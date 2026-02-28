@@ -1,18 +1,20 @@
 <!-- TNT — /index.html
-     INDEX · PRIMARY FORK AFTER DOOR · TWO MASSIVE DIAMONDS · SPLINE A vs SPLINE B
-     PURPOSE (LOCK):
-       - This is the first commitment after the Door.
-       - Two vertical diamonds only (tap-safe).
-       - No modals. No overlays. No lens widgets on this page.
-       - Language is page-level only (EN / 中文 / ES).
-       - Preserves and propagates state: lang/style/time/depth (URL) + gd_* (localStorage).
-     ROUTES (LOCKED FOR NOW):
-       - TOP DIAMOND  -> /home/        (Spline A: Structure / Lattice / Verification)
-       - BOTTOM DIAMOND -> /explore/   (Spline B: Accord / Products + Innovation)
-     OWNERSHIP:
-       - ui.css owns field (no html/body background styling)
-       - branch.css owns geometry primitives (used but not redefined)
-       - instruments.js owns canonical state normalize + i18n loader
+     INDEX · PRIMARY ROUTER (LAYER 1)
+     ROLE:
+       - First page after DOOR
+       - Two clear lanes:
+           1) STRUCTURE
+           2) PRODUCTS & INNOVATION
+       - Stark minimalist
+       - Plain English only (no abstract terminology on surface)
+       - Scientific language allowed only in fine print
+       - Routes:
+           STRUCTURE  → /home/
+           PRODUCTS   → /explore/
+       - Page-level language toggle (EN / 中文 / ES)
+       - State propagation: lang/style/time/depth
+       - Uses ui.css + branch.css + instruments.js
+       - No field overrides
 -->
 
 <!doctype html>
@@ -20,46 +22,33 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Cardinal Axis</title>
+<title>INDEX · Choose Path</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
 
 :root{
   --R:170px;
   --D:260px;
+  --opalA:rgba(200,170,255,.22);
+  --opalB:rgba(120,70,255,.16);
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
-/* Top-left */
+/* Top controls */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;align-items:center;
 }
-
-/* Top-right language toggle (page-level only) */
 .top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;align-items:center;
 }
 
 /* Brand */
@@ -70,32 +59,35 @@ a{color:inherit;text-decoration:none}
   transform:translateX(-50%);
   z-index:130;
   text-align:center;
-  padding:10px 18px;
+  padding:12px 18px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 30% 30%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 70% 60%, var(--opalB), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.25), rgba(0,0,0,.12));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.45);
   pointer-events:none;
 }
 .brand .k{
-  font-size:12px;
-  letter-spacing:3px;
+  font-size:11px;
+  letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.78;
+  opacity:.8;
   margin:0 0 6px 0;
 }
 .brand .t{
   font-weight:950;
-  font-size:40px;
-  letter-spacing:.3px;
+  font-size:44px;
+  letter-spacing:1px;
   margin:0;
-  line-height:1.02;
 }
 .brand .s{
-  opacity:.85;
-  font-size:13.5px;
+  font-size:14px;
+  opacity:.9;
   margin:8px 0 0;
-  line-height:1.35;
-  max-width:min(860px,94vw);
+  line-height:1.4;
 }
 
 /* Stage */
@@ -110,7 +102,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Massive diamonds (opal lacquer) */
+/* Diamonds */
 .d{
   width:var(--D);
   height:var(--D);
@@ -125,15 +117,14 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
 
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
-    radial-gradient(circle at 48% 52%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 50%),
+    radial-gradient(circle at 70% 75%, var(--opalA), transparent 60%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 50px 160px rgba(0,0,0,.85),
-    0 0 38px rgba(212,175,55,.25),
+    0 0 40px rgba(212,175,55,.22),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
@@ -142,38 +133,22 @@ a{color:inherit;text-decoration:none}
 }
 .d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:34px;
-  padding:1px;
+  position:absolute;inset:0;border-radius:34px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.30);
+  border-color:rgba(212,175,55,.32);
 }
 .d:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
 }
 
-/* Vertical layout */
+/* Vertical */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
@@ -189,41 +164,29 @@ a{color:inherit;text-decoration:none}
   padding:18px;
   gap:10px;
   pointer-events:none;
-  user-select:none;
 }
 .lab{
   font-weight:950;
   font-size:22px;
-  letter-spacing:.8px;
-  text-shadow:0 0 18px rgba(255,255,255,.10);
+  letter-spacing:1px;
 }
 .sub{
   font-size:14px;
-  opacity:.85;
-  line-height:1.35;
-  max-width:22em;
+  opacity:.9;
+  line-height:1.4;
+  max-width:24em;
 }
 
-/* Footer micro-line */
+/* Fine print */
 .footer{
   position:fixed;
   left:50%;
   bottom:calc(16px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:120;
-  width:min(920px,94vw);
-  text-align:center;
-  font-size:13px;
-  opacity:.78;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  font-size:12px;
+  opacity:.7;
   pointer-events:none;
-}
-
-/* Mobile */
-@media (max-width:560px){
-  :root{ --R:156px; --D:244px; }
-  .stage{top:58%}
-  .brand .t{font-size:36px}
 }
 </style>
 </head>
@@ -231,7 +194,7 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
 </div>
 
 <div class="top-right">
@@ -242,31 +205,31 @@ a{color:inherit;text-decoration:none}
 
 <div class="brand" aria-hidden="true">
   <p class="k" id="bk">CARDINAL AXIS</p>
-  <h1 class="t" id="bt">INDEX</h1>
-  <p class="s" id="bs">Choose a path · Both return to structure</p>
+  <h1 class="t" id="bt">CHOOSE PATH</h1>
+  <p class="s" id="bs">Two ways in. Both lead to clarity.</p>
 </div>
 
-<div class="stage" aria-label="Primary fork">
+<div class="stage">
 
-  <!-- SPLINE A -->
-  <div class="d d-top" id="dSplineA" role="button" tabindex="0" aria-label="Spline A">
+  <!-- STRUCTURE -->
+  <div class="d d-top" id="dStructure" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labA">STRUCTURE SPLINE</div>
-      <div class="sub" id="subA">Definitions · Lattice · Verification</div>
+      <div class="lab" id="labStructure">STRUCTURE</div>
+      <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
     </div>
   </div>
 
-  <!-- SPLINE B -->
-  <div class="d d-bottom" id="dSplineB" role="button" tabindex="0" aria-label="Spline B">
+  <!-- PRODUCTS -->
+  <div class="d d-bottom" id="dProducts" role="button" tabindex="0">
     <div class="inner">
-      <div class="lab" id="labB">ACCORD SPLINE</div>
-      <div class="sub" id="subB">Products · Innovation · Adoption</div>
+      <div class="lab" id="labProducts">PRODUCTS & INNOVATION</div>
+      <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer" id="foot">Orientation before scale · Scale before claims</div>
+<div class="footer" id="foot">Fine print: structure prevents drift · tools require structure</div>
 
 <script>
 (function(){
@@ -283,105 +246,30 @@ a{color:inherit;text-decoration:none}
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
+  localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
+  localStorage.setItem("gd_time",time);
+  localStorage.setItem("gd_depth",depth);
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function q(over){
-    var L = (over && over.lang) ? over.lang : lang;
-    var S = (over && over.style) ? over.style : style;
-    var T = (over && over.time) ? over.time : time;
-    var D = (over && over.depth) ? over.depth : depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
   }
 
-  // page-level language toggle
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
+  document.getElementById("btnDoor").href="/door/"+q();
 
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
+  document.getElementById("dStructure").onclick=function(){
+    location.href="/home/"+q();
+  };
+  document.getElementById("dProducts").onclick=function(){
+    location.href="/explore/"+q();
+  };
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang: lang}));
-    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-    renderLang();
-    paintLang();
-  }
-
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // i18n (EN/中文/ES)
-  function renderLang(){
-    if(lang==="zh"){
-      document.getElementById("bt").textContent="索引";
-      document.getElementById("bs").textContent="选择路径 · 两条路都回到结构";
-      document.getElementById("labA").textContent="结构脊柱";
-      document.getElementById("subA").textContent="定义 · 格点 · 核查";
-      document.getElementById("labB").textContent="合流脊柱";
-      document.getElementById("subB").textContent="产品 · 创新 · 采纳";
-      document.getElementById("foot").textContent="先导览 · 再规模 · 再主张";
-      document.getElementById("btnExit").textContent="退出";
-    }else if(lang==="es"){
-      document.getElementById("bt").textContent="ÍNDICE";
-      document.getElementById("bs").textContent="Elige un camino · Ambos regresan a estructura";
-      document.getElementById("labA").textContent="RAMAL DE ESTRUCTURA";
-      document.getElementById("subA").textContent="Definiciones · Lattice · Verificación";
-      document.getElementById("labB").textContent="RAMAL DE ACUERDO";
-      document.getElementById("subB").textContent="Productos · Innovación · Adopción";
-      document.getElementById("foot").textContent="Orientación · Escala · Afirmaciones";
-      document.getElementById("btnExit").textContent="SALIR";
-    }else{
-      document.getElementById("bt").textContent="INDEX";
-      document.getElementById("bs").textContent="Choose a path · Both return to structure";
-      document.getElementById("labA").textContent="STRUCTURE SPLINE";
-      document.getElementById("subA").textContent="Definitions · Lattice · Verification";
-      document.getElementById("labB").textContent="ACCORD SPLINE";
-      document.getElementById("subB").textContent="Products · Innovation · Adoption";
-      document.getElementById("foot").textContent="Orientation before scale · Scale before claims";
-      document.getElementById("btnExit").textContent="EXIT";
-    }
-  }
-  renderLang();
-
-  // Routes
-  function goSplineA(){ location.href="/home/"+q(); }
-  function goSplineB(){ location.href="/explore/"+q(); }
-
-  var a=document.getElementById("dSplineA");
-  var b=document.getElementById("dSplineB");
-
-  a.addEventListener("click", goSplineA);
-  b.addEventListener("click", goSplineB);
-
-  a.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goSplineA(); }
-  });
-  b.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goSplineB(); }
-  });
-
-  // Exit preserves state
-  document.getElementById("btnExit").href="/door/"+q();
-
+  document.getElementById("dStructure").onkeydown=function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();location.href="/home/"+q();}
+  };
+  document.getElementById("dProducts").onkeydown=function(e){
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();location.href="/explore/"+q();}
+  };
 })();
 </script>
 

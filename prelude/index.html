@@ -1,29 +1,29 @@
 <!-- TNT — /prelude/index.html
      PRELUDE · MULTI-SPINE LAUNCHPAD (MULTI-SPINE INDEX)
-     ROLE:
-       - Launchpad (stop + orient) before entering the site
-       - THREE SPINES:
-           A) LANES (3): PROOF / PRODUCTS / INNOVATION
-           B) INSTRUMENTS: GAUGES INDEX (+ optional future subtiles)
-           C) REFERENCE: LINKS / GLOSSARY / ABOUT / APPENDIX
-     ROUTES:
-       - RETURN → /index.html   (Door)
-       - ENTER  → /home/        (Main hub)
-       - PROOF  → /laws/
-       - PRODUCTS → /products/
-       - INNOVATION → /explore/
-       - GAUGES → /gauges/
-       - LINKS → /links/
-       - GLOSSARY → /glossary/   (if missing, set to /links/ until created)
-       - ABOUT → /about/         (if missing, set to /links/ until created)
-       - APPENDIX → /appendix/   (if missing, set to /links/ until created)
-     STATE:
-       - URL: lang/style/time/depth
-       - LS:  gd_lang/gd_style/gd_time/gd_depth
+     FIX (NO DRIFT):
+       - PRODUCTS click no longer “falls into” Coherence Diagnostic by accident.
+       - Adds SAFE ROUTE RESOLUTION:
+           • Try primary route (HEAD/GET)
+           • If missing/redirect-broken, fallback to a known-good hub
+       - Removes inline onclick (tap-safe)
+       - Keeps EN / 中文 / ES
+       - Preserves state (lang/style/time/depth) on every jump
+
+     ROUTES (INTENT):
+       - RETURN   → /index.html
+       - ENTER    → /home/
+       - PROOF    → /laws/
+       - PRODUCTS → /products/   (fallback → /explore/ if products surface missing)
+       - INNOV    → /explore/
+       - GAUGES   → /gauges/
+       - LINKS    → /links/
+       - GLOSSARY → /glossary/   (fallback → /links/)
+       - ABOUT    → /about/      (fallback → /links/)
+       - APPENDIX → /appendix/   (fallback → /links/)
+
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT set html/body background (ui.css owns field)
-       - Tap-safe (no inline onclick)
 -->
 
 <!doctype html>
@@ -282,8 +282,8 @@ body::before, body::after{z-index:0;pointer-events:none}
 <div class="page">
 
   <div class="banner">
-    <h1>PRELUDE</h1>
-    <p>
+    <h1 id="ttl">PRELUDE</h1>
+    <p id="tag">
       Before movement, orientation.<br/>
       Before scaling, constraint.<br/>
       Before claims, structure.
@@ -291,92 +291,92 @@ body::before, body::after{z-index:0;pointer-events:none}
   </div>
 
   <div class="principles" aria-label="Principles">
-    <div class="line">Scope precedes authority.</div>
-    <div class="line">Scale amplifies error.</div>
-    <div class="line">Compensation hides instability.</div>
-    <div class="line">Unbounded claims create fragility.</div>
-    <div class="line">Proof must survive constraint.</div>
-    <div class="line">If it cannot be measured, it cannot be stabilized.</div>
-    <div class="line">Coherence cannot exceed self-consistency.</div>
-    <div class="line">Ambiguity accelerates collapse.</div>
-    <div class="line">Correction creates a new epoch.</div>
-    <div class="line">Containment prevents cascade.</div>
+    <div class="line" id="l1">Scope precedes authority.</div>
+    <div class="line" id="l2">Scale amplifies error.</div>
+    <div class="line" id="l3">Compensation hides instability.</div>
+    <div class="line" id="l4">Unbounded claims create fragility.</div>
+    <div class="line" id="l5">Proof must survive constraint.</div>
+    <div class="line" id="l6">If it cannot be measured, it cannot be stabilized.</div>
+    <div class="line" id="l7">Coherence cannot exceed self-consistency.</div>
+    <div class="line" id="l8">Ambiguity accelerates collapse.</div>
+    <div class="line" id="l9">Correction creates a new epoch.</div>
+    <div class="line" id="l10">Containment prevents cascade.</div>
   </div>
 
   <!-- SPINE A: LANES -->
   <div class="section" aria-label="Lanes">
-    <div class="band">LANES</div>
+    <div class="band" id="bandLanes">LANES</div>
     <div class="grid">
       <div class="tile" id="goProof" style="--c:#F59E0B">
-        <div class="k"><span class="dot"></span>PROOF / VALIDATION</div>
-        <h3>LAWS</h3>
-        <p>Constraints, admissibility, and verification posture.</p>
+        <div class="k"><span class="dot"></span><span id="kProof">PROOF / VALIDATION</span></div>
+        <h3 id="hProof">LAWS</h3>
+        <p id="pProof">Constraints, admissibility, and verification posture.</p>
       </div>
 
       <div class="tile" id="goProducts" style="--c:#0EA5E9">
-        <div class="k"><span class="dot"></span>PRODUCTS</div>
-        <h3>WHAT YOU CAN USE</h3>
-        <p>Adoptable tools and platforms.</p>
+        <div class="k"><span class="dot"></span><span id="kProducts">PRODUCTS</span></div>
+        <h3 id="hProducts">WHAT YOU CAN USE</h3>
+        <p id="pProducts">Adoptable tools and platforms.</p>
       </div>
 
       <div class="tile" id="goInnovation" style="--c:#93C5FD">
-        <div class="k"><span class="dot"></span>INNOVATION</div>
-        <h3>EXPLORE</h3>
-        <p>Frontier and language surfaces (bounded).</p>
+        <div class="k"><span class="dot"></span><span id="kInnov">INNOVATION</span></div>
+        <h3 id="hInnov">EXPLORE</h3>
+        <p id="pInnov">Frontier and language surfaces (bounded).</p>
       </div>
 
       <div class="tile" id="goHome" style="--c:#D4AF37">
-        <div class="k"><span class="dot"></span>ENTER</div>
-        <h3>MAIN HUB</h3>
-        <p>Go directly into the primary hub.</p>
+        <div class="k"><span class="dot"></span><span id="kEnter">ENTER</span></div>
+        <h3 id="hEnter">MAIN HUB</h3>
+        <p id="pEnter">Go directly into the primary hub.</p>
       </div>
     </div>
   </div>
 
   <!-- SPINE B: INSTRUMENTS -->
   <div class="section" aria-label="Instruments">
-    <div class="band">INSTRUMENTS</div>
+    <div class="band" id="bandInstr">INSTRUMENTS</div>
     <div class="grid">
       <div class="tile" id="goGauges" style="--c:#60A5FA">
-        <div class="k"><span class="dot"></span>MEASUREMENT</div>
-        <h3>GAUGES</h3>
-        <p>Dashboards and measurement surfaces.</p>
+        <div class="k"><span class="dot"></span><span id="kMeas">MEASUREMENT</span></div>
+        <h3 id="hGauges">GAUGES</h3>
+        <p id="pGauges">Dashboards and measurement surfaces.</p>
       </div>
 
       <div class="tile" id="goGaugesIndex" style="--c:#A3A3A3">
-        <div class="k"><span class="dot"></span>INDEX</div>
-        <h3>GAUGES INDEX</h3>
-        <p>Start here if you want instrumentation first.</p>
+        <div class="k"><span class="dot"></span><span id="kGIdx">INDEX</span></div>
+        <h3 id="hGIdx">GAUGES INDEX</h3>
+        <p id="pGIdx">Start here if you want instrumentation first.</p>
       </div>
     </div>
   </div>
 
   <!-- SPINE C: REFERENCE -->
   <div class="section" aria-label="Reference">
-    <div class="band">REFERENCE</div>
+    <div class="band" id="bandRef">REFERENCE</div>
     <div class="grid">
       <div class="tile" id="goLinks" style="--c:#93C5FD">
-        <div class="k"><span class="dot"></span>ANCHORS</div>
-        <h3>LINKS</h3>
-        <p>External anchors and references.</p>
+        <div class="k"><span class="dot"></span><span id="kAnch">ANCHORS</span></div>
+        <h3 id="hLinks">LINKS</h3>
+        <p id="pLinks">External anchors and references.</p>
       </div>
 
       <div class="tile" id="goGlossary" style="--c:#D4AF37">
-        <div class="k"><span class="dot"></span>TERMS</div>
-        <h3>GLOSSARY</h3>
-        <p>Canonical terms (one meaning).</p>
+        <div class="k"><span class="dot"></span><span id="kTerms">TERMS</span></div>
+        <h3 id="hGlossary">GLOSSARY</h3>
+        <p id="pGlossary">Canonical terms (one meaning).</p>
       </div>
 
       <div class="tile" id="goAbout" style="--c:#A3A3A3">
-        <div class="k"><span class="dot"></span>SCOPE</div>
-        <h3>ABOUT</h3>
-        <p>What this is / what it isn’t.</p>
+        <div class="k"><span class="dot"></span><span id="kScope">SCOPE</span></div>
+        <h3 id="hAbout">ABOUT</h3>
+        <p id="pAbout">What this is / what it isn’t.</p>
       </div>
 
       <div class="tile" id="goAppendix" style="--c:#60A5FA">
-        <div class="k"><span class="dot"></span>PACKETS</div>
-        <h3>APPENDIX</h3>
-        <p>Packets and consolidated references.</p>
+        <div class="k"><span class="dot"></span><span id="kPack">PACKETS</span></div>
+        <h3 id="hAppendix">APPENDIX</h3>
+        <p id="pAppendix">Packets and consolidated references.</p>
       </div>
     </div>
   </div>
@@ -384,7 +384,7 @@ body::before, body::after{z-index:0;pointer-events:none}
 </div>
 
 <div class="footer">
-  Structure is not optional.
+  <span id="foot">Structure is not optional.</span>
   <div class="sig">COGRID.NET</div>
 </div>
 
@@ -449,23 +449,165 @@ body::before, body::after{z-index:0;pointer-events:none}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // routes (no inline onclick)
-  function go(path){ location.href = path + q(); }
+  // ---- SAFE NAV ----
+  // Why: if /products/ is missing (or routes wrong), GH Pages can fall through.
+  // This tries the intended route; if it fails, it falls back to a known-good hub.
+  function tryRoute(primaryPath, fallbackPath){
+    var primary = primaryPath + q();
+    var fallback = fallbackPath + q();
 
-  document.getElementById("goProof").addEventListener("click", function(){ go("/laws/"); });
-  document.getElementById("goProducts").addEventListener("click", function(){ go("/products/"); });
-  document.getElementById("goInnovation").addEventListener("click", function(){ go("/explore/"); });
-  document.getElementById("goHome").addEventListener("click", function(){ go("/home/"); });
+    function go(url){ window.location.href = url; }
 
-  document.getElementById("goGauges").addEventListener("click", function(){ go("/gauges/"); });
-  document.getElementById("goGaugesIndex").addEventListener("click", function(){ go("/gauges/"); });
+    // HEAD is fast when allowed; if blocked, fallback to GET.
+    try{
+      fetch(primaryPath, {method:"HEAD", cache:"no-store"})
+        .then(function(res){
+          if(res && res.ok) go(primary);
+          else go(fallback);
+        })
+        .catch(function(){
+          // GET fallback (some GH/CDN configs reject HEAD)
+          fetch(primaryPath, {method:"GET", cache:"no-store"})
+            .then(function(res2){
+              if(res2 && res2.ok) go(primary);
+              else go(fallback);
+            })
+            .catch(function(){ go(fallback); });
+        });
+    }catch(e){
+      go(primary); // last resort
+    }
+  }
 
-  document.getElementById("goLinks").addEventListener("click", function(){ go("/links/"); });
+  function goHard(path){ window.location.href = path + q(); }
 
-  // If these routes don't exist yet, they still safely route; adjust later if needed.
-  document.getElementById("goGlossary").addEventListener("click", function(){ go("/glossary/"); });
-  document.getElementById("goAbout").addEventListener("click", function(){ go("/about/"); });
-  document.getElementById("goAppendix").addEventListener("click", function(){ go("/appendix/"); });
+  // lanes
+  document.getElementById("goProof").addEventListener("click", function(){ goHard("/laws/"); });
+
+  // PRODUCTS: try /products/ first; if missing/broken, fallback to /explore/
+  document.getElementById("goProducts").addEventListener("click", function(){
+    tryRoute("/products/","/explore/");
+  });
+
+  document.getElementById("goInnovation").addEventListener("click", function(){ goHard("/explore/"); });
+  document.getElementById("goHome").addEventListener("click", function(){ goHard("/home/"); });
+
+  // instruments
+  document.getElementById("goGauges").addEventListener("click", function(){ goHard("/gauges/"); });
+  document.getElementById("goGaugesIndex").addEventListener("click", function(){ goHard("/gauges/"); });
+
+  // reference
+  document.getElementById("goLinks").addEventListener("click", function(){ goHard("/links/"); });
+
+  // These might not exist yet: try them; fallback to /links/
+  document.getElementById("goGlossary").addEventListener("click", function(){ tryRoute("/glossary/","/links/"); });
+  document.getElementById("goAbout").addEventListener("click", function(){ tryRoute("/about/","/links/"); });
+  document.getElementById("goAppendix").addEventListener("click", function(){ tryRoute("/appendix/","/links/"); });
+
+  // i18n minimal (keeps layout stable)
+  function applyText(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
+
+  if(lang==="zh"){
+    applyText("ttl","前置页");
+    document.getElementById("tag").innerHTML="先导览，再行动。<br/>先约束，再扩张。<br/>先结构，再主张。";
+
+    applyText("bandLanes","路线");
+    applyText("kProof","证明 / 核查");
+    applyText("hProof","法则");
+    applyText("pProof","约束、可采信与核查姿态。");
+
+    applyText("kProducts","产品");
+    applyText("hProducts","可用内容");
+    applyText("pProducts","可采纳的工具与平台。");
+
+    applyText("kInnov","创新");
+    applyText("hInnov","探索");
+    applyText("pInnov","前沿与语言面（有界）。");
+
+    applyText("kEnter","进入");
+    applyText("hEnter","主枢纽");
+    applyText("pEnter","直接进入主枢纽。");
+
+    applyText("bandInstr","仪器");
+    applyText("kMeas","测量");
+    applyText("hGauges","量规");
+    applyText("pGauges","仪表板与测量面。");
+
+    applyText("kGIdx","索引");
+    applyText("hGIdx","量规索引");
+    applyText("pGIdx","想先看仪器就从这里开始。");
+
+    applyText("bandRef","参考");
+    applyText("kAnch","锚点");
+    applyText("hLinks","链接");
+    applyText("pLinks","外部锚点与参考。");
+
+    applyText("kTerms","术语");
+    applyText("hGlossary","术语表");
+    applyText("pGlossary","规范术语（单一含义）。");
+
+    applyText("kScope","范围");
+    applyText("hAbout","关于");
+    applyText("pAbout","这是什么 / 不是什么。");
+
+    applyText("kPack","包");
+    applyText("hAppendix","附录");
+    applyText("pAppendix","协议包与集中引用。");
+
+    applyText("btnReturn","返回");
+    applyText("btnEnter","进入");
+    applyText("foot","结构不是可选项。");
+  }else if(lang==="es"){
+    applyText("ttl","PRELUDIO");
+    document.getElementById("tag").innerHTML="Antes de moverte, orientación.<br/>Antes de escalar, restricción.<br/>Antes de afirmar, estructura.";
+
+    applyText("bandLanes","RUTAS");
+    applyText("kProof","PRUEBA / VALIDACIÓN");
+    applyText("hProof","LEYES");
+    applyText("pProof","Restricciones, admisibilidad y postura de verificación.");
+
+    applyText("kProducts","PRODUCTOS");
+    applyText("hProducts","LO QUE PUEDES USAR");
+    applyText("pProducts","Herramientas y plataformas adoptables.");
+
+    applyText("kInnov","INNOVACIÓN");
+    applyText("hInnov","EXPLORAR");
+    applyText("pInnov","Frontera y lenguaje (acotado).");
+
+    applyText("kEnter","ENTRAR");
+    applyText("hEnter","HUB PRINCIPAL");
+    applyText("pEnter","Ir directo al hub principal.");
+
+    applyText("bandInstr","INSTRUMENTOS");
+    applyText("kMeas","MEDICIÓN");
+    applyText("hGauges","MEDIDORES");
+    applyText("pGauges","Paneles e instrumentos de medición.");
+
+    applyText("kGIdx","ÍNDICE");
+    applyText("hGIdx","ÍNDICE DE MEDIDORES");
+    applyText("pGIdx","Empieza aquí si quieres instrumentación primero.");
+
+    applyText("bandRef","REFERENCIA");
+    applyText("kAnch","ANCLAS");
+    applyText("hLinks","ENLACES");
+    applyText("pLinks","Anclas externas y referencias.");
+
+    applyText("kTerms","TÉRMINOS");
+    applyText("hGlossary","GLOSARIO");
+    applyText("pGlossary","Términos canónicos (un significado).");
+
+    applyText("kScope","ALCANCE");
+    applyText("hAbout","ACERCA");
+    applyText("pAbout","Qué es / qué no es.");
+
+    applyText("kPack","PAQUETES");
+    applyText("hAppendix","APÉNDICE");
+    applyText("pAppendix","Paquetes y referencias consolidadas.");
+
+    applyText("btnReturn","VOLVER");
+    applyText("btnEnter","ENTRAR");
+    applyText("foot","La estructura no es opcional.");
+  }
 
 })();
 </script>

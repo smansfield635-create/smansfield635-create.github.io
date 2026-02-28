@@ -1,21 +1,14 @@
 <!-- TNT — /door/index.html
      DOOR · ENTER (LAYER 0) · TWO MASSIVE DIAMONDS · TAP-SAFE
-     FIXES:
-       1) Diamonds “open” reliably = navigate (no dead taps). Uses <a> targets + JS fallback.
-       2) Gold diamond grid is forced BEHIND jewels (ui.css overlay stays background-only on this page).
-       3) No full-width legacy banner; keep centered opal brand bubble (unchanged intent).
-     ROUTING (LOCK):
-       - ENTER SITE     → /prelude/?gate=enter  (fallback: /index.html)
-       - VIEW SITE MAP  → /prelude/?gate=map    (fallback: /index.html)
-     TOP CONTROLS (LOCK):
-       - LEFT:  EXIT + (PRELUDE)   [replaces INDEX per your latest]
+     FIX:
+       - TRUE FORK:
+           ENTER SITE    → /index.html
+           VIEW SITE MAP → /prelude/
+     OTHER LOCKS UNCHANGED:
+       - LEFT: EXIT + PRELUDE
        - RIGHT: EN / 中文 / ES
-     STATE:
-       - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
+       - State carry: lang/style/time/depth
+       - Gold grid behind jewels (page forces ui overlays behind)
 -->
 
 <!doctype html>
@@ -30,26 +23,22 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* ui.css owns field */
 a{color:inherit;text-decoration:none}
 
-/* --- FORCE ui.css GOLD GRID BEHIND CONTENT (no “grid over jewel”) --- */
+/* FORCE ui.css overlay behind content (no “grid over jewel”) */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:-2 !important}
 
-/* --- Tokens --- */
 :root{
   --R:170px;
   --D:260px;
 
-  /* Opal/violet readability layer */
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.14);
   --opalC:rgba(90,210,255,.10);
 
   --goldSoft:rgba(212,175,55,.42);
 
-  /* Deep material base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
@@ -83,18 +72,9 @@ body::before, body::after{z-index:-2 !important}
   box-shadow:0 24px 80px rgba(0,0,0,.45);
   pointer-events:none;
 }
-.brand .k{
-  font-size:11px;letter-spacing:4px;text-transform:uppercase;
-  opacity:.78;margin:0 0 6px 0;
-}
-.brand .t{
-  font-weight:950;font-size:44px;letter-spacing:1.2px;
-  margin:0;line-height:1.02;
-}
-.brand .s{
-  opacity:.88;font-size:13.5px;margin:8px 0 0;
-  line-height:1.35;max-width:min(860px,94vw);
-}
+.brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
+.brand .t{font-weight:950;font-size:44px;letter-spacing:1.2px;margin:0;line-height:1.02}
+.brand .s{opacity:.88;font-size:13.5px;margin:8px 0 0;line-height:1.35;max-width:min(860px,94vw)}
 
 /* subtle interior lattice (page-only; stays behind jewels) */
 .lattice{
@@ -145,7 +125,7 @@ body::before, body::after{z-index:-2 !important}
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  z-index:80; /* above lattice + ui overlays */
+  z-index:80;
 
   background:
     radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
@@ -186,11 +166,6 @@ body::before, body::after{z-index:-2 !important}
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.32);
-  box-shadow:
-    0 50px 160px rgba(0,0,0,.86),
-    0 0 52px rgba(212,175,55,.26),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -50px 90px rgba(0,0,0,.78);
 }
 .d:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
@@ -211,23 +186,9 @@ body::before, body::after{z-index:-2 !important}
   pointer-events:none;
   user-select:none;
 }
-.lab{
-  font-weight:950;
-  font-size:22px;
-  letter-spacing:1px;
-  text-shadow:0 0 18px rgba(255,255,255,.10);
-}
-.sub{
-  font-size:14px;
-  opacity:.90;
-  line-height:1.35;
-  max-width:24em;
-}
-.pref{
-  font-weight:950;
-  font-style:italic;
-  letter-spacing:.2px;
-}
+.lab{font-weight:950;font-size:22px;letter-spacing:1px}
+.sub{font-size:14px;opacity:.90;line-height:1.35;max-width:24em}
+.pref{font-weight:950;font-style:italic;letter-spacing:.2px}
 
 /* Fine print only */
 .footer{
@@ -276,15 +237,15 @@ body::before, body::after{z-index:-2 !important}
 
 <div class="stage" aria-label="Orientation chamber">
 
-  <!-- ENTER SITE -->
-  <a class="d d-top" id="dEnter" href="/prelude/" aria-label="Enter site">
+  <!-- ENTER SITE (fork to /index.html) -->
+  <a class="d d-top" id="dEnter" href="/index.html" aria-label="Enter site">
     <div class="inner">
       <div class="lab" id="labEnter">ENTER SITE</div>
       <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
     </div>
   </a>
 
-  <!-- VIEW SITE MAP -->
+  <!-- VIEW SITE MAP (fork to /prelude/) -->
   <a class="d d-bottom" id="dNav" href="/prelude/" aria-label="View site map">
     <div class="inner">
       <div class="lab" id="labNav">VIEW SITE MAP</div>
@@ -298,7 +259,6 @@ body::before, body::after{z-index:-2 !important}
 
 <script>
 (function(){
-  // Canonical state: URL lang/style/time/depth; LS gd_*
   var qs = new URLSearchParams(location.search);
 
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
@@ -332,20 +292,16 @@ body::before, body::after{z-index:-2 !important}
            "&depth="+encodeURIComponent(D);
   }
 
-  // Wire top links
   function wireTop(){
-    document.getElementById("btnExit").href   = "/" + q();
+    document.getElementById("btnExit").href    = "/" + q();
     document.getElementById("btnPrelude").href = "/prelude/" + q();
   }
   wireTop();
 
-  // Diamond targets (tap-safe via href; JS ensures correct query)
-  var enter = document.getElementById("dEnter");
-  var nav   = document.getElementById("dNav");
-
+  // TRUE fork wiring
   function wireDiamonds(){
-    enter.href = "/prelude/" + q({}) + "&gate=enter";
-    nav.href   = "/prelude/" + q({}) + "&gate=map";
+    document.getElementById("dEnter").href = "/index.html" + q({}) + "&gate=enter";
+    document.getElementById("dNav").href   = "/prelude/"   + q({}) + "&gate=map";
   }
   wireDiamonds();
 
@@ -377,50 +333,40 @@ body::before, body::after{z-index:-2 !important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // Copy (EN/中文/ES) — plain, human-first
   function renderLang(){
     if(lang==="zh"){
       document.getElementById("bt").textContent="进入";
       document.getElementById("bs").textContent="无需信仰 · 不做推销 · 以结构导航";
-
       document.getElementById("labEnter").textContent="进入网站";
       document.getElementById("prefEnter").textContent="直接：";
       document.getElementById("subEnter").lastChild.nodeValue = " 直接进入。";
-
       document.getElementById("labNav").textContent="查看网站地图";
       document.getElementById("prefNav").textContent="先：";
       document.getElementById("subNav").lastChild.nodeValue = " 先获得方向。";
-
       document.getElementById("btnExit").textContent="退出";
       document.getElementById("btnPrelude").textContent="序章";
       document.getElementById("foot").textContent="细则：先导览 · 再规模 · 再主张";
     }else if(lang==="es"){
       document.getElementById("bt").textContent="ENTRAR";
       document.getElementById("bs").textContent="Sin creencias · Sin venta · Navegación por estructura";
-
       document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
       document.getElementById("prefEnter").textContent="Directo:";
       document.getElementById("subEnter").lastChild.nodeValue = " Entra directamente.";
-
       document.getElementById("labNav").textContent="VER MAPA DEL SITIO";
       document.getElementById("prefNav").textContent="Primero:";
       document.getElementById("subNav").lastChild.nodeValue = " Oriéntate primero.";
-
       document.getElementById("btnExit").textContent="SALIR";
       document.getElementById("btnPrelude").textContent="PRELUDIO";
       document.getElementById("foot").textContent="Letra pequeña: orientación · escala · afirmaciones";
     }else{
       document.getElementById("bt").textContent="ENTER";
       document.getElementById("bs").textContent="No belief required · No selling · Navigation by structure";
-
       document.getElementById("labEnter").textContent="ENTER SITE";
       document.getElementById("prefEnter").textContent="Direct:";
       document.getElementById("subEnter").lastChild.nodeValue = " Go directly inside.";
-
       document.getElementById("labNav").textContent="VIEW SITE MAP";
       document.getElementById("prefNav").textContent="First:";
       document.getElementById("subNav").lastChild.nodeValue = " Get oriented first.";
-
       document.getElementById("btnExit").textContent="EXIT";
       document.getElementById("btnPrelude").textContent="PRELUDE";
       document.getElementById("foot").textContent="Fine print: orientation before scale · scale before claims";

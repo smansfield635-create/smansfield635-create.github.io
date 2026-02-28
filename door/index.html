@@ -1,226 +1,76 @@
-<!-- TNT — /door/index.html
-     DOOR — HARD CLEAN (SELF-NUKING DOM) · PEARLESCENT BLACK · NO MERGE POSSIBLE
-     GUARANTEE:
-       - On load: document.body is wiped and rebuilt from one template.
-       - If you still see mixed UI after this, you are not viewing this file (cache/path).
-     ROUTES:
-       - ENTER SITE     → /home/
-       - VIEW SITE MAP  → /prelude/
-     NOTE:
-       - This file intentionally does NOT load ui.css / branch.css / instruments.js
-         because those are the #1 source of “competing UI” during debugging.
--->
-
 <!doctype html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · HARD CLEAN</title>
-
-<!-- aggressive cache hints (helps when GH Pages/browser keeps serving old HTML) -->
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
+<title>Door</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff;}
-a{color:inherit;text-decoration:none}
-
-/* Background (local only) */
-body{
-  background:
-    radial-gradient(circle at 22% 14%, rgba(255,180,120,.18), transparent 58%),
-    radial-gradient(circle at 72% 18%, rgba(212,175,55,.10), transparent 62%),
-    linear-gradient(180deg, #a50000 0%, #6c0000 60%, #2d0000 100%);
+html,body{
+  margin:0;
+  height:100%;
+  background:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:system-ui, sans-serif;
+  color:white;
 }
 
-/* TOP BAR — never wraps */
-.top{
-  position:fixed;top:14px;left:0;right:0;
-  padding:0 14px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  z-index:1000;
-}
-.group{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center}
-.btn{
-  appearance:none;border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.96));
-  color:#fff;
-  padding:10px 16px;border-radius:999px;
-  font-weight:900;letter-spacing:.2px;
-  box-shadow:0 14px 36px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
-}
-.btn.active{border-color:rgba(212,175,55,.65);box-shadow:0 0 18px rgba(212,175,55,.22), 0 14px 36px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);}
-
-/* Title (no glass banner; no conflicts) */
-.title{
-  position:fixed;top:88px;left:50%;transform:translateX(-50%);
-  width:min(920px,92vw);
-  text-align:center;
-  z-index:900;
-  pointer-events:none;
-}
-.title h1{font-size:54px;font-weight:950;letter-spacing:2px;line-height:1.02}
-.title p{margin-top:14px;font-size:16px;line-height:1.55;opacity:.90}
-
-/* Stage */
 .stage{
-  position:fixed;left:50%;top:58%;
-  transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:800;
-  pointer-events:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:60px;
 }
 
-/* Pearlescent black gem */
-:root{--D:300px;--R:220px;}
 .diamond{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:44px;
+  width:220px;
+  height:220px;
+  border:2px solid #aaa;
+  transform:rotate(45deg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-
-  background:
-    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.62) 12%, transparent 38%),
-    radial-gradient(circle at 78% 28%, rgba(160,120,255,.78) 0%, transparent 60%),
-    radial-gradient(circle at 62% 86%, rgba(110,230,255,.66) 0%, transparent 74%),
-    radial-gradient(circle at 46% 46%, rgba(255,255,255,.14) 0%, transparent 62%),
-    linear-gradient(165deg, #0f1624 0%, #070c14 60%, #04060a 100%);
-
-  border:1px solid rgba(255,255,255,.72);
-
-  box-shadow:
-    0 140px 280px rgba(0,0,0,.95),
-    0 0 180px rgba(212,175,55,.55),
-    inset 0 5px 0 rgba(255,255,255,.92),
-    inset 0 -120px 180px rgba(0,0,0,.98);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
-  border-color:rgba(255,255,255,.85);
-  box-shadow:
-    0 160px 320px rgba(0,0,0,.98),
-    0 0 240px rgba(212,175,55,.72),
-    inset 0 5px 0 rgba(255,255,255,1),
-    inset 0 -120px 180px rgba(0,0,0,.98);
-}
-.diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99);}
-
-.topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
-.bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 
 .inner{
   transform:rotate(-45deg);
-  width:100%;height:100%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;
-  padding:28px;
-  user-select:none;
-  pointer-events:none;
 }
-.lab{font-size:24px;font-weight:950;letter-spacing:1px}
-.sub{margin-top:14px;font-size:16px;opacity:.95;line-height:1.35}
-.pref{font-weight:950;font-style:italic}
 
-/* Footer */
-.footer{
-  position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-  width:min(920px,92vw);
-  text-align:center;
-  font-size:13.5px;
-  opacity:.88;
-  z-index:900;
-  pointer-events:none;
+h1{
+  font-size:20px;
+  margin:0;
 }
-.sig{margin-top:8px;font-size:12px;letter-spacing:3px;opacity:.7}
 
-@media (max-width:560px){
-  :root{--D:264px;--R:196px;}
-  .title{top:82px}
-  .title h1{font-size:46px}
-  .title p{font-size:14px}
+p{
+  margin:8px 0 0;
+  opacity:.8;
 }
 </style>
 </head>
 
 <body>
-<script>
-/* ===== SELF-NUKE + REBUILD (prevents any “merge”) ===== */
-(function(){
-  const tpl = `
-    <div class="top" aria-label="Top controls">
-      <div class="group">
-        <a class="btn" id="btnExit" href="/">EXIT</a>
-        <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-      </div>
-      <div class="group" aria-label="Language">
-        <button class="btn active" id="btnEN" type="button">EN</button>
-        <button class="btn" id="btnZH" type="button">中文</button>
-        <button class="btn" id="btnES" type="button">ES</button>
-      </div>
+
+<div class="stage">
+
+  <div class="diamond" onclick="location.href='/home/'">
+    <div class="inner">
+      <h1>ENTER</h1>
+      <p>Go inside</p>
     </div>
+  </div>
 
-    <div class="title" aria-hidden="true">
-      <h1 id="ttl">ENTER</h1>
-      <p id="tag">This is a structural site.<br/>It does not sell belief.<br/>It measures coherence.</p>
+  <div class="diamond" onclick="location.href='/prelude/'">
+    <div class="inner">
+      <h1>MAP</h1>
+      <p>Get oriented</p>
     </div>
+  </div>
 
-    <div class="stage" aria-label="Door fork">
-      <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
-        <div class="inner">
-          <div class="lab" id="labEnter">ENTER SITE</div>
-          <div class="sub" id="subEnter"><span class="pref">Direct:</span> Move forward into systems.</div>
-        </div>
-      </div>
+</div>
 
-      <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="View site map">
-        <div class="inner">
-          <div class="lab" id="labMap">VIEW SITE MAP</div>
-          <div class="sub" id="subMap"><span class="pref">First:</span> See the structure before movement.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      Scale without structure collapses.
-      <div class="sig">COGRID.NET</div>
-    </div>
-  `;
-
-  document.body.innerHTML = tpl;
-
-  // routing (no state, no dependencies)
-  const go = (url)=>()=>{ window.location.href = url; };
-  const enter = document.getElementById("dEnter");
-  const map   = document.getElementById("dMap");
-  enter.addEventListener("click", go("/home/"));
-  map.addEventListener("click", go("/prelude/"));
-  enter.addEventListener("keydown",(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go("/home/")();}});
-  map.addEventListener("keydown",(e)=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go("/prelude/")();}});
-
-  // language buttons (visual only for now)
-  const bEN=document.getElementById("btnEN");
-  const bZH=document.getElementById("btnZH");
-  const bES=document.getElementById("btnES");
-  const paint=(k)=>{
-    bEN.classList.toggle("active",k==="en");
-    bZH.classList.toggle("active",k==="zh");
-    bES.classList.toggle("active",k==="es");
-  };
-  bEN.addEventListener("click",()=>paint("en"));
-  bZH.addEventListener("click",()=>paint("zh"));
-  bES.addEventListener("click",()=>paint("es"));
-})();
-</script>
 </body>
 </html>

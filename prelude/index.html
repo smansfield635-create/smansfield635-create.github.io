@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE</title>
+<title>PRELUDE · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Ensure gold grid stays behind */
+/* Keep gold grid behind content */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
@@ -19,249 +20,212 @@ body::before, body::after{z-index:0}
 .page{
   width:min(1000px,94vw);
   margin:0 auto;
-  padding:80px 0 140px;
-  display:flex;
-  flex-direction:column;
-  gap:40px;
-  z-index:10;
+  padding:100px 0 120px;
   position:relative;
+  z-index:5;
 }
 
 /* Header */
 .header{
-  background:rgba(0,0,0,.85);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:24px;
-  padding:40px;
+  border-radius:22px;
+  padding:22px;
   text-align:center;
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(35,25,55,.55), rgba(15,10,25,.35));
+
   backdrop-filter:blur(14px);
-  box-shadow:0 60px 160px rgba(0,0,0,.9);
+  border:1px solid rgba(255,255,255,.18);
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.6),
+    inset 0 2px 8px rgba(255,255,255,.25);
 }
 
 .k{
-  font-size:12px;
+  font-size:11px;
   letter-spacing:4px;
-  opacity:.7;
-  margin:0 0 10px;
+  opacity:.75;
+  margin-bottom:6px;
 }
 
 .t{
-  font-size:42px;
+  font-size:36px;
   font-weight:950;
-  margin:0;
-  letter-spacing:1px;
+  margin:0 0 8px;
 }
 
 .s{
-  margin-top:14px;
-  font-size:16px;
-  opacity:.85;
-}
-
-/* Vault Lines */
-.vault{
-  background:rgba(0,0,0,.8);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:24px;
-  padding:30px 40px;
-  backdrop-filter:blur(14px);
-  box-shadow:0 50px 140px rgba(0,0,0,.8);
-}
-
-.line{
   font-size:15px;
-  font-weight:700;
-  padding:12px 0;
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.line:last-child{border-bottom:none}
-
-/* Map Grid */
-.map{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px;
-}
-
-.tile{
-  background:rgba(0,0,0,.9);
-  border:1px solid rgba(255,255,255,.25);
-  border-radius:18px;
-  padding:20px;
-  text-align:center;
-  cursor:pointer;
-  transition:transform .15s ease, border-color .15s ease;
-}
-
-.tile:hover{
-  transform:translateY(-4px);
-  border-color:rgba(212,175,55,.6);
-}
-
-.tile h3{
-  margin:0 0 10px;
-  font-size:16px;
-  font-weight:900;
-}
-
-.tile p{
-  font-size:13px;
-  opacity:.8;
+  opacity:.9;
   margin:0;
 }
 
-/* Focus mode */
-.focus{
-  display:none;
-  background:rgba(0,0,0,.92);
-  border:1px solid rgba(255,255,255,.3);
-  border-radius:24px;
-  padding:40px;
-  backdrop-filter:blur(14px);
-  box-shadow:0 60px 180px rgba(0,0,0,.95);
+/* Principles list */
+.principles{
+  margin-top:30px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
 }
 
-.focus.show{display:block}
+.rule{
+  border-radius:18px;
+  padding:18px;
 
-.focus h2{
-  margin:0 0 20px;
-  font-size:28px;
+  background:
+    radial-gradient(circle at 50% 15%, rgba(255,255,255,.15), transparent 40%),
+    linear-gradient(160deg, #202836 0%, #111822 60%, #070b14 100%);
+
+  border:1px solid rgba(255,255,255,.25);
+
+  box-shadow:
+    0 0 50px rgba(0,0,0,.8),
+    inset 0 3px 10px rgba(255,255,255,.3);
 }
 
-.focus p{
-  font-size:15px;
-  line-height:1.6;
+.rule h3{
+  margin:0 0 6px;
+  font-size:18px;
+  font-weight:950;
+}
+
+.rule p{
+  margin:0;
+  font-size:14px;
   opacity:.9;
 }
 
+/* Lens toggle */
+.lens{
+  margin-top:24px;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.lens .btn{
+  padding:10px 14px;
+  border-radius:999px;
+}
+
+/* Bottom actions */
 .actions{
-  margin-top:30px;
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%);
   display:flex;
   gap:14px;
-  flex-wrap:wrap;
 }
 
-.footer{
+.sig{
   position:fixed;
-  bottom:20px;
   left:50%;
+  bottom:4px;
   transform:translateX(-50%);
-  font-size:12px;
-  opacity:.6;
+  font-size:11px;
+  letter-spacing:2px;
+  opacity:.5;
 }
 
-.top-left{
-  position:fixed;
-  left:20px;
-  top:20px;
-  display:flex;
-  gap:10px;
-}
-
-.top-right{
-  position:fixed;
-  right:20px;
-  top:20px;
-  display:flex;
-  gap:10px;
+@media (max-width:600px){
+  .t{font-size:28px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" href="/door/">RETURN</a>
-  <a class="btn" id="btnEnterTop">ENTER</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-  <button class="btn" id="btnES">ES</button>
-</div>
-
 <div class="page">
 
   <div class="header">
-    <p class="k">CARDINAL AXIS</p>
-    <h1 class="t">PRELUDE</h1>
-    <p class="s">Read this once. Then enter.</p>
+    <div class="k">CARDINAL AXIS</div>
+    <div class="t">PRELUDE</div>
+    <div class="s">Read this once. It prevents confusion later.</div>
   </div>
 
-  <div class="vault">
-    <div class="line">Scope comes before scale.</div>
-    <div class="line">Scale amplifies error.</div>
-    <div class="line">Unbounded claims create fragility.</div>
-    <div class="line">If it cannot be measured, it cannot be stabilized.</div>
-    <div class="line">Containment prevents cascade.</div>
+  <div class="lens">
+    <button class="btn" id="informalBtn">INFORMAL</button>
+    <button class="btn" id="formalBtn">FORMAL</button>
+    <button class="btn" id="bothBtn">BOTH</button>
   </div>
 
-  <div class="map">
-    <div class="tile" onclick="openFocus('Definitions')">
-      <h3>DEFINITIONS</h3>
-      <p>Words that stay fixed.</p>
-    </div>
-
-    <div class="tile" onclick="openFocus('Products')">
-      <h3>PRODUCTS</h3>
-      <p>Tools you can use.</p>
-    </div>
-
-    <div class="tile" onclick="openFocus('Constraints')">
-      <h3>CONSTRAINTS</h3>
-      <p>Limits that prevent drift.</p>
-    </div>
-
-    <div class="tile" onclick="openFocus('Containment')">
-      <h3>CONTAINMENT</h3>
-      <p>Keep failure small.</p>
-    </div>
-  </div>
-
-  <div class="focus" id="focusBox">
-    <h2 id="focusTitle"></h2>
-    <p id="focusText"></p>
-
-    <div class="actions">
-      <button class="btn" onclick="closeFocus()">BACK</button>
-      <a class="btn" id="focusEnter">ENTER</a>
-    </div>
-  </div>
+  <div class="principles" id="principles"></div>
 
 </div>
 
-<div class="footer">Orientation before scale · Scale before claims</div>
+<div class="actions">
+  <a class="btn" id="btnReturn" href="/door/">RETURN</a>
+  <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+</div>
+
+<div class="sig">COGRID.NET</div>
 
 <script>
-function qs(){
-  const p=new URLSearchParams(location.search);
-  const lang=p.get("lang")||localStorage.getItem("gd_lang")||"en";
-  const style=p.get("style")||localStorage.getItem("gd_style")||"formal";
-  const time=p.get("time")||localStorage.getItem("gd_time")||"now";
-  const depth=p.get("depth")||localStorage.getItem("gd_depth")||"explore";
-  return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
-}
+(function(){
 
-document.getElementById("btnEnterTop").href="/home/"+qs();
-document.getElementById("focusEnter").href="/home/"+qs();
+  const principles = [
+    {
+      informal:"Define the boundary before naming the outcome.",
+      formal:"Scope precedes authority."
+    },
+    {
+      informal:"Small confusion becomes large failure when scaled.",
+      formal:"Scale amplifies error."
+    },
+    {
+      informal:"Don’t balance contradictions. Fix them.",
+      formal:"Compensation hides instability."
+    },
+    {
+      informal:"If you cannot test it, don’t elevate it.",
+      formal:"Unbounded claims create fragility."
+    },
+    {
+      informal:"Evidence must pass constraints.",
+      formal:"Proof must survive constraint."
+    }
+  ];
 
-function openFocus(name){
-  document.querySelector(".vault").style.display="none";
-  document.querySelector(".map").style.display="none";
+  const container=document.getElementById("principles");
 
-  document.getElementById("focusTitle").innerText=name;
-  document.getElementById("focusText").innerText="This section defines how this area works and what it protects.";
+  function render(mode){
+    container.innerHTML="";
+    principles.forEach(p=>{
+      const div=document.createElement("div");
+      div.className="rule";
 
-  document.getElementById("focusBox").classList.add("show");
-}
+      const h=document.createElement("h3");
+      const body=document.createElement("p");
 
-function closeFocus(){
-  document.getElementById("focusBox").classList.remove("show");
-  document.querySelector(".vault").style.display="block";
-  document.querySelector(".map").style.display="grid";
-}
+      if(mode==="informal"){
+        h.textContent=p.informal;
+        body.textContent="";
+      }
+      else if(mode==="formal"){
+        h.textContent=p.formal;
+        body.textContent="";
+      }
+      else{
+        h.textContent=p.informal;
+        body.textContent=p.formal;
+      }
+
+      div.appendChild(h);
+      if(body.textContent) div.appendChild(body);
+      container.appendChild(div);
+    });
+  }
+
+  render("both");
+
+  document.getElementById("informalBtn").onclick=()=>render("informal");
+  document.getElementById("formalBtn").onclick=()=>render("formal");
+  document.getElementById("bothBtn").onclick=()=>render("both");
+
+})();
 </script>
 
 </body>

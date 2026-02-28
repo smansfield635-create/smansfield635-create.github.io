@@ -1,3 +1,16 @@
+<!-- TNT — /laws/index.html
+     LAWS · CONSTRAINTS (HIGH CONTRAST) · 3 LANG (EN/中文/ES) · TRUE LENS SPLIT
+     FIXES (NO VISUAL DRIFT INTENT):
+       - Removes inline onclick (tap-safe)
+       - Adds page-level language toggle (EN / 中文 / ES)
+       - Preserves state on every link (lang/style/time/depth + gd_* LS)
+       - Dock links carry state
+       - Lens buttons show active state and actually switch content
+     LOCKS:
+       - Uses /assets/ui.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,14 +25,27 @@
 a{color:inherit;text-decoration:none}
 :root{--dockH:88px}
 
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
 /* Page layout */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:24px 0 calc(var(--dockH) + 24px);
+  padding:90px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
   gap:20px;
+  position:relative;
+  z-index:10;
 }
 
 /* High contrast container */
@@ -77,12 +103,15 @@ a{color:inherit;text-decoration:none}
   display:flex;
   gap:12px;
   margin-top:14px;
+  flex-wrap:wrap;
 }
 
+/* lines */
 .line{
   margin-top:10px;
   font-size:16px;
   line-height:1.7;
+  color:rgba(255,255,255,.92);
 }
 
 .bind{
@@ -107,48 +136,65 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.95);
   border-radius:22px;
   border:1px solid rgba(255,255,255,.2);
+  z-index:220;
 }
 .dock .btn{width:100%}
+
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
 <div class="page">
 
   <div class="block">
-    <p class="k">STRUCTURAL CONSTRAINTS</p>
-    <h1 class="h">LAWS THAT PREVENT DRIFT</h1>
-    <p class="p">
-      These are not beliefs.  
+    <p class="k" id="kTop">STRUCTURAL CONSTRAINTS</p>
+    <h1 class="h" id="hTop">LAWS THAT PREVENT DRIFT</h1>
+    <p class="p" id="pTop">
+      These are not beliefs.<br/>
       These are boundaries that stop collapse under scale.
     </p>
 
-    <div class="lens">
-      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
-      <button class="btn" onclick="setLens('formal')">FORMAL</button>
+    <div class="lens" aria-label="Lens toggle">
+      <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+      <button class="btn" id="btnFormal" type="button">FORMAL</button>
     </div>
   </div>
 
   <div class="block">
 
     <div class="law">
-      <p class="lt">1. SCOPE PRECEDES AUTHORITY</p>
+      <p class="lt" id="t1">1. SCOPE PRECEDES AUTHORITY</p>
       <div id="scope"></div>
     </div>
 
     <div class="law">
-      <p class="lt">2. SCALE AMPLIFIES ERROR</p>
+      <p class="lt" id="t2">2. SCALE AMPLIFIES ERROR</p>
       <div id="scale"></div>
     </div>
 
     <div class="law">
-      <p class="lt">3. PROOF MUST SURVIVE CONSTRAINT</p>
+      <p class="lt" id="t3">3. PROOF MUST SURVIVE CONSTRAINT</p>
       <div id="proof"></div>
     </div>
 
     <div class="law">
-      <p class="lt">4. CONTAINMENT PREVENTS CASCADE</p>
+      <p class="lt" id="t4">4. CONTAINMENT PREVENTS CASCADE</p>
       <div id="contain"></div>
     </div>
 
@@ -156,105 +202,369 @@ a{color:inherit;text-decoration:none}
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/index.html">INDEX</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
 </nav>
 
 <script>
-let currentLens = "informal";
+(function(){
+  // ----- state -----
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-const DATA = {
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
-scope:{
-informal:[
-"You must define boundaries before making claims.",
-"Undefined scope creates silent power drift.",
-"If scope moves, the result is invalid."
-],
-formal:[
-"Admissibility requires declared scope.",
-"Authority without constraint produces instability.",
-"Scope mutation invalidates prior conclusions."
-],
-bind:"Bound to: Definitions + Diagnostic Layer."
-},
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-scale:{
-informal:[
-"Small confusion becomes large failure when multiplied.",
-"Growth magnifies weakness.",
-"If it breaks at 1x, it collapses at 100x."
-],
-formal:[
-"Variance compounds under scale.",
-"Uncorrected error increases nonlinearly.",
-"Scaling without constraint accelerates instability."
-],
-bind:"Bound to: Adoption Ladder + Phase Gates."
-},
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-proof:{
-informal:[
-"If it cannot be tested, it should not be elevated.",
-"Evidence without limits is persuasion.",
-"Claims must survive pressure."
-],
-formal:[
-"Proof requires constraint-bound validation.",
-"Admissibility thresholds define legitimacy.",
-"Unbounded claims create fragility."
-],
-bind:"Bound to: Coherence Diagnostic."
-},
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
 
-contain:{
-informal:[
-"Keep failure local.",
-"Stop cascade early.",
-"Rollback beats collapse."
-],
-formal:[
-"Segmentation prevents systemic failure.",
-"Rollback discipline preserves coherence.",
-"Containment restores invariant stability."
-],
-bind:"Bound to: Enforcement + Recovery Layer."
-}
+  // wire nav with state
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnDoor","/door/");
+  wire("btnPrelude","/prelude/");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockIndex","/index.html");
 
-};
+  // language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href="/laws/" + q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-function setLens(l){
-  currentLens = l;
+  // lens toggle (style)
+  var btnInformal=document.getElementById("btnInformal");
+  var btnFormal=document.getElementById("btnFormal");
+  function paintLens(){
+    btnInformal.classList.toggle("active", style==="informal");
+    btnFormal.classList.toggle("active", style==="formal");
+  }
+  function setLens(next){
+    if(next!=="formal" && next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    render();
+  }
+  btnInformal.addEventListener("click", function(){ setLens("informal"); });
+  btnFormal.addEventListener("click", function(){ setLens("formal"); });
+  paintLens();
+
+  // ----- content (3 lang × 2 lens) -----
+  var COPY = {
+    en:{
+      top:{
+        k:"STRUCTURAL CONSTRAINTS",
+        h:"LAWS THAT PREVENT DRIFT",
+        p:"These are not beliefs.<br/>These are boundaries that stop collapse under scale."
+      },
+      titles:[
+        "1. SCOPE PRECEDES AUTHORITY",
+        "2. SCALE AMPLIFIES ERROR",
+        "3. PROOF MUST SURVIVE CONSTRAINT",
+        "4. CONTAINMENT PREVENTS CASCADE"
+      ],
+      laws:{
+        scope:{
+          informal:[
+            "Define boundaries before you speak with authority.",
+            "If scope moves, the conclusion stops meaning anything.",
+            "Lock the map first—then you can argue inside it."
+          ],
+          formal:[
+            "Admissibility requires declared scope and stable definitions.",
+            "Authority without constraint produces instability under replication.",
+            "Any scope mutation invalidates prior conclusions for that scope."
+          ],
+          bind:"Bound to: Definitions + Diagnostic Layer."
+        },
+        scale:{
+          informal:[
+            "Small confusion becomes large failure when multiplied.",
+            "Growth magnifies weakness—especially hidden weakness.",
+            "If it breaks at 1×, it collapses at 100×."
+          ],
+          formal:[
+            "Variance compounds under scale; uncorrected error accelerates nonlinearly.",
+            "Scaling beyond verification capacity increases instability rate.",
+            "Constraint violations amplify through correlated exposure."
+          ],
+          bind:"Bound to: Adoption Ladder + Phase Gates."
+        },
+        proof:{
+          informal:[
+            "If it cannot be tested, don’t elevate it.",
+            "Evidence without limits turns into persuasion.",
+            "Claims must survive pressure, not comfort."
+          ],
+          formal:[
+            "Proof requires constraint-bound validation under declared measurement rules.",
+            "Admissibility thresholds define legitimacy of escalation.",
+            "Unbounded claims create fragility and drift under stress."
+          ],
+          bind:"Bound to: Coherence Diagnostic."
+        },
+        contain:{
+          informal:[
+            "Keep failure local.",
+            "Stop cascade early.",
+            "Rollback beats collapse."
+          ],
+          formal:[
+            "Segmentation prevents systemic failure propagation.",
+            "Rollback discipline preserves coherence across epochs.",
+            "Containment restores invariants by limiting blast radius."
+          ],
+          bind:"Bound to: Enforcement + Recovery Layer."
+        }
+      }
+    },
+    zh:{
+      top:{
+        k:"结构约束",
+        h:"防漂移法则",
+        p:"这不是信仰。<br/>这是防止规模下崩塌的边界。"
+      },
+      titles:[
+        "1. 范围先于权力",
+        "2. 规模放大误差",
+        "3. 证明必须经受约束",
+        "4. 隔离阻断级联"
+      ],
+      laws:{
+        scope:{
+          informal:[
+            "先定边界，才谈权威。",
+            "范围一变，结论就失去意义。",
+            "先把地图锁住，再在地图里讨论。"
+          ],
+          formal:[
+            "可采信要求声明范围并保持定义稳定。",
+            "无约束的权威在复制与扩张下必然不稳。",
+            "范围变更会使该范围内既往结论失效。"
+          ],
+          bind:"绑定：定义 + 诊断层。"
+        },
+        scale:{
+          informal:[
+            "小困惑在乘法下会变成大失败。",
+            "增长会放大弱点——尤其是隐藏弱点。",
+            "1倍就会坏，100倍必然崩。"
+          ],
+          formal:[
+            "方差在规模下复合；未修正误差呈非线性加速。",
+            "超出核查能力的扩张会提高不稳定率。",
+            "约束违规会通过相关暴露被放大。"
+          ],
+          bind:"绑定：采纳阶梯 + 阶段闸门。"
+        },
+        proof:{
+          informal:[
+            "不可测试，就不要抬升。",
+            "无边界的证据会变成说服。",
+            "主张要经受压力，而不是舒适。"
+          ],
+          formal:[
+            "证明必须在声明的测量规则下通过约束绑定验证。",
+            "可采信阈值定义升级的合法性。",
+            "无界主张会在压力下造成脆弱与漂移。"
+          ],
+          bind:"绑定：一致性诊断。"
+        },
+        contain:{
+          informal:[
+            "把失败变小。",
+            "尽早切断级联。",
+            "回滚胜过崩塌。"
+          ],
+          formal:[
+            "分段隔离阻止系统性传播。",
+            "回滚纪律在跨纪元保持一致性。",
+            "隔离通过限制爆炸半径恢复不变量。"
+          ],
+          bind:"绑定：执行 + 恢复层。"
+        }
+      }
+    },
+    es:{
+      top:{
+        k:"RESTRICCIONES ESTRUCTURALES",
+        h:"LEYES QUE EVITAN DERIVA",
+        p:"No son creencias.<br/>Son límites que evitan colapso al escalar."
+      },
+      titles:[
+        "1. EL ALCANCE PRECEDE A LA AUTORIDAD",
+        "2. LA ESCALA AMPLIFICA EL ERROR",
+        "3. LA PRUEBA DEBE SOBREVIVIR LA RESTRICCIÓN",
+        "4. LA CONTENCIÓN EVITA LA CASCADA"
+      ],
+      laws:{
+        scope:{
+          informal:[
+            "Define límites antes de hablar con autoridad.",
+            "Si el alcance cambia, la conclusión deja de significar algo.",
+            "Primero fija el mapa—luego discutes dentro."
+          ],
+          formal:[
+            "La admisibilidad requiere alcance declarado y definiciones estables.",
+            "Autoridad sin restricción produce inestabilidad al replicar.",
+            "Mutación de alcance invalida conclusiones previas en ese alcance."
+          ],
+          bind:"Vinculado a: Definiciones + Capa Diagnóstica."
+        },
+        scale:{
+          informal:[
+            "Pequeña confusión se vuelve gran fallo al multiplicar.",
+            "El crecimiento amplifica debilidades—sobre todo las ocultas.",
+            "Si falla a 1×, colapsa a 100×."
+          ],
+          formal:[
+            "La varianza se compone con la escala; el error no corregido acelera no linealmente.",
+            "Escalar más allá de la capacidad de verificación aumenta inestabilidad.",
+            "Violaciones se amplifican por exposición correlacionada."
+          ],
+          bind:"Vinculado a: Escalera de Adopción + Compuertas por Fase."
+        },
+        proof:{
+          informal:[
+            "Si no se puede probar, no lo eleves.",
+            "Evidencia sin límites se vuelve persuasión.",
+            "Las afirmaciones deben resistir presión."
+          ],
+          formal:[
+            "La prueba requiere validación acotada por restricciones bajo reglas declaradas.",
+            "Los umbrales de admisibilidad definen legitimidad de escalación.",
+            "Afirmaciones sin límites crean fragilidad y deriva."
+          ],
+          bind:"Vinculado a: Diagnóstico de Coherencia."
+        },
+        contain:{
+          informal:[
+            "Mantén el fallo local.",
+            "Detén la cascada temprano.",
+            "Rollback vence al colapso."
+          ],
+          formal:[
+            "La segmentación evita propagación sistémica.",
+            "Disciplina de rollback preserva coherencia entre épocas.",
+            "La contención restaura invariantes limitando radio de impacto."
+          ],
+          bind:"Vinculado a: Capa de Ejecución + Recuperación."
+        }
+      }
+    }
+  };
+
+  function pickPack(){
+    if(lang==="zh") return COPY.zh;
+    if(lang==="es") return COPY.es;
+    return COPY.en;
+  }
+
+  function applyTop(){
+    var P=pickPack();
+    document.getElementById("kTop").textContent=P.top.k;
+    document.getElementById("hTop").textContent=P.top.h;
+    document.getElementById("pTop").innerHTML=P.top.p;
+    document.getElementById("t1").textContent=P.titles[0];
+    document.getElementById("t2").textContent=P.titles[1];
+    document.getElementById("t3").textContent=P.titles[2];
+    document.getElementById("t4").textContent=P.titles[3];
+    // update dock labels lightly
+    if(lang==="zh"){
+      document.getElementById("dockHome").textContent="主页";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockIndex").textContent="索引";
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnPrelude").textContent="前置页";
+      btnInformal.textContent="通俗";
+      btnFormal.textContent="正式";
+    }else if(lang==="es"){
+      document.getElementById("dockHome").textContent="INICIO";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockIndex").textContent="ÍNDICE";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+      btnInformal.textContent="INFORMAL";
+      btnFormal.textContent="FORMAL";
+    }else{
+      document.getElementById("dockHome").textContent="HOME";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockIndex").textContent="INDEX";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+      btnInformal.textContent="INFORMAL";
+      btnFormal.textContent="FORMAL";
+    }
+  }
+
+  function renderLaw(key, targetId){
+    var P=pickPack();
+    var container=document.getElementById(targetId);
+    container.innerHTML="";
+
+    var lines = P.laws[key][style];
+    for(var i=0;i<lines.length;i++){
+      var p=document.createElement("p");
+      p.className="line";
+      p.textContent=lines[i];
+      container.appendChild(p);
+    }
+
+    var bind=document.createElement("div");
+    bind.className="bind";
+    bind.textContent=P.laws[key].bind;
+    container.appendChild(bind);
+  }
+
+  function render(){
+    applyTop();
+    renderLaw("scope","scope");
+    renderLaw("scale","scale");
+    renderLaw("proof","proof");
+    renderLaw("contain","contain");
+  }
+
   render();
-}
-
-function renderLaw(id, target){
-  const container = document.getElementById(target);
-  container.innerHTML = "";
-
-  DATA[id][currentLens].forEach(line=>{
-    const p = document.createElement("p");
-    p.className = "line";
-    p.textContent = line;
-    container.appendChild(p);
-  });
-
-  const bind = document.createElement("div");
-  bind.className = "bind";
-  bind.textContent = DATA[id].bind;
-  container.appendChild(bind);
-}
-
-function render(){
-  renderLaw("scope","scope");
-  renderLaw("scale","scale");
-  renderLaw("proof","proof");
-  renderLaw("contain","contain");
-}
-
-render();
+})();
 </script>
 
 </body>

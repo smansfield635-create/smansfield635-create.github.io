@@ -1,0 +1,124 @@
+<!-- TNT — /north/index.html
+     TEMP NORTH TARGET (SAFE) — used by DOOR until /laws/ is finalized
+     EN/中文/ES + back to DOOR
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>NORTH</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+.wrap{
+  width:min(980px,92vw);
+  margin:0 auto;
+  padding:90px 0 40px;
+  position:relative;z-index:10;
+}
+.top{
+  position:fixed;left:16px;right:16px;top:16px;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  flex-wrap:nowrap;white-space:nowrap;
+}
+.top .left,.top .right{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;white-space:nowrap}
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px;
+}
+h1{margin:0;font-weight:950;letter-spacing:2px;font-size:34px}
+p{margin:10px 0 0;opacity:.86;line-height:1.5}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="left">
+    <a class="btn" id="backDoor" href="/door/">BACK TO DOOR</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="card">
+    <h1 id="ttl">NORTH</h1>
+    <p id="p1">Temporary North target. Replace with /laws/ when ready.</p>
+    <p id="p2">This page exists only to prevent broken compass routes while building.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var formality = qs.get("door_formality") || localStorage.getItem("door_formality") || "informal";
+  var expr      = qs.get("door_expr")      || localStorage.getItem("door_expr")      || "ssg";
+  var chrono    = qs.get("door_chrono")    || localStorage.getItem("door_chrono")    || "now";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(formality!=="informal" && formality!=="formal") formality="informal";
+  if(expr!=="ssg" && expr!=="mssg" && expr!=="bssg") expr="ssg";
+  if(chrono!=="origin" && chrono!=="now" && chrono!=="post") chrono="now";
+
+  function q(){
+    var p=new URLSearchParams();
+    p.set("lang",lang);p.set("style",style);p.set("time",time);p.set("depth",depth);
+    p.set("door_formality",formality);p.set("door_expr",expr);p.set("door_chrono",chrono);
+    return "?"+p.toString();
+  }
+
+  document.getElementById("backDoor").href="/door/"+q();
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  btnEN.classList.toggle("active", lang==="en");
+  btnZH.classList.toggle("active", lang==="zh");
+  btnES.classList.toggle("active", lang==="es");
+  function setLang(next){
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/north/"+q();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  if(lang==="zh"){
+    document.getElementById("ttl").textContent="北";
+    document.getElementById("p1").textContent="北向临时页面。准备好后用 /laws/ 替换。";
+    document.getElementById("p2").textContent="存在目的：在建站期间防止罗盘断链。";
+    document.getElementById("backDoor").textContent="返回门";
+  }else if(lang==="es"){
+    document.getElementById("ttl").textContent="NORTE";
+    document.getElementById("p1").textContent="Destino Norte temporal. Sustituir por /laws/ cuando esté listo.";
+    document.getElementById("p2").textContent="Existe para evitar rutas rotas mientras se construye.";
+    document.getElementById("backDoor").textContent="VOLVER A PUERTA";
+  }
+})();
+</script>
+
+</body>
+</html>

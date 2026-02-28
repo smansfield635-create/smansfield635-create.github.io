@@ -1,17 +1,20 @@
 <!-- TNT — /explore/index.html
      EXPLORE · PRODUCTS & INNOVATION (LAYER 2 · SPLINE B HUB)
-     FIXES (LOCKED):
-       - PRODUCTS band stays public-facing (no science/memo tone)
-       - PRODUCTS “Overview” routes to /products/ (NOT energy)
-       - Adds Product Index grid (independent product links) WITHOUT removing current content
-       - INNOVATION band stays separate
-       - Accordion opens in-place (no modals / no overlays)
-       - Page-level language toggle only (EN / 中文 / ES)
-       - State carry: lang/style/time/depth (URL) + gd_* (localStorage)
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe
+     UPDATE (REQUESTED):
+       - Move PRODUCT INDEX (info-first) to the TOP, directly under header.
+       - Remove the extra/duplicate OPEN: Product Index has exactly 4 OPEN buttons (Energy, Coherence Diagnostic, Dot.Grid, SSG).
+       - Keep the rest of the page intact (accordion bands + bottom dock).
+       - 3 languages: EN / 中文 / ES.
+     ROUTING (SAFE DEFAULTS):
+       - Energy → /products/energy/
+       - Coherence Diagnostic → /products/
+       - Dot.Grid → /products/
+       - SSG → /products/
+       - Products Overview → /products/
+       - Other cards keep existing targets.
+     STATE:
+       - URL: lang/style/time/depth
+       - LS:  gd_lang/gd_style/gd_time/gd_depth
 -->
 
 <!doctype html>
@@ -66,6 +69,54 @@ a{color:inherit;text-decoration:none}
 .s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
 .fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
 
+/* info-first product index (TOP) */
+.infoBox{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.infoHead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;
+}
+.infoLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.infoBar{width:6px;height:22px;border-radius:99px;background:#0EA5E9;flex:0 0 auto;margin-top:2px}
+.infoTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.infoSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.infoBody{
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.infoP{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+
+.miniLabel{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+.miniList{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.miniRow{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  padding:12px 12px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+}
+.miniLeft{min-width:0}
+.miniName{font-weight:950;letter-spacing:.2px}
+.miniDesc{margin-top:4px;font-size:12.5px;opacity:.80;line-height:1.35}
+.miniAct .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
 /* band label */
 .band{
   padding:10px 12px;
@@ -110,51 +161,6 @@ a{color:inherit;text-decoration:none}
 .pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
 .actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
-
-/* PRODUCT INDEX (inside PRODUCTS band) */
-.subBand{
-  margin-top:14px;
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.10);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.86);
-}
-.pgrid{
-  margin-top:10px;
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
-}
-@media (max-width:820px){ .pgrid{grid-template-columns:1fr;} }
-
-.pcard{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(0,0,0,.14);
-  box-shadow:0 14px 44px rgba(0,0,0,.45);
-  padding:14px 14px;
-  display:flex;
-  gap:12px;
-  align-items:flex-start;
-  justify-content:space-between;
-}
-.pcard:hover{border-color:rgba(212,175,55,.30)}
-.pL{display:flex;gap:12px;min-width:0}
-.pDot{
-  width:10px;height:10px;transform:rotate(45deg);
-  border-radius:3px;
-  background:var(--pc,#93C5FD);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
-  margin-top:4px;flex:0 0 auto;
-}
-.pTxt{min-width:0}
-.pName{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pOne{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35}
-.pAct{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-.pAct .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
 /* dock */
 .dock{
@@ -203,6 +209,34 @@ a{color:inherit;text-decoration:none}
     <div class="fine" id="fine">Fine print: deeper theory lives under Laws and Gauges.</div>
   </div>
 
+  <!-- INFO FIRST: PRODUCT INDEX -->
+  <section class="infoBox" aria-label="Product index">
+    <div class="infoHead">
+      <div class="infoLeft">
+        <div class="infoBar" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <div class="infoTitle" id="piTitle">Products Overview</div>
+          <div class="infoSub" id="piSub">Start here. See the full product index.</div>
+        </div>
+      </div>
+      <div class="miniAct">
+        <a class="btn" id="piOpenAll" href="/products/">OPEN</a>
+      </div>
+    </div>
+
+    <div class="infoBody">
+      <p class="infoP" id="piBody">
+        This opens the product index: the full list of what you can use. Pick Energy only if you want Energy.
+      </p>
+
+      <div class="miniLabel" id="piLabel">PRODUCT INDEX</div>
+
+      <div class="miniList" id="miniList">
+        <!-- built by JS (exactly 4 rows / 4 OPENs) -->
+      </div>
+    </div>
+  </section>
+
   <div class="band" id="bandA">PRODUCTS</div>
   <div class="stackList" id="listA"></div>
 
@@ -233,10 +267,12 @@ a{color:inherit;text-decoration:none}
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
-  localStorage.setItem("gd_lang",lang);
-  localStorage.setItem("gd_style",style);
-  localStorage.setItem("gd_time",time);
-  localStorage.setItem("gd_depth",depth);
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(){
@@ -256,6 +292,7 @@ a{color:inherit;text-decoration:none}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
+  wire("piOpenAll","/products/");
 
   // language toggle
   var btnEN=document.getElementById("btnEN");
@@ -267,153 +304,160 @@ a{color:inherit;text-decoration:none}
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
+
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
-    localStorage.setItem("gd_lang",lang);
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     location.href="/explore/" + q();
   }
   btnEN.onclick=function(){ setLang("en"); };
   btnZH.onclick=function(){ setLang("zh"); };
   btnES.onclick=function(){ setLang("es"); };
 
-  // i18n header (plain)
-  function renderHeader(){
-    if(lang==="zh"){
-      document.getElementById("hk").textContent="探索";
-      document.getElementById("ht").textContent="产品与创新";
-      document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
-      document.getElementById("fine").textContent="细则：更深的理论在法则与量规中。";
-      document.getElementById("bandA").textContent="产品";
-      document.getElementById("bandB").textContent="创新";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnIndex").textContent="索引";
-      document.getElementById("dockHome").textContent="主页";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockGauges").textContent="量规";
-    }else if(lang==="es"){
-      document.getElementById("hk").textContent="EXPLORAR";
-      document.getElementById("ht").textContent="PRODUCTOS E INNOVACIÓN";
-      document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
-      document.getElementById("fine").textContent="Letra pequeña: la teoría vive en Leyes y Medidores.";
-      document.getElementById("bandA").textContent="PRODUCTOS";
-      document.getElementById("bandB").textContent="INNOVACIÓN";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("btnIndex").textContent="ÍNDICE";
-      document.getElementById("dockHome").textContent="INICIO";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-    }else{
-      document.getElementById("hk").textContent="EXPLORE";
-      document.getElementById("ht").textContent="PRODUCTS & INNOVATION";
-      document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
-      document.getElementById("fine").textContent="Fine print: deeper theory lives under Laws and Gauges.";
-      document.getElementById("bandA").textContent="PRODUCTS";
-      document.getElementById("bandB").textContent="INNOVATION";
-      document.getElementById("btnDoor").textContent="DOOR";
-      document.getElementById("btnIndex").textContent="INDEX";
-      document.getElementById("dockHome").textContent="HOME";
-      document.getElementById("dockProducts").textContent="PRODUCTS";
-      document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockGauges").textContent="GAUGES";
-    }
-  }
-  renderHeader();
+  // i18n header + product index copy
+  function t(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
-  // Data
-  // IMPORTANT: PRODUCTS OVERVIEW MUST BE /products/ (this fixes your “Products goes to Energy” complaint)
+  document.getElementById("hk").textContent = t("EXPLORE","探索","EXPLORAR");
+  document.getElementById("ht").textContent = t("PRODUCTS & INNOVATION","产品与创新","PRODUCTOS E INNOVACIÓN");
+  document.getElementById("hs").textContent = t(
+    "Open a card. Read one paragraph. Jump when you’re ready.",
+    "打开一张卡。读一段话。准备好就跳转。",
+    "Abre una tarjeta. Lee un párrafo. Salta cuando estés listo."
+  );
+  document.getElementById("fine").textContent = t(
+    "Fine print: deeper theory lives under Laws and Gauges.",
+    "细则：更深的理论在法则与量规中。",
+    "Letra pequeña: la teoría vive en Leyes y Medidores."
+  );
+
+  document.getElementById("bandA").textContent = t("PRODUCTS","产品","PRODUCTOS");
+  document.getElementById("bandB").textContent = t("INNOVATION","创新","INNOVACIÓN");
+
+  document.getElementById("piTitle").textContent = t("Products Overview","产品总览","Resumen de productos");
+  document.getElementById("piSub").textContent = t("Start here. See the full product index.","从这里开始。查看完整产品索引。","Empieza aquí. Ver índice completo.");
+  document.getElementById("piBody").textContent = t(
+    "This opens the product index: the full list of what you can use. Pick Energy only if you want Energy.",
+    "这里是产品索引：你可以使用的完整清单。只想看能源就选能源。",
+    "Esto abre el índice de productos: la lista completa de lo utilizable. Elige Energía solo si quieres Energía."
+  );
+  document.getElementById("piLabel").textContent = t("PRODUCT INDEX","产品索引","ÍNDICE DE PRODUCTOS");
+  document.getElementById("piOpenAll").textContent = t("OPEN","打开","ABRIR");
+
+  // Product Index (EXACTLY 4 OPENs)
+  var mini = [
+    { key:"energy",      name:t("Energy","能源","Energía"), desc:t("Industrial thermal substitution (C).","工业热替代（C）。","Sustitución térmica industrial (C)."), href:"/products/energy/" },
+    { key:"diag",        name:t("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"), desc:t("Orientation + classification surfaces.","导向 + 分类执行面。","Superficies de orientación + clasificación."), href:"/products/" },
+    { key:"dotgrid",     name:t("Dot.Grid","Dot.Grid","Dot.Grid"), desc:t("Indexing + sweeps (surface-level).","索引 + 扫描（表面级）。","Indexación + barridos (nivel superficie)."), href:"/products/" },
+    { key:"ssg",         name:t("SSG","SSG","SSG"), desc:t("Constraint syntax geometry (surface).","约束语法几何（表面）。","Geometría de sintaxis de restricción (superficie)."), href:"/products/" }
+  ];
+
+  var miniList=document.getElementById("miniList");
+  miniList.innerHTML="";
+  mini.forEach(function(it){
+    var row=document.createElement("div");
+    row.className="miniRow";
+
+    var left=document.createElement("div");
+    left.className="miniLeft";
+
+    var nm=document.createElement("div");
+    nm.className="miniName";
+    nm.textContent=it.name;
+
+    var ds=document.createElement("div");
+    ds.className="miniDesc";
+    ds.textContent=it.desc;
+
+    left.appendChild(nm);
+    left.appendChild(ds);
+
+    var act=document.createElement("div");
+    act.className="miniAct";
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=t("OPEN","打开","ABRIR");
+    a.href=it.href + q();
+    act.appendChild(a);
+
+    row.appendChild(left);
+    row.appendChild(act);
+    miniList.appendChild(row);
+  });
+
+  // Data for accordion lists (kept)
   var PRODUCTS = [
-    {
-      c:"#0EA5E9",
-      t:{en:"Products Overview",zh:"产品总览",es:"Resumen de productos"},
-      s:{en:"Start here. See the full product index.",zh:"从这里开始。进入完整产品索引。",es:"Empieza aquí. Ver índice completo."},
-      p:{en:"This opens the product index: the full list of what you can use. Pick Energy only if you want Energy.",
-         zh:"这里打开产品索引：你能用的全部清单。只有你选择能源时才进入能源。",
-         es:"Esto abre el índice de productos. Energía solo si eliges energía."},
-      href:"/products/"
-    },
     {
       c:"#F59E0B",
       t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
       s:{en:"Industrial posture only.",zh:"仅工业姿态。",es:"Solo postura industrial."},
-      p:{en:"Industrial thermal substitution surfaces. This is one product family inside the product index.",
-         zh:"工业热替代执行面。这只是产品索引中的一个产品分支。",
-         es:"Superficies térmicas industriales. Una familia dentro del índice."},
+      p:{en:"Industrial posture only. No gain claims. Use this lane for substitution framing, not achievements.",
+         zh:"仅工业姿态。无增益主张。用于替代框架，不用于宣称成就。",
+         es:"Solo postura industrial. Sin ganancias. Úsalo para sustitución, no para logros."},
       href:"/products/energy/"
     },
     {
       c:"#93C5FD",
       t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
       s:{en:"Decision support and classification.",zh:"决策支持与分类。",es:"Soporte de decisión y clasificación."},
-      p:{en:"A practical diagnostic surface for orientation and next steps. Built to stay understandable and usable.",
-         zh:"用于方向校准与下一步的实用诊断执行面。可理解、可使用。",
-         es:"Superficie diagnóstica práctica para orientación y pasos siguientes."},
+      p:{en:"A diagnostic surface that references Laws (bounds) and Gauges (measured outputs) without inflating claims.",
+         zh:"诊断执行面：引用法则（边界）与量规（测量输出），不膨胀主张。",
+         es:"Superficie diagnóstica: referencia Leyes (límites) y Medidores (salidas) sin inflar afirmaciones."},
       href:"/products/"
     },
     {
       c:"#60A5FA",
       t:{en:"Platforms",zh:"平台",es:"Plataformas"},
       s:{en:"Core deployable units.",zh:"核心可部署单元。",es:"Unidades desplegables."},
-      p:{en:"A catalog of platform-level deliverables. The product index is the fastest entry point.",
-         zh:"平台级交付物目录。产品索引是最快入口。",
-         es:"Catálogo de plataformas. El índice es la entrada más rápida."},
+      p:{en:"Platform catalog with bounded summaries. Proof posture stays in Laws/Gauges.",
+         zh:"平台目录（有界摘要）。证明姿态在法则/量规。",
+         es:"Catálogo con resúmenes acotados. La prueba vive en Leyes/Medidores."},
       href:"/products/"
     }
-  ];
-
-  // Product Index (independent links) — your ask
-  // NOTE: You can extend this list without changing layout.
-  var PRODUCT_INDEX = [
-    {c:"#F59E0B", t:{en:"Energy",zh:"能源",es:"Energía"}, one:{en:"Industrial thermal substitution (C).",zh:"工业热替代（C）。",es:"Sustitución térmica industrial (C)."}, href:"/products/energy/"},
-    {c:"#93C5FD", t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico"}, one:{en:"Orientation + classification surfaces.",zh:"方向校准 + 分类执行面。",es:"Orientación + clasificación."}, href:"/products/"},
-    {c:"#60A5FA", t:{en:"Dot.Grid",zh:"点阵索引",es:"Dot.Grid"}, one:{en:"Indexing + sweeps (surface-level).",zh:"索引 + 扫掠（表层入口）。",es:"Indexado + barridos."}, href:"/products/"},
-    {c:"#D4AF37", t:{en:"SSG",zh:"SSG",es:"SSG"}, one:{en:"Constraint syntax geometry (surface).",zh:"约束语法几何（表层）。",es:"Geometría de sintaxis."}, href:"/products/"}
   ];
 
   var INNOV = [
     {
       c:"#93C5FD",
       t:{en:"Frontier",zh:"前沿",es:"Frontera"},
-      s:{en:"Concept lab and pathways.",zh:"概念实验室与路径。",es:"Laboratorio y caminos."},
+      s:{en:"Concept lab and pathways.",zh:"概念实验室与路径。",es:"Laboratorio y rutas."},
       p:{en:"Big ideas live here, but this page stays readable. Jump in when you want the future lane.",
-         zh:"大想法在这里，但本页保持可读。想看未来路线就跳转。",
-         es:"Aquí viven ideas grandes. Entra cuando quieras la ruta futura."},
+         zh:"这里允许大想法，但页面保持可读。想看未来路线时再进入。",
+         es:"Aquí caben ideas grandes, pero la página sigue legible. Entra cuando quieras la ruta futura."},
       href:"/explore/frontier/"
     },
     {
       c:"#D4AF37",
       t:{en:"Language",zh:"语言",es:"Lenguaje"},
       s:{en:"Shared terms and encoding.",zh:"共用术语与编码。",es:"Términos y codificación."},
-      p:{en:"A practical lane for shared language so people can communicate without confusion.",
-         zh:"用于共用语言的实用路线，减少沟通混乱。",
-         es:"Carril práctico para lenguaje compartido sin confusión."},
+      p:{en:"This lane prevents meaning drift by keeping terminology stable across pages.",
+         zh:"通过稳定术语来阻止含义漂移。",
+         es:"Evita deriva manteniendo términos estables."},
       href:"/explore/innovation/language/"
     },
     {
       c:"#A3A3A3",
       t:{en:"Readiness Only",zh:"仅就绪",es:"Solo preparación"},
       s:{en:"Requirements, not achievements.",zh:"需求，不是成就。",es:"Requisitos, no logros."},
-      p:{en:"Prerequisites and readiness checklists. This keeps the site honest and usable.",
-         zh:"先决条件与就绪清单。让网站保持可信与可用。",
-         es:"Prerrequisitos y listas. Mantiene el sitio usable."},
+      p:{en:"If you’re looking for proof, go to Laws and Gauges. This lane is for prerequisites.",
+         zh:"要“证明”去法则与量规。这里是先决条件。",
+         es:"Si buscas prueba, ve a Leyes y Medidores. Aquí son prerrequisitos."},
       href:"/laws/fusion-readiness/"
     },
     {
       c:"#334155",
       t:{en:"Jump Lists",zh:"跳转列表",es:"Listas de salto"},
       s:{en:"Fast routing.",zh:"快速跳转。",es:"Rutas rápidas."},
-      p:{en:"If you already know what you want, use jump lists instead of reading everything.",
-         zh:"如果你已经知道要什么，用跳转列表而不是全读。",
-         es:"Si ya sabes qué quieres, usa listas de salto."},
+      p:{en:"Use this when you know what you want. If you don’t, open a card and read one paragraph.",
+         zh:"知道要什么就用它。不知道就打开卡片读一段。",
+         es:"Úsalo si ya sabes qué quieres. Si no, abre una tarjeta y lee un párrafo."},
       href:"/home/"
     }
   ];
 
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
 
-  function makeRow(item, injectIndexGrid){
+  function makeRow(item){
     var row=document.createElement("div");
     row.className="stackRow";
     row.style.setProperty("--domc", item.c);
@@ -459,82 +503,15 @@ a{color:inherit;text-decoration:none}
     p.className="pdesc";
     p.textContent=pick(item.p);
 
-    body.appendChild(p);
-
-    // Inject Product Index grid ONLY inside the Products Overview accordion
-    if(injectIndexGrid){
-      var sb=document.createElement("div");
-      sb.className="subBand";
-      sb.textContent = (lang==="zh") ? "产品索引" : (lang==="es") ? "ÍNDICE DE PRODUCTOS" : "PRODUCT INDEX";
-      body.appendChild(sb);
-
-      var grid=document.createElement("div");
-      grid.className="pgrid";
-
-      PRODUCT_INDEX.forEach(function(px){
-        var card=document.createElement("div");
-        card.className="pcard";
-        card.style.setProperty("--pc", px.c);
-
-        var l=document.createElement("div");
-        l.className="pL";
-
-        var dot=document.createElement("div");
-        dot.className="pDot";
-
-        var txt=document.createElement("div");
-        txt.className="pTxt";
-
-        var name=document.createElement("div");
-        name.className="pName";
-        name.textContent = pick(px.t);
-
-        var one=document.createElement("div");
-        one.className="pOne";
-        one.textContent = pick(px.one);
-
-        txt.appendChild(name);
-        txt.appendChild(one);
-
-        l.appendChild(dot);
-        l.appendChild(txt);
-
-        var act=document.createElement("div");
-        act.className="pAct";
-
-        var open=document.createElement("a");
-        open.className="btn";
-        open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
-        open.href = px.href + q();
-
-        act.appendChild(open);
-
-        card.appendChild(l);
-        card.appendChild(act);
-
-        // whole tile clickable
-        card.addEventListener("click", function(){
-          location.href = px.href + q();
-        });
-
-        // prevent double click navigation on button
-        open.addEventListener("click", function(e){ e.stopPropagation(); });
-
-        grid.appendChild(card);
-      });
-
-      body.appendChild(grid);
-    }
-
     var acts=document.createElement("div");
     acts.className="actions";
-
     var open=document.createElement("a");
     open.className="btn";
-    open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+    open.textContent = t("OPEN","打开","ABRIR");
     open.href = item.href + q();
     acts.appendChild(open);
 
+    body.appendChild(p);
     body.appendChild(acts);
 
     head.addEventListener("click", function(){
@@ -549,18 +526,16 @@ a{color:inherit;text-decoration:none}
 
   var listA=document.getElementById("listA");
   var listB=document.getElementById("listB");
+  listA.innerHTML=""; listB.innerHTML="";
 
-  // PRODUCTS
   PRODUCTS.forEach(function(it,i){
-    var inject = (i===0); // Products Overview gets Product Index grid
-    var el=makeRow(it, inject);
+    var el=makeRow(it);
     listA.appendChild(el);
     if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });
 
-  // INNOVATION
   INNOV.forEach(function(it,i){
-    var el=makeRow(it, false);
+    var el=makeRow(it);
     listB.appendChild(el);
     if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });

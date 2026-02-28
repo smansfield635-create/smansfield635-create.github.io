@@ -1,9 +1,21 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE (LAUNCHPAD) · ENGLISH ONLY · THREE DIRECTIONS + ENTER HUB
-     VALIDATION → /laws/
-     PRODUCTS   → /products/
-     INNOVATION → /explore/
-     ENTER HUB  → /home/
+     PRELUDE · LAUNCHPAD (ENGLISH-ONLY STABILIZATION)
+     GOALS:
+       - Keep your current PRELUDE layout (banner + principles + map grid)
+       - No competing UI, no overlays, no modals
+       - No inline onclick (tap-safe handlers)
+       - English-only for now (no EN/中文/ES buttons yet)
+       - State carry: ?lang=en&style=&time=&depth= + gd_* storage
+     ROUTES:
+       - RETURN → /index.html   (Door at root)
+       - ENTER  → /home/        (Primary hub)
+       - Tiles:
+           HOME     → /home/
+           EXPLORE  → /explore/
+           PRODUCTS → /products/
+           LAWS     → /laws/
+           GAUGES   → /gauges/
+           LINKS    → /links/
 -->
 
 <!doctype html>
@@ -19,137 +31,294 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-#preludeRoot{position:relative;z-index:10}
 
-/* top bar (no wrap) */
+/* Ensure ui.css overlays stay behind page UI */
+#preludeRoot{position:relative;z-index:10}
+body{position:relative}
+body::before, body::after{pointer-events:none}
+
+/* -------------------------------- */
+/* TOP (NO WRAP)                    */
+/* -------------------------------- */
+
 .top{
-  position:fixed;top:16px;left:0;right:0;
+  position:fixed;
+  top:16px;
+  left:0;
+  right:0;
   padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;z-index:300;
+  z-index:300;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
   pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:12px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
+.top-left,
+.top-right{
+  display:flex;
+  gap:12px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
-
-/* header */
-.header{
-  width:min(980px,94vw);
-  margin:84px auto 10px;
-  padding:14px 14px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 18% 34%, rgba(210,190,255,.14), transparent 72%),
-    radial-gradient(circle at 82% 62%, rgba(120,70,255,.12), transparent 74%),
-    rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+@media (max-width:420px){
+  .top{padding:0 12px}
+  .top-left,.top-right{gap:10px}
 }
-.h1{margin:0;font-weight:950;letter-spacing:1px;font-size:20px}
-.p1{margin:8px 0 0;opacity:.86;line-height:1.45;font-size:13.5px}
 
-/* grid */
-.grid{
-  width:min(980px,94vw);
-  margin:12px auto 26px;
+/* -------------------------------- */
+/* BANNER (GLASS, HIGH CONTRAST)    */
+/* -------------------------------- */
+
+.banner{
+  position:relative;
+  width:min(1000px,92vw);
+  margin:92px auto 18px;
+  padding:22px 22px;
+  border-radius:26px;
+
+  background:
+    radial-gradient(circle at 18% 28%, rgba(210,190,255,.14), transparent 72%),
+    radial-gradient(circle at 82% 60%, rgba(120,70,255,.12), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.16));
+
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 120px rgba(0,0,0,.72);
+}
+
+.banner h1{
+  margin:0;
+  font-size:38px;
+  font-weight:950;
+  letter-spacing:2px;
+}
+
+.banner p{
+  margin:12px 0 0;
+  line-height:1.55;
+  opacity:.92;
+  font-size:15px;
+}
+
+/* -------------------------------- */
+/* PRINCIPLES PANEL                 */
+/* -------------------------------- */
+
+.principles{
+  width:min(1000px,92vw);
+  margin:12px auto 16px;
+  padding:18px 18px;
+  border-radius:22px;
+
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), transparent 60%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.16));
+
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 30px 96px rgba(0,0,0,.65);
+}
+
+.line{
+  margin:10px 0;
+  font-weight:800;
+  letter-spacing:.25px;
+  line-height:1.6;
+  font-size:15px;
+  color:rgba(255,255,255,.90);
+}
+
+/* -------------------------------- */
+/* SITE MAP GRID                    */
+/* -------------------------------- */
+
+.map{
+  width:min(1000px,92vw);
+  margin:14px auto 110px;
   display:grid;
   grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
+  gap:14px;
 }
-@media (max-width:720px){
-  .grid{grid-template-columns:1fr}
+@media (max-width:820px){
+  .map{grid-template-columns:1fr}
 }
 
-/* launch tiles */
+:root{
+  --tileA:#0f1624;
+  --tileB:#070c14;
+  --goldGlow:rgba(212,175,55,.28);
+}
+
 .tile{
   border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  box-shadow:0 18px 60px rgba(0,0,0,.62);
-  padding:14px 14px;
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.16), transparent 60%),
+    radial-gradient(circle at 80% 30%, rgba(160,120,255,.16), transparent 68%),
+    linear-gradient(165deg, var(--tileA) 0%, var(--tileB) 62%, #04060a 100%);
+
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.86),
+    0 0 26px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 76px rgba(0,0,0,.82);
+
+  padding:18px 18px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
 }
-.tile:hover{border-color:rgba(212,175,55,.35)}
-.tL{min-width:0}
-.tT{font-weight:950;letter-spacing:.6px}
-.tS{margin-top:6px;opacity:.82;line-height:1.35;font-size:13px}
-.chev{opacity:.75;font-size:18px}
 
-/* footer */
-.footer{
-  width:min(980px,94vw);
-  margin:0 auto 18px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
+.tile:hover{
+  transform:translateY(-3px);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.90),
+    0 0 40px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -44px 76px rgba(0,0,0,.82);
 }
-.sig{margin-top:6px;letter-spacing:3px;font-size:11px;opacity:.65}
+
+.tl{min-width:0}
+.tile h3{
+  margin:0 0 6px;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:1px;
+}
+.tile p{
+  margin:0;
+  opacity:.86;
+  line-height:1.45;
+  font-size:13.5px;
+}
+.chev{
+  font-size:18px;
+  opacity:.75;
+  flex:0 0 auto;
+  margin-top:2px;
+  pointer-events:none;
+}
+
+/* -------------------------------- */
+/* FOOTER                           */
+/* -------------------------------- */
+
+.footer{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  text-align:center;
+  font-size:13px;
+  opacity:.86;
+  z-index:220;
+  width:min(980px,94vw);
+  pointer-events:none;
+}
+.sig{
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  opacity:.65;
+}
 </style>
 </head>
 
 <body>
 <div id="preludeRoot">
 
-  <div class="top" aria-label="Prelude controls">
-    <div class="left">
-      <a class="btn" id="btnBack" href="/index.html">BACK</a>
+  <div class="top" aria-label="Top controls">
+    <div class="top-left">
+      <a class="btn" id="btnReturn" href="/index.html">RETURN</a>
+      <a class="btn" id="btnEnter" href="/home/">ENTER</a>
     </div>
-    <div class="right">
+    <div class="top-right">
       <span class="btn" style="pointer-events:none;opacity:.85">EN</span>
     </div>
   </div>
 
-  <div class="header">
-    <div class="h1">PRELUDE</div>
-    <div class="p1">Choose a direction. Or enter the hub immediately.</div>
+  <div class="banner">
+    <h1>PRELUDE</h1>
+    <p>
+      Before movement, orientation.<br/>
+      Before scaling, constraint.<br/>
+      Before claims, structure.
+    </p>
   </div>
 
-  <div class="grid" role="navigation" aria-label="Launchpad routes">
-    <div class="tile" id="tValidation" role="button" tabindex="0">
-      <div class="tL">
-        <div class="tT">VALIDATION</div>
-        <div class="tS">Verification, constraints, and what is admissible.</div>
+  <div class="principles" aria-label="Principles">
+    <div class="line">Scope precedes authority.</div>
+    <div class="line">Scale amplifies error.</div>
+    <div class="line">Compensation hides instability.</div>
+    <div class="line">Unbounded claims create fragility.</div>
+    <div class="line">Proof must survive constraint.</div>
+    <div class="line">If it cannot be measured, it cannot be stabilized.</div>
+    <div class="line">Coherence cannot exceed self-consistency.</div>
+    <div class="line">Ambiguity accelerates collapse.</div>
+    <div class="line">Correction creates a new epoch.</div>
+    <div class="line">Containment prevents cascade.</div>
+  </div>
+
+  <div class="map" aria-label="Site map">
+    <div class="tile" id="tHome" role="button" tabindex="0">
+      <div class="tl">
+        <h3>HOME</h3>
+        <p>Main structural hub (N/E/S/W).</p>
+      </div>
+      <div class="chev">›</div>
+    </div>
+
+    <div class="tile" id="tExplore" role="button" tabindex="0">
+      <div class="tl">
+        <h3>EXPLORE</h3>
+        <p>Innovation lanes and frontier surfaces.</p>
       </div>
       <div class="chev">›</div>
     </div>
 
     <div class="tile" id="tProducts" role="button" tabindex="0">
-      <div class="tL">
-        <div class="tT">PRODUCTS</div>
-        <div class="tS">Where the science is now, packaged into surfaces.</div>
+      <div class="tl">
+        <h3>PRODUCTS</h3>
+        <p>Adoptable tools and platforms.</p>
       </div>
       <div class="chev">›</div>
     </div>
 
-    <div class="tile" id="tInnovation" role="button" tabindex="0">
-      <div class="tL">
-        <div class="tT">INNOVATION</div>
-        <div class="tS">Future lanes, frontier work, and new directions.</div>
+    <div class="tile" id="tLaws" role="button" tabindex="0">
+      <div class="tl">
+        <h3>LAWS</h3>
+        <p>Constraints and verification doctrine.</p>
       </div>
       <div class="chev">›</div>
     </div>
 
-    <div class="tile" id="tHub" role="button" tabindex="0">
-      <div class="tL">
-        <div class="tT">ENTER HUB</div>
-        <div class="tS">Go straight to the primary hub (N/E/S/W).</div>
+    <div class="tile" id="tGauges" role="button" tabindex="0">
+      <div class="tl">
+        <h3>GAUGES</h3>
+        <p>Measurement surfaces and dashboards.</p>
+      </div>
+      <div class="chev">›</div>
+    </div>
+
+    <div class="tile" id="tLinks" role="button" tabindex="0">
+      <div class="tl">
+        <h3>LINKS</h3>
+        <p>External anchors and references.</p>
       </div>
       <div class="chev">›</div>
     </div>
   </div>
 
   <div class="footer">
-    Orientation before scale · Scale before claims
+    Structure is not optional.
     <div class="sig">COGRID.NET</div>
   </div>
 
@@ -182,10 +351,11 @@ a{color:inherit;text-decoration:none}
            "&depth="+encodeURIComponent(depth);
   }
 
-  document.getElementById("btnBack").href="/index.html"+q();
+  // top links
+  document.getElementById("btnReturn").href="/index.html"+q();
+  document.getElementById("btnEnter").href="/home/"+q();
 
   function go(path){ location.href=path+q(); }
-
   function bind(id, path){
     var el=document.getElementById(id);
     if(!el) return;
@@ -195,11 +365,14 @@ a{color:inherit;text-decoration:none}
     });
   }
 
-  bind("tValidation","/laws/");
+  bind("tHome","/home/");
+  bind("tExplore","/explore/");
   bind("tProducts","/products/");
-  bind("tInnovation","/explore/");
-  bind("tHub","/home/");
+  bind("tLaws","/laws/");
+  bind("tGauges","/gauges/");
+  bind("tLinks","/links/");
 })();
 </script>
+
 </body>
 </html>

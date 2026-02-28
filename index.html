@@ -1,21 +1,23 @@
 <!-- TNT — /index.html
-     INDEX · PRIMARY ROUTER (LAYER 1) · NO COMPETING UI · NO OVERLAP
-     GOAL:
-       - Stark, clean decision surface
-       - Two vertical diamonds only (STRUCTURE vs PRODUCTS)
-       - Top controls only (DOOR link left, language toggle right)
-       - No floating opal banner competing with diamonds
-       - No fixed footer competing with lower diamond
-       - ui.css owns field (no html/body background styling)
-       - Gold grid stays behind jewels (no overlay over diamonds)
-     ROUTES (LOCKED):
-       - STRUCTURE  → /home/
-       - PRODUCTS   → /explore/
+     INDEX · PRIMARY ROUTER (LAYER 1) · MATCH DOOR OPAL (NO COAL) · NO COMPETING UI
+
+     SURFACE RULE (LOCKED):
+       - Plain English only (no abstract/scientific terms on surface)
+       - Fine print only for structural/technical language
+       - Two lanes (two diamonds):
+           1) STRUCTURE  → /home/
+           2) PRODUCTS   → /explore/
+       - Top controls:
+           LEFT:  DOOR
+           RIGHT: EN / 中文 / ES
+       - COGRlD.NET signature: subtle, non-promotional
+
      STATE:
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
-     LANGUAGE:
-       - Page-level only (EN / 中文 / ES)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background
 -->
 
 <!doctype html>
@@ -23,7 +25,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Choose</title>
+<title>INDEX · Choose Path</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -32,52 +34,108 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* keep ui field overlays behind content */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:0}
-
-/* tokens */
 :root{
   --R:170px;
   --D:260px;
 
-  /* opal accents used ONLY inside diamonds */
+  /* Door-matched opal/violet */
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.14);
   --opalC:rgba(90,210,255,.10);
 
   --goldSoft:rgba(212,175,55,.42);
+
+  /* Deep base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
-/* top controls */
+/* Top controls */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 .top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* stage: only dominant element */
+/* Brand (opal glass) */
+.brand{
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  z-index:130;
+  text-align:center;
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
+    radial-gradient(circle at 20% 40%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--opalB), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.brand .k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin:0 0 6px 0;
+}
+.brand .t{
+  font-weight:950;
+  font-size:42px;
+  letter-spacing:1.2px;
+  margin:0;
+  line-height:1.02;
+}
+.brand .s{
+  opacity:.88;
+  font-size:13.5px;
+  margin:8px 0 0;
+  line-height:1.35;
+  max-width:min(860px,94vw);
+}
+
+/* subtle interior lattice (no field ownership) */
+.lattice{
+  position:fixed;inset:0;z-index:20;
+  pointer-events:none;
+  opacity:.08;
+  mix-blend-mode:screen;
+}
+.lattice::before{
+  content:"";
+  position:absolute;inset:-40%;
+  transform:rotate(45deg);
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px),
+    repeating-linear-gradient(90deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px);
+}
+.lattice::after{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), transparent 58%);
+}
+
+/* Stage */
 .stage{
   position:fixed;
   left:50%;
-  top:54%;
+  top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -85,7 +143,7 @@ body::before, body::after{z-index:0}
   pointer-events:none;
 }
 
-/* diamonds */
+/* Massive diamonds (opal/violet lacquer) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -98,10 +156,9 @@ body::before, body::after{z-index:0}
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  overflow:hidden;
 
   background:
-    radial-gradient(circle at 28% 22%, rgba(255,255,255,.45), transparent 52%),
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
     radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
     radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
     radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
@@ -115,6 +172,7 @@ body::before, body::after{z-index:0}
     inset 0 -50px 90px rgba(0,0,0,.78);
 
   transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  overflow:hidden;
 }
 .d::before{
   content:"";
@@ -145,11 +203,10 @@ body::before, body::after{z-index:0}
 }
 .d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-/* vertical positioning */
+/* Vertical layout */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
-/* inner labels */
 .inner{
   width:100%;
   height:100%;
@@ -164,39 +221,58 @@ body::before, body::after{z-index:0}
   pointer-events:none;
   user-select:none;
 }
-.big{
-  font-weight:950;
-  font-size:34px;
-  letter-spacing:2px;
-  margin:0;
-}
 .lab{
   font-weight:950;
   font-size:22px;
   letter-spacing:1px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
 }
 .sub{
   font-size:14px;
-  opacity:.88;
+  opacity:.90;
   line-height:1.35;
   max-width:24em;
 }
-.fine{
-  font-size:12px;
+
+/* Fine print */
+.footer{
+  position:fixed;
+  left:50%;
+  bottom:calc(18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(920px,94vw);
+  text-align:center;
+  font-size:12.5px;
   opacity:.70;
-  margin-top:10px;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  pointer-events:none;
 }
 
-/* mobile */
+/* COGRlD signature */
+.cogrid{
+  position:fixed;
+  left:50%;
+  bottom:calc(6px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;
+  font-size:11px;
+  letter-spacing:2px;
+  opacity:.55;
+  pointer-events:none;
+}
+
 @media (max-width:560px){
   :root{ --R:156px; --D:244px; }
-  .stage{top:56%}
-  .big{font-size:30px}
+  .brand .t{font-size:38px}
+  .stage{top:58%}
 }
 </style>
 </head>
 
 <body>
+
+<div class="lattice" aria-hidden="true"></div>
 
 <div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
@@ -208,29 +284,34 @@ body::before, body::after{z-index:0}
   <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
+<div class="brand" aria-hidden="true">
+  <p class="k" id="bk">CARDINAL AXIS</p>
+  <h1 class="t" id="bt">CHOOSE PATH</h1>
+  <p class="s" id="bs">Two ways in. Both lead to clarity.</p>
+</div>
+
 <div class="stage" aria-label="Primary router">
 
   <!-- STRUCTURE -->
   <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
     <div class="inner">
-      <div class="big" id="tMain">ENTER</div>
       <div class="lab" id="labStructure">STRUCTURE</div>
-      <div class="sub" id="subStructure">Definitions · boundaries · clear foundations</div>
-      <div class="fine" id="fine1">Fine print: no claims without scope.</div>
+      <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
     </div>
   </div>
 
   <!-- PRODUCTS -->
-  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products and innovation">
+  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products">
     <div class="inner">
-      <div class="big" style="opacity:0">ENTER</div>
       <div class="lab" id="labProducts">PRODUCTS</div>
-      <div class="sub" id="subProducts">Tools · platforms · what you can use</div>
-      <div class="fine" id="fine2">Fine print: tools inherit limits.</div>
+      <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
     </div>
   </div>
 
 </div>
+
+<div class="footer" id="foot">Fine print: structure prevents drift · tools inherit limits</div>
+<div class="cogrid">COGRlD.NET</div>
 
 <script>
 (function(){
@@ -267,13 +348,14 @@ body::before, body::after{z-index:0}
            "&depth="+encodeURIComponent(D);
   }
 
-  // wire DOOR link
+  // Wire DOOR link
   document.getElementById("btnDoor").href = "/door/" + q();
 
-  // language buttons
+  // Language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
+
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
@@ -289,49 +371,49 @@ body::before, body::after{z-index:0}
     document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
     paintLang();
     renderLang();
-    document.getElementById("btnDoor").href="/door/" + q();
+    document.getElementById("btnDoor").href="/door/"+q();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // i18n minimal (no abstract language on surface)
+  // Copy i18n (plain, human-first)
   function renderLang(){
     if(lang==="zh"){
-      document.getElementById("tMain").textContent="进入";
+      document.getElementById("bt").textContent="选择路径";
+      document.getElementById("bs").textContent="两条路。都通向清晰。";
       document.getElementById("labStructure").textContent="结构";
-      document.getElementById("subStructure").textContent="定义 · 边界 · 清晰基础";
-      document.getElementById("fine1").textContent="细则：无范围不主张。";
+      document.getElementById("subStructure").textContent="定义。边界。清晰基础。";
       document.getElementById("labProducts").textContent="产品";
-      document.getElementById("subProducts").textContent="工具 · 平台 · 可用内容";
-      document.getElementById("fine2").textContent="细则：工具继承限制。";
+      document.getElementById("subProducts").textContent="工具。平台。可用内容。";
       document.getElementById("btnDoor").textContent="门";
+      document.getElementById("foot").textContent="细则：结构防漂移 · 工具有边界";
     }else if(lang==="es"){
-      document.getElementById("tMain").textContent="ENTRAR";
+      document.getElementById("bt").textContent="ELEGIR RUTA";
+      document.getElementById("bs").textContent="Dos caminos. Ambos llevan a claridad.";
       document.getElementById("labStructure").textContent="ESTRUCTURA";
-      document.getElementById("subStructure").textContent="Definiciones · límites · base clara";
-      document.getElementById("fine1").textContent="Letra pequeña: sin alcance, sin afirmación.";
+      document.getElementById("subStructure").textContent="Definiciones. Límites. Base clara.";
       document.getElementById("labProducts").textContent="PRODUCTOS";
-      document.getElementById("subProducts").textContent="Herramientas · plataformas · usable";
-      document.getElementById("fine2").textContent="Letra pequeña: herramientas heredan límites.";
+      document.getElementById("subProducts").textContent="Herramientas. Plataformas. Usable.";
       document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("foot").textContent="Letra pequeña: la estructura evita deriva · las herramientas tienen límites";
     }else{
-      document.getElementById("tMain").textContent="ENTER";
+      document.getElementById("bt").textContent="CHOOSE PATH";
+      document.getElementById("bs").textContent="Two ways in. Both lead to clarity.";
       document.getElementById("labStructure").textContent="STRUCTURE";
-      document.getElementById("subStructure").textContent="Definitions · boundaries · clear foundations";
-      document.getElementById("fine1").textContent="Fine print: no claims without scope.";
+      document.getElementById("subStructure").textContent="Definitions. Boundaries. Clear foundations.";
       document.getElementById("labProducts").textContent="PRODUCTS";
-      document.getElementById("subProducts").textContent="Tools · platforms · what you can use";
-      document.getElementById("fine2").textContent="Fine print: tools inherit limits.";
+      document.getElementById("subProducts").textContent="Tools. Platforms. What you can use.";
       document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("foot").textContent="Fine print: structure prevents drift · tools inherit limits";
     }
   }
   renderLang();
 
-  // routing
-  function goStructure(){ location.href = "/home/" + q(); }
-  function goProducts(){ location.href = "/explore/" + q(); }
+  // Routing
+  function goStructure(){ location.href="/home/" + q(); }
+  function goProducts(){ location.href="/explore/" + q(); }
 
   var dS=document.getElementById("dStructure");
   var dP=document.getElementById("dProducts");

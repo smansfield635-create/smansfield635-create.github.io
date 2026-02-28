@@ -1,12 +1,12 @@
 <!-- TNT — /door/index.html
-     DOOR · HYBRID ORIENTATION CHAMBER
-     TONE:
-       - Clinical spine
-       - Cinematic restraint
-       - Institutional weight
-     ROUTES:
-       ENTER SITE     → /home/
-       VIEW SITE MAP  → /prelude/
+     DOOR · PEARLESCENT RESTORE · HIGH GLOSS GEM
+     LOCK:
+       - Jewel gloss restored
+       - Gold grid remains behind jewels
+       - Strong contrast header (opal glass)
+       - No red-on-red reading
+       - ENTER → /home/
+       - VIEW SITE MAP → /prelude/
 -->
 
 <!doctype html>
@@ -23,110 +23,73 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Ensure gold lattice remains behind */
+/* Ensure gold lattice stays behind content */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* === Structural Tokens === */
-:root{
-  --R:170px;
-  --D:260px;
-
-  /* Increased opal contrast */
-  --opalA:rgba(220,200,255,.32);
-  --opalB:rgba(140,90,255,.22);
-  --opalC:rgba(110,220,255,.16);
-
-  --goldSoft:rgba(212,175,55,.48);
-
-  --obsA:rgba(14,26,44,.98);
-  --obsB:rgba(6,10,18,.99);
-
-  --stroke:rgba(255,255,255,.16);
-}
-
-/* === Top Controls === */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;align-items:center;
-}
-
-/* === Headline Block === */
-.head{
-  position:fixed;
-  left:50%;
-  top:18px;
-  transform:translateX(-50%);
-  z-index:120;
-  width:min(920px,94vw);
-  text-align:center;
-
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  padding:18px 20px;
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 60%),
-    radial-gradient(circle at 15% 40%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 85% 60%, var(--opalB), transparent 75%),
-    linear-gradient(160deg, rgba(0,0,0,.42), rgba(0,0,0,.18));
-
-  backdrop-filter:blur(14px);
-  box-shadow:0 30px 90px rgba(0,0,0,.65);
-}
-
-.k{
-  margin:0 0 6px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-
-.t{
-  margin:0;
-  font-weight:950;
-  font-size:48px;
-  letter-spacing:2px;
-}
-
-.s{
-  margin:12px auto 0;
-  font-size:14px;
-  line-height:1.5;
-  color:rgba(255,255,255,.90);
-  max-width:800px;
-}
-
-.s strong{font-weight:950}
-.s em{font-style:italic;opacity:.95}
-
-/* === Density Lines (North) === */
-.definition{
-  margin-top:14px;
-  font-size:13px;
-  line-height:1.6;
-  color:rgba(255,255,255,.82);
-  opacity:.9;
-}
-
-/* === Stage === */
+/* Layout */
 .stage{
   position:fixed;
+  top:55%;
   left:50%;
-  top:60%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
-  z-index:60;
+  z-index:50;
   pointer-events:none;
 }
 
-/* === Jewel Diamonds === */
+:root{
+  --D:270px;
+  --R:180px;
+
+  --opal1:rgba(255,255,255,.35);
+  --opal2:rgba(210,190,255,.35);
+  --opal3:rgba(120,70,255,.25);
+  --opal4:rgba(90,210,255,.18);
+
+  --goldGlow:rgba(212,175,55,.45);
+}
+
+/* Header glass */
+.header{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(920px,94vw);
+  padding:26px 28px;
+  border-radius:30px;
+
+  border:1px solid rgba(255,255,255,.25);
+
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.25), transparent 60%),
+    radial-gradient(circle at 25% 40%, var(--opal2), transparent 75%),
+    radial-gradient(circle at 75% 60%, var(--opal3), transparent 75%),
+    linear-gradient(160deg, rgba(0,0,0,.75), rgba(0,0,0,.45));
+
+  backdrop-filter:blur(24px);
+  box-shadow:0 90px 240px rgba(0,0,0,.95);
+
+  text-align:center;
+  z-index:100;
+}
+
+.header h1{
+  margin:0;
+  font-size:46px;
+  letter-spacing:1.5px;
+}
+
+.header p{
+  margin-top:12px;
+  font-size:16px;
+  line-height:1.6;
+  color:rgba(255,255,255,.95);
+}
+
+/* Diamonds */
 .d{
   width:var(--D);
   height:var(--D);
@@ -134,42 +97,40 @@ body::before, body::after{z-index:0}
   left:50%;
   top:50%;
   transform-origin:center;
-  border-radius:34px;
+  border-radius:40px;
   cursor:pointer;
   pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
   overflow:hidden;
 
   background:
-    radial-gradient(circle at 25% 22%, rgba(255,255,255,.55), transparent 50%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 58%),
-    radial-gradient(circle at 60% 78%, var(--opalB), transparent 65%),
-    radial-gradient(circle at 30% 70%, var(--opalC), transparent 68%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
+    radial-gradient(circle at 20% 20%, var(--opal1), transparent 55%),
+    radial-gradient(circle at 70% 25%, var(--opal2), transparent 60%),
+    radial-gradient(circle at 65% 80%, var(--opal3), transparent 65%),
+    radial-gradient(circle at 30% 70%, var(--opal4), transparent 70%),
+    linear-gradient(155deg, rgba(12,22,38,.95), rgba(6,10,16,.98));
 
-  border:1px solid rgba(255,255,255,.20);
+  border:1px solid rgba(255,255,255,.28);
 
   box-shadow:
     0 60px 180px rgba(0,0,0,.95),
-    0 0 60px rgba(212,175,55,.25),
-    inset 0 2px 0 rgba(255,255,255,.25),
+    0 0 40px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.45),
     inset 0 -60px 120px rgba(0,0,0,.85);
 
-  transition:transform .18s ease, box-shadow .18s ease;
+  transition:.2s ease;
 }
 
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
   box-shadow:
-    0 60px 200px rgba(0,0,0,.95),
-    0 0 80px rgba(212,175,55,.35),
-    inset 0 2px 0 rgba(255,255,255,.30),
+    0 80px 220px rgba(0,0,0,.98),
+    0 0 70px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.55),
     inset 0 -60px 120px rgba(0,0,0,.85);
 }
 
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) * 1)) rotate(45deg)}
 
 .inner{
   width:100%;
@@ -181,7 +142,6 @@ body::before, body::after{z-index:0}
   justify-content:center;
   text-align:center;
   padding:20px;
-  gap:12px;
 }
 
 .lab{
@@ -191,80 +151,57 @@ body::before, body::after{z-index:0}
 }
 
 .sub{
-  font-size:14px;
-  opacity:.95;
-  line-height:1.4;
-  max-width:22em;
+  margin-top:12px;
+  font-size:15px;
+  line-height:1.6;
+  color:rgba(255,255,255,.96);
 }
 
 .pref{
-  font-weight:950;
+  font-weight:900;
   font-style:italic;
 }
 
-/* === Weight Line (South) === */
+/* Footer */
 .footer{
   position:fixed;
+  bottom:24px;
   left:50%;
-  bottom:calc(24px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;
   text-align:center;
-  font-size:13px;
-  letter-spacing:.5px;
+  font-size:14px;
   opacity:.85;
+  z-index:80;
 }
 
 .sig{
-  position:fixed;
-  left:50%;
-  bottom:6px;
-  transform:translateX(-50%);
+  margin-top:6px;
   font-size:11px;
-  letter-spacing:3px;
-  opacity:.5;
-}
-
-@media (max-width:560px){
-  :root{--R:150px;--D:240px}
-  .t{font-size:40px}
+  letter-spacing:2px;
+  opacity:.6;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnExit" href="/">EXIT</a>
-  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-  <button class="btn" id="btnES">ES</button>
-</div>
-
-<div class="head">
-  <p class="k">CARDINAL AXIS</p>
-  <h1 class="t">ENTER</h1>
-  <p class="s">
-    <strong>This is a structural site.</strong><br>
-    It does not sell belief.<br>
-    It measures coherence.
-  </p>
+<div class="header">
+  <h1>ENTER</h1>
+  <p>This is a structural site.<br>
+     It does not sell belief.<br>
+     It measures coherence.</p>
 </div>
 
 <div class="stage">
 
-  <div class="d d-top" id="dEnter">
+  <div class="d d-top" onclick="location.href='/home/'">
     <div class="inner">
       <div class="lab">ENTER SITE</div>
       <div class="sub"><span class="pref">Direct:</span> Move forward into systems.</div>
     </div>
   </div>
 
-  <div class="d d-bottom" id="dMap">
+  <div class="d d-bottom" onclick="location.href='/prelude/'">
     <div class="inner">
       <div class="lab">VIEW SITE MAP</div>
       <div class="sub"><span class="pref">First:</span> See the structure before movement.</div>
@@ -275,21 +212,8 @@ body::before, body::after{z-index:0}
 
 <div class="footer">
   Scale without structure collapses.
+  <div class="sig">COGRID.NET</div>
 </div>
-
-<div class="sig">
-  COGRID.NET
-</div>
-
-<script>
-(function(){
-  function goEnter(){ location.href="/home/"; }
-  function goMap(){ location.href="/prelude/"; }
-
-  document.getElementById("dEnter").onclick=goEnter;
-  document.getElementById("dMap").onclick=goMap;
-})();
-</script>
 
 </body>
 </html>

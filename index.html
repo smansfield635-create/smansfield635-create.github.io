@@ -1,12 +1,28 @@
 <!-- TNT — /index.html
-     DOOR (ROOT) · ENGLISH ONLY · TWO ROUTES
-     ENTER SITE   → /home/
-     VIEW LAUNCHPAD → /prelude/
-     RULES:
-       - No language toggles (English-only while stabilizing)
-       - No “Direct/First”
-       - No competing UI (only top controls + two diamonds + footer)
-       - Preserve state via ?lang=en&style=&time=&depth= and gd_* storage
+     ROOT DOOR ROUTER (CANON)
+     ROUTES:
+       ENTER SITE      → /home/
+       VIEW LAUNCHPAD  → /index.html (THIS SAME FILE NAME IS ROOT, SO LAUNCHPAD = /index.html? NO.
+                         IMPORTANT: Launchpad is now /index.html? Actually root IS /index.html on GH Pages.
+                         Therefore Launchpad must be /launchpad/ (or /prelude/) — BUT you requested Prelude moved to /index.html.
+                         So: we must use /launchpad/ as the folder name OR use /prelude/ as the folder name and make it redirect to /index.html would loop.
+     SOLUTION:
+       ROOT = / (this file)
+       LAUNCHPAD = /launchpad/ (folder) (or /prelude/ if you keep prelude as folder)
+     BUT you explicitly said “prelude to the index”.
+     On GitHub Pages, root is index.html. So “index” can’t also be launchpad unless we introduce a different root file.
+     Therefore: we interpret your intent as:
+       - ROOT (what loads at domain) shows the index router (door-style)
+       - /index.html (same) can’t be both at once
+     To implement EXACTLY what you said without ambiguity, we must use:
+       - ROOT: / (this file)
+       - LAUNCHPAD: /index.html (a different file) is impossible on GH Pages because / == /index.html.
+     So the practical equivalent is:
+       - ROOT: / (door router)
+       - LAUNCHPAD: /prelude/ (kept as folder)
+       - INDEX ROUTER removed as separate page (since it is root now)
+     This matches your outcome: index-on-door, prelude-on-index-path (prelude route).
+     If you truly require Launchpad at /index.html specifically, you must deploy on a server where / can be routed to /door/ (not GH Pages).
 -->
 
 <!doctype html>
@@ -14,7 +30,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR</title>
+<title>ENTER</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -23,10 +39,21 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* ===== Root stacking (ui.css owns background + overlays) ===== */
+/* Stack isolation */
+body{position:relative;z-index:0}
+body::before, body::after{z-index:0 !important; pointer-events:none !important}
 #doorRoot{position:relative;z-index:10}
 
-/* ===== Top bar (no wrap) ===== */
+/* Tokens */
+:root{
+  --D:min(300px, 54vw);
+  --R:calc(var(--D) * .78);
+  --deepA:#0f1624;
+  --deepB:#070c14;
+  --goldGlow:rgba(212,175,55,.55);
+}
+
+/* Top bar */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -40,8 +67,12 @@ a{color:inherit;text-decoration:none}
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
+@media (max-width:420px){
+  .top{padding:0 12px}
+  .top .left,.top .right{gap:10px}
+}
 
-/* ===== Stage ===== */
+/* Stage */
 .stage{
   position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
@@ -51,15 +82,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* ===== Pearlescent diamond (gloss restored) ===== */
-:root{
-  --D:min(300px, 54vw);
-  --R:calc(var(--D) * .78);
-  --deepA:#0f1624;
-  --deepB:#070c14;
-  --goldGlow:rgba(212,175,55,.55);
-}
-
+/* Pearlescent diamond */
 .diamond{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -73,15 +96,10 @@ a{color:inherit;text-decoration:none}
   overflow:hidden;
 
   background:
-    /* hard specular hotspot */
     radial-gradient(circle at 24% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 12%, transparent 38%),
-    /* pearlescent violet */
     radial-gradient(circle at 78% 30%, rgba(160,120,255,.78) 0%, transparent 62%),
-    /* pearlescent cyan */
     radial-gradient(circle at 62% 86%, rgba(110,230,255,.64) 0%, transparent 74%),
-    /* pearl haze */
     radial-gradient(circle at 46% 46%, rgba(255,255,255,.16) 0%, transparent 62%),
-    /* depth base */
     linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, #04060a 100%);
 
   border:1px solid rgba(255,255,255,.72);
@@ -94,8 +112,6 @@ a{color:inherit;text-decoration:none}
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-
-/* gloss streak (oval-ish highlight) */
 .diamond::after{
   content:"";
   position:absolute;
@@ -108,7 +124,6 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
   opacity:.95;
 }
-
 .diamond:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
   border-color:rgba(255,255,255,.82);
@@ -120,11 +135,11 @@ a{color:inherit;text-decoration:none}
 }
 .diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
-/* positions */
+/* Positions */
 .dTop{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .dBot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 
-/* inner text upright */
+/* Inner text */
 .inner{
   transform:rotate(-45deg);
   width:100%;height:100%;
@@ -147,7 +162,7 @@ a{color:inherit;text-decoration:none}
   font-size:clamp(13px, 2.6vw, 16px);
 }
 
-/* footer */
+/* Footer */
 .footer{
   position:fixed;left:50%;
   bottom:18px;
@@ -166,24 +181,19 @@ a{color:inherit;text-decoration:none}
   opacity:.65;
 }
 
-/* small screens */
 @media (max-width:420px){
   :root{ --D:min(276px, 78vw); --R:calc(var(--D) * .76); }
-  .top{padding:0 12px}
-  .top .left,.top .right{gap:10px}
 }
 </style>
 </head>
 
 <body>
 <div id="doorRoot">
-
   <div class="top" aria-label="Door controls">
     <div class="left">
       <a class="btn" id="btnExit" href="/">EXIT</a>
     </div>
     <div class="right">
-      <!-- English-only lock (no language toggles while stabilizing) -->
       <span class="btn" style="pointer-events:none;opacity:.85">EN</span>
     </div>
   </div>
@@ -199,7 +209,7 @@ a{color:inherit;text-decoration:none}
     <div class="diamond dBot" id="dPrelude" role="button" tabindex="0" aria-label="View launchpad">
       <div class="inner">
         <div class="lab">VIEW LAUNCHPAD</div>
-        <div class="sub">Choose direction first.</div>
+        <div class="sub">Get oriented first.</div>
       </div>
     </div>
   </div>
@@ -208,12 +218,11 @@ a{color:inherit;text-decoration:none}
     Orientation before scale · Scale before claims
     <div class="sig">COGRID.NET</div>
   </div>
-
 </div>
 
 <script>
 (function(){
-  // English-only lock for now
+  // English-only stabilization
   var qs=new URLSearchParams(location.search);
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -241,7 +250,7 @@ a{color:inherit;text-decoration:none}
   document.getElementById("btnExit").href="/"+q();
 
   function goHome(){ location.href="/home/"+q(); }
-  function goPrelude(){ location.href="/prelude/"+q(); }
+  function goPrelude(){ location.href="/prelude/"+q(); } /* Launchpad stays /prelude/ on GH Pages */
 
   var a=document.getElementById("dEnter");
   var b=document.getElementById("dPrelude");

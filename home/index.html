@@ -1,9 +1,18 @@
+<!-- TNT — /home/index.html
+     HUB A · HIGH-DENSITY · TRUE LENS SPLIT · CONTRAST FIX
+     ROLE:
+       - Recursive Compass (N/E/S/W)
+       - Terminal System (Appendix/Glossary/About/Links)
+       - Formal vs Informal lens ACTUALLY changes content
+       - Opal contrast panels (no red-on-red)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HOME · Structure</title>
+<title>HUB A</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -11,302 +20,273 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+:root{--dockH:90px}
 
-/* Keep gold grid behind */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:0}
-
-/* Layout */
+/* PAGE WRAP */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:110px 0 140px;
+  padding:120px 0 calc(var(--dockH) + 40px);
   position:relative;
   z-index:5;
 }
 
-/* Header panel */
+/* HEADER */
 .header{
-  border-radius:22px;
-  padding:28px;
-  text-align:center;
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1000px,94vw);
+  padding:24px 28px;
+  border-radius:28px;
+
+  border:1px solid rgba(255,255,255,.18);
 
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(40,28,70,.6), rgba(18,12,30,.45));
+    radial-gradient(circle at 20% 40%, rgba(210,190,255,.28), transparent 75%),
+    radial-gradient(circle at 80% 60%, rgba(120,70,255,.22), transparent 75%),
+    linear-gradient(160deg, rgba(0,0,0,.65), rgba(0,0,0,.35));
 
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,.28);
-
-  box-shadow:
-    0 40px 140px rgba(0,0,0,.75),
-    inset 0 3px 16px rgba(255,255,255,.35);
+  backdrop-filter:blur(18px);
+  box-shadow:0 70px 200px rgba(0,0,0,.85);
+  z-index:100;
 }
 
-.k{
-  font-size:11px;
-  letter-spacing:4px;
-  opacity:.75;
-  margin-bottom:8px;
-}
-
-.t{
-  font-size:34px;
-  font-weight:950;
-  margin:0 0 10px;
-}
-
-.s{
-  font-size:15px;
-  opacity:.92;
+.header h1{
   margin:0;
-  line-height:1.5;
+  font-size:30px;
+  letter-spacing:1.2px;
 }
 
-/* Lens toggle */
-.lens{
-  margin:30px 0 40px;
+.header p{
+  margin-top:12px;
+  font-size:15px;
+  line-height:1.6;
+  color:rgba(255,255,255,.92);
+}
+
+/* LANGUAGE */
+.lang{
+  position:fixed;
+  top:20px;
+  right:20px;
   display:flex;
-  gap:14px;
-  justify-content:center;
+  gap:10px;
+  z-index:120;
 }
 
-.lens .btn{
-  padding:10px 16px;
-  border-radius:999px;
+/* BANDS */
+.band{
+  margin-top:40px;
+  font-weight:900;
+  font-size:15px;
+  letter-spacing:1px;
+  opacity:.9;
 }
 
-/* Core grid */
-.grid{
+/* GRID */
+.row4{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:26px;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-top:16px;
+}
+@media(max-width:980px){
+  .row4{grid-template-columns:repeat(2,1fr);}
 }
 
-@media (max-width:900px){
-  .grid{grid-template-columns:1fr;}
-}
-
-.card{
-  border-radius:22px;
-  padding:26px;
+/* PLATE */
+.plate{
+  border-radius:26px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.18);
 
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.22), transparent 45%),
-    linear-gradient(160deg, #202836 0%, #10151d 75%);
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(0,0,0,.75), rgba(0,0,0,.45));
 
-  border:1px solid rgba(255,255,255,.3);
+  backdrop-filter:blur(14px);
+  box-shadow:0 40px 120px rgba(0,0,0,.85);
 
-  box-shadow:
-    0 40px 130px rgba(0,0,0,.8),
-    inset 0 4px 18px rgba(255,255,255,.35);
-
-  transition:transform .15s ease, box-shadow .2s ease;
+  cursor:pointer;
+  transition:.2s ease;
 }
 
-.card:hover{
+.plate:hover{
   transform:translateY(-4px);
-  box-shadow:
-    0 60px 170px rgba(0,0,0,.95),
-    inset 0 4px 20px rgba(255,255,255,.45);
+  box-shadow:0 60px 160px rgba(0,0,0,.95);
 }
 
-.card h2{
-  margin:0 0 12px;
-  font-size:22px;
-  font-weight:950;
+.plate h3{
+  margin:0;
+  font-size:16px;
+  letter-spacing:.8px;
 }
 
-.card p{
-  margin:0 0 10px;
-  font-size:15px;
-  line-height:1.55;
-  opacity:.95;
-}
-
-/* Binding line */
-.bind{
-  margin-top:14px;
+.plate p{
+  margin-top:12px;
   font-size:14px;
-  opacity:.8;
-  border-top:1px solid rgba(255,255,255,.25);
-  padding-top:12px;
+  line-height:1.7;
+  color:rgba(255,255,255,.95);
 }
 
-/* Bottom nav */
-.actions{
+/* FOCUS PANEL */
+.focus{
+  margin-top:40px;
+  border-radius:28px;
+  padding:30px;
+  border:1px solid rgba(255,255,255,.22);
+
+  background:
+    radial-gradient(circle at 20% 20%, rgba(210,190,255,.30), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.80), rgba(0,0,0,.55));
+
+  backdrop-filter:blur(20px);
+  box-shadow:0 80px 220px rgba(0,0,0,.95);
+
+  display:none;
+}
+
+.focus.show{display:block;}
+
+.focus h2{
+  margin:0;
+  font-size:22px;
+}
+
+.focus .block{
+  margin-top:18px;
+  font-size:15px;
+  line-height:1.8;
+  color:rgba(255,255,255,.97);
+}
+
+/* LENS TOGGLE */
+.lens{
+  margin-top:16px;
+  display:flex;
+  gap:10px;
+}
+
+/* DOCK */
+.dock{
   position:fixed;
+  bottom:20px;
   left:50%;
-  bottom:26px;
   transform:translateX(-50%);
   display:flex;
-  gap:18px;
-}
-
-.sig{
-  position:fixed;
-  left:50%;
-  bottom:6px;
-  transform:translateX(-50%);
-  font-size:11px;
-  letter-spacing:2px;
-  opacity:.5;
+  gap:10px;
+  z-index:150;
 }
 </style>
 </head>
 
 <body>
 
+<div class="lang">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
+</div>
+
+<div class="header">
+  <h1>HUB A</h1>
+  <p>Structure determines scale.  
+  Scale determines consequence.  
+  This page governs both.</p>
+</div>
+
 <div class="page">
 
-  <div class="header">
-    <div class="k">CARDINAL AXIS</div>
-    <div class="t">STRUCTURE FIRST</div>
-    <div class="s">
-      Everything here begins with definition, limits, and containment.
+  <div class="band">COMPASS</div>
+  <div class="row4">
+    <div class="plate" onclick="openFocus('N')">
+      <h3>DEFINITIONS</h3>
+      <p>Locks meaning. Prevents drift.</p>
+    </div>
+    <div class="plate" onclick="openFocus('E')">
+      <h3>PRODUCTS</h3>
+      <p>Deployable surfaces built on constraint.</p>
+    </div>
+    <div class="plate" onclick="openFocus('S')">
+      <h3>CONSTRAINTS</h3>
+      <p>Phase gates. Admissibility. Discipline.</p>
+    </div>
+    <div class="plate" onclick="openFocus('W')">
+      <h3>CONTAINMENT</h3>
+      <p>Failure isolation. Rollback control.</p>
     </div>
   </div>
 
-  <div class="lens">
-    <button class="btn" id="informalBtn">INFORMAL</button>
-    <button class="btn" id="formalBtn">FORMAL</button>
-    <button class="btn" id="bothBtn">BOTH</button>
+  <div class="band">SYSTEM</div>
+  <div class="row4">
+    <div class="plate" onclick="openFocus('APP')">
+      <h3>APPENDIX</h3>
+      <p>Packets and structured references.</p>
+    </div>
+    <div class="plate" onclick="openFocus('GLO')">
+      <h3>GLOSSARY</h3>
+      <p>Canonical language registry.</p>
+    </div>
+    <div class="plate" onclick="openFocus('ABOUT')">
+      <h3>ABOUT</h3>
+      <p>Scope and declared limits.</p>
+    </div>
+    <div class="plate" onclick="openFocus('LINKS')">
+      <h3>LINKS</h3>
+      <p>External anchors and verification.</p>
+    </div>
   </div>
 
-  <div class="grid">
+  <div class="focus" id="focusPanel">
+    <h2 id="focusTitle">—</h2>
 
-    <div class="card">
-      <h2>DEFINITIONS</h2>
-      <p id="def1"></p>
-      <p id="def2"></p>
-      <div class="bind">Binds to: Laws + Diagnostic Platform</div>
+    <div class="lens">
+      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
+      <button class="btn" onclick="setLens('formal')">FORMAL</button>
     </div>
 
-    <div class="card">
-      <h2>CONSTRAINTS</h2>
-      <p id="con1"></p>
-      <p id="con2"></p>
-      <div class="bind">Binds to: Adoption Ladder + Phase Gating</div>
-    </div>
-
-    <div class="card">
-      <h2>CONTAINMENT</h2>
-      <p id="cont1"></p>
-      <p id="cont2"></p>
-      <div class="bind">Binds to: Enforcement + Collapse Prevention</div>
-    </div>
-
-    <div class="card">
-      <h2>EXECUTION</h2>
-      <p id="exec1"></p>
-      <p id="exec2"></p>
-      <div class="bind">Binds to: Product Surfaces</div>
-    </div>
-
+    <div class="block" id="focusContent"></div>
   </div>
 
 </div>
-
-<div class="actions">
-  <a class="btn" href="/index/">INDEX</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-</div>
-
-<div class="sig">COGRID.NET</div>
 
 <script>
-(function(){
+let currentLens = "formal";
 
-  const informal = {
-    def:[
-      "Lock the meaning before you scale.",
-      "If words drift, everything collapses."
-    ],
-    con:[
-      "Set hard limits before expansion.",
-      "Scale without gates creates instability."
-    ],
-    cont:[
-      "Keep failure local.",
-      "Stop small breaks from becoming system-wide damage."
-    ],
-    exec:[
-      "Build tools inside boundaries.",
-      "Adoption must respect constraint."
-    ]
-  };
+function setLens(mode){
+  currentLens = mode;
+  if(activeNode) openFocus(activeNode);
+}
 
-  const formal = {
-    def:[
-      "Scope precedes authority.",
-      "Semantic stability determines admissibility."
-    ],
-    con:[
-      "Constraint defines scalability.",
-      "Unbounded expansion accelerates systemic drift."
-    ],
-    cont:[
-      "Containment preserves coherence under load.",
-      "Rollback discipline prevents cascade failure."
-    ],
-    exec:[
-      "Execution inherits boundary conditions.",
-      "Deployment surfaces remain within defined scope."
-    ]
-  };
+let activeNode = null;
 
-  function render(mode){
-    let d1,d2,c1,c2,t1,t2,e1,e2;
+function openFocus(node){
+  activeNode = node;
+  const panel = document.getElementById("focusPanel");
+  const title = document.getElementById("focusTitle");
+  const content = document.getElementById("focusContent");
 
-    if(mode==="informal"){
-      d1=informal.def[0]; d2=informal.def[1];
-      c1=informal.con[0]; c2=informal.con[1];
-      t1=informal.cont[0]; t2=informal.cont[1];
-      e1=informal.exec[0]; e2=informal.exec[1];
-    }
-    else if(mode==="formal"){
-      d1=formal.def[0]; d2=formal.def[1];
-      c1=formal.con[0]; c2=formal.con[1];
-      t1=formal.cont[0]; t2=formal.cont[1];
-      e1=formal.exec[0]; e2=formal.exec[1];
-    }
-    else{
-      d1=informal.def[0]+" "+formal.def[0];
-      d2=informal.def[1]+" "+formal.def[1];
-      c1=informal.con[0]+" "+formal.con[0];
-      c2=informal.con[1]+" "+formal.con[1];
-      t1=informal.cont[0]+" "+formal.cont[0];
-      t2=informal.cont[1]+" "+formal.cont[1];
-      e1=informal.exec[0]+" "+formal.exec[0];
-      e2=informal.exec[1]+" "+formal.exec[1];
-    }
+  title.innerText = node;
 
-    def1.textContent=d1;
-    def2.textContent=d2;
-    con1.textContent=c1;
-    con2.textContent=c2;
-    cont1.textContent=t1;
-    cont2.textContent=t2;
-    exec1.textContent=e1;
-    exec2.textContent=e2;
+  if(currentLens === "formal"){
+    content.innerText =
+      "Formal Mode:\n\n" +
+      "Aspect → Defines invariant boundary.\n" +
+      "Process → Enforces admissibility under declared scope.\n" +
+      "Resolution → Stabilizes scale without drift.";
+  } else {
+    content.innerText =
+      "Informal Mode:\n\n" +
+      "Lock meaning first.\n" +
+      "Don’t scale beyond proof.\n" +
+      "Keep failure small.";
   }
 
-  const def1=document.getElementById("def1");
-  const def2=document.getElementById("def2");
-  const con1=document.getElementById("con1");
-  const con2=document.getElementById("con2");
-  const cont1=document.getElementById("cont1");
-  const cont2=document.getElementById("cont2");
-  const exec1=document.getElementById("exec1");
-  const exec2=document.getElementById("exec2");
-
-  render("both");
-
-  document.getElementById("informalBtn").onclick=()=>render("informal");
-  document.getElementById("formalBtn").onclick=()=>render("formal");
-  document.getElementById("bothBtn").onclick=()=>render("both");
-
-})();
+  panel.classList.add("show");
+}
 </script>
 
 </body>

@@ -1,9 +1,25 @@
+<!-- TNT — /index.html
+     INDEX · PRIMARY ROUTER (DENSITY UPGRADE)
+     ROLE:
+       - First structural fork after Door
+       - Two lanes only:
+           STRUCTURE
+           PRODUCTS
+       - Stark minimalist
+       - High contrast (no red-on-red)
+       - Gem lacquer preserved
+       - Increased density + clarity
+     ROUTES:
+           STRUCTURE → /home/
+           PRODUCTS  → /explore/
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Choose Path</title>
+<title>CHOOSE PATH</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -12,229 +28,237 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Keep gold grid behind everything */
+/* Keep gold lattice behind */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* Layout */
-.page{
-  width:min(1000px,94vw);
-  margin:0 auto;
-  padding:100px 0 120px;
-  position:relative;
-  z-index:5;
+:root{
+  --R:170px;
+  --D:260px;
+
+  --opalA:rgba(220,200,255,.30);
+  --opalB:rgba(140,90,255,.22);
+  --opalC:rgba(110,220,255,.18);
+
+  --goldSoft:rgba(212,175,55,.48);
+
+  --obsA:rgba(14,26,44,.98);
+  --obsB:rgba(6,10,18,.99);
+
+  --stroke:rgba(255,255,255,.16);
 }
 
-/* Header */
-.header{
-  border-radius:22px;
-  padding:24px;
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;align-items:center;
+}
+
+/* Head block */
+.head{
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  z-index:120;
+  width:min(920px,94vw);
   text-align:center;
+
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:20px 22px;
 
   background:
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(35,25,55,.55), rgba(15,10,25,.35));
+    radial-gradient(circle at 15% 40%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 85% 60%, var(--opalB), transparent 75%),
+    linear-gradient(160deg, rgba(0,0,0,.48), rgba(0,0,0,.22));
 
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.22);
-
-  box-shadow:
-    0 30px 100px rgba(0,0,0,.65),
-    inset 0 2px 8px rgba(255,255,255,.3);
+  backdrop-filter:blur(16px);
+  box-shadow:0 40px 120px rgba(0,0,0,.75);
 }
 
 .k{
+  margin:0 0 8px;
   font-size:11px;
   letter-spacing:4px;
+  text-transform:uppercase;
   opacity:.75;
-  margin-bottom:6px;
 }
 
 .t{
-  font-size:38px;
+  margin:0;
   font-weight:950;
-  margin:0 0 8px;
+  font-size:46px;
+  letter-spacing:2px;
 }
 
 .s{
-  font-size:15px;
-  opacity:.9;
-  margin:0;
+  margin:14px auto 0;
+  font-size:14px;
+  line-height:1.6;
+  max-width:760px;
+  color:rgba(255,255,255,.92);
 }
 
-/* Path cards */
-.paths{
-  margin-top:40px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
+.s strong{font-weight:950}
+.s em{font-style:italic}
+
+/* Stage */
+.stage{
+  position:fixed;
+  left:50%;
+  top:62%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  pointer-events:none;
 }
 
-@media (max-width:800px){
-  .paths{grid-template-columns:1fr;}
-}
-
-.card{
-  border-radius:22px;
-  padding:28px;
+/* Diamonds */
+.d{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:34px;
   cursor:pointer;
-  transition:transform .15s ease, box-shadow .2s ease;
+  pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.2), transparent 45%),
-    linear-gradient(160deg, #1d2533 0%, #0d121a 70%);
+    radial-gradient(circle at 25% 22%, rgba(255,255,255,.55), transparent 50%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 58%),
+    radial-gradient(circle at 60% 78%, var(--opalB), transparent 65%),
+    radial-gradient(circle at 30% 70%, var(--opalC), transparent 70%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.20);
 
   box-shadow:
-    0 40px 120px rgba(0,0,0,.75),
-    inset 0 3px 12px rgba(255,255,255,.35);
+    0 60px 200px rgba(0,0,0,.95),
+    0 0 70px rgba(212,175,55,.30),
+    inset 0 2px 0 rgba(255,255,255,.30),
+    inset 0 -60px 120px rgba(0,0,0,.90);
+
+  transition:transform .18s ease, box-shadow .18s ease;
 }
 
-.card:hover{
-  transform:translateY(-4px);
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
   box-shadow:
-    0 60px 160px rgba(0,0,0,.9),
-    inset 0 3px 12px rgba(255,255,255,.4);
+    0 70px 240px rgba(0,0,0,.95),
+    0 0 90px rgba(212,175,55,.35),
+    inset 0 2px 0 rgba(255,255,255,.35),
+    inset 0 -60px 120px rgba(0,0,0,.90);
 }
 
-.card h2{
-  margin:0 0 10px;
-  font-size:22px;
-  font-weight:950;
-}
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
-.card p{
-  margin:0;
-  font-size:15px;
-  opacity:.92;
-  line-height:1.5;
-}
-
-/* Lens toggle */
-.lens{
-  margin-top:28px;
+.inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
   display:flex;
-  gap:12px;
+  flex-direction:column;
+  align-items:center;
   justify-content:center;
+  text-align:center;
+  padding:24px;
+  gap:14px;
 }
 
-.lens .btn{
-  padding:10px 14px;
-  border-radius:999px;
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:1px;
 }
 
-/* Bottom nav */
-.actions{
+.sub{
+  font-size:14px;
+  line-height:1.5;
+  opacity:.95;
+  max-width:24em;
+}
+
+/* Density footer */
+.footer{
   position:fixed;
   left:50%;
-  bottom:24px;
+  bottom:calc(28px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  display:flex;
-  gap:16px;
+  font-size:13px;
+  letter-spacing:.5px;
+  opacity:.85;
 }
 
-.sig{
-  position:fixed;
-  left:50%;
-  bottom:6px;
-  transform:translateX(-50%);
-  font-size:11px;
-  letter-spacing:2px;
-  opacity:.5;
+@media (max-width:560px){
+  :root{--R:150px;--D:240px}
+  .t{font-size:38px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
-
-  <div class="header">
-    <div class="k">CARDINAL AXIS</div>
-    <div class="t">CHOOSE YOUR PATH</div>
-    <div class="s">Two ways in. Both are structured.</div>
-  </div>
-
-  <div class="lens">
-    <button class="btn" id="informalBtn">INFORMAL</button>
-    <button class="btn" id="formalBtn">FORMAL</button>
-    <button class="btn" id="bothBtn">BOTH</button>
-  </div>
-
-  <div class="paths">
-
-    <div class="card" id="structureCard">
-      <h2 id="structureTitle">STRUCTURE</h2>
-      <p id="structureText">Definitions. Boundaries. How the system holds together.</p>
-    </div>
-
-    <div class="card" id="productCard">
-      <h2 id="productTitle">PRODUCTS</h2>
-      <p id="productText">Tools. Platforms. What you can use.</p>
-    </div>
-
-  </div>
-
-</div>
-
-<div class="actions">
+<div class="top-left">
   <a class="btn" href="/door/">DOOR</a>
-  <a class="btn" href="/prelude/">PRELUDE</a>
 </div>
 
-<div class="sig">COGRID.NET</div>
+<div class="top-right">
+  <button class="btn">EN</button>
+  <button class="btn">中文</button>
+  <button class="btn">ES</button>
+</div>
 
-<script>
-(function(){
+<div class="head">
+  <p class="k">PRIMARY ROUTER</p>
+  <h1 class="t">CHOOSE PATH</h1>
+  <p class="s">
+    <strong>Every system requires definition.</strong><br>
+    Every tool requires constraint.<br>
+    Choose whether you want to understand structure —<br>
+    or use what structure produces.
+  </p>
+</div>
 
-  const structureCard=document.getElementById("structureCard");
-  const productCard=document.getElementById("productCard");
+<div class="stage">
 
-  structureCard.onclick=function(){
-    location.href="/home/";
-  };
+  <div class="d d-top" onclick="location.href='/home/'">
+    <div class="inner">
+      <div class="lab">STRUCTURE</div>
+      <div class="sub">
+        Definitions.<br>
+        Boundaries.<br>
+        Stability before scale.
+      </div>
+    </div>
+  </div>
 
-  productCard.onclick=function(){
-    location.href="/products/";
-  };
+  <div class="d d-bottom" onclick="location.href='/explore/'">
+    <div class="inner">
+      <div class="lab">PRODUCTS</div>
+      <div class="sub">
+        Tools.<br>
+        Platforms.<br>
+        Usable surfaces.
+      </div>
+    </div>
+  </div>
 
-  const informalText={
-    structure:"Start by locking meaning. Then define limits. Then scale.",
-    product:"Use tools that respect boundaries. Nothing scales without structure."
-  };
+</div>
 
-  const formalText={
-    structure:"Scope precedes authority. Constraints prevent drift. Scale requires definition.",
-    product:"Execution inherits limits. Surfaces remain bounded. Adoption requires admissibility."
-  };
-
-  function render(mode){
-    if(mode==="informal"){
-      structureText.textContent=informalText.structure;
-      productText.textContent=informalText.product;
-    }
-    else if(mode==="formal"){
-      structureText.textContent=formalText.structure;
-      productText.textContent=formalText.product;
-    }
-    else{
-      structureText.textContent=informalText.structure+" "+formalText.structure;
-      productText.textContent=informalText.product+" "+formalText.product;
-    }
-  }
-
-  const structureText=document.getElementById("structureText");
-  const productText=document.getElementById("productText");
-
-  render("both");
-
-  document.getElementById("informalBtn").onclick=()=>render("informal");
-  document.getElementById("formalBtn").onclick=()=>render("formal");
-  document.getElementById("bothBtn").onclick=()=>render("both");
-
-})();
-</script>
+<div class="footer">
+  Structure precedes scale.
+</div>
 
 </body>
 </html>

@@ -1,24 +1,20 @@
 <!-- TNT — /door/index.html
-     DOOR · COMPASS (N/E/S/W) + SELECTABLE BANNER + ENTER HERE · 3 LANG (EN/中文/ES)
-     CHANGE (PER REQUEST):
-       - Clicking a compass diamond selects it (active glow)
-       - The TOP BANNER updates (title + explanation)
-       - Banner shows a single CTA: ENTER HERE (routes to that direction)
-       - No extra “OPEN” buttons inside diamonds (cleaner; banner owns entry)
-     ROUTES (LOCKED):
-       NORTH  = /laws/     (FACTS)
-       EAST   = /products/ (OFFER)
-       SOUTH  = /gauges/   (MEASURE)
-       WEST   = /links/    (ANCHORS)
-     TOP:
-       LEFT  = EXIT (/index.html) + PRELUDE (/prelude/)
-       RIGHT = EN / 中文 / ES
-     STATE:
-       URL + LS: gd_lang/gd_style/gd_time/gd_depth (preserved on every jump)
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background overrides (ui.css owns field)
-       - Tap-safe (no inline onclick)
+     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · CONTRAST LOCK
+     PURPOSE:
+       - This replaces the current /door/ compass.
+       - It is the canonical introductory page (Diamond Gate Bridge).
+       - It orients so well that Prelude becomes optional, not required.
+     ROUTES (AFTER YOUR SHIFT-DOWN):
+       - COMPASS (old door)   → /index.html
+       - PRELUDE (gateway)    → /prelude/
+       - ENTER (hub)          → /home/
+       - ROOT (return)        → /
+     RULES:
+       - 3 language toggle (EN/中文/ES)
+       - High contrast (no red-on-red readability failures)
+       - No modals. No overlays. No onclick. Tap-safe.
+       - Preserves gd_* state via URL + localStorage
+       - Uses ui.css/branch.css/instruments.js only
 -->
 
 <!doctype html>
@@ -26,7 +22,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR</title>
+<title>DIAMOND GATE BRIDGE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -38,19 +34,14 @@ a{color:inherit;text-decoration:none}
 /* keep ui.css field overlays behind */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0 !important;pointer-events:none !important}
-#doorRoot{position:relative;z-index:10}
+#root{position:relative;z-index:10}
 
 :root{
-  --R:154px;
-  --D:178px;
-
-  --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
-
-  --opalA:rgba(210,190,255,.18);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
+  --panel:rgba(0,0,0,.22);
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 }
 
 /* top (no wrap) */
@@ -69,233 +60,168 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .top .btn{white-space:nowrap}
 
-/* banner */
-.banner{
-  width:min(1020px,94vw);
-  margin:74px auto 10px;
-  padding:16px 16px 14px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
+/* page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:84px 0 26px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* hero */
+.hero{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+    radial-gradient(circle at 20% 30%, rgba(210,190,255,.18), transparent 72%),
+    radial-gradient(circle at 82% 66%, rgba(120,70,255,.14), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
   backdrop-filter:blur(12px);
   box-shadow:0 34px 120px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
 }
-.bk{
+
+.k{
   margin:0 0 6px;
   font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
   opacity:.78;
 }
-.bt{
+.h1{
   margin:0;
   font-weight:950;
-  font-size:26px;
-  letter-spacing:1px;
+  font-size:30px;
+  letter-spacing:1.2px;
   line-height:1.12;
 }
-.bp{
+.p{
   margin:10px 0 0;
-  font-size:13.5px;
-  opacity:.88;
+  font-size:14px;
+  opacity:.90;
+  line-height:1.5;
+  max-width:980px;
+}
+.rule{
+  margin:12px 0 0;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  font-size:12.75px;
+  color:rgba(255,255,255,.84);
   line-height:1.45;
 }
-.brow{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
+
+/* three choice cards */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:14px;
 }
-.bcta{
+@media (max-width:920px){
+  .grid{grid-template-columns:1fr}
+}
+
+.card{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  padding:16px 16px 14px;
+}
+
+.card .ct{
+  margin:0;
+  font-weight:950;
+  letter-spacing:.6px;
+  font-size:18px;
+}
+.card .cs{
+  margin:8px 0 0;
+  font-size:13.25px;
+  line-height:1.45;
+  color:rgba(255,255,255,.86);
+}
+.card .mini{
+  margin:10px 0 0;
+  font-size:12.25px;
+  line-height:1.45;
+  color:rgba(255,255,255,.74);
+}
+.card .actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  align-items:center;
+  justify-content:flex-end;
+  margin-top:12px;
 }
-.bcta .btn{
+.card .actions .btn{
   border-radius:999px;
   padding:10px 14px;
 }
 
-/* stage */
-.stage{
-  position:relative;
-  width:min(760px,94vw);
-  height:min(760px, 64vh);
-  margin:10px auto 18px;
-  z-index:40;
-}
-
-/* outer frame */
-.outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:min(680px,92vw);
-  height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  opacity:.46;
-  pointer-events:none;
+/* how-it-works blocks */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.52),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-}
-
-/* glossy diamond */
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:28px;
-  cursor:pointer;
-  pointer-events:auto;
-  touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-  overflow:hidden;
-
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.58), transparent 46%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
-
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -42px 78px rgba(0,0,0,.80);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.62;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.92;
-}
-.d:hover{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.35);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.26),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-.d:active{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
-}
-.d.active{
-  border-color:rgba(212,175,55,.65);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 66px rgba(212,175,55,.34),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-
-/* placement via custom offsets */
-.dN{ --tx:0px; --ty:calc(var(--R) * -1); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dE{ --tx:var(--R); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dS{ --tx:0px; --ty:var(--R); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dW{ --tx:calc(var(--R) * -1); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-
-.inner{
-  transform:rotate(-45deg) translateY(-2px);
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:14px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
-}
-.dir{
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.lab{
+  background:rgba(0,0,0,.12);
   font-weight:950;
-  font-size:18px;
-  letter-spacing:.6px;
-  text-shadow:0 0 16px rgba(255,255,255,.12);
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
-.sub{
-  font-size:12.5px;
-  opacity:.86;
-  line-height:1.25;
-  max-width:18em;
-}
-
-/* core */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:60px;height:60px;border-radius:18px;
+.block{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  pointer-events:none;
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.40);
+  padding:14px 14px 12px;
+}
+.block .bh{
+  margin:0;
+  font-weight:950;
+  font-size:15.5px;
+  letter-spacing:.4px;
+}
+.block .bp{
+  margin:10px 0 0;
+  font-size:13.25px;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
+}
+.block .jump{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
 }
 
-/* footer */
 .footer{
-  width:min(980px,94vw);
-  margin:8px auto 34px;
+  margin-top:8px;
   text-align:center;
   font-size:12.5px;
   opacity:.78;
 }
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
-
-@media (max-width:560px){
-  :root{ --R:140px; --D:168px; }
-  .bt{font-size:24px}
-}
-@media (max-width:420px){
-  :root{ --R:132px; --D:160px; }
+.sig{
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  opacity:.65;
 }
 </style>
 </head>
 
 <body>
-<div id="doorRoot">
+<div id="root">
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+      <a class="btn" id="btnRoot" href="/">ROOT</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -304,62 +230,87 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     </div>
   </div>
 
-  <div class="banner" aria-label="Direction banner">
-    <div class="bk" id="bk">DIAMOND GATE BRIDGE</div>
-    <div class="brow">
-      <div>
-        <h1 class="bt" id="bt">CHOOSE A DIRECTION</h1>
-        <p class="bp" id="bp">Tap a diamond. Read the banner. Then enter.</p>
-      </div>
-      <div class="bcta">
-        <a class="btn" id="btnEnterHere" href="#">ENTER HERE</a>
+  <div class="page">
+
+    <div class="hero">
+      <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
+      <h1 class="h1" id="h0">INTRO</h1>
+      <p class="p" id="p0">
+        This site is a structural interface. It does not sell belief.
+        It keeps claims bounded and support checkable.
+      </p>
+      <div class="rule" id="r0">
+        Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.
       </div>
     </div>
+
+    <div class="grid" aria-label="Entry choices">
+      <div class="card">
+        <h2 class="ct" id="c1t">PRELUDE</h2>
+        <p class="cs" id="c1s">Gateway posture. Calm entry before traversal.</p>
+        <p class="mini" id="c1m">Use this when you want an explanation-first start.</p>
+        <div class="actions">
+          <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="ct" id="c2t">COMPASS</h2>
+        <p class="cs" id="c2s">Choose a direction. Then enter.</p>
+        <p class="mini" id="c2m">Use this when you want structured traversal (N/E/S/W).</p>
+        <div class="actions">
+          <a class="btn" id="goCompass" href="/index.html">OPEN</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="ct" id="c3t">ENTER</h2>
+        <p class="cs" id="c3s">Primary hub. Move by function.</p>
+        <p class="mini" id="c3m">Use this when you already know where you’re going.</p>
+        <div class="actions">
+          <a class="btn" id="goEnter" href="/home/">OPEN</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="band" id="b1">HOW THIS WORKS</div>
+
+    <div class="block">
+      <div class="bh" id="bh1">Purpose definition</div>
+      <div class="bp" id="bp1">
+        Claims remain bounded to meaning. Support remains checkable. If a lens switch does not change content, it is a failure.
+      </div>
+      <div class="jump">
+        <a class="btn" id="jumpCompassA" href="/index.html">JUMP: COMPASS</a>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh" id="bh2">Fast navigation</div>
+      <div class="bp" id="bp2">
+        Prelude → Compass → Direction. Enter bypasses Prelude. Everything preserves state.
+      </div>
+      <div class="jump">
+        <a class="btn" id="jumpPreludeA" href="/prelude/">JUMP: PRELUDE</a>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh" id="bh3">Claim vs support</div>
+      <div class="bp" id="bp3">
+        Claim includes problem and offer. Support includes assistance and verification. The interface keeps them distinct on purpose.
+      </div>
+      <div class="jump">
+        <a class="btn" id="jumpEnterA" href="/home/">JUMP: ENTER</a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span id="f0">Orientation is the product.</span>
+      <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+    </div>
+
   </div>
-
-  <div class="stage" aria-label="Compass">
-    <div class="outer" aria-hidden="true"></div>
-
-    <div class="d dN" id="dNorth" role="button" tabindex="0" aria-label="North: Facts">
-      <div class="inner">
-        <div class="dir" id="nDir">NORTH</div>
-        <div class="lab" id="nLab">FACTS</div>
-        <div class="sub" id="nSub">Start with what can be checked.</div>
-      </div>
-    </div>
-
-    <div class="d dE" id="dEast" role="button" tabindex="0" aria-label="East: Offer">
-      <div class="inner">
-        <div class="dir" id="eDir">EAST</div>
-        <div class="lab" id="eLab">OFFER</div>
-        <div class="sub" id="eSub">Deployable products and services.</div>
-      </div>
-    </div>
-
-    <div class="d dS" id="dSouth" role="button" tabindex="0" aria-label="South: Measure">
-      <div class="inner">
-        <div class="dir" id="sDir">SOUTH</div>
-        <div class="lab" id="sLab">MEASURE</div>
-        <div class="sub" id="sSub">See signals, not arguments.</div>
-      </div>
-    </div>
-
-    <div class="d dW" id="dWest" role="button" tabindex="0" aria-label="West: Anchors">
-      <div class="inner">
-        <div class="dir" id="wDir">WEST</div>
-        <div class="lab" id="wLab">ANCHORS</div>
-        <div class="sub" id="wSub">Receipts, references, context.</div>
-      </div>
-    </div>
-
-    <div class="core">◆</div>
-  </div>
-
-  <div class="footer">
-    <span id="ft">Informal first · Formal second · Jump always</span>
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
-  </div>
-
 </div>
 
 <script>
@@ -386,20 +337,25 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  // top links carry state
-  document.getElementById("btnExit").href="/index.html"+q();
-  document.getElementById("btnPrelude").href="/prelude/"+q();
+  // wire links with state
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnRoot","/");
+  wire("goPrelude","/prelude/");
+  wire("goCompass","/index.html");
+  wire("goEnter","/home/");
+  wire("jumpCompassA","/index.html");
+  wire("jumpPreludeA","/prelude/");
+  wire("jumpEnterA","/home/");
 
   // language buttons
   var btnEN=document.getElementById("btnEN");
@@ -417,120 +373,92 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/door/"+q({lang:lang});
+    location.href="/door/"+q();
   }
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // routes
-  var ROUTE = {
-    north:"/laws/",
-    east:"/products/",
-    south:"/gauges/",
-    west:"/links/"
-  };
+  // i18n (page-only; no external file dependency)
+  function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
-  // banner refs
-  var bt=document.getElementById("bt");
-  var bp=document.getElementById("bp");
-  var enterHere=document.getElementById("btnEnterHere");
+  document.getElementById("h0").textContent = T("INTRO","介绍","INTRO");
+  document.getElementById("p0").textContent = T(
+    "This site is a structural interface. It does not sell belief. It keeps claims bounded and support checkable.",
+    "这是一个结构型界面。它不出售信仰。它让主张有界、让支撑可核查。",
+    "Este es un interfaz estructural. No vende creencias. Mantiene las afirmaciones acotadas y el soporte verificable."
+  );
+  document.getElementById("r0").textContent = T(
+    "Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.",
+    "规则：主张必须有支撑。支撑必须可验证。导航会保留 gd_* 状态。",
+    "Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva el estado gd_*."
+  );
 
-  // diamonds refs
-  var dN=document.getElementById("dNorth");
-  var dE=document.getElementById("dEast");
-  var dS=document.getElementById("dSouth");
-  var dW=document.getElementById("dWest");
+  document.getElementById("c1t").textContent = T("PRELUDE","前置页","PRELUDIO");
+  document.getElementById("c1s").textContent = T(
+    "Gateway posture. Calm entry before traversal.",
+    "入口姿态：先导览，再进入遍历。",
+    "Postura de entrada. Entrada tranquila antes del recorrido."
+  );
+  document.getElementById("c1m").textContent = T(
+    "Use this when you want an explanation-first start.",
+    "想先看解释就从这里开始。",
+    "Úsalo si quieres empezar con explicación."
+  );
 
-  function clearActive(){
-    dN.classList.remove("active");
-    dE.classList.remove("active");
-    dS.classList.remove("active");
-    dW.classList.remove("active");
-  }
+  document.getElementById("c2t").textContent = T("COMPASS","指南针","BRÚJULA");
+  document.getElementById("c2s").textContent = T(
+    "Choose a direction. Then enter.",
+    "先选方向，再进入。",
+    "Elige una dirección. Luego entra."
+  );
+  document.getElementById("c2m").textContent = T(
+    "Use this when you want structured traversal (N/E/S/W).",
+    "想按结构遍历（N/E/S/W）就用这个。",
+    "Úsalo si quieres recorrido estructurado (N/E/S/O)."
+  );
 
-  function setBanner(key){
-    clearActive();
+  document.getElementById("c3t").textContent = T("ENTER","进入","ENTRAR");
+  document.getElementById("c3s").textContent = T(
+    "Primary hub. Move by function.",
+    "主枢纽：按功能移动。",
+    "Hub principal. Muévete por función."
+  );
+  document.getElementById("c3m").textContent = T(
+    "Use this when you already know where you’re going.",
+    "已经知道去哪里就直接进。",
+    "Úsalo si ya sabes a dónde vas."
+  );
 
-    var title="", desc="", href="#";
-    if(lang==="zh"){
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · 事实"; desc="从可核查内容开始：约束、定义、可采信。"; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · 提供"; desc="可部署的产品与服务：把结构变成行动。"; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · 测量"; desc="先看信号，再谈观点：仪表板与输出。"; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · 锚点"; desc="收据、引用与上下文：可追溯与可验证。"; href=ROUTE.west; }
-      enterHere.textContent="进入这里";
-    }else if(lang==="es"){
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · HECHOS"; desc="Empieza con lo verificable: restricciones, definiciones, admisibilidad."; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · OFERTA"; desc="Productos y servicios desplegables: estructura convertida en acción."; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEDIR"; desc="Señales primero: paneles y salidas, no discusiones."; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · ANCLAS"; desc="Recibos, referencias y contexto: rastreable y verificable."; href=ROUTE.west; }
-      enterHere.textContent="ENTRAR AQUÍ";
-    }else{
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · FACTS"; desc="Start with what can be checked: constraints, definitions, admissibility."; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · OFFER"; desc="Deployable products and services: structure converted into action."; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEASURE"; desc="Signals first: dashboards and outputs, not arguments."; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · ANCHORS"; desc="Receipts, references, context: traceable and checkable."; href=ROUTE.west; }
-      enterHere.textContent="ENTER HERE";
-    }
+  document.getElementById("b1").textContent = T("HOW THIS WORKS","这个网站怎么用","CÓMO FUNCIONA");
 
-    bt.textContent = title;
-    bp.textContent = desc;
-    enterHere.href = href + q();
-  }
+  document.getElementById("bh1").textContent = T("Purpose definition","目的定义","Definición de propósito");
+  document.getElementById("bp1").textContent = T(
+    "Claims remain bounded to meaning. Support remains checkable. If a lens switch does not change content, it is a failure.",
+    "主张必须绑定含义。支撑必须可核查。若切换透镜内容不变，则失败。",
+    "Las afirmaciones quedan acotadas al significado. El soporte es verificable. Si cambiar lente no cambia contenido, es un fallo."
+  );
 
-  function bind(el, key){
-    function act(){ setBanner(key); }
-    el.addEventListener("click", act);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
+  document.getElementById("bh2").textContent = T("Fast navigation","快速导航","Navegación rápida");
+  document.getElementById("bp2").textContent = T(
+    "Prelude → Compass → Direction. Enter bypasses Prelude. Everything preserves state.",
+    "前置页 → 指南针 → 方向。进入可跳过前置页。所有跳转保留状态。",
+    "Preludio → Brújula → Dirección. Entrar evita el preludio. Todo preserva el estado."
+  );
 
-  bind(dN,"north");
-  bind(dE,"east");
-  bind(dS,"south");
-  bind(dW,"west");
+  document.getElementById("bh3").textContent = T("Claim vs support","主张 vs 支撑","Afirmación vs soporte");
+  document.getElementById("bp3").textContent = T(
+    "Claim includes problem and offer. Support includes assistance and verification. The interface keeps them distinct on purpose.",
+    "主张包含问题与提供。支撑包含协助与验证。界面刻意保持区分。",
+    "La afirmación incluye problema y oferta. El soporte incluye asistencia y verificación. El interfaz los separa a propósito."
+  );
 
-  // minimal i18n labels on diamonds + banner lead
-  function applyStaticText(){
-    if(lang==="zh"){
-      document.getElementById("bk").textContent="DIAMOND GATE BRIDGE";
-      document.getElementById("nDir").textContent="NORTH";
-      document.getElementById("eDir").textContent="EAST";
-      document.getElementById("sDir").textContent="SOUTH";
-      document.getElementById("wDir").textContent="WEST";
-      document.getElementById("nLab").textContent="事实";
-      document.getElementById("eLab").textContent="提供";
-      document.getElementById("sLab").textContent="测量";
-      document.getElementById("wLab").textContent="锚点";
-      document.getElementById("nSub").textContent="从可核查内容开始。";
-      document.getElementById("eSub").textContent="可部署的产品与服务。";
-      document.getElementById("sSub").textContent="先看信号，再谈观点。";
-      document.getElementById("wSub").textContent="收据、引用、上下文。";
-      document.getElementById("ft").textContent="先通俗 · 后正式 · 永远可跳转";
-      document.getElementById("btnExit").textContent="退出";
-      document.getElementById("btnPrelude").textContent="前置页";
-    }else if(lang==="es"){
-      document.getElementById("bk").textContent="DIAMOND GATE BRIDGE";
-      document.getElementById("nLab").textContent="HECHOS";
-      document.getElementById("eLab").textContent="OFERTA";
-      document.getElementById("sLab").textContent="MEDIR";
-      document.getElementById("wLab").textContent="ANCLAS";
-      document.getElementById("nSub").textContent="Empieza con lo verificable.";
-      document.getElementById("eSub").textContent="Productos y servicios desplegables.";
-      document.getElementById("sSub").textContent="Señales, no argumentos.";
-      document.getElementById("wSub").textContent="Recibos, referencias, contexto.";
-      document.getElementById("ft").textContent="Informal primero · Formal después · Saltar siempre";
-      document.getElementById("btnExit").textContent="SALIR";
-      document.getElementById("btnPrelude").textContent="PRELUDIO";
-    }else{
-      document.getElementById("bk").textContent="DIAMOND GATE BRIDGE";
-    }
-  }
-  applyStaticText();
+  document.getElementById("jumpCompassA").textContent = T("JUMP: COMPASS","跳转：指南针","SALTAR: BRÚJULA");
+  document.getElementById("jumpPreludeA").textContent = T("JUMP: PRELUDE","跳转：前置页","SALTAR: PRELUDIO");
+  document.getElementById("jumpEnterA").textContent = T("JUMP: ENTER","跳转：进入","SALTAR: ENTRAR");
 
-  // default selection
-  setBanner("north");
+  document.getElementById("f0").textContent = T("Orientation is the product.","导览就是产品。","La orientación es el producto.");
+
 })();
 </script>
 

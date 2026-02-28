@@ -1,11 +1,10 @@
 <!-- TNT — /products/coherence-diagnostic/index.html
-     PRODUCT · COHERENCE DIAGNOSTIC (FIX: BUTTONS ALWAYS WORK)
-     ROOT CAUSE:
-       - Your prior version relied on JS click handlers on <div>. If JS is blocked/cached/erroring, NOTHING navigates.
+     COHERENCE DIAGNOSTIC · WORKING OPEN (MODAL) · 3 LANG · STATE SAFE
      FIX:
-       - All interactive controls are real <a href> links (work even if JS fails).
-       - JS is OPTIONAL (only for language highlighting + label swap).
-       - Stage is pointer-events:none; diamonds/buttons are pointer-events:auto (no invisible blockers).
+       - Diamonds now OPEN a modal (they were only navigation/glow before)
+       - No 404 dependency: internal open is JS modal, nav remains anchors
+       - EN / 中文 / ES works
+       - gd_* state preserved via query + LS
 -->
 
 <!doctype html>
@@ -13,7 +12,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · COHERENCE DIAGNOSTIC</title>
+<title>Coherence Diagnostic</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -21,51 +20,37 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{
-  --R:150px;
-  --D:184px;
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
-}
-
-/* Make sure nothing invisible blocks taps */
 body::before,body::after{pointer-events:none!important}
 
-/* Top controls */
+/* TOP */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
-
-/* Language (top-right) */
 .top-right{
   position:fixed;right:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
-.top-right .btn{padding:10px 16px;border-radius:16px}
-.top-right .btn.active{border-color:var(--gold);box-shadow:0 0 20px var(--gold-soft), 0 18px 50px rgba(0,0,0,.85)}
 
-/* Brand */
+/* HEADER PILL */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:130;text-align:center;
   padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
   pointer-events:none;
 }
-.brand .t{font-weight:950;font-size:38px;letter-spacing:.25px;line-height:1.05;margin:0}
-.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
+.brand .t{margin:0;font-weight:950;font-size:22px;letter-spacing:.3px;line-height:1.05}
+.brand .s{margin:6px 0 0;opacity:.86;font-size:12.5px;line-height:1.25}
 
-/* Stage */
+/* STAGE */
+:root{--R:150px;--D:184px;--goldSoft:rgba(212,175,55,.45)}
 .stage{
-  position:fixed;left:50%;top:56%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw);
-  height:min(720px,94vw);
-  z-index:60;
-  pointer-events:none; /* IMPORTANT: stage never steals taps */
+  position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);
+  width:min(720px,94vw);height:min(720px,94vw);
+  z-index:60;pointer-events:none;
 }
 .outer{
   position:absolute;left:50%;top:50%;
@@ -77,38 +62,26 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
     linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
+  box-shadow:0 90px 260px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.10),inset 0 -50px 90px rgba(0,0,0,.55);
 }
 .outer::after{
-  content:"";position:absolute;inset:0;border-radius:60px;
-  opacity:.12;pointer-events:none;
+  content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
 }
 
-/* Diamonds (anchors) */
+/* DIAMONDS (BUTTONS) */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
   transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  pointer-events:auto; /* IMPORTANT: clickable */
-  display:block;
-  overflow:hidden;
-
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
     radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
   border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.28),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -42px 78px rgba(0,0,0,.80);
+  box-shadow:0 38px 120px rgba(0,0,0,.85),0 0 32px rgba(212,175,55,.28),inset 0 2px 0 rgba(255,255,255,.25),inset 0 -42px 78px rgba(0,0,0,.80);
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .d::before{
@@ -129,13 +102,14 @@ body::before,body::after{pointer-events:none!important}
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.35);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.32),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
+  box-shadow:0 44px 140px rgba(0,0,0,.92),0 0 44px rgba(212,175,55,.32),inset 0 2px 0 rgba(255,255,255,.28),inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d.active{
+  border-color:rgba(212,175,55,.60);
+  box-shadow:0 44px 140px rgba(0,0,0,.92),0 0 60px rgba(212,175,55,.40),inset 0 2px 0 rgba(255,255,255,.28),inset 0 -46px 86px rgba(0,0,0,.84);
 }
 .d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
@@ -150,6 +124,7 @@ body::before,body::after{pointer-events:none!important}
 .lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
 .sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
 
+/* CORE */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -157,10 +132,11 @@ body::before,body::after{pointer-events:none!important}
   background:rgba(0,0,0,.20);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;pointer-events:none;
+  display:grid;place-items:center;
+  pointer-events:none;
 }
 
-/* Dock */
+/* DOCK */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -170,11 +146,78 @@ body::before,body::after{pointer-events:none!important}
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
 }
+.dock .btn{pointer-events:auto}
+
+/* MODAL */
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1180px,96vw);
+  height:90vh;
+  display:none;
+  z-index:210;
+}
+.modal.show{display:block}
+.shell{
+  height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px;
+}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
+
+.hint{
+  max-width:980px;margin:0 auto 12px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.80);
+  font-size:12.5px;line-height:1.45;
+}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  margin:0 0 12px;
+  cursor:pointer;
+}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:rgba(255,255,255,.74);line-height:1.65;display:none}
+.bubble.open p{display:block}
+
 @media (max-width:560px){
-  :root{--R:136px;--D:168px}
-  .stage{top:54%}
-  .brand .t{font-size:34px}
+  :root{--R:136px;--D:170px}
+  .brand .t{font-size:20px}
+  .brand .s{font-size:12px}
 }
 </style>
 </head>
@@ -186,36 +229,35 @@ body::before,body::after{pointer-events:none!important}
   <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
-<div class="top-right" aria-label="Language">
-  <a class="btn" id="btnEN" href="?lang=en">EN</a>
-  <a class="btn" id="btnZH" href="?lang=zh">中文</a>
-  <a class="btn" id="btnES" href="?lang=es">ES</a>
-</div>
-
 <div class="brand" aria-hidden="true">
-  <div class="t" id="hdrT">Coherence Diagnostic</div>
-  <div class="s" id="hdrS">Decision support · classification · bounded outputs</div>
+  <div class="t" id="hdrTitle">Coherence Diagnostic</div>
+  <div class="s" id="hdrSub">Decision support · classification · bounded outputs</div>
 </div>
 
-<div class="stage" aria-label="Coherence Diagnostic">
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="stage" aria-label="Coherence Diagnostic quadrants">
   <div class="outer"></div>
 
-  <!-- NOTE: all are real links (no JS needed) -->
-  <a class="d d-n" id="goOverview" href="/products/coherence-diagnostic/" aria-label="Overview">
-    <div class="inner"><div class="lab" id="labN">OVERVIEW</div><div class="sub" id="subN">What it does, in one pass.</div></div>
-  </a>
+  <div class="d d-n" id="dOverview" role="button" tabindex="0" aria-label="Overview">
+    <div class="inner"><div class="lab" id="labOverview">OVERVIEW</div><div class="sub" id="subOverview">What it does, in one pass.</div></div>
+  </div>
 
-  <a class="d d-e" id="goUse" href="/products/coherence-diagnostic/" aria-label="Use">
-    <div class="inner"><div class="lab" id="labE">USE</div><div class="sub" id="subE">Inputs → constraints → outputs.</div></div>
-  </a>
+  <div class="d d-w" id="dDeploy" role="button" tabindex="0" aria-label="Deploy">
+    <div class="inner"><div class="lab" id="labDeploy">DEPLOY</div><div class="sub" id="subDeploy">Where it plugs in.</div></div>
+  </div>
 
-  <a class="d d-s" id="goRules" href="/products/coherence-diagnostic/" aria-label="Rules">
-    <div class="inner"><div class="lab" id="labS">RULES</div><div class="sub" id="subS">Admissibility + collapse posture.</div></div>
-  </a>
+  <div class="d d-s" id="dRules" role="button" tabindex="0" aria-label="Rules">
+    <div class="inner"><div class="lab" id="labRules">RULES</div><div class="sub" id="subRules">Admissibility + collapse posture.</div></div>
+  </div>
 
-  <a class="d d-w" id="goDeploy" href="/products/coherence-diagnostic/" aria-label="Deploy">
-    <div class="inner"><div class="lab" id="labW">DEPLOY</div><div class="sub" id="subW">Where it plugs in.</div></div>
-  </a>
+  <div class="d d-e" id="dUse" role="button" tabindex="0" aria-label="Use">
+    <div class="inner"><div class="lab" id="labUse">USE</div><div class="sub" id="subUse">Inputs → constraints → outputs.</div></div>
+  </div>
 
   <div class="core">◆</div>
 </div>
@@ -223,24 +265,52 @@ body::before,body::after{pointer-events:none!important}
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
   <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
+<div class="bd" id="bd"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">—</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="lensbar">
+        <div class="pill active" id="toneFormal">FORMAL</div>
+        <div class="pill" id="toneInformal">INFORMAL</div>
+        <div class="pill active" id="timeConcept">CONCEPT</div>
+        <div class="pill" id="timeLive">LIVE</div>
+        <div class="pill" id="timeRoadmap">ROADMAP</div>
+      </div>
+
+      <div class="hint" id="mHint">
+        This page is bounded. Claims require receipts. Navigation preserves gd_* state.
+      </div>
+
+      <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
+      <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
+      <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
-  // State carry (optional; page still works without this)
+  // ---- state (gd_* only) ----
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin"; // origin/now/post
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(time!=="origin" && time!=="now" && time!=="post") time="origin";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
@@ -249,6 +319,7 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(){
     return "?lang="+encodeURIComponent(lang)+
@@ -257,46 +328,283 @@ body::before,body::after{pointer-events:none!important}
            "&depth="+encodeURIComponent(depth);
   }
 
-  // Rewrite ALL links to carry state
-  document.getElementById("btnBack").href="/products/"+q();
-  document.getElementById("btnExit").href="/index.html"+q();
+  // ---- nav wiring (anchors stay anchors) ----
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnBack","/products/");
+  wire("btnExit","/index.html");
+  wire("dockPrelude","/prelude/");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-  document.getElementById("dockPrelude").href="/prelude/"+q();
-  document.getElementById("dockExplore").href="/explore/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+  // ---- language buttons ----
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href = location.pathname + q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  document.getElementById("goOverview").href="/products/coherence-diagnostic/"+q();
-  document.getElementById("goUse").href="/products/coherence-diagnostic/"+q();
-  document.getElementById("goRules").href="/products/coherence-diagnostic/"+q();
-  document.getElementById("goDeploy").href="/products/coherence-diagnostic/"+q();
-
-  document.getElementById("btnEN").href=location.pathname+q().replace("lang="+encodeURIComponent(lang),"lang=en");
-  document.getElementById("btnZH").href=location.pathname+q().replace("lang="+encodeURIComponent(lang),"lang=zh");
-  document.getElementById("btnES").href=location.pathname+q().replace("lang="+encodeURIComponent(lang),"lang=es");
-
-  // Language highlight + text swap
-  document.getElementById("btnEN").classList.toggle("active", lang==="en");
-  document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-  document.getElementById("btnES").classList.toggle("active", lang==="es");
-
-  var C={
-    en:{t:"Coherence Diagnostic",s:"Decision support · classification · bounded outputs",
-        N:["OVERVIEW","What it does, in one pass."],E:["USE","Inputs → constraints → outputs."],S:["RULES","Admissibility + collapse posture."],W:["DEPLOY","Where it plugs in."]},
-    zh:{t:"一致性诊断",s:"决策支持 · 分类 · 有界输出",
-        N:["概览","一眼看懂它做什么。"],E:["使用","输入→约束→输出。"],S:["规则","可采信与崩塌姿态。"],W:["部署","它接入到哪里。"]},
-    es:{t:"Diagnóstico de coherencia",s:"Soporte de decisión · clasificación · salidas acotadas",
-        N:["RESUMEN","Qué hace, en una pasada."],E:["USO","Entradas → límites → salidas."],S:["REGLAS","Admisibilidad y colapso."],W:["DESPLEGAR","Dónde se integra."]}
+  // ---- text packs ----
+  var COPY={
+    en:{
+      hdr:{t:"Coherence Diagnostic", s:"Decision support · classification · bounded outputs"},
+      nodes:{
+        overview:{lab:"OVERVIEW", sub:"What it does, in one pass."},
+        deploy:{lab:"DEPLOY", sub:"Where it plugs in."},
+        rules:{lab:"RULES", sub:"Admissibility + collapse posture."},
+        use:{lab:"USE", sub:"Inputs → constraints → outputs."}
+      },
+      modal:{hint:"This page is bounded. Claims require receipts. Navigation preserves gd_* state.",
+        concept:"Concept", live:"Live", roadmap:"Roadmap",
+        formal:"FORMAL", informal:"INFORMAL", c:"CONCEPT", l:"LIVE", r:"ROADMAP"
+      },
+      content:{
+        overview:{
+          origin:{formal:"A bounded diagnostic surface that classifies trajectories under declared scope. It consumes receipts, applies constraints, and outputs admissible states—not narratives. The purpose is decision compression: same evidence → same classification.",informal:"A fast way to tell what’s actually going on. You bring real receipts, it applies the rules, and it tells you what’s admissible—no guessing."},
+          now:{formal:"Live posture: the diagnostic runs as a routing surface that keeps meaning stable while pages expand. Outputs remain bounded to what is measured, and every jump preserves state.",informal:"Right now it’s the hub for ‘what’s real’. If you feel drift, this is where you check the rules and the outputs."},
+          post:{formal:"Roadmap posture: expand the diagnostic into replayable bundles, registry outputs, and cross-domain adapters while preserving the same admissibility contract.",informal:"Next it becomes a full toolkit: more adapters, better replay, and clearer proof—same rules, more reach."}
+        },
+        deploy:{
+          origin:{formal:"Deployment attaches to surfaces where drift accumulates: comms, incentives, process, and measurement. The diagnostic is placed upstream of claims so it can gate escalation before scale amplifies error.",informal:"Put it where people start making claims. It catches drift early so you don’t scale mistakes."},
+          now:{formal:"Live deployment favors small waves, observable checkpoints, and clean rollback. When signals disagree, the diagnostic flags ambiguity rather than forcing a story.",informal:"Use it in small phases. If signals don’t match, it says ‘unclear’ instead of pretending."},
+          post:{formal:"Roadmap deployment integrates staged governance, audit latency discipline, and registry publication while keeping private telemetry private.",informal:"Eventually it plugs into governance and audits so trust scales without leaking sensitive data."}
+        },
+        rules:{
+          origin:{formal:"Rules define admissibility: what counts as evidence, what fails, and what remains undecidable. Correction creates a new epoch; it does not rewrite history. The diagnostic refuses upgrades without receipts.",informal:"Rules keep the system honest. No receipts, no upgrades. If you correct something, you do it out loud—new epoch, not a rewrite."},
+          now:{formal:"Live rules enforce consistency under pressure: stable definitions, bounded claims, and deterministic handling of missing data. Ambiguity is treated as a risk amplifier.",informal:"Live rules stop the chaos. Missing data stays missing. Ambiguity doesn’t get dressed up as certainty."},
+          post:{formal:"Roadmap rules strengthen anti-gaming discipline and portability: reason codes, audit bundles, and independent verification paths.",informal:"Next we make it harder to game: better logs, clearer reasons, and proof you can hand to anyone."}
+        },
+        use:{
+          origin:{formal:"Use flow: declare scope → collect receipts → apply constraints → output classification. The output is a bounded state plus the reason code that explains why the state is admissible.",informal:"How to use it: set the scope, bring receipts, run the constraints, get a clean answer with the reason why."},
+          now:{formal:"Live use emphasizes repeatability: same inputs produce the same outputs across operators. Navigation keeps state stable so comparisons remain meaningful.",informal:"Live use is about consistency. Two people see the same evidence and land in the same conclusion."},
+          post:{formal:"Roadmap use produces exportable bundles: replay windows, hashes, and registry-ready summaries that preserve privacy while enabling verification.",informal:"Later you’ll export clean proof bundles—easy to verify, hard to fake."}
+        }
+      }
+    },
+    zh:{
+      hdr:{t:"一致性诊断", s:"决策支持 · 分类 · 有界输出"},
+      nodes:{
+        overview:{lab:"概览", sub:"一眼看懂它做什么。"},
+        deploy:{lab:"部署", sub:"它插在哪。"},
+        rules:{lab:"规则", sub:"可采信与崩塌姿态。"},
+        use:{lab:"使用", sub:"输入 → 约束 → 输出。"}
+      },
+      modal:{hint:"本页有界：主张必须有收据。跳转保留 gd_* 状态。",
+        concept:"概念", live:"上线", roadmap:"路线图",
+        formal:"正式", informal:"通俗", c:"概念", l:"上线", r:"路线图"
+      },
+      content:{
+        overview:{
+          origin:{formal:"这是一个有界诊断面：在声明范围内做轨迹分类。它只吃收据、应用约束、输出可采信状态，而不是叙事。目的：同证据 → 同分类。",informal:"这是个快速判断‘什么是真的’的工具。你给收据，它按规则输出可采信结论。"},
+          now:{formal:"上线姿态：作为路由面保持语义稳定，页面扩展但契约不变。输出仍然绑定到可测与可核查。",informal:"现在它是‘查真相’的入口。漂移出现就来这里对齐规则与输出。"},
+          post:{formal:"路线图：扩展为可回放证据包、登记输出、跨域适配器，但保持同一可采信契约。",informal:"下一步会更强：更多适配器、更好回放、更清晰证明。"}
+        },
+        deploy:{
+          origin:{formal:"部署在漂移容易累积的面：沟通、激励、流程、测量。诊断应在主张之前起门控作用，避免规模放大误差。",informal:"把它放在‘开始下结论’的位置。越早拦截漂移越省成本。"},
+          now:{formal:"上线部署偏好小波次、可观察检查点、可回滚路径。信号不一致时输出歧义，而非强行讲故事。",informal:"用小阶段跑。信号不一致就标为不清楚，不装确定。"},
+          post:{formal:"路线图部署进入治理与审计，同时保持隐私与数据边界。",informal:"最终会接入治理/审计，让信任可规模化。"}
+        },
+        rules:{
+          origin:{formal:"规则定义可采信：证据、失败条件、不可判定。修正产生新纪元，不重写历史。无收据不允许升级。",informal:"规则让系统诚实：没收据不升级；改动要公开，新纪元而不是改历史。"},
+          now:{formal:"上线规则强调压力下的一致性：稳定定义、有界主张、缺失数据确定性处理。歧义视为风险放大器。",informal:"上线规则阻止混乱：缺失就是缺失；歧义不伪装成确定。"},
+          post:{formal:"路线图规则强化防作弊与可携带：原因码、审计包、独立核查路径。",informal:"下一步更难被刷：更强日志、更清晰原因、更可验证。"}
+        },
+        use:{
+          origin:{formal:"使用流程：声明范围 → 收集收据 → 应用约束 → 输出分类。输出包含有界状态与原因码。",informal:"用法：先定范围，给收据，跑约束，拿到结论和原因。"},
+          now:{formal:"上线使用强调可重复：同输入同输出；状态保留用于可比性。",informal:"上线的关键是：两个人看同证据得到同结论。"},
+          post:{formal:"路线图使用生成可导出证明包：回放窗口、哈希、可登记摘要（隐私边界不破）。",informal:"以后你能导出证明包：好核查、难伪造。"}
+        }
+      }
+    },
+    es:{
+      hdr:{t:"Diagnóstico de Coherencia", s:"Soporte de decisión · clasificación · salidas acotadas"},
+      nodes:{
+        overview:{lab:"RESUMEN", sub:"Qué hace, en una pasada."},
+        deploy:{lab:"DESPLIEGUE", sub:"Dónde se conecta."},
+        rules:{lab:"REGLAS", sub:"Admisibilidad y postura de colapso."},
+        use:{lab:"USO", sub:"Entradas → restricciones → salidas."}
+      },
+      modal:{hint:"Esta página es acotada: las afirmaciones requieren recibos. La navegación preserva gd_*.",
+        concept:"Concepto", live:"En vivo", roadmap:"Ruta",
+        formal:"FORMAL", informal:"CLARO", c:"CONCEPTO", l:"EN VIVO", r:"RUTA"
+      },
+      content:{
+        overview:{
+          origin:{formal:"Superficie diagnóstica acotada: clasifica trayectorias bajo un alcance declarado. Consume recibos, aplica restricciones y produce estados admisibles, no narrativas. Mismo evidencia → misma clasificación.",informal:"Una forma rápida de saber qué es real. Traes recibos, aplica reglas y devuelve lo admisible."},
+          now:{formal:"Modo vivo: mantiene significado estable mientras el sitio crece. Las salidas siguen ligadas a lo medido y verificable.",informal:"Ahora es el lugar para verificar deriva y volver a la estructura."},
+          post:{formal:"Ruta: paquetes reproducibles, registros y adaptadores por dominio sin cambiar el contrato de admisibilidad.",informal:"Luego será un toolkit completo: más adaptadores, más replay, misma disciplina."}
+        },
+        deploy:{
+          origin:{formal:"Se despliega donde la deriva se acumula: comunicación, incentivos, proceso y medición. Debe gatear antes de los reclamos para que la escala no amplifique error.",informal:"Ponlo donde empiezan los reclamos. Captura deriva temprano."},
+          now:{formal:"Modo vivo: olas pequeñas, checkpoints observables y rollback limpio. Si señales no concuerdan, marca ambigüedad.",informal:"En vivo no inventa historias: si no cuadra, lo marca."},
+          post:{formal:"Ruta: integración con gobernanza y auditoría preservando privacidad.",informal:"Más adelante se integra con auditoría para escalar confianza."}
+        },
+        rules:{
+          origin:{formal:"Reglas de admisibilidad: evidencia, fallos y lo indecidible. Corrección crea una nueva época; no reescribe historia. Sin recibos no hay upgrade.",informal:"Reglas = honestidad. Sin recibos no hay upgrades. Cambios explícitos, no silenciosos."},
+          now:{formal:"En vivo: definiciones estables, reclamos acotados y manejo determinista de datos faltantes. Ambigüedad acelera colapso.",informal:"En vivo no maquilla incertidumbre. Faltante es faltante."},
+          post:{formal:"Ruta: anti-gaming, códigos de razón y paquetes de auditoría portables.",informal:"Luego será más difícil de jugar: mejores logs y razones claras."}
+        },
+        use:{
+          origin:{formal:"Flujo: declarar alcance → reunir recibos → aplicar restricciones → emitir clasificación + código de razón.",informal:"Uso: define alcance, trae recibos, corre restricciones, recibe respuesta con razón."},
+          now:{formal:"En vivo: repetibilidad. Misma entrada produce misma salida entre operadores.",informal:"En vivo: dos personas ven lo mismo y llegan a lo mismo."},
+          post:{formal:"Ruta: export bundles (replay, hashes, resumen registrable) sin filtrar telemetría privada.",informal:"Luego exportas pruebas: fácil de verificar, difícil de falsificar."}
+        }
+      }
+    }
   };
-  var T=(lang==="zh")?C.zh:(lang==="es")?C.es:C.en;
 
-  document.getElementById("hdrT").textContent=T.t;
-  document.getElementById("hdrS").textContent=T.s;
-  document.getElementById("labN").textContent=T.N[0]; document.getElementById("subN").textContent=T.N[1];
-  document.getElementById("labE").textContent=T.E[0]; document.getElementById("subE").textContent=T.E[1];
-  document.getElementById("labS").textContent=T.S[0]; document.getElementById("subS").textContent=T.S[1];
-  document.getElementById("labW").textContent=T.W[0]; document.getElementById("subW").textContent=T.W[1];
+  function pick(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+
+  // ---- apply header/node labels ----
+  function applyLabels(){
+    var T=pick();
+    document.getElementById("hdrTitle").textContent=T.hdr.t;
+    document.getElementById("hdrSub").textContent=T.hdr.s;
+
+    document.getElementById("labOverview").textContent=T.nodes.overview.lab;
+    document.getElementById("subOverview").textContent=T.nodes.overview.sub;
+    document.getElementById("labDeploy").textContent=T.nodes.deploy.lab;
+    document.getElementById("subDeploy").textContent=T.nodes.deploy.sub;
+    document.getElementById("labRules").textContent=T.nodes.rules.lab;
+    document.getElementById("subRules").textContent=T.nodes.rules.sub;
+    document.getElementById("labUse").textContent=T.nodes.use.lab;
+    document.getElementById("subUse").textContent=T.nodes.use.sub;
+
+    document.getElementById("mHint").textContent=T.modal.hint;
+
+    document.getElementById("toneFormal").textContent=T.modal.formal;
+    document.getElementById("toneInformal").textContent=T.modal.informal;
+    document.getElementById("timeConcept").textContent=T.modal.c;
+    document.getElementById("timeLive").textContent=T.modal.l;
+    document.getElementById("timeRoadmap").textContent=T.modal.r;
+
+    document.getElementById("hConcept").textContent=T.modal.concept;
+    document.getElementById("hLive").textContent=T.modal.live;
+    document.getElementById("hRoadmap").textContent=T.modal.roadmap;
+  }
+  applyLabels();
+
+  // ---- modal logic ----
+  var bd=document.getElementById("bd");
+  var modal=document.getElementById("modal");
+  var mClose=document.getElementById("mClose");
+  var mTitle=document.getElementById("mTitle");
+
+  var toneFormal=document.getElementById("toneFormal");
+  var toneInformal=document.getElementById("toneInformal");
+  var timeConcept=document.getElementById("timeConcept");
+  var timeLive=document.getElementById("timeLive");
+  var timeRoadmap=document.getElementById("timeRoadmap");
+
+  var bConcept=document.getElementById("bConcept");
+  var bLive=document.getElementById("bLive");
+  var bRoadmap=document.getElementById("bRoadmap");
+  var pConcept=document.getElementById("pConcept");
+  var pLive=document.getElementById("pLive");
+  var pRoadmap=document.getElementById("pRoadmap");
+
+  var activeKey=null;
+  var tone=style; // formal/informal
+  var tsel=time;  // origin/now/post
+
+  function setActiveDiamond(id){
+    ["dOverview","dDeploy","dRules","dUse"].forEach(function(x){
+      var el=document.getElementById(x);
+      if(el) el.classList.toggle("active", x===id);
+    });
+  }
+
+  function renderModal(){
+    var T=pick();
+    var pack=T.content[activeKey] || null;
+    if(!pack){ pConcept.textContent=""; pLive.textContent=""; pRoadmap.textContent=""; return; }
+
+    toneFormal.classList.toggle("active", tone==="formal");
+    toneInformal.classList.toggle("active", tone==="informal");
+    timeConcept.classList.toggle("active", tsel==="origin");
+    timeLive.classList.toggle("active", tsel==="now");
+    timeRoadmap.classList.toggle("active", tsel==="post");
+
+    pConcept.textContent = pack.origin[tone];
+    pLive.textContent    = pack.now[tone];
+    pRoadmap.textContent = pack.post[tone];
+
+    // keep bubbles closed until tapped
+    bConcept.classList.remove("open");
+    bLive.classList.remove("open");
+    bRoadmap.classList.remove("open");
+  }
+
+  function openModal(key, titleText, activeId){
+    activeKey=key;
+    mTitle.textContent=titleText;
+    setActiveDiamond(activeId);
+    renderModal();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+
+  function closeModal(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    setActiveDiamond("__none__");
+  }
+
+  // bubble open
+  function bindBubble(el){
+    el.tabIndex=0; el.setAttribute("role","button");
+    el.addEventListener("click", function(){ el.classList.toggle("open"); });
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.classList.toggle("open"); }
+    });
+  }
+  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
+
+  // modal close
+  bd.addEventListener("click", closeModal);
+  mClose.addEventListener("click", closeModal);
+
+  // lens toggles
+  toneFormal.addEventListener("click", function(){ tone="formal"; style="formal"; try{localStorage.setItem("gd_style",style)}catch(e){} renderModal(); });
+  toneInformal.addEventListener("click", function(){ tone="informal"; style="informal"; try{localStorage.setItem("gd_style",style)}catch(e){} renderModal(); });
+
+  timeConcept.addEventListener("click", function(){ tsel="origin"; time="origin"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
+  timeLive.addEventListener("click", function(){ tsel="now"; time="now"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
+  timeRoadmap.addEventListener("click", function(){ tsel="post"; time="post"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
+
+  // open handlers (THIS is what you were missing)
+  function bindOpen(id, key, titleKey){
+    var el=document.getElementById(id);
+    el.addEventListener("click", function(){
+      var T=pick();
+      var title = T.nodes[titleKey].lab;
+      openModal(key, title, id);
+    });
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+    });
+  }
+  bindOpen("dOverview","overview","overview");
+  bindOpen("dDeploy","deploy","deploy");
+  bindOpen("dRules","rules","rules");
+  bindOpen("dUse","use","use");
 })();
 </script>
 

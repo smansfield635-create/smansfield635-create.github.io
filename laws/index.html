@@ -1,404 +1,260 @@
-<!-- TNT — /laws/index.html
-     LAWS · LANDING · DOCTRINE-ONLY (NO PRODUCT MARKETING)
-     GOALS:
-       - 4 doctrine tiles (1–2 sentences) + OPEN (no 404 guessing beyond declared routes)
-       - Route to /laws/categories/ (existing shell)
-       - Full state carry: ?lang=&style=&time=&depth=
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-     STATE:
-       - URL keys: lang/style/time/depth
-       - LS keys: gd_lang/gd_style/gd_time/gd_depth
-     LANGUAGE:
-       - EN-only when lang=en
-       - 中文-only when lang=zh
-       - ES button present (if instruments.js allowlist blocks es upstream, it will normalize to en/zh)
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LAWS · Doctrine</title>
+<title>LAWS · Constraints</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* ui.css owns field */
 a{color:inherit;text-decoration:none}
-:root{--dockH:86px}
+:root{--dockH:88px}
 
-/* Page frame */
+/* Page layout */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 18px);
+  padding:24px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:20px;
 }
 
-/* Header */
-.header{
-  border:1px solid rgba(255,255,255,.10);
+/* High contrast container */
+.block{
+  background:rgba(0,0,0,.82);
+  border:1px solid rgba(255,255,255,.22);
   border-radius:22px;
-  background:rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  padding:14px 16px;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:26px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 50px 140px rgba(0,0,0,.9);
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:26px;letter-spacing:.3px;margin:0 0 6px}
-.s{font-size:13px;opacity:.82;line-height:1.5;margin:0}
 
-/* Controls row */
-.ctrl{
+.k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 6px;
+}
+
+.h{
+  font-size:30px;
+  font-weight:950;
+  margin:0 0 12px;
+}
+
+.p{
+  font-size:16px;
+  line-height:1.65;
+  opacity:.95;
+  margin:0;
+}
+
+/* Law list */
+.law{
+  border-top:1px solid rgba(255,255,255,.18);
+  padding-top:18px;
+  margin-top:18px;
+}
+
+.lt{
+  font-weight:950;
+  font-size:18px;
+  margin:0 0 8px;
+}
+
+.ld{
+  font-size:15px;
+  opacity:.9;
+  margin:0;
+}
+
+/* Lens toggle */
+.lens{
   display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-.leftBtns{display:flex;gap:10px;flex-wrap:wrap}
-.langTri{
-  position:relative;
-  width:128px;height:78px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-  display:grid;
-  place-items:center;
-  padding:8px;
-}
-.langTri .tri{position:relative;width:112px;height:62px;}
-.langTri .btn{position:absolute;padding:8px 12px;border-radius:999px;font-weight:900;letter-spacing:.2px;line-height:1;white-space:nowrap}
-.langTri .en{left:50%;top:0;transform:translateX(-50%)}
-.langTri .zh{left:0;bottom:0}
-.langTri .es{right:0;bottom:0}
-@media (max-width:520px){
-  .langTri{width:118px;height:74px}
-  .langTri .tri{width:104px;height:60px}
-  .langTri .btn{padding:8px 10px}
-}
-
-/* Notice strip */
-.notice{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(0,0,0,.14);
-  padding:10px 12px;
-  color:rgba(255,255,255,.84);
-  line-height:1.45;
-  font-size:13px;
-}
-
-/* Tile grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:12px;
+  margin-top:14px;
 }
-@media (max-width:860px){ .grid{grid-template-columns:1fr} }
 
-/* Doctrine tile */
-.tile{
-  --c:#93C5FD;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  box-shadow:0 18px 60px rgba(0,0,0,.62);
-  overflow:hidden;
+.line{
+  margin-top:10px;
+  font-size:16px;
+  line-height:1.7;
 }
-.thead{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px 16px;
-}
-.tleft{display:flex;gap:12px;min-width:0}
-.pip{
-  width:8px;height:22px;border-radius:99px;background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.ttxt{min-width:0}
-.tt{font-weight:950;letter-spacing:.2px}
-.ts{margin-top:6px;color:rgba(255,255,255,.84);line-height:1.5;font-size:13px}
-.tact{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.small{opacity:.70;font-size:12px}
 
-/* Bottom dock */
+.bind{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.18);
+  font-size:14px;
+  opacity:.85;
+}
+
+/* Dock */
 .dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
+  position:fixed;
+  left:50%;
+  bottom:max(12px,env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:220;
   width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  padding:14px;
+  background:rgba(0,0,0,.95);
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.2);
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:98px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-}
+.dock .btn{width:100%}
 </style>
 </head>
 
 <body>
 
-<div class="page" id="page">
+<div class="page">
 
-  <div class="header">
-    <p class="k" id="hk">CARDINAL AXIS</p>
-    <h1 class="t" id="ht">LAWS · Doctrine</h1>
-    <p class="s" id="hs">Constraints only. Products live in Products. Instrumentation lives in Gauges.</p>
+  <div class="block">
+    <p class="k">STRUCTURAL CONSTRAINTS</p>
+    <h1 class="h">LAWS THAT PREVENT DRIFT</h1>
+    <p class="p">
+      These are not beliefs.  
+      These are boundaries that stop collapse under scale.
+    </p>
 
-    <div class="ctrl">
-      <div class="leftBtns">
-        <a class="btn" id="btnHome" href="/home/">HOME</a>
-        <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-        <a class="btn" id="btnCategories" href="/laws/categories/">CATEGORIES</a>
-      </div>
-
-      <div class="langTri" aria-label="Language">
-        <div class="tri">
-          <button class="btn en" id="bEN" type="button">EN</button>
-          <button class="btn zh" id="bZH" type="button">中文</button>
-          <button class="btn es" id="bES" type="button">ES</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="notice" id="notice">
-      No fusion gain claims. Industrial (C) posture default.
+    <div class="lens">
+      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
+      <button class="btn" onclick="setLens('formal')">FORMAL</button>
     </div>
   </div>
 
-  <div class="grid" id="grid"></div>
+  <div class="block">
+
+    <div class="law">
+      <p class="lt">1. SCOPE PRECEDES AUTHORITY</p>
+      <div id="scope"></div>
+    </div>
+
+    <div class="law">
+      <p class="lt">2. SCALE AMPLIFIES ERROR</p>
+      <div id="scale"></div>
+    </div>
+
+    <div class="law">
+      <p class="lt">3. PROOF MUST SURVIVE CONSTRAINT</p>
+      <div id="proof"></div>
+    </div>
+
+    <div class="law">
+      <p class="lt">4. CONTAINMENT PREVENTS CASCADE</p>
+      <div id="contain"></div>
+    </div>
+
+  </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/index.html">INDEX</a>
 </nav>
 
 <script>
-(function(){
-  // ---- state (instrument-compatible) ----
-  var qs = new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+let currentLens = "informal";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+const DATA = {
 
-  try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-    localStorage.setItem("gd_depth", depth);
-  }catch(e){}
+scope:{
+informal:[
+"You must define boundaries before making claims.",
+"Undefined scope creates silent power drift.",
+"If scope moves, the result is invalid."
+],
+formal:[
+"Admissibility requires declared scope.",
+"Authority without constraint produces instability.",
+"Scope mutation invalidates prior conclusions."
+],
+bind:"Bound to: Definitions + Diagnostic Layer."
+},
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+scale:{
+informal:[
+"Small confusion becomes large failure when multiplied.",
+"Growth magnifies weakness.",
+"If it breaks at 1x, it collapses at 100x."
+],
+formal:[
+"Variance compounds under scale.",
+"Uncorrected error increases nonlinearly.",
+"Scaling without constraint accelerates instability."
+],
+bind:"Bound to: Adoption Ladder + Phase Gates."
+},
 
-  function q(over){
-    var L = (over && over.lang) ? over.lang : lang;
-    var S = (over && over.style) ? over.style : style;
-    var T = (over && over.time) ? over.time : time;
-    var D = (over && over.depth) ? over.depth : depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
+proof:{
+informal:[
+"If it cannot be tested, it should not be elevated.",
+"Evidence without limits is persuasion.",
+"Claims must survive pressure."
+],
+formal:[
+"Proof requires constraint-bound validation.",
+"Admissibility thresholds define legitimacy.",
+"Unbounded claims create fragility."
+],
+bind:"Bound to: Coherence Diagnostic."
+},
 
-  function wire(){
-    document.getElementById("btnHome").href="/home/"+q();
-    document.getElementById("btnIndex").href="/index.html"+q();
-    document.getElementById("btnCategories").href="/laws/categories/"+q();
+contain:{
+informal:[
+"Keep failure local.",
+"Stop cascade early.",
+"Rollback beats collapse."
+],
+formal:[
+"Segmentation prevents systemic failure.",
+"Rollback discipline preserves coherence.",
+"Containment restores invariant stability."
+],
+bind:"Bound to: Enforcement + Recovery Layer."
+}
 
-    document.getElementById("dockHome").href="/home/"+q();
-    document.getElementById("dockExplore").href="/explore/"+q();
-    document.getElementById("dockProducts").href="/products/"+q();
-    document.getElementById("dockGauges").href="/gauges/"+q();
-  }
+};
 
-  // ---- i18n ----
-  var I18N = {
-    en:{
-      hk:"CARDINAL AXIS",
-      ht:"LAWS · Doctrine",
-      hs:"Constraints only. Products live in Products. Instrumentation lives in Gauges.",
-      notice:"No fusion gain claims. Industrial (C) posture default.",
-      buttons:{home:"HOME", index:"INDEX", cat:"CATEGORIES", explore:"EXPLORE", products:"PRODUCTS", gauges:"GAUGES", open:"OPEN"},
-      tiles:{
-        C:{t:"Industrial Posture (C)", sF:"Default public-energy posture. Binds all energy claims to industrial substitution framing.", sI:"Default posture. No hype. Claims stay tied to industrial framing."},
-        FR:{t:"Fusion Readiness Rule", sF:"Requirements-only doctrine. Never implies net-positive gain or achieved production.", sI:"Readiness only. No “we did it.” Keep claims bounded."},
-        INV:{t:"Core Invariants", sF:"Non-overridable constraints that define admissibility under declared scope.", sI:"Hard rules. No exceptions. Otherwise drift wins."},
-        HCR:{t:"Hybrid Collapse Rule", sF:"Classifier separating pass, fracture, phase transition, and impossibility under windowed rules.", sI:"One harness. Four outcomes. No smoothing, no excuses."}
-      }
-    },
-    zh:{
-      hk:"基轴体系",
-      ht:"法则 · 教义",
-      hs:"只放约束教义。产品在产品页。仪表在量规页。",
-      notice:"禁止聚变增益主张。默认工业（C）姿态。",
-      buttons:{home:"主页", index:"索引", cat:"分类", explore:"探索", products:"产品", gauges:"量规", open:"打开"},
-      tiles:{
-        C:{t:"工业姿态（C）", sF:"默认公众能源姿态。所有能源主张绑定到工业替代框架。", sI:"默认姿态。不炒作。主张必须回到工业框架。"},
-        FR:{t:"聚变就绪规则", sF:"仅需求教义。绝不暗示净增益或已实现产出。", sI:"只谈就绪，不谈胜利。主张必须有界。"},
-        INV:{t:"核心不变量", sF:"不可覆盖的约束，用于在声明范围内定义可采信性。", sI:"硬规则。没例外。不然漂移。"},
-        HCR:{t:"混合崩塌规则", sF:"在窗口规则下区分通过/裂解/相变/不可能的分类器。", sI:"一个判别器，四种结果。不加权，不粉饰。"}
-      }
-    },
-    es:{
-      hk:"CARDINAL AXIS",
-      ht:"LEYES · Doctrina",
-      hs:"Solo restricciones. Productos viven en Products. Instrumentación vive en Gauges.",
-      notice:"Sin afirmaciones de ganancia de fusión. Postura Industrial (C) por defecto.",
-      buttons:{home:"INICIO", index:"ÍNDICE", cat:"CATEGORÍAS", explore:"EXPLORAR", products:"PRODUCTOS", gauges:"MEDIDORES", open:"ABRIR"},
-      tiles:{
-        C:{t:"Postura Industrial (C)", sF:"Postura pública por defecto. Vincula toda afirmación energética al marco de sustitución industrial.", sI:"Postura por defecto. Sin hype. Afirmaciones acotadas."},
-        FR:{t:"Regla de Preparación de Fusión", sF:"Solo requisitos. Nunca implica ganancia neta positiva ni producción lograda.", sI:"Solo preparación. Sin ‘lo logramos’. Mantén límites."},
-        INV:{t:"Invariantes Centrales", sF:"Restricciones no anulables que definen admisibilidad bajo alcance declarado.", sI:"Reglas duras. Sin excepciones. Si no, deriva."},
-        HCR:{t:"Regla de Colapso Híbrido", sF:"Clasificador: pasa, fractura, transición de fase, imposibilidad (por ventanas).", sI:"Un arnés. Cuatro resultados. Sin suavizado."}
-      }
-    }
-  };
+function setLens(l){
+  currentLens = l;
+  render();
+}
 
-  function text(scope, key){
-    var parts = key.split(".");
-    var cur = scope;
-    for(var i=0;i<parts.length;i++){ if(!cur) return ""; cur = cur[parts[i]]; }
-    return cur || "";
-  }
+function renderLaw(id, target){
+  const container = document.getElementById(target);
+  container.innerHTML = "";
 
-  function renderText(){
-    var S = (lang==="zh") ? I18N.zh : (lang==="es") ? I18N.es : I18N.en;
-    document.getElementById("hk").textContent = S.hk;
-    document.getElementById("ht").textContent = S.ht;
-    document.getElementById("hs").textContent = S.hs;
-    document.getElementById("notice").textContent = S.notice;
+  DATA[id][currentLens].forEach(line=>{
+    const p = document.createElement("p");
+    p.className = "line";
+    p.textContent = line;
+    container.appendChild(p);
+  });
 
-    document.getElementById("btnHome").textContent = S.buttons.home;
-    document.getElementById("btnIndex").textContent = S.buttons.index;
-    document.getElementById("btnCategories").textContent = S.buttons.cat;
+  const bind = document.createElement("div");
+  bind.className = "bind";
+  bind.textContent = DATA[id].bind;
+  container.appendChild(bind);
+}
 
-    document.getElementById("dockHome").textContent = S.buttons.home;
-    document.getElementById("dockExplore").textContent = S.buttons.explore;
-    document.getElementById("dockProducts").textContent = S.buttons.products;
-    document.getElementById("dockGauges").textContent = S.buttons.gauges;
+function render(){
+  renderLaw("scope","scope");
+  renderLaw("scale","scale");
+  renderLaw("proof","proof");
+  renderLaw("contain","contain");
+}
 
-    // buttons active state
-    document.getElementById("bEN").classList.toggle("active", lang==="en");
-    document.getElementById("bZH").classList.toggle("active", lang==="zh");
-    document.getElementById("bES").classList.toggle("active", lang==="es");
-
-    // build tiles
-    var grid = document.getElementById("grid");
-    grid.innerHTML = "";
-
-    function tile(code, color, href){
-      var t = document.createElement("section");
-      t.className = "tile";
-      t.style.setProperty("--c", color);
-
-      var head = document.createElement("div");
-      head.className = "thead";
-
-      var left = document.createElement("div");
-      left.className = "tleft";
-
-      var pip = document.createElement("div");
-      pip.className = "pip";
-
-      var txt = document.createElement("div");
-      txt.className = "ttxt";
-
-      var tt = document.createElement("div");
-      tt.className = "tt";
-      tt.textContent = S.tiles[code].t;
-
-      var ts = document.createElement("div");
-      ts.className = "ts";
-      ts.textContent = (style==="informal") ? S.tiles[code].sI : S.tiles[code].sF;
-
-      txt.appendChild(tt);
-      txt.appendChild(ts);
-
-      left.appendChild(pip);
-      left.appendChild(txt);
-
-      var act = document.createElement("div");
-      act.className = "tact";
-
-      var small = document.createElement("div");
-      small.className = "small";
-      small.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "Abrir" : "Open";
-
-      var open = document.createElement("a");
-      open.className = "btn";
-      open.textContent = S.buttons.open;
-      open.href = href + q();
-
-      act.appendChild(open);
-
-      head.appendChild(left);
-      head.appendChild(act);
-
-      t.appendChild(head);
-      return t;
-    }
-
-    // ROUTES (declared; create next if missing)
-    grid.appendChild(tile("C",  "#F59E0B", "/laws/industrial-posture/"));
-    grid.appendChild(tile("FR", "#93C5FD", "/laws/fusion-readiness/"));
-    grid.appendChild(tile("INV","#60A5FA", "/laws/core-invariants/"));
-    grid.appendChild(tile("HCR","#D4AF37", "/laws/hybrid-collapse/"));
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    // NOTE: if instruments.js allowlist blocks es, it may normalize on reload/navigation.
-    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-    renderText();
-    wire();
-  }
-
-  document.getElementById("bEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("bZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("bES").addEventListener("click", function(){ setLang("es"); });
-
-  wire();
-  renderText();
-
-})();
+render();
 </script>
 
 </body>

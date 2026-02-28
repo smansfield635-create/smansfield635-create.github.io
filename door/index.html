@@ -1,30 +1,22 @@
 <!-- TNT — /door/index.html
-     DOOR · CLEAN PEARLESCENT RESTORE · NO COMPETING UI
-     GOALS:
-       - 3D pearlescent black jewels (NOT coal)
-       - ui.css gold grid stays behind jewels (never over them)
-       - No UI merging: one title block + two diamonds only
-       - Top controls never wrap (no stacked/duplicated look)
-       - Language toggle works (EN/中文/ES) page-level only
+     DOOR · HARD CLEAN (NO COMPETING UI)
+     - ONLY: top bar + 2 diamonds
+     - NO banner, NO footer, NO extra copy blocks
+     - Pearlescent black gems
+     - ui.css field kept (no body background override)
+     - State carry: lang/style/time/depth
      ROUTES:
-       - ENTER SITE     → /home/
-       - VIEW SITE MAP  → /prelude/
-       - EXIT           → /
-       - PRELUDE        → /prelude/
-     STATE:
-       - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT set html/body background (ui.css owns field)
+       ENTER SITE     -> /home/
+       VIEW SITE MAP  -> /prelude/
+       EXIT           -> /
+       PRELUDE        -> /prelude/
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>DOOR</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -33,48 +25,22 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* =========================================================
-   HARD STACK ORDER: force ui.css overlays BEHIND door UI
-   ========================================================= */
-html,body{height:100%}
-body{position:relative;z-index:0}
-body::before{z-index:-2 !important;pointer-events:none !important}
-body::after{z-index:-1 !important;pointer-events:none !important}
-#doorRoot{position:relative;z-index:10}
+/* Keep ui.css background/grid behind; ensure our UI is above */
+body{position:relative}
+#doorRoot{position:relative;z-index:5}
 
-/* =========================================================
-   TOKENS
-   ========================================================= */
-:root{
-  --D:300px;
-  --R:220px;
-
-  --deepA:#0f1624;
-  --deepB:#070c14;
-  --deepC:#04060a;
-
-  --opalV:rgba(160,120,255,.82);
-  --opalC:rgba(110,230,255,.70);
-  --opalW:rgba(255,255,255,.22);
-
-  --goldGlow:rgba(212,175,55,.55);
-  --stroke:rgba(255,255,255,.16);
-}
-
-/* =========================================================
-   TOP BAR (never wraps)
-   ========================================================= */
+/* ===== TOP BAR (NEVER WRAPS) ===== */
 .top{
   position:fixed;
   top:16px;
   left:0;
   right:0;
   padding:0 16px;
+  z-index:50;
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
-  z-index:300;
   pointer-events:none;
 }
 .top-left,.top-right{
@@ -87,76 +53,28 @@ body::after{z-index:-1 !important;pointer-events:none !important}
 }
 .top .btn{white-space:nowrap}
 
-@media (max-width:420px){
-  .top{padding:0 12px}
-  .top-left,.top-right{gap:10px}
-}
-
-/* =========================================================
-   TITLE BLOCK (single hierarchy; no competing banners)
-   ========================================================= */
-.title{
-  position:fixed;
-  left:50%;
-  top:92px;
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  text-align:center;
-  z-index:120;
-  padding:16px 14px;
-  border-radius:22px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 18% 34%, rgba(210,190,255,.18), transparent 72%),
-    radial-gradient(circle at 82% 62%, rgba(120,70,255,.14), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
-  backdrop-filter:blur(12px);
-  box-shadow:0 40px 140px rgba(0,0,0,.62);
-  pointer-events:none;
-}
-.title h1{
-  margin:0;
-  font-size:52px;
-  letter-spacing:2px;
-  font-weight:950;
-  line-height:1.02;
-}
-.title p{
-  margin:12px 0 0;
-  font-size:15px;
-  line-height:1.55;
-  opacity:.90;
-}
-.title strong{font-weight:950}
-.title em{font-style:italic;opacity:.95}
-
-@media (max-width:560px){
-  .title{top:86px}
-  .title h1{font-size:46px}
-}
-@media (max-width:420px){
-  .title h1{font-size:42px}
-  .title p{font-size:14px}
-}
-
-/* =========================================================
-   STAGE
-   ========================================================= */
+/* ===== STAGE ===== */
 .stage{
   position:fixed;
-  top:58%;
   left:50%;
+  top:56%;
   transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:200;
+  width:min(820px,94vw);
+  height:min(820px,94vw);
+  z-index:20;
   pointer-events:none;
 }
 
-/* =========================================================
-   PEARLESCENT GEM (3D)
-   ========================================================= */
-.gem{
+/* ===== PEARLESCENT GEM (MATERIAL ONLY) ===== */
+:root{
+  --D:300px;
+  --R:220px;
+  --deepA:#0f1624;
+  --deepB:#070c14;
+  --goldGlow:rgba(212,175,55,.55);
+}
+
+.diamond{
   width:var(--D);
   height:var(--D);
   position:absolute;
@@ -169,19 +87,13 @@ body::after{z-index:-1 !important;pointer-events:none !important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  overflow:hidden;
 
   background:
-    /* specular */
     radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.62) 12%, transparent 38%),
-    /* violet bloom */
-    radial-gradient(circle at 78% 28%, var(--opalV) 0%, transparent 60%),
-    /* cyan bloom */
-    radial-gradient(circle at 62% 86%, var(--opalC) 0%, transparent 74%),
-    /* pearl haze */
-    radial-gradient(circle at 46% 46%, var(--opalW) 0%, transparent 62%),
-    /* deep base */
-    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, var(--deepC) 100%);
+    radial-gradient(circle at 78% 28%, rgba(160,120,255,.78) 0%, transparent 60%),
+    radial-gradient(circle at 62% 86%, rgba(110,230,255,.66) 0%, transparent 74%),
+    radial-gradient(circle at 46% 46%, rgba(255,255,255,.14) 0%, transparent 62%),
+    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, #04060a 100%);
 
   border:1px solid rgba(255,255,255,.70);
 
@@ -193,7 +105,8 @@ body::after{z-index:-1 !important;pointer-events:none !important}
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.gem:hover{
+
+.diamond:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
   border-color:rgba(255,255,255,.82);
   box-shadow:
@@ -202,21 +115,15 @@ body::after{z-index:-1 !important;pointer-events:none !important}
     inset 0 5px 0 rgba(255,255,255,1),
     inset 0 -120px 180px rgba(0,0,0,.98);
 }
-.gem:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
-}
 
-.gem.top{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
-.gem.bottom{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
-.gem.top:hover{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg) scale(1.04)}
-.gem.bottom:hover{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg) scale(1.04)}
-.gem.top:active{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg) scale(.99)}
-.gem.bottom:active{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg) scale(.99)}
+.diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+
+.topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
+.bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 
 .inner{
   transform:rotate(-45deg);
   height:100%;
-  width:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -226,11 +133,11 @@ body::after{z-index:-1 !important;pointer-events:none !important}
   user-select:none;
   pointer-events:none;
 }
+
 .lab{
   font-size:24px;
   font-weight:950;
   letter-spacing:1px;
-  text-shadow:0 0 18px rgba(255,255,255,.08);
 }
 .sub{
   margin-top:14px;
@@ -238,36 +145,23 @@ body::after{z-index:-1 !important;pointer-events:none !important}
   opacity:.95;
   line-height:1.35;
 }
-.pref{font-weight:950;font-style:italic}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-.footer{
-  position:fixed;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  text-align:center;
-  z-index:220;
-  font-size:13.5px;
-  opacity:.88;
-  pointer-events:none;
-}
-.sig{
-  margin-top:8px;
-  font-size:12px;
-  letter-spacing:3px;
-  opacity:.70;
+.pref{
+  font-weight:950;
+  font-style:italic;
 }
 
-/* Responsive */
+/* ===== MOBILE: shrink so NOTHING overlaps ===== */
 @media (max-width:560px){
-  :root{--D:264px;--R:196px}
+  :root{--D:256px;--R:190px}
+  .stage{top:58%}
+  .inner{padding:22px}
+  .lab{font-size:22px}
+  .sub{font-size:14.5px}
 }
 @media (max-width:420px){
-  :root{--D:248px;--R:188px}
+  :root{--D:238px;--R:178px}
+  .top{padding:0 12px}
+  .top-left,.top-right{gap:10px}
 }
 </style>
 </head>
@@ -287,20 +181,15 @@ body::after{z-index:-1 !important;pointer-events:none !important}
     </div>
   </div>
 
-  <div class="title" aria-hidden="true">
-    <h1 id="ttl">ENTER</h1>
-    <p id="tag"><strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em></p>
-  </div>
-
   <div class="stage" aria-label="Door fork">
-    <div class="gem top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+    <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
       <div class="inner">
         <div class="lab" id="labEnter">ENTER SITE</div>
         <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Move forward into systems.</div>
       </div>
     </div>
 
-    <div class="gem bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
+    <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="View site map">
       <div class="inner">
         <div class="lab" id="labMap">VIEW SITE MAP</div>
         <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
@@ -308,17 +197,11 @@ body::after{z-index:-1 !important;pointer-events:none !important}
     </div>
   </div>
 
-  <div class="footer">
-    Scale without structure collapses.
-    <div class="sig">COGRID.NET</div>
-  </div>
-
 </div>
 
 <script>
 (function(){
   var qs=new URLSearchParams(location.search);
-
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -350,11 +233,11 @@ body::after{z-index:-1 !important;pointer-events:none !important}
            "&depth="+encodeURIComponent(D);
   }
 
-  // state-carry links
+  // top links carry state
   document.getElementById("btnExit").href="/"+q();
   document.getElementById("btnPrelude").href="/prelude/"+q();
 
-  // language toggle
+  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -377,46 +260,7 @@ body::after{z-index:-1 !important;pointer-events:none !important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // i18n (minimal; layout-stable)
-  function renderLang(){
-    if(lang==="zh"){
-      document.getElementById("ttl").textContent="进入";
-      document.getElementById("tag").innerHTML="<strong>无需信仰</strong> · <strong>不做推销</strong> · <em>以结构导航</em>";
-      document.getElementById("labEnter").textContent="进入网站";
-      document.getElementById("prefEnter").textContent="直接：";
-      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
-      document.getElementById("labMap").textContent="查看网站地图";
-      document.getElementById("prefMap").textContent="先：";
-      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
-      document.getElementById("btnExit").textContent="退出";
-      document.getElementById("btnPrelude").textContent="前置页";
-    }else if(lang==="es"){
-      document.getElementById("ttl").textContent="ENTRAR";
-      document.getElementById("tag").innerHTML="<strong>Sin creencias</strong> · <strong>Sin venta</strong> · <em>Navegación por estructura</em>";
-      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
-      document.getElementById("prefEnter").textContent="Directo:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
-      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
-      document.getElementById("prefMap").textContent="Primero:";
-      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
-      document.getElementById("btnExit").textContent="SALIR";
-      document.getElementById("btnPrelude").textContent="PRELUDIO";
-    }else{
-      document.getElementById("ttl").textContent="ENTER";
-      document.getElementById("tag").innerHTML="<strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em>";
-      document.getElementById("labEnter").textContent="ENTER SITE";
-      document.getElementById("prefEnter").textContent="Direct:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
-      document.getElementById("labMap").textContent="VIEW SITE MAP";
-      document.getElementById("prefMap").textContent="First:";
-      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
-      document.getElementById("btnExit").textContent="EXIT";
-      document.getElementById("btnPrelude").textContent="PRELUDE";
-    }
-  }
-  renderLang();
-
-  // routing
+  // routing (no inline onclick)
   function goEnter(){ location.href="/home/"+q(); }
   function goMap(){ location.href="/prelude/"+q(); }
 
@@ -432,6 +276,39 @@ body::after{z-index:-1 !important;pointer-events:none !important}
   dMap.addEventListener("keydown", function(e){
     if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
   });
+
+  // minimal i18n (layout-stable)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("labEnter").textContent="进入网站";
+      document.getElementById("prefEnter").textContent="直接：";
+      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
+      document.getElementById("labMap").textContent="查看网站地图";
+      document.getElementById("prefMap").textContent="先：";
+      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnPrelude").textContent="前置页";
+    }else if(lang==="es"){
+      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("prefEnter").textContent="Directo:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
+      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefMap").textContent="Primero:";
+      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+    }else{
+      document.getElementById("labEnter").textContent="ENTER SITE";
+      document.getElementById("prefEnter").textContent="Direct:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
+      document.getElementById("labMap").textContent="VIEW SITE MAP";
+      document.getElementById("prefMap").textContent="First:";
+      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
+      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+    }
+  }
+  renderLang();
 })();
 </script>
 

@@ -1,28 +1,12 @@
-<!-- TNT — /index.html
-     ROOT DOOR ROUTER (CANON)
+<!-- TNT — /index.html  (ROOT DOOR)  — EN/ZH/ES + tighter diamonds + top banner
      ROUTES:
-       ENTER SITE      → /home/
-       VIEW LAUNCHPAD  → /index.html (THIS SAME FILE NAME IS ROOT, SO LAUNCHPAD = /index.html? NO.
-                         IMPORTANT: Launchpad is now /index.html? Actually root IS /index.html on GH Pages.
-                         Therefore Launchpad must be /launchpad/ (or /prelude/) — BUT you requested Prelude moved to /index.html.
-                         So: we must use /launchpad/ as the folder name OR use /prelude/ as the folder name and make it redirect to /index.html would loop.
-     SOLUTION:
-       ROOT = / (this file)
-       LAUNCHPAD = /launchpad/ (folder) (or /prelude/ if you keep prelude as folder)
-     BUT you explicitly said “prelude to the index”.
-     On GitHub Pages, root is index.html. So “index” can’t also be launchpad unless we introduce a different root file.
-     Therefore: we interpret your intent as:
-       - ROOT (what loads at domain) shows the index router (door-style)
-       - /index.html (same) can’t be both at once
-     To implement EXACTLY what you said without ambiguity, we must use:
-       - ROOT: / (this file)
-       - LAUNCHPAD: /index.html (a different file) is impossible on GH Pages because / == /index.html.
-     So the practical equivalent is:
-       - ROOT: / (door router)
-       - LAUNCHPAD: /prelude/ (kept as folder)
-       - INDEX ROUTER removed as separate page (since it is root now)
-     This matches your outcome: index-on-door, prelude-on-index-path (prelude route).
-     If you truly require Launchpad at /index.html specifically, you must deploy on a server where / can be routed to /door/ (not GH Pages).
+       ENTER SITE       → /home/
+       VIEW LAUNCHPAD   → /prelude/
+       EXIT             → /
+     NOTES:
+       - No competing UI: top bar + banner + 2 diamonds + footer only
+       - Language buttons do NOT wrap
+       - Diamonds are closer (R reduced)
 -->
 
 <!doctype html>
@@ -30,7 +14,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>DOOR</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -39,26 +23,15 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Stack isolation */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:0 !important; pointer-events:none !important}
+/* Root stacking */
 #doorRoot{position:relative;z-index:10}
 
-/* Tokens */
-:root{
-  --D:min(300px, 54vw);
-  --R:calc(var(--D) * .78);
-  --deepA:#0f1624;
-  --deepB:#070c14;
-  --goldGlow:rgba(212,175,55,.55);
-}
-
-/* Top bar */
+/* Top bar (never wrap) */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
   display:flex;align-items:center;justify-content:space-between;
-  gap:12px;z-index:300;
+  gap:12px;z-index:320;
   pointer-events:none;
 }
 .top .left,.top .right{
@@ -67,9 +40,40 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
-@media (max-width:420px){
-  .top{padding:0 12px}
-  .top .left,.top .right{gap:10px}
+
+/* Banner (simple, non-competing) */
+.banner{
+  position:fixed;
+  top:70px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:280;
+  width:min(980px,94vw);
+  padding:14px 14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(210,190,255,.12), transparent 70%),
+    radial-gradient(circle at 80% 60%, rgba(120,70,255,.10), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+  backdrop-filter:blur(10px);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  text-align:center;
+  pointer-events:none;
+}
+.banner .h{
+  margin:0;
+  font-weight:950;
+  letter-spacing:.6px;
+  font-size:14px;
+  text-transform:uppercase;
+  opacity:.92;
+}
+.banner .p{
+  margin:6px 0 0;
+  font-size:12.75px;
+  line-height:1.35;
+  opacity:.82;
 }
 
 /* Stage */
@@ -83,6 +87,14 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 }
 
 /* Pearlescent diamond */
+:root{
+  --D:min(300px, 54vw);
+  --R:calc(var(--D) * .68); /* tighter than before */
+  --deepA:#0f1624;
+  --deepB:#070c14;
+  --goldGlow:rgba(212,175,55,.55);
+}
+
 .diamond{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -112,6 +124,7 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
+
 .diamond::after{
   content:"";
   position:absolute;
@@ -124,6 +137,7 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   pointer-events:none;
   opacity:.95;
 }
+
 .diamond:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
   border-color:rgba(255,255,255,.82);
@@ -135,18 +149,18 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
 }
 .diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
-/* Positions */
+/* positions */
 .dTop{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .dBot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
 
-/* Inner text */
+/* inner text upright */
 .inner{
   transform:rotate(-45deg);
   width:100%;height:100%;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   text-align:center;
-  padding:24px;
+  padding:22px;
   pointer-events:none;
   user-select:none;
 }
@@ -162,7 +176,7 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   font-size:clamp(13px, 2.6vw, 16px);
 }
 
-/* Footer */
+/* footer */
 .footer{
   position:fixed;left:50%;
   bottom:18px;
@@ -181,54 +195,67 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
   opacity:.65;
 }
 
+/* small screens */
 @media (max-width:420px){
-  :root{ --D:min(276px, 78vw); --R:calc(var(--D) * .76); }
+  :root{ --D:min(276px, 78vw); --R:calc(var(--D) * .66); }
+  .top{padding:0 12px}
+  .top .left,.top .right{gap:10px}
+  .banner{top:66px}
 }
 </style>
 </head>
 
 <body>
 <div id="doorRoot">
+
   <div class="top" aria-label="Door controls">
     <div class="left">
       <a class="btn" id="btnExit" href="/">EXIT</a>
     </div>
-    <div class="right">
-      <span class="btn" style="pointer-events:none;opacity:.85">EN</span>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
+  </div>
+
+  <div class="banner" aria-hidden="true">
+    <div class="h" id="bH">WELCOME</div>
+    <div class="p" id="bP">Two entrances. One structure. Your pace.</div>
   </div>
 
   <div class="stage" aria-label="Door fork">
     <div class="diamond dTop" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
       <div class="inner">
-        <div class="lab">ENTER SITE</div>
-        <div class="sub">Go to the main hub.</div>
+        <div class="lab" id="tEnter">ENTER SITE</div>
+        <div class="sub" id="sEnter">Go to the main hub.</div>
       </div>
     </div>
 
     <div class="diamond dBot" id="dPrelude" role="button" tabindex="0" aria-label="View launchpad">
       <div class="inner">
-        <div class="lab">VIEW LAUNCHPAD</div>
-        <div class="sub">Get oriented first.</div>
+        <div class="lab" id="tPrelude">VIEW LAUNCHPAD</div>
+        <div class="sub" id="sPrelude">Get oriented first.</div>
       </div>
     </div>
   </div>
 
-  <div class="footer">
+  <div class="footer" id="foot">
     Orientation before scale · Scale before claims
     <div class="sig">COGRID.NET</div>
   </div>
+
 </div>
 
 <script>
 (function(){
-  // English-only stabilization
   var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-  var lang  = "en";
 
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -241,26 +268,84 @@ body::before, body::after{z-index:0 !important; pointer-events:none !important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  function q(){
-    return "?lang=en&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
+  // links
   document.getElementById("btnExit").href="/"+q();
 
   function goHome(){ location.href="/home/"+q(); }
-  function goPrelude(){ location.href="/prelude/"+q(); } /* Launchpad stays /prelude/ on GH Pages */
+  function goPrelude(){ location.href="/prelude/"+q(); }
 
   var a=document.getElementById("dEnter");
   var b=document.getElementById("dPrelude");
-
   a.addEventListener("click", goHome);
   b.addEventListener("click", goPrelude);
-
   a.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHome(); }});
   b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude(); }});
+
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paint(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paint();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    render();
+    paint();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  function render(){
+    if(lang==="zh"){
+      document.getElementById("bH").textContent="欢迎";
+      document.getElementById("bP").textContent="两个入口 · 一个结构 · 按你的节奏";
+      document.getElementById("tEnter").textContent="进入网站";
+      document.getElementById("sEnter").textContent="进入主枢纽。";
+      document.getElementById("tPrelude").textContent="查看发射台";
+      document.getElementById("sPrelude").textContent="先获得方向。";
+      document.getElementById("foot").firstChild.nodeValue="先导览 · 再规模 · 再主张";
+    }else if(lang==="es"){
+      document.getElementById("bH").textContent="BIENVENIDO";
+      document.getElementById("bP").textContent="Dos entradas · Una estructura · A tu ritmo";
+      document.getElementById("tEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("sEnter").textContent="Ir al hub principal.";
+      document.getElementById("tPrelude").textContent="VER PLATAFORMA";
+      document.getElementById("sPrelude").textContent="Oriéntate primero.";
+      document.getElementById("foot").firstChild.nodeValue="Orientación · Escala · Afirmaciones";
+    }else{
+      document.getElementById("bH").textContent="WELCOME";
+      document.getElementById("bP").textContent="Two entrances. One structure. Your pace.";
+      document.getElementById("tEnter").textContent="ENTER SITE";
+      document.getElementById("sEnter").textContent="Go to the main hub.";
+      document.getElementById("tPrelude").textContent="VIEW LAUNCHPAD";
+      document.getElementById("sPrelude").textContent="Get oriented first.";
+      document.getElementById("foot").firstChild.nodeValue="Orientation before scale · Scale before claims";
+    }
+  }
+  render();
 })();
 </script>
+
 </body>
 </html>

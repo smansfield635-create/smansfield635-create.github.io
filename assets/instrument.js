@@ -9,6 +9,8 @@
    - Canon keys only: gd_lang, gd_depth, gd_time, gd_style
    - Canon langs: ["en","zh","es"]  primary: "en"
    - Gate deep pages if gd_lang invalid (root/index/door are ungated)
+   NOTES:
+   - i18n_canon.json currently provides en/zh. If lang=es, i18n falls back to en until es tokens exist.
    ============================================================ */
 
 (function(){
@@ -54,20 +56,20 @@
     }
   }
 
-  // ---------- Drift cleanup ----------
+  // ---------- Drift cleanup (LOCKED behavior: delete unknown values) ----------
   function cleanupDrift(){
     var lang  = lsGet(K_LANG);
     var depth = lsGet(K_DEPTH);
     var time  = lsGet(K_TIME);
     var style = lsGet(K_STYLE);
 
-    if(lang && !ALLOW_LANG[lang])   lsDel(K_LANG);
-    if(depth && !ALLOW_DEPTH[depth]) lsDel(K_DEPTH);
-    if(time && !ALLOW_TIME[time])   lsDel(K_TIME);
-    if(style && !ALLOW_STYLE[style]) lsDel(K_STYLE);
+    if(lang && !ALLOW_LANG[lang])     lsDel(K_LANG);
+    if(depth && !ALLOW_DEPTH[depth])  lsDel(K_DEPTH);
+    if(time && !ALLOW_TIME[time])     lsDel(K_TIME);
+    if(style && !ALLOW_STYLE[style])  lsDel(K_STYLE);
   }
 
-  // ---------- Normalize (URL → LS → defaults) ----------
+  // ---------- Normalize (LOCKED precedence: URL → LS → defaults) ----------
   function normalize(){
     var lang  = qsGet("lang")  || lsGet(K_LANG)  || PRIMARY_LANG;
     var depth = qsGet("depth") || lsGet(K_DEPTH) || "explore";
@@ -88,6 +90,12 @@
   }
 
   // ---------- Minimal gating ----------
+  // Do NOT gate:
+  // - / (root)
+  // - /index.html
+  // - /door/
+  // Gate deep pages if gd_lang missing/invalid:
+  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/, /gauges/, /innovation/
   function gate(state){
     var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
 
@@ -123,6 +131,7 @@
 
   function applyI18n(dict, lang){
     try{
+      // Fallback chain: requested lang → en
       var scope = (dict && dict[lang]) ? dict[lang] : (dict && dict.en ? dict.en : null);
       if(!scope) return;
 
@@ -145,7 +154,7 @@
   function loadCanonI18n(lang){
     try{
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/assets/i18n_canon.json?v=i18n_canon_v1.2", true);
+      xhr.open("GET", "/assets/i18n_canon.json?v=i18n_canon_v1.1", true);
       xhr.onreadystatechange = function(){
         if(xhr.readyState !== 4) return;
         if(xhr.status >= 200 && xhr.status < 300){
@@ -165,7 +174,7 @@
   gate(state);
   loadCanonI18n(state.lang);
 
-  // ---------- Debug Surface ----------
+  // Optional debug surface (non-authoritative)
   window.CRP_INSTRUMENT = {
     getState: function(){
       return {

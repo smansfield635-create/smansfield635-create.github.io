@@ -1,0 +1,311 @@
+<!-- TNT — /laws/core-invariants/index.html
+     LAWS · CORE INVARIANTS — DOCTRINE LEAF
+     LOCKS:
+       - Doctrine only (no product marketing language)
+       - Defines non-overridable invariants and scope posture
+       - ui.css owns field (NO html/body background styling)
+       - branch.css geometry only
+       - instruments.js canonical state
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Laws · Core Invariants</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+:root{--dockH:86px}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.3px;margin:0 0 6px}
+.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
+
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  padding:14px 16px;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+.card h3{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:14px}
+.card p{margin:0;color:rgba(255,255,255,.84);line-height:1.55;font-size:13px}
+.card p + p{margin-top:10px}
+
+.list{
+  margin:0;
+  padding-left:18px;
+  color:rgba(255,255,255,.84);
+  line-height:1.6;
+  font-size:13px;
+}
+.list li{margin:6px 0}
+
+.binds{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.binds .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="btnCats" href="/laws/categories/">CATEGORIES</a>
+  <a class="btn" id="btnHome" href="/home/">HOME</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k" id="hk">LAWS</p>
+    <h1 class="t" id="ht">Core Invariants</h1>
+    <p class="s" id="hs">Non-overridable constraints. Scope precedes authority. No compensation by weighting.</p>
+  </div>
+
+  <div class="card">
+    <h3 id="h1">Definition</h3>
+    <p id="p1">Invariants are constraints that must remain true under a declared scope and declared measurement rules.</p>
+  </div>
+
+  <div class="card">
+    <h3 id="h2">Non-negotiable set</h3>
+    <p id="p2">If any invariant fails, the system is inadmissible under that scope—no balancing or compensation is allowed.</p>
+    <ul class="list" id="ul1">
+      <li>Non-contradiction under identical scope and evidence</li>
+      <li>Manifest/measurement lock (no semantic swaps)</li>
+      <li>Evidence chain integrity (receipt continuity)</li>
+      <li>Non-retroactivity (new epoch on correction)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3 id="h3">Operational implication</h3>
+    <p id="p3">Any downstream product or gauge inherits these invariants as hard boundary conditions.</p>
+  </div>
+
+  <div class="card">
+    <h3 id="h4">Bindings</h3>
+    <p id="p4">These links route to implementation surfaces. They are not part of doctrine itself.</p>
+    <div class="binds">
+      <a class="btn" id="goLaws" href="/laws/">LAWS</a>
+      <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
+      <a class="btn" id="goProducts" href="/products/coherence-diagnostic/">DIAGNOSTIC</a>
+    </div>
+  </div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  wire("btnLaws","/laws/");
+  wire("btnCats","/laws/categories/");
+  wire("btnHome","/home/");
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockGauges","/gauges/");
+  wire("goLaws","/laws/");
+  wire("goGauges","/gauges/");
+  wire("goProducts","/products/coherence-diagnostic/");
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    location.reload();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="法则";
+    document.getElementById("ht").textContent="核心不变量";
+    document.getElementById("hs").textContent="不可覆盖约束。范围先于权力。不允许加权补偿。";
+
+    document.getElementById("h1").textContent="定义";
+    document.getElementById("p1").textContent="不变量是在声明范围与声明测量规则下必须保持为真的约束。";
+
+    document.getElementById("h2").textContent="不可谈判集合";
+    document.getElementById("p2").textContent="任一不变量失败即判为不可采信——不允许平衡或补偿。";
+
+    document.getElementById("ul1").innerHTML =
+      "<li>同范围同证据下的不矛盾</li>"+
+      "<li>清单/测量锁（不允许静默换义）</li>"+
+      "<li>证据链完整（收据连续）</li>"+
+      "<li>不可追溯（修正需新时期）</li>";
+
+    document.getElementById("h3").textContent="操作含义";
+    document.getElementById("p3").textContent="所有下游产品与量规都继承这些不变量作为硬边界条件。";
+
+    document.getElementById("h4").textContent="绑定";
+    document.getElementById("p4").textContent="这些链接通往实现面，不属于教义本身。";
+
+    document.getElementById("goProducts").textContent="诊断引擎";
+
+    document.getElementById("btnLaws").textContent="法则";
+    document.getElementById("btnCats").textContent="分类";
+    document.getElementById("btnHome").textContent="枢纽";
+
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockGauges").textContent="量规";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="LEYES";
+    document.getElementById("ht").textContent="Invariantes Centrales";
+    document.getElementById("hs").textContent="Restricciones no anulables. Alcance antes de autoridad. Sin compensación por ponderación.";
+
+    document.getElementById("h1").textContent="Definición";
+    document.getElementById("p1").textContent="Los invariantes son restricciones que deben mantenerse verdaderas bajo un alcance y reglas de medición declaradas.";
+
+    document.getElementById("h2").textContent="Conjunto no negociable";
+    document.getElementById("p2").textContent="Si falla un invariante, el sistema es inadmisible en ese alcance; no se permite compensación.";
+
+    document.getElementById("ul1").innerHTML =
+      "<li>No contradicción con mismo alcance y evidencia</li>"+
+      "<li>Bloqueo de manifiestos/medición (sin cambios semánticos)</li>"+
+      "<li>Integridad de cadena de evidencia (recibos)</li>"+
+      "<li>No retroactividad (nueva época al corregir)</li>";
+
+    document.getElementById("h3").textContent="Implicación operativa";
+    document.getElementById("p3").textContent="Todo producto o medidor hereda estos invariantes como condiciones de borde duras.";
+
+    document.getElementById("h4").textContent="Vínculos";
+    document.getElementById("p4").textContent="Estos enlaces llevan a superficies de implementación. No son doctrina.";
+
+    document.getElementById("goProducts").textContent="DIAGNÓSTICO";
+
+    document.getElementById("btnLaws").textContent="LEYES";
+    document.getElementById("btnCats").textContent="CATEGORÍAS";
+    document.getElementById("btnHome").textContent="HUB";
+
+    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+  }
+
+})();
+</script>
+
+</body>
+</html>

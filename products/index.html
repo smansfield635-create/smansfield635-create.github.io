@@ -1,12 +1,19 @@
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (ALL PRODUCTS WIRED) · 3 LANG (EN/中文/ES)
+     PRODUCTS · MASTER INDEX (PRODUCTS + SERVICES + SOFTWARE + SYSTEMS) · 3 LANG (EN/中文/ES)
+     FIX (NO DRIFT):
+       - Adds missing 4th variable: SERVICES
+       - Keeps existing layout + accordion (no modals, no overlays)
+       - Removes any “catch-all to Coherence Diagnostic” behavior by routing:
+           • Coherence Diagnostic only from its own row
+           • Software/System sub-items route to /products/software/ with ?focus=
+       - GH Pages safe language reload: reload SAME pathname (no hard /products/ redirect)
+       - Fixes typo GAUGGES
      RULES:
-       - No dead links. No 404s.
-       - Coherence Diagnostic appears ONCE (no duplicates).
+       - No dead links. No 404s: if a page may not exist yet, it routes to a known hub.
+       - Coherence Diagnostic appears ONCE.
        - Uses ui.css + branch.css + instruments.js
        - State carry: lang/style/time/depth
        - Page-level language toggle only (top-right)
-       - No modals. No overlays. Accordion in-place only.
 -->
 
 <!doctype html>
@@ -157,6 +164,9 @@ a{color:inherit;text-decoration:none}
   <div class="band" id="bandA">PRODUCTS</div>
   <div class="stackList" id="listA"></div>
 
+  <div class="band" id="bandS">SERVICES</div>
+  <div class="stackList" id="listS"></div>
+
   <div class="band" id="bandB">SOFTWARE & SYSTEMS</div>
   <div class="stackList" id="listB"></div>
 
@@ -192,11 +202,15 @@ a{color:inherit;text-decoration:none}
   }catch(e){}
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
   function wire(id,path){
@@ -212,7 +226,7 @@ a{color:inherit;text-decoration:none}
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language toggle
+  // language toggle (reload SAME pathname; GH Pages safe)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -226,11 +240,11 @@ a{color:inherit;text-decoration:none}
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/products/" + q();
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.onclick=function(){ setLang("en"); };
-  btnZH.onclick=function(){ setLang("zh"); };
-  btnES.onclick=function(){ setLang("es"); };
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
   // i18n header
   function renderHeader(){
@@ -240,6 +254,7 @@ a{color:inherit;text-decoration:none}
       document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
       document.getElementById("fine").textContent="细则：证明姿态在法则与量规中。";
       document.getElementById("bandA").textContent="产品";
+      document.getElementById("bandS").textContent="服务";
       document.getElementById("bandB").textContent="软件与系统";
       document.getElementById("btnDoor").textContent="门";
       document.getElementById("btnHome").textContent="枢纽";
@@ -253,6 +268,7 @@ a{color:inherit;text-decoration:none}
       document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
       document.getElementById("fine").textContent="Letra pequeña: la prueba vive en Leyes y Medidores.";
       document.getElementById("bandA").textContent="PRODUCTOS";
+      document.getElementById("bandS").textContent="SERVICIOS";
       document.getElementById("bandB").textContent="SOFTWARE Y SISTEMAS";
       document.getElementById("btnDoor").textContent="PUERTA";
       document.getElementById("btnHome").textContent="HUB";
@@ -266,37 +282,41 @@ a{color:inherit;text-decoration:none}
       document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
       document.getElementById("fine").textContent="Fine print: proof posture lives under Laws and Gauges.";
       document.getElementById("bandA").textContent="PRODUCTS";
+      document.getElementById("bandS").textContent="SERVICES";
       document.getElementById("bandB").textContent="SOFTWARE & SYSTEMS";
       document.getElementById("btnDoor").textContent="DOOR";
       document.getElementById("btnHome").textContent="HUB";
       document.getElementById("dockExplore").textContent="EXPLORE";
       document.getElementById("dockProducts").textContent="PRODUCTS";
       document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockGauges").textContent="GAUGGES";
       document.getElementById("dockGauges").textContent="GAUGES";
     }
   }
   renderHeader();
 
   // ===== ROUTE LOCK (NO 404) =====
-  // If a dedicated page does not exist yet, route to the closest EXISTING hub page
-  // (software subsurfaces route to /products/software/ with a focus hint).
+  // If a dedicated page does not exist yet, route to the closest existing hub.
   var ROUTE = {
     energy: "/products/energy/",
     education: "/products/education/",
     software: "/products/software/",
-    diag: "/products/",                 // safe fallback (never 404)
+    diag: "/products/",
+
     uci: "/products/software/?focus=uci",
     dotgrid: "/products/software/?focus=dotgrid",
     ssg: "/products/software/?focus=ssg",
-    registry: "/products/software/?focus=registry"
+    registry: "/products/software/?focus=registry",
+
+    // services (safe hubs)
+    advisory: "/laws/",
+    audit: "/gauges/",
+    integration: "/products/software/",
+    training: "/products/education/"
   };
 
   // ===== DATA =====
-  // NOTE: Coherence Diagnostic appears ONCE here (as its own product).
   var PRODUCTS = [
-    {
-      c:"#F59E0B",
+    { c:"#F59E0B",
       t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
       s:{en:"Industrial posture only. No gain claims.",zh:"仅工业姿态。无增益主张。",es:"Solo postura industrial. Sin ganancias."},
       p:{en:"Industrial thermal substitution surfaces. Frontier claims stay as readiness doctrine under Laws.",
@@ -304,8 +324,7 @@ a{color:inherit;text-decoration:none}
          es:"Superficies de sustitución térmica industrial. La frontera queda como doctrina de preparación."},
       href:ROUTE.energy
     },
-    {
-      c:"#0EA5E9",
+    { c:"#0EA5E9",
       t:{en:"Education (1001 Words)",zh:"教育（1001词）",es:"Educación (1001 Palabras)"},
       s:{en:"Traversal-first learning and mastery tracks.",zh:"遍历学习与掌握路径。",es:"Aprendizaje por recorrido y dominio."},
       p:{en:"Programs, language core, training, and verification tiers packaged as an adoptable learning surface.",
@@ -313,8 +332,7 @@ a{color:inherit;text-decoration:none}
          es:"Programas, núcleo de lenguaje, entrenamiento y verificación en una superficie adoptable."},
       href:ROUTE.education
     },
-    {
-      c:"#93C5FD",
+    { c:"#93C5FD",
       t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
       s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
       p:{en:"Single entry for diagnostics. Other products route to their own hubs (no catch-all).",
@@ -322,8 +340,7 @@ a{color:inherit;text-decoration:none}
          es:"Entrada única de diagnóstico. Otros productos tienen su propio hub (sin destino universal)."},
       href:ROUTE.diag
     },
-    {
-      c:"#60A5FA",
+    { c:"#60A5FA",
       t:{en:"Software Hub",zh:"软件枢纽",es:"Hub de Software"},
       s:{en:"SSG, .DOTGrid, UCI, Registry.",zh:"SSG、.DOTGrid、UCI、登记。",es:"SSG, .DOTGrid, UCI, Registro."},
       p:{en:"Software surfaces are separated so routing never collapses into one page.",
@@ -333,9 +350,43 @@ a{color:inherit;text-decoration:none}
     }
   ];
 
+  var SERVICES = [
+    { c:"#D4AF37",
+      t:{en:"Advisory (Governance)",zh:"咨询（治理）",es:"Asesoría (Gobernanza)"},
+      s:{en:"Bounded posture + constraint-first guidance.",zh:"有界姿态 + 约束优先指导。",es:"Postura acotada + guía por restricciones."},
+      p:{en:"Services that translate doctrine into implementable decisions without inflating claims.",
+         zh:"把教义转为可执行决策的服务，不膨胀主张。",
+         es:"Servicios que convierten doctrina en decisiones ejecutables sin inflar afirmaciones."},
+      href:ROUTE.advisory
+    },
+    { c:"#60A5FA",
+      t:{en:"Audit Support",zh:"审计支持",es:"Soporte de auditoría"},
+      s:{en:"Receipts, exports, and verification surfaces.",zh:"收据、导出与验证面。",es:"Recibos, exportaciones y verificación."},
+      p:{en:"Help packaging evidence outputs for review (without changing the underlying measurement rules).",
+         zh:"协助打包证据输出用于复核（不改变测量规则）。",
+         es:"Ayuda a empaquetar evidencia para revisión (sin cambiar reglas de medición)."},
+      href:ROUTE.audit
+    },
+    { c:"#93C5FD",
+      t:{en:"Integration (Software)",zh:"集成（软件）",es:"Integración (Software)"},
+      s:{en:"Routing, state carry, and instrumentation wiring.",zh:"路由、状态携带与仪器接线。",es:"Enrutamiento, estado e instrumentación."},
+      p:{en:"Services that wire platforms cleanly so pages never collapse into the wrong destination.",
+         zh:"把平台接线到正确目的地的服务，防止页面坍缩到错误页。",
+         es:"Servicios para cablear plataformas sin colapsar en destinos incorrectos."},
+      href:ROUTE.integration
+    },
+    { c:"#0EA5E9",
+      t:{en:"Training (Education)",zh:"训练（教育）",es:"Formación (Educación)"},
+      s:{en:"Masterclasses + repeatable routines.",zh:"大师课 + 可重复例程。",es:"Clases + rutinas repetibles."},
+      p:{en:"Teach the method so the system scales without drift.",
+         zh:"教授方法，使系统规模化而不漂移。",
+         es:"Enseña el método para escalar sin deriva."},
+      href:ROUTE.training
+    }
+  ];
+
   var SYSTEMS = [
-    {
-      c:"#93C5FD",
+    { c:"#93C5FD",
       t:{en:"UCI Engine",zh:"UCI 引擎",es:"Motor UCI"},
       s:{en:"Measurement and correlation core.",zh:"测量与相关核心。",es:"Núcleo de medición y correlación."},
       p:{en:"Measurement core that feeds Gauges and verification layers (kept separate from product catalogs).",
@@ -343,8 +394,7 @@ a{color:inherit;text-decoration:none}
          es:"Núcleo de medición que alimenta Medidores y verificación (separado del catálogo)."},
       href:ROUTE.uci
     },
-    {
-      c:"#D4AF37",
+    { c:"#D4AF37",
       t:{en:".DOTGrid",zh:".DOTGrid",es:".DOTGrid"},
       s:{en:"256-state sweep interface.",zh:"256态扫掠界面。",es:"Interfaz de barrido 256-estados."},
       p:{en:"Indexing + sweep surface. Routes to software without redirecting everything to Diagnostic.",
@@ -352,8 +402,7 @@ a{color:inherit;text-decoration:none}
          es:"Superficie de indexación + barrido. Enruta a software sin redirigir todo al diagnóstico."},
       href:ROUTE.dotgrid
     },
-    {
-      c:"#A3A3A3",
+    { c:"#A3A3A3",
       t:{en:"SSG",zh:"SSG",es:"SSG"},
       s:{en:"Constraint syntax geometry.",zh:"约束语法几何。",es:"Geometría de sintaxis por restricciones."},
       p:{en:"Root execution geometry. Encoding and admissibility layers attach here.",
@@ -361,8 +410,7 @@ a{color:inherit;text-decoration:none}
          es:"Geometría raíz de ejecución. Aquí se conectan capas de codificación y admisibilidad."},
       href:ROUTE.ssg
     },
-    {
-      c:"#334155",
+    { c:"#334155",
       t:{en:"Registry",zh:"登记系统",es:"Registro"},
       s:{en:"Status and verification surfaces.",zh:"状态与验证面。",es:"Estado y verificación."},
       p:{en:"Lookupable status + reason codes. Verification stays separate from Diagnostic.",
@@ -454,12 +502,20 @@ a{color:inherit;text-decoration:none}
     return row;
   }
 
+  // render lists
   var listA=document.getElementById("listA");
+  var listS=document.getElementById("listS");
   var listB=document.getElementById("listB");
 
   PRODUCTS.forEach(function(it,i){
     var el=makeRow(it);
     listA.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+  });
+
+  SERVICES.forEach(function(it,i){
+    var el=makeRow(it);
+    listS.appendChild(el);
     if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });
 

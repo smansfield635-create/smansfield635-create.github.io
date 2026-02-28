@@ -1,17 +1,17 @@
 <!-- TNT — /laws/index.html
-     LAWS · DOCTRINE ONLY (NO PRODUCT MARKETING)
-     PURPOSE (LOCK):
-       - Houses ONLY: constraint doctrine, industrial (C) posture, fusion readiness rule,
-         hybrid collapse rule, core invariants, 256-bit model definitions.
-       - No product positioning. No SaaS/Enterprise tiers. No sales language.
-       - 1–2 sentence summaries per doctrine node.
-       - Tap-safe accordion rows with OPEN links.
-       - Language is page-level only (EN / 中文 / ES).
-       - State carry: lang/style/time/depth (URL) + gd_* (localStorage).
-     OWNERSHIP:
-       - ui.css owns field (no html/body background styling)
-       - branch.css geometry primitives only (not redefined)
-       - instruments.js canonical state loader
+     LAWS · LANDING · DOCTRINE-ONLY (NO PRODUCT MARKETING)
+     GOALS:
+       - 4 doctrine tiles (1–2 sentences) + OPEN (no 404 guessing beyond declared routes)
+       - Route to /laws/categories/ (existing shell)
+       - Full state carry: ?lang=&style=&time=&depth=
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+     STATE:
+       - URL keys: lang/style/time/depth
+       - LS keys: gd_lang/gd_style/gd_time/gd_depth
+     LANGUAGE:
+       - EN-only when lang=en
+       - 中文-only when lang=zh
+       - ES button present (if instruments.js allowlist blocks es upstream, it will normalize to en/zh)
 -->
 
 <!doctype html>
@@ -26,33 +26,21 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+/* ui.css owns field */
 a{color:inherit;text-decoration:none}
-:root{--dockH:88px}
+:root{--dockH:86px}
 
-/* page */
+/* Page frame */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 22px);
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
-  position:relative;
-  z-index:5;
 }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* header */
+/* Header */
 .header{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
@@ -62,57 +50,91 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
 .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
-.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
+.t{font-weight:950;font-size:26px;letter-spacing:.3px;margin:0 0 6px}
+.s{font-size:13px;opacity:.82;line-height:1.5;margin:0}
 
-/* doctrine banner */
-.banner{
-  margin-top:8px;
-  padding:10px 12px;
+/* Controls row */
+.ctrl{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.leftBtns{display:flex;gap:10px;flex-wrap:wrap}
+.langTri{
+  position:relative;
+  width:128px;height:78px;
   border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 14px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  display:grid;
+  place-items:center;
+  padding:8px;
+}
+.langTri .tri{position:relative;width:112px;height:62px;}
+.langTri .btn{position:absolute;padding:8px 12px;border-radius:999px;font-weight:900;letter-spacing:.2px;line-height:1;white-space:nowrap}
+.langTri .en{left:50%;top:0;transform:translateX(-50%)}
+.langTri .zh{left:0;bottom:0}
+.langTri .es{right:0;bottom:0}
+@media (max-width:520px){
+  .langTri{width:118px;height:74px}
+  .langTri .tri{width:104px;height:60px}
+  .langTri .btn{padding:8px 10px}
+}
+
+/* Notice strip */
+.notice{
   border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
   background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);
+  padding:10px 12px;
+  color:rgba(255,255,255,.84);
   line-height:1.45;
   font-size:13px;
 }
 
-/* list */
-.stackList{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-.stackRow{
-  --domc:#93C5FD;
+/* Tile grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:860px){ .grid{grid-template-columns:1fr} }
+
+/* Doctrine tile */
+.tile{
+  --c:#93C5FD;
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 18px 60px rgba(0,0,0,.62);
   overflow:hidden;
 }
-.stackHead{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+.thead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
 }
-.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35;max-width:82ch}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.stackBody{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+.tleft{display:flex;gap:12px;min-width:0}
+.pip{
+  width:8px;height:22px;border-radius:99px;background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(0,0,0,.35);
+  flex:0 0 auto;
 }
-.stackRow.open .stackBody{display:block}
+.ttxt{min-width:0}
+.tt{font-weight:950;letter-spacing:.2px}
+.ts{margin-top:6px;color:rgba(255,255,255,.84);line-height:1.5;font-size:13px}
+.tact{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.small{opacity:.70;font-size:12px}
 
-/* action */
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px}
-
-/* dock */
+/* Bottom dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
@@ -130,33 +152,44 @@ a{color:inherit;text-decoration:none}
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnHome" href="/home/">HOME</a>
-  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
-<div class="page">
+<div class="page" id="page">
 
   <div class="header">
-    <p class="k" id="hk">LAWS</p>
-    <h1 class="t" id="ht">Doctrine</h1>
-    <p class="s" id="hs">Constraint doctrine only. Products live in Products. Instrumentation lives in Gauges.</p>
-    <div class="banner" id="banner">No fusion gain claims. Industrial (C) posture default.</div>
+    <p class="k" id="hk">CARDINAL AXIS</p>
+    <h1 class="t" id="ht">LAWS · Doctrine</h1>
+    <p class="s" id="hs">Constraints only. Products live in Products. Instrumentation lives in Gauges.</p>
+
+    <div class="ctrl">
+      <div class="leftBtns">
+        <a class="btn" id="btnHome" href="/home/">HOME</a>
+        <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+        <a class="btn" id="btnCategories" href="/laws/categories/">CATEGORIES</a>
+      </div>
+
+      <div class="langTri" aria-label="Language">
+        <div class="tri">
+          <button class="btn en" id="bEN" type="button">EN</button>
+          <button class="btn zh" id="bZH" type="button">中文</button>
+          <button class="btn es" id="bES" type="button">ES</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice" id="notice">
+      No fusion gain claims. Industrial (C) posture default.
+    </div>
   </div>
 
-  <div class="stackList" id="stackList"></div>
+  <div class="grid" id="grid"></div>
 
 </div>
 
@@ -164,14 +197,13 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="dockHome" href="/home/">HOME</a>
   <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  // ===== State hydration (URL: lang/style/time/depth; LS: gd_*) =====
-  var qs=new URLSearchParams(location.search);
+  // ---- state (instrument-compatible) ----
+  var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -184,201 +216,187 @@ a{color:inherit;text-decoration:none}
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+    localStorage.setItem("gd_depth", depth);
   }catch(e){}
+
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(){
-    var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
-    return "?"+p.toString();
+  function q(over){
+    var L = (over && over.lang) ? over.lang : lang;
+    var S = (over && over.style) ? over.style : style;
+    var T = (over && over.time) ? over.time : time;
+    var D = (over && over.depth) ? over.depth : depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  // Wire nav
-  document.getElementById("btnHome").href="/home/"+q();
-  document.getElementById("btnIndex").href="/index.html"+q();
-  document.getElementById("dockHome").href="/home/"+q();
-  document.getElementById("dockExplore").href="/explore/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+  function wire(){
+    document.getElementById("btnHome").href="/home/"+q();
+    document.getElementById("btnIndex").href="/index.html"+q();
+    document.getElementById("btnCategories").href="/laws/categories/"+q();
 
-  // Language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+    document.getElementById("dockHome").href="/home/"+q();
+    document.getElementById("dockExplore").href="/explore/"+q();
+    document.getElementById("dockProducts").href="/products/"+q();
+    document.getElementById("dockGauges").href="/gauges/"+q();
   }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/laws/"+q();
-  }
-  btnEN.onclick=function(){ setLang("en"); };
-  btnZH.onclick=function(){ setLang("zh"); };
-  btnES.onclick=function(){ setLang("es"); };
 
-  // Header i18n
-  var H = {
+  // ---- i18n ----
+  var I18N = {
     en:{
-      k:"LAWS",t:"Doctrine",
-      s:"Constraint doctrine only. Products live in Products. Instrumentation lives in Gauges.",
-      b:"No fusion gain claims. Industrial (C) posture default.",
-      open:"OPEN"
+      hk:"CARDINAL AXIS",
+      ht:"LAWS · Doctrine",
+      hs:"Constraints only. Products live in Products. Instrumentation lives in Gauges.",
+      notice:"No fusion gain claims. Industrial (C) posture default.",
+      buttons:{home:"HOME", index:"INDEX", cat:"CATEGORIES", explore:"EXPLORE", products:"PRODUCTS", gauges:"GAUGES", open:"OPEN"},
+      tiles:{
+        C:{t:"Industrial Posture (C)", sF:"Default public-energy posture. Binds all energy claims to industrial substitution framing.", sI:"Default posture. No hype. Claims stay tied to industrial framing."},
+        FR:{t:"Fusion Readiness Rule", sF:"Requirements-only doctrine. Never implies net-positive gain or achieved production.", sI:"Readiness only. No “we did it.” Keep claims bounded."},
+        INV:{t:"Core Invariants", sF:"Non-overridable constraints that define admissibility under declared scope.", sI:"Hard rules. No exceptions. Otherwise drift wins."},
+        HCR:{t:"Hybrid Collapse Rule", sF:"Classifier separating pass, fracture, phase transition, and impossibility under windowed rules.", sI:"One harness. Four outcomes. No smoothing, no excuses."}
+      }
     },
     zh:{
-      k:"法则",t:"教义",
-      s:"仅约束教义。产品在产品页。仪表在量规页。",
-      b:"不做聚变净增益主张。默认工业（C）姿态。",
-      open:"打开"
+      hk:"基轴体系",
+      ht:"法则 · 教义",
+      hs:"只放约束教义。产品在产品页。仪表在量规页。",
+      notice:"禁止聚变增益主张。默认工业（C）姿态。",
+      buttons:{home:"主页", index:"索引", cat:"分类", explore:"探索", products:"产品", gauges:"量规", open:"打开"},
+      tiles:{
+        C:{t:"工业姿态（C）", sF:"默认公众能源姿态。所有能源主张绑定到工业替代框架。", sI:"默认姿态。不炒作。主张必须回到工业框架。"},
+        FR:{t:"聚变就绪规则", sF:"仅需求教义。绝不暗示净增益或已实现产出。", sI:"只谈就绪，不谈胜利。主张必须有界。"},
+        INV:{t:"核心不变量", sF:"不可覆盖的约束，用于在声明范围内定义可采信性。", sI:"硬规则。没例外。不然漂移。"},
+        HCR:{t:"混合崩塌规则", sF:"在窗口规则下区分通过/裂解/相变/不可能的分类器。", sI:"一个判别器，四种结果。不加权，不粉饰。"}
+      }
     },
     es:{
-      k:"LEYES",t:"Doctrina",
-      s:"Solo doctrina de restricciones. Productos en Productos. Instrumentación en Medidores.",
-      b:"Sin afirmaciones de ganancia neta de fusión. Postura industrial (C) por defecto.",
-      open:"ABRIR"
+      hk:"CARDINAL AXIS",
+      ht:"LEYES · Doctrina",
+      hs:"Solo restricciones. Productos viven en Products. Instrumentación vive en Gauges.",
+      notice:"Sin afirmaciones de ganancia de fusión. Postura Industrial (C) por defecto.",
+      buttons:{home:"INICIO", index:"ÍNDICE", cat:"CATEGORÍAS", explore:"EXPLORAR", products:"PRODUCTOS", gauges:"MEDIDORES", open:"ABRIR"},
+      tiles:{
+        C:{t:"Postura Industrial (C)", sF:"Postura pública por defecto. Vincula toda afirmación energética al marco de sustitución industrial.", sI:"Postura por defecto. Sin hype. Afirmaciones acotadas."},
+        FR:{t:"Regla de Preparación de Fusión", sF:"Solo requisitos. Nunca implica ganancia neta positiva ni producción lograda.", sI:"Solo preparación. Sin ‘lo logramos’. Mantén límites."},
+        INV:{t:"Invariantes Centrales", sF:"Restricciones no anulables que definen admisibilidad bajo alcance declarado.", sI:"Reglas duras. Sin excepciones. Si no, deriva."},
+        HCR:{t:"Regla de Colapso Híbrido", sF:"Clasificador: pasa, fractura, transición de fase, imposibilidad (por ventanas).", sI:"Un arnés. Cuatro resultados. Sin suavizado."}
+      }
     }
   };
-  var T = (lang==="zh")?H.zh:(lang==="es")?H.es:H.en;
-  document.getElementById("hk").textContent=T.k;
-  document.getElementById("ht").textContent=T.t;
-  document.getElementById("hs").textContent=T.s;
-  document.getElementById("banner").textContent=T.b;
 
-  // Doctrine list (routes are placeholders for now; create pages next)
-  var LAWS = [
-    {id:"posture", c:"#F59E0B",
-      name:{en:"Industrial Posture (C)",zh:"工业姿态（C）",es:"Postura Industrial (C)"},
-      one:{en:"Default public-energy posture. Binds all energy claims to industrial substitution framing.",
-           zh:"默认公开能源姿态。所有能源主张绑定为工业替代框架。",
-           es:"Postura energética pública por defecto; enmarca afirmaciones como sustitución industrial."},
-      route:"/laws/posture-industrial-c/"
-    },
-    {id:"fusion", c:"#A3A3A3",
-      name:{en:"Fusion Readiness Rule",zh:"聚变就绪规则",es:"Regla de Preparación de Fusión"},
-      one:{en:"Requirements-only doctrine. Never implies net-positive gain or achieved production.",
-           zh:"仅需求通道。绝不暗示净增益或已实现产出。",
-           es:"Doctrina solo de requisitos; no implica ganancia neta ni producción lograda."},
-      route:"/laws/fusion-readiness/"
-    },
-    {id:"invariants", c:"#93C5FD",
-      name:{en:"Core Invariants",zh:"核心不变量",es:"Invariantes Núcleo"},
-      one:{en:"Non-overridable constraints that define admissibility under declared scope.",
-           zh:"定义声明范围内可采信性的不可覆盖约束。",
-           es:"Restricciones no anulables que definen admisibilidad bajo alcance declarado."},
-      route:"/laws/invariants/"
-    },
-    {id:"hybrid", c:"#D4AF37",
-      name:{en:"Hybrid Collapse Rule",zh:"混合崩塌规则",es:"Regla Híbrida de Colapso"},
-      one:{en:"Classifier that separates pass, fracture, phase transition, and impossibility under windowed rules.",
-           zh:"在窗口规则下区分通过、断裂、相变与不可能的分类器。",
-           es:"Clasificador que separa pasar, fractura, transición de fase e imposibilidad con ventanas."},
-      route:"/laws/hybrid-collapse-rule/"
-    },
-    {id:"bit", c:"#60A5FA",
-      name:{en:"Bit Vector Model (I P G S R L Y F)",zh:"位向量模型（I P G S R L Y F）",es:"Modelo de Bits (I P G S R L Y F)"},
-      one:{en:"Canonical bit order and definitions for 256-state mapping; no weighting or compensation.",
-           zh:"256态映射的规范位序与定义；不加权不补偿。",
-           es:"Orden canónico de bits y definiciones para 256 estados; sin ponderación ni compensación."},
-      route:"/laws/bit-vector-256/"
-    },
-    {id:"sci", c:"#7F1D1D",
-      name:{en:"SCI Definition",zh:"SCI 定义",es:"Definición SCI"},
-      one:{en:"Scalar Coherence Index definition and bounded interpretation rules.",
-           zh:"标量一致性指数定义与有界解释规则。",
-           es:"Definición del Índice Escalar de Coherencia y reglas de interpretación acotadas."},
-      route:"/laws/sci-definition/"
-    },
-    {id:"example2008", c:"#334155",
-      name:{en:"Worked Example (2008)",zh:"示例（2008）",es:"Ejemplo (2008)"},
-      one:{en:"Bounded demonstration packet + run report template; replication-first posture.",
-           zh:"有界演示包+运行报告模板；复制优先姿态。",
-           es:"Paquete demostrativo acotado + plantilla de reporte; postura de replicación primero."},
-      route:"/laws/2008-example/"
+  function text(scope, key){
+    var parts = key.split(".");
+    var cur = scope;
+    for(var i=0;i<parts.length;i++){ if(!cur) return ""; cur = cur[parts[i]]; }
+    return cur || "";
+  }
+
+  function renderText(){
+    var S = (lang==="zh") ? I18N.zh : (lang==="es") ? I18N.es : I18N.en;
+    document.getElementById("hk").textContent = S.hk;
+    document.getElementById("ht").textContent = S.ht;
+    document.getElementById("hs").textContent = S.hs;
+    document.getElementById("notice").textContent = S.notice;
+
+    document.getElementById("btnHome").textContent = S.buttons.home;
+    document.getElementById("btnIndex").textContent = S.buttons.index;
+    document.getElementById("btnCategories").textContent = S.buttons.cat;
+
+    document.getElementById("dockHome").textContent = S.buttons.home;
+    document.getElementById("dockExplore").textContent = S.buttons.explore;
+    document.getElementById("dockProducts").textContent = S.buttons.products;
+    document.getElementById("dockGauges").textContent = S.buttons.gauges;
+
+    // buttons active state
+    document.getElementById("bEN").classList.toggle("active", lang==="en");
+    document.getElementById("bZH").classList.toggle("active", lang==="zh");
+    document.getElementById("bES").classList.toggle("active", lang==="es");
+
+    // build tiles
+    var grid = document.getElementById("grid");
+    grid.innerHTML = "";
+
+    function tile(code, color, href){
+      var t = document.createElement("section");
+      t.className = "tile";
+      t.style.setProperty("--c", color);
+
+      var head = document.createElement("div");
+      head.className = "thead";
+
+      var left = document.createElement("div");
+      left.className = "tleft";
+
+      var pip = document.createElement("div");
+      pip.className = "pip";
+
+      var txt = document.createElement("div");
+      txt.className = "ttxt";
+
+      var tt = document.createElement("div");
+      tt.className = "tt";
+      tt.textContent = S.tiles[code].t;
+
+      var ts = document.createElement("div");
+      ts.className = "ts";
+      ts.textContent = (style==="informal") ? S.tiles[code].sI : S.tiles[code].sF;
+
+      txt.appendChild(tt);
+      txt.appendChild(ts);
+
+      left.appendChild(pip);
+      left.appendChild(txt);
+
+      var act = document.createElement("div");
+      act.className = "tact";
+
+      var small = document.createElement("div");
+      small.className = "small";
+      small.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "Abrir" : "Open";
+
+      var open = document.createElement("a");
+      open.className = "btn";
+      open.textContent = S.buttons.open;
+      open.href = href + q();
+
+      act.appendChild(open);
+
+      head.appendChild(left);
+      head.appendChild(act);
+
+      t.appendChild(head);
+      return t;
     }
-  ];
 
-  function pick(obj){
-    return (lang==="zh")?obj.zh:(lang==="es")?(obj.es||obj.en):obj.en;
+    // ROUTES (declared; create next if missing)
+    grid.appendChild(tile("C",  "#F59E0B", "/laws/industrial-posture/"));
+    grid.appendChild(tile("FR", "#93C5FD", "/laws/fusion-readiness/"));
+    grid.appendChild(tile("INV","#60A5FA", "/laws/core-invariants/"));
+    grid.appendChild(tile("HCR","#D4AF37", "/laws/hybrid-collapse/"));
   }
 
-  function makeRow(p){
-    var row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", p.c);
-
-    var head=document.createElement("div");
-    head.className="stackHead";
-
-    var left=document.createElement("div");
-    left.className="stackLeft";
-
-    var bar=document.createElement("div");
-    bar.className="stackBar";
-    bar.style.background=p.c;
-
-    var block=document.createElement("div");
-    block.style.minWidth="0";
-
-    var title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent=pick(p.name);
-
-    var sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=pick(p.one);
-
-    block.appendChild(title);
-    block.appendChild(sub);
-
-    left.appendChild(bar);
-    left.appendChild(block);
-
-    var chev=document.createElement("div");
-    chev.className="stackChevron";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="stackBody";
-
-    var acts=document.createElement("div");
-    acts.className="actions";
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent=T.open;
-    open.href=p.route + q();
-    acts.appendChild(open);
-
-    body.appendChild(acts);
-
-    head.addEventListener("click", function(){
-      var openNow = row.classList.toggle("open");
-      chev.textContent = openNow ? "▾" : "▸";
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    // NOTE: if instruments.js allowlist blocks es, it may normalize on reload/navigation.
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+    renderText();
+    wire();
   }
 
-  var list=document.getElementById("stackList");
-  list.innerHTML="";
-  LAWS.forEach(function(p,i){
-    var el=makeRow(p);
-    list.appendChild(el);
-    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
-  });
+  document.getElementById("bEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("bZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("bES").addEventListener("click", function(){ setLang("es"); });
+
+  wire();
+  renderText();
 
 })();
 </script>

@@ -1,10 +1,10 @@
 <!-- TNT — /door/index.html
-     DOOR · PEARLESCENT BLACK (GLOSS RESTORE) · NO COMPETING UI · MOBILE-SAFE
+     DOOR · PEARLESCENT BLACK (GLOSS) · NO COMPETING UI · MOBILE-SAFE
      FIXES:
-       - Strong gloss (specular + rim + lacquer) via ::before/::after
-       - Stable geometry (no giant diamonds): D clamps to viewport
-       - No UI collisions: top bar never wraps; no banner; no extra copy layers
-       - ui.css overlays forced BEHIND door UI (prevents “coal washout”)
+       - Diamonds smaller on mobile; stage shifted DOWN
+       - No fixed footer under diamonds (COGRID.NET moved INTO bottom diamond)
+       - Top bar never wraps; never overlaps stage
+       - ui.css overlays forced BEHIND door UI
      ROUTES:
        - ENTER SITE     → /home/
        - VIEW SITE MAP  → /prelude/
@@ -41,19 +41,22 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 #doorRoot{position:relative; z-index:10}
 
 /* =========================================================
-   TOKENS (viewport-clamped so nothing goes huge)
+   TOKENS (smaller + safer)
    ========================================================= */
 :root{
-  --D: clamp(220px, 34vh, 300px);
-  --R: calc(var(--D) * 0.78);
+  /* smaller on mobile by design */
+  --D: clamp(200px, 30vh, 280px);
+  --R: calc(var(--D) * 0.70);
 
   --deepA:#0f1624;
   --deepB:#070c14;
 
-  --rim: rgba(255,255,255,.78);
   --goldGlow: rgba(212,175,55,.55);
   --violet: rgba(165,120,255,.82);
   --cyan: rgba(110,230,255,.66);
+
+  /* keeps diamonds away from top controls */
+  --stageShift: 72px;
 }
 
 /* =========================================================
@@ -62,8 +65,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 .top{
   position:fixed;
   top:16px;
-  left:0;
-  right:0;
+  left:0; right:0;
   padding:0 16px;
   display:flex;
   align-items:center;
@@ -80,8 +82,6 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
-
-/* tighter for small screens */
 @media (max-width:420px){
   .top{padding:0 12px}
   .top-left,.top-right{gap:10px}
@@ -89,14 +89,15 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 }
 
 /* =========================================================
-   STAGE
+   STAGE (shifted DOWN so it never fights the top bar)
    ========================================================= */
 .stage{
   position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) translateY(var(--stageShift));
+  width:min(760px,94vw);
+  height:min(760px,94vw);
   pointer-events:none;
   z-index:240;
 }
@@ -118,7 +119,6 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 
-  /* deep pearlescent base */
   background:
     radial-gradient(circle at 20% 15%, rgba(255,255,255,.20) 0%, transparent 45%),
     radial-gradient(circle at 78% 26%, var(--violet) 0%, transparent 62%),
@@ -129,16 +129,16 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   border:1px solid rgba(255,255,255,.55);
 
   box-shadow:
-    0 140px 280px rgba(0,0,0,.92),
-    0 0 160px var(--goldGlow),
+    0 120px 240px rgba(0,0,0,.92),
+    0 0 150px var(--goldGlow),
     inset 0 4px 0 rgba(255,255,255,.55),
     inset 0 -120px 180px rgba(0,0,0,.98);
 
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   overflow:hidden;
 }
 
-/* Rim + lacquer gradient border (makes it feel “cut” and 3D) */
+/* rim */
 .diamond::before{
   content:"";
   position:absolute;
@@ -152,19 +152,15 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
       rgba(255,255,255,.08) 60%,
       rgba(255,255,255,.45) 82%,
       rgba(255,255,255,.08) 100%);
-  opacity:.62;
+  opacity:.58;
   pointer-events:none;
-
-  /* mask so it becomes a rim */
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   padding:2px;
 }
 
-/* High specular “sweep” (this is the missing gloss) */
+/* specular sweep (gloss) */
 .diamond::after{
   content:"";
   position:absolute;
@@ -175,34 +171,27 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   transform:rotate(-12deg);
   background:
     radial-gradient(circle at 32% 60%, rgba(255,255,255,.55), rgba(255,255,255,0) 62%),
-    linear-gradient(to bottom, rgba(255,255,255,.32), rgba(255,255,255,0));
-  opacity:.55;
+    linear-gradient(to bottom, rgba(255,255,255,.30), rgba(255,255,255,0));
+  opacity:.52;
   pointer-events:none;
-  filter:blur(.2px);
 }
 
-/* hover pop */
 .diamond:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
   border-color:rgba(255,255,255,.72);
   box-shadow:
-    0 160px 320px rgba(0,0,0,.96),
-    0 0 220px rgba(212,175,55,.72),
+    0 140px 280px rgba(0,0,0,.96),
+    0 0 200px rgba(212,175,55,.72),
     inset 0 4px 0 rgba(255,255,255,.70),
     inset 0 -120px 180px rgba(0,0,0,.98);
 }
-
-.diamond:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
-}
+.diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
 /* placement */
 .topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
 .bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 
-/* =========================================================
-   INNER TEXT (upright; no overlap)
-   ========================================================= */
+/* inner text (smaller clamps to avoid clipping) */
 .inner{
   transform:rotate(-45deg);
   height:100%;
@@ -211,61 +200,31 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:24px;
+  padding:22px;
   user-select:none;
   pointer-events:none;
 }
-
 .lab{
-  font-size:clamp(18px, 2.6vh, 24px);
+  font-size:clamp(18px, 2.3vh, 22px);
   font-weight:950;
   letter-spacing:1px;
   text-shadow:0 10px 40px rgba(0,0,0,.65);
 }
-
 .sub{
-  margin-top:12px;
-  font-size:clamp(13px, 2vh, 16px);
+  margin-top:10px;
+  font-size:clamp(12.5px, 1.8vh, 15px);
   opacity:.95;
   line-height:1.35;
   text-shadow:0 10px 40px rgba(0,0,0,.65);
 }
+.pref{font-weight:950;font-style:italic}
 
-.pref{
-  font-weight:950;
-  font-style:italic;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-.footer{
-  position:fixed;
-  bottom:18px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:260;
-  width:min(980px,94vw);
-  text-align:center;
-  font-size:12.5px;
-  opacity:.70;
-  pointer-events:none;
-}
-.sig{
-  margin-top:8px;
-  font-size:12px;
+/* embedded signature (removes competing footer layer) */
+.sigIn{
+  margin-top:10px;
+  font-size:11px;
   letter-spacing:3px;
-  opacity:.70;
-}
-
-/* =========================================================
-   MOBILE spacing (avoid clipping)
-   ========================================================= */
-@media (max-height:720px){
-  :root{
-    --D: clamp(210px, 32vh, 280px);
-    --R: calc(var(--D) * 0.76);
-  }
+  opacity:.60;
 }
 </style>
 </head>
@@ -297,12 +256,9 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
       <div class="inner">
         <div class="lab" id="labMap">VIEW SITE MAP</div>
         <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
+        <div class="sigIn" id="sigIn">COGRID.NET</div>
       </div>
     </div>
-  </div>
-
-  <div class="footer">
-    <div class="sig">COGRID.NET</div>
   </div>
 
 </div>
@@ -369,7 +325,6 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // minimal i18n for labels
   function renderLang(){
     if(lang==="zh"){
       document.getElementById("labEnter").textContent="进入网站";
@@ -382,6 +337,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 
       document.getElementById("btnExit").textContent="退出";
       document.getElementById("btnPrelude").textContent="前置页";
+      document.getElementById("sigIn").textContent="COGRID.NET";
     }else if(lang==="es"){
       document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
       document.getElementById("prefEnter").textContent="Directo:";
@@ -393,6 +349,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 
       document.getElementById("btnExit").textContent="SALIR";
       document.getElementById("btnPrelude").textContent="PRELUDIO";
+      document.getElementById("sigIn").textContent="COGRID.NET";
     }else{
       document.getElementById("labEnter").textContent="ENTER SITE";
       document.getElementById("prefEnter").textContent="Direct:";
@@ -404,6 +361,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 
       document.getElementById("btnExit").textContent="EXIT";
       document.getElementById("btnPrelude").textContent="PRELUDE";
+      document.getElementById("sigIn").textContent="COGRID.NET";
     }
   }
   renderLang();

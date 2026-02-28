@@ -1,10 +1,14 @@
 <!-- TNT — /home/index.html
-     HUB A · HIGH-DENSITY · TRUE LENS SPLIT · CONTRAST FIX
-     ROLE:
-       - Recursive Compass (N/E/S/W)
-       - Terminal System (Appendix/Glossary/About/Links)
-       - Formal vs Informal lens ACTUALLY changes content
-       - Opal contrast panels (no red-on-red)
+     HUB A (HOME) · OPERATIONAL (NOT A DEAD END)
+     FIXES:
+       - Adds BACK + EXIT + DOOR + PRELUDE + INDEX (top)
+       - Adds bottom dock: HOME / PRODUCTS / LAWS / GAUGES / LINKS
+       - Adds real, non-template FORMAL vs INFORMAL lens (content materially changes)
+       - Every node has a concrete JUMP destination (no dead ends)
+       - 3 languages: EN / 中文 / ES (page-level toggle)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT set html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -12,7 +16,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HUB A</title>
+<title>HOME · HUB A</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -20,273 +24,664 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:90px}
+:root{--dockH:92px}
 
-/* PAGE WRAP */
+/* page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 40px);
+  padding:86px 0 calc(var(--dockH) + 26px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
   position:relative;
   z-index:5;
 }
 
-/* HEADER */
-.header{
+/* top bar */
+.top{
   position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(1000px,94vw);
-  padding:24px 28px;
-  border-radius:28px;
-
-  border:1px solid rgba(255,255,255,.18);
-
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.16), transparent 60%),
-    radial-gradient(circle at 20% 40%, rgba(210,190,255,.28), transparent 75%),
-    radial-gradient(circle at 80% 60%, rgba(120,70,255,.22), transparent 75%),
-    linear-gradient(160deg, rgba(0,0,0,.65), rgba(0,0,0,.35));
-
-  backdrop-filter:blur(18px);
-  box-shadow:0 70px 200px rgba(0,0,0,.85);
-  z-index:100;
+  left:0; right:0; top:16px;
+  padding:0 16px;
+  z-index:240;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  pointer-events:none;
 }
-
-.header h1{
-  margin:0;
-  font-size:30px;
-  letter-spacing:1.2px;
-}
-
-.header p{
-  margin-top:12px;
-  font-size:15px;
-  line-height:1.6;
-  color:rgba(255,255,255,.92);
-}
-
-/* LANGUAGE */
-.lang{
-  position:fixed;
-  top:20px;
-  right:20px;
+.top .left, .top .right{
   display:flex;
   gap:10px;
-  z-index:120;
+  align-items:center;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  pointer-events:auto;
 }
+.top .btn{white-space:nowrap}
 
-/* BANDS */
+/* header */
+.header{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.16), transparent 72%),
+    radial-gradient(circle at 82% 62%, rgba(120,70,255,.12), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75}
+.t{margin:0;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:10px 0 0;color:rgba(255,255,255,.84);line-height:1.5;font-size:13.5px;max-width:980px}
+
+/* bands */
 .band{
-  margin-top:40px;
-  font-weight:900;
-  font-size:15px;
-  letter-spacing:1px;
-  opacity:.9;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+  margin-top:8px;
 }
 
-/* GRID */
+/* grid */
 .row4{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:18px;
-  margin-top:16px;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-@media(max-width:980px){
-  .row4{grid-template-columns:repeat(2,1fr);}
+@media (max-width:980px){
+  .row4{grid-template-columns:repeat(2, minmax(0,1fr));}
 }
 
-/* PLATE */
+/* plate */
 .plate{
-  border-radius:26px;
-  padding:22px;
-  border:1px solid rgba(255,255,255,.18);
-
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(0,0,0,.75), rgba(0,0,0,.45));
-
-  backdrop-filter:blur(14px);
-  box-shadow:0 40px 120px rgba(0,0,0,.85);
-
+  --c:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  padding:14px 14px;
   cursor:pointer;
-  transition:.2s ease;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  justify-content:space-between;
 }
-
-.plate:hover{
-  transform:translateY(-4px);
-  box-shadow:0 60px 160px rgba(0,0,0,.95);
+.plate:hover{border-color:rgba(212,175,55,.32)}
+.pLeft{display:flex;gap:10px;min-width:0}
+.swatch{
+  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
+  margin-top:4px;flex:0 0 auto;pointer-events:none;
 }
+.pTxt{min-width:0}
+.pName{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pHint{margin-top:6px;font-size:12.5px;opacity:.80;line-height:1.35}
+.pChev{opacity:.75;font-size:18px;flex:0 0 auto;pointer-events:none}
 
-.plate h3{
-  margin:0;
-  font-size:16px;
-  letter-spacing:.8px;
-}
-
-.plate p{
-  margin-top:12px;
-  font-size:14px;
-  line-height:1.7;
-  color:rgba(255,255,255,.95);
-}
-
-/* FOCUS PANEL */
+/* focus */
 .focus{
-  margin-top:40px;
-  border-radius:28px;
-  padding:30px;
-  border:1px solid rgba(255,255,255,.22);
-
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 20% 20%, rgba(210,190,255,.30), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.80), rgba(0,0,0,.55));
-
-  backdrop-filter:blur(20px);
-  box-shadow:0 80px 220px rgba(0,0,0,.95);
-
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.16);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
   display:none;
 }
-
-.focus.show{display:block;}
-
-.focus h2{
-  margin:0;
-  font-size:22px;
+.focus.show{display:block}
+.fHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.fTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.fClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
+.fClose:hover{background:rgba(255,255,255,.08)}
+.lensRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
+.lensRow .btn{padding:10px 12px;border-radius:999px}
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.14);
+  padding:12px 14px;
+  margin-top:12px;
 }
+.p{margin:0;color:rgba(255,255,255,.90);line-height:1.55;font-size:13.25px}
+.p + .p{margin-top:10px}
+.jumpRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.jumpRow .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-.focus .block{
-  margin-top:18px;
-  font-size:15px;
-  line-height:1.8;
-  color:rgba(255,255,255,.97);
-}
-
-/* LENS TOGGLE */
-.lens{
-  margin-top:16px;
-  display:flex;
-  gap:10px;
-}
-
-/* DOCK */
+/* dock */
 .dock{
   position:fixed;
-  bottom:20px;
   left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  display:flex;
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0,1fr));
   gap:10px;
-  z-index:150;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:104px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="lang">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-  <button class="btn" id="btnES">ES</button>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <button class="btn" id="btnBack" type="button">BACK</button>
+    <a class="btn" id="btnExit" href="/">EXIT</a>
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
-<div class="header">
-  <h1>HUB A</h1>
-  <p>Structure determines scale.  
-  Scale determines consequence.  
-  This page governs both.</p>
-</div>
+<div class="page" id="page">
 
-<div class="page">
+  <div class="header">
+    <p class="k" id="hk">HUB A</p>
+    <h1 class="t" id="ht">STRUCTURE HUB</h1>
+    <p class="s" id="hs">Pick a node. Read one block. Jump with intent.</p>
+  </div>
 
-  <div class="band">COMPASS</div>
-  <div class="row4">
-    <div class="plate" onclick="openFocus('N')">
-      <h3>DEFINITIONS</h3>
-      <p>Locks meaning. Prevents drift.</p>
+  <div class="band" id="bandCompass">COMPASS</div>
+  <div class="row4" id="gridCompass"></div>
+
+  <div class="band" id="bandSystem">SYSTEM</div>
+  <div class="row4" id="gridSystem"></div>
+
+  <div class="focus" id="focus">
+    <div class="fHead">
+      <h3 class="fTitle" id="fTitle">—</h3>
+      <button class="fClose" id="fClose" type="button" aria-label="Close">✕</button>
     </div>
-    <div class="plate" onclick="openFocus('E')">
-      <h3>PRODUCTS</h3>
-      <p>Deployable surfaces built on constraint.</p>
+
+    <div class="lensRow">
+      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
+      <button class="btn" id="lensFormal" type="button">FORMAL</button>
     </div>
-    <div class="plate" onclick="openFocus('S')">
-      <h3>CONSTRAINTS</h3>
-      <p>Phase gates. Admissibility. Discipline.</p>
+
+    <div class="block">
+      <p class="p" id="p1">—</p>
+      <p class="p" id="p2">—</p>
     </div>
-    <div class="plate" onclick="openFocus('W')">
-      <h3>CONTAINMENT</h3>
-      <p>Failure isolation. Rollback control.</p>
+
+    <div class="jumpRow">
+      <a class="btn" id="btnJump" href="/home/">JUMP</a>
     </div>
   </div>
 
-  <div class="band">SYSTEM</div>
-  <div class="row4">
-    <div class="plate" onclick="openFocus('APP')">
-      <h3>APPENDIX</h3>
-      <p>Packets and structured references.</p>
-    </div>
-    <div class="plate" onclick="openFocus('GLO')">
-      <h3>GLOSSARY</h3>
-      <p>Canonical language registry.</p>
-    </div>
-    <div class="plate" onclick="openFocus('ABOUT')">
-      <h3>ABOUT</h3>
-      <p>Scope and declared limits.</p>
-    </div>
-    <div class="plate" onclick="openFocus('LINKS')">
-      <h3>LINKS</h3>
-      <p>External anchors and verification.</p>
-    </div>
-  </div>
-
-  <div class="focus" id="focusPanel">
-    <h2 id="focusTitle">—</h2>
-
-    <div class="lens">
-      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
-      <button class="btn" onclick="setLens('formal')">FORMAL</button>
-    </div>
-
-    <div class="block" id="focusContent"></div>
-  </div>
-
 </div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+</nav>
 
 <script>
-let currentLens = "formal";
+(function(){
+  // --- state ---
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-function setLens(mode){
-  currentLens = mode;
-  if(activeNode) openFocus(activeNode);
-}
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
-let activeNode = null;
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-function openFocus(node){
-  activeNode = node;
-  const panel = document.getElementById("focusPanel");
-  const title = document.getElementById("focusTitle");
-  const content = document.getElementById("focusContent");
-
-  title.innerText = node;
-
-  if(currentLens === "formal"){
-    content.innerText =
-      "Formal Mode:\n\n" +
-      "Aspect → Defines invariant boundary.\n" +
-      "Process → Enforces admissibility under declared scope.\n" +
-      "Resolution → Stabilizes scale without drift.";
-  } else {
-    content.innerText =
-      "Informal Mode:\n\n" +
-      "Lock meaning first.\n" +
-      "Don’t scale beyond proof.\n" +
-      "Keep failure small.";
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  panel.classList.add("show");
-}
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnExit","/");
+  wire("btnDoor","/door/");
+  wire("btnPrelude","/prelude/");
+  wire("btnIndex","/index.html");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+  wire("dockLinks","/links/");
+
+  // back
+  document.getElementById("btnBack").addEventListener("click", function(){
+    try{
+      if(history.length>1) history.back();
+      else location.href="/index.html"+q();
+    }catch(e){
+      location.href="/index.html"+q();
+    }
+  });
+
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/home/" + q({lang:lang});
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  function t(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
+  // UI strings
+  document.getElementById("hk").textContent=t("HUB A","HUB A","HUB A");
+  document.getElementById("ht").textContent=t("STRUCTURE HUB","结构枢纽","HUB DE ESTRUCTURA");
+  document.getElementById("hs").textContent=t(
+    "Pick a node. Read one block. Jump with intent.",
+    "选择一个节点。读一段。带着目的跳转。",
+    "Elige un nodo. Lee un bloque. Salta con intención."
+  );
+  document.getElementById("bandCompass").textContent=t("COMPASS","罗盘","BRÚJULA");
+  document.getElementById("bandSystem").textContent=t("SYSTEM","系统","SISTEMA");
+  document.getElementById("lensInformal").textContent=t("INFORMAL","非正式","INFORMAL");
+  document.getElementById("lensFormal").textContent=t("FORMAL","正式","FORMAL");
+  document.getElementById("btnBack").textContent=t("BACK","返回","VOLVER");
+  document.getElementById("btnExit").textContent=t("EXIT","退出","SALIR");
+  document.getElementById("btnDoor").textContent=t("DOOR","门","PUERTA");
+  document.getElementById("btnPrelude").textContent=t("PRELUDE","前置页","PRELUDIO");
+  document.getElementById("btnIndex").textContent=t("INDEX","索引","ÍNDICE");
+  document.getElementById("dockHome").textContent=t("HOME","主页","INICIO");
+  document.getElementById("dockProducts").textContent=t("PRODUCTS","产品","PRODUCTOS");
+  document.getElementById("dockLaws").textContent=t("LAWS","法则","LEYES");
+  document.getElementById("dockGauges").textContent=t("GAUGES","量规","MEDIDORES");
+  document.getElementById("dockLinks").textContent=t("LINKS","链接","ENLACES");
+
+  // content (REAL lens split, node-unique)
+  var NODES = {
+    N:{
+      c:"#1F3A8A",
+      name:t("DEFINITIONS","定义","DEFINICIONES"),
+      hint:t("Lock meaning. Stop drift.","锁定含义，阻止漂移。","Fija significado. Detén deriva."),
+      jump:"/laws/",
+      informal:[
+        t(
+          "Words are the steering wheel. If the wheel slips, everything slips. This section pins meaning so the rest of the site doesn’t quietly change under your feet.",
+          "词语是方向盘。方向盘一滑，全部都滑。这里把含义钉住，让网站不会在你不知情时偷换概念。",
+          "Las palabras son el volante. Si resbala, todo resbala. Aquí se fija el significado para que el sitio no cambie en silencio."
+        ),
+        t(
+          "Use this when you’re confused by labels or arguments. If two people “agree” but act differently, the meaning drifted. Jump to Definitions and reset the terms.",
+          "当你被词语绕晕、争论打转时就来这里。两个人“同意”却做不同事，通常是含义漂了。跳到定义把词重置。",
+          "Úsalo cuando una discusión se vuelve confusa. Si dos personas “acuerdan” pero actúan distinto, el significado derivó. Vuelve a Definiciones."
+        )
+      ],
+      formal:[
+        t(
+          "Definition layer is a scope-locked vocabulary. Claims are admissible only under declared terms. If a term changes, the run is a new epoch, not an edit.",
+          "定义层是范围锁定的词汇表。主张只能在声明的术语下被采信。术语一变，就是新纪元，不是改历史。",
+          "La capa de definición es vocabulario bajo alcance. Las afirmaciones solo son admisibles bajo términos declarados. Si un término cambia, es nueva época."
+        ),
+        t(
+          "Falsifier: if a single sentence can be interpreted two incompatible ways, it fails definition lock and must be rewritten. Receipt surface lives under Laws/Definitions.",
+          "证伪：一句话若能被解释成两种互相矛盾的含义，则定义锁失败，必须重写。收据面在 法则/定义。",
+          "Falsificador: si una frase admite dos lecturas incompatibles, falla el bloqueo de definición y se reescribe. Recibos en Leyes/Definiciones."
+        )
+      ]
+    },
+    E:{
+      c:"#0EA5E9",
+      name:t("PRODUCTS","产品","PRODUCTOS"),
+      hint:t("Usable surfaces.","可用执行面。","Superficies utilizables."),
+      jump:"/products/",
+      informal:[
+        t(
+          "This is the ‘what can I actually use?’ lane. Products are not promises — they’re surfaces you can adopt without needing to believe anything first.",
+          "这是“我能用什么”的路线。产品不是许诺，而是你不需要先相信什么就能采纳的执行面。",
+          "Aquí está lo que puedes usar. Los productos no son promesas: son superficies que puedes adoptar sin creer primero."
+        ),
+        t(
+          "If you want results, start here. If you want why it’s safe to scale, go to Laws and Gauges. Products inherit those limits.",
+          "想要结果从这里开始。想知道为什么能安全扩张，去法则与量规。产品继承那些边界。",
+          "Si buscas resultados, empieza aquí. Si buscas por qué es seguro escalar, ve a Leyes y Medidores. Los productos heredan límites."
+        )
+      ],
+      formal:[
+        t(
+          "Products are bounded deployment surfaces. Each surface is constrained by doctrine (Laws) and evaluated by observables (Gauges). No surface may exceed scope.",
+          "产品是有界的部署执行面。每个执行面受教义（法则）约束，并由可观测量（量规）评估。不得越界。",
+          "Los productos son superficies de despliegue acotadas. Se restringen por Leyes y se evalúan por Medidores. Ninguna supera el alcance."
+        ),
+        t(
+          "Routing contract: product pages must link back to the rule that bounds them and the gauge that measures them. If either is missing, the surface is incomplete.",
+          "路由契约：每个产品页必须回链到约束它的规则与测量它的量规。缺任一项，该执行面不完整。",
+          "Contrato: cada producto enlaza a la regla que lo limita y al medidor que lo mide. Si falta uno, la superficie está incompleta."
+        )
+      ]
+    },
+    S:{
+      c:"#F59E0B",
+      name:t("CONSTRAINTS","约束","RESTRICCIONES"),
+      hint:t("Gates and admissibility.","门控与可采信。","Compuertas y admisibilidad."),
+      jump:"/laws/",
+      informal:[
+        t(
+          "Constraints are the brakes. They stop you from scaling a mistake. They also keep the site honest: you can’t ‘talk your way’ into truth here.",
+          "约束是刹车。它阻止你把错误扩大。也让网站保持诚实：这里不能靠话术把错说成对。",
+          "Las restricciones son frenos. Evitan escalar un error. También mantienen honestidad: aquí no se ‘habla’ hasta que sea verdad."
+        ),
+        t(
+          "When you feel tempted to ‘just ship it,’ this is where you slow down. Gates are cheaper than cleanup after a blow-up.",
+          "当你想“先上再说”时就来这里降速。门控比爆雷后的清理便宜得多。",
+          "Cuando te tiente ‘solo lanza’, aquí desaceleras. Las compuertas son más baratas que limpiar un desastre."
+        )
+      ],
+      formal:[
+        t(
+          "Constraints define admissibility under declared scope. If a claim cannot be defended with receipts, it remains non-upgradable language.",
+          "约束定义在声明范围内的可采信。主张若无法用收据防守，就保持不可升级的语言层级。",
+          "Las restricciones definen admisibilidad bajo alcance. Si una afirmación no se defiende con recibos, no se puede elevar."
+        ),
+        t(
+          "Gate rule: scale may only increase when verification capacity exists. Otherwise time shrinks the upper bound, not the evidence.",
+          "门控规则：只有在核查能力存在时才允许扩张。否则只允许时间收缩上界，不允许挤压证据。",
+          "Regla: solo se escala cuando existe capacidad de verificación. Si no, el tiempo reduce el límite superior, no la evidencia."
+        )
+      ]
+    },
+    W:{
+      c:"#7F1D1D",
+      name:t("CONTAINMENT","隔离","CONTENCIÓN"),
+      hint:t("Keep failure local.","让失败局部化。","Mantén el fallo local."),
+      jump:"/laws/",
+      informal:[
+        t(
+          "Containment is damage control. Things will break — what matters is whether the break spreads. This section teaches ‘small failure’ on purpose.",
+          "隔离是止损。系统会出错——关键是错误会不会扩散。这里刻意教你如何把失败变小。",
+          "La contención es control de daño. Las cosas fallan; importa si se contagia. Aquí se diseña el ‘fallo pequeño’ a propósito."
+        ),
+        t(
+          "If you feel overwhelmed, containment gives you the next safe move: isolate, verify, repair, then proceed.",
+          "当你被压住时，隔离给你下一步安全动作：先隔离、再核查、再修复、再前进。",
+          "Si te sientes abrumado: aisla, verifica, repara, y recién avanza."
+        )
+      ],
+      formal:[
+        t(
+          "Containment defines segment boundaries and rollback discipline. A failure in one segment must not corrupt downstream receipts.",
+          "隔离定义分段边界与回滚纪律。某段失败不得污染下游收据。",
+          "La contención define límites de segmentos y disciplina de rollback. Un fallo no debe corromper recibos aguas abajo."
+        ),
+        t(
+          "Recovery contract: corrective action creates a new epoch identifier; prior epoch remains immutable for auditability.",
+          "恢复契约：修正动作必须生成新纪元标识；旧纪元保持不可变，以便审计。",
+          "Contrato: una corrección crea nueva época; la anterior permanece inmutable para auditoría."
+        )
+      ]
+    },
+
+    APP:{
+      c:"#A3A3A3",
+      name:t("APPENDIX","附录","APÉNDICE"),
+      hint:t("Packets & references.","包与引用。","Paquetes y referencias."),
+      jump:"/links/",
+      informal:[
+        t(
+          "Appendix is where you grab the packet you need without hunting. If the site feels big, this keeps you fast.",
+          "附录是你不必到处找就能拿到需要的包的地方。网站变大时，它让你保持速度。",
+          "El apéndice es para tomar el paquete sin buscar. Mantiene velocidad cuando el sitio crece."
+        ),
+        t(
+          "If you’re sharing this with someone, send the packet, not the whole site.",
+          "要分享给别人时，发包，不要丢整站链接让人迷路。",
+          "Si lo compartes, envía el paquete, no todo el sitio."
+        )
+      ],
+      formal:[
+        t(
+          "Appendix is a version-controlled packet surface. Each packet has an identifier, scope, and routing targets.",
+          "附录是版本控制的包面。每个包有标识、范围与路由目标。",
+          "El apéndice es superficie de paquetes versionados. Cada paquete tiene ID, alcance y rutas."
+        ),
+        t(
+          "Integrity rule: packets may reference doctrine and gauges, but may not introduce new claim tiers.",
+          "完整性规则：包可引用教义与量规，但不得引入新的主张层级。",
+          "Regla: los paquetes pueden referenciar Leyes y Medidores, pero no crear nuevos niveles de afirmación."
+        )
+      ]
+    },
+    GLO:{
+      c:"#93C5FD",
+      name:t("GLOSSARY","术语表","GLOSARIO"),
+      hint:t("Canon terms.","规范术语。","Términos canónicos."),
+      jump:"/links/",
+      informal:[
+        t(
+          "Glossary stops arguments caused by ‘same word, different meaning.’ If something feels slippery, check the glossary.",
+          "术语表阻止“同词不同义”的争吵。感觉滑的时候就查术语。",
+          "El glosario evita peleas por ‘misma palabra, distinto significado’. Si algo resbala, revisa aquí."
+        ),
+        t(
+          "It’s not about sounding smart — it’s about staying consistent.",
+          "这不是为了显得聪明，而是为了保持一致。",
+          "No es para sonar inteligente; es para ser consistente."
+        )
+      ],
+      formal:[
+        t(
+          "Glossary is the canonical mapping from symbol to meaning under scope. Terms cannot be silently swapped.",
+          "术语表是在范围内的规范映射：符号→含义。术语不得被静默替换。",
+          "El glosario es mapeo canónico bajo alcance: símbolo→significado. No se permiten cambios silenciosos."
+        ),
+        t(
+          "Rule: if a page uses a term not in glossary, it must define it explicitly or link to its definition surface.",
+          "规则：页面使用未入术语表的术语，必须显式定义或回链到定义面。",
+          "Regla: si una página usa un término fuera del glosario, debe definirlo o enlazar a su definición."
+        )
+      ]
+    },
+    ABOUT:{
+      c:"#D4AF37",
+      name:t("ABOUT","关于","ACERCA"),
+      hint:t("Scope & posture.","范围与姿态。","Alcance y postura."),
+      jump:"/about/",
+      informal:[
+        t(
+          "About tells you what this site is and what it refuses to be. It keeps expectations clean.",
+          "关于页说明这网站是什么，也说明它拒绝成为什么。让预期干净。",
+          "Acerca dice qué es este sitio y qué se niega a ser. Limpia expectativas."
+        ),
+        t(
+          "If you’re wondering ‘what am I looking at,’ start here.",
+          "如果你在想“我到底在看什么”，从这里开始。",
+          "Si preguntas ‘¿qué estoy viendo?’, empieza aquí."
+        )
+      ],
+      formal:[
+        t(
+          "About declares scope, measurement posture, and claim boundaries. It is the contract that prevents inflation.",
+          "关于页声明范围、测量姿态与主张边界。它是阻止膨胀的契约。",
+          "Acerca declara alcance, postura de medición y límites de afirmación. Es el contrato anti-inflación."
+        ),
+        t(
+          "If a statement conflicts with About posture, it is rewritten or removed before publication.",
+          "任何与关于页姿态冲突的表述，发布前必须重写或移除。",
+          "Si una frase contradice la postura de Acerca, se reescribe o elimina antes de publicar."
+        )
+      ]
+    },
+    LINKS:{
+      c:"#60A5FA",
+      name:t("LINKS","链接","ENLACES"),
+      hint:t("External anchors.","外部锚点。","Anclas externas."),
+      jump:"/links/",
+      informal:[
+        t(
+          "Links are receipts. If you want to verify, go here. It’s the ‘show me’ lane.",
+          "链接就是收据。想核查就来这里。这是“给我看证据”的路线。",
+          "Los enlaces son recibos. Si quieres verificar, ve aquí. Es la ruta de ‘muéstrame’."
+        ),
+        t(
+          "If someone asks for proof, don’t argue — route them to links.",
+          "别人要证据时，不要争论，直接把他路由到链接页。",
+          "Si alguien pide prueba, no discutas: envíalo a Enlaces."
+        )
+      ],
+      formal:[
+        t(
+          "Links route to external anchors (OSF/GitHub/docs). Each anchor is a provenance surface, not marketing.",
+          "链接指向外部锚点（OSF/GitHub/文档）。每个锚点是溯源面，不是营销。",
+          "Enlaces dirigen a anclas externas (OSF/GitHub/docs). Cada ancla es proveniencia, no marketing."
+        ),
+        t(
+          "Audit rule: any downstream claim must be traceable to an anchor or marked as non-upgradable language.",
+          "审计规则：任何下游主张必须可追溯到锚点，否则标记为不可升级语言。",
+          "Regla de auditoría: toda afirmación debe rastrearse a un ancla o marcarse como lenguaje no elevable."
+        )
+      ]
+    }
+  };
+
+  var lens = (style==="informal") ? "informal" : "formal";
+  var active=null;
+
+  var focus=document.getElementById("focus");
+  var fTitle=document.getElementById("fTitle");
+  var p1=document.getElementById("p1");
+  var p2=document.getElementById("p2");
+  var btnJump=document.getElementById("btnJump");
+  var lensInformal=document.getElementById("lensInformal");
+  var lensFormal=document.getElementById("lensFormal");
+
+  function paintLens(){
+    lensInformal.classList.toggle("active", lens==="informal");
+    lensFormal.classList.toggle("active", lens==="formal");
+  }
+  paintLens();
+
+  lensInformal.onclick=function(){ lens="informal"; paintLens(); if(active) openFocus(active); };
+  lensFormal.onclick=function(){ lens="formal"; paintLens(); if(active) openFocus(active); };
+
+  document.getElementById("fClose").onclick=function(){ focus.classList.remove("show"); active=null; };
+
+  function openFocus(id){
+    active=id;
+    var n=NODES[id];
+    fTitle.textContent=n.name;
+    p1.textContent=n[lens][0];
+    p2.textContent=n[lens][1];
+    btnJump.textContent=t("JUMP","跳转","SALTAR");
+    btnJump.href=n.jump + q();
+    focus.classList.add("show");
+    setTimeout(function(){ focus.scrollIntoView({behavior:"smooth", block:"start"}); }, 0);
+  }
+
+  function makePlate(id){
+    var n=NODES[id];
+    var el=document.createElement("div");
+    el.className="plate";
+    el.style.setProperty("--c", n.c);
+
+    var left=document.createElement("div");
+    left.className="pLeft";
+
+    var sw=document.createElement("div");
+    sw.className="swatch";
+    sw.style.background=n.c;
+
+    var txt=document.createElement("div");
+    txt.className="pTxt";
+
+    var name=document.createElement("div");
+    name.className="pName";
+    name.textContent=n.name;
+
+    var hint=document.createElement("div");
+    hint.className="pHint";
+    hint.textContent=n.hint;
+
+    txt.appendChild(name);
+    txt.appendChild(hint);
+    left.appendChild(sw);
+    left.appendChild(txt);
+
+    var chev=document.createElement("div");
+    chev.className="pChev";
+    chev.textContent="›";
+
+    el.appendChild(left);
+    el.appendChild(chev);
+
+    el.addEventListener("click", function(){ openFocus(id); });
+
+    return el;
+  }
+
+  var gridCompass=document.getElementById("gridCompass");
+  ["N","E","S","W"].forEach(function(id){ gridCompass.appendChild(makePlate(id)); });
+
+  var gridSystem=document.getElementById("gridSystem");
+  ["APP","GLO","ABOUT","LINKS"].forEach(function(id){ gridSystem.appendChild(makePlate(id)); });
+
+  // default open = N (operational)
+  openFocus("N");
+
+})();
 </script>
 
 </body>

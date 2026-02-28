@@ -1,132 +1,177 @@
-<!-- TNT — /door/index.html
-     DOOR · GEOMETRY ONLY (HARD RESET)
-     RULE:
-       - No ui.css
-       - No backgrounds, no gradients, no glass, no effects
-       - Only geometry + routing
-     ROUTES:
-       - TOP diamond → /home/
-       - BOTTOM diamond → /prelude/
-     STATE:
-       - Carries ?lang=&style=&time=&depth=
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR</title>
-
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+<title>ENTER</title>
 
 <style>
-/* Layout only. No field ownership. No materials. */
-html,body{margin:0;padding:0;height:100%}
-a{color:inherit;text-decoration:none}
 
-.door{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+/* ===== HARD RESET ===== */
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{
+  height:100%;
+  background:#140000;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff;
+  overflow:hidden;
 }
 
-.stack{
+/* ===== CENTER TITLE ===== */
+.title{
+  position:absolute;
+  top:12%;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+}
+
+.title h1{
+  font-size:64px;
+  letter-spacing:2px;
+  font-weight:900;
+}
+
+.title p{
+  margin-top:20px;
+  font-size:18px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+/* ===== STAGE ===== */
+.stage{
+  position:absolute;
+  top:58%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:800px;
+  height:800px;
+}
+
+/* ===== PEARLESCENT BLACK GEM ===== */
+.diamond{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:320px;
+  height:320px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:44px;
+  cursor:pointer;
+
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 12%, transparent 40%),
+    radial-gradient(circle at 80% 25%, rgba(160,120,255,.8) 0%, transparent 60%),
+    radial-gradient(circle at 65% 85%, rgba(110,230,255,.7) 0%, transparent 70%),
+    radial-gradient(circle at 45% 45%, rgba(255,255,255,.12) 0%, transparent 60%),
+    linear-gradient(165deg,#0f1624 0%,#070c14 60%,#03050a 100%);
+
+  border:1px solid rgba(255,255,255,.75);
+
+  box-shadow:
+    0 150px 300px rgba(0,0,0,.95),
+    0 0 220px rgba(212,175,55,.6),
+    inset 0 6px 0 rgba(255,255,255,.95),
+    inset 0 -140px 200px rgba(0,0,0,.98);
+
+  transition:.18s ease;
+}
+
+.diamond:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.06);
+  box-shadow:
+    0 170px 340px rgba(0,0,0,.98),
+    0 0 260px rgba(212,175,55,.8),
+    inset 0 6px 0 rgba(255,255,255,1),
+    inset 0 -140px 200px rgba(0,0,0,.98);
+}
+
+/* placement */
+.topDiamond{ transform:translate(-50%,-50%) translate(0,-230px) rotate(45deg); }
+.bottomDiamond{ transform:translate(-50%,-50%) translate(0,230px) rotate(45deg); }
+
+/* upright content */
+.inner{
+  transform:rotate(-45deg);
+  width:100%;
+  height:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:28px;
-  padding:24px;
+  text-align:center;
+  padding:30px;
 }
 
-/* Minimal visibility so geometry is clickable/legible without “design”. */
-.gd-diamond{
-  border:1px solid rgba(0,0,0,.25);
-  box-sizing:border-box;
-  cursor:pointer;
+.lab{
+  font-size:24px;
+  font-weight:900;
 }
 
-/* Ensure the label is upright (branch.css already rotates inner span) */
-.gd-diamond span{
-  font-weight:800;
-  letter-spacing:.6px;
-  text-transform:uppercase;
+.sub{
+  margin-top:18px;
+  font-size:18px;
+  opacity:.95;
 }
-.gd-diamond small{
-  font-weight:600;
-  letter-spacing:.3px;
-  text-transform:none;
+
+.pref{
+  font-weight:900;
+  font-style:italic;
 }
+
+/* footer */
+.footer{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  font-size:16px;
+  opacity:.9;
+}
+
+.sig{
+  margin-top:10px;
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.7;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="door">
-  <div class="stack">
+<div class="title">
+  <h1>ENTER</h1>
+  <p>
+    This is a structural site.<br/>
+    It does not sell belief.<br/>
+    It measures coherence.
+  </p>
+</div>
 
-    <!-- ENTER -->
-    <a class="gd-diamond" id="enter" href="/home/">
-      <span>ENTER<small>Go inside</small></span>
-    </a>
+<div class="stage">
+  <div class="diamond topDiamond">
+    <div class="inner">
+      <div class="lab">ENTER SITE</div>
+      <div class="sub"><span class="pref">Direct:</span> Move forward into systems.</div>
+    </div>
+  </div>
 
-    <!-- MAP -->
-    <a class="gd-diamond" id="map" href="/prelude/">
-      <span>MAP<small>Get oriented</small></span>
-    </a>
-
+  <div class="diamond bottomDiamond">
+    <div class="inner">
+      <div class="lab">VIEW SITE MAP</div>
+      <div class="sub"><span class="pref">First:</span> See the structure before movement.</div>
+    </div>
   </div>
 </div>
 
-<script>
-(function(){
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
-  }
-
-  // Carry state into routes
-  document.getElementById("enter").href="/home/"+q();
-  document.getElementById("map").href="/prelude/"+q();
-
-  // Minimal language swap (labels only). No UI added.
-  if(lang==="zh"){
-    document.querySelector("#enter span").childNodes[0].nodeValue="进入";
-    document.querySelector("#enter small").textContent="直接进入";
-    document.querySelector("#map span").childNodes[0].nodeValue="地图";
-    document.querySelector("#map small").textContent="先看结构";
-  }else if(lang==="es"){
-    document.querySelector("#enter span").childNodes[0].nodeValue="ENTRAR";
-    document.querySelector("#enter small").textContent="Ir adentro";
-    document.querySelector("#map span").childNodes[0].nodeValue="MAPA";
-    document.querySelector("#map small").textContent="Orientarse";
-  }
-})();
-</script>
+<div class="footer">
+  Scale without structure collapses.
+  <div class="sig">COGRID.NET</div>
+</div>
 
 </body>
 </html>

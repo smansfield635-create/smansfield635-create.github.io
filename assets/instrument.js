@@ -7,7 +7,7 @@
    - Does NOT touch html/body background (ui.css owns field)
    - Does NOT define geometry (branch.css owns geometry)
    - Canon keys only: gd_lang, gd_depth, gd_time, gd_style
-   - Canon langs: ["en","zh"]  primary: "en"
+   - Canon langs: ["en","zh","es"]  primary: "en"
    - Gate deep pages if gd_lang invalid (root/index/door are ungated)
    ============================================================ */
 
@@ -21,14 +21,14 @@
   var K_STYLE = "gd_style";
 
   // ---------- Canon (LOCKED) ----------
-  var CANON_LANG  = ["en","zh"];
+  var CANON_LANG  = ["en","zh","es"];
   var CANON_DEPTH = ["explore","learn"];
   var CANON_TIME  = ["origin","now","post"];
   var CANON_STYLE = ["formal","informal"];
   var PRIMARY_LANG = "en";
 
   // Fast allow maps
-  var ALLOW_LANG  = {en:1, zh:1};
+  var ALLOW_LANG  = {en:1, zh:1, es:1};
   var ALLOW_DEPTH = {explore:1, learn:1};
   var ALLOW_TIME  = {origin:1, now:1, post:1};
   var ALLOW_STYLE = {formal:1, informal:1};
@@ -54,7 +54,7 @@
     }
   }
 
-  // ---------- Drift cleanup (LOCKED behavior: delete unknown values) ----------
+  // ---------- Drift cleanup ----------
   function cleanupDrift(){
     var lang  = lsGet(K_LANG);
     var depth = lsGet(K_DEPTH);
@@ -67,7 +67,7 @@
     if(style && !ALLOW_STYLE[style]) lsDel(K_STYLE);
   }
 
-  // ---------- Normalize (LOCKED precedence: URL → LS → defaults) ----------
+  // ---------- Normalize (URL → LS → defaults) ----------
   function normalize(){
     var lang  = qsGet("lang")  || lsGet(K_LANG)  || PRIMARY_LANG;
     var depth = qsGet("depth") || lsGet(K_DEPTH) || "explore";
@@ -88,12 +88,6 @@
   }
 
   // ---------- Minimal gating ----------
-  // Do NOT gate:
-  // - / (root)
-  // - /index.html (Terminal)
-  // - /door/ (language select page)
-  // Gate deep pages if gd_lang missing/invalid:
-  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/, /gauges/, /innovation/
   function gate(state){
     var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
 
@@ -110,7 +104,6 @@
     }
     if(!isDeep) return;
 
-    // IMPORTANT: use normalized state (not raw lsGet) to avoid false redirects
     if(!state || !ALLOW_LANG[state.lang]){
       window.location.replace("/");
     }
@@ -152,8 +145,7 @@
   function loadCanonI18n(lang){
     try{
       var xhr = new XMLHttpRequest();
-      // Cache-buster version MUST match your canonical file version
-      xhr.open("GET", "/assets/i18n_canon.json?v=i18n_canon_v1.1", true);
+      xhr.open("GET", "/assets/i18n_canon.json?v=i18n_canon_v1.2", true);
       xhr.onreadystatechange = function(){
         if(xhr.readyState !== 4) return;
         if(xhr.status >= 200 && xhr.status < 300){
@@ -173,7 +165,7 @@
   gate(state);
   loadCanonI18n(state.lang);
 
-  // Optional debug surface (non-authoritative)
+  // ---------- Debug Surface ----------
   window.CRP_INSTRUMENT = {
     getState: function(){
       return {

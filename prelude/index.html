@@ -1,13 +1,10 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · WISHBONE INDEX
-     STRUCTURE:
-       ◇ CLAIM   → scroll to Products & Services index
-       ◇ SUPPORT → scroll to Software & Systems index
-     NOTES:
-       - Two large diamonds only
-       - No accidental routing
-       - Internal sections on same page
-       - Clean geometry
+     PRELUDE · WISHBONE INDEX (FIXED)
+     FIXES (STRUCTURE/GEOMETRY ONLY):
+       - Diamonds ALWAYS clickable (header no longer blocks taps)
+       - Diamonds scale down on mobile (no oversized overlap)
+       - Smooth scroll lands correctly (scroll-margin for fixed header)
+       - No visual redesign beyond sizing/stacking safety
 -->
 
 <!doctype html>
@@ -25,8 +22,10 @@
 a{text-decoration:none;color:inherit}
 
 :root{
-  --D:260px;
-  --R:180px;
+  /* responsive sizing (prevents “too big” on phone) */
+  --D:clamp(190px, 34vw, 250px);
+  --R:clamp(130px, 18vw, 170px);
+
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
@@ -37,19 +36,20 @@ a{text-decoration:none;color:inherit}
   position:fixed;
   left:16px;
   top:16px;
-  z-index:120;
+  z-index:220;
   display:flex;
   gap:10px;
 }
 
-/* ===== TITLE ===== */
+/* ===== TITLE (NEVER BLOCK TAPS) ===== */
 .header{
   position:fixed;
-  top:80px;
+  top:78px;
   left:50%;
   transform:translateX(-50%);
   text-align:center;
-  z-index:100;
+  z-index:200;
+  pointer-events:none; /* ✅ critical: header can’t steal clicks */
 }
 .header h1{
   margin:0;
@@ -67,11 +67,11 @@ a{text-decoration:none;color:inherit}
 .stage{
   position:fixed;
   left:50%;
-  top:46%;
+  top:50%;
   transform:translate(-50%,-50%);
   width:min(700px,94vw);
   height:420px;
-  z-index:60;
+  z-index:140;
 }
 
 /* ===== DIAMONDS ===== */
@@ -85,6 +85,7 @@ a{text-decoration:none;color:inherit}
   border-radius:28px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
@@ -129,17 +130,11 @@ a{text-decoration:none;color:inherit}
   pointer-events:none;
 }
 
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
-}
+.d:hover{ transform:translate(-50%,-50%) rotate(45deg) scale(1.03); }
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-.d-left{
-  transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg);
-}
-
-.d-right{
-  transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg);
-}
+.d-left{  transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg); }
+.d-right{ transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
 
 .inner{
   transform:rotate(-45deg);
@@ -150,6 +145,7 @@ a{text-decoration:none;color:inherit}
   justify-content:center;
   text-align:center;
   padding:18px;
+  pointer-events:none; /* click stays on .d */
 }
 
 .lab{
@@ -173,6 +169,7 @@ a{text-decoration:none;color:inherit}
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.20);
   backdrop-filter:blur(10px);
+  scroll-margin-top:140px; /* ✅ smooth scroll lands below fixed header */
 }
 
 .section h2{
@@ -186,6 +183,13 @@ a{text-decoration:none;color:inherit}
   margin-bottom:40px;
   opacity:.7;
   font-size:13px;
+}
+
+/* mobile: reduce stage height so diamonds don’t collide with header */
+@media (max-width:520px){
+  .stage{height:360px; top:52%;}
+  .section{margin-top:480px;}
+  .header h1{font-size:34px;}
 }
 </style>
 </head>
@@ -202,16 +206,16 @@ a{text-decoration:none;color:inherit}
   <p>Choose your entry posture.</p>
 </div>
 
-<div class="stage">
+<div class="stage" aria-label="Prelude wishbone">
 
-  <div class="d d-left" id="claimDiamond">
+  <div class="d d-left" id="claimDiamond" role="button" tabindex="0" aria-label="Claim">
     <div class="inner">
       <div class="lab">CLAIM</div>
       <div class="sub">Products & Services</div>
     </div>
   </div>
 
-  <div class="d d-right" id="supportDiamond">
+  <div class="d d-right" id="supportDiamond" role="button" tabindex="0" aria-label="Support">
     <div class="inner">
       <div class="lab">SUPPORT</div>
       <div class="sub">Software & Systems</div>
@@ -222,16 +226,12 @@ a{text-decoration:none;color:inherit}
 
 <div class="section" id="claimSection">
   <h2>Products & Services</h2>
-  <p>
-  What we offer. Deployable surfaces. Energy, Education, Commercial, Advisory, etc.
-  </p>
+  <p>What we offer. Deployable surfaces. Energy, Education, Commercial, Advisory, etc.</p>
 </div>
 
 <div class="section" id="supportSection">
   <h2>Software & Systems</h2>
-  <p>
-  The engines behind the claims. SSG, .DOTGrid, UCI, Registry, and measurement layers.
-  </p>
+  <p>The engines behind the claims. SSG, .DOTGrid, UCI, Registry, and measurement layers.</p>
 </div>
 
 <div class="footer">
@@ -239,17 +239,24 @@ a{text-decoration:none;color:inherit}
 </div>
 
 <script>
-document.getElementById("claimDiamond")
-  .addEventListener("click", function(){
-    document.getElementById("claimSection")
-      .scrollIntoView({behavior:"smooth"});
-  });
+(function(){
+  function go(id){
+    var el=document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+  }
 
-document.getElementById("supportDiamond")
-  .addEventListener("click", function(){
-    document.getElementById("supportSection")
-      .scrollIntoView({behavior:"smooth"});
-  });
+  var claim=document.getElementById("claimDiamond");
+  var support=document.getElementById("supportDiamond");
+
+  if(claim){
+    claim.addEventListener("click", function(){ go("claimSection"); });
+    claim.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go("claimSection"); }});
+  }
+  if(support){
+    support.addEventListener("click", function(){ go("supportSection"); });
+    support.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go("supportSection"); }});
+  }
+})();
 </script>
 
 </body>

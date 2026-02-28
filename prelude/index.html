@@ -1,10 +1,12 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · WISHBONE INDEX (FIXED)
-     FIXES (STRUCTURE/GEOMETRY ONLY):
-       - Diamonds ALWAYS clickable (header no longer blocks taps)
-       - Diamonds scale down on mobile (no oversized overlap)
-       - Smooth scroll lands correctly (scroll-margin for fixed header)
-       - No visual redesign beyond sizing/stacking safety
+     PRELUDE · WISHBONE TOGGLE (BANNER + ENTER BUTTON)
+     CHANGE (STRUCTURE/GEOMETRY ONLY):
+       - Tap CLAIM / SUPPORT → shows the corresponding banner (stays visible)
+       - Banner includes an ENTER button (routes to the selected index)
+       - CLAIM  → /products/                (Products & Services)
+       - SUPPORT→ /products/software/       (Software & Systems)
+       - Preserves state: ?lang/style/time/depth + gd_* LS
+       - No overlap/tap-blocking: header/panels are pointer-safe
 -->
 
 <!doctype html>
@@ -22,7 +24,6 @@
 a{text-decoration:none;color:inherit}
 
 :root{
-  /* responsive sizing (prevents “too big” on phone) */
   --D:clamp(190px, 34vw, 250px);
   --R:clamp(130px, 18vw, 170px);
 
@@ -33,41 +34,84 @@ a{text-decoration:none;color:inherit}
 
 /* ===== TOP ===== */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:220;
-  display:flex;
-  gap:10px;
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;
 }
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* ===== TITLE (NEVER BLOCK TAPS) ===== */
+/* ===== HEADER (never blocks taps) ===== */
 .header{
   position:fixed;
   top:78px;
   left:50%;
   transform:translateX(-50%);
   text-align:center;
-  z-index:200;
-  pointer-events:none; /* ✅ critical: header can’t steal clicks */
+  z-index:220;
+  pointer-events:none;
 }
-.header h1{
+.header h1{margin:0;font-weight:950;font-size:38px;letter-spacing:2px}
+.header p{margin-top:10px;opacity:.85;font-size:14px}
+
+/* ===== TOGGLE BANNER (clickable) ===== */
+.panelWrap{
+  position:fixed;
+  top:150px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(980px,92vw);
+  z-index:230;
+  pointer-events:none; /* only the panel is clickable */
+}
+.panel{
+  pointer-events:auto;
+  display:none;
+  border-radius:22px;
+  padding:16px 16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.panel.show{display:block}
+.panelTop{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.pTitle{
   margin:0;
   font-weight:950;
-  font-size:38px;
-  letter-spacing:2px;
+  letter-spacing:.4px;
+  font-size:18px;
 }
-.header p{
-  margin-top:10px;
-  opacity:.85;
-  font-size:14px;
+.pDesc{
+  margin:10px 0 0;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+.pActions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:flex-end;
+  margin-left:auto;
+}
+@media (max-width:520px){
+  .panelWrap{top:146px}
+  .pActions{width:100%; justify-content:flex-start}
 }
 
-/* ===== WISHBONE STAGE ===== */
+/* ===== STAGE ===== */
 .stage{
   position:fixed;
   left:50%;
-  top:50%;
+  top:56%;
   transform:translate(-50%,-50%);
   width:min(700px,94vw);
   height:420px;
@@ -76,11 +120,8 @@ a{text-decoration:none;color:inherit}
 
 /* ===== DIAMONDS ===== */
 .d{
-  width:var(--D);
-  height:var(--D);
-  position:absolute;
-  left:50%;
-  top:50%;
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
   border-radius:28px;
   cursor:pointer;
@@ -100,15 +141,12 @@ a{text-decoration:none;color:inherit}
     inset 0 2px 0 rgba(255,255,255,.25),
     inset 0 -42px 78px rgba(0,0,0,.80);
 
-  transition:transform .2s ease, box-shadow .2s ease;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
 .d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:28px;
-  padding:1px;
+  position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.65;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -116,14 +154,9 @@ a{text-decoration:none;color:inherit}
   mask-composite:exclude;
   pointer-events:none;
 }
-
 .d::after{
   content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:30%;
+  position:absolute;left:12%;right:12%;top:10%;height:30%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -136,60 +169,44 @@ a{text-decoration:none;color:inherit}
 .d-left{  transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg); }
 .d-right{ transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg); }
 
+.d.active{
+  border-color:rgba(212,175,55,.45);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 46px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+
 .inner{
   transform:rotate(-45deg);
   height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
   padding:18px;
-  pointer-events:none; /* click stays on .d */
+  pointer-events:none;
 }
+.lab{font-weight:950;font-size:20px;letter-spacing:.6px}
+.sub{margin-top:8px;font-size:13px;opacity:.85}
 
-.lab{
-  font-weight:950;
-  font-size:20px;
-  letter-spacing:.6px;
-}
-
-.sub{
-  margin-top:8px;
-  font-size:13px;
-  opacity:.85;
-}
-
-/* ===== SECTIONS ===== */
-.section{
-  width:min(1000px,92vw);
-  margin:520px auto 80px;
-  padding:24px;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(10px);
-  scroll-margin-top:140px; /* ✅ smooth scroll lands below fixed header */
-}
-
-.section h2{
-  margin-top:0;
-  font-weight:950;
-  letter-spacing:1px;
-}
-
+/* ===== FOOTER ===== */
 .footer{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  z-index:160;
+  width:min(980px,92vw);
   text-align:center;
-  margin-bottom:40px;
-  opacity:.7;
+  opacity:.75;
   font-size:13px;
+  pointer-events:none;
 }
 
-/* mobile: reduce stage height so diamonds don’t collide with header */
-@media (max-width:520px){
-  .stage{height:360px; top:52%;}
-  .section{margin-top:480px;}
-  .header h1{font-size:34px;}
+@media (max-width:560px){
+  .stage{top:58%;height:360px}
+  .header h1{font-size:34px}
 }
 </style>
 </head>
@@ -197,8 +214,14 @@ a{text-decoration:none;color:inherit}
 <body>
 
 <div class="top-left">
-  <a class="btn" href="/index.html">RETURN</a>
-  <a class="btn" href="/home/">ENTER</a>
+  <a class="btn" id="btnReturn" href="/index.html">RETURN</a>
+  <a class="btn" id="btnEnterHub" href="/home/">ENTER</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
 <div class="header">
@@ -206,8 +229,34 @@ a{text-decoration:none;color:inherit}
   <p>Choose your entry posture.</p>
 </div>
 
-<div class="stage" aria-label="Prelude wishbone">
+<!-- Toggle banner -->
+<div class="panelWrap" aria-live="polite">
+  <div class="panel" id="panelClaim">
+    <div class="panelTop">
+      <div>
+        <p class="pTitle" id="tClaim">Products & Services</p>
+        <p class="pDesc" id="dClaim">What we offer. Deployable surfaces. Energy, Education, Commercial, Advisory, etc.</p>
+      </div>
+      <div class="pActions">
+        <a class="btn" id="enterClaim" href="/products/">ENTER</a>
+      </div>
+    </div>
+  </div>
 
+  <div class="panel" id="panelSupport">
+    <div class="panelTop">
+      <div>
+        <p class="pTitle" id="tSupport">Software & Systems</p>
+        <p class="pDesc" id="dSupport">The engines behind the claims. SSG, .DOTGrid, UCI, Registry, and measurement layers.</p>
+      </div>
+      <div class="pActions">
+        <a class="btn" id="enterSupport" href="/products/software/">ENTER</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="stage" aria-label="Prelude wishbone">
   <div class="d d-left" id="claimDiamond" role="button" tabindex="0" aria-label="Claim">
     <div class="inner">
       <div class="lab">CLAIM</div>
@@ -221,17 +270,6 @@ a{text-decoration:none;color:inherit}
       <div class="sub">Software & Systems</div>
     </div>
   </div>
-
-</div>
-
-<div class="section" id="claimSection">
-  <h2>Products & Services</h2>
-  <p>What we offer. Deployable surfaces. Energy, Education, Commercial, Advisory, etc.</p>
-</div>
-
-<div class="section" id="supportSection">
-  <h2>Software & Systems</h2>
-  <p>The engines behind the claims. SSG, .DOTGrid, UCI, Registry, and measurement layers.</p>
 </div>
 
 <div class="footer">
@@ -240,22 +278,112 @@ a{text-decoration:none;color:inherit}
 
 <script>
 (function(){
-  function go(id){
-    var el=document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+  // ---- state ----
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
+  // top links carry state
+  document.getElementById("btnReturn").href="/index.html"+q();
+  document.getElementById("btnEnterHub").href="/home/"+q();
+
+  // language toggles
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/prelude/"+q();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  // ENTER buttons carry state
+  document.getElementById("enterClaim").href="/products/"+q();
+  document.getElementById("enterSupport").href="/products/software/"+q();
+
+  // i18n for the two banners only (keeps layout stable)
+  if(lang==="zh"){
+    document.getElementById("tClaim").textContent="产品与服务";
+    document.getElementById("dClaim").textContent="我们提供的可部署执行面：能源、教育、商业、咨询等。";
+    document.getElementById("tSupport").textContent="软件与系统";
+    document.getElementById("dSupport").textContent="支撑主张的引擎层：SSG、.DOTGrid、UCI、登记与测量层。";
+    document.getElementById("enterClaim").textContent="进入";
+    document.getElementById("enterSupport").textContent="进入";
+    document.getElementById("btnReturn").textContent="返回";
+    document.getElementById("btnEnterHub").textContent="进入";
+  }else if(lang==="es"){
+    document.getElementById("tClaim").textContent="Productos y Servicios";
+    document.getElementById("dClaim").textContent="Lo que ofrecemos: superficies desplegables. Energía, Educación, Comercial, Asesoría, etc.";
+    document.getElementById("tSupport").textContent="Software y Sistemas";
+    document.getElementById("dSupport").textContent="Motores detrás de las afirmaciones: SSG, .DOTGrid, UCI, Registro y capas de medición.";
+    document.getElementById("enterClaim").textContent="ENTRAR";
+    document.getElementById("enterSupport").textContent="ENTRAR";
+    document.getElementById("btnReturn").textContent="VOLVER";
+    document.getElementById("btnEnterHub").textContent="ENTRAR";
+  }
+
+  // toggle behavior
   var claim=document.getElementById("claimDiamond");
   var support=document.getElementById("supportDiamond");
+  var panelClaim=document.getElementById("panelClaim");
+  var panelSupport=document.getElementById("panelSupport");
 
-  if(claim){
-    claim.addEventListener("click", function(){ go("claimSection"); });
-    claim.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go("claimSection"); }});
+  function show(which){
+    var isClaim = (which==="claim");
+    panelClaim.classList.toggle("show", isClaim);
+    panelSupport.classList.toggle("show", !isClaim);
+    document.getElementById("claimDiamond").classList.toggle("active", isClaim);
+    document.getElementById("supportDiamond").classList.toggle("active", !isClaim);
+    // keep banner visible: no scrolling required
   }
-  if(support){
-    support.addEventListener("click", function(){ go("supportSection"); });
-    support.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go("supportSection"); }});
+
+  function bind(el, which){
+    if(!el) return;
+    el.addEventListener("click", function(){ show(which); });
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(which); }
+    });
   }
+
+  bind(claim,"claim");
+  bind(support,"support");
+
+  // default selection
+  show("claim");
 })();
 </script>
 

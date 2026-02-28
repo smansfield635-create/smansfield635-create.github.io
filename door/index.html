@@ -1,14 +1,28 @@
 <!-- TNT — /door/index.html
-     DOOR · ENTER (LAYER 0) · TWO MASSIVE DIAMONDS · TAP-SAFE
-     FIX:
-       - TRUE FORK:
-           ENTER SITE    → /index.html
-           VIEW SITE MAP → /prelude/
-     OTHER LOCKS UNCHANGED:
-       - LEFT: EXIT + PRELUDE
+     DOOR · ORIENTATION CHAMBER (LAYER 0) · TWO MASSIVE DIAMONDS · NO MODALS
+
+     ROUTES (LOCKED):
+       - ENTER SITE     → /index.html
+       - VIEW SITE MAP  → /prelude/
+
+     TOP CONTROLS (LOCKED):
+       - LEFT:  EXIT + PRELUDE
        - RIGHT: EN / 中文 / ES
-       - State carry: lang/style/time/depth
-       - Gold grid behind jewels (page forces ui overlays behind)
+
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+
+     STYLE:
+       - Opal/violet readability layer (no red-on-red reading surfaces)
+       - Titles: big, bold, uppercase
+       - Preface lines: bold + italic
+       - Gold diamond grid MUST stay BEHIND jewels (z-index fix only; no field repaint)
+
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT set html/body background (ui.css owns field)
+       - Tap-safe (no overlays intercepting)
 -->
 
 <!doctype html>
@@ -23,25 +37,28 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* ui.css owns field */
 a{color:inherit;text-decoration:none}
-
-/* FORCE ui.css overlay behind content (no “grid over jewel”) */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:-2 !important}
 
 :root{
   --R:170px;
   --D:260px;
 
+  /* Opal/violet readability layer */
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.14);
   --opalC:rgba(90,210,255,.10);
 
   --goldSoft:rgba(212,175,55,.42);
 
+  /* Deep material base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
+
+/* ===== GRID BEHIND JEWELS (stacking only) ===== */
+body{position:relative}
+body::before, body::after{z-index:0}
 
 /* Top-left */
 .top-left{
@@ -57,7 +74,10 @@ body::before, body::after{z-index:-2 !important}
 
 /* Brand (opal glass) */
 .brand{
-  position:fixed;left:50%;top:18px;transform:translateX(-50%);
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
   z-index:130;
   text-align:center;
   padding:12px 18px;
@@ -72,15 +92,33 @@ body::before, body::after{z-index:-2 !important}
   box-shadow:0 24px 80px rgba(0,0,0,.45);
   pointer-events:none;
 }
-.brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;margin:0 0 6px 0}
-.brand .t{font-weight:950;font-size:44px;letter-spacing:1.2px;margin:0;line-height:1.02}
-.brand .s{opacity:.88;font-size:13.5px;margin:8px 0 0;line-height:1.35;max-width:min(860px,94vw)}
+.brand .k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+  margin:0 0 6px 0;
+}
+.brand .t{
+  font-weight:950;
+  font-size:44px;
+  letter-spacing:1.2px;
+  margin:0;
+  line-height:1.02;
+}
+.brand .s{
+  opacity:.88;
+  font-size:13.5px;
+  margin:8px 0 0;
+  line-height:1.35;
+  max-width:min(860px,94vw);
+}
 
-/* subtle interior lattice (page-only; stays behind jewels) */
+/* subtle interior lattice (no field ownership) */
 .lattice{
-  position:fixed;inset:0;z-index:5;
+  position:fixed;inset:0;z-index:20;
   pointer-events:none;
-  opacity:.08;
+  opacity:.11; /* slightly stronger */
   mix-blend-mode:screen;
 }
 .lattice::before{
@@ -89,13 +127,13 @@ body::before, body::after{z-index:-2 !important}
   transform:rotate(45deg);
   background:
     repeating-linear-gradient(0deg,
-      rgba(212,175,55,.22) 0px,
-      rgba(212,175,55,.22) 1px,
+      rgba(212,175,55,.26) 0px,
+      rgba(212,175,55,.26) 1px,
       transparent 1px,
       transparent 52px),
     repeating-linear-gradient(90deg,
-      rgba(212,175,55,.22) 0px,
-      rgba(212,175,55,.22) 1px,
+      rgba(212,175,55,.26) 0px,
+      rgba(212,175,55,.26) 1px,
       transparent 1px,
       transparent 52px);
 }
@@ -107,7 +145,9 @@ body::before, body::after{z-index:-2 !important}
 
 /* Stage */
 .stage{
-  position:fixed;left:50%;top:56%;
+  position:fixed;
+  left:50%;
+  top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -115,17 +155,19 @@ body::before, body::after{z-index:-2 !important}
   pointer-events:none;
 }
 
-/* Massive diamonds (as <a> for tap-safe navigation) */
+/* Massive diamonds (opal/violet lacquer) */
 .d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
   transform-origin:center;
   border-radius:34px;
   cursor:pointer;
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  z-index:80;
 
   background:
     radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
@@ -143,7 +185,6 @@ body::before, body::after{z-index:-2 !important}
 
   transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   overflow:hidden;
-  display:block;
 }
 .d::before{
   content:"";
@@ -166,6 +207,11 @@ body::before, body::after{z-index:-2 !important}
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.32);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 52px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 }
 .d:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
@@ -175,20 +221,37 @@ body::before, body::after{z-index:-2 !important}
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
-/* Inner text */
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:18px;gap:10px;
+  padding:18px;
+  gap:10px;
   pointer-events:none;
   user-select:none;
 }
-.lab{font-weight:950;font-size:22px;letter-spacing:1px}
-.sub{font-size:14px;opacity:.90;line-height:1.35;max-width:24em}
-.pref{font-weight:950;font-style:italic;letter-spacing:.2px}
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:1px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
+}
+.sub{
+  font-size:14px;
+  opacity:.90;
+  line-height:1.35;
+  max-width:24em;
+}
+.pref{
+  font-weight:950;
+  font-style:italic;
+  letter-spacing:.2px;
+}
 
 /* Fine print only */
 .footer{
@@ -237,21 +300,21 @@ body::before, body::after{z-index:-2 !important}
 
 <div class="stage" aria-label="Orientation chamber">
 
-  <!-- ENTER SITE (fork to /index.html) -->
-  <a class="d d-top" id="dEnter" href="/index.html" aria-label="Enter site">
+  <!-- ENTER SITE -->
+  <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
     <div class="inner">
       <div class="lab" id="labEnter">ENTER SITE</div>
       <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
     </div>
-  </a>
+  </div>
 
-  <!-- VIEW SITE MAP (fork to /prelude/) -->
-  <a class="d d-bottom" id="dNav" href="/prelude/" aria-label="View site map">
+  <!-- VIEW SITE MAP -->
+  <div class="d d-bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
     <div class="inner">
-      <div class="lab" id="labNav">VIEW SITE MAP</div>
-      <div class="sub" id="subNav"><span class="pref" id="prefNav">First:</span> Get oriented first.</div>
+      <div class="lab" id="labMap">VIEW SITE MAP</div>
+      <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented first.</div>
     </div>
-  </a>
+  </div>
 
 </div>
 
@@ -298,13 +361,6 @@ body::before, body::after{z-index:-2 !important}
   }
   wireTop();
 
-  // TRUE fork wiring
-  function wireDiamonds(){
-    document.getElementById("dEnter").href = "/index.html" + q({}) + "&gate=enter";
-    document.getElementById("dNav").href   = "/prelude/"   + q({}) + "&gate=map";
-  }
-  wireDiamonds();
-
   // Page-level language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
@@ -326,53 +382,79 @@ body::before, body::after{z-index:-2 !important}
     renderLang();
     paintLang();
     wireTop();
-    wireDiamonds();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
+  // Copy (EN/中文/ES) — plain, human-first
   function renderLang(){
     if(lang==="zh"){
       document.getElementById("bt").textContent="进入";
       document.getElementById("bs").textContent="无需信仰 · 不做推销 · 以结构导航";
+
       document.getElementById("labEnter").textContent="进入网站";
       document.getElementById("prefEnter").textContent="直接：";
       document.getElementById("subEnter").lastChild.nodeValue = " 直接进入。";
-      document.getElementById("labNav").textContent="查看网站地图";
-      document.getElementById("prefNav").textContent="先：";
-      document.getElementById("subNav").lastChild.nodeValue = " 先获得方向。";
+
+      document.getElementById("labMap").textContent="查看网站地图";
+      document.getElementById("prefMap").textContent="先：";
+      document.getElementById("subMap").lastChild.nodeValue = " 先获得方向。";
+
       document.getElementById("btnExit").textContent="退出";
       document.getElementById("btnPrelude").textContent="序章";
       document.getElementById("foot").textContent="细则：先导览 · 再规模 · 再主张";
     }else if(lang==="es"){
       document.getElementById("bt").textContent="ENTRAR";
       document.getElementById("bs").textContent="Sin creencias · Sin venta · Navegación por estructura";
+
       document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
       document.getElementById("prefEnter").textContent="Directo:";
       document.getElementById("subEnter").lastChild.nodeValue = " Entra directamente.";
-      document.getElementById("labNav").textContent="VER MAPA DEL SITIO";
-      document.getElementById("prefNav").textContent="Primero:";
-      document.getElementById("subNav").lastChild.nodeValue = " Oriéntate primero.";
+
+      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefMap").textContent="Primero:";
+      document.getElementById("subMap").lastChild.nodeValue = " Oriéntate primero.";
+
       document.getElementById("btnExit").textContent="SALIR";
       document.getElementById("btnPrelude").textContent="PRELUDIO";
       document.getElementById("foot").textContent="Letra pequeña: orientación · escala · afirmaciones";
     }else{
       document.getElementById("bt").textContent="ENTER";
       document.getElementById("bs").textContent="No belief required · No selling · Navigation by structure";
+
       document.getElementById("labEnter").textContent="ENTER SITE";
       document.getElementById("prefEnter").textContent="Direct:";
       document.getElementById("subEnter").lastChild.nodeValue = " Go directly inside.";
-      document.getElementById("labNav").textContent="VIEW SITE MAP";
-      document.getElementById("prefNav").textContent="First:";
-      document.getElementById("subNav").lastChild.nodeValue = " Get oriented first.";
+
+      document.getElementById("labMap").textContent="VIEW SITE MAP";
+      document.getElementById("prefMap").textContent="First:";
+      document.getElementById("subMap").lastChild.nodeValue = " Get oriented first.";
+
       document.getElementById("btnExit").textContent="EXIT";
       document.getElementById("btnPrelude").textContent="PRELUDE";
       document.getElementById("foot").textContent="Fine print: orientation before scale · scale before claims";
     }
   }
   renderLang();
+
+  // ROUTES:
+  function goEnter(){ location.href = "/index.html" + q(); }
+  function goMap(){ location.href = "/prelude/" + q(); }
+
+  var enter=document.getElementById("dEnter");
+  var map=document.getElementById("dMap");
+
+  enter.addEventListener("click", goEnter);
+  map.addEventListener("click", goMap);
+
+  enter.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }
+  });
+  map.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
+  });
 
 })();
 </script>

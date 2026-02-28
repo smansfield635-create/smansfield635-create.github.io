@@ -1,21 +1,18 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · LAUNCHPAD (ENGLISH-ONLY STABILIZATION)
-     GOALS:
-       - Keep your current PRELUDE layout (banner + principles + map grid)
-       - No competing UI, no overlays, no modals
-       - No inline onclick (tap-safe handlers)
-       - English-only for now (no EN/中文/ES buttons yet)
-       - State carry: ?lang=en&style=&time=&depth= + gd_* storage
+     PRELUDE · LAUNCHPAD (EN/ZH/ES) · CLEAN / NO COMPETING UI
      ROUTES:
-       - RETURN → /index.html   (Door at root)
-       - ENTER  → /home/        (Primary hub)
-       - Tiles:
-           HOME     → /home/
-           EXPLORE  → /explore/
-           PRODUCTS → /products/
-           LAWS     → /laws/
-           GAUGES   → /gauges/
-           LINKS    → /links/
+       RETURN (back)   → /index.html
+       ENTER MAIN HUB  → /home/
+       SCIENCE (laws)  → /laws/
+       PRODUCTS        → /products/
+       INNOVATION      → /explore/
+       GAUGES          → /gauges/
+       LINKS           → /links/
+     RULES:
+       - Same visual language as Door (opal/violet glass, black material)
+       - No modals, no overlays, no competing fixed layers
+       - Cards expand in-place (accordion)
+       - State carry: lang/style/time/depth + gd_*
 -->
 
 <!doctype html>
@@ -31,308 +28,190 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+:root{
+  --dockH:90px;
+  --stroke:rgba(255,255,255,.12);
+  --glassA:rgba(0,0,0,.16);
+  --glassB:rgba(0,0,0,.10);
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+}
 
-/* Ensure ui.css overlays stay behind page UI */
-#preludeRoot{position:relative;z-index:10}
-body{position:relative}
-body::before, body::after{pointer-events:none}
-
-/* -------------------------------- */
-/* TOP (NO WRAP)                    */
-/* -------------------------------- */
-
-.top{
-  position:fixed;
-  top:16px;
-  left:0;
-  right:0;
-  padding:0 16px;
-  z-index:300;
+/* page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
-  justify-content:space-between;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* top (never wrap) */
+.top{
+  position:sticky;
+  top:0;
+  z-index:300;
+  padding:10px 0 6px;
+  display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:12px;
   pointer-events:none;
 }
-.top-left,
-.top-right{
+.top .left,.top .right{
   display:flex;
   gap:12px;
+  align-items:center;
   flex-wrap:nowrap;
   white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
-@media (max-width:420px){
-  .top{padding:0 12px}
-  .top-left,.top-right{gap:10px}
-}
 
-/* -------------------------------- */
-/* BANNER (GLASS, HIGH CONTRAST)    */
-/* -------------------------------- */
-
-.banner{
-  position:relative;
-  width:min(1000px,92vw);
-  margin:92px auto 18px;
-  padding:22px 22px;
-  border-radius:26px;
-
-  background:
-    radial-gradient(circle at 18% 28%, rgba(210,190,255,.14), transparent 72%),
-    radial-gradient(circle at 82% 60%, rgba(120,70,255,.12), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.16));
-
-  border:1px solid rgba(255,255,255,.16);
-  backdrop-filter:blur(12px);
-  box-shadow:0 40px 120px rgba(0,0,0,.72);
-}
-
-.banner h1{
-  margin:0;
-  font-size:38px;
-  font-weight:950;
-  letter-spacing:2px;
-}
-
-.banner p{
-  margin:12px 0 0;
-  line-height:1.55;
-  opacity:.92;
-  font-size:15px;
-}
-
-/* -------------------------------- */
-/* PRINCIPLES PANEL                 */
-/* -------------------------------- */
-
-.principles{
-  width:min(1000px,92vw);
-  margin:12px auto 16px;
-  padding:18px 18px;
+/* header */
+.header{
+  border:1px solid var(--stroke);
   border-radius:22px;
-
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), transparent 60%),
-    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.16));
-
-  border:1px solid rgba(255,255,255,.14);
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.12));
   backdrop-filter:blur(10px);
-  box-shadow:0 30px 96px rgba(0,0,0,.65);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.t{margin:0;font-weight:950;font-size:32px;letter-spacing:1px;line-height:1.02}
+.s{margin:10px 0 0;font-size:13.5px;opacity:.86;line-height:1.45;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+
+/* bands */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  color:rgba(255,255,255,.86);
+  font-weight:950;
+  letter-spacing:.2px;
 }
 
-.line{
-  margin:10px 0;
-  font-weight:800;
-  letter-spacing:.25px;
-  line-height:1.6;
-  font-size:15px;
-  color:rgba(255,255,255,.90);
-}
+/* stack */
+.stackList{display:flex;flex-direction:column;gap:12px}
 
-/* -------------------------------- */
-/* SITE MAP GRID                    */
-/* -------------------------------- */
-
-.map{
-  width:min(1000px,92vw);
-  margin:14px auto 110px;
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:14px;
-}
-@media (max-width:820px){
-  .map{grid-template-columns:1fr}
-}
-
-:root{
-  --tileA:#0f1624;
-  --tileB:#070c14;
-  --goldGlow:rgba(212,175,55,.28);
-}
-
-.tile{
+.stackRow{
+  --domc:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  border:1px solid rgba(255,255,255,.18);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.16), transparent 60%),
-    radial-gradient(circle at 80% 30%, rgba(160,120,255,.16), transparent 68%),
-    linear-gradient(165deg, var(--tileA) 0%, var(--tileB) 62%, #04060a 100%);
-
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.86),
-    0 0 26px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.16),
-    inset 0 -44px 76px rgba(0,0,0,.82);
-
-  padding:18px 18px;
-  cursor:pointer;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.stackHead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
 }
+.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
+.stackTitle{font-weight:950;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
-.tile:hover{
-  transform:translateY(-3px);
-  border-color:rgba(212,175,55,.35);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.90),
-    0 0 40px rgba(212,175,55,.32),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -44px 76px rgba(0,0,0,.82);
+.stackBody{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
+.stackRow.open .stackBody{display:block}
 
-.tl{min-width:0}
-.tile h3{
-  margin:0 0 6px;
-  font-size:18px;
-  font-weight:950;
-  letter-spacing:1px;
-}
-.tile p{
-  margin:0;
-  opacity:.86;
-  line-height:1.45;
-  font-size:13.5px;
-}
-.chev{
-  font-size:18px;
-  opacity:.75;
-  flex:0 0 auto;
-  margin-top:2px;
-  pointer-events:none;
-}
+.pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-/* -------------------------------- */
-/* FOOTER                           */
-/* -------------------------------- */
-
-.footer{
-  position:fixed;
-  left:50%;
-  bottom:18px;
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  text-align:center;
-  font-size:13px;
-  opacity:.86;
   z-index:220;
   width:min(980px,94vw);
-  pointer-events:none;
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:10px;
 }
-.sig{
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.65;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+}
+
+/* small */
+@media (max-width:420px){
+  .top .left,.top .right{gap:10px}
+  .t{font-size:28px}
 }
 </style>
 </head>
 
 <body>
-<div id="preludeRoot">
+
+<div class="page">
 
   <div class="top" aria-label="Top controls">
-    <div class="top-left">
-      <a class="btn" id="btnReturn" href="/index.html">RETURN</a>
-      <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+    <div class="left">
+      <a class="btn" id="btnBack" href="/index.html">RETURN</a>
+      <a class="btn" id="btnEnterTop" href="/home/">ENTER</a>
     </div>
-    <div class="top-right">
-      <span class="btn" style="pointer-events:none;opacity:.85">EN</span>
-    </div>
-  </div>
-
-  <div class="banner">
-    <h1>PRELUDE</h1>
-    <p>
-      Before movement, orientation.<br/>
-      Before scaling, constraint.<br/>
-      Before claims, structure.
-    </p>
-  </div>
-
-  <div class="principles" aria-label="Principles">
-    <div class="line">Scope precedes authority.</div>
-    <div class="line">Scale amplifies error.</div>
-    <div class="line">Compensation hides instability.</div>
-    <div class="line">Unbounded claims create fragility.</div>
-    <div class="line">Proof must survive constraint.</div>
-    <div class="line">If it cannot be measured, it cannot be stabilized.</div>
-    <div class="line">Coherence cannot exceed self-consistency.</div>
-    <div class="line">Ambiguity accelerates collapse.</div>
-    <div class="line">Correction creates a new epoch.</div>
-    <div class="line">Containment prevents cascade.</div>
-  </div>
-
-  <div class="map" aria-label="Site map">
-    <div class="tile" id="tHome" role="button" tabindex="0">
-      <div class="tl">
-        <h3>HOME</h3>
-        <p>Main structural hub (N/E/S/W).</p>
-      </div>
-      <div class="chev">›</div>
-    </div>
-
-    <div class="tile" id="tExplore" role="button" tabindex="0">
-      <div class="tl">
-        <h3>EXPLORE</h3>
-        <p>Innovation lanes and frontier surfaces.</p>
-      </div>
-      <div class="chev">›</div>
-    </div>
-
-    <div class="tile" id="tProducts" role="button" tabindex="0">
-      <div class="tl">
-        <h3>PRODUCTS</h3>
-        <p>Adoptable tools and platforms.</p>
-      </div>
-      <div class="chev">›</div>
-    </div>
-
-    <div class="tile" id="tLaws" role="button" tabindex="0">
-      <div class="tl">
-        <h3>LAWS</h3>
-        <p>Constraints and verification doctrine.</p>
-      </div>
-      <div class="chev">›</div>
-    </div>
-
-    <div class="tile" id="tGauges" role="button" tabindex="0">
-      <div class="tl">
-        <h3>GAUGES</h3>
-        <p>Measurement surfaces and dashboards.</p>
-      </div>
-      <div class="chev">›</div>
-    </div>
-
-    <div class="tile" id="tLinks" role="button" tabindex="0">
-      <div class="tl">
-        <h3>LINKS</h3>
-        <p>External anchors and references.</p>
-      </div>
-      <div class="chev">›</div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="footer">
-    Structure is not optional.
-    <div class="sig">COGRID.NET</div>
+  <div class="header" aria-hidden="true">
+    <p class="k" id="hk">CARDINAL AXIS</p>
+    <h1 class="t" id="ht">PRELUDE</h1>
+    <p class="s" id="hs">Choose a direction. Or enter the hub.</p>
+    <div class="fine" id="fine">Fine print: orientation reduces drift before scale.</div>
   </div>
+
+  <div class="band" id="bandA">DIRECTIONS</div>
+  <div class="stackList" id="listA"></div>
+
+  <div class="band" id="bandB">PRINCIPLES</div>
+  <div class="stackList" id="listB"></div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom actions">
+  <a class="btn" id="btnReturnBottom" href="/index.html">RETURN</a>
+  <a class="btn" id="btnEnterBottom" href="/home/">ENTER MAIN HUB</a>
+</nav>
+
 <script>
 (function(){
-  // English-only lock for now
+  // state
   var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-  var lang  = "en";
 
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -345,32 +224,225 @@ body::before, body::after{pointer-events:none}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  function q(){
-    return "?lang=en&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  // top links
-  document.getElementById("btnReturn").href="/index.html"+q();
-  document.getElementById("btnEnter").href="/home/"+q();
+  // wire top/bottom buttons
+  document.getElementById("btnBack").href="/index.html"+q();
+  document.getElementById("btnReturnBottom").href="/index.html"+q();
+  document.getElementById("btnEnterTop").href="/home/"+q();
+  document.getElementById("btnEnterBottom").href="/home/"+q();
 
-  function go(path){ location.href=path+q(); }
-  function bind(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    el.addEventListener("click", function(){ go(path); });
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paint(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paint();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    renderAll();
+    paint();
+    // rewire (labels may change, links keep state)
+    document.getElementById("btnBack").href="/index.html"+q();
+    document.getElementById("btnReturnBottom").href="/index.html"+q();
+    document.getElementById("btnEnterTop").href="/home/"+q();
+    document.getElementById("btnEnterBottom").href="/home/"+q();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // content
+  var COPY={
+    en:{
+      hk:"CARDINAL AXIS", ht:"PRELUDE", hs:"Choose a direction. Or enter the hub.",
+      fine:"Fine print: orientation reduces drift before scale.",
+      bandA:"DIRECTIONS", bandB:"PRINCIPLES",
+      returnTop:"RETURN", enterTop:"ENTER",
+      returnBottom:"RETURN", enterBottom:"ENTER MAIN HUB",
+      open:"OPEN",
+      dirs:[
+        {c:"#F59E0B", t:"SCIENCE (VALIDATION)", s:"Where the rules are locked.", p:"Constraint doctrine, admissibility, and bounded claims live here. If you want verification posture, start here.", href:"/laws/"},
+        {c:"#0EA5E9", t:"PRODUCTS (ADOPTION)", s:"Tools you can use.", p:"Adoptable surfaces and platform routes. This stays separate from doctrine and measurement claims.", href:"/products/"},
+        {c:"#93C5FD", t:"INNOVATION (FRONTIER)", s:"Concept lab, bounded.", p:"Explore new directions without overclaim. Anything measurable routes to Gauges.", href:"/explore/"},
+        {c:"#A3A3A3", t:"GAUGES (MEASUREMENT)", s:"What is measured / not measured.", p:"Dashboards and instrument surfaces. If you’re looking for observed outputs, they live here.", href:"/gauges/"},
+        {c:"#60A5FA", t:"LINKS (ANCHORS)", s:"External references.", p:"External anchors and references. Use this when you want receipts or source surfaces.", href:"/links/"}
+      ],
+      principles:[
+        {c:"#D4AF37", t:"Scope precedes authority.", s:"Name boundaries before outcomes.", p:"When scope is explicit, claims stay comparable. When scope is vague, words drift and results inflate."},
+        {c:"#93C5FD", t:"Scale amplifies error.", s:"Small confusion multiplies.", p:"Scaling a misread turns a small miss into a big failure. Orientation is the cheapest fix."},
+        {c:"#A3A3A3", t:"Proof must survive constraint.", s:"No shortcuts.", p:"If a claim can’t survive the rules, it stays as a hypothesis. Constraints are the gate."}
+      ]
+    },
+    zh:{
+      hk:"基轴体系", ht:"前置页", hs:"先选方向，也可以直接进入主枢纽。",
+      fine:"细则：先导览可在规模化前减少漂移。",
+      bandA:"方向", bandB:"原则",
+      returnTop:"返回", enterTop:"进入",
+      returnBottom:"返回", enterBottom:"进入主枢纽",
+      open:"打开",
+      dirs:[
+        {c:"#F59E0B", t:"科学（验证）", s:"规则锁定之处。", p:"约束教义、可采信与有界主张在这里。要验证姿态，从这里开始。", href:"/laws/"},
+        {c:"#0EA5E9", t:"产品（采纳）", s:"你可以使用的工具。", p:"可采纳执行面与平台路由。它与教义与测量主张分离。", href:"/products/"},
+        {c:"#93C5FD", t:"创新（前沿）", s:"有界概念实验室。", p:"允许探索但不夸口。可测内容跳到量规。", href:"/explore/"},
+        {c:"#A3A3A3", t:"量规（测量）", s:"测了什么/没测什么。", p:"仪表板与测量面。若要观察输出，它们在这里。", href:"/gauges/"},
+        {c:"#60A5FA", t:"链接（锚点）", s:"外部参考。", p:"外部锚点与参考面。需要收据或来源时使用。", href:"/links/"}
+      ],
+      principles:[
+        {c:"#D4AF37", t:"范围先于权力。", s:"先定边界再定结果。", p:"范围明确，主张可比较；范围模糊，语义漂移与膨胀随之发生。"},
+        {c:"#93C5FD", t:"规模放大误差。", s:"小混乱会倍增。", p:"把误读放大到规模会变成大失败。导览是最省成本的修复。"},
+        {c:"#A3A3A3", t:"证据必须经受约束。", s:"不走捷径。", p:"主张若不能通过规则，就只能作为假设。约束就是闸门。"}
+      ]
+    },
+    es:{
+      hk:"CARDINAL AXIS", ht:"PRELUDIO", hs:"Elige una dirección. O entra al hub.",
+      fine:"Letra pequeña: la orientación reduce deriva antes de escalar.",
+      bandA:"DIRECCIONES", bandB:"PRINCIPIOS",
+      returnTop:"VOLVER", enterTop:"ENTRAR",
+      returnBottom:"VOLVER", enterBottom:"ENTRAR AL HUB",
+      open:"ABRIR",
+      dirs:[
+        {c:"#F59E0B", t:"CIENCIA (VALIDACIÓN)", s:"Reglas y límites.", p:"Doctrina de restricciones, admisibilidad y afirmaciones acotadas. Si quieres verificación, empieza aquí.", href:"/laws/"},
+        {c:"#0EA5E9", t:"PRODUCTOS (ADOPCIÓN)", s:"Herramientas utilizables.", p:"Superficies adoptables y rutas de plataforma. Separado de doctrina y medición.", href:"/products/"},
+        {c:"#93C5FD", t:"INNOVACIÓN (FRONTERA)", s:"Laboratorio acotado.", p:"Explora sin sobreafirmar. Lo medible va a Medidores.", href:"/explore/"},
+        {c:"#A3A3A3", t:"MEDIDORES (MEDICIÓN)", s:"Qué se mide / no se mide.", p:"Tableros e instrumentos. Si buscas salidas observadas, están aquí.", href:"/gauges/"},
+        {c:"#60A5FA", t:"ENLACES (ANCLAS)", s:"Referencias externas.", p:"Anclas y referencias externas. Úsalo cuando quieras recibos o fuentes.", href:"/links/"}
+      ],
+      principles:[
+        {c:"#D4AF37", t:"El alcance precede a la autoridad.", s:"Primero límites, luego resultados.", p:"Con alcance explícito, las afirmaciones son comparables. Con alcance vago, las palabras derivan."},
+        {c:"#93C5FD", t:"La escala amplifica el error.", s:"La confusión se multiplica.", p:"Escalar un malentendido convierte un error pequeño en un fallo grande. Orientarse es lo más barato."},
+        {c:"#A3A3A3", t:"La prueba debe sobrevivir a la restricción.", s:"Sin atajos.", p:"Si una afirmación no sobrevive las reglas, se queda como hipótesis. La restricción es la compuerta."}
+      ]
+    }
+  };
+
+  function C(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+
+  function makeRow(item, openLabel){
+    var row=document.createElement("div");
+    row.className="stackRow";
+    row.style.setProperty("--domc", item.c);
+
+    var head=document.createElement("div");
+    head.className="stackHead";
+
+    var left=document.createElement("div");
+    left.className="stackLeft";
+
+    var bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background=item.c;
+
+    var block=document.createElement("div");
+    block.style.minWidth="0";
+
+    var title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent=item.t;
+
+    var sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent=item.s;
+
+    block.appendChild(title);
+    block.appendChild(sub);
+    left.appendChild(bar);
+    left.appendChild(block);
+
+    var chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="stackBody";
+
+    var p=document.createElement("p");
+    p.className="pdesc";
+    p.textContent=item.p;
+
+    var acts=document.createElement("div");
+    acts.className="actions";
+
+    if(item.href){
+      var open=document.createElement("a");
+      open.className="btn";
+      open.textContent=openLabel;
+      open.href=item.href + q();
+      acts.appendChild(open);
+    }
+
+    body.appendChild(p);
+    body.appendChild(acts);
+
+    head.addEventListener("click", function(){
+      var openNow=row.classList.toggle("open");
+      chev.textContent = openNow ? "▾" : "▸";
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  function renderAll(){
+    var T=C();
+
+    document.getElementById("hk").textContent=T.hk;
+    document.getElementById("ht").textContent=T.ht;
+    document.getElementById("hs").textContent=T.hs;
+    document.getElementById("fine").textContent=T.fine;
+
+    document.getElementById("bandA").textContent=T.bandA;
+    document.getElementById("bandB").textContent=T.bandB;
+
+    document.getElementById("btnBack").textContent=T.returnTop;
+    document.getElementById("btnEnterTop").textContent=T.enterTop;
+    document.getElementById("btnReturnBottom").textContent=T.returnBottom;
+    document.getElementById("btnEnterBottom").textContent=T.enterBottom;
+
+    // rebuild lists
+    var listA=document.getElementById("listA");
+    var listB=document.getElementById("listB");
+    listA.innerHTML="";
+    listB.innerHTML="";
+
+    T.dirs.forEach(function(it, i){
+      var el=makeRow({c:it.c,t:it.t,s:it.s,p:it.p,href:it.href}, T.open);
+      listA.appendChild(el);
+      if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+    });
+
+    T.principles.forEach(function(it, i){
+      var el=makeRow({c:it.c,t:it.t,s:it.s,p:it.p}, "");
+      listB.appendChild(el);
+      if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
     });
   }
 
-  bind("tHome","/home/");
-  bind("tExplore","/explore/");
-  bind("tProducts","/products/");
-  bind("tLaws","/laws/");
-  bind("tGauges","/gauges/");
-  bind("tLinks","/links/");
+  renderAll();
 })();
 </script>
 

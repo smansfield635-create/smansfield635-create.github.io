@@ -1,243 +1,132 @@
+<!-- TNT — /door/index.html
+     DOOR · GEOMETRY ONLY (HARD RESET)
+     RULE:
+       - No ui.css
+       - No backgrounds, no gradients, no glass, no effects
+       - Only geometry + routing
+     ROUTES:
+       - TOP diamond → /home/
+       - BOTTOM diamond → /prelude/
+     STATE:
+       - Carries ?lang=&style=&time=&depth=
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>DOOR</title>
 
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* Layout only. No field ownership. No materials. */
+html,body{margin:0;padding:0;height:100%}
+a{color:inherit;text-decoration:none}
 
-/* ===================================================== */
-/*  DOOR OWNS EVERYTHING — NO GLOBAL FIELD              */
-/* ===================================================== */
-
-html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 30% 20%, #1c2438 0%, #0b111d 45%, #05070c 100%);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-/* kill global overlays */
-body::before,
-body::after{display:none !important; content:none !important}
-
-/* ===================================================== */
-/*  TOP CONTROLS                                        */
-/* ===================================================== */
-
-.top{
-  position:fixed;
-  top:20px;
-  left:0;
-  right:0;
+.door{
+  height:100vh;
   display:flex;
-  justify-content:space-between;
-  padding:0 24px;
-  z-index:300;
+  align-items:center;
+  justify-content:center;
 }
 
-.top-left,.top-right{
-  display:flex;
-  gap:14px;
-  white-space:nowrap;
-}
-
-.btn{
-  padding:10px 18px;
-  border-radius:16px;
-  background:#0f1624;
-  border:1px solid rgba(255,255,255,.15);
-  font-weight:800;
-  cursor:pointer;
-  color:#fff;
-}
-
-.btn:hover{
-  border-color:#d4af37;
-}
-
-/* ===================================================== */
-/*  TITLE                                                */
-/* ===================================================== */
-
-.title{
-  position:fixed;
-  top:110px;
-  left:50%;
-  transform:translateX(-50%);
-  text-align:center;
-  z-index:120;
-}
-
-.title h1{
-  margin:0;
-  font-size:56px;
-  font-weight:950;
-  letter-spacing:2px;
-}
-
-.title p{
-  margin-top:18px;
-  font-size:18px;
-  opacity:.9;
-  line-height:1.6;
-}
-
-/* ===================================================== */
-/*  STAGE                                                */
-/* ===================================================== */
-
-.stage{
-  position:fixed;
-  top:58%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:760px;
-  height:760px;
-}
-
-/* ===================================================== */
-/*  TRUE PEARLESCENT GEM                                */
-/* ===================================================== */
-
-.diamond{
-  width:300px;
-  height:300px;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  border-radius:40px;
-  transform:translate(-50%,-50%) rotate(45deg);
-  cursor:pointer;
-
-  background:
-    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.6) 12%, transparent 38%),
-    radial-gradient(circle at 78% 28%, rgba(160,120,255,.85) 0%, transparent 60%),
-    radial-gradient(circle at 62% 86%, rgba(110,230,255,.75) 0%, transparent 74%),
-    radial-gradient(circle at 48% 45%, rgba(255,255,255,.12) 0%, transparent 60%),
-    linear-gradient(165deg, #111827 0%, #070c14 60%, #03050a 100%);
-
-  border:1px solid rgba(255,255,255,.7);
-
-  box-shadow:
-    0 160px 300px rgba(0,0,0,.95),
-    0 0 220px rgba(212,175,55,.65),
-    inset 0 5px 0 rgba(255,255,255,.95),
-    inset 0 -120px 200px rgba(0,0,0,.98);
-
-  transition:.2s ease;
-}
-
-.diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.06);
-}
-
-.inner{
-  transform:rotate(-45deg);
+.stack{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  text-align:center;
-  height:100%;
-  padding:28px;
+  gap:28px;
+  padding:24px;
 }
 
-.lab{
-  font-size:24px;
-  font-weight:900;
+/* Minimal visibility so geometry is clickable/legible without “design”. */
+.gd-diamond{
+  border:1px solid rgba(0,0,0,.25);
+  box-sizing:border-box;
+  cursor:pointer;
 }
 
-.sub{
-  margin-top:16px;
-  font-size:18px;
-  opacity:.95;
+/* Ensure the label is upright (branch.css already rotates inner span) */
+.gd-diamond span{
+  font-weight:800;
+  letter-spacing:.6px;
+  text-transform:uppercase;
 }
-
-.pref{
-  font-weight:900;
-  font-style:italic;
+.gd-diamond small{
+  font-weight:600;
+  letter-spacing:.3px;
+  text-transform:none;
 }
-
-.topDiamond{transform:translate(-50%,-50%) translate(0,-220px) rotate(45deg)}
-.bottomDiamond{transform:translate(-50%,-50%) translate(0,220px) rotate(45deg)}
-
-/* ===================================================== */
-/*  FOOTER                                               */
-/* ===================================================== */
-
-.footer{
-  position:fixed;
-  bottom:40px;
-  left:50%;
-  transform:translateX(-50%);
-  text-align:center;
-  font-size:15px;
-  opacity:.9;
-}
-
-.sig{
-  margin-top:10px;
-  font-size:12px;
-  letter-spacing:3px;
-  opacity:.7;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div class="top-left">
-    <a class="btn" href="/">EXIT</a>
-    <a class="btn" href="/prelude/">PRELUDE</a>
-  </div>
-  <div class="top-right">
-    <button class="btn">EN</button>
-    <button class="btn">中文</button>
-    <button class="btn">ES</button>
-  </div>
-</div>
+<div class="door">
+  <div class="stack">
 
-<div class="title">
-  <h1>ENTER</h1>
-  <p>
-    This is a structural site.<br/>
-    It does not sell belief.<br/>
-    It measures coherence.
-  </p>
-</div>
+    <!-- ENTER -->
+    <a class="gd-diamond" id="enter" href="/home/">
+      <span>ENTER<small>Go inside</small></span>
+    </a>
 
-<div class="stage">
-  <div class="diamond topDiamond" onclick="location.href='/home/'">
-    <div class="inner">
-      <div class="lab">ENTER SITE</div>
-      <div class="sub"><span class="pref">Direct:</span> Move forward into systems.</div>
-    </div>
-  </div>
+    <!-- MAP -->
+    <a class="gd-diamond" id="map" href="/prelude/">
+      <span>MAP<small>Get oriented</small></span>
+    </a>
 
-  <div class="diamond bottomDiamond" onclick="location.href='/prelude/'">
-    <div class="inner">
-      <div class="lab">VIEW SITE MAP</div>
-      <div class="sub"><span class="pref">First:</span> See the structure before movement.</div>
-    </div>
   </div>
 </div>
 
-<div class="footer">
-  Scale without structure collapses.
-  <div class="sig">COGRID.NET</div>
-</div>
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  // Carry state into routes
+  document.getElementById("enter").href="/home/"+q();
+  document.getElementById("map").href="/prelude/"+q();
+
+  // Minimal language swap (labels only). No UI added.
+  if(lang==="zh"){
+    document.querySelector("#enter span").childNodes[0].nodeValue="进入";
+    document.querySelector("#enter small").textContent="直接进入";
+    document.querySelector("#map span").childNodes[0].nodeValue="地图";
+    document.querySelector("#map small").textContent="先看结构";
+  }else if(lang==="es"){
+    document.querySelector("#enter span").childNodes[0].nodeValue="ENTRAR";
+    document.querySelector("#enter small").textContent="Ir adentro";
+    document.querySelector("#map span").childNodes[0].nodeValue="MAPA";
+    document.querySelector("#map small").textContent="Orientarse";
+  }
+})();
+</script>
 
 </body>
 </html>

@@ -1,27 +1,16 @@
 <!-- TNT — /explore/index.html
      EXPLORE · PRODUCTS & INNOVATION (LAYER 2 · SPLINE B HUB)
-     PRIMARY RULE:
-       - Plain language in bold layer
-       - Any abstract/scientific language goes to fine print only
-     PURPOSE:
-       - This page is the Products + Innovation hub (same accord).
-       - 2 bands (kept separate, no mixing):
-           Band A: PRODUCTS (usable surfaces)
-           Band B: INNOVATION (labs / frontier / language)
-       - Click a card → expands in-place (accordion) + OPEN button.
-       - No modals. No overlays. No “opens at bottom” confusion.
-     CONTROLS:
-       - Page-level language toggle only (EN / 中文 / ES) at top-right
-       - No language toggle inside cards
-     ROUTING (no placeholders here; all targets are existing trunks or known hubs):
-       - Products cards route to /products/ or known product pages
-       - Innovation cards route to /explore/frontier/ or /explore/innovation/language/
-     STATE:
-       - URL: lang/style/time/depth
-       - LS:  gd_lang/gd_style/gd_time/gd_depth
+     FIXES (LOCKED):
+       - PRODUCTS band stays public-facing (no science/memo tone)
+       - PRODUCTS “Overview” routes to /products/ (NOT energy)
+       - Adds Product Index grid (independent product links) WITHOUT removing current content
+       - INNOVATION band stays separate
+       - Accordion opens in-place (no modals / no overlays)
+       - Page-level language toggle only (EN / 中文 / ES)
+       - State carry: lang/style/time/depth (URL) + gd_* (localStorage)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background styling
+       - Does NOT style html/body background (ui.css owns field)
        - Tap-safe
 -->
 
@@ -121,6 +110,51 @@ a{color:inherit;text-decoration:none}
 .pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
 .actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* PRODUCT INDEX (inside PRODUCTS band) */
+.subBand{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.10);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+.pgrid{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:820px){ .pgrid{grid-template-columns:1fr;} }
+
+.pcard{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.14);
+  box-shadow:0 14px 44px rgba(0,0,0,.45);
+  padding:14px 14px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  justify-content:space-between;
+}
+.pcard:hover{border-color:rgba(212,175,55,.30)}
+.pL{display:flex;gap:12px;min-width:0}
+.pDot{
+  width:10px;height:10px;transform:rotate(45deg);
+  border-radius:3px;
+  background:var(--pc,#93C5FD);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
+  margin-top:4px;flex:0 0 auto;
+}
+.pTxt{min-width:0}
+.pName{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pOne{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35}
+.pAct{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.pAct .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
 /* dock */
 .dock{
@@ -288,88 +322,98 @@ a{color:inherit;text-decoration:none}
   }
   renderHeader();
 
-  // data (no placeholders; only known hubs/pages)
+  // Data
+  // IMPORTANT: PRODUCTS OVERVIEW MUST BE /products/ (this fixes your “Products goes to Energy” complaint)
   var PRODUCTS = [
     {
       c:"#0EA5E9",
-      t:{en:"Products",zh:"产品总览",es:"Productos"},
-      s:{en:"Everything you can use, packaged as surfaces.",zh:"所有可用内容的总入口。",es:"Entrada a todo lo utilizable."},
-      p:{en:"This is the product spine. Each item links to doctrine (Laws) and measurement (Gauges) without mixing them.",
-         zh:"这是产品脊柱。每项都可回到法则与量规，但不混写。",
-         es:"Este es el eje de productos. Cada elemento enlaza a Leyes y Medidores sin mezclar."},
+      t:{en:"Products Overview",zh:"产品总览",es:"Resumen de productos"},
+      s:{en:"Start here. See the full product index.",zh:"从这里开始。进入完整产品索引。",es:"Empieza aquí. Ver índice completo."},
+      p:{en:"This opens the product index: the full list of what you can use. Pick Energy only if you want Energy.",
+         zh:"这里打开产品索引：你能用的全部清单。只有你选择能源时才进入能源。",
+         es:"Esto abre el índice de productos. Energía solo si eliges energía."},
       href:"/products/"
     },
     {
       c:"#F59E0B",
       t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
-      s:{en:"Industrial posture only. No gain claims.",zh:"仅工业姿态。无增益主张。",es:"Solo postura industrial. Sin ganancias."},
-      p:{en:"Industrial thermal substitution surfaces. Any frontier statements stay as readiness doctrine under Laws.",
-         zh:"工业热替代执行面。任何前沿表述都只作为法则下的就绪教义。",
-         es:"Superficies de sustitución térmica industrial. Lo fronterizo queda como doctrina de preparación."},
+      s:{en:"Industrial posture only.",zh:"仅工业姿态。",es:"Solo postura industrial."},
+      p:{en:"Industrial thermal substitution surfaces. This is one product family inside the product index.",
+         zh:"工业热替代执行面。这只是产品索引中的一个产品分支。",
+         es:"Superficies térmicas industriales. Una familia dentro del índice."},
       href:"/products/energy/"
     },
     {
       c:"#93C5FD",
       t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
-      s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
-      p:{en:"A diagnostic surface that references Hybrid Collapse Rule (Laws) and outputs (Gauges) without inflating claims.",
-         zh:"诊断执行面：引用混合崩塌规则（法则）与输出（量规），不膨胀主张。",
-         es:"Superficie diagnóstica: referencia Leyes y salidas de Medidores sin inflar afirmaciones."},
+      s:{en:"Decision support and classification.",zh:"决策支持与分类。",es:"Soporte de decisión y clasificación."},
+      p:{en:"A practical diagnostic surface for orientation and next steps. Built to stay understandable and usable.",
+         zh:"用于方向校准与下一步的实用诊断执行面。可理解、可使用。",
+         es:"Superficie diagnóstica práctica para orientación y pasos siguientes."},
       href:"/products/"
     },
     {
       c:"#60A5FA",
       t:{en:"Platforms",zh:"平台",es:"Plataformas"},
-      s:{en:"Core engines and deployable units.",zh:"核心引擎与可部署单元。",es:"Motores y unidades desplegables."},
-      p:{en:"Platform catalog with bounded summaries. The proof posture stays in Laws/Gauges.",
-         zh:"平台目录（有界摘要）。证明姿态在法则/量规。",
-         es:"Catálogo de plataformas con resúmenes acotados. La prueba vive en Leyes/Medidores."},
+      s:{en:"Core deployable units.",zh:"核心可部署单元。",es:"Unidades desplegables."},
+      p:{en:"A catalog of platform-level deliverables. The product index is the fastest entry point.",
+         zh:"平台级交付物目录。产品索引是最快入口。",
+         es:"Catálogo de plataformas. El índice es la entrada más rápida."},
       href:"/products/"
     }
+  ];
+
+  // Product Index (independent links) — your ask
+  // NOTE: You can extend this list without changing layout.
+  var PRODUCT_INDEX = [
+    {c:"#F59E0B", t:{en:"Energy",zh:"能源",es:"Energía"}, one:{en:"Industrial thermal substitution (C).",zh:"工业热替代（C）。",es:"Sustitución térmica industrial (C)."}, href:"/products/energy/"},
+    {c:"#93C5FD", t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico"}, one:{en:"Orientation + classification surfaces.",zh:"方向校准 + 分类执行面。",es:"Orientación + clasificación."}, href:"/products/"},
+    {c:"#60A5FA", t:{en:"Dot.Grid",zh:"点阵索引",es:"Dot.Grid"}, one:{en:"Indexing + sweeps (surface-level).",zh:"索引 + 扫掠（表层入口）。",es:"Indexado + barridos."}, href:"/products/"},
+    {c:"#D4AF37", t:{en:"SSG",zh:"SSG",es:"SSG"}, one:{en:"Constraint syntax geometry (surface).",zh:"约束语法几何（表层）。",es:"Geometría de sintaxis."}, href:"/products/"}
   ];
 
   var INNOV = [
     {
       c:"#93C5FD",
       t:{en:"Frontier",zh:"前沿",es:"Frontera"},
-      s:{en:"Concept lab and readiness pathways.",zh:"概念实验室与就绪路径。",es:"Laboratorio de conceptos y preparación."},
-      p:{en:"Big ideas are allowed here, but claims remain bounded. Anything measurable routes to Gauges.",
-         zh:"这里允许大想法，但主张必须有界。可测内容跳到量规。",
-         es:"Aquí caben ideas grandes, pero las afirmaciones siguen acotadas. Lo medible va a Medidores."},
+      s:{en:"Concept lab and pathways.",zh:"概念实验室与路径。",es:"Laboratorio y caminos."},
+      p:{en:"Big ideas live here, but this page stays readable. Jump in when you want the future lane.",
+         zh:"大想法在这里，但本页保持可读。想看未来路线就跳转。",
+         es:"Aquí viven ideas grandes. Entra cuando quieras la ruta futura."},
       href:"/explore/frontier/"
     },
     {
       c:"#D4AF37",
       t:{en:"Language",zh:"语言",es:"Lenguaje"},
-      s:{en:"Shared terms and structural encoding.",zh:"共用术语与结构编码。",es:"Términos compartidos y codificación."},
-      p:{en:"This lane prevents meaning drift by keeping terminology stable across pages.",
-         zh:"此干线通过稳定术语来阻止含义漂移。",
-         es:"Este carril evita deriva manteniendo términos estables."},
+      s:{en:"Shared terms and encoding.",zh:"共用术语与编码。",es:"Términos y codificación."},
+      p:{en:"A practical lane for shared language so people can communicate without confusion.",
+         zh:"用于共用语言的实用路线，减少沟通混乱。",
+         es:"Carril práctico para lenguaje compartido sin confusión."},
       href:"/explore/innovation/language/"
     },
     {
       c:"#A3A3A3",
       t:{en:"Readiness Only",zh:"仅就绪",es:"Solo preparación"},
       s:{en:"Requirements, not achievements.",zh:"需求，不是成就。",es:"Requisitos, no logros."},
-      p:{en:"If you’re looking for “proof,” go to Laws and Gauges. This lane is for prerequisites.",
-         zh:"如果你要“证明”，去法则与量规。这里是先决条件。",
-         es:"Si buscas “prueba”, ve a Leyes y Medidores. Aquí son prerrequisitos."},
+      p:{en:"Prerequisites and readiness checklists. This keeps the site honest and usable.",
+         zh:"先决条件与就绪清单。让网站保持可信与可用。",
+         es:"Prerrequisitos y listas. Mantiene el sitio usable."},
       href:"/laws/fusion-readiness/"
     },
     {
       c:"#334155",
       t:{en:"Jump Lists",zh:"跳转列表",es:"Listas de salto"},
-      s:{en:"Fast routing without reading everything.",zh:"不必全读，快速跳转。",es:"Rutas rápidas sin leer todo."},
-      p:{en:"Use this when you know what you want. If you don’t, open a card and read one paragraph.",
-         zh:"知道要什么就用这个。不知道就打开卡片读一段。",
-         es:"Úsalo si ya sabes qué quieres. Si no, abre una tarjeta y lee un párrafo."},
+      s:{en:"Fast routing.",zh:"快速跳转。",es:"Rutas rápidas."},
+      p:{en:"If you already know what you want, use jump lists instead of reading everything.",
+         zh:"如果你已经知道要什么，用跳转列表而不是全读。",
+         es:"Si ya sabes qué quieres, usa listas de salto."},
       href:"/home/"
     }
   ];
 
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
 
-  function makeRow(item){
+  function makeRow(item, injectIndexGrid){
     var row=document.createElement("div");
     row.className="stackRow";
     row.style.setProperty("--domc", item.c);
@@ -415,15 +459,82 @@ a{color:inherit;text-decoration:none}
     p.className="pdesc";
     p.textContent=pick(item.p);
 
+    body.appendChild(p);
+
+    // Inject Product Index grid ONLY inside the Products Overview accordion
+    if(injectIndexGrid){
+      var sb=document.createElement("div");
+      sb.className="subBand";
+      sb.textContent = (lang==="zh") ? "产品索引" : (lang==="es") ? "ÍNDICE DE PRODUCTOS" : "PRODUCT INDEX";
+      body.appendChild(sb);
+
+      var grid=document.createElement("div");
+      grid.className="pgrid";
+
+      PRODUCT_INDEX.forEach(function(px){
+        var card=document.createElement("div");
+        card.className="pcard";
+        card.style.setProperty("--pc", px.c);
+
+        var l=document.createElement("div");
+        l.className="pL";
+
+        var dot=document.createElement("div");
+        dot.className="pDot";
+
+        var txt=document.createElement("div");
+        txt.className="pTxt";
+
+        var name=document.createElement("div");
+        name.className="pName";
+        name.textContent = pick(px.t);
+
+        var one=document.createElement("div");
+        one.className="pOne";
+        one.textContent = pick(px.one);
+
+        txt.appendChild(name);
+        txt.appendChild(one);
+
+        l.appendChild(dot);
+        l.appendChild(txt);
+
+        var act=document.createElement("div");
+        act.className="pAct";
+
+        var open=document.createElement("a");
+        open.className="btn";
+        open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+        open.href = px.href + q();
+
+        act.appendChild(open);
+
+        card.appendChild(l);
+        card.appendChild(act);
+
+        // whole tile clickable
+        card.addEventListener("click", function(){
+          location.href = px.href + q();
+        });
+
+        // prevent double click navigation on button
+        open.addEventListener("click", function(e){ e.stopPropagation(); });
+
+        grid.appendChild(card);
+      });
+
+      body.appendChild(grid);
+    }
+
     var acts=document.createElement("div");
     acts.className="actions";
+
     var open=document.createElement("a");
     open.className="btn";
     open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
     open.href = item.href + q();
     acts.appendChild(open);
 
-    body.appendChild(p);
     body.appendChild(acts);
 
     head.addEventListener("click", function(){
@@ -439,14 +550,17 @@ a{color:inherit;text-decoration:none}
   var listA=document.getElementById("listA");
   var listB=document.getElementById("listB");
 
+  // PRODUCTS
   PRODUCTS.forEach(function(it,i){
-    var el=makeRow(it);
+    var inject = (i===0); // Products Overview gets Product Index grid
+    var el=makeRow(it, inject);
     listA.appendChild(el);
     if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });
 
+  // INNOVATION
   INNOV.forEach(function(it,i){
-    var el=makeRow(it);
+    var el=makeRow(it, false);
     listB.appendChild(el);
     if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });

@@ -1,7 +1,3 @@
-<!-- TNT — /door/index.html
-     DOOR · DEPTH RESTORE · PEARL DOMINANT
--->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,27 +7,26 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* ===================================================== */
-/* FIELD CORRECTION (NO OVERRIDE OF ui.css BACKGROUND)  */
-/* Just subtle dark overlay to control luminance        */
-/* ===================================================== */
+/* =======================================================
+   PEARL MATERIAL LOCK
+   ======================================================= */
 
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.18);
-  pointer-events:none;
-  z-index:1;
+:root{
+  --D:280px;
+  --R:200px;
+
+  --baseA:#0e1422;
+  --baseB:#050911;
 }
 
-/* ===================================================== */
-/* TOP CONTROLS                                          */
-/* ===================================================== */
+/* -------------------------------------------------------
+   TOP CONTROLS
+   ------------------------------------------------------- */
 
 .top-left{
   position:fixed;
@@ -51,9 +46,9 @@ body::after{
   gap:12px;
 }
 
-/* ===================================================== */
-/* BANNER — REDUCED WEIGHT                              */
-/* ===================================================== */
+/* -------------------------------------------------------
+   BANNER (GLASS PANEL — HIGH CONTRAST)
+   ------------------------------------------------------- */
 
 .banner{
   position:fixed;
@@ -61,19 +56,22 @@ body::after{
   top:80px;
   transform:translateX(-50%);
   width:min(1000px,92vw);
-  padding:26px 36px;
+  padding:36px 40px;
   border-radius:28px;
 
   background:
-    linear-gradient(160deg, rgba(18,22,36,.78), rgba(10,14,24,.82));
+    linear-gradient(180deg,
+      rgba(25,30,45,.96) 0%,
+      rgba(15,20,35,.96) 100%);
 
-  border:1px solid rgba(255,255,255,.20);
+  border:1px solid rgba(255,255,255,.25);
 
   box-shadow:
-    0 40px 120px rgba(0,0,0,.75);
+    0 60px 140px rgba(0,0,0,.85),
+    inset 0 2px 0 rgba(255,255,255,.15);
 
   text-align:center;
-  z-index:50; /* BELOW diamonds */
+  z-index:10; /* behind diamonds */
 }
 
 .banner h1{
@@ -84,15 +82,15 @@ body::after{
 }
 
 .banner p{
-  margin:14px 0 0;
-  font-size:16px;
+  margin:18px 0 0;
+  font-size:17px;
   line-height:1.7;
-  opacity:.92;
+  opacity:.95;
 }
 
-/* ===================================================== */
-/* STAGE                                                 */
-/* ===================================================== */
+/* -------------------------------------------------------
+   STAGE
+   ------------------------------------------------------- */
 
 .stage{
   position:fixed;
@@ -105,16 +103,9 @@ body::after{
   pointer-events:none;
 }
 
-/* ===================================================== */
-/* TRUE PEARLESCENT DIAMOND                             */
-/* ===================================================== */
-
-:root{
-  --D:280px;
-  --R:200px;
-  --deepA:#0f1624;
-  --deepB:#050912;
-}
+/* =======================================================
+   TRUE PEARLESCENT DIAMOND SHADER
+   ======================================================= */
 
 .diamond{
   width:var(--D);
@@ -122,47 +113,65 @@ body::after{
   position:absolute;
   left:50%;
   top:50%;
-  border-radius:36px;
   transform-origin:center;
   transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:36px;
   cursor:pointer;
   pointer-events:auto;
 
+  /* CORRECT PEARL STACK */
   background:
-    /* razor specular */
-    radial-gradient(circle at 18% 14%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.65) 10%, transparent 34%),
+    /* primary specular */
+    radial-gradient(circle at 22% 16%,
+      rgba(255,255,255,.95) 0%,
+      rgba(255,255,255,.6) 10%,
+      transparent 35%),
 
-    /* pearl body */
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.28) 0%, transparent 60%),
+    /* pearl core glow */
+    radial-gradient(circle at 50% 40%,
+      rgba(255,255,255,.25) 0%,
+      rgba(255,255,255,.12) 35%,
+      transparent 70%),
 
-    /* violet bloom */
-    radial-gradient(circle at 82% 32%, rgba(170,130,255,.75) 0%, transparent 65%),
+    /* violet spectral bloom */
+    radial-gradient(circle at 78% 30%,
+      rgba(150,110,255,.65) 0%,
+      rgba(150,110,255,.25) 45%,
+      transparent 75%),
 
-    /* cyan bloom */
-    radial-gradient(circle at 65% 85%, rgba(130,240,255,.65) 0%, transparent 70%),
+    /* cyan spectral bloom */
+    radial-gradient(circle at 62% 85%,
+      rgba(110,230,255,.55) 0%,
+      rgba(110,230,255,.25) 45%,
+      transparent 75%),
 
-    /* base depth */
-    linear-gradient(170deg, var(--deepA) 0%, var(--deepB) 60%, #020409 100%);
+    /* deep obsidian base */
+    linear-gradient(165deg,
+      var(--baseA) 0%,
+      var(--baseB) 70%,
+      #03050a 100%);
 
-  border:1px solid rgba(255,255,255,.75);
+  border:1px solid rgba(255,255,255,.65);
 
   box-shadow:
-    0 140px 300px rgba(0,0,0,.95),
-    0 0 200px rgba(212,175,55,.65),
-    inset 0 5px 0 rgba(255,255,255,.95),
-    inset 0 -120px 200px rgba(0,0,0,.98);
+    0 120px 260px rgba(0,0,0,.95),
+    0 0 120px rgba(212,175,55,.35),
+    inset 0 4px 0 rgba(255,255,255,.85),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 
   transition:transform .18s ease, box-shadow .18s ease;
 }
 
 .diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.06);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
   box-shadow:
-    0 180px 360px rgba(0,0,0,.98),
-    0 0 260px rgba(212,175,55,.8),
-    inset 0 6px 0 rgba(255,255,255,1),
-    inset 0 -120px 200px rgba(0,0,0,.98);
+    0 140px 320px rgba(0,0,0,.98),
+    0 0 200px rgba(212,175,55,.55),
+    inset 0 4px 0 rgba(255,255,255,.95),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 }
+
+/* Inner text orientation */
 
 .inner{
   transform:rotate(-45deg);
@@ -173,7 +182,7 @@ body::after{
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:26px;
+  padding:24px;
 }
 
 .lab{
@@ -185,7 +194,7 @@ body::after{
 .sub{
   margin-top:14px;
   font-size:16px;
-  opacity:.96;
+  opacity:.95;
 }
 
 .pref{
@@ -193,7 +202,8 @@ body::after{
   font-style:italic;
 }
 
-/* positioning */
+/* placement */
+
 .topDiamond{
   transform:translate(-50%,-50%) translate(0,-200px) rotate(45deg);
 }
@@ -202,9 +212,9 @@ body::after{
   transform:translate(-50%,-50%) translate(0,200px) rotate(45deg);
 }
 
-/* ===================================================== */
-/* FOOTER                                                */
-/* ===================================================== */
+/* -------------------------------------------------------
+   FOOTER
+   ------------------------------------------------------- */
 
 .footer{
   position:fixed;
@@ -220,7 +230,7 @@ body::after{
   margin-top:8px;
   letter-spacing:3px;
   font-size:12px;
-  opacity:.75;
+  opacity:.7;
 }
 </style>
 </head>

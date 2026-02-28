@@ -1,13 +1,21 @@
 <!-- TNT — /index.html
-     PRIMARY ROUTER · LAYER 1
-     ENTER SITE → lands here
-     Two lanes:
-        STRUCTURE  → /home/
-        PRODUCTS   → /explore/
-     Stark minimalist
-     Blind-focus layout
-     High-contrast opal header
-     Gold lattice behind jewels (never over)
+     INDEX · PRIMARY ROUTER (LAYER 1) · NO COMPETING UI · NO OVERLAP
+     GOAL:
+       - Stark, clean decision surface
+       - Two vertical diamonds only (STRUCTURE vs PRODUCTS)
+       - Top controls only (DOOR link left, language toggle right)
+       - No floating opal banner competing with diamonds
+       - No fixed footer competing with lower diamond
+       - ui.css owns field (no html/body background styling)
+       - Gold grid stays behind jewels (no overlay over diamonds)
+     ROUTES (LOCKED):
+       - STRUCTURE  → /home/
+       - PRODUCTS   → /explore/
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LANGUAGE:
+       - Page-level only (EN / 中文 / ES)
 -->
 
 <!doctype html>
@@ -15,7 +23,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CHOOSE PATH</title>
+<title>INDEX · Choose</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -24,92 +32,52 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Ensure lattice remains behind jewels */
+/* keep ui field overlays behind content */
 body{position:relative;z-index:0}
-body::before, body::after{z-index:-2 !important}
+body::before, body::after{z-index:0}
 
-/* Enhanced gold lattice visibility */
-body::before{
-  opacity:1 !important;
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(212,175,55,.08) 0px,
-      rgba(212,175,55,.08) 1px,
-      transparent 1px,
-      transparent 120px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(212,175,55,.08) 0px,
-      rgba(212,175,55,.08) 1px,
-      transparent 1px,
-      transparent 120px
-    );
+/* tokens */
+:root{
+  --R:170px;
+  --D:260px;
+
+  /* opal accents used ONLY inside diamonds */
+  --opalA:rgba(210,190,255,.22);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+
+  --goldSoft:rgba(212,175,55,.42);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
 }
 
-/* Top controls */
+/* top controls */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;align-items:center;
-}
-
-/* Opal header — lighter and sharper */
-.brand{
   position:fixed;
-  left:50%;
-  top:18px;
-  transform:translateX(-50%);
-  z-index:130;
-  text-align:center;
-  padding:14px 22px;
-  border-radius:28px;
-
-  border:1px solid rgba(255,255,255,.22);
-
-  background:
-    radial-gradient(circle at 30% 30%, rgba(210,190,255,.32), transparent 70%),
-    radial-gradient(circle at 80% 60%, rgba(120,70,255,.22), transparent 72%),
-    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
-
-  backdrop-filter:blur(12px);
-  box-shadow:
-    0 32px 90px rgba(0,0,0,.45),
-    0 0 40px rgba(212,175,55,.15);
-
-  pointer-events:none;
+  right:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
-.brand .k{
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.82;
-  margin:0 0 8px 0;
-}
-
-.brand .t{
-  font-weight:950;
-  font-size:48px;
-  letter-spacing:1.5px;
-  margin:0;
-}
-
-.brand .s{
-  font-size:15px;
-  opacity:.92;
-  margin:10px 0 0;
-}
-
-/* Stage */
+/* stage: only dominant element */
 .stage{
   position:fixed;
   left:50%;
-  top:56%;
+  top:54%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
@@ -117,10 +85,10 @@ body::before{
   pointer-events:none;
 }
 
-/* Jewel styling (keep glossy) */
+/* diamonds */
 .d{
-  width:260px;
-  height:260px;
+  width:var(--D);
+  height:var(--D);
   position:absolute;
   left:50%;
   top:50%;
@@ -129,60 +97,101 @@ body::before{
   cursor:pointer;
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  overflow:hidden;
 
   background:
-    radial-gradient(circle at 28% 22%, rgba(255,255,255,.50), transparent 52%),
-    radial-gradient(circle at 76% 30%, rgba(210,190,255,.28), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.96), rgba(6,10,16,.98));
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.45), transparent 52%),
+    radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
+    radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
+    radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.20);
-
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:
-    0 60px 180px rgba(0,0,0,.88),
-    0 0 48px rgba(212,175,55,.22),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -60px 100px rgba(0,0,0,.80);
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 40px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .18s ease, border-color .18s ease;
-  overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
-
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:34px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.62;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
-  border-color:rgba(212,175,55,.38);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.32);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 52px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 }
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
 
-.d-top{transform:translate(-50%,-50%) translate(0,-170px) rotate(45deg)}
-.d-bottom{transform:translate(-50%,-50%) translate(0,170px) rotate(45deg)}
+/* vertical positioning */
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
+/* inner labels */
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
   padding:18px;
   gap:10px;
+  pointer-events:none;
+  user-select:none;
 }
-
+.big{
+  font-weight:950;
+  font-size:34px;
+  letter-spacing:2px;
+  margin:0;
+}
 .lab{
   font-weight:950;
   font-size:22px;
   letter-spacing:1px;
 }
-
 .sub{
   font-size:14px;
-  opacity:.95;
+  opacity:.88;
+  line-height:1.35;
+  max-width:24em;
+}
+.fine{
+  font-size:12px;
+  opacity:.70;
+  margin-top:10px;
 }
 
-.footer{
-  position:fixed;
-  left:50%;
-  bottom:16px;
-  transform:translateX(-50%);
-  font-size:12px;
-  opacity:.75;
+/* mobile */
+@media (max-width:560px){
+  :root{ --R:156px; --D:244px; }
+  .stage{top:56%}
+  .big{font-size:30px}
 }
 </style>
 </head>
@@ -193,56 +202,150 @@ body::before{
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
 </div>
 
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-  <button class="btn" id="btnES">ES</button>
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="brand">
-  <p class="k">CARDINAL AXIS</p>
-  <h1 class="t">CHOOSE PATH</h1>
-  <p class="s">Two ways in. Both lead to clarity.</p>
-</div>
+<div class="stage" aria-label="Primary router">
 
-<div class="stage">
-
-  <a class="d d-top" id="dStructure" href="/home/">
+  <!-- STRUCTURE -->
+  <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
     <div class="inner">
-      <div class="lab">STRUCTURE</div>
-      <div class="sub">Definitions. Boundaries. Clear foundations.</div>
+      <div class="big" id="tMain">ENTER</div>
+      <div class="lab" id="labStructure">STRUCTURE</div>
+      <div class="sub" id="subStructure">Definitions · boundaries · clear foundations</div>
+      <div class="fine" id="fine1">Fine print: no claims without scope.</div>
     </div>
-  </a>
+  </div>
 
-  <a class="d d-bottom" id="dProducts" href="/explore/">
+  <!-- PRODUCTS -->
+  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products and innovation">
     <div class="inner">
-      <div class="lab">PRODUCTS & INNOVATION</div>
-      <div class="sub">Tools. Platforms. What you can use.</div>
+      <div class="big" style="opacity:0">ENTER</div>
+      <div class="lab" id="labProducts">PRODUCTS</div>
+      <div class="sub" id="subProducts">Tools · platforms · what you can use</div>
+      <div class="fine" id="fine2">Fine print: tools inherit limits.</div>
     </div>
-  </a>
+  </div>
 
-</div>
-
-<div class="footer">
-  Fine print: structure prevents drift · tools require structure
 </div>
 
 <script>
 (function(){
   var qs = new URLSearchParams(location.search);
-  var lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
-  document.documentElement.lang = lang;
 
-  function q(){
-    var style = localStorage.getItem("gd_style") || "formal";
-    var time  = localStorage.getItem("gd_time")  || "now";
-    var depth = localStorage.getItem("gd_depth") || "explore";
-    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over && over.lang) ? over.lang : lang;
+    var S=(over && over.style) ? over.style : style;
+    var T=(over && over.time) ? over.time : time;
+    var D=(over && over.depth) ? over.depth : depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
+  // wire DOOR link
   document.getElementById("btnDoor").href = "/door/" + q();
-  document.getElementById("dStructure").href = "/home/" + q();
-  document.getElementById("dProducts").href = "/explore/" + q();
+
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+    paintLang();
+    renderLang();
+    document.getElementById("btnDoor").href="/door/" + q();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // i18n minimal (no abstract language on surface)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("tMain").textContent="进入";
+      document.getElementById("labStructure").textContent="结构";
+      document.getElementById("subStructure").textContent="定义 · 边界 · 清晰基础";
+      document.getElementById("fine1").textContent="细则：无范围不主张。";
+      document.getElementById("labProducts").textContent="产品";
+      document.getElementById("subProducts").textContent="工具 · 平台 · 可用内容";
+      document.getElementById("fine2").textContent="细则：工具继承限制。";
+      document.getElementById("btnDoor").textContent="门";
+    }else if(lang==="es"){
+      document.getElementById("tMain").textContent="ENTRAR";
+      document.getElementById("labStructure").textContent="ESTRUCTURA";
+      document.getElementById("subStructure").textContent="Definiciones · límites · base clara";
+      document.getElementById("fine1").textContent="Letra pequeña: sin alcance, sin afirmación.";
+      document.getElementById("labProducts").textContent="PRODUCTOS";
+      document.getElementById("subProducts").textContent="Herramientas · plataformas · usable";
+      document.getElementById("fine2").textContent="Letra pequeña: herramientas heredan límites.";
+      document.getElementById("btnDoor").textContent="PUERTA";
+    }else{
+      document.getElementById("tMain").textContent="ENTER";
+      document.getElementById("labStructure").textContent="STRUCTURE";
+      document.getElementById("subStructure").textContent="Definitions · boundaries · clear foundations";
+      document.getElementById("fine1").textContent="Fine print: no claims without scope.";
+      document.getElementById("labProducts").textContent="PRODUCTS";
+      document.getElementById("subProducts").textContent="Tools · platforms · what you can use";
+      document.getElementById("fine2").textContent="Fine print: tools inherit limits.";
+      document.getElementById("btnDoor").textContent="DOOR";
+    }
+  }
+  renderLang();
+
+  // routing
+  function goStructure(){ location.href = "/home/" + q(); }
+  function goProducts(){ location.href = "/explore/" + q(); }
+
+  var dS=document.getElementById("dStructure");
+  var dP=document.getElementById("dProducts");
+
+  dS.addEventListener("click", goStructure);
+  dP.addEventListener("click", goProducts);
+
+  dS.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructure(); }
+  });
+  dP.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goProducts(); }
+  });
+
 })();
 </script>
 

@@ -1,675 +1,267 @@
-<!-- TNT — /prelude/index.html
-     PRELUDE · SITE MAP + PRINCIPLES (LAYER 0.5) · NO MODALS · FOCUS (BLINDERS)
-     ROLE:
-       - “VIEW SITE MAP” destination from DOOR
-       - Shows: (A) short principles (sayings) + (B) site map (tap-to-focus sections)
-       - Clicking any site-map section fades everything else and isolates that section (focus)
-       - Exit focus restores full page
-
-     ROUTES:
-       - RETURN  → /door/
-       - ENTER   → /index.html
-       - Site-map items route to real pages (change targets as you finalize)
-
-     LANGUAGE:
-       - Page-level only (EN / 中文 / ES) (top-right)
-       - Stored in gd_lang
-       - Propagated via query: lang/style/time/depth
-
-     LENSES:
-       - None here (preserve state only)
-
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe
-       - Gold grid stays behind jewels (stacking only)
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Site Map</title>
+<title>PRELUDE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{
-  --D:260px;
 
-  --opalA:rgba(210,190,255,.22);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
-  --goldSoft:rgba(212,175,55,.42);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
-}
-
-/* keep grid behind */
-body{position:relative}
+/* Ensure gold grid stays behind */
+body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* layout */
+/* Layout */
 .page{
-  position:relative;
-  z-index:5;
-  width:min(980px,94vw);
+  width:min(1000px,94vw);
   margin:0 auto;
-  padding:16px 0 120px;
+  padding:80px 0 140px;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:40px;
+  z-index:10;
+  position:relative;
 }
 
-/* top controls */
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:140;
-  padding:12px 0;
-  backdrop-filter:blur(10px);
-}
-.toprow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.leftBtns,.rightBtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-/* header card (opal glass) */
+/* Header */
 .header{
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
-    radial-gradient(circle at 18% 40%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 82% 60%, var(--opalB), transparent 72%),
-    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.45);
-  padding:14px 16px;
-}
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;margin:0 0 6px}
-.t{font-weight:950;font-size:28px;letter-spacing:.4px;margin:0 0 6px}
-.s{margin:0;color:rgba(255,255,255,.86);line-height:1.45;font-size:13.5px}
-.fine{margin-top:10px;color:rgba(255,255,255,.72);font-size:12px;line-height:1.35}
-
-/* gold interior lattice (slightly stronger; still behind content) */
-.lattice{
-  position:fixed;inset:0;z-index:1;pointer-events:none;
-  opacity:.10;
-  mix-blend-mode:screen;
-}
-.lattice::before{
-  content:"";
-  position:absolute;inset:-40%;
-  transform:rotate(45deg);
-  background:
-    repeating-linear-gradient(0deg,
-      rgba(212,175,55,.26) 0px,
-      rgba(212,175,55,.26) 1px,
-      transparent 1px,
-      transparent 52px),
-    repeating-linear-gradient(90deg,
-      rgba(212,175,55,.26) 0px,
-      rgba(212,175,55,.26) 1px,
-      transparent 1px,
-      transparent 52px);
-}
-.lattice::after{
-  content:"";
-  position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 16%, rgba(255,255,255,.10), transparent 58%);
+  background:rgba(0,0,0,.85);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:24px;
+  padding:40px;
+  text-align:center;
+  backdrop-filter:blur(14px);
+  box-shadow:0 60px 160px rgba(0,0,0,.9);
 }
 
-/* panels */
-.panel{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  overflow:hidden;
+.k{
+  font-size:12px;
+  letter-spacing:4px;
+  opacity:.7;
+  margin:0 0 10px;
 }
-.pHead{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.pTitle{
-  display:flex;align-items:center;gap:10px;min-width:0;
-  font-weight:950;letter-spacing:.2px;
-}
-.pDot{
-  width:10px;height:10px;border-radius:999px;background:rgba(212,175,55,.85);
-  box-shadow:0 0 0 1px rgba(255,255,255,.10), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.pName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pChev{opacity:.75;font-size:18px;flex:0 0 auto}
-.pBody{
-  display:none;
-  padding:12px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.panel.open .pBody{display:block}
 
-/* sayings */
-.sayList{display:flex;flex-direction:column;gap:10px}
-.say{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:16px;
-  background:rgba(0,0,0,.16);
-  padding:12px 14px;
+.t{
+  font-size:42px;
+  font-weight:950;
+  margin:0;
+  letter-spacing:1px;
 }
-.say strong{display:block;font-weight:950;letter-spacing:.2px}
-.say em{display:block;font-style:italic;opacity:.92;margin-top:6px}
-.say span{display:block;margin-top:6px;color:rgba(255,255,255,.82);line-height:1.45}
 
-/* site map rows (accordion-style, like your Products Explore) */
-.mapList{display:flex;flex-direction:column;gap:12px}
-.mapRow{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  overflow:hidden;
+.s{
+  margin-top:14px;
+  font-size:16px;
+  opacity:.85;
 }
-.mapHead{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.mapLeft{display:flex;align-items:center;gap:12px;min-width:0}
-.mapBar{width:6px;height:22px;border-radius:99px;background:var(--c, rgba(255,255,255,.20));flex:0 0 auto}
-.mapTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mapSub{font-size:12.5px;opacity:.72;margin-left:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mapChev{font-size:16px;opacity:.75;flex:0 0 auto}
-.mapBody{
-  display:none;
-  padding:14px 16px 12px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-}
-.mapRow.open .mapBody{display:block}
-.mapDesc{margin:0 0 12px;color:rgba(255,255,255,.86);line-height:1.55}
-.mapAct{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.mapAct .btn{border-radius:999px;padding:10px 14px}
 
-/* focus mode (blinders) */
-.focusOn .header,
-.focusOn .panel.principles,
-.focusOn .panel.sitemap{opacity:.08;filter:blur(2px);pointer-events:none;transform:scale(.995)}
-.focusOn .focusPane{display:block}
-.focusPane{
-  display:none;
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px,94vw);
-  height:min(86vh, 880px);
-  z-index:260;
+/* Vault Lines */
+.vault{
+  background:rgba(0,0,0,.8);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:24px;
+  padding:30px 40px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 50px 140px rgba(0,0,0,.8);
 }
-.focusShell{
-  height:100%;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  box-shadow:0 60px 180px rgba(0,0,0,.85);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.fHead{
-  padding:14px 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+
+.line{
+  font-size:15px;
+  font-weight:700;
+  padding:12px 0;
   border-bottom:1px solid rgba(255,255,255,.08);
 }
-.fTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
-.fClose{
-  border:0;background:transparent;color:#fff;font-size:20px;
-  cursor:pointer;padding:6px 10px;border-radius:12px;
-}
-.fClose:hover{background:rgba(255,255,255,.08)}
-.fBody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
-.fAct{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:12px 16px 16px;border-top:1px solid rgba(255,255,255,.08)}
-.fAct .btn{border-radius:999px}
 
-/* footer dock */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:150;
-  width:min(980px,94vw);
+.line:last-child{border-bottom:none}
+
+/* Map Grid */
+.map{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.tile{
+  background:rgba(0,0,0,.9);
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  cursor:pointer;
+  transition:transform .15s ease, border-color .15s ease;
+}
+
+.tile:hover{
+  transform:translateY(-4px);
+  border-color:rgba(212,175,55,.6);
+}
+
+.tile h3{
+  margin:0 0 10px;
+  font-size:16px;
+  font-weight:900;
+}
+
+.tile p{
+  font-size:13px;
+  opacity:.8;
+  margin:0;
+}
+
+/* Focus mode */
+.focus{
+  display:none;
+  background:rgba(0,0,0,.92);
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:24px;
+  padding:40px;
+  backdrop-filter:blur(14px);
+  box-shadow:0 60px 180px rgba(0,0,0,.95);
+}
+
+.focus.show{display:block}
+
+.focus h2{
+  margin:0 0 20px;
+  font-size:28px;
+}
+
+.focus p{
+  font-size:15px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+.actions{
+  margin-top:30px;
   display:flex;
-  justify-content:center;
-  gap:10px;
+  gap:14px;
   flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(10px);
+}
+
+.footer{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  opacity:.6;
+}
+
+.top-left{
+  position:fixed;
+  left:20px;
+  top:20px;
+  display:flex;
+  gap:10px;
+}
+
+.top-right{
+  position:fixed;
+  right:20px;
+  top:20px;
+  display:flex;
+  gap:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="lattice" aria-hidden="true"></div>
-
-<div class="topbar">
-  <div class="page" style="padding-bottom:0">
-    <div class="toprow">
-      <div class="leftBtns">
-        <button class="btn" id="btnReturn" type="button">RETURN</button>
-        <button class="btn" id="btnEnter" type="button">ENTER</button>
-      </div>
-      <div class="rightBtns" aria-label="Language">
-        <button class="btn" id="btnEN" type="button">EN</button>
-        <button class="btn" id="btnZH" type="button">中文</button>
-        <button class="btn" id="btnES" type="button">ES</button>
-      </div>
-    </div>
-  </div>
+<div class="top-left">
+  <a class="btn" href="/door/">RETURN</a>
+  <a class="btn" id="btnEnterTop">ENTER</a>
 </div>
 
-<div class="page" id="page">
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
+</div>
+
+<div class="page">
 
   <div class="header">
-    <p class="k" id="hk">CARDINAL AXIS</p>
-    <h1 class="t" id="ht">PRELUDE</h1>
-    <p class="s" id="hs">Notes before entry.</p>
-    <p class="fine" id="hf">Fine print: these are rules for staying oriented as scale increases.</p>
+    <p class="k">CARDINAL AXIS</p>
+    <h1 class="t">PRELUDE</h1>
+    <p class="s">Read this once. Then enter.</p>
   </div>
 
-  <div class="panel principles open" id="pPrinciples">
-    <div class="pHead" data-action="toggle-panel">
-      <div class="pTitle"><span class="pDot"></span><span class="pName" id="pt1">Principles</span></div>
-      <div class="pChev">▾</div>
+  <div class="vault">
+    <div class="line">Scope comes before scale.</div>
+    <div class="line">Scale amplifies error.</div>
+    <div class="line">Unbounded claims create fragility.</div>
+    <div class="line">If it cannot be measured, it cannot be stabilized.</div>
+    <div class="line">Containment prevents cascade.</div>
+  </div>
+
+  <div class="map">
+    <div class="tile" onclick="openFocus('Definitions')">
+      <h3>DEFINITIONS</h3>
+      <p>Words that stay fixed.</p>
     </div>
-    <div class="pBody">
-      <div class="sayList" id="sayList"></div>
+
+    <div class="tile" onclick="openFocus('Products')">
+      <h3>PRODUCTS</h3>
+      <p>Tools you can use.</p>
+    </div>
+
+    <div class="tile" onclick="openFocus('Constraints')">
+      <h3>CONSTRAINTS</h3>
+      <p>Limits that prevent drift.</p>
+    </div>
+
+    <div class="tile" onclick="openFocus('Containment')">
+      <h3>CONTAINMENT</h3>
+      <p>Keep failure small.</p>
     </div>
   </div>
 
-  <div class="panel sitemap open" id="pSitemap">
-    <div class="pHead" data-action="toggle-panel">
-      <div class="pTitle"><span class="pDot"></span><span class="pName" id="pt2">Site map</span></div>
-      <div class="pChev">▾</div>
-    </div>
-    <div class="pBody">
-      <div class="mapList" id="mapList"></div>
-    </div>
-  </div>
+  <div class="focus" id="focusBox">
+    <h2 id="focusTitle"></h2>
+    <p id="focusText"></p>
 
-  <!-- focus pane -->
-  <div class="focusPane" id="focusPane" aria-hidden="true">
-    <div class="focusShell">
-      <div class="fHead">
-        <h3 class="fTitle" id="fTitle">—</h3>
-        <button class="fClose" id="fClose" type="button" aria-label="Close">✕</button>
-      </div>
-      <div class="fBody" id="fBody"></div>
-      <div class="fAct">
-        <button class="btn" id="fReturn" type="button">RETURN</button>
-        <button class="btn" id="fEnter" type="button">ENTER</button>
-      </div>
+    <div class="actions">
+      <button class="btn" onclick="closeFocus()">BACK</button>
+      <a class="btn" id="focusEnter">ENTER</a>
     </div>
   </div>
 
 </div>
 
-<nav class="dock" aria-label="Quick actions">
-  <button class="btn" id="dockReturn" type="button">RETURN</button>
-  <button class="btn" id="dockEnter" type="button">ENTER</button>
-</nav>
+<div class="footer">Orientation before scale · Scale before claims</div>
 
 <script>
-(function(){
-  var qs = new URLSearchParams(location.search);
+function qs(){
+  const p=new URLSearchParams(location.search);
+  const lang=p.get("lang")||localStorage.getItem("gd_lang")||"en";
+  const style=p.get("style")||localStorage.getItem("gd_style")||"formal";
+  const time=p.get("time")||localStorage.getItem("gd_time")||"now";
+  const depth=p.get("depth")||localStorage.getItem("gd_depth")||"explore";
+  return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+}
 
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+document.getElementById("btnEnterTop").href="/home/"+qs();
+document.getElementById("focusEnter").href="/home/"+qs();
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+function openFocus(name){
+  document.querySelector(".vault").style.display="none";
+  document.querySelector(".map").style.display="none";
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
+  document.getElementById("focusTitle").innerText=name;
+  document.getElementById("focusText").innerText="This section defines how this area works and what it protects.";
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.getElementById("focusBox").classList.add("show");
+}
 
-  function q(over){
-    var L = (over && over.lang) ? over.lang : lang;
-    var S = (over && over.style) ? over.style : style;
-    var T = (over && over.time) ? over.time : time;
-    var D = (over && over.depth) ? over.depth : depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
-
-  // language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang: lang}));
-    location.reload();
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // routes
-  function goReturn(){ location.href="/door/" + q(); }
-  function goEnter(){ location.href="/index.html" + q(); }
-
-  document.getElementById("btnReturn").addEventListener("click", goReturn);
-  document.getElementById("btnEnter").addEventListener("click", goEnter);
-  document.getElementById("dockReturn").addEventListener("click", goReturn);
-  document.getElementById("dockEnter").addEventListener("click", goEnter);
-
-  document.getElementById("fReturn").addEventListener("click", goReturn);
-  document.getElementById("fEnter").addEventListener("click", goEnter);
-
-  // i18n content (minimal)
-  var TXT = {
-    en:{
-      hk:"CARDINAL AXIS", ht:"PRELUDE", hs:"Notes before entry.", hf:"Fine print: these are rules for staying oriented as scale increases.",
-      p1:"Principles", p2:"Site map",
-      ret:"RETURN", ent:"ENTER",
-      sayings:[
-        {h:"Scope precedes authority.", s:"Start by naming boundaries before naming outcomes."},
-        {h:"Scale amplifies error.", s:"Small confusion becomes big failure when multiplied."},
-        {h:"Compensation hides instability.", s:"Avoid “balancing” contradictions; correct them."},
-        {h:"Unbounded claims create fragility.", s:"If you can’t test it, don’t elevate it."},
-        {h:"Proof must survive constraint.", s:"Evidence without gates is just persuasion."},
-        {h:"If it cannot be measured, it cannot be stabilized.", s:"Stability requires observable signals."},
-        {h:"Coherence cannot exceed self-consistency.", s:"External trust cannot exceed internal honesty."},
-        {h:"Ambiguity accelerates collapse.", s:"Confusion speeds failure once stress appears."},
-        {h:"Correction creates a new epoch.", s:"Change the rules explicitly; don’t rewrite history."},
-        {h:"Containment prevents cascade.", s:"Keep local failure local."}
-      ],
-      map:[
-        {t:"HOME", s:"The main hub for structure and orientation.", href:"/home/", c:"#93C5FD"},
-        {t:"EXPLORE", s:"Frontier and concept lab (bounded).", href:"/explore/", c:"#60A5FA"},
-        {t:"PRODUCTS", s:"Tools and platforms you can adopt.", href:"/products/", c:"#F59E0B"},
-        {t:"LAWS", s:"Doctrine and constraints (no marketing).", href:"/laws/", c:"#D4AF37"},
-        {t:"GAUGES", s:"Measurement surfaces and dashboards.", href:"/gauges/", c:"#A3A3A3"},
-        {t:"LINKS", s:"External anchors and references.", href:"/links/", c:"#60A5FA"}
-      ],
-      open:"OPEN",
-      focusHint:"Focused view"
-    },
-    zh:{
-      hk:"基轴体系", ht:"序章", hs:"进入前的提示。", hf:"细则：这些规则用于在规模化时保持方向。",
-      p1:"原则", p2:"网站地图",
-      ret:"返回", ent:"进入",
-      sayings:[
-        {h:"范围先于权力。", s:"先定边界，再谈结果。"},
-        {h:"规模放大误差。", s:"小困惑乘起来会变大故障。"},
-        {h:"补偿会掩盖不稳定。", s:"不要“平衡”矛盾；要修正。"},
-        {h:"不有界的主张会变脆弱。", s:"不可测试，就别抬高。"},
-        {h:"证据必须穿过约束。", s:"没有闸门的证据只是说服。"},
-        {h:"不可测，就不可稳。", s:"稳定需要可观察信号。"},
-        {h:"一致性不会超过自洽。", s:"外部信任不会超过内部诚实。"},
-        {h:"歧义会加速崩塌。", s:"一旦受压，困惑会加速失败。"},
-        {h:"修正会开启新纪元。", s:"规则要显式版本化，不要改写历史。"},
-        {h:"隔离防级联。", s:"局部失败必须局部化。"}
-      ],
-      map:[
-        {t:"HOME", s:"结构与方向的主枢纽。", href:"/home/", c:"#93C5FD"},
-        {t:"EXPLORE", s:"前沿与概念实验室（有界）。", href:"/explore/", c:"#60A5FA"},
-        {t:"PRODUCTS", s:"可采纳的工具与平台。", href:"/products/", c:"#F59E0B"},
-        {t:"LAWS", s:"法则与约束（无营销）。", href:"/laws/", c:"#D4AF37"},
-        {t:"GAUGES", s:"测量面与仪表板。", href:"/gauges/", c:"#A3A3A3"},
-        {t:"LINKS", s:"外部锚点与引用。", href:"/links/", c:"#60A5FA"}
-      ],
-      open:"打开",
-      focusHint:"聚焦视图"
-    },
-    es:{
-      hk:"CARDINAL AXIS", ht:"PRELUDIO", hs:"Notas antes de entrar.", hf:"Letra pequeña: reglas para mantener orientación al escalar.",
-      p1:"Principios", p2:"Mapa del sitio",
-      ret:"VOLVER", ent:"ENTRAR",
-      sayings:[
-        {h:"El alcance precede a la autoridad.", s:"Define límites antes de declarar resultados."},
-        {h:"La escala amplifica el error.", s:"Confusión pequeña se vuelve fallo grande al multiplicar."},
-        {h:"La compensación oculta inestabilidad.", s:"No “equilibres” contradicciones; corrígelas."},
-        {h:"Afirmaciones sin límites crean fragilidad.", s:"Si no se prueba, no se eleva."},
-        {h:"La prueba debe sobrevivir la restricción.", s:"Evidencia sin compuertas es persuasión."},
-        {h:"Si no se mide, no se estabiliza.", s:"La estabilidad requiere señales observables."},
-        {h:"La coherencia no supera la auto-consistencia.", s:"La confianza externa no supera la honestidad interna."},
-        {h:"La ambigüedad acelera el colapso.", s:"Con estrés, la confusión acelera el fallo."},
-        {h:"Corregir crea un nuevo epoch.", s:"Versiona la regla; no reescribas historia."},
-        {h:"La contención evita cascadas.", s:"Mantén el fallo local en local."}
-      ],
-      map:[
-        {t:"HOME", s:"Hub principal de estructura y orientación.", href:"/home/", c:"#93C5FD"},
-        {t:"EXPLORE", s:"Laboratorio de frontera (acotado).", href:"/explore/", c:"#60A5FA"},
-        {t:"PRODUCTS", s:"Herramientas y plataformas adoptables.", href:"/products/", c:"#F59E0B"},
-        {t:"LAWS", s:"Doctrina y restricciones (sin marketing).", href:"/laws/", c:"#D4AF37"},
-        {t:"GAUGES", s:"Medición y tableros.", href:"/gauges/", c:"#A3A3A3"},
-        {t:"LINKS", s:"Anclas externas y referencias.", href:"/links/", c:"#60A5FA"}
-      ],
-      open:"ABRIR",
-      focusHint:"Vista enfocada"
-    }
-  };
-
-  var T = (lang==="zh") ? TXT.zh : (lang==="es") ? TXT.es : TXT.en;
-
-  document.getElementById("hk").textContent=T.hk;
-  document.getElementById("ht").textContent=T.ht;
-  document.getElementById("hs").textContent=T.hs;
-  document.getElementById("hf").textContent=T.hf;
-  document.getElementById("pt1").textContent=T.p1;
-  document.getElementById("pt2").textContent=T.p2;
-
-  document.getElementById("btnReturn").textContent=T.ret;
-  document.getElementById("btnEnter").textContent=T.ent;
-  document.getElementById("dockReturn").textContent=T.ret;
-  document.getElementById("dockEnter").textContent=T.ent;
-  document.getElementById("fReturn").textContent=T.ret;
-  document.getElementById("fEnter").textContent=T.ent;
-
-  // build sayings
-  var sayList=document.getElementById("sayList");
-  T.sayings.forEach(function(x){
-    var d=document.createElement("div");
-    d.className="say";
-    var h=document.createElement("strong");
-    h.textContent=x.h;
-    var em=document.createElement("em");
-    em.textContent=x.s;
-    var sp=document.createElement("span");
-    sp.textContent="";
-    d.appendChild(h); d.appendChild(em); d.appendChild(sp);
-    sayList.appendChild(d);
-  });
-
-  // build site map
-  var mapList=document.getElementById("mapList");
-  T.map.forEach(function(x){
-    var row=document.createElement("div");
-    row.className="mapRow";
-    row.style.setProperty("--c", x.c);
-
-    var head=document.createElement("div");
-    head.className="mapHead";
-
-    var left=document.createElement("div");
-    left.className="mapLeft";
-
-    var bar=document.createElement("div");
-    bar.className="mapBar";
-    bar.style.background=x.c;
-
-    var title=document.createElement("div");
-    title.className="mapTitle";
-    title.textContent=x.t;
-
-    var sub=document.createElement("div");
-    sub.className="mapSub";
-    sub.textContent=x.s;
-
-    left.appendChild(bar);
-    left.appendChild(title);
-    left.appendChild(sub);
-
-    var chev=document.createElement("div");
-    chev.className="mapChev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="mapBody";
-
-    var desc=document.createElement("p");
-    desc.className="mapDesc";
-    desc.textContent=x.s;
-
-    var act=document.createElement("div");
-    act.className="mapAct";
-
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent=T.open;
-    open.href = x.href + q();
-
-    var focus=document.createElement("button");
-    focus.className="btn";
-    focus.type="button";
-    focus.textContent=T.focusHint;
-    focus.dataset.focusTitle=x.t;
-    focus.dataset.focusDesc=x.s;
-    focus.dataset.focusHref=x.href;
-
-    act.appendChild(open);
-    act.appendChild(focus);
-
-    body.appendChild(desc);
-    body.appendChild(act);
-
-    head.addEventListener("click", function(){
-      // accordion
-      mapList.querySelectorAll(".mapRow").forEach(function(r){
-        if(r!==row){ r.classList.remove("open"); var c=r.querySelector(".mapChev"); if(c) c.textContent="▸"; }
-      });
-      var isOpen=row.classList.toggle("open");
-      chev.textContent=isOpen ? "▾" : "▸";
-      // opening also puts you in focus immediately (blinders)
-      if(isOpen){ openFocus(x.t, x.s, x.href); }
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-    mapList.appendChild(row);
-  });
-
-  // panel toggles
-  document.querySelectorAll(".pHead[data-action='toggle-panel']").forEach(function(h){
-    h.addEventListener("click", function(){
-      var p=h.closest(".panel");
-      if(!p) return;
-      p.classList.toggle("open");
-      var chev=h.querySelector(".pChev");
-      if(chev) chev.textContent = p.classList.contains("open") ? "▾" : "▸";
-    });
-  });
-
-  // focus logic (blinders)
-  var page=document.getElementById("page");
-  var focusPane=document.getElementById("focusPane");
-  var fTitle=document.getElementById("fTitle");
-  var fBody=document.getElementById("fBody");
-  var fClose=document.getElementById("fClose");
-
-  function openFocus(title, desc, href){
-    page.classList.add("focusOn");
-    focusPane.style.display="block";
-    focusPane.setAttribute("aria-hidden","false");
-    fTitle.textContent=title;
-
-    fBody.innerHTML="";
-    var p=document.createElement("p");
-    p.style.margin="0 0 12px";
-    p.style.color="rgba(255,255,255,.86)";
-    p.style.lineHeight="1.55";
-    p.textContent=desc;
-    fBody.appendChild(p);
-
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=T.open;
-    a.href = href + q();
-    fBody.appendChild(a);
-
-    // scroll lock feeling (no actual lock)
-    setTimeout(function(){ focusPane.scrollIntoView({behavior:"smooth", block:"center"}); }, 0);
-  }
-
-  function closeFocus(){
-    page.classList.remove("focusOn");
-    focusPane.style.display="none";
-    focusPane.setAttribute("aria-hidden","true");
-  }
-
-  fClose.addEventListener("click", closeFocus);
-  focusPane.addEventListener("click", function(e){
-    // click outside shell closes
-    if(e.target === focusPane) closeFocus();
-  });
-
-  // focus buttons inside rows
-  document.addEventListener("click", function(e){
-    var b=e.target.closest("button[data-focus-title]");
-    if(!b) return;
-    e.preventDefault();
-    openFocus(b.dataset.focusTitle, b.dataset.focusDesc, b.dataset.focusHref);
-  });
-
-})();
+function closeFocus(){
+  document.getElementById("focusBox").classList.remove("show");
+  document.querySelector(".vault").style.display="block";
+  document.querySelector(".map").style.display="grid";
+}
 </script>
 
 </body>

@@ -1,3 +1,25 @@
+<!-- TNT — /door/index.html
+     DOOR · PEARLESCENT BLACK · GEOMETRY-OBEYING · NO CLIP · NO UI MERGE
+     FIXES:
+       - Diamonds are now sized from AVAILABLE HEIGHT (accounts for top bar + footer + safe area).
+       - No fixed “R” guesses. No clipping. No overlap.
+       - Pearlescent black restored with real gloss (rim + specular + bloom).
+       - No inline onclick. Tap-safe JS handlers.
+       - ui.css gold lattice stays BEHIND (we do NOT disable body::before/after).
+       - Top bar never wraps (shrinks + clamps; no stacking).
+     ROUTES:
+       - ENTER SITE     → /home/
+       - VIEW SITE MAP  → /prelude/
+       - EXIT           → /
+       - PRELUDE        → /prelude/
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT set html/body background (ui.css owns field)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,187 +32,396 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* =======================================================
-   DOOR — HARD GEOMETRY RESET
-   PURE GEOMETRY + PURE MATERIAL
-   NO BANNERS
-   NO COLLISIONS
-   NO FIXED PIXELS
-   ======================================================= */
-
 a{color:inherit;text-decoration:none}
 
-/* Kill global overlays */
-body::before,
-body::after{
-  display:none !important;
+/* ---------- stacking: keep ui.css field + lattice behind ---------- */
+body{position:relative;z-index:0}
+body::before, body::after{z-index:0 !important; pointer-events:none !important}
+#doorRoot{position:relative;z-index:10}
+
+/* ---------- geometry tokens (computed from available height) ---------- */
+:root{
+  --topH: 72px;                 /* visual top bar height */
+  --topPad: 14px;               /* breathing room under top bar */
+  --bottomH: 56px;              /* footer/signature zone */
+  --gapY: 22px;                 /* gap between diamonds */
+  --avail: calc(100vh - var(--topH) - var(--topPad) - var(--bottomH) - env(safe-area-inset-bottom));
+  /* rotated square bounding box ≈ 1.414 * D. Two diamonds => 2.828 * D, plus gap */
+  --D: clamp(210px, calc((var(--avail) - var(--gapY)) / 2.828), 320px);
 }
 
-/* =======================================================
-   VIEWPORT GEOMETRY SYSTEM (THIS IS THE FIX)
-   ======================================================= */
-
-.stage{
+/* ---------- top bar (NO WRAP) ---------- */
+.top{
   position:fixed;
-  inset:0;
+  top:12px;
+  left:0;
+  right:0;
+  z-index:300;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:space-between;
+  padding:0 14px;
+  gap:10px;
   pointer-events:none;
-  z-index:10;
+}
+.top-left,.top-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  pointer-events:auto;
 }
 
-/* Diamond scales with viewport height */
-:root{
-  --D: min(42vh, 320px);
-  --R: calc(var(--D) * 0.95);
+/* shrink top buttons slightly so they never stack */
+.top .btn{
+  padding:10px 14px;
+  border-radius:999px;
+  font-size:clamp(12px, 2.8vw, 14px);
+  line-height:1;
 }
 
-/* =======================================================
-   TRUE PEARLESCENT BLACK GEM
-   ======================================================= */
+/* ---------- title (minimal, not a banner fighting diamonds) ---------- */
+.title{
+  margin-top:calc(var(--topH) + 10px);
+  width:min(980px,94vw);
+  text-align:center;
+  padding:16px 14px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.16), transparent 72%),
+    radial-gradient(circle at 82% 62%, rgba(120,70,255,.12), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
+}
+.title h1{
+  margin:0;
+  font-size:clamp(36px, 7vw, 52px);
+  letter-spacing:2px;
+  font-weight:950;
+  line-height:1.02;
+}
+.title p{
+  margin:10px 0 0;
+  font-size:clamp(13px, 3.2vw, 15px);
+  line-height:1.55;
+  opacity:.90;
+}
 
+/* ---------- main layout (pure geometry: no absolute stage, no clipping) ---------- */
+.shell{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:16px;
+  padding-bottom:calc(var(--bottomH) + env(safe-area-inset-bottom));
+}
+
+/* diamond stack is vertically centered in remaining space */
+.stack{
+  flex:1 1 auto;
+  width:min(760px,94vw);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:var(--gapY);
+  padding-top:10px;
+  padding-bottom:10px;
+  pointer-events:none;
+}
+
+/* ---------- pearlescent black gem ---------- */
 .diamond{
-  position:absolute;
   width:var(--D);
   height:var(--D);
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:42px;
-  pointer-events:auto;
+  position:relative;
+  transform:rotate(45deg);
+  border-radius:40px;
   cursor:pointer;
+  pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 
+  /* pearlescent black core */
   background:
-    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.6) 12%, transparent 38%),
-    radial-gradient(circle at 78% 28%, rgba(160,120,255,.8) 0%, transparent 60%),
-    radial-gradient(circle at 60% 85%, rgba(110,230,255,.65) 0%, transparent 75%),
-    radial-gradient(circle at 50% 45%, rgba(255,255,255,.12) 0%, transparent 65%),
+    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.60) 12%, transparent 38%),
+    radial-gradient(circle at 78% 28%, rgba(160,120,255,.78) 0%, transparent 60%),
+    radial-gradient(circle at 62% 86%, rgba(110,230,255,.66) 0%, transparent 74%),
+    radial-gradient(circle at 46% 46%, rgba(255,255,255,.14) 0%, transparent 62%),
     linear-gradient(165deg, #0f1624 0%, #070c14 60%, #04060a 100%);
 
-  border:1px solid rgba(255,255,255,.7);
+  border:1px solid rgba(255,255,255,.62);
 
   box-shadow:
-    0 140px 280px rgba(0,0,0,.95),
-    0 0 200px rgba(212,175,55,.65),
-    inset 0 6px 0 rgba(255,255,255,.95),
-    inset 0 -140px 220px rgba(0,0,0,.98);
+    0 120px 240px rgba(0,0,0,.92),
+    0 0 160px rgba(212,175,55,.50),
+    inset 0 5px 0 rgba(255,255,255,.85),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 
-  transition:transform .2s ease, box-shadow .2s ease;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-
+.diamond::before{
+  /* gold rim lacquer */
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:40px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.55) 50%, transparent 100%);
+  opacity:.70;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.diamond::after{
+  /* specular streak */
+  content:"";
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.26), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
 .diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
+  transform:rotate(45deg) scale(1.03);
+  border-color:rgba(255,255,255,.78);
   box-shadow:
-    0 160px 320px rgba(0,0,0,.98),
-    0 0 260px rgba(212,175,55,.85),
-    inset 0 6px 0 rgba(255,255,255,1),
-    inset 0 -140px 220px rgba(0,0,0,.98);
+    0 140px 280px rgba(0,0,0,.96),
+    0 0 220px rgba(212,175,55,.65),
+    inset 0 5px 0 rgba(255,255,255,.92),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 }
+.diamond:active{transform:rotate(45deg) scale(.99)}
 
-/* Position diamonds symmetrically */
-.topDiamond{
-  transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg);
-}
-
-.bottomDiamond{
-  transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg);
-}
-
-/* =======================================================
-   INNER TEXT (UPRIGHT)
-   ======================================================= */
-
+/* inner text upright */
 .inner{
+  position:absolute;
+  inset:0;
   transform:rotate(-45deg);
-  height:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
   padding:28px;
+  user-select:none;
+  pointer-events:none;
 }
-
 .lab{
-  font-size: clamp(20px, 2.6vh, 26px);
-  font-weight:900;
+  font-size:clamp(18px, 3.2vw, 24px);
+  font-weight:950;
   letter-spacing:1px;
 }
-
 .sub{
-  margin-top:14px;
-  font-size: clamp(14px, 2vh, 18px);
+  margin-top:12px;
+  font-size:clamp(13px, 2.7vw, 16px);
   opacity:.95;
   line-height:1.35;
 }
+.pref{font-weight:950;font-style:italic}
 
-.pref{
-  font-weight:900;
-  font-style:italic;
-}
-
-/* =======================================================
-   CLEAN TOP BAR (NO WRAP)
-   ======================================================= */
-
-.top{
+/* footer */
+.footer{
   position:fixed;
-  top:18px;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  padding:0 20px;
-  z-index:50;
+  left:50%;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  text-align:center;
+  width:min(980px,94vw);
+  font-size:13px;
+  opacity:.86;
+  pointer-events:none;
+}
+.sig{
+  margin-top:6px;
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.70;
 }
 
-.top-left,
-.top-right{
-  display:flex;
-  gap:14px;
-  white-space:nowrap;
+/* small screens: reduce top bar height assumption */
+@media (max-width:520px){
+  :root{--topH: 66px; --gapY: 18px}
+  .top .btn{padding:10px 12px}
 }
-
-/* =======================================================
-   ZERO OTHER UI
-   ======================================================= */
-
 </style>
 </head>
 
 <body>
+<div id="doorRoot">
 
-<div class="top">
-  <div class="top-left">
-    <a class="btn" href="/">EXIT</a>
-    <a class="btn" href="/prelude/">PRELUDE</a>
-  </div>
-  <div class="top-right">
-    <button class="btn">EN</button>
-    <button class="btn">中文</button>
-    <button class="btn">ES</button>
-  </div>
-</div>
-
-<div class="stage">
-
-  <div class="diamond topDiamond" onclick="location.href='/home/'">
-    <div class="inner">
-      <div class="lab">ENTER SITE</div>
-      <div class="sub"><span class="pref">Direct:</span> Move forward into systems.</div>
+  <div class="top" aria-label="Top controls">
+    <div class="top-left">
+      <a class="btn" id="btnExit" href="/">EXIT</a>
+      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    </div>
+    <div class="top-right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="diamond bottomDiamond" onclick="location.href='/prelude/'">
-    <div class="inner">
-      <div class="lab">VIEW SITE MAP</div>
-      <div class="sub"><span class="pref">First:</span> See the structure before movement.</div>
+  <div class="shell">
+    <div class="title" aria-hidden="true">
+      <h1 id="ttl">ENTER</h1>
+      <p id="tag">This is a structural site.<br/>It does not sell belief.<br/>It measures coherence.</p>
+    </div>
+
+    <div class="stack" aria-label="Door choices">
+      <div class="diamond" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+        <div class="inner">
+          <div class="lab" id="labEnter">ENTER SITE</div>
+          <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Move forward into systems.</div>
+        </div>
+      </div>
+
+      <div class="diamond" id="dMap" role="button" tabindex="0" aria-label="View site map">
+        <div class="inner">
+          <div class="lab" id="labMap">VIEW SITE MAP</div>
+          <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <div class="footer">
+    Scale without structure collapses.
+    <div class="sig">COGRID.NET</div>
+  </div>
+
 </div>
+
+<script>
+(function(){
+  // canonical state
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  // top links carry state
+  document.getElementById("btnExit").href="/"+q();
+  document.getElementById("btnPrelude").href="/prelude/"+q();
+
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    location.reload();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // routing (no inline onclick)
+  function goEnter(){ location.href="/home/"+q(); }
+  function goMap(){ location.href="/prelude/"+q(); }
+
+  var dEnter=document.getElementById("dEnter");
+  var dMap=document.getElementById("dMap");
+
+  dEnter.addEventListener("click", goEnter);
+  dMap.addEventListener("click", goMap);
+
+  dEnter.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }
+  });
+  dMap.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
+  });
+
+  // minimal i18n (layout-safe)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("ttl").textContent="进入";
+      document.getElementById("tag").innerHTML="这是一个结构型网站。<br/>不出售信仰。<br/>衡量一致性。";
+      document.getElementById("labEnter").textContent="进入网站";
+      document.getElementById("prefEnter").textContent="直接：";
+      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
+      document.getElementById("labMap").textContent="查看网站地图";
+      document.getElementById("prefMap").textContent="先：";
+      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnPrelude").textContent="前置页";
+    }else if(lang==="es"){
+      document.getElementById("ttl").textContent="ENTRAR";
+      document.getElementById("tag").innerHTML="Este es un sitio estructural.<br/>No vende creencias.<br/>Mide coherencia.";
+      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("prefEnter").textContent="Directo:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
+      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefMap").textContent="Primero:";
+      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+    }else{
+      document.getElementById("ttl").textContent="ENTER";
+      document.getElementById("tag").innerHTML="This is a structural site.<br/>It does not sell belief.<br/>It measures coherence.";
+      document.getElementById("labEnter").textContent="ENTER SITE";
+      document.getElementById("prefEnter").textContent="Direct:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
+      document.getElementById("labMap").textContent="VIEW SITE MAP";
+      document.getElementById("prefMap").textContent="First:";
+      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
+      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+    }
+  }
+  renderLang();
+})();
+</script>
 
 </body>
 </html>

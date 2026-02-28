@@ -1,18 +1,24 @@
-<!-- TNT — /products/software/index.html  (SOFTWARE SUB-HUB · DIAMOND-OF-DIAMONDS)
-     FIXES (per your screenshot + instruction):
-     1) Main SOFTWARE screen is a DIAMOND with 4 internal DIAMONDS (no grid bubbles).
-        - HUB PLATFORM
-        - UCI
-        - SCORING
-        - REGISTRY
-     2) Clicking a diamond opens ONE centered modal (opal/obsidian) with lenses INSIDE modal only:
-        - STYLE: Formal/Informal (gd_style)
-        - TIME: Concept/Live/Roadmap (gd_time = origin/now/post)
-     3) Bulletins are THOROUGH: each view renders 4 sections, each with 4 bullets (dense, readable).
-     4) Dual language always (EN + 中文) via gd_lang + ?lang=.
-     5) Navigation consistent: BACK (/products/), EXIT (/door/), bottom dock routes with state.
-
-     NOTE: This file intentionally removes the "grid bubbles" layout entirely.
+<!-- TNT — /products/software/index.html
+     PRODUCTS · SOFTWARE (ENERGY-MODEL CLONE · 72 NARRATIVES)
+     STRUCTURE (IDENTICAL TO ENERGY):
+       LEVEL 1 (Page): 4 glossy diamonds = ENGINE / PLATFORM / INSTRUMENTS / GOVERNANCE
+       LEVEL 2 (Quadrant Modal): 4 glossy diamonds = 3 domains + RETURN
+       LEVEL 3 (Domain Modal): 3 tap-to-open bubbles = CONCEPT / LIVE / ROADMAP
+         Each bubble contains 2-tone toggle = FORMAL / INFORMAL
+     COUNT:
+       12 domains × 3 time bubbles × 2 tones = 72 narratives
+     LANGUAGE:
+       - lang=en => EN only
+       - lang=zh => 中文 only
+       - lang=es => ES only
+     STATE (NO NEW KEYS):
+       - gd_lang / gd_style / gd_time only (reads style/time, but page uses its own tone toggle)
+       - URL: lang/style/time/depth (carried forward)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe (no pointer blockers)
+       - No inline onclick
 -->
 
 <!doctype html>
@@ -24,387 +30,206 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 :root{
-  --R:154px;                  /* outer radius for 4 inner diamonds */
-  --gold:rgba(212,175,55,.9);
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
+  --R:150px;
+  --D:184px;
+  --goldSoft:rgba(212,175,55,.45);
+  --mut:rgba(255,255,255,.90);
+  --mut2:rgba(255,255,255,.74);
 }
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{text-decoration:none;color:inherit}
+body::before,body::after{pointer-events:none!important}
 
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 40%, rgba(90,140,255,.10), transparent 60%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,.02) 0 1px, transparent 1px 100px),
-    linear-gradient(180deg,#b00000 0%,#7a0000 60%,#550000 100%);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-.btn{
-  padding:10px 16px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
-}
-.btn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
-
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
+/* Top */
+.top-left{position:fixed;left:16px;top:16px;z-index:140;display:flex;gap:10px;flex-wrap:wrap}
 .brand{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%);
-  z-index:80;
-  text-align:center;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:130;text-align:center;padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);pointer-events:none
 }
-.brand .name{ font-weight:950; letter-spacing:1.2px; font-size:12px; opacity:.95; }
-.brand .tag{ font-size:11px; letter-spacing:.6px; opacity:.70; margin-top:2px; }
+.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
+.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
 
-/* ===== DIAMOND STAGE ===== */
-.stage{
-  position:fixed;
-  left:50%;
-  top:52%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw);
-  height:min(720px,94vw);
-  z-index:40;
-}
-
-/* Outer “one diamond” frame */
+/* Stage */
+.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
 .outer{
-  position:absolute;
-  left:50%; top:50%;
-  width:min(680px, 92vw);
-  height:min(680px, 92vw);
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
+  border-radius:60px;opacity:.62;pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
     radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
+    linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.72),
+    0 90px 260px rgba(0,0,0,.55),
     inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.85;
+    inset 0 -50px 90px rgba(0,0,0,.55)
 }
 .outer::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
+  content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg)
 }
 
-/* Inner “gem diamond” */
+/* Pearlescent glossy diamond (LOCK) */
 .d{
-  width:170px;height:170px;
-  position:absolute;
-  left:50%;top:50%;
-  transform-origin:center;
-  border-radius:26px;
-  cursor:pointer;
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-
-  border:1px solid rgba(255,255,255,.10);
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-  transition:transform 220ms ease, box-shadow 220ms ease, filter 220ms ease, border-color 220ms ease;
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.28),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .d::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:26px;
-  padding:1px;
+  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
+  opacity:.65;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none
 }
 .d::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;
-  transform:rotate(-10deg);
-  pointer-events:none;
+  content:"";position:absolute;left:10%;right:10%;top:10%;
+  height:28%;border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
+  transform:rotate(-10deg);pointer-events:none
 }
-
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.35);
   box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84)
 }
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-
-/* placement */
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
 .inner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:10px;
-  pointer-events:none;
+  transform:rotate(-45deg) translateY(-3px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;height:100%;padding:14px;gap:8px;
+  pointer-events:none;user-select:none
 }
-.lab{font-weight:950;letter-spacing:.8px;font-size:16px}
-.sub{font-size:12.5px;opacity:.80;line-height:1.35;max-width:18em}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
+.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
 
+/* Core */
 .core{
-  position:absolute;
-  left:50%;top:50%;
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:74px;height:74px;
-  border-radius:22px;
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.20);
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
   display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;
-  opacity:.92;
-  pointer-events:none;
+  pointer-events:none
 }
 
 /* Dock */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:90;
-  width:min(900px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  flex-wrap:wrap;
-  padding:10px 12px;
-  border-radius:999px;
+  z-index:120;width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.18);
+  pointer-events:none
 }
+.dock .btn{pointer-events:auto}
 
-/* Modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-
+/* Modals */
+.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
+.bd.show{display:block}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
+.modal.show{display:block}
 .shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
+  height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
+  overflow:hidden;display:flex;flex-direction:column
+}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+
+/* Domain grid inside quadrant modal */
+.qgrid{display:grid;gap:14px;grid-template-columns:1fr}
+@media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
+.smallDiamond{
+  width:100%;height:140px;position:relative;border-radius:22px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg,var(--obs2) 0%, var(--obs1) 65%);
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  position:relative;
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70)
 }
-.shell::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:58%;
-  width:min(980px, 94vw);
-  height:min(980px, 94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
-}
-
-.mhead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px 16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
-
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
-}
-
-.lensbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  margin:-6px -6px 14px;
-}
-.chip{
-  padding:10px 16px;
-  border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-}
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
-}
-
-/* 4 modal sections (fill space) */
-.mgrid{
-  display:grid;
-  gap:14px;
-}
-@media (min-width:920px){ .mgrid{ grid-template-columns:1fr 1fr; } }
-
-.box{
-  padding:16px 18px;
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
-}
-.box::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
-  padding:1px;
+.smallDiamond::before{
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none
 }
-.h{ margin:0 0 8px; font-weight:950; letter-spacing:.2px; }
-.p{ margin:0 0 10px; color:var(--mut); line-height:1.55; }
-.ul{ margin:0 0 0 18px; padding:0; color:var(--mut2); }
-.ul li{ margin:6px 0; }
+.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
+.sdT{font-weight:950;letter-spacing:.25px}
+.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
 
-.mact{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top:14px;
+/* Domain narrative modal */
+.lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  user-select:none;-webkit-tap-highlight-color:transparent
 }
-.sbtn{
-  padding:12px 18px;
-  border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:white;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  text-decoration:none;
+.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;margin:0 0 12px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px var(--goldSoft); }
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
+.bubble.open p{display:block}
+.hint{
+  max-width:980px;margin:0 auto 12px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.80);
+  font-size:12.5px;line-height:1.45
+}
 
 @media (max-width:560px){
-  :root{ --R: 136px; }
-  .d{ width:158px; height:158px; }
-  .stage{ top:54%; }
+  :root{--R:136px}
+  .d{width:158px;height:158px}
+  .stage{top:54%}
 }
 </style>
 </head>
@@ -413,632 +238,490 @@ body{
 
 <div class="top-left">
   <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
-<div class="brand">
-  <div class="name" id="brandName">PRODUCTS</div>
-  <div class="tag" id="brandTag">SOFTWARE SYSTEMS</div>
+<div class="brand" aria-hidden="true">
+  <div class="t" id="hdrT">Software</div>
+  <div class="s" id="hdrS">72 Narratives · 4→12→36→72</div>
 </div>
 
-<div class="stage" id="stage">
+<div class="stage" aria-label="Software quadrants">
   <div class="outer"></div>
 
-  <div class="d d-n" id="dHub" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="hubLab">HUB PLATFORM</div>
-      <div class="sub" id="hubSub">Routing · state · recursion.</div>
-    </div>
+  <div class="d d-n" id="qEngine" role="button" tabindex="0" aria-label="Engine">
+    <div class="inner"><div class="lab" id="labEngine">ENGINE</div><div class="sub" id="subEngine">Runtime · state · determinism</div></div>
   </div>
 
-  <div class="d d-e" id="dUci" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="uciLab">UCI</div>
-      <div class="sub" id="uciSub">ρ/TC · gates · audits.</div>
-    </div>
+  <div class="d d-e" id="qPlatform" role="button" tabindex="0" aria-label="Platform">
+    <div class="inner"><div class="lab" id="labPlatform">PLATFORM</div><div class="sub" id="subPlatform">Surfaces · routing · adoption</div></div>
   </div>
 
-  <div class="d d-s" id="dScore" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="scoreLab">SCORING</div>
-      <div class="sub" id="scoreSub">Executive risk metric.</div>
-    </div>
+  <div class="d d-s" id="qInstruments" role="button" tabindex="0" aria-label="Instruments">
+    <div class="inner"><div class="lab" id="labInstruments">INSTRUMENTS</div><div class="sub" id="subInstruments">Gauges · scoring · exports</div></div>
   </div>
 
-  <div class="d d-w" id="dReg" role="button" tabindex="0">
-    <div class="inner">
-      <div class="lab" id="regLab">REGISTRY</div>
-      <div class="sub" id="regSub">Serials · tiers · status.</div>
-    </div>
+  <div class="d d-w" id="qGovernance" role="button" tabindex="0" aria-label="Governance">
+    <div class="inner"><div class="lab" id="labGovernance">GOVERNANCE</div><div class="sub" id="subGovernance">Rules · gates · integrity</div></div>
   </div>
 
   <div class="core">◆</div>
 </div>
 
-<nav class="dock" id="dock">
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
+<nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockHub" href="/home/">HUB</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <div class="bd" id="bd"></div>
 
-<div class="modal" id="modal" role="dialog" aria-modal="true">
+<!-- Quadrant Modal -->
+<div class="modal" id="quadModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+      <h3 class="mtitle" id="quadTitle">Quadrant</h3>
+      <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="hint" id="quadHint">Tap a domain diamond to enter its narrative. Return closes this layer.</div>
+      <div class="qgrid" id="quadGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Domain Modal -->
+<div class="modal" id="domainModal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="domainTitle">Domain</h3>
+      <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
     </div>
 
-    <div class="mbody">
+    <div class="mbody" id="domainBody">
       <div class="lensbar">
-        <button class="chip" id="styleChip" type="button">STYLE: FORMAL</button>
-        <button class="chip" data-time="origin" id="chipConcept" type="button">CONCEPT</button>
-        <button class="chip" data-time="now" id="chipLive" type="button">LIVE</button>
-        <button class="chip" data-time="post" id="chipRoadmap" type="button">ROADMAP</button>
+        <div class="pill active" id="toneFormal">FORMAL</div>
+        <div class="pill" id="toneInformal">INFORMAL</div>
       </div>
 
-      <div class="mgrid">
-        <div class="box">
-          <h4 class="h" id="h1"></h4><p class="p" id="p1"></p><ul class="ul" id="u1"></ul>
-        </div>
-        <div class="box">
-          <h4 class="h" id="h2"></h4><p class="p" id="p2"></p><ul class="ul" id="u2"></ul>
-        </div>
-        <div class="box">
-          <h4 class="h" id="h3"></h4><p class="p" id="p3"></p><ul class="ul" id="u3"></ul>
-        </div>
-        <div class="box">
-          <h4 class="h" id="h4"></h4><p class="p" id="p4"></p><ul class="ul" id="u4"></ul>
-        </div>
-      </div>
+      <div class="hint" id="claimHint">This page describes software posture only. Proof lives under Laws; measurement lives under Gauges.</div>
 
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpHub" href="/home/">JUMP HUB</a>
-        <a class="sbtn" id="mJumpProducts" href="/products/">JUMP PRODUCTS</a>
-      </div>
+      <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
+      <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
+      <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  // state + language
-  var qs = new URLSearchParams(location.search);
-  var qLang = qs.get("lang");
-  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
-  try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-
-  var style = localStorage.getItem("gd_style") || "formal";
-  var time  = localStorage.getItem("gd_time")  || "now";
+  // state hydration
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
   if(time==="trajectory") time="post";
-  if(["origin","now","post"].indexOf(time)<0) time="now";
-  if(["formal","informal"].indexOf(style)<0) style="formal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-  function setLinks(){
-    var s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
+  function q(){
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
+    return "?"+p.toString();
   }
-  setLinks();
 
-  var TEXT = {
+  // nav links
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockLinks").href="/links/"+q();
+
+  // i18n (single language)
+  var UI={
     en:{
-      title:"PRODUCTS",
-      tag:"SOFTWARE SYSTEMS",
-      d:{
-        hub:{lab:"HUB PLATFORM", sub:"Routing · state · recursion."},
-        uci:{lab:"UCI", sub:"ρ/TC · gates · audits."},
-        score:{lab:"SCORING", sub:"Executive risk metric."},
-        reg:{lab:"REGISTRY", sub:"Serials · tiers · status."}
+      hdrT:"Software",
+      hdrS:"72 Narratives · 4→12→36→72",
+      q:{
+        engine:{lab:"ENGINE", sub:"Runtime · state · determinism"},
+        platform:{lab:"PLATFORM", sub:"Surfaces · routing · adoption"},
+        instruments:{lab:"INSTRUMENTS", sub:"Gauges · scoring · exports"},
+        governance:{lab:"GOVERNANCE", sub:"Rules · gates · integrity"}
       },
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      buttons:{return:"RETURN", jhub:"JUMP HUB", jprod:"JUMP PRODUCTS"},
-      content:{
-        hub:{
-          origin:{formal:{
-            title:"Compass Hub Platform",
-            b1:{h:"What it is",p:"A traversal hub that routes the entire architecture through one stable geometry.",u:["Hub is the canonical entry.","Every move preserves gd_* state.","Modal recursion is deterministic.","Return paths never drift."]},
-            b2:{h:"What it enforces",p:"A strict contract: lens change ⇒ content change (not just highlights).",u:["Text changes.","Bullets change.","Meaning changes.","Disallowed combos resolve deterministically."]},
-            b3:{h:"Why it matters",p:"Traversal replaces linear reading with navigable structure that compounds context.",u:["You don’t “finish a page.”","You traverse nodes.","You preserve lenses.","You build a map."]},
-            b4:{h:"How to use it",p:"Open a node, set lenses inside, read the bulletins, return cleanly.",u:["Style sets framing.","Time sets emphasis.","Content stays coherent.","Navigation stays stable."]}
-          }, informal:{
-            title:"Compass Hub Platform",
-            b1:{h:"What it is",p:"The main hub that keeps everything reachable.",u:["One geometry.","One state system.","Clean returns.","No drift."]},
-            b2:{h:"Rule",p:"If you change a lens, the content changes.",u:["Not cosmetic.","Real text flips.","Real bullets flip.","Always coherent."]},
-            b3:{h:"Why",p:"Traversal is faster than scrolling.",u:["Move by meaning.","Keep orientation.","Compound understanding.","Stay calm."]},
-            b4:{h:"Use",p:"Tap a node. Adjust lenses inside. Return.",u:["Open.","Adjust.","Read.","Return."]}
-          }},
-          now:{formal:{
-            title:"Compass Hub Platform",
-            b1:{h:"Live status",p:"The hub runs as a stable gateway while content expands over time.",u:["Routes work.","State propagates.","Dual language supported.","Placeholders are safe."]},
-            b2:{h:"State discipline",p:"All pages consume the same canonical keys and propagate them forward.",u:["gd_lang","gd_style","gd_time","gd_depth (where applicable)"]},
-            b3:{h:"Navigation discipline",p:"Each action produces a deterministic next step and preserves return paths.",u:["No broken loops.","No silent redirects.","No drifted labels.","No duplicate forks."]},
-            b4:{h:"Operator intent",p:"This layer is designed to scale into a full traversal encyclopedia.",u:["More nodes.","Deeper recursion.","Registries.","Dashboards."]}
-          }, informal:{
-            title:"Compass Hub Platform",
-            b1:{h:"Works now",p:"It’s live and consistent.",u:["Buttons work.","State sticks.","Feels smooth.","Looks aligned."]},
-            b2:{h:"Keys",p:"Everything stays on gd_* keys.",u:["No random keys.","No collisions.","No drift.","Always consistent."]},
-            b3:{h:"Navigation",p:"You can move anywhere and come back.",u:["Hub → anywhere.","Modal → return.","Dock → routes.","Exit works."]},
-            b4:{h:"Next",p:"We expand content without changing the contract.",u:["Same geometry.","Same rules.","More depth.","More pages."]}
-          }},
-          post:{formal:{
-            title:"Compass Hub Platform",
-            b1:{h:"Roadmap",p:"The hub becomes a full traversal reference surface across domains.",u:["Domain hubs.","Sub-hubs.","Evidence bundles.","Search and filters."]},
-            b2:{h:"Verification",p:"Outputs become replayable and audit-friendly by default.",u:["Hash logs.","Registry entries.","Windowed evidence.","Reason codes."]},
-            b3:{h:"Enterprise",p:"The hub integrates with governance and deployment gates.",u:["HIP enforcement.","Rollback discipline.","Zone independence.","Audit latency discipline."]},
-            b4:{h:"Public readiness",p:"Stable navigation plus clear content becomes safe for public use.",u:["No broken flows.","Clear lens meaning.","Consistent UI.","Predictable updates."]}
-          }, informal:{
-            title:"Compass Hub Platform",
-            b1:{h:"Next",p:"More pages, same structure.",u:["More nodes.","More depth.","Same rules.","Same feel."]},
-            b2:{h:"Proof",p:"We add stronger verification.",u:["Hashes.","Registry.","Audits.","Replay."]},
-            b3:{h:"Scale",p:"We add sub-hubs by domain.",u:["Software.","Commercial.","Energy.","Education."]},
-            b4:{h:"Result",p:"Traversal becomes the default way to learn this system.",u:["Faster.","Clearer.","Stable.","Coherent."]}
-          }}
-        },
-        uci:{
-          origin:{formal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"What it is",p:"A universal measurement core for correlated exposure and gate compliance.",u:["ρ measures exposure.","TC measures alignment.","Δ measures acceleration.","HIP gates enforce change discipline."]},
-            b2:{h:"What it standardizes",p:"One schema, one computation contract, one output bundle.",u:["Inputs are explicit.","No inference without evidence.","Windows are defined.","Missing data is handled deterministically."]},
-            b3:{h:"Why it exists",p:"Correlation is the silent killer of resilient systems.",u:["Common-mode failures.","Rollout clustering.","Vendor monoculture.","Hidden dependencies."]},
-            b4:{h:"What it outputs",p:"Operator-ready results and audit-ready exports.",u:["Alerts.","Scores.","Dashboards.","Hash-verifiable bundles."]}
-          }, informal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"What it is",p:"A way to measure correlation risk.",u:["It measures ρ.","It measures TC.","It watches drift.","It checks gates."]},
-            b2:{h:"Why",p:"So things don’t break together.",u:["Catch clusters.","Reduce blast radius.","Stop drift early.","Stay safe."]},
-            b3:{h:"Outputs",p:"What you can read fast.",u:["Alerts.","Scores.","Summaries.","Exports."]},
-            b4:{h:"Use",p:"Send it events and read the result.",u:["Input events.","Read output.","Fix issues.","Repeat."]}
-          }},
-          now:{formal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"Live status",p:"UCI logic is present and can be expanded per domain adapter.",u:["Same contract.","Multiple domains.","Comparable outputs.","Stable thresholds."]},
-            b2:{h:"Gate alignment",p:"UCI pairs with staged deployment to suppress correlated blast radius.",u:["Wave caps.","Segmentation zones.","Rollback readiness.","Audit latency."]},
-            b3:{h:"Operator value",p:"Transforms telemetry into bounded risk signals.",u:["Trend + slope.","Breaches + reasons.","Actions + priorities.","Exports + proofs."]},
-            b4:{h:"Certification interface",p:"UCI outputs can drive tiering and revocation logic.",u:["Tier 0–4.","Reason codes.","Renewal windows.","Suspension triggers."]}
-          }, informal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"Now",p:"It gives you the signal.",u:["Risk up/down.","Gate pass/fail.","Drift trending.","What to fix."]},
-            b2:{h:"Pairing",p:"Use it with staged rollouts.",u:["Small waves.","Rollback ready.","Zones independent.","Audit quick."]},
-            b3:{h:"Outputs",p:"Shareable results.",u:["Export file.","Report.","Hash.","Proof."]},
-            b4:{h:"Scaling",p:"Adapters plug in by domain.",u:["Water.","Energy.","HVAC.","District."]}
-          }},
-          post:{formal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"Roadmap",p:"Domain adapter registries become public and versioned.",u:["Driver vectors defined.","Windows locked.","Sign conventions fixed.","Missing-data rules explicit."]},
-            b2:{h:"Anti-gaming",p:"Red-team harnesses become mandatory for high tiers.",u:["Synthetic injections.","Divergence checks.","Reliability tests.","Audit triggers."]},
-            b3:{h:"Enterprise",p:"Underwriting and governance integration expands.",u:["Insurance interfaces.","Capital impact framing.","Regulatory snapshots.","Replay windows."]},
-            b4:{h:"Public",p:"Registry-backed evidence becomes lookupable and durable.",u:["Serials.","Status.","Revocations.","History."]}
-          }, informal:{
-            title:"Universal Coherence Instrument (UCI)",
-            b1:{h:"Next",p:"More domains plug in cleanly.",u:["More adapters.","Same engine.","Same keys.","Same outputs."]},
-            b2:{h:"Defense",p:"Harder to game over time.",u:["Red-team tests.","Checks.","Audits.","Proof."]},
-            b3:{h:"Scale",p:"More real-world connectors.",u:["Enterprise.","Insurance.","Capital.","Regulators."]},
-            b4:{h:"Public",p:"Lookup-ready.",u:["Serials.","Status.","Reasons.","History."]}
-          }}
-        },
-        score:{
-          origin:{formal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"What it is",p:"A deterministic score that converts exposure + gates into an executive metric.",u:["Gate vector dominates.","Correlation penalized.","Slope penalized.","Reason codes explain outcome."]},
-            b2:{h:"What it prevents",p:"Score inflation via ambiguity or micro-wave gaming.",u:["Unknown quotas.","Anti-splitting rules.","Effective zone calc.","Comparator regimes."]},
-            b3:{h:"What it enables",p:"Decision compression for operators and executives.",u:["One-page summary.","Operator report.","Export bundle.","Audit trace."]},
-            b4:{h:"How to use it",p:"Compute per window, publish status, remediate fails.",u:["Measure.","Score.","Publish.","Fix."]}
-          }, informal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"What it is",p:"A score that tells you how safe the system is.",u:["Higher = safer.","Lower = riskier.","Fail = stop.","Reasons included."]},
-            b2:{h:"Why",p:"So decisions are fast and consistent.",u:["Less guessing.","Clear flags.","Clear actions.","Clear proof."]},
-            b3:{h:"Outputs",p:"What you can hand to people.",u:["Score.","Reasons.","Report.","Export."]},
-            b4:{h:"Use",p:"Run it regularly and act on fails.",u:["Schedule.","Review.","Fix.","Re-check."]}
-          }},
-          now:{formal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"Live status",p:"Scoring can run over UCI outputs and gate vectors.",u:["Windowed scoring.","Hard fail overrides.","Tier recommendation.","Audit bundle export."]},
-            b2:{h:"Executive framing",p:"Translates correlated exposure into governance and capital implications.",u:["Blast radius risk.","Change discipline.","Audit readiness.","Insurance relevance."]},
-            b3:{h:"Operator framing",p:"Turns breaches into prioritized remediation actions.",u:["Which gate failed.","Where drift accelerates.","Where exposure clusters.","What to change first."]},
-            b4:{h:"Safety discipline",p:"Scoring does not weaken standards; it reflects them.",u:["No threshold relaxation.","Freeze window honored.","Only implementation changes.","Audit required."]}
-          }, informal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"Now",p:"It flags the problem clearly.",u:["Pass/Fail.","Reasons.","What’s next.","Who needs to know."]},
-            b2:{h:"Meaning",p:"Correlation = shared failure risk.",u:["High = dangerous.","Low = safer.","Slope up = worse.","Slope down = better."]},
-            b3:{h:"Actions",p:"Fix gates before anything else.",u:["Rollback ready.","Wave caps.","Seg zones.","Audit latency."]},
-            b4:{h:"Share",p:"You can export and send it.",u:["PDF summary.","CSV metrics.","Hash proof.","Reason codes."]}
-          }},
-          post:{formal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"Roadmap",p:"Scoring integrates with portfolio and underwriting surfaces.",u:["Portfolio overlays.","Scenario sims.","Capital impact tables.","Policy hooks."]},
-            b2:{h:"Stability",p:"Scoring becomes cross-checkable via dual implementations.",u:["Two engines.","Tolerance bounds.","Auto-suspension.","Audit triggers."]},
-            b3:{h:"Governance",p:"Scoring is separated from tuning authority by design.",u:["Engineering != issuance.","Commercial != thresholds.","Audit != tuning.","Anti-capture enforced."]},
-            b4:{h:"Public readiness",p:"Scores become registry-publishable without leaking telemetry.",u:["Public status.","Private data.","Reason codes.","Time-stamped records."]}
-          }, informal:{
-            title:"Risk & Correlation Scoring",
-            b1:{h:"Next",p:"Portfolio view comes online.",u:["More context.","More sims.","More reports.","Same rules."]},
-            b2:{h:"Harder to game",p:"We add dual checks.",u:["Two engines.","Tolerance.","Auto stops.","Audit."]},
-            b3:{h:"Governance",p:"Nobody can tune it quietly.",u:["Separation.","Logs.","Time locks.","Freeze rules."]},
-            b4:{h:"Public",p:"Status becomes lookupable.",u:["Tier.","Score.","Reason.","Timestamp."]}
-          }}
-        },
-        reg:{
-          origin:{formal:{
-            title:"Certification Registry Layer",
-            b1:{h:"What it is",p:"A serial-based lookup layer for issuance, renewal, and revocation.",u:["Serial ID.","Tier.","Status.","Scope + window."]},
-            b2:{h:"What it publishes",p:"Public status without exposing sensitive telemetry.",u:["Active/suspended/revoked.","Timestamp.","Tier.","Reason codes."]},
-            b3:{h:"What it enforces",p:"No silent changes and no silent revocations.",u:["Notice required.","Reason required.","Logs required.","Time locks."]},
-            b4:{h:"How to use it",p:"Lookup serials; verify status; read reason codes.",u:["Search.","Verify.","Audit.","Act."]}
-          }, informal:{
-            title:"Certification Registry Layer",
-            b1:{h:"What it is",p:"A public lookup for certificate status.",u:["Serial.","Tier.","Status.","Reason."]},
-            b2:{h:"Why",p:"So claims are verifiable.",u:["No hand-waving.","No silent edits.","Clear history.","Clear proof."]},
-            b3:{h:"What you see",p:"The minimum that still matters.",u:["Active/Revoked.","Date.","Tier.","Reasons."]},
-            b4:{h:"Use",p:"Check status before trust.",u:["Lookup.","Verify.","Decide.","Move on."]}
-          }},
-          now:{formal:{
-            title:"Certification Registry Layer",
-            b1:{h:"Live status",p:"Registry scaffolding is ready for expansion with evidence hashes.",u:["Hash of window.","Inputs used.","Gate vector.","Score + tier."]},
-            b2:{h:"Revocation discipline",p:"Automatic suspension on critical gate FAIL.",u:["Immediate suspension.","Reason codes.","Remediation window.","Re-audit required."]},
-            b3:{h:"Anti-capture",p:"Registry cannot be tuned by commercial incentives.",u:["Separation of powers.","Threshold registry immutability.","Public logging.","Time locks."]},
-            b4:{h:"Operator value",p:"Enables fast verification at the edge.",u:["Field checks.","Vendor checks.","Compliance checks.","Portfolio checks."]}
-          }, informal:{
-            title:"Certification Registry Layer",
-            b1:{h:"Now",p:"It makes status checkable.",u:["Lookup works.","Status is clear.","Reasons visible.","History stable."]},
-            b2:{h:"Revokes",p:"Fails aren’t hidden.",u:["Suspension triggers.","Reason codes.","Remediation steps.","Re-check."]},
-            b3:{h:"Capture resistance",p:"Nobody can buy the outcome.",u:["Separation.","Logs.","Locks.","Audits."]},
-            b4:{h:"Use",p:"Verify before trust.",u:["Check.","Confirm.","Decide.","Proceed."]}
-          }},
-          post:{formal:{
-            title:"Certification Registry Layer",
-            b1:{h:"Roadmap",p:"Registry gains third-party attestations and replay proof.",u:["Auditor signatures.","Replay packages.","Hash chains.","Subscription API."]},
-            b2:{h:"Coverage",p:"Registry expands by domain and by system scope.",u:["Data centers.","Utilities.","Industrial systems.","Financial infrastructure."]},
-            b3:{h:"Evidence durability",p:"Records become litigation-grade and tamper-evident.",u:["Immutable logs.","Time anchors.","Cross-checks.","Public revocation."]},
-            b4:{h:"Public readiness",p:"Enables credible external claims without exposing internal data.",u:["Public status.","Private telemetry.","Clear rules.","Trustable outcomes."]}
-          }, informal:{
-            title:"Certification Registry Layer",
-            b1:{h:"Next",p:"More proof layers come online.",u:["Audits.","Hash chains.","Replay.","API."]},
-            b2:{h:"Coverage",p:"More domains supported.",u:["Utilities.","Finance.","Industry.","Cloud."]},
-            b3:{h:"Durability",p:"Harder to dispute.",u:["Logs.","Anchors.","Cross-checks.","Public revokes."]},
-            b4:{h:"Public",p:"Claims become verifiable.",u:["Status.","Tier.","Reason.","Time."]}
-          }}
-        }
-      }
+      quadHint:"Tap a domain diamond to enter its narrative. Return closes this layer.",
+      claim:"This page describes software posture only. Proof lives under Laws; measurement lives under Gauges.",
+      concept:"Concept", live:"Live", roadmap:"Roadmap",
+      formal:"FORMAL", informal:"INFORMAL",
+      ret:"RETURN", domSub:"Concept · Live · Roadmap"
     },
     zh:{
-      title:"产品",
-      tag:"软件系统",
-      d:{
-        hub:{lab:"枢纽平台", sub:"路由 · 状态 · 递归。"},
-        uci:{lab:"UCI", sub:"ρ/TC · 门控 · 审计。"},
-        score:{lab:"评分", sub:"高管风险指标。"},
-        reg:{lab:"登记", sub:"序列 · 分层 · 状态。"}
+      hdrT:"软件",
+      hdrS:"72段叙事 · 4→12→36→72",
+      q:{
+        engine:{lab:"引擎", sub:"运行时 · 状态 · 确定性"},
+        platform:{lab:"平台", sub:"界面 · 路由 · 采纳"},
+        instruments:{lab:"量具", sub:"仪表 · 评分 · 导出"},
+        governance:{lab:"治理", sub:"规则 · 闸门 · 纪律"}
       },
-      lens:{formal:"正式", informal:"非正式", concept:"概念", live:"上线", roadmap:"路线图"},
-      buttons:{return:"返回", jhub:"跳转枢纽", jprod:"跳转产品"},
-      content:{
-        hub:{
-          origin:{formal:{
-            title:"指南针枢纽平台",
-            b1:{h:"它是什么",p:"一个遍历枢纽：用一个稳定几何路由整个架构。",u:["枢纽是规范入口。","所有移动保留 gd_* 状态。","模态递归确定。","返回路径不漂移。"]},
-            b2:{h:"它强制什么",p:"严格契约：透镜变 ⇒ 内容变（不是只高亮）。",u:["文本变化。","要点变化。","含义变化。","禁用组合会确定性修正。"]},
-            b3:{h:"为什么重要",p:"遍历取代线性阅读：结构可叠加上下文。",u:["不是“读完”。","而是“穿行”。","透镜可保持。","地图会形成。"]},
-            b4:{h:"怎么使用",p:"打开节点，在内部切透镜，读要点，干净返回。",u:["风格定框架。","时间定强调。","内容保持一致。","导航保持稳定。"]}
-          }, informal:{
-            title:"指南针枢纽平台",
-            b1:{h:"它是什么",p:"让所有东西都可达的主枢纽。",u:["一个几何。","一个状态。","返回干净。","不漂移。"]},
-            b2:{h:"规则",p:"透镜一变，内容就变。",u:["不是装饰。","是真内容变。","是真要点变。","始终一致。"]},
-            b3:{h:"为什么",p:"遍历比滚动快。",u:["按含义移动。","保持方向感。","叠加理解。","更清晰。"]},
-            b4:{h:"用法",p:"点节点，在气泡里切透镜，再返回。",u:["打开。","调整。","阅读。","返回。"]}
-          }},
-          now:{formal:{
-            title:"指南针枢纽平台",
-            b1:{h:"上线状态",p:"枢纽已可用：内容会增长但结构稳定。",u:["路由可用。","状态传播。","双语支持。","占位安全。"]},
-            b2:{h:"状态纪律",p:"所有页面只消费并传播规范键。",u:["gd_lang","gd_style","gd_time","gd_depth（适用时）"]},
-            b3:{h:"导航纪律",p:"每次动作都有确定下一步并可回退。",u:["不破环。","不暗跳。","不漂移标签。","不重复分叉。"]},
-            b4:{h:"扩展意图",p:"这一层会扩展成完整遍历百科。",u:["更多节点。","更深递归。","登记。","仪表盘。"]}
-          }, informal:{
-            title:"指南针枢纽平台",
-            b1:{h:"现在可用",p:"已上线且一致。",u:["按钮可用。","状态不丢。","很顺滑。","很对齐。"]},
-            b2:{h:"键",p:"只用 gd_* 键。",u:["不乱用键。","不冲突。","不漂移。","永远一致。"]},
-            b3:{h:"导航",p:"你能去任何地方并回来。",u:["枢纽→任意。","模态→返回。","Dock→路由。","退出可用。"]},
-            b4:{h:"下一步",p:"扩展内容但不改契约。",u:["同几何。","同规则。","更深度。","更多页。"]}
-          }},
-          post:{formal:{
-            title:"指南针枢纽平台",
-            b1:{h:"路线图",p:"枢纽将成为跨域遍历参考面。",u:["领域枢纽。","子枢纽。","证据包。","搜索与筛选。"]},
-            b2:{h:"验证",p:"输出默认可回放与可审计。",u:["哈希日志。","登记条目。","窗口证据。","原因码。"]},
-            b3:{h:"企业集成",p:"与治理与发布门控融合。",u:["HIP 执行。","回滚纪律。","分区独立。","审计延迟纪律。"]},
-            b4:{h:"对公众就绪",p:"稳定导航 + 清晰内容 → 可公开使用。",u:["不破流。","透镜含义清晰。","界面一致。","更新可预测。"]}
-          }, informal:{
-            title:"指南针枢纽平台",
-            b1:{h:"下一步",p:"更多页面，同样结构。",u:["更多节点。","更深度。","同规则。","同感觉。"]},
-            b2:{h:"证明",p:"更强验证层上线。",u:["哈希。","登记。","审计。","回放。"]},
-            b3:{h:"规模",p:"按域增加子枢纽。",u:["软件。","商业。","能源。","教育。"]},
-            b4:{h:"结果",p:"遍历成为默认学习方式。",u:["更快。","更清晰。","更稳定。","更一致。"]}
-          }}
-        },
-        uci:{
-          origin:{formal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"它是什么",p:"用于相关暴露与门控合规的通用测量核心。",u:["ρ 表示暴露。","TC 表示对齐。","Δ 表示加速度。","HIP 门控约束变更。"]},
-            b2:{h:"它标准化什么",p:"一个输入格式、一个计算契约、一个输出包。",u:["输入明确。","无证据不推断。","窗口定义。","缺失数据确定性处理。"]},
-            b3:{h:"它为什么存在",p:"相关性是不显眼但致命的系统风险。",u:["共因故障。","发布聚集。","单一供给。","隐藏依赖。"]},
-            b4:{h:"它输出什么",p:"可操作结果 + 可审计导出。",u:["告警。","评分。","仪表盘。","哈希可验证包。"]}
-          }, informal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"它是什么",p:"一种测相关风险的方法。",u:["测 ρ。","测 TC。","看漂移。","查门控。"]},
-            b2:{h:"为什么",p:"避免一起坏。",u:["抓集群。","减爆炸半径。","早点止漂移。","更安全。"]},
-            b3:{h:"输出",p:"你能快速读懂。",u:["告警。","评分。","摘要。","导出。"]},
-            b4:{h:"用法",p:"输入事件，读结果。",u:["输入。","读取。","修复。","重复。"]}
-          }},
-          now:{formal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"上线状态",p:"UCI 契约已就位，可按领域适配扩展。",u:["同契约。","多领域。","可比输出。","阈值稳定。"]},
-            b2:{h:"门控协同",p:"与分阶段发布一起抑制相关爆炸半径。",u:["波次上限。","分区独立。","可回滚。","审计延迟。"]},
-            b3:{h:"操作价值",p:"把遥测变成有界风险信号。",u:["趋势+斜率。","越界+原因。","动作+优先级。","导出+证明。"]},
-            b4:{h:"认证接口",p:"输出可驱动分层与撤销。",u:["Tier 0–4。","原因码。","续期窗口。","暂停触发。"]}
-          }, informal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"现在",p:"给你信号。",u:["风险升降。","门控通过/失败。","漂移趋势。","修什么。"]},
-            b2:{h:"配套",p:"搭配分阶段发布。",u:["小波次。","随时回滚。","分区独立。","审计快。"]},
-            b3:{h:"输出",p:"可分享结果。",u:["导出文件。","报告。","哈希。","证明。"]},
-            b4:{h:"扩展",p:"领域适配器逐步接入。",u:["水。","能源。","HVAC。","区域。"]}
-          }},
-          post:{formal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"路线图",p:"领域适配器登记成为公开版本库。",u:["驱动向量定义。","窗口锁定。","符号约定固定。","缺失规则明确。"]},
-            b2:{h:"防作弊",p:"红队测试对高层级成为必选。",u:["注入测试。","分歧检查。","可靠性测试。","审计触发。"]},
-            b3:{h:"企业",p:"承保与治理集成扩展。",u:["保险接口。","资本影响。","监管快照。","回放窗口。"]},
-            b4:{h:"公开",p:"登记+证据变得可查询且耐争议。",u:["序列号。","状态。","撤销。","历史。"]}
-          }, informal:{
-            title:"通用一致性仪器（UCI）",
-            b1:{h:"下一步",p:"更多领域干净接入。",u:["更多适配器。","同引擎。","同键。","同输出。"]},
-            b2:{h:"防守",p:"更难被操纵。",u:["红队。","检查。","审计。","证明。"]},
-            b3:{h:"规模",p:"更多连接器。",u:["企业。","保险。","资本。","监管。"]},
-            b4:{h:"公开",p:"可查询。",u:["序列。","状态。","原因。","历史。"]}
-          }}
-        },
-        score:{
-          origin:{formal:{
-            title:"风险与相关评分",
-            b1:{h:"它是什么",p:"把暴露+门控转为高管指标的确定性评分。",u:["门控权重更高。","相关暴露惩罚。","斜率惩罚。","原因码解释结果。"]},
-            b2:{h:"它防止什么",p:"靠模糊与切分发布来“刷分”。",u:["UNKNOWN 配额。","反拆分规则。","有效分区计算。","比较基准。"]},
-            b3:{h:"它解锁什么",p:"把决策时间压缩到可执行。",u:["一页纸摘要。","操作报告。","导出包。","审计轨迹。"]},
-            b4:{h:"怎么用",p:"按窗口运行，发布状态，修复失败。",u:["测量。","评分。","发布。","修复。"]}
-          }, informal:{
-            title:"风险与相关评分",
-            b1:{h:"它是什么",p:"告诉你系统有多安全的分数。",u:["高=更安全。","低=更危险。","失败=停止。","原因=清楚。"]},
-            b2:{h:"为什么",p:"让决策更快更一致。",u:["少猜。","清楚标志。","清楚动作。","清楚证明。"]},
-            b3:{h:"输出",p:"能直接拿去用。",u:["分数。","原因。","报告。","导出。"]},
-            b4:{h:"用法",p:"定期跑并对失败动手。",u:["排期。","复核。","修复。","再检。"]}
-          }},
-          now:{formal:{
-            title:"风险与相关评分",
-            b1:{h:"上线状态",p:"评分可运行在 UCI 输出与门控向量上。",u:["窗口评分。","硬失败覆盖。","分层推荐。","审计导出。"]},
-            b2:{h:"高管框架",p:"把相关暴露变成治理与资本语言。",u:["爆炸半径风险。","变更纪律。","审计就绪。","保险相关。"]},
-            b3:{h:"操作框架",p:"把越界变成优先级明确的修复动作。",u:["哪个门控失败。","哪里漂移加速。","哪里暴露聚集。","先改什么。"]},
-            b4:{h:"安全纪律",p:"评分反映标准，不削弱标准。",u:["不放宽阈值。","冻结窗口。","只改实现。","审计要求。"]}
-          }, informal:{
-            title:"风险与相关评分",
-            b1:{h:"现在",p:"清楚标出问题。",u:["通过/失败。","原因。","下一步。","通知谁。"]},
-            b2:{h:"含义",p:"相关=共享故障风险。",u:["高=危险。","低=更安全。","斜率上=变坏。","斜率下=变好。"]},
-            b3:{h:"动作",p:"先修门控。",u:["回滚就绪。","波次上限。","分区独立。","审计延迟。"]},
-            b4:{h:"共享",p:"可导出并发送。",u:["摘要。","CSV。","哈希。","原因码。"]}
-          }},
-          post:{formal:{
-            title:"风险与相关评分",
-            b1:{h:"路线图",p:"与组合与承保视图集成。",u:["组合叠加。","情景模拟。","资本影响表。","策略钩子。"]},
-            b2:{h:"稳定性",p:"双实现交叉校验避免单点错误。",u:["双引擎。","容差。","自动暂停。","审计触发。"]},
-            b3:{h:"治理",p:"评分与调参权分离。",u:["工程≠颁发。","商业≠阈值。","审计≠调参。","反捕获。"]},
-            b4:{h:"公开",p:"不泄露遥测也能公开发布状态。",u:["公开状态。","私有数据。","原因码。","时间锚定。"]}
-          }, informal:{
-            title:"风险与相关评分",
-            b1:{h:"下一步",p:"组合视图上线。",u:["更多上下文。","更多模拟。","更多报告。","同规则。"]},
-            b2:{h:"更难作弊",p:"加入双重校验。",u:["双引擎。","容差。","自动停止。","审计。"]},
-            b3:{h:"治理",p:"没人能悄悄改标准。",u:["分权。","日志。","锁。","冻结。"]},
-            b4:{h:"公开",p:"状态可查询。",u:["分层。","分数。","原因。","时间。"]}
-          }}
-        },
-        reg:{
-          origin:{formal:{
-            title:"认证登记层",
-            b1:{h:"它是什么",p:"基于序列号的颁发/续期/撤销查询层。",u:["序列号。","分层。","状态。","范围+窗口。"]},
-            b2:{h:"它发布什么",p:"公开状态但不暴露敏感遥测。",u:["启用/暂停/撤销。","时间戳。","分层。","原因码。"]},
-            b3:{h:"它强制什么",p:"不允许静默改动与静默撤销。",u:["必须通知。","必须原因。","必须日志。","时间锁。"]},
-            b4:{h:"怎么用",p:"查序列→验状态→读原因。",u:["查询。","验证。","审计。","行动。"]}
-          }, informal:{
-            title:"认证登记层",
-            b1:{h:"它是什么",p:"公开查询证书状态。",u:["序列。","分层。","状态。","原因。"]},
-            b2:{h:"为什么",p:"让宣称可验证。",u:["不靠话术。","不暗改。","历史清楚。","证明清楚。"]},
-            b3:{h:"你能看到",p:"最小但关键的信息。",u:["状态。","日期。","分层。","原因。"]},
-            b4:{h:"用法",p:"信任前先验证。",u:["查询。","确认。","决定。","继续。"]}
-          }},
-          now:{formal:{
-            title:"认证登记层",
-            b1:{h:"上线状态",p:"登记脚手架已就位，可接入证据哈希。",u:["窗口哈希。","输入记录。","门控向量。","分数+分层。"]},
-            b2:{h:"撤销纪律",p:"关键门控 FAIL 自动暂停。",u:["立即暂停。","原因码。","修复窗口。","复审要求。"]},
-            b3:{h:"反捕获",p:"商业激励无法调参登记结果。",u:["分权。","阈值不可变。","公开日志。","时间锁。"]},
-            b4:{h:"边缘价值",p:"让现场快速验证成为可能。",u:["外包验证。","供应商验证。","合规验证。","组合验证。"]}
-          }, informal:{
-            title:"认证登记层",
-            b1:{h:"现在",p:"状态可查。",u:["查询可用。","状态清楚。","原因可见。","历史稳定。"]},
-            b2:{h:"撤销",p:"失败不会被隐藏。",u:["暂停触发。","原因码。","修复步骤。","再检查。"]},
-            b3:{h:"抗捕获",p:"没人能买结果。",u:["分权。","日志。","锁。","审计。"]},
-            b4:{h:"用法",p:"信任前先验。",u:["查。","验。","定。","走。"]}
-          }},
-          post:{formal:{
-            title:"认证登记层",
-            b1:{h:"路线图",p:"登记扩展第三方证明与回放证据。",u:["审计签名。","回放包。","哈希链。","订阅 API。"]},
-            b2:{h:"覆盖",p:"按域与系统范围扩展。",u:["数据中心。","公用事业。","工业系统。","金融基础设施。"]},
-            b3:{h:"证据耐久",p:"记录更难被争议与篡改。",u:["不可变日志。","时间锚定。","交叉校验。","公开撤销。"]},
-            b4:{h:"公开就绪",p:"可信外宣而不泄露内部数据。",u:["公开状态。","私有遥测。","清楚规则。","可信结果。"]}
-          }, informal:{
-            title:"认证登记层",
-            b1:{h:"下一步",p:"更多证明层上线。",u:["审计。","哈希链。","回放。","API。"]},
-            b2:{h:"覆盖",p:"更多领域支持。",u:["公用事业。","金融。","工业。","云。"]},
-            b3:{h:"耐久",p:"更难被推翻。",u:["日志。","锚点。","校验。","公开撤销。"]},
-            b4:{h:"公开",p:"宣称可验证。",u:["状态。","分层。","原因。","时间。"]}
-          }}
-        }
+      quadHint:"点选一个域进入叙事。RETURN 将关闭本层。",
+      claim:"本页只描述软件姿态。证明在法则；测量在量规。",
+      concept:"概念", live:"上线", roadmap:"路线图",
+      formal:"正式", informal:"通俗",
+      ret:"RETURN", domSub:"概念 · 上线 · 路线图"
+    },
+    es:{
+      hdrT:"Software",
+      hdrS:"72 Narrativas · 4→12→36→72",
+      q:{
+        engine:{lab:"MOTOR", sub:"Runtime · estado · determinismo"},
+        platform:{lab:"PLATAFORMA", sub:"Superficies · rutas · adopción"},
+        instruments:{lab:"INSTRUMENTOS", sub:"Medidores · puntuación · exportación"},
+        governance:{lab:"GOBIERNO", sub:"Reglas · compuertas · integridad"}
+      },
+      quadHint:"Toca un dominio para ver su narrativa. RETURN cierra esta capa.",
+      claim:"Esta página describe postura de software. La prueba vive en Leyes; la medición en Medidores.",
+      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
+      formal:"FORMAL", informal:"INFORMAL",
+      ret:"RETURN", domSub:"Concepto · En vivo · Hoja de ruta"
+    }
+  };
+  var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+
+  document.getElementById("hdrT").textContent=T.hdrT;
+  document.getElementById("hdrS").textContent=T.hdrS;
+
+  document.getElementById("labEngine").textContent=T.q.engine.lab;
+  document.getElementById("subEngine").textContent=T.q.engine.sub;
+  document.getElementById("labPlatform").textContent=T.q.platform.lab;
+  document.getElementById("subPlatform").textContent=T.q.platform.sub;
+  document.getElementById("labInstruments").textContent=T.q.instruments.lab;
+  document.getElementById("subInstruments").textContent=T.q.instruments.sub;
+  document.getElementById("labGovernance").textContent=T.q.governance.lab;
+  document.getElementById("subGovernance").textContent=T.q.governance.sub;
+
+  document.getElementById("quadHint").textContent=T.quadHint;
+  document.getElementById("claimHint").textContent=T.claim;
+  document.getElementById("hConcept").textContent=T.concept;
+  document.getElementById("hLive").textContent=T.live;
+  document.getElementById("hRoadmap").textContent=T.roadmap;
+  document.getElementById("toneFormal").textContent=T.formal;
+  document.getElementById("toneInformal").textContent=T.informal;
+
+  // Quadrant -> domains mapping (4 quadrants × 3 domains = 12)
+  var QUADS = {
+    "ENGINE": ["State Runtime","Deterministic Gates","Receipt Progression"],
+    "PLATFORM": ["Navigation Surfaces","Product Packaging","Enterprise Deployment"],
+    "INSTRUMENTS": ["Dot.Grid Sweeps","Scoring Outputs","Registry Lookups"],
+    "GOVERNANCE": ["Admissibility Doctrine","Audit Discipline","Change Control"]
+  };
+
+  // 72 narratives (unique per domain / time / tone)
+  var N = {
+    "State Runtime":{
+      concept:{
+        formal:"The runtime is a constrained state machine: declared keys define the coordinate, and transitions are atomic. State is not a vibe; it is an admissible snapshot produced under the same rules for every observer. The purpose is repeatable execution without semantic drift.",
+        informal:"The runtime is the part that keeps things from turning into chaos. It’s a simple rule: you’re always in a state, and every move changes state cleanly. No magic. No guessing."
+      },
+      live:{
+        formal:"Live operation emphasizes stability and recoverability: state must survive refresh, navigation, and device variance. A valid move produces the same next state regardless of user path. When drift appears, rollback is deterministic.",
+        informal:"Live means it doesn’t break when you tap around. If you leave and come back, the system remembers the right thing. If something goes weird, it resets cleanly."
+      },
+      roadmap:{
+        formal:"Roadmap extends the runtime into domain adapters and exported receipts: every transition can emit a small proof bundle (inputs, decision, result). The contract remains invariant while coverage expands.",
+        informal:"Next, the runtime learns new domains without changing the rules. More surfaces, same discipline. And you can export what happened so people can verify it."
+      }
+    },
+    "Deterministic Gates":{
+      concept:{
+        formal:"Gates are binary admissibility checks applied under declared scope. They prevent escalation without receipts and suppress narrative inflation. A gate is not persuasion; it is a rule that yields pass or fail given inputs.",
+        informal:"Gates are the ‘yes/no’ switches that keep the system honest. If the proof isn’t there, you don’t get to level up. Simple."
+      },
+      live:{
+        formal:"In live mode, gates are enforced under load: no timers-as-gates, no hidden shortcuts, no silent overrides. Failures are contained and logged; success advances with a receipt.",
+        informal:"Live gating means no sneaky passes. You either meet the requirement or you don’t. If you fail, it tells you and stops the drift."
+      },
+      roadmap:{
+        formal:"Roadmap adds standardized reason codes and replay: any gate decision can be reproduced by independent observers from the same receipt set. This upgrades trust while keeping the logic minimal.",
+        informal:"Next, gate decisions come with ‘why’ in a clean, checkable way. Same inputs, same result—anyone can rerun it."
+      }
+    },
+    "Receipt Progression":{
+      concept:{
+        formal:"Progression is receipt-gated: advancement requires evidence that survives scope locks. This eliminates time-based advancement and replaces it with measurable completion. Progress becomes audit-friendly by default.",
+        informal:"You don’t progress because time passed—you progress because you did the thing. Receipts are the proof that you earned the next step."
+      },
+      live:{
+        formal:"Live progression preserves position across navigation and language toggles. Back-navigation can invalidate downstream receipts; forward movement requires fresh confirmation. The system favors safety over momentum when conflict appears.",
+        informal:"Live progression means you can’t accidentally ‘skip’ into a future state. If you back out, the system knows what becomes invalid and keeps you honest."
+      },
+      roadmap:{
+        formal:"Roadmap adds registrable receipts (hashable bundles) so progress can be recognized across products without leaking private data. This enables scalable verification without central trust.",
+        informal:"Next, your receipts can become portable—so progress can be verified elsewhere without exposing your whole life. Proof scales; privacy stays."
+      }
+    },
+    "Navigation Surfaces":{
+      concept:{
+        formal:"Surfaces are the user-facing contracts that present options without altering invariants. A surface may simplify choices, but it must not change what is admissible. UX is subordinate to the engine rules.",
+        informal:"The surface is the clean interface. It’s allowed to look simple, but it can’t lie. Pretty doesn’t get to override the rules."
+      },
+      live:{
+        formal:"Live surfaces emphasize tap reliability and isolation: no overlays intercept actions, no competing UI stacks, no accidental double routes. Each tap yields one deterministic outcome.",
+        informal:"Live means every tap works the first time. No ghost layers. No weird overlaps. You touch it, and it does exactly one thing."
+      },
+      roadmap:{
+        formal:"Roadmap introduces reusable surface templates across products so the same interactions feel identical everywhere. Consistency reduces cognitive load and improves adoption velocity.",
+        informal:"Next, every product page feels like the same ‘machine.’ Once you learn one, you can use them all without relearning the UI."
+      }
+    },
+    "Product Packaging":{
+      concept:{
+        formal:"Packaging binds engines to sellable surfaces without mixing doctrine into marketing. A product page explains what it does, while proof pages explain what is true. This separation prevents claim inflation.",
+        informal:"Packaging means: ‘Here’s what you can use’ without turning the proof into sales copy. Products do the job. Laws prove the boundaries."
+      },
+      live:{
+        formal:"Live packaging maintains stable routes and eliminates dead ends: every product card opens, every open has a return, and state is preserved across jumps. The product spine stays navigable under pressure.",
+        informal:"Live packaging means you can actually find things and get back. No 404s. No loops. Just clean routes and clean returns."
+      },
+      roadmap:{
+        formal:"Roadmap adds tiering (SaaS/Enterprise/Government) and registry status so users can understand access level without reading internal doctrine. The packaging stays human-first.",
+        informal:"Next, products get clear tiers and access signals—so anyone can understand what’s available without digging into the technical weeds."
+      }
+    },
+    "Enterprise Deployment":{
+      concept:{
+        formal:"Enterprise deployment is defined as staged rollout with segmentation and rollback. Claims remain bounded to what is measured. Governance interfaces are explicit: who can deploy, who can audit, who can tune thresholds.",
+        informal:"Enterprise is ‘scale without breaking.’ You roll out in waves, keep zones independent, and always have rollback ready. No hero moves."
+      },
+      live:{
+        formal:"Live enterprise posture tracks correlated exposure and adoption gates. Deployment decisions reference receipts, not urgency. Any instability triggers containment and a return to last stable state.",
+        informal:"Live enterprise means: if it wobbles, you stop. If it clusters, you split. If it drifts, you roll back. Stability wins."
+      },
+      roadmap:{
+        formal:"Roadmap builds audit bundles and API exports so third parties can verify posture without privileged access. This enables external trust at scale.",
+        informal:"Next, enterprise gets ‘proof packages’ you can hand to auditors and partners. They can verify without needing your whole stack."
+      }
+    },
+    "Dot.Grid Sweeps":{
+      concept:{
+        formal:"Dot.Grid is a traversal-friendly indexing sweep: it enumerates states under fixed definitions and creates comparable evidence windows. The value is repeatable classification under constraint.",
+        informal:"Dot.Grid is the scanner. It lets you sweep through states the same way every time so results don’t depend on mood or narrative."
+      },
+      live:{
+        formal:"Live sweeps enforce window discipline and consistent naming so comparisons remain valid across time. Outputs are routed to Gauges for display and to Laws for interpretation bounds.",
+        informal:"Live sweeps mean you can compare today to yesterday without tricking yourself. Same window, same labels, same output."
+      },
+      roadmap:{
+        formal:"Roadmap adds adapter packs so sweeps apply to multiple domains (software, energy, governance) while preserving the same 256-style stability contract when used.",
+        informal:"Next, Dot.Grid plugs into more domains—same sweep logic, more places to use it. You learn it once and reuse it."
+      }
+    },
+    "Scoring Outputs":{
+      concept:{
+        formal:"Scoring converts gate vectors and exposure into a bounded metric with reason codes. The score is subordinate to admissibility: it cannot override a fail state. Its purpose is decision compression, not persuasion.",
+        informal:"Scoring makes the signal easy to read. It doesn’t let you cheat a fail. It just tells you where you stand and why."
+      },
+      live:{
+        formal:"Live scoring produces stable summaries and exports. Any threshold change requires a new epoch; silent tuning is disallowed. This keeps comparisons honest and prevents retroactive narrative edits.",
+        informal:"Live scoring means you can’t quietly move the goalposts. If the rule changes, it’s obvious. If you compare scores, it’s a fair comparison."
+      },
+      roadmap:{
+        formal:"Roadmap integrates underwriting and portfolio views while keeping raw evidence traceable. Scores become shareable without exposing private telemetry, via hashed receipts.",
+        informal:"Next, you can share a score with proof attached—without dumping private data. Trust gets easier when the evidence travels with the number."
+      }
+    },
+    "Registry Lookups":{
+      concept:{
+        formal:"Registry provides lookupable status for packages, tiers, and validity windows. It is designed to publish the minimum necessary truth without leaking sensitive internals. Status is time-anchored and reason-coded.",
+        informal:"Registry is the ‘check the status’ screen. It tells you what’s active, what’s revoked, and why—without drama and without leaks."
+      },
+      live:{
+        formal:"Live registry enforces non-silent revocation and deterministic renewal rules. Any suspension or reinstatement is logged and can be audited. This prevents capture and hidden exceptions.",
+        informal:"Live registry means nobody can quietly flip things behind the scenes. If it changes, you can see it. If it’s revoked, there’s a reason."
+      },
+      roadmap:{
+        formal:"Roadmap adds third-party attestations and replay bundles so claims become verifiable across organizations. The registry becomes the bridge between internal execution and external trust.",
+        informal:"Next, registry turns into real-world credibility. Outside groups can verify status without taking your word for it."
+      }
+    },
+    "Admissibility Doctrine":{
+      concept:{
+        formal:"Doctrine defines what may be claimed and what must remain conditional. It prevents upgrades beyond receipts and locks language to measured scope. Software must obey this to avoid becoming narrative-driven.",
+        informal:"Doctrine is the rule: don’t say more than you can prove. Software is dangerous when it starts selling stories. This keeps it honest."
+      },
+      live:{
+        formal:"Live doctrine enforces posture: concept stays concept, live stays measured, roadmap stays gated. If evidence is missing, the system must say so and refuse escalation.",
+        informal:"Live doctrine means: call things what they are. If it’s not measured, you don’t hype it. If it’s only a plan, you label it as a plan."
+      },
+      roadmap:{
+        formal:"Roadmap expands doctrine into standardized templates across products so the same claim discipline holds everywhere. This reduces drift and accelerates safe adoption.",
+        informal:"Next, every product page speaks the same ‘honest language.’ No surprises. No inflated claims. Just clear posture everywhere."
+      }
+    },
+    "Audit Discipline":{
+      concept:{
+        formal:"Audit discipline requires observer-invariant evaluation: outputs must be judged by receipts, not intent. This is implemented as logging, replay, and fixed rule application under declared scope.",
+        informal:"Audit discipline means: show what happened. Not what you meant. Not what you hoped. Receipts decide."
+      },
+      live:{
+        formal:"Live audit mode produces bundles that can be re-run. Any disagreement must be resolved by scope or missing receipts, not by arguing interpretations.",
+        informal:"Live auditing makes fights boring. If you disagree, you look at the receipt. If it’s missing, you log it and move on."
+      },
+      roadmap:{
+        formal:"Roadmap adds audit automation with strict separation of tuning authority. Builders cannot silently adjust thresholds; auditors cannot silently relax rules.",
+        informal:"Next, audits get faster without getting weaker. And nobody gets to secretly ‘tune’ outcomes to make themselves look good."
+      }
+    },
+    "Change Control":{
+      concept:{
+        formal:"Change control defines how updates occur without corrupting comparability. A change that affects outcomes creates a new epoch. Old results remain interpretable under their original rules.",
+        informal:"Change control is how you upgrade without rewriting history. If you change the rules, you stamp it. Then comparisons stay honest."
+      },
+      live:{
+        formal:"Live control requires staged rollout, rollback readiness, and documented reason for change. Hot fixes must not act as hidden policy changes. Stability is treated as primary.",
+        informal:"Live change control means: don’t push chaos to production. Roll out in waves, keep rollback ready, and don’t pretend a ‘hotfix’ is harmless."
+      },
+      roadmap:{
+        formal:"Roadmap introduces policy registries and signed releases so changes become verifiable events. This strengthens external trust while maintaining internal speed.",
+        informal:"Next, updates become ‘signed events’ you can point to. People trust systems that don’t quietly change under their feet."
       }
     }
   };
 
-  // Apply language UI
-  var pack = TEXT[lang] || TEXT.en;
-  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
-  document.getElementById("brandName").textContent = pack.title;
-  document.getElementById("brandTag").textContent = pack.tag;
-
-  document.getElementById("hubLab").textContent = pack.d.hub.lab;
-  document.getElementById("hubSub").textContent = pack.d.hub.sub;
-  document.getElementById("uciLab").textContent = pack.d.uci.lab;
-  document.getElementById("uciSub").textContent = pack.d.uci.sub;
-  document.getElementById("scoreLab").textContent = pack.d.score.lab;
-  document.getElementById("scoreSub").textContent = pack.d.score.sub;
-  document.getElementById("regLab").textContent = pack.d.reg.lab;
-  document.getElementById("regSub").textContent = pack.d.reg.sub;
-
-  document.getElementById("mReturn").textContent = pack.buttons.return;
-  document.getElementById("mJumpHub").textContent = pack.buttons.jhub;
-  document.getElementById("mJumpProducts").textContent = pack.buttons.jprod;
-
-  // Lens labels
-  var styleChip=document.getElementById("styleChip");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipLive=document.getElementById("chipLive");
-  var chipRoadmap=document.getElementById("chipRoadmap");
-
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
-  }
-  function setLensLabels(){
-    styleChip.textContent = "STYLE: " + (style==="formal" ? pack.lens.formal : pack.lens.informal);
-    chipConcept.textContent = pack.lens.concept;
-    chipLive.textContent = pack.lens.live;
-    chipRoadmap.textContent = pack.lens.roadmap;
-    chipConcept.classList.toggle("active", time==="origin");
-    chipLive.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
-  }
-
-  // propagate links
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-  function setLinks(){
-    var s=q();
-    document.getElementById("btnBack").href="/products/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-    document.getElementById("dockHub").href="/home/?"+s;
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockGauges").href="/gauges/?"+s;
-    document.getElementById("mJumpHub").href="/home/?"+s;
-    document.getElementById("mJumpProducts").href="/products/?"+s;
-  }
-  setLinks();
-
-  // Modal refs
+  // UI refs
   var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
-  var activeKey=null;
+  var quadModal=document.getElementById("quadModal");
+  var domainModal=document.getElementById("domainModal");
+  var quadClose=document.getElementById("quadClose");
+  var domainClose=document.getElementById("domainClose");
+  var quadTitle=document.getElementById("quadTitle");
+  var quadGrid=document.getElementById("quadGrid");
+  var domainTitle=document.getElementById("domainTitle");
+  var toneFormal=document.getElementById("toneFormal");
+  var toneInformal=document.getElementById("toneInformal");
+  var bConcept=document.getElementById("bConcept");
+  var bLive=document.getElementById("bLive");
+  var bRoadmap=document.getElementById("bRoadmap");
+  var pConcept=document.getElementById("pConcept");
+  var pLive=document.getElementById("pLive");
+  var pRoadmap=document.getElementById("pRoadmap");
 
-  // 4 section refs
-  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
-  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
-  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
-  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
+  var currentQuad=null;
+  var currentDomain=null;
+  var tone="formal";
 
-  function fill(hEl,pEl,uEl,b){
-    hEl.textContent=b.h;
-    pEl.textContent=b.p;
-    uEl.innerHTML="";
-    b.u.forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      uEl.appendChild(li);
+  function showBD(){ bd.classList.add("show"); }
+  function hideBD(){ bd.classList.remove("show"); }
+
+  function openQuad(qname){
+    currentQuad=qname;
+    quadTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + qname;
+    quadGrid.innerHTML="";
+
+    var domains = QUADS[qname] || [];
+    domains.forEach(function(d){
+      var tile=document.createElement("div");
+      tile.className="smallDiamond";
+      tile.setAttribute("role","button");
+      tile.tabIndex=0;
+      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">'+T.domSub+'</div></div>';
+      tile.addEventListener("click", function(){ openDomain(d); });
+      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDomain(d);} });
+      quadGrid.appendChild(tile);
     });
+
+    // Return tile
+    var ret=document.createElement("div");
+    ret.className="smallDiamond";
+    ret.setAttribute("role","button");
+    ret.tabIndex=0;
+    ret.innerHTML='<div class="sdInner"><div class="sdT">'+T.ret+'</div><div class="sdS">Back to quadrants</div></div>';
+    ret.addEventListener("click", closeQuad);
+    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeQuad(); }});
+    quadGrid.appendChild(ret);
+
+    showBD();
+    quadModal.classList.add("show");
   }
 
-  function render(){
-    setLensLabels();
-    persist();
-    setLinks();
-
-    var view = pack.content[activeKey][time][style];
-    mTitle.textContent = view.title;
-
-    fill(h1,p1,u1,view.b1);
-    fill(h2,p2,u2,view.b2);
-    fill(h3,p3,u3,view.b3);
-    fill(h4,p4,u4,view.b4);
+  function closeQuad(){
+    quadModal.classList.remove("show");
+    if(!domainModal.classList.contains("show")) hideBD();
   }
 
-  function setActiveDiamond(key){
-    ["dHub","dUci","dScore","dReg"].forEach(function(id){
-      var el=document.getElementById(id);
-      if(!el) return;
-      var match = (id==="dHub"&&key==="hub")||(id==="dUci"&&key==="uci")||(id==="dScore"&&key==="score")||(id==="dReg"&&key==="reg");
-      el.classList.toggle("active", match);
-    });
+  function openDomain(dname){
+    currentDomain=dname;
+    domainTitle.textContent = (lang==="zh" ? "软件 · " : (lang==="es" ? "Software · " : "SOFTWARE · ")) + dname;
+
+    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+
+    applyTone(tone);
+
+    quadModal.classList.remove("show");
+    showBD();
+    domainModal.classList.add("show");
   }
 
-  function open(key){
-    activeKey=key;
-    setActiveDiamond(key);
-    render();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-  function close(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    setActiveDiamond("__none__");
+  function applyTone(t){
+    tone=t;
+    toneFormal.classList.toggle("active", tone==="formal");
+    toneInformal.classList.toggle("active", tone==="informal");
+
+    var pack=N[currentDomain] || null;
+    if(!pack){
+      pConcept.textContent="NOT MEASURED";
+      pLive.textContent="NOT MEASURED";
+      pRoadmap.textContent="NOT MEASURED";
+      return;
+    }
+    pConcept.textContent = pack.concept[tone];
+    pLive.textContent = pack.live[tone];
+    pRoadmap.textContent = pack.roadmap[tone];
   }
 
-  // Lens handlers
-  styleChip.addEventListener("click", function(){
-    style = (style==="formal") ? "informal" : "formal";
-    render();
+  function bindBubble(box){
+    box.addEventListener("click", function(){ box.classList.toggle("open"); });
+    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
+    box.tabIndex=0; box.setAttribute("role","button");
+  }
+  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
+
+  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
+  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
+
+  // backdrop click closes both
+  bd.addEventListener("click", function(){
+    domainModal.classList.remove("show");
+    quadModal.classList.remove("show");
+    hideBD();
   });
-  chipConcept.addEventListener("click", function(){ time="origin"; render(); });
-  chipLive.addEventListener("click", function(){ time="now"; render(); });
-  chipRoadmap.addEventListener("click", function(){ time="post"; render(); });
+  quadClose.addEventListener("click", function(){ quadModal.classList.remove("show"); hideBD(); });
+  domainClose.addEventListener("click", function(){ domainModal.classList.remove("show"); quadModal.classList.remove("show"); hideBD(); });
 
-  // Close
-  bd.addEventListener("click", close);
-  mClose.addEventListener("click", close);
-  document.getElementById("mReturn").addEventListener("click", close);
-
-  // Diamond clicks
-  document.getElementById("dHub").addEventListener("click", function(){ open("hub"); });
-  document.getElementById("dUci").addEventListener("click", function(){ open("uci"); });
-  document.getElementById("dScore").addEventListener("click", function(){ open("score"); });
-  document.getElementById("dReg").addEventListener("click", function(){ open("reg"); });
-
-  // Keyboard accessibility
-  ["dHub","dUci","dScore","dReg"].forEach(function(id){
+  // quadrants
+  function bindQuad(id,name){
     var el=document.getElementById(id);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
-    });
-  });
+    el.addEventListener("click", function(){ openQuad(name); });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openQuad(name);} });
+  }
+  bindQuad("qEngine","ENGINE");
+  bindQuad("qPlatform","PLATFORM");
+  bindQuad("qInstruments","INSTRUMENTS");
+  bindQuad("qGovernance","GOVERNANCE");
 
-  // Init labels
-  setLensLabels();
 })();
 </script>
 

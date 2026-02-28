@@ -1,10 +1,9 @@
 <!-- TNT — /index.html
-     INDEX · PRIMARY ROUTER (LAYER 1)
-     FIXES (NO VISUAL DRIFT):
-       - Wire EN / 中文 / ES buttons (they were dead)
-       - Ensure documentElement.lang is set
-       - Make q() canonical + URL-safe (encodeURIComponent)
-       - Keep existing look/geometry unchanged
+     INDEX · PRIMARY ROUTER (LAYER 1) · EMULATE DOOR MATERIAL (NO COAL)
+     GOAL:
+       - Make diamonds + brand read opal/violet lacquer exactly like the Door
+       - Keep current geometry + routing unchanged
+       - Keep EN/中文/ES toggle working
      ROUTES:
        - STRUCTURE  → /home/
        - PRODUCTS   → /explore/
@@ -28,14 +27,21 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+/* ui.css owns field */
 a{color:inherit;text-decoration:none}
 
 :root{
   --R:170px;
   --D:260px;
-  --opalA:rgba(200,170,255,.22);
-  --opalB:rgba(120,70,255,.16);
-  --goldSoft:rgba(212,175,55,.45);
+
+  /* Door-matched opal/violet readability layer */
+  --opalA:rgba(210,190,255,.22);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+
+  --goldSoft:rgba(212,175,55,.42);
+
+  /* Deep material base (same as Door) */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
@@ -50,7 +56,7 @@ a{color:inherit;text-decoration:none}
   display:flex;gap:10px;align-items:center;
 }
 
-/* Brand */
+/* Brand (Door-matched opal glass) */
 .brand{
   position:fixed;
   left:50%;
@@ -62,9 +68,10 @@ a{color:inherit;text-decoration:none}
   border-radius:999px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 30% 30%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 70% 60%, var(--opalB), transparent 72%),
-    linear-gradient(160deg, rgba(0,0,0,.25), rgba(0,0,0,.12));
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
+    radial-gradient(circle at 20% 40%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--opalB), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
   backdrop-filter:blur(10px);
   box-shadow:0 24px 80px rgba(0,0,0,.45);
   pointer-events:none;
@@ -73,20 +80,51 @@ a{color:inherit;text-decoration:none}
   font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.8;
+  opacity:.78;
   margin:0 0 6px 0;
 }
 .brand .t{
   font-weight:950;
   font-size:44px;
-  letter-spacing:1px;
+  letter-spacing:1.2px;
   margin:0;
+  line-height:1.02;
 }
 .brand .s{
-  font-size:14px;
-  opacity:.9;
+  opacity:.88;
+  font-size:13.5px;
   margin:8px 0 0;
-  line-height:1.4;
+  line-height:1.35;
+  max-width:min(860px,94vw);
+}
+
+/* subtle interior lattice (no field ownership) */
+.lattice{
+  position:fixed;inset:0;z-index:20;
+  pointer-events:none;
+  opacity:.08;
+  mix-blend-mode:screen;
+}
+.lattice::before{
+  content:"";
+  position:absolute;inset:-40%;
+  transform:rotate(45deg);
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px),
+    repeating-linear-gradient(90deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px);
+}
+.lattice::after{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), transparent 58%);
 }
 
 /* Stage */
@@ -101,7 +139,7 @@ a{color:inherit;text-decoration:none}
   pointer-events:none;
 }
 
-/* Diamonds */
+/* Massive diamonds (Door-matched opal/violet lacquer) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -116,18 +154,20 @@ a{color:inherit;text-decoration:none}
   touch-action:manipulation;
 
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 50%),
-    radial-gradient(circle at 70% 75%, var(--opalA), transparent 60%),
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
+    radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
+    radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
+    radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:
-    0 50px 160px rgba(0,0,0,.85),
+    0 50px 160px rgba(0,0,0,.86),
     0 0 40px rgba(212,175,55,.22),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
-  transition:transform .18s ease, border-color .18s ease;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
   overflow:hidden;
 }
 .d::before{
@@ -138,10 +178,24 @@ a{color:inherit;text-decoration:none}
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.32);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 52px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.78);
 }
 .d:active{
   transform:translate(-50%,-50%) rotate(45deg) scale(.99);
@@ -163,17 +217,24 @@ a{color:inherit;text-decoration:none}
   padding:18px;
   gap:10px;
   pointer-events:none;
+  user-select:none;
 }
 .lab{
   font-weight:950;
   font-size:22px;
   letter-spacing:1px;
+  text-shadow:0 0 18px rgba(255,255,255,.10);
 }
 .sub{
   font-size:14px;
-  opacity:.9;
-  line-height:1.4;
+  opacity:.90;
+  line-height:1.35;
   max-width:24em;
+}
+.pref{
+  font-weight:950;
+  font-style:italic;
+  letter-spacing:.2px;
 }
 
 /* Fine print */
@@ -184,13 +245,16 @@ a{color:inherit;text-decoration:none}
   transform:translateX(-50%);
   z-index:120;
   font-size:12px;
-  opacity:.7;
+  opacity:.70;
   pointer-events:none;
+  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
 </style>
 </head>
 
 <body>
+
+<div class="lattice" aria-hidden="true"></div>
 
 <div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
@@ -214,7 +278,7 @@ a{color:inherit;text-decoration:none}
   <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
     <div class="inner">
       <div class="lab" id="labStructure">STRUCTURE</div>
-      <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
+      <div class="sub" id="subStructure"><span class="pref" id="prefStructure">Start:</span> Clear foundations.</div>
     </div>
   </div>
 
@@ -222,7 +286,7 @@ a{color:inherit;text-decoration:none}
   <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products and innovation">
     <div class="inner">
       <div class="lab" id="labProducts">PRODUCTS & INNOVATION</div>
-      <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
+      <div class="sub" id="subProducts"><span class="pref" id="prefProducts">Start:</span> Tools you can use.</div>
     </div>
   </div>
 
@@ -265,7 +329,12 @@ a{color:inherit;text-decoration:none}
            "&depth="+encodeURIComponent(D);
   }
 
-  // Language buttons (WAS MISSING)
+  // wire door link
+  function wireLinks(){
+    document.getElementById("btnDoor").href = "/door/" + q();
+  }
+
+  // language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -274,10 +343,6 @@ a{color:inherit;text-decoration:none}
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
-  }
-
-  function wireLinks(){
-    document.getElementById("btnDoor").href = "/door/" + q();
   }
 
   function setLang(next){
@@ -298,40 +363,46 @@ a{color:inherit;text-decoration:none}
   paintLang();
   wireLinks();
 
-  // Optional page copy i18n (kept minimal; no abstract terms)
+  // i18n (minimal)
   function renderLang(){
     if(lang==="zh"){
       document.getElementById("bt").textContent="选择路径";
       document.getElementById("bs").textContent="两条路。都通向清晰。";
       document.getElementById("labStructure").textContent="结构";
-      document.getElementById("subStructure").textContent="定义。边界。清晰基础。";
+      document.getElementById("prefStructure").textContent="开始：";
+      document.getElementById("subStructure").lastChild.nodeValue=" 清晰基础。";
       document.getElementById("labProducts").textContent="产品与创新";
-      document.getElementById("subProducts").textContent="工具。平台。可用内容。";
+      document.getElementById("prefProducts").textContent="开始：";
+      document.getElementById("subProducts").lastChild.nodeValue=" 可用工具。";
       document.getElementById("btnDoor").textContent="门";
       document.getElementById("foot").textContent="细则：结构防漂移 · 工具需要结构";
     }else if(lang==="es"){
       document.getElementById("bt").textContent="ELEGIR RUTA";
       document.getElementById("bs").textContent="Dos caminos. Ambos llevan a claridad.";
       document.getElementById("labStructure").textContent="ESTRUCTURA";
-      document.getElementById("subStructure").textContent="Definiciones. Límites. Base clara.";
+      document.getElementById("prefStructure").textContent="Inicio:";
+      document.getElementById("subStructure").lastChild.nodeValue=" Base clara.";
       document.getElementById("labProducts").textContent="PRODUCTOS E INNOVACIÓN";
-      document.getElementById("subProducts").textContent="Herramientas. Plataformas. Usable.";
+      document.getElementById("prefProducts").textContent="Inicio:";
+      document.getElementById("subProducts").lastChild.nodeValue=" Herramientas utilizables.";
       document.getElementById("btnDoor").textContent="PUERTA";
       document.getElementById("foot").textContent="Letra pequeña: estructura evita deriva · herramientas requieren estructura";
     }else{
       document.getElementById("bt").textContent="CHOOSE PATH";
       document.getElementById("bs").textContent="Two ways in. Both lead to clarity.";
       document.getElementById("labStructure").textContent="STRUCTURE";
-      document.getElementById("subStructure").textContent="Definitions. Boundaries. Clear foundations.";
+      document.getElementById("prefStructure").textContent="Start:";
+      document.getElementById("subStructure").lastChild.nodeValue=" Clear foundations.";
       document.getElementById("labProducts").textContent="PRODUCTS & INNOVATION";
-      document.getElementById("subProducts").textContent="Tools. Platforms. What you can use.";
+      document.getElementById("prefProducts").textContent="Start:";
+      document.getElementById("subProducts").lastChild.nodeValue=" Tools you can use.";
       document.getElementById("btnDoor").textContent="DOOR";
       document.getElementById("foot").textContent="Fine print: structure prevents drift · tools require structure";
     }
   }
   renderLang();
 
-  // Routing
+  // routing
   function goStructure(){ location.href="/home/" + q(); }
   function goProducts(){ location.href="/explore/" + q(); }
 

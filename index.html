@@ -1,12 +1,10 @@
-<!-- TNT — /index.html  (ROOT DOOR)  — EN/ZH/ES + tighter diamonds + top banner
-     ROUTES:
-       ENTER SITE       → /home/
-       VIEW LAUNCHPAD   → /prelude/
-       EXIT             → /
-     NOTES:
-       - No competing UI: top bar + banner + 2 diamonds + footer only
-       - Language buttons do NOT wrap
-       - Diamonds are closer (R reduced)
+<!-- TNT — /index.html
+     ROOT RETURN PAGE (NOT COMPASS)
+     CTAs:
+       - PRELUDE -> /prelude/
+       - DOOR    -> /door/
+       - ENTER   -> /home/
+     EN/中文/ES + state carry
 -->
 
 <!doctype html>
@@ -14,7 +12,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR</title>
+<title>ROOT</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -22,241 +20,91 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-
-/* Root stacking */
-#doorRoot{position:relative;z-index:10}
-
-/* Top bar (never wrap) */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;z-index:320;
-  pointer-events:none;
+.wrap{
+  width:min(980px,92vw);
+  margin:0 auto;
+  padding:90px 0 40px;
+  text-align:center;
+  position:relative;
+  z-index:10;
 }
-.top .left,.top .right{
-  display:flex;gap:12px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
-  pointer-events:auto;
+.h1{margin:0;font-weight:950;letter-spacing:2px;font-size:38px}
+.p{margin:12px auto 0;max-width:70ch;opacity:.86;line-height:1.5}
+.row{
+  margin:28px auto 0;
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
 }
-.top .btn{white-space:nowrap}
-
-/* Banner (simple, non-competing) */
-.banner{
-  position:fixed;
-  top:70px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:280;
-  width:min(980px,94vw);
-  padding:14px 14px;
-  border-radius:18px;
+.card{
+  width:min(320px,92vw);
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 20% 30%, rgba(210,190,255,.12), transparent 70%),
-    radial-gradient(circle at 80% 60%, rgba(120,70,255,.10), transparent 72%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+  background:rgba(0,0,0,.18);
   backdrop-filter:blur(10px);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  text-align:center;
-  pointer-events:none;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px;
+  text-align:left;
 }
-.banner .h{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.6px;
-  font-size:14px;
-  text-transform:uppercase;
-  opacity:.92;
-}
-.banner .p{
-  margin:6px 0 0;
-  font-size:12.75px;
-  line-height:1.35;
-  opacity:.82;
-}
-
-/* Stage */
-.stage{
-  position:fixed;left:50%;top:56%;
-  transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:200;
-  pointer-events:none;
-}
-
-/* Pearlescent diamond */
-:root{
-  --D:min(300px, 54vw);
-  --R:calc(var(--D) * .68); /* tighter than before */
-  --deepA:#0f1624;
-  --deepB:#070c14;
-  --goldGlow:rgba(212,175,55,.55);
-}
-
-.diamond{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:40px;
-  pointer-events:auto;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  overflow:hidden;
-
-  background:
-    radial-gradient(circle at 24% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.55) 12%, transparent 38%),
-    radial-gradient(circle at 78% 30%, rgba(160,120,255,.78) 0%, transparent 62%),
-    radial-gradient(circle at 62% 86%, rgba(110,230,255,.64) 0%, transparent 74%),
-    radial-gradient(circle at 46% 46%, rgba(255,255,255,.16) 0%, transparent 62%),
-    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, #04060a 100%);
-
-  border:1px solid rgba(255,255,255,.72);
-
-  box-shadow:
-    0 120px 260px rgba(0,0,0,.95),
-    0 0 180px var(--goldGlow),
-    inset 0 6px 0 rgba(255,255,255,.92),
-    inset 0 -140px 220px rgba(0,0,0,.98);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-
-.diamond::after{
-  content:"";
-  position:absolute;
-  left:10%; right:10%;
-  top:10%;
-  height:34%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.26), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.95;
-}
-
-.diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
-  border-color:rgba(255,255,255,.82);
-  box-shadow:
-    0 140px 300px rgba(0,0,0,.98),
-    0 0 240px rgba(212,175,55,.72),
-    inset 0 6px 0 rgba(255,255,255,1),
-    inset 0 -140px 220px rgba(0,0,0,.98);
-}
-.diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-
-/* positions */
-.dTop{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.dBot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-
-/* inner text upright */
-.inner{
-  transform:rotate(-45deg);
-  width:100%;height:100%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:22px;
-  pointer-events:none;
-  user-select:none;
-}
-.lab{
-  font-weight:950;
-  letter-spacing:1px;
-  font-size:clamp(18px, 3.2vw, 24px);
-}
-.sub{
-  margin-top:10px;
-  opacity:.92;
-  line-height:1.25;
-  font-size:clamp(13px, 2.6vw, 16px);
-}
-
-/* footer */
-.footer{
-  position:fixed;left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
-  pointer-events:none;
-}
-.sig{
-  margin-top:6px;
-  letter-spacing:3px;
-  font-size:11px;
-  opacity:.65;
-}
-
-/* small screens */
-@media (max-width:420px){
-  :root{ --D:min(276px, 78vw); --R:calc(var(--D) * .66); }
-  .top{padding:0 12px}
-  .top .left,.top .right{gap:10px}
-  .banner{top:66px}
+.card h3{margin:0;font-weight:950;letter-spacing:.4px}
+.card p{margin:8px 0 0;opacity:.82;line-height:1.45}
+.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:200;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;
 }
 </style>
 </head>
 
 <body>
-<div id="doorRoot">
 
-  <div class="top" aria-label="Door controls">
-    <div class="left">
-      <a class="btn" id="btnExit" href="/">EXIT</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
-  </div>
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
 
-  <div class="banner" aria-hidden="true">
-    <div class="h" id="bH">WELCOME</div>
-    <div class="p" id="bP">Two entrances. One structure. Your pace.</div>
-  </div>
+<div class="wrap">
+  <div class="h1" id="ttl">ROOT</div>
+  <div class="p" id="tag">Minimal return page. Prelude is the gateway. Door is the compass.</div>
 
-  <div class="stage" aria-label="Door fork">
-    <div class="diamond dTop" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
-      <div class="inner">
-        <div class="lab" id="tEnter">ENTER SITE</div>
-        <div class="sub" id="sEnter">Go to the main hub.</div>
+  <div class="row">
+    <div class="card">
+      <h3 id="hPrelude">PRELUDE</h3>
+      <p id="pPrelude">Gateway posture. Choose informal or formal entry into Door.</p>
+      <div class="actions">
+        <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
       </div>
     </div>
 
-    <div class="diamond dBot" id="dPrelude" role="button" tabindex="0" aria-label="View launchpad">
-      <div class="inner">
-        <div class="lab" id="tPrelude">VIEW LAUNCHPAD</div>
-        <div class="sub" id="sPrelude">Get oriented first.</div>
+    <div class="card">
+      <h3 id="hDoor">DOOR</h3>
+      <p id="pDoor">Compass spine. N/E/S/W with lenses.</p>
+      <div class="actions">
+        <a class="btn" id="goDoor" href="/door/">OPEN</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 id="hEnter">ENTER</h3>
+      <p id="pEnter">Go to the primary hub.</p>
+      <div class="actions">
+        <a class="btn" id="goHome" href="/home/">OPEN</a>
       </div>
     </div>
   </div>
 
-  <div class="footer" id="foot">
-    Orientation before scale · Scale before claims
-    <div class="sig">COGRID.NET</div>
-  </div>
-
+  <div class="p" style="margin-top:22px;opacity:.72">COGRID.NET</div>
 </div>
 
 <script>
 (function(){
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -268,82 +116,59 @@ a{color:inherit;text-decoration:none}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  // links
-  document.getElementById("btnExit").href="/"+q();
+  document.getElementById("goPrelude").href="/prelude/"+q();
+  document.getElementById("goDoor").href="/door/"+q();
+  document.getElementById("goHome").href="/home/"+q();
 
-  function goHome(){ location.href="/home/"+q(); }
-  function goPrelude(){ location.href="/prelude/"+q(); }
-
-  var a=document.getElementById("dEnter");
-  var b=document.getElementById("dPrelude");
-  a.addEventListener("click", goHome);
-  b.addEventListener("click", goPrelude);
-  a.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHome(); }});
-  b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude(); }});
-
-  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-  function paint(){
+  function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
-  paint();
-
+  paintLang();
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    render();
-    paint();
+    location.href="/index.html"+q();
   }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
 
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  function render(){
-    if(lang==="zh"){
-      document.getElementById("bH").textContent="欢迎";
-      document.getElementById("bP").textContent="两个入口 · 一个结构 · 按你的节奏";
-      document.getElementById("tEnter").textContent="进入网站";
-      document.getElementById("sEnter").textContent="进入主枢纽。";
-      document.getElementById("tPrelude").textContent="查看发射台";
-      document.getElementById("sPrelude").textContent="先获得方向。";
-      document.getElementById("foot").firstChild.nodeValue="先导览 · 再规模 · 再主张";
-    }else if(lang==="es"){
-      document.getElementById("bH").textContent="BIENVENIDO";
-      document.getElementById("bP").textContent="Dos entradas · Una estructura · A tu ritmo";
-      document.getElementById("tEnter").textContent="ENTRAR AL SITIO";
-      document.getElementById("sEnter").textContent="Ir al hub principal.";
-      document.getElementById("tPrelude").textContent="VER PLATAFORMA";
-      document.getElementById("sPrelude").textContent="Oriéntate primero.";
-      document.getElementById("foot").firstChild.nodeValue="Orientación · Escala · Afirmaciones";
-    }else{
-      document.getElementById("bH").textContent="WELCOME";
-      document.getElementById("bP").textContent="Two entrances. One structure. Your pace.";
-      document.getElementById("tEnter").textContent="ENTER SITE";
-      document.getElementById("sEnter").textContent="Go to the main hub.";
-      document.getElementById("tPrelude").textContent="VIEW LAUNCHPAD";
-      document.getElementById("sPrelude").textContent="Get oriented first.";
-      document.getElementById("foot").firstChild.nodeValue="Orientation before scale · Scale before claims";
-    }
+  if(lang==="zh"){
+    document.getElementById("ttl").textContent="主页";
+    document.getElementById("tag").textContent="最小返回页：前置页=入口姿态，门=罗盘。";
+    document.getElementById("hPrelude").textContent="前置页";
+    document.getElementById("pPrelude").textContent="入口姿态：通俗/正式进入门。";
+    document.getElementById("hDoor").textContent="门";
+    document.getElementById("pDoor").textContent="罗盘主干：N/E/S/W + 透镜。";
+    document.getElementById("hEnter").textContent="进入";
+    document.getElementById("pEnter").textContent="进入主枢纽。";
+    document.querySelectorAll(".actions .btn").forEach(function(b){ b.textContent="打开"; });
+  }else if(lang==="es"){
+    document.getElementById("ttl").textContent="INICIO";
+    document.getElementById("tag").textContent="Página mínima: Preludio = postura, Puerta = brújula.";
+    document.getElementById("hPrelude").textContent="PRELUDIO";
+    document.getElementById("pPrelude").textContent="Postura de entrada: informal/formal hacia Puerta.";
+    document.getElementById("hDoor").textContent="PUERTA";
+    document.getElementById("pDoor").textContent="Eje brújula: N/E/S/O con lentes.";
+    document.getElementById("hEnter").textContent="ENTRAR";
+    document.getElementById("pEnter").textContent="Ir al hub principal.";
+    document.querySelectorAll(".actions .btn").forEach(function(b){ b.textContent="ABRIR"; });
   }
-  render();
 })();
 </script>
 

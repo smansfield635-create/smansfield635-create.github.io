@@ -7,176 +7,151 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 
-/* ============================= */
-/* STRUCTURE LOCK                */
-/* ============================= */
+/* ------------------------------------------------ */
+/* HARD RESET — DOOR OWNS ITS SURFACE              */
+/* ------------------------------------------------ */
 
-:root{
-  --D:280px;
-  --R:200px;
-
-  /* TRUE PEARL BASE */
-  --pearl-deep-1:#121a2b;
-  --pearl-deep-2:#0b1220;
-}
-
-/* ============================= */
-/* TOP CONTROLS                  */
-/* ============================= */
-
-.top-left{
-  position:fixed;
-  left:20px;
-  top:20px;
-  z-index:300;
-  display:flex;
-  gap:12px;
-}
-
-.top-right{
-  position:fixed;
-  right:20px;
-  top:20px;
-  z-index:300;
-  display:flex;
-  gap:12px;
-}
-
-/* ============================= */
-/* BANNER (GLASS, NOT COMPETING) */
-/* ============================= */
-
-.banner{
-  position:fixed;
-  left:50%;
-  top:80px;
-  transform:translateX(-50%);
-  width:min(1000px,92vw);
-  padding:32px 40px;
-  border-radius:28px;
-
+body{
   background:
-    linear-gradient(160deg, rgba(20,24,40,.88), rgba(14,18,30,.90));
-
-  border:1px solid rgba(255,255,255,.25);
-  backdrop-filter:blur(14px);
-
-  box-shadow:
-    0 60px 140px rgba(0,0,0,.75);
-
-  text-align:center;
-  z-index:10;
+    radial-gradient(circle at 20% 10%, #ff7a18 0%, #c83c00 35%, #8f1e00 60%, #3b0000 100%);
 }
 
-.banner h1{
-  margin:0;
-  font-size:56px;
+/* Kill any global overlays */
+body::before,
+body::after{
+  display:none !important;
+  content:none !important;
+}
+
+/* ------------------------------------------------ */
+/* TOP CONTROLS                                    */
+/* ------------------------------------------------ */
+
+.top{
+  position:fixed;
+  top:18px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  padding:0 24px;
+  z-index:300;
+}
+
+.top-left,
+.top-right{
+  display:flex;
+  gap:14px;
+}
+
+/* ------------------------------------------------ */
+/* CENTER TITLE (NO GLASS BANNER)                  */
+/* ------------------------------------------------ */
+
+.title-block{
+  position:fixed;
+  top:110px;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  z-index:50;
+}
+
+.title-block h1{
+  font-size:60px;
   letter-spacing:2px;
+  margin:0;
   font-weight:900;
 }
 
-.banner p{
-  margin:18px 0 0;
-  font-size:17px;
-  line-height:1.7;
-  opacity:.95;
+.title-block p{
+  margin-top:16px;
+  font-size:18px;
+  line-height:1.6;
+  opacity:.92;
 }
 
-/* ============================= */
-/* STAGE                         */
-/* ============================= */
+/* ------------------------------------------------ */
+/* STAGE                                           */
+/* ------------------------------------------------ */
 
 .stage{
   position:fixed;
-  left:50%;
   top:58%;
+  left:50%;
   transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:200;
+  width:760px;
+  height:760px;
   pointer-events:none;
+  z-index:200;
 }
 
-/* ============================= */
-/* TRUE PEARLESCENT GEM          */
-/* ============================= */
+/* ------------------------------------------------ */
+/* TRUE PEARLESCENT GEM STACK                      */
+/* ------------------------------------------------ */
 
 .diamond{
-  width:var(--D);
-  height:var(--D);
+  width:300px;
+  height:300px;
   position:absolute;
   left:50%;
   top:50%;
   transform-origin:center;
-  border-radius:36px;
-  cursor:pointer;
-  pointer-events:auto;
+  border-radius:40px;
   transform:translate(-50%,-50%) rotate(45deg);
+  pointer-events:auto;
+  cursor:pointer;
 
-  /* RESTORED PEARL STACK */
   background:
-    /* sharp specular highlight */
-    radial-gradient(circle at 18% 12%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.7) 8%, transparent 35%),
+    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.6) 12%, transparent 38%),
+    radial-gradient(circle at 75% 28%, rgba(160,120,255,.75) 0%, transparent 60%),
+    radial-gradient(circle at 62% 85%, rgba(110,230,255,.65) 0%, transparent 75%),
+    linear-gradient(165deg, #0f1624 0%, #070c14 60%, #04060a 100%);
 
-    /* soft pearl center bloom */
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.22) 0%, transparent 60%),
-
-    /* violet shimmer */
-    radial-gradient(circle at 78% 25%, rgba(160,120,255,.55) 0%, transparent 65%),
-
-    /* cyan shimmer */
-    radial-gradient(circle at 60% 85%, rgba(110,230,255,.45) 0%, transparent 75%),
-
-    /* deep but NOT crushed base */
-    linear-gradient(165deg, var(--pearl-deep-1) 0%, var(--pearl-deep-2) 70%);
-
-  border:1px solid rgba(255,255,255,.55);
+  border:1px solid rgba(255,255,255,.7);
 
   box-shadow:
-    0 120px 240px rgba(0,0,0,.85),
-    0 0 120px rgba(212,175,55,.45),
-    inset 0 3px 0 rgba(255,255,255,.85),
-    inset 0 -60px 120px rgba(0,0,0,.75);
+    0 140px 280px rgba(0,0,0,.95),
+    0 0 180px rgba(212,175,55,.55),
+    inset 0 5px 0 rgba(255,255,255,.9),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 
   transition:transform .18s ease, box-shadow .18s ease;
 }
 
 .diamond:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.06);
   box-shadow:
-    0 140px 280px rgba(0,0,0,.9),
-    0 0 180px rgba(212,175,55,.65),
-    inset 0 3px 0 rgba(255,255,255,.95),
-    inset 0 -60px 120px rgba(0,0,0,.75);
+    0 160px 320px rgba(0,0,0,.98),
+    0 0 240px rgba(212,175,55,.75),
+    inset 0 5px 0 rgba(255,255,255,1),
+    inset 0 -120px 180px rgba(0,0,0,.98);
 }
 
-/* INNER TEXT */
 .inner{
   transform:rotate(-45deg);
-  width:100%;
-  height:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:24px;
+  height:100%;
+  padding:28px;
 }
 
 .lab{
-  font-size:22px;
+  font-size:24px;
   font-weight:900;
   letter-spacing:1px;
 }
 
 .sub{
-  margin-top:14px;
-  font-size:16px;
+  margin-top:18px;
+  font-size:18px;
   opacity:.95;
 }
 
@@ -185,32 +160,34 @@ a{color:inherit;text-decoration:none}
   font-style:italic;
 }
 
-/* Placement */
+/* Positioning */
 
 .topDiamond{
-  transform:translate(-50%,-50%) translate(0,-200px) rotate(45deg);
+  transform:translate(-50%,-50%) translate(0,-220px) rotate(45deg);
 }
 
 .bottomDiamond{
-  transform:translate(-50%,-50%) translate(0,200px) rotate(45deg);
+  transform:translate(-50%,-50%) translate(0,220px) rotate(45deg);
 }
 
-/* Footer */
+/* ------------------------------------------------ */
+/* FOOTER                                          */
+/* ------------------------------------------------ */
 
 .footer{
   position:fixed;
-  left:50%;
   bottom:40px;
+  left:50%;
   transform:translateX(-50%);
-  font-size:14px;
-  opacity:.9;
-  z-index:200;
+  text-align:center;
+  font-size:15px;
+  opacity:.95;
 }
 
 .sig{
-  margin-top:8px;
-  letter-spacing:3px;
+  margin-top:10px;
   font-size:12px;
+  letter-spacing:3px;
   opacity:.7;
 }
 </style>
@@ -218,18 +195,19 @@ a{color:inherit;text-decoration:none}
 
 <body>
 
-<div class="top-left">
-  <a class="btn" href="/">EXIT</a>
-  <a class="btn" href="/prelude/">PRELUDE</a>
+<div class="top">
+  <div class="top-left">
+    <a class="btn" href="/">EXIT</a>
+    <a class="btn" href="/prelude/">PRELUDE</a>
+  </div>
+  <div class="top-right">
+    <button class="btn">EN</button>
+    <button class="btn">中文</button>
+    <button class="btn">ES</button>
+  </div>
 </div>
 
-<div class="top-right">
-  <button class="btn">EN</button>
-  <button class="btn">中文</button>
-  <button class="btn">ES</button>
-</div>
-
-<div class="banner">
+<div class="title-block">
   <h1>ENTER</h1>
   <p>
     This is a structural site.<br/>

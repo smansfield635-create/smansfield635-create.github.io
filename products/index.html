@@ -1,15 +1,17 @@
-<!-- TNT — /products/index.html  (PRODUCTS · Catalog Spine · DOOR-UNIFORM · TAP-SAFE)
-     CHANGE ONLY (what you asked):
-       - SAME content (ENERGY / EDUCATION / SOFTWARE / COMMERCIAL + same subtitles, just shorter)
-       - DOOR-uniform jewel material (no “coal”)
-       - NO outer/big diamond shell (inner diamonds only)
-       - Diamonds slightly smaller + natural gaps
-       - Text nudged slightly upward inside diamonds
-       - Tap reliability locked (no blur stacks, no tap blockers)
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css only
-       - Does NOT style html/body background (ui.css owns field)
-       - No new state keys (gd_lang/gd_style/gd_time only)
+<!-- TNT — /products/index.html
+     PRODUCTS · LANDING (SELLABLE SURFACES ONLY)
+     PURPOSE (LOCK):
+       - Consolidated product taxonomy hub (7 categories).
+       - No internal doctrine marketing. No laws copy. No fusion gain claims.
+       - 1–2 sentence summaries per product node.
+       - Each node declares licensing classes: SaaS / Enterprise / Government.
+       - Tap-safe accordion (open/close per row).
+       - Language is page-level only (EN / 中文 / ES).
+       - State carry: lang/style/time/depth (URL) + gd_* (localStorage).
+     OWNERSHIP:
+       - ui.css owns field (no html/body background styling)
+       - branch.css for geometry primitives (not redefined)
+       - instruments.js canonical state loader
 -->
 
 <!doctype html>
@@ -17,283 +19,388 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Catalog Spine</title>
+<title>PRODUCTS · Platforms</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-:root{
-  /* spacing */
-  --R:162px;          /* slightly wider radius */
-  --D:192px;          /* slightly smaller diamonds for gaps */
-
-  /* DOOR-grade jewel */
-  --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --obs3:#05070c;
-}
-
-/* page neutral (ui.css owns field) */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+/* DO NOT TOUCH FIELD — ui.css owns html/body background */
 a{color:inherit;text-decoration:none}
 
-/* top-left */
+:root{--dockH:88px}
+
+/* page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 22px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:5;
+}
+
+/* top controls */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* brand pill (NO blur) */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;
-  padding:10px 14px;border-radius:999px;
+/* header */
+.header{
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  pointer-events:none;
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.78;margin:0 0 8px 0}
-.brand .t{margin:0;font-size:46px;font-weight:950;letter-spacing:.25px;line-height:1.02}
-.brand .s{margin:8px 0 0;opacity:.84;font-size:15px;line-height:1.25}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
+.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
 
-/* stage */
-.stage{
-  position:fixed;left:50%;top:56%;
-  transform:translate(-50%,-50%);
-  width:min(760px,94vw);
-  height:min(760px,94vw);
-  z-index:60;
-  pointer-events:auto;
+/* list */
+.stackList{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.stackRow{
+  --domc:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
-
-/* diamonds (DOOR-grade) */
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:28px;
-  cursor:pointer;
+.stackHead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  pointer-events:auto;
   touch-action:manipulation;
-
+}
+.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35;max-width:72ch}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.stackBody{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
   background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.stackRow.open .stackBody{display:block}
 
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
+/* license chips */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  font-weight:950;letter-spacing:.2px;font-size:12px;
+}
+.chip.on{border-color:rgba(212,175,55,.55);box-shadow:0 0 14px rgba(212,175,55,.18)}
+/* actions */
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px}
 
-  transition:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
-}
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute;left:12%;right:12%;top:10%;height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.88;
-  transform:rotate(-10deg);
-  pointer-events:none;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.01);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-  border-color:rgba(212,175,55,.28);
-}
-.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
-
-/* placement */
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
-/* inner text (nudged UP slightly) */
-.inner{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
-  transform-origin:center;
-}
-.inner .shift{transform:translateY(-6px)}
-.lab{
-  font-weight:950;
-  letter-spacing:.9px;
-  font-size:18px;
-  text-shadow:0 0 18px rgba(255,255,255,.12);
-}
-.sub{
-  font-size:13px;
-  opacity:.86;
-  line-height:1.25;
-  max-width:14.5em;
-}
-
-/* core */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:62px;height:62px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;opacity:.92;
-  pointer-events:none;
-}
-
-/* dock (NO blur; tap-safe wrapper) */
+/* dock */
 .dock{
   position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;
-  width:min(900px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  pointer-events:none;
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-.dock .btn{pointer-events:auto}
-
-/* responsive */
-@media (max-width:560px){
-  :root{ --R:146px; --D:176px; }
-  .brand .t{font-size:40px}
-  .stage{top:58%}
-}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
 </style>
 </head>
 
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnHub" href="/home/">HUB</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnHome" href="/home/">HOME</a>
+  <a class="btn" id="btnExit" href="/index.html">INDEX</a>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <p class="k">CARDINAL AXIS</p>
-  <h1 class="t">Products</h1>
-  <p class="s">Four volumes · One catalog spine</p>
+<div class="top-right">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="stage" aria-label="Products catalog">
-  <div class="d d-n" id="goEnergy" role="button" tabindex="0" aria-label="Energy">
-    <div class="inner"><div class="shift">
-      <div class="lab">ENERGY</div>
-      <div class="sub">Industrial plasma · Readiness</div>
-    </div></div>
+<div class="page">
+
+  <div class="header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">Platforms</h1>
+    <p class="s" id="hs">Sellable surfaces only. Doctrine lives in Laws. Instrumentation lives in Gauges.</p>
   </div>
 
-  <div class="d d-e" id="goEducation" role="button" tabindex="0" aria-label="Education">
-    <div class="inner"><div class="shift">
-      <div class="lab">EDUCATION</div>
-      <div class="sub">Language · Learning</div>
-    </div></div>
-  </div>
+  <div class="stackList" id="stackList"></div>
 
-  <div class="d d-s" id="goSoftware" role="button" tabindex="0" aria-label="Software">
-    <div class="inner"><div class="shift">
-      <div class="lab">SOFTWARE</div>
-      <div class="sub">Tools · Dashboards</div>
-    </div></div>
-  </div>
-
-  <div class="d d-w" id="goCommercial" role="button" tabindex="0" aria-label="Commercial">
-    <div class="inner"><div class="shift">
-      <div class="lab">COMMERCIAL</div>
-      <div class="sub">Deploy · License</div>
-    </div></div>
-  </div>
-
-  <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-  <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
 <script>
 (function(){
-  var qs = new URLSearchParams(location.search);
+  // ===== State hydration (URL: lang/style/time/depth; LS: gd_*) =====
+  var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  if(time==="trajectory") time="post";
-  if(lang!=="en" && lang!=="zh") lang="en";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function q(){
-    var p = new URLSearchParams();
-    p.set("lang", lang);
-    p.set("style", style);
-    p.set("time", time);
-    return "?" + p.toString();
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
+    return "?"+p.toString();
   }
 
-  document.getElementById("btnHub").href  = "/home/" + q();
-  document.getElementById("btnExit").href = "/door/" + q();
+  // Wire nav
+  document.getElementById("btnHome").href="/home/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockHome").href="/home/"+q();
+  document.getElementById("dockExplore").href="/explore/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
 
-  document.getElementById("dockTerminal").href = "/index.html" + q();
-  document.getElementById("dockProducts").href = "/products/" + q();
-  document.getElementById("dockLaws").href = "/laws/" + q();
-  document.getElementById("dockGauges").href = "/gauges/" + q();
-  document.getElementById("dockLinks").href = "/links/" + q();
+  // Page language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/products/"+q();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
 
-  function go(path){ window.location.href = path + q(); }
+  // i18n header
+  var H = {
+    en:{k:"PRODUCTS",t:"Platforms",s:"Sellable surfaces only. Doctrine lives in Laws. Instrumentation lives in Gauges.",
+        open:"OPEN",doc:"DOCS",spec:"SPEC",saas:"SaaS",ent:"Enterprise",gov:"Government"},
+    zh:{k:"产品",t:"平台",s:"仅可售执行面。内部教义在法则。仪表与测量在量规。",
+        open:"打开",doc:"文档",spec:"规格",saas:"SaaS",ent:"企业",gov:"政府"},
+    es:{k:"PRODUCTOS",t:"Plataformas",s:"Solo superficies vendibles. Doctrina en Leyes. Instrumentación en Medidores.",
+        open:"ABRIR",doc:"DOCS",spec:"ESPEC",saas:"SaaS",ent:"Empresa",gov:"Gobierno"}
+  };
+  var T = (lang==="zh")?H.zh:(lang==="es")?H.es:H.en;
+  document.getElementById("hk").textContent=T.k;
+  document.getElementById("ht").textContent=T.t;
+  document.getElementById("hs").textContent=T.s;
 
-  [
-    ["goEnergy","/products/energy/"],
-    ["goEducation","/products/education/"],
-    ["goSoftware","/products/software/"],
-    ["goCommercial","/products/commercial/"]
-  ].forEach(function(pair){
-    var el = document.getElementById(pair[0]);
-    var path = pair[1];
-    if(!el) return;
-    el.addEventListener("click", function(){ go(path); }, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
+  // Product taxonomy (7) — routes are canonical targets
+  var PRODUCTS = [
+    {id:"canon", c:"#D4AF37",
+      name:{en:"Canon Engine (State Runtime)",zh:"规范引擎（状态运行时）",es:"Motor Canónico (Runtime de Estado)"},
+      one:{en:"Deterministic state propagation and traversal runtime for the entire platform.",
+           zh:"为整个平台提供确定性状态传播与遍历运行时。",
+           es:"Runtime determinista de estado y recorrido para toda la plataforma."},
+      route:"/products/canon-engine/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"cohdiag", c:"#93C5FD",
+      name:{en:"Coherence Diagnostic Engine",zh:"一致性诊断引擎",es:"Motor Diagnóstico de Coherencia"},
+      one:{en:"Classifies coherence under constraint; routes to bounded evaluation outputs.",
+           zh:"在约束下分类一致性，并路由到有界评估输出。",
+           es:"Clasifica coherencia bajo restricción; rutea a salidas acotadas."},
+      route:"/products/coherence-diagnostic/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"dotgrid", c:"#60A5FA",
+      name:{en:"Dot.Grid 256-State Indexing System",zh:"Dot.Grid 256态索引系统",es:"Sistema Dot.Grid de 256 Estados"},
+      one:{en:"256-state indexing and sweep surfaces tied to declared bit models.",
+           zh:"将256态索引与扫掠面绑定到声明的位模型。",
+           es:"Indexación y barridos de 256 estados vinculados a modelos de bits."},
+      route:"/products/dot-grid/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"adopt", c:"#F59E0B",
+      name:{en:"Adoption Ladder Framework",zh:"采纳阶梯框架",es:"Marco de Escalera de Adopción"},
+      one:{en:"Phase gating and readiness pathways that prevent scaling beyond proof posture.",
+           zh:"阶段门控与就绪路径，防止超出证明姿态的扩张。",
+           es:"Compuertas por fases y preparación para evitar escalar sin pruebas."},
+      route:"/products/adoption-ladder/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"huba", c:"#7F1D1D",
+      name:{en:"Hub A Recursive Knowledge Architecture",zh:"枢纽A递归知识架构",es:"Arquitectura Recursiva HUB A"},
+      one:{en:"Mirror-recursive index spine for orientation-to-scale and controlled reveal.",
+           zh:"用于规模导向与渐进揭示的镜像递归索引脊柱。",
+           es:"Columna índice recursiva para orientación a escala y revelado controlado."},
+      route:"/products/hub-a-architecture/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"ssg", c:"#9333EA",
+      name:{en:"SSG Platform",zh:"SSG平台",es:"Plataforma SSG"},
+      one:{en:"Constraint syntax geometry for executable structural specifications.",
+           zh:"用于可执行结构规格的约束语法几何。",
+           es:"Geometría de sintaxis de restricciones para especificaciones ejecutables."},
+      route:"/products/ssg/",
+      license:{saas:1, ent:1, gov:1}
+    },
+    {id:"energy", c:"#EA580C",
+      name:{en:"Energy (Industrial C)",zh:"能源（工业C）",es:"Energía (Industrial C)"},
+      one:{en:"Industrial thermal substitution posture (C); no net-positive fusion gain claims.",
+           zh:"工业热替代姿态（C）；不做净增益聚变主张。",
+           es:"Postura industrial (C); sin afirmaciones de ganancia neta de fusión."},
+      route:"/products/energy/",
+      license:{saas:1, ent:1, gov:1}
+    }
+  ];
+
+  function pick(obj){
+    return (lang==="zh")?obj.zh:(lang==="es")?(obj.es||obj.en):obj.en;
+  }
+
+  function makeRow(p){
+    var row=document.createElement("div");
+    row.className="stackRow";
+    row.style.setProperty("--domc", p.c);
+
+    var head=document.createElement("div");
+    head.className="stackHead";
+
+    var left=document.createElement("div");
+    left.className="stackLeft";
+
+    var bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background=p.c;
+
+    var block=document.createElement("div");
+    block.style.minWidth="0";
+
+    var title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent=pick(p.name);
+
+    var sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent=pick(p.one);
+
+    block.appendChild(title);
+    block.appendChild(sub);
+
+    left.appendChild(bar);
+    left.appendChild(block);
+
+    var chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="stackBody";
+
+    // license chips
+    var chips=document.createElement("div");
+    chips.className="chips";
+    function chip(txt,on){
+      var c=document.createElement("div");
+      c.className="chip"+(on?" on":"");
+      c.textContent=txt;
+      return c;
+    }
+    chips.appendChild(chip(T.saas, !!p.license.saas));
+    chips.appendChild(chip(T.ent,  !!p.license.ent));
+    chips.appendChild(chip(T.gov,  !!p.license.gov));
+    body.appendChild(chips);
+
+    // actions
+    var acts=document.createElement("div");
+    acts.className="actions";
+
+    var open=document.createElement("a");
+    open.className="btn";
+    open.textContent=T.open;
+    open.href=p.route + q();
+
+    var spec=document.createElement("a");
+    spec.className="btn";
+    spec.textContent=T.spec;
+    spec.href=p.route + q(); // same for now; later route to /spec inside product
+
+    var doc=document.createElement("a");
+    doc.className="btn";
+    doc.textContent=T.doc;
+    doc.href=p.route + q(); // same for now; later route to /docs inside product
+
+    acts.appendChild(open);
+    acts.appendChild(spec);
+    acts.appendChild(doc);
+
+    body.appendChild(acts);
+
+    head.addEventListener("click", function(){
+      var openNow = row.classList.toggle("open");
+      chev.textContent = openNow ? "▾" : "▸";
     });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  var list=document.getElementById("stackList");
+  list.innerHTML="";
+  PRODUCTS.forEach(function(p,i){
+    var el=makeRow(p);
+    list.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });
+
 })();
 </script>
 

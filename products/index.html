@@ -171,6 +171,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -202,6 +203,8 @@ a{color:inherit;text-decoration:none}
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
+
+  // top + dock
   wire("btnDoor","/door/");
   wire("btnHome","/home/");
   wire("dockExplore","/explore/");
@@ -269,83 +272,117 @@ a{color:inherit;text-decoration:none}
       document.getElementById("dockExplore").textContent="EXPLORE";
       document.getElementById("dockProducts").textContent="PRODUCTS";
       document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGGES";
       document.getElementById("dockGauges").textContent="GAUGES";
     }
   }
   renderHeader();
 
-  // DATA (ALL ROUTES ARE REAL / CREATED)
+  // ===== ROUTE LOCK (NO 404) =====
+  // If a dedicated page does not exist yet, route to the closest EXISTING hub page
+  // (software subsurfaces route to /products/software/ with a focus hint).
+  var ROUTE = {
+    energy: "/products/energy/",
+    education: "/products/education/",
+    software: "/products/software/",
+    diag: "/products/",                 // safe fallback (never 404)
+    uci: "/products/software/?focus=uci",
+    dotgrid: "/products/software/?focus=dotgrid",
+    ssg: "/products/software/?focus=ssg",
+    registry: "/products/software/?focus=registry"
+  };
+
+  // ===== DATA =====
+  // NOTE: Coherence Diagnostic appears ONCE here (as its own product).
   var PRODUCTS = [
-    { c:"#F59E0B",
+    {
+      c:"#F59E0B",
       t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
       s:{en:"Industrial posture only. No gain claims.",zh:"仅工业姿态。无增益主张。",es:"Solo postura industrial. Sin ganancias."},
-      p:{en:"Industrial thermal substitution surfaces. Any frontier statements stay as readiness doctrine under Laws.",
-         zh:"工业热替代执行面。任何前沿表述都只作为法则下的就绪教义。",
-         es:"Superficies de sustitución térmica industrial. Lo fronterizo queda como doctrina de preparación."},
-      href:"/products/energy/"
+      p:{en:"Industrial thermal substitution surfaces. Frontier claims stay as readiness doctrine under Laws.",
+         zh:"工业热替代执行面。前沿主张仅作为法则下的就绪教义。",
+         es:"Superficies de sustitución térmica industrial. La frontera queda como doctrina de preparación."},
+      href:ROUTE.energy
     },
-    { c:"#0EA5E9",
+    {
+      c:"#0EA5E9",
       t:{en:"Education (1001 Words)",zh:"教育（1001词）",es:"Educación (1001 Palabras)"},
       s:{en:"Traversal-first learning and mastery tracks.",zh:"遍历学习与掌握路径。",es:"Aprendizaje por recorrido y dominio."},
       p:{en:"Programs, language core, training, and verification tiers packaged as an adoptable learning surface.",
          zh:"课程、语言核心、训练与验证分层，打包为可采纳学习面。",
          es:"Programas, núcleo de lenguaje, entrenamiento y verificación en una superficie adoptable."},
-      href:"/products/education/"
+      href:ROUTE.education
     },
-    { c:"#93C5FD",
+    {
+      c:"#93C5FD",
       t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
       s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
-      p:{en:"Single entry for diagnostics. This is NOT a catch-all destination; other products route to their own hubs.",
-         zh:"诊断唯一入口。不是总汇；其他产品各自有独立入口。",
-         es:"Entrada única de diagnóstico. No es un destino universal; los demás productos tienen su propio hub."},
-      href:"/products/coherence-diagnostic/"
+      p:{en:"Single entry for diagnostics. Other products route to their own hubs (no catch-all).",
+         zh:"诊断唯一入口。其他产品各自有独立入口（不做总汇）。",
+         es:"Entrada única de diagnóstico. Otros productos tienen su propio hub (sin destino universal)."},
+      href:ROUTE.diag
     },
-    { c:"#60A5FA",
-      t:{en:"Software (SSG / .DOTGrid / Registry)",zh:"软件（SSG/.DOTGrid/登记）",es:"Software (SSG/.DOTGrid/Registro)"},
-      s:{en:"Software product hub.",zh:"软件产品枢纽。",es:"Hub de producto de software."},
-      p:{en:"SSG, .DOTGrid, UCI, and Registry as navigable software surfaces with consistent state carry.",
-         zh:"SSG、.DOTGrid、UCI 与登记，作为可导航的软件执行面并保持状态一致。",
-         es:"SSG, .DOTGrid, UCI y Registro como superficies navegables con estado consistente."},
-      href:"/products/software/"
+    {
+      c:"#60A5FA",
+      t:{en:"Software Hub",zh:"软件枢纽",es:"Hub de Software"},
+      s:{en:"SSG, .DOTGrid, UCI, Registry.",zh:"SSG、.DOTGrid、UCI、登记。",es:"SSG, .DOTGrid, UCI, Registro."},
+      p:{en:"Software surfaces are separated so routing never collapses into one page.",
+         zh:"软件执行面分离，路由不再坍缩到单一页面。",
+         es:"Las superficies de software están separadas para que el enrutamiento no colapse en una sola página."},
+      href:ROUTE.software
     }
   ];
 
   var SYSTEMS = [
-    { c:"#93C5FD",
+    {
+      c:"#93C5FD",
       t:{en:"UCI Engine",zh:"UCI 引擎",es:"Motor UCI"},
       s:{en:"Measurement and correlation core.",zh:"测量与相关核心。",es:"Núcleo de medición y correlación."},
-      p:{en:"UCI is the coherence measurement engine. It produces outputs that later feed Gauges and registries.",
-         zh:"UCI 是一致性测量引擎，输出将喂给量规与登记系统。",
-         es:"UCI es el motor de medición de coherencia; sus salidas alimentan Medidores y registros."},
-      href:"/products/uci/"
+      p:{en:"Measurement core that feeds Gauges and verification layers (kept separate from product catalogs).",
+         zh:"测量核心：喂给量规与验证层（与产品目录分离）。",
+         es:"Núcleo de medición que alimenta Medidores y verificación (separado del catálogo)."},
+      href:ROUTE.uci
     },
-    { c:"#D4AF37",
+    {
+      c:"#D4AF37",
       t:{en:".DOTGrid",zh:".DOTGrid",es:".DOTGrid"},
       s:{en:"256-state sweep interface.",zh:"256态扫掠界面。",es:"Interfaz de barrido 256-estados."},
-      p:{en:"DOTGrid is the indexing and sweep surface. It routes to SSG/engines without collapsing everything into diagnostic.",
-         zh:"DOTGrid 是索引与扫掠执行面。它路由到 SSG/引擎，而不是把一切都塞进诊断页。",
-         es:"DOTGrid es la superficie de indexación y barrido; enruta a SSG/motores sin convertirlo todo en diagnóstico."},
-      href:"/products/dotgrid/"
+      p:{en:"Indexing + sweep surface. Routes to software without redirecting everything to Diagnostic.",
+         zh:"索引+扫掠执行面。路由到软件面，不把一切重定向到诊断。",
+         es:"Superficie de indexación + barrido. Enruta a software sin redirigir todo al diagnóstico."},
+      href:ROUTE.dotgrid
     },
-    { c:"#A3A3A3",
+    {
+      c:"#A3A3A3",
       t:{en:"SSG",zh:"SSG",es:"SSG"},
       s:{en:"Constraint syntax geometry.",zh:"约束语法几何。",es:"Geometría de sintaxis por restricciones."},
-      p:{en:"SSG is the root geometry for execution encoding and admissibility discipline across the site.",
-         zh:"SSG 是全站执行编码与可采信纪律的根几何。",
-         es:"SSG es la geometría raíz para ejecución y disciplina de admisibilidad."},
-      href:"/products/ssg/"
+      p:{en:"Root execution geometry. Encoding and admissibility layers attach here.",
+         zh:"根执行几何。编码层与可采信层挂载于此。",
+         es:"Geometría raíz de ejecución. Aquí se conectan capas de codificación y admisibilidad."},
+      href:ROUTE.ssg
     },
-    { c:"#334155",
+    {
+      c:"#334155",
       t:{en:"Registry",zh:"登记系统",es:"Registro"},
       s:{en:"Status and verification surfaces.",zh:"状态与验证面。",es:"Estado y verificación."},
-      p:{en:"Registry provides lookupable status and reason codes. It is the verification surface—separate from diagnostics.",
-         zh:"登记系统提供可查询状态与原因码。它是验证面——与诊断分离。",
-         es:"Registro ofrece estado consultable y códigos de razón. Es verificación—separada del diagnóstico."},
-      href:"/products/registry/"
+      p:{en:"Lookupable status + reason codes. Verification stays separate from Diagnostic.",
+         zh:"可查询状态+原因码。验证与诊断分离。",
+         es:"Estado consultable + códigos de razón. Verificación separada del diagnóstico."},
+      href:ROUTE.registry
     }
   ];
 
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+
+  function closeSiblings(row){
+    var parent=row.parentElement;
+    if(!parent) return;
+    parent.querySelectorAll(".stackRow").forEach(function(x){
+      if(x!==row) x.classList.remove("open");
+      var ch=x.querySelector(".stackChevron");
+      if(ch) ch.textContent = (x.classList.contains("open") ? "▾" : "▸");
+    });
+  }
 
   function makeRow(item){
     var row=document.createElement("div");
@@ -400,15 +437,16 @@ a{color:inherit;text-decoration:none}
     open.className="btn";
     open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
     open.href = item.href + q();
-
     acts.appendChild(open);
 
     body.appendChild(p);
     body.appendChild(acts);
 
     head.addEventListener("click", function(){
-      var openNow=row.classList.toggle("open");
-      chev.textContent = openNow ? "▾" : "▸";
+      var willOpen = !row.classList.contains("open");
+      closeSiblings(row);
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
     });
 
     row.appendChild(head);

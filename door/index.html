@@ -1,76 +1,439 @@
+<!-- TNT — /door/index.html
+     DOOR · CLEAN PEARLESCENT RESTORE · NO COMPETING UI
+     GOALS:
+       - 3D pearlescent black jewels (NOT coal)
+       - ui.css gold grid stays behind jewels (never over them)
+       - No UI merging: one title block + two diamonds only
+       - Top controls never wrap (no stacked/duplicated look)
+       - Language toggle works (EN/中文/ES) page-level only
+     ROUTES:
+       - ENTER SITE     → /home/
+       - VIEW SITE MAP  → /prelude/
+       - EXIT           → /
+       - PRELUDE        → /prelude/
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT set html/body background (ui.css owns field)
+-->
+
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Door</title>
+<title>ENTER</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-html,body{
+a{color:inherit;text-decoration:none}
+
+/* =========================================================
+   HARD STACK ORDER: force ui.css overlays BEHIND door UI
+   ========================================================= */
+html,body{height:100%}
+body{position:relative;z-index:0}
+body::before{z-index:-2 !important;pointer-events:none !important}
+body::after{z-index:-1 !important;pointer-events:none !important}
+#doorRoot{position:relative;z-index:10}
+
+/* =========================================================
+   TOKENS
+   ========================================================= */
+:root{
+  --D:300px;
+  --R:220px;
+
+  --deepA:#0f1624;
+  --deepB:#070c14;
+  --deepC:#04060a;
+
+  --opalV:rgba(160,120,255,.82);
+  --opalC:rgba(110,230,255,.70);
+  --opalW:rgba(255,255,255,.22);
+
+  --goldGlow:rgba(212,175,55,.55);
+  --stroke:rgba(255,255,255,.16);
+}
+
+/* =========================================================
+   TOP BAR (never wraps)
+   ========================================================= */
+.top{
+  position:fixed;
+  top:16px;
+  left:0;
+  right:0;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  z-index:300;
+  pointer-events:none;
+}
+.top-left,.top-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+@media (max-width:420px){
+  .top{padding:0 12px}
+  .top-left,.top-right{gap:10px}
+}
+
+/* =========================================================
+   TITLE BLOCK (single hierarchy; no competing banners)
+   ========================================================= */
+.title{
+  position:fixed;
+  left:50%;
+  top:92px;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  text-align:center;
+  z-index:120;
+  padding:16px 14px;
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.18), transparent 72%),
+    radial-gradient(circle at 82% 62%, rgba(120,70,255,.14), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 140px rgba(0,0,0,.62);
+  pointer-events:none;
+}
+.title h1{
   margin:0;
-  height:100%;
-  background:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:system-ui, sans-serif;
-  color:white;
+  font-size:52px;
+  letter-spacing:2px;
+  font-weight:950;
+  line-height:1.02;
+}
+.title p{
+  margin:12px 0 0;
+  font-size:15px;
+  line-height:1.55;
+  opacity:.90;
+}
+.title strong{font-weight:950}
+.title em{font-style:italic;opacity:.95}
+
+@media (max-width:560px){
+  .title{top:86px}
+  .title h1{font-size:46px}
+}
+@media (max-width:420px){
+  .title h1{font-size:42px}
+  .title p{font-size:14px}
 }
 
+/* =========================================================
+   STAGE
+   ========================================================= */
 .stage{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:60px;
+  position:fixed;
+  top:58%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(760px,94vw);
+  height:min(760px,94vw);
+  z-index:200;
+  pointer-events:none;
 }
 
-.diamond{
-  width:220px;
-  height:220px;
-  border:2px solid #aaa;
-  transform:rotate(45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+/* =========================================================
+   PEARLESCENT GEM (3D)
+   ========================================================= */
+.gem{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:40px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  pointer-events:auto;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  overflow:hidden;
+
+  background:
+    /* specular */
+    radial-gradient(circle at 22% 16%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.62) 12%, transparent 38%),
+    /* violet bloom */
+    radial-gradient(circle at 78% 28%, var(--opalV) 0%, transparent 60%),
+    /* cyan bloom */
+    radial-gradient(circle at 62% 86%, var(--opalC) 0%, transparent 74%),
+    /* pearl haze */
+    radial-gradient(circle at 46% 46%, var(--opalW) 0%, transparent 62%),
+    /* deep base */
+    linear-gradient(165deg, var(--deepA) 0%, var(--deepB) 60%, var(--deepC) 100%);
+
+  border:1px solid rgba(255,255,255,.70);
+
+  box-shadow:
+    0 140px 280px rgba(0,0,0,.95),
+    0 0 180px var(--goldGlow),
+    inset 0 5px 0 rgba(255,255,255,.92),
+    inset 0 -120px 180px rgba(0,0,0,.98);
+
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
+.gem:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
+  border-color:rgba(255,255,255,.82);
+  box-shadow:
+    0 160px 320px rgba(0,0,0,.98),
+    0 0 240px rgba(212,175,55,.70),
+    inset 0 5px 0 rgba(255,255,255,1),
+    inset 0 -120px 180px rgba(0,0,0,.98);
+}
+.gem:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+}
+
+.gem.top{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
+.gem.bottom{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.gem.top:hover{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg) scale(1.04)}
+.gem.bottom:hover{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg) scale(1.04)}
+.gem.top:active{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg) scale(.99)}
+.gem.bottom:active{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg) scale(.99)}
 
 .inner{
   transform:rotate(-45deg);
+  height:100%;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  padding:28px;
+  user-select:none;
+  pointer-events:none;
+}
+.lab{
+  font-size:24px;
+  font-weight:950;
+  letter-spacing:1px;
+  text-shadow:0 0 18px rgba(255,255,255,.08);
+}
+.sub{
+  margin-top:14px;
+  font-size:16px;
+  opacity:.95;
+  line-height:1.35;
+}
+.pref{font-weight:950;font-style:italic}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.footer{
+  position:fixed;
+  bottom:18px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  text-align:center;
+  z-index:220;
+  font-size:13.5px;
+  opacity:.88;
+  pointer-events:none;
+}
+.sig{
+  margin-top:8px;
+  font-size:12px;
+  letter-spacing:3px;
+  opacity:.70;
 }
 
-h1{
-  font-size:20px;
-  margin:0;
+/* Responsive */
+@media (max-width:560px){
+  :root{--D:264px;--R:196px}
 }
-
-p{
-  margin:8px 0 0;
-  opacity:.8;
+@media (max-width:420px){
+  :root{--D:248px;--R:188px}
 }
 </style>
 </head>
 
 <body>
+<div id="doorRoot">
 
-<div class="stage">
-
-  <div class="diamond" onclick="location.href='/home/'">
-    <div class="inner">
-      <h1>ENTER</h1>
-      <p>Go inside</p>
+  <div class="top" aria-label="Top controls">
+    <div class="top-left">
+      <a class="btn" id="btnExit" href="/">EXIT</a>
+      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    </div>
+    <div class="top-right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="diamond" onclick="location.href='/prelude/'">
-    <div class="inner">
-      <h1>MAP</h1>
-      <p>Get oriented</p>
+  <div class="title" aria-hidden="true">
+    <h1 id="ttl">ENTER</h1>
+    <p id="tag"><strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em></p>
+  </div>
+
+  <div class="stage" aria-label="Door fork">
+    <div class="gem top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+      <div class="inner">
+        <div class="lab" id="labEnter">ENTER SITE</div>
+        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Move forward into systems.</div>
+      </div>
     </div>
+
+    <div class="gem bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
+      <div class="inner">
+        <div class="lab" id="labMap">VIEW SITE MAP</div>
+        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Scale without structure collapses.
+    <div class="sig">COGRID.NET</div>
   </div>
 
 </div>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  // state-carry links
+  document.getElementById("btnExit").href="/"+q();
+  document.getElementById("btnPrelude").href="/prelude/"+q();
+
+  // language toggle
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    location.reload();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // i18n (minimal; layout-stable)
+  function renderLang(){
+    if(lang==="zh"){
+      document.getElementById("ttl").textContent="进入";
+      document.getElementById("tag").innerHTML="<strong>无需信仰</strong> · <strong>不做推销</strong> · <em>以结构导航</em>";
+      document.getElementById("labEnter").textContent="进入网站";
+      document.getElementById("prefEnter").textContent="直接：";
+      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
+      document.getElementById("labMap").textContent="查看网站地图";
+      document.getElementById("prefMap").textContent="先：";
+      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("btnPrelude").textContent="前置页";
+    }else if(lang==="es"){
+      document.getElementById("ttl").textContent="ENTRAR";
+      document.getElementById("tag").innerHTML="<strong>Sin creencias</strong> · <strong>Sin venta</strong> · <em>Navegación por estructura</em>";
+      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("prefEnter").textContent="Directo:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
+      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("prefMap").textContent="Primero:";
+      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+    }else{
+      document.getElementById("ttl").textContent="ENTER";
+      document.getElementById("tag").innerHTML="<strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em>";
+      document.getElementById("labEnter").textContent="ENTER SITE";
+      document.getElementById("prefEnter").textContent="Direct:";
+      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
+      document.getElementById("labMap").textContent="VIEW SITE MAP";
+      document.getElementById("prefMap").textContent="First:";
+      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
+      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+    }
+  }
+  renderLang();
+
+  // routing
+  function goEnter(){ location.href="/home/"+q(); }
+  function goMap(){ location.href="/prelude/"+q(); }
+
+  var dEnter=document.getElementById("dEnter");
+  var dMap=document.getElementById("dMap");
+
+  dEnter.addEventListener("click", goEnter);
+  dMap.addEventListener("click", goMap);
+
+  dEnter.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }
+  });
+  dMap.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
+  });
+})();
+</script>
 
 </body>
 </html>

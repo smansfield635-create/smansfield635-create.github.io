@@ -1,29 +1,13 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · MULTI-SPINE LAUNCHPAD (MULTI-SPINE INDEX)
-     FIX (NO DRIFT):
-       - PRODUCTS click no longer “falls into” Coherence Diagnostic by accident.
-       - Adds SAFE ROUTE RESOLUTION:
-           • Try primary route (HEAD/GET)
-           • If missing/redirect-broken, fallback to a known-good hub
-       - Removes inline onclick (tap-safe)
-       - Keeps EN / 中文 / ES
-       - Preserves state (lang/style/time/depth) on every jump
-
-     ROUTES (INTENT):
-       - RETURN   → /index.html
-       - ENTER    → /home/
-       - PROOF    → /laws/
-       - PRODUCTS → /products/   (fallback → /explore/ if products surface missing)
-       - INNOV    → /explore/
-       - GAUGES   → /gauges/
-       - LINKS    → /links/
-       - GLOSSARY → /glossary/   (fallback → /links/)
-       - ABOUT    → /about/      (fallback → /links/)
-       - APPENDIX → /appendix/   (fallback → /links/)
-
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT set html/body background (ui.css owns field)
+     PRELUDE · WISHBONE INDEX
+     STRUCTURE:
+       ◇ CLAIM   → scroll to Products & Services index
+       ◇ SUPPORT → scroll to Software & Systems index
+     NOTES:
+       - Two large diamonds only
+       - No accidental routing
+       - Internal sections on same page
+       - Clean geometry
 -->
 
 <!doctype html>
@@ -38,230 +22,170 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-a{color:inherit;text-decoration:none}
+a{text-decoration:none;color:inherit}
 
-/* -------------------------------- */
-/* STRUCTURE                         */
-/* -------------------------------- */
 :root{
-  --obsA:#0d1420;
-  --obsB:#070c14;
-
-  --stroke:rgba(255,255,255,.15);
-  --stroke2:rgba(255,255,255,.12);
-
-  --dockPad:120px;
+  --D:260px;
+  --R:180px;
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
 }
 
-/* Gold grid stays behind (ui.css overlays) */
-body{position:relative}
-body::before, body::after{z-index:0;pointer-events:none}
-
-/* -------------------------------- */
-/* TOP                               */
-/* -------------------------------- */
+/* ===== TOP ===== */
 .top-left{
   position:fixed;
   left:16px;
   top:16px;
-  z-index:300;
+  z-index:120;
   display:flex;
-  gap:12px;
-  flex-wrap:nowrap;
-  white-space:nowrap;
-}
-.top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:300;
-  display:flex;
-  gap:12px;
-  flex-wrap:nowrap;
-  white-space:nowrap;
-}
-.top-left .btn, .top-right .btn{white-space:nowrap}
-
-/* -------------------------------- */
-/* PAGE WRAP                         */
-/* -------------------------------- */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:98px 0 var(--dockPad);
-  position:relative;
-  z-index:10;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-/* -------------------------------- */
-/* BANNER                            */
-/* -------------------------------- */
-.banner{
-  width:min(1000px,92vw);
-  margin:12px auto 6px;
-
-  padding:26px 30px;
-  border-radius:24px;
-
-  background:
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,.22), transparent 60%),
-    radial-gradient(circle at 75% 60%, rgba(140,90,255,.25), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
-
-  border:1px solid rgba(255,255,255,.18);
-  backdrop-filter:blur(14px);
-
-  box-shadow:0 46px 140px rgba(0,0,0,.78);
-}
-.banner h1{
-  margin:0;
-  font-size:40px;
-  font-weight:950;
-  letter-spacing:2px;
-}
-.banner p{
-  margin:12px 0 0;
-  line-height:1.55;
-  opacity:.92;
-  font-size:14.5px;
-}
-
-/* -------------------------------- */
-/* PRINCIPLES PANEL                  */
-/* -------------------------------- */
-.principles{
-  width:min(1000px,92vw);
-  margin:0 auto;
-  padding:22px 26px;
-  border-radius:22px;
-
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.18));
-
-  border:1px solid rgba(255,255,255,.15);
-  backdrop-filter:blur(12px);
-
-  box-shadow:0 34px 120px rgba(0,0,0,.70);
-}
-.line{
-  font-size:15px;
-  line-height:1.7;
-  margin:10px 0;
-  font-weight:800;
-  color:rgba(255,255,255,.92);
-}
-
-/* -------------------------------- */
-/* SPINE SECTION LABELS              */
-/* -------------------------------- */
-.section{
-  width:min(1000px,92vw);
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
-}
-
-/* -------------------------------- */
-/* TILE GRID                         */
-/* -------------------------------- */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:14px;
-}
-@media (max-width:760px){
-  .grid{grid-template-columns:1fr}
-}
-.tile{
-  --c: rgba(212,175,55,.45);
-  padding:18px 20px;
-  border-radius:22px;
-
-  background:
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,.18), transparent 60%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
-
-  border:1px solid rgba(255,255,255,.20);
-
-  box-shadow:
-    0 40px 120px rgba(0,0,0,.85),
-    inset 0 3px 0 rgba(255,255,255,.45);
-
-  cursor:pointer;
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  user-select:none;
-}
-.tile:hover{
-  transform:translateY(-3px);
-  border-color:rgba(212,175,55,.32);
-  box-shadow:
-    0 58px 160px rgba(0,0,0,.90),
-    inset 0 3px 0 rgba(255,255,255,.55);
-}
-.tile .k{
-  display:flex;
-  align-items:center;
   gap:10px;
-  margin:0 0 6px;
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.82;
-}
-.dot{
-  width:10px;height:10px;border-radius:3px;
-  transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.tile h3{
-  margin:0;
-  font-size:18px;
-  font-weight:950;
-  letter-spacing:.6px;
-}
-.tile p{
-  margin:10px 0 0;
-  opacity:.86;
-  font-size:13.5px;
-  line-height:1.5;
-  color:rgba(255,255,255,.86);
 }
 
-/* -------------------------------- */
-/* FOOTER                            */
-/* -------------------------------- */
-.footer{
+/* ===== TITLE ===== */
+.header{
   position:fixed;
+  top:80px;
   left:50%;
-  bottom:18px;
   transform:translateX(-50%);
   text-align:center;
-  font-size:13px;
+  z-index:100;
+}
+.header h1{
+  margin:0;
+  font-weight:950;
+  font-size:38px;
+  letter-spacing:2px;
+}
+.header p{
+  margin-top:10px;
   opacity:.85;
-  z-index:220;
+  font-size:14px;
+}
+
+/* ===== WISHBONE STAGE ===== */
+.stage{
+  position:fixed;
+  left:50%;
+  top:46%;
+  transform:translate(-50%,-50%);
+  width:min(700px,94vw);
+  height:420px;
+  z-index:60;
+}
+
+/* ===== DIAMONDS ===== */
+.d{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:28px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+
+  border:1px solid rgba(255,255,255,.18);
+
+  box-shadow:
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 30px rgba(212,175,55,.25),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+
+.d::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.65;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
-.sig{
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.65;
+
+.d::after{
+  content:"";
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
+}
+
+.d-left{
+  transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg);
+}
+
+.d-right{
+  transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg);
+}
+
+.inner{
+  transform:rotate(-45deg);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:18px;
+}
+
+.lab{
+  font-weight:950;
+  font-size:20px;
+  letter-spacing:.6px;
+}
+
+.sub{
+  margin-top:8px;
+  font-size:13px;
+  opacity:.85;
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  width:min(1000px,92vw);
+  margin:520px auto 80px;
+  padding:24px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(10px);
+}
+
+.section h2{
+  margin-top:0;
+  font-weight:950;
+  letter-spacing:1px;
+}
+
+.footer{
+  text-align:center;
+  margin-bottom:40px;
+  opacity:.7;
+  font-size:13px;
 }
 </style>
 </head>
@@ -269,347 +193,63 @@ body::before, body::after{z-index:0;pointer-events:none}
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnReturn" href="/index.html">RETURN</a>
-  <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+  <a class="btn" href="/index.html">RETURN</a>
+  <a class="btn" href="/home/">ENTER</a>
 </div>
 
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="header">
+  <h1>PRELUDE</h1>
+  <p>Choose your entry posture.</p>
 </div>
 
-<div class="page">
+<div class="stage">
 
-  <div class="banner">
-    <h1 id="ttl">PRELUDE</h1>
-    <p id="tag">
-      Before movement, orientation.<br/>
-      Before scaling, constraint.<br/>
-      Before claims, structure.
-    </p>
-  </div>
-
-  <div class="principles" aria-label="Principles">
-    <div class="line" id="l1">Scope precedes authority.</div>
-    <div class="line" id="l2">Scale amplifies error.</div>
-    <div class="line" id="l3">Compensation hides instability.</div>
-    <div class="line" id="l4">Unbounded claims create fragility.</div>
-    <div class="line" id="l5">Proof must survive constraint.</div>
-    <div class="line" id="l6">If it cannot be measured, it cannot be stabilized.</div>
-    <div class="line" id="l7">Coherence cannot exceed self-consistency.</div>
-    <div class="line" id="l8">Ambiguity accelerates collapse.</div>
-    <div class="line" id="l9">Correction creates a new epoch.</div>
-    <div class="line" id="l10">Containment prevents cascade.</div>
-  </div>
-
-  <!-- SPINE A: LANES -->
-  <div class="section" aria-label="Lanes">
-    <div class="band" id="bandLanes">LANES</div>
-    <div class="grid">
-      <div class="tile" id="goProof" style="--c:#F59E0B">
-        <div class="k"><span class="dot"></span><span id="kProof">PROOF / VALIDATION</span></div>
-        <h3 id="hProof">LAWS</h3>
-        <p id="pProof">Constraints, admissibility, and verification posture.</p>
-      </div>
-
-      <div class="tile" id="goProducts" style="--c:#0EA5E9">
-        <div class="k"><span class="dot"></span><span id="kProducts">PRODUCTS</span></div>
-        <h3 id="hProducts">WHAT YOU CAN USE</h3>
-        <p id="pProducts">Adoptable tools and platforms.</p>
-      </div>
-
-      <div class="tile" id="goInnovation" style="--c:#93C5FD">
-        <div class="k"><span class="dot"></span><span id="kInnov">INNOVATION</span></div>
-        <h3 id="hInnov">EXPLORE</h3>
-        <p id="pInnov">Frontier and language surfaces (bounded).</p>
-      </div>
-
-      <div class="tile" id="goHome" style="--c:#D4AF37">
-        <div class="k"><span class="dot"></span><span id="kEnter">ENTER</span></div>
-        <h3 id="hEnter">MAIN HUB</h3>
-        <p id="pEnter">Go directly into the primary hub.</p>
-      </div>
+  <div class="d d-left" id="claimDiamond">
+    <div class="inner">
+      <div class="lab">CLAIM</div>
+      <div class="sub">Products & Services</div>
     </div>
   </div>
 
-  <!-- SPINE B: INSTRUMENTS -->
-  <div class="section" aria-label="Instruments">
-    <div class="band" id="bandInstr">INSTRUMENTS</div>
-    <div class="grid">
-      <div class="tile" id="goGauges" style="--c:#60A5FA">
-        <div class="k"><span class="dot"></span><span id="kMeas">MEASUREMENT</span></div>
-        <h3 id="hGauges">GAUGES</h3>
-        <p id="pGauges">Dashboards and measurement surfaces.</p>
-      </div>
-
-      <div class="tile" id="goGaugesIndex" style="--c:#A3A3A3">
-        <div class="k"><span class="dot"></span><span id="kGIdx">INDEX</span></div>
-        <h3 id="hGIdx">GAUGES INDEX</h3>
-        <p id="pGIdx">Start here if you want instrumentation first.</p>
-      </div>
+  <div class="d d-right" id="supportDiamond">
+    <div class="inner">
+      <div class="lab">SUPPORT</div>
+      <div class="sub">Software & Systems</div>
     </div>
   </div>
 
-  <!-- SPINE C: REFERENCE -->
-  <div class="section" aria-label="Reference">
-    <div class="band" id="bandRef">REFERENCE</div>
-    <div class="grid">
-      <div class="tile" id="goLinks" style="--c:#93C5FD">
-        <div class="k"><span class="dot"></span><span id="kAnch">ANCHORS</span></div>
-        <h3 id="hLinks">LINKS</h3>
-        <p id="pLinks">External anchors and references.</p>
-      </div>
+</div>
 
-      <div class="tile" id="goGlossary" style="--c:#D4AF37">
-        <div class="k"><span class="dot"></span><span id="kTerms">TERMS</span></div>
-        <h3 id="hGlossary">GLOSSARY</h3>
-        <p id="pGlossary">Canonical terms (one meaning).</p>
-      </div>
+<div class="section" id="claimSection">
+  <h2>Products & Services</h2>
+  <p>
+  What we offer. Deployable surfaces. Energy, Education, Commercial, Advisory, etc.
+  </p>
+</div>
 
-      <div class="tile" id="goAbout" style="--c:#A3A3A3">
-        <div class="k"><span class="dot"></span><span id="kScope">SCOPE</span></div>
-        <h3 id="hAbout">ABOUT</h3>
-        <p id="pAbout">What this is / what it isn’t.</p>
-      </div>
-
-      <div class="tile" id="goAppendix" style="--c:#60A5FA">
-        <div class="k"><span class="dot"></span><span id="kPack">PACKETS</span></div>
-        <h3 id="hAppendix">APPENDIX</h3>
-        <p id="pAppendix">Packets and consolidated references.</p>
-      </div>
-    </div>
-  </div>
-
+<div class="section" id="supportSection">
+  <h2>Software & Systems</h2>
+  <p>
+  The engines behind the claims. SSG, .DOTGrid, UCI, Registry, and measurement layers.
+  </p>
 </div>
 
 <div class="footer">
-  <span id="foot">Structure is not optional.</span>
-  <div class="sig">COGRID.NET</div>
+  CLAIM must be supported. SUPPORT must be verifiable.
 </div>
 
 <script>
-(function(){
-  // ----- state -----
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
-
-  // top links
-  document.getElementById("btnReturn").href="/index.html"+q();
-  document.getElementById("btnEnter").href="/home/"+q();
-
-  // language toggles
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/prelude/"+q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // ---- SAFE NAV ----
-  // Why: if /products/ is missing (or routes wrong), GH Pages can fall through.
-  // This tries the intended route; if it fails, it falls back to a known-good hub.
-  function tryRoute(primaryPath, fallbackPath){
-    var primary = primaryPath + q();
-    var fallback = fallbackPath + q();
-
-    function go(url){ window.location.href = url; }
-
-    // HEAD is fast when allowed; if blocked, fallback to GET.
-    try{
-      fetch(primaryPath, {method:"HEAD", cache:"no-store"})
-        .then(function(res){
-          if(res && res.ok) go(primary);
-          else go(fallback);
-        })
-        .catch(function(){
-          // GET fallback (some GH/CDN configs reject HEAD)
-          fetch(primaryPath, {method:"GET", cache:"no-store"})
-            .then(function(res2){
-              if(res2 && res2.ok) go(primary);
-              else go(fallback);
-            })
-            .catch(function(){ go(fallback); });
-        });
-    }catch(e){
-      go(primary); // last resort
-    }
-  }
-
-  function goHard(path){ window.location.href = path + q(); }
-
-  // lanes
-  document.getElementById("goProof").addEventListener("click", function(){ goHard("/laws/"); });
-
-  // PRODUCTS: try /products/ first; if missing/broken, fallback to /explore/
-  document.getElementById("goProducts").addEventListener("click", function(){
-    tryRoute("/products/","/explore/");
+document.getElementById("claimDiamond")
+  .addEventListener("click", function(){
+    document.getElementById("claimSection")
+      .scrollIntoView({behavior:"smooth"});
   });
 
-  document.getElementById("goInnovation").addEventListener("click", function(){ goHard("/explore/"); });
-  document.getElementById("goHome").addEventListener("click", function(){ goHard("/home/"); });
-
-  // instruments
-  document.getElementById("goGauges").addEventListener("click", function(){ goHard("/gauges/"); });
-  document.getElementById("goGaugesIndex").addEventListener("click", function(){ goHard("/gauges/"); });
-
-  // reference
-  document.getElementById("goLinks").addEventListener("click", function(){ goHard("/links/"); });
-
-  // These might not exist yet: try them; fallback to /links/
-  document.getElementById("goGlossary").addEventListener("click", function(){ tryRoute("/glossary/","/links/"); });
-  document.getElementById("goAbout").addEventListener("click", function(){ tryRoute("/about/","/links/"); });
-  document.getElementById("goAppendix").addEventListener("click", function(){ tryRoute("/appendix/","/links/"); });
-
-  // i18n minimal (keeps layout stable)
-  function applyText(id, txt){ var el=document.getElementById(id); if(el) el.textContent=txt; }
-
-  if(lang==="zh"){
-    applyText("ttl","前置页");
-    document.getElementById("tag").innerHTML="先导览，再行动。<br/>先约束，再扩张。<br/>先结构，再主张。";
-
-    applyText("bandLanes","路线");
-    applyText("kProof","证明 / 核查");
-    applyText("hProof","法则");
-    applyText("pProof","约束、可采信与核查姿态。");
-
-    applyText("kProducts","产品");
-    applyText("hProducts","可用内容");
-    applyText("pProducts","可采纳的工具与平台。");
-
-    applyText("kInnov","创新");
-    applyText("hInnov","探索");
-    applyText("pInnov","前沿与语言面（有界）。");
-
-    applyText("kEnter","进入");
-    applyText("hEnter","主枢纽");
-    applyText("pEnter","直接进入主枢纽。");
-
-    applyText("bandInstr","仪器");
-    applyText("kMeas","测量");
-    applyText("hGauges","量规");
-    applyText("pGauges","仪表板与测量面。");
-
-    applyText("kGIdx","索引");
-    applyText("hGIdx","量规索引");
-    applyText("pGIdx","想先看仪器就从这里开始。");
-
-    applyText("bandRef","参考");
-    applyText("kAnch","锚点");
-    applyText("hLinks","链接");
-    applyText("pLinks","外部锚点与参考。");
-
-    applyText("kTerms","术语");
-    applyText("hGlossary","术语表");
-    applyText("pGlossary","规范术语（单一含义）。");
-
-    applyText("kScope","范围");
-    applyText("hAbout","关于");
-    applyText("pAbout","这是什么 / 不是什么。");
-
-    applyText("kPack","包");
-    applyText("hAppendix","附录");
-    applyText("pAppendix","协议包与集中引用。");
-
-    applyText("btnReturn","返回");
-    applyText("btnEnter","进入");
-    applyText("foot","结构不是可选项。");
-  }else if(lang==="es"){
-    applyText("ttl","PRELUDIO");
-    document.getElementById("tag").innerHTML="Antes de moverte, orientación.<br/>Antes de escalar, restricción.<br/>Antes de afirmar, estructura.";
-
-    applyText("bandLanes","RUTAS");
-    applyText("kProof","PRUEBA / VALIDACIÓN");
-    applyText("hProof","LEYES");
-    applyText("pProof","Restricciones, admisibilidad y postura de verificación.");
-
-    applyText("kProducts","PRODUCTOS");
-    applyText("hProducts","LO QUE PUEDES USAR");
-    applyText("pProducts","Herramientas y plataformas adoptables.");
-
-    applyText("kInnov","INNOVACIÓN");
-    applyText("hInnov","EXPLORAR");
-    applyText("pInnov","Frontera y lenguaje (acotado).");
-
-    applyText("kEnter","ENTRAR");
-    applyText("hEnter","HUB PRINCIPAL");
-    applyText("pEnter","Ir directo al hub principal.");
-
-    applyText("bandInstr","INSTRUMENTOS");
-    applyText("kMeas","MEDICIÓN");
-    applyText("hGauges","MEDIDORES");
-    applyText("pGauges","Paneles e instrumentos de medición.");
-
-    applyText("kGIdx","ÍNDICE");
-    applyText("hGIdx","ÍNDICE DE MEDIDORES");
-    applyText("pGIdx","Empieza aquí si quieres instrumentación primero.");
-
-    applyText("bandRef","REFERENCIA");
-    applyText("kAnch","ANCLAS");
-    applyText("hLinks","ENLACES");
-    applyText("pLinks","Anclas externas y referencias.");
-
-    applyText("kTerms","TÉRMINOS");
-    applyText("hGlossary","GLOSARIO");
-    applyText("pGlossary","Términos canónicos (un significado).");
-
-    applyText("kScope","ALCANCE");
-    applyText("hAbout","ACERCA");
-    applyText("pAbout","Qué es / qué no es.");
-
-    applyText("kPack","PAQUETES");
-    applyText("hAppendix","APÉNDICE");
-    applyText("pAppendix","Paquetes y referencias consolidadas.");
-
-    applyText("btnReturn","VOLVER");
-    applyText("btnEnter","ENTRAR");
-    applyText("foot","La estructura no es opcional.");
-  }
-
-})();
+document.getElementById("supportDiamond")
+  .addEventListener("click", function(){
+    document.getElementById("supportSection")
+      .scrollIntoView({behavior:"smooth"});
+  });
 </script>
 
 </body>

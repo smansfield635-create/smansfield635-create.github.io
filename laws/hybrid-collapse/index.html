@@ -1,0 +1,385 @@
+<!-- TNT — /laws/hybrid-collapse/index.html
+     LAWS · HYBRID COLLAPSE RULE — DOCTRINE LEAF (DOCTRINE ONLY)
+     LOCKS:
+       - Doctrine only (no product marketing language)
+       - Defines classifier classes + rule set + windowing
+       - No instrumentation outputs (those live in /gauges/)
+       - No fusion gain claims
+       - ui.css owns field (NO html/body background styling)
+       - branch.css geometry only
+       - instruments.js canonical state
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Laws · Hybrid Collapse Rule</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+:root{--dockH:86px}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.3px;margin:0 0 6px}
+.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
+
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  padding:14px 16px;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+.card h3{margin:0 0 8px;font-weight:950;letter-spacing:.2px;font-size:14px}
+.card p{margin:0;color:rgba(255,255,255,.84);line-height:1.55;font-size:13px}
+.card p + p{margin-top:10px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+.mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  font-size:12.5px;
+  color:rgba(255,255,255,.86);
+  background:rgba(0,0,0,.16);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  padding:10px 12px;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  line-height:1.55;
+  white-space:pre-wrap;
+}
+
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:7px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  font-weight:950;letter-spacing:.2px;font-size:12px;
+}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="btnCats" href="/laws/categories/">CATEGORIES</a>
+  <a class="btn" id="btnHome" href="/home/">HOME</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k" id="hk">LAWS</p>
+    <h1 class="t" id="ht">Hybrid Collapse Rule</h1>
+    <p class="s" id="hs">Doctrine-only classifier. Defines output classes and trigger rules under windowed evaluation.</p>
+  </div>
+
+  <div class="card">
+    <h3 id="h1">Output classes</h3>
+    <p id="p1">The classifier produces exactly one class for a declared epoch and declared ruleset.</p>
+    <div class="badges" id="badges">
+      <div class="badge">C0 · PASS</div>
+      <div class="badge">C1 · FRACTURE</div>
+      <div class="badge">C2 · PHASE TRANSITION</div>
+      <div class="badge">C3 · IMPOSSIBILITY</div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3 id="h2">Bit order (canonical)</h3>
+      <p id="p2">Bits are declared and evaluated in fixed order. No reordering allowed without version bump.</p>
+      <div class="mono" id="m1">Bits: [I P G S R L Y F] ∈ {0,1}^8</div>
+    </div>
+
+    <div class="card">
+      <h3 id="h3">Core triplet</h3>
+      <p id="p3">The core stability triplet is the only admissible core sum used by this ruleset.</p>
+      <div class="mono" id="m2">K(t) = I(t) + S(t) + R(t) ∈ {0,1,2,3}</div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <h3 id="h4">Window lock</h3>
+    <p id="p4">Default sustained window length is W=8. Any change requires a version bump.</p>
+    <div class="mono" id="m3">W = 8
+Counts are evaluated on sliding windows.
+No weighting. No compensation. No smoothing beyond window counts.</div>
+  </div>
+
+  <div class="card">
+    <h3 id="h5">Rule set (Hybrid v1)</h3>
+    <p id="p5">Rules are applied in order. First triggering rule determines the output class.</p>
+    <div class="mono" id="m4">R0 — INSTANT IMPOSSIBILITY (HARD KILL)
+Trigger if ANY holds at any step t:
+  R0.1  K(t) = 0
+  OR
+  R0.2  (I(t)=0 AND S(t)=0)
+  OR
+  R0.3  (I(t)=0 AND R(t)=0 AND P(t)=0)
+=> OUTPUT = C3
+
+R1 — PHASE TRANSITION (SUSTAINED CORE FAILURE)
+CF(t) := [K(t) < 2]
+If CF occurs in ≥ ceil(0.75*W) steps within any sliding W-window (default ≥6 of 8)
+=> OUTPUT = C2
+
+R2 — FRACTURE (GATE/PARTITION BREACH WITH CORE PRESENT)
+FF(t) := [(P(t)=0 OR G(t)=0) AND K(t) >= 2]
+If FF occurs in ≥ ceil(0.50*W) within any sliding W-window (default ≥4 of 8)
+=> OUTPUT = C1
+
+R3 — LENS/PAYLOAD FAIL (SECONDARY, NON-LETHAL)
+SF(t) := [(L(t)=0 OR Y(t)=0) AND K(t) >= 2]
+If SF occurs in ≥ ceil(0.75*W) within any sliding W-window (default ≥6 of 8)
+=> OUTPUT = C1
+NOTE: R3 alone never yields C2/C3.
+
+R4 — PASS
+If none of R0/R1/R2/R3 triggers
+=> OUTPUT = C0</div>
+  </div>
+
+  <div class="card">
+    <h3 id="h6">Scope binding</h3>
+    <p id="p6">This rule applies only inside a declared scope: epoch bounds + active lanes + active anchors + receipt-backed evidence stream.</p>
+    <p id="p7">If the scope changes, the run is a new epoch or a segment break. No retroactive edits.</p>
+  </div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+</nav>
+
+<script>
+(function(){
+  // ---- state ----
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnLaws","/laws/");
+  wire("btnCats","/laws/categories/");
+  wire("btnHome","/home/");
+  wire("dockIndex","/index.html");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+  wire("dockExplore","/explore/");
+
+  // language buttons
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    location.reload();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
+
+  // i18n blocks (doctrine, same meaning)
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="法则";
+    document.getElementById("ht").textContent="混合崩塌规则";
+    document.getElementById("hs").textContent="仅教义分类器。定义输出类别与窗口触发规则。";
+
+    document.getElementById("h1").textContent="输出类别";
+    document.getElementById("p1").textContent="分类器在声明的时期与规则集下输出且只输出一个类别。";
+    document.getElementById("badges").innerHTML =
+      '<div class="badge">C0 · 通过</div>'+
+      '<div class="badge">C1 · 断裂</div>'+
+      '<div class="badge">C2 · 相变</div>'+
+      '<div class="badge">C3 · 不可能</div>';
+
+    document.getElementById("h2").textContent="位序（规范）";
+    document.getElementById("p2").textContent="位向量按固定顺序声明与评估。若更改顺序必须版本升级。";
+    document.getElementById("m1").textContent="位： [I P G S R L Y F] ∈ {0,1}^8";
+
+    document.getElementById("h3").textContent="核心三元组";
+    document.getElementById("p3").textContent="核心稳定三元组是本规则集唯一允许的核心求和。";
+    document.getElementById("m2").textContent="K(t) = I(t) + S(t) + R(t) ∈ {0,1,2,3}";
+
+    document.getElementById("h4").textContent="窗口锁";
+    document.getElementById("p4").textContent="默认持续窗口长度 W=8。任何变更必须版本升级。";
+    document.getElementById("m3").textContent="W = 8\n按滑动窗口计数。\n不加权。不补偿。除窗口计数外不做平滑。";
+
+    document.getElementById("h5").textContent="规则集（Hybrid v1）";
+    document.getElementById("p5").textContent="规则按顺序应用。第一个触发的规则决定输出类别。";
+    document.getElementById("m4").textContent=
+"R0 — 立即不可能（硬终止）\n任一步 t 满足任一条件：\n  R0.1  K(t) = 0\n  或\n  R0.2  (I=0 且 S=0)\n  或\n  R0.3  (I=0 且 R=0 且 P=0)\n=> 输出 = C3\n\n"+
+"R1 — 相变（核心失败持续）\nCF(t) := [K(t) < 2]\n任一滑动窗口 W 内，CF ≥ ceil(0.75*W)（默认 ≥6/8）\n=> 输出 = C2\n\n"+
+"R2 — 断裂（核心存在但闸门/分区破损）\nFF(t) := [(P=0 或 G=0) 且 K(t) >= 2]\n任一窗口内 FF ≥ ceil(0.50*W)（默认 ≥4/8）\n=> 输出 = C1\n\n"+
+"R3 — 透镜/载荷失败（次级，非致命）\nSF(t) := [(L=0 或 Y=0) 且 K(t) >= 2]\n任一窗口内 SF ≥ ceil(0.75*W)（默认 ≥6/8）\n=> 输出 = C1\n注：R3 单独不产生 C2/C3\n\n"+
+"R4 — 通过\n若 R0/R1/R2/R3 均未触发\n=> 输出 = C0";
+
+    document.getElementById("h6").textContent="范围绑定";
+    document.getElementById("p6").textContent="本规则只在声明范围内适用：时期边界、活跃车道、活跃锚点、收据支撑证据流。";
+    document.getElementById("p7").textContent="范围变化即新时期或段落断裂。不允许追溯修改。";
+
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
+    document.getElementById("dockExplore").textContent="探索";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="LEYES";
+    document.getElementById("ht").textContent="Regla Híbrida de Colapso";
+    document.getElementById("hs").textContent="Clasificador doctrinal. Define clases de salida y reglas con ventana.";
+
+    document.getElementById("h1").textContent="Clases de salida";
+    document.getElementById("p1").textContent="El clasificador produce exactamente una clase para una época y reglas declaradas.";
+    document.getElementById("badges").innerHTML =
+      '<div class="badge">C0 · PASA</div>'+
+      '<div class="badge">C1 · FRACTURA</div>'+
+      '<div class="badge">C2 · TRANSICIÓN</div>'+
+      '<div class="badge">C3 · IMPOSIBILIDAD</div>';
+
+    document.getElementById("h2").textContent="Orden de bits (canónico)";
+    document.getElementById("p2").textContent="Los bits se declaran y evalúan en orden fijo. Cambiar requiere nueva versión.";
+    document.getElementById("m1").textContent="Bits: [I P G S R L Y F] ∈ {0,1}^8";
+
+    document.getElementById("h3").textContent="Triplete núcleo";
+    document.getElementById("p3").textContent="El triplete núcleo es la única suma aceptada por este conjunto de reglas.";
+    document.getElementById("m2").textContent="K(t) = I(t) + S(t) + R(t) ∈ {0,1,2,3}";
+
+    document.getElementById("h4").textContent="Bloqueo de ventana";
+    document.getElementById("p4").textContent="Longitud por defecto W=8. Cambiar requiere nueva versión.";
+    document.getElementById("m3").textContent="W = 8\nVentanas deslizantes.\nSin pesos. Sin compensación. Sin suavizado más allá del conteo.";
+
+    document.getElementById("h5").textContent="Conjunto de reglas (Hybrid v1)";
+    document.getElementById("p5").textContent="Las reglas se aplican en orden. La primera que dispara define la clase.";
+    // keep English mono for precision, already present in m4
+
+    document.getElementById("h6").textContent="Vinculación de alcance";
+    document.getElementById("p6").textContent="Aplica solo dentro de un alcance declarado: época, carriles activos, anclas activas y evidencia con recibos.";
+    document.getElementById("p7").textContent="Si cambia el alcance, es nueva época o ruptura de segmento. Sin ediciones retroactivas.";
+
+    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+  }
+
+})();
+</script>
+
+</body>
+</html>

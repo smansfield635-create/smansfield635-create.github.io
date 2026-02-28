@@ -1,25 +1,17 @@
-<!-- TNT — /door/index.html
-     DOOR · CLEAN ORIENTATION (NO COMPETING UI)
-     FIXES:
-       - Removes competing UI layers (no center brand bubble fighting the diamonds)
-       - Uses one hierarchy:
-           TOP controls (Exit + Prelude) + language
-           CENTER “ENTER” headline
-           TWO diamonds (Enter Site / View Site Map)
-           FINE PRINT (bottom)
-       - Opal/violet contrast panels (no red-on-red)
-       - Gold grid stays behind jewels (enforced)
-     ROUTES (LOCKED):
-       - ENTER SITE     → /home/
-       - VIEW SITE MAP  → /prelude/
-     TOP (LOCKED):
-       - LEFT:  EXIT + PRELUDE
-       - RIGHT: EN / 中文 / ES
-     STATE:
-       - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
-     SIGNATURE:
-       - COGRlD.NET (subtle, non-promotional)
+<!-- TNT — /index.html
+     INDEX · PRIMARY ROUTER (LAYER 1) · OPAL (NOT COAL) · NO COMPETING UI
+     LOCKS:
+       - Plain English on surface (no abstract/scientific terms)
+       - Fine print only for structural/technical language
+       - Two diamonds only:
+           1) STRUCTURE  → /home/
+           2) PRODUCTS   → /explore/
+       - TOP controls:
+           LEFT: DOOR + PRELUDE
+           RIGHT: EN / 中文 / ES
+       - State propagation: lang/style/time/depth
+       - ui.css owns field; branch.css geometry only; instruments.js state
+       - COGRlD.NET subtle signature
 -->
 
 <!doctype html>
@@ -27,7 +19,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Enter</title>
+<title>INDEX · Choose Path</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -36,28 +28,30 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* Keep ui.css gold grid BEHIND everything on this page */
+/* keep ui field overlays behind content */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* Tokens */
+/* tokens */
 :root{
   --R:170px;
   --D:260px;
 
-  --opalA:rgba(210,190,255,.24);
-  --opalB:rgba(120,70,255,.16);
+  /* opal/violet readability */
+  --opalA:rgba(210,190,255,.28);
+  --opalB:rgba(120,70,255,.18);
   --opalC:rgba(90,210,255,.12);
 
   --goldSoft:rgba(212,175,55,.42);
 
+  /* deep base */
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 
-  --stroke:rgba(255,255,255,.12);
+  --stroke:rgba(255,255,255,.14);
 }
 
-/* Top controls */
+/* top controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -67,14 +61,14 @@ body::before, body::after{z-index:0}
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 
-/* Center headline (single hierarchy) */
-.head{
+/* center brand (opal glass) — width clamps to avoid corner collision */
+.brand{
   position:fixed;
   left:50%;
-  top:18px;
+  top:22px;
   transform:translateX(-50%);
   z-index:120;
-  width:min(920px,94vw);
+  width:min(760px, calc(100vw - 32px - 240px));
   text-align:center;
 
   border:1px solid var(--stroke);
@@ -82,38 +76,70 @@ body::before, body::after{z-index:0}
   padding:16px 16px 14px;
 
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 62%),
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 62%),
     radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
     radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.12));
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.45);
+    linear-gradient(160deg, rgba(0,0,0,.36), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 24px 90px rgba(0,0,0,.55);
+  pointer-events:none;
 }
-.k{
+.brand .k{
   margin:0 0 6px;
   font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.78;
+  opacity:.86;
+  text-shadow:0 14px 40px rgba(0,0,0,.55);
 }
-.t{
+.brand .t{
   margin:0;
   font-weight:950;
   font-size:44px;
   letter-spacing:1.4px;
   line-height:1.02;
+  color:rgba(255,255,255,.98);
+  text-shadow:0 18px 44px rgba(0,0,0,.62);
 }
-.s{
+.brand .s{
   margin:10px auto 0;
   font-size:13.5px;
-  color:rgba(255,255,255,.82);
-  line-height:1.4;
+  color:rgba(255,255,255,.90);
+  line-height:1.5;
   max-width:860px;
+  text-shadow:0 16px 44px rgba(0,0,0,.55);
 }
-.s strong{font-weight:950}
-.s em{font-style:italic;opacity:.95}
 
-/* Stage */
+/* subtle interior lattice (no field ownership) */
+.lattice{
+  position:fixed;inset:0;z-index:20;
+  pointer-events:none;
+  opacity:.08;
+  mix-blend-mode:screen;
+}
+.lattice::before{
+  content:"";
+  position:absolute;inset:-40%;
+  transform:rotate(45deg);
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px),
+    repeating-linear-gradient(90deg,
+      rgba(212,175,55,.22) 0px,
+      rgba(212,175,55,.22) 1px,
+      transparent 1px,
+      transparent 52px);
+}
+.lattice::after{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 18%, rgba(255,255,255,.10), transparent 58%);
+}
+
+/* stage */
 .stage{
   position:fixed;
   left:50%;
@@ -125,7 +151,7 @@ body::before, body::after{z-index:0}
   pointer-events:none;
 }
 
-/* Diamonds */
+/* diamonds (opal lacquer) */
 .d{
   width:var(--D);
   height:var(--D);
@@ -141,16 +167,16 @@ body::before, body::after{z-index:0}
   overflow:hidden;
 
   background:
-    radial-gradient(circle at 28% 22%, rgba(255,255,255,.45), transparent 52%),
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.50), transparent 52%),
     radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
     radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
     radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
-  border:1px solid rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.20);
   box-shadow:
     0 50px 160px rgba(0,0,0,.86),
-    0 0 40px rgba(212,175,55,.22),
+    0 0 44px rgba(212,175,55,.24),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.78);
 
@@ -160,7 +186,7 @@ body::before, body::after{z-index:0}
   content:"";
   position:absolute;inset:0;border-radius:34px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.62;
+  opacity:.66;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
@@ -170,53 +196,59 @@ body::before, body::after{z-index:0}
   content:"";
   position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.26), rgba(255,255,255,0));
   transform:rotate(-10deg);
   pointer-events:none;
 }
 .d:hover{
   transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.32);
+  border-color:rgba(212,175,55,.36);
   box-shadow:
     0 50px 160px rgba(0,0,0,.86),
-    0 0 52px rgba(212,175,55,.26),
+    0 0 60px rgba(212,175,55,.28),
     inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -50px 90px rgba(0,0,0,.78);
 }
 .d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
-/* Vertical layout */
+/* vertical */
 .d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
 .d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
 
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:18px;gap:10px;
+  padding:18px;
+  gap:10px;
+  pointer-events:none;
   user-select:none;
 }
 .lab{
   font-weight:950;
   font-size:22px;
   letter-spacing:1px;
-  text-shadow:0 0 18px rgba(255,255,255,.10);
+  color:rgba(255,255,255,.98);
+  text-shadow:0 16px 40px rgba(0,0,0,.65);
 }
 .sub{
   font-size:14px;
-  opacity:.90;
-  line-height:1.35;
+  color:rgba(255,255,255,.90);
+  line-height:1.45;
   max-width:24em;
-}
-.pref{
-  font-weight:950;
-  font-style:italic;
-  letter-spacing:.2px;
+  text-shadow:0 14px 38px rgba(0,0,0,.60);
+  padding:8px 10px;
+  border-radius:14px;
+  background:rgba(0,0,0,.10);
+  border:1px solid rgba(255,255,255,.06);
 }
 
-/* Fine print + signature */
+/* fine print + signature */
 .footer{
   position:fixed;
   left:50%;
@@ -226,8 +258,8 @@ body::before, body::after{z-index:0}
   width:min(920px,94vw);
   text-align:center;
   font-size:12.5px;
-  opacity:.70;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
+  opacity:.72;
+  text-shadow:0 18px 60px rgba(0,0,0,.60);
   pointer-events:none;
 }
 .sig{
@@ -238,22 +270,26 @@ body::before, body::after{z-index:0}
   z-index:120;
   font-size:11px;
   letter-spacing:2px;
-  opacity:.55;
+  opacity:.58;
   pointer-events:none;
 }
 
+/* mobile */
 @media (max-width:560px){
-  :root{--R:156px;--D:244px}
+  :root{ --R:156px; --D:244px; }
   .stage{top:58%}
-  .t{font-size:38px}
+  .brand .t{font-size:38px}
+  .brand{top:20px;width:min(720px, calc(100vw - 32px));}
 }
 </style>
 </head>
 
 <body>
 
+<div class="lattice" aria-hidden="true"></div>
+
 <div class="top-left">
-  <a class="btn" id="btnExit" href="/">EXIT</a>
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
   <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
 </div>
 
@@ -263,31 +299,31 @@ body::before, body::after{z-index:0}
   <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="head" aria-hidden="true">
-  <p class="k" id="k">CARDINAL AXIS</p>
-  <h1 class="t" id="t">ENTER</h1>
-  <p class="s" id="s"><strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em></p>
+<div class="brand" aria-hidden="true">
+  <p class="k" id="bk">CARDINAL AXIS</p>
+  <h1 class="t" id="bt">CHOOSE PATH</h1>
+  <p class="s" id="bs">Two ways in. Both lead to clarity.</p>
 </div>
 
-<div class="stage" aria-label="Door fork">
+<div class="stage" aria-label="Primary router">
 
-  <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+  <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
     <div class="inner">
-      <div class="lab" id="labEnter">ENTER SITE</div>
-      <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
+      <div class="lab" id="labStructure">STRUCTURE</div>
+      <div class="sub" id="subStructure">Definitions. Boundaries. Clear foundations.</div>
     </div>
   </div>
 
-  <div class="d d-bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
+  <div class="d d-bottom" id="dProducts" role="button" tabindex="0" aria-label="Products">
     <div class="inner">
-      <div class="lab" id="labMap">VIEW SITE MAP</div>
-      <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented first.</div>
+      <div class="lab" id="labProducts">PRODUCTS</div>
+      <div class="sub" id="subProducts">Tools. Platforms. What you can use.</div>
     </div>
   </div>
 
 </div>
 
-<div class="footer" id="foot">Fine print: orientation before scale · scale before claims</div>
+<div class="footer" id="foot">Fine print: structure prevents drift · tools inherit limits</div>
 <div class="sig">COGRlD.NET</div>
 
 <script>
@@ -312,7 +348,7 @@ body::before, body::after{z-index:0}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
     var L=(over && over.lang) ? over.lang : lang;
@@ -325,11 +361,11 @@ body::before, body::after{z-index:0}
            "&depth="+encodeURIComponent(D);
   }
 
-  // top links carry state
-  document.getElementById("btnExit").href="/"+q();
+  // top links
+  document.getElementById("btnDoor").href="/door/"+q();
   document.getElementById("btnPrelude").href="/prelude/"+q();
 
-  // language buttons
+  // language buttons (reload for compatibility with instruments.js allowlist)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -342,12 +378,9 @@ body::before, body::after{z-index:0}
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    location.reload();
+    try{ localStorage.setItem("gd_lang", next); }catch(e){}
+    location.href = location.pathname + q({lang:next});
   }
-
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
@@ -355,55 +388,55 @@ body::before, body::after{z-index:0}
   // i18n minimal
   function renderLang(){
     if(lang==="zh"){
-      document.getElementById("t").textContent="进入";
-      document.getElementById("s").innerHTML="<strong>无需信仰</strong> · <strong>不做推销</strong> · <em>以结构导航</em>";
-      document.getElementById("labEnter").textContent="进入网站";
-      document.getElementById("prefEnter").textContent="直接：";
-      document.getElementById("subEnter").lastChild.nodeValue=" 直接进入。";
-      document.getElementById("labMap").textContent="查看网站地图";
-      document.getElementById("prefMap").textContent="先：";
-      document.getElementById("subMap").lastChild.nodeValue=" 先获得方向。";
-      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("bt").textContent="选择路径";
+      document.getElementById("bs").textContent="两条路。都通向清晰。";
+      document.getElementById("labStructure").textContent="结构";
+      document.getElementById("subStructure").textContent="定义。边界。清晰基础。";
+      document.getElementById("labProducts").textContent="产品";
+      document.getElementById("subProducts").textContent="工具。平台。可用内容。";
+      document.getElementById("btnDoor").textContent="门";
       document.getElementById("btnPrelude").textContent="前置页";
-      document.getElementById("foot").textContent="细则：先导览 · 再规模 · 再主张";
+      document.getElementById("foot").textContent="细则：结构防漂移 · 工具有边界";
     }else if(lang==="es"){
-      document.getElementById("t").textContent="ENTRAR";
-      document.getElementById("s").innerHTML="<strong>Sin creencias</strong> · <strong>Sin venta</strong> · <em>Navegación por estructura</em>";
-      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
-      document.getElementById("prefEnter").textContent="Directo:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Entra directamente.";
-      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
-      document.getElementById("prefMap").textContent="Primero:";
-      document.getElementById("subMap").lastChild.nodeValue=" Oriéntate primero.";
-      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("bt").textContent="ELEGIR RUTA";
+      document.getElementById("bs").textContent="Dos caminos. Ambos llevan a claridad.";
+      document.getElementById("labStructure").textContent="ESTRUCTURA";
+      document.getElementById("subStructure").textContent="Definiciones. Límites. Base clara.";
+      document.getElementById("labProducts").textContent="PRODUCTOS";
+      document.getElementById("subProducts").textContent="Herramientas. Plataformas. Usable.";
+      document.getElementById("btnDoor").textContent="PUERTA";
       document.getElementById("btnPrelude").textContent="PRELUDIO";
-      document.getElementById("foot").textContent="Letra pequeña: orientación · escala · afirmaciones";
+      document.getElementById("foot").textContent="Letra pequeña: estructura evita deriva · herramientas heredan límites";
     }else{
-      document.getElementById("t").textContent="ENTER";
-      document.getElementById("s").innerHTML="<strong>No belief required</strong> · <strong>No selling</strong> · <em>Navigation by structure</em>";
-      document.getElementById("labEnter").textContent="ENTER SITE";
-      document.getElementById("prefEnter").textContent="Direct:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Go directly inside.";
-      document.getElementById("labMap").textContent="VIEW SITE MAP";
-      document.getElementById("prefMap").textContent="First:";
-      document.getElementById("subMap").lastChild.nodeValue=" Get oriented first.";
-      document.getElementById("btnExit").textContent="EXIT";
+      document.getElementById("bt").textContent="CHOOSE PATH";
+      document.getElementById("bs").textContent="Two ways in. Both lead to clarity.";
+      document.getElementById("labStructure").textContent="STRUCTURE";
+      document.getElementById("subStructure").textContent="Definitions. Boundaries. Clear foundations.";
+      document.getElementById("labProducts").textContent="PRODUCTS";
+      document.getElementById("subProducts").textContent="Tools. Platforms. What you can use.";
+      document.getElementById("btnDoor").textContent="DOOR";
       document.getElementById("btnPrelude").textContent="PRELUDE";
-      document.getElementById("foot").textContent="Fine print: orientation before scale · scale before claims";
+      document.getElementById("foot").textContent="Fine print: structure prevents drift · tools inherit limits";
     }
   }
   renderLang();
 
-  // fork routes (LOCKED)
-  function goEnter(){ location.href="/home/"+q(); }
-  function goMap(){ location.href="/prelude/"+q(); }
+  // routing
+  function goStructure(){ location.href="/home/"+q(); }
+  function goProducts(){ location.href="/explore/"+q(); }
 
-  var dEnter=document.getElementById("dEnter");
-  var dMap=document.getElementById("dMap");
-  dEnter.addEventListener("click", goEnter);
-  dMap.addEventListener("click", goMap);
-  dEnter.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }});
-  dMap.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }});
+  var dS=document.getElementById("dStructure");
+  var dP=document.getElementById("dProducts");
+
+  dS.addEventListener("click", goStructure);
+  dP.addEventListener("click", goProducts);
+
+  dS.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goStructure(); }
+  });
+  dP.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goProducts(); }
+  });
 
 })();
 </script>

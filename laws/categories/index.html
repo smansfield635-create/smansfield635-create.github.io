@@ -1,3 +1,17 @@
+<!-- TNT — /laws/categories/index.html
+     LAWS · CATEGORIES (FLOW / INTEGRITY / REALITY / STRUCTURE) — SHELL ROUTER
+     LOCKS:
+       - ui.css owns field (NO html/body background styling here)
+       - branch.css owns geometry
+       - instruments.js owns state normalization
+     STATE:
+       - URL keys: lang/style/time/depth
+       - LS keys: gd_lang/gd_style/gd_time/gd_depth
+     BEHAVIOR:
+       - All links carry lang/style/time/depth
+       - Language toggle (EN / 中文 / ES) sets gd_lang + rewrites URL (NOTE: ES persistence requires instruments.js allowlist update)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,50 +21,196 @@
 
 <link rel="stylesheet" href="/assets/ui.css?v=1001"/>
 <link rel="stylesheet" href="/assets/branch.css?v=1001"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+/* NO FIELD OWNERSHIP HERE (ui.css owns html/body background) */
+a{color:inherit;text-decoration:none}
+
+/* Simple language toggle (top-right) */
+.langbar{
+  position:fixed;
+  right:16px;
+  top:16px;
+  z-index:140;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.langbar .btn{padding:10px 14px;border-radius:999px}
+</style>
 </head>
 
 <body>
-<div class="shooting-stars"></div>
+<div class="shooting-stars" aria-hidden="true"></div>
+
+<div class="langbar" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
 
 <div class="page">
 
   <div class="h">
-    <h1>Laws</h1>
-    <p>Categories · Choose a branch.</p>
+    <h1 id="h1">Laws</h1>
+    <p id="h2">Categories · Choose a branch.</p>
   </div>
 
   <div class="stage">
     <div class="platform">
 
-      <a class="diamond top" href="./reality/">
-        <span>Reality<small>What is</small></span>
+      <!-- REALITY -->
+      <a class="diamond top" id="linkReality" href="./reality/">
+        <span><span id="labReality">Reality</span><small id="subReality">What is</small></span>
       </a>
 
-      <a class="diamond right" href="./structure/">
-        <span>Structure<small>How it holds</small></span>
+      <!-- STRUCTURE -->
+      <a class="diamond right" id="linkStructure" href="./structure/">
+        <span><span id="labStructure">Structure</span><small id="subStructure">How it holds</small></span>
       </a>
 
-      <a class="diamond bottom" href="./flow/">
-        <span>Flow<small>How it moves</small></span>
+      <!-- FLOW -->
+      <a class="diamond bottom" id="linkFlow" href="./flow/">
+        <span><span id="labFlow">Flow</span><small id="subFlow">How it moves</small></span>
       </a>
 
-      <a class="diamond left" href="./integrity/">
-        <span>Integrity<small>What stays true</small></span>
+      <!-- INTEGRITY -->
+      <a class="diamond left" id="linkIntegrity" href="./integrity/">
+        <span><span id="labIntegrity">Integrity</span><small id="subIntegrity">What stays true</small></span>
       </a>
 
-      <a class="diamond mini mini-left" href="/laws/">
-        <span><small>BACK</small></span>
+      <!-- BACK -->
+      <a class="diamond mini mini-left" id="linkBack" href="/laws/">
+        <span><small id="labBack">BACK</small></span>
       </a>
 
-      <a class="diamond mini mini-right" href="/home/">
-        <span><small>HOME</small></span>
+      <!-- HOME -->
+      <a class="diamond mini mini-right" id="linkHome" href="/home/">
+        <span><small id="labHome">HOME</small></span>
       </a>
 
     </div>
   </div>
 
-  <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  <footer id="foot">CANONICAL · STABLE · © GEODIAMETRICS</footer>
 
 </div>
+
+<script>
+(function(){
+  // ----- State (instrument-compatible) -----
+  var qs = new URLSearchParams(location.search);
+
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+    localStorage.setItem("gd_depth", depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L = (over && over.lang) ? over.lang : lang;
+    var S = (over && over.style) ? over.style : style;
+    var T = (over && over.time) ? over.time : time;
+    var D = (over && over.depth) ? over.depth : depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
+
+  // ----- Wire routes (absolute + state carry) -----
+  document.getElementById("linkReality").href   = "/laws/categories/reality/"  + q();
+  document.getElementById("linkStructure").href = "/laws/categories/structure/"+ q();
+  document.getElementById("linkFlow").href      = "/laws/categories/flow/"     + q();
+  document.getElementById("linkIntegrity").href = "/laws/categories/integrity/"+ q();
+
+  document.getElementById("linkBack").href = "/laws/" + q();
+  document.getElementById("linkHome").href = "/home/" + q();
+
+  // ----- Language UI -----
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    location.reload();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  paintLang();
+
+  // ----- i18n (single-language) -----
+  if(lang==="zh"){
+    document.getElementById("h1").textContent="法则";
+    document.getElementById("h2").textContent="分类 · 选择分支。";
+
+    document.getElementById("labReality").textContent="现实";
+    document.getElementById("subReality").textContent="是什么";
+
+    document.getElementById("labStructure").textContent="结构";
+    document.getElementById("subStructure").textContent="如何支撑";
+
+    document.getElementById("labFlow").textContent="流动";
+    document.getElementById("subFlow").textContent="如何运行";
+
+    document.getElementById("labIntegrity").textContent="完整性";
+    document.getElementById("subIntegrity").textContent="什么保持不变";
+
+    document.getElementById("labBack").textContent="返回";
+    document.getElementById("labHome").textContent="枢纽";
+    document.getElementById("foot").textContent="规范 · 稳定 · © GEODIAMETRICS";
+  }else if(lang==="es"){
+    document.getElementById("h1").textContent="Leyes";
+    document.getElementById("h2").textContent="Categorías · Elige una rama.";
+
+    document.getElementById("labReality").textContent="Realidad";
+    document.getElementById("subReality").textContent="Qué es";
+
+    document.getElementById("labStructure").textContent="Estructura";
+    document.getElementById("subStructure").textContent="Cómo sostiene";
+
+    document.getElementById("labFlow").textContent="Flujo";
+    document.getElementById("subFlow").textContent="Cómo se mueve";
+
+    document.getElementById("labIntegrity").textContent="Integridad";
+    document.getElementById("subIntegrity").textContent="Qué se mantiene";
+
+    document.getElementById("labBack").textContent="VOLVER";
+    document.getElementById("labHome").textContent="HUB";
+    document.getElementById("foot").textContent="CANÓNICO · ESTABLE · © GEODIAMETRICS";
+  }
+
+})();
+</script>
+
 </body>
 </html>

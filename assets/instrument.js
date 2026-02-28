@@ -9,8 +9,6 @@
    - Canon keys only: gd_lang, gd_depth, gd_time, gd_style
    - Canon langs: ["en","zh","es"]  primary: "en"
    - Gate deep pages if gd_lang invalid (root/index/door are ungated)
-   NOTES:
-   - i18n_canon.json currently provides en/zh. If lang=es, i18n falls back to en until es tokens exist.
    ============================================================ */
 
 (function(){
@@ -56,7 +54,7 @@
     }
   }
 
-  // ---------- Drift cleanup (LOCKED behavior: delete unknown values) ----------
+  // ---------- Drift cleanup (LOCKED) ----------
   function cleanupDrift(){
     var lang  = lsGet(K_LANG);
     var depth = lsGet(K_DEPTH);
@@ -69,7 +67,7 @@
     if(style && !ALLOW_STYLE[style])  lsDel(K_STYLE);
   }
 
-  // ---------- Normalize (LOCKED precedence: URL → LS → defaults) ----------
+  // ---------- Normalize (URL → LS → defaults) ----------
   function normalize(){
     var lang  = qsGet("lang")  || lsGet(K_LANG)  || PRIMARY_LANG;
     var depth = qsGet("depth") || lsGet(K_DEPTH) || "explore";
@@ -78,6 +76,7 @@
 
     if(!ALLOW_LANG[lang])   lang  = PRIMARY_LANG;
     if(!ALLOW_DEPTH[depth]) depth = "explore";
+    if(time==="trajectory") time="post";
     if(!ALLOW_TIME[time])   time  = "now";
     if(!ALLOW_STYLE[style]) style = "formal";
 
@@ -92,10 +91,8 @@
   // ---------- Minimal gating ----------
   // Do NOT gate:
   // - / (root)
-  // - /index.html
-  // - /door/
-  // Gate deep pages if gd_lang missing/invalid:
-  // - /home/, /explore/, /links/, /about/, /products/, /laws/, /cares/, /gauges/, /innovation/
+  // - /index.html (Index)
+  // - /door/ (door)
   function gate(state){
     var path = (window.location && window.location.pathname) ? window.location.pathname : "/";
 
@@ -105,7 +102,7 @@
 
     if(isRoot || isIndex || isDoor) return;
 
-    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/cares", "/gauges", "/innovation"];
+    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/gauges", "/innovation", "/prelude"];
     var isDeep = false;
     for(var i=0;i<deepPrefixes.length;i++){
       if(path.indexOf(deepPrefixes[i]) === 0){ isDeep = true; break; }
@@ -131,7 +128,6 @@
 
   function applyI18n(dict, lang){
     try{
-      // Fallback chain: requested lang → en
       var scope = (dict && dict[lang]) ? dict[lang] : (dict && dict.en ? dict.en : null);
       if(!scope) return;
 
@@ -174,7 +170,7 @@
   gate(state);
   loadCanonI18n(state.lang);
 
-  // Optional debug surface (non-authoritative)
+  // Optional debug surface
   window.CRP_INSTRUMENT = {
     getState: function(){
       return {

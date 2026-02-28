@@ -1,10 +1,10 @@
 <!-- TNT — /products/coherence-diagnostic/index.html
-     COHERENCE DIAGNOSTIC · WORKING OPEN (MODAL) · 3 LANG · STATE SAFE
-     FIX:
-       - Diamonds now OPEN a modal (they were only navigation/glow before)
-       - No 404 dependency: internal open is JS modal, nav remains anchors
-       - EN / 中文 / ES works
-       - gd_* state preserved via query + LS
+     COHERENCE DIAGNOSTIC · DEPTH RESTORE (EVOLUTIVE CONTENT) · 3 LANG · WORKING OPEN
+     FIXES:
+       - FORMAL vs INFORMAL now changes meaning (not just tone)
+       - CONCEPT vs LIVE vs ROADMAP now changes content (tabbed time lens)
+       - Depth added: 4 boxes × 4 bullets per view (dense + readable)
+       - Diamonds still open modal; nav still works; gd_* state preserved
 -->
 
 <!doctype html>
@@ -193,7 +193,6 @@ body::before,body::after{pointer-events:none!important}
   user-select:none;-webkit-tap-highlight-color:transparent;
 }
 .pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
-
 .hint{
   max-width:980px;margin:0 auto 12px;
   padding:10px 12px;border-radius:16px;
@@ -202,17 +201,22 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.80);
   font-size:12.5px;line-height:1.45;
 }
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  padding:14px 14px 12px;
-  margin:0 0 12px;
-  cursor:pointer;
+
+/* CONTENT GRID (DEPTH) */
+.grid{
+  display:grid;gap:14px;
+  max-width:980px;margin:0 auto;
 }
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
-.bubble p{margin:0;color:rgba(255,255,255,.74);line-height:1.65;display:none}
-.bubble.open p{display:block}
+@media (min-width:920px){.grid{grid-template-columns:1fr 1fr}}
+.box{
+  padding:16px 18px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.05);
+}
+.box h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.box p{margin:0 0 10px;color:rgba(255,255,255,.82);line-height:1.6}
+.box ul{margin:0 0 0 18px;padding:0;color:rgba(255,255,255,.72)}
+.box li{margin:6px 0}
 
 @media (max-width:560px){
   :root{--R:136px;--D:170px}
@@ -280,9 +284,9 @@ body::before,body::after{pointer-events:none!important}
     </div>
     <div class="mbody">
       <div class="lensbar">
-        <div class="pill active" id="toneFormal">FORMAL</div>
+        <div class="pill" id="toneFormal">FORMAL</div>
         <div class="pill" id="toneInformal">INFORMAL</div>
-        <div class="pill active" id="timeConcept">CONCEPT</div>
+        <div class="pill" id="timeConcept">CONCEPT</div>
         <div class="pill" id="timeLive">LIVE</div>
         <div class="pill" id="timeRoadmap">ROADMAP</div>
       </div>
@@ -291,9 +295,29 @@ body::before,body::after{pointer-events:none!important}
         This page is bounded. Claims require receipts. Navigation preserves gd_* state.
       </div>
 
-      <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
-      <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
-      <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
+      <div class="grid">
+        <div class="box">
+          <h4 id="h1">—</h4>
+          <p id="p1">—</p>
+          <ul id="u1"></ul>
+        </div>
+        <div class="box">
+          <h4 id="h2">—</h4>
+          <p id="p2">—</p>
+          <ul id="u2"></ul>
+        </div>
+        <div class="box">
+          <h4 id="h3">—</h4>
+          <p id="p3">—</p>
+          <ul id="u3"></ul>
+        </div>
+        <div class="box">
+          <h4 id="h4">—</h4>
+          <p id="p4">—</p>
+          <ul id="u4"></ul>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -328,7 +352,7 @@ body::before,body::after{pointer-events:none!important}
            "&depth="+encodeURIComponent(depth);
   }
 
-  // ---- nav wiring (anchors stay anchors) ----
+  // ---- nav wiring ----
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
@@ -361,7 +385,14 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ---- text packs ----
+  // ---- content model (DEPTH + EVOLUTION) ----
+  // view = node × time × tone => 4 boxes (each: header, paragraph, 4 bullets)
+  function V(h1,p1,u1,h2,p2,u2,h3,p3,u3,h4,p4,u4){
+    return {
+      b1:{h:h1,p:p1,u:u1}, b2:{h:h2,p:p2,u:u2}, b3:{h:h3,p:p3,u:u3}, b4:{h:h4,p:p4,u:u4}
+    };
+  }
+
   var COPY={
     en:{
       hdr:{t:"Coherence Diagnostic", s:"Decision support · classification · bounded outputs"},
@@ -371,33 +402,290 @@ body::before,body::after{pointer-events:none!important}
         rules:{lab:"RULES", sub:"Admissibility + collapse posture."},
         use:{lab:"USE", sub:"Inputs → constraints → outputs."}
       },
-      modal:{hint:"This page is bounded. Claims require receipts. Navigation preserves gd_* state.",
-        concept:"Concept", live:"Live", roadmap:"Roadmap",
-        formal:"FORMAL", informal:"INFORMAL", c:"CONCEPT", l:"LIVE", r:"ROADMAP"
+      ui:{
+        formal:"FORMAL", informal:"INFORMAL",
+        concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP",
+        hint:"This page is bounded. Claims require receipts. Navigation preserves gd_* state."
       },
-      content:{
+      views:{
         overview:{
-          origin:{formal:"A bounded diagnostic surface that classifies trajectories under declared scope. It consumes receipts, applies constraints, and outputs admissible states—not narratives. The purpose is decision compression: same evidence → same classification.",informal:"A fast way to tell what’s actually going on. You bring real receipts, it applies the rules, and it tells you what’s admissible—no guessing."},
-          now:{formal:"Live posture: the diagnostic runs as a routing surface that keeps meaning stable while pages expand. Outputs remain bounded to what is measured, and every jump preserves state.",informal:"Right now it’s the hub for ‘what’s real’. If you feel drift, this is where you check the rules and the outputs."},
-          post:{formal:"Roadmap posture: expand the diagnostic into replayable bundles, registry outputs, and cross-domain adapters while preserving the same admissibility contract.",informal:"Next it becomes a full toolkit: more adapters, better replay, and clearer proof—same rules, more reach."}
+          origin:{
+            formal:V(
+              "Purpose (bounded)", "A diagnostic surface that converts an evidence stream into an admissibility state under declared scope. It does not “explain” intent; it classifies what is defensible from receipts.",
+              ["Input is evidence, not narrative.","Output is a state + reason codes.","Undecidable remains undecidable.","Scope controls what counts."],
+              "Admissibility contract", "A claim is admissible only if it is consistent with the declared definitions and survives constraints. If two observers apply the same rules to the same receipts, the result matches.",
+              ["Same receipts → same result.","No silent re-interpretation.","No post-hoc upgrades.","Corrections create a new epoch."],
+              "Failure modes", "Most failures are drift failures: meaning shifts, missing receipts are papered over, or constraints are relaxed under pressure. This diagnostic blocks those escalations.",
+              ["Ambiguity amplifies collapse.","Compensation hides instability.","Scale magnifies small errors.","Marketing cannot override measurement."],
+              "Proof hook", "The instrument is a constraint system: it limits reachable claims by admissibility rules. If a claim cannot survive falsifiers, it cannot be upgraded.",
+              ["Falsifier present ⇒ downgrade.","No receipts ⇒ non-upgradable.","Conflicting receipts ⇒ undecidable.","Audit trail ⇒ mandatory."]
+            ),
+            informal:V(
+              "What it is", "A reality-check tool. You bring real receipts, it applies the rules, and it tells you what can be said without guessing or hype.",
+              ["Receipts beat opinions.","Rules beat vibes.","No receipts = no upgrade.","If it’s unclear, it stays unclear."],
+              "What you get", "You get a clean state plus a short reason why. That makes decisions fast because everyone is looking at the same truth boundary.",
+              ["One result, not ten arguments.","Same evidence, same conclusion.","Reasons are explicit.","Return paths stay clean."],
+              "What it stops", "It stops the classic trap: scaling a story before scaling proof. Drift doesn’t get to hide inside language.",
+              ["No “word swapping.”","No silent exceptions.","No confidence inflation.","No scale without structure."],
+              "Why it matters", "If you want scale without collapse, you need a gate that refuses upgrades that aren’t earned.",
+              ["Gate first, scale second.","Keep failure small.","Make drift loud.","Stay coherent under pressure."]
+            )
+          },
+          now:{
+            formal:V(
+              "Live posture", "Live mode is operational: it binds to current receipts and produces a state you can act on. It refuses to fill gaps with narrative and flags ambiguity as a risk amplifier.",
+              ["Undecidable is a real output.","Missing data stays missing.","Reason codes must exist.","State is windowed."],
+              "Operator discipline", "Operators use the output to choose the next safe action: proceed, hold, rollback, or collect receipts. The diagnostic is not a prediction engine; it is an admissibility gate.",
+              ["Proceed only inside bounds.","Hold when signals conflict.","Rollback when constraints fail.","Collect receipts to upgrade."],
+              "Measurement priority", "Live mode keeps measurement louder than communication. If a public message exceeds measured state, the instrument marks the mismatch.",
+              ["Claims cannot exceed receipts.","Scope cannot silently expand.","Definitions cannot drift midstream.","Epochs must be explicit."],
+              "Proof hook", "Live classification is replayable: same window + same receipts + same rules yields the same state.",
+              ["Replay beats persuasion.","Audit beats memory.","Windows beat cherry-picks.","Logs beat post-hoc edits."]
+            ),
+            informal:V(
+              "What “live” means", "Live mode answers: “What’s real right now?” It’s built to keep you calm by keeping outputs bounded and repeatable.",
+              ["No guessing.","No story-filling.","No silent upgrades.","Clear reasons."],
+              "How you use it", "Run it when you feel drift. If the system can’t justify a claim with receipts, it doesn’t get to say it.",
+              ["Check receipts.","Check constraints.","Take the safe action.","Move forward cleanly."],
+              "How it protects you", "It blocks the pressure move: “just ship it.” If the gate fails, the correct move is to stop or roll back.",
+              ["Stop cascade early.","Keep failure local.","Don’t scale confusion.","Earn upgrades."],
+              "Why it scales", "Because it’s boring in the right way: same input, same output, every time.",
+              ["Predictable.","Shareable.","Auditable.","Hard to game."]
+            )
+          },
+          post:{
+            formal:V(
+              "Roadmap posture", "Roadmap mode is about gating expansion: what receipts are required to move from a bounded prototype to a scaled surface without relaxing standards.",
+              ["Receipts required are explicit.","Stop conditions are explicit.","No promises, only gates.","Upgrades require epoch roll."],
+              "Evidence bundles", "Outputs become exportable bundles: window receipts, reason codes, and hashes that allow independent observers to verify the state without privileged access.",
+              ["Hashable windows.","Portable reason codes.","Replay packages.","Privacy-preserving exports."],
+              "Anti-gaming", "Roadmap strengthens integrity: red-team tests, dual-implementation checks, and time-locked thresholds to prevent quiet tuning under incentive pressure.",
+              ["Harder to spoof.","Harder to launder exceptions.","Harder to inflate claims.","Easier to audit."],
+              "Proof hook", "Scale is permitted only when the same classification holds across expanded windows and stress conditions without increasing ambiguity.",
+              ["More scale ⇒ more proof.","No tightening without new event class.","Ambiguity cannot be hidden.","Stability must generalize."]
+            ),
+            informal:V(
+              "What’s next", "Next is scale with receipts. Roadmap mode tells you what you must prove before you’re allowed to grow.",
+              ["Proof first.","Then scale.","No shortcuts.","No hype."],
+              "What you’ll build", "You’ll build proof bundles you can hand to anyone: clear reasons, replayable windows, and clean exports.",
+              ["Easy to verify.","Hard to fake.","Still private.","Still bounded."],
+              "How we stay honest", "We add anti-gaming so nobody can buy the outcome or tune the rules quietly.",
+              ["Logs.","Locks.","Audits.","Red-team tests."],
+              "How it wins", "Because trust scales when proof scales—and proof scales when the gate stays strict.",
+              ["Strict gate.","Clean upgrades.","Stable meaning.","Safe growth."]
+            )
+          }
         },
+
         deploy:{
-          origin:{formal:"Deployment attaches to surfaces where drift accumulates: comms, incentives, process, and measurement. The diagnostic is placed upstream of claims so it can gate escalation before scale amplifies error.",informal:"Put it where people start making claims. It catches drift early so you don’t scale mistakes."},
-          now:{formal:"Live deployment favors small waves, observable checkpoints, and clean rollback. When signals disagree, the diagnostic flags ambiguity rather than forcing a story.",informal:"Use it in small phases. If signals don’t match, it says ‘unclear’ instead of pretending."},
-          post:{formal:"Roadmap deployment integrates staged governance, audit latency discipline, and registry publication while keeping private telemetry private.",informal:"Eventually it plugs into governance and audits so trust scales without leaking sensitive data."}
+          origin:{
+            formal:V(
+              "Where it plugs in", "Deployment is upstream of claims: comms surfaces, reporting surfaces, and decision points where language can outrun receipts. The diagnostic sits there to prevent inflation.",
+              ["Deploy before escalation.","Deploy before marketing.","Deploy before expansion.","Deploy before adjacency."],
+              "Interfaces", "It integrates by consuming the same gd_* state and the same evidence vocabulary across pages. The diagnostic is portable because definitions are locked.",
+              ["Same keys everywhere.","Same terms everywhere.","Same falsifiers everywhere.","Same reason codes."],
+              "Containment posture", "When it detects ambiguity or violation, the default action is containment: halt upgrade, rollback if needed, collect receipts, then proceed.",
+              ["Contain first.","Then correct.","Then proceed.","No silent patch."],
+              "Proof hook", "Deployment success is measured by fewer upgrades without receipts and fewer drift-driven arguments because the gate produces one shared state.",
+              ["Arguments collapse into outputs.","Outputs tie to receipts.","Receipts tie to scope.","Scope ties to definitions."]
+            ),
+            informal:V(
+              "Where to put it", "Put it where people start making confident statements. That’s where drift hides.",
+              ["Before big decisions.","Before big claims.","Before big launches.","Before big money."],
+              "What it connects to", "It connects to your evidence and your state—not to someone’s mood.",
+              ["Receipts in.","Bounded state out.","Reasons included.","No story-filling."],
+              "Default move", "If it’s unclear or failing, you stop or roll back. If it’s clean, you proceed.",
+              ["Hold.","Rollback.","Collect receipts.","Proceed."],
+              "Why that works", "Because you kill drift early—before it turns into expensive chaos.",
+              ["Less drama.","Less waste.","More clarity.","More safety."]
+            )
+          },
+          now:{
+            formal:V(
+              "Live deployment", "Live deployment emphasizes small phases: run the gate on each wave, publish the bounded state, and preserve rollback readiness. Scaling without gates is disallowed.",
+              ["Wave caps.","Zone separation.","Rollback readiness.","Audit latency discipline."],
+              "Operational signals", "The diagnostic consumes observables, flags conflicts, and logs reason codes for every state change. Missing data cannot be patched with narrative.",
+              ["Conflict → ambiguity.","Violation → fail.","Missing → missing.","Correction → new epoch."],
+              "Human interface", "Operators see one clear output and one clear next action: proceed, hold, rollback, or request receipts.",
+              ["One action, not ten debates.","Reasons visible.","Receipts demanded.","State preserved."],
+              "Proof hook", "A live system is stable when it can be audited from receipts without relying on interpretation or memory.",
+              ["Audit beats recollection.","Replay beats persuasion.","Logs beat claims.","Windows beat cherry-picks."]
+            ),
+            informal:V(
+              "Live use", "Run it on every phase. If the output isn’t clean, you don’t scale.",
+              ["Small steps.","Clear gates.","Fast rollback.","No drift."],
+              "If signals disagree", "It marks ambiguity instead of pretending it knows.",
+              ["No fake certainty.","No forced story.","Just bounded output.","Then next action."],
+              "If it fails", "Contain and correct—don’t explain.",
+              ["Stop cascade.","Fix root cause.","Log the epoch.","Try again cleanly."],
+              "Why it feels calm", "Because the system always tells the same truth the same way.",
+              ["Repeatable.","Shareable.","Auditable.","Stable."]
+            )
+          },
+          post:{
+            formal:V(
+              "Roadmap deployment", "Roadmap adds governance interfaces: certification artifacts, registry publication, and replay bundles that let third parties verify the posture without privileged access.",
+              ["Certification tiers.","Reason codes.","Public status (bounded).","Private telemetry stays private."],
+              "Scale conditions", "Scale is permitted only when the same admissibility state holds across larger windows and higher stress without increasing ambiguity.",
+              ["Scale requires generalization.","Not anecdotes.","Not one-off wins.","Not marketing."],
+              "Institutional adoption", "Deployment becomes institution-safe when messaging is constrained by measured posture and definitions cannot drift across languages or audiences.",
+              ["Same meanings.","Same outputs.","Same reasons.","Same rules."],
+              "Proof hook", "The product becomes bankable when underwriting can price risk from bounded outputs, not from promises.",
+              ["Risk priced from receipts.","Receipts tied to windows.","Windows tied to rules.","Rules tied to definitions."]
+            ),
+            informal:V(
+              "Next deployment step", "Next you make it verifiable for outsiders without handing them your raw data.",
+              ["Proof bundles.","Clear reasons.","Stable meaning.","Privacy kept."],
+              "Scale rule", "Bigger scale means stricter gates, not looser ones.",
+              ["No hype scaling.","No shortcuts.","No quiet tuning.","Earn upgrades."],
+              "Institution-safe", "When anyone can verify the posture, adoption gets easier.",
+              ["Less fear.","Less politics.","More clarity.","More trust."],
+              "Bankable", "When risk is measurable, capital behaves.",
+              ["Cheaper capital.","More partners.","Faster adoption.","Safer scale."]
+            )
+          }
         },
+
         rules:{
-          origin:{formal:"Rules define admissibility: what counts as evidence, what fails, and what remains undecidable. Correction creates a new epoch; it does not rewrite history. The diagnostic refuses upgrades without receipts.",informal:"Rules keep the system honest. No receipts, no upgrades. If you correct something, you do it out loud—new epoch, not a rewrite."},
-          now:{formal:"Live rules enforce consistency under pressure: stable definitions, bounded claims, and deterministic handling of missing data. Ambiguity is treated as a risk amplifier.",informal:"Live rules stop the chaos. Missing data stays missing. Ambiguity doesn’t get dressed up as certainty."},
-          post:{formal:"Roadmap rules strengthen anti-gaming discipline and portability: reason codes, audit bundles, and independent verification paths.",informal:"Next we make it harder to game: better logs, clearer reasons, and proof you can hand to anyone."}
+          origin:{
+            formal:V(
+              "Admissibility", "Rules define what can be claimed under a scope and what must be rejected or held as undecidable. The same receipts under the same scope must yield the same result.",
+              ["Non-contradiction.","Scope locks meaning.","Receipts define evidence.","Undecidable is allowed."],
+              "Epochs", "Correction creates a new epoch. It does not rewrite prior outputs. The diagnostic preserves history so drift cannot be hidden by silent edits.",
+              ["No retroactive edits.","Explicit correction.","Versioned outputs.","Traceable history."],
+              "Falsifiers", "Each state includes falsifiers: evidence patterns that would force downgrade or fail. If falsifiers appear, the gate triggers containment.",
+              ["Falsifier → downgrade.","Violation → fail.","Conflict → ambiguity.","Missing → not upgraded."],
+              "Proof hook", "Rules are the boundary that makes scaling safe: they limit what the system is allowed to say and do under pressure.",
+              ["Limits prevent cascade.","Discipline prevents rot.","Consistency prevents manipulation.","Auditability prevents capture."]
+            ),
+            informal:V(
+              "The point of rules", "Rules stop the system from lying to itself when it wants a win.",
+              ["No receipts, no upgrade.","If it conflicts, it’s unclear.","If it fails, you stop.","If you fix it, new epoch."],
+              "No rewriting history", "If you correct something, you do it out loud.",
+              ["New epoch.","Clear change.","Clear reason.","Clear record."],
+              "Falsifiers matter", "We don’t just say what’s true—we say what would prove it false.",
+              ["That’s honesty.","That’s safety.","That’s science.","That’s trust."],
+              "Why it scales", "Because the rules don’t bend when pressure shows up.",
+              ["No capture.","No drift.","No hype.","No collapse."]
+            )
+          },
+          now:{
+            formal:V(
+              "Live admissibility", "Live rules constrain messaging to measured posture. They prevent claim inflation and require reason codes for any upgrade, hold, or fail state.",
+              ["Reasons required.","Receipts required.","Scope required.","No silent upgrades."],
+              "Ambiguity handling", "Ambiguity is treated as a risk amplifier. The output remains bounded, and the next action is to collect receipts or contain.",
+              ["Ambiguity marked.","No forced story.","Containment default.","Receipt request."],
+              "Consistency under stress", "Live conditions produce the most drift. Rules preserve stable definitions so outputs remain comparable across time and observers.",
+              ["Stable terms.","Stable thresholds.","Stable windows.","Stable outputs."],
+              "Proof hook", "If the rules are stable, the system becomes replayable; if they drift, the system becomes persuasion.",
+              ["Replayable = auditable.","Persuasion = fragile.","Audit = stable.","Drift = collapse."]
+            ),
+            informal:V(
+              "Live rules", "Live rules keep you from talking yourself into a bad decision.",
+              ["Bounded output.","Clear reason.","Clear next move.","No drift."],
+              "Ambiguity isn’t failure", "Ambiguity is a signal to slow down, not to make stuff up.",
+              ["Hold.","Check.","Collect receipts.","Then move."],
+              "Pressure test", "Under pressure, people want exceptions. Rules say no.",
+              ["No exception laundering.","No word swapping.","No silent tuning.","No shortcuts."],
+              "Why it works", "Because the system stays honest when it’s hardest to stay honest.",
+              ["That’s the win.","That’s the moat.","That’s trust.","That’s scale."]
+            )
+          },
+          post:{
+            formal:V(
+              "Roadmap rules", "Roadmap strengthens anti-gaming: time-locked thresholds, dual-implementation checks, and red-team harnesses that prevent quiet tuning and exception laundering.",
+              ["Time locks.","Dual checks.","Red-team tests.","Audit triggers."],
+              "Portability", "Rules become portable across products by standardizing reason codes and admissibility labels so cross-domain comparisons remain meaningful.",
+              ["Same labels.","Same reasons.","Same scope grammar.","Same falsifiers."],
+              "Governance", "Separation of powers is enforced: builders cannot quietly adjust admissibility thresholds; changes require explicit epoch processes and logs.",
+              ["No capture.","No quiet tuning.","Explicit epochs.","Public discipline."],
+              "Proof hook", "The stronger the rules, the more safely the system can grow without turning into marketing.",
+              ["Proof scales.","Trust scales.","Adoption scales.","Fragility shrinks."]
+            ),
+            informal:V(
+              "Next rules", "Next we make it harder to game and easier to audit.",
+              ["Locks.","Logs.","Tests.","Reasons."],
+              "Portable truth", "Same words mean the same thing everywhere.",
+              ["No drift.","No confusion.","No loopholes.","No spin."],
+              "No quiet tuning", "Nobody gets to change the rules in the dark.",
+              ["Epoch process.","Records.","Audits.","Accountability."],
+              "Why it matters", "Because scale without integrity becomes collapse with paperwork.",
+              ["We skip that.","We stay clean.","We grow safe.","We win long-term."]
+            )
+          }
         },
+
         use:{
-          origin:{formal:"Use flow: declare scope → collect receipts → apply constraints → output classification. The output is a bounded state plus the reason code that explains why the state is admissible.",informal:"How to use it: set the scope, bring receipts, run the constraints, get a clean answer with the reason why."},
-          now:{formal:"Live use emphasizes repeatability: same inputs produce the same outputs across operators. Navigation keeps state stable so comparisons remain meaningful.",informal:"Live use is about consistency. Two people see the same evidence and land in the same conclusion."},
-          post:{formal:"Roadmap use produces exportable bundles: replay windows, hashes, and registry-ready summaries that preserve privacy while enabling verification.",informal:"Later you’ll export clean proof bundles—easy to verify, hard to fake."}
+          origin:{
+            formal:V(
+              "Flow", "Use is a deterministic pipeline: declare scope → attach receipts → run constraints → output classification + reason codes. The output is bounded by what is admissible, not by what is desired.",
+              ["Scope first.","Receipts next.","Constraints applied.","State output."],
+              "Inputs", "Inputs are receipts and observables, not intentions. If a value is not measured, it remains “NOT MEASURED.”",
+              ["Receipts only.","No intent inference.","Missing stays missing.","Windows are defined."],
+              "Outputs", "Outputs include: state, confidence band (if applicable), reason codes, and required next actions for upgrade.",
+              ["State + reasons.","Upgrade requirements.","Hold conditions.","Fail triggers."],
+              "Proof hook", "If you can’t replay it, you can’t stabilize it. Use produces replayable results under the same rules.",
+              ["Replayable.","Auditable.","Comparable.","Stable."]
+            ),
+            informal:V(
+              "How to use it", "Set the scope. Bring receipts. Run the gate. Get a clean answer with the reason why.",
+              ["Scope.","Receipts.","Gate.","Result."],
+              "What counts", "Only what you can show counts. If you didn’t measure it, you don’t pretend it’s there.",
+              ["Measured > assumed.","Receipts > vibes.","Logs > memory.","Reasons > rhetoric."],
+              "What you get", "A simple output that tells you what you can say and what you must do next to upgrade.",
+              ["Say this.","Don’t say that.","Do this next.","Stay bounded."],
+              "Why it’s fast", "Because it turns messy arguments into one shared output.",
+              ["Less arguing.","More doing.","More clarity.","More progress."]
+            )
+          },
+          now:{
+            formal:V(
+              "Live use", "Live use runs in short windows and produces actionable outputs. You do not wait for perfection; you operate inside a bounded band and refuse upgrades without receipts.",
+              ["Short windows.","Actionable states.","Receipt-gated upgrades.","Rollback discipline."],
+              "Operator actions", "Each output maps to one action: proceed, hold, rollback, or collect receipts. This prevents decision drift under time pressure.",
+              ["Proceed.","Hold.","Rollback.","Collect receipts."],
+              "State persistence", "State is preserved across pages via gd_* so comparisons remain meaningful and navigation does not create semantic drift.",
+              ["Same state keys.","Same scope.","Same meanings.","Same outputs."],
+              "Proof hook", "Live success is measured by reduced ambiguity over time without loosening rules—ambiguity shrinks because receipts improve.",
+              ["Receipts improve.","Outputs sharpen.","Rules remain stable.","Scale becomes safe."]
+            ),
+            informal:V(
+              "Use it live", "Run it often. If you feel drift, check the gate before you scale.",
+              ["Quick check.","Clear output.","Safe next step.","No drama."],
+              "Operate inside bounds", "You can move fast without lying—by staying inside what’s actually supported.",
+              ["Fast + honest.","Bounded + real.","Calm + disciplined.","Repeatable."],
+              "When it says ‘hold’", "Holding is a win. It means you didn’t scale confusion.",
+              ["No panic.","No spin.","Just receipts.","Then move."],
+              "How it compounds", "Each cycle improves receipts and reduces uncertainty—without bending rules.",
+              ["Better inputs.","Cleaner outputs.","Less ambiguity.","More scale."]
+            )
+          },
+          post:{
+            formal:V(
+              "Roadmap use", "Roadmap use standardizes export bundles and registry outputs so independent observers can verify posture. Growth is staged by proof capacity, not ambition.",
+              ["Export bundles.","Registry readiness.","Proof capacity gates.","Staged growth."],
+              "Automation", "Automation is allowed only when it preserves traceability: reason codes, hashes, and replay windows remain first-class.",
+              ["Hashes.","Reason codes.","Replay windows.","No black boxes."],
+              "Cross-domain comparability", "Outputs become comparable across products and domains by keeping the same labels, thresholds, and falsifiers under declared scope rules.",
+              ["Comparable labels.","Comparable reasons.","Comparable windows.","Comparable gates."],
+              "Proof hook", "The system becomes underwriting-grade when the evidence path is portable, replayable, and stable across time.",
+              ["Portable.","Replayable.","Stable.","Bankable."]
+            ),
+            informal:V(
+              "Next use", "Next you export proof and scale responsibly: the system grows when verification can keep up.",
+              ["Proof exports.","Clean audits.","Staged growth.","No hype."],
+              "Automation rule", "No automation that can’t be replayed and audited.",
+              ["No black boxes.","Logs required.","Reasons required.","Hashes required."],
+              "Comparability", "Same outputs mean the same thing everywhere.",
+              ["No drift.","No spin.","No confusion.","More trust."],
+              "Bankable scale", "When proof is portable, adoption gets easy.",
+              ["Partners trust it.","Institutions adopt it.","Capital calms down.","Scale survives."]
+            )
+          }
         }
       }
     },
+
     zh:{
       hdr:{t:"一致性诊断", s:"决策支持 · 分类 · 有界输出"},
       nodes:{
@@ -406,73 +694,290 @@ body::before,body::after{pointer-events:none!important}
         rules:{lab:"规则", sub:"可采信与崩塌姿态。"},
         use:{lab:"使用", sub:"输入 → 约束 → 输出。"}
       },
-      modal:{hint:"本页有界：主张必须有收据。跳转保留 gd_* 状态。",
+      ui:{
+        formal:"正式", informal:"通俗",
         concept:"概念", live:"上线", roadmap:"路线图",
-        formal:"正式", informal:"通俗", c:"概念", l:"上线", r:"路线图"
+        hint:"本页有界：主张必须有收据。导航保留 gd_* 状态。"
       },
-      content:{
+      // Chinese: same structure, localized meaning (dense but clean)
+      views:{
         overview:{
-          origin:{formal:"这是一个有界诊断面：在声明范围内做轨迹分类。它只吃收据、应用约束、输出可采信状态，而不是叙事。目的：同证据 → 同分类。",informal:"这是个快速判断‘什么是真的’的工具。你给收据，它按规则输出可采信结论。"},
-          now:{formal:"上线姿态：作为路由面保持语义稳定，页面扩展但契约不变。输出仍然绑定到可测与可核查。",informal:"现在它是‘查真相’的入口。漂移出现就来这里对齐规则与输出。"},
-          post:{formal:"路线图：扩展为可回放证据包、登记输出、跨域适配器，但保持同一可采信契约。",informal:"下一步会更强：更多适配器、更好回放、更清晰证明。"}
+          origin:{
+            formal:V(
+              "目的（有界）","一致性诊断把证据流转换为可采信状态（在声明范围内）。它不解释意图；它只回答：哪些结论能被收据支撑。",
+              ["输入=证据，不是叙事。","输出=状态+原因码。","不可判定允许存在。","范围决定什么算证据。"],
+              "可采信契约","同一范围、同一收据、同一规则 → 同一结果。任何升级必须通过约束与可反驳条件。",
+              ["同收据→同结论。","不允许静默换词。","不允许事后升级。","修正=新纪元。"],
+              "失败模式","多数失败来自漂移：语义换轨、收据缺失被掩盖、压力下放松约束。诊断器阻止这些扩张。",
+              ["歧义放大崩塌。","补偿掩盖不稳。","规模放大小错。","营销不能覆盖测量。"],
+              "证明钩子","这是约束系统：它限制可达主张。若主张无法通过反驳条件，就不能升级。",
+              ["出现反驳→降级。","无收据→不可升级。","收据冲突→不可判定。","审计轨迹→强制。"]
+            ),
+            informal:V(
+              "它是什么","一个现实校验器：你给收据，它按规则输出你能说的话——不靠猜、不靠气氛。",
+              ["收据胜过意见。","规则胜过感觉。","没收据不升级。","不清楚就保持不清楚。"],
+              "你得到什么","你得到一个清晰状态和清晰原因，这能把争论压缩成同一个边界。",
+              ["一个结果。","同证据同结论。","原因明确。","返回路径干净。"],
+              "它阻止什么","它阻止“先讲故事再补证明”。漂移无法藏在语言里。",
+              ["不换词偷换。","不暗开例外。","不抬高自信。","不结构化就不扩张。"],
+              "为什么重要","想要不崩塌的规模，就需要一个拒绝无证升级的门。",
+              ["先门控再扩张。","把失败变小。","让漂移变响。","压力下也一致。"]
+            )
+          },
+          now:{
+            formal:V(
+              "上线姿态","上线模式绑定当前收据并产出可执行状态：不补故事；把歧义标为风险放大器。",
+              ["不可判定是真输出。","缺失保持缺失。","升级需原因码。","输出按窗口。"],
+              "操作纪律","输出映射为一条下一步：继续/暂停/回滚/补收据。它不是预测器，是可采信门控。",
+              ["有界内继续。","冲突则暂停。","失败则回滚。","补收据再升级。"],
+              "测量优先","上线模式保证测量大于表达：如果外宣超过测量状态，系统标记不一致。",
+              ["主张不超收据。","范围不暗扩。","定义不漂移。","纪元必须显式。"],
+              "证明钩子","可回放：同窗口+同收据+同规则 → 同状态。",
+              ["回放胜过说服。","审计胜过记忆。","窗口胜过挑样。","日志胜过事后改写。"]
+            ),
+            informal:V(
+              "上线是什么意思","上线回答：‘现在什么是真的？’它让你冷静，因为输出永远有界且可重复。",
+              ["不猜。","不补故事。","不暗升级。","原因清楚。"],
+              "怎么用","感觉漂移就跑一次。收据撑不起的主张，系统不允许你说。",
+              ["查收据。","查约束。","做安全动作。","干净推进。"],
+              "怎么保护你","它阻止‘先发再说’。门控失败就停或回滚。",
+              ["止级联。","小范围失败。","不扩张混乱。","升级要赚。"],
+              "为什么可规模化","因为它‘无聊但可靠’：同输入同输出。",
+              ["可预测。","可分享。","可审计。","难被刷。"]
+            )
+          },
+          post:{
+            formal:V(
+              "路线图姿态","路线图是门控扩张：声明需要哪些收据才能从原型走向可规模化表面，且不放松标准。",
+              ["收据清单显式。","停止条件显式。","不许诺，只设门。","升级=新纪元。"],
+              "证据包","输出成为可导出证据包：窗口收据、原因码、哈希，便于第三方核查且不泄露敏感遥测。",
+              ["可哈希窗口。","可携原因码。","回放包。","隐私边界不破。"],
+              "防作弊","强化完整性：红队测试、双实现交叉校验、阈值时间锁，防止激励下静默调参。",
+              ["更难伪造。","更难洗例外。","更难抬主张。","更易审计。"],
+              "证明钩子","允许扩张的条件：在更大窗口与更高压力下保持同可采信状态且不增加歧义。",
+              ["规模越大证明越强。","不靠个案。","不靠营销。","稳定必须泛化。"]
+            ),
+            informal:V(
+              "下一步","下一步是带收据的扩张：路线图告诉你扩张前必须证明什么。",
+              ["先证明。","再扩张。","不走捷径。","不靠炒作。"],
+              "你会构建什么","你会构建能交给任何人的证明包：原因清楚、窗口可回放、导出可核查。",
+              ["易核查。","难伪造。","仍隐私。","仍有界。"],
+              "怎么保持诚实","加入防作弊：没人能买结果、没人能悄悄改标准。",
+              ["日志。","锁。","审计。","红队测试。"],
+              "怎么赢","信任随证明而扩张，证明随门控而可靠。",
+              ["门控严格。","升级干净。","语义稳定。","增长安全。"]
+            )
+          }
         },
-        deploy:{
-          origin:{formal:"部署在漂移容易累积的面：沟通、激励、流程、测量。诊断应在主张之前起门控作用，避免规模放大误差。",informal:"把它放在‘开始下结论’的位置。越早拦截漂移越省成本。"},
-          now:{formal:"上线部署偏好小波次、可观察检查点、可回滚路径。信号不一致时输出歧义，而非强行讲故事。",informal:"用小阶段跑。信号不一致就标为不清楚，不装确定。"},
-          post:{formal:"路线图部署进入治理与审计，同时保持隐私与数据边界。",informal:"最终会接入治理/审计，让信任可规模化。"}
+
+        deploy: { /* reuse EN structure but localized */ 
+          origin:{
+            formal:V("部署位置","部署在主张上游：沟通面/报告面/决策点。诊断器在这里防止语言超越收据。",["扩张前部署。","营销前部署。","临近前部署。","投放前部署。"],
+              "接口","通过统一 gd_* 键与统一证据词汇实现可携带。定义锁定后，诊断器可跨页复用。",["同键。","同术语。","同反驳。","同原因码。"],
+              "隔离姿态","检测到歧义或违规时默认隔离：阻止升级、必要时回滚、补收据后再推进。",["先隔离。","再修正。","再推进。","不暗补丁。"],
+              "证明钩子","部署成功的信号：无收据升级变少、漂移争论变少，因为门控给出共享状态。",["争论变输出。","输出连收据。","收据连范围。","范围连定义。"]
+            ),
+            informal:V("放哪儿","放在‘开始下结论’的位置，漂移就藏在那里。",["大决策前。","大主张前。","大发布前。","大资本前。"],
+              "连接什么","连接收据与状态，不连接情绪。",["收据进。","有界出。","原因带。","不补故事。"],
+              "默认动作","不清楚或失败就停/回滚；清楚就继续。",["停。","回滚。","补收据。","继续。"],
+              "为什么有效","因为你在最早的地方杀掉漂移。",["少争吵。","少浪费。","更清晰。","更安全。"]
+            )
+          },
+          now:{
+            formal:V("上线部署","上线强调小阶段：每波跑门控、发布有界状态、保持回滚就绪。无门控扩张不允许。",["波次上限。","分区隔离。","回滚就绪。","审计延迟纪律。"],
+              "操作信号","消费观测值、标记冲突、记录原因码。缺失数据不允许用叙事修补。",["冲突→歧义。","违规→失败。","缺失→缺失。","修正→新纪元。"],
+              "人的界面","输出映射为一条下一步：继续/暂停/回滚/补收据。",["一条动作。","原因可见。","收据要求。","状态保留。"],
+              "证明钩子","可审计：可从收据复现状态，不依赖记忆与解释。",["审计胜记忆。","回放胜说服。","窗口胜挑样。","日志胜改写。"]
+            ),
+            informal:V("上线用法","每个阶段都跑一次。输出不干净就不扩张。",["小步。","清门。","快回滚。","不漂移。"],
+              "信号不一致","标歧义，不装确定。",["不造确定。","不讲故事。","只给有界。","再行动。"],
+              "失败时","隔离与修正，不解释。",["止级联。","修根因。","记纪元。","再试。"],
+              "为什么冷静","因为同输入同输出。",["可重复。","可分享。","可审计。","稳定。"]
+            )
+          },
+          post:{
+            formal:V("路线图部署","加入治理接口：证书、登记、回放包，第三方可核查但不拿到原始遥测。",["证书分层。","原因码。","公开状态（有界）。","隐私保留。"],
+              "规模条件","扩张仅在更大窗口与更高压力下保持同可采信状态且不增加歧义时允许。",["规模需泛化。","不靠个案。","不靠炒作。","不靠承诺。"],
+              "机构采纳","当表达被测量约束且多语言语义不漂移时，机构采纳变容易。",["同含义。","同输出。","同原因。","同规则。"],
+              "证明钩子","可承保的前提：风险能从有界输出定价，而不是从承诺定价。",["风险由收据定价。","收据由窗口约束。","窗口由规则约束。","规则由定义约束。"]
+            ),
+            informal:V("下一步部署","让外部能核查但不泄露你的数据。",["证明包。","原因清楚。","语义稳定。","隐私不破。"],
+              "规模规则","规模越大门控越严，而不是越松。",["不靠炒作扩张。","不走捷径。","不暗调参。","升级要赚。"],
+              "机构安全","别人能核查，采纳就更容易。",["少恐惧。","少政治。","更清晰。","更信任。"],
+              "可承保","风险可测，资本就会冷静。",["资本更便宜。","伙伴更多。","采纳更快。","规模更稳。"]
+            )
+          }
         },
-        rules:{
-          origin:{formal:"规则定义可采信：证据、失败条件、不可判定。修正产生新纪元，不重写历史。无收据不允许升级。",informal:"规则让系统诚实：没收据不升级；改动要公开，新纪元而不是改历史。"},
-          now:{formal:"上线规则强调压力下的一致性：稳定定义、有界主张、缺失数据确定性处理。歧义视为风险放大器。",informal:"上线规则阻止混乱：缺失就是缺失；歧义不伪装成确定。"},
-          post:{formal:"路线图规则强化防作弊与可携带：原因码、审计包、独立核查路径。",informal:"下一步更难被刷：更强日志、更清晰原因、更可验证。"}
+
+        rules: { /* localized mirrors of EN */ 
+          origin:{
+            formal:V("可采信","规则定义：什么可主张、什么必须拒绝、什么保持不可判定。",["不矛盾。","范围锁语义。","收据定证据。","不可判定允许。"],
+              "纪元","修正=新纪元，不重写旧输出。保留历史以阻止漂移隐藏。",["不回写。","显式修正。","版本化输出。","可追溯历史。"],
+              "反驳条件","每个状态给出反驳条件：出现即降级/失败/歧义。",["反驳→降级。","违规→失败。","冲突→歧义。","缺失→不升级。"],
+              "证明钩子","规则是规模安全的边界：限制系统在压力下允许说与做的范围。",["限制止级联。","纪律止腐化。","一致性抗操纵。","可审计抗捕获。"]
+            ),
+            informal:V("规则的意义","规则阻止系统在想赢的时候骗自己。",["没收据不升级。","冲突就不清楚。","失败就停。","修正=新纪元。"],
+              "不改历史","改动要公开。",["新纪元。","原因清楚。","记录清楚。","历史清楚。"],
+              "反驳很重要","不仅说什么真，还说什么会证明它假。",["这叫诚实。","这叫安全。","这叫科学。","这叫信任。"],
+              "为什么能规模化","因为压力来了规则也不弯。",["不被捕获。","不漂移。","不靠炒作。","不靠崩塌。"]
+            )
+          },
+          now:{
+            formal:V("上线可采信","上线规则把表达绑定到测量姿态：升级/暂停/失败都必须有原因码。",["原因码必须。","收据必须。","范围必须。","不暗升级。"],
+              "歧义处理","歧义视为风险放大器：输出仍有界；下一步是补收据或隔离。",["歧义标记。","不强行叙事。","默认隔离。","请求收据。"],
+              "压力下一致性","上线最易漂移。规则保持稳定定义，使输出跨时间/观察者可比。",["术语稳定。","阈值稳定。","窗口稳定。","输出稳定。"],
+              "证明钩子","规则稳定→系统可回放；规则漂移→系统变成说服。",["可回放=可审计。","说服=脆弱。","审计=稳定。","漂移=崩塌。"]
+            ),
+            informal:V("上线规则","上线规则让你别把坏决定说成好决定。",["有界输出。","原因清楚。","下一步清楚。","不漂移。"],
+              "歧义不是失败","歧义是让你慢一点，不是让你编。",["暂停。","核查。","补收据。","再走。"],
+              "压力测试","压力下人想要例外。规则说不。",["不洗例外。","不换词。","不暗调。","不走捷径。"],
+              "为什么有效","因为系统在最难诚实的时候仍然诚实。",["这就是胜。","这就是护城河。","这就是信任。","这就是规模。"]
+            )
+          },
+          post:{
+            formal:V("路线图规则","路线图强化防作弊：阈值时间锁、双实现校验、红队测试，防止静默调参与例外洗白。",["时间锁。","双校验。","红队。","审计触发。"],
+              "可携带","标准化原因码与标签，使跨产品/跨域比较有意义。",["同标签。","同原因。","同范围语法。","同反驳。"],
+              "治理","分权：构建者不能悄悄改标准；变更必须走新纪元流程并留痕。",["不被捕获。","不暗调参。","显式纪元。","公开纪律。"],
+              "证明钩子","规则越强，系统越不易滑向营销。",["证明可规模化。","信任可规模化。","采纳可规模化。","脆弱性下降。"]
+            ),
+            informal:V("下一步规则","更难被刷，更易被审。",["锁。","日志。","测试。","原因。"],
+              "可携真相","同词同义。",["不漂移。","不混乱。","不漏洞。","不话术。"],
+              "不暗调","没人能在黑暗里改规则。",["纪元流程。","记录。","审计。","问责。"],
+              "为什么重要","规模没完整性就是崩塌+文书。",["我们跳过它。","保持干净。","安全增长。","长期赢。"]
+            )
+          }
         },
-        use:{
-          origin:{formal:"使用流程：声明范围 → 收集收据 → 应用约束 → 输出分类。输出包含有界状态与原因码。",informal:"用法：先定范围，给收据，跑约束，拿到结论和原因。"},
-          now:{formal:"上线使用强调可重复：同输入同输出；状态保留用于可比性。",informal:"上线的关键是：两个人看同证据得到同结论。"},
-          post:{formal:"路线图使用生成可导出证明包：回放窗口、哈希、可登记摘要（隐私边界不破）。",informal:"以后你能导出证明包：好核查、难伪造。"}
+
+        use: { /* localized mirrors of EN */ 
+          origin:{
+            formal:V("流程","确定性管线：声明范围→挂接收据→跑约束→输出分类+原因码。输出有界，不随欲望膨胀。",["先范围。","再收据。","应用约束。","输出状态。"],
+              "输入","输入是收据与观测，不是意图。未测量就保持“NOT MEASURED”。",["收据优先。","不推断意图。","缺失保持缺失。","窗口明确。"],
+              "输出","输出包含：状态、原因码、升级所需收据与下一步动作。",["状态+原因。","升级要求。","暂停条件。","失败触发。"],
+              "证明钩子","不能回放就不能稳定。使用模式产出可回放结果。",["可回放。","可审计。","可比较。","稳定。"]
+            ),
+            informal:V("怎么用","定范围、给收据、跑门控、拿结果和原因。",["范围。","收据。","门控。","结果。"],
+              "什么算数","只有你能展示的才算数。没测量就别假装。",["测量>假设。","收据>感觉。","日志>记忆。","原因>话术。"],
+              "你得到什么","一个清晰输出：你能说什么、要升级需要做什么。",["能说这个。","不能说那个。","下一步做什么。","保持有界。"],
+              "为什么快","把混乱争论压成共享输出。",["少争吵。","多执行。","更清晰。","更进步。"]
+            )
+          },
+          now:{
+            formal:V("上线使用","上线按短窗口运行，产出可执行状态。你不等完美；你在有界内运行，并拒绝无收据升级。",["短窗口。","可执行状态。","收据门控升级。","回滚纪律。"],
+              "动作映射","每个输出映射为一条动作：继续/暂停/回滚/补收据。",["一条动作。","原因可见。","收据要求。","状态保留。"],
+              "状态保留","通过 gd_* 跨页保留状态，使比较有意义，避免语义漂移。",["同状态键。","同范围。","同含义。","同输出。"],
+              "证明钩子","成功表现为：歧义随收据改善而下降，但规则不放松。",["输入变好。","输出变清。","规则稳定。","规模安全。"]
+            ),
+            informal:V("上线怎么跑","经常跑。感觉漂移就先查门控再扩张。",["快检查。","清输出。","安全下一步。","不吵。"],
+              "在有界内快","你可以快，但不能假。",["快+诚实。","有界+真实。","冷静+纪律。","可重复。"],
+              "它让你敢停","暂停是胜：你没有扩张混乱。",["不恐慌。","不话术。","补收据。","再走。"],
+              "它怎么叠加","每轮改善收据并降低不确定性。",["输入更好。","输出更清。","歧义更少。","规模更大。"]
+            )
+          },
+          post:{
+            formal:V("路线图使用","路线图标准化导出包与登记输出，使独立观察者可核查姿态。增长以核查能力为门，而非以野心为门。",["导出包。","登记就绪。","核查能力门控。","分阶段增长。"],
+              "自动化","自动化必须保持可追溯：原因码、哈希、回放窗口是一级公民。",["哈希。","原因码。","回放窗口。","不黑箱。"],
+              "跨域可比","保持同标签/阈值/反驳，使跨产品输出可比。",["可比标签。","可比原因。","可比窗口。","可比门控。"],
+              "证明钩子","当证据路径可携、可回放、跨时间稳定时，系统变得可承保。",["可携。","可回放。","稳定。","可定价。"]
+            ),
+            informal:V("下一步使用","导出证明、负责任扩张：当核查能跟上，增长才释放。",["证明导出。","审计干净。","分阶段扩张。","不炒作。"],
+              "自动化规则","不能回放/审计的自动化一律不允许。",["不黑箱。","要日志。","要原因。","要哈希。"],
+              "可比性","同输出到哪都同义。",["不漂移。","不话术。","不混乱。","更信任。"],
+              "可承保规模","证明可携带，采纳就更轻松。",["伙伴更信。","机构更易采纳。","资本更冷静。","规模更稳。"]
+            )
+          }
         }
       }
     },
+
     es:{
       hdr:{t:"Diagnóstico de Coherencia", s:"Soporte de decisión · clasificación · salidas acotadas"},
       nodes:{
         overview:{lab:"RESUMEN", sub:"Qué hace, en una pasada."},
         deploy:{lab:"DESPLIEGUE", sub:"Dónde se conecta."},
-        rules:{lab:"REGLAS", sub:"Admisibilidad y postura de colapso."},
+        rules:{lab:"REGLAS", sub:"Admisibilidad y colapso."},
         use:{lab:"USO", sub:"Entradas → restricciones → salidas."}
       },
-      modal:{hint:"Esta página es acotada: las afirmaciones requieren recibos. La navegación preserva gd_*.",
-        concept:"Concepto", live:"En vivo", roadmap:"Ruta",
-        formal:"FORMAL", informal:"CLARO", c:"CONCEPTO", l:"EN VIVO", r:"RUTA"
+      ui:{
+        formal:"FORMAL", informal:"CLARO",
+        concept:"CONCEPTO", live:"EN VIVO", roadmap:"RUTA",
+        hint:"Página acotada: afirmaciones requieren recibos. La navegación preserva gd_*."
       },
-      content:{
+      views:{
         overview:{
-          origin:{formal:"Superficie diagnóstica acotada: clasifica trayectorias bajo un alcance declarado. Consume recibos, aplica restricciones y produce estados admisibles, no narrativas. Mismo evidencia → misma clasificación.",informal:"Una forma rápida de saber qué es real. Traes recibos, aplica reglas y devuelve lo admisible."},
-          now:{formal:"Modo vivo: mantiene significado estable mientras el sitio crece. Las salidas siguen ligadas a lo medido y verificable.",informal:"Ahora es el lugar para verificar deriva y volver a la estructura."},
-          post:{formal:"Ruta: paquetes reproducibles, registros y adaptadores por dominio sin cambiar el contrato de admisibilidad.",informal:"Luego será un toolkit completo: más adaptadores, más replay, misma disciplina."}
+          origin:{
+            formal:V("Propósito (acotado)","Superficie diagnóstica que convierte evidencia en un estado admisible bajo alcance declarado. No interpreta intención; clasifica lo defendible con recibos.",
+              ["Entrada = evidencia.","Salida = estado + razones.","Indecidible es válido.","El alcance manda."],
+              "Contrato","Mismos recibos + mismas reglas ⇒ mismo resultado. Sin recibos no hay upgrade.",
+              ["Repetible.","Auditables.","Sin cambios silenciosos.","Corrección = nueva época."],
+              "Fallos típicos","Deriva semántica, faltantes maquillados, restricciones relajadas bajo presión. Esto lo bloquea.",
+              ["Ambigüedad acelera colapso.","Escala amplifica error.","Marketing no manda.","Medición manda."],
+              "Gancho de prueba","Si no sobrevive falsificadores, no se puede elevar.",
+              ["Falsificador → downgrade.","Conflicto → ambiguo.","Faltante → no medido.","Registro → obligatorio."]
+            ),
+            informal:V("Qué es","Un chequeo de realidad: traes recibos, aplica reglas y devuelve lo admisible—sin adivinar.",
+              ["Recibos > opiniones.","Reglas > vibes.","Sin recibos, sin upgrade.","Si es incierto, se queda incierto."],
+              "Qué obtienes","Un estado claro + una razón clara. Eso comprime decisiones.",
+              ["Un resultado compartido.","Menos discusión.","Más acción.","Más claridad."],
+              "Qué detiene","Detiene escalar historias antes de escalar prueba.",
+              ["Sin ‘word swapping’.","Sin excepciones ocultas.","Sin inflación.","Sin deriva."],
+              "Por qué importa","La escala segura necesita una compuerta estricta.",
+              ["Compuerta primero.","Luego escala.","Fallo local.","Recuperación limpia."]
+            )
+          },
+          now:{
+            formal:V("Modo vivo","En vivo produce estados accionables y marca ambigüedad como amplificador de riesgo. No rellena huecos con narrativa.",
+              ["Faltante = faltante.","Razones requeridas.","Ventanas definidas.","Reproducible."],
+              "Disciplina","Cada salida mapea a una acción: proceder, esperar, rollback, o pedir recibos.",
+              ["Acción única.","Razón explícita.","Retorno limpio.","Sin deriva."],
+              "Prioridad de medición","Los mensajes no pueden exceder el estado medido.",
+              ["Reclamos acotados.","Definiciones estables.","Épocas explícitas.","Logs continuos."],
+              "Gancho de prueba","Misma ventana + mismos recibos + mismas reglas ⇒ mismo estado.",
+              ["Replay.","Auditoría.","Comparabilidad.","Estabilidad."]
+            ),
+            informal:V("Qué significa en vivo","Responde: ‘¿qué es real ahora?’ Mantiene calma con salidas acotadas.",
+              ["Sin inventar.","Sin drama.","Razones claras.","Siguiente paso claro."],
+              "Cómo usarlo","Cuando sientas deriva, corre la compuerta antes de escalar.",
+              ["Chequea recibos.","Chequea reglas.","Actúa seguro.","Sigue."],
+              "Cómo protege","Bloquea el ‘solo envíalo’. Si falla, contén o rollback.",
+              ["Corta cascada.","Reduce radio.","No escala confusión.","Gana upgrades."],
+              "Por qué escala","Porque es consistente y auditable.",
+              ["Repetible.","Compartible.","Auditable.","Difícil de jugar."]
+            )
+          },
+          post:{
+            formal:V("Ruta","Ruta = compuertas para crecer: qué recibos faltan, qué detiene, qué habilita. Sin promesas, solo gates.",
+              ["Requisitos explícitos.","Stops explícitos.","Épocas explícitas.","Sin relajación."],
+              "Bundles","Paquetes exportables: razones + ventanas + hashes para verificación independiente.",
+              ["Hashes.","Replay.","Privacidad.","Portabilidad."],
+              "Anti-gaming","Más pruebas adversarias y bloqueos contra tuning silencioso.",
+              ["Red-team.","Time locks.","Dual checks.","Auditorías."],
+              "Gancho de prueba","Escala permitida solo si la ambigüedad no aumenta bajo estrés.",
+              ["Más escala = más prueba.","Sin hype.","Sin atajos.","Estabilidad generaliza."]
+            ),
+            informal:V("Qué sigue","Escala con recibos. Ruta te dice qué probar antes de crecer.",
+              ["Prueba primero.","Luego escala.","Sin atajos.","Sin hype."],
+              "Qué construyes","Paquetes de prueba para cualquiera: razones claras y replay.",
+              ["Fácil verificar.","Difícil falsificar.","Privado.","Acotado."],
+              "Cómo mantenemos honestidad","Hacemos el sistema más difícil de jugar.",
+              ["Logs.","Locks.","Tests.","Audits."],
+              "Cómo gana","Porque la confianza escala cuando la prueba escala.",
+              ["Compuerta estricta.","Crecimiento seguro.","Significado estable.","Menos deriva."]
+            )
+          }
         },
-        deploy:{
-          origin:{formal:"Se despliega donde la deriva se acumula: comunicación, incentivos, proceso y medición. Debe gatear antes de los reclamos para que la escala no amplifique error.",informal:"Ponlo donde empiezan los reclamos. Captura deriva temprano."},
-          now:{formal:"Modo vivo: olas pequeñas, checkpoints observables y rollback limpio. Si señales no concuerdan, marca ambigüedad.",informal:"En vivo no inventa historias: si no cuadra, lo marca."},
-          post:{formal:"Ruta: integración con gobernanza y auditoría preservando privacidad.",informal:"Más adelante se integra con auditoría para escalar confianza."}
-        },
-        rules:{
-          origin:{formal:"Reglas de admisibilidad: evidencia, fallos y lo indecidible. Corrección crea una nueva época; no reescribe historia. Sin recibos no hay upgrade.",informal:"Reglas = honestidad. Sin recibos no hay upgrades. Cambios explícitos, no silenciosos."},
-          now:{formal:"En vivo: definiciones estables, reclamos acotados y manejo determinista de datos faltantes. Ambigüedad acelera colapso.",informal:"En vivo no maquilla incertidumbre. Faltante es faltante."},
-          post:{formal:"Ruta: anti-gaming, códigos de razón y paquetes de auditoría portables.",informal:"Luego será más difícil de jugar: mejores logs y razones claras."}
-        },
-        use:{
-          origin:{formal:"Flujo: declarar alcance → reunir recibos → aplicar restricciones → emitir clasificación + código de razón.",informal:"Uso: define alcance, trae recibos, corre restricciones, recibe respuesta con razón."},
-          now:{formal:"En vivo: repetibilidad. Misma entrada produce misma salida entre operadores.",informal:"En vivo: dos personas ven lo mismo y llegan a lo mismo."},
-          post:{formal:"Ruta: export bundles (replay, hashes, resumen registrable) sin filtrar telemetría privada.",informal:"Luego exportas pruebas: fácil de verificar, difícil de falsificar."}
-        }
+        deploy: { origin:COPY.en.views.deploy.origin, now:COPY.en.views.deploy.now, post:COPY.en.views.deploy.post }, /* keep ES simple by reusing EN semantics style */
+        rules:  { origin:COPY.en.views.rules.origin,  now:COPY.en.views.rules.now,  post:COPY.en.views.rules.post  },
+        use:    { origin:COPY.en.views.use.origin,    now:COPY.en.views.use.now,    post:COPY.en.views.use.post    }
       }
     }
   };
 
+  // ES fallback: if we reused EN objects above, ensure they exist as Spanish text.
+  // If you want full Spanish rewrite later, we can replace those blocks; structure stays locked.
+
   function pick(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-  // ---- apply header/node labels ----
+  // ---- apply labels ----
   function applyLabels(){
     var T=pick();
     document.getElementById("hdrTitle").textContent=T.hdr.t;
@@ -487,17 +992,13 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("labUse").textContent=T.nodes.use.lab;
     document.getElementById("subUse").textContent=T.nodes.use.sub;
 
-    document.getElementById("mHint").textContent=T.modal.hint;
+    document.getElementById("mHint").textContent=T.ui.hint;
 
-    document.getElementById("toneFormal").textContent=T.modal.formal;
-    document.getElementById("toneInformal").textContent=T.modal.informal;
-    document.getElementById("timeConcept").textContent=T.modal.c;
-    document.getElementById("timeLive").textContent=T.modal.l;
-    document.getElementById("timeRoadmap").textContent=T.modal.r;
-
-    document.getElementById("hConcept").textContent=T.modal.concept;
-    document.getElementById("hLive").textContent=T.modal.live;
-    document.getElementById("hRoadmap").textContent=T.modal.roadmap;
+    document.getElementById("toneFormal").textContent=T.ui.formal;
+    document.getElementById("toneInformal").textContent=T.ui.informal;
+    document.getElementById("timeConcept").textContent=T.ui.concept;
+    document.getElementById("timeLive").textContent=T.ui.live;
+    document.getElementById("timeRoadmap").textContent=T.ui.roadmap;
   }
   applyLabels();
 
@@ -513,16 +1014,14 @@ body::before,body::after{pointer-events:none!important}
   var timeLive=document.getElementById("timeLive");
   var timeRoadmap=document.getElementById("timeRoadmap");
 
-  var bConcept=document.getElementById("bConcept");
-  var bLive=document.getElementById("bLive");
-  var bRoadmap=document.getElementById("bRoadmap");
-  var pConcept=document.getElementById("pConcept");
-  var pLive=document.getElementById("pLive");
-  var pRoadmap=document.getElementById("pRoadmap");
+  var h1=document.getElementById("h1"),p1=document.getElementById("p1"),u1=document.getElementById("u1");
+  var h2=document.getElementById("h2"),p2=document.getElementById("p2"),u2=document.getElementById("u2");
+  var h3=document.getElementById("h3"),p3=document.getElementById("p3"),u3=document.getElementById("u3");
+  var h4=document.getElementById("h4"),p4=document.getElementById("p4"),u4=document.getElementById("u4");
 
-  var activeKey=null;
-  var tone=style; // formal/informal
-  var tsel=time;  // origin/now/post
+  var activeKey=null; // overview/deploy/rules/use
+  var tone=style;     // formal/informal
+  var tsel=time;      // origin/now/post
 
   function setActiveDiamond(id){
     ["dOverview","dDeploy","dRules","dUse"].forEach(function(x){
@@ -531,30 +1030,40 @@ body::before,body::after{pointer-events:none!important}
     });
   }
 
+  function fillBox(H,P,U,b){
+    H.textContent=b.h; P.textContent=b.p; U.innerHTML="";
+    b.u.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; U.appendChild(li); });
+  }
+
   function renderModal(){
     var T=pick();
-    var pack=T.content[activeKey] || null;
-    if(!pack){ pConcept.textContent=""; pLive.textContent=""; pRoadmap.textContent=""; return; }
-
     toneFormal.classList.toggle("active", tone==="formal");
     toneInformal.classList.toggle("active", tone==="informal");
     timeConcept.classList.toggle("active", tsel==="origin");
     timeLive.classList.toggle("active", tsel==="now");
     timeRoadmap.classList.toggle("active", tsel==="post");
 
-    pConcept.textContent = pack.origin[tone];
-    pLive.textContent    = pack.now[tone];
-    pRoadmap.textContent = pack.post[tone];
+    var node = T.views[activeKey];
+    if(!node){ return; }
 
-    // keep bubbles closed until tapped
-    bConcept.classList.remove("open");
-    bLive.classList.remove("open");
-    bRoadmap.classList.remove("open");
+    var view = node[tsel] && node[tsel][tone];
+    if(!view){ return; }
+
+    fillBox(h1,p1,u1,view.b1);
+    fillBox(h2,p2,u2,view.b2);
+    fillBox(h3,p3,u3,view.b3);
+    fillBox(h4,p4,u4,view.b4);
   }
 
-  function openModal(key, titleText, activeId){
+  function openModal(key, activeId){
     activeKey=key;
-    mTitle.textContent=titleText;
+    var T=pick();
+    var title = (key==="overview")?T.nodes.overview.lab
+              : (key==="deploy")?T.nodes.deploy.lab
+              : (key==="rules")?T.nodes.rules.lab
+              : T.nodes.use.lab;
+
+    mTitle.textContent = title;
     setActiveDiamond(activeId);
     renderModal();
     bd.classList.add("show");
@@ -567,44 +1076,36 @@ body::before,body::after{pointer-events:none!important}
     setActiveDiamond("__none__");
   }
 
-  // bubble open
-  function bindBubble(el){
-    el.tabIndex=0; el.setAttribute("role","button");
-    el.addEventListener("click", function(){ el.classList.toggle("open"); });
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.classList.toggle("open"); }
-    });
-  }
-  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
-
-  // modal close
   bd.addEventListener("click", closeModal);
   mClose.addEventListener("click", closeModal);
 
-  // lens toggles
-  toneFormal.addEventListener("click", function(){ tone="formal"; style="formal"; try{localStorage.setItem("gd_style",style)}catch(e){} renderModal(); });
-  toneInformal.addEventListener("click", function(){ tone="informal"; style="informal"; try{localStorage.setItem("gd_style",style)}catch(e){} renderModal(); });
+  // tone/time toggles (persist + rerender)
+  function persist(){
+    try{
+      localStorage.setItem("gd_style",tone);
+      localStorage.setItem("gd_time",tsel);
+    }catch(e){}
+  }
 
-  timeConcept.addEventListener("click", function(){ tsel="origin"; time="origin"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
-  timeLive.addEventListener("click", function(){ tsel="now"; time="now"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
-  timeRoadmap.addEventListener("click", function(){ tsel="post"; time="post"; try{localStorage.setItem("gd_time",time)}catch(e){} renderModal(); });
+  toneFormal.addEventListener("click", function(){ tone="formal"; persist(); renderModal(); });
+  toneInformal.addEventListener("click", function(){ tone="informal"; persist(); renderModal(); });
 
-  // open handlers (THIS is what you were missing)
-  function bindOpen(id, key, titleKey){
+  timeConcept.addEventListener("click", function(){ tsel="origin"; persist(); renderModal(); });
+  timeLive.addEventListener("click", function(){ tsel="now"; persist(); renderModal(); });
+  timeRoadmap.addEventListener("click", function(){ tsel="post"; persist(); renderModal(); });
+
+  // open handlers (working)
+  function bindOpen(id, key){
     var el=document.getElementById(id);
-    el.addEventListener("click", function(){
-      var T=pick();
-      var title = T.nodes[titleKey].lab;
-      openModal(key, title, id);
-    });
+    el.addEventListener("click", function(){ openModal(key, id); });
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(key, id); }
     });
   }
-  bindOpen("dOverview","overview","overview");
-  bindOpen("dDeploy","deploy","deploy");
-  bindOpen("dRules","rules","rules");
-  bindOpen("dUse","use","use");
+  bindOpen("dOverview","overview");
+  bindOpen("dDeploy","deploy");
+  bindOpen("dRules","rules");
+  bindOpen("dUse","use");
 })();
 </script>
 

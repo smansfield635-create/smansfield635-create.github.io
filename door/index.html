@@ -1,21 +1,12 @@
 <!-- TNT — /door/index.html
-     DOOR · PEARLESCENT BLACK (GLOSS) · NO COMPETING UI · MOBILE-SAFE
-     FIXES:
-       - Diamonds smaller on mobile; stage shifted DOWN
-       - No fixed footer under diamonds (COGRID.NET moved INTO bottom diamond)
-       - Top bar never wraps; never overlaps stage
-       - ui.css overlays forced BEHIND door UI
-     ROUTES:
-       - ENTER SITE     → /home/
-       - VIEW SITE MAP  → /prelude/
-       - EXIT           → /
-       - PRELUDE        → /prelude/
-     STATE:
-       - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT set html/body background (ui.css owns field)
+     DOOR → PRELUDE (LAUNCHPAD)
+     RULES:
+       - DOOR does NOT go to HOME anymore.
+       - ENTER SITE → /prelude/?view=enter
+       - VIEW SITE MAP → /prelude/?view=map
+       - No competing UI. No banners. No footer under diamonds.
+       - Pearlescent black gems.
+       - Top bar never wraps.
 -->
 
 <!doctype html>
@@ -32,21 +23,17 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* =========================================================
-   CRITICAL: force ui.css overlays behind door UI
-   ========================================================= */
+/* Force ui.css overlays behind door UI */
 html,body{position:relative}
 body{z-index:0}
 body::before, body::after{z-index:-1 !important; pointer-events:none !important;}
 #doorRoot{position:relative; z-index:10}
 
-/* =========================================================
-   TOKENS (smaller + safer)
-   ========================================================= */
+/* Tokens */
 :root{
-  /* smaller on mobile by design */
-  --D: clamp(200px, 30vh, 280px);
-  --R: calc(var(--D) * 0.70);
+  --D: clamp(190px, 28vh, 270px);
+  --R: calc(var(--D) * 0.72);
+  --stageShift: 64px;
 
   --deepA:#0f1624;
   --deepB:#070c14;
@@ -54,14 +41,9 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   --goldGlow: rgba(212,175,55,.55);
   --violet: rgba(165,120,255,.82);
   --cyan: rgba(110,230,255,.66);
-
-  /* keeps diamonds away from top controls */
-  --stageShift: 72px;
 }
 
-/* =========================================================
-   TOP BAR (NO WRAP)
-   ========================================================= */
+/* Top bar (no wrap) */
 .top{
   position:fixed;
   top:16px;
@@ -88,9 +70,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   .top .btn{padding:9px 14px}
 }
 
-/* =========================================================
-   STAGE (shifted DOWN so it never fights the top bar)
-   ========================================================= */
+/* Stage */
 .stage{
   position:fixed;
   left:50%;
@@ -102,9 +82,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   z-index:240;
 }
 
-/* =========================================================
-   DIAMOND (PEARLESCENT BLACK + GLOSS)
-   ========================================================= */
+/* Pearlescent gem */
 .diamond{
   position:absolute;
   width:var(--D);
@@ -138,7 +116,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   overflow:hidden;
 }
 
-/* rim */
+/* Rim */
 .diamond::before{
   content:"";
   position:absolute;
@@ -160,7 +138,7 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   padding:2px;
 }
 
-/* specular sweep (gloss) */
+/* Specular sweep */
 .diamond::after{
   content:"";
   position:absolute;
@@ -187,11 +165,11 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
 }
 .diamond:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
 
-/* placement */
+/* Placement */
 .topDiamond{transform:translate(-50%,-50%) translate(0,calc(var(--R) * -1)) rotate(45deg)}
 .bottomDiamond{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 
-/* inner text (smaller clamps to avoid clipping) */
+/* Inner */
 .inner{
   transform:rotate(-45deg);
   height:100%;
@@ -218,14 +196,6 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   text-shadow:0 10px 40px rgba(0,0,0,.65);
 }
 .pref{font-weight:950;font-style:italic}
-
-/* embedded signature (removes competing footer layer) */
-.sigIn{
-  margin-top:10px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.60;
-}
 </style>
 </head>
 
@@ -235,7 +205,6 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   <div class="top" aria-label="Top controls">
     <div class="top-left">
       <a class="btn" id="btnExit" href="/">EXIT</a>
-      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
     </div>
     <div class="top-right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -245,18 +214,17 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
   </div>
 
   <div class="stage" aria-label="Door fork">
-    <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+    <div class="diamond topDiamond" id="dEnter" role="button" tabindex="0" aria-label="Enter">
       <div class="inner">
         <div class="lab" id="labEnter">ENTER SITE</div>
-        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Move forward into systems.</div>
+        <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go inside.</div>
       </div>
     </div>
 
-    <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="View site map">
+    <div class="diamond bottomDiamond" id="dMap" role="button" tabindex="0" aria-label="Map">
       <div class="inner">
         <div class="lab" id="labMap">VIEW SITE MAP</div>
-        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> See the structure before movement.</div>
-        <div class="sigIn" id="sigIn">COGRID.NET</div>
+        <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented.</div>
       </div>
     </div>
   </div>
@@ -298,15 +266,12 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
            "&depth="+encodeURIComponent(D);
   }
 
-  // top links carry state
   document.getElementById("btnExit").href="/"+q();
-  document.getElementById("btnPrelude").href="/prelude/"+q();
 
   // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
@@ -329,59 +294,47 @@ body::before, body::after{z-index:-1 !important; pointer-events:none !important;
     if(lang==="zh"){
       document.getElementById("labEnter").textContent="进入网站";
       document.getElementById("prefEnter").textContent="直接：";
-      document.getElementById("subEnter").lastChild.nodeValue=" 进入系统。";
-
+      document.getElementById("subEnter").lastChild.nodeValue=" 进入。";
       document.getElementById("labMap").textContent="查看网站地图";
       document.getElementById("prefMap").textContent="先：";
-      document.getElementById("subMap").lastChild.nodeValue=" 先看结构再行动。";
-
+      document.getElementById("subMap").lastChild.nodeValue=" 先导览。";
       document.getElementById("btnExit").textContent="退出";
-      document.getElementById("btnPrelude").textContent="前置页";
-      document.getElementById("sigIn").textContent="COGRID.NET";
     }else if(lang==="es"){
-      document.getElementById("labEnter").textContent="ENTRAR AL SITIO";
+      document.getElementById("labEnter").textContent="ENTRAR";
       document.getElementById("prefEnter").textContent="Directo:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Entra en los sistemas.";
-
-      document.getElementById("labMap").textContent="VER MAPA DEL SITIO";
+      document.getElementById("subEnter").lastChild.nodeValue=" Entra.";
+      document.getElementById("labMap").textContent="MAPA";
       document.getElementById("prefMap").textContent="Primero:";
-      document.getElementById("subMap").lastChild.nodeValue=" Ve la estructura antes de moverte.";
-
+      document.getElementById("subMap").lastChild.nodeValue=" Oriéntate.";
       document.getElementById("btnExit").textContent="SALIR";
-      document.getElementById("btnPrelude").textContent="PRELUDIO";
-      document.getElementById("sigIn").textContent="COGRID.NET";
     }else{
       document.getElementById("labEnter").textContent="ENTER SITE";
       document.getElementById("prefEnter").textContent="Direct:";
-      document.getElementById("subEnter").lastChild.nodeValue=" Move forward into systems.";
-
+      document.getElementById("subEnter").lastChild.nodeValue=" Go inside.";
       document.getElementById("labMap").textContent="VIEW SITE MAP";
       document.getElementById("prefMap").textContent="First:";
-      document.getElementById("subMap").lastChild.nodeValue=" See the structure before movement.";
-
+      document.getElementById("subMap").lastChild.nodeValue=" Get oriented.";
       document.getElementById("btnExit").textContent="EXIT";
-      document.getElementById("btnPrelude").textContent="PRELUDE";
-      document.getElementById("sigIn").textContent="COGRID.NET";
     }
   }
   renderLang();
 
-  // routing
-  function goEnter(){ location.href="/home/"+q(); }
-  function goMap(){ location.href="/prelude/"+q(); }
+  // DOOR → PRELUDE (launchpad)
+  function goPrelude(view){ location.href="/prelude/" + q() + "&view=" + encodeURIComponent(view); }
 
   var dEnter=document.getElementById("dEnter");
   var dMap=document.getElementById("dMap");
 
-  dEnter.addEventListener("click", goEnter);
-  dMap.addEventListener("click", goMap);
+  dEnter.addEventListener("click", function(){ goPrelude("enter"); });
+  dMap.addEventListener("click", function(){ goPrelude("map"); });
 
   dEnter.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude("enter"); }
   });
   dMap.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goMap(); }
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goPrelude("map"); }
   });
+
 })();
 </script>
 

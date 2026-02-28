@@ -1,14 +1,19 @@
 <!-- TNT — /home/index.html
      HUB A · MIRROR-RECURSIVE SPLINE ARCHITECTURE (MRSA) · CATEGORY-LOCKED
+     FIX PACK (NO DRIFT):
+       1) CONTRAST: convert header/focus/nodes/overlays to OPAL/VIOLET GLASS (no red-on-red haze)
+       2) FIELD Z-ORDER: force ui.css gold grid BEHIND jewels (body::before/after behind page)
+       3) SAFE ROUTES: any uncertain destinations route to /links/ (no dead navigation)
+       4) TOP-RIGHT COLLISION: clamp header width + keep language fixed cleanly
      LOCK (NON-NEGOTIABLE):
-       - Geometry governs placement ONLY. Categories are immutable.
-       - Band A (COMPASS / GENERATIVE / RECURSIVE): N · E · S · W (recursive Russian doll)
-       - Band B (SYSTEM / REFERENTIAL / TERMINAL): APPENDIX · GLOSSARY · ABOUT · LINKS (terminal; no recursion)
+       - Geometry governs placement ONLY. Categories immutable.
+       - Band A (COMPASS / RECURSIVE): N · E · S · W (recursive Russian doll)
+       - Band B (SYSTEM / TERMINAL): APPENDIX · GLOSSARY · ABOUT · LINKS (terminal; no recursion)
      BEHAVIOR:
-       - Click a plate → opens Focus Pane immediately (scrolls into view).
-       - Focus Pane contains lens toggle (INFORMAL / FORMAL / BOTH) (inside pane).
-       - Language is page-level only (EN / 中文 / ES) (top-right buttons).
-       - Each node shows 3-line skeleton per lens (Aspect → Process → Resolution).
+       - Click a plate → opens Focus Pane immediately (scrolls into view)
+       - Lens toggle INSIDE Focus Pane only (INFORMAL / FORMAL / BOTH)
+       - Language toggle is PAGE-LEVEL only (EN / 中文 / ES) (top-right)
+       - Each node: 3-line skeleton per lens (Aspect → Process → Resolution)
        - Each node includes:
            • Analog Layer sub-bubble
            • Reality binding line (tool/platform surface)
@@ -16,10 +21,8 @@
      STATE:
        - URL: lang/style/time/depth
        - LS: gd_lang/gd_style/gd_time/gd_depth
-     OWNERSHIP:
-       - ui.css owns field (no html/body background styling)
-       - branch.css geometry only
-       - instruments.js canonical state loader
+     NOTE:
+       - If /assets/instruments.js still allowlists only en/zh, ES may normalize upstream.
 -->
 
 <!doctype html>
@@ -34,9 +37,31 @@
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* DO NOT TOUCH FIELD — ui.css owns html/body background */
+/* ui.css owns field */
 a{color:inherit;text-decoration:none}
-:root{--dockH:88px}
+
+/* FORCE FIELD OVERLAYS BEHIND CONTENT (prevents gold grid over jewels) */
+body{position:relative;z-index:0}
+body::before, body::after{z-index:0}
+
+:root{
+  --dockH:88px;
+
+  /* Opal/Violet readability */
+  --opalA:rgba(210,190,255,.30);
+  --opalB:rgba(120,70,255,.20);
+  --opalC:rgba(90,210,255,.14);
+
+  --stroke:rgba(255,255,255,.14);
+  --stroke2:rgba(255,255,255,.10);
+
+  --glassBaseA:rgba(0,0,0,.36);
+  --glassBaseB:rgba(0,0,0,.14);
+
+  --textHi:rgba(255,255,255,.94);
+  --textMid:rgba(255,255,255,.86);
+  --textLo:rgba(255,255,255,.74);
+}
 
 /* page */
 .page{
@@ -47,43 +72,83 @@ a{color:inherit;text-decoration:none}
   flex-direction:column;
   gap:12px;
   position:relative;
-  z-index:5;
+  z-index:10; /* ABOVE field */
 }
 
-/* header */
+/* header (OPAL GLASS + width clamp to avoid top-right collision) */
 .header{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:22px;
-  background:rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 62%),
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    linear-gradient(160deg, var(--glassBaseA), var(--glassBaseB));
+  backdrop-filter:blur(12px);
+  box-shadow:0 24px 90px rgba(0,0,0,.58);
   padding:14px 16px;
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
   position:relative;
   z-index:20;
+  max-width:min(980px, calc(100vw - 32px - 210px)); /* yields to language buttons */
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:24px;letter-spacing:.3px;margin:0 0 6px}
-.s{font-size:13px;opacity:.82;line-height:1.5;margin:0;max-width:980px}
+.k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.86;
+  margin:0 0 6px;
+  text-shadow:0 14px 40px rgba(0,0,0,.55);
+}
+.t{
+  font-weight:950;
+  font-size:24px;
+  letter-spacing:.3px;
+  margin:0 0 6px;
+  color:var(--textHi);
+  text-shadow:0 18px 44px rgba(0,0,0,.62);
+}
+.s{
+  font-size:13px;
+  opacity:.90;
+  line-height:1.5;
+  margin:0;
+  max-width:980px;
+  color:var(--textMid);
+  text-shadow:0 16px 44px rgba(0,0,0,.55);
+}
 .ctrl{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start;margin-top:12px}
 .metric{
-  margin-top:10px;padding:10px 12px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);line-height:1.45;font-size:13px;
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  color:var(--textMid);
+  line-height:1.45;
+  font-size:13px;
 }
 
 /* language buttons (page-level only) */
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  right:16px;
+  top:16px;
+  z-index:240;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
 /* bands */
 .bandLabel{
   padding:10px 12px;
   border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  color:rgba(255,255,255,.86);
+  border:1px solid var(--stroke2);
+  background:
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.10), transparent 72%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
+  color:var(--textMid);
   font-weight:950;
   letter-spacing:.2px;
 }
@@ -98,20 +163,24 @@ a{color:inherit;text-decoration:none}
   .row4{grid-template-columns:repeat(2, minmax(0, 1fr));}
 }
 
-/* jewel plates */
+/* jewel plates (opal-tuned for contrast) */
 .plate{
   --c:#93C5FD;
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
   border-radius:18px;
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.10), transparent 52%),
+    radial-gradient(circle at 76% 30%, rgba(210,190,255,.10), transparent 58%),
     linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
   box-shadow:0 18px 60px rgba(0,0,0,.62);
   padding:14px 14px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  display:flex;gap:10px;align-items:flex-start;justify-content:space-between;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  justify-content:space-between;
   position:relative;
 }
 .plate:hover{border-color:rgba(212,175,55,.35)}
@@ -121,29 +190,63 @@ a{color:inherit;text-decoration:none}
 }
 .pLeft{display:flex;gap:10px;align-items:flex-start;min-width:0}
 .swatch{
-  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);
+  width:12px;height:12px;
+  transform:rotate(45deg);
+  border-radius:4px;
+  background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;pointer-events:none;
+  flex:0 0 auto;
+  margin-top:4px;
+  pointer-events:none;
 }
 .pTxt{min-width:0}
-.pName{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pHint{margin-top:6px;font-size:12.5px;opacity:.78;line-height:1.35}
+.pName{
+  font-weight:950;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:var(--textHi);
+  text-shadow:0 14px 38px rgba(0,0,0,.55);
+}
+.pHint{
+  margin-top:6px;
+  font-size:12.5px;
+  opacity:.86;
+  line-height:1.35;
+  color:var(--textMid);
+  text-shadow:0 14px 38px rgba(0,0,0,.52);
+}
 .pChev{opacity:.75;font-size:18px;flex:0 0 auto;pointer-events:none}
 
-/* focus pane */
+/* focus pane (OPAL GLASS) */
 .focus{
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid var(--stroke);
   border-radius:22px;
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 62%),
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 24px 90px rgba(0,0,0,.58);
   padding:14px 16px;
   display:none;
 }
 .focus.show{display:block}
 .fHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.fTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
-.fClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
+.fTitle{
+  margin:0;
+  font-weight:950;
+  letter-spacing:.2px;
+  font-size:16px;
+  color:var(--textHi);
+  text-shadow:0 16px 44px rgba(0,0,0,.60);
+}
+.fClose{
+  border:0;background:transparent;color:#fff;
+  font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px
+}
 .fClose:hover{background:rgba(255,255,255,.08)}
 
 /* lens toggle inside pane */
@@ -153,7 +256,7 @@ a{color:inherit;text-decoration:none}
 /* nodes */
 .node{
   --c:#93C5FD;
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:18px;
   background:rgba(0,0,0,.18);
   overflow:hidden;
@@ -162,8 +265,12 @@ a{color:inherit;text-decoration:none}
 }
 .nHead{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:12px 14px;cursor:pointer;font-weight:950;letter-spacing:.2px;
+  padding:12px 14px;
+  cursor:pointer;
+  font-weight:950;
+  letter-spacing:.2px;
   touch-action:manipulation;
+  color:var(--textHi);
 }
 .nLeft{display:flex;align-items:center;gap:10px;min-width:0}
 .nLabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -182,7 +289,8 @@ a{color:inherit;text-decoration:none}
   margin:0;
   line-height:1.6;
   font-size:13.75px;
-  color:rgba(255,255,255,.90);
+  color:var(--textMid);
+  text-shadow:0 14px 38px rgba(0,0,0,.50);
 }
 .line + .line{margin-top:8px}
 .line[data-lens="informal"]{display:none}
@@ -192,11 +300,27 @@ a{color:inherit;text-decoration:none}
 .view-both .line{display:block}
 
 /* analog sub-bubble */
-.subNode{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);overflow:hidden;margin-top:10px}
-.subHead{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px;touch-action:manipulation}
-.subBody{display:none;padding:10px 12px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.subNode{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:14px;
+  background:rgba(0,0,0,.16);
+  overflow:hidden;
+  margin-top:10px
+}
+.subHead{
+  padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;font-weight:950;letter-spacing:.2px;font-size:13px;
+  touch-action:manipulation;
+  color:var(--textHi);
+}
+.subBody{
+  display:none;
+  padding:10px 12px 12px;
+  border-top:1px solid rgba(255,255,255,.08)
+}
 .subNode.open .subBody{display:block}
-.analog{margin:0;line-height:1.55;font-size:13px;color:rgba(255,255,255,.86)}
+.analog{margin:0;line-height:1.55;font-size:13px;color:var(--textMid)}
 
 /* reality binding */
 .bind{
@@ -205,17 +329,27 @@ a{color:inherit;text-decoration:none}
   border-radius:14px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.86);
+  color:var(--textMid);
   line-height:1.45;
   font-size:13px;
 }
 
 /* actions */
-.actRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;margin-top:12px}
+.actRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  margin-top:12px
+}
 .pill{
   display:inline-flex;align-items:center;justify-content:center;
-  padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);font-weight:950;letter-spacing:.2px;cursor:pointer
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  font-weight:950;letter-spacing:.2px;
+  cursor:pointer
 }
 .pill:hover{border-color:var(--gold)}
 .pill:active{transform:scale(.98)}
@@ -223,7 +357,8 @@ a{color:inherit;text-decoration:none}
 
 /* dock */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -241,22 +376,56 @@ a{color:inherit;text-decoration:none}
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){:root{--dockH:92px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
 
-/* overlays */
-.ov{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px)}
+/* overlays (opal-tinted) */
+.ov{
+  position:fixed;inset:0;z-index:500;display:none;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px)
+}
 .ov.show{display:block}
-.panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,94vw);height:min(86vh, 860px);z-index:510;display:none}
+.panel{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,94vw);
+  height:min(86vh, 860px);
+  z-index:510;display:none
+}
 .panel.show{display:block}
-.shell{height:100%;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));box-shadow:0 60px 180px rgba(0,0,0,.85);overflow:hidden;display:flex;flex-direction:column}
-.pHead{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
-.pTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.shell{
+  height:100%;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 34%, rgba(210,190,255,.12), transparent 72%),
+    radial-gradient(circle at 82% 62%, rgba(120,70,255,.10), transparent 74%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 60px 180px rgba(0,0,0,.85);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column
+}
+.pHead{
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.08)
+}
+.pTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px;color:var(--textHi)}
 .pClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
 .pClose:hover{background:rgba(255,255,255,.08)}
 .pBody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 .dirList{display:flex;flex-direction:column;gap:10px}
-.row{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(0,0,0,.18);padding:12px 14px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  padding:12px 14px
+}
 .rTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.rName{font-weight:950;letter-spacing:.2px}
-.rSent{margin-top:6px;color:rgba(255,255,255,.86);line-height:1.45;font-size:13px}
+.rName{font-weight:950;letter-spacing:.2px;color:var(--textHi)}
+.rSent{margin-top:6px;color:var(--textMid);line-height:1.45;font-size:13px}
 </style>
 </head>
 
@@ -268,11 +437,6 @@ a{color:inherit;text-decoration:none}
     <p class="k" id="hk">CARDINAL AXIS</p>
     <h1 class="t" id="ht">HUB A · Index</h1>
     <p class="s" id="hs">Compass (recursive) · System (terminal) · Orientation to scale</p>
-
-    <div class="ctrl">
-      <div></div>
-    </div>
-
     <div class="metric" id="metric">Orientation before scale · Scale before claims</div>
   </div>
 
@@ -299,7 +463,7 @@ a{color:inherit;text-decoration:none}
 
 </div>
 
-<div class="top-right">
+<div class="top-right" aria-label="Language">
   <button class="btn" id="btnEN" type="button">EN</button>
   <button class="btn" id="btnZH" type="button">中文</button>
   <button class="btn" id="btnES" type="button">ES</button>
@@ -368,7 +532,7 @@ a{color:inherit;text-decoration:none}
     return "?"+p.toString();
   }
 
-  // language buttons
+  /* ===== Language (page-level) ===== */
   const btnEN=document.getElementById("btnEN");
   const btnZH=document.getElementById("btnZH");
   const btnES=document.getElementById("btnES");
@@ -388,6 +552,7 @@ a{color:inherit;text-decoration:none}
   btnZH.onclick=()=>setLang("zh");
   btnES.onclick=()=>setLang("es");
 
+  /* ===== i18n labels ===== */
   const L={
     en:{A:"COMPASS",B:"SYSTEM",metric:"Orientation before scale · Scale before claims",inf:"INFORMAL",frm:"FORMAL",both:"BOTH",analog:"Analog Layer",ji:"JUMP INDEX",jd:"JUMP DECK",active:"ACTIVE",exit:"EXIT"},
     zh:{A:"罗盘",B:"系统",metric:"先导览 · 再规模 · 再主张",inf:"非正式",frm:"正式",both:"两者",analog:"类比层",ji:"跳转目录",jd:"跳转卡组",active:"当前",exit:"退出"},
@@ -399,7 +564,7 @@ a{color:inherit;text-decoration:none}
   document.getElementById("labB").textContent=T.B;
   document.getElementById("metric").textContent=T.metric;
 
-  // lens buttons inside focus
+  /* ===== Lens (inside focus) ===== */
   const pageEl=document.getElementById("page");
   const lensInformal=document.getElementById("lensInformal");
   const lensFormal=document.getElementById("lensFormal");
@@ -421,12 +586,13 @@ a{color:inherit;text-decoration:none}
   lensFormal.onclick=()=>applyLens("formal");
   lensBoth.onclick=()=>applyLens("both");
 
-  // tree (minimal for demo; expand later by barcode table)
+  /* ===== TREE (category-locked) ===== */
   const TREE = {
     N:{label:{en:"N · DEFINITIONS",zh:"N · 定义",es:"N · DEFINICIONES"}, color:"#1F3A8A", children:["N:NE","N:NW","N:SE","N:SW"]},
     E:{label:{en:"E · PRODUCTS",zh:"E · 产品",es:"E · PRODUCTOS"}, color:"#0EA5E9", children:["E:NE","E:NW","E:SE","E:SW"]},
     S:{label:{en:"S · CONSTRAINTS",zh:"S · 约束",es:"S · RESTRICCIONES"}, color:"#F59E0B", children:["S:NE","S:NW","S:SE","S:SW"]},
     W:{label:{en:"W · CONTAINMENT",zh:"W · 隔离",es:"W · CONTENCIÓN"}, color:"#7F1D1D", children:["W:NE","W:NW","W:SE","W:SW"]},
+
     APPENDIX:{label:{en:"APPENDIX",zh:"附录",es:"APÉNDICE"}, color:"#A3A3A3", children:[]},
     GLOSSARY:{label:{en:"GLOSSARY",zh:"术语表",es:"GLOSARIO"}, color:"#93C5FD", children:[]},
     ABOUT:{label:{en:"ABOUT",zh:"关于",es:"ACERCA"}, color:"#D4AF37", children:[]},
@@ -461,10 +627,11 @@ a{color:inherit;text-decoration:none}
     return o.en;
   }
 
+  /* ===== Skeleton + Analog ===== */
   function skeleton(id, lens){
     const core = id.split(":")[0];
     const isSystem = (id==="APPENDIX"||id==="GLOSSARY"||id==="ABOUT"||id==="LINKS");
-    // simple universal skeleton, non-repeating, bounded
+
     if(lang==="zh"){
       if(isSystem){
         if(id==="APPENDIX") return lens==="formal"?["用途：收纳包。","过程：统一引用。","结果：可溯源。"]:["附录：集中关键包。","少找，多用。","需要就跳。"];
@@ -483,7 +650,9 @@ a{color:inherit;text-decoration:none}
         if(core==="S") return ["闸门先行。","没边界就停。","否则腐化。"];
         if(core==="W") return ["先隔离。","再修复。","避免级联。"];
       }
-    }else if(lang==="es"){
+    }
+
+    if(lang==="es"){
       if(isSystem){
         if(id==="APPENDIX") return lens==="formal"?["Propósito: paquetes.","Proceso: referencia única.","Resultado: proveniencia."]:["Apéndice: todo junto.","Menos búsqueda.","Salta cuando quieras."];
         if(id==="GLOSSARY") return lens==="formal"?["Propósito: fijar términos.","Proceso: bloquear deriva.","Resultado: comparabilidad."]:["Glosario: mismas palabras.","Menos ruido.","Salta cuando quieras."];
@@ -501,24 +670,25 @@ a{color:inherit;text-decoration:none}
         if(core==="S") return ["Compuertas primero.","Sin límites, no.","O se pudre."];
         if(core==="W") return ["Aísla y repara.","Corta cascada.","Vuelve estable."];
       }
+    }
+
+    // EN
+    if(isSystem){
+      if(id==="APPENDIX") return lens==="formal"?["Purpose: packets.","Process: single reference.","Result: provenance."]:["Appendix: everything in one place.","Less hunting.","Jump when needed."];
+      if(id==="GLOSSARY") return lens==="formal"?["Purpose: lock terms.","Process: prevent drift.","Result: comparability."]:["Glossary: same words.","Less arguing.","Jump when needed."];
+      if(id==="ABOUT") return lens==="formal"?["Purpose: posture + limits.","Process: prevent inflation.","Result: fewer misreads."]:["About: what it is / isn’t.","No selling.","Jump when needed."];
+      return lens==="formal"?["Purpose: external anchors.","Process: direct evidence.","Result: verifiable."]:["Links: direct anchors.","No talk.","Jump when needed."];
+    }
+    if(lens==="formal"){
+      if(core==="N") return ["Definition: scope first.","Process: lock meaning.","Result: drift reduced."];
+      if(core==="E") return ["Execution: bounded surfaces.","Process: inherit limits.","Result: stable replication."];
+      if(core==="S") return ["Gates: admissibility.","Process: refuse without evidence.","Result: disciplined scale."];
+      if(core==="W") return ["Containment: local failure.","Process: segment/rollback.","Result: coherence restored."];
     }else{
-      if(isSystem){
-        if(id==="APPENDIX") return lens==="formal"?["Purpose: packets.","Process: single reference.","Result: provenance."]:["Appendix: everything in one place.","Less hunting.","Jump when needed."];
-        if(id==="GLOSSARY") return lens==="formal"?["Purpose: lock terms.","Process: prevent drift.","Result: comparability."]:["Glossary: same words.","Less arguing.","Jump when needed."];
-        if(id==="ABOUT") return lens==="formal"?["Purpose: posture + limits.","Process: prevent inflation.","Result: fewer misreads."]:["About: what it is / isn’t.","No selling.","Jump when needed."];
-        return lens==="formal"?["Purpose: external anchors.","Process: direct evidence.","Result: verifiable."]:["Links: direct anchors.","No talk.","Jump when needed."];
-      }
-      if(lens==="formal"){
-        if(core==="N") return ["Definition: scope first.","Process: lock meaning.","Result: drift reduced."];
-        if(core==="E") return ["Execution: bounded surfaces.","Process: inherit limits.","Result: stable replication."];
-        if(core==="S") return ["Gates: admissibility.","Process: refuse without evidence.","Result: disciplined scale."];
-        if(core==="W") return ["Containment: local failure.","Process: segment/rollback.","Result: coherence restored."];
-      }else{
-        if(core==="N") return ["Lock meaning.","Then move.","Or drift."];
-        if(core==="E") return ["Execute inside limits.","Scale amplifies failure.","Working wins."];
-        if(core==="S") return ["Gate first.","No limits, no scale.","Or rot."];
-        if(core==="W") return ["Isolate and repair.","Stop cascade.","Return stable."];
-      }
+      if(core==="N") return ["Lock meaning.","Then move.","Or drift."];
+      if(core==="E") return ["Execute inside limits.","Scale amplifies failure.","Working wins."];
+      if(core==="S") return ["Gate first.","No limits, no scale.","Or rot."];
+      if(core==="W") return ["Isolate and repair.","Stop cascade.","Return stable."];
     }
     return ["—","—","—"];
   }
@@ -546,47 +716,49 @@ a{color:inherit;text-decoration:none}
     return "Reference nodes: semantic stability and anchors.";
   }
 
-  // reality bindings (platform spine)
+  /* ===== SAFE REALITY BINDINGS (NO DEAD ROUTES) =====
+     NOTE: unknown pages route to /links/ until created
+  */
   const BIND = {
-    N:{label:{en:"Coherence Diagnostic + Laws",zh:"一致性诊断 + 法则",es:"Diagnóstico + Leyes"}, route:"/laws/", sentence:{
-      en:"Pins meaning and admissibility so every downstream claim stays bounded.",
-      zh:"锁定语义与可采信，保证下游主张有界。",
-      es:"Fija significado y admisibilidad para acotar afirmaciones."
+    N:{label:{en:"Laws (Definitions + Proof)",zh:"法则（定义+证明）",es:"Leyes (Definición + Prueba)"}, route:"/laws/", sentence:{
+      en:"Pins meaning so every claim stays bounded.",
+      zh:"锁定含义，让每个主张保持有界。",
+      es:"Fija significado para acotar afirmaciones."
     }},
     E:{label:{en:"Products (Platforms)",zh:"产品（平台）",es:"Productos (Plataformas)"}, route:"/products/", sentence:{
-      en:"Maps structure into deployable adoption surfaces without exceeding scope.",
-      zh:"把结构映射为可部署采纳面且不越界。",
-      es:"Convierte estructura en superficies desplegables sin exceder alcance."
+      en:"Shows what you can use without exceeding scope.",
+      zh:"展示可用内容且不越界。",
+      es:"Muestra lo usable sin exceder alcance."
     }},
-    S:{label:{en:"Adoption Ladder + Gates",zh:"采纳阶梯 + 闸门",es:"Escalera + Compuertas"}, route:"/products/adoption-ladder/", sentence:{
-      en:"Defines phase gates that prevent scaling beyond verification capacity.",
-      zh:"定义阶段门控，防止超出核查能力的扩张。",
-      es:"Define compuertas por fases para evitar escalar sin verificación."
+    S:{label:{en:"Gates (Readiness + Phases)",zh:"闸门（就绪+阶段）",es:"Compuertas (Fases)"}, route:"/links/", sentence:{
+      en:"Defines phase gates before scale.",
+      zh:"在规模化前定义阶段闸门。",
+      es:"Define compuertas antes de escalar."
     }},
-    W:{label:{en:"Containment + Enforcement",zh:"隔离 + 执行",es:"Contención + Ejecución"}, route:"/laws/", sentence:{
-      en:"Keeps failures local and enforces rollback discipline under load.",
-      zh:"让失败局部化，并在负载下执行回滚纪律。",
-      es:"Mantiene fallos locales y disciplina de rollback bajo carga."
+    W:{label:{en:"Containment (Rollback + Recovery)",zh:"隔离（回滚+恢复）",es:"Contención (Rollback)"}, route:"/laws/", sentence:{
+      en:"Keeps failure local and recoverable.",
+      zh:"让失败局部化且可恢复。",
+      es:"Mantiene fallos locales y recuperables."
     }},
-    APPENDIX:{label:{en:"Appendix",zh:"附录",es:"Apéndice"}, route:"/appendix/", sentence:{
-      en:"Centralizes packets, receipts, and provenance surfaces.",
-      zh:"集中协议包、收据与溯源面。",
-      es:"Centraliza paquetes, recibos y proveniencia."
+    APPENDIX:{label:{en:"Appendix",zh:"附录",es:"Apéndice"}, route:"/links/", sentence:{
+      en:"Centralizes packets and references.",
+      zh:"集中协议包与引用。",
+      es:"Centraliza paquetes y referencias."
     }},
-    GLOSSARY:{label:{en:"Glossary",zh:"术语表",es:"Glosario"}, route:"/glossary/", sentence:{
-      en:"Locks canonical terms to prevent semantic drift across the site.",
-      zh:"锁定规范术语，防止跨页语义漂移。",
-      es:"Fija términos canónicos para evitar deriva semántica."
+    GLOSSARY:{label:{en:"Glossary",zh:"术语表",es:"Glosario"}, route:"/links/", sentence:{
+      en:"Locks terms to one meaning.",
+      zh:"把术语锁定为单一含义。",
+      es:"Fija términos a un significado."
     }},
-    ABOUT:{label:{en:"About",zh:"关于",es:"Acerca"}, route:"/about/", sentence:{
-      en:"States posture and boundaries to prevent claim inflation.",
-      zh:"声明姿态与边界，避免主张膨胀。",
-      es:"Declara postura y límites para evitar inflación."
+    ABOUT:{label:{en:"About",zh:"关于",es:"Acerca"}, route:"/links/", sentence:{
+      en:"States scope and limits.",
+      zh:"声明范围与边界。",
+      es:"Declara alcance y límites."
     }},
     LINKS:{label:{en:"Links",zh:"链接",es:"Enlaces"}, route:"/links/", sentence:{
-      en:"Routes to external anchors for verification and provenance.",
-      zh:"指向外部锚点以便核查与溯源。",
-      es:"Enruta a anclas externas para verificación y proveniencia."
+      en:"Routes to external anchors.",
+      zh:"指向外部锚点。",
+      es:"Enruta a anclas externas."
     }}
   };
 
@@ -607,7 +779,7 @@ a{color:inherit;text-decoration:none}
     return pack ? pack.route : "#";
   }
 
-  // overlays
+  /* ===== Overlays ===== */
   const ovJI=document.getElementById("ovJI");
   const panelJI=document.getElementById("panelJI");
   const jiClose=document.getElementById("jiClose");
@@ -623,21 +795,24 @@ a{color:inherit;text-decoration:none}
   function openJI(){
     jiTitle.textContent = (lang==="zh")?"跳转目录":(lang==="es")?"ÍNDICE":"JUMP INDEX";
     jiList.innerHTML="";
-    Object.keys(TREE).forEach(id=>{
-      if(id.indexOf(":")>=0) return; // keep index minimal: top-level only
+    ["N","E","S","W","APPENDIX","GLOSSARY","ABOUT","LINKS"].forEach(id=>{
       const row=document.createElement("div");
       row.className="row";
+
       const top=document.createElement("div");
       top.className="rTop";
+
       const nm=document.createElement("div");
       nm.className="rName";
       nm.textContent=nodeLabel(id);
+
       const act=document.createElement("div");
       const jb=document.createElement("button");
       jb.className="btn"; jb.type="button";
       jb.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
       jb.onclick=()=>openJD(id);
       act.appendChild(jb);
+
       top.appendChild(nm);
       top.appendChild(act);
 
@@ -650,6 +825,7 @@ a{color:inherit;text-decoration:none}
       row.appendChild(sent);
       jiList.appendChild(row);
     });
+
     ovJI.classList.add("show");
     panelJI.classList.add("show");
   }
@@ -688,14 +864,6 @@ a{color:inherit;text-decoration:none}
     b.textContent = bindLine(id);
     row.appendChild(b);
 
-    const go=document.createElement("div");
-    go.className="rSent";
-    go.style.opacity=".8";
-    go.textContent = (lang==="zh") ? "（跳转）进入对应平台/页面。"
-                    : (lang==="es") ? "(Salto) Ir a la superficie correspondiente."
-                    : "(Jump) Go to the corresponding surface.";
-    row.appendChild(go);
-
     const btn=document.createElement("a");
     btn.className="btn";
     const route = bindRoute(id);
@@ -718,7 +886,7 @@ a{color:inherit;text-decoration:none}
   panelJI.onclick=(e)=>e.stopPropagation();
   panelJD.onclick=(e)=>e.stopPropagation();
 
-  // focus open
+  /* ===== Focus Pane ===== */
   const focus=document.getElementById("focus");
   const fTitle=document.getElementById("fTitle");
   const fClose=document.getElementById("fClose");
@@ -785,14 +953,12 @@ a{color:inherit;text-decoration:none}
     const inf = skeleton(id,"informal");
     const frm = skeleton(id,"formal");
 
-    ["informal",inf[0],inf[1],inf[2]].forEach((v,i)=>{
-      if(i===0) return;
+    [inf[0],inf[1],inf[2]].forEach(v=>{
       const p=document.createElement("p");
       p.className="line"; p.dataset.lens="informal"; p.textContent=v;
       body.appendChild(p);
     });
-    ["formal",frm[0],frm[1],frm[2]].forEach((v,i)=>{
-      if(i===0) return;
+    [frm[0],frm[1],frm[2]].forEach(v=>{
       const p=document.createElement("p");
       p.className="line"; p.dataset.lens="formal"; p.textContent=v;
       body.appendChild(p);
@@ -861,11 +1027,9 @@ a{color:inherit;text-decoration:none}
     focusBody.appendChild(isCompass ? buildRecursiveNode(rootId) : buildTerminalNode(rootId));
 
     focus.classList.add("show");
-
     document.querySelectorAll(".plate").forEach(p=>{
       p.classList.toggle("active", p.dataset.id===rootId);
     });
-
     setTimeout(()=>focus.scrollIntoView({behavior:"smooth", block:"start"}), 0);
   }
 
@@ -874,7 +1038,7 @@ a{color:inherit;text-decoration:none}
     document.querySelectorAll(".plate").forEach(p=>p.classList.remove("active"));
   };
 
-  // build plates
+  /* ===== Build Plates (category-locked, two separate sets of four) ===== */
   const bandA=document.getElementById("bandA");
   const bandB=document.getElementById("bandB");
   const ORDER_A=["N","E","S","W"];
@@ -894,13 +1058,17 @@ a{color:inherit;text-decoration:none}
 
     const left=document.createElement("div");
     left.className="pLeft";
+
     const sw=document.createElement("div");
     sw.className="swatch";
+
     const txt=document.createElement("div");
     txt.className="pTxt";
+
     const name=document.createElement("div");
     name.className="pName";
     name.textContent=nodeLabel(id);
+
     const hint=document.createElement("div");
     hint.className="pHint";
     hint.textContent=plateHint(id);
@@ -923,11 +1091,12 @@ a{color:inherit;text-decoration:none}
   bandA.innerHTML=""; ORDER_A.forEach(id=>bandA.appendChild(makePlate(id)));
   bandB.innerHTML=""; ORDER_B.forEach(id=>bandB.appendChild(makePlate(id)));
 
-  // dock
+  /* ===== Dock ===== */
   const navExit=document.getElementById("navExit");
   const navJI=document.getElementById("navJI");
   const navJD=document.getElementById("navJD");
   const navActive=document.getElementById("navActive");
+
   navExit.textContent=T.exit;
   navJI.textContent=T.ji;
   navJD.textContent=T.jd;
@@ -938,7 +1107,7 @@ a{color:inherit;text-decoration:none}
   navJD.onclick=()=>openJD(lsGet("hub_active_node")||"N");
   navActive.onclick=()=>openJD(lsGet("hub_active_node")||"N");
 
-  // default open last active
+  /* ===== Default open ===== */
   const last = lsGet("hub_active_node") || "N";
   openFocus((last in TREE) ? last : "N");
 

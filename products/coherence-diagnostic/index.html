@@ -1,0 +1,303 @@
+<!-- TNT — /products/coherence-diagnostic/index.html
+     PRODUCT · COHERENCE DIAGNOSTIC (LIVE ROUTE)
+     ROUTE: /products/coherence-diagnostic/
+     CONTRACT:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background styling (ui.css owns field)
+       - Pearlescent glossy diamonds (match Energy)
+       - EN / 中文 / ES (page-level)
+       - State carry: lang/style/time/depth + gd_* storage
+       - No inline onclick (tap-safe)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · COHERENCE DIAGNOSTIC</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+:root{
+  --R:150px;
+  --D:184px;
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+}
+
+/* Top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* Brand */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:130;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.brand .t{font-weight:950;font-size:38px;letter-spacing:.25px;line-height:1.05;margin:0}
+.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
+
+/* Stage */
+.stage{
+  position:fixed;left:50%;top:56%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;opacity:.62;pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+.outer::after{
+  content:"";position:absolute;inset:0;border-radius:60px;
+  opacity:.12;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+}
+
+/* Pearlescent glossy diamond (same family as Energy) */
+.d{
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.28),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  overflow:hidden;
+}
+.d::before{
+  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.65;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
+.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
+.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
+.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+.inner{
+  transform:rotate(-45deg) translateY(-3px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;height:100%;padding:14px;gap:8px;
+  pointer-events:none;user-select:none;
+}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
+.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;pointer-events:none;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:120;width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.dock .btn{pointer-events:auto}
+
+@media (max-width:560px){
+  :root{--R:136px;--D:168px}
+  .stage{top:54%}
+  .brand .t{font-size:34px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+</div>
+
+<div class="brand" aria-hidden="true">
+  <div class="t" id="hdrT">Coherence Diagnostic</div>
+  <div class="s" id="hdrS">Decision support · classification · bounded outputs</div>
+</div>
+
+<div class="stage" aria-label="Coherence Diagnostic">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="goOverview" role="button" tabindex="0" aria-label="Overview">
+    <div class="inner">
+      <div class="lab" id="labN">OVERVIEW</div>
+      <div class="sub" id="subN">What it does, in one pass.</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="goUse" role="button" tabindex="0" aria-label="Use">
+    <div class="inner">
+      <div class="lab" id="labE">USE</div>
+      <div class="sub" id="subE">Inputs → constraints → outputs.</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="goProof" role="button" tabindex="0" aria-label="Proof and rules">
+    <div class="inner">
+      <div class="lab" id="labS">RULES</div>
+      <div class="sub" id="subS">Admissibility + collapse posture.</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="goDeploy" role="button" tabindex="0" aria-label="Deploy">
+    <div class="inner">
+      <div class="lab" id="labW">DEPLOY</div>
+      <div class="sub" id="subW">Where it plugs in.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  // Wire nav (state carry)
+  document.getElementById("btnBack").href="/products/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
+  document.getElementById("dockPrelude").href="/prelude/"+q();
+  document.getElementById("dockExplore").href="/explore/"+q();
+  document.getElementById("dockProducts").href="/products/"+q();
+  document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
+
+  // Minimal copy (3-lang) — single screen
+  var C={
+    en:{t:"Coherence Diagnostic",s:"Decision support · classification · bounded outputs",
+        N:["OVERVIEW","What it does, in one pass."],
+        E:["USE","Inputs → constraints → outputs."],
+        S:["RULES","Admissibility + collapse posture."],
+        W:["DEPLOY","Where it plugs in."]},
+    zh:{t:"一致性诊断",s:"决策支持 · 分类 · 有界输出",
+        N:["概览","一眼看懂它做什么。"],
+        E:["使用","输入→约束→输出。"],
+        S:["规则","可采信与崩塌姿态。"],
+        W:["部署","它接入到哪里。"]},
+    es:{t:"Diagnóstico de coherencia",s:"Soporte de decisión · clasificación · salidas acotadas",
+        N:["RESUMEN","Qué hace, en una pasada."],
+        E:["USO","Entradas → límites → salidas."],
+        S:["REGLAS","Admisibilidad y colapso."],
+        W:["DESPLEGAR","Dónde se integra."]}
+  };
+  var T=(lang==="zh")?C.zh:(lang==="es")?C.es:C.en;
+
+  document.getElementById("hdrT").textContent=T.t;
+  document.getElementById("hdrS").textContent=T.s;
+  document.getElementById("labN").textContent=T.N[0];
+  document.getElementById("subN").textContent=T.N[1];
+  document.getElementById("labE").textContent=T.E[0];
+  document.getElementById("subE").textContent=T.E[1];
+  document.getElementById("labS").textContent=T.S[0];
+  document.getElementById("subS").textContent=T.S[1];
+  document.getElementById("labW").textContent=T.W[0];
+  document.getElementById("subW").textContent=T.W[1];
+
+  // For now, route all 4 diamonds to the same product landing (this page’s future subroutes can be added later)
+  function goSelf(){ location.href="/products/coherence-diagnostic/"+q(); }
+  ["goOverview","goUse","goProof","goDeploy"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.addEventListener("click", goSelf);
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goSelf(); }});
+  });
+})();
+</script>
+
+</body>
+</html>

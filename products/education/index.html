@@ -47,6 +47,13 @@ body::before,body::after{pointer-events:none!important}
   position:fixed;left:16px;top:16px;z-index:140;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+}
+.top-right .btn{white-space:nowrap}
+
+/* brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
   z-index:130;text-align:center;
@@ -245,6 +252,12 @@ body::before,body::after{pointer-events:none!important}
   <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
 <div class="brand" aria-hidden="true">
   <div class="t" id="hdrT">Education</div>
   <div class="s" id="hdrS">Programs · Language · Training · Certification</div>
@@ -297,7 +310,7 @@ body::before,body::after{pointer-events:none!important}
         <div class="pill" id="toneInformal">INFORMAL</div>
       </div>
 
-      <div class="hint" id="domainHint">These narratives evolve by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).</div>
+      <div class="hint" id="domainHint">—</div>
 
       <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
       <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
@@ -341,98 +354,219 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // i18n (single-language)
+  // language buttons (stay on page)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/products/education/"+q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // UI per language
   var UI={
     en:{
-      hdrT:"Education", hdrS:"Programs · Language · Training · Certification",
-      q:{N:["PROGRAMS","Tracks · outcomes · routines"],E:["LANGUAGE","Core 1001 · practice"],S:["TRAINING","Masterclasses · reps"],W:["CERTIFICATION","Evidence · tiers"]},
-      hintA:"Tap a domain to read Concept / Live / Roadmap. Return closes this layer.",
-      hintB:"These narratives evolve by time (Concept → Live → Roadmap) and by tone (Formal vs Informal).",
-      concept:"Concept", live:"Live", roadmap:"Roadmap", formal:"FORMAL", informal:"INFORMAL",
-      ret:"RETURN", dom:"Concept · Live · Roadmap"
+      hdrT:"Education",
+      hdrS:"Programs · Language · Training · Certification",
+      q:{PROGRAMS:["PROGRAMS","Tracks · outcomes · routines"],LANGUAGE:["LANGUAGE","Core 1001 · practice"],TRAINING:["TRAINING","Masterclasses · reps"],CERTIFICATION:["CERTIFICATION","Evidence · tiers"]},
+      quadHint:"Tap a domain to open Concept / Live / Roadmap. Return closes this layer.",
+      formal:"FORMAL", informal:"INFORMAL",
+      concept:"Concept", live:"Live", roadmap:"Roadmap",
+      ret:"RETURN",
+      sd:"Concept · Live · Roadmap",
+      hint:"Each domain binds: INPUT → CONSTRAINT → OUTPUT → PROOF HOOK → next."
     },
     zh:{
-      hdrT:"教育", hdrS:"课程 · 语言 · 训练 · 认证",
-      q:{N:["课程体系","路径 · 成果 · 例程"],E:["语言","核心1001 · 练习"],S:["训练","大师课 · 反复练"],W:["认证","证据 · 分层"]},
-      hintA:"点选域阅读：概念 / 上线 / 路线图。返回会关闭本层。",
-      hintB:"内容随时间（概念→上线→路线图）与语气（正式/通俗）演进。",
-      concept:"概念", live:"上线", roadmap:"路线图", formal:"正式", informal:"通俗",
-      ret:"返回", dom:"概念 · 上线 · 路线图"
+      hdrT:"教育",
+      hdrS:"课程 · 语言 · 训练 · 认证",
+      q:{PROGRAMS:["课程体系","路径 · 成果 · 例程"],LANGUAGE:["语言","核心1001 · 练习"],TRAINING:["训练","大师课 · 反复练"],CERTIFICATION:["认证","证据 · 分层"]},
+      quadHint:"点选域展开：概念 / 上线 / 路线图。返回关闭本层。",
+      formal:"正式", informal:"通俗",
+      concept:"概念", live:"上线", roadmap:"路线图",
+      ret:"返回",
+      sd:"概念 · 上线 · 路线图",
+      hint:"每个域都绑定：输入 → 约束 → 输出 → 证明钩子 → 下一步。"
     },
     es:{
-      hdrT:"Educación", hdrS:"Programas · Lenguaje · Formación · Certificación",
-      q:{N:["PROGRAMAS","Rutas · resultados · rutinas"],E:["LENGUAJE","1001 · práctica"],S:["FORMACIÓN","Clases · repeticiones"],W:["CERTIFICACIÓN","Evidencia · niveles"]},
-      hintA:"Toca un dominio para leer Concepto / En vivo / Hoja de ruta. RETURN cierra esta capa.",
-      hintB:"El contenido evoluciona por tiempo (Concepto → En vivo → Hoja de ruta) y por tono (Formal vs Informal).",
-      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta", formal:"FORMAL", informal:"INFORMAL",
-      ret:"RETURN", dom:"Concepto · En vivo · Hoja de ruta"
+      hdrT:"Educación",
+      hdrS:"Programas · Lenguaje · Formación · Certificación",
+      q:{PROGRAMS:["PROGRAMAS","Rutas · resultados · rutinas"],LANGUAGE:["LENGUAJE","Core 1001 · práctica"],TRAINING:["FORMACIÓN","Clases · repeticiones"],CERTIFICATION:["CERTIFICACIÓN","Evidencia · niveles"]},
+      quadHint:"Toca un dominio para abrir Concepto / En vivo / Hoja de ruta. RETURN cierra esta capa.",
+      formal:"FORMAL", informal:"INFORMAL",
+      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
+      ret:"RETURN",
+      sd:"Concepto · En vivo · Hoja de ruta",
+      hint:"Cada dominio se ata: ENTRADA → RESTRICCIÓN → SALIDA → PRUEBA → siguiente."
     }
   };
-  var T = (lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+  var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+
   document.getElementById("hdrT").textContent=T.hdrT;
   document.getElementById("hdrS").textContent=T.hdrS;
-  document.getElementById("labN").textContent=T.q.N[0]; document.getElementById("subN").textContent=T.q.N[1];
-  document.getElementById("labE").textContent=T.q.E[0]; document.getElementById("subE").textContent=T.q.E[1];
-  document.getElementById("labS").textContent=T.q.S[0]; document.getElementById("subS").textContent=T.q.S[1];
-  document.getElementById("labW").textContent=T.q.W[0]; document.getElementById("subW").textContent=T.q.W[1];
-  document.getElementById("quadHint").textContent=T.hintA;
-  document.getElementById("domainHint").textContent=T.hintB;
+
+  document.getElementById("labN").textContent=T.q.PROGRAMS[0];
+  document.getElementById("subN").textContent=T.q.PROGRAMS[1];
+  document.getElementById("labE").textContent=T.q.LANGUAGE[0];
+  document.getElementById("subE").textContent=T.q.LANGUAGE[1];
+  document.getElementById("labS").textContent=T.q.TRAINING[0];
+  document.getElementById("subS").textContent=T.q.TRAINING[1];
+  document.getElementById("labW").textContent=T.q.CERTIFICATION[0];
+  document.getElementById("subW").textContent=T.q.CERTIFICATION[1];
+
+  document.getElementById("quadHint").textContent=T.quadHint;
+  document.getElementById("toneFormal").textContent=T.formal;
+  document.getElementById("toneInformal").textContent=T.informal;
   document.getElementById("hConcept").textContent=T.concept;
   document.getElementById("hLive").textContent=T.live;
   document.getElementById("hRoadmap").textContent=T.roadmap;
-  document.getElementById("toneFormal").textContent=T.formal;
-  document.getElementById("toneInformal").textContent=T.informal;
 
-  // model: 4 quadrants × 3 domains
-  var QUADS={
-    PROGRAMS:["Curriculum Map","Daily Routines","Checkpoints"],
-    LANGUAGE:["Core 1001","Four Levels","Practice Loops"],
-    TRAINING:["Masterclasses","Train the Trainer","Rubrics"],
-    CERTIFICATION:["Evidence Verification","Tier System","Integrity Discipline"]
+  // Domains per quadrant (12 total)
+  var DOM={
+    PROGRAMS:["curriculum","routines","checkpoints"],
+    LANGUAGE:["core1001","levels","loops"],
+    TRAINING:["masterclass","trainer","rubrics"],
+    CERTIFICATION:["evidence","tiers","integrity"]
   };
 
-  // text generator (evolutive, not merged)
-  function textFor(domain, tone, phase){
-    // phase: concept/live/roadmap
-    // tone: formal/informal
-    var d = domain;
+  // Domain metadata (depth/gravity) in 3 languages
+  var META={
+    curriculum:{
+      en:{name:"Curriculum Map",input:"learner goals + time budget",constraint:"stable taxonomy + outcomes locked",output:"traversal map + checkpoints",proof:"pass-rate by node + 30-day recall"},
+      zh:{name:"课程地图",input:"目标 + 时间预算",constraint:"分类稳定 + 成果锁定",output:"遍历地图 + 检查点",proof:"节点通过率 + 30天回忆"},
+      es:{name:"Mapa Curricular",input:"metas + tiempo",constraint:"taxonomía estable + resultados fijos",output:"mapa + checkpoints",proof:"tasa de paso + recuerdo 30 días"}
+    },
+    routines:{
+      en:{name:"Daily Routines",input:"minutes/day + weak points",constraint:"bounded loops (no overload)",output:"repeatable drills",proof:"error variance decreases per week"},
+      zh:{name:"每日例程",input:"每日分钟 + 薄弱点",constraint:"有界循环（不超载）",output:"可重复训练",proof:"错误方差周周下降"},
+      es:{name:"Rutinas Diarias",input:"minutos/día + puntos débiles",constraint:"bucles acotados",output:"drills repetibles",proof:"varianza de error baja semanalmente"}
+    },
+    checkpoints:{
+      en:{name:"Checkpoints",input:"attempt outputs",constraint:"pass/fail thresholds",output:"admissible mastery signal",proof:"independent scorer agreement"},
+      zh:{name:"检查点",input:"输出尝试",constraint:"通过/失败阈值",output:"可采信掌握信号",proof:"独立评分一致"},
+      es:{name:"Checkpoints",input:"salidas",constraint:"umbral pasa/falla",output:"señal de dominio",proof:"acuerdo entre evaluadores"}
+    },
+    core1001:{
+      en:{name:"Core 1001",input:"high-frequency vocabulary",constraint:"fixed set + minimal grammar",output:"functional speech baseline",proof:"comprehension + production tests"},
+      zh:{name:"核心1001词",input:"高频词汇",constraint:"集合固定 + 极简语法",output:"功能表达基线",proof:"理解+输出测试"},
+      es:{name:"Core 1001",input:"vocabulario frecuente",constraint:"set fijo + gramática mínima",output:"base funcional",proof:"pruebas de comprensión y producción"}
+    },
+    levels:{
+      en:{name:"Four Levels",input:"placement evidence",constraint:"band definitions do not drift",output:"level routing",proof:"time-to-competence bands"},
+      zh:{name:"四级结构",input:"分级证据",constraint:"等级定义不漂移",output:"分级路由",proof:"达标时间带宽"},
+      es:{name:"Cuatro Niveles",input:"evidencia de nivel",constraint:"definiciones no derivan",output:"ruta por nivel",proof:"bandas de tiempo a competencia"}
+    },
+    loops:{
+      en:{name:"Practice Loops",input:"prompt + response",constraint:"short cycles, measurable",output:"automaticity",proof:"speed + accuracy trend"},
+      zh:{name:"练习循环",input:"提示+回应",constraint:"短循环可测",output:"自动化",proof:"速度+准确趋势"},
+      es:{name:"Bucles de Práctica",input:"prompt + respuesta",constraint:"ciclos cortos medibles",output:"automaticidad",proof:"tendencia velocidad + precisión"}
+    },
+    masterclass:{
+      en:{name:"Masterclasses",input:"cohort baseline",constraint:"same rubric for all",output:"skills uplift",proof:"pre/post delta by checkpoint"},
+      zh:{name:"大师课",input:"群体基线",constraint:"同一评分规",output:"能力提升",proof:"检查点前后Δ"},
+      es:{name:"Masterclasses",input:"línea base cohort",constraint:"misma rúbrica",output:"mejora",proof:"delta pre/post por checkpoint"}
+    },
+    trainer:{
+      en:{name:"Train the Trainer",input:"facilitator candidates",constraint:"delivery scripts + audits",output:"replicable instruction",proof:"inter-rater consistency"},
+      zh:{name:"培训讲师",input:"讲师候选",constraint:"脚本+审计",output:"可复制教学",proof:"评分一致性"},
+      es:{name:"Formar Formadores",input:"candidatos",constraint:"guiones + auditoría",output:"enseñanza replicable",proof:"consistencia entre evaluadores"}
+    },
+    rubrics:{
+      en:{name:"Rubrics",input:"observable outputs",constraint:"observer-invariant scoring",output:"reason-coded grade",proof:"same evidence → same score"},
+      zh:{name:"评分规",input:"可观察输出",constraint:"观察者不变评分",output:"带原因码成绩",proof:"同证据→同分"},
+      es:{name:"Rúbricas",input:"salidas observables",constraint:"puntuación invariante",output:"nota con razones",proof:"misma evidencia → misma nota"}
+    },
+    evidence:{
+      en:{name:"Evidence Verification",input:"receipts + outputs",constraint:"no self-report upgrades",output:"verifiable status",proof:"audit bundle + hash"},
+      zh:{name:"证据验证",input:"收据+输出",constraint:"不靠自述升级",output:"可核查状态",proof:"审计包+哈希"},
+      es:{name:"Verificación",input:"recibos + salidas",constraint:"sin auto-reporte",output:"estado verificable",proof:"paquete de auditoría + hash"}
+    },
+    tiers:{
+      en:{name:"Tier System",input:"checkpoint history",constraint:"tier requires renewals",output:"capability bands",proof:"tier change reason codes"},
+      zh:{name:"分层体系",input:"检查点历史",constraint:"分层需续期",output:"能力带宽",proof:"分层变更原因码"},
+      es:{name:"Sistema de Niveles",input:"historial",constraint:"renovación requerida",output:"bandas de capacidad",proof:"códigos de razón por cambio"}
+    },
+    integrity:{
+      en:{name:"Integrity Discipline",input:"attempt patterns",constraint:"anti-gaming rules",output:"trustable outcomes",proof:"exception logs + fail triggers"},
+      zh:{name:"防作弊纪律",input:"尝试模式",constraint:"反作弊规则",output:"可信结果",proof:"例外日志+失败触发"},
+      es:{name:"Integridad",input:"patrones",constraint:"anti-trampa",output:"resultados confiables",proof:"logs de excepción + disparadores"}
+    }
+  };
+
+  function m(domain){
+    return (lang==="zh")?META[domain].zh:(lang==="es")?META[domain].es:META[domain].en;
+  }
+
+  function compose(domain, tone, phase){
+    var X=m(domain);
+
     if(lang==="zh"){
-      var base={
-        "Curriculum Map":"课程地图","Daily Routines":"每日例程","Checkpoints":"检查点",
-        "Core 1001":"核心1001词","Four Levels":"四级结构","Practice Loops":"练习循环",
-        "Masterclasses":"大师课","Train the Trainer":"培训讲师","Rubrics":"评分规",
-        "Evidence Verification":"证据验证","Tier System":"分层体系","Integrity Discipline":"防作弊纪律"
-      }[d] || d;
       if(tone==="formal"){
-        if(phase==="concept") return "【"+base+"】以可重复的结构表达学习目标：输入被约束，输出可核查，路径可返回。概念层强调：先定义，再训练，再验证，避免“学会了”的幻觉。";
-        if(phase==="live") return "【"+base+"】上线层强调可执行：每次练习都有边界、计时不作闸门、结果可复现。你看到的是可操作流程，而不是描述性文字。";
-        return "【"+base+"】路线图层强调扩展但不漂移：增加域包与双语一致性，同时保持同一套结构与评估规则，使规模化学习保持稳定。";
+        if(phase==="concept"){
+          return "输入："+X.input+"。约束："+X.constraint+"。输出："+X.output+"。证明钩子："+X.proof+"。本域的目标是把学习从“感觉懂了”变成“在约束下可复现的输出”。";
+        }
+        if(phase==="live"){
+          return "当前执行以可观测为权威：每次练习产生可评分输出，评分使用统一规则并记录原因码。若输出未达阈值，则不能升级掌握状态；需要回到训练循环再试。";
+        }
+        return "路线图按门控扩展：增加域包与双语一致性，但不改变分类与阈值。扩展只发生在证据可回放、评分可复核、差异可解释的前提下。";
       }else{
-        if(phase==="concept") return "【"+base+"】先把路画出来，你才不会学着学着迷路：知道学什么、怎么练、怎么算真的会。";
-        if(phase==="live") return "【"+base+"】现在就是“能用”：少废话，多练习；每一步都清楚，你做完就知道有没有进步。";
-        return "【"+base+"】以后会更大更爽：更多场景包、更多练习法，但你永远不会被改规则搞糊涂。";
+        if(phase==="concept"){
+          return "这不是“看懂就算”。你得做出输出，而且别人也能用同一套标准判定你是否达标。";
+        }
+        if(phase==="live"){
+          return "现在的玩法很直接：做练习→交输出→看结果。过了就前进，不过就回去补强。";
+        }
+        return "以后会更丰富：更多场景包、更多路径，但规则不乱改，你永远知道自己在哪、差什么。";
       }
     }
+
     if(lang==="es"){
       if(tone==="formal"){
-        if(phase==="concept") return "["+d+"] define una estructura repetible: entradas acotadas, salidas verificables y retorno estable. Concepto: definir → practicar → verificar, sin deriva semántica.";
-        if(phase==="live") return "["+d+"] opera con ejecución: rutinas cortas, criterios claros y resultados reproducibles. Lo importante es lo medible, no la narrativa.";
-        return "["+d+"] escala sin cambiar reglas: más dominios y bilingüismo consistente, manteniendo la misma arquitectura y evaluación.";
+        if(phase==="concept"){
+          return "Entrada: "+X.input+". Restricción: "+X.constraint+". Salida: "+X.output+". Prueba: "+X.proof+". El objetivo es convertir aprendizaje en salida reproducible bajo restricción.";
+        }
+        if(phase==="live"){
+          return "En vivo manda lo observable: cada intento produce una salida puntuable, con reglas y códigos de razón. Sin umbral, no hay ascenso; se regresa al bucle y se reintenta.";
+        }
+        return "Hoja de ruta con compuertas: más packs y bilingüismo consistente sin cambiar taxonomía ni umbrales. Se escala solo si la evidencia es re-jugable y la puntuación es audit-able.";
       }else{
-        if(phase==="concept") return "["+d+"] es el mapa para no perderte: sabes qué aprender, cómo practicar y cómo comprobarlo.";
-        if(phase==="live") return "["+d+"] es “útil hoy”: menos charla, más repeticiones; sales con una mejora real.";
-        return "["+d+"] luego crece sin volverse confuso: más packs, misma estructura, misma claridad.";
+        if(phase==="concept"){
+          return "No basta con “entender”. Tienes que producir algo que otra persona pueda verificar con la misma regla.";
+        }
+        if(phase==="live"){
+          return "Hoy es simple: practica → entrega → recibe resultado. Si no pasa, vuelves al bucle. Si pasa, avanzas.";
+        }
+        return "Luego se vuelve más grande sin volverse confuso: más packs, misma estructura, mismas reglas.";
       }
     }
+
     // en
     if(tone==="formal"){
-      if(phase==="concept") return "["+d+"] defines a repeatable structure: bounded inputs, verifiable outputs, and stable return paths. Concept emphasizes define → practice → verify to prevent drift.";
-      if(phase==="live") return "["+d+"] runs as execution: short routines, clear checkpoints, and reproducible results. Live emphasizes what is measurable, not what is promised.";
-      return "["+d+"] scales without changing the contract: more domains and bilingual parity while preserving the same structure and evaluation rules.";
+      if(phase==="concept"){
+        return "Input: "+X.input+". Constraint: "+X.constraint+". Output: "+X.output+". Proof hook: "+X.proof+". The objective is reproducible output under constraint, not self-reported understanding.";
+      }
+      if(phase==="live"){
+        return "Live posture is observable-first: each attempt yields a scorable output with reason codes. If thresholds are not met, mastery cannot upgrade; the learner returns to the loop and retries under the same rubric.";
+      }
+      return "Roadmap scales by gates: add packs and multilingual parity without changing taxonomy or thresholds. Expansion occurs only when evidence is replayable, scoring is audit-ready, and disagreements are explainable.";
     }else{
-      if(phase==="concept") return "["+d+"] is the map so you don’t get lost: what to learn, how to practice, and how to know it’s real.";
-      if(phase==="live") return "["+d+"] is usable today: fewer words, more reps, and you can feel the improvement quickly.";
-      return "["+d+"] grows without confusion: more packs, same structure, same clarity, no moving goalposts.";
+      if(phase==="concept"){
+        return "This isn’t “I read it so I know it.” You produce an output, and anyone can verify it with the same rule.";
+      }
+      if(phase==="live"){
+        return "Right now it’s simple: practice → submit → get a result. If you fail, you loop. If you pass, you move on.";
+      }
+      return "Next gets bigger without getting messy: more packs, more paths, but the rules don’t shift under your feet.";
     }
   }
 
@@ -453,6 +587,7 @@ body::before,body::after{pointer-events:none!important}
   var pConcept=document.getElementById("pConcept");
   var pLive=document.getElementById("pLive");
   var pRoadmap=document.getElementById("pRoadmap");
+  var domainHint=document.getElementById("domainHint");
 
   var currentQuad=null;
   var currentDomain=null;
@@ -464,18 +599,18 @@ body::before,body::after{pointer-events:none!important}
 
   function openQuad(qname){
     currentQuad=qname;
-    quadTitle.textContent = (lang==="zh") ? ("教育 · "+T.q[qname==="PROGRAMS"?"N":qname==="LANGUAGE"?"E":qname==="TRAINING"?"S":"W"][0])
-                    : (lang==="es") ? ("EDUCACIÓN · "+qname)
-                    : ("EDUCATION · "+qname);
+    quadTitle.textContent = (lang==="zh")?("教育 · "+T.q[qname][0]):(lang==="es")?("EDUCACIÓN · "+T.q[qname][0]):("EDUCATION · "+T.q[qname][0]);
     quadGrid.innerHTML="";
-    var domains=QUADS[qname]||[];
-    domains.forEach(function(d){
+
+    var ids=DOM[qname]||[];
+    ids.forEach(function(id){
+      var X=m(id);
       var tile=document.createElement("div");
       tile.className="smallDiamond";
       tile.setAttribute("role","button");
       tile.tabIndex=0;
-      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">'+T.dom+'</div></div>';
-      function act(){ openDomain(d); }
+      tile.innerHTML='<div class="sdInner"><div class="sdT">'+X.name+'</div><div class="sdS">'+T.sd+'</div></div>';
+      function act(){ openDomain(id); }
       tile.addEventListener("click", act);
       tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
       quadGrid.appendChild(tile);
@@ -495,23 +630,31 @@ body::before,body::after{pointer-events:none!important}
     domainModal.classList.remove("show");
   }
 
-  function openDomain(dname){
-    currentDomain=dname;
-    domainTitle.textContent = (lang==="zh") ? ("教育 · "+dname) : (lang==="es") ? ("EDUCACIÓN · "+dname) : ("EDUCATION · "+dname);
+  function openDomain(id){
+    currentDomain=id;
+    var X=m(id);
+    domainTitle.textContent = (lang==="zh")?("教育 · "+X.name):(lang==="es")?("EDUCACIÓN · "+X.name):("EDUCATION · "+X.name);
+
     // reset bubbles
     [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
-    applyTone(tone);
+
     quadModal.classList.remove("show");
     showBD(); domainModal.classList.add("show");
+    applyTone(tone);
+
+    domainHint.textContent = T.hint + "  |  " +
+      ((lang==="zh")?("输入："+X.input+"；约束："+X.constraint+"；输出："+X.output+"；证明："+X.proof)
+      :(lang==="es")?("Entrada: "+X.input+"; Restricción: "+X.constraint+"; Salida: "+X.output+"; Prueba: "+X.proof)
+      :("Input: "+X.input+"; Constraint: "+X.constraint+"; Output: "+X.output+"; Proof: "+X.proof));
   }
 
   function applyTone(t){
     tone=t;
     toneFormal.classList.toggle("active", tone==="formal");
     toneInformal.classList.toggle("active", tone==="informal");
-    pConcept.textContent = textFor(currentDomain, tone, "concept");
-    pLive.textContent    = textFor(currentDomain, tone, "live");
-    pRoadmap.textContent = textFor(currentDomain, tone, "roadmap");
+    pConcept.textContent = compose(currentDomain, tone, "concept");
+    pLive.textContent    = compose(currentDomain, tone, "live");
+    pRoadmap.textContent = compose(currentDomain, tone, "roadmap");
   }
 
   function bindBubble(box){

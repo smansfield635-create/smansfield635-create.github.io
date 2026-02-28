@@ -1,281 +1,445 @@
+<!-- TNT — /products/index.html
+     PRODUCTS · PRODUCT INDEX (HUB)
+     PURPOSE:
+       - This is the PRODUCT INDEX (the hub that lists products).
+       - It MUST NOT be any single product page.
+       - It routes to each product’s own page.
+     CONTENT:
+       - Band A: PRODUCT INDEX (your real products)
+       - Band B: SUPPORT SURFACES (optional: adoption, vault, etc.)
+     CONTROLS:
+       - Page-level language toggle only (EN / 中文 / ES) top-right
+     ROUTING:
+       - Coherence Diagnostic → /products/coherence-diagnostic/
+       - Energy (Industrial)  → /products/energy/
+       - Dot.Grid             → /products/dot-grid/   (create later; for now routes here or keep)
+       - SSG                  → /products/ssg/        (create later; for now routes here or keep)
+     STATE:
+       - URL: lang/style/time/depth
+       - LS: gd_lang/gd_style/gd_time/gd_depth
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background styling
+       - Tap-safe
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS · Surfaces</title>
+<title>PRODUCTS · Index</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:88px}
+:root{--dockH:86px}
 
+/* page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:24px 0 calc(var(--dockH) + 24px);
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:20px;
-}
-
-/* Heavy contrast container */
-.block{
-  background:rgba(0,0,0,.72);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:22px;
-  padding:24px;
-  backdrop-filter:blur(14px);
-  box-shadow:0 40px 120px rgba(0,0,0,.85);
-}
-
-.k{
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin:0 0 6px;
-}
-
-.h{
-  font-size:28px;
-  font-weight:950;
-  margin:0 0 12px;
-}
-
-.p{
-  font-size:15px;
-  line-height:1.6;
-  opacity:.92;
-  margin:0;
-}
-
-/* Grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:18px;
-}
-@media(max-width:900px){
-  .grid{grid-template-columns:repeat(1,minmax(0,1fr))}
-}
-
-.card{
-  background:rgba(12,18,24,.95);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:20px;
-  padding:20px;
-  cursor:pointer;
-  transition:all .15s ease;
-}
-
-.card:hover{
-  border-color:rgba(212,175,55,.6);
-  transform:translateY(-4px);
-}
-
-.ct{
-  font-weight:950;
-  margin:0 0 8px;
-  font-size:17px;
-}
-
-.cd{
-  font-size:14px;
-  opacity:.85;
-  margin:0 0 10px;
-}
-
-.focus{
-  display:none;
-}
-
-.focus.show{
-  display:block;
-}
-
-.lens{
-  display:flex;
-  gap:10px;
-  margin-top:16px;
-}
-
-.line{
-  margin-top:10px;
-  font-size:15px;
-  line-height:1.6;
-}
-
-.bind{
-  margin-top:18px;
-  padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.18);
-  font-size:14px;
-  opacity:.85;
-}
-
-/* Dock */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px,env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
-  padding:14px;
-  background:rgba(0,0,0,.9);
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.18);
 }
-.dock .btn{width:100%}
+
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:140;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+
+/* header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
+.s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+
+/* band label */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+
+/* list */
+.stackList{display:flex;flex-direction:column;gap:12px}
+.stackRow{
+  --domc:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.stackHead{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
+.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.stackBody{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.stackRow.open .stackBody{display:block}
+.pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnDoor" href="/index.html">DOOR</a>
+  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
 <div class="page">
 
-  <div class="block">
-    <p class="k">EXECUTION SURFACES</p>
-    <h1 class="h">WHAT YOU CAN ACTUALLY USE</h1>
-    <p class="p">
-      Structure without application is theory.  
-      Products convert structure into action.
-    </p>
+  <div class="header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">WHAT YOU CAN ACTUALLY USE</h1>
+    <p class="s" id="hs">Open a card. Read one paragraph. Jump when you’re ready.</p>
+    <div class="fine" id="fine">Fine print: proof posture lives under Laws and Gauges.</div>
   </div>
 
-  <div class="block">
-    <div class="grid">
+  <div class="band" id="bandA">PRODUCT INDEX</div>
+  <div class="stackList" id="listA"></div>
 
-      <div class="card" onclick="openNode('diagnostic')">
-        <p class="ct">COHERENCE DIAGNOSTIC</p>
-        <p class="cd">Measure drift before scale amplifies it.</p>
-      </div>
-
-      <div class="card" onclick="openNode('adoption')">
-        <p class="ct">ADOPTION LADDER</p>
-        <p class="cd">Phase gates for scaling responsibly.</p>
-      </div>
-
-      <div class="card" onclick="openNode('vault')">
-        <p class="ct">CANONICAL VAULT</p>
-        <p class="cd">Version-controlled reference surfaces.</p>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="block focus" id="focus">
-    <h2 id="fTitle"></h2>
-
-    <div class="lens">
-      <button class="btn" onclick="setLens('informal')">INFORMAL</button>
-      <button class="btn" onclick="setLens('formal')">FORMAL</button>
-    </div>
-
-    <div id="fBody"></div>
-  </div>
+  <div class="band" id="bandB">SUPPORT SURFACES</div>
+  <div class="stackList" id="listB"></div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/index.html">INDEX</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
-let currentLens = "informal";
-let currentNode = null;
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-const DATA = {
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
-diagnostic:{
-informal:[
-"This tool detects contradiction before it becomes collapse.",
-"It compares stated values to observable behavior.",
-"If alignment drops, scale must pause."
-],
-formal:[
-"External coherence cannot exceed internal consistency.",
-"Observer-invariant classification under constraint.",
-"Misalignment triggers admissibility threshold failure."
-],
-bind:"Bound to: Laws + Hub A Constraints."
-},
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-adoption:{
-informal:[
-"Scaling without gates creates instability.",
-"Each phase must pass before expansion.",
-"Verification capacity sets the ceiling."
-],
-formal:[
-"Phase-gated expansion model.",
-"Admissibility precedes deployment.",
-"Load increases amplify systemic variance."
-],
-bind:"Bound to: Constraints + Containment."
-},
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
 
-vault:{
-informal:[
-"This is where finalized material lives.",
-"Nothing enters without constraint verification.",
-"Version control prevents silent mutation."
-],
-formal:[
-"Canonical packet consolidation layer.",
-"Unified provenance spine.",
-"Terminal reference surface."
-],
-bind:"Bound to: Appendix + Glossary."
-}
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnDoor","/index.html");
+  wire("btnPrelude","/prelude/");
+  wire("dockHome","/home/");
+  wire("dockExplore","/explore/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-};
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/products/" + q();
+  }
+  btnEN.onclick=function(){ setLang("en"); };
+  btnZH.onclick=function(){ setLang("zh"); };
+  btnES.onclick=function(){ setLang("es"); };
 
-function openNode(key){
-  currentNode = key;
-  renderNode();
-  document.getElementById("focus").classList.add("show");
-}
+  function renderHeader(){
+    if(lang==="zh"){
+      document.getElementById("hk").textContent="产品";
+      document.getElementById("ht").textContent="你可以真正使用的内容";
+      document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
+      document.getElementById("fine").textContent="细则：证明姿态在法则与量规中。";
+      document.getElementById("bandA").textContent="产品索引";
+      document.getElementById("bandB").textContent="支持页面";
+      document.getElementById("dockHome").textContent="主页";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("btnDoor").textContent="入口";
+      document.getElementById("btnPrelude").textContent="前置页";
+    }else if(lang==="es"){
+      document.getElementById("hk").textContent="PRODUCTOS";
+      document.getElementById("ht").textContent="LO QUE PUEDES USAR";
+      document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
+      document.getElementById("fine").textContent="Letra pequeña: la prueba vive en Leyes y Medidores.";
+      document.getElementById("bandA").textContent="ÍNDICE DE PRODUCTOS";
+      document.getElementById("bandB").textContent="SUPERFICIES DE APOYO";
+      document.getElementById("dockHome").textContent="INICIO";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnPrelude").textContent="PRELUDIO";
+    }else{
+      document.getElementById("hk").textContent="PRODUCTS";
+      document.getElementById("ht").textContent="WHAT YOU CAN ACTUALLY USE";
+      document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
+      document.getElementById("fine").textContent="Fine print: proof posture lives under Laws and Gauges.";
+      document.getElementById("bandA").textContent="PRODUCT INDEX";
+      document.getElementById("bandB").textContent="SUPPORT SURFACES";
+      document.getElementById("dockHome").textContent="HOME";
+      document.getElementById("dockExplore").textContent="EXPLORE";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnPrelude").textContent="PRELUDE";
+    }
+  }
+  renderHeader();
 
-function setLens(l){
-  currentLens = l;
-  renderNode();
-}
+  // IMPORTANT: each product routes to its own page (NO MORE /products/ hijack)
+  var PRODUCTS = [
+    {
+      c:"#F59E0B",
+      t:{en:"Energy (Industrial)", zh:"能源（工业）", es:"Energía (Industrial)"},
+      s:{en:"Industrial posture only.", zh:"仅工业姿态。", es:"Solo postura industrial."},
+      p:{en:"Industrial thermal substitution surfaces and posture. This routes to the Energy product page.",
+         zh:"工业热替代执行面与姿态。跳转到能源产品页。",
+         es:"Superficies y postura industrial. Ruta a la página de Energía."},
+      href:"/products/energy/"
+    },
+    {
+      c:"#93C5FD",
+      t:{en:"Coherence Diagnostic", zh:"一致性诊断", es:"Diagnóstico de coherencia"},
+      s:{en:"Orientation + classification surfaces.", zh:"方向 + 分类执行面。", es:"Orientación + clasificación."},
+      p:{en:"Decision support and classification surfaces. This routes to the Coherence Diagnostic product page.",
+         zh:"决策支持与分类执行面。跳转到一致性诊断产品页。",
+         es:"Soporte de decisión y clasificación. Ruta al Diagnóstico."},
+      href:"/products/coherence-diagnostic/"
+    },
+    {
+      c:"#60A5FA",
+      t:{en:"Dot.Grid", zh:"Dot.Grid", es:"Dot.Grid"},
+      s:{en:"Indexing + sweeps (surface-level).", zh:"索引 + 扫描（执行面）。", es:"Indexación + barridos."},
+      p:{en:"Indexing and sweep surfaces. If this page is not built yet, keep it routed here until created.",
+         zh:"索引与扫描执行面。如果页面尚未建立，先保留跳回产品索引。",
+         es:"Superficies de indexación y barridos. Si no existe aún, vuelve al índice."},
+      href:"/products/dot-grid/"
+    },
+    {
+      c:"#D4AF37",
+      t:{en:"SSG", zh:"SSG", es:"SSG"},
+      s:{en:"Constraint syntax geometry (surface).", zh:"约束语法几何（执行面）。", es:"Geometría de sintaxis bajo restricción."},
+      p:{en:"Constraint syntax geometry surface. If this page is not built yet, keep it routed here until created.",
+         zh:"约束语法几何执行面。如果页面尚未建立，先保留跳回产品索引。",
+         es:"Superficie SSG. Si no existe aún, vuelve al índice."},
+      href:"/products/ssg/"
+    }
+  ];
 
-function renderNode(){
-  if(!currentNode) return;
-  const node = DATA[currentNode];
+  var SUPPORT = [
+    {
+      c:"#0EA5E9",
+      t:{en:"Adoption Ladder", zh:"采纳阶梯", es:"Escalera de adopción"},
+      s:{en:"Phase gates for scaling responsibly.", zh:"负责扩张的阶段门控。", es:"Compuertas por fases."},
+      p:{en:"This supports product adoption with phase gates and discipline. If not built, route to Products for now.",
+         zh:"以阶段门控支持采纳与扩张纪律。若未建立，暂回产品索引。",
+         es:"Soporta adopción con compuertas. Si no existe, vuelve al índice."},
+      href:"/products/adoption-ladder/"
+    },
+    {
+      c:"#A3A3A3",
+      t:{en:"Canonical Vault", zh:"规范库", es:"Bóveda canónica"},
+      s:{en:"Version-controlled reference surfaces.", zh:"版本控制参考面。", es:"Referencias con control de versión."},
+      p:{en:"Reference surfaces and packets. If not built, route to Links for now.",
+         zh:"参考面与协议包。若未建立，暂跳到链接。",
+         es:"Superficies de referencia. Si no existe, ve a Enlaces."},
+      href:"/links/"
+    }
+  ];
 
-  const titleMap = {
-    diagnostic:"COHERENCE DIAGNOSTIC",
-    adoption:"ADOPTION LADDER",
-    vault:"CANONICAL VAULT"
-  };
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
 
-  document.getElementById("fTitle").textContent = titleMap[currentNode];
+  function makeRow(item){
+    var row=document.createElement("div");
+    row.className="stackRow";
+    row.style.setProperty("--domc", item.c);
 
-  const body = document.getElementById("fBody");
-  body.innerHTML = "";
+    var head=document.createElement("div");
+    head.className="stackHead";
 
-  node[currentLens].forEach(line=>{
-    const p = document.createElement("p");
-    p.className = "line";
-    p.textContent = line;
+    var left=document.createElement("div");
+    left.className="stackLeft";
+
+    var bar=document.createElement("div");
+    bar.className="stackBar";
+    bar.style.background=item.c;
+
+    var block=document.createElement("div");
+    block.style.minWidth="0";
+
+    var title=document.createElement("div");
+    title.className="stackTitle";
+    title.textContent=pick(item.t);
+
+    var sub=document.createElement("div");
+    sub.className="stackSub";
+    sub.textContent=pick(item.s);
+
+    block.appendChild(title);
+    block.appendChild(sub);
+
+    left.appendChild(bar);
+    left.appendChild(block);
+
+    var chev=document.createElement("div");
+    chev.className="stackChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="stackBody";
+
+    var p=document.createElement("p");
+    p.className="pdesc";
+    p.textContent=pick(item.p);
+
+    var acts=document.createElement("div");
+    acts.className="actions";
+
+    var open=document.createElement("a");
+    open.className="btn";
+    open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+
+    // safety: if a target page isn't built yet, keep it on /products/ (index) instead of hijacking somewhere else
+    var target=item.href;
+    if(target==="/products/dot-grid/" || target==="/products/ssg/" || target==="/products/adoption-ladder/"){
+      // if not built yet, route to index (you can remove this once pages exist)
+      target="/products/";
+    }
+    open.href = target + q();
+
+    acts.appendChild(open);
+
     body.appendChild(p);
+    body.appendChild(acts);
+
+    head.addEventListener("click", function(){
+      var openNow=row.classList.toggle("open");
+      chev.textContent = openNow ? "▾" : "▸";
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  var listA=document.getElementById("listA");
+  var listB=document.getElementById("listB");
+
+  PRODUCTS.forEach(function(it,i){
+    var el=makeRow(it);
+    listA.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
   });
 
-  const bind = document.createElement("div");
-  bind.className = "bind";
-  bind.textContent = node.bind;
-  body.appendChild(bind);
-}
+  SUPPORT.forEach(function(it,i){
+    var el=makeRow(it);
+    listB.appendChild(el);
+    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
+  });
+
+})();
 </script>
 
 </body>

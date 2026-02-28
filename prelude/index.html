@@ -1,9 +1,20 @@
+<!-- TNT — /prelude/index.html
+     PRELUDE · DENSITY UPGRADE · FOCUS CONDITIONING LAYER
+     ROLE:
+       - Psychological conditioning before entry
+       - Introduces structure gravity
+       - Offers MAP fork
+     ROUTES:
+       - ENTER → /home/
+       - VIEW MAP → map reveal mode
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Orientation</title>
+<title>PRELUDE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -11,222 +22,239 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-
-/* Keep gold grid behind content */
 body{position:relative;z-index:0}
 body::before, body::after{z-index:0}
 
-/* Layout */
-.page{
-  width:min(1000px,94vw);
-  margin:0 auto;
-  padding:100px 0 120px;
-  position:relative;
-  z-index:5;
+:root{
+  --R:170px;
+  --D:260px;
+
+  --opalA:rgba(220,200,255,.32);
+  --opalB:rgba(130,80,255,.22);
+  --opalC:rgba(90,210,255,.18);
+
+  --obsA:rgba(14,26,44,.98);
+  --obsB:rgba(6,10,18,.99);
+
+  --goldSoft:rgba(212,175,55,.50);
+  --stroke:rgba(255,255,255,.18);
 }
+
+/* Top Controls */
+.top{
+  position:fixed;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(960px,94vw);
+  display:flex;
+  justify-content:space-between;
+  z-index:140;
+}
+
+.top .left,
+.top .right{display:flex;gap:10px}
 
 /* Header */
-.header{
-  border-radius:22px;
-  padding:22px;
+.head{
+  position:fixed;
+  left:50%;
+  top:90px;
+  transform:translateX(-50%);
+  width:min(960px,94vw);
   text-align:center;
 
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  padding:26px 28px;
+
   background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 60%),
-    linear-gradient(160deg, rgba(35,25,55,.55), rgba(15,10,25,.35));
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.16), transparent 60%),
+    radial-gradient(circle at 15% 40%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 85% 60%, var(--opalB), transparent 75%),
+    linear-gradient(160deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
 
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.18);
-
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.6),
-    inset 0 2px 8px rgba(255,255,255,.25);
-}
-
-.k{
-  font-size:11px;
-  letter-spacing:4px;
-  opacity:.75;
-  margin-bottom:6px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 60px 160px rgba(0,0,0,.85);
 }
 
 .t{
-  font-size:36px;
+  margin:0;
+  font-size:46px;
   font-weight:950;
-  margin:0 0 8px;
+  letter-spacing:2px;
 }
 
 .s{
+  margin-top:18px;
   font-size:15px;
-  opacity:.9;
-  margin:0;
+  line-height:1.7;
+  max-width:760px;
+  margin-left:auto;
+  margin-right:auto;
+  color:rgba(255,255,255,.95);
 }
 
-/* Principles list */
-.principles{
-  margin-top:30px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+/* Statement field */
+.field{
+  position:fixed;
+  left:50%;
+  top:280px;
+  transform:translateX(-50%);
+  width:min(960px,94vw);
+  padding:24px 28px;
+  border-radius:24px;
+
+  border:1px solid var(--stroke);
+  background:
+    radial-gradient(circle at 20% 20%, var(--opalC), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.60), rgba(0,0,0,.28));
+
+  backdrop-filter:blur(14px);
+  box-shadow:0 50px 140px rgba(0,0,0,.75);
 }
 
-.rule{
-  border-radius:18px;
-  padding:18px;
+.line{
+  margin:14px 0;
+  font-size:16px;
+  font-weight:800;
+  letter-spacing:.4px;
+  color:rgba(255,255,255,.95);
+}
+
+/* Stage */
+.stage{
+  position:fixed;
+  left:50%;
+  top:65%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  pointer-events:none;
+}
+
+.d{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:36px;
+  pointer-events:auto;
+  cursor:pointer;
 
   background:
-    radial-gradient(circle at 50% 15%, rgba(255,255,255,.15), transparent 40%),
-    linear-gradient(160deg, #202836 0%, #111822 60%, #070b14 100%);
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.60), transparent 55%),
+    radial-gradient(circle at 70% 70%, var(--opalA), transparent 65%),
+    radial-gradient(circle at 50% 80%, var(--opalB), transparent 70%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.25);
-
   box-shadow:
-    0 0 50px rgba(0,0,0,.8),
-    inset 0 3px 10px rgba(255,255,255,.3);
+    0 80px 260px rgba(0,0,0,.95),
+    0 0 120px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.35),
+    inset 0 -80px 160px rgba(0,0,0,.95);
+
+  transition:.2s ease;
 }
 
-.rule h3{
-  margin:0 0 6px;
-  font-size:18px;
-  font-weight:950;
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
 }
 
-.rule p{
-  margin:0;
-  font-size:14px;
-  opacity:.9;
-}
+.d-top{transform:translate(-50%,-50%) translate(0,-170px) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0,170px) rotate(45deg)}
 
-/* Lens toggle */
-.lens{
-  margin-top:24px;
+.inner{
+  transform:rotate(-45deg);
+  height:100%;
   display:flex;
-  gap:10px;
+  flex-direction:column;
+  align-items:center;
   justify-content:center;
+  text-align:center;
+  padding:26px;
 }
 
-.lens .btn{
-  padding:10px 14px;
-  border-radius:999px;
+.lab{
+  font-weight:950;
+  font-size:22px;
+  letter-spacing:1px;
 }
 
-/* Bottom actions */
-.actions{
+.sub{
+  margin-top:12px;
+  font-size:15px;
+  line-height:1.6;
+  font-weight:600;
+}
+
+.footer{
   position:fixed;
+  bottom:40px;
   left:50%;
-  bottom:24px;
   transform:translateX(-50%);
-  display:flex;
-  gap:14px;
+  font-size:13px;
+  opacity:.85;
 }
 
-.sig{
-  position:fixed;
-  left:50%;
-  bottom:4px;
-  transform:translateX(-50%);
-  font-size:11px;
-  letter-spacing:2px;
-  opacity:.5;
-}
-
-@media (max-width:600px){
-  .t{font-size:28px}
+@media (max-width:560px){
+  .t{font-size:36px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
-
-  <div class="header">
-    <div class="k">CARDINAL AXIS</div>
-    <div class="t">PRELUDE</div>
-    <div class="s">Read this once. It prevents confusion later.</div>
+<div class="top">
+  <div class="left">
+    <a class="btn" href="/door/">RETURN</a>
   </div>
-
-  <div class="lens">
-    <button class="btn" id="informalBtn">INFORMAL</button>
-    <button class="btn" id="formalBtn">FORMAL</button>
-    <button class="btn" id="bothBtn">BOTH</button>
+  <div class="right">
+    <button class="btn">EN</button>
+    <button class="btn">中文</button>
+    <button class="btn">ES</button>
   </div>
-
-  <div class="principles" id="principles"></div>
-
 </div>
 
-<div class="actions">
-  <a class="btn" id="btnReturn" href="/door/">RETURN</a>
-  <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+<div class="head">
+  <h1 class="t">PRELUDE</h1>
+  <p class="s">
+    Structure determines outcome.<br>
+    Unbounded systems collapse.<br>
+    Every tool inherits its limits.
+  </p>
 </div>
 
-<div class="sig">COGRID.NET</div>
+<div class="field">
+  <div class="line">Scope precedes authority.</div>
+  <div class="line">Scale amplifies error.</div>
+  <div class="line">Ambiguity accelerates collapse.</div>
+  <div class="line">Containment prevents cascade.</div>
+  <div class="line">Correction defines a new epoch.</div>
+</div>
 
-<script>
-(function(){
+<div class="stage">
+  <div class="d d-top" onclick="location.href='/home/'">
+    <div class="inner">
+      <div class="lab">ENTER</div>
+      <div class="sub">Proceed with structure.</div>
+    </div>
+  </div>
 
-  const principles = [
-    {
-      informal:"Define the boundary before naming the outcome.",
-      formal:"Scope precedes authority."
-    },
-    {
-      informal:"Small confusion becomes large failure when scaled.",
-      formal:"Scale amplifies error."
-    },
-    {
-      informal:"Don’t balance contradictions. Fix them.",
-      formal:"Compensation hides instability."
-    },
-    {
-      informal:"If you cannot test it, don’t elevate it.",
-      formal:"Unbounded claims create fragility."
-    },
-    {
-      informal:"Evidence must pass constraints.",
-      formal:"Proof must survive constraint."
-    }
-  ];
+  <div class="d d-bottom" onclick="location.href='/home/?map=1'">
+    <div class="inner">
+      <div class="lab">VIEW MAP</div>
+      <div class="sub">Survey before entry.</div>
+    </div>
+  </div>
+</div>
 
-  const container=document.getElementById("principles");
-
-  function render(mode){
-    container.innerHTML="";
-    principles.forEach(p=>{
-      const div=document.createElement("div");
-      div.className="rule";
-
-      const h=document.createElement("h3");
-      const body=document.createElement("p");
-
-      if(mode==="informal"){
-        h.textContent=p.informal;
-        body.textContent="";
-      }
-      else if(mode==="formal"){
-        h.textContent=p.formal;
-        body.textContent="";
-      }
-      else{
-        h.textContent=p.informal;
-        body.textContent=p.formal;
-      }
-
-      div.appendChild(h);
-      if(body.textContent) div.appendChild(body);
-      container.appendChild(div);
-    });
-  }
-
-  render("both");
-
-  document.getElementById("informalBtn").onclick=()=>render("informal");
-  document.getElementById("formalBtn").onclick=()=>render("formal");
-  document.getElementById("bothBtn").onclick=()=>render("both");
-
-})();
-</script>
+<div class="footer">
+  Orientation before scale.
+</div>
 
 </body>
 </html>

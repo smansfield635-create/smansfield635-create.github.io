@@ -1,21 +1,36 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · ARTIFACT VAULT (TIME-FILTER) · NO NARRATIVE · NO EXPLANATION
-     ROLE:
-       - Optional detour from DOOR “INDEX” button (artifact/time filter)
-       - Stark, cinematic, measured lines (one sentence each)
-       - No bullets, no numbering, no categories
-     ROUTES:
-       - RETURN  → /door/
-       - ENTER   → /index.html
-     STATE:
+     PRELUDE · ORIENTATION + VAULT (FOCUS MODE) · NO MODALS
+
+     NEW BEHAVIOR (LOCKED):
+       - Default view = PRELUDE VAULT (lines + two diamonds)
+       - VIEW SITE MAP → fades out VAULT view and replaces 100% with MAP view
+       - MAP view = 2 grouped 2x4 grid (COMPASS + SYSTEM)
+       - Clicking any MAP tile enters FOCUS (blinders): everything else fades out, focus panel replaces 100%
+       - Back/Return controls always available (top)
+
+     ROUTES (LOCKED):
+       - RETURN → /door/
+       - ENTER  → /index.html
+       - MAP tiles route to:
+           N/DEFINITIONS     → /laws/
+           E/PRODUCTS        → /products/
+           S/CONSTRAINTS     → /laws/
+           W/CONTAINMENT     → /laws/
+           APPENDIX          → /links/
+           GLOSSARY          → /links/
+           ABOUT             → /links/
+           LINKS             → /links/
+
+     STATE (LOCKED):
        - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
-     LANGUAGE:
-       - Page-level only (EN / 中文 / ES)
-       - No mixed output (single-language render)
+       - LS:  gd_lang/gd_style/gd_time/gd_depth
+     LANGUAGE (LOCKED):
+       - Page-level only: EN / 中文 / ES
+       - No mixed output
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe (no overlays intercepting)
 -->
 
 <!doctype html>
@@ -23,7 +38,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Geodiametrics</title>
+<title>PRELUDE · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -32,46 +47,52 @@
 <style>
 /* ui.css owns field */
 a{color:inherit;text-decoration:none}
-
 :root{
+  --R:170px;
+  --D:260px;
+  --dockH:92px;
+
+  /* Door-matched opal/violet */
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.14);
   --opalC:rgba(90,210,255,.10);
-  --glass:rgba(0,0,0,.18);
+  --goldSoft:rgba(212,175,55,.42);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-  --text:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.72);
+  --glass:rgba(0,0,0,.16);
 }
 
-/* Frame */
+/* ===== Frame ===== */
 .page{
-  width:min(980px,94vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(98px + env(safe-area-inset-bottom));
+  padding:14px 0 calc(var(--dockH) + env(safe-area-inset-bottom) + 18px);
   position:relative;
   z-index:10;
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:12px;
 }
 
-/* Top controls */
+/* ===== Top controls ===== */
 .top{
   position:sticky;
   top:0;
-  z-index:60;
+  z-index:200;
+  padding:10px 0 6px;
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
   gap:12px;
-  padding:10px 0 6px;
   pointer-events:none;
 }
 .top .left,
 .top .right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;pointer-events:auto}
 
-/* Header bubble (opal glass, readable on red) */
+/* ===== Header bubble ===== */
 .header{
   border:1px solid var(--stroke);
   border-radius:22px;
@@ -84,30 +105,28 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 24px 80px rgba(0,0,0,.45);
   padding:16px 16px 14px;
 }
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.t{margin:0;font-weight:950;font-size:38px;letter-spacing:1.2px;line-height:1.02}
+.s{margin:10px 0 0;font-size:13.5px;color:rgba(255,255,255,.78);line-height:1.4}
 
-.k{
-  margin:0 0 6px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
+/* ===== Fade/Focus system ===== */
+.view{
+  transition:opacity .22s ease, transform .22s ease;
 }
-.t{
-  margin:0;
-  font-weight:950;
-  font-size:38px;
-  letter-spacing:1.2px;
-  line-height:1.02;
-  color:var(--text);
-}
-.s{
-  margin:10px 0 0;
-  font-size:13.5px;
-  color:var(--mut);
-  line-height:1.4;
+.hidden{
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  height:0;
+  overflow:hidden;
 }
 
-/* Lines field (no boxes) */
+/* ===== Vault view (lines + diamonds) ===== */
+.vaultWrap{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
 .field{
   border:1px solid var(--stroke2);
   border-radius:22px;
@@ -116,7 +135,6 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 20px 70px rgba(0,0,0,.42);
   padding:14px 10px;
 }
-
 .line{
   margin:0;
   padding:12px 10px;
@@ -126,35 +144,182 @@ a{color:inherit;text-decoration:none}
   color:rgba(255,255,255,.90);
   text-shadow:0 0 18px rgba(255,255,255,.06);
   border-radius:16px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:opacity .45s ease, transform .45s ease, background .25s ease, border-color .25s ease;
 }
-.line.on{
-  opacity:1;
-  transform:translateY(0);
-}
-.line:hover{
-  background:rgba(0,0,0,.12);
-}
+.line:hover{background:rgba(0,0,0,.12)}
 
-/* Fine print */
-.fine{
+/* Diamonds stage */
+.stage{
+  position:relative;
+  width:min(720px,94vw);
+  height:min(560px,70vh);
+  margin:0 auto;
+  pointer-events:none;
+}
+.d{
+  width:var(--D);
+  height:var(--D);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform-origin:center;
+  border-radius:34px;
+  cursor:pointer;
+  pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.42), transparent 52%),
+    radial-gradient(circle at 76% 30%, var(--opalA), transparent 58%),
+    radial-gradient(circle at 60% 78%, var(--opalB), transparent 62%),
+    radial-gradient(circle at 32% 70%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 40px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -50px 90px rgba(0,0,0,.78);
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  overflow:hidden;
+}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:34px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.62;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.32);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.86),
+    0 0 52px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.78);
+}
+.d:active{ transform:translate(-50%,-50%) rotate(45deg) scale(.99); }
+
+.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
+.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
+.inner{
+  width:100%;
+  height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  font-size:12.5px;
-  color:rgba(255,255,255,.68);
-  opacity:.9;
-  letter-spacing:.2px;
-  padding:6px 10px 0;
+  padding:18px;
+  gap:10px;
+  pointer-events:none;
+  user-select:none;
 }
+.lab{font-weight:950;font-size:22px;letter-spacing:1px;text-shadow:0 0 18px rgba(255,255,255,.10)}
+.sub{font-size:14px;opacity:.90;line-height:1.35;max-width:24em}
+.pref{font-weight:950;font-style:italic;letter-spacing:.2px}
 
-/* Bottom dock */
+/* ===== MAP view (replaces 100%) ===== */
+.mapWrap{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+}
+.grid4{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width:980px){
+  .grid4{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+.tile{
+  --c:#93C5FD;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  box-shadow:0 18px 60px rgba(0,0,0,.62);
+  padding:14px 14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  justify-content:space-between;
+}
+.tile:hover{border-color:rgba(212,175,55,.32)}
+.tLeft{display:flex;gap:10px;min-width:0}
+.swatch{
+  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 14px rgba(0,0,0,.35);
+  margin-top:4px;flex:0 0 auto;pointer-events:none;
+}
+.tTxt{min-width:0}
+.tName{font-weight:950;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tHint{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35}
+.chev{opacity:.75;font-size:18px;flex:0 0 auto;pointer-events:none}
+
+/* ===== FOCUS panel (blinders) ===== */
+.focus{
+  display:none;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    rgba(0,0,0,.16);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.focus.show{display:block}
+.fHead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.fTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:16px}
+.fClose{border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer;padding:6px 10px;border-radius:12px}
+.fClose:hover{background:rgba(255,255,255,.08)}
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.14);
+  padding:12px 14px;
+  margin-top:12px;
+}
+.p{margin:0;color:rgba(255,255,255,.88);line-height:1.55;font-size:13.25px}
+.p + .p{margin-top:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* ===== Dock ===== */
 .dock{
   position:fixed;
   left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:80;
+  z-index:220;
   width:min(980px,94vw);
   padding:10px 12px;
   border-radius:22px;
@@ -167,9 +332,8 @@ a{color:inherit;text-decoration:none}
   gap:10px;
 }
 .dock .btn{width:100%;border-radius:999px;padding:10px 10px;white-space:nowrap}
-
-@media (max-width:560px){
-  .t{font-size:34px}
+@media (max-width:520px){
+  :root{--dockH:98px}
 }
 </style>
 </head>
@@ -196,11 +360,53 @@ a{color:inherit;text-decoration:none}
     <p class="s" id="sub">Notes before entry.</p>
   </div>
 
-  <div class="field" id="field" aria-label="Prelude lines">
-    <!-- lines injected -->
+  <!-- VAULT VIEW -->
+  <div class="view vaultWrap" id="vaultView">
+    <div class="stage" aria-label="Prelude entry">
+      <div class="d d-top" id="dEnter" role="button" tabindex="0" aria-label="Enter site">
+        <div class="inner">
+          <div class="lab" id="labEnter">ENTER SITE</div>
+          <div class="sub" id="subEnter"><span class="pref" id="prefEnter">Direct:</span> Go directly inside.</div>
+        </div>
+      </div>
+
+      <div class="d d-bottom" id="dMap" role="button" tabindex="0" aria-label="View site map">
+        <div class="inner">
+          <div class="lab" id="labMap">VIEW SITE MAP</div>
+          <div class="sub" id="subMap"><span class="pref" id="prefMap">First:</span> Get oriented first.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field" id="field" aria-label="Prelude lines"></div>
   </div>
 
-  <div class="fine" id="fine">No interpretation is provided. Entry does not require agreement.</div>
+  <!-- MAP VIEW (replaces 100%) -->
+  <div class="view mapWrap hidden" id="mapView">
+    <div class="band" id="bandA">COMPASS</div>
+    <div class="grid4" id="gridA"></div>
+
+    <div class="band" id="bandB">SYSTEM</div>
+    <div class="grid4" id="gridB"></div>
+
+    <div class="focus" id="focus">
+      <div class="fHead">
+        <h3 class="fTitle" id="fTitle">—</h3>
+        <button class="fClose" id="fClose" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="block">
+        <p class="p" id="p1">—</p>
+        <p class="p" id="p2">—</p>
+        <p class="p" id="p3">—</p>
+        <div class="actions">
+          <a class="btn" id="btnOpen" href="/index.html">OPEN</a>
+          <button class="btn" id="btnBackToMap" type="button">BACK</button>
+          <a class="btn" id="btnEnterFromFocus" href="/index.html">ENTER</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <nav class="dock" aria-label="Bottom actions">
@@ -210,7 +416,7 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // --- Canonical state (URL lang/style/time/depth; LS gd_*) ---
+  // --- State ---
   var qs=new URLSearchParams(location.search);
 
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
@@ -234,23 +440,28 @@ a{color:inherit;text-decoration:none}
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function q(over){
-    var L = (over && over.lang) ? over.lang : lang;
-    var S = (over && over.style) ? over.style : style;
-    var T = (over && over.time) ? over.time : time;
-    var D = (over && over.depth) ? over.depth : depth;
+    var L=(over && over.lang) ? over.lang : lang;
+    var S=(over && over.style) ? over.style : style;
+    var T=(over && over.time) ? over.time : time;
+    var D=(over && over.depth) ? over.depth : depth;
     return "?lang="+encodeURIComponent(L)+
            "&style="+encodeURIComponent(S)+
            "&time="+encodeURIComponent(T)+
            "&depth="+encodeURIComponent(D);
   }
 
-  // Wire routes (state-carry)
-  document.getElementById("btnReturn").href="/door/"+q();
-  document.getElementById("btnReturnBottom").href="/door/"+q();
-  document.getElementById("btnEnterTop").href="/index.html"+q();
-  document.getElementById("btnEnterBottom").href="/index.html"+q();
+  // routes
+  var btnReturn=document.getElementById("btnReturn");
+  var btnReturnBottom=document.getElementById("btnReturnBottom");
+  var btnEnterTop=document.getElementById("btnEnterTop");
+  var btnEnterBottom=document.getElementById("btnEnterBottom");
 
-  // --- Language toggle ---
+  btnReturn.href="/door/"+q();
+  btnReturnBottom.href="/door/"+q();
+  btnEnterTop.href="/index.html"+q();
+  btnEnterBottom.href="/index.html"+q();
+
+  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -264,25 +475,56 @@ a{color:inherit;text-decoration:none}
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
+    lang=next;
     try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang: lang}));
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
     document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
     paintLang();
-    render();
+    renderAll();
   }
 
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // --- Content (single-language) ---
-  var COPY = {
+  // views
+  var vaultView=document.getElementById("vaultView");
+  var mapView=document.getElementById("mapView");
+  var focus=document.getElementById("focus");
+
+  function showMap(){
+    // blinders: vault fades out, map replaces 100%
+    vaultView.classList.add("hidden");
+    mapView.classList.remove("hidden");
+    setTimeout(function(){
+      mapView.scrollIntoView({behavior:"smooth", block:"start"});
+    },0);
+  }
+  function showVault(){
+    // return from map to vault
+    focus.classList.remove("show");
+    mapView.classList.add("hidden");
+    vaultView.classList.remove("hidden");
+    setTimeout(function(){
+      window.scrollTo({top:0,behavior:"smooth"});
+    },0);
+  }
+
+  // vault diamonds
+  function goEnter(){ location.href="/index.html"+q(); }
+  var dEnter=document.getElementById("dEnter");
+  var dMap=document.getElementById("dMap");
+  dEnter.addEventListener("click", goEnter);
+  dMap.addEventListener("click", showMap);
+  dEnter.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goEnter(); }});
+  dMap.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showMap(); }});
+
+  // content
+  var COPY={
     en:{
       k:"CARDINAL AXIS",
       h:"PRELUDE",
       sub:"Notes before entry.",
-      fine:"No interpretation is provided. Entry does not require agreement.",
       lines:[
         "Scope precedes authority.",
         "Scale amplifies error.",
@@ -295,13 +537,27 @@ a{color:inherit;text-decoration:none}
         "Correction creates a new epoch.",
         "Containment prevents cascade."
       ],
-      buttons:{return:"RETURN", enter:"ENTER", enterSite:"ENTER SITE"}
+      diamonds:{
+        enter:"ENTER SITE", enterPref:"Direct:", enterSub:" Go directly inside.",
+        map:"VIEW SITE MAP", mapPref:"First:", mapSub:" Get oriented first."
+      },
+      bands:{a:"COMPASS",b:"SYSTEM"},
+      tiles:{
+        N:{t:"DEFINITIONS",s:"Words that stay fixed.",p1:"This defines what words mean.",p2:"It prevents meaning from shifting midstream.",p3:"Open when you need clarity.",href:"/laws/"},
+        E:{t:"PRODUCTS",s:"Tools you can use.",p1:"This is the catalog of usable surfaces.",p2:"It stays separate from proof and doctrine.",p3:"Open when you want tools.",href:"/products/"},
+        S:{t:"CONSTRAINTS",s:"Limits that prevent drift.",p1:"This defines what cannot be claimed.",p2:"It blocks shortcuts that inflate results.",p3:"Open when you need boundaries.",href:"/laws/"},
+        W:{t:"CONTAINMENT",s:"Keep failure small.",p1:"This defines how failures stay local.",p2:"It protects the rest of the system.",p3:"Open when stability matters.",href:"/laws/"},
+        APP:{t:"APPENDIX",s:"Packets and references.",p1:"This is a place for key packets.",p2:"It reduces searching across the site.",p3:"Open when you need a bundle.",href:"/links/"},
+        GLO:{t:"GLOSSARY",s:"Canon terms.",p1:"This locks terms to one meaning.",p2:"It prevents silent word-swaps.",p3:"Open when words matter.",href:"/links/"},
+        ABT:{t:"ABOUT",s:"What this is.",p1:"This states scope and limits.",p2:"It reduces misreads.",p3:"Open when you want context.",href:"/links/"},
+        LNK:{t:"LINKS",s:"External anchors.",p1:"This lists external proof anchors.",p2:"It routes to OSF/GitHub references.",p3:"Open when you want receipts.",href:"/links/"}
+      },
+      btn:{open:"OPEN",back:"BACK",enter:"ENTER"}
     },
     zh:{
       k:"基轴体系",
       h:"前置页",
       sub:"进入前的要点。",
-      fine:"不提供解释。进入不要求认同。",
       lines:[
         "范围先于权力。",
         "规模放大误差。",
@@ -314,13 +570,27 @@ a{color:inherit;text-decoration:none}
         "修正意味着新纪元。",
         "隔离阻断级联。"
       ],
-      buttons:{return:"返回", enter:"进入", enterSite:"进入网站"}
+      diamonds:{
+        enter:"进入网站", enterPref:"直接：", enterSub:" 直接进入。",
+        map:"查看网站地图", mapPref:"先：", mapSub:" 先获得方向。"
+      },
+      bands:{a:"罗盘",b:"系统"},
+      tiles:{
+        N:{t:"定义",s:"固定含义。",p1:"这里定义词的含义。",p2:"防止含义在中途被偷换。",p3:"需要清晰时打开。",href:"/laws/"},
+        E:{t:"产品",s:"可用工具。",p1:"这里是可用执行面的目录。",p2:"与证明与教义分离。",p3:"需要工具时打开。",href:"/products/"},
+        S:{t:"约束",s:"防漂移边界。",p1:"这里定义哪些不能主张。",p2:"阻止夸口与捷径。",p3:"需要边界时打开。",href:"/laws/"},
+        W:{t:"隔离",s:"把失败变小。",p1:"这里定义失败如何局部化。",p2:"保护系统其余部分。",p3:"需要稳定时打开。",href:"/laws/"},
+        APP:{t:"附录",s:"包与引用。",p1:"关键包集中在这里。",p2:"减少全站搜寻。",p3:"需要打包时打开。",href:"/links/"},
+        GLO:{t:"术语表",s:"规范术语。",p1:"术语固定为单一含义。",p2:"阻止静默换词。",p3:"需要术语时打开。",href:"/links/"},
+        ABT:{t:"关于",s:"这是什么。",p1:"声明范围与边界。",p2:"减少误读。",p3:"需要背景时打开。",href:"/links/"},
+        LNK:{t:"链接",s:"外部锚点。",p1:"外部证据锚点目录。",p2:"跳转到OSF/GitHub等。",p3:"需要收据时打开。",href:"/links/"}
+      },
+      btn:{open:"打开",back:"返回",enter:"进入"}
     },
     es:{
       k:"CARDINAL AXIS",
       h:"PRELUDIO",
       sub:"Notas antes de entrar.",
-      fine:"No se da interpretación. Entrar no requiere acuerdo.",
       lines:[
         "El alcance precede a la autoridad.",
         "La escala amplifica el error.",
@@ -333,28 +603,43 @@ a{color:inherit;text-decoration:none}
         "Corregir crea un nuevo epoch.",
         "La contención evita la cascada."
       ],
-      buttons:{return:"VOLVER", enter:"ENTRAR", enterSite:"ENTRAR AL SITIO"}
+      diamonds:{
+        enter:"ENTRAR AL SITIO", enterPref:"Directo:", enterSub:" Entra directamente.",
+        map:"VER MAPA DEL SITIO", mapPref:"Primero:", mapSub:" Oriéntate primero."
+      },
+      bands:{a:"BRÚJULA",b:"SISTEMA"},
+      tiles:{
+        N:{t:"DEFINICIONES",s:"Palabras fijas.",p1:"Aquí se fija el significado.",p2:"Evita cambios silenciosos.",p3:"Ábrelo cuando necesites claridad.",href:"/laws/"},
+        E:{t:"PRODUCTOS",s:"Herramientas.",p1:"Catálogo de superficies utilizables.",p2:"Separado de prueba y doctrina.",p3:"Ábrelo cuando quieras herramientas.",href:"/products/"},
+        S:{t:"RESTRICCIONES",s:"Límites claros.",p1:"Define lo que no se puede afirmar.",p2:"Bloquea atajos que inflan.",p3:"Ábrelo cuando necesites límites.",href:"/laws/"},
+        W:{t:"CONTENCIÓN",s:"Fallo local.",p1:"Define cómo aislar fallos.",p2:"Protege el resto del sistema.",p3:"Ábrelo cuando importe la estabilidad.",href:"/laws/"},
+        APP:{t:"APÉNDICE",s:"Paquetes.",p1:"Paquetes clave en un lugar.",p2:"Menos búsqueda.",p3:"Ábrelo cuando necesites un paquete.",href:"/links/"},
+        GLO:{t:"GLOSARIO",s:"Términos.",p1:"Términos canónicos.",p2:"Evita cambios de sentido.",p3:"Ábrelo cuando las palabras importen.",href:"/links/"},
+        ABT:{t:"ACERCA",s:"Qué es.",p1:"Alcance y límites.",p2:"Menos malentendidos.",p3:"Ábrelo para contexto.",href:"/links/"},
+        LNK:{t:"ENLACES",s:"Anclas externas.",p1:"Directorio de anclas externas.",p2:"OSF/GitHub y referencias.",p3:"Ábrelo para recibos.",href:"/links/"}
+      },
+      btn:{open:"ABRIR",back:"VOLVER",enter:"ENTRAR"}
     }
   };
 
-  function pick(){
-    if(lang==="zh") return COPY.zh;
-    if(lang==="es") return COPY.es;
-    return COPY.en;
-  }
+  function pick(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-  function render(){
-    var C = pick();
+  function renderAll(){
+    var C=pick();
+
     document.getElementById("k").textContent=C.k;
     document.getElementById("h").textContent=C.h;
     document.getElementById("sub").textContent=C.sub;
-    document.getElementById("fine").textContent=C.fine;
 
-    document.getElementById("btnReturn").textContent=C.buttons.return;
-    document.getElementById("btnReturnBottom").textContent=C.buttons.return;
-    document.getElementById("btnEnterTop").textContent=C.buttons.enter;
-    document.getElementById("btnEnterBottom").textContent=C.buttons.enterSite;
+    document.getElementById("labEnter").textContent=C.diamonds.enter;
+    document.getElementById("prefEnter").textContent=C.diamonds.enterPref;
+    document.getElementById("subEnter").lastChild.nodeValue=C.diamonds.enterSub;
 
+    document.getElementById("labMap").textContent=C.diamonds.map;
+    document.getElementById("prefMap").textContent=C.diamonds.mapPref;
+    document.getElementById("subMap").lastChild.nodeValue=C.diamonds.mapSub;
+
+    // vault lines
     var field=document.getElementById("field");
     field.innerHTML="";
     C.lines.forEach(function(txt){
@@ -364,22 +649,139 @@ a{color:inherit;text-decoration:none}
       field.appendChild(p);
     });
 
-    // Animate in on scroll
-    var lines=[].slice.call(document.querySelectorAll(".line"));
-    if(!("IntersectionObserver" in window)){
-      lines.forEach(function(x){ x.classList.add("on"); });
-      return;
-    }
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); }
-      });
-    }, {root:null, rootMargin:"0px 0px -10% 0px", threshold:0.1});
+    // bands
+    document.getElementById("bandA").textContent=C.bands.a;
+    document.getElementById("bandB").textContent=C.bands.b;
 
-    lines.forEach(function(x){ io.observe(x); });
+    // focus buttons
+    document.getElementById("btnBackToMap").textContent=C.btn.back;
+    document.getElementById("btnEnterFromFocus").textContent=C.btn.enter;
+
+    // build tiles
+    buildTiles(C);
   }
 
-  render();
+  function buildTiles(C){
+    var A=[
+      {id:"N", c:"#1F3A8A"},
+      {id:"E", c:"#0EA5E9"},
+      {id:"S", c:"#F59E0B"},
+      {id:"W", c:"#7F1D1D"}
+    ];
+    var B=[
+      {id:"APP", c:"#A3A3A3"},
+      {id:"GLO", c:"#93C5FD"},
+      {id:"ABT", c:"#D4AF37"},
+      {id:"LNK", c:"#60A5FA"}
+    ];
+
+    var gridA=document.getElementById("gridA");
+    var gridB=document.getElementById("gridB");
+    gridA.innerHTML=""; gridB.innerHTML="";
+
+    function makeTile(o){
+      var t=C.tiles[o.id];
+      var el=document.createElement("div");
+      el.className="tile";
+      el.style.setProperty("--c", o.c);
+      el.dataset.id=o.id;
+
+      var left=document.createElement("div");
+      left.className="tLeft";
+      var sw=document.createElement("div");
+      sw.className="swatch";
+      var txt=document.createElement("div");
+      txt.className="tTxt";
+
+      var name=document.createElement("div");
+      name.className="tName";
+      name.textContent=t.t;
+
+      var hint=document.createElement("div");
+      hint.className="tHint";
+      hint.textContent=t.s;
+
+      txt.appendChild(name);
+      txt.appendChild(hint);
+      left.appendChild(sw);
+      left.appendChild(txt);
+
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent="›";
+
+      el.appendChild(left);
+      el.appendChild(chev);
+
+      el.addEventListener("click", function(){ openFocus(o.id); });
+
+      return el;
+    }
+
+    A.forEach(function(o){ gridA.appendChild(makeTile(o)); });
+    B.forEach(function(o){ gridB.appendChild(makeTile(o)); });
+  }
+
+  // focus behavior (blinders)
+  var focus=document.getElementById("focus");
+  var fTitle=document.getElementById("fTitle");
+  var fClose=document.getElementById("fClose");
+  var p1=document.getElementById("p1");
+  var p2=document.getElementById("p2");
+  var p3=document.getElementById("p3");
+  var btnOpen=document.getElementById("btnOpen");
+  var btnBackToMap=document.getElementById("btnBackToMap");
+  var btnEnterFromFocus=document.getElementById("btnEnterFromFocus");
+
+  function openFocus(id){
+    // hide grids, show focus (100% replacement inside map view)
+    document.getElementById("gridA").classList.add("hidden");
+    document.getElementById("gridB").classList.add("hidden");
+    document.getElementById("bandA").classList.add("hidden");
+    document.getElementById("bandB").classList.add("hidden");
+
+    var C=pick();
+    var t=C.tiles[id];
+
+    fTitle.textContent=t.t;
+    p1.textContent=t.p1;
+    p2.textContent=t.p2;
+    p3.textContent=t.p3;
+
+    btnOpen.textContent = C.btn.open;
+    btnOpen.href = t.href + q();
+
+    btnEnterFromFocus.href="/index.html"+q();
+
+    focus.classList.add("show");
+    focus.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function closeFocus(){
+    focus.classList.remove("show");
+    document.getElementById("gridA").classList.remove("hidden");
+    document.getElementById("gridB").classList.remove("hidden");
+    document.getElementById("bandA").classList.remove("hidden");
+    document.getElementById("bandB").classList.remove("hidden");
+  }
+
+  fClose.addEventListener("click", closeFocus);
+  btnBackToMap.addEventListener("click", closeFocus);
+
+  // back from map to vault
+  // (use RETURN top/bottom to go to /door/, not to vault)
+  // vault <-> map is internal only
+  // provide a keyboard escape path:
+  document.addEventListener("keydown", function(e){
+    if(e.key==="Escape"){
+      if(focus.classList.contains("show")) closeFocus();
+      else if(!mapView.classList.contains("hidden")) showVault();
+    }
+  });
+
+  // render + defaults
+  renderAll();
+
 })();
 </script>
 

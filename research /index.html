@@ -1,0 +1,224 @@
+<!doctype html>
+<!-- TNT — /research/index.html
+     RESEARCH · HUB
+     MODE: INFORMATIONAL · NON-MONETIZED · STRUCTURAL
+     PURPOSE:
+       - Neutral research layer
+       - No marketing tone
+       - No lead capture
+       - No monetization
+       - No affiliate positioning
+     CONSTRAINTS:
+       - Canon state carry (lang/style/time/depth via gd_* only)
+       - No new gd_* keys
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background
+       - No modals / no overlays
+       - Single-open accordion
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research · Structural Context</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:104px;
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.84);
+  --shadowA:0 28px 90px rgba(0,0,0,.6);
+}
+
+/* Layout */
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:100px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+  position:relative;
+  z-index:10;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  padding:24px;
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowA);
+}
+
+.header h1{
+  margin:0 0 14px;
+  font-size:28px;
+  font-weight:950;
+  letter-spacing:.4px;
+}
+
+.header p{
+  margin:0;
+  line-height:1.75;
+  font-size:15px;
+  color:var(--mut);
+}
+
+/* Accordion */
+.section{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(12,18,28,.86), rgba(6,10,16,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+}
+
+.head{
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+}
+
+.title{
+  font-size:18px;
+  font-weight:900;
+}
+
+.body{
+  display:none;
+  padding:22px;
+  border-top:1px solid var(--stroke);
+}
+
+.section.open .body{display:block}
+
+.body p{
+  margin:0 0 16px;
+  line-height:1.7;
+  color:var(--mut);
+  font-size:15px;
+}
+
+.jump{
+  display:inline-block;
+  padding:10px 18px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  font-weight:800;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.dock .btn{
+  width:100%;
+  padding:10px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <h1>Research</h1>
+    <p>
+      This section provides contextual and structural research references that inform
+      the broader architectural framework of this site.
+      These pages are informational only and are presented for analytical and academic purposes.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="head">
+      <div class="title">Industry Context</div>
+      <div>▸</div>
+    </div>
+    <div class="body">
+      <p>
+        Engineering-led construction benchmarks across HVAC, roofing, insulation,
+        fenestration, plumbing, and rainwater management systems.
+      </p>
+      <a class="jump" href="/research/industry-context/">Open Industry Context</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="head">
+      <div class="title">Methodology (Reserved)</div>
+      <div>▸</div>
+    </div>
+    <div class="body">
+      <p>
+        Reserved for formal documentation of measurement logic,
+        structural evaluation models, and research methodology notes.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="head">
+      <div class="title">Field Notes (Reserved)</div>
+      <div>▸</div>
+    </div>
+    <div class="body">
+      <p>
+        Reserved for observational research, applied field analysis,
+        and contextual documentation of engineering systems.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+</nav>
+
+<script>
+(function(){
+  var sections=document.querySelectorAll(".section");
+  sections.forEach(function(sec){
+    var head=sec.querySelector(".head");
+    head.addEventListener("click",function(){
+      var isOpen=sec.classList.contains("open");
+      sections.forEach(function(s){s.classList.remove("open");});
+      if(!isOpen){sec.classList.add("open");}
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

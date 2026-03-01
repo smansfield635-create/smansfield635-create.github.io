@@ -1,11 +1,9 @@
 <!-- TNT — /home/index.html
-     HOME · STRUCTURAL CORE
-     INTENT:
-       - Monumental but calm.
-       - Strong positioning.
-       - No lenses here (orientation only).
-       - EN / 中文 / ES.
-       - State carry preserved.
+     HOME · STRUCTURAL CORE (UPGRADED LAYERING + PANEL VARIANCE)
+     FIXES:
+       - Adds sub-layer cards + “next routes” block.
+       - Elevated panels now differ from background (slab + inner glass).
+       - EN / 中文 / ES, canon state carry.
 -->
 
 <!doctype html>
@@ -24,85 +22,173 @@ a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
-/* TYPOGRAPHIC EXPANSION */
 :root{
-  --h1:42px;
-  --h2:22px;
-  --p:17px;
+  --h0:44px;
+  --h1:24px;
+  --p:18px;
+  --p2:15.5px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.08);
+
+  --inkA:rgba(10,14,20,.76);
+  --inkB:rgba(6,9,14,.86);
+
+  --opalA:rgba(210,190,255,.12);
+  --opalB:rgba(120,70,255,.09);
+  --opalC:rgba(255,70,70,.12);
+
+  --gold:rgba(212,175,55,.20);
 }
 
-/* TOP */
 .top{
   position:fixed;top:16px;left:16px;right:16px;
-  display:flex;justify-content:space-between;
+  display:flex;justify-content:space-between;gap:12px;
   z-index:200;
 }
 .top .btn{white-space:nowrap}
 
-/* WRAP */
 .wrap{
-  width:min(1000px,92vw);
+  width:min(1020px,92vw);
   margin:0 auto;
-  padding:110px 0 60px;
+  padding:120px 0 80px;
   display:flex;
   flex-direction:column;
-  gap:26px;
+  gap:18px;
 }
 
-/* HERO */
 .hero{
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.12);
+  border-radius:32px;
+  border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 20% 20%, rgba(210,190,255,.12), transparent 70%),
-    radial-gradient(circle at 80% 50%, rgba(255,70,70,.10), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.16));
+    radial-gradient(circle at 20% 20%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 82% 60%, var(--opalC), transparent 70%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  box-shadow:0 50px 180px rgba(0,0,0,.60);
+  padding:28px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.06) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
+  pointer-events:none;
+}
+.heroInner{
+  position:relative;
+  border-radius:26px;
+  border:1px solid var(--stroke2);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
   backdrop-filter:blur(12px);
-  box-shadow:0 40px 140px rgba(0,0,0,.55);
-  padding:30px 28px;
+  padding:26px;
 }
 
-.hero h1{
+.k{
+  margin:0 0 8px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+.h0{
   margin:0;
-  font-size:var(--h1);
+  font-size:var(--h0);
   font-weight:950;
   letter-spacing:1px;
+  line-height:1.06;
 }
-
-.hero p{
+.lead{
   margin:18px 0 0;
   font-size:var(--p);
-  line-height:1.7;
-  max-width:920px;
+  line-height:1.85;
+  opacity:.95;
+}
+.rule{
+  margin-top:18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.06), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.58), rgba(6,10,16,.70));
+  padding:14px 14px;
+  font-size:var(--p2);
+  line-height:1.6;
+  opacity:.92;
 }
 
-/* BLOCKS */
-.block{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  padding:22px;
+.band{
+  margin-top:8px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
   background:rgba(0,0,0,.14);
-  backdrop-filter:blur(8px);
+  padding:10px 12px;
+  font-weight:950;
+  letter-spacing:.2px;
+  opacity:.92;
 }
 
-.block h2{
-  margin:0 0 12px;
-  font-size:var(--h2);
-  font-weight:900;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
 }
+@media (max-width:860px){ .grid{grid-template-columns:1fr} }
 
-.block p{
+.card{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
+    linear-gradient(160deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 18px 70px rgba(0,0,0,.55);
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--gold) 50%, transparent 100%);
+  opacity:.42;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.card h2{
+  margin:0 0 10px;
+  font-size:var(--h1);
+  font-weight:950;
+  letter-spacing:.3px;
+}
+.card p{
   margin:0;
   font-size:var(--p);
+  line-height:1.8;
+  opacity:.90;
+}
+.small{
+  margin-top:10px;
+  font-size:var(--p2);
   line-height:1.7;
+  opacity:.78;
 }
 
-.cta{
-  margin-top:10px;
+.ctaRow{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
 }
-.cta .btn{
-  padding:12px 18px;
+.ctaRow .btn{
+  padding:12px 16px;
   border-radius:999px;
+  white-space:nowrap;
 }
 </style>
 </head>
@@ -110,50 +196,62 @@ body::before,body::after{pointer-events:none!important}
 <body>
 
 <div class="top">
+  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
   <div>
-    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-  </div>
-  <div>
-    <button class="btn" id="btnEN">EN</button>
-    <button class="btn" id="btnZH">中文</button>
-    <button class="btn" id="btnES">ES</button>
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
   </div>
 </div>
 
 <div class="wrap">
 
-  <div class="hero">
-    <h1 id="h1">STRUCTURE BEFORE STORY</h1>
-    <p id="p1">
-      Most systems collapse because they scale confusion.
-      We do the opposite.
-      We define constraints.
-      We map dependency.
-      We enforce admissibility.
-      We measure alignment.
-    </p>
-  </div>
+  <section class="hero">
+    <div class="heroInner">
+      <p class="k" id="k0">HOME</p>
+      <h1 class="h0" id="h0">STRUCTURE BEFORE STORY</h1>
+      <p class="lead" id="p0">
+        Most systems collapse because they scale confusion.
+        We define constraints.
+        We map dependency.
+        We enforce admissibility.
+        We measure alignment.
+      </p>
+      <div class="rule" id="r0">
+        Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.
+      </div>
+    </div>
+  </section>
 
-  <div class="block">
-    <h2 id="h2">THE PROBLEM</h2>
-    <p id="p2">
-      Drift compounds quietly.
-      Correlation hides in shared exposure.
-      Claims inflate faster than proof.
-      Without constraint, scale becomes instability.
-    </p>
-  </div>
+  <div class="band" id="b1">FOUR ROUTES</div>
 
-  <div class="block">
-    <h2 id="h3">THE POSITION</h2>
-    <p id="p3">
-      Every page routes to something measurable.
-      Every output can be replayed.
-      Every upgrade creates a new epoch.
-      Nothing is allowed to drift silently.
-    </p>
-    <div class="cta">
-      <a class="btn" href="/prelude/">ENTER THE SYSTEM</a>
+  <div class="grid">
+    <div class="card">
+      <h2 id="h1">INDEX</h2>
+      <p id="p1">Compass-first traversal. Choose direction. Stay oriented.</p>
+      <p class="small" id="s1">Use this when you want structure before speed.</p>
+      <div class="ctaRow"><a class="btn" id="goIndex" href="/index.html">OPEN</a></div>
+    </div>
+
+    <div class="card">
+      <h2 id="h2">DOOR</h2>
+      <p id="p2">Bridge-first routing. Enter the network by function.</p>
+      <p class="small" id="s2">Use this when you already know the lane.</p>
+      <div class="ctaRow"><a class="btn" id="goDoor" href="/door/">OPEN</a></div>
+    </div>
+
+    <div class="card">
+      <h2 id="h3">PRELUDE</h2>
+      <p id="p3">Problem, declaration, promise. The system’s spine in words.</p>
+      <p class="small" id="s3">Use this when you want the “why” before moving.</p>
+      <div class="ctaRow"><a class="btn" id="goPrelude" href="/prelude/">OPEN</a></div>
+    </div>
+
+    <div class="card">
+      <h2 id="h4">PRODUCTS</h2>
+      <p id="p4">Adoptable surfaces. Jump by use-case. Stay bounded.</p>
+      <p class="small" id="s4">Use this when you want tools right now.</p>
+      <div class="ctaRow"><a class="btn" id="goProducts" href="/products/">OPEN</a></div>
     </div>
   </div>
 
@@ -161,35 +259,84 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
+  // canonical state carry
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  if(!["en","zh","es"].includes(lang)) lang="en";
-  localStorage.setItem("gd_lang",lang);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  function setLang(next){
-    localStorage.setItem("gd_lang",next);
-    window.location.href=location.pathname+"?lang="+next;
+  if(!["en","zh","es"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
+  if(time==="trajectory") time="post";
+  if(!["origin","now","post"].includes(time)) time="now";
+  if(!["explore","learn"].includes(depth)) depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire state routes
+  document.getElementById("btnIndex").href="/index.html"+q();
+  document.getElementById("goIndex").href="/index.html"+q();
+  document.getElementById("goDoor").href="/door/"+q();
+  document.getElementById("goPrelude").href="/prelude/"+q();
+  document.getElementById("goProducts").href="/products/"+q();
+
+  // language
+  function setLang(next){
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href=location.pathname+q({lang:lang});
+  }
   document.getElementById("btnEN").onclick=function(){setLang("en")};
   document.getElementById("btnZH").onclick=function(){setLang("zh")};
   document.getElementById("btnES").onclick=function(){setLang("es")};
 
+  // i18n
   if(lang==="zh"){
-    document.getElementById("h1").textContent="结构先于叙事";
-    document.getElementById("p1").textContent="多数系统崩溃，因为它们规模化了混乱。我们反其道而行：定义约束，映射依赖，执行可采信，测量对齐。";
-    document.getElementById("h2").textContent="问题";
-    document.getElementById("p2").textContent="漂移悄然累积。相关性隐藏于共享暴露。主张膨胀快于证明。无约束则规模即不稳。";
-    document.getElementById("h3").textContent="立场";
-    document.getElementById("p3").textContent="每一页都通向可测输出。每一结果都可回放。每次升级都开新纪元。任何漂移不得沉默发生。";
-  }
-  if(lang==="es"){
-    document.getElementById("h1").textContent="ESTRUCTURA ANTES QUE HISTORIA";
-    document.getElementById("p1").textContent="La mayoría de sistemas colapsan porque escalan confusión. Nosotros definimos restricciones, mapeamos dependencia, exigimos admisibilidad y medimos alineación.";
-    document.getElementById("h2").textContent="EL PROBLEMA";
-    document.getElementById("p2").textContent="La deriva se acumula. La correlación se oculta. Las afirmaciones crecen más rápido que la prueba. Sin restricción, escalar es inestabilidad.";
-    document.getElementById("h3").textContent="LA POSICIÓN";
-    document.getElementById("p3").textContent="Cada página rutea a algo medible. Cada salida puede reproducirse. Cada cambio crea una nueva época. Nada deriva en silencio.";
+    document.getElementById("h0").textContent="结构先于叙事";
+    document.getElementById("p0").textContent="多数系统崩溃，因为它们规模化了混乱。我们定义约束，映射依赖，执行可采信，测量对齐。";
+    document.getElementById("r0").textContent="规则：主张必须有支撑。支撑必须可验证。导航保留 gd_* 状态。";
+    document.getElementById("b1").textContent="四条入口";
+    document.getElementById("h1").textContent="INDEX";
+    document.getElementById("p1").textContent="罗盘式遍历：先选方向，再进入。";
+    document.getElementById("s1").textContent="想先结构再速度，用这里。";
+    document.getElementById("h2").textContent="DOOR";
+    document.getElementById("p2").textContent="桥式路由：按功能进入网络。";
+    document.getElementById("s2").textContent="已经知道车道，用这里。";
+    document.getElementById("h3").textContent="PRELUDE";
+    document.getElementById("p3").textContent="问题、宣言、承诺：系统脊柱。";
+    document.getElementById("s3").textContent="想先理解再移动，用这里。";
+    document.getElementById("h4").textContent="PRODUCTS";
+    document.getElementById("p4").textContent="可采纳执行面：按用例跳转，保持有界。";
+    document.getElementById("s4").textContent="想立刻用工具，用这里。";
+    document.querySelectorAll(".ctaRow .btn").forEach(function(x){x.textContent="打开";});
+  }else if(lang==="es"){
+    document.getElementById("h0").textContent="ESTRUCTURA ANTES QUE HISTORIA";
+    document.getElementById("p0").textContent="La mayoría colapsa porque escala confusión. Definimos restricciones, mapeamos dependencia, exigimos admisibilidad y medimos alineación.";
+    document.getElementById("r0").textContent="Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva gd_*.";
+    document.getElementById("b1").textContent="CUATRO RUTAS";
+    document.getElementById("p1").textContent="Recorrido por brújula: elige dirección y entra.";
+    document.getElementById("s1").textContent="Estructura antes que velocidad.";
+    document.getElementById("p2").textContent="Ruteo por función: entra al sistema.";
+    document.getElementById("s2").textContent="Cuando ya conoces el carril.";
+    document.getElementById("p3").textContent="Problema, declaración, promesa: la columna del sistema.";
+    document.getElementById("s3").textContent="Cuando quieres el porqué antes de moverte.";
+    document.getElementById("p4").textContent="Superficies adoptables: salta por caso de uso.";
+    document.getElementById("s4").textContent="Cuando quieres herramientas ya.";
+    document.querySelectorAll(".ctaRow .btn").forEach(function(x){x.textContent="ABRIR";});
   }
 })();
 </script>

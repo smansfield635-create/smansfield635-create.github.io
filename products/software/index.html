@@ -1,16 +1,35 @@
 <!-- TNT — /products/software/index.html
-     SOFTWARE · MACHINE SPINE
-     STRUCTURE:
-       - 7 Canonical Software Domains
-       - Trilingual: EN / 中文 / ES
-       - Four Lenses:
-            INFORMAL
-            FORMAL
-            ENGINEERING
-            PLATFORM
-       - Single-open accordion
-       - No overlays
-       - Canon state compatible
+     PRODUCTS · SOFTWARE (THE MACHINE BEHIND THE PAGES) — MOBILE SAFE · NO MODALS · MONUMENT DENSITY
+     PURPOSE:
+       - THIS is the Software Hub (not the Products index).
+       - Expresses the problem + what the system solves + where each domain routes.
+       - Uses single-open accordion so content can be dense without looking dense.
+     LENSES:
+       - 3 languages: EN / 中文 / ES (page-level)
+       - 4 lenses via TWO toggles (NO new gd_* keys):
+           • MODE: ENGINEERING / PLATFORM  (URL param: mode=engineering|platform)
+           • STYLE: FORMAL / INFORMAL     (gd_style + URL param: style=formal|informal)
+     UI:
+       - Dark opal + red (NO washed-out blue)
+       - Long bubbles; single-open; tap-safe
+       - No overlays, no modals, no pointer traps
+     ROUTES:
+       - BACK → /products/
+       - DOOR → /door/
+       - EXIT → /index.html
+       - DOCK → HOME / PRODUCTS / SOFTWARE / LAWS / GAUGES
+       - MEMBRANE → /products/software/membrane/
+       - SSG → /products/ssg/
+       - DOT.GRID → /products/dot-grid/
+       - UCI → /products/software/uci/      (vision shell if not built yet)
+       - REGISTRY → /products/software/registry/ (vision shell if not built yet)
+     STATE:
+       - URL: lang/style/time/depth + mode
+       - LS:  gd_lang/gd_style/gd_time/gd_depth (NO new keys)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns field (NO html/body background overrides)
+       - No inline onclick
 -->
 
 <!doctype html>
@@ -18,7 +37,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SOFTWARE · Machine Spine</title>
+<title>PRODUCTS · SOFTWARE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -26,267 +45,1470 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:92px;
-  --stroke:rgba(255,255,255,.10);
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-  --opalA:rgba(210,190,255,.16);
+
+  /* dark opal + red */
+  --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
-  --redGlow:rgba(255,70,70,.18);
-  --mut:rgba(255,255,255,.88);
+  --opalR:rgba(255,70,70,.10);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --goldSoft:rgba(212,175,55,.35);
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.74);
+
+  --redGlow:rgba(255,70,70,.22);
 }
 
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
+/* page wrap */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 18px);
+  padding:88px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
+  position:relative;
+  z-index:10;
 }
 
-/* HEADER */
+/* header */
 .header{
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
-    radial-gradient(circle at 20% 20%, var(--opalA), transparent 60%),
-    radial-gradient(circle at 80% 30%, var(--opalB), transparent 65%),
-    rgba(0,0,0,.16);
-  padding:26px;
-  box-shadow:0 30px 100px rgba(0,0,0,.6);
-}
-
-.t{
-  font-weight:950;
-  font-size:34px;
-  letter-spacing:.8px;
-  margin:0 0 12px;
-}
-
-.s{
-  font-size:17px;
-  line-height:1.75;
-  opacity:.95;
-  margin:0;
-}
-
-/* LENS SELECTORS */
-.selector{
-  margin-top:18px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:space-between;
-}
-
-.pill{
-  padding:10px 18px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.25);
-  cursor:pointer;
-  font-weight:900;
-}
-
-.pill.active{
-  border-color:rgba(255,80,80,.55);
-  box-shadow:0 0 18px var(--redGlow);
-}
-
-/* ACCORDION */
-.list{display:flex;flex-direction:column;gap:16px}
-
-.row{
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 28%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalR), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.24), rgba(0,0,0,.12));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+  position:relative;
   overflow:hidden;
 }
+.header::before{
+  content:"";
+  position:absolute;left:-20%;right:-20%;top:-30%;
+  height:120%;
+  background:radial-gradient(circle at 52% 48%, rgba(255,70,70,.10), transparent 56%);
+  transform:rotate(-8deg);
+  pointer-events:none;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;position:relative;z-index:1}
+.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.6px;position:relative;z-index:1}
+.s{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.55;max-width:980px;position:relative;z-index:1}
+.fine{margin-top:10px;font-size:12.25px;opacity:.74;line-height:1.45;color:var(--mut);position:relative;z-index:1}
 
-.head{
-  padding:20px;
+/* selector row */
+.selector{
+  margin-top:12px;
   display:flex;
+  gap:10px;
+  flex-wrap:wrap;
   justify-content:space-between;
   align-items:center;
+  position:relative;
+  z-index:1;
+}
+.pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
   cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.90), 0 0 14px rgba(212,175,55,.16);
+}
+.pill.red.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.90), 0 0 16px var(--redGlow);
 }
 
-.title{
+/* band */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
   font-weight:950;
-  font-size:19px;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
+
+/* accordion */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.sig{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:3px;
+}
+.bar{
+  width:6px;height:22px;border-radius:99px;background:var(--c);
+  box-shadow:0 0 18px rgba(0,0,0,.25);
+  flex:0 0 auto;margin-top:2px;
+}
+.tblock{min-width:0}
+.hd{
+  font-weight:950;letter-spacing:.25px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:6px;
+  font-size:13px;
+  opacity:.82;
+  line-height:1.35;
+  max-width:92ch;
+  color:rgba(255,255,255,.84);
+}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
 .body{
   display:none;
-  padding:22px;
-  border-top:1px solid var(--stroke);
+  padding:16px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-
 .row.open .body{display:block}
 
-.content{
-  font-size:17px;
-  line-height:1.85;
-  color:var(--mut);
+.p{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  line-height:1.70;
+  font-size:14px;
+}
+.p + .p{margin-top:10px}
+
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:rgba(255,255,255,.78);line-height:1.65;display:none}
+.bubble.open p{display:block}
+
+.callout{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 18% 30%, rgba(255,70,70,.10), transparent 62%),
+    linear-gradient(145deg, rgba(0,0,0,.16), rgba(0,0,0,.10));
+  color:rgba(255,255,255,.86);
+  font-size:12.75px;
+  line-height:1.5;
 }
 
-/* DOCK */
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;
+}
+.actions .btn{
+  padding:10px 12px;border-radius:999px;white-space:nowrap;
+}
+
+/* dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
+  z-index:220;
   width:min(980px,94vw);
-  padding:10px;
+  padding:10px 12px;
   border-radius:22px;
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5, minmax(0,1fr));
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px;border-radius:999px}
-
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:560px){
+  :root{--dockH:104px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
 <div class="page">
 
   <div class="header">
-    <h1 class="t" id="hdrTitle">SOFTWARE SPINE</h1>
-    <p class="s" id="hdrSub">
-      Every page is a surface.
-      Every surface sits on a machine.
-      This is the machine.
-    </p>
+    <p class="k" id="hk">SOFTWARE</p>
+    <h1 class="t" id="ht">THE MACHINE BEHIND THE PAGES</h1>
+    <p class="s" id="hs"></p>
+    <div class="fine" id="fine"></div>
 
-    <div class="selector">
-      <div>
-        <button class="pill active" id="langEN">EN</button>
-        <button class="pill" id="langZH">中文</button>
-        <button class="pill" id="langES">ES</button>
+    <div class="selector" aria-label="Lens selectors">
+      <div class="pills" aria-label="Mode">
+        <button class="pill red active" id="pillEng" type="button">ENGINEERING</button>
+        <button class="pill red" id="pillPlat" type="button">PLATFORM</button>
       </div>
-      <div>
-        <button class="pill active" id="lensInformal">INFORMAL</button>
-        <button class="pill" id="lensFormal">FORMAL</button>
-        <button class="pill" id="lensEngineering">ENGINEERING</button>
-        <button class="pill" id="lensPlatform">PLATFORM</button>
+      <div class="pills" aria-label="Style">
+        <button class="pill active" id="pillInf" type="button">INFORMAL</button>
+        <button class="pill" id="pillFor" type="button">FORMAL</button>
       </div>
     </div>
   </div>
 
+  <div class="band" id="band">ENGINE DOMAINS</div>
   <div class="list" id="list"></div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/index.html">INDEX</a>
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockSoftware" href="/products/software/">SOFTWARE</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
+  // ===== canonical state (no new gd_* keys) =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var mode  = qs.get("mode")  || "engineering"; // engineering|platform (URL ONLY)
 
-let lang="en";
-let lens="informal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(mode!=="engineering" && mode!=="platform") mode="engineering";
 
-const DOMAINS=[
-"Unified Coherence Engine (UCI)",
-"Simplified Syntax Geometry (SSG)",
-"Dot.Grid 256-State Indexing",
-"Collapse Detection Engine",
-"Registry Infrastructure",
-"Audit Surface Layer",
-"Alignment Diagnostic Platform"
-];
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-function content(name){
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  const TEXT={
-    informal:{
-      en:"This domain exists because instability hides inside complexity. We built this layer to expose it before it becomes visible damage.",
-      zh:"该域存在，是因为不稳定隐藏在复杂性之中。我们构建这一层，是为了在损害出现之前揭示它。",
-      es:"Este dominio existe porque la inestabilidad se esconde dentro de la complejidad. Construimos esta capa para exponerla antes de que cause daño visible."
-    },
-    formal:{
-      en:"Provides bounded, reproducible computation under declared constraints with deterministic output integrity.",
-      zh:"在声明约束下提供有界、可重复的计算，并保持输出完整性。",
-      es:"Proporciona cálculo acotado y reproducible bajo restricciones declaradas con integridad determinista."
-    },
-    engineering:{
-      en:"Implements constraint resolution, state stabilization, deterministic gating, and collapse boundary detection across declared coordinate axes.",
-      zh:"实现约束解析、状态稳定、确定性闸门与跨坐标轴的崩溃边界检测。",
-      es:"Implementa resolución de restricciones, estabilización de estado y detección determinista de límites de colapso."
-    },
-    platform:{
-      en:"Deployable institutional surface enabling integration across legal, insurance, infrastructure, and governance systems.",
-      zh:"可部署的机构级界面，用于法律、保险、基础设施与治理系统集成。",
-      es:"Superficie institucional desplegable que permite integración con sistemas legales, de seguros e infraestructura."
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    var M=(over&&over.mode)?over.mode:mode;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D)+
+           "&mode="+encodeURIComponent(M);
+  }
+
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  wire("btnBack","/products/");
+  wire("btnDoor","/door/");
+  wire("btnExit","/index.html");
+
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockSoftware","/products/software/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  // ===== language toggle (reload same path) =====
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ===== pills =====
+  var pillEng=document.getElementById("pillEng");
+  var pillPlat=document.getElementById("pillPlat");
+  var pillInf=document.getElementById("pillInf");
+  var pillFor=document.getElementById("pillFor");
+
+  function paintPills(){
+    pillEng.classList.toggle("active", mode==="engineering");
+    pillPlat.classList.toggle("active", mode==="platform");
+    pillInf.classList.toggle("active", style==="informal");
+    pillFor.classList.toggle("active", style==="formal");
+  }
+
+  pillEng.addEventListener("click", function(){
+    mode="engineering";
+    history.replaceState({}, "", location.pathname + q());
+    paintPills(); render();
+  });
+  pillPlat.addEventListener("click", function(){
+    mode="platform";
+    history.replaceState({}, "", location.pathname + q());
+    paintPills(); render();
+  });
+  pillInf.addEventListener("click", function(){
+    style="informal";
+    try{ localStorage.setItem("gd_style","informal"); }catch(e){}
+    history.replaceState({}, "", location.pathname + q());
+    paintPills(); render();
+  });
+  pillFor.addEventListener("click", function(){
+    style="formal";
+    try{ localStorage.setItem("gd_style","formal"); }catch(e){}
+    history.replaceState({}, "", location.pathname + q());
+    paintPills(); render();
+  });
+
+  // ===== copy helpers =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+
+  function headerCopy(){
+    if(lang==="zh"){
+      setText("hk","软件");
+      setText("ht","页面背后的机器");
+      setText("hs","你来这里，是因为某个问题需要一个可核查的答案。我们把问题拆成有限格子，把解法也压进有限格子，然后用路由把你带到正确的层。");
+      setText("fine","提示：这里是“软件枢纽”。愿景条目不进引擎总页；它们去前沿壳。边界在膜（Membrane）。");
+      pillEng.textContent="工程";
+      pillPlat.textContent="平台";
+      pillInf.textContent="通俗";
+      pillFor.textContent="正式";
+      setText("btnBack","返回"); setText("btnDoor","门"); setText("btnExit","退出");
+      setText("dockHome","主页"); setText("dockProducts","产品"); setText("dockSoftware","软件");
+      setText("dockLaws","法则"); setText("dockGauges","量规");
+    }else if(lang==="es"){
+      setText("hk","SOFTWARE");
+      setText("ht","LA MÁQUINA DETRÁS DE LAS PÁGINAS");
+      setText("hs","Estás aquí porque alguna medida necesita una respuesta verificable. Partimos el problema en una cuadrícula finita y llevamos la solución a una forma finita — y luego te ruteamos al lugar correcto.");
+      setText("fine","Nota: este es el hub de software. Visión no entra al motor universal; va a carcasas en Frontera. El límite vive en la Membrana.");
+      pillEng.textContent="INGENIERÍA";
+      pillPlat.textContent="PLATAFORMA";
+      pillInf.textContent="INFORMAL";
+      pillFor.textContent="FORMAL";
+      setText("btnBack","VOLVER"); setText("btnDoor","PUERTA"); setText("btnExit","SALIR");
+      setText("dockHome","INICIO"); setText("dockProducts","PRODUCTOS"); setText("dockSoftware","SOFTWARE");
+      setText("dockLaws","LEYES"); setText("dockGauges","MEDIDORES");
+    }else{
+      setText("hk","SOFTWARE");
+      setText("ht","THE MACHINE BEHIND THE PAGES");
+      setText("hs","You’re here because some measure needs an answer. We map the problem into a finite lattice, map the solution into a finite lattice, then route you to the right layer.");
+      setText("fine","Note: this is the Software Hub. Vision never routes into an Engine catch-all; it routes into Frontier shells. The boundary lives in the Membrane.");
+      pillEng.textContent="ENGINEERING";
+      pillPlat.textContent="PLATFORM";
+      pillInf.textContent="INFORMAL";
+      pillFor.textContent="FORMAL";
+      setText("btnBack","BACK"); setText("btnDoor","DOOR"); setText("btnExit","EXIT");
+      setText("dockHome","HOME"); setText("dockProducts","PRODUCTS"); setText("dockSoftware","SOFTWARE");
+      setText("dockLaws","LAWS"); setText("dockGauges","GAUGES");
+    }
+  }
+
+  // ===== domains (12) =====
+  var DOM = {
+    state_runtime:{c:"#60A5FA", t:P("State Runtime","状态运行时","Runtime de estado"), s:P("What is true now; what changes next.","现在什么是真的；下一步怎么变。","Qué es verdad ahora; qué cambia después.")},
+    deterministic_gates:{c:"#F59E0B", t:P("Deterministic Gates","确定性闸门","Compuertas deterministas"), s:P("Rules that produce the same answer from the same input.","同输入同答案的规则。","Misma entrada, mismo resultado.")},
+    receipt_progression:{c:"#93C5FD", t:P("Receipt Progression","收据式推进","Progresión por recibos"), s:P("Advance only when you can prove it.","只有证明了才推进。","Avanzas solo si lo pruebas.")},
+    audit_discipline:{c:"#34D399", t:P("Audit Discipline","审计纪律","Disciplina de auditoría"), s:P("Resolve disputes by receipts, not intent.","用收据解决分歧，不猜意图。","Resolver por recibos, no por intención.")},
+    change_control:{c:"#A3A3A3", t:P("Change Control","变更控制","Control de cambios"), s:P("Upgrade without rewriting history.","升级但不改写历史。","Actualizar sin reescribir historia.")},
+    admissibility_doctrine:{c:"#EF4444", t:P("Admissibility Doctrine","可采信教义","Doctrina de admisibilidad"), s:P("Don’t say more than the evidence allows.","别说超过证据允许的东西。","No afirmar más que la evidencia.")},
+
+    navigation_surfaces:{c:"#60A5FA", t:P("Navigation Surfaces","导航界面","Superficies de navegación"), s:P("One tap → one outcome. Always.","一次点击→一个结果。","Un toque → un resultado.")},
+    product_packaging:{c:"#F59E0B", t:P("Product Packaging","产品封装","Empaquetado de producto"), s:P("Make tools usable without inflating claims.","让工具可用但不膨胀主张。","Usable sin inflar afirmaciones.")},
+    enterprise_deployment:{c:"#93C5FD", t:P("Enterprise Deployment","企业部署","Despliegue empresarial"), s:P("Scale in waves; rollback ready.","分波次扩张，随时回滚。","Escalar en olas; rollback listo.")},
+    dotgrid_sweeps:{c:"#34D399", t:P("Dot.Grid Sweeps","Dot.Grid 扫掠","Barridos Dot.Grid"), s:P("Index + sweep: compare across time.","索引+扫掠：跨时间比较。","Indexar + barrer: comparar en el tiempo.")},
+    scoring_outputs:{c:"#A3A3A3", t:P("Scoring Outputs","评分输出","Salidas de puntuación"), s:P("Readable signals with reason codes.","带原因码的可读信号。","Señales legibles con razones.")},
+    registry_lookups:{c:"#EF4444", t:P("Registry Lookups","登记查询","Consultas de registro"), s:P("Status you can verify without ‘trust me’.","无需‘信我’也能核查的状态。","Estado verificable sin ‘créeme’.")}
+  };
+
+  var ENGINE = ["state_runtime","deterministic_gates","receipt_progression","audit_discipline","change_control","admissibility_doctrine"];
+  var PLATFORM = ["navigation_surfaces","product_packaging","enterprise_deployment","dotgrid_sweeps","scoring_outputs","registry_lookups"];
+
+  // ===== per-domain long copy (mode × style × phase) =====
+  // This hub uses 3 sub-bubbles for density without clutter.
+  // Copy is intentionally dense but readable. No “vision claims”.
+  var TEXT = {
+    state_runtime:{
+      engineering:{
+        informal:{
+          concept:P(
+            "Runtime is the app’s gravity. It decides what counts as “now” and what the next interaction is allowed to do. When runtime is fuzzy, every page becomes an argument. When runtime is crisp, the whole system feels calm.",
+            "运行时是应用的重力：它决定什么算“现在”，以及下一次交互允许做什么。运行时模糊，页面就会变成争论；运行时清晰，系统就会变得安静稳定。",
+            "El runtime es la gravedad: define ‘ahora’ y qué permite la siguiente interacción. Si es difuso, todo se vuelve discusión; si es nítido, todo se vuelve calmado."
+          ),
+          live:P(
+            "Live runtime means refresh-safe truth. You can navigate, change language, come back tomorrow — and the system still knows what’s true. If something conflicts, it rolls back instead of improvising.",
+            "上线运行时意味着刷新安全的真相：你能导航、切语言、明天回来，系统仍知道什么是真的。出现冲突时回滚，而不是临场发挥。",
+            "En vivo: verdad segura ante recarga. Navegas, cambias idioma, vuelves mañana y el sistema sigue correcto. Si hay conflicto, rollback, no improvisación."
+          ),
+          roadmap:P(
+            "Next, runtime emits portable receipts: tiny bundles of “what happened” that survive across pages and products. That’s how scale stays honest without slowing down.",
+            "下一步运行时输出可携带收据：小型“发生了什么”包跨页面/跨产品可用。规模化既诚实又不慢，就靠这个。",
+            "Luego, el runtime emite recibos portátiles: paquetes pequeños de ‘qué pasó’ que sobreviven entre páginas y productos. Así la escala se mantiene honesta sin volverse lenta."
+          )
+        },
+        formal:{
+          concept:P(
+            "Runtime is a constrained state machine under declared keys and scope. Atomic transitions must be reproducible from identical evidence streams.",
+            "运行时是受约束的状态机：在声明键与范围下，原子化转移必须从同证据流可复现。",
+            "Runtime es una máquina de estados acotada: bajo claves y alcance declarados, transiciones atómicas deben ser reproducibles con evidencia idéntica."
+          ),
+          live:P(
+            "Live runtime requires deterministic back-navigation invalidation, refresh-safe persistence, and receipt-gated forward moves. Conflicts resolve by containment and rollback.",
+            "上线运行时要求确定性回退失效、刷新安全持久化、收据闸门式前进；冲突以隔离与回滚解决。",
+            "En vivo requiere invalidación determinista al volver, persistencia segura y avance con recibos. Conflictos se resuelven con contención y rollback."
+          ),
+          roadmap:P(
+            "Roadmap adds exportable receipt bundles (inputs/decision/result) and domain adapters while preserving invariants; corrections require epoch rollover.",
+            "路线图加入可导出收据包（输入/决策/结果）与领域适配器，同时保持不变量；修正需滚动纪元。",
+            "La hoja de ruta añade paquetes exportables (entradas/decisión/resultado) y adaptadores por dominio preservando invariantes; correcciones requieren nueva época."
+          )
+        }
+      },
+      platform:{
+        informal:{
+          concept:P(
+            "Platform sees runtime as a promise: the page can be beautiful, but it can’t change what “now” means. If UI changes meaning, you didn’t redesign — you broke the contract.",
+            "平台把运行时当承诺：页面可以漂亮，但不能改变“现在”的含义。UI改了含义，就不是改版，是毁约。",
+            "La plataforma ve runtime como promesa: la página puede ser bella, pero no puede cambiar qué significa ‘ahora’. Si UI cambia significado, rompiste contrato."
+          ),
+          live:P(
+            "If your mobile taps are unreliable, runtime feels broken even if it isn’t. Platform must deliver “one tap → one outcome” so runtime can stay legible.",
+            "手机点按不可靠时，运行时看起来就像坏了。平台必须做到“一点一果”，运行时才可读。",
+            "Si los toques móviles fallan, parece que runtime está roto. La plataforma debe dar “un toque → un resultado” para mantenerlo legible."
+          ),
+          roadmap:P(
+            "As the site grows, platform wins by consistency: same patterns, same labels, same returns. Runtime stays stable because the platform stops inventing new behavior per page.",
+            "站点增长时，平台靠一致性取胜：同模式、同标签、同返回。平台不再每页发明新行为，运行时才稳定。",
+            "Al crecer, la plataforma gana con consistencia: mismos patrones, etiquetas y retornos. Runtime se mantiene estable porque la plataforma deja de inventar comportamientos por página."
+          )
+        },
+        formal:{
+          concept:P(
+            "Platform must not mutate state semantics. Navigation may adapt presentation, but it cannot redefine “current state” under identical keys and scope.",
+            "平台不得变异状态语义：导航可适配呈现，但在同键同范围下不得重定义“当前状态”。",
+            "La plataforma no puede mutar semántica del estado. La navegación puede adaptar presentación, pero no redefinir ‘estado actual’ bajo mismas claves y alcance."
+          ),
+          live:P(
+            "Live posture requires pointer-safety (no intercepting layers), stable route mapping, and full state carry; otherwise runtime observability collapses.",
+            "上线姿态要求点按安全（无拦截层）、稳定路由映射、完整状态携带；否则运行时可观测性坍缩。",
+            "En vivo requiere seguridad de puntero (sin capas interceptando), mapeo de rutas estable y propagación completa de estado; si no, colapsa observabilidad del runtime."
+          ),
+          roadmap:P(
+            "Roadmap standardizes UI templates so runtime invariants remain intact across product surfaces; platform changes are versioned when they alter user-visible semantics.",
+            "路线图标准化UI模板，使运行时不变量跨产品保持；若平台改动改变用户可见语义，则必须版本化。",
+            "La hoja de ruta estandariza plantillas UI para preservar invariantes del runtime; cambios que alteren semántica visible requieren versionado."
+          )
+        }
+      }
     }
   };
 
-  return TEXT[lens][lang];
-}
-
-function render(){
-
-  const list=document.getElementById("list");
-  list.innerHTML="";
-
-  DOMAINS.forEach((name)=>{
-
-    const row=document.createElement("div");
-    row.className="row";
-
-    const head=document.createElement("div");
-    head.className="head";
-    head.innerHTML='<div class="title">'+name+'</div><div>▸</div>';
-
-    const body=document.createElement("div");
-    body.className="body";
-    body.innerHTML='<div class="content">'+content(name)+'</div>';
-
-    head.onclick=()=>{
-      document.querySelectorAll(".row").forEach(r=>r.classList.remove("open"));
-      row.classList.toggle("open");
+  // For remaining domains, generate dense but consistent copy blocks with minimal repetition.
+  // (Still production-ready; no placeholders; each has concept/live/roadmap across 4 lenses.)
+  function makeDomainText(seed){
+    // seed: {k, vibeEn, vibeZh, vibeEs, specEn, specZh, specEs}
+    return {
+      engineering:{
+        informal:{
+          concept:P(seed.vibeEn[0], seed.vibeZh[0], seed.vibeEs[0]),
+          live:P(seed.vibeEn[1], seed.vibeZh[1], seed.vibeEs[1]),
+          roadmap:P(seed.vibeEn[2], seed.vibeZh[2], seed.vibeEs[2])
+        },
+        formal:{
+          concept:P(seed.specEn[0], seed.specZh[0], seed.specEs[0]),
+          live:P(seed.specEn[1], seed.specZh[1], seed.specEs[1]),
+          roadmap:P(seed.specEn[2], seed.specZh[2], seed.specEs[2])
+        }
+      },
+      platform:{
+        informal:{
+          concept:P(seed.platEn[0], seed.platZh[0], seed.platEs[0]),
+          live:P(seed.platEn[1], seed.platZh[1], seed.platEs[1]),
+          roadmap:P(seed.platEn[2], seed.platZh[2], seed.platEs[2])
+        },
+        formal:{
+          concept:P(seed.platSpecEn[0], seed.platSpecZh[0], seed.platSpecEs[0]),
+          live:P(seed.platSpecEn[1], seed.platSpecZh[1], seed.platSpecEs[1]),
+          roadmap:P(seed.platSpecEn[2], seed.platSpecZh[2], seed.platSpecEs[2])
+        }
+      }
     };
+  }
+
+  var SEEDS = {
+    deterministic_gates:{
+      vibeEn:[
+        "A gate is a fair bouncer: it doesn’t care who you are, only what you brought. No proof, no upgrade. That’s how drift dies early.",
+        "Live gating means no timer tricks and no secret exceptions. If it fails, you get a reason. If it passes, you get a receipt you can replay.",
+        "Roadmap gates become shareable: two people see the same receipt and land on the same answer. Trust scales because arguing becomes unnecessary."
+      ],
+      vibeZh:[
+        "闸门像公平门卫：不看你是谁，只看你带了什么。没证明就不升级，漂移因此早死。",
+        "上线闸门没有计时花招、没有暗例外。失败给原因，通过给可回放收据。",
+        "路线图让闸门可分享：两个人看同收据得到同答案，信任规模化，争吵变多余。"
+      ],
+      vibeEs:[
+        "Una compuerta es un portero justo: no le importa quién eres, solo qué traes. Sin prueba, no hay upgrade.",
+        "En vivo no hay trucos de tiempo ni excepciones secretas. Fallas con razón; pasas con recibo re-ejecutable.",
+        "Luego las compuertas se comparten: dos personas ven el mismo recibo y llegan al mismo resultado. La confianza escala."
+      ],
+      specEn:[
+        "Binary admissibility checks under declared scope; given inputs, outcome is deterministic pass/fail.",
+        "Live: no timers-as-gates, no hidden overrides; decisions emit reason codes and are logged for replay.",
+        "Roadmap: standardized reason codes and independent replay yield observer-invariant gate outcomes."
+      ],
+      specZh:[
+        "在声明范围内的二元可采信检查；给定输入，结果确定（通过/失败）。",
+        "上线：禁止计时作闸门与暗覆盖；决策带原因码并记录可回放。",
+        "路线图：标准原因码+独立回放，使闸门结果观察者不变。"
+      ],
+      specEs:[
+        "Checks binarios bajo alcance declarado; con inputs dados, resultado determinista pasa/falla.",
+        "En vivo: sin temporizadores como compuertas ni overrides ocultos; decisiones con códigos de razón y logs para replay.",
+        "Hoja de ruta: códigos estandarizados y replay independiente para resultados invariantes."
+      ],
+      platEn:[
+        "Platform loves gates because they keep pages honest. UI can be friendly, but the gate is the final say.",
+        "Live UI must show the gate outcome clearly: pass, hold, contain — with the reason, not a vibe.",
+        "Roadmap: gates get consistent UI patterns across products so users learn one contract and trust all pages."
+      ],
+      platZh:[
+        "平台喜欢闸门，因为它让页面诚实。UI可以友好，但最终以闸门为准。",
+        "上线UI要清楚展示闸门结果：通过/暂停/隔离，并给原因，不给情绪。",
+        "路线图：闸门UI在全站一致，学一次契约，信任所有页面。"
+      ],
+      platEs:[
+        "La plataforma ama compuertas porque mantienen páginas honestas. UI puede ser amable, pero la compuerta manda.",
+        "En vivo, la UI muestra claro: pasa/espera/contén — con razón, no con ‘vibra’.",
+        "Luego: patrones UI consistentes de compuertas en todos los productos."
+      ],
+      platSpecEn:[
+        "Platform displays gate states; it must not reinterpret failures as successes or soften thresholds.",
+        "Live: prevent UI layers from bypassing gates; ensure one-tap/one-result and reason visibility.",
+        "Roadmap: standardized gate UI templates with versioned semantics."
+      ],
+      platSpecZh:[
+        "平台展示闸门状态；不得把失败解释成成功或软化阈值。",
+        "上线：防止UI绕过闸门；保证一点一果与原因可见。",
+        "路线图：闸门UI模板标准化并对语义版本化。"
+      ],
+      platSpecEs:[
+        "La plataforma muestra estados de compuerta; no puede reinterpretar fallos como éxitos ni suavizar umbrales.",
+        "En vivo: impedir bypass por UI; asegurar un toque/un resultado y visibilidad de razones.",
+        "Hoja de ruta: plantillas UI estandarizadas y semántica versionada."
+      ]
+    },
+
+    receipt_progression:{
+      vibeEn:[
+        "Progress is earned, not assumed. You move because you did the thing — not because time passed.",
+        "Live progression stays honest across navigation: go back and the system invalidates downstream steps cleanly.",
+        "Roadmap makes receipts portable: you can prove progress across products without exposing private data."
+      ],
+      vibeZh:[
+        "进步是挣来的，不是默认的：你前进因为你做到了，不是因为时间过去了。",
+        "上线推进在导航中保持诚实：回退会干净地使下游步骤失效。",
+        "路线图让收据可携带：跨产品证明进度，隐私不泄露。"
+      ],
+      vibeEs:[
+        "El progreso se gana: avanzas porque lo hiciste, no porque pasó el tiempo.",
+        "En vivo, al volver atrás se invalidan pasos posteriores de forma limpia.",
+        "Luego, los recibos se vuelven portátiles entre productos sin filtrar datos privados."
+      ],
+      specEn:[
+        "Receipt-gated progression: advancement requires evidence that survives scope locks.",
+        "Live: deterministic invalidation on back-nav; forward moves require confirmation under identical rules.",
+        "Roadmap: registrable, hashable bundles enable cross-surface recognition without centralized trust."
+      ],
+      specZh:[
+        "收据闸门式推进：升级需在范围锁下仍成立的证据。",
+        "上线：回退确定性失效；前进需在同规则下确认。",
+        "路线图：可登记可哈希的包支持跨界面认可且不依赖中心信任。"
+      ],
+      specEs:[
+        "Progresión por recibos: avanzar requiere evidencia que sobreviva al alcance.",
+        "En vivo: invalidación determinista al volver; avanzar requiere confirmación con reglas idénticas.",
+        "Hoja de ruta: bundles hasheables y registrables para reconocimiento sin confianza central."
+      ],
+      platEn:[
+        "Platform turns progression into a calm ladder: you always know what’s valid and what’s not.",
+        "Live UI must make invalidation obvious — no silent ‘still counts.’",
+        "Roadmap: progression becomes a consistent pattern across products so users don’t relearn flows."
+      ],
+      platZh:[
+        "平台把推进变成安静的阶梯：你总知道什么有效、什么无效。",
+        "上线UI必须让失效明显：禁止静默“仍然算数”。",
+        "路线图：推进模式跨产品一致，用户不必重学流程。"
+      ],
+      platEs:[
+        "La plataforma convierte progresión en escalera calmada: siempre sabes qué vale y qué no.",
+        "En vivo la invalidación debe ser obvia: sin ‘todavía cuenta’ silencioso.",
+        "Luego: patrón de progresión consistente entre productos."
+      ],
+      platSpecEn:[
+        "Platform must surface receipt validity; it must not preserve downstream states after invalidation.",
+        "Live: state carry is mandatory; UI must not create phantom progress.",
+        "Roadmap: standardized ladder UI with explicit prerequisites and returns."
+      ],
+      platSpecZh:[
+        "平台必须呈现收据有效性；失效后不得保留下游状态。",
+        "上线：必须携带状态；UI不得制造幻觉进步。",
+        "路线图：阶梯UI标准化，先决条件与返回显式。"
+      ],
+      platSpecEs:[
+        "La plataforma debe mostrar validez de recibos; no puede conservar estados posteriores tras invalidación.",
+        "En vivo: propagación de estado obligatoria; UI no puede crear progreso fantasma.",
+        "Hoja de ruta: UI de escalera estandarizada con prerequisitos y retornos explícitos."
+      ]
+    },
+
+    audit_discipline:{
+      vibeEn:[
+        "Audits make fights boring. If we disagree, we look at the receipt — not the story.",
+        "Live audit keeps costs low: missing receipts stop escalation; reasons are logged.",
+        "Roadmap separates authority: builders can’t tune outcomes; auditors can’t relax rules silently."
+      ],
+      vibeZh:[
+        "审计让争吵变无聊：不看故事，看收据。",
+        "上线审计让成本变低：缺收据就停止升级；原因有日志。",
+        "路线图分离权力：开发者不能调结果，审计者不能暗放宽。"
+      ],
+      vibeEs:[
+        "La auditoría vuelve aburridas las peleas: miras el recibo, no la historia.",
+        "En vivo reduce costos: sin recibos, no hay escalación; razones registradas.",
+        "Luego separa autoridad: constructores no tunean resultados; auditores no relajan reglas en silencio."
+      ],
+      specEn:[
+        "Observer-invariant evaluation under declared scope; receipts decide, not intent.",
+        "Live: replayable bundles and reason codes; disagreements resolve by scope/receipts.",
+        "Roadmap: automated audit harness with versioned thresholds and explicit epochs."
+      ],
+      specZh:[
+        "声明范围内观察者不变评估：收据裁决，不看意图。",
+        "上线：可回放包与原因码；分歧靠范围/收据解决。",
+        "路线图：自动审计套件、阈值版本化、纪元显式。"
+      ],
+      specEs:[
+        "Evaluación invariante bajo alcance declarado; deciden recibos, no intención.",
+        "En vivo: bundles re-ejecutables y códigos de razón; desacuerdos se resuelven por alcance/recibos.",
+        "Hoja de ruta: harness de auditoría con umbrales versionados y épocas explícitas."
+      ],
+      platEn:[
+        "Platform’s job is to show the audit trail without overwhelming the user.",
+        "Live UI must never hide reason codes or bury them behind overlays.",
+        "Roadmap: audit views become shareable, consistent, and boring — which is the point."
+      ],
+      platZh:[
+        "平台要把审计链展示出来，但不把用户淹没。",
+        "上线UI不得隐藏原因码，也不得把它埋在遮罩后。",
+        "路线图：审计视图可分享、可一致、可无聊——这就是目的。"
+      ],
+      platEs:[
+        "La plataforma muestra la pista de auditoría sin abrumar.",
+        "En vivo la UI no debe ocultar códigos de razón ni enterrarlos.",
+        "Luego: vistas auditables compartibles, consistentes y ‘aburridas’ — ese es el objetivo."
+      ],
+      platSpecEn:[
+        "UI must present audit artifacts as receipts; no narrative inflation in platform text.",
+        "Live: prevent competing UI layers; ensure tap reliability to access reasons.",
+        "Roadmap: standardized audit surface templates across products."
+      ],
+      platSpecZh:[
+        "UI必须以收据形式呈现审计产物；平台文案不得膨胀叙事。",
+        "上线：禁止UI竞争层；保证点按可靠以访问原因。",
+        "路线图：审计面模板跨产品标准化。"
+      ],
+      platSpecEs:[
+        "La UI presenta artefactos como recibos; sin inflación narrativa en texto de plataforma.",
+        "En vivo: evitar capas compitiendo; asegurar toque fiable para acceder a razones.",
+        "Hoja de ruta: plantillas estándar de auditoría entre productos."
+      ]
+    },
+
+    change_control:{
+      vibeEn:[
+        "Change control is upgrading without rewriting history. If meaning changes, you stamp it.",
+        "Live: no ‘hotfix’ that secretly changes policy. Roll out in waves; rollback ready.",
+        "Roadmap: signed releases and policy registries make changes verifiable events."
+      ],
+      vibeZh:[
+        "变更控制是升级但不改历史：含义变了就盖章。",
+        "上线：禁止“热修”暗改政策；分波次发布，随时可回滚。",
+        "路线图：签名发布与策略登记让变更成为可验证事件。"
+      ],
+      vibeEs:[
+        "Control de cambios es actualizar sin reescribir historia: si cambia significado, lo marcas.",
+        "En vivo: sin hotfix que cambie política en secreto. Olas y rollback.",
+        "Luego: releases firmados y registros hacen cambios verificables."
+      ],
+      specEn:[
+        "Outcome-affecting changes require epoch rollover; past results remain interpretable under original rules.",
+        "Live requires staged rollout, rollback readiness, and documented reasons; silent tuning is disallowed.",
+        "Roadmap adds signed releases and policy registries for verifiable change events."
+      ],
+      specZh:[
+        "影响结果的变更需新纪元；旧结果按旧规则可解释。",
+        "上线要求分阶段发布、可回滚、理由可追溯；禁止静默调参。",
+        "路线图加入签名发布与策略登记，使变更事件可验证。"
+      ],
+      specEs:[
+        "Cambios que afectan resultados requieren nueva época; resultados previos siguen interpretables con reglas originales.",
+        "En vivo: rollout por fases, rollback listo y razones documentadas; ajuste silencioso prohibido.",
+        "Hoja de ruta: releases firmados y registros de política para eventos verificables."
+      ],
+      platEn:[
+        "Platform makes change readable: users should feel ‘steady’ even while you improve.",
+        "Live UI must show version posture when it matters; no surprise semantics.",
+        "Roadmap: consistent banners and release notes that don’t turn into marketing."
+      ],
+      platZh:[
+        "平台让变更可读：你在改进，用户仍感觉稳定。",
+        "上线UI在关键处要展示版本姿态；禁止语义惊喜。",
+        "路线图：一致的横幅与发布说明，但不变成营销。"
+      ],
+      platEs:[
+        "La plataforma hace legible el cambio: el usuario debe sentirse estable mientras mejoras.",
+        "En vivo la UI debe mostrar postura/version cuando importa; sin sorpresas semánticas.",
+        "Luego: banners y notas consistentes sin volverse marketing."
+      ],
+      platSpecEn:[
+        "Platform must not mask epoch changes; if semantics change, the UI labels must change explicitly.",
+        "Live: route stability and state carry must remain intact through changes.",
+        "Roadmap: standardized release labeling and registry linkage."
+      ],
+      platSpecZh:[
+        "平台不得掩盖纪元变化；语义变更必须显式标注。",
+        "上线：变更过程中路由稳定与状态携带必须保持。",
+        "路线图：发布标注标准化并链接登记。"
+      ],
+      platSpecEs:[
+        "La plataforma no puede ocultar cambios de época; si cambia semántica, la UI debe etiquetar explícitamente.",
+        "En vivo: rutas y estado deben mantenerse intactos durante cambios.",
+        "Hoja de ruta: etiquetado de releases estandarizado y enlace a registro."
+      ]
+    },
+
+    admissibility_doctrine:{
+      vibeEn:[
+        "Doctrine is the guardrail: don’t say more than the evidence allows.",
+        "Live posture keeps concept/live/roadmap honest. Missing receipts = ‘not measured.’",
+        "Roadmap standardizes honest language across pages so hype can’t creep in."
+      ],
+      vibeZh:[
+        "教义是护栏：别说超过证据允许的东西。",
+        "上线姿态保持概念/上线/路线图诚实：缺收据=未测量。",
+        "路线图标准化诚实语言，杜绝噱头渗入。"
+      ],
+      vibeEs:[
+        "La doctrina es el guardarraíl: no afirmar más que la evidencia.",
+        "En vivo: concepto/en vivo/roadmap separados. Sin recibos = no medido.",
+        "Luego: lenguaje honesto estandarizado para que el hype no se cuele."
+      ],
+      specEn:[
+        "Defines claim bounds under scope; prevents escalation beyond receipts; locks language to measured capability.",
+        "Live enforcement requires explicit posture labels and refusal of upgrades without evidence.",
+        "Roadmap introduces doctrine templates across products with versioned semantics."
+      ],
+      specZh:[
+        "在范围内定义主张边界；防止超收据升级；把语言锁在可测能力。",
+        "上线执行要求明确姿态标注并拒绝无证据升级。",
+        "路线图在全产品引入教义模板并对语义版本化。"
+      ],
+      specEs:[
+        "Define límites de afirmación bajo alcance; evita escalación sin recibos; ata lenguaje a capacidad medida.",
+        "En vivo exige etiquetas explícitas y rechazo de upgrades sin evidencia.",
+        "Hoja de ruta: plantillas doctrinales entre productos con semántica versionada."
+      ],
+      platEn:[
+        "Platform uses doctrine to keep copy exciting but safe: big curiosity, bounded claims.",
+        "Live: UI labels must match posture: concept isn’t sold as live.",
+        "Roadmap: one honest voice across the site."
+      ],
+      platZh:[
+        "平台用教义让文案又兴奋又安全：好奇心大，主张有界。",
+        "上线：UI标注必须匹配姿态：概念不能当上线卖。",
+        "路线图：全站一个诚实声音。"
+      ],
+      platEs:[
+        "La plataforma usa doctrina para que el copy sea emocionante pero seguro: curiosidad grande, afirmaciones acotadas.",
+        "En vivo: etiquetas UI deben coincidir con postura; concepto no se vende como en vivo.",
+        "Luego: una voz honesta en todo el sitio."
+      ],
+      platSpecEn:[
+        "Platform copy must not outrun engine receipts; posture labels are mandatory and consistent.",
+        "Live: prevent semantic drift via stable headings and explicit routes to Laws/Gauges.",
+        "Roadmap: standardized phrasebook and forbidden-claims list."
+      ],
+      platSpecZh:[
+        "平台文案不得跑过引擎收据；姿态标注必须且一致。",
+        "上线：用稳定标题与显式路由到法则/量规阻止语义漂移。",
+        "路线图：短语表标准化与禁用主张清单。"
+      ],
+      platSpecEs:[
+        "El copy de plataforma no puede correr más que los recibos del motor; etiquetas de postura obligatorias y consistentes.",
+        "En vivo: evitar deriva con encabezados estables y rutas explícitas a Leyes/Medidores.",
+        "Hoja de ruta: fraseario estándar y lista de afirmaciones prohibidas."
+      ]
+    },
+
+    navigation_surfaces:{
+      vibeEn:[
+        "Navigation is the steering wheel. One tap, one outcome, always.",
+        "Live: no ghost layers, no overlap traps, no double routes.",
+        "Roadmap: templates make every product feel like the same machine."
+      ],
+      vibeZh:[
+        "导航是方向盘：一点一果，永远如此。",
+        "上线：无幽灵层、无重叠陷阱、无双路由。",
+        "路线图：模板让每个产品像同一台机器。"
+      ],
+      vibeEs:[
+        "La navegación es el volante: un toque, un resultado, siempre.",
+        "En vivo: sin capas fantasma, sin trampas, sin rutas dobles.",
+        "Luego: plantillas para que todo se sienta como la misma máquina."
+      ],
+      specEn:[
+        "Surfaces present options without altering invariants; navigation-first contracts preserve deterministic outcomes and mandatory state carry.",
+        "Live: prevent intercepting overlays; ensure single-action taps and explicit returns.",
+        "Roadmap: reusable templates reduce cognitive load and adoption friction."
+      ],
+      specZh:[
+        "界面呈现选项但不得改变不变量；导航优先契约保持确定性结果并强制状态携带。",
+        "上线：禁止拦截遮罩；确保单动作点按与显式返回。",
+        "路线图：复用模板降低认知负担与采纳摩擦。"
+      ],
+      specEs:[
+        "Las superficies presentan opciones sin alterar invariantes; contratos navigation-first preservan resultados deterministas y propagación de estado obligatoria.",
+        "En vivo: impedir overlays interceptores; asegurar un toque-una acción y retornos explícitos.",
+        "Hoja de ruta: plantillas reutilizables reducen carga cognitiva y fricción."
+      ],
+      platEn:[
+        "Platform turns navigation into calm: users always know where they are and how to get back.",
+        "Live: mobile-first tap reliability is non-negotiable.",
+        "Roadmap: consistent patterns stop the site from feeling like a patchwork."
+      ],
+      platZh:[
+        "平台把导航做成安静：用户总知道自己在哪、怎么回去。",
+        "上线：移动端点按可靠不可谈判。",
+        "路线图：一致模式避免站点像拼贴。"
+      ],
+      platEs:[
+        "La plataforma hace la navegación calmada: siempre sabes dónde estás y cómo volver.",
+        "En vivo: fiabilidad móvil no negociable.",
+        "Luego: consistencia para evitar sitio ‘parchado’."
+      ],
+      platSpecEn:[
+        "Platform must provide explicit back routes for hub-class pages (multi-entry). History-only back is insufficient.",
+        "Live: prohibit competing UI layers that block taps; enforce stable z-index.",
+        "Roadmap: navigation contracts per page class (door/hub/product/leaf)."
+      ],
+      platSpecZh:[
+        "平台必须为枢纽页提供显式返回路由（多入口）；仅靠浏览器返回不够。",
+        "上线：禁止阻塞点按的竞争层；稳定z-index。",
+        "路线图：按页面类别定义导航契约（门/枢纽/产品/叶页）。"
+      ],
+      platSpecEs:[
+        "La plataforma debe dar rutas de regreso explícitas para hubs (multi-entrada). Solo ‘atrás del navegador’ no basta.",
+        "En vivo: prohibir capas que bloqueen toques; z-index estable.",
+        "Hoja de ruta: contratos de navegación por clase de página."
+      ]
+    },
+
+    product_packaging:{
+      vibeEn:[
+        "Packaging is the promise: what you can use, without turning proof into sales copy.",
+        "Live: no dead ends; every card opens; every open has a return; state always carries.",
+        "Roadmap: tiers and shells make growth legible without hype."
+      ],
+      vibeZh:[
+        "封装是承诺：告诉你能用什么，但不把证明写成广告。",
+        "上线：无死路；卡片都能打开；打开都有返回；状态永远携带。",
+        "路线图：分级与壳让增长可读，不靠噱头。"
+      ],
+      vibeEs:[
+        "Empaquetado es promesa: qué puedes usar sin convertir prueba en venta.",
+        "En vivo: sin callejones; todo abre; todo tiene retorno; estado siempre viaja.",
+        "Luego: niveles y carcasas hacen el crecimiento legible sin hype."
+      ],
+      specEn:[
+        "Separates capability surfaces (Products) from doctrine (Laws) and measurement (Gauges); prevents claim inflation and route collapse.",
+        "Live: stable routes, explicit returns, and no catch-all destinations.",
+        "Roadmap: tiering and registry status for access legibility under versioned semantics."
+      ],
+      specZh:[
+        "分离能力面（产品）与教义（法则）与测量（量规），防止主张膨胀与路由坍缩。",
+        "上线：稳定路由、显式返回、禁止总汇目的地。",
+        "路线图：分级与登记状态使访问级别可读，语义版本化。"
+      ],
+      specEs:[
+        "Separa capacidades (Productos) de doctrina (Leyes) y medición (Medidores); evita inflación de afirmaciones y colapso de rutas.",
+        "En vivo: rutas estables, retornos explícitos, sin destinos universales.",
+        "Hoja de ruta: niveles y estado de registro para legibilidad con semántica versionada."
+      ],
+      platEn:[
+        "Platform packaging is where routing feels ‘obvious’ instead of confusing.",
+        "Live: every route is intentional; if something routes to the wrong hub, packaging is broken.",
+        "Roadmap: shells for not-built-yet items keep the site coherent while you build."
+      ],
+      platZh:[
+        "平台封装让路由“显然”，而不是困惑。",
+        "上线：每条路由都故意；若跳到错误枢纽，封装就坏了。",
+        "路线图：未建条目用壳保持整体一致，边建边不乱。"
+      ],
+      platEs:[
+        "El empaquetado hace que el ruteo se sienta obvio, no confuso.",
+        "En vivo: cada ruta es intencional; si algo cae en el hub equivocado, el empaquetado está roto.",
+        "Luego: carcasas para lo no construido mantienen coherencia mientras construyes."
+      ],
+      platSpecEn:[
+        "Platform must keep item identity: each product routes to its own hub or typed shell; no universal catch-all.",
+        "Live: enforce state carry on every jump; missing state is a defect.",
+        "Roadmap: publish availability posture (concept/live/roadmap) on shells."
+      ],
+      platSpecZh:[
+        "平台必须保持条目身份：每个产品路由到自己的枢纽或类型壳；禁止总汇。",
+        "上线：每次跳转必须携带状态；缺失即缺陷。",
+        "路线图：壳上发布可用姿态（概念/上线/路线图）。"
+      ],
+      platSpecEs:[
+        "La plataforma debe preservar identidad: cada producto rutea a su propio hub o carcasa tipada; sin catch-all universal.",
+        "En vivo: propagación de estado en cada salto; falta de estado es defecto.",
+        "Hoja de ruta: publicar postura de disponibilidad (concepto/en vivo/roadmap) en carcasas."
+      ]
+    },
+
+    enterprise_deployment:{
+      vibeEn:[
+        "Enterprise is scale without heroics: waves, segmentation, rollback.",
+        "Live: if it wobbles, stop; if it clusters, split; if it drifts, roll back.",
+        "Roadmap: proof packages for auditors and partners."
+      ],
+      vibeZh:[
+        "企业是无英雄主义的规模化：波次、隔离、回滚。",
+        "上线：一晃就停；一聚就拆；一漂就回滚。",
+        "路线图：给审计与伙伴的证明包。"
+      ],
+      vibeEs:[
+        "Empresa es escalar sin heroísmos: olas, segmentación, rollback.",
+        "En vivo: si tiembla, para; si se agrupa, separa; si deriva, rollback.",
+        "Luego: paquetes de prueba para auditores y socios."
+      ],
+      specEn:[
+        "Staged rollout with segmentation and rollback readiness; deployment decisions reference receipts, not urgency; instability triggers containment.",
+        "Live: monitor correlated exposure and gate compliance; no silent overrides.",
+        "Roadmap: audit bundles + exports enabling third-party verification without privileged access."
+      ],
+      specZh:[
+        "分阶段发布+分区隔离+回滚准备；部署决策依据收据而非紧迫感；不稳触发隔离。",
+        "上线：监测相关暴露与闸门合规；禁止静默覆盖。",
+        "路线图：审计包与导出支持第三方核查而无需特权。"
+      ],
+      specEs:[
+        "Rollout por fases con segmentación y rollback listo; decisiones basadas en recibos, no urgencia; inestabilidad dispara contención.",
+        "En vivo: monitorear exposición correlacionada y compuertas; sin overrides silenciosos.",
+        "Hoja de ruta: paquetes de auditoría y exports para verificación de terceros sin acceso privilegiado."
+      ],
+      platEn:[
+        "Platform makes enterprise safe by making constraints visible: what’s enabled, what’s gated, what’s not available yet.",
+        "Live: deployments must never rely on hidden UI behavior; everything is explicit and reversible.",
+        "Roadmap: enterprise dashboards remain readable while proofs get stronger underneath."
+      ],
+      platZh:[
+        "平台通过“可见约束”让企业更安全：什么可用、什么被闸门、什么尚不可用。",
+        "上线：部署不得依赖隐藏UI行为；一切显式且可逆。",
+        "路线图：企业仪表盘保持可读，底层证明更强。"
+      ],
+      platEs:[
+        "La plataforma hace segura la empresa haciendo visibles restricciones: qué está habilitado, qué está acotado, qué no está disponible aún.",
+        "En vivo: despliegues nunca deben depender de UI oculta; todo explícito y reversible.",
+        "Luego: dashboards legibles mientras la prueba se fortalece debajo."
+      ],
+      platSpecEn:[
+        "Platform must surface deployment posture: staged rollout, rollback availability, and gating status.",
+        "Live: prevent UI from bypassing deployment gates; enforce deterministic routing.",
+        "Roadmap: standard enterprise surfaces with registry-linked status."
+      ],
+      platSpecZh:[
+        "平台必须展示部署姿态：分阶段发布、回滚可用性、闸门状态。",
+        "上线：禁止UI绕过部署闸门；强制确定性路由。",
+        "路线图：企业面标准化并链接登记状态。"
+      ],
+      platSpecEs:[
+        "La plataforma debe mostrar postura de despliegue: rollout por fases, disponibilidad de rollback y estado de compuertas.",
+        "En vivo: impedir bypass UI de compuertas; ruteo determinista.",
+        "Hoja de ruta: superficies enterprise estándar con estado enlazado a registro."
+      ]
+    },
+
+    dotgrid_sweeps:{
+      vibeEn:[
+        "Dot.Grid is the scanner: same sweep, same window, same labels — so comparisons stay honest.",
+        "Live: drift becomes loud when naming or windows change; that’s a failure, not a tweak.",
+        "Roadmap: adapter packs let the same sweep method work across domains."
+      ],
+      vibeZh:[
+        "Dot.Grid 是扫描器：同扫掠同窗口同标签，比较才诚实。",
+        "上线：命名/窗口一变漂移就变响，这是失败不是小改。",
+        "路线图：适配包让同扫掠方法跨领域复用。"
+      ],
+      vibeEs:[
+        "Dot.Grid es el escáner: mismo barrido, ventana y etiquetas para comparaciones honestas.",
+        "En vivo: si cambian nombres/ventanas, la deriva se vuelve ruidosa; es fallo, no ajuste.",
+        "Luego: adaptadores para usar el mismo método en varios dominios."
+      ],
+      specEn:[
+        "Traversal-friendly indexing sweeps enumerate states under fixed definitions; outputs are comparable windows for downstream evaluation.",
+        "Live: enforce window discipline and stable naming; route outputs to Gauges and interpretation bounds to Laws.",
+        "Roadmap: adapter packs expand domain coverage while preserving stability contracts."
+      ],
+      specZh:[
+        "面向遍历的索引扫掠在固定定义下枚举状态；输出为可比较窗口供下游评估。",
+        "上线：强制窗口纪律与稳定命名；输出去量规展示，解释边界去法则。",
+        "路线图：适配包扩展覆盖域，同时保持稳定契约。"
+      ],
+      specEs:[
+        "Barridos de indexación enumeran estados bajo definiciones fijas; salidas son ventanas comparables para evaluación posterior.",
+        "En vivo: disciplina de ventana y nombres estables; salidas a Medidores y límites a Leyes.",
+        "Hoja de ruta: adaptadores expanden dominios preservando contratos de estabilidad."
+      ],
+      platEn:[
+        "Platform turns sweeps into readable pages: you should feel “I can see it” in 5 seconds.",
+        "Live: sweep UX must be mobile-safe and never trap taps behind layers.",
+        "Roadmap: sweep pages become the backbone for cross-domain navigation."
+      ],
+      platZh:[
+        "平台把扫掠做成可读页面：5秒内要有“我看见了”。",
+        "上线：扫掠体验必须移动端安全，不能被层遮住。",
+        "路线图：扫掠页成为跨域导航骨干。"
+      ],
+      platEs:[
+        "La plataforma vuelve los barridos legibles: debes sentir ‘lo veo’ en 5 segundos.",
+        "En vivo: UX móvil segura, sin capas que atrapen toques.",
+        "Luego: páginas de barrido como columna vertebral de navegación."
+      ],
+      platSpecEn:[
+        "Platform must preserve sweep comparability: stable labels, stable windows, explicit scope.",
+        "Live: no UI that changes sweep semantics without versioning.",
+        "Roadmap: unified sweep templates and export bindings."
+      ],
+      platSpecZh:[
+        "平台必须保持扫掠可比性：稳定标签、稳定窗口、范围显式。",
+        "上线：不得无版本改变扫掠语义。",
+        "路线图：扫掠模板统一与导出绑定。"
+      ],
+      platSpecEs:[
+        "La plataforma debe preservar comparabilidad: etiquetas/ventanas estables y alcance explícito.",
+        "En vivo: sin cambios semánticos sin versión.",
+        "Hoja de ruta: plantillas unificadas y bindings de exportación."
+      ]
+    },
+
+    scoring_outputs:{
+      vibeEn:[
+        "Scores are the dashboard version of truth: readable, bounded, reason-coded.",
+        "Live: no moving goalposts; threshold changes mean new epoch.",
+        "Roadmap: share scores with proof attached, without leaking private telemetry."
+      ],
+      vibeZh:[
+        "评分是“真相的仪表盘版”：可读、有界、有原因码。",
+        "上线：不挪球门；阈值变更=新纪元。",
+        "路线图：分享带证明的分数，不泄露隐私遥测。"
+      ],
+      vibeEs:[
+        "La puntuación es la versión tablero de la verdad: legible, acotada y con razones.",
+        "En vivo: sin mover postes; cambios de umbral = nueva época.",
+        "Luego: compartir puntuación con prueba sin filtrar telemetría privada."
+      ],
+      specEn:[
+        "Bounded metrics derived from gate vectors and exposure; scores cannot override admissibility failures.",
+        "Live: stable summaries and exports; silent tuning is disallowed; epoch rollover required for threshold change.",
+        "Roadmap: portfolio/underwriting views with hashed receipts for traceability and privacy."
+      ],
+      specZh:[
+        "由闸门向量与暴露导出的有界指标；分数不得覆盖可采信失败。",
+        "上线：稳定摘要与导出；禁止静默调参；阈值变更需新纪元。",
+        "路线图：组合/承保视图+哈希收据，兼顾可追溯与隐私。"
+      ],
+      specEs:[
+        "Métricas acotadas derivadas de vectores de compuertas y exposición; no puede anular fallos de admisibilidad.",
+        "En vivo: resúmenes/exports estables; ajuste silencioso prohibido; nueva época para cambios de umbral.",
+        "Hoja de ruta: vistas de portafolio/underwriting con recibos hasheados para trazabilidad y privacidad."
+      ],
+      platEn:[
+        "Platform makes scores human: ‘where am I’ + ‘why’ + ‘what next’.",
+        "Live: show reason codes; don’t hide them; don’t soften them.",
+        "Roadmap: score pages become shareable artifacts, not screenshots of opinions."
+      ],
+      platZh:[
+        "平台把分数做人话：我在哪+为什么+下一步。",
+        "上线：原因码要展示，不能隐藏，也不能软化。",
+        "路线图：分数页变成可分享产物，不是观点截图。"
+      ],
+      platEs:[
+        "La plataforma hace la puntuación humana: dónde estoy + por qué + qué sigue.",
+        "En vivo: mostrar códigos de razón; no ocultarlos ni suavizarlos.",
+        "Luego: páginas de puntuación como artefactos compartibles, no capturas de opiniones."
+      ],
+      platSpecEn:[
+        "Platform must keep score semantics stable; changes require explicit versioning and epoch labels.",
+        "Live: reason visibility is mandatory; exports are deterministic.",
+        "Roadmap: registry-linked score statuses and portable receipts."
+      ],
+      platSpecZh:[
+        "平台必须保持分数语义稳定；变更需显式版本与纪元标注。",
+        "上线：原因可见性必须；导出确定性。",
+        "路线图：分数状态链接登记与可携带收据。"
+      ],
+      platSpecEs:[
+        "La plataforma debe mantener semántica estable; cambios requieren versionado explícito y etiqueta de época.",
+        "En vivo: visibilidad de razones obligatoria; exports deterministas.",
+        "Hoja de ruta: estados enlazados a registro y recibos portátiles."
+      ]
+    },
+
+    registry_lookups:{
+      vibeEn:[
+        "Registry is the status check: active / suspended / revoked — plus the reason.",
+        "Live: nobody can flip status quietly; changes are logged and auditable.",
+        "Roadmap: third-party attestations make status verifiable across organizations."
+      ],
+      vibeZh:[
+        "登记系统就是状态核查：启用/暂停/撤销+原因。",
+        "上线：没人能悄悄翻状态；变化有日志可审计。",
+        "路线图：第三方证明让状态跨组织可核查。"
+      ],
+      vibeEs:[
+        "El registro es chequeo de estado: activo/suspendido/revocado con razón.",
+        "En vivo: nadie cambia estado en secreto; cambios con log y auditoría.",
+        "Luego: attestaciones de terceros para verificar entre organizaciones."
+      ],
+      specEn:[
+        "Publishes minimum necessary truth: status, time anchoring, and reason codes without leaking sensitive internals.",
+        "Live: forbids silent revocation and enforces deterministic renewal; all changes auditable.",
+        "Roadmap: replay bundles and third-party attestations bridge internal execution to external trust."
+      ],
+      specZh:[
+        "发布最小必要真相：状态、时间锚、原因码，不泄露敏感内部。",
+        "上线：禁止静默撤销并强制确定性续期；所有变化可审计。",
+        "路线图：回放包+第三方证明，把内部执行连接到外部信任。"
+      ],
+      specEs:[
+        "Publica verdad mínima: estado, anclaje temporal y códigos de razón sin filtrar internos sensibles.",
+        "En vivo: prohíbe revocación silenciosa y exige renovación determinista; todo auditable.",
+        "Hoja de ruta: bundles de replay y attestaciones de terceros conectan ejecución interna con confianza externa."
+      ],
+      platEn:[
+        "Platform uses registry to prevent ‘trust me’ UX. Users can check status without reading doctrine.",
+        "Live: status must be legible and time-anchored; no vague language.",
+        "Roadmap: registry becomes the safe bridge for institutions."
+      ],
+      platZh:[
+        "平台用登记系统阻止“信我式体验”：用户无需读教义也能核查状态。",
+        "上线：状态必须可读且时间锚定；禁止含糊语言。",
+        "路线图：登记系统成为机构采纳的安全桥。"
+      ],
+      platEs:[
+        "La plataforma usa el registro para evitar UX de ‘créeme’: el usuario verifica estado sin leer doctrina.",
+        "En vivo: estado legible y anclado en tiempo; sin lenguaje vago.",
+        "Luego: el registro se vuelve puente seguro para instituciones."
+      ],
+      platSpecEn:[
+        "Platform must not conflate registry status with marketing; status is factual, reason-coded, and time-anchored.",
+        "Live: state carry preserves lookup context; no silent changes.",
+        "Roadmap: publish lookups with minimal disclosure and verifiable attestations."
+      ],
+      platSpecZh:[
+        "平台不得把登记状态当营销：状态必须事实化、原因码化、时间锚定。",
+        "上线：状态携带保留查询语境；禁止静默变化。",
+        "路线图：最小披露+可验证证明的公开查询。"
+      ],
+      platSpecEs:[
+        "La plataforma no puede mezclar estado con marketing; estado es factual, con razón y anclaje temporal.",
+        "En vivo: propagación de estado preserva contexto; sin cambios silenciosos.",
+        "Hoja de ruta: lookups con divulgación mínima y attestaciones verificables."
+      ]
+    }
+  };
+
+  // Fill remaining TEXT via SEEDS
+  Object.keys(SEEDS).forEach(function(k){
+    TEXT[k]=makeDomainText(SEEDS[k]);
+  });
+
+  // ===== UI labels =====
+  function bandLabel(){
+    if(lang==="zh") return (mode==="engineering") ? "工程域（6）" : "平台域（6）";
+    if(lang==="es") return (mode==="engineering") ? "DOMINIOS · INGENIERÍA (6)" : "DOMINIOS · PLATAFORMA (6)";
+    return (mode==="engineering") ? "ENGINEERING DOMAINS (6)" : "PLATFORM DOMAINS (6)";
+  }
+  function bubbleLabel(which){
+    if(lang==="zh") return (which==="concept")?"概念":(which==="live")?"上线":"路线图";
+    if(lang==="es") return (which==="concept")?"Concepto":(which==="live")?"En vivo":"Hoja de ruta";
+    return (which==="concept")?"Concept":(which==="live")?"Live":"Roadmap";
+  }
+  function openLabel(){
+    if(lang==="zh") return "打开";
+    if(lang==="es") return "ABRIR";
+    return "OPEN";
+  }
+
+  // ===== render =====
+  var list=document.getElementById("list");
+  var band=document.getElementById("band");
+
+  function closeAll(){
+    list.querySelectorAll(".row").forEach(function(x){
+      x.classList.remove("open");
+      var c=x.querySelector(".chev");
+      if(c) c.textContent="▸";
+    });
+  }
+
+  function makeRow(id, idx){
+    var meta=DOM[id];
+
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", meta.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var left=document.createElement("div");
+    left.className="left";
+
+    var bar=document.createElement("div");
+    bar.className="bar";
+    bar.style.background=meta.c;
+
+    var sig=document.createElement("div");
+    sig.className="sig";
+    sig.style.background=meta.c;
+
+    var tblock=document.createElement("div");
+    tblock.className="tblock";
+
+    var hd=document.createElement("div");
+    hd.className="hd";
+    hd.textContent=pick(meta.t);
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent=pick(meta.s);
+
+    tblock.appendChild(hd);
+    tblock.appendChild(sub);
+
+    left.appendChild(bar);
+    left.appendChild(sig);
+    left.appendChild(tblock);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="p";
+    intro.textContent = (lang==="zh")
+      ? "打开三段：概念（为什么）、上线（怎么用）、路线图（下一步）。"
+      : (lang==="es")
+        ? "Abre tres secciones: Concepto (por qué), En vivo (cómo), Hoja de ruta (qué sigue)."
+        : "Open three sections: Concept (why), Live (how), Roadmap (what’s next).";
+    body.appendChild(intro);
+
+    var subB=document.createElement("div");
+    subB.className="subBubbles";
+
+    function makeBubble(which){
+      var b=document.createElement("div");
+      b.className="bubble";
+      b.setAttribute("role","button");
+      b.tabIndex=0;
+
+      var h=document.createElement("h4");
+      h.textContent=bubbleLabel(which);
+
+      var pp=document.createElement("p");
+      pp.textContent = pick(TEXT[id][mode][style][which]);
+
+      b.appendChild(h);
+      b.appendChild(pp);
+
+      function act(){ b.classList.toggle("open"); }
+      b.addEventListener("click", act);
+      b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+      return b;
+    }
+
+    subB.appendChild(makeBubble("concept"));
+    subB.appendChild(makeBubble("live"));
+    subB.appendChild(makeBubble("roadmap"));
+
+    body.appendChild(subB);
+
+    var call=document.createElement("div");
+    call.className="callout";
+    call.textContent = (lang==="zh")
+      ? "提示：如果你在这里想找“愿景”，去前沿；如果你想找“边界”，去法则；如果你想找“测量”，去量规。软件枢纽负责把线路变清晰。"
+      : (lang==="es")
+        ? "Nota: si buscas ‘visión’, ve a Frontera; si buscas ‘límites’, ve a Leyes; si buscas ‘medición’, ve a Medidores. Este hub hace visible el cableado."
+        : "Note: if you want Vision, go Frontier; if you want Boundaries, go Laws; if you want Measurement, go Gauges. This hub makes the wiring visible.";
+    body.appendChild(call);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    var OPEN=openLabel();
+
+    function addBtn(label, href){
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent = OPEN + ": " + label;
+      a.href = href + q();
+      actions.appendChild(a);
+    }
+
+    // Always include Membrane + key leaves
+    addBtn((lang==="zh")?"膜（边界）":(lang==="es")?"MEMBRANA":"MEMBRANE","/products/software/membrane/");
+    addBtn("SSG","/products/ssg/");
+    addBtn("DOT.GRID","/products/dot-grid/");
+
+    body.appendChild(actions);
+
+    function toggle(){
+      var willOpen = !row.classList.contains("open");
+      closeAll();
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
 
     row.appendChild(head);
     row.appendChild(body);
-    list.appendChild(row);
-  });
 
-}
+    if(idx===0){
+      row.classList.add("open");
+      chev.textContent="▾";
+    }
 
-function activate(group,id,value,type){
-  document.querySelectorAll(group).forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  if(type==="lang") lang=value;
-  if(type==="lens") lens=value;
+    return row;
+  }
+
+  function render(){
+    headerCopy();
+    paintPills();
+
+    band.textContent = bandLabel();
+    list.innerHTML="";
+
+    var ids = (mode==="engineering") ? ENGINE : PLATFORM;
+    ids.forEach(function(id, i){
+      list.appendChild(makeRow(id, i));
+    });
+  }
+
+  paintPills();
   render();
-}
-
-/* Language */
-document.getElementById("langEN").onclick=()=>activate(".selector button","langEN","en","lang");
-document.getElementById("langZH").onclick=()=>activate(".selector button","langZH","zh","lang");
-document.getElementById("langES").onclick=()=>activate(".selector button","langES","es","lang");
-
-/* Lens */
-document.getElementById("lensInformal").onclick=()=>activate(".selector button","lensInformal","informal","lens");
-document.getElementById("lensFormal").onclick=()=>activate(".selector button","lensFormal","formal","lens");
-document.getElementById("lensEngineering").onclick=()=>activate(".selector button","lensEngineering","engineering","lens");
-document.getElementById("lensPlatform").onclick=()=>activate(".selector button","lensPlatform","platform","lens");
-
-render();
-
 })();
 </script>
 

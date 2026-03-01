@@ -1,24 +1,22 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · FRONTIER ORIENTATION (DENSE · BIG TYPE · 3 LANG: EN/中文/ES)
-     ROLE:
-       - Explanation-first gateway (no lenses here)
-       - Human language (no diagnostic jargon)
-       - Dense, layered structure (not walls of text)
-       - Accordion (single-open) for focus
-       - Clear jump points at the end of every block
-     ROUTES:
-       - DOOR   → /door/
-       - COMPASS→ /index.html
-       - ENTER  → /home/
-       - PRODUCTS→/products/
-       - EXPLORE→ /explore/
-     STATE:
-       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
-       - Carry state on all jumps
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background override (ui.css owns field)
-       - Tap-safe, no inline onclick
+     PRELUDE · TRILINGUAL (EN/中文/ES) · DENSE · BIGGER PRINT · SINGLE-OPEN ACCORDION
+     PURPOSE:
+       - Names the problem clearly (human words).
+       - Shows that it is mapped into a finite lattice (finite measure).
+       - Explains “how the system handles the solution from every angle.”
+       - Clean jumps to Compass / Products / Explore / Laws / Gauges.
+     RULES:
+       - No modals, no overlays, no inline onclick.
+       - Mobile-safe: sticky top, single-open accordion.
+       - Canon state carry: lang/style/time/depth (URL + gd_* LS).
+     ROUTES (EDIT HERE IF NEEDED):
+       - BACK → /door/
+       - COMPASS → /index.html
+       - HOME → /home/
+       - PRODUCTS → /products/
+       - EXPLORE → /explore/
+       - LAWS → /laws/
+       - GAUGES → /gauges/
 -->
 
 <!doctype html>
@@ -34,17 +32,16 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{position:relative;z-index:0}
-body::before,body::after{pointer-events:none!important;z-index:0!important}
-#root{position:relative;z-index:10}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
 :root{
-  --inkA:rgba(12,22,38,.96);
-  --inkB:rgba(6,10,16,.99);
+  --dockH:104px;
 
   --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.10);
-  --opalR:rgba(255,80,80,.14);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,80,80,.10);
+  --goldSoft:rgba(212,175,55,.35);
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
@@ -53,154 +50,105 @@ body::before,body::after{pointer-events:none!important;z-index:0!important}
   --mut:rgba(255,255,255,.78);
 }
 
-/* Top bar */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
   gap:12px;
-  z-index:240;
-  pointer-events:none;
+  position:relative;
+  z-index:10;
+}
+
+/* Top */
+.top{
+  position:sticky; top:0; z-index:240;
+  padding:10px 0 8px;
+  display:flex; justify-content:space-between; gap:12px;
 }
 .top .left,.top .right{
-  display:flex;gap:10px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
-  pointer-events:auto;
+  display:flex; gap:10px; align-items:center;
+  flex-wrap:nowrap; white-space:nowrap;
 }
 .top .btn{white-space:nowrap}
 
-/* Page wrap */
-.wrap{
-  width:min(1080px,94vw);
-  margin:86px auto 50px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
 /* Hero */
 .hero{
+  border-radius:26px;
   border:1px solid var(--stroke);
-  border-radius:28px;
-  padding:26px 22px 22px;
   background:
     radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 38%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 62% 110%, var(--opalR), transparent 62%),
+    radial-gradient(circle at 82% 34%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:0 46px 160px rgba(0,0,0,.62);
+  backdrop-filter:blur(10px);
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
 }
-
-.k{
-  margin:0 0 10px;
-  font-size:12px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.78;
+.hero::before{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
 }
-.h1{
-  margin:0;
-  font-weight:950;
-  font-size:38px;
-  letter-spacing:1px;
-  line-height:1.08;
-}
-.pLead{
-  margin:14px 0 0;
-  font-size:16.5px;
-  line-height:1.75;
-  color:var(--txt);
-  max-width:92ch;
-}
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.h1{margin:0;font-weight:950;font-size:34px;letter-spacing:1.1px;line-height:1.1}
+.p{margin:12px 0 0;font-size:15.5px;line-height:1.62;color:var(--txt);max-width:980px}
 .rule{
-  margin-top:16px;
+  margin:14px 0 0;
   padding:12px 14px;
   border-radius:18px;
   border:1px solid var(--stroke2);
   background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.84);
   font-size:13.5px;
   line-height:1.55;
+  color:var(--mut);
 }
 
-/* Quick tiles */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:12px;
-}
-@media (max-width:980px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
-@media (max-width:560px){ .grid{grid-template-columns:1fr;} }
-
-.tile{
-  border:1px solid var(--stroke2);
-  border-radius:22px;
-  padding:16px 16px 14px;
-  background:linear-gradient(160deg, rgba(12,22,38,.82), rgba(6,10,16,.90));
-  box-shadow:0 22px 90px rgba(0,0,0,.45);
-}
-.tTitle{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.3px;
-  font-size:16px;
-}
-.tSub{
-  margin:10px 0 0;
-  color:rgba(255,255,255,.84);
-  font-size:13.25px;
-  line-height:1.55;
-}
-.tAct{
+/* Jump strip */
+.jumpstrip{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
   margin-top:12px;
-  display:flex;
-  justify-content:flex-end;
 }
+.jumpstrip .btn{padding:10px 14px;border-radius:999px}
 
-/* Accordions */
+/* Band */
 .band{
   padding:10px 12px;
   border-radius:18px;
   border:1px solid var(--stroke2);
   background:rgba(0,0,0,.12);
   font-weight:950;
-  letter-spacing:.25px;
+  letter-spacing:.2px;
   color:rgba(255,255,255,.88);
 }
-.stack{display:flex;flex-direction:column;gap:12px}
 
-.card{
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  overflow:hidden;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 56px rgba(0,0,0,.58);
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
 .head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
+  display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;
-  padding:16px 16px;
+  padding:14px 16px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.hLeft{min-width:0}
-.hTitle{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.25px;
-  font-size:16px;
-}
-.hDesc{
-  margin:8px 0 0;
-  color:rgba(255,255,255,.84);
-  font-size:13.25px;
-  line-height:1.5;
-  max-width:92ch;
-}
+.left2{min-width:0}
+.title{font-weight:950;font-size:16px;letter-spacing:.2px}
+.sub{margin-top:6px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.78);max-width:92ch}
 .chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 .body{
   display:none;
@@ -210,59 +158,52 @@ body::before,body::after{pointer-events:none!important;z-index:0!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.card.open .body{display:block}
-.p{
-  margin:0;
-  color:rgba(255,255,255,.88);
-  line-height:1.72;
-  font-size:14.25px;
-}
-.p + .p{margin-top:12px}
+.row.open .body{display:block}
+.bp{margin:0;font-size:14.5px;line-height:1.7;color:rgba(255,255,255,.86)}
+.bp + .bp{margin-top:10px}
 .ul{
-  margin:12px 0 0 18px;
+  margin:10px 0 0 18px;
   padding:0;
-  color:rgba(255,255,255,.84);
+  font-size:14px;
   line-height:1.65;
-  font-size:13.75px;
+  color:rgba(255,255,255,.82);
 }
 .ul li{margin:6px 0}
-.jumpRow{
-  margin-top:14px;
-  display:flex;
+
+/* Dock */
+.dock{
+  position:fixed; left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
 }
-
-/* Buttons (uses ui.css .btn base; we just pad consistently) */
-.btn{border-radius:999px;padding:12px 16px}
-
-/* Footer */
-.footer{
-  margin-top:8px;
-  text-align:center;
-  font-size:13px;
-  opacity:.78;
-}
-.sig{margin-top:8px;font-size:11px;letter-spacing:3px;opacity:.65}
-
-/* Bigger print (requested) */
-@media (max-width:560px){
-  .h1{font-size:34px}
-  .pLead{font-size:16px}
-  .p{font-size:14px}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:116px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
-<div id="root">
+
+<div class="page">
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnBack" href="/door/">BACK</a>
       <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-      <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+      <a class="btn" id="btnHome" href="/home/">HOME</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -271,171 +212,30 @@ body::before,body::after{pointer-events:none!important;z-index:0!important}
     </div>
   </div>
 
-  <div class="wrap">
-
-    <div class="hero" aria-label="Prelude hero">
-      <p class="k" id="k0">PRELUDE</p>
-      <h1 class="h1" id="h0">The map before the movement</h1>
-
-      <p class="pLead" id="p0a">
-        Most “big ideas” fail for one simple reason: people can’t see the full system.
-        They see pieces — products, teams, pages, tools — but they can’t see what is connected,
-        what is changing, and what will break when it scales.
-      </p>
-
-      <p class="pLead" id="p0b">
-        This site is built to make the system visible, measurable, and navigable —
-        so you can move fast without guessing.
-      </p>
-
-      <div class="rule" id="r0">
-        Rule: big ideas are allowed — but every statement must stay tied to a clear boundary.
-        If something is not measured yet, it stays labeled as not measured.
-      </div>
+  <div class="hero" aria-label="Prelude">
+    <p class="k" id="k0">PRELUDE</p>
+    <h1 class="h1" id="h0">WHY YOU’RE HERE</h1>
+    <p class="p" id="p0"></p>
+    <div class="rule" id="r0"></div>
+    <div class="jumpstrip">
+      <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
+      <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
+      <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
+      <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
     </div>
-
-    <div class="grid" aria-label="Quick starts">
-      <div class="tile">
-        <p class="tTitle" id="qt1">I want direction</p>
-        <p class="tSub" id="qs1">Use the Compass. Pick a lane. Enter cleanly.</p>
-        <div class="tAct"><a class="btn" id="qCompass" href="/index.html">OPEN COMPASS</a></div>
-      </div>
-      <div class="tile">
-        <p class="tTitle" id="qt2">I want the tools</p>
-        <p class="tSub" id="qs2">Products are adoptable surfaces: energy, education, software.</p>
-        <div class="tAct"><a class="btn" id="qProducts" href="/products/">OPEN PRODUCTS</a></div>
-      </div>
-      <div class="tile">
-        <p class="tTitle" id="qt3">I want the frontier</p>
-        <p class="tSub" id="qs3">Explore is where vision lives — still bounded and labeled.</p>
-        <div class="tAct"><a class="btn" id="qExplore" href="/explore/">OPEN EXPLORE</a></div>
-      </div>
-      <div class="tile">
-        <p class="tTitle" id="qt4">I just want the hub</p>
-        <p class="tSub" id="qs4">Enter is the launchpad when you already know where you’re going.</p>
-        <div class="tAct"><a class="btn" id="qEnter" href="/home/">OPEN ENTER</a></div>
-      </div>
-    </div>
-
-    <div class="band" id="b0">ORIENTATION LAYERS</div>
-
-    <div class="stack" id="stack">
-
-      <div class="card" id="c1">
-        <div class="head" role="button" tabindex="0">
-          <div class="hLeft">
-            <p class="hTitle" id="t1">The problem (in plain words)</p>
-            <p class="hDesc" id="s1">
-              Systems feel fine — until they scale. Then small issues multiply, teams argue, and reality becomes hard to read.
-            </p>
-          </div>
-          <div class="chev" id="v1">▸</div>
-        </div>
-        <div class="body">
-          <p class="p" id="p1a"></p>
-          <p class="p" id="p1b"></p>
-          <ul class="ul" id="u1"></ul>
-          <div class="jumpRow">
-            <a class="btn" id="j1a" href="/index.html">OPEN COMPASS</a>
-            <a class="btn" id="j1b" href="/products/">OPEN PRODUCTS</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="c2">
-        <div class="head" role="button" tabindex="0">
-          <div class="hLeft">
-            <p class="hTitle" id="t2">What we built instead</p>
-            <p class="hDesc" id="s2">
-              A finite map. A finite set of lanes. Clear routes. Clear labels. Clear boundaries.
-            </p>
-          </div>
-          <div class="chev" id="v2">▸</div>
-        </div>
-        <div class="body">
-          <p class="p" id="p2a"></p>
-          <p class="p" id="p2b"></p>
-          <ul class="ul" id="u2"></ul>
-          <div class="jumpRow">
-            <a class="btn" id="j2a" href="/door/">BACK TO DOOR</a>
-            <a class="btn" id="j2b" href="/explore/">OPEN EXPLORE</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="c3">
-        <div class="head" role="button" tabindex="0">
-          <div class="hLeft">
-            <p class="hTitle" id="t3">How to use the site in 60 seconds</p>
-            <p class="hDesc" id="s3">
-              Choose posture. Choose lane. Read one block. Then jump. Nothing is meant to trap you.
-            </p>
-          </div>
-          <div class="chev" id="v3">▸</div>
-        </div>
-        <div class="body">
-          <p class="p" id="p3a"></p>
-          <p class="p" id="p3b"></p>
-          <ul class="ul" id="u3"></ul>
-          <div class="jumpRow">
-            <a class="btn" id="j3a" href="/home/">OPEN ENTER</a>
-            <a class="btn" id="j3b" href="/laws/">OPEN LAWS</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="c4">
-        <div class="head" role="button" tabindex="0">
-          <div class="hLeft">
-            <p class="hTitle" id="t4">What “credible frontier” means here</p>
-            <p class="hDesc" id="s4">
-              Big vision is welcome — but it must stay labeled, staged, and tied to what can be checked.
-            </p>
-          </div>
-          <div class="chev" id="v4">▸</div>
-        </div>
-        <div class="body">
-          <p class="p" id="p4a"></p>
-          <p class="p" id="p4b"></p>
-          <ul class="ul" id="u4"></ul>
-          <div class="jumpRow">
-            <a class="btn" id="j4a" href="/explore/frontier/">OPEN FRONTIER</a>
-            <a class="btn" id="j4b" href="/gauges/">OPEN GAUGES</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" id="c5">
-        <div class="head" role="button" tabindex="0">
-          <div class="hLeft">
-            <p class="hTitle" id="t5">Start points (pick one)</p>
-            <p class="hDesc" id="s5">
-              If you’re new: start calm. If you’re urgent: start directional. If you’re building: start with tools.
-            </p>
-          </div>
-          <div class="chev" id="v5">▸</div>
-        </div>
-        <div class="body">
-          <p class="p" id="p5a"></p>
-          <p class="p" id="p5b"></p>
-          <ul class="ul" id="u5"></ul>
-          <div class="jumpRow">
-            <a class="btn" id="j5a" href="/index.html">OPEN COMPASS</a>
-            <a class="btn" id="j5b" href="/products/">OPEN PRODUCTS</a>
-            <a class="btn" id="j5c" href="/door/">BACK TO DOOR</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="footer" id="f0">
-      Prelude is the calm entry. Compass is the fast entry. Enter is the utility entry.
-      <div class="sig">DIAMONDGATEBRIDGE.COM</div>
-    </div>
-
   </div>
+
+  <div class="band" id="band">THE RAMP (ONE THING AT A TIME)</div>
+  <div class="stack" id="stack"></div>
+
 </div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockCompass" href="/index.html">COMPASS</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
 
 <script>
 (function(){
@@ -468,45 +268,33 @@ body::before,body::after{pointer-events:none!important;z-index:0!important}
     var D=(over&&over.depth)?over.depth:depth;
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
+  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
 
-  // ===== wire nav =====
-  function wire(id, path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-  wire("btnDoor","/door/");
+  // routes
+  wire("btnBack","/door/");
   wire("btnCompass","/index.html");
-  wire("btnEnter","/home/");
-  wire("qCompass","/index.html");
-  wire("qProducts","/products/");
-  wire("qExplore","/explore/");
-  wire("qEnter","/home/");
-  wire("j1a","/index.html");
-  wire("j1b","/products/");
-  wire("j2a","/door/");
-  wire("j2b","/explore/");
-  wire("j3a","/home/");
-  wire("j3b","/laws/");
-  wire("j4a","/explore/frontier/");
-  wire("j4b","/gauges/");
-  wire("j5a","/index.html");
-  wire("j5b","/products/");
-  wire("j5c","/door/");
+  wire("btnHome","/home/");
+  wire("goProducts","/products/");
+  wire("goExplore","/explore/");
+  wire("goLaws","/laws/");
+  wire("goGauges","/gauges/");
+  wire("dockCompass","/index.html");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-  // ===== language toggle (reload same path) =====
+  // language buttons
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
@@ -515,225 +303,132 @@ body::before,body::after{pointer-events:none!important;z-index:0!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== accordion (single-open, never-stuck) =====
-  var ids=["c1","c2","c3","c4","c5"];
-  function closeAll(){
-    ids.forEach(function(id){
-      var c=document.getElementById(id);
-      if(!c) return;
-      c.classList.remove("open");
-      var v=c.querySelector(".chev");
-      if(v) v.textContent="▸";
-    });
-  }
-  function bindCard(id){
-    var c=document.getElementById(id);
-    if(!c) return;
-    var head=c.querySelector(".head");
-    var v=c.querySelector(".chev");
-    function act(){
-      var willOpen=!c.classList.contains("open");
-      closeAll();
-      if(willOpen){ c.classList.add("open"); if(v) v.textContent="▾"; }
-    }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  ids.forEach(bindCard);
+  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
-  // ===== COPY (dense; no diagnostic jargon) =====
-  var COPY={
-    en:{
-      head:{
-        h0:"The map before the movement",
-        p0a:"Most “big ideas” fail for one simple reason: people can’t see the full system. They see pieces — products, teams, pages, tools — but they can’t see what is connected, what is changing, and what will break when it scales.",
-        p0b:"This site is built to make the system visible, measurable, and navigable — so you can move fast without guessing.",
-        r0:"Rule: big ideas are allowed — but every statement must stay tied to a clear boundary. If something is not measured yet, it stays labeled as not measured."
-      },
-      quick:{
-        qt1:"I want direction", qs1:"Use the Compass. Pick a lane. Enter cleanly.",
-        qt2:"I want the tools", qs2:"Products are adoptable surfaces: energy, education, software.",
-        qt3:"I want the frontier", qs3:"Explore is where vision lives — still bounded and labeled.",
-        qt4:"I just want the hub", qs4:"Enter is the launchpad when you already know where you’re going."
-      },
-      c1:{
-        p1a:"In the real world, the failure pattern repeats: people try to scale while they’re still unsure what’s true. When the system gets bigger, small mismatches multiply — and what looked like a tiny gap becomes a hard break.",
-        p1b:"The result is predictable: confusion, wasted motion, and arguments that feel emotional but are really structural. This page exists to fix that at the entry point.",
-        u:["Connections are hidden until it’s too late.","Labels change and people stop meaning the same thing.","Small issues multiply when you scale.","Decisions get made without a clean map."]
-      },
-      c2:{
-        p2a:"We built a finite navigation spine. That means: a small set of stable lanes, stable labels, and stable routes. You should never have to guess where something lives.",
-        p2b:"We also separate three kinds of content: what is usable now, what is measurable now, and what is vision. Vision is welcome — but it stays labeled as vision until it becomes measurable.",
-        u:["Stable lanes instead of infinite menus.","Stable labels instead of synonym drift.","Clear “usable / measurable / vision” separation.","Every block ends with a jump point."]
-      },
-      c3:{
-        p3a:"If you only remember one method, use this: pick a lane, open one block, read one paragraph, then jump. The site is designed to prevent wandering.",
-        p3b:"Compass is for directional navigation. Products is for usable surfaces. Explore is for frontier vision. Laws is for boundaries. Gauges is for live measurement.",
-        u:["Compass: pick a direction fast.","Products: adoptable tools.","Explore: frontier (labeled).","Laws: boundaries and rules.","Gauges: live measurement surfaces."]
-      },
-      c4:{
-        p4a:"Frontier is not fantasy. Frontier here means: ambitious work, with honest labeling. If something is not measured yet, it is not spoken as if it is.",
-        p4b:"That’s how you keep credibility while still aiming high. We treat progress as staged: build, test, measure, then expand.",
-        u:["Vision is allowed — labeling is required.","No silent upgrades in meaning.","No “trust me” posture.","Stage first, scale second."]
-      },
-      c5:{
-        p5a:"If you’re new, start calm: Prelude → Compass → pick a lane. If you’re urgent, start directional: Compass first. If you’re building, start with tools: Products first.",
-        p5b:"And if you want the simplest entry: Door is the positioning, Prelude is the explanation, Compass is the steering wheel, Enter is the utility hub.",
-        u:["New: read Prelude then open Compass.","Urgent: open Compass now.","Builder: open Products now.","Vision: open Explore (labeled)."]
-      },
-      footer:"Prelude is the calm entry. Compass is the fast entry. Enter is the utility entry."
+  document.getElementById("p0").textContent = T(
+    "You’re here because something needs an answer: a decision, a risk, a direction, a build. And right now, the wiring is hard to see.",
+    "你来这里，是因为某个东西需要答案：一个决策、一个风险、一个方向、一次构建。而此刻，线路不够清晰。",
+    "Estás aquí porque algo necesita una respuesta: una decisión, un riesgo, una dirección, una construcción. Y ahora mismo el cableado no se ve claro."
+  );
+
+  document.getElementById("r0").textContent = T(
+    "Prelude is the ramp: we name the problem in human terms, show how it is mapped into a finite lattice, and route you to the exact layer that can answer your question.",
+    "前置页是坡道：用人话讲清问题，说明我们如何把它映射进有限晶格，然后把你路由到能回答你问题的那一层。",
+    "El Preludio es la rampa: nombramos el problema en palabras humanas, mostramos cómo se mapea a un lattice finito y te enrutamos a la capa exacta que puede responder."
+  );
+
+  document.getElementById("band").textContent = T(
+    "THE RAMP (ONE THING AT A TIME)",
+    "坡道（一次只看一件事）",
+    "LA RAMPA (UNA COSA A LA VEZ)"
+  );
+
+  var ROWS=[
+    {
+      t:T("What is breaking in the world?","世界哪里在坏？","¿Qué se está rompiendo?"),
+      s:T("Not people. Systems. Shared dependencies. Hidden correlation.","不是人坏，是系统坏：共享依赖与隐藏相关。","No es la gente. Son sistemas: dependencias compartidas y correlación oculta."),
+      p:[
+        T(
+          "When many parts depend on the same unseen thing, they fail together. That’s why big projects collapse ‘suddenly’—the warning was there, but it was not visible.",
+          "当许多部分依赖同一条暗线，它们会一起坏。这就是大项目为何会“突然”崩：预警一直在，只是看不见。",
+          "Cuando muchas partes dependen de lo mismo sin verlo, fallan juntas. Por eso los proyectos grandes colapsan ‘de repente’: la advertencia estaba, pero era invisible."
+        ),
+        T(
+          "So the first job is visibility: map the wiring into a finite structure that can be inspected.",
+          "所以第一步是可见性：把线路映射成可检查的有限结构。",
+          "Primer paso: visibilidad. Mapear el cableado a una estructura finita inspeccionable."
+        )
+      ]
     },
-
-    zh:{
-      head:{
-        h0:"行动之前，先有地图",
-        p0a:"多数“大主意”失败只有一个原因：人看不见完整系统。人看见产品、团队、页面、工具，却看不见连接关系、变化路径、以及规模化后会在哪里断裂。",
-        p0b:"这个网站的目的就是把系统变得可见、可测、可导航——让你更快前进，而不是靠猜。",
-        r0:"规则：允许大想法——但每一句话都必须绑定清晰边界。没测量到的内容必须明确标注为“未测量”。"
-      },
-      quick:{
-        qt1:"我想要方向", qs1:"用指南针。选一条路，干净进入。",
-        qt2:"我想要工具", qs2:"产品是可采纳执行面：能源、教育、软件。",
-        qt3:"我想看前沿", qs3:"探索承载愿景——仍然有界、有标注。",
-        qt4:"我只要枢纽", qs4:"进入页是发射台：你已知道要去哪。"
-      },
-      c1:{
-        p1a:"现实世界里失败模式反复出现：在还不确定“什么是真的”时就开始扩张。系统一变大，小偏差会成倍放大——小缝变成硬断。",
-        p1b:"结果也很固定：困惑、浪费动作、争论。表面像情绪问题，本质是结构问题。本页就是在入口处解决它。",
-        u:["连接关系直到太晚才被看见。","标签变化后人不再说同一种意思。","规模化会把小问题放大。","没有干净地图就做决定。"]
-      },
-      c2:{
-        p2a:"我们做的是有限的导航主轴：少量稳定通道、稳定标签、稳定路由。你不该靠猜去找东西。",
-        p2b:"我们也分开三类内容：现在可用、现在可测、以及愿景。愿景欢迎，但在可测之前必须一直标注为愿景。",
-        u:["稳定通道，而不是无限菜单。","稳定标签，而不是同义乱飞。","明确区分“可用/可测/愿景”。","每段内容末尾都有跳转点。"]
-      },
-      c3:{
-        p3a:"如果只记住一个用法：选一条通道，打开一块内容，读一段，然后跳转。网站被设计成不让你迷路。",
-        p3b:"指南针负责方向；产品负责可用；探索负责前沿愿景；法则负责边界；量规负责实时测量。",
-        u:["指南针：快速选方向。","产品：可采纳工具。","探索：前沿（有标注）。","法则：边界与规则。","量规：实时测量面。"]
-      },
-      c4:{
-        p4a:"这里的前沿不是幻想。前沿的意思是：雄心很大，但标注必须诚实。没测量到的东西，就不能用“已经实现”的口吻说。",
-        p4b:"这就是如何在保持可信的同时追求高目标：阶段化推进——先建、再测、再扩。",
-        u:["允许愿景——必须标注。","含义不允许静默升级。","拒绝“信我”姿态。","先阶段化，再规模化。"]
-      },
-      c5:{
-        p5a:"新手：前置页→指南针→选路。着急：先开指南针。构建者：先开产品。想看愿景：开探索（有标注）。",
-        p5b:"最简单的理解：Door 是定位，Prelude 是解释，Compass 是方向盘，Enter 是工具枢纽。",
-        u:["新手：读前置页再进指南针。","着急：直接开指南针。","构建：直接开产品。","愿景：开探索（有标注）。"]
-      },
-      footer:"前置页是平静入口。指南针是快速入口。进入页是工具入口。"
+    {
+      t:T("What does ‘finite measure’ mean here?","这里的“有限测度”是什么意思？","¿Qué significa ‘medida finita’ aquí?"),
+      s:T("It means the problem is not endless. It can be enumerated.","意思是问题不是无穷的，它能被枚举。","Significa que el problema no es infinito: se puede enumerar."),
+      p:[
+        T(
+          "A finite lattice is a way to stop hand-waving. You define the dimensions you care about, enumerate the states, and then you can compare ‘before vs after’ without changing the story.",
+          "有限晶格用来终止空谈：定义你关心的维度，枚举状态，然后你就能在不改故事的前提下比较“前 vs 后”。",
+          "Un lattice finito elimina el humo: defines dimensiones, enumeras estados y comparas ‘antes vs después’ sin cambiar el relato."
+        ),
+        T(
+          "That’s how you turn big, scary problems into something you can actually steer.",
+          "这样，巨大而可怕的问题才变成可操控的方向盘。",
+          "Así conviertes problemas enormes en algo que puedes dirigir."
+        )
+      ]
     },
-
-    es:{
-      head:{
-        h0:"El mapa antes del movimiento",
-        p0a:"La mayoría de las “grandes ideas” fallan por una razón: la gente no puede ver el sistema completo. Ven piezas — productos, equipos, páginas, herramientas — pero no ven conexiones, cambios y dónde se romperá al escalar.",
-        p0b:"Este sitio está construido para hacer el sistema visible, medible y navegable — para avanzar rápido sin adivinar.",
-        r0:"Regla: se permiten ideas grandes — pero cada frase debe quedar atada a un límite claro. Si algo no está medido, se etiqueta como no medido."
-      },
-      quick:{
-        qt1:"Quiero dirección", qs1:"Usa la brújula. Elige un carril. Entra limpio.",
-        qt2:"Quiero herramientas", qs2:"Productos son superficies adoptables: energía, educación, software.",
-        qt3:"Quiero frontera", qs3:"Explorar es visión — aún acotada y etiquetada.",
-        qt4:"Solo quiero el hub", qs4:"Entrar es la lanzadera cuando ya sabes a dónde vas."
-      },
-      c1:{
-        p1a:"El patrón de fallo se repite: la gente intenta escalar antes de saber qué es verdad. Cuando crece el sistema, pequeños desajustes se multiplican hasta romper.",
-        p1b:"El resultado: confusión, esfuerzo perdido y discusiones que parecen emocionales pero son estructurales. Esta página existe para corregirlo desde la entrada.",
-        u:["Conexiones ocultas hasta tarde.","Etiquetas cambian y ya no significan lo mismo.","Problemas pequeños se amplifican al escalar.","Decisiones sin mapa limpio."]
-      },
-      c2:{
-        p2a:"Construimos una columna de navegación finita: carriles estables, etiquetas estables, rutas estables. No deberías adivinar dónde vive algo.",
-        p2b:"Separamos tres clases de contenido: usable ahora, medible ahora y visión. La visión es bienvenida, pero se queda etiquetada hasta ser medible.",
-        u:["Carriles estables, no menús infinitos.","Etiquetas estables, no sinónimos sueltos.","Separación clara: usable/medible/visión.","Cada bloque termina con un salto."]
-      },
-      c3:{
-        p3a:"Método de 60 segundos: elige carril, abre un bloque, lee un párrafo, salta. El sitio evita el vagar.",
-        p3b:"Brújula es dirección. Productos es lo usable. Explorar es visión. Leyes son límites. Medidores son medición en vivo.",
-        u:["Brújula: dirección rápida.","Productos: herramientas adoptables.","Explorar: frontera (etiquetada).","Leyes: límites y reglas.","Medidores: superficies de medición."]
-      },
-      c4:{
-        p4a:"Frontera aquí no es fantasía. Es ambición con etiquetas honestas. Si algo no está medido, no se habla como si lo estuviera.",
-        p4b:"Así se mantiene credibilidad mientras apuntas alto: construir, probar, medir, y luego expandir.",
-        u:["Visión permitida — etiqueta obligatoria.","Sin upgrades silenciosos de significado.","Sin postura ‘créeme’.","Etapas primero, escala después."]
-      },
-      c5:{
-        p5a:"Nuevo: Preludio → Brújula → carril. Urgente: Brújula primero. Constructor: Productos primero. Visión: Explorar (etiquetado).",
-        p5b:"Lectura simple: Door es posicionamiento, Preludio es explicación, Brújula es volante, Entrar es hub.",
-        u:["Nuevo: lee y luego brújula.","Urgente: abre brújula.","Constructor: abre productos.","Visión: abre explorar."]
-      },
-      footer:"Preludio es entrada calmada. Brújula es entrada rápida. Entrar es entrada utilitaria."
+    {
+      t:T("What layers answer which questions?","哪个问题归哪一层回答？","¿Qué capa responde qué?"),
+      s:T("Map, signals, doctrine, deployment: each has a job.","地图、信号、教义、部署：各司其职。","Mapa, señales, doctrina, despliegue: cada una tiene su trabajo."),
+      p:[
+        T(
+          "Dot.Grid answers: what is connected to what? Gauges answer: what is moving, and how strongly? Laws answer: what may we conclude, given scope and receipts? Products answer: what can you use, right now?",
+          "Dot.Grid 回答：谁连着谁？量规回答：什么在动、动得多强？法则回答：在范围与收据下，我们允许得出什么结论？产品回答：你现在能用什么？",
+          "Dot.Grid responde: ¿qué está conectado con qué? Medidores: ¿qué se mueve y con qué fuerza? Leyes: ¿qué podemos concluir con alcance y recibos? Productos: ¿qué puedes usar hoy?"
+        ),
+        T(
+          "Prelude is where you learn the lane before you choose speed.",
+          "前置页让你先认路，再选速度。",
+          "El Preludio te enseña el carril antes de elegir velocidad."
+        )
+      ]
+    },
+    {
+      t:T("What should you do next?","你下一步该做什么？","¿Qué haces ahora?"),
+      s:T("Choose your entry posture: Compass, Tools, Proof, or Signals.","选择入口姿态：指南针、工具、证明或信号。","Elige postura de entrada: brújula, herramientas, prueba o señales."),
+      p:[
+        T(
+          "If you want direction, go to Compass. If you want something deployable, go to Products. If you want rules, go to Laws. If you want measurements, go to Gauges.",
+          "要方向就去指南针；要可部署就去产品；要规则就去法则；要测量就去量规。",
+          "Si quieres dirección, Brújula. Si quieres algo usable, Productos. Si quieres reglas, Leyes. Si quieres medición, Medidores."
+        ),
+        T(
+          "And if you’re not sure, start with one map pass: identify scope and list the surfaces you think are involved. That alone collapses confusion.",
+          "如果你不确定，就先做一次画图：确定范围并列出你认为涉及的执行面。仅此一步就能大幅压缩困惑。",
+          "Si no estás seguro, haz un pase de mapa: define alcance y lista superficies involucradas. Eso solo ya reduce la confusión."
+        )
+      ]
     }
-  };
+  ];
 
-  function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+  var stack=document.getElementById("stack");
+  function renderStack(){
+    stack.innerHTML="";
+    ROWS.forEach(function(r,idx){
+      var row=document.createElement("div"); row.className="row";
+      var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
+      var left=document.createElement("div"); left.className="left2";
+      var title=document.createElement("div"); title.className="title"; title.textContent=r.t;
+      var sub=document.createElement("div"); sub.className="sub"; sub.textContent=r.s;
+      left.appendChild(title); left.appendChild(sub);
+      var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
+      head.appendChild(left); head.appendChild(chev);
 
-  var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+      var body=document.createElement("div"); body.className="body";
+      r.p.forEach(function(pp){
+        var p=document.createElement("p"); p.className="bp"; p.textContent=pp; body.appendChild(p);
+      });
 
-  // hero
-  setText("h0", P.head.h0);
-  setText("p0a", P.head.p0a);
-  setText("p0b", P.head.p0b);
-  setText("r0", P.head.r0);
+      function closeAll(){
+        stack.querySelectorAll(".row").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev"); if(c) c.textContent="▸";
+        });
+      }
+      function toggle(){
+        var open=!row.classList.contains("open");
+        closeAll();
+        if(open){ row.classList.add("open"); chev.textContent="▾"; }
+      }
+      head.addEventListener("click", toggle);
+      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
 
-  // quick tiles
-  setText("qt1", P.quick.qt1); setText("qs1", P.quick.qs1);
-  setText("qt2", P.quick.qt2); setText("qs2", P.quick.qs2);
-  setText("qt3", P.quick.qt3); setText("qs3", P.quick.qs3);
-  setText("qt4", P.quick.qt4); setText("qs4", P.quick.qs4);
+      row.appendChild(head); row.appendChild(body);
+      stack.appendChild(row);
 
-  // bodies + lists
-  function fillList(id, arr){
-    var ul=document.getElementById(id);
-    ul.innerHTML="";
-    arr.forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      ul.appendChild(li);
+      if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
     });
   }
-
-  setText("p1a", P.c1.p1a); setText("p1b", P.c1.p1b); fillList("u1", P.c1.u);
-  setText("p2a", P.c2.p2a); setText("p2b", P.c2.p2b); fillList("u2", P.c2.u);
-  setText("p3a", P.c3.p3a); setText("p3b", P.c3.p3b); fillList("u3", P.c3.u);
-  setText("p4a", P.c4.p4a); setText("p4b", P.c4.p4b); fillList("u4", P.c4.u);
-  setText("p5a", P.c5.p5a); setText("p5b", P.c5.p5b); fillList("u5", P.c5.u);
-
-  setText("f0", P.footer);
-
-  // ===== labels per language (small) =====
-  if(lang==="zh"){
-    setText("btnDoor","门");
-    setText("btnCompass","指南针");
-    setText("btnEnter","进入");
-    setText("qCompass","打开指南针");
-    setText("qProducts","打开产品");
-    setText("qExplore","打开探索");
-    setText("qEnter","打开进入");
-    setText("j2a","返回门");
-    setText("j3b","打开法则");
-    setText("j4b","打开量规");
-  }else if(lang==="es"){
-    setText("btnDoor","PUERTA");
-    setText("btnCompass","BRÚJULA");
-    setText("btnEnter","ENTRAR");
-    setText("qCompass","ABRIR BRÚJULA");
-    setText("qProducts","ABRIR PRODUCTOS");
-    setText("qExplore","ABRIR EXPLORAR");
-    setText("qEnter","ABRIR ENTRAR");
-  }
-
-  // Open first card by default
-  closeAll();
-  var c1=document.getElementById("c1");
-  if(c1){
-    c1.classList.add("open");
-    document.getElementById("v1").textContent="▾";
-  }
-
+  renderStack();
 })();
 </script>
 

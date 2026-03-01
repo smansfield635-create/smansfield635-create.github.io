@@ -1,23 +1,9 @@
-<!-- TNT — /explore/index.html
-     EXPLORE · BUILDER ROUTER (RESTORED) · SINGLE-OPEN ACCORDION · 3 LANG (EN/中文/ES)
-     PURPOSE:
-       - Stop routing everything to software by mistake
-       - Provide correct build routing for: Frontier / Vision / Language / Roadmap / Risk-Capital / Water/Waste/Shimmer shells
-     LENSES (NO NEW gd_* KEYS):
-       - FORMAL/INFORMAL uses gd_style
-       - PLATFORM/ENGINEERING uses gd_depth (explore|learn)
-     RULES:
-       - No modals
-       - One row open at a time
-       - State carry preserved
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE</title>
+<title>Explore · Frontier</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -25,396 +11,218 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:94px;
-  --stroke:rgba(255,255,255,.10);
-  --inkA:rgba(12,22,38,.90);
-  --inkB:rgba(6,10,16,.96);
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalR:rgba(255,70,70,.10);
+  --dockH:90px;
+  --inkA:rgba(10,18,30,.94);
+  --inkB:rgba(5,9,14,.98);
+  --gold:rgba(212,175,55,.55);
+  --opal:rgba(210,190,255,.14);
+  --red:rgba(255,80,80,.16);
 }
 
 .page{
-  width:min(1100px,94vw);
+  width:min(1200px,94vw);
   margin:0 auto;
-  padding:88px 0 calc(var(--dockH) + 18px);
-  display:flex;flex-direction:column;gap:12px;position:relative;z-index:10;
+  padding:90px 0 calc(var(--dockH)+20px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
-
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
 
 .header{
-  border:1px solid var(--stroke);
-  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:26px;
+  padding:22px 24px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalR), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.12));
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:16px;
+    radial-gradient(circle at 20% 20%, var(--opal), transparent 65%),
+    radial-gradient(circle at 80% 80%, var(--red), transparent 70%),
+    linear-gradient(160deg,var(--inkA),var(--inkB));
+  box-shadow:0 40px 140px rgba(0,0,0,.65);
 }
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
-.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.7px}
-.s{margin:10px 0 0;font-size:15px;opacity:.90;line-height:1.55;max-width:980px}
-.fine{margin-top:10px;font-size:13px;opacity:.74;line-height:1.45}
 
-.lenses{
-  margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+.k{
+  font-size:12px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.70;
+  margin:0 0 10px;
 }
-.pills{display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-  padding:10px 14px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+
+.t{
+  font-size:40px;
+  font-weight:950;
+  letter-spacing:1px;
+  margin:0 0 14px;
+}
+
+.s{
+  font-size:18px;
+  line-height:1.65;
+  opacity:.92;
+  max-width:980px;
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.panel{
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
-}
-.pill.red.active{
-  border-color:rgba(255,90,90,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,70,70,.18);
-}
-
-.band{
-  padding:10px 12px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88);
-}
-
-.list{display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  border-radius:24px;
   overflow:hidden;
+  background:linear-gradient(145deg,rgba(17,22,28,.90),rgba(10,14,20,.96));
+  box-shadow:0 25px 90px rgba(0,0,0,.6);
 }
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px;cursor:pointer;touch-action:manipulation;
+
+.panelHead{
+  padding:18px 20px;
+  cursor:pointer;
+  font-weight:900;
+  font-size:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.left{display:flex;gap:12px;min-width:0;align-items:flex-start}
-.mark{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--c);margin-top:4px;box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35)}
-.title{font-weight:950;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sub{margin-top:8px;font-size:13.75px;opacity:.84;line-height:1.35;max-width:92ch}
-.chev{font-size:16px;opacity:.75;margin-top:2px}
-.body{
+
+.panelBody{
   display:none;
-  padding:16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+  padding:20px;
+  font-size:17px;
+  line-height:1.75;
+  opacity:.88;
 }
-.row.open .body{display:block}
-.p{margin:0;color:rgba(255,255,255,.88);line-height:1.7;font-size:14.5px}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-.actions .btn{padding:10px 14px;border-radius:999px;white-space:nowrap}
+
+.panel.open .panelBody{display:block}
+
+.actions{
+  margin-top:20px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.actions .btn{
+  padding:12px 18px;
+  border-radius:999px;
+}
 
 .dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
+  position:fixed;
+  left:50%;
+  bottom:12px;
   transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  width:min(1000px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
   gap:10px;
+  padding:12px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.30);
+  backdrop-filter:blur(12px);
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media(max-width:520px){
-  :root{--dockH:106px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-}
+.dock .btn{padding:12px 14px;border-radius:999px}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="page">
 
   <div class="header">
     <p class="k" id="hk">EXPLORE</p>
-    <h1 class="t" id="ht">BUILD ROUTES</h1>
-    <p class="s" id="hs"></p>
-    <div class="fine" id="fine"></div>
-
-    <div class="lenses">
-      <div class="pills">
-        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
-        <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
-      </div>
-      <div class="pills">
-        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
-        <button class="pill" id="pillFormal" type="button">FORMAL</button>
-      </div>
-    </div>
+    <h1 class="t" id="ht">THE FRONTIER IS STRUCTURED</h1>
+    <p class="s" id="hs">
+      What if the loudest claims of our time could be measured, mapped, and stabilized?  
+      What if infrastructure, risk, energy, governance, and software were not separate problems —  
+      but coordinates inside one geometry?
+    </p>
   </div>
 
-  <div class="band" id="bandA">BUILD FIRST</div>
-  <div class="list" id="list"></div>
+  <div class="accordion" id="accordion">
+
+    <div class="panel">
+      <div class="panelHead">Energy & Industrial Systems <span>▸</span></div>
+      <div class="panelBody">
+        Industrial substitution. Waste-to-energy. Hydrogen recovery. Grid stabilization.  
+        Not as marketing claims — but as bounded, measurable systems.
+
+        <div class="actions">
+          <a class="btn" href="/explore/energy/">OPEN ENERGY</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelHead">Urban & Resource Architecture <span>▸</span></div>
+      <div class="panelBody">
+        Closed-loop habitats. Water optimization. Urban OS.  
+        Integrated resource systems under measurable constraint.
+
+        <div class="actions">
+          <a class="btn" href="/explore/infrastructure/">OPEN INFRASTRUCTURE</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelHead">Risk, Governance & Finance <span>▸</span></div>
+      <div class="panelBody">
+        Insurance models. Compliance mapping. Contract generation.  
+        Collapse prevention under institutional load.
+
+        <div class="actions">
+          <a class="btn" href="/explore/risk/">OPEN RISK</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panelHead">Software & Core Engines <span>▸</span></div>
+      <div class="panelBody">
+        256-state lattice. UCI Engine. Dot.Grid. Registry backbone.  
+        The machine behind the structure.
+
+        <div class="actions">
+          <a class="btn" href="/products/software/">OPEN SOFTWARE</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
 <nav class="dock">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
 </nav>
 
 <script>
 (function(){
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-  var buildLens = (depth==="learn") ? "engineering" : "platform";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
-  wire("btnDoor","/door/");
-  wire("btnProducts","/products/");
-  wire("btnExit","/index.html");
-  wire("dockHome","/home/");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-
-  // language toggle
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // 4 lenses
-  var pillPlatform=document.getElementById("pillPlatform");
-  var pillEngineering=document.getElementById("pillEngineering");
-  var pillInformal=document.getElementById("pillInformal");
-  var pillFormal=document.getElementById("pillFormal");
-
-  function paintLenses(){
-    pillPlatform.classList.toggle("active", buildLens==="platform");
-    pillEngineering.classList.toggle("active", buildLens==="engineering");
-    pillInformal.classList.toggle("active", style==="informal");
-    pillFormal.classList.toggle("active", style==="formal");
-  }
-  paintLenses();
-
-  function setBuild(next){
-    buildLens=(next==="engineering")?"engineering":"platform";
-    depth=(buildLens==="engineering")?"learn":"explore";
-    try{ localStorage.setItem("gd_depth",depth);}catch(e){}
-    window.location.href = window.location.pathname + q({depth:depth});
-  }
-  function setVoice(next){
-    style=(next==="formal")?"formal":"informal";
-    try{ localStorage.setItem("gd_style",style);}catch(e){}
-    window.location.href = window.location.pathname + q({style:style});
-  }
-  pillPlatform.addEventListener("click", function(){ setBuild("platform"); });
-  pillEngineering.addEventListener("click", function(){ setBuild("engineering"); });
-  pillInformal.addEventListener("click", function(){ setVoice("informal"); });
-  pillFormal.addEventListener("click", function(){ setVoice("formal"); });
-
-  function pick(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-
-  // header copy
-  var hc = (function(){
-    var informal=(style==="informal");
-    var platform=(buildLens==="platform");
-    if(lang==="zh"){
-      if(informal && platform) return ["你要建什么？先把路线搭起来。这里给的是“建站路径”：先建壳，路由不断，用户不迷路。","平台姿态：先可用、再更深。"];
-      if(informal && !platform) return ["你要建什么？先把约束搭起来。这里给的是“结构路径”：先可复现、再扩张、再自动化。","工程姿态：先守恒、再优化。"];
-      if(!informal && platform) return ["本页提供构建路由：先补齐壳页与跳转，再深化内容。","平台姿态强调一致交互与稳定路由。"];
-      return ["本页提供工程构建序列：定义范围→收据→闸门→输出→回放。","工程姿态强调可复现与可审计。"];
-    }
-    if(lang==="es"){
-      if(informal && platform) return ["¿Qué vas a construir? Primero rutas. Aquí están las rutas de construcción: carcasas primero, navegación estable, sin perder usuarios.","Postura plataforma: usable primero, profundo después."];
-      if(informal && !platform) return ["¿Qué vas a construir? Primero restricciones. Secuencia estructural: reproducible → escala → automatiza.","Postura ingeniería: conservación primero, optimización después."];
-      if(!informal && platform) return ["Este hub define rutas de construcción: completar carcasas y saltos antes de profundizar contenido.","Plataforma: interacción uniforme y rutas estables."];
-      return ["Este hub define secuencia de ingeniería: alcance→recibos→compuertas→salidas→replay.","Ingeniería: reproducibilidad y auditabilidad."];
-    }
-    if(informal && platform) return ["What are you building? Routes first. This page is the build router: shells first, stable navigation, no user confusion.","Platform posture: usable first, deep second."];
-    if(informal && !platform) return ["What are you building? Constraints first. Structural sequence: reproducible → scale → automate.","Engineering posture: conservation first, optimization second."];
-    if(!informal && platform) return ["This hub defines build routing: complete shells and jumps before deep content.","Platform posture: uniform interaction and stable routes."];
-    return ["This hub defines engineering build sequence: scope→receipts→gates→outputs→replay.","Engineering posture: reproducibility and auditability."];
-  })();
-  document.getElementById("hs").textContent=hc[0];
-  document.getElementById("fine").textContent=hc[1];
-
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="探索";
-    document.getElementById("ht").textContent="构建路由";
-    document.getElementById("bandA").textContent="先建这些";
-    document.getElementById("btnProducts").textContent="产品";
-    document.getElementById("btnExit").textContent="退出";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("dockHome").textContent="主页";
-    document.getElementById("dockExplore").textContent="探索";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    pillPlatform.textContent="平台";
-    pillEngineering.textContent="工程";
-    pillInformal.textContent="通俗";
-    pillFormal.textContent="正式";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="EXPLORAR";
-    document.getElementById("ht").textContent="RUTAS DE CONSTRUCCIÓN";
-    document.getElementById("bandA").textContent="CONSTRUIR PRIMERO";
-    document.getElementById("btnProducts").textContent="PRODUCTOS";
-    document.getElementById("btnExit").textContent="SALIR";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("dockHome").textContent="INICIO";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    pillPlatform.textContent="PLATAFORMA";
-    pillEngineering.textContent="INGENIERÍA";
-    pillInformal.textContent="INFORMAL";
-    pillFormal.textContent="FORMAL";
-  }
-
-  // Build list (correct routing; NO accidental software collapse)
-  var ITEMS = [
-    {c:"#D4AF37", t:pick("Frontier Board","前沿板","Tablero Frontera"), s:pick("Where vision pages live, bounded and labeled.","愿景页所在：有界且有标签。","Dónde vive la visión: acotada y etiquetada."), href:"/explore/frontier/"},
-    {c:"#EF4444", t:pick("Vision (SHIMMER)","愿景（SHIMMER）","Visión (SHIMMER)"), s:pick("Urban OS + Closed Loop Habitats + future shells.","城市OS + 闭环栖息地 + 未来壳。","Urban OS + hábitats cerrados + carcasas futuras."), href:"/explore/frontier/vision/"},
-    {c:"#60A5FA", t:pick("Language Lane","语言干线","Carril Lenguaje"), s:pick("Terms, encoding, and drift prevention.","术语、编码、阻止含义漂移。","Términos, codificación y prevención de deriva."), href:"/explore/innovation/language/"},
-    {c:"#93C5FD", t:pick("Risk & Capital Spine","风险与资本主脊柱","Espina Riesgo/Capital"), s:pick("Insurance + contracts + compliance + crypto.","保险+合约+合规+加密资产。","Seguro + contratos + cumplimiento + cripto."), href:"/products/risk-capital/"},
-    {c:"#34D399", t:pick("Roadmap Surface","路线图","Hoja de ruta"), s:pick("Bounded planning. No promises. Gates only.","有界规划：不承诺，只闸门。","Planificación acotada: sin promesas, solo compuertas."), href:"/explore/roadmap/"}
-  ];
-
-  var list=document.getElementById("list");
-
-  function makeRow(it){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", it.c);
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.tabIndex=0; head.setAttribute("role","button");
-
-    var left=document.createElement("div"); left.className="left";
-    var mark=document.createElement("div"); mark.className="mark"; mark.style.background=it.c;
-
-    var tb=document.createElement("div"); tb.style.minWidth="0";
-    var title=document.createElement("div"); title.className="title"; title.textContent=it.t;
-    var sub=document.createElement("div"); sub.className="sub"; sub.textContent=it.s;
-    tb.appendChild(title); tb.appendChild(sub);
-    left.appendChild(mark); left.appendChild(tb);
-
-    var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
-    head.appendChild(left); head.appendChild(chev);
-
-    var body=document.createElement("div"); body.className="body";
-    var p=document.createElement("p"); p.className="p";
-    p.textContent = (style==="informal")
-      ? pick("Open this route if you want to build that lane next. This avoids accidental detours.","想建这一条，就从这里进：避免误跳。","Abre esta ruta para construir ese carril sin desvíos accidentales.")
-      : pick("This is a build router entry. Route stability is required before content deepening.","这是构建路由入口：先稳路由，再加深内容。","Entrada de enrutamiento de construcción: estabilidad antes de profundidad.");
-    body.appendChild(p);
-
-    var actions=document.createElement("div"); actions.className="actions";
-    var a=document.createElement("a"); a.className="btn"; a.textContent=openLabel()+": "+pick("OPEN","打开","ABRIR"); a.href=it.href+q();
-    actions.appendChild(a); body.appendChild(actions);
-
-    head.addEventListener("click", function(){
-      var willOpen=!row.classList.contains("open");
-      list.querySelectorAll(".row").forEach(function(x){
+  var panels=document.querySelectorAll(".panel");
+  panels.forEach(function(p){
+    var head=p.querySelector(".panelHead");
+    var icon=head.querySelector("span");
+    head.addEventListener("click",function(){
+      var open=!p.classList.contains("open");
+      panels.forEach(function(x){
         x.classList.remove("open");
-        var c=x.querySelector(".chev"); if(c) c.textContent="▸";
+        x.querySelector("span").textContent="▸";
       });
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
+      if(open){
+        p.classList.add("open");
+        icon.textContent="▾";
+      }
     });
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); head.click(); }
-    });
-
-    row.appendChild(head); row.appendChild(body);
-    return row;
-  }
-
-  list.innerHTML="";
-  ITEMS.forEach(function(it,i){
-    var r=makeRow(it);
-    list.appendChild(r);
-    if(i===0){ r.classList.add("open"); r.querySelector(".chev").textContent="▾"; }
   });
-
 })();
 </script>
 

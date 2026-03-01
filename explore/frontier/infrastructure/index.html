@@ -1,0 +1,938 @@
+<!-- TNT — /explore/frontier/infrastructure/index.html
+     FRONTIER · INFRASTRUCTURE (INTEGRATION LAYER)
+     PURPOSE:
+       - Integrate Water / Waste / Energy / Urban / Closed-Loop into ONE deployable map
+       - Provide deployment + capital + governance posture (no hype, support-bounded language)
+     REQUIREMENTS:
+       - Trilingual: EN / 中文 / ES (page-level)
+       - 4 lenses (no new gd_* keys):
+           1) PLATFORM vs ENGINEERING  (query param: lane=platform|engineering)
+           2) INFORMAL vs FORMAL       (uses gd_style + query param style=formal|informal)
+       - Single-open accordion (one row open at a time)
+       - Inside each row: 3 sub-bubbles (Concept / Build Now / Roadmap) tap-to-open
+       - Monument typography (bigger print)
+       - Dark opal + red (no washed-out blue)
+       - No modals, no overlays, no inline onclick
+       - Canon state carry: lang/style/time/depth preserved on every jump
+       - Uses ui.css + branch.css + instruments.js only
+       - ui.css owns html/body background (NO overrides)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · INFRASTRUCTURE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+/* ===== TOKENS ===== */
+:root{
+  --dockH:92px;
+
+  /* dark opal + red (NO blue wash) */
+  --opalA:rgba(210,190,255,.12);
+  --opalB:rgba(120,70,255,.08);
+  --opalC:rgba(255,70,70,.10);
+
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+
+  --goldSoft:rgba(212,175,55,.28);
+  --redGlow:rgba(255,70,70,.18);
+}
+
+/* ===== PAGE WRAP ===== */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* ===== TOP CONTROLS ===== */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  align-items:center;
+}
+.top .btn{white-space:nowrap}
+
+/* ===== HEADER ===== */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 90px rgba(0,0,0,.58);
+  padding:16px 16px 14px;
+}
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.8px;line-height:1.08}
+.s{
+  margin:12px 0 0;
+  font-size:16px;
+  opacity:.90;
+  line-height:1.55;
+  max-width:980px;
+  color:var(--txt);
+}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  font-size:13.5px;
+  color:rgba(255,255,255,.82);
+  line-height:1.45;
+}
+
+/* ===== LENSES ROW ===== */
+.lenses{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+}
+.pill.red.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--redGlow);
+}
+
+/* ===== BAND ===== */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+  font-size:14px;
+}
+
+/* ===== ACCORDION (single open) ===== */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 56px rgba(0,0,0,.62);
+  overflow:hidden;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  min-width:0;
+}
+.mark{
+  width:10px;height:10px;
+  transform:rotate(45deg);
+  border-radius:3px;
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-top:4px;
+}
+.titleBlock{min-width:0}
+.title{
+  font-weight:950;
+  letter-spacing:.25px;
+  font-size:18px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;
+  font-size:14px;
+  opacity:.82;
+  line-height:1.45;
+  max-width:92ch;
+}
+.chev{font-size:18px;opacity:.78;flex:0 0 auto;margin-top:2px}
+
+.body{
+  display:none;
+  padding:16px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
+
+.pdesc{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  line-height:1.65;
+  font-size:14.5px;
+}
+.pdesc + .pdesc{margin-top:10px}
+
+/* Sub-bubbles (Concept / Build Now / Roadmap) */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:950;
+  letter-spacing:.15px;
+  font-size:14.5px;
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.78);
+  line-height:1.7;
+  display:none;
+  font-size:14px;
+}
+.bubble.open p{display:block}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+.actions .btn{
+  padding:10px 14px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+/* ===== DOCK ===== */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:104px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .title{font-size:17px}
+  .s{font-size:15px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/explore/frontier/">BACK</a>
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnHome" href="/home/">HOME</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header" aria-label="Header">
+    <p class="k" id="hk">FRONTIER</p>
+    <h1 class="t" id="ht">INFRASTRUCTURE INTEGRATION</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="lenses" aria-label="Lenses">
+      <div class="pills" aria-label="Lane">
+        <button class="pill red active" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills" aria-label="Tone">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" id="band">INTEGRATION MAP</div>
+  <div class="list" id="list"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockFrontier" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ===== canonical state (no new gd_* keys) =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || "platform"; // platform|engineering (URL-only, not gd_*)
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    var A=(over&&over.lane)?over.lane:lane;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D)+
+           "&lane="+encodeURIComponent(A);
+  }
+
+  // ===== wire nav =====
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnBack","/explore/frontier/");
+  wire("btnDoor","/door/");
+  wire("btnHome","/home/");
+  wire("dockExplore","/explore/");
+  wire("dockFrontier","/explore/frontier/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  // ===== language toggle (reload same path) =====
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ===== pills (lane + tone) =====
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+
+  function paintPills(){
+    pillPlatform.classList.toggle("active", lane==="platform");
+    pillEngineering.classList.toggle("active", lane==="engineering");
+    pillInformal.classList.toggle("active", style==="informal");
+    pillFormal.classList.toggle("active", style==="formal");
+  }
+  paintPills();
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    render();
+    paintPills();
+  }
+  function setTone(next){
+    if(next!=="formal" && next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({style:style}));
+    render();
+    paintPills();
+  }
+
+  pillPlatform.addEventListener("click", function(){ setLane("platform"); });
+  pillEngineering.addEventListener("click", function(){ setLane("engineering"); });
+  pillInformal.addEventListener("click", function(){ setTone("informal"); });
+  pillFormal.addEventListener("click", function(){ setTone("formal"); });
+
+  // ===== copy helpers =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function lensKey(){
+    return (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
+  }
+
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  // ===== header text =====
+  var HEADER = {
+    en:{
+      k:"FRONTIER",
+      t:"INFRASTRUCTURE INTEGRATION",
+      s:"This layer turns frontier shells into a buildable system: water + waste + energy + urban + closed-loop, wired into one deployable map.",
+      r:"Rule: big ideas are welcome. What scales here is structure: clear routes, measurable interfaces, and honest labels."
+    },
+    zh:{
+      k:"前沿",
+      t:"基础设施集成层",
+      s:"这一层把前沿“壳”变成可建系统：水 + 废弃物 + 能源 + 城市 + 闭环，统一接线成可部署地图。",
+      r:"规则：欢迎大想法。这里能规模化的是结构：清晰路由、可测接口、诚实标签。"
+    },
+    es:{
+      k:"FRONTERA",
+      t:"INTEGRACIÓN DE INFRAESTRUCTURA",
+      s:"Esta capa convierte ‘shells’ de frontera en un sistema construible: agua + residuos + energía + urbano + ciclo cerrado, cableado en un mapa desplegable.",
+      r:"Regla: se permiten ideas grandes. Lo que escala aquí es la estructura: rutas claras, interfaces medibles y etiquetas honestas."
+    }
+  };
+
+  // ===== cards =====
+  // Each card has:
+  // - title/sub
+  // - 3 bubbles (concept/build/roadmap)
+  // - jump links to real folders you already have
+  var CARDS = [
+    {
+      id:"system_map",
+      c:"#D4AF37",
+      t:P("The integration promise","集成承诺","La promesa de integración"),
+      s:P("One map, not five disconnected projects.","一张地图，不是五个孤岛。","Un mapa, no cinco proyectos sueltos."),
+      jumps:[
+        {label:P("Frontier Hub","前沿枢纽","Hub Frontera"), href:"/explore/frontier/"},
+        {label:P("Laws","法则","Leyes"), href:"/laws/"},
+        {label:P("Gauges","量规","Medidores"), href:"/gauges/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "People don’t adopt systems they can’t *navigate*. This page is the ‘stitching layer’—it connects the big frontier shells into one calm route so a reader can understand what to open next without guessing.",
+          "人们不会采纳自己无法导航的系统。本页是“缝合层”：把各个前沿壳接成一条安静路线，让读者知道下一步该打开什么，不用猜。",
+          "La gente no adopta lo que no puede navegar. Esta página es la capa de ‘costura’: conecta shells en una ruta calmada para saber qué abrir después sin adivinar."
+        ),
+        platform_formal:P(
+          "This surface is an integration router: it defines how water/waste/energy/urban/closed-loop relate, and it establishes stable jump routes and labels so exploration remains legible under growth.",
+          "本面是集成路由器：定义水/废弃物/能源/城市/闭环之间的关系，并建立稳定跳转与标签，使扩张下仍可读。",
+          "Esta superficie es un router de integración: define relación entre agua/residuos/energía/urbano/ciclo cerrado, con rutas y etiquetas estables para mantener legibilidad al crecer."
+        ),
+        engineering_informal:P(
+          "If these shells stay separate, you’ll scale confusion. Integration means: shared interfaces, shared measurements, and shared failure containment. That’s what makes ‘future tech’ real instead of inspirational.",
+          "如果这些壳一直分开，你扩张的就是困惑。集成意味着：共享接口、共享测量、共享隔离。这才让“未来科技”变成现实，而不是口号。",
+          "Si estos shells quedan separados, escalas confusión. Integración = interfaces compartidas, mediciones compartidas y contención compartida. Eso convierte ‘futuro’ en real, no solo inspirador."
+        ),
+        engineering_formal:P(
+          "Integration is defined by interface contracts: conserved inventories, routing discipline, measurement thresholds, and containment procedures. A shell becomes buildable when its inputs/outputs are declared and replayable.",
+          "集成由接口契约定义：守恒库存、路由纪律、测量阈值、隔离流程。壳在输入/输出可声明且可回放时才可建。",
+          "La integración se define por contratos de interfaz: inventarios conservados, disciplina de ruteo, umbrales de medición y contención. Un shell es construible cuando sus entradas/salidas están declaradas y son re-ejecutables."
+        )
+      }
+    },
+
+    {
+      id:"water",
+      c:"#60A5FA",
+      t:P("Water Systems","水系统","Sistemas de agua"),
+      s:P("Clean water that stays clean under stress.","压力下仍保持清洁的水。","Agua limpia que se mantiene limpia bajo estrés."),
+      jumps:[
+        {label:P("Open Water","打开水系统","Abrir Agua"), href:"/explore/frontier/water/"},
+        {label:P("Open Urban","打开城市","Abrir Urbano"), href:"/explore/frontier/urban/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "Water is the first thing people feel. When water fails, everything else gets emotional. So we route water as a simple story: source → clean → store → verify → reuse. It stays human-first.",
+          "水是人最先感受到的东西。水一出问题，其他都会情绪化。所以水的路由要像简单故事：取水→净化→储存→验证→复用。保持以人为先。",
+          "El agua es lo primero que la gente siente. Cuando falla, todo se vuelve emocional. Por eso la ruteamos como historia simple: fuente → limpiar → almacenar → verificar → reutilizar."
+        ),
+        platform_formal:P(
+          "Water is treated as a routed inventory: characterization → treatment selection → storage control → verification (thresholds + reason codes) → reuse routing.",
+          "水被视为路由库存：表征→工艺选择→储存控制→验证（阈值+原因码）→复用路由。",
+          "El agua se trata como inventario enrutado: caracterización → selección de tratamiento → control de almacenamiento → verificación (umbrales + razones) → ruteo de reutilización."
+        ),
+        engineering_informal:P(
+          "In a closed loop, water is not a utility—it's survival. That’s why water becomes a measurement machine: if you can’t verify it, you can’t trust it.",
+          "在闭环里，水不是公用事业——是生存。所以水系统必须是测量机器：不能验证，就不能信任。",
+          "En ciclo cerrado, el agua no es ‘servicio’: es supervivencia. Por eso el agua se vuelve máquina de medición: si no verificas, no confías."
+        ),
+        engineering_formal:P(
+          "Engineering focus: mass balance, contaminant loading, sensor calibration, and recovery yield. Stability targets are defined under variance, not best-case assumptions.",
+          "工程重点：质量平衡、污染负荷、传感校准、回收率。稳定目标按方差定义，而非最佳情况。",
+          "Enfoque de ingeniería: balance de masa, carga de contaminantes, calibración de sensores y rendimiento de recuperación. Objetivos de estabilidad bajo varianza, no supuestos ideales."
+        )
+      }
+    },
+
+    {
+      id:"waste",
+      c:"#34D399",
+      t:P("Waste Systems","废弃物系统","Sistemas de residuos"),
+      s:P("Stop burning value. Route molecules instead.","别烧价值。改为路由分子。","No quemes valor. Rutea moléculas."),
+      jumps:[
+        {label:P("Open Waste","打开废弃物","Abrir Residuos"), href:"/explore/frontier/waste/"},
+        {label:P("Open SHIMMER","打开 SHIMMER","Abrir SHIMMER"), href:"/explore/frontier/shimmer/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "Most people think ‘waste’ means ‘away.’ This shell teaches the opposite: waste is just misplaced value. If you can sort it, you can route it. If you can route it, you can recover it.",
+          "多数人以为“废弃物”就是“扔掉”。本壳讲相反：废弃物只是错放的价值。能分就能路由；能路由就能回收。",
+          "Muchos piensan que ‘residuo’ significa ‘afuera’. Aquí es lo contrario: es valor mal ubicado. Si lo separas, lo ruteas; si lo ruteas, lo recuperas."
+        ),
+        platform_formal:P(
+          "Waste is treated as a heterogeneous feedstock vector. The platform view focuses on routing clarity: what goes where, why, and what outputs can be verified.",
+          "废弃物被视为异质进料向量。平台视角强调路由清晰：去哪里、为什么、以及哪些输出可验证。",
+          "Residuos como vector heterogéneo. Vista plataforma: claridad de ruteo—qué va dónde, por qué, y qué salidas se verifican."
+        ),
+        engineering_informal:P(
+          "The engineering game is simple to say and hard to do: don’t destroy information with blind combustion. Keep molecular identity long enough to extract value.",
+          "工程游戏说起来简单做起来难：别用盲燃把信息毁掉。要把分子身份保留得足够久，才能提取价值。",
+          "La ingeniería: no destruyas información con combustión ciega. Conserva identidad molecular el tiempo suficiente para extraer valor."
+        ),
+        engineering_formal:P(
+          "Engineering focus: segmentation, conversion pathways, yield accounting, emissions control, and containment. Claims remain bounded by conservation and verified receipts.",
+          "工程重点：分段、转化路径、产率核算、排放控制、隔离。主张受守恒与收据验证约束。",
+          "Enfoque de ingeniería: segmentación, rutas de conversión, contabilidad de rendimiento, control de emisiones y contención. Afirmaciones acotadas por conservación y recibos verificados."
+        )
+      }
+    },
+
+    {
+      id:"energy",
+      c:"#F59E0B",
+      t:P("Energy Substitution","能源替代","Sustitución energética"),
+      s:P("Industrial posture: staged, contained, measurable.","工业姿态：分阶段、隔离、可测。","Postura industrial: por fases, contenida, medible."),
+      jumps:[
+        {label:P("Open Energy","打开能源","Abrir Energía"), href:"/explore/frontier/energy/"},
+        {label:P("Energy Product","能源产品","Producto Energía"), href:"/products/energy/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "This is where ‘big energy talk’ becomes a real plan: what gets substituted first, what gets measured first, and what stays labeled as concept until proofs exist.",
+          "这里把“能源大话”变成真实计划：先替代什么、先测什么、以及哪些在证据出现前只能标为概念。",
+          "Aquí el ‘hablar de energía’ se vuelve plan: qué se sustituye primero, qué se mide primero, y qué se queda como concepto hasta tener pruebas."
+        ),
+        platform_formal:P(
+          "Platform focus: staged adoption surfaces, clear routes, and explicit posture labels. Measurement lives in Gauges; doctrine lives in Laws; deployment surfaces live under Products.",
+          "平台重点：阶段化采纳面、清晰路由、明确姿态标签。测量在量规，教义在法则，部署面在产品。",
+          "Vista plataforma: superficies por fases, rutas claras y etiquetas de postura. Medición en Medidores; doctrina en Leyes; despliegue en Productos."
+        ),
+        engineering_informal:P(
+          "Engineering here is containment-first. If you can’t keep failure local, you can’t scale anything. The job is boring on purpose: measure, isolate, repeat.",
+          "这里的工程是隔离优先：不能把失败变小，就无法规模化。工作故意要无聊：测量、隔离、重复。",
+          "La ingeniería aquí es contención primero. Si no mantienes el fallo local, no escalas. Trabajo aburrido a propósito: medir, aislar, repetir."
+        ),
+        engineering_formal:P(
+          "Engineering focus: throughput, uptime, safety constraints, emissions bounds, and verified substitution accounting. No gain claims; only measured outputs under declared scope.",
+          "工程重点：吞吐、稼动率、安全约束、排放边界、可核查替代核算。不做增益主张，只做声明范围内可测输出。",
+          "Enfoque: throughput, uptime, seguridad, límites de emisiones y contabilidad verificable de sustitución. Sin afirmaciones de ganancia; solo salidas medidas bajo alcance declarado."
+        )
+      }
+    },
+
+    {
+      id:"urban",
+      c:"#93C5FD",
+      t:P("Urban Resource Control","城市资源控制","Control urbano de recursos"),
+      s:P("Where water/waste/energy become one ledger.","水/废弃物/能源合为一套账。","Agua/residuos/energía como un solo libro."),
+      jumps:[
+        {label:P("Open Urban","打开城市","Abrir Urbano"), href:"/explore/frontier/urban/"},
+        {label:P("Open Vision","打开愿景","Abrir Visión"), href:"/explore/frontier/vision/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "A city isn’t ‘departments.’ It’s a coupled system. Urban integration is where you stop optimizing one lane and accidentally breaking another.",
+          "城市不是“部门集合”，而是耦合系统。城市集成就是：别只优化一条线，结果把另一条线弄坏。",
+          "Una ciudad no son ‘departamentos’: es un sistema acoplado. Integrar es dejar de optimizar un carril y romper otro sin querer."
+        ),
+        platform_formal:P(
+          "Urban is a multi-utility routing surface: inventory + routing across water, waste, energy, storage, and verification. Outputs are structured for governance and measurement layers.",
+          "城市是多公用事业路由面：水/废弃物/能源/储存/验证的库存+路由。输出结构化供治理与测量层使用。",
+          "Urbano es superficie multi-utility: inventario + ruteo entre agua, residuos, energía, almacenamiento y verificación. Salidas estructuradas para gobernanza y medición."
+        ),
+        engineering_informal:P(
+          "Engineering problem: shared dependencies. If everything is tied to the same fragile node, you don’t have resilience—you have a single point of failure wearing a suit.",
+          "工程问题：共享依赖。如果所有东西都绑在同一个脆弱节点上，你没有韧性——你只有一个穿西装的单点故障。",
+          "Problema de ingeniería: dependencias compartidas. Si todo depende del mismo nodo frágil, no tienes resiliencia: tienes un punto único de fallo con traje."
+        ),
+        engineering_formal:P(
+          "Engineering focus: correlated exposure, segmentation strategy, service-level envelopes, and rollback discipline. Stability is defined as bounded variance under load.",
+          "工程重点：相关暴露、分段隔离策略、服务水平包络、回滚纪律。稳定定义为负载下方差有界。",
+          "Enfoque: exposición correlacionada, segmentación, envelopes de servicio y disciplina de rollback. Estabilidad = varianza acotada bajo carga."
+        )
+      }
+    },
+
+    {
+      id:"closed_loop",
+      c:"#A3A3A3",
+      t:P("Closed-Loop Habitats","闭环栖息地","Hábitats de ciclo cerrado"),
+      s:P("Extreme case: no ‘away’, no excuses.","极限场景：没有“扔掉”，没有借口。","Caso extremo: sin ‘afuera’, sin excusas."),
+      jumps:[
+        {label:P("Open Closed Loop","打开闭环","Abrir Ciclo Cerrado"), href:"/explore/frontier/closed-loop/"},
+        {label:P("Vision Index","愿景索引","Índice Visión"), href:"/explore/frontier/vision/"}
+      ],
+      copy:{
+        platform_informal:P(
+          "Closed-loop is the proof machine. If your method works where you can’t dump anything, it will feel almost magical on Earth—cleaner, calmer, harder to break.",
+          "闭环是证明机器：如果你的方法在“不能扔掉任何东西”的地方都能运行，那么回到地球会像魔法——更干净、更稳定、更难被击穿。",
+          "Ciclo cerrado es la máquina de prueba: si funciona donde no puedes tirar nada, en la Tierra se siente casi mágico—más limpio, más estable, más difícil de romper."
+        ),
+        platform_formal:P(
+          "Closed-loop treats water/air/food/materials/energy as a coupled ledger. Platform emphasis is legibility: inventory, routing, verification, and clear failure response.",
+          "闭环把水/空气/食物/材料/能量视为耦合账本。平台强调可读：库存、路由、验证、以及清晰的失败响应。",
+          "Ciclo cerrado trata agua/aire/comida/materiales/energía como ledger acoplado. En plataforma: legibilidad—inventario, ruteo, verificación y respuesta clara a fallos."
+        ),
+        engineering_informal:P(
+          "In closed-loop, drift kills fast. That’s why it’s the best teacher: it forces measurement, routing, and containment to be real—not optional.",
+          "在闭环里，漂移会很快致命。所以它是最好的老师：它逼测量、路由、隔离必须真实存在，而不是可选项。",
+          "En ciclo cerrado, la deriva mata rápido. Por eso enseña: obliga a que medición, ruteo y contención sean reales, no opcionales."
+        ),
+        engineering_formal:P(
+          "Engineering focus: conservation accounting, recovery yields, failure localization, and deterministic procedures. ‘Away’ sinks are disallowed; transformations must be bounded and verified.",
+          "工程重点：守恒核算、回收率、失败局部化、确定性流程。禁止“扔掉”汇点；转化必须有界且可验证。",
+          "Enfoque: contabilidad de conservación, rendimientos de recuperación, localización de fallos y procedimientos deterministas. Sumideros ‘afuera’ prohibidos; transformaciones acotadas y verificadas."
+        )
+      }
+    }
+  ];
+
+  // ===== set header =====
+  var H=HEADER[lang] || HEADER.en;
+  document.getElementById("hk").textContent=H.k;
+  document.getElementById("ht").textContent=H.t;
+  document.getElementById("hs").textContent=H.s;
+  document.getElementById("rule").textContent=H.r;
+
+  // ===== band label =====
+  function bandLabel(){
+    if(lang==="zh") return "集成地图（一次只开一个）";
+    if(lang==="es") return "MAPA DE INTEGRACIÓN (uno a la vez)";
+    return "INTEGRATION MAP (one open at a time)";
+  }
+
+  // ===== render =====
+  var list=document.getElementById("list");
+  function closeAll(){
+    list.querySelectorAll(".row").forEach(function(x){
+      x.classList.remove("open");
+      var c=x.querySelector(".chev");
+      if(c) c.textContent="▸";
+    });
+  }
+
+  function makeRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var left=document.createElement("div");
+    left.className="left";
+
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var title=document.createElement("div");
+    title.className="title";
+    title.textContent=pick(item.t);
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent=pick(item.s);
+
+    tb.appendChild(title);
+    tb.appendChild(sub);
+
+    left.appendChild(mark);
+    left.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    intro.textContent = pick(item.copy[lensKey()]);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    function bubble(which, text){
+      var b=document.createElement("div");
+      b.className="bubble";
+      b.setAttribute("role","button");
+      b.tabIndex=0;
+
+      var h=document.createElement("h4");
+      h.textContent = (which==="concept") ? labConcept() : (which==="build") ? labBuild() : labRoadmap();
+
+      var p=document.createElement("p");
+      p.textContent=text;
+
+      b.appendChild(h);
+      b.appendChild(p);
+
+      function act(){ b.classList.toggle("open"); }
+      b.addEventListener("click", act);
+      b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+      return b;
+    }
+
+    // Compact but dense: each row gets lens-specific “3-slice”
+    var lk=lensKey();
+
+    var conceptText, buildText, roadmapText;
+
+    // Build Now / Roadmap are derived from the same lens posture, but made explicit:
+    if(lk.indexOf("platform_")===0){
+      conceptText = (lang==="zh")
+        ? "平台问：用户怎么找到正确入口？我们用清晰标签 + 稳定路由，把复杂性压在结构里。"
+        : (lang==="es")
+          ? "Plataforma pregunta: ¿cómo encuentra el usuario la entrada correcta? Etiquetas claras + rutas estables; la complejidad se queda en la estructura."
+          : "Platform asks: how does a user find the right entry? Clear labels + stable routes; complexity stays inside the structure.";
+      buildText = (lang==="zh")
+        ? "现在建：把每个壳先做成‘可导航’——能打开、能返回、能保留状态；再补充测量与收据。"
+        : (lang==="es")
+          ? "Construir ahora: primero haz cada shell navegable—abre, vuelve, conserva estado; luego añade medición y recibos."
+          : "Build now: make every shell navigable first—open, return, preserve state; then add measurement and receipts.";
+      roadmapText = (lang==="zh")
+        ? "路线图：把跨壳的共同接口写成固定合同（库存/路由/阈值/原因码），让扩张不会变乱。"
+        : (lang==="es")
+          ? "Hoja de ruta: fija contratos comunes (inventario/ruteo/umbrales/razones) entre shells para que crecer no sea caos."
+          : "Roadmap: lock shared contracts (inventory/routing/thresholds/reason codes) across shells so growth doesn’t become chaos.";
+    }else{
+      conceptText = (lang==="zh")
+        ? "工程问：输入/输出是否守恒？是否可测？失败是否可隔离？如果不能，仍停留在壳。"
+        : (lang==="es")
+          ? "Ingeniería pregunta: ¿entradas/salidas conservadas? ¿medibles? ¿fallos aislables? Si no, se queda como shell."
+          : "Engineering asks: are inputs/outputs conserved, measurable, and failures isolable? If not, it stays a shell.";
+      buildText = (lang==="zh")
+        ? "现在建：先做最小闭环：测量→阈值→原因码→隔离→回滚。没有这些，不谈规模化。"
+        : (lang==="es")
+          ? "Construir ahora: mínimo bucle: medir→umbrales→razones→contener→rollback. Sin eso, no hay escala."
+          : "Build now: minimum loop: measure→thresholds→reason codes→contain→rollback. Without that, no scale.";
+      roadmapText = (lang==="zh")
+        ? "路线图：把接口变成可回放收据包（输入/决策/结果），让第三方可复现同结论。"
+        : (lang==="es")
+          ? "Hoja de ruta: convierte interfaces en paquetes de recibos re-ejecutables (entradas/decisión/resultado) para reproducibilidad por terceros."
+          : "Roadmap: convert interfaces into replayable receipt bundles (inputs/decision/result) so third parties can reproduce conclusions.";
+    }
+
+    // Tone affects “how it reads” (informal vs formal) while staying support-bounded.
+    if(style==="formal"){
+      conceptText = conceptText.replace("问：", "视角：").replace("问:", "View:");
+    }
+
+    bubbles.appendChild(bubble("concept", conceptText));
+    bubbles.appendChild(bubble("build", buildText));
+    bubbles.appendChild(bubble("roadmap", roadmapText));
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    (item.jumps||[]).forEach(function(j){
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent = openLabel() + ": " + pick(j.label);
+      a.href = j.href + q();
+      actions.appendChild(a);
+    });
+
+    body.appendChild(intro);
+    body.appendChild(bubbles);
+    body.appendChild(actions);
+
+    function toggle(){
+      var openNow = !row.classList.contains("open");
+      closeAll();
+      row.classList.toggle("open", openNow);
+      chev.textContent = openNow ? "▾" : "▸";
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+
+    if(idx===0){
+      row.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return row;
+  }
+
+  function render(){
+    document.getElementById("band").textContent = bandLabel();
+
+    // top labels
+    if(lang==="zh"){
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnHome").textContent="主页";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockFrontier").textContent="前沿";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      pillPlatform.textContent="平台";
+      pillEngineering.textContent="工程";
+      pillInformal.textContent="通俗";
+      pillFormal.textContent="正式";
+    }else if(lang==="es"){
+      document.getElementById("btnBack").textContent="VOLVER";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnHome").textContent="INICIO";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockFrontier").textContent="FRONTERA";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      pillPlatform.textContent="PLATAFORMA";
+      pillEngineering.textContent="INGENIERÍA";
+      pillInformal.textContent="INFORMAL";
+      pillFormal.textContent="FORMAL";
+    }else{
+      document.getElementById("btnBack").textContent="BACK";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnHome").textContent="HOME";
+      document.getElementById("dockExplore").textContent="EXPLORE";
+      document.getElementById("dockFrontier").textContent="FRONTIER";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+      pillPlatform.textContent="PLATFORM";
+      pillEngineering.textContent="ENGINEERING";
+      pillInformal.textContent="INFORMAL";
+      pillFormal.textContent="FORMAL";
+    }
+
+    // header text
+    var H=HEADER[lang] || HEADER.en;
+    document.getElementById("hk").textContent=H.k;
+    document.getElementById("ht").textContent=H.t;
+    document.getElementById("hs").textContent=H.s;
+    document.getElementById("rule").textContent=H.r;
+
+    list.innerHTML="";
+    CARDS.forEach(function(c,i){ list.appendChild(makeRow(c,i)); });
+  }
+
+  render();
+})();
+</script>
+
+</body>
+</html>

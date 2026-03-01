@@ -1,15 +1,19 @@
 <!-- TNT — /laws/categories/index.html
-     LAWS · CATEGORIES (FLOW / INTEGRITY / REALITY / STRUCTURE) — SHELL ROUTER
-     LOCKS:
-       - ui.css owns field (NO html/body background styling here)
-       - branch.css owns geometry
-       - instruments.js owns state normalization
-     STATE:
-       - URL keys: lang/style/time/depth
-       - LS keys: gd_lang/gd_style/gd_time/gd_depth
-     BEHAVIOR:
-       - All links carry lang/style/time/depth
-       - Language toggle (EN / 中文 / ES) sets gd_lang + rewrites URL (NOTE: ES persistence requires instruments.js allowlist update)
+     LAWS · CATEGORIES (7 CANONICAL) · 4 LENSES · 3 LANG (EN/中文/ES) · MOBILE SAFE
+     PURPOSE:
+       - “Where do I go next?” page for Laws
+       - No 404s: everything routes to /laws/ anchors by default
+     LENSES (NO NEW gd_* KEYS):
+       - INFORMAL   = style=informal & depth=explore
+       - FORMAL     = style=formal   & depth=explore
+       - PLATFORM   = style=informal & depth=learn
+       - ENGINEERING= style=formal   & depth=learn
+     RULES:
+       - Accordion only (single-open)
+       - Red signal gradient + diamond markers
+       - Canon state carry: lang/style/time/depth via URL + LS gd_*
+       - Uses ui.css + branch.css + instruments.js
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -17,196 +21,489 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Laws · Categories · Geodiametrics</title>
+<title>LAWS · Categories</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1001"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1001"/>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* NO FIELD OWNERSHIP HERE (ui.css owns html/body background) */
 a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
 
-/* Simple language toggle (top-right) */
-.langbar{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:140;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
+:root{
+  --dockH:92px;
+
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --sigR:rgba(255,70,70,.18);
+  --sigR2:rgba(255,70,70,.10);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+
+  --fsH:28px;
+  --fsP:14.5px;
 }
-.langbar .btn{padding:10px 14px;border-radius:999px}
+
+/* top */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* page */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:84px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:10;
+}
+
+/* header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--sigR2), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;padding:1px;border-radius:22px;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,90,90,.28) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.t{margin:0;font-weight:950;font-size:var(--fsH);letter-spacing:.7px;line-height:1.12}
+.s{margin:10px 0 0;font-size:var(--fsP);opacity:.92;line-height:1.55;color:var(--txt);max-width:980px}
+.fine{margin-top:10px;font-size:12.5px;opacity:.74;line-height:1.45;color:var(--mut)}
+
+/* lenses */
+.lensRow{
+  margin-top:12px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:950;letter-spacing:.2px;color:#fff;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--sigR);
+}
+.pill.dim{border-color:rgba(212,175,55,.22)}
+.pill.dim.active{border-color:rgba(255,90,90,.55)}
+
+/* band */
+.band{
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88);
+}
+
+/* accordion */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(255,70,70,.06), transparent 64%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  margin-top:3px;flex:0 0 auto;
+}
+.tblk{min-width:0}
+.tt{font-weight:950;letter-spacing:.25px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.ss{margin-top:6px;font-size:13px;opacity:.84;line-height:1.38;max-width:92ch;color:rgba(255,255,255,.86)}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.90);line-height:1.7;font-size:14.25px}
+.p + .p{margin-top:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:104px;--fsH:27px;--fsP:14.25px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
 </style>
 </head>
 
 <body>
-<div class="shooting-stars" aria-hidden="true"></div>
 
-<div class="langbar" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnLaws" href="/laws/">LAWS</a>
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    <a class="btn" id="btnHome" href="/home/">HOME</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <div class="h">
-    <h1 id="h1">Laws</h1>
-    <p id="h2">Categories · Choose a branch.</p>
-  </div>
+  <div class="header">
+    <p class="k" id="hk">LAWS</p>
+    <h1 class="t" id="ht">WHERE EACH LAW LIVES</h1>
+    <p class="s" id="hs"></p>
+    <div class="fine" id="fine"></div>
 
-  <div class="stage">
-    <div class="platform">
-
-      <!-- REALITY -->
-      <a class="diamond top" id="linkReality" href="./reality/">
-        <span><span id="labReality">Reality</span><small id="subReality">What is</small></span>
-      </a>
-
-      <!-- STRUCTURE -->
-      <a class="diamond right" id="linkStructure" href="./structure/">
-        <span><span id="labStructure">Structure</span><small id="subStructure">How it holds</small></span>
-      </a>
-
-      <!-- FLOW -->
-      <a class="diamond bottom" id="linkFlow" href="./flow/">
-        <span><span id="labFlow">Flow</span><small id="subFlow">How it moves</small></span>
-      </a>
-
-      <!-- INTEGRITY -->
-      <a class="diamond left" id="linkIntegrity" href="./integrity/">
-        <span><span id="labIntegrity">Integrity</span><small id="subIntegrity">What stays true</small></span>
-      </a>
-
-      <!-- BACK -->
-      <a class="diamond mini mini-left" id="linkBack" href="/laws/">
-        <span><small id="labBack">BACK</small></span>
-      </a>
-
-      <!-- HOME -->
-      <a class="diamond mini mini-right" id="linkHome" href="/home/">
-        <span><small id="labHome">HOME</small></span>
-      </a>
-
+    <div class="lensRow">
+      <div class="pills">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+        <button class="pill dim" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill dim" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills"><span class="fine" id="lensState">—</span></div>
     </div>
   </div>
 
-  <footer id="foot">CANONICAL · STABLE · © GEODIAMETRICS</footer>
+  <div class="band" id="band">LAWS (7) · JUMP MAP</div>
+  <div class="list" id="list"></div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
-  // ----- State (instrument-compatible) -----
-  var qs = new URLSearchParams(location.search);
-
+  // ===== canonical state =====
+  var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
-    localStorage.setItem("gd_depth", depth);
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
-    var L = (over && over.lang) ? over.lang : lang;
-    var S = (over && over.style) ? over.style : style;
-    var T = (over && over.time) ? over.time : time;
-    var D = (over && over.depth) ? over.depth : depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // ----- Wire routes (absolute + state carry) -----
-  document.getElementById("linkReality").href   = "/laws/categories/reality/"  + q();
-  document.getElementById("linkStructure").href = "/laws/categories/structure/"+ q();
-  document.getElementById("linkFlow").href      = "/laws/categories/flow/"     + q();
-  document.getElementById("linkIntegrity").href = "/laws/categories/integrity/"+ q();
+  function lensKey(){
+    if(style==="formal" && depth==="learn") return "engineering";
+    if(style==="informal" && depth==="learn") return "platform";
+    if(style==="formal") return "formal";
+    return "informal";
+  }
 
-  document.getElementById("linkBack").href = "/laws/" + q();
-  document.getElementById("linkHome").href = "/home/" + q();
+  function setLens(k){
+    if(k==="engineering"){ style="formal"; depth="learn"; }
+    else if(k==="platform"){ style="informal"; depth="learn"; }
+    else if(k==="formal"){ style="formal"; depth="explore"; }
+    else { style="informal"; depth="explore"; }
+    try{ localStorage.setItem("gd_style",style); localStorage.setItem("gd_depth",depth); }catch(e){}
+    window.location.href = window.location.pathname + q();
+  }
 
-  // ----- Language UI -----
+  // wire nav
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnLaws","/laws/");
+  wire("btnDoor","/door/");
+  wire("btnHome","/home/");
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockGauges","/gauges/");
+
+  // language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
-
+  paintLang();
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ localStorage.setItem("gd_lang", lang); }catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang: lang}));
-    location.reload();
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  paintLang();
+  // lens buttons
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
 
-  // ----- i18n (single-language) -----
+  function paintLens(){
+    var k=lensKey();
+    pillInformal.classList.toggle("active", k==="informal");
+    pillFormal.classList.toggle("active", k==="formal");
+    pillPlatform.classList.toggle("active", k==="platform");
+    pillEngineering.classList.toggle("active", k==="engineering");
+    document.getElementById("lensState").textContent =
+      (lang==="zh") ? ("当前透镜："+(k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程")) :
+      (lang==="es") ? ("Lente: "+(k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA")) :
+      ("Lens: "+(k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING"));
+  }
+  paintLens();
+
+  pillInformal.addEventListener("click", function(){ setLens("informal"); });
+  pillFormal.addEventListener("click", function(){ setLens("formal"); });
+  pillPlatform.addEventListener("click", function(){ setLens("platform"); });
+  pillEngineering.addEventListener("click", function(){ setLens("engineering"); });
+
+  // header copy
+  var HEAD={
+    en:{
+      hs:"Don’t want to read everything? Good. This page tells you exactly where each law routes—so you can jump straight to the rule you need.",
+      fine:"Default routing: each category jumps to the matching anchor inside /laws/. No 404s. Leaf pages can be added later without changing the map."
+    },
+    zh:{
+      hs:"不想全读？很好。本页告诉你每条法则“该去哪里”——让你直接跳到需要的规则。",
+      fine:"默认路由：所有分类先跳到 /laws/ 内对应锚点（不404）。叶子页以后再补，不需要改地图。"
+    },
+    es:{
+      hs:"¿No quieres leerlo todo? Perfecto. Esta página te dice dónde vive cada ley—para saltar directo a la regla que necesitas.",
+      fine:"Ruta por defecto: cada categoría salta al ancla correspondiente dentro de /laws/. Sin 404. Las hojas se pueden añadir después sin cambiar el mapa."
+    }
+  };
+  var H=HEAD[lang]||HEAD.en;
+  document.getElementById("hs").textContent=H.hs;
+  document.getElementById("fine").textContent=H.fine;
+
   if(lang==="zh"){
-    document.getElementById("h1").textContent="法则";
-    document.getElementById("h2").textContent="分类 · 选择分支。";
-
-    document.getElementById("labReality").textContent="现实";
-    document.getElementById("subReality").textContent="是什么";
-
-    document.getElementById("labStructure").textContent="结构";
-    document.getElementById("subStructure").textContent="如何支撑";
-
-    document.getElementById("labFlow").textContent="流动";
-    document.getElementById("subFlow").textContent="如何运行";
-
-    document.getElementById("labIntegrity").textContent="完整性";
-    document.getElementById("subIntegrity").textContent="什么保持不变";
-
-    document.getElementById("labBack").textContent="返回";
-    document.getElementById("labHome").textContent="枢纽";
-    document.getElementById("foot").textContent="规范 · 稳定 · © GEODIAMETRICS";
+    document.getElementById("hk").textContent="法则";
+    document.getElementById("ht").textContent="每条法则在哪里";
+    document.getElementById("band").textContent="法则（7）· 跳转地图";
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockGauges").textContent="量规";
+    pillInformal.textContent="通俗";
+    pillFormal.textContent="正式";
+    pillPlatform.textContent="平台";
+    pillEngineering.textContent="工程";
   }else if(lang==="es"){
-    document.getElementById("h1").textContent="Leyes";
-    document.getElementById("h2").textContent="Categorías · Elige una rama.";
+    document.getElementById("hk").textContent="LEYES";
+    document.getElementById("ht").textContent="DÓNDE VIVE CADA LEY";
+    document.getElementById("band").textContent="LEYES (7) · MAPA DE SALTOS";
+    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+    pillInformal.textContent="INFORMAL";
+    pillFormal.textContent="FORMAL";
+    pillPlatform.textContent="PLATAFORMA";
+    pillEngineering.textContent="INGENIERÍA";
+  }
 
-    document.getElementById("labReality").textContent="Realidad";
-    document.getElementById("subReality").textContent="Qué es";
+  // categories (route-safe: /laws/#anchor)
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-    document.getElementById("labStructure").textContent="Estructura";
-    document.getElementById("subStructure").textContent="Cómo sostiene";
+  var CATS=[
+    {c:"#EF4444", anchor:"coherence", t:P("Coherence Constraint Law","一致性约束法则","Ley de Coherencia"), s:P("The system’s gravity: mismatch becomes measurable under pressure.","系统重力：错配在压力下可测。","Gravedad del sistema: el desajuste se vuelve medible bajo presión.")},
+    {c:"#D4AF37", anchor:"noncontradiction", t:P("Non-Contradiction","不矛盾","No-Contradicción"), s:P("Same receipts should not yield two truths.","同收据不应产出两种真相。","Mismos recibos no deben dar dos verdades.")},
+    {c:"#60A5FA", anchor:"scope", t:P("Scope Precedes Authority","范围先于权力","Alcance→Autoridad"), s:P("Define the map before you speak big.","先定地图再说大话。","Define el mapa antes de afirmar en grande.")},
+    {c:"#93C5FD", anchor:"admissibility", t:P("Admissibility","可采信","Admisibilidad"), s:P("Upgrades require receipts; missing receipts stop escalation.","升级要收据；缺收据就停。","Mejoras requieren recibos; sin recibos no se escala.")},
+    {c:"#34D399", anchor:"calibration", t:P("Calibration Authority","校准权威","Autoridad de Calibración"), s:P("Rules can’t be crowdsourced without capture.","规则不可随便众包，否则会被捕获。","Las reglas no se ‘crowdsourcean’ sin riesgo de captura.")},
+    {c:"#A3A3A3", anchor:"stability", t:P("Measurable Stability","可测稳定","Estabilidad Medible"), s:P("Instability is a measurable divergence, not a feeling.","不稳定是可测偏离，不是感觉。","La inestabilidad es divergencia medible, no sentimiento.")},
+    {c:"#F59E0B", anchor:"containment", t:P("Containment","隔离","Contención"), s:P("Keep failure local. Rollback beats cascade.","失败要局部化；回滚胜过级联。","Fallo local. Rollback vence cascada.")}
+  ];
 
-    document.getElementById("labFlow").textContent="Flujo";
-    document.getElementById("subFlow").textContent="Cómo se mueve";
+  var list=document.getElementById("list");
 
-    document.getElementById("labIntegrity").textContent="Integridad";
-    document.getElementById("subIntegrity").textContent="Qué se mantiene";
+  function makeRow(it, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", it.c);
 
-    document.getElementById("labBack").textContent="VOLVER";
-    document.getElementById("labHome").textContent="HUB";
-    document.getElementById("foot").textContent="CANÓNICO · ESTABLE · © GEODIAMETRICS";
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.setAttribute("tabindex","0");
+
+    var left=document.createElement("div");
+    left.className="left";
+
+    var d=document.createElement("div");
+    d.className="dmark";
+    d.style.background=it.c;
+
+    var tblk=document.createElement("div");
+    tblk.className="tblk";
+    var tt=document.createElement("div");
+    tt.className="tt";
+    tt.textContent=pick(it.t);
+    var ss=document.createElement("div");
+    ss.className="ss";
+    ss.textContent=pick(it.s);
+    tblk.appendChild(tt);
+    tblk.appendChild(ss);
+
+    left.appendChild(d);
+    left.appendChild(tblk);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p");
+    p1.className="p";
+    p1.textContent =
+      (lang==="zh") ? "默认：跳到 /laws/ 的对应锚点。以后可以把它替换为独立叶子页，不改变用户路径。" :
+      (lang==="es") ? "Por defecto: salta al ancla correspondiente en /laws/. Luego se puede reemplazar por una hoja independiente sin cambiar la ruta del usuario." :
+      "Default: jump to the matching anchor on /laws/. Later you can replace this with a dedicated leaf page without changing user routes.";
+    body.appendChild(p1);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent = openLabel()+": "+((lang==="zh")?"法则":(lang==="es")?"LEYES":"LAWS");
+    a.href = "/laws/#"+it.anchor + q();
+    actions.appendChild(a);
+
+    var b=document.createElement("a");
+    b.className="btn";
+    b.textContent = openLabel()+": "+((lang==="zh")?"量规":(lang==="es")?"MEDIDORES":"GAUGES");
+    b.href = "/gauges/" + q();
+    actions.appendChild(b);
+
+    body.appendChild(actions);
+
+    function closeAll(){
+      list.querySelectorAll(".row").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+    }
+    function toggle(){
+      var willOpen=!row.classList.contains("open");
+      closeAll();
+      if(willOpen){ row.classList.add("open"); chev.textContent="▾"; }
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+
+    if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
+
+    return row;
+  }
+
+  for(var i=0;i<CATS.length;i++){
+    list.appendChild(makeRow(CATS[i], i));
   }
 
 })();

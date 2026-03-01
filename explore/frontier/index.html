@@ -1,18 +1,11 @@
 <!-- TNT — /explore/frontier/index.html
-     FRONTIER · TWO-DOOR SPLIT (NO LOOP) · STRUCTURE = EXISTING · VISION = NEW
-     FIX (NO DRIFT):
-       - NO “loop back” behavior (Structure DOES NOT return to Frontier)
-       - STRUCTURE goes to existing, stable surfaces (Laws / Gauges / Language)
-       - VISION goes to a NEW Vision door (separate page) so it never blends
-       - Correct script path: /assets/instruments.js
-       - Uses canonical .btn class (no crp-btn)
-       - EN / 中文 / ES
-       - State carry: lang/style/time/depth (URL + LS)
-       - ui.css owns field (no html/body background overrides)
-       - Hard navigation only (no modals, no lenses)
-     ROUTES (LOCKED):
-       STRUCTURE → /explore/frontier/structure/
-       VISION    → /explore/frontier/vision/
+     EXPLORE · FRONTIER SYSTEMS
+     MONUMENT STRUCTURE · 7 VISION SHELLS
+     4 LENSES (INFORMAL / FORMAL / PLATFORM / ENGINEERING)
+     3 LANGUAGES (EN / 中文 / ES)
+     SINGLE-OPEN ACCORDION
+     STATE-CARRY (lang/style/time/depth)
+     NO MODALS · NO OVERLAYS · PRODUCTION READY
 -->
 
 <!doctype html>
@@ -20,7 +13,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · FRONTIER</title>
+<title>EXPLORE · FRONTIER SYSTEMS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -28,125 +21,124 @@
 
 <style>
 :root{
-  --R:170px;
-  --D:260px;
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
+  --dockH:90px;
+  --inkA:rgba(15,18,26,.92);
+  --inkB:rgba(10,12,18,.96);
+  --stroke:rgba(255,255,255,.10);
+  --mut:rgba(255,255,255,.88);
+  --mut2:rgba(255,255,255,.70);
+  --redA:rgba(255,60,60,.16);
+  --goldA:rgba(212,175,55,.18);
 }
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{color:inherit;text-decoration:none}
 
-/* top-left */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:90px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;left:16px;top:16px;z-index:200;
+  display:flex;gap:10px;flex-wrap:nowrap;
 }
-
-/* language top-right */
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:120;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
-}
-.top-right .btn{white-space:nowrap}
-
-/* brand */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:110;text-align:center;padding:10px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);
-  pointer-events:none;
-}
-.brand .k{font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.75;margin:0 0 6px 0}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.3px;margin:0}
-.brand .s{font-size:13px;opacity:.8;margin-top:6px}
-
-/* stage */
-.stage{
-  position:fixed;left:50%;top:55%;
-  transform:translate(-50%,-50%);
-  width:min(720px,94vw);
-  height:min(720px,94vw);
-  z-index:60;
-  pointer-events:none;
+  position:fixed;right:16px;top:16px;z-index:200;
+  display:flex;gap:10px;flex-wrap:nowrap;
 }
 
-/* diamonds */
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:34px;
-  cursor:pointer;pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-
+.header{
+  border:1px solid var(--stroke);
+  border-radius:28px;
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
+    radial-gradient(circle at 20% 20%, var(--redA), transparent 60%),
+    radial-gradient(circle at 80% 80%, var(--goldA), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.25), rgba(0,0,0,.15));
+  padding:28px 32px;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
+}
+.k{font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.75;margin:0 0 12px}
+.t{font-weight:950;font-size:42px;letter-spacing:1px;margin:0 0 18px}
+.s{font-size:18px;line-height:1.6;color:var(--mut);max-width:900px}
 
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 50px 160px rgba(0,0,0,.85),
-    0 0 38px rgba(212,175,55,.25),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -50px 90px rgba(0,0,0,.78);
+.lens{
+  margin-top:20px;
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.pill{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  border:1px solid var(--stroke);
+  cursor:pointer;
+  font-weight:900;
+}
+.pill.active{box-shadow:0 0 16px rgba(212,175,55,.3)}
 
-  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+.stack{display:flex;flex-direction:column;gap:16px}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
   overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:34px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.60;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+.head{
+  padding:20px 24px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  cursor:pointer;
 }
-.d::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  pointer-events:none;
+.title{
+  font-weight:900;
+  font-size:26px;
+  letter-spacing:.5px;
 }
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.30);
+.sub{
+  font-size:14px;
+  opacity:.75;
+  margin-top:8px;
+}
+.chev{font-size:18px;opacity:.7}
+
+.body{
+  display:none;
+  padding:22px 24px 28px;
+  border-top:1px solid var(--stroke);
+}
+.card.open .body{display:block}
+
+.section{
+  margin-bottom:18px;
+}
+.section h4{
+  margin:0 0 10px;
+  font-size:16px;
+  letter-spacing:1px;
+  opacity:.8;
+  text-transform:uppercase;
+}
+.section p{
+  margin:0;
+  font-size:16px;
+  line-height:1.65;
+  color:var(--mut);
 }
 
-/* vertical placement */
-.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-bottom{transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg)}
-
-.inner{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:18px;gap:10px;
-  pointer-events:none;
-  user-select:none;
-}
-.lab{font-weight:950;font-size:22px;letter-spacing:.8px}
-.sub{font-size:14px;opacity:.85;line-height:1.35;max-width:22em}
-
-/* dock */
 .dock{
   position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:120;
+  bottom:10px;transform:translateX(-50%);
   width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:10px 12px;
+  border-radius:24px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.3);
 }
+.dock .btn{padding:10px;border-radius:999px;text-align:center}
 </style>
 </head>
 
@@ -157,141 +149,135 @@ a{color:inherit;text-decoration:none}
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
 </div>
 
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <div class="k" id="bk">CARDINAL AXIS</div>
-  <div class="t" id="bt">FRONTIER</div>
-  <div class="s" id="bs">Choose your direction</div>
-</div>
+<div class="page">
 
-<div class="stage" aria-label="Frontier fork">
-  <div class="d d-top" id="dStructure" role="button" tabindex="0" aria-label="Structure">
-    <div class="inner">
-      <div class="lab" id="labStructure">STRUCTURE</div>
-      <div class="sub" id="subStructure">Lock constraints · measure drift · keep meaning stable.</div>
+  <div class="header">
+    <p class="k" id="hk">EXPLORE</p>
+    <h1 class="t" id="ht">FRONTIER SYSTEMS</h1>
+    <p class="s" id="hs">
+      What if the biggest ideas of our time were finally measurable?
+      Frontier Systems is where vision meets structure — labeled,
+      bounded, and mapped before scale.
+    </p>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
     </div>
   </div>
 
-  <div class="d d-bottom" id="dVision" role="button" tabindex="0" aria-label="Vision">
-    <div class="inner">
-      <div class="lab" id="labVision">VISION</div>
-      <div class="sub" id="subVision">Build what doesn’t exist yet · then route it back to structure.</div>
-    </div>
-  </div>
+  <div class="stack" id="stack"></div>
+
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  // canonical state (URL → LS → defaults)
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  const SHELLS = [
+    "SHIMMER",
+    "Closed Loop Habitat",
+    "Urban Resource OS",
+    "Energy Transition Layer",
+    "Water Capture Model",
+    "Waste Reallocation System",
+    "Planetary Constraint Simulator"
+  ];
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  const CONTENT = {
+    informal:{
+      en:"Frontier ideas are welcome. But they must survive measurement. This shell maps the vision into constraint before scale.",
+      zh:"前沿思想是欢迎的。但必须经得起测量。本层在规模化之前，将愿景映射为约束。",
+      es:"Las ideas de frontera son bienvenidas. Pero deben sobrevivir a la medición. Esta capa mapea la visión a restricción antes de escalar."
+    },
+    formal:{
+      en:"This surface defines scope, constraint set, measurable outputs, and admissibility bounds before deployment posture.",
+      zh:"该界面定义范围、约束集、可测输出和可采信边界，然后才进入部署姿态。",
+      es:"Esta superficie define alcance, conjunto de restricciones, salidas medibles y límites de admisibilidad antes del despliegue."
+    },
+    platform:{
+      en:"Platform posture: navigation-first, labeled as VISION. No escalation beyond receipt layer.",
+      zh:"平台姿态：导航优先，标注为“愿景”。不得超越收据层升级。",
+      es:"Postura de plataforma: navegación primero, etiquetado como VISIÓN. No se escala más allá de la capa de recibos."
+    },
+    engineering:{
+      en:"Engineering posture: enumerate states, define lattice boundaries, simulate stress before physical execution.",
+      zh:"工程姿态：枚举状态，定义晶格边界，在物理执行前进行压力模拟。",
+      es:"Postura de ingeniería: enumerar estados, definir límites de red, simular estrés antes de ejecución física."
+    }
+  };
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
+  const stack = document.getElementById("stack");
+  let currentLens = "informal";
+  let currentLang = "en";
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  function render(){
+    stack.innerHTML="";
+    SHELLS.forEach((name,i)=>{
+      const card=document.createElement("div");
+      card.className="card";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
-  }
+      const head=document.createElement("div");
+      head.className="head";
+      head.innerHTML=`
+        <div>
+          <div class="title">${name}</div>
+          <div class="sub">Vision Shell · Bounded Frontier</div>
+        </div>
+        <div class="chev">▸</div>
+      `;
 
-  // wire nav
-  document.getElementById("btnBack").href="/explore/"+q();
-  document.getElementById("btnDoor").href="/door/"+q();
-  document.getElementById("dockTerminal").href="/index.html"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+      const body=document.createElement("div");
+      body.className="body";
+      body.innerHTML=`
+        <div class="section">
+          <h4>${currentLens.toUpperCase()}</h4>
+          <p>${CONTENT[currentLens][currentLang]}</p>
+        </div>
+      `;
 
-  // language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/explore/frontier/"+q();
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+      head.addEventListener("click",()=>{
+        document.querySelectorAll(".card").forEach(c=>{
+          if(c!==card){c.classList.remove("open");}
+        });
+        card.classList.toggle("open");
+      });
 
-  // routes (NO LOOP)
-  function goStructure(){ location.href="/explore/frontier/structure/"+q(); }
-  function goVision(){ location.href="/explore/frontier/vision/"+q(); }
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
 
-  function bind(el, fn){
-    el.addEventListener("click", fn);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }
+      if(i===0){card.classList.add("open");}
     });
   }
-  bind(document.getElementById("dStructure"), goStructure);
-  bind(document.getElementById("dVision"), goVision);
 
-  // minimal i18n
-  if(lang==="zh"){
-    document.getElementById("bt").textContent="前沿";
-    document.getElementById("bs").textContent="选择方向";
-    document.getElementById("labStructure").textContent="结构";
-    document.getElementById("subStructure").textContent="锁定约束 · 测量漂移 · 稳定含义。";
-    document.getElementById("labVision").textContent="愿景";
-    document.getElementById("subVision").textContent="构建尚不存在的东西 · 再把它接回结构。";
-    document.getElementById("btnBack").textContent="返回";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("dockTerminal").textContent="索引";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-  }else if(lang==="es"){
-    document.getElementById("bt").textContent="FRONTERA";
-    document.getElementById("bs").textContent="Elige tu dirección";
-    document.getElementById("labStructure").textContent="ESTRUCTURA";
-    document.getElementById("subStructure").textContent="Bloquear restricciones · medir deriva · estabilizar significado.";
-    document.getElementById("labVision").textContent="VISIÓN";
-    document.getElementById("subVision").textContent="Construir lo que aún no existe · y conectarlo de vuelta a la estructura.";
-    document.getElementById("btnBack").textContent="ATRÁS";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("dockTerminal").textContent="ÍNDICE";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-  }
+  document.querySelectorAll(".pill").forEach(p=>{
+    p.addEventListener("click",()=>{
+      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      p.classList.add("active");
+      currentLens=p.dataset.lens;
+      render();
+    });
+  });
+
+  document.getElementById("btnEN").onclick=()=>{currentLang="en";render();};
+  document.getElementById("btnZH").onclick=()=>{currentLang="zh";render();};
+  document.getElementById("btnES").onclick=()=>{currentLang="es";render();};
+
+  render();
 })();
 </script>
 

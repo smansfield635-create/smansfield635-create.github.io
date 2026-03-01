@@ -1,19 +1,26 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · WHY YOU’RE HERE (RAMP) · TRILINGUAL (EN/中文/ES)
-     GOAL:
-       - Same theme as Door/Index/Home: “frontier with receipts”
-       - Larger print + stronger panel variance (not same as background)
-       - Single-open Q/A accordion (monument density without wall-of-text)
-       - No modals, no overlays
-       - State carry: lang/style/time/depth (URL + gd_* LS)
+     PRELUDE · MONUMENT POSTURE (TRILINGUAL · NO LENSES · SINGLE-OPEN ACCORDION)
+     PURPOSE:
+       - Deep orientation without requiring “tech words”
+       - Converts “big ideas” into human navigation
+       - Every block ends with a clean jump
+     RULES:
+       - EN / 中文 / ES
+       - NO modal traps
+       - NO inline onclick
+       - Single-open accordion (one opens, others close; tap same closes)
+       - Canon state carry: lang/style/time/depth (URL + gd_* localStorage)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
+       - Does NOT style html/body background (ui.css owns field)
      ROUTES:
-       - BACK → /door/
-       - COMPASS → /index.html
-       - HOME → /home/
-       - Quick opens: /products/ /explore/ /laws/ /gauges/
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
+       - ROOT  → /
+       - DOOR  → /door/
+       - INDEX → /index.html
+       - HOME  → /home/
+       - PRODUCTS → /products/
+       - EXPLORE  → /explore/
+       - LAWS     → /laws/
+       - GAUGES   → /gauges/
 -->
 
 <!doctype html>
@@ -21,7 +28,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Why You’re Here</title>
+<title>PRELUDE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -29,43 +36,48 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body::before,body::after{pointer-events:none!important}
+body{position:relative;z-index:0}
+body::before,body::after{z-index:0!important;pointer-events:none!important}
+#root{position:relative;z-index:10}
 
+/* ===== TOKENS (opal + gold + red; no washed-out blue) ===== */
 :root{
   --dockH:92px;
 
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalC:rgba(255,80,80,.12);
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,80,80,.10);
 
+  --goldSoft:rgba(212,175,55,.35);
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-  --goldSoft:rgba(212,175,55,.20);
 
-  --H1:40px;
-  --P:15px;
-  --SM:12.75px;
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.80);
+  --mut2:rgba(255,255,255,.72);
 }
 
-/* top */
+/* ===== TOP (fixed; no pointer traps) ===== */
 .top{
-  position:fixed;left:0;right:0;top:16px;
+  position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
-  display:flex;justify-content:space-between;gap:12px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
   z-index:240;
   pointer-events:none;
 }
 .top .left,.top .right{
-  display:flex;gap:10px;align-items:center;white-space:nowrap;
+  display:flex;gap:10px;align-items:center;
+  flex-wrap:nowrap;white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
 
-/* page */
+/* ===== PAGE ===== */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:84px 0 calc(var(--dockH) + 18px);
+  padding:86px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -73,45 +85,94 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* hero */
+/* ===== HERO (monument) ===== */
 .hero{
+  position:relative;
   border-radius:26px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.14));
+    radial-gradient(circle at 18% 26%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 82% 34%, var(--opalB), transparent 72%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(12px);
-  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
+  overflow:hidden;
   padding:18px 18px 16px;
 }
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
-.h1{margin:0;font-weight:950;font-size:var(--H1);letter-spacing:1.2px;line-height:1.05}
-.p{margin:10px 0 0;font-size:var(--P);line-height:1.6;color:rgba(255,255,255,.90);max-width:980px}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:26px;
+  pointer-events:none;
+  opacity:.35;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.06) 0deg 8deg, transparent 8deg 22deg);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  left:50%;top:62%;
+  width:min(980px,92vw);
+  height:min(980px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  pointer-events:none;
+  opacity:.22;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(255,80,80,.10), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+  box-shadow:
+    0 100px 280px rgba(0,0,0,.65),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -55px 100px rgba(0,0,0,.55);
+}
+.k{
+  position:relative;z-index:2;
+  margin:0 0 6px;
+  font-size:12px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.80;
+}
+.h1{
+  position:relative;z-index:2;
+  margin:0;
+  font-weight:950;
+  font-size:38px;           /* bigger print */
+  letter-spacing:1.2px;
+  line-height:1.08;
+}
+.tag{
+  position:relative;z-index:2;
+  margin:10px 0 0;
+  color:var(--txt);
+  font-size:16px;           /* bigger print */
+  line-height:1.55;
+  max-width:980px;
+}
 .rule{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:16px;
+  position:relative;z-index:2;
+  margin:12px 0 0;
+  padding:12px 14px;
+  border-radius:18px;
   border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
   box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
-  font-size:var(--SM);
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
+  font-size:13.5px;         /* bigger print */
+  color:var(--mut);
+  line-height:1.5;
 }
-
-/* quick opens */
-.quick{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
+.ctaRow{
+  position:relative;z-index:2;
   margin-top:12px;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
 }
-.quick .btn{border-radius:999px;padding:10px 14px}
+.ctaRow .btn{border-radius:999px;padding:10px 14px}
 
-/* band */
+/* ===== BAND ===== */
 .band{
   padding:10px 12px;
   border-radius:18px;
@@ -122,46 +183,64 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.88);
 }
 
-/* accordion */
-.acc{
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 60px rgba(0,0,0,.40);
-  overflow:hidden;
+/* ===== ACCORDION (single-open) ===== */
+.stack{display:flex;flex-direction:column;gap:12px}
+
+.card{
   position:relative;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(255,80,80,.07), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
-.acc::before{
+.card::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.40;
+  opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
-.accHead{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:14px 16px;
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;
-  z-index:1;
 }
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(212,175,55,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-top:4px;
+}
+.titleBlock{min-width:0}
 .q{
   font-weight:950;
   letter-spacing:.2px;
+  font-size:18px; /* bigger print */
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.a0{
-  margin-top:6px;
-  font-size:12.75px;
-  opacity:.82;
-  line-height:1.35;
+.s{
+  margin-top:8px;
+  font-size:13.75px; /* bigger print */
+  opacity:.84;
+  line-height:1.42;
   color:rgba(255,255,255,.86);
+  max-width:92ch;
 }
-.accC{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.accBody{
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -169,20 +248,31 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.acc.open .accBody{display:block}
-.a{margin:0;color:rgba(255,255,255,.88);line-height:1.62;font-size:13.25px}
-.a + .a{margin-top:10px}
+.card.open .body{display:block}
 
-/* footer */
-.footer{
-  margin-top:8px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
+.p{
+  margin:0;
+  color:rgba(255,255,255,.90);
+  line-height:1.68;
+  font-size:14.25px; /* bigger print */
 }
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+.p + .p{margin-top:10px}
 
-/* dock */
+.ul{
+  margin:12px 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.82);
+  line-height:1.6;
+  font-size:14px; /* bigger print */
+}
+.ul li{margin:7px 0}
+
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px
+}
+.actions .btn{border-radius:999px;padding:10px 14px;white-space:nowrap}
+
+/* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
@@ -201,129 +291,72 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px; --H1:36px; --P:15px}
+  :root{--dockH:102px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .h1{font-size:34px}
 }
 </style>
 </head>
 
 <body>
+<div id="root">
 
-<div class="top">
-  <div class="left">
-    <a class="btn" id="btnBack" href="/door/">BACK</a>
-    <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-    <a class="btn" id="btnHome" href="/home/">HOME</a>
-  </div>
-  <div class="right">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
-  </div>
-</div>
-
-<div class="page">
-
-  <div class="hero">
-    <p class="k" id="k0">PRELUDE</p>
-    <h1 class="h1" id="h0">WHY YOU’RE HERE</h1>
-    <p class="p" id="p0"></p>
-    <div class="rule" id="r0"></div>
-
-    <div class="quick" aria-label="Quick opens">
-      <a class="btn" id="qProducts" href="/products/">OPEN PRODUCTS</a>
-      <a class="btn" id="qExplore" href="/explore/">OPEN EXPLORE</a>
-      <a class="btn" id="qLaws" href="/laws/">OPEN LAWS</a>
-      <a class="btn" id="qGauges" href="/gauges/">OPEN GAUGES</a>
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnRoot" href="/">ROOT</a>
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+      <a class="btn" id="btnHome" href="/home/">HOME</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="band" id="band">THE RAMP (ONE THING AT A TIME)</div>
+  <div class="page">
 
-  <div class="acc" id="a1">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="q" id="q1">What are you actually trying to do?</div>
-        <div class="a0" id="s1">Decision? risk? direction? build? This site routes you to the right layer.</div>
+    <section class="hero" aria-label="Prelude hero">
+      <p class="k" id="k0">PRELUDE</p>
+      <h1 class="h1" id="h0">WHAT ARE YOU TRYING TO MAKE TRUE?</h1>
+      <p class="tag" id="tag0"></p>
+      <div class="rule" id="rule0"></div>
+      <div class="ctaRow">
+        <a class="btn" id="ctaCompass" href="/index.html">OPEN: COMPASS</a>
+        <a class="btn" id="ctaProducts" href="/products/">OPEN: PRODUCTS</a>
+        <a class="btn" id="ctaExplore" href="/explore/">OPEN: EXPLORE</a>
       </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="a" id="p1a"></p>
-      <p class="a" id="p1b"></p>
-    </div>
+    </section>
+
+    <div class="band" id="band0">ORIENTATION (OPEN ONE)</div>
+    <div class="stack" id="stack"></div>
+
   </div>
 
-  <div class="acc" id="a2">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="q" id="q2">What does “finite measure” mean here?</div>
-        <div class="a0" id="s2">It means the problem is not endless. It can be enumerated.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="a" id="p2a"></p>
-      <p class="a" id="p2b"></p>
-    </div>
-  </div>
-
-  <div class="acc" id="a3">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="q" id="q3">Which layers answer which questions?</div>
-        <div class="a0" id="s3">Map, signals, doctrine, deployment—each has a job.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="a" id="p3a"></p>
-      <p class="a" id="p3b"></p>
-    </div>
-  </div>
-
-  <div class="acc" id="a4">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="q" id="q4">What should you do next?</div>
-        <div class="a0" id="s4">Choose an entry posture: direction, tools, proof, or signals.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="a" id="p4a"></p>
-      <p class="a" id="p4b"></p>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span id="f0">Orientation is the product.</span>
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
-  </div>
+  <nav class="dock" aria-label="Bottom navigation">
+    <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+    <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+    <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+    <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  </nav>
 
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockCompass" href="/index.html">COMPASS</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
 
 <script>
 (function(){
-  // state
+  // ===== canonical state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="informal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -332,7 +365,7 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -342,157 +375,329 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // wire
-  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
-  wire("btnBack","/door/");
-  wire("btnCompass","/index.html");
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  // top wires
+  wire("btnRoot","/");
+  wire("btnDoor","/door/");
+  wire("btnIndex","/index.html");
   wire("btnHome","/home/");
-  wire("qProducts","/products/");
-  wire("qExplore","/explore/");
-  wire("qLaws","/laws/");
-  wire("qGauges","/gauges/");
-  wire("dockCompass","/index.html");
+  wire("ctaCompass","/index.html");
+  wire("ctaProducts","/products/");
+  wire("ctaExplore","/explore/");
+
+  // dock wires
   wire("dockProducts","/products/");
+  wire("dockExplore","/explore/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language buttons
+  // language toggle (reload same path)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
   function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
   function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // copy (question-first, frontier + measurable, human words)
-  var COPY={
-    en:{
-      p0:"Why are you here—right now? Because something needs an answer: a decision, a risk, a direction, a build. And when stakes rise, the wiring is hard to see.",
-      r0:"Rule: we keep big ideas honest. If it can’t be measured yet, it stays labeled as concept or roadmap. Navigation preserves gd_* state.",
-      p1a:"You’re not here for another opinion. You’re here for a next step that won’t break later. So we start by naming the situation in human words, then we route you to the layer that can actually check it.",
-      p1b:"If you want tools you can use today, go Products. If you want the future board (bounded), go Explore. If you want rules, go Laws. If you want signals, go Gauges.",
-      p2a:"Finite measure means: this isn’t infinite fog. We can list the moving parts. We can name the dependencies. We can track what changes. We can compare windows.",
-      p2b:"When you can enumerate a system, you can stop guessing—and you can stop getting surprised by ‘everything failing together.’",
-      p3a:"Products = deployable tools. Explore = bounded frontier shells. Laws = meaning & limits. Gauges = measurement & evidence.",
-      p3b:"Prelude’s job is to stop you from grabbing the wrong layer. The fastest path is the one that doesn’t need to be redone.",
-      p4a:"If you want direction: Compass. If you want tools now: Products. If you want proof posture: Laws. If you want signals: Gauges.",
-      p4b:"Pick one. Go deep. Come back with receipts. Then upgrade the claim."
+  // ===== copy packs (dense; human words; avoids claim/support/drift jargon) =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+
+  var COPY = {
+    hero:{
+      tag:P(
+        "What you’re holding right now is not a brochure. It’s an interface for hard questions. If you feel pressure—confusion, conflict, risk, cost, reputation—that pressure is data. This site exists to turn that pressure into a clean next step.",
+        "你现在看到的不是宣传册，而是“硬问题”的界面。若你感到压力——困惑、冲突、风险、成本、声誉——这种压力就是数据。本网站的任务，是把压力变成清晰的下一步。",
+        "Esto no es un folleto. Es una interfaz para preguntas difíciles. Si sientes presión—confusión, conflicto, riesgo, costo, reputación—esa presión es dato. Este sitio convierte presión en un siguiente paso limpio."
+      ),
+      rule:P(
+        "Premise: big ideas are allowed. Boundary: every big idea must have a path to evidence. If the evidence isn’t here yet, we label it and route you to what exists.",
+        "前提：允许大想法。边界：每个大想法都必须能走向证据。若证据尚未在此，我们会标注并把你路由到已存在的部分。",
+        "Premisa: se permiten ideas grandes. Límite: toda idea grande debe tener ruta hacia evidencia. Si aún no existe aquí, se etiqueta y se enruta a lo que sí existe."
+      ),
+      band:P("ORIENTATION (OPEN ONE)","导览（打开一个）","ORIENTACIÓN (ABRE UNO)")
     },
-    zh:{
-      p0:"你为什么现在在这里？因为你需要一个答案：决策、风险、方向、构建。而当风险上升时，系统的“线路”最难看清。",
-      r0:"规则：让大想法保持诚实。不能测量就标为概念或路线图。导航保留 gd_* 状态。",
-      p1a:"你不是来听观点的，你是来找一个不会“以后崩掉”的下一步。所以先用人话把局面讲清，再路由到能核查的层。",
-      p1b:"要立刻可用的工具：产品。要有界的未来板：探索。要规则边界：法则。要信号证据：量规。",
-      p2a:"有限测量的意思是：这不是无限迷雾。部件可列、依赖可画、变化可追、窗口可比。",
-      p2b:"当系统可枚举，你就能停止猜测，也能避免“突然一起坏”。",
-      p3a:"产品=可部署工具；探索=有界前沿壳；法则=含义与边界；量规=测量与证据。",
-      p3b:"Prelude 的工作是避免你抓错层。最快的路，是不需要重做的路。",
-      p4a:"要方向：指南针。要工具：产品。要证明姿态：法则。要信号：量规。",
-      p4b:"选一个，深入。带着收据回来，然后再升级主张。"
-    },
-    es:{
-      p0:"¿Por qué estás aquí—ahora? Porque algo necesita respuesta: una decisión, un riesgo, una dirección, una construcción. Y cuando suben las apuestas, el ‘cableado’ se vuelve difícil de ver.",
-      r0:"Regla: mantenemos honestas las ideas grandes. Si aún no se puede medir, se etiqueta como concepto o ruta. La navegación preserva gd_*.",
-      p1a:"No estás aquí por otra opinión. Estás aquí por un siguiente paso que no se rompa después. Por eso empezamos en palabras humanas y luego ruteamos a la capa que puede verificar.",
-      p1b:"Herramientas hoy: Productos. Futuro acotado: Explorar. Reglas: Leyes. Señales: Medidores.",
-      p2a:"Medida finita significa: no es niebla infinita. Podemos listar piezas, dependencias, cambios y comparar ventanas.",
-      p2b:"Cuando enumeras un sistema, dejas de adivinar—y dejas de sorprenderte cuando ‘todo falla junto’.",
-      p3a:"Productos = herramientas. Explorar = frontera acotada. Leyes = significado y límites. Medidores = medición y evidencia.",
-      p3b:"La función de Prelude es evitar que tomes la capa equivocada. La ruta más rápida es la que no se rehace.",
-      p4a:"Dirección: Brújula. Herramientas: Productos. Prueba: Leyes. Señales: Medidores.",
-      p4b:"Elige una. Profundiza. Vuelve con recibos. Luego sube el nivel."
-    }
+
+    cards:[
+      {
+        c:"#D4AF37",
+        q:P("Why do most systems fail right when they start scaling?","为什么很多系统一扩张就出事？","¿Por qué tantos sistemas fallan justo al escalar?"),
+        s:P("Because the invisible wiring stays invisible—until it breaks everything at once.","因为暗线一直不可见——直到它一次性把一切拉断。","Porque el cableado invisible sigue invisible—hasta que rompe todo a la vez."),
+        p:P(
+          "You can have great intentions and still get crushed by hidden dependencies. A vendor changes. A process drifts. A team improvises. A single “small” mismatch spreads through everything that shared it. The first step is not motivation. The first step is visibility.\n\nThis site is built around a simple posture: map the system, measure what matters, and refuse upgrades that aren’t supported yet. That posture keeps growth calm instead of chaotic.",
+          "你可以很努力、很善良，但仍被隐藏依赖压垮：供应商变了、流程走样、团队临场发挥、一个“小偏差”在共享它的一切中扩散。第一步不是打鸡血。第一步是可见性。\n\n本网站的姿态很简单：先把系统画出来、把关键的东西测出来、对未被证据支持的升级说“不”。这样扩张才会安静而不是混乱。",
+          "Puedes tener buenas intenciones y aun así ser aplastado por dependencias ocultas. Cambia un proveedor. Un proceso se desaline a. Un equipo improvisa. Una ‘pequeña’ discrepancia se propaga por todo lo que la comparte. El primer paso no es motivación: es visibilidad.\n\nLa postura aquí es simple: mapear, medir y rechazar upgrades sin soporte. Así el crecimiento se vuelve calmado."
+        ),
+        bullets:{
+          en:["Invisible wiring → surprise failure","Scale multiplies small mismatches","Visibility first, then action"],
+          zh:["暗线不可见 → 惊喜式失败","规模会放大小偏差","先可见，再行动"],
+          es:["Cableado invisible → fallo sorpresa","Escala multiplica desajustes","Visibilidad primero, luego acción"]
+        },
+        jumps:[
+          {label:P("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"},
+          {label:P("OPEN: EXPLORE","打开：探索","ABRIR: EXPLORAR"), href:"/explore/"}
+        ]
+      },
+
+      {
+        c:"#EF4444",
+        q:P("What if the ‘problem’ is actually a missing measurement?","如果所谓“问题”其实只是缺一项测量？","¿Y si el ‘problema’ es una medición faltante?"),
+        s:P("When you can’t measure it, you can’t stabilize it—so you end up arguing.","不能测，就不能稳——于是只剩争论。","Si no lo mides, no lo estabilizas—y terminas discutiendo."),
+        p:P(
+          "Most conflicts are not about evil. They’re about uncertainty. People fill uncertainty with stories. Stories fight. Measurements don’t.\n\nThis site separates three things that people usually mix:\n(1) what’s being asked,\n(2) what is currently supported by evidence,\n(3) what is still only a plan.\n\nOnce those are separated, the next step becomes obvious: collect the missing evidence, or stop escalating the claim.",
+          "多数冲突不是因为“坏”，而是因为不确定。不确定会被故事填满，故事会打架；测量不会。\n\n本网站把人们常混在一起的三件事分开：\n(1) 你在问什么，\n(2) 目前证据支持到哪里，\n(3) 哪些还只是计划。\n\n分开之后，下一步就很清楚：补齐缺失证据，或停止升级说法。",
+          "La mayoría de los conflictos no son por maldad, sino por incertidumbre. La gente rellena incertidumbre con historias. Las historias pelean. Las mediciones no.\n\nAquí se separa:\n(1) qué se pregunta,\n(2) qué está respaldado por evidencia ahora,\n(3) qué sigue siendo plan.\n\nCon eso separado, el siguiente paso se vuelve obvio: recolecta evidencia faltante o deja de escalar."
+        ),
+        bullets:{
+          en:["Uncertainty → stories","Stories → conflict","Measurement → calm decisions"],
+          zh:["不确定 → 故事","故事 → 冲突","测量 → 冷静决策"],
+          es:["Incertidumbre → historias","Historias → conflicto","Medición → decisiones calmadas"]
+        },
+        jumps:[
+          {label:P("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"},
+          {label:P("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
+        ]
+      },
+
+      {
+        c:"#60A5FA",
+        q:P("Do you want to start with tools, or start with proof?","你想先看工具，还是先看证明？","¿Quieres empezar por herramientas o por prueba?"),
+        s:P("Tools move fast. Proof keeps you safe. You can choose your posture.","工具让你快。证明让你稳。你可以选姿态。","Herramientas van rápido. La prueba te mantiene seguro. Tú eliges postura."),
+        p:P(
+          "Some people want to see what they can use immediately. Others want to see the boundaries first so they don’t get sold a story.\n\nThat’s why the site has clear lanes:\n• Products: what you can adopt.\n• Gauges: what is measured.\n• Laws: what may be claimed.\n• Explore: where new things live without overpromising.\n\nPick the lane that matches your brain today. The structure will keep you from wandering.",
+          "有人想先看“能立刻用什么”；有人想先看“边界在哪里”，避免被故事带走。\n\n所以网站分成清晰车道：\n• 产品：你能采纳的东西。\n• 量规：被测量的东西。\n• 法则：允许主张到哪里。\n• 探索：新东西在哪里，但不夸口。\n\n选一个符合你今天脑回路的车道。结构会让你不乱走。",
+          "Algunos quieren ver qué pueden usar ya. Otros quieren ver límites primero para no comprar una historia.\n\nPor eso hay carriles:\n• Productos: lo adoptable.\n• Medidores: lo medido.\n• Leyes: lo que se puede afirmar.\n• Explorar: lo nuevo sin sobreprometer.\n\nElige el carril que encaje con tu mente hoy. La estructura evita que te pierdas."
+        ),
+        jumps:[
+          {label:P("OPEN: COMPASS","打开：指南针","ABRIR: BRÚJULA"), href:"/index.html"},
+          {label:P("OPEN: HOME","打开：枢纽","ABRIR: HUB"), href:"/home/"}
+        ]
+      },
+
+      {
+        c:"#0EA5E9",
+        q:P("What does ‘frontier’ mean here—without fantasy?","这里的“前沿”是什么意思——不靠幻想？","¿Qué significa ‘frontera’ aquí—sin fantasía?"),
+        s:P("It means big direction, bounded language, and a real path to evidence.","它意味着大方向、语言有界、并且有证据路径。","Significa dirección grande, lenguaje acotado y ruta real a evidencia."),
+        p:P(
+          "Frontier is allowed to be ambitious. But it’s not allowed to be sloppy.\n\nWhen something is not built yet, we treat it like a shell: it exists as a place to organize, define prerequisites, and keep the story honest. As measurement arrives, it graduates into Products or Gauges. If it never gets evidence, it stays labeled as a plan.\n\nThat’s the balance: curiosity without deception.",
+          "前沿可以很大胆，但不能粗糙。\n\n当某个东西还没建好，我们把它当“壳”：用来组织、定义前置条件、保持叙事诚实。测量一旦到位，它就升级到产品或量规；如果永远没有证据，它就一直被标成计划。\n\n这就是平衡：有好奇心，但不欺骗。",
+          "La frontera puede ser ambiciosa, pero no puede ser descuidada.\n\nCuando algo aún no está construido, se trata como carcasa: sirve para organizar, definir prerrequisitos y mantener honestidad. Cuando llega medición, sube a Productos o Medidores. Si nunca llega evidencia, se queda como plan.\n\nEse es el equilibrio: curiosidad sin engaño."
+        ),
+        jumps:[
+          {label:P("OPEN: FRONTIER","打开：前沿","ABRIR: FRONTERA"), href:"/explore/frontier/"},
+          {label:P("OPEN: VISION","打开：愿景","ABRIR: VISIÓN"), href:"/explore/frontier/vision/"}
+        ]
+      },
+
+      {
+        c:"#A3A3A3",
+        q:P("Where should you go in the next 30 seconds?","接下来30秒你该去哪？","¿A dónde deberías ir en los próximos 30 segundos?"),
+        s:P("Pick the page that matches your intent. Don’t overthink it.","选一个符合你意图的页面。别过度思考。","Elige la página que coincide con tu intención. No lo pienses demasiado."),
+        p:P(
+          "If you want orientation: open the Compass.\nIf you want usable things: open Products.\nIf you want measurements: open Gauges.\nIf you want boundaries: open Laws.\nIf you want ambitious direction: open Explore.\n\nAnd if you already know where you’re going: open Home.\n\nYou can always return here when you feel lost. That’s the point of a Prelude.",
+          "想要导览：开指南针。\n想要能用的东西：开产品。\n想要测量：开量规。\n想要边界：开法则。\n想要大胆方向：开探索。\n\n如果你已经知道去哪：开枢纽。\n\n你随时可以回来——这就是前置页的意义。",
+          "Si quieres orientación: abre Brújula.\nSi quieres cosas usables: abre Productos.\nSi quieres medición: abre Medidores.\nSi quieres límites: abre Leyes.\nSi quieres dirección ambiciosa: abre Explorar.\n\nY si ya sabes a dónde vas: abre Hub.\n\nSiempre puedes volver aquí cuando te pierdas. Para eso existe un Preludio."
+        ),
+        jumps:[
+          {label:P("OPEN: COMPASS","打开：指南针","ABRIR: BRÚJULA"), href:"/index.html"},
+          {label:P("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"},
+          {label:P("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
+        ]
+      }
+    ]
   };
 
-  function P(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+  // ===== apply hero copy =====
+  document.getElementById("tag0").textContent = pick(COPY.hero.tag);
+  document.getElementById("rule0").textContent = pick(COPY.hero.rule);
+  document.getElementById("band0").textContent = pick(COPY.hero.band);
 
-  var p=P();
-  document.getElementById("p0").textContent=p.p0;
-  document.getElementById("r0").textContent=p.r0;
-  document.getElementById("p1a").textContent=p.p1a;
-  document.getElementById("p1b").textContent=p.p1b;
-  document.getElementById("p2a").textContent=p.p2a;
-  document.getElementById("p2b").textContent=p.p2b;
-  document.getElementById("p3a").textContent=p.p3a;
-  document.getElementById("p3b").textContent=p.p3b;
-  document.getElementById("p4a").textContent=p.p4a;
-  document.getElementById("p4b").textContent=p.p4b;
-
-  if(lang==="zh"){
-    document.getElementById("btnBack").textContent="返回";
-    document.getElementById("btnCompass").textContent="指南针";
-    document.getElementById("btnHome").textContent="主页";
-    document.getElementById("qProducts").textContent="打开产品";
-    document.getElementById("qExplore").textContent="打开探索";
-    document.getElementById("qLaws").textContent="打开法则";
-    document.getElementById("qGauges").textContent="打开量规";
-    document.getElementById("band").textContent="坡道（一次一件事）";
-    document.getElementById("q1").textContent="你真正想做什么？";
-    document.getElementById("s1").textContent="决策？风险？方向？构建？本站把你路由到正确层。";
-    document.getElementById("q2").textContent="这里的“有限测量”是什么意思？";
-    document.getElementById("s2").textContent="问题不是无穷的，它可以被枚举。";
-    document.getElementById("q3").textContent="哪些层回答哪些问题？";
-    document.getElementById("s3").textContent="地图、信号、教义、部署——各司其职。";
-    document.getElementById("q4").textContent="下一步该做什么？";
-    document.getElementById("s4").textContent="选择入口姿态：方向、工具、规则或信号。";
-    document.getElementById("dockCompass").textContent="指南针";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-  }else if(lang==="es"){
-    document.getElementById("btnBack").textContent="VOLVER";
-    document.getElementById("btnCompass").textContent="BRÚJULA";
-    document.getElementById("btnHome").textContent="INICIO";
-    document.getElementById("qProducts").textContent="ABRIR PRODUCTOS";
-    document.getElementById("qExplore").textContent="ABRIR EXPLORAR";
-    document.getElementById("qLaws").textContent="ABRIR LEYES";
-    document.getElementById("qGauges").textContent="ABRIR MEDIDORES";
-    document.getElementById("band").textContent="LA RAMPA (UNA COSA A LA VEZ)";
-    document.getElementById("q1").textContent="¿Qué intentas hacer realmente?";
-    document.getElementById("s1").textContent="Decisión, riesgo, dirección, construcción: ruteamos a la capa correcta.";
-    document.getElementById("q2").textContent="¿Qué significa ‘medida finita’ aquí?";
-    document.getElementById("s2").textContent="El problema no es infinito. Se puede enumerar.";
-    document.getElementById("q3").textContent="¿Qué capas responden qué preguntas?";
-    document.getElementById("s3").textContent="Mapa, señales, doctrina, despliegue: cada una tiene un trabajo.";
-    document.getElementById("q4").textContent="¿Qué haces después?";
-    document.getElementById("s4").textContent="Elige postura: dirección, herramientas, prueba o señales.";
-    document.getElementById("dockCompass").textContent="BRÚJULA";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
+  // ===== helpers =====
+  function labelOpen(){
+    if(lang==="zh") return "打开";
+    if(lang==="es") return "ABRIR";
+    return "OPEN";
   }
 
-  // single-open accordion
-  function bind(id){
-    var box=document.getElementById(id);
-    var head=box.querySelector(".accHead");
-    var chev=box.querySelector(".accC");
-    function act(){
-      var open=!box.classList.contains("open");
-      document.querySelectorAll(".acc").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".accC"); if(c) c.textContent="▸";
+  // ===== render accordion =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".card").forEach(function(c){
+      c.classList.remove("open");
+      var ch=c.querySelector(".chev");
+      if(ch) ch.textContent="▸";
+    });
+  }
+
+  function makeCard(item, idx){
+    var card=document.createElement("div");
+    card.className="card";
+    card.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.setAttribute("tabindex","0");
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var q=document.createElement("div");
+    q.className="q";
+    q.textContent=pick(item.q);
+
+    var s=document.createElement("div");
+    s.className="s";
+    s.textContent=pick(item.s);
+
+    tb.appendChild(q);
+    tb.appendChild(s);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var paras=String(pick(item.p)).split("\n\n");
+    paras.forEach(function(t){
+      var p=document.createElement("p");
+      p.className="p";
+      p.textContent=t;
+      body.appendChild(p);
+    });
+
+    if(item.bullets){
+      var ul=document.createElement("ul");
+      ul.className="ul";
+      (lang==="zh"?item.bullets.zh:(lang==="es"?item.bullets.es:item.bullets.en)).forEach(function(t){
+        var li=document.createElement("li");
+        li.textContent=t;
+        ul.appendChild(li);
       });
-      box.classList.toggle("open", open);
-      chev.textContent=open?"▾":"▸";
+      body.appendChild(ul);
     }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-  }
-  ["a1","a2","a3","a4"].forEach(bind);
 
-  // open first
-  document.getElementById("a1").classList.add("open");
-  document.getElementById("a1").querySelector(".accC").textContent="▾";
+    var actions=document.createElement("div");
+    actions.className="actions";
+    (item.jumps||[]).forEach(function(j){
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent = labelOpen()+": "+pick(j.label).replace(/^OPEN:\s*/,"").replace(/^打开：/,"").replace(/^ABRIR:\s*/,"");
+      a.href = j.href + q();
+      actions.appendChild(a);
+    });
+    body.appendChild(actions);
+
+    function toggle(){
+      var willOpen=!card.classList.contains("open");
+      closeAll();
+      if(willOpen){
+        card.classList.add("open");
+        chev.textContent="▾";
+      }
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    if(idx===0){
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return card;
+  }
+
+  function render(){
+    stack.innerHTML="";
+    COPY.cards.forEach(function(item, idx){
+      stack.appendChild(makeCard(item, idx));
+    });
+
+    // mild label localization for top nav + CTAs
+    if(lang==="zh"){
+      document.getElementById("k0").textContent="前置页";
+      document.getElementById("h0").textContent="你到底想让什么变成真？";
+      document.getElementById("ctaCompass").textContent="打开：指南针";
+      document.getElementById("ctaProducts").textContent="打开：产品";
+      document.getElementById("ctaExplore").textContent="打开：探索";
+      document.getElementById("btnRoot").textContent="根";
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnIndex").textContent="索引";
+      document.getElementById("btnHome").textContent="枢纽";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+    }else if(lang==="es"){
+      document.getElementById("k0").textContent="PRELUDIO";
+      document.getElementById("h0").textContent="¿QUÉ INTENTAS HACER VERDAD?";
+      document.getElementById("ctaCompass").textContent="ABRIR: BRÚJULA";
+      document.getElementById("ctaProducts").textContent="ABRIR: PRODUCTOS";
+      document.getElementById("ctaExplore").textContent="ABRIR: EXPLORAR";
+      document.getElementById("btnRoot").textContent="RAÍZ";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnIndex").textContent="ÍNDICE";
+      document.getElementById("btnHome").textContent="HUB";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+    }else{
+      document.getElementById("k0").textContent="PRELUDE";
+      document.getElementById("h0").textContent="WHAT ARE YOU TRYING TO MAKE TRUE?";
+      document.getElementById("ctaCompass").textContent="OPEN: COMPASS";
+      document.getElementById("ctaProducts").textContent="OPEN: PRODUCTS";
+      document.getElementById("ctaExplore").textContent="OPEN: EXPLORE";
+      document.getElementById("btnRoot").textContent="ROOT";
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnIndex").textContent="INDEX";
+      document.getElementById("btnHome").textContent="HOME";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockExplore").textContent="EXPLORE";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+    }
+  }
+
+  render();
 })();
 </script>
 

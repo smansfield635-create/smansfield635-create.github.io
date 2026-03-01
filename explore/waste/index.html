@@ -5,7 +5,12 @@
        - Single-open accordion
        - No lenses (orientation layer)
        - No modal traps
-       - State carry
+       - State carry (lang/style/time/depth pass-through)
+     ROUTES:
+       - BACK → /explore/
+       - DOOR → /door/
+       - EXIT → /index.html
+       - DOCK: HOME / PRODUCTS / LAWS / GAUGES
 -->
 
 <!doctype html>
@@ -32,8 +37,9 @@ body::before,body::after{pointer-events:none!important}
   --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
 
-  /* waste = red signal */
-  --sigR:rgba(255,70,70,.14);
+  /* waste = red/orange signal (frontier) */
+  --sigA:rgba(255,90,90,.16);
+  --sigB:rgba(255,170,60,.10);
 
   --stroke:rgba(255,255,255,.12);
   --mut:rgba(255,255,255,.80);
@@ -61,7 +67,8 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 80% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 55% 110%, var(--sigR), transparent 62%),
+    radial-gradient(circle at 22% 90%, var(--sigA), transparent 58%),
+    radial-gradient(circle at 78% 92%, var(--sigB), transparent 62%),
     linear-gradient(160deg,var(--inkA),var(--inkB));
   box-shadow:0 44px 160px rgba(0,0,0,.68);
 }
@@ -124,7 +131,7 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="hero">
     <p class="k" id="hk">EXPLORE · WASTE</p>
-    <h1 class="h1" id="ht">WHAT IF “TRASH” IS JUST MISROUTED VALUE?</h1>
+    <h1 class="h1" id="ht">WHAT IF “TRASH” IS A ROUTING FAILURE?</h1>
     <p class="lede" id="hs"></p>
     <div class="rule" id="rule"></div>
   </div>
@@ -146,8 +153,8 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b1b"></p>
         <ul class="ul" id="b1ul"></ul>
         <div class="actions">
+          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
           <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
-          <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
         </div>
       </div>
     </div>
@@ -165,7 +172,7 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b2b"></p>
         <ul class="ul" id="b2ul"></ul>
         <div class="actions">
-          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
+          <a class="btn" id="goShimmer" href="/explore/frontier/vision/urban-resource-os/">OPEN URBAN RESOURCE OS</a>
           <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
         </div>
       </div>
@@ -204,147 +211,180 @@ body::before,body::after{pointer-events:none!important}
 <script>
 (function(){
 
+  // state carry (full params), but this page only renders language
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){ return "?lang="+encodeURIComponent(lang); }
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
   function wire(id,path){var el=document.getElementById(id);if(el)el.href=path+q();}
   wire("btnBack","/explore/");
   wire("btnDoor","/door/");
   wire("btnExit","/index.html");
+
   wire("dockHome","/home/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
-  wire("goProducts","/products/");
-  wire("goExplore","/explore/");
+
   wire("goVision","/explore/frontier/vision/");
+  wire("goProducts","/products/");
+  wire("goShimmer","/explore/frontier/vision/urban-resource-os/");
   wire("goLaws","/laws/");
   wire("goGauges","/gauges/");
   wire("goDotGrid","/products/dot-grid/");
 
+  // language buttons (reload same path)
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q();
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
   var COPY={
     en:{
       hk:"EXPLORE · WASTE",
-      ht:"WHAT IF “TRASH” IS JUST MISROUTED VALUE?",
-      hs:"Most waste systems destroy value by mixing everything and burning it down. The opportunity is routing: classify precisely, separate early, and convert each fraction into its highest-value pathway.",
-      rule:"Boundary: Orientation surface. Frames waste-to-value posture. Measurement and enforcement live in Gauges and Laws.",
+      ht:"WHAT IF “TRASH” IS A ROUTING FAILURE?",
+      hs:"Landfills, burn piles, and ‘dispose’ systems are entropy-maximizing defaults. They destroy material value, leak carbon, and erase evidence. This lane treats waste as a molecular inventory problem: classify, split, route, convert, retain.",
+      rule:"Boundary: Orientation surface. Waste posture is defined here. Claims and enforcement belong to Laws; measurement belongs to Gauges.",
       band:"WASTE SYSTEM MAP",
-      t1:"The real problem",
-      s1:"Mixed streams create mixed outcomes: low recovery and high emissions.",
-      b1a:"Landfills and incineration are not ‘solutions’—they are entropy accelerators. When streams mix, recovery becomes expensive and the system defaults to burning value.",
-      b1b:"The biggest hidden cost is not disposal. It is destroyed optionality: plastics that could be feedstock, organics that could be methane, minerals that could be aggregate, metals that should never be lost.",
-      b1ul:[
-        "Mixed inputs → low-quality outputs.",
-        "Combustion → carbon loss.",
-        "Contamination → recovery collapse.",
-        "Policy fights → stalled deployment."
-      ],
-      t2:"The posture: molecular routing",
-      s2:"Classify → segment → route → convert → retain.",
-      b2a:"The winning move is segmentation before conversion. If you can see the stream, you can route the stream.",
-      b2b:"SHIMMER formalizes this: a routing matrix chooses pathways in real time based on thermodynamics, market value, and carbon constraint—without pretending physics can be cheated.",
-      b2ul:[
-        "Mechanical recovery where feasible.",
-        "Pyrolysis / digestion where value is highest.",
-        "Gasification / refinement where residue remains.",
-        "Carbon retention where emissions would dominate."
-      ],
-      t3:"How we keep claims support-bounded",
-      s3:"Receipts first, outputs second, claims last.",
-      b3a:"We don’t sell a miracle. We build a measurement-first routing system. If something can’t be verified, it stays labeled as concept or roadmap.",
-      b3b:"Dot.Grid + Gauges make the system observable: what moved, what clustered, what changed, and where drift is forming. Laws sets what you’re allowed to conclude from those signals.",
-      b3ul:[
-        "No net-positive fusion claims.",
-        "No ‘magic efficiency’ language.",
-        "No causality without measurement rules.",
-        "New epoch on any outcome-affecting change."
-      ]
+      t1:"The problem (why disposal keeps failing)",
+      s1:"When everything becomes ‘mixed,’ value gets destroyed.",
+      b1a:"Heterogeneous waste streams get forced into one of two paths: bury it or burn it. Both paths erase material value and make accountability harder.",
+      b1b:"The real failure is routing: once streams are mixed, you’ve already lost most of the recovery options. The system needs intelligence at intake, not heroics at the end.",
+      b1ul:["Mixed streams → lost value.","Combustion = entropy-maximizing default.","Carbon loss + emissions complexity.","No receipts → no accountability."],
+      t2:"The solution shape (what ‘SHIMMER’ is really doing)",
+      s2:"Treat the city like a refinery: split streams, then optimize routes.",
+      b2a:"SHIMMER is a routing architecture: intake intelligence → segmentation → routing matrix → conversion modules → outputs (energy, materials, retained carbon).",
+      b2b:"It’s not a single technology. It’s a system that chooses the right pathway per stream under thermodynamic and market constraints—without pretending to break physics.",
+      b2ul:["Classification at intake (real-time).","Segmentation (magnets, density, polymer ID).","Routing matrix (optimize Ω).","Multi-output conversion (not one pipe)."],
+      t3:"What you can measure (so the story stays bounded)",
+      s3:"A system you can’t measure will drift under scale.",
+      b3a:"You can measure diversion, yield, and correlation: what inputs produced what outputs, under what scope, with what variance.",
+      b3b:"Dot.Grid exposes correlation and shared-dependency risk. Gauges show trends. Laws define what you’re allowed to claim from those trends.",
+      b3ul:["Mass/energy conservation in every module.","Windowed yield tracking (no cherry-pick).","Reason-coded changes (new epoch on rule shift).","Containment-first when variance spikes."]
     },
     zh:{
       hk:"探索 · 废弃物",
-      ht:"如果“垃圾”只是被路由错了的价值呢？",
-      hs:"多数废弃物系统通过混合与燃烧来摧毁价值。机会在路由：精确分类、尽早分离、把每一份物料送入最高价值路径。",
-      rule:"边界：导览层。说明“废弃物→价值”的姿态。测量与执行在量规与法则中。",
+      ht:"如果“垃圾”是路由失败呢？",
+      hs:"填埋、露天焚烧和“处理掉”是熵最大化默认值：毁掉材料价值、泄露碳、抹掉证据。本通道把废弃物当作分子库存问题：分类、分段、路由、转化、保留。",
+      rule:"边界：导览层。这里定义废弃物姿态。主张与执法归法则；测量归量规。",
       band:"废弃物系统地图",
-      t1:"真实问题",
-      s1:"混合输入 → 混合结果：低回收 + 高排放。",
-      b1a:"填埋与焚烧不是“解决”，而是熵加速器。流一混，回收就贵，系统就会默认把价值烧掉。",
-      b1b:"最大隐性成本不是处置费，而是被毁掉的选择权：本可做化工原料的塑料、可产气的有机物、可做骨料的矿物、永不该丢的金属。",
-      b1ul:["混合输入→低质量输出。","燃烧→碳损失。","污染→回收崩塌。","争议→部署停滞。"],
-      t2:"姿态：分子级路由",
-      s2:"分类→分段→路由→转化→保留。",
-      b2a:"胜负手是：先分离再转化。看得见流，才能路由流。",
-      b2b:"SHIMMER 将其形式化：路由矩阵按热力学、市场价值与碳约束实时选择路径，不假装能作弊物理。",
-      b2ul:["可行处机械回收。","高价值处热解/消化。","残余处气化/精炼。","排放主导处做碳保留。"],
-      t3:"如何保持“主张有支撑边界”",
-      s3:"先收据，再输出，最后才是主张。",
-      b3a:"我们不卖奇迹，只做测量优先的路由系统。不可核查的内容只能标为概念或路线图。",
-      b3b:"Dot.Grid + 量规让系统可观测：谁在一起动、哪里聚类、哪里变化、漂移如何形成。法则约束你能从这些信号得出什么结论。",
-      b3ul:["不做净增益聚变主张。","不做“魔法效率”措辞。","无测量规则不谈因果。","影响结果的变更必须新纪元。"]
+      t1:"问题（为什么处置总失败）",
+      s1:"一旦全部变“混合”，价值就被毁掉。",
+      b1a:"异质废弃物流被迫走两条路：埋或烧。两者都会抹掉材料价值，并让责任追溯更难。",
+      b1b:"真正失败点是路由：流一旦混合，回收选项就大量消失。系统需要入口智能，而不是末端英雄主义。",
+      b1ul:["混合→价值损失。","燃烧=熵最大化默认。","碳损失+排放复杂。","无收据→无问责。"],
+      t2:"解决形状（SHIMMER 真正在做什么）",
+      s2:"把城市当精炼厂：先分流，再优化路线。",
+      b2a:"SHIMMER 是路由架构：入口智能→分段→路由矩阵→转化模块→输出（能源、材料、碳保留）。",
+      b2b:"它不是单一技术，而是系统：在热力学与市场约束下为每种流选择正确路径，不假装突破物理。",
+      b2ul:["入口实时分类。","分段（磁选/密度/聚合物识别）。","路由矩阵（优化 Ω）。","多输出转化（不是单管道）。"],
+      t3:"可测内容（让故事有界）",
+      s3:"不可测的系统会在规模下漂移。",
+      b3a:"可测：分流率、产率、相关性——什么输入产生了什么输出，在什么范围、什么方差下。",
+      b3b:"Dot.Grid 暴露相关与共享依赖风险；量规显示趋势；法则限定趋势可被主张的含义。",
+      b3ul:["每模块守恒核算。","窗口化产率追踪。","规则变更新纪元。","方差暴涨先隔离。"]
     },
     es:{
       hk:"EXPLORAR · RESIDUOS",
-      ht:"¿Y SI ‘BASURA’ ES VALOR MAL RUTEADO?",
-      hs:"Muchos sistemas destruyen valor mezclándolo todo y quemándolo. La oportunidad es el ruteo: clasificar con precisión, separar temprano y convertir cada fracción en su vía de mayor valor.",
-      rule:"Límite: superficie de orientación. Postura residuos→valor. Medición y ejecución en Medidores y Leyes.",
-      band:"MAPA SISTEMA RESIDUOS",
-      t1:"El problema real",
-      s1:"Entradas mezcladas → salidas mezcladas: baja recuperación y más emisiones.",
-      b1a:"Vertederos e incineración no son ‘solución’: aceleran entropía. Mezclas flujos, y el sistema termina quemando valor.",
-      b1b:"El costo oculto no es el descarte, sino la opcionalidad destruida: plásticos que podrían ser feedstock, orgánicos que podrían ser gas, minerales que podrían ser agregados, metales que nunca deberían perderse.",
-      b1ul:["Entradas mezcladas → salidas pobres.","Combustión → pérdida de carbono.","Contaminación → colapso de recuperación.","Conflicto político → despliegue lento."],
-      t2:"La postura: ruteo molecular",
-      s2:"Clasificar → segmentar → rutear → convertir → retener.",
-      b2a:"La jugada ganadora es segmentar antes de convertir. Si ves el flujo, puedes rutearlo.",
-      b2b:"SHIMMER lo formaliza: una matriz de ruteo elige vías en tiempo real según termodinámica, valor de mercado y restricción de carbono—sin fingir que la física se puede hacer trampa.",
-      b2ul:["Recuperación mecánica donde aplique.","Pirólisis/digestión donde haya valor.","Gasificación/refinamiento para residuo.","Retención de carbono donde domine emisión."],
-      t3:"Cómo mantenemos afirmaciones acotadas",
-      s3:"Recibos primero, salidas después, afirmaciones al final.",
-      b3a:"No vendemos milagros. Construimos un sistema medible. Si no es verificable, queda como concepto o ruta.",
-      b3b:"Dot.Grid + Medidores vuelven el sistema observable. Leyes define qué puedes concluir de esas señales.",
-      b3ul:["Sin ganancia neta de fusión.","Sin lenguaje de ‘eficiencia mágica’.","Sin causalidad sin reglas de medición.","Cambios que afecten resultados → nueva época."]
+      ht:"¿Y SI ‘BASURA’ ES UN FALLO DE RUTEO?",
+      hs:"Vertederos y quema son defaults de entropía máxima: destruyen valor material, pierden carbono y borran evidencia. Este carril trata residuos como inventario molecular: clasificar, separar, rutear, convertir y retener.",
+      rule:"Límite: superficie de orientación. Aquí se define postura. Afirmaciones y enforcement en Leyes; medición en Medidores.",
+      band:"MAPA DE RESIDUOS",
+      t1:"El problema (por qué falla ‘disponer’)",
+      s1:"Cuando todo se mezcla, el valor se destruye.",
+      b1a:"Residuos heterogéneos se fuerzan a enterrar o quemar. Ambos caminos borran valor y dificultan responsabilidad.",
+      b1b:"El fallo real es ruteo: si mezclas streams, pierdes opciones de recuperación. Necesitas inteligencia al ingreso, no heroísmos al final.",
+      b1ul:["Streams mezclados → valor perdido.","Combustión = default de entropía máxima.","Pérdida de carbono + complejidad.","Sin recibos → sin accountability."],
+      t2:"La forma de la solución (qué hace SHIMMER)",
+      s2:"La ciudad como refinería: separar y optimizar rutas.",
+      b2a:"SHIMMER: inteligencia de ingreso → segmentación → matriz de ruteo → módulos de conversión → salidas (energía, materiales, carbono retenido).",
+      b2b:"No es una tecnología única. Es un sistema que elige la ruta correcta por stream bajo límites termodinámicos y de mercado—sin fingir romper física.",
+      b2ul:["Clasificación en tiempo real.","Segmentación (imanes, densidad, polímeros).","Matriz de ruteo (optimiza Ω).","Conversión multi-salida."],
+      t3:"Lo medible (para acotar la historia)",
+      s3:"Si no se mide, deriva al escalar.",
+      b3a:"Se mide desvío, rendimiento y correlación: qué entradas produjeron qué salidas, bajo qué alcance, con qué varianza.",
+      b3b:"Dot.Grid expone correlación y riesgo compartido. Medidores muestra tendencias. Leyes define lo que puedes afirmar.",
+      b3ul:["Conservación en cada módulo.","Rendimiento por ventana.","Nueva época si cambia regla.","Contención primero si sube varianza."]
     }
   };
 
-  function T(){return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;}
-  var P=T();
+  function P(){return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;}
+  var Pk=P();
+
   function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
   function fillUL(id,arr){var ul=document.getElementById(id);ul.innerHTML="";arr.forEach(function(x){var li=document.createElement("li");li.textContent=x;ul.appendChild(li);});}
 
-  set("hk",P.hk); set("ht",P.ht); set("hs",P.hs);
-  set("rule",P.rule); set("band",P.band);
+  set("hk",Pk.hk); set("ht",Pk.ht); set("hs",Pk.hs);
+  set("rule",Pk.rule); set("band",Pk.band);
 
-  set("t1",P.t1); set("s1",P.s1); set("b1a",P.b1a); set("b1b",P.b1b); fillUL("b1ul",P.b1ul);
-  set("t2",P.t2); set("s2",P.s2); set("b2a",P.b2a); set("b2b",P.b2b); fillUL("b2ul",P.b2ul);
-  set("t3",P.t3); set("s3",P.s3); set("b3a",P.b3a); set("b3b",P.b3b); fillUL("b3ul",P.b3ul);
+  set("t1",Pk.t1); set("s1",Pk.s1); set("b1a",Pk.b1a); set("b1b",Pk.b1b); fillUL("b1ul",Pk.b1ul);
+  set("t2",Pk.t2); set("s2",Pk.s2); set("b2a",Pk.b2a); set("b2b",Pk.b2b); fillUL("b2ul",Pk.b2ul);
+  set("t3",Pk.t3); set("s3",Pk.s3); set("b3a",Pk.b3a); set("b3b",Pk.b3b); fillUL("b3ul",Pk.b3ul);
 
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  btnEN.classList.toggle("active", lang==="en");
-  btnZH.classList.toggle("active", lang==="zh");
-  btnES.classList.toggle("active", lang==="es");
-  btnEN.onclick=function(){location.search="?lang=en"};
-  btnZH.onclick=function(){location.search="?lang=zh"};
-  btnES.onclick=function(){location.search="?lang=es"};
+  // buttons (language-only)
+  if(lang==="zh"){
+    set("btnBack","返回"); set("btnDoor","门"); set("btnExit","退出");
+    set("dockHome","主页"); set("dockProducts","产品"); set("dockLaws","法则"); set("dockGauges","量规");
+    set("goVision","打开愿景"); set("goProducts","打开产品");
+    set("goShimmer","打开 城市资源OS"); set("goLaws","打开法则");
+    set("goGauges","打开量规"); set("goDotGrid","打开 DOT.GRID");
+  }else if(lang==="es"){
+    set("btnBack","VOLVER"); set("btnDoor","PUERTA"); set("btnExit","SALIR");
+    set("dockHome","INICIO"); set("dockProducts","PRODUCTOS"); set("dockLaws","LEYES"); set("dockGauges","MEDIDORES");
+    set("goVision","ABRIR VISIÓN"); set("goProducts","ABRIR PRODUCTOS");
+    set("goShimmer","ABRIR URBAN RESOURCE OS"); set("goLaws","ABRIR LEYES");
+    set("goGauges","ABRIR MEDIDORES"); set("goDotGrid","ABRIR DOT.GRID");
+  }
 
-  var panels=document.querySelectorAll(".panel");
-  panels.forEach(function(p){
+  // single-open accordion
+  var panels=[].slice.call(document.querySelectorAll(".panel"));
+  function closeAll(){
+    panels.forEach(function(p){
+      p.classList.remove("open");
+      var c=p.querySelector(".pChev"); if(c) c.textContent="▸";
+    });
+  }
+  panels.forEach(function(p, idx){
     var head=p.querySelector(".pHead");
     var chev=p.querySelector(".pChev");
-    function toggle(){
-      var open=!p.classList.contains("open");
-      panels.forEach(function(x){x.classList.remove("open");x.querySelector(".pChev").textContent="▸";});
-      if(open){p.classList.add("open");chev.textContent="▾";}
+    function act(){
+      var willOpen=!p.classList.contains("open");
+      closeAll();
+      if(willOpen){ p.classList.add("open"); chev.textContent="▾"; }
     }
-    head.addEventListener("click",toggle);
-    head.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    if(idx===0){ p.classList.add("open"); chev.textContent="▾"; }
   });
-  panels[0].classList.add("open");
-  panels[0].querySelector(".pChev").textContent="▾";
 
 })();
 </script>

@@ -1,15 +1,16 @@
 <!-- TNT — /door/index.html
-     FRONTIER DOOR
+     DOOR · FRONTIER POSITIONING PAGE
      ROLE:
-       - Human-first entry
-       - Frontier tone (ambitious but grounded)
-       - No diagnostic jargon
-       - Language toggle: EN / 中文 / ES
-       - Routes to: /compass/ /prelude/ /structure/ /explore/
+       - Monumental positioning statement
+       - No lenses
+       - No doctrine vocabulary
+       - Heavy frontier tone
+       - Clear strength + credibility
+       - Routes into Compass, Prelude, Products
      LOCKS:
-       - ui.css owns background
-       - branch.css owns geometry
-       - instruments.js canonical state
+       - Uses ui.css + branch.css + instruments.js
+       - No html/body background override
+       - State carry (lang/style/time/depth)
 -->
 
 <!doctype html>
@@ -17,302 +18,183 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER · FRONTIER</title>
+<title>ENTER</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
+a{text-decoration:none;color:inherit}
+body{position:relative;z-index:0}
+body::before,body::after{pointer-events:none!important;z-index:0!important}
+#root{position:relative;z-index:10}
 
 :root{
-  --dockH:90px;
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-  --gold:rgba(212,175,55,.45);
-  --opal:rgba(210,190,255,.12);
+  --inkA:rgba(12,22,38,.96);
+  --inkB:rgba(6,10,16,.99);
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(255,80,80,.14);
+  --stroke:rgba(255,255,255,.12);
 }
 
-/* Top */
-.top{
-  position:fixed;left:0;right:0;top:16px;
-  display:flex;justify-content:space-between;
-  padding:0 16px;
-  z-index:200;
-}
-.top .right{display:flex;gap:10px}
-
-/* Main */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 30px);
+/* Layout */
+.wrap{
+  width:min(1040px,94vw);
+  margin:100px auto 60px;
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:24px;
 }
 
+/* Monument block */
 .hero{
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid var(--stroke);
   border-radius:28px;
+  padding:32px 26px;
   background:
-    radial-gradient(circle at 20% 30%, var(--opal), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.12));
-  backdrop-filter:blur(12px);
-  padding:36px 36px 30px;
-  box-shadow:0 40px 140px rgba(0,0,0,.65);
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 70%, var(--opalB), transparent 75%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  box-shadow:0 60px 180px rgba(0,0,0,.65);
 }
 
-.hero h1{
-  font-size:44px;
+.k{
+  letter-spacing:6px;
+  font-size:12px;
+  opacity:.75;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+.h{
+  font-size:36px;
   font-weight:950;
+  line-height:1.1;
   letter-spacing:1px;
-  margin:0 0 18px;
+  margin:0 0 16px;
 }
 
-.hero p{
-  font-size:18px;
-  line-height:1.65;
-  margin:0 0 14px;
-  max-width:920px;
-  opacity:.95;
+.p{
+  font-size:16px;
+  line-height:1.7;
+  opacity:.92;
+  max-width:80ch;
 }
 
-.section{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  padding:24px 28px;
-  background:linear-gradient(145deg, var(--inkA), var(--inkB));
-  box-shadow:0 22px 70px rgba(0,0,0,.55);
+.ctaRow{
+  margin-top:28px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
 }
 
-.section h2{
-  margin:0 0 12px;
-  font-size:22px;
+.btn{
+  padding:14px 20px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(6px);
   font-weight:900;
   letter-spacing:.4px;
+  cursor:pointer;
 }
 
-.section p{
+/* Structural reinforcement blocks */
+.block{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:20px 22px;
+  background:linear-gradient(160deg, rgba(12,22,38,.82), rgba(6,10,16,.88));
+}
+
+.bh{
+  font-size:20px;
+  font-weight:900;
   margin:0 0 10px;
-  font-size:16px;
-  line-height:1.6;
+}
+
+.bp{
+  font-size:15px;
+  line-height:1.65;
   opacity:.9;
 }
 
-.navgrid{
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:14px;
-}
-
-@media (max-width:900px){
-  .navgrid{grid-template-columns:1fr 1fr}
-}
-@media (max-width:520px){
-  .navgrid{grid-template-columns:1fr}
-}
-
-.navcard{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 40% 20%, rgba(212,175,55,.10), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-
-.navcard:hover{
-  transform:translateY(-4px);
-  box-shadow:0 28px 90px rgba(0,0,0,.75), 0 0 30px rgba(212,175,55,.25);
-}
-
-.navcard h3{
-  margin:0 0 10px;
-  font-size:18px;
-  font-weight:900;
-}
-
-.navcard p{
-  margin:0;
-  font-size:14px;
-  line-height:1.5;
-  opacity:.85;
-}
-
-.footer{
-  text-align:center;
-  font-size:13px;
-  opacity:.65;
-  margin-top:10px;
+@media (max-width:560px){
+  .h{font-size:30px}
+  .p{font-size:15px}
 }
 </style>
 </head>
 
 <body>
+<div id="root">
 
-<div class="top">
-  <div></div>
-  <div class="right">
-    <button class="btn" id="btnEN">EN</button>
-    <button class="btn" id="btnZH">中文</button>
-    <button class="btn" id="btnES">ES</button>
-  </div>
-</div>
-
-<div class="page">
+<div class="wrap">
 
   <div class="hero">
-    <h1 id="heroTitle">WE BUILD BIG IDEAS THAT HOLD</h1>
-    <p id="heroP1">
-      You’ve heard bold promises before — clean energy, smarter systems,
-      faster software, education that works.
+    <div class="k">FRONTIER</div>
+
+    <h1 class="h">
+      The loudest ideas you’ve heard in years —  
+      built on measurable structure.
+    </h1>
+
+    <p class="p">
+      We are not here to whisper incremental change.  
+      We are here to rebuild how systems are designed, measured, and scaled.  
+      Energy. Education. Software. Governance. Infrastructure.  
+      Not as fragments — but as connected architecture.
     </p>
-    <p id="heroP2">
-      The difference here is simple:
-      if it cannot hold under pressure, it does not scale.
+
+    <p class="p" style="margin-top:18px;">
+      You are here because something doesn’t quite add up.  
+      Something feels unstable.  
+      Something scales until it breaks.  
+      And you know there must be a better way.
     </p>
-    <p id="heroP3">
-      This is not imagination without structure.
-      This is frontier work built on architecture.
+
+    <p class="p" style="margin-top:18px;">
+      There is.
     </p>
-  </div>
 
-  <div class="section">
-    <h2 id="problemTitle">THE REAL PROBLEM</h2>
-    <p id="problemP1">
-      Most systems fail for the same reason:
-      they grow faster than their structure.
-    </p>
-    <p id="problemP2">
-      Everything looks stable —
-      until one weak connection spreads through everything.
-    </p>
-    <p id="problemP3">
-      We don’t wait for collapse.
-      We map the weak points before they spread.
-    </p>
-  </div>
-
-  <div class="section">
-    <h2 id="navTitle">CHOOSE YOUR ENTRY POINT</h2>
-
-    <div class="navgrid">
-
-      <a class="navcard" href="/compass/">
-        <h3 id="nav1T">Compass</h3>
-        <p id="nav1P">Orient yourself. Understand where you are before you move.</p>
-      </a>
-
-      <a class="navcard" href="/prelude/">
-        <h3 id="nav2T">Prelude</h3>
-        <p id="nav2P">See the problem clearly before exploring the frontier.</p>
-      </a>
-
-      <a class="navcard" href="/structure/">
-        <h3 id="nav3T">Structure</h3>
-        <p id="nav3P">Explore the architecture that keeps large ideas stable.</p>
-      </a>
-
-      <a class="navcard" href="/explore/">
-        <h3 id="nav4T">Innovation</h3>
-        <p id="nav4P">Enter the frontier — energy, water, software, education.</p>
-      </a>
-
+    <div class="ctaRow">
+      <a class="btn" id="goCompass" href="/index.html">OPEN COMPASS</a>
+      <a class="btn" id="goPrelude" href="/prelude/">READ PRELUDE</a>
+      <a class="btn" id="goProducts" href="/products/">SEE PRODUCTS</a>
     </div>
   </div>
 
-  <div class="footer" id="footerText">
-    Ambition is easy. Stability under pressure is rare.
+  <div class="block">
+    <div class="bh">What makes this different</div>
+    <div class="bp">
+      Big vision without structure collapses.  
+      Structure without vision stagnates.  
+      This system carries both — simultaneously.
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="bh">What you will not find here</div>
+    <div class="bp">
+      No inflated promises.  
+      No hidden rewrites.  
+      No silent shifts in meaning.
+      If something changes, it is deliberate.
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="bh">What you will find</div>
+    <div class="bp">
+      A navigable framework.  
+      A measurable backbone.  
+      A frontier that does not drift into fantasy.
+    </div>
   </div>
 
 </div>
 
-<script>
-(function(){
-  var lang=localStorage.getItem("gd_lang")||"en";
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  localStorage.setItem("gd_lang",lang);
-
-  var EN={
-    heroTitle:"WE BUILD BIG IDEAS THAT HOLD",
-    heroP1:"You’ve heard bold promises before — clean energy, smarter systems, faster software, education that works.",
-    heroP2:"The difference here is simple: if it cannot hold under pressure, it does not scale.",
-    heroP3:"This is not imagination without structure. This is frontier work built on architecture.",
-    problemTitle:"THE REAL PROBLEM",
-    problemP1:"Most systems fail for the same reason: they grow faster than their structure.",
-    problemP2:"Everything looks stable — until one weak connection spreads through everything.",
-    problemP3:"We don’t wait for collapse. We map the weak points before they spread.",
-    navTitle:"CHOOSE YOUR ENTRY POINT",
-    nav1T:"Compass", nav1P:"Orient yourself. Understand where you are before you move.",
-    nav2T:"Prelude", nav2P:"See the problem clearly before exploring the frontier.",
-    nav3T:"Structure", nav3P:"Explore the architecture that keeps large ideas stable.",
-    nav4T:"Innovation", nav4P:"Enter the frontier — energy, water, software, education.",
-    footer:"Ambition is easy. Stability under pressure is rare."
-  };
-
-  var ZH={
-    heroTitle:"我们构建能承压的大想法",
-    heroP1:"你听过很多宏大承诺——清洁能源、更聪明的系统、更快的软件、有效的教育。",
-    heroP2:"这里的不同很简单：如果它不能承受压力，它就不能扩张。",
-    heroP3:"这不是没有结构的幻想，而是建立在架构之上的前沿实践。",
-    problemTitle:"真正的问题",
-    problemP1:"大多数系统失败，是因为增长快于结构。",
-    problemP2:"看似稳定——直到一个薄弱点蔓延开来。",
-    problemP3:"我们不等崩塌发生，我们先把薄弱点找出来。",
-    navTitle:"选择你的入口",
-    nav1T:"罗盘", nav1P:"先定位，再行动。",
-    nav2T:"序章", nav2P:"在探索前沿之前，先看清问题。",
-    nav3T:"结构", nav3P:"理解支撑大型系统的架构。",
-    nav4T:"创新", nav4P:"进入前沿：能源、水、软件、教育。",
-    footer:"雄心容易，承压稳定罕见。"
-  };
-
-  var ES={
-    heroTitle:"CONSTRUIMOS IDEAS GRANDES QUE RESISTEN",
-    heroP1:"Has escuchado promesas ambiciosas — energía limpia, sistemas más inteligentes, software más rápido, educación efectiva.",
-    heroP2:"La diferencia aquí es simple: si no resiste presión, no escala.",
-    heroP3:"No es imaginación sin estructura. Es frontera construida sobre arquitectura.",
-    problemTitle:"EL PROBLEMA REAL",
-    problemP1:"La mayoría de sistemas fallan porque crecen más rápido que su estructura.",
-    problemP2:"Todo parece estable — hasta que un punto débil se propaga.",
-    problemP3:"No esperamos el colapso. Mapeamos los puntos débiles antes de que se expandan.",
-    navTitle:"ELIGE TU PUNTO DE ENTRADA",
-    nav1T:"Brújula", nav1P:"Oriéntate antes de moverte.",
-    nav2T:"Preludio", nav2P:"Entiende el problema antes de explorar.",
-    nav3T:"Estructura", nav3P:"Explora la arquitectura que sostiene grandes ideas.",
-    nav4T:"Innovación", nav4P:"Entra a la frontera — energía, agua, software, educación.",
-    footer:"La ambición es fácil. La estabilidad bajo presión es rara."
-  };
-
-  var T=(lang==="zh")?ZH:(lang==="es")?ES:EN;
-
-  function set(id,val){document.getElementById(id).textContent=val;}
-
-  set("heroTitle",T.heroTitle);
-  set("heroP1",T.heroP1);
-  set("heroP2",T.heroP2);
-  set("heroP3",T.heroP3);
-  set("problemTitle",T.problemTitle);
-  set("problemP1",T.problemP1);
-  set("problemP2",T.problemP2);
-  set("problemP3",T.problemP3);
-  set("navTitle",T.navTitle);
-  set("nav1T",T.nav1T); set("nav1P",T.nav1P);
-  set("nav2T",T.nav2T); set("nav2P",T.nav2P);
-  set("nav3T",T.nav3T); set("nav3P",T.nav3P);
-  set("nav4T",T.nav4T); set("nav4P",T.nav4P);
-  set("footerText",T.footer);
-
-  document.getElementById("btnEN").onclick=function(){localStorage.setItem("gd_lang","en");location.reload();};
-  document.getElementById("btnZH").onclick=function(){localStorage.setItem("gd_lang","zh");location.reload();};
-  document.getElementById("btnES").onclick=function(){localStorage.setItem("gd_lang","es");location.reload();};
-})();
-</script>
-
+</div>
 </body>
 </html>

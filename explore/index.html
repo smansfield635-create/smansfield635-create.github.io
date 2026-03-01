@@ -1,16 +1,20 @@
 <!-- TNT — /explore/index.html
-     EXPLORE · PRODUCTS & INNOVATION (LAYER 2)
-     FIX (NO DRIFT):
-       - Keep EXACT same colors/material as current page
-       - Restore little DIAMOND color swatch next to each title (matches item.c)
-       - No layout logic changes, no routing changes, no state changes
-       - 3 languages (EN / 中文 / ES) page-level only
-       - Language toggle reloads SAME PATH (GH Pages safe)
-       - State carry: lang/style/time/depth preserved on every jump
+     EXPLORE · PRODUCTS & INNOVATION (RESTORE + UPGRADE) · EN/中文/ES · MOBILE-SAFE · NO MODALS
+     PURPOSE:
+       - Match PRODUCTS hub style (dark opal + red, long bubbles, single-open accordion)
+       - Provide clear “where to go” map:
+           INFO (how to use)
+           LANES (Frontier / Vision / Language)
+           MAPS (Dot.Grid / SSG / Software Spine)
+           ROUTES (Laws / Gauges / Products)
+     RULES:
+       - Trilingual page-level toggle (EN/中文/ES) + GH Pages safe reload (same pathname)
+       - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
+       - Single-open accordion per band
+       - No modal traps, no inline onclick
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background styling
-       - Tap-safe
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -18,7 +22,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · Products & Innovation</title>
+<title>EXPLORE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -26,26 +30,43 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:86px}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
+
+/* tokens */
+:root{
+  --dockH:106px;
+
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,70,70,.14);
+
+  --stroke:rgba(255,255,255,.12);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+}
+
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
 /* page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 18px);
+  padding:90px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
-}
-
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:relative;
+  z-index:10;
 }
 
 /* header */
@@ -53,71 +74,63 @@ a{color:inherit;text-decoration:none}
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
-    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
-    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
     rgba(0,0,0,.14);
   backdrop-filter:blur(10px);
-  padding:14px 16px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
-.s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
-.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px;color:var(--txt)}
+.fine{margin-top:10px;font-size:12.25px;opacity:.72;line-height:1.45;color:var(--mut)}
 
-/* band label */
+/* band */
 .band{
-  padding:10px 12px;
-  border-radius:18px;
+  padding:10px 12px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.86);
+  font-weight:950;letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
 
-/* list */
-.stackList{display:flex;flex-direction:column;gap:12px}
-.stackRow{
-  --domc:#93C5FD;
+/* accordion list */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
 }
-.stackHead{
+.head{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-
-/* existing vertical bar */
-.stackBar{
-  width:6px;height:22px;border-radius:99px;background:var(--domc);
-  flex:0 0 auto;margin-top:2px
+.left{
+  display:flex;align-items:flex-start;gap:12px;min-width:0;
 }
-
-/* NEW: little diamond swatch next to title */
-.stackSw{
-  width:12px;height:12px;
-  transform:rotate(45deg);
-  border-radius:4px;
-  background:var(--domc);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-  margin-top:5px;
-  pointer-events:none;
+.mark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:3px;
 }
+.titleBlock{min-width:0}
+.title{
+  font-weight:950;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch;
+}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
-.stackTxt{min-width:0}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-
-.stackBody{
+.body{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -125,8 +138,10 @@ a{color:inherit;text-decoration:none}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.stackRow.open .stackBody{display:block}
-.pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
+.row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.86);line-height:1.6;font-size:13.25px}
+.p + .p{margin-top:10px}
+
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
 .actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
@@ -149,7 +164,7 @@ a{color:inherit;text-decoration:none}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px}
+  :root{--dockH:128px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -159,7 +174,7 @@ a{color:inherit;text-decoration:none}
 
 <div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="btnHome" href="/home/">HUB</a>
 </div>
 
 <div class="top-right" aria-label="Language">
@@ -172,27 +187,27 @@ a{color:inherit;text-decoration:none}
 
   <div class="header">
     <p class="k" id="hk">EXPLORE</p>
-    <h1 class="t" id="ht">PRODUCTS & INNOVATION</h1>
-    <p class="s" id="hs">Open a card. Read one paragraph. Jump when you’re ready.</p>
-    <div class="fine" id="fine">Fine print: deeper theory lives under Laws and Gauges.</div>
+    <h1 class="t" id="ht">ORIENTATION & LANES</h1>
+    <p class="s" id="hs">Explore is where you learn the map without getting lost.</p>
+    <div class="fine" id="fine">Fine print: Explore is bounded. Proof posture lives in Laws. Measurement posture lives in Gauges.</div>
   </div>
 
-  <!-- INFO FIRST -->
-  <div class="band" id="bandInfo">INFO</div>
-  <div class="stackList" id="listInfo"></div>
+  <div class="band" id="bandI">INFO</div>
+  <div class="list" id="listI"></div>
 
-  <!-- PRODUCTS -->
-  <div class="band" id="bandA">PRODUCTS</div>
-  <div class="stackList" id="listA"></div>
+  <div class="band" id="bandL">LANES</div>
+  <div class="list" id="listL"></div>
 
-  <!-- INNOVATION -->
-  <div class="band" id="bandB">INNOVATION</div>
-  <div class="stackList" id="listB"></div>
+  <div class="band" id="bandM">MAPS</div>
+  <div class="list" id="listM"></div>
+
+  <div class="band" id="bandR">ROUTES</div>
+  <div class="list" id="listR"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn active" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
@@ -207,11 +222,11 @@ a{color:inherit;text-decoration:none}
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -221,25 +236,27 @@ a{color:inherit;text-decoration:none}
   }catch(e){}
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire top + dock
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
   wire("btnDoor","/door/");
-  wire("btnIndex","/index.html");
-  wire("dockHome","/home/");
+  wire("btnHome","/home/");
+  wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // ===== language toggle (reload SAME PATH) =====
+  // language toggle (reload SAME pathname; GH safe)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -250,195 +267,227 @@ a{color:inherit;text-decoration:none}
   }
   paintLang();
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q();
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  btnEN.addEventListener("click",function(){setLang("en");});
+  btnZH.addEventListener("click",function(){setLang("zh");});
+  btnES.addEventListener("click",function(){setLang("es");});
 
-  // ===== i18n header =====
-  function renderHeader(){
-    if(lang==="zh"){
-      document.getElementById("hk").textContent="探索";
-      document.getElementById("ht").textContent="产品与创新";
-      document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
-      document.getElementById("fine").textContent="细则：更深的理论在法则与量规中。";
-      document.getElementById("bandInfo").textContent="信息";
-      document.getElementById("bandA").textContent="产品";
-      document.getElementById("bandB").textContent="创新";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnIndex").textContent="索引";
-      document.getElementById("dockHome").textContent="主页";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockGauges").textContent="量规";
-    }else if(lang==="es"){
-      document.getElementById("hk").textContent="EXPLORAR";
-      document.getElementById("ht").textContent="PRODUCTOS E INNOVACIÓN";
-      document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
-      document.getElementById("fine").textContent="Letra pequeña: la teoría vive en Leyes y Medidores.";
-      document.getElementById("bandInfo").textContent="INFO";
-      document.getElementById("bandA").textContent="PRODUCTOS";
-      document.getElementById("bandB").textContent="INNOVACIÓN";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("btnIndex").textContent="ÍNDICE";
-      document.getElementById("dockHome").textContent="INICIO";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-    }else{
-      document.getElementById("hk").textContent="EXPLORE";
-      document.getElementById("ht").textContent="PRODUCTS & INNOVATION";
-      document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
-      document.getElementById("fine").textContent="Fine print: deeper theory lives under Laws and Gauges.";
-      document.getElementById("bandInfo").textContent="INFO";
-      document.getElementById("bandA").textContent="PRODUCTS";
-      document.getElementById("bandB").textContent="INNOVATION";
-      document.getElementById("btnDoor").textContent="DOOR";
-      document.getElementById("btnIndex").textContent="INDEX";
-      document.getElementById("dockHome").textContent="HOME";
-      document.getElementById("dockProducts").textContent="PRODUCTS";
-      document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockGauges").textContent="GAUGES";
+  // ===== ROUTES (safe) =====
+  var ROUTE={
+    frontier:"/explore/frontier/",
+    vision:"/explore/frontier/vision/",
+    language:"/explore/innovation/language/",
+    roadmap:"/explore/roadmap/",
+    dotgrid:"/products/dot-grid/",
+    ssg:"/products/ssg/",
+    software:"/products/software/",
+    laws:"/laws/",
+    gauges:"/gauges/",
+    products:"/products/",
+    door:"/door/"
+  };
+
+  // ===== COPY =====
+  var COPY={
+    en:{
+      hk:"EXPLORE",
+      ht:"ORIENTATION & LANES",
+      hs:"Explore is where you learn the map without getting lost.",
+      fine:"Fine print: Explore is bounded. Proof posture lives in Laws. Measurement posture lives in Gauges.",
+      bands:{I:"INFO",L:"LANES",M:"MAPS",R:"ROUTES"},
+      btns:{open:"OPEN"},
+      top:{door:"DOOR", hub:"HUB"},
+      dock:{exp:"EXPLORE", prod:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
+      info:[
+        {c:"#D4AF37", t:"How to use Explore", s:"Info first. Jump second.", p:"Open one card, read one paragraph, then jump. If you want boundaries and meaning discipline, go to Laws. If you want live signals and measurement posture, go to Gauges. Explore keeps orientation simple so you don’t drift while learning.", href:ROUTE.door},
+        {c:"#EF4444", t:"What Explore is not", s:"Not a proof engine. Not a measurement dashboard.", p:"Explore does not claim admissibility and it does not publish measurements. It routes you to the layer that can: Laws for meaning/constraints; Gauges for outputs/telemetry. Explore stays human-readable.", href:ROUTE.laws}
+      ],
+      lanes:[
+        {c:"#F59E0B", t:"Frontier", s:"Big ideas, bounded posture.", p:"Frontier is where concepts live without pretending they are already measured. Vision pages can be exciting, but they remain support-bounded and route to Laws/Gauges when the claim becomes testable.", href:ROUTE.frontier},
+        {c:"#34D399", t:"Vision (SHIMMER lane)", s:"Urban + orbital readiness surfaces.", p:"Vision is where you see the long arc: cities, infrastructure, closed-loop habitats. It stays a vision lane—structure lives in DOOR, proofs live in Laws, and measurements live in Gauges.", href:ROUTE.vision},
+        {c:"#93C5FD", t:"Language", s:"Shared terms to prevent drift.", p:"Language is the glossary and substrate lane. It defines terms so pages don’t silently swap meaning. If a term changes, it is treated as a new epoch.", href:ROUTE.language},
+        {c:"#A3A3A3", t:"Roadmap", s:"Gated expansion, not promises.", p:"Roadmap lists prerequisites and gates for new surfaces. It avoids hype. It keeps the system honest about what is live vs what is planned.", href:ROUTE.roadmap}
+      ],
+      maps:[
+        {c:"#34D399", t:"Dot.Grid map", s:"Connections + correlation sweeps.", p:"Dot.Grid shows what connects to what, and reveals correlation before it compounds. It does not declare admissibility. It hands structure to Laws and signals to Gauges.", href:ROUTE.dotgrid},
+        {c:"#A3A3A3", t:"SSG substrate", s:"Execution geometry under constraint.", p:"SSG is the root syntax geometry: resources, stores, constraints, goals, guards. It keeps behavior expressible without drift.", href:ROUTE.ssg},
+        {c:"#EF4444", t:"Software spine", s:"The machine behind the pages.", p:"Software spine is where platform/engineering surfaces live. If something needs a safe hub, it routes here without 404s.", href:ROUTE.software}
+      ],
+      routes:[
+        {c:"#60A5FA", t:"Laws", s:"Meaning, constraints, admissibility.", p:"If you want the boundaries—what can be claimed and what must remain conditional—go to Laws.", href:ROUTE.laws},
+        {c:"#93C5FD", t:"Gauges", s:"Live outputs and measurement surfaces.", p:"If you want live signals, dashboards, and measurement posture, go to Gauges.", href:ROUTE.gauges},
+        {c:"#0EA5E9", t:"Products", s:"Adoptable execution surfaces.", p:"If you want usable tools and product surfaces, go to Products.", href:ROUTE.products}
+      ]
+    },
+
+    zh:{
+      hk:"探索",
+      ht:"导览与通道",
+      hs:"探索页用于学习地图而不迷路。",
+      fine:"细则：探索页有界。证明姿态在法则；测量姿态在量规。",
+      bands:{I:"信息",L:"通道",M:"地图",R:"路由"},
+      btns:{open:"打开"},
+      top:{door:"门", hub:"枢纽"},
+      dock:{exp:"探索", prod:"产品", laws:"法则", gauges:"量规"},
+      info:[
+        {c:"#D4AF37", t:"怎么用探索页", s:"先信息，后跳转。", p:"打开一张卡，读一段话，然后跳转。想看边界与含义纪律去法则；想看实时信号与测量姿态去量规。探索页保持导览清晰，防止学习时漂移。", href:ROUTE.door},
+        {c:"#EF4444", t:"探索页不是什么", s:"不是证明引擎，也不是仪表盘。", p:"探索页不判定可采信，也不发布测量结果。它把你路由到能做这件事的层：法则负责含义与约束；量规负责输出与测量。", href:ROUTE.laws}
+      ],
+      lanes:[
+        {c:"#F59E0B", t:"前沿", s:"大想法，但保持有界。", p:"前沿允许概念存在，但不假装已被测量。愿景可以兴奋，但必须有支撑边界；一旦可测试，就路由到法则/量规。", href:ROUTE.frontier},
+        {c:"#34D399", t:"愿景（SHIMMER通道）", s:"城市 + 轨道就绪面。", p:"愿景展示长弧：城市、基础设施、闭环栖息地。它只做愿景通道——结构在DOOR，证明在法则，测量在量规。", href:ROUTE.vision},
+        {c:"#93C5FD", t:"语言", s:"共用术语防漂移。", p:"语言通道定义术语，避免页面悄悄换义。术语变化视为新纪元。", href:ROUTE.language},
+        {c:"#A3A3A3", t:"路线图", s:"闸门式扩展，不做承诺。", p:"路线图只列前置条件与闸门，避免炒作；清楚区分“已上线”和“规划中”。", href:ROUTE.roadmap}
+      ],
+      maps:[
+        {c:"#34D399", t:"Dot.Grid 地图", s:"连接 + 相关扫掠。", p:"Dot.Grid 展示连接并提前暴露相关，不判定可采信；结构给法则，信号给量规。", href:ROUTE.dotgrid},
+        {c:"#A3A3A3", t:"SSG 底层", s:"约束下的执行几何。", p:"SSG 是根语法几何：资源、存储、约束、目标、守卫，使行为可表达且不漂移。", href:ROUTE.ssg},
+        {c:"#EF4444", t:"软件脊柱", s:"页面背后的机器。", p:"软件脊柱是平台/工程执行面集合；如果需要安全枢纽（避免404），就路由到这里。", href:ROUTE.software}
+      ],
+      routes:[
+        {c:"#60A5FA", t:"法则", s:"含义、约束、可采信。", p:"想看边界（什么能主张、什么必须条件化）→去法则。", href:ROUTE.laws},
+        {c:"#93C5FD", t:"量规", s:"实时输出与测量面。", p:"想看信号、仪表盘与测量姿态→去量规。", href:ROUTE.gauges},
+        {c:"#0EA5E9", t:"产品", s:"可采纳执行面。", p:"想用工具与产品执行面→去产品。", href:ROUTE.products}
+      ]
+    },
+
+    es:{
+      hk:"EXPLORAR",
+      ht:"ORIENTACIÓN Y CARRILES",
+      hs:"Explorar es para aprender el mapa sin perderte.",
+      fine:"Letra pequeña: Explorar es acotado. Prueba en Leyes. Medición en Medidores.",
+      bands:{I:"INFO",L:"CARRILES",M:"MAPAS",R:"RUTAS"},
+      btns:{open:"ABRIR"},
+      top:{door:"PUERTA", hub:"HUB"},
+      dock:{exp:"EXPLORAR", prod:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
+      info:[
+        {c:"#D4AF37", t:"Cómo usar Explorar", s:"Info primero. Salto después.", p:"Abre una tarjeta, lee un párrafo y salta. Para límites y significado: Leyes. Para señales y medición: Medidores. Explorar mantiene orientación clara.", href:ROUTE.door},
+        {c:"#EF4444", t:"Qué NO es Explorar", s:"No es motor de prueba ni tablero.", p:"Explorar no declara admisibilidad ni publica mediciones. Te rutea a la capa que sí: Leyes (significado/ límites) y Medidores (salidas/medición).", href:ROUTE.laws}
+      ],
+      lanes:[
+        {c:"#F59E0B", t:"Frontera", s:"Ideas grandes, postura acotada.", p:"Frontera aloja conceptos sin fingir que ya están medidos. Si algo se vuelve testeable, rutea a Leyes/Medidores.", href:ROUTE.frontier},
+        {c:"#34D399", t:"Visión (carril SHIMMER)", s:"Ciudades + preparación orbital.", p:"Visión muestra el arco largo: ciudades, infraestructura, hábitats cerrados. Estructura en DOOR; prueba en Leyes; medición en Medidores.", href:ROUTE.vision},
+        {c:"#93C5FD", t:"Lenguaje", s:"Términos compartidos para evitar deriva.", p:"Define términos para que las páginas no cambien significado en silencio. Cambios = nueva época.", href:ROUTE.language},
+        {c:"#A3A3A3", t:"Hoja de ruta", s:"Expansión por compuertas, sin promesas.", p:"Lista prerrequisitos y compuertas. Evita hype. Distingue ‘en vivo’ vs ‘plan’ claramente.", href:ROUTE.roadmap}
+      ],
+      maps:[
+        {c:"#34D399", t:"Mapa Dot.Grid", s:"Conexiones + correlación.", p:"Dot.Grid muestra conexiones y correlación temprano. No declara admisibilidad. Estructura → Leyes, señales → Medidores.", href:ROUTE.dotgrid},
+        {c:"#A3A3A3", t:"SSG sustrato", s:"Geometría de ejecución bajo restricciones.", p:"SSG es la geometría raíz: recursos, stores, restricciones, objetivos y guards.", href:ROUTE.ssg},
+        {c:"#EF4444", t:"Columna de software", s:"La máquina detrás de las páginas.", p:"Aquí viven superficies de plataforma/ingeniería. Si falta una página, rutea a este hub sin 404.", href:ROUTE.software}
+      ],
+      routes:[
+        {c:"#60A5FA", t:"Leyes", s:"Significado, restricciones, admisibilidad.", p:"Si buscas límites y qué se puede afirmar, ve a Leyes.", href:ROUTE.laws},
+        {c:"#93C5FD", t:"Medidores", s:"Salidas en vivo y medición.", p:"Si buscas señales y dashboards, ve a Medidores.", href:ROUTE.gauges},
+        {c:"#0EA5E9", t:"Productos", s:"Superficies adoptables.", p:"Si buscas herramientas usables, ve a Productos.", href:ROUTE.products}
+      ]
     }
+  };
+
+  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+
+  function applyHeader(){
+    var P=T();
+    document.getElementById("hk").textContent=P.hk;
+    document.getElementById("ht").textContent=P.ht;
+    document.getElementById("hs").textContent=P.hs;
+    document.getElementById("fine").textContent=P.fine;
+
+    document.getElementById("bandI").textContent=P.bands.I;
+    document.getElementById("bandL").textContent=P.bands.L;
+    document.getElementById("bandM").textContent=P.bands.M;
+    document.getElementById("bandR").textContent=P.bands.R;
+
+    document.getElementById("btnDoor").textContent=P.top.door;
+    document.getElementById("btnHome").textContent=P.top.hub;
+
+    document.getElementById("dockExplore").textContent=P.dock.exp;
+    document.getElementById("dockProducts").textContent=P.dock.prod;
+    document.getElementById("dockLaws").textContent=P.dock.laws;
+    document.getElementById("dockGauges").textContent=P.dock.gauges;
   }
-  renderHeader();
+  applyHeader();
 
-  // ===== DATA =====
-  var INFO = [
-    {
-      c:"#D4AF37",
-      t:{en:"How this hub works",zh:"本枢纽怎么用",es:"Cómo funciona este hub"},
-      s:{en:"Info first, jump second. Every card ends with a jump.",zh:"先信息，后跳转；每张卡末尾都有跳转。",es:"Info primero, salto después. Cada tarjeta termina con un salto."},
-      p:{en:"This page is a launch surface. Products are usable tools. Innovation is bounded exploration. If you want proof posture, go to Laws. If you want measured outputs, go to Gauges. Use the Open button to jump cleanly.",
-         zh:"此页是发射台。产品是可用工具；创新是有界探索。要“证明姿态”去法则；要“测量输出”去量规。点“打开”即可清晰跳转。",
-         es:"Esta página es una lanzadera. Productos = herramientas. Innovación = exploración acotada. Prueba en Leyes; medición en Medidores. Usa ABRIR para saltar limpio."},
-      href:"/prelude/"
-    }
-  ];
-
-  var PRODUCTS = [
-    { c:"#F59E0B", t:{en:"Energy",zh:"能源",es:"Energía"},
-      s:{en:"Industrial posture (C). No gain claims.",zh:"工业姿态（C）。无增益主张。",es:"Postura industrial (C). Sin ganancias."},
-      p:{en:"Thermal substitution surfaces with staged discipline and containment-first interfaces.",
-         zh:"热替代执行面：阶段化纪律与隔离优先接口。",
-         es:"Superficies de sustitución térmica con disciplina por fases y contención primero."},
-      href:"/products/energy/" },
-
-    { c:"#93C5FD", t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
-      s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
-      p:{en:"One diagnostic surface with bounded posture. Doctrine lives under Laws; measured outputs live under Gauges.",
-         zh:"一个有界诊断面：教义边界在法则，测量输出在量规。",
-         es:"Una superficie diagnóstica acotada. Doctrina en Leyes; salidas medidas en Medidores."},
-      href:"/products/coherence-diagnostic/" },
-
-    { c:"#0EA5E9", t:{en:"Dot.Grid",zh:"Dot.Grid",es:"Dot.Grid"},
-      s:{en:"256-state indexing and sweep surfaces.",zh:"256态索引与扫掠面。",es:"Indexación 256-estados y barridos."},
-      p:{en:"Index and sweep surfaces used to organize state, traversal, and references without collapsing routes into one page.",
-         zh:"索引与扫掠执行面：组织状态、遍历与引用，不把路由坍缩到单一页面。",
-         es:"Superficies de indexación y barrido para organizar estado y referencias sin colapsar rutas."},
-      href:"/products/dot-grid/" },
-
-    { c:"#A3A3A3", t:{en:"SSG",zh:"SSG",es:"SSG"},
-      s:{en:"Constraint syntax geometry platform.",zh:"约束语法几何平台。",es:"Plataforma de sintaxis geométrica."},
-      p:{en:"Execution geometry for expressing behavior via resources, stores, constraints, goals, and guards.",
-         zh:"执行几何：用资源/存储/约束/目标/守卫表达行为。",
-         es:"Geometría de ejecución: recursos, stores, restricciones, objetivos y guards."},
-      href:"/products/ssg/" }
-  ];
-
-  var INNOV = [
-    { c:"#93C5FD", t:{en:"Frontier",zh:"前沿",es:"Frontera"},
-      s:{en:"Concept lab and readiness pathways.",zh:"概念实验室与就绪路径。",es:"Laboratorio de conceptos y preparación."},
-      p:{en:"Big ideas are allowed here, but claims remain bounded. Anything measurable routes to Gauges.",
-         zh:"允许大想法，但主张必须有界。可测内容跳到量规。",
-         es:"Ideas grandes, pero afirmaciones acotadas. Lo medible va a Medidores."},
-      href:"/explore/frontier/" },
-
-    { c:"#D4AF37", t:{en:"Language",zh:"语言",es:"Lenguaje"},
-      s:{en:"Shared terms and structural encoding.",zh:"共用术语与结构编码。",es:"Términos compartidos y codificación."},
-      p:{en:"Keeps terminology stable so meaning does not drift across pages.",
-         zh:"稳定术语，防止跨页含义漂移。",
-         es:"Mantiene términos estables para evitar deriva semántica."},
-      href:"/explore/innovation/language/" },
-
-    { c:"#334155", t:{en:"Roadmap",zh:"路线图",es:"Hoja de ruta"},
-      s:{en:"Future surfaces and gated expansion.",zh:"未来执行面与阶段化扩展。",es:"Superficies futuras y expansión por fases."},
-      p:{en:"Bounded planning surface. No promises. Only prerequisites and gates.",
-         zh:"有界规划面：不承诺，只列先决条件与闸门。",
-         es:"Planificación acotada: sin promesas, solo prerrequisitos y compuertas."},
-      href:"/explore/roadmap/" }
-  ];
-
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-
-  function makeRow(item){
+  // accordion builder (single-open per list)
+  function buildRow(item, openLabel){
     var row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", item.c);
+    row.className="row";
+    row.style.setProperty("--c", item.c);
 
     var head=document.createElement("div");
-    head.className="stackHead";
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
     var left=document.createElement("div");
-    left.className="stackLeft";
+    left.className="left";
 
-    var bar=document.createElement("div");
-    bar.className="stackBar";
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=item.c;
 
-    var sw=document.createElement("div");
-    sw.className="stackSw";
-
-    var txt=document.createElement("div");
-    txt.className="stackTxt";
+    var titleBlock=document.createElement("div");
+    titleBlock.className="titleBlock";
 
     var title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent=pick(item.t);
+    title.className="title";
+    title.textContent=item.t;
 
     var sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=pick(item.s);
+    sub.className="sub";
+    sub.textContent=item.s;
 
-    txt.appendChild(title);
-    txt.appendChild(sub);
+    titleBlock.appendChild(title);
+    titleBlock.appendChild(sub);
 
-    left.appendChild(bar);
-    left.appendChild(sw);
-    left.appendChild(txt);
+    left.appendChild(mark);
+    left.appendChild(titleBlock);
 
     var chev=document.createElement("div");
-    chev.className="stackChevron";
+    chev.className="chev";
     chev.textContent="▸";
 
     head.appendChild(left);
     head.appendChild(chev);
 
     var body=document.createElement("div");
-    body.className="stackBody";
+    body.className="body";
 
     var p=document.createElement("p");
-    p.className="pdesc";
-    p.textContent=pick(item.p);
+    p.className="p";
+    p.textContent=item.p;
 
     var acts=document.createElement("div");
     acts.className="actions";
-
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
-    open.href = item.href + q();
-    acts.appendChild(open);
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=openLabel;
+    a.href=item.href + q();
+    acts.appendChild(a);
 
     body.appendChild(p);
     body.appendChild(acts);
 
-    head.addEventListener("click", function(){
-      var openNow=row.classList.toggle("open");
-      chev.textContent = openNow ? "▾" : "▸";
+    function toggle(){
+      var willOpen=!row.classList.contains("open");
+      var parent=row.parentElement;
+      if(parent){
+        parent.querySelectorAll(".row").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev");
+          if(c) c.textContent="▸";
+        });
+      }
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
     row.appendChild(head);
@@ -446,22 +495,42 @@ a{color:inherit;text-decoration:none}
     return row;
   }
 
-  function mount(listId, arr){
-    var list=document.getElementById(listId);
-    list.innerHTML="";
-    arr.forEach(function(it,i){
-      var el=makeRow(it);
-      list.appendChild(el);
-      if(i===0){
-        el.classList.add("open");
-        el.querySelector(".stackChevron").textContent="▾";
-      }
+  function renderLists(){
+    var P=T();
+    var openLabel=P.btns.open;
+
+    var listI=document.getElementById("listI");
+    var listL=document.getElementById("listL");
+    var listM=document.getElementById("listM");
+    var listR=document.getElementById("listR");
+
+    listI.innerHTML=""; listL.innerHTML=""; listM.innerHTML=""; listR.innerHTML="";
+
+    P.info.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listI.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.lanes.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listL.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.maps.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listM.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.routes.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listR.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
     });
   }
-
-  mount("listInfo", INFO);
-  mount("listA", PRODUCTS);
-  mount("listB", INNOV);
+  renderLists();
 
 })();
 </script>

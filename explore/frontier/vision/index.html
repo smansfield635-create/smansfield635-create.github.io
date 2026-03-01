@@ -1,0 +1,230 @@
+<!-- TNT — /explore/vision/index.html
+     VISION · FRONTIER EXPANSION BOARD
+     ROLE:
+       - Expansion surface (non-operational, non-claiming)
+       - Structure remains upstream (Laws / Gauges / Language)
+       - Vision expands into future domains not yet built
+       - No modals
+       - No lenses
+       - Hard navigation only
+       - Full state propagation (lang/style/time)
+       - Uses ui.css + branch.css only
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EXPLORE · VISION</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+a{color:inherit;text-decoration:none}
+
+:root{
+  --D:220px;
+  --R:150px;
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+}
+
+body{
+  margin:0;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+/* Top */
+.top-left{
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:120;
+  display:flex;
+  gap:10px;
+}
+
+/* Brand */
+.brand{
+  position:fixed;
+  left:50%;
+  top:16px;
+  transform:translateX(-50%);
+  z-index:110;
+  text-align:center;
+  padding:10px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+.brand .k{
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:.75;
+  margin:0 0 6px 0;
+}
+.brand .t{
+  font-weight:950;
+  font-size:40px;
+  letter-spacing:.3px;
+  margin:0;
+}
+.brand .s{
+  font-size:13px;
+  opacity:.8;
+  margin-top:6px;
+}
+
+/* Grid */
+.page{
+  width:min(1100px,94vw);
+  margin:140px auto 120px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+}
+@media(max-width:900px){
+  .page{grid-template-columns:1fr;}
+}
+
+/* Vision Card */
+.card{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.16);
+  padding:26px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+  box-shadow:0 40px 120px rgba(0,0,0,.85);
+  transition:.2s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 60px 160px rgba(0,0,0,.95);
+}
+
+.card h2{
+  margin:0 0 10px;
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:.5px;
+}
+
+.card p{
+  margin:0;
+  font-size:14px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.20);
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" id="btnFrontier" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+</div>
+
+<div class="brand">
+  <div class="k">CARDINAL AXIS</div>
+  <div class="t">VISION</div>
+  <div class="s">Expansion without premature claim</div>
+</div>
+
+<div class="page">
+
+  <div class="card">
+    <h2>Orbital Energy Communities</h2>
+    <p>
+      Closed-loop solar collection, energy buffering, and staged deployment.
+      Structure upstream. Vision downstream.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Water Regeneration Systems</h2>
+    <p>
+      Renewable water purification, desalination, and atmospheric capture
+      integrated into solar-scale communities.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Waste Conversion & Circularity</h2>
+    <p>
+      Waste-to-energy pathways, plasma conversion, and thermal recycling
+      within containment-first doctrine.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Renewable Infrastructure Scaling</h2>
+    <p>
+      Energy, water, and waste integrated under governance gates
+      for staged planetary-scale expansion.
+    </p>
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+
+  if(lang!=="en"&&lang!=="zh") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="origin";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+  }catch(e){}
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time);
+  }
+
+  document.getElementById("btnFrontier").href="/explore/frontier/"+q();
+  document.getElementById("btnDoor").href="/door/"+q();
+})();
+</script>
+
+</body>
+</html>

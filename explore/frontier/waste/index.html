@@ -1,0 +1,248 @@
+<!-- TNT — /explore/frontier/waste/index.html
+     EXPLORE · FRONTIER · WASTE
+     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
+     SINGLE-OPEN ACCORDION · STATE SAFE · NO MODALS
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · WASTE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+:root{
+  --dockH:90px;
+  --inkA:rgba(10,12,16,.96);
+  --inkB:rgba(5,7,10,.98);
+  --stroke:rgba(255,255,255,.10);
+  --gold:rgba(212,175,55,.18);
+  --red:rgba(255,70,70,.14);
+  --mut:rgba(255,255,255,.92);
+}
+
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:40px;
+  background:
+    radial-gradient(circle at 25% 20%, var(--gold), transparent 65%),
+    radial-gradient(circle at 75% 80%, var(--red), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
+  padding:54px;
+  box-shadow:0 60px 200px rgba(0,0,0,.65);
+}
+
+.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
+.t{font-size:56px;font-weight:950;margin:0 0 24px}
+.s{font-size:22px;line-height:1.85;color:var(--mut);max-width:950px}
+
+.lens{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.pill{
+  padding:14px 22px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  font-weight:900;
+  cursor:pointer;
+}
+.pill.active{box-shadow:0 0 22px rgba(212,175,55,.35)}
+
+.stack{display:flex;flex-direction:column;gap:24px}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:34px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  overflow:hidden;
+  box-shadow:0 50px 180px rgba(0,0,0,.6);
+}
+
+.head{
+  padding:36px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  cursor:pointer;
+}
+
+.title{font-size:32px;font-weight:900}
+.chev{font-size:20px;opacity:.75}
+
+.body{
+  display:none;
+  padding:38px 40px 48px;
+  border-top:1px solid var(--stroke);
+}
+
+.card.open .body{display:block}
+
+.body h4{
+  margin:0 0 14px;
+  font-size:15px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.body p{
+  margin:0;
+  font-size:21px;
+  line-height:1.9;
+  color:var(--mut);
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  padding:14px;
+  border-radius:28px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.35);
+}
+.dock .btn{padding:14px;border-radius:999px;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k">FRONTIER</p>
+    <h1 class="t">WASTE SYSTEMS</h1>
+    <p class="s">
+      What if waste were treated as misplaced energy?  
+      What if collapse began not at the landfill, but at the design layer?
+    </p>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
+    </div>
+  </div>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+
+  const DOMAINS = [
+    "Plasma Thermal Conversion",
+    "Closed-Loop Material Recovery",
+    "Municipal Diversion Architecture",
+    "Carbon Residual Suppression",
+    "Hydrogen Yield Optimization",
+    "Cascade Containment Modeling"
+  ];
+
+  const TEXT = {
+    informal:{
+      en:"Waste is not garbage. It is misrouted material and trapped energy. When routing is wrong, landfills grow. When routing is aligned, recovery accelerates.",
+      zh:"废弃物不是垃圾，而是错位的材料与被困的能量。路径错误，填埋增长；路径对齐，回收加速。",
+      es:"El residuo no es basura. Es material mal enrutado y energía atrapada. Cuando el flujo es correcto, la recuperación se acelera."
+    },
+    formal:{
+      en:"Waste systems are modeled as energy/material displacement vectors under thermodynamic and regulatory constraint envelopes.",
+      zh:"废弃系统被建模为能量/材料位移向量，在热力与监管约束包络内运行。",
+      es:"Los sistemas de residuos se modelan como vectores de desplazamiento energético/material bajo envolventes regulatorias y termodinámicas."
+    },
+    platform:{
+      en:"Platform posture: every diversion stream is registry-traceable and compliance-visible, allowing governance without operational opacity.",
+      zh:"平台姿态：每条分流路径可登记追踪、可合规可视，实现治理而不遮蔽运营。",
+      es:"Postura de plataforma: cada flujo es rastreable y visible para cumplimiento sin perder transparencia operativa."
+    },
+    engineering:{
+      en:"Engineering posture: plasma arc containment, hydrogen extraction ratios, cascade gate interruption, and deterministic failover under load.",
+      zh:"工程姿态：等离子弧隔离、氢提取比率、级联闸门中断与负载下确定性失效转移。",
+      es:"Postura de ingeniería: contención por plasma, ratios de hidrógeno y failover determinista bajo carga."
+    }
+  };
+
+  let currentLens="informal";
+  let currentLang="en";
+  const stack=document.getElementById("stack");
+
+  function render(){
+    stack.innerHTML="";
+    DOMAINS.forEach((name,i)=>{
+      const card=document.createElement("div");
+      card.className="card";
+
+      const head=document.createElement("div");
+      head.className="head";
+      head.innerHTML=`
+        <div class="title">${name}</div>
+        <div class="chev">▸</div>
+      `;
+
+      const body=document.createElement("div");
+      body.className="body";
+      body.innerHTML=`
+        <h4>${currentLens.toUpperCase()}</h4>
+        <p>${TEXT[currentLens][currentLang]}</p>
+      `;
+
+      head.addEventListener("click",()=>{
+        document.querySelectorAll(".card").forEach(c=>{
+          if(c!==card) c.classList.remove("open");
+        });
+        card.classList.toggle("open");
+      });
+
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
+
+      if(i===0) card.classList.add("open");
+    });
+  }
+
+  document.querySelectorAll(".pill").forEach(p=>{
+    p.addEventListener("click",()=>{
+      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      p.classList.add("active");
+      currentLens=p.dataset.lens;
+      render();
+    });
+  });
+
+  render();
+
+})();
+</script>
+
+</body>
+</html>

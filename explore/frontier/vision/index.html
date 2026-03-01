@@ -1,14 +1,18 @@
 <!-- TNT — /explore/frontier/vision/index.html
-     FRONTIER · VISION (SHIMMER) · 2-DIAMOND FORK · EN/中文/ES
-     RULES:
-       - Two vertical diamonds only (no loop back into Frontier)
-       - Urban Resource OS → /explore/frontier/vision/urban-resource-os/
-       - Closed Loop Habitats → /explore/frontier/vision/closed-loop-habitats/
-       - Structure lives in DOOR (no “structure loop” here)
+     FRONTIER · VISION (SHIMMER) · 4-DIAMOND CROSS · EN/中文/ES · FORMAL/INFORMAL
+     RULES (LOCKED):
+       - Vision lane only (no structure loop here)
+       - Structure lives in /door/
+       - 4 glossy diamonds (N/E/S/W) — human words large, formal words small
        - No modals. No overlays. No inline onclick.
        - Canon state carry: lang/style/time/depth (URL + LS)
        - Uses ui.css + branch.css + instruments.js only
        - Does NOT style html/body background (ui.css owns field)
+     ROUTES (LOCKED):
+       N (CLEAN CITIES)     → /explore/frontier/vision/urban-resource-os/
+       E (WATER SECURITY)   → /explore/frontier/vision/water-security/
+       S (ENERGY NO SMOKE)  → /explore/frontier/vision/energy-without-smoke/
+       W (LIFE OFF-EARTH)   → /explore/frontier/vision/closed-loop-habitats/
 -->
 
 <!doctype html>
@@ -31,8 +35,8 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 #vRoot{position:relative;z-index:10}
 
 :root{
-  --R:180px;
-  --D:260px;
+  --R:150px;
+  --D:184px;
 
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.18);
@@ -48,7 +52,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   padding:0 16px;
   display:flex;align-items:center;justify-content:space-between;
   gap:12px;
-  z-index:220;
+  z-index:240;
   pointer-events:none;
 }
 .top .left,.top .right{
@@ -73,69 +77,80 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   box-shadow:0 28px 100px rgba(0,0,0,.50);
   text-align:center;
 }
-.brand .t{
-  margin:0;
-  font-weight:950;
-  font-size:38px;
-  letter-spacing:1px;
-  line-height:1.08;
+.brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;margin:0 0 6px}
+.brand .t{margin:0;font-weight:950;font-size:36px;letter-spacing:1px;line-height:1.08}
+.brand .s{margin-top:6px;font-size:13.5px;opacity:.86}
+
+/* lens row (page-level only) */
+.lens{
+  width:min(980px,94vw);
+  margin:12px auto 0;
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
 }
-.brand .s{
-  margin-top:6px;
-  font-size:13.5px;
-  opacity:.86;
-}
+.lens .btn{border-radius:999px;padding:10px 14px}
 
 /* stage */
 .stage{
   position:relative;
   width:min(720px,94vw);
-  height:min(720px,74vh);
+  height:min(720px,72vh);
   margin:14px auto 0;
   z-index:60;
   pointer-events:none;
 }
 
-/* diamonds */
+/* outer frame */
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  opacity:.46;
+  pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.52),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+
+/* glossy diamonds */
 .d{
-  width:var(--D);
-  height:var(--D);
-  position:absolute;
-  left:50%;
-  top:50%;
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
   transform-origin:center;
-  border-radius:34px;
+  border-radius:28px;
   cursor:pointer;
   pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
   overflow:hidden;
 
-  transform:translate(-50%,-50%) rotate(45deg);
-
   background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.35), transparent 48%),
-    radial-gradient(circle at 72% 30%, var(--opalA), transparent 60%),
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.55), transparent 46%),
+    radial-gradient(circle at 72% 30%, var(--opalA), transparent 62%),
     radial-gradient(circle at 60% 85%, var(--opalC), transparent 72%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
 
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 48px 160px rgba(0,0,0,.85),
-    0 0 42px rgba(212,175,55,.18),
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -48px 90px rgba(0,0,0,.78);
+    inset 0 -42px 78px rgba(0,0,0,.78);
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-
-/* gold pearlescent edge */
 .d::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.6;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -143,67 +158,69 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   mask-composite:exclude;
   pointer-events:none;
 }
-
-/* gloss streak */
 .d::after{
   content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
+  position:absolute;left:10%;right:10%;top:10%;
   height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-10deg);
   pointer-events:none;
+  opacity:.92;
 }
-
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
   border-color:rgba(212,175,55,.30);
   box-shadow:
-    0 60px 200px rgba(0,0,0,.9),
-    0 0 60px rgba(212,175,55,.28),
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.26),
     inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -52px 100px rgba(0,0,0,.85);
+    inset 0 -46px 86px rgba(0,0,0,.84);
 }
+.d:active{transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(.99)}
 
-.d:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
-}
-
-/* vertical layout */
-.dTop{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.dBot{ transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg); }
+/* placement */
+.dN{--tx:0px;--ty:calc(var(--R)*-1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dE{--tx:var(--R);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dS{--tx:0px;--ty:var(--R);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dW{--tx:calc(var(--R)*-1);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
 
 .inner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  width:100%;height:100%;
+  transform:rotate(-45deg) translateY(-2px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
-  padding:18px;
-  gap:10px;
+  padding:14px;
+  gap:8px;
   pointer-events:none;
   user-select:none;
 }
-.lab{
+.big{
   font-weight:950;
-  font-size:22px;
-  letter-spacing:.8px;
-  text-shadow:0 0 18px rgba(255,255,255,.10);
+  font-size:18px;
+  letter-spacing:.7px;
+  text-shadow:0 0 16px rgba(255,255,255,.12);
 }
-.sub{
-  font-size:14px;
-  opacity:.86;
-  line-height:1.35;
-  max-width:22em;
+.small{
+  font-size:12.5px;
+  opacity:.84;
+  line-height:1.25;
+  max-width:18em;
 }
 
-/* footer note */
+/* core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+}
+
+/* footer */
 .footer{
   width:min(980px,94vw);
   margin:18px auto 34px;
@@ -212,13 +229,13 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   opacity:.78;
 }
 
-/* small screens */
+/* responsive */
 @media (max-width:560px){
-  :root{--R:164px;--D:240px}
+  :root{--R:136px;--D:170px}
+  .brand .t{font-size:34px}
 }
 @media (max-width:420px){
-  :root{--R:150px;--D:228px}
-  .brand .t{font-size:34px}
+  :root{--R:130px;--D:162px}
 }
 </style>
 </head>
@@ -239,24 +256,52 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   </div>
 
   <div class="brand" aria-hidden="true">
-    <h1 class="t" id="ttl">SHIMMER</h1>
-    <div class="s" id="subttl">Skyway Hybrid Molecular Refinery</div>
+    <p class="k" id="k0">FRONTIER · VISION</p>
+    <h1 class="t" id="t0">SHIMMER</h1>
+    <div class="s" id="s0">Pick a future system. Then go deeper.</div>
   </div>
 
-  <div class="stage" aria-label="Vision fork">
-    <div class="d dTop" id="dUrban" role="button" tabindex="0" aria-label="Urban Resource OS">
+  <div class="lens" aria-label="Style">
+    <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+    <button class="btn" id="btnFormal" type="button">FORMAL</button>
+  </div>
+
+  <div class="stage" aria-label="Vision diamond">
+    <div class="outer" aria-hidden="true"></div>
+
+    <!-- N: Clean Cities -->
+    <div class="d dN" id="dUrban" role="button" tabindex="0" aria-label="Clean Cities">
       <div class="inner">
-        <div class="lab" id="uLab">URBAN RESOURCE<br/>OS</div>
-        <div class="sub" id="uSub">Waste → Energy + Materials<br/>Distributed entropy routing</div>
+        <div class="big" id="uBig">CLEAN CITIES</div>
+        <div class="small" id="uSmall">Urban Resource Operating System</div>
       </div>
     </div>
 
-    <div class="d dBot" id="dHab" role="button" tabindex="0" aria-label="Closed Loop Habitats">
+    <!-- E: Water Security -->
+    <div class="d dE" id="dWater" role="button" tabindex="0" aria-label="Water Security">
       <div class="inner">
-        <div class="lab" id="hLab">CLOSED LOOP<br/>HABITATS</div>
-        <div class="sub" id="hSub">Orbital · Lunar · Remote<br/>Full resource retention</div>
+        <div class="big" id="wBig">WATER SECURITY</div>
+        <div class="small" id="wSmall">Closed-loop water recovery</div>
       </div>
     </div>
+
+    <!-- S: Energy Without Smoke -->
+    <div class="d dS" id="dEnergy" role="button" tabindex="0" aria-label="Energy without smoke">
+      <div class="inner">
+        <div class="big" id="eBig">ENERGY WITHOUT SMOKE</div>
+        <div class="small" id="eSmall">Multi-pathway recovery from waste</div>
+      </div>
+    </div>
+
+    <!-- W: Life Off-Earth -->
+    <div class="d dW" id="dHab" role="button" tabindex="0" aria-label="Life off-earth">
+      <div class="inner">
+        <div class="big" id="hBig">LIFE OFF-EARTH</div>
+        <div class="small" id="hSmall">Closed-loop habitats</div>
+      </div>
+    </div>
+
+    <div class="core">◆</div>
   </div>
 
   <div class="footer" id="foot">Vision lane only · Structure lives in DOOR</div>
@@ -265,15 +310,15 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 
 <script>
 (function(){
-  // state
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -298,7 +343,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
            "&depth="+encodeURIComponent(D);
   }
 
-  // wire top links with state
+  // top links
   document.getElementById("btnBack").href="/explore/frontier/"+q();
   document.getElementById("btnDoor").href="/door/"+q();
 
@@ -306,14 +351,12 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -324,39 +367,108 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // hard navigation (no loop to structure)
-  function goUrban(){ location.href="/explore/frontier/vision/urban-resource-os/"+q(); }
-  function goHab(){ location.href="/explore/frontier/vision/closed-loop-habitats/"+q(); }
-
-  var dU=document.getElementById("dUrban");
-  var dH=document.getElementById("dHab");
-
-  dU.addEventListener("click", goUrban);
-  dH.addEventListener("click", goHab);
-
-  dU.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goUrban(); }});
-  dH.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHab(); }});
-
-  // i18n
-  if(lang==="zh"){
-    document.getElementById("subttl").textContent="天路混合分子精炼厂";
-    document.getElementById("uLab").innerHTML="城市资源<br/>操作系统";
-    document.getElementById("uSub").innerHTML="废弃物 → 能源 + 材料<br/>分布式熵路由";
-    document.getElementById("hLab").innerHTML="闭环<br/>栖息地";
-    document.getElementById("hSub").innerHTML="轨道 · 月球 · 远程<br/>资源全保留";
-    document.getElementById("foot").textContent="愿景通道 · 结构在 DOOR";
-    document.getElementById("btnBack").textContent="返回";
-    document.getElementById("btnDoor").textContent="门";
-  }else if(lang==="es"){
-    document.getElementById("subttl").textContent="Refinería Molecular Híbrida Skyway";
-    document.getElementById("uLab").innerHTML="SO<br/>URBANO";
-    document.getElementById("uSub").innerHTML="Residuos → Energía + Materiales<br/>Ruteo de entropía distribuido";
-    document.getElementById("hLab").innerHTML="HÁBITATS<br/>CERRADOS";
-    document.getElementById("hSub").innerHTML="Órbita · Lunar · Remoto<br/>Retención total de recursos";
-    document.getElementById("foot").textContent="Carril de visión · La estructura vive en DOOR";
-    document.getElementById("btnBack").textContent="VOLVER";
-    document.getElementById("btnDoor").textContent="PUERTA";
+  // lens buttons (informal/formal)
+  var btnInformal=document.getElementById("btnInformal");
+  var btnFormal=document.getElementById("btnFormal");
+  function paintLens(){
+    btnInformal.classList.toggle("active", style==="informal");
+    btnFormal.classList.toggle("active", style==="formal");
   }
+  paintLens();
+  function setLens(next){
+    if(next!=="formal" && next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    applyLensCopy();
+  }
+  btnInformal.addEventListener("click", function(){ setLens("informal"); });
+  btnFormal.addEventListener("click", function(){ setLens("formal"); });
+
+  // routes
+  function go(path){ location.href = path + q(); }
+  function goUrban(){ go("/explore/frontier/vision/urban-resource-os/"); }
+  function goWater(){ go("/explore/frontier/vision/water-security/"); }
+  function goEnergy(){ go("/explore/frontier/vision/energy-without-smoke/"); }
+  function goHab(){ go("/explore/frontier/vision/closed-loop-habitats/"); }
+
+  function bind(id, fn){
+    var el=document.getElementById(id);
+    el.addEventListener("click", fn);
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
+  }
+  bind("dUrban", goUrban);
+  bind("dWater", goWater);
+  bind("dEnergy", goEnergy);
+  bind("dHab", goHab);
+
+  // copy: human big always; small print changes by lens + language
+  function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
+  function applyLensCopy(){
+    var isFormal = (style==="formal");
+
+    document.getElementById("s0").textContent = isFormal
+      ? T("Formal lens: system definitions and constraints (still vision).",
+          "正式透镜：系统定义与约束（仍属愿景）。",
+          "Lente formal: definiciones y restricciones (sigue siendo visión).")
+      : T("Informal lens: human outcomes first. Technical stays small.",
+          "通俗透镜：先看结果。技术信息保持小字。",
+          "Lente informal: resultados humanos primero. Lo técnico va pequeño.");
+
+    // Small print per diamond
+    document.getElementById("uSmall").textContent = isFormal
+      ? T("Urban Resource OS (entropy routing infrastructure)",
+          "城市资源操作系统（熵路由基础设施）",
+          "SO Urbano (infraestructura de ruteo de entropía)")
+      : T("Turn waste into energy and materials.",
+          "把垃圾变成能源和材料。",
+          "Convierte residuos en energía y materiales.");
+
+    document.getElementById("wSmall").textContent = isFormal
+      ? T("Closed-loop hydrological recovery systems",
+          "闭环水循环回收系统",
+          "Sistemas hidrológicos de recuperación en bucle cerrado")
+      : T("Recycle water so cities don’t run dry.",
+          "把水循环起来，不再缺水。",
+          "Recicla agua para que la ciudad no se seque.");
+
+    document.getElementById("eSmall").textContent = isFormal
+      ? T("Multi-pathway recovery from heterogeneous streams",
+          "异质流多路径回收",
+          "Recuperación multi-vía de flujos heterogéneos")
+      : T("Recover value without burning everything down.",
+          "不靠焚烧，把价值拿回来。",
+          "Recupera valor sin quemarlo todo.");
+
+    document.getElementById("hSmall").textContent = isFormal
+      ? T("Closed-loop habitats (orbital / lunar / remote)",
+          "闭环栖息地（轨道/月球/远程）",
+          "Hábitats cerrados (órbita / lunar / remoto)")
+      : T("Live off-Earth with full recycling.",
+          "离地生活，也能全回收。",
+          "Vive fuera de la Tierra con reciclaje total.");
+
+    document.getElementById("foot").textContent = T(
+      "Vision lane only · Structure lives in DOOR",
+      "愿景通道 · 结构在 DOOR",
+      "Carril de visión · La estructura vive en DOOR"
+    );
+
+    // Lens button labels
+    btnInformal.textContent = T("INFORMAL","通俗","INFORMAL");
+    btnFormal.textContent   = T("FORMAL","正式","FORMAL");
+  }
+
+  // static i18n titles (big text stays human)
+  document.getElementById("k0").textContent = T("FRONTIER · VISION","前沿 · 愿景","FRONTERA · VISIÓN");
+  document.getElementById("t0").textContent = "SHIMMER";
+  document.getElementById("uBig").textContent = T("CLEAN CITIES","清洁城市","CIUDADES LIMPIAS");
+  document.getElementById("wBig").textContent = T("WATER SECURITY","用水安全","SEGURIDAD HÍDRICA");
+  document.getElementById("eBig").textContent = T("ENERGY WITHOUT SMOKE","无烟能源","ENERGÍA SIN HUMO");
+  document.getElementById("hBig").textContent = T("LIFE OFF-EARTH","离地生存","VIDA FUERA DE LA TIERRA");
+
+  applyLensCopy();
 })();
 </script>
 

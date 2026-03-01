@@ -1,9 +1,17 @@
 <!-- TNT — /home/index.html
-     HOME · STRUCTURAL CORE (UPGRADED LAYERING + PANEL VARIANCE)
-     FIXES:
-       - Adds sub-layer cards + “next routes” block.
-       - Elevated panels now differ from background (slab + inner glass).
-       - EN / 中文 / ES, canon state carry.
+     HOME · LAUNCHPAD (NOT TAXONOMY) · TRILINGUAL (EN/中文/ES)
+     GOAL:
+       - Same frontier-with-receipts posture
+       - Bigger print, higher contrast panels
+       - Zero modals. No overlays.
+       - Clear routes: Products / Explore / Laws / Gauges
+       - State carry: lang/style/time/depth (URL + gd_* LS)
+     ROUTES:
+       - DOOR / PRELUDE / COMPASS
+       - Cards → /products/ /explore/ /laws/ /gauges/
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <!doctype html>
@@ -11,7 +19,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HOME · Structural Core</title>
+<title>HOME</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -19,258 +27,199 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --h0:44px;
-  --h1:24px;
-  --p:18px;
-  --p2:15.5px;
+  --dockH:92px;
+
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,80,80,.12);
 
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
+  --stroke2:rgba(255,255,255,.10);
 
-  --inkA:rgba(10,14,20,.76);
-  --inkB:rgba(6,9,14,.86);
-
-  --opalA:rgba(210,190,255,.12);
-  --opalB:rgba(120,70,255,.09);
-  --opalC:rgba(255,70,70,.12);
-
-  --gold:rgba(212,175,55,.20);
+  --H1:34px;
+  --P:15px;
 }
 
-.top{
-  position:fixed;top:16px;left:16px;right:16px;
-  display:flex;justify-content:space-between;gap:12px;
-  z-index:200;
+/* top */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
-.top .btn{white-space:nowrap}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
-.wrap{
-  width:min(1020px,92vw);
+/* page */
+.page{
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:120px 0 80px;
+  padding:90px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
+  position:relative;
+  z-index:10;
 }
 
-.hero{
-  border-radius:32px;
+/* header */
+.header{
   border:1px solid var(--stroke);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 20% 20%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 82% 60%, var(--opalC), transparent 70%),
-    linear-gradient(160deg, var(--inkA), var(--inkB));
-  box-shadow:0 50px 180px rgba(0,0,0,.60);
-  padding:28px;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:0;
-  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.06) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
-  pointer-events:none;
-}
-.heroInner{
-  position:relative;
-  border-radius:26px;
-  border:1px solid var(--stroke2);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
-  backdrop-filter:blur(12px);
-  padding:26px;
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
 }
-
-.k{
-  margin:0 0 8px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.h0{
-  margin:0;
-  font-size:var(--h0);
-  font-weight:950;
-  letter-spacing:1px;
-  line-height:1.06;
-}
-.lead{
-  margin:18px 0 0;
-  font-size:var(--p);
-  line-height:1.85;
-  opacity:.95;
-}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.t{margin:0;font-weight:950;font-size:var(--H1);letter-spacing:.8px}
+.s{margin:10px 0 0;font-size:var(--P);opacity:.90;line-height:1.6;max-width:980px}
 .rule{
-  margin-top:18px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,.06), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.58), rgba(6,10,16,.70));
-  padding:14px 14px;
-  font-size:var(--p2);
-  line-height:1.6;
-  opacity:.92;
-}
-
-.band{
-  margin-top:8px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
+  margin-top:12px;
   padding:10px 12px;
-  font-weight:950;
-  letter-spacing:.2px;
-  opacity:.92;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
+  font-size:12.75px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
 }
 
+/* grid */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:12px;
 }
-@media (max-width:860px){ .grid{grid-template-columns:1fr} }
+@media(max-width:860px){ .grid{grid-template-columns:1fr} }
 
 .card{
-  border-radius:22px;
   border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
-    linear-gradient(160deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 18px 70px rgba(0,0,0,.55);
-  padding:18px;
-  position:relative;
-  overflow:hidden;
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  padding:16px 16px;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--gold) 50%, transparent 100%);
-  opacity:.42;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.card h2{
-  margin:0 0 10px;
-  font-size:var(--h1);
-  font-weight:950;
-  letter-spacing:.3px;
-}
-.card p{
-  margin:0;
-  font-size:var(--p);
-  line-height:1.8;
-  opacity:.90;
-}
-.small{
-  margin-top:10px;
-  font-size:var(--p2);
-  line-height:1.7;
-  opacity:.78;
+.card h3{margin:0;font-weight:950;letter-spacing:.2px;font-size:18px}
+.card p{margin:10px 0 0;opacity:.84;line-height:1.55;font-size:13.75px;max-width:92ch}
+.card .row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.card .btn{border-radius:999px;padding:10px 14px}
+
+/* band */
+.band{
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.12);
+  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.86);
 }
 
-.ctaRow{
-  margin-top:12px;
-  display:flex;
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
 }
-.ctaRow .btn{
-  padding:12px 16px;
-  border-radius:999px;
-  white-space:nowrap;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-  <div>
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
-  </div>
+<div class="top-left">
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
 </div>
 
-<div class="wrap">
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
 
-  <section class="hero">
-    <div class="heroInner">
-      <p class="k" id="k0">HOME</p>
-      <h1 class="h0" id="h0">STRUCTURE BEFORE STORY</h1>
-      <p class="lead" id="p0">
-        Most systems collapse because they scale confusion.
-        We define constraints.
-        We map dependency.
-        We enforce admissibility.
-        We measure alignment.
-      </p>
-      <div class="rule" id="r0">
-        Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.
-      </div>
-    </div>
-  </section>
+<div class="page">
 
-  <div class="band" id="b1">FOUR ROUTES</div>
+  <div class="header">
+    <p class="k" id="hk">HOME</p>
+    <h1 class="t" id="ht">STRUCTURE BEFORE STORY</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="r0"></div>
+  </div>
+
+  <div class="band" id="b1">FAST ROUTES</div>
 
   <div class="grid">
     <div class="card">
-      <h2 id="h1">INDEX</h2>
-      <p id="p1">Compass-first traversal. Choose direction. Stay oriented.</p>
-      <p class="small" id="s1">Use this when you want structure before speed.</p>
-      <div class="ctaRow"><a class="btn" id="goIndex" href="/index.html">OPEN</a></div>
+      <h3 id="c1t">Products</h3>
+      <p id="c1p"></p>
+      <div class="row"><a class="btn" id="openProducts" href="/products/">OPEN</a></div>
     </div>
 
     <div class="card">
-      <h2 id="h2">DOOR</h2>
-      <p id="p2">Bridge-first routing. Enter the network by function.</p>
-      <p class="small" id="s2">Use this when you already know the lane.</p>
-      <div class="ctaRow"><a class="btn" id="goDoor" href="/door/">OPEN</a></div>
+      <h3 id="c2t">Explore</h3>
+      <p id="c2p"></p>
+      <div class="row"><a class="btn" id="openExplore" href="/explore/">OPEN</a></div>
     </div>
 
     <div class="card">
-      <h2 id="h3">PRELUDE</h2>
-      <p id="p3">Problem, declaration, promise. The system’s spine in words.</p>
-      <p class="small" id="s3">Use this when you want the “why” before moving.</p>
-      <div class="ctaRow"><a class="btn" id="goPrelude" href="/prelude/">OPEN</a></div>
+      <h3 id="c3t">Laws</h3>
+      <p id="c3p"></p>
+      <div class="row"><a class="btn" id="openLaws" href="/laws/">OPEN</a></div>
     </div>
 
     <div class="card">
-      <h2 id="h4">PRODUCTS</h2>
-      <p id="p4">Adoptable surfaces. Jump by use-case. Stay bounded.</p>
-      <p class="small" id="s4">Use this when you want tools right now.</p>
-      <div class="ctaRow"><a class="btn" id="goProducts" href="/products/">OPEN</a></div>
+      <h3 id="c4t">Gauges</h3>
+      <p id="c4p"></p>
+      <div class="row"><a class="btn" id="openGauges" href="/gauges/">OPEN</a></div>
     </div>
   </div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
-  // canonical state carry
+  // state
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(!["en","zh","es"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(style)) style="formal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  if(!["explore","learn"].includes(depth)) depth="explore";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -278,6 +227,8 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -287,56 +238,117 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // wire state routes
-  document.getElementById("btnIndex").href="/index.html"+q();
-  document.getElementById("goIndex").href="/index.html"+q();
-  document.getElementById("goDoor").href="/door/"+q();
-  document.getElementById("goPrelude").href="/prelude/"+q();
-  document.getElementById("goProducts").href="/products/"+q();
+  // wire
+  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
+  wire("btnDoor","/door/");
+  wire("btnPrelude","/prelude/");
+  wire("btnCompass","/index.html");
+  wire("openProducts","/products/");
+  wire("openExplore","/explore/");
+  wire("openLaws","/laws/");
+  wire("openGauges","/gauges/");
+  wire("dockDoor","/door/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-  // language
+  // language toggle
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
   function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href=location.pathname+q({lang:lang});
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-  document.getElementById("btnEN").onclick=function(){setLang("en")};
-  document.getElementById("btnZH").onclick=function(){setLang("zh")};
-  document.getElementById("btnES").onclick=function(){setLang("es")};
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  // i18n
+  // copy
+  var COPY={
+    en:{
+      hk:"HOME",
+      ht:"STRUCTURE BEFORE STORY",
+      hs:"Big ideas are welcome here—when they stay tied to what we can check. Choose a lane and move with receipts.",
+      r0:"Rule: if it can’t be measured yet, it stays labeled as concept or roadmap. Navigation preserves gd_* state.",
+      c1t:"Products", c1p:"Deployable surfaces. Use these when you want tools you can apply right now.",
+      c2t:"Explore", c2p:"Frontier shells and vision lanes (bounded and labeled). Curiosity without pretending.",
+      c3t:"Laws", c3p:"Rules that keep upgrades honest: scope, admissibility, epochs, containment.",
+      c4t:"Gauges", c4p:"Measurement surfaces. Signals, windows, and evidence—no narrative claims."
+    },
+    zh:{
+      hk:"主页",
+      ht:"先结构，后故事",
+      hs:"欢迎大想法——但必须绑定可核查之物。选一条路，用收据前进。",
+      r0:"规则：不能测量就标为概念或路线图。导航保留 gd_* 状态。",
+      c1t:"产品", c1p:"可部署执行面：想立刻用工具就走这里。",
+      c2t:"探索", c2p:"前沿壳与愿景通道（有界且标注）。好奇但不假装。",
+      c3t:"法则", c3p:"让升级诚实的规则：范围、可采信、纪元、隔离。",
+      c4t:"量规", c4p:"测量执行面：信号、窗口与证据——不讲叙事。"
+    },
+    es:{
+      hk:"INICIO",
+      ht:"ESTRUCTURA ANTES DE HISTORIA",
+      hs:"Las ideas grandes son bienvenidas—cuando se atan a lo verificable. Elige carril y avanza con recibos.",
+      r0:"Regla: si aún no se puede medir, se etiqueta como concepto o ruta. La navegación preserva gd_*.",
+      c1t:"Productos", c1p:"Superficies desplegables. Úsalas si quieres herramientas hoy.",
+      c2t:"Explorar", c2p:"Frontera acotada y etiquetada. Curiosidad sin fingir.",
+      c3t:"Leyes", c3p:"Reglas que mantienen honestos los upgrades: alcance, admisibilidad, épocas, contención.",
+      c4t:"Medidores", c4p:"Medición y evidencia—sin narrativa."
+    }
+  };
+
+  var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+  document.getElementById("hk").textContent=P.hk;
+  document.getElementById("ht").textContent=P.ht;
+  document.getElementById("hs").textContent=P.hs;
+  document.getElementById("r0").textContent=P.r0;
+
+  document.getElementById("c1t").textContent=P.c1t;
+  document.getElementById("c1p").textContent=P.c1p;
+  document.getElementById("c2t").textContent=P.c2t;
+  document.getElementById("c2p").textContent=P.c2p;
+  document.getElementById("c3t").textContent=P.c3t;
+  document.getElementById("c3p").textContent=P.c3p;
+  document.getElementById("c4t").textContent=P.c4t;
+  document.getElementById("c4p").textContent=P.c4p;
+
   if(lang==="zh"){
-    document.getElementById("h0").textContent="结构先于叙事";
-    document.getElementById("p0").textContent="多数系统崩溃，因为它们规模化了混乱。我们定义约束，映射依赖，执行可采信，测量对齐。";
-    document.getElementById("r0").textContent="规则：主张必须有支撑。支撑必须可验证。导航保留 gd_* 状态。";
-    document.getElementById("b1").textContent="四条入口";
-    document.getElementById("h1").textContent="INDEX";
-    document.getElementById("p1").textContent="罗盘式遍历：先选方向，再进入。";
-    document.getElementById("s1").textContent="想先结构再速度，用这里。";
-    document.getElementById("h2").textContent="DOOR";
-    document.getElementById("p2").textContent="桥式路由：按功能进入网络。";
-    document.getElementById("s2").textContent="已经知道车道，用这里。";
-    document.getElementById("h3").textContent="PRELUDE";
-    document.getElementById("p3").textContent="问题、宣言、承诺：系统脊柱。";
-    document.getElementById("s3").textContent="想先理解再移动，用这里。";
-    document.getElementById("h4").textContent="PRODUCTS";
-    document.getElementById("p4").textContent="可采纳执行面：按用例跳转，保持有界。";
-    document.getElementById("s4").textContent="想立刻用工具，用这里。";
-    document.querySelectorAll(".ctaRow .btn").forEach(function(x){x.textContent="打开";});
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnPrelude").textContent="前置页";
+    document.getElementById("btnCompass").textContent="指南针";
+    document.getElementById("openProducts").textContent="打开";
+    document.getElementById("openExplore").textContent="打开";
+    document.getElementById("openLaws").textContent="打开";
+    document.getElementById("openGauges").textContent="打开";
+    document.getElementById("b1").textContent="快速路线";
+    document.getElementById("dockDoor").textContent="门";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
   }else if(lang==="es"){
-    document.getElementById("h0").textContent="ESTRUCTURA ANTES QUE HISTORIA";
-    document.getElementById("p0").textContent="La mayoría colapsa porque escala confusión. Definimos restricciones, mapeamos dependencia, exigimos admisibilidad y medimos alineación.";
-    document.getElementById("r0").textContent="Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva gd_*.";
-    document.getElementById("b1").textContent="CUATRO RUTAS";
-    document.getElementById("p1").textContent="Recorrido por brújula: elige dirección y entra.";
-    document.getElementById("s1").textContent="Estructura antes que velocidad.";
-    document.getElementById("p2").textContent="Ruteo por función: entra al sistema.";
-    document.getElementById("s2").textContent="Cuando ya conoces el carril.";
-    document.getElementById("p3").textContent="Problema, declaración, promesa: la columna del sistema.";
-    document.getElementById("s3").textContent="Cuando quieres el porqué antes de moverte.";
-    document.getElementById("p4").textContent="Superficies adoptables: salta por caso de uso.";
-    document.getElementById("s4").textContent="Cuando quieres herramientas ya.";
-    document.querySelectorAll(".ctaRow .btn").forEach(function(x){x.textContent="ABRIR";});
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("btnPrelude").textContent="PRELUDIO";
+    document.getElementById("btnCompass").textContent="BRÚJULA";
+    document.getElementById("openProducts").textContent="ABRIR";
+    document.getElementById("openExplore").textContent="ABRIR";
+    document.getElementById("openLaws").textContent="ABRIR";
+    document.getElementById("openGauges").textContent="ABRIR";
+    document.getElementById("b1").textContent="RUTAS RÁPIDAS";
+    document.getElementById("dockDoor").textContent="PUERTA";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+  }else{
+    document.getElementById("openProducts").textContent="OPEN";
+    document.getElementById("openExplore").textContent="OPEN";
+    document.getElementById("openLaws").textContent="OPEN";
+    document.getElementById("openGauges").textContent="OPEN";
   }
 })();
 </script>

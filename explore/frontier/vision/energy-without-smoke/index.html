@@ -1,0 +1,439 @@
+<!-- TNT — /explore/frontier/vision/energy-without-smoke/index.html
+     FRONTIER · VISION · ENERGY WITHOUT SMOKE
+     RULES:
+       - Vision lane only (no structure loop here)
+       - No modals, no overlays
+       - EN / 中文 / ES
+       - Formal vs Informal toggle (materially different copy)
+       - Canon state carry: lang/style/time/depth (URL + LS)
+       - Uses ui.css + branch.css + instruments.js only
+       - Does NOT style html/body background (ui.css owns field)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VISION · ENERGY WITHOUT SMOKE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{position:relative;z-index:0}
+body::before,body::after{z-index:0!important;pointer-events:none!important}
+#root{position:relative;z-index:10}
+
+:root{
+  --opalA:rgba(210,190,255,.22);
+  --opalB:rgba(120,70,255,.18);
+  --opalC:rgba(90,210,255,.16);
+  --goldSoft:rgba(212,175,55,.45);
+}
+
+/* top */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  z-index:220;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  white-space:nowrap;flex-wrap:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* header */
+.header{
+  width:min(980px,94vw);
+  margin:74px auto 0;
+  padding:16px 16px 14px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.h1{margin:0;font-weight:950;font-size:28px;letter-spacing:1px;line-height:1.12}
+.p{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.5;max-width:980px}
+
+/* lens */
+.lens{
+  margin-top:12px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.lens .btn{border-radius:999px;padding:10px 14px}
+
+/* content */
+.page{
+  width:min(980px,94vw);
+  margin:14px auto 34px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.card{
+  position:relative;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.12), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
+  box-shadow:0 22px 72px rgba(0,0,0,.50), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{min-width:0}
+.title{font-weight:950;letter-spacing:.2px}
+.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.txt{margin:0;color:rgba(255,255,255,.88);line-height:1.6;font-size:13.25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{border-radius:999px;padding:10px 14px}
+
+/* footer */
+.footer{
+  width:min(980px,94vw);
+  margin:10px auto 34px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+</style>
+</head>
+
+<body>
+<div id="root">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/explore/frontier/vision/">BACK</a>
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <p class="k" id="k0">FRONTIER · VISION</p>
+    <h1 class="h1" id="h0">ENERGY WITHOUT SMOKE</h1>
+    <p class="p" id="p0">Human-first: turn waste and heat into usable energy without “just burn it” outcomes.</p>
+    <div class="lens" aria-label="Lens">
+      <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+      <button class="btn" id="btnFormal" type="button">FORMAL</button>
+    </div>
+  </div>
+
+  <div class="page" aria-label="Content">
+
+    <div class="card" id="c1">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Plain meaning">
+        <div class="left">
+          <div class="title" id="t1">Plain meaning</div>
+          <div class="sub" id="s1">Stop destroying value. Route materials and energy to the highest-usable pathways first.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b1"></p>
+        <div class="actions">
+          <a class="btn" id="j1" href="/explore/frontier/vision/">OPEN: VISION INDEX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c2">
+      <div class="head" role="button" tabindex="0" aria-label="Open: SHIMMER link">
+        <div class="left">
+          <div class="title" id="t2">SHIMMER link</div>
+          <div class="sub" id="s2">Classification → routing → conversion → outputs, bounded by conservation and markets.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b2"></p>
+        <div class="actions">
+          <a class="btn" id="j2" href="/explore/frontier/vision/urban-resource-os/">OPEN: URBAN RESOURCE OS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c3">
+      <div class="head" role="button" tabindex="0" aria-label="Open: What it enables">
+        <div class="left">
+          <div class="title" id="t3">What it enables</div>
+          <div class="sub" id="s3">Cleaner cities, local resilience, and eventually habitat-grade closed loops.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b3"></p>
+        <div class="actions">
+          <a class="btn" id="j3" href="/explore/frontier/vision/closed-loop-habitats/">OPEN: CLOSED-LOOP HABITATS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c4">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Boundaries">
+        <div class="left">
+          <div class="title" id="t4">Boundaries</div>
+          <div class="sub" id="s4">No fantasy jumps: measured posture first, then staged expansion.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b4"></p>
+        <div class="actions">
+          <a class="btn" id="j4" href="/products/energy/">OPEN: ENERGY PRODUCT</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Vision lane only · Structure lives in DOOR
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // --- canonical state ---
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  // nav links
+  document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
+  document.getElementById("btnDoor").href="/door/"+q();
+  document.getElementById("j1").href="/explore/frontier/vision/"+q();
+  document.getElementById("j2").href="/explore/frontier/vision/urban-resource-os/"+q();
+  document.getElementById("j3").href="/explore/frontier/vision/closed-loop-habitats/"+q();
+  document.getElementById("j4").href="/products/energy/"+q();
+
+  // language buttons (reload same path)
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // lens buttons
+  var btnI=document.getElementById("btnInformal");
+  var btnF=document.getElementById("btnFormal");
+  function paintLens(){
+    btnI.classList.toggle("active", style==="informal");
+    btnF.classList.toggle("active", style==="formal");
+  }
+  function setLens(next){
+    if(next!=="formal"&&next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    render();
+  }
+  btnI.addEventListener("click", function(){ setLens("informal"); });
+  btnF.addEventListener("click", function(){ setLens("formal"); });
+  paintLens();
+
+  // accordion
+  function bindCard(cardId){
+    var card=document.getElementById(cardId);
+    var head=card.querySelector(".head");
+    var chev=card.querySelector(".chev");
+    function act(){
+      var open=!card.classList.contains("open");
+      document.querySelectorAll(".card").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+      card.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["c1","c2","c3","c4"].forEach(bindCard);
+
+  // copy packs
+  var COPY = {
+    en:{
+      head:{k:"FRONTIER · VISION",h:"ENERGY WITHOUT SMOKE",p:"Human-first: turn waste and heat into usable energy without “just burn it” outcomes."},
+      informal:{
+        b1:"This means we stop treating landfills like bonfires. We separate what can be saved, route it to the right process, and only burn what truly has no better pathway. The win is less smoke, less wasted material value, and more usable outputs.",
+        b2:"SHIMMER is the “traffic controller”: it reads the incoming mix (plastics, organics, metals, water, composites), then routes fractions to the best pathway—recovery, digestion, pyrolysis, gasification, refinement, or carbon retention—based on constraints and demand.",
+        b3:"When cities can do this, they get cleaner air, steadier local energy, and better materials recovery. And the same routing logic is exactly what closed-loop habitats need—because habitats can’t afford to waste anything.",
+        b4:"Boundaries: we don’t inflate claims. Outputs stay tied to measured bands and conservative accounting. The path is staged: start with industrial thermal substitution and routing discipline, then expand only with receipts and stable operations."
+      },
+      formal:{
+        b1:"Energy Without Smoke is an entropy-routing program: maximize usable energy and material recovery while minimizing carbon loss, subject to conservation laws and regulatory constraints. Incineration becomes a last-resort sink, not a default pathway.",
+        b2:"SHIMMER implements a routing matrix R that assigns feedstock fractions to conversion modules (mechanical recovery, digestion, pyrolysis, gasification, refinement, carbon solidification). Optimization targets multi-output value, constrained by mass/energy balance and market variability.",
+        b3:"System-level outcome is an Urban Resource Operating System: distributed modules (200–400 t/day class) that reduce fragility, improve local routing efficiency, and produce audit-friendly outputs (energy, hydrogen potential where applicable, recovered materials).",
+        b4:"Boundaries: no net-positive fusion claims; no escalation beyond measured receipts; no mega-plant fragility assumptions. Deployment is modular, staged, and governed by admissibility and audit discipline."
+      }
+    },
+    zh:{
+      head:{k:"前沿 · 愿景",h:"无烟能源",p:"以人为先：把废弃物与热变成可用输出，而不是“一烧了之”。"},
+      informal:{
+        b1:"意思是：别把填埋场当篝火。能回收的先回收，能转化的按路由转化，只有真正没有更好路径的残余才进入末端处理。结果是更少烟、更少浪费、更多可用输出。",
+        b2:"SHIMMER 是“交通指挥”：读入混合物（塑料/有机物/金属/水/复合物），再把各部分按约束与需求路由到最佳路径——回收、消化、热解、气化、精炼或固碳。",
+        b3:"城市做到这一点，就能得到更干净的空气、更稳定的本地能量、更多材料回收。同一套路由逻辑也正是闭环栖息地所必需的，因为栖息地不能浪费任何东西。",
+        b4:"边界：不膨胀主张。输出绑定测量带宽与保守核算。路线是阶段化：先做工业热替代与路由纪律；再在收据与稳定运行基础上扩展。"
+      },
+      formal:{
+        b1:"无烟能源是熵路由计划：在守恒与监管约束下，最大化可用能源与材料回收，同时最小化碳损失。焚烧成为最后汇点，而非默认路径。",
+        b2:"SHIMMER 通过路由矩阵 R 将进料分配到模块（机械回收、消化、热解、气化、精炼、固碳）。优化目标是多输出价值，并受质量/能量平衡与市场波动约束。",
+        b3:"系统层面形成“城市资源操作系统”：分布式模块（约 200–400 吨/日级）降低巨型工厂脆弱性，提高本地路由效率，并产出可审计的能量/材料结果。",
+        b4:"边界：不做净增益聚变主张；不超越测量收据；不假设巨型工厂必然稳。部署采取模块化、阶段化，并由可采信与审计纪律治理。"
+      }
+    },
+    es:{
+      head:{k:"FRONTERA · VISIÓN",h:"ENERGÍA SIN HUMO",p:"Humano primero: convertir residuos y calor en salidas útiles sin ‘solo quemar’."},
+      informal:{
+        b1:"Significa dejar de tratar vertederos como hogueras. Se separa lo salvable, se enruta a procesos correctos y solo se quema lo que no tiene mejor camino. Menos humo, menos valor destruido, más salidas útiles.",
+        b2:"SHIMMER es el “control de tráfico”: lee la mezcla (plásticos, orgánicos, metales, agua, compuestos) y enruta fracciones al mejor camino—recuperación, digestión, pirólisis, gasificación, refinamiento o retención de carbono—según restricciones y demanda.",
+        b3:"Cuando una ciudad lo logra, obtiene aire más limpio, energía local más estable y mayor recuperación de materiales. Y la misma lógica de enrutamiento es la que necesita un hábitat cerrado: no puede desperdiciar nada.",
+        b4:"Límites: sin inflar afirmaciones. Salidas ligadas a bandas medidas y contabilidad conservadora. Camino por fases: empezar industrial y expandir solo con recibos y operación estable."
+      },
+      formal:{
+        b1:"Energía sin Humo es un programa de enrutamiento de entropía: maximizar energía útil y recuperación material minimizando pérdida de carbono, sujeto a conservación y regulación. La incineración es último recurso.",
+        b2:"SHIMMER aplica una matriz de ruteo R a módulos (recuperación mecánica, digestión, pirólisis, gasificación, refinamiento, solidificación de carbono). Optimiza valor multi-salida bajo balance masa/energía y variabilidad de precios.",
+        b3:"Resultado: un Sistema Operativo de Recursos Urbanos con módulos distribuidos (clase 200–400 t/día), menor fragilidad, mejor eficiencia local y salidas auditables (energía, materiales; potencial de H2 cuando aplique).",
+        b4:"Límites: sin afirmaciones de fusión neta positiva; sin escalación sin recibos; sin supuestos de mega-plantas. Despliegue modular y gobernado por admisibilidad y auditoría."
+      }
+    }
+  };
+
+  function render(){
+    var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+    document.getElementById("k0").textContent=P.head.k;
+    document.getElementById("h0").textContent=P.head.h;
+    document.getElementById("p0").textContent=P.head.p;
+
+    var L=(style==="formal")?P.formal:P.informal;
+    document.getElementById("b1").textContent=L.b1;
+    document.getElementById("b2").textContent=L.b2;
+    document.getElementById("b3").textContent=L.b3;
+    document.getElementById("b4").textContent=L.b4;
+
+    if(lang==="zh"){
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnDoor").textContent="门";
+      btnI.textContent="通俗"; btnF.textContent="正式";
+      document.getElementById("t1").textContent="通俗解释";
+      document.getElementById("t2").textContent="SHIMMER 连接";
+      document.getElementById("t3").textContent="它能带来什么";
+      document.getElementById("t4").textContent="边界";
+      document.getElementById("j1").textContent="打开：愿景索引";
+      document.getElementById("j2").textContent="打开：城市资源OS";
+      document.getElementById("j3").textContent="打开：闭环栖息地";
+      document.getElementById("j4").textContent="打开：能源产品";
+    }else if(lang==="es"){
+      document.getElementById("btnBack").textContent="VOLVER";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      btnI.textContent="INFORMAL"; btnF.textContent="FORMAL";
+      document.getElementById("t1").textContent="Significado simple";
+      document.getElementById("t2").textContent="Vínculo SHIMMER";
+      document.getElementById("t3").textContent="Qué habilita";
+      document.getElementById("t4").textContent="Límites";
+      document.getElementById("j1").textContent="ABRIR: ÍNDICE VISIÓN";
+      document.getElementById("j2").textContent="ABRIR: URBAN RESOURCE OS";
+      document.getElementById("j3").textContent="ABRIR: HÁBITATS CERRADOS";
+      document.getElementById("j4").textContent="ABRIR: PRODUCTO ENERGÍA";
+    }else{
+      btnI.textContent="INFORMAL"; btnF.textContent="FORMAL";
+      document.getElementById("j1").textContent="OPEN: VISION INDEX";
+      document.getElementById("j2").textContent="OPEN: URBAN RESOURCE OS";
+      document.getElementById("j3").textContent="OPEN: CLOSED-LOOP HABITATS";
+      document.getElementById("j4").textContent="OPEN: ENERGY PRODUCT";
+    }
+  }
+  render();
+
+  // default open first card
+  document.getElementById("c1").classList.add("open");
+  document.getElementById("c1").querySelector(".chev").textContent="▾";
+})();
+</script>
+
+</body>
+</html>

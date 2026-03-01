@@ -1,0 +1,249 @@
+<!-- TNT — /explore/frontier/water/index.html
+     EXPLORE · FRONTIER · WATER
+     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
+     SINGLE-OPEN ACCORDION · NO MODALS · STATE SAFE
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · WATER</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+:root{
+  --dockH:90px;
+  --inkA:rgba(12,14,20,.96);
+  --inkB:rgba(6,8,12,.98);
+  --stroke:rgba(255,255,255,.10);
+  --gold:rgba(212,175,55,.18);
+  --blue:rgba(120,180,255,.12);
+  --mut:rgba(255,255,255,.92);
+}
+
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:40px;
+  background:
+    radial-gradient(circle at 20% 18%, var(--gold), transparent 65%),
+    radial-gradient(circle at 80% 80%, var(--blue), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
+  padding:54px;
+  box-shadow:0 60px 200px rgba(0,0,0,.65);
+}
+
+.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
+.t{font-size:56px;font-weight:950;margin:0 0 24px}
+.s{font-size:22px;line-height:1.85;color:var(--mut);max-width:950px}
+
+.lens{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.pill{
+  padding:14px 22px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  font-weight:900;
+  cursor:pointer;
+}
+.pill.active{box-shadow:0 0 22px rgba(212,175,55,.35)}
+
+.stack{display:flex;flex-direction:column;gap:24px}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:34px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  overflow:hidden;
+  box-shadow:0 50px 180px rgba(0,0,0,.6);
+}
+
+.head{
+  padding:36px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  cursor:pointer;
+}
+
+.title{font-size:32px;font-weight:900}
+.chev{font-size:20px;opacity:.75}
+
+.body{
+  display:none;
+  padding:38px 40px 48px;
+  border-top:1px solid var(--stroke);
+}
+
+.card.open .body{display:block}
+
+.body h4{
+  margin:0 0 14px;
+  font-size:15px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.body p{
+  margin:0;
+  font-size:21px;
+  line-height:1.9;
+  color:var(--mut);
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  padding:14px;
+  border-radius:28px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.35);
+}
+.dock .btn{padding:14px;border-radius:999px;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k">FRONTIER</p>
+    <h1 class="t">WATER SYSTEMS</h1>
+    <p class="s">
+      What if water systems were designed like precision instruments, not patchwork utilities?  
+      What if purity, pressure, flow, and reuse were mapped before failure?
+    </p>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
+    </div>
+  </div>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+
+  const DOMAINS = [
+    "Flow Equilibrium Modeling",
+    "Purification Envelope Control",
+    "Closed-Loop Recovery Systems",
+    "Municipal Infrastructure Optimization",
+    "Cascade Failure Containment",
+    "Habitat-Level Water Autonomy"
+  ];
+
+  const TEXT = {
+    informal:{
+      en:"Water failure is rarely about scarcity. It is about misalignment — pressure, timing, routing, and containment. When those align, stability appears.",
+      zh:"水系统失效很少是资源短缺问题，而是压力、时间、路径与隔离的错位。当这些对齐，稳定就出现。",
+      es:"Las fallas del agua rara vez son escasez. Son desalineación — presión, tiempo y contención. Cuando se alinean, surge estabilidad."
+    },
+    formal:{
+      en:"Water systems are modeled under constraint envelopes: pressure bands, contamination thresholds, routing geometry, and containment rollback states.",
+      zh:"水系统在约束包络下建模：压力区间、污染阈值、路径几何与回滚状态。",
+      es:"Los sistemas de agua se modelan bajo envolventes de restricción: bandas de presión y umbrales de contaminación."
+    },
+    platform:{
+      en:"Platform posture: water modules remain registry-trackable, compliance-visible, and audit-ready without exposing sensitive civic infrastructure details.",
+      zh:"平台姿态：水模块可登记追踪、可合规可视、可审计，而不泄露市政敏感细节。",
+      es:"Postura de plataforma: módulos rastreables y auditables sin revelar infraestructura sensible."
+    },
+    engineering:{
+      en:"Engineering posture: laminar vs turbulent flow modeling, membrane tolerances, cascade interruption gates, and deterministic failover states.",
+      zh:"工程姿态：层流/湍流建模、膜耐受阈值、级联中断闸门与确定性失效转移状态。",
+      es:"Postura de ingeniería: modelado de flujo laminar/turbulento, tolerancias de membrana y estados de failover deterministas."
+    }
+  };
+
+  let currentLens="informal";
+  let currentLang="en";
+
+  const stack=document.getElementById("stack");
+
+  function render(){
+    stack.innerHTML="";
+    DOMAINS.forEach((name,i)=>{
+      const card=document.createElement("div");
+      card.className="card";
+
+      const head=document.createElement("div");
+      head.className="head";
+      head.innerHTML=`
+        <div class="title">${name}</div>
+        <div class="chev">▸</div>
+      `;
+
+      const body=document.createElement("div");
+      body.className="body";
+      body.innerHTML=`
+        <h4>${currentLens.toUpperCase()}</h4>
+        <p>${TEXT[currentLens][currentLang]}</p>
+      `;
+
+      head.addEventListener("click",()=>{
+        document.querySelectorAll(".card").forEach(c=>{
+          if(c!==card) c.classList.remove("open");
+        });
+        card.classList.toggle("open");
+      });
+
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
+
+      if(i===0) card.classList.add("open");
+    });
+  }
+
+  document.querySelectorAll(".pill").forEach(p=>{
+    p.addEventListener("click",()=>{
+      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      p.classList.add("active");
+      currentLens=p.dataset.lens;
+      render();
+    });
+  });
+
+  render();
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,24 +1,21 @@
 <!-- TNT — /index.html
-     COMPASS · FRONTIER NAV (NO LENSES) · EN/中文/ES · BIGGER PRINT · MOBILE SAFE
+     INDEX · COMPASS (4-DIAMOND) · EN/中文/ES · BIGGER PRINT · GOLD SUBTLE · OPAL+RED · NO MODALS
      ROLE:
-       - This is the Compass (4-way)
-       - Human words first (no internal jargon)
-       - No modals, no overlays
-       - Tap a diamond → banner updates → ENTER HERE jumps
-     ROUTES (LOCKED):
-       NORTH = /laws/      (Structure / Rules)
-       EAST  = /products/  (What you can use)
-       SOUTH = /gauges/    (Measurements)
-       WEST  = /explore/   (Frontier / Vision)
-     TOP:
-       LEFT  = DOOR (/door/) + HOME (/home/)
-       RIGHT = EN / 中文 / ES
+       - This is the COMPASS page (direction-first).
+       - 4 directions = 4 lanes:
+           1) STRUCTURE  (rules + doctrine)   → /laws/
+           2) USE        (products + services)→ /products/
+           3) MEASURE    (instruments)        → /gauges/
+           4) FRONTIER   (vision work)        → /explore/frontier/
+       - Clicking a diamond SELECTS it (active glow)
+       - Banner updates (human words first + “ENTER HERE”)
+       - Below banner: 4 structured blocks (Problem / What you’ll see / What not to expect / Start here)
+       - Mobile-safe: NO overlays, NO modals, NO inline onclick, no pointer traps
      STATE:
        - URL + LS: gd_lang/gd_style/gd_time/gd_depth preserved on every jump
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns background (no html/body background styling)
-       - Gold glow subtle (no overpower)
 -->
 
 <!doctype html>
@@ -39,16 +36,19 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 #root{position:relative;z-index:10}
 
 :root{
-  --R:164px;
+  --R:154px;
   --D:182px;
 
   --opalA:rgba(210,190,255,.16);
   --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,80,80,.10);
-  --goldSoft:rgba(212,175,55,.22); /* subtle */
+  --opalC:rgba(255,80,80,.12);
 
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
+  --goldSoft:rgba(212,175,55,.18); /* reduced */
+  --inkA:rgba(12,22,38,.95);
+  --inkB:rgba(6,10,16,.98);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 }
 
 /* top */
@@ -71,37 +71,37 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 .banner{
   width:min(1040px,94vw);
   margin:74px auto 10px;
-  padding:18px 18px 16px;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.12);
+  padding:16px 16px 14px;
+  border-radius:24px;
+  border:1px solid var(--stroke);
   background:
     radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
     radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
     radial-gradient(circle at 62% 110%, var(--opalC), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.14));
   backdrop-filter:blur(12px);
   box-shadow:0 34px 120px rgba(0,0,0,.55);
 }
 .bk{
-  margin:0 0 8px;
-  font-size:12px;
+  margin:0 0 6px;
+  font-size:12px; /* bigger */
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.80;
+  opacity:.78;
 }
 .bt{
   margin:0;
   font-weight:950;
-  font-size:30px; /* bigger */
+  font-size:28px; /* bigger */
   letter-spacing:1px;
   line-height:1.12;
 }
 .bp{
-  margin:12px 0 0;
-  font-size:15px; /* bigger */
-  opacity:.90;
+  margin:10px 0 0;
+  font-size:14.5px; /* bigger */
+  opacity:.88;
   line-height:1.55;
-  max-width:980px;
+  max-width:78ch;
 }
 .brow{
   display:flex;
@@ -111,7 +111,10 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   flex-wrap:wrap;
 }
 .bcta{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 .bcta .btn{border-radius:999px;padding:12px 16px}
 
@@ -119,31 +122,33 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 .stage{
   position:relative;
   width:min(760px,94vw);
-  height:min(760px, 64vh);
-  margin:10px auto 18px;
+  height:min(760px, 62vh);
+  margin:10px auto 10px;
   z-index:40;
 }
 
-/* outer frame */
+/* outer frame (subtle) */
 .outer{
-  position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
+  position:absolute;
+  left:50%;top:50%;
+  width:min(680px,92vw);
+  height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  opacity:.42;
+  opacity:.40;
   pointer-events:none;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.07), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.10), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.34) 0%, rgba(7,11,18,.52) 70%);
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.06), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(255,80,80,.08), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.36) 0%, rgba(7,11,18,.52) 70%);
   box-shadow:
-    0 90px 260px rgba(0,0,0,.42),
+    0 90px 260px rgba(0,0,0,.48),
     inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -50px 90px rgba(0,0,0,.45);
+    inset 0 -50px 90px rgba(0,0,0,.50);
 }
 
-/* glossy diamond */
+/* diamonds */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -156,17 +161,17 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   overflow:hidden;
 
   background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.50), transparent 46%),
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.52), transparent 46%),
     radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
     radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
+    linear-gradient(160deg, var(--inkA), var(--inkB));
 
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 38px 120px rgba(0,0,0,.85),
-    0 0 18px rgba(212,175,55,.12), /* subtle */
+    0 0 22px rgba(212,175,55,.10), /* reduced */
     inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -42px 78px rgba(0,0,0,.78);
+    inset 0 -42px 78px rgba(0,0,0,.80);
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
@@ -174,7 +179,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   content:"";
   position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
+  opacity:.45;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
@@ -188,30 +193,27 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
   transform:rotate(-12deg);
   pointer-events:none;
-  opacity:.9;
+  opacity:.92;
 }
 .d:hover{
   transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.28);
+  border-color:rgba(255,255,255,.20);
   box-shadow:
     0 44px 140px rgba(0,0,0,.92),
-    0 0 22px rgba(212,175,55,.16),
-    inset 0 2px 0 rgba(255,255,255,.26),
+    0 0 26px rgba(255,80,80,.12),
+    inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -46px 86px rgba(0,0,0,.84);
 }
-.d:active{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
-}
 .d.active{
-  border-color:rgba(212,175,55,.55);
+  border-color:rgba(255,80,80,.45);
   box-shadow:
     0 44px 140px rgba(0,0,0,.92),
-    0 0 34px rgba(212,175,55,.22),
-    inset 0 2px 0 rgba(255,255,255,.26),
+    0 0 34px rgba(255,80,80,.20),
+    inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -46px 86px rgba(0,0,0,.84);
 }
 
-/* placement */
+/* placement offsets */
 .dN{ --tx:0px; --ty:calc(var(--R) * -1); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
 .dE{ --tx:var(--R); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
 .dS{ --tx:0px; --ty:var(--R); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
@@ -226,15 +228,15 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   justify-content:center;
   text-align:center;
   padding:14px;
-  gap:10px;
+  gap:8px;
   pointer-events:none;
   user-select:none;
 }
 .dir{
-  font-size:12px;
+  font-size:12px; /* bigger */
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.82;
+  opacity:.78;
 }
 .lab{
   font-weight:950;
@@ -242,42 +244,52 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   letter-spacing:.6px;
 }
 .sub{
-  font-size:13.5px; /* bigger */
+  font-size:13.25px; /* bigger */
   opacity:.86;
-  line-height:1.3;
+  line-height:1.35;
   max-width:18em;
 }
 
-/* core */
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:60px;height:60px;border-radius:18px;
-  background:rgba(0,0,0,.18);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  pointer-events:none;
-  opacity:.9;
-  font-weight:900;
+/* structure blocks */
+.section{
+  width:min(1040px,94vw);
+  margin:8px auto 34px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
+.block{
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.08), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(255,80,80,.06), transparent 64%),
+    linear-gradient(160deg, rgba(12,22,38,.68), rgba(6,10,16,.78));
+  box-shadow:0 18px 60px rgba(0,0,0,.40);
+  padding:14px 14px 12px;
+}
+.bh{margin:0;font-weight:950;font-size:16px;letter-spacing:.2px}
+.bp{margin:10px 0 0;font-size:14px;line-height:1.65;color:rgba(255,255,255,.86)}
+.block .jump{margin-top:10px;display:flex;justify-content:flex-end}
+.block .jump .btn{border-radius:999px;padding:12px 16px}
 
 /* footer */
 .footer{
-  width:min(980px,94vw);
-  margin:8px auto 34px;
+  width:min(1040px,94vw);
+  margin:0 auto 34px;
   text-align:center;
-  font-size:13.5px;
+  font-size:13px;
   opacity:.80;
 }
 .sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
 
 @media (max-width:560px){
-  :root{ --R:148px; --D:170px; }
-  .bt{font-size:28px}
+  :root{--R:140px;--D:170px}
+  .bt{font-size:26px}
 }
 @media (max-width:420px){
-  :root{ --R:140px; --D:164px; }
+  :root{--R:132px;--D:162px}
 }
 </style>
 </head>
@@ -288,6 +300,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   <div class="top" aria-label="Top controls">
     <div class="left">
       <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
       <a class="btn" id="btnHome" href="/home/">HOME</a>
     </div>
     <div class="right" aria-label="Language">
@@ -302,7 +315,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     <div class="brow">
       <div>
         <h1 class="bt" id="bt">CHOOSE A DIRECTION</h1>
-        <p class="bp" id="bp">Tap a diamond. Read the banner. Then enter.</p>
+        <p class="bp" id="bp">Tap one. Read one minute. Enter when ready.</p>
       </div>
       <div class="bcta">
         <a class="btn" id="btnEnterHere" href="#">ENTER HERE</a>
@@ -313,43 +326,87 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   <div class="stage" aria-label="Compass">
     <div class="outer" aria-hidden="true"></div>
 
-    <div class="d dN" id="dNorth" role="button" tabindex="0" aria-label="North">
+    <div class="d dN" id="dStructure" role="button" tabindex="0" aria-label="Structure">
       <div class="inner">
         <div class="dir" id="nDir">NORTH</div>
         <div class="lab" id="nLab">STRUCTURE</div>
-        <div class="sub" id="nSub">Rules that keep big ideas stable.</div>
+        <div class="sub" id="nSub">Rules that keep meaning stable.</div>
       </div>
     </div>
 
-    <div class="d dE" id="dEast" role="button" tabindex="0" aria-label="East">
+    <div class="d dE" id="dUse" role="button" tabindex="0" aria-label="Use">
       <div class="inner">
         <div class="dir" id="eDir">EAST</div>
         <div class="lab" id="eLab">USE</div>
-        <div class="sub" id="eSub">Products and surfaces you can deploy.</div>
+        <div class="sub" id="eSub">Tools you can adopt.</div>
       </div>
     </div>
 
-    <div class="d dS" id="dSouth" role="button" tabindex="0" aria-label="South">
+    <div class="d dS" id="dMeasure" role="button" tabindex="0" aria-label="Measure">
       <div class="inner">
         <div class="dir" id="sDir">SOUTH</div>
         <div class="lab" id="sLab">MEASURE</div>
-        <div class="sub" id="sSub">Signals, dashboards, live outputs.</div>
+        <div class="sub" id="sSub">Signals, not arguments.</div>
       </div>
     </div>
 
-    <div class="d dW" id="dWest" role="button" tabindex="0" aria-label="West">
+    <div class="d dW" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
       <div class="inner">
         <div class="dir" id="wDir">WEST</div>
         <div class="lab" id="wLab">FRONTIER</div>
-        <div class="sub" id="wSub">Vision shells and future builds.</div>
+        <div class="sub" id="wSub">Vision work, clearly labeled.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" aria-label="Structure blocks">
+    <div class="block">
+      <div class="bh" id="bh1">Problem</div>
+      <div class="bp" id="bp1">
+        People don’t fail because they don’t care — they fail because they can’t see the wiring.
+        This compass routes you into the right lane so you stop guessing.
+      </div>
+      <div class="jump">
+        <a class="btn" id="j1" href="/prelude/">JUMP: PRELUDE</a>
       </div>
     </div>
 
-    <div class="core">◆</div>
+    <div class="block">
+      <div class="bh" id="bh2">What you’ll see</div>
+      <div class="bp" id="bp2">
+        Every lane is built around a clean question: rules, tools, measurements, or future builds.
+        Pick one lane, then follow the smallest next step.
+      </div>
+      <div class="jump">
+        <a class="btn" id="j2" href="/home/">JUMP: HOME</a>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh" id="bh3">What you won’t see</div>
+      <div class="bp" id="bp3">
+        No “trust me.” No story inflation. No pretending correlation is causation.
+        If something isn’t measured yet, it stays labeled as not measured.
+      </div>
+      <div class="jump">
+        <a class="btn" id="j3" href="/door/">JUMP: DOOR</a>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="bh" id="bh4">Start here</div>
+      <div class="bp" id="bp4">
+        If you want rules first, choose Structure. If you want tools, choose Use.
+        If you want signals, choose Measure. If you want big vision, choose Frontier.
+      </div>
+      <div class="jump">
+        <a class="btn" id="j4" href="/products/">JUMP: PRODUCTS</a>
+      </div>
+    </div>
   </div>
 
   <div class="footer">
-    <span id="ft">Big ideas live here — but only what holds gets to scale.</span>
+    <span id="ft">Direction first · Reading second · Action third</span>
     <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
 
@@ -390,9 +447,15 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
            "&depth="+encodeURIComponent(D);
   }
 
-  // top links
+  // wire top + jumps
   document.getElementById("btnDoor").href="/door/"+q();
+  document.getElementById("btnPrelude").href="/prelude/"+q();
   document.getElementById("btnHome").href="/home/"+q();
+
+  document.getElementById("j1").href="/prelude/"+q();
+  document.getElementById("j2").href="/home/"+q();
+  document.getElementById("j3").href="/door/"+q();
+  document.getElementById("j4").href="/products/"+q();
 
   // language buttons (reload same path)
   var btnEN=document.getElementById("btnEN");
@@ -416,20 +479,21 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   // routes
   var ROUTE = {
-    north:"/laws/",
-    east:"/products/",
-    south:"/gauges/",
-    west:"/explore/"
+    structure:"/laws/",
+    use:"/products/",
+    measure:"/gauges/",
+    frontier:"/explore/frontier/"
   };
 
+  // refs
   var bt=document.getElementById("bt");
   var bp=document.getElementById("bp");
   var enterHere=document.getElementById("btnEnterHere");
 
-  var dN=document.getElementById("dNorth");
-  var dE=document.getElementById("dEast");
-  var dS=document.getElementById("dSouth");
-  var dW=document.getElementById("dWest");
+  var dN=document.getElementById("dStructure");
+  var dE=document.getElementById("dUse");
+  var dS=document.getElementById("dMeasure");
+  var dW=document.getElementById("dFrontier");
 
   function clearActive(){
     dN.classList.remove("active");
@@ -443,28 +507,28 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var title="", desc="", href="#";
 
     if(lang==="zh"){
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · 结构"; desc="让大想法能承压的规则与边界。"; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · 可用内容"; desc="你可以部署的产品与执行面。"; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · 测量"; desc="信号、仪表盘与输出。"; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · 前沿"; desc="愿景与未来构建（有壳也有路由）。"; href=ROUTE.west; }
+      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · 规则"; desc="规则与边界：让含义稳定，不让系统自我欺骗。"; href=ROUTE.structure; }
+      if(key==="use"){ dE.classList.add("active"); title="USE · 可用内容"; desc="可直接使用的工具与枢纽：不迷路，直接跳转。"; href=ROUTE.use; }
+      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · 测量"; desc="信号与输出：先看数据，再谈观点。"; href=ROUTE.measure; }
+      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · 前沿"; desc="大胆愿景，但明确标注阶段：概念 / 就绪 / 下一步。"; href=ROUTE.frontier; }
       enterHere.textContent="进入这里";
     }else if(lang==="es"){
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · ESTRUCTURA"; desc="Reglas y límites que hacen estables las ideas grandes."; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · USAR"; desc="Productos y superficies que puedes desplegar."; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEDIR"; desc="Señales, paneles y salidas."; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · FRONTERA"; desc="Visión y construcciones futuras (con rutas limpias)."; href=ROUTE.west; }
+      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · REGLAS"; desc="Reglas y límites: significado estable, sin autoengaño."; href=ROUTE.structure; }
+      if(key==="use"){ dE.classList.add("active"); title="USE · USAR"; desc="Herramientas y hubs utilizables: saltos limpios."; href=ROUTE.use; }
+      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · MEDIR"; desc="Señales y salidas: datos primero, opiniones después."; href=ROUTE.measure; }
+      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · FRONTERA"; desc="Visión audaz, pero etiquetada por fase: concepto / preparación / siguiente."; href=ROUTE.frontier; }
       enterHere.textContent="ENTRAR AQUÍ";
     }else{
-      if(key==="north"){ dN.classList.add("active"); title="NORTH · STRUCTURE"; desc="Rules and boundaries that let big ideas hold under pressure."; href=ROUTE.north; }
-      if(key==="east"){  dE.classList.add("active"); title="EAST · USE"; desc="Products and surfaces you can deploy."; href=ROUTE.east; }
-      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEASURE"; desc="Signals, dashboards, and live outputs."; href=ROUTE.south; }
-      if(key==="west"){  dW.classList.add("active"); title="WEST · FRONTIER"; desc="Vision shells and future builds (with clean routing)."; href=ROUTE.west; }
+      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · RULES"; desc="Rules and boundaries: keep meaning stable and systems honest."; href=ROUTE.structure; }
+      if(key==="use"){ dE.classList.add("active"); title="USE · TOOLS"; desc="Adoptable tools and hubs: clean jumps, no wandering."; href=ROUTE.use; }
+      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · SIGNALS"; desc="Signals and outputs: data first, debate later."; href=ROUTE.measure; }
+      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · VISION"; desc="Big vision, clearly labeled by stage: concept / readiness / next."; href=ROUTE.frontier; }
       enterHere.textContent="ENTER HERE";
     }
 
     bt.textContent=title;
     bp.textContent=desc;
-    enterHere.href=href + q();
+    enterHere.href = href + q();
   }
 
   function bind(el, key){
@@ -475,36 +539,70 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     });
   }
 
-  bind(dN,"north");
-  bind(dE,"east");
-  bind(dS,"south");
-  bind(dW,"west");
+  bind(dN,"structure");
+  bind(dE,"use");
+  bind(dS,"measure");
+  bind(dW,"frontier");
 
-  // static i18n labels
+  // default selection
+  setBanner("structure");
+
+  // small i18n labels
   if(lang==="zh"){
     document.getElementById("bk").textContent="罗盘";
+    document.getElementById("bp").textContent="点一个方向。读一分钟。准备好就进入。";
+    document.getElementById("bh1").textContent="问题";
+    document.getElementById("bp1").textContent="多数人失败不是因为不努力，而是看不见线路。这个罗盘把你送到正确干线，停止猜测。";
+    document.getElementById("bh2").textContent="你会看到什么";
+    document.getElementById("bp2").textContent="每条干线都围绕一个干净问题：规则、工具、测量或前沿。选一条，然后走最小下一步。";
+    document.getElementById("bh3").textContent="你不会看到什么";
+    document.getElementById("bp3").textContent="不靠‘信我’。不夸大。不开口把相关当因果。没测量就标注没测量。";
+    document.getElementById("bh4").textContent="从哪里开始";
+    document.getElementById("bp4").textContent="想先看规则→结构；想先看工具→可用内容；想先看信号→测量；想看愿景→前沿。";
+    document.getElementById("j1").textContent="跳转：前置页";
+    document.getElementById("j2").textContent="跳转：主页";
+    document.getElementById("j3").textContent="跳转：门";
+    document.getElementById("j4").textContent="跳转：产品";
+    document.getElementById("ft").textContent="先方向 · 后阅读 · 再行动";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnPrelude").textContent="前置页";
+    document.getElementById("btnHome").textContent="主页";
     document.getElementById("nLab").textContent="结构";
+    document.getElementById("nSub").textContent="让含义稳定的规则。";
     document.getElementById("eLab").textContent="可用内容";
+    document.getElementById("eSub").textContent="你可以直接用的工具。";
     document.getElementById("sLab").textContent="测量";
+    document.getElementById("sSub").textContent="信号，而不是争论。";
     document.getElementById("wLab").textContent="前沿";
-    document.getElementById("nSub").textContent="让大想法稳定的规则。";
-    document.getElementById("eSub").textContent="你可以使用的产品。";
-    document.getElementById("sSub").textContent="信号与输出。";
-    document.getElementById("wSub").textContent="愿景与未来构建。";
-    document.getElementById("ft").textContent="大想法可以存在，但只有能承压的才允许扩张。";
+    document.getElementById("wSub").textContent="愿景工作，清晰标注。";
   }else if(lang==="es"){
     document.getElementById("bk").textContent="BRÚJULA";
+    document.getElementById("bp").textContent="Toca uno. Lee un minuto. Entra cuando estés listo.";
+    document.getElementById("bh1").textContent="Problema";
+    document.getElementById("bp1").textContent="La gente falla porque no ve el cableado. Esta brújula te rutea al carril correcto para dejar de adivinar.";
+    document.getElementById("bh2").textContent="Lo que verás";
+    document.getElementById("bp2").textContent="Cada carril responde una pregunta limpia: reglas, herramientas, medición o frontera. Elige uno y toma el siguiente paso mínimo.";
+    document.getElementById("bh3").textContent="Lo que no verás";
+    document.getElementById("bp3").textContent="Nada de ‘créeme’. Nada de inflar historias. No confundir correlación con causalidad. Si no está medido, se etiqueta.";
+    document.getElementById("bh4").textContent="Empieza aquí";
+    document.getElementById("bp4").textContent="Reglas→Estructura. Herramientas→Usar. Señales→Medir. Visión→Frontera.";
+    document.getElementById("j1").textContent="SALTAR: PRELUDIO";
+    document.getElementById("j2").textContent="SALTAR: INICIO";
+    document.getElementById("j3").textContent="SALTAR: PUERTA";
+    document.getElementById("j4").textContent="SALTAR: PRODUCTOS";
+    document.getElementById("ft").textContent="Dirección primero · Lectura después · Acción al final";
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("btnPrelude").textContent="PRELUDIO";
+    document.getElementById("btnHome").textContent="INICIO";
     document.getElementById("nLab").textContent="ESTRUCTURA";
+    document.getElementById("nSub").textContent="Reglas que estabilizan significado.";
     document.getElementById("eLab").textContent="USAR";
+    document.getElementById("eSub").textContent="Herramientas adoptables.";
     document.getElementById("sLab").textContent="MEDIR";
+    document.getElementById("sSub").textContent="Señales, no debates.";
     document.getElementById("wLab").textContent="FRONTERA";
-    document.getElementById("ft").textContent="Ideas grandes sí — pero solo lo que resiste puede escalar.";
-  }else{
-    document.getElementById("bk").textContent="COMPASS";
+    document.getElementById("wSub").textContent="Visión, bien etiquetada.";
   }
-
-  // default
-  setBanner("north");
 })();
 </script>
 

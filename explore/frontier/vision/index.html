@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
      FRONTIER · VISION (SHIMMER) · 4-DIAMOND CROSS · EN/中文/ES · FORMAL/INFORMAL
      RULES (LOCKED):
@@ -5,7 +6,8 @@
        - Structure lives in /door/
        - 4 glossy diamonds (N/E/S/W) — human words large, formal words small
        - No modals. No overlays. No inline onclick.
-       - Canon state carry: lang/style/time/depth (URL + LS)
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
        - Uses ui.css + branch.css + instruments.js only
        - Does NOT style html/body background (ui.css owns field)
      ROUTES (LOCKED):
@@ -14,7 +16,6 @@
        S (ENERGY NO SMOKE)  → /explore/frontier/vision/energy-without-smoke/
        W (LIFE OFF-EARTH)   → /explore/frontier/vision/closed-loop-habitats/
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,20 +31,36 @@
 a{color:inherit;text-decoration:none}
 
 /* keep ui.css field overlays behind */
-body{position:relative;z-index:0}
+body{position:relative;z-index:0;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before, body::after{z-index:0 !important;pointer-events:none !important}
 #vRoot{position:relative;z-index:10}
 
 :root{
-  --R:150px;
-  --D:184px;
+  /* geometry */
+  --R:156px;        /* arm length */
+  --D:190px;        /* diamond size */
 
-  --opalA:rgba(210,190,255,.22);
-  --opalB:rgba(120,70,255,.18);
-  --opalC:rgba(90,210,255,.16);
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
+  /* hierarchy: red primary, black secondary, gold adorn */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
+
+  --onyx0:rgba(6,8,10,.92);
+  --onyx1:rgba(10,12,16,.82);
+  --opalV:rgba(90,40,120,.12);     /* subtle opal sheen only */
+
+  --crimson:rgba(120,0,22,.34);    /* deep base red */
+  --festival:rgba(255,43,43,.18);  /* bright energy red */
+
+  --gold:rgba(201,162,74,.42);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 100px rgba(0,0,0,.56);
+  --shadowB:0 38px 120px rgba(0,0,0,.85);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* top controls */
@@ -57,31 +74,75 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .top .left,.top .right{
   display:flex;gap:10px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
+  flex-wrap:wrap;white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
 
+/* button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
 /* brand pill */
 .brand{
   width:min(980px,94vw);
-  margin:72px auto 0;
+  margin:74px auto 0;
   padding:14px 16px;
   border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 20% 30%, rgba(210,190,255,.12), transparent 72%),
-    radial-gradient(circle at 82% 66%, rgba(120,70,255,.10), transparent 74%),
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.24), rgba(0,0,0,.12));
   backdrop-filter:blur(12px);
-  box-shadow:0 28px 100px rgba(0,0,0,.50);
+  box-shadow:var(--shadowA);
   text-align:center;
+  position:relative;
+  overflow:hidden;
 }
-.brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;margin:0 0 6px}
-.brand .t{margin:0;font-weight:950;font-size:36px;letter-spacing:1px;line-height:1.08}
-.brand .s{margin-top:6px;font-size:13.5px;opacity:.86}
+/* gold diamond lay in trim zone only */
+.brand::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.28;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.brand .k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.82;margin:0 0 6px;color:var(--mut);position:relative}
+.brand .t{margin:0;font-weight:980;font-size:36px;letter-spacing:1px;line-height:1.08;color:var(--ink);position:relative}
+.brand .s{margin-top:6px;font-size:13.5px;opacity:.90;color:var(--mut);position:relative}
 
-/* lens row (page-level only) */
+/* lens row (page-level only: informal/formal) */
 .lens{
   width:min(980px,94vw);
   margin:12px auto 0;
@@ -102,19 +163,20 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   pointer-events:none;
 }
 
-/* outer frame */
+/* outer frame (diamond slab) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  opacity:.46;
+  opacity:.34;
   pointer-events:none;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
+    radial-gradient(circle at 70% 80%, var(--opalV), transparent 60%),
+    radial-gradient(circle at 50% 50%, var(--crimson), transparent 72%),
+    linear-gradient(160deg, rgba(10,12,16,.55) 0%, rgba(6,8,10,.78) 70%);
   box-shadow:
     0 90px 260px rgba(0,0,0,.52),
     inset 0 2px 0 rgba(255,255,255,.10),
@@ -133,50 +195,66 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   -webkit-tap-highlight-color:transparent;
   overflow:hidden;
 
+  /* onyx gem + dual-red + subtle opal sheen */
   background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.55), transparent 46%),
-    radial-gradient(circle at 72% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 60% 85%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.22), transparent 46%),
+    radial-gradient(circle at 70% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 76% 78%, var(--opalV), transparent 66%),
+    radial-gradient(circle at 28% 80%, var(--crimson), transparent 72%),
+    linear-gradient(160deg, var(--onyx1), var(--onyx0));
 
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -42px 78px rgba(0,0,0,.78);
+    var(--shadowB),
+    0 0 34px rgba(255,43,43,.10),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -44px 84px rgba(0,0,0,.84);
 
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
+
+/* gold trim with diamond lay (adornment only) */
 .d::before{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.6;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.42;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
 }
+
+/* glossy highlight */
 .d::after{
   content:"";
   position:absolute;left:10%;right:10%;top:10%;
   height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
   transform:rotate(-10deg);
   pointer-events:none;
   opacity:.92;
 }
+
 .d:hover{
-  border-color:rgba(212,175,55,.30);
+  border-color:rgba(201,162,74,.26);
   box-shadow:
     0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.26),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
+    0 0 44px rgba(255,43,43,.12),
+    0 0 32px rgba(201,162,74,.14),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -46px 86px rgba(0,0,0,.88);
 }
-.d:active{transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(.99)}
+
+.d:active{
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(.99);
+}
 
 /* placement */
 .dN{--tx:0px;--ty:calc(var(--R)*-1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
@@ -196,28 +274,41 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   user-select:none;
 }
 .big{
-  font-weight:950;
-  font-size:18px;
+  font-weight:980;
+  font-size:19px;
   letter-spacing:.7px;
-  text-shadow:0 0 16px rgba(255,255,255,.12);
+  color:var(--ink);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
 }
 .small{
-  font-size:12.5px;
-  opacity:.84;
+  font-size:12.75px;
+  opacity:.88;
   line-height:1.25;
-  max-width:18em;
+  max-width:18.5em;
+  color:rgba(255,255,255,.82);
 }
 
 /* core */
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:60px;height:60px;border-radius:18px;
-  background:rgba(0,0,0,.18);
+  width:66px;height:66px;border-radius:20px;
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 64%),
+    rgba(0,0,0,.18);
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
   display:grid;place-items:center;
   pointer-events:none;
+  color:rgba(201,162,74,.72);
+  font-weight:980;
+  font-size:18px;
+}
+.core::after{
+  content:"";
+  position:absolute;left:12px;right:12px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
+  opacity:.55;pointer-events:none;
 }
 
 /* footer */
@@ -225,17 +316,18 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   width:min(980px,94vw);
   margin:18px auto 34px;
   text-align:center;
-  font-size:12.5px;
-  opacity:.78;
+  font-size:12.75px;
+  color:var(--mut);
+  opacity:.86;
 }
 
 /* responsive */
 @media (max-width:560px){
-  :root{--R:136px;--D:170px}
+  :root{--R:140px;--D:174px}
   .brand .t{font-size:34px}
 }
 @media (max-width:420px){
-  :root{--R:130px;--D:162px}
+  :root{--R:132px;--D:166px}
 }
 </style>
 </head>
@@ -245,8 +337,9 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnBack" href="/explore/frontier/">BACK</a>
-      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnBack" href="/explore/frontier/" data-route="/explore/frontier/">BACK</a>
+      <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+      <a class="btn red" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -255,7 +348,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     </div>
   </div>
 
-  <div class="brand" aria-hidden="true">
+  <div class="brand" aria-label="Vision brand">
     <p class="k" id="k0">FRONTIER · VISION</p>
     <h1 class="t" id="t0">SHIMMER</h1>
     <div class="s" id="s0">Pick a future system. Then go deeper.</div>
@@ -266,7 +359,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     <button class="btn" id="btnFormal" type="button">FORMAL</button>
   </div>
 
-  <div class="stage" aria-label="Vision diamond">
+  <div class="stage" aria-label="Vision diamond cross">
     <div class="outer" aria-hidden="true"></div>
 
     <!-- N: Clean Cities -->
@@ -301,7 +394,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
       </div>
     </div>
 
-    <div class="core">◆</div>
+    <div class="core" aria-hidden="true">◆</div>
   </div>
 
   <div class="footer" id="foot">Vision lane only · Structure lives in DOOR</div>
@@ -310,24 +403,32 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 
 <script>
 (function(){
-  // ===== state =====
+  "use strict";
+
+  // ===== state (gd_* only; no new keys) =====
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";   // origin|now|post
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";     // 1..9
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  var d=parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
@@ -336,131 +437,94 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     var L=(over&&over.lang)?over.lang:lang;
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
+    var D=(over&&over.depth)?String(over.depth):depth;
     return "?lang="+encodeURIComponent(L)+
            "&style="+encodeURIComponent(S)+
            "&time="+encodeURIComponent(T)+
            "&depth="+encodeURIComponent(D);
   }
 
-  // top links
-  document.getElementById("btnBack").href="/explore/frontier/"+q();
-  document.getElementById("btnDoor").href="/door/"+q();
+  // Wire any [data-route] anchors
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
 
-  // language buttons (reload same path)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
   }
-  paintLang();
+
+  // Language buttons (reload same pathname)
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // lens buttons (informal/formal)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Style buttons (informal/formal) — update gd_style + reload same pathname
   var btnInformal=document.getElementById("btnInformal");
   var btnFormal=document.getElementById("btnFormal");
-  function paintLens(){
-    btnInformal.classList.toggle("active", style==="informal");
-    btnFormal.classList.toggle("active", style==="formal");
-  }
-  paintLens();
-  function setLens(next){
+
+  function setStyle(next){
     if(next!=="formal" && next!=="informal") next="informal";
     style=next;
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
-    paintLens();
-    applyLensCopy();
+    try{ LS.setItem("gd_style",style); }catch(e){}
+    window.location.href = window.location.pathname + q({style:style});
   }
-  btnInformal.addEventListener("click", function(){ setLens("informal"); });
-  btnFormal.addEventListener("click", function(){ setLens("formal"); });
+  if(btnInformal) btnInformal.addEventListener("click", function(){ setStyle("informal"); }, {passive:true});
+  if(btnFormal) btnFormal.addEventListener("click", function(){ setStyle("formal"); }, {passive:true});
 
-  // routes
-  function go(path){ location.href = path + q(); }
-  function goUrban(){ go("/explore/frontier/vision/urban-resource-os/"); }
-  function goWater(){ go("/explore/frontier/vision/water-security/"); }
-  function goEnergy(){ go("/explore/frontier/vision/energy-without-smoke/"); }
-  function goHab(){ go("/explore/frontier/vision/closed-loop-habitats/"); }
+  // Visual pressed-state (purely cosmetic)
+  function paintToggles(){
+    if(btnInformal) btnInformal.classList.toggle("red", style==="informal");
+    if(btnFormal) btnFormal.classList.toggle("red", style==="formal");
+  }
+  paintToggles();
 
+  // Routes (LOCKED)
+  function go(path){ window.location.href = path + q(); }
   function bind(id, fn){
     var el=document.getElementById(id);
-    el.addEventListener("click", fn);
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
+    if(!el) return;
+    el.addEventListener("click", fn, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }
+    });
   }
-  bind("dUrban", goUrban);
-  bind("dWater", goWater);
-  bind("dEnergy", goEnergy);
-  bind("dHab", goHab);
+  bind("dUrban", function(){ go("/explore/frontier/vision/urban-resource-os/"); });
+  bind("dWater", function(){ go("/explore/frontier/vision/water-security/"); });
+  bind("dEnergy", function(){ go("/explore/frontier/vision/energy-without-smoke/"); });
+  bind("dHab",   function(){ go("/explore/frontier/vision/closed-loop-habitats/"); });
 
-  // copy: human big always; small print changes by lens + language
+  // Copy: big stays human; small changes by lens + language
   function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function isFormal(){ return style==="formal"; }
 
-  function applyLensCopy(){
-    var isFormal = (style==="formal");
-
-    document.getElementById("s0").textContent = isFormal
-      ? T("Formal lens: system definitions and constraints (still vision).",
-          "正式透镜：系统定义与约束（仍属愿景）。",
-          "Lente formal: definiciones y restricciones (sigue siendo visión).")
-      : T("Informal lens: human outcomes first. Technical stays small.",
-          "通俗透镜：先看结果。技术信息保持小字。",
-          "Lente informal: resultados humanos primero. Lo técnico va pequeño.");
-
-    // Small print per diamond
-    document.getElementById("uSmall").textContent = isFormal
-      ? T("Urban Resource OS (entropy routing infrastructure)",
-          "城市资源操作系统（熵路由基础设施）",
-          "SO Urbano (infraestructura de ruteo de entropía)")
-      : T("Turn waste into energy and materials.",
-          "把垃圾变成能源和材料。",
-          "Convierte residuos en energía y materiales.");
-
-    document.getElementById("wSmall").textContent = isFormal
-      ? T("Closed-loop hydrological recovery systems",
-          "闭环水循环回收系统",
-          "Sistemas hidrológicos de recuperación en bucle cerrado")
-      : T("Recycle water so cities don’t run dry.",
-          "把水循环起来，不再缺水。",
-          "Recicla agua para que la ciudad no se seque.");
-
-    document.getElementById("eSmall").textContent = isFormal
-      ? T("Multi-pathway recovery from heterogeneous streams",
-          "异质流多路径回收",
-          "Recuperación multi-vía de flujos heterogéneos")
-      : T("Recover value without burning everything down.",
-          "不靠焚烧，把价值拿回来。",
-          "Recupera valor sin quemarlo todo.");
-
-    document.getElementById("hSmall").textContent = isFormal
-      ? T("Closed-loop habitats (orbital / lunar / remote)",
-          "闭环栖息地（轨道/月球/远程）",
-          "Hábitats cerrados (órbita / lunar / remoto)")
-      : T("Live off-Earth with full recycling.",
-          "离地生活，也能全回收。",
-          "Vive fuera de la Tierra con reciclaje total.");
-
-    document.getElementById("foot").textContent = T(
-      "Vision lane only · Structure lives in DOOR",
-      "愿景通道 · 结构在 DOOR",
-      "Carril de visión · La estructura vive en DOOR"
-    );
-
-    // Lens button labels
-    btnInformal.textContent = T("INFORMAL","通俗","INFORMAL");
-    btnFormal.textContent   = T("FORMAL","正式","FORMAL");
-  }
-
-  // static i18n titles (big text stays human)
+  // Static i18n big labels
   document.getElementById("k0").textContent = T("FRONTIER · VISION","前沿 · 愿景","FRONTERA · VISIÓN");
   document.getElementById("t0").textContent = "SHIMMER";
   document.getElementById("uBig").textContent = T("CLEAN CITIES","清洁城市","CIUDADES LIMPIAS");
@@ -468,7 +532,63 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   document.getElementById("eBig").textContent = T("ENERGY WITHOUT SMOKE","无烟能源","ENERGÍA SIN HUMO");
   document.getElementById("hBig").textContent = T("LIFE OFF-EARTH","离地生存","VIDA FUERA DE LA TIERRA");
 
-  applyLensCopy();
+  // Subtitle depends on style
+  document.getElementById("s0").textContent = isFormal()
+    ? T("Formal lens: system definitions and constraints (still vision).",
+        "正式透镜：系统定义与约束（仍属愿景）。",
+        "Lente formal: definiciones y restricciones (sigue siendo visión).")
+    : T("Informal lens: human outcomes first. Technical stays small.",
+        "通俗透镜：先看结果。技术信息保持小字。",
+        "Lente informal: resultados humanos primero. Lo técnico va pequeño.");
+
+  // Diamond small text per style
+  document.getElementById("uSmall").textContent = isFormal()
+    ? T("Urban Resource OS (entropy routing + infrastructure)",
+        "城市资源操作系统（熵路由+基础设施）",
+        "SO Urbano (ruteo entrópico + infraestructura)")
+    : T("Clean cities by routing water, waste, and energy together.",
+        "把水、废弃物、能源一起路由，城市才会干净。",
+        "Ciudades limpias ruteando agua, residuos y energía juntos.");
+
+  document.getElementById("wSmall").textContent = isFormal()
+    ? T("Closed-loop hydrological recovery systems",
+        "闭环水循环回收系统",
+        "Sistemas hidrológicos de recuperación en bucle cerrado")
+    : T("Recycle water so cities don’t run dry.",
+        "把水循环起来，不再缺水。",
+        "Recicla agua para que la ciudad no se seque.");
+
+  document.getElementById("eSmall").textContent = isFormal()
+    ? T("Multi-pathway recovery from heterogeneous streams",
+        "异质流多路径回收",
+        "Recuperación multi-vía de flujos heterogéneos")
+    : T("Recover value without burning everything down.",
+        "不靠焚烧，把价值拿回来。",
+        "Recupera valor sin quemarlo todo.");
+
+  document.getElementById("hSmall").textContent = isFormal()
+    ? T("Closed-loop habitats (orbital / lunar / remote)",
+        "闭环栖息地（轨道/月球/远程）",
+        "Hábitats cerrados (órbita / lunar / remoto)")
+    : T("Live off-Earth with full recycling.",
+        "离地生活，也能全回收。",
+        "Vive fuera de la Tierra con reciclaje total.");
+
+  document.getElementById("foot").textContent = T(
+    "Vision lane only · Structure lives in DOOR",
+    "愿景通道 · 结构在 DOOR",
+    "Carril de visión · La estructura vive en DOOR"
+  );
+
+  // Button labels i18n
+  btnInformal.textContent = T("INFORMAL","通俗","INFORMAL");
+  btnFormal.textContent   = T("FORMAL","正式","FORMAL");
+  document.getElementById("btnBack").textContent = T("BACK","返回","VOLVER");
+  document.getElementById("btnDoor").textContent = T("DOOR","门","PUERTA");
+  document.getElementById("btnCompass").textContent = T("COMPASS","指南针","BRÚJULA");
+
+  // Ensure all header links carry full state
+  wireAll();
 })();
 </script>
 

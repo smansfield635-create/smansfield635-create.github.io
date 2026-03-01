@@ -1,21 +1,21 @@
 <!-- TNT — /products/coherence-diagnostic/index.html
-     COHERENCE DIAGNOSTIC · 4-DIAMOND PRODUCT PAGE · WORKING MODALS · TRUE LENS/TIME SPLIT · EN/中文/ES
-     FIXES (LOCKED):
-       - No competing UI layers (clean z-index + no pointer-event traps)
-       - Modal ALWAYS opens (bd z=1000, modal z=1001)
-       - Stage does NOT disable pointer events
-       - All 3 languages supported (page-level only)
-       - Formal/Informal + Concept/Live/Roadmap actually change content (not duplicates)
+     PRODUCTS · COHERENCE DIAGNOSTIC (TED-TALK INFORMAL + FORMAL SMALL PRINT) · 3 LANG (EN/中文/ES)
+     MOBILE FIX (NO MODALS):
+       - No overlays, no full-screen modal, no “X to see page behind”.
+       - 4 glossy diamonds = jump selectors (they scroll + open the matching accordion).
+       - Long bubble accordion format (vertical).
+       - Lenses are real: STYLE (informal/formal) + TIME (concept/live/roadmap) change content.
      ROUTES:
-       - BACK  → /products/
-       - EXIT  → /index.html
-       - Dock  → /prelude/ /explore/ /products/ /laws/ /gauges/
+       - BACK → /products/
+       - EXIT → /index.html
+       - DOCK → /door/ /products/ /laws/ /gauges/
      STATE:
-       - URL: lang/style/time/depth
-       - LS: gd_lang/gd_style/gd_time/gd_depth
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
+       - Canon: lang/style/time/depth
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe (no inline onclick)
 -->
 
 <!doctype html>
@@ -23,7 +23,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Coherence Diagnostic</title>
+<title>PRODUCTS · Coherence Diagnostic</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -31,71 +31,76 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-
-/* ===== SAFETY: never let overlays steal clicks ===== */
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOP CONTROLS ===== */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
-
-/* ===== HEADER PILL ===== */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:120;text-align:center;
-  padding:10px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
-  pointer-events:none;
-}
-.brand .t{margin:0;font-weight:950;font-size:20px;letter-spacing:.2px;line-height:1.1}
-.brand .s{margin:6px 0 0;opacity:.82;font-size:12.75px;line-height:1.25}
-
-/* ===== STAGE ===== */
+/* ===== TOKENS ===== */
 :root{
   --R:150px;
   --D:184px;
+  --dockH:98px;
+
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
-  --mut:rgba(255,255,255,.90);
-  --mut2:rgba(255,255,255,.72);
+
+  /* OPAL (keep), NO washed blue panels */
+  --opalA:rgba(210,190,255,.20);
+  --opalB:rgba(120,70,255,.16);
+
+  /* RED accent allowed */
+  --redA:rgba(255,50,80,.14);
+  --redB:rgba(255,0,40,.10);
 }
 
+/* ===== TOP CONTROLS ===== */
+.topbar{
+  position:fixed;left:0;right:0;top:16px;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:12px;z-index:220;
+  pointer-events:none;
+}
+.topbar .left,.topbar .right{
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+  pointer-events:auto;
+}
+.topbar .btn{white-space:nowrap}
+
+/* ===== BRAND PILL ===== */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:210;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(10px);
+  pointer-events:none;
+}
+.brand .t{margin:0;font-weight:950;font-size:18px;letter-spacing:.2px;line-height:1.1}
+.brand .s{margin:6px 0 0;opacity:.82;font-size:12.75px;line-height:1.25}
+
+/* ===== STAGE ===== */
 .stage{
   position:fixed;left:50%;top:56%;
   transform:translate(-50%,-50%);
   width:min(720px,94vw);
   height:min(720px,94vw);
   z-index:60;
-  pointer-events:auto; /* IMPORTANT: no pointer-events:none */
+  pointer-events:auto;
 }
-
-/* soft outer frame (purely decorative) */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:60px;
-  opacity:.55;
+  opacity:.50;
   pointer-events:none;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.12), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:0 90px 260px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -50px 90px rgba(0,0,0,.55);
 }
 .outer::after{
   content:"";
@@ -104,293 +109,452 @@ body::before,body::after{pointer-events:none!important}
   background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
 }
 
-/* ===== PEARLESCENT DIAMONDS ===== */
+/* ===== DIAMONDS ===== */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:28px;
-  cursor:pointer;
-  pointer-events:auto;
-  touch-action:manipulation;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
   -webkit-tap-highlight-color:transparent;
-  z-index:70;
+  overflow:hidden;
+
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.14), transparent 58%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 62% 84%, var(--redA), transparent 72%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
+
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.28),
-    inset 0 2px 0 rgba(255,255,255,.25),
+    0 38px 120px rgba(0,0,0,.82),
+    0 0 34px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -42px 78px rgba(0,0,0,.80);
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  overflow:hidden;
 }
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:28px;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.65;
+  opacity:.62;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
+  -webkit-mask-composite:xor; mask-composite:exclude;
   pointer-events:none;
 }
 .d::after{
   content:"";
   position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
   transform:rotate(-10deg);
+  opacity:.88;
   pointer-events:none;
 }
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(1.02);
   border-color:rgba(212,175,55,.35);
   box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.32),
-    inset 0 2px 0 rgba(255,255,255,.28),
+    0 44px 140px rgba(0,0,0,.90),
+    0 0 46px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.26),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d.active{
+  border-color:rgba(212,175,55,.65);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.90),
+    0 0 70px rgba(212,175,55,.34),
+    inset 0 2px 0 rgba(255,255,255,.26),
     inset 0 -46px 86px rgba(0,0,0,.84);
 }
 
-.d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
-.d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
-.d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
-.d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
+.dN{--tx:0px;--ty:calc(var(--R)*-1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dE{--tx:var(--R);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dS{--tx:0px;--ty:var(--R);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dW{--tx:calc(var(--R)*-1);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
 
 .inner{
   transform:rotate(-45deg) translateY(-2px);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;height:100%;
-  padding:14px;gap:8px;
+  height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:14px;gap:8px;
   pointer-events:none;user-select:none;
 }
 .lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
-.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
+.sub{font-size:12.75px;opacity:.88;line-height:1.25;max-width:18em}
+
+/* ===== PAGE (SCROLL CONTENT) ===== */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:calc(70px + 36vh) 0 calc(var(--dockH) + 24px);
+  position:relative;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* ===== HERO PANEL (OPAL/RED) ===== */
+.hero{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--redB), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.h1{margin:0;font-weight:950;font-size:26px;letter-spacing:.6px;line-height:1.12}
+.p0{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.55;max-width:980px}
+.rule{
+  margin-top:12px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+  color:rgba(255,255,255,.84);
+  font-size:12.5px;
+  line-height:1.45;
+}
+
+/* ===== LENS STRIP (STYLE + TIME) ===== */
+.lens{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;
+}
+.lens .group{display:flex;gap:10px;flex-wrap:wrap}
+.lens .btn{border-radius:999px;padding:10px 14px}
+
+/* ===== LONG ACCORDION BUBBLES ===== */
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{
+  position:relative;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 62% 84%, rgba(255,0,40,.08), transparent 72%),
+    linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
+  box-shadow:0 18px 60px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dot{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--dc, rgba(212,175,55,.55));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:3px;
+}
+.title{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subtitle{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
+.txt{margin:0;color:rgba(255,255,255,.88);line-height:1.62;font-size:13.25px}
+.txt + .txt{margin-top:10px}
+.boxgrid{display:grid;gap:12px;grid-template-columns:1fr}
+@media (min-width:900px){.boxgrid{grid-template-columns:1fr 1fr}}
+.box{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  padding:12px 12px 10px;
+}
+.box .bh{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
+.box ul{margin:0 0 0 18px;padding:0;color:rgba(255,255,255,.78);line-height:1.55}
+.box li{margin:6px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{border-radius:999px;padding:10px 14px}
 
 /* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
   pointer-events:none;
 }
-.dock .btn{pointer-events:auto}
-
-/* ===== MODAL SYSTEM (ALWAYS ON TOP) ===== */
-.bd{
-  position:fixed;inset:0;
-  z-index:1000;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block}
-
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1180px,96vw);
-  height:90vh;
-  z-index:1001;
-  display:none;
-}
-.modal.show{display:block}
-
-.shell{
-  height:90vh;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
-  box-shadow:0 60px 180px rgba(0,0,0,.85);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-}
-.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
-.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
-.mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
-
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-  margin:0 0 14px;
-}
-.pill{
-  padding:10px 14px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.60);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22);
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap;pointer-events:auto}
+@media (max-width:520px){
+  :root{--dockH:108px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 
-.hint{
-  max-width:980px;margin:0 auto 12px;
-  padding:10px 12px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.80);
-  font-size:12.5px;line-height:1.45;
+/* keep diamonds from covering taps on phones when scrolling */
+@media (max-width:720px){
+  .stage{top:52%}
+  .page{padding-top:calc(70px + 32vh)}
 }
-
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(255,255,255,.05);
-  padding:14px 14px 12px;
-  margin:0 0 12px;
-}
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
-.bubble p{margin:0;color:var(--mut2);line-height:1.65}
-.grid2{display:grid;gap:12px;grid-template-columns:1fr}
-@media (min-width:920px){.grid2{grid-template-columns:1fr 1fr}}
-.box{
-  padding:14px 14px 12px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-}
-.box .h{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.box ul{margin:0 0 0 18px;padding:0;color:var(--mut2)}
-.box li{margin:6px 0}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="topbar" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnBack" href="/products/">BACK</a>
+    <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="brand" aria-hidden="true">
   <p class="t" id="hdrT">Coherence Diagnostic</p>
-  <p class="s" id="hdrS">Decision support · classification · bounded outputs</p>
+  <p class="s" id="hdrS">Calibrate self → align teams → stabilize scale</p>
 </div>
 
-<div class="stage" aria-label="Coherence Diagnostic quadrants">
-  <div class="outer"></div>
+<div class="stage" aria-label="Coherence Diagnostic diamonds">
+  <div class="outer" aria-hidden="true"></div>
 
-  <div class="d d-n" id="dOverview" role="button" tabindex="0">
+  <div class="d dN" id="dOverview" role="button" tabindex="0" aria-label="Overview">
     <div class="inner">
       <div class="lab" id="labOverview">OVERVIEW</div>
       <div class="sub" id="subOverview">What it does, in one pass.</div>
     </div>
   </div>
 
-  <div class="d d-e" id="dUse" role="button" tabindex="0">
+  <div class="d dE" id="dUse" role="button" tabindex="0" aria-label="Use">
     <div class="inner">
       <div class="lab" id="labUse">USE</div>
-      <div class="sub" id="subUse">Inputs → constraints → outputs.</div>
+      <div class="sub" id="subUse">Run it on your own life first.</div>
     </div>
   </div>
 
-  <div class="d d-s" id="dRules" role="button" tabindex="0">
+  <div class="d dS" id="dRules" role="button" tabindex="0" aria-label="Rules">
     <div class="inner">
       <div class="lab" id="labRules">RULES</div>
-      <div class="sub" id="subRules">Admissibility + collapse posture.</div>
+      <div class="sub" id="subRules">Boundaries that stop drift.</div>
     </div>
   </div>
 
-  <div class="d d-w" id="dDeploy" role="button" tabindex="0">
+  <div class="d dW" id="dDeploy" role="button" tabindex="0" aria-label="Deploy">
     <div class="inner">
       <div class="lab" id="labDeploy">DEPLOY</div>
-      <div class="sub" id="subDeploy">Where it plugs in.</div>
+      <div class="sub" id="subDeploy">From self → team → org.</div>
     </div>
   </div>
 </div>
 
+<div class="page">
+
+  <div class="hero" aria-label="Hero">
+    <p class="k" id="kTop">COHERENCE DIAGNOSTIC</p>
+    <h1 class="h1" id="hTop">Stop drift before it compounds.</h1>
+    <p class="p0" id="pTop">
+      This is a calibration tool first. You use it on yourself, then on relationships, then on organizations.
+      It does one thing: it forces claims to stay inside receipts.
+    </p>
+    <div class="rule" id="ruleTop">
+      Rule: If you can’t point to evidence, you don’t get the upgrade. If a lens switch doesn’t change content, the page is wrong.
+    </div>
+
+    <div class="lens" aria-label="Lenses">
+      <div class="group">
+        <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+        <button class="btn" id="btnFormal" type="button">FORMAL</button>
+      </div>
+      <div class="group">
+        <button class="btn" id="btnConcept" type="button">CONCEPT</button>
+        <button class="btn" id="btnLive" type="button">LIVE</button>
+        <button class="btn" id="btnRoadmap" type="button">ROADMAP</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack" aria-label="Long bubbles">
+
+    <div class="row" id="secOverview">
+      <div class="head" id="hOverview" role="button" tabindex="0">
+        <div class="hL">
+          <span class="dot" style="--dc:rgba(212,175,55,.75)"></span>
+          <div style="min-width:0">
+            <div class="title" id="tOverview">OVERVIEW</div>
+            <div class="subtitle" id="sOverview">What you get and why it feels different.</div>
+          </div>
+        </div>
+        <div class="chev" id="cOverview">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="o_p1"></p>
+        <p class="txt" id="o_p2"></p>
+        <div class="boxgrid">
+          <div class="box">
+            <div class="bh" id="o_bh1">You get</div>
+            <ul id="o_ul1"></ul>
+          </div>
+          <div class="box">
+            <div class="bh" id="o_bh2">It refuses</div>
+            <ul id="o_ul2"></ul>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn" id="o_jumpProducts" href="/products/">OPEN: PRODUCTS</a>
+          <a class="btn" id="o_jumpLaws" href="/laws/">OPEN: LAWS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="secUse">
+      <div class="head" id="hUse" role="button" tabindex="0">
+        <div class="hL">
+          <span class="dot" style="--dc:rgba(255,0,60,.55)"></span>
+          <div style="min-width:0">
+            <div class="title" id="tUse">USE</div>
+            <div class="subtitle" id="sUse">Run it on yourself first. Then scale.</div>
+          </div>
+        </div>
+        <div class="chev" id="cUse">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="u_p1"></p>
+        <p class="txt" id="u_p2"></p>
+        <div class="boxgrid">
+          <div class="box">
+            <div class="bh" id="u_bh1">Inputs</div>
+            <ul id="u_ul1"></ul>
+          </div>
+          <div class="box">
+            <div class="bh" id="u_bh2">Outputs</div>
+            <ul id="u_ul2"></ul>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn" id="u_jumpGauges" href="/gauges/">OPEN: GAUGES</a>
+          <a class="btn" id="u_jumpDoor" href="/door/">OPEN: DOOR</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="secRules">
+      <div class="head" id="hRules" role="button" tabindex="0">
+        <div class="hL">
+          <span class="dot" style="--dc:rgba(160,120,255,.55)"></span>
+          <div style="min-width:0">
+            <div class="title" id="tRules">RULES</div>
+            <div class="subtitle" id="sRules">Boundaries that stop “story mode.”</div>
+          </div>
+        </div>
+        <div class="chev" id="cRules">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="r_p1"></p>
+        <p class="txt" id="r_p2"></p>
+        <div class="boxgrid">
+          <div class="box">
+            <div class="bh" id="r_bh1">Allowed</div>
+            <ul id="r_ul1"></ul>
+          </div>
+          <div class="box">
+            <div class="bh" id="r_bh2">Banned</div>
+            <ul id="r_ul2"></ul>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn" id="r_jumpLaws" href="/laws/">OPEN: LAWS</a>
+          <a class="btn" id="r_jumpPrelude" href="/prelude/">OPEN: PRELUDE</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="secDeploy">
+      <div class="head" id="hDeploy" role="button" tabindex="0">
+        <div class="hL">
+          <span class="dot" style="--dc:rgba(0,180,255,.25)"></span>
+          <div style="min-width:0">
+            <div class="title" id="tDeploy">DEPLOY</div>
+            <div class="subtitle" id="sDeploy">Individual → relationship → team → organization.</div>
+          </div>
+        </div>
+        <div class="chev" id="cDeploy">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="d_p1"></p>
+        <p class="txt" id="d_p2"></p>
+        <div class="boxgrid">
+          <div class="box">
+            <div class="bh" id="d_bh1">Where it plugs</div>
+            <ul id="d_ul1"></ul>
+          </div>
+          <div class="box">
+            <div class="bh" id="d_bh2">What it prevents</div>
+            <ul id="d_ul2"></ul>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn" id="d_jumpProducts" href="/products/">OPEN: PRODUCTS</a>
+          <a class="btn" id="d_jumpExplore" href="/explore/">OPEN: EXPLORE</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">—</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-    <div class="mbody">
-      <div class="lensbar">
-        <div class="pill active" id="pillFormal">FORMAL</div>
-        <div class="pill" id="pillInformal">INFORMAL</div>
-        <div class="pill active" id="pillConcept">CONCEPT</div>
-        <div class="pill" id="pillLive">LIVE</div>
-        <div class="pill" id="pillRoadmap">ROADMAP</div>
-      </div>
-
-      <div class="hint" id="mHint">
-        This page is bounded. Claims require receipts. Navigation preserves gd_* state.
-      </div>
-
-      <div class="grid2">
-        <div class="box">
-          <div class="h" id="h1">—</div>
-          <ul id="u1"></ul>
-        </div>
-        <div class="box">
-          <div class="h" id="h2">—</div>
-          <ul id="u2"></ul>
-        </div>
-      </div>
-
-      <div class="bubble">
-        <h4 id="h3">—</h4>
-        <p id="p3">—</p>
-      </div>
-
-      <div class="bubble">
-        <h4 id="h4">—</h4>
-        <p id="p4">—</p>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
-  // ===== Canon state (gd_* only) =====
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -398,27 +562,39 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
-
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // ===== Wire nav with state =====
+  // wire top/dock with state
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/index.html"+q();
-
-  document.getElementById("dockPrelude").href="/prelude/"+q();
-  document.getElementById("dockExplore").href="/explore/"+q();
+  document.getElementById("dockDoor").href="/door/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
 
-  // ===== Language buttons =====
+  // internal jumps
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("o_jumpProducts","/products/");
+  wire("o_jumpLaws","/laws/");
+  wire("u_jumpGauges","/gauges/");
+  wire("u_jumpDoor","/door/");
+  wire("r_jumpLaws","/laws/");
+  wire("r_jumpPrelude","/prelude/");
+  wire("d_jumpProducts","/products/");
+  wire("d_jumpExplore","/explore/");
+
+  // ===== language buttons (reload same pathname) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -429,613 +605,91 @@ body::before,body::after{pointer-events:none!important}
   }
   paintLang();
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href=location.pathname + q();
+    window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== Copy (true split) =====
-  var COPY = {
-    en:{
-      header:{t:"Coherence Diagnostic", s:"Decision support · classification · bounded outputs"},
-      diamonds:{
-        overview:{lab:"OVERVIEW", sub:"What it does, in one pass."},
-        use:{lab:"USE", sub:"Inputs → constraints → outputs."},
-        rules:{lab:"RULES", sub:"Admissibility + collapse posture."},
-        deploy:{lab:"DEPLOY", sub:"Where it plugs in."}
-      },
-      hint:"This page is bounded. Claims require receipts. Navigation preserves gd_* state.",
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", live:"LIVE", roadmap:"ROADMAP"},
-      sections:{
-        overview:{
-          origin:{
-            formal:{
-              title:"OVERVIEW · Contract",
-              a:{h:"Purpose",u:[
-                "Classify an evidence stream under declared scope.",
-                "Refuse escalation when receipts are missing.",
-                "Expose coherence breaks as concrete failure modes.",
-                "Preserve navigation state for reproducible review."
-              ]},
-              b:{h:"Output",u:[
-                "Admissibility result + reason codes.",
-                "Bounded recommendation: proceed / hold / contain.",
-                "Receipt checklist (what’s missing).",
-                "Stable routes to Laws (proof) and Gauges (measurement)."
-              ]},
-              c:{h:"Definition",p:"A diagnostic is not a prediction engine. It is a constraint filter: it narrows what may be claimed given receipts, scope, and invariants."},
-              d:{h:"Falsifier",p:"If two observers with the same scope and receipts reach different admissibility results, the instrument is mis-specified and must be corrected (new epoch)."}
-            },
-            informal:{
-              title:"OVERVIEW · What it is",
-              a:{h:"What you get",u:[
-                "A fast answer about what’s actually supported.",
-                "A clean ‘no’ when evidence is missing.",
-                "A list of exactly what to collect next.",
-                "A route to the right page without wandering."
-              ]},
-              b:{h:"What it avoids",u:[
-                "Arguing about intent.",
-                "Narratives that inflate claims.",
-                "Scaling while confused.",
-                "Fixing the wrong thing first."
-              ]},
-              c:{h:"In plain words",p:"Bring receipts. The tool applies rules. You get a bounded result—so you can move without guessing."},
-              d:{h:"If it fails",p:"If it can be gamed or produces different answers from the same receipts, it’s broken and gets rewritten—no excuses."}
-            }
-          },
-          now:{
-            formal:{
-              title:"OVERVIEW · Live posture",
-              a:{h:"Live inputs",u:[
-                "Receipts (timestamps, logs, measurements).",
-                "Declared scope + constraints.",
-                "Known invariants (non-contradiction).",
-                "Observed divergence signals (drift)."
-              ]},
-              b:{h:"Live outputs",u:[
-                "Pass/hold/contain (bounded).",
-                "Reason codes (why allowed/blocked).",
-                "Missing-receipt list.",
-                "Next safe route (Laws/Gauges/Products)."
-              ]},
-              c:{h:"Operational rule",p:"Confusion amplifies instability once present. The diagnostic prioritizes containment when ambiguity rises under load."},
-              d:{h:"Non-negotiable",p:"External trust cannot exceed internal self-consistency under identical evidence."}
-            },
-            informal:{
-              title:"OVERVIEW · What it does right now",
-              a:{h:"It tells you",u:[
-                "What’s real vs what’s a story.",
-                "What can scale vs what must pause.",
-                "Where the drift is coming from (as signals).",
-                "What to do next without spiraling."
-              ]},
-              b:{h:"It forces",u:[
-                "Receipts-first thinking.",
-                "Boundaries before claims.",
-                "Containment before heroics.",
-                "Clean reroutes instead of guesswork."
-              ]},
-              c:{h:"Simple rule",p:"If you can’t measure it, you can’t stabilize it. So we don’t pretend."},
-              d:{h:"Why you want it",p:"Because it saves you time, money, and reputation by killing bad paths early."}
-            }
-          },
-          post:{
-            formal:{
-              title:"OVERVIEW · Roadmap",
-              a:{h:"Upgrades",u:[
-                "More domain adapters (same contract).",
-                "Replayable evidence bundles (hashable).",
-                "Registry publication of outcomes (without leaking telemetry).",
-                "Cross-check engines (dual-impl consistency)."
-              ]},
-              b:{h:"Scale conditions",u:[
-                "No widening claims without widening receipts.",
-                "No tightening bounds without new event class.",
-                "No silent correction—new epoch only.",
-                "Adversarial harness required for high tiers."
-              ]},
-              c:{h:"Why it scales",p:"Because the interface stays constant while content deepens: scope, receipts, reason codes, and bounded routes remain stable."},
-              d:{h:"Kill condition",p:"If outcome quality cannot be reproduced across observers, scale halts until measurement rules are fixed."}
-            },
-            informal:{
-              title:"OVERVIEW · Where it’s going",
-              a:{h:"Soon",u:[
-                "More domains plug in cleanly.",
-                "Reports become one-click shareable.",
-                "Proof gets easier to audit.",
-                "Gaming gets harder."
-              ]},
-              b:{h:"Always",u:[
-                "Same rules.",
-                "Same boundaries.",
-                "Same receipts-first posture.",
-                "Same calm navigation."
-              ]},
-              c:{h:"The point",p:"We turn ‘I think’ into ‘Here’s what the receipts allow.’"},
-              d:{h:"If you want speed",p:"This is how you get it—by killing ambiguity before it multiplies."}
-            }
-          }
-        },
+  // ===== lens buttons =====
+  var bInf=document.getElementById("btnInformal");
+  var bFor=document.getElementById("btnFormal");
+  var bCon=document.getElementById("btnConcept");
+  var bLiv=document.getElementById("btnLive");
+  var bRoa=document.getElementById("btnRoadmap");
 
-        use:{
-          origin:{
-            formal:{
-              title:"USE · Inputs → Constraints → Outputs",
-              a:{h:"Inputs (required)",u:[
-                "Scope_id + boundary statement.",
-                "Receipts (timestamps, measurements, logs).",
-                "Declared measurement rules (observer-invariant).",
-                "Target question (bounded)."
-              ]},
-              b:{h:"Constraints (applied)",u:[
-                "Non-contradiction under identical evidence.",
-                "Admissibility requires receipts.",
-                "Correction creates new epoch (no rewrite).",
-                "Containment prevents cascade."
-              ]},
-              c:{h:"Outputs (returned)",p:"A bounded classification plus a minimal next-action route. Outputs do not exceed inputs. If a claim needs new data, the output is ‘NOT AVAILABLE’ or ‘NOT MEASURED’."},
-              d:{h:"Operator loop",p:"Run → read reason codes → collect missing receipts → rerun. No narrative fills missing measurements."}
-            },
-            informal:{
-              title:"USE · How to run it",
-              a:{h:"Bring",u:[
-                "What happened (receipts).",
-                "Where it happened (scope).",
-                "How you measured (rules).",
-                "What you want to decide (question)."
-              ]},
-              b:{h:"It gives",u:[
-                "A clean pass/hold/contain.",
-                "Reasons you can point to.",
-                "What’s missing.",
-                "Where to go next."
-              ]},
-              c:{h:"Fast loop",p:"Run it, fix what it flags, rerun it. That’s the whole system."},
-              d:{h:"Hard boundary",p:"If you don’t have evidence, you don’t get an upgraded claim."}
-            }
-          },
-          now:{
-            formal:{
-              title:"USE · Live operation",
-              a:{h:"Live receipts",u:[
-                "Background baselines.",
-                "Delta signals and variance bands.",
-                "Event logs with device time anchors.",
-                "External confirmations (when available)."
-              ]},
-              b:{h:"Live gating",u:[
-                "Escalate only with new event class.",
-                "Freeze when ambiguity rises.",
-                "Contain when drift accelerates.",
-                "Rollback when contradictions appear."
-              ]},
-              c:{h:"Live outputs",p:"Outputs are stable across observers because measurement rules are explicit. The diagnostic never uses inferred intent—only observed behavior and receipts."},
-              d:{h:"Edge case",p:"If evidence is insufficient, output remains bounded: UNDETERMINED / NOT MEASURED."}
-            },
-            informal:{
-              title:"USE · In the real world",
-              a:{h:"When to use",u:[
-                "Before you scale something.",
-                "When the story feels ahead of the proof.",
-                "When multiple signals conflict.",
-                "When you need a clean next step."
-              ]},
-              b:{h:"What it stops",u:[
-                "Spiraling into opinions.",
-                "Chasing noise.",
-                "Fixing the wrong layer.",
-                "Overpromising."
-              ]},
-              c:{h:"It keeps you sane",p:"Because it turns chaos into a shortlist."},
-              d:{h:"And it’s honest",p:"It won’t tell you what you want. It tells you what the receipts allow."}
-            }
-          },
-          post:{
-            formal:{
-              title:"USE · Roadmap operation",
-              a:{h:"Automation",u:[
-                "Receipt bundling by default.",
-                "Hash anchors for audit replay.",
-                "Registry publication of status.",
-                "Cross-check computations."
-              ]},
-              b:{h:"Scale protocol",u:[
-                "Windowed collapse testing.",
-                "Adversarial stress harness.",
-                "Zone independence checks.",
-                "Correlation penalties enforced."
-              ]},
-              c:{h:"Why it matters",p:"At scale, the cost of being wrong is non-linear. The tool becomes a governance surface, not just a helper."},
-              d:{h:"Non-negotiable",p:"If reproducibility drops, automation stops and rules are corrected explicitly."}
-            },
-            informal:{
-              title:"USE · What changes later",
-              a:{h:"More power",u:[
-                "Better replay.",
-                "Better reports.",
-                "Better anti-gaming.",
-                "More domains."
-              ]},
-              b:{h:"Same discipline",u:[
-                "Receipts first.",
-                "Boundaries first.",
-                "Containment first.",
-                "No silent upgrades."
-              ]},
-              c:{h:"The win",p:"Speed becomes safe because it’s bounded."},
-              d:{h:"That’s the point",p:"We scale trust, not hype."}
-            }
-          }
-        },
+  function paintLens(){
+    bInf.classList.toggle("active", style==="informal");
+    bFor.classList.toggle("active", style==="formal");
+    bCon.classList.toggle("active", time==="origin");
+    bLiv.classList.toggle("active", time==="now");
+    bRoa.classList.toggle("active", time==="post");
+  }
+  function setStyle(next){
+    style=(next==="formal")?"formal":"informal";
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens(); render();
+  }
+  function setTime(next){
+    time=(next==="origin"||next==="now"||next==="post")?next:"now";
+    try{ localStorage.setItem("gd_time",time); }catch(e){}
+    paintLens(); render();
+  }
+  bInf.addEventListener("click", function(){ setStyle("informal"); });
+  bFor.addEventListener("click", function(){ setStyle("formal"); });
+  bCon.addEventListener("click", function(){ setTime("origin"); });
+  bLiv.addEventListener("click", function(){ setTime("now"); });
+  bRoa.addEventListener("click", function(){ setTime("post"); });
 
-        rules:{
-          origin:{
-            formal:{
-              title:"RULES · Admissibility",
-              a:{h:"Hard rules",u:[
-                "No receipts → no admissibility.",
-                "Same receipts → same result (observer-invariant).",
-                "Correction → new epoch (explicit).",
-                "Containment beats cascade."
-              ]},
-              b:{h:"Failure modes",u:[
-                "Semantic drift (definitions move).",
-                "Scope inflation (claims widen silently).",
-                "Compensation (patching contradictions).",
-                "Correlation blindness (shared exposure)."
-              ]},
-              c:{h:"Collapse note",p:"Ambiguity is an accelerator: once instability exists, ambiguity increases speed of failure propagation."},
-              d:{h:"Role separation",p:"Calibration authority is exclusive and cannot be crowdsourced. Non-authoritative inputs remain data only."}
-            },
-            informal:{
-              title:"RULES · The discipline",
-              a:{h:"What’s allowed",u:[
-                "Measurable claims.",
-                "Bounded scope.",
-                "Clear receipts.",
-                "Reproducible results."
-              ]},
-              b:{h:"What’s banned",u:[
-                "‘Trust me.’",
-                "Silent edits.",
-                "Scaling while confused.",
-                "Story over proof."
-              ]},
-              c:{h:"The vibe",p:"This is how you keep things clean under pressure."},
-              d:{h:"The punchline",p:"If it can’t survive constraint, it’s not ready."}
-            }
-          },
-          now:{
-            formal:{
-              title:"RULES · Live enforcement",
-              a:{h:"Live checks",u:[
-                "Time anchor first (device timestamp).",
-                "Evidence before interpretation.",
-                "No further tightening without new event class.",
-                "Back-nav invalidates downstream receipts (when applicable)."
-              ]},
-              b:{h:"Live exits",u:[
-                "Contain: isolate and stop bleeding.",
-                "Hold: gather missing receipts.",
-                "Proceed: bounded advancement.",
-                "Kill: exit when invariant breaks."
-              ]},
-              c:{h:"Reason codes",p:"Every decision emits a reason code that can be audited and replayed."},
-              d:{h:"Why this works",p:"Because it treats evidence as the substrate, not narrative."}
-            },
-            informal:{
-              title:"RULES · Right now",
-              a:{h:"Do this",u:[
-                "Name the scope.",
-                "Show receipts.",
-                "Accept bounded outputs.",
-                "Move in phases."
-              ]},
-              b:{h:"Don’t do this",u:[
-                "Argue feelings.",
-                "Invent intent.",
-                "Scale first.",
-                "Hide drift."
-              ]},
-              c:{h:"If you’re stuck",p:"That means you’re missing receipts—so go get them."},
-              d:{h:"If you’re calm",p:"That means structure is doing its job."}
-            }
-          },
-          post:{
-            formal:{
-              title:"RULES · Roadmap governance",
-              a:{h:"Protocol",u:[
-                "Windowed collapse tests.",
-                "Public audit artifacts.",
-                "Registry-based status.",
-                "Anti-capture separation."
-              ]},
-              b:{h:"Expansion gates",u:[
-                "New domain requires adapter spec.",
-                "Comparator regimes required.",
-                "Stress harness required.",
-                "Reproducibility required."
-              ]},
-              c:{h:"Public safety",p:"Roadmap makes the rules portable so non-experts can trust outcomes without reading internals."},
-              d:{h:"Kill condition",p:"If governance can be captured, the system must redesign separation—not just copy changes."}
-            },
-            informal:{
-              title:"RULES · Where it goes",
-              a:{h:"More strict",u:[
-                "More proof.",
-                "More audits.",
-                "More replay.",
-                "More defenses."
-              ]},
-              b:{h:"Still simple",u:[
-                "Receipts or no claim.",
-                "Bounds or no scale.",
-                "Containment or chaos.",
-                "Truth over story."
-              ]},
-              c:{h:"That’s it",p:"This is how you build something that lasts."},
-              d:{h:"And it matters",p:"Because systems fail when rules get soft."}
-            }
-          }
-        },
-
-        deploy:{
-          origin:{
-            formal:{
-              title:"DEPLOY · Where it plugs in",
-              a:{h:"Entry points",u:[
-                "Before product deployment.",
-                "Before public claims.",
-                "Before organizational scaling.",
-                "After anomaly detection."
-              ]},
-              b:{h:"Routing",u:[
-                "Proof surfaces → Laws.",
-                "Measurement surfaces → Gauges.",
-                "Adoption surfaces → Products.",
-                "Orientation surfaces → Prelude / Hub."
-              ]},
-              c:{h:"Integration",p:"Deployment uses the same state keys (gd_*) so users do not lose lens position across pages."},
-              d:{h:"Result",p:"The diagnostic becomes the ‘stop-and-check’ gate that prevents drift from compounding."}
-            },
-            informal:{
-              title:"DEPLOY · Put it here",
-              a:{h:"Use it",u:[
-                "Before you ship.",
-                "Before you claim.",
-                "When things feel off.",
-                "When you need a clean call."
-              ]},
-              b:{h:"It connects to",u:[
-                "Laws for proof.",
-                "Gauges for measurement.",
-                "Products for adoption.",
-                "Prelude for orientation."
-              ]},
-              c:{h:"Why it fits",p:"Because it’s the bridge between ‘ideas’ and ‘what’s allowed’."},
-              d:{h:"What it prevents",p:"Scaling into a wall you didn’t measure."}
-            }
-          },
-          now:{
-            formal:{
-              title:"DEPLOY · Live workflow",
-              a:{h:"Workflow",u:[
-                "Collect receipts.",
-                "Declare scope.",
-                "Run classification.",
-                "Execute bounded action."
-              ]},
-              b:{h:"Outputs route",u:[
-                "Contain → containment pages.",
-                "Hold → receipt checklists.",
-                "Proceed → hub paths.",
-                "Kill → exit with reason."
-              ]},
-              c:{h:"No drift",p:"The deployment contract is state-stable: the same lenses survive navigation."},
-              d:{h:"Operator win",p:"You don’t waste hours guessing; you move by evidence."}
-            },
-            informal:{
-              title:"DEPLOY · In practice",
-              a:{h:"Step 1",u:["Get receipts."]},
-              b:{h:"Step 2",u:["Run the filter."]},
-              c:{h:"Step 3",p:"Do what the bounded output says."},
-              d:{h:"Step 4",p:"If you want an upgrade, bring more evidence—not more emotion."}
-            }
-          },
-          post:{
-            formal:{
-              title:"DEPLOY · Roadmap integration",
-              a:{h:"Expansion",u:[
-                "Domain adapters per industry.",
-                "Registry publishing of status.",
-                "Audit bundles by default.",
-                "Cross-room sharing of validated artifacts."
-              ]},
-              b:{h:"Safety",u:[
-                "Zone independence checks.",
-                "Correlation penalties.",
-                "Release gating protocols.",
-                "Rollback discipline."
-              ]},
-              c:{h:"Institutional",p:"Deployment becomes compatible with underwriting, compliance, and governance because the outputs are reproducible."},
-              d:{h:"Public",p:"The interface stays simple while the back-end proof gets stronger."}
-            },
-            informal:{
-              title:"DEPLOY · The future",
-              a:{h:"It scales",u:[
-                "More domains.",
-                "More proof.",
-                "More safety.",
-                "More trust."
-              ]},
-              b:{h:"And stays readable",u:[
-                "Same buttons.",
-                "Same structure.",
-                "Same state keys.",
-                "Same calm flow."
-              ]},
-              c:{h:"That’s the whole play",p:"Make the system smarter without making the user lost."},
-              d:{h:"So yes",p:"This is how you build something that matters."}
-            }
-          }
-        }
-      }
-    },
-
-    zh:{
-      header:{t:"一致性诊断", s:"决策支持 · 分类 · 有界输出"},
-      diamonds:{
-        overview:{lab:"概览", sub:"一遍看清它做什么。"},
-        use:{lab:"使用", sub:"输入→约束→输出。"},
-        rules:{lab:"规则", sub:"可采信 + 崩塌姿态。"},
-        deploy:{lab:"部署", sub:"它接到哪里。"}
-      },
-      hint:"本页有界。主张需要收据。导航保留 gd_* 状态。",
-      lens:{formal:"正式", informal:"通俗", concept:"概念", live:"上线", roadmap:"路线图"},
-      sections:{} /* (uses EN content if zh missing for this product page; keeps page stable) */
-    },
-
-    es:{
-      header:{t:"Diagnóstico de Coherencia", s:"Soporte de decisión · clasificación · salidas acotadas"},
-      diamonds:{
-        overview:{lab:"RESUMEN", sub:"Qué hace, en una pasada."},
-        use:{lab:"USO", sub:"Entradas → límites → salidas."},
-        rules:{lab:"REGLAS", sub:"Admisibilidad + colapso."},
-        deploy:{lab:"DESPLIEGUE", sub:"Dónde se conecta."}
-      },
-      hint:"Esta página es acotada. Las afirmaciones requieren recibos. La navegación conserva gd_*.",
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPTO", live:"EN VIVO", roadmap:"RUTA"},
-      sections:{} /* (fallback to EN if not expanded yet) */
+  // ===== accordion (multi-open allowed; always closable) =====
+  function bindRow(rowId){
+    var row=document.getElementById(rowId);
+    var head=row.querySelector(".head");
+    var chev=row.querySelector(".chev");
+    function toggle(){
+      var open=!row.classList.contains("open");
+      row.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
     }
-  };
-
-  function pickPack(){
-    return (lang==="zh") ? COPY.zh : (lang==="es") ? COPY.es : COPY.en;
-  }
-
-  // Apply language header/diamonds
-  function applyLang(){
-    var P=pickPack();
-    document.getElementById("hdrT").textContent=P.header.t;
-    document.getElementById("hdrS").textContent=P.header.s;
-
-    document.getElementById("labOverview").textContent=P.diamonds.overview.lab;
-    document.getElementById("subOverview").textContent=P.diamonds.overview.sub;
-    document.getElementById("labUse").textContent=P.diamonds.use.lab;
-    document.getElementById("subUse").textContent=P.diamonds.use.sub;
-    document.getElementById("labRules").textContent=P.diamonds.rules.lab;
-    document.getElementById("subRules").textContent=P.diamonds.rules.sub;
-    document.getElementById("labDeploy").textContent=P.diamonds.deploy.lab;
-    document.getElementById("subDeploy").textContent=P.diamonds.deploy.sub;
-
-    document.getElementById("mHint").textContent=P.hint;
-
-    document.getElementById("pillFormal").textContent=P.lens.formal;
-    document.getElementById("pillInformal").textContent=P.lens.informal;
-    document.getElementById("pillConcept").textContent=P.lens.concept;
-    document.getElementById("pillLive").textContent=P.lens.live;
-    document.getElementById("pillRoadmap").textContent=P.lens.roadmap;
-  }
-  applyLang();
-
-  // ===== Modal engine =====
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
-
-  var pillFormal=document.getElementById("pillFormal");
-  var pillInformal=document.getElementById("pillInformal");
-  var pillConcept=document.getElementById("pillConcept");
-  var pillLive=document.getElementById("pillLive");
-  var pillRoadmap=document.getElementById("pillRoadmap");
-
-  var h1=document.getElementById("h1"), u1=document.getElementById("u1");
-  var h2=document.getElementById("h2"), u2=document.getElementById("u2");
-  var h3=document.getElementById("h3"), p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"), p4=document.getElementById("p4");
-
-  var activeSection="overview"; // overview/use/rules/deploy
-
-  function ulFill(el, items){
-    el.innerHTML="";
-    (items||[]).forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      el.appendChild(li);
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
   }
+  ["secOverview","secUse","secRules","secDeploy"].forEach(bindRow);
 
-  function getTimeKey(){
-    return (time==="origin") ? "origin" : (time==="post") ? "post" : "now";
+  // ===== diamond jump -> scroll + open matching row =====
+  function clearActive(){
+    ["dOverview","dUse","dRules","dDeploy"].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.classList.remove("active");
+    });
   }
-
-  function getSectionPack(){
-    var P=pickPack();
-    // If zh/es sections not expanded yet, fallback to EN to keep system working.
-    var base = P.sections && Object.keys(P.sections).length ? P : COPY.en;
-    var sec = base.sections[activeSection] || COPY.en.sections[activeSection];
-    var tKey = getTimeKey();
-    var sKey = style; // formal/informal
-    return sec[tKey][sKey];
+  function jumpTo(sectionKey){
+    clearActive();
+    var map={
+      overview:{d:"dOverview", r:"secOverview"},
+      use:{d:"dUse", r:"secUse"},
+      rules:{d:"dRules", r:"secRules"},
+      deploy:{d:"dDeploy", r:"secDeploy"}
+    };
+    var m=map[sectionKey];
+    if(!m) return;
+    document.getElementById(m.d).classList.add("active");
+    var row=document.getElementById(m.r);
+    row.classList.add("open");
+    row.querySelector(".chev").textContent="▾";
+    row.scrollIntoView({behavior:"smooth", block:"start"});
   }
-
-  function renderModal(){
-    // active pills
-    pillFormal.classList.toggle("active", style==="formal");
-    pillInformal.classList.toggle("active", style==="informal");
-    pillConcept.classList.toggle("active", time==="origin");
-    pillLive.classList.toggle("active", time==="now");
-    pillRoadmap.classList.toggle("active", time==="post");
-
-    var view = getSectionPack();
-    mTitle.textContent = view.title;
-
-    h1.textContent = view.a.h; ulFill(u1, view.a.u);
-    h2.textContent = view.b.h; ulFill(u2, view.b.u);
-    h3.textContent = view.c.h; p3.textContent = view.c.p;
-    h4.textContent = view.d.h; p4.textContent = view.d.p;
-
-    try{
-      localStorage.setItem("gd_style", style);
-      localStorage.setItem("gd_time", time);
-    }catch(e){}
-  }
-
-  function openModal(sectionKey){
-    activeSection = sectionKey;
-    renderModal();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
-
-  function closeModal(){
-    modal.classList.remove("show");
-    bd.classList.remove("show");
-  }
-
-  // Close wiring (always)
-  bd.addEventListener("click", closeModal);
-  mClose.addEventListener("click", closeModal);
-
-  // Lens wiring
-  pillFormal.addEventListener("click", function(){ style="formal"; renderModal(); });
-  pillInformal.addEventListener("click", function(){ style="informal"; renderModal(); });
-  pillConcept.addEventListener("click", function(){ time="origin"; renderModal(); });
-  pillLive.addEventListener("click", function(){ time="now"; renderModal(); });
-  pillRoadmap.addEventListener("click", function(){ time="post"; renderModal(); });
-
-  // Diamond wiring (no inline onclick)
   function bindDiamond(id, key){
     var el=document.getElementById(id);
-    el.addEventListener("click", function(){ openModal(key); });
+    function act(){ jumpTo(key); }
+    el.addEventListener("click", act);
     el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(key); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
   }
   bindDiamond("dOverview","overview");
@@ -1043,6 +697,363 @@ body::before,body::after{pointer-events:none!important}
   bindDiamond("dRules","rules");
   bindDiamond("dDeploy","deploy");
 
+  // ===== content packs (TED informal, formal small print) =====
+  // NOTE: Each section has 2 paragraphs + 2 lists. Content changes by style+time+lang.
+  var COPY = {
+    en:{
+      hero:{
+        k:"COHERENCE DIAGNOSTIC",
+        h:"Stop drift before it compounds.",
+        p:"This is a calibration tool first. Use it on yourself, then on relationships, then on organizations. It does one thing: it forces claims to stay inside receipts.",
+        r:"Rule: If you can’t point to evidence, you don’t get the upgrade. If a lens switch doesn’t change content, the page is wrong."
+      },
+      diamond:{
+        overview:{lab:"OVERVIEW", sub:"What it does, in one pass."},
+        use:{lab:"USE", sub:"Run it on your own life first."},
+        rules:{lab:"RULES", sub:"Boundaries that stop drift."},
+        deploy:{lab:"DEPLOY", sub:"Self → team → organization."}
+      },
+      sections:{
+        overview:{
+          origin:{
+            informal:{
+              p1:"Think of this as a ‘truth filter’ for your life. Not philosophy. Not motivation. A filter. You bring what happened. The tool tells you what’s actually supported.",
+              p2:"It’s exciting because it turns chaos into a clean next step. It doesn’t solve your whole life. It stops you from solving the wrong problem first.",
+              aH:"You get", aU:["A bounded call: proceed / hold / contain.","Reasons you can point to (not vibes).","A missing-receipt list (what to collect next).","A clean jump to the right lane (Laws/Gauges/Products)."],
+              bH:"It refuses", bU:["Intent arguments.","Story inflation.","Scaling while confused.","Silent rule changes."]
+            },
+            formal:{
+              p1:"The diagnostic is a constraint filter over an evidence stream within declared scope. It produces bounded classifications and reason codes; it does not predict.",
+              p2:"Observer invariance is required: identical scope + identical receipts must yield identical outputs. If not, the instrument is mis-specified (new epoch).",
+              aH:"Outputs", aU:["Classification (bounded).","Reason codes.","Missing receipts.","Next safe route."],
+              bH:"Invariants", bU:["Non-contradiction.","Scope lock.","Receipt continuity.","Non-retroactivity."]
+            }
+          },
+          now:{
+            informal:{
+              p1:"Right now it’s the fastest way to calm down a messy situation: receipts in, clarity out. You stop spiraling into opinions and move by evidence.",
+              p2:"If you’ve ever said ‘I’m not sure what’s real anymore,’ this is the opposite of that. It forces reality to be louder than narrative.",
+              aH:"Live signals", aU:["What changed.","What’s accelerating.","What’s clustering.","What’s missing."],
+              bH:"Live actions", bU:["Contain first.","Collect receipts.","Rerun.","Only then scale."]
+            },
+            formal:{
+              p1:"Live posture treats confusion as an accelerator once instability exists. The diagnostic prioritizes containment when ambiguity rises under load.",
+              p2:"Interpretation is constrained to observed behavior and measured receipts; inferred intent is not admissible input.",
+              aH:"Live inputs", aU:["Receipts with time anchors.","Scope boundaries.","Variance bands.","External confirmations (if any)."],
+              bH:"Live outputs", bU:["Proceed / hold / contain.","Reason codes.","Receipt gaps.","Safe route."]
+            }
+          },
+          post:{
+            informal:{
+              p1:"Where it goes: more domains, more replay, more anti-gaming. The interface stays simple — the proof gets stronger.",
+              p2:"The goal is not to impress people. The goal is to make big decisions boring because they’re evidence-bound.",
+              aH:"Upgrades", aU:["Shareable evidence bundles.","Harder-to-game outputs.","Registry status layers.","Cleaner cross-domain adapters."],
+              bH:"Still true", bU:["No receipts, no upgrade.","No silent edits.","New epoch on correction.","Bounds before scale."]
+            },
+            formal:{
+              p1:"Roadmap adds replayable bundles (hashable) and cross-check computations. Publication can occur via registry without leaking sensitive telemetry.",
+              p2:"Scale halts if reproducibility drops. Governance hardens by requiring adversarial harnesses for high tiers.",
+              aH:"Protocol", aU:["Windowed tests.","Reason-coded outputs.","Epoch rollover.","Adversarial clearance."],
+              bH:"Kill condition", bU:["Non-reproducible outputs across observers."]
+            }
+          }
+        },
+
+        use:{
+          origin:{
+            informal:{
+              p1:"Run it like a self-audit. Pick one claim you’re making about your life: ‘I’m disciplined.’ ‘I’m honest.’ ‘I’m consistent.’ Then bring receipts.",
+              p2:"The magic isn’t the answer — it’s the loop: run → see gaps → fix → rerun. That loop turns self-awareness into change.",
+              aH:"Inputs", aU:["Your claim (bounded).","What happened (receipts).","Where it happened (scope).","How you measured (rules)."],
+              bH:"Outputs", bU:["Pass/hold/contain.","Why (reason codes).","What’s missing.","What to do next."]
+            },
+            formal:{
+              p1:"Operation requires: declared question, declared scope, admissible receipts, and declared measurement rules. Outputs are bounded to inputs; missing data yields NOT MEASURED/UNDETERMINED.",
+              p2:"The operator loop is deterministic: run → collect missing receipts → rerun. Narrative cannot substitute for measurement.",
+              aH:"Required", aU:["Scope_id.","Receipts.","Measurement rules.","Target question."],
+              bH:"Applied", bU:["Non-contradiction.","Receipt gating.","Epoch rollover on correction.","Containment priority."]
+            }
+          },
+          now:{
+            informal:{
+              p1:"In real life, use it before you escalate. Before you quit. Before you accuse. Before you spend. Before you scale.",
+              p2:"It’s a safety rail for momentum: it lets you move fast without lying to yourself about what’s true.",
+              aH:"Use it when", aU:["Signals conflict.","The story feels ahead of proof.","You’re about to scale a decision.","You need a clean next step."],
+              bH:"It stops", bU:["Chasing noise.","Fixing the wrong layer.","Overpromising.","Emotional escalation."]
+            },
+            formal:{
+              p1:"Live mode consumes time-anchored receipts and produces bounded recommendations with reason codes. No tightening without new admissible event class.",
+              p2:"Backtracking can invalidate downstream receipts in structured workflows; advancement requires refreshed confirmation under the same scope.",
+              aH:"Live gating", aU:["New event class required to tighten bounds.","Containment on ambiguity rise.","Rollback on contradiction.","Freeze on measurement gaps."],
+              bH:"Outputs", bU:["Proceed/hold/contain.","Reason codes.","Receipt checklist.","Route to proof/measurement pages."]
+            }
+          },
+          post:{
+            informal:{
+              p1:"Later this becomes a ‘one button’ audit trail. You can hand someone a result and they can replay it without drama.",
+              p2:"That’s how trust scales: less arguing, more receipts.",
+              aH:"More power", aU:["Replay bundles.","Exportable reports.","Cross-domain adapters.","Anti-gaming checks."],
+              bH:"Same discipline", bU:["Receipts first.","Bounds first.","No silent upgrades.","New epoch on correction."]
+            },
+            formal:{
+              p1:"Roadmap integrates automation: receipt bundling, hash anchors, registry status publication, and comparator regimes for cross-check.",
+              p2:"Governance and underwriting interfaces become possible once outputs are reproducible and audit-friendly.",
+              aH:"Automation", aU:["Hash bundles.","Replay.","Registry status.","Comparator regimes."],
+              bH:"Safety", bU:["Zone independence checks.","Correlation penalties.","Release gates.","Rollback discipline."]
+            }
+          }
+        },
+
+        rules:{
+          origin:{
+            informal:{
+              p1:"Rules are what keep the system from turning into a cult. They force humility: you can’t claim more than you can prove.",
+              p2:"The second you let ‘story’ beat ‘receipts,’ you’ve lost coherence. That’s the whole game.",
+              aH:"Allowed", aU:["Measured claims.","Bounded scope.","Clear receipts.","Reproducible results."],
+              bH:"Banned", bU:["‘Trust me.’","Silent edits.","Scaling while confused.","Compensation for contradictions."]
+            },
+            formal:{
+              p1:"Admissibility is receipt-gated under declared scope. Drift is defined as semantic or structural mutation without epoch rollover.",
+              p2:"Confusion accelerates instability once present. Containment prevents cascade by limiting blast radius and enforcing rollback discipline.",
+              aH:"Hard rules", aU:["Same receipts → same result.","No receipts → no upgrade.","Correction → new epoch.","Containment before scale."],
+              bH:"Failure modes", bU:["Scope inflation.","Semantic drift.","Correlation blindness.","Compensation."]
+            }
+          },
+          now:{
+            informal:{
+              p1:"Right now the rules are simple: show your work. If you can’t, don’t pretend. That alone eliminates 80% of bad decisions.",
+              p2:"And it feels good — because it stops the internal war. You stop arguing with yourself and start acting.",
+              aH:"Do this", aU:["Name the scope.","Show receipts.","Accept bounded outputs.","Move in phases."],
+              bH:"Don’t do this", bU:["Invent intent.","Chase feelings.","Scale first.","Hide drift."]
+            },
+            formal:{
+              p1:"Live enforcement anchors time first (device timestamp), then applies measurement rules. No inferred intent. Only observed behavior and receipts.",
+              p2:"Bounds may only tighten with new admissible event class; otherwise time passage shrinks upper bounds but does not re-squeeze from same evidence.",
+              aH:"Live checks", aU:["Time anchor first.","Evidence before interpretation.","No further tightening without new event class.","Back-nav invalidates downstream receipts (where applicable)."],
+              bH:"Live exits", bU:["Contain.","Hold.","Proceed.","Kill (invariant break)."]
+            }
+          },
+          post:{
+            informal:{
+              p1:"Where it goes: stricter proofs, faster audits, and fewer debates. The rules become portable so normal people can trust outcomes.",
+              p2:"That’s what maturity looks like: boring truth that scales.",
+              aH:"More strict", aU:["More proof.","More replay.","More audits.","More defenses."],
+              bH:"Still simple", bU:["Receipts or no claim.","Bounds or no scale.","Containment or chaos.","Truth over story."]
+            },
+            formal:{
+              p1:"Roadmap governance standardizes windowed tests, public audit artifacts, registry status publication, and anti-capture separation of tuning authority.",
+              p2:"Expansion gates require adapter specs, comparator regimes, and adversarial clearance to preserve reproducibility under scale.",
+              aH:"Protocol", aU:["Windowed collapse tests.","Public audit artifacts.","Registry status.","Anti-capture separation."],
+              bH:"Expansion gates", bU:["Adapter spec required.","Comparator regimes.","Stress harness.","Reproducibility."]
+            }
+          }
+        },
+
+        deploy:{
+          origin:{
+            informal:{
+              p1:"Deploy means: put this tool right before the moment you usually ‘wing it.’ That’s where drift enters.",
+              p2:"It becomes your bridge from ‘I feel’ to ‘I can prove.’ That’s the difference between chaos and coherence.",
+              aH:"Where it plugs", aU:["Before you ship.","Before you claim.","When it feels off.","When stakes rise."],
+              bH:"What it prevents", bU:["Scaling into noise.","Overpromising.","Reputation damage.","Compounded drift."]
+            },
+            formal:{
+              p1:"Deployment surfaces: pre-claim gate, pre-scale gate, anomaly response, and bounded recommendation routing to proof/measurement layers.",
+              p2:"Integration requires canonical state keys (gd_*) so lens position and scope do not drift across navigation.",
+              aH:"Entry points", aU:["Before deployment.","Before public claims.","Before scaling.","After anomaly detection."],
+              bH:"Routing", bU:["Proof → Laws.","Measurement → Gauges.","Adoption → Products.","Orientation → Door/Prelude."]
+            }
+          },
+          now:{
+            informal:{
+              p1:"In practice it’s four moves: get receipts → run filter → do the bounded action → rerun if you want an upgrade.",
+              p2:"That’s it. It’s simple on purpose. You can scale simple.",
+              aH:"Workflow", aU:["Collect receipts.","Declare scope.","Run classification.","Execute bounded action."],
+              bH:"Upgrade path", bU:["Bring more evidence, not more emotion.","If you’re stuck, you’re missing receipts."]
+            },
+            formal:{
+              p1:"Live workflow is deterministic: receipts + scope + rules → classification + reasons → bounded action. Outputs must remain stable under identical evidence.",
+              p2:"Operationally, this reduces decision latency and prevents narrative-driven escalation under pressure.",
+              aH:"Outputs route", aU:["Contain → isolate.","Hold → collect missing receipts.","Proceed → advance bounded.","Kill → exit w/ reason."],
+              bH:"No drift", bU:["State-stable navigation.","Explicit epoch rollover on correction.","No silent overrides."]
+            }
+          },
+          post:{
+            informal:{
+              p1:"Later this becomes a real ‘trust engine’: more domains, more proof, more safety — while staying readable.",
+              p2:"Same buttons. Same flow. Stronger receipts.",
+              aH:"It scales", aU:["More domains.","More proof.","More safety.","More trust."],
+              bH:"Still readable", bU:["Same structure.","Same state keys.","Same calm flow.","Same bounded outputs."]
+            },
+            formal:{
+              p1:"Roadmap integration adds domain adapters, audit bundles by default, cross-room sharing of validated artifacts, and registry publication.",
+              p2:"Institutional compatibility increases because outputs are reproducible and audit-friendly while sensitive telemetry remains bounded.",
+              aH:"Expansion", aU:["Adapters per domain.","Audit bundles.","Registry status.","Cross-check engines."],
+              bH:"Safety", bU:["Zone independence.","Correlation penalties.","Release gates.","Rollback discipline."]
+            }
+          }
+        }
+      }
+    },
+
+    zh:{
+      hero:{
+        k:"一致性诊断",
+        h:"在漂移放大前把它止住。",
+        p:"这是先给个人用的校准工具：先用在自己身上，再用在关系上，再用在组织上。它只做一件事：让主张必须落在收据里。",
+        r:"规则：拿不出证据，就别升级主张。切换透镜内容不变＝页面错误。"
+      },
+      diamond:{
+        overview:{lab:"概览", sub:"一遍看清它做什么。"},
+        use:{lab:"使用", sub:"先从自己开始跑。"},
+        rules:{lab:"规则", sub:"阻止漂移的边界。"},
+        deploy:{lab:"部署", sub:"个人→团队→组织。"}
+      },
+      // For brevity here: zh/es reuse EN section structure but with translated hero+diamond labels.
+      // (You can expand zh/es full depth later the same way you did Closed Loop.)
+      sections:null
+    },
+
+    es:{
+      hero:{
+        k:"DIAGNÓSTICO DE COHERENCIA",
+        h:"Detén la deriva antes de que se amplifique.",
+        p:"Primero es una herramienta de calibración personal. Luego relación. Luego organización. Hace una cosa: obliga a que las afirmaciones vivan dentro de recibos.",
+        r:"Regla: sin evidencia, no hay upgrade. Si cambiar lente no cambia contenido, la página está mal."
+      },
+      diamond:{
+        overview:{lab:"RESUMEN", sub:"Qué hace, en una pasada."},
+        use:{lab:"USO", sub:"Empieza contigo."},
+        rules:{lab:"REGLAS", sub:"Límites contra deriva."},
+        deploy:{lab:"DESPLIEGUE", sub:"Persona→equipo→org."}
+      },
+      sections:null
+    }
+  };
+
+  function pickPack(){
+    return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+  }
+
+  function render(){
+    var P=pickPack();
+
+    // hero
+    document.getElementById("kTop").textContent=P.hero.k;
+    document.getElementById("hTop").textContent=P.hero.h;
+    document.getElementById("pTop").textContent=P.hero.p;
+    document.getElementById("ruleTop").textContent=P.hero.r;
+
+    // diamonds labels
+    document.getElementById("labOverview").textContent=P.diamond.overview.lab;
+    document.getElementById("subOverview").textContent=P.diamond.overview.sub;
+    document.getElementById("labUse").textContent=P.diamond.use.lab;
+    document.getElementById("subUse").textContent=P.diamond.use.sub;
+    document.getElementById("labRules").textContent=P.diamond.rules.lab;
+    document.getElementById("subRules").textContent=P.diamond.rules.sub;
+    document.getElementById("labDeploy").textContent=P.diamond.deploy.lab;
+    document.getElementById("subDeploy").textContent=P.diamond.deploy.sub;
+
+    // brand
+    document.getElementById("hdrT").textContent=(lang==="zh")?"一致性诊断":(lang==="es")?"Diagnóstico de Coherencia":"Coherence Diagnostic";
+    document.getElementById("hdrS").textContent=(lang==="zh")?"个人校准 → 团队对齐 → 稳定扩张":(lang==="es")?"Calibrar persona → alinear equipo → estabilizar escala":"Calibrate self → align teams → stabilize scale";
+
+    // Section content: EN is fully populated; zh/es can be expanded later.
+    var Base = (P.sections ? P : COPY.en);
+    var secKey = time==="origin" ? "origin" : (time==="post" ? "post" : "now");
+    var sKey = style;
+
+    function fill(sec, p1, p2, aH, aU, bH, bU){
+      document.getElementById(p1).textContent = sec.p1;
+      document.getElementById(p2).textContent = sec.p2;
+
+      document.getElementById(aH).textContent = sec.aH;
+      document.getElementById(bH).textContent = sec.bH;
+
+      function ul(id, items){
+        var el=document.getElementById(id);
+        el.innerHTML="";
+        (items||[]).forEach(function(x){
+          var li=document.createElement("li");
+          li.textContent=x;
+          el.appendChild(li);
+        });
+      }
+      ul(aU, sec.aU);
+      ul(bU, sec.bU);
+    }
+
+    fill(Base.sections.overview[secKey][sKey], "o_p1","o_p2","o_bh1","o_ul1","o_bh2","o_ul2");
+    fill(Base.sections.use[secKey][sKey],      "u_p1","u_p2","u_bh1","u_ul1","u_bh2","u_ul2");
+    fill(Base.sections.rules[secKey][sKey],    "r_p1","r_p2","r_bh1","r_ul1","r_bh2","r_ul2");
+    fill(Base.sections.deploy[secKey][sKey],   "d_p1","d_p2","d_bh1","d_ul1","d_bh2","d_ul2");
+
+    // Section titles/subtitles language tweak (light)
+    if(lang==="zh"){
+      document.getElementById("tOverview").textContent="概览";
+      document.getElementById("sOverview").textContent="你会得到什么，以及为什么它不同。";
+      document.getElementById("tUse").textContent="使用";
+      document.getElementById("sUse").textContent="先用在自己身上，再扩张。";
+      document.getElementById("tRules").textContent="规则";
+      document.getElementById("sRules").textContent="阻止“故事模式”的边界。";
+      document.getElementById("tDeploy").textContent="部署";
+      document.getElementById("sDeploy").textContent="个人 → 关系 → 团队 → 组织。";
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnExit").textContent="退出";
+      document.getElementById("o_jumpProducts").textContent="打开：产品";
+      document.getElementById("o_jumpLaws").textContent="打开：法则";
+      document.getElementById("u_jumpGauges").textContent="打开：量规";
+      document.getElementById("u_jumpDoor").textContent="打开：门";
+      document.getElementById("r_jumpLaws").textContent="打开：法则";
+      document.getElementById("r_jumpPrelude").textContent="打开：前置页";
+      document.getElementById("d_jumpProducts").textContent="打开：产品";
+      document.getElementById("d_jumpExplore").textContent="打开：探索";
+      document.getElementById("dockDoor").textContent="门";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      bInf.textContent="通俗";
+      bFor.textContent="正式";
+      bCon.textContent="概念";
+      bLiv.textContent="上线";
+      bRoa.textContent="路线图";
+    }else if(lang==="es"){
+      document.getElementById("tOverview").textContent="RESUMEN";
+      document.getElementById("sOverview").textContent="Qué obtienes y por qué se siente diferente.";
+      document.getElementById("tUse").textContent="USO";
+      document.getElementById("sUse").textContent="Empieza contigo. Luego escala.";
+      document.getElementById("tRules").textContent="REGLAS";
+      document.getElementById("sRules").textContent="Límites contra ‘modo historia’.";
+      document.getElementById("tDeploy").textContent="DESPLIEGUE";
+      document.getElementById("sDeploy").textContent="Persona → relación → equipo → org.";
+      document.getElementById("btnBack").textContent="VOLVER";
+      document.getElementById("btnExit").textContent="SALIR";
+      document.getElementById("o_jumpProducts").textContent="ABRIR: PRODUCTOS";
+      document.getElementById("o_jumpLaws").textContent="ABRIR: LEYES";
+      document.getElementById("u_jumpGauges").textContent="ABRIR: MEDIDORES";
+      document.getElementById("u_jumpDoor").textContent="ABRIR: PUERTA";
+      document.getElementById("r_jumpLaws").textContent="ABRIR: LEYES";
+      document.getElementById("r_jumpPrelude").textContent="ABRIR: PRELUDIO";
+      document.getElementById("d_jumpProducts").textContent="ABRIR: PRODUCTOS";
+      document.getElementById("d_jumpExplore").textContent="ABRIR: EXPLORAR";
+      document.getElementById("dockDoor").textContent="PUERTA";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      bInf.textContent="INFORMAL";
+      bFor.textContent="FORMAL";
+      bCon.textContent="CONCEPTO";
+      bLiv.textContent="EN VIVO";
+      bRoa.textContent="RUTA";
+    }
+  }
+
+  paintLens();
+  render();
+
+  // default: open overview so page is alive
+  document.getElementById("secOverview").classList.add("open");
+  document.getElementById("cOverview").textContent="▾";
 })();
 </script>
 

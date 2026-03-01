@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- TNT — /explore/frontier/index.html
      FRONTIER · INDEX (WIRING HUB)
      PURPOSE:
@@ -7,18 +8,18 @@
      REQUIREMENTS:
        - Trilingual: EN / 中文 / ES (page-level)
        - 4 lenses:
-           lane=platform|engineering (URL only)
+           lane=platform|engineering (URL only; NEVER stored)
            style=informal|formal     (gd_style + URL)
        - Single-open accordion (one open at a time)
        - Inside each row: 3 sub-bubbles (Concept / Build Now / Roadmap) tap-to-open
        - Monument typography (bigger print)
        - Dark opal + red (no washed-out blue)
-       - Canon state carry: lang/style/time/depth preserved everywhere
+       - Canon state carry: lang/style/time/depth preserved everywhere via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
        - Uses ui.css + branch.css + instruments.js only
        - ui.css owns html/body background (NO overrides)
-       - No inline onclick
+       - No inline onclick; addEventListener only
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -37,20 +38,27 @@ body::before,body::after{pointer-events:none!important}
 
 /* ===== TOKENS ===== */
 :root{
-  --dockH:92px;
+  --dockH:112px;
 
-  /* dark opal + red (NO blue wash) */
-  --opalA:rgba(210,190,255,.12);
-  --opalB:rgba(120,70,255,.08);
-  --opalC:rgba(255,70,70,.10);
-
+  /* Onyx + opal sheen + dual-red + gold trim (avoid washed blue) */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
   --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
 
-  --goldSoft:rgba(212,175,55,.28);
-  --redGlow:rgba(255,70,70,.18);
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --gold:rgba(201,162,74,.40);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* ===== PAGE WRAP ===== */
@@ -65,7 +73,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* ===== TOP CONTROLS ===== */
+/* ===== TOP CONTROLS (sticky; no traps) ===== */
 .top{
   position:sticky;
   top:0;
@@ -78,31 +86,74 @@ body::before,body::after{pointer-events:none!important}
 .top .left,.top .right{
   display:flex;
   gap:10px;
-  flex-wrap:nowrap;
+  flex-wrap:wrap;
   white-space:nowrap;
   align-items:center;
 }
-.top .btn{white-space:nowrap}
+
+/* ===== Button (gold under-light only) ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
 
 /* ===== HEADER ===== */
 .header{
   border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    rgba(0,0,0,.14);
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 90px rgba(0,0,0,.58);
+  box-shadow:var(--shadowA);
   padding:16px 16px 14px;
+  position:relative;
+  overflow:hidden;
 }
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
-.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.8px;line-height:1.08}
+/* Gold diamond lay in trim zone only */
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.28;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.t{margin:0;font-weight:950;font-size:32px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
 .s{
   margin:12px 0 0;
   font-size:16px;
-  opacity:.90;
+  opacity:.92;
   line-height:1.55;
   max-width:980px;
   color:var(--txt);
@@ -112,7 +163,10 @@ body::before,body::after{pointer-events:none!important}
   padding:12px 12px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
   font-size:13.5px;
   color:rgba(255,255,255,.82);
   line-height:1.45;
@@ -131,23 +185,34 @@ body::before,body::after{pointer-events:none!important}
 .pill{
   padding:10px 14px;
   border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   box-shadow:0 14px 36px rgba(0,0,0,.65);
   cursor:pointer;
-  font-weight:900;
+  font-weight:950;
   letter-spacing:.2px;
   color:#fff;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
+  min-height:44px;
+  position:relative;
+  overflow:hidden;
+}
+.pill::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
+  opacity:.45;pointer-events:none;
 }
 .pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+  border-color:rgba(201,162,74,.50);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(201,162,74,.14);
 }
 .pill.red.active{
-  border-color:rgba(255,90,90,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--redGlow);
+  border-color:rgba(255,43,43,.32);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,43,43,.12);
 }
 
 /* ===== BAND ===== */
@@ -167,9 +232,19 @@ body::before,body::after{pointer-events:none!important}
 .row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 56px rgba(0,0,0,.62);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:var(--shadowB);
   overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
 }
 .head{
   display:flex;align-items:flex-start;justify-content:space-between;
@@ -178,6 +253,7 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  position:relative;
 }
 .left{
   display:flex;
@@ -202,15 +278,32 @@ body::before,body::after{pointer-events:none!important}
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  color:var(--ink);
 }
 .sub{
   margin-top:8px;
   font-size:14px;
-  opacity:.82;
+  opacity:.86;
   line-height:1.45;
   max-width:92ch;
+  color:rgba(255,255,255,.86);
 }
-.chev{font-size:18px;opacity:.78;flex:0 0 auto;margin-top:2px}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
 
 .body{
   display:none;
@@ -218,15 +311,17 @@ body::before,body::after{pointer-events:none!important}
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.92));
+  position:relative;
 }
 .row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
 
 .pdesc{
   margin:0;
-  color:rgba(255,255,255,.88);
+  color:rgba(255,255,255,.90);
   line-height:1.65;
-  font-size:14.5px;
+  font-size:15px;
 }
 .pdesc + .pdesc{margin-top:10px}
 
@@ -235,23 +330,36 @@ body::before,body::after{pointer-events:none!important}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:rgba(255,255,255,.05);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
   padding:14px 14px 12px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
 }
 .bubble h4{
   margin:0 0 8px;
   font-weight:950;
   letter-spacing:.15px;
-  font-size:14.5px;
+  font-size:15px;
+  color:var(--ink);
 }
 .bubble p{
   margin:0;
-  color:rgba(255,255,255,.78);
+  color:rgba(255,255,255,.80);
   line-height:1.7;
   display:none;
-  font-size:14px;
+  font-size:14.5px;
 }
 .bubble.open p{display:block}
 
@@ -279,7 +387,10 @@ body::before,body::after{pointer-events:none!important}
   padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
@@ -288,7 +399,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:104px}
+  :root{--dockH:132px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
   .title{font-size:17px}
   .s{font-size:15px}
@@ -302,9 +413,9 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnExplore" href="/explore/">EXPLORE</a>
-      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-      <a class="btn" id="btnHome" href="/home/">HOME</a>
+      <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+      <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+      <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -314,18 +425,18 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="header" aria-label="Header">
-    <p class="k" id="hk">EXPLORE</p>
+    <p class="k" id="hk">EXPLORE · FRONTIER</p>
     <h1 class="t" id="ht">FRONTIER INDEX</h1>
     <p class="s" id="hs"></p>
     <div class="rule" id="rule"></div>
 
     <div class="lenses" aria-label="Lenses">
       <div class="pills" aria-label="Lane">
-        <button class="pill red active" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
         <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
       </div>
       <div class="pills" aria-label="Tone">
-        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
         <button class="pill" id="pillFormal" type="button">FORMAL</button>
       </div>
     </div>
@@ -337,87 +448,101 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
+  "use strict";
+
   // ===== canonical state (no new gd_* keys) =====
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-  var lane  = qs.get("lane")  || "platform"; // platform|engineering (URL-only)
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
-  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  var d=parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
+    var p=new URLSearchParams();
+    p.set("lang", (over&&over.lang)?over.lang:lang);
+    p.set("style",(over&&over.style)?over.style:style);
+    p.set("time", (over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?String(over.depth):depth);
     var A=(over&&over.lane)?over.lane:lane;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D)+
-           "&lane="+encodeURIComponent(A);
+    if(A==="platform"||A==="engineering") p.set("lane", A);
+    return "?" + p.toString();
   }
 
-  // ===== wire nav =====
-  function wire(id, path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
+  // Wire all [data-route] links with full state
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
   }
-  wire("btnExplore","/explore/");
-  wire("btnDoor","/door/");
-  wire("btnHome","/home/");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
 
-  // ===== language toggle (reload same path) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
+  // Language toggle (reload same path)
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== pills (lane + tone) =====
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Pills (lane URL-only; tone updates gd_style)
   var pillPlatform=document.getElementById("pillPlatform");
   var pillEngineering=document.getElementById("pillEngineering");
   var pillInformal=document.getElementById("pillInformal");
@@ -429,245 +554,112 @@ body::before,body::after{pointer-events:none!important}
     pillInformal.classList.toggle("active", style==="informal");
     pillFormal.classList.toggle("active", style==="formal");
   }
-  paintPills();
 
   function setLane(next){
     if(next!=="platform" && next!=="engineering") next="platform";
     lane=next;
     history.replaceState({}, "", location.pathname + q({lane:lane}));
-    render();
     paintPills();
+    render();
   }
+
   function setTone(next){
     if(next!=="formal" && next!=="informal") next="informal";
     style=next;
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    try{ LS.setItem("gd_style",style);}catch(e){}
     history.replaceState({}, "", location.pathname + q({style:style}));
-    render();
     paintPills();
+    render();
   }
 
-  pillPlatform.addEventListener("click", function(){ setLane("platform"); });
-  pillEngineering.addEventListener("click", function(){ setLane("engineering"); });
-  pillInformal.addEventListener("click", function(){ setTone("informal"); });
-  pillFormal.addEventListener("click", function(){ setTone("formal"); });
+  pillPlatform.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  pillEngineering.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  pillInformal.addEventListener("click", function(){ setTone("informal"); }, {passive:true});
+  pillFormal.addEventListener("click", function(){ setTone("formal"); }, {passive:true});
 
-  // ===== copy helpers =====
+  // Copy helpers
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  function lensKey(){
-    return (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
-  }
-
+  function lensKey(){ return (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal"); }
   function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
   function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
   function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
   function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // ===== header copy =====
+  // Header copy
   var HEADER={
     en:{
       k:"EXPLORE · FRONTIER",
       t:"FRONTIER INDEX",
-      s:"This is the wiring hub. Every frontier room you’ve built lives here—one open, one route, one next step.",
-      r:"Rule: frontier is labeled. If we can’t measure it yet, we keep it marked as concept or roadmap."
+      s:"This is the wiring hub. Every frontier room you built is linked here. Open one row, take one next step.",
+      r:"Rule: frontier must stay labeled. Concept stays concept until measurement exists."
     },
     zh:{
       k:"探索 · 前沿",
       t:"前沿索引",
-      s:"这是接线枢纽。你已经建好的前沿房间都在这里——一次打开一个，给出清晰下一步。",
-      r:"规则：前沿必须有标签。若暂不可测，就明确标为概念或路线图。"
+      s:"这是接线枢纽。你建好的前沿房间都在这里链接。一次打开一行，走一个下一步。",
+      r:"规则：前沿必须保持标签。没有测量，就只能是概念或路线图。"
     },
     es:{
       k:"EXPLORAR · FRONTERA",
       t:"ÍNDICE DE FRONTERA",
-      s:"Este es el hub de cableado. Cada sala de frontera que ya construiste vive aquí—uno abierto, una ruta, un siguiente paso.",
-      r:"Regla: la frontera se etiqueta. Si aún no es medible, se marca como concepto u hoja de ruta."
+      s:"Este es el hub de cableado. Cada sala de frontera construida se enlaza aquí. Abre una fila y toma un siguiente paso.",
+      r:"Regla: la frontera debe permanecer etiquetada. Concepto sigue siendo concepto hasta tener medición."
     }
   };
 
   function bandLabel(){
     if(lang==="zh") return "前沿房间（一次只开一个）";
-    if(lang==="es") return "SALAS DE FRONTERA (uno a la vez)";
+    if(lang==="es") return "SALAS DE FRONTERA (una a la vez)";
     return "FRONTIER ROOMS (one open at a time)";
   }
 
-  // ===== rooms list (matches your folder tree screenshot) =====
+  // Frontier rooms list (authoritative)
   var ROOMS = [
-    {
-      c:"#D4AF37",
-      t:P("Vision (Board)","愿景（板）","Visión (tablero)"),
-      s:P("Where vision pages live: bounded and labeled.","愿景页所在：有界且有标签。","Donde vive la visión: acotada y etiquetada."),
-      href:"/explore/frontier/vision/",
-      copy:{
-        platform_informal:P(
-          "This is the ‘frontier bookshelf.’ If a page is future-facing, it goes here first—clearly labeled—so people can explore without confusing it with proof.",
-          "这是“前沿书架”。只要是面向未来的页面，先放这里——清晰标注——让人探索但不把它误当证明。",
-          "Es la ‘biblioteca’ de frontera. Lo futuro vive aquí primero—bien etiquetado—para explorar sin confundir con prueba."
-        ),
-        platform_formal:P(
-          "Vision pages are intentionally separated from doctrine and measurement. They are labeled as concept/roadmap until receipts exist, preventing claim drift.",
-          "愿景页与教义/测量刻意分离；在收据出现前标为概念/路线图，防止主张漂移。",
-          "Las páginas de visión se separan de doctrina/medición; se etiquetan como concepto/roadmap hasta tener recibos, evitando deriva."
-        ),
-        engineering_informal:P(
-          "Engineering uses this as a map of requirements: what would need to be measured and what would need to be contained before any scale is allowed.",
-          "工程把这里当作需求地图：要测什么、要隔离什么，才谈得上规模化。",
-          "Ingeniería lo usa como mapa de requisitos: qué medir y qué contener antes de permitir escala."
-        ),
-        engineering_formal:P(
-          "Engineering posture: no escalation beyond measurement capability. Vision items translate into prerequisites, interfaces, and falsifiers.",
-          "工程姿态：不得超出测量能力升级。愿景项要翻译为先决条件、接口与证伪条件。",
-          "Postura: sin escalación más allá de capacidad de medición. Visión se traduce a prerrequisitos, interfaces y falsificadores."
-        )
-      }
-    },
-    {
-      c:"#60A5FA",
-      t:P("Infrastructure Integration","基础设施集成","Integración de infraestructura"),
-      s:P("Water + Waste + Energy + Urban + Closed-loop stitched into one map.","水/废弃物/能源/城市/闭环统一接线。","Agua+Residuos+Energía+Urbano+Ciclo cerrado en un mapa."),
-      href:"/explore/frontier/infrastructure/",
-      copy:{
-        platform_informal:P(
-          "This is the stitch layer. It turns separate shells into a single route you can actually navigate.",
-          "这是缝合层：把分散壳变成一条可导航的路线。",
-          "Capa de costura: convierte shells separados en una ruta navegable."
-        ),
-        platform_formal:P(
-          "Integration hub defining stable routes and shared contracts across frontier domains.",
-          "集成枢纽：定义跨域稳定路由与共享契约。",
-          "Hub de integración: rutas estables y contratos compartidos entre dominios."
-        ),
-        engineering_informal:P(
-          "If you can’t keep failure local, you can’t scale. This page keeps the interfaces honest.",
-          "不能把失败局部化，就不能规模化。本页让接口保持诚实。",
-          "Si no mantienes fallos locales, no escalas. Aquí se mantienen honestas las interfaces."
-        ),
-        engineering_formal:P(
-          "Interface contracts: conserved inventories, thresholds, reason codes, and containment procedures across domains.",
-          "接口契约：跨域守恒库存、阈值、原因码与隔离流程。",
-          "Contratos: inventarios conservados, umbrales, códigos de razón y contención entre dominios."
-        )
-      }
-    },
-    {
-      c:"#F59E0B",
-      t:P("Energy (Frontier)","能源（前沿）","Energía (frontera)"),
-      s:P("Industrial substitution posture; staged and measured.","工业替代姿态：分阶段、可测。","Postura industrial: por fases y medible."),
-      href:"/explore/frontier/energy/",
-      copy:{
-        platform_informal:P("A readable map of energy pathways—what we can do now vs later.","能源路径的可读地图：现在能做什么、以后做什么。","Mapa legible de rutas de energía—qué ahora vs después."),
-        platform_formal:P("Energy frontier is labeled by posture and routing, with measurement deferred to Gauges.","能源前沿按姿态与路由标注，测量交给量规。","Energía de frontera se etiqueta por postura/ruteo; medición va a Medidores."),
-        engineering_informal:P("Containment-first: measure, isolate, repeat. No hero moves.","隔离优先：测量、隔离、重复。不靠英雄主义。","Contención primero: medir, aislar, repetir. Sin héroes."),
-        engineering_formal:P("Throughput/uprate under constraints, emissions bounds, verified substitution accounting.","约束下吞吐/扩容、排放边界、可核查替代核算。","Throughput bajo restricciones, límites de emisiones y contabilidad verificable.")
-      }
-    },
-    {
-      c:"#34D399",
-      t:P("Waste (Frontier)","废弃物（前沿）","Residuos (frontera)"),
-      s:P("Recovery-first routing: stop burning value.","回收优先路由：别烧价值。","Ruteo recovery-first: no quemes valor."),
-      href:"/explore/frontier/waste/",
-      copy:{
-        platform_informal:P("A human map: sort → route → recover.","人话地图：分→路由→回收。","Mapa humano: separar → rutear → recuperar."),
-        platform_formal:P("Heterogeneous feedstock routing; outputs remain bounded to verified pathways.","异质进料路由；输出受可验证路径约束。","Ruteo de feedstock heterogéneo; salidas acotadas a vías verificadas."),
-        engineering_informal:P("Don’t destroy information with blind combustion. Keep identity long enough to extract value.","别用盲燃毁信息；保留身份才能提取价值。","No destruyas información con combustión ciega; conserva identidad para extraer valor."),
-        engineering_formal:P("Segmentation, pathway yields, emissions control, containment; no causality claims beyond receipts.","分段、产率、排放控制、隔离；不做超收据因果主张。","Segmentación, rendimientos, emisiones, contención; sin causalidad más allá de recibos.")
-      }
-    },
-    {
-      c:"#93C5FD",
-      t:P("Water (Frontier)","水（前沿）","Agua (frontera)"),
-      s:P("Source → clean → store → verify → reuse.","取水→净化→储存→验证→复用。","Fuente → limpiar → almacenar → verificar → reutilizar."),
-      href:"/explore/frontier/water/",
-      copy:{
-        platform_informal:P("Water is the first constraint. Keep it clean under stress.","水是第一约束：压力下保持清洁。","El agua es la primera restricción: mantenerla limpia bajo estrés."),
-        platform_formal:P("Routed inventory: characterization→treatment→storage→verification→reuse.","路由库存：表征→处理→储存→验证→复用。","Inventario enrutado: caracterización→tratamiento→almacenamiento→verificación→reuso."),
-        engineering_informal:P("If you can’t verify it, you can’t trust it.","不能验证就不能信任。","Si no lo verificas, no lo confías."),
-        engineering_formal:P("Mass balance, contaminant loading, sensor calibration, recovery yield under variance.","方差下质量平衡、污染负荷、传感校准、回收率。","Balance de masa, carga, calibración de sensores y rendimiento bajo varianza.")
-      }
-    },
-    {
-      c:"#EF4444",
-      t:P("SHIMMER (Frontier)","SHIMMER（前沿）","SHIMMER (frontera)"),
-      s:P("Entropy-routing spine: classify → route → convert → retain.","熵路由主干：分类→路由→转化→保留。","Columna de ruteo entrópico: clasificar→rutear→convertir→retener."),
-      href:"/explore/frontier/shimmer/",
-      copy:{
-        platform_informal:P("The routing spine connecting city and habitat logic.","连接城市与栖息地逻辑的路由脊柱。","Columna de ruteo que conecta ciudad y hábitat."),
-        platform_formal:P("Routing doctrine surface; measured outputs live in Gauges; boundaries live in Laws.","路由教义面；量规出测量；法则出边界。","Superficie doctrinal de ruteo; medición en Medidores; límites en Leyes."),
-        engineering_informal:P("Same pattern everywhere: classify, route, convert, retain. Boring on purpose.","处处同模式：分类、路由、转化、保留。故意要无聊。","Mismo patrón: clasificar, rutear, convertir, retener. Aburrido a propósito."),
-        engineering_formal:P("Conservation-bounded routing with explicit interfaces and reason codes.","守恒约束路由，接口与原因码明确。","Ruteo acotado por conservación con interfaces y códigos de razón explícitos.")
-      }
-    },
-    {
-      c:"#A3A3A3",
-      t:P("Closed-Loop (Frontier)","闭环（前沿）","Ciclo cerrado (frontera)"),
-      s:P("No ‘away’. Inventory + routing + verification.","没有‘扔掉’：库存+路由+验证。","Sin ‘afuera’: inventario+ruteo+verificación."),
-      href:"/explore/frontier/closed-loop/",
-      copy:{
-        platform_informal:P("The proof machine: if it works here, it scales down to Earth.","证明机器：这里能跑，回到地球就能下沉。","Máquina de prueba: si funciona aquí, baja a la Tierra."),
-        platform_formal:P("Coupled ledger of water/air/food/materials/energy with explicit routing and failure response.","水/气/食物/材料/能量耦合账本，路由与失败响应明确。","Ledger acoplado de agua/aire/comida/materiales/energía con ruteo y respuesta a fallos explícitos."),
-        engineering_informal:P("Drift kills fast. That’s why it teaches truth.","漂移致命快，所以它逼出真相。","La deriva mata rápido, por eso enseña verdad."),
-        engineering_formal:P("Conservation accounting, recovery yields, deterministic procedures, failure localization; away sinks disallowed.","守恒核算、回收率、确定性流程、失败局部化；禁止‘扔掉’汇点。","Contabilidad de conservación, rendimientos, procedimientos deterministas, localización de fallos; sumideros ‘afuera’ prohibidos.")
-      }
-    },
-    {
-      c:"#D4AF37",
-      t:P("Lattice (Frontier)","晶格（前沿）","Lattice (frontera)"),
-      s:P("Finite measure: map problems into enumerated states.","有限测度：把问题映射到可枚举状态。","Medida finita: mapear problemas a estados enumerables."),
-      href:"/explore/frontier/lattice/",
-      copy:{
-        platform_informal:P("Turns ‘it’s complicated’ into a map you can traverse.","把‘太复杂’变成可遍历的地图。","Convierte ‘es complicado’ en un mapa recorrible."),
-        platform_formal:P("Finite coordinate surface: stable labels and routes for state enumeration.","有限坐标面：稳定标签与路由用于状态枚举。","Superficie de coordenadas finitas: etiquetas y rutas estables para enumeración."),
-        engineering_informal:P("If you can enumerate it, you can stabilize it.","能枚举就能稳定。","Si lo puedes enumerar, lo puedes estabilizar."),
-        engineering_formal:P("State enumeration under declared scope; transitions evaluated under constraints; replayable receipts.","声明范围内状态枚举；在约束下评估转移；收据可回放。","Enumeración bajo alcance declarado; transiciones evaluadas bajo restricciones; recibos re-ejecutables.")
-      }
-    },
-    {
-      c:"#60A5FA",
-      t:P("Trajectory (Frontier)","轨迹（前沿）","Trayectoria (frontera)"),
-      s:P("Where we are → where we were → where we’re going (bounded).","我们在哪→我们曾在哪→我们将去哪（有界）。","Dónde estamos → dónde estuvimos → hacia dónde vamos (acotado)."),
-      href:"/explore/frontier/trajectory/",
-      copy:{
-        platform_informal:P("A calm timeline that doesn’t hype. Labels stay honest.","不吹牛的时间线：标签保持诚实。","Línea de tiempo calmada sin hype; etiquetas honestas."),
-        platform_formal:P("Trajectory is expressed as windowed evidence and versioned epochs, not narrative escalation.","轨迹用窗口证据与版本纪元表达，不用叙事升级。","Trayectoria como evidencia por ventanas y épocas versionadas, no escalación narrativa."),
-        engineering_informal:P("Don’t tighten bounds without new evidence. That’s how you avoid delusion.","没有新证据就别收紧边界——避免自欺。","No aprietes límites sin evidencia nueva; así evitas autoengaño."),
-        engineering_formal:P("Windowed evaluation, correlation exposure, epoch rollover on correction; reproducibility over interpretation.","窗口评估、相关暴露、修正开新纪元；可复现胜过解释。","Evaluación por ventanas, exposición correlacionada, nueva época al corregir; reproducibilidad > interpretación.")
-      }
-    },
-    {
-      c:"#93C5FD",
-      t:P("Urban (Frontier)","城市（前沿）","Urbano (frontera)"),
-      s:P("Multi-utility routing: water + waste + energy in one ledger.","多公用事业路由：一套账。","Ruteo multi-utility: un solo libro para agua/residuos/energía."),
-      href:"/explore/frontier/urban/",
-      copy:{
-        platform_informal:P("Stops silo optimization that breaks everything else.","停止只优化一个部门把全局弄坏。","Detiene optimización en silos que rompe lo demás."),
-        platform_formal:P("Integrated routing surfaces across utilities with governance-ready outputs.","跨公用事业的集成路由面，输出可用于治理。","Superficies integradas de ruteo con salidas listas para gobernanza."),
-        engineering_informal:P("Shared dependencies are the real risk. Make them visible.","共享依赖才是真风险，把它照出来。","Dependencias compartidas son el riesgo real: hazlas visibles."),
-        engineering_formal:P("Correlated exposure, segmentation, service-level envelopes, rollback discipline; stability under load variance.","相关暴露、分段、服务包络、回滚纪律；负载方差下稳定。","Exposición correlacionada, segmentación, envelopes de servicio, rollback; estabilidad bajo varianza de carga.")
-      }
-    }
+    {id:"vision",        c:"#c9a24a", href:"/explore/frontier/vision/",        t:P("Vision (Index)","愿景（索引）","Visión (índice)"),            s:P("All vision pages live here (labeled).","所有愿景页在这里（有标签）。","Aquí viven páginas de visión (etiquetadas).")},
+    {id:"infrastructure",c:"#c9a24a", href:"/explore/frontier/infrastructure/",t:P("Infrastructure","基础设施","Infraestructura"),                s:P("Integration hub across frontier domains.","跨前沿领域的集成枢纽。","Hub de integración entre dominios.")},
+    {id:"energy",        c:"#ff2b2b", href:"/explore/frontier/energy/",        t:P("Energy","能源","Energía"),                                     s:P("Industrial substitution pathways.","工业替代路径。","Vías de sustitución industrial.")},
+    {id:"waste",         c:"#ff2b2b", href:"/explore/frontier/waste/",         t:P("Waste","废弃物","Residuos"),                                   s:P("Recovery-first routing.","回收优先路由。","Ruteo recovery-first.")},
+    {id:"water",         c:"#c9a24a", href:"/explore/frontier/water/",         t:P("Water","水","Agua"),                                           s:P("Source → clean → store → verify → reuse.","取水→净化→储存→验证→复用。","Fuente→limpiar→almacenar→verificar→reusar.")},
+    {id:"shimmer",       c:"#ff2b2b", href:"/explore/frontier/shimmer/",       t:P("SHIMMER","SHIMMER","SHIMMER"),                                  s:P("Entropy-routing spine.","熵路由主干。","Columna de ruteo entrópico.")},
+    {id:"closedloop",    c:"#a3a3a3", href:"/explore/frontier/closed-loop/",   t:P("Closed-Loop","闭环","Ciclo cerrado"),                           s:P("No ‘away’. Inventory + routing + verification.","没有‘扔掉’：库存+路由+验证。","Sin ‘afuera’: inventario+ruteo+verificación.")},
+    {id:"lattice",       c:"#c9a24a", href:"/explore/frontier/lattice/",       t:P("Lattice","晶格","Lattice"),                                     s:P("Finite mapping into enumerated states.","有限映射到可枚举状态。","Mapeo finito a estados enumerables.")},
+    {id:"trajectory",    c:"#c9a24a", href:"/explore/frontier/trajectory/",    t:P("Trajectory","轨迹","Trayectoria"),                               s:P("Windowed evidence over time.","时间窗口证据。","Evidencia por ventanas.")},
+    {id:"urban",         c:"#c9a24a", href:"/explore/frontier/urban/",         t:P("Urban","城市","Urbano"),                                       s:P("Multi-utility routing in one ledger.","一套账的多公用事业路由。","Ruteo multi-utility en un solo libro.")}
   ];
 
-  // ===== header set =====
-  var H=HEADER[lang] || HEADER.en;
-  document.getElementById("hk").textContent=H.k;
-  document.getElementById("ht").textContent=H.t;
-  document.getElementById("hs").textContent=H.s;
-  document.getElementById("rule").textContent=H.r;
-
-  // ===== band label =====
-  function setBand(){ document.getElementById("band").textContent = bandLabel(); }
-
-  // ===== list render =====
+  // Row rendering
   var list=document.getElementById("list");
 
-  function closeAll(){
-    list.querySelectorAll(".row").forEach(function(x){
-      x.classList.remove("open");
-      var c=x.querySelector(".chev");
+  function closeAllRows(){
+    var rows=list.querySelectorAll(".row");
+    for(var i=0;i<rows.length;i++){
+      rows[i].classList.remove("open");
+      var c=rows[i].querySelector(".chev");
       if(c) c.textContent="▸";
-    });
+    }
+  }
+
+  function makeSubBubble(label, text){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent=text;
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    return b;
   }
 
   function makeRow(item, idx){
@@ -714,50 +706,52 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
+    // Lens-specific intro (non-abstract)
     var intro=document.createElement("p");
     intro.className="pdesc";
-    intro.textContent=pick(item.copy[lensKey()]);
 
+    var lk=lensKey();
+    var introText = (lk==="platform_informal") ? pick(P(
+      "What this gives you: a clean route. Click once and land where the frontier work lives.",
+      "你得到的是：干净的路由。点一次，落在该房间。",
+      "Te da: una ruta limpia. Un clic y llegas a la sala."
+    )) :
+    (lk==="platform_formal") ? pick(P(
+      "Routing posture: stable destination with state-carry. This index prevents frontier collapse into generic pages.",
+      "路由姿态：稳定目的地+状态携带。本索引防止前沿坍缩到泛页。",
+      "Postura de ruteo: destino estable con estado. Evita colapso de frontera a páginas genéricas."
+    )) :
+    (lk==="engineering_informal") ? pick(P(
+      "Engineering view: what must be measured and contained before any scale claim is allowed.",
+      "工程视图：在允许规模化主张前，必须测量与隔离什么。",
+      "Vista de ingeniería: qué medir y contener antes de permitir cualquier afirmación de escala."
+    )) :
+    pick(P(
+      "Engineering posture: interfaces, thresholds, containment, rollback. No escalation beyond measurement capability.",
+      "工程姿态：接口、阈值、隔离、回滚。不得超出测量能力升级。",
+      "Postura: interfaces, umbrales, contención, rollback. Sin escalación más allá de capacidad de medición."
+    ));
+    intro.textContent=introText;
+
+    // Sub-bubbles (Concept/Build/Roadmap) are consistent + lens-aware
     var bubbles=document.createElement("div");
     bubbles.className="subBubbles";
 
-    function bubble(label, text){
-      var b=document.createElement("div");
-      b.className="bubble";
-      b.setAttribute("role","button");
-      b.tabIndex=0;
-
-      var h=document.createElement("h4");
-      h.textContent=label;
-
-      var p=document.createElement("p");
-      p.textContent=text;
-
-      b.appendChild(h);
-      b.appendChild(p);
-
-      function act(){ b.classList.toggle("open"); }
-      b.addEventListener("click", act);
-      b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-      return b;
-    }
-
-    // 3 sub-bubbles are universal wiring guidance (keeps it consistent)
     var conceptText = (lane==="platform")
-      ? (lang==="zh" ? "概念：这是一个‘入口页’。先让用户知道该点哪里，再谈深内容。"
-         : lang==="es" ? "Concepto: esta es una ‘página de entrada’. Primero guía al usuario; luego profundidad."
-         : "Concept: this is an entry page. Guide the user first; depth comes second.")
-      : (lang==="zh" ? "概念：这是一个‘接口问题’。先声明输入/输出与阈值，再谈规模化。"
-         : lang==="es" ? "Concepto: es un problema de interfaz. Declara entradas/salidas y umbrales antes de escalar."
-         : "Concept: this is an interface problem. Declare inputs/outputs and thresholds before scale.");
+      ? (lang==="zh" ? "概念：这是入口。先让人知道要点哪里、要看什么。"
+         : lang==="es" ? "Concepto: esta es una entrada. Primero guía al usuario: qué tocar y qué ver."
+         : "Concept: this is an entry. Guide the user: what to tap and what to see first.")
+      : (lang==="zh" ? "概念：这是接口。先声明输入/输出与阈值，再谈扩张。"
+         : lang==="es" ? "Concepto: esto es interfaz. Declara entradas/salidas y umbrales antes de escalar."
+         : "Concept: this is interface. Declare inputs/outputs and thresholds before scaling.");
 
     var buildText = (lane==="platform")
-      ? (lang==="zh" ? "现在建：确保路由存在、返回存在、状态携带存在。先可用，再完善。"
-         : lang==="es" ? "Construir ahora: rutas+retorno+estado. Primero usable, luego profundo."
-         : "Build now: routes + returns + state carry. Usable first, deeper later.")
-      : (lang==="zh" ? "现在建：最小测量闭环：测量→原因码→隔离→回滚。没有这些，不升级。"
-         : lang==="es" ? "Construir ahora: bucle mínimo medir→razones→contener→rollback. Sin eso, no hay upgrade."
-         : "Build now: minimum loop measure→reason codes→contain→rollback. Without that, no upgrades.");
+      ? (lang==="zh" ? "现在建：确保路由存在、返回存在、状态携带存在。"
+         : lang==="es" ? "Construir ahora: rutas, retorno y estado. Primero usable."
+         : "Build now: routes, returns, and state carry. Usable first.")
+      : (lang==="zh" ? "现在建：最小闭环：测量→原因码→隔离→回滚。"
+         : lang==="es" ? "Construir ahora: bucle mínimo medir→razones→contener→rollback."
+         : "Build now: minimum loop measure→reason codes→contain→rollback.");
 
     var roadText = (lang==="zh"
       ? "路线图：把壳变成系统：共享契约、共享窗口、共享审计输出。"
@@ -765,17 +759,18 @@ body::before,body::after{pointer-events:none!important}
         ? "Hoja de ruta: convertir shells en sistema: contratos compartidos, ventanas compartidas, salidas auditables."
         : "Roadmap: turn shells into a system: shared contracts, shared windows, audit-ready outputs."));
 
-    bubbles.appendChild(bubble(labConcept(), conceptText));
-    bubbles.appendChild(bubble(labBuild(), buildText));
-    bubbles.appendChild(bubble(labRoadmap(), roadText));
+    bubbles.appendChild(makeSubBubble(labConcept(), conceptText));
+    bubbles.appendChild(makeSubBubble(labBuild(), buildText));
+    bubbles.appendChild(makeSubBubble(labRoadmap(), roadText));
 
+    // Actions
     var actions=document.createElement("div");
     actions.className="actions";
 
     var a=document.createElement("a");
-    a.className="btn";
-    a.textContent = openLabel() + ": " + (lang==="zh" ? "打开该房间" : (lang==="es" ? "Abrir sala" : "Open room"));
-    a.href = item.href + q();
+    a.className="btn red";
+    a.textContent = openLabel() + ": " + (lang==="zh" ? "进入房间" : (lang==="es" ? "Entrar" : "Enter"));
+    a.setAttribute("data-route", item.href);
     actions.appendChild(a);
 
     body.appendChild(intro);
@@ -784,13 +779,17 @@ body::before,body::after{pointer-events:none!important}
 
     function toggle(){
       var openNow = !row.classList.contains("open");
-      closeAll();
+      closeAllRows();
       row.classList.toggle("open", openNow);
       chev.textContent = openNow ? "▾" : "▸";
+      // Ensure any action link carries latest state
+      wireAll();
     }
 
-    head.addEventListener("click", toggle);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
 
     row.appendChild(head);
     row.appendChild(body);
@@ -803,7 +802,7 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function render(){
-    // language labels
+    // Localize controls/dock labels (intro-tier)
     if(lang==="zh"){
       document.getElementById("btnExplore").textContent="探索";
       document.getElementById("btnDoor").textContent="门";
@@ -842,18 +841,27 @@ body::before,body::after{pointer-events:none!important}
       pillFormal.textContent="FORMAL";
     }
 
-    // header
+    // Header
     var H=HEADER[lang] || HEADER.en;
     document.getElementById("hk").textContent=H.k;
     document.getElementById("ht").textContent=H.t;
     document.getElementById("hs").textContent=H.s;
     document.getElementById("rule").textContent=H.r;
 
-    setBand();
+    document.getElementById("band").textContent = bandLabel();
+
+    paintPills();
+
     list.innerHTML="";
-    ROOMS.forEach(function(r,i){ list.appendChild(makeRow(r,i)); });
+    for(var i=0;i<ROOMS.length;i++){
+      list.appendChild(makeRow(ROOMS[i], i));
+    }
+
+    // Wire routes everywhere after render
+    wireAll();
   }
 
+  // Init
   render();
 })();
 </script>

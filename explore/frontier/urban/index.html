@@ -1,11 +1,15 @@
 <!-- TNT — /explore/frontier/urban/index.html
-     FRONTIER · URBAN RESOURCE OPERATING SYSTEM
-     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
+     FRONTIER · URBAN RESOURCE OS (SHIMMER)
+     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES (EN/中文/ES)
+     SINGLE-OPEN ACCORDION · NO MODALS · STATE CARRY
      ROLE:
-       - Integrate Energy + Water + Waste
-       - Define city-scale alignment layer
-       - Establish convergence logic before Closed Loop
+       - City-scale “no-away” economics: waste/water/energy/materials as one routed inventory
+       - SHIMMER routing spine adapted to municipal + industrial clusters
+     ROUTES (SHELLS / SAFE):
+       - CLOSED LOOP → /explore/frontier/closed-loop/
+       - ENERGY      → /explore/frontier/energy/
+       - WATER       → /explore/frontier/water/
+       - WASTE       → /explore/frontier/waste/
 -->
 
 <!doctype html>
@@ -28,9 +32,11 @@ body::before,body::after{pointer-events:none!important}
   --dockH:96px;
   --mut:rgba(255,255,255,.92);
   --mut2:rgba(255,255,255,.76);
+
   --opal:rgba(210,190,255,.14);
-  --green:rgba(0,255,170,.08);
-  --amber:rgba(255,170,0,.08);
+  --red:rgba(255,70,70,.11);
+  --gold:rgba(212,175,55,.16);
+  --ink:rgba(0,0,0,.18);
 }
 
 .page{
@@ -46,10 +52,10 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid rgba(255,255,255,.12);
   border-radius:28px;
   background:
-    radial-gradient(circle at 20% 25%, var(--opal), transparent 70%),
-    radial-gradient(circle at 80% 30%, var(--green), transparent 70%),
-    radial-gradient(circle at 60% 90%, var(--amber), transparent 70%),
-    rgba(0,0,0,.18);
+    radial-gradient(circle at 22% 18%, var(--opal), transparent 70%),
+    radial-gradient(circle at 78% 28%, var(--red), transparent 72%),
+    radial-gradient(circle at 55% 92%, var(--gold), transparent 72%),
+    var(--ink);
   padding:30px;
   box-shadow:0 40px 120px rgba(0,0,0,.6);
 }
@@ -71,9 +77,9 @@ body::before,body::after{pointer-events:none!important}
 
 .s{
   font-size:19px;
-  line-height:1.7;
-  max-width:1000px;
-  opacity:.9;
+  line-height:1.75;
+  max-width:1040px;
+  opacity:.92;
 }
 
 .lenses{
@@ -95,8 +101,19 @@ body::before,body::after{pointer-events:none!important}
 }
 
 .pill.active{
-  border-color:rgba(212,175,55,.6);
-  box-shadow:0 0 18px rgba(212,175,55,.25);
+  border-color:rgba(212,175,55,.60);
+  box-shadow:0 0 18px rgba(212,175,55,.22);
+}
+
+.band{
+  padding:12px 16px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:900;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  opacity:.9;
 }
 
 .accordion{
@@ -106,7 +123,7 @@ body::before,body::after{pointer-events:none!important}
 }
 
 .section{
-  border:1px solid rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.10);
   border-radius:28px;
   overflow:hidden;
   background:linear-gradient(160deg, rgba(18,22,35,.95), rgba(8,12,20,.98));
@@ -118,6 +135,8 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   justify-content:space-between;
   align-items:center;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 
 .title{
@@ -126,16 +145,31 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
+.chev{opacity:.75;font-weight:900}
+
 .body{
   display:none;
   padding:28px 34px;
   border-top:1px solid rgba(255,255,255,.08);
   font-size:18px;
-  line-height:1.8;
+  line-height:1.85;
   color:var(--mut2);
 }
 
 .section.open .body{display:block}
+
+.jump{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.jump .btn{
+  padding:12px 16px;
+  border-radius:999px;
+  white-space:nowrap;
+}
 
 .dock{
   position:fixed;
@@ -155,7 +189,11 @@ body::before,body::after{pointer-events:none!important}
   padding:12px;
   border-radius:999px;
   text-align:center;
-  font-weight:700;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+@media (max-width:520px){
+  .dock{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -164,141 +202,428 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="page">
 
-<div class="header">
-<p class="k" id="hk">FRONTIER</p>
-<h1 class="t" id="ht">URBAN RESOURCE OPERATING SYSTEM</h1>
-<p class="s" id="hs"></p>
+  <div class="header">
+    <p class="k" id="hk">FRONTIER</p>
+    <h1 class="t" id="ht">URBAN RESOURCE OS</h1>
+    <p class="s" id="hs"></p>
 
-<div class="lenses">
-  <button class="pill active" id="lensInformal">INFORMAL</button>
-  <button class="pill" id="lensFormal">FORMAL</button>
-  <button class="pill" id="lensEngineering">ENGINEERING</button>
-  <button class="pill" id="lensPlatform">PLATFORM</button>
+    <div class="lenses">
+      <button class="pill active" id="lensInformal" type="button">INFORMAL</button>
+      <button class="pill" id="lensFormal" type="button">FORMAL</button>
+      <button class="pill" id="lensEngineering" type="button">ENGINEERING</button>
+      <button class="pill" id="lensPlatform" type="button">PLATFORM</button>
+    </div>
+  </div>
+
+  <div class="band" id="band">CITY AS A ROUTED INVENTORY</div>
+
+  <div class="accordion" id="accordion"></div>
+
 </div>
-</div>
 
-<div class="accordion" id="accordion"></div>
-
-</div>
-
-<nav class="dock">
-<a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
-<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
-<a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
-<a class="btn" id="navClosed" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="navClosed" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
+  <a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
+  <a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
+  <a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
 </nav>
 
 <script>
 (function(){
+  // ===== canonical state (lang only used on this page; links preserve it) =====
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+  document.documentElement.lang=lang;
 
-var qs=new URLSearchParams(location.search);
-var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
-document.documentElement.lang=lang;
+  function q(){ return "?lang="+encodeURIComponent(lang); }
 
-function q(){return "?lang="+lang}
-document.getElementById("navEnergy").href+=q();
-document.getElementById("navWater").href+=q();
-document.getElementById("navWaste").href+=q();
-document.getElementById("navClosed").href+=q();
+  document.getElementById("navClosed").href="/explore/frontier/closed-loop/"+q();
+  document.getElementById("navEnergy").href="/explore/frontier/energy/"+q();
+  document.getElementById("navWater").href="/explore/frontier/water/"+q();
+  document.getElementById("navWaste").href="/explore/frontier/waste/"+q();
 
-function pick(o){return o[lang]||o.en}
+  function pick(o){ return o[lang]||o.en; }
 
-var headerCopy={
-en:"Cities are not broken because they lack resources. They are broken because resources do not speak to each other.",
-zh:"城市不是因为缺资源而失效，而是因为资源彼此不沟通。",
-es:"Las ciudades no fallan por falta de recursos, sino por falta de coordinación."
-};
-document.getElementById("hs").textContent=pick(headerCopy);
+  var headerCopy={
+    en:"A city is not a pile of services. It’s a living inventory: water, materials, energy, heat, and waste—moving every hour. The OS is the map that stops the leaks from hiding.",
+    zh:"城市不是一堆服务，而是活的库存：水、材料、能量、热、废弃物——每小时都在流动。Urban OS 是让泄漏无法隐藏的地图。",
+    es:"Una ciudad no es un montón de servicios. Es un inventario vivo: agua, materiales, energía, calor y residuos, moviéndose cada hora. El OS es el mapa que impide que las fugas se escondan."
+  };
+  document.getElementById("hs").textContent=pick(headerCopy);
 
-var lens="informal";
+  var lens="informal";
 
-var sections=[
-{
-t:{en:"THE CITY PROBLEM",zh:"城市问题",es:"PROBLEMA URBANO"},
-c:{
-informal:{en:"Water runs in one system. Power runs in another. Waste runs in another. None of them share a unified coordination spine.",
-zh:"水、电、废弃物各自为政，没有统一协调脊柱。",
-es:"Agua, energía y residuos operan aislados."},
-formal:{en:"Urban infrastructure systems operate in siloed domains, lacking cross-domain state synchronization.",
-zh:"城市基础设施系统分域运行，缺乏跨域状态同步。",
-es:"Infraestructuras urbanas operan en silos."},
-engineering:{en:"Integrate energy, water, waste, and routing nodes into a shared runtime lattice.",
-zh:"将能源、水、废弃物节点纳入统一运行时晶格。",
-es:"Integrar nodos en un lattice compartido."},
-platform:{en:"Expose cross-domain signals via Dot.Grid and enforce stabilization through Laws.",
-zh:"通过Dot.Grid暴露跨域信号，由Laws执行稳定。",
-es:"Exponer señales cruzadas vía Dot.Grid."}
-}
-},
-{
-t:{en:"THE CONVERGENCE LAYER",zh:"收敛层",es:"CAPA DE CONVERGENCIA"},
-c:{
-informal:{en:"Urban OS is the layer where all flows meet and are measured together.",
-zh:"城市操作系统是所有流汇合并被统一测量的层。",
-es:"Urban OS es donde todos los flujos convergen."},
-formal:{en:"Urban Resource OS synchronizes multi-utility vectors under deterministic classification.",
-zh:"城市资源操作系统在确定性分类下同步多公用事业向量。",
-es:"Sincroniza vectores multi-servicio."},
-engineering:{en:"Deploy sensor integration, thermal buffering, distributed routing, and collapse detection.",
-zh:"部署传感整合、热缓冲、分布式路由与坍塌检测。",
-es:"Desplegar sensores y buffers térmicos."},
-platform:{en:"Registry-backed ledger ensures accountability across utilities.",
-zh:"基于Registry的账本确保跨公用事业问责。",
-es:"Libro respaldado por registro."}
-}
-},
-{
-t:{en:"FINITE URBAN LATTICE",zh:"有限城市晶格",es:"LATTICE URBANO FINITO"},
-c:{
-informal:{en:"If a city cannot measure itself, it cannot stabilize itself.",
-zh:"城市不能测量自己，就不能稳定自己。",
-es:"Una ciudad que no se mide no se estabiliza."},
-formal:{en:"Urban states index into a bounded lattice enabling drift detection and cross-sector comparison.",
-zh:"城市状态映射入有限晶格，实现漂移检测与跨部门比较。",
-es:"Estados urbanos indexados en lattice."},
-engineering:{en:"Bind city nodes to UCI Engine for convergence monitoring.",
-zh:"将城市节点绑定UCI引擎监测收敛。",
-es:"Vincular nodos urbanos al UCI."},
-platform:{en:"Publish transparency dashboards through Gauges.",
-zh:"通过Gauges发布透明仪表板。",
-es:"Publicar dashboards vía Medidores."}
-}
-}
-];
+  var S = [
+    {
+      t:{en:"THE PROBLEM WE ACTUALLY HAVE",zh:"我们真正的问题",es:"EL PROBLEMA REAL"},
+      sub:{en:"‘Away’ is an illusion. Costs don’t disappear.",zh:"“扔掉”是幻觉，成本不会消失。",es:"‘Afuera’ es una ilusión: los costos no desaparecen."},
+      c:{
+        informal:{
+          en:[
+            "Landfills, wastewater, grid stress—these look like separate problems because they live in separate departments. But the city is one coupled machine.",
+            "When you move one lever (like shutting a landfill), pressure moves somewhere else (like water treatment, hauling, grid load, or political blowback). The problem is not trash. It’s blind routing."
+          ],
+          zh:[
+            "填埋、污水、电网压力看起来是不同问题，是因为它们被分到不同部门。但城市是一台耦合机器。",
+            "你拉一个杠杆（比如关填埋），压力就转移到别处（比如水处理、运输、电网负载或政治反弹）。问题不是垃圾本身，而是“盲路由”。"
+          ],
+          es:[
+            "Vertederos, aguas residuales, estrés de red parecen problemas distintos porque viven en departamentos distintos. Pero la ciudad es una máquina acoplada.",
+            "Mueves una palanca (cerrar un vertedero) y la presión aparece en otro sitio (tratamiento de agua, transporte, carga de red o política). El problema no es la basura: es ruteo ciego."
+          ]
+        },
+        formal:{
+          en:[
+            "Urban fragility is dominated by hidden coupling and correlated exposure across infrastructure lanes. ‘Away’ functions as an unaccounted sink that masks loss, externalizes risk, and prevents comparability.",
+            "Therefore the city must be modeled as routed inventories under conservation and constraint: measure → route → convert → retain, with explicit windows and thresholds."
+          ],
+          zh:[
+            "城市脆弱性由隐藏耦合与跨基础设施车道的相关暴露主导。“扔掉”是未核算汇点：掩盖损耗、外部化风险、破坏可比性。",
+            "因此城市必须被建模为在守恒与约束下的路由库存：测量→路由→转化→保留，并有明确窗口与阈值。"
+          ],
+          es:[
+            "La fragilidad urbana está dominada por acoplamientos ocultos y exposición correlacionada entre carriles de infraestructura. ‘Afuera’ es un sumidero no contabilizado que oculta pérdidas y externaliza riesgo.",
+            "Por eso la ciudad debe modelarse como inventarios ruteados bajo conservación y restricción: medir → rutear → convertir → retener, con ventanas y umbrales explícitos."
+          ]
+        },
+        engineering:{
+          en:[
+            "Define lane inventories (water, solids, organics, plastics, metals, heat, power). Instrument intake, define separation purity, and bind conversion modules to known operating envelopes.",
+            "Compute routing matrix by objective (value + stability + carbon constraint). Enforce containment rules to prevent cross-lane contamination and cascading failures."
+          ],
+          zh:[
+            "定义车道库存（水、固体、有机物、塑料、金属、热、电）。仪器化入口，定义分离纯度，将转化模块绑定到已知操作包络。",
+            "按目标（价值+稳定+碳约束）计算路由矩阵。执行隔离规则，阻止跨车道污染与级联失败。"
+          ],
+          es:[
+            "Definir inventarios por carril (agua, sólidos, orgánicos, plásticos, metales, calor, energía). Instrumentar entrada, definir pureza de separación, y ligar conversión a envolventes operativos.",
+            "Calcular matriz de ruteo por objetivo (valor + estabilidad + carbono). Reglas de contención para evitar contaminación y cascadas."
+          ]
+        },
+        platform:{
+          en:[
+            "Make the city legible: one map of dependencies, one set of receipts, one dashboard of closure/leakage bands. No arguing about intent; show what moved together.",
+            "Dot.Grid maps structure, Gauges show signals, Laws constrain interpretation, Registry publishes status. That stack is the OS."
+          ],
+          zh:[
+            "让城市可读：一张依赖地图、一套收据、一张闭合/泄漏区间仪表板。不争论意图，只展示哪些一起动。",
+            "Dot.Grid映射结构，Gauges显示信号，Laws约束解释，Registry发布状态。这个栈就是OS。"
+          ],
+          es:[
+            "Hacer la ciudad legible: un mapa de dependencias, un set de recibos, un dashboard de bandas de cierre/fuga. Sin discutir intención: mostrar qué se movió junto.",
+            "Dot.Grid mapea estructura; Medidores muestran señales; Leyes limitan interpretación; Registro publica estado. Ese stack es el OS."
+          ]
+        }
+      }
+    },
 
-function render(){
-var acc=document.getElementById("accordion");
-acc.innerHTML="";
-sections.forEach(function(s,i){
-var row=document.createElement("div");
-row.className="section";
-var head=document.createElement("div");
-head.className="head";
-var title=document.createElement("div");
-title.className="title";
-title.textContent=pick(s.t);
-head.appendChild(title);
-var body=document.createElement("div");
-body.className="body";
-body.textContent=pick(s.c[lens]);
-head.onclick=function(){
-document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
-row.classList.add("open");
-};
-row.appendChild(head);
-row.appendChild(body);
-acc.appendChild(row);
-if(i===0)row.classList.add("open");
-});
-}
+    {
+      t:{en:"THE OS CONTRACT",zh:"OS 契约",es:"CONTRATO DEL OS"},
+      sub:{en:"It doesn’t ‘solve by speech’. It routes by measurement.",zh:"不靠口号“解决”，靠测量路由。",es:"No ‘soluciona con discurso’; rutea con medición."},
+      c:{
+        informal:{
+          en:[
+            "The OS is not another dashboard. It’s a contract: every stream gets measured, every decision gets a reason code, and every upgrade needs receipts.",
+            "If the city can’t explain where its losses are, it can’t control them. The OS turns that confusion into a shortlist."
+          ],
+          zh:[
+            "OS 不是另一个仪表盘，而是一份契约：每条流都要测量，每次决策都有原因码，每次升级都要收据。",
+            "城市解释不清损耗在哪，就控制不了。OS 把混乱变成一个短清单。"
+          ],
+          es:[
+            "El OS no es otro tablero: es un contrato. Cada flujo se mide, cada decisión tiene código de razón y cada upgrade requiere recibos.",
+            "Si la ciudad no puede explicar pérdidas, no puede controlarlas. El OS convierte confusión en una lista corta."
+          ]
+        },
+        formal:{
+          en:[
+            "Contract: declared scope + stable naming + windowed measurement + deterministic routing decisions. Outputs remain bounded: no causality claims, no admissibility claims unless routed to doctrine.",
+            "Any change that affects outputs is versioned (epoch rollover) to preserve comparability across time."
+          ],
+          zh:[
+            "契约：声明范围+稳定命名+窗口测量+确定性路由决策。输出保持有界：不做因果主张，不做可采信裁决（除非路由到教义层）。",
+            "任何影响输出的变更必须版本化（新纪元），以保持跨时间可比性。"
+          ],
+          es:[
+            "Contrato: alcance declarado + nombres estables + medición por ventanas + decisiones deterministas de ruteo. Salidas acotadas: sin causalidad, sin admisibilidad salvo doctrina.",
+            "Cambios que afecten salidas se versionan (nueva época) para preservar comparabilidad."
+          ]
+        },
+        engineering:{
+          en:[
+            "Implement: intake sensors, separation modules, conversion modules, storage buffers, contamination barriers. Publish recovery fractions, loss rates, and constraint violations with timestamps.",
+            "Enforce routing safety: segmentation, rollback, and isolation thresholds; treat correlated exposure as primary risk."
+          ],
+          zh:[
+            "实现：入口传感、分离模块、转化模块、储存缓冲、污染隔离。发布回收分数、损耗率、约束违规与时间戳。",
+            "执行路由安全：分段、回滚、隔离阈值；把相关暴露作为主要风险。"
+          ],
+          es:[
+            "Implementar: sensores de entrada, módulos de separación, conversión, buffers de almacenamiento y barreras de contaminación. Publicar fracciones de recuperación, tasas de pérdida y violaciones con timestamps.",
+            "Seguridad de ruteo: segmentación, rollback y umbrales de aislamiento; exposición correlacionada como riesgo primario."
+          ]
+        },
+        platform:{
+          en:[
+            "Expose the contract as a navigable interface: single-open accordions, clear jump routes to laws/gauges/products, and persistent state.",
+            "Make ‘closure’ readable for humans: GREEN/YELLOW/RED bands with receipts behind each band."
+          ],
+          zh:[
+            "把契约做成可导航界面：单开手风琴、清晰跳转到laws/gauges/products、状态持久。",
+            "把“闭合”做成人类可读：绿/黄/红区间，每个区间背后都有收据。"
+          ],
+          es:[
+            "Exponer el contrato como interfaz navegable: acordeón de apertura única, saltos claros a leyes/medidores/productos y estado persistente.",
+            "Hacer el ‘cierre’ legible: bandas VERDE/AMARILLO/ROJO con recibos detrás."
+          ]
+        }
+      }
+    },
 
-document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
-document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
-document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
-document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
+    {
+      t:{en:"THE SHIMMER ROUTING SPINE",zh:"SHIMMER 路由脊柱",es:"COLUMNA DE RUTEO SHIMMER"},
+      sub:{en:"Classify → Segment → Route → Convert → Retain.",zh:"分类→分段→路由→转化→保留。",es:"Clasificar → Segmentar → Rutear → Convertir → Retener."},
+      c:{
+        informal:{
+          en:[
+            "This is the ‘one move’ that keeps showing up: you don’t burn the pile. You sort it, route it, and transform it into something useful.",
+            "The spine is what lets you scale without guessing. Same steps, better modules."
+          ],
+          zh:[
+            "这是反复出现的“同一动作”：你不是把堆一烧了之，而是分类、路由、转化成有用东西。",
+            "这条脊柱让你在扩张时不靠猜：步骤不变，模块更强。"
+          ],
+          es:[
+            "Este es el ‘movimiento único’: no quemas la pila; la clasificas, la ruteas y la conviertes en algo útil.",
+            "La columna permite escalar sin adivinar: mismos pasos, mejores módulos."
+          ]
+        },
+        formal:{
+          en:[
+            "SHIMMER: intake intelligence (classification) → precision segmentation → dynamic routing matrix (Ω-optimization) → conversion modules → output balancing under constraints.",
+            "Urban variant emphasizes multi-revenue stability (energy + materials + carbon retention) with regulatory and market variability."
+          ],
+          zh:[
+            "SHIMMER：入口智能（分类）→精细分段→动态路由矩阵（Ω优化）→转化模块→约束下输出平衡。",
+            "城市变体强调多收益稳定（能源+材料+碳保留），并考虑监管与市场波动。"
+          ],
+          es:[
+            "SHIMMER: inteligencia de entrada → segmentación precisa → matriz dinámica (optimización Ω) → módulos de conversión → balance de salidas bajo restricciones.",
+            "La variante urbana enfatiza estabilidad multi-ingreso con variabilidad regulatoria y de mercado."
+          ]
+        },
+        engineering:{
+          en:[
+            "Define feedstock vector and module set; compute routing decisions per time window using constraints: mass/energy conservation, contamination limits, throughput bounds, and compliance.",
+            "Publish: routing fractions, conversion yields, carbon diversion, and energy equivalents as receipts."
+          ],
+          zh:[
+            "定义进料向量与模块集合；在时间窗口内按约束计算路由：质量/能量守恒、污染限制、吞吐上限、合规。",
+            "发布：路由分配、转化产率、碳分流、能量等价值作为收据。"
+          ],
+          es:[
+            "Definir vector de alimentación y módulos; calcular decisiones por ventana con restricciones: conservación, límites de contaminación, throughput y cumplimiento.",
+            "Publicar fracciones de ruteo, rendimientos, desvío de carbono y equivalentes energéticos como recibos."
+          ]
+        },
+        platform:{
+          en:[
+            "Provide clear surfaces: a routing dashboard, a receipts log, and a ‘next action’ panel that links to laws/gauges.",
+            "Never collapse routes into one ‘diagnostic’ page; each lane has its own home."
+          ],
+          zh:[
+            "提供清晰界面：路由仪表板、收据日志、下一步行动面（链接到laws/gauges）。",
+            "路由不得坍缩到一个“诊断总页”；每条车道都有自己的主页。"
+          ],
+          es:[
+            "Ofrecer superficies claras: dashboard de ruteo, log de recibos y panel de ‘siguiente acción’ con saltos a leyes/medidores.",
+            "No colapsar rutas a una sola página ‘diagnóstico’; cada carril tiene su home."
+          ]
+        }
+      }
+    },
 
-render();
+    {
+      t:{en:"WHY THIS REACHES ORBIT",zh:"为什么这能走向轨道",es:"POR QUÉ ESTO LLEGA A ÓRBITA"},
+      sub:{en:"Cities are the proving ground for habitats.",zh:"城市是栖息地的验证场。",es:"Las ciudades son el campo de prueba para hábitats."},
+      c:{
+        informal:{
+          en:[
+            "A habitat is a city with no forgiveness. So if you can close loops in a city—under politics, markets, and human error—you’re training the exact muscles you need for orbit.",
+            "The future tech isn’t the fantasy. The future tech is the discipline: measure, route, retain, repeat."
+          ],
+          zh:[
+            "栖息地是“没有宽容的城市”。所以你若能在城市里闭环——在政治、市场、人为错误下——你就在训练轨道所需的同一套肌肉。",
+            "未来科技不只是幻想，未来科技是纪律：测量、路由、保留、重复。"
+          ],
+          es:[
+            "Un hábitat es una ciudad sin perdón. Si cierras ciclos en una ciudad—con política, mercados y error humano—entrenas los músculos para órbita.",
+            "La tecnología futura real es la disciplina: medir, rutear, retener, repetir."
+          ]
+        },
+        formal:{
+          en:[
+            "Habitat constraints are an extreme case of urban closure: bounded resupply, strict contamination limits, and coupled failure modes. Urban deployments provide scalable evidence for closure accounting and routing stability.",
+            "Escalation remains phase-gated: terrestrial → remote → orbital, with explicit prerequisites and no claim inflation."
+          ],
+          zh:[
+            "栖息地约束是城市闭环的极限情况：补给受限、污染限制严格、故障耦合。城市部署为闭合核算与路由稳定提供可规模证据。",
+            "升级保持阶段闸门：地面→偏远→轨道，前置条件明确，禁止主张膨胀。"
+          ],
+          es:[
+            "Las restricciones de hábitat son el caso extremo del cierre urbano: reabastecimiento limitado, límites estrictos de contaminación y fallos acoplados. Despliegues urbanos aportan evidencia escalable.",
+            "La escalación está acotada por fases: Tierra → remoto → órbita, con prerrequisitos explícitos y sin inflación de afirmaciones."
+          ]
+        },
+        engineering:{
+          en:[
+            "Use urban loops to validate sensor baselines, module yields, contamination barriers, and recovery playbooks. Quantify loss rates and time-to-instability.",
+            "Only after stability is demonstrated under perturbation do you increase autonomy and reduce resupply dependence."
+          ],
+          zh:[
+            "用城市回路验证传感基线、模块产率、污染隔离与恢复剧本；量化损耗率与到不稳定的时间。",
+            "只有在扰动下证明稳定后，才提升自治并降低补给依赖。"
+          ],
+          es:[
+            "Usar loops urbanos para validar baselines de sensores, rendimientos de módulos, barreras de contaminación y playbooks de recuperación. Cuantificar pérdidas y tiempo a inestabilidad.",
+            "Solo tras demostrar estabilidad bajo perturbación se aumenta autonomía y se reduce dependencia de reabastecimiento."
+          ]
+        },
+        platform:{
+          en:[
+            "Keep it navigable for non-engineers: show the ‘city inventory story’ first, then route to detailed proofs and measurements.",
+            "This page is the bridge: it makes future tech feel inevitable without making claims you can’t defend."
+          ],
+          zh:[
+            "对非工程师保持可读：先讲“城市库存故事”，再跳到证明与测量细节。",
+            "这页是桥：让未来科技显得必然，但不做无法辩护的主张。"
+          ],
+          es:[
+            "Navegable para no ingenieros: primero la ‘historia de inventario urbano’, luego saltos a pruebas y mediciones.",
+            "Esta página es puente: hace que el futuro se sienta inevitable sin afirmar lo indefendible."
+          ]
+        }
+      }
+    }
+  ];
+
+  function lensLabel(){
+    if(lang==="zh") return {informal:"通俗",formal:"正式",engineering:"工程",platform:"平台"};
+    if(lang==="es") return {informal:"INFORMAL",formal:"FORMAL",engineering:"INGENIERÍA",platform:"PLATAFORMA"};
+    return {informal:"INFORMAL",formal:"FORMAL",engineering:"ENGINEERING",platform:"PLATFORM"};
+  }
+
+  function render(){
+    document.getElementById("band").textContent = (lang==="zh")
+      ? "城市 = 路由库存"
+      : (lang==="es") ? "CIUDAD = INVENTARIO RUTEADO" : "CITY AS A ROUTED INVENTORY";
+
+    var L=lensLabel();
+    document.getElementById("lensInformal").textContent=L.informal;
+    document.getElementById("lensFormal").textContent=L.formal;
+    document.getElementById("lensEngineering").textContent=L.engineering;
+    document.getElementById("lensPlatform").textContent=L.platform;
+
+    document.getElementById("hk").textContent = (lang==="zh") ? "前沿" : (lang==="es") ? "FRONTERA" : "FRONTIER";
+    document.getElementById("ht").textContent = pick({en:"URBAN RESOURCE OS",zh:"城市资源操作系统",es:"SISTEMA OPERATIVO DE RECURSOS URBANOS"});
+    document.getElementById("hs").textContent = pick(headerCopy);
+
+    var acc=document.getElementById("accordion");
+    acc.innerHTML="";
+
+    S.forEach(function(item, idx){
+      var sec=document.createElement("div");
+      sec.className="section";
+
+      var head=document.createElement("div");
+      head.className="head";
+
+      var title=document.createElement("div");
+      title.className="title";
+      title.textContent = pick(item.t);
+
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent="▸";
+
+      head.appendChild(title);
+      head.appendChild(chev);
+
+      var body=document.createElement("div");
+      body.className="body";
+
+      var sub=document.createElement("div");
+      sub.style.fontWeight="800";
+      sub.style.color="rgba(255,255,255,.86)";
+      sub.style.marginBottom="12px";
+      sub.textContent = pick(item.sub);
+
+      body.appendChild(sub);
+
+      var lines=item.c[lens];
+      for(var i=0;i<lines.length;i++){
+        var p=document.createElement("div");
+        p.style.marginTop = (i===0) ? "0" : "14px";
+        p.textContent = lines[i];
+        body.appendChild(p);
+      }
+
+      var jump=document.createElement("div");
+      jump.className="jump";
+      var openLabel=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+
+      var j1=document.createElement("a"); j1.className="btn"; j1.textContent=openLabel+": CLOSED LOOP"; j1.href="/explore/frontier/closed-loop/"+q();
+      var j2=document.createElement("a"); j2.className="btn"; j2.textContent=openLabel+": LAWS"; j2.href="/laws/"+q();
+      var j3=document.createElement("a"); j3.className="btn"; j3.textContent=openLabel+": GAUGES"; j3.href="/gauges/"+q();
+      jump.appendChild(j1); jump.appendChild(j2); jump.appendChild(j3);
+      body.appendChild(jump);
+
+      sec.appendChild(head);
+      sec.appendChild(body);
+      acc.appendChild(sec);
+
+      function closeAll(){
+        acc.querySelectorAll(".section").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev");
+          if(c) c.textContent="▸";
+        });
+      }
+      function toggle(){
+        var willOpen=!sec.classList.contains("open");
+        closeAll();
+        if(willOpen){ sec.classList.add("open"); chev.textContent="▾"; }
+      }
+
+      head.addEventListener("click", toggle);
+      head.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      });
+      head.tabIndex=0; head.setAttribute("role","button");
+
+      if(idx===0){ sec.classList.add("open"); chev.textContent="▾"; }
+    });
+  }
+
+  function setActive(){
+    ["lensInformal","lensFormal","lensEngineering","lensPlatform"].forEach(function(id){
+      document.getElementById(id).classList.remove("active");
+    });
+    if(lens==="informal") document.getElementById("lensInformal").classList.add("active");
+    if(lens==="formal") document.getElementById("lensFormal").classList.add("active");
+    if(lens==="engineering") document.getElementById("lensEngineering").classList.add("active");
+    if(lens==="platform") document.getElementById("lensPlatform").classList.add("active");
+  }
+
+  document.getElementById("lensInformal").addEventListener("click", function(){ lens="informal"; setActive(); render(); });
+  document.getElementById("lensFormal").addEventListener("click", function(){ lens="formal"; setActive(); render(); });
+  document.getElementById("lensEngineering").addEventListener("click", function(){ lens="engineering"; setActive(); render(); });
+  document.getElementById("lensPlatform").addEventListener("click", function(){ lens="platform"; setActive(); render(); });
+
+  setActive();
+  render();
 
 })();
 </script>

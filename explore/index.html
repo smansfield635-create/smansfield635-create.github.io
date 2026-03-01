@@ -1,9 +1,26 @@
+<!-- TNT — /explore/index.html
+     EXPLORE · EXPANSION MAP
+     ROLE:
+       - Foundational expansion layer
+       - No product collapse
+       - No modal traps
+       - No lens switching (orientation layer)
+       - Trilingual (EN / 中文 / ES)
+       - Monument typography
+       - Single-open accordion
+       - State carry (lang/style/time/depth)
+     LOCKS:
+       - ui.css owns background
+       - branch.css owns geometry
+       - instruments.js canonical state
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Explore · Frontier</title>
+<title>Explore · Expansion Map</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -16,30 +33,40 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:90px;
-  --inkA:rgba(10,18,30,.94);
-  --inkB:rgba(5,9,14,.98);
-  --gold:rgba(212,175,55,.55);
-  --opal:rgba(210,190,255,.14);
-  --red:rgba(255,80,80,.16);
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --stroke:rgba(255,255,255,.12);
+  --mut:rgba(255,255,255,.85);
+  --mut2:rgba(255,255,255,.72);
+  --gold:rgba(212,175,55,.45);
 }
 
 .page{
   width:min(1200px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH)+20px);
+  padding:90px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
   gap:18px;
 }
 
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;
+}
+
 .header{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:26px;
-  padding:22px 24px;
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  padding:28px 30px;
   background:
-    radial-gradient(circle at 20% 20%, var(--opal), transparent 65%),
-    radial-gradient(circle at 80% 80%, var(--red), transparent 70%),
-    linear-gradient(160deg,var(--inkA),var(--inkB));
+    radial-gradient(circle at 20% 20%, rgba(212,175,55,.08), transparent 70%),
+    radial-gradient(circle at 80% 60%, rgba(255,60,60,.06), transparent 70%),
+    rgba(0,0,0,.18);
   box-shadow:0 40px 140px rgba(0,0,0,.65);
 }
 
@@ -47,182 +74,225 @@ body::before,body::after{pointer-events:none!important}
   font-size:12px;
   letter-spacing:6px;
   text-transform:uppercase;
-  opacity:.70;
-  margin:0 0 10px;
+  opacity:.6;
+  margin:0 0 14px;
 }
 
 .t{
   font-size:40px;
-  font-weight:950;
-  letter-spacing:1px;
-  margin:0 0 14px;
+  font-weight:900;
+  letter-spacing:.6px;
+  margin:0 0 18px;
 }
 
 .s{
   font-size:18px;
-  line-height:1.65;
-  opacity:.92;
-  max-width:980px;
+  line-height:1.7;
+  color:var(--mut);
+  margin:0;
+  max-width:1000px;
 }
 
 .accordion{
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:14px;
 }
 
-.panel{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:24px;
+.block{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  background:linear-gradient(145deg, var(--inkA), var(--inkB));
   overflow:hidden;
-  background:linear-gradient(145deg,rgba(17,22,28,.90),rgba(10,14,20,.96));
-  box-shadow:0 25px 90px rgba(0,0,0,.6);
 }
 
-.panelHead{
-  padding:18px 20px;
+.head{
+  padding:22px 26px;
   cursor:pointer;
-  font-weight:900;
-  font-size:20px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:flex-start;
 }
 
-.panelBody{
+.title{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+
+.chev{
+  font-size:20px;
+  opacity:.6;
+}
+
+.body{
   display:none;
-  padding:20px;
+  padding:24px 28px 30px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.block.open .body{display:block}
+
+.p{
   font-size:17px;
   line-height:1.75;
-  opacity:.88;
+  color:var(--mut2);
+  margin:0 0 18px;
 }
 
-.panel.open .panelBody{display:block}
-
-.actions{
-  margin-top:20px;
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-
-.actions .btn{
-  padding:12px 18px;
+.jump{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 18px;
   border-radius:999px;
+  border:1px solid var(--gold);
+  font-weight:700;
 }
 
 .dock{
   position:fixed;
   left:50%;
-  bottom:12px;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
+  z-index:220;
   width:min(1000px,94vw);
+  padding:12px;
+  border-radius:24px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
-  padding:12px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.30);
-  backdrop-filter:blur(12px);
 }
-.dock .btn{padding:12px 14px;border-radius:999px}
+.dock .btn{width:100%;border-radius:999px;padding:10px 0}
+
 </style>
 </head>
 
 <body>
 
+<div class="top-left">
+  <a class="btn" id="btnHome" href="/home/">HOME</a>
+  <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
+</div>
+
 <div class="page">
 
   <div class="header">
-    <p class="k" id="hk">EXPLORE</p>
-    <h1 class="t" id="ht">THE FRONTIER IS STRUCTURED</h1>
-    <p class="s" id="hs">
-      What if the loudest claims of our time could be measured, mapped, and stabilized?  
-      What if infrastructure, risk, energy, governance, and software were not separate problems —  
-      but coordinates inside one geometry?
+    <p class="k" id="k">EXPLORE</p>
+    <h1 class="t" id="t">The Expansion Layer</h1>
+    <p class="s" id="s">
+      Every structure eventually reaches its boundary.
+      Explore is where we push past it — deliberately,
+      measurably, and without losing architectural coherence.
     </p>
   </div>
 
-  <div class="accordion" id="accordion">
-
-    <div class="panel">
-      <div class="panelHead">Energy & Industrial Systems <span>▸</span></div>
-      <div class="panelBody">
-        Industrial substitution. Waste-to-energy. Hydrogen recovery. Grid stabilization.  
-        Not as marketing claims — but as bounded, measurable systems.
-
-        <div class="actions">
-          <a class="btn" href="/explore/energy/">OPEN ENERGY</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panelHead">Urban & Resource Architecture <span>▸</span></div>
-      <div class="panelBody">
-        Closed-loop habitats. Water optimization. Urban OS.  
-        Integrated resource systems under measurable constraint.
-
-        <div class="actions">
-          <a class="btn" href="/explore/infrastructure/">OPEN INFRASTRUCTURE</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panelHead">Risk, Governance & Finance <span>▸</span></div>
-      <div class="panelBody">
-        Insurance models. Compliance mapping. Contract generation.  
-        Collapse prevention under institutional load.
-
-        <div class="actions">
-          <a class="btn" href="/explore/risk/">OPEN RISK</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="panelHead">Software & Core Engines <span>▸</span></div>
-      <div class="panelBody">
-        256-state lattice. UCI Engine. Dot.Grid. Registry backbone.  
-        The machine behind the structure.
-
-        <div class="actions">
-          <a class="btn" href="/products/software/">OPEN SOFTWARE</a>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <div class="accordion" id="accordion"></div>
 
 </div>
 
 <nav class="dock">
-  <a class="btn" href="/index.html">INDEX</a>
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
 </nav>
 
 <script>
 (function(){
-  var panels=document.querySelectorAll(".panel");
-  panels.forEach(function(p){
-    var head=p.querySelector(".panelHead");
-    var icon=head.querySelector("span");
-    head.addEventListener("click",function(){
-      var open=!p.classList.contains("open");
-      panels.forEach(function(x){
-        x.classList.remove("open");
-        x.querySelector("span").textContent="▸";
-      });
-      if(open){
-        p.classList.add("open");
-        icon.textContent="▾";
-      }
-    });
-  });
+
+var qs=new URLSearchParams(location.search);
+var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+if(!["en","zh","es"].includes(lang)) lang="en";
+localStorage.setItem("gd_lang",lang);
+
+function q(){
+ return "?lang="+encodeURIComponent(lang);
+}
+
+function wire(id,path){
+ var el=document.getElementById(id);
+ if(el) el.href=path+q();
+}
+
+wire("btnHome","/home/");
+wire("btnProducts","/products/");
+wire("dockIndex","/index.html");
+wire("dockLaws","/laws/");
+wire("dockGauges","/gauges/");
+wire("dockDoor","/door/");
+
+document.getElementById("btnEN").onclick=function(){location.href=location.pathname+"?lang=en";};
+document.getElementById("btnZH").onclick=function(){location.href=location.pathname+"?lang=zh";};
+document.getElementById("btnES").onclick=function(){location.href=location.pathname+"?lang=es";};
+
+var COPY={
+ en:{
+  head:"The Expansion Layer",
+  desc:"Every structure eventually reaches its boundary. Explore is where we push past it — deliberately, measurably, and without losing architectural coherence.",
+  blocks:[
+   {t:"Frontier Systems",p:"Water, Waste, Energy, Habitat, Urban OS. These are not concepts — they are structured deployment visions built on measurable substrate logic.",link:"/explore/frontier/"},
+   {t:"Economic & Risk Architecture",p:"Finance, Insurance, Compliance, Contracts, Regulatory Mapping. Expansion requires stable economic alignment.",link:"/explore/economic/"},
+   {t:"Infrastructure Substitution",p:"Industrial replacement systems that operate within constraint law and deployment gating.",link:"/explore/infrastructure/"},
+   {t:"Applied Coherence Models",p:"Where lattice structure meets real-world systems. Measurable, bounded, scalable.",link:"/explore/models/"}
+  ]
+ },
+ zh:{
+  head:"扩展层",
+  desc:"每个结构都会触及边界。Explore 是我们有意识、可测量地突破边界的地方，同时保持架构一致性。",
+  blocks:[
+   {t:"前沿系统",p:"水、废弃物、能源、栖息地、城市操作系统。这不是概念，而是基于可测逻辑的部署愿景。",link:"/explore/frontier/"},
+   {t:"经济与风险架构",p:"金融、保险、合规、合同、监管映射。扩展必须与经济结构一致。",link:"/explore/economic/"},
+   {t:"基础设施替代",p:"在约束法则下运行的工业替代系统。",link:"/explore/infrastructure/"},
+   {t:"应用一致性模型",p:"晶格结构与现实系统结合。可测量、可扩展。",link:"/explore/models/"}
+  ]
+ },
+ es:{
+  head:"Capa de Expansión",
+  desc:"Toda estructura alcanza su límite. Explore es donde lo empujamos — de forma deliberada y medible, sin perder coherencia arquitectónica.",
+  blocks:[
+   {t:"Sistemas Frontier",p:"Agua, Residuos, Energía, Hábitat, Sistema Urbano. No son conceptos; son visiones desplegables estructuradas.",link:"/explore/frontier/"},
+   {t:"Arquitectura Económica y de Riesgo",p:"Finanzas, Seguros, Cumplimiento, Contratos, Regulación. Escalar requiere alineación económica estable.",link:"/explore/economic/"},
+   {t:"Sustitución de Infraestructura",p:"Sistemas industriales de reemplazo bajo leyes de restricción.",link:"/explore/infrastructure/"},
+   {t:"Modelos Aplicados de Coherencia",p:"Donde la estructura de red se encuentra con sistemas reales. Medible y escalable.",link:"/explore/models/"}
+  ]
+ }
+};
+
+var C=COPY[lang];
+document.getElementById("t").textContent=C.head;
+document.getElementById("s").textContent=C.desc;
+
+var acc=document.getElementById("accordion");
+
+C.blocks.forEach(function(b,i){
+ var block=document.createElement("div");
+ block.className="block";
+ var head=document.createElement("div");
+ head.className="head";
+ head.innerHTML='<div class="title">'+b.t+'</div><div class="chev">▸</div>';
+ var body=document.createElement("div");
+ body.className="body";
+ body.innerHTML='<p class="p">'+b.p+'</p><a class="jump" href="'+b.link+q()+'">ENTER</a>';
+
+ head.onclick=function(){
+  var openNow=!block.classList.contains("open");
+  document.querySelectorAll(".block").forEach(function(x){x.classList.remove("open");});
+  block.classList.toggle("open",openNow);
+ };
+
+ block.appendChild(head);
+ block.appendChild(body);
+ acc.appendChild(block);
+});
+
 })();
 </script>
 

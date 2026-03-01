@@ -1,15 +1,11 @@
 <!-- TNT — /explore/water/index.html
-     EXPLORE · WATER (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES) · SINGLE-OPEN ACCORDION · NO MODALS
-     PURPOSE:
-       - Express the real water problem (loss, contamination, blind routing)
-       - Express the posture (inventory-first, routing-first, containment-first)
-       - Route cleanly to Water Product + Urban Resource OS + Laws/Gauges
-     RULES:
-       - No lenses here (orientation layer)
-       - Monument typography, dense via accordion
-       - No html/body background styling
+     EXPLORE · WATER (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES)
+     STYLE:
+       - Monument density
+       - Single-open accordion
+       - No lenses (orientation layer)
        - No modal traps
-       - Canon state carry (lang/style/time/depth)
+       - State carry
 -->
 
 <!doctype html>
@@ -34,36 +30,30 @@ body::before,body::after{pointer-events:none!important}
   --inkB:rgba(5,9,14,.98);
   --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
-  --blueA:rgba(90,210,255,.18);
+  --blueA:rgba(90,160,255,.12);
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
   --mut:rgba(255,255,255,.80);
   --txt:rgba(255,255,255,.92);
 }
 
 .top{
   position:fixed;left:16px;right:16px;top:16px;
-  z-index:240;
-  display:flex;justify-content:space-between;gap:12px;
+  z-index:240;display:flex;justify-content:space-between;
   pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;white-space:nowrap;pointer-events:auto;
-}
+.top .left,.top .right{display:flex;gap:10px;white-space:nowrap;pointer-events:auto}
 
 .page{
   width:min(1200px,94vw);
   margin:0 auto;
   padding:86px 0 calc(var(--dockH)+18px);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+  display:flex;flex-direction:column;gap:14px;
 }
 
 .hero{
   border:1px solid var(--stroke);
   border-radius:28px;
-  padding:20px 22px;
+  padding:22px;
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 80% 30%, var(--opalB), transparent 66%),
@@ -73,15 +63,14 @@ body::before,body::after{pointer-events:none!important}
 }
 
 .k{margin:0 0 10px;font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.72}
-.h1{margin:0 0 12px;font-size:40px;font-weight:950;line-height:1.08}
-.lede{margin:0;font-size:18px;line-height:1.70;color:var(--txt)}
-.rule{margin-top:14px;border-radius:18px;border:1px solid var(--stroke2);background:rgba(0,0,0,.16);padding:12px 14px;font-size:13.5px;color:var(--mut)}
+.h1{margin:0 0 14px;font-size:40px;font-weight:950;line-height:1.08}
+.lede{margin:0;font-size:18px;line-height:1.7;color:var(--txt)}
+.rule{margin-top:14px;border:1px solid var(--stroke);border-radius:18px;padding:12px 14px;background:rgba(0,0,0,.16);font-size:13.5px;color:var(--mut)}
 
-.band{padding:12px 14px;border-radius:18px;border:1px solid var(--stroke2);background:rgba(0,0,0,.14);font-weight:950}
+.band{padding:12px 14px;border-radius:18px;border:1px solid var(--stroke);background:rgba(0,0,0,.14);font-weight:950}
 
 .accordion{display:flex;flex-direction:column;gap:12px}
-
-.panel{border:1px solid rgba(255,255,255,.10);border-radius:24px;overflow:hidden;background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));}
+.panel{border:1px solid var(--stroke);border-radius:24px;background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));overflow:hidden}
 .pHead{padding:18px;display:flex;justify-content:space-between;cursor:pointer}
 .pTitle{font-size:20px;font-weight:950}
 .pSub{margin-top:8px;font-size:14px;opacity:.82}
@@ -96,7 +85,16 @@ body::before,body::after{pointer-events:none!important}
 
 .actions{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
 
-.dock{position:fixed;left:50%;bottom:max(10px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:220;width:min(1000px,94vw);padding:10px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.28);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;width:min(1000px,94vw);
+  padding:10px;border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
 .dock .btn{width:100%;padding:12px;border-radius:999px}
 
 @media(max-width:520px){:root{--dockH:104px}.dock{grid-template-columns:repeat(3,1fr)}}
@@ -122,14 +120,14 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="hero">
     <p class="k" id="hk">EXPLORE · WATER</p>
-    <h1 class="h1" id="ht">WHY IS CLEAN WATER STILL FRAGILE?</h1>
+    <h1 class="h1" id="ht">WHAT HAPPENS WHEN WATER IS TREATED AS WASTE?</h1>
     <p class="lede" id="hs"></p>
     <div class="rule" id="rule"></div>
   </div>
 
   <div class="band" id="band"></div>
 
-  <div class="accordion" id="acc">
+  <div class="accordion">
 
     <div class="panel">
       <div class="pHead" role="button" tabindex="0">
@@ -144,8 +142,8 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b1b"></p>
         <ul class="ul" id="b1ul"></ul>
         <div class="actions">
-          <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
           <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+          <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
         </div>
       </div>
     </div>
@@ -163,8 +161,8 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b2b"></p>
         <ul class="ul" id="b2ul"></ul>
         <div class="actions">
-          <a class="btn" id="goWater" href="/products/water/">OPEN WATER PRODUCT</a>
-          <a class="btn" id="goUros" href="/explore/frontier/vision/urban-resource-os/">OPEN URBAN RESOURCE OS</a>
+          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
+          <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
         </div>
       </div>
     </div>
@@ -188,15 +186,8 @@ body::before,body::after{pointer-events:none!important}
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang);
-  }
-
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
+  function q(){ return "?lang="+encodeURIComponent(lang); }
+  function wire(id,path){var el=document.getElementById(id);if(el)el.href=path+q();}
   wire("btnBack","/explore/");
   wire("btnDoor","/door/");
   wire("btnExit","/index.html");
@@ -204,123 +195,106 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
-  wire("goWater","/products/water/");
-  wire("goUros","/explore/frontier/vision/urban-resource-os/");
+  wire("goVision","/explore/frontier/vision/");
+  wire("goProducts","/products/");
+  wire("goLaws","/laws/");
+  wire("goGauges","/gauges/");
 
   var COPY={
     en:{
       hk:"EXPLORE · WATER",
-      ht:"WHY IS CLEAN WATER STILL FRAGILE?",
-      hs:"If water is life, why is clean water still unstable? Why do we lose it in leaks, contaminate it in routing, and politicize it in crisis?",
-      rule:"Boundary: Orientation surface. It frames the water problem and posture. Proof lives in Laws and Gauges.",
+      ht:"WHAT HAPPENS WHEN WATER IS TREATED AS WASTE?",
+      hs:"Water is not a disposal stream. It is a carrier of nutrients, energy, and risk. When we fail to classify and route it, we amplify contamination and lose recoverable value.",
+      rule:"Boundary: Orientation surface. Frames water risk and routing posture. Measurement and enforcement live in Gauges and Laws.",
       band:"WATER SYSTEM MAP",
-      t1:"The real water problem",
-      s1:"Loss, contamination, blind routing.",
-      b1a:"Water systems are often reactive. We measure contamination after exposure. We repair leaks after loss. We regulate after crisis.",
-      b1b:"The deeper problem is routing intelligence. Without full inventory and path visibility, treatment becomes guesswork instead of design.",
+      t1:"The water risk problem",
+      s1:"Contamination, loss, and invisible coupling.",
+      b1a:"Water systems fail quietly. Pipes corrode, nutrients leak, contaminants travel across invisible networks. By the time damage is visible, exposure has already multiplied.",
+      b1b:"The real issue is coupling: water, energy, waste, and urban systems are linked. A failure in one can cascade into others.",
       b1ul:[
-        "Unknown inventory → unstable routing.",
-        "Fragmented governance → slow correction.",
-        "No replayable data → no long-term trust.",
-        "Crisis cycles replace system discipline."
+        "Nutrient loss through unmanaged discharge.",
+        "Chemical exposure amplified by mixing.",
+        "Infrastructure fatigue hidden until failure.",
+        "Carbon + energy costs embedded in treatment loops."
       ],
-      t2:"The posture: inventory first, routing first",
-      s2:"Treat water as a measurable system, not an emergency.",
-      b2a:"When water is mapped as inventory—flow, pressure, contamination bands, reuse loops—the argument fades and engineering takes over.",
-      b2b:"Urban Resource OS becomes the backbone: classify inputs, segment flows, route intelligently, contain risk.",
+      t2:"The posture: controlled circulation",
+      s2:"Measure → classify → route → reuse → protect.",
+      b2a:"The solution is not to ‘clean harder’ but to classify precisely and route intelligently. Water must be treated as a circulating asset, not a sink.",
+      b2b:"Urban Resource OS and SHIMMER provide the routing framework: keep nutrients recoverable, contain risk, and convert loss into measurable value.",
       b2ul:[
-        "Measure before claim.",
-        "Segment before scale.",
-        "Contain before expand.",
-        "Route proof to Laws, signals to Gauges."
+        "Real-time measurement across nodes.",
+        "Segregation before mixing.",
+        "Energy-aware treatment pathways.",
+        "Carbon + nutrient retention strategies."
       ]
     },
     zh:{
       hk:"探索 · 水",
-      ht:"为什么清洁水仍然脆弱？",
-      hs:"水是生命，为什么清洁水系统仍然不稳定？为什么泄漏、污染与危机总在重复？",
-      rule:"边界：此页为导览。问题与姿态在此说明。证明在法则与量规中。",
+      ht:"当水被当作废弃物时会发生什么？",
+      hs:"水不是处置流，而是营养、能量与风险的载体。分类与路由失败，会放大污染并损失可回收价值。",
+      rule:"边界：导览层。风险与姿态在此说明。测量与执行在量规与法则中。",
       band:"水系统地图",
-      t1:"真正的问题",
-      s1:"流失、污染、盲路由。",
-      b1a:"水系统往往是事后反应：污染后才检测，泄漏后才修补，危机后才监管。",
-      b1b:"更深层问题是缺乏路由智能。没有完整库存与路径可视化，处理变成猜测。",
-      b1ul:["库存未知→路由不稳。","治理碎片化→修正缓慢。","无可回放数据→无长期信任。","危机循环取代系统纪律。"],
-      t2:"姿态：库存优先，路由优先",
-      s2:"把水当作可测系统，而非紧急事件。",
-      b2a:"当水被当作库存来映射——流量、压力、污染区间、回用循环——争论退场，工程接管。",
-      b2b:"城市资源OS成为主干：分类输入、分段流动、智能路由、风险隔离。",
-      b2ul:["先测量，再主张。","先分段，再扩张。","先隔离，再扩展。","证明去法则，信号去量规。"]
+      t1:"水风险问题",
+      s1:"污染、流失与隐性耦合。",
+      b1a:"水系统往往静默失败：管网腐蚀、营养流失、污染扩散。可见时，暴露已倍增。",
+      b1b:"核心在耦合：水、能源、废弃物与城市系统相连，一处失误可能级联。",
+      b1ul:["营养随排放流失。","混合放大化学暴露。","基础设施疲劳难以察觉。","处理循环中的碳与能耗隐性增加。"],
+      t2:"姿态：受控循环",
+      s2:"测量→分类→路由→再利用→保护。",
+      b2a:"解决不是更用力“清洁”，而是更精确分类与更智能路由。水应被视为循环资产。",
+      b2b:"Urban Resource OS 与 SHIMMER 提供路由框架：保留营养、控制风险、把损失转化为可测价值。",
+      b2ul:["节点实时测量。","混合前分离。","能耗感知处理路径。","碳与营养保留策略。"]
     },
     es:{
       hk:"EXPLORAR · AGUA",
-      ht:"¿POR QUÉ EL AGUA LIMPIA SIGUE SIENDO FRÁGIL?",
-      hs:"Si el agua es vida, ¿por qué los sistemas de agua limpia siguen siendo inestables?",
-      rule:"Límite: superficie de orientación. Problema y postura aquí. Prueba en Leyes y Medidores.",
+      ht:"¿QUÉ PASA CUANDO EL AGUA SE TRATA COMO RESIDUO?",
+      hs:"El agua no es un flujo de descarte. Es portadora de nutrientes, energía y riesgo. Fallar en clasificar y rutear amplifica contaminación y pierde valor recuperable.",
+      rule:"Límite: superficie de orientación. Riesgo y postura aquí. Medición y aplicación en Leyes y Medidores.",
       band:"MAPA SISTEMA AGUA",
-      t1:"El problema real",
-      s1:"Pérdida, contaminación, ruteo ciego.",
-      b1a:"Los sistemas de agua son reactivos: medimos después del daño, regulamos después de la crisis.",
-      b1b:"El problema profundo es falta de ruteo inteligente. Sin inventario completo y visibilidad de flujo, el tratamiento es adivinanza.",
-      b1ul:["Inventario desconocido → ruteo inestable.","Gobernanza fragmentada → corrección lenta.","Sin datos replayables → sin confianza.","Crisis reemplaza disciplina."],
-      t2:"Postura: inventario primero",
-      s2:"Tratar el agua como sistema medible.",
-      b2a:"Cuando el agua se mapea como inventario—flujo, presión, contaminación—la discusión baja y la ingeniería sube.",
-      b2b:"Urban Resource OS actúa como columna vertebral: clasificar, segmentar, rutear, contener.",
-      b2ul:["Medir antes de afirmar.","Segmentar antes de escalar.","Contener antes de expandir.","Prueba→Leyes, señales→Medidores."]
+      t1:"El problema del riesgo hídrico",
+      s1:"Contaminación, pérdida y acoplamiento invisible.",
+      b1a:"Los sistemas fallan en silencio: corrosión, fugas de nutrientes, transporte de contaminantes. Cuando es visible, la exposición ya se multiplicó.",
+      b1b:"El problema real es el acoplamiento: agua, energía y residuos están conectados; un fallo puede escalar.",
+      b1ul:["Pérdida de nutrientes.","Exposición química amplificada.","Fatiga de infraestructura.","Costos energéticos ocultos."],
+      t2:"La postura: circulación controlada",
+      s2:"Medir → clasificar → rutear → reutilizar → proteger.",
+      b2a:"La solución no es limpiar más fuerte sino clasificar mejor y rutear inteligentemente. El agua es activo circulante, no sumidero.",
+      b2b:"Urban Resource OS y SHIMMER ofrecen el marco: retener nutrientes, contener riesgo y convertir pérdidas en valor medible.",
+      b2ul:["Medición en tiempo real.","Segregación previa.","Tratamiento consciente de energía.","Retención de carbono y nutrientes."]
     }
   };
 
-  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+  function T(){return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;}
   var P=T();
   function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+  function fillUL(id,arr){var ul=document.getElementById(id);ul.innerHTML="";arr.forEach(function(x){var li=document.createElement("li");li.textContent=x;ul.appendChild(li);});}
 
   set("hk",P.hk);
   set("ht",P.ht);
   set("hs",P.hs);
   set("rule",P.rule);
   set("band",P.band);
-
   set("t1",P.t1);set("s1",P.s1);
   set("b1a",P.b1a);set("b1b",P.b1b);
+  fillUL("b1ul",P.b1ul);
   set("t2",P.t2);set("s2",P.s2);
   set("b2a",P.b2a);set("b2b",P.b2b);
-
-  function fillUL(id,arr){
-    var ul=document.getElementById(id);
-    ul.innerHTML="";
-    arr.forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      ul.appendChild(li);
-    });
-  }
-  fillUL("b1ul",P.b1ul);
   fillUL("b2ul",P.b2ul);
 
-  // accordion
   var panels=document.querySelectorAll(".panel");
   panels.forEach(function(p){
     var head=p.querySelector(".pHead");
     var chev=p.querySelector(".pChev");
     function toggle(){
       var open=!p.classList.contains("open");
-      panels.forEach(function(x){
-        x.classList.remove("open");
-        x.querySelector(".pChev").textContent="▸";
-      });
-      if(open){
-        p.classList.add("open");
-        chev.textContent="▾";
-      }
+      panels.forEach(function(x){x.classList.remove("open");x.querySelector(".pChev").textContent="▸";});
+      if(open){p.classList.add("open");chev.textContent="▾";}
     }
     head.addEventListener("click",toggle);
+    head.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
   });
-
-  if(panels[0]){
-    panels[0].classList.add("open");
-    panels[0].querySelector(".pChev").textContent="▾";
-  }
+  panels[0].classList.add("open");
+  panels[0].querySelector(".pChev").textContent="▾";
 
 })();
 </script>

@@ -1,19 +1,17 @@
 <!-- TNT — /products/index.html
      PRODUCTS · MASTER INDEX (PRODUCTS + SERVICES + SOFTWARE + SYSTEMS) · 3 LANG (EN/中文/ES)
-     FIX (NO DRIFT):
-       - Adds missing 4th variable: SERVICES
-       - Keeps existing layout + accordion (no modals, no overlays)
-       - Removes any “catch-all to Coherence Diagnostic” behavior by routing:
-           • Coherence Diagnostic only from its own row
-           • Software/System sub-items route to /products/software/ with ?focus=
-       - GH Pages safe language reload: reload SAME pathname (no hard /products/ redirect)
-       - Fixes typo GAUGGES
-     RULES:
-       - No dead links. No 404s: if a page may not exist yet, it routes to a known hub.
-       - Coherence Diagnostic appears ONCE.
-       - Uses ui.css + branch.css + instruments.js
+     UPGRADES (NO DRIFT):
+       - More accurate, fuller product map (includes future products WITHOUT 404)
+       - Every row has a real, safe route (no dead links)
+       - Adds diamond color swatch next to each title (in addition to color bar)
+       - Keeps accordion (no modals, no overlays)
+       - Coherence Diagnostic appears ONCE
+       - Software/System sub-items route to /products/software/ with ?focus=
+       - GH Pages-safe language reload (reload SAME pathname)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background styling
        - State carry: lang/style/time/depth
-       - Page-level language toggle only (top-right)
 -->
 
 <!doctype html>
@@ -98,7 +96,17 @@ a{color:inherit;text-decoration:none}
 }
 .stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
 .stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stackTitle{
+  font-weight:950;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:flex;align-items:center;gap:10px;
+}
+.sw{
+  width:12px;height:12px;transform:rotate(45deg);
+  border-radius:4px;background:var(--domc);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:2px;
+}
 .stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
 .stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 .stackBody{
@@ -294,93 +302,133 @@ a{color:inherit;text-decoration:none}
   }
   renderHeader();
 
-  // ===== ROUTE LOCK (NO 404) =====
-  // If a dedicated page does not exist yet, route to the closest existing hub.
+  // ===== SAFE ROUTES (NO 404) =====
+  // Future products route to Frontier (Vision) with topic param.
+  function frontier(topic){
+    return "/explore/frontier/?topic="+encodeURIComponent(topic||"vision");
+  }
+
   var ROUTE = {
     energy: "/products/energy/",
     education: "/products/education/",
     software: "/products/software/",
-    diag: "/products/",
+    diagnostic: "/products/",
 
+    // future product shells (safe)
+    water: frontier("water"),
+    waste: frontier("waste"),
+    shmr: frontier("SHIMMER"),     // SKYWAY HYBRID MOLECULAR REFINERY (SHMR) — SHIMMER acronym surface
+    climate: frontier("climate"),
+    habitat: frontier("habitat"),
+
+    // services (safe)
+    advisory: "/laws/",
+    audit: "/gauges/",
+    integration: "/products/software/",
+    training: "/products/education/",
+
+    // software & systems (safe)
     uci: "/products/software/?focus=uci",
     dotgrid: "/products/software/?focus=dotgrid",
     ssg: "/products/software/?focus=ssg",
     registry: "/products/software/?focus=registry",
-
-    // services (safe hubs)
-    advisory: "/laws/",
-    audit: "/gauges/",
-    integration: "/products/software/",
-    training: "/products/education/"
+    adoption: "/products/software/?focus=adoption"
   };
 
-  // ===== DATA =====
+  // ===== DATA (CURRENT + FUTURE SHELLS) =====
+  // NOTE: Coherence Diagnostic appears ONCE.
   var PRODUCTS = [
     { c:"#F59E0B",
       t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
-      s:{en:"Industrial posture only. No gain claims.",zh:"仅工业姿态。无增益主张。",es:"Solo postura industrial. Sin ganancias."},
-      p:{en:"Industrial thermal substitution surfaces. Frontier claims stay as readiness doctrine under Laws.",
-         zh:"工业热替代执行面。前沿主张仅作为法则下的就绪教义。",
-         es:"Superficies de sustitución térmica industrial. La frontera queda como doctrina de preparación."},
+      s:{en:"Industrial posture (C). No gain claims.",zh:"工业姿态（C）。无增益主张。",es:"Postura industrial (C). Sin ganancias."},
+      p:{en:"Thermal substitution surfaces with containment-first interfaces and staged discipline.",
+         zh:"热替代执行面：隔离优先接口 + 阶段化纪律。",
+         es:"Superficies de sustitución térmica con contención primero y disciplina por fases."},
       href:ROUTE.energy
     },
     { c:"#0EA5E9",
       t:{en:"Education (1001 Words)",zh:"教育（1001词）",es:"Educación (1001 Palabras)"},
-      s:{en:"Traversal-first learning and mastery tracks.",zh:"遍历学习与掌握路径。",es:"Aprendizaje por recorrido y dominio."},
-      p:{en:"Programs, language core, training, and verification tiers packaged as an adoptable learning surface.",
-         zh:"课程、语言核心、训练与验证分层，打包为可采纳学习面。",
-         es:"Programas, núcleo de lenguaje, entrenamiento y verificación en una superficie adoptable."},
+      s:{en:"Traversal-first learning with checkpoints.",zh:"遍历学习 + 检查点。",es:"Aprendizaje por recorrido con checkpoints."},
+      p:{en:"Programs, language core, training, and verification packaged as an adoptable learning surface.",
+         zh:"课程、语言核心、训练与验证：打包为可采纳学习面。",
+         es:"Programas, núcleo de lenguaje, formación y verificación en una superficie adoptable."},
       href:ROUTE.education
     },
     { c:"#93C5FD",
       t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
       s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
-      p:{en:"Single entry for diagnostics. Other products route to their own hubs (no catch-all).",
-         zh:"诊断唯一入口。其他产品各自有独立入口（不做总汇）。",
-         es:"Entrada única de diagnóstico. Otros productos tienen su propio hub (sin destino universal)."},
-      href:ROUTE.diag
+      p:{en:"Diagnostics only. Not a catch-all destination. Proof posture lives under Laws; measured outputs live under Gauges.",
+         zh:"仅诊断，不做总汇。证明姿态在法则；测量输出在量规。",
+         es:"Solo diagnóstico, no destino universal. Prueba en Leyes; medición en Medidores."},
+      href:ROUTE.diagnostic
     },
     { c:"#60A5FA",
       t:{en:"Software Hub",zh:"软件枢纽",es:"Hub de Software"},
-      s:{en:"SSG, .DOTGrid, UCI, Registry.",zh:"SSG、.DOTGrid、UCI、登记。",es:"SSG, .DOTGrid, UCI, Registro."},
-      p:{en:"Software surfaces are separated so routing never collapses into one page.",
-         zh:"软件执行面分离，路由不再坍缩到单一页面。",
-         es:"Las superficies de software están separadas para que el enrutamiento no colapse en una sola página."},
+      s:{en:"SSG, .DOTGrid, UCI, Registry (separated routes).",zh:"SSG、.DOTGrid、UCI、登记（路由分离）。",es:"SSG, .DOTGrid, UCI, Registro (rutas separadas)."},
+      p:{en:"Software surfaces are separated so routing never collapses into the wrong page.",
+         zh:"软件执行面彼此分离，避免路由坍缩到错误页面。",
+         es:"Superficies separadas para que el enrutamiento no colapse en la página equivocada."},
       href:ROUTE.software
+    },
+
+    /* FUTURE PRODUCT SHELLS (safe: Frontier vision topics) */
+    { c:"#34D399",
+      t:{en:"Water (Vision Shell)",zh:"水（愿景壳）",es:"Agua (Shell de visión)"},
+      s:{en:"Routing + recovery + reuse surfaces.",zh:"路由+回收+复用执行面。",es:"Ruteo + recuperación + reutilización."},
+      p:{en:"Future product shell: water routing under constraint. This link is safe and will never 404 (routes to Frontier).",
+         zh:"未来产品壳：约束下的水路由。本链接安全不 404（跳到前沿）。",
+         es:"Shell futuro: ruteo de agua bajo restricción. Enlace seguro (va a Frontera)."},
+      href:ROUTE.water
+    },
+    { c:"#A3A3A3",
+      t:{en:"Waste (Vision Shell)",zh:"废弃物（愿景壳）",es:"Residuos (Shell de visión)"},
+      s:{en:"Recovery-first, not combustion-first.",zh:"回收优先，不是燃烧优先。",es:"Recuperación primero, no combustión."},
+      p:{en:"Future product shell: heterogeneous routing and recovery. Safe link (Frontier).",
+         zh:"未来产品壳：异质流路由与回收。安全链接（前沿）。",
+         es:"Shell futuro: ruteo y recuperación heterogénea. Enlace seguro (Frontera)."},
+      href:ROUTE.waste
+    },
+    { c:"#D4AF37",
+      t:{en:"SHIMMER / SHMR (Vision Shell)",zh:"SHIMMER / SHMR（愿景壳）",es:"SHIMMER / SHMR (Shell de visión)"},
+      s:{en:"Hybrid molecular refinery routing model.",zh:"混合分子精炼路由模型。",es:"Modelo de ruteo de refinería molecular híbrida."},
+      p:{en:"Future product shell: Skyway Hybrid Molecular Refinery. Safe link (Frontier).",
+         zh:"未来产品壳：Skyway 混合分子精炼。安全链接（前沿）。",
+         es:"Shell futuro: Refinería Molecular Híbrida Skyway. Enlace seguro (Frontera)."},
+      href:ROUTE.shmr
     }
   ];
 
   var SERVICES = [
     { c:"#D4AF37",
       t:{en:"Advisory (Governance)",zh:"咨询（治理）",es:"Asesoría (Gobernanza)"},
-      s:{en:"Bounded posture + constraint-first guidance.",zh:"有界姿态 + 约束优先指导。",es:"Postura acotada + guía por restricciones."},
-      p:{en:"Services that translate doctrine into implementable decisions without inflating claims.",
-         zh:"把教义转为可执行决策的服务，不膨胀主张。",
-         es:"Servicios que convierten doctrina en decisiones ejecutables sin inflar afirmaciones."},
+      s:{en:"Constraint-first guidance.",zh:"约束优先指导。",es:"Guía por restricciones."},
+      p:{en:"Translate doctrine into decisions without inflating claims. Routes to Laws (safe).",
+         zh:"把教义转为决策，不膨胀主张。跳到法则（安全）。",
+         es:"Traduce doctrina a decisiones sin inflar afirmaciones. Va a Leyes (seguro)."},
       href:ROUTE.advisory
     },
     { c:"#60A5FA",
       t:{en:"Audit Support",zh:"审计支持",es:"Soporte de auditoría"},
-      s:{en:"Receipts, exports, and verification surfaces.",zh:"收据、导出与验证面。",es:"Recibos, exportaciones y verificación."},
-      p:{en:"Help packaging evidence outputs for review (without changing the underlying measurement rules).",
-         zh:"协助打包证据输出用于复核（不改变测量规则）。",
-         es:"Ayuda a empaquetar evidencia para revisión (sin cambiar reglas de medición)."},
+      s:{en:"Receipts + exports + review posture.",zh:"收据+导出+复核姿态。",es:"Recibos + exportación + revisión."},
+      p:{en:"Package evidence outputs for review without changing measurement rules. Routes to Gauges (safe).",
+         zh:"打包证据输出用于复核，不改测量规则。跳到量规（安全）。",
+         es:"Empaqueta evidencia para revisión sin cambiar reglas. Va a Medidores (seguro)."},
       href:ROUTE.audit
     },
     { c:"#93C5FD",
-      t:{en:"Integration (Software)",zh:"集成（软件）",es:"Integración (Software)"},
-      s:{en:"Routing, state carry, and instrumentation wiring.",zh:"路由、状态携带与仪器接线。",es:"Enrutamiento, estado e instrumentación."},
-      p:{en:"Services that wire platforms cleanly so pages never collapse into the wrong destination.",
-         zh:"把平台接线到正确目的地的服务，防止页面坍缩到错误页。",
-         es:"Servicios para cablear plataformas sin colapsar en destinos incorrectos."},
+      t:{en:"Integration (Software Wiring)",zh:"集成（软件接线）",es:"Integración (Cableado)"},
+      s:{en:"Routing, state carry, and page stability.",zh:"路由、状态携带与页面稳定。",es:"Rutas, estado y estabilidad."},
+      p:{en:"Wire platforms so pages don’t collapse into the wrong destination. Routes to Software Hub (safe).",
+         zh:"接线让页面不坍缩到错误目的地。跳到软件枢纽（安全）。",
+         es:"Cablea plataformas para evitar colapsos. Va a Hub de Software (seguro)."},
       href:ROUTE.integration
     },
     { c:"#0EA5E9",
       t:{en:"Training (Education)",zh:"训练（教育）",es:"Formación (Educación)"},
-      s:{en:"Masterclasses + repeatable routines.",zh:"大师课 + 可重复例程。",es:"Clases + rutinas repetibles."},
-      p:{en:"Teach the method so the system scales without drift.",
-         zh:"教授方法，使系统规模化而不漂移。",
-         es:"Enseña el método para escalar sin deriva."},
+      s:{en:"Masterclasses + routines + checkpoints.",zh:"大师课+例程+检查点。",es:"Clases + rutinas + checkpoints."},
+      p:{en:"Teach the method so the system scales without drift. Routes to Education (safe).",
+         zh:"教授方法，让系统规模化而不漂移。跳到教育（安全）。",
+         es:"Enseña el método para escalar sin deriva. Va a Educación (seguro)."},
       href:ROUTE.training
     }
   ];
@@ -388,35 +436,43 @@ a{color:inherit;text-decoration:none}
   var SYSTEMS = [
     { c:"#93C5FD",
       t:{en:"UCI Engine",zh:"UCI 引擎",es:"Motor UCI"},
-      s:{en:"Measurement and correlation core.",zh:"测量与相关核心。",es:"Núcleo de medición y correlación."},
-      p:{en:"Measurement core that feeds Gauges and verification layers (kept separate from product catalogs).",
-         zh:"测量核心：喂给量规与验证层（与产品目录分离）。",
-         es:"Núcleo de medición que alimenta Medidores y verificación (separado del catálogo)."},
+      s:{en:"Measurement + correlation core.",zh:"测量+相关核心。",es:"Núcleo de medición + correlación."},
+      p:{en:"Routes into Software Hub focus. Never routes into Diagnostic unless explicitly chosen.",
+         zh:"路由到软件枢纽聚焦。不再默认掉进诊断页。",
+         es:"Entra al Hub de Software con foco. No cae en diagnóstico salvo elección explícita."},
       href:ROUTE.uci
     },
     { c:"#D4AF37",
       t:{en:".DOTGrid",zh:".DOTGrid",es:".DOTGrid"},
-      s:{en:"256-state sweep interface.",zh:"256态扫掠界面。",es:"Interfaz de barrido 256-estados."},
-      p:{en:"Indexing + sweep surface. Routes to software without redirecting everything to Diagnostic.",
-         zh:"索引+扫掠执行面。路由到软件面，不把一切重定向到诊断。",
-         es:"Superficie de indexación + barrido. Enruta a software sin redirigir todo al diagnóstico."},
+      s:{en:"Index + sweep surface.",zh:"索引+扫掠执行面。",es:"Superficie de indexación + barrido."},
+      p:{en:"Routes into Software Hub focus (dotgrid).",
+         zh:"路由到软件枢纽聚焦（dotgrid）。",
+         es:"Entra al foco (dotgrid) del Hub de Software."},
       href:ROUTE.dotgrid
     },
     { c:"#A3A3A3",
       t:{en:"SSG",zh:"SSG",es:"SSG"},
       s:{en:"Constraint syntax geometry.",zh:"约束语法几何。",es:"Geometría de sintaxis por restricciones."},
-      p:{en:"Root execution geometry. Encoding and admissibility layers attach here.",
-         zh:"根执行几何。编码层与可采信层挂载于此。",
-         es:"Geometría raíz de ejecución. Aquí se conectan capas de codificación y admisibilidad."},
+      p:{en:"Routes into Software Hub focus (ssg).",
+         zh:"路由到软件枢纽聚焦（ssg）。",
+         es:"Entra al foco (ssg) del Hub de Software."},
       href:ROUTE.ssg
     },
     { c:"#334155",
       t:{en:"Registry",zh:"登记系统",es:"Registro"},
-      s:{en:"Status and verification surfaces.",zh:"状态与验证面。",es:"Estado y verificación."},
-      p:{en:"Lookupable status + reason codes. Verification stays separate from Diagnostic.",
-         zh:"可查询状态+原因码。验证与诊断分离。",
-         es:"Estado consultable + códigos de razón. Verificación separada del diagnóstico."},
+      s:{en:"Status + reason codes.",zh:"状态+原因码。",es:"Estado + códigos de razón."},
+      p:{en:"Routes into Software Hub focus (registry).",
+         zh:"路由到软件枢纽聚焦（registry）。",
+         es:"Entra al foco (registry) del Hub de Software."},
       href:ROUTE.registry
+    },
+    { c:"#F59E0B",
+      t:{en:"Adoption Ladder",zh:"采纳阶梯",es:"Escalera de adopción"},
+      s:{en:"Phase gates for safe scaling.",zh:"安全扩张的阶段闸门。",es:"Compuertas por fase para escalar."},
+      p:{en:"Routes into Software Hub focus (adoption).",
+         zh:"路由到软件枢纽聚焦（adoption）。",
+         es:"Entra al foco (adoption) del Hub de Software."},
+      href:ROUTE.adoption
     }
   ];
 
@@ -452,7 +508,16 @@ a{color:inherit;text-decoration:none}
 
     var title=document.createElement("div");
     title.className="stackTitle";
-    title.textContent=pick(item.t);
+
+    var sw=document.createElement("span");
+    sw.className="sw";
+    sw.style.background=item.c;
+
+    var label=document.createElement("span");
+    label.textContent=pick(item.t);
+
+    title.appendChild(sw);
+    title.appendChild(label);
 
     var sub=document.createElement("div");
     sub.className="stackSub";
@@ -485,8 +550,8 @@ a{color:inherit;text-decoration:none}
     open.className="btn";
     open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
     open.href = item.href + q();
-    acts.appendChild(open);
 
+    acts.appendChild(open);
     body.appendChild(p);
     body.appendChild(acts);
 
@@ -502,28 +567,22 @@ a{color:inherit;text-decoration:none}
     return row;
   }
 
-  // render lists
-  var listA=document.getElementById("listA");
-  var listS=document.getElementById("listS");
-  var listB=document.getElementById("listB");
+  function mount(listId, arr){
+    var list=document.getElementById(listId);
+    list.innerHTML="";
+    arr.forEach(function(it,i){
+      var el=makeRow(it);
+      list.appendChild(el);
+      if(i===0){
+        el.classList.add("open");
+        el.querySelector(".stackChevron").textContent="▾";
+      }
+    });
+  }
 
-  PRODUCTS.forEach(function(it,i){
-    var el=makeRow(it);
-    listA.appendChild(el);
-    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
-  });
-
-  SERVICES.forEach(function(it,i){
-    var el=makeRow(it);
-    listS.appendChild(el);
-    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
-  });
-
-  SYSTEMS.forEach(function(it,i){
-    var el=makeRow(it);
-    listB.appendChild(el);
-    if(i===0){ el.classList.add("open"); el.querySelector(".stackChevron").textContent="▾"; }
-  });
+  mount("listA", PRODUCTS);
+  mount("listS", SERVICES);
+  mount("listB", SYSTEMS);
 
 })();
 </script>

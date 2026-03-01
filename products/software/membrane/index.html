@@ -1,27 +1,18 @@
 <!-- TNT — /products/software/membrane/index.html
-     SOFTWARE · MEMBRANE (ENGINE ⇄ PLATFORM BOUNDARY)
-     PURPOSE:
-       - Declares the irreversible seam that prevents routing collapse and semantic bleed.
-       - This is NOT a product page and NOT doctrine; it is the contract between Engine and Platform.
-     FORMAT:
-       - Mobile-safe (NO modals, NO overlays, NO pointer traps)
-       - Single-open accordion (one opens, others close)
+     SOFTWARE · MEMBRANE
+     ROLE:
+       Boundary layer between:
+         - Engine / Platform
+         - Product / Vision
+         - Claim / Evidence
+     FEATURES:
        - 3 languages (EN / 中文 / ES)
-       - 4 lenses via TWO toggles (no new gd_* keys):
-           • MODE: ENGINEERING / PLATFORM  (URL param: mode=engineering|platform)
-           • STYLE: FORMAL / INFORMAL     (gd_style + URL param: style=formal|informal)
-     ROUTES:
-       - BACK  → /products/software/
-       - DOOR  → /door/
-       - EXIT  → /index.html
-       - DOCK  → HOME / PRODUCTS / SOFTWARE / LAWS / GAUGES
-     STATE:
-       - URL: lang/style/time/depth + mode
-       - LS:  gd_lang/gd_style/gd_time/gd_depth (NO new keys)
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns field (NO html/body background overrides)
-       - No inline onclick
+       - 4 lenses (Engineering / Platform × Formal / Informal)
+       - Single-open accordion
+       - Monument density
+       - State carry (lang/style/time/depth + mode)
+       - No modals
+       - Mobile safe
 -->
 
 <!doctype html>
@@ -42,38 +33,15 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:92px;
-
-  /* dark opal + red (no washed blue) */
   --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
-  --opalR:rgba(255,70,70,.10);
-
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-
+  --opalR:rgba(255,70,70,.14);
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --goldSoft:rgba(212,175,55,.35);
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.74);
-
-  --redLine:rgba(255,70,70,.55);
-  --redGlow:rgba(255,70,70,.22);
+  --mut:rgba(255,255,255,.86);
+  --redGlow:rgba(255,70,70,.25);
 }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
-
-/* page wrap */
+/* Layout */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
@@ -81,829 +49,184 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   flex-direction:column;
   gap:12px;
-  position:relative;
-  z-index:10;
 }
 
-/* header */
+/* Header */
 .header{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 28%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalR), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.24), rgba(0,0,0,.12));
+    radial-gradient(circle at 25% 20%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 75% 25%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 60% 90%, var(--opalR), transparent 64%);
+  padding:18px;
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:16px 16px 14px;
-  position:relative;
-  overflow:hidden;
+  box-shadow:0 28px 90px rgba(0,0,0,.55);
 }
-.header::before{
-  content:"";
-  position:absolute;left:-20%;right:-20%;top:-30%;
-  height:120%;
-  background:radial-gradient(circle at 50% 50%, rgba(255,70,70,.10), transparent 55%);
-  transform:rotate(-8deg);
-  pointer-events:none;
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;position:relative;z-index:1}
-.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.6px;position:relative;z-index:1}
-.s{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.55;max-width:980px;position:relative;z-index:1}
-.fine{margin-top:10px;font-size:12.25px;opacity:.74;line-height:1.45;color:var(--mut);position:relative;z-index:1}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75;margin:0 0 6px}
+.t{font-weight:950;font-size:30px;letter-spacing:.8px;margin:0}
+.s{margin-top:12px;font-size:14px;line-height:1.6;opacity:.9}
 
-/* selector row */
-.selector{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
-  position:relative;
-  z-index:1;
-}
-.pills{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.pill{
-  padding:10px 14px;
-  border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  color:#fff;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.90), 0 0 14px rgba(212,175,55,.16);
-}
-.pill.red.active{
-  border-color:rgba(255,90,90,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.90), 0 0 16px var(--redGlow);
-}
-
-/* band */
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
-}
-
-/* accordion rows */
+/* Accordion */
 .list{display:flex;flex-direction:column;gap:12px}
-
 .row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  background:linear-gradient(145deg, rgba(17,22,28,.9), rgba(11,15,20,.95));
+  box-shadow:0 16px 52px rgba(0,0,0,.6);
   overflow:hidden;
 }
 .head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;
-  padding:16px 16px;
+  padding:16px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  font-weight:950;
+  letter-spacing:.3px;
 }
-.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.sig{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:3px;
-}
-.bar{
-  width:6px;height:22px;border-radius:99px;background:var(--c);
-  box-shadow:0 0 18px rgba(0,0,0,.25);
-  flex:0 0 auto;margin-top:2px;
-}
-.tblock{min-width:0}
-.hd{
-  font-weight:950;letter-spacing:.25px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.sub{
-  margin-top:6px;
-  font-size:13px;
-  opacity:.82;
-  line-height:1.35;
-  max-width:92ch;
-  color:rgba(255,255,255,.84);
-}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-
 .body{
   display:none;
-  padding:16px 16px 16px;
+  padding:16px;
   border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
 .row.open .body{display:block}
 
 .p{
   margin:0;
-  color:rgba(255,255,255,.88);
-  line-height:1.70;
   font-size:14px;
+  line-height:1.7;
+  color:var(--mut);
 }
 .p + .p{margin-top:10px}
 
-.ul{
-  margin:12px 0 0 18px;
-  padding:0;
-  color:rgba(255,255,255,.82);
-  line-height:1.6;
-  font-size:13.5px;
-}
-.ul li{margin:6px 0}
-
-.callout{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 18% 30%, rgba(255,70,70,.10), transparent 62%),
-    linear-gradient(145deg, rgba(0,0,0,.16), rgba(0,0,0,.10));
-  color:rgba(255,255,255,.86);
-  font-size:12.75px;
-  line-height:1.5;
-}
-
-.actions{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;
-}
-.actions .btn{
-  padding:10px 12px;border-radius:999px;white-space:nowrap;
-}
-
-/* dock */
+/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:220;
   width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(5, minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:560px){
-  :root{--dockH:104px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-}
+.dock .btn{padding:10px;border-radius:999px}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="/products/software/">BACK</a>
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="page">
 
-  <div class="header" aria-label="Header">
-    <p class="k" id="hk">SOFTWARE</p>
-    <h1 class="t" id="ht">THE MEMBRANE</h1>
-    <p class="s" id="hs"></p>
-    <div class="fine" id="fine"></div>
-
-    <div class="selector" aria-label="Lens selectors">
-      <div class="pills" aria-label="Mode">
-        <button class="pill red active" id="pillEng" type="button">ENGINEERING</button>
-        <button class="pill red" id="pillPlat" type="button">PLATFORM</button>
-      </div>
-      <div class="pills" aria-label="Style">
-        <button class="pill active" id="pillInf" type="button">INFORMAL</button>
-        <button class="pill" id="pillFor" type="button">FORMAL</button>
-      </div>
-    </div>
+  <div class="header">
+    <p class="k">SOFTWARE</p>
+    <h1 class="t">THE MEMBRANE</h1>
+    <p class="s">
+      This is the boundary layer.  
+      The place where power is constrained.  
+      Where vision is filtered.  
+      Where claims become accountable.  
+    </p>
   </div>
 
-  <div class="band" id="band">MEMBRANE CONTRACT</div>
   <div class="list" id="list"></div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockSoftware" href="/products/software/">SOFTWARE</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/products/software/">SOFTWARE</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+  <a class="btn" href="/door/">DOOR</a>
 </nav>
 
 <script>
 (function(){
-  // ===== canonical state (no new gd_* keys) =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-  var mode  = qs.get("mode")  || "engineering"; // engineering|platform (URL ONLY)
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-  if(mode!=="engineering" && mode!=="platform") mode="engineering";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    var M=(over&&over.mode)?over.mode:mode;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D)+
-           "&mode="+encodeURIComponent(M);
-  }
-
-  function wire(id, path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
-  wire("btnBack","/products/software/");
-  wire("btnDoor","/door/");
-  wire("btnExit","/index.html");
-
-  wire("dockHome","/home/");
-  wire("dockProducts","/products/");
-  wire("dockSoftware","/products/software/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // ===== language toggle (reload same path) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // ===== pills =====
-  var pillEng=document.getElementById("pillEng");
-  var pillPlat=document.getElementById("pillPlat");
-  var pillInf=document.getElementById("pillInf");
-  var pillFor=document.getElementById("pillFor");
-
-  function paintPills(){
-    pillEng.classList.toggle("active", mode==="engineering");
-    pillPlat.classList.toggle("active", mode==="platform");
-    pillInf.classList.toggle("active", style==="informal");
-    pillFor.classList.toggle("active", style==="formal");
-  }
-
-  pillEng.addEventListener("click", function(){
-    mode="engineering";
-    history.replaceState({}, "", location.pathname + q());
-    paintPills(); render();
-  });
-  pillPlat.addEventListener("click", function(){
-    mode="platform";
-    history.replaceState({}, "", location.pathname + q());
-    paintPills(); render();
-  });
-  pillInf.addEventListener("click", function(){
-    style="informal";
-    try{ localStorage.setItem("gd_style","informal"); }catch(e){}
-    history.replaceState({}, "", location.pathname + q());
-    paintPills(); render();
-  });
-  pillFor.addEventListener("click", function(){
-    style="formal";
-    try{ localStorage.setItem("gd_style","formal"); }catch(e){}
-    history.replaceState({}, "", location.pathname + q());
-    paintPills(); render();
-  });
-
-  // ===== i18n header =====
-  function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
-
-  function headerCopy(){
-    if(lang==="zh"){
-      setText("hk","软件");
-      setText("ht","膜（边界）");
-      setText("hs","这是防止坍缩的结构缝：引擎做计算，平台做呈现，互不越界。");
-      setText("fine","提示：这不是产品说明，也不是教义。它是“引擎⇄平台”的不可逆合同。");
-      setText("band","膜合同");
-      setText("btnBack","返回");
-      setText("btnDoor","门");
-      setText("btnExit","退出");
-      setText("dockHome","主页");
-      setText("dockProducts","产品");
-      setText("dockSoftware","软件");
-      setText("dockLaws","法则");
-      setText("dockGauges","量规");
-      pillEng.textContent="工程";
-      pillPlat.textContent="平台";
-      pillInf.textContent="通俗";
-      pillFor.textContent="正式";
-    }else if(lang==="es"){
-      setText("hk","SOFTWARE");
-      setText("ht","LA MEMBRANA");
-      setText("hs","La costura que evita el colapso: el motor calcula, la plataforma presenta, y no se cruzan.");
-      setText("fine","Nota: esto no es marketing ni doctrina. Es el contrato irreversible Motor⇄Plataforma.");
-      setText("band","CONTRATO DE MEMBRANA");
-      setText("btnBack","VOLVER");
-      setText("btnDoor","PUERTA");
-      setText("btnExit","SALIR");
-      setText("dockHome","INICIO");
-      setText("dockProducts","PRODUCTOS");
-      setText("dockSoftware","SOFTWARE");
-      setText("dockLaws","LEYES");
-      setText("dockGauges","MEDIDORES");
-      pillEng.textContent="INGENIERÍA";
-      pillPlat.textContent="PLATAFORMA";
-      pillInf.textContent="INFORMAL";
-      pillFor.textContent="FORMAL";
-    }else{
-      setText("hk","SOFTWARE");
-      setText("ht","THE MEMBRANE");
-      setText("hs","The seam that prevents collapse: Engine computes reality, Platform presents it. No bleed.");
-      setText("fine","Note: this is not marketing and not doctrine. It is the irreversible Engine⇄Platform contract.");
-      setText("band","MEMBRANE CONTRACT");
-      setText("btnBack","BACK");
-      setText("btnDoor","DOOR");
-      setText("btnExit","EXIT");
-      setText("dockHome","HOME");
-      setText("dockProducts","PRODUCTS");
-      setText("dockSoftware","SOFTWARE");
-      setText("dockLaws","LAWS");
-      setText("dockGauges","GAUGES");
-      pillEng.textContent="ENGINEERING";
-      pillPlat.textContent="PLATFORM";
-      pillInf.textContent="INFORMAL";
-      pillFor.textContent="FORMAL";
-    }
-  }
-
-  // ===== content packs =====
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-
-  // Sections (7) — each section renders different content for:
-  // mode=engineering|platform AND style=formal|informal
-  var SECTIONS = [
+  var rows = [
     {
-      c:"#EF4444",
-      t:P("The problem this solves","它解决什么问题","El problema que resuelve"),
-      s:P("Why sites collapse into one page when structure isn’t declared.","为什么结构未声明时会坍缩到一页。","Por qué los sitios colapsan a una sola página sin estructura."),
-      text:{
-        engineering:{
-          informal:P(
-            "Have you ever felt a site get “weird” as it grows? Links start landing in the wrong place. Pages start repeating themselves. Everything starts routing to one catch-all screen. That’s not bad design — it’s a missing boundary.\n\nThe Membrane stops the collapse. It separates *computation* from *presentation* so the system can scale without losing its mind.",
-            "你见过网站越做越“怪”吗？链接开始跳错、页面开始重复、所有东西开始坍缩到一个“总汇页”。这不是审美问题，是缺了一条边界。\n\n“膜”就是止坍缩的边界：把*计算*和*呈现*分开，系统才能规模化而不发疯。",
-            "¿Has visto un sitio volverse “raro” al crecer? Enlaces que caen en lugares equivocados, páginas repetidas, y todo termina en una pantalla universal. Eso no es estética: es una frontera ausente.\n\nLa Membrana evita el colapso: separa *cómputo* de *presentación* para escalar sin perder la cabeza."
-          ),
-          formal:P(
-            "Failure mode: route collapse and semantic bleed. When engine invariants are not separated from UI surfaces, changes in presentation mutate meaning, and multiple surfaces converge into a single destination.\n\nMembrane objective: enforce a hard interface between Engine (invariants, admissibility, receipts) and Platform (navigation, labeling, presentation).",
-            "故障模式：路由坍缩与语义渗漏。引擎不变量与UI执行面不分离时，呈现层的改动会改含义，多个执行面会收敛到单一目的地。\n\n膜目标：强制硬接口——引擎（不变量/可采信/收据）与平台（导航/标签/呈现）严格分离。",
-            "Modo de fallo: colapso de rutas y fuga semántica. Sin separación entre invariantes del motor y superficies UI, la presentación muta significado y las superficies convergen en un solo destino.\n\nObjetivo: interfaz dura entre Motor (invariantes, admisibilidad, recibos) y Plataforma (navegación, etiquetas, presentación)."
-          )
-        },
-        platform:{
-          informal:P(
-            "On the Platform side, the Membrane feels like relief: every page can be beautiful *without* becoming dangerous. You can improve layout, typography, and navigation — and you’re not secretly changing what the system means.\n\nThat’s what users feel: calm. Clean routes. No surprises.",
-            "站在平台侧，“膜”像解压：页面可以更漂亮，但不会更危险。你可以改布局、字体、导航——却不会偷偷改掉系统的含义。\n\n用户感受到的是：安静、清晰、无惊喜。",
-            "En Plataforma, la Membrana se siente como alivio: puedes mejorar UI sin volverla peligrosa. Ajustas layout, tipografía y navegación sin cambiar en secreto el significado.\n\nEl usuario siente calma: rutas limpias, sin sorpresas."
-          ),
-          formal:P(
-            "Platform contract: presentation is subordinate to the engine. Platform may translate, simplify, and route; it may not alter invariants, thresholds, admissibility, or receipts.\n\nMembrane prohibits: UI-driven policy, silent redefinition, timer-gated meaning, and catch-all routing.",
-            "平台契约：呈现必须服从引擎。平台可以翻译/简化/路由，但不得改变不变量、阈值、可采信或收据。\n\n膜禁止：UI驱动政策、静默换义、计时闸门式含义、以及总汇路由坍缩。",
-            "Contrato de plataforma: la presentación es subordinada al motor. Puede traducir, simplificar y rutear; no puede alterar invariantes, umbrales, admisibilidad ni recibos.\n\nLa membrana prohíbe: política dictada por UI, redefiniciones silenciosas, significado por temporizador y rutas “universales”."
-          )
-        }
-      },
-      bullets:{
-        engineering:{
-          informal:P(
-            ["Stop catch-all routing.","Stop meaning drift caused by UI.","Stop ‘pretty but unsafe’ pages."],
-            ["阻止总汇路由坍缩。","阻止UI导致的含义漂移。","阻止“漂亮但不安全”的页面。"],
-            ["Detener rutas universales.","Detener deriva semántica causada por UI.","Detener páginas ‘bonitas pero inseguras’."]
-          ),
-          formal:P(
-            ["Route determinism under declared scope.","Invariant preservation under navigation.","Receipt-first progression integrity."],
-            ["声明范围下的路由确定性。","导航下的不变量保持。","收据优先推进完整性。"],
-            ["Determinismo de rutas bajo alcance.","Preservación de invariantes bajo navegación.","Integridad de progresión por recibos."]
-          )
-        },
-        platform:{
-          informal:P(
-            ["Make UI upgrades safe.","Make language toggles safe.","Make routing boringly reliable."],
-            ["让UI升级变安全。","让语言切换变安全。","让路由变得无聊地可靠。"],
-            ["Hacer seguras mejoras de UI.","Hacer seguro el cambio de idioma.","Hacer rutas aburridamente fiables."]
-          ),
-          formal:P(
-            ["UI is an adapter, not a governor.","No overlays that intercept state.","No semantic swaps without epoch."],
-            ["UI是适配器，不是治理者。","禁止拦截状态的覆盖层。","无纪元不得换义。"],
-            ["UI es adaptador, no gobernante.","Sin overlays que intercepten estado.","Sin cambios semánticos sin nueva época."]
-          )
-        }
-      }
+      title: "1. Claim Boundary",
+      content: `
+      The membrane prevents inflation.  
+      No product may say more than its receipts allow.  
+      If the engine cannot prove it, the platform cannot present it as live.
+      `
     },
-
     {
-      c:"#D4AF37",
-      t:P("The split","分离是什么","La separación"),
-      s:P("Engine = truth under constraint. Platform = usable surfaces.","引擎=约束下的真相；平台=可用界面。","Motor = verdad bajo restricción. Plataforma = superficies usables."),
-      text:{
-        engineering:{
-          informal:P(
-            "Engine is the part that must never negotiate. It’s the math. The rules. The receipts. When you change Engine, you create a new epoch.\n\nPlatform is the part that *people touch*. It can be friendly. It can be poetic. It can be beautiful. But it can’t change what the engine would conclude from the same evidence.",
-            "引擎是永不谈判的部分：数学、规则、收据。你改引擎，就必须开新纪元。\n\n平台是人会触摸的部分：可以友好、可以诗意、可以漂亮，但不能改变引擎在同证据下会得出的结论。",
-            "El motor es lo que nunca negocia: matemáticas, reglas, recibos. Si cambias motor, creas nueva época.\n\nLa plataforma es lo que la gente toca: puede ser amable y bella, pero no puede cambiar lo que concluye el motor con la misma evidencia."
-          ),
-          formal:P(
-            "Engine: invariants, admissibility, receipts, deterministic transitions.\nPlatform: navigation, labeling, UI templates, content surfaces.\n\nInterface rule: Platform may not modify engine outputs; Engine may not interpret platform context. Laws constrain both; Gauges observe both; Frontier consumes both.",
-            "引擎：不变量、可采信、收据、确定性转移。\n平台：导航、标签、UI模板、内容界面。\n\n接口规则：平台不得修改引擎输出；引擎不得解释平台语境。法则约束两者；量规观测两者；前沿消费两者。",
-            "Motor: invariantes, admisibilidad, recibos, transiciones deterministas.\nPlataforma: navegación, etiquetas, plantillas UI, superficies de contenido.\n\nRegla: la plataforma no modifica salidas del motor; el motor no interpreta contexto de plataforma. Leyes restringen; Medidores observan; Frontera consume."
-          )
-        },
-        platform:{
-          informal:P(
-            "If you’re building pages: this is your freedom. You can change layout and still keep truth stable.\n\nIf you’re shipping products: this is your safety. You can scale surfaces without scaling errors.",
-            "如果你在做页面：这就是你的自由——你能改样式但不改真相。\n\n如果你在交付产品：这就是你的安全——你能规模化界面而不放大错误。",
-            "Si construyes páginas: esto es libertad. Cambias layout sin cambiar verdad.\n\nSi entregas productos: esto es seguridad. Escalas superficies sin escalar errores."
-          ),
-          formal:P(
-            "Platform implements adapters and routes under a stable contract. Any surface that changes meaning violates the membrane. Any routing that collapses multiple identities into one destination violates the membrane.",
-            "平台在稳定契约下实现适配与路由。任何改变含义的界面都违反膜；任何把多个身份坍缩到一个目的地的路由都违反膜。",
-            "La plataforma implementa adaptadores y rutas bajo contrato estable. Cualquier superficie que cambie significado viola la membrana. Cualquier ruteo que colapse identidades en un solo destino la viola."
-          )
-        }
-      }
+      title: "2. Engine / Platform Separation",
+      content: `
+      Engineering produces capability.  
+      Platform produces presentation.  
+      The membrane ensures neither mutates the other.
+      `
     },
-
     {
-      c:"#60A5FA",
-      t:P("Non-negotiables","不可谈判项","No negociables"),
-      s:P("What the membrane forbids, forever.","膜永远禁止什么。","Lo que la membrana prohíbe, siempre."),
-      text:{
-        engineering:{
-          informal:P(
-            "This is the part that keeps you sane:\n\nIf a page change changes outcomes, it’s not a page change — it’s an engine change. Stamp it. New epoch. No silent edits.",
-            "这部分让你不疯：\n\n如果页面改动改变了结果，那就不是页面改动——那是引擎改动。盖章，新纪元，禁止静默。",
-            "Esto te mantiene cuerdo:\n\nSi un cambio de página cambia resultados, no es UI — es motor. Se marca. Nueva época. Sin ediciones silenciosas."
-          ),
-          formal:P(
-            "Forbidden:\n• Timers-as-gates\n• Silent threshold tuning\n• Catch-all routing\n• UI-driven admissibility\n• Causality claims from correlation\n\nRequired:\n• Declared scope\n• Receipt-first\n• Deterministic outcomes under identical evidence\n• Epoch rollover on correction",
-            "禁止：\n• 计时作闸门\n• 静默调阈\n• 总汇路由\n• UI驱动可采信\n• 用相关冒充因果\n\n必须：\n• 声明范围\n• 收据优先\n• 同证据同结果\n• 修正即新纪元",
-            "Prohibido:\n• Temporizadores como compuertas\n• Ajuste silencioso de umbrales\n• Ruteo universal\n• Admisibilidad dictada por UI\n• Causalidad desde correlación\n\nRequerido:\n• Alcance declarado\n• Recibos primero\n• Resultado determinista con evidencia idéntica\n• Nueva época al corregir"
-          )
-        },
-        platform:{
-          informal:P(
-            "No ghost layers. No hidden overlays. No double routes. One tap → one outcome.\n\nIf mobile can’t tap it, it doesn’t ship. That’s membrane discipline.",
-            "没有幽灵层，没有暗遮罩，没有双路由。一次点击→一个结果。\n\n手机点不动就不发布。这就是膜纪律。",
-            "Sin capas fantasma, sin overlays ocultos, sin rutas dobles. Un toque → un resultado.\n\nSi en móvil no se puede tocar, no se publica. Esa es disciplina de membrana."
-          ),
-          formal:P(
-            "Platform must preserve identity: stable headers, stable routes, stable state carry. Any competing UI layer that intercepts pointer events is a violation. Any label that changes meaning without a version is a violation.",
-            "平台必须保持身份：稳定标题、稳定路由、稳定状态携带。任何拦截点击的竞争层都是违规；任何无版本换义的标签都是违规。",
-            "La plataforma debe preservar identidad: headers, rutas y propagación de estado estables. Cualquier capa que intercepte eventos es violación. Cualquier etiqueta que cambie significado sin versión es violación."
-          )
-        }
-      }
+      title: "3. Vision Filtering",
+      content: `
+      Vision does not route directly into engines.  
+      Vision routes through shells.  
+      Shells must pass membrane checks before entering core domains.
+      `
     },
-
     {
-      c:"#34D399",
-      t:P("Routing map","路由地图","Mapa de ruteo"),
-      s:P("Where each class of page is allowed to point.","每类页面允许指向哪里。","Dónde puede apuntar cada clase de página."),
-      text:{
-        engineering:{
-          informal:P(
-            "Think in lanes:\n\nDOOR = orientation.\nPRODUCTS = adoption.\nLAWS = boundaries.\nGAUGES = measurement.\nFRONTIER = vision theater.\n\nThe membrane makes sure those lanes don’t blur.",
-            "按车道想：\n\nDOOR=导览\nPRODUCTS=采纳\nLAWS=边界\nGAUGES=测量\nFRONTIER=愿景舞台\n\n膜保证车道不混。",
-            "Piensa en carriles:\n\nDOOR = orientación.\nPRODUCTOS = adopción.\nLEYES = límites.\nMEDIDORES = medición.\nFRONTERA = teatro de visión.\n\nLa membrana evita que se mezclen."
-          ),
-          formal:P(
-            "Allowed routing:\n• Engine pages → Engine leaves, Laws, Gauges\n• Platform pages → Products, Doors, typed hubs\n• Vision shells → Vision index (never Engine)\n\nProhibited routing:\n• Vision → Engine catch-all\n• Laws → Product marketing loops\n• Gauges → Doctrine claims",
-            "允许路由：\n• 引擎页→引擎叶页/法则/量规\n• 平台页→产品/门/类型化枢纽\n• 愿景壳→愿景索引（绝不进引擎总汇）\n\n禁止路由：\n• 愿景→引擎总汇\n• 法则→产品营销闭环\n• 量规→教义主张",
-            "Ruteo permitido:\n• Páginas motor → hojas motor, leyes, medidores\n• Páginas plataforma → productos, door, hubs tipados\n• Carcasas visión → índice visión (nunca motor)\n\nProhibido:\n• Visión → motor universal\n• Leyes → bucles de marketing\n• Medidores → afirmaciones doctrinales"
-          )
-        },
-        platform:{
-          informal:P(
-            "This is the simple fix for your current issue:\n\nWater / Waste / Shimmer / Vision items should route to **Vision index** (or their Vision leaf), not to Software Engine.\n\nThat keeps the user’s brain calm.",
-            "这就是你当前问题的简单修复：\n\nWater/Waste/Shimmer/Vision 应该去**愿景索引**（或愿景叶页），而不是去软件引擎总页。\n\n用户脑子就安静了。",
-            "Arreglo simple:\n\nWater/Waste/Shimmer/Vision deben rutear al **índice de Visión** (o a su hoja), no al motor de software.\n\nEso calma el cerebro del usuario."
-          ),
-          formal:P(
-            "Platform rule: any item that is not executable today routes to a typed shell under Vision with explicit posture labels (Concept/Readiness/Roadmap), never to an engine hub.",
-            "平台规则：任何“今天不可执行”的条目必须路由到愿景下的类型壳（明确标注概念/就绪/路线图），绝不路由到引擎枢纽。",
-            "Regla de plataforma: todo ítem no ejecutable hoy rutea a una carcasa tipada bajo Visión con postura explícita (Concepto/Preparación/Ruta), nunca a un hub de motor."
-          )
-        }
-      }
+      title: "4. Upgrade Discipline",
+      content: `
+      Any semantic change triggers epoch rollover.  
+      The membrane prevents silent redefinition.
+      `
     },
-
     {
-      c:"#A3A3A3",
-      t:P("Interfaces","接口点","Interfaces"),
-      s:P("What the platform is allowed to ask the engine for.","平台允许向引擎要什么。","Qué puede pedir la plataforma al motor."),
-      text:{
-        engineering:{
-          informal:P(
-            "The engine should feel like a vending machine:\nYou put in scope + receipts.\nYou get out a bounded result + reason codes.\n\nNo persuasion. No vibes. Just outputs.",
-            "引擎应像自动售货机：\n输入范围+收据。\n输出有界结果+原因码。\n\n不劝说，不情绪，只输出。",
-            "El motor debe sentirse como una máquina expendedora:\nmetes alcance + recibos.\nsacas resultado acotado + razones.\n\nSin persuasión. Solo outputs."
-          ),
-          formal:P(
-            "Engine interface returns:\n• classification\n• reason codes\n• missing receipt list\n• next safe route\n\nPlatform interface returns:\n• presentation\n• navigation\n• labeling\n• user comprehension aids\n\nNo cross-mutation.",
-            "引擎接口返回：\n• 分类\n• 原因码\n• 缺失收据清单\n• 下一安全路由\n\n平台接口返回：\n• 呈现\n• 导航\n• 标签\n• 理解辅助\n\n禁止交叉变异。",
-            "Interfaz del motor:\n• clasificación\n• códigos de razón\n• lista de recibos faltantes\n• siguiente ruta segura\n\nInterfaz de plataforma:\n• presentación\n• navegación\n• etiquetas\n• ayudas de comprensión\n\nSin mutación cruzada."
-          )
-        },
-        platform:{
-          informal:P(
-            "The platform’s job is translation, not invention.\n\nYou can make it poetic.\nYou can make it simple.\nYou can make it beautiful.\n\nBut you can’t change what the engine would say.",
-            "平台的工作是翻译，不是发明。\n\n可以诗意，可以简单，可以漂亮。\n\n但不能改变引擎会说什么。",
-            "La plataforma traduce, no inventa.\n\nPuede ser poética, simple y bella.\n\nPero no puede cambiar lo que diría el motor."
-          ),
-          formal:P(
-            "Platform must preserve mapping: each UI element maps to one route and one state outcome. Any UI that changes decision semantics violates the interface.",
-            "平台必须保持映射：每个UI元素只映射一个路由与一个状态结果。任何改变决策语义的UI都违反接口。",
-            "La plataforma debe preservar mapeo: cada elemento UI mapea a una ruta y un resultado de estado. UI que cambie semántica de decisión viola la interfaz."
-          )
-        }
-      }
+      title: "5. Authority Separation",
+      content: `
+      Builders cannot tune outcomes post-hoc.  
+      Auditors cannot override engines without receipts.  
+      Authority is split by design.
+      `
     },
-
     {
-      c:"#93C5FD",
-      t:P("Kill conditions","终止条件","Condiciones de corte"),
-      s:P("When the system must stop scaling and correct rules.","何时必须停止扩张并修正规则。","Cuándo hay que detener escalado y corregir reglas."),
-      text:{
-        engineering:{
-          informal:P(
-            "If the same receipts produce two different answers, stop.\nIf a UI change changes meaning, stop.\nIf drift becomes invisible, stop.\n\nScaling a broken membrane just multiplies damage.",
-            "同收据不同答案就停。\nUI改动改变含义就停。\n漂移变不可见就停。\n\n膜坏了还扩张，只会放大伤害。",
-            "Si los mismos recibos dan dos respuestas, para.\nSi un cambio UI cambia significado, para.\nSi la deriva se vuelve invisible, para.\n\nEscalar una membrana rota multiplica el daño."
-          ),
-          formal:P(
-            "Kill triggers:\n• observer variance under identical scope/evidence\n• non-versioned semantic change\n• routing collapse into catch-all\n• pointer interception / tap unreliability\n\nResponse: freeze, correct measurement rules, roll epoch.",
-            "终止触发：\n• 同范围同证据下观察者结果不一致\n• 无版本语义变更\n• 路由坍缩到总汇\n• 点按不可靠/被拦截\n\n响应：冻结→修正规则→滚动纪元。",
-            "Disparadores:\n• variación entre observadores con mismo alcance/evidencia\n• cambio semántico sin versión\n• colapso de rutas a universal\n• interceptación de toques\n\nRespuesta: congelar, corregir reglas, nueva época."
-          )
-        },
-        platform:{
-          informal:P(
-            "If mobile taps don’t work, nothing else matters. Fix platform first.\n\nBecause platform is the steering wheel. If the steering wheel fails, you crash even with a perfect engine.",
-            "手机点按不工作，其它都不重要。先修平台。\n\n平台是方向盘。方向盘坏了，引擎再完美也会撞车。",
-            "Si en móvil no funcionan los toques, nada más importa. Arregla plataforma primero.\n\nLa plataforma es el volante. Si falla, te estrellas aunque el motor sea perfecto."
-          ),
-          formal:P(
-            "Platform kill triggers:\n• competing z-index layers\n• overlay intercepting pointer events\n• double navigation outcomes\n• state loss across jumps\n\nResponse: remove UI competition, restore single-action taps, revalidate routes.",
-            "平台终止触发：\n• z-index 竞争层\n• 遮罩拦截点击\n• 一次动作多结果\n• 跳转丢状态\n\n响应：移除UI竞争→恢复单动作→重验路由。",
-            "Triggers plataforma:\n• capas compitiendo en z-index\n• overlay interceptando eventos\n• doble resultado por acción\n• pérdida de estado\n\nRespuesta: eliminar competencia UI, restaurar un toque-una acción, revalidar rutas."
-          )
-        }
-      }
-    },
-
-    {
-      c:"#F59E0B",
-      t:P("Next routes","下一步路由","Rutas siguientes"),
-      s:P("Where to go after you understand the membrane.","理解膜后去哪里。","A dónde ir después de entender la membrana."),
-      text:{
-        engineering:{
-          informal:P(
-            "If you want rules: go to Laws.\nIf you want measurements: go to Gauges.\nIf you want usable tools: go to Products.\nIf you want future: go to Frontier.\n\nMembrane is the seam that keeps all four honest.",
-            "要规则→法则。\n要测量→量规。\n要工具→产品。\n要未来→前沿。\n\n膜是让这四个都诚实的缝。",
-            "Si quieres reglas: Leyes.\nSi quieres medición: Medidores.\nSi quieres herramientas: Productos.\nSi quieres futuro: Frontera.\n\nLa membrana mantiene honestas las cuatro."
-          ),
-          formal:P(
-            "Routing after membrane:\n• Laws: doctrine, invariants, admissibility bounds\n• Gauges: measurement outputs, indices, sweeps\n• Products: deployable surfaces and hubs\n• Frontier: vision shells and roadmap surfaces\n\nMembrane remains stable; content deepens.",
-            "膜之后路由：\n• 法则：教义/不变量/可采信边界\n• 量规：测量输出/指数/扫掠\n• 产品：可部署界面与枢纽\n• 前沿：愿景壳与路线图\n\n膜稳定不变，内容逐层加深。",
-            "Después:\n• Leyes: doctrina, invariantes, límites\n• Medidores: salidas, índices, barridos\n• Productos: superficies desplegables\n• Frontera: carcasas de visión\n\nLa membrana queda estable; el contenido se profundiza."
-          )
-        },
-        platform:{
-          informal:P(
-            "If you’re building the site: use this page as your checklist.\n\nEvery new page asks: “Am I Engine, Platform, Laws, Gauges, or Frontier?”\nIf you can’t answer, you’re about to cause collapse.",
-            "如果你在建站：把本页当清单。\n\n每个新页面先问：我是引擎/平台/法则/量规/前沿？\n答不出来，你就要制造坍缩。",
-            "Si construyes el sitio: usa esta página como checklist.\n\nCada página nueva pregunta: ¿soy Motor, Plataforma, Leyes, Medidores o Frontera?\nSi no lo sabes, estás a punto de causar colapso."
-          ),
-          formal:P(
-            "Implementation posture: declare page class, lock routes, preserve state carry, enforce single-action taps, and prohibit catch-all destinations. This is the platform guardrail.",
-            "实施姿态：声明页面类别、锁定路由、保持状态携带、强制单动作点按、禁止总汇目的地。这是平台护栏。",
-            "Postura de implementación: declarar clase de página, bloquear rutas, preservar estado, forzar un toque-una acción y prohibir destinos universales. Es el guardarraíl de plataforma."
-          )
-        }
-      }
+      title: "6. Safety Condition",
+      content: `
+      If instability clusters, containment triggers.  
+      The membrane blocks cascade.
+      `
     }
   ];
 
-  // ===== build list (single-open) =====
-  var list=document.getElementById("list");
+  var list = document.getElementById("list");
 
   function closeAll(){
-    list.querySelectorAll(".row").forEach(function(x){
-      x.classList.remove("open");
-      var c=x.querySelector(".chev");
-      if(c) c.textContent="▸";
+    list.querySelectorAll(".row").forEach(function(r){
+      r.classList.remove("open");
     });
   }
 
-  function makeRow(sec, idx){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", sec.c);
+  rows.forEach(function(r, i){
+    var row = document.createElement("div");
+    row.className = "row";
 
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
+    var head = document.createElement("div");
+    head.className = "head";
+    head.textContent = r.title;
 
-    var left=document.createElement("div");
-    left.className="left";
+    var body = document.createElement("div");
+    body.className = "body";
 
-    var bar=document.createElement("div");
-    bar.className="bar";
-    bar.style.background=sec.c;
+    var p = document.createElement("p");
+    p.className = "p";
+    p.textContent = r.content.trim();
 
-    var sig=document.createElement("div");
-    sig.className="sig";
-    sig.style.background=sec.c;
+    body.appendChild(p);
 
-    var tblock=document.createElement("div");
-    tblock.className="tblock";
-
-    var hd=document.createElement("div");
-    hd.className="hd";
-    hd.textContent=pick(sec.t);
-
-    var sub=document.createElement("div");
-    sub.className="sub";
-    sub.textContent=pick(sec.s);
-
-    tblock.appendChild(hd);
-    tblock.appendChild(sub);
-
-    left.appendChild(bar);
-    left.appendChild(sig);
-    left.appendChild(tblock);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var pack = sec.text[mode][style];
-    var parts = pick(pack).split("\n\n");
-    parts.forEach(function(txt){
-      var p=document.createElement("p");
-      p.className="p";
-      p.textContent=txt;
-      body.appendChild(p);
-    });
-
-    if(sec.bullets){
-      var bl = pick(sec.bullets[mode][style]);
-      if(bl && bl.length){
-        var ul=document.createElement("ul");
-        ul.className="ul";
-        bl.forEach(function(x){
-          var li=document.createElement("li");
-          li.textContent=x;
-          ul.appendChild(li);
-        });
-        body.appendChild(ul);
-      }
-    }
-
-    var call=document.createElement("div");
-    call.className="callout";
-    call.textContent = (lang==="zh")
-      ? "膜检查：如果一个页面同时像“引擎”和“平台”，它将导致坍缩。先分离，再扩展。"
-      : (lang==="es")
-        ? "Chequeo de membrana: si una página es a la vez ‘motor’ y ‘plataforma’, colapsa. Separa primero, escala después."
-        : "Membrane check: if a page is both ‘engine’ and ‘platform’, it will collapse. Separate first, scale second.";
-    body.appendChild(call);
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var open = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
-
-    function addBtn(label, href){
-      var a=document.createElement("a");
-      a.className="btn";
-      a.textContent = open + ": " + label;
-      a.href = href + q();
-      actions.appendChild(a);
-    }
-
-    addBtn((lang==="zh")?"法则":(lang==="es")?"LEYES":"LAWS","/laws/");
-    addBtn((lang==="zh")?"量规":(lang==="es")?"MEDIDORES":"GAUGES","/gauges/");
-    addBtn((lang==="zh")?"软件":(lang==="es")?"SOFTWARE":"SOFTWARE","/products/software/");
-
-    body.appendChild(actions);
-
-    function toggle(){
-      var willOpen = !row.classList.contains("open");
+    head.addEventListener("click", function(){
+      var openNow = !row.classList.contains("open");
       closeAll();
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
-    }
-
-    head.addEventListener("click", toggle);
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      row.classList.toggle("open", openNow);
     });
 
     row.appendChild(head);
     row.appendChild(body);
+    list.appendChild(row);
 
-    if(idx===0){
-      row.classList.add("open");
-      chev.textContent="▾";
-    }
+    if(i===0){ row.classList.add("open"); }
+  });
 
-    return row;
-  }
-
-  function render(){
-    headerCopy();
-    paintPills();
-
-    list.innerHTML="";
-    SECTIONS.forEach(function(sec, i){
-      list.appendChild(makeRow(sec, i));
-    });
-  }
-
-  paintPills();
-  render();
 })();
 </script>
 

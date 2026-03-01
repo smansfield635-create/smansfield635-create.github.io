@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:104px;
+  --stroke:rgba(255,255,255,.12);
+  --mut:rgba(255,255,255,.84);
+  --shadowA:0 28px 90px rgba(0,0,0,.6);
+}
+
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  position:relative;
+  z-index:10;
+}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  padding:22px;
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowA);
+}
+
+.h1{margin:0 0 12px;font-size:26px;font-weight:950;letter-spacing:.3px}
+.p{margin:0;line-height:1.75;color:var(--mut);font-size:15px}
+
+.row{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid var(--stroke);
+  font-weight:900;
+}
+
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.dock .btn{width:100%;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+  <div class="card">
+    <div class="h1" id="t">Research</div>
+    <div class="p" id="p">
+      Contextual and structural references that inform the broader engineering philosophy of this site.
+      This section is informational only.
+    </div>
+    <div class="row">
+      <a class="btn" id="openIndustry" href="/research/industry-context/">Open Industry Context</a>
+    </div>
+  </div>
+</div>
+
+<nav class="dock">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+  }
+
+  // wire links with state carry
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("openIndustry","/research/industry-context/");
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+
+  // trilingual copy
+  if(lang==="zh"){
+    document.getElementById("t").textContent="研究";
+    document.getElementById("p").textContent="用于支撑本网站工程研究框架的背景与结构参考。本区仅用于信息与研究。";
+    document.getElementById("openIndustry").textContent="打开：行业背景";
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+  }else if(lang==="es"){
+    document.getElementById("t").textContent="Investigación";
+    document.getElementById("p").textContent="Referencias contextuales y estructurales que informan la filosofía de ingeniería del sitio. Esta sección es solo informativa.";
+    document.getElementById("openIndustry").textContent="Abrir: Contexto industrial";
+    document.getElementById("dockIndex").textContent="BRÚJULA";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+  }
+})();
+</script>
+
+</body>
+</html>

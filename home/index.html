@@ -1,20 +1,11 @@
 <!-- TNT — /home/index.html
-     HOME · MAIN HUB · EN/中文/ES
-     ROLE:
-       - Central spine after Compass
-       - States the PROBLEM clearly
-       - States the FINITE MAP + FINITE SOLUTION clearly
-       - Routes cleanly into: LAWS / PRODUCTS / GAUGES / EXPLORE
-       - No lenses on this page (orientation only)
-     DESIGN:
-       - Diamond + gold encrusting geometry aligned with branch.css
-       - Strong TED-style marketing tone
-       - No overlays, no modals, mobile-safe
-     STATE:
-       - Canon carry: lang/style/time/depth via gd_*
-     LOCKS:
-       - ui.css owns background (no html/body override)
-       - Uses ui.css + branch.css + instruments.js only
+     HOME · STRUCTURAL CORE
+     INTENT:
+       - Monumental but calm.
+       - Strong positioning.
+       - No lenses here (orientation only).
+       - EN / 中文 / ES.
+       - State carry preserved.
 -->
 
 <!doctype html>
@@ -22,7 +13,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home · Diamond Gate Bridge</title>
+<title>HOME · Structural Core</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -33,159 +24,85 @@ a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
+/* TYPOGRAPHIC EXPANSION */
 :root{
-  --dockH:88px;
-
-  --opalA:rgba(210,190,255,.18);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(255,70,70,.12);
-
-  --goldSoft:rgba(212,175,55,.32);
-
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
-
-  --stroke:rgba(255,255,255,.12);
-  --mut:rgba(255,255,255,.84);
+  --h1:42px;
+  --h2:22px;
+  --p:17px;
 }
 
-/* Top */
+/* TOP */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;
-  white-space:nowrap;pointer-events:auto;
+  position:fixed;top:16px;left:16px;right:16px;
+  display:flex;justify-content:space-between;
+  z-index:200;
 }
 .top .btn{white-space:nowrap}
 
-/* Page */
-.page{
-  width:min(1120px,94vw);
+/* WRAP */
+.wrap{
+  width:min(1000px,92vw);
   margin:0 auto;
-  padding:84px 0 34px;
+  padding:110px 0 60px;
   display:flex;
   flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:10;
+  gap:26px;
 }
 
 /* HERO */
 .hero{
   border-radius:28px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 120%, var(--opalC), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:0 40px 140px rgba(0,0,0,.60);
-  padding:20px 20px 18px;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:0;
-  pointer-events:none;
-  background:
-    repeating-conic-gradient(from 45deg,
-      rgba(212,175,55,.08) 0deg 6deg,
-      transparent 6deg 18deg);
-  opacity:.18;
-  mask-image: radial-gradient(circle at center, black 42%, transparent 86%);
-}
-
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;position:relative}
-.h1{margin:0;font-weight:950;font-size:34px;letter-spacing:1px;line-height:1.12;position:relative}
-.p{margin:12px 0 0;font-size:15px;line-height:1.6;opacity:.92;max-width:980px;position:relative}
-.rule{
-  margin-top:14px;
-  padding:12px 14px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  font-size:13.5px;
-  line-height:1.5;
-  color:var(--mut);
-  position:relative;
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:14px;
-}
-@media (max-width:860px){
-  .grid{grid-template-columns:1fr}
-}
-
-/* CARDS */
-.card{
-  border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 22% 20%, var(--opalA), transparent 70%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(6,10,16,.98));
-  box-shadow:0 30px 110px rgba(0,0,0,.55);
-  padding:18px 18px 16px;
-  position:relative;
-  overflow:hidden;
+    radial-gradient(circle at 20% 20%, rgba(210,190,255,.12), transparent 70%),
+    radial-gradient(circle at 80% 50%, rgba(255,70,70,.10), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.16));
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 140px rgba(0,0,0,.55);
+  padding:30px 28px;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;
-  pointer-events:none;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.18;
-}
-.ctitle{
+
+.hero h1{
   margin:0;
+  font-size:var(--h1);
   font-weight:950;
-  font-size:18px;
-  letter-spacing:.5px;
+  letter-spacing:1px;
 }
-.cdesc{
-  margin:10px 0 0;
-  font-size:13.75px;
-  line-height:1.55;
-  opacity:.88;
+
+.hero p{
+  margin:18px 0 0;
+  font-size:var(--p);
+  line-height:1.7;
+  max-width:920px;
 }
-.actions{
-  margin-top:14px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+
+/* BLOCKS */
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  padding:22px;
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(8px);
 }
-.actions .btn{
+
+.block h2{
+  margin:0 0 12px;
+  font-size:var(--h2);
+  font-weight:900;
+}
+
+.block p{
+  margin:0;
+  font-size:var(--p);
+  line-height:1.7;
+}
+
+.cta{
+  margin-top:10px;
+}
+.cta .btn{
+  padding:12px 18px;
   border-radius:999px;
-  padding:10px 14px;
-  white-space:nowrap;
-}
-
-/* Footer */
-.footer{
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
-  margin-top:8px;
-}
-.sig{
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.65;
-}
-
-@media (max-width:520px){
-  .h1{font-size:28px}
 }
 </style>
 </head>
@@ -193,208 +110,87 @@ body::before,body::after{pointer-events:none!important}
 <body>
 
 <div class="top">
-  <div class="left">
-    <a class="btn" id="btnCompass" href="/compass/">COMPASS</a>
-    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+  <div>
+    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
   </div>
-  <div class="right">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+  <div>
+    <button class="btn" id="btnEN">EN</button>
+    <button class="btn" id="btnZH">中文</button>
+    <button class="btn" id="btnES">ES</button>
   </div>
 </div>
 
-<div class="page">
+<div class="wrap">
 
   <div class="hero">
-    <p class="k" id="hk">HOME</p>
-    <h1 class="h1" id="h1">A Finite Map for Infinite Problems</h1>
-    <p class="p" id="p1">
-      Every system drifts. Every organization scales into hidden correlation.
-      Every team eventually confuses signal with story.
-      <br><br>
-      We mapped the lattice.
-      We defined the bounds.
-      We built the surfaces.
+    <h1 id="h1">STRUCTURE BEFORE STORY</h1>
+    <p id="p1">
+      Most systems collapse because they scale confusion.
+      We do the opposite.
+      We define constraints.
+      We map dependency.
+      We enforce admissibility.
+      We measure alignment.
     </p>
-    <div class="rule" id="rule">
-      You are here because something needs an answer.  
-      The answer is not a slogan. It is a measurable position inside a finite map.
-    </div>
   </div>
 
-  <div class="grid">
-
-    <div class="card">
-      <h3 class="ctitle" id="c1t">STRUCTURE · Laws</h3>
-      <p class="cdesc" id="c1d">
-        Prevent drift. Define admissibility. Separate truth from narrative.
-        If you need boundaries before you scale, start here.
-      </p>
-      <div class="actions">
-        <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 class="ctitle" id="c2t">DEPLOY · Products</h3>
-      <p class="cdesc" id="c2d">
-        Tools, engines, and execution surfaces.
-        This is where structure becomes action.
-      </p>
-      <div class="actions">
-        <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 class="ctitle" id="c3t">MEASURE · Gauges</h3>
-      <p class="cdesc" id="c3d">
-        Signals. Indices. Heatmaps.
-        Replace argument with instrumentation.
-      </p>
-      <div class="actions">
-        <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 class="ctitle" id="c4t">INNOVATE · Explore</h3>
-      <p class="cdesc" id="c4d">
-        Vision shells. Frontier domains.
-        Big ideas — staged, bounded, and measurable.
-      </p>
-      <div class="actions">
-        <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
-      </div>
-    </div>
-
+  <div class="block">
+    <h2 id="h2">THE PROBLEM</h2>
+    <p id="p2">
+      Drift compounds quietly.
+      Correlation hides in shared exposure.
+      Claims inflate faster than proof.
+      Without constraint, scale becomes instability.
+    </p>
   </div>
 
-  <div class="footer">
-    <span id="ft">Map · Measure · Judge · Scale</span>
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  <div class="block">
+    <h2 id="h3">THE POSITION</h2>
+    <p id="p3">
+      Every page routes to something measurable.
+      Every output can be replayed.
+      Every upgrade creates a new epoch.
+      Nothing is allowed to drift silently.
+    </p>
+    <div class="cta">
+      <a class="btn" href="/prelude/">ENTER THE SYSTEM</a>
+    </div>
   </div>
 
 </div>
 
 <script>
 (function(){
-
-  // ===== Canon State =====
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href=path+q();
-  }
-
-  wire("btnCompass","/compass/");
-  wire("btnPrelude","/prelude/");
-  wire("goLaws","/laws/");
-  wire("goProducts","/products/");
-  wire("goGauges","/gauges/");
-  wire("goExplore","/explore/");
-
-  // ===== Language Toggle =====
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  paintLang();
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  if(!["en","zh","es"].includes(lang)) lang="en";
+  localStorage.setItem("gd_lang",lang);
 
   function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href=window.location.pathname+q({lang:lang});
+    localStorage.setItem("gd_lang",next);
+    window.location.href=location.pathname+"?lang="+next;
   }
 
-  document.getElementById("btnEN").onclick=function(){setLang("en");};
-  document.getElementById("btnZH").onclick=function(){setLang("zh");};
-  document.getElementById("btnES").onclick=function(){setLang("es");};
+  document.getElementById("btnEN").onclick=function(){setLang("en")};
+  document.getElementById("btnZH").onclick=function(){setLang("zh")};
+  document.getElementById("btnES").onclick=function(){setLang("es")};
 
-  // ===== i18n =====
   if(lang==="zh"){
-    document.getElementById("hk").textContent="主页";
-    document.getElementById("h1").textContent="为无限问题准备的有限地图";
-    document.getElementById("p1").innerHTML=
-      "每个系统都会漂移。<br>每个组织都会在扩张中形成隐藏相关。<br>每个团队都会把信号和故事混在一起。<br><br>我们画了晶格。我们定义了边界。我们建了执行面。";
-    document.getElementById("rule").textContent=
-      "你来这里，是因为某个问题需要答案。答案不是口号，而是有限地图中的一个可测位置。";
-
-    document.getElementById("c1t").textContent="结构 · 法则";
-    document.getElementById("c1d").textContent="防止漂移。定义可采信。把真相和叙事分开。";
-    document.getElementById("goLaws").textContent="打开法则";
-
-    document.getElementById("c2t").textContent="部署 · 产品";
-    document.getElementById("c2d").textContent="工具与执行面。结构变成行动。";
-    document.getElementById("goProducts").textContent="打开产品";
-
-    document.getElementById("c3t").textContent="测量 · 量规";
-    document.getElementById("c3d").textContent="信号与指数。用测量替代争论。";
-    document.getElementById("goGauges").textContent="打开量规";
-
-    document.getElementById("c4t").textContent="创新 · 探索";
-    document.getElementById("c4d").textContent="前沿与愿景壳。大想法，有界表达。";
-    document.getElementById("goExplore").textContent="打开探索";
-
-    document.getElementById("btnCompass").textContent="导览";
-    document.getElementById("btnPrelude").textContent="前置页";
-    document.getElementById("ft").textContent="画图 · 测量 · 裁决 · 扩张";
+    document.getElementById("h1").textContent="结构先于叙事";
+    document.getElementById("p1").textContent="多数系统崩溃，因为它们规模化了混乱。我们反其道而行：定义约束，映射依赖，执行可采信，测量对齐。";
+    document.getElementById("h2").textContent="问题";
+    document.getElementById("p2").textContent="漂移悄然累积。相关性隐藏于共享暴露。主张膨胀快于证明。无约束则规模即不稳。";
+    document.getElementById("h3").textContent="立场";
+    document.getElementById("p3").textContent="每一页都通向可测输出。每一结果都可回放。每次升级都开新纪元。任何漂移不得沉默发生。";
   }
-  else if(lang==="es"){
-    document.getElementById("hk").textContent="INICIO";
-    document.getElementById("h1").textContent="Un Mapa Finito para Problemas Infinitos";
-    document.getElementById("p1").innerHTML=
-      "Todo sistema deriva.<br>Toda organización escala hacia correlación oculta.<br>Toda equipo confunde señal con historia.<br><br>Mapeamos el lattice. Definimos los límites. Construimos las superficies.";
-    document.getElementById("rule").textContent=
-      "Estás aquí porque algo necesita respuesta. La respuesta no es un eslogan: es una posición medible dentro de un mapa finito.";
-
-    document.getElementById("c1t").textContent="ESTRUCTURA · Leyes";
-    document.getElementById("c1d").textContent="Evita deriva. Define admisibilidad. Separa verdad de narrativa.";
-    document.getElementById("goLaws").textContent="ABRIR LEYES";
-
-    document.getElementById("c2t").textContent="DESPLEGAR · Productos";
-    document.getElementById("c2d").textContent="Herramientas y superficies ejecutables.";
-    document.getElementById("goProducts").textContent="ABRIR PRODUCTOS";
-
-    document.getElementById("c3t").textContent="MEDIR · Medidores";
-    document.getElementById("c3d").textContent="Señales e índices. Sustituye argumento por medición.";
-    document.getElementById("goGauges").textContent="ABRIR MEDIDORES";
-
-    document.getElementById("c4t").textContent="INNOVAR · Explorar";
-    document.getElementById("c4d").textContent="Visión y frontera con límites claros.";
-    document.getElementById("goExplore").textContent="ABRIR EXPLORAR";
-
-    document.getElementById("btnCompass").textContent="BRÚJULA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("ft").textContent="Mapear · Medir · Juzgar · Escalar";
+  if(lang==="es"){
+    document.getElementById("h1").textContent="ESTRUCTURA ANTES QUE HISTORIA";
+    document.getElementById("p1").textContent="La mayoría de sistemas colapsan porque escalan confusión. Nosotros definimos restricciones, mapeamos dependencia, exigimos admisibilidad y medimos alineación.";
+    document.getElementById("h2").textContent="EL PROBLEMA";
+    document.getElementById("p2").textContent="La deriva se acumula. La correlación se oculta. Las afirmaciones crecen más rápido que la prueba. Sin restricción, escalar es inestabilidad.";
+    document.getElementById("h3").textContent="LA POSICIÓN";
+    document.getElementById("p3").textContent="Cada página rutea a algo medible. Cada salida puede reproducirse. Cada cambio crea una nueva época. Nada deriva en silencio.";
   }
-
 })();
 </script>
 

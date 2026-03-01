@@ -1,733 +1,953 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (ROUTING CATALOG) · SINGLE-OPEN ACCORDION · 3 LANG (EN/中文/ES)
+     PRODUCTS · MASTER ROUTING CATALOG · SINGLE-OPEN ACCORDION · TRILINGUAL (EN/中文/ES)
      LENSES (NO NEW gd_* KEYS):
        - INFORMAL/FORMAL uses gd_style (style=informal|formal) [URL + localStorage gd_style]
-       - PLATFORM/ENGINEERING uses lane=platform|engineering (URL ONLY; NOT gd_*)
+       - PLATFORM/ENGINEERING uses lane=platform|engineering (URL ONLY; never stored as gd_*)
      RULES:
        - No modals, no overlays
        - One row open at a time (global single-open)
-       - State carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth only)
-       - lane is URL-only; never stored as gd_*
+       - State carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - lane URL-only
+       - Language toggle reloads SAME pathname (GH Pages safe)
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns field (NO html/body background styling)
-     ROUTES:
-       - Energy → /products/energy/
-       - Education → /products/education/
-       - Coherence Diagnostic → /products/coherence-diagnostic/
-       - Software Spine (“Machine Behind Pages”) → /products/software/
-       - Dot.Grid → /products/dot-grid/
-       - SSG → /products/ssg/
-       - Risk & Capital Systems → /products/risk-capital/
-       - Vision shells route to /explore/frontier/vision/ with ?focus=
+     ROUTES (authoritative):
+       Products:
+         - Energy → /products/energy/
+         - Education → /products/education/
+         - Coherence Diagnostic → /products/coherence-diagnostic/
+         - Software Spine (“Machine Behind Pages”) → /products/software/
+         - Dot.Grid → /products/dot-grid/
+         - SSG → /products/ssg/
+         - Risk & Capital Systems → /products/risk-capital/
+         - UCI Engine → /products/uci/
+         - Registry → /products/registry/
+         - Adoption Ladder → /products/adoption-ladder/
+       Services:
+         - Advisory → /laws/
+         - Audit Support → /gauges/
+         - Integration → /products/software/ (default lane=platform)
+         - Training → /products/training/
+       Vision shells:
+         - Water → /explore/frontier/vision/?focus=water
+         - Waste → /explore/frontier/vision/?focus=waste
+         - SHIMMER → /explore/frontier/vision/?focus=shimmer
 -->
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRODUCTS</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>PRODUCTS</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+  <script defer src="/assets/instruments.js"></script>
 
-<style>
-a{color:inherit;text-decoration:none}
-body::before,body::after{pointer-events:none!important}
+  <style>
+    a{color:inherit;text-decoration:none}
+    body::before,body::after{pointer-events:none!important}
 
-:root{
-  --dockH:94px;
+    :root{
+      /* Red / Black / Gold hierarchy */
+      --onyx0: rgba(6,8,10,.90);
+      --onyx1: rgba(10,12,16,.78);
+      --opalV: rgba(90,40,120,.12);
+      --crimson: rgba(120,0,22,.34);
+      --festival: rgba(255,43,43,.16);
+      --gold: rgba(201,162,74,.40);
 
-  /* Dark opal + red dominant; subtle gold only */
-  --opalA:rgba(10,24,30,.72);
-  --opalB:rgba(14,34,42,.58);
-  --opalC:rgba(6,14,18,.72);
+      --ink: rgba(255,255,255,.94);
+      --mut: rgba(255,255,255,.80);
+      --soft: rgba(255,255,255,.62);
 
-  --redA:rgba(255,43,43,.18);
-  --redB:rgba(255,43,43,.10);
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.10);
 
-  --goldA:rgba(201,162,74,.18);
+      --shadow: 0 22px 72px rgba(0,0,0,.66);
 
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
+      --dockH: 98px;
+    }
 
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.78);
-  --soft:rgba(255,255,255,.62);
+    /* page */
+    .page{
+      width:min(1120px,94vw);
+      margin:0 auto;
+      padding:88px 0 calc(var(--dockH) + 18px);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position:relative;
+      z-index:10;
+    }
 
-  --shadow:0 18px 60px rgba(0,0,0,.62);
-}
+    /* top controls */
+    .top-left,.top-right{
+      position:fixed;top:16px;z-index:240;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      max-width: calc(50vw - 18px);
+    }
+    .top-left{left:16px;justify-content:flex-start}
+    .top-right{right:16px;justify-content:flex-end}
 
-/* page */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:88px 0 calc(var(--dockH) + 18px);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
-}
+    .seg{
+      display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.16);
+      box-shadow: 0 16px 44px rgba(0,0,0,.62);
+    }
+    .seg button{
+      appearance:none;border:0;background:transparent;color:var(--mut);
+      padding:10px 12px;min-height:44px;font-weight:980;font-size:13px;
+      letter-spacing:.25px;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .seg button[aria-pressed="true"]{
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+        linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+      box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+    }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:10px 12px;min-height:44px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+      color:var(--ink);
+      font-weight:980;font-size:14px;letter-spacing:.2px;
+      -webkit-tap-highlight-color:transparent;
+      position:relative;
+      overflow:hidden;
+      touch-action:manipulation;
+      box-shadow: 0 16px 44px rgba(0,0,0,.62);
+      white-space:nowrap;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn::after{
+      content:"";
+      position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+      opacity:.70;pointer-events:none;
+    }
+    .btn.red{
+      border-color: rgba(255,43,43,.22);
+      box-shadow: 0 16px 44px rgba(0,0,0,.62), 0 0 18px rgba(255,43,43,.12);
+    }
 
-/* header */
-.header{
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 18% 18%, var(--redA), transparent 62%),
-    radial-gradient(circle at 82% 30%, var(--goldA), transparent 64%),
-    radial-gradient(circle at 55% 92%, var(--redB), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadow);
-  padding:16px 16px 14px;
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
-.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.7px}
-.s{margin:10px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
-.fine{margin-top:10px;font-size:13.5px;opacity:.78;line-height:1.45;color:var(--mut)}
+    /* header */
+    .header{
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 18% 16%, var(--crimson), transparent 62%),
+        radial-gradient(circle at 82% 22%, var(--opalV), transparent 66%),
+        radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding:16px 16px 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .goldTrim::before{
+      content:"";
+      position:absolute;inset:0;border-radius:24px;pointer-events:none;
+      box-shadow:
+        inset 0 0 0 1px rgba(201,162,74,.30),
+        inset 0 0 0 2px rgba(0,0,0,.35);
+      background:
+        repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 14px),
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 14px);
+      opacity:.52;
+      mask:
+        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 80% 100%),
+        linear-gradient(#000,#000);
+      -webkit-mask:
+        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 80% 100%),
+        linear-gradient(#000,#000);
+    }
+    .goldTrim::after{
+      content:"◇";
+      position:absolute;right:14px;top:12px;
+      color: rgba(201,162,74,.58);
+      font-weight: 980;
+      font-size:16px;
+      opacity:.78;
+      pointer-events:none;
+      text-shadow: 0 10px 24px rgba(0,0,0,.55);
+    }
 
-/* lens controls */
-.lenses{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
-}
-.pills{display:flex;gap:10px;flex-wrap:wrap}
-.pill{
-  padding:10px 14px;border-radius:999px;
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:950;letter-spacing:.25px;color:#fff;
-  user-select:none;-webkit-tap-highlight-color:transparent;
-  min-height:44px;
-}
-.pill.active{
-  border-color:rgba(201,162,74,.50);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(201,162,74,.16);
-}
-.pill.red.active{
-  border-color:rgba(255,90,90,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,43,43,.18);
-}
+    .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74;color:var(--mut)}
+    .t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+    .s{margin:10px 0 0;font-size:16.5px;line-height:1.55;max-width:980px;color:var(--ink)}
+    .fine{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--mut);opacity:.86}
 
-/* bands */
-.band{
-  padding:10px 12px;border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:950;letter-spacing:.25px;color:rgba(255,255,255,.90);
-}
+    .metaRow{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:12px
+    }
+    .chip{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid var(--stroke);
+      background:
+        radial-gradient(circle at 25% 35%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 80% 70%, rgba(201,162,74,.08), transparent 62%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 44px rgba(0,0,0,.62);
+      color: var(--mut);
+      font-weight: 980;
+      letter-spacing:.25px;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      min-height:44px;
+      white-space:nowrap;
+    }
+    .chip b{color:var(--ink)}
 
-/* rows */
-.list{display:flex;flex-direction:column;gap:12px}
+    /* band */
+    .band{
+      padding:10px 12px;border-radius:18px;
+      border:1px solid var(--stroke2);
+      background:rgba(0,0,0,.14);
+      font-weight:980;letter-spacing:.25px;color:rgba(255,255,255,.90);
+    }
 
-.row{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.62);
-  overflow:hidden;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.mark{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  margin-top:4px;flex:0 0 auto;
-}
-.titleBlock{min-width:0}
-.title{
-  font-weight:950;letter-spacing:.25px;
-  font-size:18.5px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.sub{
-  margin-top:8px;font-size:14.25px;opacity:.86;line-height:1.35;max-width:92ch;color:var(--mut);
-}
-.chev{font-size:16px;opacity:.78;flex:0 0 auto;margin-top:2px}
+    /* accordion rows */
+    .list{display:flex;flex-direction:column;gap:12px}
 
-.body{
-  display:none;
-  padding:16px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 24% 30%, rgba(255,43,43,.12), transparent 55%),
-    radial-gradient(circle at 78% 35%, rgba(201,162,74,.10), transparent 58%),
-    linear-gradient(145deg, rgba(12,22,38,.84), rgba(7,11,18,.92));
-}
-.row.open .body{display:block}
+    .row{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(120,0,22,.14), transparent 60%),
+        radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
+      box-shadow: 0 18px 56px rgba(0,0,0,.66);
+      overflow:hidden;
+      position:relative;
+    }
+    .row::after{
+      content:"";
+      position:absolute;inset:0;border-radius:22px;pointer-events:none;
+      box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+      opacity:.60;
+    }
 
-.p{margin:0;color:rgba(255,255,255,.90);line-height:1.7;font-size:15px}
-.p + .p{margin-top:10px}
-.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14.25px}
-.ul li{margin:7px 0}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-.actions .btn{padding:10px 14px;border-radius:999px;white-space:nowrap}
+    .head{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      gap:10px;padding:16px 16px;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+      position:relative;
+    }
+    .left{display:flex;align-items:flex-start;gap:12px;min-width:0}
+    .mark{
+      width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+      background:var(--c);
+      box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+      margin-top:4px;flex:0 0 auto;
+    }
+    .titleBlock{min-width:0}
+    .title{
+      font-weight:980;letter-spacing:.25px;
+      font-size:18.5px;color:var(--ink);
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .sub{
+      margin-top:8px;font-size:14.25px;opacity:.88;line-height:1.35;max-width:92ch;color:var(--mut);
+    }
+    .chev{
+      width:36px;height:36px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--mut);
+      font-weight:980;
+      position:relative;
+      overflow:hidden;
+      flex:0 0 auto;
+      margin-top:2px;
+    }
+    .chev::after{
+      content:"";
+      position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
+      opacity:.62;pointer-events:none;
+    }
 
-/* dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
-}
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:106px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-}
+    .body{
+      display:none;
+      padding:16px 16px 16px;
+      border-top:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 24% 30%, rgba(255,43,43,.12), transparent 55%),
+        radial-gradient(circle at 78% 35%, rgba(201,162,74,.10), transparent 58%),
+        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.92));
+    }
+    .row.open .body{display:block}
+    .row.open{border-color: rgba(255,43,43,.22); box-shadow: 0 18px 56px rgba(0,0,0,.66), 0 0 18px rgba(255,43,43,.12);}
 
-/* depth indicator */
-.depth{
-  display:inline-flex;align-items:center;gap:8px;
-  font-weight:950;letter-spacing:.2px;color:var(--soft);
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  padding:10px 12px;border-radius:999px;
-  min-height:44px;
-}
-.depth b{color:var(--txt)}
-</style>
+    .p{margin:0;color:rgba(255,255,255,.92);line-height:1.7;font-size:15px}
+    .p + .p{margin-top:10px}
+    .ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14.25px}
+    .ul li{margin:7px 0}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+    /* dock */
+    .dock{
+      position:fixed;left:50%;
+      bottom:max(10px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:220;
+      width:min(980px,94vw);
+      padding:10px 12px;border-radius:24px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.62);
+      display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+    }
+    .dock .btn{width:100%;border-radius:999px}
+    @media (max-width:520px){
+      :root{--dockH:114px}
+      .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+    }
+  </style>
 </head>
 
 <body>
+  <div class="top-left" aria-label="Top navigation">
+    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    <a class="btn red" id="btnExit" href="/index.html" data-route="/index.html">COMPASS</a>
+  </div>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnHome" href="/home/">HOME</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
-<div class="page">
-
-  <div class="header">
-    <p class="k" id="hk">PRODUCTS</p>
-    <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
-    <p class="s" id="hs"></p>
-    <div class="fine" id="fine"></div>
-
-    <div class="lenses" aria-label="Four lenses">
-      <div class="pills" aria-label="Lane lens (URL-only)">
-        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
-        <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
-      </div>
-      <div class="pills" aria-label="Voice lens (gd_style)">
-        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
-        <button class="pill" id="pillFormal" type="button">FORMAL</button>
-      </div>
-      <div class="depth" aria-label="Depth">
-        <span id="depthLabel">DEPTH</span> <b id="depthVal">1</b>
-      </div>
+  <div class="top-right" aria-label="Language">
+    <div class="seg" role="group" aria-label="Language toggle">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
     </div>
   </div>
 
-  <div class="band" id="bandA">PRODUCT SURFACES</div>
-  <div class="list" id="listA"></div>
+  <div class="page">
+    <section class="header goldTrim" aria-label="Products header">
+      <p class="k" id="hk">PRODUCTS</p>
+      <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
+      <p class="s" id="hs"></p>
+      <div class="fine" id="fine"></div>
 
-  <div class="band" id="bandB">VISION SHELLS</div>
-  <div class="list" id="listB"></div>
+      <div class="metaRow">
+        <div class="seg" role="group" aria-label="Lane toggle">
+          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+        </div>
 
-  <div class="band" id="bandC">SYSTEM SPINES</div>
-  <div class="list" id="listC"></div>
+        <div class="seg" role="group" aria-label="Voice toggle">
+          <button type="button" id="styleInformal" aria-pressed="true">INFORMAL</button>
+          <button type="button" id="styleFormal" aria-pressed="false">FORMAL</button>
+        </div>
 
-</div>
+        <div class="chip" aria-label="State">
+          <span id="chipLang">LANG</span> <b id="chipLangVal">EN</b>
+          <span style="opacity:.6">·</span>
+          <span id="chipLane">LANE</span> <b id="chipLaneVal">PLATFORM</b>
+          <span style="opacity:.6">·</span>
+          <span id="chipStyle">STYLE</span> <b id="chipStyleVal">INFORMAL</b>
+          <span style="opacity:.6">·</span>
+          <span id="chipDepth">DEPTH</span> <b id="chipDepthVal">1</b>
+        </div>
+      </div>
+    </section>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
+    <div class="band" id="bandA">PRODUCT SURFACES</div>
+    <div class="list" id="listA"></div>
 
-<script>
-(function(){
-  "use strict";
+    <div class="band" id="bandS">SERVICES</div>
+    <div class="list" id="listS"></div>
 
-  // ===== canonical state (NO new gd_* keys) =====
-  var qs=new URLSearchParams(location.search);
+    <div class="band" id="bandB">VISION SHELLS</div>
+    <div class="list" id="listB"></div>
 
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal"; // informal|formal
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "1";        // numeric string
-  var lane  = qs.get("lane")  || "";                                             // URL-only platform|engineering
+    <div class="band" id="bandC">SYSTEM SPINES</div>
+    <div class="list" id="listC"></div>
+  </div>
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  <nav class="dock" aria-label="Bottom navigation">
+    <a class="btn" href="/explore/" data-route="/explore/" id="dockExplore">EXPLORE</a>
+    <a class="btn red" href="/products/" data-route="/products/" id="dockProducts">PRODUCTS</a>
+    <a class="btn" href="/laws/" data-route="/laws/" id="dockLaws">LAWS</a>
+    <a class="btn" href="/gauges/" data-route="/gauges/" id="dockGauges">GAUGES</a>
+  </nav>
 
-  var d=parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
+  <script>
+  (function(){
+    "use strict";
 
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+    // ===== Canon state (NO new gd_* keys) =====
+    var qs = new URLSearchParams(location.search);
+    var LS = window.localStorage;
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
+    var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+    var style = qs.get("style") || LS.getItem("gd_style") || "informal"; // informal|formal
+    var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";      // origin|now|post
+    var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";        // 1..9
+    var lane  = qs.get("lane")  || "platform";                           // URL-only platform|engineering
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+    if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+    if(style!=="informal" && style!=="formal") style="informal";
+    if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
-  // Build query; preserve lane as URL-only
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?String(over.depth):depth;
-    var Lane=(over&&over.lane)?over.lane:lane;
+    var d = parseInt(depth,10);
+    if(!isFinite(d)) d=1;
+    if(d<1) d=1;
+    if(d>9) d=9;
+    depth = String(d);
 
-    var p=new URLSearchParams();
-    p.set("lang",L);
-    p.set("style",S);
-    p.set("time",T);
-    p.set("depth",D);
-    if(Lane==="platform"||Lane==="engineering") p.set("lane",Lane);
-    return "?"+p.toString();
-  }
+    if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-  function wireHref(el, path){
-    if(!el) return;
-    // If path already has query, preserve it and add missing state keys.
-    if(path.indexOf("?")===-1){
-      el.setAttribute("href", path + q());
-      return;
-    }
     try{
-      var u=new URL(path, location.origin);
-      var sp=u.searchParams;
-      if(!sp.get("lang")) sp.set("lang", lang);
-      if(!sp.get("style")) sp.set("style", style);
-      if(!sp.get("time")) sp.set("time", time);
-      if(!sp.get("depth")) sp.set("depth", depth);
-      if(!sp.get("lane")) sp.set("lane", lane);
-      el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-    }catch(e){
-      el.setAttribute("href", path); // fallback
-    }
-  }
+      LS.setItem("gd_lang", lang);
+      LS.setItem("gd_style", style);
+      LS.setItem("gd_time", time);
+      LS.setItem("gd_depth", depth);
+    }catch(e){}
 
-  // nav links
-  wireHref(document.getElementById("btnDoor"),"/door/");
-  wireHref(document.getElementById("btnHome"),"/home/");
-  wireHref(document.getElementById("btnExit"),"/index.html");
-  wireHref(document.getElementById("dockExplore"),"/explore/");
-  wireHref(document.getElementById("dockProducts"),"/products/");
-  wireHref(document.getElementById("dockLaws"),"/laws/");
-  wireHref(document.getElementById("dockGauges"),"/gauges/");
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  // language toggle (reload same pathname)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    if(btnEN) btnEN.classList.toggle("active", lang==="en");
-    if(btnZH) btnZH.classList.toggle("active", lang==="zh");
-    if(btnES) btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); });
-  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); });
-  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // lens buttons
-  var pillPlatform=document.getElementById("pillPlatform");
-  var pillEngineering=document.getElementById("pillEngineering");
-  var pillInformal=document.getElementById("pillInformal");
-  var pillFormal=document.getElementById("pillFormal");
-
-  function paintLenses(){
-    if(pillPlatform) pillPlatform.classList.toggle("active", lane==="platform");
-    if(pillEngineering) pillEngineering.classList.toggle("active", lane==="engineering");
-    if(pillInformal) pillInformal.classList.toggle("active", style==="informal");
-    if(pillFormal) pillFormal.classList.toggle("active", style==="formal");
-  }
-  paintLenses();
-
-  function setLane(next){
-    lane = (next==="engineering") ? "engineering" : "platform";
-    window.location.href = window.location.pathname + q({lane:lane});
-  }
-  function setVoice(next){
-    style = (next==="formal") ? "formal" : "informal";
-    try{ localStorage.setItem("gd_style",style);}catch(e){}
-    window.location.href = window.location.pathname + q({style:style});
-  }
-
-  if(pillPlatform) pillPlatform.addEventListener("click", function(){ setLane("platform"); });
-  if(pillEngineering) pillEngineering.addEventListener("click", function(){ setLane("engineering"); });
-  if(pillInformal) pillInformal.addEventListener("click", function(){ setVoice("informal"); });
-  if(pillFormal) pillFormal.addEventListener("click", function(){ setVoice("formal"); });
-
-  // depth indicator
-  var depthLabel=document.getElementById("depthLabel");
-  var depthVal=document.getElementById("depthVal");
-  if(depthVal) depthVal.textContent = depth;
-
-  // i18n helpers
-  function pick(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function openWord(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-
-  // header localized labels
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="产品";
-    document.getElementById("ht").textContent="你能用的东西";
-    document.getElementById("bandA").textContent="产品执行面";
-    document.getElementById("bandB").textContent="愿景壳";
-    document.getElementById("bandC").textContent="系统主脊柱";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnHome").textContent="主页";
-    document.getElementById("btnExit").textContent="退出";
-    document.getElementById("dockExplore").textContent="探索";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-    if(pillPlatform) pillPlatform.textContent="平台";
-    if(pillEngineering) pillEngineering.textContent="工程";
-    if(pillInformal) pillInformal.textContent="通俗";
-    if(pillFormal) pillFormal.textContent="正式";
-    if(depthLabel) depthLabel.textContent="深度";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="PRODUCTOS";
-    document.getElementById("ht").textContent="LO QUE PUEDES USAR";
-    document.getElementById("bandA").textContent="SUPERFICIES";
-    document.getElementById("bandB").textContent="CARCASAS DE VISIÓN";
-    document.getElementById("bandC").textContent="ESPINAS DEL SISTEMA";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnHome").textContent="INICIO";
-    document.getElementById("btnExit").textContent="SALIR";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    if(pillPlatform) pillPlatform.textContent="PLATAFORMA";
-    if(pillEngineering) pillEngineering.textContent="INGENIERÍA";
-    if(pillInformal) pillInformal.textContent="INFORMAL";
-    if(pillFormal) pillFormal.textContent="FORMAL";
-    if(depthLabel) depthLabel.textContent="PROFUNDIDAD";
-  }
-
-  // Header copy depends on lane + voice
-  function headCopy(){
-    var informal = (style==="informal");
-    var platform = (lane==="platform");
-
-    if(lang==="zh"){
-      if(informal && platform) return ["你要找的是可执行的下一步。本目录把可用执行面按结构摆好：打开一行，读一分钟，干净跳转。","平台姿态：先路由，再解释。先把人从迷路里救出来。"];
-      if(informal && !platform) return ["你要找的是可测、可复跑、可扩张的答案。本目录按“能否承受压力”组织执行面。","工程姿态：先约束，再扩张。先把系统从漂移里救出来。"];
-      if(!informal && platform) return ["本页是稳定路由目录：强制状态携带，禁止坍缩到万能目的地。","平台姿态强调可用性、可发现性与一致交互模板。"];
-      return ["本页是约束下执行面目录：输出必须在声明范围内可复现。","工程姿态强调闸门、收据、回滚与分段隔离。"];
+    function q(extra){
+      var p = new URLSearchParams();
+      p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+      p.set("style",(extra&&extra.style)?extra.style:style);
+      p.set("time", (extra&&extra.time)?extra.time:time);
+      p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
+      var L = (extra&&extra.lane)?extra.lane:lane;
+      if(L==="platform"||L==="engineering") p.set("lane", L);
+      return "?" + p.toString();
     }
 
-    if(lang==="es"){
-      if(informal && platform) return ["Buscas un siguiente paso usable. Este catálogo ordena superficies para abrir una fila, leer un minuto y saltar limpio.","Postura plataforma: enrutar primero, explicar después."];
-      if(informal && !platform) return ["Buscas una respuesta medible y repetible. Este catálogo ordena superficies por disciplina bajo presión.","Postura ingeniería: restringir primero, escalar después."];
-      if(!informal && platform) return ["Este índice es un catálogo de rutas estables: preserva estado y prohíbe colapsar a un destino universal.","Plataforma: usabilidad, descubribilidad y plantillas uniformes."];
-      return ["Este índice es un catálogo bajo restricción: salidas reproducibles bajo alcance declarado.","Ingeniería: compuertas, recibos, rollback y segmentación."];
-    }
+    // Wire all [data-route] links with state
+    function wireAll(){
+      var nodes = document.querySelectorAll("[data-route]");
+      for(var i=0;i<nodes.length;i++){
+        var el = nodes[i];
+        var route = el.getAttribute("data-route") || "";
+        if(!route) continue;
 
-    // EN
-    if(informal && platform) return ["You want an executable next step. This catalog lays out usable surfaces: open one row, read one minute, jump cleanly.","Platform posture: route first, explain second."];
-    if(informal && !platform) return ["You want a measurable answer you can replay. This catalog organizes surfaces by discipline under pressure.","Engineering posture: constrain first, scale second."];
-    if(!informal && platform) return ["This page is a stable routing catalog: state-carry is mandatory and catch-all collapse is disallowed.","Platform posture prioritizes discoverability, usability, and uniform templates."];
-    return ["This page is a constraint-bounded surface catalog: outputs must remain reproducible under declared scope.","Engineering posture prioritizes gates, receipts, rollback, and segmentation."];
-  }
-  var hc=headCopy();
-  document.getElementById("hs").textContent=hc[0];
-  document.getElementById("fine").textContent=hc[1];
-
-  // Data
-  var A = [
-    {
-      c:"#ff2b2b",
-      t:pick("Energy (Industrial)","能源（工业）","Energía (Industrial)"),
-      s:pick("Industrial substitution surfaces. No gain claims.","工业替代执行面。无增益主张。","Superficies industriales. Sin ganancias."),
-      href:"/products/energy/",
-      bullets:{
-        informal:pick(
-          ["Start with what is already paid for.","Keep it measurable.","Contain risk early.","Scale only after stability.","Don’t promise miracles.","Build receipts.","Route outputs to Gauges."],
-          ["从已存在系统开始。","保持可测。","先隔离风险。","稳定后再扩张。","不许神话。","收据优先。","输出路由到量规。"],
-          ["Empieza con lo existente.","Medible primero.","Contención temprano.","Escalar tras estabilidad.","Sin milagros.","Recibos primero.","Salidas a Medidores."]
-        ),
-        formal:pick(
-          ["Industrial thermal substitution posture.","Bounded to measured bands under scope.","No net-positive claims asserted.","Containment and rollback required.","Phase-gated deployment.","Outputs routed to Gauges.","Language bounded by Laws."],
-          ["工业热替代姿态。","绑定声明范围下的可测区间。","不主张净增益。","要求隔离与回滚。","阶段闸门部署。","输出路由到量规。","语言受法则约束。"],
-          ["Postura de sustitución térmica industrial.","Acotado a bandas medidas bajo alcance.","Sin afirmaciones net-positivas.","Contención y rollback obligatorios.","Despliegue por fases.","Salidas a Medidores.","Lenguaje acotado por Leyes."]
-        )
-      }
-    },
-    {
-      c:"#c9a24a",
-      t:pick("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"),
-      s:pick("Traversal ESL system + free Stage 1 PDF.","ESL遍历系统 + 免费阶段1 PDF。","ESL por recorrido + PDF gratis."),
-      href:"/products/education/",
-      bullets:{
-        informal:pick(
-          ["Small loops. Fast clarity.","Checkpoints prove skill.","No ‘feel fluent’ upgrades.","Daily routine template.","Stage ladder roadmap.","Teacher-ready structure.","Portable progress."],
-          ["小循环，快清晰。","检查点验证能力。","不靠感觉升级。","每日例程模板。","阶段阶梯路线。","可复制教学结构。","进度可携带。"],
-          ["Bucles pequeños. Claridad rápida.","Checkpoints prueban habilidad.","Sin ‘me siento’ upgrades.","Rutina diaria.","Escalera por etapas.","Estructura replicable.","Progreso portable."]
-        ),
-        formal:pick(
-          ["Traversal-first learning surface.","Checkpoint-defined mastery.","Observer-invariant scoring posture.","Routine contract: input/output/checkpoint/log.","Tiering reserved until stability.","Label parity across languages.","Outputs remain receipt-backed."],
-          ["遍历优先学习面。","掌握由检查点定义。","观察者不变评分姿态。","例程合同：输入/输出/检查点/日志。","稳定前不做分层膨胀。","三语标签一致。","输出必须收据支撑。"],
-          ["Superficie de aprendizaje por recorrido.","Dominio por checkpoints.","Puntuación invariante al observador.","Contrato: input/output/checkpoint/log.","Niveles solo con estabilidad.","Paridad de etiquetas.","Salidas con recibos."]
-        )
-      }
-    },
-    {
-      c:"#ff2b2b",
-      t:pick("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"),
-      s:pick("Bounded outputs + reason codes. Receipts only.","有界输出+原因码。仅收据。","Salidas acotadas + razones. Solo recibos."),
-      href:"/products/coherence-diagnostic/",
-      bullets:{
-        informal:pick(
-          ["Turns chaos into a shortlist.","Stops story inflation.","Tells you what’s missing.","Routes you cleanly.","Prevents scale into confusion.","Keeps disputes boring.","Protects time."],
-          ["把混乱变成清单。","阻止故事膨胀。","告诉你缺什么。","把你干净路由走。","防止在困惑中扩张。","让争执变无聊。","保护时间。"],
-          ["Convierte caos en lista corta.","Detiene inflación narrativa.","Dice qué falta.","Enruta limpio.","Evita escalar confundido.","Hace disputas aburridas.","Protege tiempo."]
-        ),
-        formal:pick(
-          ["Constraint filter under declared scope.","Outputs: pass/hold/contain + reason codes.","No inferred intent; receipts only.","Epoch rules for corrections.","Routes to Laws (bounds) and Gauges (signals).","Prevents drift escalation.","Observer-invariant target posture."],
-          ["声明范围下的约束过滤器。","输出：通过/等待/隔离+原因码。","不用意图推断，只用收据。","修正需新纪元。","路由到法则（边界）与量规（信号）。","阻止漂移升级。","目标：观察者不变姿态。"],
-          ["Filtro bajo alcance declarado.","Salidas: pasa/espera/contén + razones.","Sin inferir intención; solo recibos.","Correcciones por época.","Rutas a Leyes y Medidores.","Evita escalación de deriva.","Objetivo invariante."]
-        )
+        if(route.indexOf("?") !== -1){
+          try{
+            var u = new URL(route, location.origin);
+            var sp = u.searchParams;
+            if(!sp.get("lang")) sp.set("lang", lang);
+            if(!sp.get("style")) sp.set("style", style);
+            if(!sp.get("time")) sp.set("time", time);
+            if(!sp.get("depth")) sp.set("depth", depth);
+            if(!sp.get("lane")) sp.set("lane", lane);
+            el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+          }catch(e){
+            el.setAttribute("href", route);
+          }
+        }else{
+          el.setAttribute("href", route + q());
+        }
       }
     }
-  ];
 
-  var B = [
-    {
-      c:"#c9a24a",
-      t:pick("Water Systems (Vision Shell)","水系统（愿景壳）","Agua (carcasa de visión)"),
-      s:pick("Capture → clean → reuse routing posture.","采集→净化→复用的路由姿态。","Captar → limpiar → reusar."),
-      href:"/explore/frontier/vision/?focus=water"
-    },
-    {
-      c:"#ff2b2b",
-      t:pick("Waste Systems (Vision Shell)","废弃物（愿景壳）","Residuos (carcasa de visión)"),
-      s:pick("Stop burning value. Route molecules instead.","别烧掉价值：路由分子。","No quemar valor: rutear moléculas."),
-      href:"/explore/frontier/vision/?focus=waste"
-    },
-    {
-      c:"#ff2b2b",
-      t:pick("SHIMMER (Vision Shell)","SHIMMER（愿景壳）","SHIMMER (carcasa de visión)"),
-      s:pick("Hybrid molecular refinery: entropy routing at scale.","混合分子精炼：规模化熵路由。","Refinería híbrida: ruteo entrópico."),
-      href:"/explore/frontier/vision/?focus=shimmer"
-    }
-  ];
+    // ===== i18n =====
+    function pick(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+    function openWord(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  var C = [
-    {
-      c:"#ff2b2b",
-      t:pick("Software Spine","软件主脊柱","Espina de software"),
-      s:pick("Routing, gates, receipts. The machine behind pages.","路由、闸门、收据：页面背后的机器。","Rutas, compuertas, recibos."),
-      href:"/products/software/",
-      bullets:{
-        informal:pick(
-          ["One tap → one outcome.","No hidden layers.","State always carried.","No catch-all collapse.","Templates everywhere.","Scale without chaos.","Boringly reliable."],
-          ["一次点击→一个结果。","无隐藏层。","状态永远携带。","不坍缩到总页。","模板处处一致。","无混乱扩张。","无聊地可靠。"],
-          ["Un toque → un resultado.","Sin capas ocultas.","Estado siempre viaja.","Sin colapsar a ‘todo’.","Plantillas en todas partes.","Escalar sin caos.","Fiable y aburrido."]
-        ),
-        formal:pick(
-          ["Navigation-first contracts.","Deterministic gates.","Receipt progression.","Audit discipline + change control.","Registry status separation.","Correlation awareness via sweeps.","Bounds governed by Laws."],
-          ["导航优先契约。","确定性闸门。","收据式推进。","审计纪律+变更控制。","登记状态分离。","通过扫掠感知相关。","边界由法则治理。"],
-          ["Contratos navigation-first.","Compuertas deterministas.","Progresión por recibos.","Auditoría + control de cambios.","Separación por registro.","Conciencia de correlación por barridos.","Límites por Leyes."]
-        )
+    var I18N = {
+      en:{
+        hk:"PRODUCTS",
+        ht:"WHAT YOU CAN USE",
+        hs_informal_platform:"Pick one thing. Open it. Keep your state. This catalog routes you to the next bounded page.",
+        hs_informal_engineering:"Pick one thing. Open it. Keep your state. Engineering view tightens language and highlights boundaries.",
+        hs_formal_platform:"This is the routing catalog. Links are stable. State-carry is mandatory.",
+        hs_formal_engineering:"This is the routing catalog. Links are stable. State-carry is mandatory. Engineering view tightens wording.",
+        fine_informal_platform:"PLATFORM emphasizes discoverability and clear next steps. Gold is trim. Red is direction. Black stays gem-like.",
+        fine_informal_engineering:"ENGINEERING emphasizes boundaries, checks, and measurable outputs. Gold is trim. Red is direction. Black stays gem-like.",
+        fine_formal_platform:"PLATFORM posture: discoverability + usability under stable routing contracts.",
+        fine_formal_engineering:"ENGINEERING posture: separation + precision under stable routing contracts.",
+
+        bandA:"PRODUCT SURFACES",
+        bandS:"SERVICES",
+        bandB:"VISION SHELLS",
+        bandC:"SYSTEM SPINES",
+
+        dockExplore:"EXPLORE",
+        dockProducts:"PRODUCTS",
+        dockLaws:"LAWS",
+        dockGauges:"GAUGES"
+      },
+      zh:{
+        hk:"产品",
+        ht:"你能用的东西",
+        hs_informal_platform:"选一个东西，打开它，状态保留。本目录把你路由到一个有界的下一页。",
+        hs_informal_engineering:"选一个东西，打开它，状态保留。工程视图会更严格、更强调边界。",
+        hs_formal_platform:"本页为路由目录。链接稳定。内部跳转必须携带状态。",
+        hs_formal_engineering:"本页为路由目录。链接稳定。内部跳转必须携带状态。工程视图强化措辞。",
+        fine_informal_platform:"平台强调可发现性与清晰下一步。金=饰边。红=方向。黑=宝石面。",
+        fine_informal_engineering:"工程强调边界、检查与可测输出。金=饰边。红=方向。黑=宝石面。",
+        fine_formal_platform:"平台姿态：稳定契约下提升可发现性与可用性。",
+        fine_formal_engineering:"工程姿态：稳定契约下强化分离度与精确措辞。",
+
+        bandA:"产品执行面",
+        bandS:"服务",
+        bandB:"愿景壳",
+        bandC:"系统主脊柱",
+
+        dockExplore:"探索",
+        dockProducts:"产品",
+        dockLaws:"法则",
+        dockGauges:"量规"
+      },
+      es:{
+        hk:"PRODUCTOS",
+        ht:"LO QUE PUEDES USAR",
+        hs_informal_platform:"Elige una cosa. Ábrela. Conserva el estado. Este catálogo te enruta al siguiente paso acotado.",
+        hs_informal_engineering:"Elige una cosa. Ábrela. Conserva el estado. Ingeniería endurece el lenguaje y resalta límites.",
+        hs_formal_platform:"Este es el catálogo de rutas. Enlaces estables. Estado obligatorio.",
+        hs_formal_engineering:"Este es el catálogo de rutas. Enlaces estables. Estado obligatorio. Ingeniería endurece el lenguaje.",
+        fine_informal_platform:"Plataforma: descubribilidad y siguiente paso claro. Oro = adorno. Rojo = dirección. Negro = gema.",
+        fine_informal_engineering:"Ingeniería: límites, checks y salidas medibles. Oro = adorno. Rojo = dirección. Negro = gema.",
+        fine_formal_platform:"Plataforma: descubribilidad y usabilidad bajo contratos de ruta estables.",
+        fine_formal_engineering:"Ingeniería: separación y precisión bajo contratos de ruta estables.",
+
+        bandA:"SUPERFICIES",
+        bandS:"SERVICIOS",
+        bandB:"CARCASAS DE VISIÓN",
+        bandC:"ESPINAS DEL SISTEMA",
+
+        dockExplore:"EXPLORAR",
+        dockProducts:"PRODUCTOS",
+        dockLaws:"LEYES",
+        dockGauges:"MEDIDORES"
       }
-    },
-    {
-      c:"#c9a24a",
-      t:pick("Dot.Grid","Dot.Grid","Dot.Grid"),
-      s:pick("Map + sweep: reveal wiring and correlation early.","地图+扫掠：提前暴露线路与相关。","Mapa + barrido: revela cableado y correlación."),
-      href:"/products/dot-grid/"
-    },
-    {
-      c:"#c9a24a",
-      t:pick("SSG","SSG","SSG"),
-      s:pick("Execution geometry: Resources/Stores/Constraints/Goals/Guards.","执行几何：资源/存储/约束/目标/守卫。","Geometría: Resources/Stores/Constraints/Goals/Guards."),
-      href:"/products/ssg/"
-    },
-    {
-      c:"#ff2b2b",
-      t:pick("Risk & Capital Systems","风险与资本系统","Riesgo y capital"),
-      s:pick("Risk, contracts, compliance, insurance, finance, crypto (bounded).","风险/合约/合规/保险/金融/加密（有界）。","Riesgo, contratos, cumplimiento, seguro, finanzas, cripto (acotado)."),
-      href:"/products/risk-capital/"
+    };
+
+    function t(key){
+      var dict = I18N[lang] || I18N.en;
+      return dict[key] || (I18N.en[key] || "");
     }
-  ];
 
-  function makeRow(item){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", item.c);
+    function applyHeader(){
+      var hk=document.getElementById("hk");
+      var ht=document.getElementById("ht");
+      var hs=document.getElementById("hs");
+      var fine=document.getElementById("fine");
 
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
+      if(hk) hk.textContent=t("hk");
+      if(ht) ht.textContent=t("ht");
 
-    var left=document.createElement("div");
-    left.className="left";
+      var hsKey="hs_"+style+"_"+lane;
+      var fineKey="fine_"+style+"_"+lane;
 
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=item.c;
+      if(hs) hs.textContent=t(hsKey);
+      if(fine) fine.textContent=t(fineKey);
 
-    var titleBlock=document.createElement("div");
-    titleBlock.className="titleBlock";
+      // bands + dock labels
+      var bandA=document.getElementById("bandA");
+      var bandS=document.getElementById("bandS");
+      var bandB=document.getElementById("bandB");
+      var bandC=document.getElementById("bandC");
+      if(bandA) bandA.textContent=t("bandA");
+      if(bandS) bandS.textContent=t("bandS");
+      if(bandB) bandB.textContent=t("bandB");
+      if(bandC) bandC.textContent=t("bandC");
 
-    var title=document.createElement("div");
-    title.className="title";
-    title.textContent=item.t;
+      var dockExplore=document.getElementById("dockExplore");
+      var dockProducts=document.getElementById("dockProducts");
+      var dockLaws=document.getElementById("dockLaws");
+      var dockGauges=document.getElementById("dockGauges");
+      if(dockExplore) dockExplore.textContent=t("dockExplore");
+      if(dockProducts) dockProducts.textContent=t("dockProducts");
+      if(dockLaws) dockLaws.textContent=t("dockLaws");
+      if(dockGauges) dockGauges.textContent=t("dockGauges");
 
-    var sub=document.createElement("div");
-    sub.className="sub";
-    sub.textContent=item.s;
+      // chip values
+      var chipLangVal=document.getElementById("chipLangVal");
+      var chipLaneVal=document.getElementById("chipLaneVal");
+      var chipStyleVal=document.getElementById("chipStyleVal");
+      var chipDepthVal=document.getElementById("chipDepthVal");
+      if(chipLangVal) chipLangVal.textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+      if(chipLaneVal) chipLaneVal.textContent = (lane==="engineering") ? pick("ENGINEERING","工程","INGENIERÍA") : pick("PLATFORM","平台","PLATAFORMA");
+      if(chipStyleVal) chipStyleVal.textContent = (style==="formal") ? pick("FORMAL","正式","FORMAL") : pick("INFORMAL","通俗","INFORMAL");
+      if(chipDepthVal) chipDepthVal.textContent = depth;
+    }
 
-    titleBlock.appendChild(title);
-    titleBlock.appendChild(sub);
+    // ===== Controls (reload same pathname) =====
+    function setPressed(ids, activeId){
+      for(var i=0;i<ids.length;i++){
+        var el=document.getElementById(ids[i]);
+        if(!el) continue;
+        el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+      }
+    }
 
-    left.appendChild(mark);
-    left.appendChild(titleBlock);
+    function reloadSamePath(extra){
+      location.href = location.pathname + q(extra || {});
+    }
 
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
+    function initControls(){
+      setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+      setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+      setPressed(["styleInformal","styleFormal"], style==="formal"?"styleFormal":"styleInformal");
 
-    head.appendChild(left);
-    head.appendChild(chev);
+      var langEN=document.getElementById("langEN");
+      var langZH=document.getElementById("langZH");
+      var langES=document.getElementById("langES");
+      if(langEN) langEN.addEventListener("click", function(){ reloadSamePath({lang:"en"}); }, {passive:true});
+      if(langZH) langZH.addEventListener("click", function(){ reloadSamePath({lang:"zh"}); }, {passive:true});
+      if(langES) langES.addEventListener("click", function(){ reloadSamePath({lang:"es"}); }, {passive:true});
 
-    var body=document.createElement("div");
-    body.className="body";
+      var lanePlatform=document.getElementById("lanePlatform");
+      var laneEngineering=document.getElementById("laneEngineering");
+      if(lanePlatform) lanePlatform.addEventListener("click", function(){ reloadSamePath({lane:"platform"}); }, {passive:true});
+      if(laneEngineering) laneEngineering.addEventListener("click", function(){ reloadSamePath({lane:"engineering"}); }, {passive:true});
 
-    var p1=document.createElement("p");
-    p1.className="p";
-    p1.textContent = (style==="informal")
-      ? pick(
-          "Open one row. Read one minute. Jump cleanly. This catalog is built to stop wandering.",
-          "打开一行。读一分钟。干净跳转。本目录用于阻止迷路。",
-          "Abre una fila. Lee un minuto. Salta limpio. Este catálogo evita deambular."
-        )
-      : pick(
-          "This surface is a routing catalog. It preserves state and prevents taxonomy collapse.",
-          "本面是路由目录：保持状态并防止分类坍缩。",
-          "Esta superficie es un catálogo de enrutamiento: preserva estado y evita colapso taxonómico."
-        );
-    body.appendChild(p1);
+      var styleInformal=document.getElementById("styleInformal");
+      var styleFormal=document.getElementById("styleFormal");
+      if(styleInformal) styleInformal.addEventListener("click", function(){
+        try{ LS.setItem("gd_style","informal"); }catch(e){}
+        reloadSamePath({style:"informal"});
+      }, {passive:true});
+      if(styleFormal) styleFormal.addEventListener("click", function(){
+        try{ LS.setItem("gd_style","formal"); }catch(e){}
+        reloadSamePath({style:"formal"});
+      }, {passive:true});
+    }
 
-    if(item.bullets){
-      var ul=document.createElement("ul");
-      ul.className="ul";
-      var bullets = (style==="informal") ? item.bullets.informal : item.bullets.formal;
-      var arr = (typeof bullets==="string") ? [bullets] : bullets;
-      if(Array.isArray(arr)){
-        arr.forEach(function(x){
+    // ===== Catalog data (concrete, non-abstract language) =====
+    function rowCopy(base){
+      // base contains: title/subtitle + 4 variants
+      // returns {p1,p2,bullets[]}
+      var key = lane + "_" + style; // platform_informal etc
+      return base[key];
+    }
+
+    var ROWS_A = [
+      {
+        c:"#ff2b2b",
+        t:{en:"Energy (Industrial)", zh:"能源（工业）", es:"Energía (Industrial)"},
+        s:{en:"Industrial substitution surfaces. Measurable first.", zh:"工业替代执行面。先可测。", es:"Superficies industriales. Medible primero."},
+        href:"/products/energy/",
+        copy:{
+          platform_informal:{
+            p1:{en:"Use this when you want a clear starting point: what to measure, where to start, and what success looks like.", zh:"当你需要清晰起点：测什么、从哪开始、成功是什么样。", es:"Úsalo para un inicio claro: qué medir, dónde empezar y cómo se ve el éxito."},
+            p2:{en:"You’ll be routed to the Energy page with the same state you have now.", zh:"会带着当前状态跳到能源页。", es:"Te enruta a Energía con el mismo estado."},
+            bullets:{en:["Start with existing equipment.","Measure before scaling.","Contain risk early.","Escalate only after stability."], zh:["从现有设备开始。","先测再扩张。","先隔离风险。","稳定后再升级。"], es:["Empieza con lo existente.","Mide antes de escalar.","Contén el riesgo temprano.","Escala tras estabilidad."]}
+          },
+          engineering_informal:{
+            p1:{en:"Use this when you need disciplined deployment: scope, bands, rollback, and visible signals.", zh:"当你需要纪律化部署：范围、区间、回滚、可见信号。", es:"Úsalo para despliegue disciplinado: alcance, bandas, rollback y señales."},
+            p2:{en:"Outputs should end up in Gauges for review.", zh:"输出应进入量规以便复核。", es:"Las salidas deben aterrizar en Medidores para revisión."},
+            bullets:{en:["Declare scope.","Bind to measured bands.","Require rollback plan.","Route signals to Gauges."], zh:["声明范围。","绑定可测区间。","要求回滚方案。","信号路由到量规。"], es:["Declara alcance.","Acota a bandas medidas.","Exige plan de rollback.","Rutea señales a Medidores."]}
+          },
+          platform_formal:{
+            p1:{en:"Energy is an industrial routing surface. State-carry is mandatory. The destination page defines the next step.", zh:"能源为工业路由执行面。必须携带状态。目标页定义下一步。", es:"Energía es una superficie de ruta industrial. Estado obligatorio. La página destino define el siguiente paso."},
+            p2:{en:"No global claims are asserted on this index.", zh:"本索引不做全局主张。", es:"Este índice no hace afirmaciones globales."},
+            bullets:{en:["Stable route.","State preserved.","Clear next step."], zh:["路由稳定。","状态保留。","下一步清晰。"], es:["Ruta estable.","Estado preservado.","Siguiente paso claro."]}
+          },
+          engineering_formal:{
+            p1:{en:"Energy is a constraint-bounded industrial surface. Deployment requires measured bands and rollback containment.", zh:"能源为约束下工业执行面。部署需可测区间与回滚隔离。", es:"Energía es una superficie industrial acotada. Despliegue requiere bandas medidas y contención con rollback."},
+            p2:{en:"Signals are reviewed via Gauges. Bounds are governed via Laws.", zh:"信号通过量规复核。边界由法则治理。", es:"Señales se revisan en Medidores. Límites se gobiernan en Leyes."},
+            bullets:{en:["Measured bands.","Rollback required.","Signals to Gauges.","Bounds via Laws."], zh:["可测区间。","必须回滚。","信号到量规。","边界到法则。"], es:["Bandas medidas.","Rollback obligatorio.","Señales a Medidores.","Límites en Leyes."]}
+          }
+        }
+      },
+      {
+        c:"#c9a24a",
+        t:{en:"Education (1001 Words)", zh:"教育（1001词）", es:"Educación (1001 Palabras)"},
+        s:{en:"Traversal ESL system + free Stage 1 PDF.", zh:"ESL遍历系统 + 免费阶段1 PDF。", es:"ESL por recorrido + PDF gratis."},
+        href:"/products/education/",
+        copy:{
+          platform_informal:{
+            p1:{en:"Use this to get fluent faster with a clear daily routine and checkpoints.", zh:"用它更快流利：清晰日常例程+检查点。", es:"Úsalo para fluidez más rápida con rutina diaria y checkpoints."},
+            p2:{en:"If you’re browsing: start with the free Stage 1 PDF flow.", zh:"如果只是看看：从免费阶段1 PDF 开始。", es:"Si estás explorando: empieza por el PDF gratuito de Etapa 1."},
+            bullets:{en:["Daily routine.","Checkpoints.","Stage ladder.","Teacher-ready."], zh:["每日例程。","检查点。","阶段阶梯。","可教学复制。"], es:["Rutina diaria.","Checkpoints.","Escalera por etapas.","Listo para enseñar."]}
+          },
+          engineering_informal:{
+            p1:{en:"Use this when you want measurable learning: checkpoints define mastery, not feelings.", zh:"当你要可测学习：掌握由检查点定义，不靠感觉。", es:"Úsalo para aprendizaje medible: checkpoints definen dominio, no sensaciones."},
+            p2:{en:"Outputs are structured so anyone can verify progress.", zh:"输出结构化，任何人都能复核进度。", es:"Salidas estructuradas para que cualquiera verifique progreso."},
+            bullets:{en:["Observer-invariant checks.","Routine contract.","Tier only after stability."], zh:["观察者不变检查。","例程合同。","稳定后再分层。"], es:["Checks invariantes.","Contrato de rutina.","Niveles tras estabilidad."]}
+          },
+          platform_formal:{
+            p1:{en:"Education is a traversal learning surface with checkpoint-defined progression. State-carry is mandatory.", zh:"教育为遍历学习面，进度由检查点定义。必须携带状态。", es:"Educación es una superficie de aprendizaje por recorrido con progresión por checkpoints. Estado obligatorio."},
+            p2:{en:"The destination page owns intake and download flow.", zh:"目标页负责入口与下载流程。", es:"La página destino maneja el flujo de ingreso y descarga."},
+            bullets:{en:["Traversal surface.","Checkpoint progression.","Stable route."], zh:["遍历执行面。","检查点进度。","路由稳定。"], es:["Superficie por recorrido.","Progresión por checkpoints.","Ruta estable."]}
+          },
+          engineering_formal:{
+            p1:{en:"Education requires observer-invariant checkpoints and a repeatable routine contract (input/output/check/log).", zh:"教育要求观察者不变检查点与可复跑例程合同（输入/输出/检查/日志）。", es:"Educación requiere checkpoints invariantes y un contrato de rutina repetible (input/output/check/log)."},
+            p2:{en:"Progress is auditable and portable.", zh:"进度可审计且可携带。", es:"Progreso auditable y portable."},
+            bullets:{en:["Invariant checks.","Routine contract.","Auditable outputs."], zh:["不变检查。","例程合同。","可审计输出。"], es:["Checks invariantes.","Contrato de rutina.","Salidas auditables."]}
+          }
+        }
+      },
+      {
+        c:"#ff2b2b",
+        t:{en:"Coherence Diagnostic", zh:"一致性诊断", es:"Diagnóstico de coherencia"},
+        s:{en:"Bounded outputs + reason codes. Receipts only.", zh:"有界输出+原因码。仅收据。", es:"Salidas acotadas + razones. Solo recibos."},
+        href:"/products/coherence-diagnostic/",
+        copy:{
+          platform_informal:{
+            p1:{en:"Use this when you need the next step to be simple: what to do, what to collect, where to go.", zh:"当你要下一步很简单：做什么、收集什么、去哪里。", es:"Úsalo para un siguiente paso simple: qué hacer, qué recolectar, a dónde ir."},
+            p2:{en:"It prevents you from bouncing between pages with no decision.", zh:"它阻止你无决定地来回跳。", es:"Evita rebotar sin decisión."},
+            bullets:{en:["Shortlist next steps.","Stop wandering.","Route cleanly."], zh:["缩短下一步清单。","阻止迷路。","干净路由。"], es:["Lista corta.","Evita deambular.","Enruta limpio."]}
+          },
+          engineering_informal:{
+            p1:{en:"Use this when you need discipline: receipts in, bounded outputs out, reason codes attached.", zh:"当你要纪律：收据输入，有界输出，附原因码。", es:"Úsalo para disciplina: recibos entran, salidas acotadas salen, razones adjuntas."},
+            p2:{en:"No inferred intent. Signals go to Gauges. Bounds go to Laws.", zh:"不推断意图。信号到量规。边界到法则。", es:"Sin inferir intención. Señales a Medidores. Límites a Leyes."},
+            bullets:{en:["Receipts only.","Reason codes.","Signals to Gauges.","Bounds to Laws."], zh:["仅收据。","原因码。","信号到量规。","边界到法则。"], es:["Solo recibos.","Razones.","Señales a Medidores.","Límites a Leyes."]}
+          },
+          platform_formal:{
+            p1:{en:"Coherence Diagnostic routes users to bounded actions with explicit reasons. State is preserved.", zh:"一致性诊断把用户路由到有界动作并给出明确理由。状态保留。", es:"Diagnóstico de coherencia enruta a acciones acotadas con razones explícitas. Estado preservado."},
+            p2:{en:"The destination page defines the decision contract.", zh:"目标页定义决策合同。", es:"La página destino define el contrato de decisión."},
+            bullets:{en:["Bounded outputs.","Explicit reasons.","Stable route."], zh:["有界输出。","明确理由。","路由稳定。"], es:["Salidas acotadas.","Razones explícitas.","Ruta estable."]}
+          },
+          engineering_formal:{
+            p1:{en:"Constraint filter under declared scope. Outputs: pass/hold/contain with reason codes. Receipts only.", zh:"声明范围下的约束过滤器。输出：通过/等待/隔离+原因码。仅收据。", es:"Filtro de restricciones bajo alcance declarado. Salidas: pasa/espera/contén con razones. Solo recibos."},
+            p2:{en:"Signals are audited in Gauges. Bounds are governed in Laws.", zh:"信号在量规审计。边界在法则治理。", es:"Señales se auditan en Medidores. Límites se gobiernan en Leyes."},
+            bullets:{en:["Scope declared.","Receipts only.","Reasons attached.","Audit + bounds routing."], zh:["范围声明。","仅收据。","附原因。","审计与边界路由。"], es:["Alcance declarado.","Solo recibos.","Razones adjuntas.","Auditoría + límites."]}
+          }
+        }
+      }
+    ];
+
+    var ROWS_S = [
+      {
+        c:"#c9a24a",
+        t:{en:"Advisory", zh:"咨询", es:"Asesoría"},
+        s:{en:"Policy and standards routing via Laws.", zh:"通过法则进行政策与标准路由。", es:"Ruteo de políticas y estándares vía Leyes."},
+        href:"/laws/",
+        copy:{
+          platform_informal:{p1:{en:"Use this when you want a clear rule before you act.", zh:"当你要先有规则再行动。", es:"Úsalo cuando quieras una regla clara antes de actuar."}, p2:{en:"Laws is the contract surface.", zh:"法则是契约面。", es:"Leyes es la superficie de contrato."}, bullets:{en:["Get the rule.","Then act."], zh:["先定规则。","再行动。"], es:["Define la regla.","Luego actúa."]}},
+          engineering_informal:{p1:{en:"Use this when wording matters: bounds, invariants, reason codes.", zh:"当措辞重要：边界、不变量、原因码。", es:"Úsalo cuando importa el lenguaje: límites, invariantes, razones."}, p2:{en:"Engineering posture lives in Laws.", zh:"工程姿态落在法则。", es:"Postura de ingeniería vive en Leyes."}, bullets:{en:["Bounds first.","Then build."], zh:["先边界。","再构建。"], es:["Límites primero.","Luego construir."]}},
+          platform_formal:{p1:{en:"Advisory routes to Laws for standards and contracts.", zh:"咨询路由至法则以获取标准与契约。", es:"Asesoría enruta a Leyes para estándares y contratos."}, p2:{en:"State-carry is preserved.", zh:"状态保留。", es:"Estado preservado."}, bullets:{en:["Standards.","Contracts."], zh:["标准。","契约。"], es:["Estándares.","Contratos."]}},
+          engineering_formal:{p1:{en:"Advisory is governed via Laws. Bounds are declared before outputs are asserted.", zh:"咨询由法则治理。先声明边界，再输出主张。", es:"Asesoría se gobierna vía Leyes. Límites se declaran antes de afirmar salidas."}, p2:{en:"Routing is stable.", zh:"路由稳定。", es:"Ruteo estable."}, bullets:{en:["Bounds declared.","Outputs controlled."], zh:["边界声明。","输出受控。"], es:["Límites declarados.","Salidas controladas."]}}
+        }
+      },
+      {
+        c:"#ff2b2b",
+        t:{en:"Audit Support", zh:"审计支持", es:"Soporte de auditoría"},
+        s:{en:"Measurement and review via Gauges.", zh:"通过量规进行测量与复核。", es:"Medición y revisión vía Medidores."},
+        href:"/gauges/",
+        copy:{
+          platform_informal:{p1:{en:"Use this when you want to see what’s happening—fast.", zh:"当你要快速看到发生了什么。", es:"Úsalo para ver qué pasa—rápido."}, p2:{en:"Gauges is the measurement surface.", zh:"量规是测量面。", es:"Medidores es la superficie de medición."}, bullets:{en:["See signals.","Make next move."], zh:["看信号。","做下一步。"], es:["Ver señales.","Siguiente movimiento."]}},
+          engineering_informal:{p1:{en:"Use this when you need evidence and thresholds: signals, receipts, and deltas.", zh:"当你要证据与阈值：信号、收据、变化量。", es:"Úsalo para evidencia y umbrales: señales, recibos y deltas."}, p2:{en:"Engineering posture: measurement before claims.", zh:"工程姿态：先测量再主张。", es:"Ingeniería: medir antes de afirmar."}, bullets:{en:["Thresholds.","Receipts.","Deltas."], zh:["阈值。","收据。","变化量。"], es:["Umbrales.","Recibos.","Deltas."]}},
+          platform_formal:{p1:{en:"Audit Support routes to Gauges for measurement and review.", zh:"审计支持路由至量规进行测量与复核。", es:"Soporte de auditoría enruta a Medidores para medición y revisión."}, p2:{en:"State-carry is preserved.", zh:"状态保留。", es:"Estado preservado."}, bullets:{en:["Measurement surface."], zh:["测量面。"], es:["Superficie de medición."]}},
+          engineering_formal:{p1:{en:"Audit Support is executed via Gauges. Signals and thresholds are reviewed before escalation.", zh:"审计支持通过量规执行。升级前复核信号与阈值。", es:"Soporte de auditoría se ejecuta en Medidores. Señales y umbrales se revisan antes de escalar."}, p2:{en:"Routing is stable.", zh:"路由稳定。", es:"Ruteo estable."}, bullets:{en:["Signals.","Thresholds.","Review gate."], zh:["信号。","阈值。","复核闸门。"], es:["Señales.","Umbrales.","Compuerta de revisión."]}}
+        }
+      },
+      {
+        c:"#c9a24a",
+        t:{en:"Integration", zh:"集成", es:"Integración"},
+        s:{en:"Wiring, state-carry, page stability via Software Spine.", zh:"线路/状态携带/页面稳定：软件主干。", es:"Cableado, estado, estabilidad vía Espina de software."},
+        href:"/products/software/?lane=platform",
+        copy:{
+          platform_informal:{p1:{en:"Use this when links and state must behave perfectly on mobile.", zh:"当链接与状态必须在手机上完美运行。", es:"Úsalo cuando enlaces y estado deben funcionar perfecto en móvil."}, p2:{en:"Software Spine is the machine behind the pages.", zh:"软件主干是页面背后的机器。", es:"La espina de software es la máquina detrás de las páginas."}, bullets:{en:["Routing contracts.","State carry.","Tap-safe UI."], zh:["路由契约。","状态携带。","点击安全UI。"], es:["Contratos de ruta.","Estado.","UI segura al toque."]}},
+          engineering_informal:{p1:{en:"Use this when you need gates and receipts: deterministic behavior, no drift.", zh:"当你需要闸门与收据：确定性行为，无漂移。", es:"Úsalo para compuertas y recibos: comportamiento determinista, sin deriva."}, p2:{en:"Engineering posture lives in the spine wiring.", zh:"工程姿态落在线路里。", es:"La postura de ingeniería vive en el cableado."}, bullets:{en:["Deterministic gates.","Receipt progression.","Rollback safety."], zh:["确定性闸门。","收据推进。","回滚安全。"], es:["Compuertas deterministas.","Progresión por recibos.","Seguridad de rollback."]}},
+          platform_formal:{p1:{en:"Integration routes to Software Spine (default lane=platform).", zh:"集成路由至软件主干（默认 lane=platform）。", es:"Integración enruta a Espina de software (lane=platform por defecto)."}, p2:{en:"State is preserved.", zh:"状态保留。", es:"Estado preservado."}, bullets:{en:["Stable wiring."], zh:["稳定线路。"], es:["Cableado estable."]}},
+          engineering_formal:{p1:{en:"Integration is executed via Software Spine. Routing, gates, and receipts are enforced under contract.", zh:"集成通过软件主干执行。路由/闸门/收据在契约下强制。", es:"Integración se ejecuta vía Espina de software. Rutas/compuertas/recibos se aplican bajo contrato."}, p2:{en:"lane remains URL-only.", zh:"lane 仅为 URL。", es:"lane solo URL."}, bullets:{en:["Contracts enforced.","Receipts enforced."], zh:["契约强制。","收据强制。"], es:["Contratos aplicados.","Recibos aplicados."]}}
+        }
+      },
+      {
+        c:"#ff2b2b",
+        t:{en:"Training", zh:"培训", es:"Formación"},
+        s:{en:"Masterclass surfaces. Build skill you can repeat.", zh:"大师课执行面。构建可复跑技能。", es:"Superficies de masterclass. Habilidad repetible."},
+        href:"/products/training/",
+        copy:{
+          platform_informal:{p1:{en:"Use this when you want a guided path, not random browsing.", zh:"当你要一条引导路径，而不是乱逛。", es:"Úsalo para un camino guiado, no navegación al azar."}, p2:{en:"Training routes to a structured sequence.", zh:"培训路由到结构化序列。", es:"Formación enruta a una secuencia estructurada."}, bullets:{en:["Guided sequence.","Repeatable skill."], zh:["引导序列。","可复跑技能。"], es:["Secuencia guiada.","Habilidad repetible."]}},
+          engineering_informal:{p1:{en:"Use this when you need checkpoints and proof, not vibes.", zh:"当你要检查点与证据，而不是感觉。", es:"Úsalo para checkpoints y prueba, no ‘vibras’."}, p2:{en:"Engineering posture: define outcome + verify.", zh:"工程姿态：定义结果+验证。", es:"Ingeniería: define resultado + verifica."}, bullets:{en:["Checkpoints.","Verification."], zh:["检查点。","验证。"], es:["Checkpoints.","Verificación."]}},
+          platform_formal:{p1:{en:"Training routes to structured instructional surfaces.", zh:"培训路由至结构化教学执行面。", es:"Formación enruta a superficies instruccionales estructuradas."}, p2:{en:"State-carry is preserved.", zh:"状态保留。", es:"Estado preservado."}, bullets:{en:["Structured route."], zh:["结构化路由。"], es:["Ruta estructurada."]}},
+          engineering_formal:{p1:{en:"Training is executed via checkpoint-defined progression. Outputs are auditable.", zh:"培训通过检查点定义的进度执行。输出可审计。", es:"Formación se ejecuta con progresión por checkpoints. Salidas auditables."}, p2:{en:"Routing is stable.", zh:"路由稳定。", es:"Ruteo estable."}, bullets:{en:["Checkpoint progression.","Auditable outputs."], zh:["检查点进度。","可审计输出。"], es:["Progresión por checkpoints.","Salidas auditables."]}}
+        }
+      }
+    ];
+
+    var ROWS_B = [
+      {c:"#c9a24a", t:{en:"Water (Vision Shell)", zh:"水（愿景壳）", es:"Agua (carcasa de visión)"}, s:{en:"Capture → clean → reuse routing posture.", zh:"采集→净化→复用路由姿态。", es:"Captar → limpiar → reusar."}, href:"/explore/frontier/vision/?focus=water"},
+      {c:"#ff2b2b", t:{en:"Waste (Vision Shell)", zh:"废弃物（愿景壳）", es:"Residuos (carcasa de visión)"}, s:{en:"Stop burning value. Route molecules instead.", zh:"别烧掉价值：路由分子。", es:"No quemar valor: rutear moléculas."}, href:"/explore/frontier/vision/?focus=waste"},
+      {c:"#ff2b2b", t:{en:"SHIMMER (Vision Shell)", zh:"SHIMMER（愿景壳）", es:"SHIMMER (carcasa de visión)"}, s:{en:"Hybrid molecular refinery at scale.", zh:"规模化混合分子精炼。", es:"Refinería molecular híbrida a escala."}, href:"/explore/frontier/vision/?focus=shimmer"}
+    ];
+
+    var ROWS_C = [
+      {c:"#ff2b2b", t:{en:"Software Spine", zh:"软件主干", es:"Espina de software"}, s:{en:"Routing, gates, receipts. The machine behind pages.", zh:"路由/闸门/收据：页面背后的机器。", es:"Rutas, compuertas, recibos."}, href:"/products/software/"},
+      {c:"#c9a24a", t:{en:"Dot.Grid", zh:"Dot.Grid", es:"Dot.Grid"}, s:{en:"Map + sweep: reveal wiring and correlation early.", zh:"地图+扫掠：提前暴露线路与相关。", es:"Mapa + barrido: revela cableado y correlación."}, href:"/products/dot-grid/"},
+      {c:"#c9a24a", t:{en:"SSG", zh:"SSG", es:"SSG"}, s:{en:"Execution geometry: Resources/Stores/Constraints/Goals/Guards.", zh:"执行几何：资源/存储/约束/目标/守卫。", es:"Geometría: Resources/Stores/Constraints/Goals/Guards."}, href:"/products/ssg/"},
+      {c:"#ff2b2b", t:{en:"Risk & Capital Systems", zh:"风险与资本系统", es:"Riesgo y capital"}, s:{en:"Risk, contracts, compliance, insurance, finance, crypto (bounded).", zh:"风险/合约/合规/保险/金融/加密（有界）。", es:"Riesgo, contratos, cumplimiento, seguro, finanzas, cripto (acotado)."}, href:"/products/risk-capital/"},
+      {c:"#c9a24a", t:{en:"UCI Engine", zh:"UCI 引擎", es:"Motor UCI"}, s:{en:"Routing-safe shell (build next if missing).", zh:"路由安全壳（缺失则下一步构建）。", es:"Shell seguro (construir si falta)."}, href:"/products/uci/"},
+      {c:"#c9a24a", t:{en:"Registry", zh:"注册表", es:"Registro"}, s:{en:"Routing-safe shell (build next if missing).", zh:"路由安全壳（缺失则下一步构建）。", es:"Shell seguro (construir si falta)."}, href:"/products/registry/"},
+      {c:"#c9a24a", t:{en:"Adoption Ladder", zh:"采用阶梯", es:"Escalera de adopción"}, s:{en:"Routing-safe shell (build next if missing).", zh:"路由安全壳（缺失则下一步构建）。", es:"Shell seguro (construir si falta)."}, href:"/products/adoption-ladder/"}
+    ];
+
+    function makeRow(item, withCopy){
+      var row=document.createElement("div");
+      row.className="row";
+      row.style.setProperty("--c", item.c);
+
+      var head=document.createElement("div");
+      head.className="head";
+      head.setAttribute("role","button");
+      head.tabIndex=0;
+
+      var left=document.createElement("div");
+      left.className="left";
+
+      var mark=document.createElement("div");
+      mark.className="mark";
+      mark.style.background=item.c;
+
+      var titleBlock=document.createElement("div");
+      titleBlock.className="titleBlock";
+
+      var title=document.createElement("div");
+      title.className="title";
+      title.textContent = item.t[lang] || item.t.en;
+
+      var sub=document.createElement("div");
+      sub.className="sub";
+      sub.textContent = item.s[lang] || item.s.en;
+
+      titleBlock.appendChild(title);
+      titleBlock.appendChild(sub);
+
+      left.appendChild(mark);
+      left.appendChild(titleBlock);
+
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent="▸";
+
+      head.appendChild(left);
+      head.appendChild(chev);
+
+      var body=document.createElement("div");
+      body.className="body";
+
+      if(withCopy && item.copy){
+        var cc = rowCopy(item.copy);
+        var p1=document.createElement("p");
+        p1.className="p";
+        p1.textContent = (cc.p1[lang] || cc.p1.en);
+        body.appendChild(p1);
+
+        var p2=document.createElement("p");
+        p2.className="p";
+        p2.textContent = (cc.p2[lang] || cc.p2.en);
+        body.appendChild(p2);
+
+        var ul=document.createElement("ul");
+        ul.className="ul";
+        var bl = cc.bullets[lang] || cc.bullets.en;
+        for(var i=0;i<bl.length;i++){
           var li=document.createElement("li");
-          li.textContent=x;
+          li.textContent=bl[i];
           ul.appendChild(li);
-        });
+        }
+        body.appendChild(ul);
+      }else{
+        var p=document.createElement("p");
+        p.className="p";
+        p.textContent = pick(
+          "Open this to go to the destination page. Your state will carry.",
+          "打开以进入目标页。你的状态会携带。",
+          "Ábrelo para ir a la página destino. Tu estado se conserva."
+        );
+        body.appendChild(p);
       }
-      body.appendChild(ul);
+
+      var actions=document.createElement("div");
+      actions.className="actions";
+
+      var open=document.createElement("a");
+      open.className="btn red";
+      open.textContent = openWord() + ": " + pick("OPEN","打开","ABRIR");
+      open.setAttribute("data-route", item.href);
+      actions.appendChild(open);
+
+      body.appendChild(actions);
+
+      function toggle(){
+        var willOpen = !row.classList.contains("open");
+        var rows=document.querySelectorAll(".row");
+        for(var i=0;i<rows.length;i++){
+          rows[i].classList.remove("open");
+          var c=rows[i].querySelector(".chev");
+          if(c) c.textContent="▸";
+        }
+        row.classList.toggle("open", willOpen);
+        chev.textContent = willOpen ? "▾" : "▸";
+      }
+
+      head.addEventListener("click", function(){ toggle(); });
+      head.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      });
+
+      row.appendChild(head);
+      row.appendChild(body);
+      return row;
     }
 
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent = openWord() + ": " + pick("OPEN","打开","ABRIR");
-    wireHref(open, item.href);
-    actions.appendChild(open);
-
-    body.appendChild(actions);
-
-    function toggle(){
-      var willOpen = !row.classList.contains("open");
-      var rows=document.querySelectorAll(".row");
-      for(var i=0;i<rows.length;i++){
-        rows[i].classList.remove("open");
-        var c=rows[i].querySelector(".chev");
-        if(c) c.textContent="▸";
+    function mount(listId, arr, withCopy){
+      var list=document.getElementById(listId);
+      list.innerHTML="";
+      for(var i=0;i<arr.length;i++){
+        list.appendChild(makeRow(arr[i], withCopy));
       }
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
     }
 
-    head.addEventListener("click", function(){ toggle(); });
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-    });
+    // ===== Apply labels + mount =====
+    applyHeader();
+    initControls();
 
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
-  }
+    // Localize top buttons + dock labels (text only; routes wired by data-route)
+    if(lang==="zh"){
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnHome").textContent="主页";
+      document.getElementById("btnExit").textContent="指南针";
+      document.getElementById("lanePlatform").textContent="平台";
+      document.getElementById("laneEngineering").textContent="工程";
+      document.getElementById("styleInformal").textContent="通俗";
+      document.getElementById("styleFormal").textContent="正式";
+    }else if(lang==="es"){
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnHome").textContent="INICIO";
+      document.getElementById("btnExit").textContent="BRÚJULA";
+      document.getElementById("lanePlatform").textContent="PLATAFORMA";
+      document.getElementById("laneEngineering").textContent="INGENIERÍA";
+      document.getElementById("styleInformal").textContent="INFORMAL";
+      document.getElementById("styleFormal").textContent="FORMAL";
+    }
 
-  function mount(listId, arr){
-    var list=document.getElementById(listId);
-    list.innerHTML="";
-    for(var i=0;i<arr.length;i++){
-      var row=makeRow(arr[i]);
-      list.appendChild(row);
-      if(i===0){
-        row.classList.add("open");
-        var c=row.querySelector(".chev");
+    // Mount lists (A + Services include lens-dependent copy)
+    mount("listA", ROWS_A, true);
+    mount("listS", ROWS_S, true);
+    mount("listB", ROWS_B, false);
+    mount("listC", ROWS_C, false);
+
+    // Wire links now that DOM has data-route in actions
+    wireAll();
+
+    // Default open first row only (keeps single-open safe)
+    try{
+      var first = document.querySelector(".row");
+      if(first){
+        first.classList.add("open");
+        var c = first.querySelector(".chev");
         if(c) c.textContent="▾";
       }
-    }
-  }
-
-  mount("listA", A);
-  mount("listB", B);
-  mount("listC", C);
-})();
-</script>
-
+    }catch(e){}
+  })();
+  </script>
 </body>
 </html>

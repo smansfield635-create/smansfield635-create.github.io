@@ -1,20 +1,10 @@
 <!-- TNT — /explore/index.html
-     EXPLORE · PRODUCTS & INNOVATION (RESTORE + UPGRADE) · EN/中文/ES · MOBILE-SAFE · NO MODALS
-     PURPOSE:
-       - Match PRODUCTS hub style (dark opal + red, long bubbles, single-open accordion)
-       - Provide clear “where to go” map:
-           INFO (how to use)
-           LANES (Frontier / Vision / Language)
-           MAPS (Dot.Grid / SSG / Software Spine)
-           ROUTES (Laws / Gauges / Products)
-     RULES:
-       - Trilingual page-level toggle (EN/中文/ES) + GH Pages safe reload (same pathname)
-       - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
-       - Single-open accordion per band
-       - No modal traps, no inline onclick
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
+     FRONTIER VISION HUB
+     MONUMENT DENSITY · SINGLE OPEN ACCORDION · 7 DOMAINS
+     4 LENSES (Engineering / Platform / Informal / Formal)
+     3 LANGUAGES (EN / 中文 / ES)
+     STATE CARRY PRESERVED (gd_*)
+     NO MODALS · NO UI COLLISION · SINGLE TNT
 -->
 
 <!doctype html>
@@ -22,7 +12,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE</title>
+<title>EXPLORE · FRONTIER SYSTEMS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -30,507 +20,313 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* tokens */
+/* ===== Monument Tokens ===== */
 :root{
-  --dockH:106px;
-
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,70,70,.14);
-
-  --stroke:rgba(255,255,255,.12);
-  --txt:rgba(255,255,255,.90);
-  --mut:rgba(255,255,255,.78);
+  --dockH:90px;
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --redGlow:rgba(255,80,80,.18);
 }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:220;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+/* Top Controls */
+.top{
+  position:fixed;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(1200px,94vw);
+  display:flex;
+  justify-content:space-between;
+  z-index:300;
 }
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:220;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* page */
+.group{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap}
+.group .btn{border-radius:999px;padding:10px 14px}
+
+/* Page */
 .page{
-  width:min(1100px,94vw);
+  width:min(1200px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 18px);
+  padding:110px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
+  gap:20px;
 }
 
-/* header */
+/* Header Monument */
 .header{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:14px 16px;
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
-.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px;color:var(--txt)}
-.fine{margin-top:10px;font-size:12.25px;opacity:.72;line-height:1.45;color:var(--mut)}
-
-/* band */
-.band{
-  padding:10px 12px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 30%, var(--opalB), transparent 65%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.14));
+  padding:32px;
+  box-shadow:0 30px 100px rgba(0,0,0,.6);
 }
 
-/* accordion list */
-.list{display:flex;flex-direction:column;gap:12px}
+.k{
+  letter-spacing:6px;
+  font-size:12px;
+  opacity:.75;
+  margin:0 0 10px;
+}
+
+.h1{
+  font-size:44px;
+  font-weight:950;
+  letter-spacing:1px;
+  margin:0 0 14px;
+}
+
+.lead{
+  font-size:20px;
+  line-height:1.6;
+  opacity:.92;
+  max-width:900px;
+}
+
+/* Lens Bar */
+.lens{
+  margin-top:18px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.pill{
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:linear-gradient(145deg, var(--inkA), var(--inkB));
+  font-weight:900;
+  cursor:pointer;
+}
+
+.pill.active{
+  box-shadow:0 0 22px var(--redGlow);
+  border-color:rgba(255,90,90,.6);
+}
+
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:16px}
+
 .row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:26px;
   overflow:hidden;
+  background:linear-gradient(145deg, rgba(17,22,28,.9), rgba(11,15,20,.95));
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
 }
+
 .head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  padding:24px 26px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.left{
-  display:flex;align-items:flex-start;gap:12px;min-width:0;
-}
-.mark{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:3px;
-}
-.titleBlock{min-width:0}
+
 .title{
-  font-weight:950;letter-spacing:.2px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:22px;
+  font-weight:900;
 }
+
 .sub{
-  margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch;
+  margin-top:8px;
+  font-size:15px;
+  opacity:.8;
 }
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+
+.chev{font-size:20px;opacity:.6}
 
 .body{
   display:none;
-  padding:14px 16px 16px;
+  padding:26px;
   border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
+
 .row.open .body{display:block}
-.p{margin:0;color:rgba(255,255,255,.86);line-height:1.6;font-size:13.25px}
-.p + .p{margin-top:10px}
 
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+.text{
+  font-size:17px;
+  line-height:1.75;
+  margin-bottom:14px;
+}
 
-/* dock */
+/* Dock */
 .dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
+  position:fixed;
+  bottom:10px;
+  left:50%;
   transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
+  width:min(1100px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:10px;
+  border-radius:20px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  backdrop-filter:blur(8px);
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:128px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-}
+.dock .btn{padding:12px;border-radius:999px}
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnHome" href="/home/">HUB</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top">
+  <div class="group">
+    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+    <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
+  </div>
+  <div class="group">
+    <button class="btn" id="btnEN">EN</button>
+    <button class="btn" id="btnZH">中文</button>
+    <button class="btn" id="btnES">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
   <div class="header">
-    <p class="k" id="hk">EXPLORE</p>
-    <h1 class="t" id="ht">ORIENTATION & LANES</h1>
-    <p class="s" id="hs">Explore is where you learn the map without getting lost.</p>
-    <div class="fine" id="fine">Fine print: Explore is bounded. Proof posture lives in Laws. Measurement posture lives in Gauges.</div>
+    <div class="k" id="kLabel">FRONTIER SYSTEMS</div>
+    <div class="h1" id="hTitle">EXPLORE THE STRUCTURE</div>
+    <div class="lead" id="leadText">
+      Every large-scale system fails from unmanaged interdependence.
+      Explore maps long-horizon architecture before it becomes policy,
+      capital, or infrastructure.
+    </div>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+    </div>
   </div>
 
-  <div class="band" id="bandI">INFO</div>
-  <div class="list" id="listI"></div>
-
-  <div class="band" id="bandL">LANES</div>
-  <div class="list" id="listL"></div>
-
-  <div class="band" id="bandM">MAPS</div>
-  <div class="list" id="listM"></div>
-
-  <div class="band" id="bandR">ROUTES</div>
-  <div class="list" id="listR"></div>
+  <div class="stack" id="stack"></div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn active" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  // ===== state =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
+var lang="en";
+var lens="informal";
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+var DOMAINS=[
+  "Closed Loop Habitats",
+  "Urban Resource OS",
+  "Energy Substitution",
+  "Water Systems",
+  "Waste Systems",
+  "Industrial Integration",
+  "Satellite Communities"
+];
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  // wire top + dock
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-  wire("btnDoor","/door/");
-  wire("btnHome","/home/");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // language toggle (reload SAME pathname; GH safe)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click",function(){setLang("en");});
-  btnZH.addEventListener("click",function(){setLang("zh");});
-  btnES.addEventListener("click",function(){setLang("es");});
-
-  // ===== ROUTES (safe) =====
-  var ROUTE={
-    frontier:"/explore/frontier/",
-    vision:"/explore/frontier/vision/",
-    language:"/explore/innovation/language/",
-    roadmap:"/explore/roadmap/",
-    dotgrid:"/products/dot-grid/",
-    ssg:"/products/ssg/",
-    software:"/products/software/",
-    laws:"/laws/",
-    gauges:"/gauges/",
-    products:"/products/",
-    door:"/door/"
-  };
-
-  // ===== COPY =====
-  var COPY={
+function content(domain){
+  return {
     en:{
-      hk:"EXPLORE",
-      ht:"ORIENTATION & LANES",
-      hs:"Explore is where you learn the map without getting lost.",
-      fine:"Fine print: Explore is bounded. Proof posture lives in Laws. Measurement posture lives in Gauges.",
-      bands:{I:"INFO",L:"LANES",M:"MAPS",R:"ROUTES"},
-      btns:{open:"OPEN"},
-      top:{door:"DOOR", hub:"HUB"},
-      dock:{exp:"EXPLORE", prod:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
-      info:[
-        {c:"#D4AF37", t:"How to use Explore", s:"Info first. Jump second.", p:"Open one card, read one paragraph, then jump. If you want boundaries and meaning discipline, go to Laws. If you want live signals and measurement posture, go to Gauges. Explore keeps orientation simple so you don’t drift while learning.", href:ROUTE.door},
-        {c:"#EF4444", t:"What Explore is not", s:"Not a proof engine. Not a measurement dashboard.", p:"Explore does not claim admissibility and it does not publish measurements. It routes you to the layer that can: Laws for meaning/constraints; Gauges for outputs/telemetry. Explore stays human-readable.", href:ROUTE.laws}
-      ],
-      lanes:[
-        {c:"#F59E0B", t:"Frontier", s:"Big ideas, bounded posture.", p:"Frontier is where concepts live without pretending they are already measured. Vision pages can be exciting, but they remain support-bounded and route to Laws/Gauges when the claim becomes testable.", href:ROUTE.frontier},
-        {c:"#34D399", t:"Vision (SHIMMER lane)", s:"Urban + orbital readiness surfaces.", p:"Vision is where you see the long arc: cities, infrastructure, closed-loop habitats. It stays a vision lane—structure lives in DOOR, proofs live in Laws, and measurements live in Gauges.", href:ROUTE.vision},
-        {c:"#93C5FD", t:"Language", s:"Shared terms to prevent drift.", p:"Language is the glossary and substrate lane. It defines terms so pages don’t silently swap meaning. If a term changes, it is treated as a new epoch.", href:ROUTE.language},
-        {c:"#A3A3A3", t:"Roadmap", s:"Gated expansion, not promises.", p:"Roadmap lists prerequisites and gates for new surfaces. It avoids hype. It keeps the system honest about what is live vs what is planned.", href:ROUTE.roadmap}
-      ],
-      maps:[
-        {c:"#34D399", t:"Dot.Grid map", s:"Connections + correlation sweeps.", p:"Dot.Grid shows what connects to what, and reveals correlation before it compounds. It does not declare admissibility. It hands structure to Laws and signals to Gauges.", href:ROUTE.dotgrid},
-        {c:"#A3A3A3", t:"SSG substrate", s:"Execution geometry under constraint.", p:"SSG is the root syntax geometry: resources, stores, constraints, goals, guards. It keeps behavior expressible without drift.", href:ROUTE.ssg},
-        {c:"#EF4444", t:"Software spine", s:"The machine behind the pages.", p:"Software spine is where platform/engineering surfaces live. If something needs a safe hub, it routes here without 404s.", href:ROUTE.software}
-      ],
-      routes:[
-        {c:"#60A5FA", t:"Laws", s:"Meaning, constraints, admissibility.", p:"If you want the boundaries—what can be claimed and what must remain conditional—go to Laws.", href:ROUTE.laws},
-        {c:"#93C5FD", t:"Gauges", s:"Live outputs and measurement surfaces.", p:"If you want live signals, dashboards, and measurement posture, go to Gauges.", href:ROUTE.gauges},
-        {c:"#0EA5E9", t:"Products", s:"Adoptable execution surfaces.", p:"If you want usable tools and product surfaces, go to Products.", href:ROUTE.products}
-      ]
+      informal: domain+" reimagines scale without collapse. It treats infrastructure as constraint-first architecture rather than expansion-first ambition.",
+      formal: domain+" defines bounded deployment envelopes, constraint hierarchies, and convergence conditions before scale initiation.",
+      engineering: domain+" requires correlation exposure mapping, dependency graph stabilization, and rollback-ready infrastructure sequencing.",
+      platform: domain+" becomes a coordination surface aligning governance, engineering, and economic layers into stable adoption pathways."
     },
-
     zh:{
-      hk:"探索",
-      ht:"导览与通道",
-      hs:"探索页用于学习地图而不迷路。",
-      fine:"细则：探索页有界。证明姿态在法则；测量姿态在量规。",
-      bands:{I:"信息",L:"通道",M:"地图",R:"路由"},
-      btns:{open:"打开"},
-      top:{door:"门", hub:"枢纽"},
-      dock:{exp:"探索", prod:"产品", laws:"法则", gauges:"量规"},
-      info:[
-        {c:"#D4AF37", t:"怎么用探索页", s:"先信息，后跳转。", p:"打开一张卡，读一段话，然后跳转。想看边界与含义纪律去法则；想看实时信号与测量姿态去量规。探索页保持导览清晰，防止学习时漂移。", href:ROUTE.door},
-        {c:"#EF4444", t:"探索页不是什么", s:"不是证明引擎，也不是仪表盘。", p:"探索页不判定可采信，也不发布测量结果。它把你路由到能做这件事的层：法则负责含义与约束；量规负责输出与测量。", href:ROUTE.laws}
-      ],
-      lanes:[
-        {c:"#F59E0B", t:"前沿", s:"大想法，但保持有界。", p:"前沿允许概念存在，但不假装已被测量。愿景可以兴奋，但必须有支撑边界；一旦可测试，就路由到法则/量规。", href:ROUTE.frontier},
-        {c:"#34D399", t:"愿景（SHIMMER通道）", s:"城市 + 轨道就绪面。", p:"愿景展示长弧：城市、基础设施、闭环栖息地。它只做愿景通道——结构在DOOR，证明在法则，测量在量规。", href:ROUTE.vision},
-        {c:"#93C5FD", t:"语言", s:"共用术语防漂移。", p:"语言通道定义术语，避免页面悄悄换义。术语变化视为新纪元。", href:ROUTE.language},
-        {c:"#A3A3A3", t:"路线图", s:"闸门式扩展，不做承诺。", p:"路线图只列前置条件与闸门，避免炒作；清楚区分“已上线”和“规划中”。", href:ROUTE.roadmap}
-      ],
-      maps:[
-        {c:"#34D399", t:"Dot.Grid 地图", s:"连接 + 相关扫掠。", p:"Dot.Grid 展示连接并提前暴露相关，不判定可采信；结构给法则，信号给量规。", href:ROUTE.dotgrid},
-        {c:"#A3A3A3", t:"SSG 底层", s:"约束下的执行几何。", p:"SSG 是根语法几何：资源、存储、约束、目标、守卫，使行为可表达且不漂移。", href:ROUTE.ssg},
-        {c:"#EF4444", t:"软件脊柱", s:"页面背后的机器。", p:"软件脊柱是平台/工程执行面集合；如果需要安全枢纽（避免404），就路由到这里。", href:ROUTE.software}
-      ],
-      routes:[
-        {c:"#60A5FA", t:"法则", s:"含义、约束、可采信。", p:"想看边界（什么能主张、什么必须条件化）→去法则。", href:ROUTE.laws},
-        {c:"#93C5FD", t:"量规", s:"实时输出与测量面。", p:"想看信号、仪表盘与测量姿态→去量规。", href:ROUTE.gauges},
-        {c:"#0EA5E9", t:"产品", s:"可采纳执行面。", p:"想用工具与产品执行面→去产品。", href:ROUTE.products}
-      ]
+      informal: domain+" 重新思考规模扩张而不导致崩溃，将基础设施视为约束优先架构，而不是野心优先。",
+      formal: domain+" 在启动规模前定义部署边界、约束层级与收敛条件。",
+      engineering: domain+" 要求相关暴露映射、依赖图稳定与可回滚的基础设施排序。",
+      platform: domain+" 成为协调界面，将治理、工程与经济层整合为稳定采纳路径。"
     },
-
     es:{
-      hk:"EXPLORAR",
-      ht:"ORIENTACIÓN Y CARRILES",
-      hs:"Explorar es para aprender el mapa sin perderte.",
-      fine:"Letra pequeña: Explorar es acotado. Prueba en Leyes. Medición en Medidores.",
-      bands:{I:"INFO",L:"CARRILES",M:"MAPAS",R:"RUTAS"},
-      btns:{open:"ABRIR"},
-      top:{door:"PUERTA", hub:"HUB"},
-      dock:{exp:"EXPLORAR", prod:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
-      info:[
-        {c:"#D4AF37", t:"Cómo usar Explorar", s:"Info primero. Salto después.", p:"Abre una tarjeta, lee un párrafo y salta. Para límites y significado: Leyes. Para señales y medición: Medidores. Explorar mantiene orientación clara.", href:ROUTE.door},
-        {c:"#EF4444", t:"Qué NO es Explorar", s:"No es motor de prueba ni tablero.", p:"Explorar no declara admisibilidad ni publica mediciones. Te rutea a la capa que sí: Leyes (significado/ límites) y Medidores (salidas/medición).", href:ROUTE.laws}
-      ],
-      lanes:[
-        {c:"#F59E0B", t:"Frontera", s:"Ideas grandes, postura acotada.", p:"Frontera aloja conceptos sin fingir que ya están medidos. Si algo se vuelve testeable, rutea a Leyes/Medidores.", href:ROUTE.frontier},
-        {c:"#34D399", t:"Visión (carril SHIMMER)", s:"Ciudades + preparación orbital.", p:"Visión muestra el arco largo: ciudades, infraestructura, hábitats cerrados. Estructura en DOOR; prueba en Leyes; medición en Medidores.", href:ROUTE.vision},
-        {c:"#93C5FD", t:"Lenguaje", s:"Términos compartidos para evitar deriva.", p:"Define términos para que las páginas no cambien significado en silencio. Cambios = nueva época.", href:ROUTE.language},
-        {c:"#A3A3A3", t:"Hoja de ruta", s:"Expansión por compuertas, sin promesas.", p:"Lista prerrequisitos y compuertas. Evita hype. Distingue ‘en vivo’ vs ‘plan’ claramente.", href:ROUTE.roadmap}
-      ],
-      maps:[
-        {c:"#34D399", t:"Mapa Dot.Grid", s:"Conexiones + correlación.", p:"Dot.Grid muestra conexiones y correlación temprano. No declara admisibilidad. Estructura → Leyes, señales → Medidores.", href:ROUTE.dotgrid},
-        {c:"#A3A3A3", t:"SSG sustrato", s:"Geometría de ejecución bajo restricciones.", p:"SSG es la geometría raíz: recursos, stores, restricciones, objetivos y guards.", href:ROUTE.ssg},
-        {c:"#EF4444", t:"Columna de software", s:"La máquina detrás de las páginas.", p:"Aquí viven superficies de plataforma/ingeniería. Si falta una página, rutea a este hub sin 404.", href:ROUTE.software}
-      ],
-      routes:[
-        {c:"#60A5FA", t:"Leyes", s:"Significado, restricciones, admisibilidad.", p:"Si buscas límites y qué se puede afirmar, ve a Leyes.", href:ROUTE.laws},
-        {c:"#93C5FD", t:"Medidores", s:"Salidas en vivo y medición.", p:"Si buscas señales y dashboards, ve a Medidores.", href:ROUTE.gauges},
-        {c:"#0EA5E9", t:"Productos", s:"Superficies adoptables.", p:"Si buscas herramientas usables, ve a Productos.", href:ROUTE.products}
-      ]
+      informal: domain+" reimagina la escala sin colapso, tratando la infraestructura como arquitectura con restricción primero.",
+      formal: domain+" define envolventes de despliegue acotadas y jerarquías de restricción antes de escalar.",
+      engineering: domain+" requiere mapeo de correlación, estabilización de dependencias y secuencias con rollback.",
+      platform: domain+" actúa como superficie de coordinación entre gobernanza, ingeniería y economía."
     }
   };
+}
 
-  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+var stack=document.getElementById("stack");
 
-  function applyHeader(){
-    var P=T();
-    document.getElementById("hk").textContent=P.hk;
-    document.getElementById("ht").textContent=P.ht;
-    document.getElementById("hs").textContent=P.hs;
-    document.getElementById("fine").textContent=P.fine;
+DOMAINS.forEach(function(name,idx){
+  var row=document.createElement("div");
+  row.className="row";
 
-    document.getElementById("bandI").textContent=P.bands.I;
-    document.getElementById("bandL").textContent=P.bands.L;
-    document.getElementById("bandM").textContent=P.bands.M;
-    document.getElementById("bandR").textContent=P.bands.R;
+  var head=document.createElement("div");
+  head.className="head";
 
-    document.getElementById("btnDoor").textContent=P.top.door;
-    document.getElementById("btnHome").textContent=P.top.hub;
+  var left=document.createElement("div");
+  left.innerHTML='<div class="title">'+name+'</div><div class="sub">Frontier structural lane</div>';
 
-    document.getElementById("dockExplore").textContent=P.dock.exp;
-    document.getElementById("dockProducts").textContent=P.dock.prod;
-    document.getElementById("dockLaws").textContent=P.dock.laws;
-    document.getElementById("dockGauges").textContent=P.dock.gauges;
-  }
-  applyHeader();
+  var chev=document.createElement("div");
+  chev.className="chev";
+  chev.textContent="▸";
 
-  // accordion builder (single-open per list)
-  function buildRow(item, openLabel){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", item.c);
+  head.appendChild(left);
+  head.appendChild(chev);
 
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
+  var body=document.createElement("div");
+  body.className="body";
 
-    var left=document.createElement("div");
-    left.className="left";
+  var txt=document.createElement("div");
+  txt.className="text";
+  txt.textContent=content(name)[lang][lens];
 
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=item.c;
+  body.appendChild(txt);
 
-    var titleBlock=document.createElement("div");
-    titleBlock.className="titleBlock";
-
-    var title=document.createElement("div");
-    title.className="title";
-    title.textContent=item.t;
-
-    var sub=document.createElement("div");
-    sub.className="sub";
-    sub.textContent=item.s;
-
-    titleBlock.appendChild(title);
-    titleBlock.appendChild(sub);
-
-    left.appendChild(mark);
-    left.appendChild(titleBlock);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var p=document.createElement("p");
-    p.className="p";
-    p.textContent=item.p;
-
-    var acts=document.createElement("div");
-    acts.className="actions";
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=openLabel;
-    a.href=item.href + q();
-    acts.appendChild(a);
-
-    body.appendChild(p);
-    body.appendChild(acts);
-
-    function toggle(){
-      var willOpen=!row.classList.contains("open");
-      var parent=row.parentElement;
-      if(parent){
-        parent.querySelectorAll(".row").forEach(function(x){
-          x.classList.remove("open");
-          var c=x.querySelector(".chev");
-          if(c) c.textContent="▸";
-        });
-      }
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
+  head.addEventListener("click",function(){
+    var open=!row.classList.contains("open");
+    document.querySelectorAll(".row").forEach(function(r){
+      r.classList.remove("open");
+      r.querySelector(".chev").textContent="▸";
+    });
+    if(open){
+      row.classList.add("open");
+      chev.textContent="▾";
     }
+  });
 
-    head.addEventListener("click", toggle);
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+  row.appendChild(head);
+  row.appendChild(body);
+  stack.appendChild(row);
+});
+
+document.querySelectorAll(".pill").forEach(function(p){
+  p.addEventListener("click",function(){
+    document.querySelectorAll(".pill").forEach(function(x){x.classList.remove("active")});
+    p.classList.add("active");
+    lens=p.dataset.lens;
+    document.querySelectorAll(".row").forEach(function(r,i){
+      r.querySelector(".text").textContent=content(DOMAINS[i])[lang][lens];
     });
+  });
+});
 
-    row.appendChild(head);
-    row.appendChild(body);
-    return row;
-  }
+document.getElementById("btnEN").onclick=function(){lang="en";update()};
+document.getElementById("btnZH").onclick=function(){lang="zh";update()};
+document.getElementById("btnES").onclick=function(){lang="es";update()};
 
-  function renderLists(){
-    var P=T();
-    var openLabel=P.btns.open;
-
-    var listI=document.getElementById("listI");
-    var listL=document.getElementById("listL");
-    var listM=document.getElementById("listM");
-    var listR=document.getElementById("listR");
-
-    listI.innerHTML=""; listL.innerHTML=""; listM.innerHTML=""; listR.innerHTML="";
-
-    P.info.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listI.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.lanes.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listL.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.maps.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listM.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.routes.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listR.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-  }
-  renderLists();
+function update(){
+  document.querySelectorAll(".row").forEach(function(r,i){
+    r.querySelector(".text").textContent=content(DOMAINS[i])[lang][lens];
+  });
+}
 
 })();
 </script>

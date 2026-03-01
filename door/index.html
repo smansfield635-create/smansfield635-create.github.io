@@ -1,5 +1,10 @@
 <!-- TNT — /door/index.html
-     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · OPAL/PEARL PANELS (CLEAN)
+     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · OPAL/PEARL PANELS
+     UPGRADE (NO LENSES, NAV-ONLY STILL):
+       - Adds PROBLEM block (TED-talk, high clarity, support-bounded)
+       - Adds SOLUTION block (finite lattice + finite-measure posture, without overclaiming)
+       - Adds "HOW WE COVER IT" block (multi-angle handling: laws/gauges/products/explore)
+       - Keeps existing routes + layout; no modals/overlays/onclick; state preserved
      ROUTES:
        - PRELUDE  → /prelude/
        - COMPASS  → /index.html
@@ -28,7 +33,7 @@ a{color:inherit;text-decoration:none}
 
 /* keep ui.css field overlays behind */
 body{position:relative;z-index:0}
-body::before,body::after{z-index:0 !important;pointer-events:none !important}
+body::before, body::after{z-index:0 !important;pointer-events:none !important}
 #root{position:relative;z-index:10}
 
 /* tokens */
@@ -39,9 +44,11 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   --opalA:rgba(210,190,255,.18);
   --opalB:rgba(120,70,255,.14);
   --opalC:rgba(90,210,255,.10);
-  --goldSoft:rgba(212,175,55,.45);
+  --opalR:rgba(255,70,70,.12);
 
-  --dockPad:26px;
+  --goldSoft:rgba(212,175,55,.45);
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 }
 
 /* top (no wrap) */
@@ -64,7 +71,7 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:84px 0 var(--dockPad);
+  padding:84px 0 26px;
   display:flex;
   flex-direction:column;
   gap:14px;
@@ -78,15 +85,34 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
     radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
     radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    radial-gradient(circle at 88% 18%, var(--opalR), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
   backdrop-filter:blur(12px);
   box-shadow:0 34px 120px rgba(0,0,0,.55);
   padding:18px 18px 16px;
 }
 
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
-.h1{margin:0;font-weight:950;font-size:30px;letter-spacing:1.2px;line-height:1.12}
-.p{margin:10px 0 0;font-size:14px;opacity:.90;line-height:1.5;max-width:980px}
+.k{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+.h1{
+  margin:0;
+  font-weight:950;
+  font-size:30px;
+  letter-spacing:1.2px;
+  line-height:1.12;
+}
+.p{
+  margin:10px 0 0;
+  font-size:14px;
+  opacity:.90;
+  line-height:1.5;
+  max-width:980px;
+}
 
 /* rule pill (pearl edge) */
 .rule{
@@ -111,7 +137,9 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   grid-template-columns:repeat(3, minmax(0,1fr));
   gap:14px;
 }
-@media (max-width:920px){ .grid{grid-template-columns:1fr} }
+@media (max-width:920px){
+  .grid{grid-template-columns:1fr}
+}
 
 .card{
   position:relative;
@@ -129,11 +157,14 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     inset 0 -36px 70px rgba(0,0,0,.55);
   padding:16px 16px 14px;
   overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease;
+  transition:.18s ease;
 }
 .card::before{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -143,7 +174,11 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
 }
 .card::after{
   content:"";
-  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -159,11 +194,35 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     inset 0 -36px 70px rgba(0,0,0,.55);
 }
 
-.ct{margin:0;font-weight:950;letter-spacing:.6px;font-size:18px}
-.cs{margin:8px 0 0;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.86)}
-.mini{margin:10px 0 0;font-size:12.25px;line-height:1.45;color:rgba(255,255,255,.74)}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{border-radius:999px;padding:10px 14px}
+.card .ct{
+  margin:0;
+  font-weight:950;
+  letter-spacing:.6px;
+  font-size:18px;
+}
+.card .cs{
+  margin:8px 0 0;
+  font-size:13.25px;
+  line-height:1.45;
+  color:rgba(255,255,255,.86);
+}
+.card .mini{
+  margin:10px 0 0;
+  font-size:12.25px;
+  line-height:1.45;
+  color:rgba(255,255,255,.74);
+}
+.card .actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+.card .actions .btn{
+  border-radius:999px;
+  padding:10px 14px;
+}
 
 /* how-it-works */
 .band{
@@ -182,6 +241,7 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
     radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 86% 20%, rgba(255,70,70,.10), transparent 62%),
     linear-gradient(160deg, rgba(12,22,38,.70), rgba(6,10,16,.78));
   backdrop-filter:blur(10px);
   box-shadow:
@@ -192,7 +252,10 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
 }
 .block::before{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
   background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
   opacity:.40;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -200,13 +263,36 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   mask-composite:exclude;
   pointer-events:none;
 }
-.bh{margin:0;font-weight:950;font-size:15.5px;letter-spacing:.4px}
-.bp{margin:10px 0 0;font-size:13.25px;line-height:1.55;color:rgba(255,255,255,.86)}
-.jump{margin-top:10px;display:flex;justify-content:flex-end}
-.jump .btn{border-radius:999px;padding:10px 14px}
+.block .bh{
+  margin:0;
+  font-weight:950;
+  font-size:15.5px;
+  letter-spacing:.4px;
+}
+.block .bp{
+  margin:10px 0 0;
+  font-size:13.25px;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
+}
+.block .jump{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+}
 
-.footer{margin-top:8px;text-align:center;font-size:12.5px;opacity:.78}
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+.footer{
+  margin-top:8px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  opacity:.65;
+}
 </style>
 </head>
 
@@ -229,20 +315,15 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     <div class="hero">
       <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
       <h1 class="h1" id="h0">INTRO</h1>
-      <p class="p" id="p0">
-        This site is a structural interface. It does not sell belief.
-        It keeps claims bounded and support checkable.
-      </p>
-      <div class="rule" id="r0">
-        Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.
-      </div>
+      <p class="p" id="p0"></p>
+      <div class="rule" id="r0"></div>
     </div>
 
     <div class="grid" aria-label="Entry choices">
       <div class="card">
         <h2 class="ct" id="c1t">PRELUDE</h2>
-        <p class="cs" id="c1s">Gateway posture. Calm entry before traversal.</p>
-        <p class="mini" id="c1m">Use this when you want an explanation-first start.</p>
+        <p class="cs" id="c1s"></p>
+        <p class="mini" id="c1m"></p>
         <div class="actions">
           <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
         </div>
@@ -250,8 +331,8 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
 
       <div class="card">
         <h2 class="ct" id="c2t">COMPASS</h2>
-        <p class="cs" id="c2s">Choose a direction. Then enter.</p>
-        <p class="mini" id="c2m">Use this when you want structured traversal (N/E/S/W).</p>
+        <p class="cs" id="c2s"></p>
+        <p class="mini" id="c2m"></p>
         <div class="actions">
           <a class="btn" id="goCompass" href="/index.html">OPEN</a>
         </div>
@@ -259,8 +340,8 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
 
       <div class="card">
         <h2 class="ct" id="c3t">ENTER</h2>
-        <p class="cs" id="c3s">Primary hub. Move by function.</p>
-        <p class="mini" id="c3m">Use this when you already know where you’re going.</p>
+        <p class="cs" id="c3s"></p>
+        <p class="mini" id="c3m"></p>
         <div class="actions">
           <a class="btn" id="goEnter" href="/home/">OPEN</a>
         </div>
@@ -270,32 +351,26 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     <div class="band" id="b1">HOW THIS WORKS</div>
 
     <div class="block">
-      <div class="bh" id="bh1">Purpose definition</div>
-      <div class="bp" id="bp1">
-        Claims remain bounded to meaning. Support remains checkable. If a lens switch does not change content, it is a failure.
-      </div>
+      <div class="bh" id="bh1">The problem</div>
+      <div class="bp" id="bp1"></div>
       <div class="jump">
-        <a class="btn" id="jumpCompassA" href="/index.html">JUMP: COMPASS</a>
+        <a class="btn" id="jumpProductsA" href="/products/">JUMP: PRODUCTS</a>
       </div>
     </div>
 
     <div class="block">
-      <div class="bh" id="bh2">Fast navigation</div>
-      <div class="bp" id="bp2">
-        Prelude → Compass → Direction. Enter bypasses Prelude. Everything preserves state.
-      </div>
+      <div class="bh" id="bh2">The solution posture</div>
+      <div class="bp" id="bp2"></div>
       <div class="jump">
-        <a class="btn" id="jumpPreludeA" href="/prelude/">JUMP: PRELUDE</a>
+        <a class="btn" id="jumpLawsA" href="/laws/">JUMP: LAWS</a>
       </div>
     </div>
 
     <div class="block">
-      <div class="bh" id="bh3">Claim vs support</div>
-      <div class="bp" id="bp3">
-        Claim includes problem and offer. Support includes assistance and verification. The interface keeps them distinct on purpose.
-      </div>
+      <div class="bh" id="bh3">Coverage from every angle</div>
+      <div class="bp" id="bp3"></div>
       <div class="jump">
-        <a class="btn" id="jumpEnterA" href="/home/">JUMP: ENTER</a>
+        <a class="btn" id="jumpGaugesA" href="/gauges/">JUMP: GAUGES</a>
       </div>
     </div>
 
@@ -347,9 +422,9 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   wire("goPrelude","/prelude/");
   wire("goCompass","/index.html");
   wire("goEnter","/home/");
-  wire("jumpCompassA","/index.html");
-  wire("jumpPreludeA","/prelude/");
-  wire("jumpEnterA","/home/");
+  wire("jumpProductsA","/products/");
+  wire("jumpLawsA","/laws/");
+  wire("jumpGaugesA","/gauges/");
 
   // language buttons
   var btnEN=document.getElementById("btnEN");
@@ -373,30 +448,32 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // i18n
+  // i18n helper
   function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
+  // HERO
   document.getElementById("h0").textContent = T("INTRO","介绍","INTRO");
   document.getElementById("p0").textContent = T(
-    "This site is a structural interface. It does not sell belief. It keeps claims bounded and support checkable.",
-    "这是一个结构型界面。它不出售信仰。它让主张有界、让支撑可核查。",
-    "Este es un interfaz estructural. No vende creencias. Mantiene las afirmaciones acotadas y el soporte verificable."
+    "You’re here because something needs a real answer. Not a vibe. Not a belief. A bounded conclusion you can act on.",
+    "你来这里，是因为你需要一个真实答案：不是感觉，不是信仰，而是你能执行的有界结论。",
+    "Estás aquí porque algo necesita una respuesta real. No una vibra. No una creencia. Una conclusión acotada y accionable."
   );
   document.getElementById("r0").textContent = T(
     "Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.",
-    "规则：主张必须有支撑。支撑必须可验证。导航会保留 gd_* 状态。",
+    "规则：主张必须有支撑。支撑必须可验证。导航保留 gd_* 状态。",
     "Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva el estado gd_*."
   );
 
+  // ENTRY CARDS
   document.getElementById("c1t").textContent = T("PRELUDE","前置页","PRELUDIO");
   document.getElementById("c1s").textContent = T(
-    "Gateway posture. Calm entry before traversal.",
-    "入口姿态：先导览，再进入遍历。",
-    "Postura de entrada. Entrada tranquila antes del recorrido."
+    "Slow entry. Learn the posture before you traverse.",
+    "慢进入：先学姿态，再开始遍历。",
+    "Entrada lenta. Aprende la postura antes de recorrer."
   );
   document.getElementById("c1m").textContent = T(
-    "Use this when you want an explanation-first start.",
-    "想先看解释就从这里开始。",
+    "Use this if you want an explanation-first start.",
+    "想先看解释，就从这里开始。",
     "Úsalo si quieres empezar con explicación."
   );
 
@@ -407,9 +484,9 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
     "Elige una dirección. Luego entra."
   );
   document.getElementById("c2m").textContent = T(
-    "Use this when you want structured traversal (N/E/S/W).",
+    "Use this for structured traversal (N/E/S/W).",
     "想按结构遍历（N/E/S/W）就用这个。",
-    "Úsalo si quieres recorrido estructurado (N/E/S/O)."
+    "Úsalo para recorrido estructurado (N/E/S/O)."
   );
 
   document.getElementById("c3t").textContent = T("ENTER","进入","ENTRAR");
@@ -420,36 +497,38 @@ body::before,body::after{z-index:0 !important;pointer-events:none !important}
   );
   document.getElementById("c3m").textContent = T(
     "Use this when you already know where you’re going.",
-    "已经知道去哪里就直接进。",
+    "已知目的地就直接进。",
     "Úsalo si ya sabes a dónde vas."
   );
 
-  document.getElementById("b1").textContent = T("HOW THIS WORKS","这个网站怎么用","CÓMO FUNCIONA");
+  // HOW THIS WORKS blocks
+  document.getElementById("b1").textContent = T("HOW THIS WORKS","如何使用","CÓMO FUNCIONA");
 
-  document.getElementById("bh1").textContent = T("Purpose definition","目的定义","Definición de propósito");
+  document.getElementById("bh1").textContent = T("The problem","问题","El problema");
   document.getElementById("bp1").textContent = T(
-    "Claims remain bounded to meaning. Support remains checkable. If a lens switch does not change content, it is a failure.",
-    "主张必须绑定含义。支撑必须可核查。若切换透镜内容不变，则失败。",
-    "Las afirmaciones quedan acotadas al significado. El soporte es verificable. Si cambiar lente no cambia contenido, es un fallo."
+    "Most real-world failures aren’t caused by lack of effort. They’re caused by drift: meanings move, scope expands silently, and small errors multiply under scale. People argue intent while the system collapses. We map this failure pattern as a finite set of repeatable classes—so you can stop guessing and start isolating what’s actually happening.",
+    "多数现实失败不是不努力，而是“漂移”：含义在移动，范围悄悄变宽，小错误在规模下被放大。人们争论意图，系统却在崩塌。我们把这种失败模式映射为一组有限、可重复的类别——让你停止猜测，开始隔离“到底发生了什么”。",
+    "La mayoría de fallas reales no vienen por falta de esfuerzo. Vienen por deriva: el significado se mueve, el alcance se infla en silencio y errores pequeños se multiplican al escalar. La gente discute intención mientras el sistema colapsa. Aquí lo mapeamos como un conjunto finito de clases repetibles para dejar de adivinar y aislar lo que realmente ocurre."
   );
 
-  document.getElementById("bh2").textContent = T("Fast navigation","快速导航","Navegación rápida");
+  document.getElementById("bh2").textContent = T("The solution posture","解决姿态","Postura de solución");
   document.getElementById("bp2").textContent = T(
-    "Prelude → Compass → Direction. Enter bypasses Prelude. Everything preserves state.",
-    "前置页 → 指南针 → 方向。进入可跳过前置页。所有跳转保留状态。",
-    "Preludio → Brújula → Dirección. Entrar evita el preludio. Todo preserva el estado."
+    "We don’t “win” by rhetoric. We win by constraints. This site treats your situation as a bounded question inside a declared scope. Then it routes you through a finite lattice of definitions, laws, and measurement surfaces. If evidence is missing, the system refuses escalation. If a claim can’t survive constraint, it stays labeled as concept or roadmap—never disguised as fact.",
+    "我们不是靠话术“赢”，而是靠约束。本站把你的情况当作声明范围内的有界问题，然后把你路由进一套有限晶格：定义、法则、测量面。缺证据就拒绝升级；主张经不起约束就只保留为概念/路线图，绝不伪装成事实。",
+    "No ganamos con retórica. Ganamos con restricciones. Este sitio trata tu situación como una pregunta acotada dentro de un alcance declarado, y te rutea por un lattice finito de definiciones, leyes y superficies de medición. Si falta evidencia, el sistema no escala. Si una afirmación no sobrevive la restricción, se queda etiquetada como concepto o ruta—nunca como hecho."
   );
 
-  document.getElementById("bh3").textContent = T("Claim vs support","主张 vs 支撑","Afirmación vs soporte");
+  document.getElementById("bh3").textContent = T("Coverage from every angle","全角度覆盖","Cobertura desde todos los ángulos");
   document.getElementById("bp3").textContent = T(
-    "Claim includes problem and offer. Support includes assistance and verification. The interface keeps them distinct on purpose.",
-    "主张包含问题与提供。支撑包含协助与验证。界面刻意保持区分。",
-    "La afirmación incluye problema y oferta. El soporte incluye asistencia y verificación. El interfaz los separa a propósito."
+    "You can enter from any angle without losing the thread. Products show what you can use. Laws define boundaries that prevent drift. Gauges expose measured signals and receipts. Explore is where we test big ideas without inflating them. The point is not to impress you. The point is to give you a clean path to the answer your situation requires—then let you move.",
+    "你可以从任何角度进入而不丢线。产品页展示你能用什么；法则定义防漂移边界；量规展示可测信号与收据；探索允许大想法但不膨胀。目的不是炫耀，而是给你一条干净路径，找到你需要的答案，然后继续前进。",
+    "Puedes entrar por cualquier ángulo sin perder el hilo. Productos muestra lo que puedes usar. Leyes define límites contra deriva. Medidores expone señales medidas y recibos. Explorar prueba ideas grandes sin inflarlas. El objetivo no es impresionar: es darte un camino limpio hacia la respuesta que tu situación requiere, y luego dejarte avanzar."
   );
 
-  document.getElementById("jumpCompassA").textContent = T("JUMP: COMPASS","跳转：指南针","SALTAR: BRÚJULA");
-  document.getElementById("jumpPreludeA").textContent = T("JUMP: PRELUDE","跳转：前置页","SALTAR: PRELUDIO");
-  document.getElementById("jumpEnterA").textContent = T("JUMP: ENTER","跳转：进入","SALTAR: ENTRAR");
+  // Jump labels
+  document.getElementById("jumpProductsA").textContent = T("JUMP: PRODUCTS","跳转：产品","SALTAR: PRODUCTOS");
+  document.getElementById("jumpLawsA").textContent = T("JUMP: LAWS","跳转：法则","SALTAR: LEYES");
+  document.getElementById("jumpGaugesA").textContent = T("JUMP: GAUGES","跳转：量规","SALTAR: MEDIDORES");
 
   document.getElementById("f0").textContent = T("Orientation is the product.","导览就是产品。","La orientación es el producto.");
 })();

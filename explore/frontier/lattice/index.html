@@ -1,0 +1,239 @@
+<!-- TNT — /explore/frontier/lattice/index.html
+     EXPLORE · FRONTIER · LATTICE
+     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
+     SINGLE-OPEN ACCORDION · STATE SAFE · NO MODALS
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · LATTICE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+:root{
+  --dockH:90px;
+  --inkA:rgba(8,10,14,.96);
+  --inkB:rgba(4,6,9,.99);
+  --stroke:rgba(255,255,255,.10);
+  --gold:rgba(212,175,55,.18);
+  --violet:rgba(160,90,255,.16);
+  --mut:rgba(255,255,255,.92);
+}
+
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:40px;
+  background:
+    radial-gradient(circle at 30% 20%, var(--gold), transparent 65%),
+    radial-gradient(circle at 70% 80%, var(--violet), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
+  padding:54px;
+  box-shadow:0 60px 200px rgba(0,0,0,.65);
+}
+
+.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
+.t{font-size:56px;font-weight:950;margin:0 0 24px}
+.s{font-size:22px;line-height:1.85;color:var(--mut);max-width:950px}
+
+.lens{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.pill{
+  padding:14px 22px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  font-weight:900;
+  cursor:pointer;
+}
+.pill.active{box-shadow:0 0 22px rgba(212,175,55,.35)}
+
+.stack{display:flex;flex-direction:column;gap:24px}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:34px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  overflow:hidden;
+  box-shadow:0 50px 180px rgba(0,0,0,.6);
+}
+
+.head{
+  padding:36px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  cursor:pointer;
+}
+
+.title{font-size:32px;font-weight:900}
+.chev{font-size:20px;opacity:.75}
+
+.body{
+  display:none;
+  padding:38px 40px 48px;
+  border-top:1px solid var(--stroke);
+}
+
+.card.open .body{display:block}
+
+.body h4{
+  margin:0 0 14px;
+  font-size:15px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.body p{
+  margin:0;
+  font-size:21px;
+  line-height:1.9;
+  color:var(--mut);
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  padding:14px;
+  border-radius:28px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.35);
+}
+.dock .btn{padding:14px;border-radius:999px;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k">FRONTIER</p>
+    <h1 class="t">LATTICE GEOMETRY</h1>
+    <p class="s">
+      What if complexity is not chaos — but structure unseen?  
+      What if every collapse can be mapped to a finite coordinate?
+    </p>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
+    </div>
+  </div>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+
+  const DOMAINS = [
+    "256-State Finite Geometry",
+    "Cardinal Axis Mapping",
+    "Hybrid Collapse Vectors",
+    "Constraint Surfaces",
+    "Trajectory Compression",
+    "Admissibility Boundaries"
+  ];
+
+  const TEXT = {
+    informal:{
+      en:"The lattice is the map beneath the map. It proves that what looks infinite is actually bounded. Every failure, every breakthrough, every drift event lands somewhere measurable.",
+      zh:"晶格是地图之下的地图。它证明看似无限的事物其实有边界。每一次失败、突破或漂移，都落在可测的位置。",
+      es:"El lattice es el mapa bajo el mapa. Demuestra que lo que parece infinito está acotado. Cada fallo o avance cae en una posición medible."
+    },
+    formal:{
+      en:"Finite lattice geometry enumerates state positions across orthogonal axes, enabling deterministic collapse classification and reproducible trajectory analysis.",
+      zh:"有限晶格几何在正交轴上枚举状态位置，实现确定性坍塌分类与可复现轨迹分析。",
+      es:"La geometría finita del lattice enumera estados en ejes ortogonales, permitiendo clasificación determinista de colapso y análisis reproducible de trayectoria."
+    },
+    platform:{
+      en:"Platform view: unify all domains under a shared coordinate grammar so adoption layers remain consistent across products.",
+      zh:"平台视角：在共享坐标语法下统一所有领域，使采纳层跨产品保持一致。",
+      es:"Vista de plataforma: unificar dominios bajo una gramática de coordenadas común para coherencia entre productos."
+    },
+    engineering:{
+      en:"Engineering view: discrete coordinate sets, constraint validation per node, bounded collapse triggers, and deterministic replay under fixed manifests.",
+      zh:"工程视角：离散坐标集、逐节点约束验证、有界坍塌触发与固定清单下的确定性回放。",
+      es:"Vista de ingeniería: conjuntos discretos, validación por nodo y replay determinista bajo manifiestos fijos."
+    }
+  };
+
+  let currentLens="informal";
+  let currentLang="en";
+  const stack=document.getElementById("stack");
+
+  function render(){
+    stack.innerHTML="";
+    DOMAINS.forEach((name,i)=>{
+      const card=document.createElement("div");
+      card.className="card";
+
+      const head=document.createElement("div");
+      head.className="head";
+      head.innerHTML=`<div class="title">${name}</div><div class="chev">▸</div>`;
+
+      const body=document.createElement("div");
+      body.className="body";
+      body.innerHTML=`<h4>${currentLens.toUpperCase()}</h4><p>${TEXT[currentLens][currentLang]}</p>`;
+
+      head.addEventListener("click",()=>{
+        document.querySelectorAll(".card").forEach(c=>{if(c!==card)c.classList.remove("open")});
+        card.classList.toggle("open");
+      });
+
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
+      if(i===0) card.classList.add("open");
+    });
+  }
+
+  document.querySelectorAll(".pill").forEach(p=>{
+    p.addEventListener("click",()=>{
+      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      p.classList.add("active");
+      currentLens=p.dataset.lens;
+      render();
+    });
+  });
+
+  render();
+
+})();
+</script>
+
+</body>
+</html>

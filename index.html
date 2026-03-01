@@ -1,14 +1,20 @@
 <!-- TNT — /index.html
-     ROOT · OPAL/PEARL MATERIAL UPGRADE (NO LAYOUT CHANGE) · 3 LANG (EN/中文/ES)
-     FIXES:
-       - Applies the same opal/purple pearlescent material used on glossy diamonds to:
-           • header
-           • cards
-       - Adds diamond color swatch next to each card title (visual anchor)
-       - Preserves existing structure + behavior + state carry
+     COMPASS · 4-DIRECTION ROUTER (N/E/S/W) · EN/中文/ES · NO MODALS · NO OVERLAYS
+     ROLE:
+       - Direction selection under constraint (not a sales page)
+       - Door sets posture; Compass selects axis; Hub moves by function
+     ROUTES (LOCKED):
+       - NORTH (Boundaries)   → /laws/
+       - EAST  (Execution)    → /products/
+       - SOUTH (Measurement)  → /gauges/
+       - WEST  (Orientation)  → /prelude/
+     STATE:
+       - URL + LS: gd_lang / gd_style / gd_time / gd_depth (lang/style/time/depth)
+       - Language toggle reloads SAME pathname (GH Pages safe)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
+       - ui.css owns html/body background (NO overrides)
+       - Tap-safe, keyboard-safe
 -->
 
 <!doctype html>
@@ -16,7 +22,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ROOT</title>
+<title>COMPASS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -24,174 +30,224 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* opal + pearl tokens (match diamonds) */
-  --opalA:rgba(210,190,255,.18);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
+  --dockH:92px;
+
+  /* dark opal + red friendly */
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,80,80,.08);
   --goldSoft:rgba(212,175,55,.45);
+  --inkA:rgba(12,22,38,.95);
+  --inkB:rgba(6,10,16,.98);
 
-  --panel-border:rgba(255,255,255,.14);
-  --text-main:#ffffff;
-  --text-sub:rgba(255,255,255,.82);
-  --accent:rgba(212,175,55,.85);
+  --R:160px;
+  --D:196px;
 }
 
-/* ===== PAGE WRAP ===== */
-.page{
-  width:min(1000px,94vw);
-  margin:0 auto;
-  padding:120px 0 120px;
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-}
-
-/* ===== TOP NAV ===== */
-.top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  display:flex;
-  gap:10px;
-  z-index:120;
-  flex-wrap:nowrap;
-  white-space:nowrap;
-}
+/* top controls */
 .top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  display:flex;
-  gap:10px;
-  z-index:120;
-  flex-wrap:nowrap;
-  white-space:nowrap;
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
 .top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* ===== HEADER (OPAL) ===== */
-.header{
+/* brand */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:230;
   text-align:center;
-  padding:26px 30px;
-  border-radius:24px;
-  border:1px solid var(--panel-border);
-  background:
-    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
-  backdrop-filter:blur(12px);
-  box-shadow:0 40px 120px rgba(0,0,0,.7);
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
 }
-.header h1{
-  margin:0;
-  font-size:38px;
-  font-weight:950;
-  letter-spacing:2px;
-  color:var(--text-main);
-}
-.header p{
-  margin-top:12px;
-  font-size:14.5px;
-  color:var(--text-sub);
-  line-height:1.6;
-}
+.brand .t{margin:0;font-weight:950;font-size:20px;letter-spacing:.2px;line-height:1.1}
+.brand .s{margin:6px 0 0;opacity:.82;font-size:12.75px;line-height:1.25}
 
-/* ===== CARDS (OPAL) ===== */
-.card{
-  position:relative;
-  padding:22px 24px;
-  border-radius:22px;
-  border:1px solid var(--panel-border);
+/* stage */
+.stage{
+  position:fixed;left:50%;top:56%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
+  pointer-events:none;
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  opacity:.52;
+  pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 58%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(14,24,40,.40), rgba(7,11,18,.60));
   box-shadow:
-    0 26px 80px rgba(0,0,0,.65),
-    0 0 28px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -36px 70px rgba(0,0,0,.55);
-  transition:transform .18s ease, box-shadow .18s ease;
-  overflow:hidden;
-}
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.card::after{
-  content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.9;
-  pointer-events:none;
-}
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:
-    0 36px 100px rgba(0,0,0,.8),
-    0 0 34px rgba(212,175,55,.16),
+    0 90px 260px rgba(0,0,0,.55),
     inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -36px 70px rgba(0,0,0,.55);
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+.outer::after{
+  content:"";
+  position:absolute;inset:0;border-radius:60px;
+  opacity:.12;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
 }
 
-.card h2{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.6px;
-  color:var(--text-main);
-  display:flex;
-  align-items:center;
+/* glossy direction diamonds */
+.d{
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+  transform:translate(-50%,-50%) rotate(45deg);
+
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.18), transparent 62%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 28px rgba(0,0,0,.20),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.28) 50%, transparent 100%);
+  opacity:.65;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;
+  height:28%;border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.28);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 26px var(--glow),
+    inset 0 2px 0 rgba(255,255,255,.26),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d:active{
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(.99);
+}
+
+/* placements */
+.d-n{ --tx:0px;              --ty:calc(var(--R) * -1); --glow:rgba(96,165,250,.22); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg);}
+.d-e{ --tx:var(--R);         --ty:0px;                --glow:rgba(212,175,55,.18); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg);}
+.d-s{ --tx:0px;              --ty:var(--R);           --glow:rgba(255,90,90,.18);  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg);}
+.d-w{ --tx:calc(var(--R)*-1);--ty:0px;                --glow:rgba(167,139,250,.16);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg);}
+
+.in{
+  width:100%;height:100%;
+  transform:rotate(-45deg) translateY(-2px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:14px;gap:8px;
+  pointer-events:none;user-select:none;
+}
+.lab{font-weight:950;font-size:18px;letter-spacing:.8px;text-shadow:0 0 16px rgba(255,255,255,.12)}
+.sub{font-size:12.75px;opacity:.84;line-height:1.25;max-width:18em}
+
+/* core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+  opacity:.92;
+}
+
+/* lower panel (long bubble) */
+.panel{
+  width:min(980px,94vw);
+  margin:0 auto;
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(var(--dockH) + 18px);
+  z-index:120;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.pk{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.pt{margin:0;font-weight:950;font-size:20px;letter-spacing:.3px}
+.pp{margin:10px 0 0;opacity:.86;line-height:1.5;font-size:13.5px}
+.prule{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  font-size:12.5px;
+  opacity:.86;
+  line-height:1.45;
+}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
-.sw{
-  width:12px;height:12px;
-  transform:rotate(45deg);
-  border-radius:4px;
-  background:var(--c, #93C5FD);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.card p{
-  margin:0;
-  color:var(--text-sub);
-  font-size:13.75px;
-  line-height:1.55;
-}
-.actions{margin-top:14px}
-.actions .btn{padding:10px 16px;border-radius:999px}
-
-/* ===== FOOTER ===== */
-.footer{
-  text-align:center;
-  margin-top:40px;
-  font-size:12.5px;
-  color:var(--text-sub);
-  letter-spacing:.8px;
-}
-.domain{
-  margin-top:10px;
-  font-weight:700;
-  color:var(--accent);
-  letter-spacing:2px;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px;--R:146px;--D:178px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .panel{bottom:calc(var(--dockH) + 14px)}
 }
 </style>
 </head>
@@ -199,7 +255,7 @@ a{color:inherit;text-decoration:none}
 <body>
 
 <div class="top-left">
-  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="btnRoot" href="/">ROOT</a>
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
 </div>
 
@@ -209,70 +265,78 @@ a{color:inherit;text-decoration:none}
   <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="page">
-
-  <div class="header">
-    <h1 id="ttl">ROOT</h1>
-    <p id="tag">
-      Orientation page. Prelude is the gateway. Door is the compass. Enter is the hub.
-    </p>
-  </div>
-
-  <div class="card" style="--c:#D4AF37">
-    <h2 id="hPrelude"><span class="sw"></span>PRELUDE</h2>
-    <p id="pPrelude">
-      Gateway posture. Choose informal or formal entry into Door.
-    </p>
-    <div class="actions">
-      <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
-    </div>
-  </div>
-
-  <div class="card" style="--c:#93C5FD">
-    <h2 id="hDoor"><span class="sw"></span>DOOR</h2>
-    <p id="pDoor">
-      Compass spine. N/E/S/W with selectable direction and entry.
-    </p>
-    <div class="actions">
-      <a class="btn" id="goDoor" href="/door/">OPEN</a>
-    </div>
-  </div>
-
-  <div class="card" style="--c:#0EA5E9">
-    <h2 id="hEnter"><span class="sw"></span>ENTER</h2>
-    <p id="pEnter">
-      Primary hub. Use this when you already know where you're going.
-    </p>
-    <div class="actions">
-      <a class="btn" id="goHome" href="/home/">OPEN</a>
-    </div>
-  </div>
-
-  <div class="footer">
-    <div id="footText">
-      Minimal return page. Orientation is the product.
-    </div>
-    <div class="domain">
-      DIAMONDGATEBRIDGE.COM
-    </div>
-  </div>
-
+<div class="brand" aria-hidden="true">
+  <p class="t" id="brandT">COMPASS</p>
+  <p class="s" id="brandS">Choose your axis. Then enter.</p>
 </div>
+
+<div class="stage" aria-label="Compass quadrants">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="dNorth" role="button" tabindex="0" aria-label="North: Laws">
+    <div class="in">
+      <div class="lab" id="nLab">NORTH</div>
+      <div class="sub" id="nSub">Boundaries · definitions · drift locks</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="dEast" role="button" tabindex="0" aria-label="East: Products">
+    <div class="in">
+      <div class="lab" id="eLab">EAST</div>
+      <div class="sub" id="eSub">Tools · execution · adoption</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="dSouth" role="button" tabindex="0" aria-label="South: Gauges">
+    <div class="in">
+      <div class="lab" id="sLab">SOUTH</div>
+      <div class="sub" id="sSub">Measurement · verification · outputs</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="dWest" role="button" tabindex="0" aria-label="West: Prelude">
+    <div class="in">
+      <div class="lab" id="wLab">WEST</div>
+      <div class="sub" id="wSub">Orientation · context · calm start</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<div class="panel" aria-label="Compass instructions">
+  <p class="pk" id="pk">DIRECTION ROUTER</p>
+  <p class="pt" id="pt">Pick the pressure you’re solving.</p>
+  <p class="pp" id="pp">
+    If meaning is unstable, go NORTH. If you need tools, go EAST.
+    If you need verification, go SOUTH. If you need context first, go WEST.
+  </p>
+  <div class="prule" id="prule">
+    Rule: this page routes. It does not debate. State is preserved across every jump.
+  </div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
 
 <script>
 (function(){
-  // ===== canonical state carry (lang/style/time/depth) =====
+  // ===== canonical state (URL → LS → defaults) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -288,76 +352,101 @@ a{color:inherit;text-decoration:none}
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
     var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // ===== wire links with full state =====
-  function wire(id,path){
+  // wire nav
+  function wire(id, path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-  wire("btnPrelude","/prelude/");
+  wire("btnRoot","/");
   wire("btnDoor","/door/");
-  wire("goPrelude","/prelude/");
-  wire("goDoor","/door/");
-  wire("goHome","/home/");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-  // ===== language toggle keeps style/time/depth =====
+  // language toggle (reload same pathname; GH Pages safe)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href = location.pathname + q({lang:lang});
+    window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== i18n text (no undeclared globals) =====
-  var ttl=document.getElementById("ttl");
-  var tag=document.getElementById("tag");
-  var hPrelude=document.getElementById("hPrelude");
-  var pPrelude=document.getElementById("pPrelude");
-  var hDoor=document.getElementById("hDoor");
-  var pDoor=document.getElementById("pDoor");
-  var hEnter=document.getElementById("hEnter");
-  var pEnter=document.getElementById("pEnter");
-  var footText=document.getElementById("footText");
+  // hard navigation targets
+  function go(path){ window.location.href = path + q(); }
 
+  var dNorth=document.getElementById("dNorth");
+  var dEast=document.getElementById("dEast");
+  var dSouth=document.getElementById("dSouth");
+  var dWest=document.getElementById("dWest");
+
+  function bind(el, path){
+    el.addEventListener("click", function(){ go(path); });
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }
+    });
+  }
+  bind(dNorth, "/laws/");
+  bind(dEast, "/products/");
+  bind(dSouth, "/gauges/");
+  bind(dWest, "/prelude/");
+
+  // i18n (light; this page is routing)
   if(lang==="zh"){
-    ttl.textContent="根";
-    tag.textContent="导览页。Prelude 是入口。Door 是罗盘。Enter 是枢纽。";
-    hPrelude.childNodes[1].nodeValue="前置页";
-    pPrelude.textContent="入口姿态：选择通俗或正式，然后进入 Door。";
-    hDoor.childNodes[1].nodeValue="罗盘";
-    pDoor.textContent="方向入口：N/E/S/W 选择后进入。";
-    hEnter.childNodes[1].nodeValue="进入";
-    pEnter.textContent="主枢纽。已知方向时直接进入。";
-    footText.textContent="最小返回页。导览本身就是产品。";
+    document.getElementById("brandT").textContent="罗盘";
+    document.getElementById("brandS").textContent="选轴，然后进入。";
+    document.getElementById("pk").textContent="方向路由";
+    document.getElementById("pt").textContent="选你正在解决的压力。";
+    document.getElementById("pp").textContent="含义不稳去北。要工具去东。要验证去南。想先了解去西。";
+    document.getElementById("prule").textContent="规则：本页只负责路由，不争论。每次跳转都保留状态。";
+    document.getElementById("nLab").textContent="北";
+    document.getElementById("nSub").textContent="边界 · 定义 · 防漂移";
+    document.getElementById("eLab").textContent="东";
+    document.getElementById("eSub").textContent="工具 · 执行 · 采纳";
+    document.getElementById("sLab").textContent="南";
+    document.getElementById("sSub").textContent="测量 · 核查 · 输出";
+    document.getElementById("wLab").textContent="西";
+    document.getElementById("wSub").textContent="导览 · 语境 · 平静入口";
+    document.getElementById("dockHome").textContent="主页";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnRoot").textContent="根";
   }else if(lang==="es"){
-    ttl.textContent="RAÍZ";
-    tag.textContent="Página de orientación. Prelude es el acceso. Door es la brújula. Enter es el hub.";
-    hPrelude.childNodes[1].nodeValue="PRELUDIO";
-    pPrelude.textContent="Postura de entrada. Elige un inicio antes de entrar a Door.";
-    hDoor.childNodes[1].nodeValue="PUERTA";
-    pDoor.textContent="Entrada por dirección: N/E/S/O y luego entrar.";
-    hEnter.childNodes[1].nodeValue="ENTRAR";
-    pEnter.textContent="Hub principal. Úsalo si ya sabes a dónde vas.";
-    footText.textContent="Página mínima de retorno. La orientación es el producto.";
+    document.getElementById("brandT").textContent="BRÚJULA";
+    document.getElementById("brandS").textContent="Elige eje. Luego entra.";
+    document.getElementById("pk").textContent="ENRUTADOR";
+    document.getElementById("pt").textContent="Elige la presión que estás resolviendo.";
+    document.getElementById("pp").textContent="Si el significado deriva: NORTE. Si necesitas herramientas: ESTE. Si necesitas verificación: SUR. Si necesitas contexto: OESTE.";
+    document.getElementById("prule").textContent="Regla: esta página enruta, no debate. El estado se preserva en cada salto.";
+    document.getElementById("nLab").textContent="NORTE";
+    document.getElementById("nSub").textContent="Límites · definiciones · anti-deriva";
+    document.getElementById("eLab").textContent="ESTE";
+    document.getElementById("eSub").textContent="Herramientas · ejecución · adopción";
+    document.getElementById("sLab").textContent="SUR";
+    document.getElementById("sSub").textContent="Medición · verificación · salidas";
+    document.getElementById("wLab").textContent="OESTE";
+    document.getElementById("wSub").textContent="Orientación · contexto · inicio calmado";
+    document.getElementById("dockHome").textContent="INICIO";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
   }
 })();
 </script>

@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- TNT — /laws/index.html
      LAWS · CANONICAL (7 LAWS) · 4 LENSES · 3 LANG (EN/中文/ES) · MOBILE SAFE · DENSE
      LENSES (NO NEW gd_* KEYS):
@@ -7,11 +8,13 @@
        - ENGINEERING= style=formal   & depth=learn
      RULES:
        - Accordion only (no modals/overlays)
-       - Single-open accordion (auto-close others)
+       - Single-open accordion (auto-close others; tap same closes)
        - Red signal gradient + diamond markers
-       - Canon state carry: lang/style/time/depth via URL + LS gd_*
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
        - Uses ui.css + branch.css + instruments.js
        - Does NOT style html/body background (ui.css owns field)
+       - No inline onclick; addEventListener only
 -->
 
 <!doctype html>
@@ -27,32 +30,38 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 /* ===== TOKENS ===== */
 :root{
-  --dockH:92px;
+  --dockH:112px;
 
-  /* dark opal + red signal (no washed-out blue) */
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --sigR:rgba(255,70,70,.18);
-  --sigR2:rgba(255,70,70,.12);
-  --goldSoft:rgba(212,175,55,.32);
-
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-
+  /* high-contrast red/black/gold (avoid washed blue) */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
+  --ink:rgba(255,255,255,.94);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
   --mut2:rgba(255,255,255,.70);
 
-  --fsH:28px;   /* typographic expansion */
-  --fsP:14.5px;
-  --fsS:13px;
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --sigR:rgba(255,43,43,.18);
+  --sigR2:rgba(255,43,43,.12);
+
+  --gold:rgba(201,162,74,.40);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 80px rgba(0,0,0,.55);
+  --shadowB:0 16px 52px rgba(0,0,0,.60);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+
+  --fsH:28px;   /* monument-type tuned for mobile */
+  --fsP:14.75px;
 }
 
 /* ===== TOP CONTROLS ===== */
@@ -66,10 +75,34 @@ body::before,body::after{pointer-events:none!important}
 }
 .top .left,.top .right{
   display:flex;gap:10px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
+  flex-wrap:wrap;white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
 
 /* ===== PAGE ===== */
 .page{
@@ -88,36 +121,46 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 30%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
     radial-gradient(circle at 55% 110%, var(--sigR2), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  box-shadow:var(--shadowA);
   padding:16px 16px 14px;
   position:relative;
   overflow:hidden;
 }
+/* Red signal rim + gold diamond lay in trim zone */
 .header::before{
   content:"";
-  position:absolute;inset:0;padding:1px;border-radius:22px;
-  background:linear-gradient(120deg, transparent 0%, rgba(255,90,90,.28) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(255,43,43,.18);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.30;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
-.t{margin:0;font-weight:950;font-size:var(--fsH);letter-spacing:.7px;line-height:1.12}
+
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74;color:var(--mut)}
+.t{margin:0;font-weight:950;font-size:var(--fsH);letter-spacing:.7px;line-height:1.12;color:var(--ink)}
 .s{margin:10px 0 0;font-size:var(--fsP);opacity:.92;line-height:1.55;color:var(--txt);max-width:980px}
-.fine{margin-top:10px;font-size:12.5px;opacity:.74;line-height:1.45;color:var(--mut)}
+.fine{margin-top:10px;font-size:12.75px;opacity:.80;line-height:1.45;color:var(--mut)}
 .rule{
   margin-top:12px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.55), rgba(6,10,16,.70));
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
   padding:12px 12px 10px;
   color:rgba(255,255,255,.86);
   font-size:13px;
@@ -137,8 +180,10 @@ body::before,body::after{pointer-events:none!important}
 .pill{
   padding:10px 14px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   box-shadow:0 14px 36px rgba(0,0,0,.65);
   cursor:pointer;
   font-weight:950;
@@ -146,14 +191,30 @@ body::before,body::after{pointer-events:none!important}
   color:#fff;
   user-select:none;
   -webkit-tap-highlight-color:transparent;
+  min-height:44px;
+  position:relative;
+  overflow:hidden;
+}
+.pill::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.26), transparent 72%);
+  opacity:.45;pointer-events:none;
 }
 .pill.active{
-  border-color:rgba(255,90,90,.55);
+  border-color:rgba(255,43,43,.32);
   box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--sigR);
 }
-.pill.dim{border-color:rgba(212,175,55,.22)}
-.pill.dim.active{
-  border-color:rgba(255,90,90,.55);
+.pill.dim{border-color:rgba(201,162,74,.22)}
+.pill.dim.active{border-color:rgba(255,43,43,.32)}
+.lensState{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:var(--mut);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
 /* ===== BAND ===== */
@@ -175,12 +236,17 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
-    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(255,70,70,.06), transparent 64%),
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(90,40,120,.10), transparent 62%),
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  box-shadow:var(--shadowB);
   overflow:hidden;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
 }
 .head{
   display:flex;align-items:flex-start;justify-content:space-between;
@@ -189,6 +255,7 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  position:relative;
 }
 .left{display:flex;align-items:flex-start;gap:12px;min-width:0}
 .marker{
@@ -209,17 +276,33 @@ body::before,body::after{pointer-events:none!important}
   font-weight:950;
   letter-spacing:.25px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  font-size:16px;
+  font-size:16.5px;
+  color:var(--ink);
 }
 .sub{
   margin-top:6px;
-  font-size:13px;
-  opacity:.84;
+  font-size:13.25px;
+  opacity:.88;
   line-height:1.38;
   max-width:92ch;
   color:rgba(255,255,255,.86);
 }
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
 
 .body{
   display:none;
@@ -227,15 +310,16 @@ body::before,body::after{pointer-events:none!important}
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.92));
 }
 .row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
 
 .p{
   margin:0;
   color:rgba(255,255,255,.90);
   line-height:1.7;
-  font-size:14.25px;
+  font-size:14.5px;
 }
 .p + .p{margin-top:10px}
 .ul{
@@ -261,7 +345,6 @@ body::before,body::after{pointer-events:none!important}
 .actions{
   display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;
 }
-.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
 /* ===== DOCK ===== */
 .dock{
@@ -273,7 +356,10 @@ body::before,body::after{pointer-events:none!important}
   padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
@@ -282,9 +368,9 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:104px;--fsH:27px;--fsP:14.25px}
+  :root{--dockH:132px;--fsH:27px;--fsP:14.25px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .title{font-size:15.5px}
+  .title{font-size:15.75px}
 }
 </style>
 </head>
@@ -293,9 +379,9 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-    <a class="btn" id="btnHome" href="/home/">HOME</a>
+    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+    <a class="btn" id="btnPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
+    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
   </div>
   <div class="right" aria-label="Language">
     <button class="btn" id="btnEN" type="button">EN</button>
@@ -315,13 +401,13 @@ body::before,body::after{pointer-events:none!important}
 
     <div class="lensRow" aria-label="Lenses">
       <div class="pills">
-        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
         <button class="pill" id="pillFormal" type="button">FORMAL</button>
         <button class="pill dim" id="pillPlatform" type="button">PLATFORM</button>
         <button class="pill dim" id="pillEngineering" type="button">ENGINEERING</button>
       </div>
       <div class="pills">
-        <span class="fine" id="lensState">—</span>
+        <span class="lensState" id="lensState">—</span>
       </div>
     </div>
   </div>
@@ -332,35 +418,49 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+  <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
+  "use strict";
+
   // ===== canonical state (NO NEW gd_* KEYS) =====
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
+  }
 
   // ===== lens mapping (4 lenses using existing keys only) =====
   // INFORMAL    => style=informal depth=explore
@@ -381,60 +481,53 @@ body::before,body::after{pointer-events:none!important}
     else { style="informal"; depth="explore"; }
 
     try{
-      localStorage.setItem("gd_style",style);
-      localStorage.setItem("gd_depth",depth);
+      LS.setItem("gd_style",style);
+      LS.setItem("gd_depth",depth);
     }catch(e){}
 
-    // update URL without losing other state
     window.location.href = window.location.pathname + q();
   }
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
+  // ===== wire all links with full state carry =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
 
-  // ===== wire nav =====
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
   }
-  wire("btnDoor","/door/");
-  wire("btnPrelude","/prelude/");
-  wire("btnHome","/home/");
-
-  wire("dockIndex","/index.html");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockGauges","/gauges/");
 
   // ===== language toggle (reload same path) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
   // ===== lens buttons =====
   var pillInformal=document.getElementById("pillInformal");
@@ -449,23 +542,21 @@ body::before,body::after{pointer-events:none!important}
     pillPlatform.classList.toggle("active", k==="platform");
     pillEngineering.classList.toggle("active", k==="engineering");
 
-    var label = (lang==="zh")
-      ? (k==="informal"?"通俗":"") + (k==="formal"?"正式":"") + (k==="platform"?"平台":"") + (k==="engineering"?"工程":"")
-      : (lang==="es")
-        ? (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA")
-        : (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
+    var label =
+      (lang==="zh") ? (k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程") :
+      (lang==="es") ? (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA") :
+      (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
 
     document.getElementById("lensState").textContent =
-      (lang==="zh") ? ("当前透镜："+label) :
+      (lang==="zh") ? ("当前透镜: "+label) :
       (lang==="es") ? ("Lente actual: "+label) :
       ("Current lens: "+label);
   }
-  paintLens();
 
-  pillInformal.addEventListener("click", function(){ setLens("informal"); });
-  pillFormal.addEventListener("click", function(){ setLens("formal"); });
-  pillPlatform.addEventListener("click", function(){ setLens("platform"); });
-  pillEngineering.addEventListener("click", function(){ setLens("engineering"); });
+  pillInformal.addEventListener("click", function(){ setLens("informal"); }, {passive:true});
+  pillFormal.addEventListener("click", function(){ setLens("formal"); }, {passive:true});
+  pillPlatform.addEventListener("click", function(){ setLens("platform"); }, {passive:true});
+  pillEngineering.addEventListener("click", function(){ setLens("engineering"); }, {passive:true});
 
   // ===== COPY PACKS =====
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
@@ -473,319 +564,194 @@ body::before,body::after{pointer-events:none!important}
 
   var HEAD = {
     en:{
-      hs:"What’s the loudest claim you can make *without lying*? That question is the whole point of this site. These laws keep every big idea support-bounded—so curiosity can scale without collapsing into hype.",
-      rule:"Rule: big claims are welcome. Unbounded claims are not. Every upgrade requires receipts. Every correction creates a new epoch.",
-      fine:"Tip: Use the lens buttons above. Informal is TED-style. Formal is specification. Platform is user-flow + navigation contracts. Engineering is boundary-first constraints."
+      hs:"What’s the loudest claim you can make without lying? These laws keep every big idea support-bounded so curiosity can scale without collapsing into hype.",
+      rule:"Rule: big ideas are welcome. Unbounded claims are not. Upgrades require receipts. Corrections create a new epoch.",
+      fine:"Lens meaning: Informal = TED clarity. Formal = spec language. Platform = navigation contracts. Engineering = boundary-first constraints."
     },
     zh:{
-      hs:"什么是你能说出的最大主张，却又不会撒谎？这就是本网站的核心。以下法则把一切大想法都锁在“可支撑边界”内，让好奇心可以扩张而不会坍塌成噱头。",
-      rule:"规则：欢迎大主张；不允许无界主张。任何升级都需要收据；任何修正都会开启新纪元。",
-      fine:"提示：上方透镜可切换。通俗=TED式；正式=规格；平台=用户路径/导航契约；工程=边界优先约束。"
+      hs:"你能说出的最大主张，却又不会撒谎，是什么？这些法则把一切大想法锁在“可支撑边界”内，让好奇心可以扩张而不会坍塌成噱头。",
+      rule:"规则：欢迎大想法；不允许无界主张。升级需要收据；修正会开启新纪元。",
+      fine:"透镜含义：通俗=TED式清晰；正式=规格语言；平台=导航契约；工程=边界优先约束。"
     },
     es:{
-      hs:"¿Cuál es la afirmación más grande que puedes hacer *sin mentir*? Esa es la idea central. Estas leyes mantienen todo acotado por soporte para que la curiosidad escale sin colapsar en hype.",
-      rule:"Regla: se permiten ideas grandes. No se permiten afirmaciones sin límites. Toda mejora requiere recibos. Toda corrección crea nueva época.",
-      fine:"Consejo: usa los lentes. Informal = TED. Formal = especificación. Plataforma = flujo/contratos. Ingeniería = límites/constraints."
+      hs:"¿Cuál es la afirmación más grande que puedes hacer sin mentir? Estas leyes mantienen las ideas acotadas por soporte para que la curiosidad escale sin hype.",
+      rule:"Regla: se permiten ideas grandes. No se permiten afirmaciones sin límites. Mejoras requieren recibos. Correcciones crean nueva época.",
+      fine:"Significado: Informal = claridad TED. Formal = especificación. Plataforma = contratos de navegación. Ingeniería = límites/constraints."
     }
   };
 
-  // 7 laws (canonical) — each provides: title/sub + per-lens paragraphs + bullets + binds
+  // 7 laws, each with 4 lens blocks (short paragraphs + bullets + bind)
   var LAWS = [
     {
-      id:"coherence",
-      c:"#EF4444",
+      c:"#ff2b2b",
       t:P("Coherence Constraint Law","一致性约束法则","Ley de Restricción de Coherencia"),
-      s:P("You can’t project more trust outward than you hold inward—under the same evidence.","同证据下：外部信任不可能超过内部自洽。","No puedes proyectar más confianza hacia afuera de la que sostienes adentro—con la misma evidencia."),
+      s:P("External trust cannot exceed internal self-consistency under the same evidence.","同证据下：外部信任不可能超过内部自洽。","La confianza externa no puede exceder la consistencia interna con la misma evidencia."),
       blocks:{
-        informal:{
-          p:[
-            "If your words and actions don’t match, the world eventually notices—especially under pressure. Coherence is not a vibe. It’s the measurable gap between what you say, what you do, and what happens next.",
-            "This law is the ‘gravity’ behind the whole stack: it tells you how far you can go before your own mismatch pulls you back down."
-          ],
-          ul:["Signal: mismatch grows when you scale.","Signal: confusion accelerates instability once present.","Output: contain first when mismatch rises."],
-          bind:"Binds to: Diagnostic · Laws · Gauges."
-        },
-        formal:{
-          p:[
-            "Coherence is bounded by preservation of declared invariants under declared measurement rules. External trust, honesty, and respect cannot exceed internal self-consistency under identical scope and evidence.",
-            "Confusion is an accelerator once instability exists. Fragmentation (value/action/outcome mismatch) is the measurable marker of coherence loss."
-          ],
-          ul:["Invariant: same evidence → same admissibility.","No intent inference: observed behavior only.","Correction ⇒ new epoch; no retroactive edits."],
-          bind:"Binds to: Observer-invariant evaluation · Receipt chain."
-        },
-        platform:{
-          p:[
-            "Platform lens: coherence is how the site stays calm. Every page must route you to the next clean step: proof (Laws) or measurement (Gauges) or adoption (Products). No loops that inflate meaning.",
-            "If a page can be misread, it will be misread. This law forces the UI to be honest: one tap, one outcome, with state preserved."
-          ],
-          ul:["Contract: stable labels across pages.","Contract: state carry is mandatory.","Contract: no silent remaps or hidden layers."],
-          bind:"Binds to: DOOR/INDEX routing contract · state keys gd_*."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: coherence is a constraint boundary. The system is admissible only if declared invariants are preserved across transitions under declared evidence streams.",
-            "Violation is not ‘bad behavior’—it is a detectable mismatch that amplifies under correlated exposure. Containment prevents cascade."
-          ],
-          ul:["Boundary: invariants must be explicit.","Boundary: no compensation-by-weighting.","Boundary: correlated exposure dominates risk at scale."],
-          bind:"Binds to: containment protocols · rollback discipline."
-        }
+        informal:{p:[
+          "If words and actions don’t match, pressure exposes it. Coherence is the measurable gap between what you say, what you do, and what happens next.",
+          "This law is the gravity behind the stack: mismatch amplifies under scale."
+        ],ul:["Mismatch grows when you scale.","Confusion accelerates instability once present.","Contain first when mismatch rises."],bind:"Binds to: Diagnostic · Laws · Gauges."},
+        formal:{p:[
+          "Coherence is bounded by preservation of declared invariants under declared measurement rules. External trust/honesty/respect cannot exceed internal consistency under identical scope/evidence.",
+          "Fragmentation is value/action/outcome mismatch. Corrections require new epoch."
+        ],ul:["Deterministic admissibility under fixed inputs.","No intent inference; observed behavior only.","Correction ⇒ epoch rollover."],bind:"Binds to: observer-invariant evaluation · receipts."},
+        platform:{p:[
+          "Platform posture: the UI must route users to the next clean step without semantic drift. One tap → one outcome, with state preserved.",
+          "If a page can be misread, it will be misread. This law forces honest navigation."
+        ],ul:["Stable labels across pages.","State carry mandatory.","No hidden remaps."],bind:"Binds to: routing contracts."},
+        engineering:{p:[
+          "Engineering posture: coherence is a constraint boundary. Admissibility holds only if invariants are preserved across transitions under declared evidence.",
+          "Containment prevents cascade under correlated exposure."
+        ],ul:["Explicit invariants.","Rollback discipline.","Correlation dominates risk at scale."],bind:"Binds to: containment protocols."}
       }
     },
-
     {
-      id:"noncontradiction",
-      c:"#D4AF37",
+      c:"#c9a24a",
       t:P("Non-Contradiction Law","不矛盾法则","Ley de No-Contradicción"),
-      s:P("Same scope + same receipts can’t produce two different truths.","同范围同收据不可能产出两种相反结论。","Mismo alcance + mismos recibos no pueden producir dos verdades distintas."),
+      s:P("Same scope + same receipts cannot produce two different truths.","同范围同收据不可能产出两种相反结论。","Mismo alcance + mismos recibos no pueden producir dos verdades distintas."),
       blocks:{
-        informal:{
-          p:[
-            "If two people look at the same receipts and reach opposite conclusions, one of two things is true: the scope is different, or the rules are different. Otherwise the system is broken.",
-            "This law kills ‘interpretation wars’ by forcing the disagreement to become structural: scope, evidence, or rules."
-          ],
-          ul:["Disagreement ⇒ check scope first.","Then check missing receipts.","Then check rule version."],
-          bind:"Binds to: replayable receipts · versioned rules."
-        },
-        formal:{
-          p:[
-            "Within fixed scope and fixed measurement rules, admissibility must be deterministic. Identical (scope, manifests, evidence) implies identical classification output.",
-            "Any deviation indicates mis-specified rules, hidden scope mutation, or evidence inconsistency."
-          ],
-          ul:["Determinism requirement.","No silent scope changes.","No post-hoc semantic swaps."],
-          bind:"Binds to: scope locks · manifest locks."
-        },
-        platform:{
-          p:[
-            "Platform lens: the UI must not allow two ‘truths’ via two paths. If two navigation routes lead to different interpretations, the page design failed.",
-            "We prevent this with stable state carry and explicit jump points."
-          ],
-          ul:["One meaning per label.","One route per intent.","State preserved on every jump."],
-          bind:"Binds to: navigation-first contract."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: classification is a function of inputs. If outputs diverge under identical inputs, the function is non-deterministic and inadmissible.",
-            "Fix is not debate; fix is specification and version bump."
-          ],
-          ul:["Function must be deterministic.","Inputs include scope + evidence hash.","Fix requires epoch bump."],
-          bind:"Binds to: epoch protocol."
-        }
+        informal:{p:[
+          "If two people see the same receipts and disagree, the scope or rules are different. Otherwise the system is broken.",
+          "This law turns ‘debate’ into structure: scope, receipts, or rule version."
+        ],ul:["Disagreement ⇒ check scope.","Then check missing receipts.","Then check rule version."],bind:"Binds to: replayable receipts."},
+        formal:{p:[
+          "Within fixed scope and fixed measurement rules, outputs must be deterministic. Identical inputs imply identical classification.",
+          "Divergence indicates hidden scope mutation, rule ambiguity, or evidence inconsistency."
+        ],ul:["Determinism requirement.","No silent scope changes.","No post-hoc semantic swaps."],bind:"Binds to: scope+manifest locks."},
+        platform:{p:[
+          "Platform posture: the UI must not allow two meanings via two routes. Labels must mean one thing across the site.",
+          "State carry + explicit jumps prevent accidental contradictions."
+        ],ul:["One meaning per label.","One route per intent.","State preserved on every jump."],bind:"Binds to: navigation contract."},
+        engineering:{p:[
+          "Engineering posture: classification is a function. If it diverges under identical inputs, the function is inadmissible.",
+          "Fix is specification + version bump, not argument."
+        ],ul:["Deterministic function.","Inputs include scope+evidence hash.","Fix ⇒ epoch bump."],bind:"Binds to: release discipline."}
       }
     },
-
     {
-      id:"scope",
-      c:"#60A5FA",
+      c:"#93c5fd",
       t:P("Scope Precedes Authority","范围先于权力","El Alcance Precede a la Autoridad"),
       s:P("Before you claim, define the map you’re claiming inside.","先定地图，再谈主张。","Antes de afirmar, define el mapa donde afirmas."),
       blocks:{
-        informal:{
-          p:[
-            "Most bad arguments are just missing scope. People are debating inside two different maps and calling it disagreement.",
-            "Scope is the fastest honesty tool: it tells you what you’re allowed to say *and what you must not say yet*."
-          ],
-          ul:["Define boundaries first.","If scope moves, restart.","No ‘infinite away’ thinking."],
-          bind:"Binds to: the first paragraph on every serious page."
-        },
-        formal:{
-          p:[
-            "Admissibility requires declared scope: epoch bounds, active lanes, active anchors, and measurement rules. Scope mutation invalidates conclusions under that scope.",
-            "Scope is an input. It is not a rhetorical flourish."
-          ],
-          ul:["Scope is part of evidence.","Mutation ⇒ new epoch.","No retroactive widening."],
-          bind:"Binds to: scope declaration schema."
-        },
-        platform:{
-          p:[
-            "Platform lens: the site must make scope easy. Users should know where they are, what the page is doing, and what it refuses to do.",
-            "That’s why every card ends with a jump."
-          ],
-          ul:["Headers must state posture.","Footers must state bounds.","Jump points prevent wandering."],
-          bind:"Binds to: DOOR / PRELUDE / HUB posture."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: scope defines the admissible measurement domain. Without explicit scope, any metric is undefined and any output is garbage.",
-            "Scope must be machine-checkable, not poetic."
-          ],
-          ul:["Scope must be explicit.","Metrics require declared rules.","Undefined scope ⇒ output UNDETERMINED."],
-          bind:"Binds to: measurement contracts."
-        }
+        informal:{p:[
+          "Most bad arguments are missing scope. People debate inside different maps and call it disagreement.",
+          "Scope is the fastest honesty tool: it tells you what you can say—and what you must not say yet."
+        ],ul:["Define boundaries first.","If scope moves, restart.","No infinite ‘away’ thinking."],bind:"Binds to: the first paragraph on serious pages."},
+        formal:{p:[
+          "Admissibility requires declared scope: epoch bounds, anchors, lanes, and measurement rules. Scope mutation invalidates conclusions under that scope.",
+          "Scope is an input, not rhetoric."
+        ],ul:["Scope is part of evidence.","Mutation ⇒ new epoch.","No retroactive widening."],bind:"Binds to: scope declaration schema."},
+        platform:{p:[
+          "Platform posture: make scope easy. Users should know where they are, what the page does, and what it refuses to do.",
+          "Every card ends with a jump to avoid wandering."
+        ],ul:["Headers state posture.","Footers state bounds.","Jump points prevent loops."],bind:"Binds to: DOOR/PRELUDE/HUB posture."},
+        engineering:{p:[
+          "Engineering posture: without explicit scope, metrics are undefined and outputs are garbage. Scope must be machine-checkable.",
+          "Undefined scope ⇒ UNDETERMINED output."
+        ],ul:["Explicit scope.","Declared measurement rules.","Undefined ⇒ UNDETERMINED."],bind:"Binds to: measurement contracts."}
       }
     },
-
     {
-      id:"admissibility",
-      c:"#93C5FD",
+      c:"#60a5fa",
       t:P("Admissibility Law","可采信法则","Ley de Admisibilidad"),
       s:P("Upgrades require receipts. Missing receipts block escalation.","升级需要收据；缺收据就禁止升级。","Las mejoras requieren recibos; sin recibos no hay escalación."),
       blocks:{
-        informal:{
-          p:[
-            "This is the anti-hype law. You don’t get to level up because you feel confident. You level up because the receipts are there.",
-            "It’s not pessimism. It’s safety—because scale amplifies error."
-          ],
-          ul:["Receipts-first.","If missing: hold/contain.","No storytelling upgrades."],
-          bind:"Binds to: every ‘OPEN’ button that claims anything."
-        },
-        formal:{
-          p:[
-            "Admissibility is a binary gate under declared scope and rules. Claims may not exceed the evidence stream. Missing receipts force output to remain NOT MEASURED / UNDETERMINED.",
-            "Reason codes must be emitted for every block."
-          ],
-          ul:["Binary gating under rules.","Reason-coded outputs.","No inference without data."],
-          bind:"Binds to: classifier outputs."
-        },
-        platform:{
-          p:[
-            "Platform lens: the site must teach people the difference between ‘interesting’ and ‘admissible.’ The UI does that by separating Vision, Products, Laws, and Gauges.",
-            "Vision can be big. Products can be usable. Laws bound meaning. Gauges show signals."
-          ],
-          ul:["Keep lanes separate.","Don’t collapse routes.","Every lane has a return."],
-          bind:"Binds to: navigation architecture."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: escalation is forbidden unless the receipt set satisfies the gate conditions. Gates are deterministic under identical inputs.",
-            "If a gate is bypassable, the system is insecure."
-          ],
-          ul:["No bypass paths.","No hidden overrides.","Audit logs required for changes."],
-          bind:"Binds to: gate design."
-        }
+        informal:{p:[
+          "This is the anti-hype law. You don’t level up because you feel confident. You level up because receipts exist.",
+          "It’s not pessimism. It’s safety—because scale amplifies error."
+        ],ul:["Receipts-first.","If missing: hold/contain.","No storytelling upgrades."],bind:"Binds to: every page that implies ‘proof’."},
+        formal:{p:[
+          "Admissibility is a binary gate under declared scope and rules. Claims may not exceed the evidence stream.",
+          "Missing receipts force output to remain NOT MEASURED / UNDETERMINED with reason codes."
+        ],ul:["Binary gating.","Reason-coded outputs.","No inference without data."],bind:"Binds to: classifier outputs."},
+        platform:{p:[
+          "Platform posture: separate lanes so users don’t confuse vision with proof. Vision can be big; Products can be usable; Laws bound meaning; Gauges show signals.",
+          "That separation is the UI version of admissibility."
+        ],ul:["Keep lanes separate.","Don’t collapse routes.","Every lane has a return."],bind:"Binds to: navigation architecture."},
+        engineering:{p:[
+          "Engineering posture: gates must be deterministic and non-bypassable. If a gate is bypassable, the system is insecure.",
+          "Changes require audit and epoch rollover."
+        ],ul:["No bypass paths.","Audit logs for changes.","Epoch bump on correction."],bind:"Binds to: gate design."}
       }
     },
-
     {
-      id:"calibration",
-      c:"#34D399",
+      c:"#34d399",
       t:P("Calibration Authority Law","校准权威法则","Ley de Autoridad de Calibración"),
       s:P("Calibration authority is exclusive. Non-authority input is data only.","校准权威是唯一的；非权威输入只能算数据。","La autoridad de calibración es exclusiva; la entrada no-autorizada es solo dato."),
       blocks:{
-        informal:{
-          p:[
-            "If everyone can ‘calibrate’ the ruler, the ruler becomes a weapon. This law protects the instrument from becoming politics.",
-            "You can contribute data all day. But you cannot redefine the measuring stick unless you hold calibration authority."
-          ],
-          ul:["Authority is explicit.","Inputs are welcome, but labeled.","Ruler can’t be crowdsourced."],
-          bind:"Binds to: instrument integrity."
-        },
-        formal:{
-          p:[
-            "Calibration authority is exclusive by definition. Parameter tuning, threshold selection, and rule specification are restricted to the authorized calibrator. All other inputs remain non-authoritative evidence only.",
-            "Violation is a capture risk and invalidates outputs."
-          ],
-          ul:["Authority separation.","No silent tuning.","Capture resistance requirement."],
-          bind:"Binds to: governance + audit separation."
-        },
-        platform:{
-          p:[
-            "Platform lens: the UI must never imply that crowds can redefine standards. The interface must distinguish ‘submit evidence’ from ‘change rules.’",
-            "That’s why the site uses clear posture labels and avoids ambiguous controls."
-          ],
-          ul:["Separate ‘data’ from ‘rules’.","Separate ‘feedback’ from ‘calibration’.","Show status plainly."],
-          bind:"Binds to: admin surfaces (future)."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: calibration is a protected configuration surface. Threat model includes unauthorized tuning, silent parameter drift, and inconsistent threshold application.",
-            "Mitigation: versioned configs, signed releases, audit logs, and explicit epoch rollover."
-          ],
-          ul:["Signed releases.","Audit logging.","Epoch bump on changes."],
-          bind:"Binds to: release discipline."
-        }
+        informal:{p:[
+          "If everyone can calibrate the ruler, the ruler becomes a weapon. This law protects the instrument from politics.",
+          "People can submit data. They can’t redefine the measuring stick without authority."
+        ],ul:["Authority is explicit.","Inputs labeled as data.","No crowdsourced ruler."],bind:"Binds to: instrument integrity."},
+        formal:{p:[
+          "Calibration authority is exclusive by definition. Parameter tuning and rule specification are restricted to the authorized calibrator.",
+          "Unauthorized tuning is capture risk and invalidates outputs."
+        ],ul:["Authority separation.","No silent tuning.","Capture resistance required."],bind:"Binds to: governance + audit separation."},
+        platform:{p:[
+          "Platform posture: clearly separate ‘submit evidence’ from ‘change rules.’ The UI must never imply crowds can redefine standards.",
+          "That’s why posture labels are explicit."
+        ],ul:["Separate data from rules.","Separate feedback from calibration.","Show status plainly."],bind:"Binds to: future admin surfaces."},
+        engineering:{p:[
+          "Engineering posture: calibration is protected configuration. Threats include unauthorized tuning, silent drift, inconsistent thresholds.",
+          "Mitigation: versioned configs, signed releases, audit logs, epoch rollover."
+        ],ul:["Signed releases.","Audit logging.","Epoch bump on changes."],bind:"Binds to: release discipline."}
       }
     },
-
     {
-      id:"stability",
-      c:"#A3A3A3",
+      c:"#a3a3a3",
       t:P("Measurable Stability Law","可测稳定法则","Ley de Estabilidad Medible"),
-      s:P("Instability is not a feeling. It’s a measurable mismatch that accelerates under scale.","不稳定不是感觉，而是可测的错配，在规模下加速。","La inestabilidad no es un sentimiento: es un desajuste medible que acelera al escalar."),
+      s:P("Instability is measurable mismatch that accelerates under scale.","不稳定是可测错配，在规模下加速。","La inestabilidad es desajuste medible que acelera al escalar."),
       blocks:{
-        informal:{
-          p:[
-            "People say ‘something feels off.’ This law says: great—now measure it. Where is the mismatch? What changed? What is moving together that shouldn’t?",
-            "Stability is built by making the invisible visible, then fixing the smallest real cause."
-          ],
-          ul:["Measure before you argue.","Find mismatch + trend.","Fix the smallest real cause."],
-          bind:"Binds to: Dot.Grid + Gauges."
-        },
-        formal:{
-          p:[
-            "Stability is evaluated as preserved alignment between declared values, observed actions, and outcomes under fixed scope. Instability is the measurable divergence vector and its acceleration over a defined window.",
-            "Once instability exists, ambiguity increases failure propagation speed."
-          ],
-          ul:["Windowed evaluation.","Trend/acceleration matters.","Ambiguity is an accelerator."],
-          bind:"Binds to: windowed collapse tests."
-        },
-        platform:{
-          p:[
-            "Platform lens: the site must translate ‘off’ into ‘here is what changed.’ That’s why every product page points to measurement surfaces.",
-            "Users shouldn’t be forced into theory. They should be routed to the right signal."
-          ],
-          ul:["Signal-first UX.","Jump to measurement.","Avoid narrative loops."],
-          bind:"Binds to: page contracts."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: stability requires variance bands, correlation checks, and deterministic rollback paths. Drift is detected by adjacency deltas and dependency mutation under identical naming.",
-            "If naming shifts silently, comparability collapses."
-          ],
-          ul:["Variance bands.","Correlation checks.","Naming lock for comparability."],
-          bind:"Binds to: Dot.Grid indexing discipline."
-        }
+        informal:{p:[
+          "People say ‘something feels off.’ This law says: great—now measure it. Where is the mismatch? What changed?",
+          "Stability is built by making the invisible visible, then fixing the smallest real cause."
+        ],ul:["Measure before arguing.","Find mismatch + trend.","Fix smallest real cause."],bind:"Binds to: Dot.Grid + Gauges."},
+        formal:{p:[
+          "Stability is preserved alignment between declared values, observed actions, and outcomes under fixed scope.",
+          "Instability is the divergence vector and its acceleration over a defined window."
+        ],ul:["Windowed evaluation.","Trend/acceleration matters.","Ambiguity accelerates propagation."],bind:"Binds to: windowed tests."},
+        platform:{p:[
+          "Platform posture: translate ‘off’ into ‘here is what changed.’ Route users to the right signal without forcing theory.",
+          "Signal-first UX prevents narrative loops."
+        ],ul:["Signal-first UX.","Jump to measurement.","Avoid loops."],bind:"Binds to: page contracts."},
+        engineering:{p:[
+          "Engineering posture: stability requires variance bands, correlation checks, and deterministic rollback paths.",
+          "Naming must be locked for comparability."
+        ],ul:["Variance bands.","Correlation checks.","Naming lock."],bind:"Binds to: indexing discipline."}
       }
     },
-
     {
-      id:"containment",
-      c:"#F59E0B",
+      c:"#f59e0b",
       t:P("Containment Prevents Cascade","隔离阻断级联","La Contención Evita la Cascada"),
       s:P("Keep failure local. Rollback beats collapse.","把失败变小：回滚胜过崩塌。","Mantén el fallo local. Rollback vence al colapso."),
       blocks:{
-        informal:{
-          p:[
-            "The fastest way to lose everything is to let one failure spread. Containment is not fear; it’s intelligence.",
-            "A contained failure becomes a lesson. An uncontained failure becomes a disaster."
-          ],
-          ul:["Isolate early.","Rollback fast.","Learn without burning the system."],
-          bind:"Binds to: deployment + operations."
-        },
-        formal:{
-          p:[
-            "Containment is segmentation plus rollback discipline. It limits blast radius and preserves invariants under fault. Cascade risk increases with correlated exposure.",
-            "Containment decisions must be reason-coded and logged."
-          ],
-          ul:["Segmentation.","Rollback discipline.","Reason-coded actions."],
-          bind:"Binds to: resilience engineering."
-        },
-        platform:{
-          p:[
-            "Platform lens: routes must avoid trap loops. Every page needs a clean exit and a clean return. If the user can’t back out safely, the platform is unsafe.",
-            "Containment is navigation, not just engineering."
-          ],
-          ul:["Every open has a return.","Back must not ‘fall through.’","No dead ends."],
-          bind:"Binds to: back buttons + state carry."
-        },
-        engineering:{
-          p:[
-            "Engineering lens: containment is an explicit failure mode design. System must support rollback to last stable receipt state, zone independence, and kill/exit paths.",
-            "No timer gates. No hidden dependency chains."
-          ],
-          ul:["Rollback to stable state.","Zone independence.","Exit paths required."],
-          bind:"Binds to: execution contracts."
-        }
+        informal:{p:[
+          "The fastest way to lose everything is to let one failure spread. Containment is intelligence, not fear.",
+          "A contained failure becomes a lesson. An uncontained failure becomes a disaster."
+        ],ul:["Isolate early.","Rollback fast.","Learn without burning the system."],bind:"Binds to: deployment + operations."},
+        formal:{p:[
+          "Containment is segmentation plus rollback discipline. It limits blast radius and preserves invariants under fault.",
+          "Containment actions must be reason-coded and logged."
+        ],ul:["Segmentation.","Rollback discipline.","Reason-coded actions."],bind:"Binds to: resilience engineering."},
+        platform:{p:[
+          "Platform posture: routes must avoid trap loops. Every page needs a clean exit and a clean return.",
+          "Containment is navigation, not just engineering."
+        ],ul:["Every open has a return.","Back must not fall through.","No dead ends."],bind:"Binds to: state carry + returns."},
+        engineering:{p:[
+          "Engineering posture: rollback to last stable receipt state, zone independence, and kill/exit paths are mandatory.",
+          "No timer gates. No hidden dependency chains."
+        ],ul:["Rollback to stable state.","Zone independence.","Exit paths required."],bind:"Binds to: execution contracts."}
       }
     }
   ];
 
-  // ===== apply header =====
+  // Apply header copy
   var H = HEAD[lang] || HEAD.en;
   document.getElementById("hs").textContent = H.hs;
   document.getElementById("ruleTop").textContent = H.rule;
   document.getElementById("fine").textContent = H.fine;
 
-  // ===== i18n small labels =====
+  // Localize fixed labels
   if(lang==="zh"){
     document.getElementById("hk").textContent="法则";
     document.getElementById("ht").textContent="让大想法保持诚实的规则";
@@ -798,11 +764,14 @@ body::before,body::after{pointer-events:none!important}
     pillFormal.textContent="正式";
     pillPlatform.textContent="平台";
     pillEngineering.textContent="工程";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnPrelude").textContent="前奏";
+    document.getElementById("btnHome").textContent="主页";
   }else if(lang==="es"){
     document.getElementById("hk").textContent="LEYES";
     document.getElementById("ht").textContent="REGLAS QUE MANTIENEN HONESTAS LAS IDEAS GRANDES";
     document.getElementById("band").textContent="LEYES CANÓNICAS (7)";
-    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockIndex").textContent="BRÚJULA";
     document.getElementById("dockExplore").textContent="EXPLORAR";
     document.getElementById("dockProducts").textContent="PRODUCTOS";
     document.getElementById("dockGauges").textContent="MEDIDORES";
@@ -810,16 +779,50 @@ body::before,body::after{pointer-events:none!important}
     pillFormal.textContent="FORMAL";
     pillPlatform.textContent="PLATAFORMA";
     pillEngineering.textContent="INGENIERÍA";
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("btnPrelude").textContent="PRELUDIO";
+    document.getElementById("btnHome").textContent="INICIO";
   }
 
-  // ===== render accordion (single-open) =====
+  // Lens state paint + handlers
+  function paintLens(){
+    var k=lensKey();
+    pillInformal.classList.toggle("active", k==="informal");
+    pillFormal.classList.toggle("active", k==="formal");
+    pillPlatform.classList.toggle("active", k==="platform");
+    pillEngineering.classList.toggle("active", k==="engineering");
+
+    var label =
+      (lang==="zh") ? (k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程") :
+      (lang==="es") ? (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA") :
+      (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
+
+    document.getElementById("lensState").textContent =
+      (lang==="zh") ? ("当前透镜: "+label) :
+      (lang==="es") ? ("Lente actual: "+label) :
+      ("Current lens: "+label);
+  }
+
+  pillInformal.addEventListener("click", function(){ setLens("informal"); }, {passive:true});
+  pillFormal.addEventListener("click", function(){ setLens("formal"); }, {passive:true});
+  pillPlatform.addEventListener("click", function(){ setLens("platform"); }, {passive:true});
+  pillEngineering.addEventListener("click", function(){ setLens("engineering"); }, {passive:true});
+
+  // Render accordion (single-open; tap same closes)
   var list=document.getElementById("list");
 
-  function openLabel(){
-    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  function closeAll(){
+    var rows=list.querySelectorAll(".row");
+    for(var i=0;i<rows.length;i++){
+      rows[i].classList.remove("open");
+      var c=rows[i].querySelector(".chev");
+      if(c) c.textContent="▸";
+    }
   }
 
-  function lensBlockKey(){ return lensKey(); }
+  function openWord(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
 
   function makeRow(L, idx){
     var row=document.createElement("div");
@@ -872,74 +875,70 @@ body::before,body::after{pointer-events:none!important}
     var small=document.createElement("div");
     small.className="smallband";
     small.textContent =
-      (lang==="zh") ? ("当前透镜："+(lensBlockKey()==="informal"?"通俗":lensBlockKey()==="formal"?"正式":lensBlockKey()==="platform"?"平台":"工程")) :
-      (lang==="es") ? ("Lente: "+(lensBlockKey()==="informal"?"INFORMAL":lensBlockKey()==="formal"?"FORMAL":lensBlockKey()==="platform"?"PLATAFORMA":"INGENIERÍA")) :
-      ("Lens: "+(lensBlockKey()==="informal"?"INFORMAL":lensBlockKey()==="formal"?"FORMAL":lensBlockKey()==="platform"?"PLATFORM":"ENGINEERING"));
-
+      (lang==="zh") ? ("透镜："+(lensKey()==="informal"?"通俗":lensKey()==="formal"?"正式":lensKey()==="platform"?"平台":"工程")) :
+      (lang==="es") ? ("Lente: "+(lensKey()==="informal"?"INFORMAL":lensKey()==="formal"?"FORMAL":lensKey()==="platform"?"PLATAFORMA":"INGENIERÍA")) :
+      ("Lens: "+(lensKey()==="informal"?"INFORMAL":lensKey()==="formal"?"FORMAL":lensKey()==="platform"?"PLATFORM":"ENGINEERING"));
     body.appendChild(small);
 
-    var k=lensBlockKey();
-    var blk = L.blocks[k] || L.blocks.informal;
+    var blk = L.blocks[lensKey()] || L.blocks.informal;
 
-    (blk.p||[]).forEach(function(txt){
+    for(var i=0;i<blk.p.length;i++){
       var p=document.createElement("p");
       p.className="p";
-      p.textContent=txt;
+      p.textContent=blk.p[i];
       body.appendChild(p);
-    });
+    }
 
     if(blk.ul && blk.ul.length){
       var ul=document.createElement("ul");
       ul.className="ul";
-      blk.ul.forEach(function(x){
+      for(var j=0;j<blk.ul.length;j++){
         var li=document.createElement("li");
-        li.textContent=x;
+        li.textContent=blk.ul[j];
         ul.appendChild(li);
-      });
+      }
       body.appendChild(ul);
     }
 
-    var bind=document.createElement("p");
-    bind.className="p";
-    bind.style.opacity=".86";
-    bind.textContent=blk.bind || "";
-    body.appendChild(bind);
+    if(blk.bind){
+      var bind=document.createElement("p");
+      bind.className="p";
+      bind.style.opacity=".86";
+      bind.textContent=blk.bind;
+      body.appendChild(bind);
+    }
 
     var actions=document.createElement("div");
     actions.className="actions";
 
     var a1=document.createElement("a");
     a1.className="btn";
-    a1.textContent=openLabel()+": "+((lang==="zh")?"量规":(lang==="es")?"GAUGES":"GAUGES");
-    a1.href="/gauges/"+q();
+    a1.textContent=openWord()+": "+(lang==="zh"?"量规":(lang==="es"?"MEDIDORES":"GAUGES"));
+    a1.setAttribute("data-route","/gauges/");
     actions.appendChild(a1);
 
     var a2=document.createElement("a");
     a2.className="btn";
-    a2.textContent=openLabel()+": "+((lang==="zh")?"产品":(lang==="es")?"PRODUCTS":"PRODUCTS");
-    a2.href="/products/"+q();
+    a2.textContent=openWord()+": "+(lang==="zh"?"产品":(lang==="es"?"PRODUCTOS":"PRODUCTS"));
+    a2.setAttribute("data-route","/products/");
     actions.appendChild(a2);
 
     body.appendChild(actions);
 
-    function closeAll(){
-      list.querySelectorAll(".row").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".chev");
-        if(c) c.textContent="▸";
-      });
-    }
-
     function toggle(){
-      var willOpen = !row.classList.contains("open");
-      closeAll();
-      if(willOpen){
-        row.classList.add("open");
-        chev.textContent="▾";
+      var isOpen=row.classList.contains("open");
+      if(isOpen){
+        row.classList.remove("open");
+        chev.textContent="▸";
+        return;
       }
+      closeAll();
+      row.classList.add("open");
+      chev.textContent="▾";
+      wireAll();
     }
 
-    head.addEventListener("click", toggle);
+    head.addEventListener("click", toggle, {passive:true});
     head.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
@@ -956,13 +955,16 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function render(){
-    list.innerHTML="";
     paintLens();
+    list.innerHTML="";
     for(var i=0;i<LAWS.length;i++){
       list.appendChild(makeRow(LAWS[i], i));
     }
+    wireAll();
   }
 
+  // Init
+  paintLens();
   render();
 })();
 </script>

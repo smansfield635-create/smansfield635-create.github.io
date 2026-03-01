@@ -1,22 +1,19 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · TRILINGUAL (EN/中文/ES) · DENSE · BIGGER PRINT · SINGLE-OPEN ACCORDION
-     PURPOSE:
-       - Names the problem clearly (human words).
-       - Shows that it is mapped into a finite lattice (finite measure).
-       - Explains “how the system handles the solution from every angle.”
-       - Clean jumps to Compass / Products / Explore / Laws / Gauges.
-     RULES:
-       - No modals, no overlays, no inline onclick.
-       - Mobile-safe: sticky top, single-open accordion.
-       - Canon state carry: lang/style/time/depth (URL + gd_* LS).
-     ROUTES (EDIT HERE IF NEEDED):
+     PRELUDE · WHY YOU’RE HERE (RAMP) · TRILINGUAL (EN/中文/ES)
+     GOAL:
+       - Same theme as Door/Index/Home: “frontier with receipts”
+       - Larger print + stronger panel variance (not same as background)
+       - Single-open Q/A accordion (monument density without wall-of-text)
+       - No modals, no overlays
+       - State carry: lang/style/time/depth (URL + gd_* LS)
+     ROUTES:
        - BACK → /door/
        - COMPASS → /index.html
        - HOME → /home/
-       - PRODUCTS → /products/
-       - EXPLORE → /explore/
-       - LAWS → /laws/
-       - GAUGES → /gauges/
+       - Quick opens: /products/ /explore/ /laws/ /gauges/
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <!doctype html>
@@ -24,7 +21,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE</title>
+<title>PRELUDE · Why You’re Here</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -32,28 +29,43 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:104px;
+  --dockH:92px;
 
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,80,80,.10);
-  --goldSoft:rgba(212,175,55,.35);
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,80,80,.12);
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
+  --goldSoft:rgba(212,175,55,.20);
 
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.78);
+  --H1:40px;
+  --P:15px;
+  --SM:12.75px;
 }
 
+/* top */
+.top{
+  position:fixed;left:0;right:0;top:16px;
+  padding:0 16px;
+  display:flex;justify-content:space-between;gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* page */
 .page{
-  width:min(1120px,94vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 18px);
+  padding:84px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -61,64 +73,45 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* Top */
-.top{
-  position:sticky; top:0; z-index:240;
-  padding:10px 0 8px;
-  display:flex; justify-content:space-between; gap:12px;
-}
-.top .left,.top .right{
-  display:flex; gap:10px; align-items:center;
-  flex-wrap:nowrap; white-space:nowrap;
-}
-.top .btn{white-space:nowrap}
-
-/* Hero */
+/* hero */
 .hero{
   border-radius:26px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
   box-shadow:0 30px 110px rgba(0,0,0,.55);
   padding:18px 18px 16px;
-  position:relative;
-  overflow:hidden;
 }
-.hero::before{
-  content:"";
-  position:absolute; inset:0; border-radius:inherit; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
-.h1{margin:0;font-weight:950;font-size:34px;letter-spacing:1.1px;line-height:1.1}
-.p{margin:12px 0 0;font-size:15.5px;line-height:1.62;color:var(--txt);max-width:980px}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.h1{margin:0;font-weight:950;font-size:var(--H1);letter-spacing:1.2px;line-height:1.05}
+.p{margin:10px 0 0;font-size:var(--P);line-height:1.6;color:rgba(255,255,255,.90);max-width:980px}
 .rule{
-  margin:14px 0 0;
-  padding:12px 14px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-size:13.5px;
-  line-height:1.55;
-  color:var(--mut);
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
+  box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  font-size:var(--SM);
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
 }
 
-/* Jump strip */
-.jumpstrip{
-  display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+/* quick opens */
+.quick{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
   margin-top:12px;
 }
-.jumpstrip .btn{padding:10px 14px;border-radius:999px}
+.quick .btn{border-radius:999px;padding:10px 14px}
 
-/* Band */
+/* band */
 .band{
   padding:10px 12px;
   border-radius:18px;
@@ -129,28 +122,46 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.88);
 }
 
-/* Accordion */
-.stack{display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
+/* accordion */
+.acc{
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 60px rgba(0,0,0,.40);
   overflow:hidden;
+  position:relative;
 }
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;
+.acc::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.40;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.accHead{
+  display:flex;justify-content:space-between;gap:10px;
   padding:14px 16px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  position:relative;
+  z-index:1;
 }
-.left2{min-width:0}
-.title{font-weight:950;font-size:16px;letter-spacing:.2px}
-.sub{margin-top:6px;font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.78);max-width:92ch}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.body{
+.q{
+  font-weight:950;
+  letter-spacing:.2px;
+}
+.a0{
+  margin-top:6px;
+  font-size:12.75px;
+  opacity:.82;
+  line-height:1.35;
+  color:rgba(255,255,255,.86);
+}
+.accC{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.accBody{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -158,21 +169,22 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.row.open .body{display:block}
-.bp{margin:0;font-size:14.5px;line-height:1.7;color:rgba(255,255,255,.86)}
-.bp + .bp{margin-top:10px}
-.ul{
-  margin:10px 0 0 18px;
-  padding:0;
-  font-size:14px;
-  line-height:1.65;
-  color:rgba(255,255,255,.82);
-}
-.ul li{margin:6px 0}
+.acc.open .accBody{display:block}
+.a{margin:0;color:rgba(255,255,255,.88);line-height:1.62;font-size:13.25px}
+.a + .a{margin-top:10px}
 
-/* Dock */
+/* footer */
+.footer{
+  margin-top:8px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+
+/* dock */
 .dock{
-  position:fixed; left:50%;
+  position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -189,7 +201,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:116px}
+  :root{--dockH:98px; --H1:36px; --P:15px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -197,36 +209,97 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
+<div class="top">
+  <div class="left">
+    <a class="btn" id="btnBack" href="/door/">BACK</a>
+    <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
+    <a class="btn" id="btnHome" href="/home/">HOME</a>
+  </div>
+  <div class="right">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnBack" href="/door/">BACK</a>
-      <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-      <a class="btn" id="btnHome" href="/home/">HOME</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
-  </div>
-
-  <div class="hero" aria-label="Prelude">
+  <div class="hero">
     <p class="k" id="k0">PRELUDE</p>
     <h1 class="h1" id="h0">WHY YOU’RE HERE</h1>
     <p class="p" id="p0"></p>
     <div class="rule" id="r0"></div>
-    <div class="jumpstrip">
-      <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
-      <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
-      <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
-      <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+
+    <div class="quick" aria-label="Quick opens">
+      <a class="btn" id="qProducts" href="/products/">OPEN PRODUCTS</a>
+      <a class="btn" id="qExplore" href="/explore/">OPEN EXPLORE</a>
+      <a class="btn" id="qLaws" href="/laws/">OPEN LAWS</a>
+      <a class="btn" id="qGauges" href="/gauges/">OPEN GAUGES</a>
     </div>
   </div>
 
   <div class="band" id="band">THE RAMP (ONE THING AT A TIME)</div>
-  <div class="stack" id="stack"></div>
+
+  <div class="acc" id="a1">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="q" id="q1">What are you actually trying to do?</div>
+        <div class="a0" id="s1">Decision? risk? direction? build? This site routes you to the right layer.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="a" id="p1a"></p>
+      <p class="a" id="p1b"></p>
+    </div>
+  </div>
+
+  <div class="acc" id="a2">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="q" id="q2">What does “finite measure” mean here?</div>
+        <div class="a0" id="s2">It means the problem is not endless. It can be enumerated.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="a" id="p2a"></p>
+      <p class="a" id="p2b"></p>
+    </div>
+  </div>
+
+  <div class="acc" id="a3">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="q" id="q3">Which layers answer which questions?</div>
+        <div class="a0" id="s3">Map, signals, doctrine, deployment—each has a job.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="a" id="p3a"></p>
+      <p class="a" id="p3b"></p>
+    </div>
+  </div>
+
+  <div class="acc" id="a4">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="q" id="q4">What should you do next?</div>
+        <div class="a0" id="s4">Choose an entry posture: direction, tools, proof, or signals.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="a" id="p4a"></p>
+      <p class="a" id="p4b"></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="f0">Orientation is the product.</span>
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
 
 </div>
 
@@ -239,18 +312,18 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ===== state =====
+  // state
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -268,29 +341,26 @@ body::before,body::after{pointer-events:none!important}
     var D=(over&&over.depth)?over.depth:depth;
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
-  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
 
-  // routes
+  // wire
+  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
   wire("btnBack","/door/");
   wire("btnCompass","/index.html");
   wire("btnHome","/home/");
-  wire("goProducts","/products/");
-  wire("goExplore","/explore/");
-  wire("goLaws","/laws/");
-  wire("goGauges","/gauges/");
+  wire("qProducts","/products/");
+  wire("qExplore","/explore/");
+  wire("qLaws","/laws/");
+  wire("qGauges","/gauges/");
   wire("dockCompass","/index.html");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
   // language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
   function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
   paintLang();
   function setLang(next){
@@ -299,136 +369,130 @@ body::before,body::after{pointer-events:none!important}
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-
-  document.getElementById("p0").textContent = T(
-    "You’re here because something needs an answer: a decision, a risk, a direction, a build. And right now, the wiring is hard to see.",
-    "你来这里，是因为某个东西需要答案：一个决策、一个风险、一个方向、一次构建。而此刻，线路不够清晰。",
-    "Estás aquí porque algo necesita una respuesta: una decisión, un riesgo, una dirección, una construcción. Y ahora mismo el cableado no se ve claro."
-  );
-
-  document.getElementById("r0").textContent = T(
-    "Prelude is the ramp: we name the problem in human terms, show how it is mapped into a finite lattice, and route you to the exact layer that can answer your question.",
-    "前置页是坡道：用人话讲清问题，说明我们如何把它映射进有限晶格，然后把你路由到能回答你问题的那一层。",
-    "El Preludio es la rampa: nombramos el problema en palabras humanas, mostramos cómo se mapea a un lattice finito y te enrutamos a la capa exacta que puede responder."
-  );
-
-  document.getElementById("band").textContent = T(
-    "THE RAMP (ONE THING AT A TIME)",
-    "坡道（一次只看一件事）",
-    "LA RAMPA (UNA COSA A LA VEZ)"
-  );
-
-  var ROWS=[
-    {
-      t:T("What is breaking in the world?","世界哪里在坏？","¿Qué se está rompiendo?"),
-      s:T("Not people. Systems. Shared dependencies. Hidden correlation.","不是人坏，是系统坏：共享依赖与隐藏相关。","No es la gente. Son sistemas: dependencias compartidas y correlación oculta."),
-      p:[
-        T(
-          "When many parts depend on the same unseen thing, they fail together. That’s why big projects collapse ‘suddenly’—the warning was there, but it was not visible.",
-          "当许多部分依赖同一条暗线，它们会一起坏。这就是大项目为何会“突然”崩：预警一直在，只是看不见。",
-          "Cuando muchas partes dependen de lo mismo sin verlo, fallan juntas. Por eso los proyectos grandes colapsan ‘de repente’: la advertencia estaba, pero era invisible."
-        ),
-        T(
-          "So the first job is visibility: map the wiring into a finite structure that can be inspected.",
-          "所以第一步是可见性：把线路映射成可检查的有限结构。",
-          "Primer paso: visibilidad. Mapear el cableado a una estructura finita inspeccionable."
-        )
-      ]
+  // copy (question-first, frontier + measurable, human words)
+  var COPY={
+    en:{
+      p0:"Why are you here—right now? Because something needs an answer: a decision, a risk, a direction, a build. And when stakes rise, the wiring is hard to see.",
+      r0:"Rule: we keep big ideas honest. If it can’t be measured yet, it stays labeled as concept or roadmap. Navigation preserves gd_* state.",
+      p1a:"You’re not here for another opinion. You’re here for a next step that won’t break later. So we start by naming the situation in human words, then we route you to the layer that can actually check it.",
+      p1b:"If you want tools you can use today, go Products. If you want the future board (bounded), go Explore. If you want rules, go Laws. If you want signals, go Gauges.",
+      p2a:"Finite measure means: this isn’t infinite fog. We can list the moving parts. We can name the dependencies. We can track what changes. We can compare windows.",
+      p2b:"When you can enumerate a system, you can stop guessing—and you can stop getting surprised by ‘everything failing together.’",
+      p3a:"Products = deployable tools. Explore = bounded frontier shells. Laws = meaning & limits. Gauges = measurement & evidence.",
+      p3b:"Prelude’s job is to stop you from grabbing the wrong layer. The fastest path is the one that doesn’t need to be redone.",
+      p4a:"If you want direction: Compass. If you want tools now: Products. If you want proof posture: Laws. If you want signals: Gauges.",
+      p4b:"Pick one. Go deep. Come back with receipts. Then upgrade the claim."
     },
-    {
-      t:T("What does ‘finite measure’ mean here?","这里的“有限测度”是什么意思？","¿Qué significa ‘medida finita’ aquí?"),
-      s:T("It means the problem is not endless. It can be enumerated.","意思是问题不是无穷的，它能被枚举。","Significa que el problema no es infinito: se puede enumerar."),
-      p:[
-        T(
-          "A finite lattice is a way to stop hand-waving. You define the dimensions you care about, enumerate the states, and then you can compare ‘before vs after’ without changing the story.",
-          "有限晶格用来终止空谈：定义你关心的维度，枚举状态，然后你就能在不改故事的前提下比较“前 vs 后”。",
-          "Un lattice finito elimina el humo: defines dimensiones, enumeras estados y comparas ‘antes vs después’ sin cambiar el relato."
-        ),
-        T(
-          "That’s how you turn big, scary problems into something you can actually steer.",
-          "这样，巨大而可怕的问题才变成可操控的方向盘。",
-          "Así conviertes problemas enormes en algo que puedes dirigir."
-        )
-      ]
+    zh:{
+      p0:"你为什么现在在这里？因为你需要一个答案：决策、风险、方向、构建。而当风险上升时，系统的“线路”最难看清。",
+      r0:"规则：让大想法保持诚实。不能测量就标为概念或路线图。导航保留 gd_* 状态。",
+      p1a:"你不是来听观点的，你是来找一个不会“以后崩掉”的下一步。所以先用人话把局面讲清，再路由到能核查的层。",
+      p1b:"要立刻可用的工具：产品。要有界的未来板：探索。要规则边界：法则。要信号证据：量规。",
+      p2a:"有限测量的意思是：这不是无限迷雾。部件可列、依赖可画、变化可追、窗口可比。",
+      p2b:"当系统可枚举，你就能停止猜测，也能避免“突然一起坏”。",
+      p3a:"产品=可部署工具；探索=有界前沿壳；法则=含义与边界；量规=测量与证据。",
+      p3b:"Prelude 的工作是避免你抓错层。最快的路，是不需要重做的路。",
+      p4a:"要方向：指南针。要工具：产品。要证明姿态：法则。要信号：量规。",
+      p4b:"选一个，深入。带着收据回来，然后再升级主张。"
     },
-    {
-      t:T("What layers answer which questions?","哪个问题归哪一层回答？","¿Qué capa responde qué?"),
-      s:T("Map, signals, doctrine, deployment: each has a job.","地图、信号、教义、部署：各司其职。","Mapa, señales, doctrina, despliegue: cada una tiene su trabajo."),
-      p:[
-        T(
-          "Dot.Grid answers: what is connected to what? Gauges answer: what is moving, and how strongly? Laws answer: what may we conclude, given scope and receipts? Products answer: what can you use, right now?",
-          "Dot.Grid 回答：谁连着谁？量规回答：什么在动、动得多强？法则回答：在范围与收据下，我们允许得出什么结论？产品回答：你现在能用什么？",
-          "Dot.Grid responde: ¿qué está conectado con qué? Medidores: ¿qué se mueve y con qué fuerza? Leyes: ¿qué podemos concluir con alcance y recibos? Productos: ¿qué puedes usar hoy?"
-        ),
-        T(
-          "Prelude is where you learn the lane before you choose speed.",
-          "前置页让你先认路，再选速度。",
-          "El Preludio te enseña el carril antes de elegir velocidad."
-        )
-      ]
-    },
-    {
-      t:T("What should you do next?","你下一步该做什么？","¿Qué haces ahora?"),
-      s:T("Choose your entry posture: Compass, Tools, Proof, or Signals.","选择入口姿态：指南针、工具、证明或信号。","Elige postura de entrada: brújula, herramientas, prueba o señales."),
-      p:[
-        T(
-          "If you want direction, go to Compass. If you want something deployable, go to Products. If you want rules, go to Laws. If you want measurements, go to Gauges.",
-          "要方向就去指南针；要可部署就去产品；要规则就去法则；要测量就去量规。",
-          "Si quieres dirección, Brújula. Si quieres algo usable, Productos. Si quieres reglas, Leyes. Si quieres medición, Medidores."
-        ),
-        T(
-          "And if you’re not sure, start with one map pass: identify scope and list the surfaces you think are involved. That alone collapses confusion.",
-          "如果你不确定，就先做一次画图：确定范围并列出你认为涉及的执行面。仅此一步就能大幅压缩困惑。",
-          "Si no estás seguro, haz un pase de mapa: define alcance y lista superficies involucradas. Eso solo ya reduce la confusión."
-        )
-      ]
+    es:{
+      p0:"¿Por qué estás aquí—ahora? Porque algo necesita respuesta: una decisión, un riesgo, una dirección, una construcción. Y cuando suben las apuestas, el ‘cableado’ se vuelve difícil de ver.",
+      r0:"Regla: mantenemos honestas las ideas grandes. Si aún no se puede medir, se etiqueta como concepto o ruta. La navegación preserva gd_*.",
+      p1a:"No estás aquí por otra opinión. Estás aquí por un siguiente paso que no se rompa después. Por eso empezamos en palabras humanas y luego ruteamos a la capa que puede verificar.",
+      p1b:"Herramientas hoy: Productos. Futuro acotado: Explorar. Reglas: Leyes. Señales: Medidores.",
+      p2a:"Medida finita significa: no es niebla infinita. Podemos listar piezas, dependencias, cambios y comparar ventanas.",
+      p2b:"Cuando enumeras un sistema, dejas de adivinar—y dejas de sorprenderte cuando ‘todo falla junto’.",
+      p3a:"Productos = herramientas. Explorar = frontera acotada. Leyes = significado y límites. Medidores = medición y evidencia.",
+      p3b:"La función de Prelude es evitar que tomes la capa equivocada. La ruta más rápida es la que no se rehace.",
+      p4a:"Dirección: Brújula. Herramientas: Productos. Prueba: Leyes. Señales: Medidores.",
+      p4b:"Elige una. Profundiza. Vuelve con recibos. Luego sube el nivel."
     }
-  ];
+  };
 
-  var stack=document.getElementById("stack");
-  function renderStack(){
-    stack.innerHTML="";
-    ROWS.forEach(function(r,idx){
-      var row=document.createElement("div"); row.className="row";
-      var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
-      var left=document.createElement("div"); left.className="left2";
-      var title=document.createElement("div"); title.className="title"; title.textContent=r.t;
-      var sub=document.createElement("div"); sub.className="sub"; sub.textContent=r.s;
-      left.appendChild(title); left.appendChild(sub);
-      var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
-      head.appendChild(left); head.appendChild(chev);
+  function P(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-      var body=document.createElement("div"); body.className="body";
-      r.p.forEach(function(pp){
-        var p=document.createElement("p"); p.className="bp"; p.textContent=pp; body.appendChild(p);
-      });
+  var p=P();
+  document.getElementById("p0").textContent=p.p0;
+  document.getElementById("r0").textContent=p.r0;
+  document.getElementById("p1a").textContent=p.p1a;
+  document.getElementById("p1b").textContent=p.p1b;
+  document.getElementById("p2a").textContent=p.p2a;
+  document.getElementById("p2b").textContent=p.p2b;
+  document.getElementById("p3a").textContent=p.p3a;
+  document.getElementById("p3b").textContent=p.p3b;
+  document.getElementById("p4a").textContent=p.p4a;
+  document.getElementById("p4b").textContent=p.p4b;
 
-      function closeAll(){
-        stack.querySelectorAll(".row").forEach(function(x){
-          x.classList.remove("open");
-          var c=x.querySelector(".chev"); if(c) c.textContent="▸";
-        });
-      }
-      function toggle(){
-        var open=!row.classList.contains("open");
-        closeAll();
-        if(open){ row.classList.add("open"); chev.textContent="▾"; }
-      }
-      head.addEventListener("click", toggle);
-      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
-
-      row.appendChild(head); row.appendChild(body);
-      stack.appendChild(row);
-
-      if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
-    });
+  if(lang==="zh"){
+    document.getElementById("btnBack").textContent="返回";
+    document.getElementById("btnCompass").textContent="指南针";
+    document.getElementById("btnHome").textContent="主页";
+    document.getElementById("qProducts").textContent="打开产品";
+    document.getElementById("qExplore").textContent="打开探索";
+    document.getElementById("qLaws").textContent="打开法则";
+    document.getElementById("qGauges").textContent="打开量规";
+    document.getElementById("band").textContent="坡道（一次一件事）";
+    document.getElementById("q1").textContent="你真正想做什么？";
+    document.getElementById("s1").textContent="决策？风险？方向？构建？本站把你路由到正确层。";
+    document.getElementById("q2").textContent="这里的“有限测量”是什么意思？";
+    document.getElementById("s2").textContent="问题不是无穷的，它可以被枚举。";
+    document.getElementById("q3").textContent="哪些层回答哪些问题？";
+    document.getElementById("s3").textContent="地图、信号、教义、部署——各司其职。";
+    document.getElementById("q4").textContent="下一步该做什么？";
+    document.getElementById("s4").textContent="选择入口姿态：方向、工具、规则或信号。";
+    document.getElementById("dockCompass").textContent="指南针";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
+  }else if(lang==="es"){
+    document.getElementById("btnBack").textContent="VOLVER";
+    document.getElementById("btnCompass").textContent="BRÚJULA";
+    document.getElementById("btnHome").textContent="INICIO";
+    document.getElementById("qProducts").textContent="ABRIR PRODUCTOS";
+    document.getElementById("qExplore").textContent="ABRIR EXPLORAR";
+    document.getElementById("qLaws").textContent="ABRIR LEYES";
+    document.getElementById("qGauges").textContent="ABRIR MEDIDORES";
+    document.getElementById("band").textContent="LA RAMPA (UNA COSA A LA VEZ)";
+    document.getElementById("q1").textContent="¿Qué intentas hacer realmente?";
+    document.getElementById("s1").textContent="Decisión, riesgo, dirección, construcción: ruteamos a la capa correcta.";
+    document.getElementById("q2").textContent="¿Qué significa ‘medida finita’ aquí?";
+    document.getElementById("s2").textContent="El problema no es infinito. Se puede enumerar.";
+    document.getElementById("q3").textContent="¿Qué capas responden qué preguntas?";
+    document.getElementById("s3").textContent="Mapa, señales, doctrina, despliegue: cada una tiene un trabajo.";
+    document.getElementById("q4").textContent="¿Qué haces después?";
+    document.getElementById("s4").textContent="Elige postura: dirección, herramientas, prueba o señales.";
+    document.getElementById("dockCompass").textContent="BRÚJULA";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
   }
-  renderStack();
+
+  // single-open accordion
+  function bind(id){
+    var box=document.getElementById(id);
+    var head=box.querySelector(".accHead");
+    var chev=box.querySelector(".accC");
+    function act(){
+      var open=!box.classList.contains("open");
+      document.querySelectorAll(".acc").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".accC"); if(c) c.textContent="▸";
+      });
+      box.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["a1","a2","a3","a4"].forEach(bind);
+
+  // open first
+  document.getElementById("a1").classList.add("open");
+  document.getElementById("a1").querySelector(".accC").textContent="▾";
 })();
 </script>
 

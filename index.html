@@ -1,21 +1,14 @@
 <!-- TNT — /index.html
-     INDEX · COMPASS (4-DIAMOND) · EN/中文/ES · BIGGER PRINT · GOLD SUBTLE · OPAL+RED · NO MODALS
-     ROLE:
-       - This is the COMPASS page (direction-first).
-       - 4 directions = 4 lanes:
-           1) STRUCTURE  (rules + doctrine)   → /laws/
-           2) USE        (products + services)→ /products/
-           3) MEASURE    (instruments)        → /gauges/
-           4) FRONTIER   (vision work)        → /explore/frontier/
-       - Clicking a diamond SELECTS it (active glow)
-       - Banner updates (human words first + “ENTER HERE”)
-       - Below banner: 4 structured blocks (Problem / What you’ll see / What not to expect / Start here)
-       - Mobile-safe: NO overlays, NO modals, NO inline onclick, no pointer traps
-     STATE:
-       - URL + LS: gd_lang/gd_style/gd_time/gd_depth preserved on every jump
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns background (no html/body background styling)
+     FRONTIER DOOR · TRUE TRILINGUAL · MONUMENTAL ACCORDION
+     LANGUAGES: EN / 中文 / ES
+     DESIGN:
+       - Existential opening
+       - Problem clearly defined
+       - Structural solution clearly defined
+       - Geometry emphasis
+       - Single-open accordion
+       - No marketing fluff without grounding
+       - Dark opal / gold restrained
 -->
 
 <!doctype html>
@@ -23,587 +16,396 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>COMPASS</title>
+<title>Frontier</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
-body{position:relative;z-index:0}
-body::before,body::after{z-index:0!important;pointer-events:none!important}
-#root{position:relative;z-index:10}
+body::before,body::after{pointer-events:none!important}
 
 :root{
-  --R:154px;
-  --D:182px;
-
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,80,80,.12);
-
-  --goldSoft:rgba(212,175,55,.18); /* reduced */
-  --inkA:rgba(12,22,38,.95);
-  --inkB:rgba(6,10,16,.98);
-
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
+  --dockH:90px;
+  --opalA:rgba(210,190,255,.10);
+  --opalB:rgba(120,70,255,.08);
 }
 
-/* top */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:200;
+  display:flex;gap:10px;
 }
-.top .left,.top .right{
-  display:flex;align-items:center;gap:10px;
-  flex-wrap:nowrap;white-space:nowrap;
-  pointer-events:auto;
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:200;
+  display:flex;gap:10px;
 }
-.top .btn{white-space:nowrap}
 
-/* banner */
-.banner{
-  width:min(1040px,94vw);
-  margin:74px auto 10px;
-  padding:16px 16px 14px;
-  border-radius:24px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 62% 110%, var(--opalC), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:0 34px 120px rgba(0,0,0,.55);
-}
-.bk{
-  margin:0 0 6px;
-  font-size:12px; /* bigger */
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.bt{
-  margin:0;
-  font-weight:950;
-  font-size:28px; /* bigger */
-  letter-spacing:1px;
-  line-height:1.12;
-}
-.bp{
-  margin:10px 0 0;
-  font-size:14.5px; /* bigger */
-  opacity:.88;
-  line-height:1.55;
-  max-width:78ch;
-}
-.brow{
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 24px);
   display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.bcta{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.bcta .btn{border-radius:999px;padding:12px 16px}
-
-/* stage */
-.stage{
-  position:relative;
-  width:min(760px,94vw);
-  height:min(760px, 62vh);
-  margin:10px auto 10px;
-  z-index:40;
+  flex-direction:column;
+  gap:22px;
 }
 
-/* outer frame (subtle) */
-.outer{
-  position:absolute;
-  left:50%;top:50%;
-  width:min(680px,92vw);
-  height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  opacity:.40;
-  pointer-events:none;
+.header{
+  border-radius:30px;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.06), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(255,80,80,.08), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.36) 0%, rgba(7,11,18,.52) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.48),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -50px 90px rgba(0,0,0,.50);
+    radial-gradient(circle at 20% 20%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--opalB), transparent 75%),
+    rgba(0,0,0,.25);
+  padding:40px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 60px 160px rgba(0,0,0,.65);
 }
 
-/* diamonds */
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:28px;
-  cursor:pointer;
-  pointer-events:auto;
-  touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-  overflow:hidden;
-
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.52), transparent 46%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--inkA), var(--inkB));
-
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 22px rgba(212,175,55,.10), /* reduced */
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -42px 78px rgba(0,0,0,.80);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.92;
-}
-.d:hover{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
-  border-color:rgba(255,255,255,.20);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 26px rgba(255,80,80,.12),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-.d.active{
-  border-color:rgba(255,80,80,.45);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 34px rgba(255,80,80,.20),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-
-/* placement offsets */
-.dN{ --tx:0px; --ty:calc(var(--R) * -1); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dE{ --tx:var(--R); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dS{ --tx:0px; --ty:var(--R); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dW{ --tx:calc(var(--R) * -1); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-
-.inner{
-  transform:rotate(-45deg) translateY(-2px);
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:14px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
-}
-.dir{
-  font-size:12px; /* bigger */
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.lab{
+.header h1{
+  font-size:42px;
   font-weight:950;
-  font-size:20px; /* bigger */
-  letter-spacing:.6px;
-}
-.sub{
-  font-size:13.25px; /* bigger */
-  opacity:.86;
-  line-height:1.35;
-  max-width:18em;
+  margin:0 0 22px;
+  letter-spacing:.8px;
 }
 
-/* structure blocks */
-.section{
-  width:min(1040px,94vw);
-  margin:8px auto 34px;
+.header p{
+  font-size:20px;
+  line-height:1.75;
+  margin:0;
+  max-width:920px;
+}
+
+.stack{display:flex;flex-direction:column;gap:18px}
+
+.row{
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(18,22,28,.94), rgba(10,12,16,.96));
+  overflow:hidden;
+}
+
+.head{
+  padding:26px 32px;
+  cursor:pointer;
   display:flex;
-  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.head h2{
+  margin:0;
+  font-size:24px;
+  font-weight:900;
+}
+
+.chev{font-size:18px;opacity:.7}
+
+.body{
+  display:none;
+  padding:28px 34px 36px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:18px;
+  line-height:1.8;
+}
+
+.row.open .body{display:block}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+  z-index:200;
+  width:min(980px,94vw);
+  padding:14px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
   gap:12px;
 }
-.block{
-  border-radius:22px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
-    radial-gradient(circle at 78% 30%, rgba(210,190,255,.08), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(255,80,80,.06), transparent 64%),
-    linear-gradient(160deg, rgba(12,22,38,.68), rgba(6,10,16,.78));
-  box-shadow:0 18px 60px rgba(0,0,0,.40);
-  padding:14px 14px 12px;
-}
-.bh{margin:0;font-weight:950;font-size:16px;letter-spacing:.2px}
-.bp{margin:10px 0 0;font-size:14px;line-height:1.65;color:rgba(255,255,255,.86)}
-.block .jump{margin-top:10px;display:flex;justify-content:flex-end}
-.block .jump .btn{border-radius:999px;padding:12px 16px}
 
-/* footer */
-.footer{
-  width:min(1040px,94vw);
-  margin:0 auto 34px;
-  text-align:center;
-  font-size:13px;
-  opacity:.80;
-}
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
-
-@media (max-width:560px){
-  :root{--R:140px;--D:170px}
-  .bt{font-size:26px}
-}
-@media (max-width:420px){
-  :root{--R:132px;--D:162px}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
 }
 </style>
 </head>
 
 <body>
-<div id="root">
 
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-      <a class="btn" id="btnHome" href="/home/">HOME</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
+<div class="top-left">
+  <a class="btn" href="/prelude/">PRELUDE</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" onclick="setLang('en')">EN</button>
+  <button class="btn" onclick="setLang('zh')">中文</button>
+  <button class="btn" onclick="setLang('es')">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <h1 id="heroTitle"></h1>
+    <p id="heroText"></p>
   </div>
 
-  <div class="banner" aria-label="Compass banner">
-    <div class="bk" id="bk">COMPASS</div>
-    <div class="brow">
-      <div>
-        <h1 class="bt" id="bt">CHOOSE A DIRECTION</h1>
-        <p class="bp" id="bp">Tap one. Read one minute. Enter when ready.</p>
-      </div>
-      <div class="bcta">
-        <a class="btn" id="btnEnterHere" href="#">ENTER HERE</a>
-      </div>
-    </div>
-  </div>
+  <div class="stack">
 
-  <div class="stage" aria-label="Compass">
-    <div class="outer" aria-hidden="true"></div>
-
-    <div class="d dN" id="dStructure" role="button" tabindex="0" aria-label="Structure">
-      <div class="inner">
-        <div class="dir" id="nDir">NORTH</div>
-        <div class="lab" id="nLab">STRUCTURE</div>
-        <div class="sub" id="nSub">Rules that keep meaning stable.</div>
-      </div>
+    <div class="row">
+      <div class="head"><h2 id="h1"></h2><div class="chev">▸</div></div>
+      <div class="body" id="b1"></div>
     </div>
 
-    <div class="d dE" id="dUse" role="button" tabindex="0" aria-label="Use">
-      <div class="inner">
-        <div class="dir" id="eDir">EAST</div>
-        <div class="lab" id="eLab">USE</div>
-        <div class="sub" id="eSub">Tools you can adopt.</div>
-      </div>
+    <div class="row">
+      <div class="head"><h2 id="h2"></h2><div class="chev">▸</div></div>
+      <div class="body" id="b2"></div>
     </div>
 
-    <div class="d dS" id="dMeasure" role="button" tabindex="0" aria-label="Measure">
-      <div class="inner">
-        <div class="dir" id="sDir">SOUTH</div>
-        <div class="lab" id="sLab">MEASURE</div>
-        <div class="sub" id="sSub">Signals, not arguments.</div>
-      </div>
+    <div class="row">
+      <div class="head"><h2 id="h3"></h2><div class="chev">▸</div></div>
+      <div class="body" id="b3"></div>
     </div>
 
-    <div class="d dW" id="dFrontier" role="button" tabindex="0" aria-label="Frontier">
-      <div class="inner">
-        <div class="dir" id="wDir">WEST</div>
-        <div class="lab" id="wLab">FRONTIER</div>
-        <div class="sub" id="wSub">Vision work, clearly labeled.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section" aria-label="Structure blocks">
-    <div class="block">
-      <div class="bh" id="bh1">Problem</div>
-      <div class="bp" id="bp1">
-        People don’t fail because they don’t care — they fail because they can’t see the wiring.
-        This compass routes you into the right lane so you stop guessing.
-      </div>
-      <div class="jump">
-        <a class="btn" id="j1" href="/prelude/">JUMP: PRELUDE</a>
-      </div>
+    <div class="row">
+      <div class="head"><h2 id="h4"></h2><div class="chev">▸</div></div>
+      <div class="body" id="b4"></div>
     </div>
 
-    <div class="block">
-      <div class="bh" id="bh2">What you’ll see</div>
-      <div class="bp" id="bp2">
-        Every lane is built around a clean question: rules, tools, measurements, or future builds.
-        Pick one lane, then follow the smallest next step.
-      </div>
-      <div class="jump">
-        <a class="btn" id="j2" href="/home/">JUMP: HOME</a>
-      </div>
-    </div>
-
-    <div class="block">
-      <div class="bh" id="bh3">What you won’t see</div>
-      <div class="bp" id="bp3">
-        No “trust me.” No story inflation. No pretending correlation is causation.
-        If something isn’t measured yet, it stays labeled as not measured.
-      </div>
-      <div class="jump">
-        <a class="btn" id="j3" href="/door/">JUMP: DOOR</a>
-      </div>
-    </div>
-
-    <div class="block">
-      <div class="bh" id="bh4">Start here</div>
-      <div class="bp" id="bp4">
-        If you want rules first, choose Structure. If you want tools, choose Use.
-        If you want signals, choose Measure. If you want big vision, choose Frontier.
-      </div>
-      <div class="jump">
-        <a class="btn" id="j4" href="/products/">JUMP: PRODUCTS</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span id="ft">Direction first · Reading second · Action third</span>
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
 
 </div>
 
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+</nav>
+
 <script>
-(function(){
-  // ----- state -----
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+const COPY = {
+en:{
+heroTitle:"What if the biggest ideas of our time were finally measurable?",
+heroText:`We live in an age of massive promises — energy revolutions, artificial intelligence, planetary systems, institutional reform.
+But how do you know what truly holds?
+How do you know what breaks?
+And how do you see instability before it spreads?
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+This is not a slogan.
+This is a structural frontier.`,
 
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
+h1:"The Problem",
+b1:`Systems rarely fail loudly at first.
+They weaken quietly.
+Connections shift.
+Dependencies stack.
+Small cracks compound.
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+By the time collapse is visible,
+it has already been forming.
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
+The real danger is not chaos.
+The real danger is invisible accumulation.`,
 
-  // wire top + jumps
-  document.getElementById("btnDoor").href="/door/"+q();
-  document.getElementById("btnPrelude").href="/prelude/"+q();
-  document.getElementById("btnHome").href="/home/"+q();
+h2:"The Claim",
+b2:`We have mapped instability into finite structure.
 
-  document.getElementById("j1").href="/prelude/"+q();
-  document.getElementById("j2").href="/home/"+q();
-  document.getElementById("j3").href="/door/"+q();
-  document.getElementById("j4").href="/products/"+q();
+Not metaphorically.
+Structurally.
 
-  // language buttons (reload same path)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+We can classify coherence.
+We can isolate weak concentration.
+We can simulate breakdown.
+We can test resilience.
 
-  // routes
-  var ROUTE = {
-    structure:"/laws/",
-    use:"/products/",
-    measure:"/gauges/",
-    frontier:"/explore/frontier/"
-  };
+Not in theory.
+In measurable form.`,
 
-  // refs
-  var bt=document.getElementById("bt");
-  var bp=document.getElementById("bp");
-  var enterHere=document.getElementById("btnEnterHere");
+h3:"The Method",
+b3:`Everything here is built on geometry.
 
-  var dN=document.getElementById("dStructure");
-  var dE=document.getElementById("dUse");
-  var dS=document.getElementById("dMeasure");
-  var dW=document.getElementById("dFrontier");
+Finite states.
+Bounded constraints.
+Explicit transitions.
+Observable outcomes.
 
-  function clearActive(){
-    dN.classList.remove("active");
-    dE.classList.remove("active");
-    dS.classList.remove("active");
-    dW.classList.remove("active");
-  }
+You are not asked to believe.
 
-  function setBanner(key){
-    clearActive();
-    var title="", desc="", href="#";
+You are invited to test.`,
 
-    if(lang==="zh"){
-      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · 规则"; desc="规则与边界：让含义稳定，不让系统自我欺骗。"; href=ROUTE.structure; }
-      if(key==="use"){ dE.classList.add("active"); title="USE · 可用内容"; desc="可直接使用的工具与枢纽：不迷路，直接跳转。"; href=ROUTE.use; }
-      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · 测量"; desc="信号与输出：先看数据，再谈观点。"; href=ROUTE.measure; }
-      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · 前沿"; desc="大胆愿景，但明确标注阶段：概念 / 就绪 / 下一步。"; href=ROUTE.frontier; }
-      enterHere.textContent="进入这里";
-    }else if(lang==="es"){
-      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · REGLAS"; desc="Reglas y límites: significado estable, sin autoengaño."; href=ROUTE.structure; }
-      if(key==="use"){ dE.classList.add("active"); title="USE · USAR"; desc="Herramientas y hubs utilizables: saltos limpios."; href=ROUTE.use; }
-      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · MEDIR"; desc="Señales y salidas: datos primero, opiniones después."; href=ROUTE.measure; }
-      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · FRONTERA"; desc="Visión audaz, pero etiquetada por fase: concepto / preparación / siguiente."; href=ROUTE.frontier; }
-      enterHere.textContent="ENTRAR AQUÍ";
-    }else{
-      if(key==="structure"){ dN.classList.add("active"); title="STRUCTURE · RULES"; desc="Rules and boundaries: keep meaning stable and systems honest."; href=ROUTE.structure; }
-      if(key==="use"){ dE.classList.add("active"); title="USE · TOOLS"; desc="Adoptable tools and hubs: clean jumps, no wandering."; href=ROUTE.use; }
-      if(key==="measure"){ dS.classList.add("active"); title="MEASURE · SIGNALS"; desc="Signals and outputs: data first, debate later."; href=ROUTE.measure; }
-      if(key==="frontier"){ dW.classList.add("active"); title="FRONTIER · VISION"; desc="Big vision, clearly labeled by stage: concept / readiness / next."; href=ROUTE.frontier; }
-      enterHere.textContent="ENTER HERE";
-    }
+h4:"Where You Go From Here",
+b4:`If you seek structure — explore the Laws.
+If you seek measurement — open the Gauges.
+If you seek application — explore Products.
 
-    bt.textContent=title;
-    bp.textContent=desc;
-    enterHere.href = href + q();
-  }
+If you are here because something feels unstable —
+you are not early.
+You are right on time.`
+},
 
-  function bind(el, key){
-    function act(){ setBanner(key); }
-    el.addEventListener("click", act);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
+zh:{
+heroTitle:"如果这个时代最大的想法终于可以被衡量，会怎样？",
+heroText:`我们生活在一个承诺巨大的时代——能源革命、人工智能、行星系统、制度改革。
+但什么是真正稳固的？
+什么正在破裂？
+我们如何在不稳定扩散前看见它？
 
-  bind(dN,"structure");
-  bind(dE,"use");
-  bind(dS,"measure");
-  bind(dW,"frontier");
+这不是口号。
+这是结构前沿。`,
 
-  // default selection
-  setBanner("structure");
+h1:"问题",
+b1:`系统很少一开始就轰然倒塌。
+它们悄悄削弱。
+连接改变。
+依赖叠加。
+细小裂缝不断放大。
 
-  // small i18n labels
-  if(lang==="zh"){
-    document.getElementById("bk").textContent="罗盘";
-    document.getElementById("bp").textContent="点一个方向。读一分钟。准备好就进入。";
-    document.getElementById("bh1").textContent="问题";
-    document.getElementById("bp1").textContent="多数人失败不是因为不努力，而是看不见线路。这个罗盘把你送到正确干线，停止猜测。";
-    document.getElementById("bh2").textContent="你会看到什么";
-    document.getElementById("bp2").textContent="每条干线都围绕一个干净问题：规则、工具、测量或前沿。选一条，然后走最小下一步。";
-    document.getElementById("bh3").textContent="你不会看到什么";
-    document.getElementById("bp3").textContent="不靠‘信我’。不夸大。不开口把相关当因果。没测量就标注没测量。";
-    document.getElementById("bh4").textContent="从哪里开始";
-    document.getElementById("bp4").textContent="想先看规则→结构；想先看工具→可用内容；想先看信号→测量；想看愿景→前沿。";
-    document.getElementById("j1").textContent="跳转：前置页";
-    document.getElementById("j2").textContent="跳转：主页";
-    document.getElementById("j3").textContent="跳转：门";
-    document.getElementById("j4").textContent="跳转：产品";
-    document.getElementById("ft").textContent="先方向 · 后阅读 · 再行动";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnPrelude").textContent="前置页";
-    document.getElementById("btnHome").textContent="主页";
-    document.getElementById("nLab").textContent="结构";
-    document.getElementById("nSub").textContent="让含义稳定的规则。";
-    document.getElementById("eLab").textContent="可用内容";
-    document.getElementById("eSub").textContent="你可以直接用的工具。";
-    document.getElementById("sLab").textContent="测量";
-    document.getElementById("sSub").textContent="信号，而不是争论。";
-    document.getElementById("wLab").textContent="前沿";
-    document.getElementById("wSub").textContent="愿景工作，清晰标注。";
-  }else if(lang==="es"){
-    document.getElementById("bk").textContent="BRÚJULA";
-    document.getElementById("bp").textContent="Toca uno. Lee un minuto. Entra cuando estés listo.";
-    document.getElementById("bh1").textContent="Problema";
-    document.getElementById("bp1").textContent="La gente falla porque no ve el cableado. Esta brújula te rutea al carril correcto para dejar de adivinar.";
-    document.getElementById("bh2").textContent="Lo que verás";
-    document.getElementById("bp2").textContent="Cada carril responde una pregunta limpia: reglas, herramientas, medición o frontera. Elige uno y toma el siguiente paso mínimo.";
-    document.getElementById("bh3").textContent="Lo que no verás";
-    document.getElementById("bp3").textContent="Nada de ‘créeme’. Nada de inflar historias. No confundir correlación con causalidad. Si no está medido, se etiqueta.";
-    document.getElementById("bh4").textContent="Empieza aquí";
-    document.getElementById("bp4").textContent="Reglas→Estructura. Herramientas→Usar. Señales→Medir. Visión→Frontera.";
-    document.getElementById("j1").textContent="SALTAR: PRELUDIO";
-    document.getElementById("j2").textContent="SALTAR: INICIO";
-    document.getElementById("j3").textContent="SALTAR: PUERTA";
-    document.getElementById("j4").textContent="SALTAR: PRODUCTOS";
-    document.getElementById("ft").textContent="Dirección primero · Lectura después · Acción al final";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("btnHome").textContent="INICIO";
-    document.getElementById("nLab").textContent="ESTRUCTURA";
-    document.getElementById("nSub").textContent="Reglas que estabilizan significado.";
-    document.getElementById("eLab").textContent="USAR";
-    document.getElementById("eSub").textContent="Herramientas adoptables.";
-    document.getElementById("sLab").textContent="MEDIR";
-    document.getElementById("sSub").textContent="Señales, no debates.";
-    document.getElementById("wLab").textContent="FRONTERA";
-    document.getElementById("wSub").textContent="Visión, bien etiquetada.";
-  }
-})();
+当崩塌可见时，
+它早已形成。
+
+真正的危险不是混乱。
+真正的危险是不可见的累积。`,
+
+h2:"主张",
+b2:`我们已将不稳定映射为有限结构。
+
+不是隐喻。
+是结构。
+
+我们可以分类一致性。
+识别薄弱集中。
+模拟崩溃。
+测试韧性。
+
+不是理论。
+是可测量的形式。`,
+
+h3:"方法",
+b3:`一切建立在几何之上。
+
+有限状态。
+有界约束。
+明确转移。
+可观察结果。
+
+不要求你相信。
+
+邀请你测试。`,
+
+h4:"下一步",
+b4:`如果你寻找结构——进入法则。
+如果你寻找测量——打开量规。
+如果你寻找应用——探索产品。
+
+如果你因为某种不稳定而来到这里——
+你不是太早。
+你正当其时。`
+},
+
+es:{
+heroTitle:"¿Y si las ideas más grandes de nuestro tiempo finalmente fueran medibles?",
+heroText:`Vivimos en una era de promesas enormes — revolución energética, inteligencia artificial, sistemas planetarios, reforma institucional.
+Pero ¿qué realmente se sostiene?
+¿Qué está fallando?
+¿Cómo vemos la inestabilidad antes de que se propague?
+
+Esto no es un eslogan.
+Es una frontera estructural.`,
+
+h1:"El Problema",
+b1:`Los sistemas rara vez colapsan de inmediato.
+Se debilitan en silencio.
+Las conexiones cambian.
+Las dependencias se acumulan.
+Pequeñas grietas se amplifican.
+
+Cuando el colapso es visible,
+ya se estaba formando.
+
+El verdadero peligro no es el caos.
+Es la acumulación invisible.`,
+
+h2:"La Afirmación",
+b2:`Hemos mapeado la inestabilidad en estructura finita.
+
+No metafóricamente.
+Estructuralmente.
+
+Podemos clasificar coherencia.
+Aislar concentraciones débiles.
+Simular ruptura.
+Probar resiliencia.
+
+No en teoría.
+En forma medible.`,
+
+h3:"El Método",
+b3:`Todo aquí se construye sobre geometría.
+
+Estados finitos.
+Restricciones acotadas.
+Transiciones explícitas.
+Resultados observables.
+
+No se te pide creer.
+
+Se te invita a probar.`,
+
+h4:"Dónde Continúas",
+b4:`Si buscas estructura — entra en Leyes.
+Si buscas medición — abre Medidores.
+Si buscas aplicación — explora Productos.
+
+Si llegaste porque algo se siente inestable —
+no llegaste temprano.
+Llegaste justo a tiempo.`
+}
+};
+
+let currentLang="en";
+
+function setLang(l){
+currentLang=l;
+applyLang();
+}
+
+function applyLang(){
+const C=COPY[currentLang];
+document.getElementById("heroTitle").innerText=C.heroTitle;
+document.getElementById("heroText").innerText=C.heroText;
+document.getElementById("h1").innerText=C.h1;
+document.getElementById("b1").innerText=C.b1;
+document.getElementById("h2").innerText=C.h2;
+document.getElementById("b2").innerText=C.b2;
+document.getElementById("h3").innerText=C.h3;
+document.getElementById("b3").innerText=C.b3;
+document.getElementById("h4").innerText=C.h4;
+document.getElementById("b4").innerText=C.b4;
+}
+
+applyLang();
+
+// accordion
+const rows=document.querySelectorAll(".row");
+rows.forEach(row=>{
+const head=row.querySelector(".head");
+const chev=row.querySelector(".chev");
+head.addEventListener("click",()=>{
+const open=!row.classList.contains("open");
+rows.forEach(r=>{
+r.classList.remove("open");
+r.querySelector(".chev").innerText="▸";
+});
+if(open){
+row.classList.add("open");
+chev.innerText="▾";
+}
+});
+});
 </script>
 
 </body>

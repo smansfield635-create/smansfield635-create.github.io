@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- TNT — /home/index.html
      HOME · LAUNCHPAD (TRILINGUAL · NO LENSES · MONUMENT TYPE · SINGLE-OPEN ACCORDION)
      PURPOSE:
@@ -7,9 +8,12 @@
      RULES:
        - EN / 中文 / ES
        - No modals. No overlays.
-       - No inline onclick. Tap-safe.
+       - No inline onclick. Tap-safe (addEventListener only).
        - Single-open accordion (one opens; others close; tap same closes)
-       - Canon state carry: lang/style/time/depth (URL + gd_* localStorage)
+       - Canon state carry: lang/style/time/depth via URL + localStorage gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - lane=platform|engineering is URL-only (preserve if present; never store)
+       - Language toggle reloads SAME pathname (GH Pages safe)
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
        - Does NOT style html/body background (ui.css owns field)
      ROUTES:
@@ -35,25 +39,34 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{position:relative;z-index:0}
+body{position:relative;z-index:0;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{z-index:0!important;pointer-events:none!important}
 #root{position:relative;z-index:10}
 
-/* ===== TOKENS (opal + gold + red; no washed-out blue) ===== */
+/* ===== TOKENS (RED primary, BLACK secondary, GOLD adorn; high contrast) ===== */
 :root{
-  --dockH:92px;
+  --dockH:96px;
 
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,80,80,.10);
-
-  --goldSoft:rgba(212,175,55,.35);
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
+  --ink:rgba(255,255,255,.94);
   --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.80);
   --mut2:rgba(255,255,255,.72);
+  --soft:rgba(255,255,255,.62);
+
+  --onyx0:rgba(6,8,10,.90);
+  --onyx1:rgba(10,12,16,.78);
+  --opalV:rgba(90,40,120,.10);          /* subtle opal sheen only */
+  --crimson:rgba(120,0,22,.30);         /* deep base red */
+  --festival:rgba(255,43,43,.14);       /* bright energy red */
+  --gold:rgba(201,162,74,.40);          /* trim */
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 34px 120px rgba(0,0,0,.58);
+  --shadowB:0 16px 52px rgba(0,0,0,.60);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* ===== TOP (fixed; no pointer traps) ===== */
@@ -67,10 +80,34 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 }
 .top .left,.top .right{
   display:flex;gap:10px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
+  flex-wrap:wrap;white-space:nowrap;
   pointer-events:auto;
 }
 .top .btn{white-space:nowrap}
+
+/* ===== Button (gold under-light; no haze) ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.62;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
 
 /* ===== PAGE ===== */
 .page{
@@ -90,23 +127,35 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   border-radius:26px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 18% 26%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 82% 34%, var(--opalB), transparent 72%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 70%),
+    radial-gradient(circle at 82% 28%, var(--opalV), transparent 72%),
+    radial-gradient(circle at 62% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(12px);
-  box-shadow:0 34px 120px rgba(0,0,0,.55);
+  box-shadow:var(--shadowA);
   overflow:hidden;
   padding:18px 18px 16px;
 }
+/* Gold diamond lay in trim zone only */
 .hero::before{
   content:"";
   position:absolute;inset:0;
   border-radius:26px;
   pointer-events:none;
-  opacity:.32;
-  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.06) 0deg 8deg, transparent 8deg 22deg);
+  opacity:.30;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
+    linear-gradient(#000,#000);
 }
+/* Large diamond slab (subtle, high-contrast) */
 .hero::after{
   content:"";
   position:absolute;
@@ -116,16 +165,18 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:70px;
   pointer-events:none;
-  opacity:.22;
+  opacity:.20;
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(255,80,80,.10), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
+    radial-gradient(circle at 70% 80%, rgba(255,43,43,.10), transparent 60%),
+    radial-gradient(circle at 55% 45%, rgba(90,40,120,.10), transparent 60%),
+    linear-gradient(160deg, rgba(10,12,16,.55) 0%, rgba(6,8,10,.78) 70%);
   box-shadow:
     0 100px 280px rgba(0,0,0,.65),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -55px 100px rgba(0,0,0,.55);
 }
+
 .k{
   position:relative;z-index:2;
   margin:0 0 6px;
@@ -133,6 +184,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   letter-spacing:4px;
   text-transform:uppercase;
   opacity:.80;
+  color:var(--mut);
 }
 .h1{
   position:relative;z-index:2;
@@ -141,6 +193,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   font-size:38px;
   letter-spacing:1.1px;
   line-height:1.08;
+  color:var(--ink);
 }
 .tag{
   position:relative;z-index:2;
@@ -157,8 +210,9 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   border-radius:18px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
   box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
   font-size:13.5px;
   color:var(--mut);
@@ -184,11 +238,10 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
-    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(255,80,80,.07), transparent 62%),
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(90,40,120,.10), transparent 62%),
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  box-shadow:var(--shadowB);
   overflow:hidden;
 }
 .card::before{
@@ -212,7 +265,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 .dmark{
   width:10px;height:10px;border-radius:3px;
   transform:rotate(45deg);
-  background:var(--c, rgba(212,175,55,.45));
+  background:var(--c, rgba(201,162,74,.45));
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
   flex:0 0 auto;
   margin-top:4px;
@@ -223,25 +276,45 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   letter-spacing:.2px;
   font-size:18px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--ink);
 }
 .s{
   margin-top:8px;
   font-size:13.75px;
-  opacity:.84;
+  opacity:.88;
   line-height:1.42;
   color:rgba(255,255,255,.86);
   max-width:92ch;
 }
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;
+  margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+
 .body{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.92));
 }
 .card.open .body{display:block}
+.card.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+
 .p{
   margin:0;
   color:rgba(255,255,255,.90);
@@ -262,7 +335,10 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
@@ -271,7 +347,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:102px}
+  :root{--dockH:112px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
   .h1{font-size:34px}
 }
@@ -283,11 +359,11 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-      <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
-      <a class="btn" id="btnExplore" href="/explore/">EXPLORE</a>
+      <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+      <a class="btn" id="btnPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
+      <a class="btn red" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+      <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+      <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -311,83 +387,101 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   </div>
 
   <nav class="dock" aria-label="Bottom navigation">
-    <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-    <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-    <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-    <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+    <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+    <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+    <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
+    <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
   </nav>
 
 </div>
 
 <script>
 (function(){
-  // ===== canonical state =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  "use strict";
+
+  // ===== Canon state (NO new gd_* keys) =====
+  var qs = new URLSearchParams(location.search);
+  var LS = window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || ""; // URL-only preserve only
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  var d = parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth = String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane="";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  function q(extra){
+    var p = new URLSearchParams();
+    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+    p.set("style",(extra&&extra.style)?extra.style:style);
+    p.set("time", (extra&&extra.time)?extra.time:time);
+    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
+    var L = (extra&&extra.lane)?extra.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?" + p.toString();
   }
 
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
+  // Wire all internal links with state carry (including lane if present)
+  function wireAll(){
+    var nodes = document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el = nodes[i];
+      var route = el.getAttribute("data-route") || "";
+      if(!route) continue;
+
+      if(route.indexOf("?") !== -1){
+        try{
+          var u = new URL(route, location.origin);
+          var sp = u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane") && (lane==="platform"||lane==="engineering")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
   }
 
-  // top wires
-  wire("btnDoor","/door/");
-  wire("btnPrelude","/prelude/");
-  wire("btnIndex","/index.html");
-  wire("btnProducts","/products/");
-  wire("btnExplore","/explore/");
+  // Language toggle (reload SAME pathname)
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ LS.setItem("gd_lang", lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
 
-  // dock wires
-  wire("dockProducts","/products/");
-  wire("dockExplore","/explore/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // language toggle (reload same path)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
   // ===== copy packs (question-first; human words) =====
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
@@ -396,7 +490,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   var HERO = {
     tag:P(
       "Home is the fast lane. It doesn’t teach. It routes. If you want the deep ‘why’, use Prelude. If you want the compass, use Index. If you want the intro table, use Door.",
-      "主页是快车道：不教学，只路由。想看深层“为什么”去前置页；想用指南针去索引；想看入门桌面去门。",
+      "主页是快车道：不教学，只路由。想看深层“为什么”去前奏；想用指南针去索引；想看入门桌面去门。",
       "Home es el carril rápido: no enseña, enruta. Para el ‘por qué’ profundo: Preludio. Para brújula: Índice. Para mesa de entrada: Puerta."
     ),
     rule:P(
@@ -414,7 +508,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   // ===== accordion data =====
   var CARDS = [
     {
-      c:"#D4AF37",
+      c:"#c9a24a",
       q:P("Do you want the big table first?","你想先看总桌面吗？","¿Quieres la mesa grande primero?"),
       s:P("Door is the intro: choose your entry without guessing.","门是入门：不靠猜选入口。","Puerta es intro: eliges entrada sin adivinar."),
       p:P(
@@ -425,7 +519,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       jump:{label:P("OPEN: DOOR","打开：门","ABRIR: PUERTA"), href:"/door/"}
     },
     {
-      c:"#60A5FA",
+      c:"#ff2b2b",
       q:P("Do you want direction, not discussion?","你想要方向而不是讨论吗？","¿Quieres dirección, no discusión?"),
       s:P("Index is the compass: pick a direction and go.","索引是指南针：选方向就走。","Índice es brújula: eliges dirección y vas."),
       p:P(
@@ -436,40 +530,40 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       jump:{label:P("OPEN: INDEX","打开：索引","ABRIR: ÍNDICE"), href:"/index.html"}
     },
     {
-      c:"#F59E0B",
+      c:"#c9a24a",
       q:P("Do you want usable things right now?","你想现在就看能用的东西吗？","¿Quieres cosas usables ya?"),
       s:P("Products is the catalog of adoption surfaces.","产品页是可采纳目录。","Productos es el catálogo adoptable."),
       p:P(
-        "Products is where you go when your question is: “What can I use?” Each card is one paragraph + a jump.\n\nIf something isn’t built yet, it should route to its shell, not to the wrong page.",
-        "产品页回答的是：“我能用什么？”每张卡：一段话+一个跳转。\n\n如果某个东西还没建好，它应该路由到它的壳，而不是跳到错误页面。",
-        "Productos responde: “¿Qué puedo usar?” Cada tarjeta: un párrafo + un salto.\n\nSi algo no está construido, debe ir a su carcasa, no a la página equivocada."
+        "Products answers: “What can I use?” Each card is one block + a jump.\n\nIf something isn’t built yet, it should route to its shell, not to the wrong page.",
+        "产品页回答：“我能用什么？”每张卡：一个块 + 一个跳转。\n\n如果某个东西还没建好，它应该路由到它的壳，而不是跳到错误页面。",
+        "Productos responde: “¿Qué puedo usar?” Cada tarjeta: un bloque + un salto.\n\nSi algo no está construido, debe ir a su carcasa, no a la página equivocada."
       ),
       jump:{label:P("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"}
     },
     {
-      c:"#93C5FD",
+      c:"#ff2b2b",
       q:P("Do you want boundaries before you believe anything?","你想先看边界再相信吗？","¿Quieres límites antes de creer?"),
       s:P("Laws is where meaning stays honest.","法则页让含义保持诚实。","Leyes mantiene el significado honesto."),
       p:P(
-        "Laws is the guardrail lane: definitions, invariants, and what is allowed to be said.\n\nIf you ever feel like a page is ‘selling a story’, Laws is where you verify the boundary.",
+        "Laws is the guardrail lane: definitions, invariants, and what is allowed to be said.\n\nIf a page feels like it’s selling a story, Laws is where you verify the boundary.",
         "法则是护栏车道：定义、不变量、以及允许说到哪里。\n\n如果你觉得某页像在“卖故事”，就来法则核查边界。",
-        "Leyes es el carril de barandillas: definiciones, invariantes y qué se permite afirmar.\n\nSi sientes que una página ‘vende historia’, aquí verificas límites."
+        "Leyes es el carril de barandillas: definiciones, invariantes y qué se permite afirmar.\n\nSi una página ‘vende historia’, aquí verificas límites."
       ),
       jump:{label:P("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"}
     },
     {
-      c:"#34D399",
+      c:"#c9a24a",
       q:P("Do you want measurements instead of arguments?","你想要测量而不是争论吗？","¿Quieres mediciones en vez de argumentos?"),
       s:P("Gauges is measurement only—no doctrine, no marketing.","量规只做测量——无教义，无营销。","Medidores = medición—sin doctrina ni marketing."),
       p:P(
-        "Gauges is where signals live: indices, sweeps, heatmaps, exports. It’s designed for ‘show me the numbers’ behavior.\n\nIf you need a decision boundary, you take the measurement to Laws.",
-        "量规是信号车道：指数、扫掠、热图、导出。它适合“给我数字”的需求。\n\n如果你需要裁决边界，就把测量带去法则。",
-        "Medidores es donde viven señales: índices, barridos, mapas, exports. Para ‘muéstrame números’.\n\nSi necesitas límite de decisión, llevas la medición a Leyes."
+        "Gauges is where signals live: indices, sweeps, heatmaps, exports. It’s designed for “show me the numbers.”\n\nIf you need a decision boundary, take the measurement to Laws.",
+        "量规是信号车道：指数、扫掠、热图、导出。它适合“给我数字”。\n\n如果你需要裁决边界，就把测量带去法则。",
+        "Medidores es donde viven señales: índices, barridos, mapas, exports. Para “muéstrame números.”\n\nSi necesitas límite de decisión, llevas la medición a Leyes."
       ),
       jump:{label:P("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
     },
     {
-      c:"#A3A3A3",
+      c:"#ff2b2b",
       q:P("Do you want ambitious direction—without overpromising?","你想看大胆方向但不夸口吗？","¿Quieres dirección ambiciosa sin sobreprometer?"),
       s:P("Explore holds frontier ideas as organized shells.","探索把前沿做成有序的壳。","Explorar guarda ideas frontera como carcasas."),
       p:P(
@@ -481,15 +575,16 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     }
   ];
 
-  // ===== render accordion =====
+  // ===== accordion render (single-open; tap same closes) =====
   var stack=document.getElementById("stack");
 
   function closeAll(){
-    stack.querySelectorAll(".card").forEach(function(c){
-      c.classList.remove("open");
-      var ch=c.querySelector(".chev");
+    var cards=stack.querySelectorAll(".card");
+    for(var i=0;i<cards.length;i++){
+      cards[i].classList.remove("open");
+      var ch=cards[i].querySelector(".chev");
       if(ch) ch.textContent="▸";
-    });
+    }
   }
 
   function makeCard(item, idx){
@@ -512,16 +607,16 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var tb=document.createElement("div");
     tb.className="titleBlock";
 
-    var q=document.createElement("div");
-    q.className="q";
-    q.textContent=pick(item.q);
+    var qEl=document.createElement("div");
+    qEl.className="q";
+    qEl.textContent=pick(item.q);
 
-    var s=document.createElement("div");
-    s.className="s";
-    s.textContent=pick(item.s);
+    var sEl=document.createElement("div");
+    sEl.className="s";
+    sEl.textContent=pick(item.s);
 
-    tb.appendChild(q);
-    tb.appendChild(s);
+    tb.appendChild(qEl);
+    tb.appendChild(sEl);
 
     hL.appendChild(mark);
     hL.appendChild(tb);
@@ -537,37 +632,35 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     body.className="body";
 
     var paras=String(pick(item.p)).split("\n\n");
-    paras.forEach(function(t){
+    for(var i=0;i<paras.length;i++){
       var p=document.createElement("p");
       p.className="p";
-      p.textContent=t;
+      p.textContent=paras[i];
       body.appendChild(p);
-    });
+    }
 
     var actions=document.createElement("div");
     actions.className="actions";
     var a=document.createElement("a");
-    a.className="btn";
+    a.className="btn red";
     a.textContent=pick(item.jump.label);
-    a.href=item.jump.href + q();
+    a.setAttribute("data-route", item.jump.href);
     actions.appendChild(a);
     body.appendChild(actions);
 
     function toggle(){
-      var willOpen=!card.classList.contains("open");
-      if(card.classList.contains("open")){
+      var isOpen=card.classList.contains("open");
+      if(isOpen){
         card.classList.remove("open");
         chev.textContent="▸";
         return;
       }
       closeAll();
-      if(willOpen){
-        card.classList.add("open");
-        chev.textContent="▾";
-      }
+      card.classList.add("open");
+      chev.textContent="▾";
     }
 
-    head.addEventListener("click", toggle);
+    head.addEventListener("click", toggle, {passive:true});
     head.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
@@ -579,23 +672,22 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       card.classList.add("open");
       chev.textContent="▾";
     }
-
     return card;
   }
 
   function render(){
     stack.innerHTML="";
-    CARDS.forEach(function(item, idx){
-      stack.appendChild(makeCard(item, idx));
-    });
+    for(var i=0;i<CARDS.length;i++){
+      stack.appendChild(makeCard(CARDS[i], i));
+    }
 
     if(lang==="zh"){
       document.getElementById("k0").textContent="主页";
       document.getElementById("h0").textContent="你下一步想去哪？";
       document.getElementById("band0").textContent="入口（打开一个）";
       document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnPrelude").textContent="前置页";
-      document.getElementById("btnIndex").textContent="索引";
+      document.getElementById("btnPrelude").textContent="前奏";
+      document.getElementById("btnIndex").textContent="指南针";
       document.getElementById("btnProducts").textContent="产品";
       document.getElementById("btnExplore").textContent="探索";
       document.getElementById("dockProducts").textContent="产品";
@@ -608,7 +700,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("band0").textContent="SUPERFICIES (ABRE UNA)";
       document.getElementById("btnDoor").textContent="PUERTA";
       document.getElementById("btnPrelude").textContent="PRELUDIO";
-      document.getElementById("btnIndex").textContent="ÍNDICE";
+      document.getElementById("btnIndex").textContent="BRÚJULA";
       document.getElementById("btnProducts").textContent="PRODUCTOS";
       document.getElementById("btnExplore").textContent="EXPLORAR";
       document.getElementById("dockProducts").textContent="PRODUCTOS";
@@ -621,7 +713,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("band0").textContent="SURFACES (OPEN ONE)";
       document.getElementById("btnDoor").textContent="DOOR";
       document.getElementById("btnPrelude").textContent="PRELUDE";
-      document.getElementById("btnIndex").textContent="INDEX";
+      document.getElementById("btnIndex").textContent="COMPASS";
       document.getElementById("btnProducts").textContent="PRODUCTS";
       document.getElementById("btnExplore").textContent="EXPLORE";
       document.getElementById("dockProducts").textContent="PRODUCTS";
@@ -629,6 +721,9 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("dockLaws").textContent="LAWS";
       document.getElementById("dockGauges").textContent="GAUGES";
     }
+
+    // Ensure all links carry full state (including optional lane)
+    wireAll();
   }
 
   render();

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Research · Industry Context</title>
+<title>Industry Context · Engineering Benchmarks</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -11,128 +11,540 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:104px;
+  --dockH:112px;
   --stroke:rgba(255,255,255,.12);
-  --mut:rgba(255,255,255,.88);
-  --shadowA:0 28px 90px rgba(0,0,0,.6);
+  --stroke2:rgba(255,255,255,.10);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.82);
+  --mut2:rgba(255,255,255,.72);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* Top controls */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+
+/* Page */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 24px);
+  padding:110px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:24px;
+  gap:14px;
+  position:relative;
+  z-index:10;
 }
 
-.card{
+/* Header */
+.header{
   border:1px solid var(--stroke);
   border-radius:26px;
-  padding:28px;
-  background:rgba(0,0,0,.18);
+  padding:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
   box-shadow:var(--shadowA);
+  position:relative;
+  overflow:hidden;
 }
-
-.h1{
-  margin:0 0 16px;
-  font-size:28px;
-  font-weight:950;
-  letter-spacing:.4px;
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.22;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
+.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.5px;position:relative}
+.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
 
-.p{
-  margin:0 0 16px;
-  line-height:1.75;
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.card::after{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  padding:16px 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+}
+.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
+.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
   color:var(--mut);
-  font-size:16px;
+  font-weight:980;
+  flex:0 0 auto;
+  margin-top:2px;
 }
-
-.list{
-  margin:18px 0 0;
-  padding-left:18px;
-  line-height:1.8;
-  font-size:15px;
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+  position:relative;
 }
-
-.notice{
-  margin-top:20px;
-  padding-top:16px;
-  border-top:1px solid var(--stroke);
+.card.open .body{display:block}
+.body p{margin:0;color:rgba(255,255,255,.88);line-height:1.75;font-size:14.75px}
+.body p + p{margin-top:12px}
+.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14px}
+.ul li{margin:7px 0}
+.mini{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.84);
   font-size:13.5px;
-  opacity:.85;
-  line-height:1.6;
+  line-height:1.55;
 }
 
+/* Dock */
 .dock{
-  position:fixed;
-  left:50%;
+  position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:min(980px,94vw);
-  padding:12px;
-  border-radius:22px;
+  padding:12px;border-radius:22px;
   border:1px solid var(--stroke);
   background:rgba(0,0,0,.22);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
+  z-index:220;
 }
-.dock .btn{
-  width:100%;
-  padding:10px;
-  border-radius:999px;
-  text-align:center;
-  font-weight:900;
+.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+  .h1{font-size:26px}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnBack" href="/research/">RESEARCH</a>
+    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
-  <div class="card">
-    <div class="h1">Engineering-Led Construction Benchmarks</div>
-
-    <div class="p">
+  <section class="header" aria-label="Header">
+    <p class="k" id="k0">RESEARCH · INDUSTRY CONTEXT</p>
+    <h1 class="h1" id="h0">Engineering-Led Construction Benchmarks</h1>
+    <p class="p0" id="p0">
       This research framework examines engineering-led construction systems across the residential building envelope.
-      The following companies are referenced as industry examples of innovation-driven structural performance
-      across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management systems.
+      The companies below are referenced as contextual examples of innovation-driven structural performance across HVAC,
+      roofing, insulation, fenestration, plumbing, and rainwater management systems.
+    </p>
+    <div class="note0" id="note0">
+      This page is informational only. It does not rank brands, compare products, or imply affiliation.
     </div>
+  </section>
 
-    <ul class="list">
-      <li>Carrier — HVAC system innovation</li>
-      <li>Trane — Mechanical cooling systems</li>
-      <li>Lennox — Furnace and climate systems</li>
-      <li>Andersen — Window engineering systems</li>
-      <li>Pella — Fenestration innovation</li>
-      <li>GAF — Roofing systems</li>
-      <li>Owens Corning — Insulation systems</li>
-      <li>CertainTeed — Architectural roofing systems</li>
-      <li>Kohler — Plumbing systems</li>
-      <li>LeafGuard — Integrated rainwater management systems</li>
-    </ul>
-
-    <div class="notice">
-      These companies are referenced for educational and contextual research purposes only.
-      All trademarks are the property of their respective owners.
-      No affiliation or endorsement is implied.
-    </div>
-
-  </div>
+  <div class="stack" id="stack"></div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/index.html">INDEX</a>
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
 </nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== Canon state (gd_* only) =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  // Wire nav with state carry
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnBack","/research/");
+  wire("btnIndex","/index.html");
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+
+  // Language toggle reload same pathname
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Copy helper
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  // ===== Content (case-study posture; no ranking; no endorsement) =====
+  // NOTE: LeafGuard timeline is stated conservatively and tied to publicly available company history.
+  var SECTIONS=[
+    {
+      c:"#c9a24a",
+      t:P("Why these references exist","为什么引用这些案例","Por qué existen estas referencias"),
+      s:P("This is a methodology-alignment page, not brand promotion.","这是方法论对齐页，不是品牌推广。","Es alineación metodológica, no promoción."),
+      p:[
+        P(
+          "This site treats innovation as a repeatable engineering pattern, not a marketing story. When a construction sub-system evolves (HVAC, roofing, windows, plumbing, rainwater routing), it typically follows a consistent cycle: a performance bottleneck is identified, a constrained redesign is introduced, deployment is standardized, and reliability becomes the new baseline.",
+          "本网站把“创新”当作可重复的工程模式，而不是营销故事。当某个建筑子系统演化（暖通、屋面、门窗、管道、雨水路由），通常遵循相似周期：识别性能瓶颈→提出有约束的再设计→标准化部署→把可靠性变成新基线。",
+          "Este sitio trata la innovación como un patrón de ingeniería repetible, no como un relato de marketing. Cuando un subsistema evoluciona (HVAC, techos, ventanas, plomería, ruteo de lluvia), suele seguir un ciclo: se identifica un cuello de botella, se introduce un rediseño bajo restricciones, se estandariza el despliegue y la confiabilidad se vuelve la nueva línea base."
+        ),
+        P(
+          "The companies listed below are referenced as contextual examples of engineering-led construction systems. The purpose is to anchor research language to real-world categories and to illustrate how innovation tends to stabilize through constraint, measurement, and deployment discipline.",
+          "下列公司仅作为“工程主导系统”的背景例子。目的：把研究语言锚定在现实类别上，并说明创新通常如何通过约束、测量与部署纪律走向稳定。",
+          "Las compañías abajo se citan como ejemplos contextuales de sistemas constructivos dirigidos por ingeniería. El propósito es anclar el lenguaje de investigación a categorías reales y mostrar cómo la innovación se estabiliza mediante restricciones, medición y disciplina de despliegue."
+        )
+      ]
+    },
+
+    {
+      c:"#ff2b2b",
+      t:P("Innovation pattern used in this research","本研究采用的创新模式","Patrón de innovación usado aquí"),
+      s:P("Constraint → Test → Standardize → Scale (with containment).","约束→测试→标准化→扩张（含隔离）。","Restricción → Prueba → Estandarizar → Escalar (con contención)."),
+      p:[
+        P(
+          "This site uses a constraint-led lens: claims do not outrun evidence. In practical construction terms, the pattern is: (1) isolate a problem boundary, (2) introduce a bounded design change, (3) verify performance under load variance, (4) standardize installation and interfaces, (5) scale through repeatable deployment.",
+          "本网站采用“约束优先”的视角：主张不得超出证据。落到施工实践，这个模式是：①隔离问题边界；②引入有界设计变更；③在负载方差下验证性能；④标准化安装与接口；⑤通过可复制部署扩张。",
+          "Este sitio usa un lente de restricciones: las afirmaciones no deben superar la evidencia. En construcción práctica: (1) aislar el límite del problema, (2) introducir un cambio acotado, (3) verificar desempeño bajo variación de carga, (4) estandarizar instalación e interfaces, (5) escalar mediante despliegue repetible."
+        ),
+        P(
+          "In coherence terms, the work stays aligned when: definitions are stable, interfaces are explicit, and change control is versioned. Innovation becomes durable when it reduces drift instead of creating new ambiguity.",
+          "用一致性语言来说：定义稳定、接口明确、变更控制可追溯时，系统才能保持对齐。创新之所以耐久，是因为它减少漂移而不是制造新的模糊。",
+          "En términos de coherencia: el trabajo se mantiene alineado cuando las definiciones son estables, las interfaces explícitas y el control de cambios versionado. La innovación perdura cuando reduce deriva en vez de crear ambigüedad."
+        )
+      ]
+    },
+
+    {
+      c:"#93c5fd",
+      t:P("Benchmark set by vertical domain","按垂直领域的基准集合","Conjunto de referencia por dominio"),
+      s:P("Plain-text domain mapping. No rankings. No comparisons.","纯文本领域映射。不排名。不对比。","Mapa por dominios. Sin rankings. Sin comparaciones."),
+      p:[
+        P(
+          "HVAC: Carrier; Trane; Lennox. Fenestration: Andersen; Pella. Roofing/Insulation: GAF; Owens Corning; CertainTeed. Plumbing: Kohler. Rainwater management: LeafGuard.",
+          "暖通：Carrier、Trane、Lennox。门窗：Andersen、Pella。屋面/保温：GAF、Owens Corning、CertainTeed。管道：Kohler。雨水管理：LeafGuard。",
+          "HVAC: Carrier; Trane; Lennox. Ventanas: Andersen; Pella. Techos/Aislamiento: GAF; Owens Corning; CertainTeed. Plomería: Kohler. Gestión de lluvia: LeafGuard."
+        )
+      ],
+      ul:[
+        P("Carrier — HVAC system innovation","Carrier — 暖通系统创新","Carrier — Innovación HVAC"),
+        P("Trane — Mechanical cooling systems","Trane — 机械制冷系统","Trane — Enfriamiento mecánico"),
+        P("Lennox — Furnace and climate systems","Lennox — 炉具与气候系统","Lennox — Hornos y clima"),
+        P("Andersen — Window engineering systems","Andersen — 门窗工程系统","Andersen — Sistemas de ventanas"),
+        P("Pella — Fenestration innovation","Pella — 门窗创新","Pella — Innovación fenestración"),
+        P("GAF — Roofing systems","GAF — 屋面系统","GAF — Sistemas de techado"),
+        P("Owens Corning — Insulation systems","Owens Corning — 保温系统","Owens Corning — Aislamiento"),
+        P("CertainTeed — Architectural roofing systems","CertainTeed — 建筑屋面系统","CertainTeed — Techos arquitectónicos"),
+        P("Kohler — Plumbing systems","Kohler — 管道系统","Kohler — Plomería"),
+        P("LeafGuard — Integrated rainwater management systems","LeafGuard — 集成雨水管理系统","LeafGuard — Gestión integrada de lluvia")
+      ]
+    },
+
+    {
+      c:"#c9a24a",
+      t:P("Case study: LeafGuard (rainwater management as routing)","案例：LeafGuard（把雨水管理视作路由）","Caso: LeafGuard (gestión de lluvia como ruteo)"),
+      s:P("Engineering relevance: flow control, containment, installation standardization.","工程相关：流量控制、隔离、安装标准化。","Relevancia: control de flujo, contención, estandarización."),
+      p:[
+        P(
+          "This case study is included because rainwater management is a direct example of routing logic in the building envelope: collect → contain → direct → discharge, while protecting adjacent systems (fascia, soffit, foundation) from overflow and uncontrolled exposure.",
+          "之所以加入该案例，是因为雨水管理是建筑围护结构中“路由逻辑”的直接例子：收集→隔离→导向→排放，同时保护相邻系统（檐板、檐底、地基）免受溢流与不受控暴露。",
+          "Este caso se incluye porque la gestión de lluvia es un ejemplo directo de lógica de ruteo en el envolvente: recolectar → contener → dirigir → descargar, protegiendo sistemas adyacentes de desbordes y exposición no controlada."
+        ),
+        P(
+          "Public brand history indicates the LeafGuard® brand gutter was introduced as a proprietary one-piece, debris-shedding gutter system (1993, introduced by Englert, Inc.). The engineering pattern relevant here is not branding; it is the system choice: reduce joints, reduce failure modes, and standardize installation outputs.",
+          "公开的品牌历史显示 LeafGuard® 品牌雨槽在 1993 年以“一体式、排斥碎屑”的专有系统形式推出（由 Englert, Inc. 引入）。这里的工程重点不是品牌，而是系统选择：减少接缝、减少失效模式、标准化安装输出。",
+          "Fuentes públicas de la marca indican que LeafGuard® se introdujo como un sistema propietario de canalón de una sola pieza que desvía residuos (1993, introducido por Englert, Inc.). El patrón relevante no es el branding; es la elección del sistema: menos uniones, menos modos de fallo, instalación estandarizada."
+        ),
+        P(
+          "On-site formation and installation standardization are part of the deployment story for covered gutter systems. In research terms: controlled manufacturing/installation interfaces matter because they determine whether performance is repeatable across homes, crews, and regions.",
+          "一体式雨槽系统的部署故事通常包含现场成型与安装标准化。用研究语言说：受控的制造/安装接口很重要，因为它决定了性能能否在不同房屋、不同团队、不同地区之间保持可复现。",
+          "La formación e instalación estandarizadas en sitio suelen formar parte del despliegue. En términos de investigación: las interfaces de fabricación/instalación controladas determinan si el desempeño es repetible entre casas, cuadrillas y regiones."
+        )
+      ],
+      ul:[
+        P("Innovation posture: consolidate parts to reduce seam-driven failure modes.","创新姿态：通过部件整合减少“接缝驱动”的失效模式。","Postura: consolidar piezas para reducir fallos por uniones."),
+        P("System boundary: keep debris out; keep flow directed; keep overflow controlled.","系统边界：阻止碎屑进入；保持流向可控；控制溢流。","Límite: excluir residuos, dirigir flujo, controlar desbordes."),
+        P("Deployment discipline: repeatable installation interface is part of the engineered output.","部署纪律：可重复安装接口是工程输出的一部分。","Disciplina: interfaz de instalación repetible forma parte de la salida."),
+        P("Methodology correlation: routing + containment mirrors constraint-first reasoning used across the site.","方法论相关：路由+隔离对应本网站的约束优先推理。","Correlación: ruteo + contención refleja el enfoque de restricciones.")
+      ],
+      mini:P(
+        "Note: This page does not reproduce corporate marketing claims, does not rank products, and does not imply any partnership. References are contextual only.",
+        "注：本页不复刻企业营销主张、不做排名对比、不暗示任何合作关系。仅用于背景参考。",
+        "Nota: esta página no reproduce reclamos de marketing corporativo, no clasifica productos y no implica alianzas. Referencias solo contextuales."
+      )
+    },
+
+    {
+      c:"#ff2b2b",
+      t:P("Methodology tie-in: why innovation matters","方法论关联：为什么创新重要","Vínculo metodológico: por qué importa la innovación"),
+      s:P("Innovation is treated as structure under pressure, not narrative.","创新被视为压力下的结构，不是叙事。","Innovación como estructura bajo presión, no narrativa."),
+      p:[
+        P(
+          "Across domains, innovation becomes durable when it increases coherence (less drift), increases containment (smaller blast radius), and improves measurement (clearer signals). That is why this page exists inside Research: it provides context for engineering-led innovation patterns without turning the site into brand marketing.",
+          "跨领域来看，创新之所以耐久，是因为它提高一致性（减少漂移）、提高隔离能力（缩小爆炸半径）、改善测量（信号更清晰）。这就是本页属于研究区的原因：提供工程创新模式的背景，而不是把网站变成品牌营销。",
+          "En todos los dominios, la innovación perdura cuando aumenta coherencia (menos deriva), mejora contención (menor radio de impacto) y mejora medición (señales más claras). Por eso esta página vive en Research: aporta contexto sin convertir el sitio en marketing de marcas."
+        )
+      ]
+    },
+
+    {
+      c:"#a3a3a3",
+      t:P("Legal posture and disclaimer","法律立场与免责声明","Postura legal y aviso"),
+      s:P("Nominative reference only. No endorsement implied.","仅限指称性引用。不构成背书。","Referencia nominativa. Sin respaldo."),
+      p:[
+        P(
+          "These companies are referenced for educational and contextual research purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
+          "以上公司仅用于教育与研究背景参考。所有商标均归各自所有者所有。本网站不构成任何隶属或背书关系。",
+          "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus respectivos propietarios. No se implica afiliación ni respaldo."
+        )
+      ]
+    }
+  ];
+
+  // Header language
+  if(lang==="zh"){
+    document.getElementById("k0").textContent="研究 · 行业背景";
+    document.getElementById("h0").textContent="工程主导的施工基准（案例研究）";
+    document.getElementById("p0").textContent="本研究框架审视住宅建筑围护结构中的工程主导系统。以下公司作为行业创新与结构性能的背景参考，涵盖暖通、屋面、保温、门窗、管道及雨水管理系统。";
+    document.getElementById("note0").textContent="本页仅用于信息与研究。无品牌排名、无产品对比、无隶属暗示。";
+  }else if(lang==="es"){
+    document.getElementById("k0").textContent="INVESTIGACIÓN · CONTEXTO INDUSTRIAL";
+    document.getElementById("h0").textContent="Referencias de construcción dirigidas por ingeniería (casos)";
+    document.getElementById("p0").textContent="Este marco examina sistemas constructivos dirigidos por ingeniería dentro del envolvente residencial. Las compañías se citan como referencias contextuales de innovación estructural en HVAC, techos, aislamiento, ventanas, plomería y gestión de lluvia.";
+    document.getElementById("note0").textContent="Solo informativo. Sin rankings, sin comparaciones, sin afiliación implícita.";
+  }
+
+  // Render accordion
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    var cards=stack.querySelectorAll(".card");
+    for(var i=0;i<cards.length;i++){
+      cards[i].classList.remove("open");
+      var c=cards[i].querySelector(".chev");
+      if(c) c.textContent="▸";
+    }
+  }
+
+  function makeCard(sec, idx){
+    var card=document.createElement("div");
+    card.className="card";
+    card.style.setProperty("--c", sec.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+
+    var ti=document.createElement("div");
+    ti.className="ti";
+    ti.textContent=pick(sec.t);
+
+    var si=document.createElement("div");
+    si.className="si";
+    si.textContent=pick(sec.s);
+
+    left.appendChild(ti);
+    left.appendChild(si);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    (sec.p||[]).forEach(function(pp){
+      var p=document.createElement("p");
+      p.textContent=pick(pp);
+      body.appendChild(p);
+    });
+
+    if(sec.ul && sec.ul.length){
+      var ul=document.createElement("ul");
+      ul.className="ul";
+      sec.ul.forEach(function(liObj){
+        var li=document.createElement("li");
+        li.textContent=pick(liObj);
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+    }
+
+    if(sec.mini){
+      var m=document.createElement("div");
+      m.className="mini";
+      m.textContent=pick(sec.mini);
+      body.appendChild(m);
+    }
+
+    function toggle(){
+      var isOpen=card.classList.contains("open");
+      if(isOpen){
+        card.classList.remove("open");
+        chev.textContent="▸";
+        return;
+      }
+      closeAll();
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    if(idx===0){
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return card;
+  }
+
+  SECTIONS.forEach(function(sec, i){
+    stack.appendChild(makeCard(sec, i));
+  });
+
+})();
+</script>
 
 </body>
 </html>

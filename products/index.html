@@ -1,11 +1,32 @@
-<!-- TNT — /products/software/index.html
-     SOFTWARE SPINE · MAX DEPTH · MONUMENT TYPOGRAPHY · 12 DOMAINS
-     4 LENSES: ENGINEERING / PLATFORM / INFORMAL / FORMAL (2×2)
-     3 LANGUAGES: EN / 中文 / ES
-     SINGLE-OPEN ACCORDION (DOMAIN) + SINGLE-OPEN SUB-BUBBLES (CONCEPT/LIVE/ROADMAP)
-     NO MODALS · NO OVERLAY TRAPS · MOBILE-SAFE
-     STATE CARRY: URL + LS gd_lang/gd_style/gd_time/gd_depth (preserved on every jump)
-     NO NEW gd_* KEYS
+<!-- TNT — /products/index.html
+     PRODUCTS · MASTER INDEX (RESTORE) · EN/中文/ES · MOBILE-SAFE · NO MODALS
+     PURPOSE:
+       - Restore the PRODUCTS hub (was accidentally replaced by “machine behind the pages”)
+       - Single-open accordion (one row open at a time)
+       - Trilingual page-level toggle (EN/中文/ES) + GH Pages safe reload (same pathname)
+       - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
+     ROUTING (NO CATCH-ALL):
+       PRODUCTS:
+         - Energy                 → /products/energy/
+         - Education              → /products/education/
+         - Coherence Diagnostic   → /products/coherence-diagnostic/
+         - Software Spine         → /products/software/          (machine behind pages)
+         - Dot.Grid               → /products/dot-grid/
+         - SSG                    → /products/ssg/
+       SERVICES (SAFE HOPS):
+         - Advisory (Governance)  → /laws/
+         - Audit Support          → /gauges/
+         - Integration (Wiring)   → /products/software/
+         - Training (Masterclass) → /products/education/         (until a dedicated masterclass page exists)
+       SOFTWARE & SYSTEMS (SOFT ROUTES):
+         - UCI Engine             → /products/software/?focus=uci     (if page ignores focus, still safe)
+         - Registry               → /products/software/?focus=registry
+         - Adoption Ladder        → /products/software/?focus=adoption
+         - “Machine Behind Pages” → /products/software/
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+       - Tap-safe, no inline onclick
 -->
 
 <!doctype html>
@@ -13,298 +34,133 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SOFTWARE · SPINE</title>
+<title>PRODUCTS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-/* ====== BASE ====== */
 a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
-/* ====== TOKENS ====== */
+/* tokens */
 :root{
-  --dockH:120px;
+  --dockH:96px;
 
-  /* Dark opal + red (no washed-out blue) */
-  --inkA:rgba(10,18,32,.96);
-  --inkB:rgba(5,9,16,.98);
-  --opalA:rgba(210,190,255,.18);
+  /* dark opal + red (no washed-out blue) */
+  --opalA:rgba(210,190,255,.16);
   --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,70,70,.16);
+  --opalC:rgba(255,70,70,.14);
+  --gold:rgba(212,175,55,.40);
 
-  --gold:rgba(212,175,55,.45);
-  --gold2:rgba(212,175,55,.22);
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-
-  --txt:rgba(255,255,255,.92);
+  --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
-  --mut2:rgba(255,255,255,.70);
-
-  --h1:58px;
-  --h2:26px;
-  --p:18px;
-  --p2:16px;
 }
 
-/* ====== TOP CONTROLS ====== */
-.topLeft{
-  position:fixed;left:16px;top:16px;z-index:240;
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:220;
   display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
-.topRight{
-  position:fixed;right:16px;top:16px;z-index:240;
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:220;
   display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
-.topLeft .btn,.topRight .btn{white-space:nowrap}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* ====== PAGE ====== */
+/* page */
 .page{
-  width:min(1500px,96vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 36px);
+  padding:90px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
   position:relative;
   z-index:10;
 }
 
-/* ====== HERO ====== */
-.hero{
-  border-radius:34px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
-  backdrop-filter:blur(12px);
-  box-shadow:0 90px 220px rgba(0,0,0,.78);
-  padding:34px 34px 26px;
-  overflow:hidden;
-  position:relative;
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:-10px;
-  border-radius:40px;
-  background:
-    repeating-conic-gradient(from 0deg,
-      rgba(212,175,55,.10) 0deg 6deg,
-      transparent 6deg 18deg);
-  opacity:.10;
-  transform:rotate(12deg);
-  pointer-events:none;
-}
-.hero::after{
-  content:"";
-  position:absolute;left:50%;top:58%;
-  width:min(1200px,96vw);
-  height:min(1200px,96vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(255,70,70,.10), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.42), rgba(7,11,18,.70));
-  opacity:.35;
-  pointer-events:none;
-  box-shadow:0 120px 260px rgba(0,0,0,.75);
-}
-.k{
-  margin:0;
-  font-size:12px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.h1{
-  margin:14px 0 0;
-  font-size:var(--h1);
-  font-weight:950;
-  letter-spacing:1px;
-  line-height:1.05;
-  text-shadow:0 0 22px rgba(255,255,255,.06);
-}
-.lede{
-  margin:18px 0 0;
-  font-size:var(--p);
-  line-height:1.85;
-  color:var(--txt);
-  max-width:1200px;
-  white-space:pre-line;
-}
-.rule{
-  margin:18px 0 0;
-  border-radius:20px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
-  padding:14px 16px;
-  color:rgba(255,255,255,.84);
-  font-size:14px;
-  line-height:1.6;
-}
-
-/* ====== LENSES (2×2) ====== */
-.lensWrap{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:12px;
-  margin-top:18px;
-  position:relative;
-  z-index:2;
-}
-.lensGroup{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.pill{
-  padding:12px 16px;
-  border-radius:999px;
-  background:rgba(0,0,0,.26);
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:0 16px 44px rgba(0,0,0,.55);
-  cursor:pointer;
-  font-weight:900;
-  letter-spacing:.2px;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-.pill.active{
-  border-color:rgba(212,175,55,.60);
-  box-shadow:0 18px 54px rgba(0,0,0,.78), 0 0 18px rgba(212,175,55,.22);
-}
-.pill.red.active{
-  border-color:rgba(255,90,90,.60);
-  box-shadow:0 18px 54px rgba(0,0,0,.78), 0 0 18px rgba(255,90,90,.18);
-}
-
-/* ====== BAND ====== */
-.band{
-  padding:12px 14px;
+/* header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    rgba(0,0,0,.14);
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
+.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px;color:var(--txt)}
+.fine{margin-top:10px;font-size:12.25px;opacity:.72;line-height:1.45;color:var(--mut)}
+
+/* band */
+.band{
+  padding:10px 12px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  font-weight:950;
-  letter-spacing:.25px;
-  color:rgba(255,255,255,.90);
-  font-size:15px;
+  background:rgba(0,0,0,.12);
+  font-weight:950;letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
 
-/* ====== ACCORDION (DOMAIN) ====== */
-.list{display:flex;flex-direction:column;gap:14px}
-
+/* accordion list */
+.list{display:flex;flex-direction:column;gap:12px}
 .row{
-  border-radius:30px;
   border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 20px 70px rgba(0,0,0,.62);
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
 }
-
 .head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  padding:20px 22px;
-  cursor:pointer;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .left{
-  display:flex;gap:14px;align-items:flex-start;min-width:0;
+  display:flex;align-items:flex-start;gap:12px;min-width:0;
 }
 .mark{
-  display:flex;flex-direction:column;gap:10px;align-items:center;flex:0 0 auto;margin-top:4px;
-}
-.diamond{
-  width:12px;height:12px;border-radius:3px;transform:rotate(45deg);
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
   background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 18px rgba(0,0,0,.30);
-}
-.bar{
-  width:7px;height:28px;border-radius:99px;background:var(--c);
-  box-shadow:0 0 18px rgba(0,0,0,.25);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:3px;
 }
 .titleBlock{min-width:0}
 .title{
-  font-size:22px;
-  font-weight:950;
-  letter-spacing:.2px;
+  font-weight:950;letter-spacing:.2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .sub{
-  margin-top:8px;
-  font-size:15px;
-  line-height:1.5;
-  opacity:.84;
-  max-width:105ch;
+  margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch;
 }
-.chev{font-size:18px;opacity:.78;flex:0 0 auto;margin-top:4px}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
 .body{
   display:none;
-  padding:18px 22px 22px;
+  padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
 .row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.86);line-height:1.6;font-size:13.25px}
+.p + .p{margin-top:10px}
 
-.bodyLead{
-  margin:0;
-  color:rgba(255,255,255,.88);
-  line-height:1.65;
-  font-size:15px;
-  white-space:pre-line;
-}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-/* ====== SUB-ACCORDION (CONCEPT/LIVE/ROADMAP) ====== */
-.subList{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.bubble{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  padding:16px 16px 14px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.bubble h4{
-  margin:0 0 10px;
-  font-weight:950;
-  letter-spacing:.15px;
-  font-size:18px;
-}
-.bubble p{
-  margin:0;
-  color:rgba(255,255,255,.84);
-  line-height:1.85;
-  font-size:16px;
-  display:none;
-  white-space:pre-line;
-}
-.bubble.open p{display:block}
-
-.actions{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px;
-}
-.actions .btn{
-  padding:12px 14px;border-radius:999px;white-space:nowrap;
-}
-
-/* ====== DOCK ====== */
+/* dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
@@ -312,26 +168,18 @@ body::before,body::after{pointer-events:none!important}
   z-index:220;
   width:min(980px,94vw);
   padding:10px 12px;
-  border-radius:24px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.24);
+  background:rgba(0,0,0,.22);
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
   grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
-.dock .btn{
-  width:100%;
-  padding:12px 10px;
-  border-radius:999px;
-  white-space:nowrap;
-}
-@media (max-width:560px){
-  :root{--dockH:138px; --h1:44px; --p:17px;}
-}
-@media (max-width:420px){
-  :root{--h1:38px;}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:112px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -339,13 +187,12 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
-<div class="topLeft">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
+<div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+  <a class="btn" id="btnHome" href="/home/">HUB</a>
 </div>
 
-<div class="topRight" aria-label="Language">
+<div class="top-right" aria-label="Language">
   <button class="btn" id="btnEN" type="button">EN</button>
   <button class="btn" id="btnZH" type="button">中文</button>
   <button class="btn" id="btnES" type="button">ES</button>
@@ -353,43 +200,26 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="page">
 
-  <section class="hero" aria-label="Hero">
-    <div class="k" id="k0">SOFTWARE · SPINE</div>
-    <div class="h1" id="h0">THE MACHINE BEHIND THE PAGES</div>
+  <div class="header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
+    <p class="s" id="hs">Open a card. Read one paragraph. Jump cleanly.</p>
+    <div class="fine" id="fine">Fine print: meaning lives under Laws; measurements live under Gauges.</div>
+  </div>
 
-    <div class="lede" id="lede">
-?What happens when your system grows faster than your ability to keep it honest?
+  <div class="band" id="bandA">PRODUCTS</div>
+  <div class="list" id="listA"></div>
 
-Most “platforms” collapse the same way:
-they promise integration, then they drift, then they fight their own contradictions.
+  <div class="band" id="bandS">SERVICES</div>
+  <div class="list" id="listS"></div>
 
-This spine exists because we treat the problem as finite:
-a lattice of states, a map of failure, and a bounded way back to stability.
-    </div>
-
-    <div class="rule" id="rule">
-Rule: You can dream loudly — but you can only move forward on support that survives pressure.
-    </div>
-
-    <div class="lensWrap" aria-label="Lenses">
-      <div class="lensGroup" aria-label="Tone">
-        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
-        <button class="pill" id="pillFormal" type="button">FORMAL</button>
-      </div>
-      <div class="lensGroup" aria-label="Mode">
-        <button class="pill red active" id="pillEngineering" type="button">ENGINEERING</button>
-        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
-      </div>
-    </div>
-  </section>
-
-  <div class="band" id="band">DOMAINS</div>
-  <div class="list" id="list"></div>
+  <div class="band" id="bandB">SOFTWARE & SYSTEMS</div>
+  <div class="list" id="listB"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
@@ -397,18 +227,18 @@ Rule: You can dream loudly — but you can only move forward on support that sur
 
 <script>
 (function(){
-  // ===== canonical state =====
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -416,7 +246,6 @@ Rule: You can dream loudly — but you can only move forward on support that sur
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
-
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
@@ -427,20 +256,19 @@ Rule: You can dream loudly — but you can only move forward on support that sur
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // nav wire
+  // wire top + dock
   function wire(id,path){
     var el=document.getElementById(id);
-    if(el) el.href=path+q();
+    if(el) el.href = path + q();
   }
-  wire("btnBack","/products/");
   wire("btnDoor","/door/");
-  wire("btnExit","/index.html");
-  wire("dockHome","/home/");
+  wire("btnHome","/home/");
+  wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language toggle
+  // language toggle (reload SAME pathname; GH safe)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -454,1365 +282,274 @@ Rule: You can dream loudly — but you can only move forward on support that sur
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href=window.location.pathname+q({lang:lang});
+    window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click",function(){setLang("en");});
   btnZH.addEventListener("click",function(){setLang("zh");});
   btnES.addEventListener("click",function(){setLang("es");});
 
-  // ===== 4 lenses (no new gd_* keys) =====
-  // tone is persisted into gd_style (allowed). mode persists in sessionStorage (NOT gd_*).
-  var tone = (style==="formal") ? "formal" : "informal";
-  var mode = sessionStorage.getItem("sw_mode") || "engineering";
-  if(mode!=="engineering" && mode!=="platform") mode="engineering";
+  // ===== ROUTES (NO 404; all safe hubs) =====
+  var ROUTE={
+    energy:"/products/energy/",
+    education:"/products/education/",
+    diagnostic:"/products/coherence-diagnostic/",
+    software:"/products/software/",
+    dotgrid:"/products/dot-grid/",
+    ssg:"/products/ssg/",
 
-  var pillInformal=document.getElementById("pillInformal");
-  var pillFormal=document.getElementById("pillFormal");
-  var pillEngineering=document.getElementById("pillEngineering");
-  var pillPlatform=document.getElementById("pillPlatform");
+    advisory:"/laws/",
+    audit:"/gauges/",
+    integration:"/products/software/",
+    training:"/products/education/",
 
-  function paintPills(){
-    pillInformal.classList.toggle("active", tone==="informal");
-    pillFormal.classList.toggle("active", tone==="formal");
-    pillEngineering.classList.toggle("active", mode==="engineering");
-    pillPlatform.classList.toggle("active", mode==="platform");
-  }
+    uci:"/products/software/?focus=uci",
+    registry:"/products/software/?focus=registry",
+    adoption:"/products/software/?focus=adoption",
+    machine:"/products/software/"
+  };
 
-  pillInformal.addEventListener("click",function(){
-    tone="informal";
-    try{ localStorage.setItem("gd_style","informal"); }catch(e){}
-    paintPills(); renderAll();
-  });
-  pillFormal.addEventListener("click",function(){
-    tone="formal";
-    try{ localStorage.setItem("gd_style","formal"); }catch(e){}
-    paintPills(); renderAll();
-  });
-  pillEngineering.addEventListener("click",function(){
-    mode="engineering";
-    try{ sessionStorage.setItem("sw_mode",mode);}catch(e){}
-    paintPills(); renderAll();
-  });
-  pillPlatform.addEventListener("click",function(){
-    mode="platform";
-    try{ sessionStorage.setItem("sw_mode",mode);}catch(e){}
-    paintPills(); renderAll();
-  });
-
-  // ===== i18n helpers =====
-  function P(en,zh,es){return {en:en,zh:zh,es:es};}
-  function pick(x){return (lang==="zh")?x.zh:(lang==="es")?x.es:x.en;}
-
-  function B(en,zh,es){ // bubble paragraph block; ensures first paragraph begins with a question
-    return P(en,zh,es);
-  }
-
-  // ===== HERO COPY (question first) =====
-  var HERO={
+  // ===== COPY =====
+  var COPY={
     en:{
-      k:"SOFTWARE · SPINE",
-      h:"THE MACHINE BEHIND THE PAGES",
-      lede:
-"?What happens when a system grows faster than its ability to stay honest?\n\n"+
-"Most platforms collapse the same way:\n"+
-"they promise integration, then language drifts, then state drifts, then authority drifts.\n\n"+
-"This spine treats failure as finite.\n"+
-"It maps instability inside a lattice.\n"+
-"It keeps upgrades bounded.\n"+
-"It produces receipts instead of arguments.",
-      rule:"Rule: We speak boldly — but we move only on support that survives pressure."
+      hk:"PRODUCTS",
+      ht:"WHAT YOU CAN USE",
+      hs:"Open a card. Read one paragraph. Jump cleanly.",
+      fine:"Fine print: meaning lives under Laws; measurements live under Gauges.",
+      bandA:"PRODUCTS",
+      bandS:"SERVICES",
+      bandB:"SOFTWARE & SYSTEMS",
+      btns:{open:"OPEN"},
+      top:{door:"DOOR", hub:"HUB"},
+      dock:{exp:"EXPLORE", prod:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
+      items:{
+        products:[
+          {c:"#F59E0B", t:"Energy", s:"Industrial posture only. No gain claims.", p:"Thermal substitution and containment-first surfaces. Implementation stays bounded to measured bands.", href:ROUTE.energy},
+          {c:"#0EA5E9", t:"Education", s:"Stage 1 free PDF + traversal learning.", p:"A full traversal ESL system: vocabulary, routines, checkpoints, and verification lanes—built to scale without confusion.", href:ROUTE.education},
+          {c:"#93C5FD", t:"Coherence Diagnostic", s:"Decision support + classification.", p:"A diagnostic surface that keeps conclusions bounded to receipts and scope. Proof posture routes to Laws; outputs route to Gauges.", href:ROUTE.diagnostic},
+          {c:"#EF4444", t:"Software Spine", s:"The machine behind the pages.", p:"The platform/engineering backbone that keeps routing, state carry, and claim discipline stable under scale.", href:ROUTE.software},
+          {c:"#34D399", t:"Dot.Grid", s:"Indexing + sweeps.", p:"Map connections, reveal correlation, and expose structural drift before it compounds—without declaring admissibility.", href:ROUTE.dotgrid},
+          {c:"#A3A3A3", t:"SSG", s:"Simplified Syntax Geometry.", p:"Root geometry for expressing behavior under constraint: resources, stores, constraints, goals, guards.", href:ROUTE.ssg}
+        ],
+        services:[
+          {c:"#D4AF37", t:"Advisory (Governance)", s:"Constraint-first guidance.", p:"Translate doctrine into implementable decisions without inflating claims.", href:ROUTE.advisory},
+          {c:"#60A5FA", t:"Audit Support", s:"Evidence packaging + review posture.", p:"Help package receipts and measurement exports for review—without changing the underlying rules.", href:ROUTE.audit},
+          {c:"#93C5FD", t:"Integration (Wiring)", s:"Routing + state carry + stability.", p:"Wire platforms cleanly so navigation never collapses into the wrong destination.", href:ROUTE.integration},
+          {c:"#0EA5E9", t:"Training (Masterclass)", s:"Repeatable delivery systems.", p:"Teach the method so the system scales without semantic drift.", href:ROUTE.training}
+        ],
+        systems:[
+          {c:"#EF4444", t:"Machine Behind the Pages", s:"One spine, many surfaces.", p:"Unified routing + state carry + lens discipline. This is where software components live.", href:ROUTE.machine},
+          {c:"#93C5FD", t:"UCI Engine", s:"Decision engine under constraint.", p:"Core computation engine routing into Gauges and Diagnostic surfaces.", href:ROUTE.uci},
+          {c:"#A3A3A3", t:"Registry", s:"Status + reason codes.", p:"Lookupable status surfaces designed to be verifiable, not persuasive.", href:ROUTE.registry},
+          {c:"#D4AF37", t:"Adoption Ladder", s:"Scaling gates + phase posture.", p:"A structured pathway for adoption under pressure: when to proceed, hold, contain, or roll back.", href:ROUTE.adoption}
+        ]
+      }
     },
     zh:{
-      k:"软件 · 脊柱",
-      h:"页面背后的机器",
-      lede:
-"?当系统的增长速度超过它保持诚实的能力，会发生什么？\n\n"+
-"多数平台的崩塌路径一致：\n"+
-"承诺整合 → 语言漂移 → 状态漂移 → 权限漂移。\n\n"+
-"本脊柱把失败当作有限问题：\n"+
-"在晶格里映射不稳定；\n"+
-"用边界锁住升级；\n"+
-"产出收据，而不是争论。",
-      rule:"规则：可以大胆想象——但只能在能经受压力的支撑上前进。"
+      hk:"产品",
+      ht:"可用内容",
+      hs:"打开一张卡。读一段话。然后清晰跳转。",
+      fine:"细则：含义在法则；测量在量规。",
+      bandA:"产品",
+      bandS:"服务",
+      bandB:"软件与系统",
+      btns:{open:"打开"},
+      top:{door:"门", hub:"枢纽"},
+      dock:{exp:"探索", prod:"产品", laws:"法则", gauges:"量规"},
+      items:{
+        products:[
+          {c:"#F59E0B", t:"能源", s:"仅工业姿态。无增益主张。", p:"热替代与隔离优先执行面。实现始终绑定在可测区间内。", href:ROUTE.energy},
+          {c:"#0EA5E9", t:"教育", s:"阶段1免费PDF + 遍历学习。", p:"完整遍历式英语学习：词汇、例程、检查点与验证路线，规模化不混乱。", href:ROUTE.education},
+          {c:"#93C5FD", t:"一致性诊断", s:"决策支持 + 分类。", p:"把结论严格绑定到收据与范围。证明姿态去法则；输出去量规。", href:ROUTE.diagnostic},
+          {c:"#EF4444", t:"软件脊柱", s:"页面背后的机器。", p:"平台/工程骨架：路由、状态携带、姿态纪律在规模下保持稳定。", href:ROUTE.software},
+          {c:"#34D399", t:"Dot.Grid", s:"索引 + 扫掠。", p:"画出连接、暴露相关、提前发现结构变化；但不裁决可采信。", href:ROUTE.dotgrid},
+          {c:"#A3A3A3", t:"SSG", s:"简化语法几何。", p:"约束下的行为表达根几何：资源、存储、约束、目标、守卫。", href:ROUTE.ssg}
+        ],
+        services:[
+          {c:"#D4AF37", t:"咨询（治理）", s:"约束优先指导。", p:"把教义翻译成可执行决策，不膨胀主张。", href:ROUTE.advisory},
+          {c:"#60A5FA", t:"审计支持", s:"证据打包 + 复核姿态。", p:"协助打包收据与测量导出用于复核，不改变底层规则。", href:ROUTE.audit},
+          {c:"#93C5FD", t:"集成（接线）", s:"路由 + 状态携带 + 稳定性。", p:"把平台接线干净，避免导航坍缩到错误目的地。", href:ROUTE.integration},
+          {c:"#0EA5E9", t:"训练（大师课）", s:"可复制交付系统。", p:"教授方法，使系统扩张而不语义漂移。", href:ROUTE.training}
+        ],
+        systems:[
+          {c:"#EF4444", t:"页面背后的机器", s:"一条脊柱，多种执行面。", p:"统一路由、状态携带、透镜纪律：软件组件在此聚合。", href:ROUTE.machine},
+          {c:"#93C5FD", t:"UCI 引擎", s:"约束下的决策引擎。", p:"核心计算引擎，向量规与诊断面供给输出。", href:ROUTE.uci},
+          {c:"#A3A3A3", t:"登记系统", s:"状态 + 原因码。", p:"可查询、可核查的状态面：追求可验证，不追求说服。", href:ROUTE.registry},
+          {c:"#D4AF37", t:"采纳阶梯", s:"扩张闸门 + 阶段姿态。", p:"在压力下的结构化采纳路径：何时前进、暂停、隔离、回滚。", href:ROUTE.adoption}
+        ]
+      }
     },
     es:{
-      k:"SOFTWARE · COLUMNA",
-      h:"LA MÁQUINA DETRÁS DE LAS PÁGINAS",
-      lede:
-"?¿Qué pasa cuando un sistema crece más rápido que su capacidad de mantenerse honesto?\n\n"+
-"Muchos ‘plataformas’ colapsan igual:\n"+
-"prometen integración → deriva del lenguaje → deriva del estado → deriva de autoridad.\n\n"+
-"Esta columna trata el fallo como finito:\n"+
-"lo mapea en una rejilla;\n"+
-"acota upgrades;\n"+
-"produce recibos en vez de discusiones.",
-      rule:"Regla: se puede soñar fuerte — pero se avanza solo con soporte que resiste presión."
+      hk:"PRODUCTOS",
+      ht:"LO QUE PUEDES USAR",
+      hs:"Abre una tarjeta. Lee un párrafo. Salta limpio.",
+      fine:"Letra pequeña: el significado vive en Leyes; la medición en Medidores.",
+      bandA:"PRODUCTOS",
+      bandS:"SERVICIOS",
+      bandB:"SOFTWARE Y SISTEMAS",
+      btns:{open:"ABRIR"},
+      top:{door:"PUERTA", hub:"HUB"},
+      dock:{exp:"EXPLORAR", prod:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
+      items:{
+        products:[
+          {c:"#F59E0B", t:"Energía", s:"Solo postura industrial. Sin ganancias.", p:"Sustitución térmica y contención primero. Implementación acotada a bandas medidas.", href:ROUTE.energy},
+          {c:"#0EA5E9", t:"Educación", s:"PDF gratis Etapa 1 + aprendizaje por recorrido.", p:"Sistema ESL completo: vocabulario, rutinas, checkpoints y verificación—escala sin confusión.", href:ROUTE.education},
+          {c:"#93C5FD", t:"Diagnóstico de coherencia", s:"Soporte de decisión + clasificación.", p:"Conclusiones acotadas a recibos y alcance. Doctrina en Leyes; salidas en Medidores.", href:ROUTE.diagnostic},
+          {c:"#EF4444", t:"Columna de Software", s:"La máquina detrás de las páginas.", p:"Backbone de plataforma/ingeniería: rutas, estado y disciplina de afirmaciones estable al escalar.", href:ROUTE.software},
+          {c:"#34D399", t:"Dot.Grid", s:"Índice + barridos.", p:"Mapea conexiones, revela correlación y expone cambios estructurales sin declarar admisibilidad.", href:ROUTE.dotgrid},
+          {c:"#A3A3A3", t:"SSG", s:"Geometría de sintaxis simplificada.", p:"Geometría raíz para expresar comportamiento bajo restricciones: recursos, stores, restricciones, objetivos y guards.", href:ROUTE.ssg}
+        ],
+        services:[
+          {c:"#D4AF37", t:"Asesoría (Gobernanza)", s:"Guía por restricciones.", p:"Traduce doctrina a decisiones ejecutables sin inflar afirmaciones.", href:ROUTE.advisory},
+          {c:"#60A5FA", t:"Soporte de auditoría", s:"Empaquetado de evidencia.", p:"Ayuda a empaquetar recibos y exports sin cambiar reglas base.", href:ROUTE.audit},
+          {c:"#93C5FD", t:"Integración (Cableado)", s:"Rutas + estado + estabilidad.", p:"Cableado limpio para que la navegación no colapse al destino equivocado.", href:ROUTE.integration},
+          {c:"#0EA5E9", t:"Formación (Masterclass)", s:"Entrega replicable.", p:"Enseña el método para escalar sin deriva semántica.", href:ROUTE.training}
+        ],
+        systems:[
+          {c:"#EF4444", t:"Máquina detrás de las páginas", s:"Una columna, muchas superficies.", p:"Ruteo unificado, propagación de estado y disciplina de lentes. Aquí viven los componentes.", href:ROUTE.machine},
+          {c:"#93C5FD", t:"Motor UCI", s:"Motor de decisión bajo restricción.", p:"Cómputo núcleo que alimenta Medidores y Diagnóstico.", href:ROUTE.uci},
+          {c:"#A3A3A3", t:"Registro", s:"Estado + códigos de razón.", p:"Estado consultable y verificable—no persuasivo.", href:ROUTE.registry},
+          {c:"#D4AF37", t:"Escalera de adopción", s:"Compuertas + postura por fases.", p:"Camino estructurado para adoptar bajo presión: avanzar, pausar, contener, rollback.", href:ROUTE.adoption}
+        ]
+      }
     }
   };
 
-  // ===== DOMAIN META =====
-  var DOM=[
-    {id:"state_runtime", c:"#60A5FA", t:P("State Runtime","状态运行时","Runtime de estado"), s:P("What is true right now — and why.","现在什么是真的——以及为什么。","Qué es verdad ahora — y por qué.")},
-    {id:"deterministic_gates", c:"#F59E0B", t:P("Deterministic Gates","确定性闸门","Compuertas deterministas"), s:P("Pass/fail rules that don’t bend.","不会弯曲的通过/失败规则。","Reglas pasa/falla que no se doblan.")},
-    {id:"receipt_progression", c:"#93C5FD", t:P("Receipt Progression","收据式推进","Progresión por recibos"), s:P("You advance because you proved it.","你前进是因为你证明了。","Avanzas porque lo probaste.")},
-    {id:"audit_discipline", c:"#34D399", t:P("Audit Discipline","审计纪律","Disciplina de auditoría"), s:P("Evidence over intent.","证据优先于意图。","Evidencia sobre intención.")},
-    {id:"change_control", c:"#A3A3A3", t:P("Change Control","变更控制","Control de cambios"), s:P("Upgrade without rewriting history.","升级但不改写历史。","Actualizar sin reescribir historia.")},
-    {id:"admissibility_doctrine", c:"#EF4444", t:P("Admissibility Doctrine","可采信教义","Doctrina de admisibilidad"), s:P("Don’t claim beyond receipts.","别说超过收据允许的东西。","No afirmes más allá de recibos.")},
-    {id:"navigation_surfaces", c:"#60A5FA", t:P("Navigation Surfaces","导航界面","Superficies de navegación"), s:P("Tap should do one thing.","点击只做一件事。","Un toque = una cosa.")},
-    {id:"product_packaging", c:"#F59E0B", t:P("Product Packaging","产品封装","Empaquetado de producto"), s:P("Keep tools usable and honest.","让工具可用且诚实。","Usable y honesto.")},
-    {id:"enterprise_deployment", c:"#93C5FD", t:P("Enterprise Deployment","企业部署","Despliegue empresarial"), s:P("Scale in waves, rollback ready.","分波次扩张，随时回滚。","Olas y rollback listo.")},
-    {id:"dotgrid_sweeps", c:"#34D399", t:P("Dot.Grid Sweeps","Dot.Grid 扫掠","Barridos Dot.Grid"), s:P("Compare reality across time.","跨时间比较现实。","Comparar en el tiempo.")},
-    {id:"scoring_outputs", c:"#A3A3A3", t:P("Scoring Outputs","评分输出","Salidas de puntuación"), s:P("Readable signals with reasons.","带原因的可读信号。","Señales con razones.")},
-    {id:"registry_lookups", c:"#EF4444", t:P("Registry Lookups","登记查询","Consultas de registro"), s:P("Status you can check.","可核查的状态。","Estado verificable.")},
-  ];
+  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-  // ===== MAX DEPTH COPY: 12 × 3 phases × 4 lenses × 3 languages =====
-  // Structure: TEXT[domainId][phase][mode][tone] => P(en,zh,es)
-  // Every first paragraph begins with a question. Dense by design.
+  // header i18n
+  function applyHeader(){
+    var P=T();
+    document.getElementById("hk").textContent=P.hk;
+    document.getElementById("ht").textContent=P.ht;
+    document.getElementById("hs").textContent=P.hs;
+    document.getElementById("fine").textContent=P.fine;
+    document.getElementById("bandA").textContent=P.bandA;
+    document.getElementById("bandS").textContent=P.bandS;
+    document.getElementById("bandB").textContent=P.bandB;
 
-  function blk(q1,q2,q3,a1,a2,a3,b1,b2,b3){
-    // 2 paragraphs + a “Next:” line; question-first guaranteed
-    return P(
-      q1+"\n\n"+a1+"\n\nNext: "+b1,
-      q2+"\n\n"+a2+"\n\nNext："+b2,
-      q3+"\n\n"+a3+"\n\nNext: "+b3
-    );
+    // top + dock labels
+    document.getElementById("btnDoor").textContent=P.top.door;
+    document.getElementById("btnHome").textContent=P.top.hub;
+    document.getElementById("dockExplore").textContent=P.dock.exp;
+    document.getElementById("dockProducts").textContent=P.dock.prod;
+    document.getElementById("dockLaws").textContent=P.dock.laws;
+    document.getElementById("dockGauges").textContent=P.dock.gauges;
   }
+  applyHeader();
 
-  var TEXT={};
+  // accordion builder (single-open)
+  function buildRow(item, openLabel){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
 
-  function set(domainId, phase, m, t, pack){
-    if(!TEXT[domainId]) TEXT[domainId]={};
-    if(!TEXT[domainId][phase]) TEXT[domainId][phase]={};
-    if(!TEXT[domainId][phase][m]) TEXT[domainId][phase][m]={};
-    TEXT[domainId][phase][m][t]=pack;
-  }
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
-  // --- DOMAIN 1: state_runtime ---
-  ["engineering","platform"].forEach(function(m){
-    ["informal","formal"].forEach(function(t){
-      // CONCEPT
-      set("state_runtime","concept",m,t,
-        (m==="engineering"&&t==="informal") ? blk(
-          "?What is ‘state’ when you’re tired, busy, and still need truth?",
-          "?当你很累、很忙却仍需要真相时，“状态”到底是什么？",
-          "?¿Qué es ‘estado’ cuando estás cansado, ocupado y aún necesitas verdad?",
-          "State Runtime is the rules of ‘now’: what is currently true, what is currently allowed, and what must be refused. If you can’t state “now” precisely, every next step becomes negotiation.",
-          "状态运行时就是“现在”的规则：现在什么是真的、允许做什么、必须拒绝什么。若“现在”不精确，下一步就会变成讨价还价。",
-          "El runtime define el ‘ahora’: qué es verdad, qué se permite y qué se rechaza. Si no defines ‘ahora’ con precisión, cada paso se vuelve negociación.",
-          "Pick one key you refuse to lose (language, scope, receipt, rule) and treat runtime as the guardrail that preserves it.",
-          "选一个你绝不允许丢的关键（语言/范围/收据/规则），把运行时当作守护它的护栏。",
-          "Elige una clave que no permitirás perder (idioma, alcance, recibo, regla) y úsala como baranda del runtime."
-        )
-      :
-        (m==="engineering"&&t==="formal") ? blk(
-          "?What is a reproducible ‘now’ under declared rules?",
-          "?在声明规则下，什么才是可复现的“现在”？",
-          "?¿Qué es un ‘ahora’ reproducible bajo reglas declaradas?",
-          "Runtime is a constrained state machine keyed by declared variables. Atomic transitions map admissible inputs to a single next state. Reproducibility is the contract: identical evidence yields identical state.",
-          "运行时是受约束状态机：由声明变量键控；原子转移把可采信输入映射到唯一下一状态。契约是可复现：同证据得同状态。",
-          "El runtime es una máquina de estados acotada por variables declaradas. Transiciones atómicas mapean inputs admisibles a un único estado siguiente. Contrato: misma evidencia → mismo estado.",
-          "Define the invariants that must survive refresh and navigation; treat any silent mutation as an epoch break.",
-          "定义必须穿越刷新与导航的不变量；任何静默变异视为新纪元断裂。",
-          "Define invariantes que deben sobrevivir recargas/navegación; cualquier mutación silenciosa es ruptura de época."
-        )
-      :
-        (m==="platform"&&t==="informal") ? blk(
-          "?Why do ‘simple pages’ still feel chaotic to users?",
-          "?为什么“简单页面”仍会让用户觉得混乱？",
-          "?¿Por qué páginas ‘simples’ aún se sienten caóticas?",
-          "Because the platform secretly changes the meaning of taps when state is unclear. A user doesn’t care about your architecture — they care that the same tap does the same thing every time.",
-          "因为平台在状态不清时会悄悄改变点击的含义。用户不在乎架构，他们在乎：同一次点击，每次都做同一件事。",
-          "Porque la plataforma cambia en secreto el significado de los toques cuando el estado no está claro. El usuario quiere: mismo toque, mismo resultado, siempre.",
-          "Make runtime visible through consistency: same headers, same back behavior, same preserved lenses, same returns.",
-          "用一致性让运行时“可见”：同标题、同返回行为、同透镜保留、同跳转返回。",
-          "Haz visible el runtime con consistencia: mismos encabezados, mismo back, mismas lentes preservadas, mismos retornos."
-        )
-      :
-        /* platform + formal */ blk(
-          "?What is the platform contract for ‘state carry’?",
-          "?平台对“状态携带”的契约是什么？",
-          "?¿Cuál es el contrato de plataforma para ‘propagar estado’?",
-          "Platform runtime is the UI-facing contract for state propagation: every route carries gd_* parameters, and every page renders from the same state snapshot. Missing propagation is treated as a defect, not a preference.",
-          "平台运行时是面向UI的状态传播契约：每条路由都携带 gd_* 参数；每页都从同一状态快照渲染。缺失传播是缺陷，不是偏好。",
-          "El runtime de plataforma es el contrato de propagación: cada ruta lleva gd_* y cada página renderiza desde el mismo snapshot. Falta de propagación = defecto.",
-          "Enforce a single canonical query builder; prohibit “special-case links” that drop lenses.",
-          "强制唯一的查询构造器；禁止“特例链接”丢失透镜。",
-          "Impone un generador canónico de query; prohíbe enlaces especiales que pierdan lentes."
-        )
-      );
+    var left=document.createElement("div");
+    left.className="left";
 
-      // LIVE
-      set("state_runtime","live",m,t,
-        (m==="engineering"&&t==="informal") ? blk(
-          "?How do you keep ‘truth’ stable when people click wildly?",
-          "?当人们疯狂点来点去时，如何让“真值”稳定？",
-          "?¿Cómo mantienes estable la ‘verdad’ cuando la gente toca sin parar?",
-          "Live runtime means your state survives refresh, language switches, and back navigation without inventing new meaning. If conflict appears, the system chooses safety: contain, reset, or roll back — but never pretend.",
-          "上线运行时意味着状态能穿越刷新、切语言、返回，而不凭空创造新含义。出现冲突就选安全：隔离/重置/回滚，但绝不假装没发生。",
-          "En vivo, el estado sobrevive recargas, idioma y back sin inventar significado. Si hay conflicto, el sistema elige seguridad: contener, resetear o rollback — nunca fingir.",
-          "Log the one mismatch you saw (state vs action vs outcome) and fix the mapping before adding new features.",
-          "记录你看到的那一个不匹配（状态/动作/结果），先修映射再加功能。",
-          "Registra un solo desajuste (estado/acción/resultado) y corrige el mapeo antes de añadir funciones."
-        )
-      :
-        (m==="engineering"&&t==="formal") ? blk(
-          "?What is the rollback boundary when contradictions appear?",
-          "?当矛盾出现时，回滚边界是什么？",
-          "?¿Cuál es el límite de rollback cuando aparecen contradicciones?",
-          "Live runtime requires deterministic recovery: back-navigation invalidates downstream assumptions, forward moves require fresh confirmation, and contradictions trigger rollback to the last admissible state under the same evidence rules.",
-          "上线运行时要求确定性恢复：回退使下游假设失效；前进需重新确认；矛盾触发回滚到同证据规则下最后可采信状态。",
-          "En vivo se requiere recuperación determinista: back invalida supuestos posteriores, avanzar exige confirmación, y contradicciones disparan rollback al último estado admisible.",
-          "Emit reason codes for each recovery decision so independent observers can replay it.",
-          "为每次恢复决策输出原因码，使独立观察者可回放复现。",
-          "Emite códigos de razón para cada decisión de recuperación para permitir replay por observadores independientes."
-        )
-      :
-        (m==="platform"&&t==="informal") ? blk(
-          "?Why does mobile feel ‘broken’ when desktop is fine?",
-          "?为什么电脑没问题，手机却像“坏了”？",
-          "?¿Por qué móvil se siente ‘roto’ cuando escritorio está bien?",
-          "Because platform runtime breaks when touch targets compete or overlays steal taps. Mobile punishes ambiguity. The fix is boring: one tap → one action, always visible back paths, and no hidden layers.",
-          "因为触控目标竞争或遮罩偷走点击时，平台运行时就崩了。手机会惩罚歧义。修复很无聊：一次点击一动作、可见返回路径、无隐藏层。",
-          "Porque en móvil los toques compiten y overlays roban taps. El móvil castiga ambigüedad. Arreglo: un toque → una acción, back visible, sin capas ocultas.",
-          "Treat tap reliability as a core invariant; if taps are unreliable, all claims are downgraded.",
-          "把点按可靠性当核心不变量；点按不可靠，所有主张一律降级。",
-          "Trata la fiabilidad de toque como invariante; si falla, todas las afirmaciones se degradan."
-        )
-      :
-        /* platform + formal */ blk(
-          "?What is the mobile-safe interaction invariant?",
-          "?移动端安全交互不变量是什么？",
-          "?¿Cuál es el invariante de interacción segura en móvil?",
-          "Live platform runtime enforces unified press primitives and pointer-event discipline: no competing overlays, no click interception, no double-route events. Each input maps to exactly one transition and is receipt-loggable.",
-          "上线平台运行时强制统一点击原语与 pointerEvents 纪律：无竞争遮罩、无拦截、无双路由。每次输入映射到唯一转移，并可记录为收据。",
-          "El runtime de plataforma en vivo exige disciplina de punteros: sin overlays competidores ni doble ruta. Cada input mapea a una transición única y puede registrarse como recibo.",
-          "If the invariant cannot be enforced on a page, that page is not admissible for scaling.",
-          "若某页无法执行该不变量，则该页不具备规模化可采信资格。",
-          "Si no se puede imponer el invariante en una página, esa página no es admisible para escalar."
-        )
-      );
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=item.c;
 
-      // ROADMAP
-      set("state_runtime","roadmap",m,t,
-        (m==="engineering"&&t==="informal") ? blk(
-          "?What would it feel like if every decision came with a tiny proof?",
-          "?如果每个决策都带一小份证明，会是什么感觉？",
-          "?¿Cómo sería si cada decisión viniera con una pequeña prueba?",
-          "Roadmap runtime outputs portable receipts: inputs, decision, result, and why. That turns “trust me” into “check me.” It also lets different products share truth without sharing your private life.",
-          "路线图运行时输出可携带收据：输入、决策、结果、原因。它把“信我”变成“核查我”，也让产品间共享真相而不共享隐私。",
-          "El roadmap emite recibos portátiles: entradas, decisión, resultado y por qué. Convierte ‘créeme’ en ‘verifícame’ y permite compartir verdad sin compartir vida privada.",
-          "Build one portable receipt format and refuse every feature that can’t emit it.",
-          "建立一种可携带收据格式，拒绝任何无法产出它的功能。",
-          "Construye un formato de recibo portable y rechaza cualquier función que no pueda emitirlo."
-        )
-      :
-        (m==="engineering"&&t==="formal") ? blk(
-          "?What is the minimal receipt bundle for replay?",
-          "?用于回放的最小收据包是什么？",
-          "?¿Cuál es el paquete mínimo de recibos para replay?",
-          "Roadmap adds exportable receipt bundles (inputs/decision/result/reason) and domain adapters while preserving invariants. Each adapter must prove equivalence under shared scope locks.",
-          "路线图加入可导出收据包（输入/决策/结果/原因）与领域适配器，同时保持不变量。每个适配器必须在共享范围锁下证明等价性。",
-          "El roadmap añade paquetes exportables (entradas/decisión/resultado/razón) y adaptadores por dominio preservando invariantes. Cada adaptador debe demostrar equivalencia bajo bloqueos de alcance.",
-          "All outcome-affecting changes are versioned; comparability is preserved by epoch rollover.",
-          "所有影响结果的变更版本化；通过纪元切换保持可比性。",
-          "Todo cambio que afecte resultados se versiona; la comparabilidad se preserva con rollover de época."
-        )
-      :
-        (m==="platform"&&t==="informal") ? blk(
-          "?What if your whole site felt like one calm machine?",
-          "?如果你整个网站都像一台安静的机器，会怎样？",
-          "?¿Y si todo tu sitio se sintiera como una máquina tranquila?",
-          "Roadmap platform runtime means template unity: same controls, same state carry, same back behavior, same density patterns. Users stop learning the UI and start learning the system.",
-          "路线图平台运行时意味着模板统一：同控件、同状态携带、同返回行为、同密度模式。用户不再学习UI，而开始学习系统。",
-          "El roadmap de plataforma unifica plantillas: mismos controles, propagación de estado, back, y densidad. El usuario deja de aprender UI y empieza a aprender el sistema.",
-          "Standardize the contract first, then scale content. Never the other way around.",
-          "先标准化契约，再扩内容；永远不要反过来。",
-          "Estandariza el contrato primero y escala el contenido después. Nunca al revés."
-        )
-      :
-        /* platform + formal */ blk(
-          "?What is the platform’s conformance test for state carry?",
-          "?平台对状态携带的一致性测试是什么？",
-          "?¿Cuál es el test de conformidad de plataforma para propagación de estado?",
-          "Roadmap introduces conformance checks: any link that drops gd_* is a violation; any page that changes lens without changing content is a violation; any overlay that steals taps is a violation.",
-          "路线图引入一致性检查：任何丢 gd_* 的链接是违规；切透镜内容不变是违规；遮罩偷点击是违规。",
-          "El roadmap introduce pruebas de conformidad: enlaces que pierden gd_* violan; lentes que no cambian contenido violan; overlays que roban taps violan.",
-          "Conformance becomes a gate: fail → contain → fix → rerun.",
-          "一致性成为闸门：失败→隔离→修复→重跑。",
-          "La conformidad se vuelve compuerta: falla → contén → corrige → re-ejecuta."
-        )
-      );
-    });
-  });
+    var titleBlock=document.createElement("div");
+    titleBlock.className="titleBlock";
 
-  // ===== The rest 11 domains are fully expanded (same depth pattern, unique per domain) =====
-  // To keep this single TNT robust and truly “max depth” without turning into unreadable noise,
-  // we encode each domain’s unique content with dense, domain-specific blocks per lens.
-  // No placeholders. No “NOT MEASURED”. No empty strings.
+    var title=document.createElement("div");
+    title.className="title";
+    title.textContent=item.t;
 
-  // Helper for remaining domains: domain-unique text generator (still unique per domain via seeded phrases).
-  function seed(domain, phase){
-    // Existential question first, then two dense paragraphs + Next line; unique by domain+phase+mode+tone.
-    var Q = {
-      deterministic_gates: {
-        concept: P(
-          "?What do you do when people want a ‘yes’ but reality is ‘not yet’?",
-          "?当人们想要“可以”，而现实是“还不行”时怎么办？",
-          "?¿Qué haces cuando la gente quiere un ‘sí’ pero la realidad es ‘todavía no’?"
-        ),
-        live: P(
-          "?How do you stop silent exceptions from becoming a culture?",
-          "?如何阻止“静默例外”变成文化？",
-          "?¿Cómo evitas que las excepciones silenciosas se vuelvan cultura?"
-        ),
-        roadmap: P(
-          "?What would trust look like if anyone could replay the same gate decision?",
-          "?如果任何人都能回放同一个闸门决策，信任会是什么样？",
-          "?¿Cómo sería la confianza si cualquiera pudiera re-ejecutar la misma decisión de compuerta?"
-        )
-      },
-      receipt_progression: {
-        concept: P(
-          "?How do you make progress real instead of motivational?",
-          "?如何让进步变真实，而不是鸡血？",
-          "?¿Cómo haces el progreso real y no motivacional?"
-        ),
-        live: P(
-          "?What happens when back-navigation reveals you skipped proof?",
-          "?当返回揭示你跳过了证明，会发生什么？",
-          "?¿Qué pasa cuando volver revela que saltaste la prueba?"
-        ),
-        roadmap: P(
-          "?Can progress be portable without leaking your life?",
-          "?进步能否可携带而不泄露你的生活？",
-          "?¿Puede el progreso ser portable sin filtrar tu vida?"
-        )
-      },
-      audit_discipline: {
-        concept: P(
-          "?What if disagreement became cheap because receipts decide?",
-          "?如果分歧因为收据裁决而变得“便宜”，会怎样？",
-          "?¿Y si el desacuerdo fuera barato porque los recibos deciden?"
-        ),
-        live: P(
-          "?How do you keep the system calm when people argue?",
-          "?当人们争吵时，如何让系统保持冷静？",
-          "?¿Cómo mantienes el sistema calmado cuando la gente discute?"
-        ),
-        roadmap: P(
-          "?What happens when audit becomes automation but authority stays separated?",
-          "?当审计变自动化但权力仍分离，会发生什么？",
-          "?¿Qué pasa cuando auditoría se automatiza pero la autoridad permanece separada?"
-        )
-      },
-      change_control: {
-        concept: P(
-          "?How do you upgrade without turning yesterday into a lie?",
-          "?如何升级而不让昨天变成谎言？",
-          "?¿Cómo actualizas sin convertir ayer en mentira?"
-        ),
-        live: P(
-          "?What is the difference between a hotfix and a hidden policy change?",
-          "?热修和“隐藏政策变更”的区别是什么？",
-          "?¿Cuál es la diferencia entre un hotfix y un cambio de política oculto?"
-        ),
-        roadmap: P(
-          "?What would releases look like if they were verifiable events?",
-          "?如果发布是可验证事件，发布会是什么样？",
-          "?¿Cómo serían los releases si fueran eventos verificables?"
-        )
-      },
-      admissibility_doctrine: {
-        concept: P(
-          "?Why do big claims become dangerous when they aren’t bounded?",
-          "?为什么大主张在无边界时会变危险？",
-          "?¿Por qué las afirmaciones grandes se vuelven peligrosas si no están acotadas?"
-        ),
-        live: P(
-          "?How do you label reality so users don’t confuse concept with proof?",
-          "?如何标注现实，让用户不把概念当证明？",
-          "?¿Cómo etiquetas la realidad para que usuarios no confundan concepto con prueba?"
-        ),
-        roadmap: P(
-          "?What happens when every page speaks the same honest language?",
-          "?当每一页都说同一种诚实语言，会发生什么？",
-          "?¿Qué pasa cuando cada página habla el mismo lenguaje honesto?"
-        )
-      },
-      navigation_surfaces: {
-        concept: P(
-          "?Why is one reliable tap more valuable than ten features?",
-          "?为什么一次可靠点击比十个功能更值钱？",
-          "?¿Por qué un toque fiable vale más que diez funciones?"
-        ),
-        live: P(
-          "?What breaks first on mobile: the code or the touch contract?",
-          "?手机上先坏的是代码还是触控契约？",
-          "?¿Qué se rompe primero en móvil: el código o el contrato de toque?"
-        ),
-        roadmap: P(
-          "?What if every product page felt identical to use?",
-          "?如果每个产品页用起来都一样，会怎样？",
-          "?¿Y si cada página de producto se sintiera idéntica al usarla?"
-        )
-      },
-      product_packaging: {
-        concept: P(
-          "?How do you sell capability without selling stories?",
-          "?如何卖能力而不卖故事？",
-          "?¿Cómo vendes capacidad sin vender historias?"
-        ),
-        live: P(
-          "?Why do dead links destroy trust faster than bad copy?",
-          "?为什么死链接比烂文案更快摧毁信任？",
-          "?¿Por qué los links muertos destruyen la confianza más rápido que mala copia?"
-        ),
-        roadmap: P(
-          "?How do you scale a product line without collapsing routing?",
-          "?如何扩产品线而不让路由坍缩？",
-          "?¿Cómo escalas una línea de productos sin colapsar el enrutamiento?"
-        )
-      },
-      enterprise_deployment: {
-        concept: P(
-          "?What is ‘scale’ if rollback is not ready?",
-          "?如果回滚没准备好，什么叫“规模”？",
-          "?¿Qué es ‘escala’ si el rollback no está listo?"
-        ),
-        live: P(
-          "?What do you do the moment correlated exposure appears?",
-          "?相关暴露出现的那一刻，你该做什么？",
-          "?¿Qué haces en el momento en que aparece exposición correlacionada?"
-        ),
-        roadmap: P(
-          "?What changes when external auditors can verify posture without your stack?",
-          "?当外部审计无需你的整套系统也能核查姿态，会改变什么？",
-          "?¿Qué cambia cuando auditores externos verifican postura sin tu stack completo?"
-        )
-      },
-      dotgrid_sweeps: {
-        concept: P(
-          "?How do you compare today to yesterday without lying to yourself?",
-          "?如何比较今天和昨天而不自欺？",
-          "?¿Cómo comparas hoy con ayer sin mentirte?"
-        ),
-        live: P(
-          "?What happens if naming shifts while you claim stability?",
-          "?当命名变化却主张稳定，会发生什么？",
-          "?¿Qué pasa si cambian los nombres mientras afirmas estabilidad?"
-        ),
-        roadmap: P(
-          "?What if the same sweep method worked across software, water, waste, and energy?",
-          "?如果同一种扫掠方法能跨软件/水/废弃物/能源复用，会怎样？",
-          "?¿Y si el mismo método de barrido funcionara en software, agua, residuos y energía?"
-        )
-      },
-      scoring_outputs: {
-        concept: P(
-          "?How do you make truth readable without making it weak?",
-          "?如何让真相可读却不变软？",
-          "?¿Cómo haces la verdad legible sin volverla débil?"
-        ),
-        live: P(
-          "?How do you stop moving goalposts from corrupting comparisons?",
-          "?如何阻止挪球门腐蚀比较？",
-          "?¿Cómo evitas que mover los postes corrompa las comparaciones?"
-        ),
-        roadmap: P(
-          "?What happens when evidence travels with the number?",
-          "?当证据跟着数字走，会发生什么？",
-          "?¿Qué pasa cuando la evidencia viaja con el número?"
-        )
-      },
-      registry_lookups: {
-        concept: P(
-          "?How do you publish truth without leaking internals?",
-          "?如何发布真相而不泄露内部细节？",
-          "?¿Cómo publicas verdad sin filtrar internos?"
-        ),
-        live: P(
-          "?What happens when revocation cannot be silent anymore?",
-          "?当撤销不再能静默，会发生什么？",
-          "?¿Qué pasa cuando la revocación ya no puede ser silenciosa?"
-        ),
-        roadmap: P(
-          "?How does a registry become real-world credibility?",
-          "?登记系统如何变成现实世界的可信度？",
-          "?¿Cómo se vuelve un registro credibilidad real?"
-        )
-      }
-    };
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent=item.s;
 
-    var A = {
-      engineering:{
-        informal:{
-          deterministic_gates:{
-            concept:"Gates are the spine’s courage. They say “no” early so you don’t pay “yes” later. A gate is not persuasion — it is the clean yes/no line that stops story-inflation before it multiplies.\n\nA good gate feels fair: same input, same result, every time — even when you’re stressed.\n",
-            live:"Live gates are where integrity is tested. No timer tricks. No hidden bypasses. No quiet overrides. Failure is contained with a reason, and success advances with a receipt.\n\nIf you allow one silent exception, you teach the system to lie.\n",
-            roadmap:"Roadmap gates become replayable: anyone with the same receipts gets the same decision. That is the core of scalable trust.\n\nGate decisions become portable proof — not personality.\n"
-          }
-        },
-        formal:{
-          deterministic_gates:{
-            concept:"Deterministic gates are binary admissibility functions under declared scope. Inputs map to pass/fail with no interpretive degrees of freedom.\n\nGates suppress escalation beyond receipts and prevent semantic inflation.\n",
-            live:"Live gating forbids timers-as-gates, hidden shortcuts, and silent overrides. Fail states emit reason codes; pass states emit receipts.\n\nThis preserves comparability across time.\n",
-            roadmap:"Roadmap adds standardized reason codes and independent replay. Observer-invariant gate outcomes become a conformance requirement.\n\nAny drift in gate behavior triggers epoch rollover.\n"
-          }
-        }
-      },
-      platform:{
-        informal:{
-          deterministic_gates:{
-            concept:"On platform, gates are how you keep UX honest. Users don’t mind a “no” — they mind a “yes” that later becomes a trap.\n\nA gate makes the UI feel safe: it refuses nonsense calmly.\n",
-            live:"Live platform gating means the UI never fakes progress. Buttons don’t unlock because time passed. They unlock because the requirement was met.\n\nThis prevents rage-click loops and hidden dead ends.\n",
-            roadmap:"Roadmap platform gating becomes standard across pages: every surface uses the same “what you must have to proceed” language.\n\nThat consistency is adoption power.\n"
-          }
-        },
-        formal:{
-          deterministic_gates:{
-            concept:"Platform gates implement admissibility checks as visible interaction contracts. A gate must not be bypassable by navigation variance or UI layering.\n\nGate failure states must be explicit and user-legible.\n",
-            live:"Live platform gates enforce one action per press, reject conflicting UI layers, and require state carry on every link.\n\nMissing propagation is treated as a gate failure.\n",
-            roadmap:"Roadmap introduces conformance testing for gate visibility and consistency. Gate logic is shared across templates and versioned.\n\nPolicy changes are never shipped as “UI tweaks.”\n"
-          }
-        }
-      }
-    };
+    titleBlock.appendChild(title);
+    titleBlock.appendChild(sub);
 
-    function fallbackBlock(domainId, phase, m, t){
-      var q = Q[domainId][phase];
-      var a = A[m][t][domainId][phase];
-      var nextLine = (lang==="zh")
-        ? "收束：先把该域的失败模式写成可复现的收据，再允许扩张。"
-        : (lang==="es")
-          ? "Cierre: convierte fallos en recibos reproducibles antes de escalar."
-          : "Closure: turn failures into replayable receipts before you scale.";
-      return P(pick(q), pick(q), pick(q)).en ? blk(
-        pick(q), pick(q), pick(q),
-        a, a, a,
-        nextLine, nextLine, nextLine
-      ) : blk(
-        pick(q), pick(q), pick(q),
-        a, a, a,
-        nextLine, nextLine, nextLine
-      );
-    }
+    left.appendChild(mark);
+    left.appendChild(titleBlock);
 
-    return {Q:Q, A:A, fallback:fallbackBlock};
-  }
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
 
-  var S=seed("x","x");
+    head.appendChild(left);
+    head.appendChild(chev);
 
-  // We already expanded state_runtime fully above. Now expand remaining 11 domains with dense unique text.
-  // For each domain, each phase, each lens, we generate unique blocks by combining domain question + lens paragraph + domain-specific closure.
+    var body=document.createElement("div");
+    body.className="body";
 
-  function put(domainId, phase, m, t, coreEN, coreZH, coreES, nextEN, nextZH, nextES){
-    set(domainId,phase,m,t, blk(
-      pick(S.Q[domainId][phase]), pick(S.Q[domainId][phase]), pick(S.Q[domainId][phase]),
-      coreEN, coreZH, coreES,
-      nextEN, nextZH, nextES
-    ));
-  }
+    var p=document.createElement("p");
+    p.className="p";
+    p.textContent=item.p;
 
-  // ===== deterministic_gates (fully custom, all lenses) =====
-  ["concept","live","roadmap"].forEach(function(ph){
-    ["engineering","platform"].forEach(function(m){
-      ["informal","formal"].forEach(function(t){
-        if(S.A[m][t].deterministic_gates){
-          var qP=S.Q.deterministic_gates[ph];
-          var core=S.A[m][t].deterministic_gates[ph];
-          put("deterministic_gates",ph,m,t,
-            core + (t==="formal" ? "\n\nEngineering intent: deterministic pass/fail is the only stable unit under scale." : "\n\nTED intent: a clean “no” saves you from expensive “yes.”"),
-            core + (t==="formal" ? "\n\n工程姿态：确定性通过/失败是规模下唯一稳定单位。" : "\n\nTED姿态：干净的“不”能省下昂贵的“是”。"),
-            core + (t==="formal" ? "\n\nIntención ingeniería: pasa/falla determinista es unidad estable bajo escala." : "\n\nIntención TED: un ‘no’ limpio evita ‘sí’ costosos."),
-            "Define the gate, then publish its reason codes.",
-            "定义闸门，并发布原因码。",
-            "Define la compuerta y publica códigos de razón."
-          );
-        }
-      });
-    });
-  });
+    var acts=document.createElement("div");
+    acts.className="actions";
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=openLabel;
+    a.href=item.href + q();
+    acts.appendChild(a);
 
-  // ===== receipt_progression =====
-  ["engineering","platform"].forEach(function(m){
-    ["informal","formal"].forEach(function(t){
-      put("receipt_progression","concept",m,t,
-        (m==="engineering"
-          ? (t==="formal"
-              ? "Receipt progression replaces time-based advancement with evidence-based advancement. A receipt is the smallest proof bundle that survives scope: inputs, decision, outcome, and reason.\n\nWithout receipts, ‘progress’ is narrative — and narrative collapses under load."
-              : "Receipts are how you stop lying to yourself. You don’t level up because you feel ready — you level up because you can show what happened.\n\nIt turns motivation into proof.")
-          : (t==="formal"
-              ? "Platform progression is receipt-gated UX: buttons unlock only when requirements are met and state carry is preserved. No hidden boosts.\n\nA user must be able to return and see the same truth."
-              : "On the platform, receipts make the site feel fair. If you did the thing, you can move. If you didn’t, it won’t pretend.\n\nThat calm is what keeps people using it.")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "收据推进用证据替代“时间推进”。收据是能在范围锁下存活的最小证明包：输入、决策、结果、原因。\n\n没有收据，“进步”就只是叙事，叙事在负载下会崩。"
-              : "收据让你停止自欺：不是觉得行了就升级，而是能拿出发生了什么。\n\n把鸡血变成证明。")
-          : (t==="formal"
-              ? "平台推进是收据闸门式UX：只有满足要求且状态携带完整时按钮才解锁。无隐藏加成。\n\n用户返回时必须看到同样的真值。"
-              : "在平台上，收据让网站显得公平：做到了就前进，没做到就不装。\n\n这种冷静决定留存。")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "La progresión por recibos sustituye avance por tiempo por avance por evidencia. Un recibo es el paquete mínimo que sobrevive el alcance: entradas, decisión, resultado y razón.\n\nSin recibos, ‘progreso’ es narrativa — y colapsa bajo carga."
-              : "Los recibos evitan mentirte. No subes por sentirte listo; subes por poder mostrar lo ocurrido.\n\nMotivación se vuelve prueba.")
-          : (t==="formal"
-              ? "En plataforma, la progresión es UX con recibos: botones se habilitan solo si requisitos se cumplen y el estado se propaga. Sin boosts ocultos.\n\nVolver debe mostrar la misma verdad."
-              : "En plataforma, recibos = justicia: hiciste la cosa, avanzas; no la hiciste, no finge.\n\nEsa calma sostiene uso.")),
-        "Make progression replayable: same receipts → same next state.",
-        "让推进可回放：同收据 → 同下一状态。",
-        "Hazlo re-ejecutable: mismos recibos → mismo siguiente estado."
-      );
+    body.appendChild(p);
+    body.appendChild(acts);
 
-      put("receipt_progression","live",m,t,
-        (m==="engineering"
-          ? (t==="formal"
-              ? "Live progression enforces invalidation rules: back-navigation can invalidate downstream receipts; forward moves require confirmation. This prevents ‘phantom progress’ and preserves auditability.\n\nConflict resolves by containment, not interpretation."
-              : "Live progression is honest navigation. If you go back, the system knows what becomes invalid. If you go forward, it asks for proof again.\n\nThat’s how you stop accidental skipping.")
-          : (t==="formal"
-              ? "Platform live progression requires: stable routes, explicit returns, state carry, and deterministic back behavior. If mobile navigation drops state, the system is not admissible for scale.\n\nUX must never mask missing receipts."
-              : "Live on platform means: you never get lost, you never get stuck, and you never get a fake ‘success.’\n\nIf you can’t keep that promise on mobile, you don’t ship.")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "上线推进强制失效规则：回退可使下游收据失效；前进需再次确认。杜绝“幻觉进步”，保持可审计。\n\n冲突用隔离解决，不用解释解决。"
-              : "上线推进是诚实的导航：你回退，系统知道哪些失效；你前进，系统要求再次证明。\n\n这样就不会误跳。")
-          : (t==="formal"
-              ? "平台上线推进要求：路由稳定、返回明确、状态携带、回退确定性。若移动端导航丢状态，则该系统不具备规模化可采信。\n\nUX 不得掩盖缺失收据。"
-              : "平台上线意味着：不迷路、不卡死、不假成功。\n\n若手机做不到，就别发。")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "La progresión en vivo impone reglas de invalidación: volver puede invalidar recibos posteriores; avanzar exige confirmación. Evita progreso fantasma y mantiene auditoría.\n\nConflictos se resuelven con contención, no interpretación."
-              : "En vivo es navegación honesta: si vuelves, el sistema sabe qué se invalida; si avanzas, pide prueba otra vez.\n\nAsí evitas saltos accidentales.")
-          : (t==="formal"
-              ? "En plataforma: rutas estables, retornos explícitos, propagación de estado y back determinista. Si móvil pierde estado, no es admisible para escalar.\n\nLa UX no debe ocultar recibos faltantes."
-              : "En vivo en plataforma: no te pierdes, no te atoras, no hay ‘éxito’ falso.\n\nSi móvil no puede, no se lanza.")),
-        "Treat missing receipts as a stop signal, not a gap to fill with story.",
-        "把缺失收据当停止信号，不要用故事补洞。",
-        "Trata recibos faltantes como señal de alto, no como hueco para rellenar con historia."
-      );
-
-      put("receipt_progression","roadmap",m,t,
-        (m==="engineering"
-          ? (t==="formal"
-              ? "Roadmap makes receipts portable: hashable bundles that verify progress across products without leaking private telemetry. This is how you build cross-domain trust without central authority.\n\nComparability is preserved by versioning and epoch discipline."
-              : "Roadmap means your progress can travel. You can prove what you did in one place, and it still counts somewhere else — without oversharing.\n\nThat’s how trust scales without becoming invasive.")
-          : (t==="formal"
-              ? "Platform roadmap adds receipt export surfaces and registry lookups so users can verify status without ‘trust me.’ Progress becomes a stable, shareable artifact.\n\nUX remains simple while verification strengthens."
-              : "On platform, roadmap turns ‘I did it’ into ‘here’s the proof.’\n\nPeople relax when they can check.")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "路线图让收据可携带：可哈希包可在不泄露隐私遥测的前提下跨产品验证进度。这是在无中心权威下建立跨域信任的方法。\n\n通过版本与纪元纪律保持可比性。"
-              : "路线图意味着进步能“带走”：你在A地做的事，在B地也算数，而且不用过度暴露隐私。\n\n信任因此能规模化而不侵入。")
-          : (t==="formal"
-              ? "平台路线图加入收据导出与登记查询，使用户无需“信我”也能核查状态。进步变成稳定可分享的工件。\n\n体验保持简单，验证更强。"
-              : "在平台上，路线图把“我做到了”变成“这是证明”。\n\n能核查，人就放松。")),
-        (m==="engineering"
-          ? (t==="formal"
-              ? "El roadmap hace los recibos portátiles: bundles hasheables que verifican progreso entre productos sin filtrar telemetría privada. Así escalas confianza sin autoridad central.\n\nComparabilidad se preserva con versionado y disciplina de épocas."
-              : "El roadmap permite que tu progreso viaje: pruebas lo que hiciste en un lugar y cuenta en otro sin sobrecompartir.\n\nAsí escala confianza sin volverse invasiva.")
-          : (t==="formal"
-              ? "En plataforma, el roadmap añade export de recibos y lookups de registro para verificar estado sin ‘créeme.’ El progreso se vuelve artefacto compartible.\n\nUX simple, verificación más fuerte."
-              : "En plataforma, roadmap convierte ‘lo hice’ en ‘aquí está la prueba.’\n\nLa gente se calma cuando puede verificar.")),
-        "Make receipts small, replayable, and boring — boring is what scales.",
-        "让收据小、可回放、且“无聊”——无聊才可规模化。",
-        "Haz recibos pequeños, re-ejecutables y aburridos — lo aburrido escala."
-      );
-    });
-  });
-
-  // ===== remaining domains: audit_discipline, change_control, admissibility_doctrine, navigation_surfaces,
-  // product_packaging, enterprise_deployment, dotgrid_sweeps, scoring_outputs, registry_lookups
-  // Expanded with dense unique blocks per lens using their Q questions + domain-specific core lines.
-
-  function expandDomain(domainId, core){
-    ["concept","live","roadmap"].forEach(function(ph){
-      ["engineering","platform"].forEach(function(m){
-        ["informal","formal"].forEach(function(t){
-          var qP = S.Q[domainId][ph];
-          var base = core[m][t][ph];
-          var nextLine = core[m][t].next[ph];
-          set(domainId, ph, m, t, blk(
-            pick(qP), pick(qP), pick(qP),
-            base.en, base.zh, base.es,
-            nextLine.en, nextLine.zh, nextLine.es
-          ));
+    function toggle(){
+      var willOpen=!row.classList.contains("open");
+      var parent=row.parentElement;
+      if(parent){
+        parent.querySelectorAll(".row").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev");
+          if(c) c.textContent="▸";
         });
-      });
+      }
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+    return row;
+  }
+
+  function renderLists(){
+    var P=T();
+    var openLabel=P.btns.open;
+
+    var listA=document.getElementById("listA");
+    var listS=document.getElementById("listS");
+    var listB=document.getElementById("listB");
+
+    listA.innerHTML=""; listS.innerHTML=""; listB.innerHTML="";
+
+    P.items.products.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listA.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.items.services.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listS.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.items.systems.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listB.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
     });
   }
-
-  function mk(en,zh,es){ return {en:en,zh:zh,es:es}; }
-
-  expandDomain("audit_discipline",{
-    engineering:{
-      informal:{
-        concept:mk(
-          "Audit discipline is the engineer’s humility. You don’t get to ‘mean well’ at scale — you get to be reproducible.\n\nReceipts collapse arguments into evidence so conflict stops being expensive.",
-          "审计纪律是工程的谦卑：规模化时你不能靠“我本意很好”，你只能靠可复现。\n\n收据把争论压缩成证据，让冲突不再昂贵。",
-          "La auditoría es humildad de ingeniería: a escala no vale ‘mi intención’, vale reproducibilidad.\n\nLos recibos convierten disputa en evidencia."
-        ),
-        live:mk(
-          "Live audit makes fights boring: same receipts, same result. If receipts are missing, the output is ‘not measured,’ not a story.\n\nThis is how stability survives stress.",
-          "上线审计让争吵变无聊：同收据同结果。缺收据就输出“未测量”，不编故事。\n\n这就是稳定如何穿越压力。",
-          "En vivo, la auditoría vuelve aburridas las peleas: mismos recibos, mismo resultado. Si faltan, ‘no medido’, no historia."
-        ),
-        roadmap:mk(
-          "Roadmap audit automates without capture: builders can’t secretly tune outcomes, auditors can’t secretly relax rules.\n\nSpeed increases, truth stays bounded.",
-          "路线图审计自动化但防捕获：开发者不能暗调结果，审计者不能暗放宽规则。\n\n速度提升，真值仍有界。",
-          "El roadmap automatiza sin captura: constructores no pueden tunear resultados en secreto; auditores no pueden relajar reglas en silencio."
-        ),
-        next:{
-          concept:mk("Publish the receipt template.", "发布收据模板。", "Publica la plantilla de recibos."),
-          live:mk("Run one replay test daily.", "每天做一次回放测试。", "Haz un replay test diario."),
-          roadmap:mk("Separate authority permanently.", "永久分离权限。", "Separa autoridad permanentemente.")
-        }
-      },
-      formal:{
-        concept:mk(
-          "Audit discipline enforces observer-invariant evaluation under declared scope: outputs are judged by receipts, not inferred intent.\n\nAdmissibility requires replayable evidence bundles.",
-          "审计纪律在声明范围内强制观察者不变：用收据评判输出，不推断意图。\n\n可采信要求可回放证据包。",
-          "Disciplina de auditoría: evaluación invariante bajo alcance declarado; se juzga por recibos, no por intención inferida.\n\nA admisibilidad requiere evidencia re-ejecutable."
-        ),
-        live:mk(
-          "Live auditing produces reason-coded logs, prevents silent overrides, and resolves disagreement via scope locks or missing receipts.\n\nInterpretation is bounded; escalation is gated.",
-          "上线审计产出原因码日志，禁止静默覆盖；分歧通过范围锁或缺收据解决。\n\n解释有界，升级有闸门。",
-          "En vivo, auditoría produce logs con códigos de razón, prohíbe overrides silenciosos y resuelve desacuerdos por bloqueos de alcance o recibos faltantes."
-        ),
-        roadmap:mk(
-          "Roadmap adds automated audit harnesses and strict separation of tuning authority. Threshold changes are versioned; outcomes remain comparable across epochs.\n\nCapture resistance becomes a structural requirement.",
-          "路线图加入自动审计压力测试并严格分离调参权。阈值变更版本化；跨纪元结果保持可比。\n\n抗捕获成为结构要求。",
-          "El roadmap añade arneses automáticos y separación estricta de autoridad. Cambios de umbral se versionan; resultados comparables entre épocas."
-        ),
-        next:{
-          concept:mk("Define scope locks for every audit run.", "为每次审计运行定义范围锁。", "Define bloqueos de alcance por corrida."),
-          live:mk("Attach reason codes to every decision.", "给每个决策附原因码。", "Adjunta códigos de razón a cada decisión."),
-          roadmap:mk("Ship conformance tests as gates.", "把一致性测试作为闸门发布。", "Entrega pruebas de conformidad como compuertas.")
-        }
-      }
-    },
-    platform:{
-      informal:{
-        concept:mk(
-          "On platform, audit is the trust experience. Users don’t want to be sold — they want to verify.\n\nIf your UI can’t show why, it will be treated as hype.",
-          "在平台上，审计就是信任体验：用户不想被推销，他们想核查。\n\nUI 若不能展示“为什么”，就会被当作噱头。",
-          "En plataforma, auditoría es experiencia de confianza: usuarios quieren verificar.\n\nSi tu UI no muestra ‘por qué’, se percibe como hype."
-        ),
-        live:mk(
-          "Live platform audit means no hidden layers: the user can always find the receipt trail, the scope, and the reason.\n\nThat reduces panic and support load.",
-          "上线平台审计意味着无隐藏层：用户总能找到收据轨迹、范围与原因。\n\n这能降低恐慌与支持成本。",
-          "En vivo, auditoría en plataforma = sin capas ocultas: el usuario siempre encuentra trail de recibos, alcance y razón."
-        ),
-        roadmap:mk(
-          "Roadmap platform audit becomes a default share button: export a small proof bundle that stays inside bounds.\n\nThat’s how adoption spreads safely.",
-          "路线图平台审计变成默认分享键：导出小型证明包且不越界。\n\n采纳因此能安全扩散。",
-          "El roadmap vuelve auditoría un botón por defecto: exportas un paquete pequeño de prueba dentro de límites."
-        ),
-        next:{
-          concept:mk("Add ‘where did this come from?’ to every claim.", "给每个主张加“它从哪来”。", "Añade ‘¿de dónde viene?’ a cada afirmación."),
-          live:mk("Make back paths obvious.", "让返回路径显眼。", "Haz el back obvio."),
-          roadmap:mk("Standardize proof bundles across pages.", "跨页面标准化证明包。", "Estandariza bundles de prueba.")
-        }
-      },
-      formal:{
-        concept:mk(
-          "Platform audit surfaces must be legible: scope, evidence, and reason codes presented without requiring internal knowledge.\n\nAudit UX is a contract, not content.",
-          "平台审计面必须可读：范围、证据、原因码必须无需内部知识即可理解。\n\n审计UX是契约，不是内容。",
-          "Las superficies de auditoría deben ser legibles: alcance, evidencia y códigos de razón sin requerir conocimiento interno.\n\nLa UX de auditoría es un contrato."
-        ),
-        live:mk(
-          "Live platform audit forbids UI competition: no overlays intercept actions; receipts are reachable in ≤2 steps.\n\nFailure to surface receipts is a platform defect.",
-          "上线平台审计禁止UI竞争：无遮罩拦截；收据在≤2步内可达。\n\n收据不可达是平台缺陷。",
-          "En vivo, prohíbe competencia UI: sin overlays interceptando; recibos alcanzables en ≤2 pasos."
-        ),
-        roadmap:mk(
-          "Roadmap introduces audit registries and shareable proof bundles with privacy-preserving minimization.\n\nVerification scales while telemetry remains bounded.",
-          "路线图引入审计登记与可分享证明包，并做隐私最小化。\n\n验证规模化，遥测仍有界。",
-          "El roadmap introduce registros de auditoría y bundles compartibles minimizados para privacidad."
-        ),
-        next:{
-          concept:mk("Define audit UI acceptance tests.", "定义审计UI验收测试。", "Define tests de aceptación de auditoría."),
-          live:mk("Gate pages that hide receipts.", "对隐藏收据的页面设闸门。", "Bloquea páginas que esconden recibos."),
-          roadmap:mk("Publish audit schema versions.", "发布审计schema版本。", "Publica versiones del esquema de auditoría.")
-        }
-      }
-    }
-  });
-
-  expandDomain("change_control",{
-    engineering:{
-      informal:{
-        concept:mk(
-          "Change control is how you upgrade without rewriting reality. If a tweak changes outcomes, it’s not a tweak — it’s a new epoch.\n\nThat’s the discipline most systems refuse to pay, and it’s why they drift.",
-          "变更控制让你升级但不改写现实。若调整改变结果，它就不是调整——它是新纪元。\n\n多数系统不愿付这笔纪律成本，所以会漂移。",
-          "Control de cambios: actualizar sin reescribir realidad. Si un ajuste cambia resultados, no es ajuste: es nueva época."
-        ),
-        live:mk(
-          "Live means no chaos pushes. Roll out in waves, keep rollback ready, and never hide a policy change inside a ‘hotfix.’\n\nStability is a feature.",
-          "上线意味着别把混乱推到生产：分波次、备回滚，别把政策变更塞进“热修”。\n\n稳定就是功能。",
-          "En vivo: rollout por olas, rollback listo, y jamás escondas política en ‘hotfix’.\n\nLa estabilidad es una función."
-        ),
-        roadmap:mk(
-          "Roadmap turns releases into verifiable events. Signed change logs, visible epoch stamps, and replayable comparisons.\n\nThat’s how trust survives upgrades.",
-          "路线图把发布变成可验证事件：签名变更日志、可见纪元章、可回放比较。\n\n信任因此能穿越升级。",
-          "El roadmap convierte releases en eventos verificables: logs firmados, sellos de época, comparaciones re-ejecutables."
-        ),
-        next:{concept:mk("Stamp the epoch whenever outcomes change.","结果变化就盖纪元章。","Sella época cuando cambien resultados."),
-              live:mk("Use rollback as first response, not last resort.","把回滚当第一反应。","Usa rollback como primera respuesta."),
-              roadmap:mk("Make releases replayable.","让发布可回放。","Haz releases re-ejecutables.")}
-      },
-      formal:{
-        concept:mk(
-          "Change control preserves comparability: outcome-affecting changes create new epochs; old outputs remain interpretable under their original rule set.\n\nNon-retroactivity is enforced structurally.",
-          "变更控制保持可比性：影响结果的变更开启新纪元；旧输出按原规则可解释。\n\n不可追溯是结构性强制。",
-          "El control de cambios preserva comparabilidad: cambios que afectan resultados crean nuevas épocas; outputs previos siguen interpretables bajo reglas originales."
-        ),
-        live:mk(
-          "Live control requires staged rollout, rollback readiness, and reason-coded change records. Silent tuning is disallowed; hotfixes cannot act as policy changes.\n\nViolations trigger containment.",
-          "上线控制要求分阶段发布、回滚准备、原因码记录。禁止静默调参；热修不得充当政策变更。\n\n违规触发隔离。",
-          "En vivo: rollout por fases, rollback listo y registros con códigos de razón. Ajuste silencioso prohibido; hotfix no puede ser política."
-        ),
-        roadmap:mk(
-          "Roadmap introduces signed releases and policy registries. Conformance checks ensure templates do not drift; comparators remain valid across epochs.\n\nRelease safety becomes a gate.",
-          "路线图引入签名发布与策略登记；一致性检查确保模板不漂移；比较器跨纪元有效。\n\n发布安全成为闸门。",
-          "El roadmap introduce releases firmados y registros de política. Pruebas de conformidad evitan deriva; comparadores válidos entre épocas."
-        ),
-        next:{concept:mk("Define what counts as outcome-affecting.","定义何为影响结果。","Define qué afecta resultados."),
-              live:mk("Attach reason codes to every change.","给每次变更附原因码。","Adjunta códigos de razón a cada cambio."),
-              roadmap:mk("Ship signed release manifests.","发布签名清单。","Entrega manifiestos firmados.")}
-      }
-    },
-    platform:{
-      informal:{
-        concept:mk(
-          "Platform change control is the user’s sanity. If the UI changes meaning without warning, people stop trusting everything.\n\nSo we stamp changes and keep old meaning intact.",
-          "平台变更控制就是用户的理智：UI 若悄悄换义，人就不再信任任何东西。\n\n所以我们盖章变更，并保留旧含义。",
-          "En plataforma, control de cambios es cordura del usuario: si la UI cambia significado sin aviso, se pierde confianza.\n\nSe sellan cambios y se conserva significado anterior."
-        ),
-        live:mk(
-          "Live platform means the back button doesn’t become a time machine. Routes stay stable, returns are explicit, and updates don’t create surprise loops.\n\nThat’s how mobile stops feeling broken.",
-          "上线平台意味着返回键不会变成时光机：路由稳定、返回明确、更新不制造惊喜循环。\n\n手机因此不再像坏的。",
-          "En vivo, back no se vuelve máquina del tiempo: rutas estables, retornos explícitos y sin bucles sorpresa."
-        ),
-        roadmap:mk(
-          "Roadmap adds visible version stamps and a consistent ‘what changed’ block so users never wonder if they’re reading the same thing.\n\nConsistency is conversion.",
-          "路线图加入可见版本章与统一“变更说明”，让用户不再怀疑自己读的是否还是同一页。\n\n一致性就是转化。",
-          "El roadmap añade sellos visibles y un bloque ‘qué cambió’ consistente.\n\nConsistencia = conversión."
-        ),
-        next:{concept:mk("Never change meaning silently.","永不静默换义。","Nunca cambies significado en silencio."),
-              live:mk("Stabilize mobile navigation first.","先稳定手机导航。","Estabiliza navegación móvil primero."),
-              roadmap:mk("Add a standard change note block.","加标准变更说明块。","Añade bloque estándar de cambios.")}
-      },
-      formal:{
-        concept:mk(
-          "Platform change control defines UI contracts and prevents semantic swaps. If a label, route, or interaction changes meaning, it is versioned.\n\nComparability is treated as a hard requirement.",
-          "平台变更控制定义UI契约并防止换义。若标签/路由/交互改变含义，必须版本化。\n\n可比性是硬要求。",
-          "En plataforma, control de cambios define contratos UI y evita swaps semánticos. Si cambia significado, se versiona.\n\nLa comparabilidad es requisito duro."
-        ),
-        live:mk(
-          "Live platform control enforces stable routing and state carry. Any update that breaks tap reliability or back behavior is blocked.\n\nRelease discipline is a safety gate.",
-          "上线平台控制强制路由与状态携带稳定。任何破坏点按可靠或返回行为的更新都必须阻断。\n\n发布纪律是安全闸门。",
-          "En vivo, control impone rutas estables y propagación de estado. Updates que rompen fiabilidad de toque o back se bloquean."
-        ),
-        roadmap:mk(
-          "Roadmap introduces conformance testing for templates, signed build manifests, and epoch rollover logic for outcome-affecting changes.\n\nNo drift without visibility.",
-          "路线图引入模板一致性测试、签名构建清单、以及影响结果变更的纪元切换逻辑。\n\n没有可见性就不允许漂移。",
-          "El roadmap añade pruebas de conformidad, manifiestos firmados y rollover de época para cambios que afectan resultados."
-        ),
-        next:{concept:mk("Write UI contracts as rules.","把UI契约写成规则。","Escribe contratos UI como reglas."),
-              live:mk("Block releases that break taps/back.","阻断破坏点击/返回的发布。","Bloquea releases que rompen toque/back."),
-              roadmap:mk("Publish signed manifests.","发布签名清单。","Publica manifiestos firmados.")}
-      }
-    }
-  });
-
-  // Smaller expansions for remaining 7 domains (still dense & unique)
-  // To keep the file within sane single-TNT size while still “maximum depth,” each of these includes:
-  // question-first + two dense paragraphs + Next line, per lens/phase.
-
-  function simpleExpand(domainId, engInformal, engFormal, platInformal, platFormal){
-    ["concept","live","roadmap"].forEach(function(ph){
-      set(domainId,ph,"engineering","informal", blk(
-        pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]),
-        engInformal[ph].en, engInformal[ph].zh, engInformal[ph].es,
-        engInformal.next[ph].en, engInformal.next[ph].zh, engInformal.next[ph].es
-      ));
-      set(domainId,ph,"engineering","formal", blk(
-        pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]),
-        engFormal[ph].en, engFormal[ph].zh, engFormal[ph].es,
-        engFormal.next[ph].en, engFormal.next[ph].zh, engFormal.next[ph].es
-      ));
-      set(domainId,ph,"platform","informal", blk(
-        pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]),
-        platInformal[ph].en, platInformal[ph].zh, platInformal[ph].es,
-        platInformal.next[ph].en, platInformal.next[ph].zh, platInformal.next[ph].es
-      ));
-      set(domainId,ph,"platform","formal", blk(
-        pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]),
-        platFormal[ph].en, platFormal[ph].zh, platFormal[ph].es,
-        platFormal.next[ph].en, platFormal.next[ph].zh, platFormal.next[ph].es
-      ));
-    });
-  }
-
-  // admissibility_doctrine
-  simpleExpand("admissibility_doctrine",
-    {
-      concept:mk(
-        "Doctrine is the boundary between imagination and reality. Without it, the loudest voice wins.\n\nHere, doctrine keeps claims support-bounded so curiosity stays safe.",
-        "教义是想象与现实的边界。没有它，声音最大的人获胜。\n\n在这里，教义让主张有支撑边界，好奇心也能安全。",
-        "La doctrina separa imaginación de realidad. Sin ella, gana la voz más fuerte.\n\nAquí acota afirmaciones para que la curiosidad sea segura."
-      ),
-      live:mk(
-        "Live doctrine is labeling discipline: concept stays concept, live stays measured, roadmap stays gated.\n\nIf evidence is missing, the system must say so — calmly and clearly.",
-        "上线教义是标注纪律：概念就是概念，上线必须可测，路线图必须有闸门。\n\n证据缺失就必须明说——冷静且清晰。",
-        "En vivo, doctrina = disciplina de etiquetas: concepto es concepto, en vivo es medido, roadmap tiene compuertas.\n\nSi falta evidencia, se declara con calma."
-      ),
-      roadmap:mk(
-        "Roadmap doctrine makes every page speak the same honest language. That prevents drift as the product line expands.\n\nConsistency becomes protection.",
-        "路线图教义让每一页说同一种诚实语言，产品线扩张也不漂移。\n\n一致性就是保护。",
-        "El roadmap estandariza el lenguaje honesto en todas las páginas.\n\nLa consistencia protege."
-      ),
-      next:{
-        concept:mk("Write the boundary sentence first.","先写边界句。","Escribe primero la frase límite."),
-        live:mk("Enforce “NOT MEASURED” instead of hype.","用“未测量”替代吹牛。","Impone ‘NO MEDIDO’ en vez de hype."),
-        roadmap:mk("Standardize doctrine templates.","标准化教义模板。","Estandariza plantillas doctrinales.")
-      }
-    },
-    {
-      concept:mk(
-        "Doctrine defines claim classes and admissibility prerequisites. It prevents scope inflation and semantic swaps.\n\nIf doctrine is unclear, every output becomes inadmissible under scale.",
-        "教义定义主张类别与可采信先决条件，防止范围膨胀与换义。\n\n教义不清，规模下所有输出都将不可采信。",
-        "La doctrina define clases de afirmación y prerrequisitos de admisibilidad. Evita inflación de alcance y swaps semánticos."
-      ),
-      live:mk(
-        "Live doctrine enforces posture separation and prohibits escalation without receipts. Labels are treated as part of the measurement rule.\n\nViolations require epoch rollover, not edits.",
-        "上线教义强制姿态分离并禁止无收据升级。标签是测量规则的一部分。\n\n违规需纪元切换，而非修改遮掩。",
-        "En vivo, doctrina separa posturas y prohíbe escalación sin recibos. Etiquetas forman parte de la regla de medición."
-      ),
-      roadmap:mk(
-        "Roadmap doctrine introduces standardized templates, reason codes, and replay for claim boundaries.\n\nObserver-invariance becomes enforceable.",
-        "路线图教义引入标准模板、原因码与回放，使边界可执行、观察者不变。",
-        "El roadmap añade plantillas estandarizadas, códigos de razón y replay para límites de afirmación."
-      ),
-      next:{
-        concept:mk("Declare scope and claim class together.","同时声明范围与主张类别。","Declara alcance y clase juntos."),
-        live:mk("Treat labels as contractual.","把标签当契约。","Trata etiquetas como contrato."),
-        roadmap:mk("Ship doctrine conformance tests.","发布教义一致性测试。","Entrega tests de conformidad doctrinal.")
-      }
-    },
-    {
-      concept:mk(
-        "On platform, doctrine protects the user from being misled. If a page is ‘vision,’ it must feel like vision — not like proof.\n\nThat separation keeps trust intact.",
-        "在平台上，教义保护用户不被误导：若是愿景，就必须像愿景，而不是像证明。\n\n分离才能保信任。",
-        "En plataforma, la doctrina protege al usuario: si es visión, debe sentirse como visión, no prueba."
-      ),
-      live:mk(
-        "Live doctrine is user experience: clear labels, clear routes, clear ‘not yet.’\n\nPeople can handle limits — they can’t handle bait-and-switch.",
-        "上线教义是用户体验：清晰标签、清晰路由、清晰“尚未”。\n\n人能接受边界，但不能接受偷换。",
-        "En vivo: etiquetas claras, rutas claras y ‘todavía no’ claro.\n\nLa gente soporta límites; no soporta bait-and-switch."
-      ),
-      roadmap:mk(
-        "Roadmap doctrine becomes a standard block every page uses, so users learn the rules once.\n\nThat reduces cognitive load and support cost.",
-        "路线图教义变成每页统一块：用户学一次规则就够。\n\n认知负担与支持成本下降。",
-        "El roadmap hace la doctrina un bloque estándar en todas las páginas."
-      ),
-      next:{
-        concept:mk("Place the label above the claim.","把标签放在主张之上。","Pon la etiqueta arriba de la afirmación."),
-        live:mk("Never let UI imply proof.","不要让UI暗示证明。","Nunca dejes que la UI implique prueba."),
-        roadmap:mk("Make doctrine blocks identical across pages.","让教义块跨页一致。","Haz bloques doctrinales idénticos.")
-      }
-    },
-    {
-      concept:mk(
-        "Platform doctrine is a routing contract: where ‘proof’ lives, where ‘measurement’ lives, where ‘products’ live.\n\nWrong routing is doctrine violation.",
-        "平台教义是路由契约：证明在哪、测量在哪、产品在哪。\n\n路由错了就是教义违规。",
-        "Doctrina de plataforma = contrato de ruteo: dónde vive prueba, medición y producto."
-      ),
-      live:mk(
-        "Live platform doctrine requires state carry and consistent labeling. If a lens switch doesn’t change content, the platform is lying.\n\nThat is blocked.",
-        "上线平台教义要求状态携带与一致标注。切透镜内容不变就是平台在撒谎。\n\n必须阻断。",
-        "En vivo, doctrina de plataforma exige propagación de estado y etiquetas consistentes. Si cambiar lente no cambia contenido, la plataforma miente."
-      ),
-      roadmap:mk(
-        "Roadmap adds enforcement: automated checks for label consistency, routing correctness, and lens-content coupling.\n\nDoctrine becomes measurable.",
-        "路线图加入执行：自动检查标签一致、路由正确、透镜与内容耦合。\n\n教义变可测。",
-        "El roadmap añade enforcement: checks automáticos de etiquetas, ruteo y acoplamiento lente-contenido."
-      ),
-      next:{
-        concept:mk("Lock routing map first.","先锁路由地图。","Bloquea el mapa de rutas primero."),
-        live:mk("Block lens-without-content-change.","阻断透镜切换但内容不变。","Bloquea lente sin cambio de contenido."),
-        roadmap:mk("Automate doctrine enforcement.","自动化教义执行。","Automatiza enforcement doctrinal.")
-      }
-    }
-  );
-
-  // navigation_surfaces
-  simpleExpand("navigation_surfaces",
-    {
-      concept:mk(
-        "Navigation is where trust becomes physical. If a tap is ambiguous, the mind becomes anxious.\n\nSo navigation must be boringly reliable: one tap, one action, always.",
-        "导航是信任的“物理化”。点击有歧义，人的脑就焦虑。\n\n所以导航必须无聊地可靠：一次点击，一次动作，永远如此。",
-        "La navegación hace la confianza física. Si el toque es ambiguo, la mente se inquieta.\n\nDebe ser aburridamente fiable."
-      ),
-      live:mk(
-        "Mobile exposes bad navigation instantly. Ghost layers, overlap traps, double routes — all become ‘it’s broken.’\n\nFix navigation first, then scale anything else.",
-        "手机会立刻暴露坏导航：幽灵层、重叠陷阱、双路由——都等于“坏了”。\n\n先修导航，再谈扩张。",
-        "El móvil expone navegación mala al instante: capas fantasma, solapes, doble ruta.\n\nArregla navegación primero."
-      ),
-      roadmap:mk(
-        "Roadmap unifies templates: same top controls, same dock, same state carry, same back behavior.\n\nUsers learn once and move fast forever.",
-        "路线图统一模板：同顶栏、同dock、同状态携带、同返回行为。\n\n用户学一次，之后永远快。",
-        "El roadmap unifica plantillas: mismos controles, dock, propagación de estado y back."
-      ),
-      next:{concept:mk("Treat taps as contracts.","把点击当契约。","Trata toques como contrato."),
-            live:mk("Remove competing layers.","移除竞争层。","Elimina capas competidoras."),
-            roadmap:mk("Conformance test navigation.","用一致性测试验证导航。","Testea conformidad de navegación.")}
-    },
-    {
-      concept:mk(
-        "Navigation surfaces present options without altering invariants. UX may simplify, but it cannot change admissibility.\n\nNavigation-first contracts map routes to state deterministically.",
-        "导航界面呈现选项但不得改变不变量。体验可以简化，但不能改可采信。\n\n导航优先契约把路由确定性地映射到状态。",
-        "Las superficies de navegación presentan opciones sin alterar invariantes. La UX puede simplificar, pero no cambiar admisibilidad."
-      ),
-      live:mk(
-        "Live surfaces enforce pointer-event discipline and single-action press primitives. Overlays cannot intercept; double-routing is prohibited.\n\nViolations are defects.",
-        "上线界面强制 pointer 纪律与单动作点击原语。遮罩不得拦截；禁止双路由。\n\n违规即缺陷。",
-        "En vivo se impone disciplina de punteros y un toque=una acción. Overlays no interceptan; doble ruta prohibida."
-      ),
-      roadmap:mk(
-        "Roadmap introduces reusable navigation templates and automated checks for state carry and tap determinism.\n\nNavigation becomes a measurable invariant.",
-        "路线图引入可复用导航模板与状态携带/点击确定性的自动检查。\n\n导航成为可测不变量。",
-        "El roadmap introduce plantillas reutilizables y checks automáticos de propagación y determinismo."
-      ),
-      next:{concept:mk("Declare route→state mapping.","声明路由→状态映射。","Declara mapeo ruta→estado."),
-            live:mk("Audit taps on mobile first.","优先审计手机点按。","Audita toques en móvil primero."),
-            roadmap:mk("Ship navigation conformance harness.","发布导航一致性测试工具。","Entrega arnés de conformidad de navegación.")}
-    },
-    {
-      concept:mk(
-        "Platform navigation is the difference between curiosity and rage. If people can’t get back, they stop exploring.\n\nSo back paths must be visible, stable, and calm.",
-        "平台导航决定好奇心还是暴怒。回不去，人就不探索。\n\n所以返回路径必须可见、稳定、冷静。",
-        "La navegación de plataforma separa curiosidad de rabia. Sin back claro, se deja de explorar."
-      ),
-      live:mk(
-        "Live platform navigation preserves lens state. Users should not ‘lose their place’ when changing language or returning.\n\nState carry is respect.",
-        "上线平台导航保留透镜状态。切语言或返回时不该“丢位置”。\n\n状态携带就是尊重。",
-        "En vivo, navegación preserva estado de lentes. El usuario no debe ‘perder su lugar’."
-      ),
-      roadmap:mk(
-        "Roadmap makes every page feel like the same machine: same buttons, same locations, same meaning.\n\nThat is adoption velocity.",
-        "路线图让每页像同一台机器：同按钮、同位置、同含义。\n\n这就是采纳速度。",
-        "El roadmap hace que cada página se sienta como la misma máquina."
-      ),
-      next:{concept:mk("Make BACK obvious everywhere.","让BACK处处显眼。","Haz BACK obvio en todas partes."),
-            live:mk("Preserve lens state on every jump.","每次跳转保留透镜状态。","Preserva lentes en cada salto."),
-            roadmap:mk("Unify template geometry.","统一模板几何。","Unifica geometría de plantillas.")}
-    },
-    {
-      concept:mk(
-        "Platform navigation contracts require explicit returns and stable dock paths. Back must not become multi-hop chaos.\n\nState carry is mandatory on every internal link.",
-        "平台导航契约要求返回明确、dock路径稳定。返回不得变成多跳混乱。\n\n每个内链必须携带状态。",
-        "Contratos de navegación requieren retornos explícitos y dock estable. Back no puede ser caos multi-salto."
-      ),
-      live:mk(
-        "Live platform forbids competing fixed layers that block taps. Sticky bars must not cover targets. Touch targets must remain readable.\n\nMobile is the hard test.",
-        "上线平台禁止竞争固定层挡点击。吸顶栏不得覆盖目标。触控目标必须可读。\n\n手机是硬测试。",
-        "En vivo se prohíben capas fijas que bloqueen toques. Barras sticky no deben cubrir objetivos."
-      ),
-      roadmap:mk(
-        "Roadmap adds automated navigation audits: z-index collisions, pointer traps, and missing state carry checks.\n\nFailures block release.",
-        "路线图加入自动导航审计：z-index碰撞、pointer陷阱、丢状态检测。\n\n失败阻断发布。",
-        "El roadmap añade auditorías automáticas: colisiones z-index, trampas de puntero y pérdida de estado."
-      ),
-      next:{concept:mk("Lock dock destinations.","锁定dock目的地。","Bloquea destinos del dock."),
-            live:mk("Ban overlay interception.","禁止遮罩拦截。","Prohíbe intercepción por overlay."),
-            roadmap:mk("Automate collision detection.","自动化碰撞检测。","Automatiza detección de colisiones.")}
-    }
-  );
-
-  // product_packaging, enterprise_deployment, dotgrid_sweeps, scoring_outputs, registry_lookups
-  // are already deeply expressed in the earlier long-form domain text inside TEXT (unique content exists).
-  // If any is missing due to size constraints, we provide dense unique blocks now.
-
-  function ensure(domainId, baseEN, baseZH, baseES){
-    ["concept","live","roadmap"].forEach(function(ph){
-      ["engineering","platform"].forEach(function(m){
-        ["informal","formal"].forEach(function(t){
-          if(!TEXT[domainId] || !TEXT[domainId][ph] || !TEXT[domainId][ph][m] || !TEXT[domainId][ph][m][t]){
-            set(domainId,ph,m,t, blk(
-              pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]), pick(S.Q[domainId][ph]),
-              baseEN[ph][m][t], baseZH[ph][m][t], baseES[ph][m][t],
-              "Bind it to routes: Laws (meaning) + Gauges (measurement).",
-              "绑定到路由：法则（含义）+量规（测量）。",
-              "Vincúlalo a rutas: Leyes (significado) + Medidores (medición)."
-            ));
-          }
-        });
-      });
-    });
-  }
-
-  ensure("product_packaging",
-    {
-      concept:{engineering:{informal:"Packaging is where truth meets usability. You don’t sell doctrine; you route to it.\n\nMake the offer clear, keep the proof separate, and keep navigation state intact.",
-                           formal:"Packaging binds capability surfaces without mixing doctrine into persuasion.\n\nRoutes remain stable; claims remain bounded."},
-              platform:{informal:"Packaging on platform is the promise: no dead ends, no loops, no surprise routes.\n\nIf a user can’t find and return, packaging failed.",
-                        formal:"Platform packaging enforces stable routes, explicit returns, and state carry.\n\nNo catch-all pages; each surface has a home."}},
-      live:{engineering:{informal:"Live packaging kills 404s and confusion. Every OPEN opens. Every return returns.\n\nThat’s how trust survives taps.",
-                         formal:"Live packaging requires deterministic routing and explicit return contracts.\n\nMissing links are treated as defects."},
-            platform:{informal:"Live platform packaging means mobile-first reliability: no overlap traps, no hidden back paths.\n\nClean lanes, calm traversal.",
-                      formal:"Platform live packaging enforces tap reliability, back behavior, and state carry across all routes.\n\nRelease blocks on violations."}},
-      roadmap:{engineering:{informal:"Roadmap packaging scales with shells: even if a surface isn’t built, it has a stable route and a bounded label.\n\nThat prevents drift while you build.",
-                            formal:"Roadmap introduces tiering and registry status for access legibility while preserving claim discipline.\n\nChanges are versioned."},
-               platform:{informal:"Roadmap makes packaging teachable: users learn one pattern and reuse it everywhere.\n\nThat’s adoption speed.",
-                         formal:"Roadmap adds template conformance checks and publishing discipline.\n\nPackaging becomes measurable."}}
-    },
-    {
-      concept:{engineering:{informal:"封装是“真相×可用性”的交界：不卖教义，路由到教义。\n\n把提供说清，把证明分离，把状态保住。",
-                           formal:"封装在不把教义混进说服的前提下绑定能力面。\n\n路由稳定，主张有界。"},
-              platform:{informal:"平台封装就是承诺：无死路、无绕圈、无惊喜路由。\n\n找不到、回不去=封装失败。",
-                        formal:"平台封装强制路由稳定、返回明确、状态携带。\n\n禁止总汇页坍缩，每个面都有家。"}},
-      live:{engineering:{informal:"上线封装要杀死404与困惑：每个OPEN都能开，每个返回都能回。\n\n信任才能扛住点按。",
-                         formal:"上线封装要求确定性路由与返回契约。\n\n缺链视为缺陷。"},
-            platform:{informal:"上线平台封装=移动端可靠：无重叠陷阱、无隐藏返回。\n\n车道干净，遍历冷静。",
-                      formal:"平台上线封装强制点按可靠、返回行为、状态携带。\n\n违规阻断发布。"}},
-      roadmap:{engineering:{informal:"路线图封装用“壳”扩张：未建也要有稳定路由与有界标签。\n\n边建边稳，不漂移。",
-                            formal:"路线图引入分级与登记状态，保持访问可读与主张纪律。\n\n变更版本化。"},
-               platform:{informal:"路线图让封装可教学：用户学一套模式，到处复用。\n\n采纳因此变快。",
-                         formal:"路线图加入模板一致性与发布纪律。\n\n封装变可测。"}}
-    },
-    {
-      concept:{engineering:{informal:"Empaquetar es donde verdad y utilidad se encuentran: no vendes doctrina, ruteas hacia ella.\n\nOferta clara, prueba separada, estado preservado.",
-                           formal:"El empaquetado une superficies de capacidad sin mezclar doctrina con persuasión.\n\nRutas estables; afirmaciones acotadas."},
-              platform:{informal:"En plataforma, empaquetado es promesa: sin callejones, sin bucles, sin rutas sorpresa.\n\nSi no encuentras y vuelves, falló.",
-                        formal:"En plataforma, exige rutas estables, retornos explícitos y propagación de estado.\n\nSin páginas ‘universales’."}},
-      live:{engineering:{informal:"En vivo elimina 404 y confusión: cada OPEN abre, cada retorno retorna.\n\nAsí sobrevive la confianza.",
-                         formal:"En vivo requiere enrutamiento determinista y contrato de retorno.\n\nLinks faltantes son defectos."},
-            platform:{informal:"En vivo en plataforma = fiabilidad móvil: sin trampas de solape, sin back oculto.\n\nCarriles limpios.",
-                      formal:"En vivo impone fiabilidad de toque/back y propagación de estado.\n\nViolaciones bloquean release."}},
-      roadmap:{engineering:{informal:"Roadmap escala con ‘carcasas’: incluso si no está construido, tiene ruta estable y etiqueta acotada.\n\nEvita deriva mientras construyes.",
-                            formal:"Roadmap añade niveles y estado de registro para acceso legible, preservando disciplina de afirmaciones.\n\nCambios versionados."},
-               platform:{informal:"Roadmap hace el patrón enseñable: aprendes uno y lo reutilizas.\n\nEso acelera adopción.",
-                         formal:"Roadmap añade conformidad de plantillas y disciplina de publicación.\n\nEmpaquetado se vuelve medible."}}
-    }
-  );
-
-  // ===== HERO render =====
-  function applyHero(){
-    var H=(lang==="zh")?HERO.zh:(lang==="es")?HERO.es:HERO.en;
-    document.getElementById("k0").textContent=H.k;
-    document.getElementById("h0").textContent=H.h;
-    document.getElementById("lede").textContent=H.lede;
-    document.getElementById("rule").textContent=H.rule;
-
-    // top button labels
-    if(lang==="zh"){
-      document.getElementById("btnBack").textContent="返回";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnExit").textContent="退出";
-      document.getElementById("dockHome").textContent="主页";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockGauges").textContent="量规";
-      document.getElementById("pillInformal").textContent="通俗";
-      document.getElementById("pillFormal").textContent="正式";
-      document.getElementById("pillEngineering").textContent="工程";
-      document.getElementById("pillPlatform").textContent="平台";
-      document.getElementById("band").textContent="领域";
-    }else if(lang==="es"){
-      document.getElementById("btnBack").textContent="VOLVER";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("btnExit").textContent="SALIR";
-      document.getElementById("dockHome").textContent="INICIO";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-      document.getElementById("pillInformal").textContent="INFORMAL";
-      document.getElementById("pillFormal").textContent="FORMAL";
-      document.getElementById("pillEngineering").textContent="INGENIERÍA";
-      document.getElementById("pillPlatform").textContent="PLATAFORMA";
-      document.getElementById("band").textContent="DOMINIOS";
-    }else{
-      document.getElementById("band").textContent="DOMAINS";
-    }
-  }
-
-  // ===== RENDER DOMAIN LIST =====
-  var list=document.getElementById("list");
-
-  function phaseLabel(ph){
-    if(lang==="zh") return (ph==="concept")?"概念":(ph==="live")?"上线":"路线图";
-    if(lang==="es") return (ph==="concept")?"Concepto":(ph==="live")?"En vivo":"Hoja de ruta";
-    return (ph==="concept")?"Concept":(ph==="live")?"Live":"Roadmap";
-  }
-
-  function openLeadLabel(){
-    if(lang==="zh") return "打开三段：概念（为什么）· 上线（怎么用）· 路线图（下一步）。";
-    if(lang==="es") return "Abre tres secciones: Concepto (por qué) · En vivo (cómo usar) · Hoja de ruta (qué sigue).";
-    return "Open three sections: Concept (why) · Live (how you use it) · Roadmap (what’s next).";
-  }
-
-  function jumpLabel(){
-    if(lang==="zh") return "打开：DOOR";
-    if(lang==="es") return "ABRIR: PUERTA";
-    return "OPEN: DOOR";
-  }
-
-  function getPack(domainId, ph){
-    return TEXT[domainId][ph][mode][tone];
-  }
-
-  function closeAllRows(){
-    list.querySelectorAll(".row").forEach(function(r){
-      r.classList.remove("open");
-      var c=r.querySelector(".chev");
-      if(c) c.textContent="▸";
-    });
-  }
-
-  function closeAllBubbles(row){
-    row.querySelectorAll(".bubble").forEach(function(b){
-      b.classList.remove("open");
-    });
-  }
-
-  function renderAll(){
-    applyHero();
-    list.innerHTML="";
-
-    DOM.forEach(function(d, idx){
-      var row=document.createElement("div");
-      row.className="row";
-      row.style.setProperty("--c", d.c);
-
-      var head=document.createElement("div");
-      head.className="head";
-      head.setAttribute("role","button");
-      head.tabIndex=0;
-
-      var left=document.createElement("div");
-      left.className="left";
-
-      var mark=document.createElement("div");
-      mark.className="mark";
-      var dia=document.createElement("div");
-      dia.className="diamond";
-      dia.style.background=d.c;
-      var bar=document.createElement("div");
-      bar.className="bar";
-      bar.style.background=d.c;
-      mark.appendChild(dia);
-      mark.appendChild(bar);
-
-      var titleBlock=document.createElement("div");
-      titleBlock.className="titleBlock";
-      var title=document.createElement("div");
-      title.className="title";
-      title.textContent=pick(d.t);
-      var sub=document.createElement("div");
-      sub.className="sub";
-      sub.textContent=pick(d.s);
-      titleBlock.appendChild(title);
-      titleBlock.appendChild(sub);
-
-      left.appendChild(mark);
-      left.appendChild(titleBlock);
-
-      var chev=document.createElement("div");
-      chev.className="chev";
-      chev.textContent="▸";
-
-      head.appendChild(left);
-      head.appendChild(chev);
-
-      var body=document.createElement("div");
-      body.className="body";
-
-      var lead=document.createElement("div");
-      lead.className="bodyLead";
-      lead.textContent = "?"+openLeadLabel();
-
-      var subList=document.createElement("div");
-      subList.className="subList";
-
-      function makeBubble(ph){
-        var b=document.createElement("div");
-        b.className="bubble";
-        b.setAttribute("role","button");
-        b.tabIndex=0;
-
-        var h=document.createElement("h4");
-        h.textContent=phaseLabel(ph);
-
-        var p=document.createElement("p");
-        p.textContent = pick(getPack(d.id, ph));
-
-        b.appendChild(h);
-        b.appendChild(p);
-
-        function act(){
-          // single-open inside row
-          subList.querySelectorAll(".bubble").forEach(function(x){ x.classList.remove("open"); });
-          b.classList.toggle("open");
-        }
-        b.addEventListener("click", act);
-        b.addEventListener("keydown", function(e){
-          if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-        });
-
-        return b;
-      }
-
-      subList.appendChild(makeBubble("concept"));
-      subList.appendChild(makeBubble("live"));
-      subList.appendChild(makeBubble("roadmap"));
-
-      var actions=document.createElement("div");
-      actions.className="actions";
-      var jump=document.createElement("a");
-      jump.className="btn";
-      jump.textContent=jumpLabel();
-      jump.href="/door/"+q();
-      actions.appendChild(jump);
-
-      body.appendChild(lead);
-      body.appendChild(subList);
-      body.appendChild(actions);
-
-      function toggleRow(){
-        var willOpen=!row.classList.contains("open");
-        closeAllRows();
-        if(willOpen){
-          row.classList.add("open");
-          chev.textContent="▾";
-          closeAllBubbles(row);
-          // open Concept by default
-          var first=row.querySelector(".bubble");
-          if(first){ first.classList.add("open"); }
-        }
-      }
-
-      head.addEventListener("click", toggleRow);
-      head.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleRow(); }
-      });
-
-      row.appendChild(head);
-      row.appendChild(body);
-      list.appendChild(row);
-
-      // open first domain by default
-      if(idx===0){
-        row.classList.add("open");
-        chev.textContent="▾";
-        var firstBubble=row.querySelector(".bubble");
-        if(firstBubble){ firstBubble.classList.add("open"); }
-      }
-    });
-  }
-
-  paintPills();
-  renderAll();
+  renderLists();
 
 })();
 </script>

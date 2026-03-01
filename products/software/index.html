@@ -1,24 +1,17 @@
 <!-- TNT — /products/software/index.html
-     PRODUCTS · SOFTWARE (UNIFIED SITE STYLE) · 2-POINT WISHBONE + IN-PAGE ACCORDION · 72 NARRATIVES · EN/中文/ES
-     FIX:
-       - Removes the “odd one out” modal grid look
-       - Uses the same opal panel + accordion + bubbles pattern as Laws / Vision pages
-       - Robust accordion toggles (open/close any item; no “stuck open” behavior)
-     MODEL (LOCKED):
-       - 2 glossy diamonds = ENGINE / PLATFORM (selects which domain set is shown)
-       - Domain list in-page (6 domains) with colored diamond marker + subtitle
-       - Open a domain -> 3 bubbles (CONCEPT / LIVE / ROADMAP), each tap-to-open
-       - Global tone toggle (FORMAL / INFORMAL) drives all narrative text
-     COUNT:
-       - 12 domains × 3 bubbles × 2 tones = 72 narratives
-     LANGUAGE:
-       - EN / 中文 / ES (single-language via gd_lang; button toggle)
-     STATE:
-       - URL + LS: lang/style/time/depth (preserved on every jump)
-       - Uses gd_lang/gd_style/gd_time/gd_depth only
+     PRODUCTS · SOFTWARE (MOBILE-SAFE · LONG BUBBLE FORMAT · NO MODALS)
+     DESIGN INTENT (LOCKED):
+       - Dark opal + red (NO washed-out blue)
+       - Long accordion bubbles (like Laws/Products)
+       - 2-point selector (ENGINE / PLATFORM) filters the domain list (no overlay)
+       - Each domain expands → shows Concept / Live / Roadmap sub-bubbles (tap-to-open)
+       - Tone toggle (INFORMAL / FORMAL) switches copy (real split)
+       - EN/中文/ES page-level language toggle
+       - Canon state carry: lang/style/time/depth (URL + LS gd_*), preserved on every jump
+       - Back buttons: BACK (Products) + DOOR + EXIT (Index)
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background overrides (ui.css owns field)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
+       - Does NOT style html/body background (ui.css owns field)
        - Tap-safe (no inline onclick)
 -->
 
@@ -36,26 +29,24 @@
 <style>
 a{color:inherit;text-decoration:none}
 :root{
-  --R:170px;
-  --D:198px;
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
+  --dockH:88px;
 
-  --opalA:rgba(210,190,255,.18);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
+  /* Dark opal (NO blue wash) */
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,80,80,.08);
+
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --goldSoft:rgba(212,175,55,.35);
 
   --mut:rgba(255,255,255,.90);
   --mut2:rgba(255,255,255,.74);
 
-  --dockH:92px;
+  --redGlow:rgba(255,70,70,.18);
 }
 
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body::before,body::after{pointer-events:none!important}
-
-/* Top */
+/* Top controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:240;
   display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
@@ -66,210 +57,135 @@ body::before,body::after{pointer-events:none!important}
 }
 .top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* Brand */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:230;text-align:center;padding:10px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  pointer-events:none;
-}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
-.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
-
-/* Stage (wishbone) */
-.stage{
-  position:relative;
-  width:min(720px,94vw);
-  height:min(520px,62vh);
-  margin:92px auto 0;
-  z-index:60;
-  pointer-events:none;
-}
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(640px,92vw);height:min(640px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;opacity:.55;pointer-events:none;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.50),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-}
-.outer::after{
-  content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-}
-
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
-  cursor:pointer;pointer-events:auto;touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
-    radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.28),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -42px 78px rgba(0,0,0,.80);
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.d::before{
-  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.65;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";position:absolute;left:10%;right:10%;top:10%;
-  height:28%;border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
-  transform:rotate(-10deg);pointer-events:none;
-}
-.d:hover{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.35);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.32),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-.d:active{
-  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
-}
-.d.active{
-  border-color:rgba(212,175,55,.65);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 66px rgba(212,175,55,.34),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-
-.dL{ --tx:calc(var(--R) * -1); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-.dR{ --tx:var(--R);           --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
-
-.inner{
-  transform:rotate(-45deg) translateY(-3px);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;height:100%;padding:14px;gap:8px;
-  pointer-events:none;user-select:none;
-}
-.lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
-.sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
-
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:60px;height:60px;border-radius:18px;
-  background:rgba(0,0,0,.20);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  pointer-events:none;
-}
-
-/* Content area */
+/* Page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:12px 0 calc(var(--dockH) + 18px);
+  padding:90px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
   position:relative;
-  z-index:30;
+  z-index:10;
 }
 
-/* Opal header panel */
-.hero{
-  border:1px solid rgba(255,255,255,.12);
+/* Header */
+.header{
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
-    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.14));
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    rgba(0,0,0,.14);
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
   padding:14px 16px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
-.hk{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.ht{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
-.hs{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
+.t{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
+.s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
 .fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
 
-/* Tone toggle */
-.toneRow{
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-  margin-top:10px;
+/* Selector row */
+.selector{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 .pill{
-  padding:10px 14px;border-radius:999px;
+  padding:10px 14px;
+  border-radius:999px;
   background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
   border:1px solid rgba(255,255,255,.10);
   box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
-  user-select:none;-webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 .pill.active{
-  border-color:rgba(212,175,55,.60);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22);
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+}
+.pill.red.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--redGlow);
 }
 
 /* Band */
 .band{
-  padding:10px 12px;border-radius:18px;
+  padding:10px 12px;
+  border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.86);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
 }
 
-/* Domain accordion (same family as products/laws) */
-.stackList{display:flex;flex-direction:column;gap:12px}
-.stackRow{
-  --domc:#93C5FD;
+/* Accordion list (long bubbles) */
+.list{display:flex;flex-direction:column;gap:12px}
+
+.row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 58%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
 }
-.stackHead{
+.head{
   display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.dotD{
-  width:12px;height:12px;border-radius:4px;
-  transform:rotate(45deg);
-  background:var(--domc);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 18px rgba(0,0,0,.35);
-  margin-top:3px;flex:0 0 auto;
+.left{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  min-width:0;
 }
-.stackTitle{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.barWrap{display:flex;align-items:flex-start;gap:10px;flex:0 0 auto;margin-top:2px}
+.diamond{
+  width:10px;height:10px;
+  transform:rotate(45deg);
+  border-radius:3px;
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+}
+.bar{
+  width:6px;height:22px;border-radius:99px;background:var(--c);
+  box-shadow:0 0 18px rgba(0,0,0,.25);
+}
+.titleBlock{min-width:0}
+.title{
+  font-weight:950;
+  letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:6px;
+  font-size:12.75px;
+  opacity:.80;
+  line-height:1.35;
+  max-width:92ch;
+}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
-.stackBody{
+.body{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -277,25 +193,40 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.stackRow.open .stackBody{display:block}
+.row.open .body{display:block}
 
-/* Bubbles inside each domain */
+.pdesc{
+  margin:0;
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.25px;
+}
+
+/* Sub-bubbles inside row: Concept / Live / Roadmap */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;background:rgba(255,255,255,.05);
-  padding:14px 14px 12px;margin:0 0 12px;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
 .bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
-.bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
+.bubble p{margin:0;color:rgba(255,255,255,.78);line-height:1.65;display:none}
 .bubble.open p{display:block}
-.hint{
-  max-width:980px;margin:0 auto 12px;
-  padding:10px 12px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.80);
-  font-size:12.5px;line-height:1.45;
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+.actions .btn{
+  padding:10px 12px;
+  border-radius:999px;
+  white-space:nowrap;
 }
 
 /* Dock */
@@ -316,9 +247,8 @@ body::before,body::after{pointer-events:none!important}
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:560px){
-  :root{--R:148px;--D:176px;--dockH:98px}
-  .stage{height:min(460px,56vh);top:auto;margin-top:92px}
+@media (max-width:520px){
+  :root{--dockH:98px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -328,6 +258,7 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top-left">
   <a class="btn" id="btnBack" href="/products/">BACK</a>
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
   <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
@@ -337,53 +268,33 @@ body::before,body::after{pointer-events:none!important}
   <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
-<div class="brand" aria-hidden="true">
-  <div class="t" id="hdrT">Software</div>
-  <div class="s" id="hdrS">Wishbone · Engine ↔ Platform · 72 Narratives</div>
-</div>
+<div class="page">
 
-<div class="stage" aria-label="Software wishbone">
-  <div class="outer" aria-hidden="true"></div>
+  <div class="header">
+    <p class="k" id="hk">SOFTWARE</p>
+    <h1 class="t" id="ht">THE MACHINE BEHIND THE PAGES</h1>
+    <p class="s" id="hs">Pick a side. Open one domain. Then open Concept / Live / Roadmap.</p>
+    <div class="fine" id="fine">Rule: big ideas are allowed, but every claim stays support-bounded.</div>
 
-  <div class="d dL" id="dEngine" role="button" tabindex="0" aria-label="Engine">
-    <div class="inner">
-      <div class="lab" id="labEngine">ENGINE</div>
-      <div class="sub" id="subEngine">How it runs · state · gates</div>
-    </div>
-  </div>
-
-  <div class="d dR" id="dPlatform" role="button" tabindex="0" aria-label="Platform">
-    <div class="inner">
-      <div class="lab" id="labPlatform">PLATFORM</div>
-      <div class="sub" id="subPlatform">How it ships · surfaces · routing</div>
-    </div>
-  </div>
-
-  <div class="core">◆</div>
-</div>
-
-<div class="page" aria-label="Software content">
-
-  <div class="hero">
-    <p class="hk" id="hk">SOFTWARE</p>
-    <h1 class="ht" id="ht">ENGINE ↔ PLATFORM</h1>
-    <p class="hs" id="hs">Pick a side. Open a domain. Tap Concept / Live / Roadmap.</p>
-    <div class="fine" id="fine">Rule: wording can change by tone, but the contract stays stable.</div>
-
-    <div class="toneRow" aria-label="Tone toggle">
-      <button class="pill" id="toneInformal" type="button">INFORMAL</button>
-      <button class="pill" id="toneFormal" type="button">FORMAL</button>
+    <div class="selector" style="margin-top:12px">
+      <div class="pills" aria-label="Side">
+        <button class="pill red active" id="pillEngine" type="button">ENGINE</button>
+        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
+      </div>
+      <div class="pills" aria-label="Tone">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
     </div>
   </div>
 
   <div class="band" id="band">ENGINE DOMAINS</div>
-  <div class="hint" id="hint">Tap a domain to expand. Bubbles open inside. Tap again to close.</div>
-  <div class="stackList" id="list"></div>
+  <div class="list" id="list"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
@@ -391,10 +302,10 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ===== state =====
+  // ===== canonical state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal"; // used as default tone
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
@@ -410,23 +321,29 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  function wire(id,path){
+  // wire nav
+  function wire(id, path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-
   wire("btnBack","/products/");
+  wire("btnDoor","/door/");
   wire("btnExit","/index.html");
-  wire("dockDoor","/door/");
+  wire("dockHome","/home/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
@@ -435,668 +352,731 @@ body::before,body::after{pointer-events:none!important}
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q();
+    window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== UI text =====
-  var UI={
-    en:{
-      hdrT:"Software",
-      hdrS:"Wishbone · Engine ↔ Platform · 72 Narratives",
-      d:{engine:{lab:"ENGINE",sub:"How it runs · state · gates"}, platform:{lab:"PLATFORM",sub:"How it ships · surfaces · routing"}},
-      hk:"SOFTWARE",
-      ht:"ENGINE ↔ PLATFORM",
-      hs:"Pick a side. Open a domain. Tap Concept / Live / Roadmap.",
-      fine:"Rule: wording can change by tone, but the contract stays stable.",
-      bandE:"ENGINE DOMAINS",
-      bandP:"PLATFORM DOMAINS",
-      hint:"Tap a domain to expand. Bubbles open inside. Tap again to close.",
-      informal:"INFORMAL",
-      formal:"FORMAL",
-      concept:"Concept",
-      live:"Live",
-      roadmap:"Roadmap"
-    },
-    zh:{
-      hdrT:"软件",
-      hdrS:"叉形入口 · 引擎 ↔ 平台 · 72段叙事",
-      d:{engine:{lab:"引擎",sub:"怎么跑 · 状态 · 闸门"}, platform:{lab:"平台",sub:"怎么交付 · 界面 · 路由"}},
-      hk:"软件",
-      ht:"引擎 ↔ 平台",
-      hs:"先选一侧。再开域。点：概念 / 上线 / 路线图。",
-      fine:"规则：语气可变，但契约不变。",
-      bandE:"引擎域",
-      bandP:"平台域",
-      hint:"点域展开；气泡在内部展开；再点可关闭。",
-      informal:"通俗",
-      formal:"正式",
-      concept:"概念",
-      live:"上线",
-      roadmap:"路线图"
-    },
-    es:{
-      hdrT:"Software",
-      hdrS:"Horquilla · Motor ↔ Plataforma · 72 Narrativas",
-      d:{engine:{lab:"MOTOR",sub:"Cómo corre · estado · compuertas"}, platform:{lab:"PLATAFORMA",sub:"Cómo se entrega · superficies · rutas"}},
-      hk:"SOFTWARE",
-      ht:"MOTOR ↔ PLATAFORMA",
-      hs:"Elige un lado. Abre un dominio. Toca: Concepto / En vivo / Hoja de ruta.",
-      fine:"Regla: cambia el tono, no el contrato.",
-      bandE:"DOMINIOS DEL MOTOR",
-      bandP:"DOMINIOS DE PLATAFORMA",
-      hint:"Toca un dominio para expandir. Burbujas adentro. Toca otra vez para cerrar.",
-      informal:"INFORMAL",
-      formal:"FORMAL",
-      concept:"Concepto",
-      live:"En vivo",
-      roadmap:"Hoja de ruta"
-    }
-  };
-  var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+  // ===== i18n for header labels (kept light; content is per-domain packs below) =====
+  function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
 
-  document.getElementById("hdrT").textContent=T.hdrT;
-  document.getElementById("hdrS").textContent=T.hdrS;
-
-  document.getElementById("labEngine").textContent=T.d.engine.lab;
-  document.getElementById("subEngine").textContent=T.d.engine.sub;
-  document.getElementById("labPlatform").textContent=T.d.platform.lab;
-  document.getElementById("subPlatform").textContent=T.d.platform.sub;
-
-  document.getElementById("hk").textContent=T.hk;
-  document.getElementById("ht").textContent=T.ht;
-  document.getElementById("hs").textContent=T.hs;
-  document.getElementById("fine").textContent=T.fine;
-  document.getElementById("hint").textContent=T.hint;
-
-  // ===== domains =====
-  var DOMAINS = {
-    state_runtime: {c:"#93C5FD", en:"State Runtime", zh:"状态运行时", es:"Runtime de estado", sEn:"State survives taps and refresh.", sZh:"点按与刷新下仍稳定。", sEs:"Estado estable al navegar."},
-    deterministic_gates: {c:"#D4AF37", en:"Deterministic Gates", zh:"确定性闸门", es:"Compuertas deterministas", sEn:"Pass/fail with reason codes.", sZh:"通过/失败+原因码。", sEs:"Pasa/falla con razones."},
-    receipt_progression: {c:"#60A5FA", en:"Receipt Progression", zh:"收据式推进", es:"Progresión por recibos", sEn:"Progress only by proof.", sZh:"只凭证明推进。", sEs:"Avanza solo con prueba."},
-    change_control: {c:"#A3A3A3", en:"Change Control", zh:"变更控制", es:"Control de cambios", sEn:"New epoch when rules change.", sZh:"规则变更=新纪元。", sEs:"Nueva época si cambian reglas."},
-    audit_discipline: {c:"#34D399", en:"Audit Discipline", zh:"审计纪律", es:"Disciplina de auditoría", sEn:"Receipts decide, not intent.", sZh:"收据说了算。", sEs:"Deciden recibos, no intención."},
-    admissibility_doctrine: {c:"#F472B6", en:"Admissibility Doctrine", zh:"可采信教义", es:"Doctrina de admisibilidad", sEn:"Don’t claim beyond receipts.", sZh:"不超越收据主张。", sEs:"No afirmar sin recibos."},
-
-    navigation_surfaces: {c:"#93C5FD", en:"Navigation Surfaces", zh:"导航界面", es:"Superficies de navegación", sEn:"Pretty UI, strict contract.", sZh:"界面漂亮，契约严格。", sEs:"UI bonita, contrato estricto."},
-    product_packaging: {c:"#D4AF37", en:"Product Packaging", zh:"产品封装", es:"Empaquetado", sEn:"Products separate from proof.", sZh:"产品与证明分离。", sEs:"Producto separado de prueba."},
-    enterprise_deployment: {c:"#60A5FA", en:"Enterprise Deployment", zh:"企业部署", es:"Despliegue empresarial", sEn:"Rollout waves + rollback.", sZh:"分波次+可回滚。", sEs:"Olas + rollback."},
-    dotgrid_sweeps: {c:"#34D399", en:"Dot.Grid Sweeps", zh:"Dot.Grid 扫掠", es:"Barridos Dot.Grid", sEn:"Same sweep, comparable outputs.", sZh:"同扫掠，可比较。", sEs:"Mismo barrido, comparable."},
-    scoring_outputs: {c:"#F472B6", en:"Scoring Outputs", zh:"评分输出", es:"Puntuación", sEn:"Signal, not persuasion.", sZh:"信号，不是说服。", sEs:"Señal, no persuasión."},
-    registry_lookups: {c:"#A3A3A3", en:"Registry Lookups", zh:"登记查询", es:"Consultas de registro", sEn:"Status + reason codes.", sZh:"状态+原因码。", sEs:"Estado + razones."}
-  };
-
-  var ENGINE6 = ["state_runtime","deterministic_gates","receipt_progression","change_control","audit_discipline","admissibility_doctrine"];
-  var PLATFORM6 = ["navigation_surfaces","product_packaging","enterprise_deployment","dotgrid_sweeps","scoring_outputs","registry_lookups"];
-
-  function dTitle(id){
-    var o=DOMAINS[id];
-    return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en;
-  }
-  function dSub(id){
-    var o=DOMAINS[id];
-    return (lang==="zh")?o.sZh:(lang==="es")?(o.sEs||o.sEn):o.sEn;
+  if(lang==="zh"){
+    setText("hk","软件");
+    setText("ht","页面背后的机器");
+    setText("hs","先选侧面，再开一个域，然后打开：概念 / 上线 / 路线图。");
+    setText("fine","规则：允许大想法，但任何主张必须有支撑边界。");
+    setText("btnBack","返回");
+    setText("btnDoor","门");
+    setText("btnExit","退出");
+    setText("dockHome","主页");
+    setText("dockProducts","产品");
+    setText("dockLaws","法则");
+    setText("dockGauges","量规");
+    setText("pillEngine","引擎");
+    setText("pillPlatform","平台");
+    setText("pillInformal","通俗");
+    setText("pillFormal","正式");
+  }else if(lang==="es"){
+    setText("hk","SOFTWARE");
+    setText("ht","LA MÁQUINA DETRÁS DE LAS PÁGINAS");
+    setText("hs","Elige lado. Abre un dominio. Luego abre: Concepto / En vivo / Hoja de ruta.");
+    setText("fine","Regla: se permiten ideas grandes, pero toda afirmación queda acotada por soporte.");
+    setText("btnBack","VOLVER");
+    setText("btnDoor","PUERTA");
+    setText("btnExit","SALIR");
+    setText("dockHome","INICIO");
+    setText("dockProducts","PRODUCTOS");
+    setText("dockLaws","LEYES");
+    setText("dockGauges","MEDIDORES");
+    setText("pillEngine","MOTOR");
+    setText("pillPlatform","PLATAFORMA");
+    setText("pillInformal","INFORMAL");
+    setText("pillFormal","FORMAL");
   }
 
-  // ===== narratives (reuse your existing text) =====
-  // NOTE: Each field is {en,zh,es}
+  // ===== side + tone =====
+  var side="engine"; // engine|platform
+  var tone=style;    // informal|formal
+
+  var pillEngine=document.getElementById("pillEngine");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+  var band=document.getElementById("band");
+  var list=document.getElementById("list");
+
+  function paintPills(){
+    pillEngine.classList.toggle("active", side==="engine");
+    pillPlatform.classList.toggle("active", side==="platform");
+    pillInformal.classList.toggle("active", tone==="informal");
+    pillFormal.classList.toggle("active", tone==="formal");
+  }
+
+  pillEngine.addEventListener("click", function(){ side="engine"; paintPills(); render(); });
+  pillPlatform.addEventListener("click", function(){ side="platform"; paintPills(); render(); });
+  pillInformal.addEventListener("click", function(){ tone="informal"; try{localStorage.setItem("gd_style","informal");}catch(e){} paintPills(); render(); });
+  pillFormal.addEventListener("click", function(){ tone="formal"; try{localStorage.setItem("gd_style","formal");}catch(e){} paintPills(); render(); });
+
+  // ===== content packs (TED-style informal + spec formal; 72 narratives present) =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  // Domain labels + color tokens (diamond + bar)
+  var DOM = {
+    state_runtime:{c:"#60A5FA", t:P("State Runtime","状态运行时","Runtime de estado"), s:P("Your app’s ‘physics’—what is true right now.","应用的“物理学”——现在什么是真的。","La ‘física’ de tu app: qué es verdad ahora.")},
+    deterministic_gates:{c:"#F59E0B", t:P("Deterministic Gates","确定性闸门","Compuertas deterministas"), s:P("Pass/fail rules that don’t change with mood.","不会随情绪变化的通过/失败规则。","Reglas pasa/falla sin ‘vibras’.")},
+    receipt_progression:{c:"#93C5FD", t:P("Receipt Progression","收据式推进","Progresión por recibos"), s:P("You move forward because you proved it.","你前进是因为你证明了。","Avanzas porque lo probaste.")},
+    audit_discipline:{c:"#34D399", t:P("Audit Discipline","审计纪律","Disciplina de auditoría"), s:P("How you stay honest under pressure.","压力下保持诚实的方法。","Cómo mantenerse honesto bajo presión.")},
+    change_control:{c:"#A3A3A3", t:P("Change Control","变更控制","Control de cambios"), s:P("Upgrade without rewriting history.","升级但不改写历史。","Actualizar sin reescribir historia.")},
+    admissibility_doctrine:{c:"#EF4444", t:P("Admissibility Doctrine","可采信教义","Doctrina de admisibilidad"), s:P("Don’t claim more than receipts allow.","别说超过收据允许的东西。","No afirmes más de lo que permiten los recibos.")},
+
+    navigation_surfaces:{c:"#60A5FA", t:P("Navigation Surfaces","导航界面","Superficies de navegación"), s:P("Tap should do one clean thing.","一次点击只做一件干净的事。","Un toque = una acción limpia.")},
+    product_packaging:{c:"#F59E0B", t:P("Product Packaging","产品封装","Empaquetado de producto"), s:P("Make tools usable without inflating claims.","让工具可用但不膨胀主张。","Hacer usable sin inflar afirmaciones.")},
+    enterprise_deployment:{c:"#93C5FD", t:P("Enterprise Deployment","企业部署","Despliegue empresarial"), s:P("Scale in waves, with rollback ready.","分波次扩张，随时可回滚。","Escalar en olas con rollback listo.")},
+    dotgrid_sweeps:{c:"#34D399", t:P("Dot.Grid Sweeps","Dot.Grid 扫掠","Barridos Dot.Grid"), s:P("Index & sweep: compare reality across time.","索引+扫掠：跨时间比较现实。","Indexar y barrer: comparar en el tiempo.")},
+    scoring_outputs:{c:"#A3A3A3", t:P("Scoring Outputs","评分输出","Salidas de puntuación"), s:P("Readable signals with reason codes.","带原因码的可读信号。","Señales legibles con razones.")},
+    registry_lookups:{c:"#EF4444", t:P("Registry Lookups","登记查询","Consultas de registro"), s:P("Status you can check without ‘trust me’.","无需‘信我’也能核查的状态。","Estado verificable sin ‘créeme’.")}
+  };
+
+  // 12 × (concept/live/roadmap) × (formal/informal)
   var TEXT = {
     state_runtime:{
       concept:{
-        formal:{en:"The runtime is a constrained state machine: declared keys define the coordinate and each transition is atomic. The same evidence stream yields the same next state under identical rules. This makes execution reproducible and drift-resistant.",
-               zh:"运行时是受约束的状态机：规范键定义坐标，状态转移必须原子化。同一证据流在同一规则下得到同一下一状态，从而让执行可复现、抗漂移。",
-               es:"El runtime es una máquina de estados acotada: las claves declaradas definen la coordenada y cada transición es atómica. La misma evidencia produce el mismo siguiente estado bajo las mismas reglas."},
-        informal:{en:"The runtime is the part that keeps everything from turning into chaos. You are always in a state, and every move changes state cleanly. No guessing, no magic—just discipline.",
-                  zh:"运行时负责防止系统变成混乱：你总在某个状态里，每一步都干净地换到下一个状态。不靠猜，不靠“魔法”，靠纪律。",
-                  es:"El runtime evita el caos: siempre estás en un estado y cada paso cambia el estado de forma limpia. Sin magia ni suposiciones: disciplina."}
+        informal:P(
+          "Think of runtime as the app’s gravity. It decides what counts as ‘now’ and what the next tap is allowed to do. If the runtime is fuzzy, every page becomes an argument. If it’s crisp, the whole system feels calm.",
+          "把运行时当作应用的重力：它决定什么算“现在”，以及下一次点击允许做什么。运行时模糊，页面就会变成争论；运行时清晰，系统就会变得安静稳定。",
+          "El runtime es la gravedad de la app: define qué es ‘ahora’ y qué permite el siguiente toque. Si es difuso, todo se vuelve discusión; si es nítido, todo se vuelve calmado."
+        ),
+        formal:P(
+          "Runtime is a constrained state machine under declared keys and scope. Atomic transitions produce reproducible next states from identical evidence, preventing semantic drift under navigation and refresh.",
+          "运行时是受约束的状态机：在声明键与范围下，原子化转移从同证据得到可复现下一状态，阻断导航/刷新下的语义漂移。",
+          "El runtime es una máquina de estados acotada: transiciones atómicas producen estados siguientes reproducibles a partir de la misma evidencia, evitando deriva bajo navegación/recarga."
+        )
       },
       live:{
-        formal:{en:"Live operation requires state to survive refresh, navigation, and device variance. Back-navigation can invalidate downstream receipts; forward movement requires fresh confirmation. Drift triggers rollback rather than reinterpretation.",
-               zh:"上线态要求状态能穿越刷新、返回、设备差异。回退会使下游收据失效；前进需要重新确认。出现漂移则回滚，而不是改口解释。",
-               es:"En vivo, el estado debe sobrevivir recarga, navegación y variaciones del dispositivo. Volver puede invalidar recibos; avanzar requiere confirmación. La deriva dispara rollback."},
-        informal:{en:"Live means it doesn’t break when you tap around. Leave and come back and it still knows what’s true. If something goes weird, it resets cleanly instead of spiraling.",
-                  zh:"上线意味着你怎么点都不崩：离开再回来，系统仍知道什么是真的。出问题就干净重置，不让它螺旋失控。",
-                  es:"En vivo significa que no se rompe cuando tocas. Sales y vuelves y sigue siendo correcto. Si se pone raro, se reinicia limpio."}
+        informal:P(
+          "Live runtime means: you can bounce around, change language, refresh the page, and it still remembers what’s true. If something conflicts, it doesn’t improvise—it rolls back to the last stable place.",
+          "上线运行时意味着：你随便跳、切语言、刷新，系统仍记得什么是真的。出现冲突时不临场发挥，而是回滚到最后稳定位置。",
+          "En vivo: puedes navegar, cambiar idioma, recargar, y el sistema sigue correcto. Si hay conflicto, no improvisa: hace rollback al último estado estable."
+        ),
+        formal:P(
+          "Live posture requires refresh-safe persistence, deterministic back-nav invalidation, and receipt-gated forward moves. Conflicts resolve by containment and rollback, not reinterpretation.",
+          "上线姿态要求：刷新安全持久化、确定性回退失效、收据闸门式前进。冲突通过隔离与回滚解决，而非事后换义。",
+          "En vivo requiere persistencia segura, invalidación determinista al volver y avance con recibos. Conflictos se resuelven con contención/rollback, no reinterpretación."
+        )
       },
       roadmap:{
-        formal:{en:"Roadmap extends the runtime into domain adapters and exportable receipts: each transition can emit a compact proof bundle (inputs, decision, result). Coverage expands without changing the core contract.",
-               zh:"路线图把运行时扩展为可插拔的领域适配器与可导出的收据：每次转移都可输出小型证明包（输入、决策、结果）。覆盖面扩大但契约不变。",
-               es:"La hoja de ruta añade adaptadores por dominio y recibos exportables: cada transición puede emitir un paquete de prueba (entradas, decisión, resultado) sin cambiar el contrato base."},
-        informal:{en:"Next, the runtime learns new domains without changing the rules. More surfaces, same discipline. And you can export what happened so others can verify it.",
-                  zh:"下一步是在不改规则的前提下接入更多领域：更多界面，同样纪律；还可以导出发生了什么，让别人能核查。",
-                  es:"Luego, el runtime se extiende a nuevos dominios sin cambiar reglas: más superficies, misma disciplina, y exportas lo ocurrido para que otros lo verifiquen."}
+        informal:P(
+          "Next, runtime becomes portable: it can emit tiny ‘what happened’ receipts you can carry across pages and products. That’s how you build a platform that stays honest while it grows.",
+          "下一步是运行时可携带：它能输出小型“发生了什么”的收据，跨页面/跨产品带着走。平台想长大又不漂移，就靠这个。",
+          "Luego el runtime se vuelve portátil: emite recibos pequeños de ‘qué pasó’ que viajan entre páginas y productos. Así crece una plataforma sin perder honestidad."
+        ),
+        formal:P(
+          "Roadmap adds exportable receipt bundles (inputs/decision/result) and domain adapters while preserving the state contract. Coverage expands without changing invariants.",
+          "路线图加入可导出收据包（输入/决策/结果）与领域适配器，同时保持状态契约不变；覆盖面扩大但不变量不变。",
+          "La hoja de ruta añade paquetes de recibos exportables (entradas/decisión/resultado) y adaptadores por dominio, preservando el contrato de estado e invariantes."
+        )
       }
     },
 
     deterministic_gates:{
       concept:{
-        formal:{en:"Gates are binary admissibility checks under declared scope. They prevent escalation without receipts and suppress narrative inflation. A gate is a rule: given inputs, it yields pass or fail.",
-               zh:"闸门是在声明范围内的二元可采信检查：没有收据就不允许升级，防止叙事膨胀。闸门是规则：给定输入，只产出通过/失败。",
-               es:"Las compuertas son verificaciones binarias de admisibilidad bajo alcance declarado. Sin recibos no hay escalación. Dado un input, devuelve pasa/falla."},
-        informal:{en:"Gates are the yes/no switches that keep the system honest. If the proof isn’t there, you don’t level up. Simple and clean.",
-                  zh:"闸门就是让系统诚实的“是/否”开关：没证明就不升级，干净利落。",
-                  es:"Las compuertas son el sí/no que mantiene honestidad. Si no hay prueba, no subes de nivel. Simple."}
+        informal:P(
+          "A gate is a friendly bouncer. It doesn’t care who you are—only what you brought. If the proof isn’t there, you don’t get in. That’s how you stop drift before it becomes drama.",
+          "闸门像友好的门卫：不看你是谁，只看你带了什么。没证明就不放行。漂移在变成闹剧前就被止住。",
+          "Una compuerta es un portero justo: no le importa quién eres, solo qué trajiste. Sin prueba no entras. Así detienes la deriva antes del drama."
+        ),
+        formal:P(
+          "Gates are binary admissibility checks under declared scope. Given inputs, the outcome is deterministic (pass/fail) and cannot be overridden by narrative.",
+          "闸门是在声明范围内的二元可采信检查：给定输入，结果确定（通过/失败），不能被叙事覆盖。",
+          "Las compuertas son checks binarios de admisibilidad: con inputs dados, el resultado es determinista (pasa/falla) y no se anula con narrativa."
+        )
       },
       live:{
-        formal:{en:"Live gates forbid timers-as-gates, hidden shortcuts, and silent overrides. Failures are contained and logged; success advances with a receipt. This preserves comparability across time.",
-               zh:"上线闸门禁止用计时当闸门、禁止暗捷径、禁止静默覆盖。失败会被隔离并记录；通过则携带收据推进，从而保证跨时间可比较。",
-               es:"En vivo, no hay temporizadores como compuertas, ni atajos ocultos, ni overrides silenciosos. Fallos se contienen y registran; éxitos avanzan con recibo."},
-        informal:{en:"Live gating means no sneaky passes. You either meet it or you don’t. If you fail, it stops drift immediately and tells you what broke.",
-                  zh:"上线闸门不允许“偷过”：要么满足，要么不满足。不满足就立刻止漂移，并告诉你哪里坏了。",
-                  es:"En vivo no hay pases furtivos: cumples o no. Si fallas, corta la deriva y te dice qué se rompió."}
+        informal:P(
+          "Live gating means no ‘timer tricks’ and no secret exceptions. Failures get contained and explained. Passes move forward with a receipt so you can replay the decision later.",
+          "上线闸门意味着没有“计时花招”、没有暗例外。失败会被隔离并解释；通过则带收据前进，之后还能复跑验证。",
+          "En vivo no hay trucos de tiempo ni excepciones secretas. Fallos se contienen y se explican; pases avanzan con recibo para poder re-ejecutar la decisión."
+        ),
+        formal:P(
+          "Live gates forbid timers-as-gates, hidden shortcuts, and silent overrides. Decisions emit reason codes and are logged for replay under identical rules.",
+          "上线闸门禁止计时作闸门、暗捷径、静默覆盖。决策带原因码并记录，可在同规则下回放。",
+          "En vivo se prohíben temporizadores como compuertas, atajos ocultos y overrides silenciosos. Las decisiones llevan códigos de razón y quedan registradas para replay."
+        )
       },
       roadmap:{
-        formal:{en:"Roadmap adds reason codes and replay: independent observers can reproduce gate decisions from the same receipt set. That upgrades trust while keeping the logic minimal.",
-               zh:"路线图加入原因码与可回放：独立观察者可用同一收据集复现闸门决策。在保持逻辑极简的同时提升可信度。",
-               es:"La hoja de ruta añade códigos de razón y replay: observadores independientes pueden reproducir la decisión con el mismo set de recibos, aumentando confianza."},
-        informal:{en:"Next, every gate comes with a clean “why” that anyone can rerun. Same inputs, same result. That’s how trust scales.",
-                  zh:"下一步是每个闸门都有可复跑的“为什么”：同输入同结果，信任因此能规模化。",
-                  es:"Luego, cada compuerta viene con un “por qué” rerunable: mismo input, mismo resultado. Así escala la confianza."}
+        informal:P(
+          "Next, gates become shareable. Two people can look at the same receipt and land on the same answer—no arguing. That’s what scalable trust feels like.",
+          "下一步闸门可分享：两个人看同一份收据会得到同一个答案——不用吵。这就是可规模化信任。",
+          "Luego, las compuertas se vuelven compartibles: dos personas ven el mismo recibo y llegan a la misma respuesta. Eso es confianza escalable."
+        ),
+        formal:P(
+          "Roadmap adds standardized reason codes and independent replay so gate outcomes are observer-invariant from the same receipt set.",
+          "路线图加入标准原因码与独立回放，使闸门结果在同收据集下对观察者不变。",
+          "La hoja de ruta añade códigos de razón estandarizados y replay independiente para que los resultados sean invariantes entre observadores con el mismo set de recibos."
+        )
       }
     },
 
     receipt_progression:{
       concept:{
-        formal:{en:"Progression is receipt-gated: advancement requires evidence that survives scope locks. Time does not grant progress; outputs do. This makes progress audit-friendly by default.",
-               zh:"推进是收据闸门式的：升级必须有在范围锁下仍成立的证据。时间不授予进步，输出才授予进步，因此默认可审计。",
-               es:"La progresión está acotada por recibos: avanzar requiere evidencia que sobreviva al alcance. El tiempo no otorga progreso; la salida sí."},
-        informal:{en:"You don’t progress because time passed—you progress because you did the thing. Receipts are the proof you earned the next step.",
-                  zh:"不是因为过了时间就算进步，而是因为你做到了。收据就是你配得上下一步的证明。",
-                  es:"No avanzas por pasar tiempo; avanzas por hacerlo. Los recibos prueban que te ganaste el siguiente paso."}
+        informal:P(
+          "Progress here is earned, not assumed. You don’t get ‘advanced’ because you waited—you advance because you produced something real. Receipts turn learning and building into proof, not vibes.",
+          "这里的进步是挣来的，不是默认的。不是等一等就升级，而是因为你产出了真实结果。收据把学习和构建变成证明，而不是感觉。",
+          "Aquí el progreso se gana, no se asume. No avanzas por esperar; avanzas por producir algo real. Los recibos convierten aprendizaje y construcción en prueba, no ‘vibras’."
+        ),
+        formal:P(
+          "Progression is receipt-gated: advancement requires evidence that survives scope locks. Time does not grant progression; outputs do.",
+          "推进是收据闸门式：升级必须有在范围锁下仍成立的证据。时间不授予推进，输出才授予推进。",
+          "La progresión está acotada por recibos: avanzar requiere evidencia que sobreviva a bloqueos de alcance. El tiempo no otorga progreso; las salidas sí."
+        )
       },
       live:{
-        formal:{en:"Live progression preserves position across navigation and language toggles. Back-navigation can invalidate downstream receipts; forward steps require confirmation. Conflicts prefer safety over momentum.",
-               zh:"上线推进会在导航与语言切换中保持位置。回退会使下游收据失效；前进需要确认。出现冲突时优先安全而非速度。",
-               es:"En vivo, la progresión se conserva al navegar o cambiar idioma. Volver puede invalidar recibos; avanzar requiere confirmación."},
-        informal:{en:"Live means you can’t accidentally skip into the future. If you back out, the system knows what becomes invalid and keeps you honest.",
-                  zh:"上线意味着你无法误闯未来：你一回退，系统就知道哪些东西无效，并把你拉回真实状态。",
-                  es:"En vivo no puedes “saltar” por accidente. Si retrocedes, el sistema sabe qué se invalida y te mantiene honesto."}
+        informal:P(
+          "Live progression keeps you honest across navigation. If you go back, downstream steps can become invalid—and the system tells you cleanly. That’s how you prevent accidental ‘skip into the future.’",
+          "上线推进会在导航中保持诚实：你一回退，下游步骤可能失效，系统会干净地告诉你。这能防止“误闯未来”。",
+          "En vivo, la progresión se mantiene honesta al navegar. Si vuelves atrás, pasos posteriores pueden invalidarse y el sistema te lo indica. Evita ‘saltar al futuro’ por accidente."
+        ),
+        formal:P(
+          "Live progression preserves state across navigation/language toggles. Back-nav invalidates downstream receipts deterministically; forward movement requires confirmation under the same rubric.",
+          "上线推进在导航/语言切换中保持状态；回退确定性地使下游收据失效；前进需在同评分规下确认。",
+          "En vivo, la progresión preserva estado al navegar/cambiar idioma. Volver invalida recibos de forma determinista; avanzar requiere confirmación con la misma rúbrica."
+        )
       },
       roadmap:{
-        formal:{en:"Roadmap adds registrable receipt bundles (hashable) so progress can be recognized across products without leaking private data. Verification scales without centralized trust.",
-               zh:"路线图加入可登记的收据包（可哈希），让进度能跨产品被认可而不泄露隐私。验证可扩展且不依赖中心信任。",
-               es:"La hoja de ruta añade paquetes de recibos registrables (hasheables) para reconocer progreso entre productos sin filtrar datos privados."},
-        informal:{en:"Next, your receipts become portable. Proof scales; privacy stays. That’s how progress becomes real outside one page.",
-                  zh:"下一步是收据可携带：证明可扩展，隐私不牺牲。这样进度才能在页面之外也算数。",
-                  es:"Luego, tus recibos se vuelven portátiles: la prueba escala y la privacidad permanece."}
+        informal:P(
+          "Next, receipts become portable: you can prove progress across products without exposing private details. Proof scales, privacy stays.",
+          "下一步收据可携带：你能在不同产品间证明进度，而不暴露隐私细节。证明能扩展，隐私不牺牲。",
+          "Luego, los recibos se vuelven portátiles: puedes probar progreso entre productos sin exponer detalles privados. La prueba escala, la privacidad permanece."
+        ),
+        formal:P(
+          "Roadmap enables registrable, hashable receipt bundles for cross-product recognition without centralized trust.",
+          "路线图实现可登记、可哈希的收据包，支持跨产品认可且不依赖中心信任。",
+          "La hoja de ruta habilita paquetes de recibos registrables/hasheables para reconocimiento entre productos sin confianza centralizada."
+        )
       }
     },
 
-    change_control: (function(){ return JSON.parse(JSON.stringify(TEXT_FROM_PREVIOUS_PLACEHOLDER)); })()
-  };
-
-  // ---- remaining 9 domains reuse from your earlier file ----
-  // To keep this TNT self-contained, we embed the rest here exactly as previously used.
-  // (No structural differences; only rendered under the unified UI.)
-  // IMPORTANT: This object is intentionally expanded in-place to avoid external dependencies.
-
-  // BEGIN: injected remaining domains
-  TEXT.change_control = {
-    concept:{
-      formal:{en:"Change control defines how updates occur without corrupting comparability. If a change affects outcomes, it creates a new epoch. Past results remain interpretable under original rules.",
-             zh:"变更控制规定如何升级而不破坏可比性：只要影响结果就开启新纪元；旧结果仍按旧规则可解释。",
-             es:"El control de cambios define cómo actualizar sin romper comparabilidad. Si cambia resultados, crea una nueva época."},
-      informal:{en:"Change control is how you upgrade without rewriting history. If rules change, you stamp it. Comparisons stay honest.",
-                zh:"变更控制就是“不改历史”的升级法：规则变了就盖章，比较才诚实。",
-                es:"Control de cambios es actualizar sin reescribir historia. Si cambias reglas, lo marcas."}
+    audit_discipline:{
+      concept:{
+        informal:P(
+          "Audit discipline is how you keep your story from changing under pressure. You don’t argue intent—you show what happened. Receipts decide. That’s the difference between ‘trust me’ and ‘check me.’",
+          "审计纪律让你的故事在压力下不变形：不争论意图，只展示发生了什么。收据裁决。这就是“信我”和“核查我”的区别。",
+          "La auditoría evita que la historia cambie bajo presión: no discutes intención, muestras lo ocurrido. Los recibos deciden. Es la diferencia entre ‘créeme’ y ‘verifícame’."
+        ),
+        formal:P(
+          "Audit discipline requires observer-invariant evaluation: outputs are judged by receipts under declared scope, not intent.",
+          "审计纪律要求观察者不变：在声明范围内用收据评判输出，而非意图。",
+          "La disciplina de auditoría exige evaluación invariante: se juzga por recibos bajo alcance declarado, no por intención."
+        )
+      },
+      live:{
+        informal:P(
+          "Live audits make disputes boring. If we disagree, we pull the receipt. If it’s missing, we log the gap and stop escalation. Cheap conflict. Clean resolution.",
+          "上线审计让争执变无聊：不一致就拿收据；缺收据就记缺口并停止升级。冲突成本变低，解决变干净。",
+          "En vivo, las auditorías vuelven las disputas aburridas: si discrepamos, vemos el recibo. Si falta, registramos el hueco y paramos la escalación."
+        ),
+        formal:P(
+          "Live audit mode produces replayable bundles. Disagreements resolve through scope constraints or missing receipts, not interpretation battles.",
+          "上线审计产出可回放包；分歧通过范围约束或缺失收据解决，而不是解释之争。",
+          "En vivo, el modo auditoría produce paquetes re-ejecutables. Desacuerdos se resuelven por alcance o recibos faltantes, no por interpretaciones."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, auditing gets fast without getting weak. Builders can’t secretly tune outcomes, and auditors can’t quietly relax rules. That’s how trust survives scale.",
+          "下一步审计更快但不更弱：开发者不能暗调结果，审计者也不能暗放宽规则。信任才能经受规模。",
+          "Luego, auditorías más rápidas sin volverse débiles: quien construye no puede ‘tunear’ resultados en secreto, y quien audita no puede relajar reglas en silencio."
+        ),
+        formal:P(
+          "Roadmap adds audit automation with separation of tuning authority: thresholds are versioned, changes create new epochs, and results remain comparable.",
+          "路线图加入自动审计并分离调参权：阈值版本化，变更开新纪元，结果保持可比。",
+          "La hoja de ruta añade automatización con separación de autoridad: umbrales versionados, cambios crean nuevas épocas y los resultados siguen comparables."
+        )
+      }
     },
-    live:{
-      formal:{en:"Live control requires staged rollout, rollback readiness, and documented reasons. Hotfixes must not become hidden policy changes. Stability remains primary.",
-             zh:"上线变更必须分阶段发布、随时可回滚、且理由可追溯。热修不能变成暗政策变更。稳定性优先。",
-             es:"En vivo, requiere rollout por fases, rollback listo y razones documentadas. Los hotfix no pueden ser cambios ocultos."},
-      informal:{en:"Live means don’t push chaos to production. Roll out in waves, keep rollback ready, and don’t pretend a hotfix is harmless.",
-                zh:"上线意味着别把混乱推到生产：分波次、备回滚、别假装热修无害。",
-                es:"En vivo: no empujes caos a producción. Ola por ola y rollback listo."}
+
+    change_control:{
+      concept:{
+        informal:P(
+          "Change control is how you upgrade without rewriting history. If a change affects outcomes, you stamp a new epoch. Old results keep their meaning. That’s rare—and powerful.",
+          "变更控制让你升级但不改历史：只要影响结果就盖新纪元章。旧结果仍保留含义。这很少见，但很强大。",
+          "Control de cambios es actualizar sin reescribir historia: si afecta resultados, marcas una nueva época. Lo anterior conserva significado."
+        ),
+        formal:P(
+          "Change control preserves comparability: outcome-affecting changes create new epochs; past results remain interpretable under original rules.",
+          "变更控制保持可比性：影响结果的变更开启新纪元；旧结果按旧规则可解释。",
+          "El control de cambios preserva comparabilidad: cambios que afectan resultados crean nuevas épocas; resultados previos siguen interpretables con reglas originales."
+        )
+      },
+      live:{
+        informal:P(
+          "Live means no chaos pushes. Roll out in waves, keep rollback ready, and never hide a policy change inside a ‘hotfix.’",
+          "上线意味着别把混乱推到生产：分波次发布，随时可回滚，别把政策变更塞进“热修”。",
+          "En vivo: no empujes caos. Rollout por olas, rollback listo, y nunca escondas un cambio de política en un ‘hotfix’."
+        ),
+        formal:P(
+          "Live control requires staged rollout, rollback readiness, and documented reasons. Silent tuning is disallowed.",
+          "上线控制要求分阶段发布、可回滚准备、理由可追溯；禁止静默调参。",
+          "En vivo requiere rollout por fases, rollback listo y razones documentadas. Ajuste silencioso prohibido."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, updates become signed events you can point to. People trust systems that don’t quietly change under their feet.",
+          "下一步更新变成可指认的签名事件：人们信任不会悄悄换地板的系统。",
+          "Luego, las actualizaciones son eventos firmados verificables. La gente confía en sistemas que no cambian en silencio bajo sus pies."
+        ),
+        formal:P(
+          "Roadmap introduces signed releases and policy registries so changes become verifiable events while maintaining internal speed.",
+          "路线图引入签名发布与策略登记，使变更成为可验证事件，同时保持内部速度。",
+          "La hoja de ruta introduce releases firmados y registros de política para que los cambios sean eventos verificables, manteniendo velocidad interna."
+        )
+      }
     },
-    roadmap:{
-      formal:{en:"Roadmap introduces signed releases and policy registries so changes become verifiable events. This strengthens external trust while keeping internal speed.",
-             zh:"路线图引入签名发布与策略登记，使变更成为可验证事件：外部信任增强，内部速度不降。",
-             es:"La hoja de ruta añade releases firmados y registros de política para que los cambios sean verificables."},
-      informal:{en:"Next, updates become ‘signed events’ you can point to. People trust systems that don’t quietly change under their feet.",
-                zh:"下一步是更新变成“可指认的签名事件”：人们信任不会悄悄换地板的系统。",
-                es:"Luego, actualizaciones como ‘eventos firmados’. La gente confía en sistemas que no cambian en silencio."}
+
+    admissibility_doctrine:{
+      concept:{
+        informal:P(
+          "Doctrine is the guardrail: don’t say more than you can prove. The moment software starts selling stories, it becomes dangerous. Doctrine keeps the system calm and checkable.",
+          "教义是护栏：别说超过你能证明的东西。软件一卖故事就危险；教义让系统保持安静可核查。",
+          "La doctrina es el guardarraíl: no digas más de lo que puedes probar. Cuando el software vende historias, se vuelve peligroso. La doctrina lo mantiene verificable."
+        ),
+        formal:P(
+          "Doctrine defines what may be claimed and what must remain conditional. It prevents upgrades beyond receipts and locks language to measured scope.",
+          "教义规定可主张与必须条件化的边界：防止超收据升级，并把语言锁在可测范围。",
+          "La doctrina define qué se puede afirmar y qué debe ser condicional. Evita upgrades sin recibos y ata el lenguaje al alcance medido."
+        )
+      },
+      live:{
+        informal:P(
+          "Live doctrine is labeling discipline: concept stays concept, live stays measured, roadmap stays gated. If evidence is missing, the system says so and refuses escalation.",
+          "上线教义就是标注纪律：概念就是概念；上线必须可测；路线图必须有闸门。证据缺失就明说并拒绝升级。",
+          "En vivo es disciplina de etiquetas: concepto es concepto, en vivo es medido, roadmap tiene compuertas. Si falta evidencia, se declara y no se escala."
+        ),
+        formal:P(
+          "Live enforcement keeps posture separated: concept/live/roadmap remain distinct classes; missing receipts block escalation and require explicit 'NOT MEASURED' status.",
+          "上线执行保持姿态分离：概念/上线/路线图是不同类别；缺收据阻断升级并要求显式“未测量”状态。",
+          "En vivo se separan clases: concepto/en vivo/roadmap. Sin recibos no hay escalación; se exige estado explícito de ‘NO MEDIDO’."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, every page speaks the same honest language. No inflated claims. No surprises. That’s how adoption stays calm.",
+          "下一步每一页都说同一种诚实语言：不膨胀、不惊喜，采纳才能安静稳定。",
+          "Luego, cada página habla el mismo lenguaje honesto: sin inflación, sin sorpresas. Así la adopción se mantiene calmada."
+        ),
+        formal:P(
+          "Roadmap standardizes doctrine templates across products so claim discipline holds everywhere, reducing drift and accelerating safe adoption.",
+          "路线图把教义模板标准化到全产品：主张纪律处处一致，减少漂移，加速安全采纳。",
+          "La hoja de ruta estandariza plantillas doctrinales entre productos para sostener disciplina de afirmaciones en todas partes, reduciendo deriva y acelerando adopción segura."
+        )
+      }
+    },
+
+    navigation_surfaces:{
+      concept:{
+        informal:P(
+          "Navigation is the user’s steering wheel. It must be boringly reliable: tap once, get one outcome, always. That’s how you prevent ‘mystery bugs’ that are really UI drift.",
+          "导航就是用户的方向盘：必须无聊地可靠——点一次，只发生一件事，而且每次都一样。这样才能防止所谓“神秘bug”（其实是UI漂移）。",
+          "La navegación es el volante del usuario: debe ser aburridamente fiable—un toque, un resultado, siempre. Así evitas ‘bugs misteriosos’ que en realidad son deriva de UI."
+        ),
+        formal:P(
+          "Surfaces present options without altering invariants. UX may simplify, but it must not change admissibility. Navigation-first contracts preserve deterministic behavior.",
+          "界面呈现选项但不得改变不变量：体验可以简化，但不能改可采信；导航优先契约保持确定性行为。",
+          "Las superficies presentan opciones sin alterar invariantes. La UX puede simplificar, pero no cambiar admisibilidad. Contratos navigation-first preservan determinismo."
+        )
+      },
+      live:{
+        informal:P(
+          "Live surfaces mean no ghost layers, no overlap traps, and no double routes. If you can’t trust taps, you can’t trust anything.",
+          "上线界面意味着没有幽灵层、没有重叠陷阱、没有双路由。点按不可信，其他都不可信。",
+          "En vivo: sin capas fantasma, sin trampas de solapamiento, sin rutas dobles. Si no confías en el toque, no confías en nada."
+        ),
+        formal:P(
+          "Live surfaces enforce tap reliability: overlays cannot intercept actions; each input maps to exactly one deterministic outcome. State propagation is mandatory.",
+          "上线界面强制点按可靠：遮罩不得拦截；每次输入映射到且只映射到一个确定结果；必须携带状态。",
+          "En vivo, se exige fiabilidad: overlays no interceptan; cada input mapea a un único resultado determinista; la propagación de estado es obligatoria."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, every product feels like the same machine. Learn one, use them all. That’s speed without chaos.",
+          "下一步每个产品都像同一台机器：学会一个就能用全部。这是无混乱的速度。",
+          "Luego, cada producto se siente como la misma máquina: aprendes uno y usas todos. Velocidad sin caos."
+        ),
+        formal:P(
+          "Roadmap introduces reusable surface templates so interactions remain identical across products, reducing cognitive load and adoption friction.",
+          "路线图引入可复用界面模板，使交互跨产品一致，降低认知负担与采纳摩擦。",
+          "La hoja de ruta introduce plantillas reutilizables para mantener interacciones idénticas entre productos, reduciendo carga cognitiva y fricción de adopción."
+        )
+      }
+    },
+
+    product_packaging:{
+      concept:{
+        informal:P(
+          "Packaging is the promise the page makes. It tells you what you can use—without smuggling doctrine into marketing. Proof lives in Laws. Products stay usable and honest.",
+          "封装就是页面的承诺：告诉你能用什么，但不把教义偷塞成营销。证明在法则里；产品保持可用且诚实。",
+          "El empaquetado es la promesa de la página: qué puedes usar sin meter doctrina como marketing. La prueba vive en Leyes. El producto sigue usable y honesto."
+        ),
+        formal:P(
+          "Packaging binds engines to deployable surfaces while keeping doctrine separate. Product pages describe capability; proof pages define admissible claims.",
+          "封装把引擎绑定到可部署界面，同时保持教义分离：产品页描述能力，证明页定义可采信主张。",
+          "El empaquetado une motores a superficies desplegables manteniendo doctrina separada. Producto describe capacidad; prueba define afirmaciones admisibles."
+        )
+      },
+      live:{
+        informal:P(
+          "Live packaging means no dead ends: every card opens, every open has a return, and every jump preserves state. If navigation collapses into the wrong page, packaging failed.",
+          "上线封装意味着没有死路：卡片都能打开，打开都有返回，跳转都带状态。路由坍缩到错误页，就算封装失败。",
+          "En vivo: sin callejones. Cada tarjeta abre, cada abrir tiene retorno, y cada salto preserva estado. Si colapsa a la página equivocada, el empaquetado falló."
+        ),
+        formal:P(
+          "Live packaging enforces stable routes, explicit returns, and mandatory state carry. No catch-all destinations; each surface routes to its own hub.",
+          "上线封装强制稳定路由、显式返回、强制携带状态；禁止“总汇页”坍缩，每个面路由到各自枢纽。",
+          "En vivo, el empaquetado exige rutas estables, retornos explícitos y propagación obligatoria de estado. Sin destinos ‘universales’; cada superficie rutea a su propio hub."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, packaging becomes scalable: clear tiers, clear access, and clear ‘not built yet’ shells that still route correctly. That’s how you grow without breaking trust.",
+          "下一步封装可规模化：分级清晰、访问清晰、未建也有“壳”且路由正确。信任不会在扩张中破裂。",
+          "Luego, el empaquetado escala: niveles claros, acceso claro y ‘carcasas’ para lo no construido que igual rutean bien. Así creces sin romper confianza."
+        ),
+        formal:P(
+          "Roadmap adds tiering and registry status for access legibility while preserving neutrality and claim discipline.",
+          "路线图加入分级与登记状态，让访问级别可读，同时保持中立与主张纪律。",
+          "La hoja de ruta añade niveles y estado de registro para legibilidad de acceso, preservando neutralidad y disciplina de afirmaciones."
+        )
+      }
+    },
+
+    enterprise_deployment:{
+      concept:{
+        informal:P(
+          "Enterprise is ‘scale without heroics.’ You deploy in waves, keep systems segmented, and always have rollback ready. That’s how you avoid spectacular failures that destroy adoption.",
+          "企业就是“无英雄主义的规模化”：分波次部署、分区隔离、随时可回滚。这样才能避免摧毁采纳的灾难性失败。",
+          "Empresa es ‘escalar sin heroísmos’: despliegas en olas, segmentas sistemas y mantienes rollback listo. Así evitas fallos espectaculares que destruyen adopción."
+        ),
+        formal:P(
+          "Enterprise deployment is staged rollout with segmentation and rollback readiness. Claims remain bounded to measured bands; governance authority is explicit.",
+          "企业部署是分阶段发布+分区隔离+回滚准备。主张限制在可测区间；治理权责明确。",
+          "Despliegue empresarial: rollout por fases con segmentación y rollback listo. Afirmaciones acotadas a bandas medidas; autoridad de gobernanza explícita."
+        )
+      },
+      live:{
+        informal:P(
+          "Live enterprise posture: if it wobbles, stop. If it clusters, split. If it drifts, roll back. Stability beats speed when trust is on the line.",
+          "上线企业姿态：一晃就停；一聚就拆；一漂就回滚。信任在场时，稳定胜过速度。",
+          "En vivo: si tiembla, paras. Si se agrupa, separas. Si deriva, rollback. La estabilidad vence a la velocidad cuando la confianza está en juego."
+        ),
+        formal:P(
+          "Live posture monitors correlated exposure and gate compliance. Deployment decisions reference receipts; instability triggers containment and reversion to last stable state.",
+          "上线姿态监测相关暴露与闸门合规；部署决策依据收据；不稳触发隔离并回到上一稳定态。",
+          "En vivo, se monitorea exposición correlacionada y compuertas. Decisiones se basan en recibos; inestabilidad dispara contención y retorno al último estado estable."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, enterprise gets ‘proof packages’ for auditors and partners. They can verify posture without needing your whole stack. That’s adoption at scale.",
+          "下一步企业拥有可交给审计和合作方的“证明包”：无需整套系统也能核查姿态。这就是规模化采纳。",
+          "Luego, la empresa tiene ‘paquetes de prueba’ para auditores y socios: verifican postura sin tu stack completo. Eso es adopción a escala."
+        ),
+        formal:P(
+          "Roadmap adds audit bundles and exports enabling third-party verification without privileged access, improving underwriting and adoption stability.",
+          "路线图加入审计包与导出，使第三方无需特权也能核查，提升承保与采纳稳定性。",
+          "La hoja de ruta añade paquetes de auditoría y exports para verificación de terceros sin acceso privilegiado, mejorando underwriting y estabilidad de adopción."
+        )
+      }
+    },
+
+    dotgrid_sweeps:{
+      concept:{
+        informal:P(
+          "Dot.Grid is the scanner that keeps comparisons fair. Same sweep, same labels, same window—so ‘today vs yesterday’ means something. No story needed.",
+          "Dot.Grid 是让比较公平的扫描器：同扫掠、同标签、同窗口，所以“今天 vs 昨天”才有意义。不需要故事。",
+          "Dot.Grid es el escáner que hace comparaciones justas: mismo barrido, mismas etiquetas, misma ventana. Así ‘hoy vs ayer’ significa algo."
+        ),
+        formal:P(
+          "Dot.Grid provides traversal-friendly indexing sweeps that enumerate states under fixed definitions, producing comparable evidence windows for classification under constraint.",
+          "Dot.Grid 提供面向遍历的索引扫掠：在固定定义下枚举状态，产出可比较证据窗口，用于约束下分类。",
+          "Dot.Grid ofrece barridos de indexación para recorrido: enumera estados bajo definiciones fijas y produce ventanas comparables para clasificación bajo restricción."
+        )
+      },
+      live:{
+        informal:P(
+          "Live sweeps make drift loud. If naming changes or windows change, your results stop being comparable—and the system should treat that like a failure, not a ‘small tweak.’",
+          "上线扫掠让漂移变响亮：命名或窗口一变，结果就不可比——系统应把这当失败，而不是“小调整”。",
+          "En vivo, los barridos hacen la deriva ruidosa: si cambian nombres o ventanas, los resultados dejan de ser comparables—eso debe tratarse como fallo, no como ‘ajuste menor’."
+        ),
+        formal:P(
+          "Live sweeps enforce window discipline and stable naming; outputs route to Gauges for display and to Laws for interpretation bounds.",
+          "上线扫掠强制窗口纪律与稳定命名；输出去量规展示，去法则约束解释。",
+          "En vivo se exige disciplina de ventana y nombres estables; las salidas van a Medidores (visual) y Leyes (límites de interpretación)."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, Dot.Grid becomes reusable across domains: software, water, waste, energy. Learn one sweep method and you get a whole library of stable comparisons.",
+          "下一步 Dot.Grid 跨领域复用：软件、水、废弃物、能源。学会一种扫掠方法，就得到一整套稳定比较库。",
+          "Luego, Dot.Grid se reutiliza en dominios: software, agua, residuos, energía. Aprendes un método de barrido y obtienes una biblioteca de comparaciones estables."
+        ),
+        formal:P(
+          "Roadmap adds adapter packs so sweeps apply across domains while preserving stability contracts when 256-style indexing is used.",
+          "路线图加入适配包，使扫掠可跨领域，同时在使用256式索引时保持稳定契约。",
+          "La hoja de ruta añade adaptadores para aplicar barridos a múltiples dominios preservando el contrato de estabilidad cuando se usa indexación estilo 256."
+        )
+      }
+    },
+
+    scoring_outputs:{
+      concept:{
+        informal:P(
+          "Scoring is the dashboard version of truth: readable, reason-coded, and bounded. It never lets you ‘average away’ a failure. It compresses decisions, not reality.",
+          "评分是“真相的仪表盘版本”：可读、带原因码、有边界。它不允许你把失败“平均掉”。它压缩决策，不改现实。",
+          "La puntuación es la versión tablero de la verdad: legible, con razones y acotada. Nunca te deja ‘promediar’ un fallo. Comprime decisiones, no la realidad."
+        ),
+        formal:P(
+          "Scoring converts gate vectors and exposure into bounded metrics with reason codes. Scores are subordinate to admissibility and cannot override fail states.",
+          "评分把闸门向量与暴露转成带原因码的有界指标。分数服从可采信，不得覆盖失败态。",
+          "La puntuación convierte vectores de compuertas y exposición en métricas acotadas con códigos de razón. Es subordinada a admisibilidad y no puede anular fallos."
+        )
+      },
+      live:{
+        informal:P(
+          "Live scoring means no moving goalposts. If thresholds change, you stamp a new epoch. That’s how you keep comparisons honest and trustable.",
+          "上线评分不允许挪球门：阈值变更必须新纪元盖章。比较因此诚实可信。",
+          "En vivo no se mueven los postes: si cambian umbrales, marcas nueva época. Comparaciones honestas y confiables."
+        ),
+        formal:P(
+          "Live scoring produces stable summaries and exports; silent tuning is disallowed. Threshold changes require epoch rollover to preserve comparability.",
+          "上线评分产出稳定摘要与导出；禁止静默调参。阈值变更需新纪元，以保持可比性。",
+          "En vivo, la puntuación produce resúmenes y exports estables; se prohíbe ajuste silencioso. Cambios de umbral requieren nueva época."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, you can share a score with proof attached—without dumping private telemetry. Evidence travels with the number. That’s the trust unlock.",
+          "下一步你能分享“带证明的分数”，而不倾倒隐私遥测。证据跟着数字走，信任就被解锁。",
+          "Luego compartes una puntuación con prueba adjunta sin volcar telemetría privada. La evidencia viaja con el número. Eso desbloquea confianza."
+        ),
+        formal:P(
+          "Roadmap integrates portfolio/underwriting views while keeping raw evidence traceable via hashed receipts, enabling shareable metrics without exposing private telemetry.",
+          "路线图接入组合/承保视图，同时用哈希收据保持证据可追溯，从而在不泄露隐私遥测的前提下分享指标。",
+          "La hoja de ruta integra vistas de portafolio/underwriting manteniendo evidencia trazable con recibos hasheados, permitiendo métricas compartibles sin exponer telemetría privada."
+        )
+      }
+    },
+
+    registry_lookups:{
+      concept:{
+        informal:P(
+          "Registry is the ‘status check’ layer: active, suspended, revoked—plus the reason. It’s how you keep verification separate from persuasion.",
+          "登记系统是“状态核查层”：启用/暂停/撤销+原因。它让验证与说服分离。",
+          "El registro es la capa de ‘chequeo de estado’: activo, suspendido, revocado—con razón. Mantiene verificación separada de persuasión."
+        ),
+        formal:P(
+          "Registry publishes minimum necessary truth: status, time anchoring, and reason codes for packages/tiers/validity windows without leaking sensitive internals.",
+          "登记系统发布最小必要真相：包/分层/有效窗口的状态、时间锚与原因码，不泄露敏感内部。",
+          "El registro publica la verdad mínima necesaria: estado, anclaje temporal y códigos de razón para paquetes/niveles/ventanas de validez sin filtrar internos sensibles."
+        )
+      },
+      live:{
+        informal:P(
+          "Live registry means nobody can quietly flip status behind the scenes. If it changes, it’s visible—and that visibility is what scales trust.",
+          "上线登记意味着没人能背地里悄悄翻转状态：变化可见，而“可见性”就是信任规模化的基础。",
+          "En vivo, nadie puede cambiar el estado en secreto: si cambia, es visible. Esa visibilidad es lo que escala la confianza."
+        ),
+        formal:P(
+          "Live registry forbids silent revocation and enforces deterministic renewal. Suspensions and reinstatements are logged and auditable to prevent capture and hidden exceptions.",
+          "上线登记禁止静默撤销并强制确定性续期；暂停/恢复都必须有日志可审计，以防捕获与暗例外。",
+          "En vivo, prohíbe revocación silenciosa y exige renovación determinista. Suspensiones/reintegros quedan registrados y auditables para evitar captura y excepciones ocultas."
+        )
+      },
+      roadmap:{
+        informal:P(
+          "Next, registry becomes real-world credibility: partners and institutions can verify status without taking your word for it.",
+          "下一步登记系统成为现实可信度：合作方与机构无需听你说，就能核查状态。",
+          "Luego, el registro se vuelve credibilidad real: socios e instituciones verifican estado sin depender de tu palabra."
+        ),
+        formal:P(
+          "Roadmap adds third-party attestations and replay bundles so status becomes verifiable across organizations, bridging internal execution to external trust.",
+          "路线图加入第三方证明与回放包，使状态能跨组织核查，成为内部执行到外部信任的桥梁。",
+          "La hoja de ruta añade atestaciones de terceros y paquetes de replay para verificar estado entre organizaciones, conectando ejecución interna con confianza externa."
+        )
+      }
     }
   };
 
-  TEXT.audit_discipline = {
-    concept:{
-      formal:{en:"Audit discipline requires observer-invariant evaluation: outputs are judged by receipts, not intent. Implemented via logging, replay, and fixed rule application under declared scope.",
-             zh:"审计纪律要求观察者不变：用收据判输出，而不是用意图判。通过日志、回放、固定规则在声明范围内实现。",
-             es:"La disciplina de auditoría exige evaluación invariante: se juzga por recibos, no por intención."},
-      informal:{en:"Audit discipline means: show what happened. Not what you meant. Receipts decide.",
-                zh:"审计纪律就是：看发生了什么，不看你“想表达什么”。收据说了算。",
-                es:"Auditoría significa: muestra lo que pasó, no lo que ‘quisiste’. Los recibos deciden."}
-    },
-    live:{
-      formal:{en:"Live audit mode produces bundles that can be re-run. Disagreements resolve via scope or missing receipts, not interpretation battles. This keeps disputes cheap and bounded.",
-             zh:"上线审计会产出可复跑的包。分歧通过范围或缺失收据解决，而不是争论解释。争议因此变得便宜且有界。",
-             es:"En vivo, produce paquetes re-ejecutables. Desacuerdos se resuelven por alcance o recibos faltantes."},
-      informal:{en:"Live auditing makes fights boring. If you disagree, look at the receipt. If it’s missing, log it and move on.",
-                zh:"上线审计让争吵变无聊：不一致就看收据；没收据就记缺失，然后继续。",
-                es:"Auditoría en vivo hace peleas aburridas: si discrepas, mira el recibo. Si falta, regístralo y sigue."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap adds audit automation with strict separation of tuning authority. Builders cannot silently tune thresholds; auditors cannot silently relax them. This blocks capture.",
-             zh:"路线图加入自动审计，同时严格分离调参权：开发者不能暗调阈值，审计者也不能暗放宽。防捕获。",
-             es:"La hoja de ruta añade automatización con separación estricta: nadie ajusta umbrales en silencio."},
-      informal:{en:"Next, audits get faster without getting weaker. And nobody gets to secretly tune outcomes to look good.",
-                zh:"下一步是审计更快但不更弱；没人能偷偷调结果来“好看”。",
-                es:"Luego, auditorías más rápidas sin volverse débiles. Nadie ‘tunea’ resultados en secreto."}
-    }
-  };
+  var ENGINE = ["state_runtime","deterministic_gates","receipt_progression","audit_discipline","change_control","admissibility_doctrine"];
+  var PLATFORM = ["navigation_surfaces","product_packaging","enterprise_deployment","dotgrid_sweeps","scoring_outputs","registry_lookups"];
 
-  TEXT.admissibility_doctrine = {
-    concept:{
-      formal:{en:"Doctrine defines what may be claimed and what must remain conditional. It prevents upgrades beyond receipts and locks language to measured scope. Software must obey this or it becomes narrative-driven.",
-             zh:"教义规定什么能主张、什么必须条件化：防止超出收据升级，并把语言锁在可测范围内。软件必须遵守，否则就会被叙事驱动。",
-             es:"La doctrina define qué se puede afirmar y qué debe ser condicional. Evita upgrades sin recibos y ata el lenguaje al alcance medido."},
-      informal:{en:"Doctrine is the rule: don’t say more than you can prove. Software gets dangerous when it sells stories. This keeps it honest.",
-                zh:"教义就是：别说超过你能证明的东西。软件一卖故事就危险。这个规则让它诚实。",
-                es:"Doctrina: no digas más de lo que puedes probar. El software se vuelve peligroso cuando vende historias."}
-    },
-    live:{
-      formal:{en:"Live doctrine enforces posture: concept stays concept, live stays measured, roadmap stays gated. If evidence is missing, the system must say so and refuse escalation.",
-             zh:"上线教义会强制姿态：概念就是概念；上线必须可测；路线图必须有闸门。证据缺失就必须声明并拒绝升级。",
-             es:"En vivo, postura: concepto es concepto, en vivo es medido, roadmap con compuertas. Si falta evidencia, se declara y no se escala."},
-      informal:{en:"Live doctrine means call things what they are. If it’s not measured, don’t hype it. If it’s only a plan, label it as a plan.",
-                zh:"上线教义就是：是什么就说是什么。没测就别吹；只是计划就标成计划。",
-                es:"En vivo: llama a las cosas por su nombre. Si no está medido, no lo exageres. Si es plan, dilo plan."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap standardizes doctrine templates across products so claim discipline holds everywhere. This reduces drift and accelerates safe adoption.",
-             zh:"路线图把教义模板标准化到全产品：主张纪律处处一致，漂移减少，安全采纳加速。",
-             es:"La hoja de ruta estandariza plantillas doctrinales entre productos para disciplina consistente. Reduce deriva y acelera adopción segura."},
-      informal:{en:"Next, every page speaks the same honest language. No surprises. No inflated claims. Clear posture everywhere.",
-                zh:"下一步是每一页都说同一种诚实语言：没惊喜、没膨胀、姿态清晰。",
-                es:"Luego, cada página habla el mismo lenguaje honesto. Sin sorpresas ni inflación de afirmaciones."}
-    }
-  };
+  function titleOf(id){ return pick(DOM[id].t); }
+  function subOf(id){ return pick(DOM[id].s); }
 
-  TEXT.navigation_surfaces = {
-    concept:{
-      formal:{en:"Surfaces present options without altering invariants. A surface may simplify choices, but it must not change what is admissible. UX is subordinate to engine rules.",
-             zh:"界面负责呈现选项但不能改不变量：可以简化选择，但不能改变什么是可采信。体验必须服从引擎规则。",
-             es:"Las superficies presentan opciones sin alterar invariantes. Pueden simplificar, pero no cambiar lo admisible."},
-      informal:{en:"The surface can look simple, but it can’t lie. Pretty doesn’t get to override the rules.",
-                zh:"界面可以很简单，但不能撒谎；漂亮不能覆盖规则。",
-                es:"La superficie puede ser simple, pero no puede mentir. Lo bonito no anula reglas."}
-    },
-    live:{
-      formal:{en:"Live surfaces require tap reliability: no competing UI stacks, no intercepting overlays, no double routes. Each action yields one deterministic outcome.",
-             zh:"上线界面要求点按可靠：没有竞争层、没有拦截遮罩、没有双重路由；每次动作只产生一个确定结果。",
-             es:"En vivo, fiabilidad: sin UI compitiendo, sin overlays interceptando, sin rutas dobles. Cada acción produce un resultado determinista."},
-      informal:{en:"Live means every tap works the first time. No ghost layers. Touch it, and it does exactly one thing.",
-                zh:"上线意味着每次点按一次成功：没有幽灵层；你点它，它只做一件事。",
-                es:"En vivo, cada toque funciona a la primera. Sin capas fantasma."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap introduces reusable templates across products so interactions feel identical everywhere. Consistency reduces cognitive load and increases adoption velocity.",
-             zh:"路线图引入跨产品复用模板：交互处处一致，认知负担下降，采纳速度提升。",
-             es:"La hoja de ruta trae plantillas reutilizables entre productos: misma interacción en todas partes."},
-      informal:{en:"Next, every product page feels like the same machine. Learn one, use them all.",
-                zh:"下一步是每个产品页都像同一台机器：学会一个，就能用全部。",
-                es:"Luego, cada página se siente como la misma máquina: aprendes una y usas todas."}
-    }
-  };
-
-  TEXT.product_packaging = {
-    concept:{
-      formal:{en:"Packaging binds engines to sellable surfaces without mixing doctrine into marketing. Product pages state what you can use; proof pages state what is true. This prevents claim inflation.",
-             zh:"封装把引擎绑定到可交付界面，但不把教义写成营销：产品页说你能用什么，证明页说什么是真的。防止主张膨胀。",
-             es:"El empaquetado une motores a superficies vendibles sin mezclar doctrina con marketing. Producto: qué usar. Prueba: qué es cierto."},
-      informal:{en:"Packaging is: here’s what you can use—without turning proof into sales copy. Products do the job; laws set boundaries.",
-                zh:"封装就是：告诉你能用什么，但不把证明写成广告。产品做事，法则定边界。",
-                es:"Empaquetado: aquí está lo que puedes usar sin convertir prueba en publicidad."}
-    },
-    live:{
-      formal:{en:"Live packaging eliminates dead ends: every card opens, every open has a return, and state is preserved across jumps. The spine stays navigable under pressure.",
-             zh:"上线封装消灭死路：每张卡都能打开；每个打开都有返回；跳转保持状态。压力下依旧可导航。",
-             es:"En vivo elimina callejones: cada tarjeta abre, cada abrir tiene retorno y el estado se conserva."},
-      informal:{en:"Live packaging means you can actually find things and get back. No 404s. No loops. Clean routes.",
-                zh:"上线封装意味着你真能找到东西并回得来：不404、不绕圈、路由干净。",
-                es:"Empaquetado en vivo: encuentras cosas y vuelves. Sin 404 ni bucles."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap adds tiering (SaaS/Enterprise/Government) and registry status so access level is legible without reading internal doctrine. Packaging stays human-first.",
-             zh:"路线图加入分级（SaaS/企业/政府）与登记状态，让访问级别一眼可读，无需翻内部教义。封装保持人类可读。",
-             es:"La hoja de ruta añade niveles y estado de registro para que el acceso sea legible sin doctrina interna."},
-      informal:{en:"Next, products get clear tiers and access signals. People don’t need jargon to understand what’s available.",
-                zh:"下一步是产品拥有清晰分级与访问信号：不靠术语也能理解可用内容。",
-                es:"Luego, productos con niveles claros y señales de acceso. Sin jerga para entender."}
-    }
-  };
-
-  TEXT.enterprise_deployment = {
-    concept:{
-      formal:{en:"Enterprise deployment is staged rollout with segmentation and rollback readiness. Claims remain bounded to measured bands. Governance is explicit: who deploys, who audits, who tunes.",
-             zh:"企业部署是分阶段发布+分区隔离+可回滚准备。主张必须限制在可测区间。治理明确：谁部署、谁审计、谁调参。",
-             es:"Despliegue empresarial = rollout por fases con segmentación y rollback listo. Afirmaciones acotadas a bandas medidas."},
-      informal:{en:"Enterprise is scale without breaking. Waves, zones, rollback. No hero moves.",
-                zh:"企业就是“不坏掉的扩张”：波次、分区、回滚；不靠英雄主义。",
-                es:"Empresa es escalar sin romper: olas, zonas, rollback."}
-    },
-    live:{
-      formal:{en:"Live posture monitors correlated exposure and gate compliance. Deployment decisions reference receipts, not urgency. Instability triggers containment and reversion to last stable state.",
-             zh:"上线姿态监测相关暴露与闸门合规。部署决策依据收据而非紧迫感。不稳即隔离并回到上一稳定态。",
-             es:"En vivo monitorea exposición correlacionada y compuertas. Decisiones se basan en recibos, no urgencia."},
-      informal:{en:"Live enterprise means: if it wobbles, stop. If it clusters, split. If it drifts, roll back.",
-                zh:"上线企业：一晃就停；一聚就拆；一漂就回滚。",
-                es:"Empresa en vivo: si tiembla, para. Si se agrupa, separa. Si deriva, rollback."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap builds audit bundles and API exports so third parties can verify posture without privileged access. External trust scales when proof is portable.",
-             zh:"路线图构建审计包与API导出，让第三方无需特权也能核查姿态。证明可携带，外部信任才能扩张。",
-             es:"La hoja de ruta añade paquetes de auditoría y exports API para verificar sin acceso privilegiado."},
-      informal:{en:"Next, enterprise gets ‘proof packages’ you can hand to auditors and partners. They verify without your whole stack.",
-                zh:"下一步：企业拥有可交给审计与合作方的“证明包”，无需交出整套系统也能核查。",
-                es:"Luego, ‘paquetes de prueba’ para auditores y socios sin entregar todo el stack."}
-    }
-  };
-
-  TEXT.dotgrid_sweeps = {
-    concept:{
-      formal:{en:"Dot.Grid is a traversal-friendly indexing sweep: it enumerates states under fixed definitions and produces comparable windows. Its value is repeatable classification under constraint.",
-             zh:"Dot.Grid 是面向遍历的索引扫掠：在固定定义下枚举状态并产出可比较窗口。价值在于“约束下的可重复分类”。",
-             es:"Dot.Grid enumera estados bajo definiciones fijas y produce ventanas comparables. Valor: clasificación repetible."},
-      informal:{en:"Dot.Grid is the scanner. It lets you sweep the same way every time so results don’t depend on mood or narrative.",
-                zh:"Dot.Grid 就是扫描器：每次同样扫法，结果不依赖情绪或故事。",
-                es:"Dot.Grid es el escáner: mismo barrido cada vez; resultados no dependen de narrativa."}
-    },
-    live:{
-      formal:{en:"Live sweeps enforce window discipline and stable naming so comparisons remain valid across time. Outputs route to Gauges for display and Laws for interpretation bounds.",
-             zh:"上线扫掠强制窗口纪律与稳定命名，使跨时间比较有效。输出去量规展示，去法则约束解释。",
-             es:"En vivo mantiene disciplina de ventana y nombres estables. Salidas a Medidores y Leyes."},
-      informal:{en:"Live sweeps mean you can compare today to yesterday fairly. Same window, same labels, same output.",
-                zh:"上线扫掠让今天对昨天的比较变公平：同窗口、同标签、同输出。",
-                es:"En vivo: comparar hoy vs ayer de forma justa. Misma ventana, mismas etiquetas."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap adds adapter packs so sweeps apply across domains while preserving the same stability contract when the 256-style indexing is used.",
-             zh:"路线图加入适配包，使扫掠可跨领域，同时在使用256式索引时保持同一稳定契约。",
-             es:"La hoja de ruta añade adaptadores para múltiples dominios manteniendo el contrato de estabilidad."},
-      informal:{en:"Next, Dot.Grid plugs into more domains—same sweep logic, more places to use it. Learn once, reuse everywhere.",
-                zh:"下一步：Dot.Grid 接入更多领域——同扫掠逻辑，更多用武之地；学一次，到处复用。",
-                es:"Luego, Dot.Grid se conecta a más dominios: misma lógica, más usos. Aprendes una vez."}
-    }
-  };
-
-  TEXT.scoring_outputs = {
-    concept:{
-      formal:{en:"Scoring converts gate vectors and exposure into a bounded metric with reason codes. A score cannot override a fail state; it compresses decisions, not reality.",
-             zh:"评分把闸门向量与暴露转成带原因码的有界指标。分数不能覆盖失败态；它压缩决策，不改现实。",
-             es:"La puntuación convierte vectores en una métrica acotada con códigos de razón. No puede anular un fallo."},
-      informal:{en:"Scoring makes the signal easy to read. It doesn’t let you cheat a fail. It tells you where you stand and why.",
-                zh:"评分让信号更好读：不允许你“用分数作弊”去盖过失败；它告诉你位置和原因。",
-                es:"La puntuación hace la señal legible: no tapa un fallo. Te dice dónde estás y por qué."}
-    },
-    live:{
-      formal:{en:"Live scoring produces stable summaries and exports. Any threshold change creates a new epoch; silent tuning is disallowed. This keeps comparisons honest.",
-             zh:"上线评分会产出稳定摘要与导出。阈值变更必须新纪元；禁止静默调参。比较因此诚实。",
-             es:"En vivo: resúmenes y exports estables. Cambios de umbral → nueva época; sin ajustes silenciosos."},
-      informal:{en:"Live scoring means no moving goalposts. If the rule changes, it’s stamped. If you compare scores, it’s fair.",
-                zh:"上线评分意味着不挪球门：规则变了就盖章；你比对分数才公平。",
-                es:"En vivo: no se mueven los postes. Si cambia la regla, se marca; comparar es justo."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap integrates portfolio and underwriting views while keeping evidence traceable via hashed receipts. Scores become shareable without leaking private telemetry.",
-             zh:"路线图接入组合与承保视图，同时用哈希收据保持证据可追溯。分数可分享但不泄露隐私遥测。",
-             es:"La hoja de ruta integra vistas de portafolio y underwriting manteniendo evidencia trazable con recibos hasheados."},
-      informal:{en:"Next, you can share a score with proof attached—without dumping private data. Trust gets easier when evidence travels with the number.",
-                zh:"下一步：你能分享带证明的分数，而不倾倒隐私数据。证据跟着数字走，信任就更容易。",
-                es:"Luego, compartes puntuación con prueba adjunta sin volcar datos privados."}
-    }
-  };
-
-  TEXT.registry_lookups = {
-    concept:{
-      formal:{en:"Registry provides lookupable status for packages, tiers, and validity windows. It publishes minimum necessary truth (status, time, reason) without exposing sensitive internals.",
-             zh:"登记系统提供可查询的包状态、分层与有效窗口；它只发布最小必要真相（状态/时间/原因），不暴露敏感内部。",
-             es:"El registro ofrece estado consultable y ventanas de validez. Publica verdad mínima sin exponer internos sensibles."},
-      informal:{en:"Registry is the status check. Active, suspended, revoked—plus the reason. Clear and verifiable.",
-                zh:"登记系统就是状态核查：启用/暂停/撤销+原因码。清楚且可核查。",
-                es:"Registro es chequeo de estado: activo, suspendido, revocado—con razón."}
-    },
-    live:{
-      formal:{en:"Live registry forbids silent revocation and enforces deterministic renewal. Every suspension or reinstatement is logged and auditable. This blocks capture and hidden exceptions.",
-             zh:"上线登记禁止静默撤销，并强制确定性续期规则。暂停/恢复都必须有日志可审计，阻断捕获与暗例外。",
-             es:"En vivo prohíbe revocación silenciosa y obliga renovación determinista. Todo queda registrado y auditable."},
-      informal:{en:"Live registry means nobody can quietly flip things behind the scenes. If it changes, you can see it.",
-                zh:"上线登记意味着没人能背地里悄悄翻转状态：一变就能看见。",
-                es:"Registro en vivo: nadie cambia cosas en secreto. Si cambia, lo ves."}
-    },
-    roadmap:{
-      formal:{en:"Roadmap adds third-party attestations and replay bundles so status becomes verifiable across organizations. Registry becomes the bridge from internal execution to external trust.",
-             zh:"路线图加入第三方证明与回放包，使状态能跨组织核查。登记成为内部执行到外部信任的桥梁。",
-             es:"La hoja de ruta añade atestaciones y replay para verificar estado entre organizaciones."},
-      informal:{en:"Next, registry becomes real-world credibility. Outside groups verify status without taking your word for it.",
-                zh:"下一步：登记系统成为现实世界的可信度。外部机构无需“听你说”，就能核查状态。",
-                es:"Luego, el registro se vuelve credibilidad real: terceros verifican estado sin depender de tu palabra."}
-    }
-  };
-  // END: injected remaining domains
-
-  function pickText(domainId, phase, tone){
-    var d=TEXT[domainId];
-    if(!d) return "NOT MEASURED";
-    var obj=d[phase][tone];
-    return (lang==="zh") ? obj.zh : (lang==="es") ? obj.es : obj.en;
+  function bandLabel(){
+    if(lang==="zh") return (side==="engine") ? "引擎域" : "平台域";
+    if(lang==="es") return (side==="engine") ? "DOMINIOS · MOTOR" : "DOMINIOS · PLATAFORMA";
+    return (side==="engine") ? "ENGINE DOMAINS" : "PLATFORM DOMAINS";
   }
 
-  // ===== selection state =====
-  var side="ENGINE";      // ENGINE|PLATFORM
-  var tone=style;         // informal|formal
-
-  var dEngine=document.getElementById("dEngine");
-  var dPlatform=document.getElementById("dPlatform");
-  function paintSide(){
-    dEngine.classList.toggle("active", side==="ENGINE");
-    dPlatform.classList.toggle("active", side==="PLATFORM");
-    document.getElementById("band").textContent = (side==="ENGINE") ? T.bandE : T.bandP;
+  function bubbleLabel(which){
+    if(lang==="zh") return (which==="concept")?"概念":(which==="live")?"上线":"路线图";
+    if(lang==="es") return (which==="concept")?"Concepto":(which==="live")?"En vivo":"Hoja de ruta";
+    return (which==="concept")?"Concept":(which==="live")?"Live":"Roadmap";
   }
 
-  var toneI=document.getElementById("toneInformal");
-  var toneF=document.getElementById("toneFormal");
-  function paintTone(){
-    toneI.classList.toggle("active", tone==="informal");
-    toneF.classList.toggle("active", tone==="formal");
-    toneI.textContent=T.informal;
-    toneF.textContent=T.formal;
+  function openLabel(){
+    if(lang==="zh") return "打开";
+    if(lang==="es") return "ABRIR";
+    return "OPEN";
   }
 
-  // apply static labels
-  document.getElementById("band").textContent = T.bandE;
-  toneI.textContent=T.informal;
-  toneF.textContent=T.formal;
-  document.getElementById("band").textContent=T.bandE;
-  document.getElementById("hint").textContent=T.hint;
+  function render(){
+    band.textContent = bandLabel();
+    list.innerHTML="";
 
-  // set tone defaults from gd_style
-  tone = (style==="formal") ? "formal" : "informal";
+    var ids = (side==="engine") ? ENGINE : PLATFORM;
 
-  // ===== render domain list =====
-  var listEl=document.getElementById("list");
+    ids.forEach(function(id, idx){
+      var row=document.createElement("div");
+      row.className="row";
+      row.style.setProperty("--c", DOM[id].c);
 
-  function buildRow(domainId){
-    var meta=DOMAINS[domainId];
-    var row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", meta.c);
+      var head=document.createElement("div");
+      head.className="head";
 
-    var head=document.createElement("div");
-    head.className="stackHead";
+      var left=document.createElement("div");
+      left.className="left";
 
-    var left=document.createElement("div");
-    left.className="stackLeft";
+      var barWrap=document.createElement("div");
+      barWrap.className="barWrap";
+      var diamond=document.createElement("div");
+      diamond.className="diamond";
+      diamond.style.background=DOM[id].c;
+      var bar=document.createElement("div");
+      bar.className="bar";
+      bar.style.background=DOM[id].c;
+      barWrap.appendChild(bar);
+      barWrap.appendChild(diamond);
 
-    var dot=document.createElement("div");
-    dot.className="dotD";
+      var titleBlock=document.createElement("div");
+      titleBlock.className="titleBlock";
+      var title=document.createElement("div");
+      title.className="title";
+      title.textContent=titleOf(id);
+      var sub=document.createElement("div");
+      sub.className="sub";
+      sub.textContent=subOf(id);
+      titleBlock.appendChild(title);
+      titleBlock.appendChild(sub);
 
-    var block=document.createElement("div");
-    block.style.minWidth="0";
+      left.appendChild(barWrap);
+      left.appendChild(titleBlock);
 
-    var title=document.createElement("div");
-    title.className="stackTitle";
-    title.textContent=dTitle(domainId);
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent="▸";
 
-    var sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=dSub(domainId);
+      head.appendChild(left);
+      head.appendChild(chev);
 
-    block.appendChild(title);
-    block.appendChild(sub);
+      var body=document.createElement("div");
+      body.className="body";
 
-    left.appendChild(dot);
-    left.appendChild(block);
+      var p=document.createElement("p");
+      p.className="pdesc";
+      p.textContent = (tone==="informal")
+        ? (lang==="zh"
+            ? "打开下面三段：概念（为什么）、上线（怎么用）、路线图（下一步）。"
+            : (lang==="es"
+                ? "Abre las tres secciones: Concepto (por qué), En vivo (cómo usar), Hoja de ruta (qué sigue)."
+                : "Open the three sections: Concept (why), Live (how you use it), Roadmap (what’s next)."))
+        : (lang==="zh"
+            ? "该域内容按：概念 / 上线 / 路线图组织；语气切换为正式规格表述。"
+            : (lang==="es"
+                ? "Contenido por: Concepto / En vivo / Hoja de ruta; el tono cambia a formulación formal."
+                : "Content is organized as Concept / Live / Roadmap; tone switch yields formal spec wording."));
 
-    var chev=document.createElement("div");
-    chev.className="stackChevron";
-    chev.textContent="▸";
+      var subB=document.createElement("div");
+      subB.className="subBubbles";
 
-    head.appendChild(left);
-    head.appendChild(chev);
+      function makeBubble(which){
+        var b=document.createElement("div");
+        b.className="bubble";
+        b.setAttribute("role","button");
+        b.tabIndex=0;
 
-    var body=document.createElement("div");
-    body.className="stackBody";
+        var h=document.createElement("h4");
+        h.textContent = bubbleLabel(which);
 
-    var b1=document.createElement("div");
-    b1.className="bubble";
-    b1.innerHTML='<h4>'+T.concept+'</h4><p></p>';
+        var pp=document.createElement("p");
+        var pack=TEXT[id][which][tone];
+        pp.textContent = pick(pack);
 
-    var b2=document.createElement("div");
-    b2.className="bubble";
-    b2.innerHTML='<h4>'+T.live+'</h4><p></p>';
+        b.appendChild(h);
+        b.appendChild(pp);
 
-    var b3=document.createElement("div");
-    b3.className="bubble";
-    b3.innerHTML='<h4>'+T.roadmap+'</h4><p></p>';
+        function act(){ b.classList.toggle("open"); }
+        b.addEventListener("click", act);
+        b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
-    function fill(){
-      b1.querySelector("p").textContent = pickText(domainId,"concept",tone);
-      b2.querySelector("p").textContent = pickText(domainId,"live",tone);
-      b3.querySelector("p").textContent = pickText(domainId,"roadmap",tone);
-    }
-    fill();
+        return b;
+      }
 
-    function bindBubble(b){
-      b.setAttribute("role","button");
-      b.tabIndex=0;
-      b.addEventListener("click", function(e){
-        e.stopPropagation();
-        b.classList.toggle("open");
+      subB.appendChild(makeBubble("concept"));
+      subB.appendChild(makeBubble("live"));
+      subB.appendChild(makeBubble("roadmap"));
+
+      var actions=document.createElement("div");
+      actions.className="actions";
+      var open=document.createElement("a");
+      open.className="btn";
+      open.textContent = openLabel() + ": " + (lang==="zh" ? "DOOR" : (lang==="es" ? "PUERTA" : "DOOR"));
+      open.href="/door/"+q();
+      actions.appendChild(open);
+
+      body.appendChild(p);
+      body.appendChild(subB);
+      body.appendChild(actions);
+
+      head.addEventListener("click", function(){
+        var openNow = !row.classList.contains("open");
+        // single-open
+        list.querySelectorAll(".row").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev");
+          if(c) c.textContent="▸";
+        });
+        row.classList.toggle("open", openNow);
+        chev.textContent = openNow ? "▾" : "▸";
       });
-      b.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){
-          e.preventDefault();
-          b.classList.toggle("open");
-        }
-      });
-    }
-    [b1,b2,b3].forEach(bindBubble);
 
-    body.appendChild(b1);
-    body.appendChild(b2);
-    body.appendChild(b3);
+      row.appendChild(head);
+      row.appendChild(body);
+      list.appendChild(row);
 
-    // robust open/close (no “stuck”)
-    head.addEventListener("click", function(){
-      var open=!row.classList.contains("open");
-      // single-open behavior (clean)
-      listEl.querySelectorAll(".stackRow").forEach(function(r){
-        r.classList.remove("open");
-        var ch=r.querySelector(".stackChevron");
-        if(ch) ch.textContent="▸";
-        // also close bubbles inside other rows
-        r.querySelectorAll(".bubble").forEach(function(bb){ bb.classList.remove("open"); });
-      });
-      row.classList.toggle("open", open);
-      chev.textContent = open ? "▾" : "▸";
-      if(open){ fill(); }
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-
-    // allow tone repaint on the fly
-    row._fill = fill;
-
-    return row;
-  }
-
-  function renderList(){
-    listEl.innerHTML="";
-    var ids = (side==="ENGINE") ? ENGINE6 : PLATFORM6;
-    ids.forEach(function(id){
-      listEl.appendChild(buildRow(id));
-    });
-    // default: open first
-    var first=listEl.querySelector(".stackRow");
-    if(first){
-      first.classList.add("open");
-      var ch=first.querySelector(".stackChevron");
-      if(ch) ch.textContent="▾";
-      if(first._fill) first._fill();
-    }
-  }
-
-  function refreshOpenRows(){
-    // update text for currently open row after tone change
-    listEl.querySelectorAll(".stackRow.open").forEach(function(r){
-      if(r._fill) r._fill();
+      if(idx===0){
+        row.classList.add("open");
+        chev.textContent="▾";
+      }
     });
   }
 
-  // ===== side controls =====
-  function setSide(next){
-    side=next;
-    paintSide();
-    renderList();
-    // scroll to list on selection (mobile nice)
-    setTimeout(function(){
-      var band=document.getElementById("band");
-      if(band) band.scrollIntoView({behavior:"smooth", block:"start"});
-    }, 60);
-  }
-
-  dEngine.addEventListener("click", function(){ setSide("ENGINE"); });
-  dPlatform.addEventListener("click", function(){ setSide("PLATFORM"); });
-  dEngine.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setSide("ENGINE"); }});
-  dPlatform.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setSide("PLATFORM"); }});
-
-  // ===== tone controls =====
-  toneI.addEventListener("click", function(){
-    tone="informal";
-    style="informal";
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
-    paintTone();
-    refreshOpenRows();
-  });
-  toneF.addEventListener("click", function(){
-    tone="formal";
-    style="formal";
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
-    paintTone();
-    refreshOpenRows();
-  });
-
-  // ===== finalize paint + initial render =====
-  paintSide();
-  paintTone();
-  renderList();
-
+  paintPills();
+  render();
 })();
 </script>
 

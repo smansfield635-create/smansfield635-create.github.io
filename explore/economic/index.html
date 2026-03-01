@@ -1,0 +1,851 @@
+<!doctype html>
+<!-- TNT — /explore/economic/index.html
+     EXPLORE · ECONOMIC & RISK ARCHITECTURE (ROUTING-SAFE SHELL)
+     REQUIREMENTS:
+       - Trilingual: EN / 中文 / ES
+       - 4 lenses:
+           lane=platform|engineering (URL-only; NEVER stored)
+           style=informal|formal     (gd_style + URL)
+       - Single-open accordion (one open at a time; tap same closes)
+       - Inside each row: 3 sub-bubbles (Concept / Build Now / Roadmap) tap-to-open
+       - Monument typography
+       - Dark opal + red (no washed-out blue)
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Uses ui.css + branch.css + instruments.js only
+       - ui.css owns html/body background (NO overrides)
+       - No inline onclick; addEventListener only
+     ROUTING:
+       - Back: /explore/
+       - Frontier: /explore/frontier/
+       - Laws: /laws/
+       - Gauges: /gauges/
+       - Products: /products/
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EXPLORE · ECONOMIC & RISK</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+/* ===== TOKENS ===== */
+:root{
+  --dockH:132px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --gold:rgba(201,162,74,.40);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* ===== PAGE ===== */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* ===== TOP (sticky) ===== */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  white-space:nowrap;
+  align-items:center;
+}
+
+/* ===== Button (gold under-light only) ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* ===== HEADER ===== */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  position:relative;
+  overflow:hidden;
+}
+/* gold diamond lay in trim zone only */
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
+.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
+  font-size:13.5px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+
+/* ===== LENSES ===== */
+.lenses{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  cursor:pointer;
+  font-weight:950;
+  letter-spacing:.2px;
+  color:#fff;
+  -webkit-tap-highlight-color:transparent;
+  min-height:44px;
+  position:relative;
+  overflow:hidden;
+}
+.pill::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.26), transparent 72%);
+  opacity:.45;pointer-events:none;
+}
+.pill.active{
+  border-color:rgba(255,43,43,.32);
+  box-shadow:0 14px 36px rgba(0,0,0,.55), 0 0 16px rgba(255,43,43,.12);
+}
+.badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:var(--mut);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+.badge b{color:var(--ink)}
+
+/* ===== ACCORDION ===== */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowB);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;
+  letter-spacing:.2px;
+  font-size:18px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--ink);
+}
+.sub{
+  margin-top:8px;
+  font-size:13.75px;
+  opacity:.88;
+  line-height:1.42;
+  color:rgba(255,255,255,.86);
+  max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+
+.body{
+  display:none;
+  padding:16px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+
+.pdesc{
+  margin:0;
+  color:rgba(255,255,255,.90);
+  line-height:1.65;
+  font-size:15px;
+}
+.pdesc + .pdesc{margin-top:10px}
+
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+/* ===== DOCK ===== */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:148px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+      <a class="btn" id="btnFrontier" href="/explore/frontier/" data-route="/explore/frontier/">FRONTIER</a>
+      <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header" aria-label="Economic & Risk header">
+    <p class="k" id="hk">EXPLORE · ECONOMIC</p>
+    <h1 class="t" id="ht">ECONOMIC & RISK ARCHITECTURE</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="lenses" aria-label="Lenses">
+      <div class="pills" aria-label="Lane">
+        <button class="pill" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills" aria-label="Tone">
+        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+      <div class="badge" aria-label="State">
+        <span id="bLang">LANG</span> <b id="bLangV">EN</b>
+        <span style="opacity:.6">·</span>
+        <span id="bLane">LANE</span> <b id="bLaneV">PLATFORM</b>
+        <span style="opacity:.6">·</span>
+        <span id="bTone">STYLE</span> <b id="bToneV">INFORMAL</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" id="band">ECONOMIC ROOMS (SHELLS)</div>
+  <div class="list" id="list"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockCompass" href="/index.html" data-route="/index.html">COMPASS</a>
+  <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== Canon state (NO new gd_* keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+  var d=parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(extra){
+    var p=new URLSearchParams();
+    p.set("lang",(extra&&extra.lang)?extra.lang:lang);
+    p.set("style",(extra&&extra.style)?extra.style:style);
+    p.set("time",(extra&&extra.time)?extra.time:time);
+    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
+    var L=(extra&&extra.lane)?extra.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?" + p.toString();
+  }
+
+  // Wire all [data-route] anchors with full state
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // Language toggle (reload same pathname)
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Lenses
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+
+  function paintPills(){
+    pillPlatform.classList.toggle("active", lane==="platform");
+    pillEngineering.classList.toggle("active", lane==="engineering");
+    pillInformal.classList.toggle("active", style==="informal");
+    pillFormal.classList.toggle("active", style==="formal");
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    paintPills();
+    render();
+  }
+  function setTone(next){
+    if(next!=="informal" && next!=="formal") next="informal";
+    style=next;
+    try{ LS.setItem("gd_style",style);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({style:style}));
+    paintPills();
+    render();
+  }
+
+  pillPlatform.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  pillEngineering.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  pillInformal.addEventListener("click", function(){ setTone("informal"); }, {passive:true});
+  pillFormal.addEventListener("click", function(){ setTone("formal"); }, {passive:true});
+
+  // Copy helpers
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function laneLabel(){
+    if(lang==="zh") return (lane==="engineering")?"工程":"平台";
+    if(lang==="es") return (lane==="engineering")?"INGENIERÍA":"PLATAFORMA";
+    return (lane==="engineering")?"ENGINEERING":"PLATFORM";
+  }
+  function styleLabel(){
+    if(lang==="zh") return (style==="formal")?"正式":"通俗";
+    if(lang==="es") return (style==="formal")?"FORMAL":"INFORMAL";
+    return (style==="formal")?"FORMAL":"INFORMAL";
+  }
+
+  // Header text
+  var HEAD={
+    en:{
+      hs_platform_informal:"This lane builds the economic ‘rails’ that keep expansion honest: contracts, incentives, and risk boundaries that don’t collapse under pressure.",
+      hs_platform_formal:"This page is the routing shell for economic and risk architecture. It preserves state and prevents taxonomy collapse into vague promises.",
+      hs_engineering_informal:"Engineering view: treat finance/risk as interfaces. Define inputs, outputs, thresholds, and failure modes before scale.",
+      hs_engineering_formal:"Engineering posture: deterministic constraints for risk, contracts, compliance, and capital—under declared scope with auditable outputs.",
+      rule:"Rule: economics is not storytelling. If you can’t measure the exposure, you can’t scale the claim."
+    },
+    zh:{
+      hs_platform_informal:"本车道搭建“经济护栏”：合约、激励、风险边界。让扩张在压力下也不坍塌。",
+      hs_platform_formal:"本页是经济与风险架构的路由壳：保留状态，防止分类坍缩成空洞承诺。",
+      hs_engineering_informal:"工程视图：把金融/风险当接口。先定义输入、输出、阈值、失败模式，再谈规模化。",
+      hs_engineering_formal:"工程姿态：在声明范围内，为风险/合约/合规/资本建立确定性约束与可审计输出。",
+      rule:"规则：经济不是讲故事。不能测暴露，就不能放大主张。"
+    },
+    es:{
+      hs_platform_informal:"Este carril construye ‘rieles’ económicos: contratos, incentivos y límites de riesgo que no colapsan bajo presión.",
+      hs_platform_formal:"Esta página es el shell de rutas para arquitectura económica y de riesgo. Preserva estado y evita colapso taxonómico.",
+      hs_engineering_informal:"Vista ingeniería: trata finanzas/riesgo como interfaces. Define entradas, salidas, umbrales y fallos antes de escalar.",
+      hs_engineering_formal:"Postura ingeniería: restricciones deterministas para riesgo, contratos, cumplimiento y capital—bajo alcance declarado con salidas auditables.",
+      rule:"Regla: la economía no es narrativa. Si no mides la exposición, no escalas la afirmación."
+    }
+  };
+
+  // Room shells inside Economic & Risk
+  var ROOMS=[
+    {c:"#ff2b2b", t:P("Finance","金融","Finanzas"), s:P("Capital flows + constraints.","资本流动+约束。","Flujos de capital + restricciones."), href:"/explore/economic/finance/"},
+    {c:"#c9a24a", t:P("Contracts","合约","Contratos"), s:P("What we allow to be promised.","允许承诺到哪里。","Qué se permite prometer."), href:"/explore/economic/contracts/"},
+    {c:"#ff2b2b", t:P("Compliance","合规","Cumplimiento"), s:P("Rules that prevent drift.","阻止漂移的规则。","Reglas que evitan deriva."), href:"/explore/economic/compliance/"},
+    {c:"#c9a24a", t:P("Insurance","保险","Seguro"), s:P("Bounded underwriting posture.","有界承保姿态。","Suscripción acotada."), href:"/explore/economic/insurance/"},
+    {c:"#ff2b2b", t:P("Risk","风险","Riesgo"), s:P("Exposure maps + containment.","暴露图+隔离。","Mapas de exposición + contención."), href:"/explore/economic/risk/"},
+    {c:"#c9a24a", t:P("Crypto","加密资产","Cripto"), s:P("Structure-first, hype-last.","结构优先，噱头最后。","Estructura primero, hype al final."), href:"/explore/economic/crypto/"}
+  ];
+
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  function makeSubBubble(label, text){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent=text;
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    return b;
+  }
+
+  var list=document.getElementById("list");
+
+  function closeAllRows(){
+    var rows=list.querySelectorAll(".row");
+    for(var i=0;i<rows.length;i++){
+      rows[i].classList.remove("open");
+      var ch=rows[i].querySelector(".chevTxt");
+      if(ch) ch.textContent="▸";
+    }
+  }
+
+  function makeRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var qEl=document.createElement("div");
+    qEl.className="q";
+    qEl.textContent=pick(item.t);
+
+    var sEl=document.createElement("div");
+    sEl.className="sub";
+    sEl.textContent=pick(item.s);
+
+    tb.appendChild(qEl);
+    tb.appendChild(sEl);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    intro.textContent =
+      (lane==="platform")
+        ? (lang==="zh" ? "平台视角：这是一条路由入口。先让用户知道该去哪里，然后再加深。"
+           : lang==="es" ? "Plataforma: esto es una entrada de rutas. Primero guía al usuario; luego profundidad."
+           : "Platform: this is a routing entry. Guide the user first; deepen later.")
+        : (lang==="zh" ? "工程视角：把它当接口问题。先定义输入/输出/阈值，再谈规模化。"
+           : lang==="es" ? "Ingeniería: trátalo como interfaz. Define entradas/salidas/umbrales antes de escalar."
+           : "Engineering: treat it as interface. Define inputs/outputs/thresholds before scale.");
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var conceptText = (style==="formal")
+      ? (lang==="zh" ? "概念：定义可允许的承诺边界（合约/风险/合规），并声明测量规则。"
+         : lang==="es" ? "Concepto: define límites de promesa (contratos/riesgo/cumplimiento) y reglas de medición."
+         : "Concept: define promise bounds (contracts/risk/compliance) and declare measurement rules.")
+      : (lang==="zh" ? "概念：让扩张不靠运气。先把钱、风险、规则说清楚。"
+         : lang==="es" ? "Concepto: que la expansión no dependa de suerte. Aclara capital, riesgo y reglas."
+         : "Concept: expansion shouldn’t rely on luck. Clarify capital, risk, and rules.");
+
+    var buildText = (style==="formal")
+      ? (lang==="zh" ? "现在建：先做路由壳页，给出‘测什么/怎么验/怎么退出’。"
+         : lang==="es" ? "Construir ahora: shells de rutas con ‘qué medir / cómo verificar / cómo salir’."
+         : "Build now: routing shells with ‘what to measure / how to verify / how to exit’.")
+      : (lang==="zh" ? "现在建：先做可用入口（目录+跳转），别把愿景当证明。"
+         : lang==="es" ? "Construir ahora: entradas usables (catálogo + saltos). No confundir visión con prueba."
+         : "Build now: usable entries (catalog + jumps). Don’t confuse vision with proof.");
+
+    var roadText = (lang==="zh"
+      ? "路线图：把每个子域连接到 Laws（边界）与 Gauges（信号），形成可审计闭环。"
+      : (lang==="es"
+        ? "Hoja de ruta: conectar cada subdominio a Leyes (límites) y Medidores (señales) para un bucle auditable."
+        : "Roadmap: connect each subdomain to Laws (bounds) and Gauges (signals) into an auditable loop."));
+
+    bubbles.appendChild(makeSubBubble(labConcept(), conceptText));
+    bubbles.appendChild(makeSubBubble(labBuild(), buildText));
+    bubbles.appendChild(makeSubBubble(labRoadmap(), roadText));
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a=document.createElement("a");
+    a.className="btn red";
+    a.textContent = openLabel()+": "+(lang==="zh"?"进入":"Enter");
+    a.setAttribute("data-route", item.href);
+    actions.appendChild(a);
+
+    body.appendChild(intro);
+    body.appendChild(bubbles);
+    body.appendChild(actions);
+
+    function toggle(){
+      var isOpen=row.classList.contains("open");
+      if(isOpen){
+        row.classList.remove("open");
+        row.querySelector(".chevTxt").textContent="▸";
+        return;
+      }
+      closeAllRows();
+      row.classList.add("open");
+      row.querySelector(".chevTxt").textContent="▾";
+      wireAll();
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    row.appendChild(head);
+    row.appendChild(body);
+
+    if(idx===0){
+      row.classList.add("open");
+      row.querySelector(".chevTxt").textContent="▾";
+    }
+
+    return row;
+  }
+
+  function applyHeader(){
+    var H=HEAD[lang] || HEAD.en;
+    var key = (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
+    document.getElementById("hs").textContent = H["hs_"+key] || H.hs_platform_informal;
+    document.getElementById("rule").textContent = H.rule;
+
+    // badges
+    document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+    document.getElementById("bLaneV").textContent = laneLabel();
+    document.getElementById("bToneV").textContent = styleLabel();
+
+    if(lang==="zh"){
+      document.getElementById("hk").textContent="探索 · 经济";
+      document.getElementById("ht").textContent="经济与风险架构";
+      document.getElementById("band").textContent="经济房间（壳）";
+      document.getElementById("dockCompass").textContent="索引";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("btnExplore").textContent="探索";
+      document.getElementById("btnFrontier").textContent="前沿";
+      document.getElementById("btnHome").textContent="主页";
+      pillPlatform.textContent="平台";
+      pillEngineering.textContent="工程";
+      pillInformal.textContent="通俗";
+      pillFormal.textContent="正式";
+      document.getElementById("bLang").textContent="语言";
+      document.getElementById("bLane").textContent="车道";
+      document.getElementById("bTone").textContent="语气";
+    }else if(lang==="es"){
+      document.getElementById("hk").textContent="EXPLORAR · ECONÓMICO";
+      document.getElementById("ht").textContent="ARQUITECTURA ECONÓMICA Y DE RIESGO";
+      document.getElementById("band").textContent="SALAS ECONÓMICAS (SHELLS)";
+      document.getElementById("dockCompass").textContent="BRÚJULA";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      document.getElementById("btnExplore").textContent="EXPLORAR";
+      document.getElementById("btnFrontier").textContent="FRONTERA";
+      document.getElementById("btnHome").textContent="INICIO";
+      pillPlatform.textContent="PLATAFORMA";
+      pillEngineering.textContent="INGENIERÍA";
+      pillInformal.textContent="INFORMAL";
+      pillFormal.textContent="FORMAL";
+      document.getElementById("bLang").textContent="IDIOMA";
+      document.getElementById("bLane").textContent="CARRIL";
+      document.getElementById("bTone").textContent="ESTILO";
+    }else{
+      document.getElementById("hk").textContent="EXPLORE · ECONOMIC";
+      document.getElementById("ht").textContent="ECONOMIC & RISK ARCHITECTURE";
+      document.getElementById("band").textContent="ECONOMIC ROOMS (SHELLS)";
+      document.getElementById("dockCompass").textContent="COMPASS";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+      document.getElementById("btnExplore").textContent="EXPLORE";
+      document.getElementById("btnFrontier").textContent="FRONTIER";
+      document.getElementById("btnHome").textContent="HOME";
+      pillPlatform.textContent="PLATFORM";
+      pillEngineering.textContent="ENGINEERING";
+      pillInformal.textContent="INFORMAL";
+      pillFormal.textContent="FORMAL";
+      document.getElementById("bLang").textContent="LANG";
+      document.getElementById("bLane").textContent="LANE";
+      document.getElementById("bTone").textContent="STYLE";
+    }
+  }
+
+  function render(){
+    paintPills();
+    applyHeader();
+    list.innerHTML="";
+    for(var i=0;i<ROOMS.length;i++){
+      list.appendChild(makeRow(ROOMS[i], i));
+    }
+    wireAll();
+  }
+
+  // Start
+  paintPills();
+  render();
+
+  // Language toggle reload same path
+  // (Top right buttons)
+  // NOTE: Buttons already call setLang; no extra wiring needed.
+})();
+</script>
+
+</body>
+</html>

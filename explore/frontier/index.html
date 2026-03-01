@@ -1,7 +1,13 @@
 <!-- TNT — /explore/frontier/index.html
-     EXPLORE · FRONTIER BOARD
-     MONUMENT STRUCTURE · SINGLE-OPEN ACCORDION
-     4 LENSES · 3 LANGUAGES · NO MODALS · STATE SAFE
+     FRONTIER BOARD · ARCHITECTURAL HUB
+     ROLE:
+       - Central routing spine for all frontier innovation domains
+       - Single-open accordion
+       - 4 lenses: Engineering / Platform / Informal / Formal
+       - 3 languages: EN / 中文 / ES
+       - Monument typography
+       - No modals
+       - State carry (lang/style/time/depth)
 -->
 
 <!doctype html>
@@ -9,237 +15,261 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · FRONTIER</title>
+<title>Explore · Frontier</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
 :root{
   --dockH:90px;
-  --inkA:rgba(14,16,24,.95);
-  --inkB:rgba(8,10,14,.98);
-  --stroke:rgba(255,255,255,.10);
-  --gold:rgba(212,175,55,.20);
-  --opal:rgba(210,190,255,.12);
-  --mut:rgba(255,255,255,.92);
+  --gold:rgba(212,175,55,.45);
+  --red:rgba(255,70,70,.25);
+  --inkA:rgba(12,22,38,.94);
+  --inkB:rgba(6,10,16,.98);
 }
 
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-
 .page{
-  width:min(1100px,94vw);
+  width:min(1200px,94vw);
   margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 18px);
+  padding:100px 0 calc(var(--dockH) + 30px);
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:20px;
 }
 
 .header{
-  border:1px solid var(--stroke);
-  border-radius:36px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
+  padding:28px 28px 22px;
   background:
-    radial-gradient(circle at 20% 18%, var(--gold), transparent 65%),
-    radial-gradient(circle at 80% 80%, var(--opal), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
-  padding:48px 48px;
-  box-shadow:0 60px 180px rgba(0,0,0,.6);
+    radial-gradient(circle at 30% 20%, var(--gold), transparent 65%),
+    radial-gradient(circle at 80% 75%, var(--red), transparent 70%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  box-shadow:0 40px 140px rgba(0,0,0,.75);
 }
 
-.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
-.t{font-size:54px;font-weight:950;margin:0 0 24px;letter-spacing:1px}
-.s{font-size:22px;line-height:1.8;color:var(--mut);max-width:920px}
+.title{
+  font-size:44px;
+  font-weight:950;
+  letter-spacing:.8px;
+  margin:0 0 12px;
+}
 
-.lens{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.subtitle{
+  font-size:18px;
+  line-height:1.6;
+  opacity:.9;
+  max-width:1000px;
+}
+
+.lensRow{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
 .pill{
-  padding:14px 20px;
+  padding:12px 18px;
   border-radius:999px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
-  font-weight:900;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(0,0,0,.3);
   cursor:pointer;
+  font-weight:700;
 }
-.pill.active{box-shadow:0 0 20px rgba(212,175,55,.35)}
+.pill.active{
+  border-color:var(--gold);
+  box-shadow:0 0 20px rgba(212,175,55,.25);
+}
 
-.stack{display:flex;flex-direction:column;gap:24px}
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-.card{
-  border:1px solid var(--stroke);
-  border-radius:32px;
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+.row{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:24px;
   overflow:hidden;
-  box-shadow:0 40px 150px rgba(0,0,0,.55);
+  background:linear-gradient(145deg,rgba(20,30,50,.9),rgba(10,15,25,.95));
+  box-shadow:0 20px 80px rgba(0,0,0,.6);
 }
 
 .head{
-  padding:32px 36px;
+  padding:20px 22px;
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   cursor:pointer;
+  font-size:20px;
+  font-weight:800;
 }
-
-.title{font-size:30px;font-weight:900}
-.chev{font-size:20px;opacity:.75}
 
 .body{
   display:none;
-  padding:34px 36px 40px;
-  border-top:1px solid var(--stroke);
+  padding:22px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:16px;
+  line-height:1.7;
 }
 
-.card.open .body{display:block}
+.row.open .body{display:block}
 
-.body h4{
-  margin:0 0 14px;
-  font-size:15px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  opacity:.75;
+.routeBtn{
+  margin-top:18px;
+  display:inline-block;
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.2);
+  font-weight:700;
+}
+.routeBtn:hover{
+  box-shadow:0 0 20px rgba(212,175,55,.3);
 }
 
-.body p{
-  margin:0;
-  font-size:20px;
-  line-height:1.8;
-  color:var(--mut);
+.topNav{
+  position:fixed;
+  top:20px;
+  left:20px;
+  display:flex;
+  gap:10px;
+}
+
+.langNav{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  gap:10px;
+}
+
+.navBtn{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(0,0,0,.3);
+  cursor:pointer;
 }
 
 .dock{
   position:fixed;
+  bottom:20px;
   left:50%;
-  bottom:12px;
   transform:translateX(-50%);
-  width:min(980px,94vw);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  padding:14px;
-  border-radius:28px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.35);
+  display:flex;
+  gap:10px;
 }
-.dock .btn{padding:14px;border-radius:999px;text-align:center}
 </style>
 </head>
 
 <body>
 
+<div class="topNav">
+  <a class="navBtn" id="backBtn" href="/explore/">BACK</a>
+  <a class="navBtn" id="exitBtn" href="/index.html">EXIT</a>
+</div>
+
+<div class="langNav">
+  <button class="navBtn" id="btnEN">EN</button>
+  <button class="navBtn" id="btnZH">中文</button>
+  <button class="navBtn" id="btnES">ES</button>
+</div>
+
 <div class="page">
 
   <div class="header">
-    <p class="k">EXPLORE</p>
-    <h1 class="t">FRONTIER BOARD</h1>
-    <p class="s">
-      What if the loudest claims are the ones with the strongest structure?  
-      The frontier is not speculation — it is disciplined expansion.
-    </p>
+    <div class="title" id="titleText">Frontier Board</div>
+    <div class="subtitle" id="subtitleText">
+      Where ambitious claims meet measurable structure.
+      If something in the world feels unstable, inefficient, or misaligned,
+      this is where we map it, bound it, and rebuild it.
+    </div>
 
-    <div class="lens">
-      <div class="pill active" data-lens="informal">INFORMAL</div>
-      <div class="pill" data-lens="formal">FORMAL</div>
-      <div class="pill" data-lens="platform">PLATFORM</div>
-      <div class="pill" data-lens="engineering">ENGINEERING</div>
+    <div class="lensRow">
+      <div class="pill active" data-lens="informal">Informal</div>
+      <div class="pill" data-lens="formal">Formal</div>
+      <div class="pill" data-lens="engineering">Engineering</div>
+      <div class="pill" data-lens="platform">Platform</div>
     </div>
   </div>
 
-  <div class="stack" id="stack"></div>
+  <div class="list" id="frontierList"></div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
-</nav>
+<div class="dock">
+  <a class="navBtn" id="homeDock" href="/home/">HOME</a>
+  <a class="navBtn" id="lawsDock" href="/laws/">LAWS</a>
+  <a class="navBtn" id="gaugesDock" href="/gauges/">GAUGES</a>
+</div>
 
 <script>
 (function(){
 
-  const THEMES = [
-    "Energy Substitution Systems",
-    "Water Optimization Networks",
-    "Waste-to-Resource Conversion",
-    "Closed-Loop Habitat Models",
-    "Urban Resource Operating Systems",
-    "Institutional Risk Infrastructure",
-    "Interplanetary Deployment Concepts"
+  const qs = new URLSearchParams(location.search);
+  let lang = qs.get("lang") || localStorage.getItem("gd_lang") || "en";
+  let style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  let time = qs.get("time") || localStorage.getItem("gd_time") || "now";
+  let depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  localStorage.setItem("gd_lang", lang);
+  localStorage.setItem("gd_style", style);
+  localStorage.setItem("gd_time", time);
+  localStorage.setItem("gd_depth", depth);
+
+  function q(){
+    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  }
+
+  document.getElementById("backBtn").href="/explore/"+q();
+  document.getElementById("exitBtn").href="/index.html"+q();
+  document.getElementById("homeDock").href="/home/"+q();
+  document.getElementById("lawsDock").href="/laws/"+q();
+  document.getElementById("gaugesDock").href="/gauges/"+q();
+
+  const domains = [
+    {id:"trajectory", label:"Trajectory Systems", route:"/explore/frontier/trajectory/"},
+    {id:"waste", label:"Waste Systems", route:"/explore/frontier/waste/"},
+    {id:"water", label:"Water Systems", route:"/explore/frontier/water/"},
+    {id:"energy", label:"Energy Systems", route:"/explore/frontier/energy/"},
+    {id:"habitats", label:"Closed-Loop Habitats", route:"/explore/frontier/habitats/"},
+    {id:"urban", label:"Urban Resource OS", route:"/explore/frontier/urban-os/"}
   ];
 
-  const TEXT = {
-    informal:{
-      en:"Frontier ideas feel big because they change scale. We make them safe by measuring their structure before we scale them.",
-      zh:"前沿想法之所以宏大，是因为它改变规模。我们通过先测结构，再扩规模，让它们变得安全。",
-      es:"Las ideas de frontera parecen grandes porque cambian escala. Las hacemos seguras midiendo su estructura antes de escalar."
-    },
-    formal:{
-      en:"Each frontier initiative is mapped through constraint alignment, cascade modeling, and bounded deployment gates before public claim.",
-      zh:"每个前沿计划在公开主张前，都经过约束对齐、级联建模与有界部署闸门。",
-      es:"Cada iniciativa de frontera se mapea mediante alineación de restricciones, modelado de cascadas y compuertas de despliegue acotadas antes de cualquier afirmación pública."
-    },
-    platform:{
-      en:"Platform posture: frontier modules remain detachable, testable, and registry-trackable.",
-      zh:"平台姿态：前沿模块必须可拆卸、可测试、可登记追踪。",
-      es:"Postura de plataforma: los módulos de frontera deben ser desacoplables, comprobables y rastreables en registro."
-    },
-    engineering:{
-      en:"Engineering posture: thermal margins, failure envelopes, energy balances, rollback vectors, and cascade thresholds are explicitly defined.",
-      zh:"工程姿态：明确热裕度、失效边界、能量平衡、回滚向量与级联阈值。",
-      es:"Postura de ingeniería: márgenes térmicos, envolventes de fallo, balances energéticos, vectores de rollback y umbrales de cascada están definidos explícitamente."
-    }
-  };
-
-  let currentLens="informal";
-  let currentLang="en";
-
-  const stack=document.getElementById("stack");
+  const list = document.getElementById("frontierList");
 
   function render(){
-    stack.innerHTML="";
-    THEMES.forEach((name,i)=>{
-      const card=document.createElement("div");
-      card.className="card";
+    list.innerHTML="";
+    domains.forEach((d,i)=>{
+      const row=document.createElement("div");
+      row.className="row";
 
       const head=document.createElement("div");
       head.className="head";
-      head.innerHTML=`
-        <div class="title">${name}</div>
-        <div class="chev">▸</div>
-      `;
+      head.textContent=d.label;
 
       const body=document.createElement("div");
       body.className="body";
       body.innerHTML=`
-        <h4>${currentLens.toUpperCase()}</h4>
-        <p>${TEXT[currentLens][currentLang]}</p>
+        This domain explores systemic instability and bounded reconstruction within ${d.label}.
+        We map constraints, measure exposure, and define safe execution surfaces.
+        <br/>
+        <a class="routeBtn" href="${d.route + q()}">ENTER DOMAIN</a>
       `;
 
-      head.addEventListener("click",()=>{
-        document.querySelectorAll(".card").forEach(c=>{
-          if(c!==card) c.classList.remove("open");
-        });
-        card.classList.toggle("open");
-      });
+      head.onclick=()=>{
+        document.querySelectorAll(".row").forEach(r=>r.classList.remove("open"));
+        row.classList.toggle("open");
+      };
 
-      card.appendChild(head);
-      card.appendChild(body);
-      stack.appendChild(card);
-
-      if(i===0) card.classList.add("open");
+      row.appendChild(head);
+      row.appendChild(body);
+      list.appendChild(row);
     });
   }
-
-  document.querySelectorAll(".pill").forEach(p=>{
-    p.addEventListener("click",()=>{
-      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
-      p.classList.add("active");
-      currentLens=p.dataset.lens;
-      render();
-    });
-  });
 
   render();
 

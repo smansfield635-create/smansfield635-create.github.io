@@ -1,23 +1,20 @@
 <!-- TNT — /door/index.html
-     DOOR · INTRO (DIAMOND GATE BRIDGE) · TRILINGUAL (EN/中文/ES) · NO LENSES
-     PURPOSE:
-       - Monumental intro that “rings frontier”: big promise + bounded posture + clear next jumps.
-       - Mobile-safe (no modals, no overlays, no pointer traps).
-     ROUTES (EDIT HERE IF YOUR ROUTES DIFFER):
-       - ROOT    → /root/        (return page)   [if you don’t have /root/, set to "/"]
-       - COMPASS → /index.html   (your compass)
+     DOOR · DIAMOND GATE BRIDGE (INTRO ROUTER) · TRILINGUAL (EN/中文/ES)
+     UPGRADE GOAL:
+       - Reframe “problem” as opportunity: big ideas + receipts posture
+       - Replace “claim/support” phrasing with human terms:
+           "big idea" / "proof" / "receipts" / "what we can check"
+       - Larger, monument typography + higher contrast panel variance
+       - No modals. No overlays. Single-open accordion in HOW THIS WORKS.
+       - State carry: lang/style/time/depth (URL + gd_* localStorage)
+     ROUTES:
+       - ROOT    → /
        - PRELUDE → /prelude/
-       - HOME    → /home/
-       - PRODUCTS→ /products/
-       - EXPLORE → /explore/
-       - LAWS    → /laws/
-       - GAUGES  → /gauges/
-     STATE:
-       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
-       - Carries lang/style/time/depth on every jump
-     STYLE:
-       - Dark opal + gold encrusting + subtle red (no washed-out blue)
-       - Larger print (typographic expansion)
+       - COMPASS → /index.html
+       - ENTER   → /home/
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <!doctype html>
@@ -25,7 +22,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DIAMOND GATE BRIDGE · INTRO</title>
+<title>DOOR · Diamond Gate Bridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -33,162 +30,138 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:98px;
+  --dockH:92px;
 
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
+  /* dark opal + red (no blue wash) */
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
   --opalC:rgba(255,80,80,.10);
 
-  --goldSoft:rgba(212,175,55,.35);
+  --panelA:rgba(0,0,0,.18);
+  --panelB:rgba(0,0,0,.26);
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.78);
-  --mut2:rgba(255,255,255,.66);
+  --goldSoft:rgba(212,175,55,.22);
+
+  /* monument type */
+  --H1:38px;
+  --H2:16px;
+  --P:15px;
+  --SM:12.75px;
 }
 
-/* Top (sticky, not fixed) */
+/* top */
 .top{
-  position:sticky; top:0; z-index:240;
-  padding:10px 0 8px;
-  display:flex; justify-content:space-between; gap:12px;
+  position:fixed;left:0;right:0;top:16px;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
 .top .left,.top .right{
-  display:flex; gap:10px; align-items:center;
-  flex-wrap:nowrap; white-space:nowrap;
+  display:flex;gap:10px;align-items:center;white-space:nowrap;
+  pointer-events:auto;
 }
+.top .btn{white-space:nowrap}
 
-/* Page wrap */
+/* page */
 .page{
-  width:min(1120px,94vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:10px 0 calc(var(--dockH) + 18px);
-  display:flex; flex-direction:column; gap:14px;
-  position:relative; z-index:10;
+  padding:84px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  position:relative;
+  z-index:10;
 }
 
-/* Hero */
+/* hero */
 .hero{
   border-radius:26px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
   box-shadow:0 30px 110px rgba(0,0,0,.55);
   padding:18px 18px 16px;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";
-  position:absolute; inset:0; border-radius:inherit; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
 }
 .k{
   margin:0 0 8px;
-  font-size:12px;
+  font-size:11px;
   letter-spacing:4px;
   text-transform:uppercase;
-  opacity:.78;
+  opacity:.74;
 }
 .h1{
   margin:0;
   font-weight:950;
-  font-size:34px;
-  letter-spacing:1.1px;
-  line-height:1.1;
+  font-size:var(--H1);
+  letter-spacing:1.2px;
+  line-height:1.05;
 }
 .p{
-  margin:12px 0 0;
-  font-size:15.5px;
-  line-height:1.62;
-  color:var(--txt);
+  margin:10px 0 0;
+  font-size:var(--P);
+  line-height:1.6;
+  color:rgba(255,255,255,.90);
   max-width:980px;
 }
 .rule{
-  margin:14px 0 0;
-  padding:12px 14px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-size:13.5px;
-  line-height:1.55;
-  color:var(--mut);
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
+  box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
+  font-size:var(--SM);
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
 }
 
-/* Primary grid (4 big cards) */
+/* 3 cards */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
+  grid-template-columns:repeat(3, minmax(0,1fr));
   gap:14px;
 }
-@media (max-width:860px){ .grid{grid-template-columns:1fr;} }
+@media (max-width:920px){ .grid{grid-template-columns:1fr} }
 
 .card{
   position:relative;
-  border-radius:24px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
     radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(255,80,80,.08), transparent 64%),
-    linear-gradient(160deg, rgba(12,22,38,.86), rgba(6,10,16,.92));
-  box-shadow:0 22px 80px rgba(0,0,0,.55);
+    linear-gradient(160deg, rgba(12,22,38,.74), rgba(6,10,16,.86));
+  box-shadow:0 20px 70px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
   overflow:hidden;
   padding:16px 16px 14px;
 }
 .card::before{
   content:"";
-  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
-.ct{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.4px;
-  font-size:18px;
-}
-.cs{
-  margin:10px 0 0;
-  font-size:14px;
-  line-height:1.55;
-  color:rgba(255,255,255,.86);
-}
-.cm{
-  margin:10px 0 0;
-  font-size:13px;
-  line-height:1.55;
-  color:rgba(255,255,255,.72);
-}
-.actions{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-.actions .btn{
-  padding:10px 14px;
-  border-radius:999px;
-}
+.ct{margin:0;font-weight:950;letter-spacing:.6px;font-size:18px}
+.cs{margin:8px 0 0;font-size:13.75px;line-height:1.5;color:rgba(255,255,255,.86)}
+.mini{margin:10px 0 0;font-size:12.75px;line-height:1.45;color:rgba(255,255,255,.74)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{border-radius:999px;padding:10px 14px}
 
-/* Accordion band */
+/* accordion */
 .band{
   padding:10px 12px;
   border-radius:18px;
@@ -198,37 +171,24 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.2px;
   color:rgba(255,255,255,.88);
 }
-
-.stack{display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
+.acc{
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 60px rgba(0,0,0,.40);
   overflow:hidden;
 }
-.head{
-  display:flex; align-items:flex-start; justify-content:space-between;
-  gap:10px; padding:14px 16px;
+.accHead{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:14px 16px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.left2{min-width:0}
-.title{
-  font-weight:950;
-  font-size:15.5px;
-  letter-spacing:.2px;
-}
-.sub{
-  margin-top:6px;
-  font-size:13.25px;
-  line-height:1.5;
-  color:rgba(255,255,255,.78);
-  max-width:92ch;
-}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.body{
+.accT{font-weight:950;letter-spacing:.2px}
+.accS{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;color:rgba(255,255,255,.86)}
+.accC{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.accBody{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -236,18 +196,23 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.row.open .body{display:block}
-.bp{
-  margin:0;
-  font-size:14px;
-  line-height:1.65;
-  color:rgba(255,255,255,.86);
-}
-.bp + .bp{margin-top:10px}
+.acc.open .accBody{display:block}
+.accP{margin:0;color:rgba(255,255,255,.88);line-height:1.62;font-size:13.25px}
+.accP + .accP{margin-top:10px}
+.jump{margin-top:12px;display:flex;justify-content:flex-end}
 
-/* Dock */
+/* footer */
+.footer{
+  margin-top:6px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+
+/* dock */
 .dock{
-  position:fixed; left:50%;
+  position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -264,7 +229,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:108px}
+  :root{--dockH:98px; --H1:34px; --P:15px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -272,76 +237,114 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnRoot" href="/">ROOT</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnRoot" href="/root/">ROOT</a>
-      <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
-  </div>
-
-  <div class="hero" aria-label="Intro">
+  <div class="hero">
     <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
-    <h1 class="h1" id="h0">FRONTIER, WITH RECEIPTS</h1>
+    <h1 class="h1" id="h0">DOOR</h1>
     <p class="p" id="p0"></p>
     <div class="rule" id="r0"></div>
   </div>
 
-  <div class="grid" aria-label="Primary entry">
+  <div class="grid" aria-label="Entry choices">
     <div class="card">
-      <h2 class="ct" id="c1t">START HERE</h2>
+      <h2 class="ct" id="c1t">PRELUDE</h2>
       <p class="cs" id="c1s"></p>
-      <p class="cm" id="c1m"></p>
+      <p class="mini" id="c1m"></p>
       <div class="actions">
         <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
       </div>
     </div>
 
     <div class="card">
-      <h2 class="ct" id="c2t">GET TO THE MAP</h2>
+      <h2 class="ct" id="c2t">COMPASS</h2>
       <p class="cs" id="c2s"></p>
-      <p class="cm" id="c2m"></p>
+      <p class="mini" id="c2m"></p>
       <div class="actions">
         <a class="btn" id="goCompass" href="/index.html">OPEN</a>
       </div>
     </div>
 
     <div class="card">
-      <h2 class="ct" id="c3t">USE THE TOOLS</h2>
+      <h2 class="ct" id="c3t">ENTER</h2>
       <p class="cs" id="c3s"></p>
-      <p class="cm" id="c3m"></p>
+      <p class="mini" id="c3m"></p>
       <div class="actions">
-        <a class="btn" id="goProducts" href="/products/">OPEN</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 class="ct" id="c4t">SEE THE FUTURE</h2>
-      <p class="cs" id="c4s"></p>
-      <p class="cm" id="c4m"></p>
-      <div class="actions">
-        <a class="btn" id="goExplore" href="/explore/">OPEN</a>
+        <a class="btn" id="goEnter" href="/home/">OPEN</a>
       </div>
     </div>
   </div>
 
-  <div class="band" id="b1">WHAT THIS SITE IS ACTUALLY DOING</div>
-  <div class="stack" id="stack"></div>
+  <div class="band" id="bandHow">HOW THIS WORKS</div>
+
+  <div class="acc" id="a1">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="accT" id="a1t">What’s the opportunity?</div>
+        <div class="accS" id="a1s">Big ideas are welcome—when they’re tied to what we can check.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="accP" id="a1p1"></p>
+      <p class="accP" id="a1p2"></p>
+      <div class="jump"><a class="btn" id="jPrelude" href="/prelude/">JUMP: PRELUDE</a></div>
+    </div>
+  </div>
+
+  <div class="acc" id="a2">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="accT" id="a2t">How do routes work?</div>
+        <div class="accS" id="a2s">Compass routes by direction; Enter routes by function.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="accP" id="a2p1"></p>
+      <p class="accP" id="a2p2"></p>
+      <div class="jump"><a class="btn" id="jCompass" href="/index.html">JUMP: COMPASS</a></div>
+    </div>
+  </div>
+
+  <div class="acc" id="a3">
+    <div class="accHead" role="button" tabindex="0">
+      <div>
+        <div class="accT" id="a3t">What makes this different?</div>
+        <div class="accS" id="a3s">We separate hype from proof—without killing curiosity.</div>
+      </div>
+      <div class="accC">▸</div>
+    </div>
+    <div class="accBody">
+      <p class="accP" id="a3p1"></p>
+      <p class="accP" id="a3p2"></p>
+      <div class="jump"><a class="btn" id="jEnter" href="/home/">JUMP: ENTER</a></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="f0">Orientation is the product.</span>
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
   <a class="btn" id="dockHome" href="/home/">HOME</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
 </nav>
 
 <script>
@@ -368,18 +371,6 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  // ===== route map (edit if needed) =====
-  var ROUTE={
-    root:"/root/",
-    compass:"/index.html",
-    prelude:"/prelude/",
-    home:"/home/",
-    products:"/products/",
-    explore:"/explore/",
-    laws:"/laws/",
-    gauges:"/gauges/"
-  };
-
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
     var S=(over&&over.style)?over.style:style;
@@ -387,200 +378,192 @@ body::before,body::after{pointer-events:none!important}
     var D=(over&&over.depth)?over.depth:depth;
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
-  function wire(id, path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
 
-  wire("btnRoot",ROUTE.root);
-  wire("btnCompass",ROUTE.compass);
-  wire("btnPrelude",ROUTE.prelude);
+  // wire routes
+  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
+  wire("btnRoot","/");
+  wire("goPrelude","/prelude/");
+  wire("goCompass","/index.html");
+  wire("goEnter","/home/");
+  wire("jPrelude","/prelude/");
+  wire("jCompass","/index.html");
+  wire("jEnter","/home/");
+  wire("dockIndex","/index.html");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockExplore","/explore/");
 
-  wire("goPrelude",ROUTE.prelude);
-  wire("goCompass",ROUTE.compass);
-  wire("goProducts",ROUTE.products);
-  wire("goExplore",ROUTE.explore);
-
-  wire("dockHome",ROUTE.home);
-  wire("dockProducts",ROUTE.products);
-  wire("dockLaws",ROUTE.laws);
-  wire("dockGauges",ROUTE.gauges);
-
-  // ===== language buttons =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
+  // language toggle (reload same path)
   function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  // ===== trilingual copy (you see one language at a time) =====
-  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-
-  document.getElementById("p0").textContent = T(
-    "What if the biggest future projects were treated like engineering—not hype? This site is a map of problems we can measure, plus the bounded methods we use to solve them. You’re here because something needs an answer—and the answer is usually hiding in the wiring.",
-    "如果最宏大的未来工程不靠口号，而靠工程纪律，会怎样？这个站点把可测的问题画成地图，并把可落地的方法做成有界工具。你来这里，是因为某个东西需要答案——而答案通常藏在“线路”里。",
-    "¿Y si los proyectos más grandes del futuro se trataran como ingeniería, no como hype? Este sitio es un mapa de problemas medibles y de métodos acotados para resolverlos. Estás aquí porque algo necesita una respuesta—y esa respuesta suele estar en el cableado."
-  );
-
-  document.getElementById("r0").textContent = T(
-    "Positioning: Big ideas are welcome. But every claim stays bounded to what can be checked. If we can’t measure it yet, we label it as readiness—not as victory.",
-    "定位：允许大想法。但任何主张必须绑定可核查的支撑。若暂时不可测，就只写“就绪”，不写“胜利”。",
-    "Posicionamiento: se permiten ideas grandes. Pero toda afirmación queda acotada a lo verificable. Si aún no se puede medir, se etiqueta como preparación, no como victoria."
-  );
-
-  document.getElementById("c1s").textContent = T(
-    "Start with the story—but the story is disciplined.",
-    "先从叙事开始——但叙事有纪律。",
-    "Empieza con el relato—pero un relato disciplinado."
-  );
-  document.getElementById("c1m").textContent = T(
-    "Prelude is a guided ramp: it names the problem, explains the posture, and routes you cleanly.",
-    "前置页是引导坡道：讲清问题、讲清姿态、并把你干净地路由到正确入口。",
-    "El Preludio es una rampa guiada: nombra el problema, explica la postura y te enruta limpio."
-  );
-
-  document.getElementById("c2s").textContent = T(
-    "Go straight to the map of directions.",
-    "直接进入方向地图。",
-    "Ve directo al mapa de direcciones."
-  );
-  document.getElementById("c2m").textContent = T(
-    "Compass is traversal: pick a direction (facts, offer, measure, anchors) and enter.",
-    "指南针是遍历：选方向（事实/提供/测量/锚点），然后进入。",
-    "La Brújula es recorrido: elige dirección y entra."
-  );
-
-  document.getElementById("c3s").textContent = T(
-    "Use deployable surfaces: products, services, software.",
-    "进入可部署执行面：产品、服务、软件。",
-    "Usa superficies desplegables: productos, servicios, software."
-  );
-  document.getElementById("c3m").textContent = T(
-    "If you want something you can apply right now, start here.",
-    "如果你要马上能用的东西，从这里开始。",
-    "Si quieres algo aplicable hoy, empieza aquí."
-  );
-
-  document.getElementById("c4s").textContent = T(
-    "Vision lane: cities, habitats, water, waste, energy—mapped as bounded futures.",
-    "愿景通道：城市/栖息地/水/废弃物/能源——作为有界未来被映射。",
-    "Carril de visión: ciudades, hábitats, agua, residuos, energía—futuros acotados."
-  );
-  document.getElementById("c4m").textContent = T(
-    "Explore is where frontier projects live—always labeled as readiness when proof isn’t complete yet.",
-    "探索页承载前沿项目——证据未完成时一律标注为“就绪”。",
-    "Explorar es donde viven los proyectos frontera—etiquetados como preparación cuando la prueba aún no está completa."
-  );
-
-  document.getElementById("b1").textContent = T(
-    "WHAT THIS SITE IS ACTUALLY DOING",
-    "这个站点到底在做什么",
-    "QUÉ ESTÁ HACIENDO ESTE SITIO"
-  );
-
-  // ===== accordion rows (single-open) =====
-  var ROWS=[
-    {
-      t:T("What is the problem?","问题是什么？","¿Cuál es el problema?"),
-      s:T("Systems fail because complexity hides shared dependencies. People scale blind.","系统失败是因为复杂性隐藏了共享依赖，人们在盲目扩张。","Los sistemas fallan porque la complejidad oculta dependencias compartidas. Se escala a ciegas."),
-      p:[
-        T(
-          "Most failures are not ‘one bug’. They’re correlated exposure: one shared dependency, one shared rollout, one shared assumption—multiplying quietly until everything fails together.",
-          "多数失败不是“一个bug”，而是相关暴露：一个共享依赖、一次共享发布、一个共享假设——悄悄相乘，直到一起崩。",
-          "La mayoría de fallos no son ‘un bug’. Son exposición correlacionada: una dependencia compartida, un rollout compartido, una suposición compartida—multiplicando en silencio hasta que todo falla junto."
-        ),
-        T(
-          "So the first job is visibility: map the wiring into a finite lattice. If you can’t see it, you can’t stabilize it.",
-          "因此第一件事是可见性：把线路映射进有限晶格。看不见，就稳不住。",
-          "El primer trabajo es visibilidad: mapear el cableado en un lattice finito. Si no lo ves, no lo estabilizas."
-        )
-      ]
+  // copy (EN/中文/ES) — human wording, frontier posture, still bounded
+  var COPY={
+    en:{
+      hero:{
+        p:"What if the loudest ideas of our time could be measured—without pretending, without hype, and without losing wonder?",
+        r:"Rule: big ideas are welcome. Every upgrade needs receipts. Navigation preserves gd_* state."
+      },
+      cards:{
+        prelude:{s:"Start with the story—then make it measurable.", m:"Use this when you want orientation before traversal."},
+        compass:{s:"Choose a direction. Then enter.", m:"Use this when you want structured traversal (N/E/S/W)."},
+        enter:{s:"Primary hub. Move by function.", m:"Use this when you already know your lane."}
+      },
+      acc:{
+        a1p1:"Most failures aren’t one mistake. They’re shared dependencies, hidden correlation, and silent meaning shifts—until everything fails together.",
+        a1p2:"This site turns that ‘invisible wiring’ into something you can see, test, and route—so your next step is calm, not guesswork.",
+        a2p1:"Prelude sets the posture. Compass chooses direction. Enter jumps by function. Each route carries your state so you don’t reset while you learn.",
+        a2p2:"If you want structure first, use Compass. If you want tools now, use Enter. If you want ‘why’ before speed, use Prelude.",
+        a3p1:"We separate curiosity from certainty. If it can’t be measured yet, it stays labeled as concept or roadmap—never as ‘done.’",
+        a3p2:"That’s how frontier stays honest: bold direction, bounded statements, and receipts when it’s time to upgrade."
+      },
+      how:{a1t:"What’s the opportunity?",a1s:"Big ideas are welcome—when they’re tied to what we can check.",
+           a2t:"How do routes work?",a2s:"Compass routes by direction; Enter routes by function.",
+           a3t:"What makes this different?",a3s:"We separate hype from proof—without killing curiosity."}
     },
-    {
-      t:T("What is our posture?","我们的姿态是什么？","¿Cuál es nuestra postura?"),
-      s:T("Big ideas, bounded outputs. No silent upgrades.","允许大想法，但输出有界；不允许静默升级。","Ideas grandes, salidas acotadas. Sin upgrades silenciosos."),
-      p:[
-        T(
-          "We separate frontier vision from proof posture. Vision is allowed to be bold—proof is required to be strict.",
-          "我们把愿景与证明分离：愿景可以大胆；证明必须严格。",
-          "Separamos visión de prueba: la visión puede ser audaz; la prueba debe ser estricta."
-        ),
-        T(
-          "If something is not measured yet, we label it as readiness. That’s how we keep trust intact while building momentum.",
-          "如果暂时不可测，我们只写“就绪”。这样才能在推进的同时不伤信任。",
-          "Si algo aún no está medido, lo etiquetamos como preparación. Así mantenemos confianza mientras avanzamos."
-        )
-      ]
+    zh:{
+      hero:{
+        p:"如果我们这个时代最宏大的想法，终于可以被测量——不靠吹嘘、不靠假装、也不牺牲好奇心，会怎样？",
+        r:"规则：欢迎大想法。每次升级都需要收据。导航保留 gd_* 状态。"
+      },
+      cards:{
+        prelude:{s:"先讲清楚，再变可测量。", m:"想先看导览与姿态，用这里。"},
+        compass:{s:"先选方向，再进入。", m:"想按结构遍历（N/E/S/W）用这里。"},
+        enter:{s:"主枢纽：按功能移动。", m:"已知路线时直接进。"}
+      },
+      acc:{
+        a1p1:"多数失败不是一个错误，而是共享依赖、隐藏相关、与静默换义——直到一起崩。",
+        a1p2:"本站把“看不见的线路”变成可见、可测、可路由的东西，让下一步更稳、更清楚。",
+        a2p1:"Prelude 定姿态。Compass 选方向。Enter 按功能跳转。每条路都携带状态，学习不重置。",
+        a2p2:"要结构先走 Compass；要工具先走 Enter；要先弄清‘为什么’走 Prelude。",
+        a3p1:"我们把好奇与确定分开：不能测量就标为概念或路线图，绝不冒充‘已实现’。",
+        a3p2:"这就是前沿的诚实：方向大胆，表述有界，升级靠收据。"
+      },
+      how:{a1t:"机会是什么？",a1s:"欢迎大想法——但必须绑定可核查之物。",
+           a2t:"路由怎么走？",a2s:"Compass 按方向；Enter 按功能。",
+           a3t:"哪里不同？",a3s:"把吹嘘与证明分开，但保留好奇心。"}
     },
-    {
-      t:T("How do we solve it?","我们怎么解？","¿Cómo lo resolvemos?"),
-      s:T("Map → sweep → measure → govern. Always with receipts.","画图→扫掠→测量→治理，全程以收据为准。","Mapa → barrido → medición → gobernanza. Siempre con recibos."),
-      p:[
-        T(
-          "We turn “I think” into a bounded run: declare scope, collect receipts, apply constraints, and route you to the next safe move.",
-          "我们把“我觉得”变成有界运行：声明范围、收集收据、施加约束，然后把你路由到下一步安全动作。",
-          "Convertimos “yo creo” en una ejecución acotada: declarar alcance, reunir recibos, aplicar restricciones y enrutar el siguiente paso seguro."
-        ),
-        T(
-          "Dot.Grid exposes structure. Gauges expose signals. Laws define what signals are allowed to mean. Products deploy the result without collapsing routes.",
-          "Dot.Grid 暴露结构；量规暴露信号；法则约束信号能意味着什么；产品把结果部署出来且不坍缩路由。",
-          "Dot.Grid expone estructura. Medidores exponen señales. Leyes definen qué pueden significar. Productos despliegan sin colapsar rutas."
-        )
-      ]
+    es:{
+      hero:{
+        p:"¿Y si las ideas más grandes de nuestro tiempo pudieran medirse—sin fingir, sin hype y sin perder asombro?",
+        r:"Regla: las ideas grandes son bienvenidas. Cada upgrade requiere recibos. La navegación preserva gd_*."
+      },
+      cards:{
+        prelude:{s:"Empieza con la historia—y luego hazla medible.", m:"Úsalo si quieres orientación antes del recorrido."},
+        compass:{s:"Elige dirección. Luego entra.", m:"Úsalo para recorrido estructurado (N/E/S/O)."},
+        enter:{s:"Hub principal. Mover por función.", m:"Úsalo si ya sabes tu carril."}
+      },
+      acc:{
+        a1p1:"La mayoría de fallas no son un error: son dependencias compartidas, correlación oculta y cambios silenciosos de significado—hasta que todo falla junto.",
+        a1p2:"Este sitio vuelve visible ese ‘cableado’ para poder verlo, probarlo y rutearlo—para que el siguiente paso sea calmado, no adivinanza.",
+        a2p1:"Prelude fija postura. Compass elige dirección. Enter salta por función. Cada ruta preserva estado para no reiniciar al aprender.",
+        a2p2:"Si quieres estructura primero, usa Compass. Si quieres herramientas ya, usa Enter. Si quieres el ‘por qué’, usa Prelude.",
+        a3p1:"Separarmos curiosidad de certeza. Si aún no se puede medir, queda etiquetado como concepto o ruta—nunca como ‘logrado’.",
+        a3p2:"Así la frontera se mantiene honesta: dirección audaz, afirmaciones acotadas y recibos cuando toca subir."
+      },
+      how:{a1t:"¿Cuál es la oportunidad?",a1s:"Ideas grandes sí—cuando se atan a lo verificable.",
+           a2t:"¿Cómo funcionan las rutas?",a2s:"Compass por dirección; Enter por función.",
+           a3t:"¿Qué lo hace distinto?",a3s:"Separamos hype de prueba sin matar curiosidad."}
     }
-  ];
+  };
 
-  var stack=document.getElementById("stack");
-  function renderStack(){
-    stack.innerHTML="";
-    ROWS.forEach(function(r,idx){
-      var row=document.createElement("div"); row.className="row";
-      var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
-      var left=document.createElement("div"); left.className="left2";
-      var title=document.createElement("div"); title.className="title"; title.textContent=r.t;
-      var sub=document.createElement("div"); sub.className="sub"; sub.textContent=r.s;
-      left.appendChild(title); left.appendChild(sub);
-      var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
-      head.appendChild(left); head.appendChild(chev);
+  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-      var body=document.createElement("div"); body.className="body";
-      r.p.forEach(function(pp){
-        var p=document.createElement("p"); p.className="bp"; p.textContent=pp; body.appendChild(p);
-      });
+  var P=T();
+  document.getElementById("p0").textContent=P.hero.p;
+  document.getElementById("r0").textContent=P.hero.r;
 
-      function closeAll(){
-        stack.querySelectorAll(".row").forEach(function(x){
-          x.classList.remove("open");
-          var c=x.querySelector(".chev"); if(c) c.textContent="▸";
-        });
-      }
-      function toggle(){
-        var open=!row.classList.contains("open");
-        closeAll();
-        if(open){ row.classList.add("open"); chev.textContent="▾"; }
-      }
-      head.addEventListener("click", toggle);
-      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+  document.getElementById("c1s").textContent=P.cards.prelude.s;
+  document.getElementById("c1m").textContent=P.cards.prelude.m;
+  document.getElementById("c2s").textContent=P.cards.compass.s;
+  document.getElementById("c2m").textContent=P.cards.compass.m;
+  document.getElementById("c3s").textContent=P.cards.enter.s;
+  document.getElementById("c3m").textContent=P.cards.enter.m;
 
-      row.appendChild(head); row.appendChild(body);
-      stack.appendChild(row);
+  document.getElementById("a1t").textContent=P.how.a1t;
+  document.getElementById("a1s").textContent=P.how.a1s;
+  document.getElementById("a2t").textContent=P.how.a2t;
+  document.getElementById("a2s").textContent=P.how.a2s;
+  document.getElementById("a3t").textContent=P.how.a3t;
+  document.getElementById("a3s").textContent=P.how.a3s;
 
-      if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
-    });
+  document.getElementById("a1p1").textContent=P.acc.a1p1;
+  document.getElementById("a1p2").textContent=P.acc.a1p2;
+  document.getElementById("a2p1").textContent=P.acc.a2p1;
+  document.getElementById("a2p2").textContent=P.acc.a2p2;
+  document.getElementById("a3p1").textContent=P.acc.a3p1;
+  document.getElementById("a3p2").textContent=P.acc.a3p2;
+
+  // translate button labels lightly
+  if(lang==="zh"){
+    document.getElementById("btnRoot").textContent="根";
+    document.getElementById("c1t").textContent="前置页";
+    document.getElementById("c2t").textContent="指南针";
+    document.getElementById("c3t").textContent="进入";
+    document.getElementById("goPrelude").textContent="打开";
+    document.getElementById("goCompass").textContent="打开";
+    document.getElementById("goEnter").textContent="打开";
+    document.getElementById("bandHow").textContent="怎么用";
+    document.getElementById("jPrelude").textContent="跳转：前置页";
+    document.getElementById("jCompass").textContent="跳转：指南针";
+    document.getElementById("jEnter").textContent="跳转：进入";
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockHome").textContent="主页";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockExplore").textContent="探索";
+  }else if(lang==="es"){
+    document.getElementById("btnRoot").textContent="RAÍZ";
+    document.getElementById("c1t").textContent="PRELUDIO";
+    document.getElementById("c2t").textContent="BRÚJULA";
+    document.getElementById("c3t").textContent="ENTRAR";
+    document.getElementById("goPrelude").textContent="ABRIR";
+    document.getElementById("goCompass").textContent="ABRIR";
+    document.getElementById("goEnter").textContent="ABRIR";
+    document.getElementById("bandHow").textContent="CÓMO FUNCIONA";
+    document.getElementById("jPrelude").textContent="SALTAR: PRELUDIO";
+    document.getElementById("jCompass").textContent="SALTAR: BRÚJULA";
+    document.getElementById("jEnter").textContent="SALTAR: ENTRAR";
+    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockHome").textContent="INICIO";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
   }
-  renderStack();
+
+  // single-open accordion
+  function bindAcc(id){
+    var box=document.getElementById(id);
+    var head=box.querySelector(".accHead");
+    var chev=box.querySelector(".accC");
+    function act(){
+      var open=!box.classList.contains("open");
+      document.querySelectorAll(".acc").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".accC"); if(c) c.textContent="▸";
+      });
+      box.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["a1","a2","a3"].forEach(bindAcc);
+
+  // open first by default
+  document.getElementById("a1").classList.add("open");
+  document.getElementById("a1").querySelector(".accC").textContent="▾";
 })();
 </script>
 

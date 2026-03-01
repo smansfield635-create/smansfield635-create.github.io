@@ -1,17 +1,20 @@
 <!-- TNT — /home/index.html
-     HOME · LAUNCHPAD (NEXT-LEVEL COHESION) · EN/中文/ES · NO MODALS
+     HOME · MAIN HUB · EN/中文/ES
      ROLE:
-       - Fast hub for known destinations
-       - Clean back buttons (Products / Door / Index)
-       - Mobile-safe long bubble format (single-open accordion)
-     ROUTES:
-       - PRODUCTS / EXPLORE / LAWS / GAUGES
-       - PLUS: COMPASS / PRELUDE
+       - Central spine after Compass
+       - States the PROBLEM clearly
+       - States the FINITE MAP + FINITE SOLUTION clearly
+       - Routes cleanly into: LAWS / PRODUCTS / GAUGES / EXPLORE
+       - No lenses on this page (orientation only)
+     DESIGN:
+       - Diamond + gold encrusting geometry aligned with branch.css
+       - Strong TED-style marketing tone
+       - No overlays, no modals, mobile-safe
      STATE:
-       - URL + LS: lang/style/time/depth via gd_*
+       - Canon carry: lang/style/time/depth via gd_*
      LOCKS:
-       - Uses ui.css + branch.css + instruments.js
-       - ui.css owns background
+       - ui.css owns background (no html/body override)
+       - Uses ui.css + branch.css + instruments.js only
 -->
 
 <!doctype html>
@@ -19,7 +22,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home · Launchpad</title>
+<title>Home · Diamond Gate Bridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -31,165 +34,268 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:92px;
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalC:rgba(255,70,70,.10);
+  --dockH:88px;
+
+  --opalA:rgba(210,190,255,.18);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(255,70,70,.12);
+
+  --goldSoft:rgba(212,175,55,.32);
+
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
   --stroke:rgba(255,255,255,.12);
+  --mut:rgba(255,255,255,.84);
 }
 
 /* Top */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:240;
+  pointer-events:none;
 }
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  white-space:nowrap;pointer-events:auto;
 }
-.top-left .btn,.top-right .btn{white-space:nowrap}
+.top .btn{white-space:nowrap}
 
 /* Page */
 .page{
-  width:min(1100px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 20px);
+  padding:84px 0 34px;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:14px;
   position:relative;
   z-index:10;
 }
 
-/* Header */
-.header{
-  border-radius:22px;
+/* HERO */
+.hero{
+  border-radius:28px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:14px 16px;
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
-.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px}
-
-/* Accordion */
-.list{display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 120%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 140px rgba(0,0,0,.60);
+  padding:20px 20px 18px;
+  position:relative;
   overflow:hidden;
 }
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.left{min-width:0}
-.tt{font-weight:950;letter-spacing:.2px}
-.ss{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;max-width:92ch}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.body{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    repeating-conic-gradient(from 45deg,
+      rgba(212,175,55,.08) 0deg 6deg,
+      transparent 6deg 18deg);
+  opacity:.18;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 86%);
 }
-.row.open .body{display:block}
-.p{margin:0;color:rgba(255,255,255,.88);line-height:1.65;font-size:13.5px}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;position:relative}
+.h1{margin:0;font-weight:950;font-size:34px;letter-spacing:1px;line-height:1.12;position:relative}
+.p{margin:12px 0 0;font-size:15px;line-height:1.6;opacity:.92;max-width:980px;position:relative}
+.rule{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  font-size:13.5px;
+  line-height:1.5;
+  color:var(--mut);
+  position:relative;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:14px;
+}
+@media (max-width:860px){
+  .grid{grid-template-columns:1fr}
+}
+
+/* CARDS */
+.card{
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 20%, var(--opalA), transparent 70%),
+    linear-gradient(160deg, rgba(12,22,38,.92), rgba(6,10,16,.98));
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.18;
+}
+.ctitle{
+  margin:0;
+  font-weight:950;
+  font-size:18px;
+  letter-spacing:.5px;
+}
+.cdesc{
+  margin:10px 0 0;
+  font-size:13.75px;
+  line-height:1.55;
+  opacity:.88;
+}
+.actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.actions .btn{
+  border-radius:999px;
+  padding:10px 14px;
+  white-space:nowrap;
+}
+
+/* Footer */
+.footer{
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+  margin-top:8px;
+}
+.sig{
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  opacity:.65;
+}
+
 @media (max-width:520px){
-  :root{--dockH:104px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .h1{font-size:28px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-  <a class="btn" id="btnCompass" href="/compass/">COMPASS</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top">
+  <div class="left">
+    <a class="btn" id="btnCompass" href="/compass/">COMPASS</a>
+    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+  </div>
+  <div class="right">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <div class="header">
+  <div class="hero">
     <p class="k" id="hk">HOME</p>
-    <h1 class="t" id="ht">Launchpad</h1>
-    <p class="s" id="hs">Open one lane. Read one paragraph. Jump cleanly.</p>
+    <h1 class="h1" id="h1">A Finite Map for Infinite Problems</h1>
+    <p class="p" id="p1">
+      Every system drifts. Every organization scales into hidden correlation.
+      Every team eventually confuses signal with story.
+      <br><br>
+      We mapped the lattice.
+      We defined the bounds.
+      We built the surfaces.
+    </p>
+    <div class="rule" id="rule">
+      You are here because something needs an answer.  
+      The answer is not a slogan. It is a measurable position inside a finite map.
+    </div>
   </div>
 
-  <div class="list" id="list"></div>
+  <div class="grid">
+
+    <div class="card">
+      <h3 class="ctitle" id="c1t">STRUCTURE · Laws</h3>
+      <p class="cdesc" id="c1d">
+        Prevent drift. Define admissibility. Separate truth from narrative.
+        If you need boundaries before you scale, start here.
+      </p>
+      <div class="actions">
+        <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="ctitle" id="c2t">DEPLOY · Products</h3>
+      <p class="cdesc" id="c2d">
+        Tools, engines, and execution surfaces.
+        This is where structure becomes action.
+      </p>
+      <div class="actions">
+        <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="ctitle" id="c3t">MEASURE · Gauges</h3>
+      <p class="cdesc" id="c3d">
+        Signals. Indices. Heatmaps.
+        Replace argument with instrumentation.
+      </p>
+      <div class="actions">
+        <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="ctitle" id="c4t">INNOVATE · Explore</h3>
+      <p class="cdesc" id="c4d">
+        Vision shells. Frontier domains.
+        Big ideas — staged, bounded, and measurable.
+      </p>
+      <div class="actions">
+        <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span id="ft">Map · Measure · Judge · Scale</span>
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
-
 <script>
 (function(){
-  // state
+
+  // ===== Canon State =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
-
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   try{
     localStorage.setItem("gd_lang",lang);
     localStorage.setItem("gd_style",style);
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
@@ -200,19 +306,19 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  function wire(id, path){
+  function wire(id,path){
     var el=document.getElementById(id);
-    if(el) el.href = path + q();
+    if(el) el.href=path+q();
   }
-  wire("btnDoor","/door/");
-  wire("btnPrelude","/prelude/");
-  wire("btnCompass","/compass/");
-  wire("dockProducts","/products/");
-  wire("dockExplore","/explore/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
 
-  // language
+  wire("btnCompass","/compass/");
+  wire("btnPrelude","/prelude/");
+  wire("goLaws","/laws/");
+  wire("goProducts","/products/");
+  wire("goGauges","/gauges/");
+  wire("goExplore","/explore/");
+
+  // ===== Language Toggle =====
   function paintLang(){
     document.getElementById("btnEN").classList.toggle("active", lang==="en");
     document.getElementById("btnZH").classList.toggle("active", lang==="zh");
@@ -223,65 +329,71 @@ body::before,body::after{pointer-events:none!important}
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
-
-  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  document.getElementById("hk").textContent=T("HOME","主页","INICIO");
-  document.getElementById("ht").textContent=T("Launchpad","发射台","LANZADERA");
-  document.getElementById("hs").textContent=T("Open one lane. Read one paragraph. Jump cleanly.","开一条路线，读一段话，干净跳转。","Abre un carril, lee un párrafo, salta limpio.");
-
-  var ITEMS=[
-    {t:T("Products","产品","Productos"), s:T("Deployable surfaces: Energy, Education, Diagnostic, Software.","可部署执行面：能源、教育、诊断、软件。","Superficies desplegables: Energía, Educación, Diagnóstico, Software."), p:T("Use this when you want tools before theory.","想先用工具就从这里。","Úsalo si quieres herramientas primero."), href:"/products/"},
-    {t:T("Explore","探索","Explorar"), s:T("Innovation lanes and vision shells (bounded).","创新通道与愿景壳（有界）。","Carriles de innovación y visión (acotado)."), p:T("Use this for frontier concepts that are still staged.","用于仍处于阶段化的前沿概念。","Úsalo para conceptos de frontera aún por fases."), href:"/explore/"},
-    {t:T("Laws","法则","Leyes"), s:T("Bounds that prevent drift (support-bounded enforcement).","防漂移边界（有支撑边界的执行）。","Límites contra deriva (disciplina acotada por soporte)."), p:T("Use this when you need definition-first truth posture.","需要先定义再判断时用它。","Úsalo cuando necesites postura de verdad basada en definiciones."), href:"/laws/"},
-    {t:T("Gauges","量规","Medidores"), s:T("Live measurement surfaces only.","仅测量输出面。","Solo superficies de medición."), p:T("Use this when you want signals, not arguments.","想看信号而不是争论时用它。","Úsalo si quieres señales, no discusiones."), href:"/gauges/"}
-  ];
-
-  var list=document.getElementById("list");
-
-  function closeAll(){
-    Array.prototype.forEach.call(list.querySelectorAll(".row"), function(r){
-      r.classList.remove("open");
-      var c=r.querySelector(".chev"); if(c) c.textContent="▸";
-    });
+    try{localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href=window.location.pathname+q({lang:lang});
   }
 
-  ITEMS.forEach(function(it, idx){
-    var row=document.createElement("div"); row.className="row";
-    var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
-    var left=document.createElement("div"); left.className="left";
-    var tt=document.createElement("div"); tt.className="tt"; tt.textContent=it.t;
-    var ss=document.createElement("div"); ss.className="ss"; ss.textContent=it.s;
-    left.appendChild(tt); left.appendChild(ss);
-    var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
-    head.appendChild(left); head.appendChild(chev);
+  document.getElementById("btnEN").onclick=function(){setLang("en");};
+  document.getElementById("btnZH").onclick=function(){setLang("zh");};
+  document.getElementById("btnES").onclick=function(){setLang("es");};
 
-    var body=document.createElement("div"); body.className="body";
-    var p=document.createElement("p"); p.className="p"; p.textContent=it.p;
-    var actions=document.createElement("div"); actions.className="actions";
-    var a=document.createElement("a"); a.className="btn"; a.textContent=T("OPEN","打开","ABRIR"); a.href=it.href + q();
-    actions.appendChild(a);
-    body.appendChild(p); body.appendChild(actions);
+  // ===== i18n =====
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="主页";
+    document.getElementById("h1").textContent="为无限问题准备的有限地图";
+    document.getElementById("p1").innerHTML=
+      "每个系统都会漂移。<br>每个组织都会在扩张中形成隐藏相关。<br>每个团队都会把信号和故事混在一起。<br><br>我们画了晶格。我们定义了边界。我们建了执行面。";
+    document.getElementById("rule").textContent=
+      "你来这里，是因为某个问题需要答案。答案不是口号，而是有限地图中的一个可测位置。";
 
-    function toggle(){
-      var willOpen=!row.classList.contains("open");
-      closeAll();
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
-    }
-    head.addEventListener("click", toggle);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+    document.getElementById("c1t").textContent="结构 · 法则";
+    document.getElementById("c1d").textContent="防止漂移。定义可采信。把真相和叙事分开。";
+    document.getElementById("goLaws").textContent="打开法则";
 
-    row.appendChild(head); row.appendChild(body);
-    list.appendChild(row);
+    document.getElementById("c2t").textContent="部署 · 产品";
+    document.getElementById("c2d").textContent="工具与执行面。结构变成行动。";
+    document.getElementById("goProducts").textContent="打开产品";
 
-    if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
-  });
+    document.getElementById("c3t").textContent="测量 · 量规";
+    document.getElementById("c3d").textContent="信号与指数。用测量替代争论。";
+    document.getElementById("goGauges").textContent="打开量规";
+
+    document.getElementById("c4t").textContent="创新 · 探索";
+    document.getElementById("c4d").textContent="前沿与愿景壳。大想法，有界表达。";
+    document.getElementById("goExplore").textContent="打开探索";
+
+    document.getElementById("btnCompass").textContent="导览";
+    document.getElementById("btnPrelude").textContent="前置页";
+    document.getElementById("ft").textContent="画图 · 测量 · 裁决 · 扩张";
+  }
+  else if(lang==="es"){
+    document.getElementById("hk").textContent="INICIO";
+    document.getElementById("h1").textContent="Un Mapa Finito para Problemas Infinitos";
+    document.getElementById("p1").innerHTML=
+      "Todo sistema deriva.<br>Toda organización escala hacia correlación oculta.<br>Toda equipo confunde señal con historia.<br><br>Mapeamos el lattice. Definimos los límites. Construimos las superficies.";
+    document.getElementById("rule").textContent=
+      "Estás aquí porque algo necesita respuesta. La respuesta no es un eslogan: es una posición medible dentro de un mapa finito.";
+
+    document.getElementById("c1t").textContent="ESTRUCTURA · Leyes";
+    document.getElementById("c1d").textContent="Evita deriva. Define admisibilidad. Separa verdad de narrativa.";
+    document.getElementById("goLaws").textContent="ABRIR LEYES";
+
+    document.getElementById("c2t").textContent="DESPLEGAR · Productos";
+    document.getElementById("c2d").textContent="Herramientas y superficies ejecutables.";
+    document.getElementById("goProducts").textContent="ABRIR PRODUCTOS";
+
+    document.getElementById("c3t").textContent="MEDIR · Medidores";
+    document.getElementById("c3d").textContent="Señales e índices. Sustituye argumento por medición.";
+    document.getElementById("goGauges").textContent="ABRIR MEDIDORES";
+
+    document.getElementById("c4t").textContent="INNOVAR · Explorar";
+    document.getElementById("c4d").textContent="Visión y frontera con límites claros.";
+    document.getElementById("goExplore").textContent="ABRIR EXPLORAR";
+
+    document.getElementById("btnCompass").textContent="BRÚJULA";
+    document.getElementById("btnPrelude").textContent="PRELUDIO";
+    document.getElementById("ft").textContent="Mapear · Medir · Juzgar · Escalar";
+  }
 
 })();
 </script>

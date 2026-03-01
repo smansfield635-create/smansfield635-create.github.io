@@ -1,0 +1,285 @@
+<!-- TNT — /explore/innovation-lattice/index.html
+     EXPLORE · INNOVATION LATTICE
+     7 SURFACES · 4 LENSES · 3 LANGUAGES
+     SINGLE-OPEN ACCORDION · MONUMENT TYPOGRAPHY · NO MODALS
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EXPLORE · INNOVATION LATTICE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+:root{
+  --dockH:90px;
+  --inkA:rgba(14,18,26,.94);
+  --inkB:rgba(8,10,16,.98);
+  --stroke:rgba(255,255,255,.10);
+  --mut:rgba(255,255,255,.90);
+  --gold:rgba(212,175,55,.18);
+  --opal:rgba(210,190,255,.14);
+}
+
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:200;display:flex;gap:10px;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:200;display:flex;gap:10px;
+}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:100px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 20% 20%, var(--gold), transparent 60%),
+    radial-gradient(circle at 80% 80%, var(--opal), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+  padding:40px 42px;
+  box-shadow:0 50px 150px rgba(0,0,0,.6);
+}
+.k{font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.75;margin:0 0 14px}
+.t{font-weight:950;font-size:48px;letter-spacing:1px;margin:0 0 20px}
+.s{font-size:20px;line-height:1.7;color:var(--mut);max-width:900px}
+
+.lens{
+  margin-top:28px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  padding:12px 18px;
+  border-radius:999px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  border:1px solid var(--stroke);
+  cursor:pointer;
+  font-weight:900;
+}
+.pill.active{box-shadow:0 0 18px rgba(212,175,55,.35)}
+
+.stack{display:flex;flex-direction:column;gap:20px}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:30px;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  overflow:hidden;
+  box-shadow:0 30px 120px rgba(0,0,0,.55);
+}
+.head{
+  padding:28px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  cursor:pointer;
+}
+.title{
+  font-size:28px;
+  font-weight:900;
+}
+.sub{
+  font-size:16px;
+  opacity:.75;
+  margin-top:10px;
+}
+.chev{font-size:20px;opacity:.7}
+
+.body{
+  display:none;
+  padding:30px 32px 36px;
+  border-top:1px solid var(--stroke);
+}
+.card.open .body{display:block}
+
+.section h4{
+  margin:0 0 12px;
+  font-size:15px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.8;
+}
+.section p{
+  margin:0;
+  font-size:19px;
+  line-height:1.75;
+  color:var(--mut);
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:12px;
+  border-radius:26px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.35);
+}
+.dock .btn{padding:12px;border-radius:999px;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="btn" href="/explore/">BACK</a>
+  <a class="btn" href="/door/">DOOR</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+  <button class="btn" id="btnES">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k">EXPLORE</p>
+    <h1 class="t">INNOVATION LATTICE</h1>
+    <p class="s">
+      Innovation is not invention.
+      It is controlled traversal across constraint.
+      If you cannot map the lattice, you cannot scale the frontier.
+    </p>
+
+    <div class="lens">
+      <div class="pill active" data-lens="informal">INFORMAL</div>
+      <div class="pill" data-lens="formal">FORMAL</div>
+      <div class="pill" data-lens="platform">PLATFORM</div>
+      <div class="pill" data-lens="engineering">ENGINEERING</div>
+    </div>
+  </div>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+
+  const DOMAINS = [
+    "Frontier Energy Systems",
+    "Urban Resource OS",
+    "Closed-Loop Habitats",
+    "Hybrid Infrastructure",
+    "Environmental Integration",
+    "Industrial Substitution",
+    "Failure & Convergence"
+  ];
+
+  const TEXT = {
+    informal:{
+      en:"Big ideas fail when they skip structure. The lattice forces clarity before scale.",
+      zh:"宏大愿景若跳过结构就会失败。晶格让扩张前先清晰。",
+      es:"Las grandes ideas fallan cuando omiten estructura. El lattice obliga claridad antes de escalar."
+    },
+    formal:{
+      en:"Each frontier domain is constrained by measurable invariants and deterministic progression under declared scope.",
+      zh:"每个前沿域受可测不变量与声明范围内的确定性推进约束。",
+      es:"Cada dominio de frontera está restringido por invariantes medibles y progresión determinista bajo alcance declarado."
+    },
+    platform:{
+      en:"Platform view: innovation becomes routable surfaces rather than isolated inventions.",
+      zh:"平台视角：创新成为可路由界面，而非孤立发明。",
+      es:"Vista de plataforma: la innovación se convierte en superficies ruteables en lugar de invenciones aisladas."
+    },
+    engineering:{
+      en:"Engineering view: energy balance, thermal limits, material flow, correlation risk, failure cascade mapping.",
+      zh:"工程视角：能量平衡、热极限、材料流、相关风险、失效级联映射。",
+      es:"Vista de ingeniería: balance energético, límites térmicos, flujo de materiales, riesgo correlacionado y mapeo de cascadas."
+    }
+  };
+
+  const stack=document.getElementById("stack");
+  let currentLens="informal";
+  let currentLang="en";
+
+  function render(){
+    stack.innerHTML="";
+    DOMAINS.forEach((name,i)=>{
+      const card=document.createElement("div");
+      card.className="card";
+
+      const head=document.createElement("div");
+      head.className="head";
+      head.innerHTML=`
+        <div>
+          <div class="title">${name}</div>
+          <div class="sub">Frontier System Surface</div>
+        </div>
+        <div class="chev">▸</div>
+      `;
+
+      const body=document.createElement("div");
+      body.className="body";
+      body.innerHTML=`
+        <div class="section">
+          <h4>${currentLens.toUpperCase()}</h4>
+          <p>${TEXT[currentLens][currentLang]}</p>
+        </div>
+      `;
+
+      head.addEventListener("click",()=>{
+        document.querySelectorAll(".card").forEach(c=>{
+          if(c!==card){c.classList.remove("open");}
+        });
+        card.classList.toggle("open");
+      });
+
+      card.appendChild(head);
+      card.appendChild(body);
+      stack.appendChild(card);
+
+      if(i===0){card.classList.add("open");}
+    });
+  }
+
+  document.querySelectorAll(".pill").forEach(p=>{
+    p.addEventListener("click",()=>{
+      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+      p.classList.add("active");
+      currentLens=p.dataset.lens;
+      render();
+    });
+  });
+
+  document.getElementById("btnEN").onclick=()=>{currentLang="en";render();};
+  document.getElementById("btnZH").onclick=()=>{currentLang="zh";render();};
+  document.getElementById("btnES").onclick=()=>{currentLang="es";render();};
+
+  render();
+
+})();
+</script>
+
+</body>
+</html>

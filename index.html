@@ -1,3 +1,15 @@
+<!-- TNT — /index.html
+     COMPASS · STRUCTURAL ORIENTATION (BIGGER TYPE) · EN/中文/ES
+     UPDATE:
+       - Typographic expansion (bigger print everywhere)
+       - Mobile-safe scaling (fluid sizes)
+       - Preserves canonical state (lang/style/time/depth) on every jump
+       - No lenses, no modals, pure positioning + navigation
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -14,27 +26,54 @@ a{color:inherit;text-decoration:none}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:100px;
-  --gold:rgba(212,175,55,.55);
-  --goldSoft:rgba(212,175,55,.25);
+  --dockH:110px;
+
+  /* gold / obsidian */
+  --gold:rgba(212,175,55,.62);
+  --goldSoft:rgba(212,175,55,.28);
   --inkA:rgba(10,18,30,.94);
   --inkB:rgba(6,10,16,.98);
+
+  /* TYPE SCALE (EXPANDED) */
+  --h1:clamp(52px, 6.2vw, 76px);
+  --lead:clamp(20px, 2.35vw, 28px);
+  --h2:clamp(32px, 3.4vw, 46px);
+  --p:clamp(18px, 2.0vw, 24px);
+  --btn:clamp(15px, 1.65vw, 18px);
 }
 
-/* Layout */
+/* page */
 .page{
-  width:min(1200px,95vw);
+  width:min(1240px,95vw);
   margin:0 auto;
   padding:140px 0 calc(var(--dockH) + 60px);
   display:flex;
   flex-direction:column;
-  gap:36px;
+  gap:34px;
 }
 
-/* Hero */
+/* top controls */
+.top{
+  position:fixed;
+  top:16px;left:0;right:0;
+  padding:0 16px;
+  z-index:240;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* hero */
 .hero{
-  border-radius:38px;
-  padding:60px 64px;
+  border-radius:40px;
+  padding:62px 66px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 30% 20%, var(--goldSoft), transparent 65%),
@@ -42,151 +81,145 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(160deg, var(--inkA), var(--inkB));
   box-shadow:
     0 80px 260px rgba(0,0,0,.85),
-    inset 0 0 160px rgba(212,175,55,.05);
+    inset 0 0 170px rgba(212,175,55,.05);
 }
-
 .h1{
-  font-size:56px;
+  font-size:var(--h1);
   font-weight:1000;
   letter-spacing:1px;
-  margin:0 0 28px 0;
+  margin:0 0 26px 0;
+  line-height:1.06;
 }
-
 .lead{
-  font-size:22px;
+  font-size:var(--lead);
   line-height:1.9;
-  max-width:980px;
-  opacity:.96;
+  max-width:1040px;
+  opacity:.97;
 }
 
-/* Section blocks */
+/* blocks */
 .block{
-  border-radius:28px;
-  padding:48px 56px;
+  border-radius:30px;
+  padding:50px 60px;
   border:1px solid rgba(255,255,255,.12);
   background:linear-gradient(160deg, var(--inkA), var(--inkB));
   box-shadow:0 60px 200px rgba(0,0,0,.8);
 }
-
 .block h2{
-  font-size:36px;
+  font-size:var(--h2);
   font-weight:950;
   margin:0 0 22px 0;
+  line-height:1.12;
 }
-
 .block p{
-  font-size:19px;
-  line-height:1.85;
-  margin:0 0 16px 0;
-  opacity:.92;
+  font-size:var(--p);
+  line-height:1.9;
+  margin:0 0 14px 0;
+  opacity:.93;
 }
 
-/* Diamond accent */
+/* diamond accent */
 .block::before{
   content:"";
   display:block;
-  width:22px;
-  height:22px;
+  width:22px;height:22px;
   transform:rotate(45deg);
   background:var(--gold);
-  box-shadow:0 0 40px var(--gold);
-  margin-bottom:24px;
+  box-shadow:0 0 44px var(--gold);
+  margin-bottom:22px;
 }
 
-/* Navigation */
+/* nav buttons */
 .nav{
   display:flex;
-  gap:18px;
+  gap:16px;
   flex-wrap:wrap;
   justify-content:center;
-  margin-top:20px;
+  margin-top:18px;
 }
-
 .nav .btn{
-  padding:14px 20px;
+  padding:14px 22px;
   border-radius:999px;
-  font-size:16px;
-  font-weight:800;
+  font-size:var(--btn);
+  font-weight:900;
   border:1px solid rgba(255,255,255,.15);
   background:rgba(0,0,0,.25);
+}
+.nav .btn:hover{
+  box-shadow:0 0 18px rgba(212,175,55,.20);
+}
+
+/* mobile tighten */
+@media (max-width:720px){
+  .page{padding:120px 0 calc(var(--dockH) + 54px)}
+  .hero{padding:44px 22px;border-radius:32px}
+  .block{padding:36px 22px;border-radius:26px}
 }
 </style>
 </head>
 
 <body>
 
+<!-- TOP: root + language -->
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnRoot" href="/">ROOT</a>
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
   <div class="hero">
-    <div class="h1" id="title">
-      You Are Not Lost.  
-      You Are Unoriented.
-    </div>
+    <div class="h1" id="title">You Are Not Lost.<br/>You Are Unoriented.</div>
 
     <div class="lead" id="intro">
-      Most systems do not fail because they lack intelligence.  
+      Most systems do not fail because they lack intelligence.<br/>
       They fail because they lack declared direction.
-      <br><br>
-      Motion without coordinate is drift.  
+      <br/><br/>
+      Motion without coordinate is drift.<br/>
       Drift without measurement becomes collapse.
-      <br><br>
+      <br/><br/>
       This platform exists to eliminate drift.
     </div>
   </div>
 
   <div class="block">
     <h2 id="problemTitle">The Structural Problem</h2>
-    <p id="problem1">
-      Organizations scale before they define invariant.
-    </p>
-    <p id="problem2">
-      Products ship before they declare constraint.
-    </p>
-    <p id="problem3">
-      Ideas expand before they anchor to geometry.
-    </p>
-    <p id="problem4">
-      The result is invisible divergence —
-      until it becomes visible collapse.
-    </p>
+    <p id="problem1">Organizations scale before they define invariant.</p>
+    <p id="problem2">Products ship before they declare constraint.</p>
+    <p id="problem3">Ideas expand before they anchor to geometry.</p>
+    <p id="problem4">The result is invisible divergence — until it becomes visible collapse.</p>
   </div>
 
   <div class="block">
     <h2 id="solutionTitle">The Structural Response</h2>
-    <p id="solution1">
-      Every direction must declare boundary.
-    </p>
-    <p id="solution2">
-      Every boundary must preserve invariant.
-    </p>
-    <p id="solution3">
-      Every invariant must survive scale.
-    </p>
-    <p id="solution4">
-      When direction is explicit, drift is measurable.
-      When drift is measurable, collapse is preventable.
-    </p>
+    <p id="solution1">Every direction must declare boundary.</p>
+    <p id="solution2">Every boundary must preserve invariant.</p>
+    <p id="solution3">Every invariant must survive scale.</p>
+    <p id="solution4">When direction is explicit, drift is measurable. When drift is measurable, collapse is preventable.</p>
   </div>
 
   <div class="block">
     <h2 id="navigateTitle">Choose Your Direction</h2>
     <p id="navigateText">
-      Orientation precedes expansion.
-      <br><br>
-      If you are seeking structure — enter Laws.
-      <br>
-      If you are seeking measurement — enter Gauges.
-      <br>
-      If you are building systems — enter Products.
-      <br>
+      Orientation precedes expansion.<br/><br/>
+      If you are seeking structure — enter Laws.<br/>
+      If you are seeking measurement — enter Gauges.<br/>
+      If you are building systems — enter Products.<br/>
       If you are exploring possibility — enter Explore.
     </p>
 
     <div class="nav">
-      <a class="btn" href="/laws/">LAWS</a>
-      <a class="btn" href="/gauges/">GAUGES</a>
-      <a class="btn" href="/products/">PRODUCTS</a>
-      <a class="btn" href="/explore/">EXPLORE</a>
+      <a class="btn" id="goLaws" href="/laws/">LAWS</a>
+      <a class="btn" id="goGauges" href="/gauges/">GAUGES</a>
+      <a class="btn" id="goProducts" href="/products/">PRODUCTS</a>
+      <a class="btn" id="goExplore" href="/explore/">EXPLORE</a>
     </div>
   </div>
 
@@ -194,15 +227,79 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  var lang = localStorage.getItem("gd_lang") || "en";
+  // ===== canonical state carry =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  // top
+  wire("btnRoot","/");
+  wire("btnDoor","/door/");
+
+  // nav
+  wire("goLaws","/laws/");
+  wire("goGauges","/gauges/");
+  wire("goProducts","/products/");
+  wire("goExplore","/explore/");
+
+  // language buttons (reload same path)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ===== i18n =====
   if(lang==="zh"){
-    document.getElementById("title").textContent="你没有迷路。你只是没有方向。";
+    document.getElementById("title").innerHTML="你没有迷路。<br/>你只是没有方向。";
     document.getElementById("intro").innerHTML=
-      "大多数系统失败，并非因为缺乏智慧。<br><br>" +
-      "而是因为缺乏声明的方向。<br><br>" +
-      "没有坐标的运动就是漂移。<br>" +
-      "不可测量的漂移终将坍塌。<br><br>" +
+      "大多数系统失败，并非因为缺乏智慧。<br/>而是因为缺乏声明的方向。<br/><br/>"+
+      "没有坐标的运动就是漂移。<br/>不可测量的漂移终将坍塌。<br/><br/>"+
       "本平台存在的目的，是消除漂移。";
 
     document.getElementById("problemTitle").textContent="结构性问题";
@@ -219,20 +316,27 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("navigateTitle").textContent="选择你的方向";
     document.getElementById("navigateText").innerHTML=
-      "定位先于扩张。<br><br>" +
-      "寻求结构 → 法则。<br>" +
-      "寻求测量 → 量规。<br>" +
-      "构建系统 → 产品。<br>" +
+      "定位先于扩张。<br/><br/>"+
+      "寻求结构 → 法则。<br/>"+
+      "寻求测量 → 量规。<br/>"+
+      "构建系统 → 产品。<br/>"+
       "探索可能 → 探索。";
+
+    document.getElementById("btnRoot").textContent="根";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("goLaws").textContent="法则";
+    document.getElementById("goGauges").textContent="量规";
+    document.getElementById("goProducts").textContent="产品";
+    document.getElementById("goExplore").textContent="探索";
   }
 
   if(lang==="es"){
-    document.getElementById("title").textContent="No estás perdido. Estás desorientado.";
+    document.getElementById("title").innerHTML="No estás perdido.<br/>Estás desorientado.";
     document.getElementById("intro").innerHTML=
-      "Los sistemas no fallan por falta de inteligencia.<br><br>" +
-      "Fallen por falta de dirección declarada.<br><br>" +
-      "Movimiento sin coordenada es deriva.<br>" +
-      "Deriva sin medición se convierte en colapso.<br><br>" +
+      "Los sistemas no fallan por falta de inteligencia.<br/>"+
+      "Fallen por falta de dirección declarada.<br/><br/>"+
+      "Movimiento sin coordenada es deriva.<br/>"+
+      "Deriva sin medición se convierte en colapso.<br/><br/>"+
       "Esta plataforma elimina la deriva.";
 
     document.getElementById("problemTitle").textContent="El Problema Estructural";
@@ -249,11 +353,18 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("navigateTitle").textContent="Elige Dirección";
     document.getElementById("navigateText").innerHTML=
-      "La orientación precede a la expansión.<br><br>" +
-      "Estructura → Leyes.<br>" +
-      "Medición → Medidores.<br>" +
-      "Construcción → Productos.<br>" +
+      "La orientación precede a la expansión.<br/><br/>"+
+      "Estructura → Leyes.<br/>"+
+      "Medición → Medidores.<br/>"+
+      "Construcción → Productos.<br/>"+
       "Exploración → Explore.";
+
+    document.getElementById("btnRoot").textContent="RAÍZ";
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("goLaws").textContent="LEYES";
+    document.getElementById("goGauges").textContent="MEDIDORES";
+    document.getElementById("goProducts").textContent="PRODUCTOS";
+    document.getElementById("goExplore").textContent="EXPLORAR";
   }
 })();
 </script>

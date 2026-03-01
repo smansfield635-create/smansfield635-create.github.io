@@ -1,7 +1,12 @@
 <!-- TNT — /explore/frontier/energy/index.html
-     EXPLORE · FRONTIER · ENERGY
+     FRONTIER · ENERGY SYSTEMS
      MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · NO MODALS · STATE SAFE
+     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
+     ROLE:
+       - Define energy instability problem
+       - Express industrial substitution posture
+       - Integrate with Waste + Water + Urban OS
+       - Route forward to Urban OS / Closed Loop
 -->
 
 <!doctype html>
@@ -9,119 +14,151 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · ENERGY</title>
+<title>FRONTIER · Energy Systems</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
+
+/* MONUMENT TYPOGRAPHY */
 :root{
-  --dockH:90px;
-  --inkA:rgba(12,14,20,.96);
-  --inkB:rgba(6,8,12,.98);
-  --stroke:rgba(255,255,255,.10);
-  --gold:rgba(212,175,55,.22);
-  --red:rgba(255,80,80,.15);
+  --dockH:96px;
   --mut:rgba(255,255,255,.92);
+  --mut2:rgba(255,255,255,.76);
+  --opal:rgba(210,190,255,.14);
+  --amber:rgba(255,170,0,.12);
+  --red:rgba(255,60,60,.10);
 }
 
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-
 .page{
-  width:min(1100px,94vw);
+  width:min(1200px,94vw);
   margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 18px);
+  padding:100px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:20px;
 }
 
 .header{
-  border:1px solid var(--stroke);
-  border-radius:40px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
   background:
-    radial-gradient(circle at 18% 20%, var(--gold), transparent 65%),
-    radial-gradient(circle at 82% 80%, var(--red), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
-  padding:54px;
-  box-shadow:0 60px 200px rgba(0,0,0,.65);
+    radial-gradient(circle at 20% 20%, var(--opal), transparent 70%),
+    radial-gradient(circle at 80% 20%, var(--amber), transparent 70%),
+    radial-gradient(circle at 60% 90%, var(--red), transparent 70%),
+    rgba(0,0,0,.18);
+  padding:28px;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
 }
 
-.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
-.t{font-size:56px;font-weight:950;margin:0 0 24px}
-.s{font-size:22px;line-height:1.85;color:var(--mut);max-width:950px}
+.k{
+  font-size:14px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 12px;
+}
 
-.lens{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
-.pill{
-  padding:14px 22px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+.t{
   font-weight:900;
-  cursor:pointer;
+  font-size:42px;
+  letter-spacing:1px;
+  margin:0 0 14px;
 }
-.pill.active{box-shadow:0 0 22px rgba(212,175,55,.4)}
 
-.stack{display:flex;flex-direction:column;gap:24px}
+.s{
+  font-size:18px;
+  line-height:1.6;
+  max-width:1000px;
+  opacity:.9;
+}
 
-.card{
-  border:1px solid var(--stroke);
-  border-radius:34px;
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+.lenses{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:24px;
+}
+
+.pill{
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;
+  font-weight:800;
+  letter-spacing:.4px;
+  font-size:14px;
+  background:rgba(0,0,0,.25);
+}
+
+.pill.active{
+  box-shadow:0 0 18px rgba(212,175,55,.25);
+  border-color:rgba(212,175,55,.55);
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.section{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;
   overflow:hidden;
-  box-shadow:0 50px 180px rgba(0,0,0,.6);
+  background:linear-gradient(160deg, rgba(18,22,35,.95), rgba(8,12,20,.98));
 }
 
 .head{
-  padding:36px 40px;
+  padding:22px 28px;
+  cursor:pointer;
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
-  cursor:pointer;
+  align-items:center;
 }
 
-.title{font-size:32px;font-weight:900}
-.chev{font-size:20px;opacity:.75}
+.title{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
 
 .body{
   display:none;
-  padding:38px 40px 48px;
-  border-top:1px solid var(--stroke);
+  padding:26px 30px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:17px;
+  line-height:1.75;
+  color:var(--mut2);
 }
 
-.card.open .body{display:block}
-
-.body h4{
-  margin:0 0 14px;
-  font-size:15px;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  opacity:.75;
-}
-
-.body p{
-  margin:0;
-  font-size:21px;
-  line-height:1.9;
-  color:var(--mut);
-}
+.section.open .body{display:block}
 
 .dock{
   position:fixed;
   left:50%;
-  bottom:12px;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  width:min(980px,94vw);
+  width:min(1000px,94vw);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
   padding:14px;
-  border-radius:28px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.35);
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
 }
-.dock .btn{padding:14px;border-radius:999px;text-align:center}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:700;
+}
 </style>
 </head>
 
@@ -129,119 +166,142 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
 <div class="page">
 
-  <div class="header">
-    <p class="k">FRONTIER</p>
-    <h1 class="t">ENERGY SYSTEMS</h1>
-    <p class="s">
-      What if industrial energy could be rebuilt from first principles?  
-      Not optimized — restructured.  
-      Measured. Bounded. Scaled without collapse.
-    </p>
+<div class="header">
+<p class="k" id="hk">FRONTIER</p>
+<h1 class="t" id="ht">ENERGY SYSTEMS</h1>
+<p class="s" id="hs"></p>
 
-    <div class="lens">
-      <div class="pill active" data-lens="informal">INFORMAL</div>
-      <div class="pill" data-lens="formal">FORMAL</div>
-      <div class="pill" data-lens="platform">PLATFORM</div>
-      <div class="pill" data-lens="engineering">ENGINEERING</div>
-    </div>
-  </div>
+<div class="lenses">
+  <button class="pill active" id="lensInformal">INFORMAL</button>
+  <button class="pill" id="lensFormal">FORMAL</button>
+  <button class="pill" id="lensEngineering">ENGINEERING</button>
+  <button class="pill" id="lensPlatform">PLATFORM</button>
+</div>
+</div>
 
-  <div class="stack" id="stack"></div>
+<div class="accordion" id="accordion"></div>
 
 </div>
 
 <nav class="dock">
-  <a class="btn" href="/explore/frontier/">FRONTIER</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
+<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
+<a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
+<a class="btn" id="navClosed" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
+<a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
 </nav>
 
 <script>
 (function(){
 
-  const DOMAINS = [
-    "Industrial Substitution",
-    "Waste-to-Energy Integration",
-    "Hydrogen Recovery Optimization",
-    "Grid Stabilization Architecture",
-    "Thermal Cascade Containment",
-    "Closed-Loop Industrial Habitat"
-  ];
+var qs=new URLSearchParams(location.search);
+var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
+document.documentElement.lang=lang;
 
-  const TEXT = {
-    informal:{
-      en:"Energy is not a fuel problem. It is a structure problem. When we redesign structure, we redesign loss, flow, failure, and recovery.",
-      zh:"能源不是燃料问题，而是结构问题。当结构被重构，损耗、流动、失效与恢复都会被重构。",
-      es:"La energía no es un problema de combustible. Es un problema estructural. Cuando rediseñamos la estructura, rediseñamos pérdidas, flujos y recuperación."
-    },
-    formal:{
-      en:"Each energy initiative is modeled through constraint envelopes, thermal margins, cascade thresholds, and rollback vectors before deployment.",
-      zh:"每个能源方案在部署前都通过约束包络、热裕度、级联阈值与回滚向量进行建模。",
-      es:"Cada iniciativa energética se modela mediante envolventes de restricción, márgenes térmicos y umbrales de cascada antes del despliegue."
-    },
-    platform:{
-      en:"Platform posture: modular energy layers remain registry-trackable and compliance-visible without exposing industrial secrets.",
-      zh:"平台姿态：能源模块可登记追踪、可合规可视，但不泄露工业机密。",
-      es:"Postura de plataforma: los módulos energéticos son rastreables y visibles para cumplimiento sin revelar secretos industriales."
-    },
-    engineering:{
-      en:"Engineering posture: plasma envelopes, mass flow equilibrium, containment geometry, and failure rollback states are explicitly bounded.",
-      zh:"工程姿态：等离子包络、质量流平衡、隔离几何与失效回滚状态被明确界定。",
-      es:"Postura de ingeniería: envolventes de plasma, equilibrio de flujo másico y estados de rollback están definidos explícitamente."
-    }
-  };
+function q(){return "?lang="+lang}
 
-  let currentLens="informal";
-  let currentLang="en";
+document.getElementById("navWater").href+=q();
+document.getElementById("navUrban").href+=q();
+document.getElementById("navClosed").href+=q();
+document.getElementById("navWaste").href+=q();
 
-  const stack=document.getElementById("stack");
+var lens="informal";
 
-  function render(){
-    stack.innerHTML="";
-    DOMAINS.forEach((name,i)=>{
-      const card=document.createElement("div");
-      card.className="card";
+function pick(o){return o[lang]||o.en}
 
-      const head=document.createElement("div");
-      head.className="head";
-      head.innerHTML=`
-        <div class="title">${name}</div>
-        <div class="chev">▸</div>
-      `;
+var headerCopy={
+en:"Energy is not scarce. Stability is. When generation, storage, and routing fall out of alignment, volatility replaces reliability.",
+zh:"能源并不稀缺，稳定性才稀缺。当发电、储存与路由失衡，波动取代可靠。",
+es:"La energía no es escasa. La estabilidad sí lo es."
+};
+document.getElementById("hs").textContent=pick(headerCopy);
 
-      const body=document.createElement("div");
-      body.className="body";
-      body.innerHTML=`
-        <h4>${currentLens.toUpperCase()}</h4>
-        <p>${TEXT[currentLens][currentLang]}</p>
-      `;
+var sections=[
+{
+t:{en:"THE INSTABILITY",zh:"不稳定性",es:"INESTABILIDAD"},
+c:{
+informal:{en:"Blackouts are not accidents. They are alignment failures. Supply spikes. Demand surges. Storage lags. Routing fragments.",
+zh:"停电不是意外，而是对齐失败。供应激增，需求冲击，储存滞后，路由碎裂。",
+es:"Los apagones no son accidentes, son fallas de alineación."},
+formal:{en:"Energy volatility emerges from generation-storage-routing misalignment under constrained infrastructure capacity.",
+zh:"能源波动源于发电-储存-路由错位。",
+es:"La volatilidad surge por desalineación generación-almacenamiento-enrutamiento."},
+engineering:{en:"Deploy modular thermal conversion, hydrogen buffering, and distributed microgrid balancing.",
+zh:"部署模块化热转化、氢缓冲与分布式微网平衡。",
+es:"Desplegar conversión térmica modular y microredes."},
+platform:{en:"Expose grid metrics via Gauges; enforce stability bands through Laws and Registry.",
+zh:"通过Gauges公开电网指标，并由Laws与Registry执行稳定带。",
+es:"Publicar métricas vía Medidores y aplicar bandas con Leyes."}
+}
+},
+{
+t:{en:"INDUSTRIAL SUBSTITUTION",zh:"工业替代",es:"SUSTITUCIÓN INDUSTRIAL"},
+c:{
+informal:{en:"The future is not a new fuel. It is replacing unstable inputs with controllable outputs.",
+zh:"未来不是新燃料，而是用可控输出替代不稳定输入。",
+es:"El futuro no es un nuevo combustible, es reemplazar entradas inestables."},
+formal:{en:"Industrial substitution replaces volatile fuel inputs with thermally stable conversion architectures.",
+zh:"工业替代用热稳定架构替代波动燃料输入。",
+es:"Sustitución industrial reemplaza entradas volátiles."},
+engineering:{en:"Integrate plasma thermal conversion and waste-energy coupling.",
+zh:"整合等离子热转化与废能耦合。",
+es:"Integrar conversión térmica por plasma."},
+platform:{en:"Link energy output classification into 256-state lattice for cross-domain coherence scoring.",
+zh:"将能源输出分类纳入256态晶格进行跨域评分。",
+es:"Vincular salida energética al lattice 256."}
+}
+},
+{
+t:{en:"FINITE ENERGY LATTICE",zh:"有限能源晶格",es:"LATTICE ENERGÉTICO FINITO"},
+c:{
+informal:{en:"Measure generation. Measure storage. Measure routing. If it isn’t measured, it isn’t stable.",
+zh:"测发电，测储存，测路由。不测量就不稳定。",
+es:"Si no se mide, no es estable."},
+formal:{en:"Energy vectors are indexed into lattice states for deterministic classification and drift detection.",
+zh:"能源向量映射入晶格状态进行分类与漂移检测。",
+es:"Vectores energéticos se indexan en estados lattice."},
+engineering:{en:"Bind energy nodes to UCI engine for collapse detection.",
+zh:"将能源节点绑定UCI引擎检测坍塌。",
+es:"Vincular nodos energéticos al motor UCI."},
+platform:{en:"Registry-backed grid ledger ensures cross-utility verification.",
+zh:"基于Registry的电网账本支持跨公用事业验证。",
+es:"Libro de red respaldado por registro."}
+}
+}
+];
 
-      head.addEventListener("click",()=>{
-        document.querySelectorAll(".card").forEach(c=>{
-          if(c!==card) c.classList.remove("open");
-        });
-        card.classList.toggle("open");
-      });
+function render(){
+var acc=document.getElementById("accordion");
+acc.innerHTML="";
+sections.forEach(function(s,i){
+var row=document.createElement("div");
+row.className="section";
+var head=document.createElement("div");
+head.className="head";
+var title=document.createElement("div");
+title.className="title";
+title.textContent=pick(s.t);
+head.appendChild(title);
+var body=document.createElement("div");
+body.className="body";
+body.textContent=pick(s.c[lens]);
+head.onclick=function(){
+document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
+row.classList.add("open");
+};
+row.appendChild(head);
+row.appendChild(body);
+acc.appendChild(row);
+if(i===0)row.classList.add("open");
+});
+}
 
-      card.appendChild(head);
-      card.appendChild(body);
-      stack.appendChild(card);
+document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
+document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
+document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
+document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
 
-      if(i===0) card.classList.add("open");
-    });
-  }
-
-  document.querySelectorAll(".pill").forEach(p=>{
-    p.addEventListener("click",()=>{
-      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
-      p.classList.add("active");
-      currentLens=p.dataset.lens;
-      render();
-    });
-  });
-
-  render();
+render();
 
 })();
 </script>

@@ -1,14 +1,12 @@
-<!-- TNT — /explore/vision/index.html
-     VISION · FRONTIER EXPANSION BOARD
-     ROLE:
-       - Expansion surface (non-operational, non-claiming)
-       - Structure remains upstream (Laws / Gauges / Language)
-       - Vision expands into future domains not yet built
-       - No modals
-       - No lenses
-       - Hard navigation only
-       - Full state propagation (lang/style/time)
-       - Uses ui.css + branch.css only
+<!-- TNT — /explore/frontier/vision/shimmer/index.html
+     SHIMMER · SKYWAY HYBRID MOLECULAR REFINERY (VISION LANE ONLY)
+     FIX (NO-LOOP / NO BLENDED DOORS):
+       - BACK goes to Vision Hub (NOT Frontier)
+       - DOOR goes to /door/ (direct structure spine)
+       - This page is VISION ONLY (no “Structure” fork, no loop mechanics)
+       - Two vertical diamonds, separated, responsive (no overlap on mobile)
+       - Uses ui.css + branch.css + instruments.js
+       - Preserves state: lang/style/time/depth (URL + LS) on every jump
 -->
 
 <!doctype html>
@@ -16,213 +14,269 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · VISION</title>
+<title>SHIMMER · Skyway Hybrid Molecular Refinery</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
+/* top controls */
+.top{
+  position:fixed;left:0;right:0;top:16px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 16px;gap:12px;z-index:220;pointer-events:none;
+}
+.top-left,.top-right{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;pointer-events:auto}
+.top .btn{white-space:nowrap}
+
+/* header pill */
+.brand{
+  position:fixed;left:50%;top:64px;transform:translateX(-50%);
+  z-index:200;text-align:center;
+  width:min(980px,92vw);
+  padding:14px 16px;border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(10px);
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  pointer-events:none;
+}
+.brand .t{margin:0;font-weight:950;letter-spacing:1.5px;font-size:34px;line-height:1.05}
+.brand .s{margin:8px 0 0;opacity:.86;font-size:14px;line-height:1.25}
+
+/* stage */
 :root{
-  --D:220px;
-  --R:150px;
+  --D:min(260px, 66vw);
+  --G:calc(var(--D) * 0.64);   /* vertical gap */
   --goldSoft:rgba(212,175,55,.45);
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
 }
 
-body{
-  margin:0;
-  color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-
-/* Top */
-.top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
+.stage{
+  position:fixed;left:50%;top:56%;
+  transform:translate(-50%,-50%);
+  width:min(760px,94vw);
+  height:min(820px,84vh);
   z-index:120;
-  display:flex;
-  gap:10px;
-}
-
-/* Brand */
-.brand{
-  position:fixed;
-  left:50%;
-  top:16px;
-  transform:translateX(-50%);
-  z-index:110;
-  text-align:center;
-  padding:10px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
   pointer-events:none;
 }
-.brand .k{
-  font-size:12px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  opacity:.75;
-  margin:0 0 6px 0;
-}
-.brand .t{
-  font-weight:950;
-  font-size:40px;
-  letter-spacing:.3px;
-  margin:0;
-}
-.brand .s{
-  font-size:13px;
-  opacity:.8;
-  margin-top:6px;
-}
 
-/* Grid */
-.page{
-  width:min(1100px,94vw);
-  margin:140px auto 120px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:20px;
-}
-@media(max-width:900px){
-  .page{grid-template-columns:1fr;}
-}
+/* glossy diamond */
+.d{
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;
+  border-radius:34px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
 
-/* Vision Card */
-.card{
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.16);
-  padding:26px;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.45), transparent 48%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.25), transparent 60%),
     linear-gradient(160deg, var(--obsA), var(--obsB));
-  box-shadow:0 40px 120px rgba(0,0,0,.85);
-  transition:.2s ease;
+
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 50px 160px rgba(0,0,0,.85),
+    0 0 38px rgba(212,175,55,.25),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -50px 90px rgba(0,0,0,.78);
+
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 60px 160px rgba(0,0,0,.95);
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:34px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.60;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.30);
 }
 
-.card h2{
-  margin:0 0 10px;
-  font-size:20px;
-  font-weight:950;
-  letter-spacing:.5px;
-}
+.dTop{--tx:0px;--ty:calc(var(--G) * -1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dBot{--tx:0px;--ty:var(--G);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
 
-.card p{
-  margin:0;
-  font-size:14px;
-  line-height:1.6;
-  opacity:.9;
+.inner{
+  transform:rotate(-45deg);
+  height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:18px;gap:10px;
+  pointer-events:none;
+  user-select:none;
 }
+.lab{font-weight:950;font-size:22px;letter-spacing:.8px}
+.sub{font-size:14px;opacity:.85;line-height:1.35;max-width:22em}
 
-/* Dock */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
+/* footer hint */
+.foot{
+  position:fixed;left:50%;
+  bottom:max(18px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:min(980px,94vw);
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+  z-index:130;
+  pointer-events:none;
+}
+
+@media (max-width:420px){
+  :root{ --D:min(248px, 72vw); --G:calc(var(--D) * 0.62); }
+  .brand .t{font-size:30px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnFrontier" href="/explore/frontier/">FRONTIER</a>
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+<div class="top" aria-label="Top controls">
+  <div class="top-left">
+    <a class="btn" id="btnBack" href="/explore/frontier/vision/">BACK</a>
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+  </div>
+  <div class="top-right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
-<div class="brand">
-  <div class="k">CARDINAL AXIS</div>
-  <div class="t">VISION</div>
-  <div class="s">Expansion without premature claim</div>
+<div class="brand" aria-hidden="true">
+  <h1 class="t" id="ttl">SHIMMER</h1>
+  <div class="s" id="tag">Skyway Hybrid Molecular Refinery</div>
 </div>
 
-<div class="page">
-
-  <div class="card">
-    <h2>Orbital Energy Communities</h2>
-    <p>
-      Closed-loop solar collection, energy buffering, and staged deployment.
-      Structure upstream. Vision downstream.
-    </p>
+<div class="stage" aria-label="SHIMMER fork">
+  <div class="d dTop" id="dUrban" role="button" tabindex="0" aria-label="Urban Resource OS">
+    <div class="inner">
+      <div class="lab" id="labUrban">URBAN RESOURCE OS</div>
+      <div class="sub" id="subUrban">Waste → Energy + Materials · Distributed entropy routing</div>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Water Regeneration Systems</h2>
-    <p>
-      Renewable water purification, desalination, and atmospheric capture
-      integrated into solar-scale communities.
-    </p>
+  <div class="d dBot" id="dHab" role="button" tabindex="0" aria-label="Closed Loop Habitats">
+    <div class="inner">
+      <div class="lab" id="labHab">CLOSED LOOP HABITATS</div>
+      <div class="sub" id="subHab">Orbital · Lunar · Remote · Full resource retention</div>
+    </div>
   </div>
-
-  <div class="card">
-    <h2>Waste Conversion & Circularity</h2>
-    <p>
-      Waste-to-energy pathways, plasma conversion, and thermal recycling
-      within containment-first doctrine.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>Renewable Infrastructure Scaling</h2>
-    <p>
-      Energy, water, and waste integrated under governance gates
-      for staged planetary-scale expansion.
-    </p>
-  </div>
-
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
-</nav>
+<div class="foot" id="foot">Vision lane only · Structure lives in DOOR</div>
 
 <script>
 (function(){
+  // --- state ---
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "origin";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en"&&lang!=="zh") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
   if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="origin";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
     localStorage.setItem("gd_style",style);
     localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(){
     return "?lang="+encodeURIComponent(lang)+
            "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time);
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  document.getElementById("btnFrontier").href="/explore/frontier/"+q();
+  // hard de-loop: BACK stays in VISION hub (not Frontier)
+  document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
   document.getElementById("btnDoor").href="/door/"+q();
+
+  // language toggles
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    location.href="/explore/frontier/vision/shimmer/"+q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // routes (VISION-only children)
+  function goUrban(){ location.href="/explore/frontier/vision/shimmer/urban-resource-os/"+q(); }
+  function goHab(){ location.href="/explore/frontier/vision/shimmer/closed-loop-habitats/"+q(); }
+
+  var dUrban=document.getElementById("dUrban");
+  var dHab=document.getElementById("dHab");
+
+  dUrban.addEventListener("click", goUrban);
+  dHab.addEventListener("click", goHab);
+
+  dUrban.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goUrban(); }});
+  dHab.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHab(); }});
+
+  // minimal i18n (keeps meaning identical)
+  if(lang==="zh"){
+    document.getElementById("tag").textContent="Skyway 混合分子精炼厂";
+    document.getElementById("labUrban").textContent="城市资源操作系统";
+    document.getElementById("subUrban").textContent="废弃物 → 能源 + 材料 · 分布式熵路由";
+    document.getElementById("labHab").textContent="闭环栖息地";
+    document.getElementById("subHab").textContent="轨道 · 月面 · 远端 · 全资源留存";
+    document.getElementById("foot").textContent="仅愿景路线 · 结构请走 DOOR";
+    document.getElementById("btnBack").textContent="返回";
+    document.getElementById("btnDoor").textContent="门";
+  }else if(lang==="es"){
+    document.getElementById("tag").textContent="Refinería molecular híbrida Skyway";
+    document.getElementById("labUrban").textContent="SO urbano de recursos";
+    document.getElementById("subUrban").textContent="Residuos → energía + materiales · enrutamiento de entropía distribuido";
+    document.getElementById("labHab").textContent="Hábitats de ciclo cerrado";
+    document.getElementById("subHab").textContent="Órbita · Lunar · Remoto · Retención total de recursos";
+    document.getElementById("foot").textContent="Solo visión · La estructura vive en DOOR";
+    document.getElementById("btnBack").textContent="ATRÁS";
+    document.getElementById("btnDoor").textContent="PUERTA";
+  }
 })();
 </script>
 

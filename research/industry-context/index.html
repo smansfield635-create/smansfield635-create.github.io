@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research · Industry Context</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:104px;
+  --stroke:rgba(255,255,255,.12);
+  --mut:rgba(255,255,255,.88);
+  --shadowA:0 28px 90px rgba(0,0,0,.6);
+}
+
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:120px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:28px;
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowA);
+}
+
+.h1{
+  margin:0 0 16px;
+  font-size:28px;
+  font-weight:950;
+  letter-spacing:.4px;
+}
+
+.p{
+  margin:0 0 16px;
+  line-height:1.75;
+  color:var(--mut);
+  font-size:16px;
+}
+
+.list{
+  margin:18px 0 0;
+  padding-left:18px;
+  line-height:1.8;
+  font-size:15px;
+}
+
+.notice{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid var(--stroke);
+  font-size:13.5px;
+  opacity:.85;
+  line-height:1.6;
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.dock .btn{
+  width:100%;
+  padding:10px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="card">
+    <div class="h1">Engineering-Led Construction Benchmarks</div>
+
+    <div class="p">
+      This research framework examines engineering-led construction systems across the residential building envelope.
+      The following companies are referenced as industry examples of innovation-driven structural performance
+      across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management systems.
+    </div>
+
+    <ul class="list">
+      <li>Carrier — HVAC system innovation</li>
+      <li>Trane — Mechanical cooling systems</li>
+      <li>Lennox — Furnace and climate systems</li>
+      <li>Andersen — Window engineering systems</li>
+      <li>Pella — Fenestration innovation</li>
+      <li>GAF — Roofing systems</li>
+      <li>Owens Corning — Insulation systems</li>
+      <li>CertainTeed — Architectural roofing systems</li>
+      <li>Kohler — Plumbing systems</li>
+      <li>LeafGuard — Integrated rainwater management systems</li>
+    </ul>
+
+    <div class="notice">
+      These companies are referenced for educational and contextual research purposes only.
+      All trademarks are the property of their respective owners.
+      No affiliation or endorsement is implied.
+    </div>
+
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+</nav>
+
+</body>
+</html>

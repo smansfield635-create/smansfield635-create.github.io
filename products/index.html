@@ -1,16 +1,25 @@
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (RESTORE + ADD DOMAIN PLATFORMS) · EN/中文/ES · MOBILE-SAFE · NO MODALS
-     PURPOSE:
-       - Restore PRODUCTS hub and add missing domain platforms (Finance/Crypto + Legal/Insurance/etc.)
-       - Single-open accordion (one row open per band)
-       - Trilingual page-level toggle (EN/中文/ES) + GH Pages safe reload (same pathname)
-       - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
-     ROUTING RULE:
-       - If a dedicated page might not exist yet, route to /products/software/?focus=<slug> (safe hub).
-     LOCKS:
+     PRODUCTS · MASTER INDEX (RESTORED) · SINGLE-OPEN ACCORDION · 3 LANG (EN/中文/ES)
+     LENSES (NO NEW gd_* KEYS):
+       - FORMAL/INFORMAL uses gd_style (style=formal|informal)
+       - PLATFORM/ENGINEERING uses gd_depth (depth=explore|learn)
+         depth=explore => PLATFORM
+         depth=learn   => ENGINEERING
+     RULES:
+       - No modals, no overlays
+       - One row open at a time (global single-open)
+       - State carry: lang/style/time/depth (URL + LS gd_*)
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
-       - Tap-safe, no inline onclick
+       - ui.css owns field (NO html/body background styling)
+     ROUTES:
+       - Energy → /products/energy/
+       - Education → /products/education/
+       - Coherence Diagnostic → /products/coherence-diagnostic/
+       - Software Spine (“Machine Behind Pages”) → /products/software/
+       - Dot.Grid → /products/dot-grid/
+       - SSG → /products/ssg/
+       - Risk & Capital Systems → /products/risk-capital/
+       - Vision shells route to /explore/frontier/vision/ with ?focus=
 -->
 
 <!doctype html>
@@ -26,39 +35,31 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
-/* tokens */
 :root{
-  --dockH:106px;
+  --dockH:94px;
 
-  /* dark opal + red */
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.12);
-  --opalC:rgba(255,70,70,.14);
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalR:rgba(255,70,70,.10);
 
-  --stroke:rgba(255,255,255,.12);
+  --inkA:rgba(12,22,38,.90);
+  --inkB:rgba(6,10,16,.96);
+
+  --stroke:rgba(255,255,255,.10);
+  --stroke2:rgba(255,255,255,.08);
+  --gold:rgba(212,175,55,.32);
+
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
 }
-
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:220;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:220;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
 
 /* page */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 18px);
+  padding:88px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -66,35 +67,73 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
+/* top controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
 /* header */
 .header{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:22px;
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.14);
+    radial-gradient(circle at 62% 92%, var(--opalR), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.12));
   backdrop-filter:blur(10px);
   box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:14px 16px;
+  padding:16px 16px 14px;
 }
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
-.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px;color:var(--txt)}
-.fine{margin-top:10px;font-size:12.25px;opacity:.72;line-height:1.45;color:var(--mut)}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.7px}
+.s{margin:10px 0 0;font-size:15px;opacity:.90;line-height:1.55;max-width:980px;color:var(--txt)}
+.fine{margin-top:10px;font-size:13px;opacity:.74;line-height:1.45;color:var(--mut)}
 
-/* band */
+/* 4-lens controls (mapped to existing keys) */
+.lenses{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+}
+.pill.red.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,70,70,.18);
+}
+
+/* bands */
 .band{
   padding:10px 12px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke2);
   background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
+  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88);
 }
 
-/* accordion list */
+/* rows */
 .list{display:flex;flex-direction:column;gap:12px}
+
 .row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
@@ -104,43 +143,43 @@ body::before,body::after{pointer-events:none!important}
 }
 .head{
   display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  gap:10px;padding:16px 16px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.left{
-  display:flex;align-items:flex-start;gap:12px;min-width:0;
-}
+.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
 .mark{
   width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
   background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:3px;
+  margin-top:4px;flex:0 0 auto;
 }
 .titleBlock{min-width:0}
 .title{
-  font-weight:950;letter-spacing:.2px;
+  font-weight:950;letter-spacing:.25px;
+  font-size:18px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .sub{
-  margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch;
+  margin-top:8px;font-size:13.75px;opacity:.84;line-height:1.35;max-width:92ch;
 }
 .chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
 .body{
   display:none;
-  padding:14px 16px 16px;
+  padding:16px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
 .row.open .body{display:block}
-.p{margin:0;color:rgba(255,255,255,.86);line-height:1.6;font-size:13.25px}
-.p + .p{margin-top:10px}
 
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+.p{margin:0;color:rgba(255,255,255,.88);line-height:1.7;font-size:14.5px}
+.p + .p{margin-top:10px}
+.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.82);line-height:1.6;font-size:14px}
+.ul li{margin:7px 0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+.actions .btn{padding:10px 14px;border-radius:999px;white-space:nowrap}
 
 /* dock */
 .dock{
@@ -149,19 +188,17 @@ body::before,body::after{pointer-events:none!important}
   transform:translateX(-50%);
   z-index:220;
   width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
+  padding:10px 12px;border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.22);
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:128px}
+  :root{--dockH:106px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -171,7 +208,8 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnHome" href="/home/">HUB</a>
+  <a class="btn" id="btnHome" href="/home/">HOME</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
 </div>
 
 <div class="top-right" aria-label="Language">
@@ -185,21 +223,29 @@ body::before,body::after{pointer-events:none!important}
   <div class="header">
     <p class="k" id="hk">PRODUCTS</p>
     <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
-    <p class="s" id="hs">Open a card. Read one paragraph. Jump cleanly.</p>
-    <div class="fine" id="fine">Fine print: meaning lives under Laws; measurements live under Gauges.</div>
+    <p class="s" id="hs"></p>
+    <div class="fine" id="fine"></div>
+
+    <div class="lenses" aria-label="Four lenses">
+      <div class="pills" aria-label="Build lens">
+        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills" aria-label="Voice lens">
+        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+    </div>
   </div>
 
-  <div class="band" id="bandA">CORE PRODUCTS</div>
+  <div class="band" id="bandA">PRODUCT SURFACES</div>
   <div class="list" id="listA"></div>
 
-  <div class="band" id="bandD">DOMAIN PLATFORMS</div>
-  <div class="list" id="listD"></div>
-
-  <div class="band" id="bandS">SERVICES</div>
-  <div class="list" id="listS"></div>
-
-  <div class="band" id="bandB">SOFTWARE & SYSTEMS</div>
+  <div class="band" id="bandB">VISION SHELLS</div>
   <div class="list" id="listB"></div>
+
+  <div class="band" id="bandC">SYSTEM SPINES</div>
+  <div class="list" id="listC"></div>
 
 </div>
 
@@ -212,18 +258,18 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ===== state =====
+  // ===== canonical state (NO new gd_* keys) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal"; // informal|formal
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";  // explore|learn (mapped)
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -231,7 +277,11 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  // map depth -> build lens
+  var buildLens = (depth==="learn") ? "engineering" : "platform";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -241,19 +291,21 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // wire top + dock
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
+
+  // nav
   wire("btnDoor","/door/");
   wire("btnHome","/home/");
+  wire("btnExit","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language toggle (reload SAME pathname; GH safe)
+  // language toggle (reload same pathname)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -264,207 +316,186 @@ body::before,body::after{pointer-events:none!important}
   }
   paintLang();
   function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang);}catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click",function(){setLang("en");});
-  btnZH.addEventListener("click",function(){setLang("zh");});
-  btnES.addEventListener("click",function(){setLang("es");});
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== ROUTES (SAFE HUBS) =====
-  var ROUTE={
-    energy:"/products/energy/",
-    education:"/products/education/",
-    diagnostic:"/products/coherence-diagnostic/",
-    software:"/products/software/",
-    dotgrid:"/products/dot-grid/",
-    ssg:"/products/ssg/",
+  // 4-lens buttons -> existing keys
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
 
-    advisory:"/laws/",
-    audit:"/gauges/",
-    integration:"/products/software/",
-    training:"/products/education/",
+  function paintLenses(){
+    pillPlatform.classList.toggle("active", buildLens==="platform");
+    pillEngineering.classList.toggle("active", buildLens==="engineering");
+    pillInformal.classList.toggle("active", style==="informal");
+    pillFormal.classList.toggle("active", style==="formal");
+  }
+  paintLenses();
 
-    // domain platforms (shell → software hub focus)
-    finance:"/products/software/?focus=finance",
-    crypto:"/products/software/?focus=crypto",
-    legal:"/products/software/?focus=legal",
-    insurance:"/products/software/?focus=insurance",
-    compliance:"/products/software/?focus=compliance",
-    contracts:"/products/software/?focus=contracts",
-    reporting:"/products/software/?focus=reporting",
-    risk:"/products/software/?focus=risk",
-    underwriting:"/products/software/?focus=underwriting",
+  function setBuild(next){
+    buildLens = (next==="engineering") ? "engineering" : "platform";
+    depth = (buildLens==="engineering") ? "learn" : "explore";
+    try{ localStorage.setItem("gd_depth",depth);}catch(e){}
+    window.location.href = window.location.pathname + q({depth:depth});
+  }
+  function setVoice(next){
+    style = (next==="formal") ? "formal" : "informal";
+    try{ localStorage.setItem("gd_style",style);}catch(e){}
+    window.location.href = window.location.pathname + q({style:style});
+  }
 
-    uci:"/products/software/?focus=uci",
-    registry:"/products/software/?focus=registry",
-    adoption:"/products/software/?focus=adoption",
-    machine:"/products/software/"
-  };
+  pillPlatform.addEventListener("click", function(){ setBuild("platform"); });
+  pillEngineering.addEventListener("click", function(){ setBuild("engineering"); });
+  pillInformal.addEventListener("click", function(){ setVoice("informal"); });
+  pillFormal.addEventListener("click", function(){ setVoice("formal"); });
 
-  // ===== COPY =====
-  var COPY={
+  function pick(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  // Header copy (dense, problem-first, human-first)
+  var HEAD = {
     en:{
-      hk:"PRODUCTS",
-      ht:"WHAT YOU CAN USE",
-      hs:"Open a card. Read one paragraph. Jump cleanly.",
-      fine:"Fine print: meaning lives under Laws; measurements live under Gauges.",
-      bandA:"CORE PRODUCTS",
-      bandD:"DOMAIN PLATFORMS",
-      bandS:"SERVICES",
-      bandB:"SOFTWARE & SYSTEMS",
-      btns:{open:"OPEN"},
-      top:{door:"DOOR", hub:"HUB"},
-      dock:{exp:"EXPLORE", prod:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
-      items:{
-        core:[
-          {c:"#F59E0B", t:"Energy", s:"Industrial posture only. No gain claims.", p:"Thermal substitution and containment-first surfaces. Implementation stays bounded to measured bands.", href:ROUTE.energy},
-          {c:"#0EA5E9", t:"Education", s:"Stage 1 free PDF + traversal learning.", p:"A full traversal ESL system: vocabulary, routines, checkpoints, and verification lanes—built to scale without confusion.", href:ROUTE.education},
-          {c:"#93C5FD", t:"Coherence Diagnostic", s:"Decision support + classification.", p:"A diagnostic surface that keeps conclusions bounded to receipts and scope. Proof posture routes to Laws; outputs route to Gauges.", href:ROUTE.diagnostic},
-          {c:"#EF4444", t:"Software Spine", s:"The machine behind the pages.", p:"The platform/engineering backbone that keeps routing, state carry, and claim discipline stable under scale.", href:ROUTE.software},
-          {c:"#34D399", t:"Dot.Grid", s:"Indexing + sweeps.", p:"Map connections, reveal correlation, and expose structural drift before it compounds—without declaring admissibility.", href:ROUTE.dotgrid},
-          {c:"#A3A3A3", t:"SSG", s:"Simplified Syntax Geometry.", p:"Root geometry for expressing behavior under constraint: resources, stores, constraints, goals, guards.", href:ROUTE.ssg}
-        ],
-        domains:[
-          {c:"#D4AF37", t:"Finance", s:"Integrity, reporting, and bounded risk.", p:"A domain platform shell that routes to the software spine for receipts, audits, and measurement posture.", href:ROUTE.finance},
-          {c:"#F97316", t:"Crypto", s:"Verification-first, hype-free posture.", p:"A domain platform shell for crypto workflows: classification, auditability, and bounded claims under declared scope.", href:ROUTE.crypto},
-          {c:"#60A5FA", t:"Legal", s:"Standards, disputes, and enforceable meaning.", p:"A legal domain shell: doctrine, definitions, and instrument-ready outputs routed through the spine.", href:ROUTE.legal},
-          {c:"#93C5FD", t:"Insurance / Underwriting", s:"Risk pricing under constraint.", p:"Insurance domain shell: underwriting posture, admissibility tiers, and evidence bundles.", href:ROUTE.insurance},
-          {c:"#34D399", t:"Compliance", s:"Regulatory mapping and audit posture.", p:"Compliance shell: translate requirements into checkable gates and exportable receipts.", href:ROUTE.compliance},
-          {c:"#A3A3A3", t:"Contracts", s:"Instrument generation + traceability.", p:"Contracts shell: structured instruments, reason codes, and non-retroactive change control.", href:ROUTE.contracts},
-          {c:"#EF4444", t:"Risk", s:"Correlation exposure and containment.", p:"Risk shell: correlation-first visibility, containment posture, and windowed instability signals.", href:ROUTE.risk}
-        ],
-        services:[
-          {c:"#D4AF37", t:"Advisory (Governance)", s:"Constraint-first guidance.", p:"Translate doctrine into implementable decisions without inflating claims.", href:ROUTE.advisory},
-          {c:"#60A5FA", t:"Audit Support", s:"Evidence packaging + review posture.", p:"Help package receipts and measurement exports for review—without changing the underlying rules.", href:ROUTE.audit},
-          {c:"#93C5FD", t:"Integration (Wiring)", s:"Routing + state carry + stability.", p:"Wire platforms cleanly so navigation never collapses into the wrong destination.", href:ROUTE.integration},
-          {c:"#0EA5E9", t:"Training (Masterclass)", s:"Repeatable delivery systems.", p:"Teach the method so the system scales without semantic drift.", href:ROUTE.training}
-        ],
-        systems:[
-          {c:"#EF4444", t:"Machine Behind the Pages", s:"One spine, many surfaces.", p:"Unified routing + state carry + lens discipline. This is where software components live.", href:ROUTE.machine},
-          {c:"#93C5FD", t:"UCI Engine", s:"Decision engine under constraint.", p:"Core computation engine routing into Gauges and Diagnostic surfaces.", href:ROUTE.uci},
-          {c:"#A3A3A3", t:"Registry", s:"Status + reason codes.", p:"Lookupable status surfaces designed to be verifiable, not persuasive.", href:ROUTE.registry},
-          {c:"#D4AF37", t:"Adoption Ladder", s:"Scaling gates + phase posture.", p:"A structured pathway for adoption under pressure: proceed, hold, contain, roll back.", href:ROUTE.adoption}
-        ]
-      }
+      hs:"Why do good systems collapse? Because people can’t see the wiring — so small problems multiply into big failures. This page is the catalog of surfaces we use to map the problem, measure it, and route you to a bounded next step.",
+      fine:"Lens rule: PLATFORM/ENGINEERING changes build posture. INFORMAL/FORMAL changes voice. Routes stay stable. Every jump carries state."
     },
     zh:{
-      hk:"产品",
-      ht:"可用内容",
-      hs:"打开一张卡。读一段话。然后清晰跳转。",
-      fine:"细则：含义在法则；测量在量规。",
-      bandA:"核心产品",
-      bandD:"领域平台",
-      bandS:"服务",
-      bandB:"软件与系统",
-      btns:{open:"打开"},
-      top:{door:"门", hub:"枢纽"},
-      dock:{exp:"探索", prod:"产品", laws:"法则", gauges:"量规"},
-      items:{
-        core:[
-          {c:"#F59E0B", t:"能源", s:"仅工业姿态。无增益主张。", p:"热替代与隔离优先执行面。实现始终绑定在可测区间内。", href:ROUTE.energy},
-          {c:"#0EA5E9", t:"教育", s:"阶段1免费PDF + 遍历学习。", p:"完整遍历式英语学习：词汇、例程、检查点与验证路线，规模化不混乱。", href:ROUTE.education},
-          {c:"#93C5FD", t:"一致性诊断", s:"决策支持 + 分类。", p:"把结论严格绑定到收据与范围。证明姿态去法则；输出去量规。", href:ROUTE.diagnostic},
-          {c:"#EF4444", t:"软件脊柱", s:"页面背后的机器。", p:"平台/工程骨架：路由、状态携带、姿态纪律在规模下保持稳定。", href:ROUTE.software},
-          {c:"#34D399", t:"Dot.Grid", s:"索引 + 扫掠。", p:"画出连接、暴露相关、提前发现结构变化；但不裁决可采信。", href:ROUTE.dotgrid},
-          {c:"#A3A3A3", t:"SSG", s:"简化语法几何。", p:"约束下的行为表达根几何：资源、存储、约束、目标、守卫。", href:ROUTE.ssg}
-        ],
-        domains:[
-          {c:"#D4AF37", t:"金融", s:"完整性、报表与有界风险。", p:"领域平台壳：把收据、审计与测量姿态路由到软件脊柱。", href:ROUTE.finance},
-          {c:"#F97316", t:"加密", s:"验证优先，拒绝炒作。", p:"加密工作流领域壳：分类、可审计、主张有界且绑定范围。", href:ROUTE.crypto},
-          {c:"#60A5FA", t:"法律", s:"标准、争议与可执行含义。", p:"法律领域壳：教义、定义与可用于仪器化的输出，通过脊柱路由。", href:ROUTE.legal},
-          {c:"#93C5FD", t:"保险 / 承保", s:"约束下的风险定价。", p:"保险领域壳：承保姿态、可采信分层与证据包。", href:ROUTE.insurance},
-          {c:"#34D399", t:"合规", s:"监管映射与审计姿态。", p:"合规领域壳：把要求翻译成可核查闸门与可导出收据。", href:ROUTE.compliance},
-          {c:"#A3A3A3", t:"合同", s:"工具生成 + 可追溯。", p:"合同领域壳：结构化文书、原因码与不可追溯变更控制。", href:ROUTE.contracts},
-          {c:"#EF4444", t:"风险", s:"相关暴露与隔离。", p:"风险领域壳：相关优先可视化、隔离姿态与窗口化不稳定信号。", href:ROUTE.risk}
-        ],
-        services:[
-          {c:"#D4AF37", t:"咨询（治理）", s:"约束优先指导。", p:"把教义翻译成可执行决策，不膨胀主张。", href:ROUTE.advisory},
-          {c:"#60A5FA", t:"审计支持", s:"证据打包 + 复核姿态。", p:"协助打包收据与测量导出用于复核，不改变底层规则。", href:ROUTE.audit},
-          {c:"#93C5FD", t:"集成（接线）", s:"路由 + 状态携带 + 稳定性。", p:"把平台接线干净，避免导航坍缩到错误目的地。", href:ROUTE.integration},
-          {c:"#0EA5E9", t:"训练（大师课）", s:"可复制交付系统。", p:"教授方法，使系统扩张而不语义漂移。", href:ROUTE.training}
-        ],
-        systems:[
-          {c:"#EF4444", t:"页面背后的机器", s:"一条脊柱，多种执行面。", p:"统一路由、状态携带、透镜纪律：软件组件在此聚合。", href:ROUTE.machine},
-          {c:"#93C5FD", t:"UCI 引擎", s:"约束下的决策引擎。", p:"核心计算引擎，向量规与诊断面供给输出。", href:ROUTE.uci},
-          {c:"#A3A3A3", t:"登记系统", s:"状态 + 原因码。", p:"可查询、可核查的状态面：追求可验证，不追求说服。", href:ROUTE.registry},
-          {c:"#D4AF37", t:"采纳阶梯", s:"扩张闸门 + 阶段姿态。", p:"在压力下的结构化采纳路径：前进、暂停、隔离、回滚。", href:ROUTE.adoption}
-        ]
-      }
+      hs:"为什么好系统会崩？因为人看不见线路——小问题被放大成大失败。本页是执行面目录：用来描图、测量、并把你路由到一个有界的下一步。",
+      fine:"透镜规则：平台/工程切换构建姿态；通俗/正式切换表达语气。路由恒定，跳转携带状态。"
     },
     es:{
-      hk:"PRODUCTOS",
-      ht:"LO QUE PUEDES USAR",
-      hs:"Abre una tarjeta. Lee un párrafo. Salta limpio.",
-      fine:"Letra pequeña: el significado vive en Leyes; la medición en Medidores.",
-      bandA:"PRODUCTOS NÚCLEO",
-      bandD:"PLATAFORMAS POR DOMINIO",
-      bandS:"SERVICIOS",
-      bandB:"SOFTWARE Y SISTEMAS",
-      btns:{open:"ABRIR"},
-      top:{door:"PUERTA", hub:"HUB"},
-      dock:{exp:"EXPLORAR", prod:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
-      items:{
-        core:[
-          {c:"#F59E0B", t:"Energía", s:"Solo postura industrial. Sin ganancias.", p:"Sustitución térmica y contención primero. Implementación acotada a bandas medidas.", href:ROUTE.energy},
-          {c:"#0EA5E9", t:"Educación", s:"PDF gratis Etapa 1 + aprendizaje por recorrido.", p:"Sistema ESL completo: vocabulario, rutinas, checkpoints y verificación—escala sin confusión.", href:ROUTE.education},
-          {c:"#93C5FD", t:"Diagnóstico de coherencia", s:"Soporte de decisión + clasificación.", p:"Conclusiones acotadas a recibos y alcance. Doctrina en Leyes; salidas en Medidores.", href:ROUTE.diagnostic},
-          {c:"#EF4444", t:"Columna de Software", s:"La máquina detrás de las páginas.", p:"Backbone de plataforma/ingeniería: rutas, estado y disciplina de afirmaciones estable al escalar.", href:ROUTE.software},
-          {c:"#34D399", t:"Dot.Grid", s:"Índice + barridos.", p:"Mapea conexiones, revela correlación y expone cambios estructurales sin declarar admisibilidad.", href:ROUTE.dotgrid},
-          {c:"#A3A3A3", t:"SSG", s:"Geometría de sintaxis simplificada.", p:"Geometría raíz para expresar comportamiento bajo restricciones: recursos, stores, restricciones, objetivos y guards.", href:ROUTE.ssg}
-        ],
-        domains:[
-          {c:"#D4AF37", t:"Finanzas", s:"Integridad, reporting y riesgo acotado.", p:"Shell de dominio que rutea al spine de software para recibos, auditoría y postura de medición.", href:ROUTE.finance},
-          {c:"#F97316", t:"Cripto", s:"Verificación primero, sin hype.", p:"Shell cripto: clasificación, auditabilidad y afirmaciones acotadas bajo alcance declarado.", href:ROUTE.crypto},
-          {c:"#60A5FA", t:"Legal", s:"Estándares, disputas y significado ejecutable.", p:"Shell legal: doctrina, definiciones y salidas instrumentables por el spine.", href:ROUTE.legal},
-          {c:"#93C5FD", t:"Seguros / Underwriting", s:"Precio de riesgo bajo restricción.", p:"Shell seguros: underwriting, niveles de admisibilidad y bundles de evidencia.", href:ROUTE.insurance},
-          {c:"#34D399", t:"Compliance", s:"Mapeo regulatorio + auditoría.", p:"Shell compliance: requisitos → compuertas verificables → recibos exportables.", href:ROUTE.compliance},
-          {c:"#A3A3A3", t:"Contratos", s:"Generación de instrumentos + trazabilidad.", p:"Shell contratos: instrumentos estructurados, códigos de razón y control de cambios no retroactivo.", href:ROUTE.contracts},
-          {c:"#EF4444", t:"Riesgo", s:"Exposición correlacionada + contención.", p:"Shell riesgo: visibilidad por correlación, contención y señales por ventana.", href:ROUTE.risk}
-        ],
-        services:[
-          {c:"#D4AF37", t:"Asesoría (Gobernanza)", s:"Guía por restricciones.", p:"Traduce doctrina a decisiones ejecutables sin inflar afirmaciones.", href:ROUTE.advisory},
-          {c:"#60A5FA", t:"Soporte de auditoría", s:"Empaquetado de evidencia.", p:"Ayuda a empaquetar recibos y exports sin cambiar reglas base.", href:ROUTE.audit},
-          {c:"#93C5FD", t:"Integración (Cableado)", s:"Rutas + estado + estabilidad.", p:"Cableado limpio para que la navegación no colapse al destino equivocado.", href:ROUTE.integration},
-          {c:"#0EA5E9", t:"Formación (Masterclass)", s:"Entrega replicable.", p:"Enseña el método para escalar sin deriva semántica.", href:ROUTE.training}
-        ],
-        systems:[
-          {c:"#EF4444", t:"Máquina detrás de las páginas", s:"Una columna, muchas superficies.", p:"Ruteo unificado, propagación de estado y disciplina de lentes. Aquí viven los componentes.", href:ROUTE.machine},
-          {c:"#93C5FD", t:"Motor UCI", s:"Motor de decisión bajo restricción.", p:"Cómputo núcleo que alimenta Medidores y Diagnóstico.", href:ROUTE.uci},
-          {c:"#A3A3A3", t:"Registro", s:"Estado + códigos de razón.", p:"Estado consultable y verificable—no persuasivo.", href:ROUTE.registry},
-          {c:"#D4AF37", t:"Escalera de adopción", s:"Compuertas + postura por fases.", p:"Camino estructurado: avanzar, pausar, contener, rollback.", href:ROUTE.adoption}
-        ]
-      }
+      hs:"¿Por qué colapsan sistemas buenos? Porque la gente no ve el cableado—y lo pequeño se multiplica en fallas grandes. Este catálogo te enruta a una siguiente acción acotada.",
+      fine:"Regla: PLATAFORMA/INGENIERÍA cambia postura. INFORMAL/FORMAL cambia voz. Rutas estables con estado preservado."
     }
   };
+  document.getElementById("hs").textContent = (HEAD[lang]||HEAD.en).hs;
+  document.getElementById("fine").textContent = (HEAD[lang]||HEAD.en).fine;
 
-  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+  // Product rows (7 bullets each, geometry-consistent)
+  var A = [
+    {
+      c:"#F59E0B",
+      t:pick("Energy (Industrial)","能源（工业）","Energía (Industrial)"),
+      s:pick("Industrial substitution surfaces. No gain claims.","工业替代执行面。无增益主张。","Superficies industriales. Sin ganancias."),
+      href:"/products/energy/",
+      bullets:{
+        informal:pick(
+          ["Turn waste heat into useful heat.","Start with what’s already paid for.","Keep it measurable.","Contain risk early.","Scale only after stability.","Don’t promise miracles.","Build receipts."],
+          ["把废热变成可用热。","从已存在系统开始。","保持可测。","先隔离风险。","稳定后再扩张。","不许神话。","收据优先。"],
+          ["Convertir calor desperdiciado en útil.","Empezar con lo existente.","Medible primero.","Contención temprano.","Escalar tras estabilidad.","Sin milagros.","Recibos primero."]
+        ),
+        formal:pick(
+          ["Industrial thermal substitution posture.","Bounded to measured bands under scope.","No net-positive claims asserted.","Containment and rollback required.","Phase-gated deployment.","Outputs routed to Gauges for display.","Proof posture in Laws governs language."],
+          ["工业热替代姿态。","绑定声明范围下的可测区间。","不主张净增益。","要求隔离与回滚。","阶段闸门部署。","输出路由到量规展示。","语言受法则约束。"],
+          ["Postura de sustitución térmica industrial.","Acotado a bandas medidas bajo alcance.","Sin afirmaciones net-positivas.","Contención y rollback obligatorios.","Despliegue por fases.","Salidas a Medidores.","Leyes gobiernan lenguaje."]
+        )
+      }
+    },
+    {
+      c:"#0EA5E9",
+      t:pick("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"),
+      s:pick("Traversal ESL system + free Stage 1 PDF.","ESL遍历系统 + 免费阶段1 PDF。","ESL por recorrido + PDF gratis."),
+      href:"/products/education/",
+      bullets:{
+        informal:pick(
+          ["Learn fast with small loops.","Prove skill with checkpoints.","No ‘feel fluent’ upgrades.","Daily routine template.","Stage ladder roadmap.","Teacher-ready structure.","Portable progress."],
+          ["小循环快速进步。","检查点验证能力。","不靠感觉升级。","每日例程模板。","阶段阶梯路线。","可复制教学结构。","进度可携带。"],
+          ["Bucles pequeños, progreso rápido.","Checkpoints prueban habilidad.","Sin ‘me siento’ upgrades.","Rutina diaria.","Escalera por etapas.","Estructura replicable.","Progreso portable."]
+        ),
+        formal:pick(
+          ["Traversal-first learning surface.","Checkpoint-defined mastery.","Observer-invariant scoring posture.","Routine contract (input/output/checkpoint/log).","Tiering reserved until stability.","Bilingual parity via stable labels.","Outputs remain receipt-backed."],
+          ["遍历优先学习面。","掌握由检查点定义。","观察者不变评分姿态。","例程合同（输入/输出/检查点/日志）。","稳定前不做分层膨胀。","用稳定标签保持双语一致。","输出必须收据支撑。"],
+          ["Superficie de aprendizaje por recorrido.","Dominio definido por checkpoints.","Puntuación invariante al observador.","Contrato de rutina.","Niveles solo con estabilidad.","Paridad bilingüe por etiquetas estables.","Salidas con recibos."]
+        )
+      }
+    },
+    {
+      c:"#93C5FD",
+      t:pick("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"),
+      s:pick("Decision filter: bounded outputs + reason codes.","决策过滤器：有界输出+原因码。","Filtro decisional: salidas acotadas + razones."),
+      href:"/products/coherence-diagnostic/",
+      bullets:{
+        informal:pick(
+          ["Turns chaos into a shortlist.","Stops story inflation.","Tells you what’s missing.","Routes you cleanly.","Prevents scale into confusion.","Keeps disputes boring.","Protects time."],
+          ["把混乱变成清单。","阻止故事膨胀。","告诉你缺什么。","把你干净路由走。","防止在困惑中扩张。","让争执变无聊。","保护时间。"],
+          ["Convierte caos en lista corta.","Detiene inflación narrativa.","Dice qué falta.","Enruta limpio.","Evita escalar confundido.","Hace disputas aburridas.","Protege tiempo."]
+        ),
+        formal:pick(
+          ["Constraint filter under declared scope.","Outputs: pass/hold/contain + reason codes.","No inferred intent; receipts only.","Observer-invariant posture target.","Epoch rules for corrections.","Routes to Laws (bounds) and Gauges (signals).","Prevents drift escalation."],
+          ["声明范围下的约束过滤器。","输出：通过/等待/隔离+原因码。","不用意图推断，只用收据。","目标：观察者不变姿态。","修正需新纪元。","路由到法则（边界）与量规（信号）。","阻止漂移升级。"],
+          ["Filtro de restricciones bajo alcance.","Salidas: pasa/espera/contén + razones.","Sin inferir intención; solo recibos.","Postura invariante al observador.","Correcciones crean época.","Rutas a Leyes y Medidores.","Evita escalación de deriva."]
+        )
+      }
+    }
+  ];
 
-  // header i18n
-  function applyHeader(){
-    var P=T();
-    document.getElementById("hk").textContent=P.hk;
-    document.getElementById("ht").textContent=P.ht;
-    document.getElementById("hs").textContent=P.hs;
-    document.getElementById("fine").textContent=P.fine;
-    document.getElementById("bandA").textContent=P.bandA;
-    document.getElementById("bandD").textContent=P.bandD;
-    document.getElementById("bandS").textContent=P.bandS;
-    document.getElementById("bandB").textContent=P.bandB;
+  var B = [
+    {
+      c:"#60A5FA",
+      t:pick("Water Systems (Vision Shell)","水系统（愿景壳）","Agua (carcasa de visión)"),
+      s:pick("Resource routing for water: capture → clean → reuse.","水的资源路由：采集→净化→复用。","Ruteo de agua: captar → limpiar → reusar."),
+      href:"/explore/frontier/vision/?focus=water"
+    },
+    {
+      c:"#34D399",
+      t:pick("Waste Systems (Vision Shell)","废弃物（愿景壳）","Residuos (carcasa de visión)"),
+      s:pick("Stop burning value. Route molecules instead.","别烧掉价值：路由分子。","No quemar valor: rutear moléculas."),
+      href:"/explore/frontier/vision/?focus=waste"
+    },
+    {
+      c:"#EF4444",
+      t:pick("SHIMMER (Vision Shell)","SHIMMER（愿景壳）","SHIMMER (carcasa de visión)"),
+      s:pick("Hybrid molecular refinery: entropy routing at scale.","混合分子精炼：规模化熵路由。","Refinería híbrida: ruteo entrópico."),
+      href:"/explore/frontier/vision/"
+    }
+  ];
 
-    document.getElementById("btnDoor").textContent=P.top.door;
-    document.getElementById("btnHome").textContent=P.top.hub;
-    document.getElementById("dockExplore").textContent=P.dock.exp;
-    document.getElementById("dockProducts").textContent=P.dock.prod;
-    document.getElementById("dockLaws").textContent=P.dock.laws;
-    document.getElementById("dockGauges").textContent=P.dock.gauges;
-  }
-  applyHeader();
+  var C = [
+    {
+      c:"#EF4444",
+      t:pick("Software Spine","软件主脊柱","Espina de software"),
+      s:pick("The machine behind the pages: routing, gates, receipts.","页面背后的机器：路由、闸门、收据。","La máquina detrás: rutas, compuertas, recibos."),
+      href:"/products/software/",
+      bullets:{
+        informal:pick(
+          ["One tap → one outcome.","No hidden layers.","State always carried.","No catch-all collapse.","Templates everywhere.","Scale without chaos.","Make it boringly reliable."],
+          ["一次点击→一个结果。","无隐藏层。","状态永远携带。","不坍缩到总页。","模板处处一致。","无混乱扩张。","无聊地可靠。"],
+          ["Un toque → un resultado.","Sin capas ocultas.","Estado siempre viaja.","Sin colapsar a ‘todo’.","Plantillas en todas partes.","Escalar sin caos.","Fiable y aburrido."]
+        ),
+        formal:pick(
+          ["Navigation-first contracts.","Deterministic gates.","Receipt progression.","Audit discipline + change control.","Registry status separation.","Correlation awareness via sweeps.","Doctrinal bounds via Laws."],
+          ["导航优先契约。","确定性闸门。","收据式推进。","审计纪律+变更控制。","登记状态分离。","通过扫掠感知相关。","法则约束语言边界。"],
+          ["Contratos navigation-first.","Compuertas deterministas.","Progresión por recibos.","Auditoría + control de cambios.","Separación de estado por registro.","Conciencia de correlación por barridos.","Límites doctrinales por Leyes."]
+        )
+      }
+    },
+    {
+      c:"#D4AF37",
+      t:pick("Dot.Grid","Dot.Grid","Dot.Grid"),
+      s:pick("Map + sweep: reveal wiring and correlation early.","地图+扫掠：提前暴露线路与相关。","Mapa + barrido: revela cableado y correlación."),
+      href:"/products/dot-grid/"
+    },
+    {
+      c:"#A3A3A3",
+      t:pick("SSG","SSG","SSG"),
+      s:pick("Root execution geometry: Resources/Stores/Constraints/Goals/Guards.","根执行几何：资源/存储/约束/目标/守卫。","Geometría raíz: Resources/Stores/Constraints/Goals/Guards."),
+      href:"/products/ssg/"
+    },
+    {
+      c:"#0EA5E9",
+      t:pick("Risk & Capital Systems","风险与资本系统","Riesgo y capital"),
+      s:pick("Insurance + contracts + compliance + crypto under constraint.","约束下的保险+合约+合规+加密资产。","Seguro + contratos + cumplimiento + cripto bajo restricción."),
+      href:"/products/risk-capital/"
+    }
+  ];
 
-  // accordion builder (single-open per list)
-  function buildRow(item, openLabel){
+  function makeRow(item){
     var row=document.createElement("div");
     row.className="row";
     row.style.setProperty("--c", item.c);
@@ -508,38 +539,61 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var p=document.createElement("p");
-    p.className="p";
-    p.textContent=item.p;
+    // body copy: 1–2 paragraphs + up to 7 bullets if present
+    var p1=document.createElement("p");
+    p1.className="p";
+    p1.textContent = (style==="informal")
+      ? pick(
+          "Open one row. Read one minute. Jump cleanly. This page is built to stop wandering.",
+          "打开一行。读一分钟。干净跳转。本页用于阻止迷路。",
+          "Abre una fila. Lee un minuto. Salta limpio. Esta página evita deambular."
+        )
+      : pick(
+          "This surface is a routing catalog. It preserves state and prevents taxonomy collapse.",
+          "本面是路由目录：保持状态并防止分类坍缩。",
+          "Esta superficie es un catálogo de enrutamiento: preserva estado y evita colapso taxonómico."
+        );
+    body.appendChild(p1);
 
-    var acts=document.createElement("div");
-    acts.className="actions";
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=openLabel;
-    a.href=item.href + q();
-    acts.appendChild(a);
-
-    body.appendChild(p);
-    body.appendChild(acts);
-
-    function toggle(){
-      var willOpen=!row.classList.contains("open");
-      var parent=row.parentElement;
-      if(parent){
-        parent.querySelectorAll(".row").forEach(function(x){
-          x.classList.remove("open");
-          var c=x.querySelector(".chev");
-          if(c) c.textContent="▸";
+    if(item.bullets){
+      var ul=document.createElement("ul");
+      ul.className="ul";
+      var bullets = (style==="informal") ? item.bullets.informal : item.bullets.formal;
+      // bullets is already localized
+      var arr = (typeof bullets==="string") ? [bullets] : bullets;
+      if(Array.isArray(arr)){
+        arr.forEach(function(x){
+          var li=document.createElement("li");
+          li.textContent=x;
+          ul.appendChild(li);
         });
       }
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
+      body.appendChild(ul);
     }
 
-    head.addEventListener("click", toggle);
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var open=document.createElement("a");
+    open.className="btn";
+    open.textContent = openLabel() + ": " + pick("OPEN","打开","ABRIR");
+    open.href = item.href + q();
+    actions.appendChild(open);
+
+    body.appendChild(actions);
+
+    head.addEventListener("click", function(){
+      var willOpen = !row.classList.contains("open");
+      document.querySelectorAll(".row").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    });
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); head.click(); }
     });
 
     row.appendChild(head);
@@ -547,43 +601,91 @@ body::before,body::after{pointer-events:none!important}
     return row;
   }
 
-  function renderLists(){
-    var P=T();
-    var openLabel=P.btns.open;
-
-    var listA=document.getElementById("listA");
-    var listD=document.getElementById("listD");
-    var listS=document.getElementById("listS");
-    var listB=document.getElementById("listB");
-
-    listA.innerHTML=""; listD.innerHTML=""; listS.innerHTML=""; listB.innerHTML="";
-
-    P.items.core.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listA.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.items.domains.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listD.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.items.services.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listS.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
-    });
-
-    P.items.systems.forEach(function(it, i){
-      var row=buildRow(it, openLabel);
-      listB.appendChild(row);
-      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+  function mount(listId, arr){
+    var list=document.getElementById(listId);
+    list.innerHTML="";
+    arr.forEach(function(it, i){
+      var row=makeRow(it);
+      list.appendChild(row);
+      if(i===0){
+        row.classList.add("open");
+        var c=row.querySelector(".chev");
+        if(c) c.textContent="▾";
+      }
     });
   }
-  renderLists();
 
+  // localize labels
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="产品";
+    document.getElementById("ht").textContent="可用内容";
+    document.getElementById("bandA").textContent="产品执行面";
+    document.getElementById("bandB").textContent="愿景壳";
+    document.getElementById("bandC").textContent="系统主脊柱";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnHome").textContent="主页";
+    document.getElementById("btnExit").textContent="退出";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
+    document.getElementById("pillPlatform").textContent="平台";
+    document.getElementById("pillEngineering").textContent="工程";
+    document.getElementById("pillInformal").textContent="通俗";
+    document.getElementById("pillFormal").textContent="正式";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="PRODUCTOS";
+    document.getElementById("ht").textContent="LO QUE PUEDES USAR";
+    document.getElementById("bandA").textContent="SUPERFICIES";
+    document.getElementById("bandB").textContent="CARCASAS DE VISIÓN";
+    document.getElementById("bandC").textContent="ESPINAS DEL SISTEMA";
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("btnHome").textContent="INICIO";
+    document.getElementById("btnExit").textContent="SALIR";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+    document.getElementById("pillPlatform").textContent="PLATAFORMA";
+    document.getElementById("pillEngineering").textContent="INGENIERÍA";
+    document.getElementById("pillInformal").textContent="INFORMAL";
+    document.getElementById("pillFormal").textContent="FORMAL";
+  }
+
+  // header body depends on lenses (platform vs engineering) + voice
+  function headCopy(){
+    var platform = (buildLens==="platform");
+    var informal = (style==="informal");
+
+    if(lang==="zh"){
+      if(informal && platform) return ["你要找什么？你要的是一个能落地的下一步。这个目录把“你能用的东西”按结构摆好：打开一行，读一分钟，立刻跳转。","平台姿态：先路由，再理解。先把人从迷路里救出来。"];
+      if(informal && !platform) return ["你要找什么？你要的是一个能测、能复跑、能扩张的答案。这个目录把执行面按“能否承受压力”排序。","工程姿态：先约束，再扩张。先把系统从漂移里救出来。"];
+      if(!informal && platform) return ["本页提供稳定路由目录：所有面均携带状态，禁止坍缩到总页。","平台姿态强调可用性、可发现性与一致交互模板。"];
+      return ["本页提供约束下执行面目录：主张与输出在声明范围内保持可复现。","工程姿态强调闸门、收据、回滚与分段隔离。"];
+    }
+
+    if(lang==="es"){
+      if(informal && platform) return ["¿Qué buscas? Un siguiente paso usable. Este catálogo ordena ‘cosas que puedes usar’ para que abras una fila, leas un minuto y saltes limpio.","Postura plataforma: enrutar primero, entender después. Primero rescatar a la gente de perderse."];
+      if(informal && !platform) return ["¿Qué buscas? Una respuesta medible y repetible. Este catálogo ordena superficies por disciplina bajo presión.","Postura ingeniería: restricción primero, escala después. Primero rescatar al sistema de la deriva."];
+      if(!informal && platform) return ["Este índice es un catálogo de rutas estables: preserva estado y evita colapso a destinos universales.","Postura plataforma: usabilidad, descubribilidad y plantillas consistentes."];
+      return ["Este índice es un catálogo de superficies bajo restricción: salidas reproducibles bajo alcance declarado.","Postura ingeniería: compuertas, recibos, rollback y segmentación."];
+    }
+
+    // EN
+    if(informal && platform) return ["What are you looking for? A usable next step. This catalog lays out what you can actually use: open one row, read one minute, jump cleanly.","Platform posture: route first, explain second. Rescue people from getting lost."];
+    if(informal && !platform) return ["What are you looking for? A measurable answer you can replay. This catalog orders surfaces by discipline under pressure.","Engineering posture: constrain first, scale second. Rescue the system from drift."];
+    if(!informal && platform) return ["This page is a stable routing catalog: state-carry is mandatory and catch-all collapse is disallowed.","Platform posture prioritizes discoverability, usability, and uniform templates."];
+    return ["This page is a constraint-bounded surface catalog: outputs must remain reproducible under declared scope.","Engineering posture prioritizes gates, receipts, rollback, and segmentation."];
+  }
+
+  var hc=headCopy();
+  document.getElementById("hs").textContent=hc[0];
+  document.getElementById("fine").textContent=hc[1];
+
+  // render lists
+  mount("listA", A);
+  mount("listB", B);
+  mount("listC", C);
 })();
 </script>
 

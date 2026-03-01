@@ -1,0 +1,659 @@
+<!-- TNT — /explore/energy/index.html
+     EXPLORE · ENERGY (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES) · SINGLE-OPEN ACCORDION · NO MODALS
+     PURPOSE:
+       - Express the problem (why energy/waste/heat is stuck)
+       - Express the solution posture (bounded, measured, staged)
+       - Route cleanly to the Energy Product + Vision shells + Laws/Gauges
+     RULES:
+       - No lenses here (still orientation layer)
+       - Monument typography, dense content via accordion
+       - No html/body background styling (ui.css owns field)
+       - No modal traps, no inline onclick
+       - Canon state carry: lang/style/time/depth (URL + gd_* LS)
+     ROUTES:
+       - BACK  → /explore/
+       - DOOR  → /door/
+       - EXIT  → /index.html
+       - Primary: /products/energy/
+       - Vision shells: /explore/frontier/vision/urban-resource-os/ + /explore/frontier/vision/closed-loop-habitats/
+       - Support: /laws/ + /gauges/ + /products/dot-grid/
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Explore · Energy</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:92px;
+
+  --inkA:rgba(10,18,30,.94);
+  --inkB:rgba(5,9,14,.98);
+
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --redA:rgba(255,70,70,.22);
+  --redB:rgba(255,70,70,.10);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+  --mut:rgba(255,255,255,.80);
+  --txt:rgba(255,255,255,.92);
+}
+
+.top{
+  position:fixed;left:16px;right:16px;top:16px;
+  z-index:240;
+  display:flex;justify-content:space-between;gap:12px;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+.page{
+  width:min(1200px,94vw);
+  margin:0 auto;
+  padding:86px 0 calc(var(--dockH)+18px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  position:relative;
+  z-index:10;
+}
+
+.hero{
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  padding:20px 22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 82% 30%, var(--opalB), transparent 64%),
+    radial-gradient(circle at 52% 110%, var(--redB), transparent 62%),
+    linear-gradient(160deg,var(--inkA),var(--inkB));
+  box-shadow:0 44px 160px rgba(0,0,0,.68);
+}
+
+.k{
+  margin:0 0 10px;
+  font-size:12px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.72;
+}
+
+.h1{
+  margin:0 0 12px;
+  font-size:40px;
+  font-weight:950;
+  letter-spacing:1px;
+  line-height:1.08;
+}
+
+.lede{
+  margin:0;
+  font-size:18px;
+  line-height:1.70;
+  color:var(--txt);
+  max-width:1040px;
+}
+
+.rule{
+  margin-top:14px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(circle at 80% 60%, var(--redA), transparent 70%),
+    rgba(0,0,0,.16);
+  padding:12px 14px;
+  color:var(--mut);
+  font-size:13.5px;
+  line-height:1.55;
+}
+
+.band{
+  padding:12px 14px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  overflow:hidden;
+  background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));
+  box-shadow:0 26px 96px rgba(0,0,0,.62);
+}
+
+.pHead{
+  padding:18px 18px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  align-items:flex-start;
+}
+
+.pLeft{min-width:0}
+.pTitle{
+  font-size:20px;
+  font-weight:950;
+  letter-spacing:.2px;
+  margin:0;
+}
+.pSub{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.55;
+  opacity:.82;
+  color:var(--mut);
+  max-width:100ch;
+}
+.pChev{font-size:18px;opacity:.75;margin-top:2px;flex:0 0 auto}
+
+.pBody{
+  display:none;
+  padding:18px 18px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+
+.panel.open .pBody{display:block}
+
+.p{
+  margin:0;
+  font-size:16px;
+  line-height:1.75;
+  color:rgba(255,255,255,.88);
+}
+.p + .p{margin-top:12px}
+
+.ul{
+  margin:12px 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.82);
+  line-height:1.65;
+  font-size:15px;
+}
+.ul li{margin:8px 0}
+
+.actions{
+  margin-top:16px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.actions .btn{
+  padding:12px 16px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(1000px,94vw);
+  padding:10px 12px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:12px 14px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:104px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnBack" href="/explore/">BACK</a>
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <p class="k" id="hk">EXPLORE · ENERGY</p>
+    <h1 class="h1" id="ht">WHY IS ENERGY STILL DIRTY?</h1>
+    <p class="lede" id="hs">
+      If heat is everywhere, why do we still burn value, burn carbon, and burn time?
+      What if the real problem is not “energy” — but routing?
+      What if the solution is not one machine — but a measured system that chooses the best pathway, every time?
+    </p>
+    <div class="rule" id="rule">
+      Boundary: This lane is frontier orientation. It explains the problem and the posture. Proof and measurement live under Laws and Gauges.
+    </div>
+  </div>
+
+  <div class="band" id="band">ENERGY FRONTIER MAP</div>
+
+  <div class="accordion" id="acc">
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div class="pLeft">
+          <div class="pTitle" id="t1">The problem we’re actually solving</div>
+          <div class="pSub" id="s1">Waste is treated like trash. Heat is treated like smoke. Systems are treated like opinions.</div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b1a"></p>
+        <p class="p" id="b1b"></p>
+        <ul class="ul" id="b1ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goLaws1" href="/laws/">OPEN LAWS</a>
+          <a class="btn" id="goGauges1" href="/gauges/">OPEN GAUGES</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div class="pLeft">
+          <div class="pTitle" id="t2">The posture: staged, measured, bounded</div>
+          <div class="pSub" id="s2">Big outcomes, but only when the receipts earn the upgrade.</div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b2a"></p>
+        <p class="p" id="b2b"></p>
+        <ul class="ul" id="b2ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goEnergy" href="/products/energy/">OPEN ENERGY PRODUCT</a>
+          <a class="btn" id="goDotGrid" href="/products/dot-grid/">OPEN DOT.GRID</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div class="pLeft">
+          <div class="pTitle" id="t3">The system view: routing, not arguing</div>
+          <div class="pSub" id="s3">If it can’t be routed, measured, and replayed, it can’t scale.</div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b3a"></p>
+        <p class="p" id="b3b"></p>
+        <ul class="ul" id="b3ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goUros" href="/explore/frontier/vision/urban-resource-os/">OPEN URBAN RESOURCE OS</a>
+          <a class="btn" id="goHab" href="/explore/frontier/vision/closed-loop-habitats/">OPEN CLOSED-LOOP HABITATS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div class="pLeft">
+          <div class="pTitle" id="t4">Why this becomes “frontier” fast</div>
+          <div class="pSub" id="s4">Because the same logic that stabilizes a city can keep a habitat alive.</div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b4a"></p>
+        <p class="p" id="b4b"></p>
+        <ul class="ul" id="b4ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
+          <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ===== canonical state carry =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  // ===== wire nav =====
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnBack","/explore/");
+  wire("btnDoor","/door/");
+  wire("btnExit","/index.html");
+
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  wire("goLaws1","/laws/");
+  wire("goGauges1","/gauges/");
+  wire("goEnergy","/products/energy/");
+  wire("goDotGrid","/products/dot-grid/");
+  wire("goUros","/explore/frontier/vision/urban-resource-os/");
+  wire("goHab","/explore/frontier/vision/closed-loop-habitats/");
+  wire("goVision","/explore/frontier/vision/");
+  wire("goExplore","/explore/");
+
+  // ===== language toggle (reload same path) =====
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q();
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // ===== copy =====
+  var COPY={
+    en:{
+      hk:"EXPLORE · ENERGY",
+      ht:"WHY IS ENERGY STILL DIRTY?",
+      hs:"If heat is everywhere, why do we still burn value, burn carbon, and burn time? What if the real problem is not “energy” — but routing? What if the solution is not one machine — but a measured system that chooses the best pathway, every time?",
+      rule:"Boundary: This lane is frontier orientation. It explains the problem and the posture. Proof and measurement live under Laws and Gauges.",
+      band:"ENERGY FRONTIER MAP",
+      t1:"The problem we’re actually solving",
+      s1:"Waste is treated like trash. Heat is treated like smoke. Systems are treated like opinions.",
+      b1a:"Most infrastructure still runs on the same primitive move: burn the pile and accept collateral damage. That destroys material value, inflates carbon cost, and hides the real constraint: we don’t know what we’re processing at a molecular level.",
+      b1b:"So the real problem is not “lack of energy.” The real problem is blind routing: mixed streams go to one fate. When the inputs are unknown, every output claim becomes a debate instead of a receipt.",
+      b1ul:[
+        "Mixed inputs → one pathway → lost value.",
+        "No inventory → no routing intelligence.",
+        "No routing → no stable scaling.",
+        "No stable scaling → politics replaces engineering."
+      ],
+      t2:"The posture: staged, measured, bounded",
+      s2:"Big outcomes, but only when the receipts earn the upgrade.",
+      b2a:"We don’t start with a miracle claim. We start with an industrial posture: measurable substitution, measurable recovery, measurable containment. Then we expand only when the evidence survives constraint.",
+      b2b:"This is how ‘frontier’ becomes real: same rules at every scale. If it doesn’t work on a pilot, it doesn’t belong in a city. If it can’t survive a city, it doesn’t belong in orbit.",
+      b2ul:[
+        "Stage pilots first (containment).",
+        "Measure outputs (no narrative upgrades).",
+        "Add modules only after stability holds.",
+        "Route proof to Laws; route signals to Gauges."
+      ],
+      t3:"The system view: routing, not arguing",
+      s3:"If it can’t be routed, measured, and replayed, it can’t scale.",
+      b3a:"Once you treat waste, water, heat, and materials as one coupled inventory, the system stops being a fight. It becomes a routing problem with constraints.",
+      b3b:"That is why SHIMMER exists as a backbone: classification → segmentation → routing → conversion → retention. Same spine whether you’re stabilizing a city or keeping a habitat alive.",
+      b3ul:[
+        "Inventory first, opinions last.",
+        "Routing matrix beats single-fate disposal.",
+        "Receipts decide upgrades, not persuasion.",
+        "Replayable windows beat one-off anecdotes."
+      ],
+      t4:"Why this becomes “frontier” fast",
+      s4:"Because the same logic that stabilizes a city can keep a habitat alive.",
+      b4a:"Closed-loop habitats are the extreme test: there is no ‘away.’ If your system leaks, you feel it. That pressure forces honesty — and it creates methods that scale back down to Earth.",
+      b4b:"So energy isn’t isolated here. It’s part of a larger frontier: cities, satellites, water, waste, and governance moving as one measured system — not as separate arguments.",
+      b4ul:[
+        "City-scale routing → infrastructure stability.",
+        "Habitat-scale routing → survival stability.",
+        "Shared spine → shared verification posture.",
+        "Frontier claims stay support-bounded."
+      ],
+      openLaws:"OPEN LAWS",
+      openGauges:"OPEN GAUGES",
+      openEnergy:"OPEN ENERGY PRODUCT",
+      openDot:"OPEN DOT.GRID",
+      openUros:"OPEN URBAN RESOURCE OS",
+      openHab:"OPEN CLOSED-LOOP HABITATS",
+      openVision:"OPEN VISION",
+      openExplore:"OPEN EXPLORE",
+      back:"BACK", door:"DOOR", exit:"EXIT",
+      home:"HOME", products:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"
+    },
+    zh:{
+      hk:"探索 · 能源",
+      ht:"为什么能源还这么“脏”？",
+      hs:"热到处都是，为什么我们还在烧价值、烧碳、烧时间？如果真正的问题不是“能源”，而是“路由”呢？如果解决方案不是一台机器，而是一套可测系统：每次都把输入送到最合适的路径呢？",
+      rule:"边界：此页是前沿导览。它解释问题与姿态。证明与测量在法则与量规中。",
+      band:"能源前沿地图",
+      t1:"我们真正要解决的问题",
+      s1:"废弃物被当垃圾；热被当烟；系统被当观点。",
+      b1a:"多数基础设施仍在做同一个原始动作：把混合物烧掉，然后接受附带损害。这会摧毁材料价值、放大碳成本，并掩盖关键约束：我们在分子层面根本不知道自己在处理什么。",
+      b1b:"所以问题不是“缺能源”。问题是盲路由：混合输入被送去同一个命运。输入不清楚，任何输出主张都变成争论，而不是收据。",
+      b1ul:["混合输入→单一路径→价值损失。","无库存→无路由智能。","无路由→无法稳定规模化。","无法规模化→政治取代工程。"],
+      t2:"姿态：阶段化、可测、 有界",
+      s2:"结果可以很大，但升级必须靠收据挣来。",
+      b2a:"我们不从“奇迹主张”开始。我们从工业姿态开始：可测替代、可测回收、可测隔离。然后只有当证据能在约束下站住脚，才允许扩展。",
+      b2b:"这就是“前沿”如何变成现实：同一套规则贯穿所有规模。试点不行，就不该进城市；城市扛不住，就不该谈轨道。",
+      b2ul:["先做试点（隔离优先）。","测量输出（不允许叙事升级）。","稳定后再加模块。","证明去法则；信号去量规。"],
+      t3:"系统视角：路由，不争吵",
+      s3:"不能路由、不能测量、不能回放，就不能规模化。",
+      b3a:"当你把废弃物、水、热、材料当作同一个耦合库存，系统就不再是吵架，而是带约束的路由问题。",
+      b3b:"这也是 SHIMMER 作为主干存在的原因：分类→分段→路由→转化→保留。无论是稳定城市，还是维持栖息地生存，脊柱相同。",
+      b3ul:["库存先行，观点靠后。","路由矩阵胜过单一处置。","收据决定升级，不靠说服。","可回放窗口胜过一次性故事。"],
+      t4:"为什么它很快就进入“前沿”",
+      s4:"因为稳定城市的逻辑，也能让栖息地活下去。",
+      b4a:"闭环栖息地是极限测试：没有“扔掉”。系统一泄漏，立刻反噬。正是这种压力逼系统诚实，并把方法反向下沉到地球。",
+      b4b:"所以能源在这里不是孤岛，而是更大前沿的一部分：城市、卫星社区、水、废弃物、治理作为同一套可测系统一起运动，而不是分裂成争论。",
+      b4ul:["城市级路由→基础设施稳定。","栖息地级路由→生存稳定。","共享脊柱→共享验证姿态。","前沿主张保持有界。"],
+      openLaws:"打开法则",
+      openGauges:"打开量规",
+      openEnergy:"打开能源产品",
+      openDot:"打开 DOT.GRID",
+      openUros:"打开城市资源OS",
+      openHab:"打开闭环栖息地",
+      openVision:"打开愿景",
+      openExplore:"打开探索",
+      back:"返回", door:"门", exit:"退出",
+      home:"主页", products:"产品", laws:"法则", gauges:"量规"
+    },
+    es:{
+      hk:"EXPLORAR · ENERGÍA",
+      ht:"¿POR QUÉ LA ENERGÍA SIGUE SIENDO “SUCIA”?",
+      hs:"Si el calor está en todas partes, ¿por qué seguimos quemando valor, quemando carbono y quemando tiempo? ¿Y si el problema real no es “energía”, sino “ruteo”? ¿Y si la solución no es una sola máquina, sino un sistema medible que elige la mejor ruta cada vez?",
+      rule:"Límite: esta página es orientación de frontera. Explica problema y postura. Prueba y medición viven en Leyes y Medidores.",
+      band:"MAPA DE FRONTERA · ENERGÍA",
+      t1:"El problema real",
+      s1:"Residuos como basura. Calor como humo. Sistemas como opiniones.",
+      b1a:"Mucho de la infraestructura aún hace lo mismo: quemar el montón y aceptar daño colateral. Eso destruye valor material, sube el costo de carbono y oculta la restricción clave: no sabemos qué procesamos a nivel molecular.",
+      b1b:"Entonces no es falta de energía. Es ruteo ciego: entradas mezcladas a un solo destino. Si no sabes el input, cualquier claim se vuelve debate, no recibo.",
+      b1ul:["Entradas mezcladas→una ruta→valor perdido.","Sin inventario→sin ruteo inteligente.","Sin ruteo→sin escala estable.","Sin escala→política reemplaza ingeniería."],
+      t2:"La postura: por fases, medible, acotada",
+      s2:"Resultados grandes solo cuando los recibos ganan el upgrade.",
+      b2a:"No empezamos con milagros. Empezamos con postura industrial: sustitución medible, recuperación medible, contención medible. Y solo escalamos si la evidencia sobrevive la restricción.",
+      b2b:"Así la frontera se vuelve real: mismas reglas a cualquier escala. Si falla en piloto, no va a ciudad. Si no sobrevive ciudad, no va a órbita.",
+      b2ul:["Pilotos primero (contención).","Medir salidas (sin upgrades narrativos).","Añadir módulos solo tras estabilidad.","Prueba→Leyes; señales→Medidores."],
+      t3:"Vista sistema: ruteo, no discusión",
+      s3:"Si no se puede rutear, medir y re-jugar, no se puede escalar.",
+      b3a:"Si tratas residuos, agua, calor y materiales como un inventario acoplado, deja de ser pelea y se vuelve problema de ruteo con restricciones.",
+      b3b:"Por eso existe SHIMMER: clasificar→segmentar→rutear→convertir→retener. Misma columna para estabilizar ciudad o sostener un hábitat.",
+      b3ul:["Inventario primero.","Matriz de ruteo > destino único.","Recibos deciden upgrades.","Ventanas replayables > anécdotas."],
+      t4:"Por qué se vuelve frontera rápido",
+      s4:"Porque la lógica que estabiliza ciudades también mantiene vivo un hábitat.",
+      b4a:"Hábitats de ciclo cerrado son la prueba extrema: no hay ‘afuera’. Si hay fuga, se siente. Esa presión fuerza honestidad y baja el método a la Tierra.",
+      b4b:"Así energía no es isla: es parte de una frontera mayor—ciudades, comunidades satélite, agua, residuos y gobernanza como sistema medible.",
+      b4ul:["Ruteo ciudad→estabilidad.","Ruteo hábitat→supervivencia.","Espina compartida→verificación compartida.","Claims acotados por soporte."],
+      openLaws:"ABRIR LEYES",
+      openGauges:"ABRIR MEDIDORES",
+      openEnergy:"ABRIR PRODUCTO ENERGÍA",
+      openDot:"ABRIR DOT.GRID",
+      openUros:"ABRIR URBAN RESOURCE OS",
+      openHab:"ABRIR HÁBITATS CERRADOS",
+      openVision:"ABRIR VISIÓN",
+      openExplore:"ABRIR EXPLORAR",
+      back:"VOLVER", door:"PUERTA", exit:"SALIR",
+      home:"INICIO", products:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"
+    }
+  };
+
+  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+
+  var P=T();
+  function set(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+
+  set("hk",P.hk);
+  set("ht",P.ht);
+  set("hs",P.hs);
+  set("rule",P.rule);
+  set("band",P.band);
+
+  set("t1",P.t1); set("s1",P.s1);
+  set("t2",P.t2); set("s2",P.s2);
+  set("t3",P.t3); set("s3",P.s3);
+  set("t4",P.t4); set("s4",P.s4);
+
+  set("b1a",P.b1a); set("b1b",P.b1b);
+  set("b2a",P.b2a); set("b2b",P.b2b);
+  set("b3a",P.b3a); set("b3b",P.b3b);
+  set("b4a",P.b4a); set("b4b",P.b4b);
+
+  function fillUL(id, arr){
+    var ul=document.getElementById(id);
+    if(!ul) return;
+    ul.innerHTML="";
+    arr.forEach(function(x){
+      var li=document.createElement("li");
+      li.textContent=x;
+      ul.appendChild(li);
+    });
+  }
+  fillUL("b1ul",P.b1ul);
+  fillUL("b2ul",P.b2ul);
+  fillUL("b3ul",P.b3ul);
+  fillUL("b4ul",P.b4ul);
+
+  set("btnBack",P.back);
+  set("btnDoor",P.door);
+  set("btnExit",P.exit);
+  set("dockHome",P.home);
+  set("dockProducts",P.products);
+  set("dockLaws",P.laws);
+  set("dockGauges",P.gauges);
+
+  set("goLaws1",P.openLaws);
+  set("goGauges1",P.openGauges);
+  set("goEnergy",P.openEnergy);
+  set("goDotGrid",P.openDot);
+  set("goUros",P.openUros);
+  set("goHab",P.openHab);
+  set("goVision",P.openVision);
+  set("goExplore",P.openExplore);
+
+  // ===== single-open accordion =====
+  var panels=document.querySelectorAll(".panel");
+  panels.forEach(function(p){
+    var head=p.querySelector(".pHead");
+    var chev=p.querySelector(".pChev");
+    function toggle(){
+      var open=!p.classList.contains("open");
+      panels.forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".pChev");
+        if(c) c.textContent="▸";
+      });
+      if(open){
+        p.classList.add("open");
+        chev.textContent="▾";
+      }
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+  });
+
+  // open first panel by default
+  if(panels[0]){
+    panels[0].classList.add("open");
+    panels[0].querySelector(".pChev").textContent="▾";
+  }
+})();
+</script>
+
+</body>
+</html>

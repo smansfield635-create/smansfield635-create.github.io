@@ -1,4 +1,23 @@
 <!doctype html>
+<!-- TNT — /door/index.html
+     DOOR · Frontier Architecture (INTRO-TIER HUB — NO LENSES REQUIRED)
+     RULES (LOCKED):
+       - Trilingual site copy: EN / 中文 / ES
+       - No inline onclick; use addEventListener
+       - State carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Language toggle reloads SAME pathname (GH Pages safe)
+       - lane=platform|engineering is URL-only (preserve if present; never store)
+       - No modals / overlays
+       - ui.css owns field (DO NOT set html/body background)
+     ROUTING:
+       - Compass → /index.html (canonical) [do NOT depend on /compass/]
+       - Explore → /explore/
+       - Products → /products/
+       - Laws → /laws/
+       - Gauges → /gauges/
+       - Dock: Home / Prelude / Products / Laws / Gauges
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -15,107 +34,184 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:90px;
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-  --goldA:rgba(212,175,55,.18);
-  --goldB:rgba(212,175,55,.08);
-  --redA:rgba(255,70,70,.08);
+  --dockH:96px;
+
+  /* Red/Black/Gold hierarchy (Door is intro-tier: keep elegant, high-contrast) */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.08);
+
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.80);
+  --soft:rgba(255,255,255,.62);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --goldA:rgba(201,162,74,.18);
+  --goldB:rgba(201,162,74,.08);
+
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* Top Controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
 .top-right{
   position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);}
 
 /* Page */
 .page{
   width:min(1150px,94vw);
   margin:0 auto;
-  padding:140px 0 calc(var(--dockH) + 30px);
+  padding:132px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:40px;
+  gap:26px;
 }
 
 /* Hero */
 .hero{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:30px;
-  padding:56px 48px;
+  padding:52px 44px;
   background:
-    radial-gradient(circle at 25% 22%, var(--goldA), transparent 60%),
-    radial-gradient(circle at 75% 80%, var(--goldB), transparent 60%),
-    radial-gradient(circle at 55% 115%, var(--redA), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
+    radial-gradient(circle at 22% 18%, var(--crimson), transparent 62%),
+    radial-gradient(circle at 82% 22%, var(--opalV), transparent 66%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 30% 22%, var(--goldA), transparent 62%),
+    radial-gradient(circle at 75% 80%, var(--goldB), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.36), rgba(0,0,0,.14));
   box-shadow:0 60px 200px rgba(0,0,0,.70);
+  backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
 }
-
+.hero::before{
+  content:"";
+  position:absolute;inset:0;border-radius:30px;pointer-events:none;
+  /* subtle gold diamond lay in trim zone only */
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.35;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
+    linear-gradient(#000,#000);
+}
 .hero h1{
   margin:0;
-  font-weight:950;
-  font-size:clamp(40px,5vw,56px);
+  font-weight:980;
+  font-size:clamp(36px,4.6vw,54px);
   letter-spacing:1px;
   line-height:1.12;
+  color:var(--ink);
+  position:relative;
 }
-
 .hero p{
-  margin:26px 0 0;
-  font-size:clamp(20px,2.4vw,24px);
+  margin:22px 0 0;
+  font-size:clamp(18px,2.2vw,22px);
   line-height:1.7;
-  opacity:.94;
+  color:var(--mut);
   max-width:980px;
+  position:relative;
 }
 
 /* Gate Grid */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:22px;
+  gap:18px;
 }
-
 .card{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:24px;
-  padding:28px 26px;
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
-  box-shadow:0 28px 80px rgba(0,0,0,.60);
-  transition:transform .2s ease, box-shadow .2s ease;
+  padding:26px 24px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 60%),
+    radial-gradient(circle at 82% 28%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+  box-shadow:0 28px 80px rgba(0,0,0,.62);
+  transition:transform .18s ease, box-shadow .18s ease;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  opacity:.65;
 }
 .card:hover{
   transform:translateY(-4px);
-  box-shadow:0 36px 110px rgba(0,0,0,.75);
+  box-shadow:0 36px 110px rgba(0,0,0,.75), 0 0 18px rgba(255,43,43,.10);
 }
 .card h3{
-  margin:0 0 16px;
+  margin:0 0 14px;
   font-size:20px;
-  letter-spacing:.5px;
+  letter-spacing:.6px;
+  color:var(--ink);
+  position:relative;
 }
 .card p{
   margin:0;
   font-size:15px;
   line-height:1.6;
-  opacity:.85;
+  color:var(--mut);
+  opacity:.92;
+  position:relative;
 }
 
 /* Dock */
 .dock{
   position:fixed;
   left:50%;
-  bottom:14px;
+  bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:200;
   width:min(1000px,94vw);
   padding:12px;
   border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.28);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(12px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:10px;
@@ -124,67 +220,72 @@ body::before,body::after{pointer-events:none!important}
   padding:12px;
   border-radius:999px;
   text-align:center;
-  font-weight:700;
+  font-weight:950;
+}
+@media (max-width:560px){
+  :root{--dockH:116px}
+  .dock{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" href="/index.html">INDEX</a>
+<div class="top-left" aria-label="Top navigation">
+  <a class="btn red" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
 </div>
 
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
+<div class="top-right" aria-label="Language">
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <div class="hero">
-    <h1 id="heroTitle">
-      What if the loudest claims of our time were finally measurable?
-    </h1>
+  <div class="hero" aria-label="Door hero">
+    <h1 id="heroTitle">What if the loudest claims of our time were finally measurable?</h1>
 
     <p id="heroText1">
-      Energy transformation. Financial redesign. Infrastructure substitution.  
+      Energy transformation. Financial redesign. Infrastructure substitution.
       Artificial systems that make decisions at planetary scale.
     </p>
 
     <p id="heroText2">
-      These are not small promises.  
+      These are not small promises.
       They are civilizational claims.
     </p>
 
     <p id="heroText3">
-      This architecture does not shrink the ambition.  
+      This architecture does not shrink the ambition.
       It strengthens the structure beneath it.
     </p>
   </div>
 
-  <div class="grid">
-    <a class="card" href="/compass/">
+  <div class="grid" aria-label="Door gates">
+    <a class="card" href="/index.html" data-route="/index.html">
       <h3 id="c1t">Compass</h3>
       <p id="c1p">Orientation before execution.</p>
     </a>
 
-    <a class="card" href="/explore/">
+    <a class="card" href="/explore/" data-route="/explore/">
       <h3 id="c2t">Explore</h3>
       <p id="c2p">Frontier models across domains.</p>
     </a>
 
-    <a class="card" href="/products/">
+    <a class="card" href="/products/" data-route="/products/">
       <h3 id="c3t">Products</h3>
       <p id="c3p">Engines, systems, instruments.</p>
     </a>
 
-    <a class="card" href="/laws/">
+    <a class="card" href="/laws/" data-route="/laws/">
       <h3 id="c4t">Laws</h3>
       <p id="c4p">Structural guardrails.</p>
     </a>
 
-    <a class="card" href="/gauges/">
+    <a class="card" href="/gauges/" data-route="/gauges/">
       <h3 id="c5t">Gauges</h3>
       <p id="c5p">Live measurement surfaces.</p>
     </a>
@@ -192,60 +293,171 @@ body::before,body::after{pointer-events:none!important}
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/prelude/">PRELUDE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" href="/home/" data-route="/home/" id="dockHome">HOME</a>
+  <a class="btn" href="/prelude/" data-route="/prelude/" id="dockPrelude">PRELUDE</a>
+  <a class="btn" href="/products/" data-route="/products/" id="dockProducts">PRODUCTS</a>
+  <a class="btn" href="/laws/" data-route="/laws/" id="dockLaws">LAWS</a>
+  <a class="btn" href="/gauges/" data-route="/gauges/" id="dockGauges">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  var lang = localStorage.getItem("gd_lang") || "en";
+  "use strict";
 
-  function setLang(l){
-    lang=l;
-    localStorage.setItem("gd_lang",l);
-    apply();
+  // ===== Canon state (NO new gd_* keys) =====
+  var qs = new URLSearchParams(location.search);
+  var LS = window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || ""; // URL-only
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+  var d = parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth = String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane="";
+
+  try{
+    LS.setItem("gd_lang", lang);
+    LS.setItem("gd_style", style);
+    LS.setItem("gd_time", time);
+    LS.setItem("gd_depth", depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(extra){
+    var p = new URLSearchParams();
+    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+    p.set("style",(extra&&extra.style)?extra.style:style);
+    p.set("time", (extra&&extra.time)?extra.time:time);
+    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
+    var L = (extra&&extra.lane)?extra.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?" + p.toString();
   }
 
-  document.getElementById("btnEN").onclick=function(){setLang("en");};
-  document.getElementById("btnZH").onclick=function(){setLang("zh");};
+  // Wire all internal links with state carry
+  function wireAll(){
+    var nodes = document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el = nodes[i];
+      var route = el.getAttribute("data-route") || "";
+      if(!route) continue;
 
+      if(route.indexOf("?") !== -1){
+        try{
+          var u = new URL(route, location.origin);
+          var sp = u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane") && (lane==="platform"||lane==="engineering")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // Language toggle must reload SAME pathname
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang = next;
+    try{ LS.setItem("gd_lang", lang); }catch(e){}
+    location.href = location.pathname + q({lang:lang});
+  }
+
+  var btnEN = document.getElementById("btnEN");
+  var btnZH = document.getElementById("btnZH");
+  var btnES = document.getElementById("btnES");
+
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Trilingual copy
   function apply(){
     if(lang==="zh"){
-      document.documentElement.lang="zh";
-
       document.getElementById("heroTitle").textContent="如果当今最宏大的主张终于可以被测量？";
+      document.getElementById("heroText1").textContent="能源转型。金融重构。基础设施替代。以行星规模做决策的人工系统。";
+      document.getElementById("heroText2").textContent="这些不是小承诺。它们是文明级主张。";
+      document.getElementById("heroText3").textContent="这套架构不缩减雄心，而是强化其下的结构。";
 
-      document.getElementById("heroText1").textContent=
-        "能源转型。金融重构。基础设施替代。"+
-        " 在全球尺度运行的人工系统。";
-
-      document.getElementById("heroText2").textContent=
-        "这些不是小承诺。"+
-        "它们是文明级主张。";
-
-      document.getElementById("heroText3").textContent=
-        "我们不缩减雄心。"+
-        "我们加强其下的结构。";
-
-      document.getElementById("c1t").textContent="罗盘";
-      document.getElementById("c1p").textContent="执行前的定位。";
+      document.getElementById("c1t").textContent="指南针";
+      document.getElementById("c1p").textContent="先定位，再执行。";
 
       document.getElementById("c2t").textContent="探索";
       document.getElementById("c2p").textContent="跨领域前沿模型。";
 
       document.getElementById("c3t").textContent="产品";
-      document.getElementById("c3p").textContent="引擎与系统。";
+      document.getElementById("c3p").textContent="引擎、系统、仪表。";
 
       document.getElementById("c4t").textContent="法则";
-      document.getElementById("c4p").textContent="结构护栏。";
+      document.getElementById("c4p").textContent="结构护栏与标准。";
 
       document.getElementById("c5t").textContent="量规";
       document.getElementById("c5p").textContent="实时测量面。";
+
+      document.getElementById("dockHome").textContent="主页";
+      document.getElementById("dockPrelude").textContent="前奏";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("btnIndex").textContent="指南针";
+    }else if(lang==="es"){
+      document.getElementById("heroTitle").textContent="¿Y si por fin pudiéramos medir las afirmaciones más ruidosas de nuestro tiempo?";
+      document.getElementById("heroText1").textContent="Transformación energética. Rediseño financiero. Sustitución de infraestructura. Sistemas artificiales que deciden a escala planetaria.";
+      document.getElementById("heroText2").textContent="No son promesas pequeñas. Son afirmaciones civilizacionales.";
+      document.getElementById("heroText3").textContent="Esta arquitectura no reduce la ambición: fortalece la estructura que la sostiene.";
+
+      document.getElementById("c1t").textContent="Brújula";
+      document.getElementById("c1p").textContent="Orientación antes de ejecutar.";
+
+      document.getElementById("c2t").textContent="Explorar";
+      document.getElementById("c2p").textContent="Modelos de frontera por dominio.";
+
+      document.getElementById("c3t").textContent="Productos";
+      document.getElementById("c3p").textContent="Motores, sistemas, instrumentos.";
+
+      document.getElementById("c4t").textContent="Leyes";
+      document.getElementById("c4p").textContent="Barandales estructurales.";
+
+      document.getElementById("c5t").textContent="Medidores";
+      document.getElementById("c5p").textContent="Superficies de medición en vivo.";
+
+      document.getElementById("dockHome").textContent="INICIO";
+      document.getElementById("dockPrelude").textContent="PRELUDIO";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      document.getElementById("btnIndex").textContent="BRÚJULA";
+    }else{
+      // EN defaults already in DOM
+      document.getElementById("dockHome").textContent="HOME";
+      document.getElementById("dockPrelude").textContent="PRELUDE";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+      document.getElementById("btnIndex").textContent="COMPASS";
     }
+
+    // Keep hrefs correct after language apply (state carry)
+    wireAll();
   }
 
   apply();

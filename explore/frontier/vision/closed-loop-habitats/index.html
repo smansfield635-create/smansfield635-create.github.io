@@ -1,12 +1,12 @@
 <!-- TNT — /explore/frontier/vision/closed-loop-habitats/index.html
      FRONTIER · VISION · CLOSED LOOP HABITATS
-     SHIMMER EXTENSION PAGE
-     RULES:
-       - Vision lane only (no structure loops)
-       - 3 languages (EN / 中文 / ES)
-       - Formal / Informal toggle
-       - Canon state carry (lang/style/time/depth)
-       - No modals, no overlays
+     UPGRADE:
+       - TED-style INFORMAL = exciting + human words + curiosity (support-bounded)
+       - FORMAL = abstract / systems language (kept for formal lens)
+       - More depth (accordion “bubbles” so it’s not a wall of text)
+       - EN/中文/ES + Formal/Informal toggle
+       - Canon state carry (lang/style/time/depth) URL + LS
+       - No modals, no overlays, no inline onclick
        - Uses ui.css + branch.css + instruments.js only
 -->
 
@@ -15,7 +15,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CLOSED LOOP HABITATS</title>
+<title>VISION · CLOSED LOOP HABITATS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -29,10 +29,12 @@ body{position:relative;z-index:0}
 body::before,body::after{z-index:0!important;pointer-events:none!important}
 #cRoot{position:relative;z-index:10}
 
+/* tokens */
 :root{
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.18);
   --opalC:rgba(90,210,255,.16);
+  --goldSoft:rgba(212,175,55,.45);
 }
 
 /* top */
@@ -45,24 +47,32 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 }
 .top .left,.top .right{
   display:flex;gap:10px;pointer-events:auto;
-  white-space:nowrap;
+  white-space:nowrap;flex-wrap:nowrap;align-items:center;
 }
+.top .btn{white-space:nowrap}
 
 /* header */
 .header{
   width:min(980px,94vw);
-  margin:84px auto 0;
-  padding:18px;
+  margin:74px auto 0;
+  padding:16px 16px 14px;
   border-radius:26px;
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
     radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
     radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(12px);
   box-shadow:0 34px 120px rgba(0,0,0,.55);
   text-align:center;
+}
+.k{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
 }
 .header h1{
   margin:0;
@@ -71,106 +81,223 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   letter-spacing:1px;
 }
 .header p{
-  margin-top:8px;
+  margin:10px 0 0;
   font-size:14px;
-  opacity:.85;
+  opacity:.88;
+  line-height:1.5;
 }
 
-/* lens toggle */
+/* lens */
 .lens{
   width:min(980px,94vw);
-  margin:14px auto 0;
+  margin:12px auto 0;
   display:flex;
   justify-content:center;
   gap:12px;
+  flex-wrap:wrap;
+}
+.lens .btn{border-radius:999px;padding:10px 14px}
+
+/* page wrap */
+.page{
+  width:min(980px,94vw);
+  margin:14px auto 34px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
-/* content blocks */
-.section{
-  width:min(980px,94vw);
-  margin:18px auto 0;
-  padding:18px;
+/* accordion “bubbles” */
+.card{
+  position:relative;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:0 22px 72px rgba(0,0,0,.55);
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.12), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
+  box-shadow:0 22px 72px rgba(0,0,0,.50), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
 }
-
-.section h2{
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{min-width:0}
+.title{font-weight:950;letter-spacing:.2px}
+.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.txt{
   margin:0;
-  font-weight:950;
-  font-size:18px;
-  letter-spacing:.6px;
+  color:rgba(255,255,255,.88);
+  line-height:1.62;
+  font-size:13.25px;
 }
-.section p{
-  margin-top:10px;
-  font-size:14px;
-  line-height:1.6;
-  opacity:.88;
+.txt + .txt{margin-top:10px}
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px
 }
+.actions .btn{border-radius:999px;padding:10px 14px}
 
 /* footer */
 .footer{
   width:min(980px,94vw);
-  margin:28px auto 34px;
+  margin:10px auto 34px;
   text-align:center;
   font-size:12.5px;
-  opacity:.75;
+  opacity:.78;
 }
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
 </style>
 </head>
 
 <body>
 <div id="cRoot">
 
-  <div class="top">
+  <div class="top" aria-label="Top controls">
     <div class="left">
       <a class="btn" id="btnBack" href="/explore/frontier/vision/">BACK</a>
       <a class="btn" id="btnDoor" href="/door/">DOOR</a>
     </div>
-    <div class="right">
-      <button class="btn" id="btnEN">EN</button>
-      <button class="btn" id="btnZH">中文</button>
-      <button class="btn" id="btnES">ES</button>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="header">
+  <div class="header" aria-label="Header">
+    <p class="k" id="k0">FRONTIER · VISION</p>
     <h1 id="ttl">CLOSED LOOP HABITATS</h1>
-    <p id="tag">Orbital · Lunar · Remote — Full Resource Retention</p>
+    <p id="tag">A place where “waste” stops existing — because you can’t afford to lose anything.</p>
   </div>
 
-  <div class="lens">
-    <button class="btn" id="btnInformal">INFORMAL</button>
-    <button class="btn" id="btnFormal">FORMAL</button>
+  <div class="lens" aria-label="Lens toggle">
+    <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+    <button class="btn" id="btnFormal" type="button">FORMAL</button>
   </div>
 
-  <div class="section">
-    <h2 id="h1">Why It Exists</h2>
-    <p id="p1"></p>
-  </div>
+  <div class="page" aria-label="Content">
 
-  <div class="section">
-    <h2 id="h2">Closed-Loop Constraint</h2>
-    <p id="p2"></p>
-  </div>
+    <div class="card" id="c1">
+      <div class="head" role="button" tabindex="0" aria-label="Open: What it feels like">
+        <div class="left">
+          <div class="title" id="t1">What it feels like</div>
+          <div class="sub" id="s1">A city that has to keep itself alive—quietly, every day, with no excuses.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="p1a"></p>
+        <p class="txt" id="p1b"></p>
+        <div class="actions">
+          <a class="btn" id="j1" href="/explore/frontier/vision/">OPEN: VISION INDEX</a>
+        </div>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2 id="h3">SHIMMER Integration</h2>
-    <p id="p3"></p>
+    <div class="card" id="c2">
+      <div class="head" role="button" tabindex="0" aria-label="Open: The big idea">
+        <div class="left">
+          <div class="title" id="t2">The big idea</div>
+          <div class="sub" id="s2">Turn life support into an inventory system: water, air, food, energy, materials.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="p2a"></p>
+        <p class="txt" id="p2b"></p>
+        <div class="actions">
+          <a class="btn" id="j2" href="/explore/frontier/vision/urban-resource-os/">OPEN: URBAN RESOURCE OS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c3">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Why it matters on Earth">
+        <div class="left">
+          <div class="title" id="t3">Why it matters on Earth</div>
+          <div class="sub" id="s3">If you can’t dump anything, you’re forced to build systems that actually work.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="p3a"></p>
+        <p class="txt" id="p3b"></p>
+        <div class="actions">
+          <a class="btn" id="j3" href="/products/energy/">OPEN: ENERGY PRODUCT</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c4">
+      <div class="head" role="button" tabindex="0" aria-label="Open: SHIMMER bridge">
+        <div class="left">
+          <div class="title" id="t4">SHIMMER bridge</div>
+          <div class="sub" id="s4">The same routing spine that can stabilize cities can keep a habitat alive.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="p4a"></p>
+        <p class="txt" id="p4b"></p>
+        <div class="actions">
+          <a class="btn" id="j4" href="/explore/frontier/vision/energy-without-smoke/">OPEN: ENERGY WITHOUT SMOKE</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c5">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Roadmap posture">
+        <div class="left">
+          <div class="title" id="t5">Roadmap posture</div>
+          <div class="sub" id="s5">Start with near-term pilots. Earn the right to scale into orbit.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="p5a"></p>
+        <p class="txt" id="p5b"></p>
+        <div class="actions">
+          <a class="btn" id="j5" href="/door/">OPEN: DOOR (STRUCTURE)</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="footer">
     Vision lane only · Structure lives in DOOR
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
 
 </div>
 
 <script>
 (function(){
-
+  // --- canonical state ---
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
@@ -179,71 +306,318 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
   if(style!=="formal"&&style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
-  localStorage.setItem("gd_lang",lang);
-  localStorage.setItem("gd_style",style);
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-  function q(){
-    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire nav with state
   document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
   document.getElementById("btnDoor").href="/door/"+q();
+  document.getElementById("j1").href="/explore/frontier/vision/"+q();
+  document.getElementById("j2").href="/explore/frontier/vision/urban-resource-os/"+q();
+  document.getElementById("j3").href="/products/energy/"+q();
+  document.getElementById("j4").href="/explore/frontier/vision/energy-without-smoke/"+q();
+  document.getElementById("j5").href="/door/"+q();
 
-  document.getElementById("btnEN").onclick=function(){location.search="?lang=en&style="+style};
-  document.getElementById("btnZH").onclick=function(){location.search="?lang=zh&style="+style};
-  document.getElementById("btnES").onclick=function(){location.search="?lang=es&style="+style};
+  // language buttons (reload same path)
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  document.getElementById("btnInformal").onclick=function(){style="informal";location.search="?lang="+lang+"&style=informal"};
-  document.getElementById("btnFormal").onclick=function(){style="formal";location.search="?lang="+lang+"&style=formal"};
+  // lens buttons
+  var btnI=document.getElementById("btnInformal");
+  var btnF=document.getElementById("btnFormal");
+  function paintLens(){
+    btnI.classList.toggle("active", style==="informal");
+    btnF.classList.toggle("active", style==="formal");
+  }
+  function setLens(next){
+    if(next!=="formal"&&next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    render();
+  }
+  btnI.addEventListener("click", function(){ setLens("informal"); });
+  btnF.addEventListener("click", function(){ setLens("formal"); });
+  paintLens();
 
-  var COPY={
+  // accordion (single-open)
+  function bindCard(cardId){
+    var card=document.getElementById(cardId);
+    var head=card.querySelector(".head");
+    var chev=card.querySelector(".chev");
+    function act(){
+      var open=!card.classList.contains("open");
+      document.querySelectorAll(".card").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+      card.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["c1","c2","c3","c4","c5"].forEach(bindCard);
+
+  // copy packs (support-bounded: exciting in informal, abstract in formal)
+  var COPY = {
     en:{
+      head:{
+        k:"FRONTIER · VISION",
+        ttl:"CLOSED LOOP HABITATS",
+        tag:"A place where “waste” stops existing — because you can’t afford to lose anything."
+      },
       informal:{
-        why:"Closed loop habitats are the harshest environment for system design. No resupply safety net. No waste export. Every leak compounds. If a system survives here, it can scale anywhere.",
-        constraint:"Air, water, nutrients, materials, and energy are one coupled inventory. Nothing disappears. Waste is a routing problem, not a disposal problem.",
-        shimmer:"SHIMMER acts as the entropy-routing spine: classify → segment → route → convert → retain. The same logic that stabilizes cities stabilizes orbit."
+        p1a:"Imagine living in a place where the trash truck never comes. No landfill. No sewer that disappears into the distance. No “we’ll deal with it later.” That’s a closed-loop habitat: you either keep your resources… or you lose the habitat.",
+        p1b:"That pressure is the gift. It forces systems to be honest. No vibes. No hand-waving. If water drifts, you notice fast. If air drifts, you notice faster. The loop turns mistakes into signals before they become disasters.",
+        p2a:"Here’s the simple version: treat everything like inventory. Water is inventory. Oxygen is inventory. Food is inventory. Heat is inventory. Materials are inventory. If you can count it, you can manage it. If you can’t count it, it will surprise you.",
+        p2b:"Once you think this way, “waste” becomes a routing decision. Some outputs get filtered and reused. Some get transformed into inputs. Some get stored. The goal isn’t perfection. The goal is stable survival under stress.",
+        p3a:"This is why it matters for Earth. Most cities act like they have infinite ‘away.’ But ‘away’ is just the next community downstream. Closed-loop thinking turns the invisible costs into visible control: leaks, contamination, downtime, maintenance debt.",
+        p3b:"When you build systems that would survive in a habitat, they feel almost magical on Earth: cleaner, calmer, cheaper to operate, and harder to break. The same discipline that keeps people alive in orbit can keep neighborhoods stable in heat waves and disasters.",
+        p4a:"SHIMMER is the bridge because it’s the same pattern: classification → routing → conversion → retention. In a city, that’s waste streams. In a habitat, that’s life-support streams. Different setting. Same spine.",
+        p4b:"And this is where the excitement lives: a habitat isn’t just a place to live. It’s a proof machine. If it can stay stable with no ‘away,’ then the methods are real — and they can scale back down to Earth.",
+        p5a:"Roadmap posture: start on Earth first. Prove the routing logic in real systems: water, waste, energy, maintenance. Build receipts. Build repeatability. Then take the exact same discipline into remote sites and finally into orbit.",
+        p5b:"That’s how big claims stay support-bounded: staged pilots, measured outputs, and clear ‘not yet’ labels when a prerequisite isn’t met."
       },
       formal:{
-        why:"Closed loop habitats represent high-constraint survival systems. External resupply is limited. Material loss is cumulative. Therefore system stability must be mathematically bounded.",
-        constraint:"All mass and energy streams are treated as conserved vectors. Outputs are constrained to internal recycling loops. Disposal is replaced by transformation.",
-        shimmer:"SHIMMER provides dynamic entropy routing under conservation constraints. It couples classification with adaptive conversion pathways to maintain resource equilibrium."
+        p1a:"Closed-loop habitats are high-constraint survival systems: resupply is limited, losses accumulate, and failure modes are coupled. System design must assume variance, not ideal conditions.",
+        p1b:"Operational objective is stability under constraint: maintain admissible ranges for air, water, nutrients, thermal balance, and materials inventory with deterministic recovery procedures.",
+        p2a:"Closed loop constraint: all mass/energy flows are treated as conserved vectors under declared accounting. Waste is not disposal; it is a transformation and routing problem within bounded pathways.",
+        p2b:"Control architecture requires continuous verification: measurement thresholds, reason-coded interventions, and replayable logs to prevent silent drift and post-hoc reinterpretation.",
+        p3a:"Earth translation: ‘away’ is an implicit routing sink that hides costs and amplifies downstream fragility. Closing loops increases observability and reduces systemic risk through explicit accounting.",
+        p3b:"Habitat-grade discipline introduces segmentation, redundancy, and constrained recovery, improving resilience for terrestrial infrastructure and disaster response.",
+        p4a:"SHIMMER integration: apply classification and dynamic routing to coupled inventories. Routing decisions optimize multi-output value while enforcing conservation and admissibility rules.",
+        p4b:"Verification posture: no escalation beyond receipts; staged expansion; no claims that exceed measurement capability under declared scope.",
+        p5a:"Roadmap: Phase I terrestrial pilots (TRL uplift) → Phase II remote/isolated operations → Phase III orbital deployment with autonomy and verified recovery protocols.",
+        p5b:"Non-negotiables: no net-positive fusion claims; no megastructure claims in near horizons; no silent rule changes without epoch rollover."
       }
     },
     zh:{
+      head:{
+        k:"前沿 · 愿景",
+        ttl:"闭环栖息地",
+        tag:"在这里，“废弃物”不再存在——因为你承受不起任何损失。"
+      },
       informal:{
-        why:"闭环栖息地是系统设计的极端环境。没有持续补给，没有垃圾外运。任何泄漏都会积累。",
-        constraint:"空气、水、养分、材料与能量是同一个库存。没有“消失”。废弃物只是路由问题。",
-        shimmer:"SHIMMER 是熵路由主干：分类 → 分段 → 路由 → 转化 → 保留。"
+        p1a:"想象一个地方：垃圾车永远不会来。没有填埋场。没有“排走就算”。也没有“以后再说”。这就是闭环栖息地：要么把资源留住，要么失去栖息地。",
+        p1b:"这种压力反而是礼物。它逼系统诚实：没有情绪，没有借口。水一漂移，很快就暴露；空气一漂移，更快就暴露。闭环把错误变成信号，而不是灾难。",
+        p2a:"最简单的说法：把一切当库存。水是库存，氧气是库存，食物是库存，热是库存，材料是库存。能数清，就能管理；数不清，就会被反噬。",
+        p2b:"一旦你这样思考，“废弃物”就变成路由决定：有的过滤复用，有的转化为输入，有的储存。目标不是完美，而是在压力下稳定生存。",
+        p3a:"为什么这对地球重要？很多城市假装有无限的“扔掉”。但“扔掉”只是把成本推给下游。闭环思维把看不见的代价变成可控变量：泄漏、污染、停机、维护债。",
+        p3b:"当你用“栖息地级”标准做地面系统，效果会像魔法：更干净、更稳定、运营更便宜、更难被击穿。轨道上的生存纪律，会在热浪与灾害中保护社区。",
+        p4a:"SHIMMER 是桥，因为模式一样：分类 → 路由 → 转化 → 保留。城市里是废物流；栖息地里是生命保障流。场景不同，脊柱相同。",
+        p4b:"兴奋点在这里：栖息地不仅是居住地，它还是“证明机器”。如果没有“扔掉”也能稳定运行，那方法就是真的，并且能反向下沉到地球。",
+        p5a:"路线姿态：先在地球验证。把路由逻辑用在真实系统：水、废弃物、能量、维护。积累收据与可重复性。再扩展到偏远站点，最后进入轨道。",
+        p5b:"这就是“大主张仍然有支撑边界”的方式：阶段化试点、可测输出、缺前置条件就明确写“尚未”。"
       },
       formal:{
-        why:"闭环栖息地属于高约束生存系统。外部补给受限。材料损失会累积。",
-        constraint:"所有质量与能量流被视为守恒向量。输出被限制在内部循环中。",
-        shimmer:"SHIMMER 在守恒约束下提供动态熵路由。"
+        p1a:"闭环栖息地属于高约束生存系统：外部补给受限，损失累积，故障模式耦合。设计必须以方差为前提，而非理想条件。",
+        p1b:"目标是在约束下保持稳定：空气、水、养分、热平衡与材料库存维持在可采信范围内，并具备确定性的恢复流程。",
+        p2a:"闭环约束：所有质量/能量流作为守恒向量处理。废弃物不是“丢弃”，而是内部有界路径下的转化与路由问题。",
+        p2b:"控制架构要求持续验证：阈值、原因码介入与可回放日志，避免静默漂移与事后换义。",
+        p3a:"地面迁移：所谓“扔掉”是隐含的路由汇点，会隐藏成本并放大下游脆弱性。闭环提高可观测并降低系统性风险。",
+        p3b:"栖息地级纪律引入分段隔离、冗余与约束恢复，提升地面基础设施与灾害响应韧性。",
+        p4a:"SHIMMER 集成：将分类与动态路由应用于耦合库存，在守恒与可采信规则约束下优化多输出价值。",
+        p4b:"验证姿态：不超越收据；阶段化扩展；主张不得超过测量能力与声明范围。",
+        p5a:"路线图：一期地面试点（提升 TRL）→ 二期偏远/隔离运行 → 三期轨道部署（自治与可验证恢复协议）。",
+        p5b:"不可谈判：不做净增益聚变主张；近期限不做巨构主张；规则变更需新纪元。"
       }
     },
     es:{
+      head:{
+        k:"FRONTERA · VISIÓN",
+        ttl:"HÁBITATS DE CICLO CERRADO",
+        tag:"Aquí ‘residuo’ deja de existir — porque no puedes permitirte perder nada."
+      },
       informal:{
-        why:"Hábitats cerrados son entornos extremos. Sin red de suministro. Cada fuga se acumula.",
-        constraint:"Aire, agua, nutrientes, materiales y energía son un solo inventario acoplado.",
-        shimmer:"SHIMMER es la columna vertebral de ruteo entrópico."
+        p1a:"Imagina vivir donde el camión de basura nunca llega. Sin vertedero. Sin ‘lo tiramos y ya’. Sin ‘luego vemos’. Eso es un hábitat de ciclo cerrado: o retienes recursos… o pierdes el hábitat.",
+        p1b:"Esa presión es un regalo. Obliga a que el sistema sea honesto: sin excusas. Si el agua deriva, se nota. Si el aire deriva, se nota antes. El ciclo convierte errores en señales antes de que sean desastres.",
+        p2a:"Versión simple: trata todo como inventario. Agua, oxígeno, comida, calor, materiales. Si lo puedes contar, lo puedes gestionar. Si no, te sorprenderá.",
+        p2b:"Entonces el ‘residuo’ se vuelve decisión de ruteo: filtrar y reutilizar, transformar a entrada, almacenar. No es perfección. Es supervivencia estable bajo presión.",
+        p3a:"Por eso importa en la Tierra. Muchas ciudades fingen tener ‘afuera’ infinito. Pero ‘afuera’ es la comunidad aguas abajo. El ciclo cerrado hace visibles fugas, contaminación, paradas y deuda de mantenimiento.",
+        p3b:"Cuando construyes con estándares de hábitat, en la Tierra se siente casi mágico: más limpio, más estable, más barato de operar y más difícil de romper. Esa disciplina salva barrios en olas de calor y desastres.",
+        p4a:"SHIMMER es el puente porque el patrón es el mismo: clasificar → rutear → convertir → retener. En la ciudad son residuos; en el hábitat, soporte vital. Distinto lugar, misma columna vertebral.",
+        p4b:"Lo emocionante: un hábitat no solo es vivienda. Es una máquina de prueba. Si puede estabilizarse sin ‘afuera’, el método es real — y puede bajar de vuelta a la Tierra.",
+        p5a:"Ruta: primero en la Tierra. Prueba ruteo en agua, residuos, energía y mantenimiento. Crea recibos y repetibilidad. Luego sitios remotos y, por último, órbita.",
+        p5b:"Así las afirmaciones grandes quedan acotadas: pilotos por fases, salidas medidas y ‘todavía no’ cuando falten prerrequisitos."
       },
       formal:{
-        why:"Los hábitats cerrados son sistemas de supervivencia bajo alta restricción.",
-        constraint:"Los flujos de masa y energía se tratan como vectores conservados.",
-        shimmer:"SHIMMER permite ruteo dinámico bajo conservación."
+        p1a:"Los hábitats cerrados son sistemas de supervivencia con alta restricción: reabastecimiento limitado, pérdidas acumulativas y fallas acopladas. El diseño debe asumir varianza.",
+        p1b:"Objetivo operativo: estabilidad bajo restricción para aire, agua, nutrientes, balance térmico e inventario de materiales, con procedimientos de recuperación deterministas.",
+        p2a:"Restricción: flujos de masa/energía como vectores conservados. ‘Residuo’ es problema de transformación y ruteo en caminos acotados.",
+        p2b:"Control requiere verificación continua: umbrales, códigos de razón y logs reproducibles para evitar deriva silenciosa.",
+        p3a:"Traducción terrestre: ‘afuera’ es un sumidero implícito que oculta costos y amplifica fragilidad. Cerrar ciclos aumenta observabilidad y reduce riesgo sistémico.",
+        p3b:"Disciplina de hábitat introduce segmentación, redundancia y recuperación acotada para infraestructura y respuesta a desastres.",
+        p4a:"Integración SHIMMER: clasificación y ruteo dinámico aplicado a inventarios acoplados, optimizando valor multi-salida bajo conservación y admisibilidad.",
+        p4b:"Postura: sin escalación sin recibos; expansión por fases; sin afirmaciones más allá de capacidad de medición y alcance declarado.",
+        p5a:"Hoja de ruta: Fase I pilotos en tierra (subir TRL) → Fase II operación aislada → Fase III despliegue orbital con autonomía y protocolos verificados.",
+        p5b:"No negociables: sin ganancia neta de fusión; sin megaestructuras en horizontes cercanos; cambios de reglas requieren nueva época."
       }
     }
   };
 
   function render(){
-    var pack=COPY[lang][style];
-    document.getElementById("p1").textContent=pack.why;
-    document.getElementById("p2").textContent=pack.constraint;
-    document.getElementById("p3").textContent=pack.shimmer;
+    var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+
+    document.getElementById("k0").textContent=P.head.k;
+    document.getElementById("ttl").textContent=P.head.ttl;
+    document.getElementById("tag").textContent=P.head.tag;
+
+    var L=(style==="formal")?P.formal:P.informal;
+
+    document.getElementById("p1a").textContent=L.p1a;
+    document.getElementById("p1b").textContent=L.p1b;
+
+    document.getElementById("p2a").textContent=L.p2a;
+    document.getElementById("p2b").textContent=L.p2b;
+
+    document.getElementById("p3a").textContent=L.p3a;
+    document.getElementById("p3b").textContent=L.p3b;
+
+    document.getElementById("p4a").textContent=L.p4a;
+    document.getElementById("p4b").textContent=L.p4b;
+
+    document.getElementById("p5a").textContent=L.p5a;
+    document.getElementById("p5b").textContent=L.p5b;
+
+    if(lang==="zh"){
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnDoor").textContent="门";
+      btnI.textContent="通俗";
+      btnF.textContent="正式";
+      document.getElementById("t1").textContent="它是什么感觉";
+      document.getElementById("t2").textContent="核心想法";
+      document.getElementById("t3").textContent="为什么对地球重要";
+      document.getElementById("t4").textContent="SHIMMER 桥";
+      document.getElementById("t5").textContent="路线姿态";
+      document.getElementById("j1").textContent="打开：愿景索引";
+      document.getElementById("j2").textContent="打开：城市资源OS";
+      document.getElementById("j3").textContent="打开：能源产品";
+      document.getElementById("j4").textContent="打开：无烟能源";
+      document.getElementById("j5").textContent="打开：DOOR（结构）";
+      document.querySelector(".footer").firstChild.nodeValue="愿景通道 · 结构在 DOOR";
+    }else if(lang==="es"){
+      document.getElementById("btnBack").textContent="VOLVER";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      btnI.textContent="INFORMAL";
+      btnF.textContent="FORMAL";
+      document.getElementById("t1").textContent="Cómo se siente";
+      document.getElementById("t2").textContent="La gran idea";
+      document.getElementById("t3").textContent="Por qué importa en la Tierra";
+      document.getElementById("t4").textContent="Puente SHIMMER";
+      document.getElementById("t5").textContent="Hoja de ruta";
+      document.getElementById("j1").textContent="ABRIR: ÍNDICE VISIÓN";
+      document.getElementById("j2").textContent="ABRIR: URBAN RESOURCE OS";
+      document.getElementById("j3").textContent="ABRIR: PRODUCTO ENERGÍA";
+      document.getElementById("j4").textContent="ABRIR: ENERGÍA SIN HUMO";
+      document.getElementById("j5").textContent="ABRIR: PUERTA (ESTRUCTURA)";
+      document.querySelector(".footer").firstChild.nodeValue="Carril de visión · La estructura vive en DOOR";
+    }else{
+      btnI.textContent="INFORMAL";
+      btnF.textContent="FORMAL";
+      document.getElementById("j1").textContent="OPEN: VISION INDEX";
+      document.getElementById("j2").textContent="OPEN: URBAN RESOURCE OS";
+      document.getElementById("j3").textContent="OPEN: ENERGY PRODUCT";
+      document.getElementById("j4").textContent="OPEN: ENERGY WITHOUT SMOKE";
+      document.getElementById("j5").textContent="OPEN: DOOR (STRUCTURE)";
+    }
   }
 
+  // lens + language UI
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  function paintLens(){
+    btnI.classList.toggle("active", style==="informal");
+    btnF.classList.toggle("active", style==="formal");
+  }
+
+  var btnI=document.getElementById("btnInformal");
+  var btnF=document.getElementById("btnFormal");
+
+  paintLang();
+  paintLens();
   render();
+
+  // default: open first card
+  document.getElementById("c1").classList.add("open");
+  document.getElementById("c1").querySelector(".chev").textContent="▾";
+
+  // bind language buttons
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // bind lens buttons (no reload)
+  function setLens(next){
+    if(next!=="formal"&&next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    render();
+  }
+  btnI.addEventListener("click", function(){ setLens("informal"); });
+  btnF.addEventListener("click", function(){ setLens("formal"); });
+
+  // accordion
+  function bindCard(cardId){
+    var card=document.getElementById(cardId);
+    var head=card.querySelector(".head");
+    var chev=card.querySelector(".chev");
+    function act(){
+      var open=!card.classList.contains("open");
+      document.querySelectorAll(".card").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+      card.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["c1","c2","c3","c4","c5"].forEach(bindCard);
 
 })();
 </script>

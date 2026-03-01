@@ -1,22 +1,21 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · ORIENTATION LAYER (NO LENSES · NO MODALS)
+     PRELUDE · POSTURE (BIG ORIENTATION) · EN/中文/ES · NO LENSES · NO MODALS
      ROLE:
-       - Calm entry before traversal
-       - Define the problem clearly
-       - Define the posture clearly
-       - Route cleanly to Compass or Enter
-     ROUTES (LOCKED):
-       - BACK → /index.html (Compass)
-       - ENTER → /home/
-       - NORTH → /laws/
-       - EAST  → /products/
-       - SOUTH → /gauges/
+       - Explain the problem (drift) + why finite measure matters
+       - Explain the solution posture (scope + receipts + invariants + replay)
+       - Provide clear jump points (every block ends with a jump)
+     ROUTES:
+       - DOOR (INTRO)  → /door/
+       - COMPASS       → /compass/
+       - ENTER (HUB)   → /home/
+       - PRODUCTS      → /products/
+       - LAWS          → /laws/
+       - GAUGES        → /gauges/
      STATE:
-       - Full carry: lang/style/time/depth (URL + gd_* LS)
+       - URL + LS: lang/style/time/depth via gd_*
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
-       - No tone lenses here (single unified voice)
+       - Uses ui.css + branch.css + instruments.js
+       - ui.css owns background
 -->
 
 <!doctype html>
@@ -24,7 +23,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Orientation</title>
+<title>Prelude · Posture</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -39,87 +38,129 @@ body::before,body::after{pointer-events:none!important}
   --dockH:92px;
 
   --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.10);
+  --opalB:rgba(120,70,255,.12);
   --opalC:rgba(255,70,70,.10);
 
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
+  --goldSoft:rgba(212,175,55,.22);
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
 }
 
 /* Top */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;align-items:center;
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;align-items:center;
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
 }
-.top-left .btn,.top-right .btn{white-space:nowrap}
+.top .btn{white-space:nowrap}
 
 /* Page */
 .page{
-  width:min(1000px,94vw);
+  width:min(1100px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 24px);
+  padding:86px 0 calc(var(--dockH) + 20px);
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:12px;
   position:relative;
   z-index:10;
 }
 
-/* Header bubble */
-.header{
-  border:1px solid rgba(255,255,255,.12);
+/* Hero */
+.hero{
   border-radius:26px;
+  border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.16);
-  backdrop-filter:blur(10px);
-  box-shadow:0 30px 100px rgba(0,0,0,.55);
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.60);
   padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 8px}
-.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.6px}
-.s{margin:12px 0 0;font-size:14px;line-height:1.6;opacity:.92}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;
+  background:
+    repeating-conic-gradient(from 45deg, transparent 0deg 8deg, rgba(212,175,55,.06) 8deg 9deg);
+  opacity:.16;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.75;position:relative}
+.h1{margin:0;font-weight:950;font-size:34px;letter-spacing:1px;line-height:1.12;position:relative}
+.p{margin:10px 0 0;font-size:14px;line-height:1.6;opacity:.90;max-width:980px;color:var(--txt);position:relative}
+.rule{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.16);
+  font-size:12.75px;
+  line-height:1.45;
+  color:var(--mut);
+  position:relative;
+}
 
-/* Long bubbles */
-.block{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
-  box-shadow:0 22px 72px rgba(0,0,0,.60);
-  padding:16px 16px 14px;
-}
-.block h3{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.3px;
-}
-.block p{
-  margin:0;
-  line-height:1.65;
-  opacity:.86;
-  font-size:14px;
-}
-.block p + p{margin-top:10px}
-
-/* Action row */
-.actions{
-  display:flex;
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:12px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  margin-top:10px;
 }
-.actions .btn{
-  padding:10px 16px;
-  border-radius:999px;
-  white-space:nowrap;
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+
+.card{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(212,175,55,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  margin-top:3px;flex:0 0 auto;
+}
+.tt{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;max-width:92ch;color:rgba(255,255,255,.84)}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.bp{margin:0;color:rgba(255,255,255,.88);line-height:1.65;font-size:13.5px}
+.bp + .bp{margin-top:10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
 /* Dock */
 .dock{
@@ -138,9 +179,9 @@ body::before,body::after{pointer-events:none!important}
   grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px;border-radius:999px;white-space:nowrap}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px}
+  :root{--dockH:104px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -148,81 +189,39 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-  <a class="btn" id="btnEnter" href="/home/">ENTER</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top">
+  <div class="left">
+    <a class="btn" id="btnDoorTop" href="/door/">DOOR</a>
+    <a class="btn" id="btnCompassTop" href="/compass/">COMPASS</a>
+    <a class="btn" id="btnHomeTop" href="/home/">ENTER</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <div class="header">
-    <p class="k" id="hk">PRELUDE</p>
-    <h1 class="t" id="ht">Before You Move</h1>
-    <p class="s" id="hs">
-      This is not a belief site.  
-      It is a structural interface.  
-      It exists because drift is real, correlation is invisible, and scale amplifies small errors.
+  <div class="hero">
+    <p class="k" id="k0">PRELUDE</p>
+    <h1 class="h1" id="h0">Posture Before Movement</h1>
+    <p class="p" id="p0">
+      Drift is the quiet killer: definitions slide, routes collapse, and “support” becomes story.
+      This site exists to pin meaning down — with finite structure and measurable boundaries.
     </p>
-  </div>
-
-  <div class="block">
-    <h3 id="hProblem">The Problem</h3>
-    <p id="pProblem1">
-      Systems fail quietly long before they fail publicly.
-      Meaning shifts. Assumptions stack. Dependencies overlap.
-      Small misalignments compound until they look like “sudden collapse.”
-    </p>
-    <p id="pProblem2">
-      Most people try to fix this with motivation, ideology, or speed.
-      None of those solve structural drift.
-    </p>
-  </div>
-
-  <div class="block">
-    <h3 id="hMapping">What We Did</h3>
-    <p id="pMapping1">
-      We mapped the problem into a finite lattice.
-      We defined boundaries, state transitions, and measurement surfaces.
-      We separated concept, live execution, and roadmap.
-    </p>
-    <p id="pMapping2">
-      Every claim is bounded.
-      Every upgrade requires receipts.
-      Every navigation move preserves state.
-    </p>
-  </div>
-
-  <div class="block">
-    <h3 id="hSolution">The Solution Posture</h3>
-    <p id="pSolution1">
-      If meaning is unstable, go to Laws.
-      If execution is unclear, go to Products.
-      If you need verification, go to Gauges.
-      If you need direction first, use Compass.
-    </p>
-    <p id="pSolution2">
-      You are here because something needs alignment.
-      There is a surface for that.
-    </p>
-
-    <div class="actions">
-      <a class="btn" id="goNorth" href="/laws/">NORTH</a>
-      <a class="btn" id="goEast" href="/products/">EAST</a>
-      <a class="btn" id="goSouth" href="/gauges/">SOUTH</a>
-      <a class="btn" id="goCompass" href="/index.html">COMPASS</a>
+    <div class="rule" id="r0">
+      Rule: Declare scope. Bring receipts. Preserve invariants. If the lens doesn’t change content, it’s a failure.
     </div>
   </div>
+
+  <div class="grid" id="grid"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
@@ -230,6 +229,7 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
+  // ===== state (URL → LS → defaults) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
@@ -237,74 +237,242 @@ body::before,body::after{pointer-events:none!important}
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
   try{
     localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire nav
   function wire(id,path){
     var el=document.getElementById(id);
-    if(el) el.href=path+q();
+    if(el) el.href = path + q();
   }
-
-  wire("btnCompass","/index.html");
-  wire("btnEnter","/home/");
-  wire("dockHome","/home/");
+  wire("btnDoorTop","/door/");
+  wire("btnCompassTop","/compass/");
+  wire("btnHomeTop","/home/");
+  wire("dockDoor","/door/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
-  wire("goNorth","/laws/");
-  wire("goEast","/products/");
-  wire("goSouth","/gauges/");
-  wire("goCompass","/index.html");
 
-  // language toggle
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paint(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+  // lang buttons (reload same pathname)
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
-  paint();
+  paintLang();
 
   function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    localStorage.setItem("gd_lang",next);
-    window.location.href=window.location.pathname+"?lang="+next;
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.onclick=function(){setLang("en");};
-  btnZH.onclick=function(){setLang("zh");};
-  btnES.onclick=function(){setLang("es");};
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="前言";
-    document.getElementById("ht").textContent="行动之前";
-    document.getElementById("hs").textContent="这不是信仰站点。这是结构界面。漂移真实存在，相关性不可见，规模会放大小错误。";
-    document.getElementById("hProblem").textContent="问题";
-    document.getElementById("pProblem1").textContent="系统往往在公开失败前就已悄悄失稳。含义漂移，假设叠加，依赖重叠。";
-    document.getElementById("pProblem2").textContent="用激情或速度无法修复结构性漂移。";
-    document.getElementById("hMapping").textContent="我们做了什么";
-    document.getElementById("pMapping1").textContent="我们将问题映射到有限晶格，定义边界与测量面。";
-    document.getElementById("pMapping2").textContent="每个主张有界，每次升级需收据，每次跳转保留状态。";
-    document.getElementById("hSolution").textContent="解决姿态";
-    document.getElementById("pSolution1").textContent="含义不稳去法则；执行不清去产品；要验证去量规；要方向用罗盘。";
-    document.getElementById("pSolution2").textContent="你在这里，是因为某个度量需要答案。这里有对应的界面。";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="PRELUDIO";
-    document.getElementById("ht").textContent="Antes de Moverte";
-    document.getElementById("hs").textContent="No es un sitio de creencias. Es una interfaz estructural. La deriva es real y la escala amplifica errores.";
+  // ===== content (accordion, single-open) =====
+  function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
+  document.getElementById("h0").textContent = T("Posture Before Movement","行动之前先定姿态","Postura Antes del Movimiento");
+  document.getElementById("p0").textContent = T(
+    "Drift is the quiet killer: definitions slide, routes collapse, and “support” becomes story. This site exists to pin meaning down — with finite structure and measurable boundaries.",
+    "漂移是安静的杀手：定义滑动、路由坍缩，“支撑”变成故事。本网站的目的，是用有限结构与可测边界把含义钉死。",
+    "La deriva es el asesino silencioso: las definiciones se mueven, las rutas colapsan y el ‘soporte’ se vuelve historia. Este sitio existe para fijar significado con estructura finita y límites medibles."
+  );
+  document.getElementById("r0").textContent = T(
+    "Rule: Declare scope. Bring receipts. Preserve invariants. If the lens doesn’t change content, it’s a failure.",
+    "规则：先声明范围，再提供收据，保持不变量。透镜不改变内容即失败。",
+    "Regla: declara alcance, trae recibos, preserva invariantes. Si el lente no cambia el contenido, es un fallo."
+  );
+
+  var ITEMS = [
+    {
+      c:"#EF4444",
+      t:T("The problem","问题","El problema"),
+      s:T("Drift compounds. Correlation hides. Collapse arrives late.","漂移会累积，相关会隐藏，崩塌会迟到。","La deriva se acumula, la correlación se oculta, el colapso llega tarde."),
+      p:[
+        T(
+          "Most people lose control because they lose the map. They can’t see the hidden shared dependencies. So they scale the wrong thing, fix the wrong thing, and argue about the wrong thing.",
+          "多数人失控，是因为地图丢了：看不见共享依赖，于是扩张错、修复错、争论也错。",
+          "La mayoría pierde control porque pierde el mapa: no ve dependencias compartidas, escala lo equivocado y discute lo equivocado."
+        ),
+        T(
+          "This site treats that as a solvable problem: map it to a finite lattice, measure it, and bound what can be claimed.",
+          "本网站把它当作可解问题：映射到有限晶格，做测量，并把主张限制在边界内。",
+          "Este sitio lo trata como problema resoluble: mapear a un lattice finito, medir y acotar lo que se puede afirmar."
+        )
+      ],
+      jump:{label:T("OPEN: COMPASS","打开：COMPASS","ABRIR: COMPASS"), href:"/compass/"}
+    },
+    {
+      c:"#D4AF37",
+      t:T("The method","方法","El método"),
+      s:T("Scope → receipts → invariants → replay.","范围→收据→不变量→回放。","Alcance → recibos → invariantes → replay."),
+      p:[
+        T(
+          "We don’t start with conclusions. We start with scope. Then we take receipts. Then we apply constraints that don’t negotiate. Then we replay the same inputs and demand the same output.",
+          "我们不从结论开始，而从范围开始。再收据，再应用不可谈判的约束，再用同输入复跑并要求同输出。",
+          "No empezamos con conclusiones. Empezamos con alcance, tomamos recibos, aplicamos restricciones no negociables y repetimos: mismo input, mismo output."
+        ),
+        T(
+          "That is how support stays checkable and claims stay clean under pressure.",
+          "这就是压力下支撑仍可核查、主张仍干净的方式。",
+          "Así el soporte sigue verificable y las afirmaciones se mantienen limpias bajo presión."
+        )
+      ],
+      jump:{label:T("OPEN: LAWS","打开：LAWS","ABRIR: LEYES"), href:"/laws/"}
+    },
+    {
+      c:"#60A5FA",
+      t:T("The navigation","导航","La navegación"),
+      s:T("You don’t need to read everything. You need the right jump.","你不需要读完一切，你需要正确跳转点。","No necesitas leer todo. Necesitas el salto correcto."),
+      p:[
+        T(
+          "Prelude explains the posture. Door is the intro. Compass is orientation. Home is a launchpad. Products are deployable surfaces. Laws are bounds. Gauges are measurement outputs.",
+          "Prelude 讲姿态。Door 是介绍。Compass 是导览。Home 是发射台。Products 是可用执行面。Laws 是边界。Gauges 是测量输出。",
+          "Prelude explica postura. Door es intro. Compass orienta. Home es lanzadera. Products son superficies. Laws son límites. Gauges son medición."
+        ),
+        T(
+          "Every section ends with a jump so you can move immediately.",
+          "每一段末尾都有跳转，让你立刻行动。",
+          "Cada sección termina con un salto para moverte de inmediato."
+        )
+      ],
+      jump:{label:T("OPEN: DOOR","打开：DOOR","ABRIR: DOOR"), href:"/door/"}
+    },
+    {
+      c:"#34D399",
+      t:T("The promise","承诺","La promesa"),
+      s:T("Big curiosity, bounded claims.","大好奇心，有界主张。","Gran curiosidad, afirmaciones acotadas."),
+      p:[
+        T(
+          "We allow ambitious ideas, but we don’t let them turn into hype. If the receipts can’t carry it, we label it honestly and keep it staged.",
+          "我们允许宏大想法，但不允许变成吹嘘。收据承载不了，就诚实标注并分阶段。",
+          "Permitimos ideas ambiciosas, pero no hype. Si los recibos no lo soportan, se etiqueta honestamente y se mantiene por fases."
+        ),
+        T(
+          "That’s how trust scales — because truth stays the same when pressure rises.",
+          "信任之所以能规模化，是因为压力上来时真相不变。",
+          "Así escala la confianza: la verdad no cambia cuando sube la presión."
+        )
+      ],
+      jump:{label:T("OPEN: PRODUCTS","打开：PRODUCTS","ABRIR: PRODUCTOS"), href:"/products/"}
+    }
+  ];
+
+  var grid=document.getElementById("grid");
+
+  function closeAll(){
+    Array.prototype.forEach.call(grid.querySelectorAll(".card"), function(c){
+      c.classList.remove("open");
+      var cv=c.querySelector(".chev");
+      if(cv) cv.textContent="▸";
+    });
   }
+
+  function makeCard(it, idx){
+    var card=document.createElement("div");
+    card.className="card";
+    card.style.setProperty("--c", it.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var dm=document.createElement("div");
+    dm.className="dmark";
+    dm.style.background=it.c;
+
+    var blk=document.createElement("div");
+    blk.style.minWidth="0";
+
+    var tt=document.createElement("div");
+    tt.className="tt";
+    tt.textContent=it.t;
+
+    var ss=document.createElement("div");
+    ss.className="ss";
+    ss.textContent=it.s;
+
+    blk.appendChild(tt);
+    blk.appendChild(ss);
+
+    hL.appendChild(dm);
+    hL.appendChild(blk);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    it.p.forEach(function(line){
+      var p=document.createElement("p");
+      p.className="bp";
+      p.textContent=line;
+      body.appendChild(p);
+    });
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=it.jump.label;
+    a.href=it.jump.href + q();
+    actions.appendChild(a);
+    body.appendChild(actions);
+
+    function toggle(){
+      var willOpen=!card.classList.contains("open");
+      closeAll();
+      if(willOpen){
+        card.classList.add("open");
+        chev.textContent="▾";
+      }
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    if(idx===0){ card.classList.add("open"); chev.textContent="▾"; }
+    return card;
+  }
+
+  ITEMS.forEach(function(it, idx){ grid.appendChild(makeCard(it, idx)); });
+
 })();
 </script>
 

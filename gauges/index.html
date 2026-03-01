@@ -1,18 +1,23 @@
+<!doctype html>
 <!-- TNT — /gauges/index.html
      GAUGES · INSTRUMENTATION SPINE
      STRUCTURE:
        - 7 Canonical Instruments
-       - Trilingual Lens: EN / 中文 / ES
-       - Four Analytical Lenses:
-            INFORMAL
-            FORMAL
-            ENGINEERING
-            PLATFORM
-       - Single-open accordion
-       - Canon state carry (gd_lang / gd_style / gd_time / gd_depth)
+       - Trilingual: EN / 中文 / ES
+       - Four Analytical Lenses (NO NEW gd_* KEYS):
+            INFORMAL   = style=informal & depth=explore
+            FORMAL     = style=formal   & depth=explore
+            PLATFORM   = style=informal & depth=learn
+            ENGINEERING= style=formal   & depth=learn
+       - Single-open accordion (tap same closes)
+       - Canon state carry: lang/style/time/depth via URL + localStorage gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - lane=platform|engineering is URL-only (preserve if present; never store; Gauges uses depth mapping above)
        - No overlays, no modals
+       - No inline onclick; addEventListener only
+       - ui.css owns background (do NOT style html/body background)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
 -->
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,14 +35,26 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:92px;
-  --stroke:rgba(255,255,255,.10);
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-  --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(120,70,255,.10);
-  --redGlow:rgba(255,70,70,.18);
-  --mut:rgba(255,255,255,.88);
+  --dockH:124px;
+
+  /* hierarchy: red primary, black secondary, gold adorn */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.72);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --gold:rgba(201,162,74,.40);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 30px 100px rgba(0,0,0,.60);
+  --shadowB:0 20px 70px rgba(0,0,0,.60);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
 .page{
@@ -49,90 +66,247 @@ body::before,body::after{pointer-events:none!important}
   gap:16px;
 }
 
+/* TOP (fixed) */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
 /* HEADER */
 .header{
   border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 20% 20%, var(--opalA), transparent 60%),
-    radial-gradient(circle at 80% 30%, var(--opalB), transparent 65%),
-    rgba(0,0,0,.16);
-  padding:22px;
-  box-shadow:0 30px 100px rgba(0,0,0,.6);
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  padding:20px;
+  box-shadow:var(--shadowA);
+  backdrop-filter:blur(10px);
+  position:relative;
+  overflow:hidden;
+}
+/* gold diamond lay in trim zone only */
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
 
+.k{
+  margin:0 0 8px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+  color:var(--mut);
+}
 .t{
-  font-weight:950;
+  font-weight:980;
   font-size:32px;
   letter-spacing:.8px;
   margin:0 0 12px;
+  color:var(--ink);
 }
-
 .s{
   font-size:16px;
   line-height:1.7;
   opacity:.92;
   margin:0;
+  color:var(--mut);
+  max-width:980px;
 }
 
-/* LENS SELECTORS */
+/* Lens selectors */
 .selector{
   margin-top:16px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   justify-content:space-between;
+  align-items:center;
 }
 
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .pill{
-  padding:10px 16px;
+  padding:10px 14px;
   border-radius:999px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   cursor:pointer;
-  font-weight:900;
+  font-weight:950;
+  letter-spacing:.2px;
+  color:var(--ink);
+  min-height:44px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
-
+.pill::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.26), transparent 72%);
+  opacity:.45;pointer-events:none;
+}
 .pill.active{
-  border-color:rgba(255,80,80,.55);
-  box-shadow:0 0 18px var(--redGlow);
+  border-color:rgba(255,43,43,.32);
+  box-shadow:0 14px 36px rgba(0,0,0,.55), 0 0 16px rgba(255,43,43,.12);
 }
+.stateBadge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:var(--mut);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+.stateBadge b{color:var(--ink)}
 
 /* ACCORDION */
 .list{display:flex;flex-direction:column;gap:14px}
 
 .row{
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
   overflow:hidden;
+  box-shadow:var(--shadowB);
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
 }
 
 .head{
-  padding:18px;
+  padding:16px 16px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:flex-start;
+  gap:10px;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 
+.titleWrap{min-width:0}
 .title{
-  font-weight:950;
+  font-weight:980;
   font-size:18px;
+  color:var(--ink);
+  letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;
+  font-size:13.75px;
+  color:var(--mut);
+  opacity:.92;
+  line-height:1.42;
+  max-width:92ch;
+}
+
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
 }
 
 .body{
   display:none;
-  padding:20px;
-  border-top:1px solid var(--stroke);
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
-
 .row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
 
 .content{
-  font-size:16px;
+  font-size:15.25px;
   line-height:1.75;
   color:var(--mut);
+  margin:0;
+}
+.content + .content{margin-top:12px}
+
+.ul{
+  margin:12px 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.82);
+  line-height:1.55;
+  font-size:13.75px;
+}
+.ul li{margin:6px 0}
+
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px;
 }
 
 /* DOCK */
@@ -143,39 +317,66 @@ body::before,body::after{pointer-events:none!important}
   width:min(980px,94vw);
   padding:10px;
   border-radius:22px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px;border-radius:999px}
 
+@media (max-width:520px){
+  :root{--dockH:140px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+  .t{font-size:28px}
+  .content{font-size:14.75px}
+}
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    <a class="btn" id="btnLaws" href="/laws/" data-route="/laws/">LAWS</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
   <div class="header">
+    <p class="k" id="hdrK">GAUGES</p>
     <h1 class="t" id="hdrTitle">INSTRUMENTATION SPINE</h1>
-    <p class="s" id="hdrSub">
-      If instability exists, it has a pattern.
-      These instruments expose that pattern before it becomes collapse.
-    </p>
+    <p class="s" id="hdrSub"></p>
 
-    <div class="selector">
-      <div>
-        <button class="pill active" id="langEN">EN</button>
-        <button class="pill" id="langZH">中文</button>
-        <button class="pill" id="langES">ES</button>
+    <div class="selector" aria-label="Lens selectors">
+      <div class="pills" aria-label="Language">
+        <button class="pill" id="langEN" type="button">EN</button>
+        <button class="pill" id="langZH" type="button">中文</button>
+        <button class="pill" id="langES" type="button">ES</button>
       </div>
-      <div>
-        <button class="pill active" id="lensInformal">INFORMAL</button>
-        <button class="pill" id="lensFormal">FORMAL</button>
-        <button class="pill" id="lensEngineering">ENGINEERING</button>
-        <button class="pill" id="lensPlatform">PLATFORM</button>
+      <div class="pills" aria-label="Lenses">
+        <button class="pill" id="lensInformal" type="button">INFORMAL</button>
+        <button class="pill" id="lensFormal" type="button">FORMAL</button>
+        <button class="pill" id="lensEngineering" type="button">ENGINEERING</button>
+        <button class="pill" id="lensPlatform" type="button">PLATFORM</button>
+      </div>
+      <div class="stateBadge" aria-label="State">
+        <span id="stLang">LANG</span> <b id="stLangV">EN</b>
+        <span style="opacity:.6">·</span>
+        <span id="stLens">LENS</span> <b id="stLensV">INFORMAL</b>
       </div>
     </div>
   </div>
@@ -184,108 +385,628 @@ body::before,body::after{pointer-events:none!important}
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/index.html">INDEX</a>
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+  <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws2" href="/laws/" data-route="/laws/">LAWS</a>
 </nav>
 
 <script>
 (function(){
+  "use strict";
 
-let lang="en";
-let lens="informal";
+  // ===== Canon state (NO new gd_* keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-const INSTRUMENTS=[
-"SCI · Scalar Coherence Index",
-"Collapse Detection Engine",
-"Windowed Stability Analyzer",
-"256-State Sweep",
-"Correlation Exposure Monitor",
-"Weak-Point Heatmap",
-"Registry Verification Surface"
-];
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || ""; // URL-only preserved if present (not used for lens here)
 
-function content(name){
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lane!=="platform" && lane!=="engineering") lane="";
 
-  const TEXT={
-    informal:{
-      en:"This instrument shows you where pressure builds and where structure begins to bend.",
-      zh:"该仪器揭示压力积累的位置以及结构开始弯曲的点。",
-      es:"Este instrumento revela dónde se acumula presión y dónde la estructura comienza a ceder."
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  // ===== Lens mapping (4 lenses via existing keys) =====
+  // INFORMAL    => style=informal depth=explore
+  // FORMAL      => style=formal   depth=explore
+  // PLATFORM    => style=informal depth=learn
+  // ENGINEERING => style=formal   depth=learn
+  function lensKey(){
+    if(style==="formal" && depth==="learn") return "engineering";
+    if(style==="informal" && depth==="learn") return "platform";
+    if(style==="formal") return "formal";
+    return "informal";
+  }
+
+  function setLens(k){
+    if(k==="engineering"){ style="formal"; depth="learn"; }
+    else if(k==="platform"){ style="informal"; depth="learn"; }
+    else if(k==="formal"){ style="formal"; depth="explore"; }
+    else { style="informal"; depth="explore"; }
+
+    try{
+      LS.setItem("gd_style",style);
+      LS.setItem("gd_depth",depth);
+    }catch(e){}
+
+    window.location.href = window.location.pathname + q();
+  }
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang", (over&&over.lang)?over.lang:lang);
+    p.set("style",(over&&over.style)?over.style:style);
+    p.set("time", (over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?over.depth:depth);
+    if(lane==="platform"||lane==="engineering") p.set("lane", lane); // preserve if present
+    return "?" + p.toString();
+  }
+
+  // Wire all [data-route] anchors with full state
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          if(!sp.get("lang")) sp.set("lang", lang);
+          if(!sp.get("style")) sp.set("style", style);
+          if(!sp.get("time")) sp.set("time", time);
+          if(!sp.get("depth")) sp.set("depth", depth);
+          if(!sp.get("lane") && (lane==="platform"||lane==="engineering")) sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // Language toggle (reload same pathname)
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Header language pills
+  var langEN=document.getElementById("langEN");
+  var langZH=document.getElementById("langZH");
+  var langES=document.getElementById("langES");
+  if(langEN) langEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  if(langZH) langZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  if(langES) langES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Lens pills
+  var lensInformal=document.getElementById("lensInformal");
+  var lensFormal=document.getElementById("lensFormal");
+  var lensEngineering=document.getElementById("lensEngineering");
+  var lensPlatform=document.getElementById("lensPlatform");
+
+  if(lensInformal) lensInformal.addEventListener("click", function(){ setLens("informal"); }, {passive:true});
+  if(lensFormal) lensFormal.addEventListener("click", function(){ setLens("formal"); }, {passive:true});
+  if(lensEngineering) lensEngineering.addEventListener("click", function(){ setLens("engineering"); }, {passive:true});
+  if(lensPlatform) lensPlatform.addEventListener("click", function(){ setLens("platform"); }, {passive:true});
+
+  // Copy helpers
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function lensLabel(){
+    var k=lensKey();
+    if(lang==="zh") return (k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程");
+    if(lang==="es") return (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA");
+    return (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
+  }
+
+  function paintPills(){
+    // language
+    langEN.classList.toggle("active", lang==="en");
+    langZH.classList.toggle("active", lang==="zh");
+    langES.classList.toggle("active", lang==="es");
+    // lens
+    var k=lensKey();
+    lensInformal.classList.toggle("active", k==="informal");
+    lensFormal.classList.toggle("active", k==="formal");
+    lensPlatform.classList.toggle("active", k==="platform");
+    lensEngineering.classList.toggle("active", k==="engineering");
+  }
+
+  // Header copy (lens-aware)
+  var HEAD={
+    en:{
+      k:"GAUGES",
+      t:"INSTRUMENTATION SPINE",
+      sub:{
+        informal:"If instability exists, it has a pattern. These instruments help you see that pattern before it becomes collapse.",
+        formal:"Measurement surfaces provide bounded outputs under declared scope, with reproducible results and reason codes.",
+        platform:"Platform posture: deployable monitoring surfaces for oversight, underwriting, and governance integration.",
+        engineering:"Engineering posture: deterministic evaluation, windowed stability analysis, correlation exposure, and collapse boundary detection."
+      }
     },
-    formal:{
-      en:"Provides bounded, observer-invariant measurement under declared scope with reproducible outputs.",
-      zh:"在声明范围内提供有界、观察者不变的可重复测量输出。",
-      es:"Proporciona medición acotada e invariante bajo alcance declarado con resultados reproducibles."
+    zh:{
+      k:"量规",
+      t:"测量主干",
+      sub:{
+        informal:"只要存在不稳定，就一定有模式。下面仪器让你在崩塌前看见模式。",
+        formal:"测量面在声明范围内输出有界、可复现结果，并附原因码。",
+        platform:"平台姿态：可部署的监测界面，用于监督、承保与治理集成。",
+        engineering:"工程姿态：确定性评估、窗口稳定分析、相关暴露与崩塌边界检测。"
+      }
     },
-    engineering:{
-      en:"Implements deterministic constraint evaluation, vector scoring, and collapse boundary detection.",
-      zh:"实现确定性约束评估、向量评分与崩溃边界检测。",
-      es:"Implementa evaluación determinista de restricciones, puntuación vectorial y detección de límites de colapso."
-    },
-    platform:{
-      en:"Deployable monitoring surface for institutional oversight, underwriting, and governance integration.",
-      zh:"可部署的监测界面，用于机构监督、承保与治理集成。",
-      es:"Superficie desplegable de monitoreo para supervisión institucional, suscripción y gobernanza."
+    es:{
+      k:"MEDIDORES",
+      t:"COLUMNA DE INSTRUMENTACIÓN",
+      sub:{
+        informal:"Si existe inestabilidad, tiene un patrón. Estos instrumentos lo muestran antes del colapso.",
+        formal:"Superficies de medición entregan salidas acotadas bajo alcance declarado, con resultados reproducibles y razones.",
+        platform:"Plataforma: superficies desplegables para supervisión, suscripción y gobernanza.",
+        engineering:"Ingeniería: evaluación determinista, análisis por ventanas, exposición de correlación y detección de límites de colapso."
+      }
     }
   };
 
-  return TEXT[lens][lang];
-}
+  // 7 canonical instruments (each has per-lens content + bullets)
+  var INSTRUMENTS=[
+    {
+      c:"#ff2b2b",
+      name:P("SCI · Scalar Coherence Index","SCI · 一致性标量指数","SCI · Índice de coherencia escalar"),
+      sub:P("Single number summary + reason code trail.","单值摘要 + 原因码轨迹。","Resumen numérico + rastro de razones."),
+      text:{
+        informal:P(
+          "This gauge answers: “Are we getting more coherent or less coherent?” It’s a calm summary that points you to the next place to look.",
+          "这项量规回答：“我们更一致还是更碎？”它给出冷静摘要，并指向下一步要看的地方。",
+          "Este medidor responde: “¿Más coherentes o menos?” Es un resumen calmado que te dirige a dónde mirar."
+        ),
+        formal:P(
+          "Produces a bounded scalar under declared scope with reproducible computation and emitted reason codes for state transitions.",
+          "在声明范围内输出有界标量，计算可复现，并对状态转移发出原因码。",
+          "Produce un escalar acotado bajo alcance declarado con cómputo reproducible y códigos de razón."
+        ),
+        platform:P(
+          "Platform use: quick health indicator for stakeholders. Route to details only when the scalar moves outside bands.",
+          "平台用途：给利益相关方一个快速健康指示。只有当指数越界才深入细节。",
+          "Uso plataforma: indicador rápido para interesados. Enruta a detalle solo cuando sale de bandas."
+        ),
+        engineering:P(
+          "Engineering use: scalar aggregates windowed deltas; requires stable naming and deterministic gates. Drift implies containment.",
+          "工程用途：标量聚合窗口变化；要求命名稳定与确定性闸门。漂移意味着要隔离。",
+          "Uso ingeniería: agrega deltas por ventana; requiere nombres estables y compuertas deterministas. Deriva implica contención."
+        )
+      },
+      bullets:{
+        informal:P("Watch trend, not feelings.","看趋势，不看感觉。","Mira tendencia, no sensaciones."),
+        formal:P("Bounded output + reason codes.","有界输出 + 原因码。","Salida acotada + razones."),
+        platform:P("Stakeholder-friendly surface.","面向管理层。","Superficie para stakeholders."),
+        engineering:P("Deterministic + windowed.","确定性 + 窗口化。","Determinista + por ventanas.")
+      }
+    },
+    {
+      c:"#c9a24a",
+      name:P("Collapse Detection Engine","崩塌检测引擎","Motor de detección de colapso"),
+      sub:P("Early warning before cascade.","级联前预警。","Alerta temprana antes de cascada."),
+      text:{
+        informal:P(
+          "This instrument’s job is simple: tell you if you are entering a danger zone—so you can slow down and contain.",
+          "它的任务很简单：告诉你是否进入危险区——从而放慢并隔离。",
+          "Su trabajo es simple: decirte si entras en zona de peligro—para bajar velocidad y contener."
+        ),
+        formal:P(
+          "Detects collapse boundary conditions under declared scope using windowed evidence and threshold rules.",
+          "在声明范围内用窗口证据与阈值规则检测崩塌边界条件。",
+          "Detecta condiciones de límite de colapso bajo alcance declarado usando evidencia por ventanas y umbrales."
+        ),
+        platform:P(
+          "Platform use: escalation gate. If warning triggers, routes shift from expansion to containment playbooks.",
+          "平台用途：升级闸门。触发预警后，从扩张转为隔离剧本。",
+          "Uso plataforma: compuerta de escalación. Si se activa, cambia de expansión a contención."
+        ),
+        engineering:P(
+          "Engineering use: thresholded detection with explicit reason codes; requires rollback/kill paths to be actionable.",
+          "工程用途：带原因码的阈值检测；必须配合回滚/终止路径才可执行。",
+          "Uso ingeniería: detección por umbrales con razones; requiere rollback/kill paths."
+        )
+      },
+      bullets:{
+        informal:P("Warn early, contain fast.","早预警，快隔离。","Alerta temprano, contén rápido."),
+        formal:P("Windowed thresholds.","窗口阈值。","Umbrales por ventanas."),
+        platform:P("Escalation gate.","升级闸门。","Compuerta de escalación."),
+        engineering:P("Requires rollback paths.","需要回滚路径。","Requiere rollback.")
+      }
+    },
+    {
+      c:"#60a5fa",
+      name:P("Windowed Stability Analyzer","窗口稳定分析器","Analizador de estabilidad por ventanas"),
+      sub:P("Short windows to find the real change.","用短窗口找真实变化。","Ventanas cortas para hallar el cambio real."),
+      text:{
+        informal:P(
+          "Instead of arguing about the whole story, this tool asks: what changed this week? This day? This window?",
+          "不争整部故事，只问：这周变了什么？今天变了什么？这个窗口变了什么？",
+          "En lugar de debatir la historia completa, pregunta: ¿qué cambió esta semana? ¿hoy? ¿en esta ventana?"
+        ),
+        formal:P(
+          "Computes stability metrics over fixed windows with reproducible comparisons and bounded deltas.",
+          "在固定窗口上计算稳定指标，比较可复现，变化量有界。",
+          "Calcula métricas de estabilidad por ventanas fijas con comparaciones reproducibles y deltas acotados."
+        ),
+        platform:P(
+          "Platform use: explain change without narrative. It generates ‘what moved’ lists for decisions.",
+          "平台用途：不用叙事解释变化。生成“哪些在动”的清单供决策。",
+          "Uso plataforma: explicar cambio sin narrativa. Genera listas de ‘qué se movió’."
+        ),
+        engineering:P(
+          "Engineering use: windowed deltas + correlation checks to identify coupled failures and prevent cascade.",
+          "工程用途：窗口变化量 + 相关检查，用于识别耦合失败并阻断级联。",
+          "Uso ingeniería: deltas por ventana + correlación para identificar fallos acoplados y evitar cascada."
+        )
+      },
+      bullets:{
+        informal:P("Small window, big clarity.","小窗口，大清晰。","Ventana pequeña, claridad grande."),
+        formal:P("Reproducible deltas.","可复现变化量。","Deltas reproducibles."),
+        platform:P("Decision-ready summaries.","决策就绪摘要。","Resúmenes listos para decisión."),
+        engineering:P("Correlation-aware.","相关感知。","Consciente de correlación.")
+      }
+    },
+    {
+      c:"#ff2b2b",
+      name:P("256-State Sweep","256 状态扫掠","Barrido de 256 estados"),
+      sub:P("Enumerate, then traverse.","先枚举，再遍历。","Enumerar, luego recorrer."),
+      text:{
+        informal:P(
+          "This is the anti-confusion tool. It turns ‘it’s complicated’ into a finite map you can traverse.",
+          "这是反困惑工具：把“太复杂”变成有限地图可遍历。",
+          "Herramienta anti-confusión: convierte ‘es complicado’ en un mapa finito recorrible."
+        ),
+        formal:P(
+          "Enumerates admissible states under declared scope and evaluates transitions with reason-coded outputs.",
+          "在声明范围内枚举可采信状态，并用原因码评估转移。",
+          "Enumera estados admisibles bajo alcance declarado y evalúa transiciones con salidas con razones."
+        ),
+        platform:P(
+          "Platform use: explain the map to non-technical users: ‘Here are the states. Here’s where you are.’",
+          "平台用途：向非技术用户解释地图：状态有哪些，你在哪里。",
+          "Uso plataforma: explicar el mapa a no técnicos: ‘estos son estados; aquí estás’."
+        ),
+        engineering:P(
+          "Engineering use: deterministic traversal; backtracking invalidates downstream receipts; prevents silent drift.",
+          "工程用途：确定性遍历；回退会使下游收据无效；防止静默漂移。",
+          "Uso ingeniería: recorrido determinista; retroceso invalida recibos; evita deriva silenciosa."
+        )
+      },
+      bullets:{
+        informal:P("Finite map beats stories.","有限地图胜过故事。","Mapa finito vence historias."),
+        formal:P("Reason-coded transitions.","原因码转移。","Transiciones con razones."),
+        platform:P("User-locating surface.","用户定位面。","Superficie para ubicar usuario."),
+        engineering:P("Deterministic traversal.","确定性遍历。","Recorrido determinista.")
+      }
+    },
+    {
+      c:"#c9a24a",
+      name:P("Correlation Exposure Monitor","相关暴露监视器","Monitor de exposición de correlación"),
+      sub:P("Reveal coupled risk before it explodes.","爆前揭示耦合风险。","Revela riesgo acoplado antes de explotar."),
+      text:{
+        informal:P(
+          "The real danger at scale isn’t one failure. It’s failures moving together. This tool shows what’s coupled.",
+          "规模下真正危险不是单点失败，而是一起动的失败。本工具揭示耦合。",
+          "El peligro real al escalar no es un fallo, sino fallos juntos. Este medidor muestra acoplamientos."
+        ),
+        formal:P(
+          "Computes correlation exposures across declared signals and flags coupled movement beyond allowed bands.",
+          "计算声明信号的相关暴露，并标记超出允许区间的耦合运动。",
+          "Calcula exposiciones de correlación y marca movimiento acoplado fuera de bandas permitidas."
+        ),
+        platform:P(
+          "Platform use: governance visibility. Makes shared dependencies explicit so decisions stop being blind.",
+          "平台用途：治理可见性。把共享依赖变显性，让决策不再盲。",
+          "Uso plataforma: visibilidad de gobernanza. Hace explícitas dependencias compartidas."
+        ),
+        engineering:P(
+          "Engineering use: coupled exposure dominates blast radius; containment design must respect these edges.",
+          "工程用途：耦合暴露决定爆炸半径；隔离设计必须尊重这些边。",
+          "Uso ingeniería: exposición acoplada domina radio de impacto; contención debe respetar estas aristas."
+        )
+      },
+      bullets:{
+        informal:P("Coupling is the danger.","耦合才危险。","El acoplamiento es el peligro."),
+        formal:P("Banded correlation flags.","相关区间标记。","Banderas por bandas."),
+        platform:P("Shared dependency visibility.","共享依赖可见。","Visibilidad de dependencias."),
+        engineering:P("Containment edges.","隔离边。","Aristas de contención.")
+      }
+    },
+    {
+      c:"#93c5fd",
+      name:P("Weak-Point Heatmap","弱点热图","Mapa de calor de puntos débiles"),
+      sub:P("Where does structure bend first?","结构先从哪弯？","¿Dónde cede primero la estructura?"),
+      text:{
+        informal:P(
+          "This shows the first place things bend. Fixing the weak point is usually cheaper than fixing everything.",
+          "它显示最先弯的地方。修弱点通常比修全局更便宜。",
+          "Muestra dónde cede primero. Arreglar el punto débil suele ser más barato que arreglar todo."
+        ),
+        formal:P(
+          "Ranks weak points by measured divergence and propagation risk under windowed evaluation.",
+          "按窗口评估的测得偏离与传播风险对弱点排序。",
+          "Clasifica puntos débiles por divergencia medida y riesgo de propagación bajo evaluación por ventanas."
+        ),
+        platform:P(
+          "Platform use: prioritize work. Converts ‘too many problems’ into a ranked list and a route.",
+          "平台用途：优先级排序。把“问题太多”变成排序清单与路径。",
+          "Uso plataforma: priorizar trabajo. Convierte ‘demasiados problemas’ en lista ordenada y ruta."
+        ),
+        engineering:P(
+          "Engineering use: design containment around top-ranked weak points; verify fixes via subsequent windows.",
+          "工程用途：围绕高排名弱点设计隔离；用后续窗口验证修复。",
+          "Uso ingeniería: diseñar contención alrededor de puntos débiles; verificar en ventanas posteriores."
+        )
+      },
+      bullets:{
+        informal:P("Fix the first bend.","修最先弯的。","Arregla la primera flexión."),
+        formal:P("Ranked by divergence + risk.","按偏离+风险排序。","Ordenado por divergencia + riesgo."),
+        platform:P("Turns overload into order.","把过载变秩序。","Convierte saturación en orden."),
+        engineering:P("Verify by windows.","用窗口验证。","Verificar por ventanas.")
+      }
+    },
+    {
+      c:"#a3a3a3",
+      name:P("Registry Verification Surface","注册表验证面","Superficie de verificación de registro"),
+      sub:P("Confirm what exists, what changed, and what is live.","确认存在/变化/上线。","Confirmar qué existe, qué cambió y qué está en vivo."),
+      text:{
+        informal:P(
+          "This instrument answers: what do we actually have right now? It prevents imaginary inventory.",
+          "它回答：我们现在到底有什么？防止‘想象库存’。",
+          "Responde: ¿qué tenemos realmente ahora? Evita inventario imaginario."
+        ),
+        formal:P(
+          "Verifies current inventory and binding tables under declared scope with reproducible snapshots.",
+          "在声明范围内用可复现快照验证当前库存与绑定表。",
+          "Verifica inventario y tablas de binding bajo alcance declarado con snapshots reproducibles."
+        ),
+        platform:P(
+          "Platform use: route safety. If a route doesn’t exist, we build a shell instead of pretending it does.",
+          "平台用途：路由安全。路由不存在就建壳，不装存在。",
+          "Uso plataforma: seguridad de rutas. Si no existe, se construye shell en vez de fingir."
+        ),
+        engineering:P(
+          "Engineering use: prevents silent drift by locking naming, versions, and live bindings to receipts.",
+          "工程用途：通过锁定命名/版本/绑定到收据，阻止静默漂移。",
+          "Uso ingeniería: evita deriva silenciosa bloqueando nombres/versiones/bindings a recibos."
+        )
+      },
+      bullets:{
+        informal:P("Reality inventory.","现实库存。","Inventario real."),
+        formal:P("Reproducible snapshots.","可复现快照。","Snapshots reproducibles."),
+        platform:P("Route safety.","路由安全。","Seguridad de rutas."),
+        engineering:P("Locks drift.","锁漂移。","Bloquea deriva.")
+      }
+    }
+  ];
 
-function render(){
+  // Apply header copy + localize fixed labels
+  function lensLabel(){
+    var k=lensKey();
+    if(lang==="zh") return (k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程");
+    if(lang==="es") return (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA");
+    return (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
+  }
 
-  const list=document.getElementById("list");
-  list.innerHTML="";
+  function applyHeader(){
+    var H=HEAD[lang] || HEAD.en;
+    document.getElementById("hdrK").textContent=H.k;
+    document.getElementById("hdrTitle").textContent=H.t;
+    document.getElementById("hdrSub").textContent=H.sub[lensKey()] || H.sub.informal;
 
-  INSTRUMENTS.forEach((name,i)=>{
+    // state badge
+    document.getElementById("stLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+    document.getElementById("stLensV").textContent = lensLabel();
 
-    const row=document.createElement("div");
+    // top button labels
+    if(lang==="zh"){
+      document.getElementById("btnDoor").textContent="门";
+      document.getElementById("btnHome").textContent="主页";
+      document.getElementById("btnLaws").textContent="法则";
+      document.getElementById("dockIndex").textContent="索引";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws2").textContent="法则";
+      document.getElementById("stLang").textContent="语言";
+      document.getElementById("stLens").textContent="透镜";
+      lensInformal.textContent="通俗";
+      lensFormal.textContent="正式";
+      lensEngineering.textContent="工程";
+      lensPlatform.textContent="平台";
+    }else if(lang==="es"){
+      document.getElementById("btnDoor").textContent="PUERTA";
+      document.getElementById("btnHome").textContent="INICIO";
+      document.getElementById("btnLaws").textContent="LEYES";
+      document.getElementById("dockIndex").textContent="BRÚJULA";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws2").textContent="LEYES";
+      document.getElementById("stLang").textContent="IDIOMA";
+      document.getElementById("stLens").textContent="LENTE";
+      lensInformal.textContent="INFORMAL";
+      lensFormal.textContent="FORMAL";
+      lensEngineering.textContent="INGENIERÍA";
+      lensPlatform.textContent="PLATAFORMA";
+    }else{
+      document.getElementById("btnDoor").textContent="DOOR";
+      document.getElementById("btnHome").textContent="HOME";
+      document.getElementById("btnLaws").textContent="LAWS";
+      document.getElementById("dockIndex").textContent="COMPASS";
+      document.getElementById("dockExplore").textContent="EXPLORE";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws2").textContent="LAWS";
+      document.getElementById("stLang").textContent="LANG";
+      document.getElementById("stLens").textContent="LENS";
+      lensInformal.textContent="INFORMAL";
+      lensFormal.textContent="FORMAL";
+      lensEngineering.textContent="ENGINEERING";
+      lensPlatform.textContent="PLATFORM";
+    }
+  }
+
+  function paintPills(){
+    // lang pills
+    langEN.classList.toggle("active", lang==="en");
+    langZH.classList.toggle("active", lang==="zh");
+    langES.classList.toggle("active", lang==="es");
+
+    // lens pills
+    var k=lensKey();
+    lensInformal.classList.toggle("active", k==="informal");
+    lensFormal.classList.toggle("active", k==="formal");
+    lensPlatform.classList.toggle("active", k==="platform");
+    lensEngineering.classList.toggle("active", k==="engineering");
+  }
+
+  // Render instruments (single-open)
+  var list=document.getElementById("list");
+
+  function closeAll(){
+    var rows=list.querySelectorAll(".row");
+    for(var i=0;i<rows.length;i++){
+      rows[i].classList.remove("open");
+      var c=rows[i].querySelector(".chevTxt");
+      if(c) c.textContent="▸";
+    }
+  }
+
+  function currentText(inst){
+    var k=lensKey();
+    return (inst.text[k] ? pick(inst.text[k]) : pick(inst.text.informal));
+  }
+  function currentBullet(inst){
+    var k=lensKey();
+    return pick(inst.bullets[k] || inst.bullets.informal);
+  }
+
+  function makeRow(inst, idx){
+    var row=document.createElement("div");
     row.className="row";
 
-    const head=document.createElement("div");
+    var head=document.createElement("div");
     head.className="head";
-    head.innerHTML='<div class="title">'+name+'</div><div>▸</div>';
+    head.setAttribute("role","button");
+    head.setAttribute("tabindex","0");
 
-    const body=document.createElement("div");
+    var tw=document.createElement("div");
+    tw.className="titleWrap";
+
+    var title=document.createElement("div");
+    title.className="title";
+    title.textContent=pick(inst.name);
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent=pick(inst.sub);
+
+    tw.appendChild(title);
+    tw.appendChild(sub);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(tw);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
     body.className="body";
-    body.innerHTML='<div class="content">'+content(name)+'</div>';
 
-    head.onclick=()=>{
-      document.querySelectorAll(".row").forEach(r=>r.classList.remove("open"));
-      row.classList.toggle("open");
-    };
+    var p1=document.createElement("p");
+    p1.className="content";
+    p1.textContent=currentText(inst);
+
+    var ul=document.createElement("ul");
+    ul.className="ul";
+    var li=document.createElement("li");
+    li.textContent=currentBullet(inst);
+    ul.appendChild(li);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    var a=document.createElement("a");
+    a.className="btn red";
+    a.textContent = (lang==="zh")?"打开：法则边界":(lang==="es")?"ABRIR: LÍMITES (LEYES)":"OPEN: LAWS BOUNDS";
+    a.setAttribute("data-route","/laws/");
+    actions.appendChild(a);
+
+    body.appendChild(p1);
+    body.appendChild(ul);
+    body.appendChild(actions);
+
+    function toggle(){
+      var isOpen=row.classList.contains("open");
+      if(isOpen){
+        row.classList.remove("open");
+        row.querySelector(".chevTxt").textContent="▸";
+        return;
+      }
+      closeAll();
+      row.classList.add("open");
+      row.querySelector(".chevTxt").textContent="▾";
+      wireAll();
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
 
     row.appendChild(head);
     row.appendChild(body);
-    list.appendChild(row);
-  });
 
-}
+    if(idx===0){
+      row.classList.add("open");
+      row.querySelector(".chevTxt").textContent="▾";
+    }
 
-function activate(btnGroup,id,value,type){
-  document.querySelectorAll(btnGroup).forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  if(type==="lang") lang=value;
-  if(type==="lens") lens=value;
+    return row;
+  }
+
+  function render(){
+    paintPills();
+    applyHeader();
+
+    list.innerHTML="";
+    for(var i=0;i<INSTRUMENTS.length;i++){
+      list.appendChild(makeRow(INSTRUMENTS[i], i));
+    }
+    wireAll();
+  }
+
+  // INIT
   render();
-}
-
-/* Language */
-document.getElementById("langEN").onclick=()=>activate(".selector button","langEN","en","lang");
-document.getElementById("langZH").onclick=()=>activate(".selector button","langZH","zh","lang");
-document.getElementById("langES").onclick=()=>activate(".selector button","langES","es","lang");
-
-/* Lens */
-document.getElementById("lensInformal").onclick=()=>activate(".selector button","lensInformal","informal","lens");
-document.getElementById("lensFormal").onclick=()=>activate(".selector button","lensFormal","formal","lens");
-document.getElementById("lensEngineering").onclick=()=>activate(".selector button","lensEngineering","engineering","lens");
-document.getElementById("lensPlatform").onclick=()=>activate(".selector button","lensPlatform","platform","lens");
-
-render();
-
 })();
 </script>
 

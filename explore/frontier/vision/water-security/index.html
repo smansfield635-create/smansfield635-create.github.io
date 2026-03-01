@@ -1,0 +1,458 @@
+<!-- TNT — /explore/frontier/vision/water-security/index.html
+     FRONTIER · VISION · WATER SECURITY
+     RULES:
+       - Vision lane only (no structure loop here)
+       - No modals, no overlays
+       - EN / 中文 / ES
+       - Formal vs Informal toggle (materially different copy)
+       - Canon state carry: lang/style/time/depth (URL + LS)
+       - Uses ui.css + branch.css + instruments.js only
+       - Does NOT style html/body background (ui.css owns field)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VISION · WATER SECURITY</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{position:relative;z-index:0}
+body::before,body::after{z-index:0!important;pointer-events:none!important}
+#root{position:relative;z-index:10}
+
+/* tokens */
+:root{
+  --opalA:rgba(210,190,255,.22);
+  --opalB:rgba(120,70,255,.18);
+  --opalC:rgba(90,210,255,.16);
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.92);
+  --obsB:rgba(6,10,16,.96);
+}
+
+/* top */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  z-index:220;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  white-space:nowrap;flex-wrap:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* header */
+.header{
+  width:min(980px,94vw);
+  margin:74px auto 0;
+  padding:16px 16px 14px;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.h1{margin:0;font-weight:950;font-size:28px;letter-spacing:1px;line-height:1.12}
+.p{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.5;max-width:980px}
+
+/* lens */
+.lens{
+  margin-top:12px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.lens .btn{border-radius:999px;padding:10px 14px}
+
+/* content */
+.page{
+  width:min(980px,94vw);
+  margin:14px auto 34px;
+  display:flex;flex-direction:column;gap:12px;
+}
+
+.card{
+  position:relative;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.12), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
+  box-shadow:0 22px 72px rgba(0,0,0,.50), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{min-width:0}
+.title{font-weight:950;letter-spacing:.2px}
+.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+.txt{margin:0;color:rgba(255,255,255,.88);line-height:1.6;font-size:13.25px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{border-radius:999px;padding:10px 14px}
+
+/* footer */
+.footer{
+  width:min(980px,94vw);
+  margin:10px auto 34px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+</style>
+</head>
+
+<body>
+<div id="root">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/explore/frontier/vision/">BACK</a>
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <p class="k" id="k0">FRONTIER · VISION</p>
+    <h1 class="h1" id="h0">WATER SECURITY</h1>
+    <p class="p" id="p0">Human-first: clean water that stays clean under stress, without fantasy claims.</p>
+    <div class="lens" aria-label="Lens">
+      <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+      <button class="btn" id="btnFormal" type="button">FORMAL</button>
+    </div>
+  </div>
+
+  <div class="page" aria-label="Content">
+
+    <div class="card" id="c1">
+      <div class="head" role="button" tabindex="0" aria-label="Open: What it is">
+        <div class="left">
+          <div class="title" id="t1">What it is</div>
+          <div class="sub" id="s1">The “water stack” that keeps communities stable: source → clean → store → verify → reuse.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b1"></p>
+        <div class="actions">
+          <a class="btn" id="j1" href="/explore/frontier/vision/">OPEN: VISION INDEX</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c2">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Why it matters">
+        <div class="left">
+          <div class="title" id="t2">Why it matters</div>
+          <div class="sub" id="s2">Water is the first constraint of cities, disaster zones, and off-world habitats.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b2"></p>
+        <div class="actions">
+          <a class="btn" id="j2" href="/products/">OPEN: PRODUCTS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c3">
+      <div class="head" role="button" tabindex="0" aria-label="Open: System view">
+        <div class="left">
+          <div class="title" id="t3">System view</div>
+          <div class="sub" id="s3">Inventory + routing: water, energy, filters, sensors, and waste outputs as one coupled ledger.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b3"></p>
+        <div class="actions">
+          <a class="btn" id="j3" href="/explore/frontier/vision/urban-resource-os/">OPEN: URBAN RESOURCE OS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="c4">
+      <div class="head" role="button" tabindex="0" aria-label="Open: Roadmap">
+        <div class="left">
+          <div class="title" id="t4">Roadmap</div>
+          <div class="sub" id="s4">Start terrestrial (cities, farms, disaster response). Then scale into closed-loop habitats.</div>
+        </div>
+        <div class="chev">▸</div>
+      </div>
+      <div class="body">
+        <p class="txt" id="b4"></p>
+        <div class="actions">
+          <a class="btn" id="j4" href="/explore/frontier/vision/closed-loop-habitats/">OPEN: CLOSED-LOOP HABITATS</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Vision lane only · Structure lives in DOOR
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // --- canonical state ---
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  // nav links
+  document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
+  document.getElementById("btnDoor").href="/door/"+q();
+  document.getElementById("j1").href="/explore/frontier/vision/"+q();
+  document.getElementById("j2").href="/products/"+q();
+  document.getElementById("j3").href="/explore/frontier/vision/urban-resource-os/"+q();
+  document.getElementById("j4").href="/explore/frontier/vision/closed-loop-habitats/"+q();
+
+  // language buttons (reload same path)
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // lens buttons
+  var btnI=document.getElementById("btnInformal");
+  var btnF=document.getElementById("btnFormal");
+  function paintLens(){
+    btnI.classList.toggle("active", style==="informal");
+    btnF.classList.toggle("active", style==="formal");
+  }
+  function setLens(next){
+    if(next!=="formal"&&next!=="informal") next="informal";
+    style=next;
+    try{ localStorage.setItem("gd_style",style); }catch(e){}
+    paintLens();
+    render();
+  }
+  btnI.addEventListener("click", function(){ setLens("informal"); });
+  btnF.addEventListener("click", function(){ setLens("formal"); });
+  paintLens();
+
+  // accordion
+  function bindCard(cardId){
+    var card=document.getElementById(cardId);
+    var head=card.querySelector(".head");
+    var chev=card.querySelector(".chev");
+    function act(){
+      var open=!card.classList.contains("open");
+      document.querySelectorAll(".card").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
+      });
+      card.classList.toggle("open", open);
+      chev.textContent=open?"▾":"▸";
+    }
+    head.addEventListener("click", act);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  ["c1","c2","c3","c4"].forEach(bindCard);
+
+  // copy packs
+  var COPY = {
+    en:{
+      head:{
+        k:"FRONTIER · VISION",
+        h:"WATER SECURITY",
+        p:"Human-first: clean water that stays clean under stress, without fantasy claims."
+      },
+      informal:{
+        b1:"This is a practical water playbook: find a reliable source, clean it, store it safely, verify it continuously, and reuse it without drifting into unsafe habits. The goal is boring reliability—because boring water is safe water.",
+        b2:"Water is where systems fail quietly: contamination, pressure loss, broken pumps, bad filters, weak maintenance, and nobody notices until people get sick. If a community can keep water stable, it can keep everything else stable.",
+        b3:"Think of water like a ledger. Every liter has a source, a treatment path, a storage state, and a test result. When those links are missing, you’re guessing. When they’re present, you can scale without panic.",
+        b4:"Start with city-scale pilots: neighborhoods, farms, disaster response. Prove reliability under variability. Then extend the exact same inventory + verification discipline to remote sites and eventually closed-loop habitats."
+      },
+      formal:{
+        b1:"Water Security is a constraint-locked system: source characterization → treatment selection → storage control → verification (thresholds + reason codes) → reuse routing. The objective is stability under variance, not best-case performance.",
+        b2:"Water dominates risk because failures are coupled and delayed: contamination propagates, measurement lags, and remediation is slow. A stable water stack reduces downstream fragility across health, logistics, energy, and governance.",
+        b3:"System view: treat water, energy, membranes, chemicals, sensors, and waste streams as a coupled inventory. Routing decisions are bounded by conservation and by admissibility rules: if verification fails, reuse is blocked and remediation is triggered.",
+        b4:"Roadmap: (1) terrestrial deployments with auditable logs, (2) distributed redundancy + segmentation, (3) exportable verification bundles for operators and regulators, (4) translation into habitat-grade closed-loop requirements (high recycle fraction, strict contamination control)."
+      }
+    },
+    zh:{
+      head:{
+        k:"前沿 · 愿景",
+        h:"水安全",
+        p:"以人为先：在压力下依然稳定的安全用水，不做幻想式主张。"
+      },
+      informal:{
+        b1:"这是一个务实的用水方法：找可靠水源→净化→安全储存→持续检测→在不漂移的前提下复用。目标是“无聊的可靠”，因为无聊的水最安全。",
+        b2:"水的问题往往是“悄悄坏”：污染、压力不足、泵故障、滤芯失效、维护断档，直到人出问题才发现。能把水稳定住的社区，基本能把一切稳定住。",
+        b3:"把水当成账本：每一升都有来源、处理路径、储存状态和检测结果。缺一项就是猜；齐全就是可扩张、可复盘、可治理。",
+        b4:"路线：先做城市/乡镇级试点（社区、农场、灾害响应），在波动中验证可靠性。再把同一套库存+验证纪律扩展到偏远站点，最后延伸到闭环栖息地。"
+      },
+      formal:{
+        b1:"水安全是约束锁定系统：水源特征→工艺选择→储存控制→验证（阈值+原因码）→复用途径路由。目标是方差下的稳定性，而不是最佳工况效率。",
+        b2:"水主导风险的原因是“耦合+滞后”：污染传播快，测量滞后，修复慢。稳定的水体系能显著降低健康、物流、能源与治理的下游脆弱性。",
+        b3:"系统视角：把水、能量、膜、药剂、传感器与废流视为耦合库存。路由决策受守恒与可采信规则约束：验证失败则禁止复用，并触发修复/隔离流程。",
+        b4:"路线图：(1) 地面部署并具备可审计日志，(2) 分布式冗余与分段隔离，(3) 可导出的验证包用于运营与监管，(4) 迁移到栖息地级闭环要求（高回收率、严格污染控制）。"
+      }
+    },
+    es:{
+      head:{
+        k:"FRONTERA · VISIÓN",
+        h:"SEGURIDAD DEL AGUA",
+        p:"Humano primero: agua limpia que se mantiene limpia bajo presión, sin promesas fantasiosas."
+      },
+      informal:{
+        b1:"Esto es un manual práctico: fuente fiable → limpiar → almacenar bien → verificar siempre → reutilizar sin deriva. El objetivo es fiabilidad aburrida, porque el agua aburrida es agua segura.",
+        b2:"El agua falla en silencio: contaminación, baja presión, bombas rotas, filtros agotados, mantenimiento débil. Nadie lo nota hasta que hay daño. Si una comunidad estabiliza el agua, puede estabilizar todo lo demás.",
+        b3:"Piensa en el agua como un libro de cuentas: cada litro tiene origen, tratamiento, estado de almacenamiento y resultado de prueba. Sin eso, adivinas. Con eso, escalas sin pánico.",
+        b4:"Ruta: pilotos en tierra (barrios, granjas, respuesta a desastres). Prueba estabilidad con variabilidad. Luego lleva la misma disciplina a sitios remotos y, finalmente, a hábitats de ciclo cerrado."
+      },
+      formal:{
+        b1:"Seguridad del Agua es un sistema con restricciones: caracterización de fuente → selección de tratamiento → control de almacenamiento → verificación (umbrales + códigos de razón) → enrutamiento de reutilización. El objetivo es estabilidad bajo varianza.",
+        b2:"El agua domina el riesgo por fallas acopladas y tardías: la contaminación se propaga, la medición se retrasa y la remediación es lenta. Una pila estable reduce fragilidad en salud, logística, energía y gobernanza.",
+        b3:"Vista de sistema: agua, energía, membranas, químicos, sensores y residuos como inventario acoplado. Enrutamiento acotado por conservación y admisibilidad: si la verificación falla, se bloquea la reutilización y se activa remediación.",
+        b4:"Hoja de ruta: (1) despliegues en tierra con registros auditables, (2) redundancia distribuida y segmentación, (3) paquetes de verificación exportables, (4) traducción a requisitos de hábitat cerrado (alto reciclaje, control estricto de contaminación)."
+      }
+    }
+  };
+
+  function render(){
+    var P = (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
+    document.getElementById("k0").textContent=P.head.k;
+    document.getElementById("h0").textContent=P.head.h;
+    document.getElementById("p0").textContent=P.head.p;
+
+    var L = (style==="formal") ? P.formal : P.informal;
+    document.getElementById("b1").textContent=L.b1;
+    document.getElementById("b2").textContent=L.b2;
+    document.getElementById("b3").textContent=L.b3;
+    document.getElementById("b4").textContent=L.b4;
+
+    if(lang==="zh"){
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnDoor").textContent="门";
+      btnI.textContent="通俗";
+      btnF.textContent="正式";
+      document.getElementById("t1").textContent="它是什么";
+      document.getElementById("t2").textContent="为什么重要";
+      document.getElementById("t3").textContent="系统视角";
+      document.getElementById("t4").textContent="路线图";
+      document.getElementById("j1").textContent="打开：愿景索引";
+      document.getElementById("j2").textContent="打开：产品";
+      document.getElementById("j3").textContent="打开：城市资源OS";
+      document.getElementById("j4").textContent="打开：闭环栖息地";
+    }else if(lang==="es"){
+      document.getElementById("btnBack").textContent="VOLVER";
+      document.getElementById("btnDoor").textContent="PUERTA";
+      btnI.textContent="INFORMAL";
+      btnF.textContent="FORMAL";
+      document.getElementById("t1").textContent="Qué es";
+      document.getElementById("t2").textContent="Por qué importa";
+      document.getElementById("t3").textContent="Vista del sistema";
+      document.getElementById("t4").textContent="Hoja de ruta";
+      document.getElementById("j1").textContent="ABRIR: ÍNDICE VISIÓN";
+      document.getElementById("j2").textContent="ABRIR: PRODUCTOS";
+      document.getElementById("j3").textContent="ABRIR: URBAN RESOURCE OS";
+      document.getElementById("j4").textContent="ABRIR: HÁBITATS CERRADOS";
+    }else{
+      btnI.textContent="INFORMAL";
+      btnF.textContent="FORMAL";
+      document.getElementById("j1").textContent="OPEN: VISION INDEX";
+      document.getElementById("j2").textContent="OPEN: PRODUCTS";
+      document.getElementById("j3").textContent="OPEN: URBAN RESOURCE OS";
+      document.getElementById("j4").textContent="OPEN: CLOSED-LOOP HABITATS";
+    }
+  }
+  render();
+
+  // default open first card
+  document.getElementById("c1").classList.add("open");
+  document.getElementById("c1").querySelector(".chev").textContent="▾";
+})();
+</script>
+
+</body>
+</html>

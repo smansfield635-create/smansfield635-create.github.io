@@ -1,270 +1,953 @@
 <!doctype html>
+<!-- TNT — /index.html
+     COMPASS (TERMINAL) · DARK ONYX GEM FIELD · DUAL-RED (CRIMSON + FESTIVAL) · GOLD TRIM (DIAMOND LAY)
+     RULES:
+       - NO html/body background styling (ui.css owns field)
+       - NO modals, NO overlays trapping taps
+       - Single-open accordion
+       - State carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - lane=platform|engineering is URL-only (never stored)
+       - Trilingual (EN/中文/ES)
+       - Lenses:
+           * INFORMAL/FORMAL => gd_style + URL style=informal|formal
+           * PLATFORM/ENGINEERING => URL lane=platform|engineering
+       - All internal links append full state query
+     ASSETS:
+       - /assets/ui.css
+       - /assets/branch.css
+       - /assets/instruments.js
+-->
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Frontier System</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>COMPASS</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+  <script defer src="/assets/instruments.js"></script>
 
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
+  <style>
+    a{color:inherit;text-decoration:none}
+    body::before,body::after{pointer-events:none!important}
 
-:root{
-  --dockH:90px;
-  --inkA:rgba(12,22,38,.92);
-  --inkB:rgba(6,10,16,.96);
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --goldSoft:rgba(212,175,55,.25);
-}
+    :root{
+      /* Color hierarchy */
+      --onyx0: rgba(6,8,10,.88);
+      --onyx1: rgba(10,12,16,.78);
+      --opalV: rgba(90,40,120,.14);   /* opal-purple sheen (subtle) */
+      --crimson: rgba(120,0,22,.38);  /* deep crimson layer */
+      --festival: rgba(255,43,43,.18);/* bright festival layer */
+      --gold: rgba(201,162,74,.42);   /* trim */
+      --goldSoft: rgba(201,162,74,.14);
 
-/* Top Controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;
-}
+      --ink: rgba(255,255,255,.94);
+      --mut: rgba(255,255,255,.80);
+      --soft: rgba(255,255,255,.62);
 
-/* Page */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 20px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.10);
 
-/* Monument Hero */
-.hero{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:28px;
-  padding:36px 28px;
-  background:
-    radial-gradient(circle at 25% 25%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 75% 70%, var(--opalB), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
-  box-shadow:0 40px 140px rgba(0,0,0,.65);
-}
+      --shadow: 0 22px 72px rgba(0,0,0,.66);
 
-.hero h1{
-  margin:0;
-  font-weight:950;
-  font-size:clamp(34px,4vw,48px);
-  letter-spacing:1px;
-  line-height:1.15;
-}
+      --dockH: 96px;
+    }
 
-.hero p{
-  margin:20px 0 0;
-  font-size:clamp(18px,2.2vw,22px);
-  line-height:1.6;
-  opacity:.92;
-}
+    /* Layout */
+    .page{
+      width:min(1120px,94vw);
+      margin:0 auto;
+      padding:88px 0 calc(var(--dockH) + 18px);
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position:relative;
+      z-index:10;
+    }
 
-/* Accordion */
-.stack{display:flex;flex-direction:column;gap:14px}
+    /* Top controls (no blending strip) */
+    .top-left,.top-right{
+      position:fixed;top:16px;z-index:240;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      max-width: calc(50vw - 18px);
+    }
+    .top-left{left:16px;justify-content:flex-start}
+    .top-right{right:16px;justify-content:flex-end}
 
-.block{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:24px;
-  overflow:hidden;
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
-}
+    .chip{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid var(--stroke);
+      background:
+        radial-gradient(circle at 25% 35%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 80% 70%, rgba(201,162,74,.08), transparent 62%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 16px 44px rgba(0,0,0,.62);
+      color: var(--mut);
+      font-weight: 950;
+      letter-spacing:.25px;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      min-height:44px;
+      white-space:nowrap;
+    }
+    .chip b{color:var(--ink)}
+    .seg{
+      display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.16);
+      box-shadow: 0 16px 44px rgba(0,0,0,.62);
+    }
+    .seg button{
+      appearance:none;border:0;background:transparent;color:var(--mut);
+      padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+      letter-spacing:.25px;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .seg button[aria-pressed="true"]{
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+        linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+      box-shadow: inset 0 -10px 22px rgba(201,162,74,.18);
+    }
 
-.head{
-  padding:20px 22px;
-  display:flex;
-  justify-content:space-between;
-  cursor:pointer;
-}
+    /* Header (gem + contrast separation) */
+    .header{
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 18% 16%, var(--crimson), transparent 62%),
+        radial-gradient(circle at 82% 22%, var(--opalV), transparent 66%),
+        radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      padding:16px 16px 14px;
+      position:relative;
+      overflow:hidden;
+    }
 
-.head span{
-  font-weight:900;
-  font-size:20px;
-  letter-spacing:.5px;
-}
+    /* Gold trim with diamond lay */
+    .goldTrim::before{
+      content:"";
+      position:absolute;inset:0;
+      border-radius:24px;
+      pointer-events:none;
+      /* outer trim */
+      box-shadow:
+        inset 0 0 0 1px rgba(201,162,74,.34),
+        inset 0 0 0 2px rgba(0,0,0,.35);
+      /* diamond lay embedded in trim zone only */
+      background:
+        /* diamond lattice */
+        repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 14px),
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 14px);
+      opacity:.55;
+      mask:
+        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 80% 100%),
+        linear-gradient(#000,#000);
+      -webkit-mask:
+        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 80% 100%),
+        linear-gradient(#000,#000);
+    }
+    /* Corner diamonds (tiny glyph, subtle) */
+    .goldTrim::after{
+      content:"◇";
+      position:absolute;right:14px;top:12px;
+      color: rgba(201,162,74,.58);
+      font-weight: 950;
+      font-size:16px;
+      opacity:.75;
+      pointer-events:none;
+      text-shadow: 0 10px 24px rgba(0,0,0,.55);
+    }
 
-.body{
-  display:none;
-  padding:22px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
+    .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74;color:var(--mut)}
+    .t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+    .s{margin:10px 0 0;font-size:16.5px;line-height:1.55;max-width:980px;color:var(--ink)}
+    .fine{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--mut);opacity:.86}
 
-.block.open .body{display:block}
+    /* Diamonds (tiles) */
+    .diamondGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+    @media (max-width: 820px){ .diamondGrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+    @media (max-width: 420px){ .diamondGrid{grid-template-columns:1fr} }
 
-.body p{
-  margin:0 0 16px;
-  font-size:16.5px;
-  line-height:1.7;
-  opacity:.9;
-}
+    .tile{
+      position:relative;
+      border:1px solid var(--stroke2);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 25% 20%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 80% 35%, rgba(90,40,120,.12), transparent 64%),
+        radial-gradient(circle at 55% 120%, rgba(0,0,0,.55), transparent 60%),
+        linear-gradient(145deg, rgba(10,12,16,.82), rgba(6,8,10,.92));
+      box-shadow: 0 18px 56px rgba(0,0,0,.68);
+      padding:14px 12px;
+      min-height:112px;
+      display:flex;flex-direction:column;gap:8px;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      overflow:hidden;
+    }
+    .tile::before{
+      content:"";
+      position:absolute;inset:0;
+      border-radius:22px;
+      pointer-events:none;
+      /* glossy gem sheen */
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.10), transparent 40%),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.08), transparent 55%),
+        radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 58%);
+      opacity:.85;
+      mix-blend-mode: screen;
+    }
+    .tile::after{
+      content:"";
+      position:absolute;inset:0;
+      border-radius:22px;
+      pointer-events:none;
+      /* gold trim + diamond lay, very subtle on tiles */
+      box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);
+      background:
+        repeating-linear-gradient(45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+      opacity:.35;
+      mask:
+        radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+        linear-gradient(#000,#000);
+      -webkit-mask:
+        radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+        linear-gradient(#000,#000);
+    }
 
-/* Dock */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:12px;
-  transform:translateX(-50%);
-  z-index:200;
-  width:min(980px,94vw);
-  padding:12px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.28);
-  backdrop-filter:blur(10px);
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:10px;
-}
+    .tile:active{transform:translateY(1px)}
 
-.dock .btn{
-  padding:12px;
-  border-radius:999px;
-  text-align:center;
-  font-weight:700;
-}
-</style>
+    .tileTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .tileTitle{margin:0;font-size:18px;line-height:1.1;font-weight:980;letter-spacing:.25px;color:var(--ink)}
+    .tileTag{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:6px 9px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+      color: var(--mut);
+      font-weight: 950;
+      font-size:11px;
+      letter-spacing:.3px;
+      position:relative;
+      overflow:hidden;
+    }
+    /* Under-light gold (tab light from underneath) */
+    .tileTag::after{
+      content:"";
+      position:absolute;left:8px;right:8px;bottom:-10px;height:22px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .tileDesc{margin:0;font-size:14px;line-height:1.35;color:var(--mut);font-weight:800;max-width:50ch}
+
+    /* Accordion */
+    .accordion{
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 82% 25%, rgba(90,40,120,.10), transparent 66%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .accordion.goldTrim{border-color: rgba(255,255,255,.10)}
+    .accItem{border-top:1px solid rgba(255,255,255,.10)}
+    .accItem:first-child{border-top:0}
+
+    .accBtn{
+      width:100%;
+      text-align:left;
+      padding:16px 14px;
+      min-height:56px;
+      border:0;background:transparent;color:var(--ink);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      font-weight:980;font-size:17px;letter-spacing:.2px;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+    .accMeta{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .accSub{font-size:13px;color:var(--mut);font-weight:850;letter-spacing:.15px;opacity:.88}
+    .chev{
+      width:36px;height:36px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.16);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--mut);
+      font-weight:980;
+      position:relative;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    /* Under-light gold on active press target */
+    .chev::after{
+      content:"";
+      position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
+      opacity:.65;
+      pointer-events:none;
+    }
+
+    .accBody{display:none;padding:0 14px 14px}
+    .accBody.open{display:block}
+
+    .bubble{
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 22% 18%, rgba(120,0,22,.18), transparent 60%),
+        radial-gradient(circle at 82% 30%, rgba(90,40,120,.12), transparent 66%),
+        linear-gradient(145deg, rgba(10,12,16,.76), rgba(6,8,10,.90));
+      border-radius:22px;
+      padding:14px 12px;
+      margin-top:10px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 18px 56px rgba(0,0,0,.66);
+    }
+    .bubble::after{
+      content:"";
+      position:absolute;inset:0;border-radius:22px;pointer-events:none;
+      box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+      opacity:.6;
+    }
+    /* Festival red edge on OPEN bodies */
+    .bubble.openEdge{
+      border-color: rgba(255,43,43,.22);
+      box-shadow: 0 18px 56px rgba(0,0,0,.66), 0 0 18px rgba(255,43,43,.14);
+    }
+    .bH{margin:0;font-size:14px;color:var(--ink);font-weight:980;letter-spacing:.25px}
+    .bP{margin:8px 0 0;font-size:15.5px;line-height:1.55;color:var(--mut);font-weight:850}
+    .bRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:10px 12px;min-height:44px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+      color:var(--ink);
+      font-weight:980;font-size:14px;letter-spacing:.2px;
+      -webkit-tap-highlight-color:transparent;
+      position:relative;
+      overflow:hidden;
+      touch-action:manipulation;
+    }
+    .btn:active{transform:translateY(1px)}
+    /* Gold under-light glow (behind, from underneath) */
+    .btn::after{
+      content:"";
+      position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    /* Festival red emphasis (directional) */
+    .btn.red{
+      border-color: rgba(255,43,43,.22);
+      box-shadow: 0 0 18px rgba(255,43,43,.14);
+    }
+
+    /* Dock */
+    .dock{
+      position:fixed;left:50%;
+      bottom:max(10px, env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      z-index:220;
+      width:min(980px,94vw);
+      padding:10px 12px;border-radius:24px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+        radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 60px rgba(0,0,0,.62);
+      display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+    }
+    .dock .btn{width:100%;border-radius:999px}
+    @media (max-width:520px){
+      :root{--dockH:110px}
+      .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-</div>
-
-<div class="top-right">
-  <button class="btn" id="btnEN">EN</button>
-  <button class="btn" id="btnZH">中文</button>
-</div>
-
-<div class="page">
-
-  <div class="hero">
-    <h1 id="heroTitle">Where do systems break — and how do they hold?</h1>
-    <p id="heroText">
-      You are here because something feels unstable.  
-      Markets shift. Infrastructure strains. Software drifts. Institutions stretch.  
-      The question is no longer whether systems change.  
-      The question is whether they change coherently — or collapse.
-    </p>
+  <!-- Top nav -->
+  <div class="top-left" aria-label="Top navigation">
+    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    <a class="btn red" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
   </div>
 
-  <div class="stack" id="stack">
-
-    <div class="block">
-      <div class="head"><span id="b1t">The Problem</span><span>▸</span></div>
-      <div class="body">
-        <p id="b1c1">
-          Most systems fail quietly long before they fail loudly.  
-          Small mismatches accumulate. Dependencies entangle.  
-          Assumptions move without being measured.
-        </p>
-        <p id="b1c2">
-          We do not suffer from a lack of intelligence.  
-          We suffer from a lack of structural visibility.
-        </p>
-      </div>
+  <!-- Language -->
+  <div class="top-right" aria-label="Language">
+    <div class="seg" role="group" aria-label="Language toggle">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
     </div>
-
-    <div class="block">
-      <div class="head"><span id="b2t">The Method</span><span>▸</span></div>
-      <div class="body">
-        <p id="b2c1">
-          This system maps structure to a finite lattice.  
-          Every relationship, constraint, and surface can be indexed.
-        </p>
-        <p id="b2c2">
-          Nothing floats in abstraction.  
-          Every claim sits on measurable ground.
-        </p>
-      </div>
-    </div>
-
-    <div class="block">
-      <div class="head"><span id="b3t">The Frontier</span><span>▸</span></div>
-      <div class="body">
-        <p id="b3c1">
-          Energy. Water. Software. Law. Insurance. Governance.  
-          These are not separate domains.  
-          They are interacting systems.
-        </p>
-        <p id="b3c2">
-          If one shifts without coherence, others follow.
-        </p>
-      </div>
-    </div>
-
   </div>
 
-</div>
+  <div class="page">
+    <!-- Header -->
+    <section class="header goldTrim" aria-label="Compass header">
+      <p class="k" id="hk">COMPASS</p>
+      <h1 class="t" id="ht">WHERE DO YOU WANT TO GO?</h1>
+      <p class="s" id="hs"></p>
+      <div class="fine" id="fine"></div>
 
-<nav class="dock">
-  <a class="btn" href="/compass/">COMPASS</a>
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
-</nav>
+      <!-- Lenses -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:12px">
+        <div class="seg" role="group" aria-label="Lane toggle">
+          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+        </div>
+        <div class="seg" role="group" aria-label="Voice toggle">
+          <button type="button" id="styleInformal" aria-pressed="true">INFORMAL</button>
+          <button type="button" id="styleFormal" aria-pressed="false">FORMAL</button>
+        </div>
+        <div class="chip" aria-label="State">
+          <span id="chipLang">LANG</span> <b id="chipLangVal">EN</b>
+          <span style="opacity:.6">·</span>
+          <span id="chipStyle">STYLE</span> <b id="chipStyleVal">INFORMAL</b>
+          <span style="opacity:.6">·</span>
+          <span id="chipDepth">DEPTH</span> <b id="chipDepthVal">1</b>
+        </div>
+      </div>
 
-<script>
-(function(){
-  var lang = localStorage.getItem("gd_lang") || "en";
+      <!-- Diamonds -->
+      <div class="diamondGrid" aria-label="Fast navigation diamonds">
+        <a class="tile" href="/products/" data-route="/products/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_products">PRODUCTS</p>
+            <span class="tileTag" data-i18n="tag_catalog">CATALOG</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_products">Buildable pages, stable routing.</p>
+        </a>
 
-  function setLang(l){
-    lang=l;
-    localStorage.setItem("gd_lang",l);
-    apply();
-  }
+        <a class="tile" href="/explore/" data-route="/explore/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_explore">EXPLORE</p>
+            <span class="tileTag" data-i18n="tag_frontier">FRONTIER</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_explore">Vision forks and frontier hubs.</p>
+        </a>
 
-  document.getElementById("btnEN").onclick=function(){setLang("en");};
-  document.getElementById("btnZH").onclick=function(){setLang("zh");};
+        <a class="tile" href="/laws/" data-route="/laws/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_laws">LAWS</p>
+            <span class="tileTag" data-i18n="tag_contract">CONTRACT</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_laws">Rules, bounds, and standards.</p>
+        </a>
 
-  function apply(){
-    if(lang==="zh"){
-      document.documentElement.lang="zh";
-      document.getElementById("heroTitle").textContent="系统何时断裂 — 又如何维持？";
-      document.getElementById("heroText").textContent=
-        "你来到这里，是因为某些结构正在变动。"+
-        " 市场波动。基础设施紧绷。软件失衡。制度拉伸。"+
-        " 问题不再是系统是否改变。"+
-        " 而是它们是否在一致中改变，还是在无序中坍塌。";
+        <a class="tile" href="/gauges/" data-route="/gauges/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_gauges">GAUGES</p>
+            <span class="tileTag" data-i18n="tag_measure">MEASURE</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_gauges">Signals, audits, measurements.</p>
+        </a>
 
-      document.getElementById("b1t").textContent="问题";
-      document.getElementById("b1c1").textContent="大多数系统在高声崩溃前，早已悄然失衡。";
-      document.getElementById("b1c2").textContent="问题不是智力不足，而是结构不可见。";
+        <a class="tile" href="/door/" data-route="/door/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_door">DOOR</p>
+            <span class="tileTag" data-i18n="tag_entry">ENTRY</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_door">Start with structure-first routing.</p>
+        </a>
 
-      document.getElementById("b2t").textContent="方法";
-      document.getElementById("b2c1").textContent="我们将结构映射到有限晶格。";
-      document.getElementById("b2c2").textContent="每个主张都必须落在可测量的基础上。";
+        <a class="tile" href="/home/" data-route="/home/">
+          <div class="tileTop">
+            <p class="tileTitle" data-i18n="d_home">HOME</p>
+            <span class="tileTag" data-i18n="tag_hub">HUB</span>
+          </div>
+          <p class="tileDesc" data-i18n="dd_home">Stable return point.</p>
+        </a>
+      </div>
+    </section>
 
-      document.getElementById("b3t").textContent="前沿";
-      document.getElementById("b3c1").textContent="能源、水、软件、法律、保险、治理，本质上是相互作用的系统。";
-      document.getElementById("b3c2").textContent="一处失衡，会引发连锁。";
+    <!-- Accordion -->
+    <section class="accordion goldTrim" aria-label="Compass accordion">
+      <div class="accItem">
+        <button class="accBtn" type="button" data-acc="a0">
+          <span class="accMeta">
+            <span data-i18n="acc0_t">Quick routes</span>
+            <span class="accSub" data-i18n="acc0_s">One minute → one jump</span>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </button>
+        <div class="accBody" id="a0">
+          <div class="bubble" data-bubble>
+            <p class="bH" data-i18n="acc0_bh">What to do</p>
+            <p class="bP" id="qroutes"></p>
+            <div class="bRow">
+              <a class="btn red" href="/products/" data-route="/products/" data-i18n="open_products">OPEN PRODUCTS</a>
+              <a class="btn" href="/explore/" data-route="/explore/" data-i18n="open_explore">OPEN EXPLORE</a>
+              <a class="btn" href="/laws/" data-route="/laws/" data-i18n="open_laws">OPEN LAWS</a>
+              <a class="btn" href="/gauges/" data-route="/gauges/" data-i18n="open_gauges">OPEN GAUGES</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accItem">
+        <button class="accBtn" type="button" data-acc="a1">
+          <span class="accMeta">
+            <span data-i18n="acc1_t">What changes under lenses</span>
+            <span class="accSub" data-i18n="acc1_s">You should feel the difference</span>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </button>
+        <div class="accBody" id="a1">
+          <div class="bubble" data-bubble>
+            <p class="bH" data-i18n="acc1_bh">Lens contract</p>
+            <p class="bP" id="lensExplain"></p>
+            <div class="bRow">
+              <a class="btn red" href="/products/" data-route="/products/" data-i18n="open_catalog">OPEN CATALOG</a>
+              <a class="btn" href="/products/software/" data-route="/products/software/" data-i18n="open_spine">OPEN SOFTWARE SPINE</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="accItem">
+        <button class="accBtn" type="button" data-acc="a2">
+          <span class="accMeta">
+            <span data-i18n="acc2_t">Festival field</span>
+            <span class="accSub" data-i18n="acc2_s">High-contrast, gem surfaces</span>
+          </span>
+          <span class="chev" aria-hidden="true">›</span>
+        </button>
+        <div class="accBody" id="a2">
+          <div class="bubble" data-bubble>
+            <p class="bH" data-i18n="acc2_bh">Visual rule</p>
+            <p class="bP" id="visualExplain"></p>
+            <div class="bRow">
+              <a class="btn" href="/index.html" data-route="/index.html" data-i18n="open_compass">OPEN COMPASS</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Dock -->
+  <nav class="dock" aria-label="Bottom navigation">
+    <a class="btn" href="/door/" data-route="/door/" data-i18n="dock_door">DOOR</a>
+    <a class="btn red" href="/products/" data-route="/products/" data-i18n="dock_products">PRODUCTS</a>
+    <a class="btn" href="/explore/" data-route="/explore/" data-i18n="dock_explore">EXPLORE</a>
+    <a class="btn" href="/home/" data-route="/home/" data-i18n="dock_home">HOME</a>
+  </nav>
+
+  <script>
+  (function(){
+    "use strict";
+
+    // ===== Canon state (NO new gd_* keys) =====
+    var qs = new URLSearchParams(location.search);
+    var LS = window.localStorage;
+
+    var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+    var style = qs.get("style") || LS.getItem("gd_style") || "informal"; // informal|formal
+    var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";      // origin|now|post
+    var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";        // 1..9
+    var lane  = qs.get("lane")  || "platform";                           // URL-only platform|engineering
+
+    if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+    if(style!=="informal" && style!=="formal") style="informal";
+    if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+    var d = parseInt(depth,10);
+    if(!isFinite(d)) d=1;
+    if(d<1) d=1;
+    if(d>9) d=9;
+    depth = String(d);
+
+    if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+    try{
+      LS.setItem("gd_lang", lang);
+      LS.setItem("gd_style", style);
+      LS.setItem("gd_time", time);
+      LS.setItem("gd_depth", depth);
+    }catch(e){}
+
+    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+    function q(extra){
+      var p = new URLSearchParams();
+      p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+      p.set("style",(extra&&extra.style)?extra.style:style);
+      p.set("time", (extra&&extra.time)?extra.time:time);
+      p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
+      var L = (extra&&extra.lane)?extra.lane:lane;
+      if(L==="platform"||L==="engineering") p.set("lane", L);
+      return "?" + p.toString();
     }
-  }
 
-  apply();
+    // Wire all links with data-route to include state
+    function wireAll(){
+      var nodes = document.querySelectorAll("[data-route]");
+      for(var i=0;i<nodes.length;i++){
+        var el = nodes[i];
+        var route = el.getAttribute("data-route") || "";
+        if(!route) continue;
 
-  var blocks=document.querySelectorAll(".block");
-  blocks.forEach(function(b){
-    b.querySelector(".head").addEventListener("click",function(){
-      blocks.forEach(function(x){
-        if(x!==b){x.classList.remove("open");}
-      });
-      b.classList.toggle("open");
-    });
-  });
-})();
-</script>
+        // If route already has query, merge missing keys.
+        if(route.indexOf("?") !== -1){
+          try{
+            var u = new URL(route, location.origin);
+            var sp = u.searchParams;
+            if(!sp.get("lang")) sp.set("lang", lang);
+            if(!sp.get("style")) sp.set("style", style);
+            if(!sp.get("time")) sp.set("time", time);
+            if(!sp.get("depth")) sp.set("depth", depth);
+            if(!sp.get("lane")) sp.set("lane", lane);
+            el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+          }catch(e){
+            el.setAttribute("href", route);
+          }
+        }else{
+          el.setAttribute("href", route + q());
+        }
+      }
+    }
 
+    // ===== Trilingual copy =====
+    var I18N = {
+      en:{
+        hk:"COMPASS",
+        ht:"WHERE DO YOU WANT TO GO?",
+        hs_informal_platform:"Pick a destination. Click once. You keep your state. This is the routing terminal.",
+        hs_informal_engineering:"Pick a destination. Click once. You keep your state. Engineering view tightens contrast and language.",
+        hs_formal_platform:"This page is the routing terminal. State-carry is mandatory. Links are stable.",
+        hs_formal_engineering:"This page is the routing terminal. State-carry is mandatory. Engineering view enforces stricter wording and separation.",
+        fine_informal_platform:"PLATFORM focuses on clear routes and fast discovery. Gold is trim. Red is direction. Black is gem field.",
+        fine_informal_engineering:"ENGINEERING focuses on boundaries and clarity. Gold is trim. Red is direction. Black is gem field.",
+        fine_formal_platform:"PLATFORM posture: discoverability + usability under stable contracts.",
+        fine_formal_engineering:"ENGINEERING posture: separation + precision under stable contracts.",
+
+        d_products:"PRODUCTS", tag_catalog:"CATALOG", dd_products:"Buildable pages, stable routing.",
+        d_explore:"EXPLORE", tag_frontier:"FRONTIER", dd_explore:"Vision forks and frontier hubs.",
+        d_laws:"LAWS", tag_contract:"CONTRACT", dd_laws:"Rules, bounds, and standards.",
+        d_gauges:"GAUGES", tag_measure:"MEASURE", dd_gauges:"Signals, audits, measurements.",
+        d_door:"DOOR", tag_entry:"ENTRY", dd_door:"Start with structure-first routing.",
+        d_home:"HOME", tag_hub:"HUB", dd_home:"Stable return point.",
+
+        acc0_t:"Quick routes", acc0_s:"One minute → one jump", acc0_bh:"What to do",
+        acc1_t:"What changes under lenses", acc1_s:"You should feel the difference", acc1_bh:"Lens contract",
+        acc2_t:"Festival field", acc2_s:"High-contrast, gem surfaces", acc2_bh:"Visual rule",
+
+        open_products:"OPEN PRODUCTS",
+        open_explore:"OPEN EXPLORE",
+        open_laws:"OPEN LAWS",
+        open_gauges:"OPEN GAUGES",
+        open_catalog:"OPEN CATALOG",
+        open_spine:"OPEN SOFTWARE SPINE",
+        open_compass:"OPEN COMPASS",
+
+        dock_door:"DOOR",
+        dock_products:"PRODUCTS",
+        dock_explore:"EXPLORE",
+        dock_home:"HOME",
+
+        qroutes_informal_platform:"Open one thing, then move. Products is the catalog. Explore is the frontier. Laws sets standards. Gauges measures.",
+        qroutes_informal_engineering:"Open one thing, then verify. Products routes to buildable surfaces. Laws bounds language. Gauges shows signals.",
+        qroutes_formal_platform:"Select a destination. State is appended to all internal links.",
+        qroutes_formal_engineering:"Select a destination. State is appended to all internal links. Wording and separation are tightened.",
+
+        lens_informal_platform:"PLATFORM highlights discoverability. ENGINEERING tightens separation. INFORMAL is clearer voice. FORMAL is stricter voice.",
+        lens_informal_engineering:"ENGINEERING tightens separation. PLATFORM emphasizes discoverability. INFORMAL is clearer voice. FORMAL is stricter voice.",
+        lens_formal_platform:"lane controls posture (URL-only). style controls voice (gd_style + URL).",
+        lens_formal_engineering:"lane controls posture (URL-only). style controls voice (gd_style + URL).",
+
+        visual_informal:"Black tiles stay gem-like. Crimson is depth. Festival red is energy. Gold is trim and under-light, never haze.",
+        visual_formal:"Contrast is the acceptance criterion: black separation, readable text, controlled accents, no blended wash."
+      },
+      zh:{
+        hk:"指南针",
+        ht:"你要去哪里？",
+        hs_informal_platform:"选一个目的地。点一次。状态保留。这里是路由终端。",
+        hs_informal_engineering:"选一个目的地。点一次。状态保留。工程视图会更“硬朗”、更清晰。",
+        hs_formal_platform:"本页为路由终端。内部链接必须携带状态。路由稳定。",
+        hs_formal_engineering:"本页为路由终端。内部链接必须携带状态。工程视图强化措辞与分离度。",
+        fine_informal_platform:"平台：更快发现与更清晰路由。金=饰边。红=方向。黑=宝石底。",
+        fine_informal_engineering:"工程：更严格边界与清晰度。金=饰边。红=方向。黑=宝石底。",
+        fine_formal_platform:"平台姿态：在稳定契约下提升可发现性与可用性。",
+        fine_formal_engineering:"工程姿态：在稳定契约下强化分离度与精确措辞。",
+
+        d_products:"产品", tag_catalog:"目录", dd_products:"可构建页面，稳定路由。",
+        d_explore:"探索", tag_frontier:"前沿", dd_explore:"愿景分叉与前沿枢纽。",
+        d_laws:"法则", tag_contract:"契约", dd_laws:"规则、边界与标准。",
+        d_gauges:"量规", tag_measure:"测量", dd_gauges:"信号、审计与测量。",
+        d_door:"门", tag_entry:"入口", dd_door:"从结构优先开始。",
+        d_home:"主页", tag_hub:"枢纽", dd_home:"稳定返回点。",
+
+        acc0_t:"快速路由", acc0_s:"一分钟 → 一次跳转", acc0_bh:"怎么用",
+        acc1_t:"透镜会改变什么", acc1_s:"你必须感觉到差异", acc1_bh:"透镜契约",
+        acc2_t:"节日底场", acc2_s:"高对比 · 宝石面", acc2_bh:"视觉规则",
+
+        open_products:"打开 产品",
+        open_explore:"打开 探索",
+        open_laws:"打开 法则",
+        open_gauges:"打开 量规",
+        open_catalog:"打开 目录",
+        open_spine:"打开 软件主干",
+        open_compass:"打开 指南针",
+
+        dock_door:"门",
+        dock_products:"产品",
+        dock_explore:"探索",
+        dock_home:"主页",
+
+        qroutes_informal_platform:"先打开一个，再移动。产品=目录。探索=前沿。法则=标准。量规=测量。",
+        qroutes_informal_engineering:"先打开一个，再验证。产品路由到可构建面。法则约束语言。量规展示信号。",
+        qroutes_formal_platform:"选择目的地。状态会附加到所有内部链接。",
+        qroutes_formal_engineering:"选择目的地。状态会附加到所有内部链接。措辞与分离度更严格。",
+
+        lens_informal_platform:"平台强调可发现性。工程强化分离度。通俗更易读。正式更严谨。",
+        lens_informal_engineering:"工程强化分离度。平台强调可发现性。通俗更易读。正式更严谨。",
+        lens_formal_platform:"lane 控制姿态（仅URL）。style 控制语气（gd_style + URL）。",
+        lens_formal_engineering:"lane 控制姿态（仅URL）。style 控制语气（gd_style + URL）。",
+
+        visual_informal:"黑色保持宝石质感。深红=深度。亮红=能量。金=饰边与底光，绝不成雾。",
+        visual_formal:"验收标准是对比：黑色分离，文字可读，点缀可控，无混合洗白。"
+      },
+      es:{
+        hk:"BRÚJULA",
+        ht:"¿A DÓNDE QUIERES IR?",
+        hs_informal_platform:"Elige un destino. Un clic. Conservas el estado. Este es el terminal de rutas.",
+        hs_informal_engineering:"Elige un destino. Un clic. Conservas el estado. Ingeniería endurece contraste y lenguaje.",
+        hs_formal_platform:"Esta página es el terminal de rutas. El estado se adjunta a todos los enlaces internos.",
+        hs_formal_engineering:"Esta página es el terminal de rutas. El estado se adjunta a todos los enlaces internos. Ingeniería endurece la separación.",
+        fine_informal_platform:"Plataforma: descubrimiento rápido. Oro = adorno. Rojo = dirección. Negro = campo gema.",
+        fine_informal_engineering:"Ingeniería: límites y claridad. Oro = adorno. Rojo = dirección. Negro = campo gema.",
+        fine_formal_platform:"Plataforma: descubribilidad y usabilidad bajo contratos estables.",
+        fine_formal_engineering:"Ingeniería: separación y precisión bajo contratos estables.",
+
+        d_products:"PRODUCTOS", tag_catalog:"CATÁLOGO", dd_products:"Páginas construibles, rutas estables.",
+        d_explore:"EXPLORAR", tag_frontier:"FRONTERA", dd_explore:"Ramas de visión y hubs.",
+        d_laws:"LEYES", tag_contract:"CONTRATO", dd_laws:"Reglas, límites y estándares.",
+        d_gauges:"MEDIDORES", tag_measure:"MEDIR", dd_gauges:"Señales, auditorías, medición.",
+        d_door:"PUERTA", tag_entry:"ENTRADA", dd_door:"Empieza con estructura.",
+        d_home:"INICIO", tag_hub:"HUB", dd_home:"Punto estable de regreso.",
+
+        acc0_t:"Rutas rápidas", acc0_s:"Un minuto → un salto", acc0_bh:"Qué hacer",
+        acc1_t:"Qué cambia con lentes", acc1_s:"Debe sentirse distinto", acc1_bh:"Contrato de lentes",
+        acc2_t:"Campo festivo", acc2_s:"Alto contraste · superficies gema", acc2_bh:"Regla visual",
+
+        open_products:"ABRIR PRODUCTOS",
+        open_explore:"ABRIR EXPLORAR",
+        open_laws:"ABRIR LEYES",
+        open_gauges:"ABRIR MEDIDORES",
+        open_catalog:"ABRIR CATÁLOGO",
+        open_spine:"ABRIR SOFTWARE SPINE",
+        open_compass:"ABRIR BRÚJULA",
+
+        dock_door:"PUERTA",
+        dock_products:"PRODUCTOS",
+        dock_explore:"EXPLORAR",
+        dock_home:"INICIO",
+
+        qroutes_informal_platform:"Abre una cosa y muévete. Productos = catálogo. Explorar = frontera. Leyes = estándares. Medidores = medición.",
+        qroutes_informal_engineering:"Abre una cosa y verifica. Productos enruta a superficies. Leyes acota lenguaje. Medidores muestran señales.",
+        qroutes_formal_platform:"Selecciona un destino. El estado se adjunta a enlaces internos.",
+        qroutes_formal_engineering:"Selecciona un destino. El estado se adjunta a enlaces internos. Separación y lenguaje se endurecen.",
+
+        lens_informal_platform:"Plataforma destaca descubrimiento. Ingeniería endurece separación. Informal aclara voz. Formal endurece voz.",
+        lens_informal_engineering:"Ingeniería endurece separación. Plataforma destaca descubrimiento. Informal aclara voz. Formal endurece voz.",
+        lens_formal_platform:"lane controla postura (solo URL). style controla voz (gd_style + URL).",
+        lens_formal_engineering:"lane controla postura (solo URL). style controla voz (gd_style + URL).",
+
+        visual_informal:"Negro se mantiene como gema. Carmesí da profundidad. Rojo vivo da energía. Oro es adorno y luz desde abajo, no bruma.",
+        visual_formal:"Criterio de aceptación: contraste alto, separación negra, texto legible, acentos controlados."
+      }
+    };
+
+    function t(key){
+      var dict = I18N[lang] || I18N.en;
+      return dict[key] || (I18N.en[key] || "");
+    }
+
+    function applyI18n(){
+      // header blocks depend on lenses
+      var hk = document.getElementById("hk");
+      var ht = document.getElementById("ht");
+      var hs = document.getElementById("hs");
+      var fine = document.getElementById("fine");
+
+      if(hk) hk.textContent = t("hk");
+      if(ht) ht.textContent = t("ht");
+
+      var modeKey = "hs_" + style + "_" + lane;
+      var fineKey = "fine_" + style + "_" + lane;
+
+      if(hs) hs.textContent = t(modeKey);
+      if(fine) fine.textContent = t(fineKey);
+
+      // fast nav labels
+      var nodes = document.querySelectorAll("[data-i18n]");
+      for(var i=0;i<nodes.length;i++){
+        var el = nodes[i];
+        var key = el.getAttribute("data-i18n");
+        if(!key) continue;
+        el.textContent = t(key);
+      }
+
+      // dynamic paragraphs
+      var qroutes = document.getElementById("qroutes");
+      var lensExplain = document.getElementById("lensExplain");
+      var visualExplain = document.getElementById("visualExplain");
+
+      var qrKey = "qroutes_" + style + "_" + lane;
+      var leKey = "lens_" + style + "_" + lane;
+      var veKey = (style==="formal") ? "visual_formal" : "visual_informal";
+
+      if(qroutes) qroutes.textContent = t(qrKey);
+      if(lensExplain) lensExplain.textContent = t(leKey);
+      if(visualExplain) visualExplain.textContent = t(veKey);
+
+      // chips
+      var chipLangVal = document.getElementById("chipLangVal");
+      var chipStyleVal = document.getElementById("chipStyleVal");
+      var chipDepthVal = document.getElementById("chipDepthVal");
+      if(chipLangVal) chipLangVal.textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+      if(chipStyleVal) chipStyleVal.textContent = (style==="formal") ? t("styleFormal") || "FORMAL" : t("styleInformal") || "INFORMAL";
+      if(chipDepthVal) chipDepthVal.textContent = depth;
+    }
+
+    // ===== Controls =====
+    function setPressed(ids, activeId){
+      for(var i=0;i<ids.length;i++){
+        var el = document.getElementById(ids[i]);
+        if(!el) continue;
+        el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+      }
+    }
+
+    function reloadSamePath(extra){
+      // Language toggle must reload SAME pathname
+      location.href = location.pathname + q(extra || {});
+    }
+
+    function initControls(){
+      // Language pressed
+      setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+      setPressed(["styleInformal","styleFormal"], style==="formal"?"styleFormal":"styleInformal");
+      setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+      var langEN = document.getElementById("langEN");
+      var langZH = document.getElementById("langZH");
+      var langES = document.getElementById("langES");
+
+      if(langEN) langEN.addEventListener("click", function(){ reloadSamePath({lang:"en"}); }, {passive:true});
+      if(langZH) langZH.addEventListener("click", function(){ reloadSamePath({lang:"zh"}); }, {passive:true});
+      if(langES) langES.addEventListener("click", function(){ reloadSamePath({lang:"es"}); }, {passive:true});
+
+      var styleInformal = document.getElementById("styleInformal");
+      var styleFormal = document.getElementById("styleFormal");
+
+      if(styleInformal) styleInformal.addEventListener("click", function(){
+        style="informal";
+        try{ LS.setItem("gd_style", style); }catch(e){}
+        reloadSamePath({style:"informal"});
+      }, {passive:true});
+
+      if(styleFormal) styleFormal.addEventListener("click", function(){
+        style="formal";
+        try{ LS.setItem("gd_style", style); }catch(e){}
+        reloadSamePath({style:"formal"});
+      }, {passive:true});
+
+      var lanePlatform = document.getElementById("lanePlatform");
+      var laneEngineering = document.getElementById("laneEngineering");
+
+      if(lanePlatform) lanePlatform.addEventListener("click", function(){
+        lane="platform";
+        reloadSamePath({lane:"platform"});
+      }, {passive:true});
+
+      if(laneEngineering) laneEngineering.addEventListener("click", function(){
+        lane="engineering";
+        reloadSamePath({lane:"engineering"});
+      }, {passive:true});
+    }
+
+    // ===== Accordion (single-open) =====
+    function closeAll(exceptId){
+      var bodies = document.querySelectorAll(".accBody");
+      for(var i=0;i<bodies.length;i++){
+        var b = bodies[i];
+        if(b.id === exceptId) continue;
+        b.classList.remove("open");
+      }
+      var bubbles = document.querySelectorAll("[data-bubble]");
+      for(var j=0;j<bubbles.length;j++){
+        bubbles[j].classList.remove("openEdge");
+      }
+    }
+
+    function initAccordion(){
+      var btns = document.querySelectorAll(".accBtn[data-acc]");
+      for(var i=0;i<btns.length;i++){
+        (function(btn){
+          btn.addEventListener("click", function(){
+            var id = btn.getAttribute("data-acc");
+            var body = document.getElementById(id);
+            if(!body) return;
+            var isOpen = body.classList.contains("open");
+            closeAll(id);
+            if(isOpen){
+              body.classList.remove("open");
+            }else{
+              body.classList.add("open");
+              // add open edge festival highlight
+              var bubble = body.querySelector("[data-bubble]");
+              if(bubble) bubble.classList.add("openEdge");
+            }
+          }, {passive:true});
+        })(btns[i]);
+      }
+    }
+
+    // ===== Boot =====
+    wireAll();
+    initControls();
+    applyI18n();
+    initAccordion();
+
+    // Default: open first section on larger screens only (keeps mobile clean)
+    try{
+      if(window.innerWidth >= 900){
+        var first = document.getElementById("a0");
+        if(first){ first.classList.add("open"); }
+        var fb = first ? first.querySelector("[data-bubble]") : null;
+        if(fb) fb.classList.add("openEdge");
+      }
+    }catch(e){}
+  })();
+  </script>
 </body>
 </html>

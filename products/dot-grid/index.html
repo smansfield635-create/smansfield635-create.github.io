@@ -1,11 +1,11 @@
 <!-- TNT — /products/dot-grid/index.html
      PRODUCTS · DOT.GRID (INDEXING + SWEEPS SURFACE)
+     EN/中文 ONLY (NO ES)
      DEPTH UPGRADE (L0 → L10):
-       - TED-style INFORMAL (curiosity + human words, still support-bounded)
+       - TED-style INFORMAL (curiosity + human words, support-bounded)
        - FORMAL (systems language, still bounded)
        - Real accordion depth (vertical) + lens depth (horizontal)
        - Mobile-safe: no blocking overlays, no fixed modal, no inline onclick
-       - 3 languages: EN / 中文 / ES
        - Canon state carry: lang/style/time/depth (URL + gd_* LS)
      ROUTES:
        - BACK → /products/
@@ -194,15 +194,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .p + .p{margin-top:10px}
 
-.ul{
-  margin:10px 0 0 18px;
-  padding:0;
-  color:rgba(255,255,255,.82);
-  line-height:1.55;
-  font-size:13.25px;
-}
-.ul li{margin:6px 0}
-
 .actions{
   display:flex;
   gap:10px;
@@ -250,7 +241,6 @@ body::before,body::after{pointer-events:none!important}
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
       <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
@@ -287,7 +277,8 @@ body::before,body::after{pointer-events:none!important}
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  // EN/中文 only
+  if(lang!=="en" && lang!=="zh") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -300,7 +291,7 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -325,24 +316,21 @@ body::before,body::after{pointer-events:none!important}
   // ===== language toggle (reload SAME pathname; GH Pages safe) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
 
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
 
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    if(next!=="en" && next!=="zh") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
 
   // ===== lens (formal/informal) =====
   var lens = (style==="formal") ? "formal" : "informal";
@@ -353,7 +341,6 @@ body::before,body::after{pointer-events:none!important}
     lens = (v==="formal") ? "formal" : "informal";
     lensInformal.classList.toggle("active", lens==="informal");
     lensFormal.classList.toggle("active", lens==="formal");
-    // persist into gd_style (canon)
     try{ localStorage.setItem("gd_style", lens); }catch(e){}
     render();
   }
@@ -362,7 +349,7 @@ body::before,body::after{pointer-events:none!important}
   setLens(lens);
 
   // ===== copy packs =====
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+  function pick(o){ return (lang==="zh")?o.zh:o.en; }
 
   var COPY = {
     head:{
@@ -377,28 +364,14 @@ body::before,body::after{pointer-events:none!important}
         ht:"DOT.GRID",
         hs:"Dot.Grid 是“地图 + 扫掠”执行面：先看连接，再看相关，把惊喜变成可见信号。",
         fine:"有界姿态：Dot.Grid 不判定可采信。它只暴露结构与信号，裁决交给法则与量规。"
-      },
-      es:{
-        hk:"PRODUCTOS",
-        ht:"DOT.GRID",
-        hs:"Dot.Grid es la superficie de “mapa + barrido”: muestra conexiones y revela correlación antes de que se convierta en sorpresa.",
-        fine:"Postura acotada: Dot.Grid no declara admisibilidad. Expone estructura y señales; el juicio vive en Leyes y Medidores."
       }
     },
 
     cards:[
       {
         c:"#D4AF37",
-        t:{
-          en:"What Dot.Grid is (in human words)",
-          zh:"Dot.Grid 是什么（人话版）",
-          es:"Qué es Dot.Grid (en palabras simples)"
-        },
-        s:{
-          en:"A flashlight for complex systems. It doesn’t argue. It shows the wiring.",
-          zh:"复杂系统的手电筒：不争论，只照出线路。",
-          es:"Una linterna para sistemas complejos. No discute: muestra el cableado."
-        },
+        t:{ en:"What Dot.Grid is (in human words)", zh:"Dot.Grid 是什么（人话版）" },
+        s:{ en:"A flashlight for complex systems. It doesn’t argue. It shows the wiring.", zh:"复杂系统的手电筒：不争论，只照出线路。" },
         informal:{
           en:[
             "Most systems fail because people can’t *see* the system. They see pages, tools, teams, vendors… but they don’t see the hidden shared dependencies.",
@@ -407,10 +380,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "多数系统出事，不是因为人不努力，而是因为人看不见系统：看见页面、工具、团队、供应商，却看不见背后的共享依赖。",
             "Dot.Grid 就是把“暗线”照出来的地图。它只回答一个实用问题：**谁连着谁**——以及哪些小变化可能变成大连锁。"
-          ],
-          es:[
-            "Muchos sistemas fallan porque la gente no puede *ver* el sistema. Ven páginas, equipos, proveedores… pero no ven dependencias compartidas.",
-            "Dot.Grid es el mapa que hace visible el cableado oculto. Responde una pregunta práctica: **qué está conectado con qué**—y dónde un cambio pequeño podría convertirse en sorpresa grande."
           ]
         },
         formal:{
@@ -421,10 +390,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "Dot.Grid 是面向遍历的索引与扫掠执行面：在稳定命名下枚举节点、边与共享依赖，并通过窗口扫掠暴露相关集群。",
             "其输出是**结构收据**（地图、快照、差分），供量规展示、供法则约束解释。"
-          ],
-          es:[
-            "Dot.Grid es una superficie de indexación y barridos orientada a recorrido. Enumera nodos, aristas y dependencias compartidas con nombres estables, y expone clusters de correlación con barridos por ventana.",
-            "Sus salidas son **recibos estructurales** (mapas, snapshots, deltas) para Medidores (visualización) y Leyes (límites de interpretación)."
           ]
         },
         jumps:[
@@ -435,8 +400,8 @@ body::before,body::after{pointer-events:none!important}
 
       {
         c:"#0EA5E9",
-        t:{ en:"What it does (the 4 jobs)", zh:"它做什么（四件事）", es:"Qué hace (4 tareas)" },
-        s:{ en:"Index → Sweep → Drift → Export. No drama, just receipts.", zh:"索引→扫掠→漂移→导出。只给收据，不给情绪。", es:"Índice → Barrido → Deriva → Exportación. Sin drama, solo recibos." },
+        t:{ en:"What it does (the 4 jobs)", zh:"它做什么（四件事）" },
+        s:{ en:"Index → Sweep → Drift → Export. No drama, just receipts.", zh:"索引→扫掠→漂移→导出。只给收据，不给情绪。" },
         informal:{
           en:[
             "**1) Index:** make a clean list of surfaces and how they relate.",
@@ -449,12 +414,6 @@ body::before,body::after{pointer-events:none!important}
             "**2) 扫掠：**寻找“会一起动”的集群。",
             "**3) 漂移：**发现线路随时间发生变化。",
             "**4) 导出：**把证据交给负责裁决的层。"
-          ],
-          es:[
-            "**1) Índice:** lista superficies y relaciones.",
-            "**2) Barrido:** busca clusters (cosas que se mueven juntas).",
-            "**3) Deriva:** detecta cambios de cableado con el tiempo.",
-            "**4) Exporta:** entrega evidencia a las capas que juzgan."
           ]
         },
         formal:{
@@ -465,10 +424,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "索引枚举节点/边与共享依赖。扫掠计算窗口相关信号。漂移追踪测量邻接差分与加速度。导出产生可回放的结构快照。",
             "Dot.Grid **不**主张因果，**不**输出可采信；它只输出适合下游在声明范围内评估的收据。"
-          ],
-          es:[
-            "El índice enumera nodos/aristas y dependencias. Los barridos calculan señales de correlación por ventana. La deriva mide deltas de adyacencia y aceleración. Exporta snapshots estructurales reproducibles.",
-            "Dot.Grid **no** afirma causalidad ni **no** produce admisibilidad; produce recibos para evaluación posterior bajo alcance declarado."
           ]
         },
         jumps:[
@@ -478,8 +433,8 @@ body::before,body::after{pointer-events:none!important}
 
       {
         c:"#F59E0B",
-        t:{ en:"Why you should care", zh:"为什么你该在意", es:"Por qué debería importarte" },
-        s:{ en:"Because correlation is how small issues become big failures.", zh:"因为相关性是“小问题变大事故”的路径。", es:"Porque la correlación convierte problemas pequeños en fallas grandes." },
+        t:{ en:"Why you should care", zh:"为什么你该在意" },
+        s:{ en:"Because correlation is how small issues become big failures.", zh:"因为相关性是“小问题变大事故”的路径。" },
         informal:{
           en:[
             "Here’s the trap: everything looks fine until it fails together. That’s correlation. A shared dependency, a shared rollout, a shared vendor, a shared assumption.",
@@ -488,10 +443,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "最大的陷阱是：看起来都挺好，直到它们一起坏。那就是相关性：共享依赖、共享发布、共享供应商、共享假设。",
             "Dot.Grid 是早预警面：在你扩张、融资、押上声誉之前，先把“会一起坏”的东西找出来。"
-          ],
-          es:[
-            "La trampa: todo parece bien… hasta que falla todo junto. Eso es correlación: dependencia compartida, despliegue compartido, proveedor compartido, suposición compartida.",
-            "Dot.Grid es alerta temprana: detecta ‘ir juntos’ antes de escalar, financiar o apostar la reputación."
           ]
         },
         formal:{
@@ -502,10 +453,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "在规模下，相关暴露主导风险；共享漂移会变得致命。Dot.Grid 让共享结构可读、可在时间窗口内比较。",
             "从而支持选择隔离策略：分段、回滚计划、分阶段发布与验证闸门。"
-          ],
-          es:[
-            "Al escalar, la exposición correlacionada domina el riesgo. La deriva es peligrosa cuando es compartida. Dot.Grid hace la estructura compartida legible y comparable en ventanas de tiempo.",
-            "Esto habilita contención: segmentación, rollback, rollouts por fases y compuertas de verificación."
           ]
         },
         jumps:[
@@ -515,8 +462,8 @@ body::before,body::after{pointer-events:none!important}
 
       {
         c:"#93C5FD",
-        t:{ en:"How to use Dot.Grid (without getting lost)", zh:"怎么用 Dot.Grid（不迷路版）", es:"Cómo usar Dot.Grid (sin perderte)" },
-        s:{ en:"Two passes: map first, sweep second. Then jump to Laws/Gauges.", zh:"两步：先画图，再扫掠。然后跳到法则/量规。", es:"Dos pasos: mapa primero, barrido después. Luego salta a Leyes/Medidores." },
+        t:{ en:"How to use Dot.Grid (without getting lost)", zh:"怎么用 Dot.Grid（不迷路版）" },
+        s:{ en:"Two passes: map first, sweep second. Then jump to Laws/Gauges.", zh:"两步：先画图，再扫掠。然后跳到法则/量规。" },
         informal:{
           en:[
             "**Pass 1 — Map:** pick a scope (what you’re mapping). List the surfaces. Draw the shared dependencies.",
@@ -527,11 +474,6 @@ body::before,body::after{pointer-events:none!important}
             "**第一遍—画图：**先选范围（你在画什么）。列出执行面，画出共享依赖。",
             "**第二遍—扫掠：**扫集群：如果会一起动，就标记。先别争论，只标记。",
             "然后跳转：量规展示信号；法则约束这些信号“可以意味着什么”。"
-          ],
-          es:[
-            "**Paso 1 — Mapa:** elige un alcance. Lista superficies. Dibuja dependencias compartidas.",
-            "**Paso 2 — Barrido:** busca clusters. Si algo se mueve junto, etiquétalo. No discutas aún: etiqueta.",
-            "Luego salta: Medidores muestra señales. Leyes define qué pueden significar."
           ]
         },
         formal:{
@@ -542,10 +484,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "声明范围→枚举节点→计算邻接/依赖边→生成快照。再做窗口扫掠计算相关与漂移差分。导出收据用于回放。",
             "操作规则：不得超出声明范围解释。Dot.Grid 产结构；教义与测量层产结论。"
-          ],
-          es:[
-            "Define alcance → enumera nodos → calcula adyacencias/dependencias → snapshot. Luego barridos por ventana para correlación y deltas de deriva. Exporta recibos para replay.",
-            "Regla: no interpretar más allá del alcance declarado. Dot.Grid entrega estructura; doctrina/medición entregan conclusiones."
           ]
         },
         jumps:[
@@ -555,8 +493,8 @@ body::before,body::after{pointer-events:none!important}
 
       {
         c:"#A3A3A3",
-        t:{ en:"Boundaries (what Dot.Grid refuses to do)", zh:"边界（Dot.Grid 拒绝做什么）", es:"Límites (lo que Dot.Grid se niega a hacer)" },
-        s:{ en:"No admissibility. No causality. No hype. Just structure and receipts.", zh:"不裁决可采信、不讲因果、不吹牛：只给结构与收据。", es:"Sin admisibilidad. Sin causalidad. Sin hype. Solo estructura y recibos." },
+        t:{ en:"Boundaries (what Dot.Grid refuses to do)", zh:"边界（Dot.Grid 拒绝做什么）" },
+        s:{ en:"No admissibility. No causality. No hype. Just structure and receipts.", zh:"不裁决可采信、不讲因果、不吹牛：只给结构与收据。" },
         informal:{
           en:[
             "Dot.Grid won’t tell you what to believe. It won’t tell you “safe” or “unsafe.” It won’t pretend correlation is causation.",
@@ -565,10 +503,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "Dot.Grid 不会告诉你该信什么；不会说“安全/不安全”；也不会把相关当因果。",
             "它只做诚实的事：**给你线路图**，**给你一起动的东西**——让系统的其他层做正确裁决。"
-          ],
-          es:[
-            "Dot.Grid no te dice qué creer. No dice “seguro/no seguro”. No finge que correlación es causalidad.",
-            "Hace lo honesto: **muestra el cableado** y **muestra lo que se movió junto**, para que el resto del sistema lo evalúe bien."
           ]
         },
         formal:{
@@ -579,10 +513,6 @@ body::before,body::after{pointer-events:none!important}
           zh:[
             "不可谈判：不输出可采信、不做因果主张、不调阈值。Dot.Grid 是结构暴露仪器，不是决策引擎。",
             "任何影响输出的规则变更必须版本化并视为新纪元，以保持可比性。"
-          ],
-          es:[
-            "No negociables: no salida de admisibilidad, no afirmaciones causales, no ajuste de umbrales. Dot.Grid es un instrumento de exposición estructural, no un motor de decisiones.",
-            "Cambios que afecten salidas deben versionarse y tratarse como nueva época para preservar comparabilidad."
           ]
         },
         jumps:[
@@ -654,25 +584,10 @@ body::before,body::after{pointer-events:none!important}
       body.appendChild(p);
     }
 
-    // optional bullets for some items (only if present)
-    if(item.bullets){
-      var bl = (lens==="formal") ? pick(item.bullets.formal) : pick(item.bullets.informal);
-      if(bl && bl.length){
-        var ul=document.createElement("ul");
-        ul.className="ul";
-        for(var j=0;j<bl.length;j++){
-          var li=document.createElement("li");
-          li.textContent=bl[j];
-          ul.appendChild(li);
-        }
-        body.appendChild(ul);
-      }
-    }
-
     var actions=document.createElement("div");
     actions.className="actions";
 
-    var openLabel = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
+    var openLabel = (lang==="zh") ? "打开" : "OPEN";
     for(var k=0;k<item.jumps.length;k++){
       var a=document.createElement("a");
       a.className="btn";
@@ -708,7 +623,6 @@ body::before,body::after{pointer-events:none!important}
     card.appendChild(head);
     card.appendChild(body);
 
-    // open first card by default
     if(idx===0){
       card.classList.add("open");
       chev.textContent="▾";
@@ -719,13 +633,12 @@ body::before,body::after{pointer-events:none!important}
 
   function render(){
     stack.innerHTML="";
-    document.getElementById("band").textContent = (lang==="zh") ? "DOT.GRID 地图" : (lang==="es") ? "MAPA DOT.GRID" : "DOT.GRID MAP";
+    document.getElementById("band").textContent = (lang==="zh") ? "DOT.GRID 地图" : "DOT.GRID MAP";
 
     for(var i=0;i<COPY.cards.length;i++){
       stack.appendChild(makeCard(COPY.cards[i], i));
     }
 
-    // language-specific button labels
     if(lang==="zh"){
       document.getElementById("btnBack").textContent="返回";
       document.getElementById("btnExit").textContent="退出";
@@ -735,15 +648,6 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("dockGauges").textContent="量规";
       lensInformal.textContent="通俗";
       lensFormal.textContent="正式";
-    }else if(lang==="es"){
-      document.getElementById("btnBack").textContent="VOLVER";
-      document.getElementById("btnExit").textContent="SALIR";
-      document.getElementById("dockHome").textContent="INICIO";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-      lensInformal.textContent="INFORMAL";
-      lensFormal.textContent="FORMAL";
     }else{
       document.getElementById("btnBack").textContent="BACK";
       document.getElementById("btnExit").textContent="EXIT";

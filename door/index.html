@@ -1,19 +1,16 @@
 <!-- TNT — /door/index.html
-     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · CONTRAST LOCK
+     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · OPAL/PEARL PANELS
      PURPOSE:
-       - This replaces the current /door/ compass.
-       - It is the canonical introductory page (Diamond Gate Bridge).
-       - It orients so well that Prelude becomes optional, not required.
-     ROUTES (AFTER YOUR SHIFT-DOWN):
-       - COMPASS (old door)   → /index.html
-       - PRELUDE (gateway)    → /prelude/
-       - ENTER (hub)          → /home/
-       - ROOT (return)        → /
+       - Canonical intro page under /door/
+     ROUTES:
+       - PRELUDE  → /prelude/
+       - COMPASS  → /index.html
+       - ENTER    → /home/
+       - ROOT     → /
      RULES:
        - 3 language toggle (EN/中文/ES)
-       - High contrast (no red-on-red readability failures)
-       - No modals. No overlays. No onclick. Tap-safe.
-       - Preserves gd_* state via URL + localStorage
+       - No modals. No overlays. No inline onclick.
+       - Preserves gd_* via URL + localStorage (lang/style/time/depth)
        - Uses ui.css/branch.css/instruments.js only
 -->
 
@@ -36,10 +33,16 @@ body{position:relative;z-index:0}
 body::before, body::after{z-index:0 !important;pointer-events:none !important}
 #root{position:relative;z-index:10}
 
+/* tokens */
 :root{
   --obsA:rgba(12,22,38,.95);
   --obsB:rgba(6,10,16,.98);
-  --panel:rgba(0,0,0,.22);
+
+  --opalA:rgba(210,190,255,.18);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+  --goldSoft:rgba(212,175,55,.45);
+
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 }
@@ -70,13 +73,14 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   gap:14px;
 }
 
-/* hero */
+/* hero (opal glass) */
 .hero{
   border-radius:26px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 20% 30%, rgba(210,190,255,.18), transparent 72%),
-    radial-gradient(circle at 82% 66%, rgba(120,70,255,.14), transparent 74%),
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
   backdrop-filter:blur(12px);
   box-shadow:0 34px 120px rgba(0,0,0,.55);
@@ -104,18 +108,25 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   line-height:1.5;
   max-width:980px;
 }
+
+/* rule pill (pearl edge) */
 .rule{
   margin:12px 0 0;
   padding:10px 12px;
   border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+  box-shadow:
+    0 14px 48px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.06);
   font-size:12.75px;
   color:rgba(255,255,255,.84);
   line-height:1.45;
 }
 
-/* three choice cards */
+/* entry cards (opal/pearl panels) */
 .grid{
   display:grid;
   grid-template-columns:repeat(3, minmax(0,1fr));
@@ -126,13 +137,56 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 
 .card{
+  position:relative;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 58%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
     linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:0 22px 72px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.55),
+    0 0 28px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -36px 70px rgba(0,0,0,.55);
   padding:16px 16px 14px;
+  overflow:hidden;
+  transition:.18s ease;
+}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  opacity:.9;
+  pointer-events:none;
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 36px 100px rgba(0,0,0,.72),
+    0 0 34px rgba(212,175,55,.16),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -36px 70px rgba(0,0,0,.55);
 }
 
 .card .ct{
@@ -162,111 +216,34 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .card .actions .btn{
   border-radius:999px;
-/* ===== OPAL / PEARL MATERIAL UPGRADE (NO LAYOUT CHANGES) ===== */
-
-/* Reuse the same opal palette you used on the glossy diamonds */
-:root{
-  --opalA:rgba(210,190,255,.18);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
+  padding:10px 14px;
 }
 
-/* HERO becomes opal glass (already close—just tighten to match diamonds) */
-.hero{
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
-  box-shadow:0 34px 120px rgba(0,0,0,.55);
+/* how-it-works */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
-
-/* RULE pill gets a subtle pearl edge + glow */
-.rule{
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
-  box-shadow:
-    0 14px 48px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-/* ENTRY CARDS: convert “black boxes” to pearlescent opal panels */
-.card{
-  position:relative;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 58%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:
-    0 22px 72px rgba(0,0,0,.55),
-    0 0 28px rgba(212,175,55,.10),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -36px 70px rgba(0,0,0,.55);
-  overflow:hidden;
-}
-
-/* Gold pearlescent edge (same trick as diamonds) */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-/* Soft gloss streak */
-.card::after{
-  content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.9;
-  pointer-events:none;
-}
-
-/* Hover lift stays the same but gets a little gold response */
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:
-    0 36px 100px rgba(0,0,0,.72),
-    0 0 34px rgba(212,175,55,.16),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -36px 70px rgba(0,0,0,.55);
-}
-
-/* HOW-IT-WORKS BLOCKS: same opal stack, slightly flatter than cards */
 .block{
   position:relative;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
     radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
     linear-gradient(160deg, rgba(12,22,38,.70), rgba(6,10,16,.78));
+  backdrop-filter:blur(10px);
   box-shadow:
     0 18px 60px rgba(0,0,0,.40),
     inset 0 1px 0 rgba(255,255,255,.06);
+  padding:14px 14px 12px;
   overflow:hidden;
 }
-
 .block::before{
   content:"";
   position:absolute;
@@ -279,6 +256,36 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   -webkit-mask-composite:xor;
   mask-composite:exclude;
   pointer-events:none;
+}
+.block .bh{
+  margin:0;
+  font-weight:950;
+  font-size:15.5px;
+  letter-spacing:.4px;
+}
+.block .bp{
+  margin:10px 0 0;
+  font-size:13.25px;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
+}
+.block .jump{
+  margin-top:10px;
+  display:flex;
+  justify-content:flex-end;
+}
+
+.footer{
+  margin-top:8px;
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+}
+.sig{
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:3px;
+  opacity:.65;
 }
 </style>
 </head>
@@ -446,7 +453,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // i18n (page-only; no external file dependency)
+  // i18n
   function T(en, zh, es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
   document.getElementById("h0").textContent = T("INTRO","介绍","INTRO");

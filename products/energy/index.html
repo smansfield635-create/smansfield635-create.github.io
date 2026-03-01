@@ -1,17 +1,26 @@
-<!-- TNT — /products/energy/index.html  (ENERGY · FULL NAVIGATION · 72 NARRATIVES)
-     FULLY NAVIGABLE / READABLE / LENSES-INTACT
-     STRUCTURE:
+<!-- TNT — /products/energy/index.html
+     PRODUCTS · ENERGY (INDUSTRIAL) · UNIVERSAL PRODUCT MODEL · 72 NARRATIVES · EN/中文/ES
+     STANDARD (LOCKED):
        LEVEL 1 (Page): 4 glossy diamonds = FOUNDATION / ARCHITECTURE / PERFORMANCE / GOVERNANCE
-       LEVEL 2 (Quadrant Modal): 4 glossy diamonds = 3 domains + RETURN
-       LEVEL 3 (Domain Modal): 3 tap-to-open bubbles = CONCEPT / LIVE / ROADMAP
-         Each bubble contains 2-tone toggle = FORMAL / INFORMAL
+       LEVEL 2 (Quadrant Modal): 3 domains + RETURN
+       LEVEL 3 (Domain Modal): Tone toggle (INFORMAL / FORMAL) + 3 bubbles (CONCEPT / LIVE / ROADMAP) tap-to-open
      COUNT:
-       12 domains × 3 time bubbles × 2 tones = 72 narratives
-     RULES:
-       - No new state keys (gd_lang/gd_style/gd_time only)
-       - Pearlescent glossy diamonds preserved (no coal overlays)
-       - Tap-safe (no pointer-event blockers)
-       - Multi-open bubbles allowed
+       12 domains × 3 bubbles × 2 tones = 72 narratives
+     POSTURE (LOCKED):
+       - Industrial posture only (C). No gain claims. No fusion achievement claims.
+       - Vision/Frontier belongs in /explore/frontier/vision/ (not here).
+     MOBILE SAFETY (LOCKED):
+       - No pointer traps (stage allows taps; overlays never steal clicks unexpectedly)
+       - Modal ALWAYS opens (bd z=1000, modals z=1001)
+       - No inline onclick (tap-safe)
+       - Bubble behavior: auto-close (opening one closes other bubbles; tap again closes)
+     STATE (LOCKED):
+       - URL + LS: lang/style/time/depth (gd_lang/gd_style/gd_time/gd_depth)
+       - Language is page-level only (EN/中文/ES)
+       - Tone toggle is page-local (does not change gd_style)
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -23,25 +32,84 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-:root{--R:150px;--D:184px;--goldSoft:rgba(212,175,55,.45);--mut:rgba(255,255,255,.90);--mut2:rgba(255,255,255,.74)}
+a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-a{text-decoration:none;color:inherit}
 body::before,body::after{pointer-events:none!important}
 
-/* Top */
-.top-left{position:fixed;left:16px;top:16px;z-index:140;display:flex;gap:10px;flex-wrap:wrap}
-.brand{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:130;text-align:center;padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);pointer-events:none}
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
-.brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
+/* ===== TOKENS ===== */
+:root{
+  --R:150px;
+  --D:184px;
 
-/* Stage */
-.stage{position:fixed;left:50%;top:56%;transform:translate(-50%,-50%);width:min(720px,94vw);height:min(720px,94vw);z-index:60}
-.outer{position:absolute;left:50%;top:50%;width:min(680px,92vw);height:min(680px,92vw);transform:translate(-50%,-50%) rotate(45deg);border-radius:60px;opacity:.62;pointer-events:none;border:1px solid rgba(255,255,255,.10);background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);box-shadow:0 90px 260px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.10),inset 0 -50px 90px rgba(0,0,0,.55)}
-.outer::after{content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg)}
+  --goldSoft:rgba(212,175,55,.45);
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(90,210,255,.08);
 
-/* Pearlescent glossy diamond (LOCK) */
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
+  --mut:rgba(255,255,255,.90);
+  --mut2:rgba(255,255,255,.74);
+}
+
+/* ===== TOP ===== */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:160;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:160;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
+
+/* ===== BRAND ===== */
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:150;text-align:center;
+  padding:10px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+.brand .t{margin:0;font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05}
+.brand .s{margin:6px 0 0;opacity:.86;font-size:14px;line-height:1.25}
+
+/* ===== STAGE ===== */
+.stage{
+  position:fixed;left:50%;top:56%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);
+  height:min(720px,94vw);
+  z-index:60;
+  pointer-events:auto; /* IMPORTANT */
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;opacity:.62;pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.42) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+.outer::after{
+  content:"";position:absolute;inset:0;border-radius:60px;opacity:.12;pointer-events:none;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+}
+
+/* ===== GLOSSY DIAMONDS ===== */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
@@ -51,7 +119,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.55), transparent 45%),
     radial-gradient(circle at 70% 78%, rgba(0,120,255,.30), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+    linear-gradient(160deg, var(--obsA), var(--obsB));
   border:1px solid rgba(255,255,255,.16);
   box-shadow:
     0 38px 120px rgba(0,0,0,.85),
@@ -59,51 +127,181 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.25),
     inset 0 -42px 78px rgba(0,0,0,.80);
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  overflow:hidden;
 }
-.d::before{content:"";position:absolute;inset:0;border-radius:28px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.65;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.d::after{content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;border-radius:999px;background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));transform:rotate(-10deg);pointer-events:none}
-.d:hover{transform:translate(-50%,-50%) rotate(45deg) scale(1.02);border-color:rgba(212,175,55,.35);box-shadow:0 44px 140px rgba(0,0,0,.92),0 0 44px rgba(212,175,55,.32),inset 0 2px 0 rgba(255,255,255,.28),inset 0 -46px 86px rgba(0,0,0,.84)}
+.d::before{
+  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.65;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";position:absolute;left:10%;right:10%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.25), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.32),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
+.d.active{
+  border-color:rgba(212,175,55,.65);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 66px rgba(212,175,55,.34),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
-.inner{transform:rotate(-45deg) translateY(-3px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%;padding:14px;gap:8px;pointer-events:none;user-select:none}
+
+.inner{
+  transform:rotate(-45deg) translateY(-3px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;height:100%;padding:14px;gap:8px;
+  pointer-events:none;user-select:none;
+}
 .lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
 .sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
 
-/* Dock */
-.dock{position:fixed;left:50%;bottom:max(12px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:120;width:min(980px,94vw);display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);pointer-events:none}
+/* ===== CENTER CORE ===== */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+}
+
+/* ===== DOCK ===== */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:140;width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
 .dock .btn{pointer-events:auto}
 
-/* Modals */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
+/* ===== MODALS (ALWAYS OPEN) ===== */
+.bd{
+  position:fixed;inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+  display:none;
+}
 .bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1180px,96vw);
+  height:90vh;
+  display:none;
+  z-index:1001;
+}
 .modal.show{display:block}
-.shell{height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));overflow:hidden;display:flex;flex-direction:column}
-.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.shell{
+  height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));
+  box-shadow:0 60px 180px rgba(0,0,0,.85);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
 .mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
 .mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
 .mbody{padding:16px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
 
-/* Domain grid inside quadrant modal */
+/* quadrant domains grid */
+.hint{
+  max-width:980px;margin:0 auto 12px;
+  padding:10px 12px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.80);
+  font-size:12.5px;line-height:1.45;
+}
 .qgrid{display:grid;gap:14px;grid-template-columns:1fr}
 @media (min-width:760px){.qgrid{grid-template-columns:1fr 1fr}}
-.smallDiamond{width:100%;height:140px;position:relative;border-radius:22px;cursor:pointer;pointer-events:auto;touch-action:manipulation;background:radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));border:1px solid rgba(255,255,255,.16);box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70)}
-.smallDiamond::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);opacity:.55;-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.sdInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
-.sdT{font-weight:950;letter-spacing:.25px}
-.sdS{font-size:12.5px;opacity:.82;margin-top:6px}
 
-/* Domain narrative modal */
+.domCard{
+  width:100%;height:140px;position:relative;border-radius:22px;
+  cursor:pointer;pointer-events:auto;touch-action:manipulation;
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 52%),
+    radial-gradient(circle at 70% 78%, rgba(0,120,255,.26), transparent 62%),
+    linear-gradient(160deg, rgba(14,24,40,.96), rgba(7,11,18,.98));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 22px 70px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.22), inset 0 -34px 60px rgba(0,0,0,.70);
+}
+.domCard::before{
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.dcInner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px;pointer-events:none}
+.dcT{font-weight:950;letter-spacing:.25px}
+.dcS{font-size:12.5px;opacity:.82;margin-top:6px}
+
+/* domain narrative */
 .lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
-.pill{padding:10px 14px;border-radius:999px;background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;user-select:none;-webkit-tap-highlight-color:transparent}
-.pill.active{border-color:rgba(212,175,55,.60);box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22)}
-.bubble{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.05);padding:14px 14px 12px;margin:0 0 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.60);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.22);
+}
+
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;
+  margin:0 0 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
 .bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
 .bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
 .bubble.open p{display:block}
-.hint{max-width:980px;margin:0 auto 12px;padding:10px 12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);color:rgba(255,255,255,.80);font-size:12.5px;line-height:1.45}
+
+@media (max-width:560px){
+  :root{--R:136px;--D:170px}
+  .stage{top:54%}
+}
 </style>
 </head>
 
@@ -111,31 +309,37 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top-left">
   <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/door/">EXIT</a>
+  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
 </div>
 
 <div class="brand" aria-hidden="true">
-  <div class="t">Energy</div>
-  <div class="s">72 Narratives · 4→12→36→72</div>
+  <div class="t" id="hdrT">Energy</div>
+  <div class="s" id="hdrS">Industrial posture (C) · No gain claims · 72 Narratives</div>
 </div>
 
 <div class="stage" aria-label="Energy quadrants">
   <div class="outer"></div>
 
-  <div class="d d-n" id="qFoundation" role="button" tabindex="0">
-    <div class="inner"><div class="lab">FOUNDATION</div><div class="sub">Origins · risk · baselines</div></div>
+  <div class="d d-n" id="qFoundation" role="button" tabindex="0" aria-label="Foundation">
+    <div class="inner"><div class="lab" id="labN">FOUNDATION</div><div class="sub" id="subN">Origins · risk · baselines</div></div>
   </div>
 
-  <div class="d d-e" id="qArchitecture" role="button" tabindex="0">
-    <div class="inner"><div class="lab">ARCHITECTURE</div><div class="sub">Build · interfaces · isolation</div></div>
+  <div class="d d-e" id="qArchitecture" role="button" tabindex="0" aria-label="Architecture">
+    <div class="inner"><div class="lab" id="labE">ARCHITECTURE</div><div class="sub" id="subE">Build · interfaces · isolation</div></div>
   </div>
 
-  <div class="d d-s" id="qPerformance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">PERFORMANCE</div><div class="sub">Measured outcomes</div></div>
+  <div class="d d-s" id="qPerformance" role="button" tabindex="0" aria-label="Performance">
+    <div class="inner"><div class="lab" id="labS">PERFORMANCE</div><div class="sub" id="subS">Measured outcomes</div></div>
   </div>
 
-  <div class="d d-w" id="qGovernance" role="button" tabindex="0">
-    <div class="inner"><div class="lab">GOVERNANCE</div><div class="sub">Scaling discipline</div></div>
+  <div class="d d-w" id="qGovernance" role="button" tabindex="0" aria-label="Governance">
+    <div class="inner"><div class="lab" id="labW">GOVERNANCE</div><div class="sub" id="subW">Scaling discipline</div></div>
   </div>
 
   <div class="core">◆</div>
@@ -143,24 +347,25 @@ body::before,body::after{pointer-events:none!important}
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
   <a class="btn" id="dockHub" href="/home/">HUB</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
   <a class="btn" id="dockLinks" href="/links/">LINKS</a>
 </nav>
 
-<!-- Backdrop reused for both modals -->
 <div class="bd" id="bd"></div>
 
 <!-- Quadrant Modal -->
 <div class="modal" id="quadModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="quadTitle">Quadrant</h3>
+      <h3 class="mtitle" id="quadTitle">ENERGY</h3>
       <button class="mclose" id="quadClose" aria-label="Close" type="button">✕</button>
     </div>
     <div class="mbody">
-      <div class="hint" id="quadHint">Tap a domain diamond to enter its narrative. Return closes this layer.</div>
+      <div class="hint" id="quadHint">Tap a domain to open Concept / Live / Roadmap. RETURN closes this layer.</div>
       <div class="qgrid" id="quadGrid"></div>
     </div>
   </div>
@@ -170,244 +375,666 @@ body::before,body::after{pointer-events:none!important}
 <div class="modal" id="domainModal" role="dialog" aria-modal="true">
   <div class="shell">
     <div class="mhead">
-      <h3 class="mtitle" id="domainTitle">Domain</h3>
+      <h3 class="mtitle" id="domainTitle">ENERGY · Domain</h3>
       <button class="mclose" id="domainClose" aria-label="Close" type="button">✕</button>
     </div>
-
-    <div class="mbody" id="domainBody">
+    <div class="mbody">
       <div class="lensbar">
-        <div class="pill active" id="toneFormal">FORMAL</div>
-        <div class="pill" id="toneInformal">INFORMAL</div>
+        <div class="pill active" id="toneInformal">INFORMAL</div>
+        <div class="pill" id="toneFormal">FORMAL</div>
       </div>
 
-      <div class="hint" id="claimHint">
-        Public posture remains Industrial Plasma Thermal Substitution (C). Fusion is referenced only as readiness doctrine, not as gain.
+      <div class="hint" id="domainHint">
+        Industrial posture only. No gain claims. Anything measurable routes to Gauges; doctrine routes to Laws.
       </div>
 
-      <div class="bubble" id="bConcept"><h4>Concept</h4><p id="pConcept"></p></div>
-      <div class="bubble" id="bLive"><h4>Live</h4><p id="pLive"></p></div>
-      <div class="bubble" id="bRoadmap"><h4>Roadmap</h4><p id="pRoadmap"></p></div>
+      <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
+      <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
+      <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  // state hydration (gd_* only)
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  var style=qs.get("style")||localStorage.getItem("gd_style")||"formal";
-  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
-  if(time==="trajectory") time="post";
-  if(lang!=="en"&&lang!=="zh") lang="en";
-  if(style!=="formal"&&style!=="informal") style="formal";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);}catch(e){}
-  function q(){var p=new URLSearchParams();p.set("lang",lang);p.set("style",style);p.set("time",time);return "?"+p.toString();}
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  // nav links
+  if(time==="trajectory") time="post";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="formal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    var p=new URLSearchParams();
+    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
+    return "?"+p.toString();
+  }
+
+  // nav wiring
   document.getElementById("btnBack").href="/products/"+q();
-  document.getElementById("btnExit").href="/door/"+q();
+  document.getElementById("btnExit").href="/index.html"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
+  document.getElementById("dockDoor").href="/door/"+q();
   document.getElementById("dockHub").href="/home/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
+  document.getElementById("dockGauges").href="/gauges/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
 
-  // Quadrant -> domains mapping (4 quadrants × 3 domains = 12)
-  var QUADS = {
-    "FOUNDATION": ["Historical Systems","Adversarial","Baseline Constraints"],
-    "ARCHITECTURE": ["Engineering","Technology","Industrial"],
-    "PERFORMANCE": ["Environmental","Medicine","Financial"],
-    "GOVERNANCE": ["Legal","Political","Social"]
+  // language toggle (page-level)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q();
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ===== UI labels =====
+  var UI={
+    en:{
+      hdrT:"Energy",
+      hdrS:"Industrial posture (C) · No gain claims · 72 Narratives",
+      q:{
+        FOUNDATION:{lab:"FOUNDATION",sub:"Origins · risk · baselines"},
+        ARCHITECTURE:{lab:"ARCHITECTURE",sub:"Build · interfaces · isolation"},
+        PERFORMANCE:{lab:"PERFORMANCE",sub:"Measured outcomes"},
+        GOVERNANCE:{lab:"GOVERNANCE",sub:"Scaling discipline"}
+      },
+      quadHint:"Tap a domain to open Concept / Live / Roadmap. RETURN closes this layer.",
+      toneI:"INFORMAL", toneF:"FORMAL",
+      concept:"Concept", live:"Live", roadmap:"Roadmap",
+      ret:"RETURN",
+      domSub:"Concept · Live · Roadmap",
+      domainHint:"Industrial posture only. No gain claims. Anything measurable routes to Gauges; doctrine routes to Laws."
+    },
+    zh:{
+      hdrT:"能源",
+      hdrS:"工业姿态（C）· 无增益主张 · 72段叙事",
+      q:{
+        FOUNDATION:{lab:"基础",sub:"起点 · 风险 · 基线"},
+        ARCHITECTURE:{lab:"架构",sub:"构建 · 接口 · 隔离"},
+        PERFORMANCE:{lab:"性能",sub:"可测结果"},
+        GOVERNANCE:{lab:"治理",sub:"规模化纪律"}
+      },
+      quadHint:"点选域展开：概念 / 上线 / 路线图。返回关闭本层。",
+      toneI:"通俗", toneF:"正式",
+      concept:"概念", live:"上线", roadmap:"路线图",
+      ret:"返回",
+      domSub:"概念 · 上线 · 路线图",
+      domainHint:"仅工业姿态。无增益主张。可测内容去量规；教义边界去法则。"
+    },
+    es:{
+      hdrT:"Energía",
+      hdrS:"Postura industrial (C) · Sin ganancias · 72 Narrativas",
+      q:{
+        FOUNDATION:{lab:"BASE",sub:"Origen · riesgo · línea base"},
+        ARCHITECTURE:{lab:"ARQUITECTURA",sub:"Construir · interfaces · aislamiento"},
+        PERFORMANCE:{lab:"RENDIMIENTO",sub:"Resultados medidos"},
+        GOVERNANCE:{lab:"GOBERNANZA",sub:"Disciplina de escala"}
+      },
+      quadHint:"Toca un dominio para abrir Concepto / En vivo / Hoja de ruta. RETURN cierra esta capa.",
+      toneI:"INFORMAL", toneF:"FORMAL",
+      concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
+      ret:"RETURN",
+      domSub:"Concepto · En vivo · Hoja de ruta",
+      domainHint:"Solo postura industrial. Sin ganancias. Lo medible va a Medidores; doctrina a Leyes."
+    }
+  };
+  var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
+
+  document.getElementById("hdrT").textContent=T.hdrT;
+  document.getElementById("hdrS").textContent=T.hdrS;
+
+  document.getElementById("labN").textContent=T.q.FOUNDATION.lab;
+  document.getElementById("subN").textContent=T.q.FOUNDATION.sub;
+  document.getElementById("labE").textContent=T.q.ARCHITECTURE.lab;
+  document.getElementById("subE").textContent=T.q.ARCHITECTURE.sub;
+  document.getElementById("labS").textContent=T.q.PERFORMANCE.lab;
+  document.getElementById("subS").textContent=T.q.PERFORMANCE.sub;
+  document.getElementById("labW").textContent=T.q.GOVERNANCE.lab;
+  document.getElementById("subW").textContent=T.q.GOVERNANCE.sub;
+
+  document.getElementById("quadHint").textContent=T.quadHint;
+  document.getElementById("toneInformal").textContent=T.toneI;
+  document.getElementById("toneFormal").textContent=T.toneF;
+  document.getElementById("hConcept").textContent=T.concept;
+  document.getElementById("hLive").textContent=T.live;
+  document.getElementById("hRoadmap").textContent=T.roadmap;
+  document.getElementById("domainHint").textContent=T.domainHint;
+
+  // ===== domains per quadrant (12 total) =====
+  var DOM={
+    FOUNDATION:["scope_baseline","feedstock_variance","safety_limits"],
+    ARCHITECTURE:["segmentation_intake","conversion_modules","heat_interfaces"],
+    PERFORMANCE:["measurement_receipts","efficiency_bands","carbon_accounting"],
+    GOVERNANCE:["permitting_posture","deployment_phasing","rollback_containment"]
   };
 
-  // 72 narratives = 12 domains × (Concept/Live/Roadmap) × (Formal/Informal)
-  // NOTE: Content is intentionally concise here because you asked to reuse existing content;
-  // the structure is now locked so you can expand any single paragraph later without drift.
-  var N = {
-    "Historical Systems":{
+  // display names
+  var NAMES={
+    scope_baseline:{en:"Scope & Baseline",zh:"范围与基线",es:"Alcance y línea base"},
+    feedstock_variance:{en:"Feedstock Variance",zh:"来料方差",es:"Varianza de insumo"},
+    safety_limits:{en:"Safety Limits",zh:"安全边界",es:"Límites de seguridad"},
+
+    segmentation_intake:{en:"Segmentation & Intake",zh:"分选与入口",es:"Segmentación y entrada"},
+    conversion_modules:{en:"Conversion Modules",zh:"转化模块",es:"Módulos de conversión"},
+    heat_interfaces:{en:"Heat Interfaces",zh:"热接口",es:"Interfaces térmicas"},
+
+    measurement_receipts:{en:"Measurement Receipts",zh:"测量收据",es:"Recibos de medición"},
+    efficiency_bands:{en:"Efficiency Bands",zh:"效率区间",es:"Bandas de eficiencia"},
+    carbon_accounting:{en:"Carbon Accounting",zh:"碳核算",es:"Contabilidad de carbono"},
+
+    permitting_posture:{en:"Permitting Posture",zh:"许可姿态",es:"Postura regulatoria"},
+    deployment_phasing:{en:"Deployment Phasing",zh:"部署分期",es:"Despliegue por fases"},
+    rollback_containment:{en:"Rollback & Containment",zh:"回滚与隔离",es:"Rollback y contención"}
+  };
+  function dTitle(id){
+    var o=NAMES[id]||{};
+    return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en;
+  }
+
+  // ===== narrative copy (bounded) =====
+  // Note: EN is primary; zh/es are concise but real (not empty).
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pickLang(obj){ return (lang==="zh")?obj.zh:(lang==="es")?obj.es:obj.en; }
+
+  var TEXT={
+    scope_baseline:{
       concept:{
-        formal:"Historical energy systems scale by narrative first and repair later. That pattern produces coupled failure because constraints are discovered after deployment. This domain frames the baseline problem: incentives outrun measurement and standards lag behind exposure. The record shows that drift is invisible until it becomes catastrophic. This architecture begins by refusing that pattern.",
-        informal:"History is a stress test we already failed a hundred different ways. Every era tried to scale power faster than it could scale discipline. The reward was progress; the cost was collapse cycles that arrived late and expensive. We’re using history as a warning label, not as a museum. The frontier only survives if it learns faster than it expands."
+        formal:P(
+          "Industrial energy work starts with a declared scope and a baseline: what feedstocks are admissible, what outputs are claimed, and what measurements will anchor comparisons. Scope drift is treated as a defect; changes create a new epoch.",
+          "工业能源先声明范围与基线：可接收来料、允许输出、比较锚点。范围漂移视为缺陷；变更需新纪元。",
+          "Empieza con alcance y línea base: insumos admisibles, salidas permitidas y mediciones ancla. Cambios crean nueva época."
+        ),
+        informal:P(
+          "Before we talk tech, we draw the box. What’s in? What’s out? What do we measure? If the box moves, the story breaks—so we lock the box first.",
+          "先画框：什么进、什么出、测什么。框一动，故事就坏，所以先锁框。",
+          "Primero dibujamos la caja: qué entra, qué sale, qué medimos. Si la caja cambia, el relato se rompe."
+        )
       },
       live:{
-        formal:"Current systems remain fragmented across engineering, regulation, finance, and public language. This fragmentation creates opportunity for manipulation and misinterpretation. The result is volatility, distrust, and under-built containment. Live posture requires a unified execution spine that can be audited. Without that, scale remains unstable.",
-        informal:"Right now the world is loud, fast, and unstable. Everyone argues about outcomes while the infrastructure quietly drifts underneath. That’s the smoke-and-mirrors reality you pointed out. The fix isn’t more debate; it’s more structure. Live discipline turns chaos into a band you can actually operate in."
+        formal:P(
+          "Live posture logs inputs (composition, moisture proxies), operating windows, and measured outputs under consistent rules. Any parameter change that alters comparisons is stamped and routed as a new epoch.",
+          "上线记录输入（组分/含水代理）、运行窗口、可测输出。影响可比性的改动需盖章为新纪元。",
+          "En vivo se registran insumos, ventanas operativas y salidas medidas. Cambios que afecten comparaciones se marcan como nueva época."
+        ),
+        informal:P(
+          "Live means: we don’t guess. We log what came in, what we did, what came out, and what we’re allowed to say about it.",
+          "上线就是不猜：记清进来什么、做了什么、出来什么、能说什么。",
+          "En vivo: no adivinamos. Registramos entrada, proceso, salida y lo que podemos afirmar."
+        )
       },
       roadmap:{
-        formal:"Roadmap for historical learning is institutionalization of constraints as default. This includes non-retroactive evidence discipline and portable standards that resist narrative drift. The objective is to compress hard lessons into enforced interfaces. The system advances when the same failures can no longer hide. That is the bridge from history to scale.",
-        informal:"The roadmap is simple: stop paying tuition to failure. We turn hard lessons into hard interfaces so the same mistake can’t repeat quietly. When history can’t sneak back in through a loophole, progress accelerates safely. The frontier becomes survivable. That’s how you build a future that doesn’t keep rebooting."
+        formal:P(
+          "Roadmap increases coverage (more feedstock classes, more modules) without widening claims. Expansion is gated by receipts: repeatable measurement, stable naming, and audit-ready exports.",
+          "路线图扩大覆盖（更多来料/模块）但不扩大主张。扩展闸门：可复测、命名稳定、可审计导出。",
+          "La hoja de ruta amplía cobertura sin inflar afirmaciones. Se escala solo con recibos repetibles y auditoría."
+        ),
+        informal:P(
+          "We earn expansion. More inputs, more modules—only after we can measure them cleanly and explain them without hype.",
+          "扩展要“赚”。能测清、能讲清，才加更多来料与模块。",
+          "La expansión se gana: más insumos y módulos solo cuando se miden y explican sin hype."
+        )
       }
     },
 
-    "Adversarial":{
+    feedstock_variance:{
       concept:{
-        formal:"Adversarial posture assumes spoofing, omission, drift injection, and exception laundering. Attack surfaces are defined before scaling, not after incidents. Integrity requires redundancy, segmentation, and audit-ready logging. Opportunity cost is reduced improvisation, but reward is defensibility under scrutiny. Manipulation resistance is a structural requirement, not an aspiration.",
-        informal:"Every system gets tested—by attackers, incentives, and pressure. The deeper enemy isn’t attack; it’s complacency. If you scale first and secure later, you lose trust forever. We bake detection and containment into the bones so the system can survive contact with reality. That’s not paranoia; that’s asymmetric intelligence."
+        formal:P(
+          "Variance is the core problem: heterogeneous feedstocks shift composition and moisture, changing conversion behavior and emissions profiles. The system design targets stability under variance, not best-case performance.",
+          "方差是核心问题：异质来料与含水变化会改变转化与排放。设计目标是“方差下稳定”，不是最佳情况。",
+          "La varianza domina: cambia composición y humedad y altera conversión. Objetivo: estabilidad bajo varianza."
+        ),
+        informal:P(
+          "Trash is not one thing. Neither is biomass. The hard part isn’t one perfect run—it’s staying stable when the input changes every day.",
+          "垃圾不是一种东西，生物质也不是。难点不是跑一次漂亮，而是每天变也能稳。",
+          "Los insumos cambian diario. El reto es mantener estabilidad, no una corrida perfecta."
+        )
       },
       live:{
-        formal:"Live adversarial monitoring flags anomaly clusters, integrity breaks, and policy violations. Telemetry is cross-validated to suppress artifact wins. Response prioritizes containment and rollback over continuity. Recovery is procedural, logged, and non-retroactive. Live resilience is measured as detectability and bounded blast radius.",
-        informal:"Live mode is where drift tries to hide. We make drift loud. We make tampering expensive. We make shortcuts visible. When something doesn’t match the envelope, it doesn’t get a story—it gets contained. That’s how you keep momentum without getting manipulated. Resilience is built before it’s needed."
+        formal:P(
+          "Live controls use intake characterization proxies and routing discipline: when variance rises, the system contains, tightens windows, and routes to safe pathways rather than pushing throughput.",
+          "上线用入口代理表征与路由纪律：方差升高就隔离、收紧窗口、走安全路径，而不是硬推产能。",
+          "En vivo: proxies de entrada + disciplina de ruteo. Si sube varianza, se contiene y se eligen vías seguras."
+        ),
+        informal:P(
+          "When the input gets weird, we don’t get brave—we get disciplined. Slow down, isolate, reroute, log it.",
+          "来料变怪，不要勇猛，要纪律：慢下来、隔离、改路、记录。",
+          "Si el insumo se pone raro: disciplina. Reducir, aislar, rerutear y registrar."
+        )
       },
       roadmap:{
-        formal:"Roadmap expands red-team cycles, strengthens tamper evidence, and tightens integrity locks. Defensive posture evolves alongside deployment footprint. Transparency reduces manipulation space by removing ambiguity. Scale is gated by adversarial clearance rather than optimism. The system advances when it proves it cannot be quietly gamed.",
-        informal:"The roadmap is “harder to fool” every quarter. More tests, tighter locks, faster containment, cleaner recovery. As scale grows, manipulation gets cheaper, so defenses must get smarter. We don’t grow into fragility. We grow into resilience. That’s how frontier becomes infrastructure."
+        formal:P(
+          "Roadmap adds richer classification (not claims) and better segmentation so variance is handled earlier in the pipeline. The contract remains: bounded outputs, receipt-first comparability.",
+          "路线图提升分类与分选来更早处理方差。契约不变：有界输出、收据优先、可比较。",
+          "Se mejora clasificación/segmentación para manejar varianza antes. Contrato: salidas acotadas y comparables."
+        ),
+        informal:P(
+          "Better sorting means fewer surprises downstream. Same discipline, smoother days.",
+          "分选更好，下游惊喜更少；纪律不变，日子更顺。",
+          "Mejor separación = menos sorpresas. Misma disciplina."
+        )
       }
     },
 
-    "Baseline Constraints":{
+    safety_limits:{
       concept:{
-        formal:"Baseline constraints define what is permitted before expansion. Industrial posture remains thermal substitution under classification (C). No net-positive fusion claim is asserted. Interfaces remain upstream-only for high-energy regimes. Measurement is the authority for escalation decisions. These constraints are the spine of admissibility.",
-        informal:"This is the rulebook before the game. We don’t get to scale whatever we want just because it sounds exciting. The baseline is containment, measurement, and discipline. Industrial substitution is the foothold because it’s real. Everything else must be earned. That’s how the dream stays honest."
+        formal:P(
+          "Safety is defined as non-negotiable constraints: thermal containment, pressure boundaries, emissions compliance, and kill/rollback procedures. Energy is never allowed to outrun containment.",
+          "安全是不可谈判约束：热隔离、压力边界、排放合规、终止/回滚流程。能量不得跑在隔离前面。",
+          "Seguridad = restricciones no negociables: contención térmica, presión, emisiones y rollback. Energía nunca por delante de contención."
+        ),
+        informal:P(
+          "If a system can’t fail safely, it can’t scale. Safety isn’t a checkbox—it’s the thing that lets you sleep.",
+          "不能安全失败，就不能规模化。安全不是打勾，是让你能睡觉的东西。",
+          "Si no falla de forma segura, no escala. La seguridad es lo que permite dormir."
+        )
       },
       live:{
-        formal:"Live constraints enforce stability bands, auditability, and reversible escalation. Drift cannot be masked by narrative framing. Any correction requires explicit rollover rather than silent edits. Boundaries remain visible and enforceable. Live posture is constraint compliance under stress.",
-        informal:"Live means the rules actually matter. If the band drifts, you don’t debate—you respond. If the evidence breaks, you don’t patch—you roll forward cleanly. The whole point is that reality stays louder than rhetoric. That’s how stability feels calm instead of fragile. Discipline is what makes speed survivable."
+        formal:P(
+          "Live operations maintain hard shutdown triggers, isolation zones, and reason-coded incident logs. If a boundary is approached, containment wins over throughput.",
+          "上线保持硬终止触发、隔离区、原因码事件日志。边界逼近时，隔离优先于产能。",
+          "En vivo: disparadores de parada, zonas de aislamiento y logs con razones. Contención > throughput."
+        ),
+        informal:P(
+          "When the line gets close, you don’t negotiate. You stop, contain, and write it down.",
+          "线快到了就不谈判：停、隔离、记清楚。",
+          "Si se acerca el límite: parar, contener y registrar."
+        )
       },
       roadmap:{
-        formal:"Roadmap constraints tighten under scale rather than loosening. Certification artifacts become portable and underwriting-grade. Governance remains non-retroactive and binary for admissibility. Expansion is conditional upon stable receipts. The system remains anchored to constraints as it grows.",
-        informal:"The roadmap isn’t “more freedom.” It’s more discipline at larger scale. We tighten the rules because the stakes get bigger. We make proof easier to verify and harder to fake. That’s how growth stays clean. The frontier doesn’t need permission; it needs structure."
+        formal:P(
+          "Roadmap strengthens safety instrumentation and audit bundles; it does not increase claims. Any capability expansion remains subordinate to verified containment.",
+          "路线图增强安全仪表与审计包，不增加主张。能力扩展永远服从已验证隔离。",
+          "Se refuerza instrumentación y auditoría; no se inflan afirmaciones. Expansión subordinada a contención verificada."
+        ),
+        informal:P(
+          "We get safer before we get faster. That’s how scale stays calm.",
+          "先更安全，再更快。规模化才能冷静。",
+          "Primero más seguro, luego más rápido. Así escala con calma."
+        )
       }
     },
 
-    "Engineering":{
+    segmentation_intake:{
       concept:{
-        formal:"Engineering defines the physical separation wall between regime and endpoint. Interfaces are explicit and isolation is structural. Thermal transfer is exchanger-mediated rather than uncontrolled. Failure modes are enumerated before scaling decisions. Mechanical survivability is a precondition.",
-        informal:"Engineering is where ambition becomes real. Heat either stays contained or it leaks into consequences. We build walls that behave like laws, not like suggestions. The cost is friction now; the reward is no catastrophe later. That’s how you keep velocity without paying collapse."
+        formal:P(
+          "Segmentation separates streams so each pathway remains stable: moisture, metals, inert mineral load, and contaminants are handled explicitly. This reduces cross-contamination and improves controllability.",
+          "分选把流拆开以保持每条路径稳定：含水、金属、惰性矿物、污染物被显式处理，减少交叉污染，提升可控性。",
+          "La segmentación separa corrientes para estabilidad: humedad, metales, inertes y contaminantes se manejan explícitamente."
+        ),
+        informal:P(
+          "If you mix everything, you get chaos. If you separate early, everything downstream gets easier.",
+          "什么都混就混乱；入口早分开，下游都更轻松。",
+          "Si mezclas todo, caos. Si separas temprano, todo se vuelve más fácil."
+        )
       },
       live:{
-        formal:"Live engineering is judged by envelope adherence under variance. Thermal drift and stress accumulation are logged continuously. Shutdown pathways are deterministic. Redundancy absorbs shock. Stability is the KPI.",
-        informal:"Live mode is where seams tell the truth. We watch drift, not headlines. When the envelope is threatened, we contain first and recover cleanly. That’s not fear—it’s professionalism. Stability is what makes scale possible."
+        formal:P(
+          "Live intake uses repeatable checks and routing rules. If classification confidence drops, the system routes conservatively and logs uncertainty rather than guessing.",
+          "上线入口用可重复检查与路由规则。置信度下降就保守路由并记录不确定性，而不是猜。",
+          "En vivo: reglas repetibles. Si baja confianza, ruteo conservador y se registra incertidumbre."
+        ),
+        informal:P(
+          "When you’re not sure what’s in the pile, don’t pretend. Route it safe and record it.",
+          "不确定就别装懂：走安全路径并记录。",
+          "Si no estás seguro, no finjas: rutea seguro y registra."
+        )
       },
       roadmap:{
-        formal:"Engineering roadmap improves efficiency without relaxing constraints. Isolation tiers deepen and certification strengthens. Expansion is blocked if stress mapping is incomplete. Growth remains subordinate to physical proof.",
-        informal:"The roadmap is stronger boundaries, cleaner interfaces, sharper envelopes. We don’t move closer to people; we move closer to resilience. Every upgrade must survive the stress we expect at scale. That’s how engineering earns the right to expand."
+        formal:P(
+          "Roadmap upgrades sensors and labeling discipline, keeping the same claim boundary. Better segmentation expands stability, not hype.",
+          "路线图升级传感与命名纪律，不改主张边界。更好分选=更稳，不是更吹。",
+          "Se mejora sensórica y disciplina de etiquetas. Mejor segmentación = más estabilidad, no hype."
+        ),
+        informal:P(
+          "Better sorting is boring—in the best way. Fewer surprises, fewer fires.",
+          "更好分选很“无聊”——但很棒：少惊喜、少救火。",
+          "Mejor separación es aburrida (bien): menos sorpresas."
+        )
       }
     },
 
-    "Technology":{
+    conversion_modules:{
       concept:{
-        formal:"Technology establishes observability and replayability. Telemetry is authority, not decoration. Logs prevent post-hoc reinterpretation. Automation remains subordinate to measurement integrity. Drift detection is first-class.",
-        informal:"Technology is the nervous system that keeps the dream honest. If the system can’t see itself, it can’t correct itself. Logs are memory you can trust under pressure. Automation serves truth, not vibes. That’s how progress stops being a story."
+        formal:P(
+          "Modules are treated as bounded conversion options. Claims are expressed as operating ranges, not peak outputs. The system chooses modules based on admissible inputs and containment rules.",
+          "模块是有界转化选项：主张用运行区间而非峰值。系统按可采信输入与隔离规则选择模块。",
+          "Módulos = opciones de conversión acotadas. Afirmaciones como rangos, no picos. Selección por insumo admisible y contención."
+        ),
+        informal:P(
+          "Different inputs need different paths. The magic isn’t one machine—it’s choosing the right tool and staying honest about what it can do.",
+          "不同来料要走不同路。关键不是一台神机，而是选对工具并诚实描述它能做什么。",
+          "Distintos insumos, distintas rutas. No es una máquina mágica: es elegir bien y ser honesto."
+        )
       },
       live:{
-        formal:"Live telemetry tracks deviation and acceleration. Cross-signal agreement suppresses artifact wins. Control actions are logged with reason codes. Auditability remains continuous. Visibility defines authority.",
-        informal:"Live mode is where drift tries to hide inside averages. We don’t let it. We cross-check, we log, and we make weirdness loud. Every intervention leaves a footprint. That’s how the system stays calm while it moves fast."
+        formal:P(
+          "Live mode treats module switching as a controlled event: it is logged, reason-coded, and bounded by safe operating windows. No silent tuning.",
+          "上线把模块切换当作受控事件：记录、原因码、受运行窗口约束。不允许静默调参。",
+          "En vivo: cambiar módulos es evento controlado con log y razones. Sin ajuste silencioso."
+        ),
+        informal:P(
+          "If we switch modes, we write it down. If we can’t explain it, we don’t do it.",
+          "切换模式就记录；解释不清就不做。",
+          "Si cambiamos modo, lo registramos. Si no se puede explicar, no se hace."
+        )
       },
       roadmap:{
-        formal:"Roadmap improves fidelity and integrity constraints. Upgrades preserve comparability under locked definitions. Automated reporting may be introduced without losing raw traceability. Transparency increases with scale.",
-        informal:"The roadmap is sharper vision, not thicker mystery. Better sensing, cleaner validation, more replayable truth. We add complexity only to clarify. The bigger it gets, the more visible it must become. That’s how frontier tech becomes trusted tech."
+        formal:P(
+          "Roadmap adds adapter specs so modules can be compared consistently. Expansion is gated by measurement readiness, not enthusiasm.",
+          "路线图增加适配规范以一致比较模块。扩展闸门是测量就绪，而不是热情。",
+          "Se añaden especificaciones para comparar módulos de forma consistente. Se escala por preparación de medición."
+        ),
+        informal:P(
+          "More modules later—only after we can measure them like adults.",
+          "以后可以更多模块——前提是能像成年人一样测清楚。",
+          "Más módulos luego, solo cuando se midan bien."
+        )
       }
     },
 
-    "Industrial":{
+    heat_interfaces:{
       concept:{
-        formal:"Industrial posture remains thermal substitution under containment. No net-positive fusion claim is asserted. Buffering precedes adjacency. Deployment follows staged phases. Claims remain bounded to measured delivered bands.",
-        informal:"Industrial scale is where you earn credibility. We start with substitution because it’s measurable and useful. We buffer before we broadcast, and we stage before we multiply. No fusion gain claims here—only disciplined delivery. That’s how trust survives scrutiny."
+        formal:P(
+          "Energy products are interface products: heat delivery, isolation, and control surfaces. The purpose is usable heat under constraint, not abstract energy narratives.",
+          "能源产品本质是接口产品：供热、隔离、控制面。目标是在约束下提供可用热，而不是抽象叙事。",
+          "Productos de energía = interfaces: entrega de calor, aislamiento y control. Objetivo: calor utilizable bajo restricción."
+        ),
+        informal:P(
+          "Most ‘energy’ problems are really heat problems. Can you deliver heat where it’s needed, safely, every day? That’s the product.",
+          "多数“能源问题”其实是热问题：能否把热安全、稳定地送到需要的地方？这才是产品。",
+          "Muchos problemas de ‘energía’ son de calor: ¿puedes entregarlo seguro y estable? Eso es el producto."
+        )
       },
       live:{
-        formal:"Live operation is evaluated by stability, uptime, and bounded variance. Containment remains upstream and auditable. Phase advancement is blocked without receipts. Stability under pressure defines viability.",
-        informal:"Live industrial isn’t loud—it’s steady. Buffers absorb spikes and interfaces stay predictable. We don’t sprint into scale; we walk phases with proof. The reward is bankable stability. The risk of rushing is reputational ruin."
+        formal:P(
+          "Live heat delivery uses controlled interfaces and isolation zones. Any anomaly triggers containment and route-to-safe handling; outputs remain bounded.",
+          "上线供热使用受控接口与隔离区。异常触发隔离与安全处理；输出保持有界。",
+          "En vivo: interfaces controladas y zonas de aislamiento. Anomalías → contención. Salidas acotadas."
+        ),
+        informal:P(
+          "If the interface is sloppy, the whole system is sloppy. Tight interfaces make the whole thing calm.",
+          "接口松，系统就松；接口紧，系统就稳。",
+          "Si la interfaz es floja, todo es flojo. Interfaz firme = calma."
+        )
       },
       roadmap:{
-        formal:"Roadmap advances through certification, underwriting alignment, and replication discipline. Cluster expansion is conditional on compliance history. Licensing ties to containment classes. Scale remains staged.",
-        informal:"The roadmap is replication without chaos. Certification first, clusters second, adjacency third. Underwriting gets easier because exposure is bounded. Growth becomes boring in the right way because it’s repeatable. That’s how industrial dominance is built."
+        formal:P(
+          "Roadmap improves interface templates (tap-safe controls, deterministic routing, audit logs) so operator behavior remains consistent under pressure.",
+          "路线图强化接口模板（点按可靠、确定性路由、审计日志），使操作在压力下保持一致。",
+          "Se mejoran plantillas de interfaz y logs para consistencia del operador bajo presión."
+        ),
+        informal:P(
+          "Better interfaces = fewer mistakes. That’s how systems scale without drama.",
+          "更好接口=更少失误；系统才能无戏剧地规模化。",
+          "Mejor interfaz = menos errores. Así escala sin drama."
+        )
       }
     },
 
-    "Environmental":{
+    measurement_receipts:{
       concept:{
-        formal:"Environmental integrity is an interface contract. Plasma regimes remain isolated from endpoints. Discharge bands are declared and measured. Buffering reduces shock propagation. Compliance is engineered.",
-        informal:"The environment is a boundary you don’t get to cheat. Heat must stay in its lane and impact must stay measurable. Buffers exist because shocks exist. The reward is scale without harm; shortcuts buy irreversible damage."
+        formal:P(
+          "Measurement is the substrate: logs, time anchors, calibration references, and exportable receipts. If it cannot be measured under declared rules, it cannot be elevated.",
+          "测量是基底：日志、时间锚、校准参考、可导出收据。若无法在声明规则下测量，就不能升级主张。",
+          "La medición es el sustrato: logs, anclas de tiempo, calibración y recibos exportables. Sin medición, no hay escalación."
+        ),
+        informal:P(
+          "Receipts beat opinions. If you can’t point to a measured receipt, you don’t get to talk bigger than the proof.",
+          "收据胜过观点：拿不出可测收据，就别讲超过证明的话。",
+          "Los recibos ganan a las opiniones. Sin recibo medido, no se habla más grande que la prueba."
+        )
       },
       live:{
-        formal:"Live monitoring tracks discharge variance and boundary integrity. Anomalies trigger containment response. Interfaces remain segregated. Reporting stays consistent with measured bands. Drift is not tolerated.",
-        informal:"Live mode is where nature audits you. If the band drifts, you respond. If the boundary is threatened, you contain. We log reality as it happens. Clean energy must look clean in behavior, not just in marketing."
+        formal:P(
+          "Live mode enforces device-time anchoring, repeatable sampling, and reason-coded outputs. Changes in instrumentation create new epochs for comparability.",
+          "上线强制设备时间锚、可重复采样与原因码输出。仪器变更需新纪元保持可比性。",
+          "En vivo: ancla de tiempo del dispositivo, muestreo repetible y salidas con razones. Cambios → nueva época."
+        ),
+        informal:P(
+          "If time isn’t anchored, arguments never end. So we anchor it first.",
+          "时间不锚定，争论就没完，所以先锚定时间。",
+          "Sin ancla de tiempo, no acaba la discusión. Por eso se ancla primero."
+        )
       },
       roadmap:{
-        formal:"Roadmap tightens impact bands and improves audit portability. Monitoring increases resolution. Expansion is blocked without verified conformity. Environmental invariants remain non-negotiable.",
-        informal:"The roadmap is tighter rules at larger scale. Better monitoring, cleaner reporting, and less room for drift. We don’t loosen standards because we’re bigger—we strengthen them. That’s how sustainability becomes structural."
+        formal:P(
+          "Roadmap adds stronger export bundles and replay protocols so independent reviewers can reproduce interpretations from the same receipts.",
+          "路线图增强导出包与回放协议，使独立复核者可用同收据复现解释。",
+          "Se añaden paquetes de exportación y replay para reproducibilidad por terceros."
+        ),
+        informal:P(
+          "Next is making proof portable: you should be able to hand someone a bundle and they can verify without ‘trust me.’",
+          "下一步是证明可携带：把包交出去，对方无需“信我”也能核查。",
+          "Luego, prueba portátil: entregas un paquete y verifican sin ‘créeme’."
+        )
       }
     },
 
-    "Medicine":{
+    efficiency_bands:{
       concept:{
-        formal:"Medical adjacency emphasizes absolute boundary discipline for human safety. High-energy regimes remain upstream-only and non-proximate. Endpoints must remain passive and certified. Health claims are excluded without validation.",
-        informal:"Healthcare teaches the harsh rule: ‘probably safe’ is still unsafe. So we keep high-energy upstream and endpoints passive. The reward is trust that doesn’t depend on hope. Boundaries are life. That’s the medical lesson baked into the architecture."
+        formal:P(
+          "Efficiency is expressed as bounded bands under declared operating windows, not as peak claims. The aim is stable substitution value under constraint.",
+          "效率用声明窗口下的有界区间表达，而非峰值主张。目标是在约束下稳定提供替代价值。",
+          "La eficiencia se expresa como bandas acotadas bajo ventanas declaradas, no como picos. Objetivo: valor estable bajo restricción."
+        ),
+        informal:P(
+          "We don’t sell ‘best case.’ We care about what stays true on Tuesday when the input changes.",
+          "我们不卖“最佳情况”，只关心来料变了的星期二还成立什么。",
+          "No vendemos ‘mejor caso’. Importa lo que sigue siendo cierto un martes con insumo distinto."
+        )
       },
       live:{
-        formal:"Live medical suitability is measured as consistent isolation and predictable incident response. Monitoring triggers deterministic shutdown. Documentation supports oversight. Human factors are treated as constraints.",
-        informal:"Live medical environments don’t tolerate ambiguity. If the interface isn’t predictable, stress explodes. So we design for calm: clear procedures, clear logs, and zero exposure. That’s how infrastructure supports life systems."
+        formal:P(
+          "Live reporting uses consistent units, windows, and reason codes. If a comparison is invalid, it is labeled as such rather than forced.",
+          "上线报告使用一致单位/窗口/原因码。不可比就标不可比，不强行比较。",
+          "En vivo: unidades/ventanas/razones consistentes. Si no es comparable, se etiqueta."
+        ),
+        informal:P(
+          "If it’s not apples-to-apples, we don’t pretend it is.",
+          "不是同口径，就不装成同口径。",
+          "Si no es comparable, no fingimos."
+        )
       },
       roadmap:{
-        formal:"Roadmap adds stronger third-party oversight and standardized safety artifacts. Bio-interface modeling becomes explicit before adjacency expansion. Isolation invariants remain dominant.",
-        informal:"The roadmap is stronger oversight, cleaner artifacts, and more preventative monitoring. We expand only when safety proof is portable. No shortcuts. The future is resilience without exposure. That’s how energy earns proximity."
+        formal:P(
+          "Roadmap adds more standardized dashboards (Gauges) while keeping industrial posture. No upgrade of claims without upgrade of measurement.",
+          "路线图增加更多标准化量规面板，保持工业姿态。无测量升级，不主张升级。",
+          "Más dashboards estandarizados, misma postura. Sin medición mejorada, no hay afirmaciones más grandes."
+        ),
+        informal:P(
+          "More clarity, same honesty. That’s how the numbers stay trustworthy.",
+          "更清楚，但更诚实；数字才可信。",
+          "Más claridad, misma honestidad."
+        )
       }
     },
 
-    "Financial":{
+    carbon_accounting:{
       concept:{
-        formal:"Financial posture prices risk based on containment tier and measured variance. Insurance maps to certification. Revenue models reference verified bands. Speculative gains are excluded from operational economics.",
-        informal:"Money loves speed until speed breaks things. Here, finance follows physics. Risk is priced against the envelope and reward comes from repeatability. The opportunity cost is slower hype; the reward is cheaper capital that stays."
+        formal:P(
+          "Carbon is treated as an accounted stream under declared boundaries. Claims remain conditional unless measurement and scope support them. This page does not assert offsets.",
+          "碳被当作在声明边界内可核算的流。除非测量与范围支撑，否则主张保持条件化。本页不主张抵消。",
+          "El carbono se trata como flujo contabilizado con límites declarados. Afirmaciones solo si hay medición/alcance. Esta página no afirma offsets."
+        ),
+        informal:P(
+          "If you can’t measure it cleanly, don’t brag about it. We keep carbon talk tied to receipts.",
+          "测不清就别吹。碳相关内容必须绑收据。",
+          "Si no se mide bien, no se presume. Carbono atado a recibos."
+        )
       },
       live:{
-        formal:"Live discipline monitors cost per verified output and variance impact. Underwriting references telemetry-backed compliance. Expansion capital is released only after verification. Stability reduces fragility.",
-        informal:"Live finance is where the world charges interest on sloppiness. If variance spikes, capital tightens. If receipts are clean, confidence rises. We release growth money only after proof. The best financial strategy is operational integrity."
+        formal:P(
+          "Live accounting logs boundary conditions and reason codes. Any change in boundary definition creates a new epoch for comparability.",
+          "上线核算记录边界条件与原因码。边界定义变更需新纪元保持可比性。",
+          "En vivo: se registran límites y razones. Cambios de límites → nueva época."
+        ),
+        informal:P(
+          "Change the boundary, change the story. So we stamp boundaries like adults.",
+          "边界一变，故事就变，所以边界必须盖章。",
+          "Si cambias el límite, cambia la historia. Por eso se marca el límite."
+        )
       },
       roadmap:{
-        formal:"Roadmap integrates certificate-linked underwriting and staged replication financing. Risk decreases as audit fidelity increases. Capital scaling remains gated by receipts.",
-        informal:"The roadmap is confidence that compounds. As auditability improves, underwriting calms down. Contracts map to measurable bands. Growth money becomes structural instead of speculative. Reward follows proof."
+        formal:P(
+          "Roadmap improves traceability and export. Any public-facing claim requires doctrine binding (Laws) and measurement binding (Gauges).",
+          "路线图增强可追溯与导出。任何面向公众的主张必须绑定法则与量规。",
+          "Se mejora trazabilidad y exportación. Afirmaciones públicas requieren Leyes + Medidores."
+        ),
+        informal:P(
+          "We’ll only talk bigger when the receipts are bigger.",
+          "收据变大，才讲话变大。",
+          "Solo hablaremos más grande cuando los recibos sean más grandes."
+        )
       }
     },
 
-    "Legal":{
+    permitting_posture:{
       concept:{
-        formal:"Legal alignment binds deployment to enforceable definitions and measurable thresholds. Compliance is tied to documented procedures. Scope remains stable to prevent interpretive drift. Liability maps to containment tiers.",
-        informal:"Law punishes what it can’t define. So we define everything that matters: the boundaries, the bands, the procedures. The reward is adoption without drama. The cost is discipline. Legal clarity becomes a scaling accelerator when proof is portable."
+        formal:P(
+          "Permitting is treated as a constraint lane: regulatory posture defines what can be deployed, where, and under which monitoring rules. The product does not outrun compliance.",
+          "许可是约束车道：监管姿态决定能部署什么、部署到哪、用什么监测规则。产品不跑在合规前面。",
+          "Permisos = carril de restricción: define qué, dónde y bajo qué monitoreo. El producto no va por delante del cumplimiento."
+        ),
+        informal:P(
+          "If you ignore permitting, you’re building a fantasy. Real systems live inside real rules.",
+          "不管许可就是做梦。真实系统必须在真实规则里活。",
+          "Ignorar permisos = fantasía. Sistemas reales viven dentro de reglas reales."
+        )
       },
       live:{
-        formal:"Live compliance uses auditable logs and stable thresholds. Disputes resolve through receipts rather than recollection. No regulatory bypass is tolerated. Posture remains bounded.",
-        informal:"Live legal posture is calm because the system is honest. When a question comes, the receipt answers it. No guessing. No arguing. That’s how legal risk shrinks. And when legal risk shrinks, scaling gets easier."
+        formal:P(
+          "Live mode keeps documentation and monitoring aligned: reason codes, logs, and export bundles support inspection without narrative inflation.",
+          "上线保持文档与监测一致：原因码、日志、导出包支持检查，不膨胀叙事。",
+          "En vivo: documentación y monitoreo alineados con razones, logs y exportables para inspección."
+        ),
+        informal:P(
+          "If an inspector asks ‘show me,’ you should have a clean bundle—not a speech.",
+          "检查员说“给我看”，你要拿出干净的包，不是演讲。",
+          "Si te dicen ‘muéstrame’, necesitas un paquete limpio, no un discurso."
+        )
       },
       roadmap:{
-        formal:"Roadmap improves certification portability and cross-jurisdiction comparability. Contract triggers map to certificate states. Expansion remains contingent on compliance stability.",
-        informal:"The roadmap is standards you can carry across regions without rewriting meaning. Certification becomes the language institutions trust. Political noise has less power when proof is stable. That’s how infrastructure becomes policy-safe."
+        formal:P(
+          "Roadmap adds standardized compliance bundles and conservative claim templates. Any change that affects classification requires explicit versioning.",
+          "路线图增加标准合规包与保守主张模板。影响分类的变更必须显式版本化。",
+          "Se añaden paquetes estándar y plantillas conservadoras. Cambios que afecten clasificación requieren versionado explícito."
+        ),
+        informal:P(
+          "Make it easy for people to say yes—by making it easy to verify.",
+          "让别人更容易说“行”：因为更容易核查。",
+          "Haz fácil decir sí: haz fácil verificar."
+        )
       }
     },
 
-    "Political":{
+    deployment_phasing:{
       concept:{
-        formal:"Political interface is treated as an institutional constraint surface. Neutral posture prevents capture. Adoption depends on auditable stability and bounded claims. Policy must not exceed technical proof.",
-        informal:"Politics amplifies what it can’t verify. So we make verification easy. Neutral posture keeps the system from becoming someone’s propaganda tool. The reward is broader adoption. The cost is refusing easy narratives. That’s how scale stays clean."
+        formal:P(
+          "Deployment phases reduce fragility: start with constrained pilots, isolate zones, and keep rollback ready. Scale is earned by receipts, not confidence.",
+          "部署分期降低脆弱性：先小试点、分区隔离、随时可回滚。规模靠收据赚，不靠自信。",
+          "Despliegue por fases reduce fragilidad: pilotos acotados, zonas aisladas, rollback listo. Escala se gana con recibos."
+        ),
+        informal:P(
+          "Don’t go big on day one. Go stable on day one. Then earn bigger.",
+          "第一天别求大，第一天求稳；稳了再赚大。",
+          "No vayas grande el día uno. Ve estable. Luego ganas más."
+        )
       },
       live:{
-        formal:"Live posture maintains bounded messaging aligned to measured state. Stakeholder engagement references receipts. Drift is suppressed by stable definitions. Trust grows through consistency.",
-        informal:"Live political reality is pressure. Everyone wants a headline. We give them receipts instead. That’s how you avoid polarization: you keep the system boringly consistent. When consistency holds, politics calms down."
+        formal:P(
+          "Live phasing monitors correlated exposure and stops expansion when variance rises. Progression requires documented receipts and reason-coded approvals.",
+          "上线分期监测相关暴露，方差上升即停止扩张。推进需要收据与原因码批准。",
+          "En vivo: monitoreo de exposición correlacionada. Si sube varianza, se detiene expansión. Avance con recibos y razones."
+        ),
+        informal:P(
+          "If it wobbles, stop. If it clusters, split. That’s how you avoid ‘one failure breaks all.’",
+          "一晃就停；一聚就拆；避免“一坏全坏”。",
+          "Si tiembla, para. Si se agrupa, separa. Así evitas ‘una falla rompe todo’."
+        )
       },
       roadmap:{
-        formal:"Roadmap harmonizes institutional adoption through portable certification and stable interfaces. Expansion remains conditional on compliance and auditability. Neutrality remains structural.",
-        informal:"The roadmap is unity through structure. When proof is portable, alignment becomes possible without forcing anyone’s beliefs. Scale becomes cooperation instead of conflict. That’s how the frontier becomes a shared project."
+        formal:P(
+          "Roadmap adds standardized rollout playbooks and audit exports so third parties can verify posture without privileged access.",
+          "路线图增加标准发布剧本与审计导出，使第三方无需特权也能核查姿态。",
+          "Se añaden playbooks y exportación de auditoría para verificación por terceros."
+        ),
+        informal:P(
+          "Scaling gets calmer when the playbook is real and repeatable.",
+          "剧本真实可重复，扩张就更冷静。",
+          "Escalar es más calmado cuando el playbook es real y repetible."
+        )
       }
     },
 
-    "Social":{
+    rollback_containment:{
       concept:{
-        formal:"Social adoption requires legible boundaries and bounded language. Trust derives from consistent posture and falsifiable claims. Transparency reduces rumor amplification. Messaging remains subordinate to measured reality.",
-        informal:"People don’t reject systems first—they reject confusion. If the story inflates, trust collapses. So we keep boundaries clear and posture honest. The reward is alignment that scales. The cost is resisting hype. That’s how excitement stays safe."
+        formal:P(
+          "Containment prevents cascade: isolate failures, cap blast radius, and revert to last stable state. Rollback is treated as a primary feature, not an emergency.",
+          "隔离阻断级联：隔离失败、限制爆炸半径、回到上一稳定态。回滚是主功能，不是紧急手段。",
+          "Contención evita cascada: aislar fallas, limitar impacto y volver al último estado estable. Rollback es función primaria."
+        ),
+        informal:P(
+          "Rollback beats collapse. Every time. If you can’t roll back cleanly, you’re not ready to scale.",
+          "回滚胜过崩塌。每次都胜。不能干净回滚，就不配规模化。",
+          "Rollback vence al colapso. Siempre. Si no puedes volver limpio, no estás listo para escalar."
+        )
       },
       live:{
-        formal:"Live communication remains consistent with measured posture. Updates reference operational bands and compliance artifacts. No speculative escalation is permitted. Transparency lowers anxiety.",
-        informal:"Live is where trust is either built or burned. We keep the frame stable so people don’t panic. We point to receipts, not slogans. That’s how adoption becomes calm. Consistency is the social version of containment."
+        formal:P(
+          "Live containment uses segmentation and deterministic recovery. Incidents emit reason codes and are replayable from receipts. No hidden exceptions.",
+          "上线隔离用分段与确定性恢复。事件带原因码且可由收据回放。无隐藏例外。",
+          "En vivo: segmentación y recuperación determinista. Incidentes con razones y replay desde recibos. Sin excepciones ocultas."
+        ),
+        informal:P(
+          "If something breaks, the system should tell you exactly what happened and how to return to stable—without drama.",
+          "出事就要讲清楚发生了什么，并把你带回稳定态——不戏剧化。",
+          "Si algo se rompe, debe decir qué pasó y cómo volver a estable, sin drama."
+        )
       },
       roadmap:{
-        formal:"Roadmap standardizes reporting and multilingual consistency without semantic drift. Public dashboards may reflect compliance bands. Education aligns with containment tiers. Adoption remains evidence-driven.",
-        informal:"The roadmap is stronger legibility at larger scale. More clarity, fewer misunderstandings, and less room for rumor. We educate without exaggerating. Trust compounds when the story doesn’t shift. That’s how social alignment becomes durable."
+        formal:P(
+          "Roadmap standardizes containment playbooks and adds audit bundles for independent review. Safety improves without inflating claims.",
+          "路线图标准化隔离剧本并加入独立复核审计包。安全增强但不膨胀主张。",
+          "Se estandarizan playbooks y bundles de auditoría. Más seguridad sin inflar afirmaciones."
+        ),
+        informal:P(
+          "The better your rollback, the braver you can be—safely.",
+          "回滚越强，你越能安全地大胆。",
+          "Mejor rollback = puedes ser más audaz, pero seguro."
+        )
       }
     }
   };
 
-  // UI refs
+  // ===== modal engine =====
   var bd=document.getElementById("bd");
   var quadModal=document.getElementById("quadModal");
   var domainModal=document.getElementById("domainModal");
@@ -416,8 +1043,9 @@ body::before,body::after{pointer-events:none!important}
   var quadTitle=document.getElementById("quadTitle");
   var quadGrid=document.getElementById("quadGrid");
   var domainTitle=document.getElementById("domainTitle");
-  var toneFormal=document.getElementById("toneFormal");
+
   var toneInformal=document.getElementById("toneInformal");
+  var toneFormal=document.getElementById("toneFormal");
   var bConcept=document.getElementById("bConcept");
   var bLive=document.getElementById("bLive");
   var bRoadmap=document.getElementById("bRoadmap");
@@ -425,128 +1053,148 @@ body::before,body::after{pointer-events:none!important}
   var pLive=document.getElementById("pLive");
   var pRoadmap=document.getElementById("pRoadmap");
 
-  var currentQuad=null;
-  var currentDomain=null;
-  var tone="formal"; // formal/informal
+  var currentQuad=null;      // FOUNDATION/ARCHITECTURE/PERFORMANCE/GOVERNANCE
+  var currentDomain=null;    // domain id
+  var tone="informal";       // informal/formal
 
   function showBD(){ bd.classList.add("show"); }
   function hideBD(){ bd.classList.remove("show"); }
+  function closeAll(){
+    quadModal.classList.remove("show");
+    domainModal.classList.remove("show");
+    hideBD();
+    setActiveDiamond(null);
+  }
+
+  function setActiveDiamond(which){
+    var dN=document.getElementById("qFoundation");
+    var dE=document.getElementById("qArchitecture");
+    var dS=document.getElementById("qPerformance");
+    var dW=document.getElementById("qGovernance");
+    dN.classList.toggle("active", which==="FOUNDATION");
+    dE.classList.toggle("active", which==="ARCHITECTURE");
+    dS.classList.toggle("active", which==="PERFORMANCE");
+    dW.classList.toggle("active", which==="GOVERNANCE");
+  }
 
   function openQuad(qname){
     currentQuad=qname;
-    quadTitle.textContent="ENERGY · " + qname;
+    setActiveDiamond(qname);
+
+    quadTitle.textContent =
+      (lang==="zh" ? "能源 · " : (lang==="es" ? "ENERGÍA · " : "ENERGY · ")) +
+      (qname==="FOUNDATION"?T.q.FOUNDATION.lab:qname==="ARCHITECTURE"?T.q.ARCHITECTURE.lab:qname==="PERFORMANCE"?T.q.PERFORMANCE.lab:T.q.GOVERNANCE.lab);
+
     quadGrid.innerHTML="";
 
-    var domains = QUADS[qname] || [];
-    domains.forEach(function(d){
+    var ids = DOM[qname] || [];
+    ids.forEach(function(id){
       var tile=document.createElement("div");
-      tile.className="smallDiamond";
+      tile.className="domCard";
       tile.setAttribute("role","button");
       tile.tabIndex=0;
-      tile.innerHTML='<div class="sdInner"><div class="sdT">'+d+'</div><div class="sdS">Concept · Live · Roadmap</div></div>';
-      tile.addEventListener("click", function(){ openDomain(d); });
-      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openDomain(d);} });
+      tile.innerHTML='<div class="dcInner"><div class="dcT">'+dTitle(id)+'</div><div class="dcS">'+T.domSub+'</div></div>';
+      function act(){ openDomain(id); }
+      tile.addEventListener("click", act);
+      tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
       quadGrid.appendChild(tile);
     });
 
-    // Return tile
     var ret=document.createElement("div");
-    ret.className="smallDiamond";
+    ret.className="domCard";
     ret.setAttribute("role","button");
     ret.tabIndex=0;
-    ret.innerHTML='<div class="sdInner"><div class="sdT">RETURN</div><div class="sdS">Back to quadrants</div></div>';
-    ret.addEventListener("click", closeQuad);
-    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeQuad(); }});
+    ret.innerHTML='<div class="dcInner"><div class="dcT">'+T.ret+'</div><div class="dcS">—</div></div>';
+    ret.addEventListener("click", closeAll);
+    ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); closeAll(); }});
     quadGrid.appendChild(ret);
 
     showBD();
-    quadModal.classList.add("show");
-  }
-
-  function closeQuad(){
-    quadModal.classList.remove("show");
-    // keep backdrop only if domain modal open
-    if(!domainModal.classList.contains("show")) hideBD();
-  }
-
-  function openDomain(dname){
-    currentDomain=dname;
-    domainTitle.textContent="ENERGY · " + dname;
-
-    // reset bubble open state
-    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
-
-    applyTone(tone);
-
-    quadModal.classList.remove("show");
-    showBD();
-    domainModal.classList.add("show");
-  }
-
-  function closeDomain(){
     domainModal.classList.remove("show");
-    // return to quadrant modal
     quadModal.classList.add("show");
   }
 
-  function applyTone(t){
-    tone=t;
-    toneFormal.classList.toggle("active", tone==="formal");
-    toneInformal.classList.toggle("active", tone==="informal");
-
-    var pack=N[currentDomain] || null;
+  function renderNarrative(){
+    if(!currentDomain) return;
+    var pack = TEXT[currentDomain] || null;
     if(!pack){
       pConcept.textContent="NOT MEASURED";
       pLive.textContent="NOT MEASURED";
       pRoadmap.textContent="NOT MEASURED";
       return;
     }
-    pConcept.textContent = pack.concept[tone];
-    pLive.textContent = pack.live[tone];
-    pRoadmap.textContent = pack.roadmap[tone];
+    pConcept.textContent = pickLang(pack.concept[tone]);
+    pLive.textContent    = pickLang(pack.live[tone]);
+    pRoadmap.textContent = pickLang(pack.roadmap[tone]);
   }
 
-  // bubbles: tap-to-open
+  function applyTone(next){
+    tone = (next==="formal") ? "formal" : "informal";
+    toneInformal.classList.toggle("active", tone==="informal");
+    toneFormal.classList.toggle("active", tone==="formal");
+    renderNarrative();
+  }
+
+  function openDomain(id){
+    currentDomain=id;
+    domainTitle.textContent =
+      (lang==="zh" ? "能源 · " : (lang==="es" ? "ENERGÍA · " : "ENERGY · ")) + dTitle(id);
+
+    // auto-close bubbles by default (none open)
+    [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+
+    quadModal.classList.remove("show");
+    showBD();
+    domainModal.classList.add("show");
+
+    // keep last tone
+    applyTone(tone);
+  }
+
+  // bubble auto-close
   function bindBubble(box){
-    box.addEventListener("click", function(){ box.classList.toggle("open"); });
-    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
     box.tabIndex=0; box.setAttribute("role","button");
+    box.addEventListener("click", function(){
+      var willOpen=!box.classList.contains("open");
+      [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+      box.classList.toggle("open", willOpen);
+    });
+    box.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        var willOpen=!box.classList.contains("open");
+        [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
+        box.classList.toggle("open", willOpen);
+      }
+    });
   }
   bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
 
-  // tone toggles
-  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
+  // tone buttons
   toneInformal.addEventListener("click", function(){ applyTone("informal"); });
+  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
 
-  // close buttons
-  document.getElementById("bd").addEventListener("click", function(){
-    // if domain open, close domain first; else close quad
-    if(domainModal.classList.contains("show")){
-      domainModal.classList.remove("show");
-      quadModal.classList.remove("show");
-      hideBD();
-      return;
-    }
-    if(quadModal.classList.contains("show")){
-      quadModal.classList.remove("show");
-      hideBD();
-    }
-  });
+  // close wiring
+  bd.addEventListener("click", closeAll);
+  quadClose.addEventListener("click", closeAll);
+  domainClose.addEventListener("click", closeAll);
+  quadModal.addEventListener("click", function(e){ e.stopPropagation(); });
+  domainModal.addEventListener("click", function(e){ e.stopPropagation(); });
 
-  quadClose.addEventListener("click", function(){ quadModal.classList.remove("show"); hideBD(); });
-  domainClose.addEventListener("click", function(){ domainModal.classList.remove("show"); quadModal.classList.remove("show"); hideBD(); });
-
-  // open quadrants
-  function bindQuad(id,name){
+  // bind quadrants
+  function bindQuad(id, name){
     var el=document.getElementById(id);
-    el.addEventListener("click", function(){ openQuad(name); });
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openQuad(name);} });
+    function act(){ openQuad(name); }
+    el.addEventListener("click", act);
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindQuad("qFoundation","FOUNDATION");
   bindQuad("qArchitecture","ARCHITECTURE");
   bindQuad("qPerformance","PERFORMANCE");
   bindQuad("qGovernance","GOVERNANCE");
 
+  // default: do nothing (no forced modal open on load)
+  applyTone("informal");
 })();
 </script>
 

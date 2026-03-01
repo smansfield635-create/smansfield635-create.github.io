@@ -1,28 +1,12 @@
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (RESTORE) · EN/中文/ES · MOBILE-SAFE · NO MODALS
+     PRODUCTS · MASTER INDEX (RESTORE + ADD DOMAIN PLATFORMS) · EN/中文/ES · MOBILE-SAFE · NO MODALS
      PURPOSE:
-       - Restore the PRODUCTS hub (was accidentally replaced by “machine behind the pages”)
-       - Single-open accordion (one row open at a time)
+       - Restore PRODUCTS hub and add missing domain platforms (Finance/Crypto + Legal/Insurance/etc.)
+       - Single-open accordion (one row open per band)
        - Trilingual page-level toggle (EN/中文/ES) + GH Pages safe reload (same pathname)
        - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
-     ROUTING (NO CATCH-ALL):
-       PRODUCTS:
-         - Energy                 → /products/energy/
-         - Education              → /products/education/
-         - Coherence Diagnostic   → /products/coherence-diagnostic/
-         - Software Spine         → /products/software/          (machine behind pages)
-         - Dot.Grid               → /products/dot-grid/
-         - SSG                    → /products/ssg/
-       SERVICES (SAFE HOPS):
-         - Advisory (Governance)  → /laws/
-         - Audit Support          → /gauges/
-         - Integration (Wiring)   → /products/software/
-         - Training (Masterclass) → /products/education/         (until a dedicated masterclass page exists)
-       SOFTWARE & SYSTEMS (SOFT ROUTES):
-         - UCI Engine             → /products/software/?focus=uci     (if page ignores focus, still safe)
-         - Registry               → /products/software/?focus=registry
-         - Adoption Ladder        → /products/software/?focus=adoption
-         - “Machine Behind Pages” → /products/software/
+     ROUTING RULE:
+       - If a dedicated page might not exist yet, route to /products/software/?focus=<slug> (safe hub).
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
@@ -47,16 +31,14 @@ body::before,body::after{pointer-events:none!important}
 
 /* tokens */
 :root{
-  --dockH:96px;
+  --dockH:106px;
 
-  /* dark opal + red (no washed-out blue) */
+  /* dark opal + red */
   --opalA:rgba(210,190,255,.16);
   --opalB:rgba(120,70,255,.12);
   --opalC:rgba(255,70,70,.14);
-  --gold:rgba(212,175,55,.40);
 
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
 }
@@ -179,7 +161,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:112px}
+  :root{--dockH:128px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -207,8 +189,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="fine" id="fine">Fine print: meaning lives under Laws; measurements live under Gauges.</div>
   </div>
 
-  <div class="band" id="bandA">PRODUCTS</div>
+  <div class="band" id="bandA">CORE PRODUCTS</div>
   <div class="list" id="listA"></div>
+
+  <div class="band" id="bandD">DOMAIN PLATFORMS</div>
+  <div class="list" id="listD"></div>
 
   <div class="band" id="bandS">SERVICES</div>
   <div class="list" id="listS"></div>
@@ -288,7 +273,7 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click",function(){setLang("zh");});
   btnES.addEventListener("click",function(){setLang("es");});
 
-  // ===== ROUTES (NO 404; all safe hubs) =====
+  // ===== ROUTES (SAFE HUBS) =====
   var ROUTE={
     energy:"/products/energy/",
     education:"/products/education/",
@@ -301,6 +286,17 @@ body::before,body::after{pointer-events:none!important}
     audit:"/gauges/",
     integration:"/products/software/",
     training:"/products/education/",
+
+    // domain platforms (shell → software hub focus)
+    finance:"/products/software/?focus=finance",
+    crypto:"/products/software/?focus=crypto",
+    legal:"/products/software/?focus=legal",
+    insurance:"/products/software/?focus=insurance",
+    compliance:"/products/software/?focus=compliance",
+    contracts:"/products/software/?focus=contracts",
+    reporting:"/products/software/?focus=reporting",
+    risk:"/products/software/?focus=risk",
+    underwriting:"/products/software/?focus=underwriting",
 
     uci:"/products/software/?focus=uci",
     registry:"/products/software/?focus=registry",
@@ -315,20 +311,30 @@ body::before,body::after{pointer-events:none!important}
       ht:"WHAT YOU CAN USE",
       hs:"Open a card. Read one paragraph. Jump cleanly.",
       fine:"Fine print: meaning lives under Laws; measurements live under Gauges.",
-      bandA:"PRODUCTS",
+      bandA:"CORE PRODUCTS",
+      bandD:"DOMAIN PLATFORMS",
       bandS:"SERVICES",
       bandB:"SOFTWARE & SYSTEMS",
       btns:{open:"OPEN"},
       top:{door:"DOOR", hub:"HUB"},
       dock:{exp:"EXPLORE", prod:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
       items:{
-        products:[
+        core:[
           {c:"#F59E0B", t:"Energy", s:"Industrial posture only. No gain claims.", p:"Thermal substitution and containment-first surfaces. Implementation stays bounded to measured bands.", href:ROUTE.energy},
           {c:"#0EA5E9", t:"Education", s:"Stage 1 free PDF + traversal learning.", p:"A full traversal ESL system: vocabulary, routines, checkpoints, and verification lanes—built to scale without confusion.", href:ROUTE.education},
           {c:"#93C5FD", t:"Coherence Diagnostic", s:"Decision support + classification.", p:"A diagnostic surface that keeps conclusions bounded to receipts and scope. Proof posture routes to Laws; outputs route to Gauges.", href:ROUTE.diagnostic},
           {c:"#EF4444", t:"Software Spine", s:"The machine behind the pages.", p:"The platform/engineering backbone that keeps routing, state carry, and claim discipline stable under scale.", href:ROUTE.software},
           {c:"#34D399", t:"Dot.Grid", s:"Indexing + sweeps.", p:"Map connections, reveal correlation, and expose structural drift before it compounds—without declaring admissibility.", href:ROUTE.dotgrid},
           {c:"#A3A3A3", t:"SSG", s:"Simplified Syntax Geometry.", p:"Root geometry for expressing behavior under constraint: resources, stores, constraints, goals, guards.", href:ROUTE.ssg}
+        ],
+        domains:[
+          {c:"#D4AF37", t:"Finance", s:"Integrity, reporting, and bounded risk.", p:"A domain platform shell that routes to the software spine for receipts, audits, and measurement posture.", href:ROUTE.finance},
+          {c:"#F97316", t:"Crypto", s:"Verification-first, hype-free posture.", p:"A domain platform shell for crypto workflows: classification, auditability, and bounded claims under declared scope.", href:ROUTE.crypto},
+          {c:"#60A5FA", t:"Legal", s:"Standards, disputes, and enforceable meaning.", p:"A legal domain shell: doctrine, definitions, and instrument-ready outputs routed through the spine.", href:ROUTE.legal},
+          {c:"#93C5FD", t:"Insurance / Underwriting", s:"Risk pricing under constraint.", p:"Insurance domain shell: underwriting posture, admissibility tiers, and evidence bundles.", href:ROUTE.insurance},
+          {c:"#34D399", t:"Compliance", s:"Regulatory mapping and audit posture.", p:"Compliance shell: translate requirements into checkable gates and exportable receipts.", href:ROUTE.compliance},
+          {c:"#A3A3A3", t:"Contracts", s:"Instrument generation + traceability.", p:"Contracts shell: structured instruments, reason codes, and non-retroactive change control.", href:ROUTE.contracts},
+          {c:"#EF4444", t:"Risk", s:"Correlation exposure and containment.", p:"Risk shell: correlation-first visibility, containment posture, and windowed instability signals.", href:ROUTE.risk}
         ],
         services:[
           {c:"#D4AF37", t:"Advisory (Governance)", s:"Constraint-first guidance.", p:"Translate doctrine into implementable decisions without inflating claims.", href:ROUTE.advisory},
@@ -340,7 +346,7 @@ body::before,body::after{pointer-events:none!important}
           {c:"#EF4444", t:"Machine Behind the Pages", s:"One spine, many surfaces.", p:"Unified routing + state carry + lens discipline. This is where software components live.", href:ROUTE.machine},
           {c:"#93C5FD", t:"UCI Engine", s:"Decision engine under constraint.", p:"Core computation engine routing into Gauges and Diagnostic surfaces.", href:ROUTE.uci},
           {c:"#A3A3A3", t:"Registry", s:"Status + reason codes.", p:"Lookupable status surfaces designed to be verifiable, not persuasive.", href:ROUTE.registry},
-          {c:"#D4AF37", t:"Adoption Ladder", s:"Scaling gates + phase posture.", p:"A structured pathway for adoption under pressure: when to proceed, hold, contain, or roll back.", href:ROUTE.adoption}
+          {c:"#D4AF37", t:"Adoption Ladder", s:"Scaling gates + phase posture.", p:"A structured pathway for adoption under pressure: proceed, hold, contain, roll back.", href:ROUTE.adoption}
         ]
       }
     },
@@ -349,20 +355,30 @@ body::before,body::after{pointer-events:none!important}
       ht:"可用内容",
       hs:"打开一张卡。读一段话。然后清晰跳转。",
       fine:"细则：含义在法则；测量在量规。",
-      bandA:"产品",
+      bandA:"核心产品",
+      bandD:"领域平台",
       bandS:"服务",
       bandB:"软件与系统",
       btns:{open:"打开"},
       top:{door:"门", hub:"枢纽"},
       dock:{exp:"探索", prod:"产品", laws:"法则", gauges:"量规"},
       items:{
-        products:[
+        core:[
           {c:"#F59E0B", t:"能源", s:"仅工业姿态。无增益主张。", p:"热替代与隔离优先执行面。实现始终绑定在可测区间内。", href:ROUTE.energy},
           {c:"#0EA5E9", t:"教育", s:"阶段1免费PDF + 遍历学习。", p:"完整遍历式英语学习：词汇、例程、检查点与验证路线，规模化不混乱。", href:ROUTE.education},
           {c:"#93C5FD", t:"一致性诊断", s:"决策支持 + 分类。", p:"把结论严格绑定到收据与范围。证明姿态去法则；输出去量规。", href:ROUTE.diagnostic},
           {c:"#EF4444", t:"软件脊柱", s:"页面背后的机器。", p:"平台/工程骨架：路由、状态携带、姿态纪律在规模下保持稳定。", href:ROUTE.software},
           {c:"#34D399", t:"Dot.Grid", s:"索引 + 扫掠。", p:"画出连接、暴露相关、提前发现结构变化；但不裁决可采信。", href:ROUTE.dotgrid},
           {c:"#A3A3A3", t:"SSG", s:"简化语法几何。", p:"约束下的行为表达根几何：资源、存储、约束、目标、守卫。", href:ROUTE.ssg}
+        ],
+        domains:[
+          {c:"#D4AF37", t:"金融", s:"完整性、报表与有界风险。", p:"领域平台壳：把收据、审计与测量姿态路由到软件脊柱。", href:ROUTE.finance},
+          {c:"#F97316", t:"加密", s:"验证优先，拒绝炒作。", p:"加密工作流领域壳：分类、可审计、主张有界且绑定范围。", href:ROUTE.crypto},
+          {c:"#60A5FA", t:"法律", s:"标准、争议与可执行含义。", p:"法律领域壳：教义、定义与可用于仪器化的输出，通过脊柱路由。", href:ROUTE.legal},
+          {c:"#93C5FD", t:"保险 / 承保", s:"约束下的风险定价。", p:"保险领域壳：承保姿态、可采信分层与证据包。", href:ROUTE.insurance},
+          {c:"#34D399", t:"合规", s:"监管映射与审计姿态。", p:"合规领域壳：把要求翻译成可核查闸门与可导出收据。", href:ROUTE.compliance},
+          {c:"#A3A3A3", t:"合同", s:"工具生成 + 可追溯。", p:"合同领域壳：结构化文书、原因码与不可追溯变更控制。", href:ROUTE.contracts},
+          {c:"#EF4444", t:"风险", s:"相关暴露与隔离。", p:"风险领域壳：相关优先可视化、隔离姿态与窗口化不稳定信号。", href:ROUTE.risk}
         ],
         services:[
           {c:"#D4AF37", t:"咨询（治理）", s:"约束优先指导。", p:"把教义翻译成可执行决策，不膨胀主张。", href:ROUTE.advisory},
@@ -374,7 +390,7 @@ body::before,body::after{pointer-events:none!important}
           {c:"#EF4444", t:"页面背后的机器", s:"一条脊柱，多种执行面。", p:"统一路由、状态携带、透镜纪律：软件组件在此聚合。", href:ROUTE.machine},
           {c:"#93C5FD", t:"UCI 引擎", s:"约束下的决策引擎。", p:"核心计算引擎，向量规与诊断面供给输出。", href:ROUTE.uci},
           {c:"#A3A3A3", t:"登记系统", s:"状态 + 原因码。", p:"可查询、可核查的状态面：追求可验证，不追求说服。", href:ROUTE.registry},
-          {c:"#D4AF37", t:"采纳阶梯", s:"扩张闸门 + 阶段姿态。", p:"在压力下的结构化采纳路径：何时前进、暂停、隔离、回滚。", href:ROUTE.adoption}
+          {c:"#D4AF37", t:"采纳阶梯", s:"扩张闸门 + 阶段姿态。", p:"在压力下的结构化采纳路径：前进、暂停、隔离、回滚。", href:ROUTE.adoption}
         ]
       }
     },
@@ -383,20 +399,30 @@ body::before,body::after{pointer-events:none!important}
       ht:"LO QUE PUEDES USAR",
       hs:"Abre una tarjeta. Lee un párrafo. Salta limpio.",
       fine:"Letra pequeña: el significado vive en Leyes; la medición en Medidores.",
-      bandA:"PRODUCTOS",
+      bandA:"PRODUCTOS NÚCLEO",
+      bandD:"PLATAFORMAS POR DOMINIO",
       bandS:"SERVICIOS",
       bandB:"SOFTWARE Y SISTEMAS",
       btns:{open:"ABRIR"},
       top:{door:"PUERTA", hub:"HUB"},
       dock:{exp:"EXPLORAR", prod:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
       items:{
-        products:[
+        core:[
           {c:"#F59E0B", t:"Energía", s:"Solo postura industrial. Sin ganancias.", p:"Sustitución térmica y contención primero. Implementación acotada a bandas medidas.", href:ROUTE.energy},
           {c:"#0EA5E9", t:"Educación", s:"PDF gratis Etapa 1 + aprendizaje por recorrido.", p:"Sistema ESL completo: vocabulario, rutinas, checkpoints y verificación—escala sin confusión.", href:ROUTE.education},
           {c:"#93C5FD", t:"Diagnóstico de coherencia", s:"Soporte de decisión + clasificación.", p:"Conclusiones acotadas a recibos y alcance. Doctrina en Leyes; salidas en Medidores.", href:ROUTE.diagnostic},
           {c:"#EF4444", t:"Columna de Software", s:"La máquina detrás de las páginas.", p:"Backbone de plataforma/ingeniería: rutas, estado y disciplina de afirmaciones estable al escalar.", href:ROUTE.software},
           {c:"#34D399", t:"Dot.Grid", s:"Índice + barridos.", p:"Mapea conexiones, revela correlación y expone cambios estructurales sin declarar admisibilidad.", href:ROUTE.dotgrid},
           {c:"#A3A3A3", t:"SSG", s:"Geometría de sintaxis simplificada.", p:"Geometría raíz para expresar comportamiento bajo restricciones: recursos, stores, restricciones, objetivos y guards.", href:ROUTE.ssg}
+        ],
+        domains:[
+          {c:"#D4AF37", t:"Finanzas", s:"Integridad, reporting y riesgo acotado.", p:"Shell de dominio que rutea al spine de software para recibos, auditoría y postura de medición.", href:ROUTE.finance},
+          {c:"#F97316", t:"Cripto", s:"Verificación primero, sin hype.", p:"Shell cripto: clasificación, auditabilidad y afirmaciones acotadas bajo alcance declarado.", href:ROUTE.crypto},
+          {c:"#60A5FA", t:"Legal", s:"Estándares, disputas y significado ejecutable.", p:"Shell legal: doctrina, definiciones y salidas instrumentables por el spine.", href:ROUTE.legal},
+          {c:"#93C5FD", t:"Seguros / Underwriting", s:"Precio de riesgo bajo restricción.", p:"Shell seguros: underwriting, niveles de admisibilidad y bundles de evidencia.", href:ROUTE.insurance},
+          {c:"#34D399", t:"Compliance", s:"Mapeo regulatorio + auditoría.", p:"Shell compliance: requisitos → compuertas verificables → recibos exportables.", href:ROUTE.compliance},
+          {c:"#A3A3A3", t:"Contratos", s:"Generación de instrumentos + trazabilidad.", p:"Shell contratos: instrumentos estructurados, códigos de razón y control de cambios no retroactivo.", href:ROUTE.contracts},
+          {c:"#EF4444", t:"Riesgo", s:"Exposición correlacionada + contención.", p:"Shell riesgo: visibilidad por correlación, contención y señales por ventana.", href:ROUTE.risk}
         ],
         services:[
           {c:"#D4AF37", t:"Asesoría (Gobernanza)", s:"Guía por restricciones.", p:"Traduce doctrina a decisiones ejecutables sin inflar afirmaciones.", href:ROUTE.advisory},
@@ -408,7 +434,7 @@ body::before,body::after{pointer-events:none!important}
           {c:"#EF4444", t:"Máquina detrás de las páginas", s:"Una columna, muchas superficies.", p:"Ruteo unificado, propagación de estado y disciplina de lentes. Aquí viven los componentes.", href:ROUTE.machine},
           {c:"#93C5FD", t:"Motor UCI", s:"Motor de decisión bajo restricción.", p:"Cómputo núcleo que alimenta Medidores y Diagnóstico.", href:ROUTE.uci},
           {c:"#A3A3A3", t:"Registro", s:"Estado + códigos de razón.", p:"Estado consultable y verificable—no persuasivo.", href:ROUTE.registry},
-          {c:"#D4AF37", t:"Escalera de adopción", s:"Compuertas + postura por fases.", p:"Camino estructurado para adoptar bajo presión: avanzar, pausar, contener, rollback.", href:ROUTE.adoption}
+          {c:"#D4AF37", t:"Escalera de adopción", s:"Compuertas + postura por fases.", p:"Camino estructurado: avanzar, pausar, contener, rollback.", href:ROUTE.adoption}
         ]
       }
     }
@@ -424,10 +450,10 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("hs").textContent=P.hs;
     document.getElementById("fine").textContent=P.fine;
     document.getElementById("bandA").textContent=P.bandA;
+    document.getElementById("bandD").textContent=P.bandD;
     document.getElementById("bandS").textContent=P.bandS;
     document.getElementById("bandB").textContent=P.bandB;
 
-    // top + dock labels
     document.getElementById("btnDoor").textContent=P.top.door;
     document.getElementById("btnHome").textContent=P.top.hub;
     document.getElementById("dockExplore").textContent=P.dock.exp;
@@ -437,7 +463,7 @@ body::before,body::after{pointer-events:none!important}
   }
   applyHeader();
 
-  // accordion builder (single-open)
+  // accordion builder (single-open per list)
   function buildRow(item, openLabel){
     var row=document.createElement("div");
     row.className="row";
@@ -526,14 +552,21 @@ body::before,body::after{pointer-events:none!important}
     var openLabel=P.btns.open;
 
     var listA=document.getElementById("listA");
+    var listD=document.getElementById("listD");
     var listS=document.getElementById("listS");
     var listB=document.getElementById("listB");
 
-    listA.innerHTML=""; listS.innerHTML=""; listB.innerHTML="";
+    listA.innerHTML=""; listD.innerHTML=""; listS.innerHTML=""; listB.innerHTML="";
 
-    P.items.products.forEach(function(it, i){
+    P.items.core.forEach(function(it, i){
       var row=buildRow(it, openLabel);
       listA.appendChild(row);
+      if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
+    });
+
+    P.items.domains.forEach(function(it, i){
+      var row=buildRow(it, openLabel);
+      listD.appendChild(row);
       if(i===0){ row.classList.add("open"); row.querySelector(".chev").textContent="▾"; }
     });
 

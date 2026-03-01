@@ -1,28 +1,9 @@
-<!-- TNT — /door/index.html
-     DOOR · DIAMOND GATE BRIDGE (INTRO ROUTER) · TRILINGUAL (EN/中文/ES)
-     UPGRADE GOAL:
-       - Reframe “problem” as opportunity: big ideas + receipts posture
-       - Replace “claim/support” phrasing with human terms:
-           "big idea" / "proof" / "receipts" / "what we can check"
-       - Larger, monument typography + higher contrast panel variance
-       - No modals. No overlays. Single-open accordion in HOW THIS WORKS.
-       - State carry: lang/style/time/depth (URL + gd_* localStorage)
-     ROUTES:
-       - ROOT    → /
-       - PRELUDE → /prelude/
-       - COMPASS → /index.html
-       - ENTER   → /home/
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
--->
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOOR · Diamond Gate Bridge</title>
+<title>DOOR · Frontier Architecture</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -30,540 +11,244 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:92px;
-
-  /* dark opal + red (no blue wash) */
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalC:rgba(255,80,80,.10);
-
-  --panelA:rgba(0,0,0,.18);
-  --panelB:rgba(0,0,0,.26);
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --goldSoft:rgba(212,175,55,.22);
-
-  /* monument type */
-  --H1:38px;
-  --H2:16px;
-  --P:15px;
-  --SM:12.75px;
+  --dockH:90px;
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --goldA:rgba(212,175,55,.18);
+  --goldB:rgba(212,175,55,.08);
+  --redA:rgba(255,70,70,.08);
 }
 
-/* top */
-.top{
-  position:fixed;left:0;right:0;top:16px;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  z-index:240;
-  pointer-events:none;
+/* Top Controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;white-space:nowrap;
-  pointer-events:auto;
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;
 }
-.top .btn{white-space:nowrap}
 
-/* page */
+/* Page */
 .page{
-  width:min(1100px,94vw);
+  width:min(1150px,94vw);
   margin:0 auto;
-  padding:84px 0 calc(var(--dockH) + 18px);
+  padding:140px 0 calc(var(--dockH) + 30px);
   display:flex;
   flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:10;
+  gap:40px;
 }
 
-/* hero */
+/* Hero */
 .hero{
-  border-radius:26px;
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:30px;
+  padding:56px 48px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:0 30px 110px rgba(0,0,0,.55);
-  padding:18px 18px 16px;
+    radial-gradient(circle at 25% 22%, var(--goldA), transparent 60%),
+    radial-gradient(circle at 75% 80%, var(--goldB), transparent 60%),
+    radial-gradient(circle at 55% 115%, var(--redA), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
+  box-shadow:0 60px 200px rgba(0,0,0,.70);
 }
-.k{
-  margin:0 0 8px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.74;
-}
-.h1{
+
+.hero h1{
   margin:0;
   font-weight:950;
-  font-size:var(--H1);
-  letter-spacing:1.2px;
-  line-height:1.05;
+  font-size:clamp(40px,5vw,56px);
+  letter-spacing:1px;
+  line-height:1.12;
 }
-.p{
-  margin:10px 0 0;
-  font-size:var(--P);
-  line-height:1.6;
-  color:rgba(255,255,255,.90);
+
+.hero p{
+  margin:26px 0 0;
+  font-size:clamp(20px,2.4vw,24px);
+  line-height:1.7;
+  opacity:.94;
   max-width:980px;
 }
-.rule{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
-  box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
-  font-size:var(--SM);
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
-}
 
-/* 3 cards */
+/* Gate Grid */
 .grid{
   display:grid;
-  grid-template-columns:repeat(3, minmax(0,1fr));
-  gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:22px;
 }
-@media (max-width:920px){ .grid{grid-template-columns:1fr} }
 
 .card{
-  position:relative;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
-    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
-    linear-gradient(160deg, rgba(12,22,38,.74), rgba(6,10,16,.86));
-  box-shadow:0 20px 70px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
-  overflow:hidden;
-  padding:16px 16px 14px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:28px 26px;
+  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+  box-shadow:0 28px 80px rgba(0,0,0,.60);
+  transition:transform .2s ease, box-shadow .2s ease;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 36px 110px rgba(0,0,0,.75);
 }
-.ct{margin:0;font-weight:950;letter-spacing:.6px;font-size:18px}
-.cs{margin:8px 0 0;font-size:13.75px;line-height:1.5;color:rgba(255,255,255,.86)}
-.mini{margin:10px 0 0;font-size:12.75px;line-height:1.45;color:rgba(255,255,255,.74)}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{border-radius:999px;padding:10px 14px}
+.card h3{
+  margin:0 0 16px;
+  font-size:20px;
+  letter-spacing:.5px;
+}
+.card p{
+  margin:0;
+  font-size:15px;
+  line-height:1.6;
+  opacity:.85;
+}
 
-/* accordion */
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
-}
-.acc{
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 60px rgba(0,0,0,.40);
-  overflow:hidden;
-}
-.accHead{
-  display:flex;justify-content:space-between;gap:10px;
-  padding:14px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.accT{font-weight:950;letter-spacing:.2px}
-.accS{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;color:rgba(255,255,255,.86)}
-.accC{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.accBody{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-}
-.acc.open .accBody{display:block}
-.accP{margin:0;color:rgba(255,255,255,.88);line-height:1.62;font-size:13.25px}
-.accP + .accP{margin-top:10px}
-.jump{margin-top:12px;display:flex;justify-content:flex-end}
-
-/* footer */
-.footer{
-  margin-top:6px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
-}
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
-
-/* dock */
+/* Dock */
 .dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
+  position:fixed;
+  left:50%;
+  bottom:14px;
   transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
+  z-index:200;
+  width:min(1000px,94vw);
+  padding:12px;
+  border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-template-columns:repeat(5,1fr);
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:98px; --H1:34px; --P:15px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:700;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnRoot" href="/">ROOT</a>
-  </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
-  </div>
+<div class="top-left">
+  <a class="btn" href="/index.html">INDEX</a>
+</div>
+
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
 </div>
 
 <div class="page">
 
   <div class="hero">
-    <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
-    <h1 class="h1" id="h0">DOOR</h1>
-    <p class="p" id="p0"></p>
-    <div class="rule" id="r0"></div>
+    <h1 id="heroTitle">
+      What if the loudest claims of our time were finally measurable?
+    </h1>
+
+    <p id="heroText1">
+      Energy transformation. Financial redesign. Infrastructure substitution.  
+      Artificial systems that make decisions at planetary scale.
+    </p>
+
+    <p id="heroText2">
+      These are not small promises.  
+      They are civilizational claims.
+    </p>
+
+    <p id="heroText3">
+      This architecture does not shrink the ambition.  
+      It strengthens the structure beneath it.
+    </p>
   </div>
 
-  <div class="grid" aria-label="Entry choices">
-    <div class="card">
-      <h2 class="ct" id="c1t">PRELUDE</h2>
-      <p class="cs" id="c1s"></p>
-      <p class="mini" id="c1m"></p>
-      <div class="actions">
-        <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
-      </div>
-    </div>
+  <div class="grid">
+    <a class="card" href="/compass/">
+      <h3 id="c1t">Compass</h3>
+      <p id="c1p">Orientation before execution.</p>
+    </a>
 
-    <div class="card">
-      <h2 class="ct" id="c2t">COMPASS</h2>
-      <p class="cs" id="c2s"></p>
-      <p class="mini" id="c2m"></p>
-      <div class="actions">
-        <a class="btn" id="goCompass" href="/index.html">OPEN</a>
-      </div>
-    </div>
+    <a class="card" href="/explore/">
+      <h3 id="c2t">Explore</h3>
+      <p id="c2p">Frontier models across domains.</p>
+    </a>
 
-    <div class="card">
-      <h2 class="ct" id="c3t">ENTER</h2>
-      <p class="cs" id="c3s"></p>
-      <p class="mini" id="c3m"></p>
-      <div class="actions">
-        <a class="btn" id="goEnter" href="/home/">OPEN</a>
-      </div>
-    </div>
-  </div>
+    <a class="card" href="/products/">
+      <h3 id="c3t">Products</h3>
+      <p id="c3p">Engines, systems, instruments.</p>
+    </a>
 
-  <div class="band" id="bandHow">HOW THIS WORKS</div>
+    <a class="card" href="/laws/">
+      <h3 id="c4t">Laws</h3>
+      <p id="c4p">Structural guardrails.</p>
+    </a>
 
-  <div class="acc" id="a1">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="accT" id="a1t">What’s the opportunity?</div>
-        <div class="accS" id="a1s">Big ideas are welcome—when they’re tied to what we can check.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="accP" id="a1p1"></p>
-      <p class="accP" id="a1p2"></p>
-      <div class="jump"><a class="btn" id="jPrelude" href="/prelude/">JUMP: PRELUDE</a></div>
-    </div>
-  </div>
-
-  <div class="acc" id="a2">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="accT" id="a2t">How do routes work?</div>
-        <div class="accS" id="a2s">Compass routes by direction; Enter routes by function.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="accP" id="a2p1"></p>
-      <p class="accP" id="a2p2"></p>
-      <div class="jump"><a class="btn" id="jCompass" href="/index.html">JUMP: COMPASS</a></div>
-    </div>
-  </div>
-
-  <div class="acc" id="a3">
-    <div class="accHead" role="button" tabindex="0">
-      <div>
-        <div class="accT" id="a3t">What makes this different?</div>
-        <div class="accS" id="a3s">We separate hype from proof—without killing curiosity.</div>
-      </div>
-      <div class="accC">▸</div>
-    </div>
-    <div class="accBody">
-      <p class="accP" id="a3p1"></p>
-      <p class="accP" id="a3p2"></p>
-      <div class="jump"><a class="btn" id="jEnter" href="/home/">JUMP: ENTER</a></div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <span id="f0">Orientation is the product.</span>
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+    <a class="card" href="/gauges/">
+      <h3 id="c5t">Gauges</h3>
+      <p id="c5p">Live measurement surfaces.</p>
+    </a>
   </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+<nav class="dock">
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/prelude/">PRELUDE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
-  // ===== state =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var lang = localStorage.getItem("gd_lang") || "en";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  function setLang(l){
+    lang=l;
+    localStorage.setItem("gd_lang",l);
+    apply();
   }
 
-  // wire routes
-  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
-  wire("btnRoot","/");
-  wire("goPrelude","/prelude/");
-  wire("goCompass","/index.html");
-  wire("goEnter","/home/");
-  wire("jPrelude","/prelude/");
-  wire("jCompass","/index.html");
-  wire("jEnter","/home/");
-  wire("dockIndex","/index.html");
-  wire("dockHome","/home/");
-  wire("dockProducts","/products/");
-  wire("dockExplore","/explore/");
+  document.getElementById("btnEN").onclick=function(){setLang("en");};
+  document.getElementById("btnZH").onclick=function(){setLang("zh");};
 
-  // language toggle (reload same path)
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+  function apply(){
+    if(lang==="zh"){
+      document.documentElement.lang="zh";
 
-  // copy (EN/中文/ES) — human wording, frontier posture, still bounded
-  var COPY={
-    en:{
-      hero:{
-        p:"What if the loudest ideas of our time could be measured—without pretending, without hype, and without losing wonder?",
-        r:"Rule: big ideas are welcome. Every upgrade needs receipts. Navigation preserves gd_* state."
-      },
-      cards:{
-        prelude:{s:"Start with the story—then make it measurable.", m:"Use this when you want orientation before traversal."},
-        compass:{s:"Choose a direction. Then enter.", m:"Use this when you want structured traversal (N/E/S/W)."},
-        enter:{s:"Primary hub. Move by function.", m:"Use this when you already know your lane."}
-      },
-      acc:{
-        a1p1:"Most failures aren’t one mistake. They’re shared dependencies, hidden correlation, and silent meaning shifts—until everything fails together.",
-        a1p2:"This site turns that ‘invisible wiring’ into something you can see, test, and route—so your next step is calm, not guesswork.",
-        a2p1:"Prelude sets the posture. Compass chooses direction. Enter jumps by function. Each route carries your state so you don’t reset while you learn.",
-        a2p2:"If you want structure first, use Compass. If you want tools now, use Enter. If you want ‘why’ before speed, use Prelude.",
-        a3p1:"We separate curiosity from certainty. If it can’t be measured yet, it stays labeled as concept or roadmap—never as ‘done.’",
-        a3p2:"That’s how frontier stays honest: bold direction, bounded statements, and receipts when it’s time to upgrade."
-      },
-      how:{a1t:"What’s the opportunity?",a1s:"Big ideas are welcome—when they’re tied to what we can check.",
-           a2t:"How do routes work?",a2s:"Compass routes by direction; Enter routes by function.",
-           a3t:"What makes this different?",a3s:"We separate hype from proof—without killing curiosity."}
-    },
-    zh:{
-      hero:{
-        p:"如果我们这个时代最宏大的想法，终于可以被测量——不靠吹嘘、不靠假装、也不牺牲好奇心，会怎样？",
-        r:"规则：欢迎大想法。每次升级都需要收据。导航保留 gd_* 状态。"
-      },
-      cards:{
-        prelude:{s:"先讲清楚，再变可测量。", m:"想先看导览与姿态，用这里。"},
-        compass:{s:"先选方向，再进入。", m:"想按结构遍历（N/E/S/W）用这里。"},
-        enter:{s:"主枢纽：按功能移动。", m:"已知路线时直接进。"}
-      },
-      acc:{
-        a1p1:"多数失败不是一个错误，而是共享依赖、隐藏相关、与静默换义——直到一起崩。",
-        a1p2:"本站把“看不见的线路”变成可见、可测、可路由的东西，让下一步更稳、更清楚。",
-        a2p1:"Prelude 定姿态。Compass 选方向。Enter 按功能跳转。每条路都携带状态，学习不重置。",
-        a2p2:"要结构先走 Compass；要工具先走 Enter；要先弄清‘为什么’走 Prelude。",
-        a3p1:"我们把好奇与确定分开：不能测量就标为概念或路线图，绝不冒充‘已实现’。",
-        a3p2:"这就是前沿的诚实：方向大胆，表述有界，升级靠收据。"
-      },
-      how:{a1t:"机会是什么？",a1s:"欢迎大想法——但必须绑定可核查之物。",
-           a2t:"路由怎么走？",a2s:"Compass 按方向；Enter 按功能。",
-           a3t:"哪里不同？",a3s:"把吹嘘与证明分开，但保留好奇心。"}
-    },
-    es:{
-      hero:{
-        p:"¿Y si las ideas más grandes de nuestro tiempo pudieran medirse—sin fingir, sin hype y sin perder asombro?",
-        r:"Regla: las ideas grandes son bienvenidas. Cada upgrade requiere recibos. La navegación preserva gd_*."
-      },
-      cards:{
-        prelude:{s:"Empieza con la historia—y luego hazla medible.", m:"Úsalo si quieres orientación antes del recorrido."},
-        compass:{s:"Elige dirección. Luego entra.", m:"Úsalo para recorrido estructurado (N/E/S/O)."},
-        enter:{s:"Hub principal. Mover por función.", m:"Úsalo si ya sabes tu carril."}
-      },
-      acc:{
-        a1p1:"La mayoría de fallas no son un error: son dependencias compartidas, correlación oculta y cambios silenciosos de significado—hasta que todo falla junto.",
-        a1p2:"Este sitio vuelve visible ese ‘cableado’ para poder verlo, probarlo y rutearlo—para que el siguiente paso sea calmado, no adivinanza.",
-        a2p1:"Prelude fija postura. Compass elige dirección. Enter salta por función. Cada ruta preserva estado para no reiniciar al aprender.",
-        a2p2:"Si quieres estructura primero, usa Compass. Si quieres herramientas ya, usa Enter. Si quieres el ‘por qué’, usa Prelude.",
-        a3p1:"Separarmos curiosidad de certeza. Si aún no se puede medir, queda etiquetado como concepto o ruta—nunca como ‘logrado’.",
-        a3p2:"Así la frontera se mantiene honesta: dirección audaz, afirmaciones acotadas y recibos cuando toca subir."
-      },
-      how:{a1t:"¿Cuál es la oportunidad?",a1s:"Ideas grandes sí—cuando se atan a lo verificable.",
-           a2t:"¿Cómo funcionan las rutas?",a2s:"Compass por dirección; Enter por función.",
-           a3t:"¿Qué lo hace distinto?",a3s:"Separamos hype de prueba sin matar curiosidad."}
+      document.getElementById("heroTitle").textContent="如果当今最宏大的主张终于可以被测量？";
+
+      document.getElementById("heroText1").textContent=
+        "能源转型。金融重构。基础设施替代。"+
+        " 在全球尺度运行的人工系统。";
+
+      document.getElementById("heroText2").textContent=
+        "这些不是小承诺。"+
+        "它们是文明级主张。";
+
+      document.getElementById("heroText3").textContent=
+        "我们不缩减雄心。"+
+        "我们加强其下的结构。";
+
+      document.getElementById("c1t").textContent="罗盘";
+      document.getElementById("c1p").textContent="执行前的定位。";
+
+      document.getElementById("c2t").textContent="探索";
+      document.getElementById("c2p").textContent="跨领域前沿模型。";
+
+      document.getElementById("c3t").textContent="产品";
+      document.getElementById("c3p").textContent="引擎与系统。";
+
+      document.getElementById("c4t").textContent="法则";
+      document.getElementById("c4p").textContent="结构护栏。";
+
+      document.getElementById("c5t").textContent="量规";
+      document.getElementById("c5p").textContent="实时测量面。";
     }
-  };
-
-  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
-
-  var P=T();
-  document.getElementById("p0").textContent=P.hero.p;
-  document.getElementById("r0").textContent=P.hero.r;
-
-  document.getElementById("c1s").textContent=P.cards.prelude.s;
-  document.getElementById("c1m").textContent=P.cards.prelude.m;
-  document.getElementById("c2s").textContent=P.cards.compass.s;
-  document.getElementById("c2m").textContent=P.cards.compass.m;
-  document.getElementById("c3s").textContent=P.cards.enter.s;
-  document.getElementById("c3m").textContent=P.cards.enter.m;
-
-  document.getElementById("a1t").textContent=P.how.a1t;
-  document.getElementById("a1s").textContent=P.how.a1s;
-  document.getElementById("a2t").textContent=P.how.a2t;
-  document.getElementById("a2s").textContent=P.how.a2s;
-  document.getElementById("a3t").textContent=P.how.a3t;
-  document.getElementById("a3s").textContent=P.how.a3s;
-
-  document.getElementById("a1p1").textContent=P.acc.a1p1;
-  document.getElementById("a1p2").textContent=P.acc.a1p2;
-  document.getElementById("a2p1").textContent=P.acc.a2p1;
-  document.getElementById("a2p2").textContent=P.acc.a2p2;
-  document.getElementById("a3p1").textContent=P.acc.a3p1;
-  document.getElementById("a3p2").textContent=P.acc.a3p2;
-
-  // translate button labels lightly
-  if(lang==="zh"){
-    document.getElementById("btnRoot").textContent="根";
-    document.getElementById("c1t").textContent="前置页";
-    document.getElementById("c2t").textContent="指南针";
-    document.getElementById("c3t").textContent="进入";
-    document.getElementById("goPrelude").textContent="打开";
-    document.getElementById("goCompass").textContent="打开";
-    document.getElementById("goEnter").textContent="打开";
-    document.getElementById("bandHow").textContent="怎么用";
-    document.getElementById("jPrelude").textContent="跳转：前置页";
-    document.getElementById("jCompass").textContent="跳转：指南针";
-    document.getElementById("jEnter").textContent="跳转：进入";
-    document.getElementById("dockIndex").textContent="索引";
-    document.getElementById("dockHome").textContent="主页";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockExplore").textContent="探索";
-  }else if(lang==="es"){
-    document.getElementById("btnRoot").textContent="RAÍZ";
-    document.getElementById("c1t").textContent="PRELUDIO";
-    document.getElementById("c2t").textContent="BRÚJULA";
-    document.getElementById("c3t").textContent="ENTRAR";
-    document.getElementById("goPrelude").textContent="ABRIR";
-    document.getElementById("goCompass").textContent="ABRIR";
-    document.getElementById("goEnter").textContent="ABRIR";
-    document.getElementById("bandHow").textContent="CÓMO FUNCIONA";
-    document.getElementById("jPrelude").textContent="SALTAR: PRELUDIO";
-    document.getElementById("jCompass").textContent="SALTAR: BRÚJULA";
-    document.getElementById("jEnter").textContent="SALTAR: ENTRAR";
-    document.getElementById("dockIndex").textContent="ÍNDICE";
-    document.getElementById("dockHome").textContent="INICIO";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
   }
 
-  // single-open accordion
-  function bindAcc(id){
-    var box=document.getElementById(id);
-    var head=box.querySelector(".accHead");
-    var chev=box.querySelector(".accC");
-    function act(){
-      var open=!box.classList.contains("open");
-      document.querySelectorAll(".acc").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".accC"); if(c) c.textContent="▸";
-      });
-      box.classList.toggle("open", open);
-      chev.textContent=open?"▾":"▸";
-    }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-  }
-  ["a1","a2","a3"].forEach(bindAcc);
-
-  // open first by default
-  document.getElementById("a1").classList.add("open");
-  document.getElementById("a1").querySelector(".accC").textContent="▾";
+  apply();
 })();
 </script>
 

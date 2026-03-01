@@ -1,14 +1,14 @@
+<!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (RESTORED) · SINGLE-OPEN ACCORDION · 3 LANG (EN/中文/ES)
+     PRODUCTS · MASTER INDEX (ROUTING CATALOG) · SINGLE-OPEN ACCORDION · 3 LANG (EN/中文/ES)
      LENSES (NO NEW gd_* KEYS):
-       - FORMAL/INFORMAL uses gd_style (style=formal|informal)
-       - PLATFORM/ENGINEERING uses gd_depth (depth=explore|learn)
-         depth=explore => PLATFORM
-         depth=learn   => ENGINEERING
+       - INFORMAL/FORMAL uses gd_style (style=informal|formal) [URL + localStorage gd_style]
+       - PLATFORM/ENGINEERING uses lane=platform|engineering (URL ONLY; NOT gd_*)
      RULES:
        - No modals, no overlays
        - One row open at a time (global single-open)
-       - State carry: lang/style/time/depth (URL + LS gd_*)
+       - State carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth only)
+       - lane is URL-only; never stored as gd_*
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns field (NO html/body background styling)
      ROUTES:
@@ -21,8 +21,6 @@
        - Risk & Capital Systems → /products/risk-capital/
        - Vision shells route to /explore/frontier/vision/ with ?focus=
 -->
-
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -40,19 +38,24 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --dockH:94px;
 
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalR:rgba(255,70,70,.10);
+  /* Dark opal + red dominant; subtle gold only */
+  --opalA:rgba(10,24,30,.72);
+  --opalB:rgba(14,34,42,.58);
+  --opalC:rgba(6,14,18,.72);
 
-  --inkA:rgba(12,22,38,.90);
-  --inkB:rgba(6,10,16,.96);
+  --redA:rgba(255,43,43,.18);
+  --redB:rgba(255,43,43,.10);
 
-  --stroke:rgba(255,255,255,.10);
+  --goldA:rgba(201,162,74,.18);
+
+  --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.08);
-  --gold:rgba(212,175,55,.32);
 
-  --txt:rgba(255,255,255,.90);
+  --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
+
+  --shadow:0 18px 60px rgba(0,0,0,.62);
 }
 
 /* page */
@@ -83,20 +86,20 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalR), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.12));
+    radial-gradient(circle at 18% 18%, var(--redA), transparent 62%),
+    radial-gradient(circle at 82% 30%, var(--goldA), transparent 64%),
+    radial-gradient(circle at 55% 92%, var(--redB), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
   backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  box-shadow:var(--shadow);
   padding:16px 16px 14px;
 }
 .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
-.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.7px}
-.s{margin:10px 0 0;font-size:15px;opacity:.90;line-height:1.55;max-width:980px;color:var(--txt)}
-.fine{margin-top:10px;font-size:13px;opacity:.74;line-height:1.45;color:var(--mut)}
+.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.7px}
+.s{margin:10px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.fine{margin-top:10px;font-size:13.5px;opacity:.78;line-height:1.45;color:var(--mut)}
 
-/* 4-lens controls (mapped to existing keys) */
+/* lens controls */
 .lenses{
   margin-top:12px;
   display:flex;
@@ -109,36 +112,37 @@ body::before,body::after{pointer-events:none!important}
 .pill{
   padding:10px 14px;border-radius:999px;
   background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
   box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  cursor:pointer;font-weight:950;letter-spacing:.25px;color:#fff;
   user-select:none;-webkit-tap-highlight-color:transparent;
+  min-height:44px;
 }
 .pill.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.18);
+  border-color:rgba(201,162,74,.50);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(201,162,74,.16);
 }
 .pill.red.active{
   border-color:rgba(255,90,90,.55);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,70,70,.18);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,43,43,.18);
 }
 
 /* bands */
 .band{
   padding:10px 12px;border-radius:18px;
   border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88);
+  background:rgba(0,0,0,.14);
+  font-weight:950;letter-spacing:.25px;color:rgba(255,255,255,.90);
 }
 
 /* rows */
 .list{display:flex;flex-direction:column;gap:12px}
 
 .row{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  box-shadow:0 16px 52px rgba(0,0,0,.62);
   overflow:hidden;
 }
 .head{
@@ -156,27 +160,28 @@ body::before,body::after{pointer-events:none!important}
 .titleBlock{min-width:0}
 .title{
   font-weight:950;letter-spacing:.25px;
-  font-size:18px;
+  font-size:18.5px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .sub{
-  margin-top:8px;font-size:13.75px;opacity:.84;line-height:1.35;max-width:92ch;
+  margin-top:8px;font-size:14.25px;opacity:.86;line-height:1.35;max-width:92ch;color:var(--mut);
 }
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.chev{font-size:16px;opacity:.78;flex:0 0 auto;margin-top:2px}
 
 .body{
   display:none;
   padding:16px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+    radial-gradient(circle at 24% 30%, rgba(255,43,43,.12), transparent 55%),
+    radial-gradient(circle at 78% 35%, rgba(201,162,74,.10), transparent 58%),
+    linear-gradient(145deg, rgba(12,22,38,.84), rgba(7,11,18,.92));
 }
 .row.open .body{display:block}
 
-.p{margin:0;color:rgba(255,255,255,.88);line-height:1.7;font-size:14.5px}
+.p{margin:0;color:rgba(255,255,255,.90);line-height:1.7;font-size:15px}
 .p + .p{margin-top:10px}
-.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.82);line-height:1.6;font-size:14px}
+.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14.25px}
 .ul li{margin:7px 0}
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
 .actions .btn{padding:10px 14px;border-radius:999px;white-space:nowrap}
@@ -201,6 +206,17 @@ body::before,body::after{pointer-events:none!important}
   :root{--dockH:106px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
+
+/* depth indicator */
+.depth{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:950;letter-spacing:.2px;color:var(--soft);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  padding:10px 12px;border-radius:999px;
+  min-height:44px;
+}
+.depth b{color:var(--txt)}
 </style>
 </head>
 
@@ -227,13 +243,16 @@ body::before,body::after{pointer-events:none!important}
     <div class="fine" id="fine"></div>
 
     <div class="lenses" aria-label="Four lenses">
-      <div class="pills" aria-label="Build lens">
+      <div class="pills" aria-label="Lane lens (URL-only)">
         <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
         <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
       </div>
-      <div class="pills" aria-label="Voice lens">
+      <div class="pills" aria-label="Voice lens (gd_style)">
         <button class="pill" id="pillInformal" type="button">INFORMAL</button>
         <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+      <div class="depth" aria-label="Depth">
+        <span id="depthLabel">DEPTH</span> <b id="depthVal">1</b>
       </div>
     </div>
   </div>
@@ -258,18 +277,28 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
+  "use strict";
+
   // ===== canonical state (NO new gd_* keys) =====
   var qs=new URLSearchParams(location.search);
+
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal"; // informal|formal
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";  // explore|learn (mapped)
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "1";        // numeric string
+  var lane  = qs.get("lane")  || "";                                             // URL-only platform|engineering
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  var d=parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -280,70 +309,92 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  // map depth -> build lens
-  var buildLens = (depth==="learn") ? "engineering" : "platform";
-
+  // Build query; preserve lane as URL-only
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+    var D=(over&&over.depth)?String(over.depth):depth;
+    var Lane=(over&&over.lane)?over.lane:lane;
+
+    var p=new URLSearchParams();
+    p.set("lang",L);
+    p.set("style",S);
+    p.set("time",T);
+    p.set("depth",D);
+    if(Lane==="platform"||Lane==="engineering") p.set("lane",Lane);
+    return "?"+p.toString();
   }
 
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
+  function wireHref(el, path){
+    if(!el) return;
+    // If path already has query, preserve it and add missing state keys.
+    if(path.indexOf("?")===-1){
+      el.setAttribute("href", path + q());
+      return;
+    }
+    try{
+      var u=new URL(path, location.origin);
+      var sp=u.searchParams;
+      if(!sp.get("lang")) sp.set("lang", lang);
+      if(!sp.get("style")) sp.set("style", style);
+      if(!sp.get("time")) sp.set("time", time);
+      if(!sp.get("depth")) sp.set("depth", depth);
+      if(!sp.get("lane")) sp.set("lane", lane);
+      el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+    }catch(e){
+      el.setAttribute("href", path); // fallback
+    }
   }
 
-  // nav
-  wire("btnDoor","/door/");
-  wire("btnHome","/home/");
-  wire("btnExit","/index.html");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
+  // nav links
+  wireHref(document.getElementById("btnDoor"),"/door/");
+  wireHref(document.getElementById("btnHome"),"/home/");
+  wireHref(document.getElementById("btnExit"),"/index.html");
+  wireHref(document.getElementById("dockExplore"),"/explore/");
+  wireHref(document.getElementById("dockProducts"),"/products/");
+  wireHref(document.getElementById("dockLaws"),"/laws/");
+  wireHref(document.getElementById("dockGauges"),"/gauges/");
 
   // language toggle (reload same pathname)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
+
   function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+    if(btnEN) btnEN.classList.toggle("active", lang==="en");
+    if(btnZH) btnZH.classList.toggle("active", lang==="zh");
+    if(btnES) btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
+
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang);}catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); });
+  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); });
+  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // 4-lens buttons -> existing keys
+  // lens buttons
   var pillPlatform=document.getElementById("pillPlatform");
   var pillEngineering=document.getElementById("pillEngineering");
   var pillInformal=document.getElementById("pillInformal");
   var pillFormal=document.getElementById("pillFormal");
 
   function paintLenses(){
-    pillPlatform.classList.toggle("active", buildLens==="platform");
-    pillEngineering.classList.toggle("active", buildLens==="engineering");
-    pillInformal.classList.toggle("active", style==="informal");
-    pillFormal.classList.toggle("active", style==="formal");
+    if(pillPlatform) pillPlatform.classList.toggle("active", lane==="platform");
+    if(pillEngineering) pillEngineering.classList.toggle("active", lane==="engineering");
+    if(pillInformal) pillInformal.classList.toggle("active", style==="informal");
+    if(pillFormal) pillFormal.classList.toggle("active", style==="formal");
   }
   paintLenses();
 
-  function setBuild(next){
-    buildLens = (next==="engineering") ? "engineering" : "platform";
-    depth = (buildLens==="engineering") ? "learn" : "explore";
-    try{ localStorage.setItem("gd_depth",depth);}catch(e){}
-    window.location.href = window.location.pathname + q({depth:depth});
+  function setLane(next){
+    lane = (next==="engineering") ? "engineering" : "platform";
+    window.location.href = window.location.pathname + q({lane:lane});
   }
   function setVoice(next){
     style = (next==="formal") ? "formal" : "informal";
@@ -351,74 +402,130 @@ body::before,body::after{pointer-events:none!important}
     window.location.href = window.location.pathname + q({style:style});
   }
 
-  pillPlatform.addEventListener("click", function(){ setBuild("platform"); });
-  pillEngineering.addEventListener("click", function(){ setBuild("engineering"); });
-  pillInformal.addEventListener("click", function(){ setVoice("informal"); });
-  pillFormal.addEventListener("click", function(){ setVoice("formal"); });
+  if(pillPlatform) pillPlatform.addEventListener("click", function(){ setLane("platform"); });
+  if(pillEngineering) pillEngineering.addEventListener("click", function(){ setLane("engineering"); });
+  if(pillInformal) pillInformal.addEventListener("click", function(){ setVoice("informal"); });
+  if(pillFormal) pillFormal.addEventListener("click", function(){ setVoice("formal"); });
 
+  // depth indicator
+  var depthLabel=document.getElementById("depthLabel");
+  var depthVal=document.getElementById("depthVal");
+  if(depthVal) depthVal.textContent = depth;
+
+  // i18n helpers
   function pick(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+  function openWord(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // Header copy (dense, problem-first, human-first)
-  var HEAD = {
-    en:{
-      hs:"Why do good systems collapse? Because people can’t see the wiring — so small problems multiply into big failures. This page is the catalog of surfaces we use to map the problem, measure it, and route you to a bounded next step.",
-      fine:"Lens rule: PLATFORM/ENGINEERING changes build posture. INFORMAL/FORMAL changes voice. Routes stay stable. Every jump carries state."
-    },
-    zh:{
-      hs:"为什么好系统会崩？因为人看不见线路——小问题被放大成大失败。本页是执行面目录：用来描图、测量、并把你路由到一个有界的下一步。",
-      fine:"透镜规则：平台/工程切换构建姿态；通俗/正式切换表达语气。路由恒定，跳转携带状态。"
-    },
-    es:{
-      hs:"¿Por qué colapsan sistemas buenos? Porque la gente no ve el cableado—y lo pequeño se multiplica en fallas grandes. Este catálogo te enruta a una siguiente acción acotada.",
-      fine:"Regla: PLATAFORMA/INGENIERÍA cambia postura. INFORMAL/FORMAL cambia voz. Rutas estables con estado preservado."
+  // header localized labels
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="产品";
+    document.getElementById("ht").textContent="你能用的东西";
+    document.getElementById("bandA").textContent="产品执行面";
+    document.getElementById("bandB").textContent="愿景壳";
+    document.getElementById("bandC").textContent="系统主脊柱";
+    document.getElementById("btnDoor").textContent="门";
+    document.getElementById("btnHome").textContent="主页";
+    document.getElementById("btnExit").textContent="退出";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockLaws").textContent="法则";
+    document.getElementById("dockGauges").textContent="量规";
+    if(pillPlatform) pillPlatform.textContent="平台";
+    if(pillEngineering) pillEngineering.textContent="工程";
+    if(pillInformal) pillInformal.textContent="通俗";
+    if(pillFormal) pillFormal.textContent="正式";
+    if(depthLabel) depthLabel.textContent="深度";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="PRODUCTOS";
+    document.getElementById("ht").textContent="LO QUE PUEDES USAR";
+    document.getElementById("bandA").textContent="SUPERFICIES";
+    document.getElementById("bandB").textContent="CARCASAS DE VISIÓN";
+    document.getElementById("bandC").textContent="ESPINAS DEL SISTEMA";
+    document.getElementById("btnDoor").textContent="PUERTA";
+    document.getElementById("btnHome").textContent="INICIO";
+    document.getElementById("btnExit").textContent="SALIR";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockLaws").textContent="LEYES";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+    if(pillPlatform) pillPlatform.textContent="PLATAFORMA";
+    if(pillEngineering) pillEngineering.textContent="INGENIERÍA";
+    if(pillInformal) pillInformal.textContent="INFORMAL";
+    if(pillFormal) pillFormal.textContent="FORMAL";
+    if(depthLabel) depthLabel.textContent="PROFUNDIDAD";
+  }
+
+  // Header copy depends on lane + voice
+  function headCopy(){
+    var informal = (style==="informal");
+    var platform = (lane==="platform");
+
+    if(lang==="zh"){
+      if(informal && platform) return ["你要找的是可执行的下一步。本目录把可用执行面按结构摆好：打开一行，读一分钟，干净跳转。","平台姿态：先路由，再解释。先把人从迷路里救出来。"];
+      if(informal && !platform) return ["你要找的是可测、可复跑、可扩张的答案。本目录按“能否承受压力”组织执行面。","工程姿态：先约束，再扩张。先把系统从漂移里救出来。"];
+      if(!informal && platform) return ["本页是稳定路由目录：强制状态携带，禁止坍缩到万能目的地。","平台姿态强调可用性、可发现性与一致交互模板。"];
+      return ["本页是约束下执行面目录：输出必须在声明范围内可复现。","工程姿态强调闸门、收据、回滚与分段隔离。"];
     }
-  };
-  document.getElementById("hs").textContent = (HEAD[lang]||HEAD.en).hs;
-  document.getElementById("fine").textContent = (HEAD[lang]||HEAD.en).fine;
 
-  // Product rows (7 bullets each, geometry-consistent)
+    if(lang==="es"){
+      if(informal && platform) return ["Buscas un siguiente paso usable. Este catálogo ordena superficies para abrir una fila, leer un minuto y saltar limpio.","Postura plataforma: enrutar primero, explicar después."];
+      if(informal && !platform) return ["Buscas una respuesta medible y repetible. Este catálogo ordena superficies por disciplina bajo presión.","Postura ingeniería: restringir primero, escalar después."];
+      if(!informal && platform) return ["Este índice es un catálogo de rutas estables: preserva estado y prohíbe colapsar a un destino universal.","Plataforma: usabilidad, descubribilidad y plantillas uniformes."];
+      return ["Este índice es un catálogo bajo restricción: salidas reproducibles bajo alcance declarado.","Ingeniería: compuertas, recibos, rollback y segmentación."];
+    }
+
+    // EN
+    if(informal && platform) return ["You want an executable next step. This catalog lays out usable surfaces: open one row, read one minute, jump cleanly.","Platform posture: route first, explain second."];
+    if(informal && !platform) return ["You want a measurable answer you can replay. This catalog organizes surfaces by discipline under pressure.","Engineering posture: constrain first, scale second."];
+    if(!informal && platform) return ["This page is a stable routing catalog: state-carry is mandatory and catch-all collapse is disallowed.","Platform posture prioritizes discoverability, usability, and uniform templates."];
+    return ["This page is a constraint-bounded surface catalog: outputs must remain reproducible under declared scope.","Engineering posture prioritizes gates, receipts, rollback, and segmentation."];
+  }
+  var hc=headCopy();
+  document.getElementById("hs").textContent=hc[0];
+  document.getElementById("fine").textContent=hc[1];
+
+  // Data
   var A = [
     {
-      c:"#F59E0B",
+      c:"#ff2b2b",
       t:pick("Energy (Industrial)","能源（工业）","Energía (Industrial)"),
       s:pick("Industrial substitution surfaces. No gain claims.","工业替代执行面。无增益主张。","Superficies industriales. Sin ganancias."),
       href:"/products/energy/",
       bullets:{
         informal:pick(
-          ["Turn waste heat into useful heat.","Start with what’s already paid for.","Keep it measurable.","Contain risk early.","Scale only after stability.","Don’t promise miracles.","Build receipts."],
-          ["把废热变成可用热。","从已存在系统开始。","保持可测。","先隔离风险。","稳定后再扩张。","不许神话。","收据优先。"],
-          ["Convertir calor desperdiciado en útil.","Empezar con lo existente.","Medible primero.","Contención temprano.","Escalar tras estabilidad.","Sin milagros.","Recibos primero."]
+          ["Start with what is already paid for.","Keep it measurable.","Contain risk early.","Scale only after stability.","Don’t promise miracles.","Build receipts.","Route outputs to Gauges."],
+          ["从已存在系统开始。","保持可测。","先隔离风险。","稳定后再扩张。","不许神话。","收据优先。","输出路由到量规。"],
+          ["Empieza con lo existente.","Medible primero.","Contención temprano.","Escalar tras estabilidad.","Sin milagros.","Recibos primero.","Salidas a Medidores."]
         ),
         formal:pick(
-          ["Industrial thermal substitution posture.","Bounded to measured bands under scope.","No net-positive claims asserted.","Containment and rollback required.","Phase-gated deployment.","Outputs routed to Gauges for display.","Proof posture in Laws governs language."],
-          ["工业热替代姿态。","绑定声明范围下的可测区间。","不主张净增益。","要求隔离与回滚。","阶段闸门部署。","输出路由到量规展示。","语言受法则约束。"],
-          ["Postura de sustitución térmica industrial.","Acotado a bandas medidas bajo alcance.","Sin afirmaciones net-positivas.","Contención y rollback obligatorios.","Despliegue por fases.","Salidas a Medidores.","Leyes gobiernan lenguaje."]
+          ["Industrial thermal substitution posture.","Bounded to measured bands under scope.","No net-positive claims asserted.","Containment and rollback required.","Phase-gated deployment.","Outputs routed to Gauges.","Language bounded by Laws."],
+          ["工业热替代姿态。","绑定声明范围下的可测区间。","不主张净增益。","要求隔离与回滚。","阶段闸门部署。","输出路由到量规。","语言受法则约束。"],
+          ["Postura de sustitución térmica industrial.","Acotado a bandas medidas bajo alcance.","Sin afirmaciones net-positivas.","Contención y rollback obligatorios.","Despliegue por fases.","Salidas a Medidores.","Lenguaje acotado por Leyes."]
         )
       }
     },
     {
-      c:"#0EA5E9",
+      c:"#c9a24a",
       t:pick("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"),
       s:pick("Traversal ESL system + free Stage 1 PDF.","ESL遍历系统 + 免费阶段1 PDF。","ESL por recorrido + PDF gratis."),
       href:"/products/education/",
       bullets:{
         informal:pick(
-          ["Learn fast with small loops.","Prove skill with checkpoints.","No ‘feel fluent’ upgrades.","Daily routine template.","Stage ladder roadmap.","Teacher-ready structure.","Portable progress."],
-          ["小循环快速进步。","检查点验证能力。","不靠感觉升级。","每日例程模板。","阶段阶梯路线。","可复制教学结构。","进度可携带。"],
-          ["Bucles pequeños, progreso rápido.","Checkpoints prueban habilidad.","Sin ‘me siento’ upgrades.","Rutina diaria.","Escalera por etapas.","Estructura replicable.","Progreso portable."]
+          ["Small loops. Fast clarity.","Checkpoints prove skill.","No ‘feel fluent’ upgrades.","Daily routine template.","Stage ladder roadmap.","Teacher-ready structure.","Portable progress."],
+          ["小循环，快清晰。","检查点验证能力。","不靠感觉升级。","每日例程模板。","阶段阶梯路线。","可复制教学结构。","进度可携带。"],
+          ["Bucles pequeños. Claridad rápida.","Checkpoints prueban habilidad.","Sin ‘me siento’ upgrades.","Rutina diaria.","Escalera por etapas.","Estructura replicable.","Progreso portable."]
         ),
         formal:pick(
-          ["Traversal-first learning surface.","Checkpoint-defined mastery.","Observer-invariant scoring posture.","Routine contract (input/output/checkpoint/log).","Tiering reserved until stability.","Bilingual parity via stable labels.","Outputs remain receipt-backed."],
-          ["遍历优先学习面。","掌握由检查点定义。","观察者不变评分姿态。","例程合同（输入/输出/检查点/日志）。","稳定前不做分层膨胀。","用稳定标签保持双语一致。","输出必须收据支撑。"],
-          ["Superficie de aprendizaje por recorrido.","Dominio definido por checkpoints.","Puntuación invariante al observador.","Contrato de rutina.","Niveles solo con estabilidad.","Paridad bilingüe por etiquetas estables.","Salidas con recibos."]
+          ["Traversal-first learning surface.","Checkpoint-defined mastery.","Observer-invariant scoring posture.","Routine contract: input/output/checkpoint/log.","Tiering reserved until stability.","Label parity across languages.","Outputs remain receipt-backed."],
+          ["遍历优先学习面。","掌握由检查点定义。","观察者不变评分姿态。","例程合同：输入/输出/检查点/日志。","稳定前不做分层膨胀。","三语标签一致。","输出必须收据支撑。"],
+          ["Superficie de aprendizaje por recorrido.","Dominio por checkpoints.","Puntuación invariante al observador.","Contrato: input/output/checkpoint/log.","Niveles solo con estabilidad.","Paridad de etiquetas.","Salidas con recibos."]
         )
       }
     },
     {
-      c:"#93C5FD",
+      c:"#ff2b2b",
       t:pick("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"),
-      s:pick("Decision filter: bounded outputs + reason codes.","决策过滤器：有界输出+原因码。","Filtro decisional: salidas acotadas + razones."),
+      s:pick("Bounded outputs + reason codes. Receipts only.","有界输出+原因码。仅收据。","Salidas acotadas + razones. Solo recibos."),
       href:"/products/coherence-diagnostic/",
       bullets:{
         informal:pick(
@@ -427,9 +534,9 @@ body::before,body::after{pointer-events:none!important}
           ["Convierte caos en lista corta.","Detiene inflación narrativa.","Dice qué falta.","Enruta limpio.","Evita escalar confundido.","Hace disputas aburridas.","Protege tiempo."]
         ),
         formal:pick(
-          ["Constraint filter under declared scope.","Outputs: pass/hold/contain + reason codes.","No inferred intent; receipts only.","Observer-invariant posture target.","Epoch rules for corrections.","Routes to Laws (bounds) and Gauges (signals).","Prevents drift escalation."],
-          ["声明范围下的约束过滤器。","输出：通过/等待/隔离+原因码。","不用意图推断，只用收据。","目标：观察者不变姿态。","修正需新纪元。","路由到法则（边界）与量规（信号）。","阻止漂移升级。"],
-          ["Filtro de restricciones bajo alcance.","Salidas: pasa/espera/contén + razones.","Sin inferir intención; solo recibos.","Postura invariante al observador.","Correcciones crean época.","Rutas a Leyes y Medidores.","Evita escalación de deriva."]
+          ["Constraint filter under declared scope.","Outputs: pass/hold/contain + reason codes.","No inferred intent; receipts only.","Epoch rules for corrections.","Routes to Laws (bounds) and Gauges (signals).","Prevents drift escalation.","Observer-invariant target posture."],
+          ["声明范围下的约束过滤器。","输出：通过/等待/隔离+原因码。","不用意图推断，只用收据。","修正需新纪元。","路由到法则（边界）与量规（信号）。","阻止漂移升级。","目标：观察者不变姿态。"],
+          ["Filtro bajo alcance declarado.","Salidas: pasa/espera/contén + razones.","Sin inferir intención; solo recibos.","Correcciones por época.","Rutas a Leyes y Medidores.","Evita escalación de deriva.","Objetivo invariante."]
         )
       }
     }
@@ -437,60 +544,60 @@ body::before,body::after{pointer-events:none!important}
 
   var B = [
     {
-      c:"#60A5FA",
+      c:"#c9a24a",
       t:pick("Water Systems (Vision Shell)","水系统（愿景壳）","Agua (carcasa de visión)"),
-      s:pick("Resource routing for water: capture → clean → reuse.","水的资源路由：采集→净化→复用。","Ruteo de agua: captar → limpiar → reusar."),
+      s:pick("Capture → clean → reuse routing posture.","采集→净化→复用的路由姿态。","Captar → limpiar → reusar."),
       href:"/explore/frontier/vision/?focus=water"
     },
     {
-      c:"#34D399",
+      c:"#ff2b2b",
       t:pick("Waste Systems (Vision Shell)","废弃物（愿景壳）","Residuos (carcasa de visión)"),
       s:pick("Stop burning value. Route molecules instead.","别烧掉价值：路由分子。","No quemar valor: rutear moléculas."),
       href:"/explore/frontier/vision/?focus=waste"
     },
     {
-      c:"#EF4444",
+      c:"#ff2b2b",
       t:pick("SHIMMER (Vision Shell)","SHIMMER（愿景壳）","SHIMMER (carcasa de visión)"),
       s:pick("Hybrid molecular refinery: entropy routing at scale.","混合分子精炼：规模化熵路由。","Refinería híbrida: ruteo entrópico."),
-      href:"/explore/frontier/vision/"
+      href:"/explore/frontier/vision/?focus=shimmer"
     }
   ];
 
   var C = [
     {
-      c:"#EF4444",
+      c:"#ff2b2b",
       t:pick("Software Spine","软件主脊柱","Espina de software"),
-      s:pick("The machine behind the pages: routing, gates, receipts.","页面背后的机器：路由、闸门、收据。","La máquina detrás: rutas, compuertas, recibos."),
+      s:pick("Routing, gates, receipts. The machine behind pages.","路由、闸门、收据：页面背后的机器。","Rutas, compuertas, recibos."),
       href:"/products/software/",
       bullets:{
         informal:pick(
-          ["One tap → one outcome.","No hidden layers.","State always carried.","No catch-all collapse.","Templates everywhere.","Scale without chaos.","Make it boringly reliable."],
+          ["One tap → one outcome.","No hidden layers.","State always carried.","No catch-all collapse.","Templates everywhere.","Scale without chaos.","Boringly reliable."],
           ["一次点击→一个结果。","无隐藏层。","状态永远携带。","不坍缩到总页。","模板处处一致。","无混乱扩张。","无聊地可靠。"],
           ["Un toque → un resultado.","Sin capas ocultas.","Estado siempre viaja.","Sin colapsar a ‘todo’.","Plantillas en todas partes.","Escalar sin caos.","Fiable y aburrido."]
         ),
         formal:pick(
-          ["Navigation-first contracts.","Deterministic gates.","Receipt progression.","Audit discipline + change control.","Registry status separation.","Correlation awareness via sweeps.","Doctrinal bounds via Laws."],
-          ["导航优先契约。","确定性闸门。","收据式推进。","审计纪律+变更控制。","登记状态分离。","通过扫掠感知相关。","法则约束语言边界。"],
-          ["Contratos navigation-first.","Compuertas deterministas.","Progresión por recibos.","Auditoría + control de cambios.","Separación de estado por registro.","Conciencia de correlación por barridos.","Límites doctrinales por Leyes."]
+          ["Navigation-first contracts.","Deterministic gates.","Receipt progression.","Audit discipline + change control.","Registry status separation.","Correlation awareness via sweeps.","Bounds governed by Laws."],
+          ["导航优先契约。","确定性闸门。","收据式推进。","审计纪律+变更控制。","登记状态分离。","通过扫掠感知相关。","边界由法则治理。"],
+          ["Contratos navigation-first.","Compuertas deterministas.","Progresión por recibos.","Auditoría + control de cambios.","Separación por registro.","Conciencia de correlación por barridos.","Límites por Leyes."]
         )
       }
     },
     {
-      c:"#D4AF37",
+      c:"#c9a24a",
       t:pick("Dot.Grid","Dot.Grid","Dot.Grid"),
       s:pick("Map + sweep: reveal wiring and correlation early.","地图+扫掠：提前暴露线路与相关。","Mapa + barrido: revela cableado y correlación."),
       href:"/products/dot-grid/"
     },
     {
-      c:"#A3A3A3",
+      c:"#c9a24a",
       t:pick("SSG","SSG","SSG"),
-      s:pick("Root execution geometry: Resources/Stores/Constraints/Goals/Guards.","根执行几何：资源/存储/约束/目标/守卫。","Geometría raíz: Resources/Stores/Constraints/Goals/Guards."),
+      s:pick("Execution geometry: Resources/Stores/Constraints/Goals/Guards.","执行几何：资源/存储/约束/目标/守卫。","Geometría: Resources/Stores/Constraints/Goals/Guards."),
       href:"/products/ssg/"
     },
     {
-      c:"#0EA5E9",
+      c:"#ff2b2b",
       t:pick("Risk & Capital Systems","风险与资本系统","Riesgo y capital"),
-      s:pick("Insurance + contracts + compliance + crypto under constraint.","约束下的保险+合约+合规+加密资产。","Seguro + contratos + cumplimiento + cripto bajo restricción."),
+      s:pick("Risk, contracts, compliance, insurance, finance, crypto (bounded).","风险/合约/合规/保险/金融/加密（有界）。","Riesgo, contratos, cumplimiento, seguro, finanzas, cripto (acotado)."),
       href:"/products/risk-capital/"
     }
   ];
@@ -539,14 +646,13 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    // body copy: 1–2 paragraphs + up to 7 bullets if present
     var p1=document.createElement("p");
     p1.className="p";
     p1.textContent = (style==="informal")
       ? pick(
-          "Open one row. Read one minute. Jump cleanly. This page is built to stop wandering.",
-          "打开一行。读一分钟。干净跳转。本页用于阻止迷路。",
-          "Abre una fila. Lee un minuto. Salta limpio. Esta página evita deambular."
+          "Open one row. Read one minute. Jump cleanly. This catalog is built to stop wandering.",
+          "打开一行。读一分钟。干净跳转。本目录用于阻止迷路。",
+          "Abre una fila. Lee un minuto. Salta limpio. Este catálogo evita deambular."
         )
       : pick(
           "This surface is a routing catalog. It preserves state and prevents taxonomy collapse.",
@@ -559,7 +665,6 @@ body::before,body::after{pointer-events:none!important}
       var ul=document.createElement("ul");
       ul.className="ul";
       var bullets = (style==="informal") ? item.bullets.informal : item.bullets.formal;
-      // bullets is already localized
       var arr = (typeof bullets==="string") ? [bullets] : bullets;
       if(Array.isArray(arr)){
         arr.forEach(function(x){
@@ -576,24 +681,27 @@ body::before,body::after{pointer-events:none!important}
 
     var open=document.createElement("a");
     open.className="btn";
-    open.textContent = openLabel() + ": " + pick("OPEN","打开","ABRIR");
-    open.href = item.href + q();
+    open.textContent = openWord() + ": " + pick("OPEN","打开","ABRIR");
+    wireHref(open, item.href);
     actions.appendChild(open);
 
     body.appendChild(actions);
 
-    head.addEventListener("click", function(){
+    function toggle(){
       var willOpen = !row.classList.contains("open");
-      document.querySelectorAll(".row").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".chev");
+      var rows=document.querySelectorAll(".row");
+      for(var i=0;i<rows.length;i++){
+        rows[i].classList.remove("open");
+        var c=rows[i].querySelector(".chev");
         if(c) c.textContent="▸";
-      });
+      }
       row.classList.toggle("open", willOpen);
       chev.textContent = willOpen ? "▾" : "▸";
-    });
+    }
+
+    head.addEventListener("click", function(){ toggle(); });
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); head.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
     row.appendChild(head);
@@ -604,85 +712,17 @@ body::before,body::after{pointer-events:none!important}
   function mount(listId, arr){
     var list=document.getElementById(listId);
     list.innerHTML="";
-    arr.forEach(function(it, i){
-      var row=makeRow(it);
+    for(var i=0;i<arr.length;i++){
+      var row=makeRow(arr[i]);
       list.appendChild(row);
       if(i===0){
         row.classList.add("open");
         var c=row.querySelector(".chev");
         if(c) c.textContent="▾";
       }
-    });
-  }
-
-  // localize labels
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="产品";
-    document.getElementById("ht").textContent="可用内容";
-    document.getElementById("bandA").textContent="产品执行面";
-    document.getElementById("bandB").textContent="愿景壳";
-    document.getElementById("bandC").textContent="系统主脊柱";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnHome").textContent="主页";
-    document.getElementById("btnExit").textContent="退出";
-    document.getElementById("dockExplore").textContent="探索";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-    document.getElementById("pillPlatform").textContent="平台";
-    document.getElementById("pillEngineering").textContent="工程";
-    document.getElementById("pillInformal").textContent="通俗";
-    document.getElementById("pillFormal").textContent="正式";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="PRODUCTOS";
-    document.getElementById("ht").textContent="LO QUE PUEDES USAR";
-    document.getElementById("bandA").textContent="SUPERFICIES";
-    document.getElementById("bandB").textContent="CARCASAS DE VISIÓN";
-    document.getElementById("bandC").textContent="ESPINAS DEL SISTEMA";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnHome").textContent="INICIO";
-    document.getElementById("btnExit").textContent="SALIR";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    document.getElementById("pillPlatform").textContent="PLATAFORMA";
-    document.getElementById("pillEngineering").textContent="INGENIERÍA";
-    document.getElementById("pillInformal").textContent="INFORMAL";
-    document.getElementById("pillFormal").textContent="FORMAL";
-  }
-
-  // header body depends on lenses (platform vs engineering) + voice
-  function headCopy(){
-    var platform = (buildLens==="platform");
-    var informal = (style==="informal");
-
-    if(lang==="zh"){
-      if(informal && platform) return ["你要找什么？你要的是一个能落地的下一步。这个目录把“你能用的东西”按结构摆好：打开一行，读一分钟，立刻跳转。","平台姿态：先路由，再理解。先把人从迷路里救出来。"];
-      if(informal && !platform) return ["你要找什么？你要的是一个能测、能复跑、能扩张的答案。这个目录把执行面按“能否承受压力”排序。","工程姿态：先约束，再扩张。先把系统从漂移里救出来。"];
-      if(!informal && platform) return ["本页提供稳定路由目录：所有面均携带状态，禁止坍缩到总页。","平台姿态强调可用性、可发现性与一致交互模板。"];
-      return ["本页提供约束下执行面目录：主张与输出在声明范围内保持可复现。","工程姿态强调闸门、收据、回滚与分段隔离。"];
     }
-
-    if(lang==="es"){
-      if(informal && platform) return ["¿Qué buscas? Un siguiente paso usable. Este catálogo ordena ‘cosas que puedes usar’ para que abras una fila, leas un minuto y saltes limpio.","Postura plataforma: enrutar primero, entender después. Primero rescatar a la gente de perderse."];
-      if(informal && !platform) return ["¿Qué buscas? Una respuesta medible y repetible. Este catálogo ordena superficies por disciplina bajo presión.","Postura ingeniería: restricción primero, escala después. Primero rescatar al sistema de la deriva."];
-      if(!informal && platform) return ["Este índice es un catálogo de rutas estables: preserva estado y evita colapso a destinos universales.","Postura plataforma: usabilidad, descubribilidad y plantillas consistentes."];
-      return ["Este índice es un catálogo de superficies bajo restricción: salidas reproducibles bajo alcance declarado.","Postura ingeniería: compuertas, recibos, rollback y segmentación."];
-    }
-
-    // EN
-    if(informal && platform) return ["What are you looking for? A usable next step. This catalog lays out what you can actually use: open one row, read one minute, jump cleanly.","Platform posture: route first, explain second. Rescue people from getting lost."];
-    if(informal && !platform) return ["What are you looking for? A measurable answer you can replay. This catalog orders surfaces by discipline under pressure.","Engineering posture: constrain first, scale second. Rescue the system from drift."];
-    if(!informal && platform) return ["This page is a stable routing catalog: state-carry is mandatory and catch-all collapse is disallowed.","Platform posture prioritizes discoverability, usability, and uniform templates."];
-    return ["This page is a constraint-bounded surface catalog: outputs must remain reproducible under declared scope.","Engineering posture prioritizes gates, receipts, rollback, and segmentation."];
   }
 
-  var hc=headCopy();
-  document.getElementById("hs").textContent=hc[0];
-  document.getElementById("fine").textContent=hc[1];
-
-  // render lists
   mount("listA", A);
   mount("listB", B);
   mount("listC", C);

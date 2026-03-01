@@ -1,8 +1,10 @@
 <!-- TNT — /explore/frontier/index.html
      FRONTIER · TWO MASSIVE DIAMONDS · PURE JUMP FORK · NO MODALS · NO LENSES
-     FIXES (NO DRIFT):
-       - Correct script path: /assets/instruments.js (was /assets/instrument.js)
-       - Use canonical .btn class (was crp-btn)
+     FIX (NO DRIFT):
+       - VISION now routes to: /explore/vision/
+       - STRUCTURE routes to: /explore/innovation/language/
+       - Correct script path: /assets/instruments.js
+       - Use canonical .btn class
        - Canon langs: EN / 中文 / ES
        - Canon state carry: lang/style/time/depth (URL + LS)
        - No html/body background styling (ui.css owns field)
@@ -216,7 +218,7 @@ a{color:inherit;text-decoration:none}
 
   // Navigation targets (hard jump)
   function goStructure(){ location.href="/explore/innovation/language/"+q(); }
-  function goVision(){ location.href="/explore/"+q(); }
+  function goVision(){ location.href="/explore/vision/"+q(); }
 
   var ds=document.getElementById("dStructure");
   var dv=document.getElementById("dVision");

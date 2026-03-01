@@ -1,7 +1,12 @@
 <!-- TNT — /explore/frontier/waste/index.html
-     EXPLORE · FRONTIER · WASTE
+     FRONTIER · WASTE SYSTEMS
      MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · STATE SAFE · NO MODALS
+     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
+     ROLE:
+       - Define entropy leakage problem
+       - Express measurable structure
+       - Show transformation pathways
+       - Route forward to Water / Energy / Urban OS
 -->
 
 <!doctype html>
@@ -9,119 +14,149 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · WASTE</title>
+<title>FRONTIER · Waste Systems</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
+
+/* MONUMENT TYPOGRAPHY */
 :root{
-  --dockH:90px;
-  --inkA:rgba(10,12,16,.96);
-  --inkB:rgba(5,7,10,.98);
-  --stroke:rgba(255,255,255,.10);
-  --gold:rgba(212,175,55,.18);
-  --red:rgba(255,70,70,.14);
+  --dockH:96px;
   --mut:rgba(255,255,255,.92);
+  --mut2:rgba(255,255,255,.76);
+  --opal:rgba(210,190,255,.14);
+  --red:rgba(255,70,70,.18);
 }
 
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-
 .page{
-  width:min(1100px,94vw);
+  width:min(1200px,94vw);
   margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 18px);
+  padding:100px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:20px;
 }
 
 .header{
-  border:1px solid var(--stroke);
-  border-radius:40px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
   background:
-    radial-gradient(circle at 25% 20%, var(--gold), transparent 65%),
-    radial-gradient(circle at 75% 80%, var(--red), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
-  padding:54px;
-  box-shadow:0 60px 200px rgba(0,0,0,.65);
+    radial-gradient(circle at 20% 20%, var(--opal), transparent 70%),
+    radial-gradient(circle at 80% 80%, var(--red), transparent 70%),
+    rgba(0,0,0,.18);
+  padding:28px;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
 }
 
-.k{letter-spacing:6px;text-transform:uppercase;font-size:12px;opacity:.75;margin:0 0 14px}
-.t{font-size:56px;font-weight:950;margin:0 0 24px}
-.s{font-size:22px;line-height:1.85;color:var(--mut);max-width:950px}
+.k{
+  font-size:14px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 12px;
+}
 
-.lens{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
-.pill{
-  padding:14px 22px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+.t{
   font-weight:900;
-  cursor:pointer;
+  font-size:42px;
+  letter-spacing:1px;
+  margin:0 0 14px;
 }
-.pill.active{box-shadow:0 0 22px rgba(212,175,55,.35)}
 
-.stack{display:flex;flex-direction:column;gap:24px}
+.s{
+  font-size:18px;
+  line-height:1.6;
+  max-width:1000px;
+  opacity:.9;
+}
 
-.card{
-  border:1px solid var(--stroke);
-  border-radius:34px;
-  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+.lenses{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:24px;
+}
+
+.pill{
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;
+  font-weight:800;
+  letter-spacing:.4px;
+  font-size:14px;
+  background:rgba(0,0,0,.25);
+}
+
+.pill.active{
+  box-shadow:0 0 18px rgba(212,175,55,.25);
+  border-color:rgba(212,175,55,.55);
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.section{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;
   overflow:hidden;
-  box-shadow:0 50px 180px rgba(0,0,0,.6);
+  background:linear-gradient(160deg, rgba(15,22,35,.95), rgba(8,12,20,.98));
 }
 
 .head{
-  padding:36px 40px;
+  padding:22px 28px;
+  cursor:pointer;
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
-  cursor:pointer;
+  align-items:center;
 }
 
-.title{font-size:32px;font-weight:900}
-.chev{font-size:20px;opacity:.75}
+.title{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
 
 .body{
   display:none;
-  padding:38px 40px 48px;
-  border-top:1px solid var(--stroke);
+  padding:26px 30px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:17px;
+  line-height:1.75;
+  color:var(--mut2);
 }
 
-.card.open .body{display:block}
-
-.body h4{
-  margin:0 0 14px;
-  font-size:15px;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  opacity:.75;
-}
-
-.body p{
-  margin:0;
-  font-size:21px;
-  line-height:1.9;
-  color:var(--mut);
-}
+.section.open .body{display:block}
 
 .dock{
   position:fixed;
   left:50%;
-  bottom:12px;
+  bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  width:min(980px,94vw);
+  width:min(1000px,94vw);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
   padding:14px;
-  border-radius:28px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.35);
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
 }
-.dock .btn{padding:14px;border-radius:999px;text-align:center}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:700;
+}
 </style>
 </head>
 
@@ -129,117 +164,148 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
 <div class="page">
 
-  <div class="header">
-    <p class="k">FRONTIER</p>
-    <h1 class="t">WASTE SYSTEMS</h1>
-    <p class="s">
-      What if waste were treated as misplaced energy?  
-      What if collapse began not at the landfill, but at the design layer?
-    </p>
+<div class="header">
+<p class="k" id="hk">FRONTIER</p>
+<h1 class="t" id="ht">WASTE SYSTEMS</h1>
+<p class="s" id="hs"></p>
 
-    <div class="lens">
-      <div class="pill active" data-lens="informal">INFORMAL</div>
-      <div class="pill" data-lens="formal">FORMAL</div>
-      <div class="pill" data-lens="platform">PLATFORM</div>
-      <div class="pill" data-lens="engineering">ENGINEERING</div>
-    </div>
-  </div>
+<div class="lenses">
+  <button class="pill active" id="lensInformal">INFORMAL</button>
+  <button class="pill" id="lensFormal">FORMAL</button>
+  <button class="pill" id="lensEngineering">ENGINEERING</button>
+  <button class="pill" id="lensPlatform">PLATFORM</button>
+</div>
+</div>
 
-  <div class="stack" id="stack"></div>
+<div class="accordion" id="accordion"></div>
 
 </div>
 
 <nav class="dock">
-  <a class="btn" href="/explore/frontier/">FRONTIER</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/laws/">LAWS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
+<a class="btn" id="navTrajectory" href="/explore/frontier/trajectory/">TRAJECTORY</a>
+<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
+<a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
+<a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
 </nav>
 
 <script>
 (function(){
 
-  const DOMAINS = [
-    "Plasma Thermal Conversion",
-    "Closed-Loop Material Recovery",
-    "Municipal Diversion Architecture",
-    "Carbon Residual Suppression",
-    "Hydrogen Yield Optimization",
-    "Cascade Containment Modeling"
-  ];
+var qs=new URLSearchParams(location.search);
+var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
+document.documentElement.lang=lang;
 
-  const TEXT = {
-    informal:{
-      en:"Waste is not garbage. It is misrouted material and trapped energy. When routing is wrong, landfills grow. When routing is aligned, recovery accelerates.",
-      zh:"废弃物不是垃圾，而是错位的材料与被困的能量。路径错误，填埋增长；路径对齐，回收加速。",
-      es:"El residuo no es basura. Es material mal enrutado y energía atrapada. Cuando el flujo es correcto, la recuperación se acelera."
-    },
-    formal:{
-      en:"Waste systems are modeled as energy/material displacement vectors under thermodynamic and regulatory constraint envelopes.",
-      zh:"废弃系统被建模为能量/材料位移向量，在热力与监管约束包络内运行。",
-      es:"Los sistemas de residuos se modelan como vectores de desplazamiento energético/material bajo envolventes regulatorias y termodinámicas."
-    },
-    platform:{
-      en:"Platform posture: every diversion stream is registry-traceable and compliance-visible, allowing governance without operational opacity.",
-      zh:"平台姿态：每条分流路径可登记追踪、可合规可视，实现治理而不遮蔽运营。",
-      es:"Postura de plataforma: cada flujo es rastreable y visible para cumplimiento sin perder transparencia operativa."
-    },
-    engineering:{
-      en:"Engineering posture: plasma arc containment, hydrogen extraction ratios, cascade gate interruption, and deterministic failover under load.",
-      zh:"工程姿态：等离子弧隔离、氢提取比率、级联闸门中断与负载下确定性失效转移。",
-      es:"Postura de ingeniería: contención por plasma, ratios de hidrógeno y failover determinista bajo carga."
-    }
-  };
+function q(){return "?lang="+lang}
 
-  let currentLens="informal";
-  let currentLang="en";
-  const stack=document.getElementById("stack");
+document.getElementById("navTrajectory").href+=q();
+document.getElementById("navWater").href+=q();
+document.getElementById("navEnergy").href+=q();
+document.getElementById("navUrban").href+=q();
 
-  function render(){
-    stack.innerHTML="";
-    DOMAINS.forEach((name,i)=>{
-      const card=document.createElement("div");
-      card.className="card";
+var lens="informal";
+var lenses={
+  informal:"INFORMAL",
+  formal:"FORMAL",
+  engineering:"ENGINEERING",
+  platform:"PLATFORM"
+};
 
-      const head=document.createElement("div");
-      head.className="head";
-      head.innerHTML=`
-        <div class="title">${name}</div>
-        <div class="chev">▸</div>
-      `;
+function pick(o){return o[lang]||o.en}
 
-      const body=document.createElement("div");
-      body.className="body";
-      body.innerHTML=`
-        <h4>${currentLens.toUpperCase()}</h4>
-        <p>${TEXT[currentLens][currentLang]}</p>
-      `;
+var headerCopy={
+en:"What happens when a system cannot see its own waste? Entropy accumulates. Cost hides. Risk compounds. Waste is not garbage — it is misplaced structure.",
+zh:"当系统看不见自己的废弃物，会发生什么？熵累积，成本隐藏，风险叠加。废弃物不是垃圾——它是错位的结构。",
+es:"¿Qué ocurre cuando un sistema no ve su propio residuo? La entropía se acumula. El costo se oculta. El riesgo se multiplica."
+};
+document.getElementById("hs").textContent=pick(headerCopy);
 
-      head.addEventListener("click",()=>{
-        document.querySelectorAll(".card").forEach(c=>{
-          if(c!==card) c.classList.remove("open");
-        });
-        card.classList.toggle("open");
-      });
+var sections=[
+{
+t:{en:"THE PROBLEM",zh:"问题",es:"EL PROBLEMA"},
+c:{
+informal:{en:"Landfill, burn, export. We move waste out of sight, not out of system. We pay twice: once in logistics, once in instability.",
+zh:"填埋、焚烧、外运。我们只是把废弃物移出视野，而不是移出系统。成本支付两次：物流与不稳定。",
+es:"Vertedero, quema, exportación. Movemos el residuo fuera de la vista, no fuera del sistema."},
+formal:{en:"Current waste systems externalize entropy through spatial displacement. True cost remains embedded in environmental and systemic risk vectors.",
+zh:"当前废弃系统通过空间转移外化熵，真实成本嵌入环境与系统风险向量。",
+es:"Los sistemas actuales externalizan entropía mediante desplazamiento espacial."},
+engineering:{en:"Material flows lack closed-loop feedback. Output streams are unmeasured beyond disposal stage.",
+zh:"材料流缺乏闭环反馈，输出流在处置阶段后未被测量。",
+es:"Los flujos materiales carecen de retroalimentación cerrada."},
+platform:{en:"Waste routing must integrate with water, energy, and urban OS surfaces.",
+zh:"废弃物路由必须整合到水、能源与城市操作系统。",
+es:"El enrutamiento de residuos debe integrarse con agua y energía."}
+}
+},
+{
+t:{en:"STRUCTURAL MAP",zh:"结构映射",es:"MAPA ESTRUCTURAL"},
+c:{
+informal:{en:"Every waste stream is a misplaced resource stream. Map it. Measure it. Redirect it.",
+zh:"每条废弃流都是错位的资源流。映射它，测量它，重定向它。",
+es:"Cada flujo de residuo es un flujo de recurso mal ubicado."},
+formal:{en:"Waste is a classification failure. Proper indexing redefines disposition pathways.",
+zh:"废弃物是分类失败。正确索引可重定义处置路径。",
+es:"El residuo es una falla de clasificación."},
+engineering:{en:"Introduce plasma thermal conversion, hydrogen extraction, and mineral reclamation loops.",
+zh:"引入等离子转化、氢回收与矿物回收循环。",
+es:"Introducir conversión térmica y recuperación de hidrógeno."},
+platform:{en:"Expose streams through Dot.Grid and register outputs through Registry layer.",
+zh:"通过Dot.Grid暴露流，通过Registry记录输出。",
+es:"Exponer flujos vía Dot.Grid y registrarlos."}
+}
+},
+{
+t:{en:"FINITE MEASURE",zh:"有限测量",es:"MEDIDA FINITA"},
+c:{
+informal:{en:"If you cannot measure loss, you cannot reduce it. Waste must be indexed in a finite lattice.",
+zh:"无法测量损耗，就无法减少它。废弃物必须被纳入有限晶格。",
+es:"Si no puedes medir pérdida, no puedes reducirla."},
+formal:{en:"All waste vectors map into measurable states within bounded lattice geometry.",
+zh:"所有废弃向量映射至有界晶格内的可测状态。",
+es:"Todos los vectores se mapean en estados medibles."},
+engineering:{en:"Apply 256-state classification across chemical and thermal conversion axes.",
+zh:"在化学与热转换轴上应用256态分类。",
+es:"Aplicar clasificación 256 estados."},
+platform:{en:"Registry publishes stability metrics for cross-domain verification.",
+zh:"Registry发布跨域稳定性指标。",
+es:"El registro publica métricas de estabilidad."}
+}
+}
+];
 
-      card.appendChild(head);
-      card.appendChild(body);
-      stack.appendChild(card);
+function render(){
+var acc=document.getElementById("accordion");
+acc.innerHTML="";
+sections.forEach(function(s,i){
+var row=document.createElement("div");
+row.className="section";
+var head=document.createElement("div");
+head.className="head";
+var title=document.createElement("div");
+title.className="title";
+title.textContent=pick(s.t);
+head.appendChild(title);
+var body=document.createElement("div");
+body.className="body";
+body.textContent=pick(s.c[lens]);
+head.onclick=function(){
+document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
+row.classList.add("open");
+};
+row.appendChild(head);
+row.appendChild(body);
+acc.appendChild(row);
+if(i===0)row.classList.add("open");
+});
+}
 
-      if(i===0) card.classList.add("open");
-    });
-  }
+document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
+document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
+document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
+document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
 
-  document.querySelectorAll(".pill").forEach(p=>{
-    p.addEventListener("click",()=>{
-      document.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
-      p.classList.add("active");
-      currentLens=p.dataset.lens;
-      render();
-    });
-  });
-
-  render();
+render();
 
 })();
 </script>

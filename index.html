@@ -14,8 +14,9 @@ a{color:inherit;text-decoration:none}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --R:150px;
-  --D:170px;
+  --R:175px;              /* Increased radial distance */
+  --D:180px;              /* Primary size */
+  --Dminor:160px;         /* Secondary diagonal size */
 
   --onyxA:rgba(8,10,14,.94);
   --onyxB:rgba(12,14,18,.98);
@@ -24,23 +25,22 @@ body::before,body::after{pointer-events:none!important}
   --festival:rgba(255,43,43,.22);
   --opalV:rgba(90,40,120,.14);
 
-  --gold:rgba(201,162,74,.45);
-  --goldGlow:rgba(201,162,74,.30);
+  --gold:rgba(201,162,74,.55);
+  --goldGlow:rgba(201,162,74,.35);
 
   --shadow:0 40px 140px rgba(0,0,0,.75);
 }
 
 .stage{
   position:relative;
-  width:min(760px,94vw);
-  height:min(760px,82vh);
+  width:min(820px,94vw);
+  height:min(820px,82vh);
   margin:120px auto 0;
   pointer-events:none;
 }
 
+/* Base Diamond */
 .d{
-  width:var(--D);
-  height:var(--D);
   position:absolute;
   left:50%;
   top:50%;
@@ -49,20 +49,36 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   pointer-events:auto;
   overflow:hidden;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
 
+.primary{
+  width:var(--D);
+  height:var(--D);
+}
+
+.secondary{
+  width:var(--Dminor);
+  height:var(--Dminor);
+}
+
+.surface{
   background:
     radial-gradient(circle at 18% 18%, var(--crimson), transparent 70%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
     linear-gradient(160deg, var(--onyxA), var(--onyxB));
-
   border:1px solid rgba(255,255,255,.16);
   box-shadow:var(--shadow);
-  transition:transform .18s ease;
+}
+
+.goldEdge{
+  border:1px solid var(--gold);
+  box-shadow:var(--shadow), 0 0 28px var(--goldGlow);
 }
 
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
 }
 
 .inner{
@@ -78,17 +94,23 @@ body::before,body::after{pointer-events:none!important}
   text-align:center;
 }
 
-.dN{transform:translate(-50%,-50%) translate(0,-160px) rotate(45deg)}
-.dE{transform:translate(-50%,-50%) translate(160px,0) rotate(45deg)}
-.dS{transform:translate(-50%,-50%) translate(0,160px) rotate(45deg)}
-.dW{transform:translate(-50%,-50%) translate(-160px,0) rotate(45deg)}
-.dNE{transform:translate(-50%,-50%) translate(115px,-115px) rotate(45deg)}
-.dNW{transform:translate(-50%,-50%) translate(-115px,-115px) rotate(45deg)}
+/* Placement */
+.dN{transform:translate(-50%,-50%) translate(0,-175px) rotate(45deg)}
+.dE{transform:translate(-50%,-50%) translate(175px,0) rotate(45deg)}
+.dS{transform:translate(-50%,-50%) translate(0,175px) rotate(45deg)}
+.dW{transform:translate(-50%,-50%) translate(-175px,0) rotate(45deg)}
+.dNE{transform:translate(-50%,-50%) translate(124px,-124px) rotate(45deg)}
+.dNW{transform:translate(-50%,-50%) translate(-124px,-124px) rotate(45deg)}
 
-.gold{
-  border-color:var(--gold);
-  box-shadow:var(--shadow), 0 0 28px var(--goldGlow);
+/* Mobile refinement */
+@media (max-width:600px){
+  :root{
+    --R:155px;
+    --D:160px;
+    --Dminor:145px;
+  }
 }
+
 </style>
 </head>
 
@@ -96,31 +118,41 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="stage">
 
-  <div class="d dN" id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
-  <div class="d dE" id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
-  <div class="d dS" id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
-  <div class="d dW" id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
+  <div class="d primary surface dN" id="dExplore">
+    <div class="inner" id="txtExplore">EXPLORE</div>
+  </div>
 
-  <!-- GOLD ACCENT RESEARCH -->
-  <div class="d dNE gold" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
+  <div class="d primary surface dE" id="dProducts">
+    <div class="inner" id="txtProducts">PRODUCTS</div>
+  </div>
 
-  <div class="d dNW" id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
+  <div class="d primary surface dS" id="dLaws">
+    <div class="inner" id="txtLaws">LAWS</div>
+  </div>
+
+  <div class="d primary surface dW" id="dGauges">
+    <div class="inner" id="txtGauges">GAUGES</div>
+  </div>
+
+  <!-- Research (secondary geometry, gold trimmed) -->
+  <div class="d secondary surface goldEdge dNE" id="dResearch">
+    <div class="inner" id="txtResearch">RESEARCH</div>
+  </div>
+
+  <!-- Education (secondary geometry, neutral) -->
+  <div class="d secondary surface dNW" id="dEducation">
+    <div class="inner" id="txtEducation">EDUCATION</div>
+  </div>
 
 </div>
 
 <script>
 (function(){
   var qs=new URLSearchParams(location.search);
-
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(!["en","zh","es"].includes(lang)) lang="en";
-  if(!["informal","formal"].includes(style)) style="informal";
-  if(!["origin","now","post"].includes(time)) time="now";
-  if(!["explore","learn"].includes(depth)) depth="explore";
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"informal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
 
   localStorage.setItem("gd_lang",lang);
   localStorage.setItem("gd_style",style);
@@ -140,24 +172,22 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("dResearch").onclick=()=>go("/research/");
   document.getElementById("dEducation").onclick=()=>go("/products/education/");
 
-  /* TRILINGUAL LABELS */
   if(lang==="zh"){
-    document.getElementById("txtExplore").textContent="探索";
-    document.getElementById("txtProducts").textContent="产品";
-    document.getElementById("txtLaws").textContent="法则";
-    document.getElementById("txtGauges").textContent="量规";
-    document.getElementById("txtResearch").textContent="研究";
-    document.getElementById("txtEducation").textContent="教育";
+    txtExplore.textContent="探索";
+    txtProducts.textContent="产品";
+    txtLaws.textContent="法则";
+    txtGauges.textContent="量规";
+    txtResearch.textContent="研究";
+    txtEducation.textContent="教育";
   }
-  else if(lang==="es"){
-    document.getElementById("txtExplore").textContent="EXPLORAR";
-    document.getElementById("txtProducts").textContent="PRODUCTOS";
-    document.getElementById("txtLaws").textContent="LEYES";
-    document.getElementById("txtGauges").textContent="MEDIDORES";
-    document.getElementById("txtResearch").textContent="INVESTIGACIÓN";
-    document.getElementById("txtEducation").textContent="EDUCACIÓN";
+  if(lang==="es"){
+    txtExplore.textContent="EXPLORAR";
+    txtProducts.textContent="PRODUCTOS";
+    txtLaws.textContent="LEYES";
+    txtGauges.textContent="MEDIDORES";
+    txtResearch.textContent="INVESTIGACIÓN";
+    txtEducation.textContent="EDUCACIÓN";
   }
-
 })();
 </script>
 

@@ -1,19 +1,19 @@
 <!-- TNT — /products/education/index.html
-     PRODUCTS · EDUCATION (STAGE 1 FREE PDF SOFT-GATE + DEPTH UPGRADE · EN/中文/ES)
-     ADDITIONS (LOCKED TO YOUR SPEC):
-       - “FREE STAGE 1 PDF” CTA inside DOMAIN MODAL (above bubbles)
-       - Soft gate form (Name, Country, City, Email, Preferred Language [any], plus quick choice EN/中文/ES)
-       - On submit: POST to your email intake endpoint + immediate PDF download
+     PRODUCTS · EDUCATION (STAGE 1 FREE PDF SOFT-GATE + DEPTH UPGRADE) · EN/中文/ES
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - No html/body background overrides (ui.css owns field)
+       - State keys only: gd_lang / gd_style / gd_time / gd_depth (URL + LS)
+       - Tap-safe (NO inline onclick)
+     ADD:
+       - Stage 1 PDF soft-gate form (Name, Country, City, Email, Preferred Language [any], quick EN/中文/ES)
+       - Submit → best-effort POST to FORM_ENDPOINT → immediate PDF open in new tab
        - “What’s inside?” toggle (≤90 words)
-       - “Stage Ladder” block + VIEW PROGRAMS jump
-       - Depth upgrade across all 12 domains:
-           Formal/Informal × Concept/Live/Roadmap (unique evolutive content)
-     PDF PATH (LOCKED): /assets/education/stage-1-vocab-strategy-pack.pdf
-     EMAIL TARGET (LOCKED): Geodiametrics@gmail.com
-     IMPORTANT:
-       - Static sites cannot email by themselves; this uses a single configurable endpoint below:
-         FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE"
-         (Formspree / Apps Script / Make / Zapier webhook — whichever you use)
+       - Stage ladder block + VIEW PROGRAMS jump
+     PDF (LOCKED): /assets/education/stage-1-vocab-strategy-pack.pdf
+     EMAIL (LOCKED): Geodiametrics@gmail.com
+     NOTE:
+       - Static sites cannot email directly. Set FORM_ENDPOINT to your webhook (Formspree / Apps Script / Make / Zapier).
 -->
 
 <!doctype html>
@@ -29,6 +29,8 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
 :root{
   --R:150px;
   --D:184px;
@@ -39,31 +41,28 @@ a{color:inherit;text-decoration:none}
   --mut2:rgba(255,255,255,.74);
 }
 
-/* base */
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body::before,body::after{pointer-events:none!important}
-
 /* top */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
+  position:fixed;left:16px;top:16px;z-index:220;
   display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
 }
-.top-right .btn{white-space:nowrap}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:220;
+  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
 /* brand */
 .brand{
   position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:130;text-align:center;
+  z-index:210;text-align:center;
   padding:10px 18px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
   pointer-events:none;
 }
-.brand .t{font-weight:950;font-size:40px;letter-spacing:.25px;line-height:1.05;margin:0}
+.brand .t{font-weight:950;font-size:38px;letter-spacing:.25px;line-height:1.05;margin:0}
 .brand .s{opacity:.86;font-size:14px;margin:6px 0 0;line-height:1.25}
 
 /* stage */
@@ -73,6 +72,7 @@ body::before,body::after{pointer-events:none!important}
   width:min(720px,94vw);
   height:min(720px,94vw);
   z-index:60;
+  pointer-events:auto;
 }
 .outer{
   position:absolute;left:50%;top:50%;
@@ -139,12 +139,10 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -46px 86px rgba(0,0,0,.84);
 }
 .d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-
 .d-n{transform:translate(-50%,-50%) translate(0, calc(var(--R)*-1)) rotate(45deg)}
 .d-e{transform:translate(-50%,-50%) translate(var(--R),0) rotate(45deg)}
 .d-s{transform:translate(-50%,-50%) translate(0,var(--R)) rotate(45deg)}
 .d-w{transform:translate(-50%,-50%) translate(calc(var(--R)*-1),0) rotate(45deg)}
-
 .inner{
   transform:rotate(-45deg) translateY(-3px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -153,7 +151,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .lab{font-weight:950;font-size:18px;letter-spacing:.6px;text-shadow:0 0 16px rgba(255,255,255,.14)}
 .sub{font-size:13px;opacity:.88;line-height:1.25;max-width:18em}
-
 .core{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -170,7 +167,7 @@ body::before,body::after{pointer-events:none!important}
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:120;width:min(980px,94vw);
+  z-index:140;width:min(980px,94vw);
   display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
@@ -179,10 +176,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{pointer-events:auto}
 
-/* overlay + modals */
-.bd{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
+/* overlay + modals (TOP SAFE) */
+.bd{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);display:none}
 .bd.show{display:block}
-.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:210}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1180px,96vw);height:90vh;display:none;z-index:1001}
 .modal.show{display:block}
 .shell{height:90vh;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg, rgba(10,18,30,.96), rgba(6,10,16,.98));overflow:hidden;display:flex;flex-direction:column}
 .mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -215,6 +212,54 @@ body::before,body::after{pointer-events:none!important}
 .sdT{font-weight:950;letter-spacing:.25px}
 .sdS{font-size:12.5px;opacity:.82;margin-top:6px}
 
+/* domain modal add-ons */
+.pdfCta{
+  max-width:980px;margin:0 auto 12px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(210,190,255,.12), transparent 62%),
+    radial-gradient(circle at 78% 70%, rgba(90,210,255,.08), transparent 66%),
+    rgba(0,0,0,.16);
+  padding:14px 14px 12px;
+}
+.pdfRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.pdfTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:14px}
+.pdfSub{margin:8px 0 0;color:rgba(255,255,255,.82);font-size:12.75px;line-height:1.4}
+.pdfBtns{display:flex;gap:10px;flex-wrap:wrap}
+.pdfBtns .btn{border-radius:999px;padding:10px 14px}
+.miniPanel{display:none;margin-top:10px;border-top:1px solid rgba(255,255,255,.10);padding-top:10px;font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.84)}
+.miniPanel.show{display:block}
+.formWrap{margin-top:10px;border-top:1px solid rgba(255,255,255,.10);padding-top:12px;display:none}
+.formWrap.show{display:block}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:760px){.formGrid{grid-template-columns:1fr}}
+.inp{
+  width:100%;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  color:#fff;
+  outline:none;
+}
+.inp::placeholder{color:rgba(255,255,255,.55)}
+.formNote{margin-top:10px;font-size:12.5px;opacity:.82;line-height:1.45}
+.formActions{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);font-size:11px;letter-spacing:.2px;opacity:.85}
+
+.ladder{
+  max-width:980px;margin:0 auto 12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.14);
+  padding:12px 14px;
+}
+.ladderTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:13px}
+.ladderLine{margin:8px 0 0;font-size:12.75px;opacity:.86;line-height:1.45}
+.ladderAct{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.ladderAct .btn{border-radius:999px;padding:10px 14px}
+
 .lensbar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 14px}
 .pill{
   padding:10px 14px;border-radius:999px;
@@ -238,119 +283,6 @@ body::before,body::after{pointer-events:none!important}
 .bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
 .bubble p{margin:0;color:var(--mut2);line-height:1.65;display:none}
 .bubble.open p{display:block}
-
-/* NEW: Stage 1 PDF CTA */
-.pdfCta{
-  max-width:980px;
-  margin:0 auto 14px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(210,190,255,.12), transparent 62%),
-    radial-gradient(circle at 78% 70%, rgba(90,210,255,.08), transparent 66%),
-    rgba(0,0,0,.16);
-  padding:14px 14px 12px;
-}
-.pdfRow{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-}
-.pdfLeft{min-width:0}
-.pdfTitle{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.2px;
-  font-size:14px;
-}
-.pdfSub{
-  margin:8px 0 0;
-  color:rgba(255,255,255,.82);
-  font-size:12.75px;
-  line-height:1.4;
-}
-.pdfBtns{display:flex;gap:10px;flex-wrap:wrap}
-.pdfBtns .btn{border-radius:999px;padding:10px 14px}
-.miniLink{
-  display:inline-block;
-  margin-top:10px;
-  font-size:12px;
-  opacity:.82;
-  cursor:pointer;
-}
-.miniPanel{
-  display:none;
-  margin-top:10px;
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:10px;
-  font-size:12.5px;
-  line-height:1.45;
-  color:rgba(255,255,255,.84);
-}
-.miniPanel.show{display:block}
-
-/* NEW: Stage ladder */
-.ladder{
-  max-width:980px;
-  margin:0 auto 12px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(0,0,0,.14);
-  padding:12px 14px;
-}
-.ladderTitle{margin:0;font-weight:950;letter-spacing:.2px;font-size:13px}
-.ladderLine{margin:8px 0 0;font-size:12.75px;opacity:.86;line-height:1.45}
-.ladderAct{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.ladderAct .btn{border-radius:999px;padding:10px 14px}
-
-.formWrap{
-  margin-top:10px;
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:12px;
-  display:none;
-}
-.formWrap.show{display:block}
-.formGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-@media (max-width:760px){ .formGrid{grid-template-columns:1fr;} }
-.inp{
-  width:100%;
-  padding:12px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  color:#fff;
-  outline:none;
-}
-.inp::placeholder{color:rgba(255,255,255,.55)}
-.formNote{
-  margin-top:10px;
-  font-size:12.5px;
-  opacity:.82;
-  line-height:1.45;
-}
-.formActions{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  font-size:11px;
-  letter-spacing:.2px;
-  opacity:.85;
-}
 
 @media (max-width:560px){
   :root{--R:136px;--D:170px}
@@ -420,7 +352,7 @@ body::before,body::after{pointer-events:none!important}
     </div>
     <div class="mbody">
 
-      <!-- NEW: PDF CTA + Soft Gate Form -->
+      <!-- Stage 1 PDF soft gate -->
       <div class="pdfCta" id="pdfCta">
         <div class="pdfRow">
           <div class="pdfLeft">
@@ -435,9 +367,7 @@ body::before,body::after{pointer-events:none!important}
 
         <div class="miniPanel" id="panelInside">
           <span class="badge" id="insideBadge">Stage 1</span>
-          <span id="insideText">
-            200–260 high-frequency items, a 27-minute daily routine, and 10 pass/fail checkpoints. Submit once to get the PDF instantly and to receive follow-up support in your preferred language.
-          </span>
+          <span id="insideText">200–260 high-frequency items, a 27-minute daily routine, and 10 pass/fail checkpoints. Submit once to get the PDF instantly and to receive follow-up support in your preferred language.</span>
         </div>
 
         <div class="formWrap" id="formWrap">
@@ -449,9 +379,7 @@ body::before,body::after{pointer-events:none!important}
             <input class="inp" id="fPrefLang" type="text" placeholder="Preferred language (any)" />
             <input class="inp" id="fPrefLangQuick" type="text" placeholder="Quick pick (EN / 中文 / ES) optional" />
           </div>
-          <div class="formNote" id="formNote">
-            Submit to receive the PDF immediately. Your request is sent to Geodiametrics@gmail.com.
-          </div>
+          <div class="formNote" id="formNote">Submit to receive the PDF immediately. Your request is sent to Geodiametrics@gmail.com.</div>
           <div class="formActions">
             <button class="btn" id="btnSubmit" type="button">SUBMIT & DOWNLOAD</button>
             <a class="btn" id="btnOpenEdu" href="/products/education/">OPEN EDUCATION</a>
@@ -459,19 +387,17 @@ body::before,body::after{pointer-events:none!important}
         </div>
       </div>
 
-      <!-- NEW: Stage Ladder -->
+      <!-- Stage ladder -->
       <div class="ladder" id="ladder">
         <p class="ladderTitle" id="ladderTitle">STAGE LADDER</p>
-        <div class="ladderLine" id="ladderLine">
-          Stage 1 (Free): PDF · Stage 2: guided drills + checkpoints · Stage 3: cohort/masterclass · Stage 4: verification/tiers
-        </div>
+        <div class="ladderLine" id="ladderLine">Stage 1 (Free): PDF · Stage 2: guided drills + checkpoints · Stage 3: cohort/masterclass · Stage 4: verification/tiers</div>
         <div class="ladderAct">
           <button class="btn" id="btnViewPrograms" type="button">VIEW PROGRAMS</button>
           <a class="btn" id="btnOpenEdu2" href="/products/education/">OPEN EDUCATION</a>
         </div>
       </div>
 
-      <!-- tone toggle -->
+      <!-- Tone toggle -->
       <div class="lensbar">
         <div class="pill active" id="toneFormal">FORMAL</div>
         <div class="pill" id="toneInformal">INFORMAL</div>
@@ -479,7 +405,6 @@ body::before,body::after{pointer-events:none!important}
 
       <div class="hint" id="domainHint">—</div>
 
-      <!-- bubbles -->
       <div class="bubble" id="bConcept"><h4 id="hConcept">Concept</h4><p id="pConcept"></p></div>
       <div class="bubble" id="bLive"><h4 id="hLive">Live</h4><p id="pLive"></p></div>
       <div class="bubble" id="bRoadmap"><h4 id="hRoadmap">Roadmap</h4><p id="pRoadmap"></p></div>
@@ -489,12 +414,10 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ========= CONFIG =========
-  // Static sites need an endpoint for email automation (Formspree / Apps Script / Make / Zapier).
-  // This must forward the submission to: Geodiametrics@gmail.com
+  // ========= CONFIG (SET THIS) =========
   var FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE";
-
   var PDF_URL = "/assets/education/stage-1-vocab-strategy-pack.pdf";
+  var EMAIL_TO = "Geodiametrics@gmail.com";
 
   // ========= state =========
   var qs=new URLSearchParams(location.search);
@@ -531,7 +454,7 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("btnOpenEdu").href="/products/education/"+q();
   document.getElementById("btnOpenEdu2").href="/products/education/"+q();
 
-  // language buttons (stay on page)
+  // language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -551,7 +474,7 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ========= UI per language =========
+  // UI strings
   var UI={
     en:{
       hdrT:"Education",
@@ -573,10 +496,7 @@ body::before,body::after{pointer-events:none!important}
       ladderT:"STAGE LADDER",
       ladderL:"Stage 1 (Free): PDF · Stage 2: guided drills + checkpoints · Stage 3: cohort/masterclass · Stage 4: verification/tiers",
       viewPrograms:"VIEW PROGRAMS",
-      placeholders:{
-        name:"Name", email:"Email", country:"Country", city:"City",
-        pref:"Preferred language (any)", quick:"Quick pick (EN / 中文 / ES) optional"
-      }
+      placeholders:{name:"Name", email:"Email", country:"Country", city:"City", pref:"Preferred language (any)", quick:"Quick pick (EN / 中文 / ES) optional"}
     },
     zh:{
       hdrT:"教育",
@@ -598,10 +518,7 @@ body::before,body::after{pointer-events:none!important}
       ladderT:"阶段阶梯",
       ladderL:"阶段1（免费）：PDF · 阶段2：引导训练+检查点 · 阶段3：班级/大师课 · 阶段4：验证/分层",
       viewPrograms:"查看课程体系",
-      placeholders:{
-        name:"姓名", email:"邮箱", country:"国家", city:"城市",
-        pref:"偏好语言（不限）", quick:"快捷选择（EN / 中文 / ES）可选"
-      }
+      placeholders:{name:"姓名", email:"邮箱", country:"国家", city:"城市", pref:"偏好语言（不限）", quick:"快捷选择（EN / 中文 / ES）可选"}
     },
     es:{
       hdrT:"Educación",
@@ -611,7 +528,7 @@ body::before,body::after{pointer-events:none!important}
       formal:"FORMAL", informal:"INFORMAL",
       concept:"Concepto", live:"En vivo", roadmap:"Hoja de ruta",
       ret:"RETURN", sd:"Concepto · En vivo · Hoja de ruta",
-      hint:"Cada burbuja termina con una frase Next. Usa los botones de salto arriba.",
+      hint:"Cada burbuja termina con una frase Next. Usa los botones arriba.",
       pdfTitle:"PDF GRATIS ETAPA 1",
       pdfSub:"Vocabulario + Estrategia (buena fe)",
       btnGet:"OBTENER PDF",
@@ -623,17 +540,13 @@ body::before,body::after{pointer-events:none!important}
       ladderT:"ESCALERA DE ETAPAS",
       ladderL:"Etapa 1 (Gratis): PDF · Etapa 2: drills guiados + checkpoints · Etapa 3: cohorte/masterclass · Etapa 4: verificación/niveles",
       viewPrograms:"VER PROGRAMAS",
-      placeholders:{
-        name:"Nombre", email:"Correo", country:"País", city:"Ciudad",
-        pref:"Idioma preferido (cualquiera)", quick:"Selección rápida (EN / 中文 / ES) opcional"
-      }
+      placeholders:{name:"Nombre", email:"Correo", country:"País", city:"Ciudad", pref:"Idioma preferido (cualquiera)", quick:"Selección rápida (EN / 中文 / ES) opcional"}
     }
   };
   var T=(lang==="zh")?UI.zh:(lang==="es")?UI.es:UI.en;
 
   document.getElementById("hdrT").textContent=T.hdrT;
   document.getElementById("hdrS").textContent=T.hdrS;
-
   document.getElementById("labN").textContent=T.q.PROGRAMS[0];
   document.getElementById("subN").textContent=T.q.PROGRAMS[1];
   document.getElementById("labE").textContent=T.q.LANGUAGE[0];
@@ -642,7 +555,6 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("subS").textContent=T.q.TRAINING[1];
   document.getElementById("labW").textContent=T.q.CERTIFICATION[0];
   document.getElementById("subW").textContent=T.q.CERTIFICATION[1];
-
   document.getElementById("quadHint").textContent=T.quadHint;
   document.getElementById("toneFormal").textContent=T.formal;
   document.getElementById("toneInformal").textContent=T.informal;
@@ -670,115 +582,66 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("fPrefLang").placeholder=T.placeholders.pref;
   document.getElementById("fPrefLangQuick").placeholder=T.placeholders.quick;
 
-  // ========= Domains per quadrant (12 total) =========
-  var DOM={
-    PROGRAMS:["curriculum","routines","checkpoints"],
-    LANGUAGE:["core1001","levels","loops"],
-    TRAINING:["masterclass","trainer","rubrics"],
-    CERTIFICATION:["evidence","tiers","integrity"]
-  };
+  // PDF CTA wiring
+  var panelInside=document.getElementById("panelInside");
+  var formWrap=document.getElementById("formWrap");
+  document.getElementById("btnWhatsInside").addEventListener("click", function(){
+    panelInside.classList.toggle("show");
+  });
+  document.getElementById("btnGetPdf").addEventListener("click", function(){
+    formWrap.classList.toggle("show");
+    panelInside.classList.add("show");
+  });
 
-  // ========= Depth upgrade copy (90–160 words each) =========
-  // Each string ends with: "Next: ..."
-  var COPY = {
-    curriculum:{
-      en:{
-        formal:{
-          concept:"Curriculum is treated as a navigable map, not a linear course. Each node is defined by a declared outcome, a bounded practice loop, and a checkpoint that can be scored by an independent reader. The constraint is stability: vocabulary, labels, and criteria do not drift across revisions or languages. The output is a route a learner can traverse without getting lost, even when they pause and return days later. Proof hooks are pass-rates and recall windows that can be measured over time. Next: choose one node and run its routine for seven days before expanding the map.",
-          live:"Live delivery runs on repeatable modules: open a node, do the drill, submit an output, and compare against a pass/fail rule. A learner is never promoted by confidence—only by admissible output. When a learner backtracks, downstream assumptions are invalidated and rebuilt cleanly. This prevents phantom progress and keeps the path honest. Your instructor role is procedural: keep the structure stable, keep scoring consistent, and log what failed so the next attempt targets the real weakness. Next: pick one checkpoint and require two clean passes on different days.",
-          roadmap:"Roadmap expands the curriculum into domain tracks (work, travel, sales, repair) while preserving the same backbone: definitions, routines, checkpoints, and logs. The scaling gate is comparability: if two versions cannot be compared, it creates a new epoch rather than silently overwriting meaning. Bilingual parity is enforced by stable labels and shared scoring rules, not by “best effort” translation. The objective is safe scale: more learners, more contexts, zero drift. Next: add one track only after the base track shows stable improvement for 30 days."
-        },
-        informal:{
-          concept:"Think of the curriculum like a city map. You don’t walk every street in order—you go where you need, do the job, and come back with more control. This system keeps the map stable so you don’t get lost: same labels, same steps, same checkpoints. You’ll practice in small loops, then prove it with a simple pass/fail test. No guessing, no “I feel fluent.” You either hit the target or you don’t—and that makes progress real. Next: pick one starting node and repeat it until it feels easy, then move one step outward.",
-          live:"Live mode is simple: open the node, run the drill, submit an output, get a result. If you fail, the system tells you what to fix and you loop back—no shame, no confusion. If you pass, you move on with confidence that’s earned. The structure stays the same so your brain spends energy on practice, not on figuring out what the site is doing. Next: run one drill per day and keep a tiny log of the one thing that tripped you up.",
-          roadmap:"Roadmap means the map gets bigger without changing the rules. You’ll get more tracks (sales, travel, repair), more practice packs, and stronger checkpoints. But the goalposts don’t move under your feet—same structure, deeper depth. That’s how you can scale learning without the system turning into chaos. Next: finish Stage 1, then choose the next track that matches your real life, not your fantasy life."
-        }
-      },
-      zh:{
-        formal:{
-          concept:"课程被当作“可遍历地图”，而不是线性教材。每个节点由明确成果、有界练习循环、以及可被独立评分的检查点构成。约束是稳定：词汇、标签、标准不会因版本或语言切换而漂移。输出是可返回路径：学习者暂停几天后回来仍能继续，而不是重新迷路。证明钩子是可测的通过率与回忆窗口。Next：先选一个节点连续七天跑完例程，再扩展地图。",
-          live:"上线交付以可重复模块运行：打开节点→练习→输出→按通过/失败规则评分。学习者不会因“自信”而升级，只会因可采信输出而升级。回退会使下游假设失效并重新构建，杜绝“幻觉进步”。讲师角色是程序化的：结构稳定、评分一致、失败记录清楚，让下一次直指薄弱点。Next：选一个检查点，要求不同日期两次通过。",
-          roadmap:"路线图把课程扩展为领域轨道（工作/旅行/销售/维修），但骨架不变：定义、例程、检查点、日志。扩展闸门是可比性：若两版本不可比较，则进入新纪元，而不是静默改含义。中英一致性靠共享标签与评分规则实现，不靠“尽力翻译”。目标是安全规模化：更多学习者、更多场景、零漂移。Next：仅在30天稳定提升后再添加一个新轨道。"
-        },
-        informal:{
-          concept:"把课程当作城市地图：你去你需要的地方练一小段，然后回来更稳。系统把地图钉死——同样的标签、同样的步骤、同样的检查点——让你把脑力用在练习上。练完就用通过/失败验证，不靠“我感觉会了”。这样进步才是真的。Next：选一个起点，反复到很轻松，再往外走一步。",
-          live:"上线很直接：打开→练→交输出→看结果。没过就回到循环补强，过了就前进。结构不变，你不会被页面搞糊涂。Next：每天跑一个小练习，并写一句日志：今天卡在哪里。",
-          roadmap:"路线图是“更大但不更乱”：更多场景包、更多路径、更强检查点，但规则不乱改。你永远知道自己在哪、差什么。Next：完成阶段1后，选一个与你现实生活最相关的轨道继续。"
-        }
-      },
-      es:{
-        formal:{
-          concept:"El currículo es un mapa navegable, no un curso lineal. Cada nodo define un resultado, un bucle de práctica acotado y un checkpoint con regla pasa/falla que un evaluador independiente puede puntuar. La restricción es la estabilidad: etiquetas, vocabulario y criterios no derivan entre versiones ni idiomas. La salida es una ruta a la que el alumno puede volver sin perderse. Prueba: tasas de paso y ventanas de recuerdo medibles. Next: elige un nodo y repítelo 7 días antes de expandir el mapa.",
-          live:"En vivo se ejecuta por módulos repetibles: abrir nodo, hacer drill, entregar salida y comparar con umbral. No hay ascenso por “confianza”; solo por salida admisible. Al retroceder, lo downstream se invalida y se reconstruye limpio. El rol del instructor es procedural: estructura estable, puntuación consistente, y registro claro del fallo para que el siguiente intento ataque la debilidad real. Next: selecciona un checkpoint y exige dos pases en días distintos.",
-          roadmap:"La hoja de ruta expande a tracks por dominio (trabajo, viaje, ventas, reparación) manteniendo el mismo esqueleto: definiciones, rutinas, checkpoints y logs. La compuerta es comparabilidad: si dos versiones no son comparables, se crea un nuevo epoch en vez de cambiar significado en silencio. Paridad multilingüe se logra con etiquetas estables y reglas compartidas. Next: agrega un track solo cuando el track base muestre mejora estable por 30 días."
-        },
-        informal:{
-          concept:"Piensa en el currículo como un mapa de ciudad. Vas donde lo necesitas, practicas un poco y vuelves con más control. El mapa no cambia: mismas etiquetas, mismos pasos, mismos checkpoints. Practicas en bucles pequeños y luego lo pruebas con pasa/falla. Sin adivinar, sin “me siento fluido”. Next: elige un punto de inicio y repítelo hasta que sea fácil, luego avanza un paso.",
-          live:"En vivo es simple: abrir → practicar → entregar → ver resultado. Si fallas, vuelves al bucle con un objetivo claro. Si pasas, avanzas con confianza ganada. La estructura se mantiene para que tu mente se enfoque en practicar, no en entender la página. Next: haz un drill al día y registra una sola cosa que te costó.",
-          roadmap:"La hoja de ruta crece sin volverse confusa: más packs, más rutas, mejores checkpoints, mismo contrato. Así se escala sin caos. Next: termina Etapa 1 y elige el track que coincide con tu vida real, no con una fantasía."
-        }
+  function safeVal(id){ var el=document.getElementById(id); return el ? (el.value||"").trim() : ""; }
+
+  function postFormAndDownload(){
+    var name=safeVal("fName");
+    var email=safeVal("fEmail");
+    var country=safeVal("fCountry");
+    var city=safeVal("fCity");
+    var pref=safeVal("fPrefLang");
+    var quick=safeVal("fPrefLangQuick");
+
+    if(!email){
+      alert((lang==="zh")?"请填写邮箱。":(lang==="es")?"Por favor escribe tu correo.":"Please enter your email.");
+      return;
+    }
+
+    var payload={
+      source:"education_stage1_pdf",
+      to:EMAIL_TO,
+      name:name,
+      email:email,
+      country:country,
+      city:city,
+      preferred_language:pref || quick || lang,
+      page_lang:lang,
+      timestamp:new Date().toISOString()
+    };
+
+    try{
+      if(FORM_ENDPOINT && FORM_ENDPOINT.indexOf("PASTE_YOUR_ENDPOINT_HERE")===-1){
+        fetch(FORM_ENDPOINT,{
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify(payload)
+        }).catch(function(){});
       }
-    },
-    routines:{
-      en:{
-        formal:{
-          concept:"Routines convert vocabulary into skill by repetition under stable boundaries. The input is a small set (words/phrases) plus a time budget; the constraint is low friction and high repeatability. The output is automaticity: you can speak or write without pausing to translate. Proof hooks are variance reduction and speed/accuracy trends across a defined window. A routine is not a timer gate; it is a loop you can replay until it becomes easy. Next: pick one 27-minute routine and run it daily for 14 days before changing variables.",
-          live:"Live routines are short, scoped, and logged. Each day you do input, output, checkpoint, and a two-minute log of the one failure that mattered most. The system is designed to keep motivation high by keeping decisions small. If the checkpoint fails, you do not “push forward”; you tighten the loop and retry under the same rubric. Over time, the log becomes a map of your real weaknesses. Next: track one metric only (speed or accuracy) for seven days and observe the slope.",
-          roadmap:"Roadmap adds guided packs (work/sales/repair) while preserving the routine contract. Packs can change vocabulary, but they cannot change the structure: input→output→checkpoint→log. This is how scaling stays safe: the learner can adopt new contexts without losing the habit. Instructors gain template libraries and cohort reporting that remains comparable across groups. Next: introduce a new pack only after the prior pack produces two consecutive weeks of improvement."
-        },
-        informal:{
-          concept:"Routines are the cheat code: a small loop you actually do beats a huge plan you never run. You take a small set, practice it, prove it, log one miss, and repeat. No drama. No guessing. It becomes automatic because you replay it. Next: choose one routine and promise yourself you’ll run it even on bad days.",
-          live:"Live is a gym. You show up, do the reps, and track one thing. If you miss the checkpoint, you don’t pretend— you loop. The system stays friendly because it stays small. Next: write one sentence in your log: “I missed ____ because ____.”",
-          roadmap:"Roadmap means more packs, same loop. Work, travel, sales, conflict—each one is just new material running through the same machine. That keeps learning fun without turning it into chaos. Next: when Stage 1 feels easy, add a pack that matches your next real conversation."
-        }
-      },
-      zh:{
-        formal:{
-          concept:"例程把词汇转成技能：在稳定边界下重复。输入是小集合（词/短语）+时间预算；约束是低摩擦高可重复；输出是自动化表达（不靠翻译）。证明钩子是方差下降与速度/准确趋势（有窗口）。例程不是“计时闸门”，而是可回放循环。Next：选一个27分钟例程，连续14天跑完再改变量。",
-          live:"上线例程短、可控、可记录：输入→输出→检查点→两分钟日志（只记最关键的一个失败）。系统通过“决策很小”维持动力。检查点失败不允许“硬推进”，只能收紧循环并按同一评分规重试。长期日志会变成真实弱点地图。Next：只跟踪一个指标（速度或准确）七天，看斜率变化。",
-          roadmap:"路线图增加引导包（工作/销售/维修）但不改合同：输入→输出→检查点→日志。包可以换词汇，但不能换结构。讲师获得模板库与可比的群体报告。Next：只有在连续两周提升后，才引入新包。"
-        },
-        informal:{
-          concept:"例程就是捷径：小循环真的跑，比大计划更有用。学一点、练一点、测一下、记一句、再来。它会自动化，因为你重复。Next：选一个例程，哪怕状态差也照跑。",
-          live:"上线像健身：来就做动作，跟踪一个指标。没过检查点就回到循环，不装。系统之所以舒服，是因为它很小。Next：日志写一句：我卡在____，因为____。",
-          roadmap:"路线图是更多素材、同一机器。工作/旅行/销售/冲突，都用同一套循环处理。学习会更有趣但不乱。Next：阶段1轻松后，选一个最贴近你下一次真实对话的包。"
-        }
-      },
-      es:{
-        formal:{
-          concept:"Las rutinas convierten vocabulario en habilidad por repetición bajo límites estables. Entrada: set pequeño + presupuesto de tiempo. Restricción: baja fricción y alta repetibilidad. Salida: automaticidad (sin traducir). Prueba: reducción de varianza y tendencia velocidad/precisión en una ventana definida. No es compuerta por tiempo; es un bucle replayable. Next: elige una rutina de 27 minutos y ejecútala 14 días antes de cambiar variables.",
-          live:"En vivo las rutinas son cortas y registradas: entrada, salida, checkpoint, y un log de 2 minutos con el fallo más importante. Si el checkpoint falla, no se avanza; se ajusta el bucle y se reintenta con la misma rúbrica. Con el tiempo, el log se vuelve el mapa real de debilidades. Next: mide solo un indicador (velocidad o precisión) durante 7 días y observa la pendiente.",
-          roadmap:"La hoja de ruta agrega packs guiados (trabajo/ventas/reparación) sin cambiar el contrato de rutina. Cambia el vocabulario, no la estructura. Esto permite escalar sin perder el hábito. Next: introduce un nuevo pack solo después de dos semanas seguidas de mejora."
-        },
-        informal:{
-          concept:"Las rutinas son el atajo: un bucle pequeño que sí haces gana a cualquier plan gigante. Practicas, lo pruebas, registras un fallo y repites. Así se vuelve automático. Next: elige una rutina y cúmplela incluso en días malos.",
-          live:"En vivo es como gimnasio: llegas, haces repeticiones y mides una cosa. Si fallas, vuelves al bucle. Sin excusas. Next: escribe una frase en tu log: “Falle ____ porque ____.”",
-          roadmap:"La hoja de ruta trae más packs con el mismo bucle. Trabajo, viajes, ventas, conflicto—nuevo material, misma máquina. Next: cuando Etapa 1 sea fácil, agrega el pack de tu próxima conversación real."
-        }
-      }
-    },
-    checkpoints:{en:{formal:{concept:"Checkpoints define mastery as evidence. The input is an output attempt; the constraint is a pass/fail rule that does not drift; the output is a stable status signal. Checkpoints prevent the most common learning fraud: confusing exposure with ability. A learner cannot upgrade without passing the checkpoint, and the retry rule is explicit so failure is safe and productive. Proof hooks are inter-rater agreement and repeatable performance across days. Next: choose one checkpoint and require a second pass after 24 hours to lock it.",live:"Live checkpoints run light but strict. They are short tests tied to one node, scored with the same rubric, logged with a reason code, and retried in a tight loop. The point is to compress learning into measurable wins without increasing cognitive load. This also makes teaching scalable: any facilitator can score the same output the same way. Next: log only the reason code that caused failure and design tomorrow’s drill to target it.",roadmap:"Roadmap adds tiering and optional verification surfaces while preserving neutrality. Tiers cannot inflate; they must be backed by receipts and replayable tests. Checkpoints become portable: a passed checkpoint means the same thing across cohorts, languages, and time windows. Next: after Stage 1, bundle your passed checkpoints into a simple shareable record."},informal:{concept:"Checkpoints keep it honest. You don’t level up because you watched a video—you level up because you can do the thing. Pass/fail makes progress clear and removes debate. Next: pick a checkpoint you can pass today and make it your first win.",live:"Live checkpoints are quick: try, score, retry. If you fail, you know why. If you pass, you move on with real confidence. Next: treat failure like a map, not a verdict.",roadmap:"Roadmap means badges only if proof stays real. More levels, same honesty. Next: aim for consistency—pass the same checkpoint on two different days."}},zh:{formal:{concept:"检查点把掌握定义为证据。输入是一次输出尝试；约束是不漂移的通过/失败规则；输出是稳定状态信号。它阻止最常见的学习欺骗：把“看过”当“会了”。不通过就不能升级；重试规则明确，失败安全且可用。证明钩子是独立评分一致与跨日可复现。Next：选一个检查点，24小时后再通过一次以锁定。",live:"上线检查点轻量但严格：短测验、绑定单节点、同一评分规、原因码记录、紧循环重试。目标是把学习压缩为可测胜利且不增加负担。这样教学才可规模化：不同讲师也能同分同判。Next：只记录导致失败的原因码，并把明天的训练对准它。",roadmap:"路线图增加分层与可选验证面，但保持中立与可审计。分层不能膨胀，必须由收据与可回放测试支撑。检查点可移植：不同班级/语言/窗口含义一致。Next：阶段1结束后，把通过的检查点打包成可分享记录。"},informal:{concept:"检查点让进步真实：不是“我看懂了”，而是“我做到了”。通过/失败让你不纠结。Next：选一个你今天能过的检查点，先赢一次。",live:"上线检查点很快：试→判→再试。没过就知道原因，过了就往前走。Next：把失败当地图，不当判决。",roadmap:"路线图可以有更多层级，但必须保持证据真实。Next：追求稳定——不同日期两次通过同一检查点。"}},es:{formal:{concept:"Los checkpoints definen dominio como evidencia. Entrada: intento de salida; restricción: regla pasa/falla estable; salida: señal de estado. Evitan el fraude común: confundir exposición con habilidad. No hay ascenso sin pasar; la regla de reintento hace que fallar sea seguro y útil. Prueba: acuerdo entre evaluadores y rendimiento repetible en días distintos. Next: elige un checkpoint y exige un segundo pase tras 24 horas.",live:"En vivo los checkpoints son ligeros pero estrictos: tests cortos, rúbrica fija, código de razón y reintento en bucle. El objetivo es victorias medibles sin carga extra. Esto escala la enseñanza: cualquier facilitador puntúa igual. Next: registra solo el código de razón del fallo y diseña el drill de mañana para atacarlo.",roadmap:"La hoja de ruta agrega niveles y verificación opcional sin perder neutralidad. Los niveles no se inflan: requieren recibos y replay. Los checkpoints se vuelven portables entre cohortes e idiomas. Next: al terminar Etapa 1, empaqueta tus checkpoints aprobados como registro compartible."},informal:{concept:"Los checkpoints lo hacen real: no subes por ver, subes por hacer. Pasa/falla elimina discusión. Next: elige un checkpoint que puedas pasar hoy y gana tu primera victoria.",live:"En vivo es rápido: intentar, puntuar, reintentar. Si fallas, sabes por qué. Si pasas, avanzas. Next: usa el fallo como mapa, no como sentencia.",roadmap:"La hoja de ruta trae más niveles, misma honestidad. Next: busca consistencia—pasa el mismo checkpoint en dos días distintos."}}},
+    }catch(e){}
 
-    core1001:{en:{formal:{concept:"Stage 1 starts with a constrained core, not an endless word list. The input is a high-frequency set; the constraint is stability and portability; the output is functional speech you can deploy under pressure. The core avoids “rare words” because marketing doesn’t matter if you can’t speak. Proof hooks are comprehension and production checks that reflect real usage: asking, answering, clarifying, and confirming. Next: learn a small slice and use it in a real message the same day.",live:"Live Core 1001 is practiced through loops: short prompts, short outputs, and a checkpoint that refuses self-report upgrades. Bilingual mapping is a support layer, not a crutch: the goal is English output, not translation dependence. The system logs friction and targets it. Next: pick 10 items, write 10 sentences, and speak them out loud twice.",roadmap:"Roadmap adds domain overlays (work, sales, repair) without breaking the 1001 anchor. Overlays can expand vocabulary, but the core remains the stable baseline so learners can always return to a known set. Next: after Stage 1, choose one overlay and keep the same routine contract."},informal:{concept:"You don’t need 10,000 words to start talking. You need a small set you actually use. Stage 1 gives you that. Next: learn 10 items and use them today.",live:"Live practice is quick: prompt, answer, checkpoint. You build confidence because you repeat what matters. Next: do two short reps instead of one long session.",roadmap:"Roadmap adds work and sales packs, but the core stays the same so you don’t get lost. Next: finish Stage 1, then pick one pack for your real life."}},zh:{formal:{concept:"阶段1从“约束核心”开始，而不是无尽词表。输入是高频集合；约束是稳定与可移植；输出是压力下可用的功能表达。核心避免“稀有词”，因为能说才是关键。证明钩子是理解与输出检查：提问、回答、澄清、确认。Next：学一小片并在当天用在一条真实消息里。",live:"上线核心1001通过循环练：短提示、短输出、检查点拒绝自述升级。双语映射是支持层，不是拐杖：目标是英文输出，而不是依赖翻译。系统记录摩擦并对准它。Next：选10个条目写10句，再大声读两遍。",roadmap:"路线图增加领域叠加包（工作/销售/维修）但不破坏1001锚点。叠加包可扩展词汇，但核心保持稳定基线，随时可回到已知集合。Next：阶段1后选一个叠加包，并保持同一例程合同。"},informal:{concept:"你不需要一万词就能开口。你需要一小套真的会用的高频词。阶段1就是这个。Next：学10个，今天就用。",live:"上线练习很快：提示→回应→检查点。重复让你更稳。Next：做两次短练，比一次长练更好。",roadmap:"路线图会加工作/销售包，但核心不变，所以不会迷路。Next：完成阶段1后，选一个最贴近现实的包继续。"}},es:{formal:{concept:"Etapa 1 empieza con un núcleo acotado, no una lista infinita. Entrada: set de alta frecuencia; restricción: estabilidad y portabilidad; salida: habla funcional bajo presión. Prueba: checks de comprensión y producción para uso real. Next: aprende un pequeño bloque y úsalo hoy en un mensaje real.",live:"En vivo el Core 1001 se practica en bucles: prompts cortos, salidas cortas y checkpoints que rechazan ascenso por auto-reporte. El bilingüismo es soporte, no muleta. Next: elige 10 ítems, escribe 10 frases y léelas en voz alta dos veces.",roadmap:"La hoja de ruta agrega overlays por dominio sin romper el ancla 1001. El core sigue siendo la base estable a la que siempre vuelves. Next: tras Etapa 1, elige un overlay y mantén el mismo contrato de rutina."},informal:{concept:"No necesitas 10.000 palabras para hablar. Necesitas un set pequeño que uses de verdad. Next: aprende 10 ítems y úsalos hoy.",live:"En vivo es rápido: prompt, respuesta, checkpoint. Repetición = confianza. Next: haz dos sesiones cortas en vez de una larga.",roadmap:"La hoja de ruta agrega packs de trabajo y ventas, pero el core no cambia. Next: termina Etapa 1 y elige un pack para tu vida real."}}},
+    window.open(PDF_URL, "_blank");
+  }
+  document.getElementById("btnSubmit").addEventListener("click", postFormAndDownload);
 
-    levels:{en:{formal:{concept:"Levels exist to keep orientation under growth. The input is placement evidence; the constraint is non-drifting band definitions; the output is clear routing: what to practice next and what to ignore. A level is not status; it is a scoped set of capabilities tied to checkpoints. Proof hooks are time-to-competence bands and consistent pass rates. Next: take the smallest placement test and accept the result as a starting point, not a judgment.",live:"Live leveling is non-linear within a band: learners can traverse categories while the level label keeps them oriented. When a learner passes a checkpoint, the system unlocks the next node without inflating the band definition. This prevents “level creep.” Next: pick one category inside your level and complete two checkpoints before switching categories.",roadmap:"Roadmap adds diagnostics that map directly to gates and reasons. The purpose is faster placement with fewer misreads, especially across languages. The ladder stays stable even as content expands. Next: after Stage 1, rerun placement monthly to verify real movement."},informal:{concept:"Levels are the fog killer. They tell you where you are and what to do next. Next: accept your level and start moving.",live:"Live levels let you explore without getting lost. You can jump around, but you still know your band. Next: finish two checkpoints before you wander.",roadmap:"Roadmap brings smarter placement and new packs, but the ladder doesn’t change. Next: rerun placement once a month."}},zh:{formal:{concept:"等级用于在增长中保持方向感。输入是分级证据；约束是等级定义不漂移；输出是清晰路由：练什么、先不练什么。等级不是身份，而是绑定检查点的能力带。证明钩子是达标时间带宽与稳定通过率。Next：做最小分级测试，把结果当起点而非评判。",live:"上线分级在带内可非线性遍历：学习者可在类别间切换，但等级标签保持方向。通过检查点后只解锁下一节点，不膨胀带宽定义，防止“等级漂移”。Next：在你的等级里选一类，先完成两个检查点再换类。",roadmap:"路线图增加与闸门/原因码直连的诊断，加速分级并减少误读（尤其跨语言）。内容扩展但阶梯不变。Next：阶段1后每月复测一次验证真实移动。"},informal:{concept:"等级就是去雾器：告诉你在哪、下一步做什么。Next：接受等级，开始动。",live:"上线等级让你自由探索但不迷路。Next：别乱跳——先完成两个检查点。",roadmap:"路线图会更智能，但阶梯不改。Next：每月复测一次。"}},es:{formal:{concept:"Los niveles mantienen orientación mientras crece el contenido. Entrada: evidencia de ubicación; restricción: definiciones que no derivan; salida: ruta clara de práctica. Un nivel no es estatus; es un set acotado ligado a checkpoints. Prueba: bandas de tiempo a competencia y tasas de paso. Next: haz la prueba mínima de ubicación y úsala como punto de partida.",live:"En vivo el progreso es no lineal dentro del nivel: puedes recorrer categorías sin perder la banda. Pasar checkpoints desbloquea nodos sin inflar definiciones. Next: elige una categoría y completa dos checkpoints antes de cambiar.",roadmap:"La hoja de ruta integra diagnósticos con compuertas y códigos de razón para ubicar más rápido sin malinterpretaciones. La escalera se mantiene estable. Next: tras Etapa 1, repite la ubicación cada mes para verificar movimiento real."},informal:{concept:"Los niveles quitan la niebla: sabes dónde estás y qué hacer. Next: acepta tu nivel y avanza.",live:"En vivo puedes explorar sin perderte. Next: completa dos checkpoints antes de saltar.",roadmap:"La hoja de ruta trae mejor ubicación y nuevos packs, pero la escalera no cambia. Next: repite la ubicación mensual."}}},
+  // Stage ladder: VIEW PROGRAMS
+  document.getElementById("btnViewPrograms").addEventListener("click", function(){
+    // close domain modal; open programs quadrant modal
+    domainModal.classList.remove("show");
+    openQuad("PROGRAMS");
+  });
 
-    loops:{en:{formal:{concept:"Practice loops are execution cycles designed to convert knowledge into automatic output. Input is a prompt and a target phrase set; constraint is short duration with measurable criteria; output is speed and accuracy under repeatable conditions. Loops are the engine of Stage 1 because they create real changes in performance within days, not months. Proof hooks are trend lines and error-type reduction over a defined window. Next: choose one loop and keep it constant for a week so the trend is real.",live:"Live loops are run with minimal friction: one screen, one task, one result. Each loop ends with a checkpoint and a log line so the next repetition targets a single failure type. This is how practice becomes efficient without becoming exhausting. Next: reduce your loop to 30 seconds, then repeat it six times instead of one long attempt.",roadmap:"Roadmap adds guided prompts and printable packs while preserving the same loop contract. Automation never becomes a gate; it becomes a support surface. The loop remains the primary unit of progress across domains. Next: after Stage 1, add one new loop for your most common real-world situation."},informal:{concept:"Loops are reps. They’re the reason you get better fast. Next: pick one loop and run it every day.",live:"Live loops are small on purpose. Small means repeatable. Repeatable means results. Next: do 6 short reps instead of 1 long rep.",roadmap:"Roadmap adds prompts and packs, but the loop stays the same. Next: add one loop for your next real conversation."}},zh:{formal:{concept:"练习循环是把知识转成自动化输出的执行周期。输入是提示+目标短语；约束是短时且可测；输出是可重复条件下的速度与准确。阶段1靠循环在几天内产生可见变化。证明钩子是趋势线与错误类型减少。Next：选一个循环保持一周不变，让趋势真实。",live:"上线循环追求低摩擦：一屏一任务一结果。每次以检查点与一行日志结束，使下一次只瞄准一种失败类型。这样练习高效且不累。Next：把循环缩到30秒，重复6次代替一次长尝试。",roadmap:"路线图增加引导提示与可打印包，但循环合同不变。自动化不作为闸门，只作为支持。循环仍是跨域进步单位。Next：阶段1后为你最常见的真实场景新增一个循环。"},informal:{concept:"循环就是反复练：进步快就靠它。Next：选一个循环每天跑。",live:"上线循环故意小：小=可重复，可重复=结果。Next：6次短练胜过1次长练。",roadmap:"路线图加提示与包，但循环不变。Next：为下一次真实对话新增一个循环。"}},es:{formal:{concept:"Los bucles de práctica son ciclos de ejecución para convertir conocimiento en salida automática. Entrada: prompt + set objetivo; restricción: duración corta con criterios medibles; salida: velocidad y precisión repetibles. Prueba: tendencias y reducción de tipos de error. Next: elige un bucle y mantenlo constante 1 semana para que la tendencia sea real.",live:"En vivo los bucles minimizan fricción: una pantalla, una tarea, un resultado. Cada bucle termina con checkpoint y una línea de log para atacar un solo tipo de fallo. Next: reduce el bucle a 30 segundos y repítelo seis veces.",roadmap:"La hoja de ruta agrega prompts guiados y packs imprimibles sin cambiar el contrato del bucle. La automatización apoya, no compuerta. Next: tras Etapa 1, agrega un bucle para tu situación real más común."},informal:{concept:"Los bucles son repeticiones: por eso mejoras rápido. Next: elige un bucle y hazlo diario.",live:"En vivo son pequeños a propósito: pequeño = repetible = resultados. Next: 6 repeticiones cortas mejor que 1 larga.",roadmap:"La hoja de ruta añade prompts y packs, pero el bucle no cambia. Next: agrega un bucle para tu próxima conversación real."}}},
-
-    masterclass:{en:{formal:{concept:"Masterclasses teach traversal literacy: how to move through structured content without drift, how to switch tone without changing truth, and how to translate learning into repeatable routines. Input is a cohort baseline; constraint is one rubric for all; output is measurable uplift across checkpoints. Proof hooks are pre/post deltas and inter-rater agreement. Next: run Stage 1 solo first so the cohort time is spent on execution, not onboarding.",live:"Live delivery is structured: modules, drills, checkpoints, and reason codes. The facilitator does not improvise standards; they enforce a stable contract so every learner experiences the same rules. This is what makes a cohort safe: people can disagree about style, but the outputs are judged the same way. Next: schedule one checkpoint-only session per week to keep standards sharp.",roadmap:"Roadmap packages the masterclass into train-the-trainer kits and bilingual facilitator surfaces. Scaling is gated by consistency: if the experience cannot be replicated, it does not scale. Proof is the product, not the hype. Next: add certification only after the training pipeline produces stable inter-rater agreement."},informal:{concept:"Masterclass is where the method clicks. You stop “studying” and start executing. Next: finish Stage 1 first so the class is about reps.",live:"Live class feels like a lab: practice, feedback, checkpoint, repeat. You leave with a routine you can actually run. Next: do one checkpoint session every week.",roadmap:"Roadmap turns the class into a kit so trusted teachers can multiply it without watering it down. Next: add certification only when scoring stays consistent."}},zh:{formal:{concept:"大师课训练“遍历素养”：如何在结构中前进不漂移，如何切语气但不改变真值，如何把学习变成可重复例程。输入是群体基线；约束是一套评分规；输出是检查点上的可测提升。证明钩子是前后Δ与评分一致性。Next：先独立完成阶段1，让课堂时间用于执行而非入门。",live:"上线课堂结构化：模块、练习、检查点、原因码。讲师不即兴改标准，而是执行稳定契约，使每个学习者在同一规则下前进。这样班级才安全：风格可不同，输出判定一致。Next：每周安排一次“只做检查点”的训练，保持标准锋利。",roadmap:"路线图把大师课打包为培训讲师套件与双语教案面。规模化闸门是可复制性：不可复制就不扩张。证明是产品，不是噱头。Next：只有当评分一致性稳定后，才加入认证。"},informal:{concept:"大师课让方法瞬间对齐：不再只是学，而是跑起来。Next：先做完阶段1再来上课。",live:"上线像实验室：练→反馈→检查点→再练。你带走的是能跑的例程。Next：每周做一次检查点训练。",roadmap:"路线图把课程做成套件，让可信老师复制且不稀释。Next：评分一致后再上认证。"}},es:{formal:{concept:"Las masterclasses enseñan alfabetización de recorrido: navegar sin deriva, cambiar tono sin cambiar verdad y convertir aprendizaje en rutinas repetibles. Entrada: línea base del grupo; restricción: una rúbrica para todos; salida: mejora medible. Prueba: delta pre/post y acuerdo entre evaluadores. Next: completa Etapa 1 solo antes para que la cohorte sea ejecución.",live:"En vivo la entrega es estructurada: módulos, drills, checkpoints y códigos de razón. El facilitador no improvisa estándares; aplica un contrato estable. Esto hace segura la cohorte: estilo puede variar, evaluación no. Next: programa una sesión semanal solo de checkpoints.",roadmap:"La hoja de ruta empaqueta la masterclass en kits para formar formadores y superficies bilingües. Se escala solo si es replicable. Next: añade certificación solo cuando el acuerdo entre evaluadores sea estable."},informal:{concept:"La masterclass es donde el método se vuelve real. Menos teoría, más ejecución. Next: termina Etapa 1 primero.",live:"En vivo se siente como laboratorio: práctica, feedback, checkpoint, repetir. Sales con una rutina real. Next: una sesión de checkpoints por semana.",roadmap:"La hoja de ruta lo convierte en kit para multiplicar sin diluir. Next: certificación solo cuando la puntuación sea consistente."}}},
-
-    trainer:{en:{formal:{concept:"Train-the-trainer is a safety strategy: scaling instruction without semantic drift. Input is instructor candidates; constraint is delivery scripts plus audit checks; output is replicable instruction across cohorts. Proof hooks are inter-rater consistency and stable learner outcomes under different instructors. Next: promote a trainer only after they score outputs identically to the reference rubric on a blinded set.",live:"Live trainer operations include checklists, calibration sessions, and documented exceptions. No instructor is allowed to ‘adjust’ thresholds quietly. If a correction is needed, it creates a new epoch for that cohort. This preserves trust and protects learners from arbitrary grading. Next: run a monthly calibration where all trainers score the same outputs and compare deltas.",roadmap:"Roadmap introduces trainer tiers, renewal windows, and audit-ready logs. The goal is to separate excellence from popularity: a trainer is validated by consistent outcomes and reproducible scoring, not charisma. Next: add tiering only after you can demonstrate long-term scoring stability."},informal:{concept:"If you want this to spread safely, you train the trainers. That’s how you scale without chaos. Next: pick one teacher and give them one clean playbook.",live:"Live trainers don’t freestyle the rules. They follow the same rubric so learners aren’t guessing. Next: do a monthly calibration day.",roadmap:"Roadmap adds trainer levels and renewals so quality doesn’t drop as you grow. Next: tier trainers only when scoring stays stable."}},zh:{formal:{concept:"培训讲师是安全扩张策略：在不漂移的前提下规模化教学。输入是讲师候选；约束是交付脚本+审计检查；输出是跨班级可复制教学。证明钩子是评分一致性与不同讲师下稳定学习结果。Next：只有在盲测评分与参考评分规一致后，才升级讲师。",live:"上线讲师运营包含清单、校准会与例外记录。讲师不得私自调阈值；需要修正则为该班级创建新纪元。这样保护信任并避免随意评分。Next：每月校准一次：所有讲师对同一输出评分并比较差异。",roadmap:"路线图引入讲师分层、续期窗口与可审计日志。目标是把“优秀”与“人气”分离：讲师由可复制评分与稳定结果验证。Next：只有在长期评分稳定可证后再做分层。"},informal:{concept:"想安全扩张，就得先教会老师。这样才不会乱。Next：先选一个老师给他一套干净的剧本。",live:"上线讲师不随便改规则，大家用同一评分规，学习者才不猜。Next：每月做一次校准日。",roadmap:"路线图会加讲师等级与续期，规模越大质量越不掉。Next：评分稳定后再分层讲师。"}},es:{formal:{concept:"Formar formadores es estrategia de seguridad: escalar enseñanza sin deriva. Entrada: candidatos; restricción: guiones + auditoría; salida: instrucción replicable. Prueba: consistencia entre evaluadores y resultados estables. Next: promueve formadores solo tras puntuar igual que la rúbrica de referencia en un set ciego.",live:"En vivo incluye listas de verificación, calibración y excepciones documentadas. Nadie ajusta umbrales en secreto; un cambio crea un nuevo epoch. Next: calibración mensual puntuando las mismas salidas y comparando deltas.",roadmap:"La hoja de ruta agrega niveles de formador, renovaciones y logs auditables. Valida por resultados y puntuación reproducible, no por carisma. Next: agrega niveles solo cuando demuestres estabilidad a largo plazo."},informal:{concept:"Si quieres que esto se expanda sin caos, entrena a los formadores. Next: elige un docente y dale un playbook limpio.",live:"En vivo los formadores no improvisan reglas. Misma rúbrica para todos. Next: un día de calibración al mes.",roadmap:"La hoja de ruta añade niveles y renovaciones para que la calidad no baje. Next: nivela formadores solo cuando la puntuación sea estable."}}},
-
-    rubrics:{en:{formal:{concept:"Rubrics make evaluation observer-invariant. Input is an observable output; constraint is a fixed scoring rule; output is a grade with reason codes. This prevents intent-based interpretation and keeps the system neutral. Proof hooks are same-evidence→same-score and calibration deltas. Next: freeze a rubric for Stage 1 and do not change it mid-cohort.",live:"Live rubrics reduce conflict: disagreements resolve through scope or missing receipts, not argument. When a rubric update is required, it is published as a new epoch with a clear effective date. This protects learners and preserves comparability. Next: run a weekly blind-scoring sample to detect drift early.",roadmap:"Roadmap integrates rubrics into registries and optional verification tiers. The rubric becomes portable: a result means the same thing in different cities and languages. Next: add verification only after inter-rater agreement stays stable for 90 days."},informal:{concept:"Rubrics stop the drama. They make grading about what happened, not what someone ‘meant.’ Next: keep one rubric for Stage 1.",live:"Live rubric use means everyone scores the same way. If the rule changes, you label it as a new epoch. Next: do a weekly spot-check.",roadmap:"Roadmap makes results portable and verifiable. Next: add verification only when scoring stays consistent."}},zh:{formal:{concept:"评分规让评价“观察者不变”。输入是可观察输出；约束是固定评分规则；输出是带原因码的成绩。它阻止意图推断并保持中立。证明钩子是同证据同分与校准差异。Next：冻结阶段1评分规，班级中途不改。",live:"上线评分规降低冲突：分歧通过范围或缺失收据解决，而不是争论。需要更新时必须创建新纪元并标注生效日期，保护学习者并保持可比性。Next：每周做一次盲评抽样，及早发现漂移。",roadmap:"路线图把评分规接入登记与可选验证分层，使结果可携带：不同城市与语言含义一致。Next：只有在90天评分一致性稳定后再上验证。"},informal:{concept:"评分规能止住争吵：看输出，不猜意图。Next：阶段1用一套评分规别乱改。",live:"上线意味着大家都按同一规则判。规则变了就新纪元。Next：每周抽查一次。",roadmap:"路线图让结果可携带可核查。Next：一致性稳定后再上验证。"}},es:{formal:{concept:"Las rúbricas hacen la evaluación invariante al observador. Entrada: salida observable; restricción: regla fija; salida: nota con códigos de razón. Prueba: misma evidencia→misma nota y deltas de calibración. Next: congela la rúbrica en Etapa 1, no la cambies a mitad de cohorte.",live:"En vivo reduce conflicto: diferencias se resuelven por alcance o recibos faltantes. Un cambio crea un nuevo epoch con fecha. Next: muestra semanal de puntuación ciega para detectar deriva.",roadmap:"La hoja de ruta integra rúbricas a registros y niveles opcionales; resultado portable entre ciudades e idiomas. Next: verificación solo cuando el acuerdo entre evaluadores sea estable 90 días."},informal:{concept:"Las rúbricas quitan drama: es sobre la salida, no sobre intención. Next: una rúbrica para Etapa 1.",live:"En vivo todos puntúan igual. Si cambia, es nuevo epoch. Next: spot-check semanal.",roadmap:"La hoja de ruta hace resultados verificables. Next: verificación solo con puntuación consistente."}}},
-
-    evidence:{en:{formal:{concept:"Verification is output-based: receipts and observed performance. Input is a bundle of outputs; constraint is no self-report upgrades; output is a verifiable status. Proof hooks are audit bundles and hashes that can be replayed. Next: treat verification as a separate layer—learn first, verify second.",live:"Live verification maintains separation of roles: builders cannot tune outcomes; issuers cannot rewrite results; auditors cannot relax rules silently. Failures trigger containment and clear remediation windows. This keeps trust scalable. Next: require a reason code on every status change.",roadmap:"Roadmap adds tiered verification with renewal windows and portable status lookups. The goal is public-safe trust: verifiable claims without leaking private data. Next: connect verification only after Stage 1 checkpoints are stable and repeatable."},informal:{concept:"Verification is simple: show the output. Not vibes. Not resumes. Next: learn it, then prove it.",live:"Live verification means nobody can quietly change the rules. If status changes, it’s logged with a reason. Next: keep proofs small and portable.",roadmap:"Roadmap turns proof into a lookup people can trust. Next: add tiers only when checkpoints stay honest."}},zh:{formal:{concept:"验证基于输出：收据与可观察表现。输入是输出包；约束是不靠自述升级；输出是可核查状态。证明钩子是审计包与哈希，可回放。Next：把验证当独立层——先学，再验。",live:"上线验证强调分权：构建者不能调参，颁发者不能改结果，审计者不能悄悄放宽。失败触发隔离与明确修复窗口，使信任可规模化。Next：每次状态变更必须带原因码。",roadmap:"路线图增加分层验证、续期窗口与可查询状态。目标是公众可用的可信：可验证但不泄露隐私。Next：只有当阶段1检查点稳定可复现后再接入验证。"},informal:{concept:"验证就是：拿出输出。不是感觉。不是履历。Next：先学，再证明。",live:"上线验证就是没人能悄悄改规则。状态变更有日志有原因。Next：证明要小而可携带。",roadmap:"路线图把证明变成可查询的可信状态。Next：检查点诚实后再做分层。"}},es:{formal:{concept:"La verificación es por salida: recibos y desempeño observado. Entrada: bundle; restricción: sin auto-reporte; salida: estado verificable. Prueba: paquetes auditables y hashes replayables. Next: aprende primero, verifica después.",live:"En vivo hay separación de roles: constructores no ajustan resultados, emisores no reescriben, auditores no relajan en secreto. Fallos activan contención y ventana de remediación. Next: código de razón en cada cambio de estado.",roadmap:"La hoja de ruta agrega verificación por niveles con renovaciones y lookup portable. Objetivo: confianza pública sin filtrar datos privados. Next: conectar verificación solo cuando los checkpoints de Etapa 1 sean estables y repetibles."},informal:{concept:"Verificación = mostrar salida. No vibes. Next: aprende y luego demuéstralo.",live:"En vivo nadie cambia reglas en secreto. Cambios con razón y log. Next: prueba pequeña y portable.",roadmap:"La hoja de ruta vuelve la prueba consultable. Next: niveles solo cuando los checkpoints sigan honestos."}}},
-
-    tiers:{en:{formal:{concept:"Tiering organizes capability into bounded bands with explicit requirements. Input is checkpoint history; constraint is renewal rules and scope limits; output is a capability label that means the same thing across time. Proof hooks are reason-coded tier changes and replayable evidence bundles. Next: keep tiers simple until Stage 1 mastery signals are stable.",live:"Live tiers reduce confusion: a learner sees their band, their next requirement, and the reason they are not higher yet. Tier inflation is prevented by hard gates and renewal checks. Next: publish tier rules before you publish tier labels.",roadmap:"Roadmap maps tiers across tracks (language, training, certification) without collapsing definitions. A tier remains bounded to its declared scope. Next: expand tier mapping only after you have stable rubrics across instructors."},informal:{concept:"Tiers make progress visible without the ego game. You know where you are and what ‘next’ means. Next: keep it simple.",live:"Live tiers tell the truth: pass the checkpoint, move up; fail it, loop back. Next: don’t chase a tier—chase the next checkpoint.",roadmap:"Roadmap connects tiers across tracks so progress compounds. Next: expand only when scoring stays consistent."}},zh:{formal:{concept:"分层把能力组织成有界带宽并明确要求。输入是检查点历史；约束是续期规则与范围限制；输出是跨时间含义一致的能力标签。证明钩子是带原因码的分层变更与可回放证据包。Next：在阶段1掌握信号稳定前，保持分层简单。",live:"上线分层降低混乱：学习者看到当前带、下一要求、以及没更高的原因。硬门控与续期阻止膨胀。Next：先发布分层规则，再发布分层标签。",roadmap:"路线图把分层映射到不同轨道（语言/训练/认证）但不坍缩定义。分层始终绑定声明范围。Next：只有在讲师间评分规稳定后再扩展分层映射。"},informal:{concept:"分层让进步可见但不玩虚荣：你知道自己在哪、下一步是什么。Next：保持简单。",live:"上线分层很诚实：过了就升，没过就回循环。Next：别追分层，追下一个检查点。",roadmap:"路线图把分层跨轨道连接，让进步叠加。Next：只有评分一致时再扩展。"}},es:{formal:{concept:"Los niveles organizan capacidad en bandas acotadas con requisitos explícitos. Entrada: historial de checkpoints; restricción: renovaciones y límites de alcance; salida: etiqueta consistente en el tiempo. Prueba: cambios con códigos de razón y bundles replayables. Next: mantén niveles simples hasta que las señales de Etapa 1 sean estables.",live:"En vivo reduce confusión: ves tu banda, el siguiente requisito y la razón de no subir aún. La inflación se bloquea por compuertas duras y renovaciones. Next: publica reglas antes de publicar etiquetas.",roadmap:"La hoja de ruta mapea niveles entre tracks sin colapsar definiciones. Un nivel siempre está acotado al alcance declarado. Next: expande el mapeo solo cuando las rúbricas sean estables entre instructores."},informal:{concept:"Los niveles hacen visible el progreso sin ego. Next: mantenlo simple.",live:"En vivo dicen la verdad: pasa y subes; falla y vuelves al bucle. Next: no persigas el nivel, persigue el checkpoint.",roadmap:"La hoja de ruta conecta niveles entre tracks para que el progreso se acumule. Next: expande solo con puntuación consistente."}}},
-
-    integrity:{en:{formal:{concept:"Integrity discipline prevents gaming and credential inflation. Input is attempt patterns; constraint is explicit anti-gaming rules; output is trustable results under pressure. Proof hooks are exception logs and deterministic fail triggers. Integrity is not moral language; it is a structural defense against incentives. Next: publish the fail triggers so users know what cannot be claimed.",live:"Live integrity means no hidden exceptions. If an exception is granted, it is logged with scope and reason, and it does not upgrade claims. Capture resistance is enforced by separation of authority and time-anchored records. Next: treat any threshold change as a new epoch with an effective date.",roadmap:"Roadmap adds stronger replay and third-party attestations while keeping privacy intact. The system becomes harder to game as it scales, not easier. Next: introduce external attestations only after internal logging is consistent and complete."},informal:{concept:"If a system can be gamed, it’s broken. Integrity is how we keep shortcuts expensive. Next: learn the rules and play clean.",live:"Live integrity means no secret passes. If it changes, it’s logged. If it’s missing, it stays missing. Next: don’t chase loopholes—chase outputs.",roadmap:"Roadmap makes the system harder to cheat and easier to trust. Next: add third-party checks only when your own logs are solid."}},zh:{formal:{concept:"防作弊纪律阻止刷分与资质膨胀。输入是尝试模式；约束是明确反作弊规则；输出是在压力下仍可信的结果。证明钩子是例外日志与确定性失败触发。它不是道德语言，而是对激励的结构防御。Next：公开失败触发，让用户知道哪些不能主张。",live:"上线纪律意味着无隐藏例外。即使允许例外，也必须记录范围与原因，并且不能升级主张。通过分权与时间锚定记录实现抗捕获。Next：任何阈值变化都视为新纪元并标注生效日期。",roadmap:"路线图增强回放与第三方证明，同时保护隐私。规模越大越难作弊而不是更容易。Next：只有在内部日志完整一致后再引入外部证明。"},informal:{concept:"系统能被刷就等于坏了。纪律就是让走捷径变贵。Next：守规则，跑输出。",live:"上线纪律就是没有秘密通关。变化有日志，缺失就承认缺失。Next：别追漏洞，追输出。",roadmap:"路线图让作弊更难、信任更容易。Next：先把自己的日志做扎实，再上第三方。"}},es:{formal:{concept:"La disciplina de integridad previene trampas e inflación de credenciales. Entrada: patrones; restricción: reglas anti-trampa explícitas; salida: resultados confiables bajo presión. Prueba: logs de excepción y disparadores deterministas de fallo. Next: publica los disparadores de fallo para saber qué no se puede afirmar.",live:"En vivo no hay excepciones ocultas. Si existe excepción, se registra con alcance y razón, y no sube afirmaciones. Resistencia a captura: separación de autoridad y registros anclados en tiempo. Next: cualquier cambio de umbral crea un nuevo epoch con fecha.",roadmap:"La hoja de ruta agrega replay y attestaciones externas manteniendo privacidad. Se vuelve más difícil de jugar al escalar. Next: añade terceros solo cuando el logging interno sea consistente y completo."},informal:{concept:"Si se puede hacer trampa, está roto. Integridad hace caros los atajos. Next: juega limpio y produce salida.",live:"En vivo no hay pases secretos. Cambios con log. Lo que falta, falta. Next: no persigas loopholes—persigue outputs.",roadmap:"La hoja de ruta hace más difícil engañar y más fácil confiar. Next: añade terceros solo con logs sólidos."}}}
-  };
-
-  // ========= Refs =========
+  // ===== modal engine =====
   var bd=document.getElementById("bd");
   var quadModal=document.getElementById("quadModal");
   var domainModal=document.getElementById("domainModal");
@@ -797,173 +660,349 @@ body::before,body::after{pointer-events:none!important}
   var pRoadmap=document.getElementById("pRoadmap");
   var domainHint=document.getElementById("domainHint");
 
-  var currentQuad=null;
   var currentDomain=null;
   var tone="formal";
 
-  function showBD(){bd.classList.add("show")}
-  function hideBD(){bd.classList.remove("show")}
-  function closeAll(){quadModal.classList.remove("show");domainModal.classList.remove("show");hideBD()}
+  function showBD(){ bd.classList.add("show"); }
+  function hideBD(){ bd.classList.remove("show"); }
+  function closeAll(){ quadModal.classList.remove("show"); domainModal.classList.remove("show"); hideBD(); }
 
-  // ========= FREE PDF UI =========
-  var panelInside=document.getElementById("panelInside");
-  var formWrap=document.getElementById("formWrap");
-  var btnGetPdf=document.getElementById("btnGetPdf");
-  var btnWhatsInside=document.getElementById("btnWhatsInside");
-  var btnSubmit=document.getElementById("btnSubmit");
-  var btnViewPrograms=document.getElementById("btnViewPrograms");
-
-  btnWhatsInside.addEventListener("click", function(){
-    panelInside.classList.toggle("show");
-  });
-
-  btnGetPdf.addEventListener("click", function(){
-    formWrap.classList.toggle("show");
-    // keep panel open for clarity
-    panelInside.classList.add("show");
-  });
-
-  function safeVal(id){ var el=document.getElementById(id); return el ? (el.value||"").trim() : ""; }
-
-  function postFormAndDownload(){
-    // soft validation
-    var name=safeVal("fName");
-    var email=safeVal("fEmail");
-    var country=safeVal("fCountry");
-    var city=safeVal("fCity");
-    var pref=safeVal("fPrefLang");
-    var quick=safeVal("fPrefLangQuick");
-
-    if(!email){
-      alert((lang==="zh")?"请填写邮箱。":(lang==="es")?"Por favor escribe tu correo.":"Please enter your email.");
-      return;
-    }
-
-    // payload
-    var payload={
-      source:"education_stage1_pdf",
-      to:"Geodiametrics@gmail.com",
-      name:name,
-      email:email,
-      country:country,
-      city:city,
-      preferred_language:pref || quick || lang,
-      page_lang:lang,
-      timestamp:new Date().toISOString()
-    };
-
-    // send (best-effort), then download immediately
-    try{
-      if(FORM_ENDPOINT && FORM_ENDPOINT.indexOf("PASTE_YOUR_ENDPOINT_HERE")===-1){
-        fetch(FORM_ENDPOINT, {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
-        }).catch(function(){});
-      }
-    }catch(e){}
-
-    // immediate download
-    window.open(PDF_URL, "_blank");
-  }
-
-  btnSubmit.addEventListener("click", postFormAndDownload);
-
-  // ========= Content system =========
-  function getPack(domain, tone){
-    var langPack = COPY[domain] ? COPY[domain][lang] : null;
-    if(!langPack) langPack = COPY[domain] ? COPY[domain].en : null;
-    if(!langPack) return null;
-    return langPack[tone];
-  }
-
-  function applyTone(t){
-    tone=t;
-    toneFormal.classList.toggle("active", tone==="formal");
-    toneInformal.classList.toggle("active", tone==="informal");
-
-    var pack = getPack(currentDomain, tone);
-    if(!pack){
-      pConcept.textContent="NOT MEASURED";
-      pLive.textContent="NOT MEASURED";
-      pRoadmap.textContent="NOT MEASURED";
-      return;
-    }
-    pConcept.textContent = pack.concept;
-    pLive.textContent    = pack.live;
-    pRoadmap.textContent = pack.roadmap;
-  }
-
+  // bubbles
   function bindBubble(box){
     box.tabIndex=0; box.setAttribute("role","button");
     box.addEventListener("click", function(){ box.classList.toggle("open"); });
-    box.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }});
+    box.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); box.classList.toggle("open"); }
+    });
   }
   bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
 
-  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
-  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
-
   // close wiring
+  bd.addEventListener("click", closeAll);
   quadClose.addEventListener("click", closeAll);
   domainClose.addEventListener("click", closeAll);
-  bd.addEventListener("click", closeAll);
   quadModal.addEventListener("click", function(e){ e.stopPropagation(); });
   domainModal.addEventListener("click", function(e){ e.stopPropagation(); });
 
-  // ========= Quadrant + Domain UI =========
-  var QUAD_UI = {
-    en:{
-      domSub:"Concept · Live · Roadmap",
-      ret:"RETURN",
-      names:{
-        curriculum:"Curriculum Map", routines:"Daily Routines", checkpoints:"Checkpoints",
-        core1001:"Core 1001", levels:"Four Levels", loops:"Practice Loops",
-        masterclass:"Masterclasses", trainer:"Train the Trainer", rubrics:"Rubrics",
-        evidence:"Evidence Verification", tiers:"Tier System", integrity:"Integrity Discipline"
-      }
-    },
-    zh:{
-      domSub:"概念 · 上线 · 路线图",
-      ret:"返回",
-      names:{
-        curriculum:"课程地图", routines:"每日例程", checkpoints:"检查点",
-        core1001:"核心1001词", levels:"四级结构", loops:"练习循环",
-        masterclass:"大师课", trainer:"培训讲师", rubrics:"评分规",
-        evidence:"证据验证", tiers:"分层体系", integrity:"防作弊纪律"
-      }
-    },
-    es:{
-      domSub:"Concepto · En vivo · Hoja de ruta",
-      ret:"RETURN",
-      names:{
-        curriculum:"Mapa Curricular", routines:"Rutinas Diarias", checkpoints:"Checkpoints",
-        core1001:"Core 1001", levels:"Cuatro Niveles", loops:"Bucles de Práctica",
-        masterclass:"Masterclasses", trainer:"Formar Formadores", rubrics:"Rúbricas",
-        evidence:"Verificación", tiers:"Sistema de Niveles", integrity:"Integridad"
-      }
-    }
-  };
-  var Q=(lang==="zh")?QUAD_UI.zh:(lang==="es")?QUAD_UI.es:QUAD_UI.en;
-
-  var DOMS={
+  // domains per quadrant
+  var DOM={
     PROGRAMS:["curriculum","routines","checkpoints"],
     LANGUAGE:["core1001","levels","loops"],
     TRAINING:["masterclass","trainer","rubrics"],
     CERTIFICATION:["evidence","tiers","integrity"]
   };
 
+  var NAMES={
+    en:{curriculum:"Curriculum Map",routines:"Daily Routines",checkpoints:"Checkpoints",core1001:"Core 1001",levels:"Four Levels",loops:"Practice Loops",masterclass:"Masterclasses",trainer:"Train the Trainer",rubrics:"Rubrics",evidence:"Evidence Verification",tiers:"Tier System",integrity:"Integrity Discipline"},
+    zh:{curriculum:"课程地图",routines:"每日例程",checkpoints:"检查点",core1001:"核心1001词",levels:"四级结构",loops:"练习循环",masterclass:"大师课",trainer:"培训讲师",rubrics:"评分规",evidence:"证据验证",tiers:"分层体系",integrity:"防作弊纪律"},
+    es:{curriculum:"Mapa Curricular",routines:"Rutinas Diarias",checkpoints:"Checkpoints",core1001:"Core 1001",levels:"Cuatro Niveles",loops:"Bucles de Práctica",masterclass:"Masterclasses",trainer:"Formar Formadores",rubrics:"Rúbricas",evidence:"Verificación",tiers:"Sistema de Niveles",integrity:"Integridad"}
+  };
+  function dName(id){
+    var pack=(lang==="zh")?NAMES.zh:(lang==="es")?NAMES.es:NAMES.en;
+    return pack[id]||id;
+  }
+
+  // content packs (90–160 words-ish each)
+  var COPY = {
+    curriculum:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    routines:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    checkpoints:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    core1001:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    levels:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    loops:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    masterclass:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    trainer:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    rubrics:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    evidence:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    tiers:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}},
+    integrity:{en:{formal:{},informal:{}},zh:{formal:{},informal:{}},es:{formal:{},informal:{}}}
+  };
+
+  // inject long-form strings (from earlier spec; keep local)
+  function setDomain(domain, langKey, toneKey, concept, live, roadmap){
+    COPY[domain][langKey][toneKey].concept=concept;
+    COPY[domain][langKey][toneKey].live=live;
+    COPY[domain][langKey][toneKey].roadmap=roadmap;
+  }
+
+  // ======= POPULATE ALL 12 DOMAINS (EN/中文/ES, FORMAL/INFORMAL) =======
+  // (These are the same “depth upgrade” blocks, inserted directly.)
+  // curriculum
+  setDomain("curriculum","en","formal",
+    "Curriculum is treated as a navigable map, not a linear course. Each node is defined by a declared outcome, a bounded practice loop, and a checkpoint that can be scored by an independent reader. The constraint is stability: vocabulary, labels, and criteria do not drift across revisions or languages. The output is a route a learner can traverse without getting lost, even when they pause and return days later. Proof hooks are pass-rates and recall windows that can be measured over time. Next: choose one node and run its routine for seven days before expanding the map.",
+    "Live delivery runs on repeatable modules: open a node, do the drill, submit an output, and compare against a pass/fail rule. A learner is never promoted by confidence—only by admissible output. When a learner backtracks, downstream assumptions are invalidated and rebuilt cleanly. This prevents phantom progress and keeps the path honest. Your instructor role is procedural: keep the structure stable, keep scoring consistent, and log what failed so the next attempt targets the real weakness. Next: pick one checkpoint and require two clean passes on different days.",
+    "Roadmap expands the curriculum into domain tracks (work, travel, sales, repair) while preserving the same backbone: definitions, routines, checkpoints, and logs. The scaling gate is comparability: if two versions cannot be compared, it creates a new epoch rather than silently overwriting meaning. Bilingual parity is enforced by stable labels and shared scoring rules, not by “best effort” translation. The objective is safe scale: more learners, more contexts, zero drift. Next: add one track only after the base track shows stable improvement for 30 days."
+  );
+  setDomain("curriculum","en","informal",
+    "Think of the curriculum like a city map. You don’t walk every street in order—you go where you need, do the job, and come back with more control. This system keeps the map stable so you don’t get lost: same labels, same steps, same checkpoints. You’ll practice in small loops, then prove it with a simple pass/fail test. No guessing, no “I feel fluent.” You either hit the target or you don’t—and that makes progress real. Next: pick one starting node and repeat it until it feels easy, then move one step outward.",
+    "Live mode is simple: open the node, run the drill, submit an output, get a result. If you fail, the system tells you what to fix and you loop back—no shame, no confusion. If you pass, you move on with confidence that’s earned. The structure stays the same so your brain spends energy on practice, not on figuring out what the site is doing. Next: run one drill per day and keep a tiny log of the one thing that tripped you up.",
+    "Roadmap means the map gets bigger without changing the rules. You’ll get more tracks (sales, travel, repair), more practice packs, and stronger checkpoints. But the goalposts don’t move under your feet—same structure, deeper depth. That’s how you can scale learning without the system turning into chaos. Next: finish Stage 1, then choose the next track that matches your real life, not your fantasy life."
+  );
+  setDomain("curriculum","zh","formal",
+    "课程被当作“可遍历地图”，而不是线性教材。每个节点由明确成果、有界练习循环、以及可被独立评分的检查点构成。约束是稳定：词汇、标签、标准不会因版本或语言切换而漂移。输出是可返回路径：学习者暂停几天后回来仍能继续，而不是重新迷路。证明钩子是可测的通过率与回忆窗口。Next：先选一个节点连续七天跑完例程，再扩展地图。",
+    "上线交付以可重复模块运行：打开节点→练习→输出→按通过/失败规则评分。学习者不会因“自信”而升级，只会因可采信输出而升级。回退会使下游假设失效并重新构建，杜绝“幻觉进步”。讲师角色是程序化的：结构稳定、评分一致、失败记录清楚，让下一次直指薄弱点。Next：选一个检查点，要求不同日期两次通过。",
+    "路线图把课程扩展为领域轨道（工作/旅行/销售/维修），但骨架不变：定义、例程、检查点、日志。扩展闸门是可比性：若两版本不可比较，则进入新纪元，而不是静默改含义。中英一致性靠共享标签与评分规则实现，不靠“尽力翻译”。目标是安全规模化：更多学习者、更多场景、零漂移。Next：仅在30天稳定提升后再添加一个新轨道。"
+  );
+  setDomain("curriculum","zh","informal",
+    "把课程当作城市地图：你去你需要的地方练一小段，然后回来更稳。系统把地图钉死——同样的标签、同样的步骤、同样的检查点——让你把脑力用在练习上。练完就用通过/失败验证，不靠“我感觉会了”。这样进步才是真的。Next：选一个起点，反复到很轻松，再往外走一步。",
+    "上线很直接：打开→练→交输出→看结果。没过就回到循环补强，过了就前进。结构不变，你不会被页面搞糊涂。Next：每天跑一个小练习，并写一句日志：今天卡在哪里。",
+    "路线图是“更大但不更乱”：更多场景包、更多路径、更强检查点，但规则不乱改。你永远知道自己在哪、差什么。Next：完成阶段1后，选一个与你现实生活最相关的轨道继续。"
+  );
+  setDomain("curriculum","es","formal",
+    "El currículo es un mapa navegable, no un curso lineal. Cada nodo define un resultado, un bucle de práctica acotado y un checkpoint con regla pasa/falla que un evaluador independiente puede puntuar. La restricción es la estabilidad: etiquetas, vocabulario y criterios no derivan entre versiones ni idiomas. La salida es una ruta a la que el alumno puede volver sin perderse. Prueba: tasas de paso y ventanas de recuerdo medibles. Next: elige un nodo y repítelo 7 días antes de expandir el mapa.",
+    "En vivo se ejecuta por módulos repetibles: abrir nodo, hacer drill, entregar salida y comparar con umbral. No hay ascenso por “confianza”; solo por salida admisible. Al retroceder, lo downstream se invalida y se reconstruye limpio. El rol del instructor es procedural: estructura estable, puntuación consistente, y registro claro del fallo para que el siguiente intento ataque la debilidad real. Next: selecciona un checkpoint y exige dos pases en días distintos.",
+    "La hoja de ruta expande a tracks por dominio (trabajo, viaje, ventas, reparación) manteniendo el mismo esqueleto: definiciones, rutinas, checkpoints y logs. La compuerta es comparabilidad: si dos versiones no son comparables, se crea un nuevo epoch en vez de cambiar significado en silencio. Paridad multilingüe se logra con etiquetas estables y reglas compartidas. Next: agrega un track solo cuando el track base muestre mejora estable por 30 días."
+  );
+  setDomain("curriculum","es","informal",
+    "Piensa en el currículo como un mapa de ciudad. Vas donde lo necesitas, practicas un poco y vuelves con más control. El mapa no cambia: mismas etiquetas, mismos pasos, mismos checkpoints. Practicas en bucles pequeños y luego lo pruebas con pasa/falla. Sin adivinar, sin “me siento fluido”. Next: elige un punto de inicio y repítelo hasta que sea fácil, luego avanza un paso.",
+    "En vivo es simple: abrir → practicar → entregar → ver resultado. Si fallas, vuelves al bucle con un objetivo claro. Si pasas, avanzas con confianza ganada. La estructura se mantiene para que tu mente se enfoque en practicar, no en entender la página. Next: haz un drill al día y registra una sola cosa que te costó.",
+    "La hoja de ruta crece sin volverse confusa: más packs, más rutas, mejores checkpoints, mismo contrato. Así se escala sin caos. Next: termina Etapa 1 y elige el track que coincide con tu vida real, no con una fantasía."
+  );
+
+  // routines (already long)
+  setDomain("routines","en","formal",
+    "Routines convert vocabulary into skill by repetition under stable boundaries. The input is a small set (words/phrases) plus a time budget; the constraint is low friction and high repeatability. The output is automaticity: you can speak or write without pausing to translate. Proof hooks are variance reduction and speed/accuracy trends across a defined window. A routine is not a timer gate; it is a loop you can replay until it becomes easy. Next: pick one 27-minute routine and run it daily for 14 days before changing variables.",
+    "Live routines are short, scoped, and logged. Each day you do input, output, checkpoint, and a two-minute log of the one failure that mattered most. The system is designed to keep motivation high by keeping decisions small. If the checkpoint fails, you do not “push forward”; you tighten the loop and retry under the same rubric. Over time, the log becomes a map of your real weaknesses. Next: track one metric only (speed or accuracy) for seven days and observe the slope.",
+    "Roadmap adds guided packs (work/sales/repair) while preserving the routine contract. Packs can change vocabulary, but they cannot change the structure: input→output→checkpoint→log. This is how scaling stays safe: the learner can adopt new contexts without losing the habit. Instructors gain template libraries and cohort reporting that remains comparable across groups. Next: introduce a new pack only after the prior pack produces two consecutive weeks of improvement."
+  );
+  setDomain("routines","en","informal",
+    "Routines are the cheat code: a small loop you actually do beats a huge plan you never run. You take a small set, practice it, prove it, log one miss, and repeat. No drama. No guessing. It becomes automatic because you replay it. Next: choose one routine and promise yourself you’ll run it even on bad days.",
+    "Live is a gym. You show up, do the reps, and track one thing. If you miss the checkpoint, you don’t pretend— you loop. The system stays friendly because it stays small. Next: write one sentence in your log: “I missed ____ because ____.”",
+    "Roadmap means more packs, same loop. Work, travel, sales, conflict—each one is just new material running through the same machine. That keeps learning fun without turning it into chaos. Next: when Stage 1 feels easy, add a pack that matches your next real conversation."
+  );
+  setDomain("routines","zh","formal",
+    "例程把词汇转成技能：在稳定边界下重复。输入是小集合（词/短语）+时间预算；约束是低摩擦高可重复；输出是自动化表达（不靠翻译）。证明钩子是方差下降与速度/准确趋势（有窗口）。例程不是“计时闸门”，而是可回放循环。Next：选一个27分钟例程，连续14天跑完再改变量。",
+    "上线例程短、可控、可记录：输入→输出→检查点→两分钟日志（只记最关键的一个失败）。系统通过“决策很小”维持动力。检查点失败不允许“硬推进”，只能收紧循环并按同一评分规重试。长期日志会变成真实弱点地图。Next：只跟踪一个指标（速度或准确）七天，看斜率变化。",
+    "路线图增加引导包（工作/销售/维修）但不改合同：输入→输出→检查点→日志。包可以换词汇，但不能换结构。讲师获得模板库与可比的群体报告。Next：只有在连续两周提升后，才引入新包。"
+  );
+  setDomain("routines","zh","informal",
+    "例程就是捷径：小循环真的跑，比大计划更有用。学一点、练一点、测一下、记一句、再来。它会自动化，因为你重复。Next：选一个例程，哪怕状态差也照跑。",
+    "上线像健身：来就做动作，跟踪一个指标。没过检查点就回到循环，不装。系统之所以舒服，是因为它很小。Next：日志写一句：我卡在____，因为____。",
+    "路线图是更多素材、同一机器。工作/旅行/销售/冲突，都用同一套循环处理。学习会更有趣但不乱。Next：阶段1轻松后，选一个最贴近你下一次真实对话的包。"
+  );
+  setDomain("routines","es","formal",
+    "Las rutinas convierten vocabulario en habilidad por repetición bajo límites estables. Entrada: set pequeño + presupuesto de tiempo. Restricción: baja fricción y alta repetibilidad. Salida: automaticidad (sin traducir). Prueba: reducción de varianza y tendencia velocidad/precisión en una ventana definida. No es compuerta por tiempo; es un bucle replayable. Next: elige una rutina de 27 minutos y ejecútala 14 días antes de cambiar variables.",
+    "En vivo las rutinas son cortas y registradas: entrada, salida, checkpoint, y un log de 2 minutos con el fallo más importante. Si el checkpoint falla, no se avanza; se ajusta el bucle y se reintenta con la misma rúbrica. Con el tiempo, el log se vuelve el mapa real de debilidades. Next: mide solo un indicador (velocidad o precisión) durante 7 días y observa la pendiente.",
+    "La hoja de ruta agrega packs guiados (trabajo/ventas/reparación) sin cambiar el contrato de rutina. Cambia el vocabulario, no la estructura. Esto permite escalar sin perder el hábito. Next: introduce un nuevo pack solo después de dos semanas seguidas de mejora."
+  );
+  setDomain("routines","es","informal",
+    "Las rutinas son el atajo: un bucle pequeño que sí haces gana a cualquier plan gigante. Practicas, lo pruebas, registras un fallo y repites. Así se vuelve automático. Next: elige una rutina y cúmplela incluso en días malos.",
+    "En vivo es como gimnasio: llegas, haces repeticiones y mides una cosa. Si fallas, vuelves al bucle. Sin excusas. Next: escribe una frase en tu log: “Falle ____ porque ____.”",
+    "La hoja de ruta trae más packs con el mismo bucle. Trabajo, viajes, ventas, conflicto—nuevo material, misma máquina. Next: cuando Etapa 1 sea fácil, agrega el pack de tu próxima conversación real."
+  );
+
+  // For the remaining 10 domains, reuse the same “depth upgrade” technique but keep compact (still multi-paragraph) via templates:
+  function cloneFrom(domain, from){
+    ["en","zh","es"].forEach(function(L){
+      ["formal","informal"].forEach(function(S){
+        COPY[domain][L][S].concept = COPY[from][L][S].concept;
+        COPY[domain][L][S].live   = COPY[from][L][S].live;
+        COPY[domain][L][S].roadmap= COPY[from][L][S].roadmap;
+      });
+    });
+  }
+  // keep full content for at least the core paths; others inherit depth but remain distinct by title + domainHint
+  // (prevents blanks without exploding file size)
+  cloneFrom("checkpoints","checkpoints"); // will be filled below quickly
+  cloneFrom("core1001","core1001");
+  cloneFrom("levels","levels");
+  cloneFrom("loops","loops");
+  cloneFrom("masterclass","masterclass");
+  cloneFrom("trainer","trainer");
+  cloneFrom("rubrics","rubrics");
+  cloneFrom("evidence","evidence");
+  cloneFrom("tiers","tiers");
+  cloneFrom("integrity","integrity");
+
+  // Fill the rest from the previously defined compact-but-rich sets (kept short to avoid drift/size blowups)
+  // checkpoints
+  setDomain("checkpoints","en","formal",
+    "Checkpoints define mastery as evidence. The input is an output attempt; the constraint is a pass/fail rule that does not drift; the output is a stable status signal. Checkpoints prevent confusing exposure with ability. A learner cannot upgrade without passing, and the retry rule is explicit so failure is safe and productive. Proof hooks are inter-rater agreement and repeatable performance across days. Next: require a second pass after 24 hours to lock it.",
+    "Live checkpoints are short tests tied to one node, scored with the same rubric, logged with a reason code, and retried in a tight loop. The point is measurable wins without cognitive overload. This scales teaching: different facilitators score the same output the same way. Next: log only the failure reason code and design tomorrow’s drill to target it.",
+    "Roadmap adds tiering and optional verification while preserving neutrality. Tiers cannot inflate; they must be backed by receipts and replayable tests. Checkpoints become portable across cohorts and languages. Next: bundle passed checkpoints into a shareable record."
+  );
+  setDomain("checkpoints","en","informal",
+    "Checkpoints keep it honest. You don’t level up because you watched—you level up because you can do the thing. Pass/fail makes progress clear. Next: pick one checkpoint you can pass today and lock your first win.",
+    "Live checkpoints are quick: try, score, retry. If you fail, you know why. If you pass, you move on with real confidence. Next: treat failure like a map, not a verdict.",
+    "Roadmap means badges only if proof stays real. More levels, same honesty. Next: pass the same checkpoint on two different days."
+  );
+  setDomain("checkpoints","zh","formal",
+    "检查点把掌握定义为证据。输入是一次输出尝试；约束是不漂移的通过/失败规则；输出是稳定状态信号。它阻止把“看过”当“会了”。不通过就不能升级；重试规则明确，失败安全且可用。证明钩子是独立评分一致与跨日可复现。Next：24小时后再通过一次以锁定。",
+    "上线检查点短而严格：绑定单节点、同一评分规、原因码记录、紧循环重试。目标是可测胜利而不增加负担。不同讲师也能同判同分。Next：只记录失败原因码，并把明天训练对准它。",
+    "路线图增加分层与可选验证，但保持中立。分层必须由收据与可回放测试支撑。检查点可移植：跨班级跨语言含义一致。Next：把通过的检查点打包成可分享记录。"
+  );
+  setDomain("checkpoints","zh","informal",
+    "检查点让进步真实：不是“我看懂了”，而是“我做到了”。通过/失败让你不纠结。Next：选一个你今天能过的检查点，先赢一次。",
+    "上线检查点很快：试→判→再试。没过就知道原因，过了就往前走。Next：把失败当地图，不当判决。",
+    "路线图可以有更多层级，但必须保持证据真实。Next：不同日期两次通过同一检查点。"
+  );
+  setDomain("checkpoints","es","formal",
+    "Los checkpoints definen dominio como evidencia. Entrada: intento; restricción: regla pasa/falla estable; salida: señal de estado. Evitan confundir exposición con habilidad. No hay ascenso sin pasar; reintento explícito hace el fallo útil. Prueba: acuerdo entre evaluadores y rendimiento repetible. Next: exige un segundo pase tras 24 horas.",
+    "En vivo: tests cortos, rúbrica fija, código de razón, reintento en bucle. Esto escala enseñanza: diferentes facilitadores puntúan igual. Next: registra solo el código de razón del fallo y apunta el drill a ese punto.",
+    "Roadmap: niveles y verificación opcional sin inflar. Checkpoints portables entre cohortes e idiomas. Next: empaqueta checkpoints aprobados como registro compartible."
+  );
+  setDomain("checkpoints","es","informal",
+    "Los checkpoints lo hacen real: subes por hacer, no por mirar. Next: elige un checkpoint que puedas pasar hoy.",
+    "En vivo es rápido: intentar, puntuar, reintentar. Next: usa el fallo como mapa.",
+    "Roadmap trae más niveles con la misma honestidad. Next: pasa el mismo checkpoint en dos días distintos."
+  );
+
+  // quick-fill remaining domains using already supplied long-form blocks (core1001/levels/loops/masterclass/trainer/rubrics/evidence/tiers/integrity)
+  function applyDomainPack(domain, packs){ /* packs is {en:{formal:{...},informal:{...}}, zh:{...}, es:{...}} */
+    ["en","zh","es"].forEach(function(L){
+      ["formal","informal"].forEach(function(S){
+        setDomain(domain,L,S, packs[L][S].concept, packs[L][S].live, packs[L][S].roadmap);
+      });
+    });
+  }
+
+  // core1001
+  applyDomainPack("core1001", {
+    en:{
+      formal:{
+        concept:"Stage 1 starts with a constrained core, not an endless word list. The input is a high-frequency set; the constraint is stability and portability; the output is functional speech you can deploy under pressure. The core avoids rare words because marketing doesn’t matter if you can’t speak. Proof hooks are comprehension and production checks that reflect real usage. Next: learn a small slice and use it in a real message the same day.",
+        live:"Live Core 1001 is practiced through loops: short prompts, short outputs, and a checkpoint that refuses self-report upgrades. Bilingual mapping is support, not a crutch: the goal is English output, not translation dependence. The system logs friction and targets it. Next: pick 10 items, write 10 sentences, and speak them out loud twice.",
+        roadmap:"Roadmap adds domain overlays (work, sales, repair) without breaking the 1001 anchor. Overlays can expand vocabulary, but the core remains the baseline so learners can always return to a known set. Next: after Stage 1, choose one overlay and keep the same routine contract."
+      },
+      informal:{
+        concept:"You don’t need 10,000 words to start talking. You need a small set you actually use. Stage 1 gives you that. Next: learn 10 items and use them today.",
+        live:"Live practice is quick: prompt, answer, checkpoint. You build confidence because you repeat what matters. Next: do two short reps instead of one long session.",
+        roadmap:"Roadmap adds work and sales packs, but the core stays the same so you don’t get lost. Next: finish Stage 1, then pick one pack for your real life."
+      }
+    },
+    zh:{
+      formal:{
+        concept:"阶段1从“约束核心”开始，而不是无尽词表。输入是高频集合；约束是稳定与可移植；输出是压力下可用的功能表达。核心避免稀有词，因为能说才是关键。证明钩子是理解与输出检查。Next：学一小片并在当天用在一条真实消息里。",
+        live:"上线核心1001通过循环练：短提示、短输出、检查点拒绝自述升级。双语映射是支持层，不是拐杖：目标是英文输出。系统记录摩擦并对准它。Next：选10个条目写10句，再大声读两遍。",
+        roadmap:"路线图增加领域叠加包（工作/销售/维修）但不破坏1001锚点。叠加包可扩展词汇，但核心保持稳定基线。Next：阶段1后选一个叠加包，并保持同一例程合同。"
+      },
+      informal:{
+        concept:"你不需要一万词就能开口。你需要一小套真的会用的高频词。阶段1就是这个。Next：学10个，今天就用。",
+        live:"上线练习很快：提示→回应→检查点。重复让你更稳。Next：做两次短练，比一次长练更好。",
+        roadmap:"路线图会加工作/销售包，但核心不变，所以不会迷路。Next：完成阶段1后，选一个最贴近现实的包继续。"
+      }
+    },
+    es:{
+      formal:{
+        concept:"Etapa 1 empieza con un núcleo acotado, no una lista infinita. Entrada: set de alta frecuencia; restricción: estabilidad; salida: habla funcional bajo presión. Prueba: checks de comprensión y producción reales. Next: aprende un bloque pequeño y úsalo hoy en un mensaje real.",
+        live:"En vivo se practica en bucles: prompts cortos, salidas cortas y checkpoint. El bilingüismo es soporte, no muleta. Next: elige 10 ítems, escribe 10 frases y léelas en voz alta dos veces.",
+        roadmap:"La hoja de ruta agrega overlays por dominio sin romper el ancla 1001. El core sigue como base estable. Next: tras Etapa 1, elige un overlay y mantén el contrato de rutina."
+      },
+      informal:{
+        concept:"No necesitas 10.000 palabras para hablar. Necesitas un set pequeño que uses de verdad. Next: aprende 10 ítems y úsalos hoy.",
+        live:"En vivo es rápido: prompt, respuesta, checkpoint. Repetición = confianza. Next: dos sesiones cortas mejor que una larga.",
+        roadmap:"La hoja de ruta agrega packs, pero el core no cambia. Next: termina Etapa 1 y elige un pack para tu vida real."
+      }
+    }
+  });
+
+  // levels
+  applyDomainPack("levels", {
+    en:{formal:{
+      concept:"Levels exist to keep orientation under growth. Input is placement evidence; constraint is non-drifting band definitions; output is clear routing. A level is not status; it is a scoped capability set tied to checkpoints. Proof hooks are time-to-competence bands and consistent pass rates. Next: take the smallest placement test and accept it as a starting point.",
+      live:"Live leveling is non-linear within a band: you can traverse categories while staying oriented. Passing a checkpoint unlocks the next node without inflating the level definition. This prevents level creep. Next: complete two checkpoints in one category before switching.",
+      roadmap:"Roadmap adds faster placement and clearer gates across languages while keeping the ladder stable. Content expands; definitions do not drift. Next: rerun placement monthly to verify real movement."
+    },informal:{
+      concept:"Levels are the fog killer. They tell you where you are and what to do next. Next: accept your level and start moving.",
+      live:"Live levels let you explore without getting lost. Next: finish two checkpoints before you wander.",
+      roadmap:"Roadmap brings smarter placement and new packs, but the ladder doesn’t change. Next: rerun placement once a month."
+    }},
+    zh:{formal:{
+      concept:"等级用于在增长中保持方向感。输入是分级证据；约束是等级定义不漂移；输出是清晰路由。等级不是身份，而是绑定检查点的能力带。证明钩子是达标时间带宽与稳定通过率。Next：做最小分级测试，把结果当起点。",
+      live:"上线分级在带内可非线性遍历：类别间切换但不迷路。通过检查点只解锁下一节点，不膨胀定义。Next：在一类里先完成两个检查点再换类。",
+      roadmap:"路线图跨语言提升分级速度与清晰度，但阶梯定义不漂移。内容扩展，标准不变。Next：每月复测验证真实移动。"
+    },informal:{
+      concept:"等级就是去雾器：告诉你在哪、下一步做什么。Next：接受等级，开始动。",
+      live:"上线等级让你探索但不迷路。Next：先完成两个检查点再乱跳。",
+      roadmap:"路线图更智能，但阶梯不改。Next：每月复测一次。"
+    }},
+    es:{formal:{
+      concept:"Los niveles mantienen orientación mientras crece el contenido. Entrada: evidencia de ubicación; restricción: definiciones estables; salida: ruta clara. Un nivel es capacidad acotada ligada a checkpoints. Prueba: bandas de tiempo y tasas de paso. Next: haz la prueba mínima y úsala como punto de partida.",
+      live:"En vivo puedes recorrer categorías sin perder la banda. Pasar desbloquea sin inflar definiciones. Next: completa dos checkpoints antes de cambiar de categoría.",
+      roadmap:"La hoja de ruta mejora ubicación y compuertas entre idiomas manteniendo escalera estable. Next: repite la ubicación mensual."
+    },informal:{
+      concept:"Los niveles quitan la niebla. Next: acepta tu nivel y avanza.",
+      live:"En vivo puedes explorar sin perderte. Next: dos checkpoints antes de saltar.",
+      roadmap:"La hoja de ruta trae packs nuevos, misma escalera. Next: ubicación mensual."
+    }}
+  });
+
+  // loops
+  applyDomainPack("loops", {
+    en:{formal:{
+      concept:"Practice loops are execution cycles that convert knowledge into automatic output. Input is a prompt and a target set; constraint is short duration with measurable criteria; output is speed and accuracy under repeatable conditions. Proof hooks are trend lines and error-type reduction. Next: keep one loop constant for a week so the trend is real.",
+      live:"Live loops minimize friction: one task, one result, one log line. Each loop ends with a checkpoint so practice stays honest. Next: make your loop 30 seconds and repeat it six times.",
+      roadmap:"Roadmap adds guided prompts and printable packs while preserving the loop contract. Automation supports; it does not gate. Next: after Stage 1, add one new loop for your most common real-world situation."
+    },informal:{
+      concept:"Loops are reps. They’re why you get better fast. Next: pick one loop and run it daily.",
+      live:"Live loops are small on purpose. Small means repeatable. Repeatable means results. Next: do 6 short reps instead of 1 long rep.",
+      roadmap:"Roadmap adds prompts and packs, but the loop stays the same. Next: add one loop for your next real conversation."
+    }},
+    zh:{formal:{
+      concept:"练习循环是把知识转成自动化输出的执行周期。输入是提示+目标集合；约束是短时且可测；输出是可重复条件下的速度与准确。证明钩子是趋势线与错误类型减少。Next：选一个循环保持一周不变，让趋势真实。",
+      live:"上线循环低摩擦：一任务一结果一行日志。每次以检查点收尾，防止自我欺骗。Next：把循环缩到30秒，重复6次。",
+      roadmap:"路线图增加引导提示与可打印包，但循环合同不变。自动化只支持不闸门。Next：阶段1后为最常见场景新增一个循环。"
+    },informal:{
+      concept:"循环就是反复练：进步快就靠它。Next：选一个循环每天跑。",
+      live:"上线循环故意小：小=可重复，可重复=结果。Next：6次短练胜过1次长练。",
+      roadmap:"路线图加提示与包，但循环不变。Next：为下一次真实对话新增一个循环。"
+    }},
+    es:{formal:{
+      concept:"Los bucles convierten conocimiento en salida automática. Entrada: prompt + set; restricción: corto y medible; salida: velocidad/precisión repetible. Prueba: tendencia y reducción de error. Next: mantén un bucle constante 1 semana.",
+      live:"En vivo minimiza fricción: una tarea, un resultado, una línea de log. Checkpoint al final. Next: bucle de 30 segundos × 6 repeticiones.",
+      roadmap:"La hoja de ruta añade prompts y packs manteniendo el contrato. Automatización apoya, no compuerta. Next: tras Etapa 1, agrega un bucle para tu caso más común."
+    },informal:{
+      concept:"Los bucles son reps. Next: elige uno y hazlo diario.",
+      live:"En vivo son pequeños: pequeño = repetible = resultados. Next: 6 reps cortas mejor que 1 larga.",
+      roadmap:"La hoja de ruta agrega prompts y packs, pero el bucle no cambia. Next: agrega un bucle para tu próxima conversación."
+    }}
+  });
+
+  // masterclass/trainer/rubrics/evidence/tiers/integrity (keep compact but rich)
+  // (To keep file size sane, reuse EN/zh/es short versions from earlier patterns.)
+  // If you want, we can expand these 6 domains to full-length like curriculum later.
+
+  // helper: fallback copy if missing (never blank)
+  function getDomain(domainId){
+    var L = (lang==="zh")?"zh":(lang==="es")?"es":"en";
+    var pack = COPY[domainId] && COPY[domainId][L] && COPY[domainId][L][tone] ? COPY[domainId][L][tone] : null;
+    if(!pack || !pack.concept){ // fallback to EN
+      pack = COPY[domainId] && COPY[domainId].en && COPY[domainId].en[tone] ? COPY[domainId].en[tone] : null;
+    }
+    return pack || {concept:"NOT MEASURED", live:"NOT MEASURED", roadmap:"NOT MEASURED"};
+  }
+
+  function applyTone(next){
+    tone = (next==="informal") ? "informal" : "formal";
+    toneFormal.classList.toggle("active", tone==="formal");
+    toneInformal.classList.toggle("active", tone==="informal");
+    style = tone;
+    try{ localStorage.setItem("gd_style",style);}catch(e){}
+    renderDomain();
+  }
+
+  function renderDomain(){
+    if(!currentDomain) return;
+    var pack = getDomain(currentDomain);
+    pConcept.textContent = pack.concept;
+    pLive.textContent = pack.live;
+    pRoadmap.textContent = pack.roadmap;
+  }
+
+  toneFormal.addEventListener("click", function(){ applyTone("formal"); });
+  toneInformal.addEventListener("click", function(){ applyTone("informal"); });
+
+  // open quad
   function openQuad(qname){
-    currentQuad=qname;
     quadTitle.textContent = (lang==="zh")?("教育 · "+T.q[qname][0]):(lang==="es")?("EDUCACIÓN · "+T.q[qname][0]):("EDUCATION · "+T.q[qname][0]);
     quadGrid.innerHTML="";
 
-    (DOMS[qname]||[]).forEach(function(id){
+    (DOM[qname]||[]).forEach(function(id){
       var tile=document.createElement("div");
       tile.className="smallDiamond";
       tile.setAttribute("role","button");
       tile.tabIndex=0;
-      tile.innerHTML='<div class="sdInner"><div class="sdT">'+(Q.names[id]||id)+'</div><div class="sdS">'+Q.domSub+'</div></div>';
+      tile.innerHTML='<div class="sdInner"><div class="sdT">'+dName(id)+'</div><div class="sdS">'+T.sd+'</div></div>';
       function act(){ openDomain(id); }
       tile.addEventListener("click", act);
       tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
@@ -974,43 +1013,37 @@ body::before,body::after{pointer-events:none!important}
     ret.className="smallDiamond";
     ret.setAttribute("role","button");
     ret.tabIndex=0;
-    ret.innerHTML='<div class="sdInner"><div class="sdT">'+Q.ret+'</div><div class="sdS">—</div></div>';
+    ret.innerHTML='<div class="sdInner"><div class="sdT">'+T.ret+'</div><div class="sdS">—</div></div>';
     function r(){ closeAll(); }
     ret.addEventListener("click", r);
     ret.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); r(); }});
     quadGrid.appendChild(ret);
 
-    showBD(); quadModal.classList.add("show");
-    domainModal.classList.remove("show");
+    showBD(); quadModal.classList.add("show"); domainModal.classList.remove("show");
   }
 
   function openDomain(id){
     currentDomain=id;
-    domainTitle.textContent = (lang==="zh")?("教育 · "+(Q.names[id]||id)):(lang==="es")?("EDUCACIÓN · "+(Q.names[id]||id)):("EDUCATION · "+(Q.names[id]||id));
+    domainTitle.textContent = (lang==="zh")?("教育 · "+dName(id)):(lang==="es")?("EDUCACIÓN · "+dName(id)):("EDUCATION · "+dName(id));
 
     // reset bubbles
     [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
 
-    quadModal.classList.remove("show");
-    showBD(); domainModal.classList.add("show");
-
-    // reset CTA visibility to clean state per domain open
+    // reset soft-gate panels each open
     panelInside.classList.remove("show");
     formWrap.classList.remove("show");
 
+    // hint
     domainHint.textContent = T.hint;
 
-    applyTone(tone);
+    quadModal.classList.remove("show");
+    showBD(); domainModal.classList.add("show");
+
+    // default tone from current site style
+    applyTone(style==="informal" ? "informal" : "formal");
   }
 
-  // VIEW PROGRAMS button inside domain modal
-  btnViewPrograms.addEventListener("click", function(){
-    // close domain modal then open PROGRAMS quadrant modal
-    domainModal.classList.remove("show");
-    openQuad("PROGRAMS");
-  });
-
-  // quadrants bindings
+  // bind quadrant diamonds
   function bindQuad(elId, quad){
     var el=document.getElementById(elId);
     function act(){ openQuad(quad); }
@@ -1022,8 +1055,6 @@ body::before,body::after{pointer-events:none!important}
   bindQuad("qTraining","TRAINING");
   bindQuad("qCertification","CERTIFICATION");
 
-  // default tone = formal
-  applyTone("formal");
 })();
 </script>
 

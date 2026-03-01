@@ -1,9 +1,28 @@
 <!doctype html>
+<!-- TNT — /research/industry-context/index.html
+     RESEARCH · INDUSTRY CONTEXT (STRUCTURED CASE STUDIES)
+     GOALS (PER SEAN):
+       - More bubbles / more categories / more structure
+       - Less clutter (nested, collapsible sub-bubbles)
+       - Include ALL listed companies (no rankings, no comparisons marketing)
+       - LeafGuard can be highlighted (more detail), but keep neutral posture
+     CONSTRAINTS (LOCKED):
+       - Informational only · no monetization · no lead capture · no affiliates
+       - No logos · no product images · no implied partnerships
+       - Plain text references only · neutral academic tone
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+       - Single-open accordion (top-level). Sub-bubbles are tap-to-open.
+-->
+
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Industry Context · Engineering Benchmarks</title>
+<title>Research · Industry Context</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -16,19 +35,22 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:112px;
+
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
+
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.82);
-  --mut2:rgba(255,255,255,.72);
+  --mut2:rgba(255,255,255,.70);
 
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  /* Red/Black/Gold (subtle) */
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
   --goldSoft:rgba(201,162,74,.18);
-
-  --shadowA:0 28px 100px rgba(0,0,0,.65);
-  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* Top controls */
@@ -112,10 +134,16 @@ body::before,body::after{pointer-events:none!important}
 }
 .k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
 .h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
-.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.5px;position:relative}
-.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
+.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
+.note0{
+  margin-top:10px;
+  color:var(--mut2);
+  font-size:13.25px;
+  line-height:1.55;
+  position:relative;
+}
 
-/* Accordion */
+/* Accordion (top-level, single-open) */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.10);
@@ -164,19 +192,67 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
 }
 .card.open .body{display:block}
+
+/* Content typography (less clutter) */
 .body p{margin:0;color:rgba(255,255,255,.88);line-height:1.75;font-size:14.75px}
 .body p + p{margin-top:12px}
 .ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14px}
 .ul li{margin:7px 0}
-.mini{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
+
+/* Sub-bubbles (tap-to-open) */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
   border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+
+/* Highlight strip for LeafGuard (still neutral) */
+.leafGuard{
+  border-color:rgba(201,162,74,.22);
+  box-shadow:var(--shadowB), 0 0 14px rgba(201,162,74,.12);
+}
+.leafGuard h4{color:rgba(255,255,255,.94)}
+.leafGuardTag{
+  display:inline-flex;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(201,162,74,.22);
   background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.84);
-  font-size:13.5px;
-  line-height:1.55;
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  letter-spacing:.2px;
+  margin-left:8px;
 }
 
 /* Dock */
@@ -222,14 +298,8 @@ body::before,body::after{pointer-events:none!important}
   <section class="header" aria-label="Header">
     <p class="k" id="k0">RESEARCH · INDUSTRY CONTEXT</p>
     <h1 class="h1" id="h0">Engineering-Led Construction Benchmarks</h1>
-    <p class="p0" id="p0">
-      This research framework examines engineering-led construction systems across the residential building envelope.
-      The companies below are referenced as contextual examples of innovation-driven structural performance across HVAC,
-      roofing, insulation, fenestration, plumbing, and rainwater management systems.
-    </p>
-    <div class="note0" id="note0">
-      This page is informational only. It does not rank brands, compare products, or imply affiliation.
-    </div>
+    <p class="p0" id="p0"></p>
+    <div class="note0" id="note0"></div>
   </section>
 
   <div class="stack" id="stack"></div>
@@ -303,148 +373,207 @@ body::before,body::after{pointer-events:none!important}
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // ===== Content (case-study posture; no ranking; no endorsement) =====
-  // NOTE: LeafGuard timeline is stated conservatively and tied to publicly available company history.
+  // ===== Header copy =====
+  var HEAD={
+    en:{
+      p0:"This page extracts engineering innovation patterns across mature construction-system verticals (HVAC, roofing, insulation, fenestration, plumbing, rainwater management). It is research context only.",
+      note0:"No rankings. No product comparisons. No endorsement or affiliation implied. Plain-text references only."
+    },
+    zh:{
+      p0:"本页提取成熟建筑系统领域（暖通、屋面、保温、门窗、管道、雨水管理）中的工程创新模式。仅作研究背景参考。",
+      note0:"不排名、不对比、不背书、不暗示合作。仅纯文本引用。"
+    },
+    es:{
+      p0:"Esta página extrae patrones de innovación de ingeniería en verticales maduros (HVAC, techos, aislamiento, ventanas, plomería, gestión de lluvia). Solo contexto de investigación.",
+      note0:"Sin rankings, sin comparaciones, sin respaldo ni afiliación. Solo referencias en texto."
+    }
+  };
+  var H=HEAD[lang]||HEAD.en;
+  document.getElementById("p0").textContent=H.p0;
+  document.getElementById("note0").textContent=H.note0;
+
+  if(lang==="zh"){
+    document.getElementById("k0").textContent="研究 · 行业背景";
+    document.getElementById("h0").textContent="工程主导的施工基准（结构化案例）";
+  }else if(lang==="es"){
+    document.getElementById("k0").textContent="INVESTIGACIÓN · CONTEXTO INDUSTRIAL";
+    document.getElementById("h0").textContent="Referencias de construcción dirigidas por ingeniería (casos estructurados)";
+  }
+
+  // ===== Content model =====
+  // Top-level cards = categories (less clutter).
+  // Inside each card = sub-bubbles (more structure).
+  // All companies included across domains. LeafGuard gets deeper sub-bubbles (highlight).
   var SECTIONS=[
     {
-      c:"#c9a24a",
-      t:P("Why these references exist","为什么引用这些案例","Por qué existen estas referencias"),
-      s:P("This is a methodology-alignment page, not brand promotion.","这是方法论对齐页，不是品牌推广。","Es alineación metodológica, no promoción."),
-      p:[
-        P(
-          "This site treats innovation as a repeatable engineering pattern, not a marketing story. When a construction sub-system evolves (HVAC, roofing, windows, plumbing, rainwater routing), it typically follows a consistent cycle: a performance bottleneck is identified, a constrained redesign is introduced, deployment is standardized, and reliability becomes the new baseline.",
-          "本网站把“创新”当作可重复的工程模式，而不是营销故事。当某个建筑子系统演化（暖通、屋面、门窗、管道、雨水路由），通常遵循相似周期：识别性能瓶颈→提出有约束的再设计→标准化部署→把可靠性变成新基线。",
-          "Este sitio trata la innovación como un patrón de ingeniería repetible, no como un relato de marketing. Cuando un subsistema evoluciona (HVAC, techos, ventanas, plomería, ruteo de lluvia), suele seguir un ciclo: se identifica un cuello de botella, se introduce un rediseño bajo restricciones, se estandariza el despliegue y la confiabilidad se vuelve la nueva línea base."
-        ),
-        P(
-          "The companies listed below are referenced as contextual examples of engineering-led construction systems. The purpose is to anchor research language to real-world categories and to illustrate how innovation tends to stabilize through constraint, measurement, and deployment discipline.",
-          "下列公司仅作为“工程主导系统”的背景例子。目的：把研究语言锚定在现实类别上，并说明创新通常如何通过约束、测量与部署纪律走向稳定。",
-          "Las compañías abajo se citan como ejemplos contextuales de sistemas constructivos dirigidos por ingeniería. El propósito es anclar el lenguaje de investigación a categorías reales y mostrar cómo la innovación se estabiliza mediante restricciones, medición y disciplina de despliegue."
-        )
-      ]
-    },
-
-    {
-      c:"#ff2b2b",
-      t:P("Innovation pattern used in this research","本研究采用的创新模式","Patrón de innovación usado aquí"),
+      t:P("Innovation Pattern (used across the site)","创新模式（全站使用）","Patrón de innovación (usado en el sitio)"),
       s:P("Constraint → Test → Standardize → Scale (with containment).","约束→测试→标准化→扩张（含隔离）。","Restricción → Prueba → Estandarizar → Escalar (con contención)."),
-      p:[
-        P(
-          "This site uses a constraint-led lens: claims do not outrun evidence. In practical construction terms, the pattern is: (1) isolate a problem boundary, (2) introduce a bounded design change, (3) verify performance under load variance, (4) standardize installation and interfaces, (5) scale through repeatable deployment.",
-          "本网站采用“约束优先”的视角：主张不得超出证据。落到施工实践，这个模式是：①隔离问题边界；②引入有界设计变更；③在负载方差下验证性能；④标准化安装与接口；⑤通过可复制部署扩张。",
-          "Este sitio usa un lente de restricciones: las afirmaciones no deben superar la evidencia. En construcción práctica: (1) aislar el límite del problema, (2) introducir un cambio acotado, (3) verificar desempeño bajo variación de carga, (4) estandarizar instalación e interfaces, (5) escalar mediante despliegue repetible."
-        ),
-        P(
-          "In coherence terms, the work stays aligned when: definitions are stable, interfaces are explicit, and change control is versioned. Innovation becomes durable when it reduces drift instead of creating new ambiguity.",
-          "用一致性语言来说：定义稳定、接口明确、变更控制可追溯时，系统才能保持对齐。创新之所以耐久，是因为它减少漂移而不是制造新的模糊。",
-          "En términos de coherencia: el trabajo se mantiene alineado cuando las definiciones son estables, las interfaces explícitas y el control de cambios versionado. La innovación perdura cuando reduce deriva en vez de crear ambigüedad."
-        )
+      bubbles:[
+        {h:P("Concept","概念","Concepto"),
+         p:P(
+          "Innovation is treated as a repeatable engineering cycle, not narrative. The cycle is: isolate boundary → bounded redesign → verify under variance → standardize interfaces → scale with containment.",
+          "创新被视为可重复的工程循环，而非叙事：隔离边界→有界再设计→在方差下验证→标准化接口→带隔离地扩张。",
+          "La innovación se trata como ciclo repetible: aislar límites → rediseño acotado → verificar bajo variación → estandarizar interfaces → escalar con contención."
+         )},
+        {h:P("Methodology correlation","方法论关联","Correlación metodológica"),
+         p:P(
+          "Durable innovation reduces drift, improves containment, and increases measurement clarity. That maps directly to Laws (bounds) and Gauges (signals).",
+          "耐久创新减少漂移、提升隔离、增强测量清晰度。对应到法则（边界）与量规（信号）。",
+          "La innovación durable reduce deriva, mejora contención y aumenta claridad de medición. Se vincula a Leyes (límites) y Medidores (señales)."
+         )}
       ]
     },
 
     {
-      c:"#93c5fd",
-      t:P("Benchmark set by vertical domain","按垂直领域的基准集合","Conjunto de referencia por dominio"),
-      s:P("Plain-text domain mapping. No rankings. No comparisons.","纯文本领域映射。不排名。不对比。","Mapa por dominios. Sin rankings. Sin comparaciones."),
-      p:[
-        P(
-          "HVAC: Carrier; Trane; Lennox. Fenestration: Andersen; Pella. Roofing/Insulation: GAF; Owens Corning; CertainTeed. Plumbing: Kohler. Rainwater management: LeafGuard.",
-          "暖通：Carrier、Trane、Lennox。门窗：Andersen、Pella。屋面/保温：GAF、Owens Corning、CertainTeed。管道：Kohler。雨水管理：LeafGuard。",
-          "HVAC: Carrier; Trane; Lennox. Ventanas: Andersen; Pella. Techos/Aislamiento: GAF; Owens Corning; CertainTeed. Plomería: Kohler. Gestión de lluvia: LeafGuard."
-        )
-      ],
-      ul:[
-        P("Carrier — HVAC system innovation","Carrier — 暖通系统创新","Carrier — Innovación HVAC"),
-        P("Trane — Mechanical cooling systems","Trane — 机械制冷系统","Trane — Enfriamiento mecánico"),
-        P("Lennox — Furnace and climate systems","Lennox — 炉具与气候系统","Lennox — Hornos y clima"),
-        P("Andersen — Window engineering systems","Andersen — 门窗工程系统","Andersen — Sistemas de ventanas"),
-        P("Pella — Fenestration innovation","Pella — 门窗创新","Pella — Innovación fenestración"),
-        P("GAF — Roofing systems","GAF — 屋面系统","GAF — Sistemas de techado"),
-        P("Owens Corning — Insulation systems","Owens Corning — 保温系统","Owens Corning — Aislamiento"),
-        P("CertainTeed — Architectural roofing systems","CertainTeed — 建筑屋面系统","CertainTeed — Techos arquitectónicos"),
-        P("Kohler — Plumbing systems","Kohler — 管道系统","Kohler — Plomería"),
-        P("LeafGuard — Integrated rainwater management systems","LeafGuard — 集成雨水管理系统","LeafGuard — Gestión integrada de lluvia")
+      t:P("HVAC (Carrier / Trane / Lennox)","暖通（Carrier / Trane / Lennox）","HVAC (Carrier / Trane / Lennox)"),
+      s:P("Closed-loop climate control under thermodynamic constraints.","热力学约束下的闭环气候控制。","Control climático en bucle cerrado bajo restricciones termodinámicas."),
+      bubbles:[
+        {h:P("Domain scope","领域范围","Alcance del dominio"),
+         p:P(
+          "HVAC is a control problem: temperature, humidity, airflow, and energy throughput under variable external load. Engineering maturity appears as stable performance envelopes and testable thresholds.",
+          "暖通是控制问题：在外部负载变化下，温度、湿度、风量与能量吞吐的稳定控制。工程成熟表现为稳定性能包络与可测试阈值。",
+          "HVAC es un problema de control: temperatura, humedad, flujo de aire y energía bajo carga externa variable. La madurez se ve en envolventes estables y umbrales testeables."
+         )},
+        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
+         p:P(
+          "Typical cycle: identify inefficiency/failure mode → redesign component or control logic → verify across seasonal variance → standardize install/service interfaces → scale through repeatable deployment.",
+          "典型循环：识别低效/失效模式→重设计部件或控制逻辑→跨季节方差验证→标准化安装/维护接口→可复制部署扩张。",
+          "Ciclo típico: identificar ineficiencia/fallo → rediseñar componente o control → verificar por variación estacional → estandarizar interfaces → escalar con despliegue repetible."
+         )},
+        {h:P("Benchmarks referenced","引用基准","Referencias"),
+         p:P(
+          "Carrier — HVAC system innovation. Trane — mechanical cooling systems. Lennox — furnace and climate systems.",
+          "Carrier—暖通系统创新。Trane—机械制冷系统。Lennox—炉具与气候系统。",
+          "Carrier—innovación HVAC. Trane—enfriamiento mecánico. Lennox—hornos y clima."
+         )}
       ]
     },
 
     {
-      c:"#c9a24a",
-      t:P("Case study: LeafGuard (rainwater management as routing)","案例：LeafGuard（把雨水管理视作路由）","Caso: LeafGuard (gestión de lluvia como ruteo)"),
-      s:P("Engineering relevance: flow control, containment, installation standardization.","工程相关：流量控制、隔离、安装标准化。","Relevancia: control de flujo, contención, estandarización."),
-      p:[
-        P(
-          "This case study is included because rainwater management is a direct example of routing logic in the building envelope: collect → contain → direct → discharge, while protecting adjacent systems (fascia, soffit, foundation) from overflow and uncontrolled exposure.",
-          "之所以加入该案例，是因为雨水管理是建筑围护结构中“路由逻辑”的直接例子：收集→隔离→导向→排放，同时保护相邻系统（檐板、檐底、地基）免受溢流与不受控暴露。",
-          "Este caso se incluye porque la gestión de lluvia es un ejemplo directo de lógica de ruteo en el envolvente: recolectar → contener → dirigir → descargar, protegiendo sistemas adyacentes de desbordes y exposición no controlada."
-        ),
-        P(
-          "Public brand history indicates the LeafGuard® brand gutter was introduced as a proprietary one-piece, debris-shedding gutter system (1993, introduced by Englert, Inc.). The engineering pattern relevant here is not branding; it is the system choice: reduce joints, reduce failure modes, and standardize installation outputs.",
-          "公开的品牌历史显示 LeafGuard® 品牌雨槽在 1993 年以“一体式、排斥碎屑”的专有系统形式推出（由 Englert, Inc. 引入）。这里的工程重点不是品牌，而是系统选择：减少接缝、减少失效模式、标准化安装输出。",
-          "Fuentes públicas de la marca indican que LeafGuard® se introdujo como un sistema propietario de canalón de una sola pieza que desvía residuos (1993, introducido por Englert, Inc.). El patrón relevante no es el branding; es la elección del sistema: menos uniones, menos modos de fallo, instalación estandarizada."
-        ),
-        P(
-          "On-site formation and installation standardization are part of the deployment story for covered gutter systems. In research terms: controlled manufacturing/installation interfaces matter because they determine whether performance is repeatable across homes, crews, and regions.",
-          "一体式雨槽系统的部署故事通常包含现场成型与安装标准化。用研究语言说：受控的制造/安装接口很重要，因为它决定了性能能否在不同房屋、不同团队、不同地区之间保持可复现。",
-          "La formación e instalación estandarizadas en sitio suelen formar parte del despliegue. En términos de investigación: las interfaces de fabricación/instalación controladas determinan si el desempeño es repetible entre casas, cuadrillas y regiones."
-        )
-      ],
-      ul:[
-        P("Innovation posture: consolidate parts to reduce seam-driven failure modes.","创新姿态：通过部件整合减少“接缝驱动”的失效模式。","Postura: consolidar piezas para reducir fallos por uniones."),
-        P("System boundary: keep debris out; keep flow directed; keep overflow controlled.","系统边界：阻止碎屑进入；保持流向可控；控制溢流。","Límite: excluir residuos, dirigir flujo, controlar desbordes."),
-        P("Deployment discipline: repeatable installation interface is part of the engineered output.","部署纪律：可重复安装接口是工程输出的一部分。","Disciplina: interfaz de instalación repetible forma parte de la salida."),
-        P("Methodology correlation: routing + containment mirrors constraint-first reasoning used across the site.","方法论相关：路由+隔离对应本网站的约束优先推理。","Correlación: ruteo + contención refleja el enfoque de restricciones.")
-      ],
-      mini:P(
-        "Note: This page does not reproduce corporate marketing claims, does not rank products, and does not imply any partnership. References are contextual only.",
-        "注：本页不复刻企业营销主张、不做排名对比、不暗示任何合作关系。仅用于背景参考。",
-        "Nota: esta página no reproduce reclamos de marketing corporativo, no clasifica productos y no implica alianzas. Referencias solo contextuales."
-      )
-    },
-
-    {
-      c:"#ff2b2b",
-      t:P("Methodology tie-in: why innovation matters","方法论关联：为什么创新重要","Vínculo metodológico: por qué importa la innovación"),
-      s:P("Innovation is treated as structure under pressure, not narrative.","创新被视为压力下的结构，不是叙事。","Innovación como estructura bajo presión, no narrativa."),
-      p:[
-        P(
-          "Across domains, innovation becomes durable when it increases coherence (less drift), increases containment (smaller blast radius), and improves measurement (clearer signals). That is why this page exists inside Research: it provides context for engineering-led innovation patterns without turning the site into brand marketing.",
-          "跨领域来看，创新之所以耐久，是因为它提高一致性（减少漂移）、提高隔离能力（缩小爆炸半径）、改善测量（信号更清晰）。这就是本页属于研究区的原因：提供工程创新模式的背景，而不是把网站变成品牌营销。",
-          "En todos los dominios, la innovación perdura cuando aumenta coherencia (menos deriva), mejora contención (menor radio de impacto) y mejora medición (señales más claras). Por eso esta página vive en Research: aporta contexto sin convertir el sitio en marketing de marcas."
-        )
+      t:P("Fenestration (Andersen / Pella)","门窗（Andersen / Pella）","Fenestración (Andersen / Pella)"),
+      s:P("Boundary-layer engineering: seals, frames, glazing, moisture, and thermal transfer.","边界层工程：密封、框体、玻璃、湿气与热传递。","Ingeniería de capa límite: sellos, marcos, vidrio, humedad y transferencia térmica."),
+      bubbles:[
+        {h:P("Domain scope","领域范围","Alcance del dominio"),
+         p:P(
+          "Fenestration is an interface system between interior climate and exterior exposure. Performance depends on seal integrity, frame material stability, glazing architecture, and installation discipline.",
+          "门窗是室内气候与室外暴露之间的接口系统。性能取决于密封完整性、框体材料稳定性、玻璃结构与安装纪律。",
+          "La fenestración es una interfaz entre clima interior y exposición exterior. Depende de integridad de sellos, estabilidad de marco, arquitectura de vidrio y disciplina de instalación."
+         )},
+        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
+         p:P(
+          "Common cycle: leakage/thermal loss identified → seal/frame/glazing redesign → certification/testing under variance → standardized installation details → scaled adoption.",
+          "常见循环：发现渗漏/热损→密封/框体/玻璃再设计→在方差下认证测试→标准化安装细节→扩张采纳。",
+          "Ciclo común: detectar fugas/pérdida térmica → rediseño de sellos/marcos/vidrio → certificación/pruebas → instalación estandarizada → adopción."
+         )},
+        {h:P("Benchmarks referenced","引用基准","Referencias"),
+         p:P(
+          "Andersen — window engineering systems. Pella — fenestration innovation.",
+          "Andersen—门窗工程系统。Pella—门窗创新。",
+          "Andersen—sistemas de ventanas. Pella—innovación fenestración."
+         )}
       ]
     },
 
     {
-      c:"#a3a3a3",
-      t:P("Legal posture and disclaimer","法律立场与免责声明","Postura legal y aviso"),
-      s:P("Nominative reference only. No endorsement implied.","仅限指称性引用。不构成背书。","Referencia nominativa. Sin respaldo."),
-      p:[
-        P(
+      t:P("Roofing & Insulation (GAF / Owens Corning / CertainTeed)","屋面与保温（GAF / Owens Corning / CertainTeed）","Techos y aislamiento (GAF / Owens Corning / CertainTeed)"),
+      s:P("Layered systems: water shedding, durability, thermal resistance, and installation gating.","分层系统：排水、耐久、热阻与安装闸门。","Sistemas por capas: drenaje, durabilidad, resistencia térmica e instalación."),
+      bubbles:[
+        {h:P("Domain scope","领域范围","Alcance del dominio"),
+         p:P(
+          "Roofing and insulation behave as stacked layers under environmental stress. Engineering maturity shows up as defined assemblies, test standards, and repeatable installation paths that reduce cascade exposure to the underlying structure.",
+          "屋面与保温在环境压力下表现为分层叠加系统。工程成熟体现为定义清晰的系统装配、测试标准与可复跑安装路径，从而减少对下部结构的级联暴露。",
+          "Techos y aislamiento son capas apiladas bajo estrés ambiental. La madurez aparece en ensamblajes definidos, estándares de prueba e instalación repetible que reduce exposición en cascada a la estructura."
+         )},
+        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
+         p:P(
+          "Typical cycle: failure mode (leak/wind/impact/thermal loss) → material or assembly redesign → test under variance → codify installation details → scale with inspection discipline.",
+          "典型循环：失效模式（渗漏/风载/冲击/热损）→材料或装配再设计→方差下测试→固化安装细节→带检验纪律扩张。",
+          "Ciclo típico: modo de fallo (fuga/viento/impacto/pérdida térmica) → rediseño de material/ensamble → pruebas → codificar instalación → escalar con disciplina de inspección."
+         )},
+        {h:P("Benchmarks referenced","引用基准","Referencias"),
+         p:P(
+          "GAF — roofing systems. Owens Corning — insulation systems. CertainTeed — architectural roofing systems.",
+          "GAF—屋面系统。Owens Corning—保温系统。CertainTeed—建筑屋面系统。",
+          "GAF—techos. Owens Corning—aislamiento. CertainTeed—techos arquitectónicos."
+         )}
+      ]
+    },
+
+    {
+      t:P("Plumbing (Kohler)","管道（Kohler）","Plomería (Kohler)"),
+      s:P("Flow routing under pressure: reliability, interfaces, and lifecycle durability.","压力下的流体路由：可靠性、接口与生命周期耐久。","Ruteo de flujo bajo presión: confiabilidad, interfaces y durabilidad."),
+      bubbles:[
+        {h:P("Domain scope","领域范围","Alcance del dominio"),
+         p:P(
+          "Plumbing systems are reliability systems: flow, pressure, valves, and interfaces under repeated cycles. Engineering maturity shows up as predictable operation across pressure variance and consistent installation outcomes.",
+          "管道系统本质是可靠性系统：流量、压力、阀门与接口在重复循环中保持稳定。工程成熟体现为在压力方差下的可预测运行与一致安装输出。",
+          "La plomería es un sistema de confiabilidad: flujo, presión, válvulas e interfaces bajo ciclos repetidos. La madurez se ve en operación predecible bajo variación y resultados consistentes de instalación."
+         )},
+        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
+         p:P(
+          "Cycle: interface failure or performance bottleneck identified → valve/fixture/material redesign → verify under variance → standardize installation and maintenance → scale.",
+          "循环：识别接口失效或性能瓶颈→阀门/器具/材料再设计→方差下验证→标准化安装与维护→扩张。",
+          "Ciclo: detectar fallo de interfaz o cuello → rediseño de válvula/accesorio/material → verificar → estandarizar instalación/mantenimiento → escalar."
+         )},
+        {h:P("Benchmark referenced","引用基准","Referencia"),
+         p:P(
+          "Kohler — plumbing systems.",
+          "Kohler—管道系统。",
+          "Kohler—plomería."
+         )}
+      ]
+    },
+
+    {
+      t:P("Rainwater Management (LeafGuard)","雨水管理（LeafGuard）","Gestión de lluvia (LeafGuard)"),
+      s:P("Highlighted case study: routing + containment as an engineered envelope interface.","重点案例：将路由+隔离作为工程接口。","Caso destacado: ruteo + contención como interfaz de envolvente."),
+      leafguard:true,
+      bubbles:[
+        {h:P("Domain scope","领域范围","Alcance del dominio"),
+         p:P(
+          "Rainwater management is routing: collect → contain → direct → discharge, while protecting adjacent systems (fascia, soffit, foundation) from uncontrolled exposure.",
+          "雨水管理本质是路由：收集→隔离→导向→排放，同时保护相邻系统（檐板、檐底、地基）免受不受控暴露。",
+          "La gestión de lluvia es ruteo: recolectar → contener → dirigir → descargar, protegiendo sistemas adyacentes de exposición no controlada."
+         )},
+        {h:P("Innovation pattern (structural)","创新模式（结构）","Patrón de innovación (estructural)"),
+         p:P(
+          "Engineering focus is not branding; it is failure-mode reduction and repeatable outputs: reduce joints, reduce seam-driven leakage/clog pathways, and standardize installation interfaces.",
+          "工程重点不是品牌，而是降低失效模式并实现可复现输出：减少接缝、减少“接缝驱动”的渗漏/堵塞路径、标准化安装接口。",
+          "El foco no es branding: es reducir modos de fallo y obtener salidas repetibles: menos uniones, menos rutas de fuga/atasco, e interfaces de instalación estandarizadas."
+         )},
+        {h:P("Historical notes (publicly cited)","历史节点（公开常见表述）","Notas históricas (citadas públicamente)"),
+         p:P(
+          "Company and public brand histories commonly cite early origin narratives and later commercialization milestones. If you add specific milestones (e.g., founding families, patent themes, or equipment advances), keep wording as “reported/cited” unless you publish supporting sources.",
+          "企业与公开品牌历史常见叙述包含早期起源与后续商业化节点。若加入具体节点（如创始家族、专利主题、设备演进），建议用“公开常见表述/被引用”措辞，除非你在此页发布支撑来源。",
+          "Historias públicas de marca suelen citar orígenes y hitos de comercialización. Si agregas hitos específicos (familias fundadoras, temas de patentes o avances de equipos), usa lenguaje “citado/reportado” salvo que publiques fuentes aquí."
+         )},
+        {h:P("Methodology correlation","方法论关联","Correlación metodológica"),
+         p:P(
+          "Rainwater systems map cleanly to the site’s method: interface geometry determines performance; containment prevents cascade; standardization enables repeatability under scale.",
+          "雨水系统与本网站方法论高度对应：接口几何决定性能；隔离阻断级联；标准化使规模化下可复现。",
+          "Los sistemas de lluvia se alinean: la geometría de la interfaz determina desempeño; la contención evita cascada; la estandarización habilita repetibilidad al escalar."
+         )}
+      ]
+    },
+
+    {
+      t:P("Disclaimer (nominative fair use)","免责声明（指称性合理使用）","Aviso (uso nominativo)"),
+      s:P("Plain-text references only. No affiliation or endorsement implied.","仅纯文本引用。不构成隶属或背书。","Solo texto. Sin afiliación ni respaldo."),
+      bubbles:[
+        {h:P("Statement","声明","Declaración"),
+         p:P(
           "These companies are referenced for educational and contextual research purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
           "以上公司仅用于教育与研究背景参考。所有商标均归各自所有者所有。本网站不构成任何隶属或背书关系。",
           "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus respectivos propietarios. No se implica afiliación ni respaldo."
-        )
+         )}
       ]
     }
   ];
 
-  // Header language
-  if(lang==="zh"){
-    document.getElementById("k0").textContent="研究 · 行业背景";
-    document.getElementById("h0").textContent="工程主导的施工基准（案例研究）";
-    document.getElementById("p0").textContent="本研究框架审视住宅建筑围护结构中的工程主导系统。以下公司作为行业创新与结构性能的背景参考，涵盖暖通、屋面、保温、门窗、管道及雨水管理系统。";
-    document.getElementById("note0").textContent="本页仅用于信息与研究。无品牌排名、无产品对比、无隶属暗示。";
-  }else if(lang==="es"){
-    document.getElementById("k0").textContent="INVESTIGACIÓN · CONTEXTO INDUSTRIAL";
-    document.getElementById("h0").textContent="Referencias de construcción dirigidas por ingeniería (casos)";
-    document.getElementById("p0").textContent="Este marco examina sistemas constructivos dirigidos por ingeniería dentro del envolvente residencial. Las compañías se citan como referencias contextuales de innovación estructural en HVAC, techos, aislamiento, ventanas, plomería y gestión de lluvia.";
-    document.getElementById("note0").textContent="Solo informativo. Sin rankings, sin comparaciones, sin afiliación implícita.";
-  }
-
-  // Render accordion
+  // ===== Render top-level accordion + nested bubbles =====
   var stack=document.getElementById("stack");
 
-  function closeAll(){
+  function closeAllCards(){
     var cards=stack.querySelectorAll(".card");
     for(var i=0;i<cards.length;i++){
       cards[i].classList.remove("open");
@@ -453,10 +582,32 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
+  function makeBubble(h, p, extraClass){
+    var b=document.createElement("div");
+    b.className="bubble" + (extraClass?(" "+extraClass):"");
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var title=document.createElement("h4");
+    title.textContent=h;
+
+    var body=document.createElement("p");
+    body.textContent=p;
+
+    b.appendChild(title);
+    b.appendChild(body);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+    return b;
+  }
+
   function makeCard(sec, idx){
     var card=document.createElement("div");
     card.className="card";
-    card.style.setProperty("--c", sec.c);
 
     var head=document.createElement("div");
     head.className="head";
@@ -487,29 +638,31 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    (sec.p||[]).forEach(function(pp){
-      var p=document.createElement("p");
-      p.textContent=pick(pp);
-      body.appendChild(p);
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    (sec.bubbles||[]).forEach(function(bb){
+      var cls = sec.leafguard ? "leafGuard" : "";
+      var bubbleEl = makeBubble(
+        pick(bb.h) + (sec.leafguard && pick(bb.h).indexOf("Historical")===0 ? '<span class="leafGuardTag">HIGHLIGHT</span>' : ""),
+        pick(bb.p),
+        cls
+      );
+      // The title text must remain textContent; the tag is added separately for leafguard first bubble only.
+      if(sec.leafguard){
+        // Add a small tag to the first bubble title only (visual highlight, still neutral)
+        if(pick(bb.h).indexOf("Domain scope")===0 || pick(bb.h).indexOf("领域范围")===0 || pick(bb.h).indexOf("Alcance")===0){
+          var tag=document.createElement("span");
+          tag.className="leafGuardTag";
+          tag.textContent=(lang==="zh")?"重点":(lang==="es")?"DESTACADO":"HIGHLIGHT";
+          bubbleEl.querySelector("h4").appendChild(tag);
+        }
+      }
+
+      bubbles.appendChild(bubbleEl);
     });
 
-    if(sec.ul && sec.ul.length){
-      var ul=document.createElement("ul");
-      ul.className="ul";
-      sec.ul.forEach(function(liObj){
-        var li=document.createElement("li");
-        li.textContent=pick(liObj);
-        ul.appendChild(li);
-      });
-      body.appendChild(ul);
-    }
-
-    if(sec.mini){
-      var m=document.createElement("div");
-      m.className="mini";
-      m.textContent=pick(sec.mini);
-      body.appendChild(m);
-    }
+    body.appendChild(bubbles);
 
     function toggle(){
       var isOpen=card.classList.contains("open");
@@ -518,9 +671,11 @@ body::before,body::after{pointer-events:none!important}
         chev.textContent="▸";
         return;
       }
-      closeAll();
+      closeAllCards();
       card.classList.add("open");
       chev.textContent="▾";
+      // close all sub-bubbles when opening card (less clutter)
+      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
     }
 
     head.addEventListener("click", toggle, {passive:true});

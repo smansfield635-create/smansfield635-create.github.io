@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Industry Context · Engineering Benchmarks</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:110px;
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.84);
+  --mutSoft:rgba(255,255,255,.72);
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+}
+
+/* Layout */
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 30px);
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+  position:relative;
+  z-index:10;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:26px;
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowA);
+}
+
+.header h1{
+  margin:0 0 16px;
+  font-size:28px;
+  font-weight:980;
+  letter-spacing:.4px;
+}
+
+.header p{
+  margin:0;
+  line-height:1.75;
+  font-size:15px;
+  color:var(--mut);
+}
+
+/* Section blocks */
+.section{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:26px;
+  background:linear-gradient(145deg, rgba(12,18,28,.88), rgba(6,10,16,.95));
+  box-shadow:var(--shadowA);
+}
+
+.section h2{
+  margin:0 0 14px;
+  font-size:18px;
+  font-weight:950;
+}
+
+.section p{
+  margin:0 0 16px;
+  line-height:1.75;
+  font-size:15px;
+  color:var(--mut);
+}
+
+.section ul{
+  margin:0;
+  padding-left:22px;
+  line-height:1.9;
+  font-size:15px;
+  color:var(--mutSoft);
+}
+
+/* Clarification block */
+.notice{
+  border:1px solid var(--stroke);
+  border-radius:20px;
+  padding:18px;
+  background:rgba(0,0,0,.14);
+  font-size:14px;
+  line-height:1.7;
+  color:var(--mut);
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;
+  border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.dock .btn{
+  width:100%;
+  padding:10px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <h1 id="title">Industry Context · Engineering Benchmarks</h1>
+    <p id="intro">
+      This research framework examines engineering-led construction systems across the residential building envelope.
+      The following companies are referenced as contextual examples of innovation-driven structural performance
+      across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management systems.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2 id="sectionTitle">Industry Reference Examples</h2>
+    <ul id="companyList">
+      <li>Carrier — HVAC system innovation</li>
+      <li>Trane — Mechanical cooling systems</li>
+      <li>Lennox — Furnace and climate systems</li>
+      <li>Andersen — Window engineering systems</li>
+      <li>Pella — Fenestration innovation</li>
+      <li>GAF — Roofing systems</li>
+      <li>Owens Corning — Insulation systems</li>
+      <li>CertainTeed — Architectural roofing systems</li>
+      <li>Kohler — Plumbing systems</li>
+      <li>LeafGuard — Integrated rainwater management systems</li>
+    </ul>
+  </div>
+
+  <div class="notice" id="noticeText">
+    These companies are referenced for educational and contextual research purposes only.
+    All trademarks are the property of their respective owners.
+    No affiliation or endorsement is implied.
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"informal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
+
+  localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
+  localStorage.setItem("gd_time",time);
+  localStorage.setItem("gd_depth",depth);
+
+  function q(){
+    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  }
+
+  // Wire dock links with state carry
+  document.querySelectorAll(".dock a").forEach(function(a){
+    var base=a.getAttribute("href");
+    a.setAttribute("href",base+q());
+  });
+
+  // Trilingual text
+  if(lang==="zh"){
+    document.getElementById("title").textContent="行业背景 · 工程基准";
+    document.getElementById("intro").textContent=
+      "本研究框架审视住宅建筑围护结构中的工程主导系统。以下公司作为行业创新与结构性能的背景参考，涵盖暖通、屋面、保温、门窗、管道及雨水管理系统。";
+    document.getElementById("sectionTitle").textContent="行业参考示例";
+    document.getElementById("noticeText").textContent=
+      "以上公司仅作为教育与研究背景参考。所有商标均归各自所有者所有。本网站不构成任何隶属或背书关系。";
+  }
+
+  if(lang==="es"){
+    document.getElementById("title").textContent="Contexto Industrial · Referencias de Ingeniería";
+    document.getElementById("intro").textContent=
+      "Este marco de investigación examina sistemas constructivos dirigidos por ingeniería dentro del envolvente residencial. Las siguientes compañías se citan como referencias contextuales de innovación estructural en HVAC, techado, aislamiento, fenestración, plomería y gestión de aguas pluviales.";
+    document.getElementById("sectionTitle").textContent="Ejemplos de Referencia Industrial";
+    document.getElementById("noticeText").textContent=
+      "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus respectivos propietarios. No se implica afiliación ni respaldo.";
+  }
+
+})();
+</script>
+
+</body>
+</html>

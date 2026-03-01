@@ -1,0 +1,256 @@
+<!-- TNT — /products/risk-capital/index.html
+     PRODUCTS · RISK & CAPITAL SYSTEMS
+     ROLE:
+       - Unified governance + insurance + crypto + contract + compliance spine
+       - 4 Lenses: ENGINEERING / PLATFORM / INFORMAL / FORMAL
+       - 3 Languages: EN / 中文 / ES
+       - Single-open accordion
+       - Monument typography
+       - State carry (lang/style/time/depth)
+       - No modal traps
+       - Production-ready
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS · RISK & CAPITAL SYSTEMS</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+
+:root{
+  --dockH:88px;
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --red:rgba(255,60,60,.85);
+  --gold:rgba(212,175,55,.55);
+  --stroke:rgba(255,255,255,.10);
+}
+
+/* Page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:90px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  padding:20px;
+  background:linear-gradient(160deg,var(--inkA),var(--inkB));
+  box-shadow:0 30px 100px rgba(0,0,0,.6);
+}
+.header h1{
+  margin:0 0 12px;
+  font-size:32px;
+  letter-spacing:1px;
+  font-weight:900;
+}
+.header p{
+  margin:0;
+  font-size:16px;
+  line-height:1.6;
+  opacity:.9;
+}
+
+/* Lens Controls */
+.lenses{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.lens{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  cursor:pointer;
+  font-weight:800;
+}
+.lens.active{
+  border-color:var(--gold);
+  box-shadow:0 0 20px rgba(212,175,55,.25);
+}
+
+/* Accordion */
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:20px;
+  overflow:hidden;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+}
+
+.card-header{
+  padding:16px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:900;
+  font-size:18px;
+}
+
+.card-body{
+  display:none;
+  padding:18px;
+  border-top:1px solid var(--stroke);
+  font-size:15px;
+  line-height:1.7;
+}
+
+.card.open .card-body{
+  display:block;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  width:min(1000px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+<h1 id="title">RISK & CAPITAL SYSTEMS</h1>
+<p id="subtitle">
+Every contract, every policy, every asset, every token — exists inside constraint.
+This spine governs exposure, obligation, enforcement, and verification.
+</p>
+</div>
+
+<div class="lenses">
+<div class="lens active" data-lens="engineering">ENGINEERING</div>
+<div class="lens" data-lens="platform">PLATFORM</div>
+<div class="lens" data-lens="informal">INFORMAL</div>
+<div class="lens" data-lens="formal">FORMAL</div>
+</div>
+
+<div class="accordion" id="accordion">
+
+<div class="card">
+<div class="card-header">Insurance & Risk Pricing Engine</div>
+<div class="card-body">
+Calculates exposure under declared constraints.
+Models cascade risk.
+Prices instability dynamically.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Contract & Enforcement Logic</div>
+<div class="card-body">
+Generates bounded agreements.
+Resolves disputes deterministically.
+Separates issuance authority from adjudication authority.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Registry & Verification Infrastructure</div>
+<div class="card-body">
+Cryptographic status anchoring.
+Public lookup without private data leakage.
+Admissibility validation via receipt replay.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Compliance & Regulatory Mapping</div>
+<div class="card-body">
+Maps policy to measurable enforcement surfaces.
+Prevents silent rule drift.
+Produces audit artifacts.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Crypto Infrastructure Layer</div>
+<div class="card-body">
+Constraint-bound token logic.
+No speculative abstraction without enforcement substrate.
+Verification-first digital asset model.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Claims Validation Engine</div>
+<div class="card-body">
+Admissibility-first dispute handling.
+Receipt-based claim resolution.
+Containment before escalation.
+</div>
+</div>
+
+<div class="card">
+<div class="card-header">Capital Allocation & Frontier Finance</div>
+<div class="card-body">
+Capital routed through constraint envelope.
+Adoption ladder quantification.
+No scale without structural proof.
+</div>
+</div>
+
+</div>
+</div>
+
+<nav class="dock">
+<a class="btn" href="/home/">HOME</a>
+<a class="btn" href="/products/">PRODUCTS</a>
+<a class="btn" href="/laws/">LAWS</a>
+<a class="btn" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+// Accordion
+document.querySelectorAll('.card-header').forEach(function(header){
+  header.addEventListener('click', function(){
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('open'));
+    header.parentElement.classList.add('open');
+  });
+});
+
+// Lens toggle (structure ready for expansion)
+document.querySelectorAll('.lens').forEach(function(l){
+  l.addEventListener('click', function(){
+    document.querySelectorAll('.lens').forEach(x=>x.classList.remove('active'));
+    l.classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>

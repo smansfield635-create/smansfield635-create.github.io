@@ -1,20 +1,10 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · DENSE ORIENTATION (3 LANG: EN/中文/ES) · BIG PRINT · NO LENSES
-     PURPOSE:
-       - Full explanation page that orients the user before Compass / Products / Explore.
-       - TED-talk energy (but still bounded: claim/support discipline).
-       - No modals. No overlays. No inline onclick.
-     TOP ROUTES:
-       - ROOT   → /            (or /index.html if you prefer; kept as / for canonical root)
-       - DOOR   → /door/
-       - COMPASS→ /index.html
-       - ENTER  → /home/
-     STATE:
-       - URL + LS: lang/style/time/depth via gd_lang/gd_style/gd_time/gd_depth
-       - Every jump carries full state
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Does NOT style html/body background (ui.css owns field)
+     PRELUDE · STRUCTURAL DECLARATION
+     INTENT:
+       - Monumental declaration.
+       - Strong problem articulation.
+       - English / 中文 / Español.
+       - No lenses yet.
 -->
 
 <!doctype html>
@@ -22,7 +12,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE · Diamond Gate Bridge</title>
+<title>PRELUDE · Structural Declaration</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -30,570 +20,148 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:96px;
-
-  /* flow-with-geometry: gold + opal (no washed-out blue) */
-  --goldA:rgba(212,175,55,.22);
-  --goldB:rgba(212,175,55,.35);
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalC:rgba(255,80,80,.08);
-
-  /* BIG PRINT */
-  --fs-k:13px;
-  --fs-h1:44px;
-  --fs-h2:28px;
-  --fs-h3:20px;
-  --fs-body:19px;
-  --lh-body:1.9;
-
-  --maxW:1040px;
+  --h1:44px;
+  --h2:24px;
+  --p:18px;
 }
 
-/* TOP BAR */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;gap:12px;
-  z-index:240;
-  pointer-events:none;
+  position:fixed;top:16px;left:16px;right:16px;
+  display:flex;justify-content:space-between;
+  z-index:200;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-  pointer-events:auto;
-}
-.top .btn{white-space:nowrap}
 
-/* PAGE */
-.page{
-  width:min(var(--maxW),94vw);
+.wrap{
+  width:min(980px,92vw);
   margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 28px);
+  padding:120px 0 80px;
   display:flex;
   flex-direction:column;
-  gap:26px;
-  position:relative;
-  z-index:10;
+  gap:40px;
 }
 
-/* SECTION BLOCK */
-.section{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:28px;
-  padding:44px 40px 46px;
+.hero{
+  border-radius:32px;
+  border:1px solid rgba(255,255,255,.14);
+  padding:36px;
   background:
-    radial-gradient(circle at 18% 22%, var(--goldA), transparent 60%),
-    radial-gradient(circle at 82% 28%, var(--opalA), transparent 64%),
-    radial-gradient(circle at 58% 110%, var(--opalC), transparent 62%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 28px 100px rgba(0,0,0,.65);
-  position:relative;
-  overflow:hidden;
-}
-.section::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldB) 50%, transparent 100%);
-  opacity:.6;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.section::after{
-  content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:22%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.12), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.7;
-  pointer-events:none;
+    radial-gradient(circle at 20% 20%, rgba(210,190,255,.14), transparent 70%),
+    radial-gradient(circle at 80% 60%, rgba(255,70,70,.12), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.18));
+  box-shadow:0 50px 180px rgba(0,0,0,.6);
 }
 
-/* TYPE */
-.k{
-  font-size:var(--fs-k);
-  letter-spacing:5px;
-  text-transform:uppercase;
-  opacity:.75;
-  margin:0 0 16px;
-}
-.h1{
+.hero h1{
+  margin:0;
+  font-size:var(--h1);
   font-weight:950;
-  font-size:var(--fs-h1);
-  line-height:1.08;
-  margin:0 0 22px;
   letter-spacing:1px;
 }
-.h2{
-  font-weight:900;
-  font-size:var(--fs-h2);
-  margin:0 0 18px;
-  letter-spacing:.2px;
-}
-.h3{
-  font-weight:900;
-  font-size:var(--fs-h3);
-  margin:0 0 16px;
-  opacity:.96;
-  letter-spacing:.1px;
-}
-.p{
-  font-size:var(--fs-body);
-  line-height:var(--lh-body);
-  margin:0 0 20px;
-  color:rgba(255,255,255,.92);
-  max-width:92ch;
-}
-.p:last-child{margin-bottom:0}
 
-.divider{
-  height:1px;
-  background:linear-gradient(90deg, transparent, rgba(212,175,55,.35), transparent);
-  margin:26px 0;
-  opacity:.75;
+.hero p{
+  margin:20px 0 0;
+  font-size:var(--p);
+  line-height:1.8;
 }
 
-/* CALLOUT */
-.call{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(0,0,0,.18);
-  padding:16px 16px 14px;
-  margin-top:10px;
-}
-.call .p{margin:0}
-
-/* ACTIONS */
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  margin-top:18px;
-}
-.actions .btn{
-  border-radius:999px;
-  padding:12px 16px;
-  white-space:nowrap;
+.block h2{
+  font-size:var(--h2);
+  margin:0 0 12px;
 }
 
-/* FOOTER DOCK */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
-}
-.dock .btn{width:100%;padding:12px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:112px;--fs-h1:36px;--fs-h2:24px;--fs-body:17px}
-  .section{padding:36px 26px 38px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+.block p{
+  font-size:var(--p);
+  line-height:1.8;
+  margin:0;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnRoot" href="/">ROOT</a>
-    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+<div class="top">
+  <a class="btn" href="/index.html">INDEX</a>
+  <div>
+    <button class="btn" id="btnEN">EN</button>
+    <button class="btn" id="btnZH">中文</button>
+    <button class="btn" id="btnES">ES</button>
   </div>
 </div>
 
-<div class="page">
+<div class="wrap">
 
-  <!-- SECTION 1 -->
-  <section class="section" aria-label="Prelude intro">
-    <p class="k" id="k1">PRELUDE</p>
-    <h1 class="h1" id="h1">A MAP BEFORE YOU MOVE</h1>
+  <div class="hero">
+    <h1 id="h1">THE DRIFT PROBLEM</h1>
+    <p id="p1">
+      Systems do not collapse from lack of ambition.
+      They collapse from unmanaged correlation.
+      From semantic drift.
+      From invisible dependency.
+      From claims that outrun constraint.
+    </p>
+  </div>
 
-    <p class="p" id="p1a"></p>
-    <p class="p" id="p1b"></p>
+  <div class="block">
+    <h2 id="h2">THE DECLARATION</h2>
+    <p id="p2">
+      We map structure to finite measure.
+      We define admissibility.
+      We separate story from proof.
+      We separate engineering from platform.
+      We enforce calibration authority.
+      We treat change as epoch, not patch.
+    </p>
+  </div>
 
-    <div class="call">
-      <p class="p" id="p1c"></p>
-    </div>
-
-    <div class="actions">
-      <a class="btn" id="goCompass1" href="/index.html">OPEN: COMPASS</a>
-      <a class="btn" id="goEnter1" href="/home/">OPEN: ENTER</a>
-    </div>
-  </section>
-
-  <!-- SECTION 2 -->
-  <section class="section" aria-label="Problem statement">
-    <p class="k" id="k2">THE PROBLEM</p>
-    <h2 class="h2" id="h2">WHY MOST SYSTEMS DRIFT</h2>
-
-    <p class="p" id="p2a"></p>
-    <p class="p" id="p2b"></p>
-    <p class="p" id="p2c"></p>
-
-    <div class="divider"></div>
-
-    <h3 class="h3" id="h2x">WHAT “DRIFT” LOOKS LIKE</h3>
-    <p class="p" id="p2d"></p>
-    <p class="p" id="p2e"></p>
-
-    <div class="actions">
-      <a class="btn" id="goLaws2" href="/laws/">OPEN: LAWS</a>
-      <a class="btn" id="goProducts2" href="/products/">OPEN: PRODUCTS</a>
-    </div>
-  </section>
-
-  <!-- SECTION 3 -->
-  <section class="section" aria-label="Bridge method">
-    <p class="k" id="k3">THE METHOD</p>
-    <h2 class="h2" id="h3">CLAIM + SUPPORT (BOUND)</h2>
-
-    <p class="p" id="p3a"></p>
-    <p class="p" id="p3b"></p>
-    <p class="p" id="p3c"></p>
-
-    <div class="divider"></div>
-
-    <h3 class="h3" id="h3x">THE SIMPLE RULE</h3>
-    <p class="p" id="p3d"></p>
-
-    <div class="actions">
-      <a class="btn" id="goCompass3" href="/index.html">OPEN: COMPASS</a>
-      <a class="btn" id="goGauges3" href="/gauges/">OPEN: GAUGES</a>
-    </div>
-  </section>
-
-  <!-- SECTION 4 -->
-  <section class="section" aria-label="How to use this site">
-    <p class="k" id="k4">HOW TO USE THIS SITE</p>
-    <h2 class="h2" id="h4">FOUR ROUTES — ONE PURPOSE</h2>
-
-    <p class="p" id="p4a"></p>
-    <p class="p" id="p4b"></p>
-
-    <div class="divider"></div>
-
-    <h3 class="h3" id="h4x">WHEN TO CLICK WHAT</h3>
-    <p class="p" id="p4c"></p>
-    <p class="p" id="p4d"></p>
-
-    <div class="actions">
-      <a class="btn" id="goDoor4" href="/door/">OPEN: DOOR</a>
-      <a class="btn" id="goExplore4" href="/explore/">OPEN: EXPLORE</a>
-    </div>
-  </section>
-
-  <!-- SECTION 5 -->
-  <section class="section" aria-label="Safety and boundaries">
-    <p class="k" id="k5">BOUNDARIES</p>
-    <h2 class="h2" id="h5">BIG IDEAS — STILL BOUNDED</h2>
-
-    <p class="p" id="p5a"></p>
-    <p class="p" id="p5b"></p>
-    <p class="p" id="p5c"></p>
-
-    <div class="actions">
-      <a class="btn" id="goProducts5" href="/products/">OPEN: PRODUCTS</a>
-      <a class="btn" id="goVision5" href="/explore/frontier/vision/">OPEN: VISION</a>
-    </div>
-  </section>
+  <div class="block">
+    <h2 id="h3">THE PROMISE</h2>
+    <p id="p3">
+      If a measure exists,
+      it can be found here.
+      If drift exists,
+      it can be bounded.
+      If scale exists,
+      it can be stabilized.
+    </p>
+  </div>
 
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
-  <a class="btn" id="dockCompass" href="/index.html">COMPASS</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-</nav>
 
 <script>
 (function(){
-  // ===== canonical state =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  // ===== wire routes with state =====
-  function wire(id, path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
-  wire("btnRoot","/");
-  wire("btnDoor","/door/");
-  wire("goCompass1","/index.html");
-  wire("goEnter1","/home/");
-
-  wire("goLaws2","/laws/");
-  wire("goProducts2","/products/");
-
-  wire("goCompass3","/index.html");
-  wire("goGauges3","/gauges/");
-
-  wire("goDoor4","/door/");
-  wire("goExplore4","/explore/");
-
-  wire("goProducts5","/products/");
-  wire("goVision5","/explore/frontier/vision/");
-
-  wire("dockDoor","/door/");
-  wire("dockCompass","/index.html");
-  wire("dockProducts","/products/");
-  wire("dockExplore","/explore/");
-
-  // ===== language toggle (reload same path) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // ===== dense copy (3 languages) =====
-  var COPY = {
-    en:{
-      h1:"A MAP BEFORE YOU MOVE",
-      p1a:"You’re here because something needs an answer. A decision. A direction. A stable way to move forward without guessing.",
-      p1b:"Most people don’t fail because they’re dumb. They fail because the system is invisible: hidden dependencies, shifting definitions, and ‘solutions’ that feel good but don’t survive pressure.",
-      p1c:"This Prelude is the flashlight. It names the problem, shows the structure, and routes you to the right surface so you don’t waste time.",
-      h2:"WHY MOST SYSTEMS DRIFT",
-      p2a:"When a system grows, tiny errors multiply. A definition changes quietly. A team assumes two words mean the same thing. A page routes to the wrong place. A metric gets tuned without saying so.",
-      p2b:"That’s drift: meaning moves, and the system keeps running anyway. At small scale it’s annoying. At large scale it’s expensive. At massive scale it becomes collapse.",
-      p2c:"This site treats drift like a real engineering problem: map it, measure it, constrain it, and refuse to upgrade claims without support.",
-      h2x:"WHAT “DRIFT” LOOKS LIKE",
-      p2d:"A claim gets bigger while evidence stays the same. Routes collapse into catch-all pages. Rules change but results pretend to be comparable. Teams argue intent instead of checking receipts.",
-      p2e:"The outcome is predictable: confusion rises, decisions slow down, and error becomes correlated across the whole network.",
-      h3:"CLAIM + SUPPORT (BOUND)",
-      p3a:"Every serious system has two sides: what you say (claim) and what backs it (support).",
-      p3b:"A claim can be a problem (“we need a solution”) or an offer (“we have a solution”). Support can be help (“services”) or proof (“receipts + verification”).",
-      p3c:"This interface separates those paths on purpose, so your mind doesn’t blend persuasion with evidence.",
-      h3x:"THE SIMPLE RULE",
-      p3d:"If it can’t be checked, it can’t be stabilized. If it can’t be stabilized, it shouldn’t be scaled.",
-      h4:"FOUR ROUTES — ONE PURPOSE",
-      p4a:"DOOR is the entry point. COMPASS is traversal (N/E/S/W). PRODUCTS are deployable tools. EXPLORE is bounded frontier vision.",
-      p4b:"Prelude exists so you don’t wander. It gives you the mental model in one place.",
-      h4x:"WHEN TO CLICK WHAT",
-      p4c:"If you want orientation: DOOR. If you want structure-first traversal: COMPASS. If you want something you can use today: PRODUCTS.",
-      p4d:"If you want future infrastructure vision (still bounded): EXPLORE → FRONTIER → VISION.",
-      h5:"BIG IDEAS — STILL BOUNDED",
-      p5a:"Yes, we talk about large-scale systems: waste-to-energy, water loops, urban resource routing, and closed-loop habitats.",
-      p5b:"But the rule does not change: no claim gets upgraded without support. No ‘net-positive’ language where it isn’t earned. No silent changes.",
-      p5c:"That’s how innovation stays exciting without becoming delusion: the story is allowed to be big, while the posture stays strict."
-    },
-    zh:{
-      h1:"先有地图，再开始移动",
-      p1a:"你来到这里，是因为某个东西需要答案：一个决策、一个方向、一个能稳定前进的方法，而不是靠猜。",
-      p1b:"多数人失败不是因为不聪明，而是因为系统不可见：隐藏依赖、定义漂移、以及看起来舒服但经不起压力的“解决方案”。",
-      p1c:"这个 Prelude 就是手电筒：把问题说清楚，把结构摆出来，并把你送到正确的页面，避免浪费时间。",
-      h2:"为什么系统会漂移",
-      p2a:"系统一增长，小错误会变成乘法。定义悄悄变了。团队默认两个词等价。页面跳错了。指标被调了却没人说。",
-      p2b:"这就是漂移：含义在动，但系统还在跑。小规模是烦，大规模是贵，超大规模就会坍塌。",
-      p2c:"本网站把漂移当作真实工程问题：先映射、再测量、再加约束，并拒绝在缺支撑时升级主张。",
-      h2x:"漂移长什么样",
-      p2d:"主张变大但证据没变。路由坍缩到“总汇页”。规则变了但结果假装可比。人们争论意图而不是核对收据。",
-      p2e:"结果可预期：困惑上升、决策变慢、错误在网络里相关扩散。",
-      h3:"主张 + 支撑（有界）",
-      p3a:"每个严肃系统都有两面：你说什么（主张）以及靠什么支撑（支撑）。",
-      p3b:"主张可以是问题（需要解决）或提供（我有解决方案）。支撑可以是帮助（服务）或证明（收据+核查）。",
-      p3c:"界面刻意把路径分开，避免把说服和证据混在一起。",
-      h3x:"最简单的规则",
-      p3d:"不可核查，就不可稳定；不可稳定，就不该规模化。",
-      h4:"四条路 — 一个目的",
-      p4a:"DOOR 是入口。COMPASS 是遍历（N/E/S/W）。PRODUCTS 是可部署工具。EXPLORE 是有界的前沿愿景。",
-      p4b:"Prelude 的作用是防止乱逛：一次给你完整心智模型。",
-      h4x:"什么时候点哪个",
-      p4c:"想先导览：DOOR。想结构化遍历：COMPASS。想马上用：PRODUCTS。",
-      p4d:"想看未来基础设施愿景（仍有界）：EXPLORE → FRONTIER → VISION。",
-      h5:"大愿景 — 仍然有界",
-      p5a:"是的，我们讨论大系统：废弃物到能源、水循环、城市资源路由、闭环栖息地。",
-      p5b:"但规则不变：没有支撑不升级主张；不该用的“净增益”措辞不出现；不允许静默修改。",
-      p5c:"这就是让创新既兴奋又不自嗨的方法：故事可以大，姿态必须严。"
-    },
-    es:{
-      h1:"UN MAPA ANTES DE MOVERTE",
-      p1a:"Estás aquí porque algo necesita una respuesta: una decisión, una dirección, una forma estable de avanzar sin adivinar.",
-      p1b:"La mayoría no falla por falta de inteligencia. Falla porque el sistema es invisible: dependencias ocultas, definiciones que se mueven, y ‘soluciones’ que se sienten bien pero no sobreviven presión.",
-      p1c:"Este Prelude es la linterna: nombra el problema, muestra la estructura y te enruta a la superficie correcta para no perder tiempo.",
-      h2:"POR QUÉ LOS SISTEMAS DERIVAN",
-      p2a:"Cuando un sistema crece, errores pequeños se multiplican. Una definición cambia en silencio. Un equipo asume que dos palabras significan lo mismo. Una ruta cae al destino equivocado. Un indicador se ajusta sin decirlo.",
-      p2b:"Eso es deriva: el significado se mueve y el sistema sigue corriendo. A pequeña escala molesta. A gran escala cuesta. A escala masiva colapsa.",
-      p2c:"Este sitio trata la deriva como problema de ingeniería: mapear, medir, acotar, y rechazar upgrades de afirmaciones sin soporte.",
-      h2x:"CÓMO SE VE LA DERIVA",
-      p2d:"La afirmación crece y la evidencia no. Las rutas colapsan a páginas ‘universales’. Cambian reglas pero se finge comparabilidad. Se discute intención en vez de revisar recibos.",
-      p2e:"Resultado: sube la confusión, bajan las decisiones y el error se correlaciona en la red.",
-      h3:"AFIRMACIÓN + SOPORTE (ACOTADO)",
-      p3a:"Todo sistema serio tiene dos lados: lo que dices (afirmación) y lo que lo respalda (soporte).",
-      p3b:"Afirmación puede ser problema (“necesitamos solución”) u oferta (“tenemos solución”). Soporte puede ser ayuda (servicios) o prueba (recibos + verificación).",
-      p3c:"La interfaz separa estos caminos a propósito para no mezclar persuasión con evidencia.",
-      h3x:"LA REGLA SIMPLE",
-      p3d:"Si no se puede verificar, no se puede estabilizar. Si no se puede estabilizar, no se debe escalar.",
-      h4:"CUATRO RUTAS — UN PROPÓSITO",
-      p4a:"DOOR es entrada. COMPASS es recorrido (N/E/S/O). PRODUCTS son herramientas desplegables. EXPLORE es visión de frontera acotada.",
-      p4b:"Prelude existe para evitar deambular: te da el modelo mental en un solo lugar.",
-      h4x:"CUÁNDO TOCAR QUÉ",
-      p4c:"Orientación: DOOR. Recorrido estructurado: COMPASS. Algo usable hoy: PRODUCTS.",
-      p4d:"Visión de infraestructura futura (acotada): EXPLORE → FRONTIER → VISION.",
-      h5:"IDEAS GRANDES — AÚN ACOTADAS",
-      p5a:"Sí, hablamos de sistemas grandes: residuos-a-energía, ciclos de agua, ruteo urbano de recursos, hábitats cerrados.",
-      p5b:"Pero la regla no cambia: sin soporte no hay upgrade. Sin lenguaje de ‘ganancia neta’ donde no corresponde. Sin cambios silenciosos.",
-      p5c:"Así la innovación se mantiene emocionante sin volverse delirio: la historia puede ser grande y la postura sigue estricta."
-    }
-  };
-
-  function set(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
-
-  function render(){
-    var P = (lang==="zh") ? COPY.zh : (lang==="es") ? COPY.es : COPY.en;
-
-    set("h1", P.h1);
-    set("p1a", P.p1a);
-    set("p1b", P.p1b);
-    set("p1c", P.p1c);
-
-    set("h2", P.h2);
-    set("p2a", P.p2a);
-    set("p2b", P.p2b);
-    set("p2c", P.p2c);
-
-    set("h2x", P.h2x);
-    set("p2d", P.p2d);
-    set("p2e", P.p2e);
-
-    set("h3", P.h3);
-    set("p3a", P.p3a);
-    set("p3b", P.p3b);
-    set("p3c", P.p3c);
-
-    set("h3x", P.h3x);
-    set("p3d", P.p3d);
-
-    set("h4", P.h4);
-    set("p4a", P.p4a);
-    set("p4b", P.p4b);
-
-    set("h4x", P.h4x);
-    set("p4c", P.p4c);
-    set("p4d", P.p4d);
-
-    set("h5", P.h5);
-    set("p5a", P.p5a);
-    set("p5b", P.p5b);
-    set("p5c", P.p5c);
-
-    // Light label swaps
-    if(lang==="zh"){
-      document.getElementById("k1").textContent="前置页";
-      document.getElementById("k2").textContent="问题";
-      document.getElementById("k3").textContent="方法";
-      document.getElementById("k4").textContent="怎么用";
-      document.getElementById("k5").textContent="边界";
-      document.getElementById("goCompass1").textContent="打开：指南针";
-      document.getElementById("goEnter1").textContent="打开：进入";
-      document.getElementById("goLaws2").textContent="打开：法则";
-      document.getElementById("goProducts2").textContent="打开：产品";
-      document.getElementById("goCompass3").textContent="打开：指南针";
-      document.getElementById("goGauges3").textContent="打开：量规";
-      document.getElementById("goDoor4").textContent="打开：门";
-      document.getElementById("goExplore4").textContent="打开：探索";
-      document.getElementById("goProducts5").textContent="打开：产品";
-      document.getElementById("goVision5").textContent="打开：愿景";
-      document.getElementById("dockDoor").textContent="门";
-      document.getElementById("dockCompass").textContent="指南针";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockExplore").textContent="探索";
-      document.getElementById("btnRoot").textContent="根";
-      document.getElementById("btnDoor").textContent="门";
-    }else if(lang==="es"){
-      document.getElementById("k1").textContent="PRELUDIO";
-      document.getElementById("k2").textContent="PROBLEMA";
-      document.getElementById("k3").textContent="MÉTODO";
-      document.getElementById("k4").textContent="CÓMO USAR";
-      document.getElementById("k5").textContent="LÍMITES";
-      document.getElementById("goCompass1").textContent="ABRIR: BRÚJULA";
-      document.getElementById("goEnter1").textContent="ABRIR: ENTRAR";
-      document.getElementById("goLaws2").textContent="ABRIR: LEYES";
-      document.getElementById("goProducts2").textContent="ABRIR: PRODUCTOS";
-      document.getElementById("goCompass3").textContent="ABRIR: BRÚJULA";
-      document.getElementById("goGauges3").textContent="ABRIR: MEDIDORES";
-      document.getElementById("goDoor4").textContent="ABRIR: PUERTA";
-      document.getElementById("goExplore4").textContent="ABRIR: EXPLORAR";
-      document.getElementById("goProducts5").textContent="ABRIR: PRODUCTOS";
-      document.getElementById("goVision5").textContent="ABRIR: VISIÓN";
-      document.getElementById("dockDoor").textContent="PUERTA";
-      document.getElementById("dockCompass").textContent="BRÚJULA";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockExplore").textContent="EXPLORAR";
-    }
+    localStorage.setItem("gd_lang",next);
+    window.location.href=location.pathname+"?lang="+next;
   }
 
-  render();
+  document.getElementById("btnEN").onclick=function(){setLang("en")};
+  document.getElementById("btnZH").onclick=function(){setLang("zh")};
+  document.getElementById("btnES").onclick=function(){setLang("es")};
+
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+
+  if(lang==="zh"){
+    document.getElementById("h1").textContent="漂移问题";
+    document.getElementById("p1").textContent="系统的崩溃并非源于缺乏雄心，而是源于未被管理的相关性、语义漂移、隐形依赖，以及主张跑在约束之前。";
+    document.getElementById("h2").textContent="宣言";
+    document.getElementById("p2").textContent="我们把结构映射到有限度量。我们定义可采信。我们分离叙事与证明。我们分离工程与平台。我们执行校准权威。我们把变更视为纪元，而非补丁。";
+    document.getElementById("h3").textContent="承诺";
+    document.getElementById("p3").textContent="若度量存在，答案可在此找到。若漂移存在，可被约束。若规模存在，可被稳定。";
+  }
+
+  if(lang==="es"){
+    document.getElementById("h1").textContent="EL PROBLEMA DE DERIVA";
+    document.getElementById("p1").textContent="Los sistemas no colapsan por falta de ambición, sino por correlación no gestionada, deriva semántica, dependencia invisible y afirmaciones que superan la restricción.";
+    document.getElementById("h2").textContent="LA DECLARACIÓN";
+    document.getElementById("p2").textContent="Mapeamos estructura a medida finita. Definimos admisibilidad. Separamos historia de prueba. Separamos ingeniería de plataforma. Aplicamos autoridad de calibración. Tratamos el cambio como época, no parche.";
+    document.getElementById("h3").textContent="LA PROMESA";
+    document.getElementById("p3").textContent="Si existe una medida, aquí puede encontrarse. Si existe deriva, puede acotarse. Si existe escala, puede estabilizarse.";
+  }
 })();
 </script>
 

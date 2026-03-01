@@ -1,3 +1,16 @@
+<!-- TNT — /index.html
+     ROOT · OPAL/PEARL MATERIAL UPGRADE (NO LAYOUT CHANGE) · 3 LANG (EN/中文/ES)
+     FIXES:
+       - Applies the same opal/purple pearlescent material used on glossy diamonds to:
+           • header
+           • cards
+       - Adds diamond color swatch next to each card title (visual anchor)
+       - Preserves existing structure + behavior + state carry
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Does NOT style html/body background (ui.css owns field)
+-->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,7 +26,12 @@
 a{color:inherit;text-decoration:none}
 
 :root{
-  --panel-bg:linear-gradient(145deg, rgba(20,24,32,.95), rgba(10,14,20,.98));
+  /* opal + pearl tokens (match diamonds) */
+  --opalA:rgba(210,190,255,.18);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+  --goldSoft:rgba(212,175,55,.45);
+
   --panel-border:rgba(255,255,255,.14);
   --text-main:#ffffff;
   --text-sub:rgba(255,255,255,.82);
@@ -28,62 +46,6 @@ a{color:inherit;text-decoration:none}
   display:flex;
   flex-direction:column;
   gap:24px;
-}
-
-/* ===== HEADER ===== */
-.header{
-  text-align:center;
-  padding:26px 30px;
-  border-radius:24px;
-  border:1px solid var(--panel-border);
-  background:var(--panel-bg);
-  box-shadow:0 40px 120px rgba(0,0,0,.7);
-}
-.header h1{
-  margin:0;
-  font-size:38px;
-  font-weight:950;
-  letter-spacing:2px;
-  color:var(--text-main);
-}
-.header p{
-  margin-top:12px;
-  font-size:14.5px;
-  color:var(--text-sub);
-  line-height:1.6;
-}
-
-/* ===== CARDS ===== */
-.card{
-  padding:22px 24px;
-  border-radius:22px;
-  border:1px solid var(--panel-border);
-  background:var(--panel-bg);
-  box-shadow:0 26px 80px rgba(0,0,0,.65);
-  transition:.18s ease;
-}
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 36px 100px rgba(0,0,0,.8);
-}
-.card h2{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.6px;
-  color:var(--text-main);
-}
-.card p{
-  margin:0;
-  color:var(--text-sub);
-  font-size:13.75px;
-  line-height:1.55;
-}
-.actions{
-  margin-top:14px;
-}
-.actions .btn{
-  padding:10px 16px;
-  border-radius:999px;
 }
 
 /* ===== TOP NAV ===== */
@@ -108,6 +70,114 @@ a{color:inherit;text-decoration:none}
   white-space:nowrap;
 }
 .top-left .btn,.top-right .btn{white-space:nowrap}
+
+/* ===== HEADER (OPAL) ===== */
+.header{
+  text-align:center;
+  padding:26px 30px;
+  border-radius:24px;
+  border:1px solid var(--panel-border);
+  background:
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
+  backdrop-filter:blur(12px);
+  box-shadow:0 40px 120px rgba(0,0,0,.7);
+}
+.header h1{
+  margin:0;
+  font-size:38px;
+  font-weight:950;
+  letter-spacing:2px;
+  color:var(--text-main);
+}
+.header p{
+  margin-top:12px;
+  font-size:14.5px;
+  color:var(--text-sub);
+  line-height:1.6;
+}
+
+/* ===== CARDS (OPAL) ===== */
+.card{
+  position:relative;
+  padding:22px 24px;
+  border-radius:22px;
+  border:1px solid var(--panel-border);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 58%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:
+    0 26px 80px rgba(0,0,0,.65),
+    0 0 28px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -36px 70px rgba(0,0,0,.55);
+  transition:transform .18s ease, box-shadow .18s ease;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+.card::after{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  opacity:.9;
+  pointer-events:none;
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 36px 100px rgba(0,0,0,.8),
+    0 0 34px rgba(212,175,55,.16),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -36px 70px rgba(0,0,0,.55);
+}
+
+.card h2{
+  margin:0 0 8px;
+  font-weight:950;
+  letter-spacing:.6px;
+  color:var(--text-main);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.sw{
+  width:12px;height:12px;
+  transform:rotate(45deg);
+  border-radius:4px;
+  background:var(--c, #93C5FD);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+}
+.card p{
+  margin:0;
+  color:var(--text-sub);
+  font-size:13.75px;
+  line-height:1.55;
+}
+.actions{margin-top:14px}
+.actions .btn{padding:10px 16px;border-radius:999px}
 
 /* ===== FOOTER ===== */
 .footer{
@@ -148,8 +218,8 @@ a{color:inherit;text-decoration:none}
     </p>
   </div>
 
-  <div class="card">
-    <h2 id="hPrelude">PRELUDE</h2>
+  <div class="card" style="--c:#D4AF37">
+    <h2 id="hPrelude"><span class="sw"></span>PRELUDE</h2>
     <p id="pPrelude">
       Gateway posture. Choose informal or formal entry into Door.
     </p>
@@ -158,8 +228,8 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <div class="card">
-    <h2 id="hDoor">DOOR</h2>
+  <div class="card" style="--c:#93C5FD">
+    <h2 id="hDoor"><span class="sw"></span>DOOR</h2>
     <p id="pDoor">
       Compass spine. N/E/S/W with selectable direction and entry.
     </p>
@@ -168,8 +238,8 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <div class="card">
-    <h2 id="hEnter">ENTER</h2>
+  <div class="card" style="--c:#0EA5E9">
+    <h2 id="hEnter"><span class="sw"></span>ENTER</h2>
     <p id="pEnter">
       Primary hub. Use this when you already know where you're going.
     </p>
@@ -253,12 +323,11 @@ a{color:inherit;text-decoration:none}
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     location.href = location.pathname + q({lang:lang});
   }
-
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== i18n text (fix: no undeclared globals) =====
+  // ===== i18n text (no undeclared globals) =====
   var ttl=document.getElementById("ttl");
   var tag=document.getElementById("tag");
   var hPrelude=document.getElementById("hPrelude");
@@ -272,21 +341,21 @@ a{color:inherit;text-decoration:none}
   if(lang==="zh"){
     ttl.textContent="根";
     tag.textContent="导览页。Prelude 是入口。Door 是罗盘。Enter 是枢纽。";
-    hPrelude.textContent="前置页";
+    hPrelude.childNodes[1].nodeValue="前置页";
     pPrelude.textContent="入口姿态：选择通俗或正式，然后进入 Door。";
-    hDoor.textContent="罗盘";
+    hDoor.childNodes[1].nodeValue="罗盘";
     pDoor.textContent="方向入口：N/E/S/W 选择后进入。";
-    hEnter.textContent="进入";
+    hEnter.childNodes[1].nodeValue="进入";
     pEnter.textContent="主枢纽。已知方向时直接进入。";
     footText.textContent="最小返回页。导览本身就是产品。";
   }else if(lang==="es"){
     ttl.textContent="RAÍZ";
     tag.textContent="Página de orientación. Prelude es el acceso. Door es la brújula. Enter es el hub.";
-    hPrelude.textContent="PRELUDIO";
+    hPrelude.childNodes[1].nodeValue="PRELUDIO";
     pPrelude.textContent="Postura de entrada. Elige un inicio antes de entrar a Door.";
-    hDoor.textContent="PUERTA";
+    hDoor.childNodes[1].nodeValue="PUERTA";
     pDoor.textContent="Entrada por dirección: N/E/S/O y luego entrar.";
-    hEnter.textContent="ENTRAR";
+    hEnter.childNodes[1].nodeValue="ENTRAR";
     pEnter.textContent="Hub principal. Úsalo si ya sabes a dónde vas.";
     footText.textContent="Página mínima de retorno. La orientación es el producto.";
   }

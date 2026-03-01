@@ -1,15 +1,15 @@
 <!-- TNT — /explore/frontier/closed-loop/index.html
-     FRONTIER · CLOSED LOOP HABITAT MODEL
+     FRONTIER · CLOSED LOOP (HABITATS / ISOLATED SITES / “NO AWAY”)
      MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES (EN/中文/ES)
      SINGLE-OPEN ACCORDION · NO MODALS · STATE CARRY
      ROLE:
-       - Planetary/Orbital “no-away” survival model
-       - SHIMMER routing posture + measurable closure targets
-     ROUTES (SHELLS / SAFE):
-       - ENERGY → /explore/frontier/energy/
-       - WATER  → /explore/frontier/water/
-       - WASTE  → /explore/frontier/waste/
-       - URBAN  → /explore/frontier/urban/
+       - “No-away” closure model: water/air/food/materials/energy as one coupled inventory
+       - Habitat logic that scales DOWN to Earth (cities, plants, remote sites)
+     ROUTES (SAFE SHELLS):
+       - URBAN OS → /explore/frontier/urban/
+       - ENERGY   → /explore/frontier/energy/
+       - WATER    → /explore/frontier/water/
+       - WASTE    → /explore/frontier/waste/
 -->
 
 <!doctype html>
@@ -17,7 +17,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · Closed Loop Habitat Model</title>
+<title>FRONTIER · Closed Loop</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -34,7 +34,7 @@ body::before,body::after{pointer-events:none!important}
   --mut2:rgba(255,255,255,.76);
 
   --opal:rgba(210,190,255,.14);
-  --red:rgba(255,70,70,.10);
+  --red:rgba(255,70,70,.11);
   --gold:rgba(212,175,55,.16);
   --ink:rgba(0,0,0,.18);
 }
@@ -78,7 +78,7 @@ body::before,body::after{pointer-events:none!important}
 .s{
   font-size:19px;
   line-height:1.75;
-  max-width:1020px;
+  max-width:1040px;
   opacity:.92;
 }
 
@@ -158,15 +158,6 @@ body::before,body::after{pointer-events:none!important}
 
 .section.open .body{display:block}
 
-.ul{
-  margin:14px 0 0 18px;
-  padding:0;
-  color:rgba(255,255,255,.80);
-  font-size:17px;
-  line-height:1.75;
-}
-.ul li{margin:8px 0}
-
 .jump{
   margin-top:18px;
   display:flex;
@@ -213,7 +204,7 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="header">
     <p class="k" id="hk">FRONTIER</p>
-    <h1 class="t" id="ht">CLOSED LOOP HABITAT MODEL</h1>
+    <h1 class="t" id="ht">CLOSED LOOP</h1>
     <p class="s" id="hs"></p>
 
     <div class="lenses">
@@ -224,14 +215,14 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="band" id="band">NO-AWAY SYSTEM</div>
+  <div class="band" id="band">NO AWAY · EVERYTHING IS INVENTORY</div>
 
   <div class="accordion" id="accordion"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN</a>
+  <a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
   <a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
   <a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
   <a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
@@ -255,266 +246,200 @@ body::before,body::after{pointer-events:none!important}
 
   function pick(o){ return o[lang]||o.en; }
 
-  // ===== header copy =====
   var headerCopy={
-    en:"What happens when there is no ‘away’? When every leak is permanent, every shortcut becomes debt, and the only way forward is measurable closure.",
-    zh:"当没有“扔掉”的地方会怎样？任何泄漏都是永久的，任何捷径都会变成债，唯一的出路是可测的闭环。",
-    es:"¿Qué pasa cuando no existe ‘afuera’? Cada fuga es permanente, cada atajo se vuelve deuda, y la única salida es el cierre medible."
+    en:"What changes when there is no landfill, no sewer ‘somewhere else’, and no cheap resupply? Everything becomes inventory. Closed Loop is the discipline that makes survival boring—and makes Earth systems finally behave.",
+    zh:"当没有填埋、没有“排到别处”、没有廉价补给时，会发生什么？一切都变成库存。闭环就是让生存变得无聊可靠的纪律，也让地面系统终于像系统一样运行。",
+    es:"¿Qué cambia cuando no hay vertedero, no hay alcantarilla ‘en otro lugar’ y no hay reabastecimiento barato? Todo es inventario. El ciclo cerrado vuelve la supervivencia aburrida—y hace que los sistemas en la Tierra se comporten de verdad."
   };
   document.getElementById("hs").textContent=pick(headerCopy);
 
-  // ===== lens system =====
   var lens="informal";
 
-  // ===== sections =====
   var S = [
     {
-      t:{en:"THE REAL PROBLEM",zh:"真正的问题",es:"EL PROBLEMA REAL"},
-      sub:{en:"Not shortage. Loss. Unmeasured loss.",zh:"不是短缺，而是损耗。不可测的损耗。",es:"No es escasez. Es pérdida. Pérdida no medida."},
+      t:{en:"THE ‘NO AWAY’ PROBLEM",zh:"“没有扔掉”的问题",es:"EL PROBLEMA ‘SIN AFUERA’"},
+      sub:{en:"If you can’t export waste, you must route it.",zh:"无法外运废弃物，就必须路由。",es:"Si no puedes exportar residuos, debes rutearlos."},
       c:{
         informal:{
           en:[
-            "Most systems look fine because they can dump the bill somewhere else. Closed-loop is the opposite: nothing disappears. If you leak, you pay forever.",
-            "That’s why closed-loop is a truth machine. It forces the questions people avoid: Where does it go? What does it become? What do we recover, and what do we lose?"
+            "On Earth we pretend problems disappear: trash goes ‘away’, heat goes ‘away’, wastewater goes ‘away’. In a habitat, there is no away.",
+            "So the real problem becomes visible: leaks, contamination, and bad routing decisions. Closed loop is not romance—it’s accounting with consequences."
           ],
           zh:[
-            "很多系统看起来没问题，是因为它们可以把账单扔到别处。闭环相反：没有东西会消失。你一泄漏，就要永远付账。",
-            "所以闭环是“真相机器”。它逼你面对被回避的问题：它去哪了？变成什么？我们回收什么？损失什么？"
+            "在地球我们假装问题会消失：垃圾“扔掉”、热“散掉”、污水“排走”。在栖息地，没有“扔掉”。",
+            "真正的问题因此暴露：泄漏、污染、错误路由。闭环不是浪漫，而是带后果的核算。"
           ],
           es:[
-            "Muchos sistemas ‘funcionan’ porque pueden tirar el costo a otro lugar. En ciclo cerrado no hay desaparición: si fugas, pagas para siempre.",
-            "Por eso el ciclo cerrado es una máquina de verdad: obliga a responder ¿a dónde va?, ¿en qué se convierte?, ¿qué recuperamos y qué perdemos?"
+            "En la Tierra fingimos que los problemas desaparecen: la basura se va ‘afuera’, el calor ‘afuera’, el agua residual ‘afuera’. En un hábitat no existe ‘afuera’.",
+            "Entonces aparece lo real: fugas, contaminación y malas decisiones de ruteo. Ciclo cerrado no es romance: es contabilidad con consecuencias."
           ]
         },
         formal:{
           en:[
-            "Closed-loop failure is dominated by cumulative loss under bounded resupply. The core problem is inventory drift across coupled streams (air, water, nutrients, thermal, materials).",
-            "Therefore the system must be designed as a conserved-vector routing problem with explicit accounting, thresholds, and recovery procedures."
+            "Closed-loop environments remove external sinks. Loss is cumulative, failures are coupled, and contamination events propagate. Stability requires explicit routing and recovery under constraints.",
+            "Therefore closure must be expressed as conserved inventories with measured leakage bands and deterministic intervention procedures."
           ],
           zh:[
-            "闭环失败由“累积损失+补给受限”主导。核心问题是耦合流（空气/水/养分/热/材料）上的库存漂移。",
-            "因此系统必须被设计为守恒向量路由问题：明确核算、阈值与恢复流程。"
+            "闭环环境移除了外部汇点：损耗累积、故障耦合、污染事件传播。稳定性要求在约束下进行显式路由与恢复。",
+            "因此闭合必须表达为守恒库存，并具有可测泄漏区间与确定性干预流程。"
           ],
           es:[
-            "El fallo en ciclo cerrado está dominado por pérdidas acumulativas con reabastecimiento limitado. El problema central es deriva de inventario en flujos acoplados.",
-            "Por lo tanto debe diseñarse como ruteo de vectores conservados con contabilidad explícita, umbrales y procedimientos de recuperación."
+            "Entornos cerrados eliminan sumideros externos. La pérdida es acumulativa, las fallas están acopladas y la contaminación se propaga. La estabilidad requiere ruteo y recuperación explícitos.",
+            "El cierre se expresa como inventarios conservados con bandas de fuga medidas y procedimientos deterministas."
           ]
         },
         engineering:{
           en:[
-            "Define inventories: water, oxygen, carbon, nitrogen, heat, structural mass. Bind sensors, buffers, and conversion modules to maintain bands under disturbance.",
-            "Treat every stream as: measure → route → convert → retain, with reason-coded interventions and deterministic rollback paths."
+            "Define mass/energy accounting: water recovery, air recycling, nutrient loops, solids handling, thermal balance. Instrument flows, set contamination constraints, and size buffers for shock events.",
+            "Design recovery playbooks: isolate → filter → reprocess → verify → rejoin. Publish yields and loss rates by window."
           ],
           zh:[
-            "定义库存：水、氧、碳、氮、热、结构质量。将传感、缓冲、转化模块绑定以在扰动下保持区间。",
-            "每条流按：测量→路由→转化→保留处理，介入带原因码，恢复路径确定且可回滚。"
+            "定义质量/能量核算：水回收、空气循环、营养回路、固体处理、热平衡。仪器化流量，设污染约束，按冲击事件配置缓冲。",
+            "设计恢复剧本：隔离→过滤→再处理→验证→回并。按窗口发布产率与损耗率。"
           ],
           es:[
-            "Define inventarios: agua, oxígeno, carbono, nitrógeno, calor, masa estructural. Vincula sensores, buffers y módulos de conversión para mantener bandas bajo perturbación.",
-            "Cada flujo: medir → rutear → convertir → retener, con intervenciones con razón y rollback determinista."
+            "Definir contabilidad masa/energía: recuperación de agua, reciclaje de aire, ciclos de nutrientes, manejo de sólidos, balance térmico. Instrumentar flujos, límites de contaminación y buffers.",
+            "Playbooks de recuperación: aislar → filtrar → reprocesar → verificar → reintegrar. Publicar rendimientos y pérdidas por ventana."
           ]
         },
         platform:{
           en:[
-            "Expose closure status as a readable dashboard: what is closing, what is leaking, and what is improving. Keep claims bounded to measured windows.",
-            "Use Dot.Grid to map dependencies, Gauges to show outputs, and Laws to constrain what the outputs are allowed to mean."
+            "Make closure legible: show ‘what is leaking’ as a ranked list with receipts. Route users to Laws (bounds) and Gauges (signals).",
+            "Keep navigation calm: one open section at a time; clear ‘next’ jumps; persistent state."
           ],
           zh:[
-            "把闭环状态做成可读仪表板：哪里在闭合、哪里在泄漏、哪里在改善。主张绑定测量窗口。",
-            "用Dot.Grid映射依赖，用Gauges展示输出，用Laws约束输出含义。"
+            "让闭合可读：把“哪里在漏”做成带收据的排序列表，并路由到法则（边界）与量规（信号）。",
+            "保持导航安静：一次只开一段；下一步跳转清晰；状态持久。"
           ],
           es:[
-            "Exponer estado de cierre en dashboard: qué se cierra, qué fuga, qué mejora. Afirmaciones acotadas a ventanas medidas.",
-            "Usa Dot.Grid para dependencias, Medidores para salidas, y Leyes para limitar interpretación."
+            "Hacer el cierre legible: mostrar ‘qué está fugando’ como lista rankeada con recibos; saltar a Leyes (límites) y Medidores (señales).",
+            "Navegación calmada: una sección abierta a la vez; saltos claros; estado persistente."
           ]
         }
       }
     },
 
     {
-      t:{en:"WHAT “CLOSED” MEANS",zh:"“闭环”是什么意思",es:"QUÉ SIGNIFICA ‘CERRADO’"},
-      sub:{en:"Closure is measurable. Not poetic.",zh:"闭合是可测的，不是诗意的。",es:"Cierre es medible, no poético."},
+      t:{en:"THE CLOSED LOOP CONTRACT",zh:"闭环契约",es:"CONTRATO DE CICLO CERRADO"},
+      sub:{en:"Measure → Route → Retain. The loop must be boring.",zh:"测量→路由→保留。闭环必须无聊可靠。",es:"Medir → Rutear → Retener. El ciclo debe ser aburrido."},
       c:{
         informal:{
           en:[
-            "Closed doesn’t mean perfect. Closed means you can see your losses, you can explain them, and you can shrink them on purpose.",
-            "The goal is not to ‘feel sustainable.’ The goal is to keep the habitat alive with numbers you can defend."
+            "Closed loop is how you make survival boring: you measure what you have, you route what you don’t want, and you keep what matters inside the loop.",
+            "The magic isn’t a gadget. The magic is refusing to let losses hide."
           ],
           zh:[
-            "闭环不等于完美。闭环意味着你看得见损耗、解释得清楚、还能有目的地把它缩小。",
-            "目标不是“感觉可持续”，而是用你能辩护的数字把系统维持住。"
+            "闭环让生存变无聊：你测你有什么，你路由你不想要的，你把重要的留在环里。",
+            "魔法不是某个小玩意，而是拒绝让损耗隐藏。"
           ],
           es:[
-            "Cerrado no significa perfecto. Significa que ves pérdidas, las explicas y las reduces a propósito.",
-            "La meta no es ‘sentirse sostenible’. La meta es mantener vida con números defendibles."
+            "Ciclo cerrado vuelve la supervivencia aburrida: mides lo que tienes, ruteas lo que no quieres y mantienes lo importante dentro del ciclo.",
+            "La magia no es un gadget: es no permitir que las pérdidas se escondan."
           ]
         },
         formal:{
           en:[
-            "Closure is defined by recovery fractions and stability bands across time windows. Each loop has: input, loss, recovery, and stored remainder.",
-            "If definitions drift, closure claims become meaningless; therefore naming, windows, and thresholds are versioned."
+            "Contract: (1) declared inventory vectors, (2) measured closure/leakage bands, (3) deterministic interventions, (4) replayable receipts.",
+            "No escalation without receipts; no redefinition without epoch rollover; no interpretation beyond declared scope."
           ],
           zh:[
-            "闭合由回收分数与稳定区间在时间窗口内定义。每个回路包含：输入、损失、回收、残余储存。",
-            "若定义漂移，闭合主张失效；因此命名、窗口、阈值必须版本化。"
+            "契约：(1)声明库存向量，(2)测得闭合/泄漏区间，(3)确定性干预，(4)可回放收据。",
+            "无收据不升级；无新纪元不改定义；不得超范围解释。"
           ],
           es:[
-            "El cierre se define por fracciones de recuperación y bandas de estabilidad en ventanas de tiempo. Cada bucle: entrada, pérdida, recuperación, resto almacenado.",
-            "Si derivan definiciones, las afirmaciones pierden significado; por eso nombres/ventanas/umbrales se versionan."
+            "Contrato: (1) vectores de inventario declarados, (2) bandas de cierre/fuga medidas, (3) intervenciones deterministas, (4) recibos replayables.",
+            "Sin recibos no hay escalación; sin nueva época no hay redefinición; no interpretar fuera del alcance."
           ]
         },
         engineering:{
           en:[
-            "Implement closure accounting per loop: water recovery, air recycling, nutrient cycling, thermal reuse, solids transformation. Enforce mass/energy conservation checks.",
-            "Design for failure: isolate loops, contain contamination, and recover to last stable state with minimal blast radius."
+            "Quantify closure: recovery fraction targets per lane (water/air/solids/heat). Enforce contamination thresholds. Treat maintenance as a first-class loop, not an afterthought.",
+            "Design for perturbation: buffer sizing, redundancy, isolation valves, and fast verification paths."
           ],
           zh:[
-            "按回路实现闭合核算：水回收、空气循环、养分循环、热复用、固体转化。执行质量/能量守恒检查。",
-            "按失败设计：回路隔离、污染隔断、以最小爆炸半径回到上一稳定态。"
+            "量化闭合：按车道设回收分数目标（水/气/固体/热），执行污染阈值。把维护当作一等回路，而不是事后补丁。",
+            "面向扰动设计：缓冲尺寸、冗余、隔离阀、快速验证路径。"
           ],
           es:[
-            "Contabilidad de cierre por bucle: recuperación de agua, reciclaje de aire, ciclo de nutrientes, reutilización térmica, transformación de sólidos. Chequeos de conservación.",
-            "Diseñar para fallo: aislar bucles, contener contaminación y volver al último estado estable con radio mínimo."
+            "Cuantificar cierre: metas de fracción de recuperación por carril (agua/aire/sólidos/calor). Umbrales de contaminación. Mantenimiento como bucle primario.",
+            "Diseño para perturbación: buffers, redundancia, válvulas de aislamiento y verificación rápida."
           ]
         },
         platform:{
           en:[
-            "Publish closure levels as simple bands users understand: GREEN (stable), YELLOW (drifting), RED (leaking). Then link to the receipts behind each band.",
-            "Keep navigation simple: one hub, one state, one truth source; no modal traps."
+            "Show the loop as a simple story first: what comes in, what gets reused, what is still leaking, and what you’re doing next.",
+            "Then jump to deep pages (energy/water/waste) without losing state."
           ],
           zh:[
-            "把闭合水平发布为可懂的区间：绿（稳定）、黄（漂移）、红（泄漏）。并链接到每个区间背后的收据。",
-            "导航保持简单：一个枢纽、一个状态、一个真相来源；不做模态陷阱。"
+            "先把闭环讲成简单故事：进来什么、复用什么、哪里还在漏、下一步做什么。",
+            "然后跳到深页（能源/水/废弃物）且不丢状态。"
           ],
           es:[
-            "Publicar niveles de cierre como bandas simples: VERDE (estable), AMARILLO (deriva), ROJO (fuga), con recibos detrás.",
-            "Navegación simple: un hub, un estado, una fuente de verdad; sin trampas modales."
+            "Primero contar el ciclo como historia simple: qué entra, qué se reutiliza, qué sigue fugando y qué harás después.",
+            "Luego saltar a páginas profundas (energía/agua/residuos) sin perder estado."
           ]
         }
       }
     },
 
     {
-      t:{en:"SHIMMER BRIDGE",zh:"SHIMMER 桥",es:"PUENTE SHIMMER"},
-      sub:{en:"Same routing spine for cities and habitats.",zh:"城市与栖息地共用同一条路由脊柱。",es:"Misma columna de ruteo para ciudades y hábitats."},
+      t:{en:"SHIMMER IN A HABITAT",zh:"栖息地里的 SHIMMER",es:"SHIMMER EN UN HÁBITAT"},
+      sub:{en:"Same routing spine, harsher penalties.",zh:"同一路由脊柱，更严厉的惩罚。",es:"Misma columna, penalizaciones más duras."},
       c:{
         informal:{
           en:[
-            "In a city, ‘waste’ is something you wish would go away. In a habitat, waste is a death sentence if you can’t route it back into usefulness.",
-            "That’s why SHIMMER matters. It’s the same move in both worlds: classify what you have, route it intelligently, convert it cleanly, retain what matters."
+            "A habitat just removes the city’s excuses. You still classify, segment, route, convert, retain. You just feel every mistake sooner.",
+            "That’s why this matters: if it works here, it works anywhere."
           ],
           zh:[
-            "在城市里，“废弃物”是你希望它消失的东西；在栖息地里，如果你不能把它路由回有用状态，它就是死刑。",
-            "所以 SHIMMER 重要：两种世界同一动作——分类你拥有的，智能路由，干净转化，保留关键资源。"
+            "栖息地只是把城市的借口拿走：你仍然分类、分段、路由、转化、保留，只是每个错误更快被你感受到。",
+            "所以它重要：能在这里稳定，就能在任何地方稳定。"
           ],
           es:[
-            "En una ciudad, ‘residuo’ es algo que deseas que desaparezca. En un hábitat, es sentencia de muerte si no puedes rutearlo de vuelta a utilidad.",
-            "Por eso importa SHIMMER: clasificar, rutear, convertir, retener."
+            "Un hábitat solo elimina excusas de la ciudad: sigues clasificando, segmentando, ruteando, convirtiendo y reteniendo, pero sientes cada error antes.",
+            "Por eso importa: si funciona aquí, funciona en cualquier parte."
           ]
         },
         formal:{
           en:[
-            "SHIMMER implements real-time multi-pathway routing: intake classification → segmentation → routing matrix → conversion modules → energy/material retention.",
-            "Habitat-scale loops are the extreme constraint case; terrestrial deployments are the proving ground."
+            "Habitat deployment is an extreme constraint case: strict contamination bounds, bounded resupply, coupled failure modes. SHIMMER provides routing discipline under those constraints.",
+            "Claims remain readiness-only unless backed by measured receipts; no net-positive fusion claims; no megastructure claims in near horizons."
           ],
           zh:[
-            "SHIMMER 实现实时多路径路由：入口分类→分段→路由矩阵→转化模块→能源/材料保留。",
-            "栖息地闭环是极限约束；地面部署是验证场。"
+            "栖息地部署是极限约束案例：污染边界严格、补给受限、故障耦合。SHIMMER 在这些约束下提供路由纪律。",
+            "主张除非有测量收据，否则仅保持就绪姿态；不做净增益聚变主张；近期限不做巨构主张。"
           ],
           es:[
-            "SHIMMER implementa ruteo multi-vía en tiempo real: clasificación → segmentación → matriz → conversión → retención de energía/material.",
-            "El hábitat es el caso extremo; la Tierra es el campo de prueba."
+            "Despliegue en hábitat es caso extremo: límites estrictos de contaminación, reabastecimiento acotado y fallas acopladas. SHIMMER aporta disciplina de ruteo.",
+            "Afirmaciones permanecen en ‘preparación’ sin recibos medidos; sin ganancia neta de fusión; sin megaestructuras en horizontes cercanos."
           ]
         },
         engineering:{
           en:[
-            "Bind routing to conservation laws and explicit Δ inventories. Enforce contamination barriers, buffer design, and deterministic failure recovery paths.",
-            "Compute and publish: recovery fractions, loss rates, and time-to-instability under perturbations."
+            "Implement closed-loop routing for each lane with explicit purity constraints. Use modular redundancy and isolation to prevent cascade. Validate through windowed stress tests.",
+            "Export receipts for audit replay: yields, losses, interventions, and recovery time-to-stability."
           ],
           zh:[
-            "把路由绑定守恒定律与显式Δ库存。执行污染隔离、缓冲设计与确定性故障恢复路径。",
-            "计算并发布：回收分数、损耗率、扰动下到不稳定的时间。"
+            "为每条车道实现闭环路由并给出纯度约束；模块化冗余与隔离阻止级联；用窗口压力测试验证。",
+            "导出审计回放收据：产率、损耗、干预、恢复到稳定的时间。"
           ],
           es:[
-            "Vincular ruteo a leyes de conservación y Δ inventarios. Barreras de contaminación, buffers y recuperación determinista.",
-            "Calcular y publicar: fracciones de recuperación, tasas de pérdida y tiempo a inestabilidad bajo perturbaciones."
+            "Implementar ruteo cerrado por carril con restricciones de pureza. Redundancia modular y aislamiento para evitar cascada. Validar con pruebas por ventana.",
+            "Exportar recibos: rendimientos, pérdidas, intervenciones y tiempo de recuperación."
           ]
         },
         platform:{
           en:[
-            "Expose one clear story: closure level + what changed + what to do next. Link each claim to receipts and keep all routes state-stable.",
-            "Use Urban OS as the bridge node between city deployments and habitat prototypes."
+            "Present ‘closure scoreboards’ that non-engineers can read: green/yellow/red bands per inventory lane, with a one-click drill-down into receipts.",
+            "Keep the UI boringly reliable: one open accordion, no overlays, clear jumps."
           ],
           zh:[
-            "暴露一个清晰故事：闭合等级+变化了什么+下一步做什么。每条主张都链接收据，路由保持状态稳定。",
-            "用Urban OS作为城市部署与栖息地原型之间的桥节点。"
+            "提供非工程师可读的“闭合记分牌”：按车道显示绿/黄/红区间，并一键下钻到收据。",
+            "UI 必须无聊可靠：单开手风琴、无遮罩、跳转清晰。"
           ],
           es:[
-            "Mostrar una narrativa clara: nivel de cierre + qué cambió + qué hacer después, con recibos y rutas estables.",
-            "Usar Urban OS como nodo puente entre despliegues urbanos y prototipos de hábitat."
-          ]
-        }
-      }
-    },
-
-    {
-      t:{en:"ROADMAP POSTURE",zh:"路线姿态",es:"POSTURA DE HOJA DE RUTA"},
-      sub:{en:"Earn orbit by proving Earth first.",zh:"先在地球证明，才配去轨道。",es:"Gana órbita probando primero en Tierra."},
-      c:{
-        informal:{
-          en:[
-            "We don’t start in orbit. We start where the receipts are cheap: municipal loops, industrial loops, remote loops.",
-            "Closed-loop becomes real when the numbers survive pressure. That’s how you get loud claims without losing your mind."
-          ],
-          zh:[
-            "我们不从轨道开始。我们从“收据便宜”的地方开始：市政回路、工业回路、偏远回路。",
-            "闭环要真实，必须让数字经得住压力。这才是“大声主张又不发疯”的方式。"
-          ],
-          es:[
-            "No empezamos en órbita. Empezamos donde los recibos son baratos: municipal, industrial, remoto.",
-            "El ciclo cerrado se vuelve real cuando los números sobreviven presión."
-          ]
-        },
-        formal:{
-          en:[
-            "Phase gating: terrestrial pilots → remote isolation → orbital deployment. Escalation requires receipts and reproducibility; missing prerequisites remain labeled as NOT AVAILABLE.",
-            "Non-negotiables: no net-positive fusion claims; no megastructure claims in near horizons; no silent rule changes."
-          ],
-          zh:[
-            "阶段闸门：地面试点→偏远隔离→轨道部署。升级要求收据与可复现；缺前置条件必须标注 NOT AVAILABLE。",
-            "不可谈判：不做净增益聚变主张；近期限不做巨构主张；规则变更禁止静默。"
-          ],
-          es:[
-            "Puertas por fase: pilotos en Tierra → aislamiento remoto → despliegue orbital. Escalación requiere recibos y reproducibilidad; prerrequisitos faltantes quedan como NO DISPONIBLE.",
-            "No negociables: sin fusión neta positiva; sin megaestructuras cercanas; sin cambios silenciosos de reglas."
-          ]
-        },
-        engineering:{
-          en:[
-            "Define measurable closure targets per loop (water/air/solids). Use buffers and segmentation to prevent cascade. Design recovery as first-class logic.",
-            "Integrate instrumentation and export: Gauges for outputs, Laws for doctrine bounds, Registry for status."
-          ],
-          zh:[
-            "为每个回路定义可测闭合目标（水/气/固体）。用缓冲与分段阻断级联。把恢复设计为一等逻辑。",
-            "整合仪器与导出：Gauges出输出，Laws定边界，Registry记状态。"
-          ],
-          es:[
-            "Definir objetivos de cierre medibles por bucle (agua/aire/sólidos). Usar buffers y segmentación para evitar cascadas. Recuperación como lógica de primera clase.",
-            "Integrar instrumentación y exportación: Medidores, Leyes y Registro."
-          ]
-        },
-        platform:{
-          en:[
-            "Make the journey navigable: one page per concept, single-open accordion, clear jump routes, and persistent state. Dense without feeling dense.",
-            "Frontier pages explain possibility; product pages explain deployability; laws/gauges explain constraints and evidence."
-          ],
-          zh:[
-            "让旅程可导航：一概念一页、单开手风琴、清晰跳转、状态持久。密但不显密。",
-            "Frontier讲可能性；Products讲可部署；Laws/Gauges讲约束与证据。"
-          ],
-          es:[
-            "Hacer el camino navegable: una página por concepto, acordeón de apertura única, rutas claras y estado persistente.",
-            "Frontier explica posibilidad; productos explican despliegue; leyes/medidores explican límites y evidencia."
+            "Mostrar ‘tableros de cierre’ legibles: bandas verde/amarillo/rojo por carril, con drill-down a recibos.",
+            "UI confiable: acordeón único, sin overlays, saltos claros."
           ]
         }
       }
@@ -522,36 +447,27 @@ body::before,body::after{pointer-events:none!important}
   ];
 
   function lensLabel(){
-    if(lang==="zh"){
-      return {informal:"通俗",formal:"正式",engineering:"工程",platform:"平台"};
-    }
-    if(lang==="es"){
-      return {informal:"INFORMAL",formal:"FORMAL",engineering:"INGENIERÍA",platform:"PLATAFORMA"};
-    }
+    if(lang==="zh") return {informal:"通俗",formal:"正式",engineering:"工程",platform:"平台"};
+    if(lang==="es") return {informal:"INFORMAL",formal:"FORMAL",engineering:"INGENIERÍA",platform:"PLATAFORMA"};
     return {informal:"INFORMAL",formal:"FORMAL",engineering:"ENGINEERING",platform:"PLATFORM"};
   }
 
-  function render(){
-    // band title (simple)
-    document.getElementById("band").textContent = (lang==="zh")
-      ? "无“扔掉”系统"
-      : (lang==="es") ? "SISTEMA SIN ‘AFUERA’" : "NO-AWAY SYSTEM";
+  var lens="informal";
 
-    // lens button labels
+  function render(){
     var L=lensLabel();
     document.getElementById("lensInformal").textContent=L.informal;
     document.getElementById("lensFormal").textContent=L.formal;
     document.getElementById("lensEngineering").textContent=L.engineering;
     document.getElementById("lensPlatform").textContent=L.platform;
 
-    // header labels
-    document.getElementById("hk").textContent = (lang==="zh") ? "前沿" : (lang==="es") ? "FRONTERA" : "FRONTIER";
-    document.getElementById("ht").textContent = pick({en:"CLOSED LOOP HABITAT MODEL",zh:"闭环栖息地模型",es:"MODELO DE HÁBITAT DE CICLO CERRADO"});
-    document.getElementById("hs").textContent = pick(headerCopy);
+    document.getElementById("hk").textContent=(lang==="zh")?"前沿":(lang==="es")?"FRONTERA":"FRONTIER";
+    document.getElementById("ht").textContent=pick({en:"CLOSED LOOP",zh:"闭环",es:"CICLO CERRADO"});
+    document.getElementById("band").textContent=(lang==="zh")?"没有扔掉 · 一切都是库存":(lang==="es")?"SIN AFUERA · TODO ES INVENTARIO":"NO AWAY · EVERYTHING IS INVENTORY";
 
-    // accordion
     var acc=document.getElementById("accordion");
     acc.innerHTML="";
+
     S.forEach(function(item, idx){
       var sec=document.createElement("div");
       sec.className="section";
@@ -561,7 +477,7 @@ body::before,body::after{pointer-events:none!important}
 
       var title=document.createElement("div");
       title.className="title";
-      title.textContent = pick(item.t);
+      title.textContent=pick(item.t);
 
       var chev=document.createElement("div");
       chev.className="chev";
@@ -577,26 +493,24 @@ body::before,body::after{pointer-events:none!important}
       sub.style.fontWeight="800";
       sub.style.color="rgba(255,255,255,.86)";
       sub.style.marginBottom="12px";
-      sub.textContent = pick(item.sub);
-
+      sub.textContent=pick(item.sub);
       body.appendChild(sub);
 
       var lines=item.c[lens];
       for(var i=0;i<lines.length;i++){
         var p=document.createElement("div");
-        p.style.marginTop = (i===0) ? "0" : "14px";
-        p.textContent = lines[i];
+        p.style.marginTop=(i===0)?"0":"14px";
+        p.textContent=lines[i];
         body.appendChild(p);
       }
 
-      // minimal “jump” row (keeps navigation legible)
       var jump=document.createElement("div");
       jump.className="jump";
+      var openLabel=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
 
-      var openLabel = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
-      var j1=document.createElement("a"); j1.className="btn"; j1.textContent=openLabel+": URBAN"; j1.href="/explore/frontier/urban/"+q();
-      var j2=document.createElement("a"); j2.className="btn"; j2.textContent=openLabel+": LAWS";  j2.href="/laws/"+q();
-      var j3=document.createElement("a"); j3.className="btn"; j3.textContent=openLabel+": GAUGES"; j3.href="/gauges/"+q();
+      var j1=document.createElement("a"); j1.className="btn"; j1.textContent=openLabel+": URBAN OS"; j1.href="/explore/frontier/urban/"+q();
+      var j2=document.createElement("a"); j2.className="btn"; j2.textContent=openLabel+": ENERGY"; j2.href="/explore/frontier/energy/"+q();
+      var j3=document.createElement("a"); j3.className="btn"; j3.textContent=openLabel+": LAWS"; j3.href="/laws/"+q();
       jump.appendChild(j1); jump.appendChild(j2); jump.appendChild(j3);
       body.appendChild(jump);
 
@@ -611,7 +525,6 @@ body::before,body::after{pointer-events:none!important}
           if(c) c.textContent="▸";
         });
       }
-
       function toggle(){
         var willOpen=!sec.classList.contains("open");
         closeAll();

@@ -1,21 +1,17 @@
 <!-- TNT — /laws/index.html
-     LAWS · GOVERNANCE LATTICE (7 CATEGORIES) · 4 LENSES (FORMAL / INFORMAL / PLATFORM / ENGINEERING) · EN/中文/ES
-     PURPOSE:
-       - One hub for ALL laws, written in ALL formats (4 lenses) with single-open accordion.
-       - INFORMAL = TED Talk (exciting, human, curiosity)
-       - FORMAL = surgical engineering doctrine (tight, bounded, non-marketing)
-       - PLATFORM = operator-facing product posture (how to use across pages/surfaces)
-       - ENGINEERING = implementation posture (interfaces, state, receipts, failure modes)
+     LAWS · CANONICAL (7 LAWS) · 4 LENSES · 3 LANG (EN/中文/ES) · MOBILE SAFE · DENSE
+     LENSES (NO NEW gd_* KEYS):
+       - INFORMAL   = style=informal & depth=explore
+       - FORMAL     = style=formal   & depth=explore
+       - PLATFORM   = style=informal & depth=learn
+       - ENGINEERING= style=formal   & depth=learn
      RULES:
-       - No modals. No overlays.
-       - Tap-safe (no inline onclick). Mobile-safe.
-       - Single-open accordion (focus).
-       - Red signal gradient + per-law colored diamond marker + subtle “dance” shimmer.
-       - Canon state carry: lang/style/time/depth (URL + LS gd_lang/gd_style/gd_time/gd_depth)
-       - Uses ui.css + branch.css + instruments.js only (no html/body background overrides)
-     ROUTES:
-       - TOP: DOOR / HOME / PRODUCTS
-       - DOCK: INDEX / EXPLORE / PRODUCTS / GAUGES
+       - Accordion only (no modals/overlays)
+       - Single-open accordion (auto-close others)
+       - Red signal gradient + diamond markers
+       - Canon state carry: lang/style/time/depth via URL + LS gd_*
+       - Uses ui.css + branch.css + instruments.js
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -23,7 +19,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LAWS</title>
+<title>LAWS · Canonical</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -33,12 +29,53 @@
 a{color:inherit;text-decoration:none}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== Layout ===== */
-:root{--dockH:92px}
+/* ===== TOKENS ===== */
+:root{
+  --dockH:92px;
+
+  /* dark opal + red signal (no washed-out blue) */
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --sigR:rgba(255,70,70,.18);
+  --sigR2:rgba(255,70,70,.12);
+  --goldSoft:rgba(212,175,55,.32);
+
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+  --mut2:rgba(255,255,255,.70);
+
+  --fsH:28px;   /* typographic expansion */
+  --fsP:14.5px;
+  --fsS:13px;
+}
+
+/* ===== TOP CONTROLS ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
+
+/* ===== PAGE ===== */
 .page{
-  width:min(1100px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 18px);
+  padding:84px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -46,82 +83,105 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* ===== Top controls ===== */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
-
-/* ===== Header ===== */
+/* ===== HEADER ===== */
 .header{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 22% 28%, rgba(210,190,255,.14), transparent 70%),
-    radial-gradient(circle at 78% 62%, rgba(120,70,255,.10), transparent 72%),
-    rgba(0,0,0,.14);
+    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--sigR2), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
-  padding:14px 16px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+  position:relative;
+  overflow:hidden;
 }
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0;font-weight:950;font-size:26px;letter-spacing:.6px}
-.s{margin:10px 0 0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px}
-.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+.header::before{
+  content:"";
+  position:absolute;inset:0;padding:1px;border-radius:22px;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,90,90,.28) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.t{margin:0;font-weight:950;font-size:var(--fsH);letter-spacing:.7px;line-height:1.12}
+.s{margin:10px 0 0;font-size:var(--fsP);opacity:.92;line-height:1.55;color:var(--txt);max-width:980px}
+.fine{margin-top:10px;font-size:12.5px;opacity:.74;line-height:1.45;color:var(--mut)}
+.rule{
+  margin-top:12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.55), rgba(6,10,16,.70));
+  padding:12px 12px 10px;
+  color:rgba(255,255,255,.86);
+  font-size:13px;
+  line-height:1.5;
+}
 
-/* ===== Lens row (4 lenses) ===== */
+/* ===== LENSES (4) ===== */
 .lensRow{
+  margin-top:12px;
   display:flex;
+  justify-content:space-between;
   gap:10px;
   flex-wrap:wrap;
-  justify-content:flex-end;
-  margin-top:12px;
+  align-items:center;
 }
-.lensRow .btn{border-radius:999px;padding:10px 12px}
-.lensRow .btn.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:0 0 18px rgba(212,175,55,.18);
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;
+  font-weight:950;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--sigR);
+}
+.pill.dim{border-color:rgba(212,175,55,.22)}
+.pill.dim.active{
+  border-color:rgba(255,90,90,.55);
 }
 
-/* ===== Band ===== */
+/* ===== BAND ===== */
 .band{
   padding:10px 12px;
   border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
   font-weight:950;
   letter-spacing:.2px;
-  color:rgba(255,255,255,.86);
+  color:rgba(255,255,255,.88);
 }
 
-/* ===== Accordion list ===== */
-.stack{display:flex;flex-direction:column;gap:12px}
+/* ===== ACCORDION ===== */
+.list{display:flex;flex-direction:column;gap:12px}
 
-.card{
-  --c:#D4AF37;
+.row{
+  position:relative;
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(255,70,70,.06), transparent 64%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
-  position:relative;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;
-  background:
-    radial-gradient(circle at 20% 12%, rgba(176,0,0,.14), transparent 55%),
-    radial-gradient(circle at 85% 78%, rgba(120,70,255,.08), transparent 60%);
-  opacity:.55;
-  pointer-events:none;
-}
-
-/* head row */
 .head{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;
@@ -129,46 +189,38 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;
-  z-index:2;
 }
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.left{display:flex;align-items:flex-start;gap:12px;min-width:0}
 .marker{
-  width:14px;height:14px;border-radius:4px;
-  transform:rotate(45deg);
-  background:linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,0) 30%), var(--c);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.14),
-    0 0 18px rgba(0,0,0,.35);
-  flex:0 0 auto;
-  margin-top:2px;
-  position:relative;
-  overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  margin-top:2px;flex:0 0 auto;
 }
-.marker::after{
-  content:"";
-  position:absolute;inset:-40%;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.55) 50%, transparent 100%);
-  opacity:.28;
-  animation:shine 3.6s ease-in-out infinite;
+.diamond{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
 }
-@keyframes shine{
-  0%{transform:translateX(-35%) rotate(0deg)}
-  50%{transform:translateX(35%) rotate(0deg)}
-  100%{transform:translateX(-35%) rotate(0deg)}
+.bar{
+  width:6px;height:22px;border-radius:99px;background:var(--c);
+  box-shadow:0 0 18px rgba(0,0,0,.25);
 }
-.name{
-  font-weight:950;letter-spacing:.2px;
+.titleBlock{min-width:0}
+.title{
+  font-weight:950;
+  letter-spacing:.25px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:16px;
 }
 .sub{
   margin-top:6px;
-  font-size:12.75px;opacity:.80;line-height:1.35;
+  font-size:13px;
+  opacity:.84;
+  line-height:1.38;
   max-width:92ch;
+  color:rgba(255,255,255,.86);
 }
 .chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
 
-/* body */
 .body{
   display:none;
   padding:14px 16px 16px;
@@ -176,38 +228,42 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-  position:relative;
-  z-index:2;
 }
-.card.open .body{display:block}
+.row.open .body{display:block}
 
 .p{
   margin:0;
-  color:rgba(255,255,255,.86);
-  line-height:1.58;
-  font-size:13.25px;
+  color:rgba(255,255,255,.90);
+  line-height:1.7;
+  font-size:14.25px;
 }
 .p + .p{margin-top:10px}
-.bul{
-  margin:12px 0 0 18px;
-  padding:0;
+.ul{
+  margin:10px 0 0 18px;padding:0;
   color:rgba(255,255,255,.82);
+  line-height:1.55;
+  font-size:13.5px;
 }
-.bul li{margin:6px 0;line-height:1.45}
-.next{
+.ul li{margin:6px 0}
+
+.smallband{
   margin-top:12px;
-  padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.10);
-  color:rgba(255,255,255,.82);
-  font-size:12.75px;
-  line-height:1.45;
+  padding:9px 10px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.15px;
+  color:rgba(255,255,255,.86);
+  font-size:13px;
 }
+
 .actions{
   display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;
 }
 .actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
-/* ===== Dock ===== */
+/* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
@@ -226,44 +282,52 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px}
+  :root{--dockH:104px;--fsH:27px;--fsP:14.25px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .title{font-size:15.5px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnHome" href="/home/">HOME</a>
-  <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    <a class="btn" id="btnHome" href="/home/">HOME</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
 </div>
 
 <div class="page">
 
-  <div class="header">
+  <div class="header" aria-label="Header">
     <p class="k" id="hk">LAWS</p>
-    <h1 class="t" id="ht">GOVERNANCE LATTICE</h1>
-    <p class="s" id="hs">These laws are the guardrails: they keep claims bounded, keep support verifiable, and stop drift from multiplying under scale.</p>
-    <div class="fine" id="fine">Choose a lens: Formal (tight doctrine), Informal (TED), Platform (how to use across surfaces), Engineering (how to implement safely).</div>
+    <h1 class="t" id="ht">THE RULES THAT KEEP BIG IDEAS HONEST</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="ruleTop"></div>
+    <div class="fine" id="fine"></div>
 
-    <div class="lensRow" aria-label="Lens">
-      <button class="btn" id="lensFormal" type="button">FORMAL</button>
-      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
-      <button class="btn" id="lensPlatform" type="button">PLATFORM</button>
-      <button class="btn" id="lensEngineering" type="button">ENGINEERING</button>
+    <div class="lensRow" aria-label="Lenses">
+      <div class="pills">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+        <button class="pill dim" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill dim" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills">
+        <span class="fine" id="lensState">—</span>
+      </div>
     </div>
   </div>
 
-  <div class="band" id="band">LAW CATEGORIES</div>
-  <div class="stack" id="stack"></div>
+  <div class="band" id="band">CANONICAL LAWS (7)</div>
+  <div class="list" id="list"></div>
 
 </div>
 
@@ -276,15 +340,15 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ===== canonical state carry =====
+  // ===== canonical state (NO NEW gd_* KEYS) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -298,37 +362,70 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
+  // ===== lens mapping (4 lenses using existing keys only) =====
+  // INFORMAL    => style=informal depth=explore
+  // FORMAL      => style=formal   depth=explore
+  // PLATFORM    => style=informal depth=learn
+  // ENGINEERING => style=formal   depth=learn
+  function lensKey(){
+    if(style==="formal" && depth==="learn") return "engineering";
+    if(style==="informal" && depth==="learn") return "platform";
+    if(style==="formal") return "formal";
+    return "informal";
+  }
+
+  function setLens(k){
+    if(k==="engineering"){ style="formal"; depth="learn"; }
+    else if(k==="platform"){ style="informal"; depth="learn"; }
+    else if(k==="formal"){ style="formal"; depth="explore"; }
+    else { style="informal"; depth="explore"; }
+
+    try{
+      localStorage.setItem("gd_style",style);
+      localStorage.setItem("gd_depth",depth);
+    }catch(e){}
+
+    // update URL without losing other state
+    window.location.href = window.location.pathname + q();
+  }
+
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
     var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  // wire nav
+  // ===== wire nav =====
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
   wire("btnDoor","/door/");
+  wire("btnPrelude","/prelude/");
   wire("btnHome","/home/");
-  wire("btnProducts","/products/");
+
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockGauges","/gauges/");
 
-  // language toggle (reload same path)
+  // ===== language toggle (reload same path) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
+
   function paintLang(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
   paintLang();
+
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -339,829 +436,534 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== 4-lens selection (independent of gd_style) =====
-  var lens="informal"; // default TED
-  var lensFormal=document.getElementById("lensFormal");
-  var lensInformal=document.getElementById("lensInformal");
-  var lensPlatform=document.getElementById("lensPlatform");
-  var lensEngineering=document.getElementById("lensEngineering");
+  // ===== lens buttons =====
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
 
   function paintLens(){
-    lensFormal.classList.toggle("active", lens==="formal");
-    lensInformal.classList.toggle("active", lens==="informal");
-    lensPlatform.classList.toggle("active", lens==="platform");
-    lensEngineering.classList.toggle("active", lens==="engineering");
+    var k=lensKey();
+    pillInformal.classList.toggle("active", k==="informal");
+    pillFormal.classList.toggle("active", k==="formal");
+    pillPlatform.classList.toggle("active", k==="platform");
+    pillEngineering.classList.toggle("active", k==="engineering");
+
+    var label = (lang==="zh")
+      ? (k==="informal"?"通俗":"") + (k==="formal"?"正式":"") + (k==="platform"?"平台":"") + (k==="engineering"?"工程":"")
+      : (lang==="es")
+        ? (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA")
+        : (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
+
+    document.getElementById("lensState").textContent =
+      (lang==="zh") ? ("当前透镜："+label) :
+      (lang==="es") ? ("Lente actual: "+label) :
+      ("Current lens: "+label);
   }
-  function setLens(next){
-    if(next!=="formal" && next!=="informal" && next!=="platform" && next!=="engineering") next="informal";
-    lens=next;
-    paintLens();
-    renderAll();
-  }
-  lensFormal.addEventListener("click", function(){ setLens("formal"); });
-  lensInformal.addEventListener("click", function(){ setLens("informal"); });
-  lensPlatform.addEventListener("click", function(){ setLens("platform"); });
-  lensEngineering.addEventListener("click", function(){ setLens("engineering"); });
+  paintLens();
 
-  // ===== law catalog (7) =====
-  var LAW = [
-    {id:"calibration", c:"#B91C1C"},
-    {id:"admissibility", c:"#F59E0B"},
-    {id:"antidrift", c:"#7C3AED"},
-    {id:"containment", c:"#0EA5E9"},
-    {id:"scalegate", c:"#22C55E"},
-    {id:"observer", c:"#E5E7EB"},
-    {id:"correlation", c:"#F97316"}
-  ];
+  pillInformal.addEventListener("click", function(){ setLens("informal"); });
+  pillFormal.addEventListener("click", function(){ setLens("formal"); });
+  pillPlatform.addEventListener("click", function(){ setLens("platform"); });
+  pillEngineering.addEventListener("click", function(){ setLens("engineering"); });
 
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  // ===== COPY PACKS =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // ===== FULL CONTENT: 7 laws × 4 lenses × 3 langs (tight + TED) =====
-  // (Written to be support-bounded: big ideas, bounded claims, no escalation.)
-  var COPY = {
-    calibration:{
-      title: pick3("Calibration Authority Law","校准权威法则","Ley de Autoridad de Calibración"),
-      sub: pick3("Only one authority can set thresholds; everyone else provides data.","只有唯一权威可设阈值；其他输入仅为数据。","Solo una autoridad fija umbrales; el resto aporta datos."),
-      actions:[
-        {t:pick3("OPEN: DOOR","打开：DOOR","ABRIR: PUERTA"), href:"/door/"},
-        {t:pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: calibration authority is exclusive. Only the declared calibrator may set, change, or re-interpret measurement rules, thresholds, and reason codes. All other human inputs are non-authoritative data.",
-          "定义：校准权威是排他性的。只有声明的校准者可以设定/更改/重解释测量规则、阈值与原因码。其他人类输入一律视为非权威数据。",
-          "Definición: la autoridad de calibración es exclusiva. Solo el calibrador declarado puede fijar/cambiar reglas, umbrales y códigos. El resto es dato no autoritativo."
-        ),
-        p2: pick3(
-          "Constraint: if authority is not exclusive, the instrument becomes non-identifiable (threshold drift) and loses observer-invariant classification. Result: governance capture becomes structurally possible.",
-          "约束：若权威不排他，仪器将不可辨识（阈值漂移），失去观察者不变分类；结果是治理捕获在结构上变为可能。",
-          "Restricción: si la autoridad no es exclusiva, el instrumento pierde identificabilidad (deriva de umbrales) y la clasificación invariante. Resultado: captura de gobernanza es posible."
-        ),
-        bul: [
-          pick3("Authority is a primitive: it must be declared.","权威是原语：必须声明。","La autoridad es primitiva: debe declararse."),
-          pick3("Recalibration is an explicit epoch change.","再校准必须是显式新纪元。","Recalibración = nueva época explícita."),
-          pick3("Non-authoritative suggestions never override receipts.","非权威建议不可覆盖收据。","Sugerencias no autoritativas nunca anulan recibos."),
-          pick3("If calibration is ambiguous, output becomes UNDETERMINED.","校准含糊则输出 UNDETERMINED。","Si la calibración es ambigua: UNDETERMINED.")
-        ],
-        next: pick3("Next: declare who can calibrate before you publish any metric.","Next：在发布任何指标前先声明谁能校准。","Next: declara quién calibra antes de publicar métricas.")
-      },
-      informal:{
-        p1: pick3(
-          "This is the rule that keeps the whole machine from becoming a popularity contest. If everyone gets to “tune the instrument,” then the instrument stops meaning anything.",
-          "这是防止整台机器变成人气投票的规则：如果人人都能“调仪器”，那仪器就没有意义。",
-          "Esta es la regla que evita que todo se vuelva concurso de popularidad. Si cualquiera ‘ajusta el instrumento’, deja de significar algo."
-        ),
-        p2: pick3(
-          "So we do it the hard way: one calibrator. Everyone else brings receipts. That’s how the same evidence produces the same answer, even under pressure.",
-          "所以我们走难路：只有一个校准者。其他人都带收据来。这样同证据才能同结论，哪怕在压力下。",
-          "Lo hacemos difícil: un calibrador. El resto trae recibos. Así la misma evidencia produce la misma respuesta bajo presión."
-        ),
-        bul: [
-          pick3("One ruler, not five.","一个尺子，不是五个。","Una regla, no cinco."),
-          pick3("If you want a new answer, bring new evidence.","想要新答案就带新证据。","Si quieres otra respuesta, trae otra evidencia."),
-          pick3("No silent tuning. Ever.","绝不静默调参。","Sin tuning silencioso. Jamás.")
-        ],
-        next: pick3("Next: treat disagreement as a receipt problem, not a personality problem.","Next：把分歧当收据问题，不当人品问题。","Next: trata el desacuerdo como problema de recibos, no de personalidad.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: surface the calibrator identity, epoch id, and active thresholds wherever scores are shown. Users must be able to answer: ‘Who calibrated this and when?’ in one tap.",
-          "平台姿态：在展示分数的地方，显式显示校准者身份、纪元ID、当前阈值。用户一键就要能回答：‘谁校准的？什么时候？’",
-          "Postura de plataforma: mostrar calibrador, id de época y umbrales activos donde haya métricas. El usuario debe responder ‘quién calibró y cuándo’ con un toque."
-        ),
-        p2: pick3(
-          "Operational rule: any lens, export, or report includes calibration metadata. If metadata is missing, the platform labels outputs as NON-AUDITABLE.",
-          "操作规则：任何透镜/导出/报告都带校准元数据。缺失则标记为 NON-AUDITABLE。",
-          "Regla operativa: todo lens/export/reporte incluye metadatos de calibración. Si falta: NON-AUDITABLE."
-        ),
-        bul: [
-          pick3("Show epoch + calibrator in headers.","页眉显示纪元+校准者。","Mostrar época + calibrador en encabezados."),
-          pick3("Lock thresholds per epoch.","阈值按纪元锁定。","Bloquear umbrales por época."),
-          pick3("Expose reason codes with outputs.","输出必须带原因码。","Exponer códigos de razón con salidas.")
-        ],
-        next: pick3("Next: add a small ‘Calibration’ badge everywhere metrics appear.","Next：所有指标旁加‘Calibration’徽章。","Next: añade un badge ‘Calibration’ donde haya métricas.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: store calibration as immutable config (versioned). Every computation reads calibration by version hash. Back-nav or scope change invalidates dependent receipts.",
-          "工程姿态：把校准存为不可变配置（版本化）。所有计算按版本哈希读取校准。回退或范围变更会使依赖收据失效。",
-          "Postura de ingeniería: calibración como config inmutable (versionada). Toda computación lee por hash de versión. Back-nav o cambio de alcance invalida recibos dependientes."
-        ),
-        p2: pick3(
-          "Failure mode: threshold drift via ad-hoc edits. Mitigation: signed releases + audit logs + deterministic replay inputs.",
-          "失效模式：临时编辑导致阈值漂移。缓解：签名发布+审计日志+确定性回放输入。",
-          "Modo de fallo: deriva por edits ad-hoc. Mitigación: releases firmados + logs + replay determinista."
-        ),
-        bul: [
-          pick3("Config hash included in every export.","每次导出包含配置哈希。","Hash de config en cada export."),
-          pick3("Reject computations without calibration id.","无校准ID则拒绝计算。","Rechazar cómputo sin id de calibración."),
-          pick3("Epoch bump on any rule change.","任何规则变更都升纪元。","Subir época ante cualquier cambio.")
-        ],
-        next: pick3("Next: implement ‘calibration_id’ as a required field in all outputs.","Next：所有输出强制包含 calibration_id。","Next: haz obligatorio ‘calibration_id’ en todas las salidas.")
-      }
+  var HEAD = {
+    en:{
+      hs:"What’s the loudest claim you can make *without lying*? That question is the whole point of this site. These laws keep every big idea support-bounded—so curiosity can scale without collapsing into hype.",
+      rule:"Rule: big claims are welcome. Unbounded claims are not. Every upgrade requires receipts. Every correction creates a new epoch.",
+      fine:"Tip: Use the lens buttons above. Informal is TED-style. Formal is specification. Platform is user-flow + navigation contracts. Engineering is boundary-first constraints."
     },
-
-    admissibility:{
-      title: pick3("Admissibility Law","可采信法则","Ley de Admisibilidad"),
-      sub: pick3("Claims cannot exceed receipts under declared scope.","主张不得超过声明范围内的收据。","Las afirmaciones no exceden los recibos bajo alcance declarado."),
-      actions:[
-        {t:pick3("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"},
-        {t:pick3("OPEN: DIAGNOSTIC","打开：诊断","ABRIR: DIAGNÓSTICO"), href:"/products/coherence-diagnostic/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: admissibility is a binary decision under declared measurement rules and declared scope. If evidence required by the rule is absent, admissibility is NOT AVAILABLE (or UNDETERMINED).",
-          "定义：可采信是在声明测量规则与声明范围下的二元判定。若规则要求的证据缺失，则可采信为 NOT AVAILABLE（或 UNDETERMINED）。",
-          "Definición: admisibilidad es decisión binaria bajo reglas y alcance declarados. Si falta evidencia requerida: NOT AVAILABLE (o UNDETERMINED)."
-        ),
-        p2: pick3(
-          "Constraint: no escalation beyond receipts. Any attempt to compensate by narrative, intention, or weighting violates admissibility and forces containment.",
-          "约束：不得超越收据升级。任何用叙事/意图/加权来补偿的做法都违反可采信，并触发隔离。",
-          "Restricción: no escalar más allá de recibos. Compensar con narrativa/intención/ponderación viola admisibilidad y obliga a contención."
-        ),
-        bul:[
-          pick3("Scope lock precedes computation.","计算前先锁范围。","Bloquear alcance antes de computar."),
-          pick3("Same receipts → same result.","同收据→同结果。","Mismos recibos → mismo resultado."),
-          pick3("Unknown ≠ admissible.","未知不等于可采信。","Desconocido ≠ admisible.")
-        ],
-        next: pick3("Next: when evidence is missing, output the missing list—not a story.","Next：缺证据就输出缺失清单，不讲故事。","Next: si falta evidencia, devuelve lista de faltantes, no historia.")
-      },
-      informal:{
-        p1: pick3(
-          "This is the law that saves reputations. You don’t get to say the big thing just because you want it to be true. You say what the receipts allow.",
-          "这是保住名声的法则：你不能因为想它是真的就说大话，你只能说收据允许你说的。",
-          "Esta es la ley que salva reputaciones. No dices lo grande por deseo; dices lo que los recibos permiten."
-        ),
-        p2: pick3(
-          "And here’s the punchline: ‘Not measured yet’ is not a failure. Pretending it was measured is the failure.",
-          "重点是：‘还没测’不是失败；假装测过才是失败。",
-          "Remate: ‘Aún no medido’ no es fallo. Fingir que lo mediste sí lo es."
-        ),
-        bul:[
-          pick3("Receipts first.","收据优先。","Recibos primero."),
-          pick3("If it’s missing, say it’s missing.","缺失就承认缺失。","Si falta, dilo."),
-          pick3("Earn upgrades.","升级要靠挣。","Gana los upgrades.")
-        ],
-        next: pick3("Next: move one level at a time—only after the gate says yes.","Next：闸门说可以才上一级。","Next: sube un nivel solo cuando la compuerta diga sí.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: every page that invites a claim must also show its admissibility posture: Concept / Live / Roadmap, with a clear ‘NOT MEASURED’ state available.",
-          "平台姿态：任何引导主张的页面，都必须同时展示可采信姿态：概念/上线/路线图，并允许清晰的 NOT MEASURED 状态。",
-          "Postura de plataforma: toda página que invite afirmación debe mostrar postura: Concepto/En vivo/Ruta, con estado claro NOT MEASURED."
-        ),
-        p2: pick3(
-          "User experience rule: make the next action obvious (collect which receipt, run which gauge, read which law).",
-          "体验规则：下一步必须明显（补哪个收据、跑哪个量规、看哪条法则）。",
-          "Regla UX: hacer obvio el siguiente paso (qué recibo, qué medidor, qué ley)."
-        ),
-        bul:[
-          pick3("Always show reason codes when blocking.","阻断时必须显示原因码。","Mostrar códigos de razón al bloquear."),
-          pick3("Show ‘missing receipts’ lists.","显示缺失收据清单。","Mostrar lista de recibos faltantes."),
-          pick3("One tap to Laws/Gauges.","一键跳到法则/量规。","Un toque a Leyes/Medidores.")
-        ],
-        next: pick3("Next: add ‘Admissibility’ badges to outputs across Products and Gauges.","Next：在产品与量规输出旁加 Admissibility 徽章。","Next: añade badges ‘Admisibilidad’ en Productos y Medidores.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: admissibility is computed from a declared schema: (scope_id, ruleset_id, evidence_hash) → {pass|fail|undetermined} + reason_codes. No hidden inputs.",
-          "工程姿态：可采信必须由声明式schema计算：(scope_id, ruleset_id, evidence_hash) → {pass|fail|undetermined}+原因码。不得有隐藏输入。",
-          "Postura de ingeniería: admisibilidad se calcula por esquema declarado: (scope_id, ruleset_id, evidence_hash) → {pasa|falla|indeterminado} + códigos. Sin inputs ocultos."
-        ),
-        p2: pick3(
-          "Failure mode: ‘soft passes’ created by implicit defaults. Mitigation: treat missing fields as explicit failure/undetermined, never as inferred success.",
-          "失效模式：隐式默认导致“软通过”。缓解：缺字段=明确失败/不确定，绝不推断成功。",
-          "Fallo: ‘pases suaves’ por defaults implícitos. Mitigación: faltantes = falla/indeterminado, nunca éxito inferido."
-        ),
-        bul:[
-          pick3("Deterministic function + reason codes.","确定性函数+原因码。","Función determinista + códigos."),
-          pick3("Evidence hashing for replay.","证据哈希用于回放。","Hash de evidencia para replay."),
-          pick3("No inferred intent, ever.","不推断意图。","Sin inferir intención.")
-        ],
-        next: pick3("Next: implement a strict validator that rejects any output missing scope or evidence hashes.","Next：实现严格校验：缺 scope 或 evidence hash 就拒绝输出。","Next: implementa validador estricto: rechaza salidas sin scope o hash.")
-      }
+    zh:{
+      hs:"什么是你能说出的最大主张，却又不会撒谎？这就是本网站的核心。以下法则把一切大想法都锁在“可支撑边界”内，让好奇心可以扩张而不会坍塌成噱头。",
+      rule:"规则：欢迎大主张；不允许无界主张。任何升级都需要收据；任何修正都会开启新纪元。",
+      fine:"提示：上方透镜可切换。通俗=TED式；正式=规格；平台=用户路径/导航契约；工程=边界优先约束。"
     },
-
-    antidrift:{
-      title: pick3("Anti-Drift Law","反漂移法则","Ley Anti-Deriva"),
-      sub: pick3("Definitions and routes stay stable; corrections create new epochs.","定义与路由必须稳定；修正必须新纪元。","Definiciones y rutas estables; corrección = nueva época."),
-      actions:[
-        {t:pick3("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"},
-        {t:pick3("OPEN: EXPLORE","打开：探索","ABRIR: EXPLORAR"), href:"/explore/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: drift is any change in meaning, threshold, or route mapping without explicit versioning. Drift destroys comparability and invalidates conclusions across time.",
-          "定义：漂移是含义/阈值/路由映射在无显式版本化情况下发生变化。漂移会摧毁可比性，使跨时间结论失效。",
-          "Definición: deriva es cualquier cambio de significado/umbral/ruta sin versionado explícito. Destruye comparabilidad e invalida conclusiones en el tiempo."
-        ),
-        p2: pick3(
-          "Rule: corrections are new epochs. Past outputs remain interpretable under prior rules. Silent edits are prohibited because they corrupt replay and auditing.",
-          "规则：修正必须新纪元；旧输出按旧规则仍可解释。禁止静默编辑，因为它破坏回放与审计。",
-          "Regla: correcciones crean nueva época. Lo anterior sigue interpretable con reglas previas. Edición silenciosa prohibida."
-        ),
-        bul:[
-          pick3("Stable identifiers; no renaming without epoch bump.","ID稳定；改名必须升纪元。","IDs estables; renombrar requiere nueva época."),
-          pick3("Routes carry canonical state keys.","路由携带规范状态键。","Rutas llevan claves de estado canónicas."),
-          pick3("Comparable windows required for trend claims.","做趋势主张必须窗口可比。","Ventanas comparables para afirmar tendencias.")
-        ],
-        next: pick3("Next: if you must change meaning, publish the old and new side-by-side with an effective date.","Next：必须改含义时，旧新并列+生效日期。","Next: si cambias significado, publica viejo vs nuevo con fecha efectiva.")
-      },
-      informal:{
-        p1: pick3(
-          "Drift is how good ideas die. It starts as “just a small edit,” and ends with nobody knowing what anything means.",
-          "漂移是好点子怎么死的：从‘小改一下’开始，到最后没人知道任何词是什么意思。",
-          "La deriva es cómo mueren las buenas ideas: empieza como ‘un pequeño cambio’ y termina con nadie sabiendo qué significa nada."
-        ),
-        p2: pick3(
-          "So we do the boring thing on purpose: names stay stable, routes stay stable, and if you change the rules, you stamp a new epoch. That’s how trust stays alive.",
-          "所以我们故意做无聊但正确的事：名字稳定、路由稳定；规则变了就盖新纪元章。信任因此活着。",
-          "Hacemos lo aburrido a propósito: nombres y rutas estables. Si cambias reglas, marcas nueva época. Así vive la confianza."
-        ),
-        bul:[
-          pick3("No silent edits.","不允许静默改。","Sin ediciones silenciosas."),
-          pick3("Stamp the change.","变更要盖章。","Marca el cambio."),
-          pick3("Keep old meaning accessible.","旧含义要可查。","Mantén accesible el significado anterior.")
-        ],
-        next: pick3("Next: treat every definition like a contract with the future.","Next：把每个定义当作对未来的合同。","Next: trata cada definición como contrato con el futuro.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: every page carries the same navigation contract. Users should never wonder: ‘Where am I?’ or ‘Why did this link reset my state?’",
-          "平台姿态：全站同一导航契约。用户不该困惑：‘我在哪？’或‘为什么这个链接把状态重置了？’",
-          "Postura de plataforma: todo el sitio comparte contrato de navegación. El usuario no debe preguntarse ‘¿dónde estoy?’ o ‘¿por qué se reseteó el estado?’"
-        ),
-        p2: pick3(
-          "UI rule: one page = one job. If a page can’t do the job clearly, it routes to a hub rather than pretending.",
-          "UI规则：一页一事。做不清楚就路由到枢纽，不要假装能做。",
-          "Regla UI: una página, un trabajo. Si no lo hace claro, enruta a un hub en vez de fingir."
-        ),
-        bul:[
-          pick3("Reload same pathname for language changes.","语言切换重载同路径。","Cambiar idioma recarga mismo path."),
-          pick3("Provide Back + Exit for multi-entry pages.","多入口页面必须有 Back+Exit。","Páginas multi-entrada: Back + Exit."),
-          pick3("Keep accordion focus (single-open).","手风琴单开聚焦。","Acordeón de apertura única.")
-        ],
-        next: pick3("Next: add a ‘Back to DOOR’ link on every hub page.","Next：每个枢纽页加‘Back to DOOR’。","Next: añade ‘Volver a PUERTA’ en cada hub.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: treat identifiers as stable API. DOM ids, data keys, and routes are versioned assets. Breaking changes require explicit migration paths.",
-          "工程姿态：把标识符当稳定API。DOM id、数据键、路由都是版本化资产；破坏性变更必须有迁移路径。",
-          "Postura de ingeniería: los identificadores son API estable. DOM ids, keys y rutas son assets versionados. Cambios rompientes requieren migración explícita."
-        ),
-        p2: pick3(
-          "Failure mode: mobile-only click failures caused by pointer-event layers and z-index collisions. Mitigation: avoid overlays; keep event targets simple; test touch-first.",
-          "失效模式：手机端点击失效（pointer-events层或z-index冲突）。缓解：少用覆盖层；目标简单；触摸优先测试。",
-          "Fallo: clicks móviles por capas pointer-events y colisiones z-index. Mitigación: evitar overlays; targets simples; test touch-first."
-        ),
-        bul:[
-          pick3("Deterministic event binding (no inline onclick).","确定性事件绑定（无onclick内联）。","Binding determinista (sin onclick)."),
-          pick3("Z-index hierarchy documented and stable.","z-index层级稳定并文档化。","Jerarquía z-index estable y documentada."),
-          pick3("Touch-action: manipulation on tappables.","可点元素 touch-action: manipulation。","touch-action: manipulation en tocables.")
-        ],
-        next: pick3("Next: add a mobile regression check: ‘can I open/close every accordion on phone?’","Next：加手机回归：‘手机上每个手风琴能否开/关？’","Next: añade check móvil: ‘¿puedo abrir/cerrar cada acordeón en teléfono?’")
-      }
-    },
-
-    containment:{
-      title: pick3("Containment Law","隔离法则","Ley de Contención"),
-      sub: pick3("Keep failure local; stop cascade early; rollback beats collapse.","把失败局部化；及早止级联；回滚胜过崩塌。","Mantén el fallo local; detén cascada; rollback > colapso."),
-      actions:[
-        {t:pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"},
-        {t:pick3("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: containment is the discipline of limiting blast radius. When instability is detected, the system isolates the affected zone and prevents propagation via shared dependencies.",
-          "定义：隔离是限制爆炸半径的纪律。检测到不稳定时，系统隔离受影响区域，并通过共享依赖阻断传播。",
-          "Definición: contención limita radio de impacto. Al detectar inestabilidad, se aísla la zona afectada y se evita propagación por dependencias compartidas."
-        ),
-        p2: pick3(
-          "Rule: prioritize rollback and segmentation over continuity. Continuing a drifting system is an escalation decision and requires admissible receipts.",
-          "规则：回滚与分段优先于‘不断电连续性’。继续运行漂移系统属于升级决策，必须有可采信收据。",
-          "Regla: prioriza rollback y segmentación sobre continuidad. Continuar con deriva es escalación y requiere recibos admisibles."
-        ),
-        bul:[
-          pick3("Contain first, explain second.","先隔离后解释。","Contener primero, explicar después."),
-          pick3("Rollback is a valid output state.","回滚是合法输出态。","Rollback es estado de salida válido."),
-          pick3("Segmentation is a structural invariant at scale.","规模下分段是结构不变量。","Segmentación es invariante estructural al escalar.")
-        ],
-        next: pick3("Next: define your rollback point before you start scaling.","Next：扩张前先定义回滚点。","Next: define punto de rollback antes de escalar.")
-      },
-      informal:{
-        p1: pick3(
-          "Containment is how adults run systems. When something goes weird, you don’t argue about it. You stop the bleeding.",
-          "隔离就是成年人怎么运行系统：一怪就不争，先止血。",
-          "La contención es cómo operan adultos. Si algo se pone raro, no discutes: detienes el sangrado."
-        ),
-        p2: pick3(
-          "And the best part? Containment doesn’t slow you down long-term. It saves you from the kind of failure that deletes the whole project.",
-          "更妙的是：隔离不会长期拖慢你，它会救你免于那种“删库式失败”。",
-          "Y lo mejor: contención no te frena a largo plazo; te salva del fallo que borra todo el proyecto."
-        ),
-        bul:[
-          pick3("Stop cascade early.","及早止级联。","Detén cascada temprano."),
-          pick3("Make rollback normal.","把回滚正常化。","Normaliza el rollback."),
-          pick3("Protect the rest of the system.","保护系统其余部分。","Protege el resto del sistema.")
-        ],
-        next: pick3("Next: build ‘contain’ as a button, not as a debate.","Next：把‘隔离’做成按钮，不做成辩论。","Next: convierte ‘contener’ en botón, no en debate.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: expose a clear Contain route wherever instability is discussed. Users should always have a safe exit: hold, contain, rollback.",
-          "平台姿态：凡是讨论不稳定之处，都要提供明确的‘隔离’路线。用户必须随时有安全出口：hold/contain/rollback。",
-          "Postura de plataforma: mostrar ruta clara de contención donde haya inestabilidad. El usuario siempre debe tener salida segura: hold/contain/rollback."
-        ),
-        p2: pick3(
-          "UI rule: do not bury containment under long text. Put it at the end of the section as an action.",
-          "UI规则：不要把隔离埋在长文里；把它作为段落末尾的动作。",
-          "Regla UI: no entierres contención en texto largo; ponlo como acción al final."
-        ),
-        bul:[
-          pick3("Always show ‘Contain’ as a next action when drift accelerates.","漂移加速时总显示‘隔离’下一步。","Mostrar ‘Contener’ cuando la deriva acelera."),
-          pick3("Keep return routes shallow.","返回路径要浅。","Mantén rutas de retorno cortas."),
-          pick3("No multi-layer modal stacks on mobile.","手机端不叠多层模态。","Sin pilas de modales en móvil.")
-        ],
-        next: pick3("Next: standardize ‘Contain / Hold / Proceed’ vocabulary across Products and Gauges.","Next：在产品与量规中统一‘Contain/Hold/Proceed’词汇。","Next: estandariza ‘Contener/Esperar/Proceder’ en Productos y Medidores.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: implement zone boundaries (isolation) and explicit rollback tokens. Back-navigation invalidates downstream receipts to prevent phantom continuity.",
-          "工程姿态：实现分区边界（隔离）与明确回滚令牌。回退要使下游收据失效，防止伪连续。",
-          "Postura de ingeniería: implementar límites de zona (aislamiento) y tokens explícitos de rollback. Back-nav invalida recibos downstream para evitar continuidad fantasma."
-        ),
-        p2: pick3(
-          "Failure mode: cascade via shared services. Mitigation: dependency segmentation + circuit breakers + deterministic recovery procedures.",
-          "失效模式：共享服务导致级联。缓解：依赖分段+熔断器+确定性恢复流程。",
-          "Fallo: cascada por servicios compartidos. Mitigación: segmentación de dependencias + circuit breakers + recuperación determinista."
-        ),
-        bul:[
-          pick3("Circuit-breakers around high-risk modules.","高风险模块加熔断。","Circuit breakers en módulos de riesgo."),
-          pick3("Rollback token emitted on exit.","退出时发回滚令牌。","Emitir token de rollback al salir."),
-          pick3("Log contain events as first-class receipts.","隔离事件作为一级收据记录。","Registrar eventos de contención como recibos de primera clase.")
-        ],
-        next: pick3("Next: define blast radius metrics and make them visible in Gauges.","Next：定义爆炸半径指标并在量规中可见。","Next: define métricas de radio de impacto y hazlas visibles en Medidores.")
-      }
-    },
-
-    scalegate:{
-      title: pick3("Scale-Gate Law","规模闸门法则","Ley de Compuertas de Escala"),
-      sub: pick3("Scale only when receipts widen; speed without proof is debt.","只有收据变宽才扩张；无证明的速度是债。","Escala solo si se amplían recibos; velocidad sin prueba es deuda."),
-      actions:[
-        {t:pick3("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"},
-        {t:pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: scaling is a controlled increase in exposure. A scale gate is a condition set that must be satisfied before exposure increases. It is evaluated on receipts, not intentions.",
-          "定义：扩张是暴露的受控增加。规模闸门是在增加暴露前必须满足的条件集，依据收据评估，不依据意图。",
-          "Definición: escalar es aumentar exposición de forma controlada. La compuerta de escala es un conjunto de condiciones antes de aumentar exposición, evaluado por recibos, no por intención."
-        ),
-        p2: pick3(
-          "Rule: if evidence does not widen, scale does not widen. Scale can be frozen without being failed. Freeze is a valid state under ambiguity.",
-          "规则：证据不变宽，规模不变宽。规模可以冻结而不算失败；在歧义下冻结是合法状态。",
-          "Regla: si la evidencia no se amplía, la escala no se amplía. Se puede congelar sin ‘fallar’. Congelar es estado válido bajo ambigüedad."
-        ),
-        bul:[
-          pick3("Gate by receipts, not by deadlines.","按收据闸门，不按截止日期。","Gate por recibos, no por fechas límite."),
-          pick3("Freeze is a safety output.","冻结是安全输出。","Freeze es salida de seguridad."),
-          pick3("New event class required to tighten intervals.","收紧必须有新事件类。","Se requiere nueva clase de evento para estrechar intervalos.")
-        ],
-        next: pick3("Next: define the minimum receipt set that unlocks the next scale step.","Next：定义解锁下一步规模的最小收据集。","Next: define el set mínimo de recibos que desbloquea el siguiente paso de escala.")
-      },
-      informal:{
-        p1: pick3(
-          "Scaling is where dreams go to die if you do it early. It’s not the big idea that breaks you—it’s the multiplied idea.",
-          "扩张是梦想早死的地方：不是点子本身害你，是点子被乘起来后害你。",
-          "Escalar es donde mueren sueños si lo haces temprano. No te rompe la idea; te rompe la idea multiplicada."
-        ),
-        p2: pick3(
-          "So we treat scale like a privilege. You earn it with receipts. Not with hype. Not with urgency. With proof.",
-          "所以规模是一种特权：用收据去挣，不靠噱头，不靠紧迫感，靠证明。",
-          "Tratamos la escala como privilegio: se gana con recibos, no con hype ni urgencia. Con prueba."
-        ),
-        bul:[
-          pick3("Earn scale.","规模要挣。","Gana la escala."),
-          pick3("Freeze without shame.","可冻结不丢人。","Congela sin vergüenza."),
-          pick3("Proof first, speed second.","证明第一，速度第二。","Prueba primero, velocidad después.")
-        ],
-        next: pick3("Next: if you feel urgency, that’s the moment to slow down and check receipts.","Next：越着急越要慢下来查收据。","Next: si sientes urgencia, es cuando debes frenar y revisar recibos.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: every growth path is represented as gates: what you can do now, what’s locked, and what receipt unlocks it. No hidden upgrade paths.",
-          "平台姿态：把增长路径做成闸门：现在能做什么、什么被锁、哪个收据解锁。不能有隐藏升级路径。",
-          "Postura de plataforma: representar crecimiento como compuertas: qué puedes hacer ahora, qué está bloqueado y qué recibo lo desbloquea. Sin upgrades ocultos."
-        ),
-        p2: pick3(
-          "UX rule: show ‘Next receipt to unlock’ at the end of relevant sections.",
-          "UX规则：在相关段落末尾显示‘解锁所需的下一条收据’。",
-          "Regla UX: mostrar ‘Siguiente recibo para desbloquear’ al final."
-        ),
-        bul:[
-          pick3("Lock actions with explanation, not with silence.","锁定动作要解释，不要沉默。","Bloquear con explicación, no con silencio."),
-          pick3("Expose ‘freeze’ as a normal option.","把‘冻结’做成正常选项。","Exponer ‘freeze’ como opción normal."),
-          pick3("Link gates to Gauges and Laws.","闸门要链接到量规与法则。","Vincular compuertas a Medidores y Leyes.")
-        ],
-        next: pick3("Next: add a small ‘Scale Gate’ block to each Product page (what’s required to expand).","Next：每个产品页加‘Scale Gate’块（扩张所需条件）。","Next: añade bloque ‘Compuerta de escala’ en cada Producto.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: implement gates as deterministic functions and enforce them at boundaries (routes, API calls, state transitions). Never enforce only in the UI.",
-          "工程姿态：闸门必须是确定性函数，在边界处强制（路由/API/状态转移），不能只在UI里做。",
-          "Postura de ingeniería: compuertas como funciones deterministas y se aplican en límites (rutas/APIs/transiciones). Nunca solo en UI."
-        ),
-        p2: pick3(
-          "Failure mode: bypass via alternate routes. Mitigation: unify press primitives, canonical routing, and receipt validation at the controller layer.",
-          "失效模式：绕路绕过闸门。缓解：统一按压原语、规范路由、控制层验证收据。",
-          "Fallo: bypass por rutas alternas. Mitigación: primitivas unificadas, ruteo canónico y validación de recibos en controlador."
-        ),
-        bul:[
-          pick3("Gate checks at entry + before commit.","入口+提交前都检查。","Chequear compuerta al entrar y antes de commit."),
-          pick3("One routing function, no forks.","一个路由函数，不分叉。","Una función de ruteo, sin forks."),
-          pick3("Receipt validation near data store.","收据验证靠近数据存储。","Validación cerca del store de datos.")
-        ],
-        next: pick3("Next: implement a ‘gate_result + reason_codes’ return type and use it everywhere.","Next：实现 gate_result+reason_codes 返回类型，并全局使用。","Next: implementa tipo de retorno ‘gate_result + reason_codes’ y úsalo en todas partes.")
-      }
-    },
-
-    observer:{
-      title: pick3("Observer Invariance Law","观察者不变法则","Ley de Invariancia del Observador"),
-      sub: pick3("Same scope + same receipts → same classification.","同范围同收据 → 同分类。","Mismo alcance + mismos recibos → misma clasificación."),
-      actions:[
-        {t:pick3("OPEN: COHERENCE DIAGNOSTIC","打开：一致性诊断","ABRIR: DIAGNÓSTICO"), href:"/products/coherence-diagnostic/"},
-        {t:pick3("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: a valid instrument is observer-invariant. Given identical scope, manifests, and evidence, independent observers must derive identical classifications.",
-          "定义：有效仪器必须观察者不变：在相同范围/清单/证据下，独立观察者必须得到相同分类。",
-          "Definición: un instrumento válido es invariante al observador. Con mismo alcance/manifiestos/evidencia, observadores independientes deben producir la misma clasificación."
-        ),
-        p2: pick3(
-          "Rule: disagreement is resolved by scope mismatch or missing receipts, not by interpreting intent. If disagreement persists with identical inputs, the instrument is mis-specified.",
-          "规则：分歧只能由范围不一致或收据缺失解释，不能靠意图解释。若输入一致仍分歧，则仪器规格错误。",
-          "Regla: el desacuerdo se resuelve por mismatch de alcance o recibos faltantes, no por intención. Si persiste con inputs idénticos, el instrumento está mal especificado."
-        ),
-        bul:[
-          pick3("Declare measurement rules explicitly.","显式声明测量规则。","Declarar reglas de medición explícitas."),
-          pick3("Hash receipts for replay.","收据哈希用于回放。","Hashear recibos para replay."),
-          pick3("No narrative arbitration.","不做叙事仲裁。","Sin arbitraje narrativo.")
-        ],
-        next: pick3("Next: when two observers differ, first compare scope + evidence hashes.","Next：两观察者不一致时，先对比 scope 与 evidence hash。","Next: si dos observadores difieren, compara primero hash de alcance y evidencia.")
-      },
-      informal:{
-        p1: pick3(
-          "If two people look at the same receipts and get two different answers, you don’t have a tool—you have an argument generator.",
-          "两个人看同一套收据得出两个答案，那不是工具，是“制造争吵机”。",
-          "Si dos personas ven los mismos recibos y obtienen respuestas distintas, no tienes herramienta: tienes generador de discusiones."
-        ),
-        p2: pick3(
-          "So we make it boring on purpose: same inputs, same outputs. That’s what turns confusion into clarity.",
-          "所以我们故意把它做得很无聊：同输入同输出。无聊才会把困惑变清晰。",
-          "Lo hacemos aburrido a propósito: mismo input, misma salida. Eso convierte confusión en claridad."
-        ),
-        bul:[
-          pick3("Receipts settle it.","收据定输赢。","Los recibos lo resuelven."),
-          pick3("No mind-reading.","不读心。","Sin leer mentes."),
-          pick3("If it’s ambiguous, say so.","有歧义就说有歧义。","Si es ambiguo, dilo.")
-        ],
-        next: pick3("Next: if you want certainty, collect better receipts—not louder opinions.","Next：想更确定就收集更好的收据，不要更大的嗓门。","Next: si quieres certeza, recoge mejores recibos, no opiniones más fuertes.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: make scope + receipts visible. Every output page should show the evidence anchors it depended on (at least as ids / timestamps).",
-          "平台姿态：让范围与收据可见。每个输出页都要显示它依赖的证据锚（至少ID/时间戳）。",
-          "Postura de plataforma: hacer visible alcance + recibos. Toda página de salida muestra anclas de evidencia (ids/tiempos)."
-        ),
-        p2: pick3(
-          "UX rule: replace ‘why’ arguments with ‘show me the receipt’ buttons (jump to Laws/Gauges).",
-          "UX规则：用‘给我看收据’按钮替代‘为什么’争论（跳到法则/量规）。",
-          "Regla UX: reemplazar debates ‘por qué’ con botones ‘muéstrame el recibo’ (saltar a Leyes/Medidores)."
-        ),
-        bul:[
-          pick3("Evidence anchors on every result card.","每个结果卡都有证据锚。","Anclas de evidencia en cada tarjeta."),
-          pick3("One-tap jump to source pages.","一键跳到来源页。","Un toque al origen."),
-          pick3("Expose UNDETERMINED as a normal state.","把 UNDETERMINED 当正常状态。","Mostrar UNDETERMINED como estado normal.")
-        ],
-        next: pick3("Next: add an ‘Evidence Used’ mini-block to all diagnostic outputs.","Next：所有诊断输出加‘Evidence Used’小块。","Next: añade bloque ‘Evidencia usada’ a todas las salidas diagnósticas.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: define a canonical input signature and a pure evaluation function. If evaluation depends on hidden context, observer invariance is broken by design.",
-          "工程姿态：定义规范输入签名与纯评估函数。若评估依赖隐藏上下文，则观察者不变在设计上已被破坏。",
-          "Postura de ingeniería: definir firma de entrada canónica y función pura. Si depende de contexto oculto, rompe invariancia por diseño."
-        ),
-        p2: pick3(
-          "Mitigation: isolate evaluation from UI state, cache by evidence hash, and require deterministic serialization of inputs.",
-          "缓解：把评估从UI状态隔离；按证据哈希缓存；要求输入确定性序列化。",
-          "Mitigación: aislar evaluación del estado UI, cache por hash, serialización determinista de inputs."
-        ),
-        bul:[
-          pick3("Pure function + deterministic serialization.","纯函数+确定性序列化。","Función pura + serialización determinista."),
-          pick3("Cache by evidence hash.","按证据哈希缓存。","Cache por hash de evidencia."),
-          pick3("Reject hidden dependencies.","拒绝隐藏依赖。","Rechazar dependencias ocultas.")
-        ],
-        next: pick3("Next: implement a ‘replay’ endpoint that re-runs evaluation from stored receipts.","Next：实现‘replay’端点：用存储收据重跑评估。","Next: implementa endpoint ‘replay’ que re-ejecute desde recibos almacenados.")
-      }
-    },
-
-    correlation:{
-      title: pick3("Correlation Penalty Law","相关性惩罚法则","Ley de Penalización por Correlación"),
-      sub: pick3("Shared exposure amplifies failure; scale decisions must price correlation.","共享暴露会放大失败；扩张必须给相关性定价。","Exposición compartida amplifica fallos; la escala debe ‘precio-correlación’."),
-      actions:[
-        {t:pick3("OPEN: DOT.GRID","打开：DOT.GRID","ABRIR: DOT.GRID"), href:"/products/dot-grid/"},
-        {t:pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
-      ],
-      formal:{
-        p1: pick3(
-          "Definition: correlation is shared dependency and shared variance across a network. Under scale, correlated exposure converts local error into systemic failure.",
-          "定义：相关性是网络中的共享依赖与共享方差。在规模下，相关暴露会把局部错误变成系统性失败。",
-          "Definición: correlación es dependencia y varianza compartidas en una red. Al escalar, la exposición correlacionada convierte error local en fallo sistémico."
-        ),
-        p2: pick3(
-          "Rule: scale decisions must penalize correlation. Independent zones reduce correlated failure probability; clustered deployment increases it. Correlation is priced as risk.",
-          "规则：扩张决策必须惩罚相关性。独立分区降低相关失败概率；集群部署提高它。相关性要被当风险定价。",
-          "Regla: decisiones de escala penalizan correlación. Zonas independientes reducen riesgo; despliegue en cluster lo aumenta. Correlación se ‘precia’ como riesgo."
-        ),
-        bul:[
-          pick3("Segment zones to reduce shared blast radius.","分区以降低共享爆炸半径。","Segmentar zonas reduce radio compartido."),
-          pick3("Treat clustered adoption as higher risk tier.","把集群采纳视为更高风险层。","Adopción en cluster = tier de riesgo mayor."),
-          pick3("Correlation must be measured, not assumed.","相关性必须测量，不能假设。","Correlación se mide, no se asume.")
-        ],
-        next: pick3("Next: do not scale a feature across all users until you have a low-correlation rollout plan.","Next：没有低相关推广计划就别全量。","Next: no escales a todos sin plan de rollout de baja correlación.")
-      },
-      informal:{
-        p1: pick3(
-          "Correlation is the hidden monster. Everything looks fine… until the same weakness hits everywhere at once.",
-          "相关性是隐藏怪物：看起来都好好的……直到同一个弱点同时击穿全网。",
-          "La correlación es el monstruo oculto. Todo parece bien… hasta que la misma debilidad golpea en todas partes a la vez."
-        ),
-        p2: pick3(
-          "So we don’t just ask ‘does it work?’ We ask ‘does it work when everybody shares the same dependency?’ That’s the real test.",
-          "所以我们不只问‘能不能用’，我们问‘当所有人共享同一依赖时还能不能用’。这才是真测验。",
-          "No solo preguntamos ‘¿funciona?’ Preguntamos ‘¿funciona cuando todos comparten la misma dependencia?’ Ese es el test real."
-        ),
-        bul:[
-          pick3("Spread it out.","分散部署。","Distribúyelo."),
-          pick3("Don’t cluster risk.","别把风险扎堆。","No agrupes riesgo."),
-          pick3("Measure correlation before you celebrate.","庆祝前先测相关性。","Mide correlación antes de celebrar.")
-        ],
-        next: pick3("Next: build in zones first, then expand—never all-at-once.","Next：先分区再扩张，永不一键全量。","Next: construye por zonas y luego expande—nunca todo de golpe.")
-      },
-      platform:{
-        p1: pick3(
-          "Platform posture: show ‘zone’ and ‘shared dependency’ indicators where adoption is tracked. Users should see whether a feature is isolated or correlated.",
-          "平台姿态：在追踪采纳处显示‘分区’与‘共享依赖’指标，让用户知道某功能是隔离还是相关。",
-          "Postura de plataforma: mostrar indicadores de ‘zona’ y ‘dependencia compartida’ donde se rastrea adopción. El usuario ve si está aislado o correlacionado."
-        ),
-        p2: pick3(
-          "UX rule: teach rollout as staged by default (pilot → cluster → expansion), not as instant global switches.",
-          "UX规则：把发布默认教成阶段化（试点→集群→扩张），而不是一键全开。",
-          "Regla UX: enseñar rollout por fases (piloto→cluster→expansión), no switches globales instantáneos."
-        ),
-        bul:[
-          pick3("Expose zone labels in dashboards.","仪表盘显示分区标签。","Mostrar etiquetas de zona en dashboards."),
-          pick3("Warn on correlated expansions.","相关性扩张要警告。","Advertir expansiones correlacionadas."),
-          pick3("Route correlation analysis through DOT.GRID.","相关分析走 DOT.GRID。","Enrutar análisis por DOT.GRID.")
-        ],
-        next: pick3("Next: add a ‘Correlation Risk’ line to scale decisions in Products and Gauges.","Next：在产品与量规的扩张决策处加‘Correlation Risk’一行。","Next: añade línea ‘Riesgo de correlación’ a decisiones de escala.")
-      },
-      engineering:{
-        p1: pick3(
-          "Engineering posture: implement zoning (feature flags by cohort), isolate shared services, and enforce progressive rollout. Correlation is lowered by architecture, not by hope.",
-          "工程姿态：实现分区（按群组特性开关）、隔离共享服务、强制渐进发布。相关性靠架构降，不靠祈祷。",
-          "Postura de ingeniería: implementar zoning (flags por cohorte), aislar servicios compartidos y rollout progresivo. La correlación se baja por arquitectura, no por esperanza."
-        ),
-        p2: pick3(
-          "Failure mode: single shared dependency (DB/service) creates systemic outage. Mitigation: redundancy, partitioning, circuit breakers, and staged deploys.",
-          "失效模式：单点共享依赖（DB/服务）导致系统性宕机。缓解：冗余、分区、熔断、分阶段部署。",
-          "Fallo: dependencia única compartida (DB/servicio) causa outage sistémico. Mitigación: redundancia, partición, circuit breakers, deploy por fases."
-        ),
-        bul:[
-          pick3("Cohort flags + staged rollout.","群组开关+分阶段发布。","Flags por cohorte + rollout por fases."),
-          pick3("Service isolation and redundancy.","服务隔离与冗余。","Aislamiento y redundancia de servicios."),
-          pick3("Measure correlated failure in Gauges.","在量规中测相关失败。","Medir fallos correlacionados en Medidores.")
-        ],
-        next: pick3("Next: require a ‘zone plan’ before any wide release is allowed.","Next：任何大范围发布前必须有‘分区计划’。","Next: exigir ‘plan de zonas’ antes de permitir releases amplios.")
-      }
+    es:{
+      hs:"¿Cuál es la afirmación más grande que puedes hacer *sin mentir*? Esa es la idea central. Estas leyes mantienen todo acotado por soporte para que la curiosidad escale sin colapsar en hype.",
+      rule:"Regla: se permiten ideas grandes. No se permiten afirmaciones sin límites. Toda mejora requiere recibos. Toda corrección crea nueva época.",
+      fine:"Consejo: usa los lentes. Informal = TED. Formal = especificación. Plataforma = flujo/contratos. Ingeniería = límites/constraints."
     }
   };
 
-  // ===== i18n header labels =====
-  function applyHeaderText(){
-    if(lang==="zh"){
-      document.getElementById("hk").textContent="法则";
-      document.getElementById("ht").textContent="治理晶格";
-      document.getElementById("hs").textContent="这些法则是护栏：让主张有界、让支撑可验证，并阻止漂移在规模下被放大。";
-      document.getElementById("fine").textContent="选择透镜：Formal（严密教义）、Informal（TED）、Platform（跨页面怎么用）、Engineering（如何安全实现）。";
-      document.getElementById("band").textContent="法则类别";
-      lensFormal.textContent="正式";
-      lensInformal.textContent="通俗";
-      lensPlatform.textContent="平台";
-      lensEngineering.textContent="工程";
-      document.getElementById("dockIndex").textContent="索引";
-      document.getElementById("dockExplore").textContent="探索";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockGauges").textContent="量规";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnHome").textContent="主页";
-      document.getElementById("btnProducts").textContent="产品";
-    }else if(lang==="es"){
-      document.getElementById("hk").textContent="LEYES";
-      document.getElementById("ht").textContent="LATTICE DE GOBERNANZA";
-      document.getElementById("hs").textContent="Estas leyes son barandillas: acotan afirmaciones, hacen soporte verificable y detienen la deriva al escalar.";
-      document.getElementById("fine").textContent="Elige lente: Formal (doctrina), Informal (TED), Plataforma (uso), Ingeniería (implementación).";
-      document.getElementById("band").textContent="CATEGORÍAS";
-      lensFormal.textContent="FORMAL";
-      lensInformal.textContent="INFORMAL";
-      lensPlatform.textContent="PLATAFORMA";
-      lensEngineering.textContent="INGENIERÍA";
-      document.getElementById("dockIndex").textContent="ÍNDICE";
-      document.getElementById("dockExplore").textContent="EXPLORAR";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("btnHome").textContent="INICIO";
-      document.getElementById("btnProducts").textContent="PRODUCTOS";
-    }else{
-      document.getElementById("hk").textContent="LAWS";
-      document.getElementById("ht").textContent="GOVERNANCE LATTICE";
-      document.getElementById("hs").textContent="These laws are the guardrails: they keep claims bounded, keep support verifiable, and stop drift from multiplying under scale.";
-      document.getElementById("fine").textContent="Choose a lens: Formal (tight doctrine), Informal (TED), Platform (how to use across surfaces), Engineering (how to implement safely).";
-      document.getElementById("band").textContent="LAW CATEGORIES";
-      lensFormal.textContent="FORMAL";
-      lensInformal.textContent="INFORMAL";
-      lensPlatform.textContent="PLATFORM";
-      lensEngineering.textContent="ENGINEERING";
-    }
-  }
-  applyHeaderText();
+  // 7 laws (canonical) — each provides: title/sub + per-lens paragraphs + bullets + binds
+  var LAWS = [
+    {
+      id:"coherence",
+      c:"#EF4444",
+      t:P("Coherence Constraint Law","一致性约束法则","Ley de Restricción de Coherencia"),
+      s:P("You can’t project more trust outward than you hold inward—under the same evidence.","同证据下：外部信任不可能超过内部自洽。","No puedes proyectar más confianza hacia afuera de la que sostienes adentro—con la misma evidencia."),
+      blocks:{
+        informal:{
+          p:[
+            "If your words and actions don’t match, the world eventually notices—especially under pressure. Coherence is not a vibe. It’s the measurable gap between what you say, what you do, and what happens next.",
+            "This law is the ‘gravity’ behind the whole stack: it tells you how far you can go before your own mismatch pulls you back down."
+          ],
+          ul:["Signal: mismatch grows when you scale.","Signal: confusion accelerates instability once present.","Output: contain first when mismatch rises."],
+          bind:"Binds to: Diagnostic · Laws · Gauges."
+        },
+        formal:{
+          p:[
+            "Coherence is bounded by preservation of declared invariants under declared measurement rules. External trust, honesty, and respect cannot exceed internal self-consistency under identical scope and evidence.",
+            "Confusion is an accelerator once instability exists. Fragmentation (value/action/outcome mismatch) is the measurable marker of coherence loss."
+          ],
+          ul:["Invariant: same evidence → same admissibility.","No intent inference: observed behavior only.","Correction ⇒ new epoch; no retroactive edits."],
+          bind:"Binds to: Observer-invariant evaluation · Receipt chain."
+        },
+        platform:{
+          p:[
+            "Platform lens: coherence is how the site stays calm. Every page must route you to the next clean step: proof (Laws) or measurement (Gauges) or adoption (Products). No loops that inflate meaning.",
+            "If a page can be misread, it will be misread. This law forces the UI to be honest: one tap, one outcome, with state preserved."
+          ],
+          ul:["Contract: stable labels across pages.","Contract: state carry is mandatory.","Contract: no silent remaps or hidden layers."],
+          bind:"Binds to: DOOR/INDEX routing contract · state keys gd_*."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: coherence is a constraint boundary. The system is admissible only if declared invariants are preserved across transitions under declared evidence streams.",
+            "Violation is not ‘bad behavior’—it is a detectable mismatch that amplifies under correlated exposure. Containment prevents cascade."
+          ],
+          ul:["Boundary: invariants must be explicit.","Boundary: no compensation-by-weighting.","Boundary: correlated exposure dominates risk at scale."],
+          bind:"Binds to: containment protocols · rollback discipline."
+        }
+      }
+    },
 
-  // ===== render =====
-  var stack=document.getElementById("stack");
+    {
+      id:"noncontradiction",
+      c:"#D4AF37",
+      t:P("Non-Contradiction Law","不矛盾法则","Ley de No-Contradicción"),
+      s:P("Same scope + same receipts can’t produce two different truths.","同范围同收据不可能产出两种相反结论。","Mismo alcance + mismos recibos no pueden producir dos verdades distintas."),
+      blocks:{
+        informal:{
+          p:[
+            "If two people look at the same receipts and reach opposite conclusions, one of two things is true: the scope is different, or the rules are different. Otherwise the system is broken.",
+            "This law kills ‘interpretation wars’ by forcing the disagreement to become structural: scope, evidence, or rules."
+          ],
+          ul:["Disagreement ⇒ check scope first.","Then check missing receipts.","Then check rule version."],
+          bind:"Binds to: replayable receipts · versioned rules."
+        },
+        formal:{
+          p:[
+            "Within fixed scope and fixed measurement rules, admissibility must be deterministic. Identical (scope, manifests, evidence) implies identical classification output.",
+            "Any deviation indicates mis-specified rules, hidden scope mutation, or evidence inconsistency."
+          ],
+          ul:["Determinism requirement.","No silent scope changes.","No post-hoc semantic swaps."],
+          bind:"Binds to: scope locks · manifest locks."
+        },
+        platform:{
+          p:[
+            "Platform lens: the UI must not allow two ‘truths’ via two paths. If two navigation routes lead to different interpretations, the page design failed.",
+            "We prevent this with stable state carry and explicit jump points."
+          ],
+          ul:["One meaning per label.","One route per intent.","State preserved on every jump."],
+          bind:"Binds to: navigation-first contract."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: classification is a function of inputs. If outputs diverge under identical inputs, the function is non-deterministic and inadmissible.",
+            "Fix is not debate; fix is specification and version bump."
+          ],
+          ul:["Function must be deterministic.","Inputs include scope + evidence hash.","Fix requires epoch bump."],
+          bind:"Binds to: epoch protocol."
+        }
+      }
+    },
 
-  function lensPack(item){
-    if(lens==="formal") return item.formal;
-    if(lens==="platform") return item.platform;
-    if(lens==="engineering") return item.engineering;
-    return item.informal;
-  }
+    {
+      id:"scope",
+      c:"#60A5FA",
+      t:P("Scope Precedes Authority","范围先于权力","El Alcance Precede a la Autoridad"),
+      s:P("Before you claim, define the map you’re claiming inside.","先定地图，再谈主张。","Antes de afirmar, define el mapa donde afirmas."),
+      blocks:{
+        informal:{
+          p:[
+            "Most bad arguments are just missing scope. People are debating inside two different maps and calling it disagreement.",
+            "Scope is the fastest honesty tool: it tells you what you’re allowed to say *and what you must not say yet*."
+          ],
+          ul:["Define boundaries first.","If scope moves, restart.","No ‘infinite away’ thinking."],
+          bind:"Binds to: the first paragraph on every serious page."
+        },
+        formal:{
+          p:[
+            "Admissibility requires declared scope: epoch bounds, active lanes, active anchors, and measurement rules. Scope mutation invalidates conclusions under that scope.",
+            "Scope is an input. It is not a rhetorical flourish."
+          ],
+          ul:["Scope is part of evidence.","Mutation ⇒ new epoch.","No retroactive widening."],
+          bind:"Binds to: scope declaration schema."
+        },
+        platform:{
+          p:[
+            "Platform lens: the site must make scope easy. Users should know where they are, what the page is doing, and what it refuses to do.",
+            "That’s why every card ends with a jump."
+          ],
+          ul:["Headers must state posture.","Footers must state bounds.","Jump points prevent wandering."],
+          bind:"Binds to: DOOR / PRELUDE / HUB posture."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: scope defines the admissible measurement domain. Without explicit scope, any metric is undefined and any output is garbage.",
+            "Scope must be machine-checkable, not poetic."
+          ],
+          ul:["Scope must be explicit.","Metrics require declared rules.","Undefined scope ⇒ output UNDETERMINED."],
+          bind:"Binds to: measurement contracts."
+        }
+      }
+    },
 
-  function closeAllExcept(node){
-    var cards=stack.querySelectorAll(".card");
-    for(var i=0;i<cards.length;i++){
-      if(cards[i]!==node){
-        cards[i].classList.remove("open");
-        var chev=cards[i].querySelector(".chev");
-        if(chev) chev.textContent="▸";
+    {
+      id:"admissibility",
+      c:"#93C5FD",
+      t:P("Admissibility Law","可采信法则","Ley de Admisibilidad"),
+      s:P("Upgrades require receipts. Missing receipts block escalation.","升级需要收据；缺收据就禁止升级。","Las mejoras requieren recibos; sin recibos no hay escalación."),
+      blocks:{
+        informal:{
+          p:[
+            "This is the anti-hype law. You don’t get to level up because you feel confident. You level up because the receipts are there.",
+            "It’s not pessimism. It’s safety—because scale amplifies error."
+          ],
+          ul:["Receipts-first.","If missing: hold/contain.","No storytelling upgrades."],
+          bind:"Binds to: every ‘OPEN’ button that claims anything."
+        },
+        formal:{
+          p:[
+            "Admissibility is a binary gate under declared scope and rules. Claims may not exceed the evidence stream. Missing receipts force output to remain NOT MEASURED / UNDETERMINED.",
+            "Reason codes must be emitted for every block."
+          ],
+          ul:["Binary gating under rules.","Reason-coded outputs.","No inference without data."],
+          bind:"Binds to: classifier outputs."
+        },
+        platform:{
+          p:[
+            "Platform lens: the site must teach people the difference between ‘interesting’ and ‘admissible.’ The UI does that by separating Vision, Products, Laws, and Gauges.",
+            "Vision can be big. Products can be usable. Laws bound meaning. Gauges show signals."
+          ],
+          ul:["Keep lanes separate.","Don’t collapse routes.","Every lane has a return."],
+          bind:"Binds to: navigation architecture."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: escalation is forbidden unless the receipt set satisfies the gate conditions. Gates are deterministic under identical inputs.",
+            "If a gate is bypassable, the system is insecure."
+          ],
+          ul:["No bypass paths.","No hidden overrides.","Audit logs required for changes."],
+          bind:"Binds to: gate design."
+        }
+      }
+    },
+
+    {
+      id:"calibration",
+      c:"#34D399",
+      t:P("Calibration Authority Law","校准权威法则","Ley de Autoridad de Calibración"),
+      s:P("Calibration authority is exclusive. Non-authority input is data only.","校准权威是唯一的；非权威输入只能算数据。","La autoridad de calibración es exclusiva; la entrada no-autorizada es solo dato."),
+      blocks:{
+        informal:{
+          p:[
+            "If everyone can ‘calibrate’ the ruler, the ruler becomes a weapon. This law protects the instrument from becoming politics.",
+            "You can contribute data all day. But you cannot redefine the measuring stick unless you hold calibration authority."
+          ],
+          ul:["Authority is explicit.","Inputs are welcome, but labeled.","Ruler can’t be crowdsourced."],
+          bind:"Binds to: instrument integrity."
+        },
+        formal:{
+          p:[
+            "Calibration authority is exclusive by definition. Parameter tuning, threshold selection, and rule specification are restricted to the authorized calibrator. All other inputs remain non-authoritative evidence only.",
+            "Violation is a capture risk and invalidates outputs."
+          ],
+          ul:["Authority separation.","No silent tuning.","Capture resistance requirement."],
+          bind:"Binds to: governance + audit separation."
+        },
+        platform:{
+          p:[
+            "Platform lens: the UI must never imply that crowds can redefine standards. The interface must distinguish ‘submit evidence’ from ‘change rules.’",
+            "That’s why the site uses clear posture labels and avoids ambiguous controls."
+          ],
+          ul:["Separate ‘data’ from ‘rules’.","Separate ‘feedback’ from ‘calibration’.","Show status plainly."],
+          bind:"Binds to: admin surfaces (future)."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: calibration is a protected configuration surface. Threat model includes unauthorized tuning, silent parameter drift, and inconsistent threshold application.",
+            "Mitigation: versioned configs, signed releases, audit logs, and explicit epoch rollover."
+          ],
+          ul:["Signed releases.","Audit logging.","Epoch bump on changes."],
+          bind:"Binds to: release discipline."
+        }
+      }
+    },
+
+    {
+      id:"stability",
+      c:"#A3A3A3",
+      t:P("Measurable Stability Law","可测稳定法则","Ley de Estabilidad Medible"),
+      s:P("Instability is not a feeling. It’s a measurable mismatch that accelerates under scale.","不稳定不是感觉，而是可测的错配，在规模下加速。","La inestabilidad no es un sentimiento: es un desajuste medible que acelera al escalar."),
+      blocks:{
+        informal:{
+          p:[
+            "People say ‘something feels off.’ This law says: great—now measure it. Where is the mismatch? What changed? What is moving together that shouldn’t?",
+            "Stability is built by making the invisible visible, then fixing the smallest real cause."
+          ],
+          ul:["Measure before you argue.","Find mismatch + trend.","Fix the smallest real cause."],
+          bind:"Binds to: Dot.Grid + Gauges."
+        },
+        formal:{
+          p:[
+            "Stability is evaluated as preserved alignment between declared values, observed actions, and outcomes under fixed scope. Instability is the measurable divergence vector and its acceleration over a defined window.",
+            "Once instability exists, ambiguity increases failure propagation speed."
+          ],
+          ul:["Windowed evaluation.","Trend/acceleration matters.","Ambiguity is an accelerator."],
+          bind:"Binds to: windowed collapse tests."
+        },
+        platform:{
+          p:[
+            "Platform lens: the site must translate ‘off’ into ‘here is what changed.’ That’s why every product page points to measurement surfaces.",
+            "Users shouldn’t be forced into theory. They should be routed to the right signal."
+          ],
+          ul:["Signal-first UX.","Jump to measurement.","Avoid narrative loops."],
+          bind:"Binds to: page contracts."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: stability requires variance bands, correlation checks, and deterministic rollback paths. Drift is detected by adjacency deltas and dependency mutation under identical naming.",
+            "If naming shifts silently, comparability collapses."
+          ],
+          ul:["Variance bands.","Correlation checks.","Naming lock for comparability."],
+          bind:"Binds to: Dot.Grid indexing discipline."
+        }
+      }
+    },
+
+    {
+      id:"containment",
+      c:"#F59E0B",
+      t:P("Containment Prevents Cascade","隔离阻断级联","La Contención Evita la Cascada"),
+      s:P("Keep failure local. Rollback beats collapse.","把失败变小：回滚胜过崩塌。","Mantén el fallo local. Rollback vence al colapso."),
+      blocks:{
+        informal:{
+          p:[
+            "The fastest way to lose everything is to let one failure spread. Containment is not fear; it’s intelligence.",
+            "A contained failure becomes a lesson. An uncontained failure becomes a disaster."
+          ],
+          ul:["Isolate early.","Rollback fast.","Learn without burning the system."],
+          bind:"Binds to: deployment + operations."
+        },
+        formal:{
+          p:[
+            "Containment is segmentation plus rollback discipline. It limits blast radius and preserves invariants under fault. Cascade risk increases with correlated exposure.",
+            "Containment decisions must be reason-coded and logged."
+          ],
+          ul:["Segmentation.","Rollback discipline.","Reason-coded actions."],
+          bind:"Binds to: resilience engineering."
+        },
+        platform:{
+          p:[
+            "Platform lens: routes must avoid trap loops. Every page needs a clean exit and a clean return. If the user can’t back out safely, the platform is unsafe.",
+            "Containment is navigation, not just engineering."
+          ],
+          ul:["Every open has a return.","Back must not ‘fall through.’","No dead ends."],
+          bind:"Binds to: back buttons + state carry."
+        },
+        engineering:{
+          p:[
+            "Engineering lens: containment is an explicit failure mode design. System must support rollback to last stable receipt state, zone independence, and kill/exit paths.",
+            "No timer gates. No hidden dependency chains."
+          ],
+          ul:["Rollback to stable state.","Zone independence.","Exit paths required."],
+          bind:"Binds to: execution contracts."
+        }
       }
     }
+  ];
+
+  // ===== apply header =====
+  var H = HEAD[lang] || HEAD.en;
+  document.getElementById("hs").textContent = H.hs;
+  document.getElementById("ruleTop").textContent = H.rule;
+  document.getElementById("fine").textContent = H.fine;
+
+  // ===== i18n small labels =====
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="法则";
+    document.getElementById("ht").textContent="让大想法保持诚实的规则";
+    document.getElementById("band").textContent="规范法则（7）";
+    document.getElementById("dockIndex").textContent="索引";
+    document.getElementById("dockExplore").textContent="探索";
+    document.getElementById("dockProducts").textContent="产品";
+    document.getElementById("dockGauges").textContent="量规";
+    pillInformal.textContent="通俗";
+    pillFormal.textContent="正式";
+    pillPlatform.textContent="平台";
+    pillEngineering.textContent="工程";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="LEYES";
+    document.getElementById("ht").textContent="REGLAS QUE MANTIENEN HONESTAS LAS IDEAS GRANDES";
+    document.getElementById("band").textContent="LEYES CANÓNICAS (7)";
+    document.getElementById("dockIndex").textContent="ÍNDICE";
+    document.getElementById("dockExplore").textContent="EXPLORAR";
+    document.getElementById("dockProducts").textContent="PRODUCTOS";
+    document.getElementById("dockGauges").textContent="MEDIDORES";
+    pillInformal.textContent="INFORMAL";
+    pillFormal.textContent="FORMAL";
+    pillPlatform.textContent="PLATAFORMA";
+    pillEngineering.textContent="INGENIERÍA";
   }
 
-  function makeCard(lawId, color){
-    var item=COPY[lawId];
-    var card=document.createElement("div");
-    card.className="card";
-    card.style.setProperty("--c", color);
+  // ===== render accordion (single-open) =====
+  var list=document.getElementById("list");
+
+  function openLabel(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
+
+  function lensBlockKey(){ return lensKey(); }
+
+  function makeRow(L, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", L.c);
 
     var head=document.createElement("div");
     head.className="head";
     head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var hL=document.createElement("div");
-    hL.className="hL";
-
-    var marker=document.createElement("div");
-    marker.className="marker";
+    head.setAttribute("tabindex","0");
 
     var left=document.createElement("div");
     left.className="left";
 
-    var name=document.createElement("div");
-    name.className="name";
-    name.textContent=item.title;
+    var marker=document.createElement("div");
+    marker.className="marker";
+    var diamond=document.createElement("div");
+    diamond.className="diamond";
+    diamond.style.background=L.c;
+    var bar=document.createElement("div");
+    bar.className="bar";
+    bar.style.background=L.c;
+    marker.appendChild(diamond);
+    marker.appendChild(bar);
 
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+    var title=document.createElement("div");
+    title.className="title";
+    title.textContent=pick(L.t);
     var sub=document.createElement("div");
     sub.className="sub";
-    sub.textContent=item.sub;
+    sub.textContent=pick(L.s);
+    tb.appendChild(title);
+    tb.appendChild(sub);
 
-    left.appendChild(name);
-    left.appendChild(sub);
-
-    hL.appendChild(marker);
-    hL.appendChild(left);
+    left.appendChild(marker);
+    left.appendChild(tb);
 
     var chev=document.createElement("div");
     chev.className="chev";
     chev.textContent="▸";
 
-    head.appendChild(hL);
+    head.appendChild(left);
     head.appendChild(chev);
 
     var body=document.createElement("div");
     body.className="body";
 
-    var p1=document.createElement("p");
-    p1.className="p";
+    var small=document.createElement("div");
+    small.className="smallband";
+    small.textContent =
+      (lang==="zh") ? ("当前透镜："+(lensBlockKey()==="informal"?"通俗":lensBlockKey()==="formal"?"正式":lensBlockKey()==="platform"?"平台":"工程")) :
+      (lang==="es") ? ("Lente: "+(lensBlockKey()==="informal"?"INFORMAL":lensBlockKey()==="formal"?"FORMAL":lensBlockKey()==="platform"?"PLATAFORMA":"INGENIERÍA")) :
+      ("Lens: "+(lensBlockKey()==="informal"?"INFORMAL":lensBlockKey()==="formal"?"FORMAL":lensBlockKey()==="platform"?"PLATFORM":"ENGINEERING"));
 
-    var p2=document.createElement("p");
-    p2.className="p";
+    body.appendChild(small);
 
-    var ul=document.createElement("ul");
-    ul.className="bul";
+    var k=lensBlockKey();
+    var blk = L.blocks[k] || L.blocks.informal;
 
-    var next=document.createElement("div");
-    next.className="next";
+    (blk.p||[]).forEach(function(txt){
+      var p=document.createElement("p");
+      p.className="p";
+      p.textContent=txt;
+      body.appendChild(p);
+    });
 
-    var acts=document.createElement("div");
-    acts.className="actions";
-
-    body.appendChild(p1);
-    body.appendChild(p2);
-    body.appendChild(ul);
-    body.appendChild(next);
-    body.appendChild(acts);
-
-    card.appendChild(head);
-    card.appendChild(body);
-
-    function fill(){
-      var L=lensPack(item);
-      p1.textContent=L.p1;
-      p2.textContent=L.p2;
-
-      ul.innerHTML="";
-      (L.bul||[]).forEach(function(x){
+    if(blk.ul && blk.ul.length){
+      var ul=document.createElement("ul");
+      ul.className="ul";
+      blk.ul.forEach(function(x){
         var li=document.createElement("li");
         li.textContent=x;
         ul.appendChild(li);
       });
+      body.appendChild(ul);
+    }
 
-      next.textContent=L.next;
+    var bind=document.createElement("p");
+    bind.className="p";
+    bind.style.opacity=".86";
+    bind.textContent=blk.bind || "";
+    body.appendChild(bind);
 
-      acts.innerHTML="";
-      (item.actions||[]).forEach(function(a){
-        var btn=document.createElement("a");
-        btn.className="btn";
-        btn.textContent=a.t;
-        btn.href=a.href + q();
-        acts.appendChild(btn);
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a1=document.createElement("a");
+    a1.className="btn";
+    a1.textContent=openLabel()+": "+((lang==="zh")?"量规":(lang==="es")?"GAUGES":"GAUGES");
+    a1.href="/gauges/"+q();
+    actions.appendChild(a1);
+
+    var a2=document.createElement("a");
+    a2.className="btn";
+    a2.textContent=openLabel()+": "+((lang==="zh")?"产品":(lang==="es")?"PRODUCTS":"PRODUCTS");
+    a2.href="/products/"+q();
+    actions.appendChild(a2);
+
+    body.appendChild(actions);
+
+    function closeAll(){
+      list.querySelectorAll(".row").forEach(function(x){
+        x.classList.remove("open");
+        var c=x.querySelector(".chev");
+        if(c) c.textContent="▸";
       });
     }
 
     function toggle(){
-      var willOpen=!card.classList.contains("open");
-      closeAllExcept(card);
-      card.classList.toggle("open", willOpen);
-      chev.textContent=willOpen ? "▾" : "▸";
+      var willOpen = !row.classList.contains("open");
+      closeAll();
+      if(willOpen){
+        row.classList.add("open");
+        chev.textContent="▾";
+      }
     }
 
-    head.addEventListener("click", function(){
-      fill();
-      toggle();
-    });
+    head.addEventListener("click", toggle);
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter" || e.key===" "){
-        e.preventDefault();
-        fill();
-        toggle();
-      }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
-    // update content on lens switch while open
-    card._fill = fill;
+    row.appendChild(head);
+    row.appendChild(body);
 
-    return card;
+    if(idx===0){
+      row.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return row;
   }
 
-  function renderAll(){
-    // update content inside open card(s) if any (single-open by design)
-    var cards=stack.querySelectorAll(".card");
-    for(var i=0;i<cards.length;i++){
-      if(cards[i].classList.contains("open") && typeof cards[i]._fill==="function"){
-        cards[i]._fill();
-      }
+  function render(){
+    list.innerHTML="";
+    paintLens();
+    for(var i=0;i<LAWS.length;i++){
+      list.appendChild(makeRow(LAWS[i], i));
     }
   }
 
-  // mount
-  stack.innerHTML="";
-  for(var i=0;i<LAW.length;i++){
-    stack.appendChild(makeCard(LAW[i].id, LAW[i].c));
-  }
-
-  // default lens + open first law (calibration) for emphasis
-  setLens("informal");
-  paintLens();
-  // programmatic open first card
-  var first=stack.querySelector(".card");
-  if(first){
-    first._fill && first._fill();
-    first.classList.add("open");
-    var c=first.querySelector(".chev"); if(c) c.textContent="▾";
-  }
+  render();
 })();
 </script>
 

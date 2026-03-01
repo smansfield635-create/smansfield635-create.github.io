@@ -1,7 +1,5 @@
 <!-- TNT — /door/index.html
-     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · OPAL/PEARL PANELS
-     PURPOSE:
-       - Canonical intro page under /door/
+     DOOR · INTRO (DIAMOND GATE BRIDGE) · 3 LANG (EN/中文/ES) · OPAL/PEARL PANELS (CLEAN)
      ROUTES:
        - PRELUDE  → /prelude/
        - COMPASS  → /index.html
@@ -30,7 +28,7 @@ a{color:inherit;text-decoration:none}
 
 /* keep ui.css field overlays behind */
 body{position:relative;z-index:0}
-body::before, body::after{z-index:0 !important;pointer-events:none !important}
+body::before,body::after{z-index:0 !important;pointer-events:none !important}
 #root{position:relative;z-index:10}
 
 /* tokens */
@@ -43,8 +41,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   --opalC:rgba(90,210,255,.10);
   --goldSoft:rgba(212,175,55,.45);
 
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
+  --dockPad:26px;
 }
 
 /* top (no wrap) */
@@ -67,7 +64,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:84px 0 26px;
+  padding:84px 0 var(--dockPad);
   display:flex;
   flex-direction:column;
   gap:14px;
@@ -87,27 +84,9 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   padding:18px 18px 16px;
 }
 
-.k{
-  margin:0 0 6px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.h1{
-  margin:0;
-  font-weight:950;
-  font-size:30px;
-  letter-spacing:1.2px;
-  line-height:1.12;
-}
-.p{
-  margin:10px 0 0;
-  font-size:14px;
-  opacity:.90;
-  line-height:1.5;
-  max-width:980px;
-}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.h1{margin:0;font-weight:950;font-size:30px;letter-spacing:1.2px;line-height:1.12}
+.p{margin:10px 0 0;font-size:14px;opacity:.90;line-height:1.5;max-width:980px}
 
 /* rule pill (pearl edge) */
 .rule{
@@ -132,9 +111,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   grid-template-columns:repeat(3, minmax(0,1fr));
   gap:14px;
 }
-@media (max-width:920px){
-  .grid{grid-template-columns:1fr}
-}
+@media (max-width:920px){ .grid{grid-template-columns:1fr} }
 
 .card{
   position:relative;
@@ -152,14 +129,11 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     inset 0 -36px 70px rgba(0,0,0,.55);
   padding:16px 16px 14px;
   overflow:hidden;
-  transition:.18s ease;
+  transition:transform .18s ease, box-shadow .18s ease;
 }
 .card::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
   opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -169,11 +143,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .card::after{
   content:"";
-  position:absolute;
-  left:10%;
-  right:10%;
-  top:10%;
-  height:28%;
+  position:absolute;left:10%;right:10%;top:10%;height:28%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
   transform:rotate(-10deg);
@@ -189,35 +159,11 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
     inset 0 -36px 70px rgba(0,0,0,.55);
 }
 
-.card .ct{
-  margin:0;
-  font-weight:950;
-  letter-spacing:.6px;
-  font-size:18px;
-}
-.card .cs{
-  margin:8px 0 0;
-  font-size:13.25px;
-  line-height:1.45;
-  color:rgba(255,255,255,.86);
-}
-.card .mini{
-  margin:10px 0 0;
-  font-size:12.25px;
-  line-height:1.45;
-  color:rgba(255,255,255,.74);
-}
-.card .actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  margin-top:12px;
-}
-.card .actions .btn{
-  border-radius:999px;
-  padding:10px 14px;
-}
+.ct{margin:0;font-weight:950;letter-spacing:.6px;font-size:18px}
+.cs{margin:8px 0 0;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.86)}
+.mini{margin:10px 0 0;font-size:12.25px;line-height:1.45;color:rgba(255,255,255,.74)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{border-radius:999px;padding:10px 14px}
 
 /* how-it-works */
 .band{
@@ -246,10 +192,7 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .block::before{
   content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
+  position:absolute;inset:0;border-radius:inherit;padding:1px;
   background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
   opacity:.40;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
@@ -257,36 +200,13 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   mask-composite:exclude;
   pointer-events:none;
 }
-.block .bh{
-  margin:0;
-  font-weight:950;
-  font-size:15.5px;
-  letter-spacing:.4px;
-}
-.block .bp{
-  margin:10px 0 0;
-  font-size:13.25px;
-  line-height:1.55;
-  color:rgba(255,255,255,.86);
-}
-.block .jump{
-  margin-top:10px;
-  display:flex;
-  justify-content:flex-end;
-}
+.bh{margin:0;font-weight:950;font-size:15.5px;letter-spacing:.4px}
+.bp{margin:10px 0 0;font-size:13.25px;line-height:1.55;color:rgba(255,255,255,.86)}
+.jump{margin-top:10px;display:flex;justify-content:flex-end}
+.jump .btn{border-radius:999px;padding:10px 14px}
 
-.footer{
-  margin-top:8px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
-}
-.sig{
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.65;
-}
+.footer{margin-top:8px;text-align:center;font-size:12.5px;opacity:.78}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
 </style>
 </head>
 
@@ -532,7 +452,6 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   document.getElementById("jumpEnterA").textContent = T("JUMP: ENTER","跳转：进入","SALTAR: ENTRAR");
 
   document.getElementById("f0").textContent = T("Orientation is the product.","导览就是产品。","La orientación es el producto.");
-
 })();
 </script>
 

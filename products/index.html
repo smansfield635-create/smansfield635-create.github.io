@@ -1,17 +1,32 @@
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER INDEX (PRODUCTS + SERVICES + SOFTWARE + SYSTEMS) · 3 LANG (EN/中文/ES)
-     UPGRADES (NO DRIFT):
-       - More accurate, fuller product map (includes future products WITHOUT 404)
-       - Every row has a real, safe route (no dead links)
-       - Adds diamond color swatch next to each title (in addition to color bar)
-       - Keeps accordion (no modals, no overlays)
-       - Coherence Diagnostic appears ONCE
-       - Software/System sub-items route to /products/software/ with ?focus=
-       - GH Pages-safe language reload (reload SAME pathname)
+     PRODUCTS · MASTER INDEX (7-CATEGORY DIAMOND) · TRILINGUAL (EN/中文/ES) · MOBILE-SAFE · NO MODALS
+     GOAL (FINALIZED):
+       - One page that feels like “the whole offering” without overwhelm.
+       - 7 category accordions (single-open) with 7 bullet “bulletins” per category.
+       - Lenses:
+           • Tone: INFORMAL / FORMAL  (uses gd_style, persists)
+           • View: PLATFORM / ENGINEERING (page-only, NOT stored; no new gd_* keys)
+       - Trilingual UI + copy packs (EN/中文/ES) but *page renders one language* via lang param/LS.
+       - Colored diamond marker next to every category title.
+       - Routes are explicit; vision shells route to Vision index until built.
+     ROUTES (SAFE / CURRENT):
+       - BACK/DOOR/HUB: as existing nav
+       - CATEGORY OPEN buttons:
+           SOFTWARE HUB      → /products/software/
+           DOT.GRID          → /products/dot-grid/
+           SSG               → /products/ssg/
+           UCI (shell)       → /products/software/?focus=uci
+           REGISTRY (shell)  → /products/software/?focus=registry
+           GAUGES            → /gauges/
+           LAWS              → /laws/
+           ENERGY            → /products/energy/
+           EDUCATION         → /products/education/
+           VISION (SHELL)    → /explore/frontier/vision/
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background styling
-       - State carry: lang/style/time/depth
+       - No html/body background overrides (ui.css owns field)
+       - Tap-safe (no inline onclick)
+       - Canon state carry: lang/style/time/depth (URL + LS gd_*)
 -->
 
 <!doctype html>
@@ -27,9 +42,25 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-:root{--dockH:86px}
+body::before,body::after{pointer-events:none!important}
 
-/* page */
+:root{
+  --dockH:92px;
+
+  /* dark opal + gold + a touch of red (no washed-out blue) */
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalR:rgba(255,80,80,.10);
+  --goldSoft:rgba(212,175,55,.35);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+}
+
+/* ===== PAGE WRAP ===== */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
@@ -37,79 +68,140 @@ a{color:inherit;text-decoration:none}
   display:flex;
   flex-direction:column;
   gap:12px;
+  position:relative;
+  z-index:10;
 }
 
-/* top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+/* ===== TOP (MOBILE SAFE) ===== */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
 }
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  align-items:center;
 }
-.top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* header */
+/* ===== HEADER ===== */
 .header{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 30% 25%, rgba(210,190,255,.14), transparent 70%),
-    radial-gradient(circle at 75% 60%, rgba(120,70,255,.10), transparent 72%),
-    rgba(0,0,0,.14);
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 60% 110%, var(--opalR), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
-  padding:14px 16px;
   box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 6px}
-.t{font-weight:950;font-size:26px;letter-spacing:.6px;margin:0 0 6px}
-.s{font-size:13.5px;opacity:.86;line-height:1.5;margin:0;max-width:980px}
-.fine{margin-top:10px;font-size:12.25px;opacity:.70;line-height:1.45}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.7px;line-height:1.12}
+.s{margin:10px 0 0;font-size:14.5px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.fine{margin-top:10px;font-size:12.75px;opacity:.74;line-height:1.45;color:var(--mut)}
 
-/* band */
+/* ===== LENSES (TONE + VIEW) ===== */
+.lensRow{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+}
+.pills{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;
+  font-weight:900;
+  letter-spacing:.2px;
+  color:#fff;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.16);
+}
+.pill.red.active{
+  border-color:rgba(255,90,90,.55);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(255,80,80,.18);
+}
+
+/* ===== BAND ===== */
 .band{
   padding:10px 12px;
   border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
   font-weight:950;
   letter-spacing:.2px;
-  color:rgba(255,255,255,.86);
+  color:rgba(255,255,255,.88);
 }
 
-/* list */
-.stackList{display:flex;flex-direction:column;gap:12px}
-.stackRow{
-  --domc:#93C5FD;
+/* ===== ACCORDION (SINGLE OPEN) ===== */
+.stack{display:flex;flex-direction:column;gap:12px}
+
+.row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
 }
-.stackHead{
+.head{
   display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:14px 16px;cursor:pointer;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.stackLeft{display:flex;align-items:flex-start;gap:12px;min-width:0}
-.stackBar{width:6px;height:22px;border-radius:99px;background:var(--domc);flex:0 0 auto;margin-top:2px}
-.stackTitle{
-  font-weight:950;letter-spacing:.2px;
+.left{
+  display:flex;align-items:flex-start;gap:12px;min-width:0;
+}
+.diamond{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-top:3px;
+}
+.titleBlock{min-width:0}
+.title{
+  font-weight:950;
+  letter-spacing:.25px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  display:flex;align-items:center;gap:10px;
+  font-size:15.5px;
 }
-.sw{
-  width:12px;height:12px;transform:rotate(45deg);
-  border-radius:4px;background:var(--domc);
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:2px;
+.sub{
+  margin-top:6px;
+  font-size:13.25px;
+  opacity:.84;
+  line-height:1.38;
+  max-width:92ch;
 }
-.stackSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
-.stackChevron{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.stackBody{
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+
+.body{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -117,14 +209,42 @@ a{color:inherit;text-decoration:none}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.stackRow.open .stackBody{display:block}
-.pdesc{margin:0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.25px}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
-.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+.row.open .body{display:block}
 
-/* dock */
+.p{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  line-height:1.70;
+  font-size:14px;
+}
+.p + .p{margin-top:10px}
+
+.ul{
+  margin:12px 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.82);
+  line-height:1.6;
+  font-size:13.75px;
+}
+.ul li{margin:7px 0}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+.actions .btn{
+  padding:10px 12px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+/* ===== DOCK ===== */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
@@ -141,7 +261,7 @@ a{color:inherit;text-decoration:none}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px}
+  :root{--dockH:104px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -149,34 +269,41 @@ a{color:inherit;text-decoration:none}
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnHome" href="/home/">HUB</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="page">
 
-  <div class="header">
-    <p class="k" id="hk">PRODUCTS</p>
-    <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
-    <p class="s" id="hs">Open a card. Read one paragraph. Jump when you’re ready.</p>
-    <div class="fine" id="fine">Fine print: proof posture lives under Laws and Gauges.</div>
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnHome" href="/home/">HUB</a>
+      <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
   </div>
 
-  <div class="band" id="bandA">PRODUCTS</div>
-  <div class="stackList" id="listA"></div>
+  <div class="header" aria-label="Products header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">WHAT EXISTS HERE?</h1>
+    <p class="s" id="hs"></p>
+    <div class="fine" id="fine"></div>
 
-  <div class="band" id="bandS">SERVICES</div>
-  <div class="stackList" id="listS"></div>
+    <div class="lensRow" aria-label="Lenses">
+      <div class="pills" aria-label="View lens">
+        <button class="pill red active" id="pillPlatform" type="button">PLATFORM</button>
+        <button class="pill red" id="pillEngineering" type="button">ENGINEERING</button>
+      </div>
+      <div class="pills" aria-label="Tone lens">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+    </div>
+  </div>
 
-  <div class="band" id="bandB">SOFTWARE & SYSTEMS</div>
-  <div class="stackList" id="listB"></div>
+  <div class="band" id="band">THE 7 CATEGORIES</div>
+  <div class="stack" id="stack"></div>
 
 </div>
 
@@ -189,15 +316,15 @@ a{color:inherit;text-decoration:none}
 
 <script>
 (function(){
-  // ===== state =====
+  // ===== canonical state (no new gd_* keys) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -208,6 +335,7 @@ a{color:inherit;text-decoration:none}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
@@ -215,26 +343,23 @@ a{color:inherit;text-decoration:none}
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
     var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire nav with state
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-
-  // top + dock
   wire("btnDoor","/door/");
   wire("btnHome","/home/");
+  wire("btnExit","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language toggle (reload SAME pathname; GH Pages safe)
+  // language toggle (reload same path)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -254,336 +379,1331 @@ a{color:inherit;text-decoration:none}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // i18n header
-  function renderHeader(){
-    if(lang==="zh"){
-      document.getElementById("hk").textContent="产品";
-      document.getElementById("ht").textContent="可用内容";
-      document.getElementById("hs").textContent="打开一张卡。读一段话。准备好就跳转。";
-      document.getElementById("fine").textContent="细则：证明姿态在法则与量规中。";
-      document.getElementById("bandA").textContent="产品";
-      document.getElementById("bandS").textContent="服务";
-      document.getElementById("bandB").textContent="软件与系统";
-      document.getElementById("btnDoor").textContent="门";
-      document.getElementById("btnHome").textContent="枢纽";
-      document.getElementById("dockExplore").textContent="探索";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockGauges").textContent="量规";
-    }else if(lang==="es"){
-      document.getElementById("hk").textContent="PRODUCTOS";
-      document.getElementById("ht").textContent="LO QUE PUEDES USAR";
-      document.getElementById("hs").textContent="Abre una tarjeta. Lee un párrafo. Salta cuando estés listo.";
-      document.getElementById("fine").textContent="Letra pequeña: la prueba vive en Leyes y Medidores.";
-      document.getElementById("bandA").textContent="PRODUCTOS";
-      document.getElementById("bandS").textContent="SERVICIOS";
-      document.getElementById("bandB").textContent="SOFTWARE Y SISTEMAS";
-      document.getElementById("btnDoor").textContent="PUERTA";
-      document.getElementById("btnHome").textContent="HUB";
-      document.getElementById("dockExplore").textContent="EXPLORAR";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockGauges").textContent="MEDIDORES";
-    }else{
-      document.getElementById("hk").textContent="PRODUCTS";
-      document.getElementById("ht").textContent="WHAT YOU CAN USE";
-      document.getElementById("hs").textContent="Open a card. Read one paragraph. Jump when you’re ready.";
-      document.getElementById("fine").textContent="Fine print: proof posture lives under Laws and Gauges.";
-      document.getElementById("bandA").textContent="PRODUCTS";
-      document.getElementById("bandS").textContent="SERVICES";
-      document.getElementById("bandB").textContent="SOFTWARE & SYSTEMS";
-      document.getElementById("btnDoor").textContent="DOOR";
-      document.getElementById("btnHome").textContent="HUB";
-      document.getElementById("dockExplore").textContent="EXPLORE";
-      document.getElementById("dockProducts").textContent="PRODUCTS";
-      document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockGauges").textContent="GAUGES";
+  // ===== lenses =====
+  var view="platform"; // platform|engineering (page-only)
+  var tone=(style==="formal")?"formal":"informal"; // formal|informal (persists to gd_style)
+
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+
+  function paintPills(){
+    pillPlatform.classList.toggle("active", view==="platform");
+    pillEngineering.classList.toggle("active", view==="engineering");
+    pillInformal.classList.toggle("active", tone==="informal");
+    pillFormal.classList.toggle("active", tone==="formal");
+  }
+
+  pillPlatform.addEventListener("click", function(){ view="platform"; paintPills(); render(); });
+  pillEngineering.addEventListener("click", function(){ view="engineering"; paintPills(); render(); });
+  pillInformal.addEventListener("click", function(){
+    tone="informal";
+    try{ localStorage.setItem("gd_style","informal"); }catch(e){}
+    paintPills(); render();
+  });
+  pillFormal.addEventListener("click", function(){
+    tone="formal";
+    try{ localStorage.setItem("gd_style","formal"); }catch(e){}
+    paintPills(); render();
+  });
+
+  // ===== helpers =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(x){ return (lang==="zh")?x.zh:(lang==="es")?x.es:x.en; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  // ===== header copy (INFORMAL = TED-ish; FORMAL = engineering-ish) =====
+  var HEAD = {
+    informal:{
+      en:{
+        hk:"PRODUCTS",
+        ht:"WHAT EXISTS HERE?",
+        hs:"Ever felt like the world is full of big promises… but nobody can show the wiring? What if you could point to a finite map, a finite method, and a finite next step—every time?",
+        fine:"This page is a launchpad. Pick a category, read one dense block, then jump. Big ideas are allowed here—every claim stays support-bounded in Laws and measurable in Gauges."
+      },
+      zh:{
+        hk:"产品",
+        ht:"这里到底有什么？",
+        hs:"你有没有发现：世界到处都是“大承诺”，但没人能把线路图拿出来？如果我们能给你一个有限地图、有限方法、有限下一步——每次都能落地，会怎样？",
+        fine:"此页是发射台：选一个类别，读一段密集内容，然后跳转。允许大想法，但主张必须在法则里有边界、在量规里可测。"
+      },
+      es:{
+        hk:"PRODUCTOS",
+        ht:"¿QUÉ EXISTE AQUÍ?",
+        hs:"¿Alguna vez sentiste que hay promesas enormes… pero nadie muestra el cableado? ¿Y si pudieras señalar un mapa finito, un método finito y un siguiente paso finito—cada vez?",
+        fine:"Esta página es una lanzadera. Elige una categoría, lee un bloque denso y salta. Ideas grandes sí—afirmaciones acotadas en Leyes y medibles en Medidores."
+      }
+    },
+    formal:{
+      en:{
+        hk:"PRODUCTS",
+        ht:"STRUCTURED OFFERING SURFACE",
+        hs:"Problem: complex systems fail under scale because shared dependencies stay invisible, claims exceed receipts, and corrections happen silently. This site binds each surface to explicit routes, bounded doctrine, and measurable outputs.",
+        fine:"This page enumerates deployable surfaces and their safe routing. Admissibility lives in Laws. Measurement lives in Gauges. Products remain separate to prevent route collapse."
+      },
+      zh:{
+        hk:"产品",
+        ht:"结构化供给面",
+        hs:"问题：复杂系统在规模下失败，原因是共享依赖不可见、主张超出收据、修正被静默执行。本网站把每个面绑定到明确路由、有界教义与可测输出。",
+        fine:"此页枚举可部署执行面与安全路由。可采信在法则；测量在量规；产品彼此分离以防路由坍缩。"
+      },
+      es:{
+        hk:"PRODUCTOS",
+        ht:"SUPERFICIE DE OFERTA ESTRUCTURADA",
+        hs:"Problema: los sistemas complejos fallan al escalar porque dependencias compartidas quedan invisibles, las afirmaciones superan los recibos y las correcciones ocurren en silencio. Este sitio ata cada superficie a rutas explícitas, doctrina acotada y salidas medibles.",
+        fine:"Esta página enumera superficies desplegables y su ruteo seguro. La admisibilidad vive en Leyes. La medición vive en Medidores. Los productos se mantienen separados para evitar colapso de rutas."
+      }
     }
-  }
-  renderHeader();
-
-  // ===== SAFE ROUTES (NO 404) =====
-  // Future products route to Frontier (Vision) with topic param.
-  function frontier(topic){
-    return "/explore/frontier/?topic="+encodeURIComponent(topic||"vision");
-  }
-
-  var ROUTE = {
-    energy: "/products/energy/",
-    education: "/products/education/",
-    software: "/products/software/",
-    diagnostic: "/products/",
-
-    // future product shells (safe)
-    water: frontier("water"),
-    waste: frontier("waste"),
-    shmr: frontier("SHIMMER"),     // SKYWAY HYBRID MOLECULAR REFINERY (SHMR) — SHIMMER acronym surface
-    climate: frontier("climate"),
-    habitat: frontier("habitat"),
-
-    // services (safe)
-    advisory: "/laws/",
-    audit: "/gauges/",
-    integration: "/products/software/",
-    training: "/products/education/",
-
-    // software & systems (safe)
-    uci: "/products/software/?focus=uci",
-    dotgrid: "/products/software/?focus=dotgrid",
-    ssg: "/products/software/?focus=ssg",
-    registry: "/products/software/?focus=registry",
-    adoption: "/products/software/?focus=adoption"
   };
 
-  // ===== DATA (CURRENT + FUTURE SHELLS) =====
-  // NOTE: Coherence Diagnostic appears ONCE.
-  var PRODUCTS = [
-    { c:"#F59E0B",
-      t:{en:"Energy (Industrial)",zh:"能源（工业）",es:"Energía (Industrial)"},
-      s:{en:"Industrial posture (C). No gain claims.",zh:"工业姿态（C）。无增益主张。",es:"Postura industrial (C). Sin ganancias."},
-      p:{en:"Thermal substitution surfaces with containment-first interfaces and staged discipline.",
-         zh:"热替代执行面：隔离优先接口 + 阶段化纪律。",
-         es:"Superficies de sustitución térmica con contención primero y disciplina por fases."},
-      href:ROUTE.energy
-    },
-    { c:"#0EA5E9",
-      t:{en:"Education (1001 Words)",zh:"教育（1001词）",es:"Educación (1001 Palabras)"},
-      s:{en:"Traversal-first learning with checkpoints.",zh:"遍历学习 + 检查点。",es:"Aprendizaje por recorrido con checkpoints."},
-      p:{en:"Programs, language core, training, and verification packaged as an adoptable learning surface.",
-         zh:"课程、语言核心、训练与验证：打包为可采纳学习面。",
-         es:"Programas, núcleo de lenguaje, formación y verificación en una superficie adoptable."},
-      href:ROUTE.education
-    },
-    { c:"#93C5FD",
-      t:{en:"Coherence Diagnostic",zh:"一致性诊断",es:"Diagnóstico de coherencia"},
-      s:{en:"Decision support and classification surfaces.",zh:"决策支持与分类执行面。",es:"Soporte de decisión y clasificación."},
-      p:{en:"Diagnostics only. Not a catch-all destination. Proof posture lives under Laws; measured outputs live under Gauges.",
-         zh:"仅诊断，不做总汇。证明姿态在法则；测量输出在量规。",
-         es:"Solo diagnóstico, no destino universal. Prueba en Leyes; medición en Medidores."},
-      href:ROUTE.diagnostic
-    },
-    { c:"#60A5FA",
-      t:{en:"Software Hub",zh:"软件枢纽",es:"Hub de Software"},
-      s:{en:"SSG, .DOTGrid, UCI, Registry (separated routes).",zh:"SSG、.DOTGrid、UCI、登记（路由分离）。",es:"SSG, .DOTGrid, UCI, Registro (rutas separadas)."},
-      p:{en:"Software surfaces are separated so routing never collapses into the wrong page.",
-         zh:"软件执行面彼此分离，避免路由坍缩到错误页面。",
-         es:"Superficies separadas para que el enrutamiento no colapse en la página equivocada."},
-      href:ROUTE.software
+  // ===== 7 categories (each must output 7 bulletins) =====
+  // Each category has:
+  //  - title/subtitle (human)
+  //  - bullets[view][tone] => 7 strings
+  //  - jumps => buttons
+  var CATS = [
+    {
+      c:"#D4AF37",
+      key:"software_spine",
+      t:P("Software Spine","软件脊柱","Columna de Software"),
+      s:P("The machine behind the pages: stable routing, state, gates, receipts.","页面背后的机器：稳定路由、状态、闸门、收据。","La máquina detrás de las páginas: rutas, estado, compuertas, recibos."),
+      jumps:[
+        {id:"SOFTWARE HUB", href:"/products/software/"},
+        {id:"SSG", href:"/products/ssg/"},
+        {id:"DOT.GRID", href:"/products/dot-grid/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "What you’re really buying: a site that stays calm when it grows.",
+              "A consistent page contract (so users don’t relearn every screen).",
+              "State carry (language + lenses) so nothing resets silently.",
+              "Clean routing so pages don’t collapse into the wrong destination.",
+              "A safe place for big ideas—without hype leaking into proof pages.",
+              "Upgradeable structure: add pages without breaking navigation.",
+              "One rule: every page ends with a jump, so readers never get trapped."
+            ],
+            [
+              "你真正得到的是：规模化时仍能保持安静稳定的网站。",
+              "一致的页面契约（用户不需要每页重学）。",
+              "状态携带（语言+透镜），避免静默重置。",
+              "干净路由，防止页面坍缩到错误目的地。",
+              "允许大想法，但不把噱头泄漏到证明页面。",
+              "结构可升级：加页面不破导航。",
+              "一条铁律：每段内容末尾都有跳转，不困住读者。"
+            ],
+            [
+              "Lo que compras de verdad: un sitio que se mantiene calmado al crecer.",
+              "Contrato de página consistente (sin reaprender cada pantalla).",
+              "Estado persistente (idioma + lentes) sin resets silenciosos.",
+              "Ruteo limpio para evitar colapsos a destinos equivocados.",
+              "Lugar seguro para ideas grandes sin hype en páginas de prueba.",
+              "Estructura ampliable sin romper navegación.",
+              "Regla: cada bloque termina con un salto para no atrapar al lector."
+            ]
+          ),
+          formal:P(
+            [
+              "Navigation-first architecture with deterministic routes and explicit returns.",
+              "State propagation contract: lang/style/time/depth preserved across all jumps.",
+              "SSG primitives enforce coherent behavior expression (no new primitives).",
+              "Receipt-gated progression prevents time-based advancement and drift.",
+              "No overlays as gates; tap produces one outcome (mobile-safe).",
+              "Change control: outcome-affecting edits require epoch boundaries.",
+              "Separation: Products describe use; Laws bound claims; Gauges measure outputs."
+            ],
+            [
+              "导航优先架构：确定路由 + 明确返回。",
+              "状态传播契约：lang/style/time/depth 全跳转保持。",
+              "SSG 原语表达行为并保持零新增原语。",
+              "收据闸门式推进，禁止用时间伪造正确性与漂移。",
+              "禁止遮罩当闸门；点按一次只产生一个结果（移动端安全）。",
+              "变更控制：影响结果的编辑必须切换纪元边界。",
+              "分离：产品页讲可用；法则页界定主张；量规页测量输出。"
+            ],
+            [
+              "Arquitectura navigation-first con rutas deterministas y retornos explícitos.",
+              "Contrato de propagación: lang/style/time/depth se preserva en cada salto.",
+              "Primitivas SSG expresan comportamiento sin introducir nuevas primitivas.",
+              "Progresión por recibos evita avance por tiempo y deriva.",
+              "Sin overlays como compuertas; un toque = un resultado (móvil seguro).",
+              "Control de cambios: ediciones que afectan resultados requieren época nueva.",
+              "Separación: Productos = uso; Leyes = límites; Medidores = medición."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "The engine is a discipline machine: it turns ‘I think’ into ‘here’s the rule.’",
+              "It stops silent resets (language, lens, time) that ruin comparisons.",
+              "It blocks ‘timer progress’ and replaces it with receipt progress.",
+              "It makes routing a first-class safety feature—not an afterthought.",
+              "It makes audits boring (that’s a compliment).",
+              "It keeps upgrades honest: new epoch when outcomes change.",
+              "It makes the platform teachable because the interaction contract is stable."
+            ],
+            [
+              "引擎是一台纪律机器：把“我觉得”变成“这是规则”。",
+              "它阻止语言/透镜/时间的静默重置（那会毁掉比较）。",
+              "它禁止“计时进步”，用“收据进步”替代。",
+              "它把路由当作安全特性，而不是事后补丁。",
+              "它让审计变无聊（这是褒奖）。",
+              "它让升级诚实：结果变就新纪元。",
+              "它让平台可教学，因为交互契约稳定。"
+            ],
+            [
+              "El motor es disciplina: convierte ‘creo’ en ‘aquí está la regla’.",
+              "Evita resets silenciosos (idioma/lente/tiempo) que rompen comparaciones.",
+              "Bloquea ‘progreso por tiempo’ y exige progreso por recibos.",
+              "Hace del ruteo una función de seguridad, no un detalle.",
+              "Vuelve la auditoría aburrida (eso es bueno).",
+              "Mantiene upgrades honestos: nueva época si cambia el resultado.",
+              "Hace la plataforma enseñable: contrato de interacción estable."
+            ]
+          ),
+          formal:P(
+            [
+              "Runtime: constrained state machine under declared keys; deterministic transitions.",
+              "Gates: binary admissibility checks; reason-coded, replayable outcomes.",
+              "Receipts: advancement requires evidence; no timers as gates.",
+              "Audit: observer-invariant evaluation; intent is ignored.",
+              "Change control: versioning + epoch rollover; no silent policy edits.",
+              "Registry: status + reason codes; lookup without leaking internals.",
+              "Interlock: Products ↔ Laws ↔ Gauges remain decoupled to prevent circularity."
+            ],
+            [
+              "运行时：声明键下的受约束状态机；确定性转移。",
+              "闸门：二元可采信检查；带原因码、可回放结果。",
+              "收据：升级必须有证据；禁止计时作闸门。",
+              "审计：观察者不变评估；忽略意图。",
+              "变更控制：版本化 + 新纪元；禁止静默政策编辑。",
+              "登记：状态+原因码；可查询且不泄露内部。",
+              "互锁：产品/法则/量规解耦，防循环。"
+            ],
+            [
+              "Runtime: máquina de estados acotada; transiciones deterministas.",
+              "Compuertas: checks binarios con códigos de razón y replay.",
+              "Recibos: avanzar requiere evidencia; sin temporizadores como compuertas.",
+              "Auditoría: evaluación invariante; se ignora intención.",
+              "Control de cambios: versionado + épocas; sin ediciones silenciosas.",
+              "Registro: estado + códigos de razón; lookup sin filtrar internos.",
+              "Interlock: Productos/Leyes/Medidores desacoplados para evitar circularidad."
+            ]
+          )
+        }
+      }
     },
 
-    /* FUTURE PRODUCT SHELLS (safe: Frontier vision topics) */
-    { c:"#34D399",
-      t:{en:"Water (Vision Shell)",zh:"水（愿景壳）",es:"Agua (Shell de visión)"},
-      s:{en:"Routing + recovery + reuse surfaces.",zh:"路由+回收+复用执行面。",es:"Ruteo + recuperación + reutilización."},
-      p:{en:"Future product shell: water routing under constraint. This link is safe and will never 404 (routes to Frontier).",
-         zh:"未来产品壳：约束下的水路由。本链接安全不 404（跳到前沿）。",
-         es:"Shell futuro: ruteo de agua bajo restricción. Enlace seguro (va a Frontera)."},
-      href:ROUTE.water
+    {
+      c:"#60A5FA",
+      key:"diagnostic_alignment",
+      t:P("Coherence Diagnostic","一致性诊断","Diagnóstico de Coherencia"),
+      s:P("A calibration tool: find mismatch fast, then route to the right layer.","校准工具：快速发现不匹配，然后跳到正确层。","Herramienta de calibración: detecta desajuste y rutea a la capa correcta."),
+      jumps:[
+        {id:"DIAGNOSTIC", href:"/products/coherence-diagnostic/"},
+        {id:"LAWS", href:"/laws/"},
+        {id:"GAUGES", href:"/gauges/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "Start with the question you’re afraid to ask.",
+              "Bring receipts (or admit you don’t have them yet).",
+              "Get a bounded answer: proceed / hold / contain.",
+              "Get a missing-receipts checklist (what to gather next).",
+              "Jump to Laws for proof boundaries (no arguing).",
+              "Jump to Gauges for measured signals (no opinions).",
+              "Repeat until the story matches the evidence."
+            ],
+            [
+              "从你最不敢问的问题开始。",
+              "带收据来（或者承认你还没有）。",
+              "得到有界答案：继续 / 暂停 / 隔离。",
+              "得到“缺什么收据”的清单。",
+              "跳到法则：主张边界（不争论）。",
+              "跳到量规：测量信号（不主观）。",
+              "重复到“叙事=证据”。"
+            ],
+            [
+              "Empieza con la pregunta que evitas.",
+              "Trae recibos (o admite que faltan).",
+              "Recibe salida acotada: seguir / esperar / contener.",
+              "Lista de recibos faltantes.",
+              "Salta a Leyes para límites de prueba.",
+              "Salta a Medidores para señales medidas.",
+              "Repite hasta que historia = evidencia."
+            ]
+          ),
+          formal:P(
+            [
+              "Declared scope + measurement rules precede classification.",
+              "Observer-invariant: same receipts → same outcome.",
+              "Outputs are bounded: proceed/hold/contain + reason codes.",
+              "No inferred intent; observed behavior only.",
+              "Correction creates a new epoch; no retroactive edits.",
+              "Admissibility is separate from presentation and sales language.",
+              "Routes remain stable to prevent navigation collapse."
+            ],
+            [
+              "声明范围+测量规则先于分类。",
+              "观察者不变：同收据→同结果。",
+              "输出有界：继续/暂停/隔离 + 原因码。",
+              "不推断意图；只用可观察行为。",
+              "修正即新纪元；禁止追溯改写。",
+              "可采信与呈现/营销语言分离。",
+              "路由稳定，防止导航坍缩。"
+            ],
+            [
+              "Alcance declarado + reglas de medición preceden clasificación.",
+              "Invariante: mismos recibos → mismo resultado.",
+              "Salidas acotadas: seguir/esperar/contener + códigos de razón.",
+              "Sin inferir intención; solo conducta observada.",
+              "Corrección = nueva época; sin edición retroactiva.",
+              "Admisibilidad separada de presentación/marketing.",
+              "Rutas estables para evitar colapso de navegación."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "It’s a truth filter for your own life and your org.",
+              "It turns confusion into a finite checklist.",
+              "It prevents ‘scale while drifting’.",
+              "It makes ‘support’ a routable thing: Laws + Gauges.",
+              "It makes calibration authority explicit (no crowdsourcing).",
+              "It makes disputes cheap: receipts settle them.",
+              "It keeps you moving by evidence, not adrenaline."
+            ],
+            [
+              "它是你个人和组织的真值过滤器。",
+              "把混乱变成有限清单。",
+              "阻止“漂移中扩张”。",
+              "把“支撑”变成可路由的东西：法则+量规。",
+              "让校准权明确（不可众包）。",
+              "让争议变便宜：收据解决。",
+              "让你靠证据行动，而不是靠肾上腺素。"
+            ],
+            [
+              "Es un filtro de verdad para tu vida y tu organización.",
+              "Convierte confusión en checklist finito.",
+              "Evita escalar mientras derivas.",
+              "Hace el soporte ruteable: Leyes + Medidores.",
+              "Aclara autoridad de calibración (sin crowdsourcing).",
+              "Hace disputas baratas: las resuelven recibos.",
+              "Te mueve por evidencia, no por adrenalina."
+            ]
+          ),
+          formal:P(
+            [
+              "Classifier under scope lock; outputs are admissible classes, not predictions.",
+              "Reason-coded gating under declared manifests and evidence hashes.",
+              "Windowed evaluation where applicable; no smoothing beyond windows.",
+              "Non-negotiables: non-contradiction, non-retroactivity, receipt continuity.",
+              "Calibration authority is exclusive; non-authoritative inputs are data only.",
+              "Kill conditions are explicit; containment is preferred under ambiguity.",
+              "Downstream coupling is via routes, not hidden dependencies."
+            ],
+            [
+              "范围锁下的分类器；输出为可采信类别而非预测。",
+              "在声明清单与证据哈希下做原因码闸门。",
+              "需要时用窗口评估；不做超出窗口的平滑。",
+              "硬不变量：不矛盾、不可追溯、收据连续。",
+              "校准权独占；非权威输入仅作数据。",
+              "Kill 条件明确；歧义下优先隔离。",
+              "下游耦合通过路由而非隐藏依赖。"
+            ],
+            [
+              "Clasificador con bloqueo de alcance; salidas son clases admisibles, no predicciones.",
+              "Compuertas con códigos de razón bajo manifiestos declarados y hashes de evidencia.",
+              "Evaluación por ventanas cuando aplique; sin suavizado fuera de ventana.",
+              "Invariantes: no contradicción, no retroactividad, continuidad de recibos.",
+              "Autoridad de calibración exclusiva; entradas no autoritativas = datos.",
+              "Condiciones de kill explícitas; contención preferida bajo ambigüedad.",
+              "Acoplamiento downstream vía rutas, no dependencias ocultas."
+            ]
+          )
+        }
+      }
     },
-    { c:"#A3A3A3",
-      t:{en:"Waste (Vision Shell)",zh:"废弃物（愿景壳）",es:"Residuos (Shell de visión)"},
-      s:{en:"Recovery-first, not combustion-first.",zh:"回收优先，不是燃烧优先。",es:"Recuperación primero, no combustión."},
-      p:{en:"Future product shell: heterogeneous routing and recovery. Safe link (Frontier).",
-         zh:"未来产品壳：异质流路由与回收。安全链接（前沿）。",
-         es:"Shell futuro: ruteo y recuperación heterogénea. Enlace seguro (Frontera)."},
-      href:ROUTE.waste
+
+    {
+      c:"#93C5FD",
+      key:"instruments_measurement",
+      t:P("Gauges & Instruments","量规与仪器","Medidores e Instrumentos"),
+      s:P("Signals over arguments: measurement surfaces only.","信号胜过争论：只做测量面。","Señales sobre debate: solo medición."),
+      jumps:[
+        {id:"GAUGES", href:"/gauges/"},
+        {id:"DOT.GRID", href:"/products/dot-grid/"},
+        {id:"LAWS", href:"/laws/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "See the signal before you tell a story.",
+              "Keep dashboards separate from doctrine.",
+              "Use Dot.Grid to map what’s connected.",
+              "Use Gauges to watch what’s changing.",
+              "Export snapshots to compare later.",
+              "If you can’t measure it, don’t elevate it.",
+              "When in doubt: contain, then measure again."
+            ],
+            [
+              "先看信号，再讲故事。",
+              "仪表板与教义分离。",
+              "用 Dot.Grid 画连接。",
+              "用量规看变化。",
+              "导出快照以便后比。",
+              "不可测就不要抬升。",
+              "不确定就先隔离，再测。"
+            ],
+            [
+              "Mira la señal antes de contar historia.",
+              "Tableros separados de doctrina.",
+              "Dot.Grid para conexiones.",
+              "Medidores para cambios.",
+              "Exporta snapshots para comparar.",
+              "Si no se mide, no se eleva.",
+              "Duda: contiene y vuelve a medir."
+            ]
+          ),
+          formal:P(
+            [
+              "Measurement-only surfaces; no doctrine narrative.",
+              "Windowed outputs with explicit time anchors.",
+              "Correlation exposure detection (cluster signals).",
+              "Exportable logs and snapshots for replay.",
+              "No threshold tuning without epoch bump.",
+              "Routing: Gauges display; Laws bound interpretation.",
+              "Observer-invariant requirements for comparable runs."
+            ],
+            [
+              "仅测量面；无教义叙事。",
+              "窗口化输出 + 明确时间锚。",
+              "相关暴露检测（集群信号）。",
+              "可导出日志/快照用于回放。",
+              "阈值变更必须新纪元。",
+              "路由：量规展示；法则约束解释。",
+              "观察者不变要求以保证可比运行。"
+            ],
+            [
+              "Solo medición; sin narrativa doctrinal.",
+              "Salidas por ventana con anclas de tiempo explícitas.",
+              "Detección de exposición correlacionada (clusters).",
+              "Logs/snapshots exportables para replay.",
+              "Sin ajuste de umbrales sin nueva época.",
+              "Ruteo: Medidores muestran; Leyes acotan interpretación.",
+              "Requisitos invariantes para comparabilidad."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "Gauges are the part that keeps you honest.",
+              "They turn ‘feelings’ into plots and logs.",
+              "They make trend direction obvious.",
+              "They show clustering (shared exposure).",
+              "They let you compare windows fairly.",
+              "They keep the system measurable, not mystical.",
+              "They make scaling safer because failure becomes visible early."
+            ],
+            [
+              "量规是让你诚实的那一层。",
+              "把“感觉”变成曲线和日志。",
+              "让趋势方向一眼可见。",
+              "展示集群（共享暴露）。",
+              "让窗口比较变公平。",
+              "让系统可测，而不神秘。",
+              "让扩张更安全：失败更早可见。"
+            ],
+            [
+              "Los medidores te mantienen honesto.",
+              "Convierten ‘sensaciones’ en curvas y logs.",
+              "Hacen obvia la dirección de la tendencia.",
+              "Muestran clustering (exposición compartida).",
+              "Permiten comparar ventanas de forma justa.",
+              "Mantienen el sistema medible, no místico.",
+              "Hacen el escalado más seguro porque el fallo se ve temprano."
+            ]
+          ),
+          formal:P(
+            [
+              "Instrument outputs are time-anchored and replayable.",
+              "No smoothing beyond declared windows unless specified.",
+              "Correlation signals are exposure indicators, not causality claims.",
+              "Exports must preserve scope_id + measurement rule identifiers.",
+              "Comparisons require identical window definitions.",
+              "Admissibility is not computed here; it is consumed elsewhere.",
+              "Failure handling prefers containment and rerun under same rules."
+            ],
+            [
+              "仪器输出必须时间锚定且可回放。",
+              "除声明窗口外不做平滑（除非显式指定）。",
+              "相关信号是暴露指标，不是因果主张。",
+              "导出必须保留 scope_id 与测量规则标识。",
+              "比较必须使用一致窗口定义。",
+              "此处不计算可采信；仅供下游消费。",
+              "失败处理优先隔离，并在同规则下复测。"
+            ],
+            [
+              "Salidas instrumentales ancladas en tiempo y re-ejecutables.",
+              "Sin suavizado fuera de ventanas declaradas salvo especificación.",
+              "Correlación = indicador de exposición, no causalidad.",
+              "Exports preservan scope_id + identificadores de reglas.",
+              "Comparaciones requieren ventanas idénticas.",
+              "Aquí no se calcula admisibilidad; se consume en otra capa.",
+              "Ante fallo: contención y re-ejecución con mismas reglas."
+            ]
+          )
+        }
+      }
     },
-    { c:"#D4AF37",
-      t:{en:"SHIMMER / SHMR (Vision Shell)",zh:"SHIMMER / SHMR（愿景壳）",es:"SHIMMER / SHMR (Shell de visión)"},
-      s:{en:"Hybrid molecular refinery routing model.",zh:"混合分子精炼路由模型。",es:"Modelo de ruteo de refinería molecular híbrida."},
-      p:{en:"Future product shell: Skyway Hybrid Molecular Refinery. Safe link (Frontier).",
-         zh:"未来产品壳：Skyway 混合分子精炼。安全链接（前沿）。",
-         es:"Shell futuro: Refinería Molecular Híbrida Skyway. Enlace seguro (Frontera)."},
-      href:ROUTE.shmr
+
+    {
+      c:"#EF4444",
+      key:"laws_governance",
+      t:P("Laws & Governance","法则与治理","Leyes y Gobernanza"),
+      s:P("Where claims get bounded: doctrine, invariants, admissibility.","主张在此有界：教义、不变量、可采信。","Aquí se acotan afirmaciones: doctrina, invariantes, admisibilidad."),
+      jumps:[
+        {id:"LAWS", href:"/laws/"},
+        {id:"DOOR", href:"/door/"},
+        {id:"GAUGES", href:"/gauges/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "This is the ‘no drift’ layer.",
+              "It defines what words are allowed to mean.",
+              "It prevents silent upgrades.",
+              "It forces new epochs when rules change.",
+              "It protects the community from hype.",
+              "It keeps support checkable.",
+              "It makes big ideas safe to explore."
+            ],
+            [
+              "这是“防漂移层”。",
+              "它规定词语允许的含义。",
+              "它阻止静默升级。",
+              "规则变更必须新纪元。",
+              "它保护社区免受噱头伤害。",
+              "它让支撑可核查。",
+              "它让大想法能安全探索。"
+            ],
+            [
+              "Esta es la capa anti-deriva.",
+              "Define qué pueden significar las palabras.",
+              "Evita upgrades silenciosos.",
+              "Cambios de regla = nueva época.",
+              "Protege a la comunidad del hype.",
+              "Mantiene soporte verificable.",
+              "Hace seguro explorar ideas grandes."
+            ]
+          ),
+          formal:P(
+            [
+              "Doctrine pages bind interpretation to scope and receipts.",
+              "Invariants are non-overridable under declared measurement rules.",
+              "Admissibility is binary where required; reason-coded always.",
+              "Corrections create new epochs; no retroactive edits.",
+              "Calibration authority constraints prevent capture.",
+              "Separation of roles: build vs audit vs tune.",
+              "Governance routes exist to keep system modular and falsifiable."
+            ],
+            [
+              "教义页面把解释绑定到范围与收据。",
+              "不变量在声明测量规则下不可覆盖。",
+              "需要时可采信二元化；且永远带原因码。",
+              "修正即新纪元；禁止追溯改写。",
+              "校准权约束防捕获。",
+              "角色分离：构建/审计/调参。",
+              "治理路由用于保持系统模块化与可证伪。"
+            ],
+            [
+              "Doctrina ata interpretación a alcance y recibos.",
+              "Invariantes no anulables bajo reglas declaradas.",
+              "Admisibilidad binaria cuando aplique; siempre con códigos de razón.",
+              "Correcciones crean épocas; sin edición retroactiva.",
+              "Restricciones de autoridad de calibración evitan captura.",
+              "Separación de roles: construir/auditar/ajustar.",
+              "Rutas de gobernanza mantienen modularidad y falsabilidad."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "This is where ‘big claims’ become safe claims.",
+              "It’s not a vibe—it’s a contract.",
+              "It’s how you stop meaning from mutating.",
+              "It’s how you stop ‘trust me’ systems.",
+              "It’s how you keep scaling from becoming corruption.",
+              "It’s how you build a platform that lasts.",
+              "It’s how you keep the map honest."
+            ],
+            [
+              "这里让“大主张”变成“安全主张”。",
+              "不是感觉，是契约。",
+              "阻止含义变异。",
+              "阻止“信我”系统。",
+              "阻止规模化变腐化。",
+              "打造能长久的平台。",
+              "让地图保持诚实。"
+            ],
+            [
+              "Aquí las ‘grandes afirmaciones’ se vuelven seguras.",
+              "No es vibra: es contrato.",
+              "Evita que el significado mute.",
+              "Evita sistemas ‘créeme’.",
+              "Evita que escalar se vuelva corrupción.",
+              "Construye una plataforma que dure.",
+              "Mantiene el mapa honesto."
+            ]
+          ),
+          formal:P(
+            [
+              "Primary constraints: non-contradiction, scope lock, receipt continuity, non-retroactivity.",
+              "Admissibility outputs are computed under declared manifests and evidence hashes.",
+              "Rule changes that affect outcomes require epoch rollover and versioning.",
+              "No compensation by weighting; failures are contained, not averaged away.",
+              "Authority separation is explicit; calibration is exclusive.",
+              "Interpretation is bounded: what cannot be measured cannot be stabilized.",
+              "Governance is designed to survive adversarial pressure."
+            ],
+            [
+              "主约束：不矛盾、范围锁、收据连续、不可追溯。",
+              "可采信输出在声明清单与证据哈希下计算。",
+              "影响结果的规则变更需新纪元与版本化。",
+              "不允许加权补偿；失败应隔离而非平均。",
+              "权力分离明确；校准权独占。",
+              "解释有界：不可测就不可稳。",
+              "治理设计必须能经受对抗压力。"
+            ],
+            [
+              "Restricciones primarias: no contradicción, bloqueo de alcance, continuidad de recibos, no retroactividad.",
+              "Admisibilidad se calcula bajo manifiestos y hashes declarados.",
+              "Cambios que afectan resultados requieren nueva época y versionado.",
+              "Sin compensación por ponderación; fallos se contienen, no se promedian.",
+              "Separación de autoridad explícita; calibración exclusiva.",
+              "Interpretación acotada: lo no medible no se estabiliza.",
+              "La gobernanza debe sobrevivir presión adversarial."
+            ]
+          )
+        }
+      }
+    },
+
+    {
+      c:"#F59E0B",
+      key:"energy_industrial",
+      t:P("Energy (Industrial)","能源（工业）","Energía (Industrial)"),
+      s:P("Industrial posture: staged pilots, containment-first, no gain claims.","工业姿态：阶段试点、隔离优先、无增益主张。","Postura industrial: pilotos por fases, contención primero, sin ganancias."),
+      jumps:[
+        {id:"ENERGY", href:"/products/energy/"},
+        {id:"VISION", href:"/explore/frontier/vision/"},
+        {id:"GAUGES", href:"/gauges/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "We don’t sell miracles. We sell disciplined pilots.",
+              "Start with one plant, one scope, one set of receipts.",
+              "Measure before you scale.",
+              "Contain failure so it can’t cascade.",
+              "Separate concept from live from roadmap.",
+              "Route big vision to Vision pages (not product claims).",
+              "If it can’t be audited, it stays ‘not yet’."
+            ],
+            [
+              "我们不卖奇迹，我们卖纪律化试点。",
+              "从一个工厂、一个范围、一套收据开始。",
+              "先测量，再扩张。",
+              "先隔离失败，防止级联。",
+              "把概念/上线/路线图分开。",
+              "大愿景去愿景页，不进产品主张。",
+              "不可审计就标“尚未”。"
+            ],
+            [
+              "No vendemos milagros: vendemos pilotos disciplinados.",
+              "Empieza con una planta, un alcance, un set de recibos.",
+              "Mide antes de escalar.",
+              "Contén fallos para evitar cascada.",
+              "Separa concepto/en vivo/roadmap.",
+              "La visión grande va a Visión, no a claims de producto.",
+              "Si no es auditable, se queda en ‘todavía no’."
+            ]
+          ),
+          formal:P(
+            [
+              "Industrial posture only; claims remain bounded to measured receipts.",
+              "Deployment is staged: scope lock → pilot → measurement → containment → scale.",
+              "No net-positive fusion claims; no frontier escalation without proofs.",
+              "Outputs must be time-anchored and exportable for audit.",
+              "Risk is managed via segmentation and rollback discipline.",
+              "Economic optimization is conditional on market variability and regulation.",
+              "Vision integration routes to SHIMMER/Frontier shells until built."
+            ],
+            [
+              "仅工业姿态；主张必须绑定测量收据。",
+              "部署分阶段：范围锁→试点→测量→隔离→扩张。",
+              "不做净增益聚变主张；无证明不推进前沿。",
+              "输出必须时间锚定且可导出审计。",
+              "风险通过分段隔离与回滚纪律管理。",
+              "经济优化受市场与监管波动约束。",
+              "愿景集成在未建前路由到 SHIMMER/Frontier 壳页。"
+            ],
+            [
+              "Solo postura industrial; afirmaciones acotadas a recibos medidos.",
+              "Despliegue por fases: bloqueo de alcance → piloto → medición → contención → escala.",
+              "Sin ganancia neta de fusión; sin escalación de frontera sin pruebas.",
+              "Salidas ancladas en tiempo y exportables para auditoría.",
+              "Riesgo vía segmentación y disciplina de rollback.",
+              "Optimización económica condicionada por mercado/regulación.",
+              "Integración de visión rutea a shells SHIMMER/Frontier hasta construirse."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "Energy is where ‘support’ becomes physical.",
+              "If measurement is weak, scale is dangerous.",
+              "If containment is weak, failure is contagious.",
+              "If routing is weak, plants become political disasters.",
+              "So we start with receipts, not slogans.",
+              "We treat waste/water/energy as one inventory problem.",
+              "And we don’t pretend physics negotiates."
+            ],
+            [
+              "能源领域里，“支撑”会变成实体。",
+              "测量弱，扩张就危险。",
+              "隔离弱，失败就传染。",
+              "路由弱，工厂就变成政治灾难。",
+              "所以我们从收据开始，不从口号开始。",
+              "把废弃物/水/能量当作同一库存问题。",
+              "而且物理定律不讨价还价。"
+            ],
+            [
+              "Energía es donde el soporte se vuelve físico.",
+              "Medición débil = escala peligrosa.",
+              "Contención débil = fallo contagioso.",
+              "Ruteo débil = desastre político.",
+              "Así que empezamos con recibos, no slogans.",
+              "Tratamos residuos/agua/energía como un inventario acoplado.",
+              "Y la física no negocia."
+            ]
+          ),
+          formal:P(
+            [
+              "System must satisfy mass/energy conservation within declared scope.",
+              "Routing must be explicit across heterogeneous feedstocks.",
+              "Outputs are multi-objective (E, M, CO2, CAPEX, OPEX) under constraints.",
+              "Measurement layer governs escalation; no interpretation beyond evidence.",
+              "Failure vectors: feed variability, market collapse, operational complexity.",
+              "Mitigation: modular redundancy, diversified revenue weighting, containment-first.",
+              "Scale is conditional: C0/C1 feasible only under receipts and governance."
+            ],
+            [
+              "系统在声明范围内必须满足质量/能量守恒。",
+              "异构进料的路由必须显式。",
+              "输出为多目标（E/M/CO2/CAPEX/OPEX）且受约束。",
+              "测量层管理升级；不得超证据解释。",
+              "失效向量：进料波动、市场崩塌、运行复杂性。",
+              "缓解：模块冗余、收入权重多元、隔离优先。",
+              "规模化是条件性的：仅在收据与治理下达到 C0/C1。"
+            ],
+            [
+              "El sistema debe cumplir conservación de masa/energía en el alcance declarado.",
+              "Ruteo explícito para feedstocks heterogéneos.",
+              "Salida multi-objetivo (E, M, CO2, CAPEX, OPEX) bajo restricciones.",
+              "La medición gobierna escalación; sin interpretación más allá de evidencia.",
+              "Vectores de fallo: variabilidad, colapso de mercado, complejidad operativa.",
+              "Mitigación: redundancia modular, pesos de ingresos diversificados, contención primero.",
+              "La escala es condicional: C0/C1 solo con recibos y gobernanza."
+            ]
+          )
+        }
+      }
+    },
+
+    {
+      c:"#34D399",
+      key:"resource_network",
+      t:P("Water · Waste · SHIMMER (Vision Shells)","水·废弃物·SHIMMER（愿景壳）","Agua · Residuos · SHIMMER (Shells)"),
+      s:P("Where the future connects: cities, landfills, water loops, orbital habitats.","未来连接处：城市、填埋场、水循环、轨道栖息地。","Donde se conecta el futuro: ciudades, vertederos, ciclos de agua, hábitats orbitales."),
+      jumps:[
+        {id:"VISION", href:"/explore/frontier/vision/"},
+        {id:"FRONTIER", href:"/explore/frontier/"},
+        {id:"LAWS", href:"/laws/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "These pages are ‘vision shells’ until built—routing stays clean anyway.",
+              "Water systems: treat leaks as inventory loss, not ‘maintenance later.’",
+              "Waste systems: stop burning value; route molecules with discipline.",
+              "Cities: turn disposal into measurable recovery pathways.",
+              "Landfills: treat them as deferred mines, not eternal fires.",
+              "SHIMMER: the routing backbone that unifies waste + water + energy.",
+              "Closed-loop habitats: the extreme test that proves the method."
+            ],
+            [
+              "这些页面在建成前是“愿景壳”，但路由仍然干净可用。",
+              "水系统：把漏损当库存损失，不是“以后修”。",
+              "废弃物：别烧掉价值，用纪律路由分子。",
+              "城市：把处理变成可测的回收路径。",
+              "填埋场：把它们当延迟矿山，而不是永恒火堆。",
+              "SHIMMER：统一废弃物+水+能源的路由骨干。",
+              "闭环栖息地：用极端场景证明方法。"
+            ],
+            [
+              "Estas páginas son ‘shells de visión’ hasta construirse—igual rutean limpio.",
+              "Agua: las fugas son pérdida de inventario, no ‘luego mantenimiento’.",
+              "Residuos: no quemes valor; rutea moléculas con disciplina.",
+              "Ciudades: convierte disposición en rutas medibles de recuperación.",
+              "Vertederos: minas diferidas, no fuegos eternos.",
+              "SHIMMER: la columna de ruteo que une residuos+agua+energía.",
+              "Hábitats cerrados: prueba extrema que valida el método."
+            ]
+          ),
+          formal:P(
+            [
+              "Vision shells remain bounded: no deployment claims without receipts.",
+              "Water/waste/energy are treated as coupled inventories under conservation constraints.",
+              "Routing engine maximizes multi-output value under regulatory and market constraints.",
+              "Modular cluster architecture preferred over mega-plant fragility.",
+              "Outputs must be measured, windowed, and exportable for audit.",
+              "Orbital systems are phased (0–30, 30–100, 100+) with explicit TRL assumptions.",
+              "Asteroid role is fragment-scale routing; no whole-body capture in near horizon."
+            ],
+            [
+              "愿景壳保持有界：无收据不做部署主张。",
+              "水/废弃物/能源视为耦合库存并受守恒约束。",
+              "路由引擎在监管与市场约束下最大化多输出价值。",
+              "优先分布式集群，避免巨型工厂脆弱性。",
+              "输出必须可测、窗口化、可导出审计。",
+              "轨道系统分阶段（0–30/30–100/100+）并显式 TRL 假设。",
+              "小行星仅碎片级路由；近期限不做整体现捕获。"
+            ],
+            [
+              "Shells de visión acotados: sin recibos no hay claims de despliegue.",
+              "Agua/residuos/energía como inventarios acoplados bajo conservación.",
+              "Motor de ruteo maximiza valor multi-salida bajo restricciones regulatorias/mercado.",
+              "Arquitectura modular distribuida sobre mega-plantas frágiles.",
+              "Salidas medibles, por ventanas y exportables para auditoría.",
+              "Sistemas orbitales por fases (0–30/30–100/100+) con supuestos TRL explícitos.",
+              "Asteroides: ruteo por fragmentos; sin captura de cuerpo completo en horizonte cercano."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "This is the ‘everything connects’ category.",
+              "Water loss is hidden drift.",
+              "Waste burning is entropy loss.",
+              "City-scale recovery needs routing, not slogans.",
+              "Scaling requires modular redundancy.",
+              "Space habitats are just the strictest version of the same problem.",
+              "So we build the method on Earth first—then lift it."
+            ],
+            [
+              "这是“一切互连”的类别。",
+              "水漏损是隐藏漂移。",
+              "焚烧废弃物是熵损失。",
+              "城市级回收需要路由，不需要口号。",
+              "规模化需要模块冗余。",
+              "太空栖息地只是同问题的最严格版本。",
+              "所以先在地球把方法建好，再往上抬。"
+            ],
+            [
+              "Esta es la categoría ‘todo conecta’.",
+              "Pérdida de agua = deriva oculta.",
+              "Quemar residuos = pérdida entrópica.",
+              "Recuperación urbana necesita ruteo, no slogans.",
+              "Escala requiere redundancia modular.",
+              "Hábitats espaciales son la versión más estricta del mismo problema.",
+              "Por eso se construye el método en la Tierra primero—y luego se eleva."
+            ]
+          ),
+          formal:P(
+            [
+              "Feedstock vectorization enables explicit routing matrix construction.",
+              "Conversion modules are selected by optimization under constraints.",
+              "Performance ceiling bounded by chemical energy; claims remain conditional.",
+              "Carbon diversion is conditional and must be measured per scope.",
+              "Failure vectors are mitigated via routing intelligence and redundancy.",
+              "Orbital closed-loop systems require ≥90% recovery targets (phase-bounded).",
+              "Δv budgets are per fragment; whole-body relocation is out-of-scope near-term."
+            ],
+            [
+              "进料向量化支持显式路由矩阵构建。",
+              "转化模块在约束下通过优化选择。",
+              "性能上限受化学能边界约束；主张必须条件化。",
+              "碳分流是条件性的，必须按范围测量。",
+              "失效向量通过路由智能与冗余缓解。",
+              "轨道闭环系统需≥90%回收目标（分阶段）。",
+              "Δv 预算按碎片计算；整体现迁移近期限不在范围内。"
+            ],
+            [
+              "Vectorización de feedstock habilita construcción explícita de matriz de ruteo.",
+              "Módulos de conversión se eligen por optimización bajo restricciones.",
+              "Techo de rendimiento acotado por energía química; claims condicionales.",
+              "Desvío de carbono condicional y medido por alcance.",
+              "Vectores de fallo mitigados por inteligencia de ruteo y redundancia.",
+              "Ciclo cerrado orbital requiere ≥90% recuperación (por fases).",
+              "Presupuestos Δv por fragmento; relocalización de cuerpo completo fuera de alcance cercano."
+            ]
+          )
+        }
+      }
+    },
+
+    {
+      c:"#0EA5E9",
+      key:"education_training",
+      t:P("Education & Training (ESL)","教育与训练（ESL）","Educación y Formación (ESL)"),
+      s:P("Traversal learning: fast, repeatable, proof-based progress.","遍历学习：快、可重复、可证明的进步。","Aprendizaje por recorrido: rápido, repetible y con prueba."),
+      jumps:[
+        {id:"EDUCATION", href:"/products/education/"},
+        {id:"FREE PDF", href:"/products/education/"},
+        {id:"HOME", href:"/home/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "Stage 1 is free: you submit once, you get the PDF instantly.",
+              "The system is traversal-first: learn by moving, not by cramming.",
+              "Daily routine keeps friction low and repetition high.",
+              "Checkpoints make progress real (pass/fail, no ego).",
+              "English, Chinese, Spanish support (ESL by design).",
+              "Cohorts and masterclasses scale the method safely.",
+              "Certification is a future layer—only after scoring stays consistent."
+            ],
+            [
+              "阶段1免费：提交一次，立即拿到PDF。",
+              "系统以遍历为先：靠移动学习，而不是死记。",
+              "日常例程低摩擦、高重复。",
+              "检查点让进步真实（通过/失败，不拼自尊）。",
+              "英语/中文/西语支持（ESL 天生设计）。",
+              "班级与大师课让方法安全规模化。",
+              "认证是未来层：只在评分一致后开启。"
+            ],
+            [
+              "Etapa 1 es gratis: envías una vez y descargas al instante.",
+              "Aprendizaje por recorrido: avanzas moviéndote, no memorizando.",
+              "Rutina diaria: poca fricción, mucha repetición.",
+              "Checkpoints hacen el progreso real (pasa/falla).",
+              "Soporte EN/中文/ES (ESL por diseño).",
+              "Cohortes/masterclasses escalan el método con seguridad.",
+              "Certificación es capa futura: solo con puntuación consistente."
+            ]
+          ),
+          formal:P(
+            [
+              "Education is an adoptable surface with stable routines and checkpoints.",
+              "Outputs are observable; upgrades require passes, not self-report.",
+              "Language support is a display layer; scoring remains invariant.",
+              "Stage ladder defines packaging without inflating claims.",
+              "Cohort delivery uses one rubric; inter-rater agreement is tracked.",
+              "Verification is separated; tiers require renewals and receipts.",
+              "Scale is gated by repeatability: same evidence → same score."
+            ],
+            [
+              "教育是可采纳执行面：稳定例程+检查点。",
+              "输出可观察；升级靠通过，不靠自述。",
+              "语言支持是展示层；评分保持不变。",
+              "阶段阶梯用于封装，不膨胀主张。",
+              "班级交付使用统一评分规，并追踪评分一致性。",
+              "验证层独立；分层需要续期与收据。",
+              "规模化闸门是可重复：同证据→同分。"
+            ],
+            [
+              "Educación como superficie adoptable con rutinas/checkpoints estables.",
+              "Salidas observables; upgrades requieren pases, no auto-reporte.",
+              "Soporte de idioma es capa de display; la puntuación es invariante.",
+              "Escalera de etapas empaqueta sin inflar claims.",
+              "Cohorte usa una rúbrica; se mide acuerdo entre evaluadores.",
+              "Verificación separada; niveles requieren renovaciones y recibos.",
+              "Compuerta de escala: misma evidencia → misma puntuación."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "This is ‘proof-based fluency’: produce outputs, don’t collect theory.",
+              "A routine is a loop you can replay under pressure.",
+              "Checkpoints are gates: you level up because you passed.",
+              "The system stays small so you actually do it daily.",
+              "Translation is support, not dependence.",
+              "Scale happens by training trainers, not by hype.",
+              "The endgame is consistency: same rubric, same result."
+            ],
+            [
+              "这是“证据型流利”：产出输出，不囤理论。",
+              "例程是压力下也能回放的循环。",
+              "检查点是闸门：过了才升级。",
+              "系统保持小，所以你能每天做。",
+              "翻译是支持，不是依赖。",
+              "靠培训讲师扩张，不靠噱头。",
+              "终局是稳定一致：同评分规，同结果。"
+            ],
+            [
+              "Esto es fluidez con prueba: produces salidas, no coleccionas teoría.",
+              "La rutina es un bucle replayable bajo presión.",
+              "Los checkpoints son compuertas: subes porque pasas.",
+              "Sistema pequeño = lo haces diario.",
+              "Traducción como soporte, no dependencia.",
+              "Escala entrenando formadores, no con hype.",
+              "Meta: consistencia—misma rúbrica, mismo resultado."
+            ]
+          ),
+          formal:P(
+            [
+              "Observer-invariant scoring under declared outputs.",
+              "Receipt-like artifacts (attempts, scores, reason codes) enable audit.",
+              "No timers-as-gates; completion is output-based.",
+              "Tiering and certification require renewal windows.",
+              "Cross-language parity preserves meaning via stable labels and rubrics.",
+              "Trainer calibration is mandatory; authority separation enforced.",
+              "Comparability is preserved via epoch stamping on rubric changes."
+            ],
+            [
+              "声明输出下的观察者不变评分。",
+              "类似收据的产物（尝试/得分/原因码）支持审计。",
+              "禁止计时作闸门；完成基于输出。",
+              "分层与认证需要续期窗口。",
+              "跨语言一致性通过稳定标签与评分规保持含义。",
+              "讲师校准必须；权力分离执行。",
+              "评分规变更需纪元盖章以保持可比性。"
+            ],
+            [
+              "Puntuación invariante bajo salidas declaradas.",
+              "Artefactos tipo recibo (intentos, puntajes, razones) habilitan auditoría.",
+              "Sin temporizadores como compuertas; completado por salida.",
+              "Niveles/certificación requieren renovaciones.",
+              "Paridad multilingüe mantiene significado con etiquetas/rúbricas estables.",
+              "Calibración de formadores obligatoria; separación de autoridad.",
+              "Cambios de rúbrica se estampan como nueva época para comparabilidad."
+            ]
+          )
+        }
+      }
+    },
+
+    {
+      c:"#A3A3A3",
+      key:"services_adoption",
+      t:P("Services & Adoption","服务与采纳","Servicios y Adopción"),
+      s:P("Advisory, audit support, integration wiring, training delivery.","咨询、审计支持、集成接线、训练交付。","Asesoría, soporte de auditoría, integración, formación."),
+      jumps:[
+        {id:"LAWS", href:"/laws/"},
+        {id:"GAUGES", href:"/gauges/"},
+        {id:"SOFTWARE HUB", href:"/products/software/"}
+      ],
+      bullets:{
+        platform:{
+          informal:P(
+            [
+              "Advisory: translate structure into decisions without inflating claims.",
+              "Audit support: package evidence outputs for review.",
+              "Integration: fix routing/state-carry so pages never collapse wrong.",
+              "Training: teach the method so it scales safely.",
+              "Enterprise wiring: rollout waves + rollback readiness.",
+              "Governance posture: ‘no silent edits’ and ‘new epoch on change.’",
+              "If it’s not measurable, we label it ‘not measured’—and move on."
+            ],
+            [
+              "咨询：把结构翻译成决策，不膨胀主张。",
+              "审计支持：打包证据输出便于复核。",
+              "集成：修好路由/状态携带，页面不再坍缩。",
+              "训练：教方法，让系统安全扩张。",
+              "企业接线：分波次发布 + 回滚准备。",
+              "治理姿态：不静默编辑；变更必新纪元。",
+              "不可测就标“未测量”，然后继续。"
+            ],
+            [
+              "Asesoría: traducir estructura en decisiones sin inflar claims.",
+              "Soporte de auditoría: empaquetar evidencia para revisión.",
+              "Integración: arreglar ruteo/estado para evitar colapsos.",
+              "Formación: enseñar el método para escalar con seguridad.",
+              "Wiring enterprise: olas de rollout + rollback listo.",
+              "Gobernanza: sin ediciones silenciosas; cambio = nueva época.",
+              "Si no es medible: ‘no medido’ y se continúa."
+            ]
+          ),
+          formal:P(
+            [
+              "Services are deployment adapters, not doctrine.",
+              "Outputs must remain bounded to receipts and declared scope.",
+              "Integration work is validated by deterministic routing and tap reliability.",
+              "Audit packaging preserves hashes/time anchors and reason codes.",
+              "Training delivery enforces stable rubrics and calibration.",
+              "Enterprise rollouts require segmentation and rollback protocols.",
+              "All service work routes back to Products/Laws/Gauges for verification."
+            ],
+            [
+              "服务是部署适配器，不是教义本体。",
+              "输出必须绑定收据与声明范围。",
+              "集成工作通过确定路由与点按可靠性验证。",
+              "审计打包保留哈希/时间锚/原因码。",
+              "训练交付强制稳定评分规与校准。",
+              "企业发布需要分段隔离与回滚协议。",
+              "所有服务最终回到产品/法则/量规做验证。"
+            ],
+            [
+              "Servicios = adaptadores de despliegue, no doctrina.",
+              "Salidas acotadas a recibos y alcance declarado.",
+              "Integración validada por ruteo determinista y fiabilidad de toque.",
+              "Paquetes de auditoría preservan hashes/anclas de tiempo y razones.",
+              "Formación exige rúbricas estables y calibración.",
+              "Rollouts enterprise requieren segmentación y rollback.",
+              "Todo servicio rutea de vuelta a Productos/Leyes/Medidores para verificación."
+            ]
+          )
+        },
+        engineering:{
+          informal:P(
+            [
+              "This is where the method becomes real-world adoption.",
+              "You don’t scale ideas—you scale procedures.",
+              "You don’t sell trust—you ship receipts.",
+              "You don’t ‘fix later’—you contain now.",
+              "You don’t argue semantics—you lock definitions.",
+              "You don’t hide changes—you stamp epochs.",
+              "You don’t guess routing—you wire it."
+            ],
+            [
+              "这里让方法落地成现实采纳。",
+              "扩张的不是想法，是流程。",
+              "卖的不是信任，是收据。",
+              "不是“以后修”，是“现在隔离”。",
+              "不是争语义，是锁定义。",
+              "不是藏变更，是盖纪元章。",
+              "不是猜路由，是把它接好。"
+            ],
+            [
+              "Aquí el método se vuelve adopción real.",
+              "No escalas ideas: escalas procedimientos.",
+              "No vendes confianza: entregas recibos.",
+              "No ‘arreglar después’: contienes ahora.",
+              "No discutes semántica: bloqueas definiciones.",
+              "No escondes cambios: estampas épocas.",
+              "No adivinas ruteo: lo cableas."
+            ]
+          ),
+          formal:P(
+            [
+              "Adoption is governed by receipt-first protocol and scope locks.",
+              "Service outputs are validated by reproducibility and audit replay.",
+              "No tuning without authority separation and version control.",
+              "Integration testing includes mobile tap reliability and state carry.",
+              "Rollouts follow staged deployment with rollback readiness.",
+              "Documentation is bound to invariant definitions to prevent drift.",
+              "Failure handling uses containment and reason-coded remediation."
+            ],
+            [
+              "采纳由收据优先协议与范围锁治理。",
+              "服务输出通过可复现与审计回放验证。",
+              "调参必须权力分离与版本控制。",
+              "集成测试包含移动端点按可靠与状态携带。",
+              "发布遵循分阶段部署与回滚准备。",
+              "文档绑定不变量定义以防漂移。",
+              "失败处理采用隔离与原因码修复。"
+            ],
+            [
+              "La adopción se rige por protocolo receipt-first y bloqueos de alcance.",
+              "Salidas de servicio validadas por reproducibilidad y replay de auditoría.",
+              "Sin ajuste sin separación de autoridad y control de versión.",
+              "Testing incluye fiabilidad móvil y propagación de estado.",
+              "Rollouts por fases con rollback listo.",
+              "Documentación atada a definiciones invariantes para evitar deriva.",
+              "Gestión de fallos con contención y remediación con códigos de razón."
+            ]
+          )
+        }
+      }
     }
   ];
 
-  var SERVICES = [
-    { c:"#D4AF37",
-      t:{en:"Advisory (Governance)",zh:"咨询（治理）",es:"Asesoría (Gobernanza)"},
-      s:{en:"Constraint-first guidance.",zh:"约束优先指导。",es:"Guía por restricciones."},
-      p:{en:"Translate doctrine into decisions without inflating claims. Routes to Laws (safe).",
-         zh:"把教义转为决策，不膨胀主张。跳到法则（安全）。",
-         es:"Traduce doctrina a decisiones sin inflar afirmaciones. Va a Leyes (seguro)."},
-      href:ROUTE.advisory
-    },
-    { c:"#60A5FA",
-      t:{en:"Audit Support",zh:"审计支持",es:"Soporte de auditoría"},
-      s:{en:"Receipts + exports + review posture.",zh:"收据+导出+复核姿态。",es:"Recibos + exportación + revisión."},
-      p:{en:"Package evidence outputs for review without changing measurement rules. Routes to Gauges (safe).",
-         zh:"打包证据输出用于复核，不改测量规则。跳到量规（安全）。",
-         es:"Empaqueta evidencia para revisión sin cambiar reglas. Va a Medidores (seguro)."},
-      href:ROUTE.audit
-    },
-    { c:"#93C5FD",
-      t:{en:"Integration (Software Wiring)",zh:"集成（软件接线）",es:"Integración (Cableado)"},
-      s:{en:"Routing, state carry, and page stability.",zh:"路由、状态携带与页面稳定。",es:"Rutas, estado y estabilidad."},
-      p:{en:"Wire platforms so pages don’t collapse into the wrong destination. Routes to Software Hub (safe).",
-         zh:"接线让页面不坍缩到错误目的地。跳到软件枢纽（安全）。",
-         es:"Cablea plataformas para evitar colapsos. Va a Hub de Software (seguro)."},
-      href:ROUTE.integration
-    },
-    { c:"#0EA5E9",
-      t:{en:"Training (Education)",zh:"训练（教育）",es:"Formación (Educación)"},
-      s:{en:"Masterclasses + routines + checkpoints.",zh:"大师课+例程+检查点。",es:"Clases + rutinas + checkpoints."},
-      p:{en:"Teach the method so the system scales without drift. Routes to Education (safe).",
-         zh:"教授方法，让系统规模化而不漂移。跳到教育（安全）。",
-         es:"Enseña el método para escalar sin deriva. Va a Educación (seguro)."},
-      href:ROUTE.training
-    }
-  ];
+  // ===== apply header =====
+  var H = (tone==="formal") ? HEAD.formal[lang] : HEAD.informal[lang];
+  if(!H) H = (tone==="formal") ? HEAD.formal.en : HEAD.informal.en;
 
-  var SYSTEMS = [
-    { c:"#93C5FD",
-      t:{en:"UCI Engine",zh:"UCI 引擎",es:"Motor UCI"},
-      s:{en:"Measurement + correlation core.",zh:"测量+相关核心。",es:"Núcleo de medición + correlación."},
-      p:{en:"Routes into Software Hub focus. Never routes into Diagnostic unless explicitly chosen.",
-         zh:"路由到软件枢纽聚焦。不再默认掉进诊断页。",
-         es:"Entra al Hub de Software con foco. No cae en diagnóstico salvo elección explícita."},
-      href:ROUTE.uci
-    },
-    { c:"#D4AF37",
-      t:{en:".DOTGrid",zh:".DOTGrid",es:".DOTGrid"},
-      s:{en:"Index + sweep surface.",zh:"索引+扫掠执行面。",es:"Superficie de indexación + barrido."},
-      p:{en:"Routes into Software Hub focus (dotgrid).",
-         zh:"路由到软件枢纽聚焦（dotgrid）。",
-         es:"Entra al foco (dotgrid) del Hub de Software."},
-      href:ROUTE.dotgrid
-    },
-    { c:"#A3A3A3",
-      t:{en:"SSG",zh:"SSG",es:"SSG"},
-      s:{en:"Constraint syntax geometry.",zh:"约束语法几何。",es:"Geometría de sintaxis por restricciones."},
-      p:{en:"Routes into Software Hub focus (ssg).",
-         zh:"路由到软件枢纽聚焦（ssg）。",
-         es:"Entra al foco (ssg) del Hub de Software."},
-      href:ROUTE.ssg
-    },
-    { c:"#334155",
-      t:{en:"Registry",zh:"登记系统",es:"Registro"},
-      s:{en:"Status + reason codes.",zh:"状态+原因码。",es:"Estado + códigos de razón."},
-      p:{en:"Routes into Software Hub focus (registry).",
-         zh:"路由到软件枢纽聚焦（registry）。",
-         es:"Entra al foco (registry) del Hub de Software."},
-      href:ROUTE.registry
-    },
-    { c:"#F59E0B",
-      t:{en:"Adoption Ladder",zh:"采纳阶梯",es:"Escalera de adopción"},
-      s:{en:"Phase gates for safe scaling.",zh:"安全扩张的阶段闸门。",es:"Compuertas por fase para escalar."},
-      p:{en:"Routes into Software Hub focus (adoption).",
-         zh:"路由到软件枢纽聚焦（adoption）。",
-         es:"Entra al foco (adoption) del Hub de Software."},
-      href:ROUTE.adoption
-    }
-  ];
+  document.getElementById("hk").textContent = H.hk;
+  document.getElementById("ht").textContent = H.ht;
+  document.getElementById("hs").textContent = H.hs;
+  document.getElementById("fine").textContent = H.fine;
 
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+  // ===== small i18n labels =====
+  function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+  if(lang==="zh"){
+    setText("btnDoor","门");
+    setText("btnHome","枢纽");
+    setText("btnExit","退出");
+    setText("dockExplore","探索");
+    setText("dockProducts","产品");
+    setText("dockLaws","法则");
+    setText("dockGauges","量规");
+    setText("band","七大类别");
+    setText("pillPlatform","平台");
+    setText("pillEngineering","工程");
+    setText("pillInformal","通俗");
+    setText("pillFormal","正式");
+  }else if(lang==="es"){
+    setText("band","LAS 7 CATEGORÍAS");
+  }
 
-  function closeSiblings(row){
-    var parent=row.parentElement;
-    if(!parent) return;
-    parent.querySelectorAll(".stackRow").forEach(function(x){
-      if(x!==row) x.classList.remove("open");
-      var ch=x.querySelector(".stackChevron");
-      if(ch) ch.textContent = (x.classList.contains("open") ? "▾" : "▸");
+  // ===== render accordion =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".row").forEach(function(x){
+      x.classList.remove("open");
+      var c=x.querySelector(".chev");
+      if(c) c.textContent="▸";
     });
   }
 
-  function makeRow(item){
+  function buildRow(cat, idx){
     var row=document.createElement("div");
-    row.className="stackRow";
-    row.style.setProperty("--domc", item.c);
+    row.className="row";
+    row.style.setProperty("--c", cat.c);
 
     var head=document.createElement("div");
-    head.className="stackHead";
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
     var left=document.createElement("div");
-    left.className="stackLeft";
+    left.className="left";
 
-    var bar=document.createElement("div");
-    bar.className="stackBar";
-    bar.style.background=item.c;
+    var d=document.createElement("div");
+    d.className="diamond";
+    d.style.background=cat.c;
 
-    var block=document.createElement("div");
-    block.style.minWidth="0";
+    var titleBlock=document.createElement("div");
+    titleBlock.className="titleBlock";
 
     var title=document.createElement("div");
-    title.className="stackTitle";
-
-    var sw=document.createElement("span");
-    sw.className="sw";
-    sw.style.background=item.c;
-
-    var label=document.createElement("span");
-    label.textContent=pick(item.t);
-
-    title.appendChild(sw);
-    title.appendChild(label);
+    title.className="title";
+    title.textContent=pick(cat.t);
 
     var sub=document.createElement("div");
-    sub.className="stackSub";
-    sub.textContent=pick(item.s);
+    sub.className="sub";
+    sub.textContent=pick(cat.s);
 
-    block.appendChild(title);
-    block.appendChild(sub);
+    titleBlock.appendChild(title);
+    titleBlock.appendChild(sub);
 
-    left.appendChild(bar);
-    left.appendChild(block);
+    left.appendChild(d);
+    left.appendChild(titleBlock);
 
     var chev=document.createElement("div");
-    chev.className="stackChevron";
+    chev.className="chev";
     chev.textContent="▸";
 
     head.appendChild(left);
     head.appendChild(chev);
 
     var body=document.createElement("div");
-    body.className="stackBody";
+    body.className="body";
 
     var p=document.createElement("p");
-    p.className="pdesc";
-    p.textContent=pick(item.p);
+    p.className="p";
+    p.textContent = (tone==="informal")
+      ? (lang==="zh"
+          ? "先读7条要点，再点按钮跳转到对应页面。"
+          : (lang==="es"
+              ? "Lee 7 puntos y luego usa los botones para saltar."
+              : "Read 7 bulletins, then use the buttons to jump."))
+      : (lang==="zh"
+          ? "该类别以7条要点枚举边界与接口；所有跳转保留状态。"
+          : (lang==="es"
+              ? "Esta categoría enumera límites e interfaces en 7 puntos; los saltos preservan estado."
+              : "This category enumerates boundaries and interfaces in 7 bulletins; jumps preserve state."));
 
-    var acts=document.createElement("div");
-    acts.className="actions";
+    var ul=document.createElement("ul");
+    ul.className="ul";
 
-    var open=document.createElement("a");
-    open.className="btn";
-    open.textContent = (lang==="zh") ? "打开" : (lang==="es") ? "ABRIR" : "OPEN";
-    open.href = item.href + q();
+    var pack = cat.bullets[view][tone];
+    var bullets = pick(pack) || [];
+    for(var i=0;i<bullets.length;i++){
+      var li=document.createElement("li");
+      li.textContent=bullets[i];
+      ul.appendChild(li);
+    }
 
-    acts.appendChild(open);
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var lbl=openLabel();
+    for(var j=0;j<cat.jumps.length;j++){
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent = lbl + ": " + cat.jumps[j].id;
+      a.href = cat.jumps[j].href + q();
+      actions.appendChild(a);
+    }
+
     body.appendChild(p);
-    body.appendChild(acts);
+    body.appendChild(ul);
+    body.appendChild(actions);
 
-    head.addEventListener("click", function(){
+    function toggle(){
       var willOpen = !row.classList.contains("open");
-      closeSiblings(row);
-      row.classList.toggle("open", willOpen);
-      chev.textContent = willOpen ? "▾" : "▸";
+      closeAll();
+      if(willOpen){
+        row.classList.add("open");
+        chev.textContent="▾";
+      }
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
     row.appendChild(head);
     row.appendChild(body);
+
+    if(idx===0){
+      row.classList.add("open");
+      chev.textContent="▾";
+    }
+
     return row;
   }
 
-  function mount(listId, arr){
-    var list=document.getElementById(listId);
-    list.innerHTML="";
-    arr.forEach(function(it,i){
-      var el=makeRow(it);
-      list.appendChild(el);
-      if(i===0){
-        el.classList.add("open");
-        el.querySelector(".stackChevron").textContent="▾";
-      }
-    });
+  function render(){
+    paintLang();
+    paintPills();
+
+    // header updates per tone
+    var H2 = (tone==="formal") ? HEAD.formal[lang] : HEAD.informal[lang];
+    if(!H2) H2 = (tone==="formal") ? HEAD.formal.en : HEAD.informal.en;
+    document.getElementById("hk").textContent = H2.hk;
+    document.getElementById("ht").textContent = H2.ht;
+    document.getElementById("hs").textContent = H2.hs;
+    document.getElementById("fine").textContent = H2.fine;
+
+    stack.innerHTML="";
+    for(var i=0;i<CATS.length;i++){
+      stack.appendChild(buildRow(CATS[i], i));
+    }
   }
 
-  mount("listA", PRODUCTS);
-  mount("listS", SERVICES);
-  mount("listB", SYSTEMS);
-
+  paintPills();
+  render();
 })();
 </script>
 

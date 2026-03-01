@@ -1,16 +1,23 @@
 <!-- TNT — /door/index.html
-     DOOR · FRONTIER POSITIONING PAGE
-     ROLE:
-       - Monumental positioning statement
-       - No lenses
-       - No doctrine vocabulary
-       - Heavy frontier tone
-       - Clear strength + credibility
-       - Routes into Compass, Prelude, Products
-     LOCKS:
-       - Uses ui.css + branch.css + instruments.js
-       - No html/body background override
-       - State carry (lang/style/time/depth)
+     DOOR · INTRO (DIAMOND GATE BRIDGE) · TRILINGUAL (EN/中文/ES) · NO LENSES
+     PURPOSE:
+       - Monumental intro that “rings frontier”: big promise + bounded posture + clear next jumps.
+       - Mobile-safe (no modals, no overlays, no pointer traps).
+     ROUTES (EDIT HERE IF YOUR ROUTES DIFFER):
+       - ROOT    → /root/        (return page)   [if you don’t have /root/, set to "/"]
+       - COMPASS → /index.html   (your compass)
+       - PRELUDE → /prelude/
+       - HOME    → /home/
+       - PRODUCTS→ /products/
+       - EXPLORE → /explore/
+       - LAWS    → /laws/
+       - GAUGES  → /gauges/
+     STATE:
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
+       - Carries lang/style/time/depth on every jump
+     STYLE:
+       - Dark opal + gold encrusting + subtle red (no washed-out blue)
+       - Larger print (typographic expansion)
 -->
 
 <!doctype html>
@@ -18,183 +25,564 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ENTER</title>
+<title>DIAMOND GATE BRIDGE · INTRO</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
-a{text-decoration:none;color:inherit}
-body{position:relative;z-index:0}
-body::before,body::after{pointer-events:none!important;z-index:0!important}
-#root{position:relative;z-index:10}
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
 :root{
-  --inkA:rgba(12,22,38,.96);
-  --inkB:rgba(6,10,16,.99);
+  --dockH:98px;
+
   --opalA:rgba(210,190,255,.16);
-  --opalB:rgba(255,80,80,.14);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,80,80,.10);
+
+  --goldSoft:rgba(212,175,55,.35);
   --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+  --mut2:rgba(255,255,255,.66);
 }
 
-/* Layout */
-.wrap{
-  width:min(1040px,94vw);
-  margin:100px auto 60px;
-  display:flex;
-  flex-direction:column;
-  gap:24px;
+/* Top (sticky, not fixed) */
+.top{
+  position:sticky; top:0; z-index:240;
+  padding:10px 0 8px;
+  display:flex; justify-content:space-between; gap:12px;
+}
+.top .left,.top .right{
+  display:flex; gap:10px; align-items:center;
+  flex-wrap:nowrap; white-space:nowrap;
 }
 
-/* Monument block */
+/* Page wrap */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:10px 0 calc(var(--dockH) + 18px);
+  display:flex; flex-direction:column; gap:14px;
+  position:relative; z-index:10;
+}
+
+/* Hero */
 .hero{
+  border-radius:26px;
   border:1px solid var(--stroke);
-  border-radius:28px;
-  padding:32px 26px;
   background:
-    radial-gradient(circle at 20% 30%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 80% 70%, var(--opalB), transparent 75%),
-    linear-gradient(160deg, var(--inkA), var(--inkB));
-  box-shadow:0 60px 180px rgba(0,0,0,.65);
+    radial-gradient(circle at 18% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
+  position:relative;
+  overflow:hidden;
 }
-
+.hero::before{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
 .k{
-  letter-spacing:6px;
+  margin:0 0 8px;
   font-size:12px;
-  opacity:.75;
+  letter-spacing:4px;
   text-transform:uppercase;
-  margin-bottom:14px;
+  opacity:.78;
 }
-
-.h{
-  font-size:36px;
+.h1{
+  margin:0;
   font-weight:950;
+  font-size:34px;
+  letter-spacing:1.1px;
   line-height:1.1;
-  letter-spacing:1px;
-  margin:0 0 16px;
 }
-
 .p{
-  font-size:16px;
-  line-height:1.7;
-  opacity:.92;
-  max-width:80ch;
+  margin:12px 0 0;
+  font-size:15.5px;
+  line-height:1.62;
+  color:var(--txt);
+  max-width:980px;
+}
+.rule{
+  margin:14px 0 0;
+  padding:12px 14px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--mut);
 }
 
-.ctaRow{
-  margin-top:28px;
-  display:flex;
+/* Primary grid (4 big cards) */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:14px;
-  flex-wrap:wrap;
 }
+@media (max-width:860px){ .grid{grid-template-columns:1fr;} }
 
-.btn{
-  padding:14px 20px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(6px);
-  font-weight:900;
+.card{
+  position:relative;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(255,80,80,.08), transparent 64%),
+    linear-gradient(160deg, rgba(12,22,38,.86), rgba(6,10,16,.92));
+  box-shadow:0 22px 80px rgba(0,0,0,.55);
+  overflow:hidden;
+  padding:16px 16px 14px;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:0; border-radius:inherit; padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.ct{
+  margin:0;
+  font-weight:950;
   letter-spacing:.4px;
-  cursor:pointer;
+  font-size:18px;
+}
+.cs{
+  margin:10px 0 0;
+  font-size:14px;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
+}
+.cm{
+  margin:10px 0 0;
+  font-size:13px;
+  line-height:1.55;
+  color:rgba(255,255,255,.72);
+}
+.actions{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.actions .btn{
+  padding:10px 14px;
+  border-radius:999px;
 }
 
-/* Structural reinforcement blocks */
-.block{
-  border:1px solid var(--stroke);
+/* Accordion band */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.12);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+}
+
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  padding:20px 22px;
-  background:linear-gradient(160deg, rgba(12,22,38,.82), rgba(6,10,16,.88));
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
-
-.bh{
-  font-size:20px;
-  font-weight:900;
-  margin:0 0 10px;
+.head{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:10px; padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-
+.left2{min-width:0}
+.title{
+  font-weight:950;
+  font-size:15.5px;
+  letter-spacing:.2px;
+}
+.sub{
+  margin-top:6px;
+  font-size:13.25px;
+  line-height:1.5;
+  color:rgba(255,255,255,.78);
+  max-width:92ch;
+}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
 .bp{
-  font-size:15px;
+  margin:0;
+  font-size:14px;
   line-height:1.65;
-  opacity:.9;
+  color:rgba(255,255,255,.86);
 }
+.bp + .bp{margin-top:10px}
 
-@media (max-width:560px){
-  .h{font-size:30px}
-  .p{font-size:15px}
+/* Dock */
+.dock{
+  position:fixed; left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:108px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
-<div id="root">
 
-<div class="wrap">
+<div class="page">
 
-  <div class="hero">
-    <div class="k">FRONTIER</div>
-
-    <h1 class="h">
-      The loudest ideas you’ve heard in years —  
-      built on measurable structure.
-    </h1>
-
-    <p class="p">
-      We are not here to whisper incremental change.  
-      We are here to rebuild how systems are designed, measured, and scaled.  
-      Energy. Education. Software. Governance. Infrastructure.  
-      Not as fragments — but as connected architecture.
-    </p>
-
-    <p class="p" style="margin-top:18px;">
-      You are here because something doesn’t quite add up.  
-      Something feels unstable.  
-      Something scales until it breaks.  
-      And you know there must be a better way.
-    </p>
-
-    <p class="p" style="margin-top:18px;">
-      There is.
-    </p>
-
-    <div class="ctaRow">
-      <a class="btn" id="goCompass" href="/index.html">OPEN COMPASS</a>
-      <a class="btn" id="goPrelude" href="/prelude/">READ PRELUDE</a>
-      <a class="btn" id="goProducts" href="/products/">SEE PRODUCTS</a>
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnRoot" href="/root/">ROOT</a>
+      <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
+      <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="block">
-    <div class="bh">What makes this different</div>
-    <div class="bp">
-      Big vision without structure collapses.  
-      Structure without vision stagnates.  
-      This system carries both — simultaneously.
+  <div class="hero" aria-label="Intro">
+    <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
+    <h1 class="h1" id="h0">FRONTIER, WITH RECEIPTS</h1>
+    <p class="p" id="p0"></p>
+    <div class="rule" id="r0"></div>
+  </div>
+
+  <div class="grid" aria-label="Primary entry">
+    <div class="card">
+      <h2 class="ct" id="c1t">START HERE</h2>
+      <p class="cs" id="c1s"></p>
+      <p class="cm" id="c1m"></p>
+      <div class="actions">
+        <a class="btn" id="goPrelude" href="/prelude/">OPEN</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="ct" id="c2t">GET TO THE MAP</h2>
+      <p class="cs" id="c2s"></p>
+      <p class="cm" id="c2m"></p>
+      <div class="actions">
+        <a class="btn" id="goCompass" href="/index.html">OPEN</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="ct" id="c3t">USE THE TOOLS</h2>
+      <p class="cs" id="c3s"></p>
+      <p class="cm" id="c3m"></p>
+      <div class="actions">
+        <a class="btn" id="goProducts" href="/products/">OPEN</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="ct" id="c4t">SEE THE FUTURE</h2>
+      <p class="cs" id="c4s"></p>
+      <p class="cm" id="c4m"></p>
+      <div class="actions">
+        <a class="btn" id="goExplore" href="/explore/">OPEN</a>
+      </div>
     </div>
   </div>
 
-  <div class="block">
-    <div class="bh">What you will not find here</div>
-    <div class="bp">
-      No inflated promises.  
-      No hidden rewrites.  
-      No silent shifts in meaning.
-      If something changes, it is deliberate.
-    </div>
-  </div>
-
-  <div class="block">
-    <div class="bh">What you will find</div>
-    <div class="bp">
-      A navigable framework.  
-      A measurable backbone.  
-      A frontier that does not drift into fantasy.
-    </div>
-  </div>
+  <div class="band" id="b1">WHAT THIS SITE IS ACTUALLY DOING</div>
+  <div class="stack" id="stack"></div>
 
 </div>
 
-</div>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ===== state =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  // ===== route map (edit if needed) =====
+  var ROUTE={
+    root:"/root/",
+    compass:"/index.html",
+    prelude:"/prelude/",
+    home:"/home/",
+    products:"/products/",
+    explore:"/explore/",
+    laws:"/laws/",
+    gauges:"/gauges/"
+  };
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+  function wire(id, path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
+
+  wire("btnRoot",ROUTE.root);
+  wire("btnCompass",ROUTE.compass);
+  wire("btnPrelude",ROUTE.prelude);
+
+  wire("goPrelude",ROUTE.prelude);
+  wire("goCompass",ROUTE.compass);
+  wire("goProducts",ROUTE.products);
+  wire("goExplore",ROUTE.explore);
+
+  wire("dockHome",ROUTE.home);
+  wire("dockProducts",ROUTE.products);
+  wire("dockLaws",ROUTE.laws);
+  wire("dockGauges",ROUTE.gauges);
+
+  // ===== language buttons =====
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
+
+  // ===== trilingual copy (you see one language at a time) =====
+  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
+  document.getElementById("p0").textContent = T(
+    "What if the biggest future projects were treated like engineering—not hype? This site is a map of problems we can measure, plus the bounded methods we use to solve them. You’re here because something needs an answer—and the answer is usually hiding in the wiring.",
+    "如果最宏大的未来工程不靠口号，而靠工程纪律，会怎样？这个站点把可测的问题画成地图，并把可落地的方法做成有界工具。你来这里，是因为某个东西需要答案——而答案通常藏在“线路”里。",
+    "¿Y si los proyectos más grandes del futuro se trataran como ingeniería, no como hype? Este sitio es un mapa de problemas medibles y de métodos acotados para resolverlos. Estás aquí porque algo necesita una respuesta—y esa respuesta suele estar en el cableado."
+  );
+
+  document.getElementById("r0").textContent = T(
+    "Positioning: Big ideas are welcome. But every claim stays bounded to what can be checked. If we can’t measure it yet, we label it as readiness—not as victory.",
+    "定位：允许大想法。但任何主张必须绑定可核查的支撑。若暂时不可测，就只写“就绪”，不写“胜利”。",
+    "Posicionamiento: se permiten ideas grandes. Pero toda afirmación queda acotada a lo verificable. Si aún no se puede medir, se etiqueta como preparación, no como victoria."
+  );
+
+  document.getElementById("c1s").textContent = T(
+    "Start with the story—but the story is disciplined.",
+    "先从叙事开始——但叙事有纪律。",
+    "Empieza con el relato—pero un relato disciplinado."
+  );
+  document.getElementById("c1m").textContent = T(
+    "Prelude is a guided ramp: it names the problem, explains the posture, and routes you cleanly.",
+    "前置页是引导坡道：讲清问题、讲清姿态、并把你干净地路由到正确入口。",
+    "El Preludio es una rampa guiada: nombra el problema, explica la postura y te enruta limpio."
+  );
+
+  document.getElementById("c2s").textContent = T(
+    "Go straight to the map of directions.",
+    "直接进入方向地图。",
+    "Ve directo al mapa de direcciones."
+  );
+  document.getElementById("c2m").textContent = T(
+    "Compass is traversal: pick a direction (facts, offer, measure, anchors) and enter.",
+    "指南针是遍历：选方向（事实/提供/测量/锚点），然后进入。",
+    "La Brújula es recorrido: elige dirección y entra."
+  );
+
+  document.getElementById("c3s").textContent = T(
+    "Use deployable surfaces: products, services, software.",
+    "进入可部署执行面：产品、服务、软件。",
+    "Usa superficies desplegables: productos, servicios, software."
+  );
+  document.getElementById("c3m").textContent = T(
+    "If you want something you can apply right now, start here.",
+    "如果你要马上能用的东西，从这里开始。",
+    "Si quieres algo aplicable hoy, empieza aquí."
+  );
+
+  document.getElementById("c4s").textContent = T(
+    "Vision lane: cities, habitats, water, waste, energy—mapped as bounded futures.",
+    "愿景通道：城市/栖息地/水/废弃物/能源——作为有界未来被映射。",
+    "Carril de visión: ciudades, hábitats, agua, residuos, energía—futuros acotados."
+  );
+  document.getElementById("c4m").textContent = T(
+    "Explore is where frontier projects live—always labeled as readiness when proof isn’t complete yet.",
+    "探索页承载前沿项目——证据未完成时一律标注为“就绪”。",
+    "Explorar es donde viven los proyectos frontera—etiquetados como preparación cuando la prueba aún no está completa."
+  );
+
+  document.getElementById("b1").textContent = T(
+    "WHAT THIS SITE IS ACTUALLY DOING",
+    "这个站点到底在做什么",
+    "QUÉ ESTÁ HACIENDO ESTE SITIO"
+  );
+
+  // ===== accordion rows (single-open) =====
+  var ROWS=[
+    {
+      t:T("What is the problem?","问题是什么？","¿Cuál es el problema?"),
+      s:T("Systems fail because complexity hides shared dependencies. People scale blind.","系统失败是因为复杂性隐藏了共享依赖，人们在盲目扩张。","Los sistemas fallan porque la complejidad oculta dependencias compartidas. Se escala a ciegas."),
+      p:[
+        T(
+          "Most failures are not ‘one bug’. They’re correlated exposure: one shared dependency, one shared rollout, one shared assumption—multiplying quietly until everything fails together.",
+          "多数失败不是“一个bug”，而是相关暴露：一个共享依赖、一次共享发布、一个共享假设——悄悄相乘，直到一起崩。",
+          "La mayoría de fallos no son ‘un bug’. Son exposición correlacionada: una dependencia compartida, un rollout compartido, una suposición compartida—multiplicando en silencio hasta que todo falla junto."
+        ),
+        T(
+          "So the first job is visibility: map the wiring into a finite lattice. If you can’t see it, you can’t stabilize it.",
+          "因此第一件事是可见性：把线路映射进有限晶格。看不见，就稳不住。",
+          "El primer trabajo es visibilidad: mapear el cableado en un lattice finito. Si no lo ves, no lo estabilizas."
+        )
+      ]
+    },
+    {
+      t:T("What is our posture?","我们的姿态是什么？","¿Cuál es nuestra postura?"),
+      s:T("Big ideas, bounded outputs. No silent upgrades.","允许大想法，但输出有界；不允许静默升级。","Ideas grandes, salidas acotadas. Sin upgrades silenciosos."),
+      p:[
+        T(
+          "We separate frontier vision from proof posture. Vision is allowed to be bold—proof is required to be strict.",
+          "我们把愿景与证明分离：愿景可以大胆；证明必须严格。",
+          "Separamos visión de prueba: la visión puede ser audaz; la prueba debe ser estricta."
+        ),
+        T(
+          "If something is not measured yet, we label it as readiness. That’s how we keep trust intact while building momentum.",
+          "如果暂时不可测，我们只写“就绪”。这样才能在推进的同时不伤信任。",
+          "Si algo aún no está medido, lo etiquetamos como preparación. Así mantenemos confianza mientras avanzamos."
+        )
+      ]
+    },
+    {
+      t:T("How do we solve it?","我们怎么解？","¿Cómo lo resolvemos?"),
+      s:T("Map → sweep → measure → govern. Always with receipts.","画图→扫掠→测量→治理，全程以收据为准。","Mapa → barrido → medición → gobernanza. Siempre con recibos."),
+      p:[
+        T(
+          "We turn “I think” into a bounded run: declare scope, collect receipts, apply constraints, and route you to the next safe move.",
+          "我们把“我觉得”变成有界运行：声明范围、收集收据、施加约束，然后把你路由到下一步安全动作。",
+          "Convertimos “yo creo” en una ejecución acotada: declarar alcance, reunir recibos, aplicar restricciones y enrutar el siguiente paso seguro."
+        ),
+        T(
+          "Dot.Grid exposes structure. Gauges expose signals. Laws define what signals are allowed to mean. Products deploy the result without collapsing routes.",
+          "Dot.Grid 暴露结构；量规暴露信号；法则约束信号能意味着什么；产品把结果部署出来且不坍缩路由。",
+          "Dot.Grid expone estructura. Medidores exponen señales. Leyes definen qué pueden significar. Productos despliegan sin colapsar rutas."
+        )
+      ]
+    }
+  ];
+
+  var stack=document.getElementById("stack");
+  function renderStack(){
+    stack.innerHTML="";
+    ROWS.forEach(function(r,idx){
+      var row=document.createElement("div"); row.className="row";
+      var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
+      var left=document.createElement("div"); left.className="left2";
+      var title=document.createElement("div"); title.className="title"; title.textContent=r.t;
+      var sub=document.createElement("div"); sub.className="sub"; sub.textContent=r.s;
+      left.appendChild(title); left.appendChild(sub);
+      var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
+      head.appendChild(left); head.appendChild(chev);
+
+      var body=document.createElement("div"); body.className="body";
+      r.p.forEach(function(pp){
+        var p=document.createElement("p"); p.className="bp"; p.textContent=pp; body.appendChild(p);
+      });
+
+      function closeAll(){
+        stack.querySelectorAll(".row").forEach(function(x){
+          x.classList.remove("open");
+          var c=x.querySelector(".chev"); if(c) c.textContent="▸";
+        });
+      }
+      function toggle(){
+        var open=!row.classList.contains("open");
+        closeAll();
+        if(open){ row.classList.add("open"); chev.textContent="▾"; }
+      }
+      head.addEventListener("click", toggle);
+      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+
+      row.appendChild(head); row.appendChild(body);
+      stack.appendChild(row);
+
+      if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
+    });
+  }
+  renderStack();
+})();
+</script>
+
 </body>
 </html>

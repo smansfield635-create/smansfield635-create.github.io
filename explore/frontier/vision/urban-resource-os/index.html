@@ -1,14 +1,12 @@
-<!-- TNT — /explore/frontier/vision/index.html
-     FRONTIER · VISION (SHIMMER) · 2-DIAMOND FORK · EN/中文/ES
+<!-- TNT — /explore/frontier/vision/urban-resource-os/index.html
+     FRONTIER · VISION · URBAN RESOURCE OS
+     SHIMMER EXTENSION PAGE
      RULES:
-       - Two vertical diamonds only (no loop back into Frontier)
-       - Urban Resource OS → /explore/frontier/vision/urban-resource-os/
-       - Closed Loop Habitats → /explore/frontier/vision/closed-loop-habitats/
-       - Structure lives in DOOR (no “structure loop” here)
-       - No modals. No overlays. No inline onclick.
-       - Canon state carry: lang/style/time/depth (URL + LS)
+       - Vision lane only (no structure loops here)
+       - Structure remains in /door/
+       - No modals, no overlays
+       - Canon state carry (lang/style/time/depth)
        - Uses ui.css + branch.css + instruments.js only
-       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -16,7 +14,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · VISION · SHIMMER</title>
+<title>URBAN RESOURCE OS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -25,15 +23,12 @@
 <style>
 a{color:inherit;text-decoration:none}
 
-/* keep ui.css field overlays behind */
+/* preserve ui field */
 body{position:relative;z-index:0}
-body::before, body::after{z-index:0 !important;pointer-events:none !important}
-#vRoot{position:relative;z-index:10}
+body::before,body::after{z-index:0!important;pointer-events:none!important}
+#uRoot{position:relative;z-index:10}
 
 :root{
-  --R:180px;
-  --D:260px;
-
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.18);
   --opalC:rgba(90,210,255,.16);
@@ -42,321 +37,156 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
   --obsB:rgba(6,10,16,.98);
 }
 
-/* top controls */
+/* top */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;
-  z-index:220;
+  display:flex;justify-content:space-between;
+  gap:12px;z-index:220;
   pointer-events:none;
 }
 .top .left,.top .right{
-  display:flex;gap:10px;align-items:center;
-  flex-wrap:nowrap;white-space:nowrap;
-  pointer-events:auto;
+  display:flex;gap:10px;pointer-events:auto;
+  white-space:nowrap;
 }
-.top .btn{white-space:nowrap}
 
-/* brand pill */
-.brand{
+/* header pill */
+.header{
   width:min(980px,94vw);
-  margin:72px auto 0;
-  padding:14px 16px;
-  border-radius:24px;
+  margin:84px auto 0;
+  padding:18px;
+  border-radius:26px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 20% 30%, rgba(210,190,255,.12), transparent 72%),
-    radial-gradient(circle at 82% 66%, rgba(120,70,255,.10), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.24), rgba(0,0,0,.12));
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
   backdrop-filter:blur(12px);
-  box-shadow:0 28px 100px rgba(0,0,0,.50);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
   text-align:center;
 }
-.brand .t{
+.header h1{
   margin:0;
   font-weight:950;
-  font-size:38px;
+  font-size:36px;
   letter-spacing:1px;
-  line-height:1.08;
 }
-.brand .s{
-  margin-top:6px;
-  font-size:13.5px;
-  opacity:.86;
-}
-
-/* stage */
-.stage{
-  position:relative;
-  width:min(720px,94vw);
-  height:min(720px,74vh);
-  margin:14px auto 0;
-  z-index:60;
-  pointer-events:none;
-}
-
-/* diamonds */
-.d{
-  width:var(--D);
-  height:var(--D);
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform-origin:center;
-  border-radius:34px;
-  cursor:pointer;
-  pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  overflow:hidden;
-
-  transform:translate(-50%,-50%) rotate(45deg);
-
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.35), transparent 48%),
-    radial-gradient(circle at 72% 30%, var(--opalA), transparent 60%),
-    radial-gradient(circle at 60% 85%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
-
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 48px 160px rgba(0,0,0,.85),
-    0 0 42px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -48px 90px rgba(0,0,0,.78);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-
-/* gold pearlescent edge */
-.d::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.6;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-
-/* gloss streak */
-.d::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  pointer-events:none;
-}
-
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
-  border-color:rgba(212,175,55,.30);
-  box-shadow:
-    0 60px 200px rgba(0,0,0,.9),
-    0 0 60px rgba(212,175,55,.28),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -52px 100px rgba(0,0,0,.85);
-}
-
-.d:active{
-  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
-}
-
-/* vertical layout */
-.dTop{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.dBot{ transform:translate(-50%,-50%) translate(0, calc(var(--R) *  1)) rotate(45deg); }
-
-.inner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:18px;
-  gap:10px;
-  pointer-events:none;
-  user-select:none;
-}
-.lab{
-  font-weight:950;
-  font-size:22px;
-  letter-spacing:.8px;
-  text-shadow:0 0 18px rgba(255,255,255,.10);
-}
-.sub{
+.header p{
+  margin-top:8px;
   font-size:14px;
-  opacity:.86;
-  line-height:1.35;
-  max-width:22em;
+  opacity:.85;
 }
 
-/* footer note */
+/* content blocks */
+.section{
+  width:min(980px,94vw);
+  margin:18px auto 0;
+  padding:18px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.08);
+}
+
+.section h2{
+  margin:0;
+  font-weight:950;
+  font-size:18px;
+  letter-spacing:.6px;
+}
+.section p{
+  margin-top:10px;
+  font-size:14px;
+  line-height:1.6;
+  opacity:.88;
+}
+
+/* small footer */
 .footer{
   width:min(980px,94vw);
-  margin:18px auto 34px;
+  margin:24px auto 34px;
   text-align:center;
   font-size:12.5px;
-  opacity:.78;
-}
-
-/* small screens */
-@media (max-width:560px){
-  :root{--R:164px;--D:240px}
-}
-@media (max-width:420px){
-  :root{--R:150px;--D:228px}
-  .brand .t{font-size:34px}
+  opacity:.75;
 }
 </style>
 </head>
 
 <body>
-<div id="vRoot">
+<div id="uRoot">
 
-  <div class="top" aria-label="Top controls">
+  <div class="top">
     <div class="left">
-      <a class="btn" id="btnBack" href="/explore/frontier/">BACK</a>
+      <a class="btn" id="btnBack" href="/explore/frontier/vision/">BACK</a>
       <a class="btn" id="btnDoor" href="/door/">DOOR</a>
     </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
+    <div class="right">
+      <button class="btn" id="btnEN">EN</button>
+      <button class="btn" id="btnZH">中文</button>
+      <button class="btn" id="btnES">ES</button>
     </div>
   </div>
 
-  <div class="brand" aria-hidden="true">
-    <h1 class="t" id="ttl">SHIMMER</h1>
-    <div class="s" id="subttl">Skyway Hybrid Molecular Refinery</div>
+  <div class="header">
+    <h1 id="ttl">URBAN RESOURCE OS</h1>
+    <p id="tag">Distributed entropy routing for cities</p>
   </div>
 
-  <div class="stage" aria-label="Vision fork">
-    <div class="d dTop" id="dUrban" role="button" tabindex="0" aria-label="Urban Resource OS">
-      <div class="inner">
-        <div class="lab" id="uLab">URBAN RESOURCE<br/>OS</div>
-        <div class="sub" id="uSub">Waste → Energy + Materials<br/>Distributed entropy routing</div>
-      </div>
-    </div>
-
-    <div class="d dBot" id="dHab" role="button" tabindex="0" aria-label="Closed Loop Habitats">
-      <div class="inner">
-        <div class="lab" id="hLab">CLOSED LOOP<br/>HABITATS</div>
-        <div class="sub" id="hSub">Orbital · Lunar · Remote<br/>Full resource retention</div>
-      </div>
-    </div>
+  <div class="section">
+    <h2>System Definition</h2>
+    <p>
+      Urban Resource OS is a distributed molecular routing architecture.
+      Waste is not combusted blindly — it is classified, segmented, and routed
+      toward highest-value energy and material pathways under thermodynamic constraint.
+    </p>
   </div>
 
-  <div class="footer" id="foot">Vision lane only · Structure lives in DOOR</div>
+  <div class="section">
+    <h2>Core Model</h2>
+    <p>
+      Feedstock → Segmentation → Dynamic Routing Matrix → Conversion Modules →
+      Energy + Materials + Carbon Retention.
+      Optimization remains bounded by chemical energy ceilings and conservation laws.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Global Role</h2>
+    <p>
+      Functions as an Urban Resource Operating System —
+      integrating waste, energy, hydrogen, materials, carbon markets,
+      and distributed infrastructure into a unified entropy management network.
+    </p>
+  </div>
+
+  <div class="footer">
+    Vision lane only · Structure lives in DOOR
+  </div>
 
 </div>
 
 <script>
 (function(){
-  // state
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  localStorage.setItem("gd_lang",lang);
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang);
   }
 
-  // wire top links with state
-  document.getElementById("btnBack").href="/explore/frontier/"+q();
+  document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
   document.getElementById("btnDoor").href="/door/"+q();
 
-  // language buttons (reload same path)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // hard navigation (no loop to structure)
-  function goUrban(){ location.href="/explore/frontier/vision/urban-resource-os/"+q(); }
-  function goHab(){ location.href="/explore/frontier/vision/closed-loop-habitats/"+q(); }
-
-  var dU=document.getElementById("dUrban");
-  var dH=document.getElementById("dHab");
-
-  dU.addEventListener("click", goUrban);
-  dH.addEventListener("click", goHab);
-
-  dU.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goUrban(); }});
-  dH.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); goHab(); }});
-
-  // i18n
-  if(lang==="zh"){
-    document.getElementById("subttl").textContent="天路混合分子精炼厂";
-    document.getElementById("uLab").innerHTML="城市资源<br/>操作系统";
-    document.getElementById("uSub").innerHTML="废弃物 → 能源 + 材料<br/>分布式熵路由";
-    document.getElementById("hLab").innerHTML="闭环<br/>栖息地";
-    document.getElementById("hSub").innerHTML="轨道 · 月球 · 远程<br/>资源全保留";
-    document.getElementById("foot").textContent="愿景通道 · 结构在 DOOR";
-    document.getElementById("btnBack").textContent="返回";
-    document.getElementById("btnDoor").textContent="门";
-  }else if(lang==="es"){
-    document.getElementById("subttl").textContent="Refinería Molecular Híbrida Skyway";
-    document.getElementById("uLab").innerHTML="SO<br/>URBANO";
-    document.getElementById("uSub").innerHTML="Residuos → Energía + Materiales<br/>Ruteo de entropía distribuido";
-    document.getElementById("hLab").innerHTML="HÁBITATS<br/>CERRADOS";
-    document.getElementById("hSub").innerHTML="Órbita · Lunar · Remoto<br/>Retención total de recursos";
-    document.getElementById("foot").textContent="Carril de visión · La estructura vive en DOOR";
-    document.getElementById("btnBack").textContent="VOLVER";
-    document.getElementById("btnDoor").textContent="PUERTA";
-  }
+  document.getElementById("btnEN").onclick=function(){location.search="?lang=en"};
+  document.getElementById("btnZH").onclick=function(){location.search="?lang=zh"};
+  document.getElementById("btnES").onclick=function(){location.search="?lang=es"};
 })();
 </script>
 

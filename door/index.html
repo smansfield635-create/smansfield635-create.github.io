@@ -162,56 +162,123 @@ body::before, body::after{z-index:0 !important;pointer-events:none !important}
 }
 .card .actions .btn{
   border-radius:999px;
-  padding:10px 14px;
+/* ===== OPAL / PEARL MATERIAL UPGRADE (NO LAYOUT CHANGES) ===== */
+
+/* Reuse the same opal palette you used on the glossy diamonds */
+:root{
+  --opalA:rgba(210,190,255,.18);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(90,210,255,.10);
+  --goldSoft:rgba(212,175,55,.45);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
 }
 
-/* how-it-works blocks */
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
+/* HERO becomes opal glass (already close—just tighten to match diamonds) */
+.hero{
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 20% 30%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 66%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.16));
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
 }
-.block{
-  border-radius:22px;
+
+/* RULE pill gets a subtle pearl edge + glow */
+.rule{
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.40);
-  padding:14px 14px 12px;
-}
-.block .bh{
-  margin:0;
-  font-weight:950;
-  font-size:15.5px;
-  letter-spacing:.4px;
-}
-.block .bp{
-  margin:10px 0 0;
-  font-size:13.25px;
-  line-height:1.55;
-  color:rgba(255,255,255,.86);
-}
-.block .jump{
-  margin-top:10px;
-  display:flex;
-  justify-content:flex-end;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+  box-shadow:
+    0 14px 48px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-.footer{
-  margin-top:8px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
+/* ENTRY CARDS: convert “black boxes” to pearlescent opal panels */
+.card{
+  position:relative;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 58%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
+    linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.55),
+    0 0 28px rgba(212,175,55,.10),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -36px 70px rgba(0,0,0,.55);
+  overflow:hidden;
 }
-.sig{
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:3px;
-  opacity:.65;
+
+/* Gold pearlescent edge (same trick as diamonds) */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
+}
+
+/* Soft gloss streak */
+.card::after{
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  opacity:.9;
+  pointer-events:none;
+}
+
+/* Hover lift stays the same but gets a little gold response */
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 36px 100px rgba(0,0,0,.72),
+    0 0 34px rgba(212,175,55,.16),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -36px 70px rgba(0,0,0,.55);
+}
+
+/* HOW-IT-WORKS BLOCKS: same opal stack, slightly flatter than cards */
+.block{
+  position:relative;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    linear-gradient(160deg, rgba(12,22,38,.70), rgba(6,10,16,.78));
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.block::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
+  opacity:.40;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  pointer-events:none;
 }
 </style>
 </head>

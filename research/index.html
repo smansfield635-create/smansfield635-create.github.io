@@ -1,4 +1,19 @@
 <!doctype html>
+<!-- TNT — /research/index.html
+     RESEARCH · HUB (EXPANDED)
+     GOALS:
+       - Expand the back page (more structure, less clutter)
+       - Keep research-only posture (no monetization, no lead capture, no affiliates)
+       - Trilingual (EN/中文/ES)
+       - Single-open accordion + nested sub-bubbles
+     LOCKS:
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - No modals/overlays
+       - No inline onclick; addEventListener only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -11,45 +26,200 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:104px;
+  --dockH:112px;
   --stroke:rgba(255,255,255,.12);
-  --mut:rgba(255,255,255,.84);
-  --shadowA:0 28px 90px rgba(0,0,0,.6);
+  --stroke2:rgba(255,255,255,.10);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.82);
+  --mut2:rgba(255,255,255,.70);
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
 }
 
+/* Top controls */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+
+/* Page */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
   padding:110px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:14px;
   position:relative;
   z-index:10;
 }
 
-.card{
+/* Header */
+.header{
   border:1px solid var(--stroke);
-  border-radius:24px;
+  border-radius:26px;
   padding:22px;
-  background:rgba(0,0,0,.18);
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
   box-shadow:var(--shadowA);
+  position:relative;
+  overflow:hidden;
 }
-
-.h1{margin:0 0 12px;font-size:26px;font-weight:950;letter-spacing:.3px}
-.p{margin:0;line-height:1.75;color:var(--mut);font-size:15px}
-
-.row{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid var(--stroke);
-  font-weight:900;
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.22;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
+.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
+.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
 
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.card::after{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  padding:16px 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+}
+.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
+.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:980;
+  flex:0 0 auto;
+  margin-top:2px;
+}
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+  position:relative;
+}
+.card.open .body{display:block}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:0;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.actions .btn{border-radius:999px;padding:10px 14px}
+
+/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -61,27 +231,46 @@ body::before,body::after{pointer-events:none!important}
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
+  z-index:220;
 }
-.dock .btn{width:100%;text-align:center}
+.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+  .h1{font-size:26px}
+}
 </style>
 </head>
 
 <body>
 
-<div class="page">
-  <div class="card">
-    <div class="h1" id="t">Research</div>
-    <div class="p" id="p">
-      Contextual and structural references that inform the broader engineering philosophy of this site.
-      This section is informational only.
-    </div>
-    <div class="row">
-      <a class="btn" id="openIndustry" href="/research/industry-context/">Open Industry Context</a>
-    </div>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
   </div>
 </div>
 
-<nav class="dock">
+<div class="page">
+
+  <section class="header" aria-label="Header">
+    <p class="k" id="k0">RESEARCH</p>
+    <h1 class="h1" id="h0">Research Hub</h1>
+    <p class="p0" id="p0"></p>
+    <div class="note0" id="note0"></div>
+  </section>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
   <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
@@ -90,11 +279,18 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
+  "use strict";
+
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -103,39 +299,230 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // wire links with state carry
-  function wire(id, path){
+  function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-  wire("openIndustry","/research/industry-context/");
+  wire("btnIndex","/index.html");
+  wire("btnIndustry","/research/industry-context/");
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // trilingual copy
-  if(lang==="zh"){
-    document.getElementById("t").textContent="研究";
-    document.getElementById("p").textContent="用于支撑本网站工程研究框架的背景与结构参考。本区仅用于信息与研究。";
-    document.getElementById("openIndustry").textContent="打开：行业背景";
-    document.getElementById("dockIndex").textContent="索引";
-    document.getElementById("dockExplore").textContent="探索";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-  }else if(lang==="es"){
-    document.getElementById("t").textContent="Investigación";
-    document.getElementById("p").textContent="Referencias contextuales y estructurales que informan la filosofía de ingeniería del sitio. Esta sección es solo informativa.";
-    document.getElementById("openIndustry").textContent="Abrir: Contexto industrial";
-    document.getElementById("dockIndex").textContent="BRÚJULA";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
   }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  var HEAD={
+    en:{
+      k0:"RESEARCH",
+      h0:"Research Hub",
+      p0:"Research pages provide contextual references and methodological notes that inform the site’s structural philosophy. This layer is informational only.",
+      note0:"No monetization. No lead capture. No affiliate positioning. Plain-text references only."
+    },
+    zh:{
+      k0:"研究",
+      h0:"研究枢纽",
+      p0:"研究页面提供背景参考与方法论笔记，用于支撑本网站的结构哲学。本层仅用于信息与研究。",
+      note0:"无变现、无获客、无联盟、仅纯文本引用。"
+    },
+    es:{
+      k0:"INVESTIGACIÓN",
+      h0:"Centro de investigación",
+      p0:"Las páginas de investigación aportan referencias contextuales y notas metodológicas que informan la filosofía estructural del sitio. Solo informativo.",
+      note0:"Sin monetización. Sin captación. Sin afiliados. Solo texto."
+    }
+  };
+  var H=HEAD[lang]||HEAD.en;
+  document.getElementById("k0").textContent=H.k0;
+  document.getElementById("h0").textContent=H.h0;
+  document.getElementById("p0").textContent=H.p0;
+  document.getElementById("note0").textContent=H.note0;
+
+  var SECTIONS=[
+    {
+      t:P("Industry Context","行业背景","Contexto industrial"),
+      s:P("Engineering-led construction benchmarks and case studies.","工程主导的施工基准与案例。","Referencias y casos de ingeniería."),
+      bubbles:[
+        {h:P("Open: Industry Context","打开：行业背景","Abrir: Contexto industrial"),
+         p:P(
+          "Benchmarks across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management. Structured into categories and sub-bubbles to reduce clutter.",
+          "覆盖暖通、屋面、保温、门窗、管道与雨水管理的基准集合。以“类别+子气泡”结构降低杂乱。",
+          "Benchmarks en HVAC, techos, aislamiento, ventanas, plomería y lluvia, estructurados por categorías para reducir desorden."
+         ),
+         route:"/research/industry-context/"
+        },
+        {h:P("What this is not","这不是","Lo que no es"),
+         p:P(
+          "No brand ranking. No product comparison. No endorsement. References are contextual only.",
+          "不做品牌排名、不做产品对比、不做背书。仅背景参考。",
+          "Sin rankings, sin comparación de productos, sin respaldo. Solo contexto."
+         )}
+      ]
+    },
+    {
+      t:P("Method Notes (Reserved)","方法论笔记（预留）","Notas de método (reservado)"),
+      s:P("Reserved for formal measurement notes and evaluation procedures.","预留：测量笔记与评估流程。","Reservado: medición y procedimientos."),
+      bubbles:[
+        {h:P("Purpose","用途","Propósito"),
+         p:P(
+          "This slot is reserved for research methodology notes that explain how bounds, signals, and deployment gates are defined without marketing language.",
+          "该栏预留用于方法论说明：如何定义边界、信号与部署闸门（无营销语言）。",
+          "Espacio reservado para notas metodológicas: límites, señales y compuertas sin lenguaje de marketing."
+         )}
+      ]
+    },
+    {
+      t:P("Field Notes (Reserved)","现场笔记（预留）","Notas de campo (reservado)"),
+      s:P("Reserved for observational notes and applied engineering documentation.","预留：观察笔记与工程应用记录。","Reservado: observaciones y documentación aplicada."),
+      bubbles:[
+        {h:P("Purpose","用途","Propósito"),
+         p:P(
+          "This slot is reserved for neutral, time-stamped observations and applied notes, with no claims beyond what is directly observed.",
+          "该栏预留用于中性时间戳观察与应用笔记：不做超出直接观察的主张。",
+          "Reservado para observaciones neutrales con marca de tiempo; sin afirmaciones más allá de lo observado."
+         )}
+      ]
+    }
+  ];
+
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".card").forEach(function(c){
+      c.classList.remove("open");
+      var ch=c.querySelector(".chev");
+      if(ch) ch.textContent="▸";
+    });
+  }
+
+  function makeBubble(bb){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=pick(bb.h);
+
+    var p=document.createElement("p");
+    p.textContent=pick(bb.p);
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    if(bb.route){
+      var actions=document.createElement("div");
+      actions.className="actions";
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+      a.href = bb.route + q();
+      actions.appendChild(a);
+      b.appendChild(actions);
+    }
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+
+    return b;
+  }
+
+  function makeCard(sec, idx){
+    var card=document.createElement("div");
+    card.className="card";
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+
+    var ti=document.createElement("div");
+    ti.className="ti";
+    ti.textContent=pick(sec.t);
+
+    var si=document.createElement("div");
+    si.className="si";
+    si.textContent=pick(sec.s);
+
+    left.appendChild(ti);
+    left.appendChild(si);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    (sec.bubbles||[]).forEach(function(bb){
+      bubbles.appendChild(makeBubble(bb));
+    });
+
+    body.appendChild(bubbles);
+
+    function toggle(){
+      var isOpen=card.classList.contains("open");
+      if(isOpen){
+        card.classList.remove("open");
+        chev.textContent="▸";
+        return;
+      }
+      closeAll();
+      card.classList.add("open");
+      chev.textContent="▾";
+      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    if(idx===0){ card.classList.add("open"); chev.textContent="▾"; }
+
+    return card;
+  }
+
+  SECTIONS.forEach(function(sec, i){
+    stack.appendChild(makeCard(sec, i));
+  });
+
 })();
 </script>
 

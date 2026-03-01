@@ -1,14 +1,24 @@
 <!-- TNT — /compass/index.html
-     COMPASS · ORIENTATION FIELD
+     COMPASS · ORIENTATION HUB (BIG) · EN/中文/ES · NO LENSES · NO MODALS
      ROLE:
-       - Define the problem (drift + incoherence)
-       - Define the measure (finite lattice)
-       - Define the posture (receipts > rhetoric)
-       - No lenses yet (pure orientation)
-       - EN / 中文 / ES
+       - Express the problem (drift + hidden correlation)
+       - Express the posture (finite map + bounded claims)
+       - 4-direction navigation with banner explanation + ENTER HERE
+     ROUTES (LOCKED):
+       NORTH  → /laws/      (STRUCTURE / BOUNDS)
+       EAST   → /products/  (DEPLOY / PRODUCTS)
+       SOUTH  → /gauges/    (MEASURE / SIGNALS)
+       WEST   → /explore/   (INNOVATION / VISION)
+     TOP NAV:
+       BACK → /door/
+       PRELUDE → /prelude/
+       ENTER → /home/
+     STATE:
+       - URL + LS: lang/style/time/depth via gd_*
      LOCKS:
        - Uses ui.css + branch.css + instruments.js
-       - ui.css owns background
+       - ui.css owns background (NO html/body background styling)
+       - Mobile-safe: no pointer-event traps, no overlays, no inline onclick
 -->
 
 <!doctype html>
@@ -28,184 +38,518 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:90px;
-  --gold:rgba(212,175,55,.35);
-  --goldSoft:rgba(212,175,55,.15);
-  --redSignal:rgba(255,70,70,.22);
+  --R:154px;
+  --D:178px;
+
+  --opalA:rgba(210,190,255,.18);
+  --opalB:rgba(120,70,255,.14);
+  --opalC:rgba(255,70,70,.12);
+
+  --goldSoft:rgba(212,175,55,.32);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
+
+  --stroke:rgba(255,255,255,.12);
+  --mut:rgba(255,255,255,.82);
 }
+
+/* Top */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;align-items:center;gap:10px;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
+}
+.top .btn{white-space:nowrap}
 
 /* Page */
 .page{
-  width:min(1100px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
-  padding:120px 0 calc(var(--dockH) + 24px);
+  padding:84px 0 28px;
+  position:relative;
+  z-index:10;
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
 }
 
-/* Diamond Field */
-.field{
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.10);
+/* Hero */
+.hero{
+  border-radius:26px;
+  border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 30% 25%, rgba(210,190,255,.18), transparent 70%),
-    radial-gradient(circle at 70% 70%, rgba(120,70,255,.14), transparent 75%),
-    linear-gradient(160deg, rgba(10,14,20,.92), rgba(6,10,16,.96));
-  padding:28px;
-  box-shadow:
-    0 60px 180px rgba(0,0,0,.85),
-    inset 0 0 60px rgba(212,175,55,.05);
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.60);
+  padding:18px 18px 16px;
+  overflow:hidden;
+  position:relative;
 }
-
-/* Gold lattice trace */
-.field::before{
+.hero::before{
   content:"";
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   pointer-events:none;
-  background:
-    repeating-conic-gradient(
-      from 45deg,
-      transparent 0deg 8deg,
-      rgba(212,175,55,.06) 8deg 9deg
-    );
-  opacity:.15;
+  background:repeating-conic-gradient(from 45deg, transparent 0deg 8deg, rgba(212,175,55,.06) 8deg 9deg);
+  opacity:.16;
   mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
 }
-
-/* Typography */
-.k{
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin:0 0 8px;
-}
-.t{
-  font-weight:950;
-  font-size:36px;
-  letter-spacing:.8px;
-  margin:0 0 14px;
-}
-.p{
-  font-size:15px;
-  line-height:1.75;
-  opacity:.92;
-  margin:0 0 16px;
-  max-width:900px;
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;position:relative}
+.h1{margin:0;font-weight:950;font-size:32px;letter-spacing:1px;line-height:1.12;position:relative}
+.p{margin:10px 0 0;font-size:14px;line-height:1.6;opacity:.90;max-width:980px;position:relative;color:rgba(255,255,255,.92)}
+.rule{
+  margin-top:12px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  font-size:12.75px;
+  line-height:1.45;
+  color:var(--mut);
+  position:relative;
 }
 
-/* Red signal emphasis */
-.signal{
-  color:#ff6b6b;
-  font-weight:700;
-}
-
-/* Dock */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  padding:12px;
-  border-radius:22px;
+/* Banner */
+.banner{
+  border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.28);
+  background:
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 120%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
   backdrop-filter:blur(12px);
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
+  box-shadow:0 30px 110px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
 }
-.dock .btn{
-  width:100%;
-  padding:12px;
+.bk{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.bt{margin:0;font-weight:950;font-size:24px;letter-spacing:.6px;line-height:1.12}
+.bp{margin:10px 0 0;font-size:13.5px;opacity:.88;line-height:1.55;max-width:980px}
+.brow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bcta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.bcta .btn{border-radius:999px;padding:10px 14px}
+
+/* Stage */
+.stage{
+  position:relative;
+  width:min(760px,94vw);
+  height:min(760px, 62vh);
+  margin:6px auto 0;
+}
+
+/* Outer frame */
+.outer{
+  position:absolute;
+  left:50%;top:50%;
+  width:min(680px,92vw);
+  height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  opacity:.50;
+  pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.10), transparent 60%),
+    radial-gradient(circle at 50% 120%, rgba(255,70,70,.10), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.52),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+.outer::after{
+  content:"";
+  position:absolute;inset:0;border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.08) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.14;
+}
+
+/* Diamonds */
+.d{
+  width:var(--D);height:var(--D);
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;
+  border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.58), transparent 46%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 60% 86%, var(--opalC), transparent 72%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 32px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -42px 78px rgba(0,0,0,.80);
+
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.62;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;
+  height:28%;
   border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+.d:hover{
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.35);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d:active{
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
+}
+.d.active{
+  border-color:rgba(212,175,55,.65);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 66px rgba(212,175,55,.34),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+
+.dN{--tx:0px;--ty:calc(var(--R)*-1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dE{--tx:var(--R);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dS{--tx:0px;--ty:var(--R);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+.dW{--tx:calc(var(--R)*-1);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+
+.inner{
+  transform:rotate(-45deg) translateY(-2px);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
+  padding:14px;
+  gap:8px;
+  pointer-events:none;
+  user-select:none;
+}
+.dir{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
+.lab{font-weight:950;font-size:18px;letter-spacing:.6px}
+.sub{font-size:12.75px;opacity:.86;line-height:1.25;max-width:18em}
+
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+  font-weight:950;
+  letter-spacing:.2px;
+  opacity:.92;
+}
+
+/* Footer */
+.footer{
+  text-align:center;
+  font-size:12.5px;
+  opacity:.78;
+  padding-bottom:34px;
+}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+
+@media (max-width:560px){
+  :root{--R:140px;--D:168px}
+  .bt{font-size:22px}
+}
+@media (max-width:420px){
+  :root{--R:132px;--D:160px}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnBack" href="/door/">BACK</a>
+    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+    <a class="btn" id="btnHome" href="/home/">ENTER</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
 <div class="page">
 
-  <div class="field">
-
-    <p class="k">COMPASS</p>
-    <h1 class="t">You Are Here Because Something Feels Off</h1>
-
-    <p class="p">
-      Systems drift. Teams drift. Products drift. 
-      Language drifts. 
-      And when drift compounds, it stops being cosmetic — it becomes structural.
+  <div class="hero">
+    <p class="k" id="k0">COMPASS</p>
+    <h1 class="h1" id="h0">Orientation, Finite Measure, and the Map</h1>
+    <p class="p" id="p0">
+      You’re here because something needs an answer. The danger is guessing inside a drifting system.
+      The fix is simple: choose a direction, keep claims support-bounded, and move by receipts.
     </p>
+    <div class="rule" id="r0">
+      Rule: Map first. Measure second. Judge third. Scale last.
+    </div>
+  </div>
 
-    <p class="p">
-      Most failures do not begin with catastrophe. 
-      They begin with <span class="signal">invisible misalignment</span>.
-      Small inconsistencies.
-      Quiet contradictions.
-      Shared exposure nobody mapped.
-    </p>
+  <div class="banner" aria-label="Direction banner">
+    <div class="bk" id="bk">DIAMOND GATE BRIDGE</div>
+    <div class="brow">
+      <div>
+        <h2 class="bt" id="bt">Choose a direction</h2>
+        <p class="bp" id="bp">Tap a diamond. Read the banner. Then enter.</p>
+      </div>
+      <div class="bcta">
+        <a class="btn" id="btnEnterHere" href="#">ENTER HERE</a>
+      </div>
+    </div>
+  </div>
 
-    <p class="p">
-      This project exists because drift is not random.
-      It can be measured.
-      It can be bounded.
-      It can be expressed within a finite lattice.
-    </p>
+  <div class="stage" aria-label="Compass">
+    <div class="outer" aria-hidden="true"></div>
 
-    <p class="p">
-      We do not operate on vibes.
-      We operate on declared scope, receipts, invariants, and replayable structure.
-    </p>
+    <div class="d dN" id="dNorth" role="button" tabindex="0" aria-label="North">
+      <div class="inner">
+        <div class="dir" id="nDir">NORTH</div>
+        <div class="lab" id="nLab">STRUCTURE</div>
+        <div class="sub" id="nSub">Bounds · definitions · drift prevention</div>
+      </div>
+    </div>
 
-    <p class="p">
-      If you are here, there is a question.
-      A system.
-      A structure.
-      A pressure point.
-      And somewhere in the lattice, there is an answer.
-    </p>
+    <div class="d dE" id="dEast" role="button" tabindex="0" aria-label="East">
+      <div class="inner">
+        <div class="dir" id="eDir">EAST</div>
+        <div class="lab" id="eLab">DEPLOY</div>
+        <div class="sub" id="eSub">Products · surfaces · adoption</div>
+      </div>
+    </div>
 
+    <div class="d dS" id="dSouth" role="button" tabindex="0" aria-label="South">
+      <div class="inner">
+        <div class="dir" id="sDir">SOUTH</div>
+        <div class="lab" id="sLab">MEASURE</div>
+        <div class="sub" id="sSub">Signals · dashboards · outputs</div>
+      </div>
+    </div>
+
+    <div class="d dW" id="dWest" role="button" tabindex="0" aria-label="West">
+      <div class="inner">
+        <div class="dir" id="wDir">WEST</div>
+        <div class="lab" id="wLab">INNOVATE</div>
+        <div class="sub" id="wSub">Vision · frontier · staged claims</div>
+      </div>
+    </div>
+
+    <div class="core">◆</div>
+  </div>
+
+  <div class="footer">
+    <span id="ft">Big curiosity · Support-bounded claims · Clean jumps</span>
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/prelude/">PRELUDE</a>
-  <a class="btn" href="/home/">HOME</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-</nav>
-
 <script>
 (function(){
+  // ===== state =====
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  if(lang==="zh"){
-    document.querySelector(".t").textContent="你在这里，因为有些地方不对劲";
-    var ps=document.querySelectorAll(".p");
-    ps[0].textContent="系统会漂移。团队会漂移。产品会漂移。语言也会漂移。当漂移累积，它不再是表面问题，而是结构问题。";
-    ps[1].innerHTML="大多数失败并非始于灾难，而始于<span class='signal'>看不见的错位</span>。细微的不一致，安静的矛盾，共享暴露却无人绘制。";
-    ps[2].textContent="这个项目存在，因为漂移不是随机的。它可以被测量，可以被约束，可以在有限晶格中表达。";
-    ps[3].textContent="我们不依赖感觉。我们依赖声明范围、收据、不变量与可回放结构。";
-    ps[4].textContent="如果你在这里，说明有一个问题。有一个系统。有一个压力点。在晶格的某处，有一个答案。";
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  if(lang==="es"){
-    document.querySelector(".t").textContent="Estás Aquí Porque Algo No Está Bien";
-    var ps=document.querySelectorAll(".p");
-    ps[0].textContent="Los sistemas derivan. Los equipos derivan. Los productos derivan. El lenguaje deriva. Cuando la deriva se acumula, deja de ser cosmética y se vuelve estructural.";
-    ps[1].innerHTML="La mayoría de fallos no empiezan con catástrofe, sino con <span class='signal'>desalineación invisible</span>. Pequeñas inconsistencias. Contradicciones silenciosas. Exposición compartida sin mapa.";
-    ps[2].textContent="Este proyecto existe porque la deriva no es aleatoria. Puede medirse. Puede acotarse. Puede expresarse dentro de un lattice finito.";
-    ps[3].textContent="No operamos con emociones. Operamos con alcance declarado, recibos, invariantes y estructura reproducible.";
-    ps[4].textContent="Si estás aquí, hay una pregunta. Un sistema. Un punto de presión. Y en algún lugar del lattice, hay una respuesta.";
+  // top links
+  document.getElementById("btnBack").href="/door/"+q();
+  document.getElementById("btnPrelude").href="/prelude/"+q();
+  document.getElementById("btnHome").href="/home/"+q();
+
+  // language (reload same path)
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+
+  // routes
+  var ROUTE = {
+    north:"/laws/",
+    east:"/products/",
+    south:"/gauges/",
+    west:"/explore/"
+  };
+
+  var bt=document.getElementById("bt");
+  var bp=document.getElementById("bp");
+  var enterHere=document.getElementById("btnEnterHere");
+
+  var dN=document.getElementById("dNorth");
+  var dE=document.getElementById("dEast");
+  var dS=document.getElementById("dSouth");
+  var dW=document.getElementById("dWest");
+
+  function clearActive(){
+    dN.classList.remove("active");
+    dE.classList.remove("active");
+    dS.classList.remove("active");
+    dW.classList.remove("active");
+  }
+
+  function setBanner(key){
+    clearActive();
+
+    var title="", desc="", href="#";
+    if(lang==="zh"){
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · 结构"; desc="边界与定义：防漂移的护栏。先把地图锁住，再谈扩张。"; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · 部署"; desc="可用执行面：产品与服务。把结构变成可落地动作。"; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · 测量"; desc="信号与输出：把争论换成数据，把感觉换成窗口。"; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · 创新"; desc="愿景与前沿：允许大想法，但主张必须分阶段且有界。"; href=ROUTE.west; }
+      enterHere.textContent="进入这里";
+    }else if(lang==="es"){
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · ESTRUCTURA"; desc="Límites y definiciones: barandales contra deriva. Primero fija el mapa."; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · DESPLEGAR"; desc="Superficies usables: productos y servicios. Estructura → acción."; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEDIR"; desc="Señales y salidas: cambia discusiones por datos y ventanas."; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · INNOVAR"; desc="Visión y frontera: ideas grandes, afirmaciones por fases y acotadas."; href=ROUTE.west; }
+      enterHere.textContent="ENTRAR AQUÍ";
+    }else{
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · STRUCTURE"; desc="Bounds and definitions: the guardrails that prevent drift. Lock the map first."; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · DEPLOY"; desc="Usable surfaces: products and services. Structure converted into action."; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEASURE"; desc="Signals and outputs: replace arguments with data and windows."; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · INNOVATE"; desc="Vision and frontier: big ideas allowed, claims stay staged and bounded."; href=ROUTE.west; }
+      enterHere.textContent="ENTER HERE";
+    }
+
+    bt.textContent=title;
+    bp.textContent=desc;
+    enterHere.href = href + q();
+  }
+
+  function bind(el, key){
+    function act(){ setBanner(key); }
+    el.addEventListener("click", act);
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+  }
+
+  bind(dN,"north");
+  bind(dE,"east");
+  bind(dS,"south");
+  bind(dW,"west");
+
+  // page copy i18n
+  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  document.getElementById("h0").textContent=T("Orientation, Finite Measure, and the Map","导览、有限测量与地图","Orientación, Medida Finita y el Mapa");
+  document.getElementById("p0").textContent=T(
+    "You’re here because something needs an answer. The danger is guessing inside a drifting system. The fix is simple: choose a direction, keep claims support-bounded, and move by receipts.",
+    "你来这里，是因为某个问题需要答案。危险在于：在漂移系统里靠猜。修复很简单：选方向、主张有界、按收据行动。",
+    "Estás aquí porque algo necesita una respuesta. El peligro es adivinar dentro de un sistema con deriva. La solución: elige dirección, afirma solo con soporte y muévete por recibos."
+  );
+  document.getElementById("r0").textContent=T(
+    "Rule: Map first. Measure second. Judge third. Scale last.",
+    "规则：先画图，再测量，再裁决，最后扩张。",
+    "Regla: mapa primero, medir segundo, juzgar tercero, escalar al final."
+  );
+
+  // diamond labels i18n
+  if(lang==="zh"){
+    document.getElementById("nLab").textContent="结构";
+    document.getElementById("nSub").textContent="边界 · 定义 · 防漂移";
+    document.getElementById("eLab").textContent="部署";
+    document.getElementById("eSub").textContent="产品 · 执行面 · 采纳";
+    document.getElementById("sLab").textContent="测量";
+    document.getElementById("sSub").textContent="信号 · 仪表盘 · 输出";
+    document.getElementById("wLab").textContent="创新";
+    document.getElementById("wSub").textContent="愿景 · 前沿 · 分阶段";
+    document.getElementById("btnBack").textContent="返回";
+    document.getElementById("btnPrelude").textContent="前置页";
+    document.getElementById("btnHome").textContent="进入";
+    document.getElementById("ft").textContent="大好奇心 · 有界主张 · 干净跳转";
+  }else if(lang==="es"){
+    document.getElementById("nLab").textContent="ESTRUCTURA";
+    document.getElementById("nSub").textContent="Límites · definiciones · anti-deriva";
+    document.getElementById("eLab").textContent="DESPLEGAR";
+    document.getElementById("eSub").textContent="Productos · superficies · adopción";
+    document.getElementById("sLab").textContent="MEDIR";
+    document.getElementById("sSub").textContent="Señales · tableros · salidas";
+    document.getElementById("wLab").textContent="INNOVAR";
+    document.getElementById("wSub").textContent="Visión · frontera · por fases";
+    document.getElementById("btnBack").textContent="VOLVER";
+    document.getElementById("btnPrelude").textContent="PRELUDIO";
+    document.getElementById("btnHome").textContent="ENTRAR";
+    document.getElementById("ft").textContent="Curiosidad grande · Afirmaciones acotadas · Saltos limpios";
+  }
+
+  // default selection
+  setBanner("north");
 })();
 </script>
 

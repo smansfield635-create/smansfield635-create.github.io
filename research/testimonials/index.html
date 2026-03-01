@@ -1,0 +1,639 @@
+<!doctype html>
+<!-- TNT — /research/testimonials/index.html
+     RESEARCH · TESTIMONIALS (PUBLIC REVIEW INDEX)
+     PURPOSE:
+       - Keep testimonials under Research (per instruction)
+       - Tie names to reviews WITHOUT creating a phone/referral directory
+       - Preserve research posture: verifiable, neutral, non-promotional
+     CONSTRAINTS (LOCKED):
+       - Informational only (no monetization / no lead capture / no affiliates)
+       - No logos / no product images / no implied partnerships
+       - No phone numbers (even partial) on public page
+       - No sensitive personal notes (age, health, veteran status, etc.)
+       - Prefer link-to-source; optional short verbatim excerpt only
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Single-open accordion + nested sub-bubbles (less clutter, more structure)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research · Testimonials</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:112px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.82);
+  --mut2:rgba(255,255,255,.70);
+
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+}
+
+/* Top */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+
+/* Page */
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  position:relative;
+  z-index:10;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
+  box-shadow:var(--shadowA);
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.22;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
+.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
+.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
+
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:12px}
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.card::after{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  padding:16px 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+}
+.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
+.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:980;
+  flex:0 0 auto;
+  margin-top:2px;
+}
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+  position:relative;
+}
+.card.open .body{display:block}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:0;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.actions .btn{border-radius:999px;padding:10px 14px}
+
+/* Review row (inside bubble) */
+.reviewRow{
+  margin-top:12px;
+  border-top:1px solid rgba(255,255,255,.10);
+  padding-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.reviewItem{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:rgba(0,0,0,.12);
+  padding:12px 12px;
+}
+.reviewMeta{
+  font-weight:950;
+  letter-spacing:.15px;
+  font-size:13.5px;
+  color:rgba(255,255,255,.90);
+}
+.reviewMeta span{
+  opacity:.75;
+  font-weight:900;
+}
+.reviewText{
+  margin-top:8px;
+  font-size:13.75px;
+  line-height:1.65;
+  color:rgba(255,255,255,.82);
+}
+.reviewLinks{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;border-radius:22px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.22);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  z-index:220;
+}
+.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+  .h1{font-size:26px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
+    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
+  </div>
+  <div class="right" aria-label="Language">
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
+  </div>
+</div>
+
+<div class="page">
+
+  <section class="header" aria-label="Header">
+    <p class="k" id="k0">RESEARCH · TESTIMONIALS</p>
+    <h1 class="h1" id="h0">Public Testimonials (Verifiable)</h1>
+    <p class="p0" id="p0"></p>
+    <div class="note0" id="note0"></div>
+  </section>
+
+  <div class="stack" id="stack"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== Canon state (gd_* only) =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnResearch","/research/");
+  wire("btnIndustry","/research/industry-context/");
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  // ===== Header copy (research posture) =====
+  var HEAD={
+    en:{
+      p0:"This page indexes publicly verifiable testimonials. Each entry links to its original public source. Review text remains the property of its author and platform.",
+      note0:"This is not product ranking. No endorsement or affiliation is implied. No phone numbers are published."
+    },
+    zh:{
+      p0:"本页索引“可公开验证”的用户评价。每条记录链接到原始公开来源。评价文本归作者与平台所有。",
+      note0:"不做产品排名；不暗示背书或隶属；不公开电话号码。"
+    },
+    es:{
+      p0:"Esta página indexa testimonios verificables públicamente. Cada entrada enlaza a su fuente pública original. El texto pertenece a su autor y plataforma.",
+      note0:"Sin ranking de productos. No se implica afiliación ni respaldo. No se publican teléfonos."
+    }
+  };
+  var H=HEAD[lang]||HEAD.en;
+  document.getElementById("p0").textContent=H.p0;
+  document.getElementById("note0").textContent=H.note0;
+
+  if(lang==="zh"){
+    document.getElementById("k0").textContent="研究 · 评价索引";
+    document.getElementById("h0").textContent="公开评价（可验证）";
+  }else if(lang==="es"){
+    document.getElementById("k0").textContent="INVESTIGACIÓN · TESTIMONIOS";
+    document.getElementById("h0").textContent="Testimonios públicos (verificables)";
+  }
+
+  // ===== DATA MODEL =====
+  // Add entries by filling:
+  // - name (as publicly shown or consented)
+  // - region (coarse)
+  // - platform (e.g., Google)
+  // - stars (optional)
+  // - date (optional)
+  // - url (permalink)
+  // - excerpt (optional, short, verbatim)
+  //
+  // IMPORTANT: Keep excerpts short (1–2 sentences) and verbatim.
+  // Prefer link-only if you want maximum policy safety.
+
+  var GROUPS=[
+    {
+      t:P("LeafGuard · Rainwater Management (Public Reviews)","LeafGuard · 雨水管理（公开评价）","LeafGuard · Gestión de lluvia (reseñas públicas)"),
+      s:P("Verifiable public reviews tied to rainwater routing consultations and installations.","可验证的公开评价，关联雨水路由咨询与安装。","Reseñas verificables vinculadas a consultas/instalaciones."),
+      bubbles:[
+        {
+          h:P("Review Index (add entries)","评价索引（添加条目）","Índice de reseñas (agregar entradas)"),
+          p:P(
+            "Add entries as Name + Region + Source Link. Use short verbatim excerpts only if needed. This preserves verification and minimizes risk.",
+            "以“姓名 + 区域 + 来源链接”添加条目。需要时可加短引文（逐字）。这样可验证且风险更低。",
+            "Agrega entradas como Nombre + Región + Enlace. Usa extractos cortos verbatim solo si hace falta."
+          ),
+          entries:[]
+        },
+        {
+          h:P("Observed themes (non-claim)","观察到的主题（非主张）","Temas observados (sin afirmaciones)"),
+          p:P(
+            "Common themes in public reviews often include clarity of explanation, diagnostic depth, installation discipline, and follow-through. This is an observation of language patterns, not a quantified performance claim.",
+            "公开评价常见主题包括：解释清晰、诊断深入、安装纪律、跟进到位。这是对语言模式的观察，不是量化性能主张。",
+            "Temas comunes incluyen claridad, diagnóstico, disciplina de instalación y seguimiento. Es observación de lenguaje, no reclamo cuantificado."
+          )
+        }
+      ]
+    },
+    {
+      t:P("Cross-Domain (Optional)","跨领域（可选）","Multidominio (opcional)"),
+      s:P("Reserve for other verticals if you later include public reviews for those domains.","预留：若未来引入其他领域的公开评价，可放在此处。","Reservado si luego incluyes reseñas públicas de otros dominios."),
+      bubbles:[
+        {
+          h:P("Placeholder","占位","Marcador"),
+          p:P(
+            "Reserved.",
+            "预留。",
+            "Reservado."
+          )
+        }
+      ]
+    },
+    {
+      t:P("Disclaimer","免责声明","Aviso"),
+      s:P("Nominative reference; no endorsement implied.","指称性引用；不构成背书。","Referencia nominativa; sin respaldo."),
+      bubbles:[
+        {
+          h:P("Statement","声明","Declaración"),
+          p:P(
+            "Testimonials referenced here are publicly available on third-party platforms. They are presented for contextual purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
+            "此处引用的评价来自第三方公开平台，仅用于背景参考。所有商标归各自所有者所有。本网站不暗示任何隶属或背书关系。",
+            "Los testimonios aquí referenciados están disponibles públicamente en plataformas de terceros. Se presentan solo como contexto. Todas las marcas pertenecen a sus dueños. No se implica afiliación ni respaldo."
+          )
+        }
+      ]
+    }
+  ];
+
+  // ===== RENDER =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".card").forEach(function(c){
+      c.classList.remove("open");
+      var ch=c.querySelector(".chev");
+      if(ch) ch.textContent="▸";
+    });
+  }
+
+  function makeReviewItem(item){
+    var box=document.createElement("div");
+    box.className="reviewItem";
+
+    var meta=document.createElement("div");
+    meta.className="reviewMeta";
+    meta.textContent=item.name + " — " + item.region;
+
+    var meta2=document.createElement("div");
+    meta2.className="reviewMeta";
+    meta2.style.marginTop="6px";
+    meta2.innerHTML = '<span>'+item.platform+'</span>' +
+      (item.stars?(' · <span>'+item.stars+'</span>'):'') +
+      (item.date?(' · <span>'+item.date+'</span>'):'');
+    box.appendChild(meta);
+    box.appendChild(meta2);
+
+    if(item.excerpt){
+      var txt=document.createElement("div");
+      txt.className="reviewText";
+      txt.textContent=item.excerpt;
+      box.appendChild(txt);
+    }
+
+    var links=document.createElement("div");
+    links.className="reviewLinks";
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=(lang==="zh")?"查看原始来源":(lang==="es")?"Ver fuente original":"View original source";
+    a.href=item.url;
+    a.target="_blank";
+    a.rel="noopener";
+    links.appendChild(a);
+    box.appendChild(links);
+
+    return box;
+  }
+
+  function makeBubble(bb){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=pick(bb.h);
+
+    var p=document.createElement("p");
+    p.textContent=pick(bb.p);
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    // optional review entries
+    if(bb.entries && bb.entries.length){
+      var rr=document.createElement("div");
+      rr.className="reviewRow";
+      bb.entries.forEach(function(it){
+        rr.appendChild(makeReviewItem(it));
+      });
+      b.appendChild(rr);
+    }
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+
+    return b;
+  }
+
+  function makeCard(sec, idx){
+    var card=document.createElement("div");
+    card.className="card";
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+
+    var ti=document.createElement("div");
+    ti.className="ti";
+    ti.textContent=pick(sec.t);
+
+    var si=document.createElement("div");
+    si.className="si";
+    si.textContent=pick(sec.s);
+
+    left.appendChild(ti);
+    left.appendChild(si);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    (sec.bubbles||[]).forEach(function(bb){
+      bubbles.appendChild(makeBubble(bb));
+    });
+
+    body.appendChild(bubbles);
+
+    function toggle(){
+      var isOpen=card.classList.contains("open");
+      if(isOpen){
+        card.classList.remove("open");
+        chev.textContent="▸";
+        return;
+      }
+      closeAll();
+      card.classList.add("open");
+      chev.textContent="▾";
+      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+    }
+
+    head.addEventListener("click", toggle, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    if(idx===0){
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return card;
+  }
+
+  GROUPS.forEach(function(sec, i){
+    stack.appendChild(makeCard(sec, i));
+  });
+
+})();
+</script>
+
+</body>
+</html>

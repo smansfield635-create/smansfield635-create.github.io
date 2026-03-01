@@ -28,9 +28,13 @@ body::before,body::after{pointer-events:none!important}
   --dockH:92px;
   --inkA:rgba(10,18,30,.94);
   --inkB:rgba(5,9,14,.98);
+
   --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
-  --blueA:rgba(90,160,255,.12);
+
+  /* water = cool silver-blue signal (subtle, not washed) */
+  --sigW:rgba(120,180,255,.10);
+
   --stroke:rgba(255,255,255,.12);
   --mut:rgba(255,255,255,.80);
   --txt:rgba(255,255,255,.92);
@@ -57,7 +61,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 80% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 50% 110%, var(--blueA), transparent 62%),
+    radial-gradient(circle at 55% 110%, var(--sigW), transparent 62%),
     linear-gradient(160deg,var(--inkA),var(--inkB));
   box-shadow:0 44px 160px rgba(0,0,0,.68);
 }
@@ -120,7 +124,7 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="hero">
     <p class="k" id="hk">EXPLORE · WATER</p>
-    <h1 class="h1" id="ht">WHAT HAPPENS WHEN WATER IS TREATED AS WASTE?</h1>
+    <h1 class="h1" id="ht">WHAT IF WATER IS A CONTROL PROBLEM?</h1>
     <p class="lede" id="hs"></p>
     <div class="rule" id="rule"></div>
   </div>
@@ -142,8 +146,8 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b1b"></p>
         <ul class="ul" id="b1ul"></ul>
         <div class="actions">
-          <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
-          <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
+          <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
+          <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
         </div>
       </div>
     </div>
@@ -162,7 +166,26 @@ body::before,body::after{pointer-events:none!important}
         <ul class="ul" id="b2ul"></ul>
         <div class="actions">
           <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
-          <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
+          <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div>
+          <div class="pTitle" id="t3"></div>
+          <div class="pSub" id="s3"></div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b3a"></p>
+        <p class="p" id="b3b"></p>
+        <ul class="ul" id="b3ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+          <a class="btn" id="goDotGrid" href="/products/dot-grid/">OPEN DOT.GRID</a>
         </div>
       </div>
     </div>
@@ -195,72 +218,94 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
-  wire("goVision","/explore/frontier/vision/");
   wire("goProducts","/products/");
+  wire("goExplore","/explore/");
+  wire("goVision","/explore/frontier/vision/");
   wire("goLaws","/laws/");
   wire("goGauges","/gauges/");
+  wire("goDotGrid","/products/dot-grid/");
 
   var COPY={
     en:{
       hk:"EXPLORE · WATER",
-      ht:"WHAT HAPPENS WHEN WATER IS TREATED AS WASTE?",
-      hs:"Water is not a disposal stream. It is a carrier of nutrients, energy, and risk. When we fail to classify and route it, we amplify contamination and lose recoverable value.",
-      rule:"Boundary: Orientation surface. Frames water risk and routing posture. Measurement and enforcement live in Gauges and Laws.",
+      ht:"WHAT IF WATER IS A CONTROL PROBLEM?",
+      hs:"Water systems rarely fail because we lack pipes. They fail because control breaks: pressure misalignment, contamination pathways, and invisible correlation across networks.",
+      rule:"Boundary: Orientation surface. Frames water posture. Enforcement and measurement live in Laws and Gauges.",
       band:"WATER SYSTEM MAP",
-      t1:"The water risk problem",
-      s1:"Contamination, loss, and invisible coupling.",
-      b1a:"Water systems fail quietly. Pipes corrode, nutrients leak, contaminants travel across invisible networks. By the time damage is visible, exposure has already multiplied.",
-      b1b:"The real issue is coupling: water, energy, waste, and urban systems are linked. A failure in one can cascade into others.",
+      t1:"The physical boundary",
+      s1:"Flow, pressure, and contamination are measurable.",
+      b1a:"Water systems are governed by hydraulics and chemistry. Pressure gradients, flow velocity, and contamination thresholds define real limits.",
+      b1b:"When those limits are ignored, the failure is not random. It follows structure—shared supply nodes, shared filtration, shared regulatory blind spots.",
       b1ul:[
-        "Nutrient loss through unmanaged discharge.",
-        "Chemical exposure amplified by mixing.",
-        "Infrastructure fatigue hidden until failure.",
-        "Carbon + energy costs embedded in treatment loops."
+        "Pressure imbalance.",
+        "Cross-connection contamination.",
+        "Aging infrastructure fatigue.",
+        "Correlation across districts."
       ],
-      t2:"The posture: controlled circulation",
-      s2:"Measure → classify → route → reuse → protect.",
-      b2a:"The solution is not to ‘clean harder’ but to classify precisely and route intelligently. Water must be treated as a circulating asset, not a sink.",
-      b2b:"Urban Resource OS and SHIMMER provide the routing framework: keep nutrients recoverable, contain risk, and convert loss into measurable value.",
+      t2:"Control and segmentation",
+      s2:"Stability requires isolation before expansion.",
+      b2a:"Modern water optimization is not a slogan. It is zoning, metering, leak detection, and windowed pressure control.",
+      b2b:"Urban Resource Operating logic applies: segment loads, validate in windows, scale only where metrics hold.",
       b2ul:[
-        "Real-time measurement across nodes.",
-        "Segregation before mixing.",
-        "Energy-aware treatment pathways.",
-        "Carbon + nutrient retention strategies."
+        "Segmented distribution.",
+        "Smart metering.",
+        "Leak detection under variance.",
+        "Rollback on threshold violation."
+      ],
+      t3:"Measurement before confidence",
+      s3:"Clean water is a measurable claim.",
+      b3a:"Concept, live, and roadmap must remain separated. If contamination reduction has not cleared defined bands, it stays roadmap.",
+      b3b:"Gauges quantify system alignment. Laws define what may be claimed. Dot.Grid reveals correlation between pressure nodes and failure clusters.",
+      b3ul:[
+        "No ‘trust the upgrade’ claims.",
+        "No unverified efficiency metrics.",
+        "No expansion without drift validation.",
+        "Epoch reset on structural change."
       ]
     },
     zh:{
       hk:"探索 · 水",
-      ht:"当水被当作废弃物时会发生什么？",
-      hs:"水不是处置流，而是营养、能量与风险的载体。分类与路由失败，会放大污染并损失可回收价值。",
-      rule:"边界：导览层。风险与姿态在此说明。测量与执行在量规与法则中。",
+      ht:"如果水是一个“控制问题”呢？",
+      hs:"水系统失败往往不是因为缺管道，而是控制失效：压力错位、污染路径、网络中的隐性相关。",
+      rule:"边界：导览层。说明水系统姿态。执行与测量在法则与量规中。",
       band:"水系统地图",
-      t1:"水风险问题",
-      s1:"污染、流失与隐性耦合。",
-      b1a:"水系统往往静默失败：管网腐蚀、营养流失、污染扩散。可见时，暴露已倍增。",
-      b1b:"核心在耦合：水、能源、废弃物与城市系统相连，一处失误可能级联。",
-      b1ul:["营养随排放流失。","混合放大化学暴露。","基础设施疲劳难以察觉。","处理循环中的碳与能耗隐性增加。"],
-      t2:"姿态：受控循环",
-      s2:"测量→分类→路由→再利用→保护。",
-      b2a:"解决不是更用力“清洁”，而是更精确分类与更智能路由。水应被视为循环资产。",
-      b2b:"Urban Resource OS 与 SHIMMER 提供路由框架：保留营养、控制风险、把损失转化为可测价值。",
-      b2ul:["节点实时测量。","混合前分离。","能耗感知处理路径。","碳与营养保留策略。"]
+      t1:"物理边界",
+      s1:"流量、压力、污染都是可测的。",
+      b1a:"水系统受水力学与化学支配。压力梯度、流速、污染阈值是真实极限。",
+      b1b:"忽视这些极限，失败并非随机，而是结构性——共享供水节点、共享过滤、共享监管盲点。",
+      b1ul:["压力失衡。","交叉污染。","老化基础设施疲劳。","区域相关风险。"],
+      t2:"控制与分段",
+      s2:"扩张前先隔离。",
+      b2a:"现代水优化不是口号，而是分区、计量、漏损检测与窗口化压力控制。",
+      b2b:"城市资源操作逻辑适用：分段负载、窗口验证、指标稳定后再扩张。",
+      b2ul:["分段配水。","智能计量。","方差下漏损检测。","阈值违例即回滚。"],
+      t3:"测量先于信心",
+      s3:"清洁水是可测主张。",
+      b3a:"概念、上线、路线图必须分离。若污染指标未达区间，只能标为路线图。",
+      b3b:"量规量化系统对齐；法则限定主张；Dot.Grid 揭示压力节点与故障集群的相关。",
+      b3ul:["不做“升级即安全”主张。","不发布未验证效率。","未验证漂移不扩张。","结构变更开新纪元。"]
     },
     es:{
       hk:"EXPLORAR · AGUA",
-      ht:"¿QUÉ PASA CUANDO EL AGUA SE TRATA COMO RESIDUO?",
-      hs:"El agua no es un flujo de descarte. Es portadora de nutrientes, energía y riesgo. Fallar en clasificar y rutear amplifica contaminación y pierde valor recuperable.",
-      rule:"Límite: superficie de orientación. Riesgo y postura aquí. Medición y aplicación en Leyes y Medidores.",
+      ht:"¿Y SI EL AGUA ES UN PROBLEMA DE CONTROL?",
+      hs:"Los sistemas de agua no fallan por falta de tuberías. Fallan cuando el control se rompe: desalineación de presión, rutas de contaminación y correlaciones invisibles.",
+      rule:"Límite: superficie de orientación. La ejecución y medición viven en Leyes y Medidores.",
       band:"MAPA SISTEMA AGUA",
-      t1:"El problema del riesgo hídrico",
-      s1:"Contaminación, pérdida y acoplamiento invisible.",
-      b1a:"Los sistemas fallan en silencio: corrosión, fugas de nutrientes, transporte de contaminantes. Cuando es visible, la exposición ya se multiplicó.",
-      b1b:"El problema real es el acoplamiento: agua, energía y residuos están conectados; un fallo puede escalar.",
-      b1ul:["Pérdida de nutrientes.","Exposición química amplificada.","Fatiga de infraestructura.","Costos energéticos ocultos."],
-      t2:"La postura: circulación controlada",
-      s2:"Medir → clasificar → rutear → reutilizar → proteger.",
-      b2a:"La solución no es limpiar más fuerte sino clasificar mejor y rutear inteligentemente. El agua es activo circulante, no sumidero.",
-      b2b:"Urban Resource OS y SHIMMER ofrecen el marco: retener nutrientes, contener riesgo y convertir pérdidas en valor medible.",
-      b2ul:["Medición en tiempo real.","Segregación previa.","Tratamiento consciente de energía.","Retención de carbono y nutrientes."]
+      t1:"El límite físico",
+      s1:"Flujo, presión y contaminación son medibles.",
+      b1a:"Los sistemas de agua obedecen hidráulica y química. Gradientes de presión y umbrales de contaminación son límites reales.",
+      b1b:"Ignorarlos no produce fallo aleatorio; produce fallo estructural: nodos compartidos, filtración compartida, puntos ciegos regulatorios.",
+      b1ul:["Desbalance de presión.","Contaminación cruzada.","Fatiga de infraestructura.","Riesgo correlacionado entre distritos."],
+      t2:"Control y segmentación",
+      s2:"Aislar antes de expandir.",
+      b2a:"Optimización moderna implica zonificación, medición inteligente y control por ventanas.",
+      b2b:"La lógica de Urban Resource aplica: segmentar, validar en ventana y escalar solo donde métricas se sostienen.",
+      b2ul:["Distribución segmentada.","Medición inteligente.","Detección de fugas.","Rollback ante violación."],
+      t3:"Medición antes que confianza",
+      s3:"El agua limpia es una afirmación medible.",
+      b3a:"Separar concepto, en vivo y hoja de ruta. Si no cumple banda, queda como hoja de ruta.",
+      b3b:"Medidores cuantifica alineación; Leyes define qué puede afirmarse; Dot.Grid revela correlación entre nodos y fallos.",
+      b3ul:["Sin afirmaciones de seguridad sin prueba.","Sin métricas infladas.","Sin expansión sin validación.","Nueva época ante cambio estructural."]
     }
   };
 
@@ -269,35 +314,9 @@ body::before,body::after{pointer-events:none!important}
   function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
   function fillUL(id,arr){var ul=document.getElementById(id);ul.innerHTML="";arr.forEach(function(x){var li=document.createElement("li");li.textContent=x;ul.appendChild(li);});}
 
-  set("hk",P.hk);
-  set("ht",P.ht);
-  set("hs",P.hs);
-  set("rule",P.rule);
-  set("band",P.band);
-  set("t1",P.t1);set("s1",P.s1);
-  set("b1a",P.b1a);set("b1b",P.b1b);
-  fillUL("b1ul",P.b1ul);
-  set("t2",P.t2);set("s2",P.s2);
-  set("b2a",P.b2a);set("b2b",P.b2b);
-  fillUL("b2ul",P.b2ul);
+  set("hk",P.hk); set("ht",P.ht); set("hs",P.hs);
+  set("rule",P.rule); set("band",P.band);
 
-  var panels=document.querySelectorAll(".panel");
-  panels.forEach(function(p){
-    var head=p.querySelector(".pHead");
-    var chev=p.querySelector(".pChev");
-    function toggle(){
-      var open=!p.classList.contains("open");
-      panels.forEach(function(x){x.classList.remove("open");x.querySelector(".pChev").textContent="▸";});
-      if(open){p.classList.add("open");chev.textContent="▾";}
-    }
-    head.addEventListener("click",toggle);
-    head.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
-  });
-  panels[0].classList.add("open");
-  panels[0].querySelector(".pChev").textContent="▾";
-
-})();
-</script>
-
-</body>
-</html>
+  set("t1",P.t1); set("s1",P.s1); set("b1a",P.b1a); set("b1b",P.b1b); fillUL("b1ul",P.b1ul);
+  set("t2",P.t2); set("s2",P.s2); set("b2a",P.b2a); set("b2b",P.b2b); fillUL("b2ul",P.b2ul);
+  set("t3",P.t3); set("s3",P.s3); set("b3a",P.b

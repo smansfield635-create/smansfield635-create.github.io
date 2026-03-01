@@ -3,239 +3,267 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · Diamond Gate Bridge</title>
+<title>INDEX · Frontier System</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
 
-/* MONUMENT TYPOGRAPHY */
-.hero-title{
-  font-size: clamp(42px, 6vw, 64px);
-  font-weight: 900;
-  letter-spacing: 1px;
-  line-height: 1.05;
+:root{
+  --dockH:90px;
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --goldSoft:rgba(212,175,55,.25);
 }
 
-.hero-sub{
-  font-size: clamp(18px, 2.5vw, 22px);
+/* Top Controls */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;white-space:nowrap;
+}
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;white-space:nowrap;
+}
+
+/* Page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:120px 0 calc(var(--dockH) + 20px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* Monument Hero */
+.hero{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:28px;
+  padding:36px 28px;
+  background:
+    radial-gradient(circle at 25% 25%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 75% 70%, var(--opalB), transparent 70%),
+    linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.15));
+  box-shadow:0 40px 140px rgba(0,0,0,.65);
+}
+
+.hero h1{
+  margin:0;
+  font-weight:950;
+  font-size:clamp(34px,4vw,48px);
+  letter-spacing:1px;
+  line-height:1.15;
+}
+
+.hero p{
+  margin:20px 0 0;
+  font-size:clamp(18px,2.2vw,22px);
+  line-height:1.6;
   opacity:.92;
-  max-width:900px;
-  line-height:1.5;
 }
 
-.section-title{
-  font-size: clamp(26px,3vw,34px);
-  font-weight:800;
+/* Accordion */
+.stack{display:flex;flex-direction:column;gap:14px}
+
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  overflow:hidden;
+  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+}
+
+.head{
+  padding:20px 22px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+.head span{
+  font-weight:900;
+  font-size:20px;
   letter-spacing:.5px;
 }
 
-.layer{
-  border-radius:22px;
-  padding:28px;
-  margin-bottom:24px;
-  border:1px solid rgba(255,255,255,.12);
-  backdrop-filter:blur(10px);
-}
-
-.layer-light{
-  background:rgba(255,255,255,.06);
-}
-
-.layer-dark{
-  background:rgba(0,0,0,.22);
-}
-
-.layer-gradient{
-  background:
-    radial-gradient(circle at 20% 30%, rgba(255,215,0,.08), transparent 60%),
-    radial-gradient(circle at 80% 70%, rgba(255,60,60,.10), transparent 65%),
-    rgba(0,0,0,.18);
-}
-
-.accordion{
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.1);
-  padding:18px;
-  cursor:pointer;
-  transition:all .2s ease;
-  margin-bottom:14px;
-}
-
-.accordion:hover{
-  background:rgba(255,255,255,.05);
-}
-
-.accordion-body{
+.body{
   display:none;
-  margin-top:12px;
-  font-size:15px;
-  line-height:1.6;
+  padding:22px;
+  border-top:1px solid rgba(255,255,255,.08);
 }
 
-.accordion.open .accordion-body{
-  display:block;
+.block.open .body{display:block}
+
+.body p{
+  margin:0 0 16px;
+  font-size:16.5px;
+  line-height:1.7;
+  opacity:.9;
 }
 
-.route-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-  margin-top:20px;
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  z-index:200;
+  width:min(980px,94vw);
+  padding:12px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(10px);
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
 }
 
-.route-buttons .btn{
-  padding:12px 18px;
+.dock .btn{
+  padding:12px;
   border-radius:999px;
+  text-align:center;
+  font-weight:700;
 }
-
-.top-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="top-left">
+  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+</div>
 
-<div class="top-bar">
-  <div>
-    <a class="btn" href="/door/">DOOR</a>
+<div class="top-right">
+  <button class="btn" id="btnEN">EN</button>
+  <button class="btn" id="btnZH">中文</button>
+</div>
+
+<div class="page">
+
+  <div class="hero">
+    <h1 id="heroTitle">Where do systems break — and how do they hold?</h1>
+    <p id="heroText">
+      You are here because something feels unstable.  
+      Markets shift. Infrastructure strains. Software drifts. Institutions stretch.  
+      The question is no longer whether systems change.  
+      The question is whether they change coherently — or collapse.
+    </p>
   </div>
-  <div>
-    <button class="btn" onclick="setLang('en')">EN</button>
-    <button class="btn" onclick="setLang('zh')">中文</button>
-    <button class="btn" onclick="setLang('es')">ES</button>
+
+  <div class="stack" id="stack">
+
+    <div class="block">
+      <div class="head"><span id="b1t">The Problem</span><span>▸</span></div>
+      <div class="body">
+        <p id="b1c1">
+          Most systems fail quietly long before they fail loudly.  
+          Small mismatches accumulate. Dependencies entangle.  
+          Assumptions move without being measured.
+        </p>
+        <p id="b1c2">
+          We do not suffer from a lack of intelligence.  
+          We suffer from a lack of structural visibility.
+        </p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="head"><span id="b2t">The Method</span><span>▸</span></div>
+      <div class="body">
+        <p id="b2c1">
+          This system maps structure to a finite lattice.  
+          Every relationship, constraint, and surface can be indexed.
+        </p>
+        <p id="b2c2">
+          Nothing floats in abstraction.  
+          Every claim sits on measurable ground.
+        </p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="head"><span id="b3t">The Frontier</span><span>▸</span></div>
+      <div class="body">
+        <p id="b3c1">
+          Energy. Water. Software. Law. Insurance. Governance.  
+          These are not separate domains.  
+          They are interacting systems.
+        </p>
+        <p id="b3c2">
+          If one shifts without coherence, others follow.
+        </p>
+      </div>
+    </div>
+
   </div>
-</div>
-
-<!-- HERO -->
-<div class="layer layer-gradient">
-
-<div class="hero-title" id="heroTitle">
-What if complexity wasn’t the enemy —  
-but unmeasured structure was?
-</div>
-
-<div class="hero-sub" id="heroSub">
-We do not fight chaos.  
-We map it.  
-We do not suppress ambition.  
-We give it geometry.  
-If scale exists, it can be stabilized.  
-If instability exists, it can be bounded.
-</div>
 
 </div>
 
-<!-- OPPORTUNITY -->
-<div class="layer layer-light">
-
-<div class="section-title" id="opportunityTitle">
-The Opportunity
-</div>
-
-<div id="opportunityText">
-We live in an era of acceleration.  
-Energy transitions. AI. Finance. Governance.  
-The issue is not that ideas are too big.  
-The issue is that wiring is invisible.  
-
-Invisible correlation.  
-Invisible dependency.  
-Invisible constraint drift.  
-
-This system makes structure visible  
-before collapse makes it obvious.
-</div>
-
-</div>
-
-<!-- STRUCTURE -->
-<div class="layer layer-dark">
-
-<div class="section-title">
-How This System Thinks
-</div>
-
-<div class="accordion">
-<div><strong>1. Map the structure</strong></div>
-<div class="accordion-body">
-Every surface routes somewhere measurable.  
-Nothing floats. Nothing hides in narrative.
-</div>
-</div>
-
-<div class="accordion">
-<div><strong>2. Separate signal from story</strong></div>
-<div class="accordion-body">
-Claims and proof are distinct layers.  
-Platform and engineering are distinct lenses.  
-Measurement and deployment never collapse into each other.
-</div>
-</div>
-
-<div class="accordion">
-<div><strong>3. Enforce finite measure</strong></div>
-<div class="accordion-body">
-If it cannot be bounded, it cannot scale.  
-If it cannot be verified, it cannot escalate.
-</div>
-</div>
-
-<div class="accordion">
-<div><strong>4. Route by geometry</strong></div>
-<div class="accordion-body">
-Compass → orientation  
-Products → tools  
-Laws → constraints  
-Gauges → measurement  
-Explore → frontier shells
-</div>
-</div>
-
-</div>
-
-<!-- ROUTING -->
-<div class="layer layer-gradient">
-
-<div class="section-title">
-Choose Your Entry
-</div>
-
-<div class="route-buttons">
-<a class="btn" href="/compass/">COMPASS</a>
-<a class="btn" href="/products/">PRODUCTS</a>
-<a class="btn" href="/laws/">LAWS</a>
-<a class="btn" href="/gauges/">GAUGES</a>
-<a class="btn" href="/explore/">EXPLORE</a>
-</div>
-
-</div>
-
-</div>
+<nav class="dock">
+  <a class="btn" href="/compass/">COMPASS</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/laws/">LAWS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
 
 <script>
-function setLang(lang){
-  localStorage.setItem("gd_lang", lang);
-  location.reload();
-}
+(function(){
+  var lang = localStorage.getItem("gd_lang") || "en";
 
-document.querySelectorAll('.accordion').forEach(function(el){
-  el.addEventListener('click', function(){
-    document.querySelectorAll('.accordion').forEach(x => {
-      if(x!==el) x.classList.remove('open');
+  function setLang(l){
+    lang=l;
+    localStorage.setItem("gd_lang",l);
+    apply();
+  }
+
+  document.getElementById("btnEN").onclick=function(){setLang("en");};
+  document.getElementById("btnZH").onclick=function(){setLang("zh");};
+
+  function apply(){
+    if(lang==="zh"){
+      document.documentElement.lang="zh";
+      document.getElementById("heroTitle").textContent="系统何时断裂 — 又如何维持？";
+      document.getElementById("heroText").textContent=
+        "你来到这里，是因为某些结构正在变动。"+
+        " 市场波动。基础设施紧绷。软件失衡。制度拉伸。"+
+        " 问题不再是系统是否改变。"+
+        " 而是它们是否在一致中改变，还是在无序中坍塌。";
+
+      document.getElementById("b1t").textContent="问题";
+      document.getElementById("b1c1").textContent="大多数系统在高声崩溃前，早已悄然失衡。";
+      document.getElementById("b1c2").textContent="问题不是智力不足，而是结构不可见。";
+
+      document.getElementById("b2t").textContent="方法";
+      document.getElementById("b2c1").textContent="我们将结构映射到有限晶格。";
+      document.getElementById("b2c2").textContent="每个主张都必须落在可测量的基础上。";
+
+      document.getElementById("b3t").textContent="前沿";
+      document.getElementById("b3c1").textContent="能源、水、软件、法律、保险、治理，本质上是相互作用的系统。";
+      document.getElementById("b3c2").textContent="一处失衡，会引发连锁。";
+    }
+  }
+
+  apply();
+
+  var blocks=document.querySelectorAll(".block");
+  blocks.forEach(function(b){
+    b.querySelector(".head").addEventListener("click",function(){
+      blocks.forEach(function(x){
+        if(x!==b){x.classList.remove("open");}
+      });
+      b.classList.toggle("open");
     });
-    el.classList.toggle('open');
   });
-});
+})();
 </script>
 
 </body>

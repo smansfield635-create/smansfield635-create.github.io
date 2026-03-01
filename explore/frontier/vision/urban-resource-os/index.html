@@ -1,10 +1,9 @@
 <!-- TNT — /explore/frontier/vision/urban-resource-os/index.html
-     FRONTIER · VISION · URBAN RESOURCE OS
-     UPGRADE (MATCH CLOSED-LOOP HABITATS QUALITY):
-       - TED-style INFORMAL = exciting + human words + curiosity (support-bounded)
-       - FORMAL = abstract / systems language (kept for formal lens)
-       - More depth (accordion “bubbles” so it’s not a wall of text)
-       - EN/中文/ES + Formal/Informal toggle
+     FIX:
+       - Accordion bubbles ALWAYS open/close (mobile-safe)
+       - Removes duplicate scripts (single controller)
+       - Forces pointer-events / z-order so nothing blocks taps
+       - EN/中文/ES + Formal/Informal toggle preserved
        - Canon state carry (lang/style/time/depth) URL + LS
        - No modals, no overlays, no inline onclick
        - Uses ui.css + branch.css + instruments.js only
@@ -105,6 +104,9 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   display:flex;
   flex-direction:column;
   gap:12px;
+  position:relative;
+  z-index:20;
+  pointer-events:auto;
 }
 
 /* accordion cards */
@@ -118,6 +120,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     linear-gradient(160deg, rgba(12,22,38,.78), rgba(6,10,16,.84));
   box-shadow:0 22px 72px rgba(0,0,0,.50), inset 0 2px 0 rgba(255,255,255,.06);
   overflow:hidden;
+  pointer-events:auto;
 }
 .card::before{
   content:"";
@@ -135,6 +138,9 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  pointer-events:auto;
+  position:relative;
+  z-index:2;
 }
 .cardLeft{min-width:0}
 .cardTitle{font-weight:950;letter-spacing:.2px}
@@ -147,6 +153,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+  position:relative;
+  z-index:1;
 }
 .card.open .cardBody{display:block}
 .txt{
@@ -168,6 +176,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   text-align:center;
   font-size:12.5px;
   opacity:.78;
+  position:relative;
+  z-index:20;
 }
 .sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
 </style>
@@ -343,7 +353,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
   paintLang();
-
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
@@ -361,8 +370,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     btnI.classList.toggle("active", style==="informal");
     btnF.classList.toggle("active", style==="formal");
   }
-  paintLens();
-
   function setLens(next){
     if(next!=="formal"&&next!=="informal") next="informal";
     style=next;
@@ -372,28 +379,43 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   }
   btnI.addEventListener("click", function(){ setLens("informal"); });
   btnF.addEventListener("click", function(){ setLens("formal"); });
+  paintLens();
 
-  // accordion: independent toggles (no “stuck” state)
+  // accordion: independent toggles (never stuck)
   function setChevron(card){
-    var chev = card.querySelector(".cardChev");
+    var chev=card.querySelector(".cardChev");
     if(!chev) return;
     chev.textContent = card.classList.contains("open") ? "▾" : "▸";
   }
-  function toggleCard(card){
-    card.classList.toggle("open");
-    setChevron(card);
-  }
-  document.querySelectorAll(".card").forEach(function(card){
-    var head = card.querySelector(".cardHead");
-    if(!head) return;
-    head.addEventListener("click", function(){ toggleCard(card); });
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleCard(card); }
+  function bindAccordion(){
+    document.querySelectorAll(".card").forEach(function(card){
+      var head=card.querySelector(".cardHead");
+      if(!head) return;
+      head.addEventListener("click", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        card.classList.toggle("open");
+        setChevron(card);
+      }, {passive:false});
+      head.addEventListener("touchend", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        card.classList.toggle("open");
+        setChevron(card);
+      }, {passive:false});
+      head.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){
+          e.preventDefault();
+          card.classList.toggle("open");
+          setChevron(card);
+        }
+      });
+      setChevron(card);
     });
-    setChevron(card);
-  });
+  }
+  bindAccordion();
 
-  // copy packs (TED-style informal, abstract formal)
+  // copy packs
   var COPY = {
     en:{
       head:{k:"FRONTIER · VISION",ttl:"URBAN RESOURCE OS",tag:"Make cities act like a closed-loop habitat—so “away” stops hiding the costs."},
@@ -413,12 +435,12 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
         p1a:"Urban Resource OS addresses heterogeneous waste streams currently processed via entropy-maximizing disposal. This destroys material value and increases downstream environmental and financial fragility.",
         p1b:"The objective is multi-output recovery under constraints: maximize usable energy and material recovery while minimizing carbon loss and maintaining regulatory compliance and operational stability.",
         p2a:"System definition: feedstock distribution vector F is measured; segmentation produces typed streams; routing matrix R assigns fractions to conversion modules C; outputs are energy E and materials M with bounded emissions.",
-        p2b:"Optimization remains physics-bounded by conservation and chemical energy ceilings. Market prices, carbon prices, and grid demand are treated as external parameters, not justification for claim inflation.",
+        p2b:"Optimization remains physics-bounded by conservation and chemical energy ceilings. Market prices and carbon prices are treated as external parameters, not justification for claim inflation.",
         p3a:"SHIMMER implements intake intelligence → precision separation → dynamic routing → conversion portfolio → output optimization. Routing is re-optimized in real time subject to mass/energy conservation and admissibility rules.",
         p3b:"Stability posture: modular deployment, redundancy, and deterministic rollback. No “single-plant monoculture.” No timers-as-gates. No silent rule changes without epoch rollover.",
         p4a:"Transferability: closed-loop constraints converge across domains (cities, remote sites, habitats). As resupply decreases, the need for inventory accounting, routing discipline, and verifiable outputs increases.",
-        p4b:"Therefore the same routing architecture supports both terrestrial resilience and mid/long-horizon habitat-scale survival, conditional on validated autonomy and verified recovery protocols.",
-        p5a:"Roadmap: Phase I clustered modules (200–400 t/day class) with diversified outputs → Phase II expanded routing with partial in-space or remote feedstock analogs → Phase III habitat-grade closed loops (conditional).",
+        p4b:"Therefore the same routing architecture supports terrestrial resilience and mid/long-horizon habitat-scale survival, conditional on validated autonomy and verified recovery protocols.",
+        p5a:"Roadmap: Phase I clustered modules (200–400 t/day class) with diversified outputs → Phase II expanded routing with remote analogs → Phase III habitat-grade closed loops (conditional).",
         p5b:"Non-negotiables: no net-positive fusion claims; no whole-asteroid capture in near horizons; no megastructure claims without validated prerequisites."
       }
     },
@@ -440,7 +462,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
         p1a:"城市资源OS 处理异质废物流当前被熵最大化处置的问题：材料价值被摧毁，下游环境与财务脆弱性上升。",
         p1b:"目标是在约束下实现多输出回收：最大化可用能量与材料回收，最小化碳损失，并保持合规与运行稳定。",
         p2a:"系统定义：测量进料分布向量 F；分段产生类型流；路由矩阵 R 将比例分配至转化模块 C；输出为能量 E 与材料 M，并受排放边界约束。",
-        p2b:"优化受守恒与化学能上限约束。市场价格与碳价作为外参，不作为主张升级的理由。",
+        p2b:"优化受守恒与化学能上限约束。市场与碳价作为外参，不作为主张升级的理由。",
         p3a:"SHIMMER 实现：进料智能 → 精准分离 → 动态路由 → 转化组合 → 输出优化。路由在守恒与可采信规则下实时重优化。",
         p3b:"稳定姿态：模块化部署、冗余与确定性回滚。避免单一巨厂脆弱性；不使用计时器作为闸门；规则变更需新纪元。",
         p4a:"可迁移性：闭环约束在城市、偏远站点与栖息地中收敛。补给越少，库存核算、路由纪律与可验证输出越重要。",
@@ -498,12 +520,9 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     document.getElementById("p5a").textContent=L.p5a;
     document.getElementById("p5b").textContent=L.p5b;
 
-    // labels
     if(lang==="zh"){
       document.getElementById("btnBack").textContent="返回";
       document.getElementById("btnDoor").textContent="门";
-      btnI.textContent="通俗";
-      btnF.textContent="正式";
       document.getElementById("t1").textContent="我们在修什么问题";
       document.getElementById("t2").textContent="核心想法";
       document.getElementById("t3").textContent="SHIMMER 脊柱";
@@ -515,11 +534,11 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("j4").textContent="打开：愿景索引";
       document.getElementById("j5").textContent="打开：前沿";
       document.getElementById("footLine").childNodes[0].nodeValue="愿景通道 · 结构在 DOOR";
+      btnI.textContent="通俗";
+      btnF.textContent="正式";
     }else if(lang==="es"){
       document.getElementById("btnBack").textContent="VOLVER";
       document.getElementById("btnDoor").textContent="PUERTA";
-      btnI.textContent="INFORMAL";
-      btnF.textContent="FORMAL";
       document.getElementById("t1").textContent="El problema";
       document.getElementById("t2").textContent="La gran idea";
       document.getElementById("t3").textContent="Columna SHIMMER";
@@ -531,117 +550,25 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("j4").textContent="ABRIR: ÍNDICE VISIÓN";
       document.getElementById("j5").textContent="ABRIR: FRONTERA";
       document.getElementById("footLine").childNodes[0].nodeValue="Carril de visión · La estructura vive en DOOR";
-    }else{
       btnI.textContent="INFORMAL";
       btnF.textContent="FORMAL";
+    }else{
       document.getElementById("j1").textContent="OPEN: ENERGY PRODUCT";
       document.getElementById("j2").textContent="OPEN: CLOSED LOOP HABITATS";
       document.getElementById("j3").textContent="OPEN: DOOR (STRUCTURE)";
       document.getElementById("j4").textContent="OPEN: VISION INDEX";
       document.getElementById("j5").textContent="OPEN: FRONTIER";
+      btnI.textContent="INFORMAL";
+      btnF.textContent="FORMAL";
     }
   }
 
-  // paint lens
-  var btnI=document.getElementById("btnInformal");
-  var btnF=document.getElementById("btnFormal");
-  function paintLens(){
-    btnI.classList.toggle("active", style==="informal");
-    btnF.classList.toggle("active", style==="formal");
-  }
-  paintLens();
-
+  // render once
   render();
 
-  // default open first
+  // default open first card
   var first=document.getElementById("c1");
   if(first){ first.classList.add("open"); var ch=first.querySelector(".cardChev"); if(ch) ch.textContent="▾"; }
-})();
-</script>
-
-<script>
-(function(){
-  // --- minimal wiring + toggles ---
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang") || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style")|| "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time") || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth")|| "explore";
-
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  // top routes
-  document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
-  document.getElementById("btnDoor").href="/door/"+q();
-
-  // button routes
-  document.getElementById("j1").href="/products/energy/"+q();
-  document.getElementById("j2").href="/explore/frontier/vision/closed-loop-habitats/"+q();
-  document.getElementById("j3").href="/door/"+q();
-  document.getElementById("j4").href="/explore/frontier/vision/"+q();
-  document.getElementById("j5").href="/explore/frontier/"+q();
-
-  // language buttons (reload same path)
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
-
-  // lens buttons (no reload)
-  var btnI=document.getElementById("btnInformal");
-  var btnF=document.getElementById("btnFormal");
-  function setLens(next){
-    if(next!=="formal"&&next!=="informal") next="informal";
-    style=next;
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
-    window.location.href = window.location.pathname + q({style:style});
-  }
-  btnI.addEventListener("click", function(){ setLens("informal"); });
-  btnF.addEventListener("click", function(){ setLens("formal"); });
-
-  // accordion: independent toggles
-  function setChevron(card){
-    var chev = card.querySelector(".cardChev");
-    if(!chev) return;
-    chev.textContent = card.classList.contains("open") ? "▾" : "▸";
-  }
-  function toggleCard(card){
-    card.classList.toggle("open");
-    setChevron(card);
-  }
-  document.querySelectorAll(".card").forEach(function(card){
-    var head = card.querySelector(".cardHead");
-    if(!head) return;
-    head.addEventListener("click", function(){ toggleCard(card); });
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleCard(card); }
-    });
-    setChevron(card);
-  });
-
 })();
 </script>
 

@@ -1,42 +1,22 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · GATE DOCTRINE (WISHBONE + LAUNCHPAD) · 3 LANG (EN/中文/ES)
-     GOAL (LOCKED):
-       - This page is an INFO + ENTRY LAUNCHPAD so strong it can replace “orientation”
-       - Two glossy vertical diamonds (no drift):
-           1) CLAIM    (Problem / Need / Facts-first entry)
-           2) SUPPORT  (Solution / Support / Systems-first entry)
-       - Clicking a diamond:
-           - highlights it
-           - reveals ONE focused banner with an OPEN button (enter here)
-           - reveals ONE accordion section below (no accidental routing)
-       - Below the fold:
-           - TWO accordion bubbles only:
-               A) CLAIM INDEX  (4 items)
-               B) SUPPORT INDEX (3 items)
-           - Each item ends with an OPEN button (hard jump)
-     ROUTES (LOCKED DEFAULTS):
-       CLAIM banner OPEN    → /laws/        (Facts-first)
-       SUPPORT banner OPEN  → /products/    (Offer-first)
-       CLAIM INDEX (4):
-         1) FACT HUB        → /laws/
-         2) PRODUCTS        → /products/
-         3) SERVICES        → /products/    (placeholder until /services/ exists)
-         4) ABOUT / INFO    → /about/ (fallback /links/)
-       SUPPORT INDEX (3):
-         1) SOFTWARE HUB    → /products/software/
-         2) GAUGES          → /gauges/
-         3) LINKS           → /links/
-     TOP:
-       LEFT  = RETURN (/index.html) + ENTER (/home/)
-       RIGHT = EN / 中文 / ES
+     PRELUDE · ORIENTATION LAYER (NO LENSES · NO MODALS)
+     ROLE:
+       - Calm entry before traversal
+       - Define the problem clearly
+       - Define the posture clearly
+       - Route cleanly to Compass or Enter
+     ROUTES (LOCKED):
+       - BACK → /index.html (Compass)
+       - ENTER → /home/
+       - NORTH → /laws/
+       - EAST  → /products/
+       - SOUTH → /gauges/
      STATE:
-       URL: lang/style/time/depth
-       LS:  gd_lang/gd_style/gd_time/gd_depth
+       - Full carry: lang/style/time/depth (URL + gd_* LS)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - No html/body background overrides (ui.css owns field)
-       - No inline onclick
-       - Tap-safe
+       - ui.css owns html/body background (NO overrides)
+       - No tone lenses here (single unified voice)
 -->
 
 <!doctype html>
@@ -44,7 +24,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE</title>
+<title>PRELUDE · Orientation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -52,634 +32,279 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-
-/* keep ui.css field overlays behind */
-body{position:relative;z-index:0}
-body::before, body::after{z-index:0 !important;pointer-events:none !important}
-#preludeRoot{position:relative;z-index:10}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
 :root{
-  --D:244px;
-  --R:160px;
+  --dockH:92px;
 
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
-  --opalA:rgba(210,190,255,.20);
-  --opalB:rgba(120,70,255,.14);
-  --opalC:rgba(90,210,255,.10);
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,70,70,.10);
 
-  --stroke:rgba(255,255,255,.12);
+  --inkA:rgba(12,22,38,.92);
+  --inkB:rgba(6,10,16,.96);
 }
 
-/* top (no wrap) */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
+/* Top */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:240;
+  display:flex;gap:10px;white-space:nowrap;align-items:center;
 }
-.top .left,.top .right{
-  display:flex;align-items:center;gap:10px;
-  flex-wrap:nowrap;white-space:nowrap;
-  pointer-events:auto;
+.top-right{
+  position:fixed;right:16px;top:16px;z-index:240;
+  display:flex;gap:10px;white-space:nowrap;align-items:center;
 }
-.top .btn{white-space:nowrap}
+.top-left .btn,.top-right .btn{white-space:nowrap}
 
-/* header */
-.head{
-  width:min(980px,94vw);
-  margin:84px auto 10px;
-  padding:18px 18px 16px;
-  border-radius:24px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.12), transparent 62%),
-    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
-    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:0 36px 120px rgba(0,0,0,.55);
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
-.t{margin:0;font-weight:950;font-size:34px;letter-spacing:1.4px;line-height:1.05}
-.s{margin:10px 0 0;font-size:14px;opacity:.88;line-height:1.45}
-.s strong{font-weight:950}
-.s em{font-style:italic}
-
-/* stage */
-.stage{
-  width:min(760px,94vw);
-  height: min(560px, 62vh);
-  margin:14px auto 8px;
+/* Page */
+.page{
+  width:min(1000px,94vw);
+  margin:0 auto;
+  padding:90px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
   position:relative;
-  pointer-events:none;
-}
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(680px,92vw);height:min(680px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  opacity:.46;
-  pointer-events:none;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.40) 0%, rgba(7,11,18,.58) 70%);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.52),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
+  z-index:10;
 }
 
-/* glossy diamonds (vertical) */
-.d{
-  width:var(--D);height:var(--D);
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:30px;
-  cursor:pointer;
-  pointer-events:auto;
-  touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
-  overflow:hidden;
-
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.58), transparent 46%),
-    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
-    linear-gradient(160deg, var(--obsA), var(--obsB));
-
-  border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    0 38px 120px rgba(0,0,0,.85),
-    0 0 32px rgba(212,175,55,.26),
-    inset 0 2px 0 rgba(255,255,255,.25),
-    inset 0 -42px 78px rgba(0,0,0,.80);
-
-  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.d::before{
-  content:"";
-  position:absolute;inset:0;border-radius:30px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.65;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;
-  height:30%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.26), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.95;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.35);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(212,175,55,.32),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.99)}
-.d.active{
-  border-color:rgba(212,175,55,.60);
-  box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 58px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.28),
-    inset 0 -46px 86px rgba(0,0,0,.84);
-}
-
-.d-top{transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg)}
-.d-bot{transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg)}
-
-.inner{
-  transform:rotate(-45deg) translateY(-2px);
-  height:100%;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:18px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
-}
-.lab{font-weight:950;font-size:20px;letter-spacing:.8px;text-shadow:0 0 16px rgba(255,255,255,.12)}
-.sub{font-size:13.5px;opacity:.88;line-height:1.25;max-width:22em}
-
-/* banner (appears when choosing a diamond) */
-.banner{
-  width:min(980px,94vw);
-  margin:8px auto 12px;
-  border-radius:22px;
+/* Header bubble */
+.header{
   border:1px solid rgba(255,255,255,.12);
+  border-radius:26px;
   background:
-    radial-gradient(circle at 18% 34%, rgba(210,190,255,.14), transparent 72%),
-    radial-gradient(circle at 82% 62%, rgba(120,70,255,.10), transparent 74%),
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
     rgba(0,0,0,.16);
-  backdrop-filter:blur(12px);
-  box-shadow:0 30px 110px rgba(0,0,0,.55);
-  padding:14px 16px;
-  display:none;
+  backdrop-filter:blur(10px);
+  box-shadow:0 30px 100px rgba(0,0,0,.55);
+  padding:18px 18px 16px;
 }
-.banner.show{display:block}
-.bTop{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.bTitle{margin:0;font-weight:950;letter-spacing:.3px}
-.bText{margin:8px 0 0;opacity:.86;line-height:1.5;font-size:13.5px}
-.bAct{display:flex;gap:10px;flex-wrap:wrap}
-.bAct .btn{border-radius:999px;padding:10px 14px}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72;margin:0 0 8px}
+.t{margin:0;font-weight:950;font-size:30px;letter-spacing:.6px}
+.s{margin:12px 0 0;font-size:14px;line-height:1.6;opacity:.92}
 
-/* accordions */
-.section{
+/* Long bubbles */
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+  box-shadow:0 22px 72px rgba(0,0,0,.60);
+  padding:16px 16px 14px;
+}
+.block h3{
+  margin:0 0 8px;
+  font-weight:950;
+  letter-spacing:.3px;
+}
+.block p{
+  margin:0;
+  line-height:1.65;
+  opacity:.86;
+  font-size:14px;
+}
+.block p + p{margin-top:10px}
+
+/* Action row */
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:10px;
+}
+.actions .btn{
+  padding:10px 16px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
   width:min(980px,94vw);
-  margin:0 auto 14px;
+  padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.14);
+  background:rgba(0,0,0,.22);
   backdrop-filter:blur(10px);
-  box-shadow:0 26px 90px rgba(0,0,0,.50);
-  overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-.sHead{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:14px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.sTitle{
-  display:flex;align-items:center;gap:10px;min-width:0;
-  font-weight:950;letter-spacing:.2px;
-}
-.sDot{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:rgba(212,175,55,.55);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-}
-.sChevron{opacity:.75;font-size:16px;flex:0 0 auto}
-.sBody{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.section.open .sBody{display:block}
-
-/* items list */
-.item{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(160deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
-  box-shadow:0 18px 60px rgba(0,0,0,.62);
-  padding:14px 14px;
-  margin:0 0 12px;
-}
-.iTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.iName{font-weight:950;letter-spacing:.2px}
-.iDesc{margin-top:8px;opacity:.84;line-height:1.5;font-size:13px}
-.iAct{margin-top:12px;display:flex;justify-content:flex-end}
-.iAct .btn{border-radius:999px;padding:10px 14px}
-
-/* footer */
-.footer{
-  width:min(980px,94vw);
-  margin:12px auto 40px;
-  text-align:center;
-  font-size:12.5px;
-  opacity:.78;
-}
-.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
-
-/* responsive */
-@media (max-width:560px){
-  :root{--D:224px;--R:148px}
-  .t{font-size:30px}
-}
-@media (max-width:420px){
-  :root{--D:214px;--R:142px}
+.dock .btn{width:100%;padding:10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
-<div id="preludeRoot">
 
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnReturn" href="/index.html">RETURN</a>
-      <a class="btn" id="btnEnter" href="/home/">ENTER</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
+<div class="top-left">
+  <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
+  <a class="btn" id="btnEnter" href="/home/">ENTER</a>
+</div>
+
+<div class="top-right" aria-label="Language">
+  <button class="btn" id="btnEN" type="button">EN</button>
+  <button class="btn" id="btnZH" type="button">中文</button>
+  <button class="btn" id="btnES" type="button">ES</button>
+</div>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k" id="hk">PRELUDE</p>
+    <h1 class="t" id="ht">Before You Move</h1>
+    <p class="s" id="hs">
+      This is not a belief site.  
+      It is a structural interface.  
+      It exists because drift is real, correlation is invisible, and scale amplifies small errors.
+    </p>
   </div>
 
-  <div class="head">
-    <div class="k" id="k">GATE DOCTRINE</div>
-    <div class="t" id="h">PRELUDE</div>
-    <div class="s" id="sub"><strong>Choose an entry posture.</strong> Then press <em>OPEN</em>.</div>
+  <div class="block">
+    <h3 id="hProblem">The Problem</h3>
+    <p id="pProblem1">
+      Systems fail quietly long before they fail publicly.
+      Meaning shifts. Assumptions stack. Dependencies overlap.
+      Small misalignments compound until they look like “sudden collapse.”
+    </p>
+    <p id="pProblem2">
+      Most people try to fix this with motivation, ideology, or speed.
+      None of those solve structural drift.
+    </p>
   </div>
 
-  <div class="stage" aria-label="Wishbone">
-    <div class="outer" aria-hidden="true"></div>
-
-    <div class="d d-top" id="dClaim" role="button" tabindex="0" aria-label="Claim">
-      <div class="inner">
-        <div class="lab" id="labClaim">CLAIM</div>
-        <div class="sub" id="subClaim">I have a problem. Show me the facts.</div>
-      </div>
-    </div>
-
-    <div class="d d-bot" id="dSupport" role="button" tabindex="0" aria-label="Support">
-      <div class="inner">
-        <div class="lab" id="labSupport">SUPPORT</div>
-        <div class="sub" id="subSupport">I have support. Show me the system.</div>
-      </div>
-    </div>
+  <div class="block">
+    <h3 id="hMapping">What We Did</h3>
+    <p id="pMapping1">
+      We mapped the problem into a finite lattice.
+      We defined boundaries, state transitions, and measurement surfaces.
+      We separated concept, live execution, and roadmap.
+    </p>
+    <p id="pMapping2">
+      Every claim is bounded.
+      Every upgrade requires receipts.
+      Every navigation move preserves state.
+    </p>
   </div>
 
-  <div class="banner" id="banner">
-    <div class="bTop">
-      <div>
-        <div class="bTitle" id="bTitle">—</div>
-        <div class="bText" id="bText">—</div>
-      </div>
-      <div class="bAct">
-        <a class="btn" id="bOpen" href="#">OPEN</a>
-      </div>
-    </div>
-  </div>
+  <div class="block">
+    <h3 id="hSolution">The Solution Posture</h3>
+    <p id="pSolution1">
+      If meaning is unstable, go to Laws.
+      If execution is unclear, go to Products.
+      If you need verification, go to Gauges.
+      If you need direction first, use Compass.
+    </p>
+    <p id="pSolution2">
+      You are here because something needs alignment.
+      There is a surface for that.
+    </p>
 
-  <!-- ACCORDION A (4) -->
-  <div class="section" id="secClaim">
-    <div class="sHead" id="headClaim" role="button" tabindex="0" aria-label="Claim index">
-      <div class="sTitle"><span class="sDot"></span><span id="secClaimTitle">CLAIM INDEX</span></div>
-      <div class="sChevron" id="chevClaim">▸</div>
+    <div class="actions">
+      <a class="btn" id="goNorth" href="/laws/">NORTH</a>
+      <a class="btn" id="goEast" href="/products/">EAST</a>
+      <a class="btn" id="goSouth" href="/gauges/">SOUTH</a>
+      <a class="btn" id="goCompass" href="/index.html">COMPASS</a>
     </div>
-    <div class="sBody" id="bodyClaim"></div>
-  </div>
-
-  <!-- ACCORDION B (3) -->
-  <div class="section" id="secSupport">
-    <div class="sHead" id="headSupport" role="button" tabindex="0" aria-label="Support index">
-      <div class="sTitle"><span class="sDot"></span><span id="secSupportTitle">SUPPORT INDEX</span></div>
-      <div class="sChevron" id="chevSupport">▸</div>
-    </div>
-    <div class="sBody" id="bodySupport"></div>
-  </div>
-
-  <div class="footer" id="foot">
-    Claim must be supported · Support must be verifiable
-    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
-  // ----- state -----
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
   try{
     localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
 
-  // top links carry state
-  document.getElementById("btnReturn").href="/index.html"+q();
-  document.getElementById("btnEnter").href="/home/"+q();
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href=path+q();
+  }
 
-  // language buttons
+  wire("btnCompass","/index.html");
+  wire("btnEnter","/home/");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+  wire("goNorth","/laws/");
+  wire("goEast","/products/");
+  wire("goSouth","/gauges/");
+  wire("goCompass","/index.html");
+
+  // language toggle
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
 
-  function paintLang(){
+  function paint(){
     btnEN.classList.toggle("active", lang==="en");
     btnZH.classList.toggle("active", lang==="zh");
     btnES.classList.toggle("active", lang==="es");
   }
-  paintLang();
+  paint();
 
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    location.href="/prelude/"+q({lang:lang});
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    localStorage.setItem("gd_lang",next);
+    window.location.href=window.location.pathname+"?lang="+next;
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  btnEN.onclick=function(){setLang("en");};
+  btnZH.onclick=function(){setLang("zh");};
+  btnES.onclick=function(){setLang("es");};
 
-  // data
-  var ROUTES = {
-    laws:"/laws/",
-    products:"/products/",
-    services:"/products/",         // placeholder until /services/ exists
-    about:"/about/",
-    about_fallback:"/links/",
-    software:"/products/software/",
-    gauges:"/gauges/",
-    links:"/links/"
-  };
-
-  function itemCard(title, desc, path){
-    var wrap=document.createElement("div");
-    wrap.className="item";
-    var top=document.createElement("div");
-    top.className="iTop";
-    var name=document.createElement("div");
-    name.className="iName";
-    name.textContent=title;
-    top.appendChild(name);
-
-    var p=document.createElement("div");
-    p.className="iDesc";
-    p.textContent=desc;
-
-    var act=document.createElement("div");
-    act.className="iAct";
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
-    a.href=path + q();
-    act.appendChild(a);
-
-    wrap.appendChild(top);
-    wrap.appendChild(p);
-    wrap.appendChild(act);
-    return wrap;
+  if(lang==="zh"){
+    document.getElementById("hk").textContent="前言";
+    document.getElementById("ht").textContent="行动之前";
+    document.getElementById("hs").textContent="这不是信仰站点。这是结构界面。漂移真实存在，相关性不可见，规模会放大小错误。";
+    document.getElementById("hProblem").textContent="问题";
+    document.getElementById("pProblem1").textContent="系统往往在公开失败前就已悄悄失稳。含义漂移，假设叠加，依赖重叠。";
+    document.getElementById("pProblem2").textContent="用激情或速度无法修复结构性漂移。";
+    document.getElementById("hMapping").textContent="我们做了什么";
+    document.getElementById("pMapping1").textContent="我们将问题映射到有限晶格，定义边界与测量面。";
+    document.getElementById("pMapping2").textContent="每个主张有界，每次升级需收据，每次跳转保留状态。";
+    document.getElementById("hSolution").textContent="解决姿态";
+    document.getElementById("pSolution1").textContent="含义不稳去法则；执行不清去产品；要验证去量规；要方向用罗盘。";
+    document.getElementById("pSolution2").textContent="你在这里，是因为某个度量需要答案。这里有对应的界面。";
+  }else if(lang==="es"){
+    document.getElementById("hk").textContent="PRELUDIO";
+    document.getElementById("ht").textContent="Antes de Moverte";
+    document.getElementById("hs").textContent="No es un sitio de creencias. Es una interfaz estructural. La deriva es real y la escala amplifica errores.";
   }
-
-  // fill accordions
-  var bodyClaim=document.getElementById("bodyClaim");
-  var bodySupport=document.getElementById("bodySupport");
-
-  function fill(){
-    bodyClaim.innerHTML="";
-    bodySupport.innerHTML="";
-
-    if(lang==="zh"){
-      bodyClaim.appendChild(itemCard("事实中心","从可核查的内容开始。", ROUTES.laws));
-      bodyClaim.appendChild(itemCard("产品","可部署的产品与平台。", ROUTES.products));
-      bodyClaim.appendChild(itemCard("服务","以服务形式提供支持与落地。", ROUTES.services));
-      bodyClaim.appendChild(itemCard("关于 / 信息","项目范围、边界与说明。", ROUTES.about));
-
-      bodySupport.appendChild(itemCard("软件中心","系统与引擎：SSG / DOTGrid / 登记等。", ROUTES.software));
-      bodySupport.appendChild(itemCard("量规","仪表板与测量输出。", ROUTES.gauges));
-      bodySupport.appendChild(itemCard("链接","外部锚点与参考。", ROUTES.links));
-    }else if(lang==="es"){
-      bodyClaim.appendChild(itemCard("HECHOS","Empieza con lo verificable.", ROUTES.laws));
-      bodyClaim.appendChild(itemCard("PRODUCTOS","Productos y plataformas desplegables.", ROUTES.products));
-      bodyClaim.appendChild(itemCard("SERVICIOS","Soporte y entrega como servicio.", ROUTES.services));
-      bodyClaim.appendChild(itemCard("ACERCA / INFO","Alcance, límites y explicación.", ROUTES.about));
-
-      bodySupport.appendChild(itemCard("HUB DE SOFTWARE","Sistemas: SSG / DOTGrid / registro.", ROUTES.software));
-      bodySupport.appendChild(itemCard("MEDIDORES","Paneles y salidas de medición.", ROUTES.gauges));
-      bodySupport.appendChild(itemCard("ENLACES","Anclas externas y referencias.", ROUTES.links));
-    }else{
-      bodyClaim.appendChild(itemCard("FACT HUB","Start with what can be checked.", ROUTES.laws));
-      bodyClaim.appendChild(itemCard("PRODUCTS","Deployable products and platforms.", ROUTES.products));
-      bodyClaim.appendChild(itemCard("SERVICES","Support and delivery as services.", ROUTES.services));
-      bodyClaim.appendChild(itemCard("ABOUT / INFO","Scope, boundaries, and explanation.", ROUTES.about));
-
-      bodySupport.appendChild(itemCard("SOFTWARE HUB","Systems: SSG / DOTGrid / registry.", ROUTES.software));
-      bodySupport.appendChild(itemCard("GAUGES","Dashboards and measurement outputs.", ROUTES.gauges));
-      bodySupport.appendChild(itemCard("LINKS","External anchors and references.", ROUTES.links));
-    }
-  }
-  fill();
-
-  // safe route for ABOUT if /about/ doesn't exist (optional fallback)
-  // We do not fetch here; just degrade gracefully on click if needed later.
-
-  // accordion behavior
-  var secClaim=document.getElementById("secClaim");
-  var secSupport=document.getElementById("secSupport");
-  var chevClaim=document.getElementById("chevClaim");
-  var chevSupport=document.getElementById("chevSupport");
-
-  function toggleSec(sec, chev){
-    var open = sec.classList.toggle("open");
-    chev.textContent = open ? "▾" : "▸";
-  }
-
-  document.getElementById("headClaim").addEventListener("click", function(){ toggleSec(secClaim,chevClaim); });
-  document.getElementById("headSupport").addEventListener("click", function(){ toggleSec(secSupport,chevSupport); });
-
-  document.getElementById("headClaim").addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleSec(secClaim,chevClaim); }
-  });
-  document.getElementById("headSupport").addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleSec(secSupport,chevSupport); }
-  });
-
-  // diamond selection -> banner + open link + auto-open matching section
-  var banner=document.getElementById("banner");
-  var bTitle=document.getElementById("bTitle");
-  var bText=document.getElementById("bText");
-  var bOpen=document.getElementById("bOpen");
-
-  var dClaim=document.getElementById("dClaim");
-  var dSupport=document.getElementById("dSupport");
-
-  function select(which){
-    var isClaim = (which==="claim");
-    dClaim.classList.toggle("active", isClaim);
-    dSupport.classList.toggle("active", !isClaim);
-
-    banner.classList.add("show");
-
-    if(lang==="zh"){
-      if(isClaim){
-        bTitle.textContent="CLAIM → 事实优先";
-        bText.textContent="从边界、约束与可核查内容开始，再进入可部署面。";
-        bOpen.textContent="打开";
-        bOpen.href=ROUTES.laws + q();
-        // open claim index
-        if(!secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        if(secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        secClaim.scrollIntoView({behavior:"smooth",block:"start"});
-      }else{
-        bTitle.textContent="SUPPORT → 提供优先";
-        bText.textContent="先看可用的产品与系统，再回到证明与测量。";
-        bOpen.textContent="打开";
-        bOpen.href=ROUTES.products + q();
-        if(!secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        if(secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        secSupport.scrollIntoView({behavior:"smooth",block:"start"});
-      }
-    }else if(lang==="es"){
-      if(isClaim){
-        bTitle.textContent="CLAIM → Hechos primero";
-        bText.textContent="Empieza por límites, restricciones y verificación. Luego entra a lo desplegable.";
-        bOpen.textContent="ABRIR";
-        bOpen.href=ROUTES.laws + q();
-        if(!secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        if(secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        secClaim.scrollIntoView({behavior:"smooth",block:"start"});
-      }else{
-        bTitle.textContent="SUPPORT → Oferta primero";
-        bText.textContent="Mira productos y sistemas, y después vuelve a prueba y medición.";
-        bOpen.textContent="ABRIR";
-        bOpen.href=ROUTES.products + q();
-        if(!secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        if(secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        secSupport.scrollIntoView({behavior:"smooth",block:"start"});
-      }
-    }else{
-      if(isClaim){
-        bTitle.textContent="CLAIM → Facts first";
-        bText.textContent="Start with constraints and what can be checked. Then enter deployable surfaces.";
-        bOpen.textContent="OPEN";
-        bOpen.href=ROUTES.laws + q();
-        if(!secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        if(secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        secClaim.scrollIntoView({behavior:"smooth",block:"start"});
-      }else{
-        bTitle.textContent="SUPPORT → Offer first";
-        bText.textContent="See products and systems first. Then return to proof and measurement.";
-        bOpen.textContent="OPEN";
-        bOpen.href=ROUTES.products + q();
-        if(!secSupport.classList.contains("open")) toggleSec(secSupport,chevSupport);
-        if(secClaim.classList.contains("open")) toggleSec(secClaim,chevClaim);
-        secSupport.scrollIntoView({behavior:"smooth",block:"start"});
-      }
-    }
-  }
-
-  function bindDiamond(el, which){
-    function act(){ select(which); }
-    el.addEventListener("click", act);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-
-  bindDiamond(dClaim,"claim");
-  bindDiamond(dSupport,"support");
-
-  // initial default: show banner but do not force scroll
-  select("claim");
-  window.scrollTo({top:0,behavior:"instant"});
-
-  // i18n minimal for top copy
-  function applyTopText(){
-    if(lang==="zh"){
-      document.getElementById("h").textContent="前置页";
-      document.getElementById("sub").innerHTML="<strong>选择入口姿态。</strong> 然后按 <em>打开</em>。";
-      document.getElementById("labClaim").textContent="CLAIM";
-      document.getElementById("subClaim").textContent="我有问题。先看事实。";
-      document.getElementById("labSupport").textContent="SUPPORT";
-      document.getElementById("subSupport").textContent="我有支撑。先看系统。";
-      document.getElementById("secClaimTitle").textContent="CLAIM 索引";
-      document.getElementById("secSupportTitle").textContent="SUPPORT 索引";
-      document.getElementById("foot").innerHTML="主张必须有支撑 · 支撑必须可核查<div class='sig'>DIAMONDGATEBRIDGE.COM</div>";
-      document.getElementById("btnReturn").textContent="返回";
-      document.getElementById("btnEnter").textContent="进入";
-    }else if(lang==="es"){
-      document.getElementById("h").textContent="PRELUDIO";
-      document.getElementById("sub").innerHTML="<strong>Elige postura de entrada.</strong> Luego pulsa <em>ABRIR</em>.";
-      document.getElementById("labClaim").textContent="CLAIM";
-      document.getElementById("subClaim").textContent="Tengo un problema. Hechos primero.";
-      document.getElementById("labSupport").textContent="SUPPORT";
-      document.getElementById("subSupport").textContent="Tengo soporte. Sistema primero.";
-      document.getElementById("secClaimTitle").textContent="ÍNDICE CLAIM";
-      document.getElementById("secSupportTitle").textContent="ÍNDICE SUPPORT";
-      document.getElementById("foot").innerHTML="La afirmación requiere soporte · El soporte debe ser verificable<div class='sig'>DIAMONDGATEBRIDGE.COM</div>";
-      document.getElementById("btnReturn").textContent="VOLVER";
-      document.getElementById("btnEnter").textContent="ENTRAR";
-    }else{
-      document.getElementById("h").textContent="PRELUDE";
-      document.getElementById("sub").innerHTML="<strong>Choose an entry posture.</strong> Then press <em>OPEN</em>.";
-      document.getElementById("secClaimTitle").textContent="CLAIM INDEX";
-      document.getElementById("secSupportTitle").textContent="SUPPORT INDEX";
-      document.getElementById("foot").innerHTML="Claim must be supported · Support must be verifiable<div class='sig'>DIAMONDGATEBRIDGE.COM</div>";
-      document.getElementById("btnReturn").textContent="RETURN";
-      document.getElementById("btnEnter").textContent="ENTER";
-    }
-  }
-  applyTopText();
-
 })();
 </script>
 

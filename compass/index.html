@@ -1,0 +1,300 @@
+<!-- TNT — /compass/index.html
+     COMPASS · GLOBAL ORIENTATION HUB
+     ROLE:
+       - Monument-level orientation surface
+       - Frontier positioning statement
+       - Problem → Mapping → Direction
+       - Routes into NORTH / EAST / SOUTH / WEST
+       - Trilingual (EN / 中文 / ES)
+       - Canon state carry (lang/style/time/depth)
+     LOCKS:
+       - ui.css owns background
+       - branch.css owns geometry
+       - instruments.js canonical state
+       - No modal overlays
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Compass · Orientation</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+/* ===============================
+   MONUMENTAL ARCHITECTURE LAYER
+================================ */
+
+:root{
+  --dockH:90px;
+  --gold:rgba(212,175,55,.35);
+  --goldSoft:rgba(212,175,55,.18);
+  --redGlow:rgba(255,70,70,.18);
+}
+
+/* Page wrap */
+.page{
+  width:min(1200px,95vw);
+  margin:0 auto;
+  padding:100px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+/* Header */
+.hero{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:28px;
+  padding:28px 32px;
+  backdrop-filter:blur(12px);
+  background:
+    radial-gradient(circle at 25% 20%, var(--goldSoft), transparent 60%),
+    radial-gradient(circle at 80% 75%, var(--redGlow), transparent 65%),
+    rgba(0,0,0,.22);
+  box-shadow:
+    0 40px 140px rgba(0,0,0,.75),
+    inset 0 0 0 1px var(--goldSoft);
+}
+
+.k{
+  margin:0 0 12px;
+  font-size:12px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.75;
+}
+
+.h{
+  margin:0;
+  font-size:44px;
+  font-weight:950;
+  letter-spacing:.6px;
+  line-height:1.15;
+}
+
+.p{
+  margin-top:18px;
+  font-size:18px;
+  line-height:1.7;
+  color:rgba(255,255,255,.92);
+}
+
+.sub{
+  margin-top:14px;
+  font-size:16px;
+  line-height:1.65;
+  color:rgba(255,255,255,.80);
+}
+
+/* Compass Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+}
+
+.card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:22px 22px;
+  backdrop-filter:blur(8px);
+  background:
+    radial-gradient(circle at 30% 20%, var(--goldSoft), transparent 60%),
+    rgba(0,0,0,.18);
+  box-shadow:
+    0 24px 80px rgba(0,0,0,.65),
+    inset 0 0 0 1px var(--goldSoft);
+  transition:transform .2s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+}
+
+.card h3{
+  margin:0 0 12px;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.3px;
+}
+
+.card p{
+  margin:0;
+  font-size:15px;
+  line-height:1.65;
+  color:rgba(255,255,255,.85);
+}
+
+.card .btn{
+  margin-top:16px;
+  display:inline-block;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--gold);
+  background:rgba(0,0,0,.28);
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(1000px,94vw);
+  padding:12px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.30);
+  backdrop-filter:blur(10px);
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{
+  text-align:center;
+  padding:12px 10px;
+  border-radius:999px;
+}
+@media(max-width:520px){
+  .dock{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="hero">
+    <p class="k" id="k">COMPASS</p>
+    <h1 class="h" id="h">Where do you begin when everything connects?</h1>
+    <p class="p" id="p1">
+      Most systems fail quietly. Not because they are evil. Not because they lack ambition.
+      But because nobody mapped the structure before they scaled the story.
+    </p>
+    <p class="sub" id="p2">
+      This compass is not a metaphor. It is a directional contract.
+      North defines truth. East builds. South scales. West protects.
+      Choose a direction.
+    </p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h3 id="nTitle">NORTH · Definition & Law</h3>
+      <p id="nText">
+        If you want to understand what is stable, measurable, and invariant —
+        this is where meaning is locked before motion begins.
+      </p>
+      <a class="btn" id="goNorth" href="/laws/">ENTER NORTH</a>
+    </div>
+
+    <div class="card">
+      <h3 id="eTitle">EAST · Build & Execute</h3>
+      <p id="eText">
+        If you want to see engines, software, infrastructure,
+        and industrial substitutions — this is where it gets built.
+      </p>
+      <a class="btn" id="goEast" href="/products/">ENTER EAST</a>
+    </div>
+
+    <div class="card">
+      <h3 id="sTitle">SOUTH · Scale & Convergence</h3>
+      <p id="sText">
+        If you care about deployment, trajectory, and consequence —
+        this is where structure meets reality.
+      </p>
+      <a class="btn" id="goSouth" href="/explore/">ENTER SOUTH</a>
+    </div>
+
+    <div class="card">
+      <h3 id="wTitle">WEST · Protection & Containment</h3>
+      <p id="wText">
+        If your concern is governance, risk, compliance, and integrity —
+        this is where systems are kept from collapsing.
+      </p>
+      <a class="btn" id="goWest" href="/laws/">ENTER WEST</a>
+    </div>
+
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+</nav>
+
+<script>
+(function(){
+
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  document.documentElement.lang = (lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
+  }
+
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  wire("goNorth","/laws/");
+  wire("goEast","/products/");
+  wire("goSouth","/explore/");
+  wire("goWest","/laws/");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockExplore","/explore/");
+  wire("dockIndex","/index.html");
+
+  if(lang==="zh"){
+    document.getElementById("h").textContent="当一切彼此连接，你从哪里开始？";
+    document.getElementById("p1").textContent="多数系统失败并非因为恶意，而是因为在扩张之前，没有人真正画出结构。";
+    document.getElementById("p2").textContent="这不是比喻，而是方向契约：北定真理，东建结构，南管规模，西守稳定。";
+    document.getElementById("nTitle").textContent="北 · 定义与法则";
+    document.getElementById("eTitle").textContent="东 · 构建与执行";
+    document.getElementById("sTitle").textContent="南 · 规模与汇聚";
+    document.getElementById("wTitle").textContent="西 · 防护与约束";
+  }
+  if(lang==="es"){
+    document.getElementById("h").textContent="¿Dónde comienzas cuando todo está conectado?";
+    document.getElementById("p1").textContent="Los sistemas fallan no por malicia, sino porque nadie mapeó la estructura antes de escalar la narrativa.";
+    document.getElementById("p2").textContent="No es metáfora, es contrato direccional: Norte define, Este construye, Sur escala, Oeste protege.";
+    document.getElementById("nTitle").textContent="NORTE · Definición";
+    document.getElementById("eTitle").textContent="ESTE · Construcción";
+    document.getElementById("sTitle").textContent="SUR · Escala";
+    document.getElementById("wTitle").textContent="OESTE · Protección";
+  }
+
+})();
+</script>
+
+</body>
+</html>

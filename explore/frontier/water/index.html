@@ -1,7 +1,7 @@
 <!-- TNT — /explore/frontier/water/index.html
      EXPLORE · FRONTIER · WATER
      MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · NO MODALS · STATE SAFE
+     SINGLE-OPEN ACCORDION · STATE SAFE · NO MODALS
 -->
 
 <!doctype html>
@@ -18,11 +18,11 @@
 <style>
 :root{
   --dockH:90px;
-  --inkA:rgba(12,14,20,.96);
-  --inkB:rgba(6,8,12,.98);
+  --inkA:rgba(10,12,16,.96);
+  --inkB:rgba(5,7,10,.98);
   --stroke:rgba(255,255,255,.10);
   --gold:rgba(212,175,55,.18);
-  --blue:rgba(120,180,255,.12);
+  --teal:rgba(0,200,180,.14);
   --mut:rgba(255,255,255,.92);
 }
 
@@ -41,8 +41,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
   border:1px solid var(--stroke);
   border-radius:40px;
   background:
-    radial-gradient(circle at 20% 18%, var(--gold), transparent 65%),
-    radial-gradient(circle at 80% 80%, var(--blue), transparent 70%),
+    radial-gradient(circle at 25% 20%, var(--gold), transparent 65%),
+    radial-gradient(circle at 75% 80%, var(--teal), transparent 70%),
     linear-gradient(160deg, rgba(0,0,0,.35), rgba(0,0,0,.18));
   padding:54px;
   box-shadow:0 60px 200px rgba(0,0,0,.65);
@@ -133,8 +133,8 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
     <p class="k">FRONTIER</p>
     <h1 class="t">WATER SYSTEMS</h1>
     <p class="s">
-      What if water systems were designed like precision instruments, not patchwork utilities?  
-      What if purity, pressure, flow, and reuse were mapped before failure?
+      What if scarcity is not a resource problem, but a routing problem?  
+      What if resilience begins in structure before it reaches infrastructure?
     </p>
 
     <div class="lens">
@@ -160,40 +160,39 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 (function(){
 
   const DOMAINS = [
-    "Flow Equilibrium Modeling",
-    "Purification Envelope Control",
-    "Closed-Loop Recovery Systems",
-    "Municipal Infrastructure Optimization",
-    "Cascade Failure Containment",
-    "Habitat-Level Water Autonomy"
+    "Closed-Loop Purification",
+    "Decentralized Filtration Nodes",
+    "Municipal Flow Mapping",
+    "Leakage Detection & Containment",
+    "Desalination Efficiency Models",
+    "Water Governance Interface"
   ];
 
   const TEXT = {
     informal:{
-      en:"Water failure is rarely about scarcity. It is about misalignment — pressure, timing, routing, and containment. When those align, stability appears.",
-      zh:"水系统失效很少是资源短缺问题，而是压力、时间、路径与隔离的错位。当这些对齐，稳定就出现。",
-      es:"Las fallas del agua rara vez son escasez. Son desalineación — presión, tiempo y contención. Cuando se alinean, surge estabilidad."
+      en:"Water fails when flows are invisible. Mapping the lattice reveals where pressure builds, where leakage hides, and where resilience must be engineered before crisis.",
+      zh:"当流向不可见时，水系统就会失效。映射结构揭示压力聚集、泄漏隐藏与必须预先设计韧性的区域。",
+      es:"El agua falla cuando los flujos son invisibles. Mapear la estructura revela presión, fugas y dónde debe diseñarse resiliencia antes de la crisis."
     },
     formal:{
-      en:"Water systems are modeled under constraint envelopes: pressure bands, contamination thresholds, routing geometry, and containment rollback states.",
-      zh:"水系统在约束包络下建模：压力区间、污染阈值、路径几何与回滚状态。",
-      es:"Los sistemas de agua se modelan bajo envolventes de restricción: bandas de presión y umbrales de contaminación."
+      en:"Water systems are modeled as flow vectors under hydraulic, regulatory, and infrastructural constraint envelopes with measurable variance windows.",
+      zh:"水系统被建模为流向向量，在水力、监管与基础设施约束包络内运行，并具有可测量方差窗口。",
+      es:"Los sistemas de agua se modelan como vectores de flujo bajo envolventes hidráulicas y regulatorias con ventanas de varianza medibles."
     },
     platform:{
-      en:"Platform posture: water modules remain registry-trackable, compliance-visible, and audit-ready without exposing sensitive civic infrastructure details.",
-      zh:"平台姿态：水模块可登记追踪、可合规可视、可审计，而不泄露市政敏感细节。",
-      es:"Postura de plataforma: módulos rastreables y auditables sin revelar infraestructura sensible."
+      en:"Platform posture: integrate municipal dashboards, regulatory visibility, and compliance registries without collapsing operational independence.",
+      zh:"平台姿态：整合市政面板、监管可视化与合规登记，同时保持运营独立性。",
+      es:"Postura de plataforma: integrar paneles municipales y cumplimiento sin colapsar independencia operativa."
     },
     engineering:{
-      en:"Engineering posture: laminar vs turbulent flow modeling, membrane tolerances, cascade interruption gates, and deterministic failover states.",
-      zh:"工程姿态：层流/湍流建模、膜耐受阈值、级联中断闸门与确定性失效转移状态。",
-      es:"Postura de ingeniería: modelado de flujo laminar/turbulento, tolerancias de membrana y estados de failover deterministas."
+      en:"Engineering posture: pressure modeling, contamination thresholds, redundancy routing, cascade interruption, and deterministic failover design.",
+      zh:"工程姿态：压力建模、污染阈值、冗余路径、级联中断与确定性失效转移设计。",
+      es:"Postura de ingeniería: modelado de presión, umbrales de contaminación y failover determinista."
     }
   };
 
   let currentLens="informal";
   let currentLang="en";
-
   const stack=document.getElementById("stack");
 
   function render(){
@@ -204,29 +203,20 @@ body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,san
 
       const head=document.createElement("div");
       head.className="head";
-      head.innerHTML=`
-        <div class="title">${name}</div>
-        <div class="chev">▸</div>
-      `;
+      head.innerHTML=`<div class="title">${name}</div><div class="chev">▸</div>`;
 
       const body=document.createElement("div");
       body.className="body";
-      body.innerHTML=`
-        <h4>${currentLens.toUpperCase()}</h4>
-        <p>${TEXT[currentLens][currentLang]}</p>
-      `;
+      body.innerHTML=`<h4>${currentLens.toUpperCase()}</h4><p>${TEXT[currentLens][currentLang]}</p>`;
 
       head.addEventListener("click",()=>{
-        document.querySelectorAll(".card").forEach(c=>{
-          if(c!==card) c.classList.remove("open");
-        });
+        document.querySelectorAll(".card").forEach(c=>{if(c!==card)c.classList.remove("open")});
         card.classList.toggle("open");
       });
 
       card.appendChild(head);
       card.appendChild(body);
       stack.appendChild(card);
-
       if(i===0) card.classList.add("open");
     });
   }

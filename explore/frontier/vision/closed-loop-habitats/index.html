@@ -2,10 +2,11 @@
      FRONTIER · VISION · CLOSED LOOP HABITATS
      SHIMMER EXTENSION PAGE
      RULES:
-       - Vision lane only (no structure loops here)
-       - Structure remains in /door/
-       - No modals, no overlays
+       - Vision lane only (no structure loops)
+       - 3 languages (EN / 中文 / ES)
+       - Formal / Informal toggle
        - Canon state carry (lang/style/time/depth)
+       - No modals, no overlays
        - Uses ui.css + branch.css + instruments.js only
 -->
 
@@ -32,9 +33,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   --opalA:rgba(210,190,255,.22);
   --opalB:rgba(120,70,255,.18);
   --opalC:rgba(90,210,255,.16);
-  --goldSoft:rgba(212,175,55,.45);
-  --obsA:rgba(12,22,38,.95);
-  --obsB:rgba(6,10,16,.98);
 }
 
 /* top */
@@ -69,13 +67,22 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 .header h1{
   margin:0;
   font-weight:950;
-  font-size:36px;
+  font-size:34px;
   letter-spacing:1px;
 }
 .header p{
   margin-top:8px;
   font-size:14px;
   opacity:.85;
+}
+
+/* lens toggle */
+.lens{
+  width:min(980px,94vw);
+  margin:14px auto 0;
+  display:flex;
+  justify-content:center;
+  gap:12px;
 }
 
 /* content blocks */
@@ -88,9 +95,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
     linear-gradient(160deg, rgba(12,22,38,.88), rgba(6,10,16,.92));
-  box-shadow:
-    0 22px 72px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.08);
+  box-shadow:0 22px 72px rgba(0,0,0,.55);
 }
 
 .section h2{
@@ -109,7 +114,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 /* footer */
 .footer{
   width:min(980px,94vw);
-  margin:24px auto 34px;
+  margin:28px auto 34px;
   text-align:center;
   font-size:12.5px;
   opacity:.75;
@@ -134,32 +139,27 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   <div class="header">
     <h1 id="ttl">CLOSED LOOP HABITATS</h1>
-    <p id="tag">Orbital · lunar · remote — full resource retention</p>
+    <p id="tag">Orbital · Lunar · Remote — Full Resource Retention</p>
+  </div>
+
+  <div class="lens">
+    <button class="btn" id="btnInformal">INFORMAL</button>
+    <button class="btn" id="btnFormal">FORMAL</button>
   </div>
 
   <div class="section">
-    <h2>Why It Exists</h2>
-    <p>
-      Closed Loop Habitats are the extreme case: no cheap resupply, no waste export,
-      and no forgiveness for drift. Any system that survives here can scale down to Earth.
-    </p>
+    <h2 id="h1">Why It Exists</h2>
+    <p id="p1"></p>
   </div>
 
   <div class="section">
-    <h2>Closed-Loop Requirement</h2>
-    <p>
-      Water, air, food, materials, and energy are treated as a single coupled inventory.
-      The habitat is a constraint-locked refinery: every stream is measured, routed, and recovered.
-    </p>
+    <h2 id="h2">Closed-Loop Constraint</h2>
+    <p id="p2"></p>
   </div>
 
   <div class="section">
-    <h2>SHIMMER Bridge</h2>
-    <p>
-      SHIMMER functions as the entropy-routing backbone: classification → segmentation →
-      dynamic routing → conversion → retention. The same routing logic supports both
-      city-scale recovery and habitat-scale survival.
-    </p>
+    <h2 id="h3">SHIMMER Integration</h2>
+    <p id="p3"></p>
   </div>
 
   <div class="footer">
@@ -170,21 +170,81 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
 <script>
 (function(){
+
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
   if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+
   localStorage.setItem("gd_lang",lang);
+  localStorage.setItem("gd_style",style);
 
   function q(){
-    return "?lang="+encodeURIComponent(lang);
+    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
   }
 
   document.getElementById("btnBack").href="/explore/frontier/vision/"+q();
   document.getElementById("btnDoor").href="/door/"+q();
 
-  document.getElementById("btnEN").onclick=function(){location.search="?lang=en"};
-  document.getElementById("btnZH").onclick=function(){location.search="?lang=zh"};
-  document.getElementById("btnES").onclick=function(){location.search="?lang=es"};
+  document.getElementById("btnEN").onclick=function(){location.search="?lang=en&style="+style};
+  document.getElementById("btnZH").onclick=function(){location.search="?lang=zh&style="+style};
+  document.getElementById("btnES").onclick=function(){location.search="?lang=es&style="+style};
+
+  document.getElementById("btnInformal").onclick=function(){style="informal";location.search="?lang="+lang+"&style=informal"};
+  document.getElementById("btnFormal").onclick=function(){style="formal";location.search="?lang="+lang+"&style=formal"};
+
+  var COPY={
+    en:{
+      informal:{
+        why:"Closed loop habitats are the harshest environment for system design. No resupply safety net. No waste export. Every leak compounds. If a system survives here, it can scale anywhere.",
+        constraint:"Air, water, nutrients, materials, and energy are one coupled inventory. Nothing disappears. Waste is a routing problem, not a disposal problem.",
+        shimmer:"SHIMMER acts as the entropy-routing spine: classify → segment → route → convert → retain. The same logic that stabilizes cities stabilizes orbit."
+      },
+      formal:{
+        why:"Closed loop habitats represent high-constraint survival systems. External resupply is limited. Material loss is cumulative. Therefore system stability must be mathematically bounded.",
+        constraint:"All mass and energy streams are treated as conserved vectors. Outputs are constrained to internal recycling loops. Disposal is replaced by transformation.",
+        shimmer:"SHIMMER provides dynamic entropy routing under conservation constraints. It couples classification with adaptive conversion pathways to maintain resource equilibrium."
+      }
+    },
+    zh:{
+      informal:{
+        why:"闭环栖息地是系统设计的极端环境。没有持续补给，没有垃圾外运。任何泄漏都会积累。",
+        constraint:"空气、水、养分、材料与能量是同一个库存。没有“消失”。废弃物只是路由问题。",
+        shimmer:"SHIMMER 是熵路由主干：分类 → 分段 → 路由 → 转化 → 保留。"
+      },
+      formal:{
+        why:"闭环栖息地属于高约束生存系统。外部补给受限。材料损失会累积。",
+        constraint:"所有质量与能量流被视为守恒向量。输出被限制在内部循环中。",
+        shimmer:"SHIMMER 在守恒约束下提供动态熵路由。"
+      }
+    },
+    es:{
+      informal:{
+        why:"Hábitats cerrados son entornos extremos. Sin red de suministro. Cada fuga se acumula.",
+        constraint:"Aire, agua, nutrientes, materiales y energía son un solo inventario acoplado.",
+        shimmer:"SHIMMER es la columna vertebral de ruteo entrópico."
+      },
+      formal:{
+        why:"Los hábitats cerrados son sistemas de supervivencia bajo alta restricción.",
+        constraint:"Los flujos de masa y energía se tratan como vectores conservados.",
+        shimmer:"SHIMMER permite ruteo dinámico bajo conservación."
+      }
+    }
+  };
+
+  function render(){
+    var pack=COPY[lang][style];
+    document.getElementById("p1").textContent=pack.why;
+    document.getElementById("p2").textContent=pack.constraint;
+    document.getElementById("p3").textContent=pack.shimmer;
+  }
+
+  render();
+
 })();
 </script>
 

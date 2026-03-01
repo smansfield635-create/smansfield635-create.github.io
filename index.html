@@ -1,17 +1,4 @@
 <!doctype html>
-<!-- TNT — /index.html
-     COMPASS · PRIMARY NAVIGATION
-     UPDATE:
-       - Adds RESEARCH as equal structural node
-       - Gold accent for RESEARCH (per instruction)
-     LOCKS:
-       - Canon state carry (lang/style/time/depth via gd_*)
-       - No new gd_* keys
-       - No overlays / no modals
-       - ui.css owns html/body background
-       - Red primary · Black secondary · Gold accent
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -29,47 +16,24 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --R:150px;
   --D:170px;
-  --dockH:120px;
 
-  --onyxA:rgba(8,10,14,.92);
+  --onyxA:rgba(8,10,14,.94);
   --onyxB:rgba(12,14,18,.98);
 
-  --crimson:rgba(120,0,22,.35);
-  --festival:rgba(255,43,43,.18);
+  --crimson:rgba(120,0,22,.38);
+  --festival:rgba(255,43,43,.22);
   --opalV:rgba(90,40,120,.14);
 
-  --gold:rgba(201,162,74,.40);
-  --goldGlow:rgba(201,162,74,.28);
+  --gold:rgba(201,162,74,.45);
+  --goldGlow:rgba(201,162,74,.30);
 
   --shadow:0 40px 140px rgba(0,0,0,.75);
 }
 
-/* Top Nav */
-.top{
-  position:fixed;
-  top:16px;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  padding:0 16px;
-  z-index:240;
-}
-
-.btn{
-  padding:10px 14px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:linear-gradient(145deg, var(--onyxA), var(--onyxB));
-  font-weight:950;
-  white-space:nowrap;
-}
-
-/* Stage */
 .stage{
   position:relative;
-  width:min(720px,94vw);
-  height:min(720px,78vh);
+  width:min(760px,94vw);
+  height:min(760px,82vh);
   margin:120px auto 0;
   pointer-events:none;
 }
@@ -98,19 +62,7 @@ body::before,body::after{pointer-events:none!important}
 }
 
 .d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-}
-
-.d::after{
-  content:"";
-  position:absolute;
-  left:12px;
-  right:12px;
-  bottom:-16px;
-  height:30px;
-  background: radial-gradient(circle at 50% 0%, var(--goldGlow), transparent 72%);
-  opacity:.6;
-  pointer-events:none;
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
 }
 
 .inner{
@@ -126,65 +78,40 @@ body::before,body::after{pointer-events:none!important}
   text-align:center;
 }
 
-/* Placement */
-.dN{transform:translate(-50%,-50%) translate(0,-150px) rotate(45deg)}
-.dE{transform:translate(-50%,-50%) translate(150px,0) rotate(45deg)}
-.dS{transform:translate(-50%,-50%) translate(0,150px) rotate(45deg)}
-.dW{transform:translate(-50%,-50%) translate(-150px,0) rotate(45deg)}
-.dNE{transform:translate(-50%,-50%) translate(105px,-105px) rotate(45deg)}
-.dNW{transform:translate(-50%,-50%) translate(-105px,-105px) rotate(45deg)}
+.dN{transform:translate(-50%,-50%) translate(0,-160px) rotate(45deg)}
+.dE{transform:translate(-50%,-50%) translate(160px,0) rotate(45deg)}
+.dS{transform:translate(-50%,-50%) translate(0,160px) rotate(45deg)}
+.dW{transform:translate(-50%,-50%) translate(-160px,0) rotate(45deg)}
+.dNE{transform:translate(-50%,-50%) translate(115px,-115px) rotate(45deg)}
+.dNW{transform:translate(-50%,-50%) translate(-115px,-115px) rotate(45deg)}
 
 .gold{
   border-color:var(--gold);
-  box-shadow:var(--shadow), 0 0 22px var(--goldGlow);
+  box-shadow:var(--shadow), 0 0 28px var(--goldGlow);
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div>
-    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  </div>
-  <div>
-    <a class="btn" id="btnHome" href="/home/">HOME</a>
-  </div>
-</div>
-
 <div class="stage">
 
-  <div class="d dN" id="dExplore">
-    <div class="inner">EXPLORE</div>
-  </div>
+  <div class="d dN" id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
+  <div class="d dE" id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
+  <div class="d dS" id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
+  <div class="d dW" id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
 
-  <div class="d dE" id="dProducts">
-    <div class="inner">PRODUCTS</div>
-  </div>
+  <!-- GOLD ACCENT RESEARCH -->
+  <div class="d dNE gold" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
 
-  <div class="d dS" id="dLaws">
-    <div class="inner">LAWS</div>
-  </div>
-
-  <div class="d dW" id="dGauges">
-    <div class="inner">GAUGES</div>
-  </div>
-
-  <div class="d dNE gold" id="dResearch">
-    <div class="inner">RESEARCH</div>
-  </div>
-
-  <div class="d dNW" id="dEducation">
-    <div class="inner">EDUCATION</div>
-  </div>
+  <div class="d dNW" id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
 
 </div>
 
 <script>
 (function(){
-
   var qs=new URLSearchParams(location.search);
+
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -204,17 +131,32 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
   }
 
-  function go(path){ location.href=path+q(); }
+  function go(p){location.href=p+q();}
 
-  document.getElementById("dExplore").addEventListener("click",()=>go("/explore/"));
-  document.getElementById("dProducts").addEventListener("click",()=>go("/products/"));
-  document.getElementById("dLaws").addEventListener("click",()=>go("/laws/"));
-  document.getElementById("dGauges").addEventListener("click",()=>go("/gauges/"));
-  document.getElementById("dResearch").addEventListener("click",()=>go("/research/"));
-  document.getElementById("dEducation").addEventListener("click",()=>go("/products/education/"));
+  document.getElementById("dExplore").onclick=()=>go("/explore/");
+  document.getElementById("dProducts").onclick=()=>go("/products/");
+  document.getElementById("dLaws").onclick=()=>go("/laws/");
+  document.getElementById("dGauges").onclick=()=>go("/gauges/");
+  document.getElementById("dResearch").onclick=()=>go("/research/");
+  document.getElementById("dEducation").onclick=()=>go("/products/education/");
 
-  document.getElementById("btnDoor").href="/door/"+q();
-  document.getElementById("btnHome").href="/home/"+q();
+  /* TRILINGUAL LABELS */
+  if(lang==="zh"){
+    document.getElementById("txtExplore").textContent="探索";
+    document.getElementById("txtProducts").textContent="产品";
+    document.getElementById("txtLaws").textContent="法则";
+    document.getElementById("txtGauges").textContent="量规";
+    document.getElementById("txtResearch").textContent="研究";
+    document.getElementById("txtEducation").textContent="教育";
+  }
+  else if(lang==="es"){
+    document.getElementById("txtExplore").textContent="EXPLORAR";
+    document.getElementById("txtProducts").textContent="PRODUCTOS";
+    document.getElementById("txtLaws").textContent="LEYES";
+    document.getElementById("txtGauges").textContent="MEDIDORES";
+    document.getElementById("txtResearch").textContent="INVESTIGACIÓN";
+    document.getElementById("txtEducation").textContent="EDUCACIÓN";
+  }
 
 })();
 </script>

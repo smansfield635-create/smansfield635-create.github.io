@@ -1,10 +1,12 @@
 <!-- TNT — /prelude/index.html
-     PRELUDE · STRUCTURAL DECLARATION
-     INTENT:
-       - Monumental declaration.
-       - Strong problem articulation.
-       - English / 中文 / Español.
-       - No lenses yet.
+     PRELUDE · STRUCTURAL DECLARATION (UPGRADED LAYERING + PANEL VARIANCE)
+     FIXES:
+       - Add real structural sub-layers (bands + cards + “next” routes).
+       - Elevated panels now DIFFER from background (dark opal slab + inner glass).
+       - Typography stays expanded.
+       - EN / 中文 / ES.
+       - No modals / no overlays / no inline onclick.
+       - Canon state carry: lang/style/time/depth (URL + gd_* LS).
 -->
 
 <!doctype html>
@@ -23,60 +25,184 @@ a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
+/* TYPOGRAPHY */
 :root{
-  --h1:44px;
-  --h2:24px;
+  --h0:46px;
+  --h1:28px;
+  --h2:20px;
   --p:18px;
+  --p2:15.5px;
+
+  /* PANEL VARIANCE */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.08);
+
+  --inkA:rgba(10,14,20,.78);
+  --inkB:rgba(6,9,14,.86);
+
+  --glassA:rgba(255,255,255,.06);
+  --glassB:rgba(255,255,255,.03);
+
+  --opalA:rgba(210,190,255,.14);
+  --opalB:rgba(120,70,255,.10);
+  --opalC:rgba(255,70,70,.12);
+
+  --gold:rgba(212,175,55,.22);
 }
 
+/* TOP */
 .top{
   position:fixed;top:16px;left:16px;right:16px;
-  display:flex;justify-content:space-between;
+  display:flex;justify-content:space-between;gap:12px;
   z-index:200;
 }
+.top .btn{white-space:nowrap}
 
+/* WRAP */
 .wrap{
-  width:min(980px,92vw);
+  width:min(1020px,92vw);
   margin:0 auto;
   padding:120px 0 80px;
   display:flex;
   flex-direction:column;
-  gap:40px;
+  gap:18px;
 }
 
+/* HERO (outer slab) */
 .hero{
   border-radius:32px;
-  border:1px solid rgba(255,255,255,.14);
-  padding:36px;
+  border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 20% 20%, rgba(210,190,255,.14), transparent 70%),
-    radial-gradient(circle at 80% 60%, rgba(255,70,70,.12), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.18));
-  box-shadow:0 50px 180px rgba(0,0,0,.6);
+    radial-gradient(circle at 20% 20%, var(--opalA), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--opalC), transparent 70%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  box-shadow:0 50px 180px rgba(0,0,0,.60);
+  padding:28px;
+  position:relative;
+  overflow:hidden;
 }
-
-.hero h1{
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.06) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.18;
+  pointer-events:none;
+}
+.heroInner{
+  position:relative;
+  border-radius:26px;
+  border:1px solid var(--stroke2);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
+    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
+  backdrop-filter:blur(12px);
+  padding:26px;
+}
+.k{
+  margin:0 0 8px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+}
+.h0{
   margin:0;
-  font-size:var(--h1);
+  font-size:var(--h0);
   font-weight:950;
   letter-spacing:1px;
+  line-height:1.06;
 }
-
-.hero p{
-  margin:20px 0 0;
+.lead{
+  margin:18px 0 0;
   font-size:var(--p);
-  line-height:1.8;
+  line-height:1.85;
+  opacity:.95;
+}
+.rule{
+  margin-top:18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.06), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.58), rgba(6,10,16,.70));
+  padding:14px 14px;
+  font-size:var(--p2);
+  line-height:1.6;
+  opacity:.92;
 }
 
-.block h2{
-  font-size:var(--h2);
-  margin:0 0 12px;
+/* BAND */
+.band{
+  margin-top:8px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  padding:10px 12px;
+  font-weight:950;
+  letter-spacing:.2px;
+  opacity:.92;
 }
 
-.block p{
-  font-size:var(--p);
-  line-height:1.8;
+/* GRID CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:860px){ .grid{grid-template-columns:1fr} }
+
+.card{
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, var(--glassA), transparent 58%),
+    linear-gradient(160deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 18px 70px rgba(0,0,0,.55);
+  padding:18px;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--gold) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.card h2{
+  margin:0 0 10px;
+  font-size:var(--h1);
+  font-weight:950;
+  letter-spacing:.3px;
+}
+.card p{
   margin:0;
+  font-size:var(--p);
+  line-height:1.8;
+  opacity:.90;
+}
+.small{
+  margin-top:10px;
+  font-size:var(--p2);
+  line-height:1.7;
+  opacity:.78;
+}
+
+/* CTA ROW */
+.ctaRow{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.ctaRow .btn{
+  padding:12px 16px;
+  border-radius:999px;
+  white-space:nowrap;
 }
 </style>
 </head>
@@ -84,83 +210,164 @@ body::before,body::after{pointer-events:none!important}
 <body>
 
 <div class="top">
-  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
   <div>
-    <button class="btn" id="btnEN">EN</button>
-    <button class="btn" id="btnZH">中文</button>
-    <button class="btn" id="btnES">ES</button>
+    <button class="btn" id="btnEN" type="button">EN</button>
+    <button class="btn" id="btnZH" type="button">中文</button>
+    <button class="btn" id="btnES" type="button">ES</button>
   </div>
 </div>
 
 <div class="wrap">
 
-  <div class="hero">
-    <h1 id="h1">THE DRIFT PROBLEM</h1>
-    <p id="p1">
-      Systems do not collapse from lack of ambition.
-      They collapse from unmanaged correlation.
-      From semantic drift.
-      From invisible dependency.
-      From claims that outrun constraint.
-    </p>
+  <section class="hero">
+    <div class="heroInner">
+      <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
+      <h1 class="h0" id="h0">THE DRIFT PROBLEM</h1>
+      <p class="lead" id="p0">
+        Systems do not collapse from lack of ambition.
+        They collapse from unmanaged correlation.
+        From semantic drift.
+        From invisible dependency.
+        From claims that outrun constraint.
+      </p>
+      <div class="rule" id="r0">
+        Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.
+      </div>
+    </div>
+  </section>
+
+  <div class="band" id="b1">THE STRUCTURE</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2 id="h1">THE DECLARATION</h2>
+      <p id="p1">
+        We map structure to finite measure.
+        We define admissibility.
+        We separate story from proof.
+        We separate engineering from platform.
+        We enforce calibration authority.
+        We treat change as epoch, not patch.
+      </p>
+      <p class="small" id="s1">
+        Translation: no silent meaning swaps, no “trust me,” no scale without receipts.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="h2">THE PROMISE</h2>
+      <p id="p2">
+        If a measure exists, it can be found here.
+        If drift exists, it can be bounded.
+        If scale exists, it can be stabilized.
+      </p>
+      <p class="small" id="s2">
+        This is a routing system: every surface leads to a measurable layer.
+      </p>
+    </div>
   </div>
 
-  <div class="block">
-    <h2 id="h2">THE DECLARATION</h2>
-    <p id="p2">
-      We map structure to finite measure.
-      We define admissibility.
-      We separate story from proof.
-      We separate engineering from platform.
-      We enforce calibration authority.
-      We treat change as epoch, not patch.
-    </p>
-  </div>
+  <div class="band" id="b2">NEXT</div>
 
-  <div class="block">
-    <h2 id="h3">THE PROMISE</h2>
+  <div class="card">
+    <h2 id="h3">CHOOSE YOUR ENTRY</h2>
     <p id="p3">
-      If a measure exists,
-      it can be found here.
-      If drift exists,
-      it can be bounded.
-      If scale exists,
-      it can be stabilized.
+      Prelude is the declaration.
+      Index is the compass.
+      Door is the bridge.
+      Home is the launchpad.
     </p>
+    <div class="ctaRow">
+      <a class="btn" id="goIndex" href="/index.html">OPEN INDEX</a>
+      <a class="btn" id="goDoor" href="/door/">OPEN DOOR</a>
+      <a class="btn" id="goHome" href="/home/">OPEN HOME</a>
+    </div>
   </div>
 
 </div>
 
 <script>
 (function(){
-  function setLang(next){
-    localStorage.setItem("gd_lang",next);
-    window.location.href=location.pathname+"?lang="+next;
+  // canonical state carry
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+
+  if(!["en","zh","es"].includes(lang)) lang="en";
+  if(!["formal","informal"].includes(style)) style="formal";
+  if(time==="trajectory") time="post";
+  if(!["origin","now","post"].includes(time)) time="now";
+  if(!["explore","learn"].includes(depth)) depth="explore";
+
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
+  // wire routes with state
+  document.getElementById("btnIndex").href="/index.html"+q();
+  document.getElementById("goIndex").href="/index.html"+q();
+  document.getElementById("goDoor").href="/door/"+q();
+  document.getElementById("goHome").href="/home/"+q();
+
+  // language
+  function setLang(next){
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href=location.pathname+q({lang:lang});
+  }
   document.getElementById("btnEN").onclick=function(){setLang("en")};
   document.getElementById("btnZH").onclick=function(){setLang("zh")};
   document.getElementById("btnES").onclick=function(){setLang("es")};
 
-  var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-
+  // i18n
   if(lang==="zh"){
-    document.getElementById("h1").textContent="漂移问题";
-    document.getElementById("p1").textContent="系统的崩溃并非源于缺乏雄心，而是源于未被管理的相关性、语义漂移、隐形依赖，以及主张跑在约束之前。";
-    document.getElementById("h2").textContent="宣言";
-    document.getElementById("p2").textContent="我们把结构映射到有限度量。我们定义可采信。我们分离叙事与证明。我们分离工程与平台。我们执行校准权威。我们把变更视为纪元，而非补丁。";
-    document.getElementById("h3").textContent="承诺";
-    document.getElementById("p3").textContent="若度量存在，答案可在此找到。若漂移存在，可被约束。若规模存在，可被稳定。";
-  }
-
-  if(lang==="es"){
-    document.getElementById("h1").textContent="EL PROBLEMA DE DERIVA";
-    document.getElementById("p1").textContent="Los sistemas no colapsan por falta de ambición, sino por correlación no gestionada, deriva semántica, dependencia invisible y afirmaciones que superan la restricción.";
-    document.getElementById("h2").textContent="LA DECLARACIÓN";
-    document.getElementById("p2").textContent="Mapeamos estructura a medida finita. Definimos admisibilidad. Separamos historia de prueba. Separamos ingeniería de plataforma. Aplicamos autoridad de calibración. Tratamos el cambio como época, no parche.";
-    document.getElementById("h3").textContent="LA PROMESA";
-    document.getElementById("p3").textContent="Si existe una medida, aquí puede encontrarse. Si existe deriva, puede acotarse. Si existe escala, puede estabilizarse.";
+    document.getElementById("h0").textContent="漂移问题";
+    document.getElementById("p0").textContent="系统的崩溃并非源于缺乏雄心，而是源于未被管理的相关性、语义漂移、隐形依赖，以及主张跑在约束之前。";
+    document.getElementById("r0").textContent="规则：主张必须有支撑。支撑必须可验证。导航保留 gd_* 状态。";
+    document.getElementById("b1").textContent="结构层";
+    document.getElementById("h1").textContent="宣言";
+    document.getElementById("p1").textContent="我们把结构映射到有限度量。我们定义可采信。我们分离叙事与证明。我们分离工程与平台。我们执行校准权威。我们把变更视为纪元，而非补丁。";
+    document.getElementById("s1").textContent="翻译：不允许静默换义、不允许“信我”、不允许无收据规模化。";
+    document.getElementById("h2").textContent="承诺";
+    document.getElementById("p2").textContent="若度量存在，答案可在此找到。若漂移存在，可被约束。若规模存在，可被稳定。";
+    document.getElementById("s2").textContent="这是路由系统：每个执行面都通向可测层。";
+    document.getElementById("b2").textContent="下一步";
+    document.getElementById("h3").textContent="选择入口";
+    document.getElementById("p3").textContent="Prelude 是宣言；Index 是罗盘；Door 是桥；Home 是发射台。";
+    document.getElementById("goIndex").textContent="打开 INDEX";
+    document.getElementById("goDoor").textContent="打开 DOOR";
+    document.getElementById("goHome").textContent="打开 HOME";
+  }else if(lang==="es"){
+    document.getElementById("h0").textContent="EL PROBLEMA DE DERIVA";
+    document.getElementById("p0").textContent="Los sistemas no colapsan por falta de ambición, sino por correlación no gestionada, deriva semántica, dependencia invisible y afirmaciones que superan la restricción.";
+    document.getElementById("r0").textContent="Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva el estado gd_*.";
+    document.getElementById("b1").textContent="LA ESTRUCTURA";
+    document.getElementById("h1").textContent="LA DECLARACIÓN";
+    document.getElementById("p1").textContent="Mapeamos estructura a medida finita. Definimos admisibilidad. Separamos historia de prueba. Separamos ingeniería de plataforma. Aplicamos autoridad de calibración. Tratamos el cambio como época, no parche.";
+    document.getElementById("s1").textContent="Traducción: sin cambios silenciosos, sin ‘créeme’, sin escalar sin recibos.";
+    document.getElementById("h2").textContent="LA PROMESA";
+    document.getElementById("p2").textContent="Si existe una medida, aquí puede encontrarse. Si existe deriva, puede acotarse. Si existe escala, puede estabilizarse.";
+    document.getElementById("s2").textContent="Esto es ruteo: cada superficie conduce a una capa medible.";
+    document.getElementById("b2").textContent="SIGUIENTE";
+    document.getElementById("h3").textContent="ELIGE TU ENTRADA";
+    document.getElementById("p3").textContent="Prelude es declaración. Index es brújula. Door es puente. Home es lanzadera.";
+    document.getElementById("goIndex").textContent="ABRIR INDEX";
+    document.getElementById("goDoor").textContent="ABRIR DOOR";
+    document.getElementById("goHome").textContent="ABRIR HOME";
   }
 })();
 </script>

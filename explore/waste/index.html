@@ -1,15 +1,11 @@
 <!-- TNT — /explore/waste/index.html
-     EXPLORE · WASTE (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES) · SINGLE-OPEN ACCORDION · NO MODALS
-     PURPOSE:
-       - Express the real waste problem (blind disposal, lost value, carbon loss)
-       - Express the posture (molecular inventory + routing, not “burn it”)
-       - Route cleanly to Vision (SHIMMER / Urban Resource OS) + Laws/Gauges + Energy/Waste surfaces
-     RULES:
-       - No lenses here (orientation layer)
-       - Monument typography, dense via accordion
-       - No html/body background styling
+     EXPLORE · WASTE (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES)
+     STYLE:
+       - Monument density
+       - Single-open accordion
+       - No lenses (orientation layer)
        - No modal traps
-       - Canon state carry (lang/style/time/depth)
+       - State carry
 -->
 
 <!doctype html>
@@ -32,56 +28,53 @@ body::before,body::after{pointer-events:none!important}
   --dockH:92px;
   --inkA:rgba(10,18,30,.94);
   --inkB:rgba(5,9,14,.98);
+
   --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
-  --redA:rgba(255,70,70,.16);
+
+  /* waste = red signal */
+  --sigR:rgba(255,70,70,.14);
+
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
   --mut:rgba(255,255,255,.80);
   --txt:rgba(255,255,255,.92);
 }
 
 .top{
   position:fixed;left:16px;right:16px;top:16px;
-  z-index:240;
-  display:flex;justify-content:space-between;gap:12px;
+  z-index:240;display:flex;justify-content:space-between;
   pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;white-space:nowrap;pointer-events:auto;
-}
+.top .left,.top .right{display:flex;gap:10px;white-space:nowrap;pointer-events:auto}
 
 .page{
   width:min(1200px,94vw);
   margin:0 auto;
   padding:86px 0 calc(var(--dockH)+18px);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+  display:flex;flex-direction:column;gap:14px;
 }
 
 .hero{
   border:1px solid var(--stroke);
   border-radius:28px;
-  padding:20px 22px;
+  padding:22px;
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 80% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 50% 110%, var(--redA), transparent 62%),
+    radial-gradient(circle at 55% 110%, var(--sigR), transparent 62%),
     linear-gradient(160deg,var(--inkA),var(--inkB));
   box-shadow:0 44px 160px rgba(0,0,0,.68);
 }
 
 .k{margin:0 0 10px;font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.72}
-.h1{margin:0 0 12px;font-size:40px;font-weight:950;line-height:1.08}
-.lede{margin:0;font-size:18px;line-height:1.70;color:var(--txt)}
-.rule{margin-top:14px;border-radius:18px;border:1px solid var(--stroke2);background:rgba(0,0,0,.16);padding:12px 14px;font-size:13.5px;color:var(--mut)}
+.h1{margin:0 0 14px;font-size:40px;font-weight:950;line-height:1.08}
+.lede{margin:0;font-size:18px;line-height:1.7;color:var(--txt)}
+.rule{margin-top:14px;border:1px solid var(--stroke);border-radius:18px;padding:12px 14px;background:rgba(0,0,0,.16);font-size:13.5px;color:var(--mut)}
 
-.band{padding:12px 14px;border-radius:18px;border:1px solid var(--stroke2);background:rgba(0,0,0,.14);font-weight:950}
+.band{padding:12px 14px;border-radius:18px;border:1px solid var(--stroke);background:rgba(0,0,0,.14);font-weight:950}
 
 .accordion{display:flex;flex-direction:column;gap:12px}
-
-.panel{border:1px solid rgba(255,255,255,.10);border-radius:24px;overflow:hidden;background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));}
+.panel{border:1px solid var(--stroke);border-radius:24px;background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));overflow:hidden}
 .pHead{padding:18px;display:flex;justify-content:space-between;cursor:pointer}
 .pTitle{font-size:20px;font-weight:950}
 .pSub{margin-top:8px;font-size:14px;opacity:.82}
@@ -96,7 +89,16 @@ body::before,body::after{pointer-events:none!important}
 
 .actions{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
 
-.dock{position:fixed;left:50%;bottom:max(10px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:220;width:min(1000px,94vw);padding:10px;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.28);display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;width:min(1000px,94vw);
+  padding:10px;border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
 .dock .btn{width:100%;padding:12px;border-radius:999px}
 
 @media(max-width:520px){:root{--dockH:104px}.dock{grid-template-columns:repeat(3,1fr)}}
@@ -122,14 +124,14 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="hero">
     <p class="k" id="hk">EXPLORE · WASTE</p>
-    <h1 class="h1" id="ht">WHY DO WE DESTROY VALUE ON PURPOSE?</h1>
+    <h1 class="h1" id="ht">WHAT IF “TRASH” IS JUST MISROUTED VALUE?</h1>
     <p class="lede" id="hs"></p>
     <div class="rule" id="rule"></div>
   </div>
 
   <div class="band" id="band"></div>
 
-  <div class="accordion" id="acc">
+  <div class="accordion">
 
     <div class="panel">
       <div class="pHead" role="button" tabindex="0">
@@ -145,7 +147,7 @@ body::before,body::after{pointer-events:none!important}
         <ul class="ul" id="b1ul"></ul>
         <div class="actions">
           <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
-          <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+          <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
         </div>
       </div>
     </div>
@@ -163,9 +165,27 @@ body::before,body::after{pointer-events:none!important}
         <p class="p" id="b2b"></p>
         <ul class="ul" id="b2ul"></ul>
         <div class="actions">
-          <a class="btn" id="goShimmer" href="/explore/frontier/vision/">OPEN SHIMMER</a>
-          <a class="btn" id="goUros" href="/explore/frontier/vision/urban-resource-os/">OPEN URBAN RESOURCE OS</a>
+          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
           <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="pHead" role="button" tabindex="0">
+        <div>
+          <div class="pTitle" id="t3"></div>
+          <div class="pSub" id="s3"></div>
+        </div>
+        <div class="pChev">▸</div>
+      </div>
+      <div class="pBody">
+        <p class="p" id="b3a"></p>
+        <p class="p" id="b3b"></p>
+        <ul class="ul" id="b3ul"></ul>
+        <div class="actions">
+          <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
+          <a class="btn" id="goDotGrid" href="/products/dot-grid/">OPEN DOT.GRID</a>
         </div>
       </div>
     </div>
@@ -190,12 +210,7 @@ body::before,body::after{pointer-events:none!important}
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(){ return "?lang="+encodeURIComponent(lang); }
-
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
+  function wire(id,path){var el=document.getElementById(id);if(el)el.href=path+q();}
   wire("btnBack","/explore/");
   wire("btnDoor","/door/");
   wire("btnExit","/index.html");
@@ -203,146 +218,133 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
-
   wire("goProducts","/products/");
-  wire("goGauges","/gauges/");
-  wire("goShimmer","/explore/frontier/vision/");
-  wire("goUros","/explore/frontier/vision/urban-resource-os/");
+  wire("goExplore","/explore/");
+  wire("goVision","/explore/frontier/vision/");
   wire("goLaws","/laws/");
+  wire("goGauges","/gauges/");
+  wire("goDotGrid","/products/dot-grid/");
 
   var COPY={
     en:{
       hk:"EXPLORE · WASTE",
-      ht:"WHY DO WE DESTROY VALUE ON PURPOSE?",
-      hs:"If waste is a resource in the wrong place, why do we treat it like a thing to erase? Why do we burn mixed value, bury future feedstock, and call it “management”?",
-      rule:"Boundary: Orientation surface. It frames the waste problem and posture. Proof lives in Laws and Gauges.",
+      ht:"WHAT IF “TRASH” IS JUST MISROUTED VALUE?",
+      hs:"Most waste systems destroy value by mixing everything and burning it down. The opportunity is routing: classify precisely, separate early, and convert each fraction into its highest-value pathway.",
+      rule:"Boundary: Orientation surface. Frames waste-to-value posture. Measurement and enforcement live in Gauges and Laws.",
       band:"WASTE SYSTEM MAP",
-      t1:"The real waste problem",
-      s1:"Blind disposal, lost materials, carbon loss.",
-      b1a:"Most waste systems are entropy-maximizers: we mix streams, then we destroy the mix to make it disappear. That destroys material value and forces carbon into the atmosphere.",
-      b1b:"The failure is not effort. The failure is routing: we don’t classify precisely, we don’t segment consistently, and we don’t optimize across outputs.",
+      t1:"The real problem",
+      s1:"Mixed streams create mixed outcomes: low recovery and high emissions.",
+      b1a:"Landfills and incineration are not ‘solutions’—they are entropy accelerators. When streams mix, recovery becomes expensive and the system defaults to burning value.",
+      b1b:"The biggest hidden cost is not disposal. It is destroyed optionality: plastics that could be feedstock, organics that could be methane, minerals that could be aggregate, metals that should never be lost.",
       b1ul:[
-        "Mixed inputs → forced low-value pathways.",
-        "No inventory map → no intelligent routing.",
-        "Energy-only thinking → material loss.",
-        "Carbon becomes a byproduct instead of a controlled output."
+        "Mixed inputs → low-quality outputs.",
+        "Combustion → carbon loss.",
+        "Contamination → recovery collapse.",
+        "Policy fights → stalled deployment."
       ],
       t2:"The posture: molecular routing",
       s2:"Classify → segment → route → convert → retain.",
-      b2a:"The solution posture is not a single machine. It’s a routing system: different materials go to different pathways, in real time, under conservation limits and market constraints.",
-      b2b:"That’s SHIMMER: a hybrid molecular refinery concept where disposal becomes routing, and routing becomes a measurable operating system.",
+      b2a:"The winning move is segmentation before conversion. If you can see the stream, you can route the stream.",
+      b2b:"SHIMMER formalizes this: a routing matrix chooses pathways in real time based on thermodynamics, market value, and carbon constraint—without pretending physics can be cheated.",
       b2ul:[
-        "Start with visibility (what is in the stream).",
-        "Segregate by physics (not vibes).",
-        "Route to multi-output value (energy + materials + carbon retention).",
-        "Keep claims support-bounded: measured outputs only."
+        "Mechanical recovery where feasible.",
+        "Pyrolysis / digestion where value is highest.",
+        "Gasification / refinement where residue remains.",
+        "Carbon retention where emissions would dominate."
+      ],
+      t3:"How we keep claims support-bounded",
+      s3:"Receipts first, outputs second, claims last.",
+      b3a:"We don’t sell a miracle. We build a measurement-first routing system. If something can’t be verified, it stays labeled as concept or roadmap.",
+      b3b:"Dot.Grid + Gauges make the system observable: what moved, what clustered, what changed, and where drift is forming. Laws sets what you’re allowed to conclude from those signals.",
+      b3ul:[
+        "No net-positive fusion claims.",
+        "No ‘magic efficiency’ language.",
+        "No causality without measurement rules.",
+        "New epoch on any outcome-affecting change."
       ]
     },
     zh:{
       hk:"探索 · 废弃物",
-      ht:"为什么我们要主动摧毁价值？",
-      hs:"如果废弃物只是“放错位置的资源”，为什么我们要把它当作需要抹掉的东西？为什么混合、焚烧、填埋，却称为“管理”？",
-      rule:"边界：此页为导览。问题与姿态在此说明。证明在法则与量规中。",
+      ht:"如果“垃圾”只是被路由错了的价值呢？",
+      hs:"多数废弃物系统通过混合与燃烧来摧毁价值。机会在路由：精确分类、尽早分离、把每一份物料送入最高价值路径。",
+      rule:"边界：导览层。说明“废弃物→价值”的姿态。测量与执行在量规与法则中。",
       band:"废弃物系统地图",
-      t1:"真正的问题",
-      s1:"盲处置、材料流失、碳流失。",
-      b1a:"多数废弃物系统在做“最大熵处理”：把流混在一起，然后把混合物摧毁来消失。材料价值被毁，碳被迫进入大气。",
-      b1b:"失败不在努力，而在路由：分类不精确、分段不一致、输出优化缺位。",
-      b1ul:["输入混合→被迫走低价值路径。","无库存图→无智能路由。","只看能源→材料损失。","碳变副产物→而非可控输出。"],
-      t2:"姿态：分子路由",
+      t1:"真实问题",
+      s1:"混合输入 → 混合结果：低回收 + 高排放。",
+      b1a:"填埋与焚烧不是“解决”，而是熵加速器。流一混，回收就贵，系统就会默认把价值烧掉。",
+      b1b:"最大隐性成本不是处置费，而是被毁掉的选择权：本可做化工原料的塑料、可产气的有机物、可做骨料的矿物、永不该丢的金属。",
+      b1ul:["混合输入→低质量输出。","燃烧→碳损失。","污染→回收崩塌。","争议→部署停滞。"],
+      t2:"姿态：分子级路由",
       s2:"分类→分段→路由→转化→保留。",
-      b2a:"解法姿态不是一台机器，而是一套路由系统：不同材料走不同路径，实时优化，遵守守恒与市场约束。",
-      b2b:"这就是 SHIMMER：混合分子精炼厂概念，把处置变成路由，把路由变成可测的操作系统。",
-      b2ul:["先可视化（流里有什么）。","按物理分离（不靠感觉）。","多输出优化（能量+材料+碳保留）。","主张必须有支撑边界：只说可测输出。"]
+      b2a:"胜负手是：先分离再转化。看得见流，才能路由流。",
+      b2b:"SHIMMER 将其形式化：路由矩阵按热力学、市场价值与碳约束实时选择路径，不假装能作弊物理。",
+      b2ul:["可行处机械回收。","高价值处热解/消化。","残余处气化/精炼。","排放主导处做碳保留。"],
+      t3:"如何保持“主张有支撑边界”",
+      s3:"先收据，再输出，最后才是主张。",
+      b3a:"我们不卖奇迹，只做测量优先的路由系统。不可核查的内容只能标为概念或路线图。",
+      b3b:"Dot.Grid + 量规让系统可观测：谁在一起动、哪里聚类、哪里变化、漂移如何形成。法则约束你能从这些信号得出什么结论。",
+      b3ul:["不做净增益聚变主张。","不做“魔法效率”措辞。","无测量规则不谈因果。","影响结果的变更必须新纪元。"]
     },
     es:{
       hk:"EXPLORAR · RESIDUOS",
-      ht:"¿POR QUÉ DESTRUIMOS VALOR A PROPÓSITO?",
-      hs:"Si el residuo es un recurso en el lugar equivocado, ¿por qué lo tratamos como algo que hay que borrar?",
-      rule:"Límite: superficie de orientación. Problema y postura aquí. Prueba en Leyes y Medidores.",
+      ht:"¿Y SI ‘BASURA’ ES VALOR MAL RUTEADO?",
+      hs:"Muchos sistemas destruyen valor mezclándolo todo y quemándolo. La oportunidad es el ruteo: clasificar con precisión, separar temprano y convertir cada fracción en su vía de mayor valor.",
+      rule:"Límite: superficie de orientación. Postura residuos→valor. Medición y ejecución en Medidores y Leyes.",
       band:"MAPA SISTEMA RESIDUOS",
       t1:"El problema real",
-      s1:"Disposición ciega, materiales perdidos, carbono perdido.",
-      b1a:"Muchos sistemas maximizan entropía: mezclan flujos y luego destruyen la mezcla para que desaparezca. Eso destruye valor material y empuja carbono a la atmósfera.",
-      b1b:"El fallo no es esfuerzo; es ruteo: mala clasificación, segmentación inconsistente y optimización pobre.",
-      b1ul:["Entradas mezcladas → caminos de bajo valor.","Sin mapa de inventario → sin ruteo inteligente.","Pensar solo en energía → pérdida de materiales.","Carbono como subproducto, no como salida controlada."],
+      s1:"Entradas mezcladas → salidas mezcladas: baja recuperación y más emisiones.",
+      b1a:"Vertederos e incineración no son ‘solución’: aceleran entropía. Mezclas flujos, y el sistema termina quemando valor.",
+      b1b:"El costo oculto no es el descarte, sino la opcionalidad destruida: plásticos que podrían ser feedstock, orgánicos que podrían ser gas, minerales que podrían ser agregados, metales que nunca deberían perderse.",
+      b1ul:["Entradas mezcladas → salidas pobres.","Combustión → pérdida de carbono.","Contaminación → colapso de recuperación.","Conflicto político → despliegue lento."],
       t2:"La postura: ruteo molecular",
       s2:"Clasificar → segmentar → rutear → convertir → retener.",
-      b2a:"La solución no es una sola máquina. Es un sistema de ruteo: cada material va a un camino distinto, en tiempo real, bajo límites de conservación y mercado.",
-      b2b:"Eso es SHIMMER: una refinería molecular híbrida donde ‘disposición’ se vuelve ruteo y el ruteo se vuelve un sistema operativo medible.",
-      b2ul:["Primero visibilidad (qué hay en el flujo).","Segregar por física.","Optimizar multi-salida (energía + materiales + retención de carbono).","Afirmaciones acotadas: solo salidas medidas."]
+      b2a:"La jugada ganadora es segmentar antes de convertir. Si ves el flujo, puedes rutearlo.",
+      b2b:"SHIMMER lo formaliza: una matriz de ruteo elige vías en tiempo real según termodinámica, valor de mercado y restricción de carbono—sin fingir que la física se puede hacer trampa.",
+      b2ul:["Recuperación mecánica donde aplique.","Pirólisis/digestión donde haya valor.","Gasificación/refinamiento para residuo.","Retención de carbono donde domine emisión."],
+      t3:"Cómo mantenemos afirmaciones acotadas",
+      s3:"Recibos primero, salidas después, afirmaciones al final.",
+      b3a:"No vendemos milagros. Construimos un sistema medible. Si no es verificable, queda como concepto o ruta.",
+      b3b:"Dot.Grid + Medidores vuelven el sistema observable. Leyes define qué puedes concluir de esas señales.",
+      b3ul:["Sin ganancia neta de fusión.","Sin lenguaje de ‘eficiencia mágica’.","Sin causalidad sin reglas de medición.","Cambios que afecten resultados → nueva época."]
     }
   };
 
-  function T(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
+  function T(){return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;}
   var P=T();
   function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+  function fillUL(id,arr){var ul=document.getElementById(id);ul.innerHTML="";arr.forEach(function(x){var li=document.createElement("li");li.textContent=x;ul.appendChild(li);});}
 
-  set("hk",P.hk);
-  set("ht",P.ht);
-  set("hs",P.hs);
-  set("rule",P.rule);
-  set("band",P.band);
+  set("hk",P.hk); set("ht",P.ht); set("hs",P.hs);
+  set("rule",P.rule); set("band",P.band);
 
-  set("t1",P.t1);set("s1",P.s1);
-  set("b1a",P.b1a);set("b1b",P.b1b);
-  set("t2",P.t2);set("s2",P.s2);
-  set("b2a",P.b2a);set("b2b",P.b2b);
+  set("t1",P.t1); set("s1",P.s1); set("b1a",P.b1a); set("b1b",P.b1b); fillUL("b1ul",P.b1ul);
+  set("t2",P.t2); set("s2",P.s2); set("b2a",P.b2a); set("b2b",P.b2b); fillUL("b2ul",P.b2ul);
+  set("t3",P.t3); set("s3",P.s3); set("b3a",P.b3a); set("b3b",P.b3b); fillUL("b3ul",P.b3ul);
 
-  function fillUL(id,arr){
-    var ul=document.getElementById(id);
-    ul.innerHTML="";
-    arr.forEach(function(x){
-      var li=document.createElement("li");
-      li.textContent=x;
-      ul.appendChild(li);
-    });
-  }
-  fillUL("b1ul",P.b1ul);
-  fillUL("b2ul",P.b2ul);
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  btnEN.classList.toggle("active", lang==="en");
+  btnZH.classList.toggle("active", lang==="zh");
+  btnES.classList.toggle("active", lang==="es");
+  btnEN.onclick=function(){location.search="?lang=en"};
+  btnZH.onclick=function(){location.search="?lang=zh"};
+  btnES.onclick=function(){location.search="?lang=es"};
 
-  // buttons
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q();
-  }
-  document.getElementById("btnEN").onclick=function(){ setLang("en"); };
-  document.getElementById("btnZH").onclick=function(){ setLang("zh"); };
-  document.getElementById("btnES").onclick=function(){ setLang("es"); };
-
-  // accordion single-open
   var panels=document.querySelectorAll(".panel");
   panels.forEach(function(p){
     var head=p.querySelector(".pHead");
     var chev=p.querySelector(".pChev");
     function toggle(){
       var open=!p.classList.contains("open");
-      panels.forEach(function(x){
-        x.classList.remove("open");
-        x.querySelector(".pChev").textContent="▸";
-      });
-      if(open){
-        p.classList.add("open");
-        chev.textContent="▾";
-      }
+      panels.forEach(function(x){x.classList.remove("open");x.querySelector(".pChev").textContent="▸";});
+      if(open){p.classList.add("open");chev.textContent="▾";}
     }
     head.addEventListener("click",toggle);
-    head.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+    head.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
   });
-
-  if(panels[0]){
-    panels[0].classList.add("open");
-    panels[0].querySelector(".pChev").textContent="▾";
-  }
+  panels[0].classList.add("open");
+  panels[0].querySelector(".pChev").textContent="▾";
 
 })();
 </script>

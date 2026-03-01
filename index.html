@@ -1,15 +1,24 @@
 <!-- TNT — /index.html
-     INDEX · COMPASS (BIGGER TYPE + MORE STRUCTURE + PANEL VARIANCE + LOWER GOLD GLOW)
-     GOALS:
-       - Bigger print without shrinking diamonds.
-       - Add structural sub-layering (Problem / Declaration / Promise) with real contrast vs background.
-       - Keep compass behavior: choose direction (N/E/S/W) + “Selected Direction” card + Enter.
-       - EN/中文/ES language toggle (page-level only).
-       - Canon state carry: lang/style/time/depth (URL + gd_* LS).
+     COMPASS · FRONTIER NAV (NO LENSES) · EN/中文/ES · BIGGER PRINT · MOBILE SAFE
+     ROLE:
+       - This is the Compass (4-way)
+       - Human words first (no internal jargon)
+       - No modals, no overlays
+       - Tap a diamond → banner updates → ENTER HERE jumps
+     ROUTES (LOCKED):
+       NORTH = /laws/      (Structure / Rules)
+       EAST  = /products/  (What you can use)
+       SOUTH = /gauges/    (Measurements)
+       WEST  = /explore/   (Frontier / Vision)
+     TOP:
+       LEFT  = DOOR (/door/) + HOME (/home/)
+       RIGHT = EN / 中文 / ES
+     STATE:
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth preserved on every jump
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
-       - No html/body background styling
-       - Tap-safe (no inline onclick)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns background (no html/body background styling)
+       - Gold glow subtle (no overpower)
 -->
 
 <!doctype html>
@@ -17,7 +26,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · COMPASS</title>
+<title>COMPASS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -25,171 +34,97 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body::before,body::after{pointer-events:none!important}
+body{position:relative;z-index:0}
+body::before,body::after{z-index:0!important;pointer-events:none!important}
+#root{position:relative;z-index:10}
 
-/* ===== TYPE (BIGGER) ===== */
 :root{
-  --dockH:92px;
+  --R:164px;
+  --D:182px;
 
-  --H0:42px;
-  --H1:28px;
-  --P:18px;
-  --P2:15.5px;
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,80,80,.10);
+  --goldSoft:rgba(212,175,55,.22); /* subtle */
 
-  /* Compass geometry */
-  --R:150px;
-  --D:184px;
-
-  /* Visual tokens */
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
-
-  --inkA:rgba(10,14,20,.76);
-  --inkB:rgba(6,9,14,.86);
-
-  --opalA:rgba(210,190,255,.12);
-  --opalB:rgba(120,70,255,.09);
-  --opalC:rgba(255,70,70,.12);
-
-  /* LOWER GOLD GLOW */
-  --gold:rgba(212,175,55,.16);
-  --goldEdge:rgba(212,175,55,.22);
+  --obsA:rgba(12,22,38,.95);
+  --obsB:rgba(6,10,16,.98);
 }
 
-/* ===== TOP ===== */
+/* top */
 .top{
-  position:fixed;top:16px;left:16px;right:16px;
-  display:flex;justify-content:space-between;gap:12px;
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
   z-index:240;
+  pointer-events:none;
 }
-.top .left,.top .right{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center}
+.top .left,.top .right{
+  display:flex;align-items:center;gap:10px;
+  flex-wrap:nowrap;white-space:nowrap;
+  pointer-events:auto;
+}
 .top .btn{white-space:nowrap}
 
-/* ===== PAGE WRAP ===== */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:92px 0 calc(var(--dockH) + 18px);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:10;
-}
-
-/* ===== HERO (slab + inner glass = variance vs field) ===== */
-.hero{
-  border-radius:32px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 20% 20%, var(--opalA), transparent 70%),
-    radial-gradient(circle at 82% 60%, var(--opalC), transparent 70%),
-    linear-gradient(160deg, var(--inkA), var(--inkB));
-  box-shadow:0 46px 160px rgba(0,0,0,.58);
-  padding:22px;
-  position:relative;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:0;
-  background:repeating-conic-gradient(from 0deg, rgba(212,175,55,.05) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.14;
-  pointer-events:none;
-}
-.heroInner{
-  position:relative;
+/* banner */
+.banner{
+  width:min(1040px,94vw);
+  margin:74px auto 10px;
+  padding:18px 18px 16px;
   border-radius:26px;
-  border:1px solid var(--stroke2);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
-  backdrop-filter:blur(12px);
-  padding:22px 22px 18px;
-}
-.k{
-  margin:0 0 8px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.h0{
-  margin:0;
-  font-size:var(--H0);
-  font-weight:950;
-  letter-spacing:1px;
-  line-height:1.06;
-}
-.p0{
-  margin:16px 0 0;
-  font-size:var(--P);
-  line-height:1.85;
-  opacity:.95;
-}
-.rule{
-  margin-top:16px;
-  border-radius:18px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,.06), transparent 58%),
-    linear-gradient(160deg, rgba(12,22,38,.58), rgba(6,10,16,.70));
-  padding:12px 14px;
-  font-size:var(--P2);
-  line-height:1.6;
-  opacity:.92;
+    radial-gradient(circle at 18% 34%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 62%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 62% 110%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(12px);
+  box-shadow:0 34px 120px rgba(0,0,0,.55);
 }
-
-/* ===== SECTION BANDS ===== */
-.band{
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  padding:10px 12px;
+.bk{
+  margin:0 0 8px;
+  font-size:12px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.80;
+}
+.bt{
+  margin:0;
   font-weight:950;
-  letter-spacing:.2px;
-  opacity:.92;
+  font-size:30px; /* bigger */
+  letter-spacing:1px;
+  line-height:1.12;
 }
-
-/* ===== STRUCTURE CARDS ===== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+.bp{
+  margin:12px 0 0;
+  font-size:15px; /* bigger */
+  opacity:.90;
+  line-height:1.55;
+  max-width:980px;
+}
+.brow{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
   gap:12px;
+  flex-wrap:wrap;
 }
-@media (max-width:980px){.grid{grid-template-columns:1fr}}
-.card{
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
-    linear-gradient(160deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 18px 70px rgba(0,0,0,.55);
-  padding:18px;
-  position:relative;
-  overflow:hidden;
+.bcta{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
 }
-.card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--gold) 50%, transparent 100%);
-  opacity:.40; /* lowered */
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.card h2{margin:0 0 10px;font-size:var(--H1);font-weight:950;letter-spacing:.3px}
-.card p{margin:0;font-size:var(--P);line-height:1.8;opacity:.90}
+.bcta .btn{border-radius:999px;padding:12px 16px}
 
-/* ===== COMPASS STAGE ===== */
+/* stage */
 .stage{
   position:relative;
-  width:min(720px,94vw);
-  height:min(720px,78vh);
-  margin:8px auto 0;
+  width:min(760px,94vw);
+  height:min(760px, 64vh);
+  margin:10px auto 18px;
+  z-index:40;
 }
+
+/* outer frame */
 .outer{
   position:absolute;left:50%;top:50%;
   width:min(680px,92vw);height:min(680px,92vw);
@@ -197,238 +132,243 @@ body::before,body::after{pointer-events:none!important}
   border-radius:60px;
   opacity:.42;
   pointer-events:none;
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.06), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(255,70,70,.10), transparent 60%),
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.07), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.10), transparent 60%),
     linear-gradient(160deg, rgba(14,24,40,.34) 0%, rgba(7,11,18,.52) 70%);
-  box-shadow:0 90px 260px rgba(0,0,0,.40);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.42),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -50px 90px rgba(0,0,0,.45);
 }
 
-/* Diamonds */
+/* glossy diamond */
 .d{
   width:var(--D);height:var(--D);
   position:absolute;left:50%;top:50%;
-  transform-origin:center;border-radius:28px;
-  cursor:pointer;pointer-events:auto;
-  -webkit-tap-highlight-color:transparent;
+  transform-origin:center;
+  border-radius:28px;
+  cursor:pointer;
+  pointer-events:auto;
   touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
   overflow:hidden;
+
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.50), transparent 45%),
-    radial-gradient(circle at 70% 78%, rgba(255,70,70,.16), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
-  border:1px solid rgba(255,255,255,.14);
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.50), transparent 46%),
+    radial-gradient(circle at 78% 30%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 62% 84%, var(--opalC), transparent 72%),
+    linear-gradient(160deg, var(--obsA), var(--obsB));
+
+  border:1px solid rgba(255,255,255,.16);
   box-shadow:
-    0 38px 120px rgba(0,0,0,.78),
-    0 0 18px rgba(212,175,55,.14), /* reduced */
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -42px 78px rgba(0,0,0,.72);
-  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+    0 38px 120px rgba(0,0,0,.85),
+    0 0 18px rgba(212,175,55,.12), /* subtle */
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -42px 78px rgba(0,0,0,.78);
+
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .d::before{
-  content:"";position:absolute;inset:0;border-radius:28px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldEdge) 50%, transparent 100%);
-  opacity:.45; /* reduced */
+  content:"";
+  position:absolute;inset:0;border-radius:28px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.55;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
   pointer-events:none;
 }
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.9;
+}
 .d:hover{
-  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(1.02);
-  border-color:rgba(212,175,55,.26);
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(1.02);
+  border-color:rgba(212,175,55,.28);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 22px rgba(212,175,55,.16),
+    inset 0 2px 0 rgba(255,255,255,.26),
+    inset 0 -46px 86px rgba(0,0,0,.84);
+}
+.d:active{
+  transform:translate(-50%,-50%) translate(var(--tx), var(--ty)) rotate(45deg) scale(.99);
 }
 .d.active{
-  border-color:rgba(212,175,55,.42);
+  border-color:rgba(212,175,55,.55);
   box-shadow:
-    0 44px 140px rgba(0,0,0,.86),
-    0 0 26px rgba(255,70,70,.12),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -46px 86px rgba(0,0,0,.80);
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 34px rgba(212,175,55,.22),
+    inset 0 2px 0 rgba(255,255,255,.26),
+    inset 0 -46px 86px rgba(0,0,0,.84);
 }
 
-.dN{--tx:0px;--ty:calc(var(--R)*-1);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
-.dE{--tx:var(--R);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
-.dS{--tx:0px;--ty:var(--R);transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
-.dW{--tx:calc(var(--R)*-1);--ty:0px;transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg)}
+/* placement */
+.dN{ --tx:0px; --ty:calc(var(--R) * -1); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
+.dE{ --tx:var(--R); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
+.dS{ --tx:0px; --ty:var(--R); transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
+.dW{ --tx:calc(var(--R) * -1); --ty:0px; transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg); }
 
-.in{
-  width:100%;height:100%;
-  transform:rotate(-45deg);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+.inner{
+  transform:rotate(-45deg) translateY(-2px);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  padding:16px;
+  padding:14px;
   gap:10px;
   pointer-events:none;
   user-select:none;
 }
+.dir{
+  font-size:12px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.82;
+}
 .lab{
   font-weight:950;
-  font-size:20px;          /* bigger */
-  letter-spacing:.9px;
+  font-size:20px; /* bigger */
+  letter-spacing:.6px;
 }
 .sub{
-  font-size:14.5px;        /* bigger */
+  font-size:13.5px; /* bigger */
   opacity:.86;
-  line-height:1.35;
+  line-height:1.3;
   max-width:18em;
 }
 
-/* Selected direction card */
-.sel{
-  width:min(980px,94vw);
-  margin:8px auto 0;
-  border-radius:26px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.06), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalC), transparent 66%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
-  backdrop-filter:blur(12px);
-  box-shadow:0 30px 120px rgba(0,0,0,.52);
-  padding:18px;
+/* core */
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:60px;height:60px;border-radius:18px;
+  background:rgba(0,0,0,.18);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 44px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  pointer-events:none;
+  opacity:.9;
+  font-weight:900;
 }
-.selK{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78}
-.selT{margin:0;font-size:34px;font-weight:950;letter-spacing:1px}
-.selP{margin:12px 0 0;font-size:var(--P);line-height:1.8;opacity:.92;max-width:70ch}
-.selAct{margin-top:14px;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-.selAct .btn{padding:12px 16px;border-radius:999px;white-space:nowrap}
 
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
+/* footer */
+.footer{
   width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  margin:8px auto 34px;
+  text-align:center;
+  font-size:13.5px;
+  opacity:.80;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:106px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .selT{font-size:30px}
+.sig{margin-top:6px;font-size:11px;letter-spacing:3px;opacity:.65}
+
+@media (max-width:560px){
+  :root{ --R:148px; --D:170px; }
+  .bt{font-size:28px}
+}
+@media (max-width:420px){
+  :root{ --R:140px; --D:164px; }
 }
 </style>
 </head>
 
 <body>
+<div id="root">
 
-<div class="top">
-  <div class="left">
-    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-    <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-    <a class="btn" id="btnHome" href="/home/">HOME</a>
-  </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
-  </div>
-</div>
-
-<div class="page">
-
-  <section class="hero" aria-label="Index Hero">
-    <div class="heroInner">
-      <p class="k" id="k0">DIAMOND GATE BRIDGE</p>
-      <h1 class="h0" id="h0">INDEX · COMPASS</h1>
-      <p class="p0" id="p0">This is a structural system. Choose your direction. Then enter.</p>
-      <div class="rule" id="r0">Rule: Claim must be supported. Support must be verifiable. Navigation preserves gd_* state.</div>
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnHome" href="/home/">HOME</a>
     </div>
-  </section>
-
-  <div class="band" id="bandA">THE PROBLEM</div>
-  <div class="grid">
-    <div class="card">
-      <h2 id="paT">DRIFT</h2>
-      <p id="paP">Systems collapse from unmanaged correlation, semantic drift, invisible dependency, and claims that outrun constraint.</p>
-    </div>
-    <div class="card">
-      <h2 id="pbT">DECLARATION</h2>
-      <p id="pbP">We map structure to finite measure, define admissibility, and treat change as epoch—so meaning stays stable under scale.</p>
-    </div>
-    <div class="card">
-      <h2 id="pcT">PROMISE</h2>
-      <p id="pcP">If a measure exists, it can be found here. If drift exists, it can be bounded. If scale exists, it can be stabilized.</p>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
     </div>
   </div>
 
-  <div class="band" id="bandB">CHOOSE A DIRECTION</div>
+  <div class="banner" aria-label="Compass banner">
+    <div class="bk" id="bk">COMPASS</div>
+    <div class="brow">
+      <div>
+        <h1 class="bt" id="bt">CHOOSE A DIRECTION</h1>
+        <p class="bp" id="bp">Tap a diamond. Read the banner. Then enter.</p>
+      </div>
+      <div class="bcta">
+        <a class="btn" id="btnEnterHere" href="#">ENTER HERE</a>
+      </div>
+    </div>
+  </div>
 
   <div class="stage" aria-label="Compass">
-    <div class="outer"></div>
+    <div class="outer" aria-hidden="true"></div>
 
-    <div class="d dN" id="dN" role="button" tabindex="0" aria-label="North">
-      <div class="in">
-        <div class="lab" id="nLab">NORTH</div>
-        <div class="sub" id="nSub">Facts · constraints · definitions</div>
+    <div class="d dN" id="dNorth" role="button" tabindex="0" aria-label="North">
+      <div class="inner">
+        <div class="dir" id="nDir">NORTH</div>
+        <div class="lab" id="nLab">STRUCTURE</div>
+        <div class="sub" id="nSub">Rules that keep big ideas stable.</div>
       </div>
     </div>
 
-    <div class="d dE" id="dE" role="button" tabindex="0" aria-label="East">
-      <div class="in">
-        <div class="lab" id="eLab">EAST</div>
-        <div class="sub" id="eSub">Operators · action · execution</div>
+    <div class="d dE" id="dEast" role="button" tabindex="0" aria-label="East">
+      <div class="inner">
+        <div class="dir" id="eDir">EAST</div>
+        <div class="lab" id="eLab">USE</div>
+        <div class="sub" id="eSub">Products and surfaces you can deploy.</div>
       </div>
     </div>
 
-    <div class="d dS" id="dS" role="button" tabindex="0" aria-label="South">
-      <div class="in">
-        <div class="lab" id="sLab">SOUTH</div>
-        <div class="sub" id="sSub">Traversal · direction · movement</div>
+    <div class="d dS" id="dSouth" role="button" tabindex="0" aria-label="South">
+      <div class="inner">
+        <div class="dir" id="sDir">SOUTH</div>
+        <div class="lab" id="sLab">MEASURE</div>
+        <div class="sub" id="sSub">Signals, dashboards, live outputs.</div>
       </div>
     </div>
 
-    <div class="d dW" id="dW" role="button" tabindex="0" aria-label="West">
-      <div class="in">
-        <div class="lab" id="wLab">WEST</div>
-        <div class="sub" id="wSub">Integration · synthesis · merge safety</div>
+    <div class="d dW" id="dWest" role="button" tabindex="0" aria-label="West">
+      <div class="inner">
+        <div class="dir" id="wDir">WEST</div>
+        <div class="lab" id="wLab">FRONTIER</div>
+        <div class="sub" id="wSub">Vision shells and future builds.</div>
       </div>
     </div>
+
+    <div class="core">◆</div>
   </div>
 
-  <section class="sel" aria-label="Selected Direction">
-    <p class="selK" id="selK">SELECTED DIRECTION</p>
-    <h2 class="selT" id="selT">NORTH</h2>
-    <p class="selP" id="selP">Start with what can be checked: constraints, definitions, and admissibility boundaries.</p>
-    <div class="selAct">
-      <a class="btn" id="btnEnter" href="/home/">ENTER HERE</a>
-    </div>
-  </section>
+  <div class="footer">
+    <span id="ft">Big ideas live here — but only what holds gets to scale.</span>
+    <div class="sig">DIAMONDGATEBRIDGE.COM</div>
+  </div>
 
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
 
 <script>
 (function(){
-  // ===== canonical state =====
+  // ----- state -----
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(!["en","zh","es"].includes(lang)) lang="en";
-  if(!["formal","informal"].includes(style)) style="formal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
-  if(!["origin","now","post"].includes(time)) time="now";
-  if(!["explore","learn"].includes(depth)) depth="explore";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -444,125 +384,127 @@ body::before,body::after{pointer-events:none!important}
     var S=(over&&over.style)?over.style:style;
     var T=(over&&over.time)?over.time:time;
     var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+    return "?lang="+encodeURIComponent(L)+
+           "&style="+encodeURIComponent(S)+
+           "&time="+encodeURIComponent(T)+
+           "&depth="+encodeURIComponent(D);
   }
 
-  // wire nav state
+  // top links
   document.getElementById("btnDoor").href="/door/"+q();
-  document.getElementById("btnPrelude").href="/prelude/"+q();
   document.getElementById("btnHome").href="/home/"+q();
-  document.getElementById("dockDoor").href="/door/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
-  document.getElementById("btnEnter").href="/home/"+q();
 
-  // language toggle reload same path
-  function setLang(next){
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href=location.pathname+q({lang:lang});
+  // language buttons (reload same path)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
   }
-  document.getElementById("btnEN").onclick=function(){setLang("en")};
-  document.getElementById("btnZH").onclick=function(){setLang("zh")};
-  document.getElementById("btnES").onclick=function(){setLang("es")};
+  paintLang();
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+  btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // direction selection
-  var selected="N";
-  var map={
-    N:{t:{en:"NORTH",zh:"北",es:"NORTE"}, p:{
-      en:"Start with what can be checked: constraints, definitions, and admissibility boundaries.",
-      zh:"从可核查开始：约束、定义与可采信边界。",
-      es:"Empieza con lo verificable: restricciones, definiciones y límites de admisibilidad."
-    }},
-    E:{t:{en:"EAST",zh:"东",es:"ESTE"}, p:{
-      en:"Start with operator geometry: what you do, how you move, and what counts as a valid step.",
-      zh:"从操作几何开始：做什么、怎么走、什么算有效一步。",
-      es:"Empieza con geometría del operador: qué haces, cómo te mueves y qué cuenta como paso válido."
-    }},
-    S:{t:{en:"SOUTH",zh:"南",es:"SUR"}, p:{
-      en:"Start with traversal: how direction is chosen, committed, and continued under pressure.",
-      zh:"从遍历开始：方向如何选择、承诺、并在压力下持续。",
-      es:"Empieza con recorrido: cómo se elige dirección, se compromete y se continúa bajo presión."
-    }},
-    W:{t:{en:"WEST",zh:"西",es:"OESTE"}, p:{
-      en:"Start with integration: how merges stay coherent, and how failures stay contained.",
-      zh:"从整合开始：合并如何保持一致，失败如何被隔离。",
-      es:"Empieza con integración: cómo las fusiones permanecen coherentes y cómo los fallos se contienen."
-    }}
+  // routes
+  var ROUTE = {
+    north:"/laws/",
+    east:"/products/",
+    south:"/gauges/",
+    west:"/explore/"
   };
 
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
+  var bt=document.getElementById("bt");
+  var bp=document.getElementById("bp");
+  var enterHere=document.getElementById("btnEnterHere");
 
-  function setActive(k){
-    selected=k;
-    ["dN","dE","dS","dW"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
-    document.getElementById("d"+k).classList.add("active");
-    document.getElementById("selT").textContent=pick(map[k].t);
-    document.getElementById("selP").textContent=pick(map[k].p);
+  var dN=document.getElementById("dNorth");
+  var dE=document.getElementById("dEast");
+  var dS=document.getElementById("dSouth");
+  var dW=document.getElementById("dWest");
+
+  function clearActive(){
+    dN.classList.remove("active");
+    dE.classList.remove("active");
+    dS.classList.remove("active");
+    dW.classList.remove("active");
   }
 
-  function bind(id,k){
-    var el=document.getElementById(id);
-    function act(){ setActive(k); }
+  function setBanner(key){
+    clearActive();
+    var title="", desc="", href="#";
+
+    if(lang==="zh"){
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · 结构"; desc="让大想法能承压的规则与边界。"; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · 可用内容"; desc="你可以部署的产品与执行面。"; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · 测量"; desc="信号、仪表盘与输出。"; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · 前沿"; desc="愿景与未来构建（有壳也有路由）。"; href=ROUTE.west; }
+      enterHere.textContent="进入这里";
+    }else if(lang==="es"){
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · ESTRUCTURA"; desc="Reglas y límites que hacen estables las ideas grandes."; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · USAR"; desc="Productos y superficies que puedes desplegar."; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEDIR"; desc="Señales, paneles y salidas."; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · FRONTERA"; desc="Visión y construcciones futuras (con rutas limpias)."; href=ROUTE.west; }
+      enterHere.textContent="ENTRAR AQUÍ";
+    }else{
+      if(key==="north"){ dN.classList.add("active"); title="NORTH · STRUCTURE"; desc="Rules and boundaries that let big ideas hold under pressure."; href=ROUTE.north; }
+      if(key==="east"){  dE.classList.add("active"); title="EAST · USE"; desc="Products and surfaces you can deploy."; href=ROUTE.east; }
+      if(key==="south"){ dS.classList.add("active"); title="SOUTH · MEASURE"; desc="Signals, dashboards, and live outputs."; href=ROUTE.south; }
+      if(key==="west"){  dW.classList.add("active"); title="WEST · FRONTIER"; desc="Vision shells and future builds (with clean routing)."; href=ROUTE.west; }
+      enterHere.textContent="ENTER HERE";
+    }
+
+    bt.textContent=title;
+    bp.textContent=desc;
+    enterHere.href=href + q();
+  }
+
+  function bind(el, key){
+    function act(){ setBanner(key); }
     el.addEventListener("click", act);
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
   }
-  bind("dN","N"); bind("dE","E"); bind("dS","S"); bind("dW","W");
-  setActive("N");
 
-  // i18n (top + bands + direction subs)
+  bind(dN,"north");
+  bind(dE,"east");
+  bind(dS,"south");
+  bind(dW,"west");
+
+  // static i18n labels
   if(lang==="zh"){
-    document.getElementById("h0").textContent="索引 · 罗盘";
-    document.getElementById("p0").textContent="这是结构系统。选择方向，然后进入。";
-    document.getElementById("r0").textContent="规则：主张必须有支撑。支撑必须可验证。导航保留 gd_* 状态。";
-    document.getElementById("bandA").textContent="问题 · 宣言 · 承诺";
-    document.getElementById("paT").textContent="漂移";
-    document.getElementById("paP").textContent="系统崩溃源于未管理的相关性、语义漂移、隐形依赖，以及主张跑在约束之前。";
-    document.getElementById("pbT").textContent="宣言";
-    document.getElementById("pbP").textContent="我们把结构映射到有限度量，定义可采信，把变更当纪元——让含义在规模下稳定。";
-    document.getElementById("pcT").textContent="承诺";
-    document.getElementById("pcP").textContent="若度量存在，答案可在此找到；若漂移存在，可被约束；若规模存在，可被稳定。";
-    document.getElementById("bandB").textContent="选择方向";
-    document.getElementById("nLab").textContent="北";
-    document.getElementById("nSub").textContent="事实 · 约束 · 定义";
-    document.getElementById("eLab").textContent="东";
-    document.getElementById("eSub").textContent="操作 · 行动 · 执行";
-    document.getElementById("sLab").textContent="南";
-    document.getElementById("sSub").textContent="遍历 · 方向 · 移动";
-    document.getElementById("wLab").textContent="西";
-    document.getElementById("wSub").textContent="整合 · 合并 · 隔离";
-    document.getElementById("selK").textContent="已选方向";
-    document.getElementById("btnEnter").textContent="从这里进入";
-    document.getElementById("dockDoor").textContent="门";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnPrelude").textContent="前置页";
-    document.getElementById("btnHome").textContent="主页";
+    document.getElementById("bk").textContent="罗盘";
+    document.getElementById("nLab").textContent="结构";
+    document.getElementById("eLab").textContent="可用内容";
+    document.getElementById("sLab").textContent="测量";
+    document.getElementById("wLab").textContent="前沿";
+    document.getElementById("nSub").textContent="让大想法稳定的规则。";
+    document.getElementById("eSub").textContent="你可以使用的产品。";
+    document.getElementById("sSub").textContent="信号与输出。";
+    document.getElementById("wSub").textContent="愿景与未来构建。";
+    document.getElementById("ft").textContent="大想法可以存在，但只有能承压的才允许扩张。";
   }else if(lang==="es"){
-    document.getElementById("h0").textContent="ÍNDICE · BRÚJULA";
-    document.getElementById("p0").textContent="Esto es un sistema estructural. Elige dirección. Luego entra.";
-    document.getElementById("r0").textContent="Regla: la afirmación debe estar respaldada. El soporte debe ser verificable. La navegación preserva gd_*.";
-    document.getElementById("bandA").textContent="PROBLEMA · DECLARACIÓN · PROMESA";
-    document.getElementById("paT").textContent="DERIVA";
-    document.getElementById("paP").textContent="Los sistemas colapsan por correlación no gestionada, deriva semántica, dependencia invisible y afirmaciones que superan la restricción.";
-    document.getElementById("pbT").textContent="DECLARACIÓN";
-    document.getElementById("pbP").textContent="Mapeamos estructura a medida finita, definimos admisibilidad y tratamos el cambio como época.";
-    document.getElementById("pcT").textContent="PROMESA";
-    document.getElementById("pcP").textContent="Si existe una medida, aquí puede encontrarse. Si existe deriva, puede acotarse. Si existe escala, puede estabilizarse.";
-    document.getElementById("bandB").textContent="ELIGE DIRECCIÓN";
-    document.getElementById("selK").textContent="DIRECCIÓN SELECCIONADA";
-    document.getElementById("btnEnter").textContent="ENTRAR AQUÍ";
-    document.getElementById("dockDoor").textContent="PUERTA";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("btnHome").textContent="INICIO";
+    document.getElementById("bk").textContent="BRÚJULA";
+    document.getElementById("nLab").textContent="ESTRUCTURA";
+    document.getElementById("eLab").textContent="USAR";
+    document.getElementById("sLab").textContent="MEDIR";
+    document.getElementById("wLab").textContent="FRONTERA";
+    document.getElementById("ft").textContent="Ideas grandes sí — pero solo lo que resiste puede escalar.";
+  }else{
+    document.getElementById("bk").textContent="COMPASS";
   }
+
+  // default
+  setBanner("north");
 })();
 </script>
 

@@ -1,89 +1,16 @@
 <!doctype html>
-<!-- TNT — /compass/index.html
-     COMPASS ROUTE SHELL (CANONICAL REDIRECT)
-     PURPOSE:
-       - Eliminate /compass/ 404
-       - Prevent drift by keeping ONE canonical Compass at /index.html
-       - Preserve full query + hash (lang/style/time/depth + lane if present)
-     RULES:
-       - No overlays/modals
-       - No new gd_* keys
-       - GH Pages safe
--->
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Compass → Index</title>
-
-  <!-- JS-off fallback -->
-  <meta http-equiv="refresh" content="0; url=../index.html"/>
-
-  <style>
-    /* ui.css owns the field; do not style html/body background. */
-    :root{
-      --ink: rgba(255,255,255,.94);
-      --mut: rgba(255,255,255,.78);
-      --stroke: rgba(255,255,255,.12);
-      --card: rgba(0,0,0,.18);
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
-    }
-    *{box-sizing:border-box}
-    .wrap{max-width:980px;margin:0 auto;padding:28px 16px}
-    .card{
-      border:1px solid var(--stroke);
-      border-radius:22px;
-      background:var(--card);
-      backdrop-filter:blur(10px);
-      box-shadow:var(--shadow);
-      padding:16px 16px;
-    }
-    .h1{margin:0;font-size:20px;line-height:1.2;font-weight:950;color:var(--ink);letter-spacing:.2px}
-    .p{margin:10px 0 0;font-size:15px;line-height:1.5;font-weight:800;color:var(--mut)}
-    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    a.btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      min-height:44px;padding:10px 12px;border-radius:16px;
-      border:1px solid var(--stroke);
-      text-decoration:none;font-weight:950;font-size:14px;letter-spacing:.2px;
-      color:var(--ink);background:rgba(0,0,0,.16);
-    }
-    a.btn:active{transform:translateY(1px)}
-  </style>
-
-  <script>
-    (function(){
-      // Preserve full query + hash. Do not create/modify gd_* keys.
-      var qs = window.location.search || "";
-      var hash = window.location.hash || "";
-      var target = "../index.html" + qs + hash;
-
-      // replace() avoids back-button loop into /compass/
-      window.location.replace(target);
-    })();
-  </script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Compass Redirect</title>
+<script>
+(function(){
+  var qs = window.location.search || "";
+  var hash = window.location.hash || "";
+  window.location.replace("../index.html" + qs + hash);
+})();
+</script>
 </head>
-<body>
-  <main class="wrap" aria-label="Compass redirect shell">
-    <section class="card">
-      <h1 class="h1">Redirecting to Compass…</h1>
-      <p class="p">
-        EN: If you are not redirected automatically, tap below.<br/>
-        中文：如果没有自动跳转，请点击下面按钮。<br/>
-        ES: Si no redirige automáticamente, pulsa abajo.
-      </p>
-      <div class="row">
-        <a class="btn" href="../index.html">OPEN /index.html</a>
-      </div>
-    </section>
-    <noscript>
-      <div class="wrap" style="padding:12px 0 0">
-        <section class="card">
-          <h2 class="h1" style="font-size:18px">JavaScript is disabled.</h2>
-          <p class="p">Tap “OPEN /index.html”.</p>
-        </section>
-      </div>
-    </noscript>
-  </main>
-</body>
+<body></body>
 </html>

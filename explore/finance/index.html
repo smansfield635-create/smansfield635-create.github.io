@@ -1,0 +1,732 @@
+<!-- TNT — /explore/finance/index.html
+     DOMAIN PLATFORM · FINANCE (TRILINGUAL · 4 LENSES · SINGLE-OPEN ACCORDION · NO MODALS)
+     LENSES:
+       - PLATFORM / ENGINEERING
+       - INFORMAL / FORMAL
+     CONTENT:
+       - Layer 1: Frontier framing (no lenses)
+       - Layer 2: Structural declaration (no lenses)
+       - Layer 3: 4-lens stack (accordion)
+     STATE:
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth
+       - lang=en|zh|es
+       - style=informal|formal
+       - time=origin|now|post
+       - depth=explore|learn
+     ROUTES:
+       BACK → /explore/
+       DOOR → /door/
+       PRODUCTS → /products/
+       LAWS → /laws/
+       GAUGES → /gauges/
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - NO html/body background overrides (ui.css owns field)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EXPLORE · FINANCE</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+<style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+:root{
+  --dockH:92px;
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(255,80,80,.10);
+  --goldSoft:rgba(212,175,55,.35);
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+  --bgA:rgba(12,22,38,.86);
+  --bgB:rgba(6,10,16,.92);
+  --red:rgba(255,70,70,.20);
+  --fontH:34px;
+  --fontT:16px;
+  --fontB:14px;
+}
+@media (min-width:900px){
+  :root{--fontH:40px;--fontT:17px;--fontB:14.5px;}
+}
+@media (max-width:420px){
+  :root{--fontH:32px;--fontT:15.5px;--fontB:14px;}
+}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:10;
+}
+
+/* top */
+.top{
+  position:sticky;top:0;z-index:240;
+  padding:10px 0 6px;
+  display:flex;justify-content:space-between;gap:12px;
+}
+.top .left,.top .right{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center}
+
+/* hero */
+.hero{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
+    radial-gradient(circle at 78% 28%, var(--opalB), transparent 66%),
+    radial-gradient(circle at 58% 92%, var(--opalC), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:16px 16px 14px;
+}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.h1{margin:0;font-weight:950;font-size:var(--fontH);letter-spacing:.9px;line-height:1.08}
+.lede{margin:10px 0 0;font-size:var(--fontT);line-height:1.55;color:var(--txt)}
+.rule{
+  margin-top:12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,70,70,.12), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));
+  padding:10px 12px;
+  color:rgba(255,255,255,.84);
+  font-size:12.75px;
+  line-height:1.45;
+}
+
+/* bands */
+.band{
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88);
+}
+
+/* blocks (no lenses) */
+.block{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  padding:14px 16px 14px;
+}
+.bh{margin:0;font-weight:950;letter-spacing:.2px;font-size:15px}
+.bp{margin:10px 0 0;color:rgba(255,255,255,.86);line-height:1.6;font-size:var(--fontB)}
+.ul{margin:10px 0 0 18px;padding:0;color:rgba(255,255,255,.82);line-height:1.55;font-size:var(--fontB)}
+.ul li{margin:6px 0}
+
+/* selectors */
+.selectRow{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+}
+.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{
+  padding:10px 14px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{border-color:rgba(212,175,55,.55);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.18)}
+.pill.red.active{border-color:rgba(255,90,90,.55);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(255,70,70,.18)}
+
+/* accordion */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 14px rgba(0,0,0,.35);margin-top:3px;flex:0 0 auto}
+.titleBlock{min-width:0}
+.ti{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.su{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;padding:14px 16px 16px;border-top:1px solid rgba(255,255,255,.08);
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.88);line-height:1.65;font-size:var(--fontB)}
+.p + .p{margin-top:10px}
+.subB{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.05);
+  padding:14px 14px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:rgba(255,255,255,.78);line-height:1.65;display:none}
+.bubble.open p{display:block}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+
+/* dock */
+.dock{
+  position:fixed;left:50%;bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:104px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/explore/">BACK</a>
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
+      <a class="btn" id="btnExit" href="/index.html">EXIT</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <p class="k" id="k0">FRONTIER · DOMAIN</p>
+    <h1 class="h1" id="h0">FINANCE</h1>
+    <p class="lede" id="lede"></p>
+    <div class="rule" id="rule"></div>
+  </div>
+
+  <div class="band" id="bA">THE PROBLEM</div>
+  <div class="block">
+    <div class="bh" id="pA_h">—</div>
+    <p class="bp" id="pA_p"></p>
+    <ul class="ul" id="pA_ul"></ul>
+  </div>
+
+  <div class="band" id="bB">THE SOLUTION SHAPE</div>
+  <div class="block">
+    <div class="bh" id="pB_h">—</div>
+    <p class="bp" id="pB_p"></p>
+    <ul class="ul" id="pB_ul"></ul>
+  </div>
+
+  <div class="band" id="bC">4 LENSES</div>
+  <div class="block">
+    <div class="bh" id="sel_h">—</div>
+    <p class="bp" id="sel_p"></p>
+
+    <div class="selectRow" style="margin-top:12px">
+      <div class="pills" aria-label="Track">
+        <button class="pill red active" id="pillEngineering" type="button">ENGINEERING</button>
+        <button class="pill red" id="pillPlatform" type="button">PLATFORM</button>
+      </div>
+      <div class="pills" aria-label="Tone">
+        <button class="pill active" id="pillInformal" type="button">INFORMAL</button>
+        <button class="pill" id="pillFormal" type="button">FORMAL</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" id="bD">FINANCE MODULES</div>
+  <div class="list" id="list"></div>
+
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  // ===== canonical state =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  if(time==="trajectory") time="post";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
+
+  // wire nav
+  function wire(id, path){ var el=document.getElementById(id); if(el) el.href = path + q(); }
+  wire("btnBack","/explore/");
+  wire("btnDoor","/door/");
+  wire("btnExit","/index.html");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  // language toggle (reload same path)
+  var btnEN=document.getElementById("btnEN"), btnZH=document.getElementById("btnZH"), btnES=document.getElementById("btnES");
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+    btnES.classList.toggle("active", lang==="es");
+  }
+  paintLang();
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{localStorage.setItem("gd_lang",lang);}catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){setLang("en");});
+  btnZH.addEventListener("click", function(){setLang("zh");});
+  btnES.addEventListener("click", function(){setLang("es");});
+
+  // helpers
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+  function lbl(en,zh,es){ return pick(P(en,zh,es)); }
+
+  // ===== DOMAIN COPY (dense, support-bounded) =====
+  var COPY = {
+    hero:{
+      k:P("FRONTIER · DOMAIN","前沿 · 领域","FRONTERA · DOMINIO"),
+      h:P("FINANCE","金融","FINANZAS"),
+      lede:P(
+        "Why does money make smart people act irrational? Because most financial systems reward short-term story over long-term structure. This page is a map that turns finance back into measurable control—without pretending risk disappears.",
+        "为什么钱会让聪明人做出不理性选择？因为多数金融系统奖励短期故事而不是长期结构。本页把金融拉回“可测可控”——但不假装风险会消失。",
+        "¿Por qué el dinero hace que gente inteligente actúe irracional? Porque muchos sistemas premian historia a corto plazo sobre estructura a largo plazo. Esta página convierte finanzas en control medible—sin fingir que el riesgo desaparece."
+      ),
+      rule:P(
+        "Rule: Big ideas are allowed. Claims stay bounded to receipts, scope, and invariants. If it can’t be measured, it can’t be stabilized.",
+        "规则：允许大想法。主张必须绑定收据、范围与不变量。不可测，就不可稳。",
+        "Regla: se permiten ideas grandes. Las afirmaciones se acotan a recibos, alcance e invariantes. Si no se puede medir, no se puede estabilizar."
+      )
+    },
+    problem:{
+      h:P("What breaks finance","金融为什么会崩","Qué rompe las finanzas"),
+      p:P(
+        "Finance collapses when incentives outrun truth. People can hide risk, delay consequences, and rewrite narratives after the fact. The result is drift: outcomes stop matching stated rules.",
+        "金融崩塌发生在激励跑在真相前面：风险被隐藏、后果被延迟、事后叙事被改写。结果就是“偏移”：结果不再匹配宣称的规则。",
+        "Las finanzas colapsan cuando los incentivos superan la verdad: el riesgo se oculta, las consecuencias se retrasan y la narrativa se reescribe. Resultado: deriva—los resultados dejan de coincidir con las reglas."
+      ),
+      ul:[
+        P("Hidden correlation (everyone fails together).","隐藏相关（一起坏）。","Correlación oculta (fallan juntos)."),
+        P("Moving goalposts (rules change silently).","挪球门（规则暗改）。","Cambios silenciosos de reglas."),
+        P("Unpriced risk (confidence replaces evidence).","风险未定价（自信替代证据）。","Riesgo sin precio (confianza > evidencia)."),
+        P("Retroactive justification (story after outcome).","事后解释（先结果后故事）。","Justificación retroactiva.")
+      ]
+    },
+    solution:{
+      h:P("What we do instead","我们怎么解决","Qué hacemos en su lugar"),
+      p:P(
+        "We force finance to speak in structure. Scope is declared. Receipts are required. Risk is priced by observable signals. If evidence is missing, the system says so—then routes you to what to measure next.",
+        "我们让金融用结构说话：声明范围、要求收据、用可观察信号定价风险。证据缺失就明说，并把你路由到下一步该测什么。",
+        "Hacemos que finanzas hablen en estructura: alcance declarado, recibos requeridos, riesgo con precio por señales observables. Si falta evidencia, el sistema lo dice y te enruta a qué medir después."
+      ),
+      ul:[
+        P("Instrument-first: measure before you promise.","先仪器：先测再承诺。","Instrumento primero: medir antes de prometer."),
+        P("Invariant-first: no contradictions under identical evidence.","先不变量：同证据不矛盾。","Invariantes primero: sin contradicción con la misma evidencia."),
+        P("Receipt-first: upgrades require proof bundles.","先收据：升级要证明包。","Recibos primero: upgrades requieren prueba."),
+        P("Epoch discipline: corrections create new epochs.","纪元纪律：修正开新纪元。","Disciplina de época: correcciones crean nuevas épocas.")
+      ]
+    },
+    lenses:{
+      h:P("How to read the 4 lenses","如何读四透镜","Cómo leer 4 lentes"),
+      p:P(
+        "Engineering = rules and math under constraint. Platform = how humans and institutions actually adopt it. Informal = TED talk clarity. Formal = spec language.",
+        "Engineering=约束下的规则与数学。Platform=人和机构怎么采纳。Informal=TED式清晰。Formal=规格语言。",
+        "Engineering = reglas y matemática bajo restricción. Platform = adopción humana/institucional. Informal = claridad tipo TED. Formal = lenguaje de especificación."
+      )
+    },
+    modules:[
+      {
+        c:"#EF4444",
+        t:P("Money truth vs money story","钱的真相 vs 钱的故事","Verdad del dinero vs historia"),
+        s:P("Most problems start as a story problem, then become a math problem.","多数问题先是故事问题，后变成数学问题。","Muchos problemas empiezan como historia y terminan como matemáticas."),
+        jump:[{id:"LAWS", href:"/laws/"},{id:"GAUGES", href:"/gauges/"}],
+        text:{
+          engineering:{
+            informal:{
+              concept:P(
+                "If finance feels like magic, it’s usually because the rules are hidden. We surface the rule, then we refuse upgrades without receipts. That’s how you turn ‘belief’ into ‘control.’",
+                "金融像魔法时，通常是因为规则被藏起来了。我们把规则摆出来，并拒绝在无收据下升级主张。这样把“信念”变成“控制”。",
+                "Si finanzas parecen magia, es porque las reglas están ocultas. Mostramos la regla y rechazamos upgrades sin recibos. Así pasas de ‘creencia’ a ‘control’."
+              ),
+              live:P(
+                "Live mode is simple: if the result changes, you must show what changed. If you can’t, you’re not allowed to claim stability. That’s how you stop ‘hand-waving’ risk.",
+                "上线模式很简单：结果变了，就必须指出哪里变了；指不出，就不允许主张稳定。这样止住“挥手式”风险。",
+                "En vivo: si cambia el resultado, debes mostrar qué cambió. Si no puedes, no puedes afirmar estabilidad. Así detienes el riesgo ‘a mano alzada’."
+              ),
+              roadmap:P(
+                "Next we make truth portable: receipts become shareable, replayable bundles. That’s when financial trust stops being a personality contest and becomes an instrument.",
+                "下一步让真相可携带：收据变成可分享、可回放的包。金融信任不再是人格竞赛，而是仪器输出。",
+                "Luego hacemos la verdad portátil: recibos compartibles y re-ejecutables. La confianza deja de ser concurso de personalidad y se vuelve instrumento."
+              )
+            },
+            formal:{
+              concept:P(
+                "Declare scope. Specify measurement rules. Apply invariants (non-contradiction) and admissibility gates. Disallow claim upgrades without receipts.",
+                "声明范围。指定测量规则。应用不变量（不矛盾）与可采信闸门。无收据禁止升级主张。",
+                "Declarar alcance. Especificar reglas de medición. Aplicar invariantes (no contradicción) y compuertas de admisibilidad. Prohibir upgrades sin recibos."
+              ),
+              live:P(
+                "Require time-anchored receipts for any stability assertion. Enforce epoch rollover on rule changes. Treat missing receipts as NOT MEASURED.",
+                "任何稳定性断言必须有时间锚收据。规则变更需新纪元。缺收据=未测量。",
+                "Exigir recibos con anclaje temporal para afirmar estabilidad. Nueva época si cambian reglas. Sin recibos = NO MEDIDO."
+              ),
+              roadmap:P(
+                "Exportable audit bundles + registry status enable third-party verification under identical manifests, preserving comparability across time windows.",
+                "可导出审计包+登记状态让第三方在同清单下核查，保持时间窗口可比。",
+                "Paquetes de auditoría exportables + estado de registro habilitan verificación de terceros bajo manifiestos idénticos, preservando comparabilidad."
+              )
+            }
+          },
+          platform:{
+            informal:{
+              concept:P(
+                "Humans don’t adopt spreadsheets. They adopt clarity. Platform lens turns finance into simple moves: name the scope, show receipts, accept the bounded answer, then take the next step.",
+                "人们不采纳表格，人们采纳清晰。平台透镜把金融变成简单动作：定范围、出收据、接受有界答案、走下一步。",
+                "La gente no adopta hojas de cálculo; adopta claridad. Plataforma convierte finanzas en pasos simples: nombra alcance, muestra recibos, acepta respuesta acotada y da el siguiente paso."
+              ),
+              live:P(
+                "Institutions fail when teams fight narratives. Live platform forces one language: reason codes. You can disagree, but you must disagree with the same receipts.",
+                "机构失败常因团队争叙事。上线平台强制一种语言：原因码。你可以不同意，但必须基于同一收据不同意。",
+                "Las instituciones fallan cuando equipos pelean narrativas. En vivo, la plataforma impone un idioma: códigos de razón. Puedes discrepar, pero con los mismos recibos."
+              ),
+              roadmap:P(
+                "Roadmap is adoption without dilution: more users, same rules, same receipts-first posture. That’s how you grow without turning ‘governance’ into politics.",
+                "路线图是“不稀释的采纳”：更多用户，同规则，同收据优先。这样扩张不会把治理变成政治。",
+                "La hoja de ruta es adopción sin dilución: más usuarios, mismas reglas, misma postura de recibos. Así creces sin convertir gobernanza en política."
+              )
+            },
+            formal:{
+              concept:P(
+                "Platform contract: stable navigation, explicit returns, mandatory state carry, and bounded copy. Users must reach the next action without interpretation drift.",
+                "平台契约：导航稳定、返回明确、状态强制携带、文案有界。用户无需解释漂移即可到达下一步动作。",
+                "Contrato de plataforma: navegación estable, retornos explícitos, propagación obligatoria de estado y copy acotado. El usuario llega a la siguiente acción sin deriva interpretativa."
+              ),
+              live:P(
+                "Operational posture: enforce single-source routes, prevent catch-all collapse, and ensure consistent UI primitives so taps map to exactly one outcome.",
+                "运行姿态：强制单源路由，防止总汇坍缩；统一交互原语，使点击映射到且仅映射到一个结果。",
+                "Postura operativa: rutas de fuente única, evitar colapso a destino universal, y primitivas UI consistentes para que cada toque produzca un único resultado."
+              ),
+              roadmap:P(
+                "Registry + audit exports provide institutional interoperability without granting tuning authority to non-calibrated agents.",
+                "登记+审计导出提供机构互操作，但不把调参权交给非校准方。",
+                "Registro + exportación de auditoría dan interoperabilidad institucional sin otorgar autoridad de ajuste a agentes no calibrados."
+              )
+            }
+          }
+        }
+      },
+      {
+        c:"#F59E0B",
+        t:P("Risk pricing under constraint","约束下的风险定价","Precio del riesgo bajo restricción"),
+        s:P("If you can’t price the risk, you can’t scale the promise.","不能定价风险，就不能规模化承诺。","Si no puedes poner precio al riesgo, no puedes escalar la promesa."),
+        jump:[{id:"GAUGES", href:"/gauges/"},{id:"PRODUCTS", href:"/products/"}],
+        text:{
+          engineering:{
+            informal:{
+              concept:P(
+                "Risk is not a feeling. It’s a pattern in receipts. We price risk by what actually happens under pressure—not by what people hope will happen.",
+                "风险不是感觉，是收据里的模式。我们按压力下真实发生的事定价，不按希望定价。",
+                "El riesgo no es un sentimiento; es un patrón en recibos. Lo ponemos precio por lo que pasa bajo presión, no por lo que se espera."
+              ),
+              live:P(
+                "Live pricing is conservative: when correlation rises, we tighten scope and prefer containment. When evidence improves, we widen carefully—new epoch when rules change.",
+                "上线定价偏保守：相关性升高就收紧范围并优先隔离；证据变强才谨慎放宽——规则变更即新纪元。",
+                "En vivo, el precio es conservador: si sube la correlación, se acota el alcance y se prefiere contención. Si mejora evidencia, se amplía con cuidado—nueva época si cambian reglas."
+              ),
+              roadmap:P(
+                "Next is portfolio view: not just one risk, but correlated risk across the network. That’s where Dot.Grid and Gauges become a real underwriting machine.",
+                "下一步是组合视图：不是单一风险，而是网络相关风险。这时 Dot.Grid + Gauges 才成为真正的承保机器。",
+                "Luego viene vista de portafolio: no solo un riesgo, sino riesgo correlacionado en la red. Ahí Dot.Grid y Medidores se vuelven máquina real de underwriting."
+              )
+            },
+            formal:{
+              concept:P(
+                "Pricing uses bounded metrics derived from gate vectors and exposure. Metrics cannot override inadmissible states; they compress decisions within admissible regions.",
+                "定价使用由闸门向量与暴露导出的有界指标；指标不得覆盖不可采信状态，只能在可采信区域内压缩决策。",
+                "La fijación de precio usa métricas acotadas derivadas de vectores de compuertas y exposición. Las métricas no pueden anular estados inadmisibles; solo comprimen decisiones dentro de lo admisible."
+              ),
+              live:P(
+                "Live enforcement forbids silent threshold shifts. Any threshold change produces an epoch rollover and breaks comparability with prior outputs.",
+                "上线禁止静默阈值漂移；阈值变更必须新纪元，且与旧输出不可直接比较。",
+                "En vivo se prohíben cambios silenciosos de umbral. Cualquier cambio crea nueva época y rompe comparabilidad con outputs previos."
+              ),
+              roadmap:P(
+                "Roadmap integrates underwriting outputs with audit bundles (hashable) so third parties can replay the price rationale under declared scope.",
+                "路线图将承保输出与可哈希审计包结合，使第三方能在声明范围下回放定价理由。",
+                "La hoja de ruta integra underwriting con paquetes de auditoría hasheables para que terceros re-ejecuten la justificación del precio bajo alcance declarado."
+              )
+            }
+          },
+          platform:{
+            informal:{
+              concept:P(
+                "For humans, risk pricing should feel like a seatbelt: not a lecture—just a protection layer that prevents bad bets from sounding ‘reasonable.’",
+                "对人来说，风险定价应像安全带：不是讲课，而是保护层，让坏赌注不再显得“合理”。",
+                "Para humanos, poner precio al riesgo debe sentirse como cinturón de seguridad: no una clase—una capa de protección que evita que apuestas malas suenen ‘razonables’."
+              ),
+              live:P(
+                "Live platform shows one thing: the reason codes. If someone asks ‘why,’ you don’t argue—you show the reason code and the receipts behind it.",
+                "上线平台只展示一件事：原因码。有人问“为什么”，不争辩，只展示原因码及其收据。",
+                "En vivo, la plataforma muestra una cosa: códigos de razón. Si alguien pregunta ‘por qué’, no discutes: muestras el código y el recibo."
+              ),
+              roadmap:P(
+                "As adoption grows, the platform keeps the same moves. New users don’t create new rules. That’s the difference between a system and a culture war.",
+                "采纳增长时，平台动作不变：新用户不创造新规则。这就是“系统”和“文化战争”的区别。",
+                "A medida que crece la adopción, la plataforma mantiene los mismos movimientos. Nuevos usuarios no crean nuevas reglas. Esa es la diferencia entre sistema y guerra cultural."
+              )
+            },
+            formal:{
+              concept:P(
+                "Platform requirement: pricing outputs must be legible, bounded, and reason-coded; no hidden model states; no unexplainable jumps.",
+                "平台要求：定价输出必须可读、有界、带原因码；不允许隐藏模型态，不允许无法解释的跳变。",
+                "Requisito de plataforma: outputs de precio legibles, acotados y con códigos de razón; sin estados ocultos; sin saltos inexplicables."
+              ),
+              live:P(
+                "Live UX enforces single-open focus, stable typography, and deterministic navigation so users can audit without losing context.",
+                "上线体验强制单开聚焦、稳定排版、确定导航，使用户审计时不丢上下文。",
+                "En vivo la UX exige foco (solo uno abierto), tipografía estable y navegación determinista para auditar sin perder contexto."
+              ),
+              roadmap:P(
+                "Roadmap adds institutional adapters (compliance, reporting) while preserving the same user actions and state keys.",
+                "路线图增加机构适配器（合规/报表），但保持相同用户动作与状态键。",
+                "La hoja de ruta añade adaptadores institucionales (cumplimiento, reporting) preservando las mismas acciones y claves de estado."
+              )
+            }
+          }
+        }
+      }
+    ]
+  };
+
+  // apply hero + blocks
+  document.getElementById("k0").textContent = pick(COPY.hero.k);
+  document.getElementById("h0").textContent = pick(COPY.hero.h);
+  document.getElementById("lede").textContent = pick(COPY.hero.lede);
+  document.getElementById("rule").textContent = pick(COPY.hero.rule);
+
+  document.getElementById("bA").textContent = lbl("THE PROBLEM","问题","EL PROBLEMA");
+  document.getElementById("pA_h").textContent = pick(COPY.problem.h);
+  document.getElementById("pA_p").textContent = pick(COPY.problem.p);
+  var pA_ul=document.getElementById("pA_ul"); pA_ul.innerHTML="";
+  COPY.problem.ul.forEach(function(x){ var li=document.createElement("li"); li.textContent=pick(x); pA_ul.appendChild(li); });
+
+  document.getElementById("bB").textContent = lbl("THE SOLUTION SHAPE","解法形状","FORMA DE LA SOLUCIÓN");
+  document.getElementById("pB_h").textContent = pick(COPY.solution.h);
+  document.getElementById("pB_p").textContent = pick(COPY.solution.p);
+  var pB_ul=document.getElementById("pB_ul"); pB_ul.innerHTML="";
+  COPY.solution.ul.forEach(function(x){ var li=document.createElement("li"); li.textContent=pick(x); pB_ul.appendChild(li); });
+
+  document.getElementById("bC").textContent = lbl("4 LENSES","四透镜","4 LENTES");
+  document.getElementById("sel_h").textContent = pick(COPY.lenses.h);
+  document.getElementById("sel_p").textContent = pick(COPY.lenses.p);
+
+  document.getElementById("bD").textContent = lbl("FINANCE MODULES","金融模块","MÓDULOS FINANZAS");
+
+  // buttons labels (keep chat EN; UI is in-page)
+  function setText(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; }
+  if(lang==="zh"){
+    setText("btnBack","返回"); setText("btnDoor","门"); setText("btnExit","退出");
+    setText("dockHome","主页"); setText("dockProducts","产品"); setText("dockLaws","法则"); setText("dockGauges","量规");
+    setText("pillEngineering","工程"); setText("pillPlatform","平台"); setText("pillInformal","通俗"); setText("pillFormal","正式");
+  }else if(lang==="es"){
+    setText("btnBack","VOLVER"); setText("btnDoor","PUERTA"); setText("btnExit","SALIR");
+    setText("dockHome","INICIO"); setText("dockProducts","PRODUCTOS"); setText("dockLaws","LEYES"); setText("dockGauges","MEDIDORES");
+    setText("pillEngineering","INGENIERÍA"); setText("pillPlatform","PLATAFORMA"); setText("pillInformal","INFORMAL"); setText("pillFormal","FORMAL");
+  }else{
+    setText("pillEngineering","ENGINEERING"); setText("pillPlatform","PLATFORM"); setText("pillInformal","INFORMAL"); setText("pillFormal","FORMAL");
+  }
+
+  // lens state
+  var track="engineering"; // engineering|platform
+  var tone=(style==="formal")?"formal":"informal";
+
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+  var list=document.getElementById("list");
+
+  function paintPills(){
+    pillEngineering.classList.toggle("active", track==="engineering");
+    pillPlatform.classList.toggle("active", track==="platform");
+    pillInformal.classList.toggle("active", tone==="informal");
+    pillFormal.classList.toggle("active", tone==="formal");
+  }
+  pillEngineering.addEventListener("click", function(){ track="engineering"; paintPills(); render(); });
+  pillPlatform.addEventListener("click", function(){ track="platform"; paintPills(); render(); });
+  pillInformal.addEventListener("click", function(){ tone="informal"; try{localStorage.setItem("gd_style","informal");}catch(e){} paintPills(); render(); });
+  pillFormal.addEventListener("click", function(){ tone="formal"; try{localStorage.setItem("gd_style","formal");}catch(e){} paintPills(); render(); });
+
+  function bubbleLabel(which){
+    if(lang==="zh") return (which==="concept")?"概念":(which==="live")?"上线":"路线图";
+    if(lang==="es") return (which==="concept")?"Concepto":(which==="live")?"En vivo":"Hoja de ruta";
+    return (which==="concept")?"Concept":(which==="live")?"Live":"Roadmap";
+  }
+  function openLabel(){
+    if(lang==="zh") return "打开";
+    if(lang==="es") return "ABRIR";
+    return "OPEN";
+  }
+
+  function render(){
+    list.innerHTML="";
+    var mods = COPY.modules;
+
+    mods.forEach(function(m, idx){
+      var row=document.createElement("div");
+      row.className="row";
+      row.style.setProperty("--c", m.c);
+
+      var head=document.createElement("div");
+      head.className="head";
+      head.setAttribute("role","button");
+      head.tabIndex=0;
+
+      var left=document.createElement("div");
+      left.className="left";
+
+      var mark=document.createElement("div");
+      mark.className="dmark";
+      mark.style.background=m.c;
+
+      var tb=document.createElement("div");
+      tb.className="titleBlock";
+      var ti=document.createElement("div");
+      ti.className="ti";
+      ti.textContent = pick(m.t);
+      var su=document.createElement("div");
+      su.className="su";
+      su.textContent = pick(m.s);
+      tb.appendChild(ti); tb.appendChild(su);
+
+      left.appendChild(mark);
+      left.appendChild(tb);
+
+      var chev=document.createElement("div");
+      chev.className="chev";
+      chev.textContent="▸";
+
+      head.appendChild(left);
+      head.appendChild(chev);
+
+      var body=document.createElement("div");
+      body.className="body";
+
+      var intro=document.createElement("p");
+      intro.className="p";
+      intro.textContent = (lang==="zh")
+        ? "打开三段：概念（为什么）/ 上线（怎么用）/ 路线图（下一步）。"
+        : (lang==="es")
+          ? "Abre tres partes: Concepto (por qué) / En vivo (uso) / Hoja de ruta (qué sigue)."
+          : "Open three parts: Concept (why) / Live (how) / Roadmap (what’s next).";
+      body.appendChild(intro);
+
+      var subB=document.createElement("div");
+      subB.className="subB";
+
+      function makeBubble(which){
+        var b=document.createElement("div");
+        b.className="bubble";
+        b.setAttribute("role","button");
+        b.tabIndex=0;
+        var h=document.createElement("h4");
+        h.textContent = bubbleLabel(which);
+        var p=document.createElement("p");
+        var pack = m.text[track][tone][which];
+        p.textContent = pick(pack);
+        b.appendChild(h); b.appendChild(p);
+        function act(){ b.classList.toggle("open"); }
+        b.addEventListener("click", act);
+        b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+        return b;
+      }
+
+      subB.appendChild(makeBubble("concept"));
+      subB.appendChild(makeBubble("live"));
+      subB.appendChild(makeBubble("roadmap"));
+      body.appendChild(subB);
+
+      var actions=document.createElement("div");
+      actions.className="actions";
+      m.jump.forEach(function(j){
+        var a=document.createElement("a");
+        a.className="btn";
+        a.textContent = openLabel() + ": " + j.id;
+        a.href = j.href + q();
+        actions.appendChild(a);
+      });
+      body.appendChild(actions);
+
+      function closeAll(){
+        list.querySelectorAll(".row").forEach(function(r){
+          r.classList.remove("open");
+          var c=r.querySelector(".chev"); if(c) c.textContent="▸";
+        });
+      }
+      function toggle(){
+        var willOpen=!row.classList.contains("open");
+        closeAll();
+        row.classList.toggle("open", willOpen);
+        chev.textContent = willOpen ? "▾" : "▸";
+      }
+      head.addEventListener("click", toggle);
+      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+
+      row.appendChild(head);
+      row.appendChild(body);
+      list.appendChild(row);
+
+      if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
+    });
+  }
+
+  paintPills();
+  render();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!-- TNT — /explore/frontier/urban/index.html
+     FRONTIER · URBAN RESOURCE OPERATING SYSTEM
+     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
+     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
+     ROLE:
+       - Integrate Energy + Water + Waste
+       - Define city-scale alignment layer
+       - Establish convergence logic before Closed Loop
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · Urban Resource OS</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:96px;
+  --mut:rgba(255,255,255,.92);
+  --mut2:rgba(255,255,255,.76);
+  --opal:rgba(210,190,255,.14);
+  --green:rgba(0,255,170,.08);
+  --amber:rgba(255,170,0,.08);
+}
+
+.page{
+  width:min(1200px,94vw);
+  margin:0 auto;
+  padding:100px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.header{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 20% 25%, var(--opal), transparent 70%),
+    radial-gradient(circle at 80% 30%, var(--green), transparent 70%),
+    radial-gradient(circle at 60% 90%, var(--amber), transparent 70%),
+    rgba(0,0,0,.18);
+  padding:30px;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
+}
+
+.k{
+  font-size:14px;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 12px;
+}
+
+.t{
+  font-weight:900;
+  font-size:42px;
+  letter-spacing:1px;
+  margin:0 0 14px;
+}
+
+.s{
+  font-size:19px;
+  line-height:1.7;
+  max-width:1000px;
+  opacity:.9;
+}
+
+.lenses{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:26px;
+}
+
+.pill{
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;
+  font-weight:800;
+  letter-spacing:.4px;
+  font-size:14px;
+  background:rgba(0,0,0,.25);
+}
+
+.pill.active{
+  border-color:rgba(212,175,55,.6);
+  box-shadow:0 0 18px rgba(212,175,55,.25);
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.section{
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:28px;
+  overflow:hidden;
+  background:linear-gradient(160deg, rgba(18,22,35,.95), rgba(8,12,20,.98));
+}
+
+.head{
+  padding:22px 30px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.body{
+  display:none;
+  padding:28px 34px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:18px;
+  line-height:1.8;
+  color:var(--mut2);
+}
+
+.section.open .body{display:block}
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(1000px,94vw);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  padding:14px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+}
+.dock .btn{
+  padding:12px;
+  border-radius:999px;
+  text-align:center;
+  font-weight:700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+<p class="k" id="hk">FRONTIER</p>
+<h1 class="t" id="ht">URBAN RESOURCE OPERATING SYSTEM</h1>
+<p class="s" id="hs"></p>
+
+<div class="lenses">
+  <button class="pill active" id="lensInformal">INFORMAL</button>
+  <button class="pill" id="lensFormal">FORMAL</button>
+  <button class="pill" id="lensEngineering">ENGINEERING</button>
+  <button class="pill" id="lensPlatform">PLATFORM</button>
+</div>
+</div>
+
+<div class="accordion" id="accordion"></div>
+
+</div>
+
+<nav class="dock">
+<a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
+<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
+<a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
+<a class="btn" id="navClosed" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
+</nav>
+
+<script>
+(function(){
+
+var qs=new URLSearchParams(location.search);
+var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
+document.documentElement.lang=lang;
+
+function q(){return "?lang="+lang}
+document.getElementById("navEnergy").href+=q();
+document.getElementById("navWater").href+=q();
+document.getElementById("navWaste").href+=q();
+document.getElementById("navClosed").href+=q();
+
+function pick(o){return o[lang]||o.en}
+
+var headerCopy={
+en:"Cities are not broken because they lack resources. They are broken because resources do not speak to each other.",
+zh:"城市不是因为缺资源而失效，而是因为资源彼此不沟通。",
+es:"Las ciudades no fallan por falta de recursos, sino por falta de coordinación."
+};
+document.getElementById("hs").textContent=pick(headerCopy);
+
+var lens="informal";
+
+var sections=[
+{
+t:{en:"THE CITY PROBLEM",zh:"城市问题",es:"PROBLEMA URBANO"},
+c:{
+informal:{en:"Water runs in one system. Power runs in another. Waste runs in another. None of them share a unified coordination spine.",
+zh:"水、电、废弃物各自为政，没有统一协调脊柱。",
+es:"Agua, energía y residuos operan aislados."},
+formal:{en:"Urban infrastructure systems operate in siloed domains, lacking cross-domain state synchronization.",
+zh:"城市基础设施系统分域运行，缺乏跨域状态同步。",
+es:"Infraestructuras urbanas operan en silos."},
+engineering:{en:"Integrate energy, water, waste, and routing nodes into a shared runtime lattice.",
+zh:"将能源、水、废弃物节点纳入统一运行时晶格。",
+es:"Integrar nodos en un lattice compartido."},
+platform:{en:"Expose cross-domain signals via Dot.Grid and enforce stabilization through Laws.",
+zh:"通过Dot.Grid暴露跨域信号，由Laws执行稳定。",
+es:"Exponer señales cruzadas vía Dot.Grid."}
+}
+},
+{
+t:{en:"THE CONVERGENCE LAYER",zh:"收敛层",es:"CAPA DE CONVERGENCIA"},
+c:{
+informal:{en:"Urban OS is the layer where all flows meet and are measured together.",
+zh:"城市操作系统是所有流汇合并被统一测量的层。",
+es:"Urban OS es donde todos los flujos convergen."},
+formal:{en:"Urban Resource OS synchronizes multi-utility vectors under deterministic classification.",
+zh:"城市资源操作系统在确定性分类下同步多公用事业向量。",
+es:"Sincroniza vectores multi-servicio."},
+engineering:{en:"Deploy sensor integration, thermal buffering, distributed routing, and collapse detection.",
+zh:"部署传感整合、热缓冲、分布式路由与坍塌检测。",
+es:"Desplegar sensores y buffers térmicos."},
+platform:{en:"Registry-backed ledger ensures accountability across utilities.",
+zh:"基于Registry的账本确保跨公用事业问责。",
+es:"Libro respaldado por registro."}
+}
+},
+{
+t:{en:"FINITE URBAN LATTICE",zh:"有限城市晶格",es:"LATTICE URBANO FINITO"},
+c:{
+informal:{en:"If a city cannot measure itself, it cannot stabilize itself.",
+zh:"城市不能测量自己，就不能稳定自己。",
+es:"Una ciudad que no se mide no se estabiliza."},
+formal:{en:"Urban states index into a bounded lattice enabling drift detection and cross-sector comparison.",
+zh:"城市状态映射入有限晶格，实现漂移检测与跨部门比较。",
+es:"Estados urbanos indexados en lattice."},
+engineering:{en:"Bind city nodes to UCI Engine for convergence monitoring.",
+zh:"将城市节点绑定UCI引擎监测收敛。",
+es:"Vincular nodos urbanos al UCI."},
+platform:{en:"Publish transparency dashboards through Gauges.",
+zh:"通过Gauges发布透明仪表板。",
+es:"Publicar dashboards vía Medidores."}
+}
+}
+];
+
+function render(){
+var acc=document.getElementById("accordion");
+acc.innerHTML="";
+sections.forEach(function(s,i){
+var row=document.createElement("div");
+row.className="section";
+var head=document.createElement("div");
+head.className="head";
+var title=document.createElement("div");
+title.className="title";
+title.textContent=pick(s.t);
+head.appendChild(title);
+var body=document.createElement("div");
+body.className="body";
+body.textContent=pick(s.c[lens]);
+head.onclick=function(){
+document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
+row.classList.add("open");
+};
+row.appendChild(head);
+row.appendChild(body);
+acc.appendChild(row);
+if(i===0)row.classList.add("open");
+});
+}
+
+document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
+document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
+document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
+document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
+
+render();
+
+})();
+</script>
+
+</body>
+</html>

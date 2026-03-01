@@ -1,11 +1,12 @@
 <!-- TNT — /laws/index.html
      LAWS · CONSTRAINTS (HIGH CONTRAST) · 3 LANG (EN/中文/ES) · TRUE LENS SPLIT
-     FIXES (NO VISUAL DRIFT INTENT):
-       - Removes inline onclick (tap-safe)
-       - Adds page-level language toggle (EN / 中文 / ES)
+     UPGRADES (AS REQUESTED):
+       - More than 4 laws (now 9)
+       - Adds little DIAMOND color swatch next to each law title
+       - Converts each law into a collapsible “bubble” (tap to expand)
+       - Keeps page-level language toggle + lens toggle
+       - No inline onclick; tap-safe
        - Preserves state on every link (lang/style/time/depth + gd_* LS)
-       - Dock links carry state
-       - Lens buttons show active state and actually switch content
      LOCKS:
        - Uses /assets/ui.css + /assets/instruments.js
        - Does NOT style html/body background (ui.css owns field)
@@ -43,7 +44,7 @@ a{color:inherit;text-decoration:none}
   padding:90px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:16px;
   position:relative;
   z-index:10;
 }
@@ -53,7 +54,7 @@ a{color:inherit;text-decoration:none}
   background:rgba(0,0,0,.82);
   border:1px solid rgba(255,255,255,.22);
   border-radius:22px;
-  padding:26px;
+  padding:22px;
   backdrop-filter:blur(16px);
   box-shadow:0 50px 140px rgba(0,0,0,.9);
 }
@@ -65,36 +66,15 @@ a{color:inherit;text-decoration:none}
   opacity:.7;
   margin:0 0 6px;
 }
-
 .h{
   font-size:30px;
   font-weight:950;
   margin:0 0 12px;
 }
-
 .p{
-  font-size:16px;
+  font-size:15.5px;
   line-height:1.65;
   opacity:.95;
-  margin:0;
-}
-
-/* Law list */
-.law{
-  border-top:1px solid rgba(255,255,255,.18);
-  padding-top:18px;
-  margin-top:18px;
-}
-
-.lt{
-  font-weight:950;
-  font-size:18px;
-  margin:0 0 8px;
-}
-
-.ld{
-  font-size:15px;
-  opacity:.9;
   margin:0;
 }
 
@@ -106,20 +86,77 @@ a{color:inherit;text-decoration:none}
   flex-wrap:wrap;
 }
 
-/* lines */
+/* ---------- Bubble Laws (Accordion) ---------- */
+.lawsStack{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+
+.lawCard{
+  --c:#93C5FD;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.08), transparent 58%),
+    linear-gradient(160deg, rgba(12,22,38,.72), rgba(6,10,16,.78));
+  box-shadow:0 22px 70px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.06);
+  overflow:hidden;
+}
+
+.lawHead{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:14px 14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.lawLeft{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.lawSw{
+  width:12px;height:12px;transform:rotate(45deg);border-radius:4px;
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.lawTitleWrap{min-width:0}
+.lawTitle{
+  margin:0;
+  font-weight:950;
+  font-size:15.5px;
+  letter-spacing:.25px;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.lawSub{
+  margin:8px 0 0;
+  font-size:13px;
+  line-height:1.35;
+  color:rgba(255,255,255,.82);
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.lawChevron{opacity:.78;font-size:16px;flex:0 0 auto;margin-top:2px}
+
+.lawBody{
+  display:none;
+  padding:0 14px 14px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+.lawCard.open .lawBody{display:block}
+
 .line{
-  margin-top:10px;
-  font-size:16px;
+  margin:10px 0 0;
+  font-size:14.5px;
   line-height:1.7;
   color:rgba(255,255,255,.92);
 }
-
 .bind{
-  margin-top:14px;
+  margin-top:12px;
   padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.18);
-  font-size:14px;
-  opacity:.85;
+  border-top:1px solid rgba(255,255,255,.14);
+  font-size:13px;
+  color:rgba(255,255,255,.80);
+  line-height:1.45;
 }
 
 /* Dock */
@@ -139,7 +176,6 @@ a{color:inherit;text-decoration:none}
   z-index:220;
 }
 .dock .btn{width:100%}
-
 @media (max-width:520px){
   :root{--dockH:98px}
   .dock{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -177,27 +213,7 @@ a{color:inherit;text-decoration:none}
   </div>
 
   <div class="block">
-
-    <div class="law">
-      <p class="lt" id="t1">1. SCOPE PRECEDES AUTHORITY</p>
-      <div id="scope"></div>
-    </div>
-
-    <div class="law">
-      <p class="lt" id="t2">2. SCALE AMPLIFIES ERROR</p>
-      <div id="scale"></div>
-    </div>
-
-    <div class="law">
-      <p class="lt" id="t3">3. PROOF MUST SURVIVE CONSTRAINT</p>
-      <div id="proof"></div>
-    </div>
-
-    <div class="law">
-      <p class="lt" id="t4">4. CONTAINMENT PREVENTS CASCADE</p>
-      <div id="contain"></div>
-    </div>
-
+    <div class="lawsStack" id="lawsStack"></div>
   </div>
 
 </div>
@@ -288,7 +304,19 @@ a{color:inherit;text-decoration:none}
   btnFormal.addEventListener("click", function(){ setLens("formal"); });
   paintLens();
 
-  // ----- content (3 lang × 2 lens) -----
+  // ----- Laws dataset (9) -----
+  var LAW = [
+    {id:"scope",  c:"#93C5FD"},
+    {id:"scale",  c:"#F59E0B"},
+    {id:"proof",  c:"#60A5FA"},
+    {id:"contain",c:"#7F1D1D"},
+    {id:"epoch",  c:"#D4AF37"},
+    {id:"nocomp", c:"#A3A3A3"},
+    {id:"receipt",c:"#0EA5E9"},
+    {id:"separate",c:"#9333EA"},
+    {id:"correl", c:"#14B8A6"}
+  ];
+
   var COPY = {
     en:{
       top:{
@@ -296,13 +324,29 @@ a{color:inherit;text-decoration:none}
         h:"LAWS THAT PREVENT DRIFT",
         p:"These are not beliefs.<br/>These are boundaries that stop collapse under scale."
       },
-      titles:[
-        "1. SCOPE PRECEDES AUTHORITY",
-        "2. SCALE AMPLIFIES ERROR",
-        "3. PROOF MUST SURVIVE CONSTRAINT",
-        "4. CONTAINMENT PREVENTS CASCADE"
-      ],
-      laws:{
+      title:{
+        scope:"Scope precedes authority",
+        scale:"Scale amplifies error",
+        proof:"Proof must survive constraint",
+        contain:"Containment prevents cascade",
+        epoch:"Correction creates a new epoch",
+        nocomp:"No compensation by weighting",
+        receipt:"Receipts gate progression",
+        separate:"Claim and support stay separate",
+        correl:"Correlation risk is first-class"
+      },
+      sub:{
+        scope:"Lock meaning and boundaries before conclusions.",
+        scale:"Small variance becomes failure when multiplied.",
+        proof:"No elevation without testable receipts.",
+        contain:"Keep failures local; stop blast radius.",
+        epoch:"No silent edits; changes are time-stamped.",
+        nocomp:"You can’t average away a violation.",
+        receipt:"Progress is earned by evidence, not time.",
+        separate:"Marketing never upgrades doctrine.",
+        correl:"Shared failure modes must be measured."
+      },
+      body:{
         scope:{
           informal:[
             "Define boundaries before you speak with authority.",
@@ -354,161 +398,206 @@ a{color:inherit;text-decoration:none}
             "Containment restores invariants by limiting blast radius."
           ],
           bind:"Bound to: Enforcement + Recovery Layer."
+        },
+        epoch:{
+          informal:[
+            "If you fix it, name the change.",
+            "Don’t rewrite history—start a new chapter.",
+            "Comparisons only work when rules stay visible."
+          ],
+          formal:[
+            "Corrections that affect outcomes create a new epoch identifier.",
+            "Retroactive edits are disallowed under doctrine posture.",
+            "Comparability requires versioned rulesets and timestamps."
+          ],
+          bind:"Bound to: Registry + Audit Discipline."
+        },
+        nocomp:{
+          informal:[
+            "You can’t ‘balance’ a violation with good vibes.",
+            "A hard boundary is a hard boundary.",
+            "Compensation hides instability until it explodes."
+          ],
+          formal:[
+            "No weighting schemes may compensate for a failed invariant.",
+            "A single hard constraint violation dominates admissibility.",
+            "Smoothing may describe; it may not justify escalation."
+          ],
+          bind:"Bound to: Core Invariants."
+        },
+        receipt:{
+          informal:[
+            "You don’t progress because time passed.",
+            "You progress because you did the thing.",
+            "Receipts keep the system honest under pressure."
+          ],
+          formal:[
+            "Progression is receipt-gated: advancement requires evidence that survives scope locks.",
+            "Timers may measure; timers may not gate admissibility.",
+            "Back-navigation invalidates downstream receipts deterministically."
+          ],
+          bind:"Bound to: SSG + Execution Surfaces."
+        },
+        separate:{
+          informal:[
+            "Keep ‘what’s true’ separate from ‘what’s offered.’",
+            "Otherwise marketing becomes doctrine.",
+            "Separation protects trust at scale."
+          ],
+          formal:[
+            "Doctrine defines bounds; products define surfaces; gauges define outputs.",
+            "No product page may upgrade a doctrine claim without receipts.",
+            "Cross-links must preserve posture separation."
+          ],
+          bind:"Bound to: Door/Compass Posture."
+        },
+        correl:{
+          informal:[
+            "Things often fail together—quietly.",
+            "Correlation is the hidden killer of scale.",
+            "If you can’t measure it, you can’t control it."
+          ],
+          formal:[
+            "Correlation exposure is tracked as a first-class risk variable.",
+            "Shared dependencies raise blast radius and reduce independence.",
+            "Gates and segmentation must be tuned against correlated failure."
+          ],
+          bind:"Bound to: UCI + Gauges."
         }
       }
     },
+
     zh:{
-      top:{
-        k:"结构约束",
-        h:"防漂移法则",
-        p:"这不是信仰。<br/>这是防止规模下崩塌的边界。"
+      top:{k:"结构约束",h:"防漂移法则",p:"这不是信仰。<br/>这是防止规模下崩塌的边界。"},
+      title:{
+        scope:"范围先于权力",scale:"规模放大误差",proof:"证明必须经受约束",contain:"隔离阻断级联",
+        epoch:"修正即新纪元",nocomp:"不允许加权补偿",receipt:"收据闸门推进",separate:"主张与支撑分离",correl:"相关风险一等"
       },
-      titles:[
-        "1. 范围先于权力",
-        "2. 规模放大误差",
-        "3. 证明必须经受约束",
-        "4. 隔离阻断级联"
-      ],
-      laws:{
+      sub:{
+        scope:"先锁含义与边界。",scale:"小方差在乘法下变大灾。",proof:"无收据，不抬升。",contain:"失败局部化。",epoch:"不静默改写。",nocomp:"不能“平均”掉违规。",receipt:"推进靠证据不靠时间。",separate:"营销不升级教义。",correl:"共享故障模式必须测。"
+      },
+      body:{
         scope:{
-          informal:[
-            "先定边界，才谈权威。",
-            "范围一变，结论就失去意义。",
-            "先把地图锁住，再在地图里讨论。"
-          ],
-          formal:[
-            "可采信要求声明范围并保持定义稳定。",
-            "无约束的权威在复制与扩张下必然不稳。",
-            "范围变更会使该范围内既往结论失效。"
-          ],
+          informal:["先定边界，才谈权威。","范围一变，结论就失去意义。","先把地图锁住，再在地图里讨论。"],
+          formal:["可采信要求声明范围并保持定义稳定。","无约束的权威在复制与扩张下必然不稳。","范围变更会使该范围内既往结论失效。"],
           bind:"绑定：定义 + 诊断层。"
         },
         scale:{
-          informal:[
-            "小困惑在乘法下会变成大失败。",
-            "增长会放大弱点——尤其是隐藏弱点。",
-            "1倍就会坏，100倍必然崩。"
-          ],
-          formal:[
-            "方差在规模下复合；未修正误差呈非线性加速。",
-            "超出核查能力的扩张会提高不稳定率。",
-            "约束违规会通过相关暴露被放大。"
-          ],
+          informal:["小困惑在乘法下会变成大失败。","增长会放大弱点——尤其是隐藏弱点。","1倍就会坏，100倍必然崩。"],
+          formal:["方差在规模下复合；未修正误差呈非线性加速。","超出核查能力的扩张会提高不稳定率。","约束违规会通过相关暴露被放大。"],
           bind:"绑定：采纳阶梯 + 阶段闸门。"
         },
         proof:{
-          informal:[
-            "不可测试，就不要抬升。",
-            "无边界的证据会变成说服。",
-            "主张要经受压力，而不是舒适。"
-          ],
-          formal:[
-            "证明必须在声明的测量规则下通过约束绑定验证。",
-            "可采信阈值定义升级的合法性。",
-            "无界主张会在压力下造成脆弱与漂移。"
-          ],
+          informal:["不可测试，就不要抬升。","无边界的证据会变成说服。","主张要经受压力，而不是舒适。"],
+          formal:["证明必须在声明的测量规则下通过约束绑定验证。","可采信阈值定义升级的合法性。","无界主张会在压力下造成脆弱与漂移。"],
           bind:"绑定：一致性诊断。"
         },
         contain:{
-          informal:[
-            "把失败变小。",
-            "尽早切断级联。",
-            "回滚胜过崩塌。"
-          ],
-          formal:[
-            "分段隔离阻止系统性传播。",
-            "回滚纪律在跨纪元保持一致性。",
-            "隔离通过限制爆炸半径恢复不变量。"
-          ],
+          informal:["把失败变小。","尽早切断级联。","回滚胜过崩塌。"],
+          formal:["分段隔离阻止系统性传播。","回滚纪律在跨纪元保持一致性。","隔离通过限制爆炸半径恢复不变量。"],
           bind:"绑定：执行 + 恢复层。"
+        },
+        epoch:{
+          informal:["修复就要命名变化。","不要改写历史——开新章。","可比性来自规则可见。"],
+          formal:["影响结果的修正必须产生新的纪元标识。","教义姿态下不允许追溯编辑。","可比性依赖版本化规则集与时间戳。"],
+          bind:"绑定：登记 + 审计纪律。"
+        },
+        nocomp:{
+          informal:["不能用“感觉良好”补偿违规。","硬边界就是硬边界。","补偿只会把不稳藏起来。"],
+          formal:["不得用加权方案补偿不变量失败。","单一硬约束失败主导可采信判定。","平滑可描述，但不能作为升级依据。"],
+          bind:"绑定：核心不变量。"
+        },
+        receipt:{
+          informal:["不是时间到了就推进。","是你做到了才推进。","收据让系统在压力下保持诚实。"],
+          formal:["推进为收据闸门：证据必须通过范围锁。","计时可测量，但不得作为闸门。","回退会确定性地使下游收据失效。"],
+          bind:"绑定：SSG + 执行面。"
+        },
+        separate:{
+          informal:["把“什么是真的”和“提供什么”分开。","不然营销会变教义。","分离保护规模下的信任。"],
+          formal:["教义定边界；产品定执行面；量规定输出。","产品页不得无收据升级教义主张。","交叉链接必须保持姿态分离。"],
+          bind:"绑定：门/指南针姿态。"
+        },
+        correl:{
+          informal:["系统常常一起坏——而且悄无声息。","相关性是规模的隐形杀手。","测不了，就控不了。"],
+          formal:["相关暴露作为一等风险变量跟踪。","共享依赖提高爆炸半径，降低独立性。","闸门与分区需针对相关失效调参。"],
+          bind:"绑定：UCI + 量规。"
         }
       }
     },
+
     es:{
-      top:{
-        k:"RESTRICCIONES ESTRUCTURALES",
-        h:"LEYES QUE EVITAN DERIVA",
-        p:"No son creencias.<br/>Son límites que evitan colapso al escalar."
+      top:{k:"RESTRICCIONES ESTRUCTURALES",h:"LEYES QUE EVITAN DERIVA",p:"No son creencias.<br/>Son límites que evitan colapso al escalar."},
+      title:{
+        scope:"El alcance precede a la autoridad",scale:"La escala amplifica el error",proof:"La prueba debe sobrevivir la restricción",contain:"La contención evita la cascada",
+        epoch:"Corrección crea nueva época",nocomp:"Sin compensación por ponderación",receipt:"Progresión con recibos",separate:"Afirmación y soporte separados",correl:"Riesgo de correlación"
       },
-      titles:[
-        "1. EL ALCANCE PRECEDE A LA AUTORIDAD",
-        "2. LA ESCALA AMPLIFICA EL ERROR",
-        "3. LA PRUEBA DEBE SOBREVIVIR LA RESTRICCIÓN",
-        "4. LA CONTENCIÓN EVITA LA CASCADA"
-      ],
-      laws:{
+      sub:{
+        scope:"Fija significado y límites primero.",scale:"La varianza se multiplica.",proof:"Sin prueba, no se eleva.",contain:"Fallo local, no sistémico.",epoch:"Sin ediciones silenciosas.",nocomp:"No se ‘promedia’ una violación.",receipt:"Progreso por evidencia.",separate:"Marketing no es doctrina.",correl:"Fallos compartidos se miden."
+      },
+      body:{
         scope:{
-          informal:[
-            "Define límites antes de hablar con autoridad.",
-            "Si el alcance cambia, la conclusión deja de significar algo.",
-            "Primero fija el mapa—luego discutes dentro."
-          ],
-          formal:[
-            "La admisibilidad requiere alcance declarado y definiciones estables.",
-            "Autoridad sin restricción produce inestabilidad al replicar.",
-            "Mutación de alcance invalida conclusiones previas en ese alcance."
-          ],
+          informal:["Define límites antes de hablar con autoridad.","Si el alcance cambia, la conclusión deja de significar algo.","Primero fija el mapa—luego discutes dentro."],
+          formal:["La admisibilidad requiere alcance declarado y definiciones estables.","Autoridad sin restricción produce inestabilidad al replicar.","Mutación de alcance invalida conclusiones previas en ese alcance."],
           bind:"Vinculado a: Definiciones + Capa Diagnóstica."
         },
         scale:{
-          informal:[
-            "Pequeña confusión se vuelve gran fallo al multiplicar.",
-            "El crecimiento amplifica debilidades—sobre todo las ocultas.",
-            "Si falla a 1×, colapsa a 100×."
-          ],
-          formal:[
-            "La varianza se compone con la escala; el error no corregido acelera no linealmente.",
-            "Escalar más allá de la capacidad de verificación aumenta inestabilidad.",
-            "Violaciones se amplifican por exposición correlacionada."
-          ],
+          informal:["Pequeña confusión se vuelve gran fallo al multiplicar.","El crecimiento amplifica debilidades—sobre todo las ocultas.","Si falla a 1×, colapsa a 100×."],
+          formal:["La varianza se compone con la escala; el error no corregido acelera no linealmente.","Escalar más allá de la capacidad de verificación aumenta inestabilidad.","Violaciones se amplifican por exposición correlacionada."],
           bind:"Vinculado a: Escalera de Adopción + Compuertas por Fase."
         },
         proof:{
-          informal:[
-            "Si no se puede probar, no lo eleves.",
-            "Evidencia sin límites se vuelve persuasión.",
-            "Las afirmaciones deben resistir presión."
-          ],
-          formal:[
-            "La prueba requiere validación acotada por restricciones bajo reglas declaradas.",
-            "Los umbrales de admisibilidad definen legitimidad de escalación.",
-            "Afirmaciones sin límites crean fragilidad y deriva."
-          ],
+          informal:["Si no se puede probar, no lo eleves.","Evidencia sin límites se vuelve persuasión.","Las afirmaciones deben resistir presión."],
+          formal:["La prueba requiere validación acotada por restricciones bajo reglas declaradas.","Los umbrales de admisibilidad definen legitimidad de escalación.","Afirmaciones sin límites crean fragilidad y deriva."],
           bind:"Vinculado a: Diagnóstico de Coherencia."
         },
         contain:{
-          informal:[
-            "Mantén el fallo local.",
-            "Detén la cascada temprano.",
-            "Rollback vence al colapso."
-          ],
-          formal:[
-            "La segmentación evita propagación sistémica.",
-            "Disciplina de rollback preserva coherencia entre épocas.",
-            "La contención restaura invariantes limitando radio de impacto."
-          ],
+          informal:["Mantén el fallo local.","Detén la cascada temprano.","Rollback vence al colapso."],
+          formal:["La segmentación evita propagación sistémica.","Disciplina de rollback preserva coherencia entre épocas.","La contención restaura invariantes limitando radio de impacto."],
           bind:"Vinculado a: Capa de Ejecución + Recuperación."
+        },
+        epoch:{
+          informal:["Si corriges, nómbralo.","No reescribas historia—nueva época.","Comparar requiere reglas visibles."],
+          formal:["Correcciones que afectan resultados crean un identificador de época nuevo.","Ediciones retroactivas están prohibidas en postura doctrinal.","Comparabilidad requiere versiones y marcas de tiempo."],
+          bind:"Vinculado a: Registro + Disciplina de Auditoría."
+        },
+        nocomp:{
+          informal:["No puedes compensar una violación con ‘promedios’.","Un límite duro es duro.","La compensación esconde inestabilidad."],
+          formal:["Ningún esquema de pesos compensa un invariante fallido.","Una violación dura domina la admisibilidad.","El suavizado puede describir; no justificar escalación."],
+          bind:"Vinculado a: Invariantes Centrales."
+        },
+        receipt:{
+          informal:["No progresas porque pasó el tiempo.","Progresas porque lo hiciste.","Los recibos mantienen honestidad bajo presión."],
+          formal:["Progresión con recibos: evidencia debe sobrevivir bloqueos de alcance.","Temporizadores miden; no compuerten.","Retroceso invalida recibos posteriores de forma determinista."],
+          bind:"Vinculado a: SSG + Superficies de Ejecución."
+        },
+        separate:{
+          informal:["Separa ‘lo verdadero’ de ‘lo ofrecido’.","Si no, marketing se vuelve doctrina.","La separación protege confianza."],
+          formal:["Doctrina limita; productos presentan superficies; medidores muestran salidas.","Una página de producto no eleva doctrina sin recibos.","Enlaces cruzados preservan separación de postura."],
+          bind:"Vinculado a: Postura de Puerta/Brújula."
+        },
+        correl:{
+          informal:["Las cosas fallan juntas—en silencio.","La correlación mata la escala.","Si no se mide, no se controla."],
+          formal:["La exposición por correlación es variable de riesgo de primera clase.","Dependencias compartidas aumentan radio de impacto.","Compuertas/segmentación se ajustan contra fallos correlacionados."],
+          bind:"Vinculado a: UCI + Medidores."
         }
       }
     }
   };
 
-  function pickPack(){
+  function pack(){
     if(lang==="zh") return COPY.zh;
     if(lang==="es") return COPY.es;
     return COPY.en;
   }
 
+  function txt(o){ return o; }
+
   function applyTop(){
-    var P=pickPack();
+    var P=pack();
     document.getElementById("kTop").textContent=P.top.k;
     document.getElementById("hTop").textContent=P.top.h;
     document.getElementById("pTop").innerHTML=P.top.p;
-    document.getElementById("t1").textContent=P.titles[0];
-    document.getElementById("t2").textContent=P.titles[1];
-    document.getElementById("t3").textContent=P.titles[2];
-    document.getElementById("t4").textContent=P.titles[3];
-    // update dock labels lightly
+
     if(lang==="zh"){
       document.getElementById("dockHome").textContent="主页";
       document.getElementById("dockProducts").textContent="产品";
@@ -536,34 +625,96 @@ a{color:inherit;text-decoration:none}
     }
   }
 
-  function renderLaw(key, targetId){
-    var P=pickPack();
-    var container=document.getElementById(targetId);
-    container.innerHTML="";
+  function buildLawCard(P, def){
+    var id=def.id;
 
-    var lines = P.laws[key][style];
+    var card=document.createElement("section");
+    card.className="lawCard";
+    card.style.setProperty("--c", def.c);
+
+    var head=document.createElement("div");
+    head.className="lawHead";
+    head.setAttribute("role","button");
+    head.setAttribute("tabindex","0");
+
+    var left=document.createElement("div");
+    left.className="lawLeft";
+
+    var sw=document.createElement("div");
+    sw.className="lawSw";
+
+    var wrap=document.createElement("div");
+    wrap.className="lawTitleWrap";
+
+    var title=document.createElement("div");
+    title.className="lawTitle";
+    title.textContent=P.title[id];
+
+    var sub=document.createElement("div");
+    sub.className="lawSub";
+    sub.textContent=P.sub[id];
+
+    wrap.appendChild(title);
+    wrap.appendChild(sub);
+
+    left.appendChild(sw);
+    left.appendChild(wrap);
+
+    var chev=document.createElement("div");
+    chev.className="lawChevron";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="lawBody";
+
+    // lines
+    var lines=P.body[id][style];
     for(var i=0;i<lines.length;i++){
       var p=document.createElement("p");
       p.className="line";
       p.textContent=lines[i];
-      container.appendChild(p);
+      body.appendChild(p);
     }
 
     var bind=document.createElement("div");
     bind.className="bind";
-    bind.textContent=P.laws[key].bind;
-    container.appendChild(bind);
+    bind.textContent=P.body[id].bind;
+    body.appendChild(bind);
+
+    function toggle(){
+      var willOpen=!card.classList.contains("open");
+      card.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+    return card;
   }
 
   function render(){
+    var P=pack();
     applyTop();
-    renderLaw("scope","scope");
-    renderLaw("scale","scale");
-    renderLaw("proof","proof");
-    renderLaw("contain","contain");
+
+    var stack=document.getElementById("lawsStack");
+    stack.innerHTML="";
+
+    for(var i=0;i<LAW.length;i++){
+      var card=buildLawCard(P, LAW[i]);
+      stack.appendChild(card);
+      if(i===0){ card.classList.add("open"); card.querySelector(".lawChevron").textContent="▾"; }
+    }
   }
 
   render();
+
 })();
 </script>
 

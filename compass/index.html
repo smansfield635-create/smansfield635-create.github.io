@@ -1,686 +1,89 @@
 <!doctype html>
+<!-- TNT — /compass/index.html
+     COMPASS ROUTE SHELL (CANONICAL REDIRECT)
+     PURPOSE:
+       - Eliminate /compass/ 404
+       - Prevent drift by keeping ONE canonical Compass at /index.html
+       - Preserve full query + hash (lang/style/time/depth + lane if present)
+     RULES:
+       - No overlays/modals
+       - No new gd_* keys
+       - GH Pages safe
+-->
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Compass</title>
+  <title>Compass → Index</title>
+
+  <!-- JS-off fallback -->
+  <meta http-equiv="refresh" content="0; url=../index.html"/>
+
   <style>
-    /* ui.css owns the field; do not set html/body background. */
+    /* ui.css owns the field; do not style html/body background. */
     :root{
-      --opal0:#071014;
-      --opal1:#0b1a20;
-      --opal2:#0f232c;
-      --ink:#e9f2f6;
-      --muted:#a8bcc8;
-      --soft:#7f98a6;
-      --stroke:rgba(255,255,255,.12);
-      --card:rgba(11,26,32,.78);
-      --card2:rgba(15,35,44,.62);
-      --red:#ff2b2b;
-      --red2:rgba(255,43,43,.14);
-      --gold:#c9a24a;
-      --gold2:rgba(201,162,74,.14);
-      --shadow:0 14px 34px rgba(0,0,0,.42);
-      --r16:16px;
-      --r20:20px;
-      --r24:24px;
+      --ink: rgba(255,255,255,.94);
+      --mut: rgba(255,255,255,.78);
+      --stroke: rgba(255,255,255,.12);
+      --card: rgba(0,0,0,.18);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
     }
     *{box-sizing:border-box}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px 16px 64px}
-    .topbar{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
-      padding:10px 12px;border:1px solid var(--stroke);border-radius:18px;background:var(--card);box-shadow:var(--shadow)
-    }
-    .brand{display:flex;gap:10px;align-items:center;min-height:44px}
-    .mark{
-      width:42px;height:42px;border-radius:14px;border:1px solid var(--stroke);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,43,43,.28), transparent 55%),
-        radial-gradient(circle at 70% 70%, rgba(201,162,74,.18), transparent 52%),
-        rgba(15,35,44,.65);
-      box-shadow:0 10px 22px rgba(0,0,0,.35);
-    }
-    .title{margin:0;font-size:22px;line-height:1.05;letter-spacing:.2px;color:var(--ink);font-weight:900}
-    .sub{margin:0;margin-top:2px;font-size:14px;line-height:1.3;color:var(--muted);font-weight:700}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
-    .seg{
-      display:flex;gap:0;border:1px solid var(--stroke);border-radius:16px;overflow:hidden;background:rgba(15,35,44,.35)
-    }
-    .seg button{
-      appearance:none;border:0;background:transparent;color:var(--muted);
-      padding:10px 12px;min-height:44px;font-weight:900;font-size:13px;letter-spacing:.3px
-    }
-    .seg button[aria-pressed="true"]{background:var(--red2);color:var(--ink)}
-    .seg.lang button[aria-pressed="true"]{background:var(--gold2)}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid var(--stroke);border-radius:999px;padding:10px 12px;min-height:44px;
-      background:rgba(15,35,44,.35);color:var(--muted);font-weight:900;font-size:13px;letter-spacing:.2px
-    }
-    .pill b{color:var(--ink)}
-    .grid{
-      margin-top:16px;
-      display:grid;grid-template-columns:1.1fr .9fr;gap:14px;
-    }
-    @media (max-width: 920px){
-      .grid{grid-template-columns:1fr}
-    }
-    .hero{
-      border:1px solid var(--stroke);border-radius:22px;background:var(--card);box-shadow:var(--shadow);
+    .wrap{max-width:980px;margin:0 auto;padding:28px 16px}
+    .card{
+      border:1px solid var(--stroke);
+      border-radius:22px;
+      background:var(--card);
+      backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
       padding:16px 16px;
     }
-    .h1{margin:0;font-size:28px;line-height:1.1;color:var(--ink);font-weight:950;letter-spacing:.2px}
-    .lead{margin:10px 0 0;font-size:16.5px;line-height:1.5;color:var(--muted);font-weight:700}
-    .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    .chip{
+    .h1{margin:0;font-size:20px;line-height:1.2;font-weight:950;color:var(--ink);letter-spacing:.2px}
+    .p{margin:10px 0 0;font-size:15px;line-height:1.5;font-weight:800;color:var(--mut)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    a.btn{
       display:inline-flex;align-items:center;justify-content:center;
-      padding:8px 10px;border-radius:999px;border:1px solid var(--stroke);
-      background:rgba(15,35,44,.35);color:var(--soft);font-weight:900;font-size:12px;letter-spacing:.25px
+      min-height:44px;padding:10px 12px;border-radius:16px;
+      border:1px solid var(--stroke);
+      text-decoration:none;font-weight:950;font-size:14px;letter-spacing:.2px;
+      color:var(--ink);background:rgba(0,0,0,.16);
     }
-    .chip.red{background:var(--red2);color:var(--ink)}
-    .chip.gold{background:var(--gold2);color:var(--gold)}
-    .diamondPanel{
-      border:1px solid var(--stroke);border-radius:22px;background:var(--card);box-shadow:var(--shadow);
-      padding:16px 16px;
-    }
-    .diamondGrid{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px
-    }
-    @media (max-width: 420px){
-      .diamondGrid{grid-template-columns:repeat(2,1fr)}
-    }
-    .diamond{
-      position:relative;display:flex;flex-direction:column;gap:6px;
-      border:1px solid var(--stroke);border-radius:20px;background:rgba(15,35,44,.55);
-      padding:14px 12px;min-height:106px;
-      box-shadow:0 10px 22px rgba(0,0,0,.35);
-      text-decoration:none;color:var(--ink)
-    }
-    .diamond:active{transform:translateY(1px)}
-    .dTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .dLabel{margin:0;font-size:16px;line-height:1.1;font-weight:950;letter-spacing:.2px}
-    .dTag{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);color:var(--muted);font-weight:900;font-size:11px;letter-spacing:.25px
-    }
-    .dDesc{margin:0;font-size:13px;line-height:1.35;color:var(--muted);font-weight:700}
-    .dAccent{
-      position:absolute;inset:0;border-radius:20px;pointer-events:none;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,43,43,.20), transparent 55%),
-        radial-gradient(circle at 80% 75%, rgba(201,162,74,.14), transparent 58%);
-      opacity:.9
-    }
-
-    /* Accordion */
-    .accordion{
-      margin-top:14px;border:1px solid var(--stroke);border-radius:22px;background:var(--card);box-shadow:var(--shadow);
-      overflow:hidden
-    }
-    .accItem{border-top:1px solid rgba(255,255,255,.08)}
-    .accItem:first-child{border-top:0}
-    .accBtn{
-      width:100%;text-align:left;
-      padding:16px 14px;min-height:54px;
-      border:0;background:transparent;color:var(--ink);
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      font-weight:950;font-size:16.5px;letter-spacing:.15px
-    }
-    .accBtn:active{transform:translateY(1px)}
-    .accMeta{display:flex;flex-direction:column;gap:2px}
-    .accSub{font-size:13px;color:var(--muted);font-weight:800;letter-spacing:.15px}
-    .chev{
-      width:34px;height:34px;border-radius:12px;border:1px solid var(--stroke);
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(15,35,44,.35);color:var(--muted);font-weight:950
-    }
-    .accBody{display:none;padding:0 14px 14px}
-    .accBody.open{display:block}
-    .bubble{
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(15,35,44,.45);
-      border-radius:20px;padding:14px 12px;margin-top:10px
-    }
-    .bH{margin:0;font-size:14px;color:var(--ink);font-weight:950;letter-spacing:.2px}
-    .bP{margin:8px 0 0;font-size:15.5px;line-height:1.5;color:var(--muted);font-weight:700}
-    .bRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:10px 12px;min-height:44px;border-radius:16px;
-      border:1px solid var(--stroke);text-decoration:none;
-      background:rgba(15,35,44,.35);color:var(--ink);
-      font-weight:950;font-size:14px;letter-spacing:.2px
-    }
-    .btn.red{background:var(--red2)}
-    .btn.gold{background:var(--gold2);color:var(--gold)}
-    .btn:active{transform:translateY(1px)}
-    .fine{margin-top:14px;font-size:12px;line-height:1.4;color:var(--soft);font-weight:800}
-    .fine b{color:var(--ink)}
+    a.btn:active{transform:translateY(1px)}
   </style>
-</head>
-
-<body>
-  <div class="wrap">
-    <header class="topbar" aria-label="Compass top controls">
-      <div class="brand" aria-label="Compass brand">
-        <div class="mark" aria-hidden="true"></div>
-        <div>
-          <p class="title" data-i18n="t_compass">COMPASS</p>
-          <p class="sub" data-i18n="t_tagline">Navigation index · state preserved</p>
-        </div>
-      </div>
-
-      <div class="controls" aria-label="State controls">
-        <div class="seg lang" role="group" aria-label="Language">
-          <button type="button" id="lang_en" aria-pressed="true">EN</button>
-          <button type="button" id="lang_zh" aria-pressed="false">中文</button>
-          <button type="button" id="lang_es" aria-pressed="false">ES</button>
-        </div>
-
-        <div class="seg" role="group" aria-label="Style">
-          <button type="button" id="style_informal" aria-pressed="true" data-i18n="t_informal">INFORMAL</button>
-          <button type="button" id="style_formal" aria-pressed="false" data-i18n="t_formal">FORMAL</button>
-        </div>
-
-        <div class="pill" aria-label="Depth">
-          <span data-i18n="t_depth">DEPTH</span> <b id="depth_val">1</b>
-        </div>
-      </div>
-    </header>
-
-    <section class="grid" aria-label="Compass intro grid">
-      <div class="hero">
-        <h1 class="h1" data-i18n="h1">Everything routes from here.</h1>
-        <p class="lead" data-i18n="lead">
-          Use Compass to reach Door, Home, Products, Explore, Laws, and Gauges without losing state.
-          This page preserves <b>lang</b>, <b>style</b>, <b>time</b>, and <b>depth</b>.
-        </p>
-        <div class="chips" aria-label="Compass chips">
-          <span class="chip red" data-i18n="chip_single">SINGLE-OPEN</span>
-          <span class="chip" data-i18n="chip_mobile">MOBILE SAFE</span>
-          <span class="chip" data-i18n="chip_state">STATE CARRY</span>
-          <span class="chip gold" data-i18n="chip_tri">TRILINGUAL</span>
-        </div>
-
-        <div class="fine" data-i18n="fine">
-          <b>Note:</b> Intro-tier hub. Lenses are not required here. Non-intro pages carry full lenses.
-        </div>
-      </div>
-
-      <div class="diamondPanel" aria-label="Fast nav diamonds">
-        <p class="sub" style="margin:0" data-i18n="fast">FAST NAV</p>
-
-        <div class="diamondGrid" aria-label="Fast nav links">
-          <a class="diamond" href="/door/" data-route="/door/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_door">DOOR</p>
-              <span class="dTag" data-i18n="tag_entry">ENTRY</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_door">Start here. Structure-first navigation.</p>
-          </a>
-
-          <a class="diamond" href="/home/" data-route="/home/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_home">HOME</p>
-              <span class="dTag" data-i18n="tag_hub">HUB</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_home">Your stable return point.</p>
-          </a>
-
-          <a class="diamond" href="/products/" data-route="/products/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_products">PRODUCTS</p>
-              <span class="dTag" data-i18n="tag_catalog">CATALOG</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_products">Everything buildable, routable.</p>
-          </a>
-
-          <a class="diamond" href="/explore/" data-route="/explore/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_explore">EXPLORE</p>
-              <span class="dTag" data-i18n="tag_frontier">FRONTIER</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_explore">Vision, domains, frontier forks.</p>
-          </a>
-
-          <a class="diamond" href="/laws/" data-route="/laws/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_laws">LAWS</p>
-              <span class="dTag" data-i18n="tag_contract">CONTRACT</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_laws">Standards, rules, invariants.</p>
-          </a>
-
-          <a class="diamond" href="/gauges/" data-route="/gauges/">
-            <span class="dAccent" aria-hidden="true"></span>
-            <div class="dTop">
-              <p class="dLabel" data-i18n="d_gauges">GAUGES</p>
-              <span class="dTag" data-i18n="tag_measure">MEASURE</span>
-            </div>
-            <p class="dDesc" data-i18n="dd_gauges">Measurement surface and audits.</p>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="accordion" aria-label="Compass routing bubbles">
-      <div class="accItem">
-        <button class="accBtn" type="button" data-acc="a0">
-          <span class="accMeta">
-            <span data-i18n="acc0_t">Compass Terminal</span>
-            <span class="accSub" data-i18n="acc0_s">Return to the global index</span>
-          </span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
-        <div class="accBody" id="a0">
-          <div class="bubble">
-            <p class="bH" data-i18n="acc0_bh">Route</p>
-            <p class="bP" data-i18n="acc0_bp">
-              This is the stable “index.html” terminal. If you want the full compass layout there, open it now.
-            </p>
-            <div class="bRow">
-              <a class="btn red" href="/index.html" data-route="/index.html" data-i18n="open_index">OPEN /index.html</a>
-              <a class="btn" href="/prelude/" data-route="/prelude/" data-i18n="open_prelude">OPEN /prelude/</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accItem">
-        <button class="accBtn" type="button" data-acc="a1">
-          <span class="accMeta">
-            <span data-i18n="acc1_t">Products</span>
-            <span class="accSub" data-i18n="acc1_s">Routing catalog to buildable pages</span>
-          </span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
-        <div class="accBody" id="a1">
-          <div class="bubble">
-            <p class="bH" data-i18n="acc1_bh">What lives here</p>
-            <p class="bP" data-i18n="acc1_bp">
-              Energy, Education, Coherence Diagnostic, Software Spine, Dot.Grid, SSG, and routing-safe shells.
-            </p>
-            <div class="bRow">
-              <a class="btn red" href="/products/" data-route="/products/" data-i18n="open_products">OPEN PRODUCTS</a>
-              <a class="btn" href="/products/software/" data-route="/products/software/" data-i18n="open_spine">OPEN SOFTWARE SPINE</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accItem">
-        <button class="accBtn" type="button" data-acc="a2">
-          <span class="accMeta">
-            <span data-i18n="acc2_t">Explore</span>
-            <span class="accSub" data-i18n="acc2_s">Frontier forks and vision shells</span>
-          </span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
-        <div class="accBody" id="a2">
-          <div class="bubble">
-            <p class="bH" data-i18n="acc2_bh">What lives here</p>
-            <p class="bP" data-i18n="acc2_bp">
-              Frontier Index, Vision Index, and domain lanes.
-            </p>
-            <div class="bRow">
-              <a class="btn red" href="/explore/" data-route="/explore/" data-i18n="open_explore">OPEN EXPLORE</a>
-              <a class="btn" href="/explore/frontier/" data-route="/explore/frontier/" data-i18n="open_frontier">OPEN FRONTIER</a>
-              <a class="btn gold" href="/explore/frontier/vision/" data-route="/explore/frontier/vision/" data-i18n="open_vision">OPEN VISION</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accItem">
-        <button class="accBtn" type="button" data-acc="a3">
-          <span class="accMeta">
-            <span data-i18n="acc3_t">Laws & Gauges</span>
-            <span class="accSub" data-i18n="acc3_s">Contracts and measurement surfaces</span>
-          </span>
-          <span class="chev" aria-hidden="true">›</span>
-        </button>
-        <div class="accBody" id="a3">
-          <div class="bubble">
-            <p class="bH" data-i18n="acc3_bh">What lives here</p>
-            <p class="bP" data-i18n="acc3_bp">
-              Laws define invariants and contracts. Gauges measure and audit.
-            </p>
-            <div class="bRow">
-              <a class="btn red" href="/laws/" data-route="/laws/" data-i18n="open_laws">OPEN LAWS</a>
-              <a class="btn gold" href="/gauges/" data-route="/gauges/" data-i18n="open_gauges">OPEN GAUGES</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
 
   <script>
     (function(){
-      "use strict";
+      // Preserve full query + hash. Do not create/modify gd_* keys.
+      var qs = window.location.search || "";
+      var hash = window.location.hash || "";
+      var target = "../index.html" + qs + hash;
 
-      // ==============================
-      // Canon state (URL + localStorage)
-      // Allowed keys only: gd_lang, gd_style, gd_time, gd_depth
-      // ==============================
-      var LS = window.localStorage;
-
-      function getParam(name){
-        try{
-          return new URL(window.location.href).searchParams.get(name);
-        }catch(e){ return null; }
-      }
-
-      function clampInt(n, lo, hi, fallback){
-        var x = parseInt(n,10);
-        if (!isFinite(x)) return fallback;
-        if (x < lo) return lo;
-        if (x > hi) return hi;
-        return x;
-      }
-
-      function readState(){
-        var uLang = getParam("lang");
-        var uStyle = getParam("style");
-        var uTime = getParam("time");
-        var uDepth = getParam("depth");
-        var lane = getParam("lane"); // URL-only
-
-        var lang = uLang || LS.getItem("gd_lang") || "en";
-        var style = uStyle || LS.getItem("gd_style") || "informal";
-        var time = uTime || LS.getItem("gd_time") || "";
-        var depth = clampInt(uDepth || LS.getItem("gd_depth") || "1", 1, 9, 1);
-
-        if (lang !== "en" && lang !== "zh" && lang !== "es") lang = "en";
-        if (style !== "informal" && style !== "formal") style = "informal";
-
-        // Persist only allowed keys (no new keys)
-        try{
-          LS.setItem("gd_lang", lang);
-          LS.setItem("gd_style", style);
-          if (time !== null && time !== undefined) LS.setItem("gd_time", String(time));
-          LS.setItem("gd_depth", String(depth));
-        }catch(e){}
-
-        return { lang: lang, style: style, time: String(time||""), depth: depth, lane: lane };
-      }
-
-      function q(state, extra){
-        var p = new URLSearchParams();
-        p.set("lang", state.lang);
-        p.set("style", state.style);
-        if (state.time) p.set("time", state.time);
-        p.set("depth", String(state.depth));
-        // lane is URL-only; preserve if present
-        if (state.lane === "platform" || state.lane === "engineering") p.set("lane", state.lane);
-        if (extra){
-          Object.keys(extra).forEach(function(k){
-            if (extra[k] === null || extra[k] === undefined || extra[k] === "") return;
-            p.set(k, String(extra[k]));
-          });
-        }
-        var s = p.toString();
-        return s ? ("?" + s) : "";
-      }
-
-      function wireAll(state){
-        // Attach state query to any element with data-route
-        var nodes = document.querySelectorAll("[data-route]");
-        for (var i=0;i<nodes.length;i++){
-          var el = nodes[i];
-          var route = el.getAttribute("data-route") || "";
-          if (!route) continue;
-          // If route already has query, keep it and append state only if missing
-          var url = route;
-          if (url.indexOf("?") === -1){
-            url = route + q(state);
-          }else{
-            // preserve existing query; append missing state keys
-            try{
-              var u = new URL(url, window.location.origin);
-              var sp = u.searchParams;
-              if (!sp.get("lang")) sp.set("lang", state.lang);
-              if (!sp.get("style")) sp.set("style", state.style);
-              if (!sp.get("time") && state.time) sp.set("time", state.time);
-              if (!sp.get("depth")) sp.set("depth", String(state.depth));
-              if (!sp.get("lane") && (state.lane==="platform"||state.lane==="engineering")) sp.set("lane", state.lane);
-              url = u.pathname + "?" + sp.toString() + (u.hash||"");
-            }catch(e){
-              // fallback: leave as-is
-            }
-          }
-          if (el.tagName === "A") el.setAttribute("href", url);
-        }
-      }
-
-      // ==============================
-      // Trilingual copy map
-      // ==============================
-      var I18N = {
-        en:{
-          t_compass:"COMPASS",
-          t_tagline:"Navigation index · state preserved",
-          t_informal:"INFORMAL",
-          t_formal:"FORMAL",
-          t_depth:"DEPTH",
-          h1:"Everything routes from here.",
-          lead:"Use Compass to reach Door, Home, Products, Explore, Laws, and Gauges without losing state. This page preserves <b>lang</b>, <b>style</b>, <b>time</b>, and <b>depth</b>.",
-          chip_single:"SINGLE-OPEN",
-          chip_mobile:"MOBILE SAFE",
-          chip_state:"STATE CARRY",
-          chip_tri:"TRILINGUAL",
-          fine:"<b>Note:</b> Intro-tier hub. Lenses are not required here. Non-intro pages carry full lenses.",
-          fast:"FAST NAV",
-          d_door:"DOOR", tag_entry:"ENTRY", dd_door:"Start here. Structure-first navigation.",
-          d_home:"HOME", tag_hub:"HUB", dd_home:"Your stable return point.",
-          d_products:"PRODUCTS", tag_catalog:"CATALOG", dd_products:"Everything buildable, routable.",
-          d_explore:"EXPLORE", tag_frontier:"FRONTIER", dd_explore:"Vision, domains, frontier forks.",
-          d_laws:"LAWS", tag_contract:"CONTRACT", dd_laws:"Standards, rules, invariants.",
-          d_gauges:"GAUGES", tag_measure:"MEASURE", dd_gauges:"Measurement surface and audits.",
-          acc0_t:"Compass Terminal", acc0_s:"Return to the global index",
-          acc0_bh:"Route", acc0_bp:"This is the stable “index.html” terminal. If you want the full compass layout there, open it now.",
-          open_index:"OPEN /index.html", open_prelude:"OPEN /prelude/",
-          acc1_t:"Products", acc1_s:"Routing catalog to buildable pages",
-          acc1_bh:"What lives here", acc1_bp:"Energy, Education, Coherence Diagnostic, Software Spine, Dot.Grid, SSG, and routing-safe shells.",
-          open_products:"OPEN PRODUCTS", open_spine:"OPEN SOFTWARE SPINE",
-          acc2_t:"Explore", acc2_s:"Frontier forks and vision shells",
-          acc2_bh:"What lives here", acc2_bp:"Frontier Index, Vision Index, and domain lanes.",
-          open_explore:"OPEN EXPLORE", open_frontier:"OPEN FRONTIER", open_vision:"OPEN VISION",
-          acc3_t:"Laws & Gauges", acc3_s:"Contracts and measurement surfaces",
-          acc3_bh:"What lives here", acc3_bp:"Laws define invariants and contracts. Gauges measure and audit.",
-          open_laws:"OPEN LAWS", open_gauges:"OPEN GAUGES"
-        },
-        zh:{
-          t_compass:"指南针",
-          t_tagline:"导航索引 · 状态保留",
-          t_informal:"通俗",
-          t_formal:"正式",
-          t_depth:"深度",
-          h1:"一切从这里出发。",
-          lead:"使用指南针进入 门户、首页、产品、探索、法则 与 仪表，并且不丢失状态。本页保留 <b>lang</b>、<b>style</b>、<b>time</b>、<b>depth</b>。",
-          chip_single:"单开折叠",
-          chip_mobile:"移动端安全",
-          chip_state:"状态携带",
-          chip_tri:"三语",
-          fine:"<b>说明：</b> 入门级枢纽页。此页不强制镜头层；非入门页必须具备完整镜头层。",
-          fast:"快速导航",
-          d_door:"门户", tag_entry:"入口", dd_door:"从这里开始。结构优先导航。",
-          d_home:"首页", tag_hub:"枢纽", dd_home:"稳定返回点。",
-          d_products:"产品", tag_catalog:"目录", dd_products:"可构建、可路由的一切。",
-          d_explore:"探索", tag_frontier:"前沿", dd_explore:"愿景、领域、前沿分叉。",
-          d_laws:"法则", tag_contract:"契约", dd_laws:"标准、规则、不变量。",
-          d_gauges:"仪表", tag_measure:"测量", dd_gauges:"测量面与审计。",
-          acc0_t:"指南针终端", acc0_s:"返回全局索引",
-          acc0_bh:"路由", acc0_bp:"这是稳定的 “index.html” 终端。如果你希望在那里看到完整指南针布局，现在打开它。",
-          open_index:"打开 /index.html", open_prelude:"打开 /prelude/",
-          acc1_t:"产品", acc1_s:"通往可构建页面的路由目录",
-          acc1_bh:"这里包含什么", acc1_bp:"能源、教育、一致性诊断、软件主干、Dot.Grid、SSG 与 路由安全壳页。",
-          open_products:"打开 产品", open_spine:"打开 软件主干",
-          acc2_t:"探索", acc2_s:"前沿分叉与愿景壳页",
-          acc2_bh:"这里包含什么", acc2_bp:"前沿索引、愿景索引 与 领域通道。",
-          open_explore:"打开 探索", open_frontier:"打开 前沿", open_vision:"打开 愿景",
-          acc3_t:"法则与仪表", acc3_s:"契约与测量面",
-          acc3_bh:"这里包含什么", acc3_bp:"法则定义不变量与契约。仪表负责测量与审计。",
-          open_laws:"打开 法则", open_gauges:"打开 仪表"
-        },
-        es:{
-          t_compass:"BRÚJULA",
-          t_tagline:"Índice de navegación · estado preservado",
-          t_informal:"INFORMAL",
-          t_formal:"FORMAL",
-          t_depth:"PROFUNDIDAD",
-          h1:"Todo se enruta desde aquí.",
-          lead:"Usa la brújula para ir a Puerta, Inicio, Productos, Explorar, Leyes y Medidores sin perder estado. Esta página preserva <b>lang</b>, <b>style</b>, <b>time</b> y <b>depth</b>.",
-          chip_single:"ACORDEÓN ÚNICO",
-          chip_mobile:"SEGURO MÓVIL",
-          chip_state:"ESTADO CONSERVADO",
-          chip_tri:"TRILINGÜE",
-          fine:"<b>Nota:</b> Hub de nivel introductorio. Aquí no se requieren lentes. Las páginas no intro llevan lentes completos.",
-          fast:"NAVEGACIÓN RÁPIDA",
-          d_door:"PUERTA", tag_entry:"ENTRADA", dd_door:"Empieza aquí. Navegación estructural.",
-          d_home:"INICIO", tag_hub:"HUB", dd_home:"Tu punto estable de regreso.",
-          d_products:"PRODUCTOS", tag_catalog:"CATÁLOGO", dd_products:"Todo lo construible y enrutable.",
-          d_explore:"EXPLORAR", tag_frontier:"FRONTERA", dd_explore:"Visión, dominios, ramificaciones.",
-          d_laws:"LEYES", tag_contract:"CONTRATO", dd_laws:"Estándares, reglas, invariantes.",
-          d_gauges:"MEDIDORES", tag_measure:"MEDIR", dd_gauges:"Superficie de medición y auditoría.",
-          acc0_t:"Terminal de brújula", acc0_s:"Volver al índice global",
-          acc0_bh:"Ruta", acc0_bp:"Este es el terminal estable “index.html”. Si quieres el diseño completo ahí, ábrelo ahora.",
-          open_index:"ABRIR /index.html", open_prelude:"ABRIR /prelude/",
-          acc1_t:"Productos", acc1_s:"Catálogo de rutas a páginas construibles",
-          acc1_bh:"Qué vive aquí", acc1_bp:"Energía, Educación, Diagnóstico de coherencia, Columna de software, Dot.Grid, SSG y shells seguros.",
-          open_products:"ABRIR PRODUCTOS", open_spine:"ABRIR SOFTWARE SPINE",
-          acc2_t:"Explorar", acc2_s:"Ramificaciones de frontera y shells de visión",
-          acc2_bh:"Qué vive aquí", acc2_bp:"Índice de Frontera, Índice de Visión y carriles de dominio.",
-          open_explore:"ABRIR EXPLORAR", open_frontier:"ABRIR FRONTERA", open_vision:"ABRIR VISIÓN",
-          acc3_t:"Leyes y Medidores", acc3_s:"Contratos y superficies de medición",
-          acc3_bh:"Qué vive aquí", acc3_bp:"Leyes definen invariantes y contratos. Medidores miden y auditan.",
-          open_laws:"ABRIR LEYES", open_gauges:"ABRIR MEDIDORES"
-        }
-      };
-
-      function applyI18n(lang){
-        var dict = I18N[lang] || I18N.en;
-        var nodes = document.querySelectorAll("[data-i18n]");
-        for (var i=0;i<nodes.length;i++){
-          var n = nodes[i];
-          var key = n.getAttribute("data-i18n");
-          var val = dict[key];
-          if (val === undefined || val === null) continue;
-          // allow <b> in a few strings
-          n.innerHTML = String(val);
-        }
-        document.documentElement.setAttribute("lang", lang === "zh" ? "zh-Hans" : lang);
-      }
-
-      // ==============================
-      // Accordion (single-open)
-      // ==============================
-      function closeAll(exceptId){
-        var bodies = document.querySelectorAll(".accBody");
-        for (var i=0;i<bodies.length;i++){
-          var b = bodies[i];
-          if (b.id === exceptId) continue;
-          b.classList.remove("open");
-        }
-      }
-
-      function initAccordion(){
-        var btns = document.querySelectorAll(".accBtn[data-acc]");
-        for (var i=0;i<btns.length;i++){
-          (function(btn){
-            btn.addEventListener("click", function(){
-              var id = btn.getAttribute("data-acc");
-              var body = document.getElementById(id);
-              if (!body) return;
-              var isOpen = body.classList.contains("open");
-              closeAll(id);
-              if (isOpen) body.classList.remove("open");
-              else body.classList.add("open");
-            }, {passive:true});
-          })(btns[i]);
-        }
-      }
-
-      // ==============================
-      // Toggles
-      // ==============================
-      function setPressed(groupIds, activeId){
-        groupIds.forEach(function(id){
-          var el = document.getElementById(id);
-          if (!el) return;
-          el.setAttribute("aria-pressed", id === activeId ? "true" : "false");
-        });
-      }
-
-      function initControls(state){
-        var en = document.getElementById("lang_en");
-        var zh = document.getElementById("lang_zh");
-        var es = document.getElementById("lang_es");
-        var si = document.getElementById("style_informal");
-        var sf = document.getElementById("style_formal");
-
-        function reloadWith(next){
-          // language toggle reloads SAME pathname (GH Pages safe)
-          var base = window.location.pathname;
-          var merged = {
-            lang: next.lang || state.lang,
-            style: next.style || state.style,
-            time: (next.time !== undefined ? next.time : state.time),
-            depth: (next.depth !== undefined ? next.depth : state.depth)
-          };
-          // persist allowed keys
-          try{
-            LS.setItem("gd_lang", merged.lang);
-            LS.setItem("gd_style", merged.style);
-            if (merged.time !== null && merged.time !== undefined) LS.setItem("gd_time", String(merged.time||""));
-            LS.setItem("gd_depth", String(merged.depth));
-          }catch(e){}
-
-          var nextState = { lang: merged.lang, style: merged.style, time: String(merged.time||""), depth: merged.depth, lane: state.lane };
-          window.location.href = base + q(nextState);
-        }
-
-        var langIds = ["lang_en","lang_zh","lang_es"];
-        var styleIds = ["style_informal","style_formal"];
-
-        // initial pressed
-        setPressed(langIds, state.lang === "zh" ? "lang_zh" : (state.lang === "es" ? "lang_es" : "lang_en"));
-        setPressed(styleIds, state.style === "formal" ? "style_formal" : "style_informal");
-
-        if (en) en.addEventListener("click", function(){ reloadWith({lang:"en"}); }, {passive:true});
-        if (zh) zh.addEventListener("click", function(){ reloadWith({lang:"zh"}); }, {passive:true});
-        if (es) es.addEventListener("click", function(){ reloadWith({lang:"es"}); }, {passive:true});
-
-        if (si) si.addEventListener("click", function(){ reloadWith({style:"informal"}); }, {passive:true});
-        if (sf) sf.addEventListener("click", function(){ reloadWith({style:"formal"}); }, {passive:true});
-
-        var d = document.getElementById("depth_val");
-        if (d) d.textContent = String(state.depth);
-      }
-
-      // ==============================
-      // Boot
-      // ==============================
-      var state = readState();
-      applyI18n(state.lang);
-      initControls(state);
-      initAccordion();
-      wireAll(state);
-
-      // Default open first bubble on desktop, keep closed on small screens
-      try{
-        if (window.innerWidth >= 920){
-          var first = document.getElementById("a0");
-          if (first) first.classList.add("open");
-        }
-      }catch(e){}
+      // replace() avoids back-button loop into /compass/
+      window.location.replace(target);
     })();
   </script>
+</head>
+<body>
+  <main class="wrap" aria-label="Compass redirect shell">
+    <section class="card">
+      <h1 class="h1">Redirecting to Compass…</h1>
+      <p class="p">
+        EN: If you are not redirected automatically, tap below.<br/>
+        中文：如果没有自动跳转，请点击下面按钮。<br/>
+        ES: Si no redirige automáticamente, pulsa abajo.
+      </p>
+      <div class="row">
+        <a class="btn" href="../index.html">OPEN /index.html</a>
+      </div>
+    </section>
+    <noscript>
+      <div class="wrap" style="padding:12px 0 0">
+        <section class="card">
+          <h2 class="h1" style="font-size:18px">JavaScript is disabled.</h2>
+          <p class="p">Tap “OPEN /index.html”.</p>
+        </section>
+      </div>
+    </noscript>
+  </main>
 </body>
 </html>

@@ -14,8 +14,8 @@ a{color:inherit;text-decoration:none}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --R:170px;
-  --D:168px;
+  --radius:170px;
+  --D:160px;
   --Dminor:150px;
 
   --onyx0:rgba(6,8,10,.96);
@@ -34,7 +34,7 @@ body::before,body::after{pointer-events:none!important}
 .stage{
   position:relative;
   width:min(760px,94vw);
-  height:min(760px,80vh);
+  height:min(760px,82vh);
   margin:120px auto 0;
   pointer-events:none;
 }
@@ -43,18 +43,24 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:50%;
   top:50%;
-  transform-origin:center;
+  width:var(--D);
+  height:var(--D);
   border-radius:28px;
   cursor:pointer;
   pointer-events:auto;
   overflow:hidden;
-  transition:transform .18s ease, box-shadow .18s ease;
+  transform-origin:center;
+  transition:transform .2s ease;
 }
 
-.primary{width:var(--D);height:var(--D)}
-.secondary{width:var(--Dminor);height:var(--Dminor)}
+/* Radial placement */
+.dExplore  { transform:translate(-50%,-50%) rotate(45deg) translateY(calc(-1 * var(--radius))); }
+.dResearch { transform:translate(-50%,-50%) rotate(45deg) translate(calc(var(--radius) * .7), calc(-1 * var(--radius) * .7)); }
+.dProducts { transform:translate(-50%,-50%) rotate(45deg) translateX(var(--radius)); }
+.dLaws     { transform:translate(-50%,-50%) rotate(45deg) translateY(var(--radius)); }
+.dGauges   { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--radius)), 0); }
+.dEducation{ transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--radius) * .7), calc(-1 * var(--radius) * .7)); }
 
-/* MATERIAL STACK */
 .surface{
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.22), transparent 46%),
@@ -64,67 +70,13 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
 
   border:1px solid rgba(255,255,255,.16);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 28px rgba(255,43,43,.10),
-    inset 0 2px 0 rgba(255,255,255,.20),
-    inset 0 -46px 86px rgba(0,0,0,.88);
+  box-shadow:var(--shadowDeep);
 }
 
-/* Gold trim layer */
 .goldTrim{
   border:1px solid var(--gold);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 34px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -46px 86px rgba(0,0,0,.88);
+  box-shadow:var(--shadowDeep), 0 0 30px var(--goldGlow);
 }
-
-/* Silk diamond lay on trim */
-.surface::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
-  opacity:.35;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-}
-
-/* Highlight gloss */
-.surface::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:30%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  pointer-events:none;
-}
-
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.04);
-}
-
-/* Placement */
-.dN{transform:translate(-50%,-50%) translate(0,-170px) rotate(45deg)}
-.dE{transform:translate(-50%,-50%) translate(170px,0) rotate(45deg)}
-.dS{transform:translate(-50%,-50%) translate(0,170px) rotate(45deg)}
-.dW{transform:translate(-50%,-50%) translate(-170px,0) rotate(45deg)}
-.dNE{transform:translate(-50%,-50%) translate(120px,-120px) rotate(45deg)}
-.dNW{transform:translate(-50%,-50%) translate(-120px,-120px) rotate(45deg)}
 
 .inner{
   width:100%;
@@ -140,14 +92,6 @@ body::before,body::after{pointer-events:none!important}
   color:#fff;
 }
 
-/* Responsive */
-@media (max-width:600px){
-  :root{
-    --R:150px;
-    --D:152px;
-    --Dminor:138px;
-  }
-}
 </style>
 </head>
 
@@ -155,58 +99,27 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="stage">
 
-  <div class="d primary surface dN" id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
-  <div class="d primary surface dE" id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
-  <div class="d primary surface dS" id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
-  <div class="d primary surface dW" id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
-
-  <div class="d secondary surface goldTrim dNE" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
-  <div class="d secondary surface dNW" id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
+  <div class="d surface dExplore" id="dExplore"><div class="inner">EXPLORE</div></div>
+  <div class="d surface goldTrim dResearch" id="dResearch"><div class="inner">RESEARCH</div></div>
+  <div class="d surface dProducts" id="dProducts"><div class="inner">PRODUCTS</div></div>
+  <div class="d surface dLaws" id="dLaws"><div class="inner">LAWS</div></div>
+  <div class="d surface dGauges" id="dGauges"><div class="inner">GAUGES</div></div>
+  <div class="d surface dEducation" id="dEducation"><div class="inner">EDUCATION</div></div>
 
 </div>
 
 <script>
 (function(){
-  var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  var style=qs.get("style")||localStorage.getItem("gd_style")||"informal";
-  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
-  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
-
-  localStorage.setItem("gd_lang",lang);
-  localStorage.setItem("gd_style",style);
-  localStorage.setItem("gd_time",time);
-  localStorage.setItem("gd_depth",depth);
-
-  function q(){
-    return "?lang="+lang+"&style="+style+"&time="+time+"&depth="+depth;
+  function go(p){
+    var qs=window.location.search||"";
+    window.location.href=p+qs;
   }
-
-  function go(p){location.href=p+q();}
-
   dExplore.onclick=()=>go("/explore/");
+  dResearch.onclick=()=>go("/research/");
   dProducts.onclick=()=>go("/products/");
   dLaws.onclick=()=>go("/laws/");
   dGauges.onclick=()=>go("/gauges/");
-  dResearch.onclick=()=>go("/research/");
   dEducation.onclick=()=>go("/products/education/");
-
-  if(lang==="zh"){
-    txtExplore.textContent="探索";
-    txtProducts.textContent="产品";
-    txtLaws.textContent="法则";
-    txtGauges.textContent="量规";
-    txtResearch.textContent="研究";
-    txtEducation.textContent="教育";
-  }
-  if(lang==="es"){
-    txtExplore.textContent="EXPLORAR";
-    txtProducts.textContent="PRODUCTOS";
-    txtLaws.textContent="LEYES";
-    txtGauges.textContent="MEDIDORES";
-    txtResearch.textContent="INVESTIGACIÓN";
-    txtEducation.textContent="EDUCACIÓN";
-  }
 })();
 </script>
 

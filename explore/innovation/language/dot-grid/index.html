@@ -1,15 +1,16 @@
 <!-- TNT — /explore/innovation/language/dot-grid/index.html
-     DOT.GRID · 256-state indexing + sweeps
-     LOCKS:
-       - TNT FULL FILE
-       - Uses /assets/ui.css + /assets/branch.css only (NO field ownership; do NOT style html/body background)
-       - Gem-standard diamond page (same “Grammar” look)
-       - Main page = 4 diamonds: HOW IT FEELS / WHY IT MATTERS / HOW IT WORKS / WHAT’S NEXT
-       - Click a diamond → centered modal
-       - Modal lenses ONLY: STYLE (formal/informal) + TIME (concept/now/roadmap = origin/now/post)
-       - Inside modal: 4 BUBBLES (4 paragraphs) — no extra internal tabs
-       - Modal footer actions are bubbles (no purple links): RETURN / JUMP LANGUAGE / JUMP EXPLORE
-       - Deterministic state propagation via ?lang=&style=&time= and gd_* localStorage
+     LANGUAGE · DOT.GRID (EN/中文) · 4 LENSES (INFORMAL / FORMAL / PLATFORM / ENGINEERING)
+     NOTES:
+       - EN + 中文 only
+       - PLATFORM/ENGINEERING mapped to gd_depth:
+           depth=explore => PLATFORM
+           depth=learn   => ENGINEERING
+       - INFORMAL/FORMAL mapped to gd_style
+       - Auto-close accordion (only one open at a time; tap again closes)
+       - No modals, no overlays, no inline onclick
+       - Canon state carry: lang/style/time/depth (URL + gd_* localStorage)
+       - Uses ui.css + branch.css + instruments.js only
+       - Does NOT style html/body background (ui.css owns field)
 -->
 
 <!doctype html>
@@ -17,776 +18,826 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DOT.GRID · 256-State Indexing</title>
+<title>LANGUAGE · DOT.GRID</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body::before,body::after{pointer-events:none!important}
+
+/* ===== TOKENS ===== */
 :root{
-  --R:124px;
+  --dockH:92px;
+
+  --opalA:rgba(210,190,255,.16);
+  --opalB:rgba(120,70,255,.12);
+  --opalC:rgba(90,210,255,.08);
   --goldSoft:rgba(212,175,55,.35);
-  --obs1:#070b12;
-  --obs2:#0c1626;
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.68);
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 }
 
-/* Top-left controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:90;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-}
-
-/* Title pill */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:80;text-align:center;
-  padding:10px 14px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.16);
-  backdrop-filter:blur(8px);
-}
-.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
-.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
-
-/* Stage */
-.stage{
-  position:fixed;left:50%;top:52%;
-  transform:translate(-50%,-50%);
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  z-index:40;
-}
-
-/* Outer gem diamond */
-.outer{
-  position:absolute;left:50%;top:50%;
-  width:min(560px,92vw);
-  height:min(560px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:60px;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 90px 260px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -50px 90px rgba(0,0,0,.55);
-  pointer-events:none;
-  opacity:.85;
-}
-.outer::after{
-  content:"";
-  position:absolute; inset:0; border-radius:60px;
-  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
-  opacity:.16;
-}
-
-/* Gem diamonds */
-.d{
-  width:150px;height:150px;
-  position:absolute;left:50%;top:50%;
-  transform-origin:center;
-  border-radius:26px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
-    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
-
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 28px 84px rgba(0,0,0,.78),
-    inset 0 2px 0 rgba(255,255,255,.14),
-    inset 0 -28px 44px rgba(0,0,0,.62);
-
-  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-}
-.d::before{
-  content:"";
-  position:absolute; inset:0; border-radius:26px; padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.d::after{
-  content:"";
-  position:absolute; left:12%; right:12%; top:10%; height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
-  opacity:.85;
-  transform:rotate(-10deg);
-  pointer-events:none;
-}
-.d:hover{
-  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 18px rgba(212,175,55,.18),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-  border-color:rgba(212,175,55,.28);
-}
-.d.active{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 34px 110px rgba(0,0,0,.88),
-    0 0 30px rgba(212,175,55,.40),
-    inset 0 2px 0 rgba(255,255,255,.18),
-    inset 0 -32px 52px rgba(0,0,0,.68);
-}
-
-.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--R) * -1)) rotate(45deg); }
-.d-e{ transform:translate(-50%,-50%) translate(var(--R), 0) rotate(45deg); }
-.d-s{ transform:translate(-50%,-50%) translate(0, var(--R)) rotate(45deg); }
-.d-w{ transform:translate(-50%,-50%) translate(calc(var(--R) * -1), 0) rotate(45deg); }
-
-.in{
-  width:100%; height:100%;
-  transform:rotate(-45deg);
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  text-align:center;
-  padding:16px;
-  gap:8px;
-  pointer-events:none;
-  user-select:none;
-}
-.lab{ font-weight:950; letter-spacing:.8px; font-size:16px; }
-.sub{ font-size:13px; opacity:.86; line-height:1.35; max-width:16em; }
-
-.core{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:64px;height:64px;border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
-  display:grid;place-items:center;
-  font-weight:950;letter-spacing:.5px;
-  opacity:.92;
-  pointer-events:none;
-}
-
-/* Bottom dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:90;
-  width:min(980px,94vw);
-  display:flex;justify-content:center;
-  gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.20);
-  backdrop-filter:blur(8px);
-}
-
-/* Modal */
-.bd{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,.65);
-  backdrop-filter:blur(10px);
-  display:none;
-}
-.bd.show{display:block;}
-.modal{
-  position:fixed;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1020px,94vw);
-  max-height:88vh;
-  display:none;
-  z-index:210;
-}
-.modal.show{display:block;}
-.shell{
-  height:88vh;
-  border-radius:26px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 50% 18%, rgba(176,0,0,.20), transparent 55%),
-    radial-gradient(circle at 40% 25%, rgba(90,140,255,.12), transparent 55%),
-    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
-  box-shadow:0 60px 180px rgba(0,0,0,.92);
-  overflow:hidden;
+/* ===== PAGE ===== */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:14px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
+  gap:12px;
   position:relative;
+  z-index:10;
 }
-.shell::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:58%;
-  width:min(980px,94vw);
-  height:min(980px,94vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
+
+/* ===== TOP (MOBILE SAFE) ===== */
+.top{
+  position:sticky;
+  top:0;
+  z-index:240;
+  padding:10px 0 6px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+.top .left,.top .right{
+  display:flex;
+  gap:10px;
+  flex-wrap:nowrap;
+  white-space:nowrap;
+  align-items:center;
+}
+.top .btn{white-space:nowrap}
+
+/* ===== HEADER ===== */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(0,80,255,.16), transparent 60%),
-    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.68) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.72),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-  opacity:.55;
-  pointer-events:none;
+    radial-gradient(circle at 20% 22%, var(--opalA), transparent 72%),
+    radial-gradient(circle at 82% 60%, var(--opalB), transparent 74%),
+    radial-gradient(circle at 55% 110%, var(--opalC), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
 }
-.mhead{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
-}
-.mtitle{ margin:0; font-weight:950; letter-spacing:.3px; font-size:16px; }
-.mclose{ border:0; background:transparent; color:#fff; font-size:18px; cursor:pointer; padding:8px 10px; }
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.t{margin:0;font-weight:950;font-size:26px;letter-spacing:.8px}
+.s{margin:10px 0 0;font-size:13.75px;opacity:.90;line-height:1.55;max-width:980px}
+.fine{margin-top:10px;font-size:12.25px;opacity:.72;line-height:1.45}
 
-.lensbar{
-  display:flex;gap:10px;flex-wrap:wrap;
-  align-items:center;justify-content:center;
-  padding:10px 10px 12px;border-bottom:1px solid rgba(255,255,255,.08);
-  position:relative;z-index:2;
+/* ===== LENSES (4 pills) ===== */
+.lenses{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
 }
-.chip{
-  padding:10px 16px;border-radius:999px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;
+.lenses .btn{
+  border-radius:999px;
+  padding:10px 12px;
 }
-.chip.active{
-  border-color:rgba(212,175,55,.35);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+.lenses .btn.active{
+  box-shadow:0 0 0 1px rgba(212,175,55,.35), 0 0 18px rgba(212,175,55,.18);
 }
 
-.mbody{
-  padding:14px 16px 18px;
-  overflow:auto;-webkit-overflow-scrolling:touch;
-  flex:1 1 auto;
-  position:relative;z-index:2;
+/* ===== BAND ===== */
+.band{
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
 }
 
-/* 4 bubbles (paragraph cards) */
-.grid{display:grid;gap:14px}
-.bubble{
-  padding:16px 18px;border-radius:22px;
-  background:
-    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+/* ===== ACCORDION (LONG BUBBLES) ===== */
+.stack{display:flex;flex-direction:column;gap:12px}
+
+.card{
+  position:relative;
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
-  position:relative;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(210,190,255,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:0 16px 52px rgba(0,0,0,.60);
+  overflow:hidden;
 }
-.bubble::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
-  opacity:.55;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor; mask-composite:exclude;
-  pointer-events:none;
-}
-.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.2px}
-.bubble p{margin:0;color:var(--mut);line-height:1.55}
-.bubble p span{color:rgba(255,255,255,.70);font-weight:800}
 
-/* Modal footer actions (bubbles, not purple links) */
-.mact{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px}
-.sbtn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:12px 18px;border-radius:14px;
-  background:linear-gradient(145deg,var(--obs2),var(--obs1));
-  color:#fff;border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 14px 36px rgba(0,0,0,.7);
-  cursor:pointer;font-weight:900;letter-spacing:.2px;text-decoration:none;
+.head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-.sbtn:hover{ box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 14px rgba(212,175,55,.20); }
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
 
+/* little colored DIAMOND marker */
+.dmark{
+  width:10px;height:10px;
+  border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(212,175,55,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;
+  margin-top:3px;
+}
+
+.name{
+  font-weight:950;
+  letter-spacing:.25px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.sub{
+  margin-top:6px;
+  font-size:12.75px;
+  opacity:.82;
+  line-height:1.35;
+  max-width:92ch;
+}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.card.open .body{display:block}
+
+.p{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  line-height:1.65;
+  font-size:13.5px;
+}
+.p + .p{margin-top:10px}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+.actions .btn{padding:10px 12px;border-radius:999px}
+
+/* ===== DOCK ===== */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{ --R: 116px; }
-  .stage{ width:min(520px,92vw); height:min(520px,92vw); }
-  .outer{ width:min(520px,92vw); height:min(520px,92vw); }
-  .core{ width:58px; height:58px; }
-  .shell{ height:90vh; }
+  :root{--dockH:98px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="crp-btn" id="btnExplore" href="/explore/">EXPLORE</a>
-  <a class="crp-btn" id="btnLanguage" href="/explore/innovation/language/">LANGUAGE</a>
-  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
-</div>
+<div class="page">
 
-<div class="brand">
-  <div class="t1" id="brandTop">DOT.GRID</div>
-  <div class="t2" id="brandSub">256-STATE INDEXING · SWEEPS</div>
-</div>
-
-<div class="stage" aria-label="DOT.GRID diamond">
-  <div class="outer"></div>
-
-  <div class="d d-n" id="dFeels" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labFeels">HOW IT FEELS</div>
-      <div class="sub" id="subFeels">Clarity at speed · no getting lost.</div>
+  <div class="top" aria-label="Top controls">
+    <div class="left">
+      <a class="btn" id="btnBack" href="/explore/innovation/language/">BACK</a>
+      <a class="btn" id="btnExplore" href="/explore/">EXPLORE</a>
+    </div>
+    <div class="right" aria-label="Language">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
     </div>
   </div>
 
-  <div class="d d-e" id="dMatters" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labMatters">WHY IT MATTERS</div>
-      <div class="sub" id="subMatters">Proof paths · lower risk.</div>
+  <div class="header" aria-label="Header">
+    <p class="k" id="hk">LANGUAGE</p>
+    <h1 class="t" id="ht">DOT.GRID</h1>
+    <p class="s" id="hs"></p>
+    <div class="fine" id="fine"></div>
+
+    <div class="lenses" aria-label="Lenses">
+      <button class="btn" id="btnInformal" type="button">INFORMAL</button>
+      <button class="btn" id="btnFormal" type="button">FORMAL</button>
+      <button class="btn" id="btnPlatform" type="button">PLATFORM</button>
+      <button class="btn" id="btnEngineering" type="button">ENGINEERING</button>
     </div>
   </div>
 
-  <div class="d d-w" id="dWorks" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labWorks">HOW IT WORKS</div>
-      <div class="sub" id="subWorks">Index · sweep · compare.</div>
-    </div>
-  </div>
+  <div class="band" id="band">DOT.GRID IN LANGUAGE</div>
+  <div class="stack" id="stack"></div>
 
-  <div class="d d-s" id="dNext" role="button" tabindex="0">
-    <div class="in">
-      <div class="lab" id="labNext">WHAT’S NEXT</div>
-      <div class="sub" id="subNext">From maps to live diagnostics.</div>
-    </div>
-  </div>
-
-  <div class="core">◆</div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="crp-btn" id="dockTerminal" href="/index.html">TERMINAL</a>
-  <a class="crp-btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="crp-btn" id="dockEducation" href="/products/education/">EDUCATION</a>
-  <a class="crp-btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="crp-btn" id="dockLinks" href="/links/">LINKS</a>
+  <a class="btn" id="dockHome" href="/home/">HOME</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
-
-<div class="bd" id="bd"></div>
-
-<div class="modal" id="modal" role="dialog" aria-modal="true">
-  <div class="shell">
-    <div class="mhead">
-      <h3 class="mtitle" id="mTitle">DOT.GRID · DETAIL</h3>
-      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
-    </div>
-
-    <!-- LENSES ONLY (no extra internal tabs) -->
-    <div class="lensbar">
-      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
-      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
-      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
-      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
-    </div>
-
-    <div class="mbody">
-      <div class="grid">
-        <div class="bubble"><h4 id="h1"></h4><p id="p1"></p></div>
-        <div class="bubble"><h4 id="h2"></h4><p id="p2"></p></div>
-        <div class="bubble"><h4 id="h3"></h4><p id="p3"></p></div>
-        <div class="bubble"><h4 id="h4"></h4><p id="p4"></p></div>
-      </div>
-
-      <div class="mact">
-        <button class="sbtn" id="mReturn" type="button">RETURN</button>
-        <a class="sbtn" id="mJumpLanguage" href="/explore/innovation/language/">JUMP LANGUAGE</a>
-        <a class="sbtn" id="mJumpExplore" href="/explore/">JUMP EXPLORE</a>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
-  // ===== STATE (canonical keys only) =====
-  var qs = new URLSearchParams(location.search);
-  var qLang = qs.get("lang");
-  var qStyle = qs.get("style");
-  var qTime = qs.get("time");
+  // ===== canonical state =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
-  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
-  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  // EN + 中文 only here
+  if(lang!=="en" && lang!=="zh") lang="en";
+  if(style!=="formal" && style!=="informal") style="informal";
   if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+  // PLATFORM/ENGINEERING mapped to gd_depth: explore=platform, learn=engineering
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang", lang);
-    localStorage.setItem("gd_style", style);
-    localStorage.setItem("gd_time", time);
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
-
-  function wire(){
-    var s=q();
-    document.getElementById("btnExplore").href="/explore/?"+s;
-    document.getElementById("btnLanguage").href="/explore/innovation/language/?"+s;
-    document.getElementById("btnExit").href="/door/?"+s;
-
-    document.getElementById("dockTerminal").href="/index.html?"+s;
-    document.getElementById("dockProducts").href="/products/?"+s;
-    document.getElementById("dockEducation").href="/products/education/?"+s;
-    document.getElementById("dockLaws").href="/laws/?"+s;
-    document.getElementById("dockLinks").href="/links/?"+s;
-
-    document.getElementById("mJumpLanguage").href="/explore/innovation/language/?"+s;
-    document.getElementById("mJumpExplore").href="/explore/?"+s;
-  }
-  wire();
-
-  // ===== UI STRINGS (single-language render) =====
-  var UI = {
-    en:{
-      top:"DOT.GRID",
-      sub:"256-STATE INDEXING · SWEEPS",
-      tiles:{
-        feels:{lab:"HOW IT FEELS", sub:"Clarity at speed · no getting lost."},
-        matters:{lab:"WHY IT MATTERS", sub:"Proof paths · lower risk."},
-        works:{lab:"HOW IT WORKS", sub:"Index · sweep · compare."},
-        next:{lab:"WHAT’S NEXT", sub:"From maps to live diagnostics."}
-      },
-      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
-      actions:{return:"RETURN", jLang:"JUMP LANGUAGE", jExp:"JUMP EXPLORE"}
-    },
-    zh:{
-      top:"DOT.GRID",
-      sub:"256态索引 · 扫掠",
-      tiles:{
-        feels:{lab:"使用感受", sub:"清晰且快速 · 不迷路。"},
-        matters:{lab:"为什么重要", sub:"可证明路径 · 风险更低。"},
-        works:{lab:"怎么运作", sub:"索引 · 扫掠 · 对比。"},
-        next:{lab:"下一步", sub:"从地图到实时诊断。"}
-      },
-      lens:{formal:"正式", informal:"直接", concept:"概念", now:"现在", roadmap:"路线图"},
-      actions:{return:"返回", jLang:"跳转语言", jExp:"跳转探索"}
-    }
-  };
-  var T = (lang==="zh") ? UI.zh : UI.en;
   document.documentElement.lang = (lang==="zh") ? "zh" : "en";
 
-  document.getElementById("brandTop").textContent = T.top;
-  document.getElementById("brandSub").textContent = T.sub;
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  }
 
-  document.getElementById("labFeels").textContent = T.tiles.feels.lab;
-  document.getElementById("subFeels").textContent = T.tiles.feels.sub;
-  document.getElementById("labMatters").textContent = T.tiles.matters.lab;
-  document.getElementById("subMatters").textContent = T.tiles.matters.sub;
-  document.getElementById("labWorks").textContent = T.tiles.works.lab;
-  document.getElementById("subWorks").textContent = T.tiles.works.sub;
-  document.getElementById("labNext").textContent = T.tiles.next.lab;
-  document.getElementById("subNext").textContent = T.tiles.next.sub;
+  function wire(id, path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
 
-  document.getElementById("mReturn").textContent = T.actions.return;
-  document.getElementById("mJumpLanguage").textContent = T.actions.jLang;
-  document.getElementById("mJumpExplore").textContent = T.actions.jExp;
+  // nav
+  wire("btnBack","/explore/innovation/language/");
+  wire("btnExplore","/explore/");
+  wire("dockHome","/home/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
 
-  // ===== CONTENT (4 bubbles per view; lens controls content density) =====
-  // Keys: section (feels/matters/works/next) -> time (origin/now/post) -> style (formal/informal) -> 4 bubbles
-  var C = {
-    feels:{
-      origin:{
-        formal:[
-          {h:"Orientation locks in", p:"Language, style, and lifecycle stay selected, so DOT.GRID never feels like it “reset.” <span>You always know where you are.</span>"},
-          {h:"It turns complexity into a map", p:"Instead of reading a long article, you move across a finite grid of states. <span>Clarity comes from structure, not volume.</span>"},
-          {h:"You can explore without punishment", p:"You can tap around and return cleanly. <span>Return paths stay obvious; exploration stays safe.</span>"},
-          {h:"It feels like a dashboard, not a textbook", p:"Each stop is short, bounded, and consistent. <span>No academic fog—just a stable surface.</span>"}
-        ],
-        informal:[
-          {h:"You don’t get lost", p:"Your settings stick. <span>No random resets.</span>"},
-          {h:"It stays clean", p:"You see the idea first, not a wall of detail. <span>Quick orientation.</span>"},
-          {h:"You can tap safely", p:"Explore, back out, repeat. <span>No punishment.</span>"},
-          {h:"It feels practical", p:"It reads like a tool. <span>Not like a textbook.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"State is stable in practice", p:"DOT.GRID carries gd_lang/gd_style/gd_time across pages. <span>That stability is the user experience.</span>"},
-          {h:"Fast reading stays coherent", p:"Every view is compact and repeatable. <span>Same layout, same density, same meaning.</span>"},
-          {h:"Errors become visible", p:"When something breaks, it breaks deterministically (routing/paths). <span>No mystery drift.</span>"},
-          {h:"Navigation feels calm", p:"You always have predictable exits and returns. <span>That’s what “safe traversal” feels like.</span>"}
-        ],
-        informal:[
-          {h:"It stays consistent", p:"Same look, same routes. <span>It doesn’t wander.</span>"},
-          {h:"It’s quick to scan", p:"Short blocks you can trust. <span>No fluff.</span>"},
-          {h:"Bugs are obvious", p:"If a link is wrong, you see it. <span>Not hidden.</span>"},
-          {h:"It feels safe", p:"You can explore and return. <span>Every time.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"Roadmap feels readable", p:"Future features can expand without changing the structure. <span>New content doesn’t wreck old navigation.</span>"},
-          {h:"Scaling stays calm", p:"More pages still follow one contract. <span>More surface, same rules.</span>"},
-          {h:"You get a real “map”", p:"DOT.GRID becomes a reference surface across domains. <span>Users learn by traversing, not memorizing.</span>"},
-          {h:"Trust increases over time", p:"Consistency becomes evidence. <span>The UI proves its own discipline.</span>"}
-        ],
-        informal:[
-          {h:"New stuff won’t wreck old stuff", p:"Same structure, more content. <span>No chaos.</span>"},
-          {h:"More pages, same rules", p:"Scaling stays calm. <span>Still readable.</span>"},
-          {h:"It becomes a real map", p:"You know where to go next. <span>Every time.</span>"},
-          {h:"It feels trustworthy", p:"Because it stays consistent. <span>That’s the point.</span>"}
-        ]
-      }
+  // language toggle (reload SAME pathname)
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+
+  function paintLang(){
+    btnEN.classList.toggle("active", lang==="en");
+    btnZH.classList.toggle("active", lang==="zh");
+  }
+  paintLang();
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh") next="en";
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q({lang:lang});
+  }
+  btnEN.addEventListener("click", function(){ setLang("en"); });
+  btnZH.addEventListener("click", function(){ setLang("zh"); });
+
+  // ===== lenses =====
+  var btnInformal=document.getElementById("btnInformal");
+  var btnFormal=document.getElementById("btnFormal");
+  var btnPlatform=document.getElementById("btnPlatform");
+  var btnEngineering=document.getElementById("btnEngineering");
+
+  function track(){ return (depth==="learn") ? "engineering" : "platform"; } // learn => engineering
+  function setTrack(next){
+    depth = (next==="engineering") ? "learn" : "explore";
+    try{ localStorage.setItem("gd_depth", depth); }catch(e){}
+    paintLenses();
+    render();
+  }
+  function setStyle(next){
+    style = (next==="formal") ? "formal" : "informal";
+    try{ localStorage.setItem("gd_style", style); }catch(e){}
+    paintLenses();
+    render();
+  }
+
+  function paintLenses(){
+    btnInformal.classList.toggle("active", style==="informal");
+    btnFormal.classList.toggle("active", style==="formal");
+    btnPlatform.classList.toggle("active", track()==="platform");
+    btnEngineering.classList.toggle("active", track()==="engineering");
+
+    if(lang==="zh"){
+      btnInformal.textContent="通俗";
+      btnFormal.textContent="正式";
+      btnPlatform.textContent="平台";
+      btnEngineering.textContent="工程";
+    }else{
+      btnInformal.textContent="INFORMAL";
+      btnFormal.textContent="FORMAL";
+      btnPlatform.textContent="PLATFORM";
+      btnEngineering.textContent="ENGINEERING";
+    }
+  }
+
+  btnInformal.addEventListener("click", function(){ setStyle("informal"); });
+  btnFormal.addEventListener("click", function(){ setStyle("formal"); });
+  btnPlatform.addEventListener("click", function(){ setTrack("platform"); });
+  btnEngineering.addEventListener("click", function(){ setTrack("engineering"); });
+
+  paintLenses();
+
+  // ===== copy =====
+  function pick(en, zh){ return (lang==="zh") ? zh : en; }
+
+  var HEAD = {
+    en:{
+      hk:"LANGUAGE",
+      ht:"DOT.GRID",
+      hs:"Dot.Grid is the language lane that turns ‘a pile of concepts’ into a navigable map. It’s how we stop meaning from drifting when the system grows.",
+      fine:"Informal = TED-talk clarity. Formal = precise definitions. Platform = what users see. Engineering = what must be true underneath."
     },
-
-    matters:{
-      origin:{
-        formal:[
-          {h:"It prevents hand-wavy claims", p:"A grid forces you to say what state you’re in. <span>That makes statements auditable.</span>"},
-          {h:"It reduces common-mode failure", p:"When systems drift, everything correlates and collapses. <span>DOT.GRID makes drift detectable early.</span>"},
-          {h:"It makes “risk” legible", p:"Instead of vibes, you get bounded categories. <span>That’s what makes decisions faster.</span>"},
-          {h:"It scales across domains", p:"The same indexing logic can frame finance, safety, governance, and education. <span>One method, many uses.</span>"}
-        ],
-        informal:[
-          {h:"It stops BS", p:"You can’t hide behind vague language. <span>You pick a state.</span>"},
-          {h:"It catches drift early", p:"Before things break together. <span>That’s the win.</span>"},
-          {h:"It makes risk readable", p:"Clear buckets, clear meaning. <span>Faster decisions.</span>"},
-          {h:"It works everywhere", p:"Same method across domains. <span>One map.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"It makes builds defensible", p:"When pages are uniform, changes are isolated. <span>That’s containment through structure.</span>"},
-          {h:"It supports audit trails", p:"States + lenses act like labels on evidence. <span>That’s how you stay falsifiable.</span>"},
-          {h:"It improves coordination", p:"Teams can point to the same state and agree. <span>No interpretation wars.</span>"},
-          {h:"It keeps the site public-safe", p:"Exploration doesn’t produce broken flows. <span>Placeholders are safer than drift.</span>"}
-        ],
-        informal:[
-          {h:"It keeps changes safe", p:"Same layout means less breakage. <span>Simple.</span>"},
-          {h:"It keeps things checkable", p:"States are labels. <span>Labels are proof.</span>"},
-          {h:"It helps teams align", p:"Same state, same meaning. <span>No fights.</span>"},
-          {h:"It’s safe to explore", p:"Because it won’t fall apart. <span>That matters.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"It becomes the reference layer", p:"DOT.GRID evolves into a traversal encyclopedia. <span>Users move through a map, not a book.</span>"},
-          {h:"It makes certification possible", p:"If you can classify states, you can verify outputs. <span>That enables tiers and registries.</span>"},
-          {h:"It enables governance interfaces", p:"Policies can reference states and thresholds. <span>That’s enforceable governance.</span>"},
-          {h:"It increases resilience", p:"Bounded systems survive pressure. <span>DOT.GRID is bounded by design.</span>"}
-        ],
-        informal:[
-          {h:"It becomes the map people use", p:"Traversal beats long reading. <span>Faster learning.</span>"},
-          {h:"It enables verification", p:"States make proof possible. <span>Tiers become real.</span>"},
-          {h:"It enables governance", p:"Rules reference states. <span>Enforceable.</span>"},
-          {h:"It makes the system durable", p:"Bounded by design. <span>Resilient.</span>"}
-        ]
-      }
-    },
-
-    works:{
-      origin:{
-        formal:[
-          {h:"Index", p:"Define a finite set of states and name them consistently. <span>Names are the contract.</span>"},
-          {h:"Sweep", p:"Run through states under stress and record what changes. <span>Evidence replaces guessing.</span>"},
-          {h:"Compare", p:"Compare runs across domains using the same labels. <span>That’s how scale-and-correlation becomes measurable.</span>"},
-          {h:"Gate", p:"Use constraints to reject inadmissible transitions. <span>Coherence is enforced, not hoped for.</span>"}
-        ],
-        informal:[
-          {h:"Index", p:"Make the state list. <span>Name it.</span>"},
-          {h:"Sweep", p:"Run it under stress. <span>Record it.</span>"},
-          {h:"Compare", p:"Same labels across domains. <span>Now you can compare.</span>"},
-          {h:"Gate", p:"Block bad transitions. <span>Stay coherent.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"Data inputs", p:"Evidence streams (CSV/JSONL) bind to stable state labels. <span>Same input, same output.</span>"},
-          {h:"Outputs", p:"You get summaries, alerts, and score tables. <span>Outputs are replayable.</span>"},
-          {h:"Instrumentation", p:"Every decision is logged with a reason code. <span>Auditability is default.</span>"},
-          {h:"UI contract", p:"Modal lenses change meaning, not just highlights. <span>No stale content after toggles.</span>"}
-        ],
-        informal:[
-          {h:"Inputs", p:"Feed the evidence stream. <span>Keep labels stable.</span>"},
-          {h:"Outputs", p:"Get alerts and summaries. <span>Replayable.</span>"},
-          {h:"Logs", p:"Every decision has a reason. <span>No mystery.</span>"},
-          {h:"UI rule", p:"Toggles change content. <span>Not just buttons.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"Automation", p:"Sweeps can run on schedules with deterministic configs. <span>No randomization gates.</span>"},
-          {h:"Adapters", p:"Domain adapters map real systems into the same state space. <span>One engine, many domains.</span>"},
-          {h:"Publishing", p:"Reference datasets and expected outputs become public artifacts. <span>Independent verification becomes normal.</span>"},
-          {h:"Integration", p:"Policies and products reference DOT.GRID outputs as constraints. <span>Measurement becomes governance.</span>"}
-        ],
-        informal:[
-          {h:"Automation", p:"Run sweeps on a schedule. <span>Deterministic.</span>"},
-          {h:"Adapters", p:"Plug in domains. <span>Same engine.</span>"},
-          {h:"Publishing", p:"Share datasets and expected outputs. <span>Verifiable.</span>"},
-          {h:"Integration", p:"Use outputs as rules. <span>Governance-ready.</span>"}
-        ]
-      }
-    },
-
-    next:{
-      origin:{
-        formal:[
-          {h:"Make the grid public", p:"Publish a minimal, stable state catalog. <span>That’s the first real deliverable.</span>"},
-          {h:"Add examples per state", p:"For each state, add one real-world example. <span>Examples make the abstract concrete.</span>"},
-          {h:"Connect to products", p:"Products consume the grid as a lens, not as a story. <span>Traversal beats lectures.</span>"},
-          {h:"Create replay kits", p:"Bundle evidence + config + expected outputs. <span>Reproduction becomes normal.</span>"}
-        ],
-        informal:[
-          {h:"Publish the state list", p:"Make it stable. <span>That’s step one.</span>"},
-          {h:"Add examples", p:"One example per state. <span>Make it real.</span>"},
-          {h:"Plug into products", p:"Use it as a lens. <span>Traversal wins.</span>"},
-          {h:"Make replay kits", p:"Evidence + config + expected output. <span>Easy verification.</span>"}
-        ]
-      },
-      now:{
-        formal:[
-          {h:"Fill the site nodes", p:"Every page gets dense bubbles with real examples. <span>No empty surfaces.</span>"},
-          {h:"Standardize naming", p:"Keep DOT.GRID / SSG / ACRONYMS consistent across all routes. <span>No split labels.</span>"},
-          {h:"Fix broken routes deterministically", p:"If a click yields 404, it’s a path mismatch. <span>Pages exist or they don’t.</span>"},
-          {h:"Expand the leaf pages", p:"Grammar/DOT/SSG/Acronyms each gain deeper leaf nodes. <span>One trunk at a time.</span>"}
-        ],
-        informal:[
-          {h:"Fill the bubbles", p:"No empty pages. <span>Make it useful.</span>"},
-          {h:"Keep names consistent", p:"Same labels everywhere. <span>No split names.</span>"},
-          {h:"Fix routes", p:"404 means the folder is missing. <span>Create it.</span>"},
-          {h:"Go deeper", p:"One trunk at a time. <span>Build leaves.</span>"}
-        ]
-      },
-      post:{
-        formal:[
-          {h:"Live telemetry", p:"Shift from static examples to live streams. <span>Measurement becomes continuous.</span>"},
-          {h:"Cross-domain dashboards", p:"Show correlation/scale across the whole network. <span>System-wide trajectory is visible.</span>"},
-          {h:"Certification registry tie-in", p:"Outputs map into tiered verification where appropriate. <span>Status becomes lookupable.</span>"},
-          {h:"Public release discipline", p:"Stable UI + stable meaning becomes safe for public use. <span>That’s the release gate.</span>"}
-        ],
-        informal:[
-          {h:"Go live", p:"Use real streams. <span>Continuous measurement.</span>"},
-          {h:"Dashboards", p:"Show system-wide movement. <span>Scale + correlation.</span>"},
-          {h:"Verification", p:"Tie outputs to status. <span>Lookupable.</span>"},
-          {h:"Public-ready", p:"Stable UI + stable meaning. <span>That’s the gate.</span>"}
-        ]
-      }
+    zh:{
+      hk:"语言",
+      ht:"DOT.GRID",
+      hs:"Dot.Grid 是语言通道：把“一堆概念”变成可遍历地图。系统越大越容易漂移，而它的任务就是把含义钉住。",
+      fine:"通俗=TED式清晰；正式=精确定义；平台=用户看到的；工程=底层必须为真的。"
     }
   };
 
-  // ===== MODAL WIRING =====
-  var bd=document.getElementById("bd");
-  var modal=document.getElementById("modal");
-  var mClose=document.getElementById("mClose");
-  var mTitle=document.getElementById("mTitle");
+  // Cards: each has 4 variants: (style informal/formal) × (track platform/engineering)
+  // Each variant has 2 paragraphs (dense but readable).
+  var CARDS = [
+    {
+      c:"#D4AF37",
+      t:{en:"What Dot.Grid means (in language)", zh:"Dot.Grid 在语言里意味着什么"},
+      s:{en:"A map for meaning: you can move, you can return, you don’t get lost.", zh:"含义地图：能前进、能返回、不迷路。"},
+      body:{
+        informal:{
+          platform:{
+            en:[
+              "Most language systems fail the same way most products fail: everything starts simple… then it grows, and nobody can explain what connects to what anymore.",
+              "Dot.Grid fixes that. It gives your learning system a *map*. You can point to a node, see what it depends on, and know what comes next. That’s how you keep progress calm instead of chaotic."
+            ],
+            zh:[
+              "很多语言系统的失败方式，和很多产品的失败方式一样：一开始很简单——然后越做越大，最后谁也说不清“这个和那个到底怎么连着”。",
+              "Dot.Grid 的作用就是给学习系统一张*地图*：你能指向一个节点，看到它依赖什么，知道下一步去哪。进步因此变得平静，不再靠运气。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Language drift happens when definitions move silently. The same word starts meaning different things on different pages, and the learner feels it as confusion.",
+              "Dot.Grid prevents that by forcing stable node names, stable adjacency, and stable routes. If the map changes, it’s logged and visible—so the system can’t gaslight the learner."
+            ],
+            zh:[
+              "语言漂移最常见的形式是：定义悄悄移动。同一个词在不同页面变成不同意思，学习者体验到的就是困惑。",
+              "Dot.Grid 通过强制稳定节点名、稳定邻接关系、稳定路线来阻止漂移。地图一变就可见、可记录，系统就无法“悄悄换义”。"
+            ]
+          }
+        },
+        formal:{
+          platform:{
+            en:[
+              "Dot.Grid is a traversal contract for terminology: a node is a declared term with a declared scope, and edges describe allowed transitions and dependency prerequisites.",
+              "The platform posture is legibility: the learner should always know where they are, what a term means here, and what the next admissible step is—without re-reading the entire system."
+            ],
+            zh:[
+              "Dot.Grid 是术语遍历契约：节点=在声明范围内的声明术语；边=允许的转移与依赖前置条件。",
+              "平台姿态强调可读性：学习者无需重读全系统，也能知道自己在哪、此处术语含义为何、以及下一步的可采信动作是什么。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Dot.Grid constrains semantics by fixing identifiers and adjacency under declared measurement/authoring rules. Meaning drift is treated as a structural mutation, not a stylistic change.",
+              "Any mutation that affects interpretation requires explicit epoching (or explicit versioning) to preserve comparability of learner progress and content audits."
+            ],
+            zh:[
+              "Dot.Grid 通过固定标识符与邻接关系（在声明的编写/测量规则下）来约束语义。含义漂移被视为结构变异，而非文风变化。",
+              "任何影响解释的变更必须显式进入新纪元（或版本化），以保持学习进度与内容审计的可比性。"
+            ]
+          }
+        }
+      },
+      jumps:[
+        {en:"OPEN: LANGUAGE HUB", zh:"打开：语言枢纽", href:"/explore/innovation/language/"},
+        {en:"OPEN: DOT.GRID (PRODUCT)", zh:"打开：Dot.Grid（产品）", href:"/products/dot-grid/"}
+      ]
+    },
 
-  var chipStyle=document.getElementById("chipStyle");
-  var chipConcept=document.getElementById("chipConcept");
-  var chipNow=document.getElementById("chipNow");
-  var chipRoadmap=document.getElementById("chipRoadmap");
+    {
+      c:"#0EA5E9",
+      t:{en:"Traversal learning vs linear learning", zh:"遍历学习 vs 线性学习"},
+      s:{en:"Linear is a line. Traversal is a map. Maps scale.", zh:"线性是直线；遍历是地图；地图可规模化。"},
+      body:{
+        informal:{
+          platform:{
+            en:[
+              "Linear learning is ‘page 1, page 2, page 3.’ It works until real life shows up and you need to jump—then the learner loses the thread.",
+              "Traversal learning is different: it lets you jump on purpose. You can learn what you need today, come back tomorrow, and still know where you are. That’s how language becomes usable fast."
+            ],
+            zh:[
+              "线性学习是“第一页、第二页、第三页”。它在理想情况下可以，但一旦真实生活出现、你需要跳转，学习者就断线。",
+              "遍历学习不是这样：它允许你*有目的地跳*。今天学你用得上的，明天回来仍然知道自己在哪。语言因此更快变成可用能力。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Traversal only works if the map is stable. If routes change or terms drift, jumping becomes chaos instead of freedom.",
+              "Dot.Grid is the rule that keeps traversal honest: you can jump, but the system must preserve state and meaning, or it’s a failure."
+            ],
+            zh:[
+              "遍历只有在地图稳定时才成立。路线一变、术语一漂移，跳转就会从自由变成混乱。",
+              "Dot.Grid 就是让遍历诚实的规则：你可以跳，但系统必须保留状态与含义，否则就是失败。"
+            ]
+          }
+        },
+        formal:{
+          platform:{
+            en:[
+              "Traversal learning is graph-based: nodes represent bounded competencies, edges represent prerequisites and allowed transitions. The learner follows routes appropriate to their context.",
+              "The platform contract is state-preserving navigation: the learner’s lens and position must survive jumps so that traversal does not induce cognitive debt."
+            ],
+            zh:[
+              "遍历学习是图结构：节点=有界能力，边=前置与允许转移。学习者按情境选择路线。",
+              "平台契约是状态保留导航：学习者的透镜与位置必须在跳转中保持，否则遍历会制造认知债。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Graph traversal requires invariant identifiers, versioned definitions, and deterministic routing rules. Otherwise, paths are not reproducible and progress cannot be audited.",
+              "Dot.Grid supplies those invariants at the language layer: stable naming, stable adjacency, and explicit evolution rules."
+            ],
+            zh:[
+              "图遍历需要不变标识符、版本化定义与确定性路由规则，否则路径不可复现、进度不可审计。",
+              "Dot.Grid 在语言层提供这些不变量：稳定命名、稳定邻接与显式演化规则。"
+            ]
+          }
+        }
+      },
+      jumps:[
+        {en:"OPEN: EXPLORE", zh:"打开：探索", href:"/explore/"},
+        {en:"OPEN: EDUCATION", zh:"打开：教育", href:"/products/education/"}
+      ]
+    },
 
-  var h1=document.getElementById("h1"), p1=document.getElementById("p1");
-  var h2=document.getElementById("h2"), p2=document.getElementById("p2");
-  var h3=document.getElementById("h3"), p3=document.getElementById("p3");
-  var h4=document.getElementById("h4"), p4=document.getElementById("p4");
+    {
+      c:"#F59E0B",
+      t:{en:"The sweep idea (why ‘clusters’ matter)", zh:"扫掠思想（为什么集群重要）"},
+      s:{en:"When things move together, you learn faster—or fail faster.", zh:"一起动=一起学更快，或一起坏更快。"},
+      body:{
+        informal:{
+          platform:{
+            en:[
+              "A ‘cluster’ is just a group that moves together. In language learning, clusters are sneaky: one missing connector can break five sentences.",
+              "Dot.Grid teaches you to see those clusters. That’s why it feels like acceleration: you stop fixing random mistakes and start fixing the shared root."
+            ],
+            zh:[
+              "“集群”就是一组会一起动的东西。在语言学习里，集群很隐蔽：一个连接词不会，五个句子都崩。",
+              "Dot.Grid 让你看见这些集群。所以它像加速器：你不再随机修错，而是修共享根因。"
+            ]
+          },
+          engineering:{
+            en:[
+              "If a cluster is real, it should show up repeatedly under similar practice windows. If it only appears once, it’s probably noise.",
+              "So Dot.Grid treats clusters as signals to investigate, not as conclusions. It points; other layers decide."
+            ],
+            zh:[
+              "如果集群是真的，它应该在类似练习窗口里反复出现；只出现一次，多半是噪声。",
+              "所以 Dot.Grid 把集群当作“值得调查的信号”，不是结论：它指路，其他层裁决。"
+            ]
+          }
+        },
+        formal:{
+          platform:{
+            en:[
+              "Sweeps are windowed passes that reveal correlated performance movements across nodes. They help identify shared dependencies and shared failure modes.",
+              "Platform posture: show the learner which nodes are likely coupled so effort can be focused without inflating claims."
+            ],
+            zh:[
+              "扫掠是窗口化遍历，用于发现节点间的相关表现变化，识别共享依赖与共享失败模式。",
+              "平台姿态：把可能耦合的节点展示给学习者，让努力更聚焦，但不膨胀主张。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Sweep outputs are descriptive: correlation indicators, drift deltas, and adjacency changes. They do not assert causality and do not assert admissibility.",
+              "Interpretation bounds are delegated: Gauges displays measurements; Laws constrains what may be concluded."
+            ],
+            zh:[
+              "扫掠输出是描述性的：相关指示、漂移差分、邻接变化。不主张因果，不主张可采信。",
+              "解释边界交由下游：量规展示测量，法则约束结论。"
+            ]
+          }
+        }
+      },
+      jumps:[
+        {en:"OPEN: GAUGES", zh:"打开：量规", href:"/gauges/"},
+        {en:"OPEN: LAWS", zh:"打开：法则", href:"/laws/"}
+      ]
+    },
 
-  var activeSection=null; // feels|matters|works|next
+    {
+      c:"#93C5FD",
+      t:{en:"How it connects to SSG", zh:"它如何连接到 SSG"},
+      s:{en:"SSG is geometry. Dot.Grid is the language map that rides on top.", zh:"SSG 是几何；Dot.Grid 是其上的语言地图。"},
+      body:{
+        informal:{
+          platform:{
+            en:[
+              "SSG tells you how the machine behaves. Dot.Grid tells you how the *words* stay stable while the machine grows.",
+              "That combination is the whole point: you get power without drift. Big systems, still explainable."
+            ],
+            zh:[
+              "SSG 负责“机器怎么跑”；Dot.Grid 负责“词怎么保持稳定”。",
+              "两者合起来才有意义：系统变大但不漂移；很强但仍可解释。"
+            ]
+          },
+          engineering:{
+            en:[
+              "When SSG changes behavior, Dot.Grid forces the language layer to stamp the change. No silent ‘meaning swaps.’",
+              "So you can scale documents, training, and product surfaces without rewriting history."
+            ],
+            zh:[
+              "当 SSG 改变行为，Dot.Grid 强制语言层盖章：不允许静默换义。",
+              "因此你能规模化文档、训练、产品界面，而不改写历史。"
+            ]
+          }
+        },
+        formal:{
+          platform:{
+            en:[
+              "SSG defines execution primitives and constraint rules. Dot.Grid defines a traversal representation of terms and concepts used to describe those primitives.",
+              "Platform goal: user legibility under growth—stable labels, stable routes, and predictable meaning."
+            ],
+            zh:[
+              "SSG 定义执行原语与约束规则；Dot.Grid 定义用于描述这些原语的术语/概念遍历表示。",
+              "平台目标：增长下仍可读——稳定标签、稳定路线、可预测含义。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Dot.Grid provides semantic versioning posture aligned with SSG invariants: stable identifiers, explicit scope locks, and auditable evolution.",
+              "This allows observer-invariant interpretation across time: the same label refers to the same bounded meaning under the same epoch."
+            ],
+            zh:[
+              "Dot.Grid 提供与 SSG 不变量一致的语义版本姿态：稳定标识符、显式范围锁、可审计演化。",
+              "从而支持跨时间的观察者不变解释：同标签在同纪元下指向同一有界含义。"
+            ]
+          }
+        }
+      },
+      jumps:[
+        {en:"OPEN: SSG", zh:"打开：SSG", href:"/products/ssg/"},
+        {en:"OPEN: SOFTWARE HUB", zh:"打开：软件枢纽", href:"/products/software/"}
+      ]
+    },
 
-  function persist(){
-    try{ localStorage.setItem("gd_style", style); localStorage.setItem("gd_time", time); }catch(e){}
+    {
+      c:"#A3A3A3",
+      t:{en:"Boundaries (what this page refuses to do)", zh:"边界（本页拒绝做什么）"},
+      s:{en:"No hype. No claims beyond the map. Just clarity.", zh:"不吹牛、不越界：只给清晰。"},
+      body:{
+        informal:{
+          platform:{
+            en:[
+              "This page won’t promise you ‘fluency.’ It won’t pretend a map is the same as a result.",
+              "What it will do is keep you oriented so your effort turns into outcomes instead of confusion."
+            ],
+            zh:[
+              "本页不会承诺“流利”，也不会把“地图”当成“结果”。",
+              "它只做一件事：让你一直有方向感，让努力变成结果，而不是困惑。"
+            ]
+          },
+          engineering:{
+            en:[
+              "If a definition changes, we mark it. If a route changes, we mark it. If a term drifts, that’s a failure to fix—not something to hide.",
+              "That’s how we keep trust: meaning doesn’t move under your feet."
+            ],
+            zh:[
+              "定义变了要标记；路线变了要标记；术语漂移就是失败——要修，不要藏。",
+              "信任来自这一点：含义不会在你脚下悄悄移动。"
+            ]
+          }
+        },
+        formal:{
+          platform:{
+            en:[
+              "Dot.Grid (language lane) is descriptive and navigational. It does not output admissibility classifications and does not output causal conclusions.",
+              "Any measurement claims route to Gauges; any interpretation bounds route to Laws."
+            ],
+            zh:[
+              "Dot.Grid（语言通道）是描述性与导航性的：不输出可采信分类，不输出因果结论。",
+              "任何测量主张去量规；任何解释边界去法则。"
+            ]
+          },
+          engineering:{
+            en:[
+              "Non-negotiables: stable identifiers, stable scope, explicit epoching for changes, and deterministic state propagation. Missing propagation is a structural defect.",
+              "If the same evidence yields different interpretations, the measurement rules must be corrected—not patched with narrative."
+            ],
+            zh:[
+              "不可谈判：稳定标识符、稳定范围、变更显式纪元化、确定性状态传播。缺失传播即结构缺陷。",
+              "若同证据产生不同解释，应修正测量规则，而非用叙事打补丁。"
+            ]
+          }
+        }
+      },
+      jumps:[
+        {en:"OPEN: LAWS", zh:"打开：法则", href:"/laws/"},
+        {en:"OPEN: DOOR", zh:"打开：DOOR", href:"/door/"}
+      ]
+    }
+  ];
+
+  // header render
+  var H=(lang==="zh")?HEAD.zh:HEAD.en;
+  document.getElementById("hk").textContent=H.hk;
+  document.getElementById("ht").textContent=H.ht;
+  document.getElementById("hs").textContent=H.hs;
+  document.getElementById("fine").textContent=H.fine;
+
+  // band
+  document.getElementById("band").textContent = (lang==="zh") ? "DOT.GRID（语言通道）" : "DOT.GRID (LANGUAGE LANE)";
+
+  // ===== accordion auto-close (only one open) =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    var cards=stack.querySelectorAll(".card");
+    cards.forEach(function(c){
+      c.classList.remove("open");
+      var cv=c.querySelector(".chev");
+      if(cv) cv.textContent="▸";
+    });
   }
 
-  function setLensLabels(){
-    chipStyle.textContent = "STYLE: " + (style==="formal" ? T.lens.formal : T.lens.informal);
-    chipConcept.textContent = T.lens.concept;
-    chipNow.textContent = T.lens.now;
-    chipRoadmap.textContent = T.lens.roadmap;
+  function makeCard(item, idx){
+    var card=document.createElement("div");
+    card.className="card";
 
-    chipConcept.classList.toggle("active", time==="origin");
-    chipNow.classList.toggle("active", time==="now");
-    chipRoadmap.classList.toggle("active", time==="post");
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.setAttribute("tabindex","0");
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.setProperty("--c", item.c);
+    mark.style.background=item.c;
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+
+    var name=document.createElement("div");
+    name.className="name";
+    name.textContent = pick(item.t.en, item.t.zh);
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent = pick(item.s.en, item.s.zh);
+
+    left.appendChild(name);
+    left.appendChild(sub);
+
+    hL.appendChild(mark);
+    hL.appendChild(left);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var modeStyle = style; // informal/formal
+    var modeTrack = track(); // platform/engineering
+
+    var paras = item.body[modeStyle][modeTrack][lang] || item.body[modeStyle][modeTrack].en;
+
+    for(var i=0;i<paras.length;i++){
+      var p=document.createElement("p");
+      p.className="p";
+      p.textContent=paras[i];
+      body.appendChild(p);
+    }
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    for(var k=0;k<item.jumps.length;k++){
+      var a=document.createElement("a");
+      a.className="btn";
+      a.textContent = (lang==="zh") ? item.jumps[k].zh : item.jumps[k].en;
+      a.href = item.jumps[k].href + q();
+      actions.appendChild(a);
+    }
+    body.appendChild(actions);
+
+    function toggle(){
+      var willOpen = !card.classList.contains("open");
+      closeAll();
+      if(willOpen){
+        card.classList.add("open");
+        chev.textContent="▾";
+      }else{
+        chev.textContent="▸";
+      }
+    }
+
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+
+    // open first card by default
+    if(idx===0){
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
+
+    return card;
   }
 
   function render(){
-    persist();
-    wire();
-    setLensLabels();
+    paintLang();
+    paintLenses();
 
-    if(!activeSection) return;
-    var pack = C[activeSection][time][style];
-    var titleMap = {
-      feels: (lang==="zh" ? "使用感受" : "HOW IT FEELS"),
-      matters: (lang==="zh" ? "为什么重要" : "WHY IT MATTERS"),
-      works: (lang==="zh" ? "怎么运作" : "HOW IT WORKS"),
-      next: (lang==="zh" ? "下一步" : "WHAT’S NEXT")
-    };
-    mTitle.textContent = "DOT.GRID · " + titleMap[activeSection];
+    stack.innerHTML="";
+    for(var i=0;i<CARDS.length;i++){
+      stack.appendChild(makeCard(CARDS[i], i));
+    }
 
-    h1.textContent = pack[0].h; p1.innerHTML = pack[0].p;
-    h2.textContent = pack[1].h; p2.innerHTML = pack[1].p;
-    h3.textContent = pack[2].h; p3.innerHTML = pack[2].p;
-    h4.textContent = pack[3].h; p4.innerHTML = pack[3].p;
+    // top + dock labels
+    if(lang==="zh"){
+      document.getElementById("btnBack").textContent="返回";
+      document.getElementById("btnExplore").textContent="探索";
+      document.getElementById("dockHome").textContent="主页";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+    }else{
+      document.getElementById("btnBack").textContent="BACK";
+      document.getElementById("btnExplore").textContent="EXPLORE";
+      document.getElementById("dockHome").textContent="HOME";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+    }
   }
 
-  function open(which){
-    activeSection=which;
-    // diamond highlight
-    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
-      document.getElementById(id).classList.toggle("active",
-        (which==="feels" && id==="dFeels") ||
-        (which==="matters" && id==="dMatters") ||
-        (which==="works" && id==="dWorks") ||
-        (which==="next" && id==="dNext")
-      );
-    });
+  // re-render on lens changes
+  function rerender(){ render(); }
 
-    render();
-    bd.classList.add("show");
-    modal.classList.add("show");
-  }
+  // hook lens changes to rerender
+  var _setStyle=setStyle;
+  setStyle=function(next){ _setStyle(next); rerender(); };
+  var _setTrack=setTrack;
+  setTrack=function(next){ _setTrack(next); rerender(); };
 
-  function close(){
-    bd.classList.remove("show");
-    modal.classList.remove("show");
-    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
-    activeSection=null;
-  }
+  // initial render
+  render();
 
-  // Click handlers
-  document.getElementById("dFeels").onclick=function(){ open("feels"); };
-  document.getElementById("dMatters").onclick=function(){ open("matters"); };
-  document.getElementById("dWorks").onclick=function(){ open("works"); };
-  document.getElementById("dNext").onclick=function(){ open("next"); };
-
-  ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
-    var el=document.getElementById(id);
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); }
-    });
-  });
-
-  // Lenses (inside modal only)
-  chipStyle.onclick=function(){
-    style = (style==="formal") ? "informal" : "formal";
-    render();
-  };
-  chipConcept.onclick=function(){ time="origin"; render(); };
-  chipNow.onclick=function(){ time="now"; render(); };
-  chipRoadmap.onclick=function(){ time="post"; render(); };
-
-  // Close actions
-  bd.onclick=close;
-  mClose.onclick=close;
-  document.getElementById("mReturn").onclick=close;
-
-  // Initial lens labels
-  setLensLabels();
 })();
 </script>
 
 </body>
 </html>
-```0

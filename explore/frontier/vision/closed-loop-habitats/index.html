@@ -1,12 +1,10 @@
 <!-- TNT — /explore/frontier/vision/closed-loop-habitats/index.html
      FRONTIER · VISION · CLOSED LOOP HABITATS
-     UPGRADE:
-       - TED-style INFORMAL = exciting + human words + curiosity (support-bounded)
-       - FORMAL = abstract / systems language (kept for formal lens)
-       - More depth (accordion “bubbles” so it’s not a wall of text)
+     FIX:
+       - Accordion bug fix: ALL cards open/close reliably (no “stuck” state)
+       - No modals, no overlays, no inline onclick
        - EN/中文/ES + Formal/Informal toggle
        - Canon state carry (lang/style/time/depth) URL + LS
-       - No modals, no overlays, no inline onclick
        - Uses ui.css + branch.css + instruments.js only
 -->
 
@@ -128,7 +126,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   -webkit-mask-composite:xor;mask-composite:exclude;
   pointer-events:none;
 }
-.head{
+.cardHead{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:10px;
   padding:14px 16px;
@@ -136,11 +134,11 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
-.left{min-width:0}
-.title{font-weight:950;letter-spacing:.2px}
-.sub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
-.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
-.body{
+.cardLeft{min-width:0}
+.cardTitle{font-weight:950;letter-spacing:.2px}
+.cardSub{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.cardChev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.cardBody{
   display:none;
   padding:14px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
@@ -148,7 +146,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
 }
-.card.open .body{display:block}
+.card.open .cardBody{display:block}
 .txt{
   margin:0;
   color:rgba(255,255,255,.88);
@@ -202,14 +200,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   <div class="page" aria-label="Content">
 
     <div class="card" id="c1">
-      <div class="head" role="button" tabindex="0" aria-label="Open: What it feels like">
-        <div class="left">
-          <div class="title" id="t1">What it feels like</div>
-          <div class="sub" id="s1">A city that has to keep itself alive—quietly, every day, with no excuses.</div>
+      <div class="cardHead" role="button" tabindex="0" aria-label="Toggle: What it feels like">
+        <div class="cardLeft">
+          <div class="cardTitle" id="t1">What it feels like</div>
+          <div class="cardSub" id="s1">A city that has to keep itself alive—quietly, every day, with no excuses.</div>
         </div>
-        <div class="chev">▸</div>
+        <div class="cardChev" aria-hidden="true">▸</div>
       </div>
-      <div class="body">
+      <div class="cardBody">
         <p class="txt" id="p1a"></p>
         <p class="txt" id="p1b"></p>
         <div class="actions">
@@ -219,14 +217,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     </div>
 
     <div class="card" id="c2">
-      <div class="head" role="button" tabindex="0" aria-label="Open: The big idea">
-        <div class="left">
-          <div class="title" id="t2">The big idea</div>
-          <div class="sub" id="s2">Turn life support into an inventory system: water, air, food, energy, materials.</div>
+      <div class="cardHead" role="button" tabindex="0" aria-label="Toggle: The big idea">
+        <div class="cardLeft">
+          <div class="cardTitle" id="t2">The big idea</div>
+          <div class="cardSub" id="s2">Turn life support into an inventory system: water, air, food, energy, materials.</div>
         </div>
-        <div class="chev">▸</div>
+        <div class="cardChev" aria-hidden="true">▸</div>
       </div>
-      <div class="body">
+      <div class="cardBody">
         <p class="txt" id="p2a"></p>
         <p class="txt" id="p2b"></p>
         <div class="actions">
@@ -236,14 +234,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     </div>
 
     <div class="card" id="c3">
-      <div class="head" role="button" tabindex="0" aria-label="Open: Why it matters on Earth">
-        <div class="left">
-          <div class="title" id="t3">Why it matters on Earth</div>
-          <div class="sub" id="s3">If you can’t dump anything, you’re forced to build systems that actually work.</div>
+      <div class="cardHead" role="button" tabindex="0" aria-label="Toggle: Why it matters on Earth">
+        <div class="cardLeft">
+          <div class="cardTitle" id="t3">Why it matters on Earth</div>
+          <div class="cardSub" id="s3">If you can’t dump anything, you’re forced to build systems that actually work.</div>
         </div>
-        <div class="chev">▸</div>
+        <div class="cardChev" aria-hidden="true">▸</div>
       </div>
-      <div class="body">
+      <div class="cardBody">
         <p class="txt" id="p3a"></p>
         <p class="txt" id="p3b"></p>
         <div class="actions">
@@ -253,14 +251,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     </div>
 
     <div class="card" id="c4">
-      <div class="head" role="button" tabindex="0" aria-label="Open: SHIMMER bridge">
-        <div class="left">
-          <div class="title" id="t4">SHIMMER bridge</div>
-          <div class="sub" id="s4">The same routing spine that can stabilize cities can keep a habitat alive.</div>
+      <div class="cardHead" role="button" tabindex="0" aria-label="Toggle: SHIMMER bridge">
+        <div class="cardLeft">
+          <div class="cardTitle" id="t4">SHIMMER bridge</div>
+          <div class="cardSub" id="s4">The same routing spine that can stabilize cities can keep a habitat alive.</div>
         </div>
-        <div class="chev">▸</div>
+        <div class="cardChev" aria-hidden="true">▸</div>
       </div>
-      <div class="body">
+      <div class="cardBody">
         <p class="txt" id="p4a"></p>
         <p class="txt" id="p4b"></p>
         <div class="actions">
@@ -270,14 +268,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     </div>
 
     <div class="card" id="c5">
-      <div class="head" role="button" tabindex="0" aria-label="Open: Roadmap posture">
-        <div class="left">
-          <div class="title" id="t5">Roadmap posture</div>
-          <div class="sub" id="s5">Start with near-term pilots. Earn the right to scale into orbit.</div>
+      <div class="cardHead" role="button" tabindex="0" aria-label="Toggle: Roadmap posture">
+        <div class="cardLeft">
+          <div class="cardTitle" id="t5">Roadmap posture</div>
+          <div class="cardSub" id="s5">Start with near-term pilots. Earn the right to scale into orbit.</div>
         </div>
-        <div class="chev">▸</div>
+        <div class="cardChev" aria-hidden="true">▸</div>
       </div>
-      <div class="body">
+      <div class="cardBody">
         <p class="txt" id="p5a"></p>
         <p class="txt" id="p5b"></p>
         <div class="actions">
@@ -288,7 +286,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   </div>
 
-  <div class="footer">
+  <div class="footer" id="footLine">
     Vision lane only · Structure lives in DOOR
     <div class="sig">DIAMONDGATEBRIDGE.COM</div>
   </div>
@@ -299,10 +297,10 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 (function(){
   // --- canonical state ---
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang") || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style")|| "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time") || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth")|| "explore";
 
   if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
   if(style!=="formal"&&style!=="informal") style="informal";
@@ -343,6 +341,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
   paintLang();
+
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
@@ -353,13 +352,15 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
   document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  // lens buttons
+  // lens buttons (no reload)
   var btnI=document.getElementById("btnInformal");
   var btnF=document.getElementById("btnFormal");
   function paintLens(){
     btnI.classList.toggle("active", style==="informal");
     btnF.classList.toggle("active", style==="formal");
   }
+  paintLens();
+
   function setLens(next){
     if(next!=="formal"&&next!=="informal") next="informal";
     style=next;
@@ -369,36 +370,34 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   }
   btnI.addEventListener("click", function(){ setLens("informal"); });
   btnF.addEventListener("click", function(){ setLens("formal"); });
-  paintLens();
 
-  // accordion (single-open)
-  function bindCard(cardId){
-    var card=document.getElementById(cardId);
-    var head=card.querySelector(".head");
-    var chev=card.querySelector(".chev");
-    function act(){
-      var open=!card.classList.contains("open");
-      document.querySelectorAll(".card").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".chev");
-        if(c) c.textContent="▸";
-      });
-      card.classList.toggle("open", open);
-      chev.textContent=open?"▾":"▸";
-    }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  // accordion FIX: independent toggles, never gets stuck
+  function setChevron(card){
+    var chev = card.querySelector(".cardChev");
+    if(!chev) return;
+    chev.textContent = card.classList.contains("open") ? "▾" : "▸";
   }
-  ["c1","c2","c3","c4","c5"].forEach(bindCard);
 
-  // copy packs (support-bounded: exciting in informal, abstract in formal)
+  function toggleCard(card){
+    card.classList.toggle("open");
+    setChevron(card);
+  }
+
+  document.querySelectorAll(".card").forEach(function(card){
+    var head = card.querySelector(".cardHead");
+    if(!head) return;
+    head.addEventListener("click", function(){ toggleCard(card); });
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggleCard(card); }
+    });
+    // init chevron
+    setChevron(card);
+  });
+
+  // copy packs (TED-style informal, abstract formal)
   var COPY = {
     en:{
-      head:{
-        k:"FRONTIER · VISION",
-        ttl:"CLOSED LOOP HABITATS",
-        tag:"A place where “waste” stops existing — because you can’t afford to lose anything."
-      },
+      head:{k:"FRONTIER · VISION",ttl:"CLOSED LOOP HABITATS",tag:"A place where “waste” stops existing — because you can’t afford to lose anything."},
       informal:{
         p1a:"Imagine living in a place where the trash truck never comes. No landfill. No sewer that disappears into the distance. No “we’ll deal with it later.” That’s a closed-loop habitat: you either keep your resources… or you lose the habitat.",
         p1b:"That pressure is the gift. It forces systems to be honest. No vibes. No hand-waving. If water drifts, you notice fast. If air drifts, you notice faster. The loop turns mistakes into signals before they become disasters.",
@@ -425,11 +424,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       }
     },
     zh:{
-      head:{
-        k:"前沿 · 愿景",
-        ttl:"闭环栖息地",
-        tag:"在这里，“废弃物”不再存在——因为你承受不起任何损失。"
-      },
+      head:{k:"前沿 · 愿景",ttl:"闭环栖息地",tag:"在这里，“废弃物”不再存在——因为你承受不起任何损失。"},
       informal:{
         p1a:"想象一个地方：垃圾车永远不会来。没有填埋场。没有“排走就算”。也没有“以后再说”。这就是闭环栖息地：要么把资源留住，要么失去栖息地。",
         p1b:"这种压力反而是礼物。它逼系统诚实：没有情绪，没有借口。水一漂移，很快就暴露；空气一漂移，更快就暴露。闭环把错误变成信号，而不是灾难。",
@@ -456,11 +451,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       }
     },
     es:{
-      head:{
-        k:"FRONTERA · VISIÓN",
-        ttl:"HÁBITATS DE CICLO CERRADO",
-        tag:"Aquí ‘residuo’ deja de existir — porque no puedes permitirte perder nada."
-      },
+      head:{k:"FRONTERA · VISIÓN",ttl:"HÁBITATS DE CICLO CERRADO",tag:"Aquí ‘residuo’ deja de existir — porque no puedes permitirte perder nada."},
       informal:{
         p1a:"Imagina vivir donde el camión de basura nunca llega. Sin vertedero. Sin ‘lo tiramos y ya’. Sin ‘luego vemos’. Eso es un hábitat de ciclo cerrado: o retienes recursos… o pierdes el hábitat.",
         p1b:"Esa presión es un regalo. Obliga a que el sistema sea honesto: sin excusas. Si el agua deriva, se nota. Si el aire deriva, se nota antes. El ciclo convierte errores en señales antes de que sean desastres.",
@@ -499,19 +490,16 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
     document.getElementById("p1a").textContent=L.p1a;
     document.getElementById("p1b").textContent=L.p1b;
-
     document.getElementById("p2a").textContent=L.p2a;
     document.getElementById("p2b").textContent=L.p2b;
-
     document.getElementById("p3a").textContent=L.p3a;
     document.getElementById("p3b").textContent=L.p3b;
-
     document.getElementById("p4a").textContent=L.p4a;
     document.getElementById("p4b").textContent=L.p4b;
-
     document.getElementById("p5a").textContent=L.p5a;
     document.getElementById("p5b").textContent=L.p5b;
 
+    // per-lang labels
     if(lang==="zh"){
       document.getElementById("btnBack").textContent="返回";
       document.getElementById("btnDoor").textContent="门";
@@ -527,7 +515,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("j3").textContent="打开：能源产品";
       document.getElementById("j4").textContent="打开：无烟能源";
       document.getElementById("j5").textContent="打开：DOOR（结构）";
-      document.querySelector(".footer").firstChild.nodeValue="愿景通道 · 结构在 DOOR";
+      document.getElementById("footLine").childNodes[0].nodeValue="愿景通道 · 结构在 DOOR";
     }else if(lang==="es"){
       document.getElementById("btnBack").textContent="VOLVER";
       document.getElementById("btnDoor").textContent="PUERTA";
@@ -543,7 +531,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("j3").textContent="ABRIR: PRODUCTO ENERGÍA";
       document.getElementById("j4").textContent="ABRIR: ENERGÍA SIN HUMO";
       document.getElementById("j5").textContent="ABRIR: PUERTA (ESTRUCTURA)";
-      document.querySelector(".footer").firstChild.nodeValue="Carril de visión · La estructura vive en DOOR";
+      document.getElementById("footLine").childNodes[0].nodeValue="Carril de visión · La estructura vive en DOOR";
     }else{
       btnI.textContent="INFORMAL";
       btnF.textContent="FORMAL";
@@ -555,69 +543,11 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     }
   }
 
-  // lens + language UI
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  function paintLens(){
-    btnI.classList.toggle("active", style==="informal");
-    btnF.classList.toggle("active", style==="formal");
-  }
-
-  var btnI=document.getElementById("btnInformal");
-  var btnF=document.getElementById("btnFormal");
-
-  paintLang();
-  paintLens();
   render();
 
   // default: open first card
-  document.getElementById("c1").classList.add("open");
-  document.getElementById("c1").querySelector(".chev").textContent="▾";
-
-  // bind language buttons
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
-
-  // bind lens buttons (no reload)
-  function setLens(next){
-    if(next!=="formal"&&next!=="informal") next="informal";
-    style=next;
-    try{ localStorage.setItem("gd_style",style); }catch(e){}
-    paintLens();
-    render();
-  }
-  btnI.addEventListener("click", function(){ setLens("informal"); });
-  btnF.addEventListener("click", function(){ setLens("formal"); });
-
-  // accordion
-  function bindCard(cardId){
-    var card=document.getElementById(cardId);
-    var head=card.querySelector(".head");
-    var chev=card.querySelector(".chev");
-    function act(){
-      var open=!card.classList.contains("open");
-      document.querySelectorAll(".card").forEach(function(x){
-        x.classList.remove("open");
-        var c=x.querySelector(".chev");
-        if(c) c.textContent="▸";
-      });
-      card.classList.toggle("open", open);
-      chev.textContent=open?"▾":"▸";
-    }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-  }
-  ["c1","c2","c3","c4","c5"].forEach(bindCard);
+  var first=document.getElementById("c1");
+  if(first){ first.classList.add("open"); var ch=first.querySelector(".cardChev"); if(ch) ch.textContent="▾"; }
 
 })();
 </script>

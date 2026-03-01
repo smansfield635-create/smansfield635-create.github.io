@@ -1,17 +1,17 @@
 <!-- TNT — /home/index.html
-     HOME · LAUNCHPAD (NOT TAXONOMY) · TRILINGUAL (EN/中文/ES)
-     GOAL:
-       - Same frontier-with-receipts posture
-       - Bigger print, higher contrast panels
-       - Zero modals. No overlays.
-       - Clear routes: Products / Explore / Laws / Gauges
-       - State carry: lang/style/time/depth (URL + gd_* LS)
-     ROUTES:
-       - DOOR / PRELUDE / COMPASS
-       - Cards → /products/ /explore/ /laws/ /gauges/
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
+     HOME · FRONTIER POSITIONING HUB
+     ROLE:
+       - Existential opener
+       - Problem articulation
+       - Finite mapping declaration
+       - Navigation convergence layer
+     DESIGN:
+       - Monument typography
+       - Balanced architectural gold (not glow-heavy)
+       - Diamond geometry alignment
+       - Accordion density (single-open)
+       - No modal traps
+       - Full state carry (lang/style/time/depth)
 -->
 
 <!doctype html>
@@ -19,7 +19,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HOME</title>
+<title>Home · Frontier Hub</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -27,330 +27,263 @@
 
 <style>
 a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
+/* ===== TOKENS ===== */
 :root{
-  --dockH:92px;
+  --dockH:90px;
 
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-  --opalC:rgba(255,80,80,.12);
-
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --H1:34px;
-  --P:15px;
+  --goldSoft:rgba(212,175,55,.28);
+  --goldEdge:rgba(212,175,55,.45);
+  --inkA:rgba(10,18,30,.92);
+  --inkB:rgba(6,10,16,.96);
+  --mut:rgba(255,255,255,.90);
+  --mut2:rgba(255,255,255,.75);
 }
 
-/* top */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
-
-/* page */
+/* ===== PAGE WRAP ===== */
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 18px);
+  padding:110px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
+  gap:24px;
 }
 
-/* header */
-.header{
-  border:1px solid var(--stroke);
-  border-radius:22px;
+/* ===== HEADER ===== */
+.hero{
+  border:1px solid var(--goldSoft);
+  border-radius:26px;
+  padding:40px 32px;
   background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.14);
-  backdrop-filter:blur(10px);
-  box-shadow:0 24px 80px rgba(0,0,0,.55);
-  padding:14px 16px;
-}
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0;font-weight:950;font-size:var(--H1);letter-spacing:.8px}
-.s{margin:10px 0 0;font-size:var(--P);opacity:.90;line-height:1.6;max-width:980px}
-.rule{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:linear-gradient(160deg, rgba(12,22,38,.60), rgba(6,10,16,.70));
-  font-size:12.75px;
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
+    radial-gradient(circle at 22% 18%, rgba(212,175,55,.08), transparent 60%),
+    linear-gradient(160deg, var(--inkA), var(--inkB));
+  box-shadow:0 40px 120px rgba(0,0,0,.65);
 }
 
-/* grid */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
+.hero h1{
+  font-size:44px;
+  font-weight:900;
+  letter-spacing:.6px;
+  margin:0 0 18px;
 }
-@media(max-width:860px){ .grid{grid-template-columns:1fr} }
 
-.card{
+.hero p{
+  font-size:18px;
+  line-height:1.7;
+  margin:0 0 14px;
+  color:var(--mut);
+}
+
+/* ===== POSITIONING BLOCK ===== */
+.position{
+  border-left:4px solid var(--goldEdge);
+  padding-left:18px;
+  font-size:17px;
+  line-height:1.7;
+  color:var(--mut2);
+}
+
+/* ===== ACCORDION ===== */
+.section{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:0 16px 52px rgba(0,0,0,.60);
-  padding:16px 16px;
-}
-.card h3{margin:0;font-weight:950;letter-spacing:.2px;font-size:18px}
-.card p{margin:10px 0 0;opacity:.84;line-height:1.55;font-size:13.75px;max-width:92ch}
-.card .row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.card .btn{border-radius:999px;padding:10px 14px}
-
-/* band */
-.band{
-  padding:10px 12px;border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.12);
-  font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.86);
+  overflow:hidden;
+  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.92));
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
 }
 
-/* dock */
+.head{
+  padding:20px 24px;
+  font-weight:900;
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.chev{opacity:.7}
+
+.body{
+  display:none;
+  padding:22px 24px;
+  border-top:1px solid rgba(255,255,255,.08);
+  font-size:16px;
+  line-height:1.75;
+  color:var(--mut2);
+}
+
+.section.open .body{display:block}
+
+/* ===== NAV GRID ===== */
+.navgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+@media(max-width:900px){
+  .navgrid{grid-template-columns:1fr}
+}
+
+.navcard{
+  border:1px solid var(--goldSoft);
+  border-radius:20px;
+  padding:22px;
+  background:linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+  font-weight:800;
+  font-size:16px;
+  letter-spacing:.4px;
+  text-align:center;
+  transition:transform .18s ease;
+}
+
+.navcard:hover{transform:translateY(-4px)}
+
 .dock{
   position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
+  bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:220;
+  z-index:200;
   width:min(980px,94vw);
   padding:10px 12px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:98px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+
+.dock .btn{
+  width:100%;
+  padding:10px;
+  border-radius:999px;
+  white-space:nowrap;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top-left">
-  <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-  <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
-  <a class="btn" id="btnCompass" href="/index.html">COMPASS</a>
-</div>
-
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
-
 <div class="page">
 
-  <div class="header">
-    <p class="k" id="hk">HOME</p>
-    <h1 class="t" id="ht">STRUCTURE BEFORE STORY</h1>
-    <p class="s" id="hs"></p>
-    <div class="rule" id="r0"></div>
+  <!-- ===== HERO ===== -->
+  <div class="hero">
+    <h1>What if the loudest claims you've ever heard could finally be proven?</h1>
+    <p>
+      Most systems collapse not because ambition is wrong —
+      but because structure is undefined.
+    </p>
+    <p>
+      We mapped the problem.
+      Not philosophically. Not rhetorically.
+      Structurally.
+    </p>
+
+    <div class="position">
+      Every instability can be reduced to finite mismatch.
+      Every mismatch can be mapped.
+      Every mapped pattern can be constrained.
+      And every constraint can be executed.
+    </div>
   </div>
 
-  <div class="band" id="b1">FAST ROUTES</div>
+  <!-- ===== PROBLEM ===== -->
+  <div class="section">
+    <div class="head">The Problem<span class="chev">▸</span></div>
+    <div class="body">
+      Systems drift.  
+      Organizations drift.  
+      Claims expand beyond evidence.  
+      Infrastructure scales faster than verification.  
+      Governance lags behind execution.  
 
-  <div class="grid">
-    <div class="card">
-      <h3 id="c1t">Products</h3>
-      <p id="c1p"></p>
-      <div class="row"><a class="btn" id="openProducts" href="/products/">OPEN</a></div>
-    </div>
+      The result is not chaos —  
+      it is misalignment accumulating silently until it becomes collapse.
 
-    <div class="card">
-      <h3 id="c2t">Explore</h3>
-      <p id="c2p"></p>
-      <div class="row"><a class="btn" id="openExplore" href="/explore/">OPEN</a></div>
+      The world does not lack intelligence.  
+      It lacks constraint geometry.
     </div>
+  </div>
 
-    <div class="card">
-      <h3 id="c3t">Laws</h3>
-      <p id="c3p"></p>
-      <div class="row"><a class="btn" id="openLaws" href="/laws/">OPEN</a></div>
-    </div>
+  <!-- ===== FINITE MAP ===== -->
+  <div class="section">
+    <div class="head">The Finite Map<span class="chev">▸</span></div>
+    <div class="body">
+      We reduced the instability space to a lattice.
+      A measurable lattice.
 
-    <div class="card">
-      <h3 id="c4t">Gauges</h3>
-      <p id="c4p"></p>
-      <div class="row"><a class="btn" id="openGauges" href="/gauges/">OPEN</a></div>
+      Behavioral systems.
+      Legal systems.
+      Energy systems.
+      Financial systems.
+      Urban systems.
+
+      All reducible to finite structure under constraint.
+
+      Not theory.
+      Geometry.
     </div>
+  </div>
+
+  <!-- ===== SOLUTION ===== -->
+  <div class="section">
+    <div class="head">The Solution<span class="chev">▸</span></div>
+    <div class="body">
+      A coherence architecture.
+
+      • Diagnostic engines  
+      • Constraint laws  
+      • Verification layers  
+      • Infrastructure models  
+      • Finite-state indexing  
+
+      You are here because something needs alignment.
+      The measure exists.
+      The route exists.
+      The execution exists.
+    </div>
+  </div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <div class="navgrid">
+    <a class="navcard" href="/products/">PRODUCTS</a>
+    <a class="navcard" href="/explore/">EXPLORE</a>
+    <a class="navcard" href="/laws/">LAWS</a>
+    <a class="navcard" href="/gauges/">GAUGES</a>
+    <a class="navcard" href="/education/">EDUCATION</a>
+    <a class="navcard" href="/door/">ENTER</a>
   </div>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+<nav class="dock">
+  <a class="btn" href="/index.html">INDEX</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/laws/">LAWS</a>
 </nav>
 
 <script>
-(function(){
-  // state
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(style!=="formal"&&style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(depth!=="explore"&&depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
-  }
-
-  // wire
-  function wire(id,path){ var el=document.getElementById(id); if(el) el.href=path+q(); }
-  wire("btnDoor","/door/");
-  wire("btnPrelude","/prelude/");
-  wire("btnCompass","/index.html");
-  wire("openProducts","/products/");
-  wire("openExplore","/explore/");
-  wire("openLaws","/laws/");
-  wire("openGauges","/gauges/");
-  wire("dockDoor","/door/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // language toggle
-  function paintLang(){
-    document.getElementById("btnEN").classList.toggle("active", lang==="en");
-    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
-    document.getElementById("btnES").classList.toggle("active", lang==="es");
-  }
-  paintLang();
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
-
-  // copy
-  var COPY={
-    en:{
-      hk:"HOME",
-      ht:"STRUCTURE BEFORE STORY",
-      hs:"Big ideas are welcome here—when they stay tied to what we can check. Choose a lane and move with receipts.",
-      r0:"Rule: if it can’t be measured yet, it stays labeled as concept or roadmap. Navigation preserves gd_* state.",
-      c1t:"Products", c1p:"Deployable surfaces. Use these when you want tools you can apply right now.",
-      c2t:"Explore", c2p:"Frontier shells and vision lanes (bounded and labeled). Curiosity without pretending.",
-      c3t:"Laws", c3p:"Rules that keep upgrades honest: scope, admissibility, epochs, containment.",
-      c4t:"Gauges", c4p:"Measurement surfaces. Signals, windows, and evidence—no narrative claims."
-    },
-    zh:{
-      hk:"主页",
-      ht:"先结构，后故事",
-      hs:"欢迎大想法——但必须绑定可核查之物。选一条路，用收据前进。",
-      r0:"规则：不能测量就标为概念或路线图。导航保留 gd_* 状态。",
-      c1t:"产品", c1p:"可部署执行面：想立刻用工具就走这里。",
-      c2t:"探索", c2p:"前沿壳与愿景通道（有界且标注）。好奇但不假装。",
-      c3t:"法则", c3p:"让升级诚实的规则：范围、可采信、纪元、隔离。",
-      c4t:"量规", c4p:"测量执行面：信号、窗口与证据——不讲叙事。"
-    },
-    es:{
-      hk:"INICIO",
-      ht:"ESTRUCTURA ANTES DE HISTORIA",
-      hs:"Las ideas grandes son bienvenidas—cuando se atan a lo verificable. Elige carril y avanza con recibos.",
-      r0:"Regla: si aún no se puede medir, se etiqueta como concepto o ruta. La navegación preserva gd_*.",
-      c1t:"Productos", c1p:"Superficies desplegables. Úsalas si quieres herramientas hoy.",
-      c2t:"Explorar", c2p:"Frontera acotada y etiquetada. Curiosidad sin fingir.",
-      c3t:"Leyes", c3p:"Reglas que mantienen honestos los upgrades: alcance, admisibilidad, épocas, contención.",
-      c4t:"Medidores", c4p:"Medición y evidencia—sin narrativa."
+document.querySelectorAll('.head').forEach(function(h){
+  h.addEventListener('click',function(){
+    var s=h.parentElement;
+    var open=!s.classList.contains('open');
+    document.querySelectorAll('.section').forEach(function(x){
+      x.classList.remove('open');
+      var c=x.querySelector('.chev');
+      if(c) c.textContent='▸';
+    });
+    if(open){
+      s.classList.add('open');
+      h.querySelector('.chev').textContent='▾';
     }
-  };
-
-  var P=(lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;
-  document.getElementById("hk").textContent=P.hk;
-  document.getElementById("ht").textContent=P.ht;
-  document.getElementById("hs").textContent=P.hs;
-  document.getElementById("r0").textContent=P.r0;
-
-  document.getElementById("c1t").textContent=P.c1t;
-  document.getElementById("c1p").textContent=P.c1p;
-  document.getElementById("c2t").textContent=P.c2t;
-  document.getElementById("c2p").textContent=P.c2p;
-  document.getElementById("c3t").textContent=P.c3t;
-  document.getElementById("c3p").textContent=P.c3p;
-  document.getElementById("c4t").textContent=P.c4t;
-  document.getElementById("c4p").textContent=P.c4p;
-
-  if(lang==="zh"){
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnPrelude").textContent="前置页";
-    document.getElementById("btnCompass").textContent="指南针";
-    document.getElementById("openProducts").textContent="打开";
-    document.getElementById("openExplore").textContent="打开";
-    document.getElementById("openLaws").textContent="打开";
-    document.getElementById("openGauges").textContent="打开";
-    document.getElementById("b1").textContent="快速路线";
-    document.getElementById("dockDoor").textContent="门";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-  }else if(lang==="es"){
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("btnCompass").textContent="BRÚJULA";
-    document.getElementById("openProducts").textContent="ABRIR";
-    document.getElementById("openExplore").textContent="ABRIR";
-    document.getElementById("openLaws").textContent="ABRIR";
-    document.getElementById("openGauges").textContent="ABRIR";
-    document.getElementById("b1").textContent="RUTAS RÁPIDAS";
-    document.getElementById("dockDoor").textContent="PUERTA";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-  }else{
-    document.getElementById("openProducts").textContent="OPEN";
-    document.getElementById("openExplore").textContent="OPEN";
-    document.getElementById("openLaws").textContent="OPEN";
-    document.getElementById("openGauges").textContent="OPEN";
-  }
-})();
+  });
+});
 </script>
 
 </body>

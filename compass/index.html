@@ -1,0 +1,213 @@
+<!-- TNT — /compass/index.html
+     COMPASS · ORIENTATION FIELD
+     ROLE:
+       - Define the problem (drift + incoherence)
+       - Define the measure (finite lattice)
+       - Define the posture (receipts > rhetoric)
+       - No lenses yet (pure orientation)
+       - EN / 中文 / ES
+     LOCKS:
+       - Uses ui.css + branch.css + instruments.js
+       - ui.css owns background
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Compass · Orientation</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:90px;
+  --gold:rgba(212,175,55,.35);
+  --goldSoft:rgba(212,175,55,.15);
+  --redSignal:rgba(255,70,70,.22);
+}
+
+/* Page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:120px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* Diamond Field */
+.field{
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(210,190,255,.18), transparent 70%),
+    radial-gradient(circle at 70% 70%, rgba(120,70,255,.14), transparent 75%),
+    linear-gradient(160deg, rgba(10,14,20,.92), rgba(6,10,16,.96));
+  padding:28px;
+  box-shadow:
+    0 60px 180px rgba(0,0,0,.85),
+    inset 0 0 60px rgba(212,175,55,.05);
+}
+
+/* Gold lattice trace */
+.field::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    repeating-conic-gradient(
+      from 45deg,
+      transparent 0deg 8deg,
+      rgba(212,175,55,.06) 8deg 9deg
+    );
+  opacity:.15;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+
+/* Typography */
+.k{
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.7;
+  margin:0 0 8px;
+}
+.t{
+  font-weight:950;
+  font-size:36px;
+  letter-spacing:.8px;
+  margin:0 0 14px;
+}
+.p{
+  font-size:15px;
+  line-height:1.75;
+  opacity:.92;
+  margin:0 0 16px;
+  max-width:900px;
+}
+
+/* Red signal emphasis */
+.signal{
+  color:#ff6b6b;
+  font-weight:700;
+}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(12px);
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.dock .btn{
+  width:100%;
+  padding:12px;
+  border-radius:999px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="field">
+
+    <p class="k">COMPASS</p>
+    <h1 class="t">You Are Here Because Something Feels Off</h1>
+
+    <p class="p">
+      Systems drift. Teams drift. Products drift. 
+      Language drifts. 
+      And when drift compounds, it stops being cosmetic — it becomes structural.
+    </p>
+
+    <p class="p">
+      Most failures do not begin with catastrophe. 
+      They begin with <span class="signal">invisible misalignment</span>.
+      Small inconsistencies.
+      Quiet contradictions.
+      Shared exposure nobody mapped.
+    </p>
+
+    <p class="p">
+      This project exists because drift is not random.
+      It can be measured.
+      It can be bounded.
+      It can be expressed within a finite lattice.
+    </p>
+
+    <p class="p">
+      We do not operate on vibes.
+      We operate on declared scope, receipts, invariants, and replayable structure.
+    </p>
+
+    <p class="p">
+      If you are here, there is a question.
+      A system.
+      A structure.
+      A pressure point.
+      And somewhere in the lattice, there is an answer.
+    </p>
+
+  </div>
+
+</div>
+
+<nav class="dock">
+  <a class="btn" href="/prelude/">PRELUDE</a>
+  <a class="btn" href="/home/">HOME</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  if(lang==="zh"){
+    document.querySelector(".t").textContent="你在这里，因为有些地方不对劲";
+    var ps=document.querySelectorAll(".p");
+    ps[0].textContent="系统会漂移。团队会漂移。产品会漂移。语言也会漂移。当漂移累积，它不再是表面问题，而是结构问题。";
+    ps[1].innerHTML="大多数失败并非始于灾难，而始于<span class='signal'>看不见的错位</span>。细微的不一致，安静的矛盾，共享暴露却无人绘制。";
+    ps[2].textContent="这个项目存在，因为漂移不是随机的。它可以被测量，可以被约束，可以在有限晶格中表达。";
+    ps[3].textContent="我们不依赖感觉。我们依赖声明范围、收据、不变量与可回放结构。";
+    ps[4].textContent="如果你在这里，说明有一个问题。有一个系统。有一个压力点。在晶格的某处，有一个答案。";
+  }
+
+  if(lang==="es"){
+    document.querySelector(".t").textContent="Estás Aquí Porque Algo No Está Bien";
+    var ps=document.querySelectorAll(".p");
+    ps[0].textContent="Los sistemas derivan. Los equipos derivan. Los productos derivan. El lenguaje deriva. Cuando la deriva se acumula, deja de ser cosmética y se vuelve estructural.";
+    ps[1].innerHTML="La mayoría de fallos no empiezan con catástrofe, sino con <span class='signal'>desalineación invisible</span>. Pequeñas inconsistencias. Contradicciones silenciosas. Exposición compartida sin mapa.";
+    ps[2].textContent="Este proyecto existe porque la deriva no es aleatoria. Puede medirse. Puede acotarse. Puede expresarse dentro de un lattice finito.";
+    ps[3].textContent="No operamos con emociones. Operamos con alcance declarado, recibos, invariantes y estructura reproducible.";
+    ps[4].textContent="Si estás aquí, hay una pregunta. Un sistema. Un punto de presión. Y en algún lugar del lattice, hay una respuesta.";
+  }
+})();
+</script>
+
+</body>
+</html>

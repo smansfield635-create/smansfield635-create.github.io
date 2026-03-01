@@ -1,0 +1,267 @@
+<!-- TNT — /explore/legal/index.html  (DOMAIN PLATFORM · LEGAL) -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>EXPLORE · LEGAL</title>
+<link rel="stylesheet" href="/assets/ui.css"/><link rel="stylesheet" href="/assets/branch.css"/><script defer src="/assets/instruments.js"></script>
+<style>
+/* SAME TEMPLATE AS FINANCE (kept identical for cohesion) */
+a{color:inherit;text-decoration:none}body::before,body::after{pointer-events:none!important}
+:root{--dockH:92px;--opalA:rgba(210,190,255,.16);--opalB:rgba(120,70,255,.12);--opalC:rgba(255,80,80,.10);--goldSoft:rgba(212,175,55,.35);--stroke:rgba(255,255,255,.12);--stroke2:rgba(255,255,255,.10);--txt:rgba(255,255,255,.90);--mut:rgba(255,255,255,.78);--bgA:rgba(12,22,38,.86);--bgB:rgba(6,10,16,.92);--red:rgba(255,70,70,.20);--fontH:34px;--fontT:16px;--fontB:14px}
+@media (min-width:900px){:root{--fontH:40px;--fontT:17px;--fontB:14.5px}}@media (max-width:420px){:root{--fontH:32px;--fontT:15.5px;--fontB:14px}}
+.page{width:min(1100px,94vw);margin:0 auto;padding:14px 0 calc(var(--dockH) + 18px);display:flex;flex-direction:column;gap:12px;position:relative;z-index:10}
+.top{position:sticky;top:0;z-index:240;padding:10px 0 6px;display:flex;justify-content:space-between;gap:12px}.top .left,.top .right{display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center}
+.hero{border:1px solid var(--stroke);border-radius:22px;background:radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),radial-gradient(circle at 78% 28%, var(--opalB), transparent 66%),radial-gradient(circle at 58% 92%, var(--opalC), transparent 64%),linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));backdrop-filter:blur(10px);box-shadow:0 24px 80px rgba(0,0,0,.55);padding:16px 16px 14px}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74}
+.h1{margin:0;font-weight:950;font-size:var(--fontH);letter-spacing:.9px;line-height:1.08}
+.lede{margin:10px 0 0;font-size:var(--fontT);line-height:1.55;color:var(--txt)}
+.rule{margin-top:12px;border-radius:16px;border:1px solid rgba(255,255,255,.10);background:radial-gradient(circle at 20% 30%, rgba(255,70,70,.12), transparent 60%),linear-gradient(160deg, rgba(12,22,38,.62), rgba(6,10,16,.72));padding:10px 12px;color:rgba(255,255,255,.84);font-size:12.75px;line-height:1.45}
+.band{padding:10px 12px;border-radius:18px;border:1px solid var(--stroke2);background:rgba(0,0,0,.14);font-weight:950;letter-spacing:.2px;color:rgba(255,255,255,.88)}
+.block{border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));box-shadow:0 16px 52px rgba(0,0,0,.60);padding:14px 16px 14px}
+.bh{margin:0;font-weight:950;letter-spacing:.2px;font-size:15px}
+.bp{margin:10px 0 0;color:rgba(255,255,255,.86);line-height:1.6;font-size:var(--fontB)}
+.ul{margin:10px 0 0 18px;padding:0;color:rgba(255,255,255,.82);line-height:1.55;font-size:var(--fontB)}.ul li{margin:6px 0}
+.selectRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.pill{padding:10px 14px;border-radius:999px;background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.65);cursor:pointer;font-weight:900;letter-spacing:.2px;color:#fff;-webkit-tap-highlight-color:transparent}
+.pill.active{border-color:rgba(212,175,55,.55);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 14px rgba(212,175,55,.18)}
+.pill.red.active{border-color:rgba(255,90,90,.55);box-shadow:0 18px 50px rgba(0,0,0,.9),0 0 16px rgba(255,70,70,.18)}
+.list{display:flex;flex-direction:column;gap:12px}
+.row{border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));box-shadow:0 16px 52px rgba(0,0,0,.60);overflow:hidden}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--c);box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 14px rgba(0,0,0,.35);margin-top:3px;flex:0 0 auto}
+.titleBlock{min-width:0}.ti{font-weight:950;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.su{margin-top:6px;font-size:12.75px;opacity:.80;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{display:none;padding:14px 16px 16px;border-top:1px solid rgba(255,255,255,.08);background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92))}
+.row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.88);line-height:1.65;font-size:var(--fontB)}.p + .p{margin-top:10px}
+.subB{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{border:1px solid rgba(255,255,255,.10);border-radius:18px;background:rgba(255,255,255,.05);padding:14px 14px 12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bubble h4{margin:0 0 8px;font-weight:950;letter-spacing:.15px}
+.bubble p{margin:0;color:rgba(255,255,255,.78);line-height:1.65;display:none}
+.bubble.open p{display:block}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
+.dock{position:fixed;left:50%;bottom:max(10px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:220;width:min(980px,94vw);padding:10px 12px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.22);backdrop-filter:blur(10px);box-shadow:0 18px 60px rgba(0,0,0,.55);display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:10px}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){:root{--dockH:104px}.dock{grid-template-columns:repeat(3, minmax(0,1fr))}}
+</style></head>
+<body>
+<div class="page">
+  <div class="top"><div class="left">
+    <a class="btn" id="btnBack" href="/explore/">BACK</a><a class="btn" id="btnDoor" href="/door/">DOOR</a><a class="btn" id="btnExit" href="/index.html">EXIT</a>
+  </div><div class="right">
+    <button class="btn" id="btnEN" type="button">EN</button><button class="btn" id="btnZH" type="button">中文</button><button class="btn" id="btnES" type="button">ES</button>
+  </div></div>
+
+  <div class="hero">
+    <p class="k" id="k0">FRONTIER · DOMAIN</p>
+    <h1 class="h1" id="h0">LEGAL</h1>
+    <p class="lede" id="lede"></p>
+    <div class="rule" id="rule"></div>
+  </div>
+
+  <div class="band" id="bA">THE PROBLEM</div>
+  <div class="block"><div class="bh" id="pA_h"></div><p class="bp" id="pA_p"></p><ul class="ul" id="pA_ul"></ul></div>
+
+  <div class="band" id="bB">THE SOLUTION SHAPE</div>
+  <div class="block"><div class="bh" id="pB_h"></div><p class="bp" id="pB_p"></p><ul class="ul" id="pB_ul"></ul></div>
+
+  <div class="band" id="bC">4 LENSES</div>
+  <div class="block">
+    <div class="bh" id="sel_h"></div><p class="bp" id="sel_p"></p>
+    <div class="selectRow" style="margin-top:12px">
+      <div class="pills"><button class="pill red active" id="pillEngineering" type="button">ENGINEERING</button><button class="pill red" id="pillPlatform" type="button">PLATFORM</button></div>
+      <div class="pills"><button class="pill active" id="pillInformal" type="button">INFORMAL</button><button class="pill" id="pillFormal" type="button">FORMAL</button></div>
+    </div>
+  </div>
+
+  <div class="band" id="bD">LEGAL MODULES</div>
+  <div class="list" id="list"></div>
+</div>
+
+<nav class="dock">
+  <a class="btn" id="dockHome" href="/home/">HOME</a><a class="btn" id="dockProducts" href="/products/">PRODUCTS</a><a class="btn" id="dockLaws" href="/laws/">LAWS</a><a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  var qs=new URLSearchParams(location.search);
+  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
+  var style=qs.get("style")||localStorage.getItem("gd_style")||"informal";
+  var time=qs.get("time")||localStorage.getItem("gd_time")||"now";
+  var depth=qs.get("depth")||localStorage.getItem("gd_depth")||"explore";
+  if(time==="trajectory") time="post";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
+  try{localStorage.setItem("gd_lang",lang);localStorage.setItem("gd_style",style);localStorage.setItem("gd_time",time);localStorage.setItem("gd_depth",depth);}catch(e){}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  function q(over){var L=(over&&over.lang)?over.lang:lang;var S=(over&&over.style)?over.style:style;var T=(over&&over.time)?over.time:time;var D=(over&&over.depth)?over.depth:depth;return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);}
+  function wire(id,path){var el=document.getElementById(id);if(el) el.href=path+q();}
+  wire("btnBack","/explore/");wire("btnDoor","/door/");wire("btnExit","/index.html");wire("dockHome","/home/");wire("dockProducts","/products/");wire("dockLaws","/laws/");wire("dockGauges","/gauges/");
+  var btnEN=document.getElementById("btnEN"),btnZH=document.getElementById("btnZH"),btnES=document.getElementById("btnES");
+  function paintLang(){btnEN.classList.toggle("active",lang==="en");btnZH.classList.toggle("active",lang==="zh");btnES.classList.toggle("active",lang==="es");}
+  paintLang();
+  function setLang(next){if(next!=="en"&&next!=="zh"&&next!=="es") next="en";lang=next;try{localStorage.setItem("gd_lang",lang);}catch(e){}window.location.href=window.location.pathname+q({lang:lang});}
+  btnEN.addEventListener("click",function(){setLang("en");});btnZH.addEventListener("click",function(){setLang("zh");});btnES.addEventListener("click",function(){setLang("es");});
+  function P(en,zh,es){return {en:en,zh:zh,es:es};} function pick(o){return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en;}
+  function lbl(en,zh,es){return pick(P(en,zh,es));}
+
+  var COPY={
+    hero:{
+      k:P("FRONTIER · DOMAIN","前沿 · 领域","FRONTERA · DOMINIO"),
+      h:P("LEGAL","法律","LEGAL"),
+      lede:P(
+        "Why do ‘rules’ fail to produce justice? Because language drifts, incentives distort, and procedures force false binaries. This page treats law as a structural system: definitions, scope, receipts, and admissible outcomes.",
+        "为什么“规则”常常不产生正义？因为语言漂移、激励扭曲、程序强迫假二元。本页把法律当作结构系统：定义、范围、收据、可采信结论。",
+        "¿Por qué las ‘reglas’ no producen justicia? Porque el lenguaje deriva, los incentivos distorsionan y el procedimiento fuerza binarios falsos. Aquí tratamos el derecho como sistema estructural: definiciones, alcance, recibos y resultados admisibles."
+      ),
+      rule:P("Rule: No authority without scope. No outcome without receipts. Corrections create new epochs.","规则：无范围不谈权威；无收据不出结论；修正开新纪元。","Regla: no hay autoridad sin alcance. No hay resultado sin recibos. Las correcciones crean nuevas épocas.")
+    },
+    problem:{h:P("What breaks law","法律哪里会坏","Qué rompe el derecho"),
+      p:P("Legal systems drift when meaning moves silently. Once definitions shift, the same facts produce different outcomes. People then fight narratives instead of resolving evidence.","法律漂移的根因是含义被静默移动：定义一变，同事实不同判。人们于是争叙事而不是解证据。","El derecho deriva cuando el significado cambia en silencio: con definiciones móviles, los mismos hechos dan resultados distintos. Luego la gente pelea narrativas en vez de resolver evidencia."),
+      ul:[P("Forced binary outcomes (grant/deny).","强迫二元（给/不给）。","Binarios forzados (concede/niega)."),
+          P("Procedural incentives (delay, escalate, appeal).","程序激励（拖延/升级/上诉）。","Incentivos procesales (dilatar/escalar/apelar)."),
+          P("Semantic drift in standards.","标准语义漂移。","Deriva semántica en estándares."),
+          P("Hidden authority (unstated scope).","隐藏权威（未声明范围）。","Autoridad oculta (alcance no declarado).") ]},
+    solution:{h:P("What we do instead","我们怎么做","Qué hacemos"),
+      p:P("We lock scope, stabilize definitions, and require receipts. Then we allow only outcomes that survive the same rules for every observer. The system becomes boring—and that is the point.","我们锁范围、稳定义、要收据。只允许在同一规则下对每位观察者都成立的结论。系统变得无聊——这正是目的。","Bloqueamos alcance, estabilizamos definiciones y exigimos recibos. Solo permitimos resultados que sobreviven las mismas reglas para cualquier observador. El sistema se vuelve aburrido—y ese es el punto."),
+      ul:[P("Observer-invariant scoring.","观察者不变评分。","Puntuación invariante al observador."),
+          P("Reason-coded outputs.","原因码输出。","Salidas con códigos de razón."),
+          P("Hybrid dispositions where ambiguity exists.","在有歧义处提供混合处置。","Disposiciones híbridas cuando hay ambigüedad."),
+          P("Explicit epoch stamps on corrections.","修正显式纪元章。","Sellos de época en correcciones.") ]},
+    lenses:{h:P("How to read the 4 lenses","如何读四透镜","Cómo leer 4 lentes"),
+      p:P("Engineering = doctrine and rule logic. Platform = how institutions and people use it without gaming it. Informal = human clarity. Formal = spec language.","Engineering=教义与规则逻辑。Platform=机构与人如何使用且不钻空子。Informal=人话清晰。Formal=规格语言。","Engineering = doctrina y lógica de reglas. Platform = uso institucional sin trampas. Informal = claridad humana. Formal = especificación.")},
+    modules:[
+      {c:"#EF4444",t:P("Scope & Definitions","范围与定义","Alcance y definiciones"),s:P("If scope moves, outcomes stop meaning anything.","范围一变，结论就失去意义。","Si el alcance cambia, el resultado deja de significar."),
+        jump:[{id:"LAWS",href:"/laws/"}],
+        text:{
+          engineering:{informal:{concept:P("Start by naming the boundaries. That single move kills most legal chaos because it blocks hidden authority.","先把边界说清楚。这个动作能杀死大部分法律混乱，因为它阻断隐藏权威。","Empieza nombrando límites. Ese movimiento mata gran parte del caos legal porque bloquea autoridad oculta."),
+                               live:P("In live disputes, the first fight is always scope. Lock it before you debate facts.","现实纠纷里第一场争夺永远是范围。先锁范围，再谈事实。","En vivo, la primera pelea es el alcance. Bloquéalo antes de debatir hechos."),
+                               roadmap:P("Next we publish stable definition packs so terms stop drifting across cases.","下一步发布稳定定义包，让术语不再跨案漂移。","Luego publicamos packs de definiciones estables para detener la deriva.")},
+                      formal:{concept:P("Admissibility requires declared scope and stable definitions.","可采信要求声明范围与稳定定义。","La admisibilidad requiere alcance declarado y definiciones estables."),
+                             live:P("Scope mutation invalidates prior conclusions under that scope.","范围变更使该范围内既往结论失效。","Mutación del alcance invalida conclusiones previas en ese alcance."),
+                             roadmap:P("Versioned definition registries preserve comparability across epochs.","版本化定义登记保持跨纪元可比。","Registros versionados preservan comparabilidad entre épocas.")}},
+          platform:{informal:{concept:P("People accept outcomes when language is stable. Platform makes stability visible.","人们接受结果的前提是语言稳定。平台把稳定性变可见。","La gente acepta resultados cuando el lenguaje es estable. La plataforma hace visible esa estabilidad."),
+                             live:P("Reason codes prevent ‘he said/she said.’ They force the dispute into receipts.","原因码让争吵变难：它把争议拉回收据。","Los códigos de razón evitan ‘él dijo/ella dijo’ y empujan a recibos."),
+                             roadmap:P("Roadmap adds case templates so institutions can adopt without inventing new words.","路线图加入模板，让机构采纳而不另造新词。","La hoja de ruta añade plantillas para adoptar sin inventar palabras nuevas.")},
+                    formal:{concept:P("UI must preserve scope tokens and prevent silent label swaps.","界面必须保留范围令牌并防止静默换词。","La UI debe preservar tokens de alcance y evitar cambios silenciosos de etiquetas."),
+                           live:P("Single-open focus reduces cognitive overload and reduces procedural gaming.","单开聚焦降低认知负担并减少程序钻空子。","Foco de apertura única reduce carga cognitiva y el juego procedimental."),
+                           roadmap:P("Institutional adapters map local procedure into canonical reason-coded outputs.","机构适配器把本地程序映射到规范原因码输出。","Adaptadores institucionales mapean procedimiento local a salidas canónicas con códigos de razón.")}}
+        }}
+    ]
+  };
+
+  // apply
+  document.getElementById("k0").textContent=pick(COPY.hero.k);
+  document.getElementById("h0").textContent=pick(COPY.hero.h);
+  document.getElementById("lede").textContent=pick(COPY.hero.lede);
+  document.getElementById("rule").textContent=pick(COPY.hero.rule);
+
+  document.getElementById("bA").textContent=lbl("THE PROBLEM","问题","EL PROBLEMA");
+  document.getElementById("pA_h").textContent=pick(COPY.problem.h);
+  document.getElementById("pA_p").textContent=pick(COPY.problem.p);
+  var pA_ul=document.getElementById("pA_ul"); pA_ul.innerHTML="";
+  COPY.problem.ul.forEach(function(x){var li=document.createElement("li");li.textContent=pick(x);pA_ul.appendChild(li);});
+
+  document.getElementById("bB").textContent=lbl("THE SOLUTION SHAPE","解法形状","FORMA DE LA SOLUCIÓN");
+  document.getElementById("pB_h").textContent=pick(COPY.solution.h);
+  document.getElementById("pB_p").textContent=pick(COPY.solution.p);
+  var pB_ul=document.getElementById("pB_ul"); pB_ul.innerHTML="";
+  COPY.solution.ul.forEach(function(x){var li=document.createElement("li");li.textContent=pick(x);pB_ul.appendChild(li);});
+
+  document.getElementById("bC").textContent=lbl("4 LENSES","四透镜","4 LENTES");
+  document.getElementById("sel_h").textContent=pick(COPY.lenses.h);
+  document.getElementById("sel_p").textContent=pick(COPY.lenses.p);
+
+  document.getElementById("bD").textContent=lbl("LEGAL MODULES","法律模块","MÓDULOS LEGALES");
+
+  function setText(id,v){var el=document.getElementById(id);if(el) el.textContent=v;}
+  if(lang==="zh"){setText("btnBack","返回");setText("btnDoor","门");setText("btnExit","退出");setText("dockHome","主页");setText("dockProducts","产品");setText("dockLaws","法则");setText("dockGauges","量规");setText("pillEngineering","工程");setText("pillPlatform","平台");setText("pillInformal","通俗");setText("pillFormal","正式");}
+  else if(lang==="es"){setText("btnBack","VOLVER");setText("btnDoor","PUERTA");setText("btnExit","SALIR");setText("dockHome","INICIO");setText("dockProducts","PRODUCTOS");setText("dockLaws","LEYES");setText("dockGauges","MEDIDORES");setText("pillEngineering","INGENIERÍA");setText("pillPlatform","PLATAFORMA");setText("pillInformal","INFORMAL");setText("pillFormal","FORMAL");}
+
+  // lens state
+  var track="engineering";
+  var tone=(style==="formal")?"formal":"informal";
+  var pillEngineering=document.getElementById("pillEngineering");
+  var pillPlatform=document.getElementById("pillPlatform");
+  var pillInformal=document.getElementById("pillInformal");
+  var pillFormal=document.getElementById("pillFormal");
+  var list=document.getElementById("list");
+
+  function paintPills(){
+    pillEngineering.classList.toggle("active", track==="engineering");
+    pillPlatform.classList.toggle("active", track==="platform");
+    pillInformal.classList.toggle("active", tone==="informal");
+    pillFormal.classList.toggle("active", tone==="formal");
+  }
+  pillEngineering.addEventListener("click", function(){track="engineering";paintPills();render();});
+  pillPlatform.addEventListener("click", function(){track="platform";paintPills();render();});
+  pillInformal.addEventListener("click", function(){tone="informal";try{localStorage.setItem("gd_style","informal");}catch(e){}paintPills();render();});
+  pillFormal.addEventListener("click", function(){tone="formal";try{localStorage.setItem("gd_style","formal");}catch(e){}paintPills();render();});
+
+  function bubbleLabel(which){
+    if(lang==="zh") return (which==="concept")?"概念":(which==="live")?"上线":"路线图";
+    if(lang==="es") return (which==="concept")?"Concepto":(which==="live")?"En vivo":"Hoja de ruta";
+    return (which==="concept")?"Concept":(which==="live")?"Live":"Roadmap";
+  }
+  function openLabel(){ if(lang==="zh") return "打开"; if(lang==="es") return "ABRIR"; return "OPEN"; }
+
+  function render(){
+    list.innerHTML="";
+    COPY.modules.forEach(function(m, idx){
+      var row=document.createElement("div"); row.className="row"; row.style.setProperty("--c", m.c);
+      var head=document.createElement("div"); head.className="head"; head.setAttribute("role","button"); head.tabIndex=0;
+      var left=document.createElement("div"); left.className="left";
+      var mark=document.createElement("div"); mark.className="dmark"; mark.style.background=m.c;
+      var tb=document.createElement("div"); tb.className="titleBlock";
+      var ti=document.createElement("div"); ti.className="ti"; ti.textContent=pick(m.t);
+      var su=document.createElement("div"); su.className="su"; su.textContent=pick(m.s);
+      tb.appendChild(ti); tb.appendChild(su);
+      left.appendChild(mark); left.appendChild(tb);
+      var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
+      head.appendChild(left); head.appendChild(chev);
+
+      var body=document.createElement("div"); body.className="body";
+      var intro=document.createElement("p"); intro.className="p";
+      intro.textContent=(lang==="zh")?"打开三段：概念/上线/路线图。":(lang==="es")?"Abre tres partes: Concepto/En vivo/Hoja de ruta.":"Open three parts: Concept/Live/Roadmap.";
+      body.appendChild(intro);
+
+      var subB=document.createElement("div"); subB.className="subB";
+      function makeBubble(which){
+        var b=document.createElement("div"); b.className="bubble"; b.setAttribute("role","button"); b.tabIndex=0;
+        var h=document.createElement("h4"); h.textContent=bubbleLabel(which);
+        var p=document.createElement("p");
+        p.textContent=pick(m.text[track][tone][which]);
+        b.appendChild(h); b.appendChild(p);
+        b.addEventListener("click", function(){b.classList.toggle("open");});
+        b.addEventListener("keydown", function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();b.classList.toggle("open");}});
+        return b;
+      }
+      subB.appendChild(makeBubble("concept")); subB.appendChild(makeBubble("live")); subB.appendChild(makeBubble("roadmap"));
+      body.appendChild(subB);
+
+      var actions=document.createElement("div"); actions.className="actions";
+      m.jump.forEach(function(j){var a=document.createElement("a"); a.className="btn"; a.textContent=openLabel()+": "+j.id; a.href=j.href+q(); actions.appendChild(a);});
+      body.appendChild(actions);
+
+      function closeAll(){
+        list.querySelectorAll(".row").forEach(function(r){r.classList.remove("open");var c=r.querySelector(".chev"); if(c) c.textContent="▸";});
+      }
+      function toggle(){
+        var willOpen=!row.classList.contains("open");
+        closeAll();
+        row.classList.toggle("open", willOpen);
+        chev.textContent=willOpen?"▾":"▸";
+      }
+      head.addEventListener("click", toggle);
+      head.addEventListener("keydown", function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();toggle();}});
+
+      row.appendChild(head); row.appendChild(body); list.appendChild(row);
+      if(idx===0){row.classList.add("open"); chev.textContent="▾";}
+    });
+  }
+
+  paintPills(); render();
+})();
+</script>
+</body></html>

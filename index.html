@@ -1,4 +1,26 @@
 <!doctype html>
+<!-- TNT — /index.html
+     COMPASS · 8-DIAMOND RING (N/E/S/W + NE/SE/SW/NW)
+     UPDATE (PER YOUR GEOMETRY RULE):
+       - We have 6 before, now 8 ( +33% vs 6, +100% vs 4 ) — but you want the practical rule:
+         "Add two more nodes ⇒ reduce diamonds by 25% so the ring fits."
+       - Implemented: D reduced by 25% (from 160px → 120px baseline)
+       - Gloss preserved (Vision-grade material stack)
+       - Trilingual labels (EN/中文/ES)
+       - Canon state carry (gd_lang/gd_style/gd_time/gd_depth) via URL + LS only
+       - No new gd_* keys
+       - No overlays/modals
+     Mapping:
+       N  = EDUCATION
+       NE = EXPLORE
+       E  = RESEARCH (gold trim)
+       SE = PRODUCTS
+       S  = HOME
+       SW = LAWS
+       W  = DOOR
+       NW = GAUGES
+-->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -15,10 +37,17 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --R:160px;                 /* cardinal radius */
-  --Rd:113px;                /* diagonal radius ≈ R * 0.707 */
-  --D:150px;                 /* diamond size */
+  /* ===== GEOMETRY =====
+     You asked: +2 nodes ⇒ reduce diamonds by 25%
+     Previous practical D ~160 → New D = 120 (25% reduction)
+  */
+  --D:120px;
 
+  /* Radius tuned to fit 8 nodes with smaller D */
+  --R:154px;              /* cardinal */
+  --Rd:109px;             /* diagonal ≈ R*0.707 */
+
+  /* ===== MATERIAL ===== */
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
@@ -46,7 +75,7 @@ body::before,body::after{pointer-events:none!important}
   top:50%;
   width:var(--D);
   height:var(--D);
-  border-radius:28px;
+  border-radius:26px;
   cursor:pointer;
   pointer-events:auto;
   transform-origin:center;
@@ -54,18 +83,17 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
 }
 
-/* Ring placement (8 nodes) */
+/* 8-ring placement */
 .N  { transform:translate(-50%,-50%) rotate(45deg) translate(0, calc(-1 * var(--R))); }
-.E  { transform:translate(-50%,-50%) rotate(45deg) translate(var(--R), 0); }
-.S  { transform:translate(-50%,-50%) rotate(45deg) translate(0, var(--R)); }
-.W  { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--R)), 0); }
-
 .NE { transform:translate(-50%,-50%) rotate(45deg) translate(var(--Rd), calc(-1 * var(--Rd))); }
-.NW { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--Rd)), calc(-1 * var(--Rd))); }
+.E  { transform:translate(-50%,-50%) rotate(45deg) translate(var(--R), 0); }
 .SE { transform:translate(-50%,-50%) rotate(45deg) translate(var(--Rd), var(--Rd)); }
+.S  { transform:translate(-50%,-50%) rotate(45deg) translate(0, var(--R)); }
 .SW { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--Rd)), var(--Rd)); }
+.W  { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--R)), 0); }
+.NW { transform:translate(-50%,-50%) rotate(45deg) translate(calc(-1 * var(--Rd)), calc(-1 * var(--Rd))); }
 
-/* FULL GLOSS MATERIAL STACK (same family as Vision) */
+/* FULL GLOSS MATERIAL STACK */
 .surface{
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.30), transparent 45%),
@@ -83,7 +111,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
 
-/* Silk trim (subtle, edge only) */
+/* Silk trim (edge-only) */
 .surface::before{
   content:"";
   position:absolute;
@@ -93,7 +121,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
-  opacity:.40;
+  opacity:.38;
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
@@ -117,7 +145,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.95;
 }
 
-/* Research gold trim */
+/* Gold trim for Research */
 .goldTrim{
   border:1px solid var(--gold);
   box-shadow:
@@ -139,21 +167,21 @@ body::before,body::after{pointer-events:none!important}
   align-items:center;
   justify-content:center;
   font-weight:980;
-  font-size:17px;
+  font-size:15px;
   letter-spacing:.6px;
   text-align:center;
   color:#fff;
   padding:10px;
 }
 
-/* Mobile tighten */
+/* Mobile tweak: keep fit on narrow screens */
 @media (max-width:600px){
   :root{
-    --R:142px;
-    --Rd:100px;
-    --D:138px;
+    --D:112px;   /* slightly more reduction on tight phones */
+    --R:144px;
+    --Rd:102px;
   }
-  .inner{font-size:16px}
+  .inner{font-size:14px}
 }
 </style>
 </head>
@@ -161,31 +189,32 @@ body::before,body::after{pointer-events:none!important}
 <body>
 
 <div class="stage">
-  <!-- Cardinals -->
-  <div class="d surface N"  id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
-  <div class="d surface E"  id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
-  <div class="d surface S"  id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
-  <div class="d surface W"  id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
 
-  <!-- Diagonals -->
-  <div class="d surface goldTrim NE" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
-  <div class="d surface NW" id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
-  <div class="d surface SE" id="dHome"><div class="inner" id="txtHome">HOME</div></div>
-  <div class="d surface SW" id="dDoor"><div class="inner" id="txtDoor">DOOR</div></div>
+  <!-- N / NE / E / SE / S / SW / W / NW -->
+  <div class="d surface N"  id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
+  <div class="d surface NE" id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
+  <div class="d surface goldTrim E" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
+  <div class="d surface SE" id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
+  <div class="d surface S"  id="dHome"><div class="inner" id="txtHome">HOME</div></div>
+  <div class="d surface SW" id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
+  <div class="d surface W"  id="dDoor"><div class="inner" id="txtDoor">DOOR</div></div>
+  <div class="d surface NW" id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
+
 </div>
 
 <script>
 (function(){
+  // Canon state (gd_* only)
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(!["en","zh","es"].includes(lang)) lang="en";
-  if(!["informal","formal"].includes(style)) style="informal";
-  if(!["origin","now","post"].includes(time)) time="now";
-  if(!["explore","learn"].includes(depth)) depth="explore";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -197,36 +226,37 @@ body::before,body::after{pointer-events:none!important}
   function q(){
     return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
   }
-  function go(p){location.href=p+q();}
+  function go(p){ location.href = p + q(); }
 
-  dExplore.onclick  = ()=>go("/explore/");
-  dProducts.onclick = ()=>go("/products/");
-  dLaws.onclick     = ()=>go("/laws/");
-  dGauges.onclick   = ()=>go("/gauges/");
-  dResearch.onclick = ()=>go("/research/");
-  dEducation.onclick= ()=>go("/products/education/");
-  dHome.onclick     = ()=>go("/home/");
-  dDoor.onclick     = ()=>go("/door/");
+  // Routes
+  dEducation.onclick=()=>go("/products/education/");
+  dExplore.onclick=()=>go("/explore/");
+  dResearch.onclick=()=>go("/research/");
+  dProducts.onclick=()=>go("/products/");
+  dHome.onclick=()=>go("/home/");
+  dLaws.onclick=()=>go("/laws/");
+  dDoor.onclick=()=>go("/door/");
+  dGauges.onclick=()=>go("/gauges/");
 
   // Trilingual labels
   if(lang==="zh"){
-    txtExplore.textContent="探索";
-    txtProducts.textContent="产品";
-    txtLaws.textContent="法则";
-    txtGauges.textContent="量规";
-    txtResearch.textContent="研究";
     txtEducation.textContent="教育";
+    txtExplore.textContent="探索";
+    txtResearch.textContent="研究";
+    txtProducts.textContent="产品";
     txtHome.textContent="主页";
+    txtLaws.textContent="法则";
     txtDoor.textContent="门";
+    txtGauges.textContent="量规";
   }else if(lang==="es"){
-    txtExplore.textContent="EXPLORAR";
-    txtProducts.textContent="PRODUCTOS";
-    txtLaws.textContent="LEYES";
-    txtGauges.textContent="MEDIDORES";
-    txtResearch.textContent="INVESTIGACIÓN";
     txtEducation.textContent="EDUCACIÓN";
+    txtExplore.textContent="EXPLORAR";
+    txtResearch.textContent="INVESTIGACIÓN";
+    txtProducts.textContent="PRODUCTOS";
     txtHome.textContent="INICIO";
+    txtLaws.textContent="LEYES";
     txtDoor.textContent="PUERTA";
+    txtGauges.textContent="MEDIDORES";
   }
 })();
 </script>

@@ -1,23 +1,17 @@
 <!-- TNT — /home/index.html
-     HOME · LAUNCHPAD (NO LENSES · NO MODALS) · EN/中文/ES
+     HOME · LAUNCHPAD (NEXT-LEVEL COHESION) · EN/中文/ES · NO MODALS
      ROLE:
-       - Fast launch surface (not taxonomy)
-       - States problem + what to do next in one screen
+       - Fast hub for known destinations
+       - Clean back buttons (Products / Door / Index)
+       - Mobile-safe long bubble format (single-open accordion)
      ROUTES:
-       - DOOR    → /door/
-       - PRELUDE → /prelude/
-       - EXPLORE → /explore/
-       - PRODUCTS→ /products/
-       - LAWS    → /laws/
-       - GAUGES  → /gauges/
-       - INDEX   → /index.html
+       - PRODUCTS / EXPLORE / LAWS / GAUGES
+       - PLUS: COMPASS / PRELUDE
      STATE:
-       - Full carry: lang/style/time/depth (URL + gd_* LS)
-       - Language toggle reloads SAME pathname (GH Pages safe)
+       - URL + LS: lang/style/time/depth via gd_*
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
-       - Tap-safe, no inline onclick
+       - Uses ui.css + branch.css + instruments.js
+       - ui.css owns background
 -->
 
 <!doctype html>
@@ -25,7 +19,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HOME · Launchpad</title>
+<title>Home · Launchpad</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -38,26 +32,20 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:92px;
-
-  --opalA:rgba(210,190,255,.16);
+  --opalA:rgba(210,190,255,.14);
   --opalB:rgba(120,70,255,.10);
   --opalC:rgba(255,70,70,.10);
-
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --txt:rgba(255,255,255,.90);
-  --mut:rgba(255,255,255,.78);
 }
 
 /* Top */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;align-items:center;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
 .top-right{
   position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;white-space:nowrap;align-items:center;
+  display:flex;gap:10px;flex-wrap:nowrap;white-space:nowrap;align-items:center;
 }
 .top-left .btn,.top-right .btn{white-space:nowrap}
 
@@ -65,7 +53,7 @@ body::before,body::after{pointer-events:none!important}
 .page{
   width:min(1100px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 22px);
+  padding:90px 0 calc(var(--dockH) + 20px);
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -75,61 +63,53 @@ body::before,body::after{pointer-events:none!important}
 
 /* Header */
 .header{
-  border:1px solid var(--stroke);
   border-radius:22px;
+  border:1px solid var(--stroke);
   background:
     radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
     radial-gradient(circle at 78% 30%, var(--opalB), transparent 66%),
     radial-gradient(circle at 62% 92%, var(--opalC), transparent 64%),
-    rgba(0,0,0,.16);
+    rgba(0,0,0,.14);
   backdrop-filter:blur(10px);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  padding:16px 16px 14px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:14px 16px;
 }
 .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.72}
-.t{margin:0;font-weight:950;font-size:28px;letter-spacing:.6px}
-.s{margin:10px 0 0;font-size:14px;line-height:1.6;opacity:.92;color:var(--txt);max-width:980px}
-.rule{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:16px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  color:var(--mut);
-  line-height:1.45;
-  font-size:12.75px;
-}
+.t{margin:0 0 6px;font-weight:950;font-size:26px;letter-spacing:.6px}
+.s{margin:0;font-size:13.5px;opacity:.86;line-height:1.5;max-width:980px}
 
-/* Band */
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.12);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.86);
-}
-
-/* Cards (long bubble format) */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
-}
-@media (max-width:900px){ .grid{grid-template-columns:1fr} }
-
-.card{
+/* Accordion */
+.list{display:flex;flex-direction:column;gap:12px}
+.row{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
-  padding:16px 16px 14px;
+  overflow:hidden;
 }
-.card h3{margin:0;font-weight:950;letter-spacing:.2px}
-.card p{margin:10px 0 0;opacity:.84;line-height:1.55;font-size:13.75px;color:rgba(255,255,255,.86)}
-.card .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.card .actions .btn{padding:10px 14px;border-radius:999px;white-space:nowrap}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:14px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.left{min-width:0}
+.tt{font-weight:950;letter-spacing:.2px}
+.ss{margin-top:6px;font-size:12.75px;opacity:.82;line-height:1.35;max-width:92ch}
+.chev{font-size:16px;opacity:.75;flex:0 0 auto;margin-top:2px}
+.body{
+  display:none;
+  padding:14px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.86), rgba(7,11,18,.92));
+}
+.row.open .body{display:block}
+.p{margin:0;color:rgba(255,255,255,.88);line-height:1.65;font-size:13.5px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+.actions .btn{padding:10px 12px;border-radius:999px;white-space:nowrap}
 
 /* Dock */
 .dock{
@@ -148,9 +128,9 @@ body::before,body::after{pointer-events:none!important}
   grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px;border-radius:999px;white-space:nowrap}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:98px}
+  :root{--dockH:104px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -161,6 +141,7 @@ body::before,body::after{pointer-events:none!important}
 <div class="top-left">
   <a class="btn" id="btnDoor" href="/door/">DOOR</a>
   <a class="btn" id="btnPrelude" href="/prelude/">PRELUDE</a>
+  <a class="btn" id="btnCompass" href="/compass/">COMPASS</a>
 </div>
 
 <div class="top-right" aria-label="Language">
@@ -173,93 +154,35 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="header">
     <p class="k" id="hk">HOME</p>
-    <h1 class="t" id="ht">LAUNCHPAD</h1>
-    <p class="s" id="hs">
-      You’re here because something needs an answer.
-      Drift hides inside systems. Correlation hides inside scale.
-      This site routes you to the right surface—fast—without story inflation.
-    </p>
-    <div class="rule" id="rule">
-      Rule: claims must be supported · support must be verifiable · navigation preserves gd_* state.
-    </div>
+    <h1 class="t" id="ht">Launchpad</h1>
+    <p class="s" id="hs">Open one lane. Read one paragraph. Jump cleanly.</p>
   </div>
 
-  <div class="band" id="bandA">PRIMARY ROUTES</div>
-  <div class="grid">
-
-    <div class="card">
-      <h3 id="c1t">DOOR</h3>
-      <p id="c1p">Compass traversal. Choose N/E/S/W and enter cleanly.</p>
-      <div class="actions">
-        <a class="btn" id="goDoor" href="/door/">OPEN</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 id="c2t">PRODUCTS</h3>
-      <p id="c2p">Adoptable surfaces: Energy, Education, Diagnostic, Dot.Grid, SSG.</p>
-      <div class="actions">
-        <a class="btn" id="goProducts" href="/products/">OPEN</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 id="c3t">LAWS</h3>
-      <p id="c3p">Boundaries that prevent drift. Doctrine posture only.</p>
-      <div class="actions">
-        <a class="btn" id="goLaws" href="/laws/">OPEN</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 id="c4t">GAUGES</h3>
-      <p id="c4p">Measurement surfaces. Receipts only. No narrative claims.</p>
-      <div class="actions">
-        <a class="btn" id="goGauges" href="/gauges/">OPEN</a>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="band" id="bandB">EXPLORATION</div>
-  <div class="grid">
-
-    <div class="card">
-      <h3 id="c5t">EXPLORE</h3>
-      <p id="c5p">Frontier + language lanes. Bounded exploration only.</p>
-      <div class="actions">
-        <a class="btn" id="goExplore" href="/explore/">OPEN</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3 id="c6t">COMPASS (INDEX)</h3>
-      <p id="c6p">If you want direction-first traversal, start here.</p>
-      <div class="actions">
-        <a class="btn" id="goIndex" href="/index.html">OPEN</a>
-      </div>
-    </div>
-
-  </div>
+  <div class="list" id="list"></div>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
+  // state
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(style!=="formal"&&style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(depth!=="explore"&&depth!=="learn") depth="explore";
 
   try{
     localStorage.setItem("gd_lang",lang);
@@ -267,122 +190,99 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_time",time);
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
-
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+
-           "&style="+encodeURIComponent(style)+
-           "&time="+encodeURIComponent(time)+
-           "&depth="+encodeURIComponent(depth);
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  function wire(id,path){
+  function wire(id, path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-
   wire("btnDoor","/door/");
   wire("btnPrelude","/prelude/");
-
-  wire("goDoor","/door/");
-  wire("goProducts","/products/");
-  wire("goLaws","/laws/");
-  wire("goGauges","/gauges/");
-  wire("goExplore","/explore/");
-  wire("goIndex","/index.html");
-
-  wire("dockDoor","/door/");
+  wire("btnCompass","/compass/");
   wire("dockProducts","/products/");
+  wire("dockExplore","/explore/");
   wire("dockLaws","/laws/");
   wire("dockGauges","/gauges/");
 
-  // language buttons (reload SAME pathname)
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paint(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
+  // language
+  function paintLang(){
+    document.getElementById("btnEN").classList.toggle("active", lang==="en");
+    document.getElementById("btnZH").classList.toggle("active", lang==="zh");
+    document.getElementById("btnES").classList.toggle("active", lang==="es");
   }
-  paint();
+  paintLang();
 
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q();
+    window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
-  // i18n text (page-only)
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="主页";
-    document.getElementById("ht").textContent="发射台";
-    document.getElementById("hs").textContent="你在这里，是因为某个问题需要答案。漂移藏在系统里，相关性藏在规模里。本网站把你快速路由到正确的界面，不膨胀叙事。";
-    document.getElementById("rule").textContent="规则：主张必须有支撑 · 支撑必须可验证 · 导航保留 gd_* 状态。";
-    document.getElementById("bandA").textContent="主入口";
-    document.getElementById("c1t").textContent="门";
-    document.getElementById("c1p").textContent="罗盘遍历。选择 N/E/S/W 并干净进入。";
-    document.getElementById("c2t").textContent="产品";
-    document.getElementById("c2p").textContent="可采纳执行面：能源、教育、诊断、Dot.Grid、SSG。";
-    document.getElementById("c3t").textContent="法则";
-    document.getElementById("c3p").textContent="防漂移边界。仅教义姿态。";
-    document.getElementById("c4t").textContent="量规";
-    document.getElementById("c4p").textContent="测量执行面。只认收据，不认叙事。";
-    document.getElementById("bandB").textContent="探索";
-    document.getElementById("c5t").textContent="探索";
-    document.getElementById("c5p").textContent="前沿 + 语言通道。有界探索。";
-    document.getElementById("c6t").textContent="罗盘（索引）";
-    document.getElementById("c6p").textContent="想先选方向再进入，从这里开始。";
-    document.getElementById("dockDoor").textContent="门";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnPrelude").textContent="前言";
-    document.getElementById("goDoor").textContent="打开";
-    document.getElementById("goProducts").textContent="打开";
-    document.getElementById("goLaws").textContent="打开";
-    document.getElementById("goGauges").textContent="打开";
-    document.getElementById("goExplore").textContent="打开";
-    document.getElementById("goIndex").textContent="打开";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="INICIO";
-    document.getElementById("ht").textContent="LANZADERA";
-    document.getElementById("hs").textContent="Estás aquí porque algo necesita respuesta. La deriva se esconde en sistemas y la correlación en la escala. Este sitio te enruta rápido a la superficie correcta, sin inflar historias.";
-    document.getElementById("rule").textContent="Regla: afirmaciones con soporte · soporte verificable · navegación preserva estado gd_*.";
-    document.getElementById("bandA").textContent="RUTAS PRINCIPALES";
-    document.getElementById("c1t").textContent="PUERTA";
-    document.getElementById("c1p").textContent="Recorrido por brújula. Elige N/E/S/O y entra limpio.";
-    document.getElementById("c2t").textContent="PRODUCTOS";
-    document.getElementById("c2p").textContent="Superficies adoptables: Energía, Educación, Diagnóstico, Dot.Grid, SSG.";
-    document.getElementById("c3t").textContent="LEYES";
-    document.getElementById("c3p").textContent="Límites que evitan deriva. Doctrina solamente.";
-    document.getElementById("c4t").textContent="MEDIDORES";
-    document.getElementById("c4p").textContent="Medición en vivo. Recibos, no narrativa.";
-    document.getElementById("bandB").textContent="EXPLORACIÓN";
-    document.getElementById("c5t").textContent="EXPLORAR";
-    document.getElementById("c5p").textContent="Frontera + lenguaje. Exploración acotada.";
-    document.getElementById("c6t").textContent="BRÚJULA (ÍNDICE)";
-    document.getElementById("c6p").textContent="Si quieres dirección primero, empieza aquí.";
-    document.getElementById("dockDoor").textContent="PUERTA";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("goDoor").textContent="ABRIR";
-    document.getElementById("goProducts").textContent="ABRIR";
-    document.getElementById("goLaws").textContent="ABRIR";
-    document.getElementById("goGauges").textContent="ABRIR";
-    document.getElementById("goExplore").textContent="ABRIR";
-    document.getElementById("goIndex").textContent="ABRIR";
+  function T(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  document.getElementById("hk").textContent=T("HOME","主页","INICIO");
+  document.getElementById("ht").textContent=T("Launchpad","发射台","LANZADERA");
+  document.getElementById("hs").textContent=T("Open one lane. Read one paragraph. Jump cleanly.","开一条路线，读一段话，干净跳转。","Abre un carril, lee un párrafo, salta limpio.");
+
+  var ITEMS=[
+    {t:T("Products","产品","Productos"), s:T("Deployable surfaces: Energy, Education, Diagnostic, Software.","可部署执行面：能源、教育、诊断、软件。","Superficies desplegables: Energía, Educación, Diagnóstico, Software."), p:T("Use this when you want tools before theory.","想先用工具就从这里。","Úsalo si quieres herramientas primero."), href:"/products/"},
+    {t:T("Explore","探索","Explorar"), s:T("Innovation lanes and vision shells (bounded).","创新通道与愿景壳（有界）。","Carriles de innovación y visión (acotado)."), p:T("Use this for frontier concepts that are still staged.","用于仍处于阶段化的前沿概念。","Úsalo para conceptos de frontera aún por fases."), href:"/explore/"},
+    {t:T("Laws","法则","Leyes"), s:T("Bounds that prevent drift (support-bounded enforcement).","防漂移边界（有支撑边界的执行）。","Límites contra deriva (disciplina acotada por soporte)."), p:T("Use this when you need definition-first truth posture.","需要先定义再判断时用它。","Úsalo cuando necesites postura de verdad basada en definiciones."), href:"/laws/"},
+    {t:T("Gauges","量规","Medidores"), s:T("Live measurement surfaces only.","仅测量输出面。","Solo superficies de medición."), p:T("Use this when you want signals, not arguments.","想看信号而不是争论时用它。","Úsalo si quieres señales, no discusiones."), href:"/gauges/"}
+  ];
+
+  var list=document.getElementById("list");
+
+  function closeAll(){
+    Array.prototype.forEach.call(list.querySelectorAll(".row"), function(r){
+      r.classList.remove("open");
+      var c=r.querySelector(".chev"); if(c) c.textContent="▸";
+    });
   }
+
+  ITEMS.forEach(function(it, idx){
+    var row=document.createElement("div"); row.className="row";
+    var head=document.createElement("div"); head.className="head"; head.tabIndex=0; head.setAttribute("role","button");
+    var left=document.createElement("div"); left.className="left";
+    var tt=document.createElement("div"); tt.className="tt"; tt.textContent=it.t;
+    var ss=document.createElement("div"); ss.className="ss"; ss.textContent=it.s;
+    left.appendChild(tt); left.appendChild(ss);
+    var chev=document.createElement("div"); chev.className="chev"; chev.textContent="▸";
+    head.appendChild(left); head.appendChild(chev);
+
+    var body=document.createElement("div"); body.className="body";
+    var p=document.createElement("p"); p.className="p"; p.textContent=it.p;
+    var actions=document.createElement("div"); actions.className="actions";
+    var a=document.createElement("a"); a.className="btn"; a.textContent=T("OPEN","打开","ABRIR"); a.href=it.href + q();
+    actions.appendChild(a);
+    body.appendChild(p); body.appendChild(actions);
+
+    function toggle(){
+      var willOpen=!row.classList.contains("open");
+      closeAll();
+      row.classList.toggle("open", willOpen);
+      chev.textContent = willOpen ? "▾" : "▸";
+    }
+    head.addEventListener("click", toggle);
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }});
+
+    row.appendChild(head); row.appendChild(body);
+    list.appendChild(row);
+
+    if(idx===0){ row.classList.add("open"); chev.textContent="▾"; }
+  });
+
 })();
 </script>
 

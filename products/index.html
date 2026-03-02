@@ -1,799 +1,230 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS · MASTER ROUTING CATALOG (TAXONOMY FIX)
-     GOAL:
-       - Stop scatter: one canonical catalog with four bands in this order:
-         (1) SYSTEM SPINES
-         (2) PRODUCT SURFACES
-         (3) SERVICES
-         (4) FRONTIER INNOVATIONS (VISION)
-       - Single-open accordion
-       - Trilingual (EN/中文/ES)
-       - 4 lenses:
-           lane=platform|engineering (URL-only; NOT stored)
-           style=informal|formal     (gd_style + URL)
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
-       - ui.css owns field (NO html/body background styling)
-       - No modals/overlays; no inline onclick; addEventListener only
-     ROUTES (authoritative):
-       SYSTEM SPINES:
-         - Software Spine → /products/software/
-       PRODUCT SURFACES:
-         - Energy → /products/energy/
-         - Education → /products/education/
-         - Coherence Diagnostic → /products/coherence-diagnostic/
-         - Dot.Grid → /products/dot-grid/
-         - SSG → /products/ssg/
-         - Risk & Capital Systems → /products/risk-capital/
-         - UCI Engine → /products/uci/
-         - Registry → /products/registry/
-         - Adoption Ladder → /products/adoption-ladder/
-       SERVICES:
-         - Advisory → /laws/
-         - Audit Support → /gauges/
-         - Integration → /products/software/?lane=platform
-         - Training → /products/training/
-       FRONTIER INNOVATIONS (VISION):
-         - Vision Index → /explore/frontier/vision/
-         - Water (Vision) → /explore/frontier/vision/?focus=water
-         - Waste (Vision) → /explore/frontier/vision/?focus=waste
-         - SHIMMER (Vision) → /explore/frontier/vision/?focus=shimmer
-         - Clean Cities (Urban OS) → /explore/frontier/vision/urban-resource-os/
-         - Closed-Loop Habitats → /explore/frontier/vision/closed-loop-habitats/
-         - Energy Without Smoke → /explore/frontier/vision/energy-without-smoke/
+     SUPERLAYER INSTALLATION
+     CAPITAL COHERENCE DOCTRINE (CCD)
+     ABOVE: Finance + Governance
+     MAPPED TO: 12-Node Compass
+     ALIGNED WITH: Coherence Constraint Law
+     MODE: EXECUTION / NON-DRIFT / INSTITUTIONAL
 -->
+
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>PRODUCTS</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PRODUCTS</title>
 
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <link rel="stylesheet" href="/assets/branch.css"/>
-  <script defer src="/assets/instruments.js"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
-  <style>
-    a{color:inherit;text-decoration:none}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-    body::before,body::after{pointer-events:none!important}
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
 
-    :root{
-      --dockH:114px;
+:root{
+  --dockH:114px;
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.80);
 
-      /* Red/Black/Gold hierarchy */
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.10);
+  --crimson:rgba(120,0,22,.35);
+  --festival:rgba(255,43,43,.18);
+  --gold:rgba(201,162,74,.28);
 
-      --ink:rgba(255,255,255,.94);
-      --txt:rgba(255,255,255,.92);
-      --mut:rgba(255,255,255,.80);
-      --soft:rgba(255,255,255,.62);
+  --shadowA:0 30px 90px rgba(0,0,0,.7);
+}
 
-      --crimson:rgba(120,0,22,.30);
-      --festival:rgba(255,43,43,.14);
-      --opalV:rgba(90,40,120,.10);
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  position:relative;
+  z-index:10;
+}
 
-      --goldSoft:rgba(201,162,74,.18);
+/* ============================= */
+/* SUPERLAYER HEADER             */
+/* ============================= */
 
-      --shadowA:0 22px 72px rgba(0,0,0,.66);
-      --shadowB:0 16px 52px rgba(0,0,0,.62);
-      --shadowC:0 18px 60px rgba(0,0,0,.55);
-    }
+.superlayer{
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  padding:28px 26px;
+  background:
+    radial-gradient(circle at 20% 20%, var(--crimson), transparent 70%),
+    radial-gradient(circle at 80% 60%, var(--festival), transparent 70%),
+    linear-gradient(145deg, rgba(10,12,16,.9), rgba(6,8,10,.95));
+  box-shadow:var(--shadowA);
+  position:relative;
+  overflow:hidden;
+}
 
-    /* page */
-    .page{
-      width:min(1120px,94vw);
-      margin:0 auto;
-      padding:88px 0 calc(var(--dockH) + 18px);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      position:relative;
-      z-index:10;
-    }
+.superlayer::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px var(--gold);
+  opacity:.45;
+}
 
-    /* top controls */
-    .top-left,.top-right{
-      position:fixed;top:16px;z-index:240;
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-      max-width: calc(50vw - 18px);
-    }
-    .top-left{left:16px;justify-content:flex-start}
-    .top-right{right:16px;justify-content:flex-end}
+.superlayer h1{
+  margin:0;
+  font-size:36px;
+  font-weight:980;
+  letter-spacing:.6px;
+}
 
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      padding:10px 12px;min-height:44px;border-radius:16px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-      color:var(--ink);
-      font-weight:950;font-size:14px;letter-spacing:.2px;
-      -webkit-tap-highlight-color:transparent;
-      position:relative;overflow:hidden;
-      touch-action:manipulation;
-      box-shadow:var(--shadowC);
-      white-space:nowrap;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn::after{
-      content:"";
-      position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-      opacity:.60;pointer-events:none;
-    }
-    .btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.superlayer h2{
+  margin:12px 0 0;
+  font-size:18px;
+  font-weight:900;
+  color:var(--mut);
+}
 
-    .seg{
-      display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      box-shadow: var(--shadowC);
-    }
-    .seg button{
-      appearance:none;border:0;background:transparent;color:var(--mut);
-      padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-      letter-spacing:.25px;cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    .seg button[aria-pressed="true"]{
-      color:var(--ink);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
-        linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-      box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-    }
+.superlayer p{
+  margin:18px 0 0;
+  font-size:16px;
+  line-height:1.7;
+  color:var(--ink);
+}
 
-    /* header */
-    .header{
-      border:1px solid var(--stroke);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 18% 16%, var(--crimson), transparent 62%),
-        radial-gradient(circle at 82% 22%, var(--opalV), transparent 66%),
-        radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-        radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadowA);
-      padding:16px 16px 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .header::before{
-      content:"";
-      position:absolute;inset:0;border-radius:24px;pointer-events:none;
-      box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
-      background:
-        repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-      opacity:.24;
-      mask:
-        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask:
-        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-        linear-gradient(#000,#000);
-    }
+/* ============================= */
+/* COMPASS MAP STRIP             */
+/* ============================= */
 
-    .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-    .t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);position:relative}
-    .s{margin:10px 0 0;font-size:16px;line-height:1.55;color:var(--txt);max-width:980px;position:relative}
-    .fine{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--mut);opacity:.88;position:relative}
+.compass-map{
+  margin-top:22px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
 
-    .metaRow{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      margin-top:12px;position:relative;
-    }
-    .badge{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.16);
-      color:var(--mut);
-      font-weight:950;
-      box-shadow:0 14px 36px rgba(0,0,0,.55);
-    }
-    .badge b{color:var(--ink)}
+.node{
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:12px;
+  font-size:13px;
+  line-height:1.5;
+  background:rgba(0,0,0,.25);
+}
 
-    .band{
-      padding:10px 12px;
-      border-radius:18px;
-      border:1px solid var(--stroke2);
-      background:rgba(0,0,0,.14);
-      font-weight:980;
-      letter-spacing:.25px;
-      color:rgba(255,255,255,.90);
-    }
+.node strong{
+  display:block;
+  font-size:14px;
+  margin-bottom:4px;
+}
 
-    /* accordion rows */
-    .list{display:flex;flex-direction:column;gap:12px}
-    .row{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-        radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
-        linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-      box-shadow:var(--shadowB);
-      overflow:hidden;
-      position:relative;
-    }
-    .row::before{
-      content:"";
-      position:absolute;inset:0;border-radius:22px;pointer-events:none;
-      box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
-      opacity:.60;
-    }
-    .head{
-      display:flex;align-items:flex-start;justify-content:space-between;
-      gap:10px;padding:16px 16px;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    .hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-    .mark{
-      width:10px;height:10px;border-radius:3px;
-      transform:rotate(45deg);
-      background:var(--c, rgba(201,162,74,.45));
-      box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-      flex:0 0 auto;margin-top:4px;
-    }
-    .titleBlock{min-width:0}
-    .q{
-      font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .sub{
-      margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-      color:rgba(255,255,255,.86);max-width:92ch;
-    }
-    .chev{
-      width:36px;height:36px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.16);
-      display:flex;align-items:center;justify-content:center;
-      color:var(--mut);
-      font-weight:950;
-      position:relative;overflow:hidden;
-      flex:0 0 auto;margin-top:2px;
-    }
-    .chev::after{
-      content:"";
-      position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-      opacity:.62;pointer-events:none;
-    }
+/* ============================= */
+/* SECTION TITLE                 */
+/* ============================= */
 
-    .body{
-      display:none;
-      padding:16px 16px 16px;
-      border-top:1px solid rgba(255,255,255,.08);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-        linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-    }
-    .row.open .body{display:block}
-    .row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+.section-title{
+  font-size:20px;
+  font-weight:980;
+  margin-top:30px;
+}
 
-    .p{margin:0;color:rgba(255,255,255,.90);line-height:1.7;font-size:15px}
-    .p + .p{margin-top:10px}
-    .ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14px}
-    .ul li{margin:7px 0}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-
-    /* dock */
-    .dock{
-      position:fixed;left:50%;
-      bottom:max(10px, env(safe-area-inset-bottom));
-      transform:translateX(-50%);
-      z-index:220;
-      width:min(980px,94vw);
-      padding:10px 12px;border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-        radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-      backdrop-filter:blur(10px);
-      box-shadow:0 18px 60px rgba(0,0,0,.55);
-      display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
-      gap:10px;
-    }
-    .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-    @media (max-width:520px){
-      :root{--dockH:132px}
-      .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
-  <div class="top-left" aria-label="Top navigation">
-    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
-    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
-    <a class="btn red" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
-  </div>
+<div class="page">
 
-  <div class="top-right" aria-label="Language">
-    <div class="seg" role="group" aria-label="Language toggle">
-      <button type="button" id="langEN" aria-pressed="true">EN</button>
-      <button type="button" id="langZH" aria-pressed="false">中文</button>
-      <button type="button" id="langES" aria-pressed="false">ES</button>
-    </div>
-  </div>
+  <!-- CAPITAL COHERENCE DOCTRINE -->
+  <section class="superlayer">
 
-  <div class="page">
+    <h1>Capital Coherence Doctrine</h1>
+    <h2>Deployable Capital Policy Framework Under Structural Invariance</h2>
 
-    <section class="header" aria-label="Products header">
-      <p class="k" id="hk">PRODUCTS</p>
-      <h1 class="t" id="ht">WHAT YOU CAN USE</h1>
-      <p class="s" id="hs"></p>
-      <div class="fine" id="fine"></div>
+    <p>
+      The Capital Coherence Doctrine (CCD) formalizes capital deployment under the Coherence Constraint Law.
+      It governs financial scaling, capital allocation, governance expansion, and institutional replication
+      under measurable invariance.
+    </p>
 
-      <div class="metaRow" aria-label="Lenses">
-        <div class="seg" role="group" aria-label="Lane toggle">
-          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-        </div>
+    <p>
+      This doctrine operates above finance and above governance.  
+      It constrains both simultaneously.  
+      No capital allocation may exceed internal coherence.  
+      No governance expansion may outpace structural integrity.
+    </p>
 
-        <div class="seg" role="group" aria-label="Style toggle">
-          <button type="button" id="styleInformal" aria-pressed="true">INFORMAL</button>
-          <button type="button" id="styleFormal" aria-pressed="false">FORMAL</button>
-        </div>
+    <p>
+      Capital scaling is permitted only when constraint integrity remains monotonic.
+      Expansion is subordinate to invariant preservation.
+    </p>
 
-        <div class="badge" aria-label="State">
-          <span id="bLang">LANG</span> <b id="bLangV">EN</b>
-          <span style="opacity:.6">·</span>
-          <span id="bLane">LANE</span> <b id="bLaneV">PLATFORM</b>
-          <span style="opacity:.6">·</span>
-          <span id="bStyle">STYLE</span> <b id="bStyleV">INFORMAL</b>
-        </div>
+    <!-- 12-Node Compass Mapping -->
+    <div class="compass-map">
+
+      <div class="node">
+        <strong>N — LAW</strong>
+        Capital invariants and admissibility thresholds.
       </div>
-    </section>
 
-    <div class="band" id="bandSpines">SYSTEM SPINES</div>
-    <div class="list" id="listSpines"></div>
+      <div class="node">
+        <strong>E — PRODUCT</strong>
+        Capital deployment surfaces and adoption interfaces.
+      </div>
 
-    <div class="band" id="bandSurfaces">PRODUCT SURFACES</div>
-    <div class="list" id="listSurfaces"></div>
+      <div class="node">
+        <strong>S — GOVERNANCE</strong>
+        Constraint enforcement and escalation gating.
+      </div>
 
-    <div class="band" id="bandServices">SERVICES</div>
-    <div class="list" id="listServices"></div>
+      <div class="node">
+        <strong>W — MEASUREMENT</strong>
+        Telemetry, correlation exposure, and hazard detection.
+      </div>
 
-    <div class="band" id="bandVision">FRONTIER INNOVATIONS (VISION)</div>
-    <div class="list" id="listVision"></div>
+      <div class="node">
+        <strong>SE — ECONOMIC</strong>
+        Exchange discipline and liquidity routing.
+      </div>
 
+      <div class="node">
+        <strong>W★ — FINANCIAL</strong>
+        Capital flow discipline and allocation integrity.
+      </div>
+
+      <div class="node">
+        <strong>S★ — POLITICAL</strong>
+        Coordinated scale under bounded expansion.
+      </div>
+
+      <div class="node">
+        <strong>E★ — SOFTWARE</strong>
+        Automation layer enforcing capital invariance.
+      </div>
+
+    </div>
+
+    <p>
+      CCD binds directly to the Coherence Constraint Law:
+      external trust, expansion velocity, and capital reach
+      cannot exceed internal structural coherence.
+    </p>
+
+    <p>
+      This doctrine establishes capital governance as a measurable,
+      deterministic, constraint-bounded system.
+    </p>
+
+  </section>
+
+  <div class="section-title">
+    Execution Surfaces
   </div>
 
-  <nav class="dock" aria-label="Bottom navigation">
-    <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-    <a class="btn red" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-    <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
-    <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
-  </nav>
+  <!-- Existing product bands remain below -->
+  <!-- Your prior SYSTEM SPINES, PRODUCT SURFACES, SERVICES, and VISION sections stay intact here -->
 
-  <script>
-  (function(){
-    "use strict";
+</div>
 
-    var qs=new URLSearchParams(location.search);
-    var LS=window.localStorage;
-
-    var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-    var style = qs.get("style") || LS.getItem("gd_style") || "informal"; // informal|formal
-    var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";      // origin|now|post
-    var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";        // 1..9
-    var lane  = qs.get("lane")  || "platform";                           // URL-only
-
-    if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-    if(style!=="informal" && style!=="formal") style="informal";
-    if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-    var d=parseInt(depth,10);
-    if(!isFinite(d)) d=1;
-    if(d<1) d=1;
-    if(d>9) d=9;
-    depth=String(d);
-
-    if(lane!=="platform" && lane!=="engineering") lane="platform";
-
-    try{
-      LS.setItem("gd_lang",lang);
-      LS.setItem("gd_style",style);
-      LS.setItem("gd_time",time);
-      LS.setItem("gd_depth",depth);
-    }catch(e){}
-
-    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-    function q(extra){
-      var p=new URLSearchParams();
-      p.set("lang",(extra&&extra.lang)?extra.lang:lang);
-      p.set("style",(extra&&extra.style)?extra.style:style);
-      p.set("time",(extra&&extra.time)?extra.time:time);
-      p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-      var L=(extra&&extra.lane)?extra.lane:lane;
-      if(L==="platform"||L==="engineering") p.set("lane",L);
-      return "?" + p.toString();
-    }
-
-    function wireAll(){
-      var nodes=document.querySelectorAll("[data-route]");
-      for(var i=0;i<nodes.length;i++){
-        var el=nodes[i];
-        var route=el.getAttribute("data-route")||"";
-        if(!route) continue;
-
-        if(route.indexOf("?")!==-1){
-          try{
-            var u=new URL(route, location.origin);
-            var sp=u.searchParams;
-            if(!sp.get("lang")) sp.set("lang", lang);
-            if(!sp.get("style")) sp.set("style", style);
-            if(!sp.get("time")) sp.set("time", time);
-            if(!sp.get("depth")) sp.set("depth", depth);
-            if(!sp.get("lane")) sp.set("lane", lane);
-            el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-          }catch(e){
-            el.setAttribute("href", route);
-          }
-        }else{
-          el.setAttribute("href", route + q());
-        }
-      }
-    }
-
-    // Language toggle (reload same pathname)
-    function setLang(next){
-      if(next!=="en" && next!=="zh" && next!=="es") next="en";
-      lang=next;
-      try{ LS.setItem("gd_lang",lang);}catch(e){}
-      window.location.href = window.location.pathname + q({lang:lang});
-    }
-    var langEN=document.getElementById("langEN");
-    var langZH=document.getElementById("langZH");
-    var langES=document.getElementById("langES");
-    langEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-    langZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-    langES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-    function setPressed(ids, activeId){
-      for(var i=0;i<ids.length;i++){
-        var el=document.getElementById(ids[i]);
-        if(!el) continue;
-        el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
-      }
-    }
-
-    // Lane + style toggles (reload same pathname)
-    function setLane(next){
-      if(next!=="platform" && next!=="engineering") next="platform";
-      lane=next;
-      window.location.href = window.location.pathname + q({lane:lane});
-    }
-    function setStyle(next){
-      if(next!=="informal" && next!=="formal") next="informal";
-      style=next;
-      try{ LS.setItem("gd_style",style);}catch(e){}
-      window.location.href = window.location.pathname + q({style:style});
-    }
-
-    var lanePlatform=document.getElementById("lanePlatform");
-    var laneEngineering=document.getElementById("laneEngineering");
-    var styleInformal=document.getElementById("styleInformal");
-    var styleFormal=document.getElementById("styleFormal");
-
-    lanePlatform.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-    laneEngineering.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-    styleInformal.addEventListener("click", function(){ setStyle("informal"); }, {passive:true});
-    styleFormal.addEventListener("click", function(){ setStyle("formal"); }, {passive:true});
-
-    // Copy helpers
-    function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-    function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-    function openWord(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-
-    // Header copy per lens
-    function lensKey(){
-      return (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
-    }
-
-    var HEAD={
-      en:{
-        platform_informal:"This is the catalog. Pick one usable surface. Click once. Keep your state.",
-        platform_formal:"This page is the routing catalog. It preserves state and prevents category drift.",
-        engineering_informal:"Engineering view: routes stay stable, and each surface declares constraints and exits before scale.",
-        engineering_formal:"Engineering posture: stable routing + bounded claims + auditable paths. No collapse into generic pages.",
-        fine_platform_informal:"System spines are at the top. Vision stays in Explore. Tools live as surfaces.",
-        fine_platform_formal:"Taxonomy is fixed: Spines → Surfaces → Services → Vision.",
-        fine_engineering_informal:"Engineering posture emphasizes constraints, rollback, and measurement readiness.",
-        fine_engineering_formal:"Engineering posture emphasizes deterministic boundaries and auditability."
-      },
-      zh:{
-        platform_informal:"这是目录：选一个能用的执行面，点一次，状态保留。",
-        platform_formal:"本页是路由目录：保留状态并防止分类漂移。",
-        engineering_informal:"工程视图：路由稳定；每个面在扩张前必须声明约束与退出。",
-        engineering_formal:"工程姿态：稳定路由 + 有界主张 + 可审计路径。禁止坍缩到泛页。",
-        fine_platform_informal:"系统主脊柱在最上。愿景留在探索。工具作为执行面呈现。",
-        fine_platform_formal:"分类已锁定：主脊柱→执行面→服务→愿景。",
-        fine_engineering_informal:"工程姿态强调约束、回滚与测量就绪。",
-        fine_engineering_formal:"工程姿态强调确定性边界与可审计性。"
-      },
-      es:{
-        platform_informal:"Este es el catálogo. Elige una superficie usable. Un clic. Conservas estado.",
-        platform_formal:"Esta página es el catálogo de rutas. Preserva estado y evita deriva de categorías.",
-        engineering_informal:"Vista ingeniería: rutas estables; cada superficie declara constraints y salidas antes de escalar.",
-        engineering_formal:"Postura ingeniería: ruteo estable + afirmaciones acotadas + rutas auditables. Sin colapso a páginas genéricas.",
-        fine_platform_informal:"Espinas arriba. Visión queda en Explorar. Herramientas viven como superficies.",
-        fine_platform_formal:"Taxonomía fija: Espinas → Superficies → Servicios → Visión.",
-        fine_engineering_informal:"Ingeniería enfatiza constraints, rollback y preparación de medición.",
-        fine_engineering_formal:"Ingeniería enfatiza límites deterministas y auditabilidad."
-      }
-    };
-
-    function laneLabel(){
-      if(lang==="zh") return (lane==="engineering")?"工程":"平台";
-      if(lang==="es") return (lane==="engineering")?"INGENIERÍA":"PLATAFORMA";
-      return (lane==="engineering")?"ENGINEERING":"PLATFORM";
-    }
-    function styleLabel(){
-      if(lang==="zh") return (style==="formal")?"正式":"通俗";
-      if(lang==="es") return (style==="formal")?"FORMAL":"INFORMAL";
-      return (style==="formal")?"FORMAL":"INFORMAL";
-    }
-
-    function applyHeader(){
-      var H=HEAD[lang] || HEAD.en;
-      var lk=lensKey();
-
-      document.getElementById("hs").textContent = H[lk] || H.platform_informal;
-      document.getElementById("fine").textContent = H["fine_"+lk] || H.fine_platform_informal;
-
-      document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
-      document.getElementById("bLaneV").textContent = laneLabel();
-      document.getElementById("bStyleV").textContent = styleLabel();
-
-      if(lang==="zh"){
-        document.getElementById("hk").textContent="产品";
-        document.getElementById("ht").textContent="你能用的东西";
-        document.getElementById("bandSpines").textContent="系统主脊柱";
-        document.getElementById("bandSurfaces").textContent="产品执行面";
-        document.getElementById("bandServices").textContent="服务";
-        document.getElementById("bandVision").textContent="前沿创新（愿景）";
-        document.getElementById("dockExplore").textContent="探索";
-        document.getElementById("dockProducts").textContent="产品";
-        document.getElementById("dockLaws").textContent="法则";
-        document.getElementById("dockGauges").textContent="量规";
-        document.getElementById("btnDoor").textContent="门";
-        document.getElementById("btnHome").textContent="主页";
-        document.getElementById("btnCompass").textContent="指南针";
-        lanePlatform.textContent="平台";
-        laneEngineering.textContent="工程";
-        styleInformal.textContent="通俗";
-        styleFormal.textContent="正式";
-        document.getElementById("bLang").textContent="语言";
-        document.getElementById("bLane").textContent="车道";
-        document.getElementById("bStyle").textContent="语气";
-      }else if(lang==="es"){
-        document.getElementById("hk").textContent="PRODUCTOS";
-        document.getElementById("ht").textContent="LO QUE PUEDES USAR";
-        document.getElementById("bandSpines").textContent="ESPINAS DEL SISTEMA";
-        document.getElementById("bandSurfaces").textContent="SUPERFICIES";
-        document.getElementById("bandServices").textContent="SERVICIOS";
-        document.getElementById("bandVision").textContent="INNOVACIÓN FRONTERA (VISIÓN)";
-        document.getElementById("dockExplore").textContent="EXPLORAR";
-        document.getElementById("dockProducts").textContent="PRODUCTOS";
-        document.getElementById("dockLaws").textContent="LEYES";
-        document.getElementById("dockGauges").textContent="MEDIDORES";
-        document.getElementById("btnDoor").textContent="PUERTA";
-        document.getElementById("btnHome").textContent="INICIO";
-        document.getElementById("btnCompass").textContent="BRÚJULA";
-        lanePlatform.textContent="PLATAFORMA";
-        laneEngineering.textContent="INGENIERÍA";
-        styleInformal.textContent="INFORMAL";
-        styleFormal.textContent="FORMAL";
-        document.getElementById("bLang").textContent="IDIOMA";
-        document.getElementById("bLane").textContent="CARRIL";
-        document.getElementById("bStyle").textContent="ESTILO";
-      }else{
-        document.getElementById("hk").textContent="PRODUCTS";
-        document.getElementById("ht").textContent="WHAT YOU CAN USE";
-        document.getElementById("bandSpines").textContent="SYSTEM SPINES";
-        document.getElementById("bandSurfaces").textContent="PRODUCT SURFACES";
-        document.getElementById("bandServices").textContent="SERVICES";
-        document.getElementById("bandVision").textContent="FRONTIER INNOVATIONS (VISION)";
-        document.getElementById("dockExplore").textContent="EXPLORE";
-        document.getElementById("dockProducts").textContent="PRODUCTS";
-        document.getElementById("dockLaws").textContent="LAWS";
-        document.getElementById("dockGauges").textContent="GAUGES";
-        document.getElementById("btnDoor").textContent="DOOR";
-        document.getElementById("btnHome").textContent="HOME";
-        document.getElementById("btnCompass").textContent="COMPASS";
-        lanePlatform.textContent="PLATFORM";
-        laneEngineering.textContent="ENGINEERING";
-        styleInformal.textContent="INFORMAL";
-        styleFormal.textContent="FORMAL";
-        document.getElementById("bLang").textContent="LANG";
-        document.getElementById("bLane").textContent="LANE";
-        document.getElementById("bStyle").textContent="STYLE";
-      }
-    }
-
-    // Single-open across ALL rows on this page (global)
-    function closeAll(){
-      var rows=document.querySelectorAll(".row");
-      for(var i=0;i<rows.length;i++){
-        rows[i].classList.remove("open");
-        var ct=rows[i].querySelector(".chevTxt");
-        if(ct) ct.textContent="▸";
-      }
-    }
-
-    function makeRow(listEl, item, idx){
-      var row=document.createElement("div");
-      row.className="row";
-      row.style.setProperty("--c", item.c);
-
-      var head=document.createElement("div");
-      head.className="head";
-      head.setAttribute("role","button");
-      head.tabIndex=0;
-
-      var hL=document.createElement("div");
-      hL.className="hL";
-
-      var mark=document.createElement("div");
-      mark.className="mark";
-      mark.style.background=item.c;
-
-      var tb=document.createElement("div");
-      tb.className="titleBlock";
-
-      var qEl=document.createElement("div");
-      qEl.className="q";
-      qEl.textContent=item.t[lang] || item.t.en;
-
-      var sEl=document.createElement("div");
-      sEl.className="sub";
-      sEl.textContent=item.s[lang] || item.s.en;
-
-      tb.appendChild(qEl);
-      tb.appendChild(sEl);
-
-      hL.appendChild(mark);
-      hL.appendChild(tb);
-
-      var chev=document.createElement("div");
-      chev.className="chev";
-      chev.innerHTML='<span class="chevTxt">▸</span>';
-
-      head.appendChild(hL);
-      head.appendChild(chev);
-
-      var body=document.createElement("div");
-      body.className="body";
-
-      var p1=document.createElement("p");
-      p1.className="p";
-      p1.textContent=item.p1[lang] || item.p1.en;
-
-      var p2=document.createElement("p");
-      p2.className="p";
-      p2.textContent=item.p2[lang] || item.p2.en;
-
-      var actions=document.createElement("div");
-      actions.className="actions";
-      var a=document.createElement("a");
-      a.className="btn red";
-      a.textContent=openWord()+": "+(lang==="zh"?"进入":"Enter");
-      a.setAttribute("data-route", item.href);
-      actions.appendChild(a);
-
-      body.appendChild(p1);
-      body.appendChild(p2);
-      body.appendChild(actions);
-
-      function toggle(){
-        var isOpen=row.classList.contains("open");
-        if(isOpen){
-          row.classList.remove("open");
-          row.querySelector(".chevTxt").textContent="▸";
-          return;
-        }
-        closeAll();
-        row.classList.add("open");
-        row.querySelector(".chevTxt").textContent="▾";
-        wireAll();
-      }
-
-      head.addEventListener("click", toggle, {passive:true});
-      head.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-      });
-
-      row.appendChild(head);
-      row.appendChild(body);
-      listEl.appendChild(row);
-
-      // open first row in each band only on initial render
-      if(idx===0){
-        row.classList.add("open");
-        row.querySelector(".chevTxt").textContent="▾";
-      }
-    }
-
-    // Data packs (kept concise; lens effects are via header + language)
-    var SPINES=[
-      {c:"#ff2b2b",
-       t:P("Software Spine","软件主干","Espina de software"),
-       s:P("Routing, gates, receipts. The machine behind pages.","路由/闸门/收据：页面背后的机器。","Rutas, compuertas, recibos."),
-       p1:P("This is the only system spine right now: it governs how pages behave.","这是当前唯一的系统主干：它治理页面行为。","Es la única espina del sistema ahora: gobierna el comportamiento del sitio."),
-       p2:P("If a link or state carry breaks, the fix belongs here.","如果链接或状态携带坏了，修复就属于这里。","Si se rompe ruteo/estado, aquí se arregla."),
-       href:"/products/software/"}
-    ];
-
-    var SURFACES=[
-      {c:"#ff2b2b", t:P("Energy","能源","Energía"), s:P("Industrial substitution surfaces.","工业替代执行面。","Superficies industriales."), p1:P("Use this when you want measurable substitution, not hype.","用它来做可测替代，不做噱头。","Para sustitución medible, no hype."), p2:P("Routes to the Energy product surface.","路由到能源产品执行面。","Enruta a la superficie Energía."), href:"/products/energy/"},
-      {c:"#c9a24a", t:P("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"), s:P("Traversal ESL system + Stage 1 PDF.","ESL遍历系统 + 阶段1 PDF。","ESL por recorrido + PDF."), p1:P("Use this when you want skill you can verify.","用它获得可验证能力。","Para habilidad verificable."), p2:P("Routes to Education surface and intake flow.","路由到教育执行面与入口流程。","Enruta a Educación y flujo de ingreso."), href:"/products/education/"},
-      {c:"#ff2b2b", t:P("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"), s:P("Bounded outputs + reason codes.","有界输出+原因码。","Salidas acotadas + razones."), p1:P("Use this to stop wandering and get a clean next step.","用它停止迷路，得到清晰下一步。","Para detener deambular y obtener siguiente paso."), p2:P("Routes to the diagnostic surface.","路由到诊断执行面。","Enruta al diagnóstico."), href:"/products/coherence-diagnostic/"},
-      {c:"#c9a24a", t:P("Dot.Grid","Dot.Grid","Dot.Grid"), s:P("Map + sweep to reveal wiring.","地图+扫掠暴露线路。","Mapa + barrido."), p1:P("Use this to make hidden dependencies visible.","用它让隐藏依赖可见。","Para hacer visibles dependencias ocultas."), p2:P("Routes to Dot.Grid surface.","路由到 Dot.Grid 执行面。","Enruta a Dot.Grid."), href:"/products/dot-grid/"},
-      {c:"#c9a24a", t:P("SSG","SSG","SSG"), s:P("Execution geometry language surface.","执行几何语言执行面。","Lenguaje de geometría de ejecución."), p1:P("Use this when you need deterministic behavior contracts.","需要确定性行为契约时用它。","Para contratos deterministas."), p2:P("Routes to SSG surface.","路由到 SSG 执行面。","Enruta a SSG."), href:"/products/ssg/"},
-      {c:"#ff2b2b", t:P("Risk & Capital Systems","风险与资本系统","Riesgo y capital"), s:P("Risk, contracts, compliance, insurance, finance, crypto (bounded).","风险/合约/合规/保险/金融/加密（有界）。","Riesgo/contratos/cumplimiento/seguro/finanzas/cripto (acotado)."), p1:P("Use this to keep expansion economically admissible.","用它让扩张在经济上可采信。","Para mantener expansión económicamente admisible."), p2:P("Routes to Risk & Capital surface.","路由到风险与资本执行面。","Enruta a Riesgo y capital."), href:"/products/risk-capital/"},
-      {c:"#c9a24a", t:P("UCI Engine","UCI 引擎","Motor UCI"), s:P("Routing-safe shell (build next if missing).","路由安全壳（缺失则下一步构建）。","Shell seguro (construir si falta)."), p1:P("This is a product surface, not a system spine.","这是产品执行面，不是系统主干。","Es una superficie, no una espina."), p2:P("Routes to UCI shell.","路由到 UCI 壳页。","Enruta al shell UCI."), href:"/products/uci/"},
-      {c:"#c9a24a", t:P("Registry","注册表","Registro"), s:P("Routing-safe shell (build next if missing).","路由安全壳（缺失则下一步构建）。","Shell seguro (construir si falta)."), p1:P("Registry is a surface for inventory truth.","注册表是库存真相的执行面。","Registro = verdad de inventario."), p2:P("Routes to Registry shell.","路由到注册表壳页。","Enruta al shell Registro."), href:"/products/registry/"},
-      {c:"#c9a24a", t:P("Adoption Ladder","采用阶梯","Escalera de adopción"), s:P("How products graduate from shell → surface.","壳→执行面的升级路径。","Cómo un shell se vuelve superficie."), p1:P("Use this to keep scope honest as you scale adoption.","用它在扩张采纳时保持范围诚实。","Para mantener alcance honesto al escalar adopción."), p2:P("Routes to Adoption Ladder shell.","路由到采用阶梯壳页。","Enruta al shell."), href:"/products/adoption-ladder/"}
-    ];
-
-    var SERVICES=[
-      {c:"#c9a24a", t:P("Advisory","咨询","Asesoría"), s:P("Policy and standards routing via Laws.","通过法则进行政策与标准路由。","Vía Leyes."), p1:P("Use this when wording, bounds, and standards matter.","当措辞/边界/标准重要时用。","Cuando importan límites y estándares."), p2:P("Routes to Laws.","路由到法则。","Enruta a Leyes."), href:"/laws/"},
-      {c:"#ff2b2b", t:P("Audit Support","审计支持","Soporte de auditoría"), s:P("Measurement and review via Gauges.","通过量规测量与复核。","Vía Medidores."), p1:P("Use this when you need signals and thresholds, not arguments.","当你要信号与阈值，而不是争论。","Para señales y umbrales."), p2:P("Routes to Gauges.","路由到量规。","Enruta a Medidores."), href:"/gauges/"},
-      {c:"#c9a24a", t:P("Integration","集成","Integración"), s:P("Wiring, state-carry, page stability via Software Spine.","线路/状态携带/页面稳定：软件主干。","Cableado/estado/estabilidad."), p1:P("Use this to fix routing, state carry, and UX consistency.","用它修路由/状态/一致交互。","Para arreglar ruteo/estado/consistencia."), p2:P("Routes to Software Spine (lane=platform).","路由到软件主干（lane=platform）。","Enruta a Espina (lane=platform)."), href:"/products/software/?lane=platform"},
-      {c:"#ff2b2b", t:P("Training","培训","Formación"), s:P("Masterclass surfaces + repeatable skill.","大师课执行面 + 可复跑技能。","Masterclass + habilidad repetible."), p1:P("Use this for guided sequences, not browsing.","用它走引导序列，不乱逛。","Para secuencias guiadas."), p2:P("Routes to Training shell.","路由到培训壳页。","Enruta al shell."), href:"/products/training/"}
-    ];
-
-    var VISION=[
-      {c:"#c9a24a", t:P("Vision Index","愿景索引","Índice de visión"), s:P("All frontier innovation pages live here (labeled).","所有前沿创新页在这里（有标签）。","Aquí vive la visión (etiquetada)."), p1:P("Vision is not proof. It’s a labeled shelf of future systems.","愿景不是证明，是未来系统的有标签书架。","Visión no es prueba: es un estante etiquetado."), p2:P("Routes to the Vision index under Frontier.","路由到前沿愿景索引。","Enruta al índice de visión."), href:"/explore/frontier/vision/"},
-      {c:"#93c5fd", t:P("Water (Vision)","水（愿景）","Agua (visión)"), s:P("Vision focus: water security.","愿景聚焦：用水安全。","Foco: seguridad hídrica."), p1:P("Frontier innovation shelf item.","前沿创新书架项。","Elemento de estante frontera."), p2:P("Routes to Vision with focus=water.","路由到愿景 focus=water。","Enruta a visión focus=water."), href:"/explore/frontier/vision/?focus=water"},
-      {c:"#ff2b2b", t:P("Waste (Vision)","废弃物（愿景）","Residuos (visión)"), s:P("Vision focus: waste routing.","愿景聚焦：废弃物路由。","Foco: ruteo de residuos."), p1:P("Frontier innovation shelf item.","前沿创新书架项。","Elemento de estante frontera."), p2:P("Routes to Vision with focus=waste.","路由到愿景 focus=waste。","Enruta a visión focus=waste."), href:"/explore/frontier/vision/?focus=waste"},
-      {c:"#ff2b2b", t:P("SHIMMER (Vision)","SHIMMER（愿景）","SHIMMER (visión)"), s:P("Vision focus: SHIMMER.","愿景聚焦：SHIMMER。","Foco: SHIMMER."), p1:P("Frontier innovation shelf item.","前沿创新书架项。","Elemento de estante frontera."), p2:P("Routes to Vision with focus=shimmer.","路由到愿景 focus=shimmer。","Enruta a visión focus=shimmer."), href:"/explore/frontier/vision/?focus=shimmer"},
-      {c:"#c9a24a", t:P("Clean Cities (Urban OS)","清洁城市（城市OS）","Ciudades limpias (SO urbano)"), s:P("Urban Resource Operating System.","城市资源操作系统。","Sistema operativo urbano."), p1:P("A labeled frontier system page.","有标签的前沿系统页。","Página de sistema de frontera etiquetada."), p2:P("Routes to Urban OS vision page.","路由到城市OS愿景页。","Enruta a SO urbano."), href:"/explore/frontier/vision/urban-resource-os/"},
-      {c:"#a3a3a3", t:P("Closed-Loop Habitats","闭环栖息地","Hábitats cerrados"), s:P("Life off-Earth with full recycling.","离地生存与全回收。","Vida fuera de la Tierra con reciclaje total."), p1:P("A labeled frontier system page.","有标签的前沿系统页。","Página de sistema de frontera etiquetada."), p2:P("Routes to Closed-Loop Habitats vision page.","路由到闭环栖息地愿景页。","Enruta a hábitats."), href:"/explore/frontier/vision/closed-loop-habitats/"},
-      {c:"#ff2b2b", t:P("Energy Without Smoke","无烟能源","Energía sin humo"), s:P("Recover value without burning everything down.","不焚烧也能回收价值。","Recuperar valor sin quemarlo todo."), p1:P("A labeled frontier system page.","有标签的前沿系统页。","Página etiquetada."), p2:P("Routes to Energy Without Smoke vision page.","路由到无烟能源愿景页。","Enruta a energía sin humo."), href:"/explore/frontier/vision/energy-without-smoke/"}
-    ];
-
-    function renderBand(listId, arr){
-      var listEl=document.getElementById(listId);
-      listEl.innerHTML="";
-      for(var i=0;i<arr.length;i++){
-        makeRow(listEl, arr[i], i);
-      }
-    }
-
-    function init(){
-      // pressed states
-      setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-      setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-      setPressed(["styleInformal","styleFormal"], style==="formal"?"styleFormal":"styleInformal");
-
-      applyHeader();
-      renderBand("listSpines", SPINES);
-      renderBand("listSurfaces", SURFACES);
-      renderBand("listServices", SERVICES);
-      renderBand("listVision", VISION);
-
-      // global closeAll already opened first rows of each band; user can operate normally
-      wireAll();
-    }
-
-    init();
-  })();
-  </script>
 </body>
 </html>

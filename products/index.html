@@ -1,6 +1,10 @@
 <!doctype html>
 <!-- TNT — /products/index.html
      PRODUCTS · MASTER ROUTING CATALOG (TAXONOMY FIX + SUPERLAYER INSTALL)
+     INFORMAL REALM LOCK:
+       - This page is INFORMAL by design. (gd_style is forced to informal)
+       - LENSES ON THIS PAGE: PLATFORM vs ENGINEERING ONLY (lane=platform|engineering URL-only)
+       - Trilingual (EN/中文/ES)
      GOAL:
        - One canonical catalog with five bands in this order:
          (0) CAPITAL COHERENCE DOCTRINE (SUPERLAYER)
@@ -9,14 +13,13 @@
          (3) SERVICES
          (4) FRONTIER INNOVATIONS (VISION)
        - Single-open accordion (global, across entire page)
-       - Trilingual (EN/中文/ES)
-       - 4 lenses:
-           lane=platform|engineering (URL-only; NOT stored)
-           style=informal|formal     (gd_style + URL)
+     STATE:
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
+     ASSETS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js only
        - ui.css owns field (NO html/body background styling)
+     SAFETY:
        - No modals/overlays; no inline onclick; addEventListener only
      ROUTES (authoritative):
        SUPERLAYER:
@@ -344,17 +347,12 @@
           <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
         </div>
 
-        <div class="seg" role="group" aria-label="Style toggle">
-          <button type="button" id="styleInformal" aria-pressed="true">INFORMAL</button>
-          <button type="button" id="styleFormal" aria-pressed="false">FORMAL</button>
-        </div>
-
         <div class="badge" aria-label="State">
           <span id="bLang">LANG</span> <b id="bLangV">EN</b>
           <span style="opacity:.6">·</span>
-          <span id="bLane">LANE</span> <b id="bLaneV">PLATFORM</b>
+          <span id="bLane">LENS</span> <b id="bLaneV">PLATFORM</b>
           <span style="opacity:.6">·</span>
-          <span id="bStyle">STYLE</span> <b id="bStyleV">INFORMAL</b>
+          <span id="bStyle">MODE</span> <b id="bStyleV">INFORMAL</b>
         </div>
       </div>
     </section>
@@ -391,13 +389,12 @@
     var LS=window.localStorage;
 
     var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-    var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+    var style = "informal"; // INFORMAL REALM LOCK (still carried in URL/LS)
     var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
     var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-    var lane  = qs.get("lane")  || "platform";
+    var lane  = qs.get("lane")  || "platform"; // URL-only
 
     if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-    if(style!=="informal" && style!=="formal") style="informal";
     if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
     var d=parseInt(depth,10);
@@ -420,7 +417,7 @@
     function q(extra){
       var p=new URLSearchParams();
       p.set("lang",(extra&&extra.lang)?extra.lang:lang);
-      p.set("style",(extra&&extra.style)?extra.style:style);
+      p.set("style","informal");
       p.set("time",(extra&&extra.time)?extra.time:time);
       p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
       var L=(extra&&extra.lane)?extra.lane:lane;
@@ -440,7 +437,7 @@
             var u=new URL(route, location.origin);
             var sp=u.searchParams;
             if(!sp.get("lang")) sp.set("lang", lang);
-            if(!sp.get("style")) sp.set("style", style);
+            sp.set("style","informal");
             if(!sp.get("time")) sp.set("time", time);
             if(!sp.get("depth")) sp.set("depth", depth);
             if(!sp.get("lane")) sp.set("lane", lane);
@@ -477,68 +474,54 @@
       lane=next;
       window.location.href = window.location.pathname + q({lane:lane});
     }
-    function setStyle(next){
-      if(next!=="informal" && next!=="formal") next="informal";
-      style=next;
-      try{ LS.setItem("gd_style",style);}catch(e){}
-      window.location.href = window.location.pathname + q({style:style});
-    }
-
     document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
     document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-    document.getElementById("styleInformal").addEventListener("click", function(){ setStyle("informal"); }, {passive:true});
-    document.getElementById("styleFormal").addEventListener("click", function(){ setStyle("formal"); }, {passive:true});
 
     function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
     function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
     function openWord(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
     function lensKey(){
-      return (lane==="platform" ? "platform_" : "engineering_") + (style==="formal" ? "formal" : "informal");
+      return (lane==="platform" ? "platform_" : "engineering_") + "informal";
     }
 
     var HEAD={
       en:{
-        platform_informal:"This is the catalog. One route, one next step. No taxonomy drift.",
-        platform_formal:"This page is the canonical routing catalog. State-carry is mandatory. No collapse into generic pages.",
-        engineering_informal:"Engineering view: adoption surfaces remain bounded. Measurement precedes scale.",
-        engineering_formal:"Engineering posture: deterministic boundaries, auditable routes, and constraint-first escalation control.",
-        fine_platform_informal:"Superlayer doctrine sits above finance and governance. Spines remain above surfaces. Vision stays in Explore.",
-        fine_platform_formal:"Taxonomy locked: Doctrine → Spines → Surfaces → Services → Vision.",
-        fine_engineering_informal:"Engineering posture emphasizes constraints, rollback, and measurement readiness.",
-        fine_engineering_formal:"Engineering posture emphasizes deterministic boundaries and auditability."
+        platform_informal:"This is the catalog. One route, one next step. Built for clarity and speed.",
+        engineering_informal:"Engineering lens (still informal): same catalog, but phrased for implementation and reliability.",
+        fine_platform_informal:"Order is fixed: Doctrine → Spines → Surfaces → Services → Vision. This page stays in informal mode.",
+        fine_engineering_informal:"Engineering lens: same order. Language stays informal. Details move to the target pages."
       },
       zh:{
-        platform_informal:"这是目录：一条路由，一个下一步。禁止分类漂移。",
-        platform_formal:"本页是规范路由目录：必须携带状态，禁止坍缩到泛页。",
-        engineering_informal:"工程视图：执行面必须有界；测量先于规模化。",
-        engineering_formal:"工程姿态：确定性边界、可审计路由、约束优先升级控制。",
-        fine_platform_informal:"资本一致性教义在金融与治理之上。主干在执行面之上。愿景留在探索。",
-        fine_platform_formal:"分类已锁定：教义→主脊柱→执行面→服务→愿景。",
-        fine_engineering_informal:"工程姿态强调约束、回滚与测量就绪。",
-        fine_engineering_formal:"工程姿态强调确定性边界与可审计性。"
+        platform_informal:"这是目录：一条路由，一个下一步。清晰、快速、好用。",
+        engineering_informal:"工程透镜（仍通俗）：同一目录，但用更偏实现与可靠性的表达。",
+        fine_platform_informal:"顺序锁定：教义→主脊柱→执行面→服务→愿景。本页固定为通俗模式。",
+        fine_engineering_informal:"工程透镜：同顺序。语言保持通俗。细节放到目标页面。"
       },
       es:{
-        platform_informal:"Este es el catálogo: una ruta, un siguiente paso. Sin deriva taxonómica.",
-        platform_formal:"Catálogo canónico de rutas. Estado obligatorio. Sin colapso a páginas genéricas.",
-        engineering_informal:"Vista ingeniería: superficies acotadas. Medición antes de escala.",
-        engineering_formal:"Postura ingeniería: límites deterministas, rutas auditables y escalación bajo restricciones.",
-        fine_platform_informal:"La doctrina supercapa gobierna finanzas y gobernanza. Espinas arriba. Visión queda en Explorar.",
-        fine_platform_formal:"Taxonomía fija: Doctrina → Espinas → Superficies → Servicios → Visión.",
-        fine_engineering_informal:"Ingeniería enfatiza constraints, rollback y medición.",
-        fine_engineering_formal:"Ingeniería enfatiza límites deterministas y auditabilidad."
+        platform_informal:"Este es el catálogo: una ruta, un siguiente paso. Claridad y velocidad.",
+        engineering_informal:"Lente de ingeniería (aún informal): mismo catálogo, con lenguaje orientado a implementación.",
+        fine_platform_informal:"Orden fijo: Doctrina → Espinas → Superficies → Servicios → Visión. Esta página queda en modo informal.",
+        fine_engineering_informal:"Lente ingeniería: mismo orden. Lenguaje sigue informal. Detalles viven en páginas destino."
       }
     };
+
+    function laneLabel(){
+      if(lang==="zh") return (lane==="engineering")?"工程":"平台";
+      if(lang==="es") return (lane==="engineering")?"INGENIERÍA":"PLATAFORMA";
+      return (lane==="engineering")?"ENGINEERING":"PLATFORM";
+    }
 
     function applyHeader(){
       var H=HEAD[lang] || HEAD.en;
       var lk=lensKey();
+
       document.getElementById("hs").textContent = H[lk] || H.platform_informal;
-      document.getElementById("fine").textContent = H["fine_"+lk] || H.fine_platform_informal;
+      document.getElementById("fine").textContent = (lane==="engineering") ? (H.fine_engineering_informal||H.fine_platform_informal) : (H.fine_platform_informal||"");
 
       document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
-      document.getElementById("bLaneV").textContent = (lang==="zh")?(lane==="engineering"?"工程":"平台") : (lang==="es")?(lane==="engineering"?"INGENIERÍA":"PLATAFORMA") : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-      document.getElementById("bStyleV").textContent = (lang==="zh")?(style==="formal"?"正式":"通俗") : (lang==="es")?(style==="formal"?"FORMAL":"INFORMAL") : (style==="formal"?"FORMAL":"INFORMAL");
+      document.getElementById("bLaneV").textContent = laneLabel();
+      document.getElementById("bStyleV").textContent = (lang==="zh")?"通俗":(lang==="es")?"INFORMAL":"INFORMAL";
 
       if(lang==="zh"){
         document.getElementById("hk").textContent="产品";
@@ -556,12 +539,10 @@
         document.getElementById("btnHome").textContent="主页";
         document.getElementById("btnCompass").textContent="指南针";
         document.getElementById("bLang").textContent="语言";
-        document.getElementById("bLane").textContent="车道";
-        document.getElementById("bStyle").textContent="语气";
+        document.getElementById("bLane").textContent="透镜";
+        document.getElementById("bStyle").textContent="模式";
         document.getElementById("lanePlatform").textContent="平台";
         document.getElementById("laneEngineering").textContent="工程";
-        document.getElementById("styleInformal").textContent="通俗";
-        document.getElementById("styleFormal").textContent="正式";
       }else if(lang==="es"){
         document.getElementById("hk").textContent="PRODUCTOS";
         document.getElementById("ht").textContent="LO QUE PUEDES USAR";
@@ -578,14 +559,15 @@
         document.getElementById("btnHome").textContent="INICIO";
         document.getElementById("btnCompass").textContent="BRÚJULA";
         document.getElementById("bLang").textContent="IDIOMA";
-        document.getElementById("bLane").textContent="CARRIL";
-        document.getElementById("bStyle").textContent="ESTILO";
+        document.getElementById("bLane").textContent="LENTE";
+        document.getElementById("bStyle").textContent="MODO";
         document.getElementById("lanePlatform").textContent="PLATAFORMA";
         document.getElementById("laneEngineering").textContent="INGENIERÍA";
-        document.getElementById("styleInformal").textContent="INFORMAL";
-        document.getElementById("styleFormal").textContent="FORMAL";
       }else{
-        document.getElementById("bandDoctrine").textContent="CAPITAL COHERENCE DOCTRINE";
+        document.getElementById("hk").textContent="PRODUCTS";
+        document.getElementById("ht").textContent="WHAT YOU CAN USE";
+        document.getElementById("bLane").textContent="LENS";
+        document.getElementById("bStyle").textContent="MODE";
       }
     }
 
@@ -599,7 +581,7 @@
       }
     }
 
-    function makeRow(listEl, item, idx){
+    function makeRow(listEl, item, isDefaultOpen){
       var row=document.createElement("div");
       row.className="row";
       row.style.setProperty("--c", item.c);
@@ -685,7 +667,7 @@
       row.appendChild(body);
       listEl.appendChild(row);
 
-      if(idx===0){
+      if(isDefaultOpen){
         row.classList.add("open");
         row.querySelector(".chevTxt").textContent="▾";
       }
@@ -693,73 +675,197 @@
 
     function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
 
+    // Informal language remains; Engineering lens tightens phrasing slightly but stays informal.
+    function copy(item){
+      if(lane==="engineering"){
+        return {
+          p1: item.p1_eng || item.p1,
+          p2: item.p2_eng || item.p2
+        };
+      }
+      return { p1:item.p1, p2:item.p2 };
+    }
+
     var DOCTRINE=[
       {c:"#c9a24a",
        t:P("Capital Coherence Doctrine (Superlayer)","资本一致性教义（超层）","Doctrina de coherencia de capital (supercapa)"),
-       s:P("Invariant capital policy above finance and governance.","在金融与治理之上的不变资本政策。","Política invariante por encima de finanzas y gobernanza."),
-       p1:P("This is the admissibility doctrine for capital under the Coherence Constraint Law.","这是基于一致性约束法则的资本可采信教义。","Doctrina de admisibilidad del capital bajo la ley de coherencia."),
-       p2:P("It constrains finance and governance simultaneously and maps into the 12-node compass (SE + W★).","它同时约束金融与治理，并映射到12节点指南针（SE + W★）。","Restringe finanzas y gobernanza y se mapea al compás de 12 nodos (SE + W★)."),
+       s:P("The rulebook above finance and governance.","金融与治理之上的规则层。","Reglas por encima de finanzas y gobernanza."),
+       p1:P("This page is where capital discipline starts. It tells you what is allowed to scale and what must stop.","资本纪律从这里开始：告诉你什么能扩张，什么必须停。","Aquí empieza la disciplina del capital: qué puede escalar y qué debe detenerse."),
+       p2:P("If you need a safe growth posture, start here.","如果你要安全扩张姿态，从这里开始。","Si necesitas crecer sin romper el sistema, empieza aquí."),
+       p1_eng:P("Capital discipline entrypoint. Sets the ceiling above finance and governance (informal phrasing).","资本纪律入口：在金融与治理之上设定上限（通俗表达）。","Entrada de disciplina de capital: techo sobre finanzas y gobernanza (informal)."),
+       p2_eng:P("Use this before deploying any capital-heavy decision surface.","在任何资本密集决策之前先看这里。","Úsalo antes de desplegar decisiones con capital."),
        href:"/products/capital-doctrine/"}
     ];
 
     var SPINES=[
       {c:"#ff2b2b",
        t:P("Software Spine","软件主干","Espina de software"),
-       s:P("Routing, gates, receipts. The machine behind pages.","路由/闸门/收据：页面背后的机器。","Rutas, compuertas, recibos."),
-       p1:P("This is the system spine governing site execution behavior.","这是治理站点执行行为的系统主干。","Espina del sistema que gobierna el comportamiento."),
-       p2:P("If routing, state carry, or templates break, fixes belong here.","路由/状态/模板有问题就来这里修。","Si falla ruteo/estado/plantillas, se arregla aquí."),
+       s:P("The machine behind the pages.","页面背后的机器。","La máquina detrás de las páginas."),
+       p1:P("If something feels inconsistent, this is usually where it gets fixed.","如果感觉不一致，通常在这里修。","Si algo es inconsistente, se arregla aquí."),
+       p2:P("Routing, stability, and state-carry live here.","路由、稳定、状态携带都在这里。","Ruteo, estabilidad y estado viven aquí."),
+       p1_eng:P("Execution backbone for routing/state consistency (informal phrasing).","路由/状态一致性的执行主干（通俗表达）。","Columna de ejecución para ruteo/estado (informal)."),
+       p2_eng:P("Use this to repair navigation, templates, and stability behavior.","用它修导航、模板与稳定性行为。","Úsalo para reparar navegación/plantillas/estabilidad."),
        href:"/products/software/"}
     ];
 
     var SURFACES=[
-      {c:"#ff2b2b", t:P("Energy","能源","Energía"), s:P("Industrial substitution surfaces.","工业替代执行面。","Superficies industriales."), p1:P("Measurable substitution posture.","可测替代姿态。","Sustitución medible."), p2:P("Routes to Energy surface.","路由到能源执行面。","Enruta a Energía."), href:"/products/energy/"},
-      {c:"#c9a24a", t:P("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"), s:P("Traversal ESL system + Stage 1 PDF.","ESL遍历系统 + 阶段1 PDF。","ESL por recorrido + PDF."), p1:P("Verification-first learning surface.","验证优先学习面。","Aprendizaje verificable."), p2:P("Routes to Education surface.","路由到教育执行面。","Enruta a Educación."), href:"/products/education/"},
-      {c:"#ff2b2b", t:P("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"), s:P("Bounded outputs + reason codes.","有界输出+原因码。","Salidas acotadas + razones."), p1:P("Decision filter under receipts.","收据下的决策过滤。","Filtro decisional."), p2:P("Routes to diagnostic surface.","路由到诊断执行面。","Enruta al diagnóstico."), href:"/products/coherence-diagnostic/"},
-      {c:"#c9a24a", t:P("Dot.Grid","Dot.Grid","Dot.Grid"), s:P("Map + sweep to reveal wiring.","地图+扫掠暴露线路。","Mapa + barrido."), p1:P("Correlation exposure early warning.","相关暴露早预警。","Alerta de correlación."), p2:P("Routes to Dot.Grid surface.","路由到 Dot.Grid 执行面。","Enruta a Dot.Grid."), href:"/products/dot-grid/"},
-      {c:"#c9a24a", t:P("SSG","SSG","SSG"), s:P("Execution geometry language surface.","执行几何语言执行面。","Lenguaje de ejecución."), p1:P("Deterministic behavior contracts.","确定性行为契约。","Contratos deterministas."), p2:P("Routes to SSG surface.","路由到 SSG 执行面。","Enruta a SSG."), href:"/products/ssg/"},
-      {c:"#ff2b2b", t:P("Risk & Capital Systems","风险与资本系统","Riesgo y capital"), s:P("Risk, contracts, compliance, insurance, finance, crypto (bounded).","风险/合约/合规/保险/金融/加密（有界）。","Riesgo/contratos/cumplimiento/seguro/finanzas/cripto."), p1:P("Economic admissibility surfaces.","经济可采信执行面。","Superficies de admisibilidad económica."), p2:P("Routes to Risk & Capital surface.","路由到风险与资本执行面。","Enruta a Riesgo y capital."), href:"/products/risk-capital/"},
-      {c:"#c9a24a", t:P("UCI Engine","UCI 引擎","Motor UCI"), s:P("Routing-safe shell.","路由安全壳。","Shell seguro."), p1:P("Surface (not a spine).","执行面（不是主干）。","Superficie (no espina)."), p2:P("Routes to UCI shell.","路由到 UCI 壳页。","Enruta al shell UCI."), href:"/products/uci/"},
-      {c:"#c9a24a", t:P("Registry","注册表","Registro"), s:P("Routing-safe shell.","路由安全壳。","Shell seguro."), p1:P("Inventory truth surface.","库存真相执行面。","Verdad de inventario."), p2:P("Routes to Registry shell.","路由到注册表壳页。","Enruta al shell Registro."), href:"/products/registry/"},
-      {c:"#c9a24a", t:P("Adoption Ladder","采用阶梯","Escalera de adopción"), s:P("Shell → surface graduation path.","壳→执行面的升级路径。","Ruta de graduación."), p1:P("Scale without taxonomy drift.","规模化而不漂移。","Escalar sin deriva."), p2:P("Routes to Adoption Ladder shell.","路由到采用阶梯壳页。","Enruta al shell."), href:"/products/adoption-ladder/"}
+      {c:"#ff2b2b", t:P("Energy","能源","Energía"), s:P("Industrial substitution surfaces.","工业替代执行面。","Superficies industriales."),
+       p1:P("Where industrial improvements become real projects.","工业改进落地的地方。","Donde lo industrial se vuelve proyecto real."),
+       p2:P("Start here when energy is the constraint.","当能源是约束，从这里开始。","Empieza aquí cuando energía es el límite."),
+       p1_eng:P("Industrial execution surface (informal phrasing).","工业执行面（通俗表达）。","Superficie industrial (informal)."),
+       p2_eng:P("Use for measurable substitution and staged adoption.","用于可测替代与分阶段采纳。","Para sustitución medible y por fases."),
+       href:"/products/energy/"},
+      {c:"#c9a24a", t:P("Education (1001 Words)","教育（1001词）","Educación (1001 Palabras)"), s:P("Traversal ESL + Stage 1 PDF.","ESL遍历 + 阶段1 PDF。","ESL por recorrido + PDF."),
+       p1:P("A simple path to real fluency without wandering.","不乱逛的真实流利路径。","Ruta simple a fluidez real."),
+       p2:P("Start here if you want a free download and a repeatable system.","想要免费下载和可复跑系统，从这里开始。","Empieza aquí si quieres descarga gratis y sistema repetible."),
+       p1_eng:P("Skill system with checkpoints and repeatable loops (informal phrasing).","带检查点的可复跑技能系统（通俗表达）。","Sistema de habilidad con checkpoints (informal)."),
+       p2_eng:P("Use for structured learning adoption and progression.","用于结构化学习采纳与进阶。","Para adopción y progresión estructurada."),
+       href:"/products/education/"},
+      {c:"#ff2b2b", t:P("Coherence Diagnostic","一致性诊断","Diagnóstico de coherencia"), s:P("Find the weak point fast.","快速找到薄弱点。","Encuentra el punto débil rápido."),
+       p1:P("Use this when things feel off and you need clarity.","感觉不对劲时用它获得清晰。","Úsalo cuando algo se siente mal."),
+       p2:P("It routes you to the next clean step.","把你路由到干净的下一步。","Te enruta al siguiente paso limpio."),
+       p1_eng:P("Decision filter surface (informal phrasing).","决策过滤执行面（通俗表达）。","Filtro decisional (informal)."),
+       p2_eng:P("Use to prevent drift and stop loops.","用于防漂移与止循环。","Para prevenir deriva y bucles."),
+       href:"/products/coherence-diagnostic/"},
+      {c:"#c9a24a", t:P("Dot.Grid","Dot.Grid","Dot.Grid"), s:P("Make hidden structure visible.","让隐藏结构可见。","Haz visible la estructura oculta."),
+       p1:P("Use this to see what’s connected before it breaks.","在崩之前看清关联。","Ver conexiones antes de que rompan."),
+       p2:P("It turns chaos into a map.","把混乱变成地图。","Convierte caos en mapa."),
+       p1_eng:P("Mapping + sweep surface (informal phrasing).","地图+扫掠执行面（通俗表达）。","Mapa + barrido (informal)."),
+       p2_eng:P("Use to expose dependencies and correlation early.","用于提前暴露依赖与相关。","Para exponer dependencias y correlación."),
+       href:"/products/dot-grid/"},
+      {c:"#c9a24a", t:P("SSG","SSG","SSG"), s:P("Execution geometry language.","执行几何语言。","Lenguaje de ejecución."),
+       p1:P("Use this when you want the rules to be clear and repeatable.","当你要清晰可复跑规则。","Cuando quieres reglas claras y repetibles."),
+       p2:P("It keeps systems from drifting as they grow.","让系统扩张时不漂移。","Evita deriva al crecer."),
+       p1_eng:P("Deterministic execution language surface (informal phrasing).","确定性执行语言面（通俗表达）。","Lenguaje determinista (informal)."),
+       p2_eng:P("Use for stable behavior specification across the site.","用于全站稳定行为规格。","Para especificar comportamiento estable."),
+       href:"/products/ssg/"},
+      {c:"#ff2b2b", t:P("Risk & Capital Systems","风险与资本系统","Riesgo y capital"),
+       s:P("Risk, contracts, compliance, insurance, finance, crypto (bounded).","风险/合约/合规/保险/金融/加密（有界）。","Riesgo/contratos/cumplimiento/seguro/finanzas/cripto."),
+       p1:P("Use this to keep growth economically sane.","用它让扩张在经济上不失控。","Para que el crecimiento sea económicamente sano."),
+       p2:P("It organizes risk so it doesn’t surprise you later.","把风险组织起来，避免以后爆雷。","Organiza riesgo para que no sorprenda."),
+       p1_eng:P("Economic admissibility surface (informal phrasing).","经济可采信执行面（通俗表达）。","Superficie de admisibilidad económica (informal)."),
+       p2_eng:P("Use to bound exposure and enforce clarity across capital decisions.","用于有界暴露并让资本决策更清晰。","Para acotar exposición y clarificar decisiones."),
+       href:"/products/risk-capital/"},
+      {c:"#c9a24a", t:P("UCI Engine","UCI 引擎","Motor UCI"), s:P("A routing-safe shell.","路由安全壳。","Shell seguro."),
+       p1:P("A product surface, not a system spine.","产品执行面，不是系统主干。","Superficie de producto, no espina."),
+       p2:P("Use it to keep interaction stable across pages.","用于保持页面交互稳定。","Para mantener interacción estable."),
+       p1_eng:P("Interaction stability surface (informal phrasing).","交互稳定执行面（通俗表达）。","Estabilidad de interacción (informal)."),
+       p2_eng:P("Use for consistent behavior primitives.","用于一致交互原语。","Para primitivas consistentes."),
+       href:"/products/uci/"},
+      {c:"#c9a24a", t:P("Registry","注册表","Registro"), s:P("Inventory truth surface.","库存真相执行面。","Verdad de inventario."),
+       p1:P("Use it to track what exists and what is real.","用它追踪什么存在、什么是真的。","Para rastrear qué existe y qué es real."),
+       p2:P("It prevents silent drift.","防止无声漂移。","Evita deriva silenciosa."),
+       p1_eng:P("Registry surface for stable tracking (informal phrasing).","稳定追踪的注册表面（通俗表达）。","Registro para seguimiento estable (informal)."),
+       p2_eng:P("Use for state truth and binding clarity.","用于状态真相与绑定清晰。","Para verdad de estado y claridad."),
+       href:"/products/registry/"},
+      {c:"#c9a24a", t:P("Adoption Ladder","采用阶梯","Escalera de adopción"), s:P("Shell → surface graduation path.","壳→执行面升级路径。","Ruta de graduación."),
+       p1:P("Use it when you want to scale without confusion.","要规模化但不混乱就用它。","Para escalar sin confusión."),
+       p2:P("It keeps taxonomy stable as you grow.","扩张时让分类保持稳定。","Mantiene taxonomía estable al crecer."),
+       p1_eng:P("Adoption scaling surface (informal phrasing).","采纳扩张执行面（通俗表达）。","Escalado de adopción (informal)."),
+       p2_eng:P("Use to keep routes stable while depth increases.","用于在加深时保持路由稳定。","Para mantener rutas estables al profundizar."),
+       href:"/products/adoption-ladder/"}
     ];
 
     var SERVICES=[
-      {c:"#c9a24a", t:P("Advisory","咨询","Asesoría"), s:P("Policy and standards via Laws.","通过法则做政策与标准。","Vía Leyes."), p1:P("Bounds-first advisory posture.","边界优先咨询姿态。","Postura límites primero."), p2:P("Routes to Laws.","路由到法则。","Enruta a Leyes."), href:"/laws/"},
-      {c:"#ff2b2b", t:P("Audit Support","审计支持","Soporte de auditoría"), s:P("Measurement and review via Gauges.","通过量规测量与复核。","Vía Medidores."), p1:P("Signals, thresholds, exports.","信号/阈值/导出。","Señales, umbrales, export."), p2:P("Routes to Gauges.","路由到量规。","Enruta a Medidores."), href:"/gauges/"},
-      {c:"#c9a24a", t:P("Integration","集成","Integración"), s:P("Wiring + state carry via Software Spine.","线路+状态携带：软件主干。","Cableado+estado."), p1:P("Platform lane by default.","默认平台车道。","Carril plataforma por defecto."), p2:P("Routes to Software Spine (lane=platform).","路由到软件主干（lane=platform）。","Enruta a Espina (lane=platform)."), href:"/products/software/?lane=platform"},
-      {c:"#ff2b2b", t:P("Training","培训","Formación"), s:P("Masterclass execution surfaces.","大师课执行面。","Superficies masterclass."), p1:P("Guided sequences, repeatable skill.","引导序列，可复跑技能。","Secuencias guiadas."), p2:P("Routes to Training shell.","路由到培训壳页。","Enruta al shell."), href:"/products/training/"}
+      {c:"#c9a24a", t:P("Advisory","咨询","Asesoría"), s:P("Standards and wording through Laws.","通过法则做标准与措辞。","Estándares vía Leyes."),
+       p1:P("Use this when definitions and boundaries matter.","定义与边界重要时用。","Cuando importan límites."),
+       p2:P("It routes to Laws.","路由到法则。","Enruta a Leyes."),
+       p1_eng:P("Boundary-first advisory surface (informal phrasing).","边界优先咨询面（通俗表达）。","Asesoría límites primero (informal)."),
+       p2_eng:P("Use to keep claims honest and scoped.","用于让主张诚实且有范围。","Para mantener afirmaciones honestas."),
+       href:"/laws/"},
+      {c:"#ff2b2b", t:P("Audit Support","审计支持","Soporte de auditoría"), s:P("Measurement and review through Gauges.","通过量规做测量与复核。","Medición vía Medidores."),
+       p1:P("Use this when you want numbers instead of arguments.","要数字不要争论时用。","Para números, no discusiones."),
+       p2:P("It routes to Gauges.","路由到量规。","Enruta a Medidores."),
+       p1_eng:P("Telemetry and review surface (informal phrasing).","遥测与复核面（通俗表达）。","Telemetría y revisión (informal)."),
+       p2_eng:P("Use for thresholds, exports, and verification.","用于阈值、导出、验证。","Para umbrales, exportación y verificación."),
+       href:"/gauges/"},
+      {c:"#c9a24a", t:P("Integration","集成","Integración"), s:P("Wiring and stability work through Software Spine.","通过软件主干做接线与稳定。","Cableado vía Espina."),
+       p1:P("Use it to fix navigation and consistency issues.","用它修导航与一致性问题。","Para arreglar navegación y consistencia."),
+       p2:P("It routes to Software Spine (platform lane).","路由到软件主干（平台车道）。","Enruta a Espina (carril plataforma)."),
+       p1_eng:P("Integration posture routed to platform lane (informal phrasing).","集成姿态路由到平台车道（通俗表达）。","Integración al carril plataforma (informal)."),
+       p2_eng:P("Use for stable wiring and repeatable execution templates.","用于稳定接线与可复跑模板。","Para cableado estable y plantillas."),
+       href:"/products/software/?lane=platform"},
+      {c:"#ff2b2b", t:P("Training","培训","Formación"), s:P("Guided sequences and repeatable skill.","引导序列与可复跑技能。","Secuencias guiadas."),
+       p1:P("Use it when you want a guided path, not browsing.","要引导路径不要乱逛。","Para una ruta guiada."),
+       p2:P("It routes to Training.","路由到培训。","Enruta a Formación."),
+       p1_eng:P("Guided execution surface (informal phrasing).","引导执行面（通俗表达）。","Ejecución guiada (informal)."),
+       p2_eng:P("Use for consistent training loops and checkpoints.","用于一致训练循环与检查点。","Para bucles y checkpoints consistentes."),
+       href:"/products/training/"}
     ];
 
     var VISION=[
-      {c:"#c9a24a", t:P("Vision Index","愿景索引","Índice de visión"), s:P("All frontier innovation pages live here (labeled).","所有前沿创新页在这里（有标签）。","Aquí vive la visión (etiquetada)."), p1:P("Vision is labeled exploration, not proof.","愿景是有标签探索，不是证明。","Visión etiquetada, no prueba."), p2:P("Routes to Vision index.","路由到愿景索引。","Enruta al índice."), href:"/explore/frontier/vision/"},
-      {c:"#93c5fd", t:P("Water (Vision)","水（愿景）","Agua (visión)"), s:P("Vision focus: water security.","愿景聚焦：用水安全。","Foco: seguridad hídrica."), p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."), p2:P("Routes to Vision focus=water.","路由到愿景 focus=water。","Enruta focus=water."), href:"/explore/frontier/vision/?focus=water"},
-      {c:"#ff2b2b", t:P("Waste (Vision)","废弃物（愿景）","Residuos (visión)"), s:P("Vision focus: waste routing.","愿景聚焦：废弃物路由。","Foco: ruteo residuos."), p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."), p2:P("Routes to Vision focus=waste.","路由到愿景 focus=waste。","Enruta focus=waste."), href:"/explore/frontier/vision/?focus=waste"},
-      {c:"#ff2b2b", t:P("SHIMMER (Vision)","SHIMMER（愿景）","SHIMMER (visión)"), s:P("Vision focus: SHIMMER.","愿景聚焦：SHIMMER。","Foco: SHIMMER."), p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."), p2:P("Routes to Vision focus=shimmer.","路由到愿景 focus=shimmer。","Enruta focus=shimmer."), href:"/explore/frontier/vision/?focus=shimmer"},
-      {c:"#c9a24a", t:P("Clean Cities (Urban OS)","清洁城市（城市OS）","Ciudades limpias (SO urbano)"), s:P("Urban Resource Operating System.","城市资源操作系统。","Sistema operativo urbano."), p1:P("Labeled frontier system page.","有标签前沿系统页。","Página etiquetada."), p2:P("Routes to Urban OS.","路由到城市OS。","Enruta."), href:"/explore/frontier/vision/urban-resource-os/"},
-      {c:"#a3a3a3", t:P("Closed-Loop Habitats","闭环栖息地","Hábitats cerrados"), s:P("Life off-Earth with full recycling.","离地生存与全回收。","Vida fuera de la Tierra."), p1:P("Labeled frontier system page.","有标签前沿系统页。","Página etiquetada."), p2:P("Routes to Habitats.","路由到栖息地。","Enruta."), href:"/explore/frontier/vision/closed-loop-habitats/"},
-      {c:"#ff2b2b", t:P("Energy Without Smoke","无烟能源","Energía sin humo"), s:P("Recover value without burning everything down.","不焚烧也能回收价值。","Recuperar valor sin quemar."), p1:P("Labeled frontier system page.","有标签前沿系统页。","Página etiquetada."), p2:P("Routes to Energy Without Smoke.","路由到无烟能源。","Enruta."), href:"/explore/frontier/vision/energy-without-smoke/"}
+      {c:"#c9a24a", t:P("Vision Index","愿景索引","Índice de visión"), s:P("All frontier innovation pages live here (labeled).","所有前沿创新页在这里（有标签）。","Visión etiquetada vive aquí."),
+       p1:P("Vision is a labeled shelf of future systems.","愿景是未来系统的有标签书架。","Visión es un estante etiquetado."),
+       p2:P("It routes to the Vision index.","路由到愿景索引。","Enruta al índice."),
+       p1_eng:P("Vision routing hub (informal phrasing).","愿景路由枢纽（通俗表达）。","Hub de visión (informal)."),
+       p2_eng:P("Use to explore without confusing it with proof.","用于探索，不把它当证明。","Explorar sin confundir con prueba."),
+       href:"/explore/frontier/vision/"},
+      {c:"#93c5fd", t:P("Water (Vision)","水（愿景）","Agua (visión)"), s:P("Water security focus.","用水安全聚焦。","Foco agua."),
+       p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."),
+       p2:P("Routes to focus=water.","路由到 focus=water。","Enruta focus=water."),
+       p1_eng:P("Water vision focus (informal phrasing).","水愿景聚焦（通俗表达）。","Foco agua (informal)."),
+       p2_eng:P("Explore water pathways and prerequisites.","探索水路径与前置条件。","Explora rutas y prerrequisitos."),
+       href:"/explore/frontier/vision/?focus=water"},
+      {c:"#ff2b2b", t:P("Waste (Vision)","废弃物（愿景）","Residuos (visión)"), s:P("Waste routing focus.","废弃物路由聚焦。","Foco residuos."),
+       p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."),
+       p2:P("Routes to focus=waste.","路由到 focus=waste。","Enruta focus=waste."),
+       p1_eng:P("Waste vision focus (informal phrasing).","废弃物愿景聚焦（通俗表达）。","Foco residuos (informal)."),
+       p2_eng:P("Explore routing and recovery concepts.","探索路由与回收概念。","Explora ruteo y recuperación."),
+       href:"/explore/frontier/vision/?focus=waste"},
+      {c:"#ff2b2b", t:P("SHIMMER (Vision)","SHIMMER（愿景）","SHIMMER (visión)"), s:P("SHIMMER focus.","SHIMMER 聚焦。","Foco SHIMMER."),
+       p1:P("Frontier shelf item.","前沿书架项。","Elemento frontera."),
+       p2:P("Routes to focus=shimmer.","路由到 focus=shimmer。","Enruta focus=shimmer."),
+       p1_eng:P("SHIMMER vision focus (informal phrasing).","SHIMMER 愿景聚焦（通俗表达）。","Foco SHIMMER (informal)."),
+       p2_eng:P("Explore how SHIMMER connects domains.","探索 SHIMMER 如何连接各域。","Explora cómo conecta dominios."),
+       href:"/explore/frontier/vision/?focus=shimmer"},
+      {c:"#c9a24a", t:P("Clean Cities (Urban OS)","清洁城市（城市OS）","Ciudades limpias (SO urbano)"), s:P("Urban Resource Operating System.","城市资源操作系统。","SO urbano."),
+       p1:P("A labeled frontier system page.","有标签前沿系统页。","Página etiquetada."),
+       p2:P("Routes to Urban OS.","路由到 Urban OS。","Enruta."),
+       p1_eng:P("Urban OS frontier page (informal phrasing).","城市OS前沿页（通俗表达）。","SO urbano (informal)."),
+       p2_eng:P("Explore city-scale routing logic.","探索城市尺度路由逻辑。","Explora lógica de ruteo urbano."),
+       href:"/explore/frontier/vision/urban-resource-os/"},
+      {c:"#a3a3a3", t:P("Closed-Loop Habitats","闭环栖息地","Hábitats cerrados"), s:P("Life off-Earth with full recycling.","离地生存与全回收。","Vida fuera de la Tierra."),
+       p1:P("A labeled frontier system page.","有标签前沿系统页。","Página etiquetada."),
+       p2:P("Routes to Habitats.","路由到 Habitats。","Enruta."),
+       p1_eng:P("Closed-loop habitats frontier page (informal phrasing).","闭环栖息地前沿页（通俗表达）。","Hábitats cerrados (informal)."),
+       p2_eng:P("Explore closed-loop constraints and routines.","探索闭环约束与例程。","Explora restricciones y rutinas."),
+       href:"/explore/frontier/vision/closed-loop-habitats/"},
+      {c:"#ff2b2b", t:P("Energy Without Smoke","无烟能源","Energía sin humo"), s:P("Recover value without burning everything down.","不焚烧也能回收价值。","Recuperar valor sin quemar."),
+       p1:P("A labeled frontier system page.","有标签前沿系统页。","Página etiquetada."),
+       p2:P("Routes to Energy Without Smoke.","路由到 Energy Without Smoke。","Enruta."),
+       p1_eng:P("Energy without smoke frontier page (informal phrasing).","无烟能源前沿页（通俗表达）。","Energía sin humo (informal)."),
+       p2_eng:P("Explore recovery-first pathways.","探索回收优先路径。","Explora rutas de recuperación."),
+       href:"/explore/frontier/vision/energy-without-smoke/"}
     ];
 
-    function renderBand(listId, arr){
+    function renderBand(listId, arr, openFirstOverall){
       var listEl=document.getElementById(listId);
       listEl.innerHTML="";
       for(var i=0;i<arr.length;i++){
-        makeRow(listEl, arr[i], i);
+        var cpy=copy(arr[i]);
+        var merged={
+          c:arr[i].c,t:arr[i].t,s:arr[i].s,
+          p1:cpy.p1,p2:cpy.p2,href:arr[i].href
+        };
+        makeRow(listEl, merged, openFirstOverall && i===0);
+        openFirstOverall=false;
       }
+      return openFirstOverall;
     }
 
     function init(){
       setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
       setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-      setPressed(["styleInformal","styleFormal"], style==="formal"?"styleFormal":"styleInformal");
 
       applyHeader();
 
-      renderBand("listDoctrine", DOCTRINE);
-      renderBand("listSpines", SPINES);
-      renderBand("listSurfaces", SURFACES);
-      renderBand("listServices", SERVICES);
-      renderBand("listVision", VISION);
+      // One open total (global). Only doctrine first row is open by default.
+      closeAll();
+      renderBand("listDoctrine", DOCTRINE, true);
+      renderBand("listSpines", SPINES, false);
+      renderBand("listSurfaces", SURFACES, false);
+      renderBand("listServices", SERVICES, false);
+      renderBand("listVision", VISION, false);
 
       wireAll();
     }

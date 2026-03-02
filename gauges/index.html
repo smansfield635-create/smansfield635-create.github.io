@@ -1,127 +1,440 @@
 <!doctype html>
 <!-- TNT — /gauges/index.html
-     PUBLIC GAUGE DASHBOARD
+     GAUGES (PUBLIC DASHBOARD) — SIMPLE READOUT (NO CLOUDFLARE REQUIRED)
      PURPOSE:
-       - Human-readable health overview
-       - Uses existing telemetry storage
-       - No Cloudflare changes required
+       - Human-friendly gauges (everyday read)
+       - Uses SAME telemetry store as engineer console: localStorage["cte_gauges_v1"]
+       - Links to engineer console: /gauges/live/
+     RULES:
+       - No modals/overlays
+       - Canon state carry: lang/style/time/depth via URL + LS gd_* only (no new gd_* keys)
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>System Health Dashboard</title>
+<title>Gauges · Dashboard</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-body{margin:0;font-family:system-ui,-apple-system,sans-serif;color:#fff}
-.page{max-width:980px;margin:100px auto 120px;padding:0 20px}
-h1{font-size:34px;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
-.card{
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:20px;
-  padding:20px;
-  background:rgba(0,0,0,.25);
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:112px;
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.72);
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
-.big{font-size:42px;font-weight:800}
-.label{opacity:.7;margin-top:6px}
-.good{color:#00ff88}
-.mid{color:#ffcc00}
-.bad{color:#ff4444}
-.footer{
-  margin-top:40px;
-  text-align:center;
+
+/* Top */
+.top{
+  position:fixed;top:12px;left:0;right:0;z-index:240;
+  padding:0 12px;pointer-events:none;
 }
+.topbar{
+  pointer-events:auto;
+  width:min(1100px,96vw);
+  margin:0 auto;
+  padding:10px 10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA);
+  backdrop-filter:blur(10px);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.group{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Buttons */
 .btn{
-  display:inline-block;
-  padding:12px 20px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.22);
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  box-shadow:var(--shadowB);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(1px)}
+.badge{
+  display:inline-flex;
+  padding:4px 9px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.2);
-  text-decoration:none;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  letter-spacing:.2px;
+}
+
+/* Page */
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:150px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* Header */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  background:rgba(0,0,0,.22);
+  box-shadow:var(--shadowA);
+  padding:18px;
+}
+.h1{margin:0;font-size:30px;font-weight:980;letter-spacing:.3px}
+.p0{margin:10px 0 0;color:var(--mut);line-height:1.7;font-size:15px}
+.small{margin-top:10px;color:var(--mut2);line-height:1.5;font-size:13px}
+
+/* Cards */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+}
+@media (max-width:860px){ .grid{grid-template-columns:1fr;} }
+
+.card{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.05), transparent 62%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+  box-shadow:var(--shadowA);
+  padding:14px;
+}
+.cardTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.title{font-weight:980;font-size:16.5px;letter-spacing:.2px}
+.sub{margin-top:6px;color:var(--mut2);font-size:13px;line-height:1.45}
+.scoreRow{display:flex;gap:10px;align-items:center;margin-top:12px}
+.score{
+  font-weight:1000;
+  font-size:34px;
+  letter-spacing:.3px;
+  padding:8px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+}
+.bar{
+  flex:1;
+  height:12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.fill{height:100%;width:0%}
+.kpi{margin-top:10px;color:rgba(255,255,255,.82);font-size:13px;line-height:1.55;white-space:pre-wrap}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  padding:12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  z-index:220;
+}
+.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+@media (max-width:520px){
+  :root{--dockH:136px}
+  .dock{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 
 <body>
+
+<div class="top">
+  <div class="topbar">
+    <div class="group">
+      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+      <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
+      <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
+      <a class="btn" id="btnExplore" href="/explore/">EXPLORE</a>
+    </div>
+    <div class="group">
+      <a class="btn" id="btnEngineer" href="/gauges/live/"><span class="badge">ENGINEER</span>&nbsp;CONSOLE</a>
+    </div>
+  </div>
+</div>
+
 <div class="page">
 
-<h1>System Health</h1>
+  <section class="header">
+    <div class="h1">Public Gauge Dashboard</div>
+    <div class="p0">This is the readable layer. It summarizes system behavior using the same telemetry as the engineer console.</div>
+    <div class="small">
+      Data source: local telemetry on this device (cte_gauges_v1). For cross-device aggregation, use the engineer console export.
+    </div>
+  </section>
 
-<div class="grid">
-
-<div class="card">
-<div class="big" id="healthScore">--</div>
-<div class="label">Overall Health</div>
-</div>
-
-<div class="card">
-<div class="big" id="visitorCount">--</div>
-<div class="label">Visitors (24h)</div>
-</div>
-
-<div class="card">
-<div class="big" id="engagementScore">--</div>
-<div class="label">Engagement</div>
-</div>
-
-<div class="card">
-<div class="big" id="stabilityScore">--</div>
-<div class="label">Stability</div>
-</div>
+  <section class="grid" aria-label="Public gauges">
+    <div class="card" id="gHealth"></div>
+    <div class="card" id="gTraffic"></div>
+    <div class="card" id="gClarity"></div>
+    <div class="card" id="gEngagement"></div>
+    <div class="card" id="gStability"></div>
+    <div class="card" id="gNext"></div>
+  </section>
 
 </div>
 
-<div class="footer">
-<a class="btn" href="/gauges/live/">Open Engineer Console</a>
-</div>
-
-</div>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
+</nav>
 
 <script>
-// Pull existing telemetry from localStorage
-function getTelemetry(){
+(function(){
+  "use strict";
+
+  // canonical state carry (gd_* only)
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
   try{
-    return JSON.parse(localStorage.getItem("telemetry_log") || "[]");
-  }catch(e){ return []; }
-}
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
 
-function calculate(){
-  const data = getTelemetry();
-  const now = Date.now();
-  const day = 24*60*60*1000;
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+  }
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnIndex","/index.html");
+  wire("btnResearch","/research/");
+  wire("btnProducts","/products/");
+  wire("btnExplore","/explore/");
+  wire("btnEngineer","/gauges/live/");
 
-  const recent = data.filter(d => now - d.timestamp < day);
-  const sessions = new Set(recent.map(d => d.session_id));
-  const visitors = sessions.size;
+  wire("dockIndex","/index.html");
+  wire("dockExplore","/explore/");
+  wire("dockProducts","/products/");
+  wire("dockLaws","/laws/");
 
-  const engagement = Math.min(100, recent.length * 5);
-  const stability = Math.max(0, 100 - (recent.filter(d => d.event==="error").length * 20));
+  function loadStore(){
+    try{
+      var raw=localStorage.getItem("cte_gauges_v1");
+      if(!raw) return {v:1,events:[]};
+      var obj=JSON.parse(raw);
+      if(!obj || !Array.isArray(obj.events)) return {v:1,events:[]};
+      return obj;
+    }catch(e){
+      return {v:1,events:[]};
+    }
+  }
+  function parseTs(ts){
+    var t=Date.parse(ts);
+    return isFinite(t)?t:0;
+  }
 
-  const health = Math.round((engagement + stability)/2);
+  function getSessions(events){
+    var by={};
+    events.forEach(function(e){
+      var sid=e.sid || "NO_SID";
+      if(!by[sid]) by[sid]=[];
+      by[sid].push(e);
+    });
+    var out=[];
+    Object.keys(by).forEach(function(sid){
+      var ev=by[sid].slice().sort(function(a,b){ return parseTs(a.ts)-parseTs(b.ts); });
+      out.push({sid:sid, events:ev});
+    });
+    out.sort(function(a,b){
+      var at=a.events.length?parseTs(a.events[a.events.length-1].ts):0;
+      var bt=b.events.length?parseTs(b.events[b.events.length-1].ts):0;
+      return bt-at;
+    });
+    return out;
+  }
 
-  document.getElementById("visitorCount").textContent = visitors;
-  document.getElementById("engagementScore").textContent = engagement;
-  document.getElementById("stabilityScore").textContent = stability;
-  document.getElementById("healthScore").textContent = health;
+  function sessionStats(sess){
+    var ev=sess.events;
+    var start=parseTs(ev[0]&&ev[0].ts);
+    var end=parseTs(ev[ev.length-1]&&ev[ev.length-1].ts);
+    var durMs=Math.max(1, end-start);
 
-  colorize("healthScore", health);
-  colorize("engagementScore", engagement);
-  colorize("stabilityScore", stability);
-}
+    var pages={};
+    var nav=0, lens=0, acc=0, scrollMax=0, timeMax=0;
 
-function colorize(id,val){
-  const el=document.getElementById(id);
-  el.classList.remove("good","mid","bad");
-  if(val>70) el.classList.add("good");
-  else if(val>40) el.classList.add("mid");
-  else el.classList.add("bad");
-}
+    ev.forEach(function(e){
+      if(e.page) pages[e.page]=true;
+      if(e.type==="nav_click") nav++;
+      if(e.type==="lens_toggle") lens++;
+      if(e.type==="accordion_toggle") acc++;
+      if(e.type==="scroll_depth"){
+        var p=(e.payload && e.payload.pct)?parseInt(e.payload.pct,10):0;
+        if(isFinite(p)) scrollMax=Math.max(scrollMax,p);
+      }
+      if(e.type==="time_on_page"){
+        var ms=(e.payload && e.payload.ms)?parseInt(e.payload.ms,10):0;
+        if(isFinite(ms)) timeMax=Math.max(timeMax,ms);
+      }
+    });
 
-calculate();
+    return {durMs:durMs, pages:pages, nav:nav, lens:lens, acc:acc, scrollMax:scrollMax, timeMax:timeMax};
+  }
+
+  // Public mapping (simple)
+  var P_RESEARCH="/research/";
+  var P_EVIDENCE="/research/testimonials/";
+  var P_INDUSTRY="/research/industry-context/";
+
+  function clamp(n){ return Math.max(0, Math.min(100, Math.round(n))); }
+
+  function fill(el, pct){
+    var f=el.querySelector(".fill");
+    if(f) f.style.width = clamp(pct) + "%";
+  }
+
+  function card(el, title, sub, score, kpi){
+    el.innerHTML =
+      '<div class="cardTop"><div><div class="title">'+title+'</div><div class="sub">'+sub+'</div></div><div class="badge">0–100</div></div>'+
+      '<div class="scoreRow"><div class="score">'+score+'</div><div class="bar"><div class="fill"></div></div></div>'+
+      '<div class="kpi">'+kpi+'</div>';
+    fill(el, score);
+  }
+
+  function render(){
+    var store=loadStore();
+    var sessions=getSessions(store.events);
+
+    // rolling = last 20 sessions
+    var roll = sessions.slice(0, 20);
+
+    // KPIs
+    var visitors = roll.length;
+    var pageViews = store.events.filter(function(e){ return e.type==="page_view"; }).length;
+
+    var reachedResearch=0, reachedEvidence=0, reachedIndustry=0;
+    var avgScroll=0, avgTime=0, avgNav=0, avgAcc=0;
+    var bounces=0;
+
+    roll.forEach(function(s){
+      var st=sessionStats(s);
+      if(st.pages[P_RESEARCH]) reachedResearch++;
+      if(st.pages[P_EVIDENCE]) reachedEvidence++;
+      if(st.pages[P_INDUSTRY]) reachedIndustry++;
+      avgScroll += st.scrollMax;
+      avgTime += st.timeMax;
+      avgNav += st.nav;
+      avgAcc += st.acc;
+      if(st.timeMax<15000 && st.scrollMax<25) bounces++;
+    });
+
+    if(visitors>0){
+      avgScroll = avgScroll/visitors;
+      avgTime = avgTime/visitors;
+      avgNav = avgNav/visitors;
+      avgAcc = avgAcc/visitors;
+    }else{
+      avgScroll=0; avgTime=0; avgNav=0; avgAcc=0;
+    }
+
+    // Public Scores
+    var clarity = clamp((reachedResearch/Math.max(1,visitors))*60 + (reachedEvidence/Math.max(1,visitors))*40);
+    var engagement = clamp((avgScroll)*0.7 + (Math.min(120000,avgTime)/120000)*30);
+    var stability = clamp(100 - (bounces/Math.max(1,visitors))*100);
+
+    var health = clamp((clarity*0.35) + (engagement*0.35) + (stability*0.30));
+
+    // "Next step" inference (simple)
+    var next = "No dominant path yet.";
+    if(reachedResearch>0 && reachedEvidence>0 && reachedIndustry>0){
+      next = "Common path present: Research → Evidence → Industry.";
+    }else if(reachedResearch>0 && reachedEvidence>0){
+      next = "Common path forming: Research → Evidence.";
+    }else if(reachedResearch>0){
+      next = "Most sessions enter Research; Evidence not yet reached consistently.";
+    }
+
+    card(
+      document.getElementById("gHealth"),
+      "Overall Health",
+      "One-screen read of system behavior.",
+      health,
+      "Clarity: "+clarity+"\nEngagement: "+engagement+"\nStability: "+stability
+    );
+
+    card(
+      document.getElementById("gTraffic"),
+      "Traffic",
+      "How many sessions this device has recorded.",
+      clamp(Math.min(100, visitors*10)),
+      "Visitors (sessions): "+visitors+"\nPage views (all time on device): "+pageViews
+    );
+
+    card(
+      document.getElementById("gClarity"),
+      "Clarity",
+      "Are people reaching the intended hubs?",
+      clarity,
+      "Reached Research: "+reachedResearch+"/"+visitors+"\nReached Evidence: "+reachedEvidence+"/"+visitors+"\nReached Industry: "+reachedIndustry+"/"+visitors
+    );
+
+    card(
+      document.getElementById("gEngagement"),
+      "Engagement",
+      "Are people actually reading?",
+      engagement,
+      "Avg scroll max: "+Math.round(avgScroll)+"%\nAvg time max: "+Math.round(avgTime/1000)+"s\nAvg accordion opens: "+Math.round(avgAcc)
+    );
+
+    card(
+      document.getElementById("gStability"),
+      "Stability",
+      "Low bounce, low thrash.",
+      stability,
+      "Bounces: "+bounces+"/"+visitors+"\nAvg nav clicks: "+Math.round(avgNav)
+    );
+
+    card(
+      document.getElementById("gNext"),
+      "What’s Happening",
+      "Plain-English interpretation of movement.",
+      clamp((reachedEvidence/Math.max(1,visitors))*100),
+      next+"\n\nTip: Engineers can open /gauges/live/ for full detail."
+    );
+  }
+
+  render();
+})();
 </script>
 
 </body>

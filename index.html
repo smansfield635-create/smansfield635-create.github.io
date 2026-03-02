@@ -1,15 +1,15 @@
 <!doctype html>
 <!-- TNT — /index.html
      COMPASS · 8-DIAMOND RING (N/E/S/W + NE/SE/SW/NW)
-     UPDATE (PER YOUR GEOMETRY RULE):
-       - We have 6 before, now 8 ( +33% vs 6, +100% vs 4 ) — but you want the practical rule:
-         "Add two more nodes ⇒ reduce diamonds by 25% so the ring fits."
-       - Implemented: D reduced by 25% (from 160px → 120px baseline)
-       - Gloss preserved (Vision-grade material stack)
-       - Trilingual labels (EN/中文/ES)
+     UPDATE: ADD BACKGROUND CONTEXT (NO OVERLAYS / NO MODALS)
+     GOAL:
+       - Keep diamonds exactly as-is (gloss + fit)
+       - Add richer “festival night / lantern / fireworks” context BEHIND the ring
+       - Add small on-page context pill (non-modal) + top controls
+       - Preserve trilingual labels (EN/中文/ES)
        - Canon state carry (gd_lang/gd_style/gd_time/gd_depth) via URL + LS only
        - No new gd_* keys
-       - No overlays/modals
+       - No inline onclick (use addEventListener)
      Mapping:
        N  = EDUCATION
        NE = EXPLORE
@@ -37,13 +37,8 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY =====
-     You asked: +2 nodes ⇒ reduce diamonds by 25%
-     Previous practical D ~160 → New D = 120 (25% reduction)
-  */
+  /* ===== GEOMETRY ===== */
   --D:120px;
-
-  /* Radius tuned to fit 8 nodes with smaller D */
   --R:154px;              /* cardinal */
   --Rd:109px;             /* diagonal ≈ R*0.707 */
 
@@ -59,8 +54,62 @@ body::before,body::after{pointer-events:none!important}
   --goldGlow:rgba(201,162,74,.36);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --stroke:rgba(255,255,255,.12);
 }
 
+/* ===== Top controls (non-modal, tap-safe) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:rgba(255,255,255,.92);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;overflow:hidden;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:rgba(255,255,255,.78);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:rgba(255,255,255,.96);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+}
+
+/* ===== Stage ===== */
 .stage{
   position:relative;
   width:min(760px,94vw);
@@ -69,6 +118,77 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
+/* ===== Background Context (behind diamonds) ===== */
+.backdrop{
+  position:absolute;inset:-26px;
+  border-radius:44px;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* soft outer slab */
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:44px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 80% 26%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 62% 92%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.10));
+  box-shadow:
+    0 70px 210px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -60px 120px rgba(0,0,0,.55);
+  opacity:.95;
+}
+
+/* lantern glow + fireworks ribbons */
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    /* lantern pools */
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.20), transparent 42%),
+    radial-gradient(circle at 82% 30%, rgba(255,43,43,.16), transparent 44%),
+    radial-gradient(circle at 50% 76%, rgba(201,162,74,.12), transparent 46%),
+
+    /* fireworks arcs (subtle) */
+    conic-gradient(from 10deg at 30% 28%,
+      rgba(201,162,74,.16), transparent 10%,
+      rgba(255,43,43,.14), transparent 22%,
+      rgba(90,40,120,.12), transparent 35%,
+      rgba(201,162,74,.10), transparent 50%,
+      transparent 100%),
+
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.14), transparent 12%,
+      rgba(201,162,74,.14), transparent 26%,
+      rgba(90,40,120,.10), transparent 42%,
+      transparent 100%),
+
+    /* film grain-ish */
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 60%);
+  filter: blur(1px);
+  opacity:.75;
+}
+
+/* inner ring halo to improve contrast */
+.halo{
+  position:absolute;left:50%;top:50%;
+  width:min(610px,92vw);height:min(610px,92vw);
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,.00), rgba(0,0,0,.22) 58%, rgba(0,0,0,.00) 78%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.10), transparent 66%);
+  opacity:.9;
+}
+
+/* ===== Diamonds ===== */
 .d{
   position:absolute;
   left:50%;
@@ -174,71 +294,175 @@ body::before,body::after{pointer-events:none!important}
   padding:10px;
 }
 
-/* Mobile tweak: keep fit on narrow screens */
+/* Context pill (non-modal) */
+.pill{
+  width:min(760px,94vw);
+  margin:14px auto 0;
+  padding:14px 16px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
+    rgba(0,0,0,.16);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.75px;
+}
+.pill b{color:rgba(255,255,255,.95)}
+
+/* Mobile tweak */
 @media (max-width:600px){
   :root{
-    --D:112px;   /* slightly more reduction on tight phones */
+    --D:112px;
     --R:144px;
     --Rd:102px;
   }
   .inner{font-size:14px}
+  .stage{height:min(700px,80vh)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="stage">
+<!-- Top controls -->
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
+    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+  </div>
+  <div class="right">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="btnEN" aria-pressed="true">EN</button>
+      <button type="button" id="btnZH" aria-pressed="false">中文</button>
+      <button type="button" id="btnES" aria-pressed="false">ES</button>
+    </div>
+  </div>
+</div>
+
+<div class="stage" aria-label="Compass ring">
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="halo" aria-hidden="true"></div>
 
   <!-- N / NE / E / SE / S / SW / W / NW -->
-  <div class="d surface N"  id="dEducation"><div class="inner" id="txtEducation">EDUCATION</div></div>
-  <div class="d surface NE" id="dExplore"><div class="inner" id="txtExplore">EXPLORE</div></div>
-  <div class="d surface goldTrim E" id="dResearch"><div class="inner" id="txtResearch">RESEARCH</div></div>
-  <div class="d surface SE" id="dProducts"><div class="inner" id="txtProducts">PRODUCTS</div></div>
-  <div class="d surface S"  id="dHome"><div class="inner" id="txtHome">HOME</div></div>
-  <div class="d surface SW" id="dLaws"><div class="inner" id="txtLaws">LAWS</div></div>
-  <div class="d surface W"  id="dDoor"><div class="inner" id="txtDoor">DOOR</div></div>
-  <div class="d surface NW" id="dGauges"><div class="inner" id="txtGauges">GAUGES</div></div>
+  <div class="d surface N"  id="dEducation" role="button" tabindex="0"><div class="inner" id="txtEducation">EDUCATION</div></div>
+  <div class="d surface NE" id="dExplore" role="button" tabindex="0"><div class="inner" id="txtExplore">EXPLORE</div></div>
+  <div class="d surface goldTrim E" id="dResearch" role="button" tabindex="0"><div class="inner" id="txtResearch">RESEARCH</div></div>
+  <div class="d surface SE" id="dProducts" role="button" tabindex="0"><div class="inner" id="txtProducts">PRODUCTS</div></div>
+  <div class="d surface S"  id="dHome" role="button" tabindex="0"><div class="inner" id="txtHome">HOME</div></div>
+  <div class="d surface SW" id="dLaws" role="button" tabindex="0"><div class="inner" id="txtLaws">LAWS</div></div>
+  <div class="d surface W"  id="dDoor" role="button" tabindex="0"><div class="inner" id="txtDoor">DOOR</div></div>
+  <div class="d surface NW" id="dGauges" role="button" tabindex="0"><div class="inner" id="txtGauges">GAUGES</div></div>
+</div>
 
+<div class="pill" id="pill">
+  <b>Compass:</b> Pick a lane and move. Everything carries state. The ring is built for fast traversal without getting lost.
 </div>
 
 <script>
 (function(){
+  "use strict";
+
   // Canon state (gd_* only)
   var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+    return "?lang="+encodeURIComponent(lang)+
+           "&style="+encodeURIComponent(style)+
+           "&time="+encodeURIComponent(time)+
+           "&depth="+encodeURIComponent(depth);
   }
-  function go(p){ location.href = p + q(); }
 
-  // Routes
-  dEducation.onclick=()=>go("/products/education/");
-  dExplore.onclick=()=>go("/explore/");
-  dResearch.onclick=()=>go("/research/");
-  dProducts.onclick=()=>go("/products/");
-  dHome.onclick=()=>go("/home/");
-  dLaws.onclick=()=>go("/laws/");
-  dDoor.onclick=()=>go("/door/");
-  dGauges.onclick=()=>go("/gauges/");
+  function setPressed(btn, on){
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  }
 
-  // Trilingual labels
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    window.location.href = window.location.pathname + q();
+  }
+
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+
+  setPressed(btnEN, lang==="en");
+  setPressed(btnZH, lang==="zh");
+  setPressed(btnES, lang==="es");
+
+  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // Wire [data-route] links with full state
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
+    }
+  }
+  wireAll();
+
+  function go(path){ window.location.href = path + q(); }
+
+  // bind click + keyboard
+  function bind(id, path){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+  }
+
+  bind("dEducation","/products/education/");
+  bind("dExplore","/explore/");
+  bind("dResearch","/research/");
+  bind("dProducts","/products/");
+  bind("dHome","/home/");
+  bind("dLaws","/laws/");
+  bind("dDoor","/door/");
+  bind("dGauges","/gauges/");
+
+  // Trilingual labels (ring + context)
+  var txtEducation=document.getElementById("txtEducation");
+  var txtExplore=document.getElementById("txtExplore");
+  var txtResearch=document.getElementById("txtResearch");
+  var txtProducts=document.getElementById("txtProducts");
+  var txtHome=document.getElementById("txtHome");
+  var txtLaws=document.getElementById("txtLaws");
+  var txtDoor=document.getElementById("txtDoor");
+  var txtGauges=document.getElementById("txtGauges");
+  var pill=document.getElementById("pill");
+
   if(lang==="zh"){
     txtEducation.textContent="教育";
     txtExplore.textContent="探索";
@@ -248,6 +472,7 @@ body::before,body::after{pointer-events:none!important}
     txtLaws.textContent="法则";
     txtDoor.textContent="门";
     txtGauges.textContent="量规";
+    pill.innerHTML="<b>指南针：</b>选一个方向就走。所有跳转携带状态。这个环用于快速遍历，不迷路。";
   }else if(lang==="es"){
     txtEducation.textContent="EDUCACIÓN";
     txtExplore.textContent="EXPLORAR";
@@ -257,6 +482,7 @@ body::before,body::after{pointer-events:none!important}
     txtLaws.textContent="LEYES";
     txtDoor.textContent="PUERTA";
     txtGauges.textContent="MEDIDORES";
+    pill.innerHTML="<b>Brújula:</b> elige un carril y avanza. Todo conserva estado. El anillo es para recorrer rápido sin perderte.";
   }
 })();
 </script>

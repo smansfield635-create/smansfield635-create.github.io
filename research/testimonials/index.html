@@ -1,33 +1,31 @@
 <!doctype html>
 <!-- TNT — /research/testimonials/index.html
-     RESEARCH · TESTIMONIALS (LEAFGUARD ONLY)
-     MODE: ENGLISH ONLY (per instruction)
-     GOALS:
-       - Remove Cross-Domain section
-       - Focus + highlight LeafGuard only
-       - Keep “Review Index” + “Observed Themes” + “Disclaimer”
-       - Put reviews directly in this file (names + short summaries, research posture)
-       - Less clutter: single-open accordion + sub-bubbles
+     RESEARCH · FIELD VALIDATION (LEAFGUARD)
+     MODE: ENGLISH ONLY
+     STRUCTURE (3 TIERS, SEPARATE):
+       A) Voice Testimonials (Name + City + Your Note + Testimonial Text)
+       B) Reference List (Name + City + Your Note + Contact Available = ON FILE)
+       C) Review Archive (Name + Review Excerpt + Context Note)
      CONSTRAINTS (LOCKED):
        - Informational only (no monetization / no lead capture / no affiliates)
-       - No logos / no product images / no implied partnerships
-       - No phone numbers (even partial) on public page
-       - Avoid sensitive private notes; use only what is already public in reviews
+       - No logos / no images / no implied partnerships
+       - No URLs (per instruction)
+       - No star icons / no ranking language
+       - NO phone numbers displayed (public page safety)
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
+       - Single-open accordion (top-level)
+       - Sub-bubbles (tap-to-open) inside each tier for less clutter
        - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
-     NOTE ON LINKS:
-       - Each item has a SOURCE_URL field. Paste the Google review permalink later.
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Research · Testimonials · LeafGuard</title>
+<title>Research · Field Validation · LeafGuard</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -57,7 +55,7 @@ body::before,body::after{pointer-events:none!important}
   --goldSoft:rgba(201,162,74,.18);
 }
 
-/* Top controls */
+/* Top */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -191,7 +189,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .card.open .body{display:block}
 
-/* Sub-bubbles */
+/* Sub-bubbles (less clutter) */
 .subBubbles{display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -229,8 +227,8 @@ body::before,body::after{pointer-events:none!important}
 }
 .bubble.open p{display:block}
 
-/* Review list */
-.reviewRow{
+/* Entry list */
+.entryList{
   margin-top:12px;
   border-top:1px solid rgba(255,255,255,.10);
   padding-top:12px;
@@ -238,37 +236,35 @@ body::before,body::after{pointer-events:none!important}
   flex-direction:column;
   gap:10px;
 }
-.reviewItem{
+.entry{
   border:1px solid rgba(255,255,255,.10);
   border-radius:16px;
   background:rgba(0,0,0,.12);
   padding:12px 12px;
 }
-.reviewMeta{
+.meta{
   font-weight:950;
   letter-spacing:.15px;
   font-size:13.5px;
   color:rgba(255,255,255,.90);
 }
-.reviewMeta span{opacity:.75;font-weight:900}
-.reviewText{
+.meta span{opacity:.75;font-weight:900}
+.text{
   margin-top:8px;
   font-size:13.75px;
   line-height:1.65;
   color:rgba(255,255,255,.82);
 }
-.reviewLinks{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-.smallNote{
-  margin-top:10px;
-  color:rgba(255,255,255,.72);
-  font-size:12.75px;
-  line-height:1.5;
+.badge{
+  display:inline-flex;
+  padding:5px 10px;
+  border-radius:999px;
+  border:1px solid rgba(201,162,74,.20);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  letter-spacing:.2px;
+  margin-left:8px;
 }
 
 /* Dock */
@@ -309,14 +305,14 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
 
   <section class="header" aria-label="Header">
-    <p class="k">RESEARCH · TESTIMONIALS</p>
-    <h1 class="h1">LeafGuard · Rainwater Management (Public Reviews)</h1>
+    <p class="k">RESEARCH · FIELD VALIDATION</p>
+    <h1 class="h1">LeafGuard · Voice + References + Reviews</h1>
     <p class="p0">
-      This page indexes publicly verifiable testimonials and ties each entry to its original public source link.
-      Review text remains the property of its author and platform.
+      This page is organized into three separate research layers: (A) Voice Testimonials, (B) Reference List, (C) Review Archive.
+      It is informational only and does not imply affiliation or endorsement.
     </p>
     <div class="note0">
-      This is not product ranking. No endorsement or affiliation is implied. No phone numbers are published.
+      Contact info is not published on this page. Reference contact is maintained off-page (on file).
     </div>
   </section>
 
@@ -342,7 +338,7 @@ body::before,body::after{pointer-events:none!important}
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en"; // page is EN-only, but we still preserve key
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -368,87 +364,62 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // ===== DATA (names + short, non-promotional summaries) =====
-  // Keep SOURCE_URL empty until you paste the Google review permalink.
-  // Summary is a neutral paraphrase of the review content (research posture).
-  var REVIEWS=[
-    {name:"Terrean Moore", when:"9 months ago", stars:"★★★★★", summary:"Emphasizes thorough guidance on household needs and a positive consultation experience.", url:""},
-    {name:"John Rupp", when:"7 months ago", stars:"★★★★★", summary:"Notes clear walkthrough of needs and help navigating financing options.", url:""},
-    {name:"Rebecca Johnson", when:"9 months ago", stars:"★★★★★", summary:"Highlights responsiveness and “above and beyond” support during decision process.", url:""},
-    {name:"Diana Proctor", when:"1 year ago", stars:"★★★★★", summary:"Emphasizes friendliness, patience, and professional conduct during consultation.", url:""},
-    {name:"JoAnn Villanueva", when:"1 year ago", stars:"★★★★★", summary:"Notes professionalism and informative explanations; frames gutters as property protection.", url:""},
-    {name:"Amy Alexander", when:"11 months ago", stars:"★★★★★", summary:"Describes strong education/diagnosis focus and confidence-building during decision.", url:""},
-    {name:"David Spencer", when:"1 year ago", stars:"★★★★★", summary:"Frames gutters as infrastructure necessity; notes seamless process and detailed planning.", url:""},
-    {name:"Gregory Walker", when:"1 year ago", stars:"★★★★★", summary:"Notes detailed explanation and attention to system flaws; emphasizes thoughtful approach.", url:""},
-    {name:"Noah McIntyre", when:"9 months ago", stars:"★★★★★", summary:"Highlights detailed explanation of system operation and warranties; notes affordability planning.", url:""},
-    {name:"Luke Hayes", when:"1 year ago", stars:"★★★★★", summary:"First-time buyer context; values knowledge transfer and follow-up communication.", url:""},
-    {name:"Lady Byler", when:"3 months ago", stars:"★★★★★", summary:"Notes availability for questions, professional installation team, and functioning performance so far.", url:""},
-    {name:"Laurie Holmstrom", when:"9 months ago", stars:"★★★★★", summary:"Mentions inspection of failing gutters and fast completion; emphasizes courtesy and guidance.", url:""},
-    {name:"Tiffanie Spencer", when:"1 year ago", stars:"★★★★★", summary:"Highlights thorough presentation, personalization, budget alignment, and quick installation scheduling.", url:""},
-    {name:"Patricia James", when:"9 months ago", stars:"★★★★★", summary:"Expresses satisfaction with cost and installation speed; frames foundation longevity benefit.", url:""},
-    {name:"Mike Griffith", when:"9 months ago", stars:"★★★★★", summary:"Mentions long-term prior system experience and version upgrade language; values explanation of improvements.", url:""},
-    {name:"Kenny Hollaway", when:"8 months ago", stars:"★★★★★", summary:"General positive interaction; includes an attached photo on the platform.", url:""},
-    {name:"James Barlow", when:"10 months ago", stars:"★★★★★", summary:"Highlights courtesy and willingness to explain pricing/warranties; mentions financial options.", url:""},
-    {name:"John Goodman", when:"2 months ago", stars:"★★★★★", summary:"Notes helpfulness and clarity; mentions professional crew and warranty framing.", url:""},
-    {name:"Mary Pattberg", when:"8 months ago", stars:"★★★★★", summary:"Mentions prior experience with system and desire to fit within budget; highlights respectful team.", url:""},
-    {name:"abi estra", when:"3 months ago", stars:"★★★★★", summary:"New build context; notes aesthetic satisfaction and neighbor adoption mention.", url:""}
+  // ===== DATA YOU WILL POPULATE =====
+  // IMPORTANT:
+  // - No phone numbers displayed. Keep phone mapping offline.
+  // - Names here should match the name used in the voice testimonial / review.
+  // - You can attach your personal note (non-sensitive).
+  // - If you later want “on file” references, set contact_on_file=true.
+
+  // A) Voice Testimonials: name + city + note + voice testimonial text (your words)
+  var VOICE_TESTIMONIALS = [
+    // Example placeholders — replace with your actual entries
+    {name:"(Add Name)", city:"(City, TX)", note:"(Your personal note)", voice:"(Voice testimonial text)", contact_on_file:true}
   ];
 
-  // ===== Observed themes (non-claim) =====
-  var THEMES=[
-    "Knowledge transfer and clarity of explanation (customers repeatedly describe understanding the system and options).",
-    "Diagnostic framing (multiple reviews mention identifying problems or design issues before installation).",
-    "Budget containment (multiple reviews describe aligning scope to budget via transparent planning).",
-    "Installation discipline (professional crews, scheduling communication, cleanup, and follow-through are recurring themes).",
-    "Longevity framing (warranty and long-term protection language appears frequently; treated here as a perception signal, not a verified metric)."
+  // B) Reference List: name + city + place + note (no review text)
+  var REFERENCES = [
+    {name:"(Add Name)", city:"(City, TX)", place:"(Area tag)", note:"(Your personal note)", contact_on_file:true}
   ];
 
-  // ===== Render accordion =====
-  var stack=document.getElementById("stack");
+  // C) Review Archive: name + review excerpt or neutral summary (public) + your context note
+  var REVIEWS = [
+    {name:"(Add Name)", city:"(City, TX)", review:"(Short excerpt or neutral summary)", note:"(Your note: what it demonstrates)", contact_on_file:false}
+  ];
 
   function closeAll(){
-    stack.querySelectorAll(".card").forEach(function(c){
+    document.querySelectorAll(".card").forEach(function(c){
       c.classList.remove("open");
       var ch=c.querySelector(".chev");
       if(ch) ch.textContent="▸";
     });
   }
 
-  function makeReviewItem(r){
-    var box=document.createElement("div");
-    box.className="reviewItem";
+  function makeEntry(metaLine, textLine, badgeText){
+    var e=document.createElement("div");
+    e.className="entry";
 
-    var meta=document.createElement("div");
-    meta.className="reviewMeta";
-    meta.textContent=r.name + " — " + r.stars + " ";
-    var span=document.createElement("span");
-    span.textContent="(" + r.when + ")";
-    meta.appendChild(span);
+    var m=document.createElement("div");
+    m.className="meta";
+    m.textContent=metaLine;
 
-    var txt=document.createElement("div");
-    txt.className="reviewText";
-    txt.textContent=r.summary;
+    if(badgeText){
+      var b=document.createElement("span");
+      b.className="badge";
+      b.textContent=badgeText;
+      m.appendChild(b);
+    }
 
-    var links=document.createElement("div");
-    links.className="reviewLinks";
+    var t=document.createElement("div");
+    t.className="text";
+    t.textContent=textLine;
 
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent=(r.url && r.url.trim()) ? "View original source" : "Add source URL";
-    a.href=(r.url && r.url.trim()) ? r.url : "#";
-    a.target="_blank";
-    a.rel="noopener";
-
-    links.appendChild(a);
-
-    box.appendChild(meta);
-    box.appendChild(txt);
-    box.appendChild(links);
-
-    return box;
+    e.appendChild(m);
+    e.appendChild(t);
+    return e;
   }
 
-  function makeBubble(title, text, buildFn){
+  function makeBubble(title, description, buildListFn){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
@@ -458,14 +429,14 @@ body::before,body::after{pointer-events:none!important}
     h.textContent=title;
 
     var p=document.createElement("p");
-    p.textContent=text;
+    p.textContent=description;
 
     b.appendChild(h);
     b.appendChild(p);
 
-    if(buildFn){
-      var extra=buildFn();
-      if(extra) b.appendChild(extra);
+    if(buildListFn){
+      var list=buildListFn();
+      if(list) b.appendChild(list);
     }
 
     function act(){ b.classList.toggle("open"); }
@@ -477,7 +448,7 @@ body::before,body::after{pointer-events:none!important}
     return b;
   }
 
-  function makeCard(){
+  function makeCard(title, subtitle, bubbles, openByDefault){
     var card=document.createElement("div");
     card.className="card";
 
@@ -491,11 +462,11 @@ body::before,body::after{pointer-events:none!important}
 
     var ti=document.createElement("div");
     ti.className="ti";
-    ti.textContent="LeafGuard · Rainwater Management (Public Reviews)";
+    ti.textContent=title;
 
     var si=document.createElement("div");
     si.className="si";
-    si.textContent="Verifiable public reviews tied to rainwater routing consultations and installations.";
+    si.textContent=subtitle;
 
     left.appendChild(ti);
     left.appendChild(si);
@@ -510,71 +481,10 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var bubbles=document.createElement("div");
-    bubbles.className="subBubbles";
-
-    // Bubble 1: Review Index
-    bubbles.appendChild(
-      makeBubble(
-        "Review Index (in-file)",
-        "Each entry is a short, neutral summary of a publicly available review. Add the source URL for verification.",
-        function(){
-          var wrap=document.createElement("div");
-          wrap.className="reviewRow";
-          REVIEWS.forEach(function(r){ wrap.appendChild(makeReviewItem(r)); });
-
-          var sn=document.createElement("div");
-          sn.className="smallNote";
-          sn.textContent="Note: This page summarizes publicly available reviews for research context. It does not publish phone numbers or private customer notes. Add source URLs to preserve verification.";
-          wrap.appendChild(sn);
-          return wrap;
-        }
-      )
-    );
-
-    // Bubble 2: Observed themes
-    bubbles.appendChild(
-      makeBubble(
-        "Observed themes (non-claim)",
-        "These are recurring language patterns across public reviews. They are not performance metrics.",
-        function(){
-          var wrap=document.createElement("div");
-          wrap.className="reviewRow";
-          THEMES.forEach(function(t){
-            var box=document.createElement("div");
-            box.className="reviewItem";
-            var txt=document.createElement("div");
-            txt.className="reviewText";
-            txt.textContent="• " + t;
-            box.appendChild(txt);
-            wrap.appendChild(box);
-          });
-          return wrap;
-        }
-      )
-    );
-
-    // Bubble 3: Disclaimer
-    bubbles.appendChild(
-      makeBubble(
-        "Disclaimer",
-        "These reviews are publicly available on third-party platforms. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
-        function(){
-          var wrap=document.createElement("div");
-          wrap.className="reviewRow";
-          var box=document.createElement("div");
-          box.className="reviewItem";
-          var txt=document.createElement("div");
-          txt.className="reviewText";
-          txt.textContent="This page is informational only. It does not rank products, compare competitors, or publish proprietary performance data.";
-          box.appendChild(txt);
-          wrap.appendChild(box);
-          return wrap;
-        }
-      )
-    );
-
-    body.appendChild(bubbles);
+    var wrap=document.createElement("div");
+    wrap.className="subBubbles";
+    bubbles.forEach(function(b){ wrap.appendChild(b); });
+    body.appendChild(wrap);
 
     function toggle(){
       var isOpen=card.classList.contains("open");
@@ -586,7 +496,7 @@ body::before,body::after{pointer-events:none!important}
       closeAll();
       card.classList.add("open");
       chev.textContent="▾";
-      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+      body.querySelectorAll(".bubble").forEach(function(bb){ bb.classList.remove("open"); });
     }
 
     head.addEventListener("click", toggle, {passive:true});
@@ -596,13 +506,94 @@ body::before,body::after{pointer-events:none!important}
 
     card.appendChild(head);
     card.appendChild(body);
-    card.classList.add("open");
-    chev.textContent="▾";
 
+    if(openByDefault){
+      card.classList.add("open");
+      chev.textContent="▾";
+    }
     return card;
   }
 
-  stack.appendChild(makeCard());
+  var stack=document.getElementById("stack");
+
+  // ===== Card A: Voice Testimonials =====
+  var bubbleA1 = makeBubble(
+    "Voice Testimonials (tied to on-file references)",
+    "Entries include name, city, your note, and the voice testimonial text. Contact availability is maintained off-page (on file).",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      VOICE_TESTIMONIALS.forEach(function(x){
+        var meta = x.name + " — " + x.city;
+        var text = "NOTE: " + x.note + "  |  VOICE: " + x.voice;
+        list.appendChild(makeEntry(meta, text, x.contact_on_file ? "CONTACT: ON FILE" : ""));
+      });
+      return list;
+    }
+  );
+
+  var cardA = makeCard(
+    "A) Voice Testimonials",
+    "Name + City + Your note + Voice testimonial text (research documentation).",
+    [bubbleA1],
+    true
+  );
+
+  // ===== Card B: Reference List =====
+  var bubbleB1 = makeBubble(
+    "Reference List (contact on file)",
+    "Entries include name, city/area, and your note. No phone numbers are published on this page.",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      REFERENCES.forEach(function(x){
+        var meta = x.name + " — " + x.city + (x.place?(" · " + x.place):"");
+        var text = "NOTE: " + x.note;
+        list.appendChild(makeEntry(meta, text, x.contact_on_file ? "CONTACT: ON FILE" : ""));
+      });
+      return list;
+    }
+  );
+
+  var cardB = makeCard(
+    "B) Reference List",
+    "Name + City/Area + Your note (contact availability retained off-page).",
+    [bubbleB1],
+    false
+  );
+
+  // ===== Card C: Review Archive =====
+  var bubbleC1 = makeBubble(
+    "Review Archive (public language patterns)",
+    "Entries include name, city, review excerpt or neutral summary, and your context note.",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      REVIEWS.forEach(function(x){
+        var meta = x.name + " — " + x.city;
+        var text = "REVIEW: " + x.review + "  |  CONTEXT NOTE: " + x.note;
+        list.appendChild(makeEntry(meta, text, ""));
+      });
+      return list;
+    }
+  );
+
+  var bubbleC2 = makeBubble(
+    "Disclaimer",
+    "This page is informational only. It does not rank products, compare competitors, publish proprietary performance data, or imply affiliation or endorsement.",
+    null
+  );
+
+  var cardC = makeCard(
+    "C) Review Archive",
+    "Name + review excerpt/summary + context note (research framing).",
+    [bubbleC1, bubbleC2],
+    false
+  );
+
+  stack.appendChild(cardA);
+  stack.appendChild(cardB);
+  stack.appendChild(cardC);
 
 })();
 </script>

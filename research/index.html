@@ -1,19 +1,20 @@
 <!doctype html>
 <!-- TNT — /research/index.html
-     RESEARCH · HUB (EXPANDED)
+     RESEARCH · HUB (WITH TESTIMONIALS LINK)
      GOALS:
-       - Expand the back page (more structure, less clutter)
-       - Keep research-only posture (no monetization, no lead capture, no affiliates)
-       - Trilingual (EN/中文/ES)
+       - Research-only posture (informational; no monetization; no lead capture; no affiliates)
+       - More bubbles / more categories / more structure / less clutter
        - Single-open accordion + nested sub-bubbles
-     LOCKS:
+       - Trilingual (EN/中文/ES)
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
-       - No modals/overlays
-       - No inline onclick; addEventListener only
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
+       - No modals/overlays; no inline onclick; addEventListener only
+     ROUTES:
+       - Industry Context → /research/industry-context/
+       - Testimonials → /research/testimonials/
 -->
+
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -31,11 +32,14 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:112px;
+
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
+
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.82);
   --mut2:rgba(255,255,255,.70);
+
   --shadowA:0 28px 100px rgba(0,0,0,.65);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 
@@ -180,7 +184,7 @@ body::before,body::after{pointer-events:none!important}
 .card.open .body{display:block}
 
 /* Sub-bubbles */
-.subBubbles{margin-top:0;display:flex;flex-direction:column;gap:10px}
+.subBubbles{display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
@@ -216,6 +220,7 @@ body::before,body::after{pointer-events:none!important}
   font-size:14.5px;
 }
 .bubble.open p{display:block}
+
 .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .actions .btn{border-radius:999px;padding:10px 14px}
 
@@ -234,7 +239,6 @@ body::before,body::after{pointer-events:none!important}
   z-index:220;
 }
 .dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
-
 @media (max-width:520px){
   :root{--dockH:132px}
   .dock{grid-template-columns:repeat(3,1fr)}
@@ -249,6 +253,7 @@ body::before,body::after{pointer-events:none!important}
   <div class="left">
     <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
     <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
+    <a class="btn" id="btnTestimonials" href="/research/testimonials/">TESTIMONIALS</a>
   </div>
   <div class="right" aria-label="Language">
     <button class="btn" id="btnEN" type="button">EN</button>
@@ -281,6 +286,7 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
+  // ===== Canon state (gd_* only) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
@@ -315,6 +321,7 @@ body::before,body::after{pointer-events:none!important}
   }
   wire("btnIndex","/index.html");
   wire("btnIndustry","/research/industry-context/");
+  wire("btnTestimonials","/research/testimonials/");
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
@@ -333,24 +340,25 @@ body::before,body::after{pointer-events:none!important}
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
+  // ===== Header copy =====
   var HEAD={
     en:{
       k0:"RESEARCH",
       h0:"Research Hub",
-      p0:"Research pages provide contextual references and methodological notes that inform the site’s structural philosophy. This layer is informational only.",
-      note0:"No monetization. No lead capture. No affiliate positioning. Plain-text references only."
+      p0:"Research pages provide contextual references and structured notes that inform the site’s engineering philosophy. This layer is informational only.",
+      note0:"No monetization. No lead capture. No affiliate positioning. Plain-text references and verifiable sources only."
     },
     zh:{
       k0:"研究",
       h0:"研究枢纽",
-      p0:"研究页面提供背景参考与方法论笔记，用于支撑本网站的结构哲学。本层仅用于信息与研究。",
-      note0:"无变现、无获客、无联盟、仅纯文本引用。"
+      p0:"研究页面提供背景参考与结构化笔记，用于支撑本网站的工程哲学。本层仅用于信息与研究。",
+      note0:"无变现、无获客、无联盟。仅纯文本引用与可验证来源。"
     },
     es:{
       k0:"INVESTIGACIÓN",
       h0:"Centro de investigación",
-      p0:"Las páginas de investigación aportan referencias contextuales y notas metodológicas que informan la filosofía estructural del sitio. Solo informativo.",
-      note0:"Sin monetización. Sin captación. Sin afiliados. Solo texto."
+      p0:"Las páginas de investigación aportan referencias contextuales y notas estructuradas que informan la filosofía de ingeniería del sitio. Solo informativo.",
+      note0:"Sin monetización. Sin captación. Sin afiliados. Solo texto y fuentes verificables."
     }
   };
   var H=HEAD[lang]||HEAD.en;
@@ -359,48 +367,69 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("p0").textContent=H.p0;
   document.getElementById("note0").textContent=H.note0;
 
+  // ===== Research hub cards =====
   var SECTIONS=[
     {
       t:P("Industry Context","行业背景","Contexto industrial"),
-      s:P("Engineering-led construction benchmarks and case studies.","工程主导的施工基准与案例。","Referencias y casos de ingeniería."),
+      s:P("Engineering-led construction benchmarks and structured case studies.","工程主导的施工基准与结构化案例。","Benchmarks y casos estructurados."),
       bubbles:[
         {h:P("Open: Industry Context","打开：行业背景","Abrir: Contexto industrial"),
          p:P(
-          "Benchmarks across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management. Structured into categories and sub-bubbles to reduce clutter.",
-          "覆盖暖通、屋面、保温、门窗、管道与雨水管理的基准集合。以“类别+子气泡”结构降低杂乱。",
-          "Benchmarks en HVAC, techos, aislamiento, ventanas, plomería y lluvia, estructurados por categorías para reducir desorden."
+          "Benchmarks across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management—organized into categories and sub-bubbles.",
+          "覆盖暖通、屋面、保温、门窗、管道与雨水管理的基准集合——按类别与子气泡组织。",
+          "Benchmarks en HVAC, techos, aislamiento, ventanas, plomería y lluvia—organizados por categorías."
          ),
          route:"/research/industry-context/"
         },
-        {h:P("What this is not","这不是","Lo que no es"),
+        {h:P("How to use this","使用方法","Cómo usarlo"),
          p:P(
-          "No brand ranking. No product comparison. No endorsement. References are contextual only.",
-          "不做品牌排名、不做产品对比、不做背书。仅背景参考。",
-          "Sin rankings, sin comparación de productos, sin respaldo. Solo contexto."
+          "Use Industry Context to anchor terminology and identify innovation patterns. It is not a ranking or comparison surface.",
+          "行业背景用于锚定术语并提取创新模式；它不是排名或对比页面。",
+          "Úsalo para anclar términos y extraer patrones; no es ranking ni comparación."
+         )}
+      ]
+    },
+    {
+      t:P("Testimonials (Public)","评价索引（公开）","Testimonios (públicos)"),
+      s:P("Publicly verifiable reviews linked to original sources.","可公开验证的评价，链接到原始来源。","Reseñas verificables enlazadas a fuentes originales."),
+      bubbles:[
+        {h:P("Open: Testimonials","打开：评价索引","Abrir: Testimonios"),
+         p:P(
+          "Indexes publicly verifiable testimonials and routes to original public sources. Review text remains the property of its author and platform.",
+          "索引可公开验证的评价，并路由到原始公开来源。评价文本归作者与平台所有。",
+          "Indexa testimonios verificables y enlaza a sus fuentes públicas. El texto pertenece al autor y plataforma."
+         ),
+         route:"/research/testimonials/"
+        },
+        {h:P("Constraints","约束","Restricciones"),
+         p:P(
+          "No phone numbers. No private customer notes. No implied affiliation. This is a verifiable index, not a referral directory.",
+          "不公开电话号码；不公开私密客户备注；不暗示隶属。这是可验证索引，不是转介绍通讯录。",
+          "Sin teléfonos. Sin notas privadas. Sin afiliación implícita. Es un índice verificable, no un directorio."
          )}
       ]
     },
     {
       t:P("Method Notes (Reserved)","方法论笔记（预留）","Notas de método (reservado)"),
-      s:P("Reserved for formal measurement notes and evaluation procedures.","预留：测量笔记与评估流程。","Reservado: medición y procedimientos."),
+      s:P("Reserved for measurement rules, bounds, and evaluation procedures.","预留：测量规则、边界与评估流程。","Reservado: reglas, límites y procedimientos."),
       bubbles:[
         {h:P("Purpose","用途","Propósito"),
          p:P(
-          "This slot is reserved for research methodology notes that explain how bounds, signals, and deployment gates are defined without marketing language.",
-          "该栏预留用于方法论说明：如何定义边界、信号与部署闸门（无营销语言）。",
-          "Espacio reservado para notas metodológicas: límites, señales y compuertas sin lenguaje de marketing."
+          "Reserved for formal documentation of measurement logic and evaluation procedures written in neutral language.",
+          "预留用于以中性语言记录测量逻辑与评估流程。",
+          "Reservado para documentar lógica de medición y procedimientos con lenguaje neutral."
          )}
       ]
     },
     {
       t:P("Field Notes (Reserved)","现场笔记（预留）","Notas de campo (reservado)"),
-      s:P("Reserved for observational notes and applied engineering documentation.","预留：观察笔记与工程应用记录。","Reservado: observaciones y documentación aplicada."),
+      s:P("Reserved for time-stamped observations and applied engineering notes.","预留：带时间戳的观察与工程应用笔记。","Reservado: observaciones con fecha y notas aplicadas."),
       bubbles:[
         {h:P("Purpose","用途","Propósito"),
          p:P(
-          "This slot is reserved for neutral, time-stamped observations and applied notes, with no claims beyond what is directly observed.",
-          "该栏预留用于中性时间戳观察与应用笔记：不做超出直接观察的主张。",
-          "Reservado para observaciones neutrales con marca de tiempo; sin afirmaciones más allá de lo observado."
+          "Reserved for observational notes with no claims beyond directly observed evidence.",
+          "预留用于观察笔记：不做超出直接观察证据的主张。",
+          "Reservado para notas observacionales sin afirmaciones más allá de lo observado."
          )}
       ]
     }

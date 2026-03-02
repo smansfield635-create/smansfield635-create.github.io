@@ -1,15 +1,22 @@
 <!doctype html>
 <!-- TNT — /research/index.html
-     RESEARCH HUB · LEAFGUARD HIGHLIGHT + SEPARATE INDUSTRY BENCHMARKS
-     ENGLISH ONLY
-     GOALS:
-       - Preface highlights LeafGuard as the dataset anchor (100-customer field study)
-       - Keep the other industry benchmark companies separate under Industry Context (no mixing)
-       - Dense, structured, readable
-     RULES:
-       - Informational only; no monetization; no lead capture; no affiliates
-       - No logos/images; no implied partnerships
+     RESEARCH HUB · DUAL LENS (NARRATIVE / ENGINEERING)
+     GOAL:
+       - Lead from the front with the 100-customer dataset (pedestal)
+       - Keep everything else as parallel correlative context
+       - SAME page supports two lenses without losing density
+     LENS RULE:
+       - Narrative lens = homeowner-readable, TED clarity
+       - Engineering lens = constraint + dataset language
+       - BOTH lenses apply to the two preface sections:
+           (1) Primary Dataset pedestal
+           (2) Engineering Context
+       - The lower framework cards remain neutral (single voice)
+     CONSTRAINTS:
+       - English only
+       - No logos, no images, no implied partnerships
        - No URLs displayed in body text
+       - No star icons, no ranking language
        - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new gd_* keys)
        - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
@@ -33,20 +40,26 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --dockH:112px;
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.82);
-  --mut2:rgba(255,255,255,.70);
   --shadowA:0 28px 100px rgba(0,0,0,.65);
-  --shadowB:0 18px 60px rgba(0,0,0,.55);
-
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-  --goldSoft:rgba(201,162,74,.18);
+  --gold:rgba(201,162,74,.18);
 }
 
-/* Top */
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  position:relative;
+  z-index:10;
+}
+
+/* TOP BUTTONS */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -55,129 +68,90 @@ body::before,body::after{pointer-events:none!important}
   z-index:240;
   pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
-  pointer-events:auto;
-}
-
-/* Button */
+.top .left,.top .right{display:flex;gap:10px;flex-wrap:wrap;pointer-events:auto}
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  display:inline-flex;align-items:center;justify-content:center;
   padding:10px 12px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  background:rgba(0,0,0,.22);
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
   touch-action:manipulation;
-  box-shadow:var(--shadowB);
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
 }
 
-/* Page */
-.page{
-  width:min(980px,94vw);
-  margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:10;
-}
-
-/* Preface (dominant) */
-.preface{
-  border:1px solid var(--stroke);
-  border-radius:26px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
-  box-shadow:var(--shadowA);
-  position:relative;
-  overflow:hidden;
-}
-.preface::before{
-  content:"";
-  position:absolute;inset:0;border-radius:26px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.22;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-}
-
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
-.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink)}
-.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px}
-.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55}
-.metric{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  font-size:13.5px;
-  line-height:1.55;
-  color:rgba(255,255,255,.84);
-}
-.actions{
-  margin-top:12px;
+/* LENS TOGGLE */
+.lensRow{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   justify-content:flex-end;
 }
+.pill{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
+    rgba(0,0,0,.18);
+  color:var(--ink);
+  font-weight:950;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(255,255,255,.32);
+  box-shadow:0 0 18px rgba(255,43,43,.16);
+}
+
+/* PREFACE SECTIONS */
+.section{
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
+  box-shadow:var(--shadowA);
+}
+.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--mut);margin:0 0 8px}
+.h1{font-weight:980;font-size:28px;margin:0 0 12px;color:var(--ink)}
+.p{line-height:1.75;color:var(--mut);font-size:15.25px;margin:0 0 12px}
+.metric{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(0,0,0,.18);
+  font-size:14px;
+  line-height:1.6;
+  color:var(--mut);
+}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;justify-content:flex-end}
 .actions .btn{border-radius:999px;padding:10px 14px}
 
-/* Accordion */
+/* FRAMEWORK CARDS */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
-  background:linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
   overflow:hidden;
-  position:relative;
-}
-.card::after{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowA);
 }
 .head{
-  padding:16px 16px;
-  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  padding:16px;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
 }
-.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
-.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
-.chev{font-weight:980;opacity:.7}
-.body{display:none;padding:16px 16px 18px;border-top:1px solid rgba(255,255,255,.08)}
+.title{font-weight:950;font-size:16.5px}
+.sub{margin-top:6px;font-size:13.25px;color:rgba(255,255,255,.82)}
+.body{display:none;padding:16px;border-top:1px solid rgba(255,255,255,.08)}
 .card.open .body{display:block}
-.body p{margin:0 0 12px;line-height:1.75;color:var(--mut);font-size:14.75px}
+.body p{margin:0 0 12px;line-height:1.7;color:rgba(255,255,255,.84)}
 
 /* Dock */
 .dock{
@@ -185,7 +159,8 @@ body::before,body::after{pointer-events:none!important}
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:min(980px,94vw);
-  padding:12px;border-radius:22px;
+  padding:12px;
+  border-radius:22px;
   border:1px solid var(--stroke);
   background:rgba(0,0,0,.22);
   display:grid;
@@ -207,49 +182,48 @@ body::before,body::after{pointer-events:none!important}
 <div class="top" aria-label="Top controls">
   <div class="left">
     <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-    <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY</a>
     <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY BENCHMARKS</a>
+    <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY EVIDENCE</a>
   </div>
-  <div class="right" aria-label="Controls">
-    <span class="btn" style="pointer-events:none;opacity:.9">EN</span>
+  <div class="right">
+    <div class="lensRow" aria-label="Lens toggle">
+      <button class="pill active" id="pillNarrative" type="button">NARRATIVE</button>
+      <button class="pill" id="pillEngineering" type="button">ENGINEERING</button>
+    </div>
   </div>
 </div>
 
 <div class="page">
 
-  <!-- PREFACE: FIELD DATASET ANCHOR (HIGHLIGHT) -->
-  <section class="preface" aria-label="Preface anchor">
-    <p class="k">RESEARCH · PREFACE</p>
-    <h1 class="h1">100-Customer Field Case Study (Dataset Anchor)</h1>
+  <!-- PRIMARY DATASET PEDESTAL -->
+  <section class="section" aria-label="Primary dataset">
+    <p class="k">PRIMARY DATASET</p>
+    <h1 class="h1" id="hDataset">100-Customer Field Study (Rainwater Management)</h1>
 
-    <p class="p0">
-      This preface anchors the Research layer to one deep dataset: the first 100 residential rainwater management installations I completed in the field.
-      It is presented as structured observation under constraint.
-    </p>
+    <p class="p" id="pDataset1"></p>
+    <p class="p" id="pDataset2"></p>
 
-    <p class="p0">
-      LeafGuard is the deployed system within this dataset, so it appears as the dataset common denominator.
-      The purpose is not ranking or comparison; the purpose is repetition documentation.
-    </p>
-
-    <div class="metric">
-      <div><strong>Anchor:</strong> 100-installation dataset</div>
-      <div><strong>Evidence surfaces:</strong> reference index · review-present subset · claim mapping · warranty mapping</div>
-      <div><strong>Boundary:</strong> descriptive only · no competitor comparisons · no performance ranking</div>
-    </div>
+    <div class="metric" id="metricBox"></div>
 
     <div class="actions">
-      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD STUDY</a>
-      <a class="btn" id="goIndustry" href="/research/industry-context/">OPEN INDUSTRY BENCHMARKS</a>
+      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD EVIDENCE</a>
     </div>
-
-    <p class="note0">
-      Industry benchmarks (the other companies) remain separate by design on the Industry Benchmarks page.
-      This avoids mixing neutral references with a single deployed dataset.
-    </p>
   </section>
 
-  <!-- HUB ACCORDION -->
+  <!-- PARALLEL CORRELATIVE CONTEXT -->
+  <section class="section" aria-label="Engineering context">
+    <p class="k">PARALLEL CORRELATIVE CONTEXT</p>
+    <h1 class="h1" id="hContext">Engineering Context (Parallel, Not Comparative)</h1>
+
+    <p class="p" id="pContext1"></p>
+    <p class="p" id="pContext2"></p>
+
+    <div class="actions">
+      <a class="btn" id="goIndustry" href="/research/industry-context/">OPEN INDUSTRY BENCHMARKS</a>
+    </div>
+  </section>
+
+  <!-- STRUCTURAL FRAMEWORK (NEUTRAL) -->
   <div class="stack" id="stack"></div>
 
 </div>
@@ -292,35 +266,90 @@ body::before,body::after{pointer-events:none!important}
     if(el) el.href = path + q();
   }
 
+  // top
   wire("btnIndex","/index.html");
-  wire("btnEvidence","/research/testimonials/");
   wire("btnIndustry","/research/industry-context/");
+  wire("btnEvidence","/research/testimonials/");
   wire("goEvidence","/research/testimonials/");
   wire("goIndustry","/research/industry-context/");
 
+  // dock
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  var CARDS = [
+  // Lens copy packs
+  var COPY = {
+    narrative:{
+      dataset1:
+        "This research layer leads with the only dataset I can fully stand behind: my first 100 completed residential rainwater management installations. The objective is not promotion. The objective is pattern clarity under real physical constraint.",
+      dataset2:
+        "Across homes with different rooflines, debris loads, fascia conditions, and foundation risk profiles, the same decision and outcome themes repeated. The evidence layer below contains the anchors: references, review-present subset, claim language mapping, and warranty mapping.",
+      metric:
+        "<div><strong>Dataset Size:</strong> 100 installations</div>"+
+        "<div><strong>Observed Decision Pattern:</strong> full-system adoption or deferred timing</div>"+
+        "<div><strong>Observed Partial Substitutions:</strong> none within the dataset window</div>"+
+        "<div><strong>Primary Limiting Variable:</strong> financial timing (observed), not structural objection</div>",
+      context1:
+        "The broader industry context is not here to compete with the dataset. It is here to support correlation: across the building envelope, engineering-led systems tend to stabilize when they reduce failure modes and standardize deployment.",
+      context2:
+        "That is why industry benchmarks are tracked separately: HVAC, roofing, insulation, fenestration, plumbing, and rainwater management all show similar convergence patterns when constraints dominate. This page keeps them parallel, not comparative."
+    },
+    engineering:{
+      dataset1:
+        "Primary dataset: first 100 completed residential installations executed under repeatable field conditions. Objective: document convergence patterns under physical constraints (gravity, debris load, attachment interfaces, termination geometry, storm variance).",
+      dataset2:
+        "Anchor surfaces: reference index, review-present subset, claim-bucket mapping, warranty-bucket mapping. Study posture: descriptive only. No ranking. No competitor comparison. No corporate representations beyond observed dataset boundaries.",
+      metric:
+        "<div><strong>Dataset Size:</strong> 100 installations</div>"+
+        "<div><strong>Outcome Structure:</strong> adoption vs deferral within cohort window</div>"+
+        "<div><strong>Alternative Configurations Observed:</strong> none within cohort window</div>"+
+        "<div><strong>Primary Constraint Driver:</strong> timing of financing (observed variable)</div>",
+      context1:
+        "Parallel correlative context: building-envelope verticals exhibit convergence under constraint. Benchmarks are used to normalize language and classify engineered system evolution (bottlenecked design space is a known artifact of constrained solutions).",
+      context2:
+        "Industry Benchmarks remain separate by design to prevent category mixing: benchmarks are references; the 100-installation cohort is deployed evidence. Correlation is allowed; comparison is excluded."
+    }
+  };
+
+  var lens="narrative";
+  var pillNarr=document.getElementById("pillNarrative");
+  var pillEng=document.getElementById("pillEngineering");
+
+  function applyLens(){
+    pillNarr.classList.toggle("active", lens==="narrative");
+    pillEng.classList.toggle("active", lens==="engineering");
+
+    document.getElementById("pDataset1").textContent = COPY[lens].dataset1;
+    document.getElementById("pDataset2").textContent = COPY[lens].dataset2;
+    document.getElementById("metricBox").innerHTML = COPY[lens].metric;
+
+    document.getElementById("pContext1").textContent = COPY[lens].context1;
+    document.getElementById("pContext2").textContent = COPY[lens].context2;
+  }
+
+  pillNarr.addEventListener("click", function(){ lens="narrative"; applyLens(); });
+  pillEng.addEventListener("click", function(){ lens="engineering"; applyLens(); });
+
+  applyLens();
+
+  // Neutral framework accordion (single voice)
+  var SECTIONS = [
     {
-      title:"Field Study (Evidence Anchors)",
-      sub:"The backing layer: references · reviews · claim mapping · warranty mapping.",
-      body:"This is the evidence surface that supports the dataset anchor. It is built for dense reading while you measure a home.",
-      href:"/research/testimonials/"
+      title:"Field Evidence Structure",
+      sub:"References, review-present subset, claim alignment, warranty correlation.",
+      body:"The evidence layer is intentionally dense. It holds the anchors that back the dataset: (1) reference index (contact on file), (2) review-present subset, (3) claim language buckets, (4) warranty correlation buckets."
     },
     {
-      title:"Industry Benchmarks (Other Companies)",
-      sub:"The separate reference list of industry engineering examples.",
-      body:"This page contains the neutral benchmark list (Carrier, Trane, Lennox, Andersen, Pella, GAF, Owens Corning, CertainTeed, Kohler, and others). It is kept separate intentionally.",
-      href:"/research/industry-context/"
+      title:"Method Boundary",
+      sub:"Descriptive observation only.",
+      body:"This research hub does not rank brands, compare competitors, or publish proprietary performance metrics. It documents observed patterns within a bounded cohort window."
     },
     {
-      title:"Method Framework (Reserved)",
-      sub:"Scope boundaries and evaluation rules to prevent drift as datasets expand.",
-      body:"Reserved for formal measurement rules and scope declarations as the Research layer grows beyond the first 100-installation cohort.",
-      href:"/research/"
+      title:"Expansion Protocol",
+      sub:"Additional cohorts or systems can be added later.",
+      body:"If future datasets are added, they must follow identical evidence rules (reference index, review subset, claim buckets, warranty buckets) to preserve comparability."
     }
   ];
 
@@ -329,83 +358,40 @@ body::before,body::after{pointer-events:none!important}
   function closeAll(){
     stack.querySelectorAll(".card").forEach(function(c){
       c.classList.remove("open");
-      var ch=c.querySelector(".chev");
-      if(ch) ch.textContent="▸";
+      c.querySelector(".chev").textContent="▸";
     });
   }
 
-  function makeCard(c, idx){
+  SECTIONS.forEach(function(s,i){
     var card=document.createElement("div");
     card.className="card";
 
     var head=document.createElement("div");
     head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var left=document.createElement("div");
-    left.style.minWidth="0";
-
-    var ti=document.createElement("div");
-    ti.className="ti";
-    ti.textContent=c.title;
-
-    var si=document.createElement("div");
-    si.className="si";
-    si.textContent=c.sub;
-
-    left.appendChild(ti);
-    left.appendChild(si);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
+    head.innerHTML='<div><div class="title">'+s.title+'</div><div class="sub">'+s.sub+'</div></div><div class="chev">▸</div>';
 
     var body=document.createElement("div");
     body.className="body";
+    body.innerHTML='<p>'+s.body+'</p>';
 
-    var p=document.createElement("p");
-    p.textContent=c.body;
-    body.appendChild(p);
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-    var a=document.createElement("a");
-    a.className="btn";
-    a.textContent="OPEN";
-    a.href=c.href + q();
-    actions.appendChild(a);
-    body.appendChild(actions);
-
-    function toggle(){
-      var isOpen=card.classList.contains("open");
+    head.addEventListener("click", function(){
+      var openNow=!card.classList.contains("open");
       closeAll();
-      if(!isOpen){
+      if(openNow){
         card.classList.add("open");
-        chev.textContent="▾";
+        head.querySelector(".chev").textContent="▾";
       }
-    }
-
-    head.addEventListener("click", toggle);
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
     card.appendChild(head);
     card.appendChild(body);
+    stack.appendChild(card);
 
-    if(idx===0){
+    if(i===0){
       card.classList.add("open");
-      chev.textContent="▾";
+      head.querySelector(".chev").textContent="▾";
     }
-
-    return card;
-  }
-
-  CARDS.forEach(function(c,i){ stack.appendChild(makeCard(c,i)); });
+  });
 
 })();
 </script>

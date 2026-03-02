@@ -1,24 +1,26 @@
 <!doctype html>
 <!-- TNT — /laws/index.html
-     LAWS · CANONICAL (7 LAWS) · 4 LENSES · 3 LANG (EN/中文/ES) · MOBILE SAFE · DENSE
-     UPDATE: ADD BACKGROUND CONTEXT (FESTIVAL NIGHT / LANTERN / FIREWORKS — BEHIND CONTENT)
-     LENSES (NO NEW gd_* KEYS):
-       - INFORMAL   = style=informal & depth=explore
-       - FORMAL     = style=formal   & depth=explore
-       - PLATFORM   = style=informal & depth=learn
-       - ENGINEERING= style=formal   & depth=learn
-     RULES:
-       - Accordion only (no modals/overlays)
-       - Single-open accordion (auto-close others; tap same closes)
-       - Red signal gradient + diamond markers
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - Uses ui.css + branch.css + instruments.js
-       - Does NOT style html/body background (ui.css owns field)
-       - No inline onclick; addEventListener only
+     LAWS · CANONICAL (7 LAWS) · NEW STANDARD (INFORMAL SITE LAYER)
+     LENSES (VISIBLE):
+       - LANE: platform|engineering (URL-only, NOT stored)
+       - LANG: EN / 中文 / ES (gd_lang + URL)
+     STATE (CANON ONLY, NO NEW gd_* KEYS):
+       - gd_lang, gd_style, gd_time, gd_depth
+       - This informal-layer page pins:
+           style = informal
+           depth = explore
+       - Preserves URL query: lang/style/time/depth/lane
+     UX:
+       - Single-open accordion (tap same closes)
+       - Changing LANG or LANE does NOT reload and does NOT close the open law
+       - No modals/overlays; no inline onclick; addEventListener only
+     BACKGROUND:
+       - Festival night / lantern / fireworks context behind content (NOT body)
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -34,11 +36,10 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOKENS ===== */
 :root{
   --dockH:112px;
 
-  /* high-contrast red/black/gold (avoid washed blue) */
+  /* high-contrast red/black/gold */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
@@ -61,7 +62,7 @@ body::before,body::after{pointer-events:none!important}
   --shadowB:0 16px 52px rgba(0,0,0,.60);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 
-  --fsH:28px;   /* monument-type tuned for mobile */
+  --fsH:28px;
   --fsP:14.75px;
 }
 
@@ -79,7 +80,6 @@ body::before,body::after{pointer-events:none!important}
   flex-wrap:wrap;white-space:nowrap;
   pointer-events:auto;
 }
-.top .btn{white-space:nowrap}
 
 /* Button (gold under-light only) */
 .btn{
@@ -95,6 +95,7 @@ body::before,body::after{pointer-events:none!important}
   position:relative;overflow:hidden;
   touch-action:manipulation;
   box-shadow:var(--shadowC);
+  white-space:nowrap;
 }
 .btn:active{transform:translateY(1px)}
 .btn::after{
@@ -104,6 +105,28 @@ body::before,body::after{pointer-events:none!important}
   opacity:.60;pointer-events:none;
 }
 .btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
 
 /* ===== PAGE ===== */
 .page{
@@ -153,7 +176,6 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
     radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-
     conic-gradient(from 12deg at 30% 28%,
       rgba(201,162,74,.14), transparent 12%,
       rgba(255,43,43,.12), transparent 24%,
@@ -164,7 +186,6 @@ body::before,body::after{pointer-events:none!important}
       rgba(201,162,74,.12), transparent 28%,
       rgba(90,40,120,.10), transparent 44%,
       transparent 100%),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
   opacity:.72;
@@ -187,7 +208,6 @@ body::before,body::after{pointer-events:none!important}
   padding:16px 16px 14px;
   overflow:hidden;
 }
-/* Red signal rim + gold diamond lay in trim zone */
 .header::before{
   content:"";
   position:absolute;inset:0;border-radius:22px;pointer-events:none;
@@ -207,7 +227,6 @@ body::before,body::after{pointer-events:none!important}
 .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.74;color:var(--mut)}
 .t{margin:0;font-weight:950;font-size:var(--fsH);letter-spacing:.7px;line-height:1.12;color:var(--ink)}
 .s{margin:10px 0 0;font-size:var(--fsP);opacity:.92;line-height:1.55;color:var(--txt);max-width:980px}
-.fine{margin-top:10px;font-size:12.75px;opacity:.80;line-height:1.45;color:var(--mut)}
 .rule{
   margin-top:12px;
   border-radius:18px;
@@ -221,8 +240,9 @@ body::before,body::after{pointer-events:none!important}
   font-size:13px;
   line-height:1.5;
 }
+.fine{margin-top:10px;font-size:12.75px;opacity:.80;line-height:1.45;color:var(--mut)}
 
-/* ===== LENSES (4) ===== */
+/* Lens row (NEW STANDARD) */
 .lensRow{
   margin-top:12px;
   display:flex;
@@ -231,38 +251,7 @@ body::before,body::after{pointer-events:none!important}
   flex-wrap:wrap;
   align-items:center;
 }
-.pills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.pill{
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  box-shadow:0 14px 36px rgba(0,0,0,.65);
-  cursor:pointer;
-  font-weight:950;
-  letter-spacing:.2px;
-  color:#fff;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  min-height:44px;
-  position:relative;
-  overflow:hidden;
-}
-.pill::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.26), transparent 72%);
-  opacity:.45;pointer-events:none;
-}
-.pill.active{
-  border-color:rgba(255,43,43,.32);
-  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px var(--sigR);
-}
-.pill.dim{border-color:rgba(201,162,74,.22)}
-.pill.dim.active{border-color:rgba(255,43,43,.32)}
-.lensState{
+.statePill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
@@ -336,7 +325,7 @@ body::before,body::after{pointer-events:none!important}
   font-size:16.5px;
   color:var(--ink);
 }
-.sub{
+.sub2{
   margin-top:6px;
   font-size:13.25px;
   opacity:.88;
@@ -387,18 +376,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .ul li{margin:6px 0}
 
-.smallband{
-  margin-top:12px;
-  padding:9px 10px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  font-weight:950;
-  letter-spacing:.15px;
-  color:rgba(255,255,255,.86);
-  font-size:13px;
-}
-
 .actions{
   display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px;
 }
@@ -436,14 +413,16 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
-    <a class="btn" id="btnPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
-    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
+    <a class="btn" id="btnPrelude" data-route="/prelude/" href="/prelude/">PRELUDE</a>
+    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
   </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
   </div>
 </div>
 
@@ -458,16 +437,12 @@ body::before,body::after{pointer-events:none!important}
     <div class="rule" id="ruleTop"></div>
     <div class="fine" id="fine"></div>
 
-    <div class="lensRow" aria-label="Lenses">
-      <div class="pills">
-        <button class="pill" id="pillInformal" type="button">INFORMAL</button>
-        <button class="pill" id="pillFormal" type="button">FORMAL</button>
-        <button class="pill dim" id="pillPlatform" type="button">PLATFORM</button>
-        <button class="pill dim" id="pillEngineering" type="button">ENGINEERING</button>
+    <div class="lensRow" aria-label="Lens row">
+      <div class="seg" role="group" aria-label="Lane">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
       </div>
-      <div class="pills">
-        <span class="lensState" id="lensState">—</span>
-      </div>
+      <div class="statePill" id="lensState">—</div>
     </div>
   </div>
 
@@ -477,29 +452,32 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
-  <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
+  <a class="btn" id="dockIndex" data-route="/index.html" href="/index.html">COMPASS</a>
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
   "use strict";
 
-  // ===== canonical state (NO NEW gd_* KEYS) =====
+  // =======================
+  // STATE (CANON ONLY)
+  // =======================
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
   var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || "platform";  // URL-only
+  var style = "informal";                    // PINNED (informal layer)
+  var depth = "explore";                     // PINNED (informal layer)
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
     LS.setItem("gd_lang",lang);
@@ -510,40 +488,286 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
+  function q(extra){
+    var p=new URLSearchParams();
+    p.set("lang",(extra&&extra.lang)?extra.lang:lang);
+    p.set("style","informal");
+    p.set("time",(extra&&extra.time)?extra.time:time);
+    p.set("depth","explore");
+    p.set("lane",(extra&&extra.lane)?extra.lane:lane);
+    return "?"+p.toString();
   }
 
-  // ===== lens mapping (4 lenses using existing keys only) =====
-  function lensKey(){
-    if(style==="formal" && depth==="learn") return "engineering";
-    if(style==="informal" && depth==="learn") return "platform";
-    if(style==="formal") return "formal";
-    return "informal";
+  // =======================
+  // COPY
+  // =======================
+  function pick3(en,zh,es){
+    return (lang==="zh")?zh:(lang==="es")?es:en;
+  }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openWord(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
   }
 
-  function setLens(k){
-    if(k==="engineering"){ style="formal"; depth="learn"; }
-    else if(k==="platform"){ style="informal"; depth="learn"; }
-    else if(k==="formal"){ style="formal"; depth="explore"; }
-    else { style="informal"; depth="explore"; }
+  var HEADER_COPY = {
+    en:{
+      hs_platform:"These laws keep meaning honest. Platform lens explains what you can do next and where the boundaries live.",
+      hs_engineering:"These laws keep meaning honest. Engineering lens states boundaries precisely and refuses escalation without receipts.",
+      rule:"Rule: big ideas are welcome. Unbounded claims are not. When evidence changes, the epoch changes.",
+      fine:"This site layer is INFORMAL by design. Only the perspective changes: PLATFORM vs ENGINEERING."
+    },
+    zh:{
+      hs_platform:"这些法则让含义保持诚实。平台透镜解释下一步怎么走，边界在哪里。",
+      hs_engineering:"这些法则让含义保持诚实。工程透镜更精确地陈述边界，拒绝无收据升级。",
+      rule:"规则：欢迎大想法；不允许无界主张。证据变了，纪元就必须变。",
+      fine:"本层为非正式公众层。只切换视角：平台 vs 工程。"
+    },
+    es:{
+      hs_platform:"Estas leyes mantienen el significado honesto. Lente PLATAFORMA explica el siguiente paso y dónde viven los límites.",
+      hs_engineering:"Estas leyes mantienen el significado honesto. Lente INGENIERÍA declara límites con precisión y bloquea escalación sin recibos.",
+      rule:"Regla: se permiten ideas grandes. No se permiten afirmaciones sin límites. Si cambia evidencia, cambia época.",
+      fine:"Esta capa es informal por diseño. Solo cambia la perspectiva: PLATAFORMA vs INGENIERÍA."
+    }
+  };
 
-    try{
-      LS.setItem("gd_style",style);
-      LS.setItem("gd_depth",depth);
-    }catch(e){}
+  // Laws: title/sub are trilingual; body is lane+lang
+  var LAWS = [
+    {
+      c:"#ff2b2b",
+      t:{en:"Coherence Constraint Law", zh:"一致性约束法则", es:"Ley de Restricción de Coherencia"},
+      s:{en:"External trust cannot exceed internal self-consistency under the same evidence.",
+         zh:"同证据下：外部信任不可能超过内部自洽。",
+         es:"La confianza externa no puede exceder la consistencia interna con la misma evidencia."},
+      platform:{
+        en:{
+          p:[
+            "If words and actions don’t match, pressure exposes it. Coherence is the gap between what is said, what is done, and what happens next.",
+            "Platform use: keep pages honest—route to Laws for bounds and Gauges for signals before scaling."
+          ],
+          ul:["Mismatch grows when you scale.","Confusion accelerates instability once present.","Contain first when mismatch rises."]
+        },
+        zh:{
+          p:[
+            "如果言行不一致，压力会把它照出来。一致性就是“说了什么、做了什么、结果是什么”之间的差。",
+            "平台用法：先用法则定边界，再用量规定信号，然后才允许扩张。"
+          ],
+          ul:["规模会放大错配。","一旦出现不稳，困惑会加速级联。","错配上升先隔离。"]
+        },
+        es:{
+          p:[
+            "Si palabras y acciones no coinciden, la presión lo expone. Coherencia es la brecha entre lo dicho, lo hecho y lo que ocurre después.",
+            "Uso plataforma: rutas honestas—Leyes para límites y Medidores para señales antes de escalar."
+          ],
+          ul:["La brecha crece al escalar.","La confusión acelera la inestabilidad.","Primero contener cuando sube el desajuste."]
+        }
+      },
+      engineering:{
+        en:{
+          p:[
+            "Constraint form: external trust/honesty/respect cannot exceed internal consistency under identical scope and evidence.",
+            "Fragmentation is measurable mismatch (values/actions/outcomes). Corrections require epoch rollover."
+          ],
+          ul:["Deterministic admissibility under fixed inputs.","No intent inference; observed behavior only.","Correction ⇒ new epoch."]
+        },
+        zh:{
+          p:[
+            "约束形式：在相同范围与证据下，外部信任/诚实/尊重不可能超过内部自洽。",
+            "碎片化=价值/行动/结果的可测错配。修正必须开新纪元。"
+          ],
+          ul:["固定输入下输出必须确定。","禁止意图推断，只看行为信号。","修正 ⇒ 新纪元。"]
+        },
+        es:{
+          p:[
+            "Forma de restricción: confianza/honestidad/respeto externos no pueden exceder consistencia interna con alcance y evidencia idénticos.",
+            "Fragmentación = desajuste medible (valores/acciones/resultados). Corrección ⇒ nueva época."
+          ],
+          ul:["Admisibilidad determinista.","Sin inferir intención; solo conducta.","Corrección ⇒ nueva época."]
+        }
+      }
+    },
 
-    window.location.href = window.location.pathname + q();
+    {
+      c:"#c9a24a",
+      t:{en:"Non-Contradiction Law", zh:"不矛盾法则", es:"Ley de No-Contradicción"},
+      s:{en:"Same scope + same receipts cannot produce two different truths.",
+         zh:"同范围同收据不可能产出两种相反结论。",
+         es:"Mismo alcance + mismos recibos no pueden producir dos verdades distintas."},
+      platform:{
+        en:{p:["If two people disagree on the same receipts, the scope or rules are different. Otherwise the system is broken.","Platform use: force disagreement into scope, receipts, or version—never vibes."],
+            ul:["Disagreement ⇒ check scope.","Then check missing receipts.","Then check rule version."]},
+        zh:{p:["如果同收据却结论相反，说明范围或规则不同。否则系统坏了。","平台用法：把分歧压回到范围/收据/版本，而不是感觉。"],
+            ul:["先查范围。","再查缺收据。","再查规则版本。"]},
+        es:{p:["Si hay desacuerdo con los mismos recibos, el alcance o las reglas difieren. Si no, el sistema está roto.","Uso plataforma: empuja el conflicto a alcance/recibos/versión, no a sensaciones."],
+            ul:["Primero alcance.","Luego recibos faltantes.","Luego versión de reglas."]}
+      },
+      engineering:{
+        en:{p:["Determinism requirement: within fixed scope and measurement rules, outputs must be identical for identical inputs.","Fix is specification + version bump, not debate."],
+            ul:["No silent scope changes.","No post-hoc semantic swaps.","Fix ⇒ epoch bump."]},
+        zh:{p:["确定性要求：固定范围与测量规则下，同输入必须同输出。","修复=规格化+版本提升，不是争论。"],
+            ul:["禁止静默改范围。","禁止事后换语义。","修复 ⇒ 新纪元。"]},
+        es:{p:["Requisito de determinismo: con alcance y reglas fijas, entradas idénticas ⇒ salidas idénticas.","Arreglo = especificación + versión, no debate."],
+            ul:["Sin cambios silenciosos de alcance.","Sin intercambio semántico post-hoc.","Arreglo ⇒ nueva época."]}
+      }
+    },
+
+    {
+      c:"#93c5fd",
+      t:{en:"Scope Precedes Authority", zh:"范围先于权力", es:"El Alcance Precede a la Autoridad"},
+      s:{en:"Before you claim, define the map you’re claiming inside.",
+         zh:"先定地图，再谈主张。",
+         es:"Antes de afirmar, define el mapa donde afirmas."},
+      platform:{
+        en:{p:["Most bad arguments are missing scope. People debate inside different maps and call it disagreement.","Platform use: every page must state what it will do—and what it refuses to do."],
+            ul:["Define boundaries first.","If scope moves, restart.","No infinite ‘away’ thinking."]},
+        zh:{p:["很多争论只是缺范围：大家在不同地图里吵。","平台用法：每页必须说清“做什么/不做什么”。"],
+            ul:["先定边界。","范围变了就重来。","不要用“无限扔掉”思维。"]},
+        es:{p:["Muchos malos debates son falta de alcance. Se discute en mapas distintos.","Uso plataforma: cada página declara qué hará y qué no hará."],
+            ul:["Definir límites primero.","Si cambia el alcance, reiniciar.","No ‘afuera’ infinito."]}
+      },
+      engineering:{
+        en:{p:["Scope is an input: epoch bounds, anchors, lanes, and measurement rules. Scope mutation invalidates conclusions.","Undefined scope ⇒ UNDETERMINED output."],
+            ul:["Scope is part of evidence.","Mutation ⇒ new epoch.","No retroactive widening."]},
+        zh:{p:["范围是输入：纪元边界、锚点、车道、测量规则。范围变更会使结论失效。","范围不明 ⇒ 输出 UNDETERMINED。"],
+            ul:["范围属于证据。","变更 ⇒ 新纪元。","禁止追溯性扩张。"]},
+        es:{p:["Alcance = entrada: límites de época, anclajes, carriles y reglas de medición. Mutación invalida conclusiones.","Alcance indefinido ⇒ UNDETERMINED."],
+            ul:["El alcance es evidencia.","Mutación ⇒ nueva época.","Sin ampliación retroactiva."]}
+      }
+    },
+
+    {
+      c:"#60a5fa",
+      t:{en:"Admissibility Law", zh:"可采信法则", es:"Ley de Admisibilidad"},
+      s:{en:"Upgrades require receipts. Missing receipts block escalation.",
+         zh:"升级需要收据；缺收据就禁止升级。",
+         es:"Las mejoras requieren recibos; sin recibos no hay escalación."},
+      platform:{
+        en:{p:["This is the anti-hype law. You don’t level up because you feel confident. You level up because receipts exist.","Platform use: separate Vision (future) from Products (usable) and Gauges (signals)."],
+            ul:["Receipts-first.","If missing: hold/contain.","No storytelling upgrades."]},
+        zh:{p:["这是反噱头法则：不是因为“感觉”升级，而是因为收据齐全升级。","平台用法：把愿景/产品/量规划分清楚，防止混淆。"],
+            ul:["收据优先。","缺收据：HOLD/CONTAIN。","禁止叙事升级。"]},
+        es:{p:["Ley anti-hype: no subes por sentirte listo; subes por recibos.","Uso plataforma: separar Visión (futuro), Productos (usable), Medidores (señales)."],
+            ul:["Recibos primero.","Si faltan: hold/contain.","Sin escalación narrativa."]}
+      },
+      engineering:{
+        en:{p:["Admissibility is a binary gate under declared scope and rules. Claims cannot exceed the evidence stream.","Missing receipts force NOT MEASURED / UNDETERMINED with reason codes."],
+            ul:["Binary gating.","Reason-coded outputs.","No inference without data."]},
+        zh:{p:["可采信是二元闸门：声明范围与规则下，主张不得超过证据流。","缺收据 ⇒ NOT MEASURED / UNDETERMINED（带原因码）。"],
+            ul:["二元闸门。","原因码输出。","无数据不推断。"]},
+        es:{p:["Admisibilidad = compuerta binaria con alcance/reglas declarados. Afirmaciones no superan evidencia.","Faltan recibos ⇒ NOT MEASURED / UNDETERMINED con códigos de razón."],
+            ul:["Compuerta binaria.","Salidas con razones.","Sin inferencia sin datos."]}
+      }
+    },
+
+    {
+      c:"#34d399",
+      t:{en:"Calibration Authority Law", zh:"校准权威法则", es:"Ley de Autoridad de Calibración"},
+      s:{en:"Calibration authority is exclusive. Non-authority input is data only.",
+         zh:"校准权威是唯一的；非权威输入只能算数据。",
+         es:"La autoridad de calibración es exclusiva; la entrada no-autorizada es solo dato."},
+      platform:{
+        en:{p:["If everyone can calibrate the ruler, the ruler becomes a weapon. This law protects the instrument from politics.","Platform use: clearly separate “submit evidence” from “change rules.”"],
+            ul:["Authority is explicit.","Inputs are welcome, labeled as data.","No crowdsourced ruler."]},
+        zh:{p:["如果人人都能“校准尺子”，尺子就会变成武器。本法则保护工具不被政治化。","平台用法：明确区分“提交证据”与“改规则”。"],
+            ul:["权威必须明确。","输入欢迎，但标注为数据。","禁止众包尺子。"]},
+        es:{p:["Si todos calibran la regla, la regla se vuelve arma. Esta ley protege el instrumento de política.","Uso plataforma: separar “enviar evidencia” de “cambiar reglas”."],
+            ul:["Autoridad explícita.","Entradas bienvenidas como dato.","Sin regla crowdsourced."]}
+      },
+      engineering:{
+        en:{p:["Calibration is protected configuration: tuning thresholds and rule specs are restricted to the authorized calibrator.","Unauthorized tuning is capture risk and invalidates outputs."],
+            ul:["Versioned configs.","Audit logs.","Epoch bump on changes."]},
+        zh:{p:["校准是受保护配置：阈值与规则规格仅限授权校准者。","未授权调参是捕获风险，会使输出失效。"],
+            ul:["配置版本化。","审计日志。","变更 ⇒ 新纪元。"]},
+        es:{p:["La calibración es configuración protegida: umbrales y reglas solo por calibrador autorizado.","Tuning no autorizado = riesgo de captura e invalida salidas."],
+            ul:["Configs versionadas.","Logs de auditoría.","Cambios ⇒ nueva época."]}
+      }
+    },
+
+    {
+      c:"#a3a3a3",
+      t:{en:"Measurable Stability Law", zh:"可测稳定法则", es:"Ley de Estabilidad Medible"},
+      s:{en:"Instability is measurable mismatch that accelerates under scale.",
+         zh:"不稳定是可测错配，在规模下加速。",
+         es:"La inestabilidad es desajuste medible que acelera al escalar."},
+      platform:{
+        en:{p:["People say “something feels off.” This law says: measure it. What changed? What’s drifting?","Platform use: route to Gauges for signals and to Laws for decision bounds."],
+            ul:["Measure before arguing.","Find mismatch + trend.","Fix smallest real cause."]},
+        zh:{p:["人会说“感觉不对”。本法则说：去测。哪里变了？哪里在漂？","平台用法：先去量规看信号，再回法则定边界。"],
+            ul:["先测再争。","找错配+趋势。","修最小真实原因。"]},
+        es:{p:["“Se siente raro” ⇒ medir. ¿Qué cambió? ¿Qué deriva?","Uso plataforma: ir a Medidores por señales y a Leyes por límites."],
+            ul:["Medir antes de discutir.","Encontrar desajuste+tendencia.","Arreglar causa real mínima."]}
+      },
+      engineering:{
+        en:{p:["Stability is preserved alignment between declared values, observed actions, and outcomes under fixed scope.","Instability is the divergence vector and its acceleration over a defined window."],
+            ul:["Windowed evaluation.","Trend/acceleration matters.","Naming lock for comparability."]},
+        zh:{p:["稳定=固定范围下，价值/行为/结果对齐的保持。","不稳定=发散向量及其在窗口内的加速度。"],
+            ul:["窗口评估。","趋势/加速度关键。","命名锁定保证可比。"]},
+        es:{p:["Estabilidad = alineación preservada (valores/acciones/resultados) con alcance fijo.","Inestabilidad = vector de divergencia y su aceleración en una ventana."],
+            ul:["Evaluación por ventanas.","Importa tendencia/aceleración.","Bloqueo de nombres para comparar."]}
+      }
+    },
+
+    {
+      c:"#f59e0b",
+      t:{en:"Containment Prevents Cascade", zh:"隔离阻断级联", es:"La Contención Evita la Cascada"},
+      s:{en:"Keep failure local. Rollback beats collapse.",
+         zh:"把失败变小：回滚胜过崩塌。",
+         es:"Mantén el fallo local. Rollback vence al colapso."},
+      platform:{
+        en:{p:["Containment is intelligence, not fear. A contained failure becomes a lesson; an uncontained failure becomes a disaster.","Platform use: every page must have a clean return—no trap loops."],
+            ul:["Isolate early.","Rollback fast.","Learn without burning the system."]},
+        zh:{p:["隔离是智慧，不是恐惧。隔离的失败是教训，不隔离的失败是灾难。","平台用法：每页必须可安全返回，禁止陷阱循环。"],
+            ul:["早隔离。","快回滚。","学习但不烧毁系统。"]},
+        es:{p:["Contención es inteligencia. Falla contenida = lección; falla no contenida = desastre.","Uso plataforma: cada página tiene retorno limpio; sin bucles trampa."],
+            ul:["Aislar temprano.","Rollback rápido.","Aprender sin quemar el sistema."]}
+      },
+      engineering:{
+        en:{p:["Containment = segmentation + rollback discipline. Limit blast radius and preserve invariants under fault.","Containment actions are reason-coded and logged."],
+            ul:["Segmentation.","Rollback to last stable state.","Exit paths required."]},
+        zh:{p:["隔离=分段+回滚纪律。限制爆炸半径并在故障下守住不变量。","隔离动作必须带原因码并记录。"],
+            ul:["分段。","回滚到最后稳定状态。","必须有退出路径。"]},
+        es:{p:["Contención = segmentación + disciplina de rollback. Limita radio de impacto y preserva invariantes.","Acciones de contención con razones y registro."],
+            ul:["Segmentación.","Rollback a estado estable.","Rutas de salida requeridas."]}
+      }
+    }
+  ];
+
+  // =======================
+  // URL STATE (NO RELOAD)
+  // =======================
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
   }
 
-  // ===== wire all links with full state carry =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyStatic();
+    updateBodies(); // keep open row open
+    wireAll();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyStatic();
+    updateBodies(); // keep open row open
+    wireAll();
+  }
+
+  // =======================
+  // WIRE LINKS (STATE CARRY)
+  // =======================
   function wireAll(){
     var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
@@ -555,10 +779,11 @@ body::before,body::after{pointer-events:none!important}
         try{
           var u=new URL(route, location.origin);
           var sp=u.searchParams;
-          if(!sp.get("lang")) sp.set("lang", lang);
-          if(!sp.get("style")) sp.set("style", style);
-          if(!sp.get("time")) sp.set("time", time);
-          if(!sp.get("depth")) sp.set("depth", depth);
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
           el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
         }catch(e){
           el.setAttribute("href", route);
@@ -569,294 +794,34 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // ===== language toggle (reload same path) =====
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  // ===== lens buttons =====
-  var pillInformal=document.getElementById("pillInformal");
-  var pillFormal=document.getElementById("pillFormal");
-  var pillPlatform=document.getElementById("pillPlatform");
-  var pillEngineering=document.getElementById("pillEngineering");
-
-  // ===== COPY PACKS =====
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-
-  var HEAD = {
-    en:{
-      hs:"What’s the loudest claim you can make without lying? These laws keep every big idea support-bounded so curiosity can scale without collapsing into hype.",
-      rule:"Rule: big ideas are welcome. Unbounded claims are not. Upgrades require receipts. Corrections create a new epoch.",
-      fine:"Lens meaning: Informal = TED clarity. Formal = spec language. Platform = navigation contracts. Engineering = boundary-first constraints."
-    },
-    zh:{
-      hs:"你能说出的最大主张，却又不会撒谎，是什么？这些法则把一切大想法锁在“可支撑边界”内，让好奇心可以扩张而不会坍塌成噱头。",
-      rule:"规则：欢迎大想法；不允许无界主张。升级需要收据；修正会开启新纪元。",
-      fine:"透镜含义：通俗=TED式清晰；正式=规格语言；平台=导航契约；工程=边界优先约束。"
-    },
-    es:{
-      hs:"¿Cuál es la afirmación más grande que puedes hacer sin mentir? Estas leyes mantienen las ideas acotadas por soporte para que la curiosidad escale sin hype.",
-      rule:"Regla: se permiten ideas grandes. No se permiten afirmaciones sin límites. Mejoras requieren recibos. Correcciones crean nueva época.",
-      fine:"Significado: Informal = claridad TED. Formal = especificación. Plataforma = contratos de navegación. Ingeniería = límites/constraints."
-    }
-  };
-
-  // 7 laws (full content preserved)
-  var LAWS = [
-    {
-      c:"#ff2b2b",
-      t:P("Coherence Constraint Law","一致性约束法则","Ley de Restricción de Coherencia"),
-      s:P("External trust cannot exceed internal self-consistency under the same evidence.","同证据下：外部信任不可能超过内部自洽。","La confianza externa no puede exceder la consistencia interna con la misma evidencia."),
-      blocks:{
-        informal:{p:[
-          "If words and actions don’t match, pressure exposes it. Coherence is the measurable gap between what you say, what you do, and what happens next.",
-          "This law is the gravity behind the stack: mismatch amplifies under scale."
-        ],ul:["Mismatch grows when you scale.","Confusion accelerates instability once present.","Contain first when mismatch rises."],bind:"Binds to: Diagnostic · Laws · Gauges."},
-        formal:{p:[
-          "Coherence is bounded by preservation of declared invariants under declared measurement rules. External trust/honesty/respect cannot exceed internal consistency under identical scope/evidence.",
-          "Fragmentation is value/action/outcome mismatch. Corrections require new epoch."
-        ],ul:["Deterministic admissibility under fixed inputs.","No intent inference; observed behavior only.","Correction ⇒ epoch rollover."],bind:"Binds to: observer-invariant evaluation · receipts."},
-        platform:{p:[
-          "Platform posture: the UI must route users to the next clean step without semantic drift. One tap → one outcome, with state preserved.",
-          "If a page can be misread, it will be misread. This law forces honest navigation."
-        ],ul:["Stable labels across pages.","State carry mandatory.","No hidden remaps."],bind:"Binds to: routing contracts."},
-        engineering:{p:[
-          "Engineering posture: coherence is a constraint boundary. Admissibility holds only if invariants are preserved across transitions under declared evidence.",
-          "Containment prevents cascade under correlated exposure."
-        ],ul:["Explicit invariants.","Rollback discipline.","Correlation dominates risk at scale."],bind:"Binds to: containment protocols."}
-      }
-    },
-    {
-      c:"#c9a24a",
-      t:P("Non-Contradiction Law","不矛盾法则","Ley de No-Contradicción"),
-      s:P("Same scope + same receipts cannot produce two different truths.","同范围同收据不可能产出两种相反结论。","Mismo alcance + mismos recibos no pueden producir dos verdades distintas."),
-      blocks:{
-        informal:{p:[
-          "If two people see the same receipts and disagree, the scope or rules are different. Otherwise the system is broken.",
-          "This law turns ‘debate’ into structure: scope, receipts, or rule version."
-        ],ul:["Disagreement ⇒ check scope.","Then check missing receipts.","Then check rule version."],bind:"Binds to: replayable receipts."},
-        formal:{p:[
-          "Within fixed scope and fixed measurement rules, outputs must be deterministic. Identical inputs imply identical classification.",
-          "Divergence indicates hidden scope mutation, rule ambiguity, or evidence inconsistency."
-        ],ul:["Determinism requirement.","No silent scope changes.","No post-hoc semantic swaps."],bind:"Binds to: scope+manifest locks."},
-        platform:{p:[
-          "Platform posture: the UI must not allow two meanings via two routes. Labels must mean one thing across the site.",
-          "State carry + explicit jumps prevent accidental contradictions."
-        ],ul:["One meaning per label.","One route per intent.","State preserved on every jump."],bind:"Binds to: navigation contract."},
-        engineering:{p:[
-          "Engineering posture: classification is a function. If it diverges under identical inputs, the function is inadmissible.",
-          "Fix is specification + version bump, not argument."
-        ],ul:["Deterministic function.","Inputs include scope+evidence hash.","Fix ⇒ epoch bump."],bind:"Binds to: release discipline."}
-      }
-    },
-    {
-      c:"#93c5fd",
-      t:P("Scope Precedes Authority","范围先于权力","El Alcance Precede a la Autoridad"),
-      s:P("Before you claim, define the map you’re claiming inside.","先定地图，再谈主张。","Antes de afirmar, define el mapa donde afirmas."),
-      blocks:{
-        informal:{p:[
-          "Most bad arguments are missing scope. People debate inside different maps and call it disagreement.",
-          "Scope is the fastest honesty tool: it tells you what you can say—and what you must not say yet."
-        ],ul:["Define boundaries first.","If scope moves, restart.","No infinite ‘away’ thinking."],bind:"Binds to: the first paragraph on serious pages."},
-        formal:{p:[
-          "Admissibility requires declared scope: epoch bounds, anchors, lanes, and measurement rules. Scope mutation invalidates conclusions under that scope.",
-          "Scope is an input, not rhetoric."
-        ],ul:["Scope is part of evidence.","Mutation ⇒ new epoch.","No retroactive widening."],bind:"Binds to: scope declaration schema."},
-        platform:{p:[
-          "Platform posture: make scope easy. Users should know where they are, what the page does, and what it refuses to do.",
-          "Every card ends with a jump to avoid wandering."
-        ],ul:["Headers state posture.","Footers state bounds.","Jump points prevent loops."],bind:"Binds to: DOOR/PRELUDE/HUB posture."},
-        engineering:{p:[
-          "Engineering posture: without explicit scope, metrics are undefined and outputs are garbage. Scope must be machine-checkable.",
-          "Undefined scope ⇒ UNDETERMINED output."
-        ],ul:["Explicit scope.","Declared measurement rules.","Undefined ⇒ UNDETERMINED."],bind:"Binds to: measurement contracts."}
-      }
-    },
-    {
-      c:"#60a5fa",
-      t:P("Admissibility Law","可采信法则","Ley de Admisibilidad"),
-      s:P("Upgrades require receipts. Missing receipts block escalation.","升级需要收据；缺收据就禁止升级。","Las mejoras requieren recibos; sin recibos no hay escalación."),
-      blocks:{
-        informal:{p:[
-          "This is the anti-hype law. You don’t level up because you feel confident. You level up because receipts exist.",
-          "It’s not pessimism. It’s safety—because scale amplifies error."
-        ],ul:["Receipts-first.","If missing: hold/contain.","No storytelling upgrades."],bind:"Binds to: every page that implies ‘proof’."},
-        formal:{p:[
-          "Admissibility is a binary gate under declared scope and rules. Claims may not exceed the evidence stream.",
-          "Missing receipts force output to remain NOT MEASURED / UNDETERMINED with reason codes."
-        ],ul:["Binary gating.","Reason-coded outputs.","No inference without data."],bind:"Binds to: classifier outputs."},
-        platform:{p:[
-          "Platform posture: separate lanes so users don’t confuse vision with proof. Vision can be big; Products can be usable; Laws bound meaning; Gauges show signals.",
-          "That separation is the UI version of admissibility."
-        ],ul:["Keep lanes separate.","Don’t collapse routes.","Every lane has a return."],bind:"Binds to: navigation architecture."},
-        engineering:{p:[
-          "Engineering posture: gates must be deterministic and non-bypassable. If a gate is bypassable, the system is insecure.",
-          "Changes require audit and epoch rollover."
-        ],ul:["No bypass paths.","Audit logs for changes.","Epoch bump on correction."],bind:"Binds to: gate design."}
-      }
-    },
-    {
-      c:"#34d399",
-      t:P("Calibration Authority Law","校准权威法则","Ley de Autoridad de Calibración"),
-      s:P("Calibration authority is exclusive. Non-authority input is data only.","校准权威是唯一的；非权威输入只能算数据。","La autoridad de calibración es exclusiva; la entrada no-autorizada es solo dato."),
-      blocks:{
-        informal:{p:[
-          "If everyone can calibrate the ruler, the ruler becomes a weapon. This law protects the instrument from politics.",
-          "People can submit data. They can’t redefine the measuring stick without authority."
-        ],ul:["Authority is explicit.","Inputs labeled as data.","No crowdsourced ruler."],bind:"Binds to: instrument integrity."},
-        formal:{p:[
-          "Calibration authority is exclusive by definition. Parameter tuning and rule specification are restricted to the authorized calibrator.",
-          "Unauthorized tuning is capture risk and invalidates outputs."
-        ],ul:["Authority separation.","No silent tuning.","Capture resistance required."],bind:"Binds to: governance + audit separation."},
-        platform:{p:[
-          "Platform posture: clearly separate ‘submit evidence’ from ‘change rules.’ The UI must never imply crowds can redefine standards.",
-          "That’s why posture labels are explicit."
-        ],ul:["Separate data from rules.","Separate feedback from calibration.","Show status plainly."],bind:"Binds to: future admin surfaces."},
-        engineering:{p:[
-          "Engineering posture: calibration is protected configuration. Threats include unauthorized tuning, silent drift, inconsistent thresholds.",
-          "Mitigation: versioned configs, signed releases, audit logs, epoch rollover."
-        ],ul:["Signed releases.","Audit logging.","Epoch bump on changes."],bind:"Binds to: release discipline."}
-      }
-    },
-    {
-      c:"#a3a3a3",
-      t:P("Measurable Stability Law","可测稳定法则","Ley de Estabilidad Medible"),
-      s:P("Instability is measurable mismatch that accelerates under scale.","不稳定是可测错配，在规模下加速。","La inestabilidad es desajuste medible que acelera al escalar."),
-      blocks:{
-        informal:{p:[
-          "People say ‘something feels off.’ This law says: great—now measure it. Where is the mismatch? What changed?",
-          "Stability is built by making the invisible visible, then fixing the smallest real cause."
-        ],ul:["Measure before arguing.","Find mismatch + trend.","Fix smallest real cause."],bind:"Binds to: Dot.Grid + Gauges."},
-        formal:{p:[
-          "Stability is preserved alignment between declared values, observed actions, and outcomes under fixed scope.",
-          "Instability is the divergence vector and its acceleration over a defined window."
-        ],ul:["Windowed evaluation.","Trend/acceleration matters.","Ambiguity accelerates propagation."],bind:"Binds to: windowed tests."},
-        platform:{p:[
-          "Platform posture: translate ‘off’ into ‘here is what changed.’ Route users to the right signal without forcing theory.",
-          "Signal-first UX prevents narrative loops."
-        ],ul:["Signal-first UX.","Jump to measurement.","Avoid loops."],bind:"Binds to: page contracts."},
-        engineering:{p:[
-          "Engineering posture: stability requires variance bands, correlation checks, and deterministic rollback paths.",
-          "Naming must be locked for comparability."
-        ],ul:["Variance bands.","Correlation checks.","Naming lock."],bind:"Binds to: indexing discipline."}
-      }
-    },
-    {
-      c:"#f59e0b",
-      t:P("Containment Prevents Cascade","隔离阻断级联","La Contención Evita la Cascada"),
-      s:P("Keep failure local. Rollback beats collapse.","把失败变小：回滚胜过崩塌。","Mantén el fallo local. Rollback vence al colapso."),
-      blocks:{
-        informal:{p:[
-          "The fastest way to lose everything is to let one failure spread. Containment is intelligence, not fear.",
-          "A contained failure becomes a lesson. An uncontained failure becomes a disaster."
-        ],ul:["Isolate early.","Rollback fast.","Learn without burning the system."],bind:"Binds to: deployment + operations."},
-        formal:{p:[
-          "Containment is segmentation plus rollback discipline. It limits blast radius and preserves invariants under fault.",
-          "Containment actions must be reason-coded and logged."
-        ],ul:["Segmentation.","Rollback discipline.","Reason-coded actions."],bind:"Binds to: resilience engineering."},
-        platform:{p:[
-          "Platform posture: routes must avoid trap loops. Every page needs a clean exit and a clean return.",
-          "Containment is navigation, not just engineering."
-        ],ul:["Every open has a return.","Back must not fall through.","No dead ends."],bind:"Binds to: state carry + returns."},
-        engineering:{p:[
-          "Engineering posture: rollback to last stable receipt state, zone independence, and kill/exit paths are mandatory.",
-          "No timer gates. No hidden dependency chains."
-        ],ul:["Rollback to stable state.","Zone independence.","Exit paths required."],bind:"Binds to: execution contracts."}
-      }
-    }
-  ];
-
-  // Apply header copy
-  var H = HEAD[lang] || HEAD.en;
-  document.getElementById("hs").textContent = H.hs;
-  document.getElementById("ruleTop").textContent = H.rule;
-  document.getElementById("fine").textContent = H.fine;
-
-  // Localize fixed labels
-  if(lang==="zh"){
-    document.getElementById("hk").textContent="法则";
-    document.getElementById("ht").textContent="让大想法保持诚实的规则";
-    document.getElementById("band").textContent="规范法则（7）";
-    document.getElementById("dockIndex").textContent="索引";
-    document.getElementById("dockExplore").textContent="探索";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockGauges").textContent="量规";
-    pillInformal.textContent="通俗";
-    pillFormal.textContent="正式";
-    pillPlatform.textContent="平台";
-    pillEngineering.textContent="工程";
-    document.getElementById("btnDoor").textContent="门";
-    document.getElementById("btnPrelude").textContent="前奏";
-    document.getElementById("btnHome").textContent="主页";
-  }else if(lang==="es"){
-    document.getElementById("hk").textContent="LEYES";
-    document.getElementById("ht").textContent="REGLAS QUE MANTIENEN HONESTAS LAS IDEAS GRANDES";
-    document.getElementById("band").textContent="LEYES CANÓNICAS (7)";
-    document.getElementById("dockIndex").textContent="BRÚJULA";
-    document.getElementById("dockExplore").textContent="EXPLORAR";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    pillInformal.textContent="INFORMAL";
-    pillFormal.textContent="FORMAL";
-    pillPlatform.textContent="PLATAFORMA";
-    pillEngineering.textContent="INGENIERÍA";
-    document.getElementById("btnDoor").textContent="PUERTA";
-    document.getElementById("btnPrelude").textContent="PRELUDIO";
-    document.getElementById("btnHome").textContent="INICIO";
-  }
-
-  // Lens state paint + handlers
-  function paintLens(){
-    var k=lensKey();
-    pillInformal.classList.toggle("active", k==="informal");
-    pillFormal.classList.toggle("active", k==="formal");
-    pillPlatform.classList.toggle("active", k==="platform");
-    pillEngineering.classList.toggle("active", k==="engineering");
-
-    var label =
-      (lang==="zh") ? (k==="informal"?"通俗":k==="formal"?"正式":k==="platform"?"平台":"工程") :
-      (lang==="es") ? (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATAFORMA":"INGENIERÍA") :
-      (k==="informal"?"INFORMAL":k==="formal"?"FORMAL":k==="platform"?"PLATFORM":"ENGINEERING");
-
-    document.getElementById("lensState").textContent =
-      (lang==="zh") ? ("当前透镜: "+label) :
-      (lang==="es") ? ("Lente actual: "+label) :
-      ("Current lens: "+label);
-  }
-
-  pillInformal.addEventListener("click", function(){ setLens("informal"); }, {passive:true});
-  pillFormal.addEventListener("click", function(){ setLens("formal"); }, {passive:true});
-  pillPlatform.addEventListener("click", function(){ setLens("platform"); }, {passive:true});
-  pillEngineering.addEventListener("click", function(){ setLens("engineering"); }, {passive:true});
-
-  // Render accordion (single-open; tap same closes)
+  // =======================
+  // RENDER (ONE TIME)
+  // =======================
   var list=document.getElementById("list");
+  var rowEls=[]; // [{row, chevron, title, sub, bodyPWrap, ul, actions}]
+  var openIndex=0;
 
   function closeAll(){
-    var rows=list.querySelectorAll(".row");
-    for(var i=0;i<rows.length;i++){
-      rows[i].classList.remove("open");
-      var c=rows[i].querySelector(".chev");
-      if(c) c.textContent="▸";
+    for(var i=0;i<rowEls.length;i++){
+      rowEls[i].row.classList.remove("open");
+      rowEls[i].chev.textContent="▸";
     }
   }
 
-  function openWord(){
-    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  function toggleRow(i){
+    var isOpen=rowEls[i].row.classList.contains("open");
+    if(isOpen){
+      rowEls[i].row.classList.remove("open");
+      rowEls[i].chev.textContent="▸";
+      return;
+    }
+    closeAll();
+    openIndex=i;
+    rowEls[i].row.classList.add("open");
+    rowEls[i].chev.textContent="▾";
   }
 
-  function makeRow(L, idx){
+  function buildRow(L, idx){
     var row=document.createElement("div");
     row.className="row";
     row.style.setProperty("--c", L.c);
@@ -864,7 +829,7 @@ body::before,body::after{pointer-events:none!important}
     var head=document.createElement("div");
     head.className="head";
     head.setAttribute("role","button");
-    head.setAttribute("tabindex","0");
+    head.tabIndex=0;
 
     var left=document.createElement("div");
     left.className="left";
@@ -882,12 +847,13 @@ body::before,body::after{pointer-events:none!important}
 
     var tb=document.createElement("div");
     tb.className="titleBlock";
+
     var title=document.createElement("div");
     title.className="title";
-    title.textContent=pick(L.t);
+
     var sub=document.createElement("div");
-    sub.className="sub";
-    sub.textContent=pick(L.s);
+    sub.className="sub2";
+
     tb.appendChild(title);
     tb.appendChild(sub);
 
@@ -904,99 +870,162 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var small=document.createElement("div");
-    small.className="smallband";
-    small.textContent =
-      (lang==="zh") ? ("透镜："+(lensKey()==="informal"?"通俗":lensKey()==="formal"?"正式":lensKey()==="platform"?"平台":"工程")) :
-      (lang==="es") ? ("Lente: "+(lensKey()==="informal"?"INFORMAL":lensKey()==="formal"?"FORMAL":lensKey()==="platform"?"PLATAFORMA":"INGENIERÍA")) :
-      ("Lens: "+(lensKey()==="informal"?"INFORMAL":lensKey()==="formal"?"FORMAL":lensKey()==="platform"?"PLATFORM":"ENGINEERING"));
-    body.appendChild(small);
+    var pWrap=document.createElement("div");
 
-    var blk = L.blocks[lensKey()] || L.blocks.informal;
-
-    for(var i=0;i<blk.p.length;i++){
-      var p=document.createElement("p");
-      p.className="p";
-      p.textContent=blk.p[i];
-      body.appendChild(p);
-    }
-
-    if(blk.ul && blk.ul.length){
-      var ul=document.createElement("ul");
-      ul.className="ul";
-      for(var j=0;j<blk.ul.length;j++){
-        var li=document.createElement("li");
-        li.textContent=blk.ul[j];
-        ul.appendChild(li);
-      }
-      body.appendChild(ul);
-    }
-
-    if(blk.bind){
-      var bind=document.createElement("p");
-      bind.className="p";
-      bind.style.opacity=".86";
-      bind.textContent=blk.bind;
-      body.appendChild(bind);
-    }
+    var ul=document.createElement("ul");
+    ul.className="ul";
 
     var actions=document.createElement("div");
     actions.className="actions";
 
-    var a1=document.createElement("a");
-    a1.className="btn";
-    a1.textContent=openWord()+": "+(lang==="zh"?"量规":(lang==="es"?"MEDIDORES":"GAUGES"));
-    a1.setAttribute("data-route","/gauges/");
-    actions.appendChild(a1);
+    var aG=document.createElement("a");
+    aG.className="btn";
+    aG.setAttribute("data-route","/gauges/");
+    actions.appendChild(aG);
 
-    var a2=document.createElement("a");
-    a2.className="btn";
-    a2.textContent=openWord()+": "+(lang==="zh"?"产品":(lang==="es"?"PRODUCTOS":"PRODUCTS"));
-    a2.setAttribute("data-route","/products/");
-    actions.appendChild(a2);
+    var aP=document.createElement("a");
+    aP.className="btn";
+    aP.setAttribute("data-route","/products/");
+    actions.appendChild(aP);
 
+    body.appendChild(pWrap);
+    body.appendChild(ul);
     body.appendChild(actions);
 
-    function toggle(){
-      var isOpen=row.classList.contains("open");
-      if(isOpen){
-        row.classList.remove("open");
-        chev.textContent="▸";
-        return;
-      }
-      closeAll();
-      row.classList.add("open");
-      chev.textContent="▾";
-      wireAll();
-    }
-
-    head.addEventListener("click", toggle, {passive:true});
+    function onToggle(){ toggleRow(idx); }
+    head.addEventListener("click", onToggle, {passive:true});
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }
     });
 
     row.appendChild(head);
     row.appendChild(body);
 
-    if(idx===0){
-      row.classList.add("open");
-      chev.textContent="▾";
-    }
+    list.appendChild(row);
 
-    return row;
+    rowEls.push({
+      row:row,
+      chev:chev,
+      title:title,
+      sub:sub,
+      pWrap:pWrap,
+      ul:ul,
+      aG:aG,
+      aP:aP
+    });
   }
 
   function render(){
-    paintLens();
     list.innerHTML="";
+    rowEls=[];
     for(var i=0;i<LAWS.length;i++){
-      list.appendChild(makeRow(LAWS[i], i));
+      buildRow(LAWS[i], i);
     }
-    wireAll();
+    openIndex=0;
+    toggleRow(0);
   }
 
-  paintLens();
+  // =======================
+  // UPDATE (NO CLOSE)
+  // =======================
+  function applyStatic(){
+    // header text
+    var HC = HEADER_COPY[lang] || HEADER_COPY.en;
+    document.getElementById("hs").textContent = (lane==="engineering") ? HC.hs_engineering : HC.hs_platform;
+    document.getElementById("ruleTop").textContent = HC.rule;
+    document.getElementById("fine").textContent = HC.fine;
+
+    // labels
+    document.getElementById("hk").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("ht").textContent = pick3("THE RULES THAT KEEP BIG IDEAS HONEST","让大想法保持诚实的规则","REGLAS QUE MANTIENEN HONESTAS LAS IDEAS GRANDES");
+    document.getElementById("band").textContent = pick3("CANONICAL LAWS (7)","规范法则（7）","LEYES CANÓNICAS (7)");
+
+    // top nav
+    document.getElementById("btnDoor").textContent = pick3("DOOR","门","PUERTA");
+    document.getElementById("btnPrelude").textContent = pick3("PRELUDE","前奏","PRELUDIO");
+    document.getElementById("btnHome").textContent = pick3("HOME","主页","INICIO");
+
+    // dock
+    document.getElementById("dockIndex").textContent = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("dockExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+
+    // language seg pressed
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+
+    // lane seg pressed + labels
+    document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+    // lens state
+    document.getElementById("lensState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+  }
+
+  function updateBodies(){
+    // preserve open state
+    var keepOpen=openIndex;
+
+    for(var i=0;i<LAWS.length;i++){
+      var L=LAWS[i];
+      var re=rowEls[i];
+
+      // title/sub
+      re.title.textContent = (lang==="zh")?L.t.zh:(lang==="es")?L.t.es:L.t.en;
+      re.sub.textContent   = (lang==="zh")?L.s.zh:(lang==="es")?L.s.es:L.s.en;
+
+      // body content (lane + lang)
+      var blk = (lane==="engineering") ? L.engineering : L.platform;
+      var pack = (lang==="zh")?blk.zh:(lang==="es")?blk.es:blk.en;
+
+      // paragraphs
+      re.pWrap.innerHTML="";
+      for(var p=0;p<pack.p.length;p++){
+        var elP=document.createElement("p");
+        elP.className="p";
+        elP.textContent=pack.p[p];
+        re.pWrap.appendChild(elP);
+      }
+
+      // bullets
+      re.ul.innerHTML="";
+      for(var u=0;u<pack.ul.length;u++){
+        var li=document.createElement("li");
+        li.textContent=pack.ul[u];
+        re.ul.appendChild(li);
+      }
+
+      // actions labels
+      re.aG.textContent = openWord()+": "+pick3("GAUGES","量规","MEDIDORES");
+      re.aP.textContent = openWord()+": "+pick3("PRODUCTS","产品","PRODUCTOS");
+    }
+
+    // restore open
+    closeAll();
+    toggleRow(keepOpen);
+  }
+
+  // =======================
+  // EVENTS
+  // =======================
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // =======================
+  // INIT
+  // =======================
   render();
+  applyStatic();
+  updateBodies();
+  wireAll();
 })();
 </script>
 

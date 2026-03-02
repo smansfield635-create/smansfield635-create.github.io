@@ -1,149 +1,535 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     FRONTIER · VISION REMOTE (16 DIAMOND CONTROL)
-     CENTER = INDEX (Manual)
-     OUTER = DIRECT ROUTES (Compass)
-     PERFECT SYMMETRY · STATE SAFE · NO MODALS
+     FRONTIER · VISION REMOTE (INFORMAL LAYER — NEW STANDARD)
+     PURPOSE:
+       - Remote-control hub for Frontier Vision
+       - CENTER = MANUAL INDEX (linear map)
+       - OUTER = DIRECT ROUTES (compass buttons)
+       - 15 outer + 1 center = 16 controls (as in current file)
+     NEW STANDARD (THIS FILE):
+       - Trilingual UI: EN / 中文 / ES
+       - Visible lens ONLY: lane=platform|engineering (URL-only; NEVER stored)
+       - Pinned informal layer:
+           gd_style = informal
+           gd_depth = explore
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - No modals/overlays
+       - No inline onclick; addEventListener only
+       - Uses ui.css + branch.css + instruments.js
+       - ui.css owns html/body background (NO background styling here)
+     CONTROLS:
+       - Top: diamond buttons for Language + Lane (does NOT reload; does NOT close anything)
+       - Bottom corners: diamond BACK / FORWARD (small)
+     NOTES:
+       - Update ROUTES map below to your exact target pages.
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>VISION · REMOTE</title>
+<title>FRONTIER · VISION REMOTE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  /* geometry */
+  --D:110px;          /* outer diamond size */
+  --C:140px;          /* center diamond size (≈ +27%) */
+  --R:290px;          /* ring radius */
+  --padTop:112px;
+
+  /* palette (red/black/gold) */
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
+
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.86);
+
+  --crimson:rgba(120,0,22,.34);
+  --festival:rgba(255,43,43,.18);
+  --opalV:rgba(90,40,120,.12);
+
+  --gold:rgba(201,162,74,.52);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 100px rgba(0,0,0,.60);
+  --shadowB:0 38px 120px rgba(0,0,0,.82);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* stage */
 .stage{
   position:relative;
-  width:min(820px,95vw);
-  height:min(820px,85vh);
-  margin:120px auto;
-}
-
-.d{
-  position:absolute;
-  width:110px;
-  height:110px;
-  transform:rotate(45deg);
-  border-radius:22px;
-  background:linear-gradient(145deg,#0c0f14,#06080b);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 25px 70px rgba(0,0,0,.6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-
-.d.center{
-  width:140px;
-  height:140px;
-  z-index:5;
-}
-
-.inner{
-  transform:rotate(-45deg);
-  text-align:center;
+  width:min(860px,95vw);
+  height:min(860px,82vh);
+  margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
+/* diamonds */
+.d{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:var(--D);
+  height:var(--D);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:22px;
+  cursor:pointer;
+  pointer-events:auto;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  overflow:hidden;
+
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.26), transparent 46%),
+    radial-gradient(circle at 70% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 76% 78%, var(--opalV), transparent 66%),
+    radial-gradient(circle at 28% 80%, var(--crimson), transparent 72%),
+    linear-gradient(160deg, var(--onyx1), var(--onyx0));
+
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:
+    var(--shadowB),
+    0 0 28px rgba(255,43,43,.10),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -44px 84px rgba(0,0,0,.84);
+
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.38;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.d::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+.d:hover{
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(255,43,43,.12),
+    0 0 32px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -46px 86px rgba(0,0,0,.88);
+}
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.98)}
+
+/* center */
+.d.center{
+  width:var(--C);
+  height:var(--C);
+  border-radius:26px;
+  z-index:10;
+  border-color:rgba(201,162,74,.28);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.92),
+    0 0 52px rgba(201,162,74,.14),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -52px 96px rgba(0,0,0,.90);
+}
+
+/* inner text */
+.inner{
+  transform:rotate(-45deg);
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px;
+  user-select:none;
+  pointer-events:none;
+}
 .word{
-  font-weight:800;
-  font-size:13px;
+  font-weight:980;
+  font-size:13.5px;
+  letter-spacing:.55px;
+  color:var(--ink);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+}
+.cardinal{
+  margin-top:5px;
+  font-size:10px;
+  opacity:.74;
+  letter-spacing:1.1px;
+  color:rgba(255,255,255,.82);
+}
+.d.center .word{font-size:15px}
+.d.center .cardinal{opacity:.80}
+
+/* TOP CONTROLS */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* diamond buttons (controls) */
+.dbtn{
+  width:46px;height:46px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  box-shadow:var(--shadowC);
+  display:grid;place-items:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
+}
+.dbtn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:26px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
+  opacity:.55;pointer-events:none;
+}
+.dbtn:active{transform:rotate(45deg) translateY(1px)}
+.dbtn span{
+  transform:rotate(-45deg);
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.4px;
+  color:var(--ink);
+  user-select:none;
+}
+.dbtn.on{
+  border-color:rgba(255,43,43,.26);
+  box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12);
+}
+
+/* bottom corner jump diamonds */
+.corner{
+  position:fixed;
+  bottom:max(18px, env(safe-area-inset-bottom));
+  z-index:240;
+  pointer-events:none;
+}
+.corner .dbtn{pointer-events:auto}
+.corner.left{left:18px}
+.corner.right{right:18px}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.70);
+  font-size:11px;
   letter-spacing:.4px;
 }
 
-.cardinal{
-  font-size:10px;
-  opacity:.6;
-  margin-top:4px;
-  letter-spacing:1px;
+/* mobile fit */
+@media (max-width:620px){
+  :root{ --D:102px; --C:132px; --R:258px; --padTop:118px; }
+  .word{font-size:13px}
+  .d.center .word{font-size:14.5px}
 }
-
+@media (max-width:420px){
+  :root{ --D:96px; --C:126px; --R:240px; }
+}
 </style>
 </head>
+
 <body>
 
-<div class="stage" id="stage"></div>
+<!-- TOP CONTROLS -->
+<div class="top" aria-label="Top controls">
+  <div class="left" aria-label="Language">
+    <div class="dbtn on" id="langEN" role="button" tabindex="0" aria-label="English"><span>EN</span></div>
+    <div class="dbtn" id="langZH" role="button" tabindex="0" aria-label="Chinese"><span>中文</span></div>
+    <div class="dbtn" id="langES" role="button" tabindex="0" aria-label="Spanish"><span>ES</span></div>
+  </div>
+
+  <div class="right" aria-label="Lane">
+    <div class="dbtn on" id="lanePlatform" role="button" tabindex="0" aria-label="Platform lane"><span>P</span></div>
+    <div class="dbtn" id="laneEngineering" role="button" tabindex="0" aria-label="Engineering lane"><span>E</span></div>
+  </div>
+</div>
+
+<!-- STAGE -->
+<div class="stage" id="stage" aria-label="Vision Remote"></div>
+
+<!-- CORNER NAV -->
+<div class="corner left" aria-label="Back">
+  <div class="dbtn" id="btnBack" role="button" tabindex="0" aria-label="Back"><span>◀</span></div>
+  <div class="cornerLabel" id="lblBack">BACK</div>
+</div>
+
+<div class="corner right" aria-label="Forward">
+  <div class="dbtn" id="btnFwd" role="button" tabindex="0" aria-label="Forward"><span>▶</span></div>
+  <div class="cornerLabel" id="lblFwd">NEXT</div>
+</div>
 
 <script>
 (function(){
+  "use strict";
 
-const routes = [
-  {label:"CITIES", code:"N"},
-  {label:"WATER", code:"NE"},
-  {label:"ENERGY", code:"E"},
-  {label:"HABITATS", code:"SE"},
-  {label:"AGRI", code:"S"},
-  {label:"FINANCE", code:"SW"},
-  {label:"INFRA", code:"W"},
-  {label:"LATTICE", code:"NW"},
-  {label:"SHIMMER", code:"NNE"},
-  {label:"TRAJECTORY", code:"ENE"},
-  {label:"WASTE", code:"ESE"},
-  {label:"URBAN", code:"SSE"},
-  {label:"CLOSED", code:"SSW"},
-  {label:"GRID", code:"WSW"},
-  {label:"DOCTRINE", code:"WNW"},
-];
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-const stage = document.getElementById("stage");
-const cx = stage.clientWidth / 2;
-const cy = stage.clientHeight / 2;
-const radius = 280;
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+  // Pinned informal layer:
+  var style = "informal";
+  var depth = "explore";
 
-function createDiamond(text, code, angle, isCenter=false){
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-  const d = document.createElement("div");
-  d.className = "d" + (isCenter ? " center" : "");
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-  if(isCenter){
-    d.style.left = (cx - 70) + "px";
-    d.style.top  = (cy - 70) + "px";
-  } else {
-    const x = cx + radius * Math.cos(angle) - 55;
-    const y = cy + radius * Math.sin(angle) - 55;
-    d.style.left = x + "px";
-    d.style.top  = y + "px";
+  document.documentElement.lang = (lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?"+p.toString();
   }
 
-  const inner = document.createElement("div");
-  inner.className = "inner";
+  // ===== ROUTES (EDIT THESE IF NEEDED) =====
+  // CENTER: Manual index (linear map). This is NOT /index.html (global compass).
+  var ROUTE_CENTER = "/explore/frontier/manual/";   // <-- change if your manual index path differs
 
-  const word = document.createElement("div");
-  word.className = "word";
-  word.textContent = text;
+  // Outer: direct routes (your section pages)
+  // IMPORTANT: Keep 15 entries (as provided) to preserve 16 total controls (15 + center)
+  var ROUTES = [
+    {label:{platform:{en:"CITIES",zh:"城市",es:"CIUDADES"}, engineering:{en:"URBAN-OS",zh:"城市OS",es:"OS-URB"}}, code:"N",   href:"/explore/frontier/urban/"},
+    {label:{platform:{en:"WATER",zh:"水",es:"AGUA"},       engineering:{en:"H2O",zh:"水系统",es:"H2O"}},         code:"NE",  href:"/explore/frontier/water/"},
+    {label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"能源系统",es:"PODER"}},    code:"E",   href:"/explore/frontier/energy/"},
+    {label:{platform:{en:"HABITATS",zh:"栖息地",es:"HÁBITATS"}, engineering:{en:"CLOSED",zh:"闭环栖息",es:"CERR"}}, code:"SE", href:"/explore/frontier/closed-loop/"},
+    {label:{platform:{en:"AGRI",zh:"农业",es:"AGRO"},      engineering:{en:"FOOD",zh:"食物链",es:"ALIM"}},       code:"S",   href:"/explore/frontier/agri/"},
+    {label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"},engineering:{en:"CAPITAL",zh:"资本",es:"CAP"}},     code:"SW",  href:"/products/finance/"},
+    {label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"},    engineering:{en:"SUBST",zh:"替代",es:"SUB"}},        code:"W",   href:"/explore/infrastructure/"},
+    {label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"},engineering:{en:"256",zh:"256态",es:"256"}},         code:"NW",  href:"/explore/frontier/lattice/"},
+    {label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},engineering:{en:"DISTORT",zh:"失真",es:"DIST"}},     code:"NNE", href:"/explore/frontier/shimmer/"},
+    {label:{platform:{en:"TRAJ",zh:"轨迹",es:"TRAY"},      engineering:{en:"WINDOW",zh:"窗口",es:"VENT"}},      code:"ENE", href:"/explore/frontier/trajectory/"},
+    {label:{platform:{en:"WASTE",zh:"废弃物",es:"RESID"},  engineering:{en:"ENTROPY",zh:"熵",es:"ENT"}},        code:"ESE", href:"/explore/frontier/waste/"},
+    {label:{platform:{en:"URBAN",zh:"城市群",es:"URB"},    engineering:{en:"CLUSTER",zh:"集群",es:"CLUST"}},     code:"SSE", href:"/explore/frontier/urban/"},
+    {label:{platform:{en:"CLOSED",zh:"闭环",es:"CERRADO"}, engineering:{en:"NO-AWAY",zh:"无扔掉",es:"SIN"}},    code:"SSW", href:"/explore/frontier/closed-loop/"},
+    {label:{platform:{en:"GRID",zh:"电网",es:"RED"},       engineering:{en:"BALANCE",zh:"平衡",es:"BAL"}},       code:"WSW", href:"/explore/infrastructure/grid-storage/"},
+    {label:{platform:{en:"DOCTRINE",zh:"教义",es:"DOCTRINA"},engineering:{en:"CCD",zh:"CCD",es:"CCD"}},         code:"WNW", href:"/products/capital-doctrine/"}
+  ];
 
-  const cardinal = document.createElement("div");
-  cardinal.className = "cardinal";
-  cardinal.textContent = code;
+  // Back / Next (Hub Jump)
+  // Keep these as section-level JJ/HJ checkpoints.
+  var ROUTE_BACK = "/explore/frontier/";   // back to Frontier hub
+  var ROUTE_FWD  = ROUTE_CENTER;           // forward into manual index by default
 
-  inner.appendChild(word);
-  inner.appendChild(cardinal);
-  d.appendChild(inner);
+  // ===== UI refs =====
+  var stage=document.getElementById("stage");
 
-  return d;
-}
+  function setPressedLang(){
+    document.getElementById("langEN").classList.toggle("on", lang==="en");
+    document.getElementById("langZH").classList.toggle("on", lang==="zh");
+    document.getElementById("langES").classList.toggle("on", lang==="es");
+  }
+  function setPressedLane(){
+    document.getElementById("lanePlatform").classList.toggle("on", lane==="platform");
+    document.getElementById("laneEngineering").classList.toggle("on", lane==="engineering");
+  }
 
-// CENTER (INDEX)
-const center = createDiamond("INDEX", "CORE", 0, true);
-stage.appendChild(center);
+  function labelFor(r){
+    var pack = (lane==="engineering") ? r.label.engineering : r.label.platform;
+    return (lang==="zh")?pack.zh:(lang==="es")?pack.es:pack.en;
+  }
 
-// OUTER 15
-routes.forEach((r,i)=>{
-  const angle = (i / routes.length) * (Math.PI * 2);
-  const diamond = createDiamond(r.label, r.code, angle);
-  stage.appendChild(diamond);
-});
+  function go(path){
+    window.location.href = path + q();
+  }
+
+  function mkDiamond(word, code, isCenter){
+    var d=document.createElement("div");
+    d.className = "d" + (isCenter ? " center" : "");
+    d.setAttribute("role","button");
+    d.tabIndex = 0;
+
+    var inner=document.createElement("div");
+    inner.className="inner";
+
+    var w=document.createElement("div");
+    w.className="word";
+    w.textContent=word;
+
+    var c=document.createElement("div");
+    c.className="cardinal";
+    c.textContent=code;
+
+    inner.appendChild(w);
+    inner.appendChild(c);
+    d.appendChild(inner);
+
+    return d;
+  }
+
+  // Perfect symmetry: compute positions after layout + on resize
+  var diamondEls=[]; // {el, isCenter, idx}
+  function layout(){
+    // Clear and rebuild (keeps symmetry exact)
+    stage.innerHTML="";
+    diamondEls=[];
+
+    // stage center (accurate)
+    var rect=stage.getBoundingClientRect();
+    var cx=rect.width/2;
+    var cy=rect.height/2;
+
+    // Center
+    var center=mkDiamond(
+      (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX",
+      "CORE",
+      true
+    );
+    center.style.left = cx + "px";
+    center.style.top  = cy + "px";
+    center.addEventListener("click", function(){ go(ROUTE_CENTER); }, {passive:true});
+    center.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(ROUTE_CENTER); }});
+    stage.appendChild(center);
+    diamondEls.push({el:center,isCenter:true,idx:-1});
+
+    // Outer ring (15)
+    var n=ROUTES.length;
+    for(var i=0;i<n;i++){
+      var r=ROUTES[i];
+      var angle = (i / n) * (Math.PI*2) - (Math.PI/2); // start at top for symmetry
+      var x = cx + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 290) * Math.cos(angle);
+      var y = cy + (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 290) * Math.sin(angle);
+
+      var d=mkDiamond(labelFor(r), r.code, false);
+      d.style.left = x + "px";
+      d.style.top  = y + "px";
+      (function(path){
+        d.addEventListener("click", function(){ go(path); }, {passive:true});
+        d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(r.href);
+
+      stage.appendChild(d);
+      diamondEls.push({el:d,isCenter:false,idx:i});
+    }
+  }
+
+  function updateLabelsOnly(){
+    // Update existing diamond labels without moving (keeps open state irrelevant here, but preserves geometry)
+    for(var i=0;i<diamondEls.length;i++){
+      var o=diamondEls[i];
+      if(o.isCenter){
+        var w=o.el.querySelector(".word");
+        if(w) w.textContent = (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
+      }else{
+        var r=ROUTES[o.idx];
+        var w2=o.el.querySelector(".word");
+        if(w2) w2.textContent = labelFor(r);
+      }
+    }
+    // Corner labels
+    document.getElementById("lblBack").textContent = (lang==="zh")?"返回":(lang==="es")?"VOLVER":"BACK";
+    document.getElementById("lblFwd").textContent  = (lang==="zh")?"前进":(lang==="es")?"SIGUIENTE":"NEXT";
+  }
+
+  // ===== Top controls (NO reload) =====
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressedLang();
+    updateLabelsOnly();
+  }
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressedLane();
+    updateLabelsOnly();
+  }
+
+  function bindBtn(id, fn){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("click", fn, {passive:true});
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
+  }
+
+  bindBtn("langEN", function(){ setLang("en"); });
+  bindBtn("langZH", function(){ setLang("zh"); });
+  bindBtn("langES", function(){ setLang("es"); });
+
+  bindBtn("lanePlatform", function(){ setLane("platform"); });
+  bindBtn("laneEngineering", function(){ setLane("engineering"); });
+
+  // ===== Corner nav =====
+  bindBtn("btnBack", function(){ go(ROUTE_BACK); });
+  bindBtn("btnFwd",  function(){ go(ROUTE_FWD); });
+
+  // ===== Init =====
+  setPressedLang();
+  setPressedLane();
+
+  // Layout after paint + on resize (fixes center drift)
+  function safeLayout(){
+    // Only layout if stage has size
+    var r=stage.getBoundingClientRect();
+    if(r.width < 10 || r.height < 10){
+      requestAnimationFrame(safeLayout);
+      return;
+    }
+    layout();
+    updateLabelsOnly();
+  }
+  requestAnimationFrame(safeLayout);
+  window.addEventListener("resize", function(){ safeLayout(); });
 
 })();
 </script>

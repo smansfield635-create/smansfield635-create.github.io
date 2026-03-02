@@ -1,11 +1,16 @@
 <!doctype html>
 <!-- TNT — /research/industry-context/index.html
-     RESEARCH · INDUSTRY CONTEXT (STRUCTURED CASE STUDIES)
+     RESEARCH · INDUSTRY CONTEXT (STRUCTURED CASE STUDIES) · DUAL LENS
      GOALS (PER SEAN):
        - More bubbles / more categories / more structure
        - Less clutter (nested, collapsible sub-bubbles)
-       - Include ALL listed companies (no rankings, no comparisons marketing)
-       - LeafGuard can be highlighted (more detail), but keep neutral posture
+       - Include ALL listed companies (no rankings, no marketing comparisons)
+       - LeafGuard highlighted (more detail) but neutral posture
+       - BIGGER PRINT (monument readability)
+     LENS RULE (NO NEW gd_* KEYS):
+       - Narrative lens = depth=explore
+       - Engineering lens = depth=learn
+       - Uses existing canonical key: gd_depth + URL depth
      CONSTRAINTS (LOCKED):
        - Informational only · no monetization · no lead capture · no affiliates
        - No logos · no product images · no implied partnerships
@@ -14,10 +19,9 @@
        - NO new gd_* keys
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
-       - Single-open accordion (top-level). Sub-bubbles are tap-to-open.
+       - Single-open accordion (top-level). Sub-bubbles tap-to-open (single-open inside each card)
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -34,43 +38,58 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:112px;
+  --dockH:118px;
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.82);
-  --mut2:rgba(255,255,255,.70);
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.88);
+  --mut2:rgba(255,255,255,.76);
 
   --shadowA:0 28px 100px rgba(0,0,0,.65);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 
-  /* Red/Black/Gold (subtle) */
+  /* Red/Black/Gold */
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
   --goldSoft:rgba(201,162,74,.18);
+  --goldEdge:rgba(201,162,74,.28);
 }
 
-/* Top controls */
+/* ===== TOP CONTROLS (FIXED) ===== */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
+  position:fixed;top:12px;left:0;right:0;
+  padding:0 12px;
   z-index:240;
   pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+.topbar{
   pointer-events:auto;
+  width:min(1040px,96vw);
+  margin:0 auto;
+  padding:10px 10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(201,162,74,.10), transparent 60%),
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.14);
+  backdrop-filter:blur(10px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.topLeft,.topRight{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
 }
 
 /* Button (gold under-light only) */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
+  padding:10px 14px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
@@ -87,14 +106,32 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
+  opacity:.55;pointer-events:none;
 }
 
-/* Page */
+/* Lens pills (mapped to depth) */
+.pill{
+  padding:10px 14px;min-height:44px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
+    rgba(0,0,0,.20);
+  color:var(--ink);
+  font-weight:950;
+  letter-spacing:.2px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.pill.active{
+  border-color:rgba(255,255,255,.30);
+  box-shadow:0 0 18px rgba(255,43,43,.18);
+}
+
+/* ===== PAGE ===== */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 24px);
+  padding:160px 0 calc(var(--dockH) + 24px); /* clears fixed topbar */
   display:flex;
   flex-direction:column;
   gap:14px;
@@ -102,11 +139,11 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* Header */
+/* ===== HEADER (BIG TYPE) ===== */
 .header{
   border:1px solid var(--stroke);
   border-radius:26px;
-  padding:22px;
+  padding:24px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
@@ -124,7 +161,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
     repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.22;
+  opacity:.20;
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
@@ -132,18 +169,12 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
-.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
-.note0{
-  margin-top:10px;
-  color:var(--mut2);
-  font-size:13.25px;
-  line-height:1.55;
-  position:relative;
-}
+.k{margin:0 0 10px;font-size:12px;letter-spacing:5px;text-transform:uppercase;opacity:.82;color:var(--mut)}
+.h1{margin:0;font-weight:980;font-size:34px;letter-spacing:.35px;color:var(--ink);line-height:1.12}
+.p0{margin:14px 0 0;line-height:1.75;color:var(--mut);font-size:17px}
+.note0{margin-top:10px;color:var(--mut2);font-size:14px;line-height:1.55}
 
-/* Accordion (top-level, single-open) */
+/* ===== ACCORDION (TOP-LEVEL SINGLE OPEN) ===== */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.10);
@@ -160,27 +191,27 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:0;border-radius:22px;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
+  opacity:.50;
 }
 .head{
-  padding:16px 16px;
+  padding:18px 16px;
   display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;
 }
-.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
-.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
+.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink)}
+.si{margin-top:8px;font-size:15px;line-height:1.55;color:rgba(255,255,255,.86);opacity:.95}
 .chev{
-  width:36px;height:36px;border-radius:14px;
+  width:40px;height:40px;border-radius:14px;
   border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);
+  background:rgba(0,0,0,.18);
   display:flex;align-items:center;justify-content:center;
   color:var(--mut);
   font-weight:980;
   flex:0 0 auto;
   margin-top:2px;
+  font-size:18px;
 }
 .body{
   display:none;
@@ -189,17 +220,10 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-  position:relative;
 }
 .card.open .body{display:block}
 
-/* Content typography (less clutter) */
-.body p{margin:0;color:rgba(255,255,255,.88);line-height:1.75;font-size:14.75px}
-.body p + p{margin-top:12px}
-.ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14px}
-.ul li{margin:7px 0}
-
-/* Sub-bubbles (tap-to-open) */
+/* ===== SUB-BUBBLES (SINGLE-OPEN WITHIN CARD) ===== */
 .subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -219,43 +243,44 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
+  opacity:.45;pointer-events:none;
 }
 .bubble h4{
   margin:0 0 8px;
   font-weight:980;
   letter-spacing:.15px;
-  font-size:15px;
+  font-size:16px; /* bigger */
   color:var(--ink);
 }
 .bubble p{
   margin:0;
-  color:rgba(255,255,255,.80);
-  line-height:1.7;
+  color:rgba(255,255,255,.88);
+  line-height:1.75;
   display:none;
-  font-size:14.5px;
+  font-size:15px; /* bigger */
 }
 .bubble.open p{display:block}
 
-/* Highlight strip for LeafGuard (still neutral) */
-.leafGuard{
-  border-color:rgba(201,162,74,.22);
-  box-shadow:var(--shadowB), 0 0 14px rgba(201,162,74,.12);
-}
-.leafGuard h4{color:rgba(255,255,255,.94)}
+/* Lens text blocks */
+[data-lens]{display:none;}
+[data-lens].show{display:block;}
+
+/* LeafGuard highlight (neutral, but visually distinct) */
+.leafGuardCard{border-color:rgba(201,162,74,.18)}
+.leafGuardCard::after{box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);opacity:.65}
 .leafGuardTag{
   display:inline-flex;
   padding:6px 10px;
   border-radius:999px;
-  border:1px solid rgba(201,162,74,.22);
+  border:1px solid rgba(201,162,74,.28);
   background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.82);
+  color:rgba(255,255,255,.86);
   font-size:11px;
-  letter-spacing:.2px;
+  letter-spacing:.22px;
   margin-left:8px;
 }
 
-/* Dock */
+/* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -264,6 +289,7 @@ body::before,body::after{pointer-events:none!important}
   padding:12px;border-radius:22px;
   border:1px solid var(--stroke);
   background:rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
@@ -272,9 +298,9 @@ body::before,body::after{pointer-events:none!important}
 .dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
 
 @media (max-width:520px){
-  :root{--dockH:132px}
+  :root{--dockH:136px}
   .dock{grid-template-columns:repeat(3,1fr)}
-  .h1{font-size:26px}
+  .h1{font-size:30px}
 }
 </style>
 </head>
@@ -282,14 +308,18 @@ body::before,body::after{pointer-events:none!important}
 <body>
 
 <div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnBack" href="/research/">RESEARCH</a>
-    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-  </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+  <div class="topbar">
+    <div class="topLeft">
+      <a class="btn" id="btnBack" href="/research/">RESEARCH</a>
+      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+    </div>
+    <div class="topRight" aria-label="Controls">
+      <button class="btn" id="btnEN" type="button">EN</button>
+      <button class="btn" id="btnZH" type="button">中文</button>
+      <button class="btn" id="btnES" type="button">ES</button>
+      <button class="pill" id="pillNarrative" type="button">NARRATIVE</button>
+      <button class="pill" id="pillEngineering" type="button">ENGINEERING</button>
+    </div>
   </div>
 </div>
 
@@ -322,7 +352,7 @@ body::before,body::after{pointer-events:none!important}
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore"; // explore|learn
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
@@ -337,6 +367,9 @@ body::before,body::after{pointer-events:none!important}
   }catch(e){}
 
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+  // Lens mapping: narrative=explore, engineering=learn
+  var lens = (depth==="learn") ? "engineering" : "narrative";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -369,11 +402,31 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
+  // Lens toggle (depth only; no new keys)
+  var pillNarr=document.getElementById("pillNarrative");
+  var pillEng=document.getElementById("pillEngineering");
+  function paintLens(){
+    pillNarr.classList.toggle("active", lens==="narrative");
+    pillEng.classList.toggle("active", lens==="engineering");
+    pillNarr.textContent = (lang==="zh")?"通俗":"NARRATIVE";
+    pillEng.textContent  = (lang==="zh")?"工程":"ENGINEERING";
+    if(lang==="es"){ pillNarr.textContent="NARRATIVO"; pillEng.textContent="INGENIERÍA"; }
+  }
+  function setLens(next){
+    lens = (next==="engineering") ? "engineering" : "narrative";
+    depth = (lens==="engineering") ? "learn" : "explore";
+    try{ localStorage.setItem("gd_depth",depth);}catch(e){}
+    // update URL without losing other state
+    window.location.href = window.location.pathname + q({depth:depth});
+  }
+  pillNarr.addEventListener("click", function(){ setLens("narrative"); });
+  pillEng.addEventListener("click", function(){ setLens("engineering"); });
+
   // Copy helper
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // ===== Header copy =====
+  // Header copy
   var HEAD={
     en:{
       p0:"This page extracts engineering innovation patterns across mature construction-system verticals (HVAC, roofing, insulation, fenestration, plumbing, rainwater management). It is research context only.",
@@ -400,26 +453,35 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("h0").textContent="Referencias de construcción dirigidas por ingeniería (casos estructurados)";
   }
 
-  // ===== Content model =====
-  // Top-level cards = categories (less clutter).
-  // Inside each card = sub-bubbles (more structure).
-  // All companies included across domains. LeafGuard gets deeper sub-bubbles (highlight).
+  // ===== Sections (ALL companies included) =====
+  // Each bubble has BOTH lens texts; we show one based on lens.
   var SECTIONS=[
     {
       t:P("Innovation Pattern (used across the site)","创新模式（全站使用）","Patrón de innovación (usado en el sitio)"),
       s:P("Constraint → Test → Standardize → Scale (with containment).","约束→测试→标准化→扩张（含隔离）。","Restricción → Prueba → Estandarizar → Escalar (con contención)."),
+      leafguard:false,
       bubbles:[
         {h:P("Concept","概念","Concepto"),
-         p:P(
-          "Innovation is treated as a repeatable engineering cycle, not narrative. The cycle is: isolate boundary → bounded redesign → verify under variance → standardize interfaces → scale with containment.",
-          "创新被视为可重复的工程循环，而非叙事：隔离边界→有界再设计→在方差下验证→标准化接口→带隔离地扩张。",
-          "La innovación se trata como ciclo repetible: aislar límites → rediseño acotado → verificar bajo variación → estandarizar interfaces → escalar con contención."
+         narrative:P(
+          "Innovation is treated as a repeatable cycle: find the real failure point, fix it without guessing, prove it under stress, then standardize the install so it stays stable at scale.",
+          "创新被视为可重复循环：找到真实失效点，不靠猜修正，在压力下证明，然后标准化安装，使规模化仍稳定。",
+          "La innovación es un ciclo repetible: detectar el fallo real, corregir sin adivinar, probar bajo estrés y estandarizar la instalación."
+         ),
+         engineering:P(
+          "Cycle: isolate boundary → bounded redesign → verification under variance → interface standardization → scale with containment.",
+          "循环：隔离边界→有界再设计→方差下验证→接口标准化→带隔离扩张。",
+          "Ciclo: aislar límite → rediseño acotado → verificación bajo variación → estandarizar interfaz → escalar con contención."
          )},
-        {h:P("Methodology correlation","方法论关联","Correlación metodológica"),
-         p:P(
-          "Durable innovation reduces drift, improves containment, and increases measurement clarity. That maps directly to Laws (bounds) and Gauges (signals).",
-          "耐久创新减少漂移、提升隔离、增强测量清晰度。对应到法则（边界）与量规（信号）。",
-          "La innovación durable reduce deriva, mejora contención y aumenta claridad de medición. Se vincula a Leyes (límites) y Medidores (señales)."
+        {h:P("Why it’s structured this way","为什么这样结构化","Por qué está estructurado así"),
+         narrative:P(
+          "This page is split into bubbles so you can read fast: domain scope, the innovation pattern, and the benchmarks referenced — without clutter.",
+          "本页用气泡分块便于快速阅读：领域范围、创新模式、引用基准，减少杂乱。",
+          "Se divide en burbujas para leer rápido: alcance, patrón y referencias, sin desorden."
+         ),
+         engineering:P(
+          "Structure reduces cognitive load: scope → mechanism → references. No rankings. No claims beyond context.",
+          "结构降低认知负荷：范围→机制→引用。无排名。无超出背景的主张。",
+          "La estructura reduce carga: alcance → mecanismo → referencias. Sin rankings. Sin afirmaciones fuera de contexto."
          )}
       ]
     },
@@ -427,21 +489,37 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("HVAC (Carrier / Trane / Lennox)","暖通（Carrier / Trane / Lennox）","HVAC (Carrier / Trane / Lennox)"),
       s:P("Closed-loop climate control under thermodynamic constraints.","热力学约束下的闭环气候控制。","Control climático en bucle cerrado bajo restricciones termodinámicas."),
+      leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         p:P(
-          "HVAC is a control problem: temperature, humidity, airflow, and energy throughput under variable external load. Engineering maturity appears as stable performance envelopes and testable thresholds.",
-          "暖通是控制问题：在外部负载变化下，温度、湿度、风量与能量吞吐的稳定控制。工程成熟表现为稳定性能包络与可测试阈值。",
-          "HVAC es un problema de control: temperatura, humedad, flujo de aire y energía bajo carga externa variable. La madurez se ve en envolventes estables y umbrales testeables."
+         narrative:P(
+          "HVAC is about keeping a house stable when the weather is not. Comfort is the result; control is the method.",
+          "暖通是在天气不稳定时让房子保持稳定。舒适是结果，控制是方法。",
+          "HVAC mantiene estable la casa cuando el clima no lo es. Confort es el resultado; control es el método."
+         ),
+         engineering:P(
+          "Control variables: temperature, humidity, airflow, energy throughput under varying external load. Maturity appears as stable envelopes and testable thresholds.",
+          "控制变量：温度、湿度、风量、能量吞吐在外部负载变化下保持稳定。成熟体现为稳定包络与可测试阈值。",
+          "Variables: temperatura, humedad, flujo de aire, energía bajo carga variable. Madurez = envolventes estables y umbrales testeables."
          )},
         {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         p:P(
-          "Typical cycle: identify inefficiency/failure mode → redesign component or control logic → verify across seasonal variance → standardize install/service interfaces → scale through repeatable deployment.",
-          "典型循环：识别低效/失效模式→重设计部件或控制逻辑→跨季节方差验证→标准化安装/维护接口→可复制部署扩张。",
-          "Ciclo típico: identificar ineficiencia/fallo → rediseñar componente o control → verificar por variación estacional → estandarizar interfaces → escalar con despliegue repetible."
+         narrative:P(
+          "Leaders shrink failure: fewer surprises, clearer controls, and consistent service outcomes.",
+          "领导者压缩失效：更少意外、更清晰控制、更一致的维护结果。",
+          "Los líderes reducen fallos: menos sorpresas, control claro y servicio consistente."
+         ),
+         engineering:P(
+          "Cycle: identify inefficiency/failure mode → redesign component/control logic → verify across seasonal variance → standardize install/service interfaces → scale.",
+          "循环：识别低效/失效模式→重设计部件/控制逻辑→跨季节方差验证→标准化安装/维护接口→扩张。",
+          "Ciclo: detectar ineficiencia/fallo → rediseñar componente/control → verificar por variación estacional → estandarizar interfaces → escalar."
          )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
-         p:P(
+         narrative:P(
+          "Carrier, Trane, and Lennox are referenced as mature examples of engineered climate control systems.",
+          "Carrier、Trane、Lennox 被引用为成熟的工程化气候控制系统例子。",
+          "Carrier, Trane y Lennox se citan como ejemplos maduros de control climático."
+         ),
+         engineering:P(
           "Carrier — HVAC system innovation. Trane — mechanical cooling systems. Lennox — furnace and climate systems.",
           "Carrier—暖通系统创新。Trane—机械制冷系统。Lennox—炉具与气候系统。",
           "Carrier—innovación HVAC. Trane—enfriamiento mecánico. Lennox—hornos y clima."
@@ -452,21 +530,37 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("Fenestration (Andersen / Pella)","门窗（Andersen / Pella）","Fenestración (Andersen / Pella)"),
       s:P("Boundary-layer engineering: seals, frames, glazing, moisture, and thermal transfer.","边界层工程：密封、框体、玻璃、湿气与热传递。","Ingeniería de capa límite: sellos, marcos, vidrio, humedad y transferencia térmica."),
+      leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         p:P(
-          "Fenestration is an interface system between interior climate and exterior exposure. Performance depends on seal integrity, frame material stability, glazing architecture, and installation discipline.",
-          "门窗是室内气候与室外暴露之间的接口系统。性能取决于密封完整性、框体材料稳定性、玻璃结构与安装纪律。",
-          "La fenestración es una interfaz entre clima interior y exposición exterior. Depende de integridad de sellos, estabilidad de marco, arquitectura de vidrio y disciplina de instalación."
+         narrative:P(
+          "Windows are where comfort leaks first. Mature systems treat the window as a climate interface — not a sheet of glass.",
+          "门窗是舒适最先泄漏的地方。成熟系统把门窗当作气候接口，而不是一片玻璃。",
+          "Las ventanas son donde se fuga el confort. Sistemas maduros las tratan como interfaz climática."
+         ),
+         engineering:P(
+          "Interface system between interior climate and exterior exposure. Performance depends on seal integrity, frame stability, glazing architecture, and installation discipline.",
+          "室内气候与室外暴露之间的接口系统。性能取决于密封完整性、框体稳定性、玻璃结构与安装纪律。",
+          "Interfaz entre clima interior y exposición exterior. Depende de sellos, estabilidad del marco, arquitectura del vidrio y disciplina de instalación."
          )},
         {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         p:P(
-          "Common cycle: leakage/thermal loss identified → seal/frame/glazing redesign → certification/testing under variance → standardized installation details → scaled adoption.",
-          "常见循环：发现渗漏/热损→密封/框体/玻璃再设计→在方差下认证测试→标准化安装细节→扩张采纳。",
-          "Ciclo común: detectar fugas/pérdida térmica → rediseño de sellos/marcos/vidrio → certificación/pruebas → instalación estandarizada → adopción."
+         narrative:P(
+          "Engineering maturity shows up as fewer drafts, less moisture intrusion, and predictable indoor comfort.",
+          "工程成熟表现为更少漏风、更少潮气侵入、更可预测的室内舒适。",
+          "Madurez = menos corrientes, menos humedad y confort predecible."
+         ),
+         engineering:P(
+          "Leakage/thermal loss identified → seal/frame/glazing redesign → certification/testing under variance → standardized installation details → scaled adoption.",
+          "识别渗漏/热损→密封/框体/玻璃再设计→方差下认证测试→标准化安装细节→扩张采纳。",
+          "Detectar fuga/pérdida térmica → rediseñar sellos/marcos/vidrio → certificar/probar → estandarizar instalación → escalar."
          )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
-         p:P(
+         narrative:P(
+          "Andersen and Pella are referenced as long-running examples of engineered fenestration systems.",
+          "Andersen 与 Pella 被引用为长期运行的工程化门窗系统例子。",
+          "Andersen y Pella se citan como ejemplos de fenestración de ingeniería."
+         ),
+         engineering:P(
           "Andersen — window engineering systems. Pella — fenestration innovation.",
           "Andersen—门窗工程系统。Pella—门窗创新。",
           "Andersen—sistemas de ventanas. Pella—innovación fenestración."
@@ -477,21 +571,37 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("Roofing & Insulation (GAF / Owens Corning / CertainTeed)","屋面与保温（GAF / Owens Corning / CertainTeed）","Techos y aislamiento (GAF / Owens Corning / CertainTeed)"),
       s:P("Layered systems: water shedding, durability, thermal resistance, and installation gating.","分层系统：排水、耐久、热阻与安装闸门。","Sistemas por capas: drenaje, durabilidad, resistencia térmica e instalación."),
+      leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         p:P(
-          "Roofing and insulation behave as stacked layers under environmental stress. Engineering maturity shows up as defined assemblies, test standards, and repeatable installation paths that reduce cascade exposure to the underlying structure.",
-          "屋面与保温在环境压力下表现为分层叠加系统。工程成熟体现为定义清晰的系统装配、测试标准与可复跑安装路径，从而减少对下部结构的级联暴露。",
-          "Techos y aislamiento son capas apiladas bajo estrés ambiental. La madurez aparece en ensamblajes definidos, estándares de prueba e instalación repetible que reduce exposición en cascada a la estructura."
+         narrative:P(
+          "Your roof is your first line of defense. Mature systems work because the layers are designed to work together — and installed the same way every time.",
+          "屋面是第一道防线。成熟系统之所以有效，是因为分层协同设计，并且每次都按同样方式安装。",
+          "El techo es la primera defensa. Sistemas maduros funcionan por capas coordinadas e instalación consistente."
+         ),
+         engineering:P(
+          "Stacked assemblies under environmental stress. Maturity = defined assemblies, test standards, and repeatable installation paths that reduce cascade exposure to the underlying structure.",
+          "在环境压力下的叠层装配。成熟=定义清晰的装配、测试标准与可复跑安装路径，减少对下部结构的级联暴露。",
+          "Ensamblajes apilados bajo estrés ambiental. Madurez = ensamblajes definidos, estándares de prueba e instalación repetible que reduce cascadas."
          )},
         {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         p:P(
-          "Typical cycle: failure mode (leak/wind/impact/thermal loss) → material or assembly redesign → test under variance → codify installation details → scale with inspection discipline.",
-          "典型循环：失效模式（渗漏/风载/冲击/热损）→材料或装配再设计→方差下测试→固化安装细节→带检验纪律扩张。",
-          "Ciclo típico: modo de fallo (fuga/viento/impacto/pérdida térmica) → rediseño de material/ensamble → pruebas → codificar instalación → escalar con disciplina de inspección."
+         narrative:P(
+          "Leaders reduce surprises: fewer leaks, better durability, and clearer installation discipline.",
+          "领导者减少意外：更少渗漏、更好耐久、更清晰安装纪律。",
+          "Los líderes reducen sorpresas: menos fugas, más durabilidad y disciplina de instalación."
+         ),
+         engineering:P(
+          "Failure mode (leak/wind/impact/thermal loss) → material/assembly redesign → test under variance → codify install details → scale with inspection discipline.",
+          "失效模式（渗漏/风载/冲击/热损）→材料/装配再设计→方差下测试→固化安装细节→带检验纪律扩张。",
+          "Fallo (fuga/viento/impacto/pérdida térmica) → rediseño material/ensamble → pruebas → codificar instalación → escalar con inspección."
          )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
-         p:P(
+         narrative:P(
+          "GAF, Owens Corning, and CertainTeed are referenced as mature examples of engineered layered assemblies.",
+          "GAF、Owens Corning、CertainTeed 被引用为成熟的工程化分层装配系统例子。",
+          "GAF, Owens Corning y CertainTeed se citan como ejemplos de ensamblajes por capas."
+         ),
+         engineering:P(
           "GAF — roofing systems. Owens Corning — insulation systems. CertainTeed — architectural roofing systems.",
           "GAF—屋面系统。Owens Corning—保温系统。CertainTeed—建筑屋面系统。",
           "GAF—techos. Owens Corning—aislamiento. CertainTeed—techos arquitectónicos."
@@ -502,21 +612,37 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("Plumbing (Kohler)","管道（Kohler）","Plomería (Kohler)"),
       s:P("Flow routing under pressure: reliability, interfaces, and lifecycle durability.","压力下的流体路由：可靠性、接口与生命周期耐久。","Ruteo de flujo bajo presión: confiabilidad, interfaces y durabilidad."),
+      leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         p:P(
-          "Plumbing systems are reliability systems: flow, pressure, valves, and interfaces under repeated cycles. Engineering maturity shows up as predictable operation across pressure variance and consistent installation outcomes.",
-          "管道系统本质是可靠性系统：流量、压力、阀门与接口在重复循环中保持稳定。工程成熟体现为在压力方差下的可预测运行与一致安装输出。",
-          "La plomería es un sistema de confiabilidad: flujo, presión, válvulas e interfaces bajo ciclos repetidos. La madurez se ve en operación predecible bajo variación y resultados consistentes de instalación."
+         narrative:P(
+          "Plumbing is invisible until it fails. Mature systems behave predictably under pressure and usage cycles.",
+          "管道平时看不见，出问题就很明显。成熟系统能在压力与使用循环下保持可预测。",
+          "La plomería es invisible hasta que falla. Sistemas maduros operan de forma predecible bajo presión y ciclos."
+         ),
+         engineering:P(
+          "Reliability system: flow, pressure, valves, interfaces under repeated cycles. Maturity = predictable operation across pressure variance and consistent installation outcomes.",
+          "可靠性系统：流量、压力、阀门、接口在重复循环中稳定。成熟=压力方差下可预测运行与一致安装输出。",
+          "Sistema de confiabilidad: flujo, presión, válvulas e interfaces bajo ciclos. Madurez = operación predecible y resultados consistentes."
          )},
         {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         p:P(
-          "Cycle: interface failure or performance bottleneck identified → valve/fixture/material redesign → verify under variance → standardize installation and maintenance → scale.",
-          "循环：识别接口失效或性能瓶颈→阀门/器具/材料再设计→方差下验证→标准化安装与维护→扩张。",
-          "Ciclo: detectar fallo de interfaz o cuello → rediseño de válvula/accesorio/material → verificar → estandarizar instalación/mantenimiento → escalar."
+         narrative:P(
+          "Leaders reduce leak risk by stabilizing interfaces and standardizing installs.",
+          "领导者通过稳定接口与标准化安装降低渗漏风险。",
+          "Los líderes reducen fugas estabilizando interfaces y estandarizando instalación."
+         ),
+         engineering:P(
+          "Interface failure/bottleneck identified → valve/fixture/material redesign → verify under variance → standardize install/maintenance → scale.",
+          "识别接口失效/瓶颈→阀门/器具/材料再设计→方差下验证→标准化安装/维护→扩张。",
+          "Detectar fallo/cuello → rediseñar válvula/accesorio/material → verificar → estandarizar instalación/mantenimiento → escalar."
          )},
         {h:P("Benchmark referenced","引用基准","Referencia"),
-         p:P(
+         narrative:P(
+          "Kohler is referenced as a mature example of engineered plumbing systems and interfaces.",
+          "Kohler 被引用为成熟的工程化管道系统与接口例子。",
+          "Kohler se cita como ejemplo de sistemas e interfaces de plomería."
+         ),
+         engineering:P(
           "Kohler — plumbing systems.",
           "Kohler—管道系统。",
           "Kohler—plomería."
@@ -526,32 +652,52 @@ body::before,body::after{pointer-events:none!important}
 
     {
       t:P("Rainwater Management (LeafGuard)","雨水管理（LeafGuard）","Gestión de lluvia (LeafGuard)"),
-      s:P("Highlighted case study: routing + containment as an engineered envelope interface.","重点案例：将路由+隔离作为工程接口。","Caso destacado: ruteo + contención como interfaz de envolvente."),
+      s:P("Highlighted case study: routing + containment as an engineered envelope interface.","重点案例：路由+隔离作为工程接口。","Caso destacado: ruteo + contención como interfaz de envolvente."),
       leafguard:true,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         p:P(
-          "Rainwater management is routing: collect → contain → direct → discharge, while protecting adjacent systems (fascia, soffit, foundation) from uncontrolled exposure.",
-          "雨水管理本质是路由：收集→隔离→导向→排放，同时保护相邻系统（檐板、檐底、地基）免受不受控暴露。",
-          "La gestión de lluvia es ruteo: recolectar → contener → dirigir → descargar, protegiendo sistemas adyacentes de exposición no controlada."
+         narrative:P(
+          "Rainwater is simple and brutal: it follows gravity, collects debris, and tests attachment points. Mature systems route water consistently and keep failure local.",
+          "雨水逻辑简单但残酷：顺重力流动、携带碎屑、测试连接点。成熟系统能稳定路由并把失败局部化。",
+          "La lluvia es simple: gravedad, residuos y puntos de sujeción. Sistemas maduros enrutan de forma consistente y mantienen el fallo local."
+         ),
+         engineering:P(
+          "Routing problem: collect → contain → direct → discharge while protecting fascia/soffit/foundation from uncontrolled exposure. Core variables: debris load, attachment integrity, termination geometry, rainfall variance.",
+          "路由问题：收集→隔离→导向→排放，同时保护檐板/檐底/地基免受不受控暴露。核心变量：碎屑负载、连接完整性、端部几何、降雨方差。",
+          "Problema de ruteo: recolectar → contener → dirigir → descargar protegiendo fascia/soffit/cimiento. Variables: residuos, sujeción, terminaciones, variación de lluvia."
          )},
-        {h:P("Innovation pattern (structural)","创新模式（结构）","Patrón de innovación (estructural)"),
-         p:P(
-          "Engineering focus is not branding; it is failure-mode reduction and repeatable outputs: reduce joints, reduce seam-driven leakage/clog pathways, and standardize installation interfaces.",
-          "工程重点不是品牌，而是降低失效模式并实现可复现输出：减少接缝、减少“接缝驱动”的渗漏/堵塞路径、标准化安装接口。",
-          "El foco no es branding: es reducir modos de fallo y obtener salidas repetibles: menos uniones, menos rutas de fuga/atasco, e interfaces de instalación estandarizadas."
-         )},
-        {h:P("Historical notes (publicly cited)","历史节点（公开常见表述）","Notas históricas (citadas públicamente)"),
-         p:P(
-          "Company and public brand histories commonly cite early origin narratives and later commercialization milestones. If you add specific milestones (e.g., founding families, patent themes, or equipment advances), keep wording as “reported/cited” unless you publish supporting sources.",
-          "企业与公开品牌历史常见叙述包含早期起源与后续商业化节点。若加入具体节点（如创始家族、专利主题、设备演进），建议用“公开常见表述/被引用”措辞，除非你在此页发布支撑来源。",
-          "Historias públicas de marca suelen citar orígenes y hitos de comercialización. Si agregas hitos específicos (familias fundadoras, temas de patentes o avances de equipos), usa lenguaje “citado/reportado” salvo que publiques fuentes aquí."
+        {h:P("Observed convergence themes","观察到的收敛主题","Temas de convergencia observados"),
+         narrative:P(
+          "In the field, people talk about the same things: clogs, overflow, foundation water, and long-term peace of mind. Those themes repeat because the constraints repeat.",
+          "现场用户总在谈同样的事：堵塞、溢流、地基积水、长期安心。这些主题重复，因为约束重复。",
+          "En campo, la gente repite temas: atascos, desbordes, agua cerca del cimiento y tranquilidad. Se repite porque las restricciones se repiten."
+         ),
+         engineering:P(
+          "Repeat themes are treated as language clusters: debris/clog concern, attachment integrity, finish durability, termination/corner complexity. These clusters map into claim categories and warranty categories in the Field Study Evidence layer.",
+          "重复主题被视为语言簇：碎屑/堵塞、连接完整性、外观耐久、端部/转角复杂度。这些簇在“现场研究证据”中映射到主张类别与保修类别。",
+          "Los temas repetidos se tratan como clústeres: residuos/atascos, integridad de sujeción, durabilidad del acabado, complejidad de terminaciones. Se mapean a categorías en la evidencia del estudio."
          )},
         {h:P("Methodology correlation","方法论关联","Correlación metodológica"),
-         p:P(
-          "Rainwater systems map cleanly to the site’s method: interface geometry determines performance; containment prevents cascade; standardization enables repeatability under scale.",
-          "雨水系统与本网站方法论高度对应：接口几何决定性能；隔离阻断级联；标准化使规模化下可复现。",
-          "Los sistemas de lluvia se alinean: la geometría de la interfaz determina desempeño; la contención evita cascada; la estandarización habilita repetibilidad al escalar."
+         narrative:P(
+          "This vertical fits the site’s method because it’s measurable: you can see debris, see overflow paths, and see where water goes.",
+          "该领域契合本网站方法论，因为可测：能看到碎屑、看到溢流路径、看到水最终去哪。",
+          "Este vertical encaja porque es medible: se ven residuos, rutas de desborde y destino del agua."
+         ),
+         engineering:P(
+          "Direct mapping: interface geometry → failure mode exposure; containment prevents cascade; standardization enables repeatability under scale. Evidence anchors live in the 100-installation cohort.",
+          "直接映射：接口几何→失效暴露；隔离阻断级联；标准化使规模化下可复现。证据锚点来自 100 次安装队列。",
+          "Mapeo directo: geometría → exposición a fallos; contención evita cascada; estandarización habilita repetibilidad. Los anclajes están en el cohorte de 100 instalaciones."
+         )},
+        {h:P("Benchmarks referenced (rainwater)","引用基准（雨水）","Referencias (lluvia)"),
+         narrative:P(
+          "LeafGuard is referenced here because this page also connects to a live 100-installation field dataset in the Research Hub.",
+          "此处引用 LeafGuard，是因为本页与研究枢纽中的 100 次现场数据集相连接。",
+          "LeafGuard se cita aquí porque esta página conecta con un dataset de 100 instalaciones."
+         ),
+         engineering:P(
+          "LeafGuard — integrated rainwater management systems (referenced for contextual research).",
+          "LeafGuard—集成雨水管理系统（仅用于背景研究引用）。",
+          "LeafGuard — gestión integrada de lluvia (referencia contextual)."
          )}
       ]
     },
@@ -559,18 +705,24 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("Disclaimer (nominative fair use)","免责声明（指称性合理使用）","Aviso (uso nominativo)"),
       s:P("Plain-text references only. No affiliation or endorsement implied.","仅纯文本引用。不构成隶属或背书。","Solo texto. Sin afiliación ni respaldo."),
+      leafguard:false,
       bubbles:[
         {h:P("Statement","声明","Declaración"),
-         p:P(
+         narrative:P(
           "These companies are referenced for educational and contextual research purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
           "以上公司仅用于教育与研究背景参考。所有商标均归各自所有者所有。本网站不构成任何隶属或背书关系。",
           "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus respectivos propietarios. No se implica afiliación ni respaldo."
+         ),
+         engineering:P(
+          "Nominative reference only; no endorsement implied. No rankings. No product comparisons. Plain-text context references only.",
+          "仅指称性引用；不构成背书。不排名、不对比。仅纯文本背景引用。",
+          "Referencia nominativa; sin respaldo. Sin rankings ni comparaciones. Solo contexto en texto."
          )}
       ]
     }
   ];
 
-  // ===== Render top-level accordion + nested bubbles =====
+  // ===== Render accordion + nested bubbles =====
   var stack=document.getElementById("stack");
 
   function closeAllCards(){
@@ -582,32 +734,76 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function makeBubble(h, p, extraClass){
+  function makeLensPara(narr, eng){
+    var wrap=document.createElement("div");
+    var pn=document.createElement("p");
+    pn.setAttribute("data-lens","narrative");
+    pn.textContent=narr;
+    var pe=document.createElement("p");
+    pe.setAttribute("data-lens","engineering");
+    pe.textContent=eng;
+    wrap.appendChild(pn);
+    wrap.appendChild(pe);
+    return wrap;
+  }
+
+  function showLensIn(node){
+    node.querySelectorAll("[data-lens]").forEach(function(el){
+      el.classList.remove("show");
+      var k=el.getAttribute("data-lens");
+      if(k===lens) el.classList.add("show");
+    });
+  }
+
+  function makeBubble(hText, narrText, engText, leaf){
     var b=document.createElement("div");
-    b.className="bubble" + (extraClass?(" "+extraClass):"");
+    b.className="bubble" + (leaf ? " leafGuardCard" : "");
     b.setAttribute("role","button");
     b.tabIndex=0;
 
-    var title=document.createElement("h4");
-    title.textContent=h;
+    var h=document.createElement("h4");
+    h.textContent=hText;
 
-    var body=document.createElement("p");
-    body.textContent=p;
+    // add highlight tag for LeafGuard domain scope bubble (visual only)
+    if(leaf && (hText.toLowerCase().indexOf("domain scope")===0 || hText.indexOf("领域范围")===0 || hText.toLowerCase().indexOf("alcance")===0)){
+      var tag=document.createElement("span");
+      tag.className="leafGuardTag";
+      tag.textContent=(lang==="zh")?"重点":(lang==="es")?"DESTACADO":"HIGHLIGHT";
+      h.appendChild(tag);
+    }
 
-    b.appendChild(title);
-    b.appendChild(body);
+    var pWrap=makeLensPara(narrText, engText);
 
-    function act(){ b.classList.toggle("open"); }
+    b.appendChild(h);
+    b.appendChild(pWrap);
+
+    function closeSiblings(){
+      var sib=b.parentElement ? b.parentElement.querySelectorAll(".bubble") : [];
+      for(var i=0;i<sib.length;i++){
+        if(sib[i]!==b) sib[i].classList.remove("open");
+      }
+    }
+
+    function act(){
+      var willOpen=!b.classList.contains("open");
+      closeSiblings();
+      b.classList.toggle("open", willOpen);
+      showLensIn(b);
+    }
+
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
+
+    // Ensure lens is applied even when closed/open
+    showLensIn(b);
     return b;
   }
 
   function makeCard(sec, idx){
     var card=document.createElement("div");
-    card.className="card";
+    card.className="card" + (sec.leafguard ? " leafGuardCard" : "");
 
     var head=document.createElement("div");
     head.className="head";
@@ -642,24 +838,14 @@ body::before,body::after{pointer-events:none!important}
     bubbles.className="subBubbles";
 
     (sec.bubbles||[]).forEach(function(bb){
-      var cls = sec.leafguard ? "leafGuard" : "";
-      var bubbleEl = makeBubble(
-        pick(bb.h) + (sec.leafguard && pick(bb.h).indexOf("Historical")===0 ? '<span class="leafGuardTag">HIGHLIGHT</span>' : ""),
-        pick(bb.p),
-        cls
+      bubbles.appendChild(
+        makeBubble(
+          pick(bb.h),
+          pick(bb.narrative),
+          pick(bb.engineering),
+          !!sec.leafguard
+        )
       );
-      // The title text must remain textContent; the tag is added separately for leafguard first bubble only.
-      if(sec.leafguard){
-        // Add a small tag to the first bubble title only (visual highlight, still neutral)
-        if(pick(bb.h).indexOf("Domain scope")===0 || pick(bb.h).indexOf("领域范围")===0 || pick(bb.h).indexOf("Alcance")===0){
-          var tag=document.createElement("span");
-          tag.className="leafGuardTag";
-          tag.textContent=(lang==="zh")?"重点":(lang==="es")?"DESTACADO":"HIGHLIGHT";
-          bubbleEl.querySelector("h4").appendChild(tag);
-        }
-      }
-
-      bubbles.appendChild(bubbleEl);
     });
 
     body.appendChild(bubbles);
@@ -675,7 +861,7 @@ body::before,body::after{pointer-events:none!important}
       card.classList.add("open");
       chev.textContent="▾";
       // close all sub-bubbles when opening card (less clutter)
-      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); showLensIn(b); });
     }
 
     head.addEventListener("click", toggle, {passive:true});
@@ -694,9 +880,11 @@ body::before,body::after{pointer-events:none!important}
     return card;
   }
 
-  SECTIONS.forEach(function(sec, i){
-    stack.appendChild(makeCard(sec, i));
-  });
+  // Render
+  SECTIONS.forEach(function(sec,i){ stack.appendChild(makeCard(sec,i)); });
+
+  // Paint lens pills
+  paintLens();
 
 })();
 </script>

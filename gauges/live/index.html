@@ -1,0 +1,369 @@
+<!doctype html>
+<!-- TNT — /gauges/live/index.html
+     CTE_GAUGES_v1 · LIVE VIEWER (LOCAL ONLY)
+     PURPOSE:
+       - View live traversal telemetry captured by /assets/gauges.js
+       - Filter by event type and page
+       - Export JSON
+       - Clear buffer
+     RULES:
+       - No new gd_* keys
+       - Reads canonical gd_* for state only
+       - Uses ui.css + branch.css + instruments.js
+       - No overlays/modals
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gauges · Live</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+<script defer src="/assets/gauges.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:112px;
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.84);
+  --shadowA:0 28px 100px rgba(0,0,0,.65);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --gold:rgba(201,162,74,.18);
+}
+
+/* Top */
+.top{
+  position:fixed;top:12px;left:0;right:0;z-index:240;
+  padding:0 12px;pointer-events:none;
+}
+.topbar{
+  pointer-events:auto;
+  width:min(1100px,96vw);
+  margin:0 auto;
+  padding:10px 10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.14);
+  backdrop-filter:blur(10px);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    rgba(0,0,0,.22);
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  box-shadow:var(--shadowB);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(1px)}
+
+.page{
+  width:min(1100px,94vw);
+  margin:0 auto;
+  padding:150px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.panel{
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:rgba(0,0,0,.22);
+  box-shadow:var(--shadowA);
+  padding:16px;
+}
+
+.h1{margin:0 0 8px;font-size:26px;font-weight:980;letter-spacing:.3px}
+.p0{margin:0;color:var(--mut);line-height:1.7}
+
+.controls{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  margin-top:12px;
+}
+.group{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sel,.inp{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  color:#fff;
+}
+.inp{min-width:220px}
+.small{font-size:12.5px;color:rgba(255,255,255,.74);line-height:1.4}
+
+.tableWrap{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(0,0,0,.18);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:10px 10px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  vertical-align:top;
+}
+th{
+  text-align:left;
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.90);
+  background:rgba(0,0,0,.22);
+}
+td{color:rgba(255,255,255,.82)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px}
+
+.badge{
+  display:inline-flex;
+  padding:4px 9px;
+  border-radius:999px;
+  border:1px solid rgba(201,162,74,.22);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  letter-spacing:.2px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="topbar">
+    <div class="group">
+      <a class="btn" id="btnBack" href="/gauges/">GAUGES</a>
+      <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
+      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+    </div>
+    <div class="group">
+      <button class="btn" id="btnExport" type="button">EXPORT JSON</button>
+      <button class="btn" id="btnClear" type="button">CLEAR</button>
+      <button class="btn" id="btnDebug" type="button">DEBUG OFF</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <section class="panel">
+    <div class="h1">Live Gauges</div>
+    <div class="p0">
+      Local-only telemetry captured by <span class="badge">/assets/gauges.js</span>.
+      Use filters to watch traversal and engagement in live motion.
+    </div>
+
+    <div class="controls">
+      <div class="group">
+        <label class="small">Event</label>
+        <select class="sel" id="selType"></select>
+
+        <label class="small">Page contains</label>
+        <input class="inp" id="inpPage" type="text" placeholder="/research /products /index.html"/>
+
+        <label class="small">Limit</label>
+        <select class="sel" id="selLimit">
+          <option>50</option>
+          <option selected>150</option>
+          <option>300</option>
+          <option>600</option>
+        </select>
+      </div>
+
+      <div class="group">
+        <button class="btn" id="btnRefresh" type="button">REFRESH</button>
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:10px">
+      Tip: turn DEBUG ON to mirror events in the browser console during live consults.
+    </div>
+  </section>
+
+  <section class="panel tableWrap" aria-label="Events">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:160px">Time</th>
+          <th style="width:160px">Type</th>
+          <th style="width:220px">Page</th>
+          <th>Payload</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // state carry (gd_* only)
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  try{
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
+  }catch(e){}
+
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+  }
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+  wire("btnBack","/gauges/");
+  wire("btnResearch","/research/");
+  wire("btnIndex","/index.html");
+
+  var selType=document.getElementById("selType");
+  var inpPage=document.getElementById("inpPage");
+  var selLimit=document.getElementById("selLimit");
+  var tbody=document.getElementById("tbody");
+
+  function load(){
+    try{
+      var raw=localStorage.getItem("cte_gauges_v1");
+      if(!raw) return {v:1,events:[]};
+      var obj=JSON.parse(raw);
+      if(!obj || !Array.isArray(obj.events)) return {v:1,events:[]};
+      return obj;
+    }catch(e){
+      return {v:1,events:[]};
+    }
+  }
+
+  function uniqTypes(events){
+    var m={};
+    events.forEach(function(e){ m[e.type]=true; });
+    return Object.keys(m).sort();
+  }
+
+  function setTypeOptions(types){
+    selType.innerHTML="";
+    var opt=document.createElement("option");
+    opt.value="__all__";
+    opt.textContent="(all)";
+    selType.appendChild(opt);
+    types.forEach(function(t){
+      var o=document.createElement("option");
+      o.value=t;
+      o.textContent=t;
+      selType.appendChild(o);
+    });
+  }
+
+  function clip(s,n){
+    s=String(s||"");
+    return s.length>n ? s.slice(0,n-1)+"…" : s;
+  }
+
+  function render(){
+    var store=load();
+    var events=store.events.slice();
+
+    setTypeOptions(uniqTypes(events));
+
+    var wantType = selType.value || "__all__";
+    var wantPage = (inpPage.value||"").trim();
+    var limit = parseInt(selLimit.value,10);
+    if(!isFinite(limit)) limit=150;
+
+    if(wantType!=="__all__"){
+      events = events.filter(function(e){ return e.type===wantType; });
+    }
+    if(wantPage){
+      events = events.filter(function(e){
+        return (e.page||"").indexOf(wantPage)>=0 || ((e.state&&e.state.path)||"").indexOf(wantPage)>=0;
+      });
+    }
+
+    events = events.slice(-limit).reverse();
+
+    tbody.innerHTML="";
+    events.forEach(function(e){
+      var tr=document.createElement("tr");
+      var td1=document.createElement("td");
+      td1.textContent=clip(e.ts, 24);
+      var td2=document.createElement("td");
+      td2.innerHTML='<span class="badge">'+clip(e.type, 32)+'</span>';
+      var td3=document.createElement("td");
+      td3.textContent=clip(e.page, 48);
+      var td4=document.createElement("td");
+      td4.innerHTML="<code>"+clip(JSON.stringify(e.payload||{}), 420)+"</code>";
+      tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3);tr.appendChild(td4);
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById("btnRefresh").addEventListener("click", render);
+
+  // Export JSON
+  document.getElementById("btnExport").addEventListener("click", function(){
+    var data=load();
+    var blob=new Blob([JSON.stringify(data,null,2)], {type:"application/json"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a");
+    a.href=url;
+    a.download="cte_gauges_v1_export.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+  });
+
+  // Clear buffer
+  document.getElementById("btnClear").addEventListener("click", function(){
+    try{ localStorage.setItem("cte_gauges_v1", JSON.stringify({v:1,events:[]})); }catch(e){}
+    render();
+  });
+
+  // Debug toggle
+  function paintDebug(){
+    var on = (localStorage.getItem("cte_gauges_debug")==="1");
+    document.getElementById("btnDebug").textContent = on ? "DEBUG ON" : "DEBUG OFF";
+  }
+  document.getElementById("btnDebug").addEventListener("click", function(){
+    var on = (localStorage.getItem("cte_gauges_debug")==="1");
+    try{ localStorage.setItem("cte_gauges_debug", on ? "0" : "1"); }catch(e){}
+    paintDebug();
+  });
+
+  // initial
+  paintDebug();
+  render();
+
+})();
+</script>
+
+</body>
+</html>

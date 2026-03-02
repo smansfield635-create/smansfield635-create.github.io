@@ -1,9 +1,9 @@
 <!doctype html>
-<!-- TNT — /explore/frontier/shimmer/index.html
-     EXPLORE · FRONTIER · SHIMMER (INFORMAL SITE LAYER — NEW STANDARD)
+<!-- TNT — /explore/frontier/lattice/index.html
+     EXPLORE · FRONTIER · LATTICE (INFORMAL SITE LAYER — NEW STANDARD)
      PURPOSE:
-       - SHIMMER as a frontier routing field: signal integrity, distortion, stabilization, calibration
-       - Dense, legible, routing-safe shell that stays measurable (no hype)
+       - Lattice as the finite coordinate discipline beneath frontier claims
+       - Dense, legible, routing-safe shell (no hype; measurable posture)
      NEW STANDARD (THIS FILE):
        - Trilingual: EN / 中文 / ES
        - LENSES (VISIBLE ONLY):
@@ -31,7 +31,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · SHIMMER</title>
+<title>FRONTIER · Lattice</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -155,8 +155,8 @@ body::before,body::after{pointer-events:none!important}
   border-radius:34px;
   background:
     radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
-    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    radial-gradient(circle at 78% 22%, rgba(90,40,120,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(255,43,43,.10), transparent 64%),
     linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
   box-shadow:
     0 70px 220px rgba(0,0,0,.62),
@@ -168,13 +168,13 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:-18%;
   background:
-    radial-gradient(circle at 22% 30%, rgba(90,40,120,.16), transparent 46%),
-    radial-gradient(circle at 78% 26%, rgba(255,43,43,.14), transparent 48%),
-    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 52%),
-    conic-gradient(from 14deg at 34% 30%,
-      rgba(201,162,74,.14), transparent 12%,
-      rgba(90,40,120,.12), transparent 26%,
-      rgba(255,43,43,.10), transparent 40%,
+    radial-gradient(circle at 28% 30%, rgba(201,162,74,.12), transparent 46%),
+    radial-gradient(circle at 72% 28%, rgba(90,40,120,.14), transparent 48%),
+    radial-gradient(circle at 50% 78%, rgba(255,43,43,.10), transparent 52%),
+    conic-gradient(from 20deg at 52% 40%,
+      rgba(201,162,74,.12), transparent 14%,
+      rgba(90,40,120,.12), transparent 30%,
+      rgba(255,43,43,.10), transparent 44%,
       transparent 100%),
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
@@ -337,6 +337,7 @@ body::before,body::after{pointer-events:none!important}
 .pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
 .pdesc + .pdesc{margin-top:10px}
 
+/* Sub-bubbles */
 .subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -417,9 +418,9 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
   <div class="backdrop" aria-hidden="true"></div>
 
-  <div class="header" aria-label="Shimmer header">
-    <p class="k" id="hk">FRONTIER · SHIMMER</p>
-    <h1 class="t" id="ht">SHIMMER FIELD</h1>
+  <div class="header" aria-label="Lattice header">
+    <p class="k" id="hk">FRONTIER · LATTICE</p>
+    <h1 class="t" id="ht">LATTICE GEOMETRY</h1>
     <p class="s" id="hs"></p>
     <div class="rule" id="rule"></div>
 
@@ -429,7 +430,7 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="band" id="band">SHIMMER DOMAINS</div>
+  <div class="band" id="band">LATTICE DOMAINS</div>
   <div class="list" id="list"></div>
 </div>
 
@@ -531,191 +532,191 @@ body::before,body::after{pointer-events:none!important}
   var HEAD={
     en:{
       platform:{
-        hs:"Shimmer is where systems stop trusting ‘what feels true’ and start protecting clarity. It treats perception as a routing problem: signal gets distorted, beliefs form, and behavior follows.",
-        rule:"Rule: do not argue beliefs. Measure distortion, restore signal, and keep the interface honest."
+        hs:"The lattice is the map beneath the map. It lets people stop arguing about ‘complexity’ and start pointing to coordinates: what state are we in right now?",
+        rule:"Rule: if it can’t be indexed, it can’t be compared. If it can’t be compared, it can’t be scaled safely."
       },
       engineering:{
-        hs:"Engineering view: Shimmer models signal distortion as measurable variance between source and interpretation under bounded interfaces. Stabilization requires thresholds, feedback, and deterministic recalibration triggers.",
-        rule:"Rule: define variance bands, detect drift early, and trigger correction before distortion becomes behavior at scale."
+        hs:"Engineering view: a lattice is a finite state coordinate discipline. It supports deterministic classification, replayable evidence, and drift detection under fixed manifests.",
+        rule:"Rule: identical inputs must yield identical outputs. Any mutation requires version bump + replay."
       }
     },
     zh:{
       platform:{
-        hs:"Shimmer 用来保护清晰度：当系统不再依赖“感觉正确”，而是把感知当作路由问题：信号被扭曲→信念形成→行为跟随。",
-        rule:"规则：不争论信念。测量失真、恢复信号、让界面保持诚实。"
+        hs:"晶格是地图之下的地图。它让人停止争论“复杂”，开始指向坐标：我们现在处在哪个状态？",
+        rule:"规则：不能索引就不能比较；不能比较就不能安全扩张。"
       },
       engineering:{
-        hs:"工程视图：Shimmer 把信号失真建模为在有界接口下，信号源与认知解释之间的可测方差。稳定需要阈值、反馈与确定性再校准触发。",
-        rule:"规则：定义方差带，提前检测漂移，在失真以规模化方式变成行为之前触发修正。"
+        hs:"工程视图：晶格是有限状态坐标纪律。它支持确定性分类、可回放证据与固定清单下的漂移检测。",
+        rule:"规则：同输入必得同输出。任何变异必须版本升级+回放。"
       }
     },
     es:{
       platform:{
-        hs:"Shimmer protege claridad: deja de confiar en ‘lo que se siente cierto’ y trata percepción como ruteo: la señal se distorsiona, se forman creencias y el comportamiento sigue.",
-        rule:"Regla: no discutir creencias. Medir distorsión, restaurar señal y mantener la interfaz honesta."
+        hs:"El lattice es el mapa bajo el mapa. Ayuda a dejar de discutir ‘complejidad’ y empezar a señalar coordenadas: ¿en qué estado estamos ahora?",
+        rule:"Regla: si no se puede indexar, no se puede comparar. Si no se puede comparar, no se puede escalar con seguridad."
       },
       engineering:{
-        hs:"Vista de ingeniería: Shimmer modela distorsión como varianza medible entre fuente e interpretación bajo interfaces acotadas. Estabilización requiere umbrales, feedback y disparadores deterministas de recalibración.",
-        rule:"Regla: definir bandas de varianza, detectar deriva temprano y corregir antes de que la distorsión se vuelva conducta a escala."
+        hs:"Vista de ingeniería: el lattice es disciplina de coordenadas de estados finitos. Permite clasificación determinista, evidencia reproducible y detección de deriva bajo manifiestos fijos.",
+        rule:"Regla: mismas entradas → mismas salidas. Cualquier mutación requiere versión + replay."
       }
     }
   };
 
-  // ===== Domains (cards) =====
+  // ===== Domains =====
   var DOMAINS=[
     {
       c:"#c9a24a",
-      t:{en:"Signal Integrity Modeling", zh:"信号完整性建模", es:"Modelado de integridad de señal"},
-      s:{en:"Where signal gets bent before humans notice.", zh:"信号在被人察觉前如何弯曲。", es:"Dónde la señal se dobla antes de que el humano lo note."},
+      t:{en:"256-State Finite Geometry", zh:"256态有限几何", es:"Geometría finita de 256 estados"},
+      s:{en:"A bounded coordinate space for classification.", zh:"用于分类的有界坐标空间。", es:"Espacio acotado para clasificación."},
       platform:{
         intro:{
-          en:"Most manipulation doesn’t add new facts—it bends the channel. Shimmer starts by naming the channel and showing where it degrades.",
-          zh:"多数操控不是添加新事实，而是弯曲通道。Shimmer 从命名通道开始，展示通道在哪儿变差。",
-          es:"La mayoría de manipulación no agrega hechos: dobla el canal. Shimmer nombra el canal y muestra dónde se degrada."
+          en:"When everything feels infinite, people drift into stories. A finite lattice stops that drift: it forces a countable map.",
+          zh:"当一切看似无限，人就会滑向叙事。有限晶格阻止漂移：强制可计数地图。",
+          es:"Cuando todo parece infinito, se cae en historias. Un lattice finito lo evita: obliga a un mapa contable."
         },
-        concept:{en:"Concept: clarity comes from channel hygiene.", zh:"概念：清晰来自通道卫生。", es:"Concepto: claridad viene de higiene del canal."},
-        build:{en:"Build now: list your top 3 channels (feeds) and the failure mode for each.", zh:"现在建：列出3个主要通道（信息源）及各自失效模式。", es:"Construir ahora: listar 3 canales y el modo de fallo de cada uno."},
-        roadmap:{en:"Roadmap: connect channel failures to measurable indicators and a correction routine.", zh:"路线图：把通道失效与可测指标和修正例程绑定。", es:"Hoja de ruta: ligar fallos del canal a indicadores medibles y rutina de corrección."}
+        concept:{en:"Concept: finite states make disagreement measurable.", zh:"概念：有限状态让分歧可测。", es:"Concepto: estados finitos hacen el desacuerdo medible."},
+        build:{en:"Build now: list the axes (only a few) that matter for this domain.", zh:"现在建：列出本域真正重要的少数轴。", es:"Construir ahora: listar los pocos ejes que importan en este dominio."},
+        roadmap:{en:"Roadmap: publish the enumeration and keep naming locked for comparability.", zh:"路线图：发布枚举，并锁定命名以保持可比性。", es:"Hoja de ruta: publicar enumeración y fijar nombres para comparabilidad."}
       },
       engineering:{
         intro:{
-          en:"Define channel model: source → transforms → presentation → user interpretation. Distortion is measurable variance at each transform boundary.",
-          zh:"定义通道模型：信号源→变换→呈现→用户解释。失真是每个变换边界的可测方差。",
-          es:"Definir modelo de canal: fuente → transformaciones → presentación → interpretación. Distorsión = varianza medible en cada frontera."
+          en:"Finite state geometry means explicit axes, explicit ordering, and explicit enumeration. ‘Complex’ becomes indexable.",
+          zh:"有限状态几何=显式轴、显式顺序、显式枚举。“复杂”变成可索引。",
+          es:"Geometría finita = ejes explícitos, orden explícito y enumeración explícita. ‘Complejo’ se vuelve indexable."
         },
-        concept:{en:"Concept: distortion is variance under bounded interface conditions.", zh:"概念：失真=有界接口条件下的方差。", es:"Concepto: distorsión = varianza bajo condiciones de interfaz acotadas."},
-        build:{en:"Build now: define a baseline and variance band per channel; log deltas by window.", zh:"现在建：为每条通道定义基线与方差带；按窗口记录差分。", es:"Construir ahora: definir baseline y banda de varianza por canal; registrar deltas por ventana."},
-        roadmap:{en:"Roadmap: add reason-coded triggers and audit logs for recalibration actions.", zh:"路线图：为再校准动作增加原因码触发与审计日志。", es:"Hoja de ruta: añadir triggers con razón y logs de auditoría para recalibración."}
+        concept:{en:"Concept: enumeration enables deterministic classification.", zh:"概念：枚举支持确定性分类。", es:"Concepto: enumeración habilita clasificación determinista."},
+        build:{en:"Build now: define axis independence and edge constraints (inequality basis).", zh:"现在建：定义轴独立性与边约束（不等式基）。", es:"Construir ahora: definir independencia de ejes y restricciones de borde (base de desigualdades)."},
+        roadmap:{en:"Roadmap: run sweeps and store receipts (hash/version) for replay.", zh:"路线图：执行扫掠并存储收据（哈希/版本）以便回放。", es:"Hoja de ruta: ejecutar barridos y guardar recibos (hash/versión) para replay."}
       }
     },
 
     {
       c:"#ff2b2b",
-      t:{en:"Attention Stabilization", zh:"注意力稳定", es:"Estabilización de atención"},
-      s:{en:"When attention becomes a resource under attack.", zh:"当注意力变成被攻击的资源。", es:"Cuando la atención se vuelve un recurso bajo ataque."},
+      t:{en:"Cardinal Axis Mapping", zh:"基数轴映射", es:"Mapeo de ejes cardinales"},
+      s:{en:"Definition, execution, measurement, identity as anchors.", zh:"定义/执行/测量/身份作为锚。", es:"Definición, ejecución, medición, identidad como anclas."},
       platform:{
         intro:{
-          en:"If attention gets hijacked, people can’t hold a plan. Stabilization is not control—it’s restoring the ability to choose.",
-          zh:"注意力被劫持，人就无法坚持计划。稳定不是控制，而是恢复“选择能力”。",
-          es:"Si la atención es secuestrada, la gente no sostiene un plan. Estabilizar no es controlar: es restaurar capacidad de elegir."
+          en:"People need anchors. Cardinal axes give a stable language for ‘what broke’ without debating intent.",
+          zh:"人需要锚点。基数轴提供稳定语言来描述“哪里坏了”，而不争论意图。",
+          es:"La gente necesita anclas. Ejes cardinales dan lenguaje estable para ‘qué se rompió’ sin debatir intención."
         },
-        concept:{en:"Concept: the user needs a calm loop.", zh:"概念：用户需要一个安静的循环。", es:"Concepto: el usuario necesita un bucle calmado."},
-        build:{en:"Build now: remove ‘infinite scroll’ behaviors from your process; adopt 1-step loops.", zh:"现在建：从你的流程里移除“无限滚动”；采用一步循环。", es:"Construir ahora: eliminar comportamientos de ‘scroll infinito’; adoptar bucles de 1 paso."},
-        roadmap:{en:"Roadmap: publish a stabilization playbook (pause → reset → re-enter).", zh:"路线图：发布稳定剧本（暂停→重置→再进入）。", es:"Hoja de ruta: publicar playbook (pausar → reset → re-entrar)."}
+        concept:{en:"Concept: anchors keep the map readable.", zh:"概念：锚点让地图可读。", es:"Concepto: anclas mantienen el mapa legible."},
+        build:{en:"Build now: for each axis, write one sentence: what must stay true.", zh:"现在建：为每个轴写一句：必须保持什么为真。", es:"Construir ahora: por eje, escribir una frase: qué debe mantenerse verdadero."},
+        roadmap:{en:"Roadmap: bind each axis to a measurement surface and a return path.", zh:"路线图：把每个轴绑定到测量面与返回路径。", es:"Hoja de ruta: ligar cada eje a una superficie de medición y una ruta de retorno."}
       },
       engineering:{
         intro:{
-          en:"Model attention load as capacity under variable stimulus. Instability appears as rising switching rate, degraded retention, and higher error variance.",
-          zh:"将注意力负载建模为在可变刺激下的容量。不稳定表现为切换率上升、保持下降、错误方差上升。",
-          es:"Modelar carga de atención como capacidad bajo estímulo variable. Inestabilidad = más switching, menor retención, más varianza de error."
+          en:"Cardinal mapping converts qualitative disputes into structural coordinates. Axes become invariant inputs to classification.",
+          zh:"基数映射把定性争论变成结构坐标。轴成为分类的不变量输入。",
+          es:"Mapeo cardinal convierte disputas cualitativas en coordenadas estructurales. Ejes se vuelven entradas invariantes."
         },
-        concept:{en:"Concept: stabilize by limiting state transitions and variance.", zh:"概念：通过限制状态切换与方差来稳定。", es:"Concepto: estabilizar limitando transiciones de estado y varianza."},
-        build:{en:"Build now: define allowable transition rate (per window) and a clamp when exceeded.", zh:"现在建：定义每窗口允许的切换率，并设置超限夹紧。", es:"Construir ahora: definir tasa permitida por ventana y un clamp cuando se excede."},
-        roadmap:{en:"Roadmap: closed-loop feedback that reduces switching and restores retention baseline.", zh:"路线图：闭环反馈，降低切换并恢复保持基线。", es:"Hoja de ruta: feedback en bucle cerrado que reduce switching y restaura baseline."}
+        concept:{en:"Concept: axis anchors are constraint surfaces.", zh:"概念：轴锚是约束面。", es:"Concepto: anclas de eje son superficies de restricción."},
+        build:{en:"Build now: define manifests (scope + axis definitions) and hash them.", zh:"现在建：定义清单（范围+轴定义）并哈希锁定。", es:"Construir ahora: definir manifiestos (alcance + ejes) y hashearlos."},
+        roadmap:{en:"Roadmap: enforce ‘no silent axis mutation’ with epoch rollover.", zh:"路线图：用新纪元强制“无静默轴变异”。", es:"Hoja de ruta: imponer ‘sin mutación silenciosa’ con rollover de época."}
       }
     },
 
     {
       c:"#c9a24a",
-      t:{en:"Perception Drift Detection", zh:"感知漂移检测", es:"Detección de deriva perceptiva"},
-      s:{en:"When the map diverges from reality.", zh:"当地图偏离现实。", es:"Cuando el mapa se separa de la realidad."},
+      t:{en:"Hybrid Collapse Vectors", zh:"混合坍塌向量", es:"Vectores híbridos de colapso"},
+      s:{en:"How failures couple across lanes.", zh:"故障如何跨车道耦合。", es:"Cómo se acoplan fallos entre carriles."},
       platform:{
         intro:{
-          en:"Drift is when people become confident in a false map. Shimmer looks for drift early and forces a return to receipts.",
-          zh:"漂移=人对错误地图越来越自信。Shimmer 早期识别漂移，并强制回到收据。",
-          es:"Deriva es cuando la gente se vuelve segura de un mapa falso. Shimmer la detecta temprano y obliga a volver a recibos."
+          en:"Collapse rarely comes from one thing. It comes from coupling: small failures moving together until they cascade.",
+          zh:"坍塌很少来自单点，而来自耦合：小失败一起移动，直到级联。",
+          es:"El colapso rara vez viene de una sola cosa. Viene de acoplamiento: fallos pequeños moviéndose juntos hasta cascada."
         },
-        concept:{en:"Concept: confidence is not proof.", zh:"概念：自信不是证明。", es:"Concepto: confianza no es prueba."},
-        build:{en:"Build now: define a ‘reality check’ step before major decisions.", zh:"现在建：在重大决策前定义一个“现实核对”步骤。", es:"Construir ahora: definir un paso de ‘reality check’ antes de decisiones mayores."},
-        roadmap:{en:"Roadmap: drift scoreboard (green/yellow/red) with receipts behind each state.", zh:"路线图：漂移记分牌（绿/黄/红），每个状态背后都有收据。", es:"Hoja de ruta: tablero de deriva (verde/amarillo/rojo) con recibos detrás."}
+        concept:{en:"Concept: coupling is the real danger.", zh:"概念：耦合才是真危险。", es:"Concepto: el acoplamiento es el peligro real."},
+        build:{en:"Build now: list your top 3 couplings (what moves together under stress).", zh:"现在建：列出3个主要耦合（压力下哪些会一起动）。", es:"Construir ahora: listar 3 acoplamientos principales (qué se mueve junto bajo estrés)."},
+        roadmap:{en:"Roadmap: map couplings into Dot.Grid and watch correlation exposure.", zh:"路线图：把耦合映射进Dot.Grid，并监测相关暴露。", es:"Hoja de ruta: mapear acoplamientos en Dot.Grid y observar exposición de correlación."}
       },
       engineering:{
         intro:{
-          en:"Define ground truth proxies and compare interpretation outputs. Drift is divergence over windows with measurable acceleration.",
-          zh:"定义真值代理并比较解释输出。漂移是窗口上的可测偏离及其加速。",
-          es:"Definir proxies de verdad y comparar salidas de interpretación. Deriva = divergencia por ventanas con aceleración medible."
+          en:"Hybrid collapse vectors are cross-axis divergence patterns. They show where correlated exposure dominates stability.",
+          zh:"混合坍塌向量是跨轴偏离模式，展示相关暴露如何主导稳定性。",
+          es:"Vectores híbridos son patrones de divergencia multi-eje. Muestran dónde la exposición correlacionada domina estabilidad."
         },
-        concept:{en:"Concept: drift is divergence + acceleration under fixed scope.", zh:"概念：漂移=固定范围下的偏离+加速。", es:"Concepto: deriva = divergencia + aceleración bajo alcance fijo."},
-        build:{en:"Build now: compute divergence metrics and trigger thresholds for recalibration.", zh:"现在建：计算偏离指标并设置再校准阈值触发。", es:"Construir ahora: calcular métricas de divergencia y umbrales para recalibración."},
-        roadmap:{en:"Roadmap: epoch rollover on rule changes to preserve comparability.", zh:"路线图：规则变化必须新纪元以保持可比性。", es:"Hoja de ruta: rollover de época en cambios de reglas para preservar comparabilidad."}
+        concept:{en:"Concept: collapse is a vector, not a story.", zh:"概念：坍塌是向量，不是故事。", es:"Concepto: colapso es vector, no historia."},
+        build:{en:"Build now: define correlation and acceleration measures (ρ, Δρ) for couplings.", zh:"现在建：为耦合定义相关与加速度度量（ρ、Δρ）。", es:"Construir ahora: definir medidas de correlación y aceleración (ρ, Δρ) para acoplamientos."},
+        roadmap:{en:"Roadmap: windowed detection + containment triggers + rollback discipline.", zh:"路线图：窗口检测+隔离触发+回滚纪律。", es:"Hoja de ruta: detección por ventanas + triggers de contención + disciplina de rollback."}
       }
     },
 
     {
       c:"#a3a3a3",
-      t:{en:"Cognitive Load Balancing", zh:"认知负载平衡", es:"Balanceo de carga cognitiva"},
-      s:{en:"How much can a human carry without breaking?", zh:"人能承载多少而不崩？", es:"¿Cuánto puede cargar un humano sin romperse?"},
+      t:{en:"Constraint Surfaces", zh:"约束面", es:"Superficies de restricción"},
+      s:{en:"Where movement is allowed to go.", zh:"允许运动到哪里。", es:"Dónde se permite el movimiento."},
       platform:{
         intro:{
-          en:"Overload creates bad shortcuts: people stop verifying and start reacting. Balance is how you keep the loop intact.",
-          zh:"过载会逼出坏捷径：人停止验证，开始反应。平衡让循环保持完整。",
-          es:"La sobrecarga crea atajos malos: se deja de verificar y se reacciona. Balance = mantener el bucle intacto."
+          en:"Constraints are not negativity. They’re safety rails: they say where you can move without breaking.",
+          zh:"约束不是消极，而是护栏：告诉你哪里能动而不破。",
+          es:"Las restricciones no son negatividad. Son barandillas: dicen dónde puedes moverte sin romper."
         },
-        concept:{en:"Concept: fewer steps, clearer steps.", zh:"概念：步骤更少、更清晰。", es:"Concepto: menos pasos, pasos más claros."},
-        build:{en:"Build now: enforce ‘one open’ UX and single next-step routing.", zh:"现在建：执行“一次只开一个”的UX与单一下一步路由。", es:"Construir ahora: aplicar UX de ‘una abierta’ y ruteo de siguiente paso único."},
-        roadmap:{en:"Roadmap: split long processes into short stages with pass/fail checks.", zh:"路线图：把长流程拆成短阶段，并加通过/失败检查。", es:"Hoja de ruta: dividir procesos largos en etapas cortas con checks pasa/falla."}
+        concept:{en:"Concept: boundaries make progress repeatable.", zh:"概念：边界让进步可复跑。", es:"Concepto: límites hacen progreso repetible."},
+        build:{en:"Build now: write one boundary you refuse to cross without measurement.", zh:"现在建：写下一个“无测量绝不跨越”的边界。", es:"Construir ahora: escribir un límite que no cruzas sin medición."},
+        roadmap:{en:"Roadmap: convert boundaries into clear gates with reason codes.", zh:"路线图：把边界变成带原因码的闸门。", es:"Hoja de ruta: convertir límites en compuertas con códigos de razón."}
       },
       engineering:{
         intro:{
-          en:"Load is capacity under constraints. Measure error rates, switching frequency, and retention loss to detect overload.",
-          zh:"负载=约束下的容量。通过错误率、切换频率、保持损失检测过载。",
-          es:"Carga = capacidad bajo restricciones. Medir tasa de error, frecuencia de switching y pérdida de retención para detectar sobrecarga."
+          en:"Constraint surfaces are the admissibility geometry: allowed transitions, forbidden transitions, and deterministic failure meanings.",
+          zh:"约束面是可采信几何：允许转移、禁止转移、以及确定性失败含义。",
+          es:"Superficies de restricción son geometría de admisibilidad: transiciones permitidas/prohibidas y significados de fallo deterministas."
         },
-        concept:{en:"Concept: overload is measurable variance, not opinion.", zh:"概念：过载是可测方差，不是意见。", es:"Concepto: sobrecarga es varianza medible, no opinión."},
-        build:{en:"Build now: define overload thresholds and deterministic UI clamps.", zh:"现在建：定义过载阈值与确定性UI夹紧策略。", es:"Construir ahora: definir umbrales de sobrecarga y clamps deterministas de UI."},
-        roadmap:{en:"Roadmap: adaptive pacing that stays within declared limits (no hidden manipulative gates).", zh:"路线图：自适应节奏但保持在声明限制内（无隐藏操控闸门）。", es:"Hoja de ruta: pacing adaptativo dentro de límites declarados (sin compuertas manipulativas ocultas)."}
+        concept:{en:"Concept: constraints define admissibility.", zh:"概念：约束定义可采信。", es:"Concepto: restricciones definen admisibilidad."},
+        build:{en:"Build now: define a minimal inequality basis and validate monotonicity.", zh:"现在建：定义最小不等式基，并验证单调性。", es:"Construir ahora: definir base mínima de desigualdades y validar monotonicidad."},
+        roadmap:{en:"Roadmap: formalize envelopes and termination logic (containment precedes rupture).", zh:"路线图：形式化包络与终止逻辑（隔离先于破裂）。", es:"Hoja de ruta: formalizar envolventes y lógica de terminación (contención antes de ruptura)."}
       }
     },
 
     {
       c:"#c9a24a",
-      t:{en:"Human-System Interface", zh:"人机接口", es:"Interfaz humano-sistema"},
-      s:{en:"Where design either preserves agency or steals it.", zh:"设计要么保主体性，要么偷走它。", es:"Donde el diseño preserva agencia o la roba."},
+      t:{en:"Trajectory Compression", zh:"轨迹压缩", es:"Compresión de trayectoria"},
+      s:{en:"Turning time into windows you can compare.", zh:"把时间变成可比较窗口。", es:"Convertir tiempo en ventanas comparables."},
       platform:{
         intro:{
-          en:"Interfaces teach behavior. Shimmer demands interfaces that make verification easy, not exhausting.",
-          zh:"界面会教人行为。Shimmer 要求界面让验证更容易，而不是更累。",
-          es:"Las interfaces enseñan comportamiento. Shimmer exige interfaces que hagan verificación fácil, no agotadora."
+          en:"Time feels like noise until you window it. Once windowed, the path becomes readable: drift, acceleration, recovery.",
+          zh:"时间在分窗前像噪声。分窗后路径可读：漂移、加速、恢复。",
+          es:"El tiempo parece ruido hasta que lo pones en ventanas. Luego el camino se vuelve legible: deriva, aceleración, recuperación."
         },
-        concept:{en:"Concept: make truth the easy path.", zh:"概念：让真相成为最省力的路径。", es:"Concepto: hacer que la verdad sea el camino fácil."},
-        build:{en:"Build now: one click = one outcome; keep state; clear exits.", zh:"现在建：一点击=一结果；保留状态；出口清晰。", es:"Construir ahora: un clic = un resultado; preservar estado; salidas claras."},
-        roadmap:{en:"Roadmap: attach receipts to every meaningful claim surface.", zh:"路线图：每个有意义的主张面都要挂收据。", es:"Hoja de ruta: adjuntar recibos a cada superficie de afirmación significativa."}
+        concept:{en:"Concept: windows turn motion into a story you can verify.", zh:"概念：窗口把运动变成可验证故事。", es:"Concepto: ventanas convierten movimiento en historia verificable."},
+        build:{en:"Build now: choose one window size and stick to it for comparability.", zh:"现在建：选一个窗口尺寸并坚持，以保持可比性。", es:"Construir ahora: elegir un tamaño de ventana y mantenerlo para comparabilidad."},
+        roadmap:{en:"Roadmap: publish window receipts and trend summaries with bounds.", zh:"路线图：发布窗口收据与带边界的趋势摘要。", es:"Hoja de ruta: publicar recibos por ventana y resúmenes de tendencia con límites."}
       },
       engineering:{
         intro:{
-          en:"Define interface constraints: no ambiguous controls, no silent remaps, no timer gates. Deterministic navigation preserves comparability.",
-          zh:"定义接口约束：无模糊控件、无静默重映射、无计时闸门。确定性导航保持可比性。",
-          es:"Definir restricciones de interfaz: sin controles ambiguos, sin remapeos silenciosos, sin compuertas por tiempo. Navegación determinista preserva comparabilidad."
+          en:"Compression means representing trajectories with bounded summaries: deltas, accelerations, and threshold crossings per window.",
+          zh:"压缩=用有界摘要表示轨迹：每窗口差分、加速度与阈值穿越。",
+          es:"Compresión = representar trayectorias con resúmenes acotados: deltas, aceleraciones y cruces de umbral por ventana."
         },
-        concept:{en:"Concept: interface is a constraint surface.", zh:"概念：界面是约束面。", es:"Concepto: la interfaz es una superficie de restricción."},
-        build:{en:"Build now: audit navigation for bypass paths and hidden state mutation.", zh:"现在建：审计导航是否存在绕过路径与隐藏状态变异。", es:"Construir ahora: auditar navegación por rutas de bypass y mutación de estado oculta."},
-        roadmap:{en:"Roadmap: signed releases + versioned rule surfaces to prevent capture.", zh:"路线图：签名发布+版本化规则面以防捕获。", es:"Hoja de ruta: releases firmados + superficies de reglas versionadas para evitar captura."}
+        concept:{en:"Concept: windowed derivatives detect instability early.", zh:"概念：窗口导数提前发现不稳定。", es:"Concepto: derivadas por ventana detectan inestabilidad temprano."},
+        build:{en:"Build now: compute deltas and acceleration; alert on slope changes.", zh:"现在建：计算差分与加速度；对斜率变化报警。", es:"Construir ahora: calcular deltas y aceleración; alertar cambios de pendiente."},
+        roadmap:{en:"Roadmap: integrate windowed tests into gauges and rollback triggers.", zh:"路线图：把窗口测试接入量规与回滚触发。", es:"Hoja de ruta: integrar pruebas por ventana en medidores y triggers de rollback."}
       }
     },
 
     {
       c:"#ff2b2b",
-      t:{en:"Reality Calibration Layer", zh:"现实校准层", es:"Capa de calibración de realidad"},
-      s:{en:"How systems return to shared truth.", zh:"系统如何回到共享真相。", es:"Cómo los sistemas vuelven a una verdad compartida."},
+      t:{en:"Admissibility Boundaries", zh:"可采信边界", es:"Límites de admisibilidad"},
+      s:{en:"What you are allowed to claim right now.", zh:"你现在允许主张到哪里。", es:"Qué se permite afirmar ahora."},
       platform:{
         intro:{
-          en:"Calibration is how you stop arguing. You agree on what counts as evidence, then you replay it.",
-          zh:"校准能终止争吵：先同意什么算证据，再回放它。",
-          es:"La calibración detiene discusiones: se acuerda qué cuenta como evidencia y luego se reproduce."
+          en:"The lattice protects honesty: you can dream big, but you label readiness. No measurement means: concept only.",
+          zh:"晶格保护诚实：你可以想得很大，但必须标注就绪度。没测量就只能：概念。",
+          es:"El lattice protege honestidad: puedes soñar grande, pero etiquetas preparación. Sin medición: solo concepto."
         },
-        concept:{en:"Concept: shared standards beat shared opinions.", zh:"概念：共享标准胜过共享观点。", es:"Concepto: estándares compartidos vencen opiniones compartidas."},
-        build:{en:"Build now: a simple ‘calibration check’ before changing rules.", zh:"现在建：在改规则前做一个简单“校准检查”。", es:"Construir ahora: un ‘chequeo de calibración’ antes de cambiar reglas."},
-        roadmap:{en:"Roadmap: connect calibration to Laws + Gauges and keep authority explicit.", zh:"路线图：把校准连接到Laws+Gauges，并保持权威清晰。", es:"Hoja de ruta: conectar calibración a Leyes+Medidores y mantener autoridad explícita."}
+        concept:{en:"Concept: readiness is a label, not an insult.", zh:"概念：就绪度是标签，不是侮辱。", es:"Concepto: preparación es etiqueta, no insulto."},
+        build:{en:"Build now: separate ‘vision’ from ‘proof’ in your routing.", zh:"现在建：在路由上把“愿景”与“证明”分开。", es:"Construir ahora: separar ‘visión’ de ‘prueba’ en ruteo."},
+        roadmap:{en:"Roadmap: promote shells to products only after receipts exist.", zh:"路线图：有收据后再把壳升级为产品。", es:"Hoja de ruta: promover shells a productos solo cuando existan recibos."}
       },
       engineering:{
         intro:{
-          en:"Calibration authority is a protected surface. Threshold tuning must be versioned, audited, and epoch-bumped to preserve determinism.",
-          zh:"校准权威是受保护面。阈值调参必须版本化、可审计，并通过新纪元保持确定性。",
-          es:"La autoridad de calibración es superficie protegida. Ajuste de umbrales debe versionarse, auditarse y elevar época para preservar determinismo."
+          en:"Admissibility is deterministic under fixed scope: claims cannot exceed evidence. The lattice makes that gate machine-checkable.",
+          zh:"固定范围下可采信是确定性的：主张不得超出证据。晶格让闸门可机检。",
+          es:"La admisibilidad es determinista bajo alcance fijo: afirmaciones no pueden exceder evidencia. El lattice lo hace comprobable."
         },
-        concept:{en:"Concept: calibration is governance of measurement rules.", zh:"概念：校准是对测量规则的治理。", es:"Concepto: calibración es gobernanza de reglas de medición."},
-        build:{en:"Build now: signed configuration + audit log for all threshold changes.", zh:"现在建：阈值变化全部走签名配置+审计日志。", es:"Construir ahora: configuración firmada + log de auditoría para todos los cambios de umbral."},
-        roadmap:{en:"Roadmap: supervisory stress testing validates whether calibration survives adversarial pressure.", zh:"路线图：监督压力测试验证校准能否抗住对抗压力。", es:"Hoja de ruta: pruebas de estrés supervisor validan si calibración sobrevive presión adversarial."}
+        concept:{en:"Concept: admissibility is a binary gate with reason codes.", zh:"概念：可采信=带原因码的二元闸门。", es:"Concepto: admisibilidad es compuerta binaria con códigos de razón."},
+        build:{en:"Build now: output HOLD/UNDETERMINED when receipts are missing.", zh:"现在建：缺收据时输出HOLD/UNDETERMINED。", es:"Construir ahora: emitir HOLD/UNDETERMINED cuando falten recibos."},
+        roadmap:{en:"Roadmap: epoch discipline on corrections (no retroactive edits).", zh:"路线图：修正必须走新纪元纪律（无追溯改写）。", es:"Hoja de ruta: disciplina de época en correcciones (sin ediciones retroactivas)."}
       }
     }
   ];
@@ -867,13 +868,13 @@ body::before,body::after{pointer-events:none!important}
     var H=(HEAD[lang]||HEAD.en);
     var lanePack = (lane==="engineering") ? H.engineering : H.platform;
 
-    document.getElementById("hk").textContent = pick3("FRONTIER · SHIMMER","前沿 · SHIMMER","FRONTERA · SHIMMER");
-    document.getElementById("ht").textContent = pick3("SHIMMER FIELD","SHIMMER 场","CAMPO SHIMMER");
+    document.getElementById("hk").textContent = pick3("FRONTIER · LATTICE","前沿 · 晶格","FRONTERA · LATTICE");
+    document.getElementById("ht").textContent = pick3("LATTICE GEOMETRY","晶格几何","GEOMETRÍA LATTICE");
     document.getElementById("hs").textContent = lanePack.hs;
     document.getElementById("rule").textContent = lanePack.rule;
 
     document.getElementById("band").textContent =
-      pick3("SHIMMER DOMAINS","SHIMMER 域","DOMINIOS SHIMMER");
+      pick3("LATTICE DOMAINS","晶格域","DOMINIOS LATTICE");
 
     document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
     document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");

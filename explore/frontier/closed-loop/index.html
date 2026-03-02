@@ -1,18 +1,33 @@
+<!doctype html>
 <!-- TNT — /explore/frontier/closed-loop/index.html
-     FRONTIER · CLOSED LOOP (HABITATS / ISOLATED SITES / “NO AWAY”)
-     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES (EN/中文/ES)
-     SINGLE-OPEN ACCORDION · NO MODALS · STATE CARRY
-     ROLE:
+     FRONTIER · CLOSED LOOP (INFORMAL SITE LAYER — NEW STANDARD)
+     PURPOSE:
        - “No-away” closure model: water/air/food/materials/energy as one coupled inventory
        - Habitat logic that scales DOWN to Earth (cities, plants, remote sites)
+     NEW STANDARD (THIS FILE):
+       - Trilingual: EN / 中文 / ES
+       - LENSES (VISIBLE ONLY):
+           lane=platform|engineering (URL-only; NEVER stored)
+         (Informal/formal is NOT user-visible in this layer.)
+       - Pin this page to informal layer:
+           gd_style = informal
+           gd_depth = explore
+       - Single-open accordion (tap same closes)
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open row
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
      ROUTES (SAFE SHELLS):
        - URBAN OS → /explore/frontier/urban/
        - ENERGY   → /explore/frontier/energy/
        - WATER    → /explore/frontier/water/
        - WASTE    → /explore/frontier/waste/
+       - FRONTIER INDEX → /explore/frontier/
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -25,540 +40,941 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:96px;
-  --mut:rgba(255,255,255,.92);
-  --mut2:rgba(255,255,255,.76);
+  --dockH:132px;
 
-  --opal:rgba(210,190,255,.14);
-  --red:rgba(255,70,70,.11);
-  --gold:rgba(212,175,55,.16);
-  --ink:rgba(0,0,0,.18);
+  /* Red / Black / Gold hierarchy (avoid washed blue) */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+  --mut2:rgba(255,255,255,.72);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* ===== Page wrap ===== */
 .page{
-  width:min(1200px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
-  padding:100px 0 calc(var(--dockH) + 24px);
+  padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:22px;
-}
-
-.header{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:28px;
-  background:
-    radial-gradient(circle at 22% 18%, var(--opal), transparent 70%),
-    radial-gradient(circle at 78% 28%, var(--red), transparent 72%),
-    radial-gradient(circle at 55% 92%, var(--gold), transparent 72%),
-    var(--ink);
-  padding:30px;
-  box-shadow:0 40px 120px rgba(0,0,0,.6);
-}
-
-.k{
-  font-size:14px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin:0 0 12px;
-}
-
-.t{
-  font-weight:900;
-  font-size:42px;
-  letter-spacing:1px;
-  margin:0 0 14px;
-}
-
-.s{
-  font-size:19px;
-  line-height:1.75;
-  max-width:1040px;
-  opacity:.92;
-}
-
-.lenses{
-  display:flex;
   gap:12px;
-  flex-wrap:wrap;
-  margin-top:26px;
+  position:relative;
+  z-index:10;
 }
 
-.pill{
-  padding:12px 20px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  cursor:pointer;
-  font-weight:800;
-  letter-spacing:.4px;
-  font-size:14px;
-  background:rgba(0,0,0,.25);
+/* ===== Top controls (fixed) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
-
-.pill.active{
-  border-color:rgba(212,175,55,.60);
-  box-shadow:0 0 18px rgba(212,175,55,.22);
-}
-
-.band{
-  padding:12px 16px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.12);
-  font-weight:900;
-  letter-spacing:.6px;
-  text-transform:uppercase;
-  opacity:.9;
-}
-
-.accordion{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-.section{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:28px;
-  overflow:hidden;
-  background:linear-gradient(160deg, rgba(18,22,35,.95), rgba(8,12,20,.98));
-}
-
-.head{
-  padding:22px 30px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-
-.title{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:.4px;
-}
-
-.chev{opacity:.75;font-weight:900}
-
-.body{
-  display:none;
-  padding:28px 34px;
-  border-top:1px solid rgba(255,255,255,.08);
-  font-size:18px;
-  line-height:1.85;
-  color:var(--mut2);
-}
-
-.section.open .body{display:block}
-
-.jump{
-  margin-top:18px;
+.top .left,.top .right{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  justify-content:flex-end;
-}
-.jump .btn{
-  padding:12px 16px;
-  border-radius:999px;
   white-space:nowrap;
+  align-items:center;
+  pointer-events:auto;
 }
 
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Background context (behind content; not body) ===== */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* ===== Header ===== */
+.header{
+  position:relative;
+  z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:rgba(255,255,255,.78)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
+.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
+  font-size:13.5px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+
+/* Lens state pills */
+.lensRow{
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+
+/* Band */
+.band{
+  position:relative;
+  z-index:2;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+}
+
+/* Accordion rows */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowB);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(201,162,74,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+.body{
+  display:none;
+  padding:16px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+
+.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
+.pdesc + .pdesc{margin-top:10px}
+
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px}
+.bubble.open p{display:block}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  width:min(1000px,94vw);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  padding:14px;
-  border-radius:24px;
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-.dock .btn{
-  padding:12px;
-  border-radius:999px;
-  text-align:center;
-  font-weight:800;
-  letter-spacing:.2px;
-}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  .dock{grid-template-columns:repeat(2,1fr)}
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(2, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
 
-  <div class="header">
-    <p class="k" id="hk">FRONTIER</p>
+<div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <div class="header" aria-label="Closed loop header">
+    <p class="k" id="hk">FRONTIER · CLOSED LOOP</p>
     <h1 class="t" id="ht">CLOSED LOOP</h1>
     <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
 
-    <div class="lenses">
-      <button class="pill active" id="lensInformal" type="button">INFORMAL</button>
-      <button class="pill" id="lensFormal" type="button">FORMAL</button>
-      <button class="pill" id="lensEngineering" type="button">ENGINEERING</button>
-      <button class="pill" id="lensPlatform" type="button">PLATFORM</button>
+    <div class="lensRow" aria-label="Lens state">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
     </div>
   </div>
 
   <div class="band" id="band">NO AWAY · EVERYTHING IS INVENTORY</div>
-
-  <div class="accordion" id="accordion"></div>
-
+  <div class="list" id="list"></div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
-  <a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
-  <a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
-  <a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
+  <a class="btn" id="navUrban" data-route="/explore/frontier/urban/" href="/explore/frontier/urban/">URBAN OS</a>
+  <a class="btn" id="navEnergy" data-route="/explore/frontier/energy/" href="/explore/frontier/energy/">ENERGY</a>
+  <a class="btn" id="navWater" data-route="/explore/frontier/water/" href="/explore/frontier/water/">WATER</a>
+  <a class="btn" id="navWaste" data-route="/explore/frontier/waste/" href="/explore/frontier/waste/">WASTE</a>
 </nav>
 
 <script>
 (function(){
-  // ===== canonical state (lang only used on this page; links preserve it) =====
+  "use strict";
+
+  // ===== Canon state (gd_* only; no new keys) =====
   var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-  document.documentElement.lang=lang;
+  var LS=window.localStorage;
 
-  function q(){ return "?lang="+encodeURIComponent(lang); }
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
-  document.getElementById("navUrban").href="/explore/frontier/urban/"+q();
-  document.getElementById("navEnergy").href="/explore/frontier/energy/"+q();
-  document.getElementById("navWater").href="/explore/frontier/water/"+q();
-  document.getElementById("navWaste").href="/explore/frontier/waste/"+q();
+  // Pin informal layer
+  var style = "informal";
+  var depth = "explore";
 
-  function pick(o){ return o[lang]||o.en; }
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-  var headerCopy={
-    en:"What changes when there is no landfill, no sewer ‘somewhere else’, and no cheap resupply? Everything becomes inventory. Closed Loop is the discipline that makes survival boring—and makes Earth systems finally behave.",
-    zh:"当没有填埋、没有“排到别处”、没有廉价补给时，会发生什么？一切都变成库存。闭环就是让生存变得无聊可靠的纪律，也让地面系统终于像系统一样运行。",
-    es:"¿Qué cambia cuando no hay vertedero, no hay alcantarilla ‘en otro lugar’ y no hay reabastecimiento barato? Todo es inventario. El ciclo cerrado vuelve la supervivencia aburrida—y hace que los sistemas en la Tierra se comporten de verdad."
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+
+  // Wire all internal links with pinned state (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== Header copy (lane-aware; no tone) =====
+  var HEAD={
+    en:{
+      platform:{
+        hs:"What changes when there is no landfill, no sewer ‘somewhere else’, and no cheap resupply? Everything becomes inventory. Closed loop makes survival boring — and makes Earth systems finally behave.",
+        rule:"Rule: no ‘away’. If you can’t route it, you can’t keep it stable."
+      },
+      engineering:{
+        hs:"Engineering view: closed loop is a coupled inventory system. Loss, contamination, and delay propagate across lanes unless routing, buffers, and verification are explicit.",
+        rule:"Rule: define conserved inventories + leakage bands + deterministic interventions. No escalation beyond measurement capability."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"当没有填埋、没有“排到别处”、没有廉价补给时，会发生什么？一切都变成库存。闭环让生存变得无聊可靠，也让地面系统终于像系统一样运行。",
+        rule:"规则：没有“扔掉”。不能路由，就不能稳定。"
+      },
+      engineering:{
+        hs:"工程视图：闭环是耦合库存系统。若路由、缓冲与验证不明确，损耗/污染/延迟会跨车道传播。",
+        rule:"规则：定义守恒库存+泄漏区间+确定性干预。不得超出测量能力升级。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"¿Qué cambia cuando no hay vertedero, no hay alcantarilla ‘en otro lugar’ y no hay reabastecimiento barato? Todo es inventario. El ciclo cerrado vuelve la supervivencia aburrida — y hace que la Tierra por fin se comporte.",
+        rule:"Regla: no hay ‘afuera’. Si no puedes rutearlo, no puedes estabilizarlo."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: ciclo cerrado es un sistema de inventario acoplado. Pérdida, contaminación y demora se propagan entre carriles sin ruteo, buffers y verificación explícitos.",
+        rule:"Regla: inventarios conservados + bandas de fuga + intervenciones deterministas. Sin escalación más allá de la medición."
+      }
+    }
   };
-  document.getElementById("hs").textContent=pick(headerCopy);
 
-  var lens="informal";
-
-  var S = [
+  // ===== Sections (dense, legible, lane-aware) =====
+  var SECTIONS=[
     {
-      t:{en:"THE ‘NO AWAY’ PROBLEM",zh:"“没有扔掉”的问题",es:"EL PROBLEMA ‘SIN AFUERA’"},
-      sub:{en:"If you can’t export waste, you must route it.",zh:"无法外运废弃物，就必须路由。",es:"Si no puedes exportar residuos, debes rutearlos."},
-      c:{
-        informal:{
-          en:[
-            "On Earth we pretend problems disappear: trash goes ‘away’, heat goes ‘away’, wastewater goes ‘away’. In a habitat, there is no away.",
-            "So the real problem becomes visible: leaks, contamination, and bad routing decisions. Closed loop is not romance—it’s accounting with consequences."
-          ],
-          zh:[
-            "在地球我们假装问题会消失：垃圾“扔掉”、热“散掉”、污水“排走”。在栖息地，没有“扔掉”。",
-            "真正的问题因此暴露：泄漏、污染、错误路由。闭环不是浪漫，而是带后果的核算。"
-          ],
-          es:[
-            "En la Tierra fingimos que los problemas desaparecen: la basura se va ‘afuera’, el calor ‘afuera’, el agua residual ‘afuera’. En un hábitat no existe ‘afuera’.",
-            "Entonces aparece lo real: fugas, contaminación y malas decisiones de ruteo. Ciclo cerrado no es romance: es contabilidad con consecuencias."
-          ]
+      c:"#c9a24a",
+      t:{en:"THE ‘NO AWAY’ PROBLEM", zh:"“没有扔掉”的问题", es:"EL PROBLEMA ‘SIN AFUERA’"},
+      s:{en:"When you can’t export waste, you must route it.", zh:"无法外运废弃物，就必须路由。", es:"Si no puedes exportar residuos, debes rutearlos."},
+      platform:{
+        intro:{
+          en:"On Earth we hide problems by moving them. In a closed loop, hiding becomes impossible. That forces clarity: what is leaking, what is contaminating, and what is misrouted.",
+          zh:"在地球我们靠“搬走”来隐藏问题。闭环里无法隐藏，于是清晰出现：哪里在漏、哪里在污染、哪里在错路由。",
+          es:"En la Tierra ocultamos moviendo problemas. En ciclo cerrado no se puede. Eso obliga claridad: qué fuga, qué contamina y qué está mal ruteado."
         },
-        formal:{
-          en:[
-            "Closed-loop environments remove external sinks. Loss is cumulative, failures are coupled, and contamination events propagate. Stability requires explicit routing and recovery under constraints.",
-            "Therefore closure must be expressed as conserved inventories with measured leakage bands and deterministic intervention procedures."
-          ],
-          zh:[
-            "闭环环境移除了外部汇点：损耗累积、故障耦合、污染事件传播。稳定性要求在约束下进行显式路由与恢复。",
-            "因此闭合必须表达为守恒库存，并具有可测泄漏区间与确定性干预流程。"
-          ],
-          es:[
-            "Entornos cerrados eliminan sumideros externos. La pérdida es acumulativa, las fallas están acopladas y la contaminación se propaga. La estabilidad requiere ruteo y recuperación explícitos.",
-            "El cierre se expresa como inventarios conservados con bandas de fuga medidas y procedimientos deterministas."
-          ]
+        concept:{
+          en:"Concept: ‘away’ is not a sink. It’s a story. Closed loop replaces story with inventory accounting.",
+          zh:"概念：“扔掉”不是汇点，而是故事。闭环用库存核算替代故事。",
+          es:"Concepto: ‘afuera’ no es sumidero, es historia. Ciclo cerrado reemplaza historia con contabilidad de inventario."
         },
-        engineering:{
-          en:[
-            "Define mass/energy accounting: water recovery, air recycling, nutrient loops, solids handling, thermal balance. Instrument flows, set contamination constraints, and size buffers for shock events.",
-            "Design recovery playbooks: isolate → filter → reprocess → verify → rejoin. Publish yields and loss rates by window."
-          ],
-          zh:[
-            "定义质量/能量核算：水回收、空气循环、营养回路、固体处理、热平衡。仪器化流量，设污染约束，按冲击事件配置缓冲。",
-            "设计恢复剧本：隔离→过滤→再处理→验证→回并。按窗口发布产率与损耗率。"
-          ],
-          es:[
-            "Definir contabilidad masa/energía: recuperación de agua, reciclaje de aire, ciclos de nutrientes, manejo de sólidos, balance térmico. Instrumentar flujos, límites de contaminación y buffers.",
-            "Playbooks de recuperación: aislar → filtrar → reprocesar → verificar → reintegrar. Publicar rendimientos y pérdidas por ventana."
-          ]
+        build:{
+          en:"Build now: start labeling inventories (water/air/solids/heat). Stop mixing unknowns. Track losses explicitly.",
+          zh:"现在建：给库存贴标签（水/气/固体/热）。停止混未知流。显式追损耗。",
+          es:"Construir ahora: etiquetar inventarios (agua/aire/sólidos/calor). No mezclar desconocidos. Medir pérdidas explícitamente."
         },
-        platform:{
-          en:[
-            "Make closure legible: show ‘what is leaking’ as a ranked list with receipts. Route users to Laws (bounds) and Gauges (signals).",
-            "Keep navigation calm: one open section at a time; clear ‘next’ jumps; persistent state."
-          ],
-          zh:[
-            "让闭合可读：把“哪里在漏”做成带收据的排序列表，并路由到法则（边界）与量规（信号）。",
-            "保持导航安静：一次只开一段；下一步跳转清晰；状态持久。"
-          ],
-          es:[
-            "Hacer el cierre legible: mostrar ‘qué está fugando’ como lista rankeada con recibos; saltar a Leyes (límites) y Medidores (señales).",
-            "Navegación calmada: una sección abierta a la vez; saltos claros; estado persistente."
-          ]
+        roadmap:{
+          en:"Roadmap: publish simple leak lists → add routing rules → add recovery yields → add verification windows (then scale).",
+          zh:"路线图：发布简单泄漏清单→加入路由规则→加入回收产率→加入验证窗口（再扩张）。",
+          es:"Hoja de ruta: lista simple de fugas → reglas de ruteo → rendimientos → ventanas de verificación (luego escalar)."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Closed loop removes external sinks. Therefore loss is cumulative, contamination couples, and delays propagate. Stability demands explicit routing, buffers, and deterministic interventions.",
+          zh:"闭环移除外部汇点：损耗累积、污染耦合、延迟传播。稳定性要求显式路由、缓冲与确定性干预。",
+          es:"Ciclo cerrado elimina sumideros externos: pérdidas acumulativas, contaminación acoplada y demoras que se propagan. Estabilidad exige ruteo, buffers e intervenciones deterministas."
+        },
+        concept:{
+          en:"Concept: define conserved inventory vectors and leakage bands per lane. Couple lanes through explicit interfaces only.",
+          zh:"概念：为每车道定义守恒库存向量与泄漏区间。车道耦合必须通过显式接口。",
+          es:"Concepto: definir vectores de inventario conservados y bandas de fuga por carril. Acoplar carriles solo por interfaces explícitas."
+        },
+        build:{
+          en:"Build now: instrument flows, set contamination constraints, size buffers for shock events, and define isolation + rollback procedures.",
+          zh:"现在建：仪器化流量，设污染约束，按冲击事件配置缓冲，并定义隔离+回滚流程。",
+          es:"Construir ahora: instrumentar flujos, límites de contaminación, buffers para shocks y procedimientos de aislamiento + rollback."
+        },
+        roadmap:{
+          en:"Roadmap: windowed stress tests, replayable receipts, audit exports (yields/losses/interventions/time-to-stability).",
+          zh:"路线图：窗口压力测试、可回放收据、审计导出（产率/损耗/干预/恢复时间）。",
+          es:"Hoja de ruta: pruebas por ventanas, recibos replayables y exports auditables (rendimientos/pérdidas/intervenciones/tiempo de recuperación)."
         }
       }
     },
 
     {
-      t:{en:"THE CLOSED LOOP CONTRACT",zh:"闭环契约",es:"CONTRATO DE CICLO CERRADO"},
-      sub:{en:"Measure → Route → Retain. The loop must be boring.",zh:"测量→路由→保留。闭环必须无聊可靠。",es:"Medir → Rutear → Retener. El ciclo debe ser aburrido."},
-      c:{
-        informal:{
-          en:[
-            "Closed loop is how you make survival boring: you measure what you have, you route what you don’t want, and you keep what matters inside the loop.",
-            "The magic isn’t a gadget. The magic is refusing to let losses hide."
-          ],
-          zh:[
-            "闭环让生存变无聊：你测你有什么，你路由你不想要的，你把重要的留在环里。",
-            "魔法不是某个小玩意，而是拒绝让损耗隐藏。"
-          ],
-          es:[
-            "Ciclo cerrado vuelve la supervivencia aburrida: mides lo que tienes, ruteas lo que no quieres y mantienes lo importante dentro del ciclo.",
-            "La magia no es un gadget: es no permitir que las pérdidas se escondan."
-          ]
+      c:"#ff2b2b",
+      t:{en:"THE CLOSED LOOP CONTRACT", zh:"闭环契约", es:"CONTRATO DE CICLO CERRADO"},
+      s:{en:"Measure → Route → Retain. The loop must be boring.", zh:"测量→路由→保留。闭环必须无聊可靠。", es:"Medir → Rutear → Retener. El ciclo debe ser aburrido."},
+      platform:{
+        intro:{
+          en:"Closed loop makes survival boring: you measure what you have, you route what you don’t want, and you keep what matters inside the loop. Loss can’t hide.",
+          zh:"闭环让生存变无聊：测你有什么，路由你不想要的，把重要的留在环里。损耗无法隐藏。",
+          es:"Ciclo cerrado vuelve la supervivencia aburrida: mides lo que tienes, ruteas lo que no quieres y mantienes lo importante dentro. La pérdida no se esconde."
         },
-        formal:{
-          en:[
-            "Contract: (1) declared inventory vectors, (2) measured closure/leakage bands, (3) deterministic interventions, (4) replayable receipts.",
-            "No escalation without receipts; no redefinition without epoch rollover; no interpretation beyond declared scope."
-          ],
-          zh:[
-            "契约：(1)声明库存向量，(2)测得闭合/泄漏区间，(3)确定性干预，(4)可回放收据。",
-            "无收据不升级；无新纪元不改定义；不得超范围解释。"
-          ],
-          es:[
-            "Contrato: (1) vectores de inventario declarados, (2) bandas de cierre/fuga medidas, (3) intervenciones deterministas, (4) recibos replayables.",
-            "Sin recibos no hay escalación; sin nueva época no hay redefinición; no interpretar fuera del alcance."
-          ]
+        concept:{
+          en:"Concept: the loop is discipline, not a gadget. It works when everyone uses the same labels and the same routes.",
+          zh:"概念：闭环是纪律，不是小玩意。只有当所有人用同一套标签与路由才稳定。",
+          es:"Concepto: el ciclo es disciplina, no gadget. Funciona cuando todos usan mismas etiquetas y rutas."
         },
-        engineering:{
-          en:[
-            "Quantify closure: recovery fraction targets per lane (water/air/solids/heat). Enforce contamination thresholds. Treat maintenance as a first-class loop, not an afterthought.",
-            "Design for perturbation: buffer sizing, redundancy, isolation valves, and fast verification paths."
-          ],
-          zh:[
-            "量化闭合：按车道设回收分数目标（水/气/固体/热），执行污染阈值。把维护当作一等回路，而不是事后补丁。",
-            "面向扰动设计：缓冲尺寸、冗余、隔离阀、快速验证路径。"
-          ],
-          es:[
-            "Cuantificar cierre: metas de fracción de recuperación por carril (agua/aire/sólidos/calor). Umbrales de contaminación. Mantenimiento como bucle primario.",
-            "Diseño para perturbación: buffers, redundancia, válvulas de aislamiento y verificación rápida."
-          ]
+        build:{
+          en:"Build now: publish a simple ‘what comes in / what gets reused / what still leaks’ board. Then fix one leak at a time.",
+          zh:"现在建：发布“进来什么/复用什么/哪里还在漏”的简版看板，然后一次修一个漏点。",
+          es:"Construir ahora: tablero simple ‘qué entra / qué se reutiliza / qué fuga’. Luego arreglar una fuga a la vez."
         },
-        platform:{
-          en:[
-            "Show the loop as a simple story first: what comes in, what gets reused, what is still leaking, and what you’re doing next.",
-            "Then jump to deep pages (energy/water/waste) without losing state."
-          ],
-          zh:[
-            "先把闭环讲成简单故事：进来什么、复用什么、哪里还在漏、下一步做什么。",
-            "然后跳到深页（能源/水/废弃物）且不丢状态。"
-          ],
-          es:[
-            "Primero contar el ciclo como historia simple: qué entra, qué se reutiliza, qué sigue fugando y qué harás después.",
-            "Luego saltar a páginas profundas (energía/agua/residuos) sin perder estado."
-          ]
+        roadmap:{
+          en:"Roadmap: add thresholds and verification, then graduate into Gauges/Products as the loop becomes repeatable.",
+          zh:"路线图：加入阈值与验证，然后当回路可复跑时升级到量规/产品。",
+          es:"Hoja de ruta: agregar umbrales y verificación, luego graduar a Medidores/Productos cuando sea repetible."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Contract: declared inventory vectors + measured closure/leakage bands + deterministic interventions + replayable receipts. No receipts, no escalation.",
+          zh:"契约：声明库存向量+测得闭合/泄漏区间+确定性干预+可回放收据。无收据不升级。",
+          es:"Contrato: vectores declarados + bandas de cierre/fuga medidas + intervenciones deterministas + recibos replayables. Sin recibos no hay escalación."
+        },
+        concept:{
+          en:"Concept: couple lanes via explicit interfaces and reason codes. Avoid ‘soft coupling’ that cannot be audited.",
+          zh:"概念：通过显式接口与原因码耦合车道。避免无法审计的“软耦合”。",
+          es:"Concepto: acoplar carriles con interfaces explícitas y códigos de razón. Evitar acoplamiento blando no auditable."
+        },
+        build:{
+          en:"Build now: quantify recovery fractions per lane (water/air/solids/heat), enforce contamination bounds, and treat maintenance as a first-class loop.",
+          zh:"现在建：量化每车道回收分数（水/气/固体/热），执行污染边界，并把维护当作一等回路。",
+          es:"Construir ahora: cuantificar fracciones de recuperación por carril, límites de contaminación y mantenimiento como bucle primario."
+        },
+        roadmap:{
+          en:"Roadmap: perturbation design (buffer sizing, redundancy, isolation valves) + fast verification paths + windowed evaluations.",
+          zh:"路线图：扰动设计（缓冲尺寸、冗余、隔离阀）+快速验证路径+窗口评估。",
+          es:"Hoja de ruta: diseño para perturbación (buffers, redundancia, válvulas) + verificación rápida + evaluación por ventanas."
         }
       }
     },
 
     {
-      t:{en:"SHIMMER IN A HABITAT",zh:"栖息地里的 SHIMMER",es:"SHIMMER EN UN HÁBITAT"},
-      sub:{en:"Same routing spine, harsher penalties.",zh:"同一路由脊柱，更严厉的惩罚。",es:"Misma columna, penalizaciones más duras."},
-      c:{
-        informal:{
-          en:[
-            "A habitat just removes the city’s excuses. You still classify, segment, route, convert, retain. You just feel every mistake sooner.",
-            "That’s why this matters: if it works here, it works anywhere."
-          ],
-          zh:[
-            "栖息地只是把城市的借口拿走：你仍然分类、分段、路由、转化、保留，只是每个错误更快被你感受到。",
-            "所以它重要：能在这里稳定，就能在任何地方稳定。"
-          ],
-          es:[
-            "Un hábitat solo elimina excusas de la ciudad: sigues clasificando, segmentando, ruteando, convirtiendo y reteniendo, pero sientes cada error antes.",
-            "Por eso importa: si funciona aquí, funciona en cualquier parte."
-          ]
+      c:"#a3a3a3",
+      t:{en:"SHIMMER IN A HABITAT", zh:"栖息地里的 SHIMMER", es:"SHIMMER EN UN HÁBITAT"},
+      s:{en:"Same routing spine, harsher penalties.", zh:"同一路由脊柱，更严厉的惩罚。", es:"Misma columna, penalizaciones más duras."},
+      platform:{
+        intro:{
+          en:"A habitat removes the city’s excuses. You still classify, segment, route, convert, retain — you just feel mistakes sooner. That’s why it teaches truth.",
+          zh:"栖息地拿走城市的借口：你仍然分类、分段、路由、转化、保留，只是错误更快反噬。它因此逼出真相。",
+          es:"Un hábitat elimina excusas: clasificas, segmentas, ruteas, conviertes y retienes, pero sientes errores antes. Por eso enseña verdad."
         },
-        formal:{
-          en:[
-            "Habitat deployment is an extreme constraint case: strict contamination bounds, bounded resupply, coupled failure modes. SHIMMER provides routing discipline under those constraints.",
-            "Claims remain readiness-only unless backed by measured receipts; no net-positive fusion claims; no megastructure claims in near horizons."
-          ],
-          zh:[
-            "栖息地部署是极限约束案例：污染边界严格、补给受限、故障耦合。SHIMMER 在这些约束下提供路由纪律。",
-            "主张除非有测量收据，否则仅保持就绪姿态；不做净增益聚变主张；近期限不做巨构主张。"
-          ],
-          es:[
-            "Despliegue en hábitat es caso extremo: límites estrictos de contaminación, reabastecimiento acotado y fallas acopladas. SHIMMER aporta disciplina de ruteo.",
-            "Afirmaciones permanecen en ‘preparación’ sin recibos medidos; sin ganancia neta de fusión; sin megaestructuras en horizontes cercanos."
-          ]
+        concept:{
+          en:"Concept: if it works here, it scales down to Earth. Closed loop is the proof machine.",
+          zh:"概念：能在这里稳定，就能下沉到地球。闭环是证明机器。",
+          es:"Concepto: si funciona aquí, baja a la Tierra. Ciclo cerrado es máquina de prueba."
         },
-        engineering:{
-          en:[
-            "Implement closed-loop routing for each lane with explicit purity constraints. Use modular redundancy and isolation to prevent cascade. Validate through windowed stress tests.",
-            "Export receipts for audit replay: yields, losses, interventions, and recovery time-to-stability."
-          ],
-          zh:[
-            "为每条车道实现闭环路由并给出纯度约束；模块化冗余与隔离阻止级联；用窗口压力测试验证。",
-            "导出审计回放收据：产率、损耗、干预、恢复到稳定的时间。"
-          ],
-          es:[
-            "Implementar ruteo cerrado por carril con restricciones de pureza. Redundancia modular y aislamiento para evitar cascada. Validar con pruebas por ventana.",
-            "Exportar recibos: rendimientos, pérdidas, intervenciones y tiempo de recuperación."
-          ]
+        build:{
+          en:"Build now: make closure readable with simple scoreboards per lane (green/yellow/red) and clear next actions.",
+          zh:"现在建：用车道记分牌让闭合可读（绿/黄/红），并给出明确下一步动作。",
+          es:"Construir ahora: tableros simples por carril (verde/amarillo/rojo) y próximas acciones claras."
         },
-        platform:{
-          en:[
-            "Present ‘closure scoreboards’ that non-engineers can read: green/yellow/red bands per inventory lane, with a one-click drill-down into receipts.",
-            "Keep the UI boringly reliable: one open accordion, no overlays, clear jumps."
-          ],
-          zh:[
-            "提供非工程师可读的“闭合记分牌”：按车道显示绿/黄/红区间，并一键下钻到收据。",
-            "UI 必须无聊可靠：单开手风琴、无遮罩、跳转清晰。"
-          ],
-          es:[
-            "Mostrar ‘tableros de cierre’ legibles: bandas verde/amarillo/rojo por carril, con drill-down a recibos.",
-            "UI confiable: acordeón único, sin overlays, saltos claros."
-          ]
+        roadmap:{
+          en:"Roadmap: connect to Water/Energy/Waste pages; publish measurement surfaces in Gauges; keep bounds in Laws.",
+          zh:"路线图：连接水/能/废页面；在量规发布测量面；在法则锁定边界。",
+          es:"Hoja de ruta: conectar con Agua/Energía/Residuos; publicar medición en Medidores; límites en Leyes."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Habitat deployment is an extreme constraint case: strict contamination bounds, bounded resupply, coupled failure modes. Routing discipline is mandatory.",
+          zh:"栖息地部署是极限约束案例：污染边界严格、补给受限、故障耦合。路由纪律是强制的。",
+          es:"Despliegue en hábitat es caso extremo: límites estrictos de contaminación, reabastecimiento acotado y fallas acopladas. Disciplina de ruteo obligatoria."
+        },
+        concept:{
+          en:"Concept: implement closed-loop routing per lane with explicit purity constraints and deterministic recovery playbooks (isolate→filter→reprocess→verify→rejoin).",
+          zh:"概念：按车道实现闭环路由，给出纯度约束，并用确定性恢复剧本（隔离→过滤→再处理→验证→回并）。",
+          es:"Concepto: ruteo cerrado por carril con restricciones de pureza y playbooks deterministas (aislar→filtrar→reprocesar→verificar→reintegrar)."
+        },
+        build:{
+          en:"Build now: modular redundancy + isolation to prevent cascade; windowed stress tests; export receipts for audit replay.",
+          zh:"现在建：模块化冗余+隔离阻断级联；窗口压力测试；导出审计回放收据。",
+          es:"Construir ahora: redundancia modular + aislamiento para evitar cascada; pruebas por ventanas; exportar recibos para auditoría."
+        },
+        roadmap:{
+          en:"Roadmap: yields/losses/interventions and time-to-stability as standard outputs; correlation exposure checks across coupled lanes.",
+          zh:"路线图：把产率/损耗/干预/恢复时间作为标准输出；对耦合车道做相关暴露检查。",
+          es:"Hoja de ruta: rendimientos/pérdidas/intervenciones/tiempo de recuperación como salidas estándar; chequeos de exposición correlacionada."
         }
       }
     }
   ];
 
-  function lensLabel(){
-    if(lang==="zh") return {informal:"通俗",formal:"正式",engineering:"工程",platform:"平台"};
-    if(lang==="es") return {informal:"INFORMAL",formal:"FORMAL",engineering:"INGENIERÍA",platform:"PLATAFORMA"};
-    return {informal:"INFORMAL",formal:"FORMAL",engineering:"ENGINEERING",platform:"PLATFORM"};
+  // ===== Accordion state preserved across lane/lang changes =====
+  var list=document.getElementById("list");
+  var rowRefs=[];
+  var openIndex=0;
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
   }
 
-  var lens="informal";
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
 
-  function render(){
-    var L=lensLabel();
-    document.getElementById("lensInformal").textContent=L.informal;
-    document.getElementById("lensFormal").textContent=L.formal;
-    document.getElementById("lensEngineering").textContent=L.engineering;
-    document.getElementById("lensPlatform").textContent=L.platform;
+  function makeSubBubble(label){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
 
-    document.getElementById("hk").textContent=(lang==="zh")?"前沿":(lang==="es")?"FRONTERA":"FRONTIER";
-    document.getElementById("ht").textContent=pick({en:"CLOSED LOOP",zh:"闭环",es:"CICLO CERRADO"});
-    document.getElementById("band").textContent=(lang==="zh")?"没有扔掉 · 一切都是库存":(lang==="es")?"SIN AFUERA · TODO ES INVENTARIO":"NO AWAY · EVERYTHING IS INVENTORY";
+    var h=document.createElement("h4");
+    h.textContent=label;
 
-    var acc=document.getElementById("accordion");
-    acc.innerHTML="";
+    var p=document.createElement("p");
+    p.textContent="";
 
-    S.forEach(function(item, idx){
-      var sec=document.createElement("div");
-      sec.className="section";
+    b.appendChild(h);
+    b.appendChild(p);
 
-      var head=document.createElement("div");
-      head.className="head";
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
-      var title=document.createElement("div");
-      title.className="title";
-      title.textContent=pick(item.t);
+    return {wrap:b, p:p};
+  }
 
-      var chev=document.createElement("div");
-      chev.className="chev";
-      chev.textContent="▸";
+  function buildRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
 
-      head.appendChild(title);
-      head.appendChild(chev);
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
-      var body=document.createElement("div");
-      body.className="body";
+    var hL=document.createElement("div");
+    hL.className="hL";
 
-      var sub=document.createElement("div");
-      sub.style.fontWeight="800";
-      sub.style.color="rgba(255,255,255,.86)";
-      sub.style.marginBottom="12px";
-      sub.textContent=pick(item.sub);
-      body.appendChild(sub);
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
 
-      var lines=item.c[lens];
-      for(var i=0;i<lines.length;i++){
-        var p=document.createElement("div");
-        p.style.marginTop=(i===0)?"0":"14px";
-        p.textContent=lines[i];
-        body.appendChild(p);
-      }
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
 
-      var jump=document.createElement("div");
-      jump.className="jump";
-      var openLabel=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+    var title=document.createElement("div");
+    title.className="q";
 
-      var j1=document.createElement("a"); j1.className="btn"; j1.textContent=openLabel+": URBAN OS"; j1.href="/explore/frontier/urban/"+q();
-      var j2=document.createElement("a"); j2.className="btn"; j2.textContent=openLabel+": ENERGY"; j2.href="/explore/frontier/energy/"+q();
-      var j3=document.createElement("a"); j3.className="btn"; j3.textContent=openLabel+": LAWS"; j3.href="/laws/"+q();
-      jump.appendChild(j1); jump.appendChild(j2); jump.appendChild(j3);
-      body.appendChild(jump);
+    var sub=document.createElement("div");
+    sub.className="sub";
 
-      sec.appendChild(head);
-      sec.appendChild(body);
-      acc.appendChild(sec);
+    tb.appendChild(title);
+    tb.appendChild(sub);
 
-      function closeAll(){
-        acc.querySelectorAll(".section").forEach(function(x){
-          x.classList.remove("open");
-          var c=x.querySelector(".chev");
-          if(c) c.textContent="▸";
-        });
-      }
-      function toggle(){
-        var willOpen=!sec.classList.contains("open");
-        closeAll();
-        if(willOpen){ sec.classList.add("open"); chev.textContent="▾"; }
-      }
+    hL.appendChild(mark);
+    hL.appendChild(tb);
 
-      head.addEventListener("click", toggle);
-      head.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-      });
-      head.tabIndex=0; head.setAttribute("role","button");
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
 
-      if(idx===0){ sec.classList.add("open"); chev.textContent="▾"; }
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    body.appendChild(intro);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var b1=makeSubBubble(labConcept());
+    var b2=makeSubBubble(labBuild());
+    var b3=makeSubBubble(labRoadmap());
+
+    bubbles.appendChild(b1.wrap);
+    bubbles.appendChild(b2.wrap);
+    bubbles.appendChild(b3.wrap);
+    body.appendChild(bubbles);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a1=document.createElement("a");
+    a1.className="btn";
+    a1.setAttribute("data-route","/explore/frontier/urban/");
+    actions.appendChild(a1);
+
+    var a2=document.createElement("a");
+    a2.className="btn";
+    a2.setAttribute("data-route","/explore/frontier/energy/");
+    actions.appendChild(a2);
+
+    var a3=document.createElement("a");
+    a3.className="btn red";
+    a3.setAttribute("data-route","/laws/");
+    actions.appendChild(a3);
+
+    body.appendChild(actions);
+
+    function onToggle(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      sub:sub,
+      intro:intro,
+      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      a1:a1,a2:a2,a3:a3
     });
   }
 
-  function setActive(){
-    ["lensInformal","lensFormal","lensEngineering","lensPlatform"].forEach(function(id){
-      document.getElementById(id).classList.remove("active");
-    });
-    if(lens==="informal") document.getElementById("lensInformal").classList.add("active");
-    if(lens==="formal") document.getElementById("lensFormal").classList.add("active");
-    if(lens==="engineering") document.getElementById("lensEngineering").classList.add("active");
-    if(lens==="platform") document.getElementById("lensPlatform").classList.add("active");
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<SECTIONS.length;i++){
+      buildRow(SECTIONS[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
   }
 
-  document.getElementById("lensInformal").addEventListener("click", function(){ lens="informal"; setActive(); render(); });
-  document.getElementById("lensFormal").addEventListener("click", function(){ lens="formal"; setActive(); render(); });
-  document.getElementById("lensEngineering").addEventListener("click", function(){ lens="engineering"; setActive(); render(); });
-  document.getElementById("lensPlatform").addEventListener("click", function(){ lens="platform"; setActive(); render(); });
+  function applyHeader(){
+    var H=(HEAD[lang]||HEAD.en);
+    var lanePack = (lane==="engineering") ? H.engineering : H.platform;
 
-  setActive();
-  render();
+    document.getElementById("hk").textContent = pick3("FRONTIER · CLOSED LOOP","前沿 · 闭环","FRONTERA · CICLO CERRADO");
+    document.getElementById("ht").textContent = pick3("CLOSED LOOP","闭环","CICLO CERRADO");
+    document.getElementById("hs").textContent = lanePack.hs;
+    document.getElementById("rule").textContent = lanePack.rule;
 
+    document.getElementById("band").textContent =
+      pick3("NO AWAY · EVERYTHING IS INVENTORY","没有扔掉 · 一切都是库存","SIN AFUERA · TODO ES INVENTARIO");
+
+    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
+
+    document.getElementById("navUrban").textContent  = pick3("URBAN OS","城市OS","SO URBANO");
+    document.getElementById("navEnergy").textContent = pick3("ENERGY","能源","ENERGÍA");
+    document.getElementById("navWater").textContent  = pick3("WATER","水","AGUA");
+    document.getElementById("navWaste").textContent  = pick3("WASTE","废弃物","RESIDUOS");
+
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<SECTIONS.length;i++){
+      var item=SECTIONS[i];
+      var r=rowRefs[i];
+
+      r.title.textContent = (lang==="zh")?item.t.zh:(lang==="es")?(item.t.es||item.t.en):item.t.en;
+      r.sub.textContent   = (lang==="zh")?item.s.zh:(lang==="es")?(item.s.es||item.s.en):item.s.en;
+
+      var pack = (lane==="engineering") ? item.engineering : item.platform;
+
+      r.intro.textContent = (lang==="zh")?pack.intro.zh:(lang==="es")?(pack.intro.es||pack.intro.en):pack.intro.en;
+      r.b1p.textContent   = (lang==="zh")?pack.concept.zh:(lang==="es")?(pack.concept.es||pack.concept.en):pack.concept.en;
+      r.b2p.textContent   = (lang==="zh")?pack.build.zh:(lang==="es")?(pack.build.es||pack.build.en):pack.build.en;
+      r.b3p.textContent   = (lang==="zh")?pack.roadmap.zh:(lang==="es")?(pack.roadmap.es||pack.roadmap.en):pack.roadmap.en;
+
+      r.a1.textContent = openLabel()+": "+pick3("URBAN OS","城市OS","SO URBANO");
+      r.a2.textContent = openLabel()+": "+pick3("ENERGY","能源","ENERGÍA");
+      r.a3.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== No reload on language/lane changes =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== INIT =====
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
 })();
 </script>
 

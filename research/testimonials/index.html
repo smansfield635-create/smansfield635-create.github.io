@@ -2,16 +2,18 @@
 <!-- TNT — /research/testimonials/index.html
      RESEARCH · FIELD VALIDATION (LEAFGUARD)
      MODE: ENGLISH ONLY
-     STRUCTURE (3 TIERS, SEPARATE):
-       A) Voice Testimonials (Name + City + Your Note + Testimonial Text)
-       B) Reference List (Name + City + Your Note + Contact Available = ON FILE)
-       C) Review Archive (Name + Review Excerpt + Context Note)
-     CONSTRAINTS (LOCKED):
+     STRUCTURE (STACKED / SIMPLE / NON-CLUTTER):
+       A) Voice Testimonials (Google review = voice)
+       B) Reference List (Name + City + Your Note + CONTACT ON FILE)
+       C) Review Archive (Summaries + Context Notes)
+       D) Claim Alignment (Review language → structural claims)
+       E) Warranty Correlation (separate warranty buckets)
+     CONSTRAINTS:
        - Informational only (no monetization / no lead capture / no affiliates)
        - No logos / no images / no implied partnerships
        - No URLs (per instruction)
        - No star icons / no ranking language
-       - NO phone numbers displayed (public page safety)
+       - No phone numbers displayed (public page safety)
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
        - Single-open accordion (top-level)
@@ -25,7 +27,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Research · Field Validation · LeafGuard</title>
+<title>Research · LeafGuard Field Validation</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -189,7 +191,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .card.open .body{display:block}
 
-/* Sub-bubbles (less clutter) */
+/* Sub-bubbles */
 .subBubbles{display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -308,11 +310,11 @@ body::before,body::after{pointer-events:none!important}
     <p class="k">RESEARCH · FIELD VALIDATION</p>
     <h1 class="h1">LeafGuard · Voice + References + Reviews</h1>
     <p class="p0">
-      This page is organized into three separate research layers: (A) Voice Testimonials, (B) Reference List, (C) Review Archive.
-      It is informational only and does not imply affiliation or endorsement.
+      English-only, stacked, and structured. This page separates: (A) Voice Testimonials (Google review present),
+      (B) Reference List (contact on file), (C) Review Archive (summaries + context), plus claim/warranty correlation layers.
     </p>
     <div class="note0">
-      Contact info is not published on this page. Reference contact is maintained off-page (on file).
+      No URLs. No star icons. No ranking language. Contact details are maintained off-page (on file).
     </div>
   </section>
 
@@ -364,30 +366,156 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // ===== DATA YOU WILL POPULATE =====
-  // IMPORTANT:
-  // - No phone numbers displayed. Keep phone mapping offline.
-  // - Names here should match the name used in the voice testimonial / review.
-  // - You can attach your personal note (non-sensitive).
-  // - If you later want “on file” references, set contact_on_file=true.
+  // ===== DATASET: 1–100 (names/cities/notes), Voice flagged where review exists =====
+  // Notes are kept as brief as possible. Sensitive medical/age details were omitted.
+  // CONTACT is assumed ON FILE for this dataset (your notebook), but phone digits are not published here.
+  var DATA = [
+    {id:14,name:"Diana Vandergriff",city:"Chico",note:"60 acres; rural estate",voice:false},
+    {id:15,name:"Arnold Lawson",city:"Allen",note:"First-time buyers; asked about property insurance",voice:false},
+    {id:16,name:"Joy Flanagan",city:"Alba",note:"Stated LeafGuard felt like the only solution",voice:false},
+    {id:17,name:"Jacques Delira",city:"Mesquite",note:"Warranty emphasis",voice:false},
+    {id:18,name:"Phillip Blander",city:"Sherman",note:"Color scheme preference",voice:false},
+    {id:19,name:"JoAnn Villanueva",city:"Dallas",note:"Foundation protection emphasis",voice:true},
+    {id:20,name:"Anthony Bradford",city:"Forest Hill",note:"Professional client; finance context",voice:false},
+    {id:21,name:"Mike Castle",city:"Wylie",note:"10-year prior LeafGuard experience; addition",voice:false},
+    {id:22,name:"Mike Cook",city:"Heath",note:"Fabrication background; fit/finish focus",voice:false},
+    {id:23,name:"Oscar Nelson",city:"Fort Worth",note:"Project note on file",voice:false},
+    {id:24,name:"Bryan Proctor",city:"Willis Point",note:"Near 300' of gutter",voice:false},
+    {id:25,name:"Luke Hayes",city:"Arlington",note:"First-time homeowner; education-heavy consult",voice:true},
+    {id:26,name:"John & Dorothy Dakinger",city:"Aubrey",note:"Purchase framed as gift",voice:false},
+    {id:27,name:"Jessica Rogers",city:"The Colony",note:"Previous LeafGuard owner",voice:false},
+    {id:28,name:"David & Tiffany Spencer",city:"Krugerville",note:"Custom corners; 200+ feet",voice:true},
+    {id:29,name:"Barnabus & Judy Osong",city:"Garland",note:"Multiple custom corners",voice:false},
+    {id:30,name:"Donna Schnell",city:"Flower Mound",note:"Lakehouse; 200+ feet",voice:false},
+    {id:31,name:"Gary Steele",city:"Denton",note:"Project note on file",voice:false},
+    {id:32,name:"Alexis Pitts",city:"Garland",note:"Project note on file",voice:false},
+    {id:33,name:"Evelyn Trowell",city:"DeSoto",note:"Foundation damage concern",voice:false},
+    {id:34,name:"Bo Ready",city:"Marshall",note:"Cash customer; debris/foundation context",voice:false},
+    {id:35,name:"Madonna Kissinger-Russell",city:"Dallas",note:"Duplex; long property",voice:false},
+    {id:36,name:"Roberta Patience",city:"Duncanville",note:"Had LeafGuard previously (San Antonio)",voice:false},
+    {id:37,name:"Albert 'Ray' Sain",city:"Euless",note:"Project note on file",voice:false},
+    {id:38,name:"Orea Brown",city:"Wichita Falls",note:"Color scheme preference",voice:false},
+    {id:39,name:"Louis Blakely",city:"Arlington",note:"Project note on file",voice:false},
+    {id:40,name:"Kelene Powell",city:"Nevada",note:"Pet note",voice:false},
+    {id:41,name:"Ignacio Alvarado",city:"Irving",note:"Pet note",voice:false},
+    {id:42,name:"Sandy Grant",city:"Arlington",note:"Prior LeafFilter failure",voice:false},
+    {id:43,name:"Marcee Camp",city:"Mansfield",note:"Long marriage; volunteer note",voice:false},
+    {id:44,name:"Davis Sugg",city:"Garland",note:"Cash; scheduling note",voice:false},
+    {id:45,name:"Michael Cormican & Dolores",city:"Dallas",note:"Project note on file",voice:false},
+    {id:46,name:"Russell Stoffer",city:"Fort Worth",note:"Life event framing; consult appreciation",voice:true},
+    {id:47,name:"Kathy Strickland",city:"Burleson",note:"Thought had LG; actually LeafFilter",voice:false},
+    {id:48,name:"Patrick Hicks",city:"Rowlett",note:"200+ feet measured; scope/pricing note",voice:false},
+    {id:49,name:"Kirankumar Shastri",city:"Fort Worth",note:"Ping pong machine note",voice:false},
 
-  // A) Voice Testimonials: name + city + note + voice testimonial text (your words)
-  var VOICE_TESTIMONIALS = [
-    // Example placeholders — replace with your actual entries
-    {name:"(Add Name)", city:"(City, TX)", note:"(Your personal note)", voice:"(Voice testimonial text)", contact_on_file:true}
+    {id:50,name:"Brian Leding",city:"Colleyville",note:"Insurance claim; roof context",voice:false},
+    {id:51,name:"Anna",city:"Flower Mound",note:"Donation to VA note",voice:false},
+    {id:52,name:"Mike Griffith",city:"Flower Mound",note:"Insurance claim; upgrade context",voice:true},
+    {id:53,name:"Victor Mejer",city:"Fort Worth",note:"Writing a sci-fi novel",voice:false},
+    {id:54,name:"Pedro Najera",city:"Saginaw",note:"Treasury work note",voice:false},
+    {id:55,name:"Laurie Holmstrom",city:"Fort Worth",note:"Notary; long-term framing",voice:true},
+    {id:56,name:"Noah McIntyre",city:"(TX)",note:"Newlywed; education-heavy consult",voice:true},
+    {id:57,name:"Judy Hayes",city:"Burleson",note:"Rescues stray dogs",voice:false},
+    {id:58,name:"Amanda Taylor",city:"Carrollton",note:"Duplex; strong energy note",voice:false},
+    {id:59,name:"Canefo Williams",city:"Cedar Hill",note:"Multi-drop; home note",voice:false},
+    {id:60,name:"Howard Pattberg",city:"Sulphur Springs",note:"200 feet of LeafGuard",voice:false},
+    {id:61,name:"Wayne Duke",city:"(TX)",note:"Metal roof",voice:false},
+    {id:62,name:"Emogene Thomas",city:"Longview",note:"Had plastic gutters",voice:false},
+    {id:63,name:"David Velvin",city:"Henderson",note:"Oil company executive",voice:false},
+    {id:64,name:"Leon Flowers",city:"Denton",note:"Gutters completely clogged",voice:false},
+    {id:65,name:"Blaine Barrier",city:"Krugerville",note:"Drain Defenders interest",voice:false},
+    {id:66,name:"Monica Herrera",city:"Waxahachie",note:"Prior home damage context",voice:false},
+    {id:67,name:"Kenneth Aind",city:"Austin",note:"Rental property purchase",voice:false},
+    {id:68,name:"Robert Mackinnon",city:"Round Top",note:"Corrugated gutters",voice:false},
+    {id:69,name:"Herb Steiner",city:"Briarcliff",note:"Color combo note",voice:false},
+    {id:70,name:"Jewel Williams",city:"Manor",note:"Sibling households both have LG",voice:false},
+    {id:71,name:"Carolyn Battles",city:"Forest Hill",note:"Financing excitement",voice:false},
+    {id:72,name:"Cary Conaway",city:"Dallas",note:"Heavy leaf/debris",voice:false},
+    {id:73,name:"Ruby Peder",city:"Red Oak",note:"Removed LeafFilter",voice:false},
+    {id:74,name:"Irene Sims",city:"Dallas",note:"Invited you to church",voice:false},
+
+    {id:75,name:"Charlotte Fox",city:"Dallas",note:"Large roof/fascia/soffit project",voice:false},
+    {id:76,name:"Stevie Benson",city:"Ferris",note:"Drain Defenders interest",voice:false},
+    {id:77,name:"Brenda Spencer",city:"Henderson",note:"Referral relationship note",voice:false},
+    {id:78,name:"Myong Chilson",city:"Fort Worth",note:"New gutters already destroyed (prior issue)",voice:false},
+    {id:79,name:"Richard Ross",city:"Fort Worth",note:"Completely clogged",voice:false},
+    {id:80,name:"Robert (Bob) Bond",city:"Fort Worth",note:"Prior LeafGuard customer",voice:false},
+    {id:81,name:"Lisa Clement",city:"Dallas",note:"Screens didn’t work (prior system)",voice:false},
+    {id:82,name:"Deborah Bach",city:"Carbon",note:"Clogs & wood rot",voice:false},
+    {id:83,name:"David & Peggy Owens",city:"Decatur",note:"Veteran household",voice:false},
+    {id:84,name:"Frank Hook",city:"Murphy",note:"Large foundation project",voice:false},
+    {id:85,name:"Gerald Dawson",city:"Mansfield",note:"Big debris problem",voice:false},
+    {id:86,name:"Tracey Patterson",city:"Dallas",note:"Missing fascia board",voice:false},
+    {id:87,name:"Roberta Lastinger",city:"Plano",note:"Lots of trees",voice:false},
+    {id:88,name:"Robert Bond",city:"Fort Worth",note:"Prior LeafGuard customer",voice:false},
+    {id:89,name:"Moss Chambwa",city:"Plano",note:"New to the States",voice:false},
+    {id:90,name:"Carol Sandifer",city:"Anna",note:"Big debris problem",voice:false},
+    {id:91,name:"Becky Edwards",city:"Plano",note:"Over 300’ of gutter",voice:false},
+    {id:92,name:"George Guerrero",city:"Royse City",note:"Tons of trees",voice:false},
+    {id:93,name:"Linda Shipp",city:"Merit",note:"Customer note",voice:false},
+    {id:94,name:"Cecil Stooksberry",city:"Rockwall",note:"Foundation concern",voice:false},
+    {id:95,name:"Kristin Doughty",city:"Springtown",note:"Property note",voice:false},
+    {id:96,name:"Mark Clemens",city:"Fort Worth",note:"Prior LeafGuard customer",voice:false},
+    {id:97,name:"Joe Garcia",city:"Fort Worth",note:"Veteran household",voice:false},
+    {id:98,name:"Adrianne Tiggins",city:"Dallas",note:"Signed up early; pricing context",voice:false},
+    {id:99,name:"Dan Byler",city:"Azle",note:"Color scheme preference",voice:false},
+    {id:100,name:"Susan Finehout",city:"McKinney",note:"Lifetime framing; design preference",voice:false}
   ];
 
-  // B) Reference List: name + city + place + note (no review text)
-  var REFERENCES = [
-    {name:"(Add Name)", city:"(City, TX)", place:"(Area tag)", note:"(Your personal note)", contact_on_file:true}
+  // ===== Derived lists =====
+  var VOICE = DATA.filter(function(x){ return !!x.voice; });
+  var REF   = DATA.slice(); // all 1–100 (we started at 14, but you said stop at 100; this is the extracted dataset)
+
+  // ===== Review archive entries =====
+  // We only have confirmed review identities for the VOICE set; other review entries can be added later.
+  function makeReviewSummary(x){
+    // Neutral, non-promotional summaries (research posture)
+    if(x.name==="JoAnn Villanueva") return "Professional + informative; frames gutters as property protection.";
+    if(x.name==="Luke Hayes") return "Education-heavy consult; first-time homeowner framing.";
+    if(x.name==="David & Tiffany Spencer") return "Thorough presentation; custom corners; budget alignment; scheduling discipline.";
+    if(x.name==="Russell Stoffer") return "Life event context; perceived above-and-beyond support.";
+    if(x.name==="Mike Griffith") return "Long-term prior system; upgrade framing; confidence in improvements.";
+    if(x.name==="Laurie Holmstrom") return "Lifetime framing; one-day completion mention; satisfaction language.";
+    if(x.name==="Noah McIntyre") return "High-detail education; affordability emphasis; consult time intensity.";
+    return "Public review present; summary on file.";
+  }
+
+  // ===== Claim/Warranty correlation buckets =====
+  var CLAIM_BUCKETS = [
+    {key:"CLOG", title:"Debris Exclusion / Clog Prevention", desc:"Customer language about prior clogging, heavy debris, screens failing, or wanting no clogs."},
+    {key:"ATTACH", title:"Attachment Integrity / Detachment Prevention", desc:"Customer language about pull-away, detachment, fascia damage, or stability concerns."},
+    {key:"FINISH", title:"Finish / Appearance Durability", desc:"Customer language about color, finish, aesthetics, or long-term appearance."},
+    {key:"CAPS", title:"End-Caps / Corners / Terminations", desc:"Customer language about corners, custom angles, end-caps, or complex termination geometry."}
   ];
 
-  // C) Review Archive: name + review excerpt or neutral summary (public) + your context note
-  var REVIEWS = [
-    {name:"(Add Name)", city:"(City, TX)", review:"(Short excerpt or neutral summary)", note:"(Your note: what it demonstrates)", contact_on_file:false}
+  var WARRANTY_BUCKETS = [
+    {key:"W_FINISH", title:"Lifetime Paint Finish Warranty", desc:"Coverage category: finish durability. Correlate only to review language that mentions color/finish/appearance over time."},
+    {key:"W_ATTACH", title:"Lifetime No-Pullaway / No-Detachment Warranty", desc:"Coverage category: attachment integrity. Correlate to language mentioning pull-away, detachment, fascia issues, or stability."},
+    {key:"W_CLOG", title:"Lifetime No-Clog Warranty", desc:"Coverage category: clog prevention. Correlate to language mentioning clogging, debris load, screens failing, or 'no clogs' expectations."},
+    {key:"W_CAPS", title:"Two-Year End-to-End Cap Production Warranty", desc:"Coverage category: end-caps/terminations. Correlate to language mentioning corners/end-caps/custom angles."}
   ];
 
-  function closeAll(){
+  function classifyClaims(x){
+    var txt=(x.note||"").toLowerCase();
+    var out=[];
+    if(/clog|debris|leaf|tree|screen|filter/.test(txt)) out.push("CLOG");
+    if(/fascia|pull|detach|foundation|damage|rot/.test(txt)) out.push("ATTACH");
+    if(/color|scheme|finish|chocolate|ivory|brown|red|green/.test(txt)) out.push("FINISH");
+    if(/corner|custom|angle|end cap|cap/.test(txt)) out.push("CAPS");
+    return out;
+  }
+
+  function classifyWarranties(x){
+    var claims=classifyClaims(x);
+    var out=[];
+    if(claims.indexOf("FINISH")>=0) out.push("W_FINISH");
+    if(claims.indexOf("ATTACH")>=0) out.push("W_ATTACH");
+    if(claims.indexOf("CLOG")>=0) out.push("W_CLOG");
+    if(claims.indexOf("CAPS")>=0) out.push("W_CAPS");
+    return out;
+  }
+
+  // ===== UI helpers =====
+  function closeAllCards(){
     document.querySelectorAll(".card").forEach(function(c){
       c.classList.remove("open");
       var ch=c.querySelector(".chev");
@@ -493,7 +621,7 @@ body::before,body::after{pointer-events:none!important}
         chev.textContent="▸";
         return;
       }
-      closeAll();
+      closeAllCards();
       card.classList.add("open");
       chev.textContent="▾";
       body.querySelectorAll(".bubble").forEach(function(bb){ bb.classList.remove("open"); });
@@ -514,42 +642,49 @@ body::before,body::after{pointer-events:none!important}
     return card;
   }
 
+  // ===== Build page =====
   var stack=document.getElementById("stack");
 
-  // ===== Card A: Voice Testimonials =====
+  // A) Voice Testimonials
   var bubbleA1 = makeBubble(
-    "Voice Testimonials (tied to on-file references)",
-    "Entries include name, city, your note, and the voice testimonial text. Contact availability is maintained off-page (on file).",
+    "Voice Testimonials (Google review present)",
+    "These entries are the subset of the reference list that has a public Google review. Contact is maintained on file.",
     function(){
       var list=document.createElement("div");
       list.className="entryList";
-      VOICE_TESTIMONIALS.forEach(function(x){
-        var meta = x.name + " — " + x.city;
-        var text = "NOTE: " + x.note + "  |  VOICE: " + x.voice;
-        list.appendChild(makeEntry(meta, text, x.contact_on_file ? "CONTACT: ON FILE" : ""));
+      VOICE.forEach(function(x){
+        var meta = "#" + x.id + " · " + x.name + " — " + x.city;
+        var txt  = "NOTE: " + (x.note||"") + "  |  SUMMARY: " + makeReviewSummary(x);
+        list.appendChild(makeEntry(meta, txt, "VOICE + CONTACT ON FILE"));
       });
       return list;
     }
   );
 
+  var bubbleA2 = makeBubble(
+    "Voice testimonial rule",
+    "Definition used here: Voice testimonial = a Google review exists for the individual.",
+    null
+  );
+
   var cardA = makeCard(
     "A) Voice Testimonials",
-    "Name + City + Your note + Voice testimonial text (research documentation).",
-    [bubbleA1],
+    "Google review present. Names tied to the reference list.",
+    [bubbleA1, bubbleA2],
     true
   );
 
-  // ===== Card B: Reference List =====
+  // B) Reference List (all 1–100 we extracted)
   var bubbleB1 = makeBubble(
-    "Reference List (contact on file)",
-    "Entries include name, city/area, and your note. No phone numbers are published on this page.",
+    "Reference List (1–100)",
+    "All documented references in the current dataset. Contact is maintained on file (not published here).",
     function(){
       var list=document.createElement("div");
       list.className="entryList";
-      REFERENCES.forEach(function(x){
-        var meta = x.name + " — " + x.city + (x.place?(" · " + x.place):"");
-        var text = "NOTE: " + x.note;
-        list.appendChild(makeEntry(meta, text, x.contact_on_file ? "CONTACT: ON FILE" : ""));
+      REF.forEach(function(x){
+        var meta = "#" + x.id + " · " + x.name + " — " + x.city;
+        var txt  = "NOTE: " + (x.note||"");
+        list.appendChild(makeEntry(meta, txt, "CONTACT ON FILE"));
       });
       return list;
     }
@@ -557,43 +692,144 @@ body::before,body::after{pointer-events:none!important}
 
   var cardB = makeCard(
     "B) Reference List",
-    "Name + City/Area + Your note (contact availability retained off-page).",
+    "Name + City + your note. Contact maintained on file.",
     [bubbleB1],
     false
   );
 
-  // ===== Card C: Review Archive =====
+  // C) Review Archive (voice subset summarized; expand later)
   var bubbleC1 = makeBubble(
-    "Review Archive (public language patterns)",
-    "Entries include name, city, review excerpt or neutral summary, and your context note.",
+    "Review Archive (summaries)",
+    "Review summaries are neutral and non-promotional. No URLs are shown on this page.",
     function(){
       var list=document.createElement("div");
       list.className="entryList";
-      REVIEWS.forEach(function(x){
+      VOICE.forEach(function(x){
         var meta = x.name + " — " + x.city;
-        var text = "REVIEW: " + x.review + "  |  CONTEXT NOTE: " + x.note;
-        list.appendChild(makeEntry(meta, text, ""));
+        var txt  = makeReviewSummary(x);
+        list.appendChild(makeEntry(meta, txt, "REVIEW SUMMARY"));
       });
       return list;
     }
   );
 
   var bubbleC2 = makeBubble(
-    "Disclaimer",
-    "This page is informational only. It does not rank products, compare competitors, publish proprietary performance data, or imply affiliation or endorsement.",
+    "Add more reviews later",
+    "If you confirm additional names have public reviews, add them by toggling VOICE=true in the dataset.",
     null
   );
 
   var cardC = makeCard(
     "C) Review Archive",
-    "Name + review excerpt/summary + context note (research framing).",
+    "Public review present → summary stored here.",
     [bubbleC1, bubbleC2],
+    false
+  );
+
+  // D) Claim Alignment
+  var bubbleD1 = makeBubble(
+    "Claim Alignment Buckets",
+    "This is a research mapping: review/reference language → structural claim categories. This does not assert proof; it organizes language patterns.",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      CLAIM_BUCKETS.forEach(function(c){
+        list.appendChild(makeEntry(c.title, c.desc, ""));
+      });
+      return list;
+    }
+  );
+
+  var bubbleD2 = makeBubble(
+    "Entries mapped to claim buckets",
+    "Entries are bucketed using only the reference note text (debris/fascia/corners/color/etc.).",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      var by={CLOG:0,ATTACH:0,FINISH:0,CAPS:0};
+      REF.forEach(function(x){
+        classifyClaims(x).forEach(function(k){ by[k] = (by[k]||0)+1; });
+      });
+      list.appendChild(makeEntry("Debris / Clog language", String(by.CLOG) + " entries", ""));
+      list.appendChild(makeEntry("Attachment / Damage language", String(by.ATTACH) + " entries", ""));
+      list.appendChild(makeEntry("Finish / Color language", String(by.FINISH) + " entries", ""));
+      list.appendChild(makeEntry("Corners / Caps language", String(by.CAPS) + " entries", ""));
+      return list;
+    }
+  );
+
+  var cardD = makeCard(
+    "D) Claim Alignment",
+    "Review language patterns mapped to structural claim categories.",
+    [bubbleD1, bubbleD2],
+    false
+  );
+
+  // E) Warranty Correlation
+  var bubbleE1 = makeBubble(
+    "Warranty Categories (as provided)",
+    "This section organizes reference/review language into warranty-relevant buckets without making performance claims.",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      WARRANTY_BUCKETS.forEach(function(w){
+        list.appendChild(makeEntry(w.title, w.desc, ""));
+      });
+      return list;
+    }
+  );
+
+  var bubbleE2 = makeBubble(
+    "Warranty-relevant language counts (from notes)",
+    "Counts below are derived from keyword mapping of the 1–100 notes. This is not a warranty adjudication.",
+    function(){
+      var list=document.createElement("div");
+      list.className="entryList";
+      var by={W_FINISH:0,W_ATTACH:0,W_CLOG:0,W_CAPS:0};
+      REF.forEach(function(x){
+        classifyWarranties(x).forEach(function(k){ by[k] = (by[k]||0)+1; });
+      });
+      list.appendChild(makeEntry("Lifetime Paint Finish Warranty (language matches)", String(by.W_FINISH) + " entries", ""));
+      list.appendChild(makeEntry("Lifetime No-Pullaway / No-Detachment (language matches)", String(by.W_ATTACH) + " entries", ""));
+      list.appendChild(makeEntry("Lifetime No-Clog (language matches)", String(by.W_CLOG) + " entries", ""));
+      list.appendChild(makeEntry("Two-Year End-Cap Production (language matches)", String(by.W_CAPS) + " entries", ""));
+      return list;
+    }
+  );
+
+  var bubbleE3 = makeBubble(
+    "Disclaimer (warranty)",
+    "Warranties are referenced as categories for research organization only. This page does not interpret warranty terms or make coverage determinations.",
+    null
+  );
+
+  var cardE = makeCard(
+    "E) Warranty Correlation",
+    "Separate category: how review/reference language aligns with warranty categories.",
+    [bubbleE1, bubbleE2, bubbleE3],
+    false
+  );
+
+  // F) Global disclaimer
+  var bubbleF1 = makeBubble(
+    "Global Disclaimer",
+    "This page is informational only. It does not rank brands, compare competitors, publish proprietary performance metrics, or imply affiliation or endorsement.",
+    null
+  );
+
+  var cardF = makeCard(
+    "F) Disclaimer",
+    "Research framing and constraints.",
+    [bubbleF1],
     false
   );
 
   stack.appendChild(cardA);
   stack.appendChild(cardB);
   stack.appendChild(cardC);
+  stack.appendChild(cardD);
+  stack.appendChild(cardE);
+  stack.appendChild(cardF);
 
 })();
 </script>

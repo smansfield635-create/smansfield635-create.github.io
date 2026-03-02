@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- TNT — /door/index.html
      DOOR · Frontier Architecture (INTRO-TIER HUB — NO LENSES REQUIRED)
+     UPDATE: ADD BACKGROUND CONTEXT (FESTIVAL NIGHT / LANTERN / FIREWORKS — BEHIND CONTENT)
      RULES (LOCKED):
        - Trilingual site copy: EN / 中文 / ES
        - No inline onclick; use addEventListener
@@ -36,7 +37,7 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --dockH:96px;
 
-  /* Red/Black/Gold hierarchy (Door is intro-tier: keep elegant, high-contrast) */
+  /* Red/Black/Gold hierarchy */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.08);
 
@@ -97,6 +98,63 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   flex-direction:column;
   gap:26px;
+  position:relative;
+  z-index:10;
+}
+
+/* ===== Background context (behind hero + grid) ===== */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:120px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 160px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 26%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 62% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.95;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    /* Lantern pools */
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+
+    /* Firework ribbons */
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.75;
 }
 
 /* Hero */
@@ -118,7 +176,6 @@ body::before,body::after{pointer-events:none!important}
 .hero::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;pointer-events:none;
-  /* subtle gold diamond lay in trim zone only */
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -225,6 +282,7 @@ body::before,body::after{pointer-events:none!important}
 @media (max-width:560px){
   :root{--dockH:116px}
   .dock{grid-template-columns:repeat(3,1fr)}
+  .hero{padding:40px 22px}
 }
 </style>
 </head>
@@ -244,6 +302,7 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
 
   <div class="hero" aria-label="Door hero">
     <h1 id="heroTitle">What if the loudest claims of our time were finally measurable?</h1>
@@ -317,6 +376,7 @@ body::before,body::after{pointer-events:none!important}
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
   var d = parseInt(depth,10);
@@ -347,7 +407,6 @@ body::before,body::after{pointer-events:none!important}
     return "?" + p.toString();
   }
 
-  // Wire all internal links with state carry
   function wireAll(){
     var nodes = document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
@@ -374,7 +433,6 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // Language toggle must reload SAME pathname
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang = next;
@@ -385,12 +443,10 @@ body::before,body::after{pointer-events:none!important}
   var btnEN = document.getElementById("btnEN");
   var btnZH = document.getElementById("btnZH");
   var btnES = document.getElementById("btnES");
-
   if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
   if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // Trilingual copy
   function apply(){
     if(lang==="zh"){
       document.getElementById("heroTitle").textContent="如果当今最宏大的主张终于可以被测量？";
@@ -447,7 +503,6 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("dockGauges").textContent="MEDIDORES";
       document.getElementById("btnIndex").textContent="BRÚJULA";
     }else{
-      // EN defaults already in DOM
       document.getElementById("dockHome").textContent="HOME";
       document.getElementById("dockPrelude").textContent="PRELUDE";
       document.getElementById("dockProducts").textContent="PRODUCTS";
@@ -456,7 +511,6 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("btnIndex").textContent="COMPASS";
     }
 
-    // Keep hrefs correct after language apply (state carry)
     wireAll();
   }
 

@@ -1,15 +1,29 @@
+<!doctype html>
 <!-- TNT — /explore/frontier/energy/index.html
-     FRONTIER · ENERGY SYSTEMS
-     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
-     ROLE:
-       - Define energy instability problem
-       - Express industrial substitution posture
-       - Integrate with Waste + Water + Urban OS
-       - Route forward to Urban OS / Closed Loop
+     FRONTIER · ENERGY SYSTEMS (INFORMAL SITE LAYER — NEW STANDARD)
+     PURPOSE:
+       - Define energy instability problem (human first)
+       - Express industrial substitution posture (bounded, measurable)
+       - Integrate with Waste + Water + Urban OS + Closed Loop
+       - Route forward to related frontier rooms
+     REQUIREMENTS (NEW STANDARD):
+       - Trilingual: EN / 中文 / ES
+       - LENSES (VISIBLE ONLY):
+           lane=platform|engineering (URL-only; NEVER stored)
+         (Informal/formal is NOT user-visible in this layer.)
+       - Pins this page to informal layer:
+           style = informal (stored in gd_style)
+           depth = explore  (stored in gd_depth)
+       - Single-open accordion (one open at a time)
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open section
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -25,120 +39,348 @@ a{color:inherit;text-decoration:none}
 body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 body::before,body::after{pointer-events:none!important}
 
-/* MONUMENT TYPOGRAPHY */
 :root{
-  --dockH:96px;
-  --mut:rgba(255,255,255,.92);
-  --mut2:rgba(255,255,255,.76);
-  --opal:rgba(210,190,255,.14);
-  --amber:rgba(255,170,0,.12);
-  --red:rgba(255,60,60,.10);
+  --dockH:112px;
+
+  /* Red / Black / Gold hierarchy */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+  --mut2:rgba(255,255,255,.72);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 110px rgba(0,0,0,.62);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowC:0 40px 120px rgba(0,0,0,.60);
 }
 
+/* ===== Page ===== */
 .page{
   width:min(1200px,94vw);
   margin:0 auto;
-  padding:100px 0 calc(var(--dockH) + 24px);
+  padding:104px 0 calc(var(--dockH) + 22px);
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:14px;
+  position:relative;
+  z-index:10;
 }
 
+/* ===== Top controls ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowB);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Background context (behind content; not body) ===== */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1240px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* ===== Header ===== */
 .header{
+  position:relative;
+  z-index:2;
   border:1px solid rgba(255,255,255,.12);
   border-radius:28px;
   background:
-    radial-gradient(circle at 20% 20%, var(--opal), transparent 70%),
-    radial-gradient(circle at 80% 20%, var(--amber), transparent 70%),
-    radial-gradient(circle at 60% 90%, var(--red), transparent 70%),
-    rgba(0,0,0,.18);
-  padding:28px;
-  box-shadow:0 40px 120px rgba(0,0,0,.6);
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 70%),
+    radial-gradient(circle at 82% 26%, var(--opalV), transparent 72%),
+    radial-gradient(circle at 60% 90%, var(--festival), transparent 70%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
+  padding:22px;
+  box-shadow:var(--shadowA);
+  overflow:hidden;
 }
-
-.k{
-  font-size:14px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin:0 0 12px;
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.24;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
+.k{margin:0 0 10px;font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.72;color:var(--mut);position:relative}
+.t{margin:0 0 12px;font-weight:980;font-size:42px;letter-spacing:1px;color:var(--ink);position:relative;line-height:1.08}
+.s{margin:0;font-size:18px;line-height:1.65;max-width:1000px;color:rgba(255,255,255,.88);position:relative}
 
-.t{
-  font-weight:900;
-  font-size:42px;
-  letter-spacing:1px;
-  margin:0 0 14px;
-}
-
-.s{
-  font-size:18px;
-  line-height:1.6;
-  max-width:1000px;
-  opacity:.9;
-}
-
-.lenses{
+/* ===== Lens strip (NEW STANDARD) ===== */
+.lensRow{
+  margin-top:16px;
   display:flex;
-  flex-wrap:wrap;
   gap:12px;
-  margin-top:24px;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:var(--mut);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
-.pill{
-  padding:12px 20px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  cursor:pointer;
-  font-weight:800;
-  letter-spacing:.4px;
-  font-size:14px;
-  background:rgba(0,0,0,.25);
-}
-
-.pill.active{
-  box-shadow:0 0 18px rgba(212,175,55,.25);
-  border-color:rgba(212,175,55,.55);
-}
-
+/* ===== Accordion ===== */
 .accordion{
+  position:relative;
+  z-index:2;
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:12px;
 }
 
 .section{
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:28px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:26px;
   overflow:hidden;
-  background:linear-gradient(160deg, rgba(18,22,35,.95), rgba(8,12,20,.98));
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(160deg, rgba(18,22,35,.92), rgba(8,12,20,.98));
+  box-shadow:var(--shadowC);
+  position:relative;
+}
+.section::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
 }
 
 .head{
-  padding:22px 28px;
+  padding:18px 18px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
-  align-items:center;
+  align-items:flex-start;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
 }
-
+.titleWrap{min-width:0}
 .title{
   font-size:22px;
-  font-weight:900;
+  font-weight:980;
   letter-spacing:.4px;
+  color:var(--ink);
 }
-
+.subline{
+  margin-top:8px;
+  font-size:14.5px;
+  line-height:1.5;
+  color:rgba(255,255,255,.86);
+  opacity:.92;
+  max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mut);
+  font-weight:980;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
 .body{
   display:none;
-  padding:26px 30px;
+  padding:18px 20px 20px;
   border-top:1px solid rgba(255,255,255,.08);
   font-size:17px;
   line-height:1.75;
-  color:var(--mut2);
+  color:rgba(255,255,255,.82);
+  position:relative;
 }
-
 .section.open .body{display:block}
 
+.body p{margin:0}
+.body p + p{margin-top:12px}
+
+.smallband{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  font-weight:980;
+  letter-spacing:.15px;
+  color:rgba(255,255,255,.86);
+  font-size:13px;
+}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{
+  margin:0 0 8px;
+  font-weight:980;
+  letter-spacing:.15px;
+  font-size:15px;
+  color:var(--ink);
+}
+.bubble p{
+  margin:0;
+  color:rgba(255,255,255,.80);
+  line-height:1.7;
+  display:none;
+  font-size:14.5px;
+}
+.bubble.open p{display:block}
+
+/* Actions */
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  margin-top:14px;
+}
+
+/* ===== Dock ===== */
 .dock{
   position:fixed;
   left:50%;
@@ -148,161 +390,582 @@ body::before,body::after{pointer-events:none!important}
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
-  padding:14px;
+  padding:12px;
   border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  z-index:220;
 }
 .dock .btn{
   padding:12px;
   border-radius:999px;
   text-align:center;
-  font-weight:700;
+  font-weight:950;
+}
+
+@media (max-width:560px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(2,1fr)}
+  .t{font-size:36px}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
 <div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
 
-<div class="header">
-<p class="k" id="hk">FRONTIER</p>
-<h1 class="t" id="ht">ENERGY SYSTEMS</h1>
-<p class="s" id="hs"></p>
+  <div class="header">
+    <p class="k" id="hk">FRONTIER</p>
+    <h1 class="t" id="ht">ENERGY SYSTEMS</h1>
+    <p class="s" id="hs"></p>
 
-<div class="lenses">
-  <button class="pill active" id="lensInformal">INFORMAL</button>
-  <button class="pill" id="lensFormal">FORMAL</button>
-  <button class="pill" id="lensEngineering">ENGINEERING</button>
-  <button class="pill" id="lensPlatform">PLATFORM</button>
-</div>
-</div>
+    <div class="lensRow" aria-label="Lens state">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </div>
 
-<div class="accordion" id="accordion"></div>
-
+  <div class="accordion" id="accordion"></div>
 </div>
 
-<nav class="dock">
-<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
-<a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
-<a class="btn" id="navClosed" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
-<a class="btn" id="navWaste" href="/explore/frontier/waste/">WASTE</a>
+<nav class="dock" aria-label="Related frontier">
+  <a class="btn" id="navWater" data-route="/explore/frontier/water/" href="/explore/frontier/water/">WATER</a>
+  <a class="btn" id="navUrban" data-route="/explore/frontier/urban/" href="/explore/frontier/urban/">URBAN OS</a>
+  <a class="btn" id="navClosed" data-route="/explore/frontier/closed-loop/" href="/explore/frontier/closed-loop/">CLOSED LOOP</a>
+  <a class="btn" id="navWaste" data-route="/explore/frontier/waste/" href="/explore/frontier/waste/">WASTE</a>
 </nav>
 
 <script>
 (function(){
+  "use strict";
 
-var qs=new URLSearchParams(location.search);
-var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
-document.documentElement.lang=lang;
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-function q(){return "?lang="+lang}
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
-document.getElementById("navWater").href+=q();
-document.getElementById("navUrban").href+=q();
-document.getElementById("navClosed").href+=q();
-document.getElementById("navWaste").href+=q();
+  // Pin informal layer
+  var style = "informal";
 
-var lens="informal";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
-function pick(o){return o[lang]||o.en}
+  var d=parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
 
-var headerCopy={
-en:"Energy is not scarce. Stability is. When generation, storage, and routing fall out of alignment, volatility replaces reliability.",
-zh:"能源并不稀缺，稳定性才稀缺。当发电、储存与路由失衡，波动取代可靠。",
-es:"La energía no es escasa. La estabilidad sí lo es."
-};
-document.getElementById("hs").textContent=pick(headerCopy);
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-var sections=[
-{
-t:{en:"THE INSTABILITY",zh:"不稳定性",es:"INESTABILIDAD"},
-c:{
-informal:{en:"Blackouts are not accidents. They are alignment failures. Supply spikes. Demand surges. Storage lags. Routing fragments.",
-zh:"停电不是意外，而是对齐失败。供应激增，需求冲击，储存滞后，路由碎裂。",
-es:"Los apagones no son accidentes, son fallas de alineación."},
-formal:{en:"Energy volatility emerges from generation-storage-routing misalignment under constrained infrastructure capacity.",
-zh:"能源波动源于发电-储存-路由错位。",
-es:"La volatilidad surge por desalineación generación-almacenamiento-enrutamiento."},
-engineering:{en:"Deploy modular thermal conversion, hydrogen buffering, and distributed microgrid balancing.",
-zh:"部署模块化热转化、氢缓冲与分布式微网平衡。",
-es:"Desplegar conversión térmica modular y microredes."},
-platform:{en:"Expose grid metrics via Gauges; enforce stability bands through Laws and Registry.",
-zh:"通过Gauges公开电网指标，并由Laws与Registry执行稳定带。",
-es:"Publicar métricas vía Medidores y aplicar bandas con Leyes."}
-}
-},
-{
-t:{en:"INDUSTRIAL SUBSTITUTION",zh:"工业替代",es:"SUSTITUCIÓN INDUSTRIAL"},
-c:{
-informal:{en:"The future is not a new fuel. It is replacing unstable inputs with controllable outputs.",
-zh:"未来不是新燃料，而是用可控输出替代不稳定输入。",
-es:"El futuro no es un nuevo combustible, es reemplazar entradas inestables."},
-formal:{en:"Industrial substitution replaces volatile fuel inputs with thermally stable conversion architectures.",
-zh:"工业替代用热稳定架构替代波动燃料输入。",
-es:"Sustitución industrial reemplaza entradas volátiles."},
-engineering:{en:"Integrate plasma thermal conversion and waste-energy coupling.",
-zh:"整合等离子热转化与废能耦合。",
-es:"Integrar conversión térmica por plasma."},
-platform:{en:"Link energy output classification into 256-state lattice for cross-domain coherence scoring.",
-zh:"将能源输出分类纳入256态晶格进行跨域评分。",
-es:"Vincular salida energética al lattice 256."}
-}
-},
-{
-t:{en:"FINITE ENERGY LATTICE",zh:"有限能源晶格",es:"LATTICE ENERGÉTICO FINITO"},
-c:{
-informal:{en:"Measure generation. Measure storage. Measure routing. If it isn’t measured, it isn’t stable.",
-zh:"测发电，测储存，测路由。不测量就不稳定。",
-es:"Si no se mide, no es estable."},
-formal:{en:"Energy vectors are indexed into lattice states for deterministic classification and drift detection.",
-zh:"能源向量映射入晶格状态进行分类与漂移检测。",
-es:"Vectores energéticos se indexan en estados lattice."},
-engineering:{en:"Bind energy nodes to UCI engine for collapse detection.",
-zh:"将能源节点绑定UCI引擎检测坍塌。",
-es:"Vincular nodos energéticos al motor UCI."},
-platform:{en:"Registry-backed grid ledger ensures cross-utility verification.",
-zh:"基于Registry的电网账本支持跨公用事业验证。",
-es:"Libro de red respaldado por registro."}
-}
-}
-];
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-function render(){
-var acc=document.getElementById("accordion");
-acc.innerHTML="";
-sections.forEach(function(s,i){
-var row=document.createElement("div");
-row.className="section";
-var head=document.createElement("div");
-head.className="head";
-var title=document.createElement("div");
-title.className="title";
-title.textContent=pick(s.t);
-head.appendChild(title);
-var body=document.createElement("div");
-body.className="body";
-body.textContent=pick(s.c[lens]);
-head.onclick=function(){
-document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
-row.classList.add("open");
-};
-row.appendChild(head);
-row.appendChild(body);
-acc.appendChild(row);
-if(i===0)row.classList.add("open");
-});
-}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
-document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
-document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
-document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    p.set("lane",(over&&over.lane)?over.lane:lane);
+    return "?"+p.toString();
+  }
 
-render();
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
 
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
+
+  // Wire all internal links with pinned state (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== Copy =====
+  var headerCopy = {
+    en:{
+      platform:"Energy is not scarce. Stability is. When generation, storage, and routing fall out of alignment, volatility replaces reliability.",
+      engineering:"Engineering view: stability is a control problem. Define boundaries, measure drift, contain failure locally, and only then scale throughput."
+    },
+    zh:{
+      platform:"能源并不稀缺，稳定性才稀缺。当发电、储存与路由失衡，波动取代可靠。",
+      engineering:"工程视图：稳定性是控制问题。先定义边界，测漂移，局部隔离，再谈扩张吞吐。"
+    },
+    es:{
+      platform:"La energía no es escasa. La estabilidad sí lo es. Cuando generación, almacenamiento y ruteo se desalinean, la volatilidad reemplaza la confiabilidad.",
+      engineering:"Vista de ingeniería: la estabilidad es un problema de control. Define límites, mide deriva, contiene fallas localmente y luego escala."
+    }
+  };
+
+  var sections = [
+    {
+      key:"instability",
+      t:P("THE INSTABILITY","不稳定性","INESTABILIDAD"),
+      s:P("Reliability fails when the system loses alignment under load.","可靠性在负载下失去对齐时崩。","La confiabilidad falla cuando el sistema se desalinean bajo carga."),
+      platform:{
+        p:[
+          P(
+            "Blackouts are not mysteries. They are alignment failures: supply spikes, demand surges, storage lags, and routing fragments.",
+            "停电不是神秘事件，而是对齐失败：供应激增、需求冲击、储存滞后、路由碎裂。",
+            "Los apagones no son misterios. Son fallas de alineación: picos de oferta, picos de demanda, rezagos de almacenamiento y ruteo fragmentado."
+          ),
+          P(
+            "This page treats energy as a system you can stabilize: measure the mismatch, tighten the boundaries, and stop cascade before it spreads.",
+            "本页把能源视为可稳定的系统：测错配、收紧边界、在扩散前阻断级联。",
+            "Esta página trata energía como un sistema estabilizable: medir el desajuste, ajustar límites y detener la cascada."
+          )
+        ],
+        bullets:[
+          P("If you can’t measure it, you can’t stabilize it.","不能测量，就无法稳定。","Si no se mide, no se estabiliza."),
+          P("Scale amplifies small mismatches into large outages.","规模会放大小错配为大停电。","La escala amplifica desajustes en fallas grandes."),
+          P("Containment beats hero moves.","隔离胜过英雄主义。","Contención vence a héroes.")
+        ]
+      },
+      engineering:{
+        p:[
+          P(
+            "Instability is a control failure under constrained capacity: generation↔storage↔routing are misaligned across variance bands.",
+            "不稳定是约束容量下的控制失败：发电↔储存↔路由在方差带内错位。",
+            "La inestabilidad es falla de control bajo capacidad restringida: generación↔almacenamiento↔ruteo desalineados bajo variación."
+          ),
+          P(
+            "Engineering posture: define measurable envelopes, enforce thresholds, localize failures, and avoid escalation beyond measurement capability.",
+            "工程姿态：定义可测包络、执行阈值、局部化失败、不得超测量能力升级。",
+            "Postura: definir envolventes medibles, aplicar umbrales, localizar fallas y no escalar más allá de la medición."
+          )
+        ],
+        bullets:[
+          P("Inputs: generation, storage state, routing capacity, demand variance.","输入：发电、储存状态、路由容量、需求方差。","Entradas: generación, estado de almacenamiento, capacidad de ruteo, varianza de demanda."),
+          P("Outputs: stability band status + reason codes.","输出：稳定带状态+原因码。","Salidas: estado de banda de estabilidad + códigos de razón."),
+          P("Violation: contain → rollback → re-evaluate window.","违规：隔离→回滚→重新评估窗口。","Violación: contener → rollback → reevaluar ventana.")
+        ]
+      },
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), platform:P("Energy stability is alignment under pressure.","能源稳定=压力下对齐。","Estabilidad energética = alineación bajo presión."), engineering:P("Control problem under constrained capacity + variance bands.","约束容量+方差带下的控制问题。","Problema de control bajo restricciones + bandas de varianza.")},
+        {h:P("Build Now","现在建","Construir ahora"), platform:P("Expose simple signals: what changed, where drift grows, what to do next.","暴露简单信号：变了什么、漂移在哪增大、下一步是什么。","Exponer señales simples: qué cambió, dónde crece deriva, siguiente paso."), engineering:P("Define bands + thresholds; emit reason codes; enforce containment.","定义带+阈值；输出原因码；执行隔离。","Definir bandas+umbrales; emitir razones; aplicar contención.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), platform:P("Connect Energy↔Waste↔Water↔Urban to show full system routing.","连接能源↔废弃物↔水↔城市，展示系统路由。","Conectar Energía↔Residuos↔Agua↔Urbano para mostrar ruteo total."), engineering:P("Standardize interfaces; verify under load; graduate shells into measured surfaces.","标准化接口；在负载下验证；壳升级为可测执行面。","Estandarizar interfaces; verificar bajo carga; graduar shells a superficies medidas.")}
+      ]
+    },
+
+    {
+      key:"substitution",
+      t:P("INDUSTRIAL SUBSTITUTION","工业替代","SUSTITUCIÓN INDUSTRIAL"),
+      s:P("Replace unstable inputs with controllable outputs.","用可控输出替代不稳定输入。","Reemplazar entradas inestables con salidas controlables."),
+      platform:{
+        p:[
+          P(
+            "The future is not a new fuel. It is replacing unstable inputs with controllable outputs—then proving that stability under real load.",
+            "未来不是新燃料，而是用可控输出替代不稳定输入——并在真实负载下证明稳定。",
+            "El futuro no es un combustible nuevo. Es reemplazar entradas inestables con salidas controlables y probar estabilidad bajo carga real."
+          ),
+          P(
+            "Substitution is only real when it is repeatable: same install discipline, same behavior, same outcome under variance.",
+            "替代只有在可复跑时才真实：同安装纪律、同行为、同结果（在方差下）。",
+            "La sustitución solo es real cuando es repetible: misma disciplina, mismo comportamiento, mismo resultado bajo variación."
+          )
+        ],
+        bullets:[
+          P("Don’t promise net miracles. Prove bounded substitution.","不许神话。证明有界替代。","Sin milagros. Probar sustitución acotada."),
+          P("Measure before scaling throughput.","扩吞吐前先测量。","Medir antes de escalar throughput."),
+          P("Contain failures locally.","把失败局部化。","Contener fallas localmente.")
+        ]
+      },
+      engineering:{
+        p:[
+          P(
+            "Industrial substitution is a constraint-bounded replacement of inputs, validated by measured performance bands and auditable accounting.",
+            "工业替代是在约束边界内替换输入，并以可测性能带与可审计核算验证。",
+            "La sustitución industrial es reemplazo acotado por restricciones, validado por bandas medibles y contabilidad auditable."
+          ),
+          P(
+            "Engineering posture: interface definitions (input/output), threshold gates, rollback discipline, and windowed verification precede scale.",
+            "工程姿态：接口定义（输入/输出）、阈值闸门、回滚纪律、窗口验证先于扩张。",
+            "Postura: definir interfaces, compuertas por umbral, disciplina de rollback y verificación por ventanas antes de escalar."
+          )
+        ],
+        bullets:[
+          P("Define substitution accounting boundaries.","定义替代核算边界。","Definir límites de contabilidad de sustitución."),
+          P("Require containment + rollback for upgrades.","升级必须具备隔离+回滚。","Requerir contención + rollback para upgrades."),
+          P("Route outputs to Gauges for verification.","输出路由到量规验证。","Rutear salidas a Medidores.")
+        ]
+      },
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), platform:P("Substitution = stability you can repeat.","替代=可复跑的稳定。","Sustitución = estabilidad repetible."), engineering:P("Replacement under constraint, validated by measurement bands.","约束下替换，由测量带验证。","Reemplazo bajo restricciones, validado por bandas de medición.")},
+        {h:P("Build Now","现在建","Construir ahora"), platform:P("Start with what already exists: waste heat, routing, and measurable baselines.","从已有系统开始：废热、路由、可测基线。","Empezar con lo existente: calor residual, ruteo y líneas base medibles."), engineering:P("Define interfaces + thresholds; implement containment-first deployment.","定义接口+阈值；实施隔离优先部署。","Definir interfaces+umbrales; desplegar con contención primero.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), platform:P("Integrate with Waste/Water so the story stays one system, not a silo.","与废弃物/水集成，保持一个系统而不是孤岛。","Integrar con Residuos/Agua para que sea un sistema, no silos."), engineering:P("Standardize install + verification; scale only after stability holds across windows.","标准化安装+验证；仅在跨窗口稳定后扩张。","Estandarizar instalación+verificación; escalar solo tras estabilidad por ventanas.")}
+      ]
+    },
+
+    {
+      key:"lattice",
+      t:P("FINITE ENERGY LATTICE","有限能源晶格","LATTICE ENERGÉTICO FINITO"),
+      s:P("Measure generation, storage, routing. If it isn’t measured, it isn’t stable.","测发电、测储存、测路由。不测量就不稳定。","Medir generación, almacenamiento y ruteo. Si no se mide, no es estable."),
+      platform:{
+        p:[
+          P(
+            "You don’t stabilize what you can’t name. The lattice idea is simple: index what matters into a small set of states you can traverse.",
+            "你无法稳定你无法命名的东西。晶格思路很简单：把关键变量索引到一组可遍历状态。",
+            "No estabilizas lo que no puedes nombrar. La idea lattice: indexar lo importante en estados recorribles."
+          ),
+          P(
+            "This is how Energy connects to the rest of Frontier: the same map works across Waste, Water, and Urban routing.",
+            "这就是能源如何与前沿其他部分连接：同一张图也适用于废弃物、水、城市路由。",
+            "Así se conecta Energía con el resto de Frontera: el mismo mapa sirve para Residuos, Agua y Urbano."
+          )
+        ],
+        bullets:[
+          P("Small map beats big narrative.","小地图胜过大叙事。","Mapa pequeño vence narrativa grande."),
+          P("Stable labels enable stable teamwork.","稳定标签带来稳定协作。","Etiquetas estables permiten trabajo estable."),
+          P("Signals route you to next step.","信号把你路由到下一步。","Señales te rutean al siguiente paso.")
+        ]
+      },
+      engineering:{
+        p:[
+          P(
+            "Energy vectors are indexed into finite states for deterministic classification, drift detection, and replayable evaluation under declared scope.",
+            "能源向量映射到有限状态，用于确定性分类、漂移检测、在声明范围内可回放评估。",
+            "Vectores de energía se indexan en estados finitos para clasificación determinista, detección de deriva y evaluación reproducible."
+          ),
+          P(
+            "Engineering posture: state IDs, transition rules, and reason-coded outputs enable cross-domain correlation exposure analysis.",
+            "工程姿态：状态ID、转移规则、原因码输出，使跨域相关暴露分析成为可能。",
+            "Postura: IDs de estado, reglas de transición y salidas con razones habilitan análisis de exposición correlacionada."
+          )
+        ],
+        bullets:[
+          P("Declare scope + measurement rules first.","先声明范围+测量规则。","Declarar alcance + reglas de medición primero."),
+          P("Deterministic outputs under identical inputs.","同输入下输出必须确定。","Salidas deterministas bajo entradas idénticas."),
+          P("Replay integrity over interpretation.","重视可回放胜过解释。","Integridad de replay > interpretación.")
+        ]
+      },
+      bubbles:[
+        {h:P("Concept","概念","Concepto"), platform:P("A small map you can traverse beats guessing.","可遍历的小地图胜过猜。","Un mapa pequeño recorrible vence adivinar."), engineering:P("Finite state indexing + deterministic gates.","有限状态索引+确定性闸门。","Indexación finita + compuertas deterministas.")},
+        {h:P("Build Now","现在建","Construir ahora"), platform:P("Pick the minimum signals to show on Gauges.","选出量规上要展示的最小信号集。","Elegir señales mínimas para mostrar en Medidores."), engineering:P("Define state IDs + transitions; emit reason codes.","定义状态ID+转移；输出原因码。","Definir IDs + transiciones; emitir razones.")},
+        {h:P("Roadmap","路线图","Hoja de ruta"), platform:P("Use the same traversal logic across Waste/Water/Urban.","把同一遍历逻辑用于废弃物/水/城市。","Usar la misma lógica de recorrido para Residuos/Agua/Urbano."), engineering:P("Bind to lattice + registry for cross-domain comparability.","绑定到晶格+注册表实现跨域可比。","Vincular a lattice+registro para comparabilidad cross-domain.")}
+      ]
+    }
+  ];
+
+  // ===== Accordion state preserved across lens/lang changes =====
+  var acc=document.getElementById("accordion");
+  var rows=[]; // {wrap, chev, title, sub, body, p1, p2, band, b1p, b2p, b3p}
+  var openIndex=0;
+
+  function closeAll(){
+    for(var i=0;i<rows.length;i++){
+      rows[i].wrap.classList.remove("open");
+      rows[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rows[i].wrap.classList.contains("open");
+    if(isOpen){
+      rows[i].wrap.classList.remove("open");
+      rows[i].chev.textContent="▸";
+      return;
+    }
+    closeAll();
+    openIndex=i;
+    rows[i].wrap.classList.add("open");
+    rows[i].chev.textContent="▾";
+  }
+
+  function makeBubble(label, text){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent=text;
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    return {wrap:b, p:p};
+  }
+
+  function buildRow(sec, idx){
+    var row=document.createElement("div");
+    row.className="section";
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var titleWrap=document.createElement("div");
+    titleWrap.className="titleWrap";
+
+    var title=document.createElement("div");
+    title.className="title";
+
+    var subline=document.createElement("div");
+    subline.className="subline";
+
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(subline);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(titleWrap);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p");
+    var p2=document.createElement("p");
+    body.appendChild(p1);
+    body.appendChild(p2);
+
+    var band=document.createElement("div");
+    band.className="smallband";
+    body.appendChild(band);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var b1=makeBubble(pick3("Concept","概念","Concepto"),"");
+    var b2=makeBubble(pick3("Build Now","现在建","Construir ahora"),"");
+    var b3=makeBubble(pick3("Roadmap","路线图","Hoja de ruta"),"");
+    bubbles.appendChild(b1.wrap);
+    bubbles.appendChild(b2.wrap);
+    bubbles.appendChild(b3.wrap);
+    body.appendChild(bubbles);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a1=document.createElement("a");
+    a1.className="btn";
+    a1.setAttribute("data-route","/explore/frontier/water/");
+    actions.appendChild(a1);
+
+    var a2=document.createElement("a");
+    a2.className="btn";
+    a2.setAttribute("data-route","/explore/frontier/waste/");
+    actions.appendChild(a2);
+
+    var a3=document.createElement("a");
+    a3.className="btn red";
+    a3.setAttribute("data-route","/explore/frontier/urban/");
+    actions.appendChild(a3);
+
+    body.appendChild(actions);
+
+    function onToggle(){ toggleRow(idx); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    acc.appendChild(row);
+
+    rows.push({
+      wrap:row, chev:chev, title:title, sub:subline,
+      p1:p1, p2:p2, band:band,
+      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      a1:a1, a2:a2, a3:a3
+    });
+  }
+
+  function render(){
+    acc.innerHTML="";
+    rows=[];
+    for(var i=0;i<sections.length;i++){
+      buildRow(sections[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  function applyHeader(){
+    document.getElementById("hk").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("ht").textContent = pick3("ENERGY SYSTEMS","能源系统","SISTEMAS DE ENERGÍA");
+
+    var h = headerCopy[lang] || headerCopy.en;
+    document.getElementById("hs").textContent = (lane==="engineering") ? h.engineering : h.platform;
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    // top labels
+    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
+
+    // dock labels
+    document.getElementById("navWater").textContent  = pick3("WATER","水","AGUA");
+    document.getElementById("navUrban").textContent  = pick3("URBAN OS","城市OS","SO URBANO");
+    document.getElementById("navClosed").textContent = pick3("CLOSED LOOP","闭环","CICLO CERRADO");
+    document.getElementById("navWaste").textContent  = pick3("WASTE","废弃物","RESIDUOS");
+
+    // control labels
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<sections.length;i++){
+      var sec=sections[i];
+      var r=rows[i];
+
+      r.title.textContent = pick(sec.t);
+      r.sub.textContent   = pick(sec.s);
+
+      var blk = (lane==="engineering") ? sec.engineering : sec.platform;
+
+      r.p1.textContent = pick(blk.p[0]);
+      r.p2.textContent = pick(blk.p[1]);
+
+      // band text
+      r.band.textContent =
+        (lane==="engineering")
+          ? pick3("ENGINEERING — constraints, interfaces, thresholds, containment.","工程 — 约束/接口/阈值/隔离。","INGENIERÍA — restricciones, interfaces, umbrales, contención.")
+          : pick3("PLATFORM — human map, next step, clean routing.","平台 — 人话地图/下一步/干净路由。","PLATAFORMA — mapa humano, siguiente paso, ruteo limpio.");
+
+      // sub-bubbles
+      r.b1p.textContent = pick( (lane==="engineering") ? sec.bubbles[0].engineering : sec.bubbles[0].platform );
+      r.b2p.textContent = pick( (lane==="engineering") ? sec.bubbles[1].engineering : sec.bubbles[1].platform );
+      r.b3p.textContent = pick( (lane==="engineering") ? sec.bubbles[2].engineering : sec.bubbles[2].platform );
+
+      // action labels
+      r.a1.textContent = openLabel()+": "+pick3("WATER","水","AGUA");
+      r.a2.textContent = openLabel()+": "+pick3("WASTE","废弃物","RESIDUOS");
+      r.a3.textContent = openLabel()+": "+pick3("URBAN OS","城市OS","SO URBANO");
+    }
+
+    closeAll();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== No reload on language/lane changes =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== INIT =====
+  render();
+  applyHeader();
+  updateRows();
+  wireAll();
 })();
 </script>
 

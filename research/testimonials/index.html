@@ -1,21 +1,25 @@
 <!doctype html>
 <!-- TNT — /research/testimonials/index.html
-     RESEARCH · TESTIMONIALS (PUBLIC REVIEW INDEX)
-     PURPOSE:
-       - Keep testimonials under Research (per instruction)
-       - Tie names to reviews WITHOUT creating a phone/referral directory
-       - Preserve research posture: verifiable, neutral, non-promotional
+     RESEARCH · TESTIMONIALS (LEAFGUARD ONLY)
+     MODE: ENGLISH ONLY (per instruction)
+     GOALS:
+       - Remove Cross-Domain section
+       - Focus + highlight LeafGuard only
+       - Keep “Review Index” + “Observed Themes” + “Disclaimer”
+       - Put reviews directly in this file (names + short summaries, research posture)
+       - Less clutter: single-open accordion + sub-bubbles
      CONSTRAINTS (LOCKED):
        - Informational only (no monetization / no lead capture / no affiliates)
        - No logos / no product images / no implied partnerships
        - No phone numbers (even partial) on public page
-       - No sensitive personal notes (age, health, veteran status, etc.)
-       - Prefer link-to-source; optional short verbatim excerpt only
+       - Avoid sensitive private notes; use only what is already public in reviews
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
-       - Single-open accordion + nested sub-bubbles (less clutter, more structure)
+       - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
+     NOTE ON LINKS:
+       - Each item has a SOURCE_URL field. Paste the Google review permalink later.
 -->
 
 <!doctype html>
@@ -23,7 +27,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Research · Testimonials</title>
+<title>Research · Testimonials · LeafGuard</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -53,7 +57,7 @@ body::before,body::after{pointer-events:none!important}
   --goldSoft:rgba(201,162,74,.18);
 }
 
-/* Top */
+/* Top controls */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -137,7 +141,7 @@ body::before,body::after{pointer-events:none!important}
 .p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
 .note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
 
-/* Accordion */
+/* Accordion (single-open) */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.10);
@@ -188,7 +192,7 @@ body::before,body::after{pointer-events:none!important}
 .card.open .body{display:block}
 
 /* Sub-bubbles */
-.subBubbles{margin-top:0;display:flex;flex-direction:column;gap:10px}
+.subBubbles{display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
@@ -224,10 +228,8 @@ body::before,body::after{pointer-events:none!important}
   font-size:14.5px;
 }
 .bubble.open p{display:block}
-.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.actions .btn{border-radius:999px;padding:10px 14px}
 
-/* Review row (inside bubble) */
+/* Review list */
 .reviewRow{
   margin-top:12px;
   border-top:1px solid rgba(255,255,255,.10);
@@ -248,10 +250,7 @@ body::before,body::after{pointer-events:none!important}
   font-size:13.5px;
   color:rgba(255,255,255,.90);
 }
-.reviewMeta span{
-  opacity:.75;
-  font-weight:900;
-}
+.reviewMeta span{opacity:.75;font-weight:900}
 .reviewText{
   margin-top:8px;
   font-size:13.75px;
@@ -264,6 +263,12 @@ body::before,body::after{pointer-events:none!important}
   gap:10px;
   flex-wrap:wrap;
   justify-content:flex-end;
+}
+.smallNote{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  font-size:12.75px;
+  line-height:1.5;
 }
 
 /* Dock */
@@ -296,20 +301,23 @@ body::before,body::after{pointer-events:none!important}
     <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
     <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
   </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+  <div class="right" aria-label="Controls">
+    <span class="btn" style="pointer-events:none;opacity:.9">EN</span>
   </div>
 </div>
 
 <div class="page">
 
   <section class="header" aria-label="Header">
-    <p class="k" id="k0">RESEARCH · TESTIMONIALS</p>
-    <h1 class="h1" id="h0">Public Testimonials (Verifiable)</h1>
-    <p class="p0" id="p0"></p>
-    <div class="note0" id="note0"></div>
+    <p class="k">RESEARCH · TESTIMONIALS</p>
+    <h1 class="h1">LeafGuard · Rainwater Management (Public Reviews)</h1>
+    <p class="p0">
+      This page indexes publicly verifiable testimonials and ties each entry to its original public source link.
+      Review text remains the property of its author and platform.
+    </p>
+    <div class="note0">
+      This is not product ranking. No endorsement or affiliation is implied. No phone numbers are published.
+    </div>
   </section>
 
   <div class="stack" id="stack"></div>
@@ -327,14 +335,14 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only) =====
+  // ===== Canon state carry (gd_* only) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en"; // page is EN-only, but we still preserve key
   if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -346,16 +354,9 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
   }
-
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
@@ -367,114 +368,42 @@ body::before,body::after{pointer-events:none!important}
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-
-  // ===== Header copy (research posture) =====
-  var HEAD={
-    en:{
-      p0:"This page indexes publicly verifiable testimonials. Each entry links to its original public source. Review text remains the property of its author and platform.",
-      note0:"This is not product ranking. No endorsement or affiliation is implied. No phone numbers are published."
-    },
-    zh:{
-      p0:"本页索引“可公开验证”的用户评价。每条记录链接到原始公开来源。评价文本归作者与平台所有。",
-      note0:"不做产品排名；不暗示背书或隶属；不公开电话号码。"
-    },
-    es:{
-      p0:"Esta página indexa testimonios verificables públicamente. Cada entrada enlaza a su fuente pública original. El texto pertenece a su autor y plataforma.",
-      note0:"Sin ranking de productos. No se implica afiliación ni respaldo. No se publican teléfonos."
-    }
-  };
-  var H=HEAD[lang]||HEAD.en;
-  document.getElementById("p0").textContent=H.p0;
-  document.getElementById("note0").textContent=H.note0;
-
-  if(lang==="zh"){
-    document.getElementById("k0").textContent="研究 · 评价索引";
-    document.getElementById("h0").textContent="公开评价（可验证）";
-  }else if(lang==="es"){
-    document.getElementById("k0").textContent="INVESTIGACIÓN · TESTIMONIOS";
-    document.getElementById("h0").textContent="Testimonios públicos (verificables)";
-  }
-
-  // ===== DATA MODEL =====
-  // Add entries by filling:
-  // - name (as publicly shown or consented)
-  // - region (coarse)
-  // - platform (e.g., Google)
-  // - stars (optional)
-  // - date (optional)
-  // - url (permalink)
-  // - excerpt (optional, short, verbatim)
-  //
-  // IMPORTANT: Keep excerpts short (1–2 sentences) and verbatim.
-  // Prefer link-only if you want maximum policy safety.
-
-  var GROUPS=[
-    {
-      t:P("LeafGuard · Rainwater Management (Public Reviews)","LeafGuard · 雨水管理（公开评价）","LeafGuard · Gestión de lluvia (reseñas públicas)"),
-      s:P("Verifiable public reviews tied to rainwater routing consultations and installations.","可验证的公开评价，关联雨水路由咨询与安装。","Reseñas verificables vinculadas a consultas/instalaciones."),
-      bubbles:[
-        {
-          h:P("Review Index (add entries)","评价索引（添加条目）","Índice de reseñas (agregar entradas)"),
-          p:P(
-            "Add entries as Name + Region + Source Link. Use short verbatim excerpts only if needed. This preserves verification and minimizes risk.",
-            "以“姓名 + 区域 + 来源链接”添加条目。需要时可加短引文（逐字）。这样可验证且风险更低。",
-            "Agrega entradas como Nombre + Región + Enlace. Usa extractos cortos verbatim solo si hace falta."
-          ),
-          entries:[]
-        },
-        {
-          h:P("Observed themes (non-claim)","观察到的主题（非主张）","Temas observados (sin afirmaciones)"),
-          p:P(
-            "Common themes in public reviews often include clarity of explanation, diagnostic depth, installation discipline, and follow-through. This is an observation of language patterns, not a quantified performance claim.",
-            "公开评价常见主题包括：解释清晰、诊断深入、安装纪律、跟进到位。这是对语言模式的观察，不是量化性能主张。",
-            "Temas comunes incluyen claridad, diagnóstico, disciplina de instalación y seguimiento. Es observación de lenguaje, no reclamo cuantificado."
-          )
-        }
-      ]
-    },
-    {
-      t:P("Cross-Domain (Optional)","跨领域（可选）","Multidominio (opcional)"),
-      s:P("Reserve for other verticals if you later include public reviews for those domains.","预留：若未来引入其他领域的公开评价，可放在此处。","Reservado si luego incluyes reseñas públicas de otros dominios."),
-      bubbles:[
-        {
-          h:P("Placeholder","占位","Marcador"),
-          p:P(
-            "Reserved.",
-            "预留。",
-            "Reservado."
-          )
-        }
-      ]
-    },
-    {
-      t:P("Disclaimer","免责声明","Aviso"),
-      s:P("Nominative reference; no endorsement implied.","指称性引用；不构成背书。","Referencia nominativa; sin respaldo."),
-      bubbles:[
-        {
-          h:P("Statement","声明","Declaración"),
-          p:P(
-            "Testimonials referenced here are publicly available on third-party platforms. They are presented for contextual purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
-            "此处引用的评价来自第三方公开平台，仅用于背景参考。所有商标归各自所有者所有。本网站不暗示任何隶属或背书关系。",
-            "Los testimonios aquí referenciados están disponibles públicamente en plataformas de terceros. Se presentan solo como contexto. Todas las marcas pertenecen a sus dueños. No se implica afiliación ni respaldo."
-          )
-        }
-      ]
-    }
+  // ===== DATA (names + short, non-promotional summaries) =====
+  // Keep SOURCE_URL empty until you paste the Google review permalink.
+  // Summary is a neutral paraphrase of the review content (research posture).
+  var REVIEWS=[
+    {name:"Terrean Moore", when:"9 months ago", stars:"★★★★★", summary:"Emphasizes thorough guidance on household needs and a positive consultation experience.", url:""},
+    {name:"John Rupp", when:"7 months ago", stars:"★★★★★", summary:"Notes clear walkthrough of needs and help navigating financing options.", url:""},
+    {name:"Rebecca Johnson", when:"9 months ago", stars:"★★★★★", summary:"Highlights responsiveness and “above and beyond” support during decision process.", url:""},
+    {name:"Diana Proctor", when:"1 year ago", stars:"★★★★★", summary:"Emphasizes friendliness, patience, and professional conduct during consultation.", url:""},
+    {name:"JoAnn Villanueva", when:"1 year ago", stars:"★★★★★", summary:"Notes professionalism and informative explanations; frames gutters as property protection.", url:""},
+    {name:"Amy Alexander", when:"11 months ago", stars:"★★★★★", summary:"Describes strong education/diagnosis focus and confidence-building during decision.", url:""},
+    {name:"David Spencer", when:"1 year ago", stars:"★★★★★", summary:"Frames gutters as infrastructure necessity; notes seamless process and detailed planning.", url:""},
+    {name:"Gregory Walker", when:"1 year ago", stars:"★★★★★", summary:"Notes detailed explanation and attention to system flaws; emphasizes thoughtful approach.", url:""},
+    {name:"Noah McIntyre", when:"9 months ago", stars:"★★★★★", summary:"Highlights detailed explanation of system operation and warranties; notes affordability planning.", url:""},
+    {name:"Luke Hayes", when:"1 year ago", stars:"★★★★★", summary:"First-time buyer context; values knowledge transfer and follow-up communication.", url:""},
+    {name:"Lady Byler", when:"3 months ago", stars:"★★★★★", summary:"Notes availability for questions, professional installation team, and functioning performance so far.", url:""},
+    {name:"Laurie Holmstrom", when:"9 months ago", stars:"★★★★★", summary:"Mentions inspection of failing gutters and fast completion; emphasizes courtesy and guidance.", url:""},
+    {name:"Tiffanie Spencer", when:"1 year ago", stars:"★★★★★", summary:"Highlights thorough presentation, personalization, budget alignment, and quick installation scheduling.", url:""},
+    {name:"Patricia James", when:"9 months ago", stars:"★★★★★", summary:"Expresses satisfaction with cost and installation speed; frames foundation longevity benefit.", url:""},
+    {name:"Mike Griffith", when:"9 months ago", stars:"★★★★★", summary:"Mentions long-term prior system experience and version upgrade language; values explanation of improvements.", url:""},
+    {name:"Kenny Hollaway", when:"8 months ago", stars:"★★★★★", summary:"General positive interaction; includes an attached photo on the platform.", url:""},
+    {name:"James Barlow", when:"10 months ago", stars:"★★★★★", summary:"Highlights courtesy and willingness to explain pricing/warranties; mentions financial options.", url:""},
+    {name:"John Goodman", when:"2 months ago", stars:"★★★★★", summary:"Notes helpfulness and clarity; mentions professional crew and warranty framing.", url:""},
+    {name:"Mary Pattberg", when:"8 months ago", stars:"★★★★★", summary:"Mentions prior experience with system and desire to fit within budget; highlights respectful team.", url:""},
+    {name:"abi estra", when:"3 months ago", stars:"★★★★★", summary:"New build context; notes aesthetic satisfaction and neighbor adoption mention.", url:""}
   ];
 
-  // ===== RENDER =====
+  // ===== Observed themes (non-claim) =====
+  var THEMES=[
+    "Knowledge transfer and clarity of explanation (customers repeatedly describe understanding the system and options).",
+    "Diagnostic framing (multiple reviews mention identifying problems or design issues before installation).",
+    "Budget containment (multiple reviews describe aligning scope to budget via transparent planning).",
+    "Installation discipline (professional crews, scheduling communication, cleanup, and follow-through are recurring themes).",
+    "Longevity framing (warranty and long-term protection language appears frequently; treated here as a perception signal, not a verified metric)."
+  ];
+
+  // ===== Render accordion =====
   var stack=document.getElementById("stack");
 
   function closeAll(){
@@ -485,67 +414,58 @@ body::before,body::after{pointer-events:none!important}
     });
   }
 
-  function makeReviewItem(item){
+  function makeReviewItem(r){
     var box=document.createElement("div");
     box.className="reviewItem";
 
     var meta=document.createElement("div");
     meta.className="reviewMeta";
-    meta.textContent=item.name + " — " + item.region;
+    meta.textContent=r.name + " — " + r.stars + " ";
+    var span=document.createElement("span");
+    span.textContent="(" + r.when + ")";
+    meta.appendChild(span);
 
-    var meta2=document.createElement("div");
-    meta2.className="reviewMeta";
-    meta2.style.marginTop="6px";
-    meta2.innerHTML = '<span>'+item.platform+'</span>' +
-      (item.stars?(' · <span>'+item.stars+'</span>'):'') +
-      (item.date?(' · <span>'+item.date+'</span>'):'');
-    box.appendChild(meta);
-    box.appendChild(meta2);
-
-    if(item.excerpt){
-      var txt=document.createElement("div");
-      txt.className="reviewText";
-      txt.textContent=item.excerpt;
-      box.appendChild(txt);
-    }
+    var txt=document.createElement("div");
+    txt.className="reviewText";
+    txt.textContent=r.summary;
 
     var links=document.createElement("div");
     links.className="reviewLinks";
+
     var a=document.createElement("a");
     a.className="btn";
-    a.textContent=(lang==="zh")?"查看原始来源":(lang==="es")?"Ver fuente original":"View original source";
-    a.href=item.url;
+    a.textContent=(r.url && r.url.trim()) ? "View original source" : "Add source URL";
+    a.href=(r.url && r.url.trim()) ? r.url : "#";
     a.target="_blank";
     a.rel="noopener";
+
     links.appendChild(a);
+
+    box.appendChild(meta);
+    box.appendChild(txt);
     box.appendChild(links);
 
     return box;
   }
 
-  function makeBubble(bb){
+  function makeBubble(title, text, buildFn){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
     b.tabIndex=0;
 
     var h=document.createElement("h4");
-    h.textContent=pick(bb.h);
+    h.textContent=title;
 
     var p=document.createElement("p");
-    p.textContent=pick(bb.p);
+    p.textContent=text;
 
     b.appendChild(h);
     b.appendChild(p);
 
-    // optional review entries
-    if(bb.entries && bb.entries.length){
-      var rr=document.createElement("div");
-      rr.className="reviewRow";
-      bb.entries.forEach(function(it){
-        rr.appendChild(makeReviewItem(it));
-      });
-      b.appendChild(rr);
+    if(buildFn){
+      var extra=buildFn();
+      if(extra) b.appendChild(extra);
     }
 
     function act(){ b.classList.toggle("open"); }
@@ -557,7 +477,7 @@ body::before,body::after{pointer-events:none!important}
     return b;
   }
 
-  function makeCard(sec, idx){
+  function makeCard(){
     var card=document.createElement("div");
     card.className="card";
 
@@ -571,11 +491,11 @@ body::before,body::after{pointer-events:none!important}
 
     var ti=document.createElement("div");
     ti.className="ti";
-    ti.textContent=pick(sec.t);
+    ti.textContent="LeafGuard · Rainwater Management (Public Reviews)";
 
     var si=document.createElement("div");
     si.className="si";
-    si.textContent=pick(sec.s);
+    si.textContent="Verifiable public reviews tied to rainwater routing consultations and installations.";
 
     left.appendChild(ti);
     left.appendChild(si);
@@ -593,9 +513,66 @@ body::before,body::after{pointer-events:none!important}
     var bubbles=document.createElement("div");
     bubbles.className="subBubbles";
 
-    (sec.bubbles||[]).forEach(function(bb){
-      bubbles.appendChild(makeBubble(bb));
-    });
+    // Bubble 1: Review Index
+    bubbles.appendChild(
+      makeBubble(
+        "Review Index (in-file)",
+        "Each entry is a short, neutral summary of a publicly available review. Add the source URL for verification.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          REVIEWS.forEach(function(r){ wrap.appendChild(makeReviewItem(r)); });
+
+          var sn=document.createElement("div");
+          sn.className="smallNote";
+          sn.textContent="Note: This page summarizes publicly available reviews for research context. It does not publish phone numbers or private customer notes. Add source URLs to preserve verification.";
+          wrap.appendChild(sn);
+          return wrap;
+        }
+      )
+    );
+
+    // Bubble 2: Observed themes
+    bubbles.appendChild(
+      makeBubble(
+        "Observed themes (non-claim)",
+        "These are recurring language patterns across public reviews. They are not performance metrics.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          THEMES.forEach(function(t){
+            var box=document.createElement("div");
+            box.className="reviewItem";
+            var txt=document.createElement("div");
+            txt.className="reviewText";
+            txt.textContent="• " + t;
+            box.appendChild(txt);
+            wrap.appendChild(box);
+          });
+          return wrap;
+        }
+      )
+    );
+
+    // Bubble 3: Disclaimer
+    bubbles.appendChild(
+      makeBubble(
+        "Disclaimer",
+        "These reviews are publicly available on third-party platforms. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          var box=document.createElement("div");
+          box.className="reviewItem";
+          var txt=document.createElement("div");
+          txt.className="reviewText";
+          txt.textContent="This page is informational only. It does not rank products, compare competitors, or publish proprietary performance data.";
+          box.appendChild(txt);
+          wrap.appendChild(box);
+          return wrap;
+        }
+      )
+    );
 
     body.appendChild(bubbles);
 
@@ -619,18 +596,13 @@ body::before,body::after{pointer-events:none!important}
 
     card.appendChild(head);
     card.appendChild(body);
-
-    if(idx===0){
-      card.classList.add("open");
-      chev.textContent="▾";
-    }
+    card.classList.add("open");
+    chev.textContent="▾";
 
     return card;
   }
 
-  GROUPS.forEach(function(sec, i){
-    stack.appendChild(makeCard(sec, i));
-  });
+  stack.appendChild(makeCard());
 
 })();
 </script>

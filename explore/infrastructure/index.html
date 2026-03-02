@@ -494,4 +494,364 @@ body::before,body::after{pointer-events:none!important}
     p.set("lang",(over&&over.lang)?over.lang:lang);
     p.set("style","informal");
     p.set("time",(over&&over.time)?over.time:time);
-    p.set
+    p.set("depth","explore");
+    p.set("lane",(over&&over.lane)?over.lane:lane);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+
+  // Wire all internal links with pinned state (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== Header copy (lane-aware; no tone) =====
+  var HEAD={
+    en:{
+      platform:{
+        hs:"Infrastructure substitution is how big systems change without breaking: replace one interface at a time, keep failure local, and prove the gain with measurement.",
+        rule:"Rule: substitution is staged. Prove one zone before copying to the next."
+      },
+      engineering:{
+        hs:"Engineering view: substitution is interfaces + thresholds + rollback. If you can’t isolate failure, you can’t scale.",
+        rule:"Rule: no escalation beyond measurement capability. Containment precedes replication."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"基础设施替代=不破坏系统的升级方式：一次替换一个接口，把失败局部化，用测量证明收益。",
+        rule:"规则：替代必须分阶段。在一个区验证，再复制到下一个区。"
+      },
+      engineering:{
+        hs:"工程视图：替代=接口+阈值+回滚。不能隔离失败，就不能扩张。",
+        rule:"规则：不得超出测量能力升级。隔离先于复制。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"La sustitución de infraestructura cambia sistemas grandes sin romperlos: una interfaz a la vez, fallos locales, y prueba con medición.",
+        rule:"Regla: la sustitución es por fases. Se prueba en una zona antes de copiarse."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: sustitución = interfaces + umbrales + rollback. Si no aislas el fallo, no escalas.",
+        rule:"Regla: sin escalación más allá de capacidad de medición. Contención antes de replicación."
+      }
+    }
+  };
+
+  // ===== Rooms (routing-safe shells) =====
+  var ROOMS=[
+    {c:"#ff2b2b", t:P("Industrial Thermal","工业热替代","Térmico industrial"), s:P("Swap heat sources without breaking operations.","替换热源不破坏运行。","Sustituir calor sin romper operación."), href:"/explore/infrastructure/industrial-thermal/"},
+    {c:"#c9a24a", t:P("Grid & Storage","电网与储能","Red y almacenamiento"), s:P("Stability first, then capacity.","先稳定再容量。","Estabilidad primero, luego capacidad."), href:"/explore/infrastructure/grid-storage/"},
+    {c:"#ff2b2b", t:P("Materials & Recovery","材料与回收","Materiales y recuperación"), s:P("Substitute inputs by routing outputs.","用输出路由替代输入。","Sustituir insumos ruteando salidas."), href:"/explore/infrastructure/materials-recovery/"},
+    {c:"#c9a24a", t:P("Logistics & Throughput","物流与吞吐","Logística y throughput"), s:P("Bottlenecks, queues, and rollback routes.","瓶颈、队列与回滚路径。","Cuellos, colas y rollback."), href:"/explore/infrastructure/logistics/"},
+    {c:"#ff2b2b", t:P("Housing & Retrofit","住房与改造","Vivienda y retrofit"), s:P("Incremental retrofit with verification.","增量改造+验证。","Retrofit incremental con verificación."), href:"/explore/infrastructure/housing-retrofit/"},
+    {c:"#c9a24a", t:P("Regulatory Mapping","监管映射","Mapeo regulatorio"), s:P("Where substitution is allowed to land.","替代允许落地到哪里。","Dónde puede aterrizar la sustitución."), href:"/explore/infrastructure/regulatory/"}
+  ];
+
+  // ===== Accordion state preserved across lane/lang changes =====
+  var list=document.getElementById("list");
+  var rowRefs=[]; // {row, chev, title, sub, intro, b1p,b2p,b3p, a}
+  var openIndex=0;
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
+
+  function makeSubBubble(label, text){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent=text;
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    return {wrap:b, p:p};
+  }
+
+  function buildRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var title=document.createElement("div");
+    title.className="q";
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+
+    tb.appendChild(title);
+    tb.appendChild(sub);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    body.appendChild(intro);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var b1=makeSubBubble(labConcept(),"");
+    var b2=makeSubBubble(labBuild(),"");
+    var b3=makeSubBubble(labRoadmap(),"");
+
+    bubbles.appendChild(b1.wrap);
+    bubbles.appendChild(b2.wrap);
+    bubbles.appendChild(b3.wrap);
+    body.appendChild(bubbles);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    var a=document.createElement("a");
+    a.className="btn red";
+    a.setAttribute("data-route", item.href);
+    actions.appendChild(a);
+    body.appendChild(actions);
+
+    function onToggle(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      sub:sub,
+      intro:intro,
+      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      a:a
+    });
+  }
+
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<ROOMS.length;i++){
+      buildRow(ROOMS[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  function applyHeader(){
+    var H=(HEAD[lang]||HEAD.en);
+    var lanePack = (lane==="engineering") ? H.engineering : H.platform;
+
+    document.getElementById("hk").textContent = pick3("EXPLORE · INFRASTRUCTURE","探索 · 基础设施","EXPLORAR · INFRAESTRUCTURA");
+    document.getElementById("ht").textContent = pick3("INFRASTRUCTURE SUBSTITUTION","基础设施替代","SUSTITUCIÓN DE INFRAESTRUCTURA");
+    document.getElementById("hs").textContent = lanePack.hs;
+    document.getElementById("rule").textContent = lanePack.rule;
+
+    document.getElementById("band").textContent = pick3("INFRASTRUCTURE ROOMS (SHELLS)","基础设施房间（壳）","SALAS DE INFRAESTRUCTURA (SHELLS)");
+
+    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
+
+    document.getElementById("dockCompass").textContent  = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent   = pick3("GAUGES","量规","MEDIDORES");
+
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<ROOMS.length;i++){
+      var item=ROOMS[i];
+      var r=rowRefs[i];
+
+      r.title.textContent = pick(item.t);
+      r.sub.textContent   = pick(item.s);
+
+      r.intro.textContent =
+        (lane==="engineering")
+          ? pick3(
+              "Engineering view: declare interfaces + thresholds + rollback. If you can’t isolate failure, you can’t scale substitution.",
+              "工程视图：声明接口+阈值+回滚。不能隔离失败，就不能扩张替代。",
+              "Vista de ingeniería: declarar interfaces + umbrales + rollback. Si no aislas fallo, no escalas sustitución."
+            )
+          : pick3(
+              "Platform view: one clean route. Start with what’s buildable, keep the next step bounded, and avoid wandering.",
+              "平台视角：一条干净路由。从可建部分开始，把下一步做成有界，不乱逛。",
+              "Plataforma: una ruta limpia. Empieza con lo construible, acota el siguiente paso y evita deambular."
+            );
+
+      r.b1p.textContent =
+        (lane==="engineering")
+          ? pick3("Concept: substitution is an interface contract under constraint.","概念：替代是在约束下的接口契约。","Concepto: sustitución es contrato de interfaz bajo restricciones.")
+          : pick3("Concept: swap one component at a time; prove before copying.","概念：一次替换一个部件，先证明再复制。","Concepto: cambia una pieza a la vez; prueba antes de copiar.");
+
+      r.b2p.textContent =
+        (lane==="engineering")
+          ? pick3("Build now: define thresholds + rollback; emit reason codes for gates.","现在建：定义阈值+回滚；为闸门输出原因码。","Construir ahora: definir umbrales + rollback; emitir razones.")
+          : pick3("Build now: routing-safe shell + return path + state carry.","现在建：路由安全壳+返回路径+状态携带。","Construir ahora: shell de rutas + retorno + estado.");
+
+      r.b3p.textContent =
+        pick3(
+          "Roadmap: validate one zone → copy many zones → couple domains (audit outputs at every step).",
+          "路线图：单区验证→多区复制→跨域耦合（每步都有审计输出）。",
+          "Hoja de ruta: validar una zona → copiar muchas → acoplar dominios (auditar salidas en cada paso)."
+        );
+
+      r.a.textContent = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== No reload on language/lane changes =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== INIT =====
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
+})();
+</script>
+
+</body>
+</html>

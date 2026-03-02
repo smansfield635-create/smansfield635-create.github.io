@@ -1,12 +1,15 @@
 <!doctype html>
 <!-- TNT — /research/index.html
-     RESEARCH HUB · PREFACE ANCHOR
-     PRIMARY: 100-Customer Field Case Study (preface, non-collapsible)
-     SECONDARY: routes to evidence + industry context
-     ENGLISH ONLY (per current directive)
+     RESEARCH HUB · LEAFGUARD HIGHLIGHT + SEPARATE INDUSTRY BENCHMARKS
+     ENGLISH ONLY
+     GOALS:
+       - Preface highlights LeafGuard as the dataset anchor (100-customer field study)
+       - Keep the other industry benchmark companies separate under Industry Context (no mixing)
+       - Dense, structured, readable
      RULES:
-       - No logos, no images, no implied partnerships
-       - No URLs displayed, no star icons, no ranking language
+       - Informational only; no monetization; no lead capture; no affiliates
+       - No logos/images; no implied partnerships
+       - No URLs displayed in body text
        - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new gd_* keys)
        - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
@@ -92,7 +95,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* Preface (non-collapsible, dominant) */
+/* Preface (dominant) */
 .preface{
   border:1px solid var(--stroke);
   border-radius:26px;
@@ -122,10 +125,11 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
-.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
-.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
+
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink)}
+.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px}
+.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55}
 .metric{
   margin-top:12px;
   padding:12px 12px;
@@ -136,6 +140,14 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.55;
   color:rgba(255,255,255,.84);
 }
+.actions{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.actions .btn{border-radius:999px;padding:10px 14px}
 
 /* Accordion */
 .stack{display:flex;flex-direction:column;gap:12px}
@@ -163,15 +175,9 @@ body::before,body::after{pointer-events:none!important}
 .ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
 .si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
 .chev{font-weight:980;opacity:.7}
-.body{
-  display:none;
-  padding:16px 16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
+.body{display:none;padding:16px 16px 18px;border-top:1px solid rgba(255,255,255,.08)}
 .card.open .body{display:block}
 .body p{margin:0 0 12px;line-height:1.75;color:var(--mut);font-size:14.75px}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
-.actions .btn{border-radius:999px;padding:10px 14px}
 
 /* Dock */
 .dock{
@@ -201,8 +207,8 @@ body::before,body::after{pointer-events:none!important}
 <div class="top" aria-label="Top controls">
   <div class="left">
     <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
-    <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD EVIDENCE</a>
+    <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY</a>
+    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY BENCHMARKS</a>
   </div>
   <div class="right" aria-label="Controls">
     <span class="btn" style="pointer-events:none;opacity:.9">EN</span>
@@ -211,34 +217,35 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="page">
 
-  <!-- PREFACE ANCHOR -->
-  <section class="preface" aria-label="100-customer case study preface">
+  <!-- PREFACE: FIELD DATASET ANCHOR (HIGHLIGHT) -->
+  <section class="preface" aria-label="Preface anchor">
     <p class="k">RESEARCH · PREFACE</p>
-    <h1 class="h1">100-Customer Field Case Study</h1>
+    <h1 class="h1">100-Customer Field Case Study (Dataset Anchor)</h1>
 
     <p class="p0">
-      This research layer documents observed patterns across my first 100 residential rainwater management installations.
-      The objective is not promotion. The objective is pattern documentation under constraint.
+      This preface anchors the Research layer to one deep dataset: the first 100 residential rainwater management installations I completed in the field.
+      It is presented as structured observation under constraint.
     </p>
 
     <p class="p0">
-      The sections linked below function as anchors to the study:
-      a reference index, a review-present subset, claim language mapping, and warranty category correlation.
+      LeafGuard is the deployed system within this dataset, so it appears as the dataset common denominator.
+      The purpose is not ranking or comparison; the purpose is repetition documentation.
     </p>
 
     <div class="metric">
-      <div><strong>Dataset:</strong> 100 installations (first cohort)</div>
-      <div><strong>Evidence anchors:</strong> references + reviews + claim mapping + warranty mapping</div>
-      <div><strong>Boundary:</strong> descriptive observations only; no ranking; no competitor comparisons</div>
+      <div><strong>Anchor:</strong> 100-installation dataset</div>
+      <div><strong>Evidence surfaces:</strong> reference index · review-present subset · claim mapping · warranty mapping</div>
+      <div><strong>Boundary:</strong> descriptive only · no competitor comparisons · no performance ranking</div>
     </div>
 
     <div class="actions">
-      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD EVIDENCE</a>
-      <a class="btn" id="goIndustry" href="/research/industry-context/">OPEN INDUSTRY CONTEXT</a>
+      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD STUDY</a>
+      <a class="btn" id="goIndustry" href="/research/industry-context/">OPEN INDUSTRY BENCHMARKS</a>
     </div>
 
     <p class="note0">
-      Contact details are maintained off-page (on file). This hub does not publish phone numbers or private identifiers.
+      Industry benchmarks (the other companies) remain separate by design on the Industry Benchmarks page.
+      This avoids mixing neutral references with a single deployed dataset.
     </p>
   </section>
 
@@ -285,37 +292,34 @@ body::before,body::after{pointer-events:none!important}
     if(el) el.href = path + q();
   }
 
-  // top
   wire("btnIndex","/index.html");
-  wire("btnIndustry","/research/industry-context/");
   wire("btnEvidence","/research/testimonials/");
+  wire("btnIndustry","/research/industry-context/");
   wire("goEvidence","/research/testimonials/");
   wire("goIndustry","/research/industry-context/");
 
-  // dock
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // Hub cards
   var CARDS = [
     {
-      title:"Field Evidence (Anchors)",
-      sub:"The backing layer: references, review-present subset, claim mapping, warranty mapping.",
-      body:"This section holds the evidence anchors that support the 100-customer study. It is designed to be dense, structured, and readable while you’re in the field.",
+      title:"Field Study (Evidence Anchors)",
+      sub:"The backing layer: references · reviews · claim mapping · warranty mapping.",
+      body:"This is the evidence surface that supports the dataset anchor. It is built for dense reading while you measure a home.",
       href:"/research/testimonials/"
     },
     {
-      title:"Industry Context",
-      sub:"Engineering benchmarks across the residential building envelope (neutral posture).",
-      body:"Contextual case studies across construction verticals. Plain-text references only. No implied partnerships.",
+      title:"Industry Benchmarks (Other Companies)",
+      sub:"The separate reference list of industry engineering examples.",
+      body:"This page contains the neutral benchmark list (Carrier, Trane, Lennox, Andersen, Pella, GAF, Owens Corning, CertainTeed, Kohler, and others). It is kept separate intentionally.",
       href:"/research/industry-context/"
     },
     {
       title:"Method Framework (Reserved)",
-      sub:"Measurement rules, scope boundaries, and evaluation criteria.",
-      body:"Reserved for formalizing measurement rules and scope declarations. This prevents drift as the dataset expands beyond the first cohort.",
+      sub:"Scope boundaries and evaluation rules to prevent drift as datasets expand.",
+      body:"Reserved for formal measurement rules and scope declarations as the Research layer grows beyond the first 100-installation cohort.",
       href:"/research/"
     }
   ];
@@ -407,4 +411,4 @@ body::before,body::after{pointer-events:none!important}
 </script>
 
 </body>
-</html>and 
+</html>

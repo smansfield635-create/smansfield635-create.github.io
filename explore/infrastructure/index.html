@@ -11,8 +11,8 @@
            lane=platform|engineering (URL-only; NEVER stored)
          (Informal/formal is NOT user-visible in this layer.)
        - Pin this page to informal layer:
-           style = informal (stored in gd_style)
-           depth = explore  (stored in gd_depth)
+           gd_style = informal
+           gd_depth = explore
        - Single-open accordion (tap same closes)
        - Switching LANG or LANE does NOT reload page
        - Switching LANG or LANE does NOT close the open row
@@ -243,7 +243,7 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.45;
 }
 
-/* Lens state pill */
+/* Lens state pills */
 .lensRow{
   margin-top:12px;
   display:flex;
@@ -462,22 +462,15 @@ body::before,body::after{pointer-events:none!important}
 
   var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
   // Pin informal layer
   var style = "informal";
+  var depth = "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d=parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
-
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
@@ -495,7 +488,8 @@ body::before,body::after{pointer-events:none!important}
     p.set("style","informal");
     p.set("time",(over&&over.time)?over.time:time);
     p.set("depth","explore");
-    p.set("lane",(over&&over.lane)?over.lane:lane);
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
     return "?"+p.toString();
   }
 
@@ -507,18 +501,16 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
   function laneLabel(){
     return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
       : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
       : (lane==="engineering"?"ENGINEERING":"PLATFORM");
   }
-  function openLabel(){
-    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
-  }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
   function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
   function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
   function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
@@ -596,7 +588,7 @@ body::before,body::after{pointer-events:none!important}
 
   // ===== Accordion state preserved across lane/lang changes =====
   var list=document.getElementById("list");
-  var rowRefs=[]; // {row, chev, title, sub, intro, b1p,b2p,b3p, a}
+  var rowRefs=[];
   var openIndex=0;
 
   function closeAllRows(){
@@ -619,7 +611,7 @@ body::before,body::after{pointer-events:none!important}
     rowRefs[i].chev.textContent="▾";
   }
 
-  function makeSubBubble(label, text){
+  function makeSubBubble(label){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
@@ -629,7 +621,7 @@ body::before,body::after{pointer-events:none!important}
     h.textContent=label;
 
     var p=document.createElement("p");
-    p.textContent=text;
+    p.textContent="";
 
     b.appendChild(h);
     b.appendChild(p);
@@ -637,6 +629,7 @@ body::before,body::after{pointer-events:none!important}
     function act(){ b.classList.toggle("open"); }
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
     return {wrap:b, p:p};
   }
 
@@ -689,9 +682,9 @@ body::before,body::after{pointer-events:none!important}
     var bubbles=document.createElement("div");
     bubbles.className="subBubbles";
 
-    var b1=makeSubBubble(labConcept(),"");
-    var b2=makeSubBubble(labBuild(),"");
-    var b3=makeSubBubble(labRoadmap(),"");
+    var b1=makeSubBubble(labConcept());
+    var b2=makeSubBubble(labBuild());
+    var b3=makeSubBubble(labRoadmap());
 
     bubbles.appendChild(b1.wrap);
     bubbles.appendChild(b2.wrap);

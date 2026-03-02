@@ -1,821 +1,683 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision-remote/index.html
-     VISION · REMOTE CONTROL (16 BUTTONS = 8 DIAMONDS × 2 TRIANGLES) + 1 CENTER (25% BIGGER)
-     GOAL:
-       - Fix spacing/fit on mobile by turning each diamond into TWO TRIANGLE BUTTONS (16 total).
-       - Keep perfect symmetry. Center stays truly centered.
-       - Each button shows:
-         - BIG word label
-         - SMALL cardinal code (N / NNE / ... / NNW)
+     VISION · REMOTE (KIOSK)
+     PURPOSE:
+       - One usable hub page you can drive from.
+       - 8 outer diamonds + 1 dominant center diamond (center is 125% size).
+       - Center routes to Frontier Index (manual / linear map):
+           /explore/frontier/index.html
+       - Outer diamonds route to the 8 Frontier pages that already exist.
+     INFORMAL SITE LAYER (PINNED):
+       - style = informal (stored gd_style)
+       - depth = explore  (stored gd_depth)
+       - lane=platform|engineering is URL-only (never stored)
      CONTROLS:
-       - Trilingual LANG (EN/中文/ES) — top, diamond-shaped.
-       - Lens: PLATFORM / ENGINEERING — top, diamond-shaped (URL-only; never stored).
-     STATE (no new gd_* keys):
-       - URL + localStorage: gd_lang, gd_style, gd_time, gd_depth
-       - URL: lang/style/time/depth/lane
-     RULES:
-       - No modals/overlays
-       - No inline onclick (addEventListener only)
-       - ui.css owns background (do not set html/body background)
-     ROUTING:
-       - Center (INDEX/CORE) goes to the “linear final index” for this section.
-       - Each triangle goes to its own target.
-       - Bottom-left diamond = BACK (section hub)
-       - Bottom-right diamond = FORWARD (next jump / hub-jump)
+       - Language (EN/中文/ES) top
+       - Lane (PLATFORM/ENGINEERING) top
+       - Switching lang/lane DOES NOT reload and DOES NOT break symmetry.
+     STATE CARRY:
+       - URL + LS: gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
+       - Preserve URL query: lang/style/time/depth/lane
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>VISION · REMOTE</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VISION · REMOTE</title>
 
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <link rel="stylesheet" href="/assets/branch.css"/>
-  <script defer src="/assets/instruments.js"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
-  <style>
-    a{color:inherit;text-decoration:none}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-    body::before,body::after{pointer-events:none!important}
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
 
-    :root{
-      --stroke:rgba(255,255,255,.12);
-      --stroke2:rgba(255,255,255,.10);
+:root{
+  --dockH:112px;
 
-      --ink:rgba(255,255,255,.94);
-      --mut:rgba(255,255,255,.78);
+  /* geometry */
+  --D:124px;                 /* outer diamond size */
+  --Dc:155px;                /* center diamond = 125% */
+  --R:176px;                 /* ring radius (cardinals) */
+  --Rd:124px;                /* ring radius (diagonals) approx R*0.707 */
 
-      --crimson:rgba(120,0,22,.30);
-      --festival:rgba(255,43,43,.14);
-      --opalV:rgba(90,40,120,.10);
+  /* palette (red/black/gold) */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 
-      --gold:rgba(201,162,74,.42);
-      --goldSoft:rgba(201,162,74,.18);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
 
-      --shadowA:0 34px 120px rgba(0,0,0,.62);
-      --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
 
-      /* size (outer diamonds) — tuned to fit */
-      --D:clamp(82px, 15.5vw, 118px);
-      /* center is 25% bigger */
-      --Dc:calc(var(--D) * 1.25);
-    }
+  --shadowA:0 34px 120px rgba(0,0,0,.58);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+}
 
-    /* ===== TOP BAR (no traps) ===== */
-    .top{
-      position:fixed; top:14px; left:0; right:0;
-      padding:0 14px;
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
-      z-index:240;
-      pointer-events:none;
-    }
-    .top .left,.top .right{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; white-space:nowrap;
-      pointer-events:auto;
-    }
+/* top controls */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
+  pointer-events:auto;
+}
 
-    /* diamond-like chip */
-    .chip{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-height:44px;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-      color:var(--ink);
-      font-weight:950;
-      font-size:13px;
-      letter-spacing:.2px;
-      -webkit-tap-highlight-color:transparent;
-      position:relative;
-      overflow:hidden;
-      touch-action:manipulation;
-      box-shadow:var(--shadowB);
-      user-select:none;
-    }
-    .chip:active{transform:translateY(1px)}
-    .chip::after{
-      content:"";
-      position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
-      opacity:.58;pointer-events:none;
-    }
-    .chip.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);}
+/* compact nav buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
+  opacity:.55;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.10);}
 
-    .seg{
-      display:inline-flex; gap:0; overflow:hidden;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      box-shadow: var(--shadowB);
-    }
-    .seg button{
-      appearance:none; border:0; background:transparent;
-      color:rgba(255,255,255,.80);
-      padding:10px 12px; min-height:44px;
-      font-weight:950; font-size:13px; letter-spacing:.25px;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    .seg button[aria-pressed="true"]{
-      color:var(--ink);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
-        linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-      box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-    }
+/* diamond segmented controls */
+.seg{
+  display:inline-flex;gap:8px;align-items:center;
+  padding:6px 8px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  box-shadow:var(--shadowB);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;
+  padding:8px 10px;min-height:40px;
+  color:rgba(255,255,255,.84);
+  font-weight:950;font-size:13px;letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  border-radius:14px;
+  position:relative;
+}
+.seg button::before{
+  content:"";
+  position:absolute;left:8px;top:50%;
+  width:8px;height:8px;border-radius:2px;
+  transform:translateY(-50%) rotate(45deg);
+  background:rgba(201,162,74,.28);
+  box-shadow:0 0 0 1px rgba(255,255,255,.10);
+  opacity:.55;
+}
+.seg button span{padding-left:14px;display:inline-block}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.10);
+}
+.seg button[aria-pressed="true"]::before{
+  background:rgba(255,43,43,.30);
+  opacity:.85;
+}
 
-    /* ===== PAGE ===== */
-    .page{
-      width:min(1100px,94vw);
-      margin:0 auto;
-      padding:84px 0 110px;
-      position:relative;
-      z-index:10;
-    }
+/* page */
+.page{
+  width:min(1180px,94vw);
+  margin:0 auto;
+  padding:92px 0 calc(var(--dockH) + 22px);
+  position:relative;
+  z-index:10;
+}
 
-    .header{
-      border:1px solid var(--stroke);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-        radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
-        radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-        radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-        linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
-      backdrop-filter: blur(10px);
-      box-shadow:var(--shadowA);
-      padding:14px 14px 12px;
-      position:relative;
-      overflow:hidden;
-    }
-    .header::before{
-      content:"";
-      position:absolute; inset:0; border-radius:24px; pointer-events:none;
-      box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
-      background:
-        repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-      opacity:.26;
-      mask:
-        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask:
-        radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-        linear-gradient(#000,#000);
-    }
+/* header slab */
+.header{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.12));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.22;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.t{margin:0;font-weight:980;font-size:28px;letter-spacing:.8px;color:var(--ink);position:relative}
+.s{margin:10px 0 0;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.88);max-width:980px;position:relative}
+.state{
+  margin-top:10px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:relative;
+}
+.pillState{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+}
 
-    .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-    .t{margin:0;font-weight:980;font-size:26px;letter-spacing:.8px;line-height:1.12;color:var(--ink);position:relative}
-    .s{margin:10px 0 0;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.90);max-width:980px;position:relative}
-    .rule{
-      margin-top:10px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-        radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
-        linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
-      padding:12px 12px 10px;
-      color:rgba(255,255,255,.86);
-      font-size:13px;
-      line-height:1.5;
-      position:relative;
-    }
+/* stage */
+.stage{
+  position:relative;
+  width:min(780px,94vw);
+  height:min(780px,72vh);
+  margin:16px auto 0;
+  pointer-events:none;
+}
+.d{
+  pointer-events:auto;
+  position:absolute;left:50%;top:50%;
+  width:var(--D);height:var(--D);
+  border-radius:26px;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  transform-origin:center;
+  overflow:hidden;
 
-    /* ===== STAGE (true center) ===== */
-    .stage{
-      position:relative;
-      margin:18px auto 0;
-      width:min(900px,94vw);
-      height:min(680px,68vh);
-      border-radius:28px;
-      overflow:hidden;
-      pointer-events:none;
-    }
-    .stage::before{
-      content:"";
-      position:absolute; inset:0; pointer-events:none;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:28px;
-      background:
-        radial-gradient(circle at 18% 22%, rgba(201,162,74,.10), transparent 62%),
-        radial-gradient(circle at 78% 24%, rgba(255,43,43,.12), transparent 64%),
-        radial-gradient(circle at 64% 86%, rgba(90,40,120,.10), transparent 66%),
-        linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
-      box-shadow:0 70px 220px rgba(0,0,0,.62);
-      opacity:.92;
-    }
-    .stage::after{
-      content:"";
-      position:absolute; inset:-18%;
-      background:
-        radial-gradient(circle at 20% 34%, rgba(255,43,43,.18), transparent 44%),
-        radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
-        radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-      opacity:.70;
-      pointer-events:none;
-    }
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.22), transparent 46%),
+    radial-gradient(circle at 70% 22%, rgba(255,43,43,.14), transparent 62%),
+    radial-gradient(circle at 76% 78%, var(--opalV), transparent 66%),
+    radial-gradient(circle at 28% 80%, var(--crimson), transparent 72%),
+    linear-gradient(160deg, rgba(10,12,16,.82), rgba(6,8,10,.92));
 
-    /* ===== DIAMOND WRAPPER (rotated square) ===== */
-    .diamond{
-      position:absolute;
-      width:var(--D);
-      height:var(--D);
-      left:0; top:0;
-      transform:translate(-50%,-50%) rotate(45deg);
-      border-radius:22px;
-      pointer-events:auto;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 46%),
-        radial-gradient(circle at 72% 22%, rgba(255,43,43,.14), transparent 62%),
-        radial-gradient(circle at 76% 78%, rgba(90,40,120,.10), transparent 66%),
-        radial-gradient(circle at 28% 80%, rgba(120,0,22,.26), transparent 72%),
-        linear-gradient(160deg, rgba(12,14,18,.92), rgba(6,8,10,.96));
-      box-shadow:0 44px 140px rgba(0,0,0,.78);
-    }
-    .diamond::before{
-      content:"";
-      position:absolute; inset:0; border-radius:22px; pointer-events:none;
-      box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
-      background:
-        repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
-      opacity:.32;
-      mask:
-        radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask:
-        radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-        linear-gradient(#000,#000);
-    }
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.78),
+    0 0 28px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.16),
+    inset 0 -44px 86px rgba(0,0,0,.86);
 
-    /* center */
-    .diamond.center{
-      width:var(--Dc);
-      height:var(--Dc);
-      border-radius:26px;
-      box-shadow:0 58px 180px rgba(0,0,0,.86), 0 0 34px rgba(201,162,74,.10);
-    }
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+}
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.30;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.d::after{
+  content:"";
+  position:absolute;left:10%;right:10%;top:10%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-10deg);
+  pointer-events:none;
+  opacity:.90;
+}
+.d:hover{
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(1.04);
+  border-color:rgba(201,162,74,.22);
+}
+.d:active{transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg) scale(.99);}
 
-    /* ===== TRIANGLE BUTTONS (2 per diamond) ===== */
-    .tri{
-      position:absolute; inset:0;
-      border:0;
-      padding:0;
-      margin:0;
-      background:transparent;
-      color:inherit;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    .tri.left{clip-path:polygon(0 0, 0 100%, 100% 100%, 0 0);}
-    .tri.right{clip-path:polygon(100% 0, 0 0, 100% 100%, 100% 0);}
+/* 8-ring placement (perfect compass) */
+.N  { --tx:0px;                 --ty:calc(-1 * var(--R));  }
+.NE { --tx:var(--Rd);           --ty:calc(-1 * var(--Rd)); }
+.E  { --tx:var(--R);            --ty:0px;                  }
+.SE { --tx:var(--Rd);           --ty:var(--Rd);            }
+.S  { --tx:0px;                 --ty:var(--R);             }
+.SW { --tx:calc(-1 * var(--Rd));--ty:var(--Rd);            }
+.W  { --tx:calc(-1 * var(--R)); --ty:0px;                  }
+.NW { --tx:calc(-1 * var(--Rd));--ty:calc(-1 * var(--Rd)); }
 
-    /* divider line between triangles */
-    .divider{
-      position:absolute; inset:-20%;
-      transform:rotate(45deg);
-      left:50%;
-      width:2px;
-      background:rgba(255,255,255,.10);
-      pointer-events:none;
-      opacity:.85;
-    }
+.N,.NE,.E,.SE,.S,.SW,.W,.NW{
+  transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) rotate(45deg);
+}
 
-    /* triangle label block (rotate back so text is upright) */
-    .triInner{
-      position:absolute;
-      left:50%; top:50%;
-      transform:translate(-50%,-50%) rotate(-45deg);
-      width:86%;
-      text-align:center;
-      pointer-events:none;
-      user-select:none;
-    }
-    .word{
-      font-weight:980;
-      letter-spacing:.6px;
-      font-size:clamp(13px, 2.4vw, 16px);
-      color:var(--ink);
-      text-shadow:0 0 18px rgba(0,0,0,.45);
-      line-height:1.1;
-    }
-    .code{
-      margin-top:6px;
-      font-weight:950;
-      letter-spacing:1.6px;
-      font-size:11px;
-      color:rgba(255,255,255,.72);
-      opacity:.95;
-    }
+/* center */
+.C{
+  width:var(--Dc);height:var(--Dc);
+  --tx:0px;--ty:0px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-color:rgba(255,43,43,.22);
+  box-shadow:
+    0 52px 170px rgba(0,0,0,.84),
+    0 0 40px rgba(255,43,43,.10),
+    0 0 26px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -52px 98px rgba(0,0,0,.88);
+}
+.C:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.03);
+}
+.C:active{
+  transform:translate(-50%,-50%) rotate(45deg) scale(.99);
+}
 
-    /* center label */
-    .coreInner{
-      position:absolute; inset:0;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      transform:rotate(-45deg);
-      pointer-events:none;
-      user-select:none;
-      gap:8px;
-    }
-    .coreWord{
-      font-weight:990;
-      letter-spacing:.9px;
-      font-size:clamp(16px, 3.2vw, 20px);
-      color:var(--ink);
-    }
-    .coreCode{
-      font-weight:950;
-      letter-spacing:2px;
-      font-size:11px;
-      color:rgba(255,255,255,.74);
-    }
+/* inner text */
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:14px;
+  gap:6px;
+  user-select:none;
+  pointer-events:none;
+}
+.word{
+  font-weight:980;
+  font-size:16px;
+  letter-spacing:.7px;
+  color:rgba(255,255,255,.94);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+}
+.code{
+  font-size:11px;
+  letter-spacing:2px;
+  opacity:.80;
+  color:rgba(255,255,255,.78);
+}
+.small{
+  font-size:11px;
+  opacity:.78;
+  color:rgba(255,255,255,.78);
+}
 
-    /* corner nav diamonds (back/forward) */
-    .corner{
-      position:absolute;
-      width:58px; height:58px;
-      border-radius:18px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,16,.74), rgba(6,8,10,.90));
-      box-shadow:0 18px 60px rgba(0,0,0,.55);
-      pointer-events:auto;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-    .corner:active{transform:rotate(45deg) scale(.98)}
-    .corner .cInner{
-      position:absolute; inset:0;
-      transform:rotate(-45deg);
-      display:grid; place-items:center;
-      font-weight:980;
-      letter-spacing:.4px;
-      font-size:12px;
-      color:rgba(255,255,255,.90);
-      user-select:none;
-      pointer-events:none;
-    }
-    .corner.left{left:14px; bottom:14px;}
-    .corner.right{right:14px; bottom:14px;}
-  </style>
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+
+@media (max-width:560px){
+  :root{--D:114px;--Dc:143px;--R:162px;--Rd:114px}
+}
+@media (max-width:420px){
+  :root{--D:108px;--Dc:135px;--R:152px;--Rd:108px}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="chip" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-      <a class="chip red" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
-      <a class="chip" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnBack" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+    <a class="btn red" id="btnManual" data-route="/explore/frontier/index.html" href="/explore/frontier/index.html">INDEX</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true"><span>EN</span></button>
+      <button type="button" id="langZH" aria-pressed="false"><span>中文</span></button>
+      <button type="button" id="langES" aria-pressed="false"><span>ES</span></button>
     </div>
-
-    <div class="right">
-      <div class="seg" role="group" aria-label="Language">
-        <button type="button" id="langEN" aria-pressed="true">EN</button>
-        <button type="button" id="langZH" aria-pressed="false">中文</button>
-        <button type="button" id="langES" aria-pressed="false">ES</button>
-      </div>
-
-      <div class="seg" role="group" aria-label="Lens">
-        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-      </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true"><span>PLATFORM</span></button>
+      <button type="button" id="laneEngineering" aria-pressed="false"><span>ENGINEERING</span></button>
     </div>
   </div>
+</div>
 
-  <div class="page">
-    <section class="header" aria-label="Header">
-      <p class="k" id="hk">VISION · REMOTE</p>
-      <h1 class="t" id="ht">Pick one direction. One step.</h1>
-      <p class="s" id="hs">Each outer diamond is two triangle buttons (16 total). Center is the section index (manual / full map).</p>
-      <div class="rule" id="rule">Rule: This is a hub jump. Use BACK to re-enter the previous hub. Use FORWARD to jump to the next hub.</div>
-    </section>
+<div class="page">
 
-    <div class="stage" id="stage" aria-label="Remote stage">
-      <!-- back / forward corner diamonds -->
-      <div class="corner left" id="btnBack" role="button" tabindex="0" aria-label="Back"><div class="cInner" id="txtBack">BACK</div></div>
-      <div class="corner right" id="btnForward" role="button" tabindex="0" aria-label="Forward"><div class="cInner" id="txtForward">FORWARD</div></div>
+  <section class="header" aria-label="Header">
+    <p class="k" id="hk">VISION · REMOTE</p>
+    <h1 class="t" id="ht">FRONTIER REMOTE</h1>
+    <p class="s" id="hs"></p>
+    <div class="state">
+      <div class="pillState" id="laneState">—</div>
+      <div class="pillState" id="langState">—</div>
+    </div>
+  </section>
 
-      <!-- center (index / core) -->
-      <div class="diamond center" id="core" role="button" tabindex="0" aria-label="Index core">
-        <div class="coreInner">
-          <div class="coreWord" id="coreWord">INDEX</div>
-          <div class="coreCode" id="coreCode">CORE</div>
-        </div>
-      </div>
+  <div class="stage" aria-label="Remote diamonds">
 
-      <!-- 8 outer diamonds (each has 2 triangle buttons) -->
-      <div class="diamond" id="dN">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnN"></button>
-        <button class="tri right" type="button" id="btnNNE"></button>
-      </div>
+    <!-- Outer 8 -->
+    <div class="d N"  id="dCities"   role="button" tabindex="0" aria-label="Cities">
+      <div class="inner"><div class="word" id="wCities">CITIES</div><div class="code">N</div><div class="small" id="sCities">Urban OS</div></div>
+    </div>
 
-      <div class="diamond" id="dNE">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnNE"></button>
-        <button class="tri right" type="button" id="btnENE"></button>
-      </div>
+    <div class="d NE" id="dWater"    role="button" tabindex="0" aria-label="Water">
+      <div class="inner"><div class="word" id="wWater">WATER</div><div class="code">NE</div><div class="small" id="sWater">Circulation</div></div>
+    </div>
 
-      <div class="diamond" id="dE">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnE"></button>
-        <button class="tri right" type="button" id="btnESE"></button>
-      </div>
+    <div class="d E"  id="dEnergy"   role="button" tabindex="0" aria-label="Energy">
+      <div class="inner"><div class="word" id="wEnergy">ENERGY</div><div class="code">E</div><div class="small" id="sEnergy">Stability</div></div>
+    </div>
 
-      <div class="diamond" id="dSE">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnSE"></button>
-        <button class="tri right" type="button" id="btnSSE"></button>
-      </div>
+    <div class="d SE" id="dHabitats" role="button" tabindex="0" aria-label="Habitats">
+      <div class="inner"><div class="word" id="wHabitats">HABITATS</div><div class="code">SE</div><div class="small" id="sHabitats">Closed loop</div></div>
+    </div>
 
-      <div class="diamond" id="dS">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnS"></button>
-        <button class="tri right" type="button" id="btnSSW"></button>
-      </div>
+    <div class="d S"  id="dWaste"    role="button" tabindex="0" aria-label="Waste">
+      <div class="inner"><div class="word" id="wWaste">WASTE</div><div class="code">S</div><div class="small" id="sWaste">Routing loss</div></div>
+    </div>
 
-      <div class="diamond" id="dSW">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnSW"></button>
-        <button class="tri right" type="button" id="btnWSW"></button>
-      </div>
+    <div class="d SW" id="dTrajectory" role="button" tabindex="0" aria-label="Trajectory">
+      <div class="inner"><div class="word" id="wTrajectory">TRAJECTORY</div><div class="code">SW</div><div class="small" id="sTrajectory">Windows</div></div>
+    </div>
 
-      <div class="diamond" id="dW">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnW"></button>
-        <button class="tri right" type="button" id="btnWNW"></button>
-      </div>
+    <div class="d W"  id="dLattice"  role="button" tabindex="0" aria-label="Lattice">
+      <div class="inner"><div class="word" id="wLattice">LATTICE</div><div class="code">W</div><div class="small" id="sLattice">Finite coords</div></div>
+    </div>
 
-      <div class="diamond" id="dNW">
-        <div class="divider"></div>
-        <button class="tri left"  type="button" id="btnNW"></button>
-        <button class="tri right" type="button" id="btnNNW"></button>
+    <div class="d NW" id="dShimmer"  role="button" tabindex="0" aria-label="Shimmer">
+      <div class="inner"><div class="word" id="wShimmer">SHIMMER</div><div class="code">NW</div><div class="small" id="sShimmer">Signal clarity</div></div>
+    </div>
+
+    <!-- Center (dominant) -->
+    <div class="d C" id="dCenter" role="button" tabindex="0" aria-label="Frontier Index">
+      <div class="inner">
+        <div class="word" id="wCenter">INDEX</div>
+        <div class="code">CORE</div>
+        <div class="small" id="sCenter">Manual / Map</div>
       </div>
     </div>
+
   </div>
+</div>
 
-  <script>
-  (function(){
-    "use strict";
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
 
-    // ===== Canon state (gd_* only) =====
-    var qs=new URLSearchParams(location.search);
-    var LS=window.localStorage;
+<script>
+(function(){
+  "use strict";
 
-    var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-    var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-    var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-    var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
-    var lane  = qs.get("lane")  || "platform"; // URL-only
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-    if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-    if(style!=="informal" && style!=="formal") style="informal";
-    if(time==="trajectory") time="post";
-    if(time!=="origin" && time!=="now" && time!=="post") time="now";
-    if(lane!=="platform" && lane!=="engineering") lane="platform";
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform";            // URL-only (never store)
 
-    // persist only gd_* (no new keys)
-    try{
-      LS.setItem("gd_lang",lang);
-      LS.setItem("gd_style",style);
-      LS.setItem("gd_time",time);
-      LS.setItem("gd_depth",depth);
-    }catch(e){}
+  // PIN informal layer
+  var style = "informal";
+  var depth = "explore";
 
-    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-    function q(over){
-      var p=new URLSearchParams();
-      p.set("lang",(over&&over.lang)?over.lang:lang);
-      p.set("style",(over&&over.style)?over.style:style);
-      p.set("time",(over&&over.time)?over.time:time);
-      p.set("depth",(over&&over.depth)?String(over.depth):depth);
-      var L=(over&&over.lane)?over.lane:lane;
-      if(L==="platform"||L==="engineering") p.set("lane",L);
-      return "?" + p.toString();
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    p.set("lane",(over&&over.lane)?over.lane:lane);
+    return "?" + p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(el) el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function langLabel(){
+    return (lang==="zh") ? "中文" : (lang==="es") ? "ES" : "EN";
+  }
+
+  // Wire all internal links with pinned state + lane
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
+    }
+  }
+
+  // ===== Routes (8 + center) =====
+  var ROUTES={
+    cities:"/explore/frontier/urban/",
+    water:"/explore/frontier/water/",
+    energy:"/explore/frontier/energy/",
+    habitats:"/explore/frontier/closed-loop/",
+    waste:"/explore/frontier/waste/",
+    trajectory:"/explore/frontier/trajectory/",
+    lattice:"/explore/frontier/lattice/",
+    shimmer:"/explore/frontier/shimmer/",
+    center:"/explore/frontier/index.html"
+  };
+
+  function go(path){ window.location.href = path + q(); }
+  function bind(id, fn){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("click", fn, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }
+    });
+  }
+
+  bind("dCities",    function(){ go(ROUTES.cities); });
+  bind("dWater",     function(){ go(ROUTES.water); });
+  bind("dEnergy",    function(){ go(ROUTES.energy); });
+  bind("dHabitats",  function(){ go(ROUTES.habitats); });
+  bind("dWaste",     function(){ go(ROUTES.waste); });
+  bind("dTrajectory",function(){ go(ROUTES.trajectory); });
+  bind("dLattice",   function(){ go(ROUTES.lattice); });
+  bind("dShimmer",   function(){ go(ROUTES.shimmer); });
+  bind("dCenter",    function(){ go(ROUTES.center); });
+
+  // ===== No reload on language / lane changes =====
+  function applyHeaderCopy(){
+    document.getElementById("hk").textContent =
+      (lang==="zh") ? "愿景 · 遥控器" : (lang==="es") ? "VISIÓN · CONTROL" : "VISION · REMOTE";
+    document.getElementById("ht").textContent =
+      (lang==="zh") ? "前沿遥控器" : (lang==="es") ? "CONTROL DE FRONTERA" : "FRONTIER REMOTE";
+
+    document.getElementById("hs").textContent =
+      (lane==="engineering")
+        ? ((lang==="zh") ? "工程视角：选一个领域进入。中心=索引（手册/地图）。"
+           : (lang==="es") ? "Ingeniería: elige un dominio. Centro = índice (manual/mapa)."
+           : "Engineering view: pick a domain. Center = Index (manual/map).")
+        : ((lang==="zh") ? "平台视角：点一个按钮走一步。中心=索引（手册/地图）。"
+           : (lang==="es") ? "Plataforma: un toque, un paso. Centro = índice (manual/mapa)."
+           : "Platform view: one tap, one step. Center = Index (manual/map).");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    // small labels (keep 1 word + short hint)
+    if(lang==="zh"){
+      document.getElementById("wCities").textContent="城市";
+      document.getElementById("sCities").textContent="城市OS";
+      document.getElementById("wWater").textContent="水";
+      document.getElementById("sWater").textContent="循环";
+      document.getElementById("wEnergy").textContent="能源";
+      document.getElementById("sEnergy").textContent="稳定";
+      document.getElementById("wHabitats").textContent="栖息地";
+      document.getElementById("sHabitats").textContent="闭环";
+      document.getElementById("wWaste").textContent="废弃物";
+      document.getElementById("sWaste").textContent="损耗";
+      document.getElementById("wTrajectory").textContent="轨迹";
+      document.getElementById("sTrajectory").textContent="窗口";
+      document.getElementById("wLattice").textContent="晶格";
+      document.getElementById("sLattice").textContent="坐标";
+      document.getElementById("wShimmer").textContent="SHIMMER";
+      document.getElementById("sShimmer").textContent="清晰";
+      document.getElementById("wCenter").textContent="索引";
+      document.getElementById("sCenter").textContent="手册/地图";
+
+      document.getElementById("btnBack").textContent="前沿";
+      document.getElementById("btnManual").textContent="索引";
+      document.getElementById("dockExplore").textContent="探索";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+
+      document.getElementById("lanePlatform").textContent="平台";
+      document.getElementById("laneEngineering").textContent="工程";
+    }else if(lang==="es"){
+      document.getElementById("wCities").textContent="URBAN";
+      document.getElementById("sCities").textContent="OS urbano";
+      document.getElementById("wWater").textContent="AGUA";
+      document.getElementById("sWater").textContent="Circulación";
+      document.getElementById("wEnergy").textContent="ENERGÍA";
+      document.getElementById("sEnergy").textContent="Estabilidad";
+      document.getElementById("wHabitats").textContent="HÁBITATS";
+      document.getElementById("sHabitats").textContent="Ciclo cerrado";
+      document.getElementById("wWaste").textContent="RESIDUOS";
+      document.getElementById("sWaste").textContent="Pérdida";
+      document.getElementById("wTrajectory").textContent="TRAYECTO";
+      document.getElementById("sTrajectory").textContent="Ventanas";
+      document.getElementById("wLattice").textContent="LATTICE";
+      document.getElementById("sLattice").textContent="Coords";
+      document.getElementById("wShimmer").textContent="SHIMMER";
+      document.getElementById("sShimmer").textContent="Claridad";
+      document.getElementById("wCenter").textContent="ÍNDICE";
+      document.getElementById("sCenter").textContent="Manual/Mapa";
+
+      document.getElementById("btnBack").textContent="FRONTERA";
+      document.getElementById("btnManual").textContent="ÍNDICE";
+      document.getElementById("dockExplore").textContent="EXPLORAR";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+
+      document.getElementById("lanePlatform").textContent="PLATAFORMA";
+      document.getElementById("laneEngineering").textContent="INGENIERÍA";
+    }else{
+      // EN defaults
+      document.getElementById("btnBack").textContent="FRONTIER";
+      document.getElementById("btnManual").textContent="INDEX";
+      document.getElementById("dockExplore").textContent="EXPLORE";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+
+      document.getElementById("lanePlatform").textContent="PLATFORM";
+      document.getElementById("laneEngineering").textContent="ENGINEERING";
     }
 
-    function setPressed(ids, activeId){
-      for(var i=0;i<ids.length;i++){
-        var el=document.getElementById(ids[i]);
-        if(!el) continue;
-        el.setAttribute("aria-pressed", (ids[i]===activeId) ? "true" : "false");
-      }
-    }
+    // pressed states (no reload)
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
-    // ===== Wire top nav anchors with state =====
-    function wireAll(){
-      var nodes=document.querySelectorAll("[data-route]");
-      for(var i=0;i<nodes.length;i++){
-        var el=nodes[i];
-        var route=el.getAttribute("data-route")||"";
-        if(!route) continue;
-        if(route.indexOf("?")!==-1){
-          try{
-            var u=new URL(route, location.origin);
-            var sp=u.searchParams;
-            sp.set("lang", lang);
-            sp.set("style", style);
-            sp.set("time", time);
-            sp.set("depth", depth);
-            sp.set("lane", lane);
-            el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-          }catch(e){
-            el.setAttribute("href", route);
-          }
-        }else{
-          el.setAttribute("href", route + q());
-        }
-      }
-    }
-
-    // ===== Layout: true center + 8 on ring =====
-    function place(){
-      var stage=document.getElementById("stage");
-      var rect=stage.getBoundingClientRect();
-      var cx=rect.width/2;
-      var cy=rect.height/2;
-
-      var D=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--D")) || 100;
-
-      // radius tuned to keep diamonds fully inside stage
-      var R=Math.min(rect.width, rect.height)/2 - (D*0.95);
-      if(R < D*1.15) R = D*1.15;
-
-      function setPos(id, x, y){
-        var el=document.getElementById(id);
-        if(!el) return;
-        el.style.left = x + "px";
-        el.style.top  = y + "px";
-      }
-
-      // center
-      setPos("core", cx, cy);
-
-      // 8 outer (angles: N, NE, E, SE, S, SW, W, NW)
-      var angles = [
-        -90,  -45,   0,   45,
-         90,  135, 180,  225
-      ].map(function(a){ return a*Math.PI/180; });
-
-      var ids=["dN","dNE","dE","dSE","dS","dSW","dW","dNW"];
-      for(var i=0;i<ids.length;i++){
-        var a=angles[i];
-        setPos(ids[i], cx + Math.cos(a)*R, cy + Math.sin(a)*R);
-      }
-    }
-
-    window.addEventListener("resize", place);
-    window.addEventListener("orientationchange", place);
-
-    // ===== Button text + routes (16 triangle buttons) =====
-    // Pairing: each outer diamond holds 2 codes:
-    // N: N + NNE
-    // NE: NE + ENE
-    // E: E + ESE
-    // SE: SE + SSE
-    // S: S + SSW
-    // SW: SW + WSW
-    // W: W + WNW
-    // NW: NW + NNW
-
-    // EDIT THESE ROUTES IF NEEDED (authoritative mapping lives here)
-    var ROUTES = {
-      // center (section “manual / full index”)
-      CORE: "/explore/frontier/index.html",
-
-      // hub jump controls
-      BACK: "/explore/frontier/",
-      FORWARD: "/explore/",
-
-      // 16 buttons (example mapping from your screenshot)
-      N:   "/explore/frontier/urban/",
-      NNE: "/explore/frontier/vision/",
-      NE:  "/explore/frontier/water/",
-      ENE: "/explore/frontier/shimmer/",
-      E:   "/explore/frontier/energy/",
-      ESE: "/explore/frontier/waste/",
-      SE:  "/explore/frontier/closed-loop/",
-      SSE: "/explore/frontier/urban/",
-      S:   "/products/energy/",
-      SSW: "/products/finance/",
-      SW:  "/products/finance/",
-      WSW: "/explore/infrastructure/",
-      W:   "/products/capital-doctrine/",
-      WNW: "/products/capital-doctrine/",
-      NW:  "/explore/frontier/lattice/",
-      NNW: "/explore/frontier/trajectory/"
-    };
-
-    // labels (one word + code)
-    var LABELS = {
-      en:{
-        CORE:{word:"INDEX", code:"CORE"},
-        BACK:"BACK",
-        FORWARD:"FORWARD",
-        N:{word:"CITIES",code:"N"},
-        NNE:{word:"VISION",code:"NNE"},
-        NE:{word:"WATER",code:"NE"},
-        ENE:{word:"SHIMMER",code:"ENE"},
-        E:{word:"ENERGY",code:"E"},
-        ESE:{word:"WASTE",code:"ESE"},
-        SE:{word:"HABITATS",code:"SE"},
-        SSE:{word:"URBAN",code:"SSE"},
-        S:{word:"AGRI",code:"S"},
-        SSW:{word:"CLOSED",code:"SSW"},
-        SW:{word:"FINANCE",code:"SW"},
-        WSW:{word:"GRID",code:"WSW"},
-        W:{word:"DOCTRINE",code:"W"},
-        WNW:{word:"DOCTRINE",code:"WNW"},
-        NW:{word:"LATTICE",code:"NW"},
-        NNW:{word:"TRAJECTORY",code:"NNW"}
-      },
-      zh:{
-        CORE:{word:"索引", code:"CORE"},
-        BACK:"返回",
-        FORWARD:"前进",
-        N:{word:"城市",code:"N"},
-        NNE:{word:"愿景",code:"NNE"},
-        NE:{word:"水",code:"NE"},
-        ENE:{word:"SHIMMER",code:"ENE"},
-        E:{word:"能源",code:"E"},
-        ESE:{word:"废弃物",code:"ESE"},
-        SE:{word:"栖息地",code:"SE"},
-        SSE:{word:"城市OS",code:"SSE"},
-        S:{word:"农业",code:"S"},
-        SSW:{word:"闭环",code:"SSW"},
-        SW:{word:"金融",code:"SW"},
-        WSW:{word:"电网",code:"WSW"},
-        W:{word:"教义",code:"W"},
-        WNW:{word:"教义",code:"WNW"},
-        NW:{word:"晶格",code:"NW"},
-        NNW:{word:"轨迹",code:"NNW"}
-      },
-      es:{
-        CORE:{word:"ÍNDICE", code:"CORE"},
-        BACK:"VOLVER",
-        FORWARD:"AVANZAR",
-        N:{word:"CIUDADES",code:"N"},
-        NNE:{word:"VISIÓN",code:"NNE"},
-        NE:{word:"AGUA",code:"NE"},
-        ENE:{word:"SHIMMER",code:"ENE"},
-        E:{word:"ENERGÍA",code:"E"},
-        ESE:{word:"RESIDUOS",code:"ESE"},
-        SE:{word:"HÁBITATS",code:"SE"},
-        SSE:{word:"URBANO",code:"SSE"},
-        S:{word:"AGRO",code:"S"},
-        SSW:{word:"CERRADO",code:"SSW"},
-        SW:{word:"FINANZAS",code:"SW"},
-        WSW:{word:"RED",code:"WSW"},
-        W:{word:"DOCTRINA",code:"W"},
-        WNW:{word:"DOCTRINA",code:"WNW"},
-        NW:{word:"LATTICE",code:"NW"},
-        NNW:{word:"TRAYECTORIA",code:"NNW"}
-      }
-    };
-
-    function L(){ return (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en"); }
-
-    function setTri(btnId, key){
-      var btn=document.getElementById(btnId);
-      if(!btn) return;
-
-      // content
-      var wrap=document.createElement("div");
-      wrap.className="triInner";
-
-      var w=document.createElement("div");
-      w.className="word";
-      w.textContent = LABELS[L()][key].word;
-
-      var c=document.createElement("div");
-      c.className="code";
-      c.textContent = LABELS[L()][key].code;
-
-      wrap.appendChild(w);
-      wrap.appendChild(c);
-      btn.innerHTML="";
-      btn.appendChild(wrap);
-
-      // navigation
-      btn.addEventListener("click", function(){
-        window.location.href = ROUTES[key] + q();
-      }, {passive:true});
-    }
-
-    function bindDiamond(id, fn){
-      var el=document.getElementById(id);
-      if(!el) return;
-      el.addEventListener("click", fn, {passive:true});
-      el.addEventListener("keydown", function(e){
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }
-      });
-    }
-
-    function applyTextAndRoutes(){
-      // top copy
-      var hk=document.getElementById("hk");
-      var ht=document.getElementById("ht");
-      var hs=document.getElementById("hs");
-      var rule=document.getElementById("rule");
-
-      if(lang==="zh"){
-        hk.textContent="愿景 · 遥控器";
-        ht.textContent="选一个方向。走一步。";
-        hs.textContent="外圈 8 个菱形，每个菱形 2 个三角按钮（共 16）。中心是本区“线性索引/说明书”。";
-        rule.textContent="规则：这是 Hub Jump。用“返回”回到上一个 Hub；用“前进”跳到下一个 Hub。";
-      }else if(lang==="es"){
-        hk.textContent="VISIÓN · CONTROL";
-        ht.textContent="Elige una dirección. Un paso.";
-        hs.textContent="8 diamantes exteriores, cada uno con 2 botones triangulares (16). El centro es el índice lineal/manual de esta sección.";
-        rule.textContent="Regla: esto es un Hub Jump. Usa VOLVER para re-entrar al hub previo; usa AVANZAR para saltar al siguiente hub.";
-      }else{
-        hk.textContent="VISION · REMOTE";
-        ht.textContent="Pick one direction. One step.";
-        hs.textContent="8 outer diamonds, each with 2 triangle buttons (16). Center is the section index (manual / full map).";
-        rule.textContent="Rule: This is a hub jump. Use BACK to re-enter the previous hub. Use FORWARD to jump to the next hub.";
-      }
-
-      // center
-      document.getElementById("coreWord").textContent = LABELS[L()].CORE.word;
-      document.getElementById("coreCode").textContent = LABELS[L()].CORE.code;
-
-      // corner nav
-      document.getElementById("txtBack").textContent = LABELS[L()].BACK;
-      document.getElementById("txtForward").textContent = LABELS[L()].FORWARD;
-
-      // triangles
-      setTri("btnN","N");
-      setTri("btnNNE","NNE");
-      setTri("btnNE","NE");
-      setTri("btnENE","ENE");
-      setTri("btnE","E");
-      setTri("btnESE","ESE");
-      setTri("btnSE","SE");
-      setTri("btnSSE","SSE");
-      setTri("btnS","S");
-      setTri("btnSSW","SSW");
-      setTri("btnSW","SW");
-      setTri("btnWSW","WSW");
-      setTri("btnW","W");
-      setTri("btnWNW","WNW");
-      setTri("btnNW","NW");
-      setTri("btnNNW","NNW");
-
-      // core + corner actions
-      bindDiamond("core", function(){ window.location.href = ROUTES.CORE + q(); });
-      bindDiamond("btnBack", function(){ window.location.href = ROUTES.BACK + q(); });
-      bindDiamond("btnForward", function(){ window.location.href = ROUTES.FORWARD + q(); });
-
-      // reflect pressed state
-      setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-      setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    }
-
-    // ===== Non-reloading toggles (keep layout + keep “open state” because no accordion here) =====
-    function setLang(next){
-      if(next!=="en" && next!=="zh" && next!=="es") next="en";
-      lang=next;
-      try{ LS.setItem("gd_lang",lang);}catch(e){}
-      history.replaceState({}, "", location.pathname + q({lang:lang}));
-      applyTextAndRoutes();
-      wireAll();
-    }
-    function setLane(next){
-      if(next!=="platform" && next!=="engineering") next="platform";
-      lane=next;
-      history.replaceState({}, "", location.pathname + q({lane:lane}));
-      setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-      wireAll();
-    }
-
-    document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-    document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-    document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-    document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-    document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-    // init
     wireAll();
-    applyTextAndRoutes();
-    place();
-  })();
-  </script>
+  }
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeaderCopy();
+  }
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeaderCopy();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // init
+  applyHeaderCopy();
+  wireAll();
+})();
+</script>
+
 </body>
 </html>

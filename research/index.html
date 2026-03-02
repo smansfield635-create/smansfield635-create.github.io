@@ -1,17 +1,25 @@
 <!doctype html>
-<!-- TNT — /research/index.html
-     RESEARCH · HUB (WITH TESTIMONIALS LINK)
+<!-- TNT — /research/testimonials/index.html
+     RESEARCH · TESTIMONIALS (LEAFGUARD ONLY)
+     MODE: ENGLISH ONLY (per instruction)
      GOALS:
-       - Research-only posture (informational; no monetization; no lead capture; no affiliates)
-       - More bubbles / more categories / more structure / less clutter
-       - Single-open accordion + nested sub-bubbles
-       - Trilingual (EN/中文/ES)
+       - Remove Cross-Domain section
+       - Focus + highlight LeafGuard only
+       - Keep “Review Index” + “Observed Themes” + “Disclaimer”
+       - Put reviews directly in this file (names + short summaries, research posture)
+       - Less clutter: single-open accordion + sub-bubbles
+     CONSTRAINTS (LOCKED):
+       - Informational only (no monetization / no lead capture / no affiliates)
+       - No logos / no product images / no implied partnerships
+       - No phone numbers (even partial) on public page
+       - Avoid sensitive private notes; use only what is already public in reviews
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
        - No modals/overlays; no inline onclick; addEventListener only
-     ROUTES:
-       - Industry Context → /research/industry-context/
-       - Testimonials → /research/testimonials/
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+     NOTE ON LINKS:
+       - Each item has a SOURCE_URL field. Paste the Google review permalink later.
 -->
 
 <!doctype html>
@@ -19,7 +27,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Research</title>
+<title>Research · Testimonials · LeafGuard</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -133,7 +141,7 @@ body::before,body::after{pointer-events:none!important}
 .p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
 .note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
 
-/* Accordion */
+/* Accordion (single-open) */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.10);
@@ -221,8 +229,47 @@ body::before,body::after{pointer-events:none!important}
 }
 .bubble.open p{display:block}
 
-.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.actions .btn{border-radius:999px;padding:10px 14px}
+/* Review list */
+.reviewRow{
+  margin-top:12px;
+  border-top:1px solid rgba(255,255,255,.10);
+  padding-top:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.reviewItem{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:rgba(0,0,0,.12);
+  padding:12px 12px;
+}
+.reviewMeta{
+  font-weight:950;
+  letter-spacing:.15px;
+  font-size:13.5px;
+  color:rgba(255,255,255,.90);
+}
+.reviewMeta span{opacity:.75;font-weight:900}
+.reviewText{
+  margin-top:8px;
+  font-size:13.75px;
+  line-height:1.65;
+  color:rgba(255,255,255,.82);
+}
+.reviewLinks{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.smallNote{
+  margin-top:10px;
+  color:rgba(255,255,255,.72);
+  font-size:12.75px;
+  line-height:1.5;
+}
 
 /* Dock */
 .dock{
@@ -251,24 +298,26 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+    <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
     <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
-    <a class="btn" id="btnTestimonials" href="/research/testimonials/">TESTIMONIALS</a>
   </div>
-  <div class="right" aria-label="Language">
-    <button class="btn" id="btnEN" type="button">EN</button>
-    <button class="btn" id="btnZH" type="button">中文</button>
-    <button class="btn" id="btnES" type="button">ES</button>
+  <div class="right" aria-label="Controls">
+    <span class="btn" style="pointer-events:none;opacity:.9">EN</span>
   </div>
 </div>
 
 <div class="page">
 
   <section class="header" aria-label="Header">
-    <p class="k" id="k0">RESEARCH</p>
-    <h1 class="h1" id="h0">Research Hub</h1>
-    <p class="p0" id="p0"></p>
-    <div class="note0" id="note0"></div>
+    <p class="k">RESEARCH · TESTIMONIALS</p>
+    <h1 class="h1">LeafGuard · Rainwater Management (Public Reviews)</h1>
+    <p class="p0">
+      This page indexes publicly verifiable testimonials and ties each entry to its original public source link.
+      Review text remains the property of its author and platform.
+    </p>
+    <div class="note0">
+      This is not product ranking. No endorsement or affiliation is implied. No phone numbers are published.
+    </div>
   </section>
 
   <div class="stack" id="stack"></div>
@@ -286,14 +335,14 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only) =====
+  // ===== Canon state carry (gd_* only) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en"; // page is EN-only, but we still preserve key
   if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
@@ -305,136 +354,56 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+  function q(){
+    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
   }
-
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
   }
-  wire("btnIndex","/index.html");
+  wire("btnResearch","/research/");
   wire("btnIndustry","/research/industry-context/");
-  wire("btnTestimonials","/research/testimonials/");
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
-
-  // ===== Header copy =====
-  var HEAD={
-    en:{
-      k0:"RESEARCH",
-      h0:"Research Hub",
-      p0:"Research pages provide contextual references and structured notes that inform the site’s engineering philosophy. This layer is informational only.",
-      note0:"No monetization. No lead capture. No affiliate positioning. Plain-text references and verifiable sources only."
-    },
-    zh:{
-      k0:"研究",
-      h0:"研究枢纽",
-      p0:"研究页面提供背景参考与结构化笔记，用于支撑本网站的工程哲学。本层仅用于信息与研究。",
-      note0:"无变现、无获客、无联盟。仅纯文本引用与可验证来源。"
-    },
-    es:{
-      k0:"INVESTIGACIÓN",
-      h0:"Centro de investigación",
-      p0:"Las páginas de investigación aportan referencias contextuales y notas estructuradas que informan la filosofía de ingeniería del sitio. Solo informativo.",
-      note0:"Sin monetización. Sin captación. Sin afiliados. Solo texto y fuentes verificables."
-    }
-  };
-  var H=HEAD[lang]||HEAD.en;
-  document.getElementById("k0").textContent=H.k0;
-  document.getElementById("h0").textContent=H.h0;
-  document.getElementById("p0").textContent=H.p0;
-  document.getElementById("note0").textContent=H.note0;
-
-  // ===== Research hub cards =====
-  var SECTIONS=[
-    {
-      t:P("Industry Context","行业背景","Contexto industrial"),
-      s:P("Engineering-led construction benchmarks and structured case studies.","工程主导的施工基准与结构化案例。","Benchmarks y casos estructurados."),
-      bubbles:[
-        {h:P("Open: Industry Context","打开：行业背景","Abrir: Contexto industrial"),
-         p:P(
-          "Benchmarks across HVAC, roofing, insulation, fenestration, plumbing, and rainwater management—organized into categories and sub-bubbles.",
-          "覆盖暖通、屋面、保温、门窗、管道与雨水管理的基准集合——按类别与子气泡组织。",
-          "Benchmarks en HVAC, techos, aislamiento, ventanas, plomería y lluvia—organizados por categorías."
-         ),
-         route:"/research/industry-context/"
-        },
-        {h:P("How to use this","使用方法","Cómo usarlo"),
-         p:P(
-          "Use Industry Context to anchor terminology and identify innovation patterns. It is not a ranking or comparison surface.",
-          "行业背景用于锚定术语并提取创新模式；它不是排名或对比页面。",
-          "Úsalo para anclar términos y extraer patrones; no es ranking ni comparación."
-         )}
-      ]
-    },
-    {
-      t:P("Testimonials (Public)","评价索引（公开）","Testimonios (públicos)"),
-      s:P("Publicly verifiable reviews linked to original sources.","可公开验证的评价，链接到原始来源。","Reseñas verificables enlazadas a fuentes originales."),
-      bubbles:[
-        {h:P("Open: Testimonials","打开：评价索引","Abrir: Testimonios"),
-         p:P(
-          "Indexes publicly verifiable testimonials and routes to original public sources. Review text remains the property of its author and platform.",
-          "索引可公开验证的评价，并路由到原始公开来源。评价文本归作者与平台所有。",
-          "Indexa testimonios verificables y enlaza a sus fuentes públicas. El texto pertenece al autor y plataforma."
-         ),
-         route:"/research/testimonials/"
-        },
-        {h:P("Constraints","约束","Restricciones"),
-         p:P(
-          "No phone numbers. No private customer notes. No implied affiliation. This is a verifiable index, not a referral directory.",
-          "不公开电话号码；不公开私密客户备注；不暗示隶属。这是可验证索引，不是转介绍通讯录。",
-          "Sin teléfonos. Sin notas privadas. Sin afiliación implícita. Es un índice verificable, no un directorio."
-         )}
-      ]
-    },
-    {
-      t:P("Method Notes (Reserved)","方法论笔记（预留）","Notas de método (reservado)"),
-      s:P("Reserved for measurement rules, bounds, and evaluation procedures.","预留：测量规则、边界与评估流程。","Reservado: reglas, límites y procedimientos."),
-      bubbles:[
-        {h:P("Purpose","用途","Propósito"),
-         p:P(
-          "Reserved for formal documentation of measurement logic and evaluation procedures written in neutral language.",
-          "预留用于以中性语言记录测量逻辑与评估流程。",
-          "Reservado para documentar lógica de medición y procedimientos con lenguaje neutral."
-         )}
-      ]
-    },
-    {
-      t:P("Field Notes (Reserved)","现场笔记（预留）","Notas de campo (reservado)"),
-      s:P("Reserved for time-stamped observations and applied engineering notes.","预留：带时间戳的观察与工程应用笔记。","Reservado: observaciones con fecha y notas aplicadas."),
-      bubbles:[
-        {h:P("Purpose","用途","Propósito"),
-         p:P(
-          "Reserved for observational notes with no claims beyond directly observed evidence.",
-          "预留用于观察笔记：不做超出直接观察证据的主张。",
-          "Reservado para notas observacionales sin afirmaciones más allá de lo observado."
-         )}
-      ]
-    }
+  // ===== DATA (names + short, non-promotional summaries) =====
+  // Keep SOURCE_URL empty until you paste the Google review permalink.
+  // Summary is a neutral paraphrase of the review content (research posture).
+  var REVIEWS=[
+    {name:"Terrean Moore", when:"9 months ago", stars:"★★★★★", summary:"Emphasizes thorough guidance on household needs and a positive consultation experience.", url:""},
+    {name:"John Rupp", when:"7 months ago", stars:"★★★★★", summary:"Notes clear walkthrough of needs and help navigating financing options.", url:""},
+    {name:"Rebecca Johnson", when:"9 months ago", stars:"★★★★★", summary:"Highlights responsiveness and “above and beyond” support during decision process.", url:""},
+    {name:"Diana Proctor", when:"1 year ago", stars:"★★★★★", summary:"Emphasizes friendliness, patience, and professional conduct during consultation.", url:""},
+    {name:"JoAnn Villanueva", when:"1 year ago", stars:"★★★★★", summary:"Notes professionalism and informative explanations; frames gutters as property protection.", url:""},
+    {name:"Amy Alexander", when:"11 months ago", stars:"★★★★★", summary:"Describes strong education/diagnosis focus and confidence-building during decision.", url:""},
+    {name:"David Spencer", when:"1 year ago", stars:"★★★★★", summary:"Frames gutters as infrastructure necessity; notes seamless process and detailed planning.", url:""},
+    {name:"Gregory Walker", when:"1 year ago", stars:"★★★★★", summary:"Notes detailed explanation and attention to system flaws; emphasizes thoughtful approach.", url:""},
+    {name:"Noah McIntyre", when:"9 months ago", stars:"★★★★★", summary:"Highlights detailed explanation of system operation and warranties; notes affordability planning.", url:""},
+    {name:"Luke Hayes", when:"1 year ago", stars:"★★★★★", summary:"First-time buyer context; values knowledge transfer and follow-up communication.", url:""},
+    {name:"Lady Byler", when:"3 months ago", stars:"★★★★★", summary:"Notes availability for questions, professional installation team, and functioning performance so far.", url:""},
+    {name:"Laurie Holmstrom", when:"9 months ago", stars:"★★★★★", summary:"Mentions inspection of failing gutters and fast completion; emphasizes courtesy and guidance.", url:""},
+    {name:"Tiffanie Spencer", when:"1 year ago", stars:"★★★★★", summary:"Highlights thorough presentation, personalization, budget alignment, and quick installation scheduling.", url:""},
+    {name:"Patricia James", when:"9 months ago", stars:"★★★★★", summary:"Expresses satisfaction with cost and installation speed; frames foundation longevity benefit.", url:""},
+    {name:"Mike Griffith", when:"9 months ago", stars:"★★★★★", summary:"Mentions long-term prior system experience and version upgrade language; values explanation of improvements.", url:""},
+    {name:"Kenny Hollaway", when:"8 months ago", stars:"★★★★★", summary:"General positive interaction; includes an attached photo on the platform.", url:""},
+    {name:"James Barlow", when:"10 months ago", stars:"★★★★★", summary:"Highlights courtesy and willingness to explain pricing/warranties; mentions financial options.", url:""},
+    {name:"John Goodman", when:"2 months ago", stars:"★★★★★", summary:"Notes helpfulness and clarity; mentions professional crew and warranty framing.", url:""},
+    {name:"Mary Pattberg", when:"8 months ago", stars:"★★★★★", summary:"Mentions prior experience with system and desire to fit within budget; highlights respectful team.", url:""},
+    {name:"abi estra", when:"3 months ago", stars:"★★★★★", summary:"New build context; notes aesthetic satisfaction and neighbor adoption mention.", url:""}
   ];
 
+  // ===== Observed themes (non-claim) =====
+  var THEMES=[
+    "Knowledge transfer and clarity of explanation (customers repeatedly describe understanding the system and options).",
+    "Diagnostic framing (multiple reviews mention identifying problems or design issues before installation).",
+    "Budget containment (multiple reviews describe aligning scope to budget via transparent planning).",
+    "Installation discipline (professional crews, scheduling communication, cleanup, and follow-through are recurring themes).",
+    "Longevity framing (warranty and long-term protection language appears frequently; treated here as a perception signal, not a verified metric)."
+  ];
+
+  // ===== Render accordion =====
   var stack=document.getElementById("stack");
 
   function closeAll(){
@@ -445,30 +414,58 @@ body::before,body::after{pointer-events:none!important}
     });
   }
 
-  function makeBubble(bb){
+  function makeReviewItem(r){
+    var box=document.createElement("div");
+    box.className="reviewItem";
+
+    var meta=document.createElement("div");
+    meta.className="reviewMeta";
+    meta.textContent=r.name + " — " + r.stars + " ";
+    var span=document.createElement("span");
+    span.textContent="(" + r.when + ")";
+    meta.appendChild(span);
+
+    var txt=document.createElement("div");
+    txt.className="reviewText";
+    txt.textContent=r.summary;
+
+    var links=document.createElement("div");
+    links.className="reviewLinks";
+
+    var a=document.createElement("a");
+    a.className="btn";
+    a.textContent=(r.url && r.url.trim()) ? "View original source" : "Add source URL";
+    a.href=(r.url && r.url.trim()) ? r.url : "#";
+    a.target="_blank";
+    a.rel="noopener";
+
+    links.appendChild(a);
+
+    box.appendChild(meta);
+    box.appendChild(txt);
+    box.appendChild(links);
+
+    return box;
+  }
+
+  function makeBubble(title, text, buildFn){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
     b.tabIndex=0;
 
     var h=document.createElement("h4");
-    h.textContent=pick(bb.h);
+    h.textContent=title;
 
     var p=document.createElement("p");
-    p.textContent=pick(bb.p);
+    p.textContent=text;
 
     b.appendChild(h);
     b.appendChild(p);
 
-    if(bb.route){
-      var actions=document.createElement("div");
-      actions.className="actions";
-      var a=document.createElement("a");
-      a.className="btn";
-      a.textContent=(lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
-      a.href = bb.route + q();
-      actions.appendChild(a);
-      b.appendChild(actions);
+    if(buildFn){
+      var extra=buildFn();
+      if(extra) b.appendChild(extra);
     }
 
     function act(){ b.classList.toggle("open"); }
@@ -480,7 +477,7 @@ body::before,body::after{pointer-events:none!important}
     return b;
   }
 
-  function makeCard(sec, idx){
+  function makeCard(){
     var card=document.createElement("div");
     card.className="card";
 
@@ -494,11 +491,11 @@ body::before,body::after{pointer-events:none!important}
 
     var ti=document.createElement("div");
     ti.className="ti";
-    ti.textContent=pick(sec.t);
+    ti.textContent="LeafGuard · Rainwater Management (Public Reviews)";
 
     var si=document.createElement("div");
     si.className="si";
-    si.textContent=pick(sec.s);
+    si.textContent="Verifiable public reviews tied to rainwater routing consultations and installations.";
 
     left.appendChild(ti);
     left.appendChild(si);
@@ -516,9 +513,66 @@ body::before,body::after{pointer-events:none!important}
     var bubbles=document.createElement("div");
     bubbles.className="subBubbles";
 
-    (sec.bubbles||[]).forEach(function(bb){
-      bubbles.appendChild(makeBubble(bb));
-    });
+    // Bubble 1: Review Index
+    bubbles.appendChild(
+      makeBubble(
+        "Review Index (in-file)",
+        "Each entry is a short, neutral summary of a publicly available review. Add the source URL for verification.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          REVIEWS.forEach(function(r){ wrap.appendChild(makeReviewItem(r)); });
+
+          var sn=document.createElement("div");
+          sn.className="smallNote";
+          sn.textContent="Note: This page summarizes publicly available reviews for research context. It does not publish phone numbers or private customer notes. Add source URLs to preserve verification.";
+          wrap.appendChild(sn);
+          return wrap;
+        }
+      )
+    );
+
+    // Bubble 2: Observed themes
+    bubbles.appendChild(
+      makeBubble(
+        "Observed themes (non-claim)",
+        "These are recurring language patterns across public reviews. They are not performance metrics.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          THEMES.forEach(function(t){
+            var box=document.createElement("div");
+            box.className="reviewItem";
+            var txt=document.createElement("div");
+            txt.className="reviewText";
+            txt.textContent="• " + t;
+            box.appendChild(txt);
+            wrap.appendChild(box);
+          });
+          return wrap;
+        }
+      )
+    );
+
+    // Bubble 3: Disclaimer
+    bubbles.appendChild(
+      makeBubble(
+        "Disclaimer",
+        "These reviews are publicly available on third-party platforms. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
+        function(){
+          var wrap=document.createElement("div");
+          wrap.className="reviewRow";
+          var box=document.createElement("div");
+          box.className="reviewItem";
+          var txt=document.createElement("div");
+          txt.className="reviewText";
+          txt.textContent="This page is informational only. It does not rank products, compare competitors, or publish proprietary performance data.";
+          box.appendChild(txt);
+          wrap.appendChild(box);
+          return wrap;
+        }
+      )
+    );
 
     body.appendChild(bubbles);
 
@@ -542,15 +596,13 @@ body::before,body::after{pointer-events:none!important}
 
     card.appendChild(head);
     card.appendChild(body);
-
-    if(idx===0){ card.classList.add("open"); chev.textContent="▾"; }
+    card.classList.add("open");
+    chev.textContent="▾";
 
     return card;
   }
 
-  SECTIONS.forEach(function(sec, i){
-    stack.appendChild(makeCard(sec, i));
-  });
+  stack.appendChild(makeCard());
 
 })();
 </script>

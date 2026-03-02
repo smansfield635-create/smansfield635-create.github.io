@@ -1,16 +1,19 @@
 <!doctype html>
 <!-- TNT — /products/capital-doctrine/index.html
      CAPITAL COHERENCE DOCTRINE (CCD)
-     MODE: SUPERLAYER · INSTITUTIONAL · DEPLOYABLE · DENSE
-     LANGUAGE: ENGLISH ONLY (PAGE COPY)
-     POSITION: ABOVE FINANCE + GOVERNANCE
-     ROOT: Coherence Constraint Law
-     LENSES (THIS PAGE ONLY):
-       - lane=platform|engineering (URL-only)
-       - Tier = gd_depth (1..4): HS / COLLEGE / MASTERS / PHD
+     NEW STANDARD (INFORMAL WEBSITE LAYER — FULL REWRITE)
+     NON-NEGOTIABLES (LOCKED):
+       - NO HS/COLLEGE/MASTERS/PHD labels anywhere in UI
+       - NO tier toggle visible to users
+       - This page remains INFORMAL layer (human-accessible, institutional, dense)
+       - Two visible lenses only:
+           lane=platform|engineering (URL-only; NOT stored)
+       - Trilingual UI toggle stays (EN/中文/ES)
+       - Page copy remains dense; does NOT collapse into barebones
      STATE:
        - Preserve gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
        - Preserve URL query: lang/style/time/depth/lane
+       - Force gd_style="informal" on this page (informal layer build)
      UX:
        - Single-open accordion (top-level)
        - Sub-bubbles inside sections
@@ -36,7 +39,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:122px;
+  --dockH:120px;
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
@@ -254,22 +257,10 @@ body::before,body::after{pointer-events:none!important}
 
 .body p{margin:0;color:rgba(255,255,255,.88);line-height:1.75;font-size:14.75px}
 .body p + p{margin-top:12px}
-
 .ul{margin:12px 0 0 18px;padding:0;color:rgba(255,255,255,.84);line-height:1.65;font-size:14px}
 .ul li{margin:7px 0}
 
-.smallband{
-  margin-top:12px;
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  font-weight:980;
-  letter-spacing:.15px;
-  color:rgba(255,255,255,.86);
-  font-size:13px;
-}
-
+/* Sub-bubbles */
 .subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -353,8 +344,8 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
 
   <section class="header" aria-label="Header">
-    <p class="k">CAPITAL COHERENCE DOCTRINE</p>
-    <h1 class="h1">Capital Coherence Doctrine (CCD)</h1>
+    <p class="k" id="k0">CAPITAL COHERENCE DOCTRINE</p>
+    <h1 class="h1" id="h0">Capital Coherence Doctrine (CCD)</h1>
     <div class="sub" id="hdrSub"></div>
     <div class="note" id="hdrNote"></div>
 
@@ -364,24 +355,17 @@ body::before,body::after{pointer-events:none!important}
         <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
       </div>
 
-      <div class="seg" role="group" aria-label="Tier">
-        <button type="button" id="tierHS" aria-pressed="true">HS</button>
-        <button type="button" id="tierCollege" aria-pressed="false">COLLEGE</button>
-        <button type="button" id="tierMasters" aria-pressed="false">MASTERS</button>
-        <button type="button" id="tierPhd" aria-pressed="false">PHD</button>
-      </div>
-
       <div class="badge" aria-label="State">
-        <span>LANG</span> <b id="bLang">EN</b>
+        <span id="bLang">LANG</span> <b id="bLangV">EN</b>
         <span style="opacity:.6">·</span>
-        <span>LENS</span> <b id="bLane">PLATFORM</b>
+        <span id="bLane">LENS</span> <b id="bLaneV">PLATFORM</b>
         <span style="opacity:.6">·</span>
-        <span>TIER</span> <b id="bTier">HS</b>
+        <span id="bMode">MODE</span> <b id="bModeV">INFORMAL</b>
       </div>
     </div>
   </section>
 
-  <div class="band">DOCTRINE SECTIONS (SINGLE-OPEN)</div>
+  <div class="band" id="band0">DOCTRINE SECTIONS (SINGLE-OPEN)</div>
   <div class="stack" id="stack"></div>
 
 </div>
@@ -402,20 +386,22 @@ body::before,body::after{pointer-events:none!important}
   var LS=window.localStorage;
 
   var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";       // 1..4 used for tier on this page
-  var lane  = qs.get("lane")  || "platform";                          // URL-only
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1"; // preserved but not surfaced
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+
+  // Informal site layer lock for this page
+  var style = "informal";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
+  // preserve depth but do not interpret it here
   var d=parseInt(depth,10);
   if(!isFinite(d)) d=1;
   if(d<1) d=1;
-  if(d>4) d=4;
+  if(d>9) d=9;
   depth=String(d);
 
   if(lane!=="platform" && lane!=="engineering") lane="platform";
@@ -429,13 +415,13 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-  function q(extra){
+  function q(over){
     var p=new URLSearchParams();
-    p.set("lang",(extra&&extra.lang)?extra.lang:lang);
-    p.set("style",(extra&&extra.style)?extra.style:style);
-    p.set("time",(extra&&extra.time)?extra.time:time);
-    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-    p.set("lane",(extra&&extra.lane)?extra.lane:lane);
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?String(over.depth):depth);
+    p.set("lane",(over&&over.lane)?over.lane:lane);
     return "?" + p.toString();
   }
 
@@ -450,8 +436,8 @@ body::before,body::after{pointer-events:none!important}
         try{
           var u=new URL(route, location.origin);
           var sp=u.searchParams;
+          sp.set("style","informal");
           if(!sp.get("lang")) sp.set("lang", lang);
-          if(!sp.get("style")) sp.set("style", style);
           if(!sp.get("time")) sp.set("time", time);
           if(!sp.get("depth")) sp.set("depth", depth);
           if(!sp.get("lane")) sp.set("lane", lane);
@@ -471,17 +457,6 @@ body::before,body::after{pointer-events:none!important}
       if(!el) continue;
       el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
     }
-  }
-
-  function tierLabel(){
-    if(depth==="1") return "HS";
-    if(depth==="2") return "COLLEGE";
-    if(depth==="3") return "MASTERS";
-    return "PHD";
-  }
-
-  function laneLabel(){
-    return lane==="engineering" ? "ENGINEERING" : "PLATFORM";
   }
 
   // Language toggle (reload same path)
@@ -504,494 +479,267 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // Tier toggle (gd_depth)
-  function setTier(n){
-    var nn=parseInt(n,10);
-    if(!isFinite(nn)) nn=1;
-    if(nn<1) nn=1;
-    if(nn>4) nn=4;
-    depth=String(nn);
-    try{ LS.setItem("gd_depth",depth);}catch(e){}
-    window.location.href = window.location.pathname + q({depth:depth});
-  }
-  document.getElementById("tierHS").addEventListener("click", function(){ setTier(1); }, {passive:true});
-  document.getElementById("tierCollege").addEventListener("click", function(){ setTier(2); }, {passive:true});
-  document.getElementById("tierMasters").addEventListener("click", function(){ setTier(3); }, {passive:true});
-  document.getElementById("tierPhd").addEventListener("click", function(){ setTier(4); }, {passive:true});
-
-  // Copy helper
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // ===== Header copy (dense, tier-aware, lane-aware) =====
-  function headerCopy(){
-    var t=tierLabel();
-    var L=laneLabel();
-
-    // Keep content in EN but allow language toggle for the rest of site state; display EN only copy here by design.
-    if(t==="HS"){
-      return {
-        sub:"CCD is the rulebook that keeps money movement from breaking systems. It sits above finance and governance.",
-        note:"HS tier: clear meaning. No under-the-hood. Use PLATFORM for navigation. Use ENGINEERING for sharper phrasing."
-      };
+  // ===== Header copy (informal layer, dense, institutional) =====
+  var HDR = {
+    en:{
+      sub:"CCD is the superlayer that governs whether capital expansion is structurally safe. It sits above finance and above governance.",
+      note:"Informal layer: dense and readable. PLATFORM explains how to use it. ENGINEERING explains how it behaves (without formal protocol language)."
+    },
+    zh:{
+      sub:"CCD 是判断资本扩张是否结构安全的超层规则。它位于金融与治理之上。",
+      note:"通俗层：密集但可读。PLATFORM 讲怎么用。ENGINEERING 讲怎么运作（不进入正式协议语言）。"
+    },
+    es:{
+      sub:"CCD es la supercapa que decide si la expansión de capital es estructuralmente segura. Está por encima de finanzas y gobernanza.",
+      note:"Capa informal: densa y legible. PLATFORM = cómo usar. ENGINEERING = cómo se comporta (sin protocolo formal)."
     }
-    if(t==="COLLEGE"){
-      return {
-        sub:"CCD is a deployable policy layer that makes capital actions admissible before scaling. It constrains finance and governance together.",
-        note:"COLLEGE tier: mechanism language without full protocol. PLATFORM explains usage. ENGINEERING explains behavior."
-      };
-    }
-    if(t==="MASTERS"){
-      return {
-        sub:"CCD is a superlayer governance doctrine derived from the Coherence Constraint Law. It defines admissibility gates for capital deployment and scale escalation across domains.",
-        note:"MASTERS tier: discipline + failure modes. PLATFORM = operational clarity. ENGINEERING = implementation fidelity."
-      };
-    }
-    return {
-      sub:"CCD is the supradomain capital admissibility doctrine: invariant-bounded, versionable, auditable, and enforceable. It constrains finance and governance simultaneously under measurable invariance.",
-      note:"PHD tier: full under-the-hood structure. PLATFORM = traversal semantics. ENGINEERING = maximal precision."
-    };
-  }
+  };
 
-  // ===== Doctrine sections (tier × lane variants) =====
-  // Each section contains: title/subtitle + tier blocks + sub-bubbles.
-  // PLATFORM vs ENGINEERING shifts phrasing posture (not structure).
-  var SECTIONS = [
-    {
-      id:"position",
-      c:"#c9a24a",
-      t:"Position in System Architecture",
-      s:"Where CCD sits, what it governs, and what it refuses to be.",
-      tiers:{
-        "1":{
-          platform:[
-            "CCD is above finance and above governance. It exists so money doesn’t move in a way that breaks the system.",
-            "If you want safe growth, CCD is the starting point."
-          ],
-          engineering:[
-            "CCD is an upstream decision boundary for capital actions. Finance and governance execute beneath it.",
-            "If the boundary fails, deployment stops."
-          ]
-        },
-        "2":{
-          platform:[
-            "CCD is a policy layer you can deploy: it defines what is allowed before capital decisions scale.",
-            "It does not replace finance; it prevents finance from outrunning structure."
-          ],
-          engineering:[
-            "CCD is an admissibility layer: it gates capital movement before execution surfaces proceed.",
-            "It constrains finance and governance simultaneously to prevent drift-based fragility."
-          ]
-        },
-        "3":{
-          platform:[
-            "CCD sits between root invariants and domain execution. It converts the Coherence Constraint Law into operational capital discipline.",
-            "Its role is prevention: stop fragile expansion before it becomes collapse."
-          ],
-          engineering:[
-            "CCD is a superlayer: derived from root invariants, applied across domains, and enforced through measurable gates.",
-            "It is versionable and auditable, but it cannot violate the root law."
-          ]
-        },
-        "4":{
-          platform:[
-            "CCD is the cross-domain capital admissibility superlayer. It governs scale eligibility as a function of coherence preservation.",
-            "This is not a strategy deck. It is an enforceable discipline layer."
-          ],
-          engineering:[
-            "CCD formalizes capital action eligibility under invariance. It sits above finance/governance and below the root invariant, providing deterministic gates and audit surfaces.",
-            "Any bypass path is treated as structural insecurity."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"What CCD is", p:[
-          "A rule layer above finance and governance.",
-          "A way to keep scale from outrunning structure."
-        ]},
-        {h:"What CCD is not", p:[
-          "Not investment advice.",
-          "Not marketing.",
-          "Not a forecast system."
-        ]},
-        {h:"Immediate application", p:[
-          "Use CCD before big capital moves.",
-          "Use CCD when scale pressure is rising."
-        ]}
-      ]
-    },
+  function applyHeader(){
+    var H=HDR[lang] || HDR.en;
+    document.getElementById("hdrSub").textContent = H.sub;
+    document.getElementById("hdrNote").textContent = H.note;
 
-    {
-      id:"root",
-      c:"#ff2b2b",
-      t:"Core Invariant",
-      s:"The single sentence that governs everything below it.",
-      tiers:{
-        "1":{
-          platform:[
-            "Money cannot safely scale faster than the system’s integrity.",
-            "If the inside is unstable, the outside cannot hold."
-          ],
-          engineering:[
-            "External expansion cannot exceed internal coherence without fragmentation.",
-            "If coherence is violated, halt."
-          ]
-        },
-        "2":{
-          platform:[
-            "Capital scale is allowed only when the system stays aligned inside.",
-            "If alignment breaks, growth becomes fragile."
-          ],
-          engineering:[
-            "External capital expansion is bounded by internal coherence under the same evidence.",
-            "Violation triggers containment and rollback."
-          ]
-        },
-        "3":{
-          platform:[
-            "CCD applies the Coherence Constraint Law to capital movement: scale is conditional, not assumed.",
-            "When coherence falls, expansion becomes a force-multiplier for error."
-          ],
-          engineering:[
-            "Coherence Constraint Law (financial form): external capital credibility and reach cannot exceed internal structural coherence under identical scope/evidence.",
-            "Once instability exists, ambiguity accelerates cascade."
-          ]
-        },
-        "4":{
-          platform:[
-            "CCD’s root invariant prevents systemic overreach: capital cannot purchase coherence; coherence must precede scale.",
-            "This is the stability firewall for growth."
-          ],
-          engineering:[
-            "Invariant: external capital expansion must remain ≤ internal coherence capacity. Exceeding capacity creates measurable fragmentation and acceleration of instability.",
-            "This invariant is non-negotiable; only measurement fidelity can improve."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"Plain meaning", p:["Scale requires integrity first.","If integrity breaks, stop and repair."]},
-        {h:"Why it matters", p:["Capital amplifies both strength and weakness.","Unbounded capital magnifies failure."]},
-        {h:"Enforcement posture", p:["Violation → freeze → audit → rollback.","No discretionary bypass."]}
-      ]
-    },
+    document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+    document.getElementById("bLaneV").textContent = (lane==="engineering" ? (lang==="zh"?"工程":(lang==="es"?"INGENIERÍA":"ENGINEERING")) : (lang==="zh"?"平台":(lang==="es"?"PLATAFORMA":"PLATFORM")));
+    document.getElementById("bModeV").textContent = (lang==="zh")?"通俗":(lang==="es")?"INFORMAL":"INFORMAL";
 
-    {
-      id:"map16",
-      c:"#c9a24a",
-      t:"16-Point Compass Standard (Locked)",
-      s:"The canonical geometry for capital motion mapping: 4 + 4 + 4 + 4.",
-      tiers:{
-        "1":{
-          platform:[
-            "CCD uses a 16-direction compass so we can talk about capital movement clearly and consistently.",
-            "It’s one map. Two lenses. Four tiers."
-          ],
-          engineering:[
-            "CCD is mapped to a balanced 16-point compass: anchors, transitions, compression vectors, acceleration vectors.",
-            "No hierarchy drift: 4+4+4+4."
-          ]
-        },
-        "2":{
-          platform:[
-            "The 16 points let you see: where capital is stable, where it’s drifting, and where it’s accelerating into fragility.",
-            "Same map for everyone. Different depth of explanation."
-          ],
-          engineering:[
-            "16-point map separates: structural anchors, structural transitions, inward compression discipline, outward acceleration control.",
-            "This increases diagnostic fidelity without changing authority."
-          ]
-        },
-        "3":{
-          platform:[
-            "This map is how we keep complex capital decisions from turning into arguments.",
-            "We route decisions through the same compass every time."
-          ],
-          engineering:[
-            "Structural 8 governs architecture; dynamic 8 governs motion. Both remain subordinate to the root invariant.",
-            "Compass is the coordinate discipline, not a narrative."
-          ]
-        },
-        "4":{
-          platform:[
-            "16 points is the standard because it prevents blind spots.",
-            "It shows stability, drift, compression, and acceleration as distinct directions."
-          ],
-          engineering:[
-            "Canonical: 4 anchors + 4 transitions + 4 compression + 4 acceleration. This is complete angular resolution under a four-axis system.",
-            "No additional authority is introduced."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"PRIMARY ANCHORS (4)", p:[
-          "N — Definition",
-          "E — Execution",
-          "S — Measurement",
-          "W — Identity"
-        ]},
-        {h:"PRIMARY TRANSITIONS (4)", p:[
-          "NE — Definition → Execution",
-          "SE — Execution → Measurement",
-          "SW — Measurement → Identity",
-          "NW — Identity → Definition"
-        ]},
-        {h:"COMPRESSION VECTORS (4)", p:[
-          "NNE — Signal Escalation Discipline",
-          "ESE — Operational Containment",
-          "SSW — Contraction Governance",
-          "WNW — Structural Revalidation"
-        ]},
-        {h:"ACCELERATION VECTORS (4)", p:[
-          "ENE — Directed Acceleration",
-          "SSE — Measurement Pressure",
-          "WSW — Identity Drift Correction",
-          "NNW — Structural Recursion Guard"
-        ]}
-      ]
-    },
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
-    {
-      id:"metrics",
-      c:"#93c5fd",
-      t:"Measurable Invariance",
-      s:"What must be measurable for capital motion to be admissible.",
-      tiers:{
-        "1":{
-          platform:[
-            "If you can’t measure it, you can’t scale it safely.",
-            "CCD requires a small set of numbers that tell the truth."
-          ],
-          engineering:[
-            "CCD requires measurable variables with defined inputs, outputs, thresholds, and failure meanings.",
-            "No metric = no escalation."
-          ]
-        },
-        "2":{
-          platform:[
-            "We don’t measure everything. We measure the few things that predict fragility early.",
-            "If those move the wrong way, we slow down."
-          ],
-          engineering:[
-            "Measurement focuses on exposure, acceleration, segmentation, redundancy, and window stability.",
-            "These variables must remain observer-consistent."
-          ]
-        },
-        "3":{
-          platform:[
-            "This is how CCD stays honest: the same measures apply across domains.",
-            "If the measures fail, the story doesn’t matter."
-          ],
-          engineering:[
-            "CCD uses a capital stability vector: exposure magnitude, acceleration, redundancy, segmentation integrity, window behavior, hazard proxy.",
-            "Outputs are reason-coded gates."
-          ]
-        },
-        "4":{
-          platform:[
-            "These measures keep capital from lying to itself.",
-            "They prevent ‘everything is fine’ until it isn’t."
-          ],
-          engineering:[
-            "Measurable invariance means: declared rule + defined evidence + deterministic result. Anything else is narrative.",
-            "Metrics are not opinions; they are gates."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"Core variables (minimum set)", p:[
-          "ρ — Correlated Exposure",
-          "Δρ — Correlation Acceleration",
-          "R — Redundancy Strength",
-          "S — Segmentation Integrity",
-          "W — Trajectory Window Stability",
-          "λ_proxy — Composite Hazard Proxy",
-          "L — Liquidity Coverage (domain-specific)"
-        ]},
-        {h:"Evidence rule", p:[
-          "Each variable must have: input definition → measurement rule → threshold → failure meaning.",
-          "If any is undefined: output is UNDETERMINED."
-        ]},
-        {h:"Where it lives", p:[
-          "Gauges hold measurement surfaces.",
-          "CCD holds admissibility rules that consume those measurements."
-        ]}
-      ]
-    },
-
-    {
-      id:"policy",
-      c:"#ff2b2b",
-      t:"Deployable Capital Policy Framework",
-      s:"What you can enforce institutionally without narratives or exceptions.",
-      tiers:{
-        "1":{
-          platform:[
-            "This is the rule set: what capital can do, and what it must not do.",
-            "Rules exist so scale doesn’t break people."
-          ],
-          engineering:[
-            "Deployable policy = explicit rules + deterministic gates + audit outputs.",
-            "No rule bypass."
-          ]
-        },
-        "2":{
-          platform:[
-            "CCD enforces floors and ceilings: enough cushion, not too much exposure.",
-            "If you break the rule, you pause and repair."
-          ],
-          engineering:[
-            "Policy is built as gates: liquidity floor, leverage bounds, exposure caps, and escalation triggers.",
-            "Violation triggers R3 recovery."
-          ]
-        },
-        "3":{
-          platform:[
-            "It’s not about being conservative. It’s about being survivable.",
-            "CCD is growth discipline, not growth denial."
-          ],
-          engineering:[
-            "Policy families: allocation constraints, concentration limits, duration matching, segmentation enforcement, acceleration limits, exception logging.",
-            "Each family emits reason-coded decisions."
-          ]
-        },
-        "4":{
-          platform:[
-            "CCD is how you scale without gambling with the system.",
-            "Rules turn ‘good judgment’ into repeatable behavior."
-          ],
-          engineering:[
-            "Policy is versioned, timestamped, and audit-ready. Any policy change requires epoch bump and manifest update.",
-            "No retroactive reinterpretation is permitted."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"Minimum enforceable rules (baseline)", p:[
-          "Liquidity floor must be maintained.",
-          "Exposure concentration must be bounded.",
-          "Acceleration beyond tolerance triggers freeze.",
-          "Segmentation must be verified, not assumed.",
-          "Exceptions must be logged and versioned."
-        ]},
-        {h:"R3 recovery (if violated)", p:[
-          "Freeze deployment.",
-          "Emit segment break.",
-          "Roll scope epoch.",
-          "Publish updated manifest.",
-          "Restart chain."
-        ]},
-        {h:"Artifacts (institution-ready)", p:[
-          "CCD_MANIFEST_v1 (scope + invariants)",
-          "CAPITAL_LEDGER_v1 (allocations)",
-          "EXPOSURE_MAP_v1 (dependencies)",
-          "SEGMENTATION_AUDIT_v1 (proof)",
-          "EXCEPTION_LOG_v1 (violations)",
-          "CERTIFICATE_LEDGER_v1 (pass/fail)"
-        ]}
-      ]
-    },
-
-    {
-      id:"binding",
-      c:"#a3a3a3",
-      t:"Binding to Finance, Governance, and Gauges",
-      s:"How CCD routes into implementation surfaces without losing authority.",
-      tiers:{
-        "1":{
-          platform:[
-            "CCD is the rulebook. Finance and governance are where the rules get applied.",
-            "Gauges show what’s happening."
-          ],
-          engineering:[
-            "CCD defines admissibility gates. Finance/governance implement them. Gauges verify them.",
-            "Authority flows downward; telemetry flows upward."
-          ]
-        },
-        "2":{
-          platform:[
-            "If you don’t have measurement, you don’t scale.",
-            "If you don’t have governance discipline, you don’t keep stability."
-          ],
-          engineering:[
-            "CCD consumes measurement outputs and emits allowed/blocked decisions with reason codes.",
-            "Finance and governance surfaces are subordinate to those gates."
-          ]
-        },
-        "3":{
-          platform:[
-            "This is the closed loop: rules → action → measurement → correction.",
-            "It keeps the system honest."
-          ],
-          engineering:[
-            "Closed loop: CCD (gates) → Finance/Governance (execution) → Gauges (verification) → CCD (update via epoch discipline).",
-            "Any bypass path invalidates outputs."
-          ]
-        },
-        "4":{
-          platform:[
-            "This binding is why CCD is a superlayer.",
-            "It constrains multiple domains at once."
-          ],
-          engineering:[
-            "Superlayer property: CCD constrains finance and governance simultaneously, using shared measurement surfaces and shared failure handling.",
-            "This creates institutional survivability under scale."
-          ]
-        }
-      },
-      bubbles:[
-        {h:"Implementation links", p:[
-          "Finance execution surface: /products/finance/",
-          "Risk & capital systems: /products/risk-capital/",
-          "Measurement surfaces: /gauges/",
-          "Definition bounds: /laws/"
-        ]},
-        {h:"Authority rule", p:[
-          "CCD constrains finance and governance.",
-          "Finance and governance cannot redefine CCD."
-        ]},
-        {h:"Measurement rule", p:[
-          "If measurements are missing: output is HOLD/UNDETERMINED.",
-          "If measurements fail: output is CONTAIN/ROLLBACK."
-        ]}
-      ]
-    }
-  ];
-
-  function currentTier(){ return depth; }
-  function tierText(){ return tierLabel(); }
-
-  function closeAllCards(){
-    var cards=document.querySelectorAll(".card");
-    for(var i=0;i<cards.length;i++){
-      cards[i].classList.remove("open");
-      var c=cards[i].querySelector(".chevTxt");
-      if(c) c.textContent="▸";
+    if(lang==="zh"){
+      document.getElementById("k0").textContent="资本一致性教义";
+      document.getElementById("h0").textContent="资本一致性教义（CCD）";
+      document.getElementById("band0").textContent="教义章节（一次只开一个）";
+      document.getElementById("bLang").textContent="语言";
+      document.getElementById("bLane").textContent="透镜";
+      document.getElementById("bMode").textContent="模式";
+    }else if(lang==="es"){
+      document.getElementById("k0").textContent="DOCTRINA DE COHERENCIA DE CAPITAL";
+      document.getElementById("h0").textContent="Doctrina de Coherencia de Capital (CCD)";
+      document.getElementById("band0").textContent="SECCIONES (una a la vez)";
+      document.getElementById("bLang").textContent="IDIOMA";
+      document.getElementById("bLane").textContent="LENTE";
+      document.getElementById("bMode").textContent="MODO";
+    }else{
+      document.getElementById("k0").textContent="CAPITAL COHERENCE DOCTRINE";
+      document.getElementById("h0").textContent="Capital Coherence Doctrine (CCD)";
+      document.getElementById("band0").textContent="DOCTRINE SECTIONS (SINGLE-OPEN)";
+      document.getElementById("bLang").textContent="LANG";
+      document.getElementById("bLane").textContent="LENS";
+      document.getElementById("bMode").textContent="MODE";
     }
   }
 
-  function makeBubble(h, lines){
+  // ===== Single-open accordion =====
+  var stack=document.getElementById("stack");
+
+  function closeAll(){
+    stack.querySelectorAll(".card").forEach(function(c){
+      c.classList.remove("open");
+      var t=c.querySelector(".chevTxt");
+      if(t) t.textContent="▸";
+    });
+  }
+
+  function bubble(title, lines){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
     b.tabIndex=0;
 
-    var hh=document.createElement("h4");
-    hh.textContent=h;
+    var h=document.createElement("h4");
+    h.textContent=title;
 
-    var pp=document.createElement("p");
-    pp.textContent=Array.isArray(lines) ? lines.join("  ") : String(lines||"");
+    var p=document.createElement("p");
+    p.textContent=Array.isArray(lines) ? lines.join("  ") : String(lines||"");
 
-    b.appendChild(hh);
-    b.appendChild(pp);
+    b.appendChild(h);
+    b.appendChild(p);
 
     function act(){ b.classList.toggle("open"); }
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
-
     return b;
   }
+
+  function sectionCopy(sec){
+    // PLATFORM vs ENGINEERING phrasing only (still informal).
+    return (lane==="engineering") ? sec.eng : sec.plat;
+  }
+
+  var SECTIONS = [
+    {
+      c:"#c9a24a",
+      t:"Position in System Architecture",
+      s:"Where CCD sits, what it governs, and what it refuses to be.",
+      plat:[
+        "CCD sits above finance and above governance. It exists to prevent money from scaling a weak structure into a bigger failure.",
+        "It does not tell you what to buy. It tells you when scaling is safe and when it must pause."
+      ],
+      eng:[
+        "CCD is an upstream admissibility layer for capital action. Finance and governance execute beneath it.",
+        "If structural safety cannot be demonstrated, escalation is blocked and rollback is preferred."
+      ],
+      bubbles:[
+        {h:"What CCD governs", p:[
+          "Whether expansion is safe.",
+          "Whether exposure is bounded.",
+          "Whether the system can survive scale."
+        ]},
+        {h:"What CCD does not do", p:[
+          "Not portfolio advice.",
+          "Not marketing claims.",
+          "Not prediction or narrative forecasting."
+        ]},
+        {h:"Where it routes", p:[
+          "Finance execution surfaces.",
+          "Governance gating surfaces.",
+          "Gauges for verification."
+        ]}
+      ]
+    },
+    {
+      c:"#ff2b2b",
+      t:"Core Principle",
+      s:"One sentence that keeps capital from lying to itself.",
+      plat:[
+        "External capital expansion cannot exceed internal structural coherence.",
+        "Capital is an accelerant: it amplifies both strength and weakness."
+      ],
+      eng:[
+        "External expansion is bounded by internal coherence under the same evidence.",
+        "Violation triggers containment posture: pause, audit, rollback."
+      ],
+      bubbles:[
+        {h:"Plain meaning", p:["If the inside is unstable, growth makes it worse.","If the inside is aligned, disciplined growth strengthens it."]},
+        {h:"What breaks systems", p:["Scale with hidden coupling.","Scale without measurement.","Scale while drifting."]},
+        {h:"Default response", p:["Stop escalation first.","Localize failure.","Return to last stable position."]}
+      ]
+    },
+    {
+      c:"#93c5fd",
+      t:"What This Doctrine Controls",
+      s:"The repeatable failure modes capital tends to amplify.",
+      plat:[
+        "CCD focuses on the predictable ways systems fail when money moves faster than structure.",
+        "It prevents fragile growth patterns from becoming permanent damage."
+      ],
+      eng:[
+        "CCD controls capital admissibility across exposure, concentration, segmentation integrity, redundancy erosion, and acceleration toward fragility.",
+        "It treats correlated exposure as the primary hidden risk at scale."
+      ],
+      bubbles:[
+        {h:"Primary control categories", p:[
+          "Exposure concentration",
+          "Correlation clustering",
+          "Redundancy decay",
+          "Segmentation breakdown",
+          "Acceleration toward fragility"
+        ]},
+        {h:"Why this matters", p:[
+          "These are the common collapse pathways.",
+          "CCD makes them visible early enough to stop."
+        ]},
+        {h:"Outputs", p:[
+          "Proceed (bounded)",
+          "Hold (missing proof)",
+          "Contain (risk rising)",
+          "Rollback (integrity violated)"
+        ]}
+      ]
+    },
+    {
+      c:"#c9a24a",
+      t:"Compass Integration (16-Point Standard)",
+      s:"The geometry used to talk about capital motion consistently.",
+      plat:[
+        "CCD uses a 16-direction compass so decisions don’t turn into arguments.",
+        "It separates stable motion from drift, compression, and unsafe acceleration."
+      ],
+      eng:[
+        "CCD uses a balanced 16-point map (4+4+4+4) so capital motion can be classified without ambiguity.",
+        "This is a coordinate discipline for decision routing, not a claim of new physics."
+      ],
+      bubbles:[
+        {h:"4 Anchors", p:["N Definition","E Execution","S Measurement","W Identity"]},
+        {h:"4 Transitions", p:["NE Def→Exec","SE Exec→Meas","SW Meas→Id","NW Id→Def"]},
+        {h:"4 Compression", p:["NNE escalation discipline","ESE containment","SSW contraction governance","WNW revalidation"]},
+        {h:"4 Acceleration", p:["ENE directed acceleration","SSE measurement pressure","WSW identity drift correction","NNW recursion guard"]}
+      ]
+    },
+    {
+      c:"#ff2b2b",
+      t:"Deployable Policy Framework",
+      s:"What an institution can actually enforce without drama.",
+      plat:[
+        "CCD becomes real when it is enforced as policy: floors, ceilings, and stop rules.",
+        "It makes “good judgment” repeatable instead of personality-driven."
+      ],
+      eng:[
+        "CCD enforces policy via explicit gates: scope declaration, exposure review, segmentation validation, redundancy checks, acceleration monitoring, and automatic stop on violation.",
+        "Exceptions require logging; silent overrides are disallowed."
+      ],
+      bubbles:[
+        {h:"Minimum policy gates", p:[
+          "Declare scope before allocation",
+          "Review concentration before scale",
+          "Validate segmentation (don’t assume it)",
+          "Check redundancy before leverage",
+          "Monitor acceleration during expansion",
+          "Stop automatically when violated"
+        ]},
+        {h:"Recovery posture", p:[
+          "Freeze escalation",
+          "Audit what changed",
+          "Rollback to last stable state",
+          "Restart with a tighter map"
+        ]},
+        {h:"Institution-ready artifacts", p:[
+          "Capital ledger",
+          "Exposure map",
+          "Segmentation audit",
+          "Exception log",
+          "Certification record"
+        ]}
+      ]
+    },
+    {
+      c:"#a3a3a3",
+      t:"Binding to Finance, Governance, and Gauges",
+      s:"How CCD stays above domains without becoming vague.",
+      plat:[
+        "CCD is the rulebook. Finance applies it. Governance enforces it. Gauges verify it.",
+        "This keeps the system honest as it grows."
+      ],
+      eng:[
+        "Authority flows downward: CCD constrains finance and governance simultaneously. Evidence flows upward: gauges report signals back to CCD posture decisions.",
+        "If measurement is missing, escalation is blocked by default."
+      ],
+      bubbles:[
+        {h:"Implementation routes", p:[
+          "/products/finance/",
+          "/products/risk-capital/",
+          "/gauges/",
+          "/laws/"
+        ]},
+        {h:"Authority rule", p:[
+          "CCD constrains finance and governance.",
+          "Finance/governance cannot redefine CCD."
+        ]},
+        {h:"Measurement rule", p:[
+          "Missing measurement → HOLD",
+          "Failing measurement → CONTAIN/ROLLBACK",
+          "Passing measurement → PROCEED (bounded)"
+        ]}
+      ]
+    }
+  ];
 
   function makeCard(sec, idx){
     var card=document.createElement("div");
@@ -1027,60 +775,54 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var t=currentTier();
-    var blocks=(sec.tiers && sec.tiers[t]) ? sec.tiers[t] : sec.tiers["1"];
-    var lines=(lane==="engineering") ? (blocks.engineering||blocks.platform) : (blocks.platform||blocks.engineering);
-
-    // Summary paragraphs for this tier/lane
+    var lines=sectionCopy(sec);
     for(var i=0;i<lines.length;i++){
       var p=document.createElement("p");
       p.textContent=lines[i];
       body.appendChild(p);
     }
 
-    // Sub-bubbles
     var sb=document.createElement("div");
     sb.className="subBubbles";
-    for(var j=0;j<(sec.bubbles||[]).length;j++){
-      sb.appendChild(makeBubble(sec.bubbles[j].h, sec.bubbles[j].p));
-    }
+    (sec.bubbles||[]).forEach(function(b){
+      sb.appendChild(bubble(b.h, b.p));
+    });
     body.appendChild(sb);
 
-    // Actions
     var actions=document.createElement("div");
     actions.className="actions";
 
     var a1=document.createElement("a");
     a1.className="btn red";
-    a1.textContent="OPEN: GAUGES";
+    a1.textContent=(lang==="zh")?"打开：量规":(lang==="es")?"ABRIR: MEDIDORES":"OPEN: GAUGES";
     a1.setAttribute("data-route","/gauges/");
     actions.appendChild(a1);
 
     var a2=document.createElement("a");
     a2.className="btn";
-    a2.textContent="OPEN: FINANCE";
+    a2.textContent=(lang==="zh")?"打开：金融":(lang==="es")?"ABRIR: FINANZAS":"OPEN: FINANCE";
     a2.setAttribute("data-route","/products/finance/");
     actions.appendChild(a2);
 
     var a3=document.createElement("a");
     a3.className="btn";
-    a3.textContent="OPEN: RISK & CAPITAL";
+    a3.textContent=(lang==="zh")?"打开：风险与资本":(lang==="es")?"ABRIR: RIESGO Y CAPITAL":"OPEN: RISK & CAPITAL";
     a3.setAttribute("data-route","/products/risk-capital/");
     actions.appendChild(a3);
 
     body.appendChild(actions);
 
     function toggle(){
-      var isOpen=card.classList.contains("open");
-      if(isOpen){
+      var openNow=!card.classList.contains("open");
+      if(!openNow){
         card.classList.remove("open");
         card.querySelector(".chevTxt").textContent="▸";
         return;
       }
-      closeAllCards();
+      closeAll();
       card.classList.add("open");
       card.querySelector(".chevTxt").textContent="▾";
-      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+      body.querySelectorAll(".bubble").forEach(function(x){ x.classList.remove("open"); });
       wireAll();
     }
 
@@ -1100,22 +842,6 @@ body::before,body::after{pointer-events:none!important}
     return card;
   }
 
-  function applyHeader(){
-    var H=headerCopy();
-    document.getElementById("hdrSub").textContent = H.sub;
-    document.getElementById("hdrNote").textContent = H.note;
-
-    document.getElementById("bLang").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
-    document.getElementById("bLane").textContent = laneLabel();
-    document.getElementById("bTier").textContent = tierText();
-
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    setPressed(["tierHS","tierCollege","tierMasters","tierPhd"], depth==="1"?"tierHS":depth==="2"?"tierCollege":depth==="3"?"tierMasters":"tierPhd");
-  }
-
-  // Render
-  var stack=document.getElementById("stack");
   function render(){
     applyHeader();
     stack.innerHTML="";

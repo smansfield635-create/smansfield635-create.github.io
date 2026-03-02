@@ -1,25 +1,13 @@
 <!doctype html>
 <!-- TNT — /research/index.html
-     RESEARCH HUB · DUAL LENS (NARRATIVE / ENGINEERING) + RESTORED CONTRAST
-     GOAL:
-       - Lead from the front with the 100-customer dataset (pedestal)
-       - Everything else is parallel correlative context
-       - Same page supports two lenses WITHOUT losing density
-     LENS RULE:
-       - Narrative lens = homeowner-readable, TED clarity
-       - Engineering lens = constraint + dataset language
-       - BOTH lenses apply to:
-           (1) Primary Dataset pedestal
-           (2) Parallel Correlative Context
-       - Lower framework cards remain neutral (single voice)
-     CONSTRAINTS:
-       - English only
-       - No logos, no images, no implied partnerships
-       - No URLs displayed in body text
-       - No star icons, no ranking language
-       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new gd_* keys)
+     RESEARCH HUB · DUAL LENS (NARRATIVE / ENGINEERING) + LIVE GAUGES HARDWIRED
+     CHANGE IN THIS TNT:
+       - HARDWIRE /assets/gauges.js (local telemetry) so traversal plays in live motion
+     RULES:
+       - No new gd_* keys (gauges uses cte_gauges_v1)
+       - Canon state carry preserved: gd_lang/gd_style/gd_time/gd_depth
        - No modals/overlays; no inline onclick; addEventListener only
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js + /assets/gauges.js
        - ui.css owns html/body background (NO overrides)
 -->
 
@@ -32,6 +20,7 @@
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
+<script defer src="/assets/gauges.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -143,7 +132,7 @@ body::before,body::after{pointer-events:none!important}
 .page{
   width:min(980px,94vw);
   margin:0 auto;
-  padding:160px 0 calc(var(--dockH) + 24px); /* IMPORTANT: clears the fixed topbar */
+  padding:160px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
   gap:16px;
@@ -151,7 +140,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* ===== PEDESTAL SECTIONS (RESTORED CONTRAST) ===== */
+/* ===== PEDESTAL SECTIONS (HIGH CONTRAST) ===== */
 .section{
   border:1px solid rgba(255,255,255,.12);
   border-radius:26px;
@@ -198,7 +187,7 @@ body::before,body::after{pointer-events:none!important}
 .p{
   margin:0 0 12px;
   line-height:1.75;
-  color:rgba(255,255,255,.92); /* boosted contrast */
+  color:rgba(255,255,255,.92);
   font-size:15.25px;
 }
 .metric{
@@ -287,6 +276,7 @@ body::before,body::after{pointer-events:none!important}
       <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
       <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY BENCHMARKS</a>
       <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY EVIDENCE</a>
+      <a class="btn" id="btnLive" href="/gauges/live/">LIVE</a>
     </div>
     <div class="topRight" aria-label="Lens toggle">
       <button class="pill active" id="pillNarrative" type="button">NARRATIVE</button>
@@ -372,6 +362,7 @@ body::before,body::after{pointer-events:none!important}
   wire("btnIndex","/index.html");
   wire("btnIndustry","/research/industry-context/");
   wire("btnEvidence","/research/testimonials/");
+  wire("btnLive","/gauges/live/");
   wire("goEvidence","/research/testimonials/");
   wire("goIndustry","/research/industry-context/");
 
@@ -387,7 +378,7 @@ body::before,body::after{pointer-events:none!important}
       dataset1:
         "This research layer leads with the only dataset I can fully stand behind: my first 100 completed residential rainwater management installations. The objective is not promotion. The objective is pattern clarity under real physical constraint.",
       dataset2:
-        "Across homes with different rooflines, debris loads, fascia conditions, and foundation risk profiles, the same decision and outcome themes repeated. The evidence layer below contains the anchors: references, review-present subset, claim language mapping, and warranty mapping.",
+        "Across homes with different rooflines, debris loads, fascia conditions, and foundation risk profiles, the same decision and outcome themes repeated. The evidence layer contains the anchors: references, review-present subset, claim mapping, and warranty mapping.",
       metric:
         "<div><strong>Dataset Size:</strong> 100 installations</div>"+
         "<div><strong>Observed Decision Pattern:</strong> full-system adoption or deferred timing</div>"+
@@ -396,7 +387,7 @@ body::before,body::after{pointer-events:none!important}
       context1:
         "The broader industry context is not here to compete with the dataset. It is here to support correlation: across the building envelope, engineering-led systems tend to stabilize when they reduce failure modes and standardize deployment.",
       context2:
-        "That is why industry benchmarks are tracked separately: HVAC, roofing, insulation, fenestration, plumbing, and rainwater management all show similar convergence patterns when constraints dominate. This page keeps them parallel, not comparative."
+        "That is why industry benchmarks are tracked separately: HVAC, roofing, insulation, fenestration, plumbing, and rainwater management show similar convergence patterns when constraints dominate. This page keeps them parallel, not comparative."
     },
     engineering:{
       dataset1:
@@ -429,8 +420,14 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("pContext2").textContent = COPY[lens].context2;
   }
 
-  pillNarr.addEventListener("click", function(){ lens="narrative"; applyLens(); });
-  pillEng.addEventListener("click", function(){ lens="engineering"; applyLens(); });
+  pillNarr.addEventListener("click", function(){
+    lens="narrative";
+    applyLens();
+  });
+  pillEng.addEventListener("click", function(){
+    lens="engineering";
+    applyLens();
+  });
   applyLens();
 
   // ===== Neutral framework accordion (single voice) =====

@@ -1,17 +1,17 @@
 <!doctype html>
 <!-- TNT — /research/index.html
-     RESEARCH HUB · DUAL LENS (NARRATIVE / ENGINEERING)
+     RESEARCH HUB · DUAL LENS (NARRATIVE / ENGINEERING) + RESTORED CONTRAST
      GOAL:
        - Lead from the front with the 100-customer dataset (pedestal)
-       - Keep everything else as parallel correlative context
-       - SAME page supports two lenses without losing density
+       - Everything else is parallel correlative context
+       - Same page supports two lenses WITHOUT losing density
      LENS RULE:
        - Narrative lens = homeowner-readable, TED clarity
        - Engineering lens = constraint + dataset language
-       - BOTH lenses apply to the two preface sections:
+       - BOTH lenses apply to:
            (1) Primary Dataset pedestal
-           (2) Engineering Context
-       - The lower framework cards remain neutral (single voice)
+           (2) Parallel Correlative Context
+       - Lower framework cards remain neutral (single voice)
      CONSTRAINTS:
        - English only
        - No logos, no images, no implied partnerships
@@ -20,6 +20,7 @@
        - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new gd_* keys)
        - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <html lang="en">
@@ -37,107 +38,189 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
+/* ===== TOKENS ===== */
 :root{
   --dockH:112px;
+
   --stroke:rgba(255,255,255,.12);
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.82);
-  --shadowA:0 28px 100px rgba(0,0,0,.65);
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.86);
+  --mut2:rgba(255,255,255,.74);
+
   --gold:rgba(201,162,74,.18);
+  --gold2:rgba(201,162,74,.28);
+  --redGlow:rgba(255,43,43,.14);
+
+  --shadowA:0 40px 120px rgba(0,0,0,.75);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-.page{
-  width:min(980px,94vw);
-  margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  position:relative;
-  z-index:10;
-}
-
-/* TOP BUTTONS */
+/* ===== TOP BAR (FIXED, NON-OVERLAP) ===== */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
+  position:fixed;top:12px;left:0;right:0;
   z-index:240;
+  padding:0 12px;
   pointer-events:none;
 }
-.top .left,.top .right{display:flex;gap:10px;flex-wrap:wrap;pointer-events:auto}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.22);
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+.topbar{
+  pointer-events:auto;
+  width:min(1020px,96vw);
+  margin:0 auto;
+  padding:10px 10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 20% 20%, rgba(201,162,74,.10), transparent 60%),
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.14);
+  backdrop-filter:blur(10px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
 }
-
-/* LENS TOGGLE */
-.lensRow{
+.topLeft,.topRight{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  justify-content:flex-end;
+  align-items:center;
 }
+
+/* Buttons (gold underlight; high contrast) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 14px;
+  min-height:44px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;
+  font-size:14px;
+  letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadowB);
+  white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 72%);
+  opacity:.55;
+  pointer-events:none;
+}
+
+/* Lens toggle pills */
 .pill{
   padding:10px 14px;
+  min-height:44px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
-    rgba(0,0,0,.18);
+    rgba(0,0,0,.20);
   color:var(--ink);
   font-weight:950;
+  letter-spacing:.2px;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
 }
 .pill.active{
-  border-color:rgba(255,255,255,.32);
-  box-shadow:0 0 18px rgba(255,43,43,.16);
+  border-color:rgba(255,255,255,.30);
+  box-shadow:0 0 18px rgba(255,43,43,.18);
 }
 
-/* PREFACE SECTIONS */
-.section{
-  border:1px solid var(--stroke);
-  border-radius:26px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
-  box-shadow:var(--shadowA);
+/* ===== PAGE ===== */
+.page{
+  width:min(980px,94vw);
+  margin:0 auto;
+  padding:160px 0 calc(var(--dockH) + 24px); /* IMPORTANT: clears the fixed topbar */
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  position:relative;
+  z-index:10;
 }
-.k{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--mut);margin:0 0 8px}
-.h1{font-weight:980;font-size:28px;margin:0 0 12px;color:var(--ink)}
-.p{line-height:1.75;color:var(--mut);font-size:15.25px;margin:0 0 12px}
+
+/* ===== PEDESTAL SECTIONS (RESTORED CONTRAST) ===== */
+.section{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:26px;
+  padding:24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 75% 25%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 70% 90%, rgba(90,40,120,.10), transparent 70%),
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.16);
+  position:relative;
+  overflow:hidden;
+}
+.section::before{
+  content:"";
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+  opacity:.18;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{
+  margin:0 0 8px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.82;
+  color:rgba(255,255,255,.78);
+}
+.h1{
+  margin:0 0 12px;
+  font-weight:980;
+  font-size:28px;
+  letter-spacing:.35px;
+  color:var(--ink);
+}
+.p{
+  margin:0 0 12px;
+  line-height:1.75;
+  color:rgba(255,255,255,.92); /* boosted contrast */
+  font-size:15.25px;
+}
 .metric{
-  margin-top:14px;
+  margin-top:12px;
   padding:14px;
-  border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:rgba(0,0,0,.18);
+  border:1px solid rgba(201,162,74,.18);
+  background:rgba(0,0,0,.40);
+  color:rgba(255,255,255,.88);
   font-size:14px;
   line-height:1.6;
-  color:var(--mut);
 }
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;justify-content:flex-end}
-.actions .btn{border-radius:999px;padding:10px 14px}
 
-/* FRAMEWORK CARDS */
+/* ===== FRAMEWORK ACCORDION (NEUTRAL) ===== */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
   overflow:hidden;
-  background:rgba(0,0,0,.18);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.05), transparent 62%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
   box-shadow:var(--shadowA);
 }
 .head{
@@ -146,14 +229,18 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
+  gap:12px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-.title{font-weight:950;font-size:16.5px}
+.title{font-weight:950;font-size:16.5px;color:var(--ink)}
 .sub{margin-top:6px;font-size:13.25px;color:rgba(255,255,255,.82)}
+.chev{opacity:.75;font-weight:950}
 .body{display:none;padding:16px;border-top:1px solid rgba(255,255,255,.08)}
 .card.open .body{display:block}
-.body p{margin:0 0 12px;line-height:1.7;color:rgba(255,255,255,.84)}
+.body p{margin:0 0 12px;line-height:1.7;color:rgba(255,255,255,.84);font-size:14.75px}
 
-/* Dock */
+/* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -161,17 +248,31 @@ body::before,body::after{pointer-events:none!important}
   width:min(980px,94vw);
   padding:12px;
   border-radius:22px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.10), transparent 64%),
+    rgba(0,0,0,.22);
+  box-shadow:var(--shadowB);
+  backdrop-filter:blur(10px);
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
   z-index:220;
 }
-.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
+.dock .btn{
+  width:100%;
+  text-align:center;
+  border-radius:999px;
+  padding:10px;
+}
+@media (max-width:720px){
+  .topbar{gap:8px}
+  .btn,.pill{padding:10px 12px}
+}
 @media (max-width:520px){
   :root{--dockH:132px}
   .dock{grid-template-columns:repeat(3,1fr)}
+  .page{padding-top:180px}
   .h1{font-size:26px}
 }
 </style>
@@ -179,14 +280,15 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
+<!-- FIXED TOP BAR -->
 <div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY BENCHMARKS</a>
-    <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY EVIDENCE</a>
-  </div>
-  <div class="right">
-    <div class="lensRow" aria-label="Lens toggle">
+  <div class="topbar">
+    <div class="topLeft">
+      <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
+      <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY BENCHMARKS</a>
+      <a class="btn" id="btnEvidence" href="/research/testimonials/">FIELD STUDY EVIDENCE</a>
+    </div>
+    <div class="topRight" aria-label="Lens toggle">
       <button class="pill active" id="pillNarrative" type="button">NARRATIVE</button>
       <button class="pill" id="pillEngineering" type="button">ENGINEERING</button>
     </div>
@@ -206,7 +308,7 @@ body::before,body::after{pointer-events:none!important}
     <div class="metric" id="metricBox"></div>
 
     <div class="actions">
-      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD EVIDENCE</a>
+      <a class="btn" id="goEvidence" href="/research/testimonials/">OPEN FIELD STUDY EVIDENCE</a>
     </div>
   </section>
 
@@ -239,7 +341,7 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // Canon state carry (gd_* only)
+  // ===== Canon state carry (gd_* only) =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
@@ -266,20 +368,20 @@ body::before,body::after{pointer-events:none!important}
     if(el) el.href = path + q();
   }
 
-  // top
+  // top links
   wire("btnIndex","/index.html");
   wire("btnIndustry","/research/industry-context/");
   wire("btnEvidence","/research/testimonials/");
   wire("goEvidence","/research/testimonials/");
   wire("goIndustry","/research/industry-context/");
 
-  // dock
+  // dock links
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // Lens copy packs
+  // ===== Lens copy packs =====
   var COPY = {
     narrative:{
       dataset1:
@@ -307,7 +409,7 @@ body::before,body::after{pointer-events:none!important}
         "<div><strong>Alternative Configurations Observed:</strong> none within cohort window</div>"+
         "<div><strong>Primary Constraint Driver:</strong> timing of financing (observed variable)</div>",
       context1:
-        "Parallel correlative context: building-envelope verticals exhibit convergence under constraint. Benchmarks are used to normalize language and classify engineered system evolution (bottlenecked design space is a known artifact of constrained solutions).",
+        "Parallel correlative context: building-envelope verticals exhibit convergence under constraint. Benchmarks normalize language and categorize engineered system evolution under repeatable constraints.",
       context2:
         "Industry Benchmarks remain separate by design to prevent category mixing: benchmarks are references; the 100-installation cohort is deployed evidence. Correlation is allowed; comparison is excluded."
     }
@@ -320,21 +422,18 @@ body::before,body::after{pointer-events:none!important}
   function applyLens(){
     pillNarr.classList.toggle("active", lens==="narrative");
     pillEng.classList.toggle("active", lens==="engineering");
-
     document.getElementById("pDataset1").textContent = COPY[lens].dataset1;
     document.getElementById("pDataset2").textContent = COPY[lens].dataset2;
     document.getElementById("metricBox").innerHTML = COPY[lens].metric;
-
     document.getElementById("pContext1").textContent = COPY[lens].context1;
     document.getElementById("pContext2").textContent = COPY[lens].context2;
   }
 
   pillNarr.addEventListener("click", function(){ lens="narrative"; applyLens(); });
   pillEng.addEventListener("click", function(){ lens="engineering"; applyLens(); });
-
   applyLens();
 
-  // Neutral framework accordion (single voice)
+  // ===== Neutral framework accordion (single voice) =====
   var SECTIONS = [
     {
       title:"Field Evidence Structure",
@@ -368,7 +467,17 @@ body::before,body::after{pointer-events:none!important}
 
     var head=document.createElement("div");
     head.className="head";
-    head.innerHTML='<div><div class="title">'+s.title+'</div><div class="sub">'+s.sub+'</div></div><div class="chev">▸</div>';
+
+    var left=document.createElement("div");
+    left.style.minWidth="0";
+    left.innerHTML='<div class="title">'+s.title+'</div><div class="sub">'+s.sub+'</div>';
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.textContent="▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
 
     var body=document.createElement("div");
     body.className="body";
@@ -379,7 +488,7 @@ body::before,body::after{pointer-events:none!important}
       closeAll();
       if(openNow){
         card.classList.add("open");
-        head.querySelector(".chev").textContent="▾";
+        chev.textContent="▾";
       }
     });
 
@@ -389,7 +498,7 @@ body::before,body::after{pointer-events:none!important}
 
     if(i===0){
       card.classList.add("open");
-      head.querySelector(".chev").textContent="▾";
+      chev.textContent="▾";
     }
   });
 

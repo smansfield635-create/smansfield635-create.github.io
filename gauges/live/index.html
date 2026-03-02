@@ -1,38 +1,28 @@
 <!doctype html>
 <!-- TNT — /gauges/live/index.html
-     LIVE GAUGES DASHBOARD (LOCAL ONLY)
+     ENGINEER CONSOLE — 8 GAUGES + EVENTS (LOCAL ONLY, NO CLOUDFLARE REQUIRED)
      PURPOSE:
-       - Compute and display 8 gauges from local telemetry captured by /assets/gauges.js
-       - ONE FILE. ONE TNT. EIGHT GAUGES.
+       - Full under-the-hood telemetry viewer
+       - Computes 8 gauges from localStorage["cte_gauges_v1"]
      GAUGES:
-       COHERENCE (4)
-         C1 Traversal Coherence Gauge (TCG)
-         C2 Anchor Coherence Gauge (ACG)
-         C3 Lens Coherence Gauge (LCG)
-         C4 Narrative–Engineering Convergence Gauge (NECG)
-       INTEGRITY (2)
-         I1 State Integrity Gauge (SIG)
-         I2 Boundary Integrity Gauge (BIG)
-       STABILITY (2)
-         F1 Fragmentation Gauge (FG)   (higher = worse)
-         P1 Progress Gauge (PG)        (higher = better)
+       COHERENCE (4): C1 TCG, C2 ACG, C3 LCG, C4 NECG
+       INTEGRITY (2): I1 SIG, I2 BIG
+       STABILITY (2): F1 FG (worse↑), P1 PG (better↑)
      RULES:
-       - No new gd_* keys (uses existing gd_* read-only)
-       - Telemetry store key: cte_gauges_v1 (from /assets/gauges.js)
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Uses ui.css + branch.css + instruments.js + gauges.js
+       - No modals/overlays; no inline onclick
+       - Canon state carry: lang/style/time/depth via URL + LS gd_* only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Gauges · Live</title>
+<title>Gauges · Engineer Console</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
-<script defer src="/assets/gauges.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -48,9 +38,6 @@ body::before,body::after{pointer-events:none!important}
   --mut2:rgba(255,255,255,.72);
   --shadowA:0 28px 100px rgba(0,0,0,.65);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
-  --gold:rgba(201,162,74,.18);
-  --gold2:rgba(201,162,74,.28);
-  --red:rgba(255,43,43,.18);
 }
 
 /* Top */
@@ -65,10 +52,8 @@ body::before,body::after{pointer-events:none!important}
   padding:10px 10px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(201,162,74,.10), transparent 60%),
-    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.14);
+  background:linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA);
   backdrop-filter:blur(10px);
   display:flex;justify-content:space-between;align-items:center;gap:10px;
 }
@@ -79,9 +64,7 @@ body::before,body::after{pointer-events:none!important}
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    rgba(0,0,0,.22);
+  background:rgba(0,0,0,.22);
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   box-shadow:var(--shadowB);
@@ -92,7 +75,7 @@ body::before,body::after{pointer-events:none!important}
   display:inline-flex;
   padding:4px 9px;
   border-radius:999px;
-  border:1px solid rgba(201,162,74,.22);
+  border:1px solid rgba(255,255,255,.14);
   background:rgba(0,0,0,.14);
   color:rgba(255,255,255,.82);
   font-size:11px;
@@ -153,16 +136,13 @@ body::before,body::after{pointer-events:none!important}
   grid-template-columns:repeat(2, minmax(0, 1fr));
   gap:12px;
 }
-@media (max-width:860px){
-  .grid{grid-template-columns:1fr}
-}
+@media (max-width:860px){ .grid{grid-template-columns:1fr} }
 
 .g{
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.06), transparent 62%),
-    radial-gradient(circle at 82% 22%, rgba(201,162,74,.08), transparent 62%),
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.05), transparent 62%),
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
   box-shadow:var(--shadowA);
   padding:14px;
@@ -233,7 +213,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
 <div class="top">
   <div class="topbar">
     <div class="group">
-      <a class="btn" id="btnGauges" href="/gauges/">GAUGES</a>
+      <a class="btn" id="btnPublic" href="/gauges/">PUBLIC</a>
       <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
       <a class="btn" id="btnEvidence" href="/research/testimonials/">EVIDENCE</a>
       <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY</a>
@@ -243,7 +223,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       <button class="btn" id="btnRefresh" type="button">REFRESH</button>
       <button class="btn" id="btnExport" type="button">EXPORT JSON</button>
       <button class="btn" id="btnClear" type="button">CLEAR</button>
-      <button class="btn" id="btnDebug" type="button">DEBUG OFF</button>
     </div>
   </div>
 </div>
@@ -251,14 +230,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
 <div class="page">
 
   <section class="header">
-    <div class="h1">Live Gauges (8)</div>
-    <div class="p0">
-      Computed from local telemetry (<span class="badge">cte_gauges_v1</span>) captured by <span class="badge">/assets/gauges.js</span>.
-      Select a session to inspect, or view rolling stats across recent sessions.
-    </div>
-    <div class="small">
-      Coherence: higher is better · Integrity: higher is better · Fragmentation: higher is worse · Progress: higher is better
-    </div>
+    <div class="h1">Engineer Console (8 Gauges)</div>
+    <div class="p0">Full under-the-hood readout. Uses local telemetry in this browser: <span class="badge">cte_gauges_v1</span>.</div>
+    <div class="small">Mode: session or rolling. Filters below control the event table.</div>
   </section>
 
   <section class="controls" aria-label="Controls">
@@ -283,11 +257,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       </select>
     </div>
     <div class="field">
-      <div class="lab">Page filter (events table)</div>
+      <div class="lab">Page filter</div>
       <input class="inp" id="inpPage" type="text" placeholder="/research /products /index.html"/>
     </div>
     <div class="field">
-      <div class="lab">Event filter (events table)</div>
+      <div class="lab">Event filter</div>
       <select class="sel" id="selType"></select>
     </div>
   </section>
@@ -355,7 +329,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     if(el) el.href=path+q();
   }
 
-  wire("btnGauges","/gauges/");
+  wire("btnPublic","/gauges/");
   wire("btnResearch","/research/");
   wire("btnEvidence","/research/testimonials/");
   wire("btnIndustry","/research/industry-context/");
@@ -366,7 +340,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // store IO
   function loadStore(){
     try{
       var raw=localStorage.getItem("cte_gauges_v1");
@@ -378,7 +351,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       return {v:1,events:[]};
     }
   }
-
+  function parseTs(ts){
+    var t=Date.parse(ts);
+    return isFinite(t)?t:0;
+  }
   function uniq(arr){
     var m={}; var out=[];
     for(var i=0;i<arr.length;i++){
@@ -388,15 +364,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     }
     return out;
   }
-
   function clip(s,n){
     s=String(s||"");
     return s.length>n ? s.slice(0,n-1)+"…" : s;
-  }
-
-  function parseTs(ts){
-    var t=Date.parse(ts);
-    return isFinite(t)?t:0;
   }
 
   function getSessions(events){
@@ -432,7 +402,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     var durMs=Math.max(1, end-start);
 
     var pages={};
-    var pageSeq=[];
     var lensToggles=0;
     var navClicks=0;
     var accordionToggles=0;
@@ -440,26 +409,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     var timeMaxMs=0;
 
     var navPass=0, navTotal=0;
-
     var boundaryOpens=0;
 
     ev.forEach(function(e){
       if(e.page) pages[e.page]=true;
-
-      if(e.type==="page_view"){
-        pageSeq.push(e.page||"");
-      }
       if(e.type==="nav_click"){
-        navClicks++;
-        navTotal++;
-        // integrity: to_search must include lang/style/time/depth
-        var s=(e.payload && e.payload.to_search) ? String(e.payload.to_search) : "";
+        navClicks++; navTotal++;
+        var s=(e.payload && (e.payload.to_search || e.payload.to_search=== "")) ? String(e.payload.to_search) : "";
+        // if payload is from older emitters, allow "to" containing query
+        if(!s && e.payload && e.payload.to){
+          s = String(e.payload.to);
+        }
         var ok = (s.indexOf("lang=")>=0 && s.indexOf("style=")>=0 && s.indexOf("time=")>=0 && s.indexOf("depth=")>=0);
         if(ok) navPass++;
       }
-      if(e.type==="lens_toggle"){
-        lensToggles++;
-      }
+      if(e.type==="lens_toggle") lensToggles++;
       if(e.type==="accordion_toggle"){
         accordionToggles++;
         var lbl=(e.payload && e.payload.label)?String(e.payload.label).toLowerCase():"";
@@ -477,18 +441,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       }
     });
 
-    var touchedResearch=!!pages[PATH_RESEARCH];
-    var touchedEvidence=!!pages[PATH_EVIDENCE];
-    var touchedIndustry=!!pages[PATH_INDUSTRY];
-    var touchedIndex=!!pages[PATH_INDEX];
-
     return {
       start:start,end:end,durMs:durMs,
       pages:pages,
-      touchedResearch:touchedResearch,
-      touchedEvidence:touchedEvidence,
-      touchedIndustry:touchedIndustry,
-      touchedIndex:touchedIndex,
+      touchedResearch:!!pages[PATH_RESEARCH],
+      touchedEvidence:!!pages[PATH_EVIDENCE],
+      touchedIndustry:!!pages[PATH_INDUSTRY],
+      touchedIndex:!!pages[PATH_INDEX],
       lensToggles:lensToggles,
       navClicks:navClicks,
       accordionToggles:accordionToggles,
@@ -496,52 +455,47 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       timeMaxMs:timeMaxMs,
       navPass:navPass,
       navTotal:navTotal,
-      boundaryOpens:boundaryOpens,
-      pageSeq:pageSeq
+      boundaryOpens:boundaryOpens
     };
   }
 
+  function clamp(n){ return Math.max(0, Math.min(100, Math.round(n))); }
+
   // ===== Gauge computations (per session) =====
   function C1_TCG(s){
-    // Traversal Coherence Gauge (0-100)
     var score=0;
     if(s.touchedResearch) score+=30;
     if(s.touchedEvidence) score+=30;
     if(s.touchedIndustry) score+=20;
-    if(s.touchedIndex || s.touchedResearch) score+=20; // allow hub return
-    return Math.max(0, Math.min(100, score));
+    if(s.touchedIndex || s.touchedResearch) score+=20;
+    return clamp(score);
   }
 
   function C2_ACG(s){
-    // Anchor Coherence Gauge (0-100) focusing Evidence page engagement
     var score=0;
     if(s.touchedEvidence) score+=10;
     if(s.touchedEvidence && s.scrollMax>=75) score+=25;
     if(s.touchedEvidence && s.accordionToggles>=2) score+=25;
     if(s.boundaryOpens>=1) score+=25;
     if(s.timeMaxMs>=60000) score+=15;
-    return Math.max(0, Math.min(100, score));
+    return clamp(score);
   }
 
   function C3_LCG(s){
-    // Lens Coherence Gauge (0-100)
     var score=0;
     if(s.lensToggles===0){
-      // neutral: no lens usage; score depends on stability (no thrash)
       score = 60;
     }else{
-      score += 40; // lens used
+      score += 40;
       if(s.timeMaxMs>=30000) score += 30;
       if(s.scrollMax>=50) score += 15;
-      if(s.lensToggles>5 && s.durMs<30000) score -= 30; // thrash
-      if(s.navClicks>=1) score += 15; // used lens then moved
+      if(s.lensToggles>5 && s.durMs<30000) score -= 30;
+      if(s.navClicks>=1) score += 15;
     }
-    return Math.max(0, Math.min(100, score));
+    return clamp(score);
   }
 
   function C4_NECG(sessionList){
-    // Narrative–Engineering Convergence Gauge (0-100) computed across sessions
-    // Determine "narrative" sessions (depth=explore at any event) vs "engineering" sessions (depth=learn at any event)
     function isNarr(ev){
       var d=(ev.state && ev.state.depth)?String(ev.state.depth):"";
       return d==="explore";
@@ -551,13 +505,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       return d==="learn";
     }
     function reachesEvidenceWithin2Transitions(sess){
-      // Use nav_click order as transitions; see if to_path evidence within first 2 navs after first page_view
       var navs=sess.events.filter(function(e){ return e.type==="nav_click"; });
       for(var i=0;i<Math.min(2, navs.length);i++){
-        var p = navs[i].payload && navs[i].payload.to_path;
-        if(p===PATH_EVIDENCE) return true;
+        var p = navs[i].payload && (navs[i].payload.to_path || navs[i].payload.to);
+        if(!p) continue;
+        if(String(p).indexOf(PATH_EVIDENCE)===0) return true;
       }
-      // fallback: if touchedEvidence at all and had <=2 nav clicks, count it
       var st=sessionStats(sess);
       if(st.touchedEvidence && st.navClicks<=2) return true;
       return false;
@@ -571,7 +524,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
         if(isNarr(ev[i])) hasN=true;
         if(isEng(ev[i])) hasE=true;
       }
-      // If both, assign to whichever appears last (more recent state)
       if(hasN || hasE){
         var lastDepth=null;
         for(var j=ev.length-1;j>=0;j--){
@@ -593,61 +545,50 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     var rn=rate(narr);
     var re=rate(eng);
     var diff=Math.abs(rn-re);
-    var score = Math.max(0, Math.min(100, Math.round((1-diff)*100)));
+    var score = clamp((1-diff)*100);
     return {score:score, rn:rn, re:re, n:narr.length, e:eng.length};
   }
 
   function I1_SIG(s){
-    // State Integrity Gauge (0-100): internal nav clicks that preserve full state params
-    if(s.navTotal===0) return 100; // no nav clicks -> no leakage observed
-    return Math.max(0, Math.min(100, Math.round((s.navPass/s.navTotal)*100)));
+    if(s.navTotal===0) return 100;
+    return clamp((s.navPass/s.navTotal)*100);
   }
 
   function I2_BIG(s){
-    // Boundary Integrity Gauge (0-100): boundary sections opened + context dwell and return behavior
     var score=0;
     if(s.boundaryOpens>=1) score+=40;
     if(s.touchedIndustry && (s.timeMaxMs>=30000 || s.scrollMax>=50)) score+=30;
     if(s.touchedResearch && (s.touchedIndustry||s.touchedEvidence)) score+=30;
-    return Math.max(0, Math.min(100, score));
+    return clamp(score);
   }
 
   function F1_FG(s){
-    // Fragmentation Gauge (0-100, higher worse)
     var score=0;
-    // bounce
     if(s.timeMaxMs<15000 && s.scrollMax<25) score+=40;
-
-    // rates per minute
     var mins = Math.max(0.25, s.durMs/60000);
     var navPerMin = s.navClicks/mins;
     var lensPerMin = s.lensToggles/mins;
     var accPerMin = s.accordionToggles/mins;
-
     if(navPerMin>6) score+=30;
     if(lensPerMin>5) score+=30;
     if(accPerMin>8 && s.scrollMax<50) score+=20;
-
-    return Math.max(0, Math.min(100, Math.round(score)));
+    return clamp(score);
   }
 
   function P1_PG(s){
-    // Progress Gauge (0-100, higher better)
     var score=0;
     if(s.touchedEvidence) score+=40;
     if(s.touchedEvidence && s.accordionToggles>=2) score+=20;
     if(s.touchedEvidence && s.scrollMax>=75) score+=20;
     if(s.touchedResearch || s.touchedIndustry) score+=20;
-    return Math.max(0, Math.min(100, score));
+    return clamp(score);
   }
 
-  // ===== Rendering =====
   function gaugeCard(el, name, sub, score, scale, details){
-    var html = '';
-    html += '<div class="gTop"><div><div class="gTitle">'+name+'</div><div class="gSub">'+sub+'</div></div><div class="badge">'+scale+'</div></div>';
-    html += '<div class="scoreRow"><div class="score">'+score+'</div><div class="scale">'+scale+'</div></div>';
-    html += '<div class="details">'+(details||'')+'</div>';
-    el.innerHTML = html;
+    el.innerHTML =
+      '<div class="gTop"><div><div class="gTitle">'+name+'</div><div class="gSub">'+sub+'</div></div><div class="badge">'+scale+'</div></div>'+
+      '<div class="scoreRow"><div class="score">'+score+'</div><div class="scale">'+scale+'</div></div>'+
+      '<div class="details">'+(details||'')+'</div>';
   }
 
   function setTypeOptions(types){
@@ -671,17 +612,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     var wantPage=(inpPage.value||"").trim();
     var wantType=selType.value||"__all__";
 
-    var events = sess ? sess.events.slice() : store.events.slice();
-    // newest first
-    events = events.slice().sort(function(a,b){ return parseTs(b.ts)-parseTs(a.ts); });
+    var events = (sess ? sess.events : store.events).slice().sort(function(a,b){ return parseTs(b.ts)-parseTs(a.ts); });
 
     if(wantType!=="__all__"){
       events = events.filter(function(e){ return e.type===wantType; });
     }
     if(wantPage){
-      events = events.filter(function(e){
-        return (e.page||"").indexOf(wantPage)>=0;
-      });
+      events = events.filter(function(e){ return (e.page||"").indexOf(wantPage)>=0; });
     }
 
     events = events.slice(0, 250);
@@ -709,21 +646,22 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       var st=sessionStats(s);
       var opt=document.createElement("option");
       opt.value=s.sid;
-      opt.textContent = s.sid + " · " + new Date(st.end||Date.now()).toLocaleString() + " · " + st.durMs/1000|0 + "s · " + Object.keys(st.pages).length + " pages";
+      opt.textContent = s.sid + " · " + new Date(st.end||Date.now()).toLocaleString() + " · " + ((st.durMs/1000)|0) + "s · " + Object.keys(st.pages).length + " pages";
       selSession.appendChild(opt);
     });
 
+    // types dropdown
+    var types = uniq(store.events.map(function(e){return e.type;})).sort();
+    setTypeOptions(types);
+
     var selMode=document.getElementById("selMode");
     var selN=document.getElementById("selN");
+
     var mode=selMode.value;
     var N=parseInt(selN.value,10); if(!isFinite(N)) N=10;
 
     var selectedSid=selSession.value || (sessions[0] && sessions[0].sid) || null;
     var currentSess = sessions.find(function(s){ return s.sid===selectedSid; }) || sessions[0] || null;
-
-    // types dropdown
-    var types = uniq(store.events.map(function(e){return e.type;})).sort();
-    setTypeOptions(types);
 
     var scopeSessions;
     var scopeLabel;
@@ -736,7 +674,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
       scopeLabel = currentSess ? ("Session " + currentSess.sid) : "No session";
     }
 
-    // Aggregate: average for gauges (except NECG which needs cohort split)
     function avg(fn){
       if(!scopeSessions.length) return 0;
       var sum=0;
@@ -754,121 +691,64 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
 
     var necg = C4_NECG(scopeSessions);
 
-    // Details blocks
-    function scopeCounts(){
-      var pagesCount={};
-      scopeSessions.forEach(function(s){
-        var st=sessionStats(s);
-        Object.keys(st.pages).forEach(function(p){ pagesCount[p]=(pagesCount[p]||0)+1; });
-      });
-      return pagesCount;
-    }
-    var pc=scopeCounts();
-
-    // Render gauge cards
-    gaugeCard(
-      document.getElementById("gC1"),
+    gaugeCard(document.getElementById("gC1"),
       "C1 · Traversal Coherence (TCG)",
-      "Does usage follow the intended research spine (Research → Evidence → Industry) with loop closure?",
-      c1,
-      "0–100 (higher better)",
-      scopeLabel + "\nTouched Research: " + (pc[PATH_RESEARCH]||0) + " · Evidence: " + (pc[PATH_EVIDENCE]||0) + " · Industry: " + (pc[PATH_INDUSTRY]||0)
+      "Did the session follow the intended spine?",
+      c1,"0–100 (higher better)",
+      scopeLabel+"\nTouch Research/Evidence/Industry indicates coherent traversal."
     );
 
-    gaugeCard(
-      document.getElementById("gC2"),
+    gaugeCard(document.getElementById("gC2"),
       "C2 · Anchor Coherence (ACG)",
-      "Do anchors actually anchor (scroll, opens, time) on the Evidence surface?",
-      c2,
-      "0–100 (higher better)",
-      scopeLabel + "\nEvidence engagement signals computed from scroll/time/accordion within scope."
+      "Did evidence anchors actually anchor?",
+      c2,"0–100 (higher better)",
+      scopeLabel+"\nSignals: evidence scroll, opens, boundary opens, time."
     );
 
-    gaugeCard(
-      document.getElementById("gC3"),
+    gaugeCard(document.getElementById("gC3"),
       "C3 · Lens Coherence (LCG)",
-      "Is lens switching used as intended (not thrash) and followed by deeper engagement?",
-      c3,
-      "0–100 (higher better)",
-      scopeLabel + "\nLens toggles are treated as coherent if followed by time/scroll progression."
+      "Did lens switching deepen engagement (not thrash)?",
+      c3,"0–100 (higher better)",
+      scopeLabel+"\nPenalizes rapid thrash; rewards post-toggle engagement."
     );
 
-    gaugeCard(
-      document.getElementById("gC4"),
+    gaugeCard(document.getElementById("gC4"),
       "C4 · Narrative–Engineering Convergence (NECG)",
-      "Do both lenses converge toward the same next action (reaching Field Evidence)?",
-      necg.score,
-      "0–100 (higher better)",
-      scopeLabel +
-      "\nNarrative cohort: " + necg.n + " sessions · Reach Evidence rate: " + Math.round(necg.rn*100) + "%" +
-      "\nEngineering cohort: " + necg.e + " sessions · Reach Evidence rate: " + Math.round(necg.re*100) + "%"
+      "Do both lenses converge to the same next step (Evidence)?",
+      necg.score,"0–100 (higher better)",
+      scopeLabel+"\nNarr cohort: "+necg.n+" · Reach Evidence: "+Math.round(necg.rn*100)+"%\nEng cohort: "+necg.e+" · Reach Evidence: "+Math.round(necg.re*100)+"%"
     );
 
-    gaugeCard(
-      document.getElementById("gI1"),
+    gaugeCard(document.getElementById("gI1"),
       "I1 · State Integrity (SIG)",
-      "Do internal nav clicks preserve full state carry (lang/style/time/depth) in URL?",
-      i1,
-      "0–100 (higher better)",
-      scopeLabel + "\nComputed from nav_click payload.to_search containing lang/style/time/depth."
+      "Do internal nav clicks preserve lang/style/time/depth?",
+      i1,"0–100 (higher better)",
+      scopeLabel+"\nComputed from nav_click destination query containing state."
     );
 
-    gaugeCard(
-      document.getElementById("gI2"),
+    gaugeCard(document.getElementById("gI2"),
       "I2 · Boundary Integrity (BIG)",
-      "Are boundaries engaged (disclaimer/boundary opens) and does context usage return to the hub?",
-      i2,
-      "0–100 (higher better)",
-      scopeLabel + "\nBoundary opens counted from accordion labels containing boundary/disclaimer."
+      "Are boundaries engaged and does flow return cleanly?",
+      i2,"0–100 (higher better)",
+      scopeLabel+"\nBoundary opens + context engagement + hub return."
     );
 
-    gaugeCard(
-      document.getElementById("gF1"),
+    gaugeCard(document.getElementById("gF1"),
       "F1 · Fragmentation (FG)",
-      "Entropy / thrash / bounce (higher is worse).",
-      f1,
-      "0–100 (higher worse)",
-      scopeLabel + "\nSignals: bounce (time<15s & scroll<25), nav/lens/accordion rates per minute."
+      "Entropy/thrash/bounce (higher is worse).",
+      f1,"0–100 (higher worse)",
+      scopeLabel+"\nSignals: bounce + high nav/lens rates."
     );
 
-    gaugeCard(
-      document.getElementById("gP1"),
+    gaugeCard(document.getElementById("gP1"),
       "P1 · Progress (PG)",
-      "Does the session advance into Evidence and engage anchors?",
-      p1,
-      "0–100 (higher better)",
-      scopeLabel + "\nProgress rewards reaching Evidence + engagement + returning to hub/context."
+      "Did the session advance toward Evidence anchors?",
+      p1,"0–100 (higher better)",
+      scopeLabel+"\nRewards reaching Evidence + engagement + return."
     );
 
-    // Render events table (session scoped when mode=session)
     renderEvents(store, mode==="rolling" ? null : currentSess);
-
-    // Debug button paint
-    paintDebug();
   }
-
-  // Debug toggle
-  function paintDebug(){
-    var on = (localStorage.getItem("cte_gauges_debug")==="1");
-    document.getElementById("btnDebug").textContent = on ? "DEBUG ON" : "DEBUG OFF";
-  }
-
-  document.getElementById("btnDebug").addEventListener("click", function(){
-    var on = (localStorage.getItem("cte_gauges_debug")==="1");
-    try{ localStorage.setItem("cte_gauges_debug", on ? "0" : "1"); }catch(e){}
-    paintDebug();
-  });
-
-  // Refresh
-  document.getElementById("btnRefresh").addEventListener("click", computeAndRender);
-
-  // Recompute on control changes
-  ["selMode","selSession","selN","inpPage","selType"].forEach(function(id){
-    var el=document.getElementById(id);
-    if(!el) return;
-    el.addEventListener("change", computeAndRender);
-    el.addEventListener("input", function(){ if(id==="inpPage") computeAndRender(); });
-  });
 
   // Export JSON
   document.getElementById("btnExport").addEventListener("click", function(){
@@ -890,7 +770,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;fon
     computeAndRender();
   });
 
-  // initial
+  document.getElementById("btnRefresh").addEventListener("click", computeAndRender);
+
+  ["selMode","selSession","selN","inpPage","selType"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("change", computeAndRender);
+    el.addEventListener("input", function(){ if(id==="inpPage") computeAndRender(); });
+  });
+
   computeAndRender();
 
 })();

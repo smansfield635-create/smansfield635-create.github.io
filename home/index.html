@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- TNT — /home/index.html
      HOME · LAUNCHPAD (TRILINGUAL · NO LENSES · MONUMENT TYPE · SINGLE-OPEN ACCORDION)
+     UPDATE: ADD BACKGROUND CONTEXT (FESTIVAL NIGHT / LANTERN / FIREWORKS — BEHIND CONTENT)
      PURPOSE:
        - “Where do I go next?” without teaching taxonomy
        - Dense, legible, one-open-at-a-time bubbles
@@ -58,10 +59,10 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   --onyx0:rgba(6,8,10,.90);
   --onyx1:rgba(10,12,16,.78);
-  --opalV:rgba(90,40,120,.10);          /* subtle opal sheen only */
-  --crimson:rgba(120,0,22,.30);         /* deep base red */
-  --festival:rgba(255,43,43,.14);       /* bright energy red */
-  --gold:rgba(201,162,74,.40);          /* trim */
+  --opalV:rgba(90,40,120,.10);
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --gold:rgba(201,162,74,.40);
   --goldSoft:rgba(201,162,74,.18);
 
   --shadowA:0 34px 120px rgba(0,0,0,.58);
@@ -121,9 +122,63 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   z-index:10;
 }
 
+/* ===== Background context (behind hero + stack; not body) ===== */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:70px;
+  transform:translateX(-50%);
+  width:min(1160px,96vw);
+  height:calc(100% - 120px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 26%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 62% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
 /* ===== HERO (monument) ===== */
 .hero{
   position:relative;
+  z-index:2;
   border-radius:26px;
   border:1px solid var(--stroke);
   background:
@@ -137,7 +192,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   overflow:hidden;
   padding:18px 18px 16px;
 }
-/* Gold diamond lay in trim zone only */
 .hero::before{
   content:"";
   position:absolute;inset:0;
@@ -155,7 +209,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
     linear-gradient(#000,#000);
 }
-/* Large diamond slab (subtle, high-contrast) */
 .hero::after{
   content:"";
   position:absolute;
@@ -221,6 +274,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
 /* ===== BAND ===== */
 .band{
+  position:relative;
+  z-index:2;
   padding:10px 12px;
   border-radius:18px;
   border:1px solid var(--stroke2);
@@ -231,7 +286,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 }
 
 /* ===== ACCORDION (single-open; long bubbles) ===== */
-.stack{display:flex;flex-direction:column;gap:12px}
+.stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
 
 .card{
   position:relative;
@@ -374,6 +429,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
   <div class="page">
 
+    <div class="backdrop" aria-hidden="true"></div>
+
     <section class="hero" aria-label="Home hero">
       <p class="k" id="k0">HOME</p>
       <h1 class="h1" id="h0">WHERE DO YOU WANT TO GO NEXT?</h1>
@@ -397,91 +454,80 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
 <script>
 (function(){
-  "use strict";
-
-  // ===== Canon state (NO new gd_* keys) =====
-  var qs = new URLSearchParams(location.search);
-  var LS = window.localStorage;
-
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || ""; // URL-only preserve only
+  // ===== canonical state =====
+  var qs=new URLSearchParams(location.search);
+  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || ""; // URL-only preserve if present
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
+  if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d = parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth = String(d);
-
+  if(depth!=="explore" && depth!=="learn") depth="explore";
   if(lane!=="platform" && lane!=="engineering") lane="";
 
   try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
+    localStorage.setItem("gd_lang",lang);
+    localStorage.setItem("gd_style",style);
+    localStorage.setItem("gd_time",time);
+    localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(extra){
-    var p = new URLSearchParams();
-    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
-    p.set("style",(extra&&extra.style)?extra.style:style);
-    p.set("time", (extra&&extra.time)?extra.time:time);
-    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-    var L = (extra&&extra.lane)?extra.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane", L);
-    return "?" + p.toString();
+  function q(over){
+    var L=(over&&over.lang)?over.lang:lang;
+    var S=(over&&over.style)?over.style:style;
+    var T=(over&&over.time)?over.time:time;
+    var D=(over&&over.depth)?over.depth:depth;
+    var A=(over&&over.lane)?over.lane:lane;
+    var out="?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
+    if(A==="platform"||A==="engineering") out+="&lane="+encodeURIComponent(A);
+    return out;
   }
 
-  // Wire all internal links with state carry (including lane if present)
-  function wireAll(){
-    var nodes = document.querySelectorAll("[data-route]");
+  function wire(id,path){
+    var el=document.getElementById(id);
+    if(el) el.href = path + q();
+  }
+
+  // top wires
+  wire("btnDoor","/door/");
+  wire("btnPrelude","/prelude/");
+  wire("btnIndex","/index.html");
+  wire("btnProducts","/products/");
+  wire("btnExplore","/explore/");
+
+  // dock wires
+  wire("dockProducts","/products/");
+  wire("dockExplore","/explore/");
+  wire("dockLaws","/laws/");
+  wire("dockGauges","/gauges/");
+
+  // wire all data-route anchors with state carry
+  (function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
-      var el = nodes[i];
-      var route = el.getAttribute("data-route") || "";
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
       if(!route) continue;
-
-      if(route.indexOf("?") !== -1){
-        try{
-          var u = new URL(route, location.origin);
-          var sp = u.searchParams;
-          if(!sp.get("lang")) sp.set("lang", lang);
-          if(!sp.get("style")) sp.set("style", style);
-          if(!sp.get("time")) sp.set("time", time);
-          if(!sp.get("depth")) sp.set("depth", depth);
-          if(!sp.get("lane") && (lane==="platform"||lane==="engineering")) sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
-      }else{
-        el.setAttribute("href", route + q());
-      }
+      el.setAttribute("href", route + q());
     }
-  }
+  })();
 
-  // Language toggle (reload SAME pathname)
+  // language toggle (reload same path)
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ LS.setItem("gd_lang", lang); }catch(e){}
+    lang=next;
+    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
 
   // ===== copy packs (question-first; human words) =====
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
@@ -582,7 +628,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var cards=stack.querySelectorAll(".card");
     for(var i=0;i<cards.length;i++){
       cards[i].classList.remove("open");
-      var ch=cards[i].querySelector(".chev");
+      var ch=cards[i].querySelector(".chevTxt");
       if(ch) ch.textContent="▸";
     }
   }
@@ -623,7 +669,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
     var chev=document.createElement("div");
     chev.className="chev";
-    chev.textContent="▸";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
 
     head.appendChild(hL);
     head.appendChild(chev);
@@ -652,12 +698,12 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       var isOpen=card.classList.contains("open");
       if(isOpen){
         card.classList.remove("open");
-        chev.textContent="▸";
+        chev.querySelector(".chevTxt").textContent="▸";
         return;
       }
       closeAll();
       card.classList.add("open");
-      chev.textContent="▾";
+      chev.querySelector(".chevTxt").textContent="▾";
     }
 
     head.addEventListener("click", toggle, {passive:true});
@@ -670,7 +716,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
     if(idx===0){
       card.classList.add("open");
-      chev.textContent="▾";
+      chev.querySelector(".chevTxt").textContent="▾";
     }
     return card;
   }
@@ -722,7 +768,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       document.getElementById("dockGauges").textContent="GAUGES";
     }
 
-    // Ensure all links carry full state (including optional lane)
     wireAll();
   }
 

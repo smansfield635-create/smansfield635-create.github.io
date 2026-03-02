@@ -1,15 +1,34 @@
+<!doctype html>
 <!-- TNT — /explore/frontier/waste/index.html
-     FRONTIER · WASTE SYSTEMS
-     MONUMENT DENSITY · 4 LENSES · 3 LANGUAGES
-     SINGLE-OPEN ACCORDION · STATE CARRY · NO MODALS
-     ROLE:
-       - Define entropy leakage problem
-       - Express measurable structure
-       - Show transformation pathways
-       - Route forward to Water / Energy / Urban OS
+     FRONTIER · WASTE SYSTEMS (INFORMAL SITE LAYER — NEW STANDARD)
+     PURPOSE:
+       - Define entropy leakage problem (waste = misplaced structure)
+       - Express measurable structure + transformation pathways
+       - Route forward to Water / Energy / Urban OS / Trajectory
+     NEW STANDARD (THIS FILE):
+       - Trilingual: EN / 中文 / ES
+       - LENSES (VISIBLE ONLY):
+           lane=platform|engineering (URL-only; NEVER stored)
+         (Informal/formal is NOT user-visible in this layer.)
+       - Pin this page to informal layer:
+           gd_style = informal
+           gd_depth = explore
+       - Single-open accordion (tap same closes)
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open row
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+     ROUTING (STATE CARRY):
+       - /explore/frontier/trajectory/
+       - /explore/frontier/water/
+       - /explore/frontier/energy/
+       - /explore/frontier/urban/
+       - Back to Frontier index: /explore/frontier/
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -22,291 +41,934 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* MONUMENT TYPOGRAPHY */
 :root{
-  --dockH:96px;
-  --mut:rgba(255,255,255,.92);
-  --mut2:rgba(255,255,255,.76);
-  --opal:rgba(210,190,255,.14);
-  --red:rgba(255,70,70,.18);
+  --dockH:132px;
+
+  /* Red / Black / Gold hierarchy (no washed blue) */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+  --mut2:rgba(255,255,255,.72);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* ===== Page wrap ===== */
 .page{
-  width:min(1200px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
-  padding:100px 0 calc(var(--dockH) + 24px);
+  padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:20px;
-}
-
-.header{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:28px;
-  background:
-    radial-gradient(circle at 20% 20%, var(--opal), transparent 70%),
-    radial-gradient(circle at 80% 80%, var(--red), transparent 70%),
-    rgba(0,0,0,.18);
-  padding:28px;
-  box-shadow:0 40px 120px rgba(0,0,0,.6);
-}
-
-.k{
-  font-size:14px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.7;
-  margin:0 0 12px;
-}
-
-.t{
-  font-weight:900;
-  font-size:42px;
-  letter-spacing:1px;
-  margin:0 0 14px;
-}
-
-.s{
-  font-size:18px;
-  line-height:1.6;
-  max-width:1000px;
-  opacity:.9;
-}
-
-.lenses{
-  display:flex;
-  flex-wrap:wrap;
   gap:12px;
-  margin-top:24px;
+  position:relative;
+  z-index:10;
 }
 
-.pill{
-  padding:12px 20px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  cursor:pointer;
-  font-weight:800;
-  letter-spacing:.4px;
-  font-size:14px;
-  background:rgba(0,0,0,.25);
+/* ===== Top controls (fixed) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
-
-.pill.active{
-  box-shadow:0 0 18px rgba(212,175,55,.25);
-  border-color:rgba(212,175,55,.55);
-}
-
-.accordion{
+.top .left,.top .right{
   display:flex;
-  flex-direction:column;
-  gap:18px;
+  gap:10px;
+  flex-wrap:wrap;
+  white-space:nowrap;
+  align-items:center;
+  pointer-events:auto;
 }
 
-.section{
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:28px;
+/* Button (gold under-light only) */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Background context (behind content; not body) ===== */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
   overflow:hidden;
-  background:linear-gradient(160deg, rgba(15,22,35,.95), rgba(8,12,20,.98));
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
 }
 
-.head{
-  padding:22px 28px;
-  cursor:pointer;
+/* ===== Header ===== */
+.header{
+  position:relative;
+  z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:rgba(255,255,255,.78)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
+.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
+  font-size:13.5px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+
+/* Lens state pills */
+.lensRow{
+  margin-top:12px;
   display:flex;
   justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
   align-items:center;
 }
-
-.title{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:.4px;
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
+/* Band */
+.band{
+  position:relative;
+  z-index:2;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+}
+
+/* Accordion rows */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowB);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(201,162,74,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
 .body{
   display:none;
-  padding:26px 30px;
+  padding:16px 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
-  font-size:17px;
-  line-height:1.75;
-  color:var(--mut2);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
 
-.section.open .body{display:block}
+.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
+.pdesc + .pdesc{margin-top:10px}
 
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px}
+.bubble.open p{display:block}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+/* Dock */
 .dock{
   position:fixed;
   left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  width:min(1000px,94vw);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  padding:14px;
-  border-radius:24px;
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-.dock .btn{
-  padding:12px;
-  border-radius:999px;
-  text-align:center;
-  font-weight:700;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
 <div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
 
-<div class="header">
-<p class="k" id="hk">FRONTIER</p>
-<h1 class="t" id="ht">WASTE SYSTEMS</h1>
-<p class="s" id="hs"></p>
+  <div class="header" aria-label="Waste header">
+    <p class="k" id="hk">FRONTIER · WASTE</p>
+    <h1 class="t" id="ht">WASTE SYSTEMS</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
 
-<div class="lenses">
-  <button class="pill active" id="lensInformal">INFORMAL</button>
-  <button class="pill" id="lensFormal">FORMAL</button>
-  <button class="pill" id="lensEngineering">ENGINEERING</button>
-  <button class="pill" id="lensPlatform">PLATFORM</button>
+    <div class="lensRow" aria-label="Lens state">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </div>
+
+  <div class="band" id="band">WASTE SECTIONS (OPEN ONE)</div>
+  <div class="list" id="list"></div>
 </div>
-</div>
 
-<div class="accordion" id="accordion"></div>
-
-</div>
-
-<nav class="dock">
-<a class="btn" id="navTrajectory" href="/explore/frontier/trajectory/">TRAJECTORY</a>
-<a class="btn" id="navWater" href="/explore/frontier/water/">WATER</a>
-<a class="btn" id="navEnergy" href="/explore/frontier/energy/">ENERGY</a>
-<a class="btn" id="navUrban" href="/explore/frontier/urban/">URBAN OS</a>
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="navTrajectory" data-route="/explore/frontier/trajectory/" href="/explore/frontier/trajectory/">TRAJECTORY</a>
+  <a class="btn" id="navWater" data-route="/explore/frontier/water/" href="/explore/frontier/water/">WATER</a>
+  <a class="btn" id="navEnergy" data-route="/explore/frontier/energy/" href="/explore/frontier/energy/">ENERGY</a>
+  <a class="btn" id="navUrban" data-route="/explore/frontier/urban/" href="/explore/frontier/urban/">URBAN OS</a>
 </nav>
 
 <script>
 (function(){
+  "use strict";
 
-var qs=new URLSearchParams(location.search);
-var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-if(lang!=="en"&&lang!=="zh"&&lang!=="es")lang="en";
-document.documentElement.lang=lang;
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-function q(){return "?lang="+lang}
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
-document.getElementById("navTrajectory").href+=q();
-document.getElementById("navWater").href+=q();
-document.getElementById("navEnergy").href+=q();
-document.getElementById("navUrban").href+=q();
+  // Pin informal layer
+  var style = "informal";
+  var depth = "explore";
 
-var lens="informal";
-var lenses={
-  informal:"INFORMAL",
-  formal:"FORMAL",
-  engineering:"ENGINEERING",
-  platform:"PLATFORM"
-};
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-function pick(o){return o[lang]||o.en}
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-var headerCopy={
-en:"What happens when a system cannot see its own waste? Entropy accumulates. Cost hides. Risk compounds. Waste is not garbage — it is misplaced structure.",
-zh:"当系统看不见自己的废弃物，会发生什么？熵累积，成本隐藏，风险叠加。废弃物不是垃圾——它是错位的结构。",
-es:"¿Qué ocurre cuando un sistema no ve su propio residuo? La entropía se acumula. El costo se oculta. El riesgo se multiplica."
-};
-document.getElementById("hs").textContent=pick(headerCopy);
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-var sections=[
-{
-t:{en:"THE PROBLEM",zh:"问题",es:"EL PROBLEMA"},
-c:{
-informal:{en:"Landfill, burn, export. We move waste out of sight, not out of system. We pay twice: once in logistics, once in instability.",
-zh:"填埋、焚烧、外运。我们只是把废弃物移出视野，而不是移出系统。成本支付两次：物流与不稳定。",
-es:"Vertedero, quema, exportación. Movemos el residuo fuera de la vista, no fuera del sistema."},
-formal:{en:"Current waste systems externalize entropy through spatial displacement. True cost remains embedded in environmental and systemic risk vectors.",
-zh:"当前废弃系统通过空间转移外化熵，真实成本嵌入环境与系统风险向量。",
-es:"Los sistemas actuales externalizan entropía mediante desplazamiento espacial."},
-engineering:{en:"Material flows lack closed-loop feedback. Output streams are unmeasured beyond disposal stage.",
-zh:"材料流缺乏闭环反馈，输出流在处置阶段后未被测量。",
-es:"Los flujos materiales carecen de retroalimentación cerrada."},
-platform:{en:"Waste routing must integrate with water, energy, and urban OS surfaces.",
-zh:"废弃物路由必须整合到水、能源与城市操作系统。",
-es:"El enrutamiento de residuos debe integrarse con agua y energía."}
-}
-},
-{
-t:{en:"STRUCTURAL MAP",zh:"结构映射",es:"MAPA ESTRUCTURAL"},
-c:{
-informal:{en:"Every waste stream is a misplaced resource stream. Map it. Measure it. Redirect it.",
-zh:"每条废弃流都是错位的资源流。映射它，测量它，重定向它。",
-es:"Cada flujo de residuo es un flujo de recurso mal ubicado."},
-formal:{en:"Waste is a classification failure. Proper indexing redefines disposition pathways.",
-zh:"废弃物是分类失败。正确索引可重定义处置路径。",
-es:"El residuo es una falla de clasificación."},
-engineering:{en:"Introduce plasma thermal conversion, hydrogen extraction, and mineral reclamation loops.",
-zh:"引入等离子转化、氢回收与矿物回收循环。",
-es:"Introducir conversión térmica y recuperación de hidrógeno."},
-platform:{en:"Expose streams through Dot.Grid and register outputs through Registry layer.",
-zh:"通过Dot.Grid暴露流，通过Registry记录输出。",
-es:"Exponer flujos vía Dot.Grid y registrarlos."}
-}
-},
-{
-t:{en:"FINITE MEASURE",zh:"有限测量",es:"MEDIDA FINITA"},
-c:{
-informal:{en:"If you cannot measure loss, you cannot reduce it. Waste must be indexed in a finite lattice.",
-zh:"无法测量损耗，就无法减少它。废弃物必须被纳入有限晶格。",
-es:"Si no puedes medir pérdida, no puedes reducirla."},
-formal:{en:"All waste vectors map into measurable states within bounded lattice geometry.",
-zh:"所有废弃向量映射至有界晶格内的可测状态。",
-es:"Todos los vectores se mapean en estados medibles."},
-engineering:{en:"Apply 256-state classification across chemical and thermal conversion axes.",
-zh:"在化学与热转换轴上应用256态分类。",
-es:"Aplicar clasificación 256 estados."},
-platform:{en:"Registry publishes stability metrics for cross-domain verification.",
-zh:"Registry发布跨域稳定性指标。",
-es:"El registro publica métricas de estabilidad."}
-}
-}
-];
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
 
-function render(){
-var acc=document.getElementById("accordion");
-acc.innerHTML="";
-sections.forEach(function(s,i){
-var row=document.createElement("div");
-row.className="section";
-var head=document.createElement("div");
-head.className="head";
-var title=document.createElement("div");
-title.className="title";
-title.textContent=pick(s.t);
-head.appendChild(title);
-var body=document.createElement("div");
-body.className="body";
-body.textContent=pick(s.c[lens]);
-head.onclick=function(){
-document.querySelectorAll(".section").forEach(x=>x.classList.remove("open"));
-row.classList.add("open");
-};
-row.appendChild(head);
-row.appendChild(body);
-acc.appendChild(row);
-if(i===0)row.classList.add("open");
-});
-}
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
 
-document.getElementById("lensInformal").onclick=function(){lens="informal";render();};
-document.getElementById("lensFormal").onclick=function(){lens="formal";render();};
-document.getElementById("lensEngineering").onclick=function(){lens="engineering";render();};
-document.getElementById("lensPlatform").onclick=function(){lens="platform";render();};
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
 
-render();
+  // Wire all internal links with pinned state (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
 
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== Header copy (lane-aware; no tone) =====
+  var HEAD={
+    en:{
+      platform:{
+        hs:"What happens when a system cannot see its own waste? Entropy accumulates. Cost hides. Risk compounds. Waste is not garbage — it is misplaced structure.",
+        rule:"Rule: stop destroying information. Classify → route → recover. If you can’t classify it, you can’t stabilize it."
+      },
+      engineering:{
+        hs:"Engineering view: waste is an identity + routing problem under constraints. If output streams are unmeasured past disposal, the system cannot learn.",
+        rule:"Rule: instrument the stream, preserve identity long enough to extract value, and contain failure modes before scale."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"当系统看不见自己的废弃物，会发生什么？熵累积，成本隐藏，风险叠加。废弃物不是垃圾——它是错位的结构。",
+        rule:"规则：别毁掉信息。分类→路由→回收。不能分类就不能稳定。"
+      },
+      engineering:{
+        hs:"工程视图：废弃物=身份+路由的约束问题。若处置后不再测量输出流，系统就无法学习。",
+        rule:"规则：测量流、保留身份以提取价值、在规模化前隔离失效模式。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"¿Qué ocurre cuando un sistema no ve su propio residuo? La entropía se acumula. El costo se oculta. El riesgo se multiplica. El residuo no es basura: es estructura mal ubicada.",
+        rule:"Regla: no destruyas información. Clasificar → rutear → recuperar. Si no puedes clasificar, no puedes estabilizar."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: residuo = identidad + ruteo bajo restricciones. Si los flujos no se miden después de la disposición, el sistema no aprende.",
+        rule:"Regla: instrumentar el flujo, conservar identidad para extraer valor y contener modos de fallo antes de escalar."
+      }
+    }
+  };
+
+  // ===== Sections (dense, legible, lane-aware) =====
+  var SECTIONS=[
+    {
+      c:"#ff2b2b",
+      t:{en:"THE PROBLEM", zh:"问题", es:"EL PROBLEMA"},
+      s:{en:"We move waste out of sight, not out of system.", zh:"我们只是移出视野，不是移出系统。", es:"Movemos el residuo fuera de la vista, no del sistema."},
+      platform:{
+        intro:{
+          en:"Landfill, burn, export. Those are visibility tactics. The true cost stays inside the system as logistics friction and instability.",
+          zh:"填埋、焚烧、外运——这只是“看不见”的策略。真实成本仍在系统内：物流摩擦与不稳定。",
+          es:"Vertedero, quema, exportación: tácticas de visibilidad. El costo real queda dentro como fricción logística e inestabilidad."
+        },
+        concept:{
+          en:"Concept: ‘away’ is not a place. Waste doesn’t leave the system; it changes form and pressure.",
+          zh:"概念：“扔掉”不是地方。废弃物不离开系统，只是改变形态与压力。",
+          es:"Concepto: ‘afuera’ no es un lugar. El residuo no sale del sistema; cambia forma y presión."
+        },
+        build:{
+          en:"Build now: stop mixing streams blindly. Basic segmentation is the fastest value recovery.",
+          zh:"现在建：停止盲混。最基础的分流就是最快的价值回收。",
+          es:"Construir ahora: dejar de mezclar flujos a ciegas. La segmentación básica recupera valor más rápido."
+        },
+        roadmap:{
+          en:"Roadmap: add identification → add routing contracts → add verification → add recovery yields (then scale).",
+          zh:"路线图：加身份识别→加路由契约→加验证→加回收产率（再扩张）。",
+          es:"Hoja de ruta: agregar identificación → contratos de ruteo → verificación → rendimientos (luego escalar)."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Externalized entropy is a measurement failure: you lose identity and then you can’t compute yields, emissions, or containment boundaries.",
+          zh:"外化熵本质是测量失败：身份丢失后就无法计算产率、排放或隔离边界。",
+          es:"La entropía externalizada es una falla de medición: pierdes identidad y ya no puedes calcular rendimientos, emisiones o límites de contención."
+        },
+        concept:{
+          en:"Concept: waste = heterogeneous feedstock with state. Classification is the first gate, not an afterthought.",
+          zh:"概念：废弃物=有状态的异质进料。分类是第一闸门，而不是事后补丁。",
+          es:"Concepto: residuo = feedstock heterogéneo con estado. Clasificación es la primera compuerta."
+        },
+        build:{
+          en:"Build now: instrument at intake, preserve identity through routing, and emit reason codes for disposition decisions.",
+          zh:"现在建：入口测量；路由中保留身份；对处置决策输出原因码。",
+          es:"Construir ahora: instrumentar en entrada, conservar identidad durante ruteo y emitir códigos de razón para decisiones."
+        },
+        roadmap:{
+          en:"Roadmap: deterministic pathway yields, emissions bounds, containment/rollback, and audit exports across the chain.",
+          zh:"路线图：确定性路径产率、排放边界、隔离/回滚、全链路审计导出。",
+          es:"Hoja de ruta: rendimientos deterministas, límites de emisiones, contención/rollback y exports auditables en toda la cadena."
+        }
+      }
+    },
+    {
+      c:"#c9a24a",
+      t:{en:"STRUCTURAL MAP", zh:"结构映射", es:"MAPA ESTRUCTURAL"},
+      s:{en:"Every waste stream is a misplaced resource stream.", zh:"每条废弃流都是错位的资源流。", es:"Cada flujo de residuo es un flujo de recurso mal ubicado."},
+      platform:{
+        intro:{
+          en:"The map is simple: identify what it is, route it to a defined pathway, and keep it measurable long enough to recover value.",
+          zh:"映射很简单：识别它是什么，把它路由到定义好的路径，并保持可测，直到把价值拿回来。",
+          es:"El mapa es simple: identificar, rutear a una vía definida y mantenerlo medible el tiempo suficiente para recuperar valor."
+        },
+        concept:{
+          en:"Concept: waste is misplaced structure. When structure is restored (classification + routing), cost drops and stability rises.",
+          zh:"概念：废弃物是错位结构。结构一恢复（分类+路由），成本下降，稳定上升。",
+          es:"Concepto: residuo es estructura mal ubicada. Cuando restauras estructura (clasificación+ruteo), baja costo y sube estabilidad."
+        },
+        build:{
+          en:"Build now: start with three bins that matter (clean stream / dirty stream / unknown stream).",
+          zh:"现在建：先从三类开始（干净流/脏流/未知流）。",
+          es:"Construir ahora: empezar con tres contenedores útiles (limpio / sucio / desconocido)."
+        },
+        roadmap:{
+          en:"Roadmap: expand to pathway-specific bins, publish routing rules, and integrate with energy/water recovery loops.",
+          zh:"路线图：扩展到“路径专用分流”，发布路由规则，并与能源/水回收闭环联动。",
+          es:"Hoja de ruta: expandir a bins por vía, publicar reglas de ruteo e integrar con bucles de recuperación de energía/agua."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Structural map = classification ontology + pathway contracts. Without contracts, routing becomes narrative and yield becomes unknowable.",
+          zh:"结构映射=分类本体+路径契约。没有契约，路由就会变成叙事，产率也不可知。",
+          es:"Mapa estructural = ontología de clasificación + contratos de vías. Sin contratos, el ruteo se vuelve narrativa y el rendimiento es incognoscible."
+        },
+        concept:{
+          en:"Concept: define admissible pathways (recycle, recover, convert, contain) with thresholds and reason codes.",
+          zh:"概念：定义可采信路径（回收、回取、转化、隔离），并配阈值与原因码。",
+          es:"Concepto: definir vías admisibles (reciclar, recuperar, convertir, contener) con umbrales y códigos de razón."
+        },
+        build:{
+          en:"Build now: measure yields per pathway; keep emissions bounded; isolate failures; require rollback paths.",
+          zh:"现在建：测每条路径的产率；排放有界；失败局部化；必须有回滚路径。",
+          es:"Construir ahora: medir rendimientos por vía; acotar emisiones; aislar fallos; exigir rutas de rollback."
+        },
+        roadmap:{
+          en:"Roadmap: cross-domain coupling (waste↔energy↔water), correlation exposure checks, and windowed stability evaluation.",
+          zh:"路线图：跨域耦合（废↔能↔水）、相关暴露检查、以及窗口稳定性评估。",
+          es:"Hoja de ruta: acoplar dominios (residuos↔energía↔agua), chequeos de exposición correlacionada y evaluación por ventanas."
+        }
+      }
+    },
+    {
+      c:"#a3a3a3",
+      t:{en:"FINITE MEASURE", zh:"有限测量", es:"MEDIDA FINITA"},
+      s:{en:"If you cannot measure loss, you cannot reduce it.", zh:"无法测量损耗，就无法减少它。", es:"Si no puedes medir pérdida, no puedes reducirla."},
+      platform:{
+        intro:{
+          en:"Measurement is what turns waste from a shame bucket into a control surface. If it’s measured, it can improve.",
+          zh:"测量能把废弃物从“羞耻桶”变成“控制面”。能测就能改进。",
+          es:"La medición convierte el residuo de cubo de vergüenza a superficie de control. Si se mide, se mejora."
+        },
+        concept:{
+          en:"Concept: use a finite set of labels so the whole system can agree on what’s happening.",
+          zh:"概念：用有限标签，让系统对“发生了什么”达成一致。",
+          es:"Concepto: usar un conjunto finito de etiquetas para que el sistema acuerde qué ocurre."
+        },
+        build:{
+          en:"Build now: track three numbers: volume in, volume routed, volume lost. Then shrink the loss.",
+          zh:"现在建：追三件事：进量、路由量、损耗量。然后把损耗变小。",
+          es:"Construir ahora: seguir tres números: volumen entra, volumen ruteado, volumen perdido. Luego reducir pérdida."
+        },
+        roadmap:{
+          en:"Roadmap: publish the dashboard in Gauges; use Laws for boundary language; graduate stable shells into Products.",
+          zh:"路线图：在量规发布看板；用法则管理边界语言；稳定壳升级为产品。",
+          es:"Hoja de ruta: publicar tablero en Medidores; usar Leyes para límites; subir shells estables a Productos."
+        }
+      },
+      engineering:{
+        intro:{
+          en:"Finite measure means enumerated states: waste vectors map into state IDs for deterministic classification and drift detection.",
+          zh:"有限测量意味着可枚举状态：废弃物向量映射到状态ID，实现确定性分类与漂移检测。",
+          es:"Medida finita significa estados enumerados: los vectores de residuos se mapean a IDs para clasificación determinista y detección de deriva."
+        },
+        concept:{
+          en:"Concept: define state variables (composition, moisture, contamination, energy potential) and route under constraints.",
+          zh:"概念：定义状态变量（成分、含水、污染、能量潜力），在约束下路由。",
+          es:"Concepto: definir variables de estado (composición, humedad, contaminación, potencial energético) y rutear bajo restricciones."
+        },
+        build:{
+          en:"Build now: bind classification outputs to registry entries; enforce non-bypass gates; reason-code every disposition.",
+          zh:"现在建：把分类输出绑定到注册表条目；闸门不可绕过；每个处置都必须原因码。",
+          es:"Construir ahora: vincular salidas de clasificación al registro; compuertas no bypass; codificar razones en cada disposición."
+        },
+        roadmap:{
+          en:"Roadmap: 256-state sweep compatibility, replayable receipts, and audit exports for regulators and operators.",
+          zh:"路线图：256态扫掠兼容、可回放收据、以及面向监管与运营的审计导出。",
+          es:"Hoja de ruta: compatibilidad con barrido 256 estados, recibos reproducibles y exports de auditoría para reguladores y operadores."
+        }
+      }
+    }
+  ];
+
+  // ===== Accordion state preserved across lane/lang changes =====
+  var list=document.getElementById("list");
+  var rowRefs=[];
+  var openIndex=0;
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
+
+  function makeSubBubble(label){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent="";
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    return {wrap:b, p:p};
+  }
+
+  function buildRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var title=document.createElement("div");
+    title.className="q";
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+
+    tb.appendChild(title);
+    tb.appendChild(sub);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    body.appendChild(intro);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var b1=makeSubBubble(labConcept());
+    var b2=makeSubBubble(labBuild());
+    var b3=makeSubBubble(labRoadmap());
+
+    bubbles.appendChild(b1.wrap);
+    bubbles.appendChild(b2.wrap);
+    bubbles.appendChild(b3.wrap);
+    body.appendChild(bubbles);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a=document.createElement("a");
+    a.className="btn red";
+    a.textContent=openLabel()+": "+pick3("OPEN RELATED ROOM","打开关联房间","ABRIR SALA RELACIONADA");
+    a.setAttribute("data-route","/explore/frontier/water/");
+    actions.appendChild(a);
+
+    body.appendChild(actions);
+
+    function onToggle(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      sub:sub,
+      intro:intro,
+      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      action:a
+    });
+  }
+
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<SECTIONS.length;i++){
+      buildRow(SECTIONS[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  function applyHeader(){
+    var H=(HEAD[lang]||HEAD.en);
+    var lanePack = (lane==="engineering") ? H.engineering : H.platform;
+
+    document.getElementById("hk").textContent = pick3("FRONTIER · WASTE","前沿 · 废弃物","FRONTERA · RESIDUOS");
+    document.getElementById("ht").textContent = pick3("WASTE SYSTEMS","废弃物系统","SISTEMAS DE RESIDUOS");
+    document.getElementById("hs").textContent = lanePack.hs;
+    document.getElementById("rule").textContent = lanePack.rule;
+
+    document.getElementById("band").textContent = pick3("WASTE SECTIONS (OPEN ONE)","废弃物模块（打开一个）","SECCIONES DE RESIDUOS (ABRE UNA)");
+
+    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
+
+    document.getElementById("navTrajectory").textContent = pick3("TRAJECTORY","轨迹","TRAYECTORIA");
+    document.getElementById("navWater").textContent      = pick3("WATER","水","AGUA");
+    document.getElementById("navEnergy").textContent     = pick3("ENERGY","能源","ENERGÍA");
+    document.getElementById("navUrban").textContent      = pick3("URBAN OS","城市OS","SO URBANO");
+
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<SECTIONS.length;i++){
+      var item=SECTIONS[i];
+      var r=rowRefs[i];
+
+      r.title.textContent = (lang==="zh")?item.t.zh:(lang==="es")?(item.t.es||item.t.en):item.t.en;
+      r.sub.textContent   = (lang==="zh")?item.s.zh:(lang==="es")?(item.s.es||item.s.en):item.s.en;
+
+      var pack = (lane==="engineering") ? item.engineering : item.platform;
+
+      r.intro.textContent = (lang==="zh")?pack.intro.zh:(lang==="es")?(pack.intro.es||pack.intro.en):pack.intro.en;
+      r.b1p.textContent   = (lang==="zh")?pack.concept.zh:(lang==="es")?(pack.concept.es||pack.concept.en):pack.concept.en;
+      r.b2p.textContent   = (lang==="zh")?pack.build.zh:(lang==="es")?(pack.build.es||pack.build.en):pack.build.en;
+      r.b3p.textContent   = (lang==="zh")?pack.roadmap.zh:(lang==="es")?(pack.roadmap.es||pack.roadmap.en):pack.roadmap.en;
+
+      // Lane-based next step
+      var actionRoute = (lane==="engineering") ? "/explore/frontier/energy/" : "/explore/frontier/water/";
+      r.action.setAttribute("data-route", actionRoute);
+      r.action.textContent = openLabel()+": "+pick3(
+        lane==="engineering" ? "ENERGY" : "WATER",
+        lane==="engineering" ? "能源" : "水",
+        lane==="engineering" ? "ENERGÍA" : "AGUA"
+      );
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== No reload on language/lane changes =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== INIT =====
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
 })();
 </script>
 

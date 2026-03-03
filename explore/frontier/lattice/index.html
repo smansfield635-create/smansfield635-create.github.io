@@ -1,27 +1,16 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/lattice/index.html
-     FRONTIER · LATTICE (INFORMAL SITE LAYER — NEW STANDARD · DENSE)
-     PURPOSE:
-       - Lattice as the finite coordinate discipline beneath frontier claims
-       - Make “complex” operational: indexable → comparable → auditable → scalable
-       - Provide BOTH:
-           (A) Platform posture: human-legible, action-forward, no hype
-           (B) Engineering posture: deterministic, manifest/receipt/replay disciplined
-     NEW STANDARD (THIS FILE):
+     FRONTIER · LATTICE (INFORMAL SITE LAYER — NEW STANDARD · FULL CONTENT)
+     REQUIREMENTS (LOCKED):
        - Trilingual: EN / 中文 / ES
-       - VISIBLE LENS ONLY:
-           lane=platform|engineering (URL-only; NEVER stored)
-         (Informal/formal is NOT user-visible in this layer.)
-       - Pin this page to informal layer:
-           gd_style = informal
-           gd_depth = explore
+       - Visible lens only: lane=platform|engineering (URL-only; NEVER stored)
+       - Pinned informal layer: style=informal, depth=explore (stored in gd_style/gd_depth)
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY (NO new gd_* keys)
+       - No modals/overlays; no inline onclick; addEventListener only
        - Single-open accordion (tap same closes)
        - Switching LANG or LANE does NOT reload page
        - Switching LANG or LANE does NOT close the open row
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Uses ui.css + branch.css + instruments.js only
+       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
      ROUTING:
        - FRONTIER INDEX → /explore/frontier/
@@ -435,7 +424,7 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="band" id="band">LATTICE DOMAINS</div>
+  <div class="band" id="band">LATTICE DOMAINS (ONE OPEN)</div>
   <div class="list" id="list"></div>
 </div>
 
@@ -458,7 +447,10 @@ body::before,body::after{pointer-events:none!important}
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
-  // Pin informal layer
+  // Pin informal layer (site layer)
+  var style = "informal";
+  var depth = "explore";
+
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -493,6 +485,7 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
   function laneLabel(){
     return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
@@ -532,247 +525,223 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // ===== Header (lane-aware) =====
-  function headerPack(){
-    var H = HEAD[lang] || HEAD.en;
-    return (lane==="engineering") ? H.engineering : H.platform;
-  }
+  // ===== Header copy (lane-aware; trilingual) =====
+  var HEAD={
+    platform:{
+      en:{
+        hs:"Lattice is the ‘map beneath the map’. It turns vague complexity into a finite set of states you can point to. Once you can point to a state, you can compare it across time, teams, and domains.",
+        rule:"Rule: Index → Compare → Measure → Gate → Replay. If any step is missing, you HOLD."
+      },
+      zh:{
+        hs:"晶格是“地图之下的地图”。它把模糊的复杂变成有限状态集合。能指到状态，就能跨时间、跨团队、跨领域比较。",
+        rule:"规则：索引→比较→测量→闸门→回放。缺一步就 HOLD。"
+      },
+      es:{
+        hs:"El lattice es el ‘mapa bajo el mapa’. Convierte complejidad vaga en estados finitos. Si puedes señalar un estado, puedes compararlo en el tiempo y entre dominios.",
+        rule:"Regla: Indexar → Comparar → Medir → Gatear → Replay. Si falta un paso: HOLD."
+      }
+    },
+    engineering:{
+      en:{
+        hs:"Lattice = finite-state coordinate discipline: explicit axes, explicit enumeration, manifest lock, deterministic outputs under fixed scope, and replayable receipts. If identical inputs diverge, outputs are inadmissible until version bump + replay.",
+        rule:"Rule: (scope + manifest + evidence) ⇒ deterministic output. Mutation ⇒ version bump ⇒ replay ⇒ new receipts."
+      },
+      zh:{
+        hs:"晶格=有限状态坐标纪律：显式轴、显式枚举、清单锁、固定范围下确定性输出、可回放收据。同输入若分歧，输出在版本升级+回放前一律不可采信。",
+        rule:"规则：（范围+清单+证据）⇒确定性输出。变异⇒版本升级⇒回放⇒新收据。"
+      },
+      es:{
+        hs:"Lattice = disciplina de estados finitos: ejes explícitos, enumeración, manifiesto bloqueado, salidas deterministas bajo alcance fijo y recibos replayables. Si entradas idénticas divergen, es inadmisible hasta versión + replay.",
+        rule:"Regla: (alcance + manifiesto + evidencia) ⇒ salida determinista. Mutación ⇒ versión ⇒ replay ⇒ nuevos recibos."
+      }
+    }
+  };
 
-  // ===== Domains data =====
-  // PLATFORM = “how you use it / what to do next / what to look for”
-  // ENGINEERING = “determinism / manifest / receipts / constraints / replay”
-  var DOMAINS = (function(){
-    function T(en,zh,es){ return {en:en, zh:zh, es:es}; }
-    return [
-      // 0..10 already defined above in DOMAINS var in comments; here we embed the actual packs
-      // (We re-use the already-written DOMAINS list from the HTML comment section structure)
-    ];
-  })();
+  // ===== 1–10 Lattice Domains (full content, platform vs engineering differs) =====
+  // Each item has: title+subtitle and per-lane packs: intro, concept, build, roadmap (all trilingual).
+  var DOMAINS = [
+    {
+      c:"#c9a24a",
+      t:{en:"1) Why a Lattice Exists", zh:"1）为什么需要晶格", es:"1) Por qué existe el lattice"},
+      s:{en:"Turn ‘complex’ into indexable reality.", zh:"把“复杂”变成可索引现实。", es:"Convertir ‘complejo’ en realidad indexable."},
+      platform:{
+        intro:{en:"When people say “it’s complicated,” they usually mean “we don’t share coordinates.” A lattice gives shared coordinates so disagreements become visible and fixable.", zh:"人说“太复杂”常常等于“我们没有共享坐标”。晶格提供共享坐标，让分歧可见、可修。", es:"Cuando alguien dice “es complicado”, suele significar “no compartimos coordenadas”. El lattice crea coordenadas compartidas para volver el desacuerdo visible y corregible."},
+        concept:{en:"Concept: coordinates replace arguments.", zh:"概念：坐标替代争论。", es:"Concepto: coordenadas reemplazan argumentos."},
+        build:{en:"Build now: pick 3–5 axes that truly matter and refuse to add more until a new failure class forces it.", zh:"现在建：选3–5个真正重要的轴；除非出现新失败类别，否则拒绝加轴。", es:"Construir ahora: elige 3–5 ejes que de verdad importan y no agregues más hasta que una nueva clase de fallo lo exija."},
+        roadmap:{en:"Roadmap: publish the axis list and keep it stable so comparisons remain honest across teams.", zh:"路线图：发布轴清单并保持稳定，让跨团队比较保持诚实。", es:"Hoja de ruta: publica la lista de ejes y mantenla estable para comparaciones honestas entre equipos."}
+      },
+      engineering:{
+        intro:{en:"A lattice is a finite Ω-state coordinate system. Its job is to prevent silent scope creep by forcing explicit axes, explicit enumeration, and explicit admissibility boundaries.", zh:"晶格是有限Ω状态坐标系统。它通过显式轴、显式枚举与显式可采信边界，防止静默范围膨胀。", es:"Un lattice es un sistema finito Ω de coordenadas. Su trabajo es prevenir creep silencioso de alcance forzando ejes explícitos, enumeración explícita y límites de admisibilidad."},
+        concept:{en:"Concept: scope + manifest are inputs, not prose.", zh:"概念：范围+清单是输入，不是文案。", es:"Concepto: alcance + manifiesto son entradas, no prosa."},
+        build:{en:"Build now: define axis types + allowed values; store in a manifest; hash the manifest.", zh:"现在建：定义轴类型与允许取值；写入清单；哈希锁定清单。", es:"Construir ahora: definir tipos de ejes + valores permitidos; guardarlo en manifiesto; hashear el manifiesto."},
+        roadmap:{en:"Roadmap: every axis mutation triggers version bump and full regression sweep.", zh:"路线图：任何轴变更触发版本升级与全量回归扫掠。", es:"Hoja de ruta: cualquier mutación de ejes dispara versión y barrido de regresión completo."}
+      }
+    },
 
-  // We embed the actual domain objects directly (kept in one place for TNT)
-  DOMAINS = [
-    /* 0 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"0) Why a Lattice Exists", zh:"0）为什么需要晶格", es:"0) Por qué existe el lattice"},
-        s:{en:"Turn ‘complex’ into indexable reality.", zh:"把“复杂”变成可索引现实。", es:"Convertir ‘complejo’ en realidad indexable."},
-        platform:{
-          intro:{en:"Platform translation: ‘Lattice’ means a clean menu of states. You can point to where you are instead of arguing about vibes.", zh:"平台翻译：晶格=一份干净的状态菜单。你能指向“我们在这”，而不是争论感觉。", es:"Traducción plataforma: lattice = menú limpio de estados. Señalas dónde estás en vez de discutir sensaciones."},
-          concept:{en:"Concept: a state label ends confusion.", zh:"概念：给状态贴标签=结束混乱。", es:"Concepto: etiquetar el estado termina la confusión."},
-          build:{en:"Build now: make a short list of states you see repeatedly (5–20).", zh:"现在建：列出你反复看到的状态（5–20个）。", es:"Construir ahora: listar estados que ves repetidamente (5–20)."},
-          roadmap:{en:"Roadmap: expand only when a NEW failure class appears.", zh:"路线图：只有出现新失败类别才扩展。", es:"Hoja de ruta: expandir solo cuando aparece una NUEVA clase de fallo."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: lattice = explicit state space Ω with reversible mapping and manifest lock. It removes interpretive degrees of freedom.", zh:"工程翻译：晶格=显式状态空间Ω+可逆映射+清单锁，消除解释自由度。", es:"Traducción ingeniería: lattice = espacio Ω explícito con mapeo reversible y manifiesto bloqueado; elimina ambigüedad interpretativa."},
-          concept:{en:"Concept: scope+manifest are inputs.", zh:"概念：范围+清单是输入。", es:"Concepto: alcance+manifiesto son entradas."},
-          build:{en:"Build now: define axis set + value sets; store as manifest v1.", zh:"现在建：定义轴集合+取值集合；存为 manifest v1。", es:"Construir ahora: definir ejes+valores; guardarlo como manifiesto v1."},
-          roadmap:{en:"Roadmap: any rule change = version bump + replay sweep.", zh:"路线图：任何规则变更=版本升级+回放扫掠。", es:"Hoja de ruta: cualquier cambio = versión + barrido/replay."}
-        }
-      };
-    })(),
+    {
+      c:"#ff2b2b",
+      t:{en:"2) Axes & Enumeration", zh:"2）轴与枚举", es:"2) Ejes y enumeración"},
+      s:{en:"Make the state space countable.", zh:"让状态空间可计数。", es:"Hacer el espacio de estados contable."},
+      platform:{
+        intro:{en:"Enumeration is the moment a fuzzy idea becomes a list. Once you have a list, you can track drift instead of telling stories.", zh:"枚举让模糊想法变成清单。有了清单，就能追踪漂移，而不是讲故事。", es:"Enumerar es cuando una idea difusa se vuelve lista. Con lista, puedes rastrear deriva en vez de contar historias."},
+        concept:{en:"Concept: if you can list it, you can track it.", zh:"概念：能列出来，就能追踪。", es:"Concepto: si puedes listarlo, puedes rastrearlo."},
+        build:{en:"Build now: write the smallest state list that matches reality (not perfection).", zh:"现在建：写出能匹配现实的最小状态清单（不是完美）。", es:"Construir ahora: escribe la lista mínima de estados que coincide con la realidad (no perfección)."},
+        roadmap:{en:"Roadmap: expand only when a new failure class appears.", zh:"路线图：只有出现新失败类别才扩展。", es:"Hoja de ruta: expandir solo cuando aparezca una nueva clase de fallo."}
+      },
+      engineering:{
+        intro:{en:"Define axes; enumerate Cartesian product; ensure tuple↔state_id reversibility. Reversibility prevents silent reindexing and post-hoc semantic swaps.", zh:"定义轴；枚举笛卡尔积；确保元组↔state_id 可逆。可逆性防止静默重编号与事后语义替换。", es:"Definir ejes; enumerar producto cartesiano; asegurar reversibilidad tupla↔state_id. La reversibilidad evita reindexación silenciosa y cambios semánticos post-hoc."},
+        concept:{en:"Concept: reversibility preserves audit integrity.", zh:"概念：可逆性保持审计完整性。", es:"Concepto: reversibilidad preserva integridad de auditoría."},
+        build:{en:"Build now: implement state_id mapping table and freeze it under manifest hash.", zh:"现在建：实现 state_id 映射表，并在清单哈希下冻结。", es:"Construir ahora: implementar tabla state_id y congelarla bajo hash del manifiesto."},
+        roadmap:{en:"Roadmap: add ordinal embedding only after axis independence is validated.", zh:"路线图：先验证轴独立性，再加入序数嵌入。", es:"Hoja de ruta: agregar embedding ordinal solo después de validar independencia de ejes."}
+      }
+    },
 
-    /* 1 */ (function(){
-      return {
-        c:"#ff2b2b",
-        t:{en:"1) Axes & Enumeration", zh:"1）轴与枚举", es:"1) Ejes y enumeración"},
-        s:{en:"Make the state space countable.", zh:"让状态空间可计数。", es:"Hacer el espacio contable."},
-        platform:{
-          intro:{en:"Platform translation: axes are the few knobs that actually matter. Enumeration is the list of ‘where we could be’.", zh:"平台翻译：轴=真正重要的几个旋钮；枚举=“我们可能在哪里”的清单。", es:"Traducción plataforma: ejes = pocos controles que importan; enumeración = lista de ‘dónde podríamos estar’."},
-          concept:{en:"Concept: list beats guessing.", zh:"概念：清单胜过猜。", es:"Concepto: lista vence adivinar."},
-          build:{en:"Build now: write axis names using human words (no symbols) first.", zh:"现在建：先用人话写轴名（先别上符号）。", es:"Construir ahora: nombrar ejes con palabras humanas primero (sin símbolos)."},
-          roadmap:{en:"Roadmap: add ‘how to spot it’ next to each axis value.", zh:"路线图：给每个轴取值加“如何识别”。", es:"Hoja de ruta: agregar ‘cómo reconocerlo’ a cada valor de eje."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: each state is a tuple; tuple↔state_id mapping must be reversible and frozen.", zh:"工程翻译：每个状态是元组；元组↔state_id必须可逆且冻结。", es:"Traducción ingeniería: cada estado es tupla; mapeo tupla↔state_id debe ser reversible y fijo."},
-          concept:{en:"Concept: reversibility prevents silent reindexing.", zh:"概念：可逆性防静默重编号。", es:"Concepto: reversibilidad evita reindexación silenciosa."},
-          build:{en:"Build now: implement state_id mapping and commit to it under manifest.", zh:"现在建：实现state_id映射并在清单下提交。", es:"Construir ahora: implementar mapeo state_id y fijarlo en el manifiesto."},
-          roadmap:{en:"Roadmap: add ordinal embedding only after independence checks pass.", zh:"路线图：独立性检查通过后再加序数嵌入。", es:"Hoja de ruta: agregar embedding ordinal solo tras pasar independencia."}
-        }
-      };
-    })(),
+    {
+      c:"#c9a24a",
+      t:{en:"3) Manifest Lock", zh:"3）清单锁", es:"3) Bloqueo de manifiesto"},
+      s:{en:"No silent edits. No retroactive truth.", zh:"无静默改写。无追溯真相。", es:"Sin ediciones silenciosas. Sin verdad retroactiva."},
+      platform:{
+        intro:{en:"If the measuring stick changes invisibly, trust collapses. A manifest is the published promise of what “same inputs” means.", zh:"量尺若暗改，信任就崩。清单是公开承诺：什么叫“同输入”。", es:"Si la regla cambia en silencio, la confianza colapsa. El manifiesto es la promesa pública de qué significa “mismas entradas”."},
+        concept:{en:"Concept: stable naming makes stable learning.", zh:"概念：命名稳定，学习才稳定。", es:"Concepto: nombres estables → aprendizaje estable."},
+        build:{en:"Build now: publish the definitions you refuse to change without an epoch bump.", zh:"现在建：发布你绝不在不换纪元的情况下更改的定义。", es:"Construir ahora: publica definiciones que no cambiarás sin una nueva época."},
+        roadmap:{en:"Roadmap: keep old outputs labeled as old (don’t rewrite history).", zh:"路线图：旧输出继续标注为旧（不改历史）。", es:"Hoja de ruta: mantener salidas viejas etiquetadas como viejas (no reescribir historia)."}
+      },
+      engineering:{
+        intro:{en:"Manifest = scope + axes + mapping + thresholds + versions. Hash it. Store hash with every receipt. Corrections require epoch rollover.", zh:"清单=范围+轴+映射+阈值+版本。哈希锁定。每个收据存哈希。修正必须新纪元。", es:"Manifiesto = alcance + ejes + mapeo + umbrales + versiones. Hashearlo. Guardar hash en cada recibo. Correcciones requieren nueva época."},
+        concept:{en:"Concept: manifest hash is part of evidence.", zh:"概念：清单哈希是证据的一部分。", es:"Concepto: hash del manifiesto es parte de la evidencia."},
+        build:{en:"Build now: require (manifest_hash, scope_id, window_id) on every output.", zh:"现在建：每个输出必须带（manifest_hash, scope_id, window_id）。", es:"Construir ahora: exigir (manifest_hash, scope_id, window_id) en cada salida."},
+        roadmap:{en:"Roadmap: fail builds on silent drift; enforce regression sweeps on any rule change.", zh:"路线图：静默漂移直接失败；任何规则变更强制回归扫掠。", es:"Hoja de ruta: fallar builds ante deriva silenciosa; forzar barridos de regresión en cambios."}
+      }
+    },
 
-    /* 2 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"2) Manifest Lock (Version Discipline)", zh:"2）清单锁（版本纪律）", es:"2) Bloqueo de manifiesto"},
-        s:{en:"No silent edits. No retroactive truth.", zh:"无静默改写。无追溯真相。", es:"Sin ediciones silenciosas. Sin verdad retroactiva."},
-        platform:{
-          intro:{en:"Platform translation: the rules can’t change behind your back. If they change, the page must say it’s a new version.", zh:"平台翻译：规则不能背后变。变了就必须说：这是新版本。", es:"Traducción plataforma: las reglas no pueden cambiar a escondidas. Si cambian, la página debe decir: nueva versión."},
-          concept:{en:"Concept: stable names make comparison fair.", zh:"概念：命名稳定，比较才公平。", es:"Concepto: nombres estables hacen comparación justa."},
-          build:{en:"Build now: write a 1-line ‘This page is pinned to…’ statement (style=informal, depth=explore).", zh:"现在建：写一句“本页固定在…”（style=informal, depth=explore）。", es:"Construir ahora: escribir 1 línea ‘Esta página está fijada a…’ (style=informal, depth=explore)."},
-          roadmap:{en:"Roadmap: show ‘last rule change’ date in the future (when you have it).", zh:"路线图：将来显示“规则最后变更日期”。", es:"Hoja de ruta: mostrar ‘último cambio de regla’ en el futuro."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: manifest defines (scope, axes, mappings, thresholds). Hash it and attach hash to every receipt.", zh:"工程翻译：清单定义（范围/轴/映射/阈值）。哈希锁定，并附到每个收据。", es:"Traducción ingeniería: manifiesto define (alcance, ejes, mapeos, umbrales). Hashearlo y adjuntar hash a cada recibo."},
-          concept:{en:"Concept: manifest hash is evidence.", zh:"概念：清单哈希是证据。", es:"Concepto: hash del manifiesto es evidencia."},
-          build:{en:"Build now: include manifest version + hash fields in receipt schema.", zh:"现在建：收据架构加入manifest版本+哈希字段。", es:"Construir ahora: incluir versión+hash del manifiesto en el esquema de recibo."},
-          roadmap:{en:"Roadmap: epoch bump on any change that could affect outputs.", zh:"路线图：任何可能影响输出的变更必须新纪元。", es:"Hoja de ruta: nueva época ante cualquier cambio que afecte salidas."}
-        }
-      };
-    })(),
+    {
+      c:"#ff2b2b",
+      t:{en:"4) Axis Independence & Redundancy", zh:"4）轴独立性与冗余", es:"4) Independencia y redundancia"},
+      s:{en:"Stop fake complexity (dependent axes).", zh:"阻止伪复杂（轴依赖）。", es:"Evitar complejidad falsa (ejes dependientes)."},
+      platform:{
+        intro:{en:"If two dials always move together, you don’t have more detail — you have more clutter. Lattice makes you clean that up.", zh:"两个旋钮若总一起动，那不是细节更多，而是更乱。晶格逼你清理。", es:"Si dos perillas siempre se mueven juntas, no hay más detalle: hay más desorden. El lattice obliga a limpiarlo."},
+        concept:{en:"Concept: redundancy masquerades as precision.", zh:"概念：冗余伪装成精确。", es:"Concepto: redundancia se disfraza de precisión."},
+        build:{en:"Build now: list suspected dependencies and label them “NOT PROVEN”.", zh:"现在建：列出怀疑依赖，并标注“未证明”。", es:"Construir ahora: listar dependencias sospechadas y marcarlas “NO PROBADO”."},
+        roadmap:{en:"Roadmap: either remove redundant axes or separate them with new evidence rules.", zh:"路线图：要么删除冗余轴，要么用新证据规则把它们分开。", es:"Hoja de ruta: eliminar ejes redundantes o separarlos con nuevas reglas de evidencia."}
+      },
+      engineering:{
+        intro:{en:"Independence is structural: no axis may be derived from others under declared evidence. Run redundancy tests and store receipts.", zh:"独立性是结构性的：在声明证据下，任何轴不得由其他轴推导。做冗余测试并存收据。", es:"Independencia es estructural: ningún eje debe derivarse de otros bajo evidencia declarada. Ejecutar pruebas de redundancia y guardar recibos."},
+        concept:{en:"Concept: dependency is an information leak.", zh:"概念：依赖就是信息泄漏。", es:"Concepto: dependencia es fuga de información."},
+        build:{en:"Build now: implement dependency checks (correlation, mutual information, or rule-based derivability).", zh:"现在建：实现依赖检测（相关/互信息/规则可推导）。", es:"Construir ahora: implementar chequeos de dependencia (correlación, info mutua o derivabilidad)." },
+        roadmap:{en:"Roadmap: forbid scaling claims until redundancy is bounded within tolerance.", zh:"路线图：冗余未在容差内有界前，禁止规模化主张。", es:"Hoja de ruta: prohibir afirmaciones de escala hasta acotar redundancia dentro de tolerancia."}
+      }
+    },
 
-    /* 3 */ (function(){
-      return {
-        c:"#ff2b2b",
-        t:{en:"3) Axis Independence & Redundancy", zh:"3）轴独立性与冗余", es:"3) Independencia de ejes"},
-        s:{en:"Stop fake complexity (dependent axes).", zh:"阻止伪复杂（轴依赖）。", es:"Evitar complejidad falsa (dependencias)."},
-        platform:{
-          intro:{en:"Platform translation: if two ‘reasons’ always show up together, you’re double-counting. People think you’re measuring more than you are.", zh:"平台翻译：如果两个“原因”总一起出现，你是在重复计数。看起来像测多了，其实没有。", es:"Traducción plataforma: si dos ‘razones’ siempre aparecen juntas, estás contando doble. Parece que mides más de lo real."},
-          concept:{en:"Concept: fewer, cleaner axes beat many messy axes.", zh:"概念：少而干净胜过多而乱。", es:"Concepto: pocos ejes limpios vencen muchos ejes sucios."},
-          build:{en:"Build now: mark any suspected dependency as ‘UNPROVEN’ in plain language.", zh:"现在建：对可疑依赖用人话标“未证明”。", es:"Construir ahora: marcar dependencias sospechadas como ‘NO PROBADO’ en lenguaje simple."},
-          roadmap:{en:"Roadmap: remove or split axes only after you can show receipts.", zh:"路线图：只有拿得出收据才删轴/拆轴。", es:"Hoja de ruta: eliminar/dividir ejes solo con recibos."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: redundancy tests verify no axis is derivable from the others under declared evidence. Store test results.", zh:"工程翻译：冗余测试验证在声明证据下，轴不可由其他轴推导。保存测试结果。", es:"Traducción ingeniería: pruebas de redundancia verifican que ningún eje se derive de otros bajo evidencia declarada. Guardar resultados."},
-          concept:{en:"Concept: dependency is an information leak.", zh:"概念：依赖=信息泄漏。", es:"Concepto: dependencia = fuga de información."},
-          build:{en:"Build now: implement redundancy check logic and log pass/fail per epoch.", zh:"现在建：实现冗余检测逻辑，并按纪元记录通过/失败。", es:"Construir ahora: implementar chequeos y registrar pass/fail por época."},
-          roadmap:{en:"Roadmap: block scaling claims until redundancy bounds hold.", zh:"路线图：冗余未有界前阻止规模化主张。", es:"Hoja de ruta: bloquear afirmaciones de escala hasta acotar redundancia."}
-        }
-      };
-    })(),
+    {
+      c:"#c9a24a",
+      t:{en:"5) Ordinal Embedding", zh:"5）序数嵌入", es:"5) Embedding ordinal"},
+      s:{en:"Make states comparable as ‘better/worse’.", zh:"让状态可比较为“更好/更坏”。", es:"Hacer estados comparables como ‘mejor/peor’."},
+      platform:{
+        intro:{en:"People need direction. Ordinal embedding turns a map into a ladder: you can see progress without pretending it’s perfect science.", zh:"人需要方向。序数嵌入把地图变成阶梯：你能看见进步，但不假装完美科学。", es:"La gente necesita dirección. El embedding ordinal convierte el mapa en escalera: ves progreso sin fingir ciencia perfecta."},
+        concept:{en:"Concept: order enables next steps.", zh:"概念：有序才有下一步。", es:"Concepto: el orden habilita siguientes pasos."},
+        build:{en:"Build now: define simple low→high ordering per axis and keep it readable.", zh:"现在建：为每个轴定义简单低→高顺序，并保持可读。", es:"Construir ahora: definir orden simple bajo→alto por eje y mantenerlo legible."},
+        roadmap:{en:"Roadmap: revise ordering only via epoch bump, using outcome evidence.", zh:"路线图：只用新纪元依据结果证据修正顺序。", es:"Hoja de ruta: revisar el orden solo con nueva época y evidencia de resultados."}
+      },
+      engineering:{
+        intro:{en:"Embedding is a projection. Maintain auditability: given an ordinal code, you must trace back to axis-values and manifest version.", zh:"嵌入是投影。必须可审计：给定序数码，要能追溯到轴取值与清单版本。", es:"El embedding es una proyección. Debe ser auditable: dado un código ordinal, trazar a valores de ejes y versión de manifiesto."},
+        concept:{en:"Concept: projection ≠ reality; projection must be reproducible.", zh:"概念：投影≠现实；投影必须可复现。", es:"Concepto: proyección ≠ realidad; debe ser reproducible."},
+        build:{en:"Build now: implement ordinal mapping table; freeze under manifest hash.", zh:"现在建：实现序数映射表；在清单哈希下冻结。", es:"Construir ahora: implementar tabla ordinal; congelarla bajo hash del manifiesto."},
+        roadmap:{en:"Roadmap: use ordinal deltas for drift detection, not intent inference.", zh:"路线图：用序数差分做漂移检测，不做意图推断。", es:"Hoja de ruta: usar deltas ordinales para deriva, no para inferir intención."}
+      }
+    },
 
-    /* 4 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"4) Ordinal Embedding (Comparable Numbers)", zh:"4）序数嵌入（可比数字）", es:"4) Embedding ordinal"},
-        s:{en:"Turn states into ordered positions.", zh:"把状态变成可排序位置。", es:"Convertir estados en posiciones ordenadas."},
-        platform:{
-          intro:{en:"Platform translation: you want a simple ladder: ‘better / worse’ without pretending the world is one number.", zh:"平台翻译：你想要一个简单阶梯：更好/更坏，但不假装世界只有一个数字。", es:"Traducción plataforma: quieres una escalera simple ‘mejor/peor’ sin fingir que todo es un número."},
-          concept:{en:"Concept: order makes next steps obvious.", zh:"概念：有序才有清晰下一步。", es:"Concepto: el orden hace obvio el siguiente paso."},
-          build:{en:"Build now: define ‘low/medium/high’ per axis in human terms.", zh:"现在建：每个轴用人话定义低/中/高。", es:"Construir ahora: definir bajo/medio/alto por eje en términos humanos."},
-          roadmap:{en:"Roadmap: keep the ladder stable; only change via epoch.", zh:"路线图：阶梯保持稳定；改就新纪元。", es:"Hoja de ruta: mantener la escalera estable; cambios solo por época."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: ordinal mapping is a projection. It must be auditable, versioned, and consistent with monotonic constraints.", zh:"工程翻译：序数映射是投影，必须可审计、版本化，并与单调约束一致。", es:"Traducción ingeniería: mapeo ordinal es proyección; debe ser auditable, versionado y consistente con restricciones monótonas."},
-          concept:{en:"Concept: embedding is not evidence; it’s organization.", zh:"概念：嵌入不是证据，是组织方式。", es:"Concepto: embedding no es evidencia; es organización."},
-          build:{en:"Build now: implement mapping table + hash it in manifest.", zh:"现在建：实现映射表并在清单中哈希锁定。", es:"Construir ahora: implementar tabla de mapeo y hashearla en el manifiesto."},
-          roadmap:{en:"Roadmap: treat ordinal deltas as drift signals; do not infer intent.", zh:"路线图：把序数差分当漂移信号；不推断意图。", es:"Hoja de ruta: tratar deltas ordinales como deriva; no inferir intención."}
-        }
-      };
-    })(),
+    {
+      c:"#ff2b2b",
+      t:{en:"6) Edge Constraints", zh:"6）边约束", es:"6) Restricciones de borde"},
+      s:{en:"Define allowed transitions (movement rules).", zh:"定义允许的转移（运动规则）。", es:"Definir transiciones permitidas (reglas de movimiento)."},
+      platform:{
+        intro:{en:"Edges prevent the map from becoming a choose-your-own-story. They turn “maybe” into “allowed / not allowed”.", zh:"边约束防止地图变成随便编的故事，把“也许”变成“允许/不允许”。", es:"Los bordes evitan que el mapa sea un ‘elige tu historia’. Convierten ‘quizá’ en ‘permitido / no permitido’."},
+        concept:{en:"Concept: constraints are safety rails.", zh:"概念：约束是护栏。", es:"Concepto: restricciones son barandillas."},
+        build:{en:"Build now: write 3–7 hard-stop rules (NEVER transitions).", zh:"现在建：写3–7条硬停规则（绝不转移）。", es:"Construir ahora: escribir 3–7 reglas duras (transiciones NUNCA)."},
+        roadmap:{en:"Roadmap: convert each hard-stop into a gate + reason code.", zh:"路线图：每条硬停变成闸门+原因码。", es:"Hoja de ruta: convertir cada regla en compuerta + código de razón."}
+      },
+      engineering:{
+        intro:{en:"Edges are enforceable constraints: inequality basis, forbidden transitions, and deterministic failure meanings. All transition attempts are logged.", zh:"边是可执行约束：不等式基、禁止转移、确定性失败含义。所有转移尝试必须记录。", es:"Bordes son restricciones ejecutables: base de desigualdades, transiciones prohibidas y significados deterministas. Todo intento se registra."},
+        concept:{en:"Concept: admissibility is encoded in edge rules.", zh:"概念：可采信编码在边规则里。", es:"Concepto: admisibilidad se codifica en reglas de borde."},
+        build:{en:"Build now: implement edge-check function; emit reason codes on violation.", zh:"现在建：实现 edge-check 函数；违规输出原因码。", es:"Construir ahora: implementar función edge-check; emitir códigos en violación."},
+        roadmap:{en:"Roadmap: verify monotonicity and constraint satisfaction via sweeps.", zh:"路线图：用扫掠验证单调性与约束满足。", es:"Hoja de ruta: verificar monotonicidad y restricciones mediante barridos."}
+      }
+    },
 
-    /* 5 */ (function(){
-      return {
-        c:"#ff2b2b",
-        t:{en:"5) Edge Constraints (Inequality Basis)", zh:"5）边约束（不等式基）", es:"5) Restricciones de borde"},
-        s:{en:"Define what transitions are allowed.", zh:"定义允许的转移。", es:"Definir transiciones permitidas."},
-        platform:{
-          intro:{en:"Platform translation: edges are ‘what you’re allowed to do next’ so people don’t wander into unsafe moves.", zh:"平台翻译：边=“你下一步允许做什么”，防止用户走进不安全动作。", es:"Traducción plataforma: bordes = ‘qué puedes hacer después’ para evitar movimientos inseguros."},
-          concept:{en:"Concept: guardrails prevent both hype and panic.", zh:"概念：护栏同时阻止噱头与恐慌。", es:"Concepto: barandillas evitan hype y pánico."},
-          build:{en:"Build now: write 5 ‘hard no’ rules (plain language).", zh:"现在建：写5条“硬不行”的规则（人话）。", es:"Construir ahora: escribir 5 reglas ‘no’ (lenguaje simple)."},
-          roadmap:{en:"Roadmap: each ‘no’ gets a reason code and a safe alternative.", zh:"路线图：每个“不”都有原因码+安全替代路径。", es:"Hoja de ruta: cada ‘no’ tiene código de razón y alternativa segura."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: edge constraints are enforced inequalities and forbidden transitions. Each attempted transition is checked and logged.", zh:"工程翻译：边约束=不等式+禁止转移。每次转移尝试都要检查并记录。", es:"Traducción ingeniería: restricciones de borde = desigualdades + transiciones prohibidas. Cada intento se chequea y registra."},
-          concept:{en:"Concept: constraints are executable.", zh:"概念：约束可执行。", es:"Concepto: restricciones son ejecutables."},
-          build:{en:"Build now: implement edge checks + failure logs (reason-coded).", zh:"现在建：实现边检查+失败日志（原因码）。", es:"Construir ahora: implementar chequeos + logs de fallo (códigos)."},
-          roadmap:{en:"Roadmap: publish monotonicity verification logs as receipts.", zh:"路线图：发布单调性验证日志作为收据。", es:"Hoja de ruta: publicar logs de monotonicidad como recibos."}
-        }
-      };
-    })(),
+    {
+      c:"#c9a24a",
+      t:{en:"7) Verification Sweeps", zh:"7）验证扫掠", es:"7) Barridos de verificación"},
+      s:{en:"Test broadly, not selectively.", zh:"广度测试，而非挑例子。", es:"Probar ampliamente, no selectivamente."},
+      platform:{
+        intro:{en:"A lattice becomes trustworthy when it survives sweeps: many states tested, failures shown, and improvements tracked.", zh:"晶格可信的前提是经得起扫掠：测很多状态、展示失败、追踪改进。", es:"Un lattice es confiable cuando sobrevive barridos: muchos estados probados, fallos visibles y mejoras rastreadas."},
+        concept:{en:"Concept: breadth beats confidence.", zh:"概念：广度胜过自信。", es:"Concepto: amplitud vence confianza."},
+        build:{en:"Build now: run a small sweep and publish a plain summary (pass/hold/fail counts).", zh:"现在建：做一次小扫掠并发布朴素摘要（通过/暂停/失败数量）。", es:"Construir ahora: ejecutar un barrido pequeño y publicar resumen simple (pasar/hold/fallar)." },
+        roadmap:{en:"Roadmap: expand sweep coverage as adoption grows; never hide failures.", zh:"路线图：随采纳扩大扫掠覆盖；绝不隐藏失败。", es:"Hoja de ruta: ampliar cobertura conforme crece adopción; nunca ocultar fallos."}
+      },
+      engineering:{
+        intro:{en:"Sweeps are replayable computations over the state graph. Each sweep yields receipts: inputs, manifest hash, outputs, violations.", zh:"扫掠是对状态图的可回放计算。每次扫掠产出收据：输入、清单哈希、输出、违规。", es:"Los barridos son cómputos replayables sobre el grafo de estados. Producen recibos: entradas, hash del manifiesto, salidas, violaciones."},
+        concept:{en:"Concept: verification is an artifact, not a claim.", zh:"概念：验证是产物，不是口号。", es:"Concepto: verificación es artefacto, no afirmación."},
+        build:{en:"Build now: store sweep logs with version tags; treat failures as first-class data.", zh:"现在建：带版本标签存扫掠日志；把失败当一等数据。", es:"Construir ahora: guardar logs con versión; tratar fallos como datos de primera clase."},
+        roadmap:{en:"Roadmap: regression sweeps on every release; fail on drift.", zh:"路线图：每次发布做回归扫掠；漂移则失败。", es:"Hoja de ruta: barridos de regresión en cada release; fallar ante deriva."}
+      }
+    },
 
-    /* 6 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"6) Verification Sweeps (Reality Check)", zh:"6）验证扫掠（现实校验）", es:"6) Barridos de verificación"},
-        s:{en:"Test many states, not favorite stories.", zh:"测很多状态，不测“喜欢的故事”。", es:"Probar muchos estados, no historias favoritas."},
-        platform:{
-          intro:{en:"Platform translation: a sweep is you checking the whole room, not just one corner. It’s how you keep yourself honest.", zh:"平台翻译：扫掠=你检查整间屋子，不只看一个角落。它让你保持诚实。", es:"Traducción plataforma: un barrido es revisar toda la sala, no una esquina. Te mantiene honesto."},
-          concept:{en:"Concept: breadth beats confidence.", zh:"概念：广度胜过自信。", es:"Concepto: amplitud vence confianza."},
-          build:{en:"Build now: run a small sweep and show the failures plainly.", zh:"现在建：做小扫掠，并把失败清楚展示。", es:"Construir ahora: ejecutar barrido pequeño y mostrar fallos claramente."},
-          roadmap:{en:"Roadmap: increase sweep coverage as adoption grows.", zh:"路线图：采纳越大，扫掠覆盖越大。", es:"Hoja de ruta: aumentar cobertura conforme crece adopción."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: sweeps are replayable computations across Ω. Each sweep must store inputs, manifest hash, outputs, and violations.", zh:"工程翻译：扫掠=对Ω的可回放计算。每次扫掠需存输入、清单哈希、输出与违规。", es:"Traducción ingeniería: barridos son cómputos replayables sobre Ω. Guardar entradas, hash, salidas y violaciones."},
-          concept:{en:"Concept: verification is an artifact.", zh:"概念：验证是产物。", es:"Concepto: verificación es artefacto."},
-          build:{en:"Build now: store sweep logs per epoch; enforce reproducibility.", zh:"现在建：按纪元存扫掠日志；强制可复现。", es:"Construir ahora: guardar logs por época; imponer reproducibilidad."},
-          roadmap:{en:"Roadmap: regression sweeps on every change; fail builds on drift.", zh:"路线图：每次变更回归扫掠；漂移则失败。", es:"Hoja de ruta: barridos de regresión en cada cambio; fallar si hay deriva."}
-        }
-      };
-    })(),
+    {
+      c:"#ff2b2b",
+      t:{en:"8) Envelope Discipline", zh:"8）包络纪律", es:"8) Disciplina de envolvente"},
+      s:{en:"Bound escalation before rupture.", zh:"在破裂前有界升级。", es:"Acotar escalación antes de ruptura."},
+      platform:{
+        intro:{en:"Envelope answers: “How close to breaking are we?” It turns fear into a meter and turns debates into decisions.", zh:"包络回答：“我们离崩坏有多近？”它把恐惧变成仪表，把争论变成决策。", es:"La envolvente responde: “¿Qué tan cerca de romper?” Convierte miedo en medidor y debates en decisiones."},
+        concept:{en:"Concept: boundaries prevent hype and panic.", zh:"概念：边界阻止噱头与恐慌。", es:"Concepto: límites evitan hype y pánico."},
+        build:{en:"Build now: define 3 bands (GREEN/YELLOW/RED) with one sentence each.", zh:"现在建：定义三档（绿/黄/红），每档一句话。", es:"Construir ahora: definir 3 bandas (VERDE/AMARILLO/ROJO) con una frase cada una."},
+        roadmap:{en:"Roadmap: link bands to actions (continue / slow / contain).", zh:"路线图：区间绑定动作（继续/减速/隔离）。", es:"Hoja de ruta: vincular bandas a acciones (continuar / ralentizar / contener)."}
+      },
+      engineering:{
+        intro:{en:"Envelope variables are explicit inputs. Thresholds and termination logic must be deterministic. Containment precedes rupture.", zh:"包络变量是显式输入。阈值与终止逻辑必须确定性。隔离先于破裂。", es:"Variables de envolvente son entradas explícitas. Umbrales y lógica de terminación deben ser deterministas. Contención antes de ruptura."},
+        concept:{en:"Concept: termination rules are part of admissibility.", zh:"概念：终止规则属于可采信的一部分。", es:"Concepto: reglas de terminación son parte de admisibilidad."},
+        build:{en:"Build now: define escalation thresholds + hard-stop conditions; log every crossing.", zh:"现在建：定义升级阈值+硬停条件；记录每次穿越。", es:"Construir ahora: definir umbrales + paradas duras; registrar cada cruce."},
+        roadmap:{en:"Roadmap: run envelope checks in sweeps; export receipts for audit replay.", zh:"路线图：扫掠中做包络检查；导出收据供审计回放。", es:"Hoja de ruta: chequear envolvente en barridos; exportar recibos para auditoría/replay."}
+      }
+    },
 
-    /* 7 */ (function(){
-      return {
-        c:"#ff2b2b",
-        t:{en:"7) Envelope Discipline (How Close to Breaking)", zh:"7）包络纪律（离崩坏多近）", es:"7) Disciplina de envolvente"},
-        s:{en:"Bound escalation before rupture.", zh:"在破裂前有界升级。", es:"Acotar escalación antes de ruptura."},
-        platform:{
-          intro:{en:"Platform translation: the envelope is your ‘safety distance’. It tells you when to slow down, not when to panic.", zh:"平台翻译：包络=你的“安全距离”。它告诉你何时减速，而不是恐慌。", es:"Traducción plataforma: la envolvente es tu ‘distancia de seguridad’. Te dice cuándo frenar, no entrar en pánico."},
-          concept:{en:"Concept: boundaries turn fear into decisions.", zh:"概念：边界把恐惧变成决策。", es:"Concepto: límites convierten miedo en decisiones."},
-          build:{en:"Build now: define a simple 3-band indicator (GREEN/YELLOW/RED) for the lane.", zh:"现在建：为该车道定义三段指示（绿/黄/红）。", es:"Construir ahora: definir indicador de 3 bandas (VERDE/AMARILLO/ROJO)."},
-          roadmap:{en:"Roadmap: each band maps to one action (continue / slow / contain).", zh:"路线图：每个区间对应一个动作（继续/减速/隔离）。", es:"Hoja de ruta: cada banda mapea a una acción (seguir/ralentizar/contener)."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: envelope variables and thresholds are explicit inputs. Crossings emit reason codes and must be logged as receipts.", zh:"工程翻译：包络变量与阈值是显式输入。穿越输出原因码，并必须记录为收据。", es:"Traducción ingeniería: variables/umbrales son entradas explícitas. Cruces emiten códigos y se registran como recibos."},
-          concept:{en:"Concept: termination precedes rupture.", zh:"概念：终止先于破裂。", es:"Concepto: terminación antes de ruptura."},
-          build:{en:"Build now: define hard-stop conditions + containment triggers; store every crossing.", zh:"现在建：定义硬停条件+隔离触发；存每次穿越。", es:"Construir ahora: definir paradas duras + triggers; guardar cada cruce."},
-          roadmap:{en:"Roadmap: integrate envelope tests into sweeps and audit outputs.", zh:"路线图：包络测试接入扫掠与审计输出。", es:"Hoja de ruta: integrar pruebas de envolvente en barridos y auditorías."}
-        }
-      };
-    })(),
+    {
+      c:"#c9a24a",
+      t:{en:"9) Receipts & Replay", zh:"9）收据与回放", es:"9) Recibos y replay"},
+      s:{en:"If it can’t be replayed, it’s not trusted.", zh:"不可回放就不可信。", es:"Si no hay replay, no hay confianza."},
+      platform:{
+        intro:{en:"Receipts keep progress calm. You can disagree, but you can’t pretend the evidence isn’t there.", zh:"收据让进步更安静：你可以不同意，但不能假装证据不存在。", es:"Los recibos vuelven el progreso calmado: puedes discrepar, pero no fingir que la evidencia no existe."},
+        concept:{en:"Concept: evidence beats loops.", zh:"概念：证据胜过循环。", es:"Concepto: evidencia vence bucles."},
+        build:{en:"Build now: for any important output, store “what was used” (inputs + window + version).", zh:"现在建：任何重要输出都存“用了什么”（输入+窗口+版本）。", es:"Construir ahora: para salidas importantes, guardar “qué se usó” (entradas + ventana + versión)."},
+        roadmap:{en:"Roadmap: make receipts easy to find and impossible to silently rewrite.", zh:"路线图：收据易找且无法静默改写。", es:"Hoja de ruta: hacer recibos fáciles de encontrar e imposibles de reescribir en silencio."}
+      },
+      engineering:{
+        intro:{en:"Replay requires fixed scope + fixed manifest + fixed evidence + deterministic code path. Missing any component ⇒ UNDETERMINED.", zh:"回放需要固定范围+固定清单+固定证据+确定性代码路径。缺一项⇒UNDETERMINED。", es:"Replay requiere alcance fijo + manifiesto fijo + evidencia fija + ruta determinista. Si falta algo ⇒ UNDETERMINED."},
+        concept:{en:"Concept: auditability is structural.", zh:"概念：可审计是结构属性。", es:"Concepto: auditabilidad es estructural."},
+        build:{en:"Build now: include manifest_hash + scope_id + window_id on every receipt.", zh:"现在建：每个收据包含 manifest_hash + scope_id + window_id。", es:"Construir ahora: incluir manifest_hash + scope_id + window_id en cada recibo."},
+        roadmap:{en:"Roadmap: regression replays on release; fail builds on drift.", zh:"路线图：发布做回归回放；漂移直接失败。", es:"Hoja de ruta: replays de regresión en releases; fallar builds por deriva."}
+      }
+    },
 
-    /* 8 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"8) Receipts & Replay (Audit Surface)", zh:"8）收据与回放（审计面）", es:"8) Recibos y replay"},
-        s:{en:"If it can’t be replayed, it’s not trusted.", zh:"不可回放就不可信。", es:"Si no hay replay, no hay confianza."},
-        platform:{
-          intro:{en:"Platform translation: receipts are the ‘show your work’ button. They stop arguments and stop self-deception.", zh:"平台翻译：收据=“展示你的过程”按钮。它止争论，也止自欺。", es:"Traducción plataforma: recibos = botón ‘muestra tu trabajo’. Detienen discusiones y autoengaño."},
-          concept:{en:"Concept: receipts beat persuasion.", zh:"概念：收据胜过说服。", es:"Concepto: recibos vencen persuasión."},
-          build:{en:"Build now: make receipts easy to find (one link per major output).", zh:"现在建：收据要好找（每个关键输出一个链接）。", es:"Construir ahora: hacer recibos fáciles de encontrar (un enlace por salida clave)."},
-          roadmap:{en:"Roadmap: receipts become the basis for training and repeatable execution.", zh:"路线图：收据成为培训与可复跑执行的基础。", es:"Hoja de ruta: recibos se vuelven base para formación y ejecución repetible."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: replay integrity requires fixed scope + fixed manifest + fixed evidence. Missing any component forces UNDETERMINED.", zh:"工程翻译：回放完整性需要固定范围+固定清单+固定证据。缺一项则 UNDETERMINED。", es:"Traducción ingeniería: integridad de replay requiere alcance+manifiesto+evidencia fijos. Si falta algo: UNDETERMINED."},
-          concept:{en:"Concept: auditability is structural.", zh:"概念：可审计是结构性的。", es:"Concepto: auditabilidad es estructural."},
-          build:{en:"Build now: include manifest hash + scope id + window id in every receipt.", zh:"现在建：每收据含清单哈希+范围id+窗口id。", es:"Construir ahora: incluir hash+id de alcance+id de ventana en cada recibo."},
-          roadmap:{en:"Roadmap: regression replay on release; fail builds on divergence.", zh:"路线图：发布做回归回放；分歧则失败。", es:"Hoja de ruta: replay de regresión en release; fallar si diverge."}
-        }
-      };
-    })(),
-
-    /* 9 */ (function(){
-      return {
-        c:"#ff2b2b",
-        t:{en:"9) Admissibility Outputs (PASS / HOLD / FAIL)", zh:"9）可采信输出（通过/暂停/失败）", es:"9) Salidas (PASS / HOLD / FAIL)"},
-        s:{en:"Bounded decisions with reason codes.", zh:"带原因码的有界裁决。", es:"Decisiones acotadas con códigos."},
-        platform:{
-          intro:{en:"Platform translation: PASS means ‘safe to proceed’. HOLD means ‘not enough evidence’. FAIL means ‘contain first’.", zh:"平台翻译：PASS=可继续；HOLD=证据不够；FAIL=先隔离。", es:"Traducción plataforma: PASS = seguir seguro. HOLD = falta evidencia. FAIL = contener primero."},
-          concept:{en:"Concept: HOLD is not weakness; it’s discipline.", zh:"概念：HOLD 不是软弱，是纪律。", es:"Concepto: HOLD no es debilidad; es disciplina."},
-          build:{en:"Build now: define 5–10 reason codes that users can understand.", zh:"现在建：定义5–10个用户能懂的原因码。", es:"Construir ahora: definir 5–10 códigos de razón comprensibles."},
-          roadmap:{en:"Roadmap: every reason code routes to one next action.", zh:"路线图：每个原因码都路由到一个下一步动作。", es:"Hoja de ruta: cada código rutea a una acción siguiente."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: outputs are deterministic gates under fixed scope. Missing inputs → HOLD/UNDETERMINED. Violations → FAIL/CONTAIN.", zh:"工程翻译：输出是固定范围下的确定性闸门。缺输入→HOLD/UNDETERMINED；违规→FAIL/CONTAIN。", es:"Traducción ingeniería: salidas son compuertas deterministas. Falta entradas → HOLD/UNDETERMINED. Violaciones → FAIL/CONTAIN."},
-          concept:{en:"Concept: reason codes preserve comparability across epochs.", zh:"概念：原因码让跨纪元可比。", es:"Concepto: códigos preservan comparabilidad entre épocas."},
-          build:{en:"Build now: map each reason code to threshold + action + receipt schema.", zh:"现在建：原因码映射阈值+动作+收据架构。", es:"Construir ahora: mapear código a umbral+acción+recibo."},
-          roadmap:{en:"Roadmap: forbid narrative overrides in execution layers.", zh:"路线图：执行层禁止叙事覆盖。", es:"Hoja de ruta: prohibir overrides narrativos en ejecución."}
-        }
-      };
-    })(),
-
-    /* 10 */ (function(){
-      return {
-        c:"#c9a24a",
-        t:{en:"10) Coupling & Correlated Exposure", zh:"10）耦合与相关暴露", es:"10) Acoplamiento y exposición correlacionada"},
-        s:{en:"Why failures move together under scale.", zh:"为何规模下失败会一起动。", es:"Por qué los fallos se mueven juntos al escalar."},
-        platform:{
-          intro:{en:"Platform translation: if two problems always arrive together, treat them as one risk bundle until proven separate.", zh:"平台翻译：如果两个问题总一起到，就先当成一个风险包，直到证明能分开。", es:"Traducción plataforma: si dos problemas llegan juntos, trátalos como un paquete de riesgo hasta probar separación."},
-          concept:{en:"Concept: correlation is the hidden amplifier.", zh:"概念：相关性是隐藏放大器。", es:"Concepto: correlación es amplificador oculto."},
-          build:{en:"Build now: write the top 3 ‘moves together’ pairs you see.", zh:"现在建：写出你看到的前三个“一起动”的组合。", es:"Construir ahora: escribir los 3 pares principales que ‘se mueven juntos’."},
-          roadmap:{en:"Roadmap: show coupling in Gauges as a simple early-warning strip.", zh:"路线图：在量规里用一条简单预警条显示耦合。", es:"Hoja de ruta: mostrar acoplamiento en Medidores como franja de alerta temprana simple."}
-        },
-        engineering:{
-          intro:{en:"Engineering translation: coupling is (ρ, Δρ) over windows. Under load, correlation dominates and reduces segmentation effectiveness.", zh:"工程翻译：耦合是窗口下的（ρ、Δρ）。负载下相关主导，并削弱分段有效性。", es:"Traducción ingeniería: acoplamiento = (ρ, Δρ) por ventanas. Bajo carga domina y reduce segmentación."},
-          concept:{en:"Concept: correlation acceleration is the pre-collapse signal.", zh:"概念：相关加速是坍塌前信号。", es:"Concepto: aceleración de correlación es señal pre-colapso."},
-          build:{en:"Build now: compute ρ and Δρ; emit reason codes on threshold crossings.", zh:"现在建：计算ρ与Δρ；阈值穿越输出原因码。", es:"Construir ahora: calcular ρ y Δρ; emitir códigos al cruzar umbrales."},
-          roadmap:{en:"Roadmap: feed coupling into containment triggers and rollback discipline.", zh:"路线图：耦合接入隔离触发与回滚纪律。", es:"Hoja de ruta: alimentar acoplamiento a triggers de contención y rollback."}
-        }
-      };
-    })()
+    {
+      c:"#ff2b2b",
+      t:{en:"10) Admissibility Gates", zh:"10）可采信闸门", es:"10) Compuertas de admisibilidad"},
+      s:{en:"PASS / HOLD / FAIL with reason codes.", zh:"通过/暂停/失败 + 原因码。", es:"PASAR / HOLD / FALLAR con códigos."},
+      platform:{
+        intro:{en:"Lattice doesn’t sell certainty. It outputs bounded decisions you can act on today.", zh:"晶格不贩卖确定性，只输出你今天能执行的有界裁决。", es:"El lattice no vende certeza. Entrega decisiones acotadas accionables hoy."},
+        concept:{en:"Concept: HOLD is a valid output.", zh:"概念：HOLD 是合法输出。", es:"Concepto: HOLD es salida válida."},
+        build:{en:"Build now: define 5–10 plain reason codes (missing data, scope mismatch, threshold breach).", zh:"现在建：定义5–10个朴素原因码（缺数据/范围不符/阈值违规）。", es:"Construir ahora: definir 5–10 códigos simples (datos faltantes, alcance distinto, violación de umbral)."},
+        roadmap:{en:"Roadmap: connect each code to next step (measure / inspect / contain / retry).", zh:"路线图：每个原因码绑定下一步（测量/检查/隔离/重试）。", es:"Hoja de ruta: conectar cada código a siguiente paso (medir / inspeccionar / contener / reintentar)."}
+      },
+      engineering:{
+        intro:{en:"Gate logic is deterministic under fixed scope. Missing inputs ⇒ HOLD/UNDETERMINED. Violations ⇒ FAIL/CONTAIN. Otherwise PASS.", zh:"固定范围下闸门逻辑必须确定性。缺输入⇒HOLD/UNDETERMINED；违规⇒FAIL/CONTAIN；否则 PASS。", es:"Lógica de compuerta determinista bajo alcance fijo. Falta de entradas ⇒ HOLD/UNDETERMINED. Violaciones ⇒ FAIL/CONTAIN. Si no, PASS."},
+        concept:{en:"Concept: reason codes preserve comparability and prevent narrative override.", zh:"概念：原因码保持可比性并阻止叙事覆盖。", es:"Concepto: códigos preservan comparabilidad y evitan override narrativo."},
+        build:{en:"Build now: map each gate to (threshold + action + receipt schema).", zh:"现在建：每个闸门映射到（阈值+动作+收据架构）。", es:"Construir ahora: mapear cada compuerta a (umbral + acción + esquema de recibo)."},
+        roadmap:{en:"Roadmap: enforce non-bypassable gates in execution layers (finance, governance, deployment).", zh:"路线图：在执行层（金融/治理/部署）强制闸门不可绕过。", es:"Hoja de ruta: imponer compuertas no-bypass en capas de ejecución (finanzas, gobernanza, despliegue)."}
+      }
+    }
   ];
 
-  // ===== Accordion state preserved across lane/lang changes =====
+  // ===== Accordion render (single-open; preserve open row) =====
   var list=document.getElementById("list");
   var rowRefs=[];
   var openIndex=0;
@@ -815,7 +784,6 @@ body::before,body::after{pointer-events:none!important}
     function act(){ b.classList.toggle("open"); }
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
     return {wrap:b, p:p};
   }
 
@@ -916,15 +884,14 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function applyHeader(){
-    var pack = headerPack();
+    var H = (lane==="engineering") ? HEAD.engineering : HEAD.platform;
 
     document.getElementById("hk").textContent = pick3("FRONTIER · LATTICE","前沿 · 晶格","FRONTERA · LATTICE");
     document.getElementById("ht").textContent = pick3("LATTICE GEOMETRY","晶格几何","GEOMETRÍA LATTICE");
-    document.getElementById("hs").textContent = pack.hs;
-    document.getElementById("rule").textContent = pack.rule;
+    document.getElementById("hs").textContent = (lang==="zh")?H.zh.hs:(lang==="es")?H.es.hs:H.en.hs;
+    document.getElementById("rule").textContent = (lang==="zh")?H.zh.rule:(lang==="es")?H.es.rule:H.en.rule;
 
-    document.getElementById("band").textContent =
-      pick3("LATTICE DOMAINS (ONE OPEN)","晶格域（一次只开一个）","DOMINIOS LATTICE (uno abierto)");
+    document.getElementById("band").textContent = pick3("LATTICE DOMAINS (ONE OPEN)","晶格域（一次只开一个）","DOMINIOS LATTICE (uno abierto)");
 
     document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
     document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
@@ -956,15 +923,15 @@ body::before,body::after{pointer-events:none!important}
       var item=DOMAINS[i];
       var r=rowRefs[i];
 
-      r.title.textContent = (lang==="zh")?item.t.zh:(lang==="es")?(item.t.es||item.t.en):item.t.en;
-      r.sub.textContent   = (lang==="zh")?item.s.zh:(lang==="es")?(item.s.es||item.s.en):item.s.en;
+      r.title.textContent = pick(item.t);
+      r.sub.textContent   = pick(item.s);
 
       var pack = (lane==="engineering") ? item.engineering : item.platform;
 
-      r.intro.textContent = (lang==="zh")?pack.intro.zh:(lang==="es")?(pack.intro.es||pack.intro.en):pack.intro.en;
-      r.b1p.textContent   = (lang==="zh")?pack.concept.zh:(lang==="es")?(pack.concept.es||pack.concept.en):pack.concept.en;
-      r.b2p.textContent   = (lang==="zh")?pack.build.zh:(lang==="es")?(pack.build.es||pack.build.en):pack.build.en;
-      r.b3p.textContent   = (lang==="zh")?pack.roadmap.zh:(lang==="es")?(pack.roadmap.es||pack.roadmap.en):pack.roadmap.en;
+      r.intro.textContent = pick(pack.intro);
+      r.b1p.textContent   = pick(pack.concept);
+      r.b2p.textContent   = pick(pack.build);
+      r.b3p.textContent   = pick(pack.roadmap);
 
       r.a1.textContent = openLabel()+": "+pick3("FRONTIER INDEX","前沿索引","ÍNDICE FRONTERA");
       r.a2.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");

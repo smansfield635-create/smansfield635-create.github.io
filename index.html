@@ -1,17 +1,9 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · TRUE HIERARCHY SCALE v6 (SCREEN FIT COMPRESSION)
-
-     FINAL SCALE MODEL:
-
-     CORE (Tier 0)            = 100%
-     Tier 1 (Cardinals)       = 60%
-     Tier 2 (Diagonals)       = 45%
-     Tier 3 (Intercardinals)  = 40%
-
-     Radii compressed for screen fit.
-     Only one dominant center.
-     Outer rings progressively smaller.
+     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — GEOMETRY LOCK v5
+     CORE = EXACTLY 2× LEVEL-1 SIZE
+     OUTER TIERS UNCHANGED
+     NO DRIFT
 -->
 
 <html lang="en">
@@ -22,107 +14,125 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;background:#7a0f0f}
+body{margin:0}
+body::before,body::after{pointer-events:none!important}
 
-/* ================= SCALE ================= */
+/* =========================================================
+   FINAL GEOMETRY LOCK
+   ---------------------------------------------------------
+   Tier 1 = Base reference
+   CORE   = 2 × Tier 1
+   All other tiers unchanged
+========================================================= */
 
 :root{
-  --D0:220px;  /* CORE 100% */
-  --D1:132px;  /* 60% */
-  --D2:99px;   /* 45% */
-  --D3:88px;   /* 40% */
+  --D1:120px;      /* Tier 1 (N/E/S/W) */
+  --D0:240px;      /* CORE = EXACTLY 2× Tier 1 */
 
-  /* compressed radii */
-  --R1:220px;
-  --R2:330px;
-  --R3:420px;
+  --D2:150px;      /* Diagonals */
+  --D3:188px;      /* Outer ring */
+
+  --R1:150px;
+  --R2:245px;
+  --R3:360px;
+
+  --padTop:120px;
+
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.88);
+  --festival:rgba(255,43,43,.26);
+  --opalV:rgba(90,40,120,.18);
+  --crimson:rgba(120,0,22,.44);
+  --gold:rgba(201,162,74,.55);
+  --goldGlow:rgba(201,162,74,.28);
+  --shadowDeep:0 40px 120px rgba(0,0,0,.85);
 }
 
 .stage{
   position:relative;
-  width:min(1100px,95vw);
-  height:min(1000px,85vh);
-  margin:110px auto 0;
+  width:min(1200px,94vw);
+  height:min(1200px,85vh);
+  margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
-/* ================= DIAMOND ================= */
-
 .node{
   position:absolute;
-  left:50%;
-  top:50%;
+  left:50%;top:50%;
   transform:translate(-50%,-50%) rotate(45deg);
-  pointer-events:auto;
+  border-radius:24px;
   cursor:pointer;
+  pointer-events:auto;
   overflow:hidden;
-  border-radius:26px;
   transition:.15s ease;
 }
 
-.core{ width:var(--D0); height:var(--D0); z-index:10;}
+.core{ width:var(--D0); height:var(--D0); z-index:6;}
 .l1{ width:var(--D1); height:var(--D1);}
 .l2{ width:var(--D2); height:var(--D2);}
 .l3{ width:var(--D3); height:var(--D3);}
 
 .surface{
   background:
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,.35), transparent 45%),
-    linear-gradient(160deg,#140707,#000);
-  border:1px solid rgba(255,255,255,.2);
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,.25), transparent 45%),
+    radial-gradient(circle at 75% 30%, var(--festival), transparent 60%),
+    radial-gradient(circle at 60% 80%, var(--opalV), transparent 60%),
+    radial-gradient(circle at 30% 75%, var(--crimson), transparent 70%),
+    linear-gradient(160deg,var(--onyx1),var(--onyx0));
+  border:1px solid rgba(255,255,255,.18);
   box-shadow:
-    0 30px 80px rgba(0,0,0,.8),
-    inset 0 3px 0 rgba(255,255,255,.25),
-    inset 0 -60px 100px rgba(0,0,0,.95);
+    var(--shadowDeep),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -60px 90px rgba(0,0,0,.9);
 }
 
 .surface::after{
   content:"";
   position:absolute;
-  left:15%;
-  right:15%;
-  top:10%;
-  height:30%;
+  left:15%;right:15%;top:10%;
+  height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);
-  transform:rotate(-12deg);
+  background:linear-gradient(to bottom,rgba(255,255,255,.25),transparent);
+  transform:rotate(-10deg);
 }
 
 .node:hover{
   box-shadow:
-    0 30px 80px rgba(0,0,0,.8),
-    0 0 40px rgba(255,200,120,.4),
-    inset 0 3px 0 rgba(255,255,255,.25),
-    inset 0 -60px 100px rgba(0,0,0,.95);
+    var(--shadowDeep),
+    0 0 0 2px var(--goldGlow),
+    0 0 40px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -60px 90px rgba(0,0,0,.9);
+  border-color:var(--gold);
 }
 
 .inner{
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:14px;
-  color:white;
+  padding:12px;
 }
 
 .word{
   font-weight:900;
-  font-size:clamp(13px,1.2vw,18px);
+  font-size:clamp(12px,1.2vw,18px);
   line-height:1.1;
 }
 
 .code{
   font-size:10px;
   opacity:.7;
-  margin-top:6px;
+  margin-top:4px;
 }
+
 </style>
 </head>
 
@@ -159,6 +169,7 @@ const stage=document.getElementById("stage");
 function mkNode(item,className){
   const d=document.createElement("div");
   d.className="node surface "+className;
+  d.tabIndex=0;
   const inner=document.createElement("div");
   inner.className="inner";
   inner.innerHTML=`<div class="word">${item.label}</div><div class="code">${item.code}</div>`;
@@ -182,7 +193,7 @@ function layout(){
   core.style.top=cy+"px";
   stage.appendChild(core);
 
-  function place(list,radius,className,startAngle){
+  function place(list,radius,className,startAngle= -Math.PI/2){
     list.forEach((item,i)=>{
       const angle=startAngle+(i/list.length)*Math.PI*2;
       const x=cx+radius*Math.cos(angle);
@@ -194,7 +205,7 @@ function layout(){
     });
   }
 
-  place(ROUTES.filter(r=>r.tier===1),R1,"l1",-Math.PI/2);
+  place(ROUTES.filter(r=>r.tier===1),R1,"l1");
   place(ROUTES.filter(r=>r.tier===2),R2,"l2",-Math.PI/4);
   place(ROUTES.filter(r=>r.tier===3),R3,"l3",-Math.PI/8);
 }

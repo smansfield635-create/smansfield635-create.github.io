@@ -1,13 +1,13 @@
 <!doctype html>
 <!-- TNT — /products/education/index.html
      EDUCATION · UNIFIED SCROLL · TRI-LINGUAL (EN/中文/ES) · ESL MARKETING DEPTH
-     MODEL (LOCKED):
-       - Unified long-scroll surface (no diamonds, no modals)
-       - Strong marketing tone + clear ESL language
-       - Stage 1 FREE PDF + soft gate form (required to download)
-       - Immediate download after submit (best-effort email automation)
-       - Single-open accordion (auto-close)
-       - Full state carry: lang/style/time/depth + gd_* localStorage ONLY
+     UPGRADE/AUGMENT (NO DESIGN RESET):
+       - Keep unified long-scroll (no diamonds, no modals)
+       - Keep current tone + palette
+       - Add: full state-carry wiring for ALL nav links (BACK/EXIT/DOCK/CTA)
+       - Add: language button pressed-state + i18n for BACK/EXIT + dock labels
+       - Add: soft-gate UX polish (inline status, honeypot, disabled submit while sending)
+       - Add: accordion a11y polish (aria-expanded) + keyboard parity
      PDF PATH (LOCKED): /assets/education/stage-1-vocab-strategy-pack.pdf
      EMAIL TARGET (LOCKED): Geodiametrics@gmail.com
      FORM DELIVERY:
@@ -17,8 +17,6 @@
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (no overrides)
-     FIXES APPLIED (NO DRIFT):
-       - Removed washed blue; enforced red/black primary with gold adorn + subtle opal sheen (purple only)
        - No inline onclick (addEventListener only)
        - Language toggle reloads SAME pathname (GH Pages safe)
 -->
@@ -99,6 +97,12 @@ body::before,body::after{pointer-events:none!important}
 }
 .top-right .btn{white-space:nowrap}
 
+/* Language pressed-state */
+.langOn{
+  border-color:rgba(255,43,43,.22)!important;
+  box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12)!important;
+}
+
 /* Page layout */
 .page{
   width:min(1040px,94vw);
@@ -166,6 +170,7 @@ body::before,body::after{pointer-events:none!important}
   font-size:15px;
   line-height:1.7;
   color:rgba(255,255,255,.88);
+  white-space:pre-line;
 }
 
 /* Panel */
@@ -251,6 +256,8 @@ body::before,body::after{pointer-events:none!important}
 }
 .inp::placeholder{color:rgba(255,255,255,.55)}
 
+.hp{display:none!important} /* honeypot */
+
 .formNote{
   margin-top:10px;
   font-size:12.75px;
@@ -258,6 +265,16 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.45;
   color:rgba(255,255,255,.82);
 }
+.formStatus{
+  margin-top:10px;
+  font-size:12.75px;
+  line-height:1.45;
+  color:rgba(255,255,255,.86);
+  opacity:.92;
+  display:none;
+}
+.formStatus.show{display:block}
+
 .formActions{
   margin-top:10px;
   display:flex;
@@ -412,8 +429,10 @@ body::before,body::after{pointer-events:none!important}
         <input class="inp" id="fCity" type="text" autocomplete="address-level2" placeholder="City"/>
         <input class="inp" id="fPrefLang" type="text" placeholder="Preferred language (any)"/>
         <input class="inp" id="fQuick" type="text" placeholder="Quick pick (EN / 中文 / ES) optional"/>
+        <input class="inp hp" id="fWebsite" type="text" tabindex="-1" autocomplete="off" placeholder="website"/>
       </div>
       <div class="formNote" id="formNote"></div>
+      <div class="formStatus" id="formStatus"></div>
       <div class="formActions">
         <button class="btn red" id="btnSubmit" type="button">SUBMIT & DOWNLOAD</button>
       </div>
@@ -428,7 +447,7 @@ body::before,body::after{pointer-events:none!important}
 
   <!-- ACCORDION SECTIONS -->
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t1">What makes this different</div>
         <div class="hS" id="s1"></div>
@@ -445,7 +464,7 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t2">Traversal learning (the core idea)</div>
         <div class="hS" id="s2"></div>
@@ -462,7 +481,7 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t3">The Stage 1 routine (simple, repeatable)</div>
         <div class="hS" id="s3"></div>
@@ -479,7 +498,7 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t4">Checkpoints (proof, not feelings)</div>
         <div class="hS" id="s4"></div>
@@ -496,7 +515,7 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t5">From individual to organization</div>
         <div class="hS" id="s5"></div>
@@ -513,7 +532,7 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section">
-    <div class="head" role="button" tabindex="0">
+    <div class="head" role="button" tabindex="0" aria-expanded="false">
       <div class="hL">
         <div class="hT" id="t6">What you can do today (quick start)</div>
         <div class="hS" id="s6"></div>
@@ -541,8 +560,10 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
+  "use strict";
+
   // ========= CONFIG =========
-  var FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE"; // webhook endpoint that forwards to Geodiametrics@gmail.com
+  var FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE";
   var PDF_URL = "/assets/education/stage-1-vocab-strategy-pack.pdf";
   var EMAIL_TARGET = "Geodiametrics@gmail.com";
 
@@ -577,23 +598,33 @@ body::before,body::after{pointer-events:none!important}
   }
 
   // ========= NAV WIRING (state carry) =========
-  document.getElementById("btnBack").href="/products/"+q();
-  document.getElementById("btnExit").href="/index.html"+q();
-  document.getElementById("dockHome").href="/home/"+q();
-  document.getElementById("dockProducts").href="/products/"+q();
-  document.getElementById("dockLaws").href="/laws/"+q();
-  document.getElementById("dockGauges").href="/gauges/"+q();
+  function wire(){
+    document.getElementById("btnBack").href="/products/"+q();
+    document.getElementById("btnExit").href="/index.html"+q();
 
-  document.getElementById("jumpProducts1").href="/products/"+q();
-  document.getElementById("jumpExplore2").href="/explore/"+q();
-  document.getElementById("jumpLaws4").href="/laws/"+q();
-  document.getElementById("jumpGauges5").href="/gauges/"+q();
-  document.getElementById("jumpProducts6").href="/products/"+q();
+    document.getElementById("dockHome").href="/home/"+q();
+    document.getElementById("dockProducts").href="/products/"+q();
+    document.getElementById("dockLaws").href="/laws/"+q();
+    document.getElementById("dockGauges").href="/gauges/"+q();
+
+    document.getElementById("jumpProducts1").href="/products/"+q();
+    document.getElementById("jumpExplore2").href="/explore/"+q();
+    document.getElementById("jumpLaws4").href="/laws/"+q();
+    document.getElementById("jumpGauges5").href="/gauges/"+q();
+    document.getElementById("jumpProducts6").href="/products/"+q();
+  }
+  wire();
 
   // ========= LANGUAGE TOGGLE (reload same pathname) =========
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
+
+  function paintLangBtns(){
+    btnEN.classList.toggle("langOn", lang==="en");
+    btnZH.classList.toggle("langOn", lang==="zh");
+    btnES.classList.toggle("langOn", lang==="es");
+  }
 
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
@@ -601,18 +632,17 @@ body::before,body::after{pointer-events:none!important}
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
+  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // ========= COPY (dense · TED talk · tri-lingual) =========
-  var COPY = /* (unchanged content; just moved into one object) */ null;
-  // Inline JSON kept identical to your last version; stored below to avoid drift.
-  COPY = {
+  // ========= COPY (tri-lingual) =========
+  var COPY = {
     en: {
+      nav:{back:"BACK", exit:"EXIT", home:"HOME", products:"PRODUCTS", laws:"LAWS", gauges:"GAUGES"},
       heroK:"PRODUCTS · EDUCATION",
       heroTitle:"Complete Traversal ESL System",
-      heroText:"This is not a word list. This is not “study harder.” This is complete traversal learning: you learn a small core, you run a daily loop, you pass checkpoints, and you scale into real life. The structure stays stable so you never get lost. The content gets deeper so you keep growing. The result is simple: your output changes—what you can actually say, write, and understand under pressure.",
+      heroText:"This is not a word list. This is not “study harder.” This is complete traversal learning: you learn a small core, you run a daily loop, you pass checkpoints, and you scale into real life.\n\nThe structure stays stable so you never get lost. The content gets deeper so you keep growing. The result is simple: your output changes—what you can actually say, write, and understand under pressure.",
       pdfTitle:"FREE STAGE 1 PDF",
       pdfSub:"Vocabulary + Strategy Pack (Goodwill Release). Submit once. Download immediately.",
       btnGet:"GET PDF",
@@ -622,6 +652,7 @@ body::before,body::after{pointer-events:none!important}
       placeholders:{name:"Name", email:"Email", country:"Country", city:"City", pref:"Preferred language (any)", quick:"Quick pick (EN / 中文 / ES) optional"},
       formNote:"Submit to download immediately. Your request is sent to Geodiametrics@gmail.com.",
       submit:"SUBMIT & DOWNLOAD",
+      status:{sending:"Submitting…", ok:"Submitted. Download opened. If download didn’t open, use your browser’s popup permission and try again.", fail:"Submission could not be sent. Download will still open."},
       ladderTitle:"Stage Ladder",
       ladderText:"Stage 1 is free: the PDF gives the core and the routine. Stage 2 adds guided drills and sharper checkpoints. Stage 3 adds cohort execution (masterclass format). Stage 4 adds verification and tier pathways. Every stage is built to scale without drift: same structure, deeper skill.",
       t1:"What makes this different",
@@ -650,9 +681,10 @@ body::before,body::after{pointer-events:none!important}
       p6b:"If you do this daily, you will feel a shift quickly: fewer pauses, clearer sentences, more calm. Not because you got lucky. Because the system is engineered to build automatic output, not just knowledge."
     },
     zh: {
+      nav:{back:"返回", exit:"退出", home:"主页", products:"产品", laws:"法则", gauges:"量规"},
       heroK:"产品 · 教育",
       heroTitle:"完整遍历式 ESL 学习系统",
-      heroText:"这不是词表。也不是“再努力一点”。这是完整遍历学习：学一个小核心、跑每日循环、过检查点、把能力带进真实生活。结构稳定，所以你不会迷路。内容逐步加深，所以你持续成长。结果很直接：你的输出会改变——你在压力下能说、能写、能听懂。",
+      heroText:"这不是词表。也不是“再努力一点”。这是完整遍历学习：学一个小核心、跑每日循环、过检查点、把能力带进真实生活。\n\n结构稳定，所以你不会迷路。内容逐步加深，所以你持续成长。结果很直接：你的输出会改变——你在压力下能说、能写、能听懂。",
       pdfTitle:"免费阶段1 PDF",
       pdfSub:"词汇 + 策略包（善意发布）。提交一次即可立即下载。",
       btnGet:"获取PDF",
@@ -662,6 +694,7 @@ body::before,body::after{pointer-events:none!important}
       placeholders:{name:"姓名", email:"邮箱", country:"国家", city:"城市", pref:"偏好语言（不限）", quick:"快捷选择（EN / 中文 / ES）可选"},
       formNote:"提交后立即下载。你的请求将发送到 Geodiametrics@gmail.com。",
       submit:"提交并下载",
+      status:{sending:"正在提交…", ok:"已提交。下载已打开。如未打开，请允许浏览器弹窗后重试。", fail:"提交未能发送，但下载仍会打开。"},
       ladderTitle:"阶段阶梯",
       ladderText:"阶段1免费：PDF 给你核心与例程。阶段2增加引导训练与更锋利的检查点。阶段3增加班级/大师课执行。阶段4增加验证与分层路径。每一阶段都为“无漂移扩张”而设计：结构不变，能力加深。",
       t1:"为什么它不一样",
@@ -690,9 +723,10 @@ body::before,body::after{pointer-events:none!important}
       p6b:"如果你每天这样跑，你会很快感受到变化：停顿更少、句子更清晰、心态更稳。不是运气，是结构在起作用：它追求的是自动化输出，而不是“知道很多”。"
     },
     es: {
+      nav:{back:"VOLVER", exit:"SALIR", home:"INICIO", products:"PRODUCTOS", laws:"LEYES", gauges:"MEDIDORES"},
       heroK:"PRODUCTOS · EDUCACIÓN",
       heroTitle:"Sistema ESL de Recorrido Completo",
-      heroText:"Esto no es una lista de palabras. Tampoco es “estudia más”. Esto es aprendizaje por recorrido completo: un núcleo pequeño, un bucle diario, checkpoints pasa/falla, y escala a la vida real. La estructura no cambia, así no te pierdes. La profundidad crece, así sigues avanzando. El resultado es directo: cambia tu salida—lo que puedes decir, escribir y entender bajo presión.",
+      heroText:"Esto no es una lista de palabras. Tampoco es “estudia más”. Esto es aprendizaje por recorrido completo: un núcleo pequeño, un bucle diario, checkpoints pasa/falla, y escala a la vida real.\n\nLa estructura no cambia, así no te pierdes. La profundidad crece, así sigues avanzando. El resultado es directo: cambia tu salida—lo que puedes decir, escribir y entender bajo presión.",
       pdfTitle:"PDF GRATIS ETAPA 1",
       pdfSub:"Vocabulario + Estrategia (buena fe). Envía una vez. Descarga inmediata.",
       btnGet:"OBTENER PDF",
@@ -702,11 +736,12 @@ body::before,body::after{pointer-events:none!important}
       placeholders:{name:"Nombre", email:"Correo", country:"País", city:"Ciudad", pref:"Idioma preferido (cualquiera)", quick:"Selección rápida (EN / 中文 / ES) opcional"},
       formNote:"Envía para descargar al instante. Tu solicitud se envía a Geodiametrics@gmail.com.",
       submit:"ENVIAR Y DESCARGAR",
+      status:{sending:"Enviando…", ok:"Enviado. Descarga abierta. Si no abrió, permite popups e intenta de nuevo.", fail:"No se pudo enviar, pero la descarga igual se abrirá."},
       ladderTitle:"Escalera de Etapas",
       ladderText:"Etapa 1 es gratis: el PDF trae el núcleo y la rutina. Etapa 2 añade drills guiados y checkpoints más finos. Etapa 3 añade cohorte / masterclass. Etapa 4 añade verificación y niveles. Cada etapa escala sin deriva: misma estructura, más habilidad.",
       t1:"Qué lo hace diferente",
       s1:"Mucho ESL falla porque confunde exposición con habilidad. Este sistema no permite ese error.",
-      p1a:"La mayoría de sistemas premian “tiempo sentado”. Este premia “salida producida”. Ese cambio lo cambia todo. Puedes leer años y congelarte hablando. Puedes memorizar listas y bloquearte bajo presión. Por eso Etapa 1 hace algo honesto: reduce el idioma a un núcleo usable y fuerza repetición hasta que tu cerebro y tu boca se alineen.",
+      p1a:"La mayoría de sistemas premian “tiempo sentado”. Este premia “salida producida”. Ese cambio lo cambia todo. Puedes leer años y congelarte hablando. Puedes memorizar listas y bloquearte bajo presión. Por eso Etapa 1 hace algo honesto: reduce el idioma a un núcleo usable y fuerza repetición hasta que tu cerebro y tu boca se alineen。",
       p1b:"Esto es recorrido completo: vocabulario, conectores, preguntas, anclas de tiempo, frases diarias, frases de trabajo, frases de reparación/conflicto y cortesía. No solo “sabes palabras”. Sabes qué hacer con ellas. Y lo pruebas con checkpoints. Por eso funciona incluso cuando la motivación baja.",
       t2:"Aprendizaje por recorrido (la idea central)",
       s2:"No aprendes un capítulo. Aprendes un mapa: retornos, bucles y compuertas de prueba.",
@@ -739,6 +774,13 @@ body::before,body::after{pointer-events:none!important}
 
   function applyText(){
     var t=T();
+    document.getElementById("btnBack").textContent = t.nav.back;
+    document.getElementById("btnExit").textContent = t.nav.exit;
+    document.getElementById("dockHome").textContent = t.nav.home;
+    document.getElementById("dockProducts").textContent = t.nav.products;
+    document.getElementById("dockLaws").textContent = t.nav.laws;
+    document.getElementById("dockGauges").textContent = t.nav.gauges;
+
     document.getElementById("heroK").textContent=t.heroK;
     document.getElementById("heroTitle").textContent=t.heroTitle;
     document.getElementById("heroText").textContent=t.heroText;
@@ -797,37 +839,53 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("p6a").textContent=t.p6a;
     document.getElementById("p6b").textContent=t.p6b;
   }
+
   applyText();
+  paintLangBtns();
 
   // ========= PDF UI =========
   var insidePanel=document.getElementById("insidePanel");
   var formWrap=document.getElementById("formWrap");
+  var formStatus=document.getElementById("formStatus");
+  var btnSubmit=document.getElementById("btnSubmit");
 
   document.getElementById("btnInside").addEventListener("click", function(){
     insidePanel.classList.toggle("show");
-  });
+  }, {passive:true});
 
   document.getElementById("btnGet").addEventListener("click", function(){
     formWrap.classList.toggle("show");
     insidePanel.classList.add("show");
-  });
+  }, {passive:true});
 
-  document.getElementById("jumpGetPdf3").addEventListener("click", function(){
+  function revealForm(){
     formWrap.classList.add("show");
     insidePanel.classList.add("show");
     window.scrollTo({top:0,behavior:"smooth"});
-  });
-
-  document.getElementById("jumpGetPdf6").addEventListener("click", function(){
-    formWrap.classList.add("show");
-    insidePanel.classList.add("show");
-    window.scrollTo({top:0,behavior:"smooth"});
-  });
+  }
+  document.getElementById("jumpGetPdf3").addEventListener("click", revealForm, {passive:true});
+  document.getElementById("jumpGetPdf6").addEventListener("click", revealForm, {passive:true});
 
   // ========= SOFT GATE SUBMIT (best-effort) =========
   function v(id){ var el=document.getElementById(id); return el ? (el.value||"").trim() : ""; }
 
+  function status(msg){
+    formStatus.textContent = msg;
+    formStatus.classList.add("show");
+  }
+
+  function openPdf(){
+    // best effort: open in new tab; if blocked, navigate same tab
+    var w = window.open(PDF_URL,"_blank");
+    if(!w){ window.location.href = PDF_URL; }
+  }
+
   function submitAndDownload(){
+    var t=T();
+
+    var hp=v("fWebsite");
+    if(hp){ openPdf(); return; } // bot
+
     var name=v("fName");
     var email=v("fEmail");
     var country=v("fCountry");
@@ -839,6 +897,9 @@ body::before,body::after{pointer-events:none!important}
       alert(lang==="zh" ? "请填写邮箱。" : lang==="es" ? "Por favor escribe tu correo." : "Please enter your email.");
       return;
     }
+
+    btnSubmit.disabled = true;
+    status(t.status.sending);
 
     var payload={
       source:"education_stage1_pdf",
@@ -853,35 +914,62 @@ body::before,body::after{pointer-events:none!important}
       page:location.href
     };
 
-    try{
-      if(FORM_ENDPOINT && FORM_ENDPOINT.indexOf("PASTE_YOUR_ENDPOINT_HERE")===-1){
-        fetch(FORM_ENDPOINT,{
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify(payload)
-        }).catch(function(){});
-      }
-    }catch(e){}
+    var hasEndpoint = (FORM_ENDPOINT && FORM_ENDPOINT.indexOf("PASTE_YOUR_ENDPOINT_HERE")===-1);
 
-    window.open(PDF_URL,"_blank");
+    if(!hasEndpoint){
+      // no endpoint configured: still download immediately
+      btnSubmit.disabled = false;
+      status(t.status.fail);
+      openPdf();
+      return;
+    }
+
+    try{
+      fetch(FORM_ENDPOINT,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      }).then(function(){
+        btnSubmit.disabled = false;
+        status(t.status.ok);
+        openPdf();
+      }).catch(function(){
+        btnSubmit.disabled = false;
+        status(t.status.fail);
+        openPdf();
+      });
+    }catch(e){
+      btnSubmit.disabled = false;
+      status(t.status.fail);
+      openPdf();
+    }
   }
-  document.getElementById("btnSubmit").addEventListener("click", submitAndDownload);
+
+  btnSubmit.addEventListener("click", submitAndDownload);
 
   // ========= ACCORDION (single-open auto-close; tap same closes) =========
   var secs=[].slice.call(document.querySelectorAll(".section"));
+
   function setChevron(sec,isOpen){
     var c=sec.querySelector(".chev");
     if(c) c.textContent=isOpen ? "▾" : "▸";
+    var h=sec.querySelector(".head");
+    if(h) h.setAttribute("aria-expanded", isOpen ? "true" : "false");
   }
+
+  function closeAll(){
+    secs.forEach(function(s){
+      s.classList.remove("open");
+      setChevron(s,false);
+    });
+  }
+
   secs.forEach(function(sec){
     setChevron(sec,false);
     var head=sec.querySelector(".head");
     function act(){
       var willOpen=!sec.classList.contains("open");
-      secs.forEach(function(s){
-        s.classList.remove("open");
-        setChevron(s,false);
-      });
+      closeAll();
       if(willOpen){
         sec.classList.add("open");
         setChevron(sec,true);
@@ -892,7 +980,9 @@ body::before,body::after{pointer-events:none!important}
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
   });
+
   if(secs[0]){ secs[0].classList.add("open"); setChevron(secs[0],true); }
+
 })();
 </script>
 

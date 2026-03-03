@@ -1,11 +1,13 @@
 <!doctype html>
 <!-- TNT — /index.html
      COMPASS · 16-POINT RING + CENTER INDEX (CORE)
-     UPDATE: ADD BACKGROUND CONTEXT (NO OVERLAYS / NO MODALS)
-     GOAL:
-       - 16-point glossy ring (perfect symmetry)
-       - Center glossy diamond (INDEX · CORE) that routes to the index page
-       - Festival night / lantern / fireworks context BEHIND geometry
+     UPDATE (PER SEAN):
+       - REMOVE HOME + DOOR from compass geometry (they do NOT belong in the ring)
+       - MOVE HOME + DOOR into bottom corner diamonds (outside geometry)
+       - KEEP 16-point glossy ring (perfect symmetry) + center glossy INDEX (CORE)
+       - REPLACE removed ring nodes with what belongs (domain/product/system hubs)
+       - Finance must route to the correct Finance hub (set below)
+       - Festival night / lantern / fireworks context BEHIND geometry (no overlays/modals)
        - Non-modal context pill
        - Trilingual labels (EN/中文/ES)
        - Canon state carry (gd_lang/gd_style/gd_time/gd_depth) via URL + LS only
@@ -29,8 +31,8 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY (16-point) ===== */
-  --D:94px;        /* outer diamond size (smaller for 16) */
+  /* ===== GEOMETRY (16-point ring) ===== */
+  --D:94px;        /* outer diamond size */
   --C:138px;       /* center diamond size */
   --R:250px;       /* ring radius */
   --padTop:120px;
@@ -293,9 +295,59 @@ body::before,body::after{pointer-events:none!important}
 .center .word{font-size:15px}
 .center .code{opacity:.82}
 
+/* Bottom corner nav diamonds (HOME + DOOR live here, NOT in compass) */
+.corner{
+  position:fixed;
+  bottom:max(18px, env(safe-area-inset-bottom));
+  z-index:240;
+  pointer-events:none;
+}
+.corner .dmini{pointer-events:auto}
+.corner.left{left:18px}
+.corner.right{right:18px}
+
+.dmini{
+  width:54px;height:54px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;place-items:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
+}
+.dmini::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
+  opacity:.55;pointer-events:none;
+}
+.dmini:active{transform:rotate(45deg) translateY(1px)}
+.dmini span{
+  transform:rotate(-45deg);
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.6px;
+  color:rgba(255,255,255,.92);
+  user-select:none;
+}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.70);
+  font-size:11px;
+  letter-spacing:.4px;
+}
+
 /* Context pill (non-modal) */
 .pill{
-  width:min(760px,94vw);
+  width:min(820px,94vw);
   margin:14px auto 0;
   padding:14px 16px;
   border-radius:22px;
@@ -331,8 +383,9 @@ body::before,body::after{pointer-events:none!important}
 <!-- Top controls -->
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnDoor" href="/door/" data-route="/door/">DOOR</a>
-    <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+    <!-- Removed from ring; still available here as normal header nav -->
+    <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+    <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
   </div>
   <div class="right">
     <div class="seg" role="group" aria-label="Language">
@@ -350,7 +403,17 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="pill" id="pill">
-  <b>Compass:</b> Use the ring for directions. Use the center for the Index (the manual).
+  <b>Compass:</b> Ring = domain hubs. Center = Index (core manual). Home + Door live outside the compass.
+</div>
+
+<!-- Bottom corners: HOME + DOOR (OUTSIDE compass geometry) -->
+<div class="corner left" aria-label="Door">
+  <div class="dmini" id="btnDoorMini" role="button" tabindex="0" aria-label="Door"><span>DOOR</span></div>
+  <div class="cornerLabel" id="lblDoor">DOOR</div>
+</div>
+<div class="corner right" aria-label="Home">
+  <div class="dmini" id="btnHomeMini" role="button" tabindex="0" aria-label="Home"><span>HOME</span></div>
+  <div class="cornerLabel" id="lblHome">HOME</div>
 </div>
 
 <script>
@@ -423,40 +486,71 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // Trilingual context pill
+  // Trilingual context pill + corner labels
   var pill=document.getElementById("pill");
-  function paintPill(){
+  var lblDoor=document.getElementById("lblDoor");
+  var lblHome=document.getElementById("lblHome");
+
+  function paintText(){
     if(lang==="zh"){
-      pill.innerHTML="<b>指南针：</b>外环用于方向；中心用于索引（说明书）。";
+      pill.innerHTML="<b>指南针：</b>外环=领域枢纽；中心=索引（核心说明书）。主页与门在罗盘之外。";
+      lblDoor.textContent="门";
+      lblHome.textContent="主页";
+      document.querySelector("#btnDoorMini span").textContent="门";
+      document.querySelector("#btnHomeMini span").textContent="主页";
     }else if(lang==="es"){
-      pill.innerHTML="<b>Brújula:</b> el anillo es dirección; el centro es el Índice (manual).";
+      pill.innerHTML="<b>Brújula:</b> anillo = hubs de dominio. centro = Índice (manual). Inicio y Puerta van fuera de la brújula.";
+      lblDoor.textContent="PUERTA";
+      lblHome.textContent="INICIO";
+      document.querySelector("#btnDoorMini span").textContent="PUERTA";
+      document.querySelector("#btnHomeMini span").textContent="INICIO";
     }else{
-      pill.innerHTML="<b>Compass:</b> Use the ring for directions. Use the center for the Index (the manual).";
+      pill.innerHTML="<b>Compass:</b> Ring = domain hubs. Center = Index (core manual). Home + Door live outside the compass.";
+      lblDoor.textContent="DOOR";
+      lblHome.textContent="HOME";
+      document.querySelector("#btnDoorMini span").textContent="DOOR";
+      document.querySelector("#btnHomeMini span").textContent="HOME";
     }
   }
-  paintPill();
+  paintText();
 
-  // ===== EDIT THIS: center routes to your Index (manual) page =====
-  var INDEX_ROUTE = "/explore/frontier/manual/"; // change to your actual “index manual” page
+  // Bottom corners: DOOR + HOME (outside ring)
+  function bindMini(id, path){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+  }
+  bindMini("btnDoorMini","/door/");
+  bindMini("btnHomeMini","/home/");
 
-  // ===== 16-POINT ROUTES (edit freely) =====
+  // ===== CENTER INDEX ROUTE (CORE MANUAL) =====
+  // Set this to your actual “index manual” page path.
+  var INDEX_ROUTE = "/index-core/";  /* CHANGE THIS if needed */
+
+  // ===== 16 POINTS (HOME + DOOR REMOVED; REPLACED WITH WHAT BELONGS) =====
+  // Finance now routes to /finance/ (domain hub), not a product leaf.
+  // Products remains /products/ (product hub).
   var ROUTES = [
-    {code:"N",   en:"EDUCATION", zh:"教育",   es:"EDUCACIÓN", href:"/products/education/"},
-    {code:"NNE", en:"PRELUDE",   zh:"前奏",   es:"PRELUDIO",  href:"/prelude/"},
-    {code:"NE",  en:"EXPLORE",   zh:"探索",   es:"EXPLORAR",  href:"/explore/"},
-    {code:"ENE", en:"FRONTIER",  zh:"前沿",   es:"FRONTERA",  href:"/explore/frontier/"},
-    {code:"E",   en:"RESEARCH",  zh:"研究",   es:"INVEST.",   href:"/research/", gold:true},
-    {code:"ESE", en:"RISK",      zh:"风险",   es:"RIESGO",    href:"/products/risk-capital/"},
-    {code:"SE",  en:"PRODUCTS",  zh:"产品",   es:"PRODUCTOS", href:"/products/"},
-    {code:"SSE", en:"FINANCE",   zh:"金融",   es:"FINANZAS",  href:"/products/finance/"},
-    {code:"S",   en:"HOME",      zh:"主页",   es:"INICIO",    href:"/home/"},
-    {code:"SSW", en:"GAUGES",    zh:"量规",   es:"MEDIDORES", href:"/gauges/"},
-    {code:"SW",  en:"LAWS",      zh:"法则",   es:"LEYES",     href:"/laws/"},
-    {code:"WSW", en:"DOCTRINE",  zh:"教义",   es:"DOCTRINA",  href:"/products/capital-doctrine/"},
-    {code:"W",   en:"DOOR",      zh:"门",     es:"PUERTA",    href:"/door/"},
-    {code:"WNW", en:"INFRA",     zh:"基建",   es:"INFRA",     href:"/explore/infrastructure/"},
-    {code:"NW",  en:"GAUGES",    zh:"量规",   es:"MEDIDORES", href:"/gauges/"},
-    {code:"NNW", en:"INDEX",     zh:"索引",   es:"ÍNDICE",    href:INDEX_ROUTE}
+    {code:"N",   en:"EDUCATION",    zh:"教育",     es:"EDUCACIÓN",   href:"/products/education/"},
+    {code:"NNE", en:"PRELUDE",      zh:"前奏",     es:"PRELUDIO",    href:"/prelude/"},
+    {code:"NE",  en:"EXPLORE",      zh:"探索",     es:"EXPLORAR",    href:"/explore/"},
+    {code:"ENE", en:"FRONTIER",     zh:"前沿",     es:"FRONTERA",    href:"/explore/frontier/"},
+    {code:"E",   en:"RESEARCH",     zh:"研究",     es:"INVEST.",     href:"/research/", gold:true},
+    {code:"ESE", en:"GAUGES",       zh:"量规",     es:"MEDIDORES",   href:"/gauges/"},
+    {code:"SE",  en:"PRODUCTS",     zh:"产品",     es:"PRODUCTOS",   href:"/products/"},
+    {code:"SSE", en:"FINANCE",      zh:"金融",     es:"FINANZAS",    href:"/finance/"},
+    {code:"S",   en:"ENERGY",       zh:"能源",     es:"ENERGÍA",     href:"/explore/frontier/energy/"},
+    {code:"SSW", en:"INFRA",        zh:"基建",     es:"INFRA",       href:"/explore/infrastructure/"},
+    {code:"SW",  en:"AGRICULTURE",  zh:"农业",     es:"AGRO",        href:"/products/agriculture/"},
+    {code:"WSW", en:"GOVERNING",    zh:"治理",     es:"GOBIERNO",    href:"/laws/"},
+    {code:"W",   en:"LAWS",         zh:"法则",     es:"LEYES",       href:"/laws/"},
+    {code:"WNW", en:"VISION",       zh:"愿景",     es:"VISIÓN",      href:"/explore/frontier/vision/"},
+    {code:"NW",  en:"LATTICE",      zh:"晶格",     es:"LATTICE",     href:"/explore/frontier/lattice/"},
+    {code:"NNW", en:"SHIMMER",      zh:"闪烁",     es:"SHIMMER",     href:"/explore/frontier/shimmer/"}
   ];
 
   function mkDiamond(item, isCenter){

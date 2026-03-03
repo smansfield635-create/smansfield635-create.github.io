@@ -1,27 +1,23 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — DIAL FACE + GEM RING (NO GAUGES IN RING)
-     LOCKS (PER SEAN):
-       - One dominant center diamond. All others progressively smaller outward.
-       - Compass face graphic BEHIND gems (dial: concavity + rings + ticks + engraved axes).
-       - N/E/S/W are DEFINITIVE (non-arbitrary):
-           N = LAWS
-           E = ENERGY
-           S = FINANCE
-           W = GOVERNANCE
-       - Gauges are NOT a cardinal: remove from ring. Provide outside-geometry access (aux button + top nav).
-       - Home + Door outside compass geometry (corner diamonds).
-       - Add HUB + EXIT outside geometry (aux diamonds).
-       - Center INDEX routes to /index-core/ (create that page separately if 404).
-       - Fix doctrine route: /products/capital-doctrine/
-       - Trilingual (EN/中文/ES)
-       - lane=platform|engineering toggle: URL-only, NO reload, updates labels live
-       - lang toggle: reload same pathname (GH Pages safe)
+     COMPASS · 16-POINT RING + CENTER CORE (INDEX) — COMPASS v6 (NO LOOPS · NO DUPES · DIAL FACE)
+     EXECUTION (LOCKED):
+       - 16-point glossy ring + center CORE (Index) + instrument dial face
+       - Home + Door are OUTSIDE compass geometry (bottom corner diamonds)
+       - Add HUB + EXIT controls (outside geometry) (HUB→/index.html, EXIT→/door/)
+       - Remove Prelude + Lattice from compass ring
+       - Add Research to ring
+       - Fix Doctrine route: /products/capital-doctrine/
+       - Governance must route to: /governance/
+       - NO duplicate destinations in ring:
+           duplicates or intentionally-unbuilt => /404.html placeholder
+       - Trilingual: EN / 中文 / ES
+       - Lane: lane=platform|engineering (URL-only; NO reload) updates labels
        - Canon state carry: URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY (NO new gd_* keys)
-       - No overlays/modals; no inline onclick; addEventListener only
-       - No duplicate destinations in ring: duplicates/unbuilt -> /404.html placeholder
-       - Brand credit: cogrid.net · diamondgatebridge.com
        - ui.css owns html/body background (NO overrides)
+       - No overlays/modals; no inline onclick; addEventListener only
+     BRAND:
+       - cogrid.net · diamondgatebridge.com
 -->
 
 <html lang="en">
@@ -40,20 +36,20 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== SCALE (ONE BIG CENTER, SMALLER OUTWARD) ===== */
-  --D0:196px;  /* CORE (dominant) */
-  --D1:140px;  /* Cardinals */
-  --D2:110px;  /* Diagonals */
-  --D3:82px;   /* Intercardinals */
+  /* ===== GEOMETRY (one dominant center; progressive reduction outward) ===== */
+  --D0:190px;  /* CORE */
+  --D1:132px;  /* N/E/S/W */
+  --D2:106px;  /* NE/SE/SW/NW */
+  --D3:86px;   /* 8 intercardinals */
 
-  /* tighter radii so everything fits */
-  --R1:172px;  /* cardinal ring */
-  --R2:252px;  /* diagonal ring */
-  --R3:322px;  /* outer ring */
+  /* radii: larger closer; smaller further */
+  --R1:168px;
+  --R2:238px;
+  --R3:304px;
 
-  --padTop:118px;
+  --padTop:112px;
 
-  /* material */
+  /* ===== MATERIAL ===== */
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
@@ -62,14 +58,14 @@ body::before,body::after{pointer-events:none!important}
   --opalV:rgba(90,40,120,.18);
 
   --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.34);
-  --goldGlow2:rgba(201,162,74,.18);
+  --goldGlow:rgba(201,162,74,.30);
+  --goldGlow2:rgba(201,162,74,.14);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
   --stroke:rgba(255,255,255,.12);
 }
 
-/* ===== TOP CONTROLS ===== */
+/* ===== Top controls ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -87,7 +83,7 @@ body::before,body::after{pointer-events:none!important}
   padding:10px 12px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 54%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   color:rgba(255,255,255,.92);
   font-weight:950;font-size:14px;letter-spacing:.2px;
@@ -95,16 +91,13 @@ body::before,body::after{pointer-events:none!important}
   touch-action:manipulation;
   position:relative;overflow:hidden;
   white-space:nowrap;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
 }
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
-  opacity:.60;pointer-events:none;
+.btn:active{filter:brightness(.98)}
+.btn:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:0 18px 60px rgba(0,0,0,.35), 0 0 0 2px rgba(201,162,74,.16), 0 0 28px rgba(201,162,74,.18);
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:0 0 18px rgba(255,43,43,.10);}
-
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -121,27 +114,26 @@ body::before,body::after{pointer-events:none!important}
 .seg button[aria-pressed="true"]{
   color:rgba(255,255,255,.96);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 60%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
 }
 
-/* ===== STAGE ===== */
+/* ===== Stage ===== */
 .stage{
   position:relative;
   width:min(1100px,94vw);
-  height:min(1100px,84vh);
+  height:min(1100px,82vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
-/* festival slab */
+/* ===== Festival slab behind dial ===== */
 .backdrop{
   position:absolute;inset:-26px;
   border-radius:44px;
   pointer-events:none;
   overflow:hidden;
-  z-index:0;
 }
 .backdrop::before{
   content:"";
@@ -182,8 +174,8 @@ body::before,body::after{pointer-events:none!important}
   opacity:.75;
 }
 
-/* ===== DIAL FACE (gems sit on this) ===== */
-.dial{
+/* ===== Dial face (anti-snowflake, instrument-grade) ===== */
+.dialFace{
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -191,22 +183,22 @@ body::before,body::after{pointer-events:none!important}
   height:min(980px,92vw);
   border-radius:999px;
   pointer-events:none;
-  z-index:1;
   overflow:hidden;
+  z-index:1;
 }
-/* concavity + rim */
-.dial::before{
+.dialFace::before{
   content:"";
   position:absolute;inset:0;
   border-radius:999px;
   background:
-    radial-gradient(circle at 50% 44%,
+    radial-gradient(circle at 50% 45%,
       rgba(255,255,255,.06),
       rgba(0,0,0,.18) 58%,
       rgba(0,0,0,.46) 78%,
       rgba(0,0,0,.00) 92%),
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255,43,43,.10), transparent 66%);
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.10), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
     inset 0 0 0 10px rgba(0,0,0,.10),
@@ -214,21 +206,20 @@ body::before,body::after{pointer-events:none!important}
     0 50px 180px rgba(0,0,0,.35);
   opacity:.92;
 }
-/* rings + ticks + 45° silk inlay (no orthogonal grid) */
-.dial::after{
+.dialFace::after{
   content:"";
   position:absolute;inset:-16%;
   background:
-    /* three rings */
-    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(255,255,255,.06) 34% 34.7%, transparent 35% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.7%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 70%, rgba(255,255,255,.06) 70% 70.7%, transparent 71% 100%),
+    /* resolution rings */
+    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(255,255,255,.06) 34% 34.6%, transparent 35% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
 
-    /* engraved axes */
+    /* axis engravings */
     linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
     linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
 
-    /* 45° aligned tick hashes */
+    /* 45° aligned silk inlay (matches diamonds) */
     repeating-conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
@@ -239,8 +230,6 @@ body::before,body::after{pointer-events:none!important}
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
-
-/* engraved N/E/S/W */
 .faceLetters{
   position:absolute;
   left:50%;top:50%;
@@ -264,7 +253,7 @@ body::before,body::after{pointer-events:none!important}
 .faceLetters .S{left:50%;bottom:10px;transform:translateX(-50%)}
 .faceLetters .W{left:10px;top:50%;transform:translateY(-50%)}
 
-/* ===== GEM NODES ===== */
+/* ===== Nodes ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -272,15 +261,14 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   pointer-events:auto;
   overflow:hidden;
-  z-index:5;
+  border-radius:22px;
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  z-index:5;
 }
-
-/* sizes */
-.core{width:var(--D0);height:var(--D0);border-radius:28px;z-index:6}
-.l1{width:var(--D1);height:var(--D1);border-radius:26px}
-.l2{width:var(--D2);height:var(--D2);border-radius:22px}
-.l3{width:var(--D3);height:var(--D3);border-radius:20px}
+.core{ width:var(--D0); height:var(--D0); border-radius:26px; z-index:6; }
+.l1{ width:var(--D1); height:var(--D1); }
+.l2{ width:var(--D2); height:var(--D2); }
+.l3{ width:var(--D3); height:var(--D3); }
 
 .surface{
   background:
@@ -296,10 +284,10 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
-/* diamond-aligned silk trim */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
@@ -311,7 +299,6 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
 }
-/* highlight streak */
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -322,6 +309,16 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.95;
 }
+
+.goldTrim{
+  border:1px solid var(--gold);
+  box-shadow:
+    var(--shadowDeep),
+    0 0 34px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.24),
+    inset 0 -50px 90px rgba(0,0,0,.90);
+}
+
 /* glow-only hover (NO movement) */
 .node:hover{
   border-color:rgba(201,162,74,.46);
@@ -335,16 +332,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .node:active{filter:brightness(.98)}
 
-/* gold trim node */
-.goldTrim{
-  border:1px solid var(--gold);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 34px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -50px 90px rgba(0,0,0,.90);
-}
-
 /* inner text */
 .inner{
   width:100%;height:100%;
@@ -352,24 +339,30 @@ body::before,body::after{pointer-events:none!important}
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   text-align:center;
-  color:#fff;
   padding:10px;
-  gap:4px;
+  gap:5px;
+  user-select:none;
+  pointer-events:none;
 }
-.word{font-weight:980;letter-spacing:.55px;line-height:1.05}
-.code{font-weight:950;letter-spacing:1.2px;opacity:.78}
+.word{
+  font-weight:980;
+  font-size:clamp(10px, 1.05vw, 16px);
+  letter-spacing:.55px;
+  line-height:1.05;
+  color:rgba(255,255,255,.95);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+}
+.code{
+  font-weight:950;
+  font-size:10px;
+  letter-spacing:1.2px;
+  opacity:.78;
+  color:rgba(255,255,255,.86);
+}
+.core .word{font-size:clamp(12px, 1.2vw, 18px)}
+.core .code{opacity:.82}
 
-/* font scaling per tier */
-.core .word{font-size:16px}
-.core .code{font-size:10px;opacity:.82}
-.l1 .word{font-size:13.5px}
-.l1 .code{font-size:9.5px}
-.l2 .word{font-size:12px}
-.l2 .code{font-size:9px}
-.l3 .word{font-size:10.5px}
-.l3 .code{font-size:8.5px}
-
-/* ===== OUTSIDE-GEOMETRY AUX DIAMONDS ===== */
+/* ===== Bottom corner diamonds (outside geometry) ===== */
 .corner{
   position:fixed;
   bottom:max(18px, env(safe-area-inset-bottom));
@@ -379,25 +372,14 @@ body::before,body::after{pointer-events:none!important}
 .corner .dmini{pointer-events:auto}
 .corner.left{left:18px}
 .corner.right{right:18px}
-
-.aux{
-  position:fixed;
-  left:50%;
-  bottom:max(18px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:240;
-  display:flex;
-  gap:12px;
-  pointer-events:none;
-}
-.aux .dmini{pointer-events:auto}
+.corner.mid{left:50%;transform:translateX(-50%);bottom:max(18px, env(safe-area-inset-bottom));}
 
 .dmini{
-  width:56px;height:56px;
+  width:54px;height:54px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 54%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;place-items:center;
@@ -407,7 +389,7 @@ body::before,body::after{pointer-events:none!important}
   transform:rotate(45deg);
   position:relative;
   overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  transition:box-shadow .16s ease, border-color .16s ease;
 }
 .dmini::after{
   content:"";
@@ -422,7 +404,6 @@ body::before,body::after{pointer-events:none!important}
     0 0 0 2px rgba(201,162,74,.16),
     0 0 30px rgba(201,162,74,.22);
 }
-.dmini:active{filter:brightness(.98)}
 .dmini span{
   transform:rotate(-45deg);
   font-weight:980;
@@ -439,10 +420,30 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== PILL ===== */
+/* ===== Banner + Pill ===== */
+.banner{
+  width:min(980px,94vw);
+  margin:calc(var(--padTop) - 84px) auto 0;
+  padding:12px 14px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  box-shadow:0 22px 70px rgba(0,0,0,.35);
+  color:rgba(255,255,255,.86);
+  line-height:1.5;
+  font-size:13.5px;
+}
+.banner b{color:rgba(255,255,255,.95)}
+.banner .brand{
+  margin-top:6px;
+  font-size:12px;
+  color:rgba(255,255,255,.70);
+}
+.banner .brand span{color:rgba(201,162,74,.72);font-weight:950}
+
 .pill{
   width:min(980px,94vw);
-  margin:16px auto 0;
+  margin:14px auto 0;
   padding:14px 16px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
@@ -457,37 +458,30 @@ body::before,body::after{pointer-events:none!important}
   font-size:13.75px;
 }
 .pill b{color:rgba(255,255,255,.95)}
-.brand{
-  margin-top:8px;
-  font-size:12px;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.70);
-}
-.brand span{color:rgba(201,162,74,.70);font-weight:950}
 
-/* responsive */
-@media (max-width:720px){
+/* ===== Mobile ===== */
+@media (max-width:640px){
   :root{
     --D0:176px;
-    --D1:128px;
-    --D2:102px;
-    --D3:78px;
-    --R1:160px;
-    --R2:232px;
-    --R3:296px;
-    --padTop:124px;
+    --D1:122px;
+    --D2:98px;
+    --D3:82px;
+    --R1:154px;
+    --R2:222px;
+    --R3:286px;
+    --padTop:122px;
   }
-  .stage{height:min(980px,84vh)}
+  .stage{height:min(900px,82vh)}
 }
 @media (max-width:420px){
   :root{
-    --D0:164px;
-    --D1:118px;
-    --D2:96px;
-    --D3:74px;
-    --R1:150px;
-    --R2:220px;
-    --R3:282px;
+    --D0:168px;
+    --D1:116px;
+    --D2:94px;
+    --D3:78px;
+    --R1:146px;
+    --R2:212px;
+    --R3:274px;
   }
 }
 </style>
@@ -495,19 +489,16 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
+<!-- TOP CONTROLS -->
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnResearch" data-route="/research/" href="/research/">RESEARCH</a>
-    <a class="btn" id="btnExplore"  data-route="/explore/" href="/explore/">EXPLORE</a>
-    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-    <a class="btn" id="btnGauges"   data-route="/gauges/" href="/gauges/">GAUGES</a>
-  </div>
-  <div class="right">
     <div class="seg" role="group" aria-label="Language">
       <button type="button" id="btnEN" aria-pressed="true">EN</button>
       <button type="button" id="btnZH" aria-pressed="false">中文</button>
       <button type="button" id="btnES" aria-pressed="false">ES</button>
     </div>
+  </div>
+  <div class="right">
     <div class="seg" role="group" aria-label="Lane">
       <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
       <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
@@ -515,9 +506,17 @@ body::before,body::after{pointer-events:none!important}
   </div>
 </div>
 
+<!-- BANNER -->
+<div class="banner" id="banner">
+  <b id="banT">WELCOME TO THE COMPASS.</b>
+  <span id="banS"> Choose a hub. Move forward. Use HUB to reset. Use EXIT to restart traversal.</span>
+  <div class="brand"><span>cogrid.net</span> · <span>diamondgatebridge.com</span></div>
+</div>
+
+<!-- STAGE -->
 <div class="stage" id="stage" aria-label="Compass dial">
   <div class="backdrop" aria-hidden="true"></div>
-  <div class="dial" aria-hidden="true"></div>
+  <div class="dialFace" aria-hidden="true"></div>
   <div class="faceLetters" aria-hidden="true">
     <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
   </div>
@@ -525,24 +524,31 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="pill" id="pill">
-  <div id="pillMain"><b>Welcome to the Compass.</b> Cardinals are fixed. The ring routes to hubs. Gauges stay outside the ring.</div>
-  <div class="brand"><span>cogrid.net</span> · <span>diamondgatebridge.com</span></div>
+  <div id="pillMain"><b>Compass:</b> Center opens the CORE Index. The ring opens hubs. No duplicates. Unbuilt hubs route to 404.</div>
 </div>
 
-<!-- Outside-geometry corners -->
+<!-- BOTTOM CORNERS (OUTSIDE COMPASS GEOMETRY) -->
 <div class="corner left" aria-label="Door">
   <div class="dmini" id="btnDoorMini" role="button" tabindex="0" aria-label="Door"><span>DOOR</span></div>
   <div class="cornerLabel" id="lblDoor">DOOR</div>
 </div>
+
 <div class="corner right" aria-label="Home">
   <div class="dmini" id="btnHomeMini" role="button" tabindex="0" aria-label="Home"><span>HOME</span></div>
   <div class="cornerLabel" id="lblHome">HOME</div>
 </div>
 
-<!-- Outside-geometry aux controls -->
-<div class="aux" aria-label="Aux controls (outside compass)">
-  <div class="dmini" id="btnHubMini" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
-  <div class="dmini" id="btnExitMini" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
+<div class="corner mid" aria-label="Hub controls">
+  <div style="display:flex;gap:14px;align-items:flex-start;pointer-events:auto">
+    <div style="pointer-events:none">
+      <div class="dmini" id="btnExitMini" role="button" tabindex="0" aria-label="Exit"><span>⟲</span></div>
+      <div class="cornerLabel" id="lblExit">EXIT</div>
+    </div>
+    <div style="pointer-events:none">
+      <div class="dmini" id="btnHubMini" role="button" tabindex="0" aria-label="Hub"><span>◆</span></div>
+      <div class="cornerLabel" id="lblHub">HUB</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -589,19 +595,7 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-  // ===== Wire [data-route] anchors with full state =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-  wireAll();
-
-  // ===== Language (reload) =====
+  // ===== Top language (reload for GH safety) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -613,17 +607,16 @@ body::before,body::after{pointer-events:none!important}
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
-    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
   btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // ===== Lane (NO reload; URL-only; updates labels live) =====
+  // ===== Lane (NO reload; URL-only) =====
   var btnLP=document.getElementById("lanePlatform");
   var btnLE=document.getElementById("laneEngineering");
-
   setPressed(btnLP, lane==="platform");
   setPressed(btnLE, lane==="engineering");
 
@@ -634,146 +627,130 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnLP, lane==="platform");
     setPressed(btnLE, lane==="engineering");
     paintText();
-    layout();
-    wireAll();
+    layout(); // rebuild labels
   }
   btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // ===== Text (pill + outside labels) =====
-  var pillMain=document.getElementById("pillMain");
-  var lblDoor=document.getElementById("lblDoor");
-  var lblHome=document.getElementById("lblHome");
-
-  function paintText(){
-    var laneWord = (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-                  : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-                  : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-
-    if(lang==="zh"){
-      pillMain.innerHTML="<b>欢迎来到指南针。</b> 四象限固定不任意。外环路由到枢纽；量规不占象限（在外部）。当前透镜："+laneWord+"。";
-      lblDoor.textContent="门"; lblHome.textContent="主页";
-      document.querySelector("#btnDoorMini span").textContent="门";
-      document.querySelector("#btnHomeMini span").textContent="主页";
-      document.querySelector("#btnHubMini span").textContent="枢纽";
-      document.querySelector("#btnExitMini span").textContent="退出";
-      document.getElementById("btnResearch").textContent="研究";
-      document.getElementById("btnExplore").textContent="探索";
-      document.getElementById("btnProducts").textContent="产品";
-      document.getElementById("btnGauges").textContent="量规";
-      btnLP.textContent="平台";
-      btnLE.textContent="工程";
-    }else if(lang==="es"){
-      pillMain.innerHTML="<b>Bienvenido a la Brújula.</b> Cardinales fijos (no arbitrarios). El anillo enruta a hubs; Medidores no ocupan cardinales (van fuera). Lente: "+laneWord+".";
-      lblDoor.textContent="PUERTA"; lblHome.textContent="INICIO";
-      document.querySelector("#btnDoorMini span").textContent="PUERTA";
-      document.querySelector("#btnHomeMini span").textContent="INICIO";
-      document.querySelector("#btnHubMini span").textContent="HUB";
-      document.querySelector("#btnExitMini span").textContent="SALIR";
-      document.getElementById("btnResearch").textContent="INVESTIGACIÓN";
-      document.getElementById("btnExplore").textContent="EXPLORAR";
-      document.getElementById("btnProducts").textContent="PRODUCTOS";
-      document.getElementById("btnGauges").textContent="MEDIDORES";
-      btnLP.textContent="PLATAFORMA";
-      btnLE.textContent="INGENIERÍA";
-    }else{
-      pillMain.innerHTML="<b>Welcome to the Compass.</b> Cardinals are fixed (non-arbitrary). The ring routes to hubs; Gauges stay outside the ring. Lens: "+laneWord+".";
-      lblDoor.textContent="DOOR"; lblHome.textContent="HOME";
-      document.querySelector("#btnDoorMini span").textContent="DOOR";
-      document.querySelector("#btnHomeMini span").textContent="HOME";
-      document.querySelector("#btnHubMini span").textContent="HUB";
-      document.querySelector("#btnExitMini span").textContent="EXIT";
-      document.getElementById("btnResearch").textContent="RESEARCH";
-      document.getElementById("btnExplore").textContent="EXPLORE";
-      document.getElementById("btnProducts").textContent="PRODUCTS";
-      document.getElementById("btnGauges").textContent="GAUGES";
-      btnLP.textContent="PLATFORM";
-      btnLE.textContent="ENGINEERING";
-    }
-  }
-  paintText();
-
-  // ===== Outside-geometry navigation =====
+  // ===== Outside-geometry controls =====
   function bindMini(id, path){
     var el=document.getElementById(id);
     if(!el) return;
     function act(){ go(path); }
     el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindMini("btnDoorMini","/door/");
   bindMini("btnHomeMini","/home/");
-  bindMini("btnHubMini","/home/");    // HUB = launchpad
-  bindMini("btnExitMini","/door/");   // EXIT = door reset (intro)
+  bindMini("btnExitMini","/door/");
+  bindMini("btnHubMini","/index.html");
 
-  // ===== Routing: unique destinations enforced =====
-  var INDEX_ROUTE = "/index-core/";
-  var PLACEHOLDER_404 = "/404.html";
+  // ===== Banner + pill copy =====
+  var banT=document.getElementById("banT");
+  var banS=document.getElementById("banS");
+  var pillMain=document.getElementById("pillMain");
+  var lblDoor=document.getElementById("lblDoor");
+  var lblHome=document.getElementById("lblHome");
+  var lblExit=document.getElementById("lblExit");
+  var lblHub=document.getElementById("lblHub");
 
-  // DEFINITIVE N/E/S/W mapping (fixed meaning). No Gauges in ring.
-  // Lane changes labels only (not destinations).
+  function paintText(){
+    var laneWord = (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+                 : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+                 : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+
+    if(lang==="zh"){
+      banT.textContent="欢迎来到指南针。";
+      banS.textContent=" 选一个枢纽向前走。HUB 重置。EXIT 重新开始。透镜："+laneWord+"。";
+      pillMain.innerHTML="<b>指南针：</b>中心打开 CORE 索引。外环打开枢纽。禁止重复；未建页面暂时去 404。";
+      lblDoor.textContent="门"; lblHome.textContent="主页"; lblExit.textContent="退出"; lblHub.textContent="枢纽";
+      document.querySelector("#btnDoorMini span").textContent="门";
+      document.querySelector("#btnHomeMini span").textContent="主页";
+    }else if(lang==="es"){
+      banT.textContent="BIENVENIDO A LA BRÚJULA.";
+      banS.textContent=" Elige un hub y avanza. HUB reinicia. EXIT reinicia recorrido. Lente: "+laneWord+".";
+      pillMain.innerHTML="<b>Brújula:</b> Centro abre el Índice CORE. El anillo abre hubs. Sin duplicados; no construido → 404.";
+      lblDoor.textContent="PUERTA"; lblHome.textContent="INICIO"; lblExit.textContent="SALIR"; lblHub.textContent="HUB";
+      document.querySelector("#btnDoorMini span").textContent="PUERTA";
+      document.querySelector("#btnHomeMini span").textContent="INICIO";
+    }else{
+      banT.textContent="WELCOME TO THE COMPASS.";
+      banS.textContent=" Choose a hub. Move forward. HUB resets. EXIT restarts traversal. Lens: "+laneWord+".";
+      pillMain.innerHTML="<b>Compass:</b> Center opens the CORE Index. The ring opens hubs. No duplicates. Unbuilt hubs route to 404.";
+      lblDoor.textContent="DOOR"; lblHome.textContent="HOME"; lblExit.textContent="EXIT"; lblHub.textContent="HUB";
+      document.querySelector("#btnDoorMini span").textContent="DOOR";
+      document.querySelector("#btnHomeMini span").textContent="HOME";
+    }
+  }
+  paintText();
+
+  // ===== Routing (16 unique destinations; duplicates => 404) =====
+  var PLACEHOLDER_404="/404.html";
+  var INDEX_CORE="/index-core/";
+
+  // Tier meaning:
+  // Tier 1 (Cardinals): Laws / Energy / Finance / Governance
+  // Tier 2 (Diagonals): Research / Products / Agriculture / Explore
+  // Tier 3 (Outer 8): Education / Shimmer / Gauges / Doctrine / Infra / Frontier / Vision / Risk&Capital
+  //
+  // Lane changes LABELS ONLY (routes remain fixed).
   var ROUTES_RAW = [
-    // Tier 1 (cardinals)
-    {tier:1, code:"N",  href:"/laws/",
+    // Tier 1 (N/E/S/W)
+    {tier:1, code:"N",  gold:false, href:"/laws/",
       label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMITES"}}},
-    {tier:1, code:"E",  href:"/explore/frontier/energy/",
-      label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"能源",es:"PODER"}}},
-    {tier:1, code:"S",  href:"/finance/",
+    {tier:1, code:"E",  gold:false, href:"/explore/frontier/energy/",
+      label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"功率",es:"PODER"}}},
+    {tier:1, code:"S",  gold:false, href:"/finance/",
       label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"}, engineering:{en:"CAPITAL",zh:"资本",es:"CAPITAL"}}},
-    {tier:1, code:"W",  href:"/governance/",
-      label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"}, engineering:{en:"EXECUTION",zh:"执行",es:"EJECUCIÓN"}}},
+    {tier:1, code:"W",  gold:false, href:"/governance/",
+      label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"}, engineering:{en:"EXEC",zh:"执行",es:"EJEC"}}},
 
-    // Tier 2 (diagonals)
-    {tier:2, code:"NE", href:"/research/",
-      label:{platform:{en:"RESEARCH",zh:"研究",es:"INVESTIGACIÓN"}, engineering:{en:"R&D",zh:"研发",es:"I+D"}}, gold:true},
-    {tier:2, code:"SE", href:"/products/",
-      label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"}, engineering:{en:"DEPLOY",zh:"部署",es:"DESPLIEGUE"}}},
-    {tier:2, code:"SW", href:"/products/agriculture/",
-      label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"}, engineering:{en:"FOOD",zh:"食物",es:"ALIMENTO"}}},
-    {tier:2, code:"NW", href:"/explore/infrastructure/",
-      label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"}, engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}},
+    // Tier 2 (NE/SE/SW/NW)
+    {tier:2, code:"NE", gold:true,  href:"/research/",
+      label:{platform:{en:"RESEARCH",zh:"研究",es:"INVESTIG."}, engineering:{en:"R&D",zh:"研发",es:"I+D"}}},
+    {tier:2, code:"SE", gold:false, href:"/products/",
+      label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"}, engineering:{en:"DEPLOY",zh:"部署",es:"DESPL"}}},
+    {tier:2, code:"SW", gold:false, href:"/agriculture/",
+      label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"}, engineering:{en:"FOOD",zh:"食物",es:"ALIM"}}},
+    {tier:2, code:"NW", gold:false, href:"/explore/",
+      label:{platform:{en:"EXPLORE",zh:"探索",es:"EXPLORAR"}, engineering:{en:"MODELS",zh:"模型",es:"MODELOS"}}},
 
-    // Tier 3 (intercardinals) — hubs only (no gauges)
-    {tier:3, code:"NNE", href:"/products/education/",
+    // Tier 3 (8 intercardinals)
+    {tier:3, code:"NNE", gold:false, href:"/products/education/",
       label:{platform:{en:"EDUCATION",zh:"教育",es:"EDUCACIÓN"}, engineering:{en:"ESL",zh:"ESL",es:"ESL"}}},
-    {tier:3, code:"ENE", href:"/explore/frontier/",
-      label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}, engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}},
-    {tier:3, code:"ESE", href:"/products/capital-doctrine/",
+    {tier:3, code:"ENE", gold:false, href:"/explore/frontier/shimmer/",
+      label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"}, engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}},
+    {tier:3, code:"ESE", gold:false, href:"/gauges/",
+      label:{platform:{en:"GAUGES",zh:"量规",es:"MEDIDORES"}, engineering:{en:"SIGNALS",zh:"信号",es:"SEÑALES"}}},
+    {tier:3, code:"SSE", gold:false, href:"/products/capital-doctrine/",
       label:{platform:{en:"DOCTRINE",zh:"教义",es:"DOCTRINA"}, engineering:{en:"CCD",zh:"CCD",es:"CCD"}}},
-    {tier:3, code:"SSE", href:"/products/risk-capital/",
-      label:{platform:{en:"RISK",zh:"风险",es:"RIESGO"}, engineering:{en:"ENVELOPE",zh:"包络",es:"ENV"}}},
-    {tier:3, code:"SSW", href:"/explore/frontier/vision/",
-      label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"}, engineering:{en:"VISION",zh:"愿景",es:"VISIÓN"}}},
-    {tier:3, code:"WSW", href:"/laws/categories/",
-      label:{platform:{en:"CATEGORIES",zh:"分类",es:"CATEGORÍAS"}, engineering:{en:"MAP",zh:"映射",es:"MAPA"}}},
-    {tier:3, code:"WNW", href:"/explore/frontier/lattice/",
-      label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"}, engineering:{en:"256",zh:"256态",es:"256"}}},
-    {tier:3, code:"NNW", href:"/explore/frontier/shimmer/",
-      label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"}, engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}}
+    {tier:3, code:"SSW", gold:false, href:"/explore/infrastructure/",
+      label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"}, engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}},
+    {tier:3, code:"WSW", gold:false, href:"/explore/frontier/",
+      label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}, engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}},
+    {tier:3, code:"WNW", gold:false, href:"/explore/frontier/vision/",
+      label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"}, engineering:{en:"MAP",zh:"映射",es:"MAP"}}},
+    {tier:3, code:"NNW", gold:false, href:"/products/risk-capital/",
+      label:{platform:{en:"RISK",zh:"风险",es:"RIESGO"}, engineering:{en:"RISK",zh:"风险",es:"RIESGO"}}}
   ];
 
   function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
+    var seen=Object.create(null);
+    var out=[];
     for(var i=0;i<list.length;i++){
-      var it = list[i];
-      var h  = (it.href||"").trim();
-      if(!h) h = PLACEHOLDER_404;
-      if(seen[h]) h = PLACEHOLDER_404;
-      seen[h] = true;
-      out.push({
-        tier:it.tier, code:it.code, href:h,
-        label:it.label, gold:!!it.gold
-      });
+      var it=list[i];
+      var h=(it.href||"").trim();
+      if(!h) h=PLACEHOLDER_404;
+      if(seen[h]) h=PLACEHOLDER_404;
+      seen[h]=true;
+      out.push({tier:it.tier,code:it.code,gold:!!it.gold,href:h,label:it.label});
     }
     return out;
   }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
+  var ROUTES=normalizeRoutes(ROUTES_RAW);
 
   function labelFor(it){
-    var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
+    var pack=(lane==="engineering")?it.label.engineering:it.label.platform;
     return (lang==="zh")?pack.zh:(lang==="es")?pack.es:pack.en;
   }
 
@@ -788,11 +765,11 @@ body::before,body::after{pointer-events:none!important}
 
     var w=document.createElement("div");
     w.className="word";
-    w.textContent = labelFor(it);
+    w.textContent=labelFor(it);
 
     var c=document.createElement("div");
     c.className="code";
-    c.textContent = it.code;
+    c.textContent=it.code;
 
     inner.appendChild(w);
     inner.appendChild(c);
@@ -800,9 +777,7 @@ body::before,body::after{pointer-events:none!important}
 
     function act(){ go(it.href); }
     d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
     return d;
   }
@@ -818,61 +793,56 @@ body::before,body::after{pointer-events:none!important}
 
     var w=document.createElement("div");
     w.className="word";
-    w.textContent = (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
+    w.textContent=(lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
 
     var c=document.createElement("div");
     c.className="code";
-    c.textContent = "CORE";
+    c.textContent="CORE";
 
     inner.appendChild(w);
     inner.appendChild(c);
     d.appendChild(inner);
 
-    function act(){ go(INDEX_ROUTE); }
+    function act(){ go(INDEX_CORE); }
     d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
     return d;
   }
 
+  // ===== Layout =====
   var stage=document.getElementById("stage");
 
   function layout(){
-    // remove previous nodes
+    // remove prior nodes only
     var olds=stage.querySelectorAll(".node");
     for(var i=0;i<olds.length;i++) olds[i].remove();
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||172;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||252;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||322;
-
-    // core
     var core=mkCore();
     core.style.left=cx+"px"; core.style.top=cy+"px";
     stage.appendChild(core);
 
-    // split tiers
-    var t1=[], t2=[], t3=[];
+    var t1=[],t2=[],t3=[];
     for(var i=0;i<ROUTES.length;i++){
       if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
       else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
       else t3.push(ROUTES[i]);
     }
 
-    // Tier 1 pinned to N/E/S/W angles by code (fixed meaning)
-    function pickBy(code, arr){
-      for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i];
-      return null;
-    }
-    var fixed=[pickBy("N",t1),pickBy("E",t1),pickBy("S",t1),pickBy("W",t1)].filter(Boolean);
-    var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
-    for(var i=0;i<fixed.length;i++){
-      var it=fixed[i];
+    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||238;
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||304;
+
+    // Tier 1 pinned to N/E/S/W angles by code
+    function pickBy(code, arr){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+    var t1Ordered=[pickBy("N",t1),pickBy("E",t1),pickBy("S",t1),pickBy("W",t1)].filter(Boolean);
+    if(t1Ordered.length<4){ for(var i=0;i<t1.length;i++) if(t1Ordered.indexOf(t1[i])===-1) t1Ordered.push(t1[i]); }
+    var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
+    for(var i=0;i<t1Ordered.length;i++){
+      var it=t1Ordered[i];
       var x=cx + R1*Math.cos(ang[i]);
       var y=cy + R1*Math.sin(ang[i]);
       var n=mkNode(it,"l1");
@@ -880,7 +850,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 2 diagonals (start -45°)
+    // Tier 2 (4 diagonals) start at -45°
     for(var i=0;i<t2.length;i++){
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
       var x=cx + R2*Math.cos(a);
@@ -890,9 +860,9 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 3 intercardinals (start -22.5°)
+    // Tier 3 (8) start at -67.5°
     for(var i=0;i<t3.length;i++){
-      var a=(i/t3.length)*(Math.PI*2) - Math.PI/8;
+      var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
       var x=cx + R3*Math.cos(a);
       var y=cy + R3*Math.sin(a);
       var n=mkNode(t3[i],"l3");
@@ -906,8 +876,10 @@ body::before,body::after{pointer-events:none!important}
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
     layout();
   }
+
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+
 })();
 </script>
 

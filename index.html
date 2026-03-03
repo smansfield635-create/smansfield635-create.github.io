@@ -14,39 +14,39 @@ a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-/* ===============================
+/* ======================================
    TRUE HIERARCHY
-   CORE largest
-   Progressive decay outward
-================================ */
+   One dominant center.
+   Progressive reduction outward.
+====================================== */
 
 :root{
-  --D0:220px;  /* CORE (100%) */
-  --D1:165px;  /* 75% */
-  --D2:120px;  /* 55% */
-  --D3:88px;   /* 40% */
+  --D0:210px;  /* CORE */
+  --D1:150px;  /* 75% */
+  --D2:115px;  /* 55% */
+  --D3:80px;   /* 38% */
 
-  /* compressed radii to fit screen */
-  --R1:190px;
-  --R2:300px;
-  --R3:390px;
+  /* tighter radii */
+  --R1:170px;
+  --R2:255px;
+  --R3:330px;
 
-  --padTop:100px;
+  --padTop:90px;
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
-  --festival:rgba(255,43,43,.26);
-  --opalV:rgba(90,40,120,.18);
-  --crimson:rgba(120,0,22,.44);
+  --festival:rgba(255,43,43,.30);
+  --opalV:rgba(90,40,120,.22);
+  --crimson:rgba(120,0,22,.45);
   --gold:rgba(201,162,74,.55);
-  --shadowDeep:0 40px 120px rgba(0,0,0,.85);
+  --shadowDeep:0 40px 110px rgba(0,0,0,.85);
 }
 
 /* Stage */
 .stage{
   position:relative;
-  width:min(1100px,94vw);
-  height:min(1100px,85vh);
+  width:min(1050px,94vw);
+  height:min(1050px,88vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
@@ -57,7 +57,7 @@ body::before,body::after{pointer-events:none!important}
   left:50%;
   top:50%;
   transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:24px;
+  border-radius:26px;
   cursor:pointer;
   pointer-events:auto;
   overflow:hidden;
@@ -71,28 +71,53 @@ body::before,body::after{pointer-events:none!important}
 
 .surface{
   background:
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,.25), transparent 45%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,.28), transparent 45%),
     radial-gradient(circle at 75% 30%, var(--festival), transparent 60%),
     radial-gradient(circle at 60% 80%, var(--opalV), transparent 60%),
     radial-gradient(circle at 30% 75%, var(--crimson), transparent 70%),
     linear-gradient(160deg,var(--onyx1),var(--onyx0));
-  border:1px solid rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.22);
   box-shadow:
     var(--shadowDeep),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -60px 90px rgba(0,0,0,.9);
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -70px 100px rgba(0,0,0,.95);
 }
 
+/* Gloss layer restored */
+.surface::after{
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  top:12%;
+  height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);
+  transform:rotate(-12deg);
+  opacity:.95;
+}
+
+/* Hover */
 .node:hover{
   box-shadow:
     var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.25),
-    0 0 40px rgba(201,162,74,.25),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -60px 90px rgba(0,0,0,.9);
+    0 0 0 2px rgba(201,162,74,.30),
+    0 0 50px rgba(201,162,74,.25),
+    inset 0 2px 0 rgba(255,255,255,.25),
+    inset 0 -70px 100px rgba(0,0,0,.95);
   border-color:var(--gold);
 }
 
+/* INDEX emphasis */
+.core{
+  box-shadow:
+    var(--shadowDeep),
+    0 0 60px rgba(201,162,74,.25),
+    inset 0 2px 0 rgba(255,255,255,.28),
+    inset 0 -80px 120px rgba(0,0,0,.95);
+}
+
+/* Text */
 .inner{
   width:100%;
   height:100%;
@@ -116,6 +141,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.7;
   margin-top:4px;
 }
+
 </style>
 </head>
 

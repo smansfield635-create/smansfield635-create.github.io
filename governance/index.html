@@ -1,0 +1,1031 @@
+<!doctype html>
+<!-- TNT — /governance/index.html
+     GOVERNANCE · INDEX (FOUR PILLARS) — INFORMAL SITE LAYER (PINNED)
+     PURPOSE:
+       - Governance = deployment/execution layer that makes Finance/Agriculture real at scale
+       - Four pillars (locked): Policy Engine · Compliance Grid · Public Risk Meter · Decision Index
+       - Clear routing to each pillar page + Laws (doctrine) + Gauges (signals)
+     STANDARD (THIS FILE):
+       - Trilingual UI: EN / 中文 / ES
+       - Visible lens ONLY: lane=platform|engineering (URL-only; NEVER stored)
+       - Pinned informal layer:
+           gd_style = informal
+           gd_depth = explore
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Switching LANG or LANE does NOT reload and does NOT close open row
+       - Single-open accordion (tap same closes)
+       - No modals/overlays; no inline onclick; addEventListener only
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+     ROUTES:
+       - Edit ROUTES only if paths change.
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GOVERNANCE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:132px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.95);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Top (fixed) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Page ===== */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* Background context behind content */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* ===== Header ===== */
+.header{
+  position:relative;
+  z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
+  font-size:13.25px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+
+/* State pills */
+.stateRow{
+  margin-top:12px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+
+/* Band */
+.band{
+  position:relative;z-index:2;
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
+
+/* Accordion */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.mark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.subt{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
+
+.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:14.75px}
+.pdesc + .pdesc{margin-top:12px}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.25px}
+.bubble.open p{display:block}
+
+.actions{
+  margin-top:14px;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+}
+.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:148px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn red" id="btnLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <section class="header" aria-label="Governance header">
+    <p class="k" id="hk">GOVERNANCE</p>
+    <h1 class="t" id="ht">FOUR PILLARS</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="stateRow" aria-label="State">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </section>
+
+  <div class="band" id="band">PILLARS (OPEN ONE)</div>
+  <div class="list" id="list"></div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn red" id="dockLaws2" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== State (gd_* only; pinned informal layer) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
+  var time = qs.get("time") || LS.getItem("gd_time") || "now";
+  var lane = qs.get("lane") || "platform"; // URL-only
+
+  // pinned layer
+  var style="informal";
+  var depth="explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  // ===== ROUTES (single source of truth) =====
+  var ROUTES={
+    policy_engine:"/products/governing/policy-engine/",
+    compliance_grid:"/products/governing/compliance-grid/",
+    public_risk_meter:"/products/governing/public-risk-meter/",
+    decision_index:"/products/governing/decision-index/",
+    laws:"/laws/",
+    gauges:"/gauges/",
+    products:"/products/",
+    compass:"/index.html",
+    explore:"/explore/",
+    door:"/door/"
+  };
+
+  // ===== Header copy =====
+  var HEAD={
+    en:{
+      platform:{
+        hs:"Governance is the execution layer: institutions, enforcement, public accountability, and stability boundaries. It turns doctrine into behavior at scale.",
+        rule:"Rule: Governance deploys. Laws bound. Gauges measure. If measurement is missing, escalation stays paused."
+      },
+      engineering:{
+        hs:"Engineering view: governance is deterministic boundary enforcement under declared scope: constraints → gates → reason codes → receipts → replay. It is how systems stay comparable under scale.",
+        rule:"Rule: no silent overrides. Every intervention has a reason code and an audit receipt."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"治理是执行层：机构、执法、公共问责与稳定边界。它把教义变成可规模行为。",
+        rule:"规则：治理负责落地；法则负责边界；量规负责测量。缺测量就必须暂停升级。"
+      },
+      engineering:{
+        hs:"工程视图：治理是在声明范围下执行确定性边界：约束→闸门→原因码→收据→回放。它保证系统在扩张时仍可比较。",
+        rule:"规则：禁止静默覆盖。每次干预必须有原因码与审计收据。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"Gobernanza es la capa de ejecución: instituciones, enforcement, rendición pública de cuentas y límites de estabilidad. Convierte doctrina en conducta a escala.",
+        rule:"Regla: Gobernanza despliega. Leyes acotan. Medidores miden. Sin medición, la escalación se pausa."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: gobernanza = enforcement determinista bajo alcance declarado: restricciones → compuertas → códigos → recibos → replay. Mantiene comparabilidad a escala.",
+        rule:"Regla: sin overrides silenciosos. Toda intervención exige código de razón y recibo de auditoría."
+      }
+    }
+  };
+
+  // ===== Pillars (4) =====
+  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
+
+  var PILLARS=[
+    {
+      id:"policy_engine",
+      c:"#34d399",
+      t:P("Policy Engine","政策引擎","Motor de Política"),
+      s:P("Turn rules into decisions institutions can execute.","把规则变成机构可执行决策。","Convertir reglas en decisiones ejecutables."),
+      platform:{
+        intro:P(
+          "This pillar makes governance practical: policies become a small set of consistent decisions that can be enforced without personality conflicts.",
+          "这个支柱让治理可落地：政策被压缩成一小组一致决策，不再依赖个人风格。",
+          "Este pilar vuelve la gobernanza práctica: políticas se vuelven decisiones consistentes, aplicables sin choques de personalidad."
+        ),
+        b1:{h:P("What it outputs","输出是什么","Qué produce"), p:P(
+          "Clear allowed/blocked actions, with plain-language reasons.",
+          "清晰的允许/阻止动作，并给出人话原因。",
+          "Acciones permitidas/bloqueadas con razones claras."
+        )},
+        b2:{h:P("What it prevents","防止什么","Qué evita"), p:P(
+          "Ad-hoc exceptions that rot institutions from the inside.",
+          "随意例外从内部腐蚀机构。",
+          "Excepciones ad-hoc que pudren instituciones."
+        )},
+        b3:{h:P("How it ties to Laws","如何连接法则","Cómo conecta a Leyes"), p:P(
+          "Laws define bounds; Policy Engine turns bounds into executable steps.",
+          "法则给边界；政策引擎把边界变成可执行步骤。",
+          "Leyes acotan; el motor convierte límites en pasos ejecutables."
+        )}
+      },
+      engineering:{
+        intro:P(
+          "Policy Engine is a deterministic compiler: declared scope + constraints → reason-coded decision outputs, logged as receipts.",
+          "政策引擎是确定性编译器：声明范围+约束→原因码决策输出，并以收据记录。",
+          "Motor de política = compilador determinista: alcance+restricciones → salidas con códigos, registradas como recibos."
+        ),
+        b1:{h:P("Inputs","输入","Entradas"), p:P(
+          "Scope manifest, constraint set, threshold table, version tag.",
+          "范围清单、约束集、阈值表、版本标记。",
+          "Manifiesto de alcance, restricciones, umbrales, versión."
+        )},
+        b2:{h:P("Determinism","确定性","Determinismo"), p:P(
+          "Same inputs must yield same outputs; changes require version bump.",
+          "同输入必得同输出；变更必须版本升级。",
+          "Mismas entradas → mismas salidas; cambios requieren nueva versión."
+        )},
+        b3:{h:P("Receipts","收据","Recibos"), p:P(
+          "Every decision emits a receipt: inputs used + reason code + timestamp.",
+          "每个决策输出收据：使用的输入+原因码+时间戳。",
+          "Cada decisión emite recibo: entradas + código + timestamp."
+        )}
+      }
+    },
+
+    {
+      id:"compliance_grid",
+      c:"#c9a24a",
+      t:P("Compliance Grid","合规网格","Grid de Cumplimiento"),
+      s:P("Make constraints visible and enforceable across teams.","让约束跨团队可见且可执行。","Hacer restricciones visibles y ejecutables."),
+      platform:{
+        intro:P(
+          "Compliance stops drift: everyone knows what is allowed, what is blocked, and what must be verified before action.",
+          "合规阻止漂移：所有人知道允许什么、阻止什么、行动前必须验证什么。",
+          "Cumplimiento detiene deriva: todos saben qué se permite, qué se bloquea y qué verificar antes de actuar."
+        ),
+        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P(
+          "A simple grid: requirement → evidence → status.",
+          "简单网格：要求→证据→状态。",
+          "Una grilla simple: requisito → evidencia → estado."
+        )},
+        b2:{h:P("Why it matters","为什么重要","Por qué importa"), p:P(
+          "Scale fails when teams interpret rules differently.",
+          "扩张失败往往是团队对规则理解不一致。",
+          "La escala falla cuando equipos interpretan reglas distinto."
+        )},
+        b3:{h:P("Next step routing","下一步路由","Ruta siguiente"), p:P(
+          "From a violation, route to Laws (bounds) and Gauges (signals).",
+          "出现违规就路由到法则（边界）与量规（信号）。",
+          "Ante violación: saltar a Leyes (límites) y Medidores (señales)."
+        )}
+      },
+      engineering:{
+        intro:P(
+          "Compliance Grid is constraint surface presentation + enforcement logging: each cell maps to a check, a threshold, and a receipt schema.",
+          "合规网格是约束面展示+执行日志：每个格子对应检查、阈值与收据架构。",
+          "Grid = superficies de restricción + logging: cada celda mapea a check, umbral y esquema de recibo."
+        ),
+        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P(
+          "Each requirement has a binary gate: PASS/HOLD/FAIL with reason code.",
+          "每项要求都是二元闸门：PASS/HOLD/FAIL + 原因码。",
+          "Cada requisito tiene compuerta: PASS/HOLD/FAIL con código."
+        )},
+        b2:{h:P("Audit trail","审计轨迹","Rastro de auditoría"), p:P(
+          "No silent compliance. All checks are logged by window.",
+          "无静默合规。所有检查按窗口记录。",
+          "Sin cumplimiento silencioso. Checks registrados por ventana."
+        )},
+        b3:{h:P("Interfaces","接口","Interfaces"), p:P(
+          "Consumes Laws and Gauges; emits enforcement receipts to Registry.",
+          "消费法则与量规；向Registry输出执行收据。",
+          "Consume Leyes y Medidores; emite recibos de enforcement al Registro."
+        )}
+      }
+    },
+
+    {
+      id:"public_risk_meter",
+      c:"#ff2b2b",
+      t:P("Public Risk Meter","公共风险表","Medidor de Riesgo Público"),
+      s:P("Readable stability posture for the public: green/yellow/red.","对公众可读的稳定姿态：绿/黄/红。","Postura legible: verde/amarillo/rojo."),
+      platform:{
+        intro:P(
+          "This pillar translates technical risk into a calm public signal. It prevents panic and prevents denial by showing the same truth every time.",
+          "该支柱把技术风险翻译成冷静的公共信号：既防恐慌，也防否认——每次都展示同一真相。",
+          "Traduce riesgo técnico a señal pública calmada. Evita pánico y negación mostrando la misma verdad siempre."
+        ),
+        b1:{h:P("What it answers","回答什么","Qué responde"), p:P(
+          "Are we stable? If not, where is the leak and what is the next action?",
+          "我们稳定吗？不稳定的话，哪里在漏，下一步是什么？",
+          "¿Estamos estables? Si no, ¿dónde está la fuga y cuál es el siguiente paso?"
+        )},
+        b2:{h:P("What it avoids","避免什么","Qué evita"), p:P(
+          "Arguing about intent. It reports observed behavior and measured signals only.",
+          "不争论意图，只报告观测行为与测得信号。",
+          "No discute intención. Reporta solo señales medidas y comportamiento observado."
+        )},
+        b3:{h:P("How it integrates","如何整合","Cómo integra"), p:P(
+          "Routes users to Gauges for detail and to Laws for boundaries.",
+          "把用户路由到量规看细节，到法则看边界。",
+          "Enruta a Medidores para detalle y a Leyes para límites."
+        )}
+      },
+      engineering:{
+        intro:P(
+          "Risk Meter is a windowed exposure report: thresholds + trend + correlation watch. It is a posture output, not a narrative.",
+          "风险表是窗口化暴露报告：阈值+趋势+相关监测。它输出姿态，不输出叙事。",
+          "Medidor = reporte por ventanas: umbrales + tendencia + vigilancia de correlación. Salida de postura, no narrativa."
+        ),
+        b1:{h:P("Signals","信号","Señales"), p:P(
+          "Exposure level, acceleration, correlated movement (ρ/Δρ) where applicable.",
+          "暴露水平、加速度、以及可用时的相关运动（ρ/Δρ）。",
+          "Nivel de exposición, aceleración y movimiento correlacionado (ρ/Δρ) cuando aplique."
+        )},
+        b2:{h:P("Triggers","触发","Triggers"), p:P(
+          "Crossing a band emits a reason code and links to receipts.",
+          "穿越区间输出原因码，并链接收据。",
+          "Cruzar banda emite código y enlaza recibos."
+        )},
+        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P(
+          "GREEN / YELLOW / RED plus reason codes; no causality claims.",
+          "GREEN/YELLOW/RED + 原因码；不做因果主张。",
+          "VERDE/AMARILLO/ROJO + códigos; sin causalidad."
+        )}
+      }
+    },
+
+    {
+      id:"decision_index",
+      c:"#93c5fd",
+      t:P("Decision Index","决策指数","Índice de Decisión"),
+      s:P("Compress choice: next step, not wandering.","压缩选择：给下一步，不让乱逛。","Comprimir elección: siguiente paso, no deambular."),
+      platform:{
+        intro:P(
+          "Decision Index is the anti-confusion surface. It turns a big problem into a short list of executable next actions.",
+          "决策指数是“反混乱界面”：把大问题压成一小串可执行的下一步。",
+          "Índice de Decisión es superficie anti-confusión: convierte problemas grandes en una lista corta de acciones ejecutables."
+        ),
+        b1:{h:P("What it produces","产出什么","Qué produce"), p:P(
+          "A ranked list: do this next, then this, with a clear stop condition.",
+          "排序清单：下一步做什么，再做什么，并给清晰停止条件。",
+          "Lista rankeada: haz esto, luego esto, con condición de parada."
+        )},
+        b2:{h:P("Why it’s governance","为何属于治理","Por qué es gobernanza"), p:P(
+          "Because decisions must be comparable across teams and time, not personality-based.",
+          "因为决策必须跨团队与时间可比，而不是靠个性。",
+          "Porque decisiones deben ser comparables entre equipos y tiempo, no basadas en personalidad."
+        )},
+        b3:{h:P("Where it routes","路由到哪里","A dónde enruta"), p:P(
+          "To Policy Engine for enforcement, to Compliance Grid for requirements, to Gauges for evidence.",
+          "到政策引擎做执行，到合规网格看要求，到量规看证据。",
+          "A Motor de Política, Grid de Cumplimiento y Medidores."
+        )}
+      },
+      engineering:{
+        intro:P(
+          "Decision Index is bounded inference under fixed scope: it never exceeds evidence and always emits reason-coded outputs and receipts.",
+          "决策指数是在固定范围下的有界推断：不超证据，输出原因码与收据。",
+          "Índice = inferencia acotada bajo alcance fijo: no excede evidencia y emite códigos/recibos."
+        ),
+        b1:{h:P("Inputs","输入","Entradas"), p:P(
+          "Scope + signals (gauges) + constraints (laws) + current posture.",
+          "范围+信号（量规）+约束（法则）+当前姿态。",
+          "Alcance + señales + restricciones + postura actual."
+        )},
+        b2:{h:P("Outputs","输出","Salidas"), p:P(
+          "Next action list + stop/hold conditions, with reason codes.",
+          "下一步清单+停止/暂停条件，并带原因码。",
+          "Lista de acciones + condiciones de stop/hold con códigos."
+        )},
+        b3:{h:P("Auditability","可审计","Auditabilidad"), p:P(
+          "Every recommendation is replayable: same inputs → same list.",
+          "每条建议可回放：同输入→同清单。",
+          "Cada recomendación es replayable: mismas entradas → misma lista."
+        )}
+      }
+    }
+  ];
+
+  // ===== DOM build =====
+  var list=document.getElementById("list");
+  var rowRefs=[];
+  var openIndex=0;
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
+
+  function makeBubble(titleObj, textObj){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent = pick3(titleObj.en, titleObj.zh, titleObj.es);
+
+    var p=document.createElement("p");
+    p.textContent = pick3(textObj.en, textObj.zh, textObj.es);
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    return b;
+  }
+
+  function buildRow(pillar, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", pillar.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=pillar.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var title=document.createElement("div");
+    title.className="q";
+
+    var subt=document.createElement("div");
+    subt.className="subt";
+
+    tb.appendChild(title);
+    tb.appendChild(subt);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    body.appendChild(intro);
+
+    var sb=document.createElement("div");
+    sb.className="subBubbles";
+
+    var pack = (lane==="engineering") ? pillar.engineering : pillar.platform;
+    sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
+    sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
+    sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
+    body.appendChild(sb);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var aOpen=document.createElement("a");
+    aOpen.className="btn red";
+    aOpen.setAttribute("data-route", ROUTES[pillar.id]);
+    actions.appendChild(aOpen);
+
+    var aLaws=document.createElement("a");
+    aLaws.className="btn";
+    aLaws.setAttribute("data-route", ROUTES.laws);
+    actions.appendChild(aLaws);
+
+    var aGauges=document.createElement("a");
+    aGauges.className="btn";
+    aGauges.setAttribute("data-route", ROUTES.gauges);
+    actions.appendChild(aGauges);
+
+    body.appendChild(actions);
+
+    function act(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", act, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      subt:subt,
+      intro:intro,
+      openBtn:aOpen,
+      lawsBtn:aLaws,
+      gaugesBtn:aGauges,
+      pillar:pillar
+    });
+  }
+
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<PILLARS.length;i++){
+      buildRow(PILLARS[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  function applyHeader(){
+    var H=(HEAD[lang]||HEAD.en);
+    var pack=(lane==="engineering") ? H.engineering : H.platform;
+
+    document.getElementById("hk").textContent = pick3("GOVERNANCE","治理","GOBERNANZA");
+    document.getElementById("ht").textContent = pick3("FOUR PILLARS","四大支柱","CUATRO PILARES");
+    document.getElementById("hs").textContent = pack.hs;
+    document.getElementById("rule").textContent = pack.rule;
+
+    document.getElementById("band").textContent = pick3("PILLARS (OPEN ONE)","支柱（打开一个）","PILARES (abre uno)");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
+
+    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnLaws").textContent = pick3("LAWS","法则","LEYES");
+
+    document.getElementById("dockDoor").textContent = pick3("DOOR","门","PUERTA");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws2").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<rowRefs.length;i++){
+      var R=rowRefs[i];
+      var p=R.pillar;
+
+      R.title.textContent = pick3(p.t.en, p.t.zh, p.t.es);
+      R.subt.textContent  = pick3(p.s.en, p.s.zh, p.s.es);
+
+      var pack = (lane==="engineering") ? p.engineering : p.platform;
+
+      R.intro.textContent = pick3(pack.intro.en, pack.intro.zh, pack.intro.es);
+
+      // rebuild bubbles (so titles/texts match lane + lang)
+      var sb = R.row.querySelector(".subBubbles");
+      if(sb){
+        sb.innerHTML="";
+        sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
+        sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
+        sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
+      }
+
+      R.openBtn.textContent = openLabel()+": "+pick3("OPEN PILLAR","打开支柱","ABRIR PILAR");
+      R.lawsBtn.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");
+      R.gaugesBtn.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== state-carry wiring =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== No-reload toggles =====
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // init pressed
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // build
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
+
+})();
+</script>
+
+</body>
+</html>

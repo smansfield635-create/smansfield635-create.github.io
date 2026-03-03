@@ -1,25 +1,4 @@
 <!doctype html>
-<!-- TNT — /index.html
-     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — ANTI-SNOWFLAKE DIAL v2 (SCALED RADII + WORKING LANE)
-     UPDATE (PER SEAN):
-       - FIX: lane=platform|engineering toggle MUST update labels + routes (no reload; URL-only)
-       - SCALE GEOMETRY (hierarchical radii):
-           Center CORE = +25% (vs prior)
-           Level 1 (N/E/S/W) = 50% of CORE size, closest radius
-           Level 2 (NE/SE/SW/NW) = -25% from Level 1, medium radius
-           Level 3 (the other 8 intercardinals) = -25% from Level 2, outer radius
-         - Larger nodes closer to center; smaller nodes further out
-       - KEEP: perfect symmetry per ring class; anti-snowflake dial face; no movement on hover (glow only)
-       - KEEP: Home + Door outside compass geometry (corner diamonds)
-       - KEEP: no duplicates in the 16 ring; duplicates/unbuilt → /404.html placeholder
-       - FIX: brand is cogrid.net (NOT cograde.net) + diamondgatebridge.com
-       - Trilingual labels (EN/中文/ES)
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - No overlays/modals; no inline onclick; addEventListener only
-       - ui.css owns html/body background (NO overrides)
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -36,90 +15,35 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY ===== */
-  --D0:172px;             /* CORE size (was 138) => ~+25% */
-  --D1:86px;              /* Level 1 size (N/E/S/W) = 50% of CORE */
-  --D2:64px;              /* Level 2 size (NE/SE/SW/NW) = -25% from D1 */
-  --D3:48px;              /* Level 3 size (8 intercardinals) = -25% from D2 */
+  /* ===== HIERARCHICAL GEOMETRY ===== */
 
-  --R1:168px;             /* Level 1 radius (closest) */
-  --R2:230px;             /* Level 2 radius */
-  --R3:290px;             /* Level 3 radius (furthest) */
+  --CORE:190px;
+
+  --L1:96px;     /* 4 Cardinals */
+  --L2:72px;     /* 4 Diagonals */
+  --L3:52px;     /* 8 Intercardinals */
+
+  --R1:170px;    /* Cardinals radius */
+  --R2:250px;    /* Diagonals radius */
+  --R3:330px;    /* Intercardinals radius */
 
   --padTop:120px;
 
-  /* ===== MATERIAL ===== */
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
-  --crimson:rgba(120,0,22,.44);
   --festival:rgba(255,43,43,.26);
   --opalV:rgba(90,40,120,.18);
+  --crimson:rgba(120,0,22,.44);
 
   --gold:rgba(201,162,74,.58);
   --goldGlow:rgba(201,162,74,.34);
-  --goldGlow2:rgba(201,162,74,.18);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
-  --stroke:rgba(255,255,255,.12);
 }
 
-/* ===== Top controls ===== */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
-  pointer-events:auto;
-}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:rgba(255,255,255,.92);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;overflow:hidden;
-  white-space:nowrap;
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.seg{
-  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow:0 18px 60px rgba(0,0,0,.35);
-}
-.seg button{
-  appearance:none;border:0;background:transparent;color:rgba(255,255,255,.78);
-  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-  letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.seg button[aria-pressed="true"]{
-  color:rgba(255,255,255,.96);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-}
+/* ===== STAGE ===== */
 
-/* ===== Stage ===== */
 .stage{
   position:relative;
   width:min(1100px,94vw);
@@ -128,150 +52,23 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-/* ===== Festival slab ===== */
-.backdrop{
-  position:absolute;inset:-26px;
-  border-radius:44px;
-  pointer-events:none;
-  overflow:hidden;
-}
-.backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:44px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 80% 26%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.10));
-  box-shadow:
-    0 70px 210px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -60px 120px rgba(0,0,0,.55);
-  opacity:.95;
-}
-.backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
-  background:
-    radial-gradient(circle at 18% 34%, rgba(255,43,43,.20), transparent 42%),
-    radial-gradient(circle at 82% 30%, rgba(255,43,43,.16), transparent 44%),
-    radial-gradient(circle at 50% 76%, rgba(201,162,74,.12), transparent 46%),
-    conic-gradient(from 10deg at 30% 28%,
-      rgba(201,162,74,.16), transparent 10%,
-      rgba(255,43,43,.14), transparent 22%,
-      rgba(90,40,120,.12), transparent 35%,
-      rgba(201,162,74,.10), transparent 50%,
-      transparent 100%),
-    conic-gradient(from 180deg at 70% 36%,
-      rgba(255,43,43,.14), transparent 12%,
-      rgba(201,162,74,.14), transparent 26%,
-      rgba(90,40,120,.10), transparent 42%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 60%);
-  filter: blur(1px);
-  opacity:.75;
-}
+/* ===== NODE BASE ===== */
 
-/* ===== Dial face ===== */
-.dialFace{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
-  border-radius:999px;
-  pointer-events:none;
-  overflow:hidden;
-  z-index:1;
-}
-.dialFace::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:999px;
-  background:
-    radial-gradient(circle at 50% 45%,
-      rgba(255,255,255,.06),
-      rgba(0,0,0,.18) 58%,
-      rgba(0,0,0,.46) 78%,
-      rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%,
-      rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%,
-      rgba(255,43,43,.10), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.10),
-    inset 0 0 70px rgba(0,0,0,.45),
-    0 50px 180px rgba(0,0,0,.35);
-  opacity:.92;
-}
-.dialFace::after{
-  content:"";
-  position:absolute;inset:-16%;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
-
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
-
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
-  opacity:.78;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-}
-
-.faceLetters{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
-  pointer-events:none;
-  z-index:2;
-  opacity:.70;
-}
-.faceLetters span{
-  position:absolute;
-  color:rgba(201,162,74,.42);
-  font-weight:980;
-  letter-spacing:2px;
-  font-size:12px;
-  text-shadow:0 0 12px rgba(0,0,0,.55);
-}
-.faceLetters .N{left:50%;top:10px;transform:translateX(-50%)}
-.faceLetters .E{right:10px;top:50%;transform:translateY(-50%)}
-.faceLetters .S{left:50%;bottom:10px;transform:translateX(-50%)}
-.faceLetters .W{left:10px;top:50%;transform:translateY(-50%)}
-
-/* ===== Diamonds ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
-  width:var(--D3);
-  height:var(--D3);
-  border-radius:22px;
-  cursor:pointer;
-  pointer-events:auto;
   transform:translate(-50%,-50%) rotate(45deg);
   transform-origin:center;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  pointer-events:auto;
+  cursor:pointer;
   overflow:hidden;
-  z-index:5;
+  border-radius:22px;
+  transition:box-shadow .16s ease, border-color .16s ease;
 }
 
 .surface{
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.30), transparent 45%),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 45%),
     radial-gradient(circle at 78% 22%, var(--festival), transparent 60%),
     radial-gradient(circle at 75% 82%, var(--opalV), transparent 65%),
     radial-gradient(circle at 30% 80%, var(--crimson), transparent 72%),
@@ -279,585 +76,145 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid rgba(255,255,255,.18);
   box-shadow:
     var(--shadowDeep),
-    0 0 26px rgba(255,43,43,.10),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
 
-.surface::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
-  opacity:.38;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-}
-.surface::after{
-  content:"";
-  position:absolute;
-  left:12%;right:12%;top:10%;
-  height:30%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.95;
-}
-
-.goldTrim{
-  border:1px solid var(--gold);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 34px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -50px 90px rgba(0,0,0,.90);
-}
-
-/* glow-only hover */
 .node:hover{
-  border-color:rgba(201,162,74,.46);
+  border-color:var(--gold);
   box-shadow:
     var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 28px rgba(201,162,74,.22),
-    0 0 46px rgba(201,162,74,.12),
+    0 0 0 2px rgba(201,162,74,.18),
+    0 0 28px var(--goldGlow),
     inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
-.node:active{ filter:brightness(.98); }
 
-/* inner text */
+/* ===== SIZE CLASSES ===== */
+
+.core{ width:var(--CORE); height:var(--CORE); z-index:6; }
+.l1{ width:var(--L1); height:var(--L1); z-index:5; }
+.l2{ width:var(--L2); height:var(--L2); z-index:4; }
+.l3{ width:var(--L3); height:var(--L3); z-index:3; }
+
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
+  font-weight:950;
   color:#fff;
   padding:8px;
-  gap:5px;
-}
-.word{
-  font-weight:980;
   font-size:12px;
-  letter-spacing:.55px;
-  line-height:1.05;
-}
-.code{
-  font-weight:950;
-  font-size:9.5px;
-  letter-spacing:1.2px;
-  opacity:.78;
 }
 
-/* size classes */
-.core{ width:var(--D0); height:var(--D0); border-radius:26px; z-index:6; }
-.l1{ width:var(--D1); height:var(--D1); border-radius:22px; }
-.l2{ width:var(--D2); height:var(--D2); border-radius:20px; }
-.l3{ width:var(--D3); height:var(--D3); border-radius:18px; }
+/* ===== BRAND STRIP ===== */
 
-.core .word{font-size:15px}
-.core .code{opacity:.82}
-
-/* bottom corner nav (outside geometry) */
-.corner{
-  position:fixed;
-  bottom:max(18px, env(safe-area-inset-bottom));
-  z-index:240;
-  pointer-events:none;
-}
-.corner .dmini{pointer-events:auto}
-.corner.left{left:18px}
-.corner.right{right:18px}
-
-.dmini{
-  width:54px;height:54px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;place-items:center;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  transform:rotate(45deg);
-  position:relative;
-  overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease;
-}
-.dmini::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
-  opacity:.55;pointer-events:none;
-}
-.dmini:hover{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.55),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 30px rgba(201,162,74,.22);
-}
-.dmini span{
-  transform:rotate(-45deg);
-  font-weight:980;
-  font-size:12px;
-  letter-spacing:.6px;
-  color:rgba(255,255,255,.92);
-  user-select:none;
-}
-.cornerLabel{
-  margin-top:10px;
-  text-align:center;
-  color:rgba(255,255,255,.70);
-  font-size:11px;
-  letter-spacing:.4px;
-}
-
-/* context pill */
 .pill{
   width:min(980px,94vw);
   margin:14px auto 0;
   padding:14px 16px;
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
+  background:rgba(0,0,0,.16);
   box-shadow:0 26px 90px rgba(0,0,0,.55);
   color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.75px;
+  text-align:center;
+  font-size:13px;
 }
-.pill b{color:rgba(255,255,255,.95)}
-.brand{
-  margin-top:8px;
-  font-size:12px;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.70);
+.pill span{
+  color:var(--gold);
+  font-weight:900;
 }
-.brand span{color:rgba(201,162,74,.70);font-weight:950}
 
-/* mobile tweak */
-@media (max-width:600px){
-  :root{
-    --D0:164px;
-    --D1:82px;
-    --D2:60px;
-    --D3:46px;
-    --R1:152px;
-    --R2:210px;
-    --R3:268px;
-    --padTop:124px;
-  }
-  .stage{height:min(820px,82vh)}
-  .word{font-size:11.5px}
-}
-@media (max-width:420px){
-  :root{
-    --D0:154px;
-    --D1:78px;
-    --D2:58px;
-    --D3:44px;
-    --R1:144px;
-    --R2:196px;
-    --R3:248px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-    <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-  </div>
-  <div class="right">
-    <div class="seg" role="group" aria-label="Language">
-      <button type="button" id="btnEN" aria-pressed="true">EN</button>
-      <button type="button" id="btnZH" aria-pressed="false">中文</button>
-      <button type="button" id="btnES" aria-pressed="false">ES</button>
-    </div>
-    <div class="seg" role="group" aria-label="Lane">
-      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-    </div>
-  </div>
-</div>
+<div class="stage" id="stage"></div>
 
-<div class="stage" id="stage" aria-label="Compass dial">
-  <div class="backdrop" aria-hidden="true"></div>
-  <div class="dialFace" aria-hidden="true"></div>
-  <div class="faceLetters" aria-hidden="true">
-    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
-  </div>
-  <!-- nodes injected by JS -->
-</div>
-
-<div class="pill" id="pill">
-  <div id="pillMain"><b>Compass:</b> Ring = hubs. Center = Index (manual). Home + Door live outside the compass.</div>
-  <div class="brand"><span>cogrid.net</span> · <span>diamondgatebridge.com</span></div>
-</div>
-
-<div class="corner left" aria-label="Door">
-  <div class="dmini" id="btnDoorMini" role="button" tabindex="0" aria-label="Door"><span>DOOR</span></div>
-  <div class="cornerLabel" id="lblDoor">DOOR</div>
-</div>
-<div class="corner right" aria-label="Home">
-  <div class="dmini" id="btnHomeMini" role="button" tabindex="0" aria-label="Home"><span>HOME</span></div>
-  <div class="cornerLabel" id="lblHome">HOME</div>
+<div class="pill">
+  <span>cogrid.net</span> · <span>diamondgatebridge.com</span>
 </div>
 
 <script>
 (function(){
-  "use strict";
-
-  // ===== Canon state (gd_* only; lane URL-only) =====
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
-
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
-  var lane  = qs.get("lane")  || "platform"; // URL-only
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
-
-  try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style",(over&&over.style)?over.style:style);
-    p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth",(over&&over.depth)?over.depth:depth);
-    var L=(over&&over.lane)?over.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane",L);
-    return "?"+p.toString();
-  }
-
-  function go(path){ window.location.href = path + q(); }
-
-  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
-
-  // Wire [data-route] anchors with full state (including lane)
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-  wireAll();
-
-  // ===== Language (reload) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  setPressed(btnEN, lang==="en");
-  setPressed(btnZH, lang==="zh");
-  setPressed(btnES, lang==="es");
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  // ===== Lane (NO reload) =====
-  var btnLP=document.getElementById("lanePlatform");
-  var btnLE=document.getElementById("laneEngineering");
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
-
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-    // update labels and rebuild nodes (safe)
-    paintText();
-    layout();  // rebuild nodes so labels can change by lane
-    wireAll();
-  }
-  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  // ===== Text (pill + corner labels) =====
-  var pillMain=document.getElementById("pillMain");
-  var lblDoor=document.getElementById("lblDoor");
-  var lblHome=document.getElementById("lblHome");
-
-  function paintText(){
-    var laneWord = (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-                  : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-                  : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-
-    if(lang==="zh"){
-      pillMain.innerHTML="<b>指南针：</b>外环=枢纽；中心=索引（说明书）。主页与门在罗盘之外。当前透镜："+laneWord+"。";
-      lblDoor.textContent="门"; lblHome.textContent="主页";
-      document.querySelector("#btnDoorMini span").textContent="门";
-      document.querySelector("#btnHomeMini span").textContent="主页";
-    }else if(lang==="es"){
-      pillMain.innerHTML="<b>Brújula:</b> anillo = hubs. centro = Índice (manual). Inicio y Puerta van fuera. Lente: "+laneWord+".";
-      lblDoor.textContent="PUERTA"; lblHome.textContent="INICIO";
-      document.querySelector("#btnDoorMini span").textContent="PUERTA";
-      document.querySelector("#btnHomeMini span").textContent="INICIO";
-    }else{
-      pillMain.innerHTML="<b>Compass:</b> Ring = hubs. Center = Index (manual). Home + Door live outside. Lens: "+laneWord+".";
-      lblDoor.textContent="DOOR"; lblHome.textContent="HOME";
-      document.querySelector("#btnDoorMini span").textContent="DOOR";
-      document.querySelector("#btnHomeMini span").textContent="HOME";
-    }
-  }
-  paintText();
-
-  // bottom corners
-  function bindMini(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  bindMini("btnDoorMini","/door/");
-  bindMini("btnHomeMini","/home/");
-
-  // ===== ROUTING (unique enforced) =====
-  var INDEX_ROUTE = "/index-core/";
-  var PLACEHOLDER_404 = "/404.html";
-
-  // NOTE: engineering/platform can *change labels* but NOT destinations.
-  // If any destination would duplicate or is intentionally unbuilt, set href:"" and it will become 404.
-  var ROUTES_RAW = [
-    {lvl:1, code:"N",   label:{platform:{en:"EDUCATION",zh:"教育",es:"EDUCACIÓN"}, engineering:{en:"ESL",zh:"ESL",es:"ESL"}}, href:"/products/education/"},
-    {lvl:3, code:"NNE", label:{platform:{en:"PRELUDE",zh:"前奏",es:"PRELUDIO"},    engineering:{en:"PRIMER",zh:"前置",es:"PRIMER"}}, href:"/prelude/"},
-    {lvl:2, code:"NE",  label:{platform:{en:"EXPLORE",zh:"探索",es:"EXPLORAR"},    engineering:{en:"MODELS",zh:"模型",es:"MODELOS"}}, href:"/explore/"},
-    {lvl:3, code:"ENE", label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"},   engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}, href:"/explore/frontier/"},
-    {lvl:1, code:"E",   label:{platform:{en:"RESEARCH",zh:"研究",es:"INVEST."},    engineering:{en:"R&D",zh:"研发",es:"I+D"}}, href:"/research/", gold:true},
-
-    {lvl:3, code:"ESE", label:{platform:{en:"GAUGES",zh:"量规",es:"MEDIDORES"},    engineering:{en:"SIGNALS",zh:"信号",es:"SEÑALES"}}, href:"/gauges/"},
-    {lvl:2, code:"SE",  label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"},  engineering:{en:"DEPLOY",zh:"部署",es:"DESPL"}}, href:"/products/"},
-    {lvl:3, code:"SSE", label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"},    engineering:{en:"CAPITAL",zh:"资本",es:"CAP"}}, href:"/finance/"},
-
-    {lvl:1, code:"S",   label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},      engineering:{en:"POWER",zh:"能源",es:"PODER"}}, href:"/explore/frontier/energy/"},
-    {lvl:3, code:"SSW", label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"},         engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}, href:"/explore/infrastructure/"},
-
-    {lvl:2, code:"SW",  label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"},    engineering:{en:"FOOD",zh:"食物",es:"ALIM"}}, href:"/products/agriculture/"},
-    {lvl:3, code:"WSW", label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"},engineering:{en:"EXEC",zh:"执行",es:"EJEC"}}, href:"/governance/"},
-    {lvl:1, code:"W",   label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"},          engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
-    {lvl:3, code:"WNW", label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"},       engineering:{en:"VISION",zh:"愿景",es:"VISIÓN"}}, href:"/explore/frontier/vision/"},
-    {lvl:2, code:"NW",  label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"},     engineering:{en:"256",zh:"256态",es:"256"}}, href:"/explore/frontier/lattice/"},
-    {lvl:3, code:"NNW", label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},     engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}, href:"/explore/frontier/shimmer/"}
-  ];
-
-  function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
-    for(var i=0;i<list.length;i++){
-      var it = list[i];
-      var h  = (it.href||"").trim();
-      if(!h) h = PLACEHOLDER_404;
-      if(seen[h]) h = PLACEHOLDER_404;
-      seen[h] = true;
-      out.push({
-        lvl: it.lvl,
-        code: it.code,
-        label: it.label,
-        href: h,
-        gold: !!it.gold
-      });
-    }
-    return out;
-  }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
-
-  function labelFor(it){
-    var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
-    return (lang==="zh")?pack.zh:(lang==="es")?pack.es:pack.en;
-  }
-
-  function mkNode(it, cls){
-    var d=document.createElement("div");
-    d.className="node surface " + cls + (it.gold ? " goldTrim" : "");
-    d.setAttribute("role","button");
-    d.tabIndex=0;
-
-    var inner=document.createElement("div");
-    inner.className="inner";
-
-    var w=document.createElement("div");
-    w.className="word";
-    w.textContent = labelFor(it);
-
-    var c=document.createElement("div");
-    c.className="code";
-    c.textContent=it.code;
-
-    inner.appendChild(w);
-    inner.appendChild(c);
-    d.appendChild(inner);
-
-    function act(){ go(it.href); }
-    d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    return d;
-  }
-
-  function mkCore(){
-    var d=document.createElement("div");
-    d.className="node surface core";
-    d.setAttribute("role","button");
-    d.tabIndex=0;
-
-    var inner=document.createElement("div");
-    inner.className="inner";
-
-    var w=document.createElement("div");
-    w.className="word";
-    w.textContent = (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
-
-    var c=document.createElement("div");
-    c.className="code";
-    c.textContent="CORE";
-
-    inner.appendChild(w);
-    inner.appendChild(c);
-    d.appendChild(inner);
-
-    function act(){ go(INDEX_ROUTE); }
-    d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    return d;
-  }
 
   var stage=document.getElementById("stage");
 
+  function node(label, cls, radius, angle){
+    var d=document.createElement("div");
+    d.className="node surface "+cls;
+
+    var inner=document.createElement("div");
+    inner.className="inner";
+    inner.textContent=label;
+    d.appendChild(inner);
+
+    var cx=stage.offsetWidth/2;
+    var cy=stage.offsetHeight/2;
+
+    var x=cx + radius*Math.cos(angle);
+    var y=cy + radius*Math.sin(angle);
+
+    d.style.left=x+"px";
+    d.style.top=y+"px";
+
+    stage.appendChild(d);
+  }
+
   function layout(){
-    // remove previous nodes (keep backdrop/dial elements)
-    var olds=stage.querySelectorAll(".node");
-    for(var i=0;i<olds.length;i++) olds[i].remove();
 
-    var rect=stage.getBoundingClientRect();
-    var cx=rect.width/2, cy=rect.height/2;
+    stage.innerHTML="";
 
-    // core
-    var core=mkCore();
-    core.style.left=cx+"px"; core.style.top=cy+"px";
+    var cx=stage.offsetWidth/2;
+    var cy=stage.offsetHeight/2;
+
+    /* CORE */
+    var core=document.createElement("div");
+    core.className="node surface core";
+    var inner=document.createElement("div");
+    inner.className="inner";
+    inner.textContent="INDEX";
+    core.appendChild(inner);
+    core.style.left=cx+"px";
+    core.style.top=cy+"px";
     stage.appendChild(core);
 
-    // group by level
-    var l1=[], l2=[], l3=[];
-    for(var i=0;i<ROUTES.length;i++){
-      if(ROUTES[i].lvl===1) l1.push(ROUTES[i]);
-      else if(ROUTES[i].lvl===2) l2.push(ROUTES[i]);
-      else l3.push(ROUTES[i]);
+    /* LEVEL 1 — CARDINALS */
+    var axes=["N","E","S","W"];
+    var angles=[-Math.PI/2,0,Math.PI/2,Math.PI];
+    for(var i=0;i<4;i++){
+      node(axes[i],"l1", parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1")), angles[i]);
     }
 
-    function place(list, radius, className, startAngle){
-      var n=list.length;
-      for(var i=0;i<n;i++){
-        var it=list[i];
-        var a=(i/n)*(Math.PI*2) + startAngle;
-        var x=cx + radius*Math.cos(a);
-        var y=cy + radius*Math.sin(a);
-        var node=mkNode(it, className);
-        node.style.left=x+"px"; node.style.top=y+"px";
-        stage.appendChild(node);
-      }
+    /* LEVEL 2 — DIAGONALS */
+    var diags=["NE","SE","SW","NW"];
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"));
+    for(var i=0;i<4;i++){
+      var a=-Math.PI/4 + i*(Math.PI/2);
+      node(diags[i],"l2",R2,a);
     }
 
-    // level 1: exactly N/E/S/W aligned
-    // order N, E, S, W around starting at top; radius R1
-    var l1Ordered=[];
-    // pick by code to enforce cardinal alignment
-    function pull(code){
-      for(var i=0;i<l1.length;i++) if(l1[i].code===code) return l1[i];
-      return null;
+    /* LEVEL 3 — INTERCARDINALS */
+    var subs=["NNE","ENE","ESE","SSE","SSW","WSW","WNW","NNW"];
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"));
+    for(var i=0;i<8;i++){
+      var a=-Math.PI*(3/8) + i*(Math.PI/4);
+      node(subs[i],"l3",R3,a);
     }
-    var n0=pull("N"), e0=pull("E"), s0=pull("S"), w0=pull("W");
-    if(n0) l1Ordered.push(n0);
-    if(e0) l1Ordered.push(e0);
-    if(s0) l1Ordered.push(s0);
-    if(w0) l1Ordered.push(w0);
-    // if any missing, fallback to whatever remains
-    if(l1Ordered.length<4){
-      for(var i=0;i<l1.length;i++){
-        if(l1Ordered.indexOf(l1[i])===-1) l1Ordered.push(l1[i]);
-      }
-    }
-    // place at angles -90, 0, 90, 180
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
-    var angles=[-Math.PI/2, 0, Math.PI/2, Math.PI];
-    for(var i=0;i<l1Ordered.length;i++){
-      var it=l1Ordered[i];
-      var x=cx + R1*Math.cos(angles[i]);
-      var y=cy + R1*Math.sin(angles[i]);
-      var node=mkNode(it,"l1");
-      node.style.left=x+"px"; node.style.top=y+"px";
-      stage.appendChild(node);
-    }
-
-    // level 2 (4 diagonals): start at -45deg
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||230;
-    place(l2, R2, "l2", -Math.PI/4);
-
-    // level 3 (8 intercardinals): start at -67.5deg so they sit between l1/l2 nicely
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||290;
-    place(l3, R3, "l3", -Math.PI*(3/8));
   }
 
   function safeLayout(){
-    var r=stage.getBoundingClientRect();
-    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
+    if(stage.offsetWidth<10){ requestAnimationFrame(safeLayout); return; }
     layout();
   }
+
   requestAnimationFrame(safeLayout);
-  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+  window.addEventListener("resize",safeLayout);
 
 })();
 </script>

@@ -1,0 +1,342 @@
+<!doctype html>
+<!-- TNT — /explore/frontier/vision/dot-grid/index.html
+     FRONTIER · VISION · DOT·DOT GRID
+     VISION LAYER ONLY (PINNED INFORMAL)
+     INTEGRATES:
+       - Civilizational Mirror
+       - Action vs Inaction Funnel
+       - Snowflake Vein (Coherence Circulation)
+       - Remote Mapping Integration
+     STATE SAFE · SINGLE OPEN · NO MODALS
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VISION · DOT·DOT GRID</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff;
+}
+
+:root{
+  --inkA:#0b0f14;
+  --inkB:#070a0f;
+  --stroke:rgba(255,255,255,.12);
+  --gold:rgba(212,175,55,.18);
+  --red:rgba(255,60,60,.16);
+  --blue:rgba(90,180,255,.16);
+  --mut:rgba(255,255,255,.88);
+}
+
+.page{
+  width:min(1100px,94vw);
+  margin:110px auto 120px;
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:36px;
+  padding:48px;
+  background:
+    radial-gradient(circle at 30% 20%, var(--gold), transparent 70%),
+    radial-gradient(circle at 70% 80%, var(--red), transparent 70%),
+    linear-gradient(160deg,var(--inkA),var(--inkB));
+  box-shadow:0 60px 200px rgba(0,0,0,.7);
+}
+
+.k{
+  letter-spacing:6px;
+  text-transform:uppercase;
+  font-size:12px;
+  opacity:.7;
+}
+
+.t{
+  font-size:52px;
+  font-weight:950;
+  margin:12px 0 20px;
+}
+
+.s{
+  font-size:20px;
+  line-height:1.85;
+  color:var(--mut);
+  max-width:900px;
+}
+
+.lane{
+  margin-top:28px;
+  display:flex;
+  gap:12px;
+}
+
+.pill{
+  padding:12px 20px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  cursor:pointer;
+  font-weight:900;
+  background:linear-gradient(145deg,var(--inkA),var(--inkB));
+}
+.pill.active{
+  box-shadow:0 0 18px rgba(212,175,55,.35);
+}
+
+.band{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  padding:14px 20px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:.85;
+}
+
+.stack{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  background:linear-gradient(160deg,var(--inkA),var(--inkB));
+  overflow:hidden;
+}
+
+.head{
+  padding:28px 34px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+.title{
+  font-size:26px;
+  font-weight:900;
+}
+
+.chev{opacity:.7}
+
+.body{
+  display:none;
+  padding:32px 36px 40px;
+  border-top:1px solid var(--stroke);
+  font-size:19px;
+  line-height:1.9;
+  color:var(--mut);
+}
+
+.card.open .body{display:block}
+
+.funnel{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+  margin-top:26px;
+}
+
+.funnelBox{
+  border:1px solid var(--stroke);
+  border-radius:28px;
+  padding:30px;
+}
+
+.funnelBox.red{
+  background:radial-gradient(circle at 50% 10%, var(--red), transparent 80%);
+}
+.funnelBox.blue{
+  background:radial-gradient(circle at 50% 10%, var(--blue), transparent 80%);
+}
+
+.jump{
+  margin-top:30px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.jump .btn{
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  font-weight:900;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="header">
+  <div class="k">FRONTIER · VISION</div>
+  <div class="t">DOT·DOT GRID</div>
+  <div class="s">
+    The map beneath the map.  
+    Every system, every drift, every collapse — lands somewhere measurable.
+  </div>
+
+  <div class="lane">
+    <div class="pill active" id="lanePlatform">PLATFORM</div>
+    <div class="pill" id="laneEngineering">ENGINEERING</div>
+  </div>
+</div>
+
+<div class="band">CIVILIZATIONAL MIRROR</div>
+
+<div class="stack" id="stack"></div>
+
+<div class="band">ACTION VS INACTION FUNNEL</div>
+
+<div class="funnel">
+  <div class="funnelBox red">
+    <h3>INACTION (TEAR)</h3>
+    <p>
+      Denial → Drift → Acceleration → Correlation → Cascade → Collapse.
+      Collapse is rarely explosive. It is geometric slope ignored.
+    </p>
+  </div>
+
+  <div class="funnelBox blue">
+    <h3>ACTION (FLAME)</h3>
+    <p>
+      Detection → Containment → Adjustment → Stabilization → Replication.
+      Stability is not luck. It is routing with measurement.
+    </p>
+  </div>
+</div>
+
+<div class="band">SNOWFLAKE VEINS</div>
+
+<div class="stack">
+  <div class="card open">
+    <div class="head">
+      <div class="title">Coherence Circulation</div>
+      <div class="chev">▾</div>
+    </div>
+    <div class="body">
+      The flower (Vision) feeds the star (Expansion),  
+      feeds the heart (Adoption),  
+      feeds the diamond (Structure),  
+      feeds the Grid (Measurement).  
+
+      The snowflake veins are the information pathways between domains.  
+      That is where correction travels.  
+      That is where stability spreads.
+    </div>
+  </div>
+</div>
+
+<div class="jump">
+  <a class="btn" href="/explore/frontier/vision/?style=informal">RETURN TO VISION REMOTE</a>
+  <a class="btn" href="/laws/">OPEN LAWS</a>
+  <a class="btn" href="/gauges/">OPEN GAUGES</a>
+</div>
+
+</div>
+
+<script>
+(function(){
+
+const DATA = {
+platform: [
+{
+title:"The Mirror",
+body:"Dot·Dot Grid reflects position without narrative. It replaces rhetoric with coordinate placement."
+},
+{
+title:"Domain Translator",
+body:"Energy, water, finance, waste — all map to shared geometry. Comparison replaces confusion."
+},
+{
+title:"Freedom Protector",
+body:"It does not control action. It reveals slope. Choice remains yours."
+},
+{
+title:"Adoption Accelerator",
+body:"When movement is visible, trust grows. When trust grows, adoption accelerates."
+}
+],
+engineering:[
+{
+title:"Finite Coordinate Discipline",
+body:"Enumerated state geometry under fixed axes. Deterministic classification enabled."
+},
+{
+title:"Drift Detection",
+body:"Windowed delta analysis reveals acceleration gradients prior to cascade."
+},
+{
+title:"Containment Triggers",
+body:"Constraint surfaces define admissible transitions and rollback pathways."
+},
+{
+title:"Correlation Exposure",
+body:"Hybrid collapse vectors identify multi-axis divergence under bounded manifolds."
+}
+]
+};
+
+let lane="platform";
+const stack=document.getElementById("stack");
+
+function render(){
+  stack.innerHTML="";
+  DATA[lane].forEach((item,i)=>{
+    const card=document.createElement("div");
+    card.className="card";
+    if(i===0) card.classList.add("open");
+
+    const head=document.createElement("div");
+    head.className="head";
+    head.innerHTML=`<div class="title">${item.title}</div><div class="chev">▸</div>`;
+
+    const body=document.createElement("div");
+    body.className="body";
+    body.textContent=item.body;
+
+    head.addEventListener("click",()=>{
+      document.querySelectorAll(".card").forEach(c=>{if(c!==card)c.classList.remove("open")});
+      card.classList.toggle("open");
+    });
+
+    card.appendChild(head);
+    card.appendChild(body);
+    stack.appendChild(card);
+  });
+}
+
+document.getElementById("lanePlatform").addEventListener("click",()=>{
+  lane="platform";
+  document.getElementById("lanePlatform").classList.add("active");
+  document.getElementById("laneEngineering").classList.remove("active");
+  render();
+});
+
+document.getElementById("laneEngineering").addEventListener("click",()=>{
+  lane="engineering";
+  document.getElementById("laneEngineering").classList.add("active");
+  document.getElementById("lanePlatform").classList.remove("active");
+  render();
+});
+
+render();
+
+})();
+</script>
+
+</body>
+</html>

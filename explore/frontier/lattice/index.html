@@ -1,10 +1,12 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/lattice/index.html
      FRONTIER · LATTICE + SHIMMER (COMBINED ROOM — NEW STANDARD)
+     UPDATE (PER SEAN):
+       - SHIMMER must carry more depth (pick up slack): more domains, more explicit protocol, more measurable posture
+       - Keep LATTICE strong + unchanged in intent
      PURPOSE:
-       - Merge LATTICE + SHIMMER into one room (same hub) with two separate concept sets
-       - Display separately via in-page MODE toggle (no reload)
-       - Dense, legible, routing-safe shell (no hype; measurable posture)
+       - Merge LATTICE + SHIMMER into one room with a MODE toggle (no reload)
+       - Display separately and densely
      NEW STANDARD (THIS FILE):
        - Trilingual: EN / 中文 / ES
        - LENSES (VISIBLE ONLY):
@@ -574,52 +576,53 @@ body::before,body::after{pointer-events:none!important}
           }
         }
       },
+
       shimmer:{
         en:{
           platform:{
-            hs:"Shimmer is signal integrity for humans. It measures how interfaces distort perception so people stop mistaking distortion for truth.",
-            rule:"Rule: measure distortion before it becomes belief. If you can’t measure it, label it as uncertainty."
+            hs:"SHIMMER is a clarity loop for humans: Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat. It’s how you stop attention from turning into drift.",
+            rule:"Rule: show what changed before you argue. Receipts beat vibes."
           },
           engineering:{
-            hs:"Engineering view: Shimmer is interface variance. Define source signal, define measurement, define thresholds, and define re-calibration triggers (deterministic).",
-            rule:"Rule: variance bands + thresholds + reset triggers. No ‘feelings’ allowed as gates."
+            hs:"Engineering SHIMMER = interface variance control: baseline → bands → triggers → reason codes → receipts → replay. It treats perception drift as a measurable system fault.",
+            rule:"Rule: baseline first. Any trigger must be reproducible under fixed scope."
           }
         },
         zh:{
           platform:{
-            hs:"Shimmer=人类层面的信号完整性。它测量界面如何扭曲感知，让人不把失真当真相。",
-            rule:"规则：失真在变成信念前就要测量。不能测量就标注为不确定。"
+            hs:"SHIMMER 是面向人类的清晰循环：筛选→高亮→检查→测量→减缓→解释→重复。它阻止注意力变成漂移。",
+            rule:"规则：先展示变化，再争论。收据胜过感觉。"
           },
           engineering:{
-            hs:"工程视图：Shimmer=接口方差。定义源信号、测量规则、阈值与再校准触发（确定性）。",
-            rule:"规则：方差带+阈值+重置触发。不得用“感觉”当闸门。"
+            hs:"工程 SHIMMER = 接口方差控制：基线→区间→触发→原因码→收据→回放。把感知漂移当成可测系统故障。",
+            rule:"规则：先基线。任何触发在固定范围下都必须可复现。"
           }
         },
         es:{
           platform:{
-            hs:"Shimmer es integridad de señal para humanos. Mide cómo las interfaces distorsionan percepción para no confundir distorsión con verdad.",
-            rule:"Regla: medir distorsión antes de que se vuelva creencia. Si no se mide, se etiqueta como incertidumbre."
+            hs:"SHIMMER es un loop de claridad: Filtrar → Resaltar → Inspeccionar → Medir → Mitigar → Explicar → Repetir. Evita que la atención se vuelva deriva.",
+            rule:"Regla: muestra qué cambió antes de discutir. Recibos > sensaciones."
           },
           engineering:{
-            hs:"Vista de ingeniería: Shimmer es varianza de interfaz. Define señal fuente, regla de medición, umbrales y triggers deterministas de recalibración.",
-            rule:"Regla: bandas de varianza + umbrales + triggers de reset. Sin ‘sensaciones’ como compuertas."
+            hs:"SHIMMER (ingeniería) = control de varianza de interfaz: baseline → bandas → triggers → códigos → recibos → replay. Trata la deriva perceptiva como fallo medible.",
+            rule:"Regla: baseline primero. Cualquier trigger debe ser reproducible bajo alcance fijo."
           }
         }
       }
     };
 
-    function pickPack(root, which){
+    function pickPack(root){
       var L = root[lang] || root.en;
       return (lane==="engineering") ? L.engineering : L.platform;
     }
     return {
-      hs: pickPack(H[mode], "hs").hs,
-      rule: pickPack(H[mode], "rule").rule
+      hs: pickPack(H[mode]).hs,
+      rule: pickPack(H[mode]).rule
     };
   }
 
-  // ===== Data (two separate concept sets) =====
-  var LATTICE_DOMAINS=[
+  // ===== LATTICE DOMAINS (kept compact) =====
+  var LATTICE_DOMAINS = [
     {
       c:"#c9a24a",
       t:{en:"256-State Finite Geometry", zh:"256态有限几何", es:"Geometría finita de 256 estados"},
@@ -656,73 +659,167 @@ body::before,body::after{pointer-events:none!important}
     },
     {
       c:"#a3a3a3",
-      t:{en:"Constraint Surfaces", zh:"约束面", es:"Superficies de restricción"},
-      s:{en:"Where movement is allowed to go.", zh:"允许运动到哪里。", es:"Dónde se permite el movimiento."},
+      t:{en:"Admissibility Boundaries", zh:"可采信边界", es:"Límites de admisibilidad"},
+      s:{en:"What you are allowed to claim right now.", zh:"你现在允许主张到哪里。", es:"Qué se permite afirmar ahora."},
       platform:{
-        intro:{en:"Constraints are safety rails. They prevent ‘scale first, learn later.’", zh:"约束是护栏，防止“先扩张后补课”。", es:"Las restricciones son barandillas. Evitan ‘escala primero, aprende después’."},
-        concept:{en:"Concept: boundaries make progress repeatable.", zh:"概念：边界让进步可复跑。", es:"Concepto: límites hacen progreso repetible."},
-        build:{en:"Build now: write one boundary you refuse to cross without measurement.", zh:"现在建：写下一个“无测量不跨越”的边界。", es:"Construir ahora: escribir un límite que no cruzas sin medición."},
-        roadmap:{en:"Roadmap: convert boundaries into gates with reason codes.", zh:"路线图：把边界变成带原因码闸门。", es:"Hoja de ruta: convertir límites en compuertas con códigos de razón."}
+        intro:{en:"Dream big, label readiness. No measurement means: concept only.", zh:"想得很大也可以，但要标注就绪度。没测量就只能：概念。", es:"Sueña grande, etiqueta preparación. Sin medición: solo concepto."},
+        concept:{en:"Concept: readiness is a label, not an insult.", zh:"概念：就绪度是标签，不是侮辱。", es:"Concepto: preparación es etiqueta, no insulto."},
+        build:{en:"Build now: separate vision from proof in routing.", zh:"现在建：路由上分开愿景与证明。", es:"Construir ahora: separar visión de prueba en ruteo."},
+        roadmap:{en:"Roadmap: promote shells to products only after receipts exist.", zh:"路线图：有收据后再把壳升级为产品。", es:"Hoja de ruta: promover shells a productos solo cuando existan recibos."}
       },
       engineering:{
-        intro:{en:"Constraint surfaces define admissibility: allowed transitions, forbidden transitions, deterministic failure meanings.", zh:"约束面定义可采信：允许/禁止转移与确定性失败含义。", es:"Superficies definen admisibilidad: transiciones permitidas/prohibidas y significados de fallo deterministas."},
-        concept:{en:"Concept: admissibility is geometry, not debate.", zh:"概念：可采信是几何，不是争论。", es:"Concepto: admisibilidad es geometría, no debate."},
-        build:{en:"Build now: define minimal inequality basis and validate monotonicity.", zh:"现在建：定义最小不等式基并验证单调性。", es:"Construir ahora: definir base mínima y validar monotonicidad."},
-        roadmap:{en:"Roadmap: formalize envelopes + termination logic (containment precedes rupture).", zh:"路线图：形式化包络+终止逻辑（隔离先于破裂）。", es:"Hoja de ruta: formalizar envolventes + terminación (contención antes de ruptura)."}
+        intro:{en:"Claims cannot exceed evidence under fixed scope. Gates must be machine-checkable.", zh:"固定范围下主张不得超出证据。闸门必须可机检。", es:"Afirmaciones no pueden exceder evidencia bajo alcance fijo. Compuertas deben ser comprobables."},
+        concept:{en:"Concept: admissibility is binary with reason codes.", zh:"概念：可采信=带原因码二元闸门。", es:"Concepto: admisibilidad es binaria con códigos de razón."},
+        build:{en:"Build now: output HOLD/UNDETERMINED when receipts are missing.", zh:"现在建：缺收据输出HOLD/UNDETERMINED。", es:"Construir ahora: emitir HOLD/UNDETERMINED cuando falten recibos."},
+        roadmap:{en:"Roadmap: epoch discipline on corrections (no retroactive edits).", zh:"路线图：修正走新纪元纪律（无追溯改写）。", es:"Hoja de ruta: disciplina de época en correcciones (sin ediciones retroactivas)."}
       }
     }
   ];
 
-  var SHIMMER_DOMAINS=[
+  // ===== SHIMMER DOMAINS (DEEP; acronym + measurable) =====
+  // S.H.I.M.M.E.R. core loop + operational layers
+  var SHIMMER_DOMAINS = [
     {
       c:"#ff2b2b",
-      t:{en:"Perception Drift", zh:"感知漂移", es:"Deriva de percepción"},
-      s:{en:"When interpretation diverges from reality.", zh:"当解释偏离现实。", es:"Cuando interpretación diverge de realidad."},
+      t:{en:"SHIMMER Overview (Protocol)", zh:"SHIMMER 总览（协议）", es:"SHIMMER (protocolo)"},
+      s:{en:"A clarity loop: Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat.", zh:"清晰循环：筛选→高亮→检查→测量→减缓→解释→重复。", es:"Loop de claridad: Filtrar→Resaltar→Inspeccionar→Medir→Mitigar→Explicar→Repetir."},
       platform:{
-        intro:{en:"People don’t see the system. They see the interface. Drift begins when interface cues replace reality.", zh:"人看到的是界面，不是系统。漂移从“界面线索替代现实”开始。", es:"La gente ve la interfaz, no el sistema. La deriva empieza cuando señales de interfaz reemplazan realidad."},
-        concept:{en:"Concept: drift is measurable mismatch between signal and belief.", zh:"概念：漂移=信号与信念的可测错配。", es:"Concepto: deriva = desajuste medible entre señal y creencia."},
-        build:{en:"Build now: define one ‘reality anchor’ metric users can’t argue with.", zh:"现在建：定义一个用户无法争论的“现实锚点”指标。", es:"Construir ahora: definir un métrico ‘ancla de realidad’ que no se discuta."},
-        roadmap:{en:"Roadmap: publish drift bands (green/yellow/red) with receipts behind each band.", zh:"路线图：发布漂移区间（绿/黄/红）并在每区间背后挂收据。", es:"Hoja de ruta: publicar bandas de deriva (verde/amarillo/rojo) con recibos detrás."}
+        intro:{en:"SHIMMER is not persuasion. It is the opposite: it reduces distortion so humans can decide without being dragged by noise.", zh:"SHIMMER 不是说服，而是相反：减少失真，让人不被噪声拖着走。", es:"SHIMMER no es persuasión. Es lo contrario: reduce distorsión para decidir sin ruido."},
+        concept:{en:"Concept: attention is a resource; distortion is a leak.", zh:"概念：注意力是资源；失真是泄漏。", es:"Concepto: atención es recurso; distorsión es fuga."},
+        build:{en:"Build now: define the loop in one page: what is screened, what is highlighted, and where receipts live.", zh:"现在建：一页写清循环：筛什么、高亮什么、收据在哪。", es:"Construir ahora: definir el loop en una página: qué se filtra, qué se resalta y dónde están los recibos."},
+        roadmap:{en:"Roadmap: attach SHIMMER outputs to Gauges (signals) and Laws (bounds) as anchors.", zh:"路线图：把SHIMMER输出锚定到量规（信号）与法则（边界）。", es:"Hoja de ruta: anclar salidas de SHIMMER a Medidores (señales) y Leyes (límites)."}
       },
       engineering:{
-        intro:{en:"Define source signal, define interface transforms, and measure variance. Drift is an output, not a vibe.", zh:"定义源信号、定义界面变换并测方差。漂移是输出，不是感觉。", es:"Definir señal fuente, transformaciones de interfaz y medir varianza. Deriva es salida, no vibra."},
-        concept:{en:"Concept: variance bands define acceptable distortion.", zh:"概念：方差带定义可接受失真。", es:"Concepto: bandas de varianza definen distorsión aceptable."},
-        build:{en:"Build now: set thresholds and deterministic re-calibration triggers.", zh:"现在建：设置阈值与确定性再校准触发。", es:"Construir ahora: fijar umbrales y triggers deterministas de recalibración."},
-        roadmap:{en:"Roadmap: link drift to containment: warn → slow → isolate → reset.", zh:"路线图：把漂移连接到隔离：警告→减速→隔离→重置。", es:"Hoja de ruta: ligar deriva a contención: avisar→ralentizar→aislar→reset."}
+        intro:{en:"Engineering SHIMMER treats perception drift as a measurable interface fault. Baselines, bands, triggers, reason codes, receipts, replay.", zh:"工程 SHIMMER 把感知漂移当成可测接口故障：基线、区间、触发、原因码、收据、回放。", es:"SHIMMER de ingeniería trata la deriva perceptiva como fallo medible: baseline, bandas, triggers, razones, recibos, replay."},
+        concept:{en:"Concept: measured variance is the only admissible driver of resets.", zh:"概念：只有测得的方差才允许触发重置。", es:"Concepto: solo varianza medida puede disparar resets."},
+        build:{en:"Build now: define baseline capture + variance metric + threshold definitions per surface.", zh:"现在建：为每个界面定义基线采集+方差指标+阈值。", es:"Construir ahora: definir captura de baseline + métrica de varianza + umbrales por superficie."},
+        roadmap:{en:"Roadmap: publish a replayable log: baseline hash, deltas, triggers, actions, recovery-to-band.", zh:"路线图：发布可回放日志：基线哈希、差分、触发、动作、回带恢复。", es:"Hoja de ruta: publicar log replayable: hash de baseline, deltas, triggers, acciones, recuperación a banda."}
       }
     },
+
     {
       c:"#c9a24a",
-      t:{en:"Attention Load", zh:"注意力负载", es:"Carga de atención"},
-      s:{en:"When cognitive load breaks decision quality.", zh:"当认知负载击穿决策质量。", es:"Cuando carga cognitiva rompe calidad de decisión."},
+      t:{en:"S — SCREEN (Input Gate)", zh:"S — 筛选（输入闸门）", es:"S — FILTRAR (compuerta)"},
+      s:{en:"Decide what enters the mind/system at all.", zh:"决定什么可以进入系统。", es:"Decidir qué entra al sistema."},
       platform:{
-        intro:{en:"Too many options feels like freedom — until it becomes paralysis. Shimmer makes load visible.", zh:"选项太多像自由，直到变瘫痪。Shimmer 让负载可见。", es:"Demasiadas opciones parecen libertad hasta parálisis. Shimmer hace visible la carga."},
-        concept:{en:"Concept: load is an early-warning signal.", zh:"概念：负载是早预警信号。", es:"Concepto: carga es señal temprana."},
-        build:{en:"Build now: reduce clutter with ‘one open’ + clear next jumps.", zh:"现在建：用“单开”+清晰下一步减少杂乱。", es:"Construir ahora: reducir clutter con ‘uno abierto’ + saltos claros."},
-        roadmap:{en:"Roadmap: publish a load index and route users to relief paths.", zh:"路线图：发布负载指数并路由到减负路径。", es:"Hoja de ruta: publicar índice de carga y rutas de alivio."}
+        intro:{en:"If you can’t say why something matters, don’t feed it in. Screening is kindness to your future self.", zh:"说不清为什么重要，就别喂进去。筛选是对未来自己的善意。", es:"Si no puedes decir por qué importa, no lo metas. Filtrar es amabilidad hacia tu yo futuro."},
+        concept:{en:"Concept: fewer inputs = more stability.", zh:"概念：输入越少，越稳定。", es:"Concepto: menos entradas = más estabilidad."},
+        build:{en:"Build now: two lists — MUST SEE / MUST IGNORE.", zh:"现在建：两张清单——必看/必忽略。", es:"Construir ahora: dos listas — IMPRESCINDIBLE / IGNORAR."},
+        roadmap:{en:"Roadmap: add ‘source trust’ and ‘scope relevance’ tags to screening.", zh:"路线图：给筛选增加“来源可信度/范围相关性”标签。", es:"Hoja de ruta: añadir etiquetas ‘confianza de fuente’ y ‘relevancia de alcance’."}
       },
       engineering:{
-        intro:{en:"Model load as measurable interaction variance: dwell time, reversal rate, error rate, and loop frequency.", zh:"把负载建模为可测交互方差：停留、回退、错误、循环频率。", es:"Modelar carga como varianza de interacción: tiempo, reversa, error y frecuencia de bucles."},
-        concept:{en:"Concept: instability rises when variance exceeds band.", zh:"概念：方差超带则不稳定上升。", es:"Concepto: inestabilidad sube cuando varianza excede banda."},
-        build:{en:"Build now: define bands + alarms; never gate on feelings.", zh:"现在建：定义区间+报警；绝不以感觉为闸门。", es:"Construir ahora: definir bandas + alarmas; nunca gatear por ‘sensaciones’."},
-        roadmap:{en:"Roadmap: couple load control with rollback/containment triggers.", zh:"路线图：把负载控制与回滚/隔离触发耦合。", es:"Hoja de ruta: acoplar control de carga a triggers de rollback/contención."}
+        intro:{en:"Screening is deterministic gating: allow-lists, deny-lists, and reason-coded rejections. It’s an input contract.", zh:"筛选是确定性闸门：白名单、黑名单、原因码拒绝。这是输入契约。", es:"Filtrar es compuerta determinista: allow/deny-lists y rechazos con códigos. Es contrato de entrada."},
+        concept:{en:"Concept: gate inputs before classification.", zh:"概念：先闸门输入，再做分类。", es:"Concepto: gatear entradas antes de clasificar."},
+        build:{en:"Build now: implement reasons for rejection (R1..Rn).", zh:"现在建：实现拒绝原因码（R1..Rn）。", es:"Construir ahora: implementar razones de rechazo (R1..Rn)."},
+        roadmap:{en:"Roadmap: measure screening drift (what started getting through?) by window.", zh:"路线图：按窗口测筛选漂移（什么开始漏进来了？）。", es:"Hoja de ruta: medir deriva de filtrado por ventana."}
       }
     },
+
     {
-      c:"#a3a3a3",
-      t:{en:"Reality Calibration", zh:"现实校准", es:"Calibración de realidad"},
-      s:{en:"Restoring alignment after distortion.", zh:"在失真后恢复对齐。", es:"Restaurar alineación tras distorsión."},
+      c:"#ff2b2b",
+      t:{en:"H — HIGHLIGHT (Change Detector)", zh:"H — 高亮（变化检测）", es:"H — RESALTAR (detector)"},
+      s:{en:"Show deltas, not opinions.", zh:"展示差分，不展示观点。", es:"Mostrar deltas, no opiniones."},
       platform:{
-        intro:{en:"Calibration is how you stop rumor from becoming policy. It restores a shared map.", zh:"校准阻止谣言变政策，恢复共享地图。", es:"Calibración evita que rumor se vuelva política y restaura un mapa compartido."},
-        concept:{en:"Concept: calibration separates data from rules.", zh:"概念：校准把数据与规则分离。", es:"Concepto: calibración separa dato de regla."},
-        build:{en:"Build now: show ‘what changed’ with receipts, not explanations.", zh:"现在建：用收据展示“变了什么”，而不是解释。", es:"Construir ahora: mostrar ‘qué cambió’ con recibos, no explicaciones."},
-        roadmap:{en:"Roadmap: enforce authority boundaries (who can calibrate) and log changes.", zh:"路线图：执行校准权威边界并记录变更。", es:"Hoja de ruta: imponer límites de autoridad y registrar cambios."}
+        intro:{en:"Highlighting prevents gaslighting-by-noise. It pins: what changed, when, and how big.", zh:"高亮防止“噪声式煤气灯效应”：把变化、时间、幅度钉住。", es:"Resaltar evita ‘gaslighting por ruido’: fija qué cambió, cuándo y cuánto."},
+        concept:{en:"Concept: visible change reduces argument loops.", zh:"概念：变化可见，争论循环就减少。", es:"Concepto: cambio visible reduce bucles de discusión."},
+        build:{en:"Build now: 1-line before/after for the primary signal.", zh:"现在建：为主信号做一行前后对比。", es:"Construir ahora: dif 1 línea antes/después para la señal principal."},
+        roadmap:{en:"Roadmap: attach ‘what changed’ to a receipt link (no narratives).", zh:"路线图：把“变了什么”绑定到收据（无叙事）。", es:"Hoja de ruta: vincular ‘qué cambió’ a un recibo (sin narrativa)." }
       },
       engineering:{
-        intro:{en:"Calibration requires versioned rules, signed configs, and replayable outputs under fixed scope.", zh:"校准需要版本化规则、签名配置与固定范围下可回放输出。", es:"Calibración requiere reglas versionadas, configs firmadas y salidas replayables bajo alcance fijo."},
-        concept:{en:"Concept: calibration is protected configuration.", zh:"概念：校准是受保护配置。", es:"Concepto: calibración es configuración protegida."},
-        build:{en:"Build now: implement ‘scope + evidence hash → output’ determinism.", zh:"现在建：实现“范围+证据哈希→输出”的确定性。", es:"Construir ahora: implementar determinismo ‘alcance+hash evidencia → salida’."},
-        roadmap:{en:"Roadmap: epoch discipline on any rule mutation.", zh:"路线图：任何规则变异必须走新纪元纪律。", es:"Hoja de ruta: disciplina de época en mutaciones de regla."}
+        intro:{en:"Highlighting = variance detection: delta, slope, and threshold crossings with reason codes.", zh:"高亮=方差检测：差分、斜率、阈值穿越，并输出原因码。", es:"Resaltar = detección de varianza: delta, pendiente y cruces de umbral con códigos."},
+        concept:{en:"Concept: drift is a metric.", zh:"概念：漂移是指标。", es:"Concepto: deriva es métrica."},
+        build:{en:"Build now: compute windowed deltas; flag slope changes.", zh:"现在建：计算窗口差分；对斜率变化标记。", es:"Construir ahora: deltas por ventana; marcar cambios de pendiente."},
+        roadmap:{en:"Roadmap: link drift flags to containment triggers (warn/slow/reset).", zh:"路线图：把漂移标记接入隔离触发（警告/减速/重置）。", es:"Hoja de ruta: conectar flags a triggers de contención (avisar/ralentizar/reset)." }
+      }
+    },
+
+    {
+      c:"#93c5fd",
+      t:{en:"I — INSPECT (Zoom Boundary)", zh:"I — 检查（缩放边界）", es:"I — INSPECCIONAR (límite)"},
+      s:{en:"Pick the evidence boundary before claiming.", zh:"主张前先选证据边界。", es:"Elegir límite de evidencia antes de afirmar."},
+      platform:{
+        intro:{en:"Inspection is ‘go one level deeper’ without getting lost. It keeps curiosity structured.", zh:"检查=“再深入一级”而不迷路，让好奇心有结构。", es:"Inspección = ‘bajar un nivel’ sin perderse. Mantiene curiosidad estructurada."},
+        concept:{en:"Concept: scope first, then conclusions.", zh:"概念：先范围，再结论。", es:"Concepto: alcance primero, conclusiones después."},
+        build:{en:"Build now: one ‘inspect path’ per signal (where to go next).", zh:"现在建：每个信号一条检查路径（下一步去哪）。", es:"Construir ahora: una ruta de inspección por señal (a dónde ir después)." },
+        roadmap:{en:"Roadmap: standardize inspection depth (same depth → same view).", zh:"路线图：标准化检查深度（同深度→同视图）。", es:"Hoja de ruta: estandarizar profundidad (misma profundidad → misma vista)." }
+      },
+      engineering:{
+        intro:{en:"Inspection chooses the scope slice: which inputs, which window, which identifiers. It is part of the input.", zh:"检查选择范围切片：哪些输入、哪个窗口、哪些标识符。它是输入的一部分。", es:"Inspección elige el corte de alcance: entradas, ventana e identificadores. Es parte de la entrada."},
+        concept:{en:"Concept: scope is an input variable.", zh:"概念：范围是输入变量。", es:"Concepto: alcance es variable de entrada."},
+        build:{en:"Build now: implement a scope schema (anchors, window, evidence list).", zh:"现在建：实现范围架构（锚点/窗口/证据清单）。", es:"Construir ahora: implementar esquema de alcance (anclas, ventana, lista de evidencia)." },
+        roadmap:{en:"Roadmap: hash scope + evidence to preserve replay integrity.", zh:"路线图：哈希锁定范围+证据以保证回放完整性。", es:"Hoja de ruta: hashear alcance+evidencia para integridad de replay."}
+      }
+    },
+
+    {
+      c:"#34d399",
+      t:{en:"M — MEASURE (Receipts)", zh:"M — 测量（收据）", es:"M — MEDIR (recibos)"},
+      s:{en:"Turn observation into a repeatable number.", zh:"把观察变成可复跑数字。", es:"Convertir observación en número repetible."},
+      platform:{
+        intro:{en:"Measurement is the moment you stop guessing. If you can’t measure it, label it as a concept.", zh:"测量就是你停止猜的那一刻。测不了就标注为概念。", es:"Medir es cuando dejas de adivinar. Si no puedes medir, etiqueta como concepto."},
+        concept:{en:"Concept: receipts beat confidence.", zh:"概念：收据胜过自信。", es:"Concepto: recibos vencen confianza."},
+        build:{en:"Build now: define one metric per page that tells the truth.", zh:"现在建：每页定义一个“说真话”的指标。", es:"Construir ahora: definir una métrica por página que diga la verdad."},
+        roadmap:{en:"Roadmap: align metrics to gates (pass/hold/fail with reasons).", zh:"路线图：指标对齐闸门（通过/暂停/失败+原因）。", es:"Hoja de ruta: alinear métricas a compuertas (pasar/hold/fallar con razones)." }
+      },
+      engineering:{
+        intro:{en:"Measurement is a function: inputs → output → threshold → failure meaning. Undefined means UNDETERMINED.", zh:"测量是函数：输入→输出→阈值→失败含义。未定义则 UNDETERMINED。", es:"Medición es función: entradas→salida→umbral→significado de fallo. Sin definir → UNDETERMINED."},
+        concept:{en:"Concept: determinism under fixed scope.", zh:"概念：固定范围下的确定性。", es:"Concepto: determinismo bajo alcance fijo."},
+        build:{en:"Build now: implement reason codes for each threshold crossing.", zh:"现在建：为每个阈值穿越实现原因码。", es:"Construir ahora: implementar códigos de razón por cruce de umbral."},
+        roadmap:{en:"Roadmap: store receipts (timestamp + version + hash) for replay.", zh:"路线图：存收据（时间戳+版本+哈希）以回放。", es:"Hoja de ruta: guardar recibos (timestamp+versión+hash) para replay."}
+      }
+    },
+
+    {
+      c:"#f59e0b",
+      t:{en:"M — MITIGATE (Contain)", zh:"M — 减缓（隔离）", es:"M — MITIGAR (contener)"},
+      s:{en:"Reduce harm before you ‘solve’.", zh:"先止损，再谈解决。", es:"Reducir daño antes de ‘resolver’."},
+      platform:{
+        intro:{en:"Mitigation is the calm move: make the blast radius smaller. You don’t have to win the argument today.", zh:"减缓是冷静动作：缩小爆炸半径。你今天不必赢辩论。", es:"Mitigar es el movimiento calmado: reducir radio de impacto. No tienes que ganar el argumento hoy."},
+        concept:{en:"Concept: containment preserves options.", zh:"概念：隔离保留选择权。", es:"Concepto: contención preserva opciones."},
+        build:{en:"Build now: define a ‘pause’ action and a ‘rollback’ action people can actually execute.", zh:"现在建：定义可执行的“暂停”与“回滚”。", es:"Construir ahora: definir acciones ejecutables ‘pausa’ y ‘rollback’."},
+        roadmap:{en:"Roadmap: add tiered responses: warn → slow → isolate → reset.", zh:"路线图：分级响应：警告→减速→隔离→重置。", es:"Hoja de ruta: respuestas por niveles: avisar→ralentizar→aislar→reset."}
+      },
+      engineering:{
+        intro:{en:"Mitigation is control logic: containment triggers, rollback paths, kill/exit behaviors. It is not mood.", zh:"减缓是控制逻辑：隔离触发、回滚路径、终止/退出行为。不是情绪。", es:"Mitigación es lógica de control: triggers, rollback y kill/exit. No es ‘estado de ánimo’."},
+        concept:{en:"Concept: containment beats cascade.", zh:"概念：隔离胜过级联。", es:"Concepto: contención vence cascada."},
+        build:{en:"Build now: define containment thresholds and corresponding actions.", zh:"现在建：定义隔离阈值与对应动作。", es:"Construir ahora: definir umbrales y acciones de contención."},
+        roadmap:{en:"Roadmap: verify mitigation effectiveness by windowed re-entry to bands.", zh:"路线图：用窗口再入区间验证减缓效果。", es:"Hoja de ruta: verificar eficacia por re-entrada a bandas en ventanas."}
+      }
+    },
+
+    {
+      c:"#a3a3a3",
+      t:{en:"E — EXPLAIN (Reason Codes)", zh:"E — 解释（原因码）", es:"E — EXPLICAR (razones)"},
+      s:{en:"Translate flags into plain causes.", zh:"把标记翻译成人话原因。", es:"Traducir flags a causas simples."},
+      platform:{
+        intro:{en:"Explanation should be short: what changed, what it means, what you do next. No speeches.", zh:"解释要短：变了什么、意味着什么、下一步做什么。不演讲。", es:"Explicar debe ser corto: qué cambió, qué significa y qué haces después. Sin discursos."},
+        concept:{en:"Concept: people need ‘next action’, not theory.", zh:"概念：人需要“下一步动作”，不需要理论。", es:"Concepto: la gente necesita ‘siguiente acción’, no teoría."},
+        build:{en:"Build now: standardize 5–10 reason codes across pages.", zh:"现在建：全站标准化5–10个原因码。", es:"Construir ahora: estandarizar 5–10 códigos de razón en el sitio."},
+        roadmap:{en:"Roadmap: map reason codes into Laws (bounds) and Products (actions).", zh:"路线图：把原因码映射到法则（边界）与产品（动作）。", es:"Hoja de ruta: mapear códigos de razón a Leyes (límites) y Productos (acciones)." }
+      },
+      engineering:{
+        intro:{en:"Reason codes are the bridge between measurement and governance. They preserve determinism and auditability.", zh:"原因码是测量与治理的桥：保持确定性与可审计。", es:"Códigos de razón son puente entre medición y gobernanza: preservan determinismo y auditabilidad."},
+        concept:{en:"Concept: codes prevent narrative drift.", zh:"概念：代码防止叙事漂移。", es:"Concepto: códigos previenen deriva narrativa."},
+        build:{en:"Build now: bind each code to threshold + action + receipt schema.", zh:"现在建：每个码绑定阈值+动作+收据架构。", es:"Construir ahora: ligar cada código a umbral + acción + esquema de recibo."},
+        roadmap:{en:"Roadmap: require codes for every intervention (no silent fixes).", zh:"路线图：每次干预必须有原因码（无静默修复）。", es:"Hoja de ruta: exigir códigos para cada intervención (sin arreglos silenciosos)." }
+      }
+    },
+
+    {
+      c:"#c9a24a",
+      t:{en:"R — REPEAT (Window Discipline)", zh:"R — 重复（窗口纪律）", es:"R — REPETIR (ventanas)"},
+      s:{en:"Confirm stabilization over time.", zh:"用时间确认稳定。", es:"Confirmar estabilidad con el tiempo."},
+      platform:{
+        intro:{en:"Repeat is where confidence becomes earned: you check again tomorrow. Then again next week. Patterns show up.", zh:"重复让信心变成“挣来的”：明天再看一次，下周再看一次，模式就出来了。", es:"Repetir es donde la confianza se gana: revisas mañana y la próxima semana. Aparecen patrones."},
+        concept:{en:"Concept: stability is consistency over windows.", zh:"概念：稳定=跨窗口一致。", es:"Concepto: estabilidad = consistencia por ventanas."},
+        build:{en:"Build now: pick one window size (daily/weekly) and stick to it.", zh:"现在建：选一个窗口（天/周）并坚持。", es:"Construir ahora: elegir tamaño de ventana (día/semana) y mantenerlo."},
+        roadmap:{en:"Roadmap: publish a timeline of flags and recoveries (readable).", zh:"路线图：发布可读时间线：标记与恢复。", es:"Hoja de ruta: publicar línea temporal legible: flags y recuperaciones."}
+      },
+      engineering:{
+        intro:{en:"Repeat is verification: trend reversal, band re-entry, reduced variance, and stable reason-code frequency.", zh:"重复=验证：趋势反转、回带、方差降低、原因码频率稳定。", es:"Repetir = verificación: reversión de tendencia, re-entrada a banda, menor varianza y frecuencia estable de códigos."},
+        concept:{en:"Concept: windowed evidence beats snapshots.", zh:"概念：窗口证据胜过快照。", es:"Concepto: evidencia por ventanas vence snapshots."},
+        build:{en:"Build now: store window aggregates + hashes for audit replay.", zh:"现在建：存窗口汇总+哈希用于审计回放。", es:"Construir ahora: guardar agregados por ventana + hashes para replay."},
+        roadmap:{en:"Roadmap: integrate windowed repeat checks into gating and escalation control.", zh:"路线图：把窗口重复检查接入闸门与升级控制。", es:"Hoja de ruta: integrar chequeos repetidos por ventana en compuertas y control de escalación."}
       }
     }
   ];
@@ -887,7 +984,7 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("ht").textContent =
       (mode==="shimmer")
-        ? pick3("SIGNAL INTEGRITY","信号完整性","INTEGRIDAD DE SEÑAL")
+        ? pick3("SHIMMER (S.H.I.M.M.E.R.)","SHIMMER（S.H.I.M.M.E.R.）","SHIMMER (S.H.I.M.M.E.R.)")
         : pick3("LATTICE GEOMETRY","晶格几何","GEOMETRÍA LATTICE");
 
     document.getElementById("hs").textContent = packs.hs;
@@ -898,7 +995,6 @@ body::before,body::after{pointer-events:none!important}
         ? pick3("SHIMMER DOMAINS","SHIMMER 域","DOMINIOS SHIMMER")
         : pick3("LATTICE DOMAINS","晶格域","DOMINIOS LATTICE");
 
-    // Labels
     document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
     document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
     document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
@@ -914,7 +1010,6 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
     document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
 
-    // State pills
     document.getElementById("modeState").textContent =
       (lang==="zh") ? ("模式："+(mode==="shimmer"?"SHIMMER":"晶格")) :
       (lang==="es") ? ("Modo: "+(mode==="shimmer"?"SHIMMER":"LATTICE")) :
@@ -988,8 +1083,8 @@ body::before,body::after{pointer-events:none!important}
     if(next!=="lattice" && next!=="shimmer") next="lattice";
     mode=next;
     applyHeader();
-    renderList();   // swaps the domain set; restores saved open row for that mode
-    updateRows();   // applies current lang/lane text into the new set
+    renderList();
+    updateRows();
   }
 
   document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});

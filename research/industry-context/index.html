@@ -1,25 +1,20 @@
 <!doctype html>
 <!-- TNT — /research/industry-context/index.html
-     RESEARCH · INDUSTRY CONTEXT (STRUCTURED CASE STUDIES) · DUAL LENS
-     GOALS (PER SEAN):
-       - More bubbles / more categories / more structure
-       - Less clutter (nested, collapsible sub-bubbles)
-       - Include ALL listed companies (no rankings, no marketing comparisons)
-       - LeafGuard highlighted (more detail) but neutral posture
-       - BIGGER PRINT (monument readability)
-     LENS RULE (NO NEW gd_* KEYS):
-       - Narrative lens = depth=explore
-       - Engineering lens = depth=learn
-       - Uses existing canonical key: gd_depth + URL depth
-     CONSTRAINTS (LOCKED):
-       - Informational only · no monetization · no lead capture · no affiliates
-       - No logos · no product images · no implied partnerships
-       - Plain text references only · neutral academic tone
+     RESEARCH · INDUSTRY CONTEXT (STRUCTURED CASE STUDIES) · CONSUMER-FRIENDLY UPGRADE v1
+     PRESERVES (LOCKED):
+       - Bubbles + categories + structure
+       - Single-open accordion (top-level). Sub-bubbles single-open inside each card
+       - Dual lens via depth (Narrative=explore / Engineering=learn) using gd_depth + URL depth
+       - Trilingual EN/中文/ES
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
-       - Single-open accordion (top-level). Sub-bubbles tap-to-open (single-open inside each card)
+       - Informational only (no monetization, no capture, no affiliates)
+       - No logos/images, neutral academic posture
+     UPGRADE (CONSUMER-FRIENDLY):
+       - Lens labels: QUICK (depth=explore) / DEEP (depth=learn)  (no logic change)
+       - “Quick Read” strip (non-modal) + Jump-to-LeafGuard scroll
+       - Sub-bubbles: show ONLY the first sentence by default; full paragraph reveals on open
+       - Larger type retained; less clutter by default
 -->
 
 <html lang="en">
@@ -108,6 +103,7 @@ body::before,body::after{pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
   opacity:.55;pointer-events:none;
 }
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);}
 
 /* Lens pills (mapped to depth) */
 .pill{
@@ -174,6 +170,38 @@ body::before,body::after{pointer-events:none!important}
 .p0{margin:14px 0 0;line-height:1.75;color:var(--mut);font-size:17px}
 .note0{margin-top:10px;color:var(--mut2);font-size:14px;line-height:1.55}
 
+/* ===== QUICK READ STRIP ===== */
+.quick{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:rgba(0,0,0,.14);
+  box-shadow:var(--shadowA);
+  padding:14px 14px 12px;
+}
+.quickT{
+  margin:0;
+  font-weight:980;
+  letter-spacing:.2px;
+  font-size:15px;
+  color:rgba(255,255,255,.92);
+}
+.quickUl{
+  margin:10px 0 0 18px;
+  padding:0;
+  color:rgba(255,255,255,.86);
+  line-height:1.6;
+  font-size:14.5px;
+}
+.quickUl li{margin:6px 0}
+.quickActions{
+  margin-top:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+.quickActions .btn{border-radius:999px;padding:10px 14px}
+
 /* ===== ACCORDION (TOP-LEVEL SINGLE OPEN) ===== */
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
@@ -223,7 +251,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .card.open .body{display:block}
 
-/* ===== SUB-BUBBLES (SINGLE-OPEN WITHIN CARD) ===== */
+/* ===== SUB-BUBBLES ===== */
 .subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -249,23 +277,25 @@ body::before,body::after{pointer-events:none!important}
   margin:0 0 8px;
   font-weight:980;
   letter-spacing:.15px;
-  font-size:16px; /* bigger */
+  font-size:16px;
   color:var(--ink);
 }
-.bubble p{
+.preview{
   margin:0;
+  color:rgba(255,255,255,.86);
+  line-height:1.6;
+  font-size:15px;
+}
+.detail{
+  display:none;
+  margin-top:10px;
   color:rgba(255,255,255,.88);
   line-height:1.75;
-  display:none;
-  font-size:15px; /* bigger */
+  font-size:15px;
 }
-.bubble.open p{display:block}
+.bubble.open .detail{display:block}
 
-/* Lens text blocks */
-[data-lens]{display:none;}
-[data-lens].show{display:block;}
-
-/* LeafGuard highlight (neutral, but visually distinct) */
+/* LeafGuard highlight */
 .leafGuardCard{border-color:rgba(201,162,74,.18)}
 .leafGuardCard::after{box-shadow: inset 0 0 0 1px rgba(201,162,74,.22);opacity:.65}
 .leafGuardTag{
@@ -317,8 +347,8 @@ body::before,body::after{pointer-events:none!important}
       <button class="btn" id="btnEN" type="button">EN</button>
       <button class="btn" id="btnZH" type="button">中文</button>
       <button class="btn" id="btnES" type="button">ES</button>
-      <button class="pill" id="pillNarrative" type="button">NARRATIVE</button>
-      <button class="pill" id="pillEngineering" type="button">ENGINEERING</button>
+      <button class="pill" id="pillNarrative" type="button">QUICK</button>
+      <button class="pill" id="pillEngineering" type="button">DEEP</button>
     </div>
   </div>
 </div>
@@ -330,6 +360,15 @@ body::before,body::after{pointer-events:none!important}
     <h1 class="h1" id="h0">Engineering-Led Construction Benchmarks</h1>
     <p class="p0" id="p0"></p>
     <div class="note0" id="note0"></div>
+  </section>
+
+  <section class="quick" aria-label="Quick read">
+    <p class="quickT" id="qt">Quick Read</p>
+    <ul class="quickUl" id="qul"></ul>
+    <div class="quickActions">
+      <button class="btn red" id="jumpLeaf" type="button">JUMP: LEAFGUARD</button>
+      <a class="btn" id="openLaws" href="/laws/">OPEN: LAWS</a>
+    </div>
   </section>
 
   <div class="stack" id="stack"></div>
@@ -368,7 +407,6 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  // Lens mapping: narrative=explore, engineering=learn
   var lens = (depth==="learn") ? "engineering" : "narrative";
 
   function q(over){
@@ -379,7 +417,7 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // Wire nav with state carry
+  // wire nav
   function wire(id,path){
     var el=document.getElementById(id);
     if(el) el.href = path + q();
@@ -390,8 +428,9 @@ body::before,body::after{pointer-events:none!important}
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
+  wire("openLaws","/laws/");
 
-  // Language toggle reload same pathname
+  // language (reload)
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -402,86 +441,121 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // Lens toggle (depth only; no new keys)
+  // lens (depth)
   var pillNarr=document.getElementById("pillNarrative");
   var pillEng=document.getElementById("pillEngineering");
   function paintLens(){
     pillNarr.classList.toggle("active", lens==="narrative");
     pillEng.classList.toggle("active", lens==="engineering");
-    pillNarr.textContent = (lang==="zh")?"通俗":"NARRATIVE";
-    pillEng.textContent  = (lang==="zh")?"工程":"ENGINEERING";
-    if(lang==="es"){ pillNarr.textContent="NARRATIVO"; pillEng.textContent="INGENIERÍA"; }
+    if(lang==="zh"){ pillNarr.textContent="快读"; pillEng.textContent="深读"; }
+    else if(lang==="es"){ pillNarr.textContent="RÁPIDO"; pillEng.textContent="PROFUNDO"; }
+    else { pillNarr.textContent="QUICK"; pillEng.textContent="DEEP"; }
   }
   function setLens(next){
     lens = (next==="engineering") ? "engineering" : "narrative";
     depth = (lens==="engineering") ? "learn" : "explore";
     try{ localStorage.setItem("gd_depth",depth);}catch(e){}
-    // update URL without losing other state
     window.location.href = window.location.pathname + q({depth:depth});
   }
   pillNarr.addEventListener("click", function(){ setLens("narrative"); });
   pillEng.addEventListener("click", function(){ setLens("engineering"); });
 
-  // Copy helper
+  // copy helpers
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // Header copy
+  // header
   var HEAD={
     en:{
-      p0:"This page extracts engineering innovation patterns across mature construction-system verticals (HVAC, roofing, insulation, fenestration, plumbing, rainwater management). It is research context only.",
-      note0:"No rankings. No product comparisons. No endorsement or affiliation implied. Plain-text references only."
+      k0:"RESEARCH · INDUSTRY CONTEXT",
+      h0:"Engineering-Led Construction Benchmarks",
+      p0:"Structured, neutral case-study references across mature construction-system verticals (HVAC, roofing, insulation, windows, plumbing, rainwater management).",
+      note0:"No rankings. No comparisons. No partnerships implied. Plain-text references only. LeafGuard is highlighted as a field dataset anchor (neutral posture).",
+      qt:"Quick Read",
+      bullets:[
+        "Read one card at a time. Open one bubble at a time.",
+        "Quick lens = first sentence + plain meaning.",
+        "Deep lens = constraints + variables + mapping language."
+      ],
+      jump:"JUMP: LEAFGUARD",
+      openLaws:"OPEN: LAWS"
     },
     zh:{
-      p0:"本页提取成熟建筑系统领域（暖通、屋面、保温、门窗、管道、雨水管理）中的工程创新模式。仅作研究背景参考。",
-      note0:"不排名、不对比、不背书、不暗示合作。仅纯文本引用。"
+      k0:"研究 · 行业背景",
+      h0:"工程主导的施工基准（结构化案例）",
+      p0:"以结构化、学术中立方式，引用成熟建筑系统领域案例（暖通、屋面、保温、门窗、管道、雨水管理）。",
+      note0:"不排名、不对比、不暗示合作。仅纯文本引用。LeafGuard 作为现场数据集锚点被重点标注（中立）。",
+      qt:"快读",
+      bullets:[
+        "一次读一张卡；一次开一个气泡。",
+        "快读 = 首句 + 人话。",
+        "深读 = 约束 + 变量 + 映射语言。"
+      ],
+      jump:"跳转：LEAFGUARD",
+      openLaws:"打开：法则"
     },
     es:{
-      p0:"Esta página extrae patrones de innovación de ingeniería en verticales maduros (HVAC, techos, aislamiento, ventanas, plomería, gestión de lluvia). Solo contexto de investigación.",
-      note0:"Sin rankings, sin comparaciones, sin respaldo ni afiliación. Solo referencias en texto."
+      k0:"INVESTIGACIÓN · CONTEXTO INDUSTRIAL",
+      h0:"Referencias de construcción dirigidas por ingeniería (casos estructurados)",
+      p0:"Referencias estructuradas y neutrales en verticales maduras (HVAC, techos, aislamiento, ventanas, plomería, lluvia).",
+      note0:"Sin rankings. Sin comparaciones. Sin afiliación implícita. Solo texto. LeafGuard se destaca como ancla de dataset de campo (postura neutral).",
+      qt:"Lectura rápida",
+      bullets:[
+        "Lee una tarjeta a la vez. Abre una burbuja a la vez.",
+        "RÁPIDO = primera frase + significado claro.",
+        "PROFUNDO = restricciones + variables + lenguaje de mapeo."
+      ],
+      jump:"SALTO: LEAFGUARD",
+      openLaws:"ABRIR: LEYES"
     }
   };
   var H=HEAD[lang]||HEAD.en;
+  document.getElementById("k0").textContent=H.k0;
+  document.getElementById("h0").textContent=H.h0;
   document.getElementById("p0").textContent=H.p0;
   document.getElementById("note0").textContent=H.note0;
+  document.getElementById("qt").textContent=H.qt;
+  document.getElementById("jumpLeaf").textContent=H.jump;
+  document.getElementById("openLaws").textContent=H.openLaws;
 
-  if(lang==="zh"){
-    document.getElementById("k0").textContent="研究 · 行业背景";
-    document.getElementById("h0").textContent="工程主导的施工基准（结构化案例）";
-  }else if(lang==="es"){
-    document.getElementById("k0").textContent="INVESTIGACIÓN · CONTEXTO INDUSTRIAL";
-    document.getElementById("h0").textContent="Referencias de construcción dirigidas por ingeniería (casos estructurados)";
-  }
+  var qul=document.getElementById("qul");
+  qul.innerHTML="";
+  H.bullets.forEach(function(t){
+    var li=document.createElement("li");
+    li.textContent=t;
+    qul.appendChild(li);
+  });
 
-  // ===== Sections (ALL companies included) =====
-  // Each bubble has BOTH lens texts; we show one based on lens.
+  paintLens();
+
+  // ===== Sections (same content set; consumer default hides detail) =====
   var SECTIONS=[
     {
       t:P("Innovation Pattern (used across the site)","创新模式（全站使用）","Patrón de innovación (usado en el sitio)"),
       s:P("Constraint → Test → Standardize → Scale (with containment).","约束→测试→标准化→扩张（含隔离）。","Restricción → Prueba → Estandarizar → Escalar (con contención)."),
+      key:"pattern",
       leafguard:false,
       bubbles:[
         {h:P("Concept","概念","Concepto"),
          narrative:P(
+          "Innovation is treated as a repeatable cycle.",
+          "创新被视为可重复循环。",
+          "La innovación se trata como un ciclo repetible."
+         ),
+         narrative_full:P(
           "Innovation is treated as a repeatable cycle: find the real failure point, fix it without guessing, prove it under stress, then standardize the install so it stays stable at scale.",
           "创新被视为可重复循环：找到真实失效点，不靠猜修正，在压力下证明，然后标准化安装，使规模化仍稳定。",
           "La innovación es un ciclo repetible: detectar el fallo real, corregir sin adivinar, probar bajo estrés y estandarizar la instalación."
          ),
          engineering:P(
+          "Cycle: isolate boundary → bounded redesign → verification under variance.",
+          "循环：隔离边界→有界再设计→方差下验证。",
+          "Ciclo: aislar límite → rediseño acotado → verificación bajo variación."
+         ),
+         engineering_full:P(
           "Cycle: isolate boundary → bounded redesign → verification under variance → interface standardization → scale with containment.",
           "循环：隔离边界→有界再设计→方差下验证→接口标准化→带隔离扩张。",
           "Ciclo: aislar límite → rediseño acotado → verificación bajo variación → estandarizar interfaz → escalar con contención."
-         )},
-        {h:P("Why it’s structured this way","为什么这样结构化","Por qué está estructurado así"),
-         narrative:P(
-          "This page is split into bubbles so you can read fast: domain scope, the innovation pattern, and the benchmarks referenced — without clutter.",
-          "本页用气泡分块便于快速阅读：领域范围、创新模式、引用基准，减少杂乱。",
-          "Se divide en burbujas para leer rápido: alcance, patrón y referencias, sin desorden."
-         ),
-         engineering:P(
-          "Structure reduces cognitive load: scope → mechanism → references. No rankings. No claims beyond context.",
-          "结构降低认知负荷：范围→机制→引用。无排名。无超出背景的主张。",
-          "La estructura reduce carga: alcance → mecanismo → referencias. Sin rankings. Sin afirmaciones fuera de contexto."
          )}
       ]
     },
@@ -489,37 +563,47 @@ body::before,body::after{pointer-events:none!important}
     {
       t:P("HVAC (Carrier / Trane / Lennox)","暖通（Carrier / Trane / Lennox）","HVAC (Carrier / Trane / Lennox)"),
       s:P("Closed-loop climate control under thermodynamic constraints.","热力学约束下的闭环气候控制。","Control climático en bucle cerrado bajo restricciones termodinámicas."),
+      key:"hvac",
       leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
          narrative:P(
+          "HVAC keeps a house stable when the weather is not.",
+          "暖通是在天气不稳定时让房子保持稳定。",
+          "HVAC mantiene estable la casa cuando el clima no lo es."
+         ),
+         narrative_full:P(
           "HVAC is about keeping a house stable when the weather is not. Comfort is the result; control is the method.",
           "暖通是在天气不稳定时让房子保持稳定。舒适是结果，控制是方法。",
           "HVAC mantiene estable la casa cuando el clima no lo es. Confort es el resultado; control es el método."
          ),
          engineering:P(
+          "Variables: temperature, humidity, airflow, energy throughput.",
+          "变量：温度、湿度、风量、能量吞吐。",
+          "Variables: temperatura, humedad, flujo de aire, energía."
+         ),
+         engineering_full:P(
           "Control variables: temperature, humidity, airflow, energy throughput under varying external load. Maturity appears as stable envelopes and testable thresholds.",
           "控制变量：温度、湿度、风量、能量吞吐在外部负载变化下保持稳定。成熟体现为稳定包络与可测试阈值。",
-          "Variables: temperatura, humedad, flujo de aire, energía bajo carga variable. Madurez = envolventes estables y umbrales testeables."
-         )},
-        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         narrative:P(
-          "Leaders shrink failure: fewer surprises, clearer controls, and consistent service outcomes.",
-          "领导者压缩失效：更少意外、更清晰控制、更一致的维护结果。",
-          "Los líderes reducen fallos: menos sorpresas, control claro y servicio consistente."
-         ),
-         engineering:P(
-          "Cycle: identify inefficiency/failure mode → redesign component/control logic → verify across seasonal variance → standardize install/service interfaces → scale.",
-          "循环：识别低效/失效模式→重设计部件/控制逻辑→跨季节方差验证→标准化安装/维护接口→扩张。",
-          "Ciclo: detectar ineficiencia/fallo → rediseñar componente/control → verificar por variación estacional → estandarizar interfaces → escalar."
+          "Control variables: temperatura, humedad, flujo de aire, energía bajo carga variable. Madurez = envolventes estables y umbrales testeables."
          )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
          narrative:P(
+          "Carrier, Trane, and Lennox are referenced as mature examples.",
+          "Carrier、Trane、Lennox 被引用为成熟例子。",
+          "Carrier, Trane y Lennox se citan como ejemplos maduros."
+         ),
+         narrative_full:P(
           "Carrier, Trane, and Lennox are referenced as mature examples of engineered climate control systems.",
           "Carrier、Trane、Lennox 被引用为成熟的工程化气候控制系统例子。",
           "Carrier, Trane y Lennox se citan como ejemplos maduros de control climático."
          ),
          engineering:P(
+          "Carrier—HVAC systems. Trane—cooling systems. Lennox—furnace/climate systems.",
+          "Carrier—暖通系统。Trane—制冷系统。Lennox—炉具/气候系统。",
+          "Carrier—HVAC. Trane—enfriamiento. Lennox—hornos/clima."
+         ),
+         engineering_full:P(
           "Carrier — HVAC system innovation. Trane — mechanical cooling systems. Lennox — furnace and climate systems.",
           "Carrier—暖通系统创新。Trane—机械制冷系统。Lennox—炉具与气候系统。",
           "Carrier—innovación HVAC. Trane—enfriamiento mecánico. Lennox—hornos y clima."
@@ -529,79 +613,51 @@ body::before,body::after{pointer-events:none!important}
 
     {
       t:P("Fenestration (Andersen / Pella)","门窗（Andersen / Pella）","Fenestración (Andersen / Pella)"),
-      s:P("Boundary-layer engineering: seals, frames, glazing, moisture, and thermal transfer.","边界层工程：密封、框体、玻璃、湿气与热传递。","Ingeniería de capa límite: sellos, marcos, vidrio, humedad y transferencia térmica."),
+      s:P("Boundary-layer engineering: seals, frames, glazing, moisture, thermal transfer.","边界层工程：密封、框体、玻璃、湿气与热传递。","Ingeniería de capa límite: sellos, marcos, vidrio, humedad y transferencia térmica."),
+      key:"fen",
       leafguard:false,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         narrative:P(
+         narrative:P("Windows are where comfort leaks first.","门窗是舒适最先泄漏的地方。","Las ventanas son donde se fuga el confort."),
+         narrative_full:P(
           "Windows are where comfort leaks first. Mature systems treat the window as a climate interface — not a sheet of glass.",
           "门窗是舒适最先泄漏的地方。成熟系统把门窗当作气候接口，而不是一片玻璃。",
           "Las ventanas son donde se fuga el confort. Sistemas maduros las tratan como interfaz climática."
          ),
-         engineering:P(
+         engineering:P("Performance depends on seal integrity and installation discipline.","性能取决于密封完整性与安装纪律。","Depende de sellos e instalación."),
+         engineering_full:P(
           "Interface system between interior climate and exterior exposure. Performance depends on seal integrity, frame stability, glazing architecture, and installation discipline.",
           "室内气候与室外暴露之间的接口系统。性能取决于密封完整性、框体稳定性、玻璃结构与安装纪律。",
           "Interfaz entre clima interior y exposición exterior. Depende de sellos, estabilidad del marco, arquitectura del vidrio y disciplina de instalación."
          )},
-        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         narrative:P(
-          "Engineering maturity shows up as fewer drafts, less moisture intrusion, and predictable indoor comfort.",
-          "工程成熟表现为更少漏风、更少潮气侵入、更可预测的室内舒适。",
-          "Madurez = menos corrientes, menos humedad y confort predecible."
-         ),
-         engineering:P(
-          "Leakage/thermal loss identified → seal/frame/glazing redesign → certification/testing under variance → standardized installation details → scaled adoption.",
-          "识别渗漏/热损→密封/框体/玻璃再设计→方差下认证测试→标准化安装细节→扩张采纳。",
-          "Detectar fuga/pérdida térmica → rediseñar sellos/marcos/vidrio → certificar/probar → estandarizar instalación → escalar."
-         )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
-         narrative:P(
+         narrative:P("Andersen and Pella are referenced as mature examples.","Andersen 与 Pella 被引用为成熟例子。","Andersen y Pella se citan como ejemplos maduros."),
+         narrative_full:P(
           "Andersen and Pella are referenced as long-running examples of engineered fenestration systems.",
           "Andersen 与 Pella 被引用为长期运行的工程化门窗系统例子。",
           "Andersen y Pella se citan como ejemplos de fenestración de ingeniería."
          ),
-         engineering:P(
-          "Andersen — window engineering systems. Pella — fenestration innovation.",
-          "Andersen—门窗工程系统。Pella—门窗创新。",
-          "Andersen—sistemas de ventanas. Pella—innovación fenestración."
-         )}
+         engineering:P("Andersen—window systems. Pella—fenestration innovation.","Andersen—门窗系统。Pella—门窗创新。","Andersen—ventanas. Pella—fenestración."),
+         engineering_full:P("Andersen — window engineering systems. Pella — fenestration innovation.","Andersen—门窗工程系统。Pella—门窗创新。","Andersen—sistemas de ventanas. Pella—innovación fenestración.")
+        }
       ]
     },
 
     {
       t:P("Roofing & Insulation (GAF / Owens Corning / CertainTeed)","屋面与保温（GAF / Owens Corning / CertainTeed）","Techos y aislamiento (GAF / Owens Corning / CertainTeed)"),
-      s:P("Layered systems: water shedding, durability, thermal resistance, and installation gating.","分层系统：排水、耐久、热阻与安装闸门。","Sistemas por capas: drenaje, durabilidad, resistencia térmica e instalación."),
+      s:P("Layered assemblies: water shedding, durability, thermal resistance, installation gating.","分层装配：排水、耐久、热阻与安装闸门。","Ensamblajes por capas: drenaje, durabilidad, resistencia térmica e instalación."),
+      key:"roof",
       leafguard:false,
       bubbles:[
-        {h:P("Domain scope","领域范围","Alcance del dominio"),
-         narrative:P(
-          "Your roof is your first line of defense. Mature systems work because the layers are designed to work together — and installed the same way every time.",
-          "屋面是第一道防线。成熟系统之所以有效，是因为分层协同设计，并且每次都按同样方式安装。",
-          "El techo es la primera defensa. Sistemas maduros funcionan por capas coordinadas e instalación consistente."
-         ),
-         engineering:P(
-          "Stacked assemblies under environmental stress. Maturity = defined assemblies, test standards, and repeatable installation paths that reduce cascade exposure to the underlying structure.",
-          "在环境压力下的叠层装配。成熟=定义清晰的装配、测试标准与可复跑安装路径，减少对下部结构的级联暴露。",
-          "Ensamblajes apilados bajo estrés ambiental. Madurez = ensamblajes definidos, estándares de prueba e instalación repetible que reduce cascadas."
-         )},
-        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         narrative:P(
-          "Leaders reduce surprises: fewer leaks, better durability, and clearer installation discipline.",
-          "领导者减少意外：更少渗漏、更好耐久、更清晰安装纪律。",
-          "Los líderes reducen sorpresas: menos fugas, más durabilidad y disciplina de instalación."
-         ),
-         engineering:P(
-          "Failure mode (leak/wind/impact/thermal loss) → material/assembly redesign → test under variance → codify install details → scale with inspection discipline.",
-          "失效模式（渗漏/风载/冲击/热损）→材料/装配再设计→方差下测试→固化安装细节→带检验纪律扩张。",
-          "Fallo (fuga/viento/impacto/pérdida térmica) → rediseño material/ensamble → pruebas → codificar instalación → escalar con inspección."
-         )},
         {h:P("Benchmarks referenced","引用基准","Referencias"),
-         narrative:P(
+         narrative:P("GAF, Owens Corning, CertainTeed are referenced as mature assemblies.","GAF、Owens Corning、CertainTeed 被引用为成熟装配。","GAF, Owens Corning y CertainTeed se citan como ensamblajes maduros."),
+         narrative_full:P(
           "GAF, Owens Corning, and CertainTeed are referenced as mature examples of engineered layered assemblies.",
           "GAF、Owens Corning、CertainTeed 被引用为成熟的工程化分层装配系统例子。",
           "GAF, Owens Corning y CertainTeed se citan como ejemplos de ensamblajes por capas."
          ),
-         engineering:P(
+         engineering:P("GAF—roofing. Owens Corning—insulation. CertainTeed—architectural roofing.","GAF—屋面。Owens Corning—保温。CertainTeed—建筑屋面。","GAF—techos. Owens—aislamiento. CertainTeed—techos."),
+         engineering_full:P(
           "GAF — roofing systems. Owens Corning — insulation systems. CertainTeed — architectural roofing systems.",
           "GAF—屋面系统。Owens Corning—保温系统。CertainTeed—建筑屋面系统。",
           "GAF—techos. Owens Corning—aislamiento. CertainTeed—techos arquitectónicos."
@@ -611,118 +667,82 @@ body::before,body::after{pointer-events:none!important}
 
     {
       t:P("Plumbing (Kohler)","管道（Kohler）","Plomería (Kohler)"),
-      s:P("Flow routing under pressure: reliability, interfaces, and lifecycle durability.","压力下的流体路由：可靠性、接口与生命周期耐久。","Ruteo de flujo bajo presión: confiabilidad, interfaces y durabilidad."),
+      s:P("Flow routing under pressure: reliability, interfaces, lifecycle durability.","压力下的流体路由：可靠性、接口与生命周期耐久。","Ruteo de flujo bajo presión: confiabilidad, interfaces y durabilidad."),
+      key:"plumb",
       leafguard:false,
       bubbles:[
-        {h:P("Domain scope","领域范围","Alcance del dominio"),
-         narrative:P(
-          "Plumbing is invisible until it fails. Mature systems behave predictably under pressure and usage cycles.",
-          "管道平时看不见，出问题就很明显。成熟系统能在压力与使用循环下保持可预测。",
-          "La plomería es invisible hasta que falla. Sistemas maduros operan de forma predecible bajo presión y ciclos."
-         ),
-         engineering:P(
-          "Reliability system: flow, pressure, valves, interfaces under repeated cycles. Maturity = predictable operation across pressure variance and consistent installation outcomes.",
-          "可靠性系统：流量、压力、阀门、接口在重复循环中稳定。成熟=压力方差下可预测运行与一致安装输出。",
-          "Sistema de confiabilidad: flujo, presión, válvulas e interfaces bajo ciclos. Madurez = operación predecible y resultados consistentes."
-         )},
-        {h:P("Innovation pattern","创新模式","Patrón de innovación"),
-         narrative:P(
-          "Leaders reduce leak risk by stabilizing interfaces and standardizing installs.",
-          "领导者通过稳定接口与标准化安装降低渗漏风险。",
-          "Los líderes reducen fugas estabilizando interfaces y estandarizando instalación."
-         ),
-         engineering:P(
-          "Interface failure/bottleneck identified → valve/fixture/material redesign → verify under variance → standardize install/maintenance → scale.",
-          "识别接口失效/瓶颈→阀门/器具/材料再设计→方差下验证→标准化安装/维护→扩张。",
-          "Detectar fallo/cuello → rediseñar válvula/accesorio/material → verificar → estandarizar instalación/mantenimiento → escalar."
-         )},
         {h:P("Benchmark referenced","引用基准","Referencia"),
-         narrative:P(
+         narrative:P("Kohler is referenced as a mature plumbing system example.","Kohler 被引用为成熟管道系统例子。","Kohler se cita como ejemplo de plomería madura."),
+         narrative_full:P(
           "Kohler is referenced as a mature example of engineered plumbing systems and interfaces.",
           "Kohler 被引用为成熟的工程化管道系统与接口例子。",
           "Kohler se cita como ejemplo de sistemas e interfaces de plomería."
          ),
-         engineering:P(
-          "Kohler — plumbing systems.",
-          "Kohler—管道系统。",
-          "Kohler—plomería."
-         )}
+         engineering:P("Kohler—plumbing systems and interfaces.","Kohler—管道系统与接口。","Kohler—sistemas e interfaces."),
+         engineering_full:P("Kohler — plumbing systems.","Kohler—管道系统。","Kohler—plomería.")
+        }
       ]
     },
 
     {
       t:P("Rainwater Management (LeafGuard)","雨水管理（LeafGuard）","Gestión de lluvia (LeafGuard)"),
-      s:P("Highlighted case study: routing + containment as an engineered envelope interface.","重点案例：路由+隔离作为工程接口。","Caso destacado: ruteo + contención como interfaz de envolvente."),
+      s:P("Highlighted case: routing + containment as an engineered envelope interface.","重点案例：路由+隔离作为工程接口。","Caso destacado: ruteo + contención como interfaz."),
+      key:"leafguard",
       leafguard:true,
       bubbles:[
         {h:P("Domain scope","领域范围","Alcance del dominio"),
-         narrative:P(
+         narrative:P("Rainwater is gravity + debris + attachment integrity.","雨水=重力+碎屑+连接完整性。","Lluvia = gravedad + residuos + sujeción."),
+         narrative_full:P(
           "Rainwater is simple and brutal: it follows gravity, collects debris, and tests attachment points. Mature systems route water consistently and keep failure local.",
           "雨水逻辑简单但残酷：顺重力流动、携带碎屑、测试连接点。成熟系统能稳定路由并把失败局部化。",
           "La lluvia es simple: gravedad, residuos y puntos de sujeción. Sistemas maduros enrutan de forma consistente y mantienen el fallo local."
          ),
-         engineering:P(
+         engineering:P("Routing variables: debris load, attachment, termination geometry, rainfall variance.","路由变量：碎屑负载、连接、端部几何、降雨方差。","Variables: residuos, sujeción, terminaciones, variación de lluvia."),
+         engineering_full:P(
           "Routing problem: collect → contain → direct → discharge while protecting fascia/soffit/foundation from uncontrolled exposure. Core variables: debris load, attachment integrity, termination geometry, rainfall variance.",
           "路由问题：收集→隔离→导向→排放，同时保护檐板/檐底/地基免受不受控暴露。核心变量：碎屑负载、连接完整性、端部几何、降雨方差。",
-          "Problema de ruteo: recolectar → contener → dirigir → descargar protegiendo fascia/soffit/cimiento. Variables: residuos, sujeción, terminaciones, variación de lluvia."
-         )},
-        {h:P("Observed convergence themes","观察到的收敛主题","Temas de convergencia observados"),
-         narrative:P(
-          "In the field, people talk about the same things: clogs, overflow, foundation water, and long-term peace of mind. Those themes repeat because the constraints repeat.",
-          "现场用户总在谈同样的事：堵塞、溢流、地基积水、长期安心。这些主题重复，因为约束重复。",
-          "En campo, la gente repite temas: atascos, desbordes, agua cerca del cimiento y tranquilidad. Se repite porque las restricciones se repiten."
-         ),
-         engineering:P(
-          "Repeat themes are treated as language clusters: debris/clog concern, attachment integrity, finish durability, termination/corner complexity. These clusters map into claim categories and warranty categories in the Field Study Evidence layer.",
-          "重复主题被视为语言簇：碎屑/堵塞、连接完整性、外观耐久、端部/转角复杂度。这些簇在“现场研究证据”中映射到主张类别与保修类别。",
-          "Los temas repetidos se tratan como clústeres: residuos/atascos, integridad de sujeción, durabilidad del acabado, complejidad de terminaciones. Se mapean a categorías en la evidencia del estudio."
-         )},
-        {h:P("Methodology correlation","方法论关联","Correlación metodológica"),
-         narrative:P(
-          "This vertical fits the site’s method because it’s measurable: you can see debris, see overflow paths, and see where water goes.",
-          "该领域契合本网站方法论，因为可测：能看到碎屑、看到溢流路径、看到水最终去哪。",
-          "Este vertical encaja porque es medible: se ven residuos, rutas de desborde y destino del agua."
-         ),
-         engineering:P(
-          "Direct mapping: interface geometry → failure mode exposure; containment prevents cascade; standardization enables repeatability under scale. Evidence anchors live in the 100-installation cohort.",
-          "直接映射：接口几何→失效暴露；隔离阻断级联；标准化使规模化下可复现。证据锚点来自 100 次安装队列。",
-          "Mapeo directo: geometría → exposición a fallos; contención evita cascada; estandarización habilita repetibilidad. Los anclajes están en el cohorte de 100 instalaciones."
+          "Problema: recolectar → contener → dirigir → descargar protegiendo fascia/soffit/cimiento. Variables: residuos, sujeción, terminaciones, variación de lluvia."
          )},
         {h:P("Benchmarks referenced (rainwater)","引用基准（雨水）","Referencias (lluvia)"),
-         narrative:P(
+         narrative:P("LeafGuard is referenced here as a field dataset anchor.","LeafGuard 在此作为现场数据锚点引用。","LeafGuard se cita como ancla de dataset de campo."),
+         narrative_full:P(
           "LeafGuard is referenced here because this page also connects to a live 100-installation field dataset in the Research Hub.",
           "此处引用 LeafGuard，是因为本页与研究枢纽中的 100 次现场数据集相连接。",
           "LeafGuard se cita aquí porque esta página conecta con un dataset de 100 instalaciones."
          ),
-         engineering:P(
-          "LeafGuard — integrated rainwater management systems (referenced for contextual research).",
-          "LeafGuard—集成雨水管理系统（仅用于背景研究引用）。",
-          "LeafGuard — gestión integrada de lluvia (referencia contextual)."
-         )}
+         engineering:P("LeafGuard—integrated rainwater management (context reference only).","LeafGuard—集成雨水管理（仅背景引用）。","LeafGuard—gestión integrada (solo contexto)."),
+         engineering_full:P("LeafGuard — integrated rainwater management systems (referenced for contextual research).","LeafGuard—集成雨水管理系统（仅用于背景研究引用）。","LeafGuard—gestión integrada (referencia contextual).")}
       ]
     },
 
     {
       t:P("Disclaimer (nominative fair use)","免责声明（指称性合理使用）","Aviso (uso nominativo)"),
       s:P("Plain-text references only. No affiliation or endorsement implied.","仅纯文本引用。不构成隶属或背书。","Solo texto. Sin afiliación ni respaldo."),
+      key:"disclaimer",
       leafguard:false,
       bubbles:[
         {h:P("Statement","声明","Declaración"),
-         narrative:P(
+         narrative:P("Educational/contextual reference only.","仅教育/研究背景引用。","Referencia educativa/contextual."),
+         narrative_full:P(
           "These companies are referenced for educational and contextual research purposes only. All trademarks are the property of their respective owners. No affiliation or endorsement is implied.",
           "以上公司仅用于教育与研究背景参考。所有商标均归各自所有者所有。本网站不构成任何隶属或背书关系。",
-          "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus respectivos propietarios. No se implica afiliación ni respaldo."
+          "Estas compañías se mencionan únicamente con fines educativos y contextuales. Todas las marcas pertenecen a sus propietarios. No se implica afiliación ni respaldo."
          ),
-         engineering:P(
-          "Nominative reference only; no endorsement implied. No rankings. No product comparisons. Plain-text context references only.",
-          "仅指称性引用；不构成背书。不排名、不对比。仅纯文本背景引用。",
-          "Referencia nominativa; sin respaldo. Sin rankings ni comparaciones. Solo contexto en texto."
-         )}
+         engineering:P("Nominative reference only; no endorsement; no rankings; no comparisons.","仅指称性引用；不背书；不排名；不对比。","Referencia nominativa; sin respaldo; sin rankings; sin comparaciones."),
+         engineering_full:P("Nominative reference only; no endorsement implied. No rankings. No product comparisons. Plain-text context references only.","仅指称性引用；不构成背书。不排名、不对比。仅纯文本背景引用。","Referencia nominativa; sin respaldo. Sin rankings ni comparaciones. Solo contexto en texto.")}
       ]
     }
   ];
 
-  // ===== Render accordion + nested bubbles =====
+  // Quick jump to LeafGuard
+  var leafElId="sec_leafguard";
+  document.getElementById("jumpLeaf").addEventListener("click", function(){
+    var el=document.getElementById(leafElId);
+    if(!el) return;
+    el.scrollIntoView({behavior:"smooth", block:"start"});
+  }, {passive:true});
+
+  // Render accordion
   var stack=document.getElementById("stack");
 
   function closeAllCards(){
@@ -734,61 +754,88 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function makeLensPara(narr, eng){
-    var wrap=document.createElement("div");
-    var pn=document.createElement("p");
-    pn.setAttribute("data-lens","narrative");
-    pn.textContent=narr;
-    var pe=document.createElement("p");
-    pe.setAttribute("data-lens","engineering");
-    pe.textContent=eng;
-    wrap.appendChild(pn);
-    wrap.appendChild(pe);
-    return wrap;
+  function closeSiblings(b){
+    var sib=b.parentElement ? b.parentElement.querySelectorAll(".bubble") : [];
+    for(var i=0;i<sib.length;i++){
+      if(sib[i]!==b) sib[i].classList.remove("open");
+    }
   }
 
-  function showLensIn(node){
-    node.querySelectorAll("[data-lens]").forEach(function(el){
-      el.classList.remove("show");
-      var k=el.getAttribute("data-lens");
-      if(k===lens) el.classList.add("show");
-    });
+  function bubbleText(bb){
+    // preview = first sentence of selected lens
+    var prev = (lens==="engineering") ? bb.engineering : bb.narrative;
+    var full = (lens==="engineering") ? bb.engineering_full : bb.narrative_full;
+    return {prev:pick(prev), full:pick(full)};
   }
 
-  function makeBubble(hText, narrText, engText, leaf){
+  function makeBubble(bb, isLeaf){
     var b=document.createElement("div");
-    b.className="bubble" + (leaf ? " leafGuardCard" : "");
+    b.className="bubble" + (isLeaf ? " leafGuardCard" : "");
     b.setAttribute("role","button");
     b.tabIndex=0;
 
     var h=document.createElement("h4");
-    h.textContent=hText;
+    h.textContent=pick(bb.h);
 
-    // add highlight tag for LeafGuard domain scope bubble (visual only)
-    if(leaf && (hText.toLowerCase().indexOf("domain scope")===0 || hText.indexOf("领域范围")===0 || hText.toLowerCase().indexOf("alcance")===0)){
+    if(isLeaf){
       var tag=document.createElement("span");
       tag.className="leafGuardTag";
       tag.textContent=(lang==="zh")?"重点":(lang==="es")?"DESTACADO":"HIGHLIGHT";
       h.appendChild(tag);
     }
 
-    var pWrap=makeLensPara(narrText, engText);
+    var txt=bubbleText(bb);
+
+    var prev=document.createElement("p");
+    prev.className="preview";
+    prev.textContent=txt.prev;
+
+    var det=document.createElement("div");
+    det.className="detail";
+    // split full by double newlines if present
+    String(txt.full).split("\n\n").forEach(function(t){
+      var p=document.createElement("p");
+      p.style.margin="0";
+      p.style.padding="0";
+      p.style.lineHeight="1.75";
+      p.style.fontSize="15px";
+      p.style.color="rgba(255,255,255,.88)";
+      p.textContent=t;
+      det.appendChild(p);
+      // spacing
+      var spacer=document.createElement("div");
+      spacer.style.height="10px";
+      det.appendChild(spacer);
+    });
+    // remove last spacer
+    if(det.lastChild) det.removeChild(det.lastChild);
 
     b.appendChild(h);
-    b.appendChild(pWrap);
-
-    function closeSiblings(){
-      var sib=b.parentElement ? b.parentElement.querySelectorAll(".bubble") : [];
-      for(var i=0;i<sib.length;i++){
-        if(sib[i]!==b) sib[i].classList.remove("open");
-      }
-    }
+    b.appendChild(prev);
+    b.appendChild(det);
 
     function act(){
       var willOpen=!b.classList.contains("open");
-      closeSiblings();
+      closeSiblings(b);
       b.classList.toggle("open", willOpen);
-      showLensIn(b);
+      // always refresh text in case lens changed
+      var t=bubbleText(bb);
+      prev.textContent=t.prev;
+      det.innerHTML="";
+      String(t.full).split("\n\n").forEach(function(x){
+        var p=document.createElement("p");
+        p.style.margin="0";
+        p.style.padding="0";
+        p.style.lineHeight="1.75";
+        p.style.fontSize="15px";
+        p.style.color="rgba(255,255,255,.88)";
+        p.textContent=x;
+        det.appendChild(p);
+        var spacer=document.createElement("div");
+        spacer.style.height="10px";
+        det.appendChild(spacer);
+      });
+      if(det.lastChild) det.removeChild(det.lastChild);
     }
 
     b.addEventListener("click", act, {passive:true});
@@ -796,14 +843,13 @@ body::before,body::after{pointer-events:none!important}
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
 
-    // Ensure lens is applied even when closed/open
-    showLensIn(b);
     return b;
   }
 
   function makeCard(sec, idx){
     var card=document.createElement("div");
     card.className="card" + (sec.leafguard ? " leafGuardCard" : "");
+    if(sec.key==="leafguard") card.id=leafElId;
 
     var head=document.createElement("div");
     head.className="head";
@@ -838,14 +884,7 @@ body::before,body::after{pointer-events:none!important}
     bubbles.className="subBubbles";
 
     (sec.bubbles||[]).forEach(function(bb){
-      bubbles.appendChild(
-        makeBubble(
-          pick(bb.h),
-          pick(bb.narrative),
-          pick(bb.engineering),
-          !!sec.leafguard
-        )
-      );
+      bubbles.appendChild(makeBubble(bb, !!sec.leafguard));
     });
 
     body.appendChild(bubbles);
@@ -860,8 +899,8 @@ body::before,body::after{pointer-events:none!important}
       closeAllCards();
       card.classList.add("open");
       chev.textContent="▾";
-      // close all sub-bubbles when opening card (less clutter)
-      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); showLensIn(b); });
+      // close sub-bubbles on open (consumer-friendly)
+      body.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
     }
 
     head.addEventListener("click", toggle, {passive:true});
@@ -876,15 +915,12 @@ body::before,body::after{pointer-events:none!important}
       card.classList.add("open");
       chev.textContent="▾";
     }
-
     return card;
   }
 
-  // Render
+  // render
+  stack.innerHTML="";
   SECTIONS.forEach(function(sec,i){ stack.appendChild(makeCard(sec,i)); });
-
-  // Paint lens pills
-  paintLens();
 
 })();
 </script>

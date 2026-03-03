@@ -1,27 +1,31 @@
 <!doctype html>
 <!-- TNT — /door/index.html
      DOOR · Frontier Architecture (INTRO-TIER HUB — NO LENSES REQUIRED)
-     UPGRADE (PER SEAN):
-       - Keep the layout (hero + 5 gates + dock) but make it premium/marketable:
-         • 3D gold inlay aligned to geometry (no flat grid feel)
-         • Perimeter gold glow on hover/press (NO movement)
-         • Stronger narrative (calm, sharp, industrial) without hype
-       - Trilingual copy: EN / 中文 / ES
-       - No inline onclick; addEventListener only
+     UPDATE (PER SEAN):
+       - Upgrade visual gloss + 3D adoption (uniform, matches compass material language)
+       - Perimeter gold glow on hover/press (NO button movement)
+       - Keep festival-night context BEHIND content (no overlays / no modals)
+       - Reduce confusion: DOOR is a hub, not a loop — each gate is unique and labeled as such
+       - Add brand credit: cogrid.net + diamondgatebridge.com
+       - Correct spelling: cogrid.net (NOT cograde)
+     RULES (LOCKED):
+       - Trilingual site copy: EN / 中文 / ES
+       - No inline onclick; use addEventListener
        - State carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
        - Language toggle reloads SAME pathname (GH Pages safe)
-       - lane=platform|engineering preserved if present in URL; never store
+       - lane=platform|engineering is URL-only (preserve if present; never store)
        - No modals / overlays
        - ui.css owns field (DO NOT set html/body background)
      ROUTING:
-       - Compass → /index.html (canonical)
+       - Compass → /index.html
        - Explore → /explore/
        - Products → /products/
        - Laws → /laws/
        - Gauges → /gauges/
        - Dock: Home / Prelude / Products / Laws / Gauges
 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -38,94 +42,48 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:96px;
+  --dockH:104px;
 
-  /* Red/Black/Gold hierarchy */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.08);
 
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.80);
-  --soft:rgba(255,255,255,.62);
+  --ink:rgba(255,255,255,.95);
+  --mut:rgba(255,255,255,.82);
+  --txt:rgba(255,255,255,.90);
 
-  --crimson:rgba(120,0,22,.34);
-  --festival:rgba(255,43,43,.18);
-  --opalV:rgba(90,40,120,.12);
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
 
-  --goldA:rgba(201,162,74,.22);
-  --goldB:rgba(201,162,74,.10);
-  --goldGlow:rgba(201,162,74,.24);
+  --goldSoft:rgba(201,162,74,.18);
 
-  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowA:0 30px 120px rgba(0,0,0,.72);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* Top Controls */
+/* ===== Top Controls ===== */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:240;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-  pointer-events:auto;
 }
 .top-right{
   position:fixed;right:16px;top:16px;z-index:240;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
-  pointer-events:auto;
 }
 
-/* Buttons (no move; perimeter glow only) */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowB);
-  white-space:nowrap;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.btn:hover{
-  border-color:rgba(201,162,74,.26);
-  box-shadow:var(--shadowB), 0 0 18px rgba(201,162,74,.14), 0 0 22px rgba(255,43,43,.10);
-}
-.btn:active{
-  border-color:rgba(201,162,74,.32);
-  box-shadow:var(--shadowB), 0 0 22px rgba(201,162,74,.18), 0 0 28px rgba(255,43,43,.12);
-  filter:saturate(1.02);
-}
-.btn.red{
-  border-color:rgba(255,43,43,.22);
-  box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.12);
-}
-.btn.red:hover{
-  border-color:rgba(201,162,74,.26);
-  box-shadow:var(--shadowB), 0 0 18px rgba(201,162,74,.16), 0 0 26px rgba(255,43,43,.14);
-}
-
-/* Page */
+/* ===== Page ===== */
 .page{
   width:min(1150px,94vw);
   margin:0 auto;
   padding:132px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:26px;
+  gap:18px;
   position:relative;
   z-index:10;
 }
 
-/* ===== Background context (behind hero + grid) ===== */
+/* ===== Background context (behind content) ===== */
 .backdrop{
   position:absolute;
   left:50%;
@@ -158,12 +116,10 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:-18%;
   background:
-    /* Lantern pools */
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
     radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
 
-    /* Firework ribbons */
     conic-gradient(from 12deg at 30% 28%,
       rgba(201,162,74,.14), transparent 12%,
       rgba(255,43,43,.12), transparent 24%,
@@ -177,167 +133,193 @@ body::before,body::after{pointer-events:none!important}
 
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
-  opacity:.75;
+  opacity:.74;
 }
 
-/* Hero */
+/* ===== Hero ===== */
 .hero{
+  position:relative;
+  z-index:2;
   border:1px solid var(--stroke);
   border-radius:30px;
-  padding:52px 44px;
+  padding:44px 38px 22px;
   background:
     radial-gradient(circle at 22% 18%, var(--crimson), transparent 62%),
     radial-gradient(circle at 82% 22%, var(--opalV), transparent 66%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    radial-gradient(circle at 30% 22%, var(--goldA), transparent 62%),
-    radial-gradient(circle at 75% 80%, var(--goldB), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.36), rgba(0,0,0,.14));
-  box-shadow:0 60px 200px rgba(0,0,0,.70);
+    radial-gradient(circle at 30% 22%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.34), rgba(0,0,0,.14));
+  box-shadow:var(--shadowA);
   backdrop-filter:blur(10px);
-  position:relative;overflow:hidden;
+  overflow:hidden;
 }
-/* 3D gold inlay aligned (no flat grid) */
 .hero::before{
   content:"";
   position:absolute;inset:0;border-radius:30px;pointer-events:none;
-  background:
-    /* edge gold frame + inner bevel */
-    radial-gradient(circle at 50% -20%, rgba(201,162,74,.22), transparent 56%),
-    radial-gradient(circle at 120% 50%, rgba(201,162,74,.18), transparent 54%),
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 58%),
-    radial-gradient(circle at -20% 50%, rgba(201,162,74,.16), transparent 54%),
-
-    /* angled silk to match diamond geometry */
-    repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.20);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
   opacity:.30;
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
     linear-gradient(#000,#000);
 }
-/* subtle highlight streak */
-.hero::after{
-  content:"";
-  position:absolute;left:10%;right:10%;top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.14), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.80;pointer-events:none;
+.heroK{
+  margin:0 0 10px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.82;
+  color:rgba(255,255,255,.80);
+  position:relative;
 }
-
 .hero h1{
   margin:0;
   font-weight:980;
-  font-size:clamp(36px,4.6vw,54px);
+  font-size:clamp(34px,4.4vw,52px);
   letter-spacing:1px;
   line-height:1.12;
   color:var(--ink);
   position:relative;
-  text-shadow:0 18px 60px rgba(0,0,0,.55);
 }
 .hero p{
   margin:18px 0 0;
-  font-size:clamp(18px,2.2vw,22px);
+  font-size:clamp(16.5px,2.1vw,20px);
   line-height:1.7;
-  color:var(--mut);
+  color:rgba(255,255,255,.88);
   max-width:980px;
   position:relative;
 }
+.brandline{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.10);
+  font-size:12.75px;
+  line-height:1.55;
+  color:rgba(255,255,255,.78);
+  position:relative;
+}
+.brandline b{color:rgba(255,255,255,.92)}
 
-/* Gate Grid */
+/* ===== Gates ===== */
+.band{
+  position:relative;
+  z-index:2;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;
+  letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
+
 .grid{
+  position:relative;
+  z-index:2;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:18px;
+  gap:16px;
 }
 
-/* Gate card (no movement; perimeter glow only) */
-.card{
+/* glossy “gem” cards — no movement, glow only */
+.gate{
   border:1px solid rgba(255,255,255,.12);
   border-radius:24px;
-  padding:26px 24px;
+  padding:22px 20px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.16), transparent 52%),
-    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 64%),
-    radial-gradient(circle at 70% 88%, rgba(90,40,120,.10), transparent 68%),
-    radial-gradient(circle at 28% 86%, rgba(120,0,22,.18), transparent 72%),
-    linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.96));
-  box-shadow:0 28px 80px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -44px 84px rgba(0,0,0,.70);
+    radial-gradient(circle at 22% 14%, rgba(255,255,255,.22), transparent 48%),
+    radial-gradient(circle at 80% 22%, rgba(255,43,43,.12), transparent 60%),
+    radial-gradient(circle at 74% 84%, rgba(90,40,120,.10), transparent 64%),
+    radial-gradient(circle at 28% 82%, rgba(120,0,22,.20), transparent 72%),
+    linear-gradient(160deg, rgba(17,22,28,.90), rgba(11,15,20,.96));
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.62),
+    0 0 20px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -46px 86px rgba(0,0,0,.74);
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  transform:none !important;
+  transition:box-shadow .18s ease, border-color .18s ease, filter .18s ease;
 }
-
-/* 3D gold inlay aligned to geometry + perimeter glow */
-.card::before{
+.gate::before{
   content:"";
   position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  /* perimeter glow ring + silk trim that respects 3D surface */
   background:
-    radial-gradient(circle at 50% -30%, rgba(201,162,74,.22), transparent 56%),
-    radial-gradient(circle at 120% 50%, rgba(201,162,74,.18), transparent 54%),
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.12), transparent 58%),
-    radial-gradient(circle at -20% 50%, rgba(201,162,74,.14), transparent 54%),
-    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
-  opacity:.24;
+    radial-gradient(120% 120% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.16) 82%, rgba(212,175,55,0) 100%),
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
+  opacity:.38;
 }
-
-.card::after{
+.gate::after{
   content:"";
-  position:absolute;inset:0;border-radius:24px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
-  opacity:.55;
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
 }
 
-.card:hover{
-  border-color:rgba(201,162,74,.22);
+.gate:hover{
+  border-color:rgba(212,175,55,.55);
   box-shadow:
-    0 32px 96px rgba(0,0,0,.72),
-    0 0 18px rgba(201,162,74,.14),
-    0 0 22px rgba(255,43,43,.10),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -46px 86px rgba(0,0,0,.74);
+    0 28px 92px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.26),
+    0 0 16px rgba(255,43,43,.12),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -48px 90px rgba(0,0,0,.78);
+  filter:saturate(1.05);
 }
-.card:active{
-  border-color:rgba(201,162,74,.26);
+.gate:active{
+  border-color:rgba(212,175,55,.62);
   box-shadow:
-    0 32px 96px rgba(0,0,0,.74),
-    0 0 22px rgba(201,162,74,.18),
-    0 0 28px rgba(255,43,43,.12),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -46px 86px rgba(0,0,0,.76);
-  filter:saturate(1.02);
+    0 22px 72px rgba(0,0,0,.62),
+    0 0 28px rgba(212,175,55,.34),
+    inset 0 0 0 2px rgba(255,255,255,.10),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -48px 90px rgba(0,0,0,.80);
 }
 
-.card h3{
-  margin:0 0 14px;
-  font-size:20px;
+.gTop{display:flex;gap:10px;align-items:flex-start}
+.gMark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c,#d4af37);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.gTitle{
+  margin:0;
+  font-size:18px;
+  font-weight:980;
   letter-spacing:.6px;
   color:var(--ink);
-  position:relative;
-  text-shadow:0 18px 60px rgba(0,0,0,.50);
 }
-.card p{
-  margin:0;
-  font-size:15px;
-  line-height:1.65;
-  color:rgba(255,255,255,.84);
-  position:relative;
+.gSub{
+  margin-top:10px;
+  font-size:14.25px;
+  line-height:1.6;
+  color:rgba(255,255,255,.86);
+  opacity:.94;
 }
 
-/* Dock */
+/* ===== Dock ===== */
 .dock{
   position:fixed;
   left:50%;
@@ -348,10 +330,7 @@ body::before,body::after{pointer-events:none!important}
   padding:12px;
   border-radius:24px;
   border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  background:rgba(0,0,0,.22);
   backdrop-filter:blur(12px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
@@ -364,20 +343,10 @@ body::before,body::after{pointer-events:none!important}
   text-align:center;
   font-weight:950;
 }
-
-/* “brand credit” line (non-link text) */
-.brand{
-  margin-top:10px;
-  font-size:12px;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.66);
-}
-.brand b{color:rgba(201,162,74,.82)}
-
 @media (max-width:560px){
-  :root{--dockH:116px}
+  :root{--dockH:126px}
   .dock{grid-template-columns:repeat(3,1fr)}
-  .hero{padding:40px 22px}
+  .hero{padding:38px 20px 18px}
 }
 </style>
 </head>
@@ -399,7 +368,8 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
   <div class="backdrop" aria-hidden="true"></div>
 
-  <div class="hero" aria-label="Door hero">
+  <section class="hero" aria-label="Door hero">
+    <p class="heroK" id="heroK">DOOR · FRONTIER ARCHITECTURE</p>
     <h1 id="heroTitle">What if the loudest claims of our time were finally measurable?</h1>
 
     <p id="heroText1">
@@ -417,37 +387,39 @@ body::before,body::after{pointer-events:none!important}
       It strengthens the structure beneath it.
     </p>
 
-    <div class="brand" id="brandLine">
-      <b>cograde.net</b> · <b>diamondgatebridge.com</b>
+    <div class="brandline" id="brandLine">
+      <b>Brand:</b> cogrid.net · diamondgatebridge.com
     </div>
-  </div>
+  </section>
 
-  <div class="grid" aria-label="Door gates">
-    <a class="card" href="/index.html" data-route="/index.html">
-      <h3 id="c1t">Compass</h3>
-      <p id="c1p">Orientation before execution. One direction. One next step. No wandering.</p>
+  <div class="band" id="band">START HERE (PICK ONE)</div>
+
+  <section class="grid" aria-label="Door gates">
+    <a class="gate" href="/index.html" data-route="/index.html" style="--c:rgba(201,162,74,.75)">
+      <div class="gTop"><div class="gMark"></div><h3 class="gTitle" id="c1t">Compass</h3></div>
+      <div class="gSub" id="c1p">Orientation before execution.</div>
     </a>
 
-    <a class="card" href="/explore/" data-route="/explore/">
-      <h3 id="c2t">Explore</h3>
-      <p id="c2p">Frontier models across domains. Concept-first, labeled, bounded.</p>
+    <a class="gate" href="/explore/" data-route="/explore/" style="--c:rgba(255,43,43,.85)">
+      <div class="gTop"><div class="gMark"></div><h3 class="gTitle" id="c2t">Explore</h3></div>
+      <div class="gSub" id="c2p">Frontier models across domains.</div>
     </a>
 
-    <a class="card" href="/products/" data-route="/products/">
-      <h3 id="c3t">Products</h3>
-      <p id="c3p">Deployment surfaces. Real pages. Real routes. Built to scale safely.</p>
+    <a class="gate" href="/products/" data-route="/products/" style="--c:rgba(90,40,120,.70)">
+      <div class="gTop"><div class="gMark"></div><h3 class="gTitle" id="c3t">Products</h3></div>
+      <div class="gSub" id="c3p">Engines, systems, instruments.</div>
     </a>
 
-    <a class="card" href="/laws/" data-route="/laws/">
-      <h3 id="c4t">Laws</h3>
-      <p id="c4p">Doctrine and boundaries. What is allowed to be claimed and deployed.</p>
+    <a class="gate" href="/laws/" data-route="/laws/" style="--c:rgba(201,162,74,.75)">
+      <div class="gTop"><div class="gMark"></div><h3 class="gTitle" id="c4t">Laws</h3></div>
+      <div class="gSub" id="c4p">Structural guardrails.</div>
     </a>
 
-    <a class="card" href="/gauges/" data-route="/gauges/">
-      <h3 id="c5t">Gauges</h3>
-      <p id="c5p">Signals only. Measurement surfaces. Receipts beat arguments.</p>
+    <a class="gate" href="/gauges/" data-route="/gauges/" style="--c:rgba(255,43,43,.75)">
+      <div class="gTop"><div class="gMark"></div><h3 class="gTitle" id="c5t">Gauges</h3></div>
+      <div class="gSub" id="c5p">Live measurement surfaces.</div>
     </a>
-  </div>
+  </section>
 
 </div>
 
@@ -471,7 +443,7 @@ body::before,body::after{pointer-events:none!important}
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || ""; // URL-only; never store
+  var lane  = qs.get("lane")  || ""; // URL-only (preserve if present; never store)
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
@@ -548,25 +520,27 @@ body::before,body::after{pointer-events:none!important}
 
   function apply(){
     if(lang==="zh"){
+      document.getElementById("heroK").textContent="门 · 前沿架构";
       document.getElementById("heroTitle").textContent="如果当今最宏大的主张终于可以被测量？";
       document.getElementById("heroText1").textContent="能源转型。金融重构。基础设施替代。以行星规模做决策的人工系统。";
       document.getElementById("heroText2").textContent="这些不是小承诺。它们是文明级主张。";
       document.getElementById("heroText3").textContent="这套架构不缩减雄心，而是强化其下的结构。";
+      document.getElementById("band").textContent="从这里开始（选一个）";
 
       document.getElementById("c1t").textContent="指南针";
-      document.getElementById("c1p").textContent="先定位，再执行。一个方向，一个下一步，不乱逛。";
+      document.getElementById("c1p").textContent="先定位，再执行。";
 
       document.getElementById("c2t").textContent="探索";
-      document.getElementById("c2p").textContent="跨领域前沿模型。概念先行，标注清晰，有界。";
+      document.getElementById("c2p").textContent="跨领域前沿模型。";
 
       document.getElementById("c3t").textContent="产品";
-      document.getElementById("c3p").textContent="部署面。真实页面，真实路由。为规模化安全而建。";
+      document.getElementById("c3p").textContent="引擎、系统、仪表。";
 
       document.getElementById("c4t").textContent="法则";
-      document.getElementById("c4p").textContent="教义与边界：什么允许主张，什么允许部署。";
+      document.getElementById("c4p").textContent="结构护栏。";
 
       document.getElementById("c5t").textContent="量规";
-      document.getElementById("c5p").textContent="只看信号。测量面。收据胜过争论。";
+      document.getElementById("c5p").textContent="实时测量面。";
 
       document.getElementById("dockHome").textContent="主页";
       document.getElementById("dockPrelude").textContent="前奏";
@@ -574,27 +548,30 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("dockLaws").textContent="法则";
       document.getElementById("dockGauges").textContent="量规";
       document.getElementById("btnIndex").textContent="指南针";
-      document.getElementById("brandLine").innerHTML="<b>cograde.net</b> · <b>diamondgatebridge.com</b>";
+
+      document.getElementById("brandLine").innerHTML="<b>品牌：</b> cogrid.net · diamondgatebridge.com";
     }else if(lang==="es"){
+      document.getElementById("heroK").textContent="PUERTA · ARQUITECTURA DE FRONTERA";
       document.getElementById("heroTitle").textContent="¿Y si por fin pudiéramos medir las afirmaciones más ruidosas de nuestro tiempo?";
       document.getElementById("heroText1").textContent="Transformación energética. Rediseño financiero. Sustitución de infraestructura. Sistemas artificiales que deciden a escala planetaria.";
       document.getElementById("heroText2").textContent="No son promesas pequeñas. Son afirmaciones civilizacionales.";
       document.getElementById("heroText3").textContent="Esta arquitectura no reduce la ambición: fortalece la estructura que la sostiene.";
+      document.getElementById("band").textContent="EMPIEZA AQUÍ (ELIGE UNO)";
 
       document.getElementById("c1t").textContent="Brújula";
-      document.getElementById("c1p").textContent="Orientación antes de ejecutar. Una dirección. Un siguiente paso. Sin deambular.";
+      document.getElementById("c1p").textContent="Orientación antes de ejecutar.";
 
       document.getElementById("c2t").textContent="Explorar";
-      document.getElementById("c2p").textContent="Modelos de frontera por dominio. Concepto primero, etiquetado y acotado.";
+      document.getElementById("c2p").textContent="Modelos de frontera por dominio.";
 
       document.getElementById("c3t").textContent="Productos";
-      document.getElementById("c3p").textContent="Superficies de despliegue. Páginas reales. Rutas reales. Hecho para escalar con seguridad.";
+      document.getElementById("c3p").textContent="Motores, sistemas, instrumentos.";
 
       document.getElementById("c4t").textContent="Leyes";
-      document.getElementById("c4p").textContent="Doctrina y límites: qué se permite afirmar y desplegar.";
+      document.getElementById("c4p").textContent="Barandales estructurales.";
 
       document.getElementById("c5t").textContent="Medidores";
-      document.getElementById("c5p").textContent="Solo señales. Superficies de medición. Recibos > discusiones.";
+      document.getElementById("c5p").textContent="Superficies de medición en vivo.";
 
       document.getElementById("dockHome").textContent="INICIO";
       document.getElementById("dockPrelude").textContent="PRELUDIO";
@@ -602,7 +579,8 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("dockLaws").textContent="LEYES";
       document.getElementById("dockGauges").textContent="MEDIDORES";
       document.getElementById("btnIndex").textContent="BRÚJULA";
-      document.getElementById("brandLine").innerHTML="<b>cograde.net</b> · <b>diamondgatebridge.com</b>";
+
+      document.getElementById("brandLine").innerHTML="<b>Marca:</b> cogrid.net · diamondgatebridge.com";
     }else{
       document.getElementById("dockHome").textContent="HOME";
       document.getElementById("dockPrelude").textContent="PRELUDE";
@@ -610,7 +588,7 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("dockLaws").textContent="LAWS";
       document.getElementById("dockGauges").textContent="GAUGES";
       document.getElementById("btnIndex").textContent="COMPASS";
-      document.getElementById("brandLine").innerHTML="<b>cograde.net</b> · <b>diamondgatebridge.com</b>";
+      document.getElementById("brandLine").innerHTML="<b>Brand:</b> cogrid.net · diamondgatebridge.com";
     }
 
     wireAll();

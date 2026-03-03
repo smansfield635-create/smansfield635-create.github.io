@@ -1,17 +1,18 @@
 <!doctype html>
 <!-- TNT — /prelude/index.html
      PRELUDE · TABLE SETTING (TRILINGUAL · NO LENSES · MONUMENT DENSITY · SINGLE-OPEN)
-     UPDATE: ADD BACKGROUND CONTEXT (FESTIVAL NIGHT / LANTERN / FIREWORKS — BEHIND CONTENT)
-     PURPOSE:
-       - Existential first question
-       - Frame the problem in common human language (not “claim/support” jargon)
-       - Introduce ladder (Head → System → Scale) without technical overwhelm
-       - Dense but legible
+     UPDATE (PER SEAN):
+       - Keep festival-night context BEHIND content (no overlays/modals)
+       - Uniform 3D gloss adoption (gem material) for ALL buttons on this page
+       - Gold glow = PERIMETER ring (NOT bottom-only underlight)
+       - Buttons do NOT move on press (glow only)
+       - “CONTINUE” does NOT jump pages (no arbitrary routing):
+           clicking CONTINUE closes current section and opens the next section
+           final section’s CONTINUE routes to /door/
      RULES:
        - EN / 中文 / ES
        - No lenses on this page
-       - Single-open accordion
-       - Large, readable typography
+       - Single-open accordion (tap same closes)
        - No modals / no overlays
        - Canon state carry (lang/style/time/depth) via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
@@ -19,9 +20,11 @@
        - lane=platform|engineering is URL-only (preserve if present; never store)
        - Uses ui.css + branch.css + instruments.js only
        - ui.css owns field (NO html/body background styling)
+     ROUTES:
+       - Final continue → /door/
+       - Dock: Door / Products / Explore
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -41,13 +44,11 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --dockH:96px;
 
-  /* Red / Black / Gold hierarchy (intro-tier: elegant, high contrast) */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.08);
 
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.82);
-  --soft:rgba(255,255,255,.62);
 
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
@@ -58,6 +59,10 @@ body::before,body::after{pointer-events:none!important}
 
   --shadowA:0 34px 120px rgba(0,0,0,.58);
   --shadowB:0 20px 70px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+
+  --glow:rgba(212,175,55,.26);
+  --glowStrong:rgba(212,175,55,.34);
 }
 
 /* TOP */
@@ -72,27 +77,79 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;flex-wrap:wrap;align-items:center;
 }
 
-/* Button (no overlays; gold under-light only) */
+/* ===== 3D GLOSS BUTTON (uniform; no movement; perimeter glow) ===== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   min-height:44px;padding:10px 12px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 42%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
+    radial-gradient(circle at 28% 80%, rgba(120,0,22,.16), transparent 72%),
+    linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
   position:relative;overflow:hidden;
   touch-action:manipulation;
-  box-shadow:0 16px 44px rgba(0,0,0,.62);
+  box-shadow:
+    var(--shadowC),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -26px 46px rgba(0,0,0,.55);
+  transform:none !important;
+  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
 }
-.btn:active{transform:translateY(1px)}
+.btn::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
+    repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  opacity:.32;
+}
 .btn::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.90;
+}
+.btn:hover{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.72),
+    0 0 22px var(--glow),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -30px 54px rgba(0,0,0,.60);
+  filter:saturate(1.05);
+}
+.btn:active{
+  border-color:rgba(212,175,55,.62);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.65),
+    0 0 28px var(--glowStrong),
+    inset 0 0 0 2px rgba(255,255,255,.10),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -30px 54px rgba(0,0,0,.62);
+}
+.btn.primary{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:
+    var(--shadowC),
+    0 0 16px rgba(255,43,43,.12),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -26px 46px rgba(0,0,0,.55);
 }
 
 /* PAGE */
@@ -210,7 +267,6 @@ body::before,body::after{pointer-events:none!important}
 
 /* ACCORDION */
 .stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
-
 .card{
   border:1px solid rgba(255,255,255,.10);
   border-radius:24px;
@@ -314,7 +370,7 @@ body::before,body::after{pointer-events:none!important}
   <div class="top" aria-label="Top controls">
     <div class="left">
       <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
-      <a class="btn" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+      <a class="btn primary" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
     </div>
     <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
@@ -324,7 +380,6 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="page">
-
     <div class="backdrop" aria-hidden="true"></div>
 
     <section class="hero" aria-label="Prelude hero">
@@ -334,7 +389,6 @@ body::before,body::after{pointer-events:none!important}
     </section>
 
     <div class="stack" id="stack" aria-label="Prelude accordion"></div>
-
   </div>
 
   <nav class="dock" aria-label="Bottom navigation">
@@ -434,6 +488,8 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("h0").textContent=pick(HERO.h);
   document.getElementById("tag0").textContent=pick(HERO.t);
 
+  var FINAL_ROUTE="/door/";
+
   var SECTIONS=[
     {
       q:P(
@@ -479,8 +535,8 @@ body::before,body::after{pointer-events:none!important}
     var cards=stack.querySelectorAll(".card");
     for(var i=0;i<cards.length;i++){
       cards[i].classList.remove("open");
-      var ch=cards[i].querySelector(".chevTxt");
-      if(ch) ch.textContent="▸";
+      var t=cards[i].querySelector(".chevTxt");
+      if(t) t.textContent="▸";
     }
   }
 
@@ -488,6 +544,16 @@ body::before,body::after{pointer-events:none!important}
     if(lang==="zh") return "继续";
     if(lang==="es") return "CONTINUAR";
     return "CONTINUE";
+  }
+
+  function openCard(i){
+    var cards=stack.querySelectorAll(".card");
+    if(i<0 || i>=cards.length) return;
+    closeAll();
+    var c=cards[i];
+    c.classList.add("open");
+    var t=c.querySelector(".chevTxt");
+    if(t) t.textContent="▾";
   }
 
   SECTIONS.forEach(function(sec,i){
@@ -522,11 +588,13 @@ body::before,body::after{pointer-events:none!important}
 
     var actions=document.createElement("div");
     actions.className="actions";
-    var btn=document.createElement("a");
+
+    var btn=document.createElement("button");
     btn.className="btn";
+    btn.type="button";
     btn.textContent=continueLabel();
-    btn.setAttribute("data-route","/door/");
     actions.appendChild(btn);
+
     body.appendChild(actions);
 
     function toggle(){
@@ -542,6 +610,16 @@ body::before,body::after{pointer-events:none!important}
     head.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
+
+    btn.addEventListener("click", function(){
+      var next=i+1;
+      if(next<SECTIONS.length){
+        openCard(next);
+        try{ stack.children[next].scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){}
+      }else{
+        location.href = FINAL_ROUTE + q();
+      }
+    }, {passive:true});
 
     card.appendChild(head);
     card.appendChild(body);

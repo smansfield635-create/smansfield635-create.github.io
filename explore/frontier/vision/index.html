@@ -1,6 +1,15 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     FRONTIER · VISION REMOTE (INFORMAL LAYER — NEW STANDARD · UO GLOSS)
+     FRONTIER · VISION REMOTE (INFORMAL LAYER — NEW STANDARD · UO GLOSS · DIAL FACE UPGRADE)
+     UPGRADE (MATCH COMPASS STANDARD):
+       - Add instrument-grade dial face (anti-snowflake) behind geometry (no body override)
+       - Keep UO gloss + gold inlay aligned to diamond (no flat orthogonal grid)
+       - Hover = glow only (NO movement)
+       - Hierarchical diamond sizing + radii (same concept as Compass):
+           CORE = largest (center)
+           Cardinals (N/E/S/W) = next largest, closer to center
+           Diagonals (NE/SE/SW/NW) = smaller, medium radius
+           Other 8 (NNE/ENE/ESE/SSE/SSW/WSW/WNW/NNW) = smallest, outer radius
      GEOMETRY (LOCKED):
        - 16 outer controls (N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW)
        - 1 center CORE (manual index / linear map)
@@ -9,7 +18,7 @@
        - Trilingual UI (EN/中文/ES) (no reload)
        - Visible lens ONLY: lane=platform|engineering (URL-only; never stored) (no reload)
        - Pinned informal layer: gd_style=informal, gd_depth=explore
-       - Canon carry: gd_lang/gd_style/gd_time/gd_depth only
+       - Canon carry: gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
        - No modals/overlays; no inline onclick; addEventListener only
      ROUTING (EDIT ONLY IN ROUTE MAP SECTION):
        - CORE path + each of 16 manifold paths
@@ -31,18 +40,20 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY ===== */
-  --D:90px;      /* outer diamond size (≈20% smaller than 110) */
-  --C:140px;     /* center diamond size (kept strong) */
-  --R:262px;     /* ring radius */
+  /* ===== HIERARCHY (match compass concept) ===== */
+  --D0:154px; /* CORE */
+  --D1:112px; /* N/E/S/W */
+  --D2:92px;  /* NE/SE/SW/NW */
+  --D3:80px;  /* other 8 */
+
+  --R1:178px; /* cardinals closest */
+  --R2:246px; /* diagonals */
+  --R3:300px; /* outer 8 */
+
   --padTop:118px;
 
   /* ===== MATERIAL (UO stack) ===== */
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
   --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.78);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.86);
@@ -51,33 +62,31 @@ body::before,body::after{pointer-events:none!important}
   --festival:rgba(255,43,43,.22);
   --opalV:rgba(90,40,120,.14);
 
-  --gold:rgba(201,162,74,.52);
+  --gold:rgba(201,162,74,.56);
   --goldGlow:rgba(201,162,74,.22);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
-  --shadowA:0 34px 120px rgba(0,0,0,.58);
-  --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
 /* ===== STAGE ===== */
 .stage{
   position:relative;
-  width:min(900px,95vw);
-  height:min(900px,82vh);
+  width:min(980px,95vw);
+  height:min(980px,82vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
-/* subtle slab behind ring (no body background override) */
+/* ===== Festival slab (soft) ===== */
 .slab{
   position:absolute;left:50%;top:50%;
-  width:min(760px,92vw);
-  height:min(760px,92vw);
+  width:min(820px,92vw);
+  height:min(820px,92vw);
   transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
+  border-radius:72px;
   pointer-events:none;
-  opacity:.22;
+  opacity:.16;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
@@ -90,13 +99,69 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -50px 90px rgba(0,0,0,.55);
 }
 
-/* ===== DIAMONDS ===== */
+/* ===== Dial face (instrument-grade) ===== */
+.dialFace{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(860px,92vw);
+  height:min(860px,92vw);
+  border-radius:999px;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+.dialFace::before{
+  content:"";
+  position:absolute;inset:0;border-radius:999px;
+  background:
+    radial-gradient(circle at 50% 45%,
+      rgba(255,255,255,.06),
+      rgba(0,0,0,.18) 58%,
+      rgba(0,0,0,.46) 78%,
+      rgba(0,0,0,.00) 92%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 0 10px rgba(0,0,0,.10),
+    inset 0 0 70px rgba(0,0,0,.45),
+    0 50px 180px rgba(0,0,0,.35);
+  opacity:.92;
+}
+.dialFace::after{
+  content:"";
+  position:absolute;inset:-16%;
+  background:
+    /* resolution rings */
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
+
+    /* engraved axes */
+    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+
+    /* 45° aligned silk inlay */
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.06) 0 1.2deg,
+      transparent 1.2deg 7.5deg),
+
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter: blur(.25px);
+  opacity:.78;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+}
+
+/* ===== Diamonds ===== */
 .d{
   position:absolute;
   left:50%;
   top:50%;
-  width:var(--D);
-  height:var(--D);
+  width:var(--D3);
+  height:var(--D3);
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:18px;
   cursor:pointer;
@@ -104,6 +169,7 @@ body::before,body::after{pointer-events:none!important}
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
   overflow:hidden;
+  z-index:5;
 
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
@@ -120,10 +186,10 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -44px 84px rgba(0,0,0,.84);
 
-  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
+  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
 }
 
-/* gold lay (trim zone only) */
+/* diamond-aligned gold inlay */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -152,30 +218,24 @@ body::before,body::after{pointer-events:none!important}
   opacity:.92;
 }
 
+/* glow-only hover (NO movement) */
 .d:hover{
-  border-color:rgba(201,162,74,.26);
+  border-color:rgba(201,162,74,.34);
   box-shadow:
-    0 44px 140px rgba(0,0,0,.92),
-    0 0 44px rgba(255,43,43,.12),
-    0 0 32px rgba(201,162,74,.14),
+    var(--shadowDeep),
+    0 0 0 2px rgba(201,162,74,.14),
+    0 0 28px rgba(201,162,74,.18),
+    0 0 44px rgba(201,162,74,.10),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -46px 86px rgba(0,0,0,.88);
 }
-.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
+.d:active{filter:brightness(.985)}
 
-/* center */
-.d.center{
-  width:var(--C);
-  height:var(--C);
-  border-radius:26px;
-  z-index:10;
-  border-color:rgba(201,162,74,.30);
-  box-shadow:
-    0 54px 170px rgba(0,0,0,.92),
-    0 0 52px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -52px 96px rgba(0,0,0,.90);
-}
+/* size classes */
+.d.core{width:var(--D0);height:var(--D0);border-radius:26px;z-index:10}
+.d.l1{width:var(--D1);height:var(--D1);border-radius:22px}
+.d.l2{width:var(--D2);height:var(--D2);border-radius:20px}
+.d.l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
 /* inner text */
 .inner{
@@ -203,8 +263,12 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:1.1px;
   color:rgba(255,255,255,.84);
 }
-.d.center .word{font-size:15px}
-.d.center .cardinal{font-size:10px}
+
+/* bump text size for larger nodes */
+.d.core .word{font-size:15px}
+.d.core .cardinal{font-size:10px}
+.d.l1 .word{font-size:13px}
+.d.l2 .word{font-size:12px}
 
 /* ===== TOP CONTROLS (diamond-shaped) ===== */
 .top{
@@ -234,6 +298,7 @@ body::before,body::after{pointer-events:none!important}
   transform:rotate(45deg);
   position:relative;
   overflow:hidden;
+  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
 }
 .dbtn::after{
   content:"";
@@ -241,7 +306,11 @@ body::before,body::after{pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
   opacity:.55;pointer-events:none;
 }
-.dbtn:active{transform:rotate(45deg) translateY(1px)}
+.dbtn:hover{
+  border-color:rgba(201,162,74,.34);
+  box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.14), 0 0 26px rgba(201,162,74,.16);
+}
+.dbtn:active{transform:rotate(45deg) translateY(1px);filter:brightness(.985)}
 .dbtn span{
   transform:rotate(-45deg);
   font-weight:980;
@@ -273,13 +342,20 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== MOBILE FIT ===== */
+/* ===== MOBILE ===== */
 @media (max-width:640px){
-  :root{ --D:86px; --C:136px; --R:236px; --padTop:128px; }
+  :root{
+    --D0:148px; --D1:108px; --D2:88px; --D3:78px;
+    --R1:168px; --R2:234px; --R3:286px;
+    --padTop:128px;
+  }
   .word{font-size:11.25px}
 }
 @media (max-width:420px){
-  :root{ --D:82px; --C:130px; --R:224px; }
+  :root{
+    --D0:140px; --D1:104px; --D2:86px; --D3:76px;
+    --R1:160px; --R2:224px; --R3:274px;
+  }
   .word{font-size:11px}
 }
 </style>
@@ -304,6 +380,8 @@ body::before,body::after{pointer-events:none!important}
 <!-- STAGE -->
 <div class="stage" id="stage" aria-label="Vision Remote">
   <div class="slab" aria-hidden="true"></div>
+  <div class="dialFace" aria-hidden="true"></div>
+  <!-- nodes injected -->
 </div>
 
 <!-- BOTTOM CORNERS -->
@@ -361,15 +439,12 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
 
   // ===== ROUTE MAP (EDIT HERE ONLY) =====
-  // CORE (manual index / linear map)
-  var ROUTE_CORE = "/explore/frontier/manual/"; // <-- set to your true manual index page
-
-  // EXIT + HUB
+  var ROUTE_CORE = "/explore/frontier/manual/"; // core manual index / linear map
   var ROUTE_EXIT = "/door/";
   var ROUTE_HUB  = "/index.html";
 
-  // 16 manifolds (outer ring)
-  // NOTE: labels are 1-word (platform) vs compact (engineering). Each shows code too.
+  // 16 manifolds (outer)
+  // NOTE: order is fixed by geometry (clockwise starting at N)
   var MANIFOLDS = [
     {code:"N",   href:"/explore/frontier/urban/",        p:{en:"CITIES",zh:"城市",es:"CIUDADES"},    e:{en:"URBAN",zh:"城市OS",es:"URB-OS"}},
     {code:"NNE", href:"/explore/frontier/shimmer/",      p:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},   e:{en:"CLEAR",zh:"清晰",es:"CLAR"}},
@@ -409,10 +484,9 @@ body::before,body::after{pointer-events:none!important}
     return (lane==="engineering") ? pick(m.e) : pick(m.p);
   }
 
-  // Build diamond
-  function mkDiamond(word, code, isCenter){
+  function mkDiamond(word, code, cls){
     var d=document.createElement("div");
-    d.className="d"+(isCenter?" center":"");
+    d.className="d "+cls;
     d.setAttribute("role","button");
     d.tabIndex=0;
 
@@ -433,25 +507,34 @@ body::before,body::after{pointer-events:none!important}
     return d;
   }
 
-  // layout (perfect symmetry; N at top)
-  var elByIndex=[];
+  // classify by code into tier class + radius
+  function tierFor(code){
+    if(code==="N"||code==="E"||code==="S"||code==="W") return {cls:"l1", rvar:"--R1"};
+    if(code==="NE"||code==="SE"||code==="SW"||code==="NW") return {cls:"l2", rvar:"--R2"};
+    return {cls:"l3", rvar:"--R3"};
+  }
+
+  var ringEls=[]; // keep for label refresh
+
   function layout(){
-    // keep slab
+    // keep slab + dial face
     var slab=stage.querySelector(".slab");
+    var dial=stage.querySelector(".dialFace");
     stage.innerHTML="";
     if(slab) stage.appendChild(slab);
+    if(dial) stage.appendChild(dial);
 
-    elByIndex=[];
+    ringEls=[];
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2;
     var cy=rect.height/2;
 
-    // center CORE
+    // core
     var core=mkDiamond(
       (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX",
       "CORE",
-      true
+      "core"
     );
     core.style.left=cx+"px";
     core.style.top=cy+"px";
@@ -459,17 +542,25 @@ body::before,body::after{pointer-events:none!important}
     core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(ROUTE_CORE); }});
     stage.appendChild(core);
 
-    // ring
-    var R=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 262;
-    var n=MANIFOLDS.length;
+    // radii
+    var cs=getComputedStyle(document.documentElement);
+    var R1=parseFloat(cs.getPropertyValue("--R1"))||178;
+    var R2=parseFloat(cs.getPropertyValue("--R2"))||246;
+    var R3=parseFloat(cs.getPropertyValue("--R3"))||300;
 
+    // ring (perfect symmetry, N at top) — positions by angle, but tier decides radius/size
+    var n=MANIFOLDS.length;
     for(var i=0;i<n;i++){
       var m=MANIFOLDS[i];
-      var angle=(i/n)*Math.PI*2 - Math.PI/2; // N at top
-      var x=cx + R*Math.cos(angle);
-      var y=cy + R*Math.sin(angle);
+      var ang=(i/n)*Math.PI*2 - Math.PI/2;
 
-      var d=mkDiamond(labelFor(m), m.code, false);
+      var t=tierFor(m.code);
+      var r=(t.rvar==="--R1")?R1:(t.rvar==="--R2")?R2:R3;
+
+      var x=cx + r*Math.cos(ang);
+      var y=cy + r*Math.sin(ang);
+
+      var d=mkDiamond(labelFor(m), m.code, t.cls);
       d.style.left=x+"px";
       d.style.top=y+"px";
 
@@ -479,7 +570,7 @@ body::before,body::after{pointer-events:none!important}
       })(m.href);
 
       stage.appendChild(d);
-      elByIndex.push(d);
+      ringEls.push({el:d, m:m});
     }
 
     // corner labels
@@ -488,23 +579,20 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function updateLabelsOnly(){
-    // ring
-    for(var i=0;i<MANIFOLDS.length;i++){
-      var d=elByIndex[i];
-      if(!d) continue;
-      var w=d.querySelector(".word");
-      if(w) w.textContent=labelFor(MANIFOLDS[i]);
+    for(var i=0;i<ringEls.length;i++){
+      var o=ringEls[i];
+      var w=o.el.querySelector(".word");
+      if(w) w.textContent=labelFor(o.m);
     }
   }
 
-  // top toggles (no reload)
+  // toggles (no reload)
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
     try{ LS.setItem("gd_lang",lang);}catch(e){}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
     setPressedLang();
-    // keep geometry stable; just refresh labels
     updateLabelsOnly();
     document.getElementById("lblExit").textContent = (lang==="zh")?"退出":(lang==="es")?"SALIR":"EXIT";
     document.getElementById("lblHub").textContent  = (lang==="zh")?"枢纽":(lang==="es")?"HUB":"HUB";
@@ -545,7 +633,6 @@ body::before,body::after{pointer-events:none!important}
     layout();
     updateLabelsOnly();
   }
-
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); });
 

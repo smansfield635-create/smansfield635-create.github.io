@@ -1,25 +1,23 @@
 <!doctype html>
 <!-- TNT — /explore/index.html
      EXPLORE · EXPANSION MAP (INTRO-TIER ORIENTATION — NO LENSES)
-     ROLE:
-       - Foundational expansion layer
-       - No product collapse
-       - No modal traps
-       - No lens switching (orientation layer)
-       - Trilingual (EN / 中文 / ES)
-       - Monument typography
-       - Single-open accordion
-       - State carry (lang/style/time/depth) via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - lane=platform|engineering is URL-only (preserve if present; never store)
-     LOCKS:
-       - ui.css owns background (do NOT style html/body background)
-       - branch.css owns geometry
-       - instruments.js included
+     UPDATE (PER SEAN):
+       - UPGRADE BUTTON MATERIAL SYSTEM to match “3D gloss” standard:
+           • Perimeter gold glow (NOT bottom-only underlight)
+           • Diamond-aligned silk inlay (no flat orthogonal grid feel)
+           • Hover = glow only (no movement)
+       - Keep: no lenses (orientation layer)
+       - Keep: trilingual (EN/中文/ES) with SAME-path reload
+       - Keep: single-open accordion
+       - Keep: state carry lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - Keep: lane=platform|engineering is URL-only (preserve if present; never store)
+       - Keep: ui.css owns html/body background (NO background styling here)
+       - No overlays/modals; no inline onclick; addEventListener only
      ROUTING:
-       - Links must append full state query
-       - If a destination doesn’t exist yet, keep link (routing-safe shell is next deliverable)
+       - Links append full state query
+       - If destination doesn’t exist yet, keep link (shell later)
 -->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -53,6 +51,10 @@ body::before,body::after{pointer-events:none!important}
   --goldA:rgba(201,162,74,.22);
   --goldB:rgba(201,162,74,.10);
 
+  --gold:rgba(201,162,74,.58);
+  --goldGlow:rgba(201,162,74,.30);
+  --goldGlow2:rgba(201,162,74,.16);
+
   --shadowA:0 40px 140px rgba(0,0,0,.65);
   --shadowB:0 20px 70px rgba(0,0,0,.60);
 }
@@ -77,13 +79,15 @@ body::before,body::after{pointer-events:none!important}
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
 
-/* Button (gold under-light only) */
+/* ===== Button (3D gloss + perimeter gold glow; NO movement) ===== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   min-height:44px;padding:10px 12px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.10), transparent 46%),
+    radial-gradient(circle at 82% 24%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 70% 86%, rgba(90,40,120,.10), transparent 66%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
@@ -93,14 +97,56 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:0 16px 44px rgba(0,0,0,.62);
   white-space:nowrap;
 }
-.btn:active{transform:translateY(1px)}
+.btn::before{
+  content:"";
+  position:absolute;inset:0;border-radius:16px;
+  pointer-events:none;
+  /* diamond-aligned silk inlay (subtle) */
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.18;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    linear-gradient(#000,#000);
+}
 .btn::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
+  position:absolute;left:12%;right:12%;top:10%;
+  height:32%;
+  border-radius:999px;
+  pointer-events:none;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  opacity:.92;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:0 16px 44px rgba(0,0,0,.62), 0 0 18px rgba(255,43,43,.12);}
+.btn:hover{
+  border-color:rgba(201,162,74,.46);
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.62),
+    0 0 0 2px rgba(201,162,74,.16),
+    0 0 28px rgba(201,162,74,.22),
+    0 0 46px rgba(201,162,74,.12);
+}
+.btn:active{filter:brightness(.98)}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.62),
+    0 0 18px rgba(255,43,43,.12);
+}
+.btn.red:hover{
+  border-color:rgba(201,162,74,.46);
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.62),
+    0 0 0 2px rgba(201,162,74,.16),
+    0 0 28px rgba(201,162,74,.22),
+    0 0 46px rgba(201,162,74,.12),
+    0 0 20px rgba(255,43,43,.10);
+}
 
 /* Header */
 .header{
@@ -118,7 +164,7 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(10px);
   position:relative;overflow:hidden;
 }
-/* Gold diamond lay in trim zone only */
+/* Gold diamond lay in trim zone only (already diamond-aligned) */
 .header::before{
   content:"";
   position:absolute;inset:0;border-radius:28px;pointer-events:none;
@@ -229,6 +275,7 @@ body::before,body::after{pointer-events:none!important}
   margin:0 0 18px;
 }
 
+/* Jump button uses same .btn system, but pill-shaped */
 .jump{
   display:inline-flex;
   align-items:center;justify-content:center;
@@ -236,19 +283,6 @@ body::before,body::after{pointer-events:none!important}
   margin-top:10px;
   padding:10px 18px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  font-weight:950;
-  letter-spacing:.2px;
-  position:relative;overflow:hidden;
-}
-.jump::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.62;pointer-events:none;
 }
 
 /* Dock */
@@ -311,7 +345,7 @@ body::before,body::after{pointer-events:none!important}
   <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
   <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
-  <a class="btn" id="dockDoor" href="/door/" data-route="/door/">DOOR</a>
+  <a class="btn red" id="dockDoor" href="/door/" data-route="/door/">DOOR</a>
 </nav>
 
 <script>
@@ -404,45 +438,49 @@ body::before,body::after{pointer-events:none!important}
   // Copy
   var COPY={
     en:{
+      k:"EXPLORE",
       head:"The Expansion Layer",
-      desc:"Every structure eventually reaches its boundary. Explore is where we push past it — deliberately, measurably, and without losing coherence.",
+      desc:"Explore is where we extend capability without breaking structure. It holds frontier direction as organized surfaces: prerequisites, boundaries, and clean entry points.",
       blocks:[
         {t:"Frontier Systems",p:"Water, Waste, Energy, Habitat, Urban OS. Structured deployment visions built on measurable substrate logic.",link:"/explore/frontier/"},
-        {t:"Economic & Risk Architecture",p:"Finance, Insurance, Compliance, Contracts, Regulatory Mapping. Expansion requires stable economic alignment.",link:"/explore/economic/"},
+        {t:"Economic & Risk Architecture",p:"Finance, insurance, compliance, contracts, regulatory mapping. Expansion only works when incentives and constraints are aligned.",link:"/explore/economic/"},
         {t:"Infrastructure Substitution",p:"Industrial replacement systems that operate within constraint law and deployment gating.",link:"/explore/infrastructure/"},
-        {t:"Applied Coherence Models",p:"Where lattice structure meets real-world systems. Measurable, bounded, scalable.",link:"/explore/models/"}
+        {t:"Applied Coherence Models",p:"Where lattice structure meets real-world systems. Measurable, bounded, replayable under fixed scope.",link:"/explore/models/"}
       ],
       enter:"ENTER"
     },
     zh:{
+      k:"探索",
       head:"扩展层",
-      desc:"每个结构都会触及边界。Explore 是我们有意识、可测量地突破边界的地方，同时保持架构一致性。",
+      desc:"Explore 是“在不破坏结构前提下扩展能力”的地方。它把前沿方向做成有序面：前置条件、边界、与清晰入口。",
       blocks:[
-        {t:"前沿系统",p:"水、废弃物、能源、栖息地、城市操作系统。这不是概念，而是基于可测逻辑的部署愿景。",link:"/explore/frontier/"},
-        {t:"经济与风险架构",p:"金融、保险、合规、合同、监管映射。扩展必须与经济结构一致。",link:"/explore/economic/"},
-        {t:"基础设施替代",p:"在约束法则下运行的工业替代系统与部署闸门。",link:"/explore/infrastructure/"},
-        {t:"应用一致性模型",p:"晶格结构与现实系统结合。可测量、有界、可扩展。",link:"/explore/models/"}
+        {t:"前沿系统",p:"水、废弃物、能源、栖息地、城市操作系统。基于可测底层逻辑的结构化部署愿景。",link:"/explore/frontier/"},
+        {t:"经济与风险架构",p:"金融、保险、合规、合同、监管映射。只有激励与约束对齐，扩展才成立。",link:"/explore/economic/"},
+        {t:"基础设施替代",p:"在约束法则与部署闸门下运行的工业替代系统。",link:"/explore/infrastructure/"},
+        {t:"应用一致性模型",p:"晶格结构与现实系统结合：可测、有界、在固定范围下可回放。",link:"/explore/models/"}
       ],
       enter:"进入"
     },
     es:{
+      k:"EXPLORAR",
       head:"Capa de Expansión",
-      desc:"Toda estructura alcanza su límite. Explore es donde lo empujamos — deliberado y medible, sin perder coherencia.",
+      desc:"Explore es donde extendemos capacidad sin romper estructura. Mantiene dirección frontera como superficies organizadas: prerrequisitos, límites y entradas limpias.",
       blocks:[
-        {t:"Sistemas Frontier",p:"Agua, Residuos, Energía, Hábitat, Sistema Urbano. Visiones desplegables estructuradas.",link:"/explore/frontier/"},
-        {t:"Arquitectura Económica y de Riesgo",p:"Finanzas, Seguros, Cumplimiento, Contratos, Regulación. Escalar requiere alineación económica estable.",link:"/explore/economic/"},
+        {t:"Sistemas Frontier",p:"Agua, residuos, energía, hábitat, sistema urbano. Visiones desplegables estructuradas sobre lógica medible.",link:"/explore/frontier/"},
+        {t:"Arquitectura Económica y de Riesgo",p:"Finanzas, seguros, cumplimiento, contratos, regulación. Escalar funciona solo con incentivos y restricciones alineados.",link:"/explore/economic/"},
         {t:"Sustitución de Infraestructura",p:"Sistemas industriales de reemplazo bajo leyes de restricción y compuertas de despliegue.",link:"/explore/infrastructure/"},
-        {t:"Modelos Aplicados de Coherencia",p:"Donde la estructura de red se encuentra con sistemas reales. Medible, acotado, escalable.",link:"/explore/models/"}
+        {t:"Modelos Aplicados de Coherencia",p:"Donde la estructura lattice se une con sistemas reales. Medible, acotado, replayable bajo alcance fijo.",link:"/explore/models/"}
       ],
       enter:"ENTRAR"
     }
   };
 
   var C=COPY[lang]||COPY.en;
+  document.getElementById("k").textContent=C.k;
   document.getElementById("t").textContent=C.head;
   document.getElementById("s").textContent=C.desc;
 
-  // Render accordion (single-open)
+  // Render accordion (single-open; tap same closes; keyboard safe)
   var acc=document.getElementById("accordion");
 
   function closeAll(){
@@ -460,6 +498,8 @@ body::before,body::after{pointer-events:none!important}
 
     var head=document.createElement("div");
     head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
     var title=document.createElement("div");
     title.className="title";
@@ -480,24 +520,29 @@ body::before,body::after{pointer-events:none!important}
     p.textContent=b.p;
 
     var a=document.createElement("a");
-    a.className="jump";
+    a.className="btn jump";
     a.textContent=C.enter;
     a.setAttribute("data-route", b.link);
 
     body.appendChild(p);
     body.appendChild(a);
 
-    head.addEventListener("click", function(){
+    function toggle(){
       var openNow=!block.classList.contains("open");
-      closeAll();
-      block.classList.toggle("open", openNow);
-      chev.textContent = openNow ? "▾" : "▸";
-      // wire state onto jump link after any toggle
+      if(openNow){
+        closeAll();
+        block.classList.add("open");
+        chev.textContent="▾";
+      }else{
+        block.classList.remove("open");
+        chev.textContent="▸";
+      }
       wireAll();
-    }, {passive:true});
+    }
 
+    head.addEventListener("click", toggle, {passive:true});
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); head.click(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
     });
 
     block.appendChild(head);

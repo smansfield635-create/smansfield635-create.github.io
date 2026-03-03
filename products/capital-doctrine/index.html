@@ -1,24 +1,30 @@
 <!doctype html>
 <!-- TNT — /products/capital-doctrine/index.html
      CAPITAL COHERENCE DOCTRINE (CCD)
-     NEW STANDARD (INFORMAL WEBSITE LAYER — FULL REWRITE)
+     INFORMAL WEBSITE LAYER — NEW STANDARD (LOCKED)
+
      NON-NEGOTIABLES (LOCKED):
        - NO HS/COLLEGE/MASTERS/PHD labels anywhere in UI
        - NO tier toggle visible to users
        - This page remains INFORMAL layer (human-accessible, institutional, dense)
-       - Two visible lenses only:
-           lane=platform|engineering (URL-only; NOT stored)
+       - Visible lens ONLY:
+           lane=platform|engineering (URL-only; NEVER stored)
        - Trilingual UI toggle stays (EN/中文/ES)
        - Page copy remains dense; does NOT collapse into barebones
-     STATE:
+
+     STATE (LOCKED):
        - Preserve gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
        - Preserve URL query: lang/style/time/depth/lane
-       - Force gd_style="informal" on this page (informal layer build)
-     UX:
-       - Single-open accordion (top-level)
-       - Sub-bubbles inside sections
+       - Force gd_style="informal" AND gd_depth="explore" on this page
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open accordion section
+
+     UX (LOCKED):
+       - Single-open accordion (tap same closes)
+       - Sub-bubbles inside sections (tap-to-open)
        - No modals/overlays; no inline onclick; addEventListener only
-     ASSETS:
+
+     ASSETS (LOCKED):
        - /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
 -->
@@ -157,6 +163,7 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
+
 .k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
 .h1{margin:0;font-weight:980;font-size:34px;letter-spacing:.55px;color:var(--ink);position:relative}
 .sub{
@@ -332,7 +339,7 @@ body::before,body::after{pointer-events:none!important}
     <a class="btn" id="btnFinance" href="/products/finance/" data-route="/products/finance/">FINANCE</a>
     <a class="btn" id="btnRisk" href="/products/risk-capital/" data-route="/products/risk-capital/">RISK & CAPITAL</a>
   </div>
-  <div class="right" aria-label="Language">
+  <div class="right" aria-label="Controls">
     <div class="seg" role="group" aria-label="Language toggle">
       <button type="button" id="langEN" aria-pressed="true">EN</button>
       <button type="button" id="langZH" aria-pressed="false">中文</button>
@@ -360,7 +367,7 @@ body::before,body::after{pointer-events:none!important}
         <span style="opacity:.6">·</span>
         <span id="bLane">LENS</span> <b id="bLaneV">PLATFORM</b>
         <span style="opacity:.6">·</span>
-        <span id="bMode">MODE</span> <b id="bModeV">INFORMAL</b>
+        <span id="bLayer">LAYER</span> <b id="bLayerV">INFORMAL</b>
       </div>
     </div>
   </section>
@@ -371,7 +378,7 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">INDEX</a>
+  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
   <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
@@ -381,36 +388,30 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state carry (gd_* only) =====
+  // ===== Canon state (gd_* only; pinned informal layer on this page) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
   var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1"; // preserved but not surfaced
-  var lane  = qs.get("lane")  || "platform"; // URL-only
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";     // preserved but pinned to explore for this page
+  var lane  = qs.get("lane")  || "platform";                        // URL-only
 
-  // Informal site layer lock for this page
+  // pin layer
   var style = "informal";
+  var pinnedDepth = "explore";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  // preserve depth but do not interpret it here
-  var d=parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
-
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
+  // keep numeric depth in URL if present but do NOT surface; set gd_depth to "explore"
   try{
     LS.setItem("gd_lang",lang);
     LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
+    LS.setItem("gd_depth",pinnedDepth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
@@ -420,11 +421,21 @@ body::before,body::after{pointer-events:none!important}
     p.set("lang",(over&&over.lang)?over.lang:lang);
     p.set("style","informal");
     p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth",(over&&over.depth)?String(over.depth):depth);
-    p.set("lane",(over&&over.lane)?over.lane:lane);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
     return "?" + p.toString();
   }
 
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  // Wire all internal links with pinned query (and lane)
   function wireAll(){
     var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
@@ -436,10 +447,10 @@ body::before,body::after{pointer-events:none!important}
         try{
           var u=new URL(route, location.origin);
           var sp=u.searchParams;
+          sp.set("lang", lang);
           sp.set("style","informal");
-          if(!sp.get("lang")) sp.set("lang", lang);
-          if(!sp.get("time")) sp.set("time", time);
-          if(!sp.get("depth")) sp.set("depth", depth);
+          sp.set("time", time);
+          sp.set("depth","explore");
           if(!sp.get("lane")) sp.set("lane", lane);
           el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
         }catch(e){
@@ -451,112 +462,394 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function setPressed(ids, activeId){
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
-    }
-  }
-
-  // Language toggle (reload same path)
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  // Lane toggle (URL-only)
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    window.location.href = window.location.pathname + q({lane:lane});
-  }
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  // ===== Header copy (informal layer, dense, institutional) =====
+  // ===== Copy Packs (TRI × LANE) =====
   var HDR = {
     en:{
-      sub:"CCD is the superlayer that governs whether capital expansion is structurally safe. It sits above finance and above governance.",
-      note:"Informal layer: dense and readable. PLATFORM explains how to use it. ENGINEERING explains how it behaves (without formal protocol language)."
+      platform:{
+        sub:"CCD is the superlayer that decides whether capital expansion is structurally safe. It sits above finance and above governance. This page explains the doctrine in human language without shrinking it.",
+        note:"Platform lens: what CCD is, what it blocks, what it allows, and what to do next."
+      },
+      engineering:{
+        sub:"CCD is an admissibility layer for capital action: invariant-bounded, auditable, and enforceable. It gates finance and governance execution under measurable constraints.",
+        note:"Engineering lens: same doctrine, tighter wording: gates, envelopes, triggers, and reason-coded outputs."
+      }
     },
     zh:{
-      sub:"CCD 是判断资本扩张是否结构安全的超层规则。它位于金融与治理之上。",
-      note:"通俗层：密集但可读。PLATFORM 讲怎么用。ENGINEERING 讲怎么运作（不进入正式协议语言）。"
+      platform:{
+        sub:"CCD 是判断资本扩张是否结构安全的超层规则。它位于金融与治理之上。本页用人能读的语言讲清楚，但不会把内容变薄。",
+        note:"平台透镜：CCD 是什么、会拦什么、允许什么、下一步怎么走。"
+      },
+      engineering:{
+        sub:"CCD 是资本动作的可采信层：不变量有界、可审计、可执行。它用可测约束对金融与治理进行闸门控制。",
+        note:"工程透镜：同一教义，更紧：闸门、包络、触发、原因码输出。"
+      }
     },
     es:{
-      sub:"CCD es la supercapa que decide si la expansión de capital es estructuralmente segura. Está por encima de finanzas y gobernanza.",
-      note:"Capa informal: densa y legible. PLATFORM = cómo usar. ENGINEERING = cómo se comporta (sin protocolo formal)."
+      platform:{
+        sub:"CCD es la supercapa que decide si la expansión de capital es estructuralmente segura. Está por encima de finanzas y gobernanza. Esta página lo explica en lenguaje humano sin adelgazarlo.",
+        note:"Lente plataforma: qué es, qué bloquea, qué permite y cuál es el siguiente paso."
+      },
+      engineering:{
+        sub:"CCD es una capa de admisibilidad para acciones de capital: acotada por invariantes, auditable y ejecutable. Gatea finanzas y gobernanza bajo restricciones medibles.",
+        note:"Lente ingeniería: misma doctrina, lenguaje más preciso: compuertas, envolventes, triggers y salidas con códigos."
+      }
     }
   };
 
-  function applyHeader(){
-    var H=HDR[lang] || HDR.en;
-    document.getElementById("hdrSub").textContent = H.sub;
-    document.getElementById("hdrNote").textContent = H.note;
+  // ===== Sections (dense; lane-aware; bubbles are also lane-aware) =====
+  var SECTIONS = [
+    {
+      c:"#c9a24a",
+      t:P("Position in System Architecture","系统架构中的位置","Posición en la arquitectura"),
+      s:P("Where CCD sits, what it governs, and what it refuses to be.","CCD 位于哪里、治理什么、拒绝成为什么。","Dónde se ubica, qué gobierna y qué no es."),
+      plat:{
+        p:[
+          "CCD sits above finance and above governance. It exists so money cannot scale a weak structure into a bigger failure.",
+          "CCD does not pick winners. It blocks unsafe scaling and forces the system back to proof and stability."
+        ],
+        bubbles:[
+          {h:P("What CCD governs","CCD 治理什么","Qué gobierna"), p:P(
+            "Scale eligibility, exposure bounds, and survivability under growth pressure.",
+            "扩张资格、暴露边界、以及增长压力下的可生存性。",
+            "Elegibilidad de escala, límites de exposición y supervivencia bajo presión."
+          )},
+          {h:P("What CCD is not","CCD 不是什么","Qué NO es"), p:P(
+            "Not investment advice. Not marketing. Not a prediction engine.",
+            "不是投资建议；不是营销；不是预测引擎。",
+            "No es consejo financiero. No es marketing. No es un motor de predicción."
+          )},
+          {h:P("Where it routes next","下一步路由到哪里","A dónde enruta"), p:P(
+            "Finance execution, governance enforcement, gauges for verification.",
+            "金融执行、治理执行、量规验证。",
+            "Ejecución financiera, enforcement, medidores para verificación."
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "CCD is an upstream admissibility boundary for capital action. Finance and governance execute beneath it.",
+          "If structural safety cannot be demonstrated, escalation is blocked and rollback is preferred."
+        ],
+        bubbles:[
+          {h:P("Authority flow","权威流向","Flujo de autoridad"), p:P(
+            "CCD constrains finance + governance simultaneously. Neither may redefine CCD.",
+            "CCD 同时约束金融与治理；二者不得重定义 CCD。",
+            "CCD restringe finanzas y gobernanza; ninguna puede redefinir CCD."
+          )},
+          {h:P("Evidence flow","证据流向","Flujo de evidencia"), p:P(
+            "Gauges provide signals upward; CCD consumes them to gate decisions.",
+            "量规向上提供信号；CCD 消费信号并对决策闸门。",
+            "Medidores suben señales; CCD las consume para gatear decisiones."
+          )},
+          {h:P("Default failure posture","默认失败姿态","Postura por defecto"), p:P(
+            "Block escalation → contain → audit → rollback → re-enter via receipts.",
+            "拦截升级→隔离→审计→回滚→以收据再入。",
+            "Bloquear → contener → auditar → rollback → reingresar con recibos."
+          )}
+        ]
+      }
+    },
 
-    document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
-    document.getElementById("bLaneV").textContent = (lane==="engineering" ? (lang==="zh"?"工程":(lang==="es"?"INGENIERÍA":"ENGINEERING")) : (lang==="zh"?"平台":(lang==="es"?"PLATAFORMA":"PLATFORM")));
-    document.getElementById("bModeV").textContent = (lang==="zh")?"通俗":(lang==="es")?"INFORMAL":"INFORMAL";
+    {
+      c:"#ff2b2b",
+      t:P("Core Invariant","核心不变量","Invariante central"),
+      s:P("The sentence that prevents capital from lying to itself.","防止资本自欺的一句话。","La frase que evita la auto-mentira."),
+      plat:{
+        p:[
+          "External capital expansion cannot exceed internal structural coherence.",
+          "Capital amplifies both strength and weakness. If the inside is drifting, money makes the drift expensive."
+        ],
+        bubbles:[
+          {h:P("Plain meaning","直白含义","Significado"), p:P(
+            "If you can’t hold integrity, you can’t hold scale.",
+            "守不住完整性，就守不住规模。",
+            "Si no sostienes integridad, no sostienes escala."
+          )},
+          {h:P("Why scale is dangerous","为什么规模危险","Por qué escala es peligrosa"), p:P(
+            "Scale multiplies errors. Unbounded growth hides failure until it cascades.",
+            "规模会放大错误；无界增长会隐藏失败直到级联。",
+            "La escala multiplica errores; crecimiento sin límites oculta fallo hasta cascada."
+          )},
+          {h:P("What CCD does immediately","CCD 立即做什么","Qué hace CCD"), p:P(
+            "Stops escalation first. Then demands proof, not stories.",
+            "先停升级，再要证据，不要故事。",
+            "Primero detiene escalación. Luego exige prueba, no historias."
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "Invariant: external expansion must remain ≤ internal coherence capacity under the same evidence.",
+          "Violation triggers containment: pause, audit, rollback. No discretionary bypass."
+        ],
+        bubbles:[
+          {h:P("Gate outputs","闸门输出","Salidas de compuerta"), p:P(
+            "PROCEED (bounded), HOLD (missing proof), CONTAIN (risk rising), ROLLBACK (violation).",
+            "通过（有界）、暂停（缺证明）、隔离（风险上升）、回滚（违规）。",
+            "PROCEED (acotado), HOLD (falta prueba), CONTAIN (riesgo), ROLLBACK (violación)."
+          )},
+          {h:P("Reason codes","原因码","Códigos de razón"), p:P(
+            "Every HOLD/CONTAIN/ROLLBACK is reason-coded for replay and audit.",
+            "每个暂停/隔离/回滚都必须原因码，便于回放与审计。",
+            "Cada HOLD/CONTAIN/ROLLBACK lleva código para replay y auditoría."
+          )},
+          {h:P("No intent inference","不推断意图","Sin inferir intención"), p:P(
+            "Observed behavior only. CCD does not care about narrative framing.",
+            "只看行为信号；CCD 不看叙事包装。",
+            "Solo señales observadas; CCD no depende de narrativa."
+          )}
+        ]
+      }
+    },
 
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    {
+      c:"#c9a24a",
+      t:P("16-Point Compass Mapping (4+4+4+4)","16点指南针映射（4+4+4+4）","Mapa de 16 puntos (4+4+4+4)"),
+      s:P("The geometry used to classify capital motion without arguing.","用于无争论分类资本运动的几何。","Geometría para clasificar movimiento sin discusión."),
+      plat:{
+        p:[
+          "CCD uses a 16-direction compass so people can say where capital is moving without debating definitions.",
+          "It separates stability, drift, compression, and unsafe acceleration as distinct directions."
+        ],
+        bubbles:[
+          {h:P("Anchors (4)","锚点（4）","Anclas (4)"), p:P(
+            "N Definition · E Execution · S Measurement · W Identity",
+            "N 定义 · E 执行 · S 测量 · W 身份",
+            "N Definición · E Ejecución · S Medición · W Identidad"
+          )},
+          {h:P("Transitions (4)","转移（4）","Transiciones (4)"), p:P(
+            "NE Def→Exec · SE Exec→Meas · SW Meas→Id · NW Id→Def",
+            "NE 定→执 · SE 执→测 · SW 测→身 · NW 身→定",
+            "NE Def→Ejec · SE Ejec→Med · SW Med→Id · NW Id→Def"
+          )},
+          {h:P("Why 16 matters","为什么要16","Por qué 16"), p:P(
+            "It prevents blind spots. You can’t hide drift inside vague language.",
+            "它防盲区：漂移无法藏在模糊语言里。",
+            "Evita puntos ciegos: la deriva no se esconde en lenguaje vago."
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "Canonical resolution: 4 anchors + 4 transitions + 4 compression + 4 acceleration. (4+4+4+4).",
+          "CCD uses this to classify motion and trigger gates deterministically."
+        ],
+        bubbles:[
+          {h:P("Compression (4)","压缩（4）","Compresión (4)"), p:P(
+            "NNE escalation discipline · ESE containment · SSW contraction governance · WNW revalidation",
+            "NNE 升级纪律 · ESE 隔离 · SSW 收缩治理 · WNW 复验",
+            "NNE disciplina · ESE contención · SSW contracción · WNW revalidación"
+          )},
+          {h:P("Acceleration (4)","加速（4）","Aceleración (4)"), p:P(
+            "ENE directed acceleration · SSE measurement pressure · WSW identity drift correction · NNW recursion guard",
+            "ENE 定向加速 · SSE 测量压力 · WSW 身份漂移纠偏 · NNW 递归护栏",
+            "ENE aceleración dirigida · SSE presión de medición · WSW corrección de deriva · NNW guardia recursiva"
+          )},
+          {h:P("Determinism rule","确定性规则","Regla de determinismo"), p:P(
+            "Same scope + same receipts → same classification.",
+            "同范围同收据→同分类。",
+            "Mismo alcance + mismos recibos → misma clasificación."
+          )}
+        ]
+      }
+    },
 
-    if(lang==="zh"){
-      document.getElementById("k0").textContent="资本一致性教义";
-      document.getElementById("h0").textContent="资本一致性教义（CCD）";
-      document.getElementById("band0").textContent="教义章节（一次只开一个）";
-      document.getElementById("bLang").textContent="语言";
-      document.getElementById("bLane").textContent="透镜";
-      document.getElementById("bMode").textContent="模式";
-    }else if(lang==="es"){
-      document.getElementById("k0").textContent="DOCTRINA DE COHERENCIA DE CAPITAL";
-      document.getElementById("h0").textContent="Doctrina de Coherencia de Capital (CCD)";
-      document.getElementById("band0").textContent="SECCIONES (una a la vez)";
-      document.getElementById("bLang").textContent="IDIOMA";
-      document.getElementById("bLane").textContent="LENTE";
-      document.getElementById("bMode").textContent="MODO";
-    }else{
-      document.getElementById("k0").textContent="CAPITAL COHERENCE DOCTRINE";
-      document.getElementById("h0").textContent="Capital Coherence Doctrine (CCD)";
-      document.getElementById("band0").textContent="DOCTRINE SECTIONS (SINGLE-OPEN)";
-      document.getElementById("bLang").textContent="LANG";
-      document.getElementById("bLane").textContent="LENS";
-      document.getElementById("bMode").textContent="MODE";
+    {
+      c:"#93c5fd",
+      t:P("Measurable Invariance","可测不变量","Invariancia medible"),
+      s:P("What must be measurable before capital can scale.","资本扩张前必须可测的东西。","Qué debe ser medible antes de escalar."),
+      plat:{
+        p:[
+          "CCD doesn’t demand that you measure everything. It demands that you measure the few things that predict fragility early.",
+          "If you can’t measure it, you can’t safely claim it."
+        ],
+        bubbles:[
+          {h:P("Minimum truth set","最小真相集","Conjunto mínimo"), p:P(
+            "Exposure · Concentration · Redundancy · Segmentation · Window stability",
+            "暴露·集中度·冗余·分段·窗口稳定",
+            "Exposición · Concentración · Redundancia · Segmentación · Estabilidad por ventana"
+          )},
+          {h:P("If missing","若缺失","Si falta"), p:P(
+            "CCD output is HOLD until measurement exists.",
+            "没有测量就暂停（HOLD）。",
+            "Sin medición: HOLD."
+          )},
+          {h:P("If failing","若失败","Si falla"), p:P(
+            "CCD output is CONTAIN/ROLLBACK depending on severity.",
+            "失败则隔离/回滚（视严重程度）。",
+            "Falla: CONTAIN/ROLLBACK según severidad."
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "Measurable invariance means: declared rule + defined evidence + deterministic result.",
+          "Undefined variables force UNDETERMINED. Reason codes are mandatory."
+        ],
+        bubbles:[
+          {h:P("Evidence contract","证据契约","Contrato de evidencia"), p:P(
+            "Input definition → measurement rule → threshold → failure meaning.",
+            "输入定义→测量规则→阈值→失败含义。",
+            "Definición de entrada → regla → umbral → significado."
+          )},
+          {h:P("Audit property","审计属性","Propiedad de auditoría"), p:P(
+            "Every gate emits receipts for replay.",
+            "每个闸门输出收据以回放。",
+            "Cada compuerta emite recibos para replay."
+          )},
+          {h:P("No narrative override","无叙事覆盖","Sin override narrativo"), p:P(
+            "Stories cannot override failed measurements.",
+            "叙事不能覆盖失败测量。",
+            "Narrativas no anulan medición fallida."
+          )}
+        ]
+      }
+    },
+
+    {
+      c:"#ff2b2b",
+      t:P("Deployable Policy Framework","可部署政策框架","Marco de política desplegable"),
+      s:P("How CCD becomes enforceable behavior, not a slogan.","CCD 如何变成可执行行为而不是口号。","Cómo se vuelve conducta ejecutable."),
+      plat:{
+        p:[
+          "CCD becomes real when it is written as policy: floors, ceilings, and stop rules.",
+          "That policy prevents one person’s optimism from becoming everyone’s liability."
+        ],
+        bubbles:[
+          {h:P("Baseline enforceables","最低可执行项","Mínimos"), p:P(
+            "Liquidity floor · Exposure caps · Segmentation checks · Stop on acceleration",
+            "流动性底线·暴露上限·分段校验·加速即停",
+            "Piso de liquidez · Caps de exposición · Chequeos · Stop por aceleración"
+          )},
+          {h:P("What gets logged","必须记录什么","Qué se registra"), p:P(
+            "Exceptions, overrides, and why.",
+            "例外、覆盖，以及原因。",
+            "Excepciones, overrides y por qué."
+          )},
+          {h:P("Recovery posture","恢复姿态","Recuperación"), p:P(
+            "Freeze → audit → rollback → restart bounded.",
+            "冻结→审计→回滚→有界重启。",
+            "Freeze → auditar → rollback → reiniciar acotado."
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "Deployable policy = explicit gates + deterministic triggers + audit outputs.",
+          "If a gate is bypassable, the system is insecure."
+        ],
+        bubbles:[
+          {h:P("Gate families","闸门族","Familias de compuertas"), p:P(
+            "Allocation constraints · Concentration limits · Acceleration limits · Segmentation enforcement",
+            "配置约束·集中限制·加速限制·分段执行",
+            "Restricciones de asignación · límites · aceleración · segmentación"
+          )},
+          {h:P("Version discipline","版本纪律","Disciplina de versión"), p:P(
+            "Policy changes require epoch bump + replayability.",
+            "政策变更必须新纪元+可回放。",
+            "Cambios requieren nueva época + replay."
+          )},
+          {h:P("Stop rule","停机规则","Regla de stop"), p:P(
+            "Violation → automatic halt → containment.",
+            "违规→自动停机→隔离。",
+            "Violación → stop automático → contención."
+          )}
+        ]
+      }
+    },
+
+    {
+      c:"#a3a3a3",
+      t:P("Binding to Finance, Governance, and Gauges","绑定金融、治理与量规","Vinculación a finanzas, gobernanza y medidores"),
+      s:P("How CCD stays above domains while remaining concrete.","CCD 如何在保持超层的同时保持具体。","Cómo permanece arriba sin volverse vago."),
+      plat:{
+        p:[
+          "CCD is the rulebook. Finance applies it. Governance enforces it. Gauges show what’s happening.",
+          "This creates a closed loop: rules → action → measurement → correction."
+        ],
+        bubbles:[
+          {h:P("Authority rule","权威规则","Regla de autoridad"), p:P(
+            "CCD constrains finance and governance. They cannot redefine CCD.",
+            "CCD 约束金融与治理；它们不能重定义 CCD。",
+            "CCD restringe finanzas y gobernanza; no pueden redefinir CCD."
+          )},
+          {h:P("Measurement rule","测量规则","Regla de medición"), p:P(
+            "Missing measurement → HOLD. Failing measurement → CONTAIN/ROLLBACK.",
+            "缺测量→HOLD；测量失败→隔离/回滚。",
+            "Sin medición → HOLD. Fallo → CONTAIN/ROLLBACK."
+          )},
+          {h:P("Routing links","路由链接","Enlaces"), p:P(
+            "Finance · Risk/Capital · Gauges · Laws",
+            "金融·风险与资本·量规·法则",
+            "Finanzas · Riesgo/Capital · Medidores · Leyes"
+          )}
+        ]
+      },
+      eng:{
+        p:[
+          "CCD consumes gauge outputs and emits reason-coded admissibility decisions.",
+          "Any bypass path invalidates the system’s audit posture."
+        ],
+        bubbles:[
+          {h:P("Closed loop","闭环","Loop cerrado"), p:P(
+            "CCD (gates) → execution → gauges → CCD (update via epoch discipline).",
+            "CCD（闸门）→执行→量规→CCD（新纪元纪律更新）。",
+            "CCD (compuertas) → ejecución → medidores → CCD (épocas)."
+          )},
+          {h:P("Bypass handling","绕过处理","Manejo de bypass"), p:P(
+            "Bypass is treated as structural insecurity; halt and audit.",
+            "绕过被视为结构不安全：停机并审计。",
+            "Bypass = inseguridad estructural; detener y auditar."
+          )},
+          {h:P("Output contract","输出契约","Contrato de salida"), p:P(
+            "Deterministic outputs, reason codes, receipts for replay.",
+            "确定性输出、原因码、收据回放。",
+            "Salidas deterministas, códigos y recibos para replay."
+          )}
+        ]
+      }
+    }
+  ];
+
+  // ===== Accordion state (preserve open card on lang/lane changes) =====
+  var stack=document.getElementById("stack");
+  var cardRefs=[]; // {card,chev,title,subtitle,paras[], bubbles[] {h,p}, actions[]}
+  var openIndex=0;
+
+  function closeAll(){
+    for(var i=0;i<cardRefs.length;i++){
+      cardRefs[i].card.classList.remove("open");
+      cardRefs[i].chev.textContent="▸";
     }
   }
 
-  // ===== Single-open accordion =====
-  var stack=document.getElementById("stack");
-
-  function closeAll(){
-    stack.querySelectorAll(".card").forEach(function(c){
-      c.classList.remove("open");
-      var t=c.querySelector(".chevTxt");
-      if(t) t.textContent="▸";
-    });
+  function toggleCard(i){
+    var isOpen=cardRefs[i].card.classList.contains("open");
+    if(isOpen){
+      cardRefs[i].card.classList.remove("open");
+      cardRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAll();
+    openIndex=i;
+    cardRefs[i].card.classList.add("open");
+    cardRefs[i].chev.textContent="▾";
+    // collapse bubbles when switching cards
+    cardRefs[i].card.querySelectorAll(".bubble").forEach(function(b){ b.classList.remove("open"); });
+    wireAll();
   }
 
-  function bubble(title, lines){
+  function buildBubble(){
     var b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
     b.tabIndex=0;
 
     var h=document.createElement("h4");
-    h.textContent=title;
-
     var p=document.createElement("p");
-    p.textContent=Array.isArray(lines) ? lines.join("  ") : String(lines||"");
-
     b.appendChild(h);
     b.appendChild(p);
 
@@ -565,183 +858,11 @@ body::before,body::after{pointer-events:none!important}
     b.addEventListener("keydown", function(e){
       if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
     });
-    return b;
+
+    return {wrap:b, h:h, p:p};
   }
 
-  function sectionCopy(sec){
-    // PLATFORM vs ENGINEERING phrasing only (still informal).
-    return (lane==="engineering") ? sec.eng : sec.plat;
-  }
-
-  var SECTIONS = [
-    {
-      c:"#c9a24a",
-      t:"Position in System Architecture",
-      s:"Where CCD sits, what it governs, and what it refuses to be.",
-      plat:[
-        "CCD sits above finance and above governance. It exists to prevent money from scaling a weak structure into a bigger failure.",
-        "It does not tell you what to buy. It tells you when scaling is safe and when it must pause."
-      ],
-      eng:[
-        "CCD is an upstream admissibility layer for capital action. Finance and governance execute beneath it.",
-        "If structural safety cannot be demonstrated, escalation is blocked and rollback is preferred."
-      ],
-      bubbles:[
-        {h:"What CCD governs", p:[
-          "Whether expansion is safe.",
-          "Whether exposure is bounded.",
-          "Whether the system can survive scale."
-        ]},
-        {h:"What CCD does not do", p:[
-          "Not portfolio advice.",
-          "Not marketing claims.",
-          "Not prediction or narrative forecasting."
-        ]},
-        {h:"Where it routes", p:[
-          "Finance execution surfaces.",
-          "Governance gating surfaces.",
-          "Gauges for verification."
-        ]}
-      ]
-    },
-    {
-      c:"#ff2b2b",
-      t:"Core Principle",
-      s:"One sentence that keeps capital from lying to itself.",
-      plat:[
-        "External capital expansion cannot exceed internal structural coherence.",
-        "Capital is an accelerant: it amplifies both strength and weakness."
-      ],
-      eng:[
-        "External expansion is bounded by internal coherence under the same evidence.",
-        "Violation triggers containment posture: pause, audit, rollback."
-      ],
-      bubbles:[
-        {h:"Plain meaning", p:["If the inside is unstable, growth makes it worse.","If the inside is aligned, disciplined growth strengthens it."]},
-        {h:"What breaks systems", p:["Scale with hidden coupling.","Scale without measurement.","Scale while drifting."]},
-        {h:"Default response", p:["Stop escalation first.","Localize failure.","Return to last stable position."]}
-      ]
-    },
-    {
-      c:"#93c5fd",
-      t:"What This Doctrine Controls",
-      s:"The repeatable failure modes capital tends to amplify.",
-      plat:[
-        "CCD focuses on the predictable ways systems fail when money moves faster than structure.",
-        "It prevents fragile growth patterns from becoming permanent damage."
-      ],
-      eng:[
-        "CCD controls capital admissibility across exposure, concentration, segmentation integrity, redundancy erosion, and acceleration toward fragility.",
-        "It treats correlated exposure as the primary hidden risk at scale."
-      ],
-      bubbles:[
-        {h:"Primary control categories", p:[
-          "Exposure concentration",
-          "Correlation clustering",
-          "Redundancy decay",
-          "Segmentation breakdown",
-          "Acceleration toward fragility"
-        ]},
-        {h:"Why this matters", p:[
-          "These are the common collapse pathways.",
-          "CCD makes them visible early enough to stop."
-        ]},
-        {h:"Outputs", p:[
-          "Proceed (bounded)",
-          "Hold (missing proof)",
-          "Contain (risk rising)",
-          "Rollback (integrity violated)"
-        ]}
-      ]
-    },
-    {
-      c:"#c9a24a",
-      t:"Compass Integration (16-Point Standard)",
-      s:"The geometry used to talk about capital motion consistently.",
-      plat:[
-        "CCD uses a 16-direction compass so decisions don’t turn into arguments.",
-        "It separates stable motion from drift, compression, and unsafe acceleration."
-      ],
-      eng:[
-        "CCD uses a balanced 16-point map (4+4+4+4) so capital motion can be classified without ambiguity.",
-        "This is a coordinate discipline for decision routing, not a claim of new physics."
-      ],
-      bubbles:[
-        {h:"4 Anchors", p:["N Definition","E Execution","S Measurement","W Identity"]},
-        {h:"4 Transitions", p:["NE Def→Exec","SE Exec→Meas","SW Meas→Id","NW Id→Def"]},
-        {h:"4 Compression", p:["NNE escalation discipline","ESE containment","SSW contraction governance","WNW revalidation"]},
-        {h:"4 Acceleration", p:["ENE directed acceleration","SSE measurement pressure","WSW identity drift correction","NNW recursion guard"]}
-      ]
-    },
-    {
-      c:"#ff2b2b",
-      t:"Deployable Policy Framework",
-      s:"What an institution can actually enforce without drama.",
-      plat:[
-        "CCD becomes real when it is enforced as policy: floors, ceilings, and stop rules.",
-        "It makes “good judgment” repeatable instead of personality-driven."
-      ],
-      eng:[
-        "CCD enforces policy via explicit gates: scope declaration, exposure review, segmentation validation, redundancy checks, acceleration monitoring, and automatic stop on violation.",
-        "Exceptions require logging; silent overrides are disallowed."
-      ],
-      bubbles:[
-        {h:"Minimum policy gates", p:[
-          "Declare scope before allocation",
-          "Review concentration before scale",
-          "Validate segmentation (don’t assume it)",
-          "Check redundancy before leverage",
-          "Monitor acceleration during expansion",
-          "Stop automatically when violated"
-        ]},
-        {h:"Recovery posture", p:[
-          "Freeze escalation",
-          "Audit what changed",
-          "Rollback to last stable state",
-          "Restart with a tighter map"
-        ]},
-        {h:"Institution-ready artifacts", p:[
-          "Capital ledger",
-          "Exposure map",
-          "Segmentation audit",
-          "Exception log",
-          "Certification record"
-        ]}
-      ]
-    },
-    {
-      c:"#a3a3a3",
-      t:"Binding to Finance, Governance, and Gauges",
-      s:"How CCD stays above domains without becoming vague.",
-      plat:[
-        "CCD is the rulebook. Finance applies it. Governance enforces it. Gauges verify it.",
-        "This keeps the system honest as it grows."
-      ],
-      eng:[
-        "Authority flows downward: CCD constrains finance and governance simultaneously. Evidence flows upward: gauges report signals back to CCD posture decisions.",
-        "If measurement is missing, escalation is blocked by default."
-      ],
-      bubbles:[
-        {h:"Implementation routes", p:[
-          "/products/finance/",
-          "/products/risk-capital/",
-          "/gauges/",
-          "/laws/"
-        ]},
-        {h:"Authority rule", p:[
-          "CCD constrains finance and governance.",
-          "Finance/governance cannot redefine CCD."
-        ]},
-        {h:"Measurement rule", p:[
-          "Missing measurement → HOLD",
-          "Failing measurement → CONTAIN/ROLLBACK",
-          "Passing measurement → PROCEED (bounded)"
-        ]}
-      ]
-    }
-  ];
-
-  function makeCard(sec, idx){
+  function buildCard(sec, idx){
     var card=document.createElement("div");
     card.className="card";
     card.style.setProperty("--c", sec.c);
@@ -756,11 +877,9 @@ body::before,body::after{pointer-events:none!important}
 
     var ti=document.createElement("div");
     ti.className="ti";
-    ti.textContent=sec.t;
 
     var si=document.createElement("div");
     si.className="si";
-    si.textContent=sec.s;
 
     left.appendChild(ti);
     left.appendChild(si);
@@ -775,18 +894,22 @@ body::before,body::after{pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var lines=sectionCopy(sec);
-    for(var i=0;i<lines.length;i++){
-      var p=document.createElement("p");
-      p.textContent=lines[i];
-      body.appendChild(p);
-    }
+    // reserve 2 paragraphs (we keep 2 for density; can expand later without changing structure)
+    var p1=document.createElement("p");
+    var p2=document.createElement("p");
+    body.appendChild(p1);
+    body.appendChild(p2);
 
     var sb=document.createElement("div");
     sb.className="subBubbles";
-    (sec.bubbles||[]).forEach(function(b){
-      sb.appendChild(bubble(b.h, b.p));
-    });
+
+    var b1=buildBubble();
+    var b2=buildBubble();
+    var b3=buildBubble();
+
+    sb.appendChild(b1.wrap);
+    sb.appendChild(b2.wrap);
+    sb.appendChild(b3.wrap);
     body.appendChild(sb);
 
     var actions=document.createElement("div");
@@ -794,64 +917,182 @@ body::before,body::after{pointer-events:none!important}
 
     var a1=document.createElement("a");
     a1.className="btn red";
-    a1.textContent=(lang==="zh")?"打开：量规":(lang==="es")?"ABRIR: MEDIDORES":"OPEN: GAUGES";
     a1.setAttribute("data-route","/gauges/");
-    actions.appendChild(a1);
 
     var a2=document.createElement("a");
     a2.className="btn";
-    a2.textContent=(lang==="zh")?"打开：金融":(lang==="es")?"ABRIR: FINANZAS":"OPEN: FINANCE";
     a2.setAttribute("data-route","/products/finance/");
-    actions.appendChild(a2);
 
     var a3=document.createElement("a");
     a3.className="btn";
-    a3.textContent=(lang==="zh")?"打开：风险与资本":(lang==="es")?"ABRIR: RIESGO Y CAPITAL":"OPEN: RISK & CAPITAL";
     a3.setAttribute("data-route","/products/risk-capital/");
-    actions.appendChild(a3);
 
+    actions.appendChild(a1);
+    actions.appendChild(a2);
+    actions.appendChild(a3);
     body.appendChild(actions);
 
-    function toggle(){
-      var openNow=!card.classList.contains("open");
-      if(!openNow){
-        card.classList.remove("open");
-        card.querySelector(".chevTxt").textContent="▸";
-        return;
-      }
-      closeAll();
-      card.classList.add("open");
-      card.querySelector(".chevTxt").textContent="▾";
-      body.querySelectorAll(".bubble").forEach(function(x){ x.classList.remove("open"); });
-      wireAll();
-    }
-
-    head.addEventListener("click", toggle, {passive:true});
+    function onToggle(){ toggleCard(idx); }
+    head.addEventListener("click", onToggle, {passive:true});
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }
     });
 
     card.appendChild(head);
     card.appendChild(body);
+    stack.appendChild(card);
 
-    if(idx===0){
-      card.classList.add("open");
-      card.querySelector(".chevTxt").textContent="▾";
-    }
-
-    return card;
+    cardRefs.push({
+      card:card,
+      chev:card.querySelector(".chevTxt"),
+      ti:ti, si:si,
+      p1:p1, p2:p2,
+      bubs:[b1,b2,b3],
+      acts:[a1,a2,a3]
+    });
   }
 
-  function render(){
-    applyHeader();
+  function renderSkeleton(){
     stack.innerHTML="";
+    cardRefs=[];
     for(var i=0;i<SECTIONS.length;i++){
-      stack.appendChild(makeCard(SECTIONS[i], i));
+      buildCard(SECTIONS[i], i);
     }
+    openIndex=0;
+    toggleCard(0);
+  }
+
+  function applyHeader(){
+    var H=(HDR[lang]||HDR.en);
+    var pack=(lane==="engineering") ? H.engineering : H.platform;
+
+    document.getElementById("hdrSub").textContent = pack.sub;
+    document.getElementById("hdrNote").textContent = pack.note;
+
+    document.getElementById("bLangV").textContent = (lang==="zh")?"中文":(lang==="es")?"ES":"EN";
+    document.getElementById("bLaneV").textContent = (lang==="zh") ? (lane==="engineering"?"工程":"平台") : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA") : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+    document.getElementById("bLayerV").textContent = (lang==="zh")?"通俗":(lang==="es")?"INFORMAL":"INFORMAL";
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+    if(lang==="zh"){
+      document.getElementById("k0").textContent="资本一致性教义";
+      document.getElementById("h0").textContent="资本一致性教义（CCD）";
+      document.getElementById("band0").textContent="教义章节（一次只开一个）";
+      document.getElementById("bLang").textContent="语言";
+      document.getElementById("bLane").textContent="透镜";
+      document.getElementById("bLayer").textContent="层";
+      document.getElementById("btnProducts").textContent="产品";
+      document.getElementById("btnFinance").textContent="金融";
+      document.getElementById("btnRisk").textContent="风险与资本";
+      document.getElementById("dockIndex").textContent="指南针";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockGauges").textContent="量规";
+      document.getElementById("lanePlatform").textContent="平台";
+      document.getElementById("laneEngineering").textContent="工程";
+    }else if(lang==="es"){
+      document.getElementById("k0").textContent="DOCTRINA DE COHERENCIA DE CAPITAL";
+      document.getElementById("h0").textContent="Doctrina de Coherencia de Capital (CCD)";
+      document.getElementById("band0").textContent="SECCIONES (una a la vez)";
+      document.getElementById("bLang").textContent="IDIOMA";
+      document.getElementById("bLane").textContent="LENTE";
+      document.getElementById("bLayer").textContent="CAPA";
+      document.getElementById("btnProducts").textContent="PRODUCTOS";
+      document.getElementById("btnFinance").textContent="FINANZAS";
+      document.getElementById("btnRisk").textContent="RIESGO Y CAPITAL";
+      document.getElementById("dockIndex").textContent="BRÚJULA";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockGauges").textContent="MEDIDORES";
+      document.getElementById("lanePlatform").textContent="PLATAFORMA";
+      document.getElementById("laneEngineering").textContent="INGENIERÍA";
+    }else{
+      document.getElementById("k0").textContent="CAPITAL COHERENCE DOCTRINE";
+      document.getElementById("h0").textContent="Capital Coherence Doctrine (CCD)";
+      document.getElementById("band0").textContent="DOCTRINE SECTIONS (SINGLE-OPEN)";
+      document.getElementById("bLang").textContent="LANG";
+      document.getElementById("bLane").textContent="LENS";
+      document.getElementById("bLayer").textContent="LAYER";
+      document.getElementById("btnProducts").textContent="PRODUCTS";
+      document.getElementById("btnFinance").textContent="FINANCE";
+      document.getElementById("btnRisk").textContent="RISK & CAPITAL";
+      document.getElementById("dockIndex").textContent="COMPASS";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockGauges").textContent="GAUGES";
+      document.getElementById("lanePlatform").textContent="PLATFORM";
+      document.getElementById("laneEngineering").textContent="ENGINEERING";
+    }
+  }
+
+  function updateCards(){
+    var keep=openIndex;
+
+    for(var i=0;i<SECTIONS.length;i++){
+      var sec=SECTIONS[i];
+      var ref=cardRefs[i];
+
+      ref.ti.textContent = pick(sec.t);
+      ref.si.textContent = pick(sec.s);
+
+      var pack = (lane==="engineering") ? sec.eng : sec.plat;
+
+      ref.p1.textContent = pack.p[0] || "";
+      ref.p2.textContent = pack.p[1] || "";
+
+      // bubbles (always 3 on this page by design; if fewer, blank them)
+      var bArr = pack.bubbles || [];
+      for(var k=0;k<3;k++){
+        var b=bArr[k] || {h:P("","", ""), p:P("","", "")};
+        ref.bubs[k].h.textContent = pick(b.h) || "";
+        ref.bubs[k].p.textContent = pick(b.p) || "";
+        // keep open state of each bubble (do not force-close on lang/lane)
+      }
+
+      // actions i18n
+      ref.acts[0].textContent = (lang==="zh")?"打开：量规":(lang==="es")?"ABRIR: MEDIDORES":"OPEN: GAUGES";
+      ref.acts[1].textContent = (lang==="zh")?"打开：金融":(lang==="es")?"ABRIR: FINANZAS":"OPEN: FINANCE";
+      ref.acts[2].textContent = (lang==="zh")?"打开：风险与资本":(lang==="es")?"ABRIR: RIESGO Y CAPITAL":"OPEN: RISK & CAPITAL";
+    }
+
+    closeAll();
+    toggleCard(keep);
     wireAll();
   }
 
-  render();
+  // ===== No reload toggles (LANG + LANE) =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateCards();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateCards();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== INIT =====
+  renderSkeleton();
+  applyHeader();
+  updateCards();
+  wireAll();
+
 })();
 </script>
 

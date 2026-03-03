@@ -1,18 +1,16 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · 16-POINT RING (N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW)
+     COMPASS · 16-POINT RING + CENTER INDEX (CORE)
      UPDATE: ADD BACKGROUND CONTEXT (NO OVERLAYS / NO MODALS)
      GOAL:
-       - Keep full gloss material stack
-       - Add richer “festival night / lantern / fireworks” context BEHIND the ring
-       - Add small on-page context pill (non-modal) + top controls
-       - Preserve trilingual labels (EN/中文/ES)
+       - 16-point glossy ring (perfect symmetry)
+       - Center glossy diamond (INDEX · CORE) that routes to the index page
+       - Festival night / lantern / fireworks context BEHIND geometry
+       - Non-modal context pill
+       - Trilingual labels (EN/中文/ES)
        - Canon state carry (gd_lang/gd_style/gd_time/gd_depth) via URL + LS only
        - No new gd_* keys
-       - No inline onclick (use addEventListener)
-     NOTE:
-       - 16-point ring uses JS polar placement for symmetry + mobile fit.
-       - Edit ROUTES in the script if you want different destinations.
+       - No inline onclick (addEventListener only)
 -->
 
 <html lang="en">
@@ -33,6 +31,7 @@ body::before,body::after{pointer-events:none!important}
 :root{
   /* ===== GEOMETRY (16-point) ===== */
   --D:94px;        /* outer diamond size (smaller for 16) */
+  --C:138px;       /* center diamond size */
   --R:250px;       /* ring radius */
   --padTop:120px;
 
@@ -278,6 +277,22 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
+/* CENTER INDEX diamond */
+.center{
+  width:var(--C);
+  height:var(--C);
+  border-radius:26px;
+  z-index:10;
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.90),
+    0 0 48px rgba(201,162,74,.14),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -54px 100px rgba(0,0,0,.88);
+}
+.center .word{font-size:15px}
+.center .code{opacity:.82}
+
 /* Context pill (non-modal) */
 .pill{
   width:min(760px,94vw);
@@ -299,13 +314,14 @@ body::before,body::after{pointer-events:none!important}
 
 /* Mobile tweak */
 @media (max-width:600px){
-  :root{ --D:86px; --R:220px; --padTop:124px; }
+  :root{ --D:86px; --C:134px; --R:220px; --padTop:124px; }
   .word{font-size:12.25px}
+  .center .word{font-size:14.5px}
   .stage{height:min(740px,82vh)}
   .halo{width:min(620px,92vw);height:min(620px,92vw)}
 }
 @media (max-width:420px){
-  :root{ --D:82px; --R:206px; }
+  :root{ --D:82px; --C:128px; --R:206px; }
 }
 </style>
 </head>
@@ -327,14 +343,14 @@ body::before,body::after{pointer-events:none!important}
   </div>
 </div>
 
-<div class="stage" id="stage" aria-label="Compass ring (16)">
+<div class="stage" id="stage" aria-label="Compass ring (16) with center index">
   <div class="backdrop" aria-hidden="true"></div>
   <div class="halo" aria-hidden="true"></div>
-  <!-- diamonds injected by JS for perfect symmetry -->
+  <!-- center + ring injected by JS for perfect symmetry -->
 </div>
 
 <div class="pill" id="pill">
-  <b>Compass:</b> Pick a direction and move. The 16-point ring adds fine control without changing the rules: state carries everywhere.
+  <b>Compass:</b> Use the ring for directions. Use the center for the Index (the manual).
 </div>
 
 <script>
@@ -372,6 +388,20 @@ body::before,body::after{pointer-events:none!important}
            "&depth="+encodeURIComponent(depth);
   }
 
+  function go(path){ window.location.href = path + q(); }
+
+  // Wire [data-route] anchors with full state
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
+    }
+  }
+  wireAll();
+
   // Language buttons (reload same path)
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
   function setLang(next){
@@ -393,22 +423,23 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // Wire [data-route] anchors with full state
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
+  // Trilingual context pill
+  var pill=document.getElementById("pill");
+  function paintPill(){
+    if(lang==="zh"){
+      pill.innerHTML="<b>指南针：</b>外环用于方向；中心用于索引（说明书）。";
+    }else if(lang==="es"){
+      pill.innerHTML="<b>Brújula:</b> el anillo es dirección; el centro es el Índice (manual).";
+    }else{
+      pill.innerHTML="<b>Compass:</b> Use the ring for directions. Use the center for the Index (the manual).";
     }
   }
-  wireAll();
+  paintPill();
 
-  function go(path){ window.location.href = path + q(); }
+  // ===== EDIT THIS: center routes to your Index (manual) page =====
+  var INDEX_ROUTE = "/explore/frontier/manual/"; // change to your actual “index manual” page
 
   // ===== 16-POINT ROUTES (edit freely) =====
-  // NOTE: These defaults try to avoid 404s by using paths you already use elsewhere.
   var ROUTES = [
     {code:"N",   en:"EDUCATION", zh:"教育",   es:"EDUCACIÓN", href:"/products/education/"},
     {code:"NNE", en:"PRELUDE",   zh:"前奏",   es:"PRELUDIO",  href:"/prelude/"},
@@ -425,13 +456,12 @@ body::before,body::after{pointer-events:none!important}
     {code:"W",   en:"DOOR",      zh:"门",     es:"PUERTA",    href:"/door/"},
     {code:"WNW", en:"INFRA",     zh:"基建",   es:"INFRA",     href:"/explore/infrastructure/"},
     {code:"NW",  en:"GAUGES",    zh:"量规",   es:"MEDIDORES", href:"/gauges/"},
-    {code:"NNW", en:"INDEX",     zh:"索引",   es:"ÍNDICE",    href:"/index.html"} // safe self-link
+    {code:"NNW", en:"INDEX",     zh:"索引",   es:"ÍNDICE",    href:INDEX_ROUTE}
   ];
 
-  // Build one diamond
-  function mkDiamond(item){
+  function mkDiamond(item, isCenter){
     var d=document.createElement("div");
-    d.className="d surface" + (item.gold ? " goldTrim" : "");
+    d.className="d surface" + (isCenter ? " center" : "") + (item.gold ? " goldTrim" : "");
     d.setAttribute("role","button");
     d.tabIndex=0;
 
@@ -459,7 +489,7 @@ body::before,body::after{pointer-events:none!important}
     return d;
   }
 
-  // Layout ring (perfect symmetry)
+  // Layout ring (perfect symmetry) + center
   var stage=document.getElementById("stage");
 
   function layout(){
@@ -471,34 +501,34 @@ body::before,body::after{pointer-events:none!important}
 
     var R=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 250;
 
+    // Center INDEX
+    var centerItem={
+      code:"CORE",
+      en:"INDEX",
+      zh:"索引",
+      es:"ÍNDICE",
+      href:INDEX_ROUTE
+    };
+    var center=mkDiamond(centerItem, true);
+    center.style.left = cx + "px";
+    center.style.top  = cy + "px";
+    stage.appendChild(center);
+
+    // Ring
     var n=ROUTES.length;
     for(var i=0;i<n;i++){
       var item=ROUTES[i];
-      var angle = (i / n) * (Math.PI*2) - (Math.PI/2); // start at true North
-      var x = cx + R*Math.cos(angle);
-      var y = cy + R*Math.sin(angle);
+      var angle=(i/n)*(Math.PI*2) - (Math.PI/2);
+      var x=cx + R*Math.cos(angle);
+      var y=cy + R*Math.sin(angle);
 
-      var d=mkDiamond(item);
-      d.style.left = x + "px";
-      d.style.top  = y + "px";
+      var d=mkDiamond(item, false);
+      d.style.left=x+"px";
+      d.style.top=y+"px";
       stage.appendChild(d);
     }
   }
 
-  // Trilingual context pill
-  var pill=document.getElementById("pill");
-  function paintPill(){
-    if(lang==="zh"){
-      pill.innerHTML="<b>指南针：</b>选一个方向就走。16点环提供更细的控制，但规则不变：全站携带状态。";
-    }else if(lang==="es"){
-      pill.innerHTML="<b>Brújula:</b> elige una dirección y avanza. El anillo de 16 puntos da control fino sin cambiar las reglas: el estado se conserva.";
-    }else{
-      pill.innerHTML="<b>Compass:</b> Pick a direction and move. The 16-point ring adds fine control without changing the rules: state carries everywhere.";
-    }
-  }
-  paintPill();
-
-  // Init + resize
   function safeLayout(){
     var r=stage.getBoundingClientRect();
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
@@ -506,6 +536,7 @@ body::before,body::after{pointer-events:none!important}
   }
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+
 })();
 </script>
 

@@ -49,6 +49,12 @@
   /* Gloss highlight */
   --gd-gloss-a:rgba(255,255,255,.22);
   --gd-gloss-b:rgba(255,255,255,0);
+
+  /* ===== NEW: "3D EDGE" INLAY CURVE (non-orthogonal feel) =====
+     Uses conic + radial masks so it reads as curvature, not flat grid.
+  */
+  --gd-curve-a:rgba(212,175,55,.11);
+  --gd-curve-b:rgba(212,175,55,.06);
 }
 
 /* =========================
@@ -257,17 +263,25 @@ button::before,
 
   /* ring glows around edges; no bottom bias */
   background:
-    radial-gradient(120% 120% at 50% 50%, rgba(212,175,55,0) 58%, var(--gd-perim-b) 82%, rgba(212,175,55,0) 100%);
+    radial-gradient(120% 120% at 50% 50%, rgba(212,175,55,0) 58%, var(--gd-perim-b) 82%, rgba(212,175,55,0) 100%),
+    /* NEW: curved "3D edge" sweep, reads like bevel curvature */
+    conic-gradient(from 210deg at 50% 50%,
+      rgba(212,175,55,0) 0 16%,
+      var(--gd-curve-a) 18% 22%,
+      rgba(212,175,55,0) 26% 46%,
+      var(--gd-curve-b) 50% 54%,
+      rgba(212,175,55,0) 58% 100%
+    );
 
-  /* subtle gold inlay lines that respect the 3D surface (not straight “flat grid”) */
+  /* keep this as edge-only */
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
 
-  opacity:.55;
+  opacity:.58;
 }
 
 /* Micro “silk” trim (edge-only, follows surface) */

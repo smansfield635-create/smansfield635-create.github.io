@@ -1,0 +1,863 @@
+<!doctype html>
+<!-- TNT — /products/agriculture/index.html
+     AGRICULTURE · INDEX (4 SURFACES) — INFORMAL SITE LAYER (PINNED)
+     PURPOSE:
+       - Fix Compass dead link for AGRICULTURE
+       - Provide a clean hub that routes into 4 agriculture surfaces
+       - No loops, no duplicates, no marketing pitch—deployment surfaces only
+     STANDARD (THIS FILE):
+       - Trilingual UI: EN / 中文 / ES
+       - Visible lens ONLY: lane=platform|engineering (URL-only; NEVER stored) (NO reload)
+       - Pinned informal layer:
+           gd_style = informal
+           gd_depth = explore
+       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
+       - NO new gd_* keys
+       - Switching LANG or LANE does NOT reload and does NOT close the open row
+       - Single-open accordion (tap same closes)
+       - No modals/overlays; no inline onclick; addEventListener only
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+     ROUTES:
+       - Edit ROUTES only if paths change.
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AGRICULTURE</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:132px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.95);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Top (fixed) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Page ===== */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* Background context behind content */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* ===== Header ===== */
+.header{
+  position:relative;
+  z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
+  font-size:13.25px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+.stateRow{
+  margin-top:12px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+
+/* Band */
+.band{
+  position:relative;z-index:2;
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
+
+/* Accordion */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.hDia{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.hTitleBlock{min-width:0}
+.hTitle{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hSub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+.body{
+  display:none;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
+
+.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:14.75px}
+.pdesc + .pdesc{margin-top:12px}
+.actions{
+  margin-top:14px;
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+}
+.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:148px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn red" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <section class="header" aria-label="Agriculture header">
+    <p class="k" id="hk">AGRICULTURE</p>
+    <h1 class="t" id="ht">AGRICULTURE · INDEX</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="stateRow" aria-label="State">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </section>
+
+  <div class="band" id="band">FOUR DEPLOYABLE SURFACES (OPEN ONE)</div>
+  <div class="list" id="list"></div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
+  <a class="btn red" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== State (gd_* only; pinned informal layer) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
+  var time = qs.get("time") || LS.getItem("gd_time") || "now";
+  var lane = qs.get("lane") || "platform"; // URL-only
+
+  // pinned layer
+  var style="informal";
+  var depth="explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+
+  // ===== ROUTES =====
+  var ROUTES={
+    closed_loop_farming:"/products/agriculture/closed-loop-farming/",
+    yield_optimizer:"/products/agriculture/yield-optimizer/",
+    water_index:"/products/agriculture/water-index/",
+    soil_health_grid:"/products/agriculture/soil-health-grid/",
+    products:"/products/",
+    compass:"/index.html",
+    explore:"/explore/",
+    door:"/door/",
+    laws:"/laws/",
+    gauges:"/gauges/"
+  };
+
+  // ===== Header copy =====
+  var HEAD={
+    en:{
+      platform:{
+        hs:"Agriculture is closed-loop stability at human scale: water, energy, soil, yield, and verification. This hub routes you into four deployable surfaces.",
+        rule:"Rule: measure first. Close leaks. Standardize the loop. Scale only after stability holds."
+      },
+      engineering:{
+        hs:"Engineering view: agriculture is mass-balance execution under constraints: contamination bounds, windowed yields, and receipt-backed verification.",
+        rule:"Rule: declared scope + measured receipts. No inference beyond evidence."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"农业是人类尺度的闭环稳定：水、能量、土壤、产量与验证。本页把你路由到四个可部署面。",
+        rule:"规则：先测量，再止漏；标准化闭环；稳定成立后才允许扩张。"
+      },
+      engineering:{
+        hs:"工程视图：农业是在约束下执行质量平衡：污染边界、窗口产率、收据支撑的验证。",
+        rule:"规则：声明范围 + 测得收据。不得超证据推断。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"Agricultura es estabilidad de ciclo cerrado a escala humana: agua, energía, suelo, rendimiento y verificación. Este hub enruta a cuatro superficies desplegables.",
+        rule:"Regla: medir primero. Cerrar fugas. Estandarizar el ciclo. Escalar solo cuando la estabilidad se sostiene."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: agricultura es balance de masa bajo restricciones: límites de contaminación, rendimientos por ventana y verificación con recibos.",
+        rule:"Regla: alcance declarado + recibos medidos. Sin inferencia más allá de evidencia."
+      }
+    }
+  };
+
+  // ===== Surfaces (4) =====
+  function T(en,zh,es){ return {en:en, zh:zh, es:es}; }
+
+  var SURFACES=[
+    {
+      id:"closed_loop_farming",
+      c:"#34d399",
+      t:T("Closed Loop Farming","闭环农业","Agricultura Cerrada"),
+      s:T("Stop losses. Reuse inputs. Keep the loop stable.","止损并复用投入，保持闭环稳定。","Detener pérdidas. Reusar insumos. Mantener el ciclo estable."),
+      platform:{
+        intro:T(
+          "This surface defines the closed-loop posture: what must be conserved, what must be measured, and what is allowed to scale.",
+          "该面定义闭环姿态：哪些必须守恒、哪些必须测量、哪些允许扩张。",
+          "Define postura de ciclo cerrado: qué conservar, qué medir y qué puede escalar."
+        ),
+        p1:T("Focus: water + nutrients + energy as routed inventories.","重点：水/养分/能量作为可路由库存。","Enfoque: agua/nutrientes/energía como inventarios ruteados."),
+        p2:T("Output: a stable loop you can repeat without drift.","输出：无漂移可复跑的稳定闭环。","Salida: ciclo estable repetible sin deriva.")
+      },
+      engineering:{
+        intro:T(
+          "Mass-balance execution: define conserved inventories, leakage bands, and receipt schemas per check.",
+          "质量平衡执行：定义守恒库存、泄漏区间与每项检查的收据架构。",
+          "Ejecución de balance: inventarios conservados, bandas de fuga y esquemas de recibo por check."
+        ),
+        p1:T("Inputs: scope manifest + measurement rules + thresholds.","输入：范围清单 + 测量规则 + 阈值。","Entradas: manifiesto de alcance + reglas de medición + umbrales."),
+        p2:T("Outputs: PASS/HOLD/FAIL with reason codes and replayable receipts.","输出：PASS/HOLD/FAIL + 原因码 + 可回放收据。","Salidas: PASS/HOLD/FAIL con códigos y recibos replayables.")
+      }
+    },
+
+    {
+      id:"yield_optimizer",
+      c:"#c9a24a",
+      t:T("Yield Optimizer","产量优化","Optimizador de Rendimiento"),
+      s:T("Better harvest with less waste—measured, not guessed.","更好收成、更少浪费——用测量，不用猜。","Mejor cosecha con menos residuo—medido, no adivinado."),
+      platform:{
+        intro:T(
+          "This surface turns yield improvement into a controlled loop: small change → measured delta → repeat.",
+          "该面把产量提升变成可控循环：小改动→测得差分→重复。",
+          "Convierte mejora de rendimiento en bucle controlado: cambio pequeño → delta medible → repetir."
+        ),
+        p1:T("Focus: reduce waste before chasing scale.","重点：先减浪费，再谈扩张。","Enfoque: reducir desperdicio antes de escalar."),
+        p2:T("Output: a simple plan that stays stable across seasons.","输出：跨季节稳定的简单计划。","Salida: plan simple estable entre temporadas.")
+      },
+      engineering:{
+        intro:T(
+          "Windowed deltas with constraint gates: measured yield changes are evaluated inside fixed windows.",
+          "带约束闸门的窗口差分：产量变化在固定窗口内评估。",
+          "Deltas por ventana con compuertas: cambios evaluados en ventanas fijas."
+        ),
+        p1:T("Inputs: baseline yield, interventions, window length W, thresholds.","输入：基线产量、干预、窗口长度W、阈值。","Entradas: baseline, intervenciones, ventana W, umbrales."),
+        p2:T("Outputs: delta table + stop/hold conditions (reason-coded).","输出：差分表 + 停止/暂停条件（原因码）。","Salidas: tabla de deltas + condiciones stop/hold (con códigos).")
+      }
+    },
+
+    {
+      id:"water_index",
+      c:"#93c5fd",
+      t:T("Water Index","水指数","Índice Hídrico"),
+      s:T("Track water reality, not stories.","追踪水的现实，不追故事。","Medir agua real, no historias."),
+      platform:{
+        intro:T(
+          "Water is the first constraint in most agriculture systems. This surface makes water readable and comparable.",
+          "水通常是农业系统的第一约束。该面让水变得可读、可比。",
+          "El agua suele ser la primera restricción. Esta superficie la hace legible y comparable."
+        ),
+        p1:T("Focus: inflow/outflow and risk posture under drought or excess.","重点：进出水与干旱/过量下的风险姿态。","Enfoque: entrada/salida y postura de riesgo bajo escasez o exceso."),
+        p2:T("Output: a simple index you can use to decide the next step.","输出：可用于决策下一步的简单指数。","Salida: índice simple para decidir el siguiente paso.")
+      },
+      engineering:{
+        intro:T(
+          "Inflow/outflow accounting with stress bands: the index is a deterministic transform of measured receipts.",
+          "进出水核算 + 压力区间：指数是对测得收据的确定性变换。",
+          "Contabilidad de entrada/salida con bandas: índice = transform determinista de recibos medidos."
+        ),
+        p1:T("Inputs: meter receipts, rainfall windows, storage capacity, thresholds.","输入：计量收据、降雨窗口、储量容量、阈值。","Entradas: recibos de medición, ventanas de lluvia, capacidad, umbrales."),
+        p2:T("Outputs: band state + trend direction; no narrative claims.","输出：区间状态+趋势方向；不输出叙事。","Salidas: estado por bandas + tendencia; sin narrativa.")
+      }
+    },
+
+    {
+      id:"soil_health_grid",
+      c:"#a3a3a3",
+      t:T("Soil Health Grid","土壤网格","Grid de Suelo"),
+      s:T("Make soil measurable: state, drift, and recovery posture.","让土壤可测：状态、漂移、恢复姿态。","Hacer suelo medible: estado, deriva y postura de recuperación."),
+      platform:{
+        intro:T(
+          "Soil is not vibes. It is a state that can improve or degrade. This surface makes that trajectory visible.",
+          "土壤不是感觉，它是一种会变好或变坏的状态。该面让轨迹可见。",
+          "El suelo no es ‘vibra’; es un estado que mejora o degrada. Aquí se hace visible."
+        ),
+        p1:T("Focus: soil state categories you can act on.","重点：可执行的土壤状态类别。","Enfoque: categorías de estado accionables."),
+        p2:T("Output: clear posture—maintain, recover, or contain.","输出：清晰姿态——维持、恢复、或隔离。","Salida: postura clara—mantener, recuperar o contener.")
+      },
+      engineering:{
+        intro:T(
+          "Finite states + drift detection: classify soil condition into stable bins; detect drift by windowed receipts.",
+          "有限态 + 漂移检测：把土壤条件分类到稳定区间；用窗口收据检测漂移。",
+          "Estados finitos + detección de deriva: clasificar en bins y detectar deriva por ventanas."
+        ),
+        p1:T("Inputs: measurement receipts, classification rules, thresholds, window W.","输入：测量收据、分类规则、阈值、窗口W。","Entradas: recibos, reglas, umbrales, ventana W."),
+        p2:T("Outputs: state label + reason codes + replay path.","输出：状态标签+原因码+回放路径。","Salidas: etiqueta de estado + códigos + ruta replay.")
+      }
+    }
+  ];
+
+  // ===== DOM build =====
+  var list=document.getElementById("list");
+  var rowRefs=[];
+  var openIndex=0;
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
+
+  function buildRow(surf, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", surf.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var dia=document.createElement("div");
+    dia.className="hDia";
+    dia.style.background=surf.c;
+
+    var tb=document.createElement("div");
+    tb.className="hTitleBlock";
+
+    var hTitle=document.createElement("div");
+    hTitle.className="hTitle";
+
+    var hSub=document.createElement("div");
+    hSub.className="hSub";
+
+    tb.appendChild(hTitle);
+    tb.appendChild(hSub);
+
+    hL.appendChild(dia);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p");
+    p1.className="pdesc";
+    var p2=document.createElement("p");
+    p2.className="pdesc";
+
+    body.appendChild(p1);
+    body.appendChild(p2);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var aOpen=document.createElement("a");
+    aOpen.className="btn red";
+    aOpen.setAttribute("data-route", ROUTES[surf.id] || "/products/agriculture/");
+    actions.appendChild(aOpen);
+
+    var aProducts=document.createElement("a");
+    aProducts.className="btn";
+    aProducts.setAttribute("data-route", ROUTES.products);
+    actions.appendChild(aProducts);
+
+    var aGauges=document.createElement("a");
+    aGauges.className="btn";
+    aGauges.setAttribute("data-route", ROUTES.gauges);
+    actions.appendChild(aGauges);
+
+    body.appendChild(actions);
+
+    function act(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", act, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:hTitle,
+      sub:hSub,
+      p1:p1,
+      p2:p2,
+      openBtn:aOpen,
+      productsBtn:aProducts,
+      gaugesBtn:aGauges,
+      surf:surf
+    });
+  }
+
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<SURFACES.length;i++){
+      buildRow(SURFACES[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  function applyHeader(){
+    var H=(HEAD[lang]||HEAD.en);
+    var pack=(lane==="engineering") ? H.engineering : H.platform;
+
+    document.getElementById("hk").textContent = pick3("AGRICULTURE","农业","AGRICULTURA");
+    document.getElementById("ht").textContent = pick3("AGRICULTURE · INDEX","农业 · 索引","AGRICULTURA · ÍNDICE");
+    document.getElementById("hs").textContent = pack.hs;
+    document.getElementById("rule").textContent = pack.rule;
+
+    document.getElementById("band").textContent = pick3("FOUR DEPLOYABLE SURFACES (OPEN ONE)","四个可部署面（打开一个）","CUATRO SUPERFICIES (abre una)");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
+
+    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+
+    document.getElementById("dockDoor").textContent = pick3("DOOR","门","PUERTA");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<rowRefs.length;i++){
+      var R=rowRefs[i];
+      var S=R.surf;
+
+      R.title.textContent = pick3(S.t.en, S.t.zh, S.t.es);
+      R.sub.textContent   = pick3(S.s.en, S.s.zh, S.s.es);
+
+      var pack = (lane==="engineering") ? S.engineering : S.platform;
+
+      R.p1.textContent = pick3(pack.intro.en, pack.intro.zh, pack.intro.es);
+      R.p2.textContent = pick3(pack.p1.en, pack.p1.zh, pack.p1.es) + " " + pick3(pack.p2.en, pack.p2.zh, pack.p2.es);
+
+      R.openBtn.textContent = openLabel()+": "+pick3("OPEN SURFACE","打开面","ABRIR SUPERFICIE");
+      R.productsBtn.textContent = openLabel()+": "+pick3("PRODUCTS","产品","PRODUCTOS");
+      R.gaugesBtn.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== state-carry wiring =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== No-reload toggles =====
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // init pressed
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // build
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
+
+})();
+</script>
+
+</body>
+</html>

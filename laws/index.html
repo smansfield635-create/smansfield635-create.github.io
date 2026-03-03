@@ -1,325 +1,352 @@
 <!doctype html>
-<!-- TNT — /laws/index.html
-     LAWS · CANONICAL SYSTEMS LAW COMPENDIUM v1.0
-     STATUS: FORMAL + INFORMAL DUAL-LENS
-     DOMAIN: Structured Systems Under Declared Scope
-     VERSION: 1.0
-     TIMESTAMP (UTC): 2026-03-02T00:00:00Z
-     FREEZE: Epoch 1 (Formalization Epoch)
-
-     PUBLICATION INTENT:
-       - Textbook-ready structural law format
-       - Deterministic mathematical expressions
-       - Informal interpretive layer
-       - Trilingual: EN / 中文 / ES
-       - Lane lens: PLATFORM | ENGINEERING (no reload)
-       - Canon state carry: lang/style/time/depth via URL + gd_*
-       - NO new gd_* keys
-       - ui.css owns background
+<!--
+TNT — /laws/index.html
+LAWS · SCIENTIFIC FORMALIZATION + PUBLIC NARRATIVE
+VERSION: 1.0.0
+TIMESTAMP (UTC): 2026-03-02T00:00:00Z
+STATUS: PUBLIC CANONICAL DRAFT
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LAWS · Canonical Systems Law v1.0</title>
+<title>LAWS · Canonical Framework</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:120px;
   --stroke:rgba(255,255,255,.12);
-  --ink:rgba(255,255,255,.95);
-  --mut:rgba(255,255,255,.80);
-  --gold:rgba(201,162,74,.4);
+  --ink:#fff;
+  --mut:rgba(255,255,255,.82);
+  --gold:rgba(201,162,74,.35);
+  --goldGlow:rgba(201,162,74,.25);
+  --shadow:0 28px 120px rgba(0,0,0,.65);
 }
 
+/* Page */
 .page{
-  width:min(1100px,94vw);
+  width:min(1150px,94vw);
   margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 20px);
+  padding:110px 0 120px;
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:28px;
 }
 
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  display:flex;justify-content:space-between;
-  padding:0 16px;
-  z-index:200;
+/* Header */
+.header{
+  border-radius:30px;
+  padding:36px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,43,43,.15), transparent 60%),
+    radial-gradient(circle at 80% 30%, rgba(90,40,120,.12), transparent 70%),
+    linear-gradient(160deg, rgba(10,12,16,.85), rgba(6,8,10,.95));
+  border:1px solid var(--gold);
+  box-shadow:var(--shadow), 0 0 40px var(--goldGlow);
 }
 
-.btn{
-  padding:10px 14px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.3);
-  font-weight:900;
-  letter-spacing:.3px;
+.header h1{
+  margin:0;
+  font-size:42px;
+  font-weight:950;
+  letter-spacing:.8px;
+}
+
+.header p{
+  margin-top:18px;
+  font-size:17px;
+  line-height:1.8;
+  color:var(--mut);
+  max-width:1000px;
+}
+
+/* Toggle Bar */
+.toggleRow{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
 }
 
 .seg{
   display:inline-flex;
-  border-radius:16px;
+  border-radius:18px;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.12);
-}
-.seg button{
-  background:transparent;
-  border:0;
-  padding:10px 14px;
-  font-weight:900;
-  color:var(--mut);
-  cursor:pointer;
-}
-.seg button[aria-pressed="true"]{
-  background:rgba(201,162,74,.2);
-  color:#fff;
-}
-
-.header{
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  padding:18px;
+  border:1px solid var(--gold);
   background:rgba(0,0,0,.25);
 }
 
-.k{
-  font-size:12px;
-  letter-spacing:4px;
-  opacity:.75;
-  margin:0 0 6px;
-}
-
-.h{
-  font-size:30px;
+.seg button{
+  padding:10px 18px;
   font-weight:950;
-  margin:0 0 10px;
+  border:none;
+  background:transparent;
+  color:var(--mut);
+  cursor:pointer;
 }
 
-.meta{
-  font-size:12px;
-  opacity:.7;
-  line-height:1.6;
-}
-
-.section{
-  border:1px solid var(--stroke);
-  border-radius:20px;
-  padding:16px;
-  background:rgba(0,0,0,.22);
-}
-
-.law-title{
-  font-weight:950;
-  font-size:18px;
-  margin:0 0 10px;
-}
-
-.mono{
-  font-family:ui-monospace,monospace;
-  font-size:13px;
-  background:rgba(0,0,0,.3);
-  border:1px solid rgba(255,255,255,.1);
-  padding:12px;
-  border-radius:14px;
-  white-space:pre-wrap;
-  line-height:1.5;
+.seg button.active{
   color:#fff;
+  background:
+    radial-gradient(circle at 50% 120%, var(--goldGlow), transparent 60%),
+    linear-gradient(180deg, rgba(255,43,43,.15), rgba(0,0,0,.15));
 }
 
-.p{
-  font-size:14.5px;
-  line-height:1.7;
+/* Bubble */
+.bubble{
+  border-radius:28px;
+  padding:30px 32px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,43,43,.12), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(201,162,74,.10), transparent 60%),
+    linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.98));
+  border:1px solid var(--gold);
+  box-shadow:var(--shadow), 0 0 30px var(--goldGlow);
+  position:relative;
+}
+
+/* Gold 3D trim */
+.bubble::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  pointer-events:none;
+  box-shadow:
+    inset 0 0 0 1px rgba(201,162,74,.25),
+    inset 0 0 30px rgba(201,162,74,.15);
+  opacity:.8;
+}
+
+.bubble h2{
+  margin:0 0 16px;
+  font-size:26px;
+  font-weight:950;
+}
+
+.bubble p{
+  margin:12px 0;
+  line-height:1.8;
+  font-size:16px;
   color:var(--mut);
 }
 
-.dock{
-  position:fixed;
-  bottom:12px;
-  left:50%;
-  transform:translateX(-50%);
-  width:min(1000px,94vw);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+.formal{
+  font-family:ui-monospace, SFMono-Regular, monospace;
+  background:rgba(0,0,0,.35);
+  padding:18px;
+  border-radius:18px;
+  margin-top:16px;
+  white-space:pre-wrap;
+  font-size:14px;
+  line-height:1.7;
+  color:#fff;
 }
-.dock .btn{width:100%}
+
+.timestamp{
+  margin-top:18px;
+  font-size:12px;
+  opacity:.6;
+}
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div>
-    <a class="btn" href="/home/">HOME</a>
-    <a class="btn" href="/index.html">COMPASS</a>
-  </div>
-  <div class="seg">
-    <button id="langEN" aria-pressed="true">EN</button>
-    <button id="langZH" aria-pressed="false">中文</button>
-    <button id="langES" aria-pressed="false">ES</button>
-  </div>
-  <div class="seg">
-    <button id="lanePlatform" aria-pressed="true">PLATFORM</button>
-    <button id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-  </div>
-</div>
-
 <div class="page">
 
   <div class="header">
-    <p class="k">CANONICAL SYSTEMS LAW</p>
-    <h1 class="h">STRUCTURAL COHERENCE LAW COMPENDIUM v1.0</h1>
-    <div class="meta">
-      Domain: Structured Systems Under Declared Scope<br>
-      Version: 1.0<br>
-      Freeze: Formalization Epoch 1<br>
-      Timestamp (UTC): 2026-03-02T00:00:00Z<br>
-      Publication Status: Scientific Formalization Ready
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="law-title">Law I — Coherence Constraint Law</div>
-
-    <div class="mono">
-T(S,σ,E) ≤ C(S,σ,E)
-
-Where:
-C = f(V,A,O)
-
-If T &gt; C:
-D = T − C
-dD/dt ∝ αD
-    </div>
-
-    <p class="p">
-External trust cannot exceed internal structural coherence under identical scope and evidence.
-Divergence accelerates under scale.
+    <h1 id="title">THE LAWS THAT SCALE STRUCTURE</h1>
+    <p id="intro">
+      Most systems fail not because of malice, but because of misalignment.
+      These laws formalize alignment as a measurable constraint between
+      definition, execution, verification, and scale.
     </p>
   </div>
 
-  <div class="section">
-    <div class="law-title">Law II — Non-Contradiction Under Identical Scope</div>
-
-    <div class="mono">
-Given fixed σ and identical E:
-
-Output(S,σ,E) = deterministic
-
-If outputs differ:
-σ₁ ≠ σ₂ OR E₁ ≠ E₂
+  <div class="toggleRow">
+    <div class="seg">
+      <button id="btnFormal" class="active">FORMAL</button>
+      <button id="btnInformal">SUMMARY</button>
     </div>
-
-    <p class="p">
-Within declared scope, identical inputs must produce identical outputs.
-Disagreement implies scope mutation or evidence variance.
-    </p>
+    <div class="seg">
+      <button id="btnEN" class="active">EN</button>
+      <button id="btnZH">中文</button>
+      <button id="btnES">ES</button>
+    </div>
   </div>
 
-  <div class="section">
-    <div class="law-title">Law III — Scope Precedes Authority</div>
-
-    <div class="mono">
-F(S) admissible ⇔ σ declared
-
-Undefined σ ⇒ UNDETERMINED
-    </div>
-
-    <p class="p">
-All claims require declared evaluation boundary.
-Undefined scope invalidates output.
-    </p>
-  </div>
-
-  <div class="section">
-    <div class="law-title">Law IV — Admissibility Law</div>
-
-    <div class="mono">
-Claimₙ₊₁ admissible ⇔ Receiptsₙ₊₁ ⊆ E(σ)
-
-Missing receipts ⇒ NOT MEASURED
-    </div>
-
-    <p class="p">
-Escalation requires evidence continuity.
-Narrative alone does not permit structural upgrade.
-    </p>
-  </div>
-
-  <div class="section">
-    <div class="law-title">Law V — Calibration Authority Law</div>
-
-    <div class="mono">
-Θ (threshold config) modifiable only by authorized calibrator.
-
-Unauthorized modification ⇒ Invalid(S,σ)
-    </div>
-
-    <p class="p">
-Calibration is protected configuration.
-Rule mutation without authority invalidates outputs.
-    </p>
-  </div>
-
-  <div class="section">
-    <div class="law-title">Law VI — Measurable Stability Law</div>
-
-    <div class="mono">
-K(t) = I(t) + S(t) + R(t)
-
-Stability: K(t) ≥ 2
-
-Sustained K(t)&lt;2 over W-window ⇒ Phase Transition
-    </div>
-
-    <p class="p">
-Instability is measurable divergence, not perception.
-Acceleration defines structural transition.
-    </p>
-  </div>
-
-  <div class="section">
-    <div class="law-title">Law VII — Containment Prevents Cascade</div>
-
-    <div class="mono">
-If instability detected:
-
-BlastRadius ≤ Γ
-
-Rollback &gt; Collapse
-    </div>
-
-    <p class="p">
-Segment early. Localize failure. Preserve invariants.
-Containment preserves system survivability.
-    </p>
-  </div>
+  <div id="content"></div>
 
 </div>
 
-<nav class="dock">
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
-  <a class="btn" href="/laws/categories/">CATEGORIES</a>
-</nav>
-
 <script>
 (function(){
-  var qs=new URLSearchParams(location.search);
-  var lang=qs.get("lang")||localStorage.getItem("gd_lang")||"en";
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  localStorage.setItem("gd_lang",lang);
+
+let mode="formal";
+let lang="en";
+
+const data = {
+
+en:{
+formal:`
+Let:
+
+E_ext = external declared state  
+E_int = internal operational state  
+Δ = |E_ext − E_int|
+
+Coherence Constraint:
+
+Trust_ext ≤ Consistency_int
+
+If Δ increases under scale S:
+
+Instability acceleration ∝ S × Δ
+
+Determinism Rule:
+
+If S₁ = S₂ and R₁ = R₂  
+Then f(S₁, R₁) = f(S₂, R₂)
+
+Undefined scope ⇒ UNDETERMINED  
+Scope mutation ⇒ New epoch.
+`,
+informal:`
+Systems collapse when what is said, what is built, and what is measured drift apart.
+
+These laws exist to prevent scale from amplifying incoherence.
+
+They are not moral.
+They are structural.
+
+Define your scope.
+Align your execution.
+Verify your outputs.
+Contain divergence early.
+`
+},
+
+zh:{
+formal:`
+设：
+
+E_ext = 外部声明状态  
+E_int = 内部运行状态  
+Δ = |E_ext − E_int|
+
+一致性约束：
+
+Trust_ext ≤ Consistency_int
+
+若 Δ 在规模 S 下扩大：
+
+不稳定加速度 ∝ S × Δ
+
+确定性规则：
+
+若 S₁ = S₂ 且 R₁ = R₂  
+则 f(S₁, R₁) = f(S₂, R₂)
+
+范围未定义 ⇒ UNDETERMINED  
+范围变化 ⇒ 新纪元
+`,
+informal:`
+当“所说”“所做”“所测”发生漂移时，系统会崩塌。
+
+这些法则不是道德，而是结构。
+
+先定义范围。
+再对齐执行。
+然后验证。
+最后在早期隔离偏差。
+`
+},
+
+es:{
+formal:`
+Sea:
+
+E_ext = estado declarado externo  
+E_int = estado operativo interno  
+Δ = |E_ext − E_int|
+
+Restricción de Coherencia:
+
+Trust_ext ≤ Consistency_int
+
+Si Δ aumenta bajo escala S:
+
+Aceleración de inestabilidad ∝ S × Δ
+
+Regla de determinismo:
+
+Si S₁ = S₂ y R₁ = R₂  
+Entonces f(S₁, R₁) = f(S₂, R₂)
+
+Alcance indefinido ⇒ UNDETERMINED  
+Cambio de alcance ⇒ Nueva época
+`,
+informal:`
+Los sistemas colapsan cuando lo dicho, lo construido y lo medido divergen.
+
+Estas leyes no son morales.
+Son estructurales.
+
+Define el alcance.
+Alinea ejecución.
+Verifica resultados.
+Contén la divergencia temprano.
+`
+}
+
+};
+
+function render(){
+const container=document.getElementById("content");
+container.innerHTML=`
+<div class="bubble">
+<h2>Coherence Constraint Framework</h2>
+${mode==="formal"
+? `<div class="formal">${data[lang].formal}</div>`
+: `<p>${data[lang].informal.replace(/\n/g,"<br><br>")}</p>`
+}
+<div class="timestamp">
+Version 1.0.0 · 2026-03-02T00:00:00Z
+</div>
+</div>
+`;
+}
+
+function setMode(m){
+mode=m;
+document.getElementById("btnFormal").classList.toggle("active",m==="formal");
+document.getElementById("btnInformal").classList.toggle("active",m==="informal");
+render();
+}
+
+function setLang(l){
+lang=l;
+document.getElementById("btnEN").classList.toggle("active",l==="en");
+document.getElementById("btnZH").classList.toggle("active",l==="zh");
+document.getElementById("btnES").classList.toggle("active",l==="es");
+render();
+}
+
+document.getElementById("btnFormal").onclick=()=>setMode("formal");
+document.getElementById("btnInformal").onclick=()=>setMode("informal");
+document.getElementById("btnEN").onclick=()=>setLang("en");
+document.getElementById("btnZH").onclick=()=>setLang("zh");
+document.getElementById("btnES").onclick=()=>setLang("es");
+
+render();
+
 })();
 </script>
 

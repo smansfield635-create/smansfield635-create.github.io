@@ -5,8 +5,9 @@
        - REMOVE HOME + DOOR from compass geometry (they do NOT belong in the ring)
        - MOVE HOME + DOOR into bottom corner diamonds (outside geometry)
        - KEEP 16-point glossy ring (perfect symmetry) + center glossy INDEX (CORE)
-       - REPLACE removed ring nodes with what belongs (domain/product/system hubs)
-       - Finance must route to the correct Finance hub (set below)
+       - NO DUPLICATION: 16 facets = 16 UNIQUE destinations
+         - If not built yet, route to UNIQUE placeholder paths (expected 404 until filled)
+       - Upgrade gold inlay to respect 3D diamond geometry (no flat grid look)
        - Festival night / lantern / fireworks context BEHIND geometry (no overlays/modals)
        - Non-modal context pill
        - Trilingual labels (EN/中文/ES)
@@ -120,7 +121,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   overflow:hidden;
 }
-/* soft outer slab */
 .backdrop::before{
   content:"";
   position:absolute;inset:0;
@@ -137,7 +137,6 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -60px 120px rgba(0,0,0,.55);
   opacity:.95;
 }
-/* lantern glow + fireworks ribbons */
 .backdrop::after{
   content:"";
   position:absolute;inset:-18%;
@@ -163,7 +162,6 @@ body::before,body::after{pointer-events:none!important}
   filter: blur(1px);
   opacity:.75;
 }
-/* inner ring halo to improve contrast */
 .halo{
   position:absolute;left:50%;top:50%;
   width:min(700px,92vw);height:min(700px,92vw);
@@ -189,7 +187,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
   transform:translate(-50%,-50%) rotate(45deg);
   transform-origin:center;
-  transition:transform .18s ease, box-shadow .18s ease;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   overflow:hidden;
 }
 
@@ -209,23 +207,41 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
 
-/* Silk trim (edge-only) */
+/* UPGRADED GOLD INLAY: diamond-aligned weave + bevel sweep (no flat grid look) */
 .surface::before{
   content:"";
-  position:absolute;
-  inset:0;
+  position:absolute; inset:0;
   border-radius:inherit;
   pointer-events:none;
+
+  /* 3D-respecting inlay: conic weave + bevel sweep */
   background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
-  opacity:.38;
+    /* bevel sweep (top-left → bottom-right) */
+    linear-gradient(135deg, rgba(201,162,74,.14), transparent 42%, rgba(0,0,0,0) 70%),
+    /* secondary bevel */
+    linear-gradient(-45deg, rgba(201,162,74,.08), transparent 44%),
+
+    /* diamond weave (not axis grid) */
+    repeating-conic-gradient(
+      from 45deg at 50% 50%,
+      rgba(201,162,74,.11) 0 6deg,
+      transparent 6deg 18deg
+    ),
+
+    /* subtle edge energy */
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%);
+
+  opacity:.44;
+
+  /* trim-zone only */
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
+
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
 }
 
 /* Highlight streak */
@@ -383,7 +399,6 @@ body::before,body::after{pointer-events:none!important}
 <!-- Top controls -->
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <!-- Removed from ring; still available here as normal header nav -->
     <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
     <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
   </div>
@@ -406,7 +421,7 @@ body::before,body::after{pointer-events:none!important}
   <b>Compass:</b> Ring = domain hubs. Center = Index (core manual). Home + Door live outside the compass.
 </div>
 
-<!-- Bottom corners: HOME + DOOR (OUTSIDE compass geometry) -->
+<!-- Bottom corners: DOOR + HOME (OUTSIDE ring) -->
 <div class="corner left" aria-label="Door">
   <div class="dmini" id="btnDoorMini" role="button" tabindex="0" aria-label="Door"><span>DOOR</span></div>
   <div class="cornerLabel" id="lblDoor">DOOR</div>
@@ -528,29 +543,30 @@ body::before,body::after{pointer-events:none!important}
   bindMini("btnHomeMini","/home/");
 
   // ===== CENTER INDEX ROUTE (CORE MANUAL) =====
-  // Set this to your actual “index manual” page path.
-  var INDEX_ROUTE = "/index-core/";  /* CHANGE THIS if needed */
+  var INDEX_ROUTE = "/index-core/"; /* change later if needed */
 
-  // ===== 16 POINTS (HOME + DOOR REMOVED; REPLACED WITH WHAT BELONGS) =====
-  // Finance now routes to /finance/ (domain hub), not a product leaf.
-  // Products remains /products/ (product hub).
+  // ===== UNIQUE PLACEHOLDER ROUTES (expected 404 until you fill them) =====
+  function TODO(slug){ return "/_todo/"+slug+"/"; }
+
+  // ===== 16 UNIQUE HUBS (NO DUPLICATION) =====
+  // If you haven't created a hub yet, it gets a unique TODO path (404 is OK for now).
   var ROUTES = [
-    {code:"N",   en:"EDUCATION",    zh:"教育",     es:"EDUCACIÓN",   href:"/products/education/"},
-    {code:"NNE", en:"PRELUDE",      zh:"前奏",     es:"PRELUDIO",    href:"/prelude/"},
-    {code:"NE",  en:"EXPLORE",      zh:"探索",     es:"EXPLORAR",    href:"/explore/"},
-    {code:"ENE", en:"FRONTIER",     zh:"前沿",     es:"FRONTERA",    href:"/explore/frontier/"},
-    {code:"E",   en:"RESEARCH",     zh:"研究",     es:"INVEST.",     href:"/research/", gold:true},
-    {code:"ESE", en:"GAUGES",       zh:"量规",     es:"MEDIDORES",   href:"/gauges/"},
-    {code:"SE",  en:"PRODUCTS",     zh:"产品",     es:"PRODUCTOS",   href:"/products/"},
-    {code:"SSE", en:"FINANCE",      zh:"金融",     es:"FINANZAS",    href:"/finance/"},
-    {code:"S",   en:"ENERGY",       zh:"能源",     es:"ENERGÍA",     href:"/explore/frontier/energy/"},
-    {code:"SSW", en:"INFRA",        zh:"基建",     es:"INFRA",       href:"/explore/infrastructure/"},
-    {code:"SW",  en:"AGRICULTURE",  zh:"农业",     es:"AGRO",        href:"/products/agriculture/"},
-    {code:"WSW", en:"GOVERNING",    zh:"治理",     es:"GOBIERNO",    href:"/laws/"},
-    {code:"W",   en:"LAWS",         zh:"法则",     es:"LEYES",       href:"/laws/"},
-    {code:"WNW", en:"VISION",       zh:"愿景",     es:"VISIÓN",      href:"/explore/frontier/vision/"},
-    {code:"NW",  en:"LATTICE",      zh:"晶格",     es:"LATTICE",     href:"/explore/frontier/lattice/"},
-    {code:"NNW", en:"SHIMMER",      zh:"闪烁",     es:"SHIMMER",     href:"/explore/frontier/shimmer/"}
+    {code:"N",   en:"EDUCATION",    zh:"教育",     es:"EDUCACIÓN", href:"/products/education/"},
+    {code:"NNE", en:"PRELUDE",      zh:"前奏",     es:"PRELUDIO",  href:"/prelude/"},
+    {code:"NE",  en:"EXPLORE",      zh:"探索",     es:"EXPLORAR",  href:"/explore/"},
+    {code:"ENE", en:"FRONTIER",     zh:"前沿",     es:"FRONTERA",  href:"/explore/frontier/"},
+    {code:"E",   en:"RESEARCH",     zh:"研究",     es:"INVEST.",   href:"/research/", gold:true},
+    {code:"ESE", en:"OBSERVATORY",  zh:"观测",     es:"OBSERV.",   href:"/gauges/"},                 /* rename later if you create /observatory/ */
+    {code:"SE",  en:"PRODUCTS",     zh:"产品",     es:"PRODUCTOS", href:"/products/"},
+    {code:"SSE", en:"FINANCE",      zh:"金融",     es:"FINANZAS",  href:TODO("finance-hub")},        /* UNIQUE placeholder until /finance/ exists */
+    {code:"S",   en:"ENERGY",       zh:"能源",     es:"ENERGÍA",   href:"/explore/frontier/energy/"},
+    {code:"SSW", en:"INFRA",        zh:"基建",     es:"INFRA",     href:"/explore/infrastructure/"},
+    {code:"SW",  en:"AGRICULTURE",  zh:"农业",     es:"AGRO",      href:"/products/agriculture/"},
+    {code:"WSW", en:"GOVERNANCE",   zh:"治理",     es:"GOBIERNO",  href:TODO("governance-hub")},     /* UNIQUE placeholder until /governance/ exists */
+    {code:"W",   en:"DOCTRINE",     zh:"教义",     es:"DOCTRINA",  href:"/laws/"},                   /* keep as global doctrine for now */
+    {code:"WNW", en:"VISION",       zh:"愿景",     es:"VISIÓN",    href:"/explore/frontier/vision/"},
+    {code:"NW",  en:"LATTICE",      zh:"晶格",     es:"LATTICE",   href:"/explore/frontier/lattice/"},
+    {code:"NNW", en:"SHIMMER",      zh:"闪烁",     es:"SHIMMER",   href:"/explore/frontier/shimmer/"}
   ];
 
   function mkDiamond(item, isCenter){
@@ -596,13 +612,7 @@ body::before,body::after{pointer-events:none!important}
     var R=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 250;
 
     // Center INDEX
-    var centerItem={
-      code:"CORE",
-      en:"INDEX",
-      zh:"索引",
-      es:"ÍNDICE",
-      href:INDEX_ROUTE
-    };
+    var centerItem={code:"CORE", en:"INDEX", zh:"索引", es:"ÍNDICE", href:INDEX_ROUTE};
     var center=mkDiamond(centerItem, true);
     center.style.left = cx + "px";
     center.style.top  = cy + "px";

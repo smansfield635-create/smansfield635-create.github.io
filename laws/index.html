@@ -1,434 +1,351 @@
 <!doctype html>
-<!--
-TNT — /laws/index.html
-LAWS · SCIENTIFIC PUBLICATION EDITION · HYBRID INSTITUTIONAL ARCHIVE
-
-MODE:
-- Scientific journal presentation
-- Hybrid institutional archival layer
-- Formal + Informal toggle
-- EN / 中文 / ES
-- Dense, high-contrast, bubble architecture
-- Canon state carry (gd_lang / gd_style / gd_time / gd_depth)
-- lane preserved (URL-only)
-- ui.css owns body background
+<!-- TNT — /laws/index.html
+     LAWS · FOUNDATIONAL STRUCTURAL FRAMEWORK (7 CANONICAL LAWS)
+     MODE: HYBRID SCIENTIFIC DECLARATION + FORMALIZATION + INFORMAL LENS
+     LANG: EN / 中文 / ES
+     TOGGLE: FORMAL (scientific) / INFORMAL (narrative)
+     STYLE: BLACK DEPTH · RED FIELD · GOLD 3D TRIM · HIGH CONTRAST
+     STATE: lang/style/time/depth via URL + gd_lang/gd_style/gd_time/gd_depth ONLY
+     NO NEW gd_* KEYS
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>LAWS · Scientific Publication Edition</title>
+<title>FOUNDATIONAL LAWS</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
-
-/* =============================
-   STRUCTURAL TOKENS
-============================= */
+a{text-decoration:none;color:inherit}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:120px;
-
-  --ink:#ffffff;
-  --mut:rgba(255,255,255,.82);
-  --soft:rgba(255,255,255,.65);
-
-  --stroke:rgba(255,255,255,.14);
-  --strokeSoft:rgba(255,255,255,.08);
-
-  --gold:rgba(201,162,74,.65);
-  --goldSoft:rgba(201,162,74,.25);
-
-  --blackDeep:rgba(0,0,0,.88);
-  --blackMid:rgba(8,10,14,.92);
-
-  --shadowA:0 40px 140px rgba(0,0,0,.75);
-  --shadowB:0 18px 60px rgba(0,0,0,.65);
+  --gold:rgba(212,175,55,.55);
+  --goldSoft:rgba(212,175,55,.22);
+  --redSoft:rgba(255,70,70,.18);
+  --blackA:rgba(10,12,16,.92);
+  --blackB:rgba(5,7,10,.96);
 }
 
-/* =============================
-   PAGE WRAP
-============================= */
+/* ===== HEADER ===== */
 
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:100px 0 calc(var(--dockH) + 24px);
+.header{
+  width:min(1200px,94vw);
+  margin:110px auto 20px;
+  padding:28px 32px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 20% 20%, var(--redSoft), transparent 60%),
+    linear-gradient(160deg, var(--blackA), var(--blackB));
+  box-shadow:
+    0 50px 140px rgba(0,0,0,.75),
+    inset 0 0 0 1px var(--goldSoft);
+  position:relative;
+}
+
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:28px;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
+  opacity:.35;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 84% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 84% 100%),
+    linear-gradient(#000,#000);
+}
+
+.k{letter-spacing:6px;font-size:12px;opacity:.75;margin:0 0 14px}
+.h1{font-size:44px;font-weight:980;margin:0 0 14px}
+.subtitle{font-size:18px;line-height:1.7;opacity:.9;max-width:1000px}
+
+.timestamp{
+  margin-top:18px;
+  font-size:13px;
+  opacity:.75;
+  letter-spacing:.4px;
+}
+
+/* ===== TOGGLE ===== */
+
+.toggleRow{
+  width:min(1200px,94vw);
+  margin:10px auto 20px;
+  display:flex;
+  gap:12px;
+  justify-content:flex-end;
+}
+
+.toggle{
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(145deg,var(--blackA),var(--blackB));
+  font-weight:950;
+  letter-spacing:.4px;
+  cursor:pointer;
+  box-shadow:0 16px 50px rgba(0,0,0,.7);
+}
+.toggle.active{
+  border-color:var(--gold);
+  box-shadow:
+    0 0 0 2px rgba(212,175,55,.18),
+    0 0 28px var(--goldSoft);
+}
+
+/* ===== BUBBLE STACK ===== */
+
+.stack{
+  width:min(1200px,94vw);
+  margin:0 auto calc(var(--dockH) + 40px);
   display:flex;
   flex-direction:column;
-  gap:26px;
-  position:relative;
-  z-index:10;
+  gap:22px;
 }
 
-/* =============================
-   TOP CONTROLS
-============================= */
-
-.top{
-  position:fixed;
-  top:16px;
-  left:0;
-  right:0;
-  padding:0 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  z-index:240;
-  pointer-events:none;
-}
-
-.top .left,
-.top .right{
-  display:flex;
-  gap:10px;
-  pointer-events:auto;
-  flex-wrap:wrap;
-}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:10px 14px;
-  border-radius:16px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
-    linear-gradient(145deg, rgba(15,18,24,.92), rgba(5,7,10,.98));
-  color:var(--ink);
-  font-weight:900;
-  letter-spacing:.3px;
-  box-shadow:var(--shadowB);
-  -webkit-tap-highlight-color:transparent;
-}
-
-.seg{
-  display:inline-flex;
-  border-radius:16px;
-  overflow:hidden;
-  border:1px solid var(--stroke);
-  background:var(--blackDeep);
-}
-
-.seg button{
-  appearance:none;
-  border:0;
-  background:transparent;
-  color:var(--mut);
-  padding:10px 14px;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.seg button[aria-pressed="true"]{
-  color:#fff;
-  background:
-    radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.20));
-}
-
-/* =============================
-   MONUMENT HEADER (BLACK DOMINANT)
-============================= */
-
-.monument{
+.bubble{
   border-radius:28px;
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 20% 20%, rgba(255,43,43,.18), transparent 60%),
-    linear-gradient(180deg, var(--blackDeep), var(--blackMid));
-  box-shadow:var(--shadowA);
-  padding:38px 40px;
+    radial-gradient(circle at 18% 18%, var(--redSoft), transparent 60%),
+    linear-gradient(145deg,var(--blackA),var(--blackB));
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.75),
+    inset 0 0 0 1px var(--goldSoft);
+  padding:26px 28px;
   position:relative;
   overflow:hidden;
 }
 
-.monument::before{
+.bubble::after{
   content:"";
   position:absolute;
-  inset:0;
-  border-radius:28px;
-  box-shadow: inset 0 0 0 1px var(--goldSoft);
+  left:14%;right:14%;top:10%;
+  height:26%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-8deg);
   pointer-events:none;
+  opacity:.85;
 }
 
-.monument h1{
-  margin:0;
-  font-size:clamp(36px,4vw,48px);
-  font-weight:950;
-  letter-spacing:1px;
-}
-
-.monument p{
-  margin:18px 0 0;
-  font-size:18px;
-  line-height:1.65;
-  color:var(--mut);
-  max-width:950px;
-}
-
-/* =============================
-   PUBLICATION META BUBBLE
-============================= */
-
-.metaBubble{
-  border-radius:22px;
-  border:1px solid var(--strokeSoft);
-  background:var(--blackDeep);
-  box-shadow:var(--shadowB);
-  padding:20px 22px;
-}
-
-.metaRow{
-  font-size:13.5px;
-  color:var(--mut);
-  line-height:1.6;
-}
-
-/* =============================
-   LAW BUBBLES
-============================= */
-
-.lawBubble{
-  border-radius:26px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 25% 18%, rgba(255,43,43,.14), transparent 60%),
-    linear-gradient(145deg, var(--blackDeep), rgba(6,8,12,.96));
-  box-shadow:var(--shadowB);
-  padding:28px 30px;
-  position:relative;
-  overflow:hidden;
-}
-
-.lawBubble::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:26px;
-  box-shadow: inset 0 0 0 1px var(--goldSoft);
-  pointer-events:none;
-}
-
-.lawTitle{
+.bTitle{
   font-size:24px;
-  font-weight:950;
-  margin:0 0 16px;
+  font-weight:980;
+  margin-bottom:14px;
 }
 
-.lawText{
-  font-size:15px;
+.bNarrative{
+  font-size:16px;
+  line-height:1.8;
+  opacity:.92;
+}
+
+.bFormal{
+  margin-top:18px;
+  padding:18px;
+  border-radius:18px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.12);
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:14px;
   line-height:1.7;
-  color:var(--mut);
   white-space:pre-wrap;
 }
 
-/* =============================
-   FORMAL BLOCK
-============================= */
-
-.formalBlock{
-  margin-top:20px;
-  font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size:14px;
-  background:rgba(0,0,0,.55);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:16px 18px;
-  line-height:1.6;
-  color:#fff;
-  box-shadow: inset 0 0 0 1px var(--goldSoft);
-}
-
-/* =============================
-   DOCK
-============================= */
-
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(1000px,94vw);
-  padding:12px;
-  border-radius:22px;
-  border:1px solid var(--stroke);
-  background:var(--blackDeep);
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowB);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  z-index:220;
-}
-
-.dock .btn{
-  width:100%;
-  border-radius:999px;
-}
-
-/* =============================
-   RESPONSIVE
-============================= */
-
-@media(max-width:720px){
-  .monument{padding:28px}
-  .lawBubble{padding:22px}
-  .dock{grid-template-columns:repeat(2,1fr)}
-}
-
+.langHide{display:none}
+.formalHide{display:none}
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div class="left">
-    <a class="btn" href="/home/">HOME</a>
-    <a class="btn" href="/explore/">EXPLORE</a>
+<div class="header">
+  <div class="k">FOUNDATIONAL STRUCTURAL FRAMEWORK</div>
+  <div class="h1">Seven Canonical Laws of Coherence</div>
+  <div class="subtitle">
+    A unified structural law set governing alignment, admissibility,
+    scope constraint, measurement stability, and cascade containment
+    across individual, institutional, and civilizational systems.
   </div>
-  <div class="right">
-    <div class="seg" role="group">
-      <button id="langEN" aria-pressed="true">EN</button>
-      <button id="langZH" aria-pressed="false">中文</button>
-      <button id="langES" aria-pressed="false">ES</button>
-    </div>
-    <div class="seg" role="group">
-      <button id="viewFormal" aria-pressed="true">FORMAL</button>
-      <button id="viewSummary" aria-pressed="false">SUMMARY</button>
-    </div>
+  <div class="timestamp">
+    Publication Timestamp: 2026-03-02 · Version 1.0 · Hybrid Formalization
   </div>
 </div>
 
-<div class="page">
+<div class="toggleRow">
+  <div class="toggle active" id="btnNarrative">INFORMAL</div>
+  <div class="toggle" id="btnFormal">FORMAL</div>
+</div>
 
-  <section class="monument">
-    <h1 id="heroTitle">THE LAWS THAT SCALE STRUCTURE</h1>
-    <p id="heroText">
-      Most systems fail not because of malice, but because of misalignment.
-      These laws formalize alignment as a measurable constraint between definition, execution, verification, and scale.
-    </p>
-  </section>
+<div class="stack">
 
-  <div class="metaBubble">
-    <div class="metaRow" id="metaRow">
-      Publication Timestamp: <span id="timestamp"></span><br/>
-      Classification: Structural Scientific Law (Hybrid Formalization)<br/>
-      Version: 1.0 · Epoch Locked
+  <!-- LAW 1 -->
+  <div class="bubble">
+    <div class="bTitle">I. Coherence Constraint Law</div>
+    <div class="bNarrative">
+      External trust cannot exceed internal structural alignment.
+      When declared values, executed actions, and observed outcomes diverge,
+      instability accumulates proportionally to scale.
+    </div>
+    <div class="bFormal formalHide">
+      Let V(t) = declared values
+      Let A(t) = executed actions
+      Let O(t) = observed outcomes
+      
+      Define divergence:
+        D(t) = |V - A| + |A - O|
+      
+      Stability condition:
+        D(t) → 0  as scale → ∞
+      
+      If D(t) increases under scaling,
+        systemic instability is inevitable.
     </div>
   </div>
 
-  <div class="lawBubble">
-    <div class="lawTitle" id="lawTitle">Coherence Constraint Law</div>
-    <div class="lawText" id="lawSummary">
-External trust cannot exceed internal consistency under identical scope and evidence.
-Misalignment under scale produces instability acceleration.
+  <!-- LAW 2 -->
+  <div class="bubble">
+    <div class="bTitle">II. Non-Contradiction Under Identical Scope</div>
+    <div class="bNarrative">
+      Under identical scope and identical evidence,
+      a system cannot yield two incompatible conclusions.
     </div>
+    <div class="bFormal formalHide">
+      Given scope S and evidence set E:
+      
+      If f(S,E) = C1
+      and f(S,E) = C2
+      and C1 ≠ C2
+      
+      ⇒ system inconsistency.
+    </div>
+  </div>
 
-    <div class="formalBlock" id="lawFormal">
-Let:
+  <!-- LAW 3 -->
+  <div class="bubble">
+    <div class="bTitle">III. Scope Precedes Authority</div>
+    <div class="bNarrative">
+      No claim is valid until its domain of applicability is defined.
+      Authority derives from declared boundary conditions.
+    </div>
+    <div class="bFormal formalHide">
+      Let claim C operate over domain Ω.
+      
+      If Ω is undefined,
+      then C is indeterminate.
+      
+      Validity requires:
+        explicit Ω,
+        explicit constraints,
+        explicit measurement rules.
+    </div>
+  </div>
 
-E_ext = external declared state
-E_int = internal operational state
-Δ = |E_ext - E_int|
+  <!-- LAW 4 -->
+  <div class="bubble">
+    <div class="bTitle">IV. Admissibility Precedes Escalation</div>
+    <div class="bNarrative">
+      No system may scale beyond the strength of its evidence.
+      Escalation without receipts is structurally unstable.
+    </div>
+    <div class="bFormal formalHide">
+      Let R = receipt-backed evidence
+      
+      Escalation E_s allowed iff:
+        ∀ claim C, ∃ R(C)
+      
+      If R(C) = ∅
+        ⇒ escalation blocked.
+    </div>
+  </div>
 
-Constraint:
-Trust_ext ≤ Consistency_int
+  <!-- LAW 5 -->
+  <div class="bubble">
+    <div class="bTitle">V. Calibration Authority Law</div>
+    <div class="bNarrative">
+      Measurement standards must be controlled.
+      If everyone can redefine the ruler,
+      the ruler ceases to function.
+    </div>
+    <div class="bFormal formalHide">
+      Let M = measurement rule set.
+      
+      M modifications require:
+        authorized calibration function K
+      
+      Unauthorized mutation:
+        M' ≠ M
+        ⇒ invalidates prior results.
+    </div>
+  </div>
 
-If Δ increases under scale S:
-Instability_acceleration ∝ S × Δ
+  <!-- LAW 6 -->
+  <div class="bubble">
+    <div class="bTitle">VI. Measurable Stability Law</div>
+    <div class="bNarrative">
+      Instability is not emotional.
+      It is divergence measurable across time windows.
+    </div>
+    <div class="bFormal formalHide">
+      Let window W
+      
+      Stability if:
+        ∀ t ∈ W, divergence D(t) ≤ threshold θ
+      
+      Persistent D(t) > θ
+        ⇒ phase transition risk.
+    </div>
+  </div>
 
-Determinism:
-If (S1 = S2) ∧ (R1 = R2)
-Then f(S1, R1) = f(S2, R2)
+  <!-- LAW 7 -->
+  <div class="bubble">
+    <div class="bTitle">VII. Containment Prevents Cascade</div>
+    <div class="bNarrative">
+      Local failure is survivable.
+      Uncontained failure becomes systemic collapse.
+    </div>
+    <div class="bFormal formalHide">
+      Let F(t) = failure state
+      
+      If containment C applied:
+        propagation radius r → bounded
+      
+      If C absent:
+        r → system-wide
+      
+      ⇒ cascade risk ∝ propagation radius.
     </div>
   </div>
 
 </div>
-
-<nav class="dock">
-  <a class="btn" href="/index.html">COMPASS</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
-  <a class="btn" href="/laws/categories/">CATEGORIES</a>
-</nav>
 
 <script>
-(function(){
+const btnNarrative = document.getElementById("btnNarrative");
+const btnFormal = document.getElementById("btnFormal");
+const formals = document.querySelectorAll(".bFormal");
 
-  var now = new Date();
-  document.getElementById("timestamp").textContent = now.toISOString();
+btnNarrative.onclick = () => {
+  btnNarrative.classList.add("active");
+  btnFormal.classList.remove("active");
+  formals.forEach(el => el.classList.add("formalHide"));
+};
 
-  var lang="en";
-  var view="formal";
-
-  var summaryText = {
-    en:`External trust cannot exceed internal consistency under identical scope and evidence.
-Misalignment under scale produces instability acceleration.`,
-    zh:`在相同范围与证据下，外部信任不可能超过内部一致性。
-规模放大会加速错位所带来的不稳定。`,
-    es:`La confianza externa no puede exceder la consistencia interna bajo el mismo alcance y evidencia.
-El desalineamiento bajo escala acelera la inestabilidad.`
-  };
-
-  var formalText = {
-    en:document.getElementById("lawFormal").textContent,
-    zh:`设:
-
-E_ext = 外部声明状态
-E_int = 内部运行状态
-Δ = |E_ext - E_int|
-
-约束:
-Trust_ext ≤ Consistency_int
-
-若 Δ 随规模 S 增长:
-不稳定加速度 ∝ S × Δ
-
-确定性:
-若 (S1 = S2) 且 (R1 = R2)
-则 f(S1, R1) = f(S2, R2)`,
-    es:`Sea:
-
-E_ext = estado declarado externo
-E_int = estado operativo interno
-Δ = |E_ext - E_int|
-
-Restricción:
-Trust_ext ≤ Consistency_int
-
-Si Δ aumenta bajo escala S:
-Aceleración de inestabilidad ∝ S × Δ
-
-Determinismo:
-Si (S1 = S2) y (R1 = R2)
-Entonces f(S1, R1) = f(S2, R2)`
-  };
-
-  function setLang(l){
-    lang=l;
-    document.getElementById("lawSummary").textContent = summaryText[l];
-    document.getElementById("lawFormal").textContent = formalText[l];
-  }
-
-  function setView(v){
-    view=v;
-    document.getElementById("lawFormal").style.display = (v==="formal") ? "block":"none";
-  }
-
-  document.getElementById("langEN").onclick=function(){setLang("en")};
-  document.getElementById("langZH").onclick=function(){setLang("zh")};
-  document.getElementById("langES").onclick=function(){setLang("es")};
-
-  document.getElementById("viewFormal").onclick=function(){setView("formal")};
-  document.getElementById("viewSummary").onclick=function(){setView("summary")};
-
-})();
+btnFormal.onclick = () => {
+  btnFormal.classList.add("active");
+  btnNarrative.classList.remove("active");
+  formals.forEach(el => el.classList.remove("formalHide"));
+};
 </script>
 
 </body>

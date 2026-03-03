@@ -1,0 +1,192 @@
+<!doctype html>
+<!-- TNT — /products/finance/liquidity-model/index.html
+     PRODUCT · FINANCE · LIQUIDITY MODEL
+     INFORMAL LAYER (PINNED)
+     TRILINGUAL · PLATFORM / ENGINEERING LENS
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Liquidity Model</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.95);
+  --mut:rgba(255,255,255,.82);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 30px 120px rgba(0,0,0,.70);
+}
+
+.page{
+  width:min(1000px,94vw);
+  margin:120px auto 120px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.header{
+  border:1px solid var(--stroke);
+  border-radius:24px;
+  padding:24px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, var(--goldSoft), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.16));
+  box-shadow:var(--shadowA);
+}
+
+.k{margin:0 0 6px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.8;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:32px;color:var(--ink)}
+.s{margin:10px 0 0;font-size:16px;line-height:1.6;color:var(--mut)}
+
+.section{
+  border:1px solid var(--stroke);
+  border-radius:20px;
+  padding:20px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.14);
+}
+
+.section h3{
+  margin:0 0 10px;
+  font-size:18px;
+  letter-spacing:.4px;
+  font-weight:980;
+}
+
+.section p{
+  margin:0;
+  line-height:1.7;
+  font-size:15px;
+  color:rgba(255,255,255,.9);
+}
+
+.rule{
+  font-size:14px;
+  color:rgba(255,255,255,.75);
+  margin-top:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <p class="k" id="hk">FINANCE</p>
+    <h1 class="t" id="ht">Liquidity Model</h1>
+    <p class="s" id="hs"></p>
+  </div>
+
+  <div class="section">
+    <h3 id="h1">Concept</h3>
+    <p id="p1"></p>
+  </div>
+
+  <div class="section">
+    <h3 id="h2">Execution Surface</h3>
+    <p id="p2"></p>
+  </div>
+
+  <div class="section">
+    <h3 id="h3">Roadmap</h3>
+    <p id="p3"></p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
+  var lane=qs.get("lane")||"platform";
+
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
+  if(lane!=="platform"&&lane!=="engineering") lane="platform";
+
+  function T(en,zh,es){return lang==="zh"?zh:(lang==="es"?es:en);}
+
+  document.documentElement.lang=lang;
+
+  document.getElementById("hs").textContent=
+    lane==="engineering"
+      ? T(
+        "Engineering lens: liquidity as bounded survivability under windowed stress.",
+        "工程视角：流动性=窗口压力下的有界存活能力。",
+        "Ingeniería: liquidez como supervivencia acotada bajo estrés por ventana."
+      )
+      : T(
+        "Platform lens: can you survive shocks without breaking the system?",
+        "平台视角：面对冲击，你能否不破坏系统而存活？",
+        "Plataforma: ¿puedes sobrevivir shocks sin romper el sistema?"
+      );
+
+  document.getElementById("p1").textContent=
+    lane==="engineering"
+      ? T(
+        "Liquidity is not cash. It is survivability under bounded shock. It measures coverage floors, exposure ceilings, and time-to-failure across stress windows.",
+        "流动性不是现金，而是冲击下的存活能力。它衡量覆盖下限、暴露上限与压力窗口下的失效时间。",
+        "La liquidez no es efectivo. Es supervivencia ante shock. Mide pisos de cobertura, techos de exposición y tiempo-a-fallo."
+      )
+      : T(
+        "Liquidity means you don’t panic when volatility spikes. It means you planned for stress before stress arrived.",
+        "流动性意味着在波动上升时不慌张，而是在压力来临前就已规划。",
+        "Liquidez significa no entrar en pánico cuando sube la volatilidad."
+      );
+
+  document.getElementById("p2").textContent=
+    lane==="engineering"
+      ? T(
+        "Execution: define coverage ratio, model stress scenarios, apply windowed deltas, trigger HOLD when coverage < threshold.",
+        "执行：定义覆盖率、建模压力场景、应用窗口差分，覆盖率低于阈值触发 HOLD。",
+        "Ejecución: definir ratio de cobertura, modelar estrés, aplicar deltas por ventana, disparar HOLD bajo umbral."
+      )
+      : T(
+        "Execution: build a clear floor. Know your runway. Know your buffer. If your margin shrinks, slow down immediately.",
+        "执行：建立底线，明确跑道与缓冲区。边际缩小时立刻减速。",
+        "Ejecución: establecer piso claro. Conocer tu margen. Si se reduce, desacelerar."
+      );
+
+  document.getElementById("p3").textContent=
+    lane==="engineering"
+      ? T(
+        "Roadmap: integrate with Risk Envelope, bind to Capital Doctrine, log stress tests as receipts, automate window regression.",
+        "路线图：与风险包络整合，绑定资本教义，记录压力测试收据，自动窗口回归。",
+        "Hoja de ruta: integrar con Risk Envelope, vincular a CCD, registrar pruebas de estrés y automatizar regresiones."
+      )
+      : T(
+        "Roadmap: stop guessing. Attach liquidity to gauges. Make survivability visible before you scale.",
+        "路线图：停止猜测，把流动性接入量规，在扩张前可视化存活能力。",
+        "Hoja de ruta: dejar de adivinar. Conectar liquidez a medidores antes de escalar."
+      );
+
+})();
+</script>
+
+</body>
+</html>

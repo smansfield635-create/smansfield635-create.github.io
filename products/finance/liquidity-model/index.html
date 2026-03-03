@@ -1,8 +1,15 @@
 <!doctype html>
 <!-- TNT — /products/finance/liquidity-model/index.html
-     PRODUCT · FINANCE · LIQUIDITY MODEL
-     INFORMAL LAYER (PINNED)
-     TRILINGUAL · PLATFORM / ENGINEERING LENS
+     PRODUCTS · FINANCE · LIQUIDITY MODEL (INFORMAL LAYER — NEW STANDARD)
+     REQUIREMENTS:
+       - Trilingual: EN / 中文 / ES
+       - Visible lens ONLY: lane=platform|engineering (URL-only; NEVER stored)
+       - Pin informal layer: gd_style=informal, gd_depth=explore
+       - Switching LANG or LANE does NOT reload page
+       - 4×4 (16-cell) liquidity model
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Uses ui.css + branch.css + instruments.js
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <html lang="en">
@@ -21,169 +28,634 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
+  --dockH:120px;
   --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
   --ink:rgba(255,255,255,.95);
-  --mut:rgba(255,255,255,.82);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
 
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
   --goldSoft:rgba(201,162,74,.18);
 
-  --shadowA:0 30px 120px rgba(0,0,0,.70);
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* ===== Top controls ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:rgba(255,255,255,.78);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:rgba(255,255,255,.96);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* ===== Page ===== */
 .page{
-  width:min(1000px,94vw);
-  margin:120px auto 120px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:10;
 }
 
+/* backdrop behind content */
+.backdrop{
+  position:absolute;left:50%;top:68px;transform:translateX(-50%);
+  width:min(1180px,96vw);height:calc(100% - 108px);
+  border-radius:34px;pointer-events:none;z-index:0;overflow:hidden;
+}
+.backdrop::before{
+  content:"";position:absolute;inset:0;border-radius:34px;
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);opacity:.72;
+}
+
+/* header */
 .header{
+  position:relative;z-index:2;
   border:1px solid var(--stroke);
   border-radius:24px;
-  padding:24px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    radial-gradient(circle at 26% 22%, var(--goldSoft), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.32), rgba(0,0,0,.16));
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
   box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px}
+.rule{
+  margin-top:12px;padding:12px 12px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
+  font-size:13.25px;color:rgba(255,255,255,.86);line-height:1.45;
+}
+.stateRow{
+  margin-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
-.k{margin:0 0 6px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.8;color:var(--mut)}
-.t{margin:0;font-weight:980;font-size:32px;color:var(--ink)}
-.s{margin:10px 0 0;font-size:16px;line-height:1.6;color:var(--mut)}
+/* band */
+.band{
+  position:relative;z-index:2;
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
 
-.section{
-  border:1px solid var(--stroke);
-  border-radius:20px;
-  padding:20px;
+/* 4x4 grid */
+.grid{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:12px;
+}
+@media (max-width:980px){
+  .grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
+
+.cell{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:14px 14px 12px;
   background:
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
     radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.14);
+    rgba(0,0,0,.12);
+  box-shadow:var(--shadowB);
+  position:relative;overflow:hidden;
+}
+.cell::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.cellTop{display:flex;gap:10px;align-items:flex-start}
+.dia{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c, rgba(201,162,74,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.h{
+  font-weight:980;letter-spacing:.2px;font-size:15.5px;color:var(--ink);line-height:1.15;
+}
+.p{
+  margin-top:10px;
+  font-size:13.75px;
+  line-height:1.55;
+  color:rgba(255,255,255,.86);
 }
 
-.section h3{
-  margin:0 0 10px;
-  font-size:18px;
-  letter-spacing:.4px;
-  font-weight:980;
+/* dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
 }
-
-.section p{
-  margin:0;
-  line-height:1.7;
-  font-size:15px;
-  color:rgba(255,255,255,.9);
-}
-
-.rule{
-  font-size:14px;
-  color:rgba(255,255,255,.75);
-  margin-top:8px;
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+    <a class="btn" id="btnFinance" data-route="/products/finance/" href="/products/finance/">FINANCE</a>
+    <a class="btn red" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
 <div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
 
-  <div class="header">
-    <p class="k" id="hk">FINANCE</p>
-    <h1 class="t" id="ht">Liquidity Model</h1>
+  <section class="header" aria-label="Liquidity header">
+    <p class="k" id="hk">FINANCE · LIQUIDITY</p>
+    <h1 class="t" id="ht">LIQUIDITY MODEL (4×4)</h1>
     <p class="s" id="hs"></p>
-  </div>
+    <div class="rule" id="rule"></div>
 
-  <div class="section">
-    <h3 id="h1">Concept</h3>
-    <p id="p1"></p>
-  </div>
+    <div class="stateRow" aria-label="State">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </section>
 
-  <div class="section">
-    <h3 id="h2">Execution Surface</h3>
-    <p id="p2"></p>
-  </div>
-
-  <div class="section">
-    <h3 id="h3">Roadmap</h3>
-    <p id="p3"></p>
-  </div>
+  <div class="band" id="band">LIQUIDITY GRID (16)</div>
+  <div class="grid" id="grid"></div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockFinance" data-route="/products/finance/" href="/products/finance/">FINANCE</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
+  "use strict";
 
+  // ===== State (gd_* only; pinned informal layer) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
-  var lane=qs.get("lane")||"platform";
+  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
+  var time = qs.get("time") || LS.getItem("gd_time") || "now";
+  var lane = qs.get("lane") || "platform"; // URL-only
 
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(lane!=="platform"&&lane!=="engineering") lane="platform";
+  // pinned layer
+  var style="informal";
+  var depth="explore";
 
-  function T(en,zh,es){return lang==="zh"?zh:(lang==="es"?es:en);}
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-  document.documentElement.lang=lang;
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-  document.getElementById("hs").textContent=
-    lane==="engineering"
-      ? T(
-        "Engineering lens: liquidity as bounded survivability under windowed stress.",
-        "工程视角：流动性=窗口压力下的有界存活能力。",
-        "Ingeniería: liquidez como supervivencia acotada bajo estrés por ventana."
-      )
-      : T(
-        "Platform lens: can you survive shocks without breaking the system?",
-        "平台视角：面对冲击，你能否不破坏系统而存活？",
-        "Plataforma: ¿puedes sobrevivir shocks sin romper el sistema?"
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+
+  // ===== Header copy =====
+  function applyHeader(){
+    document.getElementById("hk").textContent = pick3("FINANCE · LIQUIDITY","金融 · 流动性","FINANZAS · LIQUIDEZ");
+    document.getElementById("ht").textContent = pick3("LIQUIDITY MODEL (4×4)","流动性模型（4×4）","MODELO DE LIQUIDEZ (4×4)");
+
+    document.getElementById("hs").textContent =
+      (lane==="engineering")
+        ? pick3(
+          "Engineering lens: liquidity is bounded survivability under windowed stress. This grid forces explicit floors, ceilings, triggers, and receipts.",
+          "工程视角：流动性=窗口压力下的有界存活能力。本表强制：下限/上限/触发/收据。",
+          "Ingeniería: liquidez = supervivencia acotada bajo estrés por ventanas. Esta grilla fuerza pisos, techos, triggers y recibos."
+        )
+        : pick3(
+          "Platform lens: liquidity is your ability to stay calm under shock. This grid shows what to define, what to watch, what to stop, and what to log.",
+          "平台视角：流动性=冲击下仍能保持冷静的能力。本表给出：定义什么、看什么、何时停、记录什么。",
+          "Plataforma: liquidez = mantener calma bajo shock. Esta grilla muestra qué definir, qué vigilar, cuándo frenar y qué registrar."
+        );
+
+    document.getElementById("rule").textContent =
+      pick3(
+        "Rule: Define → Measure → Gate → Receipt. If any step is missing, the posture is HOLD.",
+        "规则：定义→测量→闸门→收据。缺任何一步，姿态=HOLD。",
+        "Regla: Definir → Medir → Gatear → Recibo. Si falta un paso, postura = HOLD."
       );
 
-  document.getElementById("p1").textContent=
-    lane==="engineering"
-      ? T(
-        "Liquidity is not cash. It is survivability under bounded shock. It measures coverage floors, exposure ceilings, and time-to-failure across stress windows.",
-        "流动性不是现金，而是冲击下的存活能力。它衡量覆盖下限、暴露上限与压力窗口下的失效时间。",
-        "La liquidez no es efectivo. Es supervivencia ante shock. Mide pisos de cobertura, techos de exposición y tiempo-a-fallo."
-      )
-      : T(
-        "Liquidity means you don’t panic when volatility spikes. It means you planned for stress before stress arrived.",
-        "流动性意味着在波动上升时不慌张，而是在压力来临前就已规划。",
-        "Liquidez significa no entrar en pánico cuando sube la volatilidad."
-      );
+    document.getElementById("band").textContent =
+      pick3("LIQUIDITY GRID (16)","流动性网格（16）","GRILLA DE LIQUIDEZ (16)");
 
-  document.getElementById("p2").textContent=
-    lane==="engineering"
-      ? T(
-        "Execution: define coverage ratio, model stress scenarios, apply windowed deltas, trigger HOLD when coverage < threshold.",
-        "执行：定义覆盖率、建模压力场景、应用窗口差分，覆盖率低于阈值触发 HOLD。",
-        "Ejecución: definir ratio de cobertura, modelar estrés, aplicar deltas por ventana, disparar HOLD bajo umbral."
-      )
-      : T(
-        "Execution: build a clear floor. Know your runway. Know your buffer. If your margin shrinks, slow down immediately.",
-        "执行：建立底线，明确跑道与缓冲区。边际缩小时立刻减速。",
-        "Ejecución: establecer piso claro. Conocer tu margen. Si se reduce, desacelerar."
-      );
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
 
-  document.getElementById("p3").textContent=
-    lane==="engineering"
-      ? T(
-        "Roadmap: integrate with Risk Envelope, bind to Capital Doctrine, log stress tests as receipts, automate window regression.",
-        "路线图：与风险包络整合，绑定资本教义，记录压力测试收据，自动窗口回归。",
-        "Hoja de ruta: integrar con Risk Envelope, vincular a CCD, registrar pruebas de estrés y automatizar regresiones."
-      )
-      : T(
-        "Roadmap: stop guessing. Attach liquidity to gauges. Make survivability visible before you scale.",
-        "路线图：停止猜测，把流动性接入量规，在扩张前可视化存活能力。",
-        "Hoja de ruta: dejar de adivinar. Conectar liquidez a medidores antes de escalar."
-      );
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
+
+    document.getElementById("btnProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("btnFinance").textContent  = pick3("FINANCE","金融","FINANZAS");
+    document.getElementById("btnCompass").textContent  = pick3("COMPASS","指南针","BRÚJULA");
+
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockFinance").textContent  = pick3("FINANCE","金融","FINANZAS");
+    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent   = pick3("GAUGES","量规","MEDIDORES");
+
+    document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
+  }
+
+  // ===== 4×4 content =====
+  // Rows = what you manage; Cols = how you make it real.
+  var ROWS = [
+    {key:"coverage", c:"#c9a24a", name:{en:"Coverage",zh:"覆盖",es:"Cobertura"}},
+    {key:"buffer",   c:"#34d399", name:{en:"Buffer",zh:"缓冲",es:"Buffer"}},
+    {key:"shock",    c:"#ff2b2b", name:{en:"Shock",zh:"冲击",es:"Shock"}},
+    {key:"audit",    c:"#a3a3a3", name:{en:"Audit",zh:"审计",es:"Auditoría"}}
+  ];
+  var COLS = [
+    {key:"define",  name:{en:"Define",zh:"定义",es:"Definir"}},
+    {key:"measure", name:{en:"Measure",zh:"测量",es:"Medir"}},
+    {key:"gate",    name:{en:"Gate",zh:"闸门",es:"Gatear"}},
+    {key:"receipt", name:{en:"Receipt",zh:"收据",es:"Recibo"}}
+  ];
+
+  // Each cell returns {h,p} by lane+lang.
+  function cell(rowKey,colKey){
+    var P = function(en,zh,es){ return pick3(en,zh,es); };
+
+    // PLATFORM wording: human/action-forward
+    // ENGINEERING wording: contract/threshold/replay-forward
+    var plat = {
+      coverage:{
+        define:  {h:P("Coverage floor","覆盖底线","Piso de cobertura"),
+                 p:P("Name the minimum cash/runway you refuse to cross.","写出你绝不跨越的最低现金/跑道。","Define el mínimo de caja/runway que no cruzas.")},
+        measure: {h:P("Runway clock","跑道时钟","Reloj de runway"),
+                 p:P("Track months of runway and how fast it’s shrinking.","跟踪跑道（月）以及缩短速度。","Mide meses de runway y la velocidad de caída.")},
+        gate:    {h:P("Slow down trigger","减速触发","Trigger de freno"),
+                 p:P("If runway drops below your floor, stop scaling immediately.","低于底线立刻停止扩张。","Si cae bajo el piso, frena la escala.")},
+        receipt: {h:P("Coverage note","覆盖记录","Nota de cobertura"),
+                 p:P("Log the floor, the current value, and the decision you took.","记录底线、当前值、采取的决策。","Registra piso, valor actual y decisión tomada.")}
+      },
+      buffer:{
+        define:  {h:P("Buffer definition","缓冲定义","Definición de buffer"),
+                 p:P("Name what counts as a true buffer (cash, credit, inventory).","定义什么算真正缓冲（现金/授信/库存）。","Define qué cuenta como buffer real (caja/crédito/inventario).")},
+        measure: {h:P("Buffer burn","缓冲消耗","Consumo del buffer"),
+                 p:P("Track burn rate and how quickly buffers refill.","跟踪消耗速度与补充速度。","Mide burn rate y velocidad de recarga.")},
+        gate:    {h:P("Protect buffer","保护缓冲","Proteger buffer"),
+                 p:P("If buffer refill can’t keep up, switch to containment posture.","补充跟不上就进入隔离姿态。","Si no se recarga, cambia a contención.")},
+        receipt: {h:P("Buffer log","缓冲日志","Log de buffer"),
+                 p:P("Log buffer sources, drawdowns, and refill evidence.","记录缓冲来源、动用、补充证据。","Registra fuentes, retiros y evidencia de recarga.")}
+      },
+      shock:{
+        define:  {h:P("Shock list","冲击清单","Lista de shocks"),
+                 p:P("Name the top 3 shocks you must survive (price, demand, legal).","列出必须扛住的3个冲击（价格/需求/法律）。","Nombra 3 shocks críticos (precio/demanda/legal).")},
+        measure: {h:P("Stress window","压力窗口","Ventana de estrés"),
+                 p:P("Run stress checks by window (weekly/monthly).","按窗口做压力检查（周/月）。","Ejecuta estrés por ventana (semana/mes).")},
+        gate:    {h:P("Kill escalation","终止升级","Cortar escalación"),
+                 p:P("If a shock scenario breaks you on paper, you do not scale in reality.","纸面都扛不住就绝不扩张。","Si el shock te rompe en papel, no escalas en realidad.")},
+        receipt: {h:P("Stress receipt","压力收据","Recibo de estrés"),
+                 p:P("Log scenario, assumptions, result, and next action.","记录场景、假设、结果、下一步动作。","Registra escenario, supuestos, resultado y siguiente acción.")}
+      },
+      audit:{
+        define:  {h:P("What must be provable","必须可证明的内容","Qué debe ser demostrable"),
+                 p:P("Pick what you must be able to prove under scrutiny.","选出必须能被审查证明的内容。","Elige lo que debes poder demostrar bajo revisión.")},
+        measure: {h:P("Truth surfaces","真相表面","Superficies de verdad"),
+                 p:P("Measure what you claim — not what you wish.","测你主张的，不测你希望的。","Mide lo que afirmas, no lo que deseas.")},
+        gate:    {h:P("No proof, no scale","无证明不扩张","Sin prueba no hay escala"),
+                 p:P("If you can’t produce receipts, hold escalation.","拿不出收据就暂停扩张。","Si no puedes producir recibos, HOLD.")},
+        receipt: {h:P("Replay packet","回放包","Paquete de replay"),
+                 p:P("Store receipts so another person can replay your conclusion.","存收据让别人能回放你的结论。","Guarda recibos para que otro pueda replicar tu conclusión.")}
+      }
+    };
+
+    var eng = {
+      coverage:{
+        define:  {h:P("Coverage threshold","覆盖阈值","Umbral de cobertura"),
+                 p:P("Declare coverage floor (CF) and runway floor (RF) as explicit parameters.","声明覆盖下限CF与跑道下限RF为显式参数。","Declarar CF y RF como parámetros explícitos.")},
+        measure: {h:P("Windowed coverage","窗口覆盖","Cobertura por ventana"),
+                 p:P("Compute CF(t) and dCF/dt over a fixed window; store values in receipts.","在固定窗口计算CF(t)与dCF/dt并写入收据。","Calcular CF(t) y dCF/dt por ventana y guardarlo en recibos.")},
+        gate:    {h:P("Gate: HOLD/CONTAIN","闸门：HOLD/CONTAIN","Compuerta: HOLD/CONTAIN"),
+                 p:P("If CF(t)<CF_min or slope exceeds limit, emit HOLD/CONTAIN with reason code.","若CF(t)<CF_min或斜率超限，输出HOLD/CONTAIN+原因码。","Si CF(t)<CF_min o pendiente excede límite, emitir HOLD/CONTAIN + razón.")},
+        receipt: {h:P("Receipt schema","收据架构","Esquema de recibo"),
+                 p:P("Receipt includes: scope id, window id, CF values, thresholds, version hash.","收据包含：范围id、窗口id、CF值、阈值、版本哈希。","Recibo incluye: id de alcance, ventana, valores CF, umbrales y hash de versión.")}
+      },
+      buffer:{
+        define:  {h:P("Buffer types","缓冲类型","Tipos de buffer"),
+                 p:P("Define buffer vector B = [cash, credit, inventory] and admissible draw rules.","定义缓冲向量B=[现金,授信,库存]及可采信动用规则。","Definir vector B=[caja,crédito,inventario] y reglas admisibles.")},
+        measure: {h:P("Burn & refill","消耗与补充","Consumo y recarga"),
+                 p:P("Compute burn rate β and refill rate ρ per window; compare ρ vs β.","按窗口计算消耗β与补充ρ，并比较ρ与β。","Calcular β y ρ por ventana; comparar ρ vs β.")},
+        gate:    {h:P("Gate: buffer integrity","闸门：缓冲完整性","Compuerta: integridad del buffer"),
+                 p:P("If ρ<β under stress, require containment posture and prohibit leverage escalation.","若压力下ρ<β，强制隔离姿态并禁止加杠杆。","Si ρ<β bajo estrés, exigir contención y prohibir escalación de apalancamiento.")},
+        receipt: {h:P("Drawdown receipts","动用收据","Recibos de retiros"),
+                 p:P("Log every draw: source, amount, reason code, recovery plan, and verification timestamp.","记录每次动用：来源、金额、原因码、恢复计划、验证时间戳。","Registrar cada retiro: fuente, monto, razón, plan de recuperación y timestamp.")}
+      },
+      shock:{
+        define:  {h:P("Shock set S","冲击集合S","Conjunto de shocks S"),
+                 p:P("Define S={s1..sk} with parameter bounds and coupling assumptions (ρ).","定义冲击集合S={s1..sk}及参数边界与耦合假设ρ。","Definir S={s1..sk} con límites y supuestos de acoplamiento (ρ).")},
+        measure: {h:P("Stress harness","压力测试框架","Harness de estrés"),
+                 p:P("Run windowed stress tests; measure failure time τ and recovery time r.","执行窗口压力测试；测失效时间τ与恢复时间r。","Ejecutar estrés por ventanas; medir τ (fallo) y r (recuperación).")},
+        gate:    {h:P("Gate: admissibility","闸门：可采信","Compuerta: admisibilidad"),
+                 p:P("If τ is too short or r too long, escalation is inadmissible (HOLD/FAIL).","若τ过短或r过长，升级不可采信（HOLD/FAIL）。","Si τ es muy corto o r muy largo, escalación inadmisible (HOLD/FAIL).")},
+        receipt: {h:P("Stress receipts","压力收据","Recibos de estrés"),
+                 p:P("Store scenario id, parameter bounds, outputs, and version hashes for replay.","存场景id、参数边界、输出与版本哈希用于回放。","Guardar id de escenario, límites, salidas y hashes para replay.")}
+      },
+      audit:{
+        define:  {h:P("Audit scope","审计范围","Alcance de auditoría"),
+                 p:P("Declare what is audited: claims, thresholds, code paths, and evidence sources.","声明审计对象：主张、阈值、代码路径、证据源。","Declarar qué se audita: afirmaciones, umbrales, rutas de código y evidencia.")},
+        measure: {h:P("Deterministic replay","确定性回放","Replay determinista"),
+                 p:P("Replay output under fixed scope+manifest; divergence ⇒ invalid until epoch bump.","在固定范围+清单下回放输出；分歧⇒无效，需新纪元。","Reproducir bajo alcance+manifiesto fijo; divergencia ⇒ inválido hasta nueva época.")},
+        gate:    {h:P("Gate: no silent overrides","闸门：无静默覆盖","Compuerta: sin overrides silenciosos"),
+                 p:P("Every exception must be reason-coded and receipted; silent changes are disallowed.","任何例外必须原因码+收据；禁止静默变更。","Toda excepción requiere razón+recibo; prohibidos cambios silenciosos.")},
+        receipt: {h:P("Audit packet","审计包","Paquete de auditoría"),
+                 p:P("Packet includes: manifests, hashes, window outputs, gate decisions, exception logs.","审计包包含：清单、哈希、窗口输出、闸门决策、例外日志。","Paquete incluye: manifiestos, hashes, salidas por ventana, decisiones de compuerta y excepciones.")}
+      }
+    };
+
+    var pack = (lane==="engineering") ? eng : plat;
+    return pack[rowKey][colKey];
+  }
+
+  function buildGrid(){
+    var grid=document.getElementById("grid");
+    grid.innerHTML="";
+
+    // 16 cells in row-major order, each cell header = Row · Col
+    for(var r=0;r<ROWS.length;r++){
+      for(var c=0;c<COLS.length;c++){
+        var row=ROWS[r], col=COLS[c];
+        var txt=cell(row.key,col.key);
+
+        var cellEl=document.createElement("div");
+        cellEl.className="cell";
+        cellEl.style.setProperty("--c", row.c);
+
+        var top=document.createElement("div");
+        top.className="cellTop";
+
+        var dia=document.createElement("div");
+        dia.className="dia";
+        dia.style.background=row.c;
+
+        var h=document.createElement("div");
+        h.className="h";
+        h.textContent = pick3(row.name.en,row.name.zh,row.name.es) + " · " + pick3(col.name.en,col.name.zh,col.name.es) + " — " + txt.h;
+
+        top.appendChild(dia);
+        top.appendChild(h);
+
+        var p=document.createElement("div");
+        p.className="p";
+        p.textContent = txt.p;
+
+        cellEl.appendChild(top);
+        cellEl.appendChild(p);
+        grid.appendChild(cellEl);
+      }
+    }
+  }
+
+  // wire routes with pinned query (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // no-reload toggles
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();
+    buildGrid();
+    wireAll();
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();
+    buildGrid();
+    wireAll();
+  }
+
+  // bindings
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // init pressed
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // init render
+  applyHeader();
+  buildGrid();
+  wireAll();
 
 })();
 </script>

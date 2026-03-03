@@ -1,17 +1,18 @@
 <!doctype html>
 <!-- TNT — /home/index.html
      HOME · LAUNCHPAD (TRILINGUAL · NO LENSES · MONUMENT TYPE · SINGLE-OPEN ACCORDION)
-     UPDATE: ADD BACKGROUND CONTEXT (FESTIVAL NIGHT / LANTERN / FIREWORKS — BEHIND CONTENT)
-     PURPOSE:
-       - “Where do I go next?” without teaching taxonomy
-       - Dense, legible, one-open-at-a-time bubbles
-       - Visual variance: elevated panels are NOT same as background
+     UPDATE (PER SEAN):
+       - Keep festival-night context BEHIND content (no overlays/modals)
+       - Upgrade to uniform 3D gloss adoption (gem material)
+       - Gold glow = perimeter ring (NOT bottom underlight)
+       - Buttons do NOT move on press (glow only)
+       - Reduce loop confusion: each open block has ONE “OPEN” jump only (no multi-jump spam)
      RULES:
        - EN / 中文 / ES
        - No modals. No overlays.
        - No inline onclick. Tap-safe (addEventListener only).
        - Single-open accordion (one opens; others close; tap same closes)
-       - Canon state carry: lang/style/time/depth via URL + localStorage gd_lang/gd_style/gd_time/gd_depth ONLY
+       - Canon state carry: lang/style/time/depth via localStorage gd_lang/gd_style/gd_time/gd_depth ONLY + URL
        - NO new gd_* keys
        - lane=platform|engineering is URL-only (preserve if present; never store)
        - Language toggle reloads SAME pathname (GH Pages safe)
@@ -20,14 +21,13 @@
      ROUTES:
        - DOOR  → /door/
        - PRELUDE → /prelude/
-       - INDEX → /index.html
+       - COMPASS → /index.html
        - PRODUCTS → /products/
        - EXPLORE → /explore/
        - LAWS → /laws/
        - GAUGES → /gauges/
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -44,7 +44,7 @@ body{position:relative;z-index:0;margin:0;font-family:system-ui,-apple-system,Se
 body::before,body::after{z-index:0!important;pointer-events:none!important}
 #root{position:relative;z-index:10}
 
-/* ===== TOKENS (RED primary, BLACK secondary, GOLD adorn; high contrast) ===== */
+/* ===== TOKENS (page-local; ui.css owns field) ===== */
 :root{
   --dockH:96px;
 
@@ -55,14 +55,14 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.80);
   --mut2:rgba(255,255,255,.72);
-  --soft:rgba(255,255,255,.62);
 
   --onyx0:rgba(6,8,10,.90);
   --onyx1:rgba(10,12,16,.78);
   --opalV:rgba(90,40,120,.10);
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
-  --gold:rgba(201,162,74,.40);
+
+  --gold:rgba(201,162,74,.55);
   --goldSoft:rgba(201,162,74,.18);
 
   --shadowA:0 34px 120px rgba(0,0,0,.58);
@@ -84,31 +84,75 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   flex-wrap:wrap;white-space:nowrap;
   pointer-events:auto;
 }
-.top .btn{white-space:nowrap}
 
-/* ===== Button (gold under-light; no haze) ===== */
+/* ===== 3D GLOSS BUTTON (no movement; perimeter glow) ===== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 42%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
+    radial-gradient(circle at 28% 80%, rgba(120,0,22,.16), transparent 72%),
+    linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
   touch-action:manipulation;
-  box-shadow:var(--shadowC);
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadowC), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -26px 46px rgba(0,0,0,.55);
+  white-space:nowrap;
+  transform:none !important;
+  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
 }
-.btn:active{transform:translateY(1px)}
+.btn::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
+    repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  opacity:.32;
+}
 .btn::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.62;pointer-events:none;
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.90;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.btn:hover{
+  border-color:rgba(212,175,55,.55);
+  box-shadow:
+    0 22px 72px rgba(0,0,0,.72),
+    0 0 22px rgba(212,175,55,.26),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -30px 54px rgba(0,0,0,.60);
+  filter:saturate(1.05);
+}
+.btn:active{
+  border-color:rgba(212,175,55,.62);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.65),
+    0 0 28px rgba(212,175,55,.34),
+    inset 0 0 0 2px rgba(255,255,255,.10),
+    inset 0 2px 0 rgba(255,255,255,.12),
+    inset 0 -30px 54px rgba(0,0,0,.62);
+}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12), inset 0 2px 0 rgba(255,255,255,.10), inset 0 -26px 46px rgba(0,0,0,.55);
+}
 
 /* ===== PAGE ===== */
 .page{
@@ -158,7 +202,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
     radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-
     conic-gradient(from 12deg at 30% 28%,
       rgba(201,162,74,.14), transparent 12%,
       rgba(255,43,43,.12), transparent 24%,
@@ -169,13 +212,12 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       rgba(201,162,74,.12), transparent 28%,
       rgba(90,40,120,.10), transparent 44%,
       transparent 100%),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
   opacity:.72;
 }
 
-/* ===== HERO (monument) ===== */
+/* ===== HERO ===== */
 .hero{
   position:relative;
   z-index:2;
@@ -197,7 +239,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   position:absolute;inset:0;
   border-radius:26px;
   pointer-events:none;
-  opacity:.30;
+  opacity:.28;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -209,27 +251,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
     linear-gradient(#000,#000);
 }
-.hero::after{
-  content:"";
-  position:absolute;
-  left:50%;top:62%;
-  width:min(980px,92vw);
-  height:min(980px,92vw);
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:70px;
-  pointer-events:none;
-  opacity:.20;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 70% 80%, rgba(255,43,43,.10), transparent 60%),
-    radial-gradient(circle at 55% 45%, rgba(90,40,120,.10), transparent 60%),
-    linear-gradient(160deg, rgba(10,12,16,.55) 0%, rgba(6,8,10,.78) 70%);
-  box-shadow:
-    0 100px 280px rgba(0,0,0,.65),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -55px 100px rgba(0,0,0,.55);
-}
-
 .k{
   position:relative;z-index:2;
   margin:0 0 6px;
@@ -268,7 +289,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
   box-shadow:0 14px 48px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06);
   font-size:13.5px;
-  color:var(--mut);
+  color:rgba(255,255,255,.84);
   line-height:1.5;
 }
 
@@ -285,9 +306,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   color:rgba(255,255,255,.88);
 }
 
-/* ===== ACCORDION (single-open; long bubbles) ===== */
+/* ===== ACCORDION ===== */
 .stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
-
 .card{
   position:relative;
   border:1px solid rgba(255,255,255,.10);
@@ -301,12 +321,18 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 }
 .card::before{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
-  opacity:.45;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;mask-composite:exclude;
-  pointer-events:none;
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.14) 82%, rgba(212,175,55,0) 100%),
+    repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  opacity:.26;
 }
 .head{
   display:flex;align-items:flex-start;justify-content:space-between;
@@ -358,7 +384,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
   opacity:.62;pointer-events:none;
 }
-
 .body{
   display:none;
   padding:14px 16px 16px;
@@ -368,8 +393,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.92));
 }
 .card.open .body{display:block}
-.card.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
-
 .p{
   margin:0;
   color:rgba(255,255,255,.90);
@@ -428,7 +451,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   </div>
 
   <div class="page">
-
     <div class="backdrop" aria-hidden="true"></div>
 
     <section class="hero" aria-label="Home hero">
@@ -440,7 +462,6 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
     <div class="band" id="band0">SURFACES (OPEN ONE)</div>
     <div class="stack" id="stack"></div>
-
   </div>
 
   <nav class="dock" aria-label="Bottom navigation">
@@ -454,13 +475,15 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
 
 <script>
 (function(){
+  "use strict";
+
   // ===== canonical state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-  var lane  = qs.get("lane")  || ""; // URL-only preserve if present
+  var lane  = qs.get("lane")  || ""; // URL-only preserve if present; never store
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="formal" && style!=="informal") style="informal";
@@ -489,26 +512,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     return out;
   }
 
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-
-  // top wires
-  wire("btnDoor","/door/");
-  wire("btnPrelude","/prelude/");
-  wire("btnIndex","/index.html");
-  wire("btnProducts","/products/");
-  wire("btnExplore","/explore/");
-
-  // dock wires
-  wire("dockProducts","/products/");
-  wire("dockExplore","/explore/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // wire all data-route anchors with state carry
-  (function wireAll(){
+  // wire all internal [data-route] with state
+  function wireAll(){
     var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
       var el=nodes[i];
@@ -516,7 +521,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       if(!route) continue;
       el.setAttribute("href", route + q());
     }
-  })();
+  }
 
   // language toggle (reload same path)
   function setLang(next){
@@ -525,24 +530,24 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); });
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); });
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); });
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // ===== copy packs (question-first; human words) =====
+  // ===== copy packs =====
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
 
   var HERO = {
     tag:P(
-      "Home is the fast lane. It doesn’t teach. It routes. If you want the deep ‘why’, use Prelude. If you want the compass, use Index. If you want the intro table, use Door.",
-      "主页是快车道：不教学，只路由。想看深层“为什么”去前奏；想用指南针去索引；想看入门桌面去门。",
-      "Home es el carril rápido: no enseña, enruta. Para el ‘por qué’ profundo: Preludio. Para brújula: Índice. Para mesa de entrada: Puerta."
+      "Home is the fast lane. It doesn’t teach taxonomy. It routes you to the next surface with one clean choice.",
+      "主页是快车道：不教分类，只把你路由到下一入口（一次只做一个选择）。",
+      "Home es el carril rápido: no enseña taxonomía. Te enruta con una sola elección limpia."
     ),
     rule:P(
-      "Rule: choose one surface, read one block, then jump. This keeps your brain calm and your path clean.",
-      "规则：选一个面，读一个块，然后跳转。这样大脑更安静，路径更干净。",
-      "Regla: elige una superficie, lee un bloque y salta. Mantiene la mente calmada y la ruta limpia."
+      "Rule: open one block, read one paragraph, then jump. If you want the big table first, go to DOOR.",
+      "规则：打开一个块，读一段，然后跳转。想先看总桌面就去 DOOR。",
+      "Regla: abre un bloque, lee un párrafo y salta. Para la mesa grande: PUERTA."
     ),
     band:P("SURFACES (OPEN ONE)","入口（打开一个）","SUPERFICIES (ABRE UNA)")
   };
@@ -551,71 +556,65 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
   document.getElementById("rule0").textContent = pick(HERO.rule);
   document.getElementById("band0").textContent = pick(HERO.band);
 
-  // ===== accordion data =====
+  // ===== accordion data (each has ONE jump only) =====
   var CARDS = [
-    {
-      c:"#c9a24a",
-      q:P("Do you want the big table first?","你想先看总桌面吗？","¿Quieres la mesa grande primero?"),
-      s:P("Door is the intro: choose your entry without guessing.","门是入门：不靠猜选入口。","Puerta es intro: eliges entrada sin adivinar."),
+    { c:"#c9a24a",
+      q:P("Start at the big table?","从总桌面开始？","¿Empezar por la mesa grande?"),
+      s:P("Door is the intro hub: it tells you what this is and where to enter.","DOOR 是入门枢纽：告诉你这是什么、怎么进入。","Puerta es el hub de intro: qué es y cómo entrar."),
       p:P(
-        "Use Door when you want a clean starting posture: Intro → Compass → Hub.\n\nDoor is where the site tells you what it is, what it is not, and how to enter without getting lost.",
-        "想要干净起步就用门：介绍 → 指南针 → 枢纽。\n\n门会告诉你：网站是什么、不是什麽，以及如何不迷路地进入。",
-        "Usa Puerta para un inicio limpio: Intro → Brújula → Hub.\n\nPuerta explica qué es, qué no es y cómo entrar sin perderte."
+        "Use DOOR when you want the intro posture: what the system is, what it refuses to claim, and how to enter without getting lost.",
+        "想要入门姿态就用 DOOR：系统是什么、拒绝什么主张、如何不迷路进入。",
+        "Usa PUERTA para postura de inicio: qué es, qué no afirma y cómo entrar sin perderte."
       ),
-      jump:{label:P("OPEN: DOOR","打开：门","ABRIR: PUERTA"), href:"/door/"}
+      jump:{label:P("OPEN: DOOR","打开：DOOR","ABRIR: PUERTA"), href:"/door/"}
     },
-    {
-      c:"#ff2b2b",
-      q:P("Do you want direction, not discussion?","你想要方向而不是讨论吗？","¿Quieres dirección, no discusión?"),
-      s:P("Index is the compass: pick a direction and go.","索引是指南针：选方向就走。","Índice es brújula: eliges dirección y vas."),
+    { c:"#ff2b2b",
+      q:P("Need direction right now?","现在就要方向？","¿Necesitas dirección ya?"),
+      s:P("Compass is fast traversal: pick a direction and go.","指南针=快速遍历：选方向就走。","Brújula = recorrido rápido: eliges y vas."),
       p:P(
-        "Use Index when you want fast traversal. It’s designed to move you into a lane (Products / Laws / Gauges / Explore) without teaching you theory.\n\nIf you feel stuck, Index is the fastest reset.",
-        "想要快速遍历就用索引：它会把你送入某条车道（产品/法则/量规/探索），而不要求你先学理论。\n\n如果你卡住了，索引是最快的重置。",
-        "Usa Índice para recorrer rápido. Te mete en un carril (Productos/Leyes/Medidores/Explorar) sin teoría.\n\nSi estás trabado, Índice es el reinicio más rápido."
+        "Use COMPASS when you want to traverse without reading: it’s designed for movement, not explanation.",
+        "想直接走就用 COMPASS：它为“移动”而生，不是为“解释”。",
+        "Usa BRÚJULA para moverte sin leer: está hecha para movimiento, no explicación."
       ),
-      jump:{label:P("OPEN: INDEX","打开：索引","ABRIR: ÍNDICE"), href:"/index.html"}
+      jump:{label:P("OPEN: COMPASS","打开：指南针","ABRIR: BRÚJULA"), href:"/index.html"}
     },
-    {
-      c:"#c9a24a",
-      q:P("Do you want usable things right now?","你想现在就看能用的东西吗？","¿Quieres cosas usables ya?"),
-      s:P("Products is the catalog of adoption surfaces.","产品页是可采纳目录。","Productos es el catálogo adoptable."),
+    { c:"#c9a24a",
+      q:P("Want deployable things?","想看可落地的东西？","¿Quieres cosas desplegables?"),
+      s:P("Products is the catalog: signatures + streams + jumps.","产品页是目录：签名系统+部署流+跳转。","Productos es catálogo: firmas + streams + saltos."),
       p:P(
-        "Products answers: “What can I use?” Each card is one block + a jump.\n\nIf something isn’t built yet, it should route to its shell, not to the wrong page.",
-        "产品页回答：“我能用什么？”每张卡：一个块 + 一个跳转。\n\n如果某个东西还没建好，它应该路由到它的壳，而不是跳到错误页面。",
-        "Productos responde: “¿Qué puedo usar?” Cada tarjeta: un bloque + un salto.\n\nSi algo no está construido, debe ir a su carcasa, no a la página equivocada."
+        "Use PRODUCTS when you want “what can I use” and direct entry to pages.",
+        "想要“我能用什么”与直接进入页面，就用 PRODUCTS。",
+        "Usa PRODUCTOS para “qué puedo usar” y entrada directa."
       ),
       jump:{label:P("OPEN: PRODUCTS","打开：产品","ABRIR: PRODUCTOS"), href:"/products/"}
     },
-    {
-      c:"#ff2b2b",
-      q:P("Do you want boundaries before you believe anything?","你想先看边界再相信吗？","¿Quieres límites antes de creer?"),
-      s:P("Laws is where meaning stays honest.","法则页让含义保持诚实。","Leyes mantiene el significado honesto."),
+    { c:"#ff2b2b",
+      q:P("Want boundaries before belief?","先看边界再相信？","¿Límites antes de creer?"),
+      s:P("Laws is doctrine: definitions, invariants, and bounds.","法则是教义：定义、不变量、边界。","Leyes es doctrina: definiciones, invariantes y límites."),
       p:P(
-        "Laws is the guardrail lane: definitions, invariants, and what is allowed to be said.\n\nIf a page feels like it’s selling a story, Laws is where you verify the boundary.",
-        "法则是护栏车道：定义、不变量、以及允许说到哪里。\n\n如果你觉得某页像在“卖故事”，就来法则核查边界。",
-        "Leyes es el carril de barandillas: definiciones, invariantes y qué se permite afirmar.\n\nSi una página ‘vende historia’, aquí verificas límites."
+        "Use LAWS when you want the system’s constraints and what is allowed to be claimed.",
+        "想看系统约束与允许主张范围，就用 LAWS。",
+        "Usa LEYES para restricciones y qué se permite afirmar."
       ),
       jump:{label:P("OPEN: LAWS","打开：法则","ABRIR: LEYES"), href:"/laws/"}
     },
-    {
-      c:"#c9a24a",
-      q:P("Do you want measurements instead of arguments?","你想要测量而不是争论吗？","¿Quieres mediciones en vez de argumentos?"),
-      s:P("Gauges is measurement only—no doctrine, no marketing.","量规只做测量——无教义，无营销。","Medidores = medición—sin doctrina ni marketing."),
+    { c:"#c9a24a",
+      q:P("Want signals, not speeches?","想看信号而不是讲话？","¿Señales, no discursos?"),
+      s:P("Gauges is measurement only.","量规只做测量。","Medidores = solo medición."),
       p:P(
-        "Gauges is where signals live: indices, sweeps, heatmaps, exports. It’s designed for “show me the numbers.”\n\nIf you need a decision boundary, take the measurement to Laws.",
-        "量规是信号车道：指数、扫掠、热图、导出。它适合“给我数字”。\n\n如果你需要裁决边界，就把测量带去法则。",
-        "Medidores es donde viven señales: índices, barridos, mapas, exports. Para “muéstrame números.”\n\nSi necesitas límite de decisión, llevas la medición a Leyes."
+        "Use GAUGES when you want numbers, deltas, and trend direction. Take the result to LAWS if you need a boundary.",
+        "想要数字、差分与趋势方向就用 GAUGES；需要边界就把结果带去 LAWS。",
+        "Usa MEDIDORES para números/deltas/tendencia. Para límites: llévalo a LEYES."
       ),
       jump:{label:P("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES"), href:"/gauges/"}
     },
-    {
-      c:"#ff2b2b",
-      q:P("Do you want ambitious direction—without overpromising?","你想看大胆方向但不夸口吗？","¿Quieres dirección ambiciosa sin sobreprometer?"),
-      s:P("Explore holds frontier ideas as organized shells.","探索把前沿做成有序的壳。","Explorar guarda ideas frontera como carcasas."),
+    { c:"#93c5fd",
+      q:P("Want frontier ideas safely labeled?","想看前沿但要标注就绪度？","¿Ideas frontera con postura clara?"),
+      s:P("Explore is organized shells: ambition with prerequisites.","探索=有序壳：雄心+前置条件。","Explorar = carcasas: ambición con prerrequisitos."),
       p:P(
-        "Explore is where the future lives safely: big direction, prerequisites, and clearly labeled readiness.\n\nWhen measurement arrives, shells graduate into Products or Gauges. Until then: organized, not hyped.",
-        "探索是“安全的未来”：大方向、前置条件、以及清晰的就绪标注。\n\n测量一到位，壳就升级到产品或量规；在那之前：有序，不吹。",
-        "Explorar es futuro seguro: dirección grande, prerrequisitos y postura clara.\n\nCuando llega medición, la carcasa sube a Productos o Medidores. Hasta entonces: organizado, sin hype."
+        "Use EXPLORE when you want direction with controlled claims. Shells graduate into Products/Gauges after receipts exist.",
+        "想要方向但不夸口就用 EXPLORE：有收据后壳才升级到产品/量规。",
+        "Usa EXPLORAR para dirección sin sobreprometer. La carcasa sube con recibos."
       ),
       jump:{label:P("OPEN: EXPLORE","打开：探索","ABRIR: EXPLORAR"), href:"/explore/"}
     }
@@ -628,8 +627,8 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var cards=stack.querySelectorAll(".card");
     for(var i=0;i<cards.length;i++){
       cards[i].classList.remove("open");
-      var ch=cards[i].querySelector(".chevTxt");
-      if(ch) ch.textContent="▸";
+      var t=cards[i].querySelector(".chevTxt");
+      if(t) t.textContent="▸";
     }
   }
 
@@ -641,7 +640,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var head=document.createElement("div");
     head.className="head";
     head.setAttribute("role","button");
-    head.setAttribute("tabindex","0");
+    head.tabIndex=0;
 
     var hL=document.createElement("div");
     hL.className="hL";
@@ -677,21 +676,20 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
     var body=document.createElement("div");
     body.className="body";
 
-    var paras=String(pick(item.p)).split("\n\n");
-    for(var i=0;i<paras.length;i++){
-      var p=document.createElement("p");
-      p.className="p";
-      p.textContent=paras[i];
-      body.appendChild(p);
-    }
+    var p=document.createElement("p");
+    p.className="p";
+    p.textContent=pick(item.p);
+    body.appendChild(p);
 
     var actions=document.createElement("div");
     actions.className="actions";
+
     var a=document.createElement("a");
     a.className="btn red";
     a.textContent=pick(item.jump.label);
     a.setAttribute("data-route", item.jump.href);
     actions.appendChild(a);
+
     body.appendChild(actions);
 
     function toggle(){
@@ -704,6 +702,7 @@ body::before,body::after{z-index:0!important;pointer-events:none!important}
       closeAll();
       card.classList.add("open");
       chev.querySelector(".chevTxt").textContent="▾";
+      wireAll();
     }
 
     head.addEventListener("click", toggle, {passive:true});

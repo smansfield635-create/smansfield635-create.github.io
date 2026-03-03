@@ -1,29 +1,26 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS · SIGNATURE + 5 STREAMS · 20 CORE PRODUCTS (MARKETABLE / STORY-FIRST)
-     INFORMAL LAYER (PINNED):
+     PRODUCTS · SIGNATURE SYSTEMS + 5 STREAMS (FULL / GLOSS / COLOR / NO SHELLS)
+     INFORMAL SITE LAYER (PINNED):
        - gd_style = informal
        - gd_depth = explore
-     TRILINGUAL UI: EN / 中文 / ES
+     TRILINGUAL UI: EN / 中文 / ES  (NO RELOAD)
      VISIBLE LENS ONLY:
-       - lane=platform|engineering (URL-only; NEVER stored)
+       - lane=platform|engineering (URL-only; NEVER stored) (NO RELOAD)
      UX:
-       - Single-open accordion (streams)
-       - Switching LANG or LANE does NOT reload
-       - Switching LANG or LANE does NOT close the open stream
-       - NO empty grid boxes (no dead space)
-       - Each product is a stacked card with:
-           - 1 narrative paragraph (always visible)
-           - 3 sub-bubbles: Concept / Build Now / Roadmap
-           - Jump button
+       - Signature first (8 glossy diamonds; 4×2)
+       - Streams are single-open accordion
+       - Each stream body is a 2×2 glossy diamond grid (4 products, no empty space)
+       - Switching LANG or LANE does NOT reload and does NOT close the open stream
      STATE:
        - Preserve gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
        - Preserve URL query: lang/style/time/depth/lane
      ASSETS:
        - /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
-     ROUTES:
-       - Edit ROUTES table in JS to fix any 404s (single place).
+     ROUTING:
+       - Edit ROUTES table only.
+       - If a destination 404s: create that page, don’t degrade this hub.
 -->
 
 <html lang="en">
@@ -41,28 +38,34 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
+/* ===== TOKENS ===== */
 :root{
   --dockH:132px;
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
-  --ink:rgba(255,255,255,.94);
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.80);
-  --mut2:rgba(255,255,255,.72);
+  --ink:rgba(255,255,255,.95);
+  --txt:rgba(255,255,255,.90);
+  --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
 
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-  --goldSoft:rgba(201,162,74,.18);
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.86);
+
+  --crimson:rgba(120,0,22,.34);
+  --festival:rgba(255,43,43,.18);
+  --opalV:rgba(90,40,120,.12);
+
+  --gold:rgba(201,162,74,.55);
+  --goldGlow:rgba(201,162,74,.30);
 
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== Top controls ===== */
+/* ===== TOP CONTROLS ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -76,7 +79,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* button */
+/* Buttons */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -100,6 +103,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
 
+/* Seg */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -121,22 +125,25 @@ body::before,body::after{pointer-events:none!important}
   box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
 }
 
-/* ===== Page ===== */
+/* ===== PAGE ===== */
 .page{
-  width:min(1120px,94vw);
+  width:min(1180px,94vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
-  display:flex;flex-direction:column;gap:12px;
-  position:relative;z-index:10;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
 }
 
-/* background context behind content */
+/* Background context behind content */
 .backdrop{
   position:absolute;
   left:50%;
   top:68px;
   transform:translateX(-50%);
-  width:min(1180px,96vw);
+  width:min(1240px,96vw);
   height:calc(100% - 108px);
   border-radius:34px;
   pointer-events:none;
@@ -181,11 +188,13 @@ body::before,body::after{pointer-events:none!important}
   opacity:.72;
 }
 
-/* ===== Header ===== */
+/* ===== HEADER ===== */
 .header{
-  position:relative;z-index:2;
+  position:relative;
+  z-index:2;
   border:1px solid var(--stroke);
-  border-radius:24px;
+  border-radius:26px;
+  padding:20px 18px 16px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
@@ -194,12 +203,11 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
   box-shadow:var(--shadowA);
-  padding:18px 18px 16px;
   overflow:hidden;
 }
 .header::before{
   content:"";
-  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -213,9 +221,15 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(#000,#000);
 }
 
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
-.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
-.s{margin:10px 0 0;font-size:15.5px;line-height:1.65;color:var(--txt);max-width:980px}
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.h1{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);line-height:1.08}
+.sub{
+  margin-top:12px;
+  font-size:15.5px;
+  line-height:1.6;
+  color:rgba(255,255,255,.88);
+  max-width:980px;
+}
 .rule{
   margin-top:12px;
   padding:12px 12px;
@@ -230,34 +244,7 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.45;
 }
 
-/* signature panel */
-.signature{
-  position:relative;z-index:2;
-  border:1px solid rgba(201,162,74,.26);
-  border-radius:24px;
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.20), transparent 58%),
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.28), rgba(0,0,0,.14));
-  box-shadow:var(--shadowA), 0 0 22px rgba(201,162,74,.10);
-  padding:18px 18px 16px;
-  overflow:hidden;
-}
-.signature h2{margin:0;font-size:18px;font-weight:980;letter-spacing:.4px;color:var(--ink)}
-.sigGrid{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.sigItem{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  padding:12px 12px;
-  background:rgba(0,0,0,.14);
-}
-.sigTop{display:flex;gap:10px;align-items:flex-start}
-.sigDia{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--pc);box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);flex:0 0 auto;margin-top:4px}
-.sigName{font-weight:980;font-size:15px;letter-spacing:.2px;color:var(--ink)}
-.sigBody{margin-top:8px;color:rgba(255,255,255,.84);line-height:1.6;font-size:13.75px}
-.sigActions{margin-top:10px;display:flex;justify-content:flex-end}
-
-/* state pills */
+/* State pills */
 .stateRow{
   margin-top:12px;
   display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
@@ -272,7 +259,7 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
-/* band */
+/* ===== SIGNATURE ===== */
 .band{
   position:relative;z-index:2;
   padding:10px 12px;border-radius:18px;
@@ -282,7 +269,111 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.90);
 }
 
-/* ===== Streams accordion (single-open) ===== */
+.sigPanel{
+  position:relative;z-index:2;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:16px 16px 18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(201,162,74,.10), transparent 58%),
+    radial-gradient(circle at 78% 30%, rgba(255,43,43,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.84), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+}
+.sigIntro{
+  margin:0 0 14px;
+  font-size:14.75px;
+  line-height:1.65;
+  color:rgba(255,255,255,.86);
+  max-width:980px;
+}
+
+/* Diamond grid: 4×2 */
+.dgrid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:14px;
+}
+@media (max-width:920px){
+  .dgrid{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+
+/* Glossy diamond tile */
+.dtile{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:14px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.20), transparent 50%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.14), transparent 60%),
+    radial-gradient(circle at 70% 86%, rgba(90,40,120,.12), transparent 66%),
+    radial-gradient(circle at 26% 82%, rgba(120,0,22,.22), transparent 70%),
+    linear-gradient(160deg, rgba(10,12,16,.88), rgba(6,8,10,.96));
+  box-shadow:
+    0 22px 70px rgba(0,0,0,.62),
+    0 0 26px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -46px 86px rgba(0,0,0,.78);
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.dtile::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.28;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    linear-gradient(#000,#000);
+}
+.dtile::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.90;
+}
+
+.dtop{display:flex;align-items:flex-start;gap:10px}
+.dmark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c,#c9a24a);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.dtitle{
+  font-weight:980;
+  letter-spacing:.2px;
+  font-size:15.5px;
+  color:var(--ink);
+  line-height:1.15;
+}
+.dpara{
+  margin-top:10px;
+  font-size:13.75px;
+  line-height:1.55;
+  color:rgba(255,255,255,.84);
+}
+.dfoot{
+  margin-top:12px;
+  display:flex;justify-content:flex-end;
+}
+.dfoot .btn{min-height:40px;padding:10px 12px;border-radius:999px;font-size:13px}
+
+/* ===== STREAMS ACCORDION ===== */
 .list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
 .row{
   border:1px solid rgba(255,255,255,.10);
@@ -309,19 +400,19 @@ body::before,body::after{pointer-events:none!important}
   touch-action:manipulation;
 }
 .hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.mark{
+.hDia{
   width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
   background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
   flex:0 0 auto;margin-top:4px;
 }
-.titleBlock{min-width:0}
-.q{
+.hTitleBlock{min-width:0}
+.hTitle{
   font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.subt{
-  margin-top:8px;font-size:13.75px;opacity:.90;line-height:1.45;
+.hSub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
   color:rgba(255,255,255,.86);max-width:92ch;
 }
 .chev{
@@ -340,6 +431,7 @@ body::before,body::after{pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
   opacity:.62;pointer-events:none;
 }
+
 .body{
   display:none;
   padding:16px 16px 18px;
@@ -351,61 +443,25 @@ body::before,body::after{pointer-events:none!important}
 .row.open .body{display:block}
 .row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
 
-/* product card (no grid dead space) */
-.pcard{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:14px 14px 12px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  position:relative;
-  overflow:hidden;
+.streamPara{
+  margin:0 0 14px;
+  color:rgba(255,255,255,.88);
+  font-size:14.75px;
+  line-height:1.65;
+  max-width:980px;
 }
-.pcard + .pcard{margin-top:12px}
-.pcard::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
-}
-.pTop{display:flex;gap:10px;align-items:flex-start}
-.pDia{width:10px;height:10px;border-radius:3px;transform:rotate(45deg);background:var(--pc);box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);flex:0 0 auto;margin-top:4px}
-.pName{font-weight:980;letter-spacing:.2px;font-size:16px;color:var(--ink);line-height:1.15}
-.pNarr{margin-top:10px;color:rgba(255,255,255,.86);line-height:1.65;font-size:14.25px}
 
-/* sub-bubbles */
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  padding:12px 12px 10px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
+/* stream grid: fixed 2×2 diamonds for symmetry */
+.sgrid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:14px;
 }
-.bubble::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.20), transparent 72%);
-  opacity:.45;pointer-events:none;
+@media (max-width:720px){
+  .sgrid{grid-template-columns:repeat(1, minmax(0,1fr))}
 }
-.bubble h4{margin:0 0 6px;font-weight:980;letter-spacing:.15px;font-size:14px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.65;display:none;font-size:13.75px}
-.bubble.open p{display:block}
 
-/* jump */
-.pActions{margin-top:12px;display:flex;justify-content:flex-end}
-.pActions .btn{padding:10px 12px;border-radius:999px;min-height:40px;font-size:13px}
-
-/* ===== Dock ===== */
+/* ===== DOCK ===== */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
@@ -425,7 +481,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
-  :root{--dockH:132px}
+  :root{--dockH:148px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
@@ -457,8 +513,8 @@ body::before,body::after{pointer-events:none!important}
 
   <section class="header" aria-label="Products header">
     <p class="k" id="hk">PRODUCTS</p>
-    <h1 class="t" id="ht">SIGNATURE + STREAMS</h1>
-    <p class="s" id="hs"></p>
+    <h1 class="h1" id="ht">SIGNATURE SYSTEMS · DEPLOYMENT STREAMS</h1>
+    <p class="sub" id="hs"></p>
     <div class="rule" id="rule"></div>
 
     <div class="stateRow" aria-label="State">
@@ -467,12 +523,13 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </section>
 
-  <section class="signature" aria-label="Signature Solutions">
-    <h2 id="sigH">SIGNATURE SOLUTIONS</h2>
-    <div class="sigGrid" id="sigGrid"></div>
+  <div class="band" id="bandSig">SIGNATURE SYSTEMS (OPEN ONE → ENTER)</div>
+  <section class="sigPanel" aria-label="Signature systems">
+    <p class="sigIntro" id="sigIntro"></p>
+    <div class="dgrid" id="sigGrid"></div>
   </section>
 
-  <div class="band" id="band">STREAMS (OPEN ONE)</div>
+  <div class="band" id="bandStreams">STREAMS (OPEN ONE)</div>
   <div class="list" id="list"></div>
 </div>
 
@@ -487,7 +544,7 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== State (gd_* only; pinned informal layer) =====
+  // ===== STATE (gd_* only; pinned informal layer) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
@@ -524,6 +581,10 @@ body::before,body::after{pointer-events:none!important}
     return "?"+p.toString();
   }
 
+  function go(path){
+    window.location.href = path + q();
+  }
+
   function setPressed(ids, activeId){
     for(var i=0;i<ids.length;i++){
       var el=document.getElementById(ids[i]);
@@ -533,536 +594,377 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+
   function laneLabel(){
     return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
       : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
       : (lane==="engineering"?"ENGINEERING":"PLATFORM");
   }
+
   function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // ===== ROUTES TABLE (edit here if you rename pages) =====
+  // ===== ROUTES (single source of truth) =====
+  // IMPORTANT: If any is 404, create that page at the path.
   var ROUTES = {
-    // SIGNATURE
-    "sig_side":"/products/signature/on-your-side-ai/",
-    "sig_shimmer":"/explore/frontier/shimmer/",
-    "sig_lattice":"/explore/frontier/lattice/",
-    "sig_dotgrid":"/products/signature/dot-dot-grid/",
-    "sig_fte":"/products/signature/fusion-traversal-engine/",
+    // SIGNATURE SYSTEMS
+    sig_shimmer: "/explore/frontier/shimmer/",
+    sig_lattice256: "/explore/frontier/lattice/",
+    sig_dotdot: "/gauges/dot-grid/",
+    sig_onyourside: "/products/on-your-side-ai/",
+    sig_fusion_traversal: "/products/fusion-traversal-engine/",
+    sig_ccd: "/products/capital-doctrine/",
+    sig_clean_english: "/products/education/",
+    sig_energy_stack: "/explore/frontier/energy/",
 
-    // GOVERNING
-    "gov_policy_engine":"/products/governing/policy-engine/",
-    "gov_decision_index":"/products/governing/decision-index/",
-    "gov_compliance_grid":"/products/governing/compliance-grid/",
-    "gov_public_risk_meter":"/products/governing/public-risk-meter/",
+    // STREAMS: GOVERNING
+    gov_policy_engine: "/products/governing/policy-engine/",
+    gov_decision_index: "/products/governing/decision-index/",
+    gov_compliance_grid: "/products/governing/compliance-grid/",
+    gov_public_risk_meter: "/products/governing/public-risk-meter/",
 
-    // ENERGY
-    "en_grid_optimization":"/products/energy/grid-optimization/",
-    "en_storage_stack":"/products/energy/storage-stack/",
-    "en_load_balancer":"/products/energy/load-balancer/",
-    "en_resilience_module":"/products/energy/resilience-module/",
+    // STREAMS: ENERGY
+    en_grid_optimization: "/products/energy/grid-optimization/",
+    en_storage_stack: "/products/energy/storage-stack/",
+    en_load_balancer: "/products/energy/load-balancer/",
+    en_resilience_module: "/products/energy/resilience-module/",
 
-    // FINANCE
-    "fi_capital_doctrine":"/products/capital-doctrine/",
-    "fi_liquidity_model":"/products/finance/liquidity-model/",
-    "fi_risk_envelope":"/products/finance/risk-envelope/",
-    "fi_audit_ledger":"/products/finance/audit-ledger/",
+    // STREAMS: FINANCE
+    fi_capital_doctrine: "/products/capital-doctrine/",
+    fi_liquidity_model: "/products/finance/liquidity-model/",
+    fi_risk_envelope: "/products/finance/risk-envelope/",
+    fi_audit_ledger: "/products/finance/audit-ledger/",
 
-    // AGRICULTURE
-    "ag_closed_loop_farming":"/products/agriculture/closed-loop-farming/",
-    "ag_yield_optimizer":"/products/agriculture/yield-optimizer/",
-    "ag_water_index":"/products/agriculture/water-index/",
-    "ag_soil_health_grid":"/products/agriculture/soil-health-grid/",
+    // STREAMS: AGRICULTURE
+    ag_closed_loop_farming: "/products/agriculture/closed-loop-farming/",
+    ag_yield_optimizer: "/products/agriculture/yield-optimizer/",
+    ag_water_index: "/products/agriculture/water-index/",
+    ag_soil_health_grid: "/products/agriculture/soil-health-grid/",
 
-    // INFRASTRUCTURE
-    "in_urban_stack":"/products/infrastructure/urban-stack/",
-    "in_transit_model":"/products/infrastructure/transit-model/",
-    "in_waste_loop":"/products/infrastructure/waste-loop/",
-    "in_habitat_module":"/products/infrastructure/habitat-module/"
+    // STREAMS: INFRASTRUCTURE
+    in_urban_stack: "/products/infrastructure/urban-stack/",
+    in_transit_model: "/products/infrastructure/transit-model/",
+    in_waste_loop: "/products/infrastructure/waste-loop/",
+    in_habitat_module: "/products/infrastructure/habitat-module/"
   };
 
-  // ===== SIGNATURE (fixed top set) =====
-  var SIGNATURE = [
-    {pc:"#ff2b2b", id:"sig_side",
-      n:{platform:{en:"SIDE · On Your Side AI",zh:"SIDE · 站在你这边AI",es:"SIDE · IA de tu lado"},
-         engineering:{en:"SIDE · Adversarial Clarity Engine",zh:"SIDE · 对抗式清晰引擎",es:"SIDE · Motor adversarial"}},
-      p:{platform:{en:"Scope-first assistant: forces clean decision posture before escalation.",zh:"范围优先：升级前先给清晰决策姿态。",es:"Alcance primero: postura limpia antes de escalar."},
-         engineering:{en:"Constraint/receipt gating for decisions; reason-coded outputs.",zh:"决策的约束/收据闸门；原因码输出。",es:"Gating por restricciones/recibos; códigos de razón."}},
-      c:{platform:{en:"Concept: truth without drama.",zh:"概念：不带戏剧的真相。",es:"Concepto: verdad sin drama."},
-         engineering:{en:"Concept: adversarial coherence under scope.",zh:"概念：范围下的对抗一致性。",es:"Concepto: coherencia adversarial bajo alcance."}},
-      b:{platform:{en:"Build now: intake → scope → next step.",zh:"现在建：输入→范围→下一步。",es:"Construir: entrada→alcance→siguiente paso."},
-         engineering:{en:"Build now: deterministic gates + receipt log.",zh:"现在建：确定性闸门+收据日志。",es:"Construir: compuertas deterministas + log."}},
-      r:{platform:{en:"Roadmap: integrate to every stream as entry boundary.",zh:"路线图：作为每个流的入口边界。",es:"Hoja: integrarlo como frontera de entrada."},
-         engineering:{en:"Roadmap: manifest locks + replay regression.",zh:"路线图：清单锁+回放回归。",es:"Hoja: locks + regresión por replay."}}
+  // ===== COPY PACKS =====
+  var HEAD = {
+    en:{
+      platform:{
+        hs:"This is a deployment catalog for structural stability. Signature Systems are the core engines. Streams are the adoption surfaces. Choose one path and execute.",
+        rule:"Rule: signatures lead. Streams deploy. Every jump is a real page."
+      },
+      engineering:{
+        hs:"Engineering view: same catalog, expressed as deterministic contracts. Signature Systems are shared primitives. Streams are execution surfaces with bounded outputs.",
+        rule:"Rule: route → receipt → replay. No silent overrides."
+      }
     },
-
-    {pc:"#c9a24a", id:"sig_shimmer",
-      n:{platform:{en:"SHIMMER",zh:"SHIMMER",es:"SHIMMER"},
-         engineering:{en:"SHIMMER (S.H.I.M.M.E.R.)",zh:"SHIMMER（S.H.I.M.M.E.R.）",es:"SHIMMER (S.H.I.M.M.E.R.)"}},
-      p:{platform:{en:"Stops perception drift from turning into collapse.",zh:"阻止感知漂移变成坍塌。",es:"Evita que deriva perceptiva se vuelva colapso."},
-         engineering:{en:"Variance control loop for interface + cognition.",zh:"接口+认知的方差控制回路。",es:"Loop de control de varianza interfaz+cognición."}},
-      c:{platform:{en:"Concept: clarity loop for humans.",zh:"概念：面向人类的清晰循环。",es:"Concepto: loop de claridad."},
-         engineering:{en:"Concept: baseline→bands→triggers→receipts.",zh:"概念：基线→区间→触发→收据。",es:"Concepto: baseline→bandas→triggers→recibos."}},
-      b:{platform:{en:"Build now: show ‘what changed’ before arguing.",zh:"现在建：先展示变化，再争论。",es:"Construir: mostrar cambio antes de discutir."},
-         engineering:{en:"Build now: deterministic reason codes per trigger.",zh:"现在建：每触发对应原因码。",es:"Construir: códigos deterministas por trigger."}},
-      r:{platform:{en:"Roadmap: unify across streams via shared receipts.",zh:"路线图：用共享收据统一各流。",es:"Hoja: unificar por recibos compartidos."},
-         engineering:{en:"Roadmap: replayable logs + regression checks.",zh:"路线图：可回放日志+回归检查。",es:"Hoja: logs replayables + regresión."}}
+    zh:{
+      platform:{
+        hs:"这是“结构稳定”的部署目录。签名系统是核心引擎；产品流是采纳面。选一条路径，直接执行。",
+        rule:"规则：签名先行；流负责落地；每个跳转都必须是实页。"
+      },
+      engineering:{
+        hs:"工程视图：同一目录，用确定性契约表达。签名系统是共享原语；产品流是有界输出的执行面。",
+        rule:"规则：路由→收据→回放。禁止静默覆盖。"
+      }
     },
-
-    {pc:"#93c5fd", id:"sig_lattice",
-      n:{platform:{en:"256-State Lattice",zh:"256态晶格",es:"Lattice 256"},
-         engineering:{en:"Finite State Lattice (4×8 core)",zh:"有限态晶格（4×8核）",es:"Lattice finito (4×8 núcleo)"}},
-      p:{platform:{en:"Turns ‘complex’ into indexable, comparable, auditable states.",zh:"把复杂变成可索引、可比较、可审计状态。",es:"Convierte ‘complejo’ en estados indexables y auditables."},
-         engineering:{en:"Explicit axes + manifest locks + deterministic replay.",zh:"显式轴+清单锁+确定性回放。",es:"Ejes explícitos + locks + replay determinista."}},
-      c:{platform:{en:"Concept: stop stories; point to coordinates.",zh:"概念：不讲故事，指向坐标。",es:"Concepto: no historias; coordenadas."},
-         engineering:{en:"Concept: (scope+manifest+evidence)⇒output.",zh:"概念：（范围+清单+证据）⇒输出。",es:"Concepto: (alcance+manifiesto+evidencia)⇒salida."}},
-      b:{platform:{en:"Build now: define 3–5 axes and keep them stable.",zh:"现在建：定义3–5轴并保持稳定。",es:"Construir: definir 3–5 ejes y mantenerlos."},
-         engineering:{en:"Build now: hash manifest; store receipts for replay.",zh:"现在建：哈希清单；存收据回放。",es:"Construir: hashear manifiesto; guardar recibos."}},
-      r:{platform:{en:"Roadmap: bind each stream to the same coordinate grammar.",zh:"路线图：各流共用坐标语法。",es:"Hoja: misma gramática de coordenadas."},
-         engineering:{en:"Roadmap: sweeps + regression replays on every change.",zh:"路线图：扫掠+每变更回归回放。",es:"Hoja: barridos + replay de regresión."}}
-    },
-
-    {pc:"#a3a3a3", id:"sig_dotgrid",
-      n:{platform:{en:"Dot·Dot Grid",zh:"点点网格",es:"Dot·Dot Grid"},
-         engineering:{en:"Trajectory Window Grid",zh:"轨迹窗口网格",es:"Grid de ventanas"}},
-      p:{platform:{en:"Shows drift before it becomes failure. Windowed truth.",zh:"失败前先看漂移。窗口化真相。",es:"Muestra deriva antes del fallo. Verdad por ventanas."},
-         engineering:{en:"Windowed deltas + slope changes + triggers.",zh:"窗口差分+斜率变化+触发。",es:"Deltas por ventana + pendiente + triggers."}},
-      c:{platform:{en:"Concept: see the path, not the snapshot.",zh:"概念：看路径，不看快照。",es:"Concepto: ver el camino, no el snapshot."},
-         engineering:{en:"Concept: trend/accel are signals.",zh:"概念：趋势/加速是信号。",es:"Concepto: tendencia/acel son señales."}},
-      b:{platform:{en:"Build now: choose one window and keep it consistent.",zh:"现在建：选一个窗口并保持一致。",es:"Construir: elegir una ventana consistente."},
-         engineering:{en:"Build now: compute Δ and ΔΔ; emit reason codes.",zh:"现在建：计算Δ与ΔΔ；输出原因码。",es:"Construir: calcular Δ y ΔΔ; emitir códigos."}},
-      r:{platform:{en:"Roadmap: connect to every product as the early-warning layer.",zh:"路线图：作为每个产品的预警层。",es:"Hoja: capa de alerta temprana."},
-         engineering:{en:"Roadmap: regression checks per release.",zh:"路线图：每发布做回归检查。",es:"Hoja: regresión por release."}}
-    },
-
-    {pc:"#34d399", id:"sig_fte",
-      n:{platform:{en:"Fusion Traversal Engine",zh:"融合遍历引擎",es:"Motor de Traversal"},
-         engineering:{en:"Traversal Integration Core",zh:"遍历集成核",es:"Núcleo de integración"}},
-      p:{platform:{en:"One spine connecting human → signal → state → action.",zh:"一条脊柱连接：人→信号→状态→动作。",es:"Una columna que conecta: humano→señal→estado→acción."},
-         engineering:{en:"Unified handoff contracts across lanes; receipt-first.",zh:"跨车道统一交接契约；收据优先。",es:"Contratos unificados; recibos primero."}},
-      c:{platform:{en:"Concept: reduce clutter by routing through checkpoints.",zh:"概念：用检查点路由减少杂乱。",es:"Concepto: reducir clutter con checkpoints."},
-         engineering:{en:"Concept: deterministic handoff with invalidation rules.",zh:"概念：确定性交接+失效规则。",es:"Concepto: handoff determinista + invalidación."}},
-      b:{platform:{en:"Build now: jump-to-jump checkpoints for main sections.",zh:"现在建：主区设置J2J检查点。",es:"Construir: checkpoints J2J."},
-         engineering:{en:"Build now: receipt-gated advancement and rollback.",zh:"现在建：收据闸门推进+回滚。",es:"Construir: avance con gate + rollback."}},
-      r:{platform:{en:"Roadmap: unify all compasses into a coherent travel system.",zh:"路线图：把所有指南针统一为遍历系统。",es:"Hoja: unificar brújulas en sistema de viaje."},
-         engineering:{en:"Roadmap: formal layer later; informal remains stable.",zh:"路线图：稍后做正式层；通俗层保持稳定。",es:"Hoja: capa formal después; informal estable."}}
+    es:{
+      platform:{
+        hs:"Este es un catálogo de despliegue para estabilidad estructural. Sistemas firma = motores núcleo. Streams = superficies de adopción. Elige un camino y ejecuta.",
+        rule:"Regla: firmas lideran. Streams despliegan. Cada salto debe ser una página real."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: mismo catálogo como contratos deterministas. Sistemas firma = primitivas compartidas. Streams = superficies de ejecución con salidas acotadas.",
+        rule:"Regla: ruta → recibo → replay. Sin overrides silenciosos."
+      }
     }
+  };
+
+  var SIGNATURE = [
+    {id:"sig_shimmer", c:"#ff2b2b",
+      n:{platform:{en:"SHIMMER Engine",zh:"SHIMMER 引擎",es:"Motor SHIMMER"}, engineering:{en:"Variance Control",zh:"方差控制",es:"Control de Varianza"}},
+      p:{platform:{en:"Stabilizes perception under pressure. Removes distortion before it becomes drift.",zh:"压力下稳定感知。失真在变成漂移前被削减。",es:"Estabiliza percepción bajo presión. Reduce distorsión antes de deriva."},
+         engineering:{en:"Baseline → bands → triggers → reason codes → receipts → replay.",zh:"基线→区间→触发→原因码→收据→回放。",es:"Baseline→bandas→triggers→razones→recibos→replay。"}}},
+
+    {id:"sig_lattice256", c:"#c9a24a",
+      n:{platform:{en:"256-State Lattice",zh:"256态晶格",es:"Lattice 256"}, engineering:{en:"4×8 Core Map",zh:"4×8 核映射",es:"Mapa 4×8"}},
+      p:{platform:{en:"Makes “complex” indexable. Enables comparison across time, teams, and domains.",zh:"让“复杂”可索引。可跨时间/团队/领域比较。",es:"Hace lo complejo indexable. Permite comparar en el tiempo y dominios."},
+         engineering:{en:"Finite coordinates + manifest lock + deterministic replay discipline.",zh:"有限坐标+清单锁+确定性回放纪律。",es:"Coordenadas finitas + manifiesto fijo + replay determinista."}}},
+
+    {id:"sig_dotdot", c:"#93c5fd",
+      n:{platform:{en:"Dot·Dot Grid",zh:"点点网格",es:"Dot·Dot Grid"}, engineering:{en:"Signal Surface",zh:"信号面",es:"Superficie de Señal"}},
+      p:{platform:{en:"Shows what changed. Turns vague concern into measurable deltas.",zh:"展示变化。把模糊担忧变成可测差分。",es:"Muestra cambios. Convierte preocupación en deltas medibles."},
+         engineering:{en:"Windowed deltas + trend direction + threshold crossings.",zh:"窗口差分+趋势方向+阈值穿越。",es:"Deltas por ventana + tendencia + cruces de umbral."}}},
+
+    {id:"sig_onyourside", c:"#34d399",
+      n:{platform:{en:"On Your Side AI (SIDE)",zh:"On Your Side AI（SIDE）",es:"On Your Side AI"}, engineering:{en:"Receipt-First Agent",zh:"收据优先代理",es:"Agente con Recibos"}},
+      p:{platform:{en:"Decision support with calm structure: next step, not noise.",zh:"冷静结构的决策支持：给下一步，不给噪声。",es:"Soporte de decisión con estructura: siguiente paso, no ruido."},
+         engineering:{en:"Bounded outputs + scope discipline + non-narrative classification.",zh:"有界输出+范围纪律+非叙事分类。",es:"Salidas acotadas + disciplina de alcance + clasificación no narrativa."}}},
+
+    {id:"sig_fusion_traversal", c:"#a3a3a3",
+      n:{platform:{en:"Traversal Engine",zh:"遍历引擎",es:"Motor de Traversal"}, engineering:{en:"Fusion Traversal Core",zh:"融合遍历核",es:"Núcleo de Fusión"}},
+      p:{platform:{en:"Moves users through structure without losing state or clarity.",zh:"在不丢状态与清晰度的前提下完成遍历。",es:"Recorre estructura sin perder estado ni claridad."},
+         engineering:{en:"Receipt-gated traversal with deterministic exits and returns.",zh:"收据门控遍历：确定性退出与返回。",es:"Traversal con compuertas por recibo: salidas y retornos deterministas."}}},
+
+    {id:"sig_ccd", c:"#c9a24a",
+      n:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"Superlayer Gates",zh:"超层闸门",es:"Compuertas Supercapa"}},
+      p:{platform:{en:"Prevents capital from scaling incoherence into collapse.",zh:"阻止资本把不一致扩张成坍塌。",es:"Evita que capital escale incoherencia hasta colapso."},
+         engineering:{en:"Invariant admissibility layer above finance and governance.",zh:"位于金融与治理之上的不变量可采信层。",es:"Capa de admisibilidad invariante sobre finanzas y gobernanza."}}},
+
+    {id:"sig_clean_english", c:"#93c5fd",
+      n:{platform:{en:"Clean English Core",zh:"Clean English Core",es:"Clean English Core"}, engineering:{en:"Syntax Geometry (SSG)",zh:"简化语法几何（SSG）",es:"Geometría de Sintaxis"}},
+      p:{platform:{en:"ESL fluency system: traversal learning with tight structure.",zh:"ESL 流利系统：结构化遍历学习。",es:"Sistema ESL: aprendizaje por recorrido con estructura."},
+         engineering:{en:"Formal grammar navigation mapped as finite rulesets.",zh:"把语法导航映射成有限规则集。",es:"Navegación gramatical como reglas finitas."}}},
+
+    {id:"sig_energy_stack", c:"#ff2b2b",
+      n:{platform:{en:"Energy Stack",zh:"能源栈",es:"Stack Energía"}, engineering:{en:"Solar→Fusion Roadmap",zh:"太阳→聚变路线",es:"Solar→Fusión"}},
+      p:{platform:{en:"Industrial substitution from present reality to frontier capability.",zh:"从现实到前沿能力的工业替代路径。",es:"Sustitución industrial desde realidad a frontera."},
+         engineering:{en:"Stability-first: routing, buffering, containment, verification.",zh:"稳定优先：路由、缓冲、隔离、验证。",es:"Estabilidad primero: ruteo, buffers, contención, verificación."}}}
   ];
 
-  // ===== STREAMS (5 × 4 = 20) =====
   var STREAMS = [
     {
       c:"#34d399",
       name:{en:"GOVERNING",zh:"治理",es:"GOBIERNO"},
-      sub:{en:"Meaning, enforcement, and public stability boundaries.", zh:"含义、执行与公共稳定边界。", es:"Significado, ejecución y límites de estabilidad pública."},
+      para:{
+        en:{platform:"Governing is how big systems stay honest: meaning, rules, enforcement, and public stability boundaries.",
+            engineering:"Governing is deterministic boundary enforcement: constraints, reason codes, receipts, and replayable audits."},
+        zh:{platform:"治理让大系统保持诚实：含义、规则、执行与公共稳定边界。",
+            engineering:"治理=确定性边界执行：约束、原因码、收据与可回放审计。"},
+        es:{platform:"Gobernar mantiene sistemas grandes honestos: significado, reglas, ejecución y límites públicos.",
+            engineering:"Gobernar = enforcement determinista: restricciones, códigos, recibos y auditorías replayables."}
+      },
       products:[
-        {pc:"#34d399", id:"gov_policy_engine",
-         n:{platform:{en:"Policy Engine",zh:"政策引擎",es:"Motor de Política"}, engineering:{en:"Policy Compiler",zh:"政策编译器",es:"Compilador"}},
-         p:{platform:{en:"Turns rules into usable decisions. Removes interpretation drift.",zh:"把规则变成可用决策，去掉解释漂移。",es:"Convierte reglas en decisiones, elimina deriva."},
-            engineering:{en:"Deterministic rule compilation with reason codes and receipts.",zh:"确定性规则编译：原因码+收据。",es:"Compilación determinista con códigos y recibos."}},
-         c:{platform:{en:"Concept: rules must route, not debate.",zh:"概念：规则要路由，不要争论。",es:"Concepto: reglas deben rutear, no debatir."},
-            engineering:{en:"Concept: constraints are enforceable surfaces.",zh:"概念：约束是可执行的面。",es:"Concepto: restricciones son superficies ejecutables."}},
-         b:{platform:{en:"Build now: one page → one decision posture.",zh:"现在建：一页→一种决策姿态。",es:"Construir: una página→una postura."},
-            engineering:{en:"Build now: schema + deterministic outputs + log.",zh:"现在建：架构+确定性输出+日志。",es:"Construir: esquema+salidas+log."}},
-         r:{platform:{en:"Roadmap: connect to every stream as the public boundary.",zh:"路线图：作为各流的公共边界。",es:"Hoja: frontera pública para todos los streams."},
-            engineering:{en:"Roadmap: versioned manifests + replay regression.",zh:"路线图：版本化清单+回放回归。",es:"Hoja: manifiestos versionados + replay."}}
-        },
-        {pc:"#93c5fd", id:"gov_decision_index",
-         n:{platform:{en:"Decision Index",zh:"决策索引",es:"Índice de Decisión"}, engineering:{en:"Decision Classifier",zh:"决策分类器",es:"Clasificador"}},
-         p:{platform:{en:"Stops wandering. Produces a bounded next step.",zh:"停止迷路，输出有界下一步。",es:"Detiene deambular. Da siguiente paso acotado."},
-            engineering:{en:"Bounded outputs under fixed scope; no intent inference.",zh:"固定范围下有界输出；不推断意图。",es:"Salidas acotadas; sin inferir intención."}},
-         c:{platform:{en:"Concept: clarity beats freedom overload.",zh:"概念：清晰胜过选择过载。",es:"Concepto: claridad vence sobrecarga."},
-            engineering:{en:"Concept: determinism under identical inputs.",zh:"概念：同输入确定性。",es:"Concepto: determinismo con entradas idénticas."}},
-         b:{platform:{en:"Build now: one decision → one route.",zh:"现在建：一决策→一条路。",es:"Construir: una decisión→una ruta."},
-            engineering:{en:"Build now: reason codes + receipts per decision.",zh:"现在建：每决策原因码+收据。",es:"Construir: códigos+recibos por decisión."}},
-         r:{platform:{en:"Roadmap: attach to all product pages as a ‘next’ engine.",zh:"路线图：作为所有产品页的“下一步”。",es:"Hoja: motor ‘siguiente’ para todos."},
-            engineering:{en:"Roadmap: audit replay for decisions.",zh:"路线图：决策审计回放。",es:"Hoja: replay de auditoría."}}
-        },
-        {pc:"#c9a24a", id:"gov_compliance_grid",
-         n:{platform:{en:"Compliance Grid",zh:"合规网格",es:"Grid de Cumplimiento"}, engineering:{en:"Constraint Matrix",zh:"约束矩阵",es:"Matriz"}},
-         p:{platform:{en:"Shows what is allowed before execution.",zh:"执行前展示允许范围。",es:"Muestra lo permitido antes de ejecutar."},
-            engineering:{en:"Constraint surfaces + violation meanings.",zh:"约束面+违规含义。",es:"Superficies + significados de violación."}},
-         c:{platform:{en:"Concept: boundaries keep ideas honest.",zh:"概念：边界让想法诚实。",es:"Concepto: límites hacen honestas las ideas."},
-            engineering:{en:"Concept: admissibility is gateable.",zh:"概念：可采信可闸门化。",es:"Concepto: admisibilidad gateable."}},
-         b:{platform:{en:"Build now: publish ‘allowed / not allowed’ plainly.",zh:"现在建：清晰发布“允许/不允许”。",es:"Construir: publicar permitido/no permitido."},
-            engineering:{en:"Build now: reason-coded constraints.",zh:"现在建：原因码约束。",es:"Construir: restricciones con códigos."}},
-         r:{platform:{en:"Roadmap: bind to Laws + Gauges for verification.",zh:"路线图：绑定法则+量规验证。",es:"Hoja: ligar a Leyes+Medidores."},
-            engineering:{en:"Roadmap: regression tests on constraint changes.",zh:"路线图：约束变更回归测试。",es:"Hoja: tests de regresión."}}
-        },
-        {pc:"#ff2b2b", id:"gov_public_risk_meter",
-         n:{platform:{en:"Public Risk Meter",zh:"公共风险表",es:"Medidor Público"}, engineering:{en:"Exposure Monitor",zh:"暴露监测",es:"Monitor"}},
-         p:{platform:{en:"Readable posture: green/yellow/red for public stability.",zh:"公共稳定：红黄绿姿态可读。",es:"Postura legible verde/amarillo/rojo."},
-            engineering:{en:"Windowed exposure + Δρ acceleration monitoring.",zh:"窗口暴露+Δρ加速监测。",es:"Exposición por ventana + Δρ."}},
-         c:{platform:{en:"Concept: prevent panic and prevent denial.",zh:"概念：防恐慌，也防否认。",es:"Concepto: prevenir pánico y negación."},
-            engineering:{en:"Concept: correlation acceleration is the warning.",zh:"概念：相关加速是预警。",es:"Concepto: aceleración correlacional es alerta."}},
-         b:{platform:{en:"Build now: one meter, one meaning, everywhere.",zh:"现在建：一个表，一种含义，全站一致。",es:"Construir: un medidor, un significado."},
-            engineering:{en:"Build now: thresholds + receipts per band.",zh:"现在建：每区间阈值+收据。",es:"Construir: umbrales+recibos por banda."}},
-         r:{platform:{en:"Roadmap: integrate into Door/Compass posture pages.",zh:"路线图：整合到Door/Compass姿态页。",es:"Hoja: integrar en Door/Compass."},
-            engineering:{en:"Roadmap: publish replayable logs.",zh:"路线图：发布可回放日志。",es:"Hoja: logs replayables."}}
-        }
+        {id:"gov_policy_engine", c:"#34d399",
+          n:{platform:{en:"Policy Engine",zh:"政策引擎",es:"Motor de Política"}, engineering:{en:"Policy Compiler",zh:"政策编译器",es:"Compilador"}},
+          p:{platform:{en:"Turns rules into usable decisions.",zh:"把规则变成可用决策。",es:"Convierte reglas en decisiones."},
+             engineering:{en:"Deterministic rule compilation + reason codes.",zh:"确定性规则编译+原因码。",es:"Compilación determinista + códigos."}}},
+        {id:"gov_decision_index", c:"#93c5fd",
+          n:{platform:{en:"Decision Index",zh:"决策索引",es:"Índice de Decisión"}, engineering:{en:"Decision Classifier",zh:"决策分类器",es:"Clasificador"}},
+          p:{platform:{en:"Produces next step without wandering.",zh:"输出下一步，避免乱逛。",es:"Da el siguiente paso sin deambular."},
+             engineering:{en:"Bounded outputs under fixed scope.",zh:"固定范围下有界输出。",es:"Salidas acotadas bajo alcance fijo."}}},
+        {id:"gov_compliance_grid", c:"#c9a24a",
+          n:{platform:{en:"Compliance Grid",zh:"合规网格",es:"Grid de Cumplimiento"}, engineering:{en:"Constraint Matrix",zh:"约束矩阵",es:"Matriz"}},
+          p:{platform:{en:"Shows what is allowed to be done.",zh:"展示允许做什么。",es:"Muestra lo permitido."},
+             engineering:{en:"Constraint surfaces + audit trail.",zh:"约束面+审计轨迹。",es:"Superficies + rastro audit."}}},
+        {id:"gov_public_risk_meter", c:"#ff2b2b",
+          n:{platform:{en:"Public Risk Meter",zh:"公共风险表",es:"Medidor Público"}, engineering:{en:"Exposure Monitor",zh:"暴露监测",es:"Monitor"}},
+          p:{platform:{en:"Readable posture: green/yellow/red.",zh:"可读姿态：绿/黄/红。",es:"Postura legible: verde/amarillo/rojo."},
+             engineering:{en:"Windowed exposure + Δρ watch.",zh:"窗口暴露+Δρ监测。",es:"Exposición por ventana + Δρ."}}}
       ]
     },
 
     {
       c:"#ff2b2b",
       name:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},
-      sub:{en:"Industrial substitution: stability first, then scale.", zh:"工业替代：先稳定，再扩张。", es:"Sustitución industrial: estabilidad primero, luego escala."},
+      para:{
+        en:{platform:"Energy is stability first. Scale is allowed only after volatility is constrained.",
+            engineering:"Energy is control under constraint: feedback, buffers, windowed deltas, containment playbooks."},
+        zh:{platform:"能源优先稳定。只有在波动受限后才允许扩张。",
+            engineering:"能源是在约束下的控制：反馈、缓冲、窗口差分、隔离剧本。"},
+        es:{platform:"Energía: estabilidad primero. Escala solo después de limitar volatilidad.",
+            engineering:"Energía: control bajo restricción: feedback, buffers, deltas por ventana y contención."}
+      },
       products:[
-        {pc:"#ff2b2b", id:"en_grid_optimization",
-         n:{platform:{en:"Grid Optimization",zh:"电网优化",es:"Optimización de Red"}, engineering:{en:"Grid Control Loop",zh:"电网控制回路",es:"Bucle de Control"}},
-         p:{platform:{en:"Reduce volatility without fantasy: stabilize before capacity.",zh:"不靠幻想降波动：先稳后扩。",es:"Reducir volatilidad sin fantasía: estabilizar antes de capacidad."},
-            engineering:{en:"Feedback control + stability bands + reason-coded interventions.",zh:"反馈控制+稳定带+原因码干预。",es:"Control feedback + bandas + códigos."}},
-         c:{platform:{en:"Concept: grid failure is alignment failure.",zh:"概念：电网失败是对齐失败。",es:"Concepto: fallo de red = fallo de alineación."},
-            engineering:{en:"Concept: control is bounded by constraints.",zh:"概念：控制受约束有界。",es:"Concepto: control acotado por restricciones."}},
-         b:{platform:{en:"Build now: publish one ‘stability band’ people can read.",zh:"现在建：发布一个人能读的稳定带。",es:"Construir: publicar una banda de estabilidad legible."},
-            engineering:{en:"Build now: compute deltas per window and trigger contain/rollback.",zh:"现在建：按窗口算差分并触发隔离/回滚。",es:"Construir: deltas por ventana y triggers de contención/rollback."}},
-         r:{platform:{en:"Roadmap: integrate storage + demand shaping into one story.",zh:"路线图：把储能+需求整形合成一条故事线。",es:"Hoja: integrar almacenamiento+demanda en una historia."},
-            engineering:{en:"Roadmap: unified receipts across grid modules.",zh:"路线图：电网模块共享收据。",es:"Hoja: recibos unificados."}}
-        },
-        {pc:"#c9a24a", id:"en_storage_stack",
-         n:{platform:{en:"Storage Stack",zh:"储能系统",es:"Sistema de Almacenamiento"}, engineering:{en:"Buffer Envelope",zh:"缓冲包络",es:"Envolvente de Buffer"}},
-         p:{platform:{en:"Buffers convert shock into survivable motion.",zh:"缓冲把冲击变成可承受运动。",es:"Buffers convierten shocks en movimiento sobrevivible."},
-            engineering:{en:"Capacity + discharge constraints under windowed stress.",zh:"窗口压力下容量+放电约束。",es:"Capacidad+descarga bajo estrés por ventana."}},
-         c:{platform:{en:"Concept: storage is stability, not hype.",zh:"概念：储能是稳定，不是噱头。",es:"Concepto: almacenamiento = estabilidad."},
-            engineering:{en:"Concept: envelopes prevent rupture.",zh:"概念：包络防破裂。",es:"Concepto: envolventes evitan ruptura."}},
-         b:{platform:{en:"Build now: define ‘minimum survivable buffer’.",zh:"现在建：定义“最低可生存缓冲”。",es:"Construir: definir buffer mínimo sobrevivible."},
-            engineering:{en:"Build now: floors/ceilings + reason codes on violations.",zh:"现在建：地板/天花+违规原因码。",es:"Construir: pisos/techos + códigos."}},
-         r:{platform:{en:"Roadmap: integrate into public risk meter posture.",zh:"路线图：接入公共风险表姿态。",es:"Hoja: integrar al medidor público."},
-            engineering:{en:"Roadmap: regression test buffer sizing.",zh:"路线图：缓冲尺寸回归测试。",es:"Hoja: tests de regresión de sizing."}}
-        },
-        {pc:"#93c5fd", id:"en_load_balancer",
-         n:{platform:{en:"Load Balancer",zh:"负载平衡",es:"Balanceador de Carga"}, engineering:{en:"Demand Shaper",zh:"需求整形",es:"Modelador de Demanda"}},
-         p:{platform:{en:"Keep peaks from breaking the system.",zh:"防止峰值破坏系统。",es:"Evitar que picos rompan el sistema."},
-            engineering:{en:"Predictive shaping + windowed deltas + drift flags.",zh:"预测整形+窗口差分+漂移标记。",es:"Modelado predictivo + deltas + flags."}},
-         c:{platform:{en:"Concept: peaks are where systems lie.",zh:"概念：峰值处系统最会撒谎。",es:"Concepto: en picos, el sistema miente."},
-            engineering:{en:"Concept: variance control is admissibility.",zh:"概念：方差控制就是可采信。",es:"Concepto: control de varianza = admisibilidad."}},
-         b:{platform:{en:"Build now: show ‘peak pressure’ as one readable number.",zh:"现在建：把峰值压力变成一个可读数字。",es:"Construir: mostrar presión de pico como un número legible."},
-            engineering:{en:"Build now: reason-coded interventions on threshold crossings.",zh:"现在建：阈值穿越→原因码干预。",es:"Construir: cruces→intervenciones con códigos."}},
-         r:{platform:{en:"Roadmap: unify grid + storage + load into one stability story.",zh:"路线图：电网+储能+负载统一为稳定故事。",es:"Hoja: unificar red+almacenamiento+carga."},
-            engineering:{en:"Roadmap: publish replayable demand shaping receipts.",zh:"路线图：发布可回放需求整形收据。",es:"Hoja: recibos replayables."}}
-        },
-        {pc:"#a3a3a3", id:"en_resilience_module",
-         n:{platform:{en:"Resilience Module",zh:"韧性模块",es:"Módulo de Resiliencia"}, engineering:{en:"Containment Playbook",zh:"隔离剧本",es:"Playbook de Contención"}},
-         p:{platform:{en:"Make failure local. Recover fast.",zh:"让失败变小，快速恢复。",es:"Fallo local. Recuperación rápida."},
-            engineering:{en:"Rollback paths + kill/exit logic + receipts.",zh:"回滚路径+终止/退出逻辑+收据。",es:"Rollback+kill/exit+recibos."}},
-         c:{platform:{en:"Concept: containment is intelligence.",zh:"概念：隔离是智能。",es:"Concepto: contención es inteligencia."},
-            engineering:{en:"Concept: rollback beats cascade.",zh:"概念：回滚胜过级联。",es:"Concepto: rollback vence cascada."}},
-         b:{platform:{en:"Build now: publish a calm recovery checklist.",zh:"现在建：发布冷静恢复清单。",es:"Construir: checklist de recuperación."},
-            engineering:{en:"Build now: deterministic recovery steps with reason codes.",zh:"现在建：确定性恢复步骤+原因码。",es:"Construir: pasos deterministas + códigos."}},
-         r:{platform:{en:"Roadmap: connect to governing risk posture pages.",zh:"路线图：连接治理风险姿态页。",es:"Hoja: conectar a postura de riesgo."},
-            engineering:{en:"Roadmap: windowed verification of recovery-to-band.",zh:"路线图：窗口验证恢复回带。",es:"Hoja: verificación por ventana."}}
-        }
+        {id:"en_grid_optimization", c:"#ff2b2b",
+          n:{platform:{en:"Grid Optimization",zh:"电网优化",es:"Optimización de Red"}, engineering:{en:"Grid Control Loop",zh:"电网控制回路",es:"Bucle de Control"}},
+          p:{platform:{en:"Reduce volatility without fantasy.",zh:"不靠幻想降低波动。",es:"Reduce volatilidad sin fantasía."},
+             engineering:{en:"Feedback control + stability bands.",zh:"反馈控制+稳定区间。",es:"Control por feedback + bandas."}}},
+        {id:"en_storage_stack", c:"#c9a24a",
+          n:{platform:{en:"Storage Stack",zh:"储能系统",es:"Sistema de Almacenamiento"}, engineering:{en:"Buffer Envelope",zh:"缓冲包络",es:"Envolvente de Buffer"}},
+          p:{platform:{en:"Store energy so the system stays calm.",zh:"储能让系统保持安静。",es:"Almacena para mantener calma."},
+             engineering:{en:"Capacity + discharge constraints.",zh:"容量+放电约束。",es:"Capacidad + restricciones de descarga."}}},
+        {id:"en_load_balancer", c:"#93c5fd",
+          n:{platform:{en:"Load Balancer",zh:"负载平衡",es:"Balanceador de Carga"}, engineering:{en:"Demand Shaper",zh:"需求整形",es:"Modelador de Demanda"}},
+          p:{platform:{en:"Keep peaks from breaking the system.",zh:"防止峰值破坏系统。",es:"Evita que picos rompan el sistema."},
+             engineering:{en:"Windowed deltas + control thresholds.",zh:"窗口差分+控制阈值。",es:"Deltas por ventana + umbrales."}}},
+        {id:"en_resilience_module", c:"#a3a3a3",
+          n:{platform:{en:"Resilience Module",zh:"韧性模块",es:"Módulo de Resiliencia"}, engineering:{en:"Containment Playbook",zh:"隔离剧本",es:"Playbook de Contención"}},
+          p:{platform:{en:"Make failure local. Recover fast.",zh:"让失败变小，快速恢复。",es:"Fallo local. Recuperación rápida."},
+             engineering:{en:"Rollback paths + kill/exit logic.",zh:"回滚路径+终止/退出逻辑。",es:"Rollback + lógica kill/exit."}}}
       ]
     },
 
     {
       c:"#c9a24a",
       name:{en:"FINANCE",zh:"金融",es:"FINANZAS"},
-      sub:{en:"Capital discipline above execution: admissibility before scale.", zh:"执行之上的资本纪律：先可采信，再扩张。", es:"Disciplina de capital: admisibilidad antes de escalar."},
+      para:{
+        en:{platform:"Finance is admissibility before scale. Capital does not buy coherence. Coherence precedes growth.",
+            engineering:"Finance is constraint execution: envelopes, exposure windows, reason-coded gates, and replayable audit receipts."},
+        zh:{platform:"金融是先可采信再扩张。资本买不到一致性；一致性先于增长。",
+            engineering:"金融是约束执行：包络、暴露窗口、原因码闸门与可回放审计收据。"},
+        es:{platform:"Finanzas: admisibilidad antes de escalar. El capital no compra coherencia; la coherencia precede el crecimiento.",
+            engineering:"Finanzas: ejecución de restricciones: envolventes, ventanas de exposición, compuertas con razones y recibos replayables."}
+      },
       products:[
-        {pc:"#c9a24a", id:"fi_capital_doctrine",
-         n:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital (CCD)"}, engineering:{en:"CCD Superlayer",zh:"CCD 超层",es:"Supercapa CCD"}},
-         p:{platform:{en:"Rulebook above finance & governance. Stops unsafe growth.",zh:"金融与治理之上规则书，阻止不安全扩张。",es:"Reglamento sobre finanzas y gobernanza; detiene crecimiento inseguro."},
-            engineering:{en:"Invariant gates + audit classification under constraint.",zh:"约束下不变量闸门+审计分类。",es:"Compuertas invariantes + clasificación auditable."}},
-         c:{platform:{en:"Concept: capital cannot purchase coherence.",zh:"概念：资本买不到一致性。",es:"Concepto: el capital no compra coherencia."},
-            engineering:{en:"Concept: admissibility is upstream.",zh:"概念：可采信在上游。",es:"Concepto: admisibilidad es upstream."}},
-         b:{platform:{en:"Build now: publish a stop-rule before scale.",zh:"现在建：扩张前先发布停规则。",es:"Construir: regla de stop antes de escalar."},
-            engineering:{en:"Build now: reason-coded gates and receipt log.",zh:"现在建：原因码闸门+收据日志。",es:"Construir: compuertas con códigos + log."}},
-         r:{platform:{en:"Roadmap: bind to risk envelope + liquidity model.",zh:"路线图：绑定风险包络+流动性模型。",es:"Hoja: ligar a envolvente de riesgo + liquidez."},
-            engineering:{en:"Roadmap: enforce no bypass paths.",zh:"路线图：强制无绕过路径。",es:"Hoja: imponer sin bypass."}}
-        },
-        {pc:"#93c5fd", id:"fi_liquidity_model",
-         n:{platform:{en:"Liquidity Model",zh:"流动性模型",es:"Modelo de Liquidez"}, engineering:{en:"Coverage Envelope",zh:"覆盖包络",es:"Envolvente de Cobertura"}},
-         p:{platform:{en:"Can the system survive a shock window without lying?",zh:"系统能否在冲击窗口里存活而不自欺？",es:"¿Puede sobrevivir a un shock sin mentir?"},
-            engineering:{en:"Windowed stress + floors/ceilings + deterministic outputs.",zh:"窗口压力+地板/天花+确定性输出。",es:"Estrés por ventana + pisos/techos + salidas deterministas."}},
-         c:{platform:{en:"Concept: liquidity is time, not opinion.",zh:"概念：流动性是时间，不是观点。",es:"Concepto: liquidez es tiempo, no opinión."},
-            engineering:{en:"Concept: survivability is a bounded gate.",zh:"概念：可生存性是有界闸门。",es:"Concepto: sobrevivibilidad es compuerta acotada."}},
-         b:{platform:{en:"Build now: publish one survival band people can read.",zh:"现在建：发布一个人能读的生存带。",es:"Construir: publicar banda de supervivencia legible."},
-            engineering:{en:"Build now: stress test receipts per window.",zh:"现在建：每窗口压力测试收据。",es:"Construir: recibos de stress por ventana."}},
-         r:{platform:{en:"Roadmap: integrate into public risk meter posture.",zh:"路线图：接入公共风险姿态。",es:"Hoja: integrar a postura de riesgo."},
-            engineering:{en:"Roadmap: replayable audit for every classification.",zh:"路线图：每次分类都可回放审计。",es:"Hoja: auditoría replayable."}}
-        },
-        {pc:"#ff2b2b", id:"fi_risk_envelope",
-         n:{platform:{en:"Risk Envelope",zh:"风险包络",es:"Envolvente de Riesgo"}, engineering:{en:"K/M/R/P Bounds",zh:"K/M/R/P 边界",es:"Límites K/M/R/P"}},
-         p:{platform:{en:"How close to breaking are we—right now?",zh:"我们现在离崩坏多近？",es:"¿Qué tan cerca de romper, ahora?"},
-            engineering:{en:"Constraint surfaces + triggers; no narrative overrides.",zh:"约束面+触发器；无叙事覆盖。",es:"Superficies + triggers; sin override narrativo."}},
-         c:{platform:{en:"Concept: risk is geometry under scale.",zh:"概念：风险是规模下的几何。",es:"Concepto: riesgo es geometría bajo escala."},
-            engineering:{en:"Concept: envelope crossings define action.",zh:"概念：包络穿越定义动作。",es:"Concepto: cruces definen acción."}},
-         b:{platform:{en:"Build now: show a single bounded risk posture.",zh:"现在建：展示一个有界风险姿态。",es:"Construir: mostrar postura de riesgo acotada."},
-            engineering:{en:"Build now: reason-coded triggers + rollback paths.",zh:"现在建：原因码触发+回滚路径。",es:"Construir: triggers con códigos + rollback."}},
-         r:{platform:{en:"Roadmap: connect to liquidity + doctrine for admissibility.",zh:"路线图：连接流动性+教义做可采信。",es:"Hoja: conectar liquidez+doctrina."},
-            engineering:{en:"Roadmap: regression tests on thresholds.",zh:"路线图：阈值回归测试。",es:"Hoja: tests de regresión."}}
-        },
-        {pc:"#a3a3a3", id:"fi_audit_ledger",
-         n:{platform:{en:"Audit Ledger",zh:"审计账本",es:"Libro de Auditoría"}, engineering:{en:"Receipt Log",zh:"收据日志",es:"Log de Recibos"}},
-         p:{platform:{en:"Receipts beat arguments. Replay beats persuasion.",zh:"收据胜过争论；回放胜过说服。",es:"Recibos > discusión. Replay > persuasión."},
-            engineering:{en:"Manifest hash + scope id + window id on every output.",zh:"每输出带清单哈希+范围id+窗口id。",es:"Hash+alcance+ventana en cada salida."}},
-         c:{platform:{en:"Concept: calm progress requires proof.",zh:"概念：安静的进步需要证明。",es:"Concepto: progreso calmado requiere prueba."},
-            engineering:{en:"Concept: auditability is structural.",zh:"概念：可审计是结构属性。",es:"Concepto: auditabilidad es estructural."}},
-         b:{platform:{en:"Build now: show receipts in one click.",zh:"现在建：一键可见收据。",es:"Construir: recibos a un clic."},
-            engineering:{en:"Build now: deterministic replay path for every result.",zh:"现在建：每结果确定性回放路径。",es:"Construir: ruta de replay determinista."}},
-         r:{platform:{en:"Roadmap: unify receipts across all streams.",zh:"路线图：全流统一收据。",es:"Hoja: unificar recibos entre streams."},
-            engineering:{en:"Roadmap: fail builds on drift.",zh:"路线图：漂移则失败构建。",es:"Hoja: fallar builds ante deriva."}}
-        }
+        {id:"fi_capital_doctrine", c:"#c9a24a",
+          n:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"CCD Superlayer",zh:"CCD 超层",es:"Supercapa CCD"}},
+          p:{platform:{en:"The rulebook above finance & governance.",zh:"金融与治理之上的规则书。",es:"Reglamento sobre finanzas y gobernanza."},
+             engineering:{en:"Invariant admissibility gates + classification.",zh:"不变量可采信闸门+分类。",es:"Compuertas invariantes + clasificación."}}},
+        {id:"fi_liquidity_model", c:"#93c5fd",
+          n:{platform:{en:"Liquidity Model",zh:"流动性模型",es:"Modelo de Liquidez"}, engineering:{en:"Coverage Envelope",zh:"覆盖包络",es:"Envolvente de Cobertura"}},
+          p:{platform:{en:"Can you survive the shock?",zh:"能否扛住冲击？",es:"¿Puedes sobrevivir el shock?"},
+             engineering:{en:"Floors/ceilings + window stress discipline.",zh:"地板/天花+窗口压力纪律。",es:"Pisos/techos + estrés por ventana."}}},
+        {id:"fi_risk_envelope", c:"#ff2b2b",
+          n:{platform:{en:"Risk Envelope",zh:"风险包络",es:"Envolvente de Riesgo"}, engineering:{en:"K/M/R/P Bounds",zh:"K/M/R/P 边界",es:"Límites K/M/R/P"}},
+          p:{platform:{en:"How close to breaking are we?",zh:"我们离崩坏多近？",es:"¿Qué tan cerca de romper?"},
+             engineering:{en:"Constraint surfaces + triggers + rollback posture.",zh:"约束面+触发+回滚姿态。",es:"Superficies + triggers + rollback."}}},
+        {id:"fi_audit_ledger", c:"#a3a3a3",
+          n:{platform:{en:"Audit Ledger",zh:"审计账本",es:"Libro de Auditoría"}, engineering:{en:"Receipt Log",zh:"收据日志",es:"Log de Recibos"}},
+          p:{platform:{en:"Receipts beat arguments.",zh:"收据胜过争论。",es:"Recibos > discusiones."},
+             engineering:{en:"Manifest hash + deterministic replay path.",zh:"清单哈希+确定性回放路径。",es:"Hash de manifiesto + replay determinista."}}}
       ]
     },
 
     {
       c:"#34d399",
       name:{en:"AGRICULTURE",zh:"农业",es:"AGRICULTURA"},
-      sub:{en:"Food as a closed loop: water, energy, soil, yield, verification.", zh:"食物作为闭环：水、能量、土壤、产量、验证。", es:"Alimento como ciclo cerrado: agua, energía, suelo, rendimiento, verificación."},
+      para:{
+        en:{platform:"Agriculture is a closed loop at human scale: water, energy, soil, yield, and verification.",
+            engineering:"Agriculture is mass-balance execution under constraints: contamination bounds, windowed yields, and replayable receipts."},
+        zh:{platform:"农业是人类尺度的闭环：水、能量、土壤、产量与验证。",
+            engineering:"农业是在约束下执行质量平衡：污染边界、窗口产率、可回放收据。"},
+        es:{platform:"Agricultura es ciclo cerrado a escala humana: agua, energía, suelo, rendimiento y verificación.",
+            engineering:"Agricultura es balance de masa bajo restricciones: límites, rendimientos por ventana y recibos replayables."}
+      },
       products:[
-        {pc:"#34d399", id:"ag_closed_loop_farming",
-         n:{platform:{en:"Closed Loop Farming",zh:"闭环农业",es:"Agricultura Cerrada"}, engineering:{en:"Nutrient Loop",zh:"营养回路",es:"Bucle de Nutrientes"}},
-         p:{platform:{en:"Stop losses. Reuse inputs. Make food survivable at scale.",zh:"止损复用，让食物在规模下可生存。",es:"Detener pérdidas. Reusar insumos. Hacer alimento sobrevivible."},
-            engineering:{en:"Mass balance + contamination bounds + recovery receipts.",zh:"质量平衡+污染边界+回收收据。",es:"Balance de masa + límites + recibos."}},
-         c:{platform:{en:"Concept: farming is a system, not a field.",zh:"概念：农业是系统，不是地块。",es:"Concepto: agricultura es sistema, no parcela."},
-            engineering:{en:"Concept: closure is measurable.",zh:"概念：闭合可测。",es:"Concepto: cierre es medible."}},
-         b:{platform:{en:"Build now: define the loop: inputs, outputs, reuse.",zh:"现在建：定义闭环：输入、输出、复用。",es:"Construir: definir loop: entradas, salidas, reuso."},
-            engineering:{en:"Build now: receipts per yield and loss.",zh:"现在建：每产量/损耗收据。",es:"Construir: recibos por rendimiento y pérdida."}},
-         r:{platform:{en:"Roadmap: integrate water index + soil grid + energy stability.",zh:"路线图：整合水指数+土壤网格+能源稳定。",es:"Hoja: integrar agua+suelo+energía."},
-            engineering:{en:"Roadmap: windowed stress tests per season.",zh:"路线图：按季节窗口压力测试。",es:"Hoja: stress por ventanas estacionales."}}
-        },
-        {pc:"#c9a24a", id:"ag_yield_optimizer",
-         n:{platform:{en:"Yield Optimizer",zh:"产量优化",es:"Optimizador de Rendimiento"}, engineering:{en:"Yield Controller",zh:"产量控制器",es:"Controlador"}},
-         p:{platform:{en:"Better harvest with less waste.",zh:"更好收成，更少浪费。",es:"Mejor cosecha con menos residuo."},
-            engineering:{en:"Windowed deltas + constraint gates.",zh:"窗口差分+约束闸门。",es:"Deltas por ventana + compuertas."}},
-         c:{platform:{en:"Concept: yield is trajectory.",zh:"概念：产量是轨迹。",es:"Concepto: rendimiento es trayectoria."},
-            engineering:{en:"Concept: constraints prevent overfit.",zh:"概念：约束防过拟合。",es:"Concepto: restricciones evitan overfit."}},
-         b:{platform:{en:"Build now: one baseline, one target, one window.",zh:"现在建：一个基线，一个目标，一个窗口。",es:"Construir: baseline, objetivo y ventana."},
-            engineering:{en:"Build now: deterministic classification per window.",zh:"现在建：每窗口确定性分类。",es:"Construir: clasificación determinista por ventana."}},
-         r:{platform:{en:"Roadmap: integrate receipts into decision index.",zh:"路线图：收据接入决策索引。",es:"Hoja: integrar recibos al índice de decisión."},
-            engineering:{en:"Roadmap: replay regression for yield classification.",zh:"路线图：产量分类回放回归。",es:"Hoja: regresión por replay."}}
-        },
-        {pc:"#93c5fd", id:"ag_water_index",
-         n:{platform:{en:"Water Index",zh:"水指数",es:"Índice Hídrico"}, engineering:{en:"Hydro Bands",zh:"水稳定带",es:"Bandas Hídricas"}},
-         p:{platform:{en:"Track water reality, not stories.",zh:"追踪水的现实，不追故事。",es:"Medir agua real, no historias."},
-            engineering:{en:"Inflow/outflow + stress bands + receipts.",zh:"进出+压力区间+收据。",es:"Entrada/salida + bandas + recibos."}},
-         c:{platform:{en:"Concept: water is circulation.",zh:"概念：水是循环。",es:"Concepto: agua es circulación."},
-            engineering:{en:"Concept: stability is bounded.",zh:"概念：稳定有界。",es:"Concepto: estabilidad acotada."}},
-         b:{platform:{en:"Build now: publish one band people can read.",zh:"现在建：发布一个可读区间。",es:"Construir: publicar una banda legible."},
-            engineering:{en:"Build now: windowed drift detection.",zh:"现在建：窗口漂移检测。",es:"Construir: detección de deriva por ventana."}},
-         r:{platform:{en:"Roadmap: connect to closed-loop farming posture.",zh:"路线图：连接闭环农业姿态。",es:"Hoja: conectar a agricultura cerrada."},
-            engineering:{en:"Roadmap: integrate into gauges as stability surface.",zh:"路线图：接入量规做稳定面。",es:"Hoja: integrar a medidores."}}
-        },
-        {pc:"#a3a3a3", id:"ag_soil_health_grid",
-         n:{platform:{en:"Soil Health Grid",zh:"土壤网格",es:"Grid de Suelo"}, engineering:{en:"Soil State Lattice",zh:"土壤态晶格",es:"Lattice de Suelo"}},
-         p:{platform:{en:"Make soil measurable and comparable across time.",zh:"让土壤可测、可比较。",es:"Hacer suelo medible y comparable."},
-            engineering:{en:"Finite states + drift detection under manifest.",zh:"清单下有限态+漂移检测。",es:"Estados finitos + deriva bajo manifiesto."}},
-         c:{platform:{en:"Concept: soil is a system boundary.",zh:"概念：土壤是系统边界。",es:"Concepto: suelo es frontera del sistema."},
-            engineering:{en:"Concept: indexing enables agronomy at scale.",zh:"概念：索引支持规模农业。",es:"Concepto: indexar habilita agronomía a escala."}},
-         b:{platform:{en:"Build now: define a small set of soil states.",zh:"现在建：定义少量土壤状态。",es:"Construir: definir pocos estados de suelo."},
-            engineering:{en:"Build now: receipts per classification window.",zh:"现在建：每分类窗口收据。",es:"Construir: recibos por ventana."}},
-         r:{platform:{en:"Roadmap: bind soil→yield→water as one story.",zh:"路线图：土壤→产量→水合成一条故事线。",es:"Hoja: suelo→rendimiento→agua como una historia."},
-            engineering:{en:"Roadmap: sweeps + regression replays.",zh:"路线图：扫掠+回放回归。",es:"Hoja: barridos + replays."}}
-        }
+        {id:"ag_closed_loop_farming", c:"#34d399",
+          n:{platform:{en:"Closed Loop Farming",zh:"闭环农业",es:"Agricultura Cerrada"}, engineering:{en:"Nutrient Loop",zh:"营养回路",es:"Bucle de Nutrientes"}},
+          p:{platform:{en:"Stop losses. Reuse inputs.",zh:"止损并复用投入。",es:"Detener pérdidas. Reusar insumos."},
+             engineering:{en:"Mass balance + contamination bounds.",zh:"质量平衡+污染边界。",es:"Balance de masa + límites."}}},
+        {id:"ag_yield_optimizer", c:"#c9a24a",
+          n:{platform:{en:"Yield Optimizer",zh:"产量优化",es:"Optimizador de Rendimiento"}, engineering:{en:"Yield Controller",zh:"产量控制器",es:"Controlador"}},
+          p:{platform:{en:"Better harvest with less waste.",zh:"更好收成、更少浪费。",es:"Mejor cosecha con menos residuo."},
+             engineering:{en:"Windowed deltas + constraint gates.",zh:"窗口差分+约束闸门。",es:"Deltas por ventana + compuertas."}}},
+        {id:"ag_water_index", c:"#93c5fd",
+          n:{platform:{en:"Water Index",zh:"水指数",es:"Índice Hídrico"}, engineering:{en:"Hydro Bands",zh:"水稳定带",es:"Bandas Hídricas"}},
+          p:{platform:{en:"Track water reality, not stories.",zh:"追踪水的现实，不追故事。",es:"Medir agua real, no historias."},
+             engineering:{en:"Inflow/outflow + stress bands.",zh:"进出+压力区间。",es:"Entrada/salida + bandas."}}},
+        {id:"ag_soil_health_grid", c:"#a3a3a3",
+          n:{platform:{en:"Soil Health Grid",zh:"土壤网格",es:"Grid de Suelo"}, engineering:{en:"Soil State Lattice",zh:"土壤态晶格",es:"Lattice de Suelo"}},
+          p:{platform:{en:"Make soil measurable.",zh:"让土壤可测。",es:"Hacer suelo medible."},
+             engineering:{en:"Finite states + drift detection.",zh:"有限态+漂移检测。",es:"Estados finitos + deriva."}}}
       ]
     },
 
     {
       c:"#a3a3a3",
       name:{en:"INFRASTRUCTURE",zh:"基础设施",es:"INFRAESTRUCTURA"},
-      sub:{en:"Substitution without breaking: interfaces, thresholds, rollback.", zh:"不破坏替代：接口、阈值、回滚。", es:"Sustitución sin romper: interfaces, umbrales, rollback."},
+      para:{
+        en:{platform:"Infrastructure is substitution without breaking: interfaces, thresholds, rollback, and verification.",
+            engineering:"Infrastructure is safe replication: bounded interfaces, containment-first deployment, and audit-ready receipts."},
+        zh:{platform:"基础设施是不破坏的替代：接口、阈值、回滚与验证。",
+            engineering:"基础设施是安全复制：有界接口、隔离优先部署、审计就绪收据。"},
+        es:{platform:"Infraestructura es sustitución sin romper: interfaces, umbrales, rollback y verificación.",
+            engineering:"Infraestructura es replicación segura: interfaces acotadas, contención primero y recibos listos para auditoría."}
+      },
       products:[
-        {pc:"#a3a3a3", id:"in_urban_stack",
-         n:{platform:{en:"Urban Stack",zh:"城市栈",es:"Stack Urbano"}, engineering:{en:"Urban OS Surface",zh:"城市OS面",es:"Superficie OS"}},
-         p:{platform:{en:"City as routed inventory: measurable closure instead of ‘away’.",zh:"城市=路由库存：可测闭合替代“扔掉”。",es:"Ciudad = inventario ruteado: cierre medible, no ‘afuera’."},
-            engineering:{en:"Dependencies + receipts + gates across lanes.",zh:"跨车道依赖+收据+闸门。",es:"Dependencias+recibos+compuertas."}},
-         c:{platform:{en:"Concept: one city, one coupled machine.",zh:"概念：一座城市，一台耦合机器。",es:"Concepto: una ciudad, una máquina acoplada."},
-            engineering:{en:"Concept: correlated exposure dominates at scale.",zh:"概念：规模下相关暴露主导。",es:"Concepto: exposición correlacionada domina."}},
-         b:{platform:{en:"Build now: show the inventory story first.",zh:"现在建：先讲库存故事。",es:"Construir: contar historia de inventario primero."},
-            engineering:{en:"Build now: publish receipts per lane transition.",zh:"现在建：每车道转移发布收据。",es:"Construir: recibos por transición."}},
-         r:{platform:{en:"Roadmap: integrate waste/water/energy into one closure posture.",zh:"路线图：把废弃/水/能源整合为闭合姿态。",es:"Hoja: integrar residuos/agua/energía."},
-            engineering:{en:"Roadmap: deterministic routing matrix + replay.",zh:"路线图：确定性路由矩阵+回放。",es:"Hoja: matriz determinista + replay."}}
-        },
-        {pc:"#93c5fd", id:"in_transit_model",
-         n:{platform:{en:"Transit Model",zh:"交通模型",es:"Modelo de Tránsito"}, engineering:{en:"Flow Constraints",zh:"流量约束",es:"Restricciones de Flujo"}},
-         p:{platform:{en:"Throughput without collapse: queues made visible.",zh:"吞吐不坍塌：队列可见化。",es:"Throughput sin colapso: colas visibles."},
-            engineering:{en:"Queues + window stability + bounded interventions.",zh:"队列+窗口稳定+有界干预。",es:"Colas+estabilidad por ventana+intervenciones acotadas."}},
-         c:{platform:{en:"Concept: bottlenecks are the real tax.",zh:"概念：瓶颈才是真税。",es:"Concepto: cuellos son el impuesto real."},
-            engineering:{en:"Concept: stability is a band, not a feeling.",zh:"概念：稳定是区间，不是感觉。",es:"Concepto: estabilidad es banda, no sensación."}},
-         b:{platform:{en:"Build now: publish one queue metric plainly.",zh:"现在建：清晰发布一个队列指标。",es:"Construir: publicar una métrica de cola."},
-            engineering:{en:"Build now: reason-coded actions per threshold.",zh:"现在建：阈值→原因码动作。",es:"Construir: acciones con códigos por umbral."}},
-         r:{platform:{en:"Roadmap: connect to urban stack as mobility lane.",zh:"路线图：接入城市栈的移动车道。",es:"Hoja: conectar al stack urbano."},
-            engineering:{en:"Roadmap: regression tests on routing changes.",zh:"路线图：路由变更回归测试。",es:"Hoja: regresión de cambios."}}
-        },
-        {pc:"#ff2b2b", id:"in_waste_loop",
-         n:{platform:{en:"Waste Loop",zh:"废弃循环",es:"Bucle de Residuos"}, engineering:{en:"Entropy Routing",zh:"熵路由",es:"Ruteo Entrópico"}},
-         p:{platform:{en:"No ‘away’: route value back into the system.",zh:"没有扔掉：把价值路由回系统。",es:"Sin ‘afuera’: rutear valor de vuelta."},
-            engineering:{en:"Classification + conversion + yields with receipts.",zh:"分类+转化+产率（带收据）。",es:"Clasificación+conversión+rendimientos con recibos."}},
-         c:{platform:{en:"Concept: waste is misplaced structure.",zh:"概念：废弃物是错位结构。",es:"Concepto: residuo es estructura mal ubicada."},
-            engineering:{en:"Concept: entropy leakage is measurable.",zh:"概念：熵泄漏可测。",es:"Concepto: fuga entrópica es medible."}},
-         b:{platform:{en:"Build now: publish streams and where they go.",zh:"现在建：发布各流以及去向。",es:"Construir: publicar flujos y destinos."},
-            engineering:{en:"Build now: receipt logs per conversion.",zh:"现在建：每转化收据日志。",es:"Construir: logs por conversión."}},
-         r:{platform:{en:"Roadmap: integrate into closed-loop/habitat story.",zh:"路线图：接入闭环/栖息地故事线。",es:"Hoja: integrar a historia de ciclo cerrado."},
-            engineering:{en:"Roadmap: windowed stress + containment playbooks.",zh:"路线图：窗口压力+隔离剧本。",es:"Hoja: estrés por ventana+playbooks."}}
-        },
-        {pc:"#c9a24a", id:"in_habitat_module",
-         n:{platform:{en:"Habitat Module",zh:"栖息模块",es:"Módulo de Hábitat"}, engineering:{en:"No-Away Closure",zh:"无扔掉闭合",es:"Cierre Sin-Afuera"}},
-         p:{platform:{en:"Closed loop scaled down to Earth: make survival boring.",zh:"闭环下放到地面：让生存变得无聊可靠。",es:"Ciclo cerrado en Tierra: supervivencia aburrida y confiable."},
-            engineering:{en:"Conserved inventories + leakage bands + recovery receipts.",zh:"守恒库存+泄漏区间+恢复收据。",es:"Inventarios conservados+bandas+recibos de recuperación."}},
-         c:{platform:{en:"Concept: everything becomes inventory.",zh:"概念：一切都是库存。",es:"Concepto: todo es inventario."},
-            engineering:{en:"Concept: closure is a contract.",zh:"概念：闭合是一份契约。",es:"Concepto: cierre es contrato."}},
-         b:{platform:{en:"Build now: define what ‘in’ and ‘out’ mean.",zh:"现在建：定义“进/出”是什么意思。",es:"Construir: definir qué es ‘entra/sale’."},
-            engineering:{en:"Build now: instrument flows; publish yields/losses.",zh:"现在建：仪器化流量；发布产率/损耗。",es:"Construir: instrumentar flujos; publicar rendimientos/pérdidas."}},
-         r:{platform:{en:"Roadmap: connect to water/energy/waste as one coupled system.",zh:"路线图：与水/能源/废弃物耦合成一体。",es:"Hoja: acoplar agua/energía/residuos."},
-            engineering:{en:"Roadmap: replayable logs + containment triggers.",zh:"路线图：可回放日志+隔离触发。",es:"Hoja: logs replayables + triggers."}}
-        }
+        {id:"in_urban_stack", c:"#a3a3a3",
+          n:{platform:{en:"Urban Stack",zh:"城市栈",es:"Stack Urbano"}, engineering:{en:"Urban OS Surface",zh:"城市OS面",es:"Superficie OS"}},
+          p:{platform:{en:"City as routed inventory.",zh:"城市=路由库存。",es:"Ciudad = inventario ruteado."},
+             engineering:{en:"Dependencies + receipts + gates.",zh:"依赖+收据+闸门。",es:"Dependencias + recibos + compuertas."}}},
+        {id:"in_transit_model", c:"#93c5fd",
+          n:{platform:{en:"Transit Model",zh:"交通模型",es:"Modelo de Tránsito"}, engineering:{en:"Flow Constraints",zh:"流量约束",es:"Restricciones de Flujo"}},
+          p:{platform:{en:"Throughput without collapse.",zh:"吞吐不坍塌。",es:"Throughput sin colapso."},
+             engineering:{en:"Queues + window stability.",zh:"队列+窗口稳定。",es:"Colas + estabilidad por ventana."}}},
+        {id:"in_waste_loop", c:"#ff2b2b",
+          n:{platform:{en:"Waste Loop",zh:"废弃循环",es:"Bucle de Residuos"}, engineering:{en:"Entropy Routing",zh:"熵路由",es:"Ruteo Entrópico"}},
+          p:{platform:{en:"No ‘away’. Route value back.",zh:"没有扔掉，把价值路由回来。",es:"Sin ‘afuera’. Retornar valor."},
+             engineering:{en:"Classification + conversion + yields.",zh:"分类+转化+产率。",es:"Clasificación + conversión + rendimientos."}}},
+        {id:"in_habitat_module", c:"#c9a24a",
+          n:{platform:{en:"Habitat Module",zh:"栖息模块",es:"Módulo de Hábitat"}, engineering:{en:"No-Away Closure",zh:"无扔掉闭合",es:"Cierre Sin-Afuera"}},
+          p:{platform:{en:"Closed loop scaled down to Earth.",zh:"闭环可下放到地面。",es:"Ciclo cerrado escalado a Tierra."},
+             engineering:{en:"Conserved inventories + leakage bands.",zh:"守恒库存+泄漏区间。",es:"Inventarios conservados + bandas de fuga."}}}
       ]
     }
   ];
 
-  // ===== Copy packs =====
-  var COPY = {
-    en:{
-      header:{
-        hs:"These products are not a catalog of features. They are a stability stack: scope → measurement → admissibility → containment → replay. Scale is allowed only after coherence is proven.",
-        rule:"Rule: signature solutions explain the spine. Streams deliver execution surfaces. Every product is a jump into a dedicated shell."
-      }
-    },
-    zh:{
-      header:{
-        hs:"这些不是“功能目录”，而是稳定栈：范围→测量→可采信→隔离→回放。只有证明一致性后才允许扩张。",
-        rule:"规则：签名方案解释脊柱；各流提供执行面；每个产品跳转到自己的壳页。"
-      }
-    },
-    es:{
-      header:{
-        hs:"Estos productos no son un catálogo de features. Son un stack de estabilidad: alcance → medición → admisibilidad → contención → replay. Escalar solo después de probar coherencia.",
-        rule:"Regla: las soluciones firma explican la columna. Los streams entregan superficies de ejecución. Cada producto salta a su shell."
-      }
-    }
-  };
-
-  // ===== Wire routes with pinned query (and lane) =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      if(route.indexOf("?")!==-1){
-        try{
-          var u=new URL(route, location.origin);
-          var sp=u.searchParams;
-          sp.set("lang", lang);
-          sp.set("style","informal");
-          sp.set("time", time);
-          sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){ el.setAttribute("href", route); }
-      }else{
-        el.setAttribute("href", route + q());
-      }
-    }
-  }
-
-  // ===== Signature render =====
+  // ===== BUILD SIGNATURE GRID =====
   var sigGrid=document.getElementById("sigGrid");
-  function makeBubble(title, text){
-    var b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
 
-    var h=document.createElement("h4");
-    h.textContent=title;
+  function mkTile(item){
+    var tile=document.createElement("div");
+    tile.className="dtile";
+    tile.style.setProperty("--c", item.c);
+    tile.setAttribute("role","button");
+    tile.tabIndex=0;
 
-    var p=document.createElement("p");
-    p.textContent=text;
+    var top=document.createElement("div");
+    top.className="dtop";
 
-    b.appendChild(h);
-    b.appendChild(p);
+    var m=document.createElement("div");
+    m.className="dmark";
+    m.style.background=item.c;
 
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-    return b;
+    var t=document.createElement("div");
+    t.className="dtitle";
+
+    top.appendChild(m);
+    top.appendChild(t);
+
+    var para=document.createElement("div");
+    para.className="dpara";
+
+    var foot=document.createElement("div");
+    foot.className="dfoot";
+
+    var btn=document.createElement("a");
+    btn.className="btn red";
+    btn.setAttribute("data-route", ROUTES[item.id] || "/products/");
+    foot.appendChild(btn);
+
+    tile.appendChild(top);
+    tile.appendChild(para);
+    tile.appendChild(foot);
+
+    function act(){ go(ROUTES[item.id] || "/products/"); }
+    tile.addEventListener("click", act, {passive:true});
+    tile.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    return {wrap:tile,title:t,para:para,btn:btn,item:item};
   }
 
+  var sigRefs=[];
   function renderSignature(){
     sigGrid.innerHTML="";
+    sigRefs=[];
     for(var i=0;i<SIGNATURE.length;i++){
-      var s=SIGNATURE[i];
-      var box=document.createElement("div");
-      box.className="sigItem";
-      box.style.setProperty("--pc", s.pc);
-
-      var top=document.createElement("div");
-      top.className="sigTop";
-
-      var dia=document.createElement("div");
-      dia.className="sigDia";
-      dia.style.background=s.pc;
-
-      var nm=document.createElement("div");
-      nm.className="sigName";
-      var packN=(lane==="engineering")?s.n.engineering:s.n.platform;
-      nm.textContent=(lang==="zh")?packN.zh:(lang==="es")?(packN.es||packN.en):packN.en;
-
-      top.appendChild(dia);
-      top.appendChild(nm);
-
-      var body=document.createElement("div");
-      body.className="sigBody";
-      var packP=(lane==="engineering")?s.p.engineering:s.p.platform;
-      body.textContent=(lang==="zh")?packP.zh:(lang==="es")?(packP.es||packP.en):packP.en;
-
-      var bubbles=document.createElement("div");
-      bubbles.className="subBubbles";
-      var packC=(lane==="engineering")?s.c.engineering:s.c.platform;
-      var packB=(lane==="engineering")?s.b.engineering:s.b.platform;
-      var packR=(lane==="engineering")?s.r.engineering:s.r.platform;
-
-      bubbles.appendChild(makeBubble(pick3("Concept","概念","Concepto"), (lang==="zh")?packC.zh:(lang==="es")?(packC.es||packC.en):packC.en));
-      bubbles.appendChild(makeBubble(pick3("Build Now","现在建","Construir ahora"), (lang==="zh")?packB.zh:(lang==="es")?(packB.es||packB.en):packB.en));
-      bubbles.appendChild(makeBubble(pick3("Roadmap","路线图","Hoja de ruta"), (lang==="zh")?packR.zh:(lang==="es")?(packR.es||packR.en):packR.en));
-
-      var actions=document.createElement("div");
-      actions.className="sigActions";
-      var a=document.createElement("a");
-      a.className="btn red";
-      a.setAttribute("data-route", ROUTES[s.id] || "/products/");
-      a.textContent=openLabel()+": "+pick3("ENTER","进入","ENTRAR");
-      actions.appendChild(a);
-
-      box.appendChild(top);
-      box.appendChild(body);
-      box.appendChild(bubbles);
-      box.appendChild(actions);
-
-      sigGrid.appendChild(box);
+      var r=mkTile(SIGNATURE[i]);
+      sigGrid.appendChild(r.wrap);
+      sigRefs.push(r);
     }
   }
 
-  // ===== Streams accordion =====
+  // ===== STREAMS ACCORDION =====
   var list=document.getElementById("list");
-  var rowRefs=[];
-  var openIndex=0;
+  var streamRefs=[];
+  var openStream=0;
 
-  function closeAllRows(){
-    for(var i=0;i<rowRefs.length;i++){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
+  function closeAllStreams(){
+    for(var i=0;i<streamRefs.length;i++){
+      streamRefs[i].row.classList.remove("open");
+      streamRefs[i].chev.textContent="▸";
     }
   }
-  function toggleRow(i){
-    var isOpen=rowRefs[i].row.classList.contains("open");
+
+  function toggleStream(i){
+    var isOpen=streamRefs[i].row.classList.contains("open");
     if(isOpen){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
+      streamRefs[i].row.classList.remove("open");
+      streamRefs[i].chev.textContent="▸";
       return;
     }
-    closeAllRows();
-    openIndex=i;
-    rowRefs[i].row.classList.add("open");
-    rowRefs[i].chev.textContent="▾";
+    closeAllStreams();
+    openStream=i;
+    streamRefs[i].row.classList.add("open");
+    streamRefs[i].chev.textContent="▾";
   }
 
-  function buildStreamRow(stream, idx){
+  function buildStreamRow(s, idx){
     var row=document.createElement("div");
     row.className="row";
-    row.style.setProperty("--c", stream.c);
+    row.style.setProperty("--c", s.c);
 
     var head=document.createElement("div");
     head.className="head";
@@ -1072,133 +974,113 @@ body::before,body::after{pointer-events:none!important}
     var hL=document.createElement("div");
     hL.className="hL";
 
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=stream.c;
+    var dia=document.createElement("div");
+    dia.className="hDia";
+    dia.style.background=s.c;
 
     var tb=document.createElement("div");
-    tb.className="titleBlock";
+    tb.className="hTitleBlock";
 
-    var title=document.createElement("div");
-    title.className="q";
+    var hTitle=document.createElement("div");
+    hTitle.className="hTitle";
 
-    var subt=document.createElement("div");
-    subt.className="subt";
+    var hSub=document.createElement("div");
+    hSub.className="hSub";
 
-    tb.appendChild(title);
-    tb.appendChild(subt);
+    tb.appendChild(hTitle);
+    tb.appendChild(hSub);
 
-    hL.appendChild(mark);
+    hL.appendChild(dia);
     hL.appendChild(tb);
 
-    var chevWrap=document.createElement("div");
-    chevWrap.className="chev";
-    chevWrap.innerHTML='<span class="chevTxt">▸</span>';
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
 
     head.appendChild(hL);
-    head.appendChild(chevWrap);
+    head.appendChild(chev);
 
     var body=document.createElement("div");
     body.className="body";
 
-    var cards=[];
-    for(var i=0;i<stream.products.length;i++){
-      var p=stream.products[i];
+    var para=document.createElement("p");
+    para.className="streamPara";
+    body.appendChild(para);
 
-      var card=document.createElement("div");
-      card.className="pcard";
-      card.style.setProperty("--pc", p.pc);
+    var grid=document.createElement("div");
+    grid.className="sgrid";
 
-      var top=document.createElement("div");
-      top.className="pTop";
-
-      var dia=document.createElement("div");
-      dia.className="pDia";
-      dia.style.background=p.pc;
-
-      var name=document.createElement("div");
-      name.className="pName";
-
-      top.appendChild(dia);
-      top.appendChild(name);
-
-      var narr=document.createElement("div");
-      narr.className="pNarr";
-
-      var bubbles=document.createElement("div");
-      bubbles.className="subBubbles";
-
-      var bConcept=makeBubble(pick3("Concept","概念","Concepto"), "");
-      var bBuild=makeBubble(pick3("Build Now","现在建","Construir ahora"), "");
-      var bRoad=makeBubble(pick3("Roadmap","路线图","Hoja de ruta"), "");
-
-      bubbles.appendChild(bConcept);
-      bubbles.appendChild(bBuild);
-      bubbles.appendChild(bRoad);
-
-      var actions=document.createElement("div");
-      actions.className="pActions";
-
-      var btn=document.createElement("a");
-      btn.className="btn red";
-      btn.setAttribute("data-route", ROUTES[p.id] || "/products/");
-      btn.textContent=openLabel()+": "+pick3("ENTER","进入","ENTRAR");
-      actions.appendChild(btn);
-
-      card.appendChild(top);
-      card.appendChild(narr);
-      card.appendChild(bubbles);
-      card.appendChild(actions);
-
-      body.appendChild(card);
-
-      cards.push({
-        name:name,narr:narr,
-        cP:bConcept.querySelector("p"),
-        bP:bBuild.querySelector("p"),
-        rP:bRoad.querySelector("p"),
-        btn:btn,
-        prod:p
-      });
+    var tiles=[];
+    for(var i=0;i<s.products.length;i++){
+      var t=mkTile(s.products[i]);
+      // slightly stronger color signal for stream items
+      t.wrap.style.boxShadow =
+        "0 22px 70px rgba(0,0,0,.62), 0 0 18px rgba(255,43,43,.08), inset 0 2px 0 rgba(255,255,255,.14), inset 0 -46px 86px rgba(0,0,0,.78)";
+      grid.appendChild(t.wrap);
+      tiles.push(t);
     }
+    body.appendChild(grid);
 
-    function onToggle(){ toggleRow(idx); wireAll(); }
-    head.addEventListener("click", onToggle, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+    function act(){ toggleStream(idx); }
+    head.addEventListener("click", act, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
     row.appendChild(head);
     row.appendChild(body);
     list.appendChild(row);
 
-    rowRefs.push({
+    streamRefs.push({
       row:row,
       chev:row.querySelector(".chevTxt"),
-      title:title,
-      subt:subt,
-      cards:cards,
-      stream:stream
+      title:hTitle,
+      sub:hSub,
+      para:para,
+      tiles:tiles,
+      stream:s
     });
   }
 
   function renderStreams(){
     list.innerHTML="";
-    rowRefs=[];
+    streamRefs=[];
     for(var i=0;i<STREAMS.length;i++){
       buildStreamRow(STREAMS[i], i);
     }
-    openIndex=0;
-    toggleRow(0);
+    openStream=0;
+    toggleStream(0);
+  }
+
+  // ===== APPLY COPY (no rebuild; preserves open stream) =====
+  function lanePack(obj){
+    var key = (lane==="engineering") ? "engineering" : "platform";
+    var L = obj[lang] || obj.en;
+    return L[key];
   }
 
   function applyHeader(){
-    var H=(COPY[lang]||COPY.en).header;
-    document.getElementById("hk").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("ht").textContent = pick3("SIGNATURE + STREAMS","签名方案 + 产品流","FIRMA + STREAMS");
-    document.getElementById("hs").textContent = H.hs;
-    document.getElementById("rule").textContent = H.rule;
+    var H = HEAD[lang] || HEAD.en;
+    var pack = (lane==="engineering") ? H.engineering : H.platform;
 
-    document.getElementById("sigH").textContent = pick3("SIGNATURE SOLUTIONS","签名方案","SOLUCIONES FIRMA");
-    document.getElementById("band").textContent = pick3("STREAMS (OPEN ONE)","产品流（打开一个）","STREAMS (abre uno)");
+    document.getElementById("hk").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("ht").textContent = pick3("SIGNATURE SYSTEMS · DEPLOYMENT STREAMS","签名系统 · 部署产品流","SISTEMAS FIRMA · STREAMS DE DESPLIEGUE");
+    document.getElementById("hs").textContent = pack.hs;
+    document.getElementById("rule").textContent = pack.rule;
+
+    document.getElementById("bandSig").textContent = pick3("SIGNATURE SYSTEMS (ENTER)","签名系统（进入）","SISTEMAS FIRMA (ENTRAR)");
+    document.getElementById("bandStreams").textContent = pick3("STREAMS (OPEN ONE)","产品流（打开一个）","STREAMS (ABRE UNO)");
+
+    document.getElementById("sigIntro").textContent =
+      (lane==="engineering")
+        ? pick3(
+            "These are shared primitives. They interlock. They do not compete. Every deployment stream below is built on these engines.",
+            "这些是共享原语：互锁不互斥。下面每条产品流都建立在这些引擎之上。",
+            "Estas son primitivas compartidas: se interconectan, no compiten. Cada stream se construye sobre estos motores."
+          )
+        : pick3(
+            "These are the headline systems. They remove confusion, prevent drift, and give the public a readable path from problem → execution.",
+            "这些是头部系统：削减混乱、阻止漂移，并给公众一个可读的“问题→执行”路径。",
+            "Estos son los sistemas líderes: reducen confusión, evitan deriva y dan un camino legible de problema → ejecución."
+          );
 
     document.getElementById("laneState").textContent =
       (lang==="zh") ? ("当前透镜："+laneLabel()) :
@@ -1215,48 +1097,86 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("dockExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
     document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
     document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+    document.getElementById("dockGauges").textContent = pick3("GAUGGES","量规","MEDIDORES").replace("GAUGGES","GAUGES");
 
     document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
     document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
   }
 
-  function updateStreams(){
-    var keep=openIndex;
+  function updateTiles(){
+    // signature
+    for(var i=0;i<sigRefs.length;i++){
+      var r=sigRefs[i];
+      var item=r.item;
+      var name = (lane==="engineering") ? item.n.engineering : item.n.platform;
+      var para = (lane==="engineering") ? item.p.engineering : item.p.platform;
 
-    for(var i=0;i<rowRefs.length;i++){
-      var r=rowRefs[i];
-      var s=r.stream;
-      r.title.textContent = pick3(s.name.en, s.name.zh, s.name.es);
-      r.subt.textContent  = pick3(s.sub.en,  s.sub.zh,  s.sub.es);
+      r.title.textContent = pick3(name.en, name.zh, name.es);
+      r.para.textContent  = pick3(para.en, para.zh, para.es);
+      r.btn.textContent   = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
+    }
 
-      for(var j=0;j<r.cards.length;j++){
-        var c=r.cards[j];
-        var p=c.prod;
+    // streams + stream tiles
+    for(var s=0;s<streamRefs.length;s++){
+      var SR=streamRefs[s];
+      var S=SR.stream;
 
-        var packN=(lane==="engineering")?p.n.engineering:p.n.platform;
-        var packP=(lane==="engineering")?p.p.engineering:p.p.platform;
-        var packC=(lane==="engineering")?p.c.engineering:p.c.platform;
-        var packB=(lane==="engineering")?p.b.engineering:p.b.platform;
-        var packR=(lane==="engineering")?p.r.engineering:p.r.platform;
+      SR.title.textContent = pick3(S.name.en, S.name.zh, S.name.es);
+      SR.sub.textContent   = pick3("", "", "");
+      SR.sub.textContent   = pick3(
+        (S.name.en==="FINANCE")?"Admissibility before scale.":"Four deployable surfaces.",
+        (S.name.zh==="金融")?"先可采信再扩张。":"四个可部署面。",
+        (S.name.es==="FINANZAS")?"Admisibilidad antes de escalar.":"Cuatro superficies desplegables."
+      );
 
-        c.name.textContent=(lang==="zh")?packN.zh:(lang==="es")?(packN.es||packN.en):packN.en;
-        c.narr.textContent=(lang==="zh")?packP.zh:(lang==="es")?(packP.es||packP.en):packP.en;
+      var SP = (lane==="engineering") ? (S.para[lang]||S.para.en).engineering : (S.para[lang]||S.para.en).platform;
+      SR.para.textContent = SP;
 
-        c.cP.textContent=(lang==="zh")?packC.zh:(lang==="es")?(packC.es||packC.en):packC.en;
-        c.bP.textContent=(lang==="zh")?packB.zh:(lang==="es")?(packB.es||packB.en):packB.en;
-        c.rP.textContent=(lang==="zh")?packR.zh:(lang==="es")?(packR.es||packR.en):packR.en;
+      for(var j=0;j<SR.tiles.length;j++){
+        var T=SR.tiles[j];
+        var P=T.item;
+        var nm=(lane==="engineering")?P.n.engineering:P.n.platform;
+        var pr=(lane==="engineering")?P.p.engineering:P.p.platform;
 
-        c.btn.textContent=openLabel()+": "+pick3("ENTER","进入","ENTRAR");
+        T.title.textContent = pick3(nm.en, nm.zh, nm.es);
+        T.para.textContent  = pick3(pr.en, pr.zh, pr.es);
+        T.btn.textContent   = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
       }
     }
 
-    closeAllRows();
-    toggleRow(keep);
-    wireAll();
+    // keep open stream
+    closeAllStreams();
+    toggleStream(openStream);
   }
 
-  // ===== No reload toggles =====
+  // ===== STATE-CARRY WIRING =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== NO-RELOAD TOGGLES =====
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
@@ -1264,8 +1184,8 @@ body::before,body::after{pointer-events:none!important}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
     setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
     applyHeader();
-    renderSignature();
-    updateStreams();
+    updateTiles();
+    wireAll();
   }
 
   function setLane(next){
@@ -1274,11 +1194,11 @@ body::before,body::after{pointer-events:none!important}
     history.replaceState({}, "", location.pathname + q({lane:lane}));
     setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
     applyHeader();
-    renderSignature();
-    updateStreams();
+    updateTiles();
+    wireAll();
   }
 
-  // bindings
+  // ===== BINDINGS =====
   document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
   document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
@@ -1286,15 +1206,14 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // init pressed
+  // ===== INIT =====
   setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
   setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
-  // init render
-  applyHeader();
   renderSignature();
   renderStreams();
-  updateStreams();
+  applyHeader();
+  updateTiles();
   wireAll();
 
 })();

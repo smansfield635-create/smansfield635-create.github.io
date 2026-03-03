@@ -1,368 +1,854 @@
 <!doctype html>
-<!-- TNT — /index-core/index.html
-     CADDY · DECISION DIAGNOSTIC ENGINE
-     TRILINGUAL (EN / 中文 / ES)
-     DUAL LENS (PLATFORM / ENGINEERING)
-     STATE: gd_lang / gd_style / gd_time / gd_depth ONLY
-     lane=platform|engineering URL-ONLY (not stored)
+<!-- TNT — /index.html
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY + DRAGONS
+     OWNER: SEAN (Website Building Room)
+     LOCKS:
+       - DiamondGateBridge.com header + welcome
+       - Obsidian dial face (instrument-grade) + gemstone nodes
+       - Visible mythic Chinese dragons in clouds (background layer, no external assets)
+       - 16 unique destinations (no duplicates); unknown/unbuilt → /404.html
+       - Center CORE routes to /index-core/index.html
+       - Bottom corner controls: EXIT → /door/ | HUB → /home/
+       - Trilingual: EN / 中文 / ES (NO reload)
+       - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - No overlays/modals; no inline onclick; addEventListener only
+       - ui.css owns html/body background (NO overrides)
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-<title>CADDY · Decision Diagnostic Engine</title>
+<title>Compass · DiamondGateBridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0}
+body::before,body::after{pointer-events:none!important}
 
-body{
-margin:0;
-font-family:system-ui,-apple-system,Segoe UI,Roboto;
-color:white;
+:root{
+  /* ===== GEOMETRY (one dominant center; progressively smaller outward) ===== */
+  --D0:210px;  /* CORE (dominant) */
+  --D1:150px;  /* Cardinals */
+  --D2:112px;  /* Diagonals */
+  --D3:86px;   /* Outer 8 */
+
+  /* tighter radii (bring them in) */
+  --R1:168px;
+  --R2:246px;
+  --R3:314px;
+
+  --padTop:102px;
+
+  /* ===== MATERIAL ===== */
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
+  --stroke:rgba(255,255,255,.12);
+
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.88);
+
+  --crimson:rgba(120,0,22,.44);
+  --festival:rgba(255,43,43,.26);
+  --opalV:rgba(90,40,120,.18);
+
+  --gold:rgba(201,162,74,.58);
+  --goldGlow:rgba(201,162,74,.22);
+
+  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* PAGE */
-
-.page{
-max-width:1100px;
-margin:auto;
-padding:120px 24px;
-display:flex;
-flex-direction:column;
-gap:28px;
-}
-
-/* HEADER */
-
-.header{
-border-radius:24px;
-padding:28px;
-background:
-radial-gradient(circle at 20% 20%,rgba(201,162,74,.15),transparent),
-linear-gradient(145deg,#080a0e,#040608);
-box-shadow:0 40px 120px rgba(0,0,0,.8);
-}
-
-.title{
-font-size:34px;
-font-weight:900;
-letter-spacing:.5px;
-}
-
-.subtitle{
-margin-top:12px;
-font-size:16px;
-opacity:.85;
-line-height:1.6;
-}
-
-/* GRID */
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:18px;
-}
-
-.card{
-border-radius:20px;
-padding:18px;
-background:
-radial-gradient(circle at 20% 20%,rgba(255,255,255,.08),transparent),
-linear-gradient(150deg,#0d1118,#05070a);
-box-shadow:0 20px 60px rgba(0,0,0,.7);
-border:1px solid rgba(255,255,255,.1);
-}
-
-.card h3{
-margin:0 0 10px 0;
-font-size:18px;
-font-weight:800;
-}
-
-select,input{
-width:100%;
-margin-top:6px;
-}
-
-.rangeVal{
-margin-top:6px;
-font-weight:700;
-opacity:.85;
-}
-
-/* OUTPUT */
-
-.result{
-border-radius:22px;
-padding:24px;
-background:
-radial-gradient(circle at 20% 20%,rgba(201,162,74,.15),transparent),
-linear-gradient(140deg,#0b0e14,#04060a);
-border:1px solid rgba(255,255,255,.12);
-box-shadow:0 20px 80px rgba(0,0,0,.8);
-}
-
-.star{
-font-size:24px;
-font-weight:900;
-letter-spacing:.6px;
-margin-bottom:12px;
-}
-
-.reason{
-opacity:.9;
-line-height:1.6;
-}
-
-/* LINKS */
-
-.links{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-margin-top:20px;
-}
-
-.linkBtn{
-padding:10px 14px;
-border-radius:999px;
-border:1px solid rgba(255,255,255,.14);
-background:linear-gradient(145deg,#10141a,#070a0e);
-cursor:pointer;
-}
-
-/* TOP BAR */
-
+/* ===== TOP BAR ===== */
 .top{
-position:fixed;
-top:16px;
-left:0;
-right:0;
-display:flex;
-justify-content:space-between;
-padding:0 20px;
-z-index:100;
+  position:fixed;top:14px;left:0;right:0;
+  padding:0 14px;
+  z-index:260;
+  pointer-events:none;
+}
+.topbar{
+  pointer-events:auto;
+  width:min(1120px,96vw);
+  margin:0 auto;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:10px 12px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+}
+.brandLeft{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
+}
+.brandTitle{
+  font-weight:980;
+  letter-spacing:.6px;
+  font-size:14px;
+  color:rgba(255,255,255,.94);
+  white-space:nowrap;
+}
+.brandSub{
+  font-size:12px;
+  color:rgba(255,255,255,.72);
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+.brandLinks{
+  display:flex;gap:10px;flex-wrap:wrap;
+  font-size:12px;
+  color:rgba(255,255,255,.70);
+}
+.brandLinks a{
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(201,162,74,.16);
+  background:rgba(0,0,0,.14);
+}
+.controlsRight{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
 
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowB);
+}
 .seg button{
-padding:10px 12px;
-border-radius:12px;
-border:1px solid rgba(255,255,255,.2);
-background:#111;
-color:white;
-cursor:pointer;
+  appearance:none;border:0;background:transparent;
+  color:rgba(255,255,255,.78);
+  padding:10px 12px;min-height:42px;
+  font-weight:980;font-size:13px;letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-
 .seg button[aria-pressed="true"]{
-background:#333;
+  color:rgba(255,255,255,.95);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
 }
 
+/* ===== STAGE ===== */
+.stage{
+  position:relative;
+  width:min(1200px,94vw);
+  height:min(1200px,86vh);
+  margin:var(--padTop) auto 0;
+  pointer-events:none;
+}
+
+/* Mid-Autumn sky beyond borders + dragons in clouds (NO external assets) */
+.sky{
+  position:absolute;inset:-20%;
+  pointer-events:none;
+  z-index:0;
+  border-radius:44px;
+  overflow:hidden;
+}
+.sky::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 70% 14%, rgba(255,240,210,.14), transparent 48%), /* moon haze */
+    radial-gradient(circle at 18% 22%, rgba(255,60,60,.12), transparent 54%),  /* lantern glow */
+    radial-gradient(circle at 86% 38%, rgba(120,70,255,.10), transparent 62%), /* opal haze */
+    radial-gradient(circle at 40% 70%, rgba(0,0,0,.30), transparent 62%),
+    linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.22) 68%, rgba(0,0,0,.30) 100%);
+  opacity:.95;
+}
+.sky::after{
+  content:"";
+  position:absolute;inset:0;
+  /* two dragon silhouettes as SVG (cloudy, mythic, distant) */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='800' viewBox='0 0 1400 800'%3E%3Cpath d='M210 430c60-70 140-120 240-110 60 6 98 32 132 58 38 28 80 58 160 52 70-5 120-42 170-80 60-46 120-92 220-90 70 2 132 28 182 70 38 32 66 70 90 114 10 18 0 34-18 36-20 2-34-10-44-26-22-36-46-68-78-92-40-30-84-48-132-50-78-4-128 34-184 78-58 44-120 92-214 100-108 10-172-36-220-72-30-22-56-42-100-46-76-7-134 30-184 88-14 16-30 22-46 14-16-8-18-26-4-44Z' fill='%23d4af37' fill-opacity='.14'/%3E%3Cpath d='M980 300c40-40 94-70 160-74 54-4 96 12 134 30 34 16 66 32 118 26 44-6 74-28 104-52 36-30 74-60 138-64 60-4 112 18 154 56 18 16 34 34 48 56 10 14 6 30-8 38-14 8-30 4-40-10-12-18-26-34-42-48-30-28-66-42-110-38-44 4-72 28-104 54-34 28-74 60-132 70-76 12-128-12-170-32-26-12-48-24-78-22-44 2-82 24-114 56-12 12-28 12-40 0-12-12-12-28 0-40Z' fill='%23ffffff' fill-opacity='.08'/%3E%3C/svg%3E");
+  background-size:cover;
+  background-position:center;
+  mix-blend-mode:screen;
+  filter:blur(1.2px);
+  opacity:.80;
+}
+
+/* Compass slab (dark crystal) */
+.slab{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,92vw);
+  height:min(980px,92vw);
+  border-radius:44px;
+  pointer-events:none;
+  z-index:1;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
+    linear-gradient(160deg, rgba(10,12,16,.90), rgba(6,8,10,.96));
+  box-shadow:
+    0 70px 240px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -70px 140px rgba(0,0,0,.65);
+}
+
+/* Obsidian dial face (instrument grade) */
+.dial{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  border-radius:999px;
+  pointer-events:none;
+  z-index:2;
+  overflow:hidden;
+}
+.dial::before{
+  content:"";
+  position:absolute;inset:0;border-radius:999px;
+  background:
+    radial-gradient(circle at 50% 42%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
+      rgba(0,0,0,.00) 92%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 80px rgba(0,0,0,.55),
+    0 50px 180px rgba(0,0,0,.30);
+  opacity:.96;
+}
+.dial::after{
+  content:"";
+  position:absolute;inset:-14%;
+  background:
+    /* rings */
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
+
+    /* cardinal engrave */
+    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+
+    /* 45° aligned inlay */
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.06) 0 1.2deg,
+      transparent 1.2deg 7.5deg),
+
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter: blur(.25px);
+  opacity:.78;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+}
+.faceLetters{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  pointer-events:none;
+  z-index:3;
+  opacity:.72;
+}
+.faceLetters span{
+  position:absolute;
+  color:rgba(201,162,74,.45);
+  font-weight:980;
+  letter-spacing:2px;
+  font-size:12px;
+  text-shadow:0 0 12px rgba(0,0,0,.55);
+}
+.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
+.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
+.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
+.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
+
+/* ===== GEM NODES ===== */
+.node{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  cursor:pointer;
+  pointer-events:auto;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.18);
+  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  z-index:10;
+  border-radius:22px;
+}
+.core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
+.l1{width:var(--D1);height:var(--D1)}
+.l2{width:var(--D2);height:var(--D2)}
+.l3{width:var(--D3);height:var(--D3);border-radius:18px}
+
+.surface{
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
+    radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
+    linear-gradient(160deg, var(--onyx1), var(--onyx0));
+  box-shadow:
+    var(--shadowDeep),
+    0 0 24px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -52px 92px rgba(0,0,0,.88);
+}
+.surface::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
+  opacity:.36;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.surface::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+
+/* glow-only hover (NO movement) */
+.node:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:
+    var(--shadowDeep),
+    0 0 0 2px rgba(201,162,74,.14),
+    0 0 34px rgba(201,162,74,.18),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -52px 92px rgba(0,0,0,.88);
+}
+.node:active{filter:brightness(.98)}
+
+/* inner text */
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px;
+  gap:6px;
+  color:#fff;
+}
+.word{
+  font-weight:980;
+  letter-spacing:.6px;
+  line-height:1.05;
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+  /* ensure full-word fit */
+  font-size:clamp(10px, 1.15vw, 16px);
+  max-width:100%;
+  word-break:keep-all;
+}
+.code{
+  font-weight:950;
+  font-size:10px;
+  letter-spacing:1.2px;
+  opacity:.78;
+}
+
+/* CORE emphasis */
+.core{
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.88),
+    0 0 46px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -64px 110px rgba(0,0,0,.92);
+}
+
+/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
+.corner{
+  position:fixed;
+  bottom:max(16px, env(safe-area-inset-bottom));
+  z-index:260;
+  pointer-events:none;
+}
+.corner .dmini{pointer-events:auto}
+.corner.left{left:16px}
+.corner.right{right:16px}
+
+.dmini{
+  width:56px;height:56px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
+  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  display:grid;place-items:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
+  transition:box-shadow .16s ease, border-color .16s ease;
+}
+.dmini:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
+}
+.dmini span{
+  transform:rotate(-45deg);
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.6px;
+  color:rgba(255,255,255,.92);
+  user-select:none;
+}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.72);
+  font-size:11px;
+  letter-spacing:.4px;
+}
+
+/* ===== BOTTOM PILL ===== */
+.pillWrap{
+  width:min(1120px,94vw);
+  margin:14px auto 0;
+  padding-bottom:90px; /* space above corners */
+}
+.pill{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:14px 16px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
+    rgba(0,0,0,.16);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.5px;
+}
+.pill b{color:rgba(255,255,255,.95)}
+.pill .g{color:rgba(201,162,74,.80);font-weight:980}
+
+/* ===== RESPONSIVE FIT ===== */
+@media (max-width:720px){
+  :root{
+    --D0:196px;
+    --D1:142px;
+    --D2:108px;
+    --D3:84px;
+    --R1:156px;
+    --R2:228px;
+    --R3:292px;
+    --padTop:112px;
+  }
+  .stage{height:min(980px,86vh)}
+}
+@media (max-width:520px){
+  :root{
+    --D0:184px;
+    --D1:136px;
+    --D2:104px;
+    --D3:80px;
+    --R1:146px;
+    --R2:214px;
+    --R3:274px;
+  }
+  .brandSub{display:none}
+}
 </style>
 </head>
 
 <body>
 
-<div class="top">
+<div class="top" aria-label="Top controls">
+  <div class="topbar">
+    <div class="brandLeft" aria-label="Brand">
+      <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
+      <div class="brandSub" id="brandSub">Obsidian dial · Gem navigation · Receipt-first structure</div>
+      <div class="brandLinks" aria-label="Brand links">
+        <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
+        <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
+      </div>
+    </div>
 
-<div class="seg">
-<button id="langEN">EN</button>
-<button id="langZH">中文</button>
-<button id="langES">ES</button>
+    <div class="controlsRight" aria-label="Language and lens">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" id="btnEN" aria-pressed="true">EN</button>
+        <button type="button" id="btnZH" aria-pressed="false">中文</button>
+        <button type="button" id="btnES" aria-pressed="false">ES</button>
+      </div>
+      <div class="seg" role="group" aria-label="Lane">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="seg">
-<button id="lanePlatform">PLATFORM</button>
-<button id="laneEngineering">ENGINEERING</button>
+<div class="stage" id="stage" aria-label="Compass dial">
+  <div class="sky" aria-hidden="true"></div>
+  <div class="slab" aria-hidden="true"></div>
+  <div class="dial" aria-hidden="true"></div>
+  <div class="faceLetters" aria-hidden="true">
+    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
+  </div>
+  <!-- nodes injected by JS -->
 </div>
 
+<div class="pillWrap" aria-label="Compass note">
+  <div class="pill" id="pill">
+    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
+  </div>
 </div>
 
-<div class="page">
-
-<div class="header">
-
-<div class="title" id="title">
-CADDY · Decision Diagnostic Engine
+<div class="corner left" aria-label="Exit">
+  <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
+  <div class="cornerLabel" id="lblExit">EXIT</div>
 </div>
-
-<div class="subtitle" id="subtitle"></div>
-
-</div>
-
-<div class="grid">
-
-<div class="card">
-<h3 id="catLabel">Category</h3>
-<select id="category">
-<option>Individual</option>
-<option>Relational</option>
-<option>Business</option>
-<option>Corporate</option>
-</select>
-</div>
-
-<div class="card">
-<h3 id="scenarioLabel">Scenario</h3>
-<select id="scenario">
-<option>Strategic Planning</option>
-<option>Conflict Resolution</option>
-<option>Investment Decision</option>
-<option>Leadership Decision</option>
-<option>Innovation Development</option>
-<option>Risk Management</option>
-</select>
-</div>
-
-<div class="card">
-<h3 id="adversityLabel">Adversity</h3>
-<input type="range" min="0" max="100" value="40" id="adversity">
-<div class="rangeVal" id="aVal">40</div>
-</div>
-
-<div class="card">
-<h3 id="ambitionLabel">Ambition</h3>
-<input type="range" min="0" max="100" value="60" id="ambition">
-<div class="rangeVal" id="bVal">60</div>
-</div>
-
-<div class="card">
-<h3 id="dispositionLabel">Disposition</h3>
-<select id="disposition">
-<option>Patient</option>
-<option>Balanced</option>
-<option>Aggressive</option>
-<option>Analytical</option>
-</select>
-</div>
-
-</div>
-
-<div class="result">
-
-<div class="star" id="alignmentStar"></div>
-
-<div class="reason" id="alignmentReason"></div>
-
-<div class="links">
-
-<div class="linkBtn" onclick="location.href='/research/'">Research</div>
-<div class="linkBtn" onclick="location.href='/explore/frontier/'">Frontier</div>
-<div class="linkBtn" onclick="location.href='/explore/frontier/vision/'">Vision</div>
-<div class="linkBtn" onclick="location.href='/laws/'">Laws</div>
-<div class="linkBtn" onclick="location.href='/index.html'">Compass</div>
-
-</div>
-
-</div>
-
+<div class="corner right" aria-label="Hub">
+  <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
+  <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
 
 <script>
+(function(){
+  "use strict";
 
-/* LANGUAGE */
+  // ===== Canon state (gd_* only; lane URL-only) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-let lang="en"
-let lane="platform"
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
-const TEXT={
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-en:{
-subtitle_platform:"Scenario-based decision engine. Tune conditions and observe alignment.",
-subtitle_engineering:"Decision calibration system mapping ambition vs adversity across defined scenarios.",
-alignEssential:"Alignment: Essential",
-alignStrategic:"Alignment: Strategic",
-alignBalanced:"Alignment: Balanced",
-alignCaution:"Alignment: Caution"
-},
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
+  }catch(e){}
 
-zh:{
-subtitle_platform:"基于情境的决策引擎，通过调节变量观察对齐结果。",
-subtitle_engineering:"决策校准系统，通过情境映射风险与雄心。",
-alignEssential:"对齐：核心",
-alignStrategic:"对齐：策略",
-alignBalanced:"对齐：平衡",
-alignCaution:"对齐：谨慎"
-},
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-es:{
-subtitle_platform:"Motor de decisiones basado en escenarios.",
-subtitle_engineering:"Sistema de calibración estratégica de decisiones.",
-alignEssential:"Alineación: Esencial",
-alignStrategic:"Alineación: Estratégica",
-alignBalanced:"Alineación: Balanceada",
-alignCaution:"Alineación: Precaución"
-}
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style",(over&&over.style)?over.style:style);
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?over.depth:depth);
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
 
-}
+  function go(path){ window.location.href = path + q(); }
+  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-/* UPDATE TEXT */
+  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
+  var CORE_ROUTE = "/index-core/index.html";
+  var EXIT_ROUTE = "/door/";
+  var HUB_ROUTE  = "/home/";
+  var PLACEHOLDER_404 = "/404.html";
 
-function updateText(){
+  // Your requested north/south/east/west meaning:
+  // N = Laws, E = Energy, S = Finance, W = Governance
+  // Research included; Doctrine fixed to /products/capital-doctrine/ ; Prelude removed from compass.
+  var ROUTES_RAW = [
+    // Tier 1 (cardinals)
+    {tier:1, code:"N",  label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
+    {tier:1, code:"E",  label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"功率",es:"PWR"}}, href:"/explore/frontier/energy/"},
+    {tier:1, code:"S",  label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"}, engineering:{en:"CAPITAL",zh:"资本",es:"CAP"}}, href:"/finance/"},
+    {tier:1, code:"W",  label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"}, engineering:{en:"EXEC",zh:"执行",es:"EJEC"}}, href:"/governance/"},
 
-const t=TEXT[lang]
+    // Tier 2 (diagonals)
+    {tier:2, code:"NE", label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"}, engineering:{en:"DEPLOY",zh:"部署",es:"DESPL"}}, href:"/products/"},
+    {tier:2, code:"SE", label:{platform:{en:"RESEARCH",zh:"研究",es:"INVEST."}, engineering:{en:"R&D",zh:"研发",es:"I+D"}}, href:"/research/"},
+    {tier:2, code:"SW", label:{platform:{en:"EXPLORE",zh:"探索",es:"EXPLORAR"}, engineering:{en:"MODELS",zh:"模型",es:"MODELOS"}}, href:"/explore/"},
+    {tier:2, code:"NW", label:{platform:{en:"DOCTRINE",zh:"教义",es:"DOCTRINA"}, engineering:{en:"CCD",zh:"CCD",es:"CCD"}}, href:"/products/capital-doctrine/"},
 
-document.getElementById("subtitle").textContent=
-lane==="engineering"?t.subtitle_engineering:t.subtitle_platform
+    // Tier 3 (outer 8)
+    {tier:3, code:"NNE",label:{platform:{en:"EDUCATION",zh:"教育",es:"EDUCACIÓN"}, engineering:{en:"ESL",zh:"ESL",es:"ESL"}}, href:"/products/education/"},
+    {tier:3, code:"ENE",label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}, engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}, href:"/explore/frontier/"},
+    {tier:3, code:"ESE",label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"}, engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}, href:"/explore/infrastructure/"},
+    {tier:3, code:"SSE",label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"}, engineering:{en:"FOOD",zh:"食物",es:"ALIM"}}, href:"/products/agriculture/"},
+    {tier:3, code:"SSW",label:{platform:{en:"GAUGES",zh:"量规",es:"MEDIDORES"}, engineering:{en:"SIGNALS",zh:"信号",es:"SEÑALES"}}, href:"/gauges/"},
+    {tier:3, code:"WSW",label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"}, engineering:{en:"MAP",zh:"映射",es:"MAP"}}, href:"/explore/frontier/vision/"},
+    {tier:3, code:"WNW",label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"}, engineering:{en:"256",zh:"256态",es:"256"}}, href:"/explore/frontier/lattice/"},
+    {tier:3, code:"NNW",label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"}, engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}, href:"/explore/frontier/shimmer/"}
+  ];
 
-}
+  function normalizeRoutes(list){
+    // enforce unique hrefs; missing/duplicate -> 404 placeholder
+    var seen = Object.create(null);
+    var out = [];
+    for(var i=0;i<list.length;i++){
+      var it=list[i];
+      var h=(it.href||"").trim();
+      if(!h) h=PLACEHOLDER_404;
+      if(seen[h]) h=PLACEHOLDER_404;
+      seen[h]=true;
+      out.push({tier:it.tier, code:it.code, label:it.label, href:h});
+    }
+    return out;
+  }
+  var ROUTES = normalizeRoutes(ROUTES_RAW);
 
-/* COMPUTE */
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
-function compute(){
+  function labelFor(it){
+    var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
+    return pick3(pack.en, pack.zh, pack.es);
+  }
 
-let a=parseInt(adversity.value)
-let b=parseInt(ambition.value)
+  // ===== UI refs =====
+  var stage=document.getElementById("stage");
 
-aVal.textContent=a
-bVal.textContent=b
+  // ===== Build nodes =====
+  function mkNode(word, code, cls){
+    var d=document.createElement("div");
+    d.className="node surface "+cls;
+    d.setAttribute("role","button");
+    d.tabIndex=0;
 
-let score=b-a
-const t=TEXT[lang]
+    var inner=document.createElement("div");
+    inner.className="inner";
 
-if(score>30){
-alignmentStar.textContent=t.alignEssential
-alignmentReason.textContent="High ambition relative to adversity."
-}
+    var w=document.createElement("div");
+    w.className="word";
+    w.textContent=word;
 
-else if(score>10){
-alignmentStar.textContent=t.alignStrategic
-alignmentReason.textContent="Strategic progression recommended."
-}
+    var c=document.createElement("div");
+    c.className="code";
+    c.textContent=code;
 
-else if(score>-10){
-alignmentStar.textContent=t.alignBalanced
-alignmentReason.textContent="Balanced conditions."
-}
+    inner.appendChild(w);
+    inner.appendChild(c);
+    d.appendChild(inner);
 
-else{
-alignmentStar.textContent=t.alignCaution
-alignmentReason.textContent="Containment recommended."
-}
+    return d;
+  }
 
-}
+  function layout(){
+    // remove existing nodes
+    stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
-adversity.oninput=compute
-ambition.oninput=compute
+    var rect=stage.getBoundingClientRect();
+    var cx=rect.width/2, cy=rect.height/2;
 
-compute()
-updateText()
+    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||246;
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
 
-/* LANGUAGE BUTTONS */
+    // CORE
+    var core=mkNode(
+      pick3("CORE","核心","NÚCLEO"),
+      "INDEX",
+      "core"
+    );
+    core.style.left=cx+"px"; core.style.top=cy+"px";
+    core.addEventListener("click", function(){ go(CORE_ROUTE); }, {passive:true});
+    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
+    stage.appendChild(core);
 
-langEN.onclick=()=>{lang="en";updateText();compute()}
-langZH.onclick=()=>{lang="zh";updateText();compute()}
-langES.onclick=()=>{lang="es";updateText();compute()}
+    // split by tier
+    var t1=[], t2=[], t3=[];
+    for(var i=0;i<ROUTES.length;i++){
+      if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
+      else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
+      else t3.push(ROUTES[i]);
+    }
 
-/* LANE BUTTONS */
+    // Tier 1 pinned to N/E/S/W angles by code order
+    function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+    var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
+    var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+    for(var i=0;i<ordered.length;i++){
+      var it=ordered[i];
+      var x=cx + R1*Math.cos(ang[i]);
+      var y=cy + R1*Math.sin(ang[i]);
+      var n=mkNode(labelFor(it), it.code, "l1");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
 
-lanePlatform.onclick=()=>{lane="platform";updateText()}
-laneEngineering.onclick=()=>{lane="engineering";updateText()}
+    // Tier 2 (4 diagonals) start at -45°
+    for(var i=0;i<t2.length;i++){
+      var it=t2[i];
+      var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
+      var x=cx + R2*Math.cos(a);
+      var y=cy + R2*Math.sin(a);
+      var n=mkNode(labelFor(it), it.code, "l2");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
 
+    // Tier 3 (8) start at -67.5°
+    for(var i=0;i<t3.length;i++){
+      var it=t3[i];
+      var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
+      var x=cx + R3*Math.cos(a);
+      var y=cy + R3*Math.sin(a);
+      var n=mkNode(labelFor(it), it.code, "l3");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
+  }
+
+  function safeLayout(){
+    var r=stage.getBoundingClientRect();
+    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
+    layout();
+  }
+
+  // ===== Language (NO reload) =====
+  var btnEN=document.getElementById("btnEN");
+  var btnZH=document.getElementById("btnZH");
+  var btnES=document.getElementById("btnES");
+  setPressed(btnEN, lang==="en");
+  setPressed(btnZH, lang==="zh");
+  setPressed(btnES, lang==="es");
+
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(btnEN, lang==="en");
+    setPressed(btnZH, lang==="zh");
+    setPressed(btnES, lang==="es");
+    paintHeader();
+    safeLayout();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  // ===== Lane (NO reload; URL-only) =====
+  var btnLP=document.getElementById("lanePlatform");
+  var btnLE=document.getElementById("laneEngineering");
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+    paintHeader();
+    safeLayout();
+  }
+
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== Header text i18n =====
+  function paintHeader(){
+    var laneWord = pick3("PLATFORM","平台","PLATAFORMA");
+    if(lane==="engineering") laneWord = pick3("ENGINEERING","工程","INGENIERÍA");
+
+    if(lang==="zh"){
+      document.getElementById("brandTitle").textContent="欢迎来到指南针";
+      document.getElementById("brandSub").textContent="黑曜石表盘 · 宝石导航 · 收据优先结构 · 透镜："+laneWord;
+      document.getElementById("lblExit").textContent="退出";
+      document.getElementById("lblHub").textContent="枢纽";
+      document.querySelector("#btnExit span").textContent="退出";
+      document.querySelector("#btnHub span").textContent="枢纽";
+      document.getElementById("pill").innerHTML="<b>指南针：</b>一个中心（<span class='g'>核心</span>）+ 16 枢纽。禁止重复目的地。未建页面暂时路由到 <span class='g'>/404.html</span>。";
+    }else if(lang==="es"){
+      document.getElementById("brandTitle").textContent="BIENVENIDO A LA BRÚJULA";
+      document.getElementById("brandSub").textContent="Dial de obsidiana · Gemas · Estructura con recibos · Lente: "+laneWord;
+      document.getElementById("lblExit").textContent="SALIR";
+      document.getElementById("lblHub").textContent="HUB";
+      document.querySelector("#btnExit span").textContent="SALIR";
+      document.querySelector("#btnHub span").textContent="HUB";
+      document.getElementById("pill").innerHTML="<b>Brújula:</b> Un centro (<span class='g'>CORE</span>) + 16 hubs. Sin destinos duplicados. No construido → <span class='g'>/404.html</span>.";
+    }else{
+      document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
+      document.getElementById("brandSub").textContent="Obsidian dial · Gem navigation · Receipt-first structure · Lens: "+laneWord;
+      document.getElementById("lblExit").textContent="EXIT";
+      document.getElementById("lblHub").textContent="HUB";
+      document.querySelector("#btnExit span").textContent="EXIT";
+      document.querySelector("#btnHub span").textContent="HUB";
+      document.getElementById("pill").innerHTML="<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
+    }
+  }
+
+  // ===== Corner buttons =====
+  function bindCorner(id, path){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+  }
+  bindCorner("btnExit", EXIT_ROUTE);
+  bindCorner("btnHub", HUB_ROUTE);
+
+  // ===== Init =====
+  paintHeader();
+  requestAnimationFrame(safeLayout);
+  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+
+})();
 </script>
 
 </body>

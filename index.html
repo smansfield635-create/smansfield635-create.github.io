@@ -1,14 +1,16 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY + DRAGONS
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY + DRAGONS (NO ASSETS)
      OWNER: SEAN (Website Building Room)
+
      LOCKS:
        - DiamondGateBridge.com header + welcome
-       - Obsidian dial face (instrument-grade) + gemstone nodes
+       - Obsidian dial face (instrument-grade) + gemstone nodes (3D bevel + gloss)
        - Visible mythic Chinese dragons in clouds (background layer, no external assets)
-       - 16 unique destinations (no duplicates); unknown/unbuilt → /404.html
-       - Center CORE routes to /index-core/index.html
+       - 16 unique destinations (no duplicates); unknown/unbuilt/duplicate → /404.html
+       - Center CORE routes to /index-core/index.html (WORKING)
        - Bottom corner controls: EXIT → /door/ | HUB → /home/
+       - Bottom dock jump options (no modal, no loops): DOOR / LAWS / PRODUCTS / RESEARCH
        - Trilingual: EN / 中文 / ES (NO reload)
        - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
        - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
@@ -33,22 +35,21 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   /* ===== GEOMETRY (one dominant center; progressively smaller outward) ===== */
-  --D0:210px;  /* CORE (dominant) */
-  --D1:150px;  /* Cardinals */
+  --D0:208px;  /* CORE (dominant) */
+  --D1:148px;  /* Cardinals */
   --D2:112px;  /* Diagonals */
-  --D3:86px;   /* Outer 8 */
+  --D3:88px;   /* Outer 8 */
 
-  /* tighter radii (bring them in) */
-  --R1:168px;
-  --R2:246px;
-  --R3:314px;
+  /* tighter radii (bring them closer for screen fit) */
+  --R1:160px;
+  --R2:234px;
+  --R3:298px;
 
-  --padTop:102px;
+  --padTop:106px;
 
   /* ===== MATERIAL ===== */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
-  --stroke:rgba(255,255,255,.12);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
@@ -58,11 +59,15 @@ body::before,body::after{pointer-events:none!important}
   --opalV:rgba(90,40,120,.18);
 
   --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.22);
+  --goldGlow:rgba(201,162,74,.18);
+  --goldGlow2:rgba(201,162,74,.10);
 
+  --stroke:rgba(255,255,255,.12);
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  --dockH:118px;
 }
 
 /* ===== TOP BAR ===== */
@@ -181,10 +186,10 @@ body::before,body::after{pointer-events:none!important}
   background-position:center;
   mix-blend-mode:screen;
   filter:blur(1.2px);
-  opacity:.80;
+  opacity:.82;
 }
 
-/* Compass slab (dark crystal) */
+/* Compass slab (dark crystal obsidian) */
 .slab{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -249,14 +254,14 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
     linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
 
-    /* 45° aligned inlay */
+    /* diamond-aligned 3D inlay (NO orthogonal grid) */
     repeating-conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
 
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter: blur(.25px);
-  opacity:.78;
+  opacity:.80;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
@@ -295,11 +300,14 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
   border-radius:22px;
 }
+
+/* sizes */
 .core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
+/* gemstone material */
 .surface{
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
@@ -309,25 +317,34 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
     var(--shadowDeep),
-    0 0 24px rgba(255,43,43,.08),
+    0 0 22px rgba(255,43,43,.08),
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
+
+/* 3D edge + diamond-aligned inlay (NOT orthogonal) */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  /* bevel rim */
   background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
-  opacity:.36;
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.10), transparent 55%),
+    radial-gradient(circle at 70% 78%, rgba(0,0,0,.32), transparent 60%),
+    /* silk lines aligned to diamond */
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.07) 0 1.1deg,
+      transparent 1.1deg 7.2deg);
+  opacity:.62;
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 66%, #000 74% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 66%, #000 74% 100%),
     linear-gradient(#000,#000);
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
 }
+
+/* gloss streak */
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -369,7 +386,6 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.6px;
   line-height:1.05;
   text-shadow:0 0 18px rgba(0,0,0,.42);
-  /* ensure full-word fit */
   font-size:clamp(10px, 1.15vw, 16px);
   max-width:100%;
   word-break:keep-all;
@@ -390,6 +406,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -64px 110px rgba(0,0,0,.92);
 }
+.core .word{font-size:clamp(12px, 1.35vw, 18px)}
 
 /* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
 .corner{
@@ -439,11 +456,11 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== BOTTOM PILL ===== */
+/* ===== BOTTOM PILL + DOCK ===== */
 .pillWrap{
   width:min(1120px,94vw);
   margin:14px auto 0;
-  padding-bottom:90px; /* space above corners */
+  padding-bottom:calc(var(--dockH) + 8px); /* space for dock + corners */
 }
 .pill{
   border:1px solid rgba(255,255,255,.12);
@@ -462,31 +479,77 @@ body::before,body::after{pointer-events:none!important}
 .pill b{color:rgba(255,255,255,.95)}
 .pill .g{color:rgba(201,162,74,.80);font-weight:980}
 
-/* ===== RESPONSIVE FIT ===== */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:240;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+  pointer-events:auto;
+}
+.dock .db{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.12), transparent 62%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:rgba(255,255,255,.92);
+  font-weight:980;
+  letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  box-shadow:var(--shadowB);
+  cursor:pointer;
+  user-select:none;
+}
+.dock .db:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 26px rgba(201,162,74,.16);
+}
+@media (max-width:560px){
+  :root{--dockH:138px}
+  .dock{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .brandSub{display:none}
+}
+
+/* responsive fit */
 @media (max-width:720px){
   :root{
     --D0:196px;
     --D1:142px;
     --D2:108px;
-    --D3:84px;
-    --R1:156px;
-    --R2:228px;
-    --R3:292px;
-    --padTop:112px;
+    --D3:86px;
+    --R1:152px;
+    --R2:224px;
+    --R3:284px;
+    --padTop:114px;
   }
   .stage{height:min(980px,86vh)}
 }
 @media (max-width:520px){
   :root{
-    --D0:184px;
+    --D0:186px;
     --D1:136px;
     --D2:104px;
-    --D3:80px;
+    --D3:84px;
     --R1:146px;
     --R2:214px;
     --R3:274px;
   }
-  .brandSub{display:none}
 }
 </style>
 </head>
@@ -533,6 +596,13 @@ body::before,body::after{pointer-events:none!important}
     <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
   </div>
 </div>
+
+<nav class="dock" aria-label="Quick jumps">
+  <div class="db" id="dockDoor" role="button" tabindex="0">DOOR</div>
+  <div class="db" id="dockLaws" role="button" tabindex="0">LAWS</div>
+  <div class="db" id="dockProducts" role="button" tabindex="0">PRODUCTS</div>
+  <div class="db" id="dockResearch" role="button" tabindex="0">RESEARCH</div>
+</nav>
 
 <div class="corner left" aria-label="Exit">
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
@@ -593,9 +663,9 @@ body::before,body::after{pointer-events:none!important}
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // Your requested north/south/east/west meaning:
+  // North/East/South/West meaning (locked):
   // N = Laws, E = Energy, S = Finance, W = Governance
-  // Research included; Doctrine fixed to /products/capital-doctrine/ ; Prelude removed from compass.
+  // Research included; Doctrine fixed; Prelude removed.
   var ROUTES_RAW = [
     // Tier 1 (cardinals)
     {tier:1, code:"N",  label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
@@ -621,7 +691,6 @@ body::before,body::after{pointer-events:none!important}
   ];
 
   function normalizeRoutes(list){
-    // enforce unique hrefs; missing/duplicate -> 404 placeholder
     var seen = Object.create(null);
     var out = [];
     for(var i=0;i<list.length;i++){
@@ -637,7 +706,6 @@ body::before,body::after{pointer-events:none!important}
   var ROUTES = normalizeRoutes(ROUTES_RAW);
 
   function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-
   function labelFor(it){
     var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
     return pick3(pack.en, pack.zh, pack.es);
@@ -672,15 +740,15 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function layout(){
-    // remove existing nodes
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||246;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
+    var cs=getComputedStyle(document.documentElement);
+    var R1=parseFloat(cs.getPropertyValue("--R1"))||160;
+    var R2=parseFloat(cs.getPropertyValue("--R2"))||234;
+    var R3=parseFloat(cs.getPropertyValue("--R3"))||298;
 
     // CORE
     var core=mkNode(
@@ -755,50 +823,13 @@ body::before,body::after{pointer-events:none!important}
     layout();
   }
 
-  // ===== Language (NO reload) =====
+  // ===== Language + Lane toggles (NO reload) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
-  setPressed(btnEN, lang==="en");
-  setPressed(btnZH, lang==="zh");
-  setPressed(btnES, lang==="es");
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    setPressed(btnEN, lang==="en");
-    setPressed(btnZH, lang==="zh");
-    setPressed(btnES, lang==="es");
-    paintHeader();
-    safeLayout();
-  }
-
-  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  // ===== Lane (NO reload; URL-only) =====
   var btnLP=document.getElementById("lanePlatform");
   var btnLE=document.getElementById("laneEngineering");
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
 
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-    paintHeader();
-    safeLayout();
-  }
-
-  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  // ===== Header text i18n =====
   function paintHeader(){
     var laneWord = pick3("PLATFORM","平台","PLATAFORMA");
     if(lane==="engineering") laneWord = pick3("ENGINEERING","工程","INGENIERÍA");
@@ -808,17 +839,25 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("brandSub").textContent="黑曜石表盘 · 宝石导航 · 收据优先结构 · 透镜："+laneWord;
       document.getElementById("lblExit").textContent="退出";
       document.getElementById("lblHub").textContent="枢纽";
-      document.querySelector("#btnExit span").textContent="退出";
-      document.querySelector("#btnHub span").textContent="枢纽";
+      document.querySelector("#btnExit span").textContent="EXIT";
+      document.querySelector("#btnHub span").textContent="HUB";
       document.getElementById("pill").innerHTML="<b>指南针：</b>一个中心（<span class='g'>核心</span>）+ 16 枢纽。禁止重复目的地。未建页面暂时路由到 <span class='g'>/404.html</span>。";
+      document.getElementById("dockDoor").textContent="门";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockResearch").textContent="研究";
     }else if(lang==="es"){
       document.getElementById("brandTitle").textContent="BIENVENIDO A LA BRÚJULA";
-      document.getElementById("brandSub").textContent="Dial de obsidiana · Gemas · Estructura con recibos · Lente: "+laneWord;
+      document.getElementById("brandSub").textContent="Dial de obsidiana · Gemas · Recibos primero · Lente: "+laneWord;
       document.getElementById("lblExit").textContent="SALIR";
       document.getElementById("lblHub").textContent="HUB";
-      document.querySelector("#btnExit span").textContent="SALIR";
+      document.querySelector("#btnExit span").textContent="EXIT";
       document.querySelector("#btnHub span").textContent="HUB";
       document.getElementById("pill").innerHTML="<b>Brújula:</b> Un centro (<span class='g'>CORE</span>) + 16 hubs. Sin destinos duplicados. No construido → <span class='g'>/404.html</span>.";
+      document.getElementById("dockDoor").textContent="PUERTA";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockResearch").textContent="INVESTIGACIÓN";
     }else{
       document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
       document.getElementById("brandSub").textContent="Obsidian dial · Gem navigation · Receipt-first structure · Lens: "+laneWord;
@@ -827,23 +866,58 @@ body::before,body::after{pointer-events:none!important}
       document.querySelector("#btnExit span").textContent="EXIT";
       document.querySelector("#btnHub span").textContent="HUB";
       document.getElementById("pill").innerHTML="<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
+      document.getElementById("dockDoor").textContent="DOOR";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockResearch").textContent="RESEARCH";
     }
   }
 
-  // ===== Corner buttons =====
-  function bindCorner(id, path){
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang); }catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(btnEN, lang==="en"); setPressed(btnZH, lang==="zh"); setPressed(btnES, lang==="es");
+    paintHeader();
+    safeLayout();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform"); setPressed(btnLE, lane==="engineering");
+    paintHeader();
+    safeLayout();
+  }
+
+  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // initial pressed states
+  setPressed(btnEN, lang==="en"); setPressed(btnZH, lang==="zh"); setPressed(btnES, lang==="es");
+  setPressed(btnLP, lane==="platform"); setPressed(btnLE, lane==="engineering");
+
+  // ===== corners + dock =====
+  function bind(id, fn){
     var el=document.getElementById(id);
     if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    el.addEventListener("click", fn, {passive:true});
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
   }
-  bindCorner("btnExit", EXIT_ROUTE);
-  bindCorner("btnHub", HUB_ROUTE);
+  bind("btnExit", function(){ go(EXIT_ROUTE); });
+  bind("btnHub",  function(){ go(HUB_ROUTE); });
 
-  // ===== Init =====
+  bind("dockDoor", function(){ go("/door/"); });
+  bind("dockLaws", function(){ go("/laws/"); });
+  bind("dockProducts", function(){ go("/products/"); });
+  bind("dockResearch", function(){ go("/research/"); });
+
+  // ===== init =====
   paintHeader();
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});

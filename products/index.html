@@ -1,11 +1,26 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS · 5 STREAMS · 20 CORE PRODUCTS
-     PLATFORM vs ENGINEERING (URL lane)
-     TRILINGUAL (EN / 中文 / ES)
-     INFORMAL LAYER PINNED
-     SINGLE-OPEN ACCORDION
-     STATE SAFE (gd_* only)
+     PRODUCTS · 5 STREAMS · 20 CORE PRODUCTS (FULL / GLOSS / COLOR)
+     INFORMAL SITE LAYER (PINNED):
+       - gd_style = informal
+       - gd_depth = explore
+     TRILINGUAL UI: EN / 中文 / ES
+     VISIBLE LENS ONLY:
+       - lane=platform|engineering (URL-only; NEVER stored)
+     UX:
+       - Single-open accordion (streams)
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open stream
+       - Each product card has a colored diamond marker + a jump button
+     STATE:
+       - Preserve gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
+       - Preserve URL query: lang/style/time/depth/lane
+     ASSETS:
+       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - ui.css owns html/body background (NO overrides)
+     ROUTES:
+       - This page provides jumps directly to product shells/pages.
+       - If any route 404s, change the ROUTES table in JS (single place).
 -->
 
 <html lang="en">
@@ -25,303 +40,941 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:120px;
+
   --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
   --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.80);
-  --shadow:0 24px 80px rgba(0,0,0,.65);
+  --soft:rgba(255,255,255,.62);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* ===== Top controls ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
+}
+
+/* button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Page ===== */
 .page{
   width:min(1120px,94vw);
-  margin:120px auto 0;
-  padding-bottom:calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
+  margin:0 auto;
+  padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
+  position:relative;z-index:10;
 }
 
+/* background context behind content */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
+    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
+    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
+    conic-gradient(from 12deg at 30% 28%,
+      rgba(201,162,74,.14), transparent 12%,
+      rgba(255,43,43,.12), transparent 24%,
+      rgba(90,40,120,.10), transparent 38%,
+      transparent 100%),
+    conic-gradient(from 180deg at 70% 36%,
+      rgba(255,43,43,.12), transparent 14%,
+      rgba(201,162,74,.12), transparent 28%,
+      rgba(90,40,120,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* ===== Header ===== */
 .header{
+  position:relative;
+  z-index:2;
   border:1px solid var(--stroke);
-  border-radius:22px;
-  padding:20px;
-  background:linear-gradient(145deg, rgba(10,12,16,.85), rgba(6,8,10,.95));
-  box-shadow:var(--shadow);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
 }
 
-.k{font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.75}
-.t{font-size:28px;font-weight:950;margin:6px 0 10px}
-.s{font-size:15px;line-height:1.6;color:var(--mut)}
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
+.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
+  font-size:13.25px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
 
-.list{display:flex;flex-direction:column;gap:14px}
+/* state pills */
+.stateRow{
+  margin-top:12px;
+  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+
+/* band */
+.band{
+  position:relative;z-index:2;
+  padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;
+  color:rgba(255,255,255,.90);
+}
+
+/* ===== Accordion (streams) ===== */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
 
 .row{
-  border:1px solid var(--stroke);
-  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
   overflow:hidden;
-  background:linear-gradient(145deg, rgba(14,18,22,.9), rgba(8,10,14,.95));
-  box-shadow:var(--shadow);
+  position:relative;
 }
-
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
 .head{
-  padding:16px 18px;
-  display:flex;
-  justify-content:space-between;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;padding:16px 16px;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
-
-.title{font-weight:900;font-size:18px}
-.chev{opacity:.6}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.mark{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--c);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.subt{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
 
 .body{
   display:none;
-  border-top:1px solid var(--stroke);
-  padding:16px 18px;
+  padding:16px 16px 18px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
-
 .row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
 
-.sub{
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
   gap:12px;
 }
 
-.card{
-  border:1px solid var(--stroke);
-  border-radius:14px;
-  padding:12px;
-  background:rgba(0,0,0,.18);
-}
-
-.card h4{
-  margin:0 0 6px;
-  font-size:14px;
-  font-weight:900;
-}
-
-.card p{
-  margin:0;
-  font-size:13px;
-  color:var(--mut);
-  line-height:1.5;
-}
-
-.seg{
-  display:inline-flex;
-  border:1px solid var(--stroke);
-  border-radius:14px;
+.pcard{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:14px 14px 12px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  position:relative;
   overflow:hidden;
 }
-
-.seg button{
-  appearance:none;
-  border:0;
-  background:transparent;
-  color:var(--mut);
-  padding:8px 12px;
-  font-weight:900;
-  cursor:pointer;
+.pcard::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
 }
+.pTop{display:flex;gap:10px;align-items:flex-start}
+.pDia{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
+  background:var(--pc);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.pName{
+  font-weight:980;
+  letter-spacing:.2px;
+  font-size:15.5px;
+  color:var(--ink);
+  line-height:1.15;
+}
+.pMeta{
+  margin-top:10px;
+  font-size:13.25px;
+  color:rgba(255,255,255,.82);
+  line-height:1.5;
+}
+.pActions{
+  margin-top:12px;
+  display:flex;justify-content:flex-end;
+}
+.pActions .btn{padding:10px 12px;border-radius:999px;min-height:40px;font-size:13px}
 
-.seg button[aria-pressed="true"]{
-  background:rgba(255,43,43,.12);
-  color:#fff;
+/* ===== Dock ===== */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
 
 <body>
 
-<div class="page">
-
-  <div class="header">
-    <div class="k">PRODUCT ARCHITECTURE</div>
-    <div class="t" id="title">FIVE STREAMS · TWENTY PRODUCTS</div>
-    <div class="s" id="subtitle"></div>
-
-    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-      <div class="seg">
-        <button id="lanePlatform" aria-pressed="true">PLATFORM</button>
-        <button id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-      </div>
-
-      <div class="seg">
-        <button id="langEN" aria-pressed="true">EN</button>
-        <button id="langZH">中文</button>
-        <button id="langES">ES</button>
-      </div>
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
+    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+    <a class="btn red" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
     </div>
   </div>
+</div>
 
+<div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <section class="header" aria-label="Products header">
+    <p class="k" id="hk">PRODUCTS</p>
+    <h1 class="t" id="ht">FIVE STREAMS · TWENTY PRODUCTS</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="stateRow" aria-label="State">
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </section>
+
+  <div class="band" id="band">STREAMS (OPEN ONE)</div>
   <div class="list" id="list"></div>
 
 </div>
 
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+  <a class="btn red" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
+
 <script>
 (function(){
+  "use strict";
 
-var qs=new URLSearchParams(location.search);
-var LS=window.localStorage;
+  // ===== State (gd_* only; pinned informal layer) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-var lane  = qs.get("lane")  || "platform";
+  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
+  var time = qs.get("time") || LS.getItem("gd_time") || "now";
+  var lane = qs.get("lane") || "platform"; // URL-only
 
-if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-if(lane!=="platform"&&lane!=="engineering") lane="platform";
+  // pinned layer
+  var style="informal";
+  var depth="explore";
 
-LS.setItem("gd_lang",lang);
-LS.setItem("gd_style","informal");
-LS.setItem("gd_depth","explore");
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-document.documentElement.lang = lang==="zh"?"zh":lang==="es"?"es":"en";
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-function pick(en,zh,es){
-  return lang==="zh"?zh:lang==="es"?es:en;
-}
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-function laneText(p,e){
-  return lane==="engineering"?e:p;
-}
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
 
-var STREAMS = [
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
 
-{
-name:{en:"GOVERNING",zh:"治理",es:"GOBIERNO"},
-products:[
-["Policy Engine","政策引擎","Motor de Política"],
-["Decision Index","决策指数","Índice de Decisión"],
-["Compliance Grid","合规网格","Grid de Cumplimiento"],
-["Public Risk Meter","公共风险表","Medidor Público"]
-]
-},
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
 
-{
-name:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},
-products:[
-["Grid Optimization","电网优化","Optimización de Red"],
-["Storage Stack","储能系统","Sistema de Almacenamiento"],
-["Load Balancer","负载平衡","Balanceador de Carga"],
-["Resilience Module","韧性模块","Módulo de Resiliencia"]
-]
-},
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
 
-{
-name:{en:"FINANCE",zh:"金融",es:"FINANZAS"},
-products:[
-["Capital Doctrine","资本教义","Doctrina de Capital"],
-["Liquidity Model","流动性模型","Modelo de Liquidez"],
-["Risk Envelope","风险包络","Envolvente de Riesgo"],
-["Audit Ledger","审计账本","Libro de Auditoría"]
-]
-},
+  function openLabel(){
+    return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN";
+  }
 
-{
-name:{en:"AGRICULTURE",zh:"农业",es:"AGRICULTURA"},
-products:[
-["Closed Loop Farming","闭环农业","Agricultura Cerrada"],
-["Yield Optimizer","产量优化","Optimizador de Rendimiento"],
-["Water Index","水指数","Índice Hídrico"],
-["Soil Health Grid","土壤网格","Grid de Suelo"]
-]
-},
+  // ===== ROUTES TABLE (edit here if you rename pages) =====
+  // These are "jump pages" for products: each product gets its own destination.
+  // If a page doesn't exist yet, create a routing-safe shell at that path.
+  var ROUTES = {
+    // GOVERNING
+    "gov_policy_engine":"/products/governing/policy-engine/",
+    "gov_decision_index":"/products/governing/decision-index/",
+    "gov_compliance_grid":"/products/governing/compliance-grid/",
+    "gov_public_risk_meter":"/products/governing/public-risk-meter/",
 
-{
-name:{en:"INFRASTRUCTURE",zh:"基础设施",es:"INFRAESTRUCTURA"},
-products:[
-["Urban Stack","城市栈","Stack Urbano"],
-["Transit Model","交通模型","Modelo de Tránsito"],
-["Waste Loop","废弃循环","Bucle de Residuos"],
-["Habitat Module","栖息模块","Módulo de Hábitat"]
-]
-}
+    // ENERGY
+    "en_grid_optimization":"/products/energy/grid-optimization/",
+    "en_storage_stack":"/products/energy/storage-stack/",
+    "en_load_balancer":"/products/energy/load-balancer/",
+    "en_resilience_module":"/products/energy/resilience-module/",
 
-];
+    // FINANCE
+    "fi_capital_doctrine":"/products/capital-doctrine/",
+    "fi_liquidity_model":"/products/finance/liquidity-model/",
+    "fi_risk_envelope":"/products/finance/risk-envelope/",
+    "fi_audit_ledger":"/products/finance/audit-ledger/",
 
-var list=document.getElementById("list");
+    // AGRICULTURE
+    "ag_closed_loop_farming":"/products/agriculture/closed-loop-farming/",
+    "ag_yield_optimizer":"/products/agriculture/yield-optimizer/",
+    "ag_water_index":"/products/agriculture/water-index/",
+    "ag_soil_health_grid":"/products/agriculture/soil-health-grid/",
 
-function render(){
+    // INFRASTRUCTURE
+    "in_urban_stack":"/products/infrastructure/urban-stack/",
+    "in_transit_model":"/products/infrastructure/transit-model/",
+    "in_waste_loop":"/products/infrastructure/waste-loop/",
+    "in_habitat_module":"/products/infrastructure/habitat-module/"
+  };
 
-list.innerHTML="";
+  // ===== DATA: 5 streams × 4 products = 20 =====
+  // Each product has:
+  // - id (route key)
+  // - name (platform vs engineering wording)
+  // - descriptor (platform vs engineering)
+  // - color (pc) = marker diamond color
+  var STREAMS = [
+    {
+      c:"#34d399",
+      name:{en:"GOVERNING",zh:"治理",es:"GOBIERNO"},
+      sub:{en:"Meaning, rules, enforcement, and public stability boundaries.", zh:"含义、规则、执行与公共稳定边界。", es:"Significado, reglas, ejecución y límites de estabilidad pública."},
+      products:[
+        {id:"gov_policy_engine", pc:"#34d399",
+         n:{platform:{en:"Policy Engine",zh:"政策引擎",es:"Motor de Política"}, engineering:{en:"Policy Compiler",zh:"政策编译器",es:"Compilador de Política"}},
+         d:{platform:{en:"Turns rules into usable decisions.",zh:"把规则变成可用决策。",es:"Convierte reglas en decisiones usables."},
+            engineering:{en:"Deterministic rule compilation + reason codes.",zh:"确定性规则编译+原因码。",es:"Compilación determinista + códigos de razón."}}},
+        {id:"gov_decision_index", pc:"#93c5fd",
+         n:{platform:{en:"Decision Index",zh:"决策指数",es:"Índice de Decisión"}, engineering:{en:"Decision Classifier",zh:"决策分类器",es:"Clasificador de Decisión"}},
+         d:{platform:{en:"Stops wandering. Produces next step.",zh:"停止迷路，输出下一步。",es:"Detiene deambular. Da siguiente paso."},
+            engineering:{en:"Bounded outputs under fixed scope.",zh:"固定范围下有界输出。",es:"Salidas acotadas bajo alcance fijo."}}},
+        {id:"gov_compliance_grid", pc:"#c9a24a",
+         n:{platform:{en:"Compliance Grid",zh:"合规网格",es:"Grid de Cumplimiento"}, engineering:{en:"Constraint Matrix",zh:"约束矩阵",es:"Matriz de Restricciones"}},
+         d:{platform:{en:"Shows what is allowed to be done.",zh:"展示允许做什么。",es:"Muestra lo permitido."},
+            engineering:{en:"Constraint surfaces + audit trail.",zh:"约束面+审计轨迹。",es:"Superficies + rastro de auditoría."}}},
+        {id:"gov_public_risk_meter", pc:"#ff2b2b",
+         n:{platform:{en:"Public Risk Meter",zh:"公共风险表",es:"Medidor Público"}, engineering:{en:"Exposure Monitor",zh:"暴露监测",es:"Monitor de Exposición"}},
+         d:{platform:{en:"Readable red/yellow/green posture.",zh:"可读红黄绿姿态。",es:"Postura legible rojo/amarillo/verde."},
+            engineering:{en:"Windowed exposure + Δρ watch.",zh:"窗口暴露+Δρ监测。",es:"Exposición por ventana + vigilancia Δρ."}}}
+      ]
+    },
 
-STREAMS.forEach(function(stream){
+    {
+      c:"#ff2b2b",
+      name:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},
+      sub:{en:"Industrial substitution posture: stability first, then scale.", zh:"工业替代姿态：先稳定，再扩张。", es:"Postura de sustitución: estabilidad primero, luego escala."},
+      products:[
+        {id:"en_grid_optimization", pc:"#ff2b2b",
+         n:{platform:{en:"Grid Optimization",zh:"电网优化",es:"Optimización de Red"}, engineering:{en:"Grid Control Loop",zh:"电网控制回路",es:"Bucle de Control"}},
+         d:{platform:{en:"Reduce volatility without fantasy.",zh:"不靠幻想降低波动。",es:"Reducir volatilidad sin fantasía."},
+            engineering:{en:"Feedback control + stability bands.",zh:"反馈控制+稳定区间。",es:"Control por feedback + bandas."}}},
+        {id:"en_storage_stack", pc:"#c9a24a",
+         n:{platform:{en:"Storage Stack",zh:"储能系统",es:"Sistema de Almacenamiento"}, engineering:{en:"Buffer Envelope",zh:"缓冲包络",es:"Envolvente de Buffer"}},
+         d:{platform:{en:"Store energy so the system stays calm.",zh:"储能让系统保持安静。",es:"Almacenar para mantener calma."},
+            engineering:{en:"Capacity + discharge constraints.",zh:"容量+放电约束。",es:"Capacidad + restricciones de descarga."}}},
+        {id:"en_load_balancer", pc:"#93c5fd",
+         n:{platform:{en:"Load Balancer",zh:"负载平衡",es:"Balanceador de Carga"}, engineering:{en:"Demand Shaper",zh:"需求整形",es:"Modelador de Demanda"}},
+         d:{platform:{en:"Keep peaks from breaking the system.",zh:"防止峰值破坏系统。",es:"Evitar que picos rompan el sistema."},
+            engineering:{en:"Predictive + windowed deltas.",zh:"预测+窗口差分。",es:"Predictivo + deltas por ventana."}}},
+        {id:"en_resilience_module", pc:"#a3a3a3",
+         n:{platform:{en:"Resilience Module",zh:"韧性模块",es:"Módulo de Resiliencia"}, engineering:{en:"Containment Playbook",zh:"隔离剧本",es:"Playbook de Contención"}},
+         d:{platform:{en:"Make failure local. Recover fast.",zh:"让失败变小，快速恢复。",es:"Fallo local. Recuperación rápida."},
+            engineering:{en:"Rollback paths + kill/exit logic.",zh:"回滚路径+终止/退出逻辑。",es:"Rollback + lógica kill/exit."}}}
+      ]
+    },
 
-var row=document.createElement("div");
-row.className="row";
+    {
+      c:"#c9a24a",
+      name:{en:"FINANCE",zh:"金融",es:"FINANZAS"},
+      sub:{en:"Capital discipline above finance execution: admissibility before scale.", zh:"金融执行之上的资本纪律：先可采信，再扩张。", es:"Disciplina de capital: admisibilidad antes de escalar."},
+      products:[
+        {id:"fi_capital_doctrine", pc:"#c9a24a",
+         n:{platform:{en:"Capital Doctrine",zh:"资本教义",es:"Doctrina de Capital"}, engineering:{en:"CCD Superlayer",zh:"CCD 超层",es:"Supercapa CCD"}},
+         d:{platform:{en:"The rulebook above finance & governance.",zh:"在金融与治理之上的规则书。",es:"Reglamento sobre finanzas y gobernanza."},
+            engineering:{en:"Invariant gates + audit classification.",zh:"不变量闸门+审计分类。",es:"Compuertas invariantes + clasificación auditable."}}},
+        {id:"fi_liquidity_model", pc:"#93c5fd",
+         n:{platform:{en:"Liquidity Model",zh:"流动性模型",es:"Modelo de Liquidez"}, engineering:{en:"Coverage Envelope",zh:"覆盖包络",es:"Envolvente de Cobertura"}},
+         d:{platform:{en:"Can you survive shocks?",zh:"能否扛住冲击？",es:"¿Puedes sobrevivir shocks?"},
+            engineering:{en:"Floors/ceilings + window stress.",zh:"地板/天花+窗口压力。",es:"Pisos/techos + estrés por ventana."}}},
+        {id:"fi_risk_envelope", pc:"#ff2b2b",
+         n:{platform:{en:"Risk Envelope",zh:"风险包络",es:"Envolvente de Riesgo"}, engineering:{en:"K/M/R/P Bounds",zh:"K/M/R/P 边界",es:"Límites K/M/R/P"}},
+         d:{platform:{en:"How close to breaking are we?",zh:"我们离崩坏多近？",es:"¿Qué tan cerca de romper?"},
+            engineering:{en:"Constraint surfaces + triggers.",zh:"约束面+触发器。",es:"Superficies + triggers."}}},
+        {id:"fi_audit_ledger", pc:"#a3a3a3",
+         n:{platform:{en:"Audit Ledger",zh:"审计账本",es:"Libro de Auditoría"}, engineering:{en:"Receipt Log",zh:"收据日志",es:"Log de Recibos"}},
+         d:{platform:{en:"Receipts beat arguments.",zh:"收据胜过争论。",es:"Recibos > discusiones."},
+            engineering:{en:"Manifest hash + replay path.",zh:"清单哈希+回放路径。",es:"Hash de manifiesto + replay."}}}
+      ]
+    },
 
-var head=document.createElement("div");
-head.className="head";
+    {
+      c:"#34d399",
+      name:{en:"AGRICULTURE",zh:"农业",es:"AGRICULTURA"},
+      sub:{en:"Food as a closed loop: water, energy, soil, yield, verification.", zh:"把食物当闭环：水、能量、土壤、产量、验证。", es:"Alimento como ciclo cerrado: agua, energía, suelo, rendimiento, verificación."},
+      products:[
+        {id:"ag_closed_loop_farming", pc:"#34d399",
+         n:{platform:{en:"Closed Loop Farming",zh:"闭环农业",es:"Agricultura Cerrada"}, engineering:{en:"Nutrient Loop",zh:"营养回路",es:"Bucle de Nutrientes"}},
+         d:{platform:{en:"Stop losses. Reuse inputs.",zh:"止损并复用投入。",es:"Detener pérdidas. Reusar insumos."},
+            engineering:{en:"Mass balance + contamination bounds.",zh:"质量平衡+污染边界。",es:"Balance de masa + límites de contaminación."}}},
+        {id:"ag_yield_optimizer", pc:"#c9a24a",
+         n:{platform:{en:"Yield Optimizer",zh:"产量优化",es:"Optimizador de Rendimiento"}, engineering:{en:"Yield Controller",zh:"产量控制器",es:"Controlador de Rendimiento"}},
+         d:{platform:{en:"Better harvest with less waste.",zh:"更好收成、更少浪费。",es:"Mejor cosecha con menos residuo."},
+            engineering:{en:"Windowed deltas + constraints.",zh:"窗口差分+约束。",es:"Deltas por ventana + restricciones."}}},
+        {id:"ag_water_index", pc:"#93c5fd",
+         n:{platform:{en:"Water Index",zh:"水指数",es:"Índice Hídrico"}, engineering:{en:"Hydro Bands",zh:"水稳定带",es:"Bandas Hídricas"}},
+         d:{platform:{en:"Track water reality, not stories.",zh:"追踪水的现实，不追故事。",es:"Medir agua real, no historias."},
+            engineering:{en:"Inflow/outflow + stress bands.",zh:"进出+压力区间。",es:"Entrada/salida + bandas de estrés."}}},
+        {id:"ag_soil_health_grid", pc:"#a3a3a3",
+         n:{platform:{en:"Soil Health Grid",zh:"土壤网格",es:"Grid de Suelo"}, engineering:{en:"Soil State Lattice",zh:"土壤态晶格",es:"Lattice de Suelo"}},
+         d:{platform:{en:"Make soil measurable.",zh:"让土壤可测。",es:"Hacer suelo medible."},
+            engineering:{en:"Finite states + drift detection.",zh:"有限态+漂移检测。",es:"Estados finitos + deriva."}}}
+      ]
+    },
 
-var title=document.createElement("div");
-title.className="title";
-title.textContent=pick(stream.name.en,stream.name.zh,stream.name.es);
+    {
+      c:"#a3a3a3",
+      name:{en:"INFRASTRUCTURE",zh:"基础设施",es:"INFRAESTRUCTURA"},
+      sub:{en:"Substitution without breaking: interfaces, thresholds, rollback.", zh:"不破坏的替代：接口、阈值、回滚。", es:"Sustitución sin romper: interfaces, umbrales, rollback."},
+      products:[
+        {id:"in_urban_stack", pc:"#a3a3a3",
+         n:{platform:{en:"Urban Stack",zh:"城市栈",es:"Stack Urbano"}, engineering:{en:"Urban OS Surface",zh:"城市OS面",es:"Superficie OS"}},
+         d:{platform:{en:"City as routed inventory.",zh:"城市=路由库存。",es:"Ciudad = inventario ruteado."},
+            engineering:{en:"Dependencies + receipts + gates.",zh:"依赖+收据+闸门。",es:"Dependencias + recibos + compuertas."}}},
+        {id:"in_transit_model", pc:"#93c5fd",
+         n:{platform:{en:"Transit Model",zh:"交通模型",es:"Modelo de Tránsito"}, engineering:{en:"Flow Constraints",zh:"流量约束",es:"Restricciones de Flujo"}},
+         d:{platform:{en:"Throughput without collapse.",zh:"吞吐不坍塌。",es:"Throughput sin colapso."},
+            engineering:{en:"Queues + window stability.",zh:"队列+窗口稳定。",es:"Colas + estabilidad por ventana."}}},
+        {id:"in_waste_loop", pc:"#ff2b2b",
+         n:{platform:{en:"Waste Loop",zh:"废弃循环",es:"Bucle de Residuos"}, engineering:{en:"Entropy Routing",zh:"熵路由",es:"Ruteo Entrópico"}},
+         d:{platform:{en:"No ‘away’. Route value back.",zh:"没有扔掉，把价值路由回来。",es:"Sin ‘afuera’. Retornar valor."},
+            engineering:{en:"Classification + conversion + yields.",zh:"分类+转化+产率。",es:"Clasificación + conversión + rendimientos."}}},
+        {id:"in_habitat_module", pc:"#c9a24a",
+         n:{platform:{en:"Habitat Module",zh:"栖息模块",es:"Módulo de Hábitat"}, engineering:{en:"No-Away Closure",zh:"无扔掉闭合",es:"Cierre Sin-Afuera"}},
+         d:{platform:{en:"Closed loop scaled down to Earth.",zh:"闭环可下放到地面。",es:"Ciclo cerrado escalado a Tierra."},
+            engineering:{en:"Conserved inventories + leakage bands.",zh:"守恒库存+泄漏区间。",es:"Inventarios conservados + bandas de fuga."}}}
+      ]
+    }
+  ];
 
-var chev=document.createElement("div");
-chev.className="chev";
-chev.textContent="▸";
+  // ===== Copy packs (lane-aware, trilingual) =====
+  var HEAD = {
+    en:{
+      platform:{
+        hs:"Pick a stream. Open one. Jump into a product. This is the informal layer: human-legible, action-forward, no hype.",
+        rule:"Rule: 5 streams × 4 products = 20. Each product is a jump page into its own shell."
+      },
+      engineering:{
+        hs:"Engineering view: same 20 products, but phrased as contracts, constraints, and deterministic outputs. Everything stays pinned to the informal site layer.",
+        rule:"Rule: products are execution surfaces. Names differ by lane; routes remain identical."
+      }
+    },
+    zh:{
+      platform:{
+        hs:"选一个流。打开一个。跳进一个产品。本层为通俗层：人能读、动作导向、不吹。",
+        rule:"规则：5个流×4个产品=20。每个产品都是跳转到自己的壳页。"
+      },
+      engineering:{
+        hs:"工程视图：同样的20个产品，但用契约/约束/确定性输出来表达。站点仍固定在通俗层。",
+        rule:"规则：产品是执行面。车道只影响措辞，不影响路由。"
+      }
+    },
+    es:{
+      platform:{
+        hs:"Elige un stream. Abre uno. Entra a un producto. Esta es la capa informal: legible, orientada a acción, sin hype.",
+        rule:"Regla: 5 streams × 4 productos = 20. Cada producto es un salto a su shell."
+      },
+      engineering:{
+        hs:"Vista de ingeniería: los mismos 20 productos, expresados como contratos, restricciones y salidas deterministas. Todo permanece fijado a la capa informal.",
+        rule:"Regla: los productos son superficies de ejecución. El carril cambia palabras, no rutas."
+      }
+    }
+  };
 
-head.appendChild(title);
-head.appendChild(chev);
+  // ===== DOM build (keep open stream on toggle) =====
+  var list=document.getElementById("list");
+  var rowRefs=[]; // {row, chev, title, subt, cards:[{name,meta,btn,wrap}]}
+  var openIndex=0;
 
-var body=document.createElement("div");
-body.className="body";
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
 
-var sub=document.createElement("div");
-sub.className="sub";
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndex=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
 
-stream.products.forEach(function(p){
+  function buildStreamRow(stream, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", stream.c);
 
-var card=document.createElement("div");
-card.className="card";
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
 
-var h=document.createElement("h4");
-h.textContent=pick(p[0],p[1],p[2]);
+    var hL=document.createElement("div");
+    hL.className="hL";
 
-var desc=document.createElement("p");
-desc.textContent=laneText(
-pick("Operational deployment layer.","平台执行层。","Capa operativa."),
-pick("Deterministic architecture + manifest discipline.","确定性架构+清单纪律。","Arquitectura determinista + disciplina de manifiesto.")
-);
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=stream.c;
 
-card.appendChild(h);
-card.appendChild(desc);
-sub.appendChild(card);
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
 
-});
+    var title=document.createElement("div");
+    title.className="q";
 
-body.appendChild(sub);
+    var subt=document.createElement("div");
+    subt.className="subt";
 
-head.addEventListener("click",function(){
-document.querySelectorAll(".row").forEach(function(r){ if(r!==row) r.classList.remove("open"); });
-row.classList.toggle("open");
-});
+    tb.appendChild(title);
+    tb.appendChild(subt);
 
-row.appendChild(head);
-row.appendChild(body);
-list.appendChild(row);
+    hL.appendChild(mark);
+    hL.appendChild(tb);
 
-});
+    var chevWrap=document.createElement("div");
+    chevWrap.className="chev";
+    chevWrap.innerHTML='<span class="chevTxt">▸</span>';
 
-}
+    head.appendChild(hL);
+    head.appendChild(chevWrap);
 
-document.getElementById("lanePlatform").addEventListener("click",function(){
-lane="platform";
-this.setAttribute("aria-pressed","true");
-document.getElementById("laneEngineering").setAttribute("aria-pressed","false");
-render();
-});
+    var body=document.createElement("div");
+    body.className="body";
 
-document.getElementById("laneEngineering").addEventListener("click",function(){
-lane="engineering";
-this.setAttribute("aria-pressed","true");
-document.getElementById("lanePlatform").setAttribute("aria-pressed","false");
-render();
-});
+    var grid=document.createElement("div");
+    grid.className="grid";
 
-document.getElementById("langEN").addEventListener("click",function(){lang="en";render();});
-document.getElementById("langZH").addEventListener("click",function(){lang="zh";render();});
-document.getElementById("langES").addEventListener("click",function(){lang="es";render();});
+    var cards=[];
+    for(var i=0;i<stream.products.length;i++){
+      var p=stream.products[i];
 
-render();
+      var card=document.createElement("div");
+      card.className="pcard";
+      card.style.setProperty("--pc", p.pc);
+
+      var top=document.createElement("div");
+      top.className="pTop";
+
+      var d=document.createElement("div");
+      d.className="pDia";
+      d.style.background=p.pc;
+
+      var name=document.createElement("div");
+      name.className="pName";
+
+      top.appendChild(d);
+      top.appendChild(name);
+
+      var meta=document.createElement("div");
+      meta.className="pMeta";
+
+      var actions=document.createElement("div");
+      actions.className="pActions";
+
+      var btn=document.createElement("a");
+      btn.className="btn red";
+      btn.setAttribute("data-route", ROUTES[p.id] || "/products/");
+      btn.textContent="OPEN";
+
+      actions.appendChild(btn);
+
+      card.appendChild(top);
+      card.appendChild(meta);
+      card.appendChild(actions);
+
+      grid.appendChild(card);
+
+      cards.push({wrap:card,name:name,meta:meta,btn:btn,prod:p});
+    }
+
+    body.appendChild(grid);
+
+    function onToggle(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      subt:subt,
+      cards:cards
+    });
+  }
+
+  function renderList(){
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<STREAMS.length;i++){
+      buildStreamRow(STREAMS[i], i);
+    }
+    openIndex=0;
+    toggleRow(0);
+  }
+
+  // update copy without rebuilding DOM (preserve open row)
+  function applyHeader(){
+    var pack = ((HEAD[lang]||HEAD.en)[lane==="engineering"?"engineering":"platform"]);
+
+    document.getElementById("hk").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("ht").textContent = pick3("FIVE STREAMS · TWENTY PRODUCTS","五流 · 二十产品","CINCO STREAMS · VEINTE PRODUCTOS");
+    document.getElementById("hs").textContent = pack.hs;
+    document.getElementById("rule").textContent = pack.rule;
+
+    document.getElementById("band").textContent = pick3("STREAMS (OPEN ONE)","产品流（打开一个）","STREAMS (abre uno)");
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
+
+    document.getElementById("btnDoor").textContent = pick3("DOOR","门","PUERTA");
+    document.getElementById("btnHome").textContent = pick3("HOME","主页","INICIO");
+    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+
+    document.getElementById("dockExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+
+    document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
+  }
+
+  function updateRows(){
+    var keep=openIndex;
+
+    for(var i=0;i<STREAMS.length;i++){
+      var s=STREAMS[i];
+      var r=rowRefs[i];
+
+      r.title.textContent = pick3(s.name.en, s.name.zh, s.name.es);
+      r.subt.textContent  = pick3(s.sub.en,  s.sub.zh,  s.sub.es);
+
+      for(var j=0;j<r.cards.length;j++){
+        var c=r.cards[j];
+        var p=c.prod;
+
+        c.name.textContent = (lane==="engineering")
+          ? pick3(p.n.engineering.en, p.n.engineering.zh, p.n.engineering.es)
+          : pick3(p.n.platform.en,    p.n.platform.zh,    p.n.platform.es);
+
+        c.meta.textContent = (lane==="engineering")
+          ? pick3(p.d.engineering.en, p.d.engineering.zh, p.d.engineering.es)
+          : pick3(p.d.platform.en,    p.d.platform.zh,    p.d.platform.es);
+
+        c.btn.textContent = openLabel() + ": " + pick3("ENTER","进入","ENTRAR");
+      }
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // wire routes with pinned query (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // no reload toggles
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();
+    updateRows();
+  }
+
+  // bindings
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // init pressed
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // build + apply
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
 
 })();
 </script>

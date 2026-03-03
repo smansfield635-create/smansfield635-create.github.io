@@ -1,11 +1,4 @@
 <!doctype html>
-<!-- TNT — /index.html
-     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — GEOMETRY LOCK v5
-     CORE = EXACTLY 2× LEVEL-1 SIZE
-     OUTER TIERS UNCHANGED
-     NO DRIFT
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -21,26 +14,24 @@ a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-/* =========================================================
-   FINAL GEOMETRY LOCK
-   ---------------------------------------------------------
-   Tier 1 = Base reference
-   CORE   = 2 × Tier 1
-   All other tiers unchanged
-========================================================= */
+/* ===============================
+   TRUE HIERARCHY
+   CORE largest
+   Progressive decay outward
+================================ */
 
 :root{
-  --D1:120px;      /* Tier 1 (N/E/S/W) */
-  --D0:240px;      /* CORE = EXACTLY 2× Tier 1 */
+  --D0:220px;  /* CORE (100%) */
+  --D1:165px;  /* 75% */
+  --D2:120px;  /* 55% */
+  --D3:88px;   /* 40% */
 
-  --D2:150px;      /* Diagonals */
-  --D3:188px;      /* Outer ring */
+  /* compressed radii to fit screen */
+  --R1:190px;
+  --R2:300px;
+  --R3:390px;
 
-  --R1:150px;
-  --R2:245px;
-  --R3:360px;
-
-  --padTop:120px;
+  --padTop:100px;
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
@@ -48,21 +39,23 @@ body::before,body::after{pointer-events:none!important}
   --opalV:rgba(90,40,120,.18);
   --crimson:rgba(120,0,22,.44);
   --gold:rgba(201,162,74,.55);
-  --goldGlow:rgba(201,162,74,.28);
   --shadowDeep:0 40px 120px rgba(0,0,0,.85);
 }
 
+/* Stage */
 .stage{
   position:relative;
-  width:min(1200px,94vw);
-  height:min(1200px,85vh);
+  width:min(1100px,94vw);
+  height:min(1100px,85vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
+/* Node */
 .node{
   position:absolute;
-  left:50%;top:50%;
+  left:50%;
+  top:50%;
   transform:translate(-50%,-50%) rotate(45deg);
   border-radius:24px;
   cursor:pointer;
@@ -90,40 +83,31 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -60px 90px rgba(0,0,0,.9);
 }
 
-.surface::after{
-  content:"";
-  position:absolute;
-  left:15%;right:15%;top:10%;
-  height:28%;
-  border-radius:999px;
-  background:linear-gradient(to bottom,rgba(255,255,255,.25),transparent);
-  transform:rotate(-10deg);
-}
-
 .node:hover{
   box-shadow:
     var(--shadowDeep),
-    0 0 0 2px var(--goldGlow),
-    0 0 40px var(--goldGlow),
+    0 0 0 2px rgba(201,162,74,.25),
+    0 0 40px rgba(201,162,74,.25),
     inset 0 2px 0 rgba(255,255,255,.22),
     inset 0 -60px 90px rgba(0,0,0,.9);
   border-color:var(--gold);
 }
 
 .inner{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   transform:rotate(-45deg);
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:12px;
+  padding:14px;
 }
 
 .word{
   font-weight:900;
-  font-size:clamp(12px,1.2vw,18px);
+  font-size:clamp(12px,1.2vw,20px);
   line-height:1.1;
 }
 
@@ -132,7 +116,6 @@ body::before,body::after{pointer-events:none!important}
   opacity:.7;
   margin-top:4px;
 }
-
 </style>
 </head>
 
@@ -169,7 +152,6 @@ const stage=document.getElementById("stage");
 function mkNode(item,className){
   const d=document.createElement("div");
   d.className="node surface "+className;
-  d.tabIndex=0;
   const inner=document.createElement("div");
   inner.className="inner";
   inner.innerHTML=`<div class="word">${item.label}</div><div class="code">${item.code}</div>`;
@@ -193,7 +175,7 @@ function layout(){
   core.style.top=cy+"px";
   stage.appendChild(core);
 
-  function place(list,radius,className,startAngle= -Math.PI/2){
+  function place(list,radius,className,startAngle=-Math.PI/2){
     list.forEach((item,i)=>{
       const angle=startAngle+(i/list.length)*Math.PI*2;
       const x=cx+radius*Math.cos(angle);

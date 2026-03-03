@@ -1,14 +1,18 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     FRONTIER · VISION REMOTE (16 MANIFOLDS + CORE + EXIT + HUB)
-     GEOMETRY:
-       - 16 outer cardinal manifolds
-       - 1 center CORE (manual index)
-       - 2 bottom controls: EXIT (→ DOOR) / HUB (→ MAIN COMPASS)
-     STATE:
-       - 3 Language toggles (EN / 中文 / ES)
-       - 2 Lane toggles (P / E)
-       - Pinned informal layer (gd_style=informal, gd_depth=explore)
+     FRONTIER · VISION REMOTE (INFORMAL LAYER — NEW STANDARD · UO GLOSS)
+     GEOMETRY (LOCKED):
+       - 16 outer controls (N, NNE, NE, ENE, E, ESE, SE, SSE, S, SSW, SW, WSW, W, WNW, NW, NNW)
+       - 1 center CORE (manual index / linear map)
+       - 2 bottom controls: EXIT → /door/  |  HUB → /index.html
+     UI (LOCKED):
+       - Trilingual UI (EN/中文/ES) (no reload)
+       - Visible lens ONLY: lane=platform|engineering (URL-only; never stored) (no reload)
+       - Pinned informal layer: gd_style=informal, gd_depth=explore
+       - Canon carry: gd_lang/gd_style/gd_time/gd_depth only
+       - No modals/overlays; no inline onclick; addEventListener only
+     ROUTING (EDIT ONLY IN ROUTE MAP SECTION):
+       - CORE path + each of 16 manifold paths
 -->
 
 <html lang="en">
@@ -27,29 +31,66 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --D:88px;     /* outer size (reduced ~20%) */
-  --C:140px;    /* center size */
-  --R:270px;    /* radius */
-  --padTop:120px;
+  /* ===== GEOMETRY ===== */
+  --D:90px;      /* outer diamond size (≈20% smaller than 110) */
+  --C:140px;     /* center diamond size (kept strong) */
+  --R:262px;     /* ring radius */
+  --padTop:118px;
+
+  /* ===== MATERIAL (UO stack) ===== */
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.86);
-  --festival:rgba(255,43,43,.18);
-  --crimson:rgba(120,0,22,.34);
-  --opalV:rgba(90,40,120,.12);
-  --gold:rgba(201,162,74,.45);
 
-  --shadowA:0 28px 90px rgba(0,0,0,.7);
+  --crimson:rgba(120,0,22,.40);
+  --festival:rgba(255,43,43,.22);
+  --opalV:rgba(90,40,120,.14);
+
+  --gold:rgba(201,162,74,.52);
+  --goldGlow:rgba(201,162,74,.22);
+
+  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --shadowA:0 34px 120px rgba(0,0,0,.58);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
+/* ===== STAGE ===== */
 .stage{
   position:relative;
-  width:min(860px,95vw);
-  height:min(860px,82vh);
+  width:min(900px,95vw);
+  height:min(900px,82vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
+/* subtle slab behind ring (no body background override) */
+.slab{
+  position:absolute;left:50%;top:50%;
+  width:min(760px,92vw);
+  height:min(760px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:70px;
+  pointer-events:none;
+  opacity:.22;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, var(--opalV), transparent 60%),
+    radial-gradient(circle at 50% 55%, var(--crimson), transparent 72%),
+    linear-gradient(160deg, rgba(10,12,16,.55) 0%, rgba(6,8,10,.78) 70%);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.52),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+}
+
+/* ===== DIAMONDS ===== */
 .d{
   position:absolute;
   left:50%;
@@ -62,204 +103,451 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  overflow:hidden;
 
   background:
-    radial-gradient(circle at 25% 20%, rgba(255,255,255,.2), transparent 50%),
-    radial-gradient(circle at 70% 30%, var(--festival), transparent 65%),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
+    radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
 
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:var(--shadowA);
+  border:1px solid rgba(255,255,255,.16);
+
+  box-shadow:
+    var(--shadowDeep),
+    0 0 28px rgba(255,43,43,.10),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -44px 84px rgba(0,0,0,.84);
+
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease;
 }
 
+/* gold lay (trim zone only) */
+.d::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.20);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
+  opacity:.42;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+
+/* highlight streak */
+.d::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:32%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+
+.d:hover{
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 44px 140px rgba(0,0,0,.92),
+    0 0 44px rgba(255,43,43,.12),
+    0 0 32px rgba(201,162,74,.14),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -46px 86px rgba(0,0,0,.88);
+}
+.d:active{transform:translate(-50%,-50%) rotate(45deg) scale(.985)}
+
+/* center */
 .d.center{
   width:var(--C);
   height:var(--C);
   border-radius:26px;
-  border-color:var(--gold);
+  z-index:10;
+  border-color:rgba(201,162,74,.30);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.92),
+    0 0 52px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -52px 96px rgba(0,0,0,.90);
 }
 
+/* inner text */
 .inner{
   transform:rotate(-45deg);
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
   padding:6px;
+  user-select:none;
+  pointer-events:none;
 }
-
 .word{
-  font-weight:900;
-  font-size:12px;
-  letter-spacing:.6px;
+  font-weight:980;
+  font-size:11.5px;
+  letter-spacing:.55px;
+  color:var(--ink);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+  line-height:1.05;
 }
 .cardinal{
+  margin-top:5px;
   font-size:9px;
-  opacity:.7;
-  margin-top:4px;
-  letter-spacing:1px;
+  opacity:.78;
+  letter-spacing:1.1px;
+  color:rgba(255,255,255,.84);
 }
-
 .d.center .word{font-size:15px}
+.d.center .cardinal{font-size:10px}
 
-/* TOP CONTROLS */
+/* ===== TOP CONTROLS (diamond-shaped) ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
-  display:flex;justify-content:space-between;
-  padding:0 16px;z-index:240;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
-.ctrl{
-  display:flex;gap:10px;
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  pointer-events:auto;
 }
-.tbtn{
-  width:42px;height:42px;
-  transform:rotate(45deg);
-  border-radius:12px;
-  background:linear-gradient(160deg,var(--onyx1),var(--onyx0));
-  border:1px solid rgba(255,255,255,.15);
+.dbtn{
+  width:46px;height:46px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  box-shadow:var(--shadowC);
   display:grid;place-items:center;
   cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
 }
-.tbtn span{
+.dbtn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:26px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
+  opacity:.55;pointer-events:none;
+}
+.dbtn:active{transform:rotate(45deg) translateY(1px)}
+.dbtn span{
   transform:rotate(-45deg);
-  font-size:11px;
-  font-weight:800;
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.4px;
+  color:var(--ink);
+  user-select:none;
 }
-.tbtn.on{border-color:var(--gold)}
+.dbtn.on{
+  border-color:rgba(255,43,43,.26);
+  box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12);
+}
 
-/* BOTTOM */
-.bottom{
+/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
+.corner{
   position:fixed;
-  bottom:20px;
-  left:0;right:0;
-  display:flex;
-  justify-content:space-between;
-  padding:0 24px;
+  bottom:max(18px, env(safe-area-inset-bottom));
   z-index:240;
+  pointer-events:none;
+}
+.corner .dbtn{pointer-events:auto}
+.corner.left{left:18px}
+.corner.right{right:18px}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.70);
+  font-size:11px;
+  letter-spacing:.4px;
+}
+
+/* ===== MOBILE FIT ===== */
+@media (max-width:640px){
+  :root{ --D:86px; --C:136px; --R:236px; --padTop:128px; }
+  .word{font-size:11.25px}
+}
+@media (max-width:420px){
+  :root{ --D:82px; --C:130px; --R:224px; }
+  .word{font-size:11px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-  <div class="ctrl">
-    <div class="tbtn on" id="langEN"><span>EN</span></div>
-    <div class="tbtn" id="langZH"><span>中文</span></div>
-    <div class="tbtn" id="langES"><span>ES</span></div>
+<!-- TOP CONTROLS -->
+<div class="top" aria-label="Top controls">
+  <div class="left" aria-label="Language">
+    <div class="dbtn on" id="langEN" role="button" tabindex="0" aria-label="English"><span>EN</span></div>
+    <div class="dbtn" id="langZH" role="button" tabindex="0" aria-label="Chinese"><span>中文</span></div>
+    <div class="dbtn" id="langES" role="button" tabindex="0" aria-label="Spanish"><span>ES</span></div>
   </div>
-  <div class="ctrl">
-    <div class="tbtn on" id="laneP"><span>P</span></div>
-    <div class="tbtn" id="laneE"><span>E</span></div>
+
+  <div class="right" aria-label="Lane">
+    <div class="dbtn on" id="lanePlatform" role="button" tabindex="0" aria-label="Platform lane"><span>P</span></div>
+    <div class="dbtn" id="laneEngineering" role="button" tabindex="0" aria-label="Engineering lane"><span>E</span></div>
   </div>
 </div>
 
-<div class="stage" id="stage"></div>
+<!-- STAGE -->
+<div class="stage" id="stage" aria-label="Vision Remote">
+  <div class="slab" aria-hidden="true"></div>
+</div>
 
-<div class="bottom">
-  <div class="tbtn" id="btnExit"><span>EXIT</span></div>
-  <div class="tbtn" id="btnHub"><span>HUB</span></div>
+<!-- BOTTOM CORNERS -->
+<div class="corner left" aria-label="Exit">
+  <div class="dbtn" id="btnExit" role="button" tabindex="0" aria-label="Exit to Door"><span>⟲</span></div>
+  <div class="cornerLabel" id="lblExit">EXIT</div>
+</div>
+
+<div class="corner right" aria-label="Hub Jump">
+  <div class="dbtn" id="btnHub" role="button" tabindex="0" aria-label="Hub Jump to Compass"><span>◆</span></div>
+  <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
 
 <script>
 (function(){
-"use strict";
+  "use strict";
 
-var qs=new URLSearchParams(location.search);
-var LS=window.localStorage;
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
 
-var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
-var lane=qs.get("lane")||"platform";
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
 
-if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-if(lane!=="platform"&&lane!=="engineering") lane="platform";
+  // pinned informal layer
+  var style = "informal";
+  var depth = "explore";
 
-LS.setItem("gd_lang",lang);
-LS.setItem("gd_style","informal");
-LS.setItem("gd_depth","explore");
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-function q(){
-  var p=new URLSearchParams();
-  p.set("lang",lang);
-  p.set("lane",lane);
-  p.set("style","informal");
-  p.set("depth","explore");
-  return "?"+p.toString();
-}
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
 
-function go(path){ window.location.href=path+q(); }
+  document.documentElement.lang = (lang==="zh")?"zh":(lang==="es")?"es":"en";
 
-var MANIFOLDS=[
-"N","NNE","NE","ENE","E","ESE","SE","SSE",
-"S","SSW","SW","WSW","W","WNW","NW","NNW"
-];
-
-var stage=document.getElementById("stage");
-
-function build(){
-  stage.innerHTML="";
-  var rect=stage.getBoundingClientRect();
-  var cx=rect.width/2;
-  var cy=rect.height/2;
-  var R=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R"));
-
-  // CENTER
-  var center=mk("INDEX","CORE",true);
-  center.style.left=cx+"px";
-  center.style.top=cy+"px";
-  center.onclick=function(){go("/explore/frontier/manual/");};
-  stage.appendChild(center);
-
-  // OUTER 16
-  for(var i=0;i<16;i++){
-    var angle=(i/16)*Math.PI*2 - Math.PI/2;
-    var x=cx+R*Math.cos(angle);
-    var y=cy+R*Math.sin(angle);
-    var d=mk("",""+MANIFOLDS[i],false);
-    d.style.left=x+"px";
-    d.style.top=y+"px";
-    d.onclick=(function(code){
-      return function(){go("/explore/frontier/"+code.toLowerCase()+"/");};
-    })(MANIFOLDS[i]);
-    stage.appendChild(d);
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?"+p.toString();
   }
-}
 
-function mk(word,code,isCenter){
-  var d=document.createElement("div");
-  d.className="d"+(isCenter?" center":"");
-  var inner=document.createElement("div");
-  inner.className="inner";
-  var w=document.createElement("div");
-  w.className="word";
-  w.textContent=word;
-  var c=document.createElement("div");
-  c.className="cardinal";
-  c.textContent=code;
-  inner.appendChild(w);
-  inner.appendChild(c);
-  d.appendChild(inner);
-  return d;
-}
+  function go(path){ window.location.href = path + q(); }
 
-// toggles
-function setLang(l){lang=l;LS.setItem("gd_lang",l);history.replaceState({}, "", location.pathname+q());}
-function setLane(l){lane=l;history.replaceState({}, "", location.pathname+q());}
+  // ===== ROUTE MAP (EDIT HERE ONLY) =====
+  // CORE (manual index / linear map)
+  var ROUTE_CORE = "/explore/frontier/manual/"; // <-- set to your true manual index page
 
-document.getElementById("langEN").onclick=function(){setLang("en");};
-document.getElementById("langZH").onclick=function(){setLang("zh");};
-document.getElementById("langES").onclick=function(){setLang("es");};
-document.getElementById("laneP").onclick=function(){setLane("platform");};
-document.getElementById("laneE").onclick=function(){setLane("engineering");};
+  // EXIT + HUB
+  var ROUTE_EXIT = "/door/";
+  var ROUTE_HUB  = "/index.html";
 
-document.getElementById("btnExit").onclick=function(){go("/door/");};
-document.getElementById("btnHub").onclick=function(){go("/index.html");};
+  // 16 manifolds (outer ring)
+  // NOTE: labels are 1-word (platform) vs compact (engineering). Each shows code too.
+  var MANIFOLDS = [
+    {code:"N",   href:"/explore/frontier/urban/",        p:{en:"CITIES",zh:"城市",es:"CIUDADES"},    e:{en:"URBAN",zh:"城市OS",es:"URB-OS"}},
+    {code:"NNE", href:"/explore/frontier/shimmer/",      p:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},   e:{en:"CLEAR",zh:"清晰",es:"CLAR"}},
+    {code:"NE",  href:"/explore/frontier/water/",        p:{en:"WATER",zh:"水",es:"AGUA"},          e:{en:"H2O",zh:"水系",es:"H2O"}},
+    {code:"ENE", href:"/explore/frontier/trajectory/",   p:{en:"TRAJ",zh:"轨迹",es:"TRAY"},         e:{en:"WIN",zh:"窗口",es:"VENT"}},
+    {code:"E",   href:"/explore/frontier/energy/",       p:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},    e:{en:"POWER",zh:"功率",es:"PWR"}},
+    {code:"ESE", href:"/explore/frontier/waste/",        p:{en:"WASTE",zh:"废弃物",es:"RESID"},     e:{en:"ENTROPY",zh:"熵",es:"ENT"}},
+    {code:"SE",  href:"/explore/frontier/closed-loop/",  p:{en:"HABITATS",zh:"栖息地",es:"HÁBIT"},  e:{en:"HAB",zh:"栖息",es:"HAB"}},
+    {code:"SSE", href:"/explore/frontier/urban/",        p:{en:"URBAN",zh:"城市群",es:"URBANO"},    e:{en:"CLUSTER",zh:"集群",es:"CLUST"}},
+    {code:"S",   href:"/explore/frontier/agri/",         p:{en:"AGRI",zh:"农业",es:"AGRO"},         e:{en:"FOOD",zh:"食物",es:"ALIM"}},
+    {code:"SSW", href:"/explore/frontier/closed-loop/",  p:{en:"CLOSED",zh:"闭环",es:"CERRADO"},   e:{en:"NO-AWAY",zh:"无扔掉",es:"SIN"}},
+    {code:"SW",  href:"/products/finance/",              p:{en:"FINANCE",zh:"金融",es:"FINANZ"},    e:{en:"CAPITAL",zh:"资本",es:"CAP"}},
+    {code:"WSW", href:"/explore/infrastructure/grid-storage/", p:{en:"GRID",zh:"电网",es:"RED"},    e:{en:"BALANCE",zh:"平衡",es:"BAL"}},
+    {code:"W",   href:"/explore/infrastructure/",        p:{en:"INFRA",zh:"基建",es:"INFRA"},       e:{en:"SUBST",zh:"替代",es:"SUB"}},
+    {code:"WNW", href:"/products/capital-doctrine/",     p:{en:"DOCTRINE",zh:"教义",es:"DOCTR"},    e:{en:"CCD",zh:"CCD",es:"CCD"}},
+    {code:"NW",  href:"/explore/frontier/lattice/",      p:{en:"LATTICE",zh:"晶格",es:"LATTICE"},   e:{en:"256",zh:"256态",es:"256"}},
+    {code:"NNW", href:"/explore/frontier/vision/",       p:{en:"VISION",zh:"愿景",es:"VISIÓN"},     e:{en:"MAP",zh:"映射",es:"MAP"}}
+  ];
 
-requestAnimationFrame(build);
-window.addEventListener("resize",build);
+  // ===== UI refs =====
+  var stage=document.getElementById("stage");
+
+  function setPressedLang(){
+    document.getElementById("langEN").classList.toggle("on", lang==="en");
+    document.getElementById("langZH").classList.toggle("on", lang==="zh");
+    document.getElementById("langES").classList.toggle("on", lang==="es");
+  }
+  function setPressedLane(){
+    document.getElementById("lanePlatform").classList.toggle("on", lane==="platform");
+    document.getElementById("laneEngineering").classList.toggle("on", lane==="engineering");
+  }
+
+  function pick(o){
+    return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en;
+  }
+  function labelFor(m){
+    return (lane==="engineering") ? pick(m.e) : pick(m.p);
+  }
+
+  // Build diamond
+  function mkDiamond(word, code, isCenter){
+    var d=document.createElement("div");
+    d.className="d"+(isCenter?" center":"");
+    d.setAttribute("role","button");
+    d.tabIndex=0;
+
+    var inner=document.createElement("div");
+    inner.className="inner";
+
+    var w=document.createElement("div");
+    w.className="word";
+    w.textContent=word;
+
+    var c=document.createElement("div");
+    c.className="cardinal";
+    c.textContent=code;
+
+    inner.appendChild(w);
+    inner.appendChild(c);
+    d.appendChild(inner);
+    return d;
+  }
+
+  // layout (perfect symmetry; N at top)
+  var elByIndex=[];
+  function layout(){
+    // keep slab
+    var slab=stage.querySelector(".slab");
+    stage.innerHTML="";
+    if(slab) stage.appendChild(slab);
+
+    elByIndex=[];
+
+    var rect=stage.getBoundingClientRect();
+    var cx=rect.width/2;
+    var cy=rect.height/2;
+
+    // center CORE
+    var core=mkDiamond(
+      (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX",
+      "CORE",
+      true
+    );
+    core.style.left=cx+"px";
+    core.style.top=cy+"px";
+    core.addEventListener("click", function(){ go(ROUTE_CORE); }, {passive:true});
+    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(ROUTE_CORE); }});
+    stage.appendChild(core);
+
+    // ring
+    var R=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R")) || 262;
+    var n=MANIFOLDS.length;
+
+    for(var i=0;i<n;i++){
+      var m=MANIFOLDS[i];
+      var angle=(i/n)*Math.PI*2 - Math.PI/2; // N at top
+      var x=cx + R*Math.cos(angle);
+      var y=cy + R*Math.sin(angle);
+
+      var d=mkDiamond(labelFor(m), m.code, false);
+      d.style.left=x+"px";
+      d.style.top=y+"px";
+
+      (function(path){
+        d.addEventListener("click", function(){ go(path); }, {passive:true});
+        d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(m.href);
+
+      stage.appendChild(d);
+      elByIndex.push(d);
+    }
+
+    // corner labels
+    document.getElementById("lblExit").textContent = (lang==="zh")?"退出":(lang==="es")?"SALIR":"EXIT";
+    document.getElementById("lblHub").textContent  = (lang==="zh")?"枢纽":(lang==="es")?"HUB":"HUB";
+  }
+
+  function updateLabelsOnly(){
+    // ring
+    for(var i=0;i<MANIFOLDS.length;i++){
+      var d=elByIndex[i];
+      if(!d) continue;
+      var w=d.querySelector(".word");
+      if(w) w.textContent=labelFor(MANIFOLDS[i]);
+    }
+  }
+
+  // top toggles (no reload)
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    setPressedLang();
+    // keep geometry stable; just refresh labels
+    updateLabelsOnly();
+    document.getElementById("lblExit").textContent = (lang==="zh")?"退出":(lang==="es")?"SALIR":"EXIT";
+    document.getElementById("lblHub").textContent  = (lang==="zh")?"枢纽":(lang==="es")?"HUB":"HUB";
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressedLane();
+    updateLabelsOnly();
+  }
+
+  function bindBtn(id, fn){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("click", fn, {passive:true});
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
+  }
+
+  bindBtn("langEN", function(){ setLang("en"); });
+  bindBtn("langZH", function(){ setLang("zh"); });
+  bindBtn("langES", function(){ setLang("es"); });
+
+  bindBtn("lanePlatform", function(){ setLane("platform"); });
+  bindBtn("laneEngineering", function(){ setLane("engineering"); });
+
+  bindBtn("btnExit", function(){ go(ROUTE_EXIT); });
+  bindBtn("btnHub",  function(){ go(ROUTE_HUB); });
+
+  // init
+  setPressedLang();
+  setPressedLane();
+
+  function safeLayout(){
+    var r=stage.getBoundingClientRect();
+    if(r.width<10 || r.height<10){ requestAnimationFrame(safeLayout); return; }
+    layout();
+    updateLabelsOnly();
+  }
+
+  requestAnimationFrame(safeLayout);
+  window.addEventListener("resize", function(){ safeLayout(); });
 
 })();
 </script>

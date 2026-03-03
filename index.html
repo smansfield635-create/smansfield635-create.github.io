@@ -1,22 +1,13 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · 16-POINT DIAL + CENTER CORE — ANTI-SNOWFLAKE v3.1 (LEGIBILITY + PROPORTION FIX)
-     FIX (PER SEAN):
-       - Diamonds were too small. This rebuild scales UP so full words fit.
-       - Proportions are preserved (progressive):
-           CORE = D0
-           L1 (N/E/S/W) = 50% of CORE
-           L2 (NE/SE/SW/NW) = 75% of L1
-           L3 (8 intercardinals) = 75% of L2
-       - Larger nodes closer to center; smaller nodes further out (3 radii).
-       - Hover = glow only (NO movement).
-       - Home + Door stay OUTSIDE geometry (corner diamonds).
-       - lane=platform|engineering toggle WORKS (updates labels + keeps routes; URL-only; NO reload).
-       - Trilingual labels (EN/中文/ES).
-       - No duplicates: duplicates/unbuilt → /404.html placeholder.
-       - Brand: cogrid.net · diamondgatebridge.com
-       - Canon state carry: URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY (NO new gd_* keys)
-       - ui.css owns html/body background (NO overrides)
+     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — GEOMETRY SCALE v5
+     UPDATE:
+       • Center diamond reduced by 25% (proportional, not dominant)
+       • True outward growth scale (each ring +25%)
+       • Full-word fit priority (outer rings largest)
+       • Clean routing table
+       • No lens toggles (pure geometry pass)
+       • ui.css owns background
 -->
 
 <html lang="en">
@@ -27,305 +18,101 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-:root{
-  /* ===== GEOMETRY (SCALED UP FOR LEGIBILITY) =====
-     Pick CORE big enough for full words; derive others by ratio.
-     D0=200, D1=100, D2=75, D3=56
-  */
-  --D0:200px;   /* CORE */
-  --D1:100px;   /* L1 */
-  --D2:75px;    /* L2 */
-  --D3:56px;    /* L3 */
+/* =========================================================
+   SCALE MODEL (PROPORTIONAL OUTWARD GROWTH)
+   ---------------------------------------------------------
+   Tier 0 (CORE)  = 108px  (25% smaller than prior 144 baseline)
+   Tier 1         = +25%
+   Tier 2         = +25%
+   Tier 3         = +25%
+========================================================= */
 
-  /* radii (bigger closer; smaller further) */
-  --R1:172px;   /* L1 */
-  --R2:262px;   /* L2 */
-  --R3:342px;   /* L3 */
+:root{
+  --D0:108px;   /* CORE (reduced 25%) */
+  --D1:135px;   /* Cardinals */
+  --D2:168px;   /* Diagonals */
+  --D3:210px;   /* Outer ring */
+
+  --R1:170px;
+  --R2:270px;
+  --R3:390px;
 
   --padTop:120px;
 
-  /* ===== MATERIAL ===== */
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
-
-  --crimson:rgba(120,0,22,.44);
   --festival:rgba(255,43,43,.26);
   --opalV:rgba(90,40,120,.18);
-
-  --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.34);
-
-  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --crimson:rgba(120,0,22,.44);
+  --gold:rgba(201,162,74,.55);
+  --goldGlow:rgba(201,162,74,.28);
+  --shadowDeep:0 50px 140px rgba(0,0,0,.85);
 }
 
-/* ===== Top controls ===== */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
-  pointer-events:auto;
-}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.14), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:rgba(255,255,255,.92);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;overflow:hidden;
-  white-space:nowrap;
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.28), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.seg{
-  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow:0 18px 60px rgba(0,0,0,.35);
-}
-.seg button{
-  appearance:none;border:0;background:transparent;color:rgba(255,255,255,.78);
-  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-  letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.seg button[aria-pressed="true"]{
-  color:rgba(255,255,255,.96);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.18), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-}
-
-/* ===== Stage ===== */
 .stage{
   position:relative;
-  width:min(1240px,96vw);
-  height:min(1240px,84vh);
+  width:min(1300px,94vw);
+  height:min(1300px,88vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
-/* ===== Festival slab ===== */
-.backdrop{
-  position:absolute;inset:-26px;
-  border-radius:44px;
-  pointer-events:none;
-  overflow:hidden;
-}
-.backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:44px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 80% 26%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 62% 92%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(160deg, rgba(0,0,0,.20), rgba(0,0,0,.10));
-  box-shadow:
-    0 70px 210px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -60px 120px rgba(0,0,0,.55);
-  opacity:.95;
-}
-.backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
-  background:
-    radial-gradient(circle at 18% 34%, rgba(255,43,43,.20), transparent 42%),
-    radial-gradient(circle at 82% 30%, rgba(255,43,43,.16), transparent 44%),
-    radial-gradient(circle at 50% 76%, rgba(201,162,74,.12), transparent 46%),
-    conic-gradient(from 10deg at 30% 28%,
-      rgba(201,162,74,.16), transparent 10%,
-      rgba(255,43,43,.14), transparent 22%,
-      rgba(90,40,120,.12), transparent 35%,
-      rgba(201,162,74,.10), transparent 50%,
-      transparent 100%),
-    conic-gradient(from 180deg at 70% 36%,
-      rgba(255,43,43,.14), transparent 12%,
-      rgba(201,162,74,.14), transparent 26%,
-      rgba(90,40,120,.10), transparent 42%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 60%);
-  filter: blur(1px);
-  opacity:.75;
-}
-
-/* ===== Dial face ===== */
-.dialFace{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1100px,92vw);
-  height:min(1100px,92vw);
-  border-radius:999px;
-  pointer-events:none;
-  overflow:hidden;
-  z-index:1;
-}
-.dialFace::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:999px;
-  background:
-    radial-gradient(circle at 50% 45%,
-      rgba(255,255,255,.06),
-      rgba(0,0,0,.18) 58%,
-      rgba(0,0,0,.46) 78%,
-      rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%,
-      rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%,
-      rgba(255,43,43,.10), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.10),
-    inset 0 0 70px rgba(0,0,0,.45),
-    0 50px 180px rgba(0,0,0,.35);
-  opacity:.92;
-}
-.dialFace::after{
-  content:"";
-  position:absolute;inset:-16%;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(255,255,255,.06) 34% 34.6%, transparent 35% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(255,255,255,.06) 50% 50.6%, transparent 51% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
-  opacity:.78;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 16%, #000 18% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 16%, #000 18% 100%);
-}
-.faceLetters{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(1100px,92vw);
-  height:min(1100px,92vw);
-  pointer-events:none;
-  z-index:2;
-  opacity:.70;
-}
-.faceLetters span{
-  position:absolute;
-  color:rgba(201,162,74,.42);
-  font-weight:980;
-  letter-spacing:2px;
-  font-size:12px;
-  text-shadow:0 0 12px rgba(0,0,0,.55);
-}
-.faceLetters .N{left:50%;top:10px;transform:translateX(-50%)}
-.faceLetters .E{right:10px;top:50%;transform:translateY(-50%)}
-.faceLetters .S{left:50%;bottom:10px;transform:translateX(-50%)}
-.faceLetters .W{left:10px;top:50%;transform:translateY(-50%)}
-
-/* ===== Nodes ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
-  width:var(--D3);
-  height:var(--D3);
-  border-radius:18px;
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:28px;
   cursor:pointer;
   pointer-events:auto;
-  transform:translate(-50%,-50%) rotate(45deg);
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
   overflow:hidden;
-  z-index:5;
+  transition:.15s ease;
 }
+
+.core{ width:var(--D0); height:var(--D0); z-index:6;}
+.l1{ width:var(--D1); height:var(--D1);}
+.l2{ width:var(--D2); height:var(--D2);}
+.l3{ width:var(--D3); height:var(--D3);}
+
 .surface{
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.30), transparent 45%),
-    radial-gradient(circle at 78% 22%, var(--festival), transparent 60%),
-    radial-gradient(circle at 75% 82%, var(--opalV), transparent 65%),
-    radial-gradient(circle at 30% 80%, var(--crimson), transparent 72%),
-    linear-gradient(160deg, var(--onyx1), var(--onyx0));
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,.25), transparent 45%),
+    radial-gradient(circle at 75% 30%, var(--festival), transparent 60%),
+    radial-gradient(circle at 60% 80%, var(--opalV), transparent 60%),
+    radial-gradient(circle at 30% 75%, var(--crimson), transparent 70%),
+    linear-gradient(160deg,var(--onyx1),var(--onyx0));
   border:1px solid rgba(255,255,255,.18);
   box-shadow:
     var(--shadowDeep),
-    0 0 26px rgba(255,43,43,.10),
     inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -50px 90px rgba(0,0,0,.90);
+    inset 0 -70px 110px rgba(0,0,0,.9);
 }
-.surface::before{
-  content:"";
-  position:absolute;inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.10) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px);
-  opacity:.38;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-}
+
 .surface::after{
   content:"";
   position:absolute;
-  left:12%;right:12%;top:10%;
-  height:30%;
+  left:15%;right:15%;top:10%;
+  height:28%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.95;
+  background:linear-gradient(to bottom,rgba(255,255,255,.25),transparent);
+  transform:rotate(-10deg);
 }
-.goldTrim{
-  border:1px solid var(--gold);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 34px var(--goldGlow),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -50px 90px rgba(0,0,0,.90);
-}
-.node:hover{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 28px rgba(201,162,74,.22),
-    0 0 46px rgba(201,162,74,.12),
-    inset 0 2px 0 rgba(255,255,255,.24),
-    inset 0 -50px 90px rgba(0,0,0,.90);
-}
-.node:active{ filter:brightness(.98); }
 
-/* inner text (LEGIBILITY FIRST: wraps + clamps) */
+.node:hover{
+  box-shadow:
+    var(--shadowDeep),
+    0 0 0 2px var(--goldGlow),
+    0 0 50px var(--goldGlow),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -70px 110px rgba(0,0,0,.9);
+  border-color:var(--gold);
+}
+
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -334,495 +121,106 @@ body::before,body::after{pointer-events:none!important}
   align-items:center;
   justify-content:center;
   text-align:center;
-  color:#fff;
-  padding:8px 10px;
-  gap:4px;
+  padding:16px;
 }
+
 .word{
-  font-weight:980;
-  letter-spacing:.45px;
+  font-weight:900;
+  font-size:clamp(14px,1.4vw,22px);
   line-height:1.05;
-  max-width:12ch;
-  white-space:normal;
-  word-break:break-word;
-  text-wrap:balance;
-  font-size:clamp(9px, 1.0vw, 12.5px);
 }
+
 .code{
-  font-weight:950;
-  font-size:clamp(8px, .85vw, 10px);
-  letter-spacing:1.1px;
-  opacity:.78;
-}
-
-/* size classes */
-.core{ width:var(--D0); height:var(--D0); border-radius:26px; z-index:6; }
-.l1{ width:var(--D1); height:var(--D1); border-radius:22px; }
-.l2{ width:var(--D2); height:var(--D2); border-radius:20px; }
-.l3{ width:var(--D3); height:var(--D3); border-radius:18px; }
-
-.core .word{font-size:clamp(12px, 1.2vw, 15px); max-width:16ch;}
-.core .code{opacity:.82}
-
-/* bottom corner nav */
-.corner{
-  position:fixed;
-  bottom:max(18px, env(safe-area-inset-bottom));
-  z-index:240;
-  pointer-events:none;
-}
-.corner .dmini{pointer-events:auto}
-.corner.left{left:18px}
-.corner.right{right:18px}
-.dmini{
-  width:54px;height:54px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;place-items:center;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  transform:rotate(45deg);
-  position:relative;
-  overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease;
-}
-.dmini::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 72%);
-  opacity:.55;pointer-events:none;
-}
-.dmini:hover{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.55),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 30px rgba(201,162,74,.22);
-}
-.dmini span{
-  transform:rotate(-45deg);
-  font-weight:980;
   font-size:12px;
-  letter-spacing:.6px;
-  color:rgba(255,255,255,.92);
-  user-select:none;
-}
-.cornerLabel{
-  margin-top:10px;
-  text-align:center;
-  color:rgba(255,255,255,.70);
-  font-size:11px;
-  letter-spacing:.4px;
+  opacity:.7;
+  margin-top:6px;
 }
 
-/* pill */
-.pill{
-  width:min(980px,94vw);
-  margin:14px auto 0;
-  padding:14px 16px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.75px;
-}
-.pill b{color:rgba(255,255,255,.95)}
-.brand{
-  margin-top:8px;
-  font-size:12px;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.70);
-}
-.brand span{color:rgba(201,162,74,.70);font-weight:950}
-
-/* mobile */
-@media (max-width:600px){
-  :root{
-    --D0:176px;
-    --D1:88px;
-    --D2:66px;
-    --D3:50px;
-    --R1:156px;
-    --R2:236px;
-    --R3:312px;
-    --padTop:124px;
-  }
-  .stage{height:min(940px,82vh)}
-}
-@media (max-width:420px){
-  :root{
-    --D0:168px;
-    --D1:84px;
-    --D2:63px;
-    --D3:48px;
-    --R1:148px;
-    --R2:224px;
-    --R3:296px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-    <a class="btn" id="btnExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-  </div>
-  <div class="right">
-    <div class="seg" role="group" aria-label="Language">
-      <button type="button" id="btnEN" aria-pressed="true">EN</button>
-      <button type="button" id="btnZH" aria-pressed="false">中文</button>
-      <button type="button" id="btnES" aria-pressed="false">ES</button>
-    </div>
-    <div class="seg" role="group" aria-label="Lane">
-      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-    </div>
-  </div>
-</div>
-
-<div class="stage" id="stage" aria-label="Compass dial">
-  <div class="backdrop" aria-hidden="true"></div>
-  <div class="dialFace" aria-hidden="true"></div>
-  <div class="faceLetters" aria-hidden="true">
-    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
-  </div>
-</div>
-
-<div class="pill" id="pill">
-  <div id="pillMain"><b>Compass:</b> Ring = hubs. Center = Index (manual). Home + Door live outside the compass.</div>
-  <div class="brand"><span>cogrid.net</span> · <span>diamondgatebridge.com</span></div>
-</div>
-
-<div class="corner left" aria-label="Door">
-  <div class="dmini" id="btnDoorMini" role="button" tabindex="0" aria-label="Door"><span>DOOR</span></div>
-  <div class="cornerLabel" id="lblDoor">DOOR</div>
-</div>
-<div class="corner right" aria-label="Home">
-  <div class="dmini" id="btnHomeMini" role="button" tabindex="0" aria-label="Home"><span>HOME</span></div>
-  <div class="cornerLabel" id="lblHome">HOME</div>
-</div>
+<div class="stage" id="stage"></div>
 
 <script>
 (function(){
-  "use strict";
 
-  // ===== Canon state (gd_* only; lane URL-only) =====
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
+/* =========================================================
+   ROUTING TABLE
+========================================================= */
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
-  var lane  = qs.get("lane")  || "platform"; // URL-only
+const ROUTES = [
+  {tier:1,code:"N",label:"LAWS",href:"/laws/"},
+  {tier:1,code:"E",label:"PRODUCTS",href:"/products/"},
+  {tier:1,code:"S",label:"ENERGY",href:"/explore/frontier/energy/"},
+  {tier:1,code:"W",label:"GAUGES",href:"/gauges/"},
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+  {tier:2,code:"NE",label:"EXPLORE",href:"/explore/"},
+  {tier:2,code:"SE",label:"FINANCE",href:"/finance/"},
+  {tier:2,code:"SW",label:"AGRICULTURE",href:"/products/agriculture/"},
+  {tier:2,code:"NW",label:"LATTICE",href:"/explore/frontier/lattice/"},
 
-  try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
+  {tier:3,code:"NNE",label:"PRELUDE",href:"/prelude/"},
+  {tier:3,code:"ENE",label:"FRONTIER",href:"/explore/frontier/"},
+  {tier:3,code:"ESE",label:"SIGNALS",href:"/gauges/"},
+  {tier:3,code:"SSE",label:"CAPITAL",href:"/finance/"},
+  {tier:3,code:"SSW",label:"INFRASTRUCTURE",href:"/explore/infrastructure/"},
+  {tier:3,code:"WSW",label:"GOVERNANCE",href:"/governance/"},
+  {tier:3,code:"WNW",label:"VISION",href:"/explore/frontier/vision/"},
+  {tier:3,code:"NNW",label:"SHIMMER",href:"/explore/frontier/shimmer/"}
+];
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+const stage=document.getElementById("stage");
 
-  function q(over){
-    var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style",(over&&over.style)?over.style:style);
-    p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth",(over&&over.depth)?over.depth:depth);
-    var L=(over&&over.lane)?over.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane",L);
-    return "?"+p.toString();
-  }
+function mkNode(item,className){
+  const d=document.createElement("div");
+  d.className="node surface "+className;
+  d.tabIndex=0;
 
-  function go(path){ window.location.href = path + q(); }
-  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
+  const inner=document.createElement("div");
+  inner.className="inner";
+  inner.innerHTML=`<div class="word">${item.label}</div><div class="code">${item.code}</div>`;
+  d.appendChild(inner);
 
-  // Wire [data-route] anchors with full state
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-  wireAll();
+  d.onclick=()=>location.href=item.href;
+  return d;
+}
 
-  // ===== Language (reload) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  setPressed(btnEN, lang==="en");
-  setPressed(btnZH, lang==="zh");
-  setPressed(btnES, lang==="es");
+function layout(){
+  stage.innerHTML="";
+  const rect=stage.getBoundingClientRect();
+  const cx=rect.width/2;
+  const cy=rect.height/2;
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  const R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"));
+  const R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"));
+  const R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"));
 
-  // ===== Lane (NO reload; updates labels) =====
-  var btnLP=document.getElementById("lanePlatform");
-  var btnLE=document.getElementById("laneEngineering");
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
+  const core=mkNode({label:"INDEX",code:"CORE",href:"/index-core/"},"core");
+  core.style.left=cx+"px";
+  core.style.top=cy+"px";
+  stage.appendChild(core);
 
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-    paintText();
-    layout();
-    wireAll();
-  }
-  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  // ===== Pill + corner labels =====
-  var pillMain=document.getElementById("pillMain");
-  var lblDoor=document.getElementById("lblDoor");
-  var lblHome=document.getElementById("lblHome");
-
-  function paintText(){
-    var laneWord = (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-                  : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-                  : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-
-    if(lang==="zh"){
-      pillMain.innerHTML="<b>指南针：</b>外环=枢纽；中心=索引（说明书）。主页与门在罗盘之外。当前透镜："+laneWord+"。";
-      lblDoor.textContent="门"; lblHome.textContent="主页";
-      document.querySelector("#btnDoorMini span").textContent="门";
-      document.querySelector("#btnHomeMini span").textContent="主页";
-    }else if(lang==="es"){
-      pillMain.innerHTML="<b>Brújula:</b> anillo = hubs. centro = Índice (manual). Inicio y Puerta van fuera. Lente: "+laneWord+".";
-      lblDoor.textContent="PUERTA"; lblHome.textContent="INICIO";
-      document.querySelector("#btnDoorMini span").textContent="PUERTA";
-      document.querySelector("#btnHomeMini span").textContent="INICIO";
-    }else{
-      pillMain.innerHTML="<b>Compass:</b> Ring = hubs. Center = Index (manual). Home + Door live outside. Lens: "+laneWord+".";
-      lblDoor.textContent="DOOR"; lblHome.textContent="HOME";
-      document.querySelector("#btnDoorMini span").textContent="DOOR";
-      document.querySelector("#btnHomeMini span").textContent="HOME";
-    }
-  }
-  paintText();
-
-  // bottom corners
-  function bindMini(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+  function place(list,radius,className,startAngle=-Math.PI/2){
+    list.forEach((item,i)=>{
+      const angle=startAngle+(i/list.length)*Math.PI*2;
+      const x=cx+radius*Math.cos(angle);
+      const y=cy+radius*Math.sin(angle);
+      const n=mkNode(item,className);
+      n.style.left=x+"px";
+      n.style.top=y+"px";
+      stage.appendChild(n);
     });
   }
-  bindMini("btnDoorMini","/door/");
-  bindMini("btnHomeMini","/home/");
 
-  // ===== Routing (unique enforced) =====
-  var INDEX_ROUTE = "/index-core/";
-  var PLACEHOLDER_404 = "/404.html";
+  place(ROUTES.filter(r=>r.tier===1),R1,"l1");
+  place(ROUTES.filter(r=>r.tier===2),R2,"l2",-Math.PI/4);
+  place(ROUTES.filter(r=>r.tier===3),R3,"l3",-Math.PI/8);
+}
 
-  var ROUTES_RAW = [
-    {lvl:1, code:"N",   label:{platform:{en:"EDUCATION",zh:"教育",es:"EDUCACIÓN"}, engineering:{en:"ESL",zh:"ESL",es:"ESL"}}, href:"/products/education/"},
-    {lvl:3, code:"NNE", label:{platform:{en:"PRELUDE",zh:"前奏",es:"PRELUDIO"},    engineering:{en:"PRIMER",zh:"前置",es:"PRIMER"}}, href:"/prelude/"},
-    {lvl:2, code:"NE",  label:{platform:{en:"EXPLORE",zh:"探索",es:"EXPLORAR"},    engineering:{en:"MODELS",zh:"模型",es:"MODELOS"}}, href:"/explore/"},
-    {lvl:3, code:"ENE", label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"},   engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}, href:"/explore/frontier/"},
-    {lvl:1, code:"E",   label:{platform:{en:"RESEARCH",zh:"研究",es:"INVEST."},    engineering:{en:"R&D",zh:"研发",es:"I+D"}}, href:"/research/", gold:true},
-
-    {lvl:3, code:"ESE", label:{platform:{en:"GAUGES",zh:"量规",es:"MEDIDORES"},    engineering:{en:"SIGNALS",zh:"信号",es:"SEÑALES"}}, href:"/gauges/"},
-    {lvl:2, code:"SE",  label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"},  engineering:{en:"DEPLOY",zh:"部署",es:"DESPL"}}, href:"/products/"},
-    {lvl:3, code:"SSE", label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"},    engineering:{en:"CAPITAL",zh:"资本",es:"CAP"}}, href:"/finance/"},
-
-    {lvl:1, code:"S",   label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},      engineering:{en:"POWER",zh:"能源",es:"PODER"}}, href:"/explore/frontier/energy/"},
-    {lvl:3, code:"SSW", label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"},         engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}, href:"/explore/infrastructure/"},
-
-    {lvl:2, code:"SW",  label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"},    engineering:{en:"FOOD",zh:"食物",es:"ALIM"}}, href:"/products/agriculture/"},
-    {lvl:3, code:"WSW", label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"},engineering:{en:"EXEC",zh:"执行",es:"EJEC"}}, href:"/governance/"},
-    {lvl:1, code:"W",   label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"},          engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
-    {lvl:3, code:"WNW", label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"},       engineering:{en:"VISION",zh:"愿景",es:"VISIÓN"}}, href:"/explore/frontier/vision/"},
-    {lvl:2, code:"NW",  label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"},     engineering:{en:"256",zh:"256态",es:"256"}}, href:"/explore/frontier/lattice/"},
-    {lvl:3, code:"NNW", label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},     engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}, href:"/explore/frontier/shimmer/"}
-  ];
-
-  function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
-    for(var i=0;i<list.length;i++){
-      var it = list[i];
-      var h  = (it.href||"").trim();
-      if(!h) h = PLACEHOLDER_404;
-      if(seen[h]) h = PLACEHOLDER_404;
-      seen[h] = true;
-      out.push({lvl:it.lvl,code:it.code,label:it.label,href:h,gold:!!it.gold});
-    }
-    return out;
-  }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
-
-  function labelFor(it){
-    var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
-    return (lang==="zh")?pack.zh:(lang==="es")?pack.es:pack.en;
-  }
-
-  function mkNode(it, cls){
-    var d=document.createElement("div");
-    d.className="node surface "+cls+(it.gold?" goldTrim":"");
-    d.setAttribute("role","button");
-    d.tabIndex=0;
-
-    var inner=document.createElement("div");
-    inner.className="inner";
-
-    var w=document.createElement("div");
-    w.className="word";
-    w.textContent=labelFor(it);
-
-    var c=document.createElement("div");
-    c.className="code";
-    c.textContent=it.code;
-
-    inner.appendChild(w);
-    inner.appendChild(c);
-    d.appendChild(inner);
-
-    function act(){ go(it.href); }
-    d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    return d;
-  }
-
-  function mkCore(){
-    var d=document.createElement("div");
-    d.className="node surface core";
-    d.setAttribute("role","button");
-    d.tabIndex=0;
-
-    var inner=document.createElement("div");
-    inner.className="inner";
-
-    var w=document.createElement("div");
-    w.className="word";
-    w.textContent=(lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
-
-    var c=document.createElement("div");
-    c.className="code";
-    c.textContent="CORE";
-
-    inner.appendChild(w);
-    inner.appendChild(c);
-    d.appendChild(inner);
-
-    function act(){ go(INDEX_ROUTE); }
-    d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    return d;
-  }
-
-  var stage=document.getElementById("stage");
-
-  function layout(){
-    var olds=stage.querySelectorAll(".node");
-    for(var i=0;i<olds.length;i++) olds[i].remove();
-
-    var rect=stage.getBoundingClientRect();
-    var cx=rect.width/2, cy=rect.height/2;
-
-    var core=mkCore();
-    core.style.left=cx+"px"; core.style.top=cy+"px";
-    stage.appendChild(core);
-
-    var l1=[], l2=[], l3=[];
-    for(var i=0;i<ROUTES.length;i++){
-      if(ROUTES[i].lvl===1) l1.push(ROUTES[i]);
-      else if(ROUTES[i].lvl===2) l2.push(ROUTES[i]);
-      else l3.push(ROUTES[i]);
-    }
-
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||172;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||262;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||342;
-
-    // L1 pinned to N/E/S/W
-    function pickBy(code, arr){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
-    var l1Ordered=[pickBy("N",l1),pickBy("E",l1),pickBy("S",l1),pickBy("W",l1)].filter(Boolean);
-    if(l1Ordered.length<4){ for(var i=0;i<l1.length;i++) if(l1Ordered.indexOf(l1[i])===-1) l1Ordered.push(l1[i]); }
-    var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
-    for(var i=0;i<l1Ordered.length;i++){
-      var it=l1Ordered[i];
-      var x=cx + R1*Math.cos(ang[i]);
-      var y=cy + R1*Math.sin(ang[i]);
-      var n=mkNode(it,"l1");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      stage.appendChild(n);
-    }
-
-    // L2 (4 diagonals)
-    for(var i=0;i<l2.length;i++){
-      var a=(i/l2.length)*(Math.PI*2) - Math.PI/4;
-      var x=cx + R2*Math.cos(a);
-      var y=cy + R2*Math.sin(a);
-      var n=mkNode(l2[i],"l2");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      stage.appendChild(n);
-    }
-
-    // L3 (8 intercardinals)
-    for(var i=0;i<l3.length;i++){
-      var a=(i/l3.length)*(Math.PI*2) - Math.PI*(3/8);
-      var x=cx + R3*Math.cos(a);
-      var y=cy + R3*Math.sin(a);
-      var n=mkNode(l3[i],"l3");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      stage.appendChild(n);
-    }
-  }
-
-  function safeLayout(){
-    var r=stage.getBoundingClientRect();
-    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    layout();
-  }
-  requestAnimationFrame(safeLayout);
-  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+requestAnimationFrame(layout);
+window.addEventListener("resize",layout);
 
 })();
 </script>

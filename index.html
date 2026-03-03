@@ -1,22 +1,21 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · 16-POINT RING + CENTER INDEX (CORE) — ANTI-SNOWFLAKE DIAL v3 (RATIO FIX)
-     UPDATE (PER SEAN):
-       - FIX RATIOS:
-           Center CORE reduced by 25%
-           Level 1 (N/E/S/W) = 50% of CORE size
-           Level 2 (NE/SE/SW/NW) = -25% from Level 1
-           Level 3 (8 intercardinals) = -25% from Level 2
-       - Larger nodes closer to center; smaller nodes further out
-       - KEEP: perfect symmetry per ring class; anti-snowflake dial face; no movement on hover (glow only)
-       - KEEP: Home + Door outside compass geometry (corner diamonds)
-       - KEEP: no duplicates in the 16 ring; duplicates/unbuilt → /404.html placeholder
-       - FIX: lane=platform|engineering toggle updates labels + routes (no reload; URL-only)
-       - FIX: brand is cogrid.net + diamondgatebridge.com
-       - Trilingual labels (EN/中文/ES)
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - No overlays/modals; no inline onclick; addEventListener only
+     COMPASS · 16-POINT DIAL + CENTER CORE — ANTI-SNOWFLAKE v3.1 (LEGIBILITY + PROPORTION FIX)
+     FIX (PER SEAN):
+       - Diamonds were too small. This rebuild scales UP so full words fit.
+       - Proportions are preserved (progressive):
+           CORE = D0
+           L1 (N/E/S/W) = 50% of CORE
+           L2 (NE/SE/SW/NW) = 75% of L1
+           L3 (8 intercardinals) = 75% of L2
+       - Larger nodes closer to center; smaller nodes further out (3 radii).
+       - Hover = glow only (NO movement).
+       - Home + Door stay OUTSIDE geometry (corner diamonds).
+       - lane=platform|engineering toggle WORKS (updates labels + keeps routes; URL-only; NO reload).
+       - Trilingual labels (EN/中文/ES).
+       - No duplicates: duplicates/unbuilt → /404.html placeholder.
+       - Brand: cogrid.net · diamondgatebridge.com
+       - Canon state carry: URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY (NO new gd_* keys)
        - ui.css owns html/body background (NO overrides)
 -->
 
@@ -36,21 +35,19 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY (RATIO FIX) =====
-     CORE reduced by 25% vs prior v2 (172 → 129)
-     L1 = 50% of CORE (≈ 64)
-     L2 = -25% from L1 (≈ 48)
-     L3 = -25% from L2 (≈ 36)
+  /* ===== GEOMETRY (SCALED UP FOR LEGIBILITY) =====
+     Pick CORE big enough for full words; derive others by ratio.
+     D0=200, D1=100, D2=75, D3=56
   */
-  --D0:129px;             /* CORE */
-  --D1:64px;              /* N/E/S/W */
-  --D2:48px;              /* NE/SE/SW/NW */
-  --D3:36px;              /* 8 intercardinals */
+  --D0:200px;   /* CORE */
+  --D1:100px;   /* L1 */
+  --D2:75px;    /* L2 */
+  --D3:56px;    /* L3 */
 
-  /* radii: larger closer; smaller further */
-  --R1:148px;             /* Level 1 radius (closest) */
-  --R2:214px;             /* Level 2 radius */
-  --R3:280px;             /* Level 3 radius (furthest) */
+  /* radii (bigger closer; smaller further) */
+  --R1:172px;   /* L1 */
+  --R2:262px;   /* L2 */
+  --R3:342px;   /* L3 */
 
   --padTop:120px;
 
@@ -126,8 +123,8 @@ body::before,body::after{pointer-events:none!important}
 /* ===== Stage ===== */
 .stage{
   position:relative;
-  width:min(1100px,94vw);
-  height:min(1100px,82vh);
+  width:min(1240px,96vw);
+  height:min(1240px,84vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
@@ -183,8 +180,8 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
+  width:min(1100px,92vw);
+  height:min(1100px,92vw);
   border-radius:999px;
   pointer-events:none;
   overflow:hidden;
@@ -216,30 +213,26 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:-16%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
-
+    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(255,255,255,.06) 34% 34.6%, transparent 35% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 50%, rgba(255,255,255,.06) 50% 50.6%, transparent 51% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
     linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
     linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
     repeating-conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter: blur(.25px);
   opacity:.78;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  mask: radial-gradient(circle at 50% 50%, transparent 0 16%, #000 18% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 16%, #000 18% 100%);
 }
-
 .faceLetters{
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
+  width:min(1100px,92vw);
+  height:min(1100px,92vw);
   pointer-events:none;
   z-index:2;
   opacity:.70;
@@ -271,7 +264,6 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   z-index:5;
 }
-
 .surface{
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.30), transparent 45%),
@@ -313,7 +305,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.95;
 }
-
 .goldTrim{
   border:1px solid var(--gold);
   box-shadow:
@@ -322,8 +313,6 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.24),
     inset 0 -50px 90px rgba(0,0,0,.90);
 }
-
-/* glow-only hover */
 .node:hover{
   border-color:rgba(201,162,74,.46);
   box-shadow:
@@ -336,7 +325,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .node:active{ filter:brightness(.98); }
 
-/* inner text */
+/* inner text (LEGIBILITY FIRST: wraps + clamps) */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -346,11 +335,25 @@ body::before,body::after{pointer-events:none!important}
   justify-content:center;
   text-align:center;
   color:#fff;
-  padding:8px;
+  padding:8px 10px;
   gap:4px;
 }
-.word{font-weight:980;font-size:11.5px;letter-spacing:.55px;line-height:1.05}
-.code{font-weight:950;font-size:9px;letter-spacing:1.1px;opacity:.78}
+.word{
+  font-weight:980;
+  letter-spacing:.45px;
+  line-height:1.05;
+  max-width:12ch;
+  white-space:normal;
+  word-break:break-word;
+  text-wrap:balance;
+  font-size:clamp(9px, 1.0vw, 12.5px);
+}
+.code{
+  font-weight:950;
+  font-size:clamp(8px, .85vw, 10px);
+  letter-spacing:1.1px;
+  opacity:.78;
+}
 
 /* size classes */
 .core{ width:var(--D0); height:var(--D0); border-radius:26px; z-index:6; }
@@ -358,7 +361,7 @@ body::before,body::after{pointer-events:none!important}
 .l2{ width:var(--D2); height:var(--D2); border-radius:20px; }
 .l3{ width:var(--D3); height:var(--D3); border-radius:18px; }
 
-.core .word{font-size:15px}
+.core .word{font-size:clamp(12px, 1.2vw, 15px); max-width:16ch;}
 .core .code{opacity:.82}
 
 /* bottom corner nav */
@@ -371,7 +374,6 @@ body::before,body::after{pointer-events:none!important}
 .corner .dmini{pointer-events:auto}
 .corner.left{left:18px}
 .corner.right{right:18px}
-
 .dmini{
   width:54px;height:54px;
   border-radius:16px;
@@ -447,27 +449,26 @@ body::before,body::after{pointer-events:none!important}
 /* mobile */
 @media (max-width:600px){
   :root{
-    --D0:122px;
-    --D1:61px;
-    --D2:46px;
-    --D3:35px;
-    --R1:136px;
-    --R2:198px;
-    --R3:262px;
+    --D0:176px;
+    --D1:88px;
+    --D2:66px;
+    --D3:50px;
+    --R1:156px;
+    --R2:236px;
+    --R3:312px;
     --padTop:124px;
   }
-  .stage{height:min(820px,82vh)}
-  .word{font-size:11px}
+  .stage{height:min(940px,82vh)}
 }
 @media (max-width:420px){
   :root{
-    --D0:116px;
-    --D1:58px;
-    --D2:44px;
-    --D3:34px;
-    --R1:128px;
-    --R2:186px;
-    --R3:244px;
+    --D0:168px;
+    --D1:84px;
+    --D2:63px;
+    --D3:48px;
+    --R1:148px;
+    --R2:224px;
+    --R3:296px;
   }
 }
 </style>
@@ -589,7 +590,7 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // ===== Lane (NO reload) =====
+  // ===== Lane (NO reload; updates labels) =====
   var btnLP=document.getElementById("lanePlatform");
   var btnLE=document.getElementById("laneEngineering");
   setPressed(btnLP, lane==="platform");
@@ -776,11 +777,11 @@ body::before,body::after{pointer-events:none!important}
       else l3.push(ROUTES[i]);
     }
 
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||148;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||214;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||280;
+    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||172;
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||262;
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||342;
 
-    // L1 cardinals pinned to N/E/S/W angles in code order
+    // L1 pinned to N/E/S/W
     function pickBy(code, arr){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
     var l1Ordered=[pickBy("N",l1),pickBy("E",l1),pickBy("S",l1),pickBy("W",l1)].filter(Boolean);
     if(l1Ordered.length<4){ for(var i=0;i<l1.length;i++) if(l1Ordered.indexOf(l1[i])===-1) l1Ordered.push(l1[i]); }
@@ -794,7 +795,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // L2 (4 diagonals) start at -45°
+    // L2 (4 diagonals)
     for(var i=0;i<l2.length;i++){
       var a=(i/l2.length)*(Math.PI*2) - Math.PI/4;
       var x=cx + R2*Math.cos(a);
@@ -804,7 +805,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // L3 (8) start at -67.5°
+    // L3 (8 intercardinals)
     for(var i=0;i<l3.length;i++){
       var a=(i/l3.length)*(Math.PI*2) - Math.PI*(3/8);
       var x=cx + R3*Math.cos(a);
@@ -822,19 +823,6 @@ body::before,body::after{pointer-events:none!important}
   }
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
-
-  // corners
-  function bindMini(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  bindMini("btnDoorMini","/door/");
-  bindMini("btnHomeMini","/home/");
 
 })();
 </script>

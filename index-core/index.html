@@ -1,18 +1,22 @@
 <!doctype html>
 <!-- TNT — /index-core/index.html
-     INDEX · CORE (MANUAL + INDEX SCORE) — TRILINGUAL · PLATFORM/ENGINEERING (URL-ONLY)
-     PURPOSE:
-       - This is the center diamond destination from /index.html (CORE manual)
-       - Provides: Index Score (readable + bounded) + routing to hubs (no loops)
-     STATE (CANON ONLY, NO NEW gd_* KEYS):
-       - gd_lang, gd_style, gd_time, gd_depth (LS + URL)
-       - lane=platform|engineering is URL-only (NEVER stored)
-     UX:
+     INDEX · CORE — DECISION DIAGNOSTIC ENGINE (CITIZEN DIAGNOSTIC ENGINE)
+     MODE:
        - Bubble-first (contrast + 3D gloss)
+       - No sliders (no user “knob” manipulation)
+       - Scenario presets only (receipt-oriented posture)
+       - 4 context layers: Individual · Relational · Business · Corporate
+     LENSES (VISIBLE):
+       - lane=platform|engineering (URL-only; NEVER stored) (NO reload; updates copy in-place)
+       - lang=EN|中文|ES (NO reload; updates copy in-place)
+     STATE (CANON ONLY; NO NEW gd_* KEYS):
+       - Preserve gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY
+       - lane is URL-only
+     UX:
        - Single-open accordion (tap same closes)
-       - LANG + LANE toggles do NOT reload and do NOT close open section
        - Buttons glow (no motion)
-       - Timestamp displayed (page render timestamp)
+       - Timestamp displayed (render timestamp)
+       - Direct routing to hubs (Compass/Home/Products/Laws/Governance/Gauges/Explore)
      ASSETS:
        - /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (NO overrides)
@@ -22,7 +26,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · CORE</title>
+<title>INDEX · CORE — Decision Diagnostic Engine</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -33,9 +37,8 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOKENS ===== */
 :root{
-  --dockH:120px;
+  --dockH:128px;
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
@@ -43,27 +46,26 @@ body::before,body::after{pointer-events:none!important}
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
-  --soft:rgba(255,255,255,.62);
 
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
 
   --gold:rgba(201,162,74,.55);
-  --goldGlow:rgba(201,162,74,.28);
-  --goldSoft:rgba(201,162,74,.18);
+  --goldGlow:rgba(201,162,74,.22);
+  --goldSoft:rgba(201,162,74,.14);
 
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== TOP ===== */
+/* ===== Top ===== */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
+  position:fixed;top:14px;left:0;right:0;
+  padding:0 14px;
   display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
+  gap:10px;
   z-index:240;
   pointer-events:none;
 }
@@ -72,7 +74,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* Button (perimeter glow; NO bottom-only underlay) */
+/* Button (perimeter glow; no motion) */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -85,19 +87,19 @@ body::before,body::after{pointer-events:none!important}
   -webkit-tap-highlight-color:transparent;
   position:relative;overflow:hidden;
   touch-action:manipulation;
-  box-shadow:var(--shadowC), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  box-shadow:var(--shadowC), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.08);
 }
-.btn:active{filter:brightness(.98)}
 .btn:hover{
   border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.18), 0 0 28px rgba(201,162,74,.18);
+  box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.18), 0 0 28px rgba(201,162,74,.16);
 }
+.btn:active{filter:brightness(.98)}
 .btn.red{
   border-color:rgba(255,43,43,.22);
   box-shadow:var(--shadowC), 0 0 0 1px rgba(255,43,43,.14), 0 0 18px rgba(255,43,43,.10);
 }
 .btn.red:hover{
-  border-color:rgba(255,43,43,.30);
+  border-color:rgba(255,43,43,.32);
   box-shadow:var(--shadowC), 0 0 0 2px rgba(255,43,43,.16), 0 0 28px rgba(255,43,43,.14);
 }
 
@@ -123,7 +125,7 @@ body::before,body::after{pointer-events:none!important}
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
 }
 
-/* ===== PAGE ===== */
+/* ===== Page ===== */
 .page{
   width:min(1120px,94vw);
   margin:0 auto;
@@ -223,7 +225,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .pill .g{color:rgba(201,162,74,.75);font-weight:950}
 
-/* Band */
+/* Bands */
 .band{
   position:relative;z-index:2;
   padding:10px 12px;border-radius:18px;
@@ -233,8 +235,8 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.90);
 }
 
-/* Score panel */
-.scorePanel{
+/* Engine panel */
+.engine{
   position:relative;z-index:2;
   border:1px solid rgba(255,255,255,.10);
   border-radius:24px;
@@ -246,39 +248,54 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowA);
   overflow:hidden;
 }
-.scoreIntro{margin:0 0 14px;font-size:14.75px;line-height:1.65;color:rgba(255,255,255,.86);max-width:980px}
-.scoreGrid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
-}
-@media (max-width:820px){ .scoreGrid{grid-template-columns:1fr} }
-.metric{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  padding:14px 14px 12px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  position:relative;
-  overflow:hidden;
-}
-.metric::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.40;pointer-events:none;
-}
-.mTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.mName{font-weight:980;letter-spacing:.2px;font-size:15.5px;color:var(--ink)}
-.mHint{font-size:12.75px;color:rgba(255,255,255,.78);line-height:1.4}
-.mVal{font-weight:980;color:rgba(201,162,74,.85)}
-.range{margin-top:10px;width:100%}
-small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height:1.45}
+.engineIntro{margin:0 0 14px;font-size:14.75px;line-height:1.65;color:rgba(255,255,255,.86);max-width:980px}
 
-/* Score output bubble */
-.scoreOut{
+/* Context pills */
+.ctxRow{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+}
+.ctxPills{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ctx{
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  color:rgba(255,255,255,.86);
+  font-weight:980;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.ctx.active{
+  border-color:rgba(201,162,74,.34);
+  box-shadow:0 0 0 2px rgba(201,162,74,.12), 0 0 24px rgba(201,162,74,.14);
+}
+
+/* Scenario select */
+.formRow{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:1fr 220px;
+  gap:12px;
+  align-items:start;
+}
+@media (max-width:820px){
+  .formRow{grid-template-columns:1fr}
+}
+.select{
+  width:100%;
+  min-height:48px;
+  padding:12px 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  color:rgba(255,255,255,.92);
+  outline:none;
+}
+.select option{color:#000}
+.runRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.runRow .btn{min-height:48px;border-radius:999px;padding:10px 14px}
+
+/* Output bubble */
+.out{
   margin-top:12px;
   border:1px solid rgba(255,255,255,.12);
   border-radius:18px;
@@ -288,20 +305,45 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
     radial-gradient(circle at 82% 34%, rgba(255,43,43,.10), transparent 60%),
     rgba(0,0,0,.14);
 }
-.scoreOutRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.bigScore{
+.outTop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.big{
   font-weight:980;
   letter-spacing:.6px;
   font-size:18px;
   color:rgba(255,255,255,.94);
 }
-.bigScore .n{color:rgba(201,162,74,.90)}
+.big .n{color:rgba(201,162,74,.90)}
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  font-weight:980;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.86);
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
 .reason{
   margin-top:8px;
   color:rgba(255,255,255,.84);
   line-height:1.5;
-  font-size:13.5px;
+  font-size:13.75px;
 }
+.metrics{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width:920px){ .metrics{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.m{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:10px 10px;
+  background:rgba(0,0,0,.12);
+}
+.mN{font-weight:980;color:rgba(255,255,255,.90);font-size:12.75px}
+.mV{margin-top:6px;font-weight:980;color:rgba(201,162,74,.86);font-size:14px}
 
 /* Accordion */
 .list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
@@ -406,7 +448,7 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
   <div class="left">
     <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
     <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
-    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
   </div>
   <div class="right" aria-label="Controls">
     <div class="seg" role="group" aria-label="Language">
@@ -424,9 +466,9 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
 <div class="page">
   <div class="backdrop" aria-hidden="true"></div>
 
-  <section class="header" aria-label="Index header">
+  <section class="header" aria-label="Header">
     <p class="k" id="hk">INDEX</p>
-    <h1 class="h1" id="ht">CORE MANUAL · INDEX SCORE</h1>
+    <h1 class="h1" id="ht">DECISION DIAGNOSTIC ENGINE</h1>
     <p class="sub" id="hs"></p>
 
     <div class="metaRow" aria-label="Meta">
@@ -435,78 +477,51 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
     </div>
   </section>
 
-  <div class="band" id="bandScore">INDEX SCORE (BOUNDED)</div>
-  <section class="scorePanel" aria-label="Index score">
-    <p class="scoreIntro" id="scoreIntro"></p>
+  <div class="band" id="bandEngine">ENGINE (SELECT → RUN)</div>
+  <section class="engine" aria-label="Engine">
+    <p class="engineIntro" id="engineIntro"></p>
 
-    <div class="scoreGrid">
-      <div class="metric">
-        <div class="mTop">
-          <div>
-            <div class="mName" id="m1n">Definition</div>
-            <div class="mHint" id="m1h">Are terms bounded and non-contradictory?</div>
-          </div>
-          <div class="mVal"><span id="m1v">70</span></div>
-        </div>
-        <input class="range" id="m1r" type="range" min="0" max="100" value="70"/>
-        <small class="note" id="m1t">Higher = clearer scope and fewer semantic swaps.</small>
+    <div class="ctxRow">
+      <div class="ctxPills" aria-label="Context">
+        <button class="ctx active" id="ctxIndividual" type="button">INDIVIDUAL</button>
+        <button class="ctx" id="ctxRelational" type="button">RELATIONAL</button>
+        <button class="ctx" id="ctxBusiness" type="button">BUSINESS</button>
+        <button class="ctx" id="ctxCorporate" type="button">CORPORATE</button>
       </div>
+      <div class="pill" id="ctxState">—</div>
+    </div>
 
-      <div class="metric">
-        <div class="mTop">
-          <div>
-            <div class="mName" id="m2n">Execution</div>
-            <div class="mHint" id="m2h">Can a next step be produced without narrative?</div>
-          </div>
-          <div class="mVal"><span id="m2v">65</span></div>
-        </div>
-        <input class="range" id="m2r" type="range" min="0" max="100" value="65"/>
-        <small class="note" id="m2t">Higher = bounded outputs and clear stop/hold.</small>
-      </div>
-
-      <div class="metric">
-        <div class="mTop">
-          <div>
-            <div class="mName" id="m3n">Verification</div>
-            <div class="mHint" id="m3h">Are claims tied to receipts and replay paths?</div>
-          </div>
-          <div class="mVal"><span id="m3v">55</span></div>
-        </div>
-        <input class="range" id="m3r" type="range" min="0" max="100" value="55"/>
-        <small class="note" id="m3t">Higher = receipts exist and are comparable.</small>
-      </div>
-
-      <div class="metric">
-        <div class="mTop">
-          <div>
-            <div class="mName" id="m4n">Scale Posture</div>
-            <div class="mHint" id="m4h">Will scaling amplify mismatch or contain it?</div>
-          </div>
-          <div class="mVal"><span id="m4v">60</span></div>
-        </div>
-        <input class="range" id="m4r" type="range" min="0" max="100" value="60"/>
-        <small class="note" id="m4t">Higher = containment-first, no silent overrides.</small>
+    <div class="formRow" aria-label="Scenario">
+      <select class="select" id="scenarioSelect" aria-label="Scenario select"></select>
+      <div class="runRow">
+        <button class="btn red" id="btnRun" type="button">RUN</button>
       </div>
     </div>
 
-    <div class="scoreOut">
-      <div class="scoreOutRow">
-        <div class="bigScore" id="scoreBig">INDEX SCORE: <span class="n" id="scoreNum">—</span>/100</div>
-        <div class="pill" id="scoreClass">—</div>
+    <div class="out" id="out">
+      <div class="outTop">
+        <div class="big" id="outTitle">POSTURE: <span class="n" id="outPosture">—</span></div>
+        <div class="badge" id="outScore">SCORE: —/100</div>
       </div>
-      <div class="reason" id="scoreReason">—</div>
+      <div class="reason" id="outReason">—</div>
+      <div class="metrics" aria-label="Metrics">
+        <div class="m"><div class="mN" id="mDefN">Definition</div><div class="mV" id="mDefV">—</div></div>
+        <div class="m"><div class="mN" id="mExeN">Execution</div><div class="mV" id="mExeV">—</div></div>
+        <div class="m"><div class="mN" id="mVerN">Verification</div><div class="mV" id="mVerV">—</div></div>
+        <div class="m"><div class="mN" id="mScaN">Scale Posture</div><div class="mV" id="mScaV">—</div></div>
+      </div>
     </div>
   </section>
 
-  <div class="band" id="bandHow">HOW THIS INDEX WORKS (OPEN ONE)</div>
+  <div class="band" id="bandHow">HOW THIS WORKS (OPEN ONE)</div>
   <div class="list" id="list"></div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
   <a class="btn" id="dockGovernance" data-route="/governance/" href="/governance/">GOVERNANCE</a>
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
 </nav>
 
 <script>
@@ -559,59 +574,11 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
   }
 
   function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-
   function laneLabel(){
     return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
       : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
       : (lane==="engineering"?"ENGINEERING":"PLATFORM");
   }
-
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-
-  // ===== Wire routes with state carry =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-
-  // ===== Toggles (NO reload) =====
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    applyCopy();
-    updateAccordion();
-    updateScoreText();
-    wireAll();
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  }
-
-  function setLane(next){
-    if(next!=="platform"&&next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    applyCopy();
-    updateAccordion();
-    updateScoreText();
-    wireAll();
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-  }
-
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
   // ===== Timestamp =====
   function pad2(n){ return (n<10?"0":"")+n; }
@@ -627,227 +594,244 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
   }
   document.getElementById("tsVal").textContent = tsNow();
 
-  // ===== Copy =====
-  var COPY={
-    en:{
-      hk:"INDEX",
-      ht:"CORE MANUAL · INDEX SCORE",
-      hs_platform:"This is the manual behind the compass. It tells you how to move without loops: define → measure → bound → deploy. The score below is a bounded readiness signal, not a promise.",
-      hs_engineering:"Engineering view: the Index is the contract. It binds scope, measurement, admissibility, and replay. The score below is a bounded posture output under declared rules.",
-      bandScore:"INDEX SCORE (BOUNDED)",
-      scoreIntro_platform:"Set the four dials. The Index Score is the minimum-safe signal for escalation. If Verification is low, escalation is HOLD.",
-      scoreIntro_engineering:"Set the four dials. Index Score = bounded posture under declared scope. Low Verification forces HOLD regardless of other values.",
-      bandHow:"HOW THIS INDEX WORKS (OPEN ONE)",
-      laneState_prefix:"Current lens: ",
-      scoreClass_prefix:"Posture: ",
-      sec:[
-        {c:"#c9a24a",
-         q:"What is this Index?",
-         s:"A manual that prevents navigation loops.",
-         p:[
-           "This Index exists to stop wandering. It is the stable entry point behind the compass center.",
-           "It routes you into a hub (Products, Laws, Gauges, Governance) with a clean boundary: no hype, no silent overrides."
-         ],
-         a:[{t:"OPEN: COMPASS", href:"/index.html"},{t:"OPEN: PRODUCTS", href:"/products/"}]
-        },
-        {c:"#93c5fd",
-         q:"What does the Index Score mean?",
-         s:"A bounded readiness signal.",
-         p:[
-           "The score is not a claim about outcomes. It is a claim about structure: can this system stay honest under scale?",
-           "Rule: if Verification is below threshold, posture is HOLD even if other dials are high."
-         ],
-         a:[{t:"OPEN: GAUGES", href:"/gauges/"},{t:"OPEN: LAWS", href:"/laws/"}]
-        },
-        {c:"#ff2b2b",
-         q:"How do I use it without getting confused?",
-         s:"One surface at a time. One jump at a time.",
-         p:[
-           "Pick one hub. Read one block. Take one jump. If you need boundaries, go to Laws. If you need signals, go to Gauges.",
-           "If you feel a loop forming, return here. This page is the reset."
-         ],
-         a:[{t:"OPEN: GOVERNANCE", href:"/governance/"},{t:"OPEN: HOME", href:"/home/"}]
-        }
-      ],
-      metrics:{
-        m1n:"Definition", m1h:"Are terms bounded and non-contradictory?", m1t:"Higher = clearer scope and fewer semantic swaps.",
-        m2n:"Execution", m2h:"Can a next step be produced without narrative?", m2t:"Higher = bounded outputs and clear stop/hold.",
-        m3n:"Verification", m3h:"Are claims tied to receipts and replay paths?", m3t:"Higher = receipts exist and are comparable.",
-        m4n:"Scale Posture", m4h:"Will scaling amplify mismatch or contain it?", m4t:"Higher = containment-first, no silent overrides."
-      }
-    },
-    zh:{
-      hk:"索引",
-      ht:"核心说明书 · 索引评分",
-      hs_platform:"这是指南针中心背后的说明书。它让你不陷入循环：定义→测量→边界→部署。下面的评分是“就绪姿态”，不是承诺。",
-      hs_engineering:"工程视图：索引是契约。它绑定范围、测量、可采信与回放。下面的评分是声明规则下的有界姿态输出。",
-      bandScore:"索引评分（有界）",
-      scoreIntro_platform:"调整四个刻度。索引评分是升级前的最低安全信号。若“核查/收据”低，升级必须 HOLD。",
-      scoreIntro_engineering:"调整四个刻度。索引评分=声明范围下的有界姿态。核查低则无条件 HOLD。",
-      bandHow:"索引怎么用（打开一个）",
-      laneState_prefix:"当前透镜：",
-      scoreClass_prefix:"姿态：",
-      sec:[
-        {c:"#c9a24a",
-         q:"索引是什么？",
-         s:"防止导航循环的说明书。",
-         p:[
-           "索引用于停止乱逛。它是指南针中心背后的稳定入口。",
-           "它把你路由到枢纽（产品/法则/量规/治理），并坚持边界：不吹、不静默覆盖。"
-         ],
-         a:[{t:"打开：指南针", href:"/index.html"},{t:"打开：产品", href:"/products/"}]
-        },
-        {c:"#93c5fd",
-         q:"索引评分是什么意思？",
-         s:"有界的就绪信号。",
-         p:[
-           "评分不是“结果承诺”，而是“结构承诺”：系统在规模下能否保持诚实。",
-           "规则：核查低于阈值，姿态必须 HOLD，即使其他刻度很高。"
-         ],
-         a:[{t:"打开：量规", href:"/gauges/"},{t:"打开：法则", href:"/laws/"}]
-        },
-        {c:"#ff2b2b",
-         q:"如何用它而不混乱？",
-         s:"一次一个面，一次一个跳转。",
-         p:[
-           "选一个枢纽，读一个块，然后跳一次。需要边界去法则，需要信号去量规。",
-           "若开始形成循环，回到这里。索引就是重置点。"
-         ],
-         a:[{t:"打开：治理", href:"/governance/"},{t:"打开：主页", href:"/home/"}]
-        }
-      ],
-      metrics:{
-        m1n:"定义", m1h:"术语是否有边界且不矛盾？", m1t:"越高=范围更清晰、语义偷换更少。",
-        m2n:"执行", m2h:"能否给出下一步而不靠叙事？", m2t:"越高=输出有界、停止/暂停清晰。",
-        m3n:"核查", m3h:"主张是否绑定收据与回放路径？", m3t:"越高=收据存在且可比。",
-        m4n:"规模姿态", m4h:"扩张会放大错配还是隔离它？", m4t:"越高=隔离优先、无静默覆盖。"
-      }
-    },
-    es:{
-      hk:"ÍNDICE",
-      ht:"MANUAL CENTRAL · PUNTAJE ÍNDICE",
-      hs_platform:"Este es el manual detrás de la brújula. Evita bucles: definir → medir → acotar → desplegar. El puntaje es una señal acotada, no una promesa.",
-      hs_engineering:"Vista de ingeniería: el Índice es el contrato. Vincula alcance, medición, admisibilidad y replay. El puntaje es postura acotada bajo reglas declaradas.",
-      bandScore:"PUNTAJE ÍNDICE (ACOTADO)",
-      scoreIntro_platform:"Ajusta los cuatro diales. El puntaje es la señal mínima segura antes de escalar. Si Verificación es baja, postura = HOLD.",
-      scoreIntro_engineering:"Ajusta los cuatro diales. Puntaje = postura acotada bajo alcance declarado. Verificación baja fuerza HOLD.",
-      bandHow:"CÓMO USAR EL ÍNDICE (abre uno)",
-      laneState_prefix:"Lente actual: ",
-      scoreClass_prefix:"Postura: ",
-      sec:[
-        {c:"#c9a24a",
-         q:"¿Qué es este Índice?",
-         s:"Un manual para evitar bucles.",
-         p:[
-           "Este Índice existe para detener el deambular. Es el punto estable detrás del centro.",
-           "Enruta a un hub (Productos, Leyes, Medidores, Gobernanza) con límites claros: sin hype, sin overrides silenciosos."
-         ],
-         a:[{t:"ABRIR: BRÚJULA", href:"/index.html"},{t:"ABRIR: PRODUCTOS", href:"/products/"}]
-        },
-        {c:"#93c5fd",
-         q:"¿Qué significa el puntaje?",
-         s:"Señal de preparación acotada.",
-         p:[
-           "No es promesa de resultados. Es promesa de estructura: ¿puede mantenerse honesto al escalar?",
-           "Regla: Verificación bajo umbral ⇒ HOLD aunque otros diales estén altos."
-         ],
-         a:[{t:"ABRIR: MEDIDORES", href:"/gauges/"},{t:"ABRIR: LEYES", href:"/laws/"}]
-        },
-        {c:"#ff2b2b",
-         q:"¿Cómo usarlo sin confusión?",
-         s:"Una superficie. Un salto.",
-         p:[
-           "Elige un hub. Lee un bloque. Haz un salto. Si necesitas límites: Leyes. Si necesitas señales: Medidores.",
-           "Si aparece un bucle, regresa aquí. Este es el reset."
-         ],
-         a:[{t:"ABRIR: GOBERNANZA", href:"/governance/"},{t:"ABRIR: INICIO", href:"/home/"}]
-        }
-      ],
-      metrics:{
-        m1n:"Definición", m1h:"¿Términos acotados y sin contradicción?", m1t:"Más alto = alcance claro y menos swaps semánticos.",
-        m2n:"Ejecución", m2h:"¿Siguiente paso sin narrativa?", m2t:"Más alto = salidas acotadas y stop/hold claro.",
-        m3n:"Verificación", m3h:"¿Recibos y replay?", m3t:"Más alto = recibos comparables.",
-        m4n:"Postura de escala", m4h:"¿Escala amplifica o contiene?", m4t:"Más alto = contención primero, sin overrides."
-      }
+  // ===== Wire routes with state carry =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
     }
+  }
+  wireAll();
+
+  // ===== Toggles (NO reload) =====
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyCopy();
+    rebuildScenarioMenu();
+    paintContextState();
+    wireAll();
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  }
+
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyCopy();
+    paintContextState();
+    // output text changes by lane for reasons (keep metrics same)
+    renderOutput(lastRun);
+    wireAll();
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // ===== Engine dataset (receipt-oriented presets; no user knobs) =====
+  // Values: def/exe/ver/sca ∈ [0,100]
+  // ver is a hard gate: ver < 40 ⇒ HOLD
+  var DATA = {
+    individual: [
+      {id:"career_move", name:{en:"Career move under uncertainty", zh:"职业选择（不确定性）", es:"Cambio de carrera (incertidumbre)"}, v:{def:70, exe:65, ver:45, sca:60},
+        plat:{en:"Choose the smallest reversible step that increases receipts.", zh:"选最小可逆步骤，先增加收据。", es:"Elige el paso reversible más pequeño para aumentar recibos."},
+        eng:{en:"Hold escalation until evidence window is sufficient; proceed with bounded experiment.", zh:"证据窗口不足则暂停升级；以有界实验推进。", es:"Pausar escalación hasta evidencia suficiente; avanzar con experimento acotado."}
+      },
+      {id:"health_decision", name:{en:"Health decision with limited data", zh:"健康决策（数据不足）", es:"Decisión de salud (datos limitados)"}, v:{def:60, exe:55, ver:30, sca:55},
+        plat:{en:"Do not escalate. Get verification receipts first.", zh:"不要升级。先补核查收据。", es:"No escalar. Primero recibos de verificación."},
+        eng:{en:"Verification gate violated (ver<40). Output = HOLD.", zh:"核查闸门触发（ver<40）。输出=HOLD。", es:"Compuerta de verificación violada (ver<40). Salida=HOLD."}
+      },
+      {id:"relocation", name:{en:"Relocation / move decision", zh:"搬迁决策", es:"Mudanza / reubicación"}, v:{def:72, exe:62, ver:52, sca:58},
+        plat:{en:"Sequence: define constraints → verify costs → execute staged move.", zh:"顺序：定义约束→核查成本→分阶段执行。", es:"Secuencia: definir restricciones → verificar costos → ejecutar por etapas."},
+        eng:{en:"Proceed with bounded plan; keep rollback path and receipts.", zh:"以有界计划推进；保留回滚路径与收据。", es:"Avanzar con plan acotado; mantener rollback y recibos."}
+      }
+    ],
+    relational: [
+      {id:"trust_break", name:{en:"Trust breakdown repair", zh:"信任破裂修复", es:"Reparación de confianza"}, v:{def:55, exe:50, ver:35, sca:45},
+        plat:{en:"Stop escalation. Replace arguments with receipts and boundaries.", zh:"停止升级。用收据与边界替代争论。", es:"Detener escalación. Sustituir discusión por recibos y límites."},
+        eng:{en:"Verification gate violated (ver<40). Output = HOLD; require evidence of behavior change.", zh:"核查闸门触发（ver<40）。输出=HOLD；要求行为变化证据。", es:"Compuerta de verificación violada (ver<40). HOLD; requerir evidencia de cambio conductual."}
+      },
+      {id:"money_conflict", name:{en:"Money conflict / budgeting", zh:"金钱冲突 / 预算", es:"Conflicto de dinero / presupuesto"}, v:{def:68, exe:62, ver:50, sca:52},
+        plat:{en:"Define shared rules; track receipts; review weekly.", zh:"定义共同规则；记录收据；每周复盘。", es:"Definir reglas compartidas; registrar recibos; revisar semanal."},
+        eng:{en:"Proceed with constraint set + receipt log; no silent exceptions.", zh:"以约束集+收据日志推进；禁止静默例外。", es:"Avanzar con restricciones + log de recibos; sin excepciones silenciosas."}
+      },
+      {id:"commitment_step", name:{en:"Commitment escalation decision", zh:"关系升级决策", es:"Escalación de compromiso"}, v:{def:62, exe:58, ver:42, sca:55},
+        plat:{en:"Proceed cautiously: small commitments first; verify alignment.", zh:"谨慎推进：先小承诺，再核查对齐。", es:"Avanzar con cautela: compromisos pequeños primero; verificar alineación."},
+        eng:{en:"Proceed (bounded). Add verification checkpoints before major escalation.", zh:"可推进（有界）。重大升级前添加核查检查点。", es:"Avanzar (acotado). Añadir checkpoints de verificación antes de gran escalación."}
+      }
+    ],
+    business: [
+      {id:"hire_decision", name:{en:"Hiring decision", zh:"招聘决策", es:"Decisión de contratación"}, v:{def:70, exe:72, ver:48, sca:65},
+        plat:{en:"Use a trial + clear rubric; avoid irreversible bets.", zh:"用试用+明确评分规；避免不可逆下注。", es:"Usar prueba + rúbrica clara; evitar apuestas irreversibles."},
+        eng:{en:"Proceed with bounded trial contract; receipts = rubric + outputs.", zh:"以有界试用合同推进；收据=评分规+输出。", es:"Avanzar con contrato de prueba acotado; recibos=rúbrica+salidas."}
+      },
+      {id:"partner_eval", name:{en:"Partnership evaluation", zh:"合作伙伴评估", es:"Evaluación de alianza"}, v:{def:60, exe:55, ver:38, sca:60},
+        plat:{en:"Do not scale yet. Verify terms, incentives, and receipts.", zh:"先别扩张。核查条款、激励与收据。", es:"No escalar aún. Verificar términos, incentivos y recibos."},
+        eng:{en:"Verification gate violated (ver<40). Output=HOLD; require contract/receipt alignment.", zh:"核查闸门触发（ver<40）。输出=HOLD；要求合同/收据对齐。", es:"Compuerta de verificación violada (ver<40). HOLD; exigir alineación contrato/recibos."}
+      },
+      {id:"market_expand", name:{en:"Market expansion", zh:"市场扩张", es:"Expansión de mercado"}, v:{def:68, exe:64, ver:46, sca:50},
+        plat:{en:"Stage rollout and measure; contain drift early.", zh:"分阶段上线并测量；早隔离漂移。", es:"Despliegue por etapas y medir; contener deriva temprano."},
+        eng:{en:"Proceed with gated rollout; windowed measurement required.", zh:"以闸门式上线推进；必须窗口测量。", es:"Avanzar con despliegue por compuertas; medición por ventanas requerida."}
+      }
+    ],
+    corporate: [
+      {id:"reg_risk", name:{en:"Regulatory risk posture", zh:"监管风险姿态", es:"Postura de riesgo regulatorio"}, v:{def:72, exe:58, ver:55, sca:62},
+        plat:{en:"Document scope and rules; publish posture clearly.", zh:"记录范围与规则；清晰发布姿态。", es:"Documentar alcance y reglas; publicar postura claramente."},
+        eng:{en:"Proceed with reason-coded gates; audit receipts mandatory.", zh:"以原因码闸门推进；审计收据强制。", es:"Avanzar con compuertas con códigos; recibos de auditoría obligatorios."}
+      },
+      {id:"cap_alloc", name:{en:"Capital allocation decision", zh:"资本配置决策", es:"Asignación de capital"}, v:{def:66, exe:60, ver:44, sca:58},
+        plat:{en:"Hold if verification weak; scale only after proofs.", zh:"核查弱则暂停；证明后再扩张。", es:"Si verificación débil: HOLD; escalar solo tras pruebas."},
+        eng:{en:"Proceed bounded; enforce CCD gates if applicable; require receipts.", zh:"有界推进；如适用则执行 CCD 闸门；要求收据。", es:"Avanzar acotado; aplicar compuertas CCD si aplica; exigir recibos."}
+      },
+      {id:"crisis_response", name:{en:"Crisis response routing", zh:"危机响应路由", es:"Ruta de respuesta a crisis"}, v:{def:58, exe:62, ver:40, sca:70},
+        plat:{en:"Act with containment first; publish one clear next step.", zh:"先隔离；发布一个清晰的下一步。", es:"Contención primero; publicar un siguiente paso claro."},
+        eng:{en:"At threshold: ver=40. Proceed only with containment receipts; any drop ⇒ HOLD.", zh:"临界：ver=40。仅在隔离收据齐全时推进；下降则 HOLD。", es:"En umbral: ver=40. Avanzar solo con recibos de contención; si baja ⇒ HOLD."}
+      }
+    ]
   };
 
-  // ===== Score logic =====
-  function clamp(n,min,max){ return Math.max(min,Math.min(max,n)); }
-
-  function computeScore(a,b,c,d){
-    // Weighted, but Verification is a hard posture gate.
-    var wA=0.25, wB=0.25, wC=0.30, wD=0.20;
-    var raw = (a*wA + b*wB + c*wC + d*wD);
+  // ===== Scoring (internal; derived from preset receipts) =====
+  function score(v){
+    // weighted; verification has largest weight
+    var raw = v.def*0.25 + v.exe*0.25 + v.ver*0.30 + v.sca*0.20;
     return Math.round(raw);
   }
-
-  function classify(a,b,c,d,score){
-    // Hard gate on verification (c)
-    if(c < 40) return {cls:"HOLD", color:"#ff2b2b", reasonKey:"hold_v"};
-    if(score >= 80) return {cls:"READY", color:"#34d399", reasonKey:"ready"};
-    if(score >= 60) return {cls:"STABLE", color:"#c9a24a", reasonKey:"stable"};
-    return {cls:"HOLD", color:"#ff2b2b", reasonKey:"hold"};
+  function posture(v, s){
+    if(v.ver < 40) return "HOLD";
+    if(s >= 80) return "READY";
+    if(s >= 60) return "STABLE";
+    return "HOLD";
+  }
+  function postureReason(v, s, item){
+    if(lane==="engineering"){
+      return (lang==="zh")?item.eng.zh:(lang==="es")?item.eng.es:item.eng.en;
+    }
+    return (lang==="zh")?item.plat.zh:(lang==="es")?item.plat.es:item.plat.en;
   }
 
-  function reasonText(key, a,b,c,d,score){
+  // ===== Context handling =====
+  var ctx="individual";
+  var lastRun=null;
+
+  function ctxLabel(){
     if(lang==="zh"){
-      if(key==="hold_v") return "核查 < 40：缺收据/回放路径。姿态 = HOLD。先补证据，再谈升级。";
-      if(key==="ready")  return "评分 ≥ 80 且核查通过：结构可升级。继续保持范围锁与收据纪律。";
-      if(key==="stable") return "评分 60–79：结构稳定但仍需补强。优先提升核查与规模姿态。";
-      return "评分 < 60：姿态 = HOLD。先压缩范围、补收据、再推进。";
+      return (ctx==="individual")?"个人":(ctx==="relational")?"关系":(ctx==="business")?"商业":"机构";
     }
     if(lang==="es"){
-      if(key==="hold_v") return "Verificación < 40: faltan recibos/replay. Postura = HOLD. Primero evidencia, luego escalar.";
-      if(key==="ready")  return "Puntaje ≥ 80 con verificación: listo para escalar. Mantén bloqueo de alcance y disciplina de recibos.";
-      if(key==="stable") return "Puntaje 60–79: estable pero incompleto. Prioriza verificación y postura de escala.";
-      return "Puntaje < 60: postura = HOLD. Reduce alcance, agrega recibos y recién luego avanza.";
+      return (ctx==="individual")?"INDIVIDUAL":(ctx==="relational")?"RELACIONAL":(ctx==="business")?"NEGOCIO":"CORPORATIVO";
     }
-    if(key==="hold_v") return "Verification < 40: missing receipts/replay. Posture = HOLD. Add evidence before escalation.";
-    if(key==="ready")  return "Score ≥ 80 with verification: ready to scale. Keep scope lock and receipt discipline.";
-    if(key==="stable") return "Score 60–79: stable but incomplete. Prioritize verification and scale posture.";
-    return "Score < 60: posture = HOLD. Shrink scope, add receipts, then advance.";
+    return (ctx==="individual")?"INDIVIDUAL":(ctx==="relational")?"RELATIONAL":(ctx==="business")?"BUSINESS":"CORPORATE";
   }
 
-  function updateScoreText(){
-    document.getElementById("laneState").textContent =
-      (lang==="zh") ? ("当前透镜："+laneLabel()) :
-      (lang==="es") ? ("Lente actual: "+laneLabel()) :
-      ("Current lens: "+laneLabel());
+  function paintContextState(){
+    document.getElementById("ctxState").textContent =
+      (lang==="zh")?("当前层："+ctxLabel()):
+      (lang==="es")?("Capa: "+ctxLabel()):
+      ("Layer: "+ctxLabel());
   }
 
-  function recalc(){
-    var a=parseInt(document.getElementById("m1r").value,10);
-    var b=parseInt(document.getElementById("m2r").value,10);
-    var c=parseInt(document.getElementById("m3r").value,10);
-    var d=parseInt(document.getElementById("m4r").value,10);
-
-    document.getElementById("m1v").textContent=String(a);
-    document.getElementById("m2v").textContent=String(b);
-    document.getElementById("m3v").textContent=String(c);
-    document.getElementById("m4v").textContent=String(d);
-
-    var score=computeScore(a,b,c,d);
-    document.getElementById("scoreNum").textContent=String(score);
-
-    var cls=classify(a,b,c,d,score);
-    var sc=document.getElementById("scoreClass");
-    var prefix = (COPY[lang]||COPY.en).scoreClass_prefix || "Posture: ";
-    sc.textContent = prefix + cls.cls;
-    sc.style.borderColor = "rgba(255,255,255,.12)";
-    sc.style.boxShadow = "0 14px 36px rgba(0,0,0,.55), 0 0 18px rgba(0,0,0,.0)";
-    sc.style.color = "rgba(255,255,255,.86)";
-    sc.style.background = "rgba(0,0,0,.16)";
-    sc.style.boxShadow = "0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.06), 0 0 24px "+cls.color+"33";
-
-    document.getElementById("scoreReason").textContent = reasonText(cls.reasonKey,a,b,c,d,score);
+  function setCtx(next){
+    ctx=next;
+    // button state
+    var ids=["ctxIndividual","ctxRelational","ctxBusiness","ctxCorporate"];
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.classList.toggle("active",
+        (ids[i]==="ctxIndividual" && ctx==="individual") ||
+        (ids[i]==="ctxRelational" && ctx==="relational") ||
+        (ids[i]==="ctxBusiness" && ctx==="business") ||
+        (ids[i]==="ctxCorporate" && ctx==="corporate")
+      );
+    }
+    rebuildScenarioMenu();
+    paintContextState();
+    // reset output display for clarity
+    lastRun=null;
+    renderOutput(null);
   }
 
-  ["m1r","m2r","m3r","m4r"].forEach(function(id){
-    document.getElementById(id).addEventListener("input", recalc, {passive:true});
-  });
+  document.getElementById("ctxIndividual").addEventListener("click", function(){ setCtx("individual"); }, {passive:true});
+  document.getElementById("ctxRelational").addEventListener("click", function(){ setCtx("relational"); }, {passive:true});
+  document.getElementById("ctxBusiness").addEventListener("click", function(){ setCtx("business"); }, {passive:true});
+  document.getElementById("ctxCorporate").addEventListener("click", function(){ setCtx("corporate"); }, {passive:true});
 
-  // ===== Accordion build =====
+  // ===== Scenario menu =====
+  var sel=document.getElementById("scenarioSelect");
+
+  function rebuildScenarioMenu(){
+    sel.innerHTML="";
+    var arr=DATA[ctx]||[];
+    for(var i=0;i<arr.length;i++){
+      var it=arr[i];
+      var opt=document.createElement("option");
+      opt.value=it.id;
+      opt.textContent = (lang==="zh")?it.name.zh:(lang==="es")?it.name.es:it.name.en;
+      sel.appendChild(opt);
+    }
+  }
+
+  // ===== Output render =====
+  function renderOutput(run){
+    var outPost=document.getElementById("outPosture");
+    var outScore=document.getElementById("outScore");
+    var outReason=document.getElementById("outReason");
+
+    if(!run){
+      outPost.textContent="—";
+      outScore.textContent = pick3("SCORE: —/100","评分：—/100","PUNTAJE: —/100");
+      outReason.textContent = pick3(
+        "Select a context and scenario, then RUN.",
+        "选择层级与场景，然后 RUN。",
+        "Selecciona capa y escenario, luego RUN."
+      );
+      document.getElementById("mDefV").textContent="—";
+      document.getElementById("mExeV").textContent="—";
+      document.getElementById("mVerV").textContent="—";
+      document.getElementById("mScaV").textContent="—";
+      return;
+    }
+
+    var it=run.item;
+    var v=it.v;
+    var s=score(v);
+    var p=posture(v,s);
+
+    outPost.textContent = pick3(p,p,p);
+    outScore.textContent =
+      (lang==="zh")?("评分： "+s+"/100"):(lang==="es")?("PUNTAJE: "+s+"/100"):("SCORE: "+s+"/100");
+    outReason.textContent = postureReason(v,s,it);
+
+    document.getElementById("mDefV").textContent=String(v.def);
+    document.getElementById("mExeV").textContent=String(v.exe);
+    document.getElementById("mVerV").textContent=String(v.ver);
+    document.getElementById("mScaV").textContent=String(v.sca);
+  }
+
+  document.getElementById("btnRun").addEventListener("click", function(){
+    var id=sel.value;
+    var arr=DATA[ctx]||[];
+    var found=null;
+    for(var i=0;i<arr.length;i++){ if(arr[i].id===id){ found=arr[i]; break; } }
+    if(!found) return;
+    lastRun={ctx:ctx,item:found};
+    renderOutput(lastRun);
+  }, {passive:true});
+
+  // ===== Accordion =====
   var list=document.getElementById("list");
   var refs=[];
   var openIndex=0;
@@ -891,13 +875,13 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
     var tb=document.createElement("div");
     tb.style.minWidth="0";
 
-    var q=document.createElement("div");
-    q.className="q";
+    var qEl=document.createElement("div");
+    qEl.className="q";
 
-    var s=document.createElement("div");
-    s.className="subt";
+    var sEl=document.createElement("div");
+    sEl.className="subt";
 
-    tb.appendChild(q); tb.appendChild(s);
+    tb.appendChild(qEl); tb.appendChild(sEl);
     hL.appendChild(mark); hL.appendChild(tb);
 
     var chev=document.createElement("div");
@@ -912,7 +896,6 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
 
     var p1=document.createElement("p"); p1.className="p";
     var p2=document.createElement("p"); p2.className="p";
-
     body.appendChild(p1); body.appendChild(p2);
 
     var actions=document.createElement("div");
@@ -922,7 +905,7 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
     actions.appendChild(a1); actions.appendChild(a2);
     body.appendChild(actions);
 
-    function act(){ toggle(idx); }
+    function act(){ toggle(idx); wireAll(); }
     head.addEventListener("click", act, {passive:true});
     head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
@@ -930,100 +913,164 @@ small.note{display:block;margin-top:10px;color:rgba(255,255,255,.74);line-height
     row.appendChild(body);
     list.appendChild(row);
 
-    refs.push({row:row,chev:row.querySelector(".chevTxt"),q:q,s:s,p1:p1,p2:p2,a1:a1,a2:a2,item:item});
+    refs.push({row:row,chev:row.querySelector(".chevTxt"),q:qEl,s:sEl,p1:p1,p2:p2,a1:a1,a2:a2,item:item});
   }
+
+  var SECTIONS={
+    en:[
+      {c:"#c9a24a",q:"What this engine is",s:"A posture classifier, not a chatbot.",
+       p1:"This is a decision diagnostic engine. It classifies posture under a chosen context and scenario using receipt-oriented presets.",
+       p2:"It does not accept arbitrary user scoring. It keeps the signal consistent and comparable.",
+       a1:{t:"OPEN: LAWS",href:"/laws/"}, a2:{t:"OPEN: GOVERNANCE",href:"/governance/"}},
+
+      {c:"#93c5fd",q:"Why no sliders",s:"Receipts beat opinions.",
+       p1:"If users can change the inputs, the output becomes theater. This engine stays receipt-oriented: presets represent known scenarios.",
+       p2:"As evidence grows, presets can be updated under versioned rules—not by random adjustment.",
+       a1:{t:"OPEN: GAUGES",href:"/gauges/"}, a2:{t:"OPEN: PRODUCTS",href:"/products/"}},
+
+      {c:"#ff2b2b",q:"How to use it",s:"Pick one layer. Pick one scenario. Run.",
+       p1:"Select the layer (individual/relational/business/corporate), select a scenario, then run. Read posture and reason.",
+       p2:"If posture is HOLD, route to Laws (bounds) or Governance (enforcement) before escalation.",
+       a1:{t:"OPEN: COMPASS",href:"/index.html"}, a2:{t:"OPEN: EXPLORE",href:"/explore/"}}
+    ],
+    zh:[
+      {c:"#c9a24a",q:"这个引擎是什么",s:"姿态分类器，不是聊天秀。",
+       p1:"这是决策诊断引擎：在指定层级与场景下，用收据导向的预设来判定姿态。",
+       p2:"它不允许用户随意打分，从而保持信号一致与可比。",
+       a1:{t:"打开：法则",href:"/laws/"}, a2:{t:"打开：治理",href:"/governance/"}},
+
+      {c:"#93c5fd",q:"为什么没有滑杆",s:"收据胜过意见。",
+       p1:"如果用户能改输入，输出就变成表演。引擎保持收据导向：预设代表常见且可复核的场景。",
+       p2:"证据增长后，预设可在版本化规则下更新，而不是随便旋钮。",
+       a1:{t:"打开：量规",href:"/gauges/"}, a2:{t:"打开：产品",href:"/products/"}},
+
+      {c:"#ff2b2b",q:"怎么用",s:"选层级→选场景→运行。",
+       p1:"选择层级（个人/关系/商业/机构），选择场景，然后运行。读取姿态与原因。",
+       p2:"若姿态为 HOLD，先去法则看边界或去治理看执行，再谈升级。",
+       a1:{t:"打开：指南针",href:"/index.html"}, a2:{t:"打开：探索",href:"/explore/"}}
+    ],
+    es:[
+      {c:"#c9a24a",q:"Qué es este motor",s:"Clasificador de postura, no chatbot.",
+       p1:"Este es un motor de diagnóstico: clasifica postura según capa y escenario con presets orientados a recibos.",
+       p2:"No permite puntuación arbitraria del usuario. Mantiene señal consistente y comparable.",
+       a1:{t:"ABRIR: LEYES",href:"/laws/"}, a2:{t:"ABRIR: GOBERNANZA",href:"/governance/"}},
+
+      {c:"#93c5fd",q:"Por qué no hay sliders",s:"Recibos > opiniones.",
+       p1:"Si el usuario cambia inputs, la salida se vuelve teatro. Aquí la señal es orientada a recibos mediante presets.",
+       p2:"Con más evidencia, los presets se actualizan con reglas versionadas—not con ajustes arbitrarios.",
+       a1:{t:"ABRIR: MEDIDORES",href:"/gauges/"}, a2:{t:"ABRIR: PRODUCTOS",href:"/products/"}},
+
+      {c:"#ff2b2b",q:"Cómo usarlo",s:"Elige capa → escenario → RUN.",
+       p1:"Selecciona capa (individual/relacional/negocio/corporativo), elige escenario y ejecuta. Lee postura y razón.",
+       p2:"Si postura es HOLD, enruta a Leyes (límites) o Gobernanza (enforcement) antes de escalar.",
+       a1:{t:"ABRIR: BRÚJULA",href:"/index.html"}, a2:{t:"ABRIR: EXPLORAR",href:"/explore/"}}
+    ]
+  };
 
   function renderAccordion(){
     list.innerHTML="";
     refs=[];
-    var sec=(COPY[lang]||COPY.en).sec;
-    for(var i=0;i<sec.length;i++) buildRow(sec[i], i);
+    var sec=(lang==="zh")?SECTIONS.zh:(lang==="es")?SECTIONS.es:SECTIONS.en;
+    for(var i=0;i<sec.length;i++){
+      buildRow(sec[i], i);
+    }
     openIndex=0;
     toggle(0);
   }
 
   function updateAccordion(){
-    var keep=openIndex;
-    var sec=(COPY[lang]||COPY.en).sec;
-
-    // if count changed, rebuild
-    if(refs.length!==sec.length){ renderAccordion(); keep=openIndex; }
-
+    var sec=(lang==="zh")?SECTIONS.zh:(lang==="es")?SECTIONS.es:SECTIONS.en;
+    if(refs.length!==sec.length){
+      renderAccordion();
+      return;
+    }
     for(var i=0;i<refs.length;i++){
       var R=refs[i];
       var it=sec[i];
       R.row.style.setProperty("--c", it.c);
       R.q.textContent=it.q;
       R.s.textContent=it.s;
-      R.p1.textContent=it.p[0]||"";
-      R.p2.textContent=it.p[1]||"";
-      R.a1.textContent=openLabel()+": "+it.a[0].t;
-      R.a2.textContent=openLabel()+": "+it.a[1].t;
-      R.a1.setAttribute("data-route", it.a[0].href);
-      R.a2.setAttribute("data-route", it.a[1].href);
+      R.p1.textContent=it.p1;
+      R.p2.textContent=it.p2;
+      R.a1.textContent=it.a1.t;
+      R.a2.textContent=it.a2.t;
+      R.a1.setAttribute("data-route", it.a1.href);
+      R.a2.setAttribute("data-route", it.a2.href);
     }
-
     closeAll();
-    toggle(keep);
+    toggle(openIndex);
   }
 
-  // ===== Apply all copy =====
+  // ===== Copy =====
   function applyCopy(){
-    var C=COPY[lang]||COPY.en;
+    var hk = (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX";
+    var ht = (lang==="zh")?"决策诊断引擎":(lang==="es")?"MOTOR DE DIAGNÓSTICO":"DECISION DIAGNOSTIC ENGINE";
+    var hsP = (lang==="zh")
+      ? "这是指南针中心背后的核心引擎：选择层级与场景，输出姿态与下一步。这里不允许随意旋钮；信号必须可比、可复核。"
+      : (lang==="es")
+      ? "Este es el motor central detrás de la brújula: eliges capa y escenario, y obtienes postura + siguiente paso. Sin perillas arbitrarias: señal comparable."
+      : "This is the engine behind the compass center: choose layer + scenario, receive posture + next step. No arbitrary knobs—signal must stay comparable.";
 
-    document.getElementById("hk").textContent = C.hk;
-    document.getElementById("ht").textContent = C.ht;
+    var hsE = (lang==="zh")
+      ? "工程视图：该引擎在声明规则下对姿态进行分类。输入来自预设场景（收据导向）。输出=姿态+原因，不输出叙事。"
+      : (lang==="es")
+      ? "Vista de ingeniería: clasificador de postura bajo reglas declaradas. Entradas = presets orientados a recibos. Salida = postura + razón, sin narrativa."
+      : "Engineering view: posture classifier under declared rules. Inputs are receipt-oriented presets. Output = posture + reason; no narrative.";
 
-    document.getElementById("hs").textContent =
-      (lane==="engineering") ? C.hs_engineering : C.hs_platform;
+    document.getElementById("hk").textContent = hk;
+    document.getElementById("ht").textContent = ht;
+    document.getElementById("hs").textContent = (lane==="engineering")?hsE:hsP;
 
-    document.getElementById("bandScore").textContent = C.bandScore;
-    document.getElementById("scoreIntro").textContent =
-      (lane==="engineering") ? C.scoreIntro_engineering : C.scoreIntro_platform;
+    document.getElementById("bandEngine").textContent =
+      (lang==="zh")?"引擎（选择→运行）":(lang==="es")?"MOTOR (SELECCIONA → RUN)":"ENGINE (SELECT → RUN)";
+    document.getElementById("bandHow").textContent =
+      (lang==="zh")?"怎么用（打开一个）":(lang==="es")?"CÓMO FUNCIONA (abre uno)":"HOW THIS WORKS (OPEN ONE)";
 
-    document.getElementById("bandHow").textContent = C.bandHow;
+    document.getElementById("engineIntro").textContent =
+      (lang==="zh")?"选择层级与场景，然后运行。输出是姿态与原因。若核查不足，姿态会自动 HOLD。"
+      : (lang==="es")?"Selecciona capa y escenario, luego RUN. La salida es postura y razón. Si falta verificación, postura = HOLD."
+      : "Select a layer and scenario, then RUN. Output is posture and reason. If verification is insufficient, posture becomes HOLD.";
 
-    // metric labels
-    document.getElementById("m1n").textContent=C.metrics.m1n;
-    document.getElementById("m1h").textContent=C.metrics.m1h;
-    document.getElementById("m1t").textContent=C.metrics.m1t;
+    document.getElementById("laneState").textContent =
+      (lang==="zh")?("当前透镜："+laneLabel()):
+      (lang==="es")?("Lente actual: "+laneLabel()):
+      ("Current lens: "+laneLabel());
 
-    document.getElementById("m2n").textContent=C.metrics.m2n;
-    document.getElementById("m2h").textContent=C.metrics.m2h;
-    document.getElementById("m2t").textContent=C.metrics.m2t;
-
-    document.getElementById("m3n").textContent=C.metrics.m3n;
-    document.getElementById("m3h").textContent=C.metrics.m3h;
-    document.getElementById("m3t").textContent=C.metrics.m3t;
-
-    document.getElementById("m4n").textContent=C.metrics.m4n;
-    document.getElementById("m4h").textContent=C.metrics.m4h;
-    document.getElementById("m4t").textContent=C.metrics.m4t;
-
-    // nav labels
     document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("btnHome").textContent   = pick3("HOME","主页","INICIO");
-    document.getElementById("btnExplore").textContent= pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnHome").textContent = pick3("HOME","主页","INICIO");
+    document.getElementById("btnDoor").textContent = pick3("DOOR","门","PUERTA");
 
-    document.getElementById("dockProducts").textContent  = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockLaws").textContent      = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent    = pick3("GAUGES","量规","MEDIDORES");
-    document.getElementById("dockGovernance").textContent= pick3("GOVERNANCE","治理","GOBERNANZA");
+    document.getElementById("dockProducts").textContent   = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent       = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGovernance").textContent = pick3("GOVERNANCE","治理","GOBERNANZA");
+    document.getElementById("dockExplore").textContent    = pick3("EXPLORE","探索","EXPLORAR");
 
-    // lane pills
-    document.getElementById("lanePlatform").textContent  = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
     document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
 
-    updateScoreText();
+    // engine labels
+    document.getElementById("ctxIndividual").textContent = pick3("INDIVIDUAL","个人","INDIVIDUAL");
+    document.getElementById("ctxRelational").textContent = pick3("RELATIONAL","关系","RELACIONAL");
+    document.getElementById("ctxBusiness").textContent   = pick3("BUSINESS","商业","NEGOCIO");
+    document.getElementById("ctxCorporate").textContent  = pick3("CORPORATE","机构","CORPORATIVO");
+
+    document.getElementById("btnRun").textContent = pick3("RUN","运行","RUN");
+
+    // metric names
+    document.getElementById("mDefN").textContent = pick3("Definition","定义","Definición");
+    document.getElementById("mExeN").textContent = pick3("Execution","执行","Ejecución");
+    document.getElementById("mVerN").textContent = pick3("Verification","核查","Verificación");
+    document.getElementById("mScaN").textContent = pick3("Scale Posture","规模姿态","Postura de escala");
   }
 
   // ===== Init =====
-  renderAccordion();
   applyCopy();
+  paintContextState();
+  rebuildScenarioMenu();
+  renderOutput(null);
+  renderAccordion();
   updateAccordion();
   wireAll();
-  recalc();
-  updateScoreText();
 
 })();
 </script>

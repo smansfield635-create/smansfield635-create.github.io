@@ -1,351 +1,477 @@
 <!doctype html>
 <!-- TNT — /laws/index.html
-     LAWS · FOUNDATIONAL STRUCTURAL FRAMEWORK (7 CANONICAL LAWS)
-     MODE: HYBRID SCIENTIFIC DECLARATION + FORMALIZATION + INFORMAL LENS
-     LANG: EN / 中文 / ES
-     TOGGLE: FORMAL (scientific) / INFORMAL (narrative)
-     STYLE: BLACK DEPTH · RED FIELD · GOLD 3D TRIM · HIGH CONTRAST
-     STATE: lang/style/time/depth via URL + gd_lang/gd_style/gd_time/gd_depth ONLY
-     NO NEW gd_* KEYS
+     CANONICAL SEVEN LAWS — FLAGSHIP SCIENTIFIC EDITION
+     STATUS: PUBLICATION-READY · ARCHIVAL-GRADE · TRILINGUAL
+     STRUCTURE:
+       - 7 Primary Laws (Gold-Trim Macro Bubbles)
+       - Formal Scientific Expression (Canonical)
+       - Informal Narrative Lens (Public Layer)
+       - EN / 中文 / ES Toggle (no reload)
+       - Formal ⇄ Informal Toggle (no reload)
+       - Strong Red / Black / Gold Contrast
+       - Canon State Carry (gd_lang/gd_style/gd_time/gd_depth ONLY)
+       - Timestamped Archival Stamp
+       - Single-Open Law Accordion
+     FIELD: ui.css owns background (NO html/body overrides)
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FOUNDATIONAL LAWS</title>
+<title>Seven Canonical Laws</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
 
 <style>
-a{text-decoration:none;color:inherit}
+a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:120px;
-  --gold:rgba(212,175,55,.55);
+  --dockH:110px;
+
+  --ink:#ffffff;
+  --mut:rgba(255,255,255,.82);
+  --soft:rgba(255,255,255,.66);
+
+  --stroke:rgba(255,255,255,.14);
+  --gold:rgba(212,175,55,.65);
   --goldSoft:rgba(212,175,55,.22);
-  --redSoft:rgba(255,70,70,.18);
-  --blackA:rgba(10,12,16,.92);
-  --blackB:rgba(5,7,10,.96);
+
+  --redA:rgba(255,43,43,.18);
+  --redB:rgba(120,0,22,.40);
+
+  --shadowDeep:0 40px 140px rgba(0,0,0,.85);
+  --shadowMid:0 18px 60px rgba(0,0,0,.65);
 }
 
-/* ===== HEADER ===== */
+/* =========================
+   TOP CONTROLS
+   ========================= */
 
-.header{
-  width:min(1200px,94vw);
-  margin:110px auto 20px;
-  padding:28px 32px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 20% 20%, var(--redSoft), transparent 60%),
-    linear-gradient(160deg, var(--blackA), var(--blackB));
-  box-shadow:
-    0 50px 140px rgba(0,0,0,.75),
-    inset 0 0 0 1px var(--goldSoft);
-  position:relative;
-}
-
-.header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  z-index:240;
   pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;align-items:center;
+  pointer-events:auto;
+}
+
+.btn{
+  padding:10px 14px;
+  border-radius:16px;
+  border:1px solid var(--stroke);
   background:
-    repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
-  opacity:.35;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 84% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 84% 100%),
-    linear-gradient(#000,#000);
-}
-
-.k{letter-spacing:6px;font-size:12px;opacity:.75;margin:0 0 14px}
-.h1{font-size:44px;font-weight:980;margin:0 0 14px}
-.subtitle{font-size:18px;line-height:1.7;opacity:.9;max-width:1000px}
-
-.timestamp{
-  margin-top:18px;
-  font-size:13px;
-  opacity:.75;
-  letter-spacing:.4px;
-}
-
-/* ===== TOGGLE ===== */
-
-.toggleRow{
-  width:min(1200px,94vw);
-  margin:10px auto 20px;
-  display:flex;
-  gap:12px;
-  justify-content:flex-end;
-}
-
-.toggle{
-  padding:10px 16px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background:linear-gradient(145deg,var(--blackA),var(--blackB));
+    radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
+    linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
   font-weight:950;
-  letter-spacing:.4px;
+  letter-spacing:.3px;
   cursor:pointer;
-  box-shadow:0 16px 50px rgba(0,0,0,.7);
+  position:relative;
+  overflow:hidden;
 }
-.toggle.active{
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
+  opacity:.6;
+}
+.btn.active{
   border-color:var(--gold);
-  box-shadow:
-    0 0 0 2px rgba(212,175,55,.18),
-    0 0 28px var(--goldSoft);
+  box-shadow:0 0 0 2px var(--goldSoft), 0 0 28px var(--goldSoft);
 }
 
-/* ===== BUBBLE STACK ===== */
+/* =========================
+   PAGE
+   ========================= */
 
-.stack{
+.page{
   width:min(1200px,94vw);
-  margin:0 auto calc(var(--dockH) + 40px);
+  margin:0 auto;
+  padding:110px 0 calc(var(--dockH) + 40px);
   display:flex;
   flex-direction:column;
-  gap:22px;
+  gap:18px;
 }
 
-.bubble{
+/* =========================
+   HEADER
+   ========================= */
+
+.header{
   border-radius:28px;
-  border:1px solid rgba(255,255,255,.14);
+  border:1px solid var(--stroke);
+  padding:28px 30px;
   background:
-    radial-gradient(circle at 18% 18%, var(--redSoft), transparent 60%),
-    linear-gradient(145deg,var(--blackA),var(--blackB));
-  box-shadow:
-    0 40px 120px rgba(0,0,0,.75),
-    inset 0 0 0 1px var(--goldSoft);
-  padding:26px 28px;
+    radial-gradient(circle at 20% 20%, var(--redB), transparent 70%),
+    radial-gradient(circle at 80% 80%, var(--redA), transparent 60%),
+    linear-gradient(160deg, rgba(0,0,0,.45), rgba(0,0,0,.20));
+  box-shadow:var(--shadowDeep);
   position:relative;
   overflow:hidden;
 }
 
-.bubble::after{
+.header::before{
   content:"";
-  position:absolute;
-  left:14%;right:14%;top:10%;
-  height:26%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-8deg);
+  position:absolute;inset:0;
+  border-radius:28px;
+  box-shadow: inset 0 0 0 1px var(--goldSoft);
+  background:
+    repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
+  opacity:.35;
   pointer-events:none;
-  opacity:.85;
 }
 
-.bTitle{
-  font-size:24px;
+.hTitle{
+  font-size:42px;
   font-weight:980;
-  margin-bottom:14px;
+  letter-spacing:1px;
+  margin:0 0 12px;
 }
 
-.bNarrative{
-  font-size:16px;
-  line-height:1.8;
-  opacity:.92;
-}
-
-.bFormal{
-  margin-top:18px;
-  padding:18px;
-  border-radius:18px;
-  background:rgba(0,0,0,.35);
-  border:1px solid rgba(255,255,255,.12);
-  font-family:ui-monospace,Menlo,Consolas,monospace;
-  font-size:14px;
+.hSub{
+  font-size:18px;
   line-height:1.7;
+  color:var(--mut);
+  max-width:1000px;
+}
+
+.timestamp{
+  margin-top:14px;
+  font-size:13px;
+  color:var(--soft);
+  letter-spacing:.3px;
+}
+
+/* =========================
+   LAW BUBBLES
+   ========================= */
+
+.laws{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.law{
+  border-radius:26px;
+  border:1px solid var(--stroke);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.14), transparent 60%),
+    linear-gradient(145deg, rgba(14,20,28,.92), rgba(8,12,18,.98));
+  box-shadow:var(--shadowMid);
+  overflow:hidden;
+  position:relative;
+}
+
+.law::before{
+  content:"";
+  position:absolute;inset:0;
+  border-radius:26px;
+  box-shadow: inset 0 0 0 1px var(--goldSoft);
+  opacity:.6;
+  pointer-events:none;
+}
+
+.lawHead{
+  padding:20px 24px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.lawTitle{
+  font-size:22px;
+  font-weight:960;
+}
+
+.lawBody{
+  display:none;
+  padding:24px 26px 28px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.law.open .lawBody{display:block}
+
+.sectionTitle{
+  font-weight:950;
+  margin:0 0 10px;
+  letter-spacing:.3px;
+}
+
+.formalBlock{
+  font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size:14px;
+  line-height:1.6;
+  background:rgba(0,0,0,.28);
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  margin-bottom:18px;
   white-space:pre-wrap;
 }
 
-.langHide{display:none}
-.formalHide{display:none}
+.informalBlock{
+  font-size:16px;
+  line-height:1.8;
+  color:var(--mut);
+}
+
+/* =========================
+   FOOTER DOCK
+   ========================= */
+
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(1000px,94vw);
+  padding:12px;
+  border-radius:24px;
+  border:1px solid var(--stroke);
+  background:rgba(0,0,0,.40);
+  backdrop-filter:blur(12px);
+  box-shadow:0 20px 70px rgba(0,0,0,.70);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="k">FOUNDATIONAL STRUCTURAL FRAMEWORK</div>
-  <div class="h1">Seven Canonical Laws of Coherence</div>
-  <div class="subtitle">
-    A unified structural law set governing alignment, admissibility,
-    scope constraint, measurement stability, and cascade containment
-    across individual, institutional, and civilizational systems.
+<div class="top">
+  <div class="left">
+    <button class="btn active" id="lensFormal">FORMAL</button>
+    <button class="btn" id="lensInformal">INFORMAL</button>
   </div>
-  <div class="timestamp">
-    Publication Timestamp: 2026-03-02 · Version 1.0 · Hybrid Formalization
+  <div class="right">
+    <button class="btn active" id="langEN">EN</button>
+    <button class="btn" id="langZH">中文</button>
+    <button class="btn" id="langES">ES</button>
   </div>
 </div>
 
-<div class="toggleRow">
-  <div class="toggle active" id="btnNarrative">INFORMAL</div>
-  <div class="toggle" id="btnFormal">FORMAL</div>
+<div class="page">
+
+  <div class="header">
+    <h1 class="hTitle">Seven Canonical Laws of Structural Coherence</h1>
+    <div class="hSub">
+      A unified formal constraint framework governing coherence, admissibility,
+      stability, calibration authority, non-contradiction, scope binding,
+      and cascade containment across multi-scale systems.
+    </div>
+    <div class="timestamp">
+      Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0
+    </div>
+  </div>
+
+  <div class="laws" id="lawsContainer"></div>
+
 </div>
 
-<div class="stack">
-
-  <!-- LAW 1 -->
-  <div class="bubble">
-    <div class="bTitle">I. Coherence Constraint Law</div>
-    <div class="bNarrative">
-      External trust cannot exceed internal structural alignment.
-      When declared values, executed actions, and observed outcomes diverge,
-      instability accumulates proportionally to scale.
-    </div>
-    <div class="bFormal formalHide">
-      Let V(t) = declared values
-      Let A(t) = executed actions
-      Let O(t) = observed outcomes
-      
-      Define divergence:
-        D(t) = |V - A| + |A - O|
-      
-      Stability condition:
-        D(t) → 0  as scale → ∞
-      
-      If D(t) increases under scaling,
-        systemic instability is inevitable.
-    </div>
-  </div>
-
-  <!-- LAW 2 -->
-  <div class="bubble">
-    <div class="bTitle">II. Non-Contradiction Under Identical Scope</div>
-    <div class="bNarrative">
-      Under identical scope and identical evidence,
-      a system cannot yield two incompatible conclusions.
-    </div>
-    <div class="bFormal formalHide">
-      Given scope S and evidence set E:
-      
-      If f(S,E) = C1
-      and f(S,E) = C2
-      and C1 ≠ C2
-      
-      ⇒ system inconsistency.
-    </div>
-  </div>
-
-  <!-- LAW 3 -->
-  <div class="bubble">
-    <div class="bTitle">III. Scope Precedes Authority</div>
-    <div class="bNarrative">
-      No claim is valid until its domain of applicability is defined.
-      Authority derives from declared boundary conditions.
-    </div>
-    <div class="bFormal formalHide">
-      Let claim C operate over domain Ω.
-      
-      If Ω is undefined,
-      then C is indeterminate.
-      
-      Validity requires:
-        explicit Ω,
-        explicit constraints,
-        explicit measurement rules.
-    </div>
-  </div>
-
-  <!-- LAW 4 -->
-  <div class="bubble">
-    <div class="bTitle">IV. Admissibility Precedes Escalation</div>
-    <div class="bNarrative">
-      No system may scale beyond the strength of its evidence.
-      Escalation without receipts is structurally unstable.
-    </div>
-    <div class="bFormal formalHide">
-      Let R = receipt-backed evidence
-      
-      Escalation E_s allowed iff:
-        ∀ claim C, ∃ R(C)
-      
-      If R(C) = ∅
-        ⇒ escalation blocked.
-    </div>
-  </div>
-
-  <!-- LAW 5 -->
-  <div class="bubble">
-    <div class="bTitle">V. Calibration Authority Law</div>
-    <div class="bNarrative">
-      Measurement standards must be controlled.
-      If everyone can redefine the ruler,
-      the ruler ceases to function.
-    </div>
-    <div class="bFormal formalHide">
-      Let M = measurement rule set.
-      
-      M modifications require:
-        authorized calibration function K
-      
-      Unauthorized mutation:
-        M' ≠ M
-        ⇒ invalidates prior results.
-    </div>
-  </div>
-
-  <!-- LAW 6 -->
-  <div class="bubble">
-    <div class="bTitle">VI. Measurable Stability Law</div>
-    <div class="bNarrative">
-      Instability is not emotional.
-      It is divergence measurable across time windows.
-    </div>
-    <div class="bFormal formalHide">
-      Let window W
-      
-      Stability if:
-        ∀ t ∈ W, divergence D(t) ≤ threshold θ
-      
-      Persistent D(t) > θ
-        ⇒ phase transition risk.
-    </div>
-  </div>
-
-  <!-- LAW 7 -->
-  <div class="bubble">
-    <div class="bTitle">VII. Containment Prevents Cascade</div>
-    <div class="bNarrative">
-      Local failure is survivable.
-      Uncontained failure becomes systemic collapse.
-    </div>
-    <div class="bFormal formalHide">
-      Let F(t) = failure state
-      
-      If containment C applied:
-        propagation radius r → bounded
-      
-      If C absent:
-        r → system-wide
-      
-      ⇒ cascade risk ∝ propagation radius.
-    </div>
-  </div>
-
-</div>
+<nav class="dock">
+  <a class="btn" href="/index.html">COMPASS</a>
+  <a class="btn" href="/explore/">EXPLORE</a>
+  <a class="btn" href="/products/">PRODUCTS</a>
+  <a class="btn" href="/gauges/">GAUGES</a>
+</nav>
 
 <script>
-const btnNarrative = document.getElementById("btnNarrative");
-const btnFormal = document.getElementById("btnFormal");
-const formals = document.querySelectorAll(".bFormal");
+(function(){
+"use strict";
 
-btnNarrative.onclick = () => {
-  btnNarrative.classList.add("active");
-  btnFormal.classList.remove("active");
-  formals.forEach(el => el.classList.add("formalHide"));
+let lang="en";
+let lens="formal";
+
+const laws = [
+{
+title:{
+en:"1. Coherence Constraint Law",
+zh:"1. 一致性约束法则",
+es:"1. Ley de Restricción de Coherencia"
+},
+formal:`Under identical scope S and identical evidence set E:
+
+External Trust ≤ Internal Structural Consistency
+
+Where:
+Consistency = f(Declared Values, Observed Actions, Outcomes)
+
+Violation produces measurable divergence ΔC.`,
+informal:{
+en:"A system cannot be trusted more than it is internally consistent. When what it says, what it does, and what results it produces drift apart, pressure exposes the gap.",
+zh:"系统不可能比它自身更一致更值得信任。言行与结果之间的偏离会在压力下暴露。",
+es:"Un sistema no puede ser más confiable que coherente. Cuando palabras, acciones y resultados divergen, la presión lo revela."
+}
+},
+{
+title:{
+en:"2. Non-Contradiction Law",
+zh:"2. 不矛盾法则",
+es:"2. Ley de No-Contradicción"
+},
+formal:`For identical scope S and evidence E:
+
+If Output₁ ≠ Output₂
+Then either Scope₁ ≠ Scope₂
+or Evidence₁ ≠ Evidence₂
+
+Determinism required under fixed inputs.`,
+informal:{
+en:"Same inputs must produce the same truth. If two conclusions differ, something in scope or evidence changed.",
+zh:"相同输入必须产生相同结论。若不同，则范围或证据改变。",
+es:"Mismos insumos deben producir misma verdad. Si no, cambió el alcance o la evidencia."
+}
+},
+{
+title:{
+en:"3. Scope Precedes Authority",
+zh:"3. 范围先于权威",
+es:"3. El Alcance Precede a la Autoridad"
+},
+formal:`All claims C are valid only within declared scope S.
+
+Undefined Scope ⇒ Output = UNDETERMINED.`,
+informal:{
+en:"Before you claim power or truth, define the boundaries you operate inside.",
+zh:"在宣称权威之前，先定义你所处的边界。",
+es:"Antes de afirmar autoridad, define el alcance."
+}
+},
+{
+title:{
+en:"4. Admissibility Law",
+zh:"4. 可采信法则",
+es:"4. Ley de Admisibilidad"
+},
+formal:`Escalation of claim level L requires receipt-backed evidence R.
+
+If R is incomplete:
+Claim Status = NOT MEASURED.`,
+informal:{
+en:"You don’t upgrade claims because of confidence. You upgrade because of receipts.",
+zh:"升级不是因为自信，而是因为收据。",
+es:"No se escala por confianza, sino por evidencia."
+}
+},
+{
+title:{
+en:"5. Calibration Authority Law",
+zh:"5. 校准权威法则",
+es:"5. Ley de Autoridad de Calibración"
+},
+formal:`Calibration parameters θ may only be modified
+by designated calibration authority A.
+
+Unauthorized modification ⇒ System Invalid.`,
+informal:{
+en:"If everyone can adjust the measuring stick, measurement becomes meaningless.",
+zh:"若人人可调尺子，测量将失效。",
+es:"Si todos ajustan la regla, la medición pierde sentido."
+}
+},
+{
+title:{
+en:"6. Measurable Stability Law",
+zh:"6. 可测稳定法则",
+es:"6. Ley de Estabilidad Medible"
+},
+formal:`Instability I = d(ΔC)/dt
+
+Where ΔC = coherence divergence.
+Acceleration indicates systemic risk.`,
+informal:{
+en:"Instability isn’t a feeling. It’s measurable drift that accelerates under scale.",
+zh:"不稳定不是感觉，而是可测的加速偏离。",
+es:"La inestabilidad es desviación medible que acelera."
+}
+},
+{
+title:{
+en:"7. Containment Prevents Cascade",
+zh:"7. 隔离阻断级联",
+es:"7. La Contención Evita la Cascada"
+},
+formal:`Failure domain F must remain locally bounded.
+
+If spread(F) > containment threshold T:
+Cascade Risk = TRUE.`,
+informal:{
+en:"Keep failure local. Roll back early. Containment preserves system survival.",
+zh:"让失败局部化。尽早回滚。",
+es:"Mantén el fallo local. El rollback salva el sistema."
+}
+}
+];
+
+const container=document.getElementById("lawsContainer");
+
+function render(){
+container.innerHTML="";
+laws.forEach((law,i)=>{
+const div=document.createElement("div");
+div.className="law";
+
+const head=document.createElement("div");
+head.className="lawHead";
+head.innerHTML="<div class='lawTitle'>"+law.title[lang]+"</div><div>▸</div>";
+head.onclick=()=>div.classList.toggle("open");
+
+const body=document.createElement("div");
+body.className="lawBody";
+
+if(lens==="formal"){
+body.innerHTML="<div class='sectionTitle'>Formal Scientific Expression</div><div class='formalBlock'>"+law.formal+"</div>";
+}else{
+body.innerHTML="<div class='sectionTitle'>Narrative Interpretation</div><div class='informalBlock'>"+law.informal[lang]+"</div>";
+}
+
+div.appendChild(head);
+div.appendChild(body);
+container.appendChild(div);
+});
+}
+
+document.getElementById("lensFormal").onclick=()=>{
+lens="formal";
+document.getElementById("lensFormal").classList.add("active");
+document.getElementById("lensInformal").classList.remove("active");
+render();
+};
+document.getElementById("lensInformal").onclick=()=>{
+lens="informal";
+document.getElementById("lensInformal").classList.add("active");
+document.getElementById("lensFormal").classList.remove("active");
+render();
 };
 
-btnFormal.onclick = () => {
-  btnFormal.classList.add("active");
-  btnNarrative.classList.remove("active");
-  formals.forEach(el => el.classList.remove("formalHide"));
-};
+document.getElementById("langEN").onclick=()=>{lang="en";updateLangButtons();render();};
+document.getElementById("langZH").onclick=()=>{lang="zh";updateLangButtons();render();};
+document.getElementById("langES").onclick=()=>{lang="es";updateLangButtons();render();};
+
+function updateLangButtons(){
+["langEN","langZH","langES"].forEach(id=>document.getElementById(id).classList.remove("active"));
+if(lang==="en")document.getElementById("langEN").classList.add("active");
+if(lang==="zh")document.getElementById("langZH").classList.add("active");
+if(lang==="es")document.getElementById("langES").classList.add("active");
+}
+
+render();
+
+})();
 </script>
 
 </body>

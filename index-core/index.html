@@ -1,40 +1,27 @@
 <!doctype html>
 <!-- TNT — /index-core/index.html
-     INDEX · CORE — HONEST AIDE (GRAVITATIONAL WELL) · TRILINGUAL · PLATFORM/ENGINEERING (URL-ONLY)
-     OWNER: SEAN — WEBSITE BUILDING ROOM
-
-     PURPOSE (LOCKED):
-       - Core click path: CAPTIVATION → EXPLANATION → CAPTIVATION → IMPULSE → START DIAGNOSTIC
-       - Primary CTA (largest, centered): START HONEST AIDE (Alignment Diagnostic)
-       - No sliders. No user-adjustable “scores.” Output is informational + routing.
-
-     STATE (CANON ONLY, NO NEW gd_* KEYS):
-       - URL + LS: gd_lang, gd_style, gd_time, gd_depth
-       - lane=platform|engineering is URL-only (NEVER stored)
-       - Trilingual toggles do NOT reload. Lane toggle does NOT reload.
-
-     UI (LOCKED):
-       - Bubble format + strong contrast + 3D gloss + gold-trim perimeter glow (NO movement)
-       - No modals/overlays; no inline onclick; addEventListener only
+     INDEX · CORE (GRAVITATIONAL WELL) — TRILINGUAL + 2 LENSES (URL-ONLY)
+     PURPOSE (PER SEAN):
+       - Captivation → Explanation → Captivation → ONE dominant handoff
+       - Core = tutorial + concept constructs + sample “AIDE” diagnostic (scenario-driven)
+       - Handoff: Start Alignment Evaluation (AIDE) as main CTA
+     HARD RULES:
+       - Trilingual: EN/中文/ES (NO reload)
+       - Lens: lane=platform|engineering (URL-only; NEVER stored; NO reload)
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth only (LS + URL)
+       - NO new gd_* keys
        - ui.css owns html/body background (NO overrides)
-       - Uses: /assets/ui.css + /assets/branch.css + /assets/instruments.js
-
-     ROUTING (EDIT ONLY IN ROUTE MAP SECTION):
-       - DIAGNOSTIC: /diagnostic/
-       - COMPASS: /index.html
-       - HOME: /home/
-       - DOOR: /door/
-       - LAWS: /laws/
-       - RESEARCH: /research/
-       - FRONTIER: /explore/frontier/
-       - VISION: /explore/frontier/vision/
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Single-open accordion
+       - EVERY BUTTON = micro-compass (N/E/S/W corners on the element)
+       - Depth shows via material/shadow, NOT by resizing buttons
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>INDEX · CORE · Honest AIDE</title>
+<title>INDEX · CORE</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -45,9 +32,9 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOKENS (match compass gloss + perimeter glow) ===== */
+/* ===== TOKENS ===== */
 :root{
-  --dockH:124px;
+  --dockH:120px;
 
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
@@ -55,25 +42,22 @@ body::before,body::after{pointer-events:none!important}
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
-  --mut2:rgba(255,255,255,.70);
-
-  --onyx0:rgba(6,8,10,.94);
-  --onyx1:rgba(10,12,16,.86);
+  --soft:rgba(255,255,255,.62);
 
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
 
-  --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.18);
-  --goldGlow2:rgba(201,162,74,.10);
+  --gold:rgba(201,162,74,.55);
+  --goldGlow:rgba(201,162,74,.22);
+  --goldSoft:rgba(201,162,74,.16);
 
-  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowA:0 30px 120px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== TOP CONTROLS ===== */
+/* ===== TOP ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -87,79 +71,43 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* perimeter-glow button (NO motion) */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;overflow:hidden;
-  box-shadow:var(--shadowC), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
-  white-space:nowrap;
-}
-.btn:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.16), 0 0 30px rgba(201,162,74,.18);
-}
-.btn:active{filter:brightness(.98)}
-.btn.red{
-  border-color:rgba(255,43,43,.22);
-  box-shadow:var(--shadowC), 0 0 0 1px rgba(255,43,43,.12), 0 0 18px rgba(255,43,43,.10);
-}
-.btn.red:hover{
-  border-color:rgba(255,43,43,.30);
-  box-shadow:var(--shadowC), 0 0 0 2px rgba(255,43,43,.16), 0 0 30px rgba(255,43,43,.14);
-}
-
-/* segmented toggles */
+/* ===== Seg ===== */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  box-shadow:var(--shadowB);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
 }
 .seg button{
-  appearance:none;border:0;background:transparent;
-  color:rgba(255,255,255,.78);
-  padding:10px 12px;min-height:44px;
-  font-weight:980;font-size:13px;letter-spacing:.25px;
-  cursor:pointer;
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
 .seg button[aria-pressed="true"]{
-  color:rgba(255,255,255,.95);
+  color:var(--ink);
   background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 60%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
 }
 
 /* ===== PAGE ===== */
 .page{
-  width:min(1180px,94vw);
+  width:min(1120px,94vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;flex-direction:column;gap:12px;
   position:relative;
   z-index:10;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
 }
 
-/* backdrop slab (behind content) */
+/* Backdrop slab behind content (not body) */
 .backdrop{
-  position:absolute;
-  left:50%;
-  top:68px;
+  position:absolute;left:50%;top:68px;
   transform:translateX(-50%);
-  width:min(1240px,96vw);
+  width:min(1180px,96vw);
   height:calc(100% - 108px);
   border-radius:34px;
   pointer-events:none;
@@ -175,7 +123,7 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
     radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
     radial-gradient(circle at 60% 90%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+    linear-gradient(160deg, rgba(0,0,0,.16), rgba(0,0,0,.08));
   box-shadow:
     0 70px 220px rgba(0,0,0,.62),
     inset 0 2px 0 rgba(255,255,255,.06),
@@ -189,32 +137,32 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
     radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-    repeating-conic-gradient(from 45deg at 50% 50%, rgba(201,162,74,.06) 0 1.2deg, transparent 1.2deg 7.5deg),
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.06) 0 1.2deg, transparent 1.2deg 7.5deg),
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
   opacity:.72;
 }
 
-/* ===== HERO (captivation #1) ===== */
+/* ===== HERO (CAPTIVATION) ===== */
 .hero{
-  position:relative;
-  z-index:2;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:28px;
-  padding:22px 20px 18px;
+  position:relative;z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:26px;
+  padding:22px 18px 16px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  box-shadow:var(--shadowA);
+    linear-gradient(160deg, rgba(0,0,0,.26), rgba(0,0,0,.10));
   backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
   overflow:hidden;
 }
 .hero::before{
   content:"";
-  position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  position:absolute;inset:0;border-radius:26px;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -227,37 +175,27 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
-.k{
-  margin:0 0 8px;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-  color:var(--mut);
+
+/* subtle “gravity well” dial watermark behind hero */
+.hero::after{
+  content:"";
+  position:absolute;left:50%;top:60%;
+  width:min(980px,92vw);
+  height:min(980px,92vw);
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  pointer-events:none;
+  opacity:.22;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06), rgba(0,0,0,.20) 58%, rgba(0,0,0,0) 76%),
+    repeating-conic-gradient(from 45deg at 50% 50%, rgba(201,162,74,.06) 0 1.2deg, transparent 1.2deg 9deg);
+  filter:blur(.25px);
 }
-.h1{
-  margin:0;
-  font-weight:980;
-  font-size:34px;
-  letter-spacing:.7px;
-  line-height:1.08;
-  color:var(--ink);
-}
-.sub{
-  margin-top:12px;
-  font-size:15.5px;
-  line-height:1.6;
-  color:rgba(255,255,255,.88);
-  max-width:980px;
-}
-.metaRow{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-}
+
+.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
+.h1{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);line-height:1.08}
+.sub{margin-top:12px;font-size:15.5px;line-height:1.6;color:rgba(255,255,255,.88);max-width:980px}
+.metaRow{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
 .pill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
@@ -267,113 +205,93 @@ body::before,body::after{pointer-events:none!important}
   font-weight:950;
   box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
-.pill .g{color:rgba(201,162,74,.78);font-weight:980}
+.pill .g{color:rgba(201,162,74,.75);font-weight:950}
 
-/* ===== GRAVITY WELL (captivation #2 + CTA) ===== */
-.well{
+/* ===== MICRO-CARDINALITY (EVERY ACTION ELEMENT) ===== */
+.microCard{
   position:relative;
-  z-index:2;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:28px;
-  padding:18px 18px 18px;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(255,255,255,.06), transparent 55%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 62%, rgba(255,43,43,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.84), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
-  overflow:hidden;
 }
-.well::after{
-  content:"";
-  position:absolute;inset:-40%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 58%),
-    radial-gradient(circle at 50% 50%, rgba(0,0,0,.00), rgba(0,0,0,.38) 62%, rgba(0,0,0,.00) 78%);
-  opacity:.75;
-  pointer-events:none;
-  filter:blur(.35px);
-}
-
-.wellTop{
-  position:relative;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-}
-.wellTitle{
+.microCard .cN,.microCard .cE,.microCard .cS,.microCard .cW{
+  position:absolute;
+  font-size:10px;
+  letter-spacing:1.2px;
   font-weight:980;
-  letter-spacing:.2px;
-  font-size:16px;
-  color:rgba(255,255,255,.92);
+  color:rgba(0,0,0,.72);
+  text-shadow:0 0 10px rgba(0,0,0,.35);
+  pointer-events:none;
 }
-.wellHint{
-  font-size:12.75px;
-  color:rgba(255,255,255,.74);
-  line-height:1.4;
-  max-width:72ch;
+.microCard .cN::after,
+.microCard .cE::after,
+.microCard .cS::after,
+.microCard .cW::after{
+  content:attr(data-g);
+  position:absolute;left:0;top:0;
+  color:rgba(201,162,74,.45);
+  transform:translate(.4px,.4px);
+  text-shadow:0 0 14px rgba(201,162,74,.14);
 }
+.microCard .cN{top:8px;left:50%;transform:translateX(-50%)}
+.microCard .cS{bottom:8px;left:50%;transform:translateX(-50%)}
+.microCard .cE{right:10px;top:50%;transform:translateY(-50%)}
+.microCard .cW{left:10px;top:50%;transform:translateY(-50%)}
 
-.cta{
-  margin-top:14px;
-  display:flex;
-  justify-content:center;
-}
-.ctaBig{
-  width:min(760px, 100%);
-  padding:16px 18px;
-  min-height:58px;
-  border-radius:22px;
+/* ===== BUTTON (3D perimeter glow + bevel; NO bottom-only underlay) ===== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.10), transparent 55%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.12), transparent 62%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  box-shadow:
-    var(--shadowA),
-    0 0 0 2px rgba(201,162,74,.12),
-    0 0 38px rgba(201,162,74,.14);
-  color:rgba(255,255,255,.96);
-  font-weight:980;
-  letter-spacing:.4px;
-  font-size:16px;
-  text-align:center;
-  cursor:pointer;
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
   touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
-}
-.ctaBig::after{
-  content:"";
-  position:absolute;left:14%;right:14%;top:10%;
-  height:34%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
-  transform:rotate(-10deg);
-  opacity:.9;
-  pointer-events:none;
-}
-.ctaBig:hover{
-  border-color:rgba(201,162,74,.44);
   box-shadow:
-    var(--shadowA),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 46px rgba(201,162,74,.18);
+    var(--shadowC),
+    0 0 0 1px rgba(201,162,74,.10),
+    0 0 18px rgba(201,162,74,.10);
 }
-.ctaBig:active{filter:brightness(.98)}
-.ctaSub{
-  margin-top:10px;
-  color:rgba(255,255,255,.80);
-  line-height:1.55;
-  font-size:13.75px;
-  text-align:center;
+.btn::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,0) 38%),
+    linear-gradient(-45deg, rgba(0,0,0,.52), rgba(0,0,0,0) 52%),
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.28;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.btn::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  opacity:.85;pointer-events:none;
+}
+.btn:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.18), 0 0 28px rgba(201,162,74,.18);
+}
+.btn:active{filter:brightness(.98)}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowC), 0 0 0 1px rgba(255,43,43,.14), 0 0 18px rgba(255,43,43,.10);
+}
+.btn.red:hover{
+  border-color:rgba(255,43,43,.30);
+  box-shadow:var(--shadowC), 0 0 0 2px rgba(255,43,43,.16), 0 0 28px rgba(255,43,43,.14);
 }
 
-/* ===== EXPLANATION BUBBLES (single-open) ===== */
+/* ===== BAND ===== */
 .band{
   position:relative;z-index:2;
   padding:10px 12px;border-radius:18px;
@@ -382,6 +300,116 @@ body::before,body::after{pointer-events:none!important}
   font-weight:980;letter-spacing:.25px;
   color:rgba(255,255,255,.90);
 }
+
+/* ===== PRIME CTA (RE-CAPTIVATION + HANDOFF) ===== */
+.cta{
+  position:relative;z-index:2;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:26px;
+  padding:18px 18px 16px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.12), transparent 58%),
+    radial-gradient(circle at 78% 26%, rgba(255,43,43,.12), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+}
+.ctaTitle{margin:0;font-weight:980;font-size:18px;letter-spacing:.35px;color:var(--ink)}
+.ctaSub{margin-top:10px;color:rgba(255,255,255,.86);line-height:1.6;font-size:14.75px;max-width:980px}
+.ctaRow{
+  margin-top:14px;
+  display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+}
+.bigBtn{
+  min-height:56px;
+  padding:14px 18px;
+  border-radius:20px;
+  font-size:15px;
+  letter-spacing:.35px;
+}
+.bigBtnWrap{flex:1 1 auto;min-width:min(520px,100%)}
+.smallBtnWrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+/* ===== SCENARIO PANEL (SAMPLE ENGINE; bounded) ===== */
+.panel{
+  position:relative;z-index:2;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  padding:16px 16px 18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+}
+.panelTitle{margin:0;font-weight:980;font-size:16px;letter-spacing:.2px;color:var(--ink)}
+.panelSub{margin-top:10px;color:rgba(255,255,255,.84);line-height:1.6;font-size:14.25px}
+.grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:12px;
+}
+@media (max-width:860px){ .grid{grid-template-columns:1fr} }
+
+.field{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:14px 14px 12px;
+  background:rgba(0,0,0,.12);
+  position:relative;
+  overflow:hidden;
+}
+.field::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.18), transparent 72%);
+  opacity:.40;pointer-events:none;
+}
+.lab{font-weight:980;color:rgba(255,255,255,.92);letter-spacing:.2px;font-size:13px}
+.hint{margin-top:6px;color:rgba(255,255,255,.78);font-size:12.75px;line-height:1.45}
+.select, .dial{
+  margin-top:10px;
+  width:100%;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.22);
+  color:#fff;
+  padding:12px 12px;
+  outline:none;
+}
+.dialRow{
+  margin-top:10px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+}
+.pct{font-weight:980;color:rgba(201,162,74,.85)}
+.note{margin-top:10px;color:rgba(255,255,255,.74);font-size:12.75px;line-height:1.45}
+
+/* ===== OUTPUT ===== */
+.out{
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  padding:12px 12px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 82% 34%, rgba(255,43,43,.10), transparent 60%),
+    rgba(0,0,0,.14);
+}
+.outRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.outBig{font-weight:980;letter-spacing:.45px;font-size:16px;color:rgba(255,255,255,.92)}
+.outBig .g{color:rgba(201,162,74,.88)}
+.outText{margin-top:8px;color:rgba(255,255,255,.84);line-height:1.55;font-size:13.75px}
+.tags{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
+.tag{
+  padding:7px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  font-weight:950;font-size:12px;letter-spacing:.2px;
+}
+
+/* ===== ACCORDION (single-open) ===== */
 .list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
 .row{
   border:1px solid rgba(255,255,255,.10);
@@ -450,17 +478,6 @@ body::before,body::after{pointer-events:none!important}
 .p{margin:0;color:rgba(255,255,255,.90);line-height:1.7;font-size:14.5px}
 .p + .p{margin-top:10px}
 .actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
-
-/* ===== JUMP STRIP (secondary; approved jump points) ===== */
-.jumpStrip{
-  position:relative;z-index:2;
-  display:grid;
-  grid-template-columns:repeat(5, minmax(0,1fr));
-  gap:10px;
-}
-@media (max-width:980px){ .jumpStrip{grid-template-columns:repeat(3, minmax(0,1fr));} }
-.jumpStrip .btn{width:100%;border-radius:999px}
 
 /* ===== DOCK ===== */
 .dock{
@@ -492,10 +509,16 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
-    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
+    <a class="btn microCard" id="btnCompass" data-route="/index.html" href="/index.html">
+      <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+      <span id="tCompass">COMPASS</span>
+    </a>
+    <a class="btn microCard" id="btnHome" data-route="/home/" href="/home/">
+      <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+      <span id="tHome">HOME</span>
+    </a>
   </div>
+
   <div class="right" aria-label="Controls">
     <div class="seg" role="group" aria-label="Language">
       <button type="button" id="langEN" aria-pressed="true">EN</button>
@@ -512,71 +535,131 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
   <div class="backdrop" aria-hidden="true"></div>
 
-  <section class="hero" aria-label="Hero">
-    <p class="k" id="k0">INDEX · CORE</p>
-    <h1 class="h1" id="h0">Honest AIDE</h1>
-    <p class="sub" id="sub0"></p>
+  <section class="hero" aria-label="Core hero">
+    <p class="k" id="hk">INDEX · CORE</p>
+    <h1 class="h1" id="ht">THE GRAVITY WELL</h1>
+    <p class="sub" id="hs"></p>
 
     <div class="metaRow" aria-label="Meta">
-      <div class="pill" id="laneState">—</div>
-      <div class="pill"><span class="g" id="tsLabel">Timestamp</span>: <span id="tsVal">—</span></div>
+      <div class="pill" id="laneState"><span class="g" id="laneG">Lens</span>: <span id="laneVal">—</span></div>
+      <div class="pill" id="tsPill"><span class="g" id="tsLabel">Timestamp</span>: <span id="tsVal">—</span></div>
     </div>
   </section>
 
-  <section class="well" aria-label="Gravitational well">
-    <div class="wellTop">
-      <div>
-        <div class="wellTitle" id="wellTitle">Engine posture</div>
-        <div class="wellHint" id="wellHint"></div>
+  <div class="band" id="bandCta">START HERE</div>
+
+  <section class="cta microCard" aria-label="Primary handoff">
+    <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+
+    <p class="ctaTitle" id="ctaTitle">AIDE — Alignment Evaluation</p>
+    <p class="ctaSub" id="ctaSub"></p>
+
+    <div class="ctaRow">
+      <div class="bigBtnWrap">
+        <a class="btn red bigBtn microCard" id="btnStart" data-route="/products/alignment-diagnostic/" href="/products/alignment-diagnostic/">
+          <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+          <span id="btnStartTxt">START: AIDE ALIGNMENT</span>
+        </a>
+      </div>
+      <div class="smallBtnWrap">
+        <a class="btn microCard" id="btnWhat" href="#sample">
+          <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+          <span id="btnWhatTxt">SEE SAMPLE</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="band" id="bandSample">SAMPLE ENGINE (SCENARIO · ADVERSITY · AMBITION · DISPOSITION)</div>
+
+  <section class="panel" id="sample" aria-label="Sample diagnostic">
+    <p class="panelTitle" id="pTitle">Citizen Diagnostic Engine (Sample)</p>
+    <p class="panelSub" id="pSub"></p>
+
+    <div class="grid">
+      <div class="field microCard">
+        <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+
+        <div class="lab" id="labScenario">Scenario</div>
+        <div class="hint" id="hintScenario">Pick what you believe is wrong. Stop there. Then the engine returns bounded next steps.</div>
+        <select class="select" id="scenario">
+          <option value="money">Money pressure</option>
+          <option value="work">Work conflict</option>
+          <option value="health">Health uncertainty</option>
+          <option value="family">Family/relational tension</option>
+          <option value="legal">Legal/process confusion</option>
+          <option value="purpose">Purpose / direction drift</option>
+          <option value="trust">Trust fracture</option>
+          <option value="crisis">Immediate crisis posture</option>
+        </select>
+        <div class="note" id="noteScenario">This is a sample: it does not read your private data. It returns structured guidance by class.</div>
+      </div>
+
+      <div class="field microCard">
+        <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+
+        <div class="lab" id="labKnobs">Knobs</div>
+        <div class="hint" id="hintKnobs">These are NOT “facts.” They are a simulation posture: risk appetite and tolerance.</div>
+
+        <div class="dialRow">
+          <div class="lab" id="labA">Adversity</div><div class="pct"><span id="aVal">40</span>%</div>
+        </div>
+        <input class="dial" id="adversity" type="range" min="0" max="100" value="40"/>
+
+        <div class="dialRow">
+          <div class="lab" id="labB">Ambition</div><div class="pct"><span id="bVal">55</span>%</div>
+        </div>
+        <input class="dial" id="ambition" type="range" min="0" max="100" value="55"/>
+
+        <div class="dialRow">
+          <div class="lab" id="labD">Disposition</div><div class="pct"><span id="dVal">50</span>%</div>
+        </div>
+        <input class="dial" id="disposition" type="range" min="0" max="100" value="50"/>
+
+        <div class="note" id="noteKnobs">Disposition is neither “right” nor “wrong.” It changes which path is most effective for you.</div>
       </div>
     </div>
 
-    <div class="cta">
-      <button class="ctaBig" id="btnStart" type="button">START HONEST AIDE</button>
+    <div class="out microCard" aria-label="Output">
+      <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+
+      <div class="outRow">
+        <div class="outBig" id="outClass">CLASS: <span class="g" id="outClassVal">—</span></div>
+        <div class="outBig" id="outPosture">POSTURE: <span class="g" id="outPostureVal">—</span></div>
+      </div>
+      <div class="outText" id="outText">—</div>
+      <div class="tags" id="tags"></div>
     </div>
-    <div class="ctaSub" id="ctaSub"></div>
   </section>
 
-  <div class="band" id="bandHow">HOW THIS WORKS (OPEN ONE)</div>
+  <div class="band" id="bandHow">HOW THIS CORE WORKS (OPEN ONE)</div>
   <div class="list" id="list"></div>
-
-  <div class="band" id="bandJumps">APPROVED JUMPS</div>
-  <div class="jumpStrip" aria-label="Approved jumps">
-    <a class="btn" id="jumpLaws" data-route="/laws/" href="/laws/">LAWS</a>
-    <a class="btn" id="jumpResearch" data-route="/research/" href="/research/">RESEARCH</a>
-    <a class="btn" id="jumpFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
-    <a class="btn" id="jumpVision" data-route="/explore/frontier/vision/" href="/explore/frontier/vision/">VISION</a>
-    <a class="btn" id="jumpExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  </div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-  <a class="btn" id="dockResearch" data-route="/research/" href="/research/">RESEARCH</a>
-  <a class="btn" id="dockFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
-  <a class="btn red" id="dockStart" href="/diagnostic/">START</a>
+  <a class="btn microCard" id="dockLaws" data-route="/laws/" href="/laws/">
+    <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+    <span id="tLaws">LAWS</span>
+  </a>
+  <a class="btn microCard" id="dockResearch" data-route="/research/" href="/research/">
+    <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+    <span id="tResearch">RESEARCH</span>
+  </a>
+  <a class="btn microCard" id="dockFrontier" data-route="/explore/frontier/" href="/explore/frontier/">
+    <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+    <span id="tFrontier">FRONTIER</span>
+  </a>
+  <a class="btn microCard" id="dockVision" data-route="/explore/frontier/vision/" href="/explore/frontier/vision/">
+    <span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span>
+    <span id="tVision">VISION</span>
+  </a>
 </nav>
 
 <script>
 (function(){
   "use strict";
 
-  // ==========================================================
-  // ROUTE MAP (EDIT HERE ONLY)
-  // ==========================================================
-  var ROUTE_DIAGNOSTIC = "/diagnostic/";                 // Honest AIDE (Alignment Diagnostic)
-  var ROUTE_COMPASS    = "/index.html";
-  var ROUTE_HOME       = "/home/";
-  var ROUTE_DOOR       = "/door/";
-  var ROUTE_LAWS       = "/laws/";
-  var ROUTE_RESEARCH   = "/research/";
-  var ROUTE_FRONTIER   = "/explore/frontier/";
-  var ROUTE_VISION     = "/explore/frontier/vision/";
-  var ROUTE_EXPLORE    = "/explore/";
-
-  // ==========================================================
-  // STATE (gd_* only; lane is URL-only)
-  // ==========================================================
+  // ===== State (gd_* only; lane URL-only) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
@@ -613,8 +696,6 @@ body::before,body::after{pointer-events:none!important}
     return "?"+p.toString();
   }
 
-  function go(path){ window.location.href = path + q(); }
-
   function setPressed(ids, activeId){
     for(var i=0;i<ids.length;i++){
       var el=document.getElementById(ids[i]);
@@ -629,206 +710,277 @@ body::before,body::after{pointer-events:none!important}
       : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
       : (lane==="engineering"?"ENGINEERING":"PLATFORM");
   }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // ==========================================================
-  // TIMESTAMP
-  // ==========================================================
+  // ===== Timestamp =====
   function pad2(n){ return (n<10?"0":"")+n; }
   function tsNow(){
     var d=new Date();
-    return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())+" "+
-           pad2(d.getHours())+":"+pad2(d.getMinutes())+":"+pad2(d.getSeconds());
+    return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())+" "+pad2(d.getHours())+":"+pad2(d.getMinutes())+":"+pad2(d.getSeconds());
   }
-  document.getElementById("tsVal").textContent=tsNow();
+  document.getElementById("tsVal").textContent = tsNow();
 
-  // ==========================================================
-  // WIRE ROUTES
-  // ==========================================================
-  function wire(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    el.setAttribute("href", path + q());
+  // ===== Wire routes with state carry =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
+    }
   }
 
-  wire("btnCompass", ROUTE_COMPASS);
-  wire("btnHome", ROUTE_HOME);
-  wire("btnDoor", ROUTE_DOOR);
-
-  wire("jumpLaws", ROUTE_LAWS);
-  wire("jumpResearch", ROUTE_RESEARCH);
-  wire("jumpFrontier", ROUTE_FRONTIER);
-  wire("jumpVision", ROUTE_VISION);
-  wire("jumpExplore", ROUTE_EXPLORE);
-
-  wire("dockLaws", ROUTE_LAWS);
-  wire("dockResearch", ROUTE_RESEARCH);
-  wire("dockFrontier", ROUTE_FRONTIER);
-
-  // dockStart is a plain href but must carry state
-  document.getElementById("dockStart").setAttribute("href", ROUTE_DIAGNOSTIC + q());
-
-  // ==========================================================
-  // COPY (platform vs engineering + 3 languages)
-  // ==========================================================
+  // ===== Copy =====
   var COPY={
     en:{
-      k0:"INDEX · CORE",
-      h0:"Honest AIDE",
-      sub0_platform:"This is the gravitational well of the compass. It does one job: turn confusion into a clean next step — without hype, without debate, and without silent overrides.",
-      sub0_engineering:"Core contract: scope → measurement → admissibility → replay. Honest AIDE is a posture engine that refuses escalation without receipts.",
-      wellTitle:"Engine posture",
-      wellHint_platform:"You don’t tune the truth. You choose a scenario, then AIDE returns a bounded posture + reason. If verification is insufficient, posture becomes HOLD.",
-      wellHint_engineering:"Deterministic posture classifier under declared scope. No user-tuned scores. Outputs are reason-coded and receipt-gated: READY / STABLE / HOLD.",
-      cta:"START HONEST AIDE",
-      ctaSub_platform:"Start the Alignment Diagnostic evaluation. You’ll get posture + reason + the next safest step.",
-      ctaSub_engineering:"Start Alignment Diagnostic. Output = posture + reason code + bounded next-action list.",
-      bandHow:"HOW THIS WORKS (OPEN ONE)",
-      bandJumps:"APPROVED JUMPS",
-      rows:[
-        {c:"#c9a24a", q:"What AIDE is", s:"A posture engine, not a chatbot.",
-         p:[
-           "AIDE outputs a posture (READY / STABLE / HOLD) plus a reason. It compresses decision space into one next step.",
-           "If verification is missing, it holds — by design."
-         ],
-         a1:{t:"OPEN: LAWS", href:ROUTE_LAWS}, a2:{t:"OPEN: RESEARCH", href:ROUTE_RESEARCH}
-        },
-        {c:"#93c5fd", q:"What changes with the lane", s:"Same truth. Different framing.",
-         p:[
-           "PLATFORM: plain meaning and safe routing. ENGINEERING: declared scope, bounded outputs, and replay language.",
-           "Lane changes labels and explanations — not destinations."
-         ],
-         a1:{t:"OPEN: FRONTIER", href:ROUTE_FRONTIER}, a2:{t:"OPEN: VISION", href:ROUTE_VISION}
-        },
-        {c:"#ff2b2b", q:"What happens after you run it", s:"You exit the loop on purpose.",
-         p:[
-           "After posture is returned, you either: (1) proceed to the next step, or (2) return here and tighten verification.",
-           "No wandering. No infinite hopping."
-         ],
-         a1:{t:"OPEN: COMPASS", href:ROUTE_COMPASS}, a2:{t:"OPEN: EXPLORE", href:ROUTE_EXPLORE}
-        }
-      ],
-      lanePfx:"Current lens: ",
-      tsLabel:"Timestamp"
+      hk:"INDEX · CORE",
+      ht:"THE GRAVITY WELL",
+      hs_p:"This page is designed to capture attention, then give a clean explanation, then re-capture attention — so you can enter the diagnostic with clarity. Start with what you believe is wrong. Stop there.",
+      hs_e:"Engineering view: this is the entry contract. It stabilizes scope and posture before any decision output. Start with a fault statement. Stop there. Do not narrate a solution yet.",
+      bandCta:"START HERE",
+      ctaTitle:"AIDE — Alignment Evaluation",
+      ctaSub_p:"AIDE is the first traversal. It classifies your situation under constraint and returns bounded next steps. It does not require you to explain everything perfectly.",
+      ctaSub_e:"AIDE is the first traversal. It produces bounded outputs under declared scope. It is the minimum-safe entry before any escalation.",
+      btnStart:"START: AIDE ALIGNMENT",
+      btnWhat:"SEE SAMPLE",
+      bandSample:"SAMPLE ENGINE (SCENARIO · ADVERSITY · AMBITION · DISPOSITION)",
+      pTitle:"Citizen Diagnostic Engine (Sample)",
+      pSub_p:"This sample shows how the instrument behaves. It does not ingest private data. It generates structured, bounded next steps from a scenario and posture knobs.",
+      pSub_e:"This sample demonstrates bounded inference under posture knobs. It is not a claim of truth; it is a controllable simulation surface.",
+      labScenario:"Scenario",
+      hintScenario:"Pick what you believe is wrong. Stop there. Then the engine returns bounded next steps.",
+      noteScenario:"This is a sample. For personalized results, use AIDE (alignment) first.",
+      labKnobs:"Knobs",
+      hintKnobs:"These are NOT “facts.” They define posture: risk tolerance and speed vs caution.",
+      labA:"Adversity",
+      labB:"Ambition",
+      labD:"Disposition",
+      noteKnobs:"Disposition changes which path is most effective for you. It is not a moral score.",
+      outTextFallback:"Choose a scenario and set posture knobs to see a bounded output.",
+      bandHow:"HOW THIS CORE WORKS (OPEN ONE)",
+      tCompass:"COMPASS", tHome:"HOME",
+      tLaws:"LAWS", tResearch:"RESEARCH", tFrontier:"FRONTIER", tVision:"VISION",
+      sec:[
+        {c:"#c9a24a", q:"Step 1: Name what is wrong", s:"Stop before solutions.", p:[
+          "This is the most common failure: people skip straight to a solution. AIDE prevents that.",
+          "You name what is wrong, then the system returns bounded actions and stop/hold conditions."
+        ]},
+        {c:"#93c5fd", q:"Step 2: Choose posture", s:"Risk vs reward is controlled.", p:[
+          "Adversity, ambition, and disposition change the route without changing the bounds.",
+          "Platform lens emphasizes human clarity. Engineering lens emphasizes scope discipline."
+        ]},
+        {c:"#ff2b2b", q:"Step 3: Handoff (no loops)", s:"One jump, at the end.", p:[
+          "This page is a gravitational well: it stabilizes, then hands off to AIDE.",
+          "External jumps exist, but they live in the dock and the end-state of your traversal—not in every paragraph."
+        ], handoff:true}
+      ]
     },
     zh:{
-      k0:"索引 · 核心",
-      h0:"Honest AIDE",
-      sub0_platform:"这里是指南针的“引力井”。它只做一件事：把混乱压缩成干净的下一步——不吹、不吵、不静默覆盖。",
-      sub0_engineering:"核心契约：范围→测量→可采信→回放。Honest AIDE 是姿态引擎：没有收据就拒绝升级。",
-      wellTitle:"引擎姿态",
-      wellHint_platform:"你不调“真相”。你选一个场景，AIDE 输出有界姿态+原因。核查不足时，姿态 = HOLD。",
-      wellHint_engineering:"声明范围下的确定性姿态分类器。无用户调参。输出带原因码并收据闸门：READY / STABLE / HOLD。",
-      cta:"启动 HONEST AIDE",
-      ctaSub_platform:"启动一致性/对齐诊断。你会得到姿态 + 原因 + 最安全下一步。",
-      ctaSub_engineering:"启动对齐诊断。输出 = 姿态 + 原因码 + 有界下一步清单。",
-      bandHow:"如何使用（打开一个）",
-      bandJumps:"允许跳转",
-      rows:[
-        {c:"#c9a24a", q:"AIDE 是什么", s:"姿态引擎，不是聊天机器人。",
-         p:[
-           "AIDE 输出姿态（READY / STABLE / HOLD）与原因，并把决策空间压缩成一个下一步。",
-           "核查缺失时必须 HOLD ——这是设计。"
-         ],
-         a1:{t:"打开：法则", href:ROUTE_LAWS}, a2:{t:"打开：研究", href:ROUTE_RESEARCH}
-        },
-        {c:"#93c5fd", q:"透镜切换改变什么", s:"同一真相，不同表达。",
-         p:[
-           "平台：人话 + 安全路由。工程：声明范围 + 有界输出 + 回放语言。",
-           "透镜只改说明文字，不改目的地。"
-         ],
-         a1:{t:"打开：前沿", href:ROUTE_FRONTIER}, a2:{t:"打开：愿景", href:ROUTE_VISION}
-        },
-        {c:"#ff2b2b", q:"运行后会发生什么", s:"刻意退出循环。",
-         p:[
-           "姿态返回后：要么执行下一步，要么回到这里先补核查。",
-           "不乱跳，不无限分岔。"
-         ],
-         a1:{t:"打开：指南针", href:ROUTE_COMPASS}, a2:{t:"打开：探索", href:ROUTE_EXPLORE}
-        }
-      ],
-      lanePfx:"当前透镜：",
-      tsLabel:"时间戳"
+      hk:"索引 · 核心",
+      ht:"引力井",
+      hs_p:"本页用于：先吸引注意力，再给出清晰解释，然后再次吸引——让你带着清晰进入诊断。先说你认为哪里不对，停在那里。",
+      hs_e:"工程视图：这是进入契约。先稳定范围与姿态，再输出任何决策建议。先写故障陈述，停在那里。",
+      bandCta:"从这里开始",
+      ctaTitle:"AIDE — 对齐评估",
+      ctaSub_p:"AIDE 是第一条遍历。它在约束下分类，并给出有界下一步，不要求你“解释得完美”。",
+      ctaSub_e:"AIDE 是第一条遍历。在声明范围内输出有界结果，是升级前最低安全入口。",
+      btnStart:"开始：AIDE 对齐评估",
+      btnWhat:"查看样例",
+      bandSample:"样例引擎（场景 · 逆境 · 野心 · 性格倾向）",
+      pTitle:"公民诊断引擎（样例）",
+      pSub_p:"此样例展示工具的行为方式：不读取隐私数据，只根据场景与姿态旋钮输出结构化下一步。",
+      pSub_e:"此样例展示姿态旋钮下的有界推断。它不是“真理主张”，而是可控模拟面。",
+      labScenario:"场景",
+      hintScenario:"选择你认为哪里不对，停在那里，然后系统输出有界下一步。",
+      noteScenario:"这是样例。个性化结果请先做 AIDE（对齐）评估。",
+      labKnobs:"旋钮",
+      hintKnobs:"这些不是“事实”。它们定义姿态：风险容忍与速度/谨慎。",
+      labA:"逆境",
+      labB:"野心",
+      labD:"倾向",
+      noteKnobs:"倾向会改变最有效路径，但不是道德评分。",
+      outTextFallback:"选择场景并设置旋钮，即可得到有界输出。",
+      bandHow:"核心怎么用（打开一个）",
+      tCompass:"指南针", tHome:"主页",
+      tLaws:"法则", tResearch:"研究", tFrontier:"前沿", tVision:"愿景",
+      sec:[
+        {c:"#c9a24a", q:"第1步：说清哪里不对", s:"先停住，不急着给方案。", p:[
+          "最常见的失败是：直接跳到方案。AIDE 阻止这件事发生。",
+          "你只需陈述故障，系统返回有界行动与停止/暂停条件。"
+        ]},
+        {c:"#93c5fd", q:"第2步：选择姿态", s:"风险/回报由姿态控制。", p:[
+          "逆境、野心、倾向会改变路线，但不改变边界。",
+          "平台透镜强调人话清晰；工程透镜强调范围纪律。"
+        ]},
+        {c:"#ff2b2b", q:"第3步：交接（无循环）", s:"跳转只在终点。", p:[
+          "本页是引力井：先稳定，再交接给 AIDE。",
+          "外部跳转存在，但应放在底部与终点，而不是每段话里。"
+        ], handoff:true}
+      ]
     },
     es:{
-      k0:"ÍNDICE · NÚCLEO",
-      h0:"Honest AIDE",
-      sub0_platform:"Este es el pozo gravitacional de la brújula. Un trabajo: convertir confusión en el siguiente paso limpio — sin hype, sin debate y sin overrides silenciosos.",
-      sub0_engineering:"Contrato núcleo: alcance → medición → admisibilidad → replay. Honest AIDE es motor de postura que bloquea escalación sin recibos.",
-      wellTitle:"Postura del motor",
-      wellHint_platform:"No ajustas la verdad. Eliges un escenario y AIDE devuelve postura acotada + razón. Si falta verificación: HOLD.",
-      wellHint_engineering:"Clasificador determinista bajo alcance declarado. Sin knobs del usuario. Salidas con códigos y compuertas: READY / STABLE / HOLD.",
-      cta:"INICIAR HONEST AIDE",
-      ctaSub_platform:"Inicia el diagnóstico de alineación. Obtendrás postura + razón + el siguiente paso más seguro.",
-      ctaSub_engineering:"Inicia diagnóstico. Salida = postura + código + lista acotada de acciones.",
+      hk:"ÍNDICE · CORE",
+      ht:"EL POZO GRAVITACIONAL",
+      hs_p:"Esta página: cautiva, explica, vuelve a cautivar—para entrar al diagnóstico con claridad. Empieza por lo que está mal. Detente ahí.",
+      hs_e:"Vista ingeniería: contrato de entrada. Estabiliza alcance y postura antes de cualquier salida. Escribe el fallo. Detente ahí.",
+      bandCta:"EMPIEZA AQUÍ",
+      ctaTitle:"AIDE — Evaluación de Alineación",
+      ctaSub_p:"AIDE es el primer recorrido. Clasifica bajo restricción y entrega próximos pasos acotados. No necesitas ‘explicarlo perfecto’.",
+      ctaSub_e:"AIDE es el primer recorrido. Produce salidas acotadas bajo alcance declarado. Es la entrada mínima segura.",
+      btnStart:"INICIAR: AIDE ALINEACIÓN",
+      btnWhat:"VER MUESTRA",
+      bandSample:"MUESTRA (ESCENARIO · ADVERSIDAD · AMBICIÓN · DISPOSICIÓN)",
+      pTitle:"Motor Diagnóstico Ciudadano (Muestra)",
+      pSub_p:"Esta muestra enseña el comportamiento del instrumento. No ingiere datos privados. Da próximos pasos acotados por escenario y postura.",
+      pSub_e:"Demuestra inferencia acotada con knobs de postura. No es reclamo de verdad; es una superficie de simulación controlable.",
+      labScenario:"Escenario",
+      hintScenario:"Elige qué está mal. Detente ahí. Luego el motor devuelve próximos pasos acotados.",
+      noteScenario:"Esto es una muestra. Para resultados personalizados: AIDE primero.",
+      labKnobs:"Knobs",
+      hintKnobs:"No son ‘hechos’. Definen postura: tolerancia al riesgo y velocidad vs cautela.",
+      labA:"Adversidad",
+      labB:"Ambición",
+      labD:"Disposición",
+      noteKnobs:"La disposición cambia la ruta más efectiva. No es puntaje moral.",
+      outTextFallback:"Elige un escenario y ajusta la postura para ver una salida acotada.",
       bandHow:"CÓMO FUNCIONA (abre uno)",
-      bandJumps:"SALTOS APROBADOS",
-      rows:[
-        {c:"#c9a24a", q:"Qué es AIDE", s:"Motor de postura, no chatbot.",
-         p:[
-           "AIDE produce postura (READY / STABLE / HOLD) y una razón. Comprime decisiones a un siguiente paso.",
-           "Sin verificación: HOLD por diseño."
-         ],
-         a1:{t:"ABRIR: LEYES", href:ROUTE_LAWS}, a2:{t:"ABRIR: INVESTIGACIÓN", href:ROUTE_RESEARCH}
-        },
-        {c:"#93c5fd", q:"Qué cambia con el lente", s:"Misma verdad. Otro marco.",
-         p:[
-           "PLATAFORMA: significado claro y ruteo seguro. INGENIERÍA: alcance declarado, salidas acotadas y replay.",
-           "El lente cambia texto/etiquetas, no destinos."
-         ],
-         a1:{t:"ABRIR: FRONTERA", href:ROUTE_FRONTIER}, a2:{t:"ABRIR: VISIÓN", href:ROUTE_VISION}
-        },
-        {c:"#ff2b2b", q:"Qué pasa después de correrlo", s:"Salir del bucle a propósito.",
-         p:[
-           "Tras la postura: (1) ejecutar siguiente paso o (2) volver aquí y subir verificación.",
-           "Sin deambular. Sin saltos infinitos."
-         ],
-         a1:{t:"ABRIR: BRÚJULA", href:ROUTE_COMPASS}, a2:{t:"ABRIR: EXPLORAR", href:ROUTE_EXPLORE}
-        }
-      ],
-      lanePfx:"Lente actual: ",
-      tsLabel:"Timestamp"
+      tCompass:"BRÚJULA", tHome:"INICIO",
+      tLaws:"LEYES", tResearch:"INVEST.", tFrontier:"FRONTERA", tVision:"VISIÓN",
+      sec:[
+        {c:"#c9a24a", q:"Paso 1: Nombra lo que está mal", s:"Detente antes de soluciones.", p:[
+          "El fallo común: saltar a la solución. AIDE lo evita.",
+          "Nombras el fallo y el sistema devuelve acciones acotadas con stop/hold."
+        ]},
+        {c:"#93c5fd", q:"Paso 2: Elige postura", s:"Riesgo vs recompensa controlado.", p:[
+          "Adversidad, ambición y disposición cambian ruta sin romper límites.",
+          "PLATFORM = claridad humana. ENGINEERING = disciplina de alcance."
+        ]},
+        {c:"#ff2b2b", q:"Paso 3: Handoff (sin bucles)", s:"Un salto, al final.", p:[
+          "Este Core es un pozo: estabiliza y entrega a AIDE.",
+          "Los saltos externos existen, pero viven en el dock y al final del recorrido."
+        ], handoff:true}
+      ]
     }
   };
 
-  function C(){ return COPY[lang]||COPY.en; }
+  function C(){ return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en; }
 
-  function applyCopy(){
-    var c=C();
-    document.getElementById("k0").textContent=c.k0;
-    document.getElementById("h0").textContent=c.h0;
-    document.getElementById("sub0").textContent = (lane==="engineering") ? c.sub0_engineering : c.sub0_platform;
-
-    document.getElementById("wellTitle").textContent=c.wellTitle;
-    document.getElementById("wellHint").textContent = (lane==="engineering") ? c.wellHint_engineering : c.wellHint_platform;
-
-    document.getElementById("btnStart").textContent=c.cta;
-    document.getElementById("ctaSub").textContent = (lane==="engineering") ? c.ctaSub_engineering : c.ctaSub_platform;
-
-    document.getElementById("bandHow").textContent=c.bandHow;
-    document.getElementById("bandJumps").textContent=c.bandJumps;
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh") ? (c.lanePfx+laneLabel()) :
-      (lang==="es") ? (c.lanePfx+laneLabel()) :
-      (c.lanePfx+laneLabel());
-
-    document.getElementById("tsLabel").textContent=c.tsLabel;
-
-    // nav labels
-    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("btnHome").textContent   = pick3("HOME","主页","INICIO");
-    document.getElementById("btnDoor").textContent   = pick3("DOOR","门","PUERTA");
-
-    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockResearch").textContent = pick3("RESEARCH","研究","INVEST.");
-    document.getElementById("dockFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
-    document.getElementById("dockStart").textContent    = pick3("START","开始","INICIAR");
+  // ===== Toggles (NO reload) =====
+  function setLang(next){
+    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyCopy();
+    updateAccordion();
+    updateOutput();
+    wireAll();
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
   }
 
-  // ==========================================================
-  // ACCORDION BUILD (single-open)
-  // ==========================================================
+  function setLane(next){
+    if(next!=="platform"&&next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyCopy();
+    updateAccordion();
+    updateOutput();
+    wireAll();
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+  // ===== Output engine (bounded, scenario+knobs) =====
+  var scenarioEl=document.getElementById("scenario");
+  var aEl=document.getElementById("adversity");
+  var bEl=document.getElementById("ambition");
+  var dEl=document.getElementById("disposition");
+
+  function clamp(n){ return Math.max(0, Math.min(100, n)); }
+
+  function classFrom(s, adv, amb, disp){
+    // very simple classing (sample only): 40 classes come later; here we show the pattern.
+    // Outputs are bounded + stop/hold oriented.
+    var r = 0;
+    r += (adv>=70)?3:(adv>=40)?2:1;
+    r += (amb>=70)?3:(amb>=40)?2:1;
+    r += (disp>=70)?3:(disp>=40)?2:1;
+
+    var base = (s==="crisis"||adv>=85) ? "CONTAIN" : (amb>=75 && adv<=55) ? "PUSH" : "STABILIZE";
+    var tier = (r>=8) ? "H3" : (r>=6) ? "H2" : "H1";
+    return {cls: base+"-"+tier, posture: (base==="CONTAIN")?"HOLD":"GO"};
+  }
+
+  function textFor(out){
+    if(lang==="zh"){
+      if(out.posture==="HOLD") return "姿态=HOLD：先隔离风险与边界，再做任何升级。下一步必须小、可验证、可回滚。";
+      return "姿态=GO：允许推进，但必须保持范围锁与停止条件。下一步只做一件事，并记录收据。";
+    }
+    if(lang==="es"){
+      if(out.posture==="HOLD") return "Postura=HOLD: primero contención y límites, luego escalar. Próximo paso pequeño, verificable y con rollback.";
+      return "Postura=GO: puedes avanzar, pero con bloqueo de alcance y condición de parada. Un paso a la vez y con recibos.";
+    }
+    if(out.posture==="HOLD") return "Posture=HOLD: contain risk and bounds first. Next step must be small, verifiable, and rollback-safe.";
+    return "Posture=GO: proceed under scope lock and stop conditions. One step at a time, with receipts.";
+  }
+
+  function tagsFor(s){
+    var m={
+      money:["cashflow","boundaries","receipts"],
+      work:["roles","scope","next-step"],
+      health:["evidence","windows","containment"],
+      family:["repair","boundaries","pace"],
+      legal:["procedure","receipts","hold/stop"],
+      purpose:["direction","commitment","scope"],
+      trust:["integrity","replay","repair"],
+      crisis:["containment","triage","exit-path"]
+    };
+    return m[s]||["scope","next-step","receipts"];
+  }
+
+  function updateOutput(){
+    var adv=clamp(parseInt(aEl.value,10)||0);
+    var amb=clamp(parseInt(bEl.value,10)||0);
+    var disp=clamp(parseInt(dEl.value,10)||0);
+
+    document.getElementById("aVal").textContent=String(adv);
+    document.getElementById("bVal").textContent=String(amb);
+    document.getElementById("dVal").textContent=String(disp);
+
+    var s=scenarioEl.value;
+    var out=classFrom(s,adv,amb,disp);
+
+    document.getElementById("outClassVal").textContent=out.cls;
+    document.getElementById("outPostureVal").textContent=out.posture;
+    document.getElementById("outText").textContent=textFor(out);
+
+    var tags=document.getElementById("tags");
+    tags.innerHTML="";
+    tagsFor(s).forEach(function(t){
+      var el=document.createElement("div");
+      el.className="tag";
+      el.textContent=t;
+      tags.appendChild(el);
+    });
+  }
+
+  ["input","change"].forEach(function(ev){
+    aEl.addEventListener(ev, updateOutput, {passive:true});
+    bEl.addEventListener(ev, updateOutput, {passive:true});
+    dEl.addEventListener(ev, updateOutput, {passive:true});
+    scenarioEl.addEventListener(ev, updateOutput, {passive:true});
+  });
+
+  // ===== Accordion build =====
   var list=document.getElementById("list");
   var refs=[];
   var openIndex=0;
@@ -852,151 +1004,218 @@ body::before,body::after{pointer-events:none!important}
     refs[i].chev.textContent="▾";
   }
 
-  function build(){
+  function buildRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="mark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.style.minWidth="0";
+
+    var q=document.createElement("div");
+    q.className="q";
+
+    var s=document.createElement("div");
+    s.className="subt";
+
+    tb.appendChild(q); tb.appendChild(s);
+    hL.appendChild(mark); hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var p1=document.createElement("p"); p1.className="p";
+    var p2=document.createElement("p"); p2.className="p";
+
+    body.appendChild(p1); body.appendChild(p2);
+
+    // Only the final section gets links (traversal-respect)
+    var actions=document.createElement("div");
+    actions.className="actions";
+    body.appendChild(actions);
+
+    function act(){ toggle(idx); }
+    head.addEventListener("click", act, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    refs.push({row:row,chev:row.querySelector(".chevTxt"),q:q,s:s,p1:p1,p2:p2,actions:actions,item:item});
+  }
+
+  function renderAccordion(){
     list.innerHTML="";
     refs=[];
-    var rows=C().rows;
-
-    for(var i=0;i<rows.length;i++){
-      var it=rows[i];
-
-      var row=document.createElement("div");
-      row.className="row";
-      row.style.setProperty("--c", it.c);
-
-      var head=document.createElement("div");
-      head.className="head";
-      head.setAttribute("role","button");
-      head.tabIndex=0;
-
-      var hL=document.createElement("div");
-      hL.className="hL";
-
-      var mark=document.createElement("div");
-      mark.className="mark";
-      mark.style.background=it.c;
-
-      var tb=document.createElement("div");
-      tb.style.minWidth="0";
-
-      var qd=document.createElement("div");
-      qd.className="q";
-      qd.textContent=it.q;
-
-      var sd=document.createElement("div");
-      sd.className="subt";
-      sd.textContent=it.s;
-
-      tb.appendChild(qd); tb.appendChild(sd);
-      hL.appendChild(mark); hL.appendChild(tb);
-
-      var chev=document.createElement("div");
-      chev.className="chev";
-      chev.innerHTML='<span class="chevTxt">▸</span>';
-
-      head.appendChild(hL);
-      head.appendChild(chev);
-
-      var body=document.createElement("div");
-      body.className="body";
-
-      var p1=document.createElement("p"); p1.className="p"; p1.textContent=it.p[0]||"";
-      var p2=document.createElement("p"); p2.className="p"; p2.textContent=it.p[1]||"";
-
-      body.appendChild(p1); body.appendChild(p2);
-
-      var actions=document.createElement("div");
-      actions.className="actions";
-
-      var a1=document.createElement("a");
-      a1.className="btn red";
-      a1.textContent=openLabel()+": "+it.a1.t;
-      a1.setAttribute("data-route", it.a1.href);
-
-      var a2=document.createElement("a");
-      a2.className="btn";
-      a2.textContent=openLabel()+": "+it.a2.t;
-      a2.setAttribute("data-route", it.a2.href);
-
-      actions.appendChild(a1); actions.appendChild(a2);
-      body.appendChild(actions);
-
-      function act(){ toggle(i); wireAll(); }
-      head.addEventListener("click", act, {passive:true});
-      head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
-      row.appendChild(head);
-      row.appendChild(body);
-      list.appendChild(row);
-
-      refs.push({row:row,chev:row.querySelector(".chevTxt")});
-    }
-
+    var sec=C().sec;
+    for(var i=0;i<sec.length;i++) buildRow(sec[i], i);
     openIndex=0;
     toggle(0);
   }
 
-  // ==========================================================
-  // STATE-CARRY WIRE ALL (including lane)
-  // ==========================================================
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
+  function updateAccordion(){
+    var keep=openIndex;
+    var sec=C().sec;
+
+    if(refs.length!==sec.length){ renderAccordion(); keep=openIndex; }
+
+    for(var i=0;i<refs.length;i++){
+      var R=refs[i];
+      var it=sec[i];
+      R.row.style.setProperty("--c", it.c);
+      R.q.textContent=it.q;
+      R.s.textContent=it.s;
+      R.p1.textContent=it.p[0]||"";
+      R.p2.textContent=it.p[1]||"";
+
+      R.actions.innerHTML="";
+      if(it.handoff){
+        var b1=document.createElement("a");
+        b1.className="btn red microCard";
+        b1.setAttribute("data-route","/products/alignment-diagnostic/");
+        b1.href="/products/alignment-diagnostic/"+q();
+        b1.innerHTML='<span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span><span>'+pick3("OPEN: AIDE","打开：AIDE","ABRIR: AIDE")+'</span>';
+
+        var b2=document.createElement("a");
+        b2.className="btn microCard";
+        b2.setAttribute("data-route","/laws/");
+        b2.href="/laws/"+q();
+        b2.innerHTML='<span class="cN" data-g="N">N</span><span class="cE" data-g="E">E</span><span class="cS" data-g="S">S</span><span class="cW" data-g="W">W</span><span>'+pick3("OPEN: LAWS","打开：法则","ABRIR: LEYES")+'</span>';
+
+        R.actions.appendChild(b1);
+        R.actions.appendChild(b2);
+      }
+    }
+
+    closeAll();
+    toggle(keep);
+    wireAll();
+  }
+
+  // ===== Copy apply =====
+  function applyCopy(){
+    var c=C();
+
+    document.getElementById("hk").textContent=c.hk;
+    document.getElementById("ht").textContent=c.ht;
+    document.getElementById("hs").textContent=(lane==="engineering")?c.hs_e:c.hs_p;
+
+    document.getElementById("bandCta").textContent=c.bandCta;
+    document.getElementById("ctaTitle").textContent=c.ctaTitle;
+    document.getElementById("ctaSub").textContent=(lane==="engineering")?c.ctaSub_e:c.ctaSub_p;
+    document.getElementById("btnStartTxt").textContent=c.btnStart;
+    document.getElementById("btnWhatTxt").textContent=c.btnWhat;
+
+    document.getElementById("bandSample").textContent=c.bandSample;
+    document.getElementById("pTitle").textContent=c.pTitle;
+    document.getElementById("pSub").textContent=(lane==="engineering")?c.pSub_e:c.pSub_p;
+
+    document.getElementById("labScenario").textContent=c.labScenario;
+    document.getElementById("hintScenario").textContent=c.hintScenario;
+    document.getElementById("noteScenario").textContent=c.noteScenario;
+
+    document.getElementById("labKnobs").textContent=c.labKnobs;
+    document.getElementById("hintKnobs").textContent=c.hintKnobs;
+    document.getElementById("labA").textContent=c.labA;
+    document.getElementById("labB").textContent=c.labB;
+    document.getElementById("labD").textContent=c.labD;
+    document.getElementById("noteKnobs").textContent=c.noteKnobs;
+
+    document.getElementById("bandHow").textContent=c.bandHow;
+
+    document.getElementById("tCompass").textContent=c.tCompass;
+    document.getElementById("tHome").textContent=c.tHome;
+
+    document.getElementById("tLaws").textContent=c.tLaws;
+    document.getElementById("tResearch").textContent=c.tResearch;
+    document.getElementById("tFrontier").textContent=c.tFrontier;
+    document.getElementById("tVision").textContent=c.tVision;
+
+    document.getElementById("laneG").textContent=pick3("Lens","透镜","Lente");
+    document.getElementById("laneVal").textContent=laneLabel();
+    document.getElementById("tsLabel").textContent=pick3("Timestamp","时间戳","Marca de tiempo");
+
+    // toggles
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+
+    // tune topbar buttons text (already microCard)
+    document.getElementById("tCompass").textContent=c.tCompass;
+    document.getElementById("tHome").textContent=c.tHome;
+
+    // ensure scenario options localized minimally (keep values stable)
+    var s=scenarioEl;
+    if(lang==="zh"){
+      s.options[0].text="资金压力";
+      s.options[1].text="工作冲突";
+      s.options[2].text="健康不确定";
+      s.options[3].text="家庭/关系紧张";
+      s.options[4].text="法律/流程困惑";
+      s.options[5].text="方向漂移";
+      s.options[6].text="信任断裂";
+      s.options[7].text="紧急危机姿态";
+    }else if(lang==="es"){
+      s.options[0].text="Presión de dinero";
+      s.options[1].text="Conflicto laboral";
+      s.options[2].text="Incertidumbre de salud";
+      s.options[3].text="Tensión relacional/familiar";
+      s.options[4].text="Confusión legal/proceso";
+      s.options[5].text="Deriva de propósito";
+      s.options[6].text="Ruptura de confianza";
+      s.options[7].text="Postura de crisis inmediata";
+    }else{
+      s.options[0].text="Money pressure";
+      s.options[1].text="Work conflict";
+      s.options[2].text="Health uncertainty";
+      s.options[3].text="Family/relational tension";
+      s.options[4].text="Legal/process confusion";
+      s.options[5].text="Purpose / direction drift";
+      s.options[6].text="Trust fracture";
+      s.options[7].text="Immediate crisis posture";
     }
   }
 
-  // ==========================================================
-  // TOGGLES (NO reload)
-  // ==========================================================
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    applyCopy();
-    build();
-    wireAll();
-  }
+  // ===== Jump to sample (no loops) =====
+  document.getElementById("btnWhat").addEventListener("click", function(e){
+    try{
+      e.preventDefault();
+      document.getElementById("sample").scrollIntoView({behavior:"smooth", block:"start"});
+    }catch(_){}
+  });
 
-  function setLane(next){
-    if(next!=="platform"&&next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    applyCopy();
-    build();
-    wireAll();
-  }
-
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-
-  // ==========================================================
-  // CTA
-  // ==========================================================
-  document.getElementById("btnStart").addEventListener("click", function(){
-    go(ROUTE_DIAGNOSTIC);
-  }, {passive:true});
-
-  // ==========================================================
-  // INIT
-  // ==========================================================
+  // ===== Init =====
+  renderAccordion();
   applyCopy();
-  build();
+  updateAccordion();
   wireAll();
+  updateOutput();
 
+  // ===== NO-RELOAD toggles =====
+  function setLangNoReload(next){ setLang(next); }
+  function setLaneNoReload(next){ setLane(next); }
+
+  // override to no reload
+  // (already wired via addEventListener above)
 })();
 </script>
 

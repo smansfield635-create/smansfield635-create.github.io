@@ -1,16 +1,17 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · TRUE HIERARCHY SCALE v5 (CORRECTED FINAL)
-     SCALE MODEL (CONFIRMED):
+     COMPASS · TRUE HIERARCHY SCALE v6 (SCREEN FIT COMPRESSION)
+
+     FINAL SCALE MODEL:
 
      CORE (Tier 0)            = 100%
-     Cardinals (Tier 1)       = 75%
-     Diagonals (Tier 2)       = 60%
-     Intercardinals (Tier 3)  = 45%
+     Tier 1 (Cardinals)       = 60%
+     Tier 2 (Diagonals)       = 45%
+     Tier 3 (Intercardinals)  = 40%
 
-     Only ONE dominant diamond.
+     Radii compressed for screen fit.
+     Only one dominant center.
      Outer rings progressively smaller.
-     Full symmetry preserved.
 -->
 
 <html lang="en">
@@ -26,27 +27,30 @@
 a{color:inherit;text-decoration:none}
 body{margin:0;background:#7a0f0f}
 
-/* ===== SCALE SYSTEM ===== */
-:root{
-  --D0:240px;  /* CORE 100% */
-  --D1:180px;  /* 75% */
-  --D2:144px;  /* 60% */
-  --D3:108px;  /* 45% */
+/* ================= SCALE ================= */
 
-  --R1:260px;
-  --R2:380px;
-  --R3:520px;
+:root{
+  --D0:220px;  /* CORE 100% */
+  --D1:132px;  /* 60% */
+  --D2:99px;   /* 45% */
+  --D3:88px;   /* 40% */
+
+  /* compressed radii */
+  --R1:220px;
+  --R2:330px;
+  --R3:420px;
 }
 
 .stage{
   position:relative;
-  width:min(1300px,95vw);
-  height:min(1300px,90vh);
-  margin:120px auto 0;
+  width:min(1100px,95vw);
+  height:min(1000px,85vh);
+  margin:110px auto 0;
   pointer-events:none;
 }
 
-/* ===== DIAMOND ===== */
+/* ================= DIAMOND ================= */
+
 .node{
   position:absolute;
   left:50%;
@@ -55,7 +59,7 @@ body{margin:0;background:#7a0f0f}
   pointer-events:auto;
   cursor:pointer;
   overflow:hidden;
-  border-radius:28px;
+  border-radius:26px;
   transition:.15s ease;
 }
 
@@ -104,17 +108,18 @@ body{margin:0;background:#7a0f0f}
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:16px;
+  padding:14px;
   color:white;
 }
 
 .word{
   font-weight:900;
-  font-size:clamp(14px,1.4vw,20px);
+  font-size:clamp(13px,1.2vw,18px);
+  line-height:1.1;
 }
 
 .code{
-  font-size:11px;
+  font-size:10px;
   opacity:.7;
   margin-top:6px;
 }
@@ -172,7 +177,6 @@ function layout(){
   const R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"));
   const R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"));
 
-  // CORE
   const core=mkNode({label:"INDEX",code:"CORE",href:"/index-core/"},"core");
   core.style.left=cx+"px";
   core.style.top=cy+"px";

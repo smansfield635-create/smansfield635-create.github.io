@@ -1,1 +1,995 @@
-G
+<!doctype html>
+<!-- TNT — /explore/frontier/shimmer/index.html
+     FRONTIER · SHIMMER (COMBINED ROOM: SHIMMER + LATTICE)
+     NEW STANDARD (INFORMAL SITE LAYER):
+       - Trilingual: EN / 中文 / ES
+       - VISIBLE LENS ONLY: lane=platform|engineering (URL-only; NEVER stored)
+       - Mode toggle (in-page; no reload): SHIMMER ↔ LATTICE
+       - Pin informal layer: gd_style=informal, gd_depth=explore
+       - Switching LANG or LANE does NOT reload page
+       - Switching LANG or LANE does NOT close the open row
+       - Switching MODE does NOT reload page (preserve open row per mode)
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new keys)
+       - No modals/overlays; no inline onclick; addEventListener only
+     ROUTING:
+       - FRONTIER INDEX → /explore/frontier/
+       - EXPLORE → /explore/
+       - HOME → /home/
+       - PRODUCTS → /products/
+       - LAWS → /laws/
+       - GAUGES → /gauges/
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FRONTIER · SHIMMER</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<style>
+a{color:inherit;text-decoration:none}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --dockH:132px;
+
+  --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
+
+  --ink:rgba(255,255,255,.94);
+  --txt:rgba(255,255,255,.92);
+  --mut:rgba(255,255,255,.78);
+
+  --crimson:rgba(120,0,22,.30);
+  --festival:rgba(255,43,43,.14);
+  --opalV:rgba(90,40,120,.10);
+  --goldSoft:rgba(201,162,74,.18);
+
+  --shadowA:0 24px 90px rgba(0,0,0,.58);
+  --shadowB:0 16px 56px rgba(0,0,0,.62);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
+}
+
+/* ===== Top (fixed) ===== */
+.top{
+  position:fixed;top:16px;left:0;right:0;
+  padding:0 16px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
+}
+.top .left,.top .right{
+  display:flex;gap:10px;flex-wrap:wrap;white-space:nowrap;align-items:center;
+  pointer-events:auto;
+}
+
+/* Button */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 12px;min-height:44px;border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
+  color:var(--ink);
+  font-weight:950;font-size:14px;letter-spacing:.2px;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowC);
+}
+.btn:active{transform:translateY(1px)}
+.btn::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  opacity:.60;pointer-events:none;
+}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.16);
+  box-shadow: var(--shadowC);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;color:var(--mut);
+  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
+  letter-spacing:.25px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+}
+
+/* ===== Page ===== */
+.page{
+  width:min(1120px,94vw);
+  margin:0 auto;
+  padding:104px 0 calc(var(--dockH) + 18px);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  z-index:10;
+}
+
+/* Background context (behind content; not body) */
+.backdrop{
+  position:absolute;
+  left:50%;
+  top:68px;
+  transform:translateX(-50%);
+  width:min(1180px,96vw);
+  height:calc(100% - 108px);
+  border-radius:34px;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.backdrop::before{
+  content:"";
+  position:absolute;inset:0;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:34px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
+    radial-gradient(circle at 78% 22%, rgba(90,40,120,.12), transparent 62%),
+    radial-gradient(circle at 60% 90%, rgba(255,43,43,.10), transparent 64%),
+    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  opacity:.92;
+}
+.backdrop::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(circle at 28% 30%, rgba(201,162,74,.12), transparent 46%),
+    radial-gradient(circle at 72% 28%, rgba(90,40,120,.14), transparent 48%),
+    radial-gradient(circle at 50% 78%, rgba(255,43,43,.10), transparent 52%),
+    conic-gradient(from 20deg at 52% 40%,
+      rgba(201,162,74,.12), transparent 14%,
+      rgba(90,40,120,.12), transparent 30%,
+      rgba(255,43,43,.10), transparent 44%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
+  opacity:.72;
+}
+
+/* Header */
+.header{
+  position:relative;
+  z-index:2;
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
+    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadowA);
+  padding:16px 16px 14px;
+  overflow:hidden;
+}
+.header::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+  opacity:.26;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
+    linear-gradient(#000,#000);
+}
+.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:rgba(255,255,255,.78)}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
+.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
+.rule{
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
+  font-size:13.5px;
+  color:rgba(255,255,255,.86);
+  line-height:1.45;
+}
+
+/* Mode row + state pills */
+.modeRow{
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.statePill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  box-shadow:0 14px 36px rgba(0,0,0,.55);
+}
+
+/* Band */
+.band{
+  position:relative;
+  z-index:2;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.14);
+  font-weight:950;
+  letter-spacing:.2px;
+  color:rgba(255,255,255,.88);
+}
+
+/* Accordion rows */
+.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.row{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowB);
+  overflow:hidden;
+  position:relative;
+}
+.row::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+  opacity:.60;
+}
+.head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:10px;
+  padding:16px 16px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.dmark{
+  width:10px;height:10px;border-radius:3px;
+  transform:rotate(45deg);
+  background:var(--c, rgba(201,162,74,.45));
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  flex:0 0 auto;margin-top:4px;
+}
+.titleBlock{min-width:0}
+.q{
+  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sub{
+  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
+  color:rgba(255,255,255,.86);max-width:92ch;
+}
+.chev{
+  width:36px;height:36px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);
+  font-weight:950;
+  position:relative;overflow:hidden;
+  flex:0 0 auto;margin-top:2px;
+}
+.chev::after{
+  content:"";
+  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+.body{
+  display:none;
+  padding:16px 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.row.open .body{display:block}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+
+.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
+.pdesc + .pdesc{margin-top:10px}
+
+/* Sub-bubbles */
+.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.bubble{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.12);
+  padding:14px 14px 12px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  overflow:hidden;
+}
+.bubble::after{
+  content:"";
+  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
+  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
+  opacity:.50;pointer-events:none;
+}
+.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px}
+.bubble.open p{display:block}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+
+/* Dock */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:220;
+  width:min(980px,94vw);
+  padding:10px 12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+@media (max-width:520px){
+  :root{--dockH:132px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top" aria-label="Top controls">
+  <div class="left">
+    <a class="btn" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+  </div>
+  <div class="right" aria-label="Controls">
+    <div class="seg" role="group" aria-label="Language">
+      <button type="button" id="langEN" aria-pressed="true">EN</button>
+      <button type="button" id="langZH" aria-pressed="false">中文</button>
+      <button type="button" id="langES" aria-pressed="false">ES</button>
+    </div>
+    <div class="seg" role="group" aria-label="Lane">
+      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <div class="header" aria-label="Header">
+    <p class="k" id="hk">FRONTIER</p>
+    <h1 class="t" id="ht">SHIMMER (S.H.I.M.M.E.R.)</h1>
+    <p class="s" id="hs"></p>
+    <div class="rule" id="rule"></div>
+
+    <div class="modeRow" aria-label="Mode + state">
+      <div class="seg" role="group" aria-label="Mode">
+        <button type="button" id="modeShimmer" aria-pressed="true">SHIMMER</button>
+        <button type="button" id="modeLattice" aria-pressed="false">LATTICE</button>
+      </div>
+      <div class="statePill" id="modeState">—</div>
+      <div class="statePill" id="laneState">—</div>
+      <div class="statePill" id="langState">—</div>
+    </div>
+  </div>
+
+  <div class="band" id="band">DOMAINS</div>
+  <div class="list" id="list"></div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+</nav>
+
+<script>
+(function(){
+  "use strict";
+
+  // ===== Canon state (gd_* only; no new keys) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+
+  // Pin informal layer
+  var style = "informal";
+  var depth = "explore";
+
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style","informal");
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth","explore");
+  }catch(e){}
+
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("style","informal");
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth","explore");
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function setPressed(ids, activeId){
+    for(var i=0;i<ids.length;i++){
+      var el=document.getElementById(ids[i]);
+      if(!el) continue;
+      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+    }
+  }
+
+  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
+  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
+  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
+  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+
+  function laneLabel(){
+    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
+      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
+      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+  }
+
+  // Wire all internal links with pinned state (and lane)
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route, location.origin);
+          var sp=u.searchParams;
+          sp.set("lang", lang);
+          sp.set("style","informal");
+          sp.set("time", time);
+          sp.set("depth","explore");
+          sp.set("lane", lane);
+          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+        }catch(e){
+          el.setAttribute("href", route);
+        }
+      }else{
+        el.setAttribute("href", route + q());
+      }
+    }
+  }
+
+  // ===== MODE (in-page; not stored; no reload) =====
+  var mode="shimmer"; // shimmer|lattice
+  var openIndexByMode={ shimmer:0, lattice:0 };
+
+  // ===== Header copy =====
+  function headerPacks(){
+    var H={
+      shimmer:{
+        en:{
+          platform:{hs:"SHIMMER is a clarity loop for humans: Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat. It stops attention from turning into drift.", rule:"Rule: show what changed before you argue. Receipts beat vibes."},
+          engineering:{hs:"Engineering SHIMMER = interface variance control: baseline → bands → triggers → reason codes → receipts → replay. Treat perception drift as a measurable system fault.", rule:"Rule: baseline first. Any trigger must be reproducible under fixed scope."}
+        },
+        zh:{
+          platform:{hs:"SHIMMER 是面向人类的清晰循环：筛选→高亮→检查→测量→减缓→解释→重复。它阻止注意力变成漂移。", rule:"规则：先展示变化，再争论。收据胜过感觉。"},
+          engineering:{hs:"工程 SHIMMER = 接口方差控制：基线→区间→触发→原因码→收据→回放。把感知漂移当成可测系统故障。", rule:"规则：先基线。任何触发在固定范围下都必须可复现。"}
+        },
+        es:{
+          platform:{hs:"SHIMMER es un loop de claridad: Filtrar → Resaltar → Inspeccionar → Medir → Mitigar → Explicar → Repetir. Evita que la atención se vuelva deriva.", rule:"Regla: muestra qué cambió antes de discutir. Recibos > sensaciones."},
+          engineering:{hs:"SHIMMER (ingeniería) = control de varianza de interfaz: baseline → bandas → triggers → códigos → recibos → replay. Trata la deriva perceptiva como fallo medible.", rule:"Regla: baseline primero. Cualquier trigger debe ser reproducible bajo alcance fijo."}
+        }
+      },
+      lattice:{
+        en:{
+          platform:{hs:"Lattice is coordinate discipline. It turns ‘complex’ into ‘indexable’. Indexable → comparable; comparable → scalable safely.", rule:"Rule: no indexing → no comparability. No comparability → no safe scaling."},
+          engineering:{hs:"Engineering view: finite state coordinates + manifest locks + deterministic replay. If identical inputs diverge, epoch bump + replay is required.", rule:"Rule: identical inputs must yield identical outputs. Mutation requires version bump + full replay."}
+        },
+        zh:{
+          platform:{hs:"晶格=坐标纪律。把“复杂”变成“可索引”。可索引→可比较；可比较→可安全扩张。", rule:"规则：不能索引就不能比较；不能比较就不能安全扩张。"},
+          engineering:{hs:"工程视图：有限状态坐标+清单锁定+确定性回放。同输入若分歧，必须新纪元+回放。", rule:"规则：同输入必得同输出。变异必须版本升级+全量回放。"}
+        },
+        es:{
+          platform:{hs:"Lattice es disciplina de coordenadas. Indexable → comparable; comparable → escalable con seguridad.", rule:"Regla: sin indexación no hay comparabilidad. Sin comparabilidad no hay escala segura."},
+          engineering:{hs:"Vista de ingeniería: coordenadas finitas + manifiestos bloqueados + replay determinista. Si diverge, nueva época + replay.", rule:"Regla: mismas entradas → mismas salidas. Mutación requiere versión + replay completo."}
+        }
+      }
+    };
+
+    var root = (H[mode][lang]||H[mode].en);
+    return (lane==="engineering") ? root.engineering : root.platform;
+  }
+
+  // ===== LATTICE DOMAINS (compact) =====
+  var LATTICE_DOMAINS=[
+    {c:"#c9a24a",
+     t:{en:"256-State Finite Geometry",zh:"256态有限几何",es:"Geometría finita (256)"},
+     s:{en:"Countable map for classification.",zh:"用于分类的可计数地图。",es:"Mapa contable para clasificación."},
+     platform:{intro:{en:"Finite states stop story drift. They force a countable map.",zh:"有限状态阻止叙事漂移：强制可计数地图。",es:"Estados finitos evitan deriva narrativa: mapa contable."},
+               concept:{en:"Concept: finite states make disagreement measurable.",zh:"概念：有限状态让分歧可测。",es:"Concepto: estados finitos hacen desacuerdo medible."},
+               build:{en:"Build now: name the few axes that matter.",zh:"现在建：命名真正重要的少数轴。",es:"Construir ahora: nombrar los pocos ejes que importan."},
+               roadmap:{en:"Roadmap: publish enumeration and lock naming.",zh:"路线图：发布枚举并锁定命名。",es:"Hoja de ruta: publicar enumeración y fijar nombres."}},
+     engineering:{intro:{en:"Explicit axes + ordering + enumeration. ‘Complex’ becomes indexable.",zh:"显式轴+顺序+枚举。“复杂”变可索引。",es:"Ejes+orden+enumeración. ‘Complejo’ se vuelve indexable."},
+                 concept:{en:"Concept: enumeration enables deterministic classification.",zh:"概念：枚举支持确定性分类。",es:"Concepto: enumeración habilita clasificación determinista."},
+                 build:{en:"Build now: define axis independence + inequality basis.",zh:"现在建：轴独立性+不等式基。",es:"Construir ahora: independencia + base de desigualdades."},
+                 roadmap:{en:"Roadmap: sweep + store receipts (hash/version) for replay.",zh:"路线图：扫掠+存收据（哈希/版本）回放。",es:"Hoja de ruta: barrer + guardar recibos (hash/versión) para replay."}}
+    },
+    {c:"#ff2b2b",
+     t:{en:"Cardinal Axis Mapping",zh:"基数轴映射",es:"Ejes cardinales"},
+     s:{en:"Anchors for definition/execution/measurement/identity.",zh:"定义/执行/测量/身份锚点。",es:"Anclas para definición/ejecución/medición/identidad."},
+     platform:{intro:{en:"Anchors keep the map readable without debating intent.",zh:"锚点让地图可读，不必争论意图。",es:"Anclas mantienen el mapa legible sin debatir intención."},
+               concept:{en:"Concept: anchors keep navigation honest.",zh:"概念：锚点让导航诚实。",es:"Concepto: anclas mantienen navegación honesta."},
+               build:{en:"Build now: one sentence per axis — what must stay true.",zh:"现在建：每轴一句——必须保持什么为真。",es:"Construir ahora: una frase por eje — qué debe mantenerse verdadero."},
+               roadmap:{en:"Roadmap: bind each axis to measurement + return path.",zh:"路线图：每轴绑定测量面+返回路径。",es:"Hoja de ruta: ligar cada eje a medición + retorno."}},
+     engineering:{intro:{en:"Axes become invariant inputs; disputes become coordinates.",zh:"轴成为不变量输入；争论变坐标。",es:"Ejes como entradas invariantes; disputas como coordenadas."},
+                 concept:{en:"Concept: axis anchors define constraint surfaces.",zh:"概念：轴锚定义约束面。",es:"Concepto: anclas definen superficies de restricción."},
+                 build:{en:"Build now: manifest locks (scope + axis defs) and hash them.",zh:"现在建：清单锁（范围+轴定义）并哈希。",es:"Construir ahora: bloquear manifiestos (alcance + ejes) y hashearlos."},
+                 roadmap:{en:"Roadmap: forbid silent axis mutation (epoch rollover).",zh:"路线图：禁止静默轴变异（新纪元）。",es:"Hoja de ruta: prohibir mutación silenciosa (nueva época)."}}
+    },
+    {c:"#a3a3a3",
+     t:{en:"Admissibility Boundaries",zh:"可采信边界",es:"Límites de admisibilidad"},
+     s:{en:"Claims cannot exceed evidence.",zh:"主张不得超证据。",es:"Afirmaciones no exceden evidencia."},
+     platform:{intro:{en:"Dream big, label readiness. No measurement means: concept only.",zh:"想得很大也可以，但要标注就绪度；无测量=仅概念。",es:"Sueña grande, etiqueta preparación; sin medición = solo concepto."},
+               concept:{en:"Concept: readiness is a label.",zh:"概念：就绪度是标签。",es:"Concepto: preparación es etiqueta."},
+               build:{en:"Build now: separate vision from proof in routing.",zh:"现在建：路由上分开愿景与证明。",es:"Construir ahora: separar visión de prueba en ruteo."},
+               roadmap:{en:"Roadmap: promote shells only after receipts exist.",zh:"路线图：有收据后再升级壳。",es:"Hoja de ruta: promover shells solo con recibos."}},
+     engineering:{intro:{en:"Gates must be machine-checkable under fixed scope.",zh:"固定范围下闸门必须可机检。",es:"Compuertas deben ser comprobables bajo alcance fijo."},
+                 concept:{en:"Concept: admissibility is binary with reason codes.",zh:"概念：可采信=二元闸门+原因码。",es:"Concepto: admisibilidad es binaria con códigos."},
+                 build:{en:"Build now: output HOLD/UNDETERMINED when receipts are missing.",zh:"现在建：缺收据输出HOLD/UNDETERMINED。",es:"Construir ahora: emitir HOLD/UNDETERMINED cuando falten recibos."},
+                 roadmap:{en:"Roadmap: epoch discipline (no retroactive edits).",zh:"路线图：新纪元纪律（无追溯改写）。",es:"Hoja de ruta: disciplina de época (sin ediciones retroactivas)."}}
+    }
+  ];
+
+  // ===== SHIMMER DOMAINS (deep; acronym) =====
+  var SHIMMER_DOMAINS=[
+    {c:"#ff2b2b",
+     t:{en:"SHIMMER Overview (Protocol)",zh:"SHIMMER 总览（协议）",es:"SHIMMER (protocolo)"},
+     s:{en:"Screen→Highlight→Inspect→Measure→Mitigate→Explain→Repeat.",zh:"筛选→高亮→检查→测量→减缓→解释→重复。",es:"Filtrar→Resaltar→Inspeccionar→Medir→Mitigar→Explicar→Repetir."},
+     platform:{intro:{en:"SHIMMER reduces distortion so humans can decide without being dragged by noise.",zh:"SHIMMER 减少失真，让人不被噪声拖着走。",es:"SHIMMER reduce distorsión para decidir sin ruido."},
+               concept:{en:"Concept: attention is a resource; distortion is a leak.",zh:"概念：注意力是资源；失真是泄漏。",es:"Concepto: atención es recurso; distorsión es fuga."},
+               build:{en:"Build now: define the loop and where receipts live.",zh:"现在建：写清循环与收据位置。",es:"Construir ahora: definir el loop y dónde viven los recibos."},
+               roadmap:{en:"Roadmap: attach outputs to Gauges (signals) + Laws (bounds).",zh:"路线图：输出锚定量规（信号）+法则（边界）。",es:"Hoja de ruta: anclar salidas a Medidores (señales) + Leyes (límites)."}},
+     engineering:{intro:{en:"Treat perception drift as measurable interface fault: baselines, bands, triggers, reason codes, receipts, replay.",zh:"把感知漂移当可测接口故障：基线、区间、触发、原因码、收据、回放。",es:"Deriva perceptiva como fallo medible: baseline, bandas, triggers, razones, recibos, replay."},
+                 concept:{en:"Concept: measured variance is the only admissible driver of resets.",zh:"概念：只有测得方差才允许触发重置。",es:"Concepto: solo varianza medida puede disparar resets."},
+                 build:{en:"Build now: baseline capture + variance metric + threshold per surface.",zh:"现在建：每个界面定义基线+方差指标+阈值。",es:"Construir ahora: baseline+métrica+umbral por superficie."},
+                 roadmap:{en:"Roadmap: publish replayable log (baseline hash, deltas, triggers, recovery-to-band).",zh:"路线图：发布可回放日志（基线哈希、差分、触发、回带恢复）。",es:"Hoja de ruta: publicar log replayable (hash baseline, deltas, triggers, recuperación a banda)."}}
+    },
+
+    {c:"#c9a24a",
+     t:{en:"S — SCREEN (Input Gate)",zh:"S — 筛选（输入闸门）",es:"S — FILTRAR (compuerta)"},
+     s:{en:"Decide what enters at all.",zh:"决定什么能进入。",es:"Decidir qué entra."},
+     platform:{intro:{en:"If you can’t say why it matters, don’t feed it in.",zh:"说不清为什么重要，就别喂进去。",es:"Si no puedes decir por qué importa, no lo metas."},
+               concept:{en:"Concept: fewer inputs = more stability.",zh:"概念：输入越少越稳定。",es:"Concepto: menos entradas = más estabilidad."},
+               build:{en:"Build now: MUST SEE / MUST IGNORE lists.",zh:"现在建：必看/必忽略清单。",es:"Construir ahora: listas IMPRESCINDIBLE / IGNORAR."},
+               roadmap:{en:"Roadmap: add tags (source trust, scope relevance).",zh:"路线图：加标签（来源可信度、范围相关性）。",es:"Hoja de ruta: añadir etiquetas (confianza de fuente, relevancia de alcance)."}},
+     engineering:{intro:{en:"Deterministic gating: allow/deny-lists and reason-coded rejections.",zh:"确定性闸门：白/黑名单+原因码拒绝。",es:"Compuerta determinista: allow/deny-lists y rechazos con códigos."},
+                 concept:{en:"Concept: gate inputs before classification.",zh:"概念：先闸门输入再分类。",es:"Concepto: gatear entradas antes de clasificar."},
+                 build:{en:"Build now: implement rejection reason codes (R1..Rn).",zh:"现在建：实现拒绝原因码（R1..Rn）。",es:"Construir ahora: implementar razones (R1..Rn)."},
+                 roadmap:{en:"Roadmap: measure screening drift by window.",zh:"路线图：按窗口测筛选漂移。",es:"Hoja de ruta: medir deriva de filtrado por ventana."}}
+    },
+
+    {c:"#ff2b2b",
+     t:{en:"H — HIGHLIGHT (Change Detector)",zh:"H — 高亮（变化检测）",es:"H — RESALTAR (detector)"},
+     s:{en:"Show deltas, not opinions.",zh:"展示差分，不展示观点。",es:"Mostrar deltas, no opiniones."},
+     platform:{intro:{en:"Pin: what changed, when, and how big.",zh:"钉住：变了什么、何时、多大。",es:"Fijar: qué cambió, cuándo y cuánto."},
+               concept:{en:"Concept: visible change reduces argument loops.",zh:"概念：变化可见，争论就少。",es:"Concepto: cambio visible reduce bucles."},
+               build:{en:"Build now: 1-line before/after for the primary signal.",zh:"现在建：主信号一行前后对比。",es:"Construir ahora: diff 1 línea antes/después."},
+               roadmap:{en:"Roadmap: link highlights to receipts (no narratives).",zh:"路线图：高亮绑定收据（无叙事）。",es:"Hoja de ruta: vincular resaltados a recibos (sin narrativa)."}},
+     engineering:{intro:{en:"Variance detection: delta, slope, threshold crossings with reason codes.",zh:"方差检测：差分、斜率、阈值穿越+原因码。",es:"Detección de varianza: delta, pendiente, cruces con códigos."},
+                 concept:{en:"Concept: drift is a metric.",zh:"概念：漂移是指标。",es:"Concepto: deriva es métrica."},
+                 build:{en:"Build now: windowed deltas; flag slope changes.",zh:"现在建：窗口差分；标记斜率变化。",es:"Construir ahora: deltas por ventana; marcar cambios de pendiente."},
+                 roadmap:{en:"Roadmap: connect flags to containment triggers.",zh:"路线图：标记接入隔离触发。",es:"Hoja de ruta: conectar flags a triggers de contención."}}
+    },
+
+    {c:"#93c5fd",
+     t:{en:"I — INSPECT (Scope Boundary)",zh:"I — 检查（范围边界）",es:"I — INSPECCIONAR (alcance)"},
+     s:{en:"Pick the evidence boundary before claiming.",zh:"主张前先选证据边界。",es:"Elegir límite de evidencia antes de afirmar."},
+     platform:{intro:{en:"Go one level deeper without getting lost.",zh:"深入一级但不迷路。",es:"Bajar un nivel sin perderse."},
+               concept:{en:"Concept: scope first, then conclusions.",zh:"概念：先范围，再结论。",es:"Concepto: alcance primero, conclusiones después."},
+               build:{en:"Build now: one inspect path per signal.",zh:"现在建：每个信号一条检查路径。",es:"Construir ahora: una ruta de inspección por señal."},
+               roadmap:{en:"Roadmap: standardize inspection depth.",zh:"路线图：标准化检查深度。",es:"Hoja de ruta: estandarizar profundidad de inspección."}},
+     engineering:{intro:{en:"Scope slice is part of input: identifiers, window, evidence list.",zh:"范围切片是输入：标识符、窗口、证据清单。",es:"Corte de alcance es entrada: IDs, ventana, lista de evidencia."},
+                 concept:{en:"Concept: scope is an input variable.",zh:"概念：范围是输入变量。",es:"Concepto: alcance es variable de entrada."},
+                 build:{en:"Build now: scope schema (anchors, window, evidence).",zh:"现在建：范围架构（锚点/窗口/证据）。",es:"Construir ahora: esquema de alcance (anclas, ventana, evidencia)."},
+                 roadmap:{en:"Roadmap: hash scope+evidence for replay integrity.",zh:"路线图：哈希锁范围+证据用于回放完整性。",es:"Hoja de ruta: hashear alcance+evidencia para integridad de replay."}}
+    },
+
+    {c:"#34d399",
+     t:{en:"M — MEASURE (Receipts)",zh:"M — 测量（收据）",es:"M — MEDIR (recibos)"},
+     s:{en:"Turn observation into a repeatable number.",zh:"把观察变成可复跑数字。",es:"Convertir observación en número repetible."},
+     platform:{intro:{en:"If you can’t measure it, label it concept.",zh:"测不了就标注概念。",es:"Si no puedes medir, etiqueta como concepto."},
+               concept:{en:"Concept: receipts beat confidence.",zh:"概念：收据胜过自信。",es:"Concepto: recibos vencen confianza."},
+               build:{en:"Build now: one truth metric per page.",zh:"现在建：每页一个说真话指标。",es:"Construir ahora: una métrica verdadera por página."},
+               roadmap:{en:"Roadmap: align metrics to gates (pass/hold/fail + reasons).",zh:"路线图：指标对齐闸门（通过/暂停/失败+原因）。",es:"Hoja de ruta: alinear métricas a compuertas (pasar/hold/fallar + razones)."}},
+     engineering:{intro:{en:"Measurement is function: inputs→output→threshold→failure meaning. Undefined→UNDETERMINED.",zh:"测量是函数：输入→输出→阈值→失败含义；未定义→UNDETERMINED。",es:"Medición es función: entradas→salida→umbral→significado. Sin definir→UNDETERMINED."},
+                 concept:{en:"Concept: determinism under fixed scope.",zh:"概念：固定范围下确定性。",es:"Concepto: determinismo bajo alcance fijo."},
+                 build:{en:"Build now: reason codes per threshold crossing.",zh:"现在建：每次阈值穿越输出原因码。",es:"Construir ahora: códigos por cruce de umbral."},
+                 roadmap:{en:"Roadmap: store receipts (timestamp+version+hash) for replay.",zh:"路线图：存收据（时间戳+版本+哈希）回放。",es:"Hoja de ruta: guardar recibos (timestamp+versión+hash) para replay."}}
+    },
+
+    {c:"#f59e0b",
+     t:{en:"M — MITIGATE (Contain)",zh:"M — 减缓（隔离）",es:"M — MITIGAR (contener)"},
+     s:{en:"Reduce harm before you ‘solve’.",zh:"先止损，再谈解决。",es:"Reducir daño antes de ‘resolver’."},
+     platform:{intro:{en:"Make blast radius smaller; preserve options.",zh:"缩小爆炸半径，保留选择权。",es:"Reducir radio de impacto; preservar opciones."},
+               concept:{en:"Concept: containment preserves options.",zh:"概念：隔离保留选择权。",es:"Concepto: contención preserva opciones."},
+               build:{en:"Build now: define pause + rollback actions people can execute.",zh:"现在建：定义可执行暂停+回滚。",es:"Construir ahora: definir pausa + rollback ejecutables."},
+               roadmap:{en:"Roadmap: tiered responses: warn→slow→isolate→reset.",zh:"路线图：分级响应：警告→减速→隔离→重置。",es:"Hoja de ruta: respuestas por niveles: avisar→ralentizar→aislar→reset."}},
+     engineering:{intro:{en:"Control logic: containment triggers, rollback paths, kill/exit behaviors.",zh:"控制逻辑：隔离触发、回滚路径、终止/退出。",es:"Lógica de control: triggers, rollback y kill/exit."},
+                 concept:{en:"Concept: containment beats cascade.",zh:"概念：隔离胜过级联。",es:"Concepto: contención vence cascada."},
+                 build:{en:"Build now: define thresholds and corresponding actions.",zh:"现在建：定义阈值与对应动作。",es:"Construir ahora: definir umbrales y acciones."},
+                 roadmap:{en:"Roadmap: verify effectiveness by re-entry to bands over windows.",zh:"路线图：用窗口回带验证有效性。",es:"Hoja de ruta: verificar eficacia por re-entrada a bandas en ventanas."}}
+    },
+
+    {c:"#a3a3a3",
+     t:{en:"E — EXPLAIN (Reason Codes)",zh:"E — 解释（原因码）",es:"E — EXPLICAR (razones)"},
+     s:{en:"Translate flags into plain causes.",zh:"把标记翻译成人话原因。",es:"Traducir flags a causas simples."},
+     platform:{intro:{en:"Short explanation: what changed, what it means, next action.",zh:"短解释：变了什么、意味着什么、下一步动作。",es:"Explicación corta: qué cambió, qué significa, siguiente acción."},
+               concept:{en:"Concept: people need next action, not theory.",zh:"概念：人需要下一步动作，不需要理论。",es:"Concepto: la gente necesita siguiente acción, no teoría."},
+               build:{en:"Build now: standardize 5–10 reason codes across pages.",zh:"现在建：全站标准化5–10个原因码。",es:"Construir ahora: estandarizar 5–10 códigos en el sitio."},
+               roadmap:{en:"Roadmap: map reason codes into Laws (bounds) and Products (actions).",zh:"路线图：原因码映射到法则（边界）与产品（动作）。",es:"Hoja de ruta: mapear códigos a Leyes (límites) y Productos (acciones)."}},
+     engineering:{intro:{en:"Reason codes bridge measurement and governance; preserve auditability.",zh:"原因码连接测量与治理，保持可审计。",es:"Códigos conectan medición y gobernanza; preservan auditabilidad."},
+                 concept:{en:"Concept: codes prevent narrative drift.",zh:"概念：代码防止叙事漂移。",es:"Concepto: códigos previenen deriva narrativa."},
+                 build:{en:"Build now: bind each code to threshold + action + receipt schema.",zh:"现在建：每个码绑定阈值+动作+收据架构。",es:"Construir ahora: ligar cada código a umbral+acción+esquema de recibo."},
+                 roadmap:{en:"Roadmap: require codes for every intervention (no silent fixes).",zh:"路线图：每次干预必须有原因码（无静默修复）。",es:"Hoja de ruta: exigir códigos para cada intervención (sin arreglos silenciosos)."}}
+    },
+
+    {c:"#c9a24a",
+     t:{en:"R — REPEAT (Window Discipline)",zh:"R — 重复（窗口纪律）",es:"R — REPETIR (ventanas)"},
+     s:{en:"Confirm stabilization over time.",zh:"用时间确认稳定。",es:"Confirmar estabilidad con el tiempo."},
+     platform:{intro:{en:"Check again tomorrow. Patterns show up.",zh:"明天再看一次，模式就出来。",es:"Revisar mañana. Aparecen patrones."},
+               concept:{en:"Concept: stability is consistency over windows.",zh:"概念：稳定=跨窗口一致。",es:"Concepto: estabilidad = consistencia por ventanas."},
+               build:{en:"Build now: pick one window size (daily/weekly) and stick to it.",zh:"现在建：选一个窗口（天/周）并坚持。",es:"Construir ahora: elegir tamaño de ventana (día/semana) y mantenerlo."},
+               roadmap:{en:"Roadmap: publish a readable timeline of flags and recoveries.",zh:"路线图：发布可读时间线：标记与恢复。",es:"Hoja de ruta: publicar línea temporal legible: flags y recuperaciones."}},
+     engineering:{intro:{en:"Verification: band re-entry, reduced variance, stable reason-code frequency over windows.",zh:"验证：回带、方差降低、原因码频率稳定（跨窗口）。",es:"Verificación: re-entrada a bandas, menor varianza y frecuencia estable de códigos por ventanas."},
+                 concept:{en:"Concept: windowed evidence beats snapshots.",zh:"概念：窗口证据胜过快照。",es:"Concepto: evidencia por ventanas vence snapshots."},
+                 build:{en:"Build now: store window aggregates + hashes for audit replay.",zh:"现在建：存窗口汇总+哈希用于审计回放。",es:"Construir ahora: guardar agregados por ventana + hashes para replay."},
+                 roadmap:{en:"Roadmap: integrate repeat checks into gating and escalation control.",zh:"路线图：把重复检查接入闸门与升级控制。",es:"Hoja de ruta: integrar chequeos repetidos en compuertas y control de escalación."}}
+    }
+  ];
+
+  function getActiveDomains(){
+    return (mode==="lattice") ? LATTICE_DOMAINS : SHIMMER_DOMAINS;
+  }
+
+  // ===== Accordion state preserved across lane/lang/mode changes =====
+  var list=document.getElementById("list");
+  var rowRefs=[];
+
+  function closeAllRows(){
+    for(var i=0;i<rowRefs.length;i++){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+    }
+  }
+
+  function toggleRow(i){
+    var isOpen=rowRefs[i].row.classList.contains("open");
+    if(isOpen){
+      rowRefs[i].row.classList.remove("open");
+      rowRefs[i].chev.textContent="▸";
+      return;
+    }
+    closeAllRows();
+    openIndexByMode[mode]=i;
+    rowRefs[i].row.classList.add("open");
+    rowRefs[i].chev.textContent="▾";
+  }
+
+  function makeSubBubble(label){
+    var b=document.createElement("div");
+    b.className="bubble";
+    b.setAttribute("role","button");
+    b.tabIndex=0;
+
+    var h=document.createElement("h4");
+    h.textContent=label;
+
+    var p=document.createElement("p");
+    p.textContent="";
+
+    b.appendChild(h);
+    b.appendChild(p);
+
+    function act(){ b.classList.toggle("open"); }
+    b.addEventListener("click", act, {passive:true});
+    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+
+    return {wrap:b, p:p};
+  }
+
+  function buildRow(item, idx){
+    var row=document.createElement("div");
+    row.className="row";
+    row.style.setProperty("--c", item.c);
+
+    var head=document.createElement("div");
+    head.className="head";
+    head.setAttribute("role","button");
+    head.tabIndex=0;
+
+    var hL=document.createElement("div");
+    hL.className="hL";
+
+    var mark=document.createElement("div");
+    mark.className="dmark";
+    mark.style.background=item.c;
+
+    var tb=document.createElement("div");
+    tb.className="titleBlock";
+
+    var title=document.createElement("div");
+    title.className="q";
+
+    var sub=document.createElement("div");
+    sub.className="sub";
+
+    tb.appendChild(title);
+    tb.appendChild(sub);
+
+    hL.appendChild(mark);
+    hL.appendChild(tb);
+
+    var chev=document.createElement("div");
+    chev.className="chev";
+    chev.innerHTML='<span class="chevTxt">▸</span>';
+
+    head.appendChild(hL);
+    head.appendChild(chev);
+
+    var body=document.createElement("div");
+    body.className="body";
+
+    var intro=document.createElement("p");
+    intro.className="pdesc";
+    body.appendChild(intro);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+
+    var b1=makeSubBubble(labConcept());
+    var b2=makeSubBubble(labBuild());
+    var b3=makeSubBubble(labRoadmap());
+
+    bubbles.appendChild(b1.wrap);
+    bubbles.appendChild(b2.wrap);
+    bubbles.appendChild(b3.wrap);
+    body.appendChild(bubbles);
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+
+    var a1=document.createElement("a"); a1.className="btn"; a1.setAttribute("data-route","/explore/frontier/"); actions.appendChild(a1);
+    var a2=document.createElement("a"); a2.className="btn"; a2.setAttribute("data-route","/laws/"); actions.appendChild(a2);
+    var a3=document.createElement("a"); a3.className="btn red"; a3.setAttribute("data-route","/gauges/"); actions.appendChild(a3);
+
+    body.appendChild(actions);
+
+    function onToggle(){ toggleRow(idx); wireAll(); }
+    head.addEventListener("click", onToggle, {passive:true});
+    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
+
+    row.appendChild(head);
+    row.appendChild(body);
+    list.appendChild(row);
+
+    rowRefs.push({
+      row:row,
+      chev:row.querySelector(".chevTxt"),
+      title:title,
+      sub:sub,
+      intro:intro,
+      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      a1:a1,a2:a2,a3:a3
+    });
+  }
+
+  function renderList(){
+    var DOMS=getActiveDomains();
+    var keep=openIndexByMode[mode]||0;
+    if(keep<0) keep=0;
+    if(keep>=DOMS.length) keep=0;
+
+    list.innerHTML="";
+    rowRefs=[];
+    for(var i=0;i<DOMS.length;i++){
+      buildRow(DOMS[i], i);
+    }
+    toggleRow(keep);
+  }
+
+  function applyHeader(){
+    var pack=headerPacks();
+
+    document.getElementById("hk").textContent =
+      (mode==="shimmer") ? pick3("FRONTIER · SHIMMER","前沿 · SHIMMER","FRONTERA · SHIMMER")
+                         : pick3("FRONTIER · LATTICE","前沿 · 晶格","FRONTERA · LATTICE");
+
+    document.getElementById("ht").textContent =
+      (mode==="shimmer") ? pick3("SHIMMER (S.H.I.M.M.E.R.)","SHIMMER（S.H.I.M.M.E.R.）","SHIMMER (S.H.I.M.M.E.R.)")
+                         : pick3("LATTICE GEOMETRY","晶格几何","GEOMETRÍA LATTICE");
+
+    document.getElementById("hs").textContent = pack.hs;
+    document.getElementById("rule").textContent = pack.rule;
+
+    document.getElementById("band").textContent =
+      (mode==="shimmer") ? pick3("SHIMMER DOMAINS","SHIMMER 域","DOMINIOS SHIMMER")
+                         : pick3("LATTICE DOMAINS","晶格域","DOMINIOS LATTICE");
+
+    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
+
+    document.getElementById("dockFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
+    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent   = pick3("GAUGES","量规","MEDIDORES");
+
+    document.getElementById("modeShimmer").textContent = pick3("SHIMMER","SHIMMER","SHIMMER");
+    document.getElementById("modeLattice").textContent = pick3("LATTICE","晶格","LATTICE");
+
+    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+
+    document.getElementById("modeState").textContent =
+      (lang==="zh") ? ("模式："+(mode==="shimmer"?"SHIMMER":"晶格")) :
+      (lang==="es") ? ("Modo: "+(mode==="shimmer"?"SHIMMER":"LATTICE")) :
+      ("Mode: "+(mode==="shimmer"?"SHIMMER":"LATTICE"));
+
+    document.getElementById("laneState").textContent =
+      (lang==="zh") ? ("当前透镜："+laneLabel()) :
+      (lang==="es") ? ("Lente actual: "+laneLabel()) :
+      ("Current lens: "+laneLabel());
+
+    document.getElementById("langState").textContent =
+      (lang==="zh") ? ("语言：中文") :
+      (lang==="es") ? ("Idioma: ES") :
+      ("Lang: EN");
+
+    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
+    setPressed(["modeShimmer","modeLattice"], mode==="shimmer"?"modeShimmer":"modeLattice");
+  }
+
+  function updateRows(){
+    var DOMS=getActiveDomains();
+    var keep=openIndexByMode[mode]||0;
+    if(keep<0) keep=0;
+    if(keep>=DOMS.length) keep=0;
+
+    for(var i=0;i<DOMS.length;i++){
+      var item=DOMS[i];
+      var r=rowRefs[i];
+      if(!r) continue;
+
+      r.title.textContent = (lang==="zh")?item.t.zh:(lang==="es")?(item.t.es||item.t.en):item.t.en;
+      r.sub.textContent   = (lang==="zh")?item.s.zh:(lang==="es")?(item.s.es||item.s.en):item.s.en;
+
+      var pack = (lane==="engineering") ? item.engineering : item.platform;
+
+      r.intro.textContent = (lang==="zh")?pack.intro.zh:(lang==="es")?(pack.intro.es||pack.intro.en):pack.intro.en;
+      r.b1p.textContent   = (lang==="zh")?pack.concept.zh:(lang==="es")?(pack.concept.es||pack.concept.en):pack.concept.en;
+      r.b2p.textContent   = (lang==="zh")?pack.build.zh:(lang==="es")?(pack.build.es||pack.build.en):pack.build.en;
+      r.b3p.textContent   = (lang==="zh")?pack.roadmap.zh:(lang==="es")?(pack.roadmap.es||pack.roadmap.en):pack.roadmap.en;
+
+      r.a1.textContent = openLabel()+": "+pick3("FRONTIER INDEX","前沿索引","ÍNDICE FRONTERA");
+      r.a2.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");
+      r.a3.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+    }
+
+    closeAllRows();
+    toggleRow(keep);
+    wireAll();
+  }
+
+  // ===== No reload on language/lane/mode changes =====
+  function setLang(next){
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    lang=next;
+    try{ LS.setItem("gd_lang",lang);}catch(e){}
+    history.replaceState({}, "", location.pathname + q({lang:lang}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    applyHeader();
+    updateRows();
+  }
+
+  function setMode(next){
+    if(next!=="shimmer" && next!=="lattice") next="shimmer";
+    mode=next;
+    applyHeader();
+    renderList();
+    updateRows();
+  }
+
+  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  document.getElementById("modeShimmer").addEventListener("click", function(){ setMode("shimmer"); }, {passive:true});
+  document.getElementById("modeLattice").addEventListener("click", function(){ setMode("lattice"); }, {passive:true});
+
+  // ===== INIT =====
+  renderList();
+  applyHeader();
+  updateRows();
+  wireAll();
+})();
+</script>
+
+</body>
+</html>

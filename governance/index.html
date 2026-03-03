@@ -1,26 +1,19 @@
 <!doctype html>
 <!-- TNT — /governance/index.html
      GOVERNANCE · INDEX (FOUR PILLARS) — INFORMAL SITE LAYER (PINNED)
-     PURPOSE:
-       - Governance = deployment/execution layer that makes Finance/Agriculture real at scale
-       - Four pillars (locked): Policy Engine · Compliance Grid · Public Risk Meter · Decision Index
-       - Clear routing to each pillar page + Laws (doctrine) + Gauges (signals)
-     STANDARD (THIS FILE):
-       - Trilingual UI: EN / 中文 / ES
-       - Visible lens ONLY: lane=platform|engineering (URL-only; NEVER stored)
-       - Pinned informal layer:
-           gd_style = informal
-           gd_depth = explore
+     EXECUTED UPGRADES (PER SEAN):
+       - Apply new GOLD INLAY 3D concept (radial/conic inlay; not flat grid)
+       - Apply GOLD PERIMETER GLOW to pressed/active controls + primary action buttons (no motion)
+       - Keep PLATFORM vs ENGINEERING lens (URL-only lane; NO reload)
+       - Trilingual UI (EN/中文/ES) (NO reload)
+       - Single-open accordion (tap same closes)
+       - Switching LANG or LANE does NOT reload and does NOT close open row
+       - No modals/overlays; no inline onclick; addEventListener only
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
-       - Switching LANG or LANE does NOT reload and does NOT close open row
-       - Single-open accordion (tap same closes)
-       - No modals/overlays; no inline onclick; addEventListener only
-     ASSETS:
-       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
-     ROUTES:
-       - Edit ROUTES only if paths change.
+     ROUTING:
+       - This page must be reachable at /governance/ from compass.
+       - If a pillar page 404s: create it at the route below (do NOT point elsewhere).
 -->
 
 <html lang="en">
@@ -48,10 +41,16 @@ body::before,body::after{pointer-events:none!important}
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
 
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.86);
+
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
-  --goldSoft:rgba(201,162,74,.18);
+
+  --gold:rgba(201,162,74,.62);
+  --goldGlow:rgba(201,162,74,.22);
+  --goldGlowSoft:rgba(201,162,74,.14);
 
   --shadowA:0 24px 90px rgba(0,0,0,.58);
   --shadowB:0 16px 56px rgba(0,0,0,.62);
@@ -72,13 +71,13 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* Button */
+/* Button: gold perimeter glow, no motion */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
@@ -88,13 +87,28 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowC);
 }
 .btn:active{transform:translateY(1px)}
+/* perimeter glow (NOT bottom-only) */
 .btn::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
+  position:absolute;inset:-2px;
+  border-radius:18px;
+  pointer-events:none;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10),
+    0 0 18px var(--goldGlowSoft),
+    inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.85;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.10);
+}
+.btn.red::after{
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10),
+    0 0 24px var(--goldGlow),
+    inset 0 0 0 1px rgba(201,162,74,.16);
+}
 
 /* Segmented */
 .seg{
@@ -109,13 +123,21 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.25px;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  position:relative;
 }
 .seg button[aria-pressed="true"]{
   color:var(--ink);
   background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 60%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+}
+.seg button[aria-pressed="true"]::after{
+  content:"";
+  position:absolute;inset:2px;border-radius:14px;
+  pointer-events:none;
+  box-shadow:0 0 20px var(--goldGlowSoft);
+  opacity:.95;
 }
 
 /* ===== Page ===== */
@@ -196,13 +218,20 @@ body::before,body::after{pointer-events:none!important}
   padding:16px 16px 14px;
   overflow:hidden;
 }
+
+/* 3D inlay trim (radial + conic) */
 .header::before{
   content:"";
   position:absolute;inset:0;border-radius:24px;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
+    radial-gradient(circle at 50% 50%, transparent 0 72%, rgba(201,162,74,.10) 78%, transparent 84%),
+    conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.12) 0 6%,
+      transparent 6% 12%,
+      rgba(201,162,74,.08) 12% 18%,
+      transparent 18% 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   opacity:.26;
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
@@ -211,21 +240,23 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
-.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
-.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink)}
-.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px}
+
+.k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
+.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);position:relative}
+.s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px;position:relative}
 .rule{
   margin-top:12px;
   padding:12px 12px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 58%),
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
     linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
   font-size:13.25px;
   color:rgba(255,255,255,.86);
   line-height:1.45;
+  position:relative;
 }
 
 /* State pills */
@@ -307,9 +338,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .chev::after{
   content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-  opacity:.62;pointer-events:none;
+  position:absolute;inset:-2px;border-radius:16px;
+  pointer-events:none;
+  box-shadow:0 0 18px var(--goldGlowSoft);
+  opacity:.65;
 }
 
 .body{
@@ -333,7 +365,7 @@ body::before,body::after{pointer-events:none!important}
   border-radius:18px;
   background:
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
     rgba(0,0,0,.12);
   padding:14px 14px 12px;
   cursor:pointer;
@@ -344,9 +376,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .bubble::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
+  position:absolute;inset:-2px;border-radius:20px;
+  pointer-events:none;
+  box-shadow:0 0 22px rgba(201,162,74,.10);
+  opacity:.60;
 }
 .bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
 .bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.25px}
@@ -390,7 +423,7 @@ body::before,body::after{pointer-events:none!important}
   <div class="left">
     <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
     <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-    <a class="btn red" id="btnLaws" data-route="/laws/" href="/laws/">LAWS</a>
+    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
   </div>
   <div class="right" aria-label="Controls">
     <div class="seg" role="group" aria-label="Language">
@@ -426,9 +459,9 @@ body::before,body::after{pointer-events:none!important}
 
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
-  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  <a class="btn red" id="dockLaws2" data-route="/laws/" href="/laws/">LAWS</a>
+  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+  <a class="btn red" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
 </nav>
 
 <script>
@@ -510,7 +543,7 @@ body::before,body::after{pointer-events:none!important}
         rule:"Rule: Governance deploys. Laws bound. Gauges measure. If measurement is missing, escalation stays paused."
       },
       engineering:{
-        hs:"Engineering view: governance is deterministic boundary enforcement under declared scope: constraints → gates → reason codes → receipts → replay. It is how systems stay comparable under scale.",
+        hs:"Engineering view: governance is deterministic boundary enforcement under declared scope: constraints → gates → reason codes → receipts → replay. It keeps systems comparable under scale.",
         rule:"Rule: no silent overrides. Every intervention has a reason code and an audit receipt."
       }
     },
@@ -536,212 +569,104 @@ body::before,body::after{pointer-events:none!important}
     }
   };
 
-  // ===== Pillars (4) =====
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
 
+  // ===== Pillars (4) =====
   var PILLARS=[
     {
-      id:"policy_engine",
-      c:"#34d399",
+      id:"policy_engine", c:"#34d399",
       t:P("Policy Engine","政策引擎","Motor de Política"),
       s:P("Turn rules into decisions institutions can execute.","把规则变成机构可执行决策。","Convertir reglas en decisiones ejecutables."),
       platform:{
         intro:P(
-          "This pillar makes governance practical: policies become a small set of consistent decisions that can be enforced without personality conflicts.",
-          "这个支柱让治理可落地：政策被压缩成一小组一致决策，不再依赖个人风格。",
-          "Este pilar vuelve la gobernanza práctica: políticas se vuelven decisiones consistentes, aplicables sin choques de personalidad."
+          "Policy turns doctrine into actions. This pillar compresses rules into a small set of executable decisions that can be enforced consistently.",
+          "政策把教义变成动作。本支柱把规则压缩为一小组可执行决策，并一致执行。",
+          "Política convierte doctrina en acción. Este pilar comprime reglas en decisiones ejecutables y consistentes."
         ),
-        b1:{h:P("What it outputs","输出是什么","Qué produce"), p:P(
-          "Clear allowed/blocked actions, with plain-language reasons.",
-          "清晰的允许/阻止动作，并给出人话原因。",
-          "Acciones permitidas/bloqueadas con razones claras."
-        )},
-        b2:{h:P("What it prevents","防止什么","Qué evita"), p:P(
-          "Ad-hoc exceptions that rot institutions from the inside.",
-          "随意例外从内部腐蚀机构。",
-          "Excepciones ad-hoc que pudren instituciones."
-        )},
-        b3:{h:P("How it ties to Laws","如何连接法则","Cómo conecta a Leyes"), p:P(
-          "Laws define bounds; Policy Engine turns bounds into executable steps.",
-          "法则给边界；政策引擎把边界变成可执行步骤。",
-          "Leyes acotan; el motor convierte límites en pasos ejecutables."
-        )}
-      },
+        b1:{h:P("Outputs","输出","Salidas"), p:P("Allowed/blocked actions with plain reasons.","允许/阻止动作 + 人话原因。","Acciones permitidas/bloqueadas con razones claras.")},
+        b2:{h:P("Stops drift","阻止漂移","Detiene deriva"), p:P("Prevents ad-hoc exceptions becoming policy.","防止随意例外变成政策。","Evita que excepciones ad-hoc se vuelvan política.")},
+        b3:{h:P("Connects to Laws","连接法则","Conecta a Leyes"), p:P("Laws bound; Policy Engine executes.","法则定边界；政策引擎执行。","Leyes acotan; el motor ejecuta.")} },
       engineering:{
         intro:P(
-          "Policy Engine is a deterministic compiler: declared scope + constraints → reason-coded decision outputs, logged as receipts.",
-          "政策引擎是确定性编译器：声明范围+约束→原因码决策输出，并以收据记录。",
-          "Motor de política = compilador determinista: alcance+restricciones → salidas con códigos, registradas como recibos."
+          "Deterministic compilation: scope + constraints → reason-coded decisions, logged as receipts for replay.",
+          "确定性编译：范围+约束→原因码决策，并以收据记录供回放。",
+          "Compilación determinista: alcance+restricciones → decisiones con códigos, con recibos para replay."
         ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P(
-          "Scope manifest, constraint set, threshold table, version tag.",
-          "范围清单、约束集、阈值表、版本标记。",
-          "Manifiesto de alcance, restricciones, umbrales, versión."
-        )},
-        b2:{h:P("Determinism","确定性","Determinismo"), p:P(
-          "Same inputs must yield same outputs; changes require version bump.",
-          "同输入必得同输出；变更必须版本升级。",
-          "Mismas entradas → mismas salidas; cambios requieren nueva versión."
-        )},
-        b3:{h:P("Receipts","收据","Recibos"), p:P(
-          "Every decision emits a receipt: inputs used + reason code + timestamp.",
-          "每个决策输出收据：使用的输入+原因码+时间戳。",
-          "Cada decisión emite recibo: entradas + código + timestamp."
-        )}
-      }
+        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope manifest, constraint set, thresholds, version.","范围清单、约束集、阈值、版本。","Manifiesto, restricciones, umbrales, versión.")},
+        b2:{h:P("Determinism","确定性","Determinismo"), p:P("Same inputs → same outputs; changes require version bump.","同输入→同输出；变更必须版本升级。","Mismas entradas → mismas salidas; cambios requieren versión.")},
+        b3:{h:P("Receipts","收据","Recibos"), p:P("Decision receipt: inputs used + reason code + timestamp.","决策收据：使用输入+原因码+时间戳。","Recibo: entradas + código + timestamp.")} }
     },
 
     {
-      id:"compliance_grid",
-      c:"#c9a24a",
+      id:"compliance_grid", c:"#c9a24a",
       t:P("Compliance Grid","合规网格","Grid de Cumplimiento"),
       s:P("Make constraints visible and enforceable across teams.","让约束跨团队可见且可执行。","Hacer restricciones visibles y ejecutables."),
       platform:{
         intro:P(
-          "Compliance stops drift: everyone knows what is allowed, what is blocked, and what must be verified before action.",
-          "合规阻止漂移：所有人知道允许什么、阻止什么、行动前必须验证什么。",
-          "Cumplimiento detiene deriva: todos saben qué se permite, qué se bloquea y qué verificar antes de actuar."
+          "Compliance keeps scale honest. It makes requirements visible so teams stop interpreting rules differently.",
+          "合规让规模化保持诚实：要求可见，团队不再各自解释。",
+          "Cumplimiento mantiene la escala honesta: requisitos visibles para evitar interpretaciones distintas."
         ),
-        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P(
-          "A simple grid: requirement → evidence → status.",
-          "简单网格：要求→证据→状态。",
-          "Una grilla simple: requisito → evidencia → estado."
-        )},
-        b2:{h:P("Why it matters","为什么重要","Por qué importa"), p:P(
-          "Scale fails when teams interpret rules differently.",
-          "扩张失败往往是团队对规则理解不一致。",
-          "La escala falla cuando equipos interpretan reglas distinto."
-        )},
-        b3:{h:P("Next step routing","下一步路由","Ruta siguiente"), p:P(
-          "From a violation, route to Laws (bounds) and Gauges (signals).",
-          "出现违规就路由到法则（边界）与量规（信号）。",
-          "Ante violación: saltar a Leyes (límites) y Medidores (señales)."
-        )}
-      },
+        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P("Requirement → evidence → status.","要求→证据→状态。","Requisito → evidencia → estado.")},
+        b2:{h:P("Why it matters","为何重要","Por qué importa"), p:P("Scale fails when rules drift across teams.","规则在团队间漂移，扩张就会失败。","La escala falla cuando reglas derivan entre equipos.")},
+        b3:{h:P("Routes on violation","违规路由","Ruta ante violación"), p:P("Route to Laws (bounds) and Gauges (signals).","路由到法则（边界）与量规（信号）。","Enrutar a Leyes (límites) y Medidores (señales).")} },
       engineering:{
         intro:P(
-          "Compliance Grid is constraint surface presentation + enforcement logging: each cell maps to a check, a threshold, and a receipt schema.",
-          "合规网格是约束面展示+执行日志：每个格子对应检查、阈值与收据架构。",
-          "Grid = superficies de restricción + logging: cada celda mapea a check, umbral y esquema de recibo."
+          "Constraint surface + enforcement logging. Each cell maps to a check, threshold, and receipt schema.",
+          "约束面+执行日志：每个格子对应检查、阈值与收据架构。",
+          "Superficie de restricciones + logging. Cada celda mapea a check, umbral y esquema de recibo."
         ),
-        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P(
-          "Each requirement has a binary gate: PASS/HOLD/FAIL with reason code.",
-          "每项要求都是二元闸门：PASS/HOLD/FAIL + 原因码。",
-          "Cada requisito tiene compuerta: PASS/HOLD/FAIL con código."
-        )},
-        b2:{h:P("Audit trail","审计轨迹","Rastro de auditoría"), p:P(
-          "No silent compliance. All checks are logged by window.",
-          "无静默合规。所有检查按窗口记录。",
-          "Sin cumplimiento silencioso. Checks registrados por ventana."
-        )},
-        b3:{h:P("Interfaces","接口","Interfaces"), p:P(
-          "Consumes Laws and Gauges; emits enforcement receipts to Registry.",
-          "消费法则与量规；向Registry输出执行收据。",
-          "Consume Leyes y Medidores; emite recibos de enforcement al Registro."
-        )}
-      }
+        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P("PASS/HOLD/FAIL with reason codes.","PASS/HOLD/FAIL + 原因码。","PASS/HOLD/FAIL con códigos.")},
+        b2:{h:P("Audit trail","审计轨迹","Auditoría"), p:P("No silent compliance; checks logged by window.","无静默合规；按窗口记录。","Sin cumplimiento silencioso; checks por ventana.")},
+        b3:{h:P("Interfaces","接口","Interfaces"), p:P("Consumes Laws/Gauges; emits receipts to Registry.","消费法则/量规；输出收据到Registry。","Consume Leyes/Medidores; emite recibos al Registro.")} }
     },
 
     {
-      id:"public_risk_meter",
-      c:"#ff2b2b",
-      t:P("Public Risk Meter","公共风险表","Medidor de Riesgo Público"),
-      s:P("Readable stability posture for the public: green/yellow/red.","对公众可读的稳定姿态：绿/黄/红。","Postura legible: verde/amarillo/rojo."),
+      id:"public_risk_meter", c:"#ff2b2b",
+      t:P("Public Risk Meter","公共风险表","Medidor Público"),
+      s:P("Readable stability posture: green/yellow/red.","可读稳定姿态：绿/黄/红。","Postura legible: verde/amarillo/rojo."),
       platform:{
         intro:P(
-          "This pillar translates technical risk into a calm public signal. It prevents panic and prevents denial by showing the same truth every time.",
-          "该支柱把技术风险翻译成冷静的公共信号：既防恐慌，也防否认——每次都展示同一真相。",
-          "Traduce riesgo técnico a señal pública calmada. Evita pánico y negación mostrando la misma verdad siempre."
+          "This is the public surface. It translates technical risk into a calm, repeatable signal—preventing panic and preventing denial.",
+          "这是公众面：把技术风险翻译成冷静且可复跑的信号，既防恐慌也防否认。",
+          "Superficie pública: traduce riesgo técnico a señal calmada y repetible, evitando pánico y negación."
         ),
-        b1:{h:P("What it answers","回答什么","Qué responde"), p:P(
-          "Are we stable? If not, where is the leak and what is the next action?",
-          "我们稳定吗？不稳定的话，哪里在漏，下一步是什么？",
-          "¿Estamos estables? Si no, ¿dónde está la fuga y cuál es el siguiente paso?"
-        )},
-        b2:{h:P("What it avoids","避免什么","Qué evita"), p:P(
-          "Arguing about intent. It reports observed behavior and measured signals only.",
-          "不争论意图，只报告观测行为与测得信号。",
-          "No discute intención. Reporta solo señales medidas y comportamiento observado."
-        )},
-        b3:{h:P("How it integrates","如何整合","Cómo integra"), p:P(
-          "Routes users to Gauges for detail and to Laws for boundaries.",
-          "把用户路由到量规看细节，到法则看边界。",
-          "Enruta a Medidores para detalle y a Leyes para límites."
-        )}
-      },
+        b1:{h:P("Answers","回答什么","Responde"), p:P("Are we stable? If not, where is the leak and what is next?","我们稳定吗？不稳定的话，哪里在漏，下一步是什么？","¿Estamos estables? Si no, ¿dónde está la fuga y qué sigue?")},
+        b2:{h:P("Avoids intent debates","避免意图争论","Evita debatir intención"), p:P("Observed behavior + measured signals only.","只看观测行为与测得信号。","Solo señales medidas y comportamiento observado.")},
+        b3:{h:P("Integrates","如何整合","Integra"), p:P("Routes to Gauges for detail; Laws for bounds.","到量规看细节；到法则看边界。","Enruta a Medidores (detalle) y Leyes (límites).")} },
       engineering:{
         intro:P(
-          "Risk Meter is a windowed exposure report: thresholds + trend + correlation watch. It is a posture output, not a narrative.",
-          "风险表是窗口化暴露报告：阈值+趋势+相关监测。它输出姿态，不输出叙事。",
-          "Medidor = reporte por ventanas: umbrales + tendencia + vigilancia de correlación. Salida de postura, no narrativa."
+          "Windowed exposure report: thresholds + trend + correlation watch. Posture output, not narrative.",
+          "窗口化暴露报告：阈值+趋势+相关监测。输出姿态，不输出叙事。",
+          "Reporte por ventanas: umbrales + tendencia + vigilancia de correlación. Salida de postura, no narrativa."
         ),
-        b1:{h:P("Signals","信号","Señales"), p:P(
-          "Exposure level, acceleration, correlated movement (ρ/Δρ) where applicable.",
-          "暴露水平、加速度、以及可用时的相关运动（ρ/Δρ）。",
-          "Nivel de exposición, aceleración y movimiento correlacionado (ρ/Δρ) cuando aplique."
-        )},
-        b2:{h:P("Triggers","触发","Triggers"), p:P(
-          "Crossing a band emits a reason code and links to receipts.",
-          "穿越区间输出原因码，并链接收据。",
-          "Cruzar banda emite código y enlaza recibos."
-        )},
-        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P(
-          "GREEN / YELLOW / RED plus reason codes; no causality claims.",
-          "GREEN/YELLOW/RED + 原因码；不做因果主张。",
-          "VERDE/AMARILLO/ROJO + códigos; sin causalidad."
-        )}
-      }
+        b1:{h:P("Signals","信号","Señales"), p:P("Exposure, acceleration, correlated movement (ρ/Δρ) when applicable.","暴露、加速度、以及可用时的ρ/Δρ。","Exposición, aceleración y ρ/Δρ cuando aplique.")},
+        b2:{h:P("Triggers","触发","Triggers"), p:P("Band crossing emits reason code + receipt links.","穿越区间输出原因码并链接收据。","Cruce de banda emite código y enlaces a recibos.")},
+        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P("GREEN/YELLOW/RED + codes; no causality claims.","GREEN/YELLOW/RED + 原因码；不做因果主张。","VERDE/AMARILLO/ROJO + códigos; sin causalidad.")} }
     },
 
     {
-      id:"decision_index",
-      c:"#93c5fd",
+      id:"decision_index", c:"#93c5fd",
       t:P("Decision Index","决策指数","Índice de Decisión"),
-      s:P("Compress choice: next step, not wandering.","压缩选择：给下一步，不让乱逛。","Comprimir elección: siguiente paso, no deambular."),
+      s:P("Compress choice into a short executable next step list.","把选择压成可执行的下一步清单。","Comprime elección en lista ejecutable."),
       platform:{
         intro:P(
-          "Decision Index is the anti-confusion surface. It turns a big problem into a short list of executable next actions.",
-          "决策指数是“反混乱界面”：把大问题压成一小串可执行的下一步。",
-          "Índice de Decisión es superficie anti-confusión: convierte problemas grandes en una lista corta de acciones ejecutables."
+          "This is the anti-confusion surface. It turns a big problem into a short list of next actions with clear stop conditions.",
+          "这是反混乱界面：把大问题压成下一步清单，并给清晰停止条件。",
+          "Superficie anti-confusión: convierte problemas grandes en acciones siguientes con condiciones de parada."
         ),
-        b1:{h:P("What it produces","产出什么","Qué produce"), p:P(
-          "A ranked list: do this next, then this, with a clear stop condition.",
-          "排序清单：下一步做什么，再做什么，并给清晰停止条件。",
-          "Lista rankeada: haz esto, luego esto, con condición de parada."
-        )},
-        b2:{h:P("Why it’s governance","为何属于治理","Por qué es gobernanza"), p:P(
-          "Because decisions must be comparable across teams and time, not personality-based.",
-          "因为决策必须跨团队与时间可比，而不是靠个性。",
-          "Porque decisiones deben ser comparables entre equipos y tiempo, no basadas en personalidad."
-        )},
-        b3:{h:P("Where it routes","路由到哪里","A dónde enruta"), p:P(
-          "To Policy Engine for enforcement, to Compliance Grid for requirements, to Gauges for evidence.",
-          "到政策引擎做执行，到合规网格看要求，到量规看证据。",
-          "A Motor de Política, Grid de Cumplimiento y Medidores."
-        )}
-      },
+        b1:{h:P("Produces","产出","Produce"), p:P("Ranked next steps, then a stop condition.","排序下一步，然后给停止条件。","Siguientes pasos rankeados y condición de stop.")},
+        b2:{h:P("Governance reason","治理原因","Razón"), p:P("Decisions must be comparable across teams/time, not personality-based.","决策必须跨团队/时间可比，不靠个性。","Decisiones comparables entre equipos/tiempo, no por personalidad.")},
+        b3:{h:P("Routes to pillars","路由到支柱","Enruta a pilares"), p:P("Policy Engine (enforce), Compliance Grid (requirements), Gauges (evidence).","政策引擎（执行）、合规网格（要求）、量规（证据）。","Motor (enforce), Grid (requisitos), Medidores (evidencia).")} },
       engineering:{
         intro:P(
-          "Decision Index is bounded inference under fixed scope: it never exceeds evidence and always emits reason-coded outputs and receipts.",
-          "决策指数是在固定范围下的有界推断：不超证据，输出原因码与收据。",
-          "Índice = inferencia acotada bajo alcance fijo: no excede evidencia y emite códigos/recibos."
+          "Bounded inference under fixed scope: never exceeds evidence; emits reason-coded outputs and receipts.",
+          "固定范围下有界推断：不超证据；输出原因码与收据。",
+          "Inferencia acotada bajo alcance fijo: no excede evidencia; emite códigos y recibos."
         ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P(
-          "Scope + signals (gauges) + constraints (laws) + current posture.",
-          "范围+信号（量规）+约束（法则）+当前姿态。",
-          "Alcance + señales + restricciones + postura actual."
-        )},
-        b2:{h:P("Outputs","输出","Salidas"), p:P(
-          "Next action list + stop/hold conditions, with reason codes.",
-          "下一步清单+停止/暂停条件，并带原因码。",
-          "Lista de acciones + condiciones de stop/hold con códigos."
-        )},
-        b3:{h:P("Auditability","可审计","Auditabilidad"), p:P(
-          "Every recommendation is replayable: same inputs → same list.",
-          "每条建议可回放：同输入→同清单。",
-          "Cada recomendación es replayable: mismas entradas → misma lista."
-        )}
-      }
+        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope + gauges + laws + posture.","范围+量规+法则+姿态。","Alcance + medidores + leyes + postura.")},
+        b2:{h:P("Outputs","输出","Salidas"), p:P("Next actions + hold/stop conditions, reason-coded.","下一步动作+暂停/停止条件，带原因码。","Acciones + condiciones hold/stop con códigos.")},
+        b3:{h:P("Replay","回放","Replay"), p:P("Same inputs → same ranked list.","同输入→同排序清单。","Mismas entradas → misma lista.")} }
     }
   ];
 
@@ -756,7 +681,6 @@ body::before,body::after{pointer-events:none!important}
       rowRefs[i].chev.textContent="▸";
     }
   }
-
   function toggleRow(i){
     var isOpen=rowRefs[i].row.classList.contains("open");
     if(isOpen){
@@ -788,7 +712,6 @@ body::before,body::after{pointer-events:none!important}
     function act(){ b.classList.toggle("open"); }
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
     return b;
   }
 
@@ -891,9 +814,7 @@ body::before,body::after{pointer-events:none!important}
   function renderList(){
     list.innerHTML="";
     rowRefs=[];
-    for(var i=0;i<PILLARS.length;i++){
-      buildRow(PILLARS[i], i);
-    }
+    for(var i=0;i<PILLARS.length;i++) buildRow(PILLARS[i], i);
     openIndex=0;
     toggleRow(0);
   }
@@ -906,8 +827,7 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("ht").textContent = pick3("FOUR PILLARS","四大支柱","CUATRO PILARES");
     document.getElementById("hs").textContent = pack.hs;
     document.getElementById("rule").textContent = pack.rule;
-
-    document.getElementById("band").textContent = pick3("PILLARS (OPEN ONE)","支柱（打开一个）","PILARES (abre uno)");
+    document.getElementById("band").textContent = pick3("PILLARS (OPEN ONE)","支柱（打开一个）","PILARES (ABRE UNO)");
 
     document.getElementById("laneState").textContent =
       (lang==="zh") ? ("当前透镜："+laneLabel()) :
@@ -919,12 +839,12 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
     document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("btnLaws").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("btnProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
 
     document.getElementById("dockDoor").textContent = pick3("DOOR","门","PUERTA");
-    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockLaws2").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
     document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+    document.getElementById("dockCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
   }
 
   function updateRows(){
@@ -938,10 +858,8 @@ body::before,body::after{pointer-events:none!important}
       R.subt.textContent  = pick3(p.s.en, p.s.zh, p.s.es);
 
       var pack = (lane==="engineering") ? p.engineering : p.platform;
-
       R.intro.textContent = pick3(pack.intro.en, pack.intro.zh, pack.intro.es);
 
-      // rebuild bubbles (so titles/texts match lane + lang)
       var sb = R.row.querySelector(".subBubbles");
       if(sb){
         sb.innerHTML="";

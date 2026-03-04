@@ -1,6 +1,10 @@
 <!doctype html>
 <!-- TNT — /index.html
      COMPASS · 2-LAYER (5 + 12) · ENGLISH ONLY · STABLE ENGINE LOAD
+     CANON LAYERING FIX:
+     - #gd-field hosts bg canvas + glassPlate (BEHIND DRAGON)
+     - #gd-dragon hosts dragon canvas (ABOVE PLATE, BELOW UI)
+     - #gd-ui hosts dial + nodes + controls (ABOVE DRAGON)
 -->
 <html lang="en">
 <head>
@@ -12,16 +16,28 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <!-- IMPORTANT: cache-bust so mobile stops serving old JS -->
-<script defer src="/assets/instruments.js?v=cb_v1"></script>
-<script defer src="/assets/bg-engine.js?v=cb_v1"></script>
-<script defer src="/assets/dragon-anatomy.js?v=cb_v1"></script>
+<script defer src="/assets/instruments.js?v=cb_v2"></script>
+<script defer src="/assets/bg-engine.js?v=cb_v2"></script>
+<script defer src="/assets/dragon-anatomy.js?v=cb_v2"></script>
 
 <style>
 body{margin:0}
+
+/* =========================================================
+   CANON LAYER HOSTS (device-stable)
+   field (0-4) < dragon (5-9) < ui (10+)
+========================================================= */
+#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
+#gd-field{z-index:0;pointer-events:none}
+#gd-dragon{z-index:6;pointer-events:none}
+#gd-ui{z-index:20;pointer-events:none}
+
+/* UI */
 .stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
 .glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;border:1px solid rgba(255,255,255,.10);background:linear-gradient(160deg, rgba(10,12,16,.34), rgba(6,8,10,.44));box-shadow:0 70px 240px rgba(0,0,0,.48), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -70px 140px rgba(0,0,0,.52);opacity:.86}
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
 .dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
+
 .node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);cursor:pointer;pointer-events:auto;overflow:hidden;border:1px solid rgba(255,255,255,.18);z-index:20;border-radius:22px;background:linear-gradient(160deg,#111827,#0b0f16);box-shadow:0 44px 140px rgba(0,0,0,.82)}
 .core{width:208px;height:208px;border-radius:26px}
 .l1{width:150px;height:150px}
@@ -31,6 +47,7 @@ body{margin:0}
 .word{font-weight:980;letter-spacing:.6px}
 .code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
 
+/* Top controls + corners live in UI layer */
 .top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
 .topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
 .controls{display:flex;gap:10px;justify-content:flex-end}
@@ -47,28 +64,38 @@ body{margin:0}
 
 <body>
 
-<div class="top">
-  <div class="topbar">
-    <div class="controls">
-      <div class="seg" role="group" aria-label="Compass Layer">
-        <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
-        <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
-      </div>
-      <div class="seg" role="group" aria-label="Lane">
-        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+<!-- CANON LAYER HOSTS -->
+<div id="gd-field"></div>
+<div id="gd-dragon"></div>
+
+<div id="gd-ui">
+
+  <div class="top">
+    <div class="topbar">
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Compass Layer">
+          <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
+          <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
+        </div>
+        <div class="seg" role="group" aria-label="Lane">
+          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="stage" id="stage">
-  <div class="glassPlate"></div>
-  <div class="dial"></div>
-</div>
+  <div class="stage" id="stage">
+    <!-- glass plate belongs BEHIND dragon => we will move it into gd-field at runtime -->
+    <div class="glassPlate" id="glassPlate"></div>
 
-<div class="corner left"><button class="btn" id="btnExit">EXIT</button></div>
-<div class="corner right"><button class="btn" id="btnHub">HUB</button></div>
+    <div class="dial"></div>
+  </div>
+
+  <div class="corner left"><button class="btn" id="btnExit">EXIT</button></div>
+  <div class="corner right"><button class="btn" id="btnHub">HUB</button></div>
+
+</div>
 
 <script>
 (function(){
@@ -105,14 +132,40 @@ body{margin:0}
   }
   function go(path){ location.href = path + q(); }
 
+  // Move glassPlate behind dragon (into gd-field) while keeping its geometry
+  function relocatePlate(){
+    var field=document.getElementById("gd-field");
+    var plate=document.getElementById("glassPlate");
+    if(!field || !plate) return;
+
+    // Freeze current computed box relative to viewport
+    var r=plate.getBoundingClientRect();
+
+    plate.style.position="fixed";
+    plate.style.left = (r.left)+"px";
+    plate.style.top  = (r.top)+"px";
+    plate.style.transform="none";
+    plate.style.width = (r.width)+"px";
+    plate.style.height= (r.height)+"px";
+    plate.style.zIndex="2"; // within field layer
+    field.appendChild(plate);
+  }
+
   // Mount engines ONCE after load (never remount on resize/tabs)
   window.addEventListener("load", function(){
+    relocatePlate();
+
     try{
-      if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({ fps:30, dpr_cap:1.6, crater_count:18, moon_radius:0.065, cloud_count:22, lantern_count:26 });
+      if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({
+        fps:30, dpr_cap:1.6, crater_count:18, moon_radius:0.065, cloud_count:22, lantern_count:26
+      });
     }catch(e){}
+
     try{
-      // slow dragon
-      if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({ speed:55, girth:2.6, segments:110 });
+      // slow dragon; must be ABOVE plate but BELOW nodes
+      if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({
+        speed:55, girth:2.6, segments:110
+      });
     }catch(e){}
   });
 

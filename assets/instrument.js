@@ -79,7 +79,6 @@
     v = v.toLowerCase();
     // common variants -> zh
     if(v === "zh-cn" || v === "zh-hans" || v === "zh-hans-cn" || v === "zh-hans-hk" || v === "zh-hant") return "zh";
-    // tolerate EN/ZH/ES etc already handled by lowercasing
     return v;
   }
 
@@ -279,6 +278,7 @@
       ref: String(document.referrer || "").slice(0,300)
     });
 
+    // scroll_depth thresholds
     var thresholds = [25,50,75,90];
     var hit = {25:false,50:false,75:false,90:false};
     var last = 0;
@@ -307,6 +307,7 @@
 
     window.addEventListener("scroll", onScroll, {passive:true});
 
+    // click capture (anchors/buttons/accordion-ish)
     function findAnchor(target){
       var el = target;
       for(var i=0;i<8 && el;i++){
@@ -353,7 +354,14 @@
       if(b){
         var label = safeText(b).toLowerCase();
         var cls = (b.className ? String(b.className).toLowerCase() : "");
-        var isLens = (label.indexOf("informal")>=0 || label.indexOf("formal")>=0 || label.indexOf("platform")>=0 || label.indexOf("engineering")>=0 || label.indexOf("narrative")>=0 || cls.indexOf("pill")>=0);
+        var isLens = (
+          label.indexOf("informal")>=0 ||
+          label.indexOf("formal")>=0 ||
+          label.indexOf("platform")>=0 ||
+          label.indexOf("engineering")>=0 ||
+          label.indexOf("narrative")>=0 ||
+          cls.indexOf("pill")>=0
+        );
         emit(isLens ? "lens_toggle" : "button_click", state, {
           label: safeText(b),
           id: (b.id || "")
@@ -379,6 +387,7 @@
   gate(state);
   loadCanonI18n(state.lang);
 
+  // Telemetry emit (non-blocking)
   initTelemetry(state);
 
   // Optional debug surface (keep existing)

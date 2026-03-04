@@ -1,240 +1,417 @@
 <!doctype html>
+<!-- =========================================================
+   GEODIAMETRICS COMPASS — TNT FULL FILE
+   VERSION: LAYER 4 STABLE BASELINE
+   OWNER: SEAN
+   PURPOSE:
+     - Obsidian compass with water lens
+     - Single moon (phase changes per load)
+     - Atmospheric clouds + lantern drift
+     - Dual dragon flight system (clean base body)
+     - English only (temporary build rule)
+     - No competing UI layers
+     - Full file replacement (TNT)
+========================================================= -->
+
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Compass</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<script src="/assets/hex-lattice-engine.js"></script>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/branch.css">
 
 <style>
 
-/* =============================
-   LAYER COLORS
-   red → dark → red → dark
-============================= */
-
-:root{
-
---red-field:#9e0000;
---dark-ring:#0b0f16;
---red-compass:#b00000;
---dark-button:#080b12;
-
---gold:#d4af37;
-
---core:180px;
---cardinal:120px;
---minor:90px;
-
---r1:150px;
---r2:230px;
---r3:300px;
-
-}
-
-/* =============================
-   FIELD
-============================= */
+/* ===============================
+   CORE LAYOUT
+=============================== */
 
 body{
-background:radial-gradient(circle at center,
-#9e0000 0%,
-#600000 45%,
-#300000 100%);
+margin:0;
 overflow:hidden;
+font-family:system-ui;
 }
-
-/* =============================
-   STAGE
-============================= */
 
 .stage{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:900px;
-height:900px;
-}
-
-/* =============================
-   COMPASS RINGS
-============================= */
-
-.ring{
-position:absolute;
-border-radius:50%;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
+position:fixed;
+inset:0;
 pointer-events:none;
 }
 
-.ring.outer{
-width:760px;
-height:760px;
-border:2px solid rgba(212,175,55,.35);
+/* ===============================
+   SKY LAYER
+=============================== */
+
+.sky{
+position:absolute;
+inset:0;
+z-index:1;
+
+background:
+radial-gradient(circle at 70% 15%,rgba(255,230,180,.18),transparent 40%),
+radial-gradient(circle at 30% 30%,rgba(255,100,80,.12),transparent 60%),
+linear-gradient(180deg,#7b0000,#2b0000);
 }
 
-.ring.mid{
-width:520px;
-height:520px;
-border:2px solid rgba(212,175,55,.25);
-}
-
-.ring.inner{
-width:320px;
-height:320px;
-border:2px solid rgba(212,175,55,.20);
-}
-
-/* =============================
+/* ===============================
    MOON
-============================= */
+=============================== */
 
 .moon{
 position:absolute;
-top:60px;
-right:90px;
-width:80px;
-height:80px;
+right:14%;
+top:12%;
+width:140px;
+height:140px;
 border-radius:50%;
+z-index:2;
 
 background:
-radial-gradient(circle at 35% 30%,
-#fff8d6 0%,
-#ffeaa0 40%,
-#ffd86a 70%,
-#ffcf4d 100%);
+radial-gradient(circle at 35% 35%,#fff,#ddd 60%,#999 100%);
 
 box-shadow:
-0 0 40px rgba(255,240,200,.6),
-0 0 120px rgba(255,210,100,.4);
-
+0 0 40px rgba(255,230,180,.4),
+0 0 90px rgba(255,200,120,.2);
 }
 
-/* =============================
-   DIAMOND BUTTONS
-============================= */
+/* ===============================
+   COMPASS WATER LENS
+=============================== */
+
+.compassLens{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:720px;
+height:720px;
+border-radius:50%;
+z-index:3;
+
+background:
+radial-gradient(circle at 50% 40%,rgba(255,255,255,.1),transparent 60%),
+radial-gradient(circle at 50% 70%,rgba(255,255,255,.08),transparent 60%),
+rgba(120,0,0,.35);
+
+backdrop-filter:blur(6px);
+
+box-shadow:
+0 0 120px rgba(0,0,0,.8),
+inset 0 0 60px rgba(0,0,0,.8);
+}
+
+/* ===============================
+   COMPASS RINGS
+=============================== */
+
+.compassLines{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:720px;
+height:720px;
+border-radius:50%;
+z-index:4;
+pointer-events:none;
+}
+
+.compassLines:before,
+.compassLines:after{
+content:"";
+position:absolute;
+inset:0;
+border-radius:50%;
+border:1px solid rgba(212,175,55,.4);
+}
+
+.compassLines:after{
+transform:scale(.68);
+}
+
+/* ===============================
+   DRAGON CANVAS
+=============================== */
+
+#dragonCanvas{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:5;
+}
+
+/* ===============================
+   ATMOSPHERE CANVAS
+=============================== */
+
+#atmosCanvas{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:2;
+}
+
+/* ===============================
+   COMPASS BUTTONS
+=============================== */
 
 .node{
 position:absolute;
-transform:rotate(45deg);
-background:#080b12;
+width:120px;
+height:120px;
+background:#0c0c0c;
 border:1px solid rgba(255,255,255,.15);
+border-radius:18px;
 box-shadow:
-0 12px 30px rgba(0,0,0,.8),
-0 0 18px rgba(212,175,55,.18);
+0 0 40px rgba(0,0,0,.7),
+0 0 20px rgba(212,175,55,.2);
+
+pointer-events:auto;
 cursor:pointer;
 }
 
 .node:hover{
 box-shadow:
-0 12px 30px rgba(0,0,0,.9),
-0 0 24px rgba(212,175,55,.35);
+0 0 40px rgba(212,175,55,.4),
+0 0 80px rgba(212,175,55,.3);
 }
 
-/* sizes */
-
-.core{width:var(--core);height:var(--core);}
-.cardinal{width:var(--cardinal);height:var(--cardinal);}
-.minor{width:var(--minor);height:var(--minor);}
-
-/* label */
-
-.node span{
-transform:rotate(-45deg);
-display:block;
-text-align:center;
-color:white;
-font-weight:700;
-font-size:14px;
-line-height:1;
-position:absolute;
-top:50%;
-left:50%;
-transform-origin:center;
-translate:-50% -50%;
+.core{
+width:200px;
+height:200px;
+border-radius:24px;
 }
 
 </style>
 </head>
 
+
 <body>
 
-<div class="stage" id="stage">
+<div class="stage">
 
-<div class="ring outer"></div>
-<div class="ring mid"></div>
-<div class="ring inner"></div>
+<div class="sky"></div>
 
 <div class="moon"></div>
 
+<div class="compassLens"></div>
+
+<div class="compassLines"></div>
+
+<canvas id="atmosCanvas"></canvas>
+<canvas id="dragonCanvas"></canvas>
+
 </div>
+
+
 
 <script>
 
-/* =============================
-   GEOMETRY
-============================= */
+/* =========================================================
+   MOON PHASE ENGINE
+========================================================= */
 
-const stage = document.getElementById("stage")
+(function(){
 
-function addNode(label,x,y,size){
+let moon=document.querySelector(".moon")
 
-let node = document.createElement("div")
-node.className="node "+size
+let phase=Math.floor(Math.random()*8)
 
-node.style.left = x+"px"
-node.style.top = y+"px"
+let mask=document.createElement("div")
 
-let text = document.createElement("span")
-text.innerText = label
+mask.style.position="absolute"
+mask.style.inset="0"
+mask.style.borderRadius="50%"
 
-node.appendChild(text)
-stage.appendChild(node)
+let offset=(phase-4)*20
+
+mask.style.boxShadow=`${offset}px 0 0 0 rgba(0,0,0,.8)`
+
+moon.appendChild(mask)
+
+})()
+
+
+
+/* =========================================================
+   ATMOSPHERE ENGINE (clouds + lanterns)
+========================================================= */
+
+const atmosCanvas=document.getElementById("atmosCanvas")
+const atmos=atmosCanvas.getContext("2d")
+
+function resizeAtmos(){
+atmosCanvas.width=window.innerWidth
+atmosCanvas.height=window.innerHeight
+}
+
+resizeAtmos()
+window.addEventListener("resize",resizeAtmos)
+
+let lanterns=[]
+let clouds=[]
+
+for(let i=0;i<18;i++){
+lanterns.push({
+x:Math.random()*window.innerWidth,
+y:window.innerHeight+Math.random()*400,
+speed:.12+Math.random()*.18,
+size:3+Math.random()*4
+})
+}
+
+for(let i=0;i<8;i++){
+clouds.push({
+x:Math.random()*window.innerWidth,
+y:Math.random()*window.innerHeight*.6,
+speed:.18+Math.random()*.15,
+size:260+Math.random()*200
+})
+}
+
+function drawLanterns(){
+
+atmos.fillStyle="rgba(255,200,120,.25)"
+
+lanterns.forEach(l=>{
+
+atmos.beginPath()
+atmos.arc(l.x,l.y,l.size,0,Math.PI*2)
+atmos.fill()
+
+l.y-=l.speed
+
+if(l.y<-20){
+l.y=window.innerHeight+40
+l.x=Math.random()*window.innerWidth
+}
+
+})
 
 }
 
-/* =============================
-   CORE
-============================= */
+function drawClouds(){
 
-addNode("CORE",360,360,"core")
+atmos.fillStyle="rgba(255,255,255,.05)"
 
-/* =============================
-   CARDINALS
-============================= */
+clouds.forEach(c=>{
 
-addNode("LAWS",360,210,"cardinal")
-addNode("ENERGY",520,360,"cardinal")
-addNode("FINANCE",360,520,"cardinal")
-addNode("GOVERNANCE",210,360,"cardinal")
+atmos.beginPath()
+atmos.ellipse(c.x,c.y,c.size,60,0,0,Math.PI*2)
+atmos.fill()
 
-/* =============================
-   MINOR
-============================= */
+c.x+=c.speed
 
-addNode("PRODUCTS",520,210,"minor")
-addNode("RESEARCH",600,360,"minor")
-addNode("EXPLORE",520,520,"minor")
-addNode("DOCTRINE",360,600,"minor")
+if(c.x>window.innerWidth+200){
+c.x=-200
+}
 
-addNode("EDUCATION",210,520,"minor")
-addNode("FRONTIER",120,360,"minor")
-addNode("INFRA",210,210,"minor")
-addNode("AGRICULTURE",360,120,"minor")
+})
 
-/* =============================
-   CONTROLS
-============================= */
+}
 
-addNode("EXIT",120,700,"minor")
-addNode("HUB",600,700,"minor")
-addNode("HOME",360,750,"minor")
-addNode("INDEX",360,30,"minor")
+function renderAtmos(){
+
+atmos.clearRect(0,0,atmosCanvas.width,atmosCanvas.height)
+
+drawClouds()
+drawLanterns()
+
+requestAnimationFrame(renderAtmos)
+
+}
+
+renderAtmos()
+
+
+
+/* =========================================================
+   DRAGON ENGINE (clean baseline body)
+========================================================= */
+
+const dragonCanvas=document.getElementById("dragonCanvas")
+const ctx=dragonCanvas.getContext("2d")
+
+function resizeDragon(){
+dragonCanvas.width=window.innerWidth
+dragonCanvas.height=window.innerHeight
+}
+
+resizeDragon()
+window.addEventListener("resize",resizeDragon)
+
+
+function createDragon(y){
+
+let body=[]
+let segments=70
+
+for(let i=0;i<segments;i++){
+body.push({
+x:-i*30,
+y:y
+})
+}
+
+return{
+body:body,
+speed:.9
+}
+
+}
+
+let dragons=[
+createDragon(window.innerHeight*.35),
+createDragon(window.innerHeight*.70)
+]
+
+
+function drawDragon(dragon){
+
+let body=dragon.body
+
+for(let i=0;i<body.length;i++){
+
+let p=body[i]
+
+let wave=Math.sin(i*.35+performance.now()*.002)*10
+
+p.x+=dragon.speed
+p.y+=wave*.03
+
+if(p.x>window.innerWidth+200){
+p.x=-200
+}
+
+ctx.fillStyle="rgba(10,60,20,.9)"
+ctx.strokeStyle="rgba(212,175,55,.7)"
+ctx.lineWidth=1.5
+
+let size=18-i*.22
+
+ctx.beginPath()
+ctx.ellipse(p.x,p.y,size,size*.8,0,0,Math.PI*2)
+ctx.fill()
+ctx.stroke()
+
+}
+
+}
+
+function renderDragon(){
+
+ctx.clearRect(0,0,dragonCanvas.width,dragonCanvas.height)
+
+dragons.forEach(d=>drawDragon(d))
+
+requestAnimationFrame(renderDragon)
+
+}
+
+renderDragon()
+
 
 </script>
 

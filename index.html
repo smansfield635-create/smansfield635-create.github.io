@@ -1,20 +1,23 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (EN ONLY FOR SPEED)
-     UPDATE (THIS TNT):
-       - FIX “VIBRATING” DRAGONS: continuous connected spine (no disconnected circles), true slither (low-freq), no overlap jitter
-       - DRAGONS LAYERING: ABOVE compass face/dial, BELOW gem buttons (dragons never cover CORE)
-       - DRAGONS BEHAVIOR: two dragons (top + bottom), enter from edges, traverse fully, exit screen, respawn with new quote
-       - CLOUDS: translucent, move opposite direction of dragons, never pass over CORE
-       - MOON: single moon with phases + craters + glow (no “double moon”)
-       - KEEP: 16 unique routes (no duplicates); missing/duplicate → /404.html
-       - CORE: routes to /index-core/index.html (center diamond action works)
-       - Bottom corners: EXIT → /door/ | HUB → /home/ (positioned above any bottom UI)
-       - LENS: lane=platform|engineering (URL-only; no reload; NEVER stored) — affects labels only
-       - STATE: gd_lang/gd_style/gd_time/gd_depth URL + LS only (NO new gd_* keys)
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (EN-ONLY VISUAL PASS)
+     OWNER: SEAN (Website Building Room)
+
+     EXECUTION GOAL (THIS PASS):
+       - Fix dragons: true head + segmented spine + smooth SLITHER (no vibration, no “vines”)
+       - Fix clouds: placed BEHIND compass lens (under water/glass)
+       - Fix color stack: red → dark → red (water lens) → dark (buttons)
+       - Keep: 16 hubs + CORE only (no extra diamonds)
+       - Keep: no duplicate destinations; missing/unbuilt → /404.html
+       - CORE routes to /index-core/index.html
+       - Bottom corner controls: EXIT → /door/ | HUB → /home/
+       - State carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - lane=platform|engineering is URL-only (no reload; never stored) — kept
        - ui.css owns html/body background (NO overrides)
-     NOTE:
-       - EN ONLY per “no Chinese/Spanish until further notice”. Dragon quotes are EN only in this TNT.
+
+     NOTE (PER YOUR LAST DIRECTION):
+       - ENGLISH ONLY for now (visual correctness first). No CN/ES text on UI in this pass.
+       - Only dragon banner text is rendered (English quotes). Can swap to CN top / locale bottom later.
 -->
 
 <html lang="en">
@@ -33,12 +36,13 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY ===== */
-  --D0:210px;  /* CORE */
+  /* ===== GEOMETRY (one dominant center; progressively smaller outward) ===== */
+  --D0:210px;  /* CORE (dominant) */
   --D1:150px;  /* Cardinals */
   --D2:112px;  /* Diagonals */
   --D3:86px;   /* Outer 8 */
 
+  /* radii (tight, fit on screen) */
   --R1:168px;
   --R2:246px;
   --R3:314px;
@@ -50,7 +54,7 @@ body::before,body::after{pointer-events:none!important}
   --mut:rgba(255,255,255,.78);
 
   --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.88);
+  --onyx1:rgba(10,12,16,.90);
 
   --crimson:rgba(120,0,22,.44);
   --festival:rgba(255,43,43,.26);
@@ -81,8 +85,8 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(8,10,14,.82), rgba(4,6,10,.92));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
+    linear-gradient(145deg, rgba(10,10,14,.70), rgba(4,6,10,.82));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
@@ -99,20 +103,20 @@ body::before,body::after{pointer-events:none!important}
 }
 .brandSub{
   font-size:12px;
-  color:rgba(255,255,255,.76);
+  color:rgba(255,255,255,.74);
   letter-spacing:.2px;
   white-space:nowrap;
 }
 .brandLinks{
   display:flex;gap:10px;flex-wrap:wrap;
   font-size:12px;
-  color:rgba(255,255,255,.74);
+  color:rgba(255,255,255,.72);
 }
 .brandLinks a{
   padding:6px 10px;
   border-radius:999px;
   border:1px solid rgba(201,162,74,.16);
-  background:rgba(0,0,0,.14);
+  background:rgba(0,0,0,.12);
 }
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
@@ -149,12 +153,11 @@ body::before,body::after{pointer-events:none!important}
   height:min(1200px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
-  z-index:10;
 }
 
-/* ===== SKY (brighter evening; red→orange→night) ===== */
+/* ===== OUTER SKY (brighter evening sky; NOT too dark) ===== */
 .sky{
-  position:absolute;inset:-20%;
+  position:absolute;inset:-18%;
   pointer-events:none;
   z-index:0;
   border-radius:44px;
@@ -164,38 +167,28 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 64% 14%, rgba(255,240,210,.18), transparent 50%), /* moon haze */
-    radial-gradient(circle at 18% 22%, rgba(255,90,60,.16), transparent 56%),   /* lantern glow */
-    radial-gradient(circle at 84% 38%, rgba(255,170,70,.10), transparent 64%),  /* warm cloud glow */
-    radial-gradient(circle at 30% 78%, rgba(0,0,0,.22), transparent 60%),
+    radial-gradient(circle at 62% 14%, rgba(255,230,160,.16) 0%, rgba(255,230,160,0) 56%), /* moon haze */
+    radial-gradient(circle at 20% 24%, rgba(255,120,60,.14) 0%, rgba(255,120,60,0) 58%),  /* orange dusk */
+    radial-gradient(circle at 86% 34%, rgba(160,90,255,.10) 0%, rgba(160,90,255,0) 62%),   /* opal */
+    radial-gradient(circle at 48% 72%, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 62%),
     linear-gradient(180deg,
-      rgba(170,0,0,.35) 0%,
-      rgba(110,0,0,.30) 22%,
-      rgba(35,8,18,.55) 62%,
-      rgba(0,0,0,.68) 100%);
+      rgba(180,0,0,.00) 0%,
+      rgba(122,0,0,.10) 35%,
+      rgba(40,0,0,.22) 100%);
   opacity:.98;
 }
-/* subtle grain / fireworks ribbons */
 .sky::after{
   content:"";
-  position:absolute;inset:-18%;
+  position:absolute;inset:0;
   background:
-    conic-gradient(from 20deg at 30% 24%,
-      rgba(255,200,120,.10), transparent 12%,
-      rgba(255,80,80,.10), transparent 24%,
-      rgba(140,90,255,.08), transparent 38%,
-      transparent 100%),
-    conic-gradient(from 210deg at 74% 28%,
-      rgba(255,80,80,.10), transparent 12%,
-      rgba(255,200,120,.09), transparent 26%,
-      rgba(140,90,255,.08), transparent 44%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(.6px);
-  opacity:.70;
+    radial-gradient(900px 520px at 50% 100%, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 68%),
+    radial-gradient(220px 220px at 18% 18%, rgba(255,220,160,.10) 0%, rgba(255,220,160,0) 66%),
+    radial-gradient(260px 260px at 80% 22%, rgba(255,210,150,.08) 0%, rgba(255,210,150,0) 70%);
+  mix-blend-mode:screen;
+  opacity:.55;
 }
 
-/* ===== SLAB (dark crystal) ===== */
+/* ===== STAGE SLAB (dark container) ===== */
 .slab{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -206,17 +199,58 @@ body::before,body::after{pointer-events:none!important}
   z-index:1;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.06), transparent 55%),
     radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
     radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
     linear-gradient(160deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
   box-shadow:
-    0 70px 240px rgba(0,0,0,.54),
+    0 70px 240px rgba(0,0,0,.52),
     inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -70px 140px rgba(0,0,0,.62);
+    inset 0 -70px 140px rgba(0,0,0,.58);
 }
 
-/* ===== DIAL (obsidian) ===== */
+/* ===== COMPASS WATER LENS (red/translucent; provides the missing RED layer) ===== */
+.waterLens{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(940px,90vw);
+  height:min(940px,90vw);
+  border-radius:999px;
+  pointer-events:none;
+  z-index:4; /* sits above clouds and dial, below dragons and buttons */
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    inset 0 0 0 1px rgba(201,162,74,.10),
+    inset 0 0 90px rgba(0,0,0,.22);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.05), transparent 60%),
+    radial-gradient(circle at 50% 55%, rgba(255,43,43,.10), rgba(255,43,43,.04) 58%, rgba(0,0,0,0) 78%),
+    linear-gradient(180deg, rgba(255,43,43,.06), rgba(0,0,0,.06));
+  opacity:.92;
+}
+.waterLens::before{
+  content:"";
+  position:absolute;inset:-30%;
+  background:
+    radial-gradient(circle at 30% 35%, rgba(255,255,255,.06), transparent 46%),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,.04), transparent 52%),
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,.055) 0 2px,
+      rgba(255,255,255,0) 2px 18px);
+  filter:blur(.35px);
+  opacity:.55;
+  animation: rippleMove 10s linear infinite;
+  mix-blend-mode:screen;
+}
+@keyframes rippleMove{
+  0%{ transform:translate(-4%, -2%) rotate(0deg); }
+  50%{ transform:translate(3%, 2%) rotate(6deg); }
+  100%{ transform:translate(-4%, -2%) rotate(0deg); }
+}
+
+/* ===== OBISIDIAN DIAL FACE (under water lens) ===== */
 .dial{
   position:absolute;
   left:50%;top:50%;
@@ -235,7 +269,7 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 42%,
       rgba(255,255,255,.05),
       rgba(0,0,0,.20) 56%,
-      rgba(0,0,0,.52) 78%,
+      rgba(0,0,0,.56) 78%,
       rgba(0,0,0,.00) 92%),
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
     radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
@@ -243,8 +277,8 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
     inset 0 0 0 10px rgba(0,0,0,.12),
-    inset 0 0 80px rgba(0,0,0,.52),
-    0 50px 180px rgba(0,0,0,.26);
+    inset 0 0 80px rgba(0,0,0,.55),
+    0 50px 180px rgba(0,0,0,.28);
   opacity:.96;
 }
 .dial::after{
@@ -254,58 +288,16 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
-
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
-    /* IMPORTANT: diamond-aligned silk (no flat orthogonal grid) */
+    linear-gradient(90deg, transparent 0 49.7%, rgba(0,0,0,.16) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(0,0,0,.16) 49.7% 50.3%, transparent 50.3% 100%),
     repeating-conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter: blur(.25px);
-  opacity:.76;
+  opacity:.78;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-}
-
-/* Cardinal letters on dial */
-.faceLetters{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  pointer-events:none;
-  z-index:3;
-  opacity:.78;
-}
-.faceLetters span{
-  position:absolute;
-  color:rgba(201,162,74,.48);
-  font-weight:980;
-  letter-spacing:2px;
-  font-size:12px;
-  text-shadow:0 0 12px rgba(0,0,0,.55);
-}
-.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
-.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
-.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
-.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
-
-/* ===== FX CANVAS (dragons + clouds + lanterns + moon) =====
-   layer: above dial (z=4), below gems (z=10+)
-*/
-.fx{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:4;
-}
-.fx canvas{
-  width:100%;
-  height:100%;
-  display:block;
 }
 
 /* ===== GEM NODES ===== */
@@ -318,10 +310,10 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:10;
+  z-index:20;
   border-radius:22px;
 }
-.core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
+.core{width:var(--D0);height:var(--D0);z-index:22;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
@@ -339,16 +331,19 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-/* 3D edge inlay (diamond-aligned; NOT orthogonal) */
+/* 3D edge inlay aligned to diamond, not orthogonal grid */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
   background:
-    radial-gradient(140% 120% at 50% 50%, rgba(201,162,74,0) 56%, rgba(201,162,74,.14) 82%, rgba(201,162,74,0) 100%),
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
-  opacity:.40;
+    /* curved “edge sweep” to suggest bevel */
+    radial-gradient(140% 120% at 18% 20%, rgba(212,175,55,.16) 0%, rgba(212,175,55,0) 55%),
+    radial-gradient(140% 120% at 82% 82%, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 58%),
+    /* silk trim follows diamond orientation */
+    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
+  opacity:.34;
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
@@ -377,6 +372,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .node:active{filter:brightness(.98)}
 
+/* inner text (kept; full word fit via clamp) */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -406,11 +402,21 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
-/* ===== CORNERS (EXIT/HUB) ===== */
+/* CORE emphasis */
+.core{
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.88),
+    0 0 46px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -64px 110px rgba(0,0,0,.92);
+}
+
+/* ===== CORNERS ===== */
 .corner{
   position:fixed;
   bottom:max(16px, env(safe-area-inset-bottom));
-  z-index:320; /* above all */
+  z-index:260;
   pointer-events:none;
 }
 .corner .dmini{pointer-events:auto}
@@ -432,7 +438,7 @@ body::before,body::after{pointer-events:none!important}
   transform:rotate(45deg);
   position:relative;
   overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  transition:box-shadow .16s ease, border-color .16s ease;
 }
 .dmini:hover{
   border-color:rgba(201,162,74,.44);
@@ -454,7 +460,30 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== RESPONSIVE FIT ===== */
+/* ===== NOTE PILL ===== */
+.pillWrap{
+  width:min(1120px,94vw);
+  margin:14px auto 0;
+  padding-bottom:90px;
+}
+.pill{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:14px 16px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
+    rgba(0,0,0,.16);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.5px;
+}
+.pill b{color:rgba(255,255,255,.95)}
+.pill .g{color:rgba(201,162,74,.80);font-weight:980}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width:720px){
   :root{
     --D0:196px;
@@ -489,18 +518,14 @@ body::before,body::after{pointer-events:none!important}
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
       <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">A human tutorial into structure: choose one hub, follow one clean path.</div>
+      <div class="brandSub" id="brandSub">A visual tutorial: choose a construct, enter a hub, keep your path clean.</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
       </div>
     </div>
 
-    <div class="controlsRight" aria-label="Language and lens">
-      <!-- EN only in this TNT -->
-      <div class="seg" role="group" aria-label="Language">
-        <button type="button" id="btnEN" aria-pressed="true">EN</button>
-      </div>
+    <div class="controlsRight" aria-label="Lens">
       <div class="seg" role="group" aria-label="Lane">
         <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
         <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
@@ -513,21 +538,32 @@ body::before,body::after{pointer-events:none!important}
   <div class="sky" aria-hidden="true"></div>
   <div class="slab" aria-hidden="true"></div>
   <div class="dial" aria-hidden="true"></div>
-  <div class="faceLetters" aria-hidden="true">
-    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
-  </div>
 
-  <div class="fx" aria-hidden="true"><canvas id="fx"></canvas></div>
+  <!-- clouds + moon live on fxBackCanvas (z behind lens) -->
+  <canvas id="fxBack"></canvas>
+
+  <!-- compass lens (RED layer) -->
+  <div class="waterLens" aria-hidden="true"></div>
+
+  <!-- dragons + banners live on fxMidCanvas (above lens, below buttons) -->
+  <canvas id="fxMid"></canvas>
+
   <!-- nodes injected by JS -->
+</div>
+
+<div class="pillWrap" aria-label="Compass note">
+  <div class="pill" id="pill">
+    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
+  </div>
 </div>
 
 <div class="corner left" aria-label="Exit">
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
-  <div class="cornerLabel">EXIT</div>
+  <div class="cornerLabel" id="lblExit">EXIT</div>
 </div>
 <div class="corner right" aria-label="Hub">
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
-  <div class="cornerLabel">HUB</div>
+  <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
 
 <script>
@@ -538,12 +574,13 @@ body::before,body::after{pointer-events:none!important}
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang  = "en"; // EN only for this TNT
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en"; // kept, EN only UI in this pass
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
+  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -557,11 +594,11 @@ body::before,body::after{pointer-events:none!important}
     LS.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang="en";
+  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
     var p=new URLSearchParams();
-    p.set("lang","en");
+    p.set("lang",(over&&over.lang)?over.lang:lang);
     p.set("style",(over&&over.style)?over.style:style);
     p.set("time",(over&&over.time)?over.time:time);
     p.set("depth",(over&&over.depth)?over.depth:depth);
@@ -569,39 +606,40 @@ body::before,body::after{pointer-events:none!important}
     if(L==="platform"||L==="engineering") p.set("lane",L);
     return "?"+p.toString();
   }
+
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
+  // ===== ROUTING (NO DUPLICATES; missing/unbuilt → 404) =====
   var CORE_ROUTE = "/index-core/index.html";
   var EXIT_ROUTE = "/door/";
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // N/E/S/W meaning per your last directive:
-  // N=Laws, E=Energy, S=Finance, W=Governance
-  // Prelude removed from compass.
+  // N/E/S/W mapping per your latest accepted hierarchy:
+  // N = Laws, E = Energy, S = Finance, W = Governance
+  // Prelude removed. Research included. Doctrine fixed.
   var ROUTES_RAW = [
     // Tier 1 (cardinals)
-    {tier:1, code:"N",  label:{platform:"LAWS",        engineering:"BOUNDS"},   href:"/laws/"},
-    {tier:1, code:"E",  label:{platform:"ENERGY",      engineering:"POWER"},    href:"/explore/frontier/energy/"},
-    {tier:1, code:"S",  label:{platform:"FINANCE",     engineering:"CAPITAL"},  href:"/finance/"},
-    {tier:1, code:"W",  label:{platform:"GOVERNANCE",  engineering:"EXEC"},     href:"/governance/"},
+    {tier:1, code:"N",  label:{platform:"LAWS",        engineering:"BOUNDS"},     href:"/laws/"},
+    {tier:1, code:"E",  label:{platform:"ENERGY",      engineering:"POWER"},      href:"/explore/frontier/energy/"},
+    {tier:1, code:"S",  label:{platform:"FINANCE",     engineering:"CAPITAL"},    href:"/finance/"},
+    {tier:1, code:"W",  label:{platform:"GOVERNANCE",  engineering:"EXEC"},       href:"/governance/"},
 
     // Tier 2 (diagonals)
-    {tier:2, code:"NE", label:{platform:"PRODUCTS",    engineering:"DEPLOY"},   href:"/products/"},
-    {tier:2, code:"SE", label:{platform:"RESEARCH",    engineering:"R&D"},      href:"/research/"},
-    {tier:2, code:"SW", label:{platform:"EXPLORE",     engineering:"MODELS"},   href:"/explore/"},
-    {tier:2, code:"NW", label:{platform:"DOCTRINE",    engineering:"CCD"},      href:"/products/capital-doctrine/"},
+    {tier:2, code:"NE", label:{platform:"PRODUCTS",    engineering:"DEPLOY"},     href:"/products/"},
+    {tier:2, code:"SE", label:{platform:"RESEARCH",    engineering:"R&D"},        href:"/research/"},
+    {tier:2, code:"SW", label:{platform:"EXPLORE",     engineering:"MODELS"},     href:"/explore/"},
+    {tier:2, code:"NW", label:{platform:"DOCTRINE",    engineering:"CCD"},        href:"/products/capital-doctrine/"},
 
     // Tier 3 (outer 8)
-    {tier:3, code:"NNE",label:{platform:"EDUCATION",   engineering:"ESL"},      href:"/products/education/"},
-    {tier:3, code:"ENE",label:{platform:"FRONTIER",    engineering:"FRONTIER"}, href:"/explore/frontier/"},
-    {tier:3, code:"ESE",label:{platform:"INFRA",       engineering:"SUBST"},    href:"/explore/infrastructure/"},
-    {tier:3, code:"SSE",label:{platform:"AGRICULTURE", engineering:"FOOD"},     href:"/products/agriculture/"},
-    {tier:3, code:"SSW",label:{platform:"GAUGES",      engineering:"SIGNALS"},  href:"/gauges/"},
-    {tier:3, code:"WSW",label:{platform:"VISION",      engineering:"MAP"},      href:"/explore/frontier/vision/"},
-    {tier:3, code:"WNW",label:{platform:"LATTICE",     engineering:"256"},      href:"/explore/frontier/lattice/"},
+    {tier:3, code:"NNE",label:{platform:"EDUCATION",   engineering:"ESL"},        href:"/products/education/"},
+    {tier:3, code:"ENE",label:{platform:"FRONTIER",    engineering:"FRONTIER"},   href:"/explore/frontier/"},
+    {tier:3, code:"ESE",label:{platform:"INFRA",       engineering:"SUBST"},      href:"/explore/infrastructure/"},
+    {tier:3, code:"SSE",label:{platform:"AGRICULTURE", engineering:"FOOD"},       href:"/products/agriculture/"},
+    {tier:3, code:"SSW",label:{platform:"GAUGES",      engineering:"SIGNALS"},    href:"/gauges/"},
+    {tier:3, code:"WSW",label:{platform:"VISION",      engineering:"MAP"},        href:"/explore/frontier/vision/"},
+    {tier:3, code:"WNW",label:{platform:"LATTICE",     engineering:"256"},        href:"/explore/frontier/lattice/"},
     {tier:3, code:"NNW",label:{platform:"SHIMMER",     engineering:"S.H.I.M.M.E.R."}, href:"/explore/frontier/shimmer/"}
   ];
 
@@ -637,15 +675,15 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnLP, lane==="platform");
     setPressed(btnLE, lane==="engineering");
     paintHeader();
-    layoutCompass(); // rebuild labels
+    layoutNodes();
   }
   btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
   function paintHeader(){
-    var lens = (lane==="engineering") ? "ENGINEERING" : "PLATFORM";
+    var laneWord = (lane==="engineering") ? "ENGINEERING" : "PLATFORM";
     document.getElementById("brandSub").textContent =
-      "A human tutorial into structure: choose one hub, follow one clean path. Lens: " + lens + ".";
+      "A visual tutorial: choose a construct, enter a hub, keep your path clean. Lens: "+laneWord+".";
   }
   paintHeader();
 
@@ -662,8 +700,9 @@ body::before,body::after{pointer-events:none!important}
   bindCorner("btnExit", EXIT_ROUTE);
   bindCorner("btnHub", HUB_ROUTE);
 
-  // ===== Build nodes =====
+  // ===== Nodes (16 + core only) =====
   var stage=document.getElementById("stage");
+
   function mkNode(word, code, cls){
     var d=document.createElement("div");
     d.className="node surface "+cls;
@@ -684,19 +723,20 @@ body::before,body::after{pointer-events:none!important}
     inner.appendChild(w);
     inner.appendChild(c);
     d.appendChild(inner);
+
     return d;
   }
 
-  function layoutCompass(){
+  function layoutNodes(){
+    // remove existing nodes
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var cs=getComputedStyle(document.documentElement);
-    var R1=parseFloat(cs.getPropertyValue("--R1"))||168;
-    var R2=parseFloat(cs.getPropertyValue("--R2"))||246;
-    var R3=parseFloat(cs.getPropertyValue("--R3"))||314;
+    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||246;
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
 
     // CORE
     var core=mkNode("CORE","INDEX","core");
@@ -705,16 +745,19 @@ body::before,body::after{pointer-events:none!important}
     core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
     stage.appendChild(core);
 
-    // split by tier
-    var t1=[],t2=[],t3=[];
+    var t1=[], t2=[], t3=[];
     for(var i=0;i<ROUTES.length;i++){
       if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
       else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
       else t3.push(ROUTES[i]);
     }
 
-    // Tier 1 pinned to N/E/S/W
-    function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+    function byCode(arr, code){
+      for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i];
+      return null;
+    }
+
+    // Tier 1 pinned N/E/S/W
     var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
     var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
     for(var i=0;i<ordered.length;i++){
@@ -730,7 +773,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 2 start -45°
+    // Tier 2 diagonals
     for(var i=0;i<t2.length;i++){
       var it=t2[i];
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
@@ -745,7 +788,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 3 start -67.5°
+    // Tier 3 outer 8
     for(var i=0;i<t3.length;i++){
       var it=t3[i];
       var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
@@ -761,434 +804,428 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function safeLayout(){
+  function safeLayoutNodes(){
     var r=stage.getBoundingClientRect();
-    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    layoutCompass();
-    FX.resize();
+    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayoutNodes); return; }
+    layoutNodes();
   }
-  requestAnimationFrame(safeLayout);
-  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
 
-  // ============================================================
-  // FX ENGINE (moon + clouds + lanterns + 2 dragons)
-  // FIX: dragons are continuous (connected) and slither (no vibrate)
-  // ============================================================
-  var FX = (function(){
-    var canvas=document.getElementById("fx");
-    var ctx=canvas.getContext("2d", {alpha:true});
-    var W=0,H=0, DPR=1;
+  // ===== FX CANVASES =====
+  var fxBack=document.getElementById("fxBack");
+  var fxMid =document.getElementById("fxMid");
+  var back=fxBack.getContext("2d");
+  var mid =fxMid.getContext("2d");
 
-    // persistent moon phase counter (cycles each visit)
-    var moonKey="gd_moon_phase_i"; // NOT gd_* (localStorage key is allowed but user asked no new gd_*; this is NOT gd_? actually it is. Avoid.
-    // IMPORTANT: no new gd_* keys. Use sessionStorage instead.
-    var phaseI=0;
-    try{
-      var s=sessionStorage.getItem("moon_phase_i");
-      phaseI = s ? parseInt(s,10) : 0;
-      if(!isFinite(phaseI)) phaseI=0;
-      phaseI = (phaseI+1)%8;
-      sessionStorage.setItem("moon_phase_i", String(phaseI));
-    }catch(e){ phaseI = (Math.floor(Math.random()*8))%8; }
+  fxBack.style.position="absolute";
+  fxBack.style.left="0"; fxBack.style.top="0";
+  fxBack.style.width="100%"; fxBack.style.height="100%";
+  fxBack.style.pointerEvents="none";
+  fxBack.style.zIndex="3"; // clouds+moon under water lens
 
-    // quotes EN only
-    var QUOTES = [
-      "Say less. Do more.",
-      "Fix what you can. Admit what you can’t.",
-      "Change one thing. Prove it. Repeat.",
-      "A moment’s pride becomes a thousand years of regret.",
-      "The river flows: time passes."
-    ];
+  fxMid.style.position="absolute";
+  fxMid.style.left="0"; fxMid.style.top="0";
+  fxMid.style.width="100%"; fxMid.style.height="100%";
+  fxMid.style.pointerEvents="none";
+  fxMid.style.zIndex="6"; // dragons above lens, below nodes
 
-    function randQuote(){ return QUOTES[(Math.random()*QUOTES.length)|0]; }
+  function dpr(){
+    return Math.min(2, window.devicePixelRatio || 1);
+  }
 
-    var clouds=[];
-    var lanterns=[];
-    var dragons=[];
+  function resizeFX(){
+    var r=stage.getBoundingClientRect();
+    var s=dpr();
+    fxBack.width=Math.max(1, Math.floor(r.width*s));
+    fxBack.height=Math.max(1, Math.floor(r.height*s));
+    fxMid.width=fxBack.width;
+    fxMid.height=fxBack.height;
+    back.setTransform(s,0,0,s,0,0);
+    mid.setTransform(s,0,0,s,0,0);
+  }
 
-    function init(){
-      clouds=[];
-      for(var i=0;i<12;i++){
-        clouds.push({
-          x:Math.random()*W,
-          y:Math.random()*H*0.52,
-          r:160+Math.random()*240,
-          a:0.06+Math.random()*0.05,
-          v:-(0.10+Math.random()*0.18) // opposite direction to dragons
-        });
-      }
+  window.addEventListener("resize", function(){
+    resizeFX();
+    safeLayoutNodes();
+  }, {passive:true});
 
-      lanterns=[];
-      for(var i=0;i<24;i++){
-        lanterns.push({
-          x:Math.random()*W,
-          y:H + Math.random()*H*0.6,
-          r:2.4+Math.random()*3.6,
-          v:0.22+Math.random()*0.35,
-          wob:Math.random()*1000
-        });
-      }
+  // ===== MOON (single moon, phase advance per return) =====
+  function nextMoonPhase(){
+    var key="moon_phase_step";
+    var v=0;
+    try{ v=parseInt(sessionStorage.getItem(key)||"0",10); if(!isFinite(v)) v=0; }catch(e){ v=0; }
+    v=(v+1)%8;
+    try{ sessionStorage.setItem(key,String(v)); }catch(e){}
+    return v; // 0..7
+  }
+  var moonPhase=nextMoonPhase();
 
-      dragons=[
-        makeDragon(H*0.30, +1, true),  // top: primary
-        makeDragon(H*0.72, -1, false)  // bottom: translated (EN for now)
-      ];
+  function drawMoon(ctx, w, h){
+    var mx=w*0.78, my=h*0.16;
+    var r=Math.min(w,h)*0.07; // bigger than before
+    // glow
+    var g=ctx.createRadialGradient(mx,my,0,mx,my,r*2.2);
+    g.addColorStop(0,"rgba(255,240,210,0.26)");
+    g.addColorStop(0.35,"rgba(255,240,210,0.12)");
+    g.addColorStop(1,"rgba(255,240,210,0)");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(mx,my,r*2.2,0,Math.PI*2); ctx.fill();
+
+    // moon body
+    ctx.save();
+    ctx.beginPath(); ctx.arc(mx,my,r,0,Math.PI*2);
+    ctx.clip();
+    var mgrad=ctx.createRadialGradient(mx-r*0.25,my-r*0.2,r*0.2,mx,my,r*1.1);
+    mgrad.addColorStop(0,"rgba(255,250,240,0.92)");
+    mgrad.addColorStop(1,"rgba(210,190,160,0.92)");
+    ctx.fillStyle=mgrad;
+    ctx.fillRect(mx-r,my-r,r*2,r*2);
+
+    // craters
+    ctx.globalAlpha=0.22;
+    ctx.fillStyle="rgba(0,0,0,0.45)";
+    for(var i=0;i<10;i++){
+      var cx=mx + (Math.sin(i*2.2)*0.55)*r*0.7;
+      var cy=my + (Math.cos(i*1.9)*0.55)*r*0.65;
+      var rr=r*(0.08 + (i%3)*0.04);
+      ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.fill();
     }
+    ctx.globalAlpha=1;
 
-    function resize(){
-      DPR=Math.max(1, Math.min(2, window.devicePixelRatio||1));
-      var rect=canvas.getBoundingClientRect();
-      W=Math.max(10, Math.floor(rect.width));
-      H=Math.max(10, Math.floor(rect.height));
-      canvas.width=Math.floor(W*DPR);
-      canvas.height=Math.floor(H*DPR);
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-      init();
+    // phase shadow (single moon, no double)
+    var phase = moonPhase; // 0 new .. 4 full .. 7 waning crescent
+    var t = phase/7;       // 0..1
+    // map: new -> full -> new
+    var illum = (phase<=4) ? (phase/4) : ((8-phase)/4); // 0..1..0
+    // shadow offset
+    var off = (phase<=4) ? (1-illum) : -(1-illum);
+    ctx.globalCompositeOperation="source-over";
+    ctx.fillStyle="rgba(0,0,0,0.55)";
+    ctx.beginPath();
+    ctx.ellipse(mx + off*r*0.85, my, r, r, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ===== CLOUDS (behind compass lens) =====
+  var clouds=[];
+  function seedClouds(){
+    clouds=[];
+    for(var i=0;i<12;i++){
+      clouds.push({
+        x: Math.random()*stage.clientWidth,
+        y: Math.random()*stage.clientHeight*0.45 + stage.clientHeight*0.06,
+        v: 0.12 + Math.random()*0.18,
+        s: 140 + Math.random()*220,
+        a: 0.030 + Math.random()*0.020,
+        o: Math.random()*1000
+      });
     }
+  }
 
-    // ---------- Moon ----------
-    function drawMoon(){
-      // place moon outside dial (upper right)
-      var mx=W*0.86, my=H*0.16;
-      var R=Math.min(W,H)*0.060; // bigger, visible
-      // glow
-      ctx.save();
-      ctx.globalCompositeOperation="screen";
-      var g=ctx.createRadialGradient(mx,my,0,mx,my,R*3.2);
-      g.addColorStop(0,"rgba(255,240,210,0.22)");
-      g.addColorStop(0.35,"rgba(255,210,140,0.12)");
-      g.addColorStop(1,"rgba(255,210,140,0)");
-      ctx.fillStyle=g;
-      ctx.beginPath(); ctx.arc(mx,my,R*3.2,0,Math.PI*2); ctx.fill();
-      ctx.restore();
-
-      // moon disk
-      ctx.save();
-      ctx.fillStyle="rgba(255,245,230,0.92)";
-      ctx.beginPath(); ctx.arc(mx,my,R,0,Math.PI*2); ctx.fill();
-
-      // craters
-      ctx.globalAlpha=0.22;
-      ctx.fillStyle="rgba(0,0,0,0.35)";
-      for(var i=0;i<9;i++){
-        var ang=Math.random()*Math.PI*2;
-        var rr=R*(0.12+Math.random()*0.14);
-        var px=mx + Math.cos(ang)*R*(0.20+Math.random()*0.55);
-        var py=my + Math.sin(ang)*R*(0.20+Math.random()*0.55);
-        ctx.beginPath(); ctx.arc(px,py,rr,0,Math.PI*2); ctx.fill();
-      }
-
-      // phase mask (single moon, not “double”)
-      // phaseI: 0 new → 4 full
-      var t=phaseI/7; // 0..1
-      // illuminated fraction
-      var k = 1 - Math.abs(2*t-1); // 0 new/full? actually peaks at full in middle; we want full at t≈0.5
-      // better: map phaseI to [-1..1] terminator
-      var p = (phaseI-3.5)/3.5; // -1..1
-      ctx.globalCompositeOperation="source-atop";
-      ctx.fillStyle="rgba(0,0,0,0.62)";
-      // draw dark overlay then carve lit side with ellipse
-      ctx.globalCompositeOperation="source-over";
-      ctx.globalAlpha=1;
-      // darken whole disk slightly based on phase (new = darker)
-      // We'll paint shadow by clipping circle.
-      ctx.save();
-      ctx.beginPath(); ctx.arc(mx,my,R,0,Math.PI*2); ctx.clip();
-      ctx.fillStyle="rgba(0,0,0,"+(0.70*Math.max(0,1-Math.abs(p)))+")";
-      // p near 0 => full => low shadow, p near +-1 => new => high shadow
-      // invert:
-      var sh = 0.12 + 0.58*Math.abs(p);
-      ctx.fillStyle="rgba(0,0,0,"+sh+")";
-      ctx.fillRect(mx-R,my-R,2*R,2*R);
-
-      // terminator: lit side
-      ctx.globalCompositeOperation="destination-out";
-      ctx.fillStyle="rgba(0,0,0,1)";
-      // lit ellipse center offset
-      var ox = mx + p*R*0.85;
+  function drawCloudBlob(ctx, x, y, size, alpha){
+    ctx.save();
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle="rgba(255,255,255,1)";
+    // multi-lobe cloud
+    var lobes=6;
+    for(var i=0;i<lobes;i++){
+      var ang=i*(Math.PI*2/lobes);
+      var rx=size*(0.32+0.10*Math.sin(i*1.7));
+      var ry=size*(0.16+0.06*Math.cos(i*1.3));
+      var lx=x + Math.cos(ang)*size*0.18;
+      var ly=y + Math.sin(ang)*size*0.06;
       ctx.beginPath();
-      ctx.ellipse(ox,my,R*1.05,R,0,0,Math.PI*2);
+      ctx.ellipse(lx,ly,rx,ry,0,0,Math.PI*2);
       ctx.fill();
-      ctx.restore();
+    }
+    ctx.restore();
+  }
 
-      ctx.restore();
+  function drawClouds(){
+    var w=stage.clientWidth, h=stage.clientHeight;
+    back.save();
+    back.globalCompositeOperation="screen";
+    for(var i=0;i<clouds.length;i++){
+      var c=clouds[i];
+      // soft drift left->right
+      c.x += c.v;
+      // subtle vertical drift
+      c.y += Math.sin((performance.now()*0.00008)+c.o)*0.03;
+      if(c.x > w + c.s) c.x = -c.s;
+
+      // translucent, so buttons always show
+      drawCloudBlob(back, c.x, c.y, c.s, c.a);
+    }
+    back.restore();
+  }
+
+  // ===== LANTERN EMBERS (behind dragons; above clouds) =====
+  var embers=[];
+  function seedEmbers(){
+    embers=[];
+    for(var i=0;i<36;i++){
+      embers.push({
+        x: Math.random()*stage.clientWidth,
+        y: stage.clientHeight + Math.random()*240,
+        v: 0.25 + Math.random()*0.45,
+        s: 1.4 + Math.random()*2.6,
+        w: 0.6 + Math.random()*1.2,
+        o: Math.random()*1000
+      });
+    }
+  }
+  function drawEmbers(ctx){
+    var w=stage.clientWidth, h=stage.clientHeight;
+    ctx.save();
+    ctx.globalCompositeOperation="screen";
+    for(var i=0;i<embers.length;i++){
+      var e=embers[i];
+      e.y -= e.v;
+      e.x += Math.sin((performance.now()*0.0012)+e.o)*0.18;
+      if(e.y < -30){
+        e.y = h + 30;
+        e.x = Math.random()*w;
+      }
+      ctx.fillStyle="rgba(255,200,120,0.18)";
+      ctx.beginPath();
+      ctx.ellipse(e.x,e.y,e.s*1.2,e.s*2.0,0,0,Math.PI*2);
+      ctx.fill();
+
+      ctx.fillStyle="rgba(255,160,90,0.08)";
+      ctx.beginPath();
+      ctx.arc(e.x,e.y,e.s*2.2,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // ===== DRAGON ENGINE (true head + segmented spine; smooth slither) =====
+  var quotes = [
+    "Say less. Do more.",
+    "Time passes. The river flows.",
+    "Fix what you can. Learn from what you can’t.",
+    "Do not do to others what you do not want done to you.",
+    "A moment’s mistake can become a long regret."
+  ];
+  var quoteIndex = Math.floor(Math.random()*quotes.length);
+
+  function Dragon(opts){
+    this.dir = opts.dir;            // 1 = left->right, -1 = right->left
+    this.yBase = opts.yBase;        // baseline
+    this.yAmp  = opts.yAmp;         // slither amplitude
+    this.speed = opts.speed;        // px per frame
+    this.len   = opts.len;          // segment count
+    this.segDist = opts.segDist;    // distance between segments
+    this.phase = Math.random()*1000;
+    this.reset();
+  }
+
+  Dragon.prototype.reset = function(){
+    var w=stage.clientWidth;
+    var startX = (this.dir===1) ? -200 : (w+200);
+    this.head = {x:startX, y:this.yBase};
+    this.body=[];
+    for(var i=0;i<this.len;i++){
+      this.body.push({x:startX - this.dir*i*this.segDist, y:this.yBase});
+    }
+    quoteIndex = (quoteIndex+1)%quotes.length;
+    this.quote = quotes[quoteIndex];
+    this.bannerT = 0;
+  };
+
+  Dragon.prototype.step = function(t){
+    var w=stage.clientWidth;
+    // head movement: smooth slither, low frequency (not violent)
+    var drift = Math.sin((t*0.00045)+this.phase)*this.yAmp;
+    this.head.x += this.speed*this.dir;
+    this.head.y = this.yBase + drift;
+
+    // follow chain (inverse kinematics)
+    this.body[0].x = this.head.x;
+    this.body[0].y = this.head.y;
+
+    for(var i=1;i<this.body.length;i++){
+      var p=this.body[i];
+      var prev=this.body[i-1];
+
+      var dx = prev.x - p.x;
+      var dy = prev.y - p.y;
+      var dist = Math.sqrt(dx*dx+dy*dy) || 1;
+
+      var target = this.segDist;
+      var k = (dist - target)/dist;
+
+      // pull segment toward fixed distance
+      p.x += dx*k;
+      p.y += dy*k;
     }
 
-    // ---------- Clouds ----------
-    function drawClouds(dt){
+    // offscreen reset after full pass
+    if(this.dir===1 && this.head.x > w+240) this.reset();
+    if(this.dir===-1 && this.head.x < -240) this.reset();
+  };
+
+  function drawDragon(ctx, dragon, t){
+    // dark green dragon with segmented body + ridge spikes + head details
+    var body=dragon.body;
+    if(body.length<6) return;
+
+    ctx.save();
+    ctx.globalCompositeOperation="source-over";
+
+    // colors
+    var fill="rgba(10,40,18,0.92)";
+    var edge="rgba(0,0,0,0.55)";
+    var gold="rgba(212,175,55,0.70)";
+
+    // draw body back-to-front
+    for(var i=body.length-1;i>=0;i--){
+      var p=body[i];
+
+      // taper: thick near head, thinner to tail
+      var u = i/(body.length-1);
+      var base = (1-u);
+      var w = 22*base + 6;
+      var h = 16*base + 5;
+
+      // slight local rotation following tangent
+      var prev = body[Math.max(0,i-1)];
+      var next = body[Math.min(body.length-1,i+1)];
+      var ang = Math.atan2(next.y - prev.y, next.x - prev.x);
+
       ctx.save();
-      ctx.globalCompositeOperation="screen";
-      for(var i=0;i<clouds.length;i++){
-        var c=clouds[i];
-        c.x += c.v*dt;
-        if(c.x < -c.r-200) c.x = W + c.r + 200;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(ang);
 
-        // do NOT cover CORE: fade in center zone
-        var dx=(c.x - W*0.5);
-        var dy=(c.y - H*0.5);
-        var d=Math.sqrt(dx*dx+dy*dy);
-        var coreFade = smoothstep(0, 220, Math.max(0, 220 - d)); // 1 near center
-        var a = c.a * (1 - 0.85*coreFade);
+      // segment
+      ctx.fillStyle=fill;
+      ctx.beginPath();
+      ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
+      ctx.fill();
 
-        ctx.fillStyle="rgba(255,255,255,"+a+")";
-        ctx.beginPath();
-        ctx.ellipse(c.x,c.y,c.r, c.r*0.22, 0, 0, Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-
-    // ---------- Lanterns ----------
-    function drawLanterns(dt){
-      ctx.save();
-      ctx.globalCompositeOperation="screen";
-      for(var i=0;i<lanterns.length;i++){
-        var l=lanterns[i];
-        l.y -= l.v*dt;
-        l.x += Math.sin((l.wob+performance.now()*0.001))*0.08*dt;
-
-        if(l.y < -40){
-          l.y = H + 60 + Math.random()*H*0.35;
-          l.x = Math.random()*W;
-          l.r = 2.2+Math.random()*3.8;
-          l.v = 0.22+Math.random()*0.35;
-          l.wob = Math.random()*1000;
-        }
-
-        var g=ctx.createRadialGradient(l.x,l.y,0,l.x,l.y,l.r*4);
-        g.addColorStop(0,"rgba(255,210,140,0.22)");
-        g.addColorStop(0.4,"rgba(255,120,80,0.10)");
-        g.addColorStop(1,"rgba(255,120,80,0)");
-        ctx.fillStyle=g;
-        ctx.beginPath(); ctx.arc(l.x,l.y,l.r*4,0,Math.PI*2); ctx.fill();
-
-        ctx.fillStyle="rgba(255,220,170,0.20)";
-        ctx.beginPath(); ctx.arc(l.x,l.y,l.r,0,Math.PI*2); ctx.fill();
-      }
-      ctx.restore();
-    }
-
-    // ---------- Dragon (continuous spine + body + head) ----------
-    function makeDragon(yBase, dir, isTop){
-      // dir: +1 left->right, -1 right->left
-      var segN=64;
-      var spine=[];
-      for(var i=0;i<segN;i++) spine.push({x:0,y:yBase});
-      var startX = (dir>0) ? (-W*0.35) : (W*1.35);
-      for(var i=0;i<segN;i++){
-        spine[i].x = startX - dir*i*14; // trailing behind
-        spine[i].y = yBase;
-      }
-      return {
-        top:isTop,
-        dir:dir,
-        xHead:startX,
-        yBase:yBase,
-        t:Math.random()*1000,
-        speed: (dir>0?1:-1) * (38 + Math.random()*18), // px/sec
-        amp:  10 + Math.random()*7,
-        wave: 0.85 + Math.random()*0.35,
-        spine:spine,
-        quote: randQuote(),
-        qOffset: 0.30 + Math.random()*0.45 // where along body to place glow text
-      };
-    }
-
-    function smoothstep(a,b,x){
-      var t=Math.max(0,Math.min(1,(x-a)/(b-a)));
-      return t*t*(3-2*t);
-    }
-
-    function updateDragon(D, dt){
-      // slither: low-frequency, small curvature; NOT high frequency wiggle
-      D.t += dt*0.001;
-
-      // advance head
-      D.xHead += D.speed * (dt/1000);
-      var phase = D.t * D.wave;
-
-      // head y uses sin + very light secondary sin
-      var yHead = D.yBase + Math.sin(phase)*D.amp + Math.sin(phase*0.45)*D.amp*0.35;
-
-      // push head into spine[0]
-      var s=D.spine;
-      s[0].x = D.xHead;
-      s[0].y = yHead;
-
-      // follow: maintain fixed spacing with smoothing (prevents jitter/overlap)
-      var spacing=12;
-      for(var i=1;i<s.length;i++){
-        var px=s[i-1].x, py=s[i-1].y;
-        var cx=s[i].x, cy=s[i].y;
-        var dx=px-cx, dy=py-cy;
-        var dist=Math.sqrt(dx*dx+dy*dy) || 1;
-        var tx = px - (dx/dist)*spacing;
-        var ty = py - (dy/dist)*spacing;
-        // smooth converge (critical: kills vibration)
-        var k=0.55; // smoothing factor
-        s[i].x = cx + (tx-cx)*k;
-        s[i].y = cy + (ty-cy)*k;
-      }
-
-      // respawn after fully exiting
-      if(D.dir>0 && D.xHead > W*1.35){
-        var y = D.yBase; // keep lane
-        var ND = makeDragon(y, +1, D.top);
-        // preserve yBase lane exactly
-        ND.yBase = y;
-        ND.spine.forEach(function(p){ p.y = y; });
-        return ND;
-      }
-      if(D.dir<0 && D.xHead < -W*0.35){
-        var y2 = D.yBase;
-        var ND2 = makeDragon(y2, -1, D.top);
-        ND2.yBase = y2;
-        ND2.spine.forEach(function(p){ p.y = y2; });
-        return ND2;
-      }
-
-      return D;
-    }
-
-    function drawDragon(D){
-      var s=D.spine;
-
-      // color scheme: dragons dark, opaque; text gold glow
-      ctx.save();
-      ctx.globalCompositeOperation="source-over";
-
-      // body ribbon (continuous stroke)
-      ctx.lineCap="round";
-      ctx.lineJoin="round";
-
-      // thickness taper
-      for(var pass=0; pass<2; pass++){
-        ctx.beginPath();
-        for(var i=0;i<s.length;i++){
-          var p=s[i];
-          if(i===0) ctx.moveTo(p.x,p.y);
-          else ctx.lineTo(p.x,p.y);
-        }
-        ctx.strokeStyle = pass===0 ? "rgba(8,34,16,0.92)" : "rgba(212,175,55,0.32)";
-        ctx.lineWidth   = pass===0 ? 18 : 2.2;
-        ctx.stroke();
-      }
-
-      // segment scales (small dark triangles along body; subtle, not noisy)
-      ctx.fillStyle="rgba(0,0,0,0.18)";
-      ctx.strokeStyle="rgba(212,175,55,0.22)";
+      // shadow edge
+      ctx.strokeStyle="rgba(0,0,0,0.28)";
       ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
+      ctx.stroke();
 
-      for(var i=6;i<s.length-10;i+=4){
-        var p=s[i];
-        var p2=s[i+1];
-        var dx=p2.x-p.x, dy=p2.y-p.y;
-        var ang=Math.atan2(dy,dx);
-
-        // scale triangle normal
-        var nx=Math.cos(ang+Math.PI/2);
-        var ny=Math.sin(ang+Math.PI/2);
-
-        var t=1-(i/s.length);
-        var sz=4 + t*6;
-
+      // ridge spikes (not leaves): small triangles along top edge near head-mid
+      if(i<42 && i>10 && (i%3===0)){
+        ctx.fillStyle="rgba(212,175,55,0.18)";
         ctx.beginPath();
-        ctx.moveTo(p.x + nx*sz, p.y + ny*sz);
-        ctx.lineTo(p.x - nx*sz*0.6, p.y - ny*sz*0.6);
-        ctx.lineTo(p.x + Math.cos(ang)*sz*1.2, p.y + Math.sin(ang)*sz*1.2);
+        ctx.moveTo(-w*0.10, -h*0.98);
+        ctx.lineTo(0, -h*1.55);
+        ctx.lineTo(w*0.10, -h*0.98);
         ctx.closePath();
         ctx.fill();
-        ctx.stroke();
-      }
-
-      // head (distinct)
-      var h=s[0];
-      var h2=s[1];
-      var angH=Math.atan2(h2.y-h.y, h2.x-h.x);
-      ctx.save();
-      ctx.translate(h.x,h.y);
-      ctx.rotate(angH);
-
-      // head base
-      ctx.fillStyle="rgba(6,26,12,0.96)";
-      ctx.strokeStyle="rgba(212,175,55,0.55)";
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.ellipse(10,0,18,12,0,0,Math.PI*2);
-      ctx.fill(); ctx.stroke();
-
-      // horns
-      ctx.strokeStyle="rgba(212,175,55,0.50)";
-      ctx.lineWidth=2;
-      ctx.beginPath();
-      ctx.moveTo(2,-6); ctx.quadraticCurveTo(-10,-18,-18,-8);
-      ctx.moveTo(2, 6); ctx.quadraticCurveTo(-10, 18,-18, 8);
-      ctx.stroke();
-
-      // whiskers
-      ctx.strokeStyle="rgba(255,255,255,0.14)";
-      ctx.lineWidth=1.4;
-      ctx.beginPath();
-      ctx.moveTo(14,-2); ctx.quadraticCurveTo(34,-10,56,-6);
-      ctx.moveTo(14, 2); ctx.quadraticCurveTo(34, 10,56, 6);
-      ctx.stroke();
-
-      // eye
-      ctx.fillStyle="rgba(255,255,255,0.22)";
-      ctx.beginPath(); ctx.arc(16,-3,2.1,0,Math.PI*2); ctx.fill();
-
-      ctx.restore();
-
-      // glowing quote “banner” along body (top dragon only; EN only)
-      if(D.top){
-        var qi = Math.floor(s.length * D.qOffset);
-        qi = Math.max(10, Math.min(s.length-12, qi));
-        var qP = s[qi];
-        ctx.save();
-        ctx.globalCompositeOperation="screen";
-        ctx.fillStyle="rgba(212,175,55,0.62)";
-        ctx.font="700 13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-        ctx.textAlign="center";
-        ctx.shadowColor="rgba(212,175,55,0.55)";
-        ctx.shadowBlur=10;
-        // keep text readable: clamp inside
-        var tx = Math.max(120, Math.min(W-120, qP.x));
-        var ty = Math.max(40,  Math.min(H-40,  qP.y - 26));
-        ctx.fillText(D.quote, tx, ty);
-        ctx.restore();
       }
 
       ctx.restore();
     }
 
-    var last=performance.now();
-    function frame(now){
-      var dt=Math.min(34, now-last); // cap dt
-      last=now;
+    // head (draw on top)
+    var hx=dragon.head.x, hy=dragon.head.y;
+    var h2=body[3];
+    var hAng=Math.atan2(hy - h2.y, hx - h2.x);
 
-      ctx.clearRect(0,0,W,H);
+    ctx.save();
+    ctx.translate(hx, hy);
+    ctx.rotate(hAng);
 
-      drawMoon();
-      drawClouds(dt);
-      drawLanterns(dt);
+    // skull
+    ctx.fillStyle="rgba(12,48,20,0.98)";
+    ctx.beginPath();
+    ctx.ellipse(0,0,28,20,0,0,Math.PI*2);
+    ctx.fill();
 
-      // dragons: update then draw; one top one bottom
-      dragons[0]=updateDragon(dragons[0], dt);
-      dragons[1]=updateDragon(dragons[1], dt);
+    // snout
+    ctx.beginPath();
+    ctx.ellipse(16,4,18,12,0,0,Math.PI*2);
+    ctx.fill();
 
-      // IMPORTANT layering: dragons above dial, below gems (canvas already below gems)
-      drawDragon(dragons[0]);
-      drawDragon(dragons[1]);
+    // jaw shadow
+    ctx.fillStyle="rgba(0,0,0,0.25)";
+    ctx.beginPath();
+    ctx.ellipse(10,10,20,10,0,0,Math.PI*2);
+    ctx.fill();
 
-      requestAnimationFrame(frame);
-    }
+    // eye glow
+    ctx.fillStyle="rgba(212,175,55,0.75)";
+    ctx.beginPath();
+    ctx.arc(8,-4,2.2,0,Math.PI*2);
+    ctx.fill();
 
-    return { resize: resize, start: function(){ requestAnimationFrame(frame); } };
-  })();
+    // horns
+    ctx.fillStyle="rgba(212,175,55,0.18)";
+    ctx.beginPath();
+    ctx.moveTo(-6,-18); ctx.lineTo(-14,-34); ctx.lineTo(2,-22);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(2,-18); ctx.lineTo(-2,-36); ctx.lineTo(10,-22);
+    ctx.closePath(); ctx.fill();
 
-  // init FX
-  FX.resize();
-  FX.start();
+    // whisker
+    ctx.strokeStyle="rgba(255,255,255,0.12)";
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(26,4);
+    ctx.quadraticCurveTo(46,0,62,-8);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // banner (English only; gold glow) follows dragon, below head slightly
+    ctx.save();
+    ctx.globalCompositeOperation="screen";
+    ctx.font="700 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+    ctx.fillStyle="rgba(212,175,55,0.68)";
+    ctx.shadowColor="rgba(212,175,55,0.18)";
+    ctx.shadowBlur=14;
+
+    // place banner near segment 10..20
+    var bx=body[14].x, by=body[14].y + 22;
+    ctx.fillText(dragon.quote, bx, by);
+    ctx.restore();
+  }
+
+  // ===== Render loop =====
+  var dragonTop = new Dragon({dir:-1, yBase: stage.clientHeight*0.30, yAmp: 18, speed: 0.70, len: 70, segDist: 10});
+  var dragonBot = new Dragon({dir: 1, yBase: stage.clientHeight*0.72, yAmp: 16, speed: 0.62, len: 68, segDist: 10});
+
+  function render(){
+    var w=stage.clientWidth, h=stage.clientHeight;
+    // clear
+    back.clearRect(0,0,w,h);
+    mid.clearRect(0,0,w,h);
+
+    // BACK LAYER: moon + clouds
+    drawMoon(back, w, h);
+    drawClouds();
+
+    // MID LAYER: dragons + embers (embers above clouds, still under buttons)
+    drawEmbers(mid);
+
+    var t=performance.now();
+    dragonTop.step(t);
+    dragonBot.step(t);
+
+    drawDragon(mid, dragonTop, t);
+    drawDragon(mid, dragonBot, t);
+
+    requestAnimationFrame(render);
+  }
+
+  // ===== Init =====
+  function init(){
+    resizeFX();
+    seedClouds();
+    seedEmbers();
+    safeLayoutNodes();
+    requestAnimationFrame(render);
+  }
+  init();
 
 })();
 </script>

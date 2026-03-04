@@ -1,25 +1,31 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (SEPARATED LAYERS FIX) · v7
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY + REAL DRAGONS (SVG)
      OWNER: SEAN (Website Building Room)
-     FIX (PER SEAN):
-       - Separate visuals into distinct layers (NO “dragon becomes cloud” merge)
-         LAYER ORDER (back→front):
-           0) sky + stars + moon (single moon, phased)
-           1) water reflection haze (subtle)
-           2) clouds (translucent) — behind compass face
-           3) compass slab + dial face (semi-glass)
-           4) dragons (opaque) — ABOVE compass face, BELOW buttons
-           5) gem buttons (opaque)
-       - Moon: SINGLE, brighter, cratered, visible; phase advances each page load/return (sessionStorage)
-       - Dragons: two, thicker, segmented, with head + horns + whiskers; gold glowing sayings (top=classical CN, bottom=selected language)
-       - Clouds can cross at multiple depths but NEVER over CORE diamond
-       - 3D inlay: remove orthogonal “grid” look inside diamonds; use diamond-aligned conic silk + curvature feel
-       - Keep: 16 unique destinations, CORE → /index-core/index.html, EXIT → /door/, HUB → /home/
-       - Trilingual: EN/中文/ES (NO reload)
-       - Lane: lane=platform|engineering (URL-only; NO reload; NEVER stored)
-       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+
+     FIXES (v5):
+       - Separate layers: SKY (behind) → WATER/COMPASS FACE → CLOUDS (translucent) → DRAGONS (opaque) → BUTTONS (opaque)
+       - Dragons are NOT vines: head + segmented body + scales + claws + spine + tail taper
+       - Two dragons:
+           TOP: always classical Chinese sayings (gold glow)
+           BOTTOM: language-matched sayings (EN/中文/ES) (gold glow)
+         Text changes each full pass (animation iteration).
+       - Clouds move opposite direction; never cover CORE.
+       - Moon: single moon with crater texture + glow; phase advances by time (no new storage keys)
+       - Brighter compass face (water-glass) + subtle ripple (performance-safe)
+       - Curved 3D gold inlay (no flat orthogonal grid)
+       - Exit/Hub above bottom dock (no conflict)
+       - Trilingual EN/中文/ES (NO reload)
+       - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
+       - Canon carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - No overlays/modals; no inline onclick; addEventListener only
        - ui.css owns html/body background (NO overrides)
+
+     ROUTES:
+       - CORE → /index-core/index.html
+       - EXIT → /door/
+       - HUB  → /home/
+       - Unbuilt/duplicate href → /404.html
 -->
 
 <html lang="en">
@@ -48,7 +54,8 @@ body::before,body::after{pointer-events:none!important}
   --R2:246px;
   --R3:314px;
 
-  --padTop:102px;
+  --padTop:106px;
+  --dockH:82px;
 
   /* ===== MATERIAL ===== */
   --ink:rgba(255,255,255,.94);
@@ -57,9 +64,9 @@ body::before,body::after{pointer-events:none!important}
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
-  --crimson:rgba(120,0,22,.44);
-  --festival:rgba(255,43,43,.26);
-  --opalV:rgba(90,40,120,.18);
+  --crimson:rgba(120,0,22,.40);
+  --festival:rgba(255,43,43,.22);
+  --opalV:rgba(90,40,120,.14);
 
   --gold:rgba(201,162,74,.58);
   --goldGlow:rgba(201,162,74,.22);
@@ -84,21 +91,36 @@ body::before,body::after{pointer-events:none!important}
   border-radius:22px;
   padding:10px 12px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
-  backdrop-filter:blur(10px);
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.08), transparent 62%),
+    radial-gradient(circle at 82% 30%, rgba(255,43,43,.08), transparent 64%),
+    linear-gradient(145deg, rgba(12,14,18,.62), rgba(6,8,12,.78));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
+  backdrop-filter:blur(12px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
 }
-.brandLeft{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;}
-.brandTitle{font-weight:980;letter-spacing:.6px;font-size:14px;color:rgba(255,255,255,.94);white-space:nowrap;}
-.brandSub{font-size:12px;color:rgba(255,255,255,.72);letter-spacing:.2px;white-space:nowrap;}
-.brandLinks{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.70);}
-.brandLinks a{padding:6px 10px;border-radius:999px;border:1px solid rgba(201,162,74,.16);background:rgba(0,0,0,.14);}
-.controlsRight{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;}
+.brandLeft{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
+}
+.brandTitle{
+  font-weight:980;letter-spacing:.6px;font-size:14px;color:rgba(255,255,255,.94);white-space:nowrap;
+}
+.brandSub{
+  font-size:12px;color:rgba(255,255,255,.74);letter-spacing:.2px;white-space:nowrap;
+}
+.brandLinks{
+  display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.70);
+}
+.brandLinks a{
+  padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(201,162,74,.16);
+  background:rgba(0,0,0,.14);
+}
+.controlsRight{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+}
 
+/* segmented controls */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -110,8 +132,7 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.78);
   padding:10px 12px;min-height:42px;
   font-weight:980;font-size:13px;letter-spacing:.25px;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 .seg button[aria-pressed="true"]{
   color:rgba(255,255,255,.95);
@@ -128,265 +149,261 @@ body::before,body::after{pointer-events:none!important}
   height:min(1200px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
-  border-radius:44px;
-  overflow:hidden;
+  border-radius:34px;
 }
 
-/* ===== LAYER 0: SKY + STARS + MOON (single moon only) ===== */
-.sky{
-  position:absolute;inset:0;
-  pointer-events:none;
-  z-index:0;
+/* ===== LAYERS =====
+   0 sky (behind stage)
+   1 waterGlass (compass slab background)
+   2 obsidianDial
+   3 clouds (translucent, behind buttons, below dragons)
+   4 dragons (opaque, above compass, below buttons)
+   5 nodes (opaque)
+*/
+.layer{position:absolute;inset:0;border-radius:34px;overflow:hidden;pointer-events:none}
+
+/* SKY: red→orange→night gradient + haze */
+.sky{z-index:0}
+.sky::before{
+  content:"";position:absolute;inset:-12%;
   background:
-    radial-gradient(circle at 70% 14%, rgba(255,240,210,.16) 0%, rgba(255,240,210,0) 52%),
-    radial-gradient(circle at 18% 22%, rgba(255,90,70,.12) 0%, transparent 56%),
-    radial-gradient(circle at 86% 38%, rgba(120,70,255,.10) 0%, transparent 66%),
-    radial-gradient(circle at 50% 78%, rgba(0,0,0,.22) 0%, transparent 68%),
-    linear-gradient(180deg, rgba(255,120,60,.22) 0%, rgba(120,20,10,.22) 35%, rgba(0,0,0,.26) 100%);
+    radial-gradient(circle at 72% 16%, rgba(255,240,210,.16) 0%, rgba(255,240,210,0) 46%), /* moon haze zone */
+    radial-gradient(circle at 18% 22%, rgba(255,90,60,.14) 0%, rgba(255,90,60,0) 54%),  /* lantern glow */
+    radial-gradient(circle at 86% 38%, rgba(120,70,255,.10) 0%, rgba(120,70,255,0) 62%), /* opal haze */
+    linear-gradient(180deg,
+      rgba(255,120,60,.14) 0%,
+      rgba(255,70,40,.10) 16%,
+      rgba(120,0,22,.10) 46%,
+      rgba(0,0,0,.28) 100%);
   filter:saturate(1.05);
 }
-.stars{
-  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.75;
-  background:
-    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.55), transparent 55%),
-    radial-gradient(1px 1px at 26% 12%, rgba(255,255,255,.50), transparent 55%),
-    radial-gradient(1px 1px at 44% 20%, rgba(255,255,255,.45), transparent 55%),
-    radial-gradient(1px 1px at 62% 14%, rgba(255,255,255,.55), transparent 55%),
-    radial-gradient(1px 1px at 78% 18%, rgba(255,255,255,.50), transparent 55%),
-    radial-gradient(1px 1px at 88% 26%, rgba(255,255,255,.40), transparent 55%),
-    radial-gradient(1px 1px at 18% 34%, rgba(255,255,255,.35), transparent 55%),
-    radial-gradient(1px 1px at 34% 40%, rgba(255,255,255,.30), transparent 55%),
-    radial-gradient(1px 1px at 70% 36%, rgba(255,255,255,.34), transparent 55%),
-    radial-gradient(1px 1px at 84% 44%, rgba(255,255,255,.28), transparent 55%);
-  filter:blur(.2px);
-}
 
-/* single moon with craters + glow + phase shadow */
+/* MOON: single moon + crater texture + glow + reflection */
 .moon{
   position:absolute;
-  right:6%;
-  top:12%;
-  width:180px;height:180px;
-  border-radius:999px;
-  z-index:2;
+  width:180px;height:180px;border-radius:999px;
+  left:78%;top:16%;
+  transform:translate(-50%,-50%);
+  z-index:1;
   pointer-events:none;
-  background:
-    radial-gradient(circle at 35% 30%, rgba(255,255,255,.82), rgba(255,255,255,.55) 52%, rgba(255,255,255,.30) 72%, rgba(255,255,255,.00) 100%),
-    radial-gradient(circle at 40% 38%, rgba(240,230,210,.55) 0 30%, rgba(0,0,0,0) 31%),
-    radial-gradient(circle at 62% 56%, rgba(230,220,200,.45) 0 22%, rgba(0,0,0,0) 23%),
-    radial-gradient(circle at 52% 28%, rgba(220,210,190,.40) 0 14%, rgba(0,0,0,0) 15%),
-    radial-gradient(circle at 32% 62%, rgba(220,210,190,.34) 0 18%, rgba(0,0,0,0) 19%);
-  box-shadow:
-    0 0 40px rgba(255,240,210,.25),
-    0 0 90px rgba(255,240,210,.18);
   opacity:.95;
-}
-.moon::after{
-  /* terminator shadow for phases; moved by --phaseX */
-  content:"";
-  position:absolute;inset:-2%;
-  border-radius:999px;
   background:
-    radial-gradient(circle at 50% 50%, rgba(0,0,0,.00) 0 55%, rgba(0,0,0,.70) 74% 100%);
-  transform:translateX(var(--phaseX, 0%));
-  mix-blend-mode:multiply;
-  opacity:.78;
-}
-
-/* ===== LAYER 1: WATER REFLECTION HAZE (subtle) ===== */
-.water{
-  position:absolute;inset:0;z-index:3;pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 65%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(circle at 30% 82%, rgba(255,140,80,.08), transparent 70%),
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.10));
-  opacity:.75;
-}
-.water::after{
-  content:"";
-  position:absolute;inset:-20%;
-  background:
-    repeating-radial-gradient(circle at 50% 60%,
-      rgba(255,255,255,.020) 0 10px,
-      rgba(255,255,255,0) 10px 22px);
-  animation:ripple 10s linear infinite;
-  opacity:.40;
-}
-@keyframes ripple{
-  0%{transform:translateY(0) rotate(0deg)}
-  100%{transform:translateY(-40px) rotate(1deg)}
-}
-
-/* ===== LAYER 2: CLOUDS (translucent; behind compass face; never over CORE area) ===== */
-.cloudLayer{
-  position:absolute;inset:0;z-index:4;pointer-events:none;
-  mask-image:
-    radial-gradient(circle at 50% 58%, transparent 0 140px, #000 190px 100%); /* keep clear around CORE */
-  -webkit-mask-image:
-    radial-gradient(circle at 50% 58%, transparent 0 140px, #000 190px 100%);
-}
-.cloud{
-  position:absolute;
-  width:520px;height:210px;
-  left:-40%;
-  top:18%;
-  opacity:.22;
-  filter:blur(0.2px);
-  background:
-    radial-gradient(140px 90px at 22% 55%, rgba(255,255,255,.26), rgba(255,255,255,0) 70%),
-    radial-gradient(160px 100px at 48% 45%, rgba(255,255,255,.20), rgba(255,255,255,0) 72%),
-    radial-gradient(140px 90px at 70% 58%, rgba(255,255,255,.18), rgba(255,255,255,0) 70%),
-    radial-gradient(90px 60px at 86% 62%, rgba(255,255,255,.12), rgba(255,255,255,0) 72%);
-  animation:cloudDrift 26s linear infinite;
-}
-.cloud.c2{top:56%;opacity:.18;animation-duration:32s;animation-delay:-10s;}
-.cloud.c3{top:36%;opacity:.14;animation-duration:40s;animation-delay:-22s;}
-@keyframes cloudDrift{
-  0%{transform:translateX(-10%)}
-  100%{transform:translateX(160%)}
-}
-
-/* ===== LAYER 3: COMPASS SLAB + DIAL (semi-glass; lighter for contrast) ===== */
-.slab{
-  position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
-  border-radius:44px;
-  pointer-events:none;
-  z-index:5;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.12), transparent 58%),
-    radial-gradient(circle at 78% 28%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 66%),
-    linear-gradient(160deg, rgba(255,255,255,.05), rgba(0,0,0,.10));
+    /* craters */
+    radial-gradient(circle at 36% 38%, rgba(0,0,0,.10) 0 10px, transparent 11px),
+    radial-gradient(circle at 62% 44%, rgba(0,0,0,.09) 0 14px, transparent 15px),
+    radial-gradient(circle at 48% 62%, rgba(0,0,0,.08) 0 9px, transparent 10px),
+    radial-gradient(circle at 30% 70%, rgba(0,0,0,.06) 0 7px, transparent 8px),
+    radial-gradient(circle at 55% 28%, rgba(0,0,0,.06) 0 6px, transparent 7px),
+    /* surface */
+    radial-gradient(circle at 35% 30%, rgba(255,255,255,.98), rgba(245,245,245,.92) 58%, rgba(220,220,220,.86) 100%);
   box-shadow:
-    0 70px 240px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -70px 140px rgba(0,0,0,.55);
-  opacity:.78;
-}
-
-.dial{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  border-radius:999px;
-  pointer-events:none;
-  z-index:6;
+    0 0 38px rgba(255,240,210,.32),
+    0 0 80px rgba(255,210,150,.16);
   overflow:hidden;
 }
-.dial::before{
+.moon::after{
   content:"";
-  position:absolute;inset:0;border-radius:999px;
+  position:absolute;inset:-30%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06), transparent 62%);
+  opacity:.70;
+}
+/* phase shadow controlled by JS via --phaseX (-1..1) */
+.moon::before{
+  content:"";
+  position:absolute;top:-10%;bottom:-10%;
+  left:calc(50% + var(--phaseX,0) * 42%);
+  width:120%;
+  border-radius:999px;
+  background:rgba(0,0,0,.48);
+  filter:blur(.2px);
+  mix-blend-mode:multiply;
+}
+
+/* reflection in water layer: faint */
+.moonRef{
+  position:absolute;
+  width:210px;height:210px;border-radius:999px;
+  left:78%;top:76%;
+  transform:translate(-50%,-50%) scaleY(.55);
+  opacity:.10;
+  filter:blur(1px);
+  background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.90), rgba(255,255,255,0) 62%);
+  pointer-events:none;
+}
+
+/* WATER/GLASS compass face */
+.waterGlass{z-index:1}
+.waterGlass::before{
+  content:"";position:absolute;inset:18px;border-radius:30px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    /* bright water plane */
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.14), transparent 62%),
+    radial-gradient(circle at 40% 70%, rgba(255,170,120,.12), transparent 62%),
+    radial-gradient(circle at 68% 62%, rgba(255,120,80,.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.06));
+  box-shadow:
+    0 70px 220px rgba(0,0,0,.30),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -70px 140px rgba(0,0,0,.30);
+  opacity:.85;
+  backdrop-filter:blur(10px);
+}
+/* subtle ripple (performance-safe): animated background-position */
+.waterGlass::after{
+  content:"";position:absolute;inset:18px;border-radius:30px;
+  background:
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,.06) 0 2px,
+      rgba(255,255,255,0) 2px 14px);
+  opacity:.10;
+  mix-blend-mode:overlay;
+  animation: rippleShift 14s linear infinite;
+}
+@keyframes rippleShift{
+  0%{background-position:0 0}
+  100%{background-position:220px 180px}
+}
+
+/* OBISIDIAN DIAL (instrument) */
+.dial{z-index:2}
+.dial .ring{
+  position:absolute;left:50%;top:50%;
+  width:min(900px,90vw);height:min(900px,90vw);
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  pointer-events:none;
   background:
     radial-gradient(circle at 50% 42%,
-      rgba(255,255,255,.06),
-      rgba(0,0,0,.18) 56%,
-      rgba(0,0,0,.42) 78%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
       rgba(0,0,0,.00) 92%),
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%);
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.10),
-    inset 0 0 80px rgba(0,0,0,.45);
-  opacity:.95;
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 80px rgba(0,0,0,.55),
+    0 50px 180px rgba(0,0,0,.22);
+  opacity:.82; /* lighter than before */
 }
-.dial::after{
-  content:"";
-  position:absolute;inset:-14%;
+.dial .engrave{
+  position:absolute;left:50%;top:50%;
+  width:min(900px,90vw);height:min(900px,90vw);
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  pointer-events:none;
   background:
     radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
 
+    /* curved 3D inlay: concentric arcs + faint conic */
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10) 0 1px, transparent 2px 100%),
+    repeating-conic-gradient(from 45deg at 50% 50%, rgba(201,162,74,.06) 0 1.2deg, transparent 1.2deg 7.5deg),
+
+    /* axes */
     linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
-
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
-  opacity:.72;
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%);
+  opacity:.55;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
 
-/* 16 direction labels on dial */
-.face16{
+/* 16 cardinal labels on dial (gold + black shadow) */
+.dialMarks{
   position:absolute;left:50%;top:50%;
+  width:min(900px,90vw);height:min(900px,90vw);
   transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  pointer-events:none;
-  z-index:7;
-  opacity:.78;
+  z-index:3;pointer-events:none;
 }
-.face16 span{
+.dialMarks span{
   position:absolute;
-  color:rgba(0,0,0,.70);
-  text-shadow:0 0 0 rgba(0,0,0,0);
   font-weight:980;
-  letter-spacing:1.6px;
   font-size:11px;
-  mix-blend-mode:overlay;
-}
-.face16 span::after{
-  content:attr(data-g);
-  position:absolute;inset:0;
+  letter-spacing:1.6px;
   color:rgba(201,162,74,.62);
-  text-shadow:0 0 10px rgba(201,162,74,.18);
-  transform:translate(1px,1px);
-  mix-blend-mode:screen;
+  text-shadow:0 0 10px rgba(0,0,0,.55), 0 0 1px rgba(0,0,0,.9);
+  opacity:.85;
 }
 
-/* ===== LAYER 4: DRAGONS (opaque; above compass, below buttons) ===== */
-.dragonLayer{
+/* CLOUDS (translucent, behind dragons, never over CORE) */
+.clouds{z-index:3}
+.cloudBand{
+  position:absolute;left:-40%;right:-40%;
+  top:26%;
+  height:140px;
+  opacity:.18;
+  filter:blur(.6px);
+  background:
+    radial-gradient(120px 70px at 10% 60%, rgba(255,255,255,.70), rgba(255,255,255,0) 70%),
+    radial-gradient(140px 80px at 22% 40%, rgba(255,255,255,.60), rgba(255,255,255,0) 72%),
+    radial-gradient(170px 90px at 36% 60%, rgba(255,255,255,.55), rgba(255,255,255,0) 74%),
+    radial-gradient(150px 90px at 50% 45%, rgba(255,255,255,.50), rgba(255,255,255,0) 74%),
+    radial-gradient(180px 100px at 66% 55%, rgba(255,255,255,.55), rgba(255,255,255,0) 76%),
+    radial-gradient(160px 90px at 82% 45%, rgba(255,255,255,.52), rgba(255,255,255,0) 76%),
+    radial-gradient(120px 70px at 92% 60%, rgba(255,255,255,.48), rgba(255,255,255,0) 72%);
+  animation: cloudDrift 26s linear infinite;
+}
+/* lower, smaller cloud band */
+.cloudBand.b2{
+  top:72%;
+  height:110px;
+  opacity:.14;
+  animation-duration:32s;
+}
+@keyframes cloudDrift{
+  0%{transform:translateX(-10%)}
+  100%{transform:translateX(10%)}
+}
+/* keep clouds off core: mask a central hole */
+.cloudsMask{
   position:absolute;inset:0;
-  z-index:8;
+  -webkit-mask: radial-gradient(circle at 50% 52%, transparent 0 150px, #000 170px 100%);
+  mask: radial-gradient(circle at 50% 52%, transparent 0 150px, #000 170px 100%);
+}
+
+/* DRAGONS: opaque, above compass, below nodes */
+.dragons{z-index:4}
+.dragonWrap{
+  position:absolute;left:-35%;
+  width:170%;
+  height:220px;
   pointer-events:none;
-}
-.dragon{
-  position:absolute;
-  width:920px;
-  height:260px;
-  top:16%;
-  left:-110%;
   opacity:.95;
-  filter:drop-shadow(0 18px 26px rgba(0,0,0,.35));
-  animation:dragonPassTop 26s linear infinite;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.55));
 }
-.dragon.bottom{
-  top:auto;
-  bottom:16%;
-  left:110%;
-  transform:scaleX(-1);
-  animation:dragonPassBottom 28s linear infinite;
+.dragonWrap.top{top:20%; animation: flyR2L 24s linear infinite;}
+.dragonWrap.bot{top:74%; animation: flyL2R 26s linear infinite;}
+
+@keyframes flyR2L{
+  0%{transform:translateX(18%)}
+  100%{transform:translateX(-18%)}
 }
-@keyframes dragonPassTop{
-  0%{transform:translateX(0)}
-  100%{transform:translateX(240%)}
-}
-@keyframes dragonPassBottom{
-  0%{transform:translateX(0) scaleX(-1)}
-  100%{transform:translateX(-240%) scaleX(-1)}
+@keyframes flyL2R{
+  0%{transform:translateX(-18%)}
+  100%{transform:translateX(18%)}
 }
 
-/* glow text on dragon */
-.dragonText{
-  fill:rgba(212,175,55,.96);
-  filter:drop-shadow(0 0 10px rgba(212,175,55,.28));
-  font-weight:900;
-  letter-spacing:2px;
+/* LANTERNS (subtle up drift) */
+.lantern{
+  position:absolute;
+  width:14px;height:18px;border-radius:6px;
+  background:radial-gradient(circle at 50% 40%, rgba(255,220,170,.90), rgba(255,120,60,.60) 60%, rgba(255,120,60,0) 100%);
+  box-shadow:0 0 10px rgba(255,170,100,.22);
+  opacity:.22;
+  animation: lanternUp 18s linear infinite;
+}
+@keyframes lanternUp{
+  0%{transform:translateY(40px);opacity:.10}
+  20%{opacity:.22}
+  100%{transform:translateY(-520px);opacity:0}
 }
 
-/* ===== LAYER 5: GEM BUTTONS ===== */
+/* NODES (gems) */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -404,12 +421,17 @@ body::before,body::after{pointer-events:none!important}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
+/* fractal-ish gloss + 3D */
 .surface{
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.24), transparent 46%),
     radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
     radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
     radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
+    /* fractal noise illusion (safe): layered conic micrograin */
+    repeating-conic-gradient(from 20deg at 40% 40%,
+      rgba(255,255,255,.018) 0 4deg,
+      rgba(0,0,0,0) 4deg 14deg),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
     var(--shadowDeep),
@@ -417,24 +439,19 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-
-/* 3D inlay FIX: remove orthogonal look → conic silk aligned to diamond + curved feel */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  /* curved-ish inlay feel: conic + diagonals (NOT axis grid) */
   background:
     repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.08) 0 1.1deg,
-      transparent 1.1deg 7.2deg),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 62%);
+      rgba(201,162,74,.075) 0 1.2deg,
+      transparent 1.2deg 8deg),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.06), transparent 62%);
   opacity:.38;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%);
+  mask: radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%);
 }
 .surface::after{
   content:"";
@@ -446,7 +463,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.92;
 }
-
 .node:hover{
   border-color:rgba(201,162,74,.44);
   box-shadow:
@@ -457,8 +473,16 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
 .node:active{filter:brightness(.98)}
+.core{
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.88),
+    0 0 46px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -64px 110px rgba(0,0,0,.92);
+}
 
-/* inner text + per-gem N/E/S/W corners */
+/* inner text */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -470,7 +494,8 @@ body::before,body::after{pointer-events:none!important}
   padding:10px;
   gap:6px;
   color:#fff;
-  position:relative;
+  pointer-events:none;
+  user-select:none;
 }
 .word{
   font-weight:980;
@@ -488,100 +513,93 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
-/* small cardinal corners on each gem (not peppered across page) */
-.cornerMark{
-  position:absolute;
+/* per-button cardinality on corners (tiny) */
+.corners{
+  position:absolute;inset:8px;
+  transform:rotate(-45deg);
+  pointer-events:none;
+  opacity:.70;
   font-weight:980;
   font-size:9px;
-  letter-spacing:1.1px;
-  color:rgba(201,162,74,.72);
-  text-shadow:0 0 10px rgba(201,162,74,.18);
-  opacity:.92;
+  letter-spacing:1px;
+  color:rgba(201,162,74,.70);
+  text-shadow:0 0 10px rgba(0,0,0,.55);
 }
-.cornerMark.n{top:6px;left:50%;transform:translateX(-50%)}
-.cornerMark.e{right:6px;top:50%;transform:translateY(-50%)}
-.cornerMark.s{bottom:6px;left:50%;transform:translateX(-50%)}
-.cornerMark.w{left:6px;top:50%;transform:translateY(-50%)}
+.corners .n{position:absolute;top:0;left:50%;transform:translateX(-50%)}
+.corners .e{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+.corners .s{position:absolute;bottom:0;left:50%;transform:translateX(-50%)}
+.corners .w{position:absolute;left:0;top:50%;transform:translateY(-50%)}
 
-/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
-.cornerBtn{
+/* ===== DOCK + EXIT/HUB ABOVE IT ===== */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:240;
+  width:min(980px,94vw);
+  padding:10px 12px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+  backdrop-filter:blur(12px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+.dock a{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(145deg, rgba(10,12,16,.70), rgba(6,8,10,.84));
+  color:rgba(255,255,255,.90);
+  font-weight:980;letter-spacing:.25px;
+}
+
+/* corner diamonds above dock */
+.corner{
   position:fixed;
-  bottom:max(16px, env(safe-area-inset-bottom));
-  z-index:300;
+  bottom:calc(max(10px, env(safe-area-inset-bottom)) + var(--dockH));
+  z-index:250;
   pointer-events:none;
 }
-.cornerBtn .dmini{pointer-events:auto}
-.cornerBtn.left{left:16px}
-.cornerBtn.right{right:16px}
-
+.corner .dmini{pointer-events:auto}
+.corner.left{left:16px}
+.corner.right{right:16px}
 .dmini{
-  width:56px;height:56px;
-  border-radius:16px;
+  width:56px;height:56px;border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
+  box-shadow:var(--shadowB);
   display:grid;place-items:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
   transform:rotate(45deg);
-  position:relative;
-  overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease;
-}
-.dmini:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
 }
 .dmini span{
   transform:rotate(-45deg);
-  font-weight:980;
-  font-size:12px;
-  letter-spacing:.6px;
-  color:rgba(255,255,255,.92);
+  font-weight:980;font-size:12px;letter-spacing:.6px;color:rgba(255,255,255,.92);
   user-select:none;
 }
 .cornerLabel{
-  margin-top:10px;
-  text-align:center;
-  color:rgba(255,255,255,.72);
-  font-size:11px;
-  letter-spacing:.4px;
+  margin-top:10px;text-align:center;color:rgba(255,255,255,.72);font-size:11px;letter-spacing:.4px;
 }
 
-/* ===== BOTTOM PILL ===== */
-.pillWrap{
-  width:min(1120px,94vw);
-  margin:14px auto 0;
-  padding-bottom:90px;
-}
-.pill{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:14px 16px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.5px;
-}
-.pill b{color:rgba(255,255,255,.95)}
-.pill .g{color:rgba(201,162,74,.80);font-weight:980}
-
+/* responsive */
 @media (max-width:720px){
-  :root{--D0:196px;--D1:142px;--D2:108px;--D3:84px;--R1:156px;--R2:228px;--R3:292px;--padTop:112px;}
-  .moon{width:150px;height:150px}
+  :root{
+    --D0:196px; --D1:142px; --D2:108px; --D3:84px;
+    --R1:156px; --R2:228px; --R3:292px;
+    --padTop:112px;
+    --dockH:96px;
+  }
 }
 @media (max-width:520px){
-  :root{--D0:184px;--D1:136px;--D2:104px;--D3:80px;--R1:146px;--R2:214px;--R3:274px;}
+  :root{
+    --D0:184px; --D1:136px; --D2:104px; --D3:80px;
+    --R1:146px; --R2:214px; --R3:274px;
+    --dockH:108px;
+  }
   .brandSub{display:none}
-  .moon{width:132px;height:132px}
+  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
 }
 </style>
 </head>
@@ -614,122 +632,49 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="stage" id="stage" aria-label="Compass dial">
-  <!-- L0 -->
-  <div class="sky" aria-hidden="true"></div>
-  <div class="stars" aria-hidden="true"></div>
-  <div class="moon" id="moon" aria-hidden="true"></div>
-
-  <!-- L1 -->
-  <div class="water" aria-hidden="true"></div>
-
-  <!-- L2 -->
-  <div class="cloudLayer" aria-hidden="true">
-    <div class="cloud c1"></div>
-    <div class="cloud c2"></div>
-    <div class="cloud c3"></div>
+  <div class="layer sky" aria-hidden="true">
+    <div class="moon" id="moon"></div>
+    <div class="moonRef" aria-hidden="true"></div>
   </div>
 
-  <!-- L3 -->
-  <div class="slab" aria-hidden="true"></div>
-  <div class="dial" aria-hidden="true"></div>
+  <div class="layer waterGlass" aria-hidden="true"></div>
 
-  <!-- 16 labels (minimal set; dial already shows rings; these are optional but present) -->
-  <div class="face16" aria-hidden="true" id="face16"></div>
-
-  <!-- L4: dragons -->
-  <div class="dragonLayer" aria-hidden="true">
-    <svg class="dragon" viewBox="0 0 920 260" aria-hidden="true">
-      <!-- body segments -->
-      <defs>
-        <linearGradient id="dgBody" x1="0" x2="1">
-          <stop offset="0" stop-color="#0b3b20"/>
-          <stop offset="1" stop-color="#145c2f"/>
-        </linearGradient>
-        <pattern id="dgScales" width="18" height="12" patternUnits="userSpaceOnUse">
-          <path d="M0,12 Q9,0 18,12" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-          <path d="M0,12 Q9,2 18,12" fill="none" stroke="rgba(212,175,55,.18)" stroke-width="1"/>
-        </pattern>
-      </defs>
-
-      <!-- main body (thicker, segmented feel via two strokes) -->
-      <path d="M40 150
-               C140 70, 240 210, 340 130
-               C440 60, 520 210, 620 120
-               C710 55, 800 140, 880 110"
-            fill="none" stroke="url(#dgBody)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
-      <path d="M40 150
-               C140 70, 240 210, 340 130
-               C440 60, 520 210, 620 120
-               C710 55, 800 140, 880 110"
-            fill="none" stroke="url(#dgScales)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" opacity=".70"/>
-
-      <!-- head -->
-      <g transform="translate(850 60) rotate(-10)">
-        <path d="M0 70 C20 30, 60 18, 92 38 C110 50, 112 72, 96 88 C74 110, 40 108, 12 96 Z"
-              fill="url(#dgBody)" opacity=".98" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-        <path d="M72 44 L110 28" stroke="rgba(212,175,55,.65)" stroke-width="4" stroke-linecap="round"/>
-        <path d="M70 50 L112 48" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-linecap="round"/>
-        <!-- horns -->
-        <path d="M78 28 C84 10, 96 6, 110 14" stroke="#cfae48" stroke-width="5" stroke-linecap="round" fill="none"/>
-        <path d="M64 30 C62 10, 74 4, 90 10" stroke="#cfae48" stroke-width="5" stroke-linecap="round" fill="none"/>
-        <!-- whiskers -->
-        <path d="M22 78 C0 72, -20 68, -44 74" stroke="rgba(212,175,55,.55)" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <path d="M26 84 C4 90, -20 96, -44 110" stroke="rgba(212,175,55,.40)" stroke-width="3" stroke-linecap="round" fill="none"/>
-        <!-- eye -->
-        <circle cx="78" cy="62" r="6" fill="rgba(255,255,255,.70)"/>
-      </g>
-
-      <!-- small arms (hint) -->
-      <g opacity=".75" stroke="rgba(0,0,0,.35)" stroke-width="2" fill="url(#dgBody)">
-        <path d="M420 160 C430 150, 446 150, 456 160 C460 170, 452 176, 442 176 C432 176, 424 170, 420 160Z"/>
-        <path d="M600 146 C610 136, 626 136, 636 146 C640 156, 632 162, 622 162 C612 162, 604 156, 600 146Z"/>
-      </g>
-
-      <!-- gold sayings (classical CN top) -->
-      <text class="dragonText" x="160" y="102" font-size="18">道可道 非常道 · 少说多做 · 急所不欲 无施于人</text>
-      <text class="dragonText" x="220" y="132" font-size="18">过则能改 善莫大焉 · 一时之成 千古恨</text>
-    </svg>
-
-    <svg class="dragon bottom" viewBox="0 0 920 260" aria-hidden="true">
-      <!-- reuse visual style -->
-      <path d="M40 150
-               C140 70, 240 210, 340 130
-               C440 60, 520 210, 620 120
-               C710 55, 800 140, 880 110"
-            fill="none" stroke="#0b3b20" stroke-width="46" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>
-      <path d="M40 150
-               C140 70, 240 210, 340 130
-               C440 60, 520 210, 620 120
-               C710 55, 800 140, 880 110"
-            fill="none" stroke="rgba(212,175,55,.12)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>
-
-      <g transform="translate(850 60) rotate(-10)">
-        <path d="M0 70 C20 30, 60 18, 92 38 C110 50, 112 72, 96 88 C74 110, 40 108, 12 96 Z"
-              fill="#145c2f" opacity=".98" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
-        <path d="M78 28 C84 10, 96 6, 110 14" stroke="#cfae48" stroke-width="5" stroke-linecap="round" fill="none"/>
-        <path d="M64 30 C62 10, 74 4, 90 10" stroke="#cfae48" stroke-width="5" stroke-linecap="round" fill="none"/>
-        <circle cx="78" cy="62" r="6" fill="rgba(255,255,255,.70)"/>
-      </g>
-
-      <!-- bottom sayings (language-selected) -->
-      <text class="dragonText" id="dragonBottomLine1" x="180" y="118" font-size="18">SAY LESS, DO MORE · TIME FLOWS LIKE WATER</text>
-      <text class="dragonText" id="dragonBottomLine2" x="260" y="148" font-size="18">THE WAY THAT CAN BE SPOKEN IS NOT THE ETERNAL WAY</text>
-    </svg>
+  <div class="layer dial" aria-hidden="true">
+    <div class="ring"></div>
+    <div class="engrave"></div>
+    <div class="dialMarks" id="dialMarks" aria-hidden="true"></div>
   </div>
-  <!-- nodes injected by JS -->
+
+  <div class="layer clouds" aria-hidden="true">
+    <div class="cloudsMask">
+      <div class="cloudBand"></div>
+      <div class="cloudBand b2"></div>
+    </div>
+  </div>
+
+  <div class="layer dragons" aria-hidden="true">
+    <div class="dragonWrap top" id="dragonTop"></div>
+    <div class="dragonWrap bot" id="dragonBot"></div>
+  </div>
+
+  <!-- lanterns (subtle) -->
+  <div class="layer" aria-hidden="true" id="lanternLayer"></div>
+
+  <!-- nodes injected -->
 </div>
 
-<div class="pillWrap" aria-label="Compass note">
-  <div class="pill" id="pill">
-    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
-  </div>
-</div>
+<nav class="dock" aria-label="Bottom navigation">
+  <a id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
+  <a id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
+  <a id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a id="dockResearch" data-route="/research/" href="/research/">RESEARCH</a>
+</nav>
 
-<div class="cornerBtn left" aria-label="Exit">
+<div class="corner left" aria-label="Exit">
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
   <div class="cornerLabel" id="lblExit">EXIT</div>
 </div>
-<div class="cornerBtn right" aria-label="Hub">
+<div class="corner right" aria-label="Hub">
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
   <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
@@ -777,30 +722,14 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-  // ===== Moon phases: advance per page load/return (sessionStorage; no gd_* keys) =====
-  var PHASES = [
-    "-34%", "-22%", "-12%", "-6%", "0%", "8%", "18%", "28%"  // includes full-ish (0)
-  ];
-  var idx = 0;
-  try{
-    var k="moon_phase_idx";
-    var prev = parseInt(sessionStorage.getItem(k)||"0",10);
-    if(!isFinite(prev)) prev = 0;
-    idx = (prev + 1) % PHASES.length;
-    sessionStorage.setItem(k, String(idx));
-  }catch(e){}
-  var moon=document.getElementById("moon");
-  if(moon) moon.style.setProperty("--phaseX", PHASES[idx]);
-
-  // ===== Routing (NO DUPLICATES; unknown/unbuilt → 404) =====
+  // ===== ROUTING (unique enforced) =====
   var CORE_ROUTE = "/index-core/index.html";
   var EXIT_ROUTE = "/door/";
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // N/E/S/W meaning fixed per your latest directive:
-  // N = Laws, E = Energy, S = Finance, W = Governance
-  // Prelude removed; Research included; Doctrine fixed.
+  // N/E/S/W mapping per your rule:
+  // N=LAWS, E=ENERGY, S=FINANCE, W=GOVERNANCE
   var ROUTES_RAW = [
     {tier:1, code:"N",  label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
     {tier:1, code:"E",  label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"功率",es:"PWR"}}, href:"/explore/frontier/energy/"},
@@ -843,26 +772,209 @@ body::before,body::after{pointer-events:none!important}
     return pick3(pack.en, pack.zh, pack.es);
   }
 
-  // Bottom dragon sayings per language
-  function paintDragonBottomText(){
-    var l1 = document.getElementById("dragonBottomLine1");
-    var l2 = document.getElementById("dragonBottomLine2");
-    if(!l1||!l2) return;
-
-    if(lang==="zh"){
-      l1.textContent="少说多做 · 相相如水";
-      l2.textContent="道可道 非常道 · 急所不欲 无施于人";
-    }else if(lang==="es"){
-      l1.textContent="DI MENOS, HAZ MÁS · EL TIEMPO FLUYE COMO EL AGUA";
-      l2.textContent="EL CAMINO QUE PUEDE NOMBRARSE NO ES EL CAMINO ETERNO";
-    }else{
-      l1.textContent="SAY LESS, DO MORE · TIME FLOWS LIKE WATER";
-      l2.textContent="THE WAY THAT CAN BE SPOKEN IS NOT THE ETERNAL WAY";
+  // ===== Wire dock links with state carry =====
+  function wireAll(){
+    var nodes=document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el=nodes[i];
+      var route=el.getAttribute("data-route")||"";
+      if(!route) continue;
+      el.setAttribute("href", route + q());
     }
   }
-  paintDragonBottomText();
+  wireAll();
 
-  // ===== Build nodes =====
+  // ===== Moon phase (no new storage; time-based) =====
+  (function setMoonPhase(){
+    var d=new Date();
+    var t = d.getTime();
+    // 8 phases based on ~12h buckets
+    var phase = Math.floor((t / (1000*60*60*12)) % 8); // 0..7
+    // map phase to shadow offset: -1..1
+    // full moon at phase 4 (center shadow off to far side)
+    var map = [-0.85,-0.60,-0.30,-0.10,0.95,0.60,0.30,0.10];
+    var x = map[phase] || 0.95;
+    document.getElementById("moon").style.setProperty("--phaseX", String(x));
+  })();
+
+  // ===== Dial marks (16) =====
+  (function buildDialMarks(){
+    var el=document.getElementById("dialMarks");
+    if(!el) return;
+    el.innerHTML="";
+    var marks=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    for(var i=0;i<marks.length;i++){
+      var sp=document.createElement("span");
+      sp.textContent=marks[i];
+      // position around circle
+      var ang=(i/marks.length)*Math.PI*2 - Math.PI/2;
+      var r= (Math.min(el.clientWidth, el.clientHeight)/2) - 14;
+      var cx=el.clientWidth/2, cy=el.clientHeight/2;
+      var x=cx + r*Math.cos(ang);
+      var y=cy + r*Math.sin(ang);
+      sp.style.left = x+"px";
+      sp.style.top  = y+"px";
+      sp.style.transform = "translate(-50%,-50%)";
+      el.appendChild(sp);
+    }
+  })();
+
+  // ===== Lanterns (few, subtle) =====
+  (function initLanterns(){
+    var L=document.getElementById("lanternLayer");
+    if(!L) return;
+    L.innerHTML="";
+    var count=8;
+    for(var i=0;i<count;i++){
+      var d=document.createElement("div");
+      d.className="lantern";
+      d.style.left = (8 + Math.random()*84) + "%";
+      d.style.top  = (70 + Math.random()*30) + "%";
+      d.style.animationDelay = (-Math.random()*18) + "s";
+      d.style.animationDuration = (16 + Math.random()*10) + "s";
+      L.appendChild(d);
+    }
+  })();
+
+  // ===== Dragon SVG generator (REAL dragon, not vine) =====
+  function dragonSVG(opts){
+    // opts: {flip:boolean, text:string, top:boolean}
+    var fillBody = "#0b3a22";      // dark jade
+    var fillBelly= "#184a2c";
+    var scaleA   = "#1e6a3a";
+    var stroke   = "#071a10";
+    var glowText = "rgba(212,175,55,0.95)";
+    var text = opts.text || "";
+    var flip = opts.flip ? -1 : 1;
+
+    // Path for body (S-curve) used for textPath
+    var bodyPathId = "bp_" + Math.random().toString(16).slice(2);
+
+    return ''
+    + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 320" width="100%" height="100%" preserveAspectRatio="none">'
+    + '<defs>'
+      + '<filter id="g" x="-20%" y="-20%" width="140%" height="140%">'
+        + '<feGaussianBlur stdDeviation="2" result="b"/>'
+        + '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>'
+      + '</filter>'
+      + '<pattern id="scales" width="48" height="28" patternUnits="userSpaceOnUse">'
+        + '<path d="M0,28 C12,14 36,14 48,28" fill="none" stroke="'+scaleA+'" stroke-width="3" opacity="0.65"/>'
+        + '<path d="M-24,28 C-12,14 12,14 24,28" fill="none" stroke="'+scaleA+'" stroke-width="3" opacity="0.55"/>'
+      + '</pattern>'
+      + '<path id="'+bodyPathId+'" d="M 80 170 C 260 80, 420 260, 600 160 C 780 60, 940 260, 1120 170 C 1280 90, 1400 200, 1520 160" />'
+    + '</defs>'
+
+    + '<g transform="translate(0,0) scale('+flip+',1) translate('+(flip<0?-1600:0)+',0)">'
+
+      // TAIL
+      + '<path d="M1400 170 C 1500 160, 1540 140, 1580 120" fill="none" stroke="'+fillBody+'" stroke-width="26" stroke-linecap="round"/>'
+      + '<path d="M1400 170 C 1500 160, 1540 140, 1580 120" fill="none" stroke="'+stroke+'" stroke-width="3" opacity="0.6"/>'
+
+      // BODY base (thick)
+      + '<path d="M 110 170 C 270 85, 420 260, 600 160 C 780 60, 940 260, 1120 170 C 1280 90, 1400 200, 1480 160" fill="none" stroke="'+fillBody+'" stroke-width="46" stroke-linecap="round"/>'
+      // belly
+      + '<path d="M 120 182 C 280 110, 420 270, 600 176 C 780 86, 940 270, 1120 182 C 1280 120, 1400 210, 1470 178" fill="none" stroke="'+fillBelly+'" stroke-width="24" stroke-linecap="round" opacity="0.9"/>'
+      // scale overlay (pattern stroked along body with clip feel)
+      + '<path d="M 110 170 C 270 85, 420 260, 600 160 C 780 60, 940 260, 1120 170 C 1280 90, 1400 200, 1480 160" fill="none" stroke="url(#scales)" stroke-width="38" stroke-linecap="round" opacity="0.65"/>'
+      // spine fins
+      + '<path d="M240 92 l10 -28 l12 26 l12 -30 l14 28 l12 -26 l12 24" fill="none" stroke="#2a9a5a" stroke-width="6" stroke-linecap="round" opacity="0.75"/>'
+      + '<path d="M700 86 l10 -28 l12 26 l12 -30 l14 28 l12 -26 l12 24" fill="none" stroke="#2a9a5a" stroke-width="6" stroke-linecap="round" opacity="0.75"/>'
+      + '<path d="M1080 96 l10 -28 l12 26 l12 -30 l14 28 l12 -26 l12 24" fill="none" stroke="#2a9a5a" stroke-width="6" stroke-linecap="round" opacity="0.75"/>'
+
+      // CLAWS (2 sets)
+      + '<g opacity="0.85">'
+        + '<path d="M520 210 c-12 18 -26 26 -42 26 c18 -16 20 -28 12 -44 c18 0 26 8 30 18 z" fill="#0a2516"/>'
+        + '<path d="M560 216 c-10 16 -22 24 -36 24 c16 -14 18 -24 10 -38 c16 0 22 8 26 14 z" fill="#0a2516"/>'
+        + '<path d="M960 214 c-12 18 -26 26 -42 26 c18 -16 20 -28 12 -44 c18 0 26 8 30 18 z" fill="#0a2516"/>'
+        + '<path d="M1000 220 c-10 16 -22 24 -36 24 c16 -14 18 -24 10 -38 c16 0 22 8 26 14 z" fill="#0a2516"/>'
+      + '</g>'
+
+      // HEAD (horns + whiskers + jaw)
+      + '<g transform="translate(120,138)">'
+        + '<path d="M0 44 C 22 10, 70 -4, 112 18 C 146 36, 150 74, 120 92 C 86 112, 44 106, 18 86 C -6 68, -10 58, 0 44 Z" fill="'+fillBody+'" stroke="'+stroke+'" stroke-width="3"/>'
+        + '<path d="M86 52 C 106 46, 126 54, 132 70 C 120 78, 106 86, 88 86 Z" fill="#0a2516" opacity="0.9"/>'
+        + '<circle cx="98" cy="52" r="5" fill="#e8f6ff"/><circle cx="98" cy="52" r="2" fill="#001"/>'
+        + '<path d="M118 28 C 132 10, 154 4, 170 12" fill="none" stroke="#e1c16a" stroke-width="6" stroke-linecap="round"/>'
+        + '<path d="M108 24 C 118 4, 140 -6, 156 -2" fill="none" stroke="#e1c16a" stroke-width="5" stroke-linecap="round"/>'
+        + '<path d="M132 74 C 150 80, 170 74, 182 62" fill="none" stroke="#e1c16a" stroke-width="4" stroke-linecap="round"/>'
+        + '<path d="M132 80 C 152 96, 174 96, 190 90" fill="none" stroke="#e1c16a" stroke-width="3" stroke-linecap="round"/>'
+        + '<path d="M86 68 C 106 84, 118 92, 130 96" fill="none" stroke="#fff" stroke-width="2" opacity="0.55"/>'
+      + '</g>'
+
+      // TEXT (gold glow) along body path
+      + '<text filter="url(#g)" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-weight="900" font-size="22" letter-spacing="2" fill="'+glowText+'">'
+        + '<textPath href="#'+bodyPathId+'" startOffset="10%">'+escapeXML(text)+'</textPath>'
+      + '</text>'
+
+    + '</g></svg>';
+  }
+
+  function escapeXML(s){
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#39;");
+  }
+
+  // ===== Sayings pools =====
+  var CN_CLASSIC = [
+    "少说多做",
+    "己所不欲，勿施于人",
+    "过而能改，善莫大焉",
+    "一失足成千古恨",
+    "道可道，非常道",
+    "水善利万物而不争"
+  ];
+
+  var POOLS = {
+    en: [
+      "Say less, do more.",
+      "If you can correct it, do it.",
+      "Keep failure local. Rollback beats cascade.",
+      "Evidence first. Upgrade only with receipts.",
+      "Scope first. Then speak."
+    ],
+    zh: [
+      "少说多做。",
+      "己所不欲，勿施于人。",
+      "过而能改，善莫大焉。",
+      "一失足成千古恨。",
+      "道可道，非常道。"
+    ],
+    es: [
+      "Di menos, haz más.",
+      "Si puedes corregirlo, corrígelo.",
+      "Evidencia primero; luego escala.",
+      "Alcance primero; luego afirmas.",
+      "Contén antes de desplegar."
+    ]
+  };
+
+  function nextFrom(arr, idx){ return arr[(idx % arr.length + arr.length) % arr.length]; }
+
+  var topIdx = 0;
+  var botIdx = 0;
+
+  function paintDragons(){
+    var topText = nextFrom(CN_CLASSIC, topIdx++);
+    var langPool = (lang==="zh") ? POOLS.zh : (lang==="es") ? POOLS.es : POOLS.en;
+    var botText = nextFrom(langPool, botIdx++);
+
+    // top: right->left (flip true so head faces left)
+    document.getElementById("dragonTop").innerHTML = dragonSVG({flip:true, text: topText});
+
+    // bottom: left->right (flip false so head faces right)
+    document.getElementById("dragonBot").innerHTML = dragonSVG({flip:false, text: botText});
+  }
+
+  // change sayings each full pass
+  document.getElementById("dragonTop").addEventListener("animationiteration", function(){ paintDragons(); }, {passive:true});
+  document.getElementById("dragonBot").addEventListener("animationiteration", function(){ paintDragons(); }, {passive:true});
+  paintDragons();
+
+  // ===== Nodes =====
   var stage=document.getElementById("stage");
 
   function mkNode(word, code, cls){
@@ -870,6 +982,10 @@ body::before,body::after{pointer-events:none!important}
     d.className="node surface "+cls;
     d.setAttribute("role","button");
     d.tabIndex=0;
+
+    var corners=document.createElement("div");
+    corners.className="corners";
+    corners.innerHTML='<div class="n">N</div><div class="e">E</div><div class="s">S</div><div class="w">W</div>';
 
     var inner=document.createElement("div");
     inner.className="inner";
@@ -882,24 +998,15 @@ body::before,body::after{pointer-events:none!important}
     c.className="code";
     c.textContent=code;
 
-    // per-gem NESW corners (only on gems)
-    var n=document.createElement("div"); n.className="cornerMark n"; n.textContent="N";
-    var e=document.createElement("div"); e.className="cornerMark e"; e.textContent="E";
-    var s=document.createElement("div"); s.className="cornerMark s"; s.textContent="S";
-    var ww=document.createElement("div"); ww.className="cornerMark w"; ww.textContent="W";
-
     inner.appendChild(w);
     inner.appendChild(c);
-    inner.appendChild(n);
-    inner.appendChild(e);
-    inner.appendChild(s);
-    inner.appendChild(ww);
-
+    d.appendChild(corners);
     d.appendChild(inner);
     return d;
   }
 
   function layout(){
+    // remove existing nodes
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
@@ -916,6 +1023,7 @@ body::before,body::after{pointer-events:none!important}
     core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
     stage.appendChild(core);
 
+    // split by tier
     var t1=[], t2=[], t3=[];
     for(var i=0;i<ROUTES.length;i++){
       if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
@@ -925,9 +1033,9 @@ body::before,body::after{pointer-events:none!important}
 
     function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
 
-    // Tier 1 pinned angles
+    // Tier 1 pinned
     var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
-    var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+    var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
     for(var i=0;i<ordered.length;i++){
       var it=ordered[i];
       var x=cx + R1*Math.cos(ang[i]);
@@ -941,7 +1049,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 2 diagonals
+    // Tier 2
     for(var i=0;i<t2.length;i++){
       var it=t2[i];
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
@@ -956,7 +1064,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 3 outer 8
+    // Tier 3
     for(var i=0;i<t3.length;i++){
       var it=t3[i];
       var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
@@ -970,26 +1078,6 @@ body::before,body::after{pointer-events:none!important}
       })(it.href, n);
       stage.appendChild(n);
     }
-
-    // build minimal 16-direction text on dial (once per layout)
-    var face=document.getElementById("face16");
-    if(face){
-      face.innerHTML="";
-      var labels=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-      for(var i=0;i<labels.length;i++){
-        var sp=document.createElement("span");
-        sp.textContent=labels[i];
-        sp.setAttribute("data-g", labels[i]);
-        var a=(i/labels.length)*(Math.PI*2) - Math.PI/2;
-        var r= (Math.min(face.clientWidth, face.clientHeight)/2) - 18;
-        var x=(face.clientWidth/2) + r*Math.cos(a);
-        var y=(face.clientHeight/2) + r*Math.sin(a);
-        sp.style.left = x+"px";
-        sp.style.top  = y+"px";
-        sp.style.transform="translate(-50%,-50%)";
-        face.appendChild(sp);
-      }
-    }
   }
 
   function safeLayout(){
@@ -998,7 +1086,7 @@ body::before,body::after{pointer-events:none!important}
     layout();
   }
 
-  // ===== Language (NO reload) =====
+  // ===== Language + lane toggles (NO reload) =====
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -1007,23 +1095,32 @@ body::before,body::after{pointer-events:none!important}
   setPressed(btnES, lang==="es");
 
   function paintHeader(){
-    var laneWord = (lane==="engineering") ? pick3("ENGINEERING","工程","INGENIERÍA") : pick3("PLATFORM","平台","PLATAFORMA");
+    var laneWord = (lane==="engineering")
+      ? pick3("ENGINEERING","工程","INGENIERÍA")
+      : pick3("PLATFORM","平台","PLATAFORMA");
+
     if(lang==="zh"){
       document.getElementById("brandTitle").textContent="欢迎来到指南针";
-      document.getElementById("brandSub").textContent="视觉教程：选一个方向 → 得到清晰下一步。透镜："+laneWord+"。";
+      document.getElementById("brandSub").textContent="可视化教程：选方向 → 得到清晰下一步。透镜："+laneWord+"。";
       document.getElementById("lblExit").textContent="退出";
       document.getElementById("lblHub").textContent="枢纽";
       document.querySelector("#btnExit span").textContent="退出";
       document.querySelector("#btnHub span").textContent="枢纽";
-      document.getElementById("pill").innerHTML="<b>指南针：</b>一个中心（<span class='g'>核心</span>）+ 16 枢纽。禁止重复目的地。未建页面路由到 <span class='g'>/404.html</span>。";
+      document.getElementById("dockDoor").textContent="门";
+      document.getElementById("dockLaws").textContent="法则";
+      document.getElementById("dockProducts").textContent="产品";
+      document.getElementById("dockResearch").textContent="研究";
     }else if(lang==="es"){
       document.getElementById("brandTitle").textContent="BIENVENIDO A LA BRÚJULA";
-      document.getElementById("brandSub").textContent="Tutorial visual: elige una dirección → siguiente paso claro. Lente: "+laneWord+".";
+      document.getElementById("brandSub").textContent="Tutorial visual: elige dirección → siguiente paso claro. Lente: "+laneWord+".";
       document.getElementById("lblExit").textContent="SALIR";
       document.getElementById("lblHub").textContent="HUB";
       document.querySelector("#btnExit span").textContent="SALIR";
       document.querySelector("#btnHub span").textContent="HUB";
-      document.getElementById("pill").innerHTML="<b>Brújula:</b> Un centro (<span class='g'>CORE</span>) + 16 hubs. Sin duplicados. No construido → <span class='g'>/404.html</span>.";
+      document.getElementById("dockDoor").textContent="PUERTA";
+      document.getElementById("dockLaws").textContent="LEYES";
+      document.getElementById("dockProducts").textContent="PRODUCTOS";
+      document.getElementById("dockResearch").textContent="INVEST.";
     }else{
       document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
       document.getElementById("brandSub").textContent="A visual tutorial: pick a direction → get a clear next step. Lens: "+laneWord+".";
@@ -1031,9 +1128,11 @@ body::before,body::after{pointer-events:none!important}
       document.getElementById("lblHub").textContent="HUB";
       document.querySelector("#btnExit span").textContent="EXIT";
       document.querySelector("#btnHub span").textContent="HUB";
-      document.getElementById("pill").innerHTML="<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
+      document.getElementById("dockDoor").textContent="DOOR";
+      document.getElementById("dockLaws").textContent="LAWS";
+      document.getElementById("dockProducts").textContent="PRODUCTS";
+      document.getElementById("dockResearch").textContent="RESEARCH";
     }
-    paintDragonBottomText();
   }
 
   function setLang(next){
@@ -1045,13 +1144,14 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnZH, lang==="zh");
     setPressed(btnES, lang==="es");
     paintHeader();
+    paintDragons(); // bottom dragon language changes
     safeLayout();
+    wireAll();
   }
   btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // ===== Lane (NO reload; URL-only) =====
   var btnLP=document.getElementById("lanePlatform");
   var btnLE=document.getElementById("laneEngineering");
   setPressed(btnLP, lane==="platform");
@@ -1065,19 +1165,18 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnLE, lane==="engineering");
     paintHeader();
     safeLayout();
+    wireAll();
   }
   btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // ===== Corner buttons =====
+  // ===== Exit/Hub =====
   function bindCorner(id, path){
     var el=document.getElementById(id);
     if(!el) return;
     function act(){ go(path); }
     el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindCorner("btnExit", EXIT_ROUTE);
   bindCorner("btnHub", HUB_ROUTE);

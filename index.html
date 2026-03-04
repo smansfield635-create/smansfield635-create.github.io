@@ -1,19 +1,21 @@
 <!doctype html>
 <!-- TNT — /index.html
-COMPASS ENGINE V6 · LAYER 1 (DIAL + DIAMONDS STABILIZATION)
+COMPASS ENGINE V6 · LAYER 2 (WATER DIAL + SINGLE MOON + HEX SHIMMER)
 OWNER: SEAN
 ROOM: WEBSITE BUILDING ROOM
 
-GOAL:
-• Stabilize compass graphics engine
-• Remove competing UI layers
-• Restore instrument dial rings
-• Restore true 3D gem diamonds
-• Prepare animation layers (dragons/clouds later)
+ADDS (LAYER 2):
+• Single moon (glow + cratered) with reflection
+• Moon phase advances forward on each visit (localStorage: moon_phase_v1) — NOT a gd_* key
+• Water dial (ripples) inside the compass circle only
+• Hex shimmer micro-structure (subtle, performance-safe)
 
-NO ANIMATIONS YET
-NO LANGUAGES YET
-NO CLOUDS YET
+KEEPS:
+• ui.css owns html/body background (no overrides here)
+• No modals/overlays; no inline onclick; addEventListener only
+• No timers as gates (animation is ornamental only)
+
+ENGLISH ONLY (visual-first)
 -->
 
 <html lang="en">
@@ -25,193 +27,848 @@ NO CLOUDS YET
 <link rel="stylesheet" href="/assets/ui.css"/>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0}
+body::before,body::after{pointer-events:none!important}
 
-/* =========================
-STAGE
-========================= */
+:root{
+  --ink:rgba(255,255,255,.94);
+  --stroke:rgba(255,255,255,.12);
+
+  --gold:rgba(212,175,55,.55);
+  --goldGlow:rgba(212,175,55,.22);
+
+  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  /* Geometry */
+  --padTop:106px;
+
+  /* One dominant center, progressively smaller outward */
+  --D0:200px; /* CORE */
+  --D1:150px; /* cardinals */
+  --D2:112px; /* diagonals */
+  --D3:86px;  /* outer 8 */
+
+  /* Tight radii */
+  --R1:168px;
+  --R2:246px;
+  --R3:314px;
+}
+
+.top{
+  position:fixed;top:14px;left:0;right:0;
+  padding:0 14px;
+  z-index:260;
+  pointer-events:none;
+}
+.topbar{
+  pointer-events:auto;
+  width:min(1120px,96vw);
+  margin:0 auto;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:10px 12px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(212,175,55,.10), transparent 62%),
+    radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(212,175,55,.12);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+}
+.brandLeft{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
+}
+.brandTitle{
+  font-weight:980;letter-spacing:.6px;font-size:14px;
+  color:rgba(255,255,255,.94);white-space:nowrap;
+}
+.brandSub{
+  font-size:12px;color:rgba(255,255,255,.72);letter-spacing:.2px;white-space:nowrap;
+}
+.brandLinks{
+  display:flex;gap:10px;flex-wrap:wrap;
+  font-size:12px;color:rgba(255,255,255,.70);
+}
+.brandLinks a{
+  padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(212,175,55,.16);
+  background:rgba(0,0,0,.14);
+}
+
+.controlsRight{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+}
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowB);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;
+  color:rgba(255,255,255,.78);
+  padding:10px 12px;min-height:42px;
+  font-weight:980;font-size:13px;letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:rgba(255,255,255,.95);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.14), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.14), inset 0 -10px 22px rgba(212,175,55,.10);
+}
 
 .stage{
-position:relative;
-width:min(1200px,95vw);
-height:min(1200px,85vh);
-margin:120px auto 0;
-pointer-events:none;
+  position:relative;
+  width:min(1200px,94vw);
+  height:min(1200px,86vh);
+  margin:var(--padTop) auto 0;
+  pointer-events:none;
 }
 
-/* =========================
-OBSIDIAN DIAL
-========================= */
-
-.dial{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:min(900px,90vw);
-height:min(900px,90vw);
-border-radius:50%;
-pointer-events:none;
-overflow:hidden;
-z-index:1;
+/* Dark crystal slab (holds dial + nodes) */
+.slab{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,92vw);
+  height:min(980px,92vw);
+  border-radius:44px;
+  pointer-events:none;
+  z-index:1;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
+    linear-gradient(160deg, rgba(10,12,16,.88), rgba(6,8,10,.96));
+  box-shadow:
+    0 70px 240px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -70px 140px rgba(0,0,0,.65);
 }
 
-/* Obsidian material */
-
-.dial::before{
-content:"";
-position:absolute;
-inset:0;
-border-radius:50%;
-
-background:
-radial-gradient(circle at 50% 45%,rgba(255,255,255,.05),transparent 60%),
-linear-gradient(180deg,#0a0e14,#020305);
-
-box-shadow:
-inset 0 0 0 2px rgba(255,255,255,.05),
-inset 0 0 0 10px rgba(0,0,0,.20),
-inset 0 0 80px rgba(0,0,0,.65),
-0 40px 160px rgba(0,0,0,.35);
+/* Dial wrapper (canvas is clipped to circle) */
+.dialWrap{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  border-radius:999px;
+  z-index:2;
+  pointer-events:none;
+  overflow:hidden;
 }
 
-/* =========================
-INSTRUMENT GOLD RINGS
-========================= */
-
-.dial::after{
-content:"";
-position:absolute;
-inset:0;
-border-radius:50%;
-
-background:
-
-radial-gradient(circle at 50% 50%,transparent 0 30%,rgba(212,175,55,.18) 30.3% 31%,transparent 31.2%),
-radial-gradient(circle at 50% 50%,transparent 0 48%,rgba(212,175,55,.16) 48.2% 48.8%,transparent 49%),
-radial-gradient(circle at 50% 50%,transparent 0 66%,rgba(212,175,55,.12) 66.2% 66.8%,transparent 67%),
-
-linear-gradient(90deg,transparent 0 49.7%,rgba(212,175,55,.22) 49.7% 50.3%,transparent 50.3%),
-linear-gradient(0deg,transparent 0 49.7%,rgba(212,175,55,.22) 49.7% 50.3%,transparent 50.3%);
-
-opacity:.8;
+/* Obsidian rim + instrument rings overlay */
+.dialRim{
+  position:absolute;inset:0;border-radius:999px;
+  pointer-events:none;
+  z-index:3;
+}
+.dialRim::before{
+  content:"";
+  position:absolute;inset:0;border-radius:999px;
+  background:
+    radial-gradient(circle at 50% 42%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
+      rgba(0,0,0,.00) 92%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 80px rgba(0,0,0,.55),
+    0 50px 180px rgba(0,0,0,.30);
+  opacity:.96;
+}
+.dialRim::after{
+  content:"";
+  position:absolute;inset:-14%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
+    linear-gradient(90deg, transparent 0 49.7%, rgba(212,175,55,.14) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(212,175,55,.14) 49.7% 50.3%, transparent 50.3% 100%),
+    repeating-conic-gradient(from 45deg at 50% 50%, rgba(212,175,55,.06) 0 1.2deg, transparent 1.2deg 7.5deg);
+  filter: blur(.25px);
+  opacity:.78;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
 
-/* =========================
-DIAMOND NODES
-========================= */
+/* Cardinal letters (simple for now; layer 3 will add full 16) */
+.faceLetters{
+  position:absolute;inset:0;border-radius:999px;
+  pointer-events:none;
+  z-index:4;
+  opacity:.75;
+}
+.faceLetters span{
+  position:absolute;
+  color:rgba(212,175,55,.46);
+  font-weight:980;
+  letter-spacing:2px;
+  font-size:12px;
+  text-shadow:0 0 12px rgba(0,0,0,.55);
+}
+.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
+.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
+.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
+.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
+/* Gem nodes */
 .node{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%) rotate(45deg);
-border-radius:22px;
-pointer-events:auto;
-cursor:pointer;
-overflow:hidden;
-
-background:
-radial-gradient(circle at 25% 20%,rgba(255,255,255,.20),transparent 45%),
-linear-gradient(145deg,#111827,#020305);
-
-border:1px solid rgba(255,255,255,.16);
-
-box-shadow:
-0 25px 80px rgba(0,0,0,.8),
-inset 0 2px 0 rgba(255,255,255,.15),
-inset 0 -60px 120px rgba(0,0,0,.9);
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  cursor:pointer;
+  pointer-events:auto;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.18);
+  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  z-index:10;
+  border-radius:22px;
 }
 
-/* diamond sizes */
+.core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
+.l1{width:var(--D1);height:var(--D1)}
+.l2{width:var(--D2);height:var(--D2)}
+.l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
-.core{width:200px;height:200px;z-index:10}
-.l1{width:150px;height:150px}
-.l2{width:110px;height:110px}
-.l3{width:80px;height:80px}
+.surface{
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, rgba(255,43,43,.18), transparent 62%),
+    radial-gradient(circle at 74% 84%, rgba(160,90,255,.14), transparent 64%),
+    radial-gradient(circle at 28% 84%, rgba(120,0,22,.28), transparent 70%),
+    linear-gradient(160deg, rgba(10,12,16,.86), rgba(6,8,10,.96));
+  box-shadow:
+    var(--shadowDeep),
+    0 0 24px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -52px 92px rgba(0,0,0,.88);
+}
 
-/* =========================
-INNER TEXT
-========================= */
+/* 3D edge: diamond-aligned silk trim (not orthogonal grid) */
+.surface::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.18);
+  background:
+    repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
+  opacity:.32;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.surface::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+
+/* glow-only hover (no movement) */
+.node:hover{
+  border-color:rgba(212,175,55,.44);
+  box-shadow:
+    var(--shadowDeep),
+    0 0 0 2px rgba(212,175,55,.14),
+    0 0 34px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -52px 92px rgba(0,0,0,.88);
+}
+.node:active{filter:brightness(.98)}
 
 .inner{
-transform:rotate(-45deg);
-display:flex;
-align-items:center;
-justify-content:center;
-height:100%;
-width:100%;
-font-weight:900;
-letter-spacing:.6px;
-font-size:14px;
-color:white;
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px;
+  gap:6px;
+  color:#fff;
+  pointer-events:none;
+  user-select:none;
+}
+.word{
+  font-weight:980;
+  letter-spacing:.6px;
+  line-height:1.05;
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+  font-size:clamp(10px, 1.15vw, 16px);
+  max-width:100%;
+  word-break:keep-all;
+}
+.code{
+  font-weight:950;
+  font-size:10px;
+  letter-spacing:1.2px;
+  opacity:.78;
 }
 
-/* =========================
-GLOW
-========================= */
-
-.node:hover{
-box-shadow:
-0 30px 90px rgba(0,0,0,.9),
-0 0 20px rgba(212,175,55,.35),
-inset 0 2px 0 rgba(255,255,255,.15),
-inset 0 -60px 120px rgba(0,0,0,.9);
+/* Corner controls (kept minimal for now) */
+.corner{
+  position:fixed;
+  bottom:max(16px, env(safe-area-inset-bottom));
+  z-index:260;
+  pointer-events:none;
+}
+.corner .dmini{pointer-events:auto}
+.corner.left{left:16px}
+.corner.right{right:16px}
+.dmini{
+  width:56px;height:56px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 22% 12%, rgba(255,255,255,.18), transparent 52%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
+  box-shadow:var(--shadowB);
+  display:grid;place-items:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
+  transition:box-shadow .16s ease, border-color .16s ease;
+}
+.dmini:hover{
+  border-color:rgba(212,175,55,.44);
+  box-shadow:var(--shadowB), 0 0 28px rgba(212,175,55,.16);
+}
+.dmini span{
+  transform:rotate(-45deg);
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.6px;
+  color:rgba(255,255,255,.92);
+}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.72);
+  font-size:11px;
+  letter-spacing:.4px;
 }
 
+/* Responsive */
+@media (max-width:720px){
+  :root{
+    --D0:188px; --D1:142px; --D2:108px; --D3:84px;
+    --R1:156px; --R2:228px; --R3:292px;
+    --padTop:112px;
+  }
+  .stage{height:min(980px,86vh)}
+  .brandSub{display:none}
+}
+@media (max-width:520px){
+  :root{
+    --D0:176px; --D1:136px; --D2:104px; --D3:80px;
+    --R1:146px; --R2:214px; --R3:274px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div class="stage" id="stage">
+<div class="top" aria-label="Top controls">
+  <div class="topbar">
+    <div class="brandLeft" aria-label="Brand">
+      <div class="brandTitle">WELCOME TO THE COMPASS</div>
+      <div class="brandSub">Obsidian dial · Water face · Moon phase · Hex shimmer</div>
+      <div class="brandLinks" aria-label="Brand links">
+        <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
+        <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
+      </div>
+    </div>
 
-<div class="dial"></div>
+    <div class="controlsRight" aria-label="Lens (kept, but no language systems yet)">
+      <div class="seg" role="group" aria-label="Lane">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div class="stage" id="stage" aria-label="Compass dial">
+  <div class="slab" aria-hidden="true"></div>
+
+  <div class="dialWrap" aria-hidden="true">
+    <canvas id="dialCanvas"></canvas>
+    <div class="dialRim"></div>
+    <div class="faceLetters" aria-hidden="true">
+      <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
+    </div>
+  </div>
+</div>
+
+<div class="corner left" aria-label="Exit">
+  <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
+  <div class="cornerLabel">EXIT</div>
+</div>
+<div class="corner right" aria-label="Hub">
+  <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
+  <div class="cornerLabel">HUB</div>
 </div>
 
 <script>
+(function(){
+"use strict";
 
-/* =========================
-COMPASS ENGINE
-========================= */
+/* ========= Canon state (gd_* only; lane URL-only; no new gd_* keys) ========= */
+var qs=new URLSearchParams(location.search);
+var LS=window.localStorage;
 
-const stage=document.getElementById("stage");
+var lane = qs.get("lane") || "platform";
+if(lane!=="platform" && lane!=="engineering") lane="platform";
 
-const nodes=[
-{tier:"core",label:"CORE"},
-{tier:"l1",label:"N"},
-{tier:"l1",label:"E"},
-{tier:"l1",label:"S"},
-{tier:"l1",label:"W"},
-{tier:"l2",label:"NE"},
-{tier:"l2",label:"SE"},
-{tier:"l2",label:"SW"},
-{tier:"l2",label:"NW"},
-{tier:"l3",label:"NNE"},
-{tier:"l3",label:"ENE"},
-{tier:"l3",label:"ESE"},
-{tier:"l3",label:"SSE"},
-{tier:"l3",label:"SSW"},
-{tier:"l3",label:"WSW"},
-{tier:"l3",label:"WNW"},
-{tier:"l3",label:"NNW"}
+/* Keep gd_* untouched aside from existing expectations */
+try{
+  // do not add new gd_* keys
+}catch(e){}
+
+/* Lane toggle (no reload) */
+function setPressed(el,on){ el.setAttribute("aria-pressed", on ? "true":"false"); }
+var btnLP=document.getElementById("lanePlatform");
+var btnLE=document.getElementById("laneEngineering");
+setPressed(btnLP, lane==="platform");
+setPressed(btnLE, lane==="engineering");
+
+function qLane(next){
+  var p=new URLSearchParams(location.search);
+  p.set("lane", next);
+  return "?" + p.toString();
+}
+function setLane(next){
+  if(next!=="platform" && next!=="engineering") next="platform";
+  lane=next;
+  history.replaceState({}, "", location.pathname + qLane(lane));
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
+}
+btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+/* Corner actions */
+function bindCorner(id, path){
+  var el=document.getElementById(id);
+  if(!el) return;
+  function act(){ window.location.href = path + (location.search||""); }
+  el.addEventListener("click", act, {passive:true});
+  el.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+  });
+}
+bindCorner("btnExit","/door/");
+bindCorner("btnHub","/home/");
+
+/* ========= Nodes (LAYER 2 keeps structure minimal; routing/languages later) ========= */
+var stage=document.getElementById("stage");
+
+/* Routing skeleton (no duplicates enforced later) */
+var CORE_ROUTE="/index-core/index.html";
+var ROUTES=[
+  {tier:1, code:"N",  label:"LAWS",       href:"/laws/"},
+  {tier:1, code:"E",  label:"ENERGY",      href:"/explore/frontier/energy/"},
+  {tier:1, code:"S",  label:"FINANCE",     href:"/finance/"},
+  {tier:1, code:"W",  label:"GOVERNANCE",  href:"/governance/"},
+  {tier:2, code:"NE", label:"PRODUCTS",    href:"/products/"},
+  {tier:2, code:"SE", label:"RESEARCH",    href:"/research/"},
+  {tier:2, code:"SW", label:"EXPLORE",     href:"/explore/"},
+  {tier:2, code:"NW", label:"DOCTRINE",    href:"/products/capital-doctrine/"},
+  {tier:3, code:"NNE",label:"EDUCATION",   href:"/products/education/"},
+  {tier:3, code:"ENE",label:"FRONTIER",    href:"/explore/frontier/"},
+  {tier:3, code:"ESE",label:"INFRA",       href:"/explore/infrastructure/"},
+  {tier:3, code:"SSE",label:"AGRICULTURE", href:"/products/agriculture/"},
+  {tier:3, code:"SSW",label:"GAUGES",      href:"/gauges/"},
+  {tier:3, code:"WSW",label:"VISION",      href:"/explore/frontier/vision/"},
+  {tier:3, code:"WNW",label:"LATTICE",     href:"/explore/frontier/lattice/"},
+  {tier:3, code:"NNW",label:"SHIMMER",     href:"/explore/frontier/shimmer/"}
 ];
 
-function createNode(n){
-let d=document.createElement("div");
-d.className="node "+n.tier;
+function mkNode(label, code, cls){
+  var d=document.createElement("div");
+  d.className="node surface " + cls;
+  d.setAttribute("role","button");
+  d.tabIndex=0;
 
-let inner=document.createElement("div");
-inner.className="inner";
-inner.textContent=n.label;
+  var inner=document.createElement("div");
+  inner.className="inner";
 
-d.appendChild(inner);
+  var w=document.createElement("div");
+  w.className="word";
+  w.textContent=label;
 
-stage.appendChild(d);
+  var c=document.createElement("div");
+  c.className="code";
+  c.textContent=code;
+
+  inner.appendChild(w);
+  inner.appendChild(c);
+  d.appendChild(inner);
+  return d;
 }
 
-nodes.forEach(createNode);
+function placeNodes(){
+  // remove prior nodes
+  stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
+  var rect=stage.getBoundingClientRect();
+  var cx=rect.width/2, cy=rect.height/2;
+
+  var cs=getComputedStyle(document.documentElement);
+  var R1=parseFloat(cs.getPropertyValue("--R1"))||168;
+  var R2=parseFloat(cs.getPropertyValue("--R2"))||246;
+  var R3=parseFloat(cs.getPropertyValue("--R3"))||314;
+
+  // CORE
+  var core=mkNode("CORE","INDEX","core");
+  core.style.left=cx+"px"; core.style.top=cy+"px";
+  core.addEventListener("click", function(){ window.location.href = CORE_ROUTE + (location.search||""); }, {passive:true});
+  core.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.location.href = CORE_ROUTE + (location.search||""); }
+  });
+  stage.appendChild(core);
+
+  // split
+  var t1=ROUTES.filter(function(r){return r.tier===1;});
+  var t2=ROUTES.filter(function(r){return r.tier===2;});
+  var t3=ROUTES.filter(function(r){return r.tier===3;});
+
+  function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+  var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
+  var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+
+  // tier1 pinned
+  for(var i=0;i<ordered.length;i++){
+    var it=ordered[i];
+    var x=cx + R1*Math.cos(ang[i]);
+    var y=cy + R1*Math.sin(ang[i]);
+    var n=mkNode(it.label,it.code,"l1");
+    n.style.left=x+"px"; n.style.top=y+"px";
+    (function(path, el){
+      el.addEventListener("click", function(){ window.location.href = path + (location.search||""); }, {passive:true});
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.location.href = path + (location.search||""); }
+      });
+    })(it.href, n);
+    stage.appendChild(n);
+  }
+
+  // tier2
+  for(var j=0;j<t2.length;j++){
+    var it2=t2[j];
+    var a2=(j/t2.length)*(Math.PI*2) - Math.PI/4;
+    var x2=cx + R2*Math.cos(a2);
+    var y2=cy + R2*Math.sin(a2);
+    var n2=mkNode(it2.label,it2.code,"l2");
+    n2.style.left=x2+"px"; n2.style.top=y2+"px";
+    (function(path, el){
+      el.addEventListener("click", function(){ window.location.href = path + (location.search||""); }, {passive:true});
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.location.href = path + (location.search||""); }
+      });
+    })(it2.href, n2);
+    stage.appendChild(n2);
+  }
+
+  // tier3
+  for(var k=0;k<t3.length;k++){
+    var it3=t3[k];
+    var a3=(k/t3.length)*(Math.PI*2) - Math.PI*(3/8);
+    var x3=cx + R3*Math.cos(a3);
+    var y3=cy + R3*Math.sin(a3);
+    var n3=mkNode(it3.label,it3.code,"l3");
+    n3.style.left=x3+"px"; n3.style.top=y3+"px";
+    (function(path, el){
+      el.addEventListener("click", function(){ window.location.href = path + (location.search||""); }, {passive:true});
+      el.addEventListener("keydown", function(e){
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); window.location.href = path + (location.search||""); }
+      });
+    })(it3.href, n3);
+    stage.appendChild(n3);
+  }
+}
+
+/* ========= Dial Canvas (WATER + SINGLE MOON + HEX SHIMMER) ========= */
+
+var canvas=document.getElementById("dialCanvas");
+var ctx=canvas.getContext("2d", { alpha:true });
+
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
+function getDialSize(){
+  var wrap=canvas.parentElement;
+  var r=wrap.getBoundingClientRect();
+  var s=Math.floor(Math.min(r.width, r.height));
+  return {w:s,h:s};
+}
+
+function setCanvasSize(){
+  var d=getDialSize();
+  if(canvas.width!==d.w || canvas.height!==d.h){
+    canvas.width=d.w;
+    canvas.height=d.h;
+  }
+}
+
+function getNextMoonPhase(){
+  // 0..7 (8 phases)
+  var key="moon_phase_v1"; // NOT gd_*
+  var v=0;
+  try{
+    v=parseInt(localStorage.getItem(key)||"0",10);
+    if(!isFinite(v)) v=0;
+    v=(v+1)%8;
+    localStorage.setItem(key, String(v));
+  }catch(e){
+    v=(Math.random()*8)|0;
+  }
+  return v;
+}
+
+var moonPhase=getNextMoonPhase(); // advances every load/return
+var t0=performance.now();
+
+function drawMoon(g, cx, cy, r, phase, glow){
+  // phase: 0 new -> 4 full -> 7 waning crescent
+  // we draw a base lit disc then subtract a shadow disc
+  g.save();
+
+  // glow halo
+  if(glow){
+    var halo=g.createRadialGradient(cx,cy,r*0.2, cx,cy,r*2.2);
+    halo.addColorStop(0,"rgba(255,240,210,0.22)");
+    halo.addColorStop(0.4,"rgba(255,220,170,0.10)");
+    halo.addColorStop(1,"rgba(255,220,170,0)");
+    g.fillStyle=halo;
+    g.beginPath(); g.arc(cx,cy,r*2.2,0,Math.PI*2); g.fill();
+  }
+
+  // base disc
+  var base=g.createRadialGradient(cx-r*0.2, cy-r*0.2, r*0.2, cx, cy, r);
+  base.addColorStop(0,"rgba(255,250,235,0.95)");
+  base.addColorStop(1,"rgba(230,210,170,0.92)");
+  g.fillStyle=base;
+  g.beginPath(); g.arc(cx,cy,r,0,Math.PI*2); g.fill();
+
+  // craters (subtle)
+  g.globalAlpha=0.18;
+  g.fillStyle="rgba(120,90,60,0.9)";
+  for(var i=0;i<16;i++){
+    var a=(i*37)%360 * Math.PI/180;
+    var rr=r*(0.12 + ((i*13)%10)/100);
+    var px=cx + Math.cos(a)*r*(0.15 + ((i*7)%30)/100);
+    var py=cy + Math.sin(a)*r*(0.15 + ((i*9)%30)/100);
+    g.beginPath(); g.arc(px,py,rr,0,Math.PI*2); g.fill();
+  }
+  g.globalAlpha=1;
+
+  // shadow: offset determines phase
+  // map phase to offset in [-r, r]
+  // new (0) => shadow centered (full dark)
+  // full (4) => shadow far away (no shadow)
+  var p = phase; // 0..7
+  var signed = (p<=4) ? (1 - p/4) : ( (p-4)/3 ); // 0..1
+  // waxing: shadow moves right; waning: shadow moves left
+  var dir = (p<=4) ? 1 : -1;
+  var off = dir * signed * r*1.15;
+
+  // draw shadow disc using destination-out trick for crisp terminator
+  g.save();
+  g.globalCompositeOperation="source-over";
+  g.fillStyle="rgba(0,0,0,0.65)";
+  // Instead of painting over, we cut the lit disc by drawing a black disc with source-atop
+  g.globalCompositeOperation="source-atop";
+  g.beginPath(); g.arc(cx+off, cy, r*1.02, 0, Math.PI*2); g.fill();
+  g.restore();
+
+  g.restore();
+}
+
+function drawMoonReflection(g, cx, cy, r, phase){
+  // reflection: vertical flip, blur-ish via alpha gradients
+  g.save();
+  g.translate(0, cy*2);
+  g.scale(1, -1);
+
+  // compress reflection
+  g.globalAlpha=0.35;
+  drawMoon(g, cx, cy + r*0.5, r*0.85, phase, false);
+
+  // fade out with gradient
+  var grad=g.createLinearGradient(0, cy, 0, cy + r*3);
+  grad.addColorStop(0,"rgba(0,0,0,0)");
+  grad.addColorStop(0.25,"rgba(0,0,0,0.25)");
+  grad.addColorStop(1,"rgba(0,0,0,0.90)");
+  g.globalCompositeOperation="destination-in";
+  g.fillStyle=grad;
+  g.fillRect(0, cy, canvas.width, canvas.height);
+  g.restore();
+}
+
+function drawHexShimmer(g, w, h, t){
+  // subtle hex lattice; very low alpha for premium texture
+  var size = Math.max(10, Math.floor(Math.min(w,h)/64)); // dynamic
+  var dx = size*1.75;
+  var dy = size*1.52;
+
+  g.save();
+  g.globalAlpha=0.08;
+  g.strokeStyle="rgba(212,175,55,0.55)";
+  g.lineWidth=1;
+
+  // drift shimmer with time
+  var ox = (t*0.006) % dx;
+  var oy = (t*0.004) % dy;
+
+  function hexPath(x,y,s){
+    g.beginPath();
+    for(var i=0;i<6;i++){
+      var a=Math.PI/3*i + Math.PI/6;
+      var px=x + Math.cos(a)*s;
+      var py=y + Math.sin(a)*s;
+      if(i===0) g.moveTo(px,py); else g.lineTo(px,py);
+    }
+    g.closePath();
+  }
+
+  for(var y=-dy; y<h+dy; y+=dy){
+    for(var x=-dx; x<w+dx; x+=dx){
+      var row = Math.round(y/dy);
+      var xx = x + (row%2 ? dx/2 : 0) - ox;
+      var yy = y - oy;
+
+      // tiny intensity modulation (avoid “grid look”)
+      var m = 0.5 + 0.5*Math.sin((xx+yy)*0.01 + t*0.002);
+      g.globalAlpha = 0.04 + m*0.05;
+
+      hexPath(xx, yy, size*0.55);
+      g.stroke();
+    }
+  }
+  g.restore();
+}
+
+function drawWater(g, w, h, t){
+  // water base gradient
+  g.save();
+  var bg=g.createLinearGradient(0,0,0,h);
+  bg.addColorStop(0,"rgba(40,20,30,0.55)");
+  bg.addColorStop(0.45,"rgba(60,10,20,0.25)");
+  bg.addColorStop(1,"rgba(0,0,0,0.55)");
+  g.fillStyle=bg;
+  g.fillRect(0,0,w,h);
+
+  // ripples (cyclic, subtle but visible)
+  g.globalAlpha=0.18;
+  g.strokeStyle="rgba(255,220,170,0.35)";
+  g.lineWidth=1;
+
+  var cx=w*0.55, cy=h*0.58;
+  var maxR=Math.min(w,h)*0.55;
+
+  for(var i=0;i<18;i++){
+    var rr = (i/18)*maxR;
+    var wob = 1 + 0.02*Math.sin(t*0.002 + i*0.9);
+    g.beginPath();
+    g.ellipse(cx, cy, rr*wob, rr*0.72*wob, 0, 0, Math.PI*2);
+    g.stroke();
+  }
+
+  // moving wave bands (horizontal shimmer)
+  g.globalAlpha=0.10;
+  for(var k=0;k<9;k++){
+    var y = (k/9)*h;
+    var amp = 6 + k*0.3;
+    g.beginPath();
+    for(var x=0;x<=w;x+=16){
+      var yy = y + Math.sin((x*0.02) + t*0.002 + k)*amp;
+      if(x===0) g.moveTo(x,yy); else g.lineTo(x,yy);
+    }
+    g.stroke();
+  }
+
+  g.restore();
+}
+
+function drawFrame(){
+  setCanvasSize();
+  var w=canvas.width, h=canvas.height;
+  var t=performance.now() - t0;
+
+  ctx.clearRect(0,0,w,h);
+
+  // Clip to circle (dial interior)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(w/2,h/2, Math.min(w,h)*0.5, 0, Math.PI*2);
+  ctx.clip();
+
+  // WATER first
+  drawWater(ctx, w, h, t);
+
+  // HEX SHIMMER on top of water
+  drawHexShimmer(ctx, w, h, t);
+
+  // MOON + reflection
+  var mx=w*0.72, my=h*0.22, mr=Math.min(w,h)*0.075;
+  drawMoon(ctx, mx, my, mr, moonPhase, true);
+  drawMoonReflection(ctx, mx, my + mr*1.6, mr*0.9, moonPhase);
+
+  // subtle vignette inside dial
+  var vg=ctx.createRadialGradient(w/2,h/2, Math.min(w,h)*0.15, w/2,h/2, Math.min(w,h)*0.55);
+  vg.addColorStop(0,"rgba(0,0,0,0)");
+  vg.addColorStop(1,"rgba(0,0,0,0.35)");
+  ctx.fillStyle=vg;
+  ctx.fillRect(0,0,w,h);
+
+  ctx.restore();
+
+  requestAnimationFrame(drawFrame);
+}
+
+function safeStart(){
+  var r=canvas.parentElement.getBoundingClientRect();
+  if(r.width<10 || r.height<10){ requestAnimationFrame(safeStart); return; }
+  placeNodes();
+  drawFrame();
+}
+
+requestAnimationFrame(safeStart);
+window.addEventListener("resize", function(){
+  setCanvasSize();
+  placeNodes();
+}, {passive:true});
+
+})();
 </script>
 
 </body>

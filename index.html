@@ -1,221 +1,403 @@
 <!DOCTYPE html>
-<!-- TNT — /index.html
-     COMPASS · 2-LAYER (5 + 12) · ENGLISH ONLY (VISUAL PASS)
-     FIX:
-       - HARD CACHE BUST on engines (bg-engine + dragon)
-       - PURGE duplicate bg canvas before boot (prevents “double moon/spin”)
--->
-
+<!-- TNT — /index.html (COMPASS VISUAL UPGRADE SAFE BUILD) -->
 <html lang="en">
+
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>Compass · DiamondGateBridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
-<script>
-// PRE-BOOT PURGE: if an older bg canvas already exists (dup scripts / cache), remove it.
-(function(){
-  try{
-    var old = document.getElementById("gd_bg_canvas");
-    if(old && old.parentNode) old.parentNode.removeChild(old);
-  }catch(e){}
-})();
-</script>
-
-<script defer src="/assets/instruments.js?v=20260304a"></script>
-<script defer src="/assets/bg-engine.js?v=20260304a"></script>
-<script defer src="/assets/dragon-anatomy.js?v=20260304a"></script>
+<script defer src="/assets/instruments.js"></script>
+<script defer src="/assets/bg-engine.js"></script>
+<script defer src="/assets/dragon-anatomy.js"></script>
 
 <style>
-body{margin:0}
 
-/* ===== STAGE ===== */
+/* =========================
+STAGE
+========================= */
+
+body{
+margin:0;
+overflow:hidden;
+}
+
 .stage{
-  position:relative;
-  width:min(1200px,94vw);
-  height:min(1100px,86vh);
-  margin:90px auto 0;
-  pointer-events:none;
+position:relative;
+width:min(1100px,92vw);
+height:min(1100px,85vh);
+margin:90px auto 0;
+pointer-events:none;
 }
 
-/* ===== COMPASS DIAL ===== */
+/* =========================
+COMPASS DIAL
+========================= */
+
 .dial{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  border-radius:999px;
-  z-index:2;
-  background:
-    radial-gradient(circle at 50% 40%,rgba(255,255,255,.05),rgba(0,0,0,.45) 80%);
-  box-shadow:
-    0 40px 160px rgba(0,0,0,.75),
-    inset 0 0 60px rgba(0,0,0,.65);
+
+position:absolute;
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+width:min(880px,88vw);
+height:min(880px,88vw);
+
+border-radius:50%;
+
+z-index:2;
+
+/* translucent glass */
+
+background:
+
+radial-gradient(circle at 30% 30%,rgba(255,255,255,.08),transparent 60%),
+
+radial-gradient(circle at 60% 70%,rgba(255,120,120,.08),transparent 60%),
+
+linear-gradient(160deg,rgba(10,12,16,.55),rgba(6,8,10,.65));
+
+box-shadow:
+
+0 60px 200px rgba(0,0,0,.55),
+
+inset 0 0 0 2px rgba(255,255,255,.06),
+
+inset 0 0 60px rgba(0,0,0,.45);
+
 }
 
-/* ===== GEMS ===== */
+/* =========================
+COMPASS RINGS
+========================= */
+
+.dial::before{
+
+content:"";
+position:absolute;
+inset:0;
+
+border-radius:50%;
+
+background:
+
+radial-gradient(circle at center,transparent 0%,transparent 38%,rgba(212,175,55,.08) 39%,transparent 40%),
+
+radial-gradient(circle at center,transparent 0%,transparent 54%,rgba(212,175,55,.08) 55%,transparent 56%),
+
+radial-gradient(circle at center,transparent 0%,transparent 70%,rgba(212,175,55,.08) 71%,transparent 72%);
+
+}
+
+/* =========================
+RADIAL COMPASS TICKS
+========================= */
+
+.dial::after{
+
+content:"";
+position:absolute;
+inset:0;
+border-radius:50%;
+
+background:
+repeating-conic-gradient(
+
+rgba(212,175,55,.25) 0deg,
+rgba(212,175,55,.25) 1deg,
+
+transparent 1deg,
+transparent 15deg
+
+);
+
+mask:
+radial-gradient(circle at center,transparent 0 65%,#000 67%);
+
+opacity:.35;
+
+}
+
+/* =========================
+GEM NODES
+========================= */
+
 .node{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.18);
-  background:linear-gradient(160deg,#0b0f16,#050608);
-  box-shadow:0 40px 120px rgba(0,0,0,.85);
-  cursor:pointer;
-  pointer-events:auto;
+
+position:absolute;
+
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%) rotate(45deg);
+
+cursor:pointer;
+pointer-events:auto;
+
+border-radius:22px;
+
+border:1px solid rgba(255,255,255,.18);
+
+transition:all .18s ease;
+
+background:
+
+radial-gradient(circle at 20% 20%,rgba(255,255,255,.25),transparent 45%),
+
+linear-gradient(160deg,#0b0f16,#050608);
+
+box-shadow:
+
+0 40px 120px rgba(0,0,0,.9),
+
+inset 0 2px 0 rgba(255,255,255,.15);
+
 }
 
-.core{width:200px;height:200px;border-radius:26px}
-.l1{width:150px;height:150px;border-radius:22px}
-.l2{width:110px;height:110px;border-radius:20px}
-.l3{width:92px;height:92px;border-radius:18px}
+/* honeycomb fractal pattern */
+
+.node::before{
+
+content:"";
+position:absolute;
+inset:0;
+opacity:.18;
+
+background:
+
+repeating-linear-gradient(
+60deg,
+rgba(212,175,55,.15) 0 1px,
+transparent 1px 10px),
+
+repeating-linear-gradient(
+-60deg,
+rgba(212,175,55,.12) 0 1px,
+transparent 1px 10px);
+
+mask:
+radial-gradient(circle at center,transparent 0 70%,#000 80%);
+
+}
+
+/* highlight streak */
+
+.node::after{
+
+content:"";
+position:absolute;
+
+left:12%;
+right:12%;
+top:8%;
+
+height:30%;
+
+border-radius:999px;
+
+background:
+linear-gradient(
+to bottom,
+rgba(255,255,255,.25),
+rgba(255,255,255,0)
+);
+
+transform:rotate(-12deg);
+
+}
+
+/* sizes */
+
+.core{
+width:200px;
+height:200px;
+z-index:10;
+}
+
+.l1{
+width:150px;
+height:150px;
+}
+
+/* =========================
+TEXT
+========================= */
 
 .inner{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transform:rotate(-45deg);
-  color:white;
-  font-weight:900;
-  letter-spacing:.6px;
-  font-size:14px;
-  text-align:center;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:100%;
+height:100%;
+
+transform:rotate(-45deg);
+
+color:white;
+
+font-weight:900;
+letter-spacing:.6px;
+
+text-shadow:0 0 16px rgba(0,0,0,.6);
+
 }
 
-/* ===== TOP BAR ===== */
-.topbar{
-  position:fixed;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:12px;
-  padding:8px 14px;
-  background:#050608;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:14px;
-  z-index:300;
-}
-.topbar button{
-  background:none;
-  border:none;
-  color:white;
-  font-weight:800;
-  cursor:pointer;
-}
+/* =========================
+CORNERS
+========================= */
 
-/* ===== CORNERS ===== */
 .corner{
-  position:fixed;
-  bottom:20px;
-  z-index:300;
+
+position:fixed;
+bottom:20px;
+z-index:300;
+
 }
+
 .corner.left{left:20px}
 .corner.right{right:20px}
+
 .corner button{
-  background:#050608;
-  color:white;
-  border:1px solid rgba(255,255,255,.15);
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
+
+background:#050608;
+color:white;
+
+border:1px solid rgba(255,255,255,.15);
+
+padding:10px 14px;
+border-radius:10px;
+
+cursor:pointer;
+
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <button id="layer1">LAYER 1</button>
-  <button id="layer2">LAYER 2</button>
-</div>
-
 <div class="stage" id="stage">
-  <div class="dial"></div>
+
+<div class="dial"></div>
+
 </div>
 
 <div class="corner left">
-  <button id="btnExit">EXIT</button>
+<button id="btnExit">EXIT</button>
 </div>
 
 <div class="corner right">
-  <button id="btnHub">HUB</button>
+<button id="btnHub">HUB</button>
 </div>
 
 <script>
+
 (function(){
+
 "use strict";
 
-const stage=document.getElementById("stage");
+/* =========================
+ENGINE MOUNT
+(unchanged animation)
+========================= */
 
-const LAYER1=[
-  {label:"CORE",cls:"core",x:0,y:0,href:"/index-core/index.html"},
-  {label:"LAWS",cls:"l1",x:0,y:-200,href:"/laws/"},
-  {label:"ENERGY",cls:"l1",x:200,y:0,href:"/explore/frontier/energy/"},
-  {label:"FINANCE",cls:"l1",x:0,y:200,href:"/finance/"},
-  {label:"GOVERNANCE",cls:"l1",x:-200,y:0,href:"/governance/"}
-];
+function mountEngines(){
 
-const LAYER2=[
-  {label:"CORE",cls:"core",x:0,y:0,href:"/index-spine/index.html"},
+if(window.GD_BG && !window.__BG_ACTIVE){
 
-  {label:"PRODUCTS",cls:"l2",x:0,y:-280,href:"/products/"},
-  {label:"FRONTIER",cls:"l3",x:150,y:-240,href:"/explore/frontier/"},
-  {label:"INFRA",cls:"l3",x:280,y:-120,href:"/explore/infrastructure/"},
-  {label:"RESEARCH",cls:"l2",x:280,y:0,href:"/research/"},
-  {label:"EXPLORE",cls:"l2",x:280,y:120,href:"/explore/"},
-  {label:"AGRICULTURE",cls:"l3",x:150,y:240,href:"/products/agriculture/"},
-  {label:"GAUGES",cls:"l2",x:0,y:280,href:"/gauges/"},
-  {label:"DOCTRINE",cls:"l3",x:-150,y:240,href:"/products/capital-doctrine/"},
-  {label:"LATTICE",cls:"l3",x:-280,y:120,href:"/explore/frontier/lattice/"},
-  {label:"SHIMMER",cls:"l3",x:-280,y:0,href:"/explore/frontier/shimmer/"},
-  {label:"VISION",cls:"l3",x:-280,y:-120,href:"/explore/frontier/vision/"},
-  {label:"EDUCATION",cls:"l3",x:-150,y:-240,href:"/products/education/"}
-];
+window.__BG_ACTIVE=true;
 
-function clearNodes(){
-  document.querySelectorAll(".node").forEach(n=>n.remove());
+window.GD_BG.mount({
+
+fps:30,
+dpr_cap:1.5,
+moon_radius:.065,
+crater_count:18
+
+})
+
 }
 
-function addNode(n){
-  const d=document.createElement("div");
-  d.className="node "+n.cls;
-  d.style.left=`calc(50% + ${n.x}px)`;
-  d.style.top=`calc(50% + ${n.y}px)`;
+if(window.GD_DRAGON && !window.__DRAGON_ACTIVE){
 
-  const inner=document.createElement("div");
-  inner.className="inner";
-  inner.textContent=n.label;
+window.__DRAGON_ACTIVE=true;
 
-  d.appendChild(inner);
-  d.addEventListener("click", ()=>{ location.href=n.href; }, {passive:true});
+window.GD_DRAGON.mount({
 
-  stage.appendChild(d);
+speed:.18,
+girth:3.2,
+segments:120
+
+})
+
 }
 
-function render(layer){
-  clearNodes();
-  layer.forEach(addNode);
 }
 
-document.getElementById("layer1").addEventListener("click", ()=>render(LAYER1), {passive:true});
-document.getElementById("layer2").addEventListener("click", ()=>render(LAYER2), {passive:true});
+window.addEventListener("load",mountEngines)
 
-document.getElementById("btnExit").addEventListener("click", ()=>location.href="/door/", {passive:true});
-document.getElementById("btnHub").addEventListener("click", ()=>location.href="/home/", {passive:true});
+/* =========================
+COMPASS LAYOUT
+========================= */
 
-render(LAYER1);
+const stage=document.getElementById("stage")
 
-})();
+const nodes=[
+
+{label:"CORE",cls:"core",x:0,y:0,href:"/index-core/index.html"},
+
+{label:"LAWS",cls:"l1",x:0,y:-180,href:"/laws/"},
+
+{label:"ENERGY",cls:"l1",x:180,y:0,href:"/explore/frontier/energy/"},
+
+{label:"FINANCE",cls:"l1",x:0,y:180,href:"/finance/"},
+
+{label:"GOVERNANCE",cls:"l1",x:-180,y:0,href:"/governance/"}
+
+]
+
+function build(){
+
+nodes.forEach(n=>{
+
+const d=document.createElement("div")
+d.className="node "+n.cls
+
+const inner=document.createElement("div")
+inner.className="inner"
+inner.textContent=n.label
+
+d.appendChild(inner)
+
+d.style.left=`calc(50% + ${n.x}px)`
+d.style.top=`calc(50% + ${n.y}px)`
+
+d.onclick=()=>location.href=n.href
+
+stage.appendChild(d)
+
+})
+
+}
+
+build()
+
+/* =========================
+NAV
+========================= */
+
+document.getElementById("btnExit").onclick=()=>location.href="/door/"
+document.getElementById("btnHub").onclick=()=>location.href="/home/"
+
+})()
+
 </script>
 
 </body>

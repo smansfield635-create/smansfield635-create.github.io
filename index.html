@@ -1,37 +1,55 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · PRODUCTION LOADER (PHASE: DRAGON LOOK)
-     MODE: ENGLISH ONLY · STABLE ENGINE LOAD · MINIMAL STATUS
-     FULL FILE REPLACEMENT
+     GEODIAMETRICS COMPASS INDEX (INDEX-FIRST CANON)
+     PURPOSE:
+     - LOCK DOM CONTRACTS + LOAD ORDER + CACHE POLICY
+     - PROVIDE STABLE HOST LAYERS FOR ALL ASSETS
+     - PROVIDE COMPASS UI (2-LAYER: 5 + 12) FOR SPATIAL EVAL
+     - KEEP MINIMAL VERSION STATUS (NO DIAGNOSTIC WALL)
+
+     CONTRACTS (LOCKED):
+     1) DOM HOSTS MUST EXIST:
+        #gd-field  (bg-engine mounts here)
+        #gd-dragon (dragon-engine mounts here)
+        #gd-ui     (all UI lives here)
+     2) LOAD ORDER:
+        ui.css → branch.css → instruments.js → bg-engine.js → dragon-anatomy.js
+     3) CACHE POLICY:
+        Single build token controls all assets (bump 1 string to force reload)
 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Compass · DiamondGateBridge</title>
 
-<!-- SINGLE BUILD TOKEN (BUMP THIS STRING ONLY WHEN YOU NEED A HARD RELOAD) -->
+<!-- SINGLE BUILD TOKEN (BUMP THIS ONE STRING ONLY WHEN YOU NEED A HARD RELOAD) -->
 <script>
-window.__GD_BUILD__="IDX_PROD_20260304_1100";
+window.__GD_BUILD__="IDX_CANON_20260304_1200";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_PROD_20260304_1100"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_PROD_20260304_1100"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_20260304_1200"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_20260304_1200"/>
 
-<script defer src="/assets/instruments.js?v=IDX_PROD_20260304_1100"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_PROD_20260304_1100"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_PROD_20260304_1100"></script>
+<script defer src="/assets/instruments.js?v=IDX_CANON_20260304_1200"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_CANON_20260304_1200"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_20260304_1200"></script>
 
 <style>
 body{margin:0}
 
-/* LAYER HOSTS */
+/* =========================================================
+   CANON HOST LAYERS
+========================================================= */
 #gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
 
-/* MINIMAL ENGINE STATUS (VERSIONED) */
+/* =========================================================
+   MINIMAL ENGINE STATUS (VERSIONED)
+========================================================= */
 #engstat{
 position:fixed;
 top:10px;
@@ -46,29 +64,44 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);
 opacity:.75;
 }
 
-/* TOP BAR */
+/* =========================================================
+   TOP BAR
+========================================================= */
 .top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
 .topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
 .controls{display:flex;gap:10px;justify-content:flex-end}
 .seg{display:inline-flex;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18)}
 .seg button{border:0;background:transparent;color:rgba(255,255,255,.78);padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
-.seg button[aria-pressed="true"]{color:#fff;background:radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%), linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10))}
+.seg button[aria-pressed="true"]{
+color:#fff;
+background:
+radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+}
 
-/* STAGE */
+/* =========================================================
+   STAGE
+========================================================= */
 .stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
 .glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;border:1px solid rgba(255,255,255,.10);background:linear-gradient(160deg, rgba(10,12,16,.34), rgba(6,8,10,.44));box-shadow:0 70px 240px rgba(0,0,0,.48), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -70px 140px rgba(0,0,0,.52);opacity:.86}
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
 .dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
 
-/* COMPASS NODES (L1 only; for spacing evaluation) */
+/* =========================================================
+   COMPASS NODES
+========================================================= */
 .node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:auto;overflow:hidden;border:1px solid rgba(255,255,255,.18);z-index:20;border-radius:22px;background:linear-gradient(160deg,#111827,#0b0f16);box-shadow:0 44px 140px rgba(0,0,0,.82)}
 .core{width:208px;height:208px;border-radius:26px}
 .l1{width:150px;height:150px}
+.l2{width:116px;height:116px}
+.l3{width:92px;height:92px;border-radius:18px}
 .inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;text-align:center}
 .word{font-weight:980;letter-spacing:.6px}
 .code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
 
-/* CORNERS */
+/* =========================================================
+   CORNERS
+========================================================= */
 .corner{position:fixed;bottom:16px;z-index:270;pointer-events:none}
 .corner.left{left:16px}
 .corner.right{right:16px}
@@ -77,6 +110,8 @@ opacity:.75;
 </head>
 
 <body>
+
+<!-- CANON HOSTS -->
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
@@ -113,44 +148,191 @@ opacity:.75;
 (function(){
 "use strict";
 
+/* =========================================================
+   STATE (EN-only; minimal; no new gd_* keys)
+========================================================= */
+var qs=new URLSearchParams(location.search);
+var LS=window.localStorage;
+
+var style=(qs.get("style")||LS.getItem("gd_style")||"informal");
+var time =(qs.get("time") ||LS.getItem("gd_time") ||"now");
+var depth=(qs.get("depth")||LS.getItem("gd_depth")||"explore");
+var lane =(qs.get("lane") ||"platform").toLowerCase();
+var layer=(qs.get("layer")||"1");
+
+if(style!=="informal"&&style!=="formal") style="informal";
+if(time==="trajectory") time="post";
+if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+if(depth!=="explore"&&depth!=="learn") depth="explore";
+if(lane!=="platform"&&lane!=="engineering") lane="platform";
+if(layer!=="1"&&layer!=="2") layer="1";
+
+try{
+  LS.setItem("gd_lang","en");
+  LS.setItem("gd_style",style);
+  LS.setItem("gd_time",time);
+  LS.setItem("gd_depth",depth);
+}catch(e){}
+
+document.documentElement.lang="en";
+
+function q(over){
+  var p=new URLSearchParams();
+  p.set("lang","en");
+  p.set("style",(over&&over.style)?over.style:style);
+  p.set("time",(over&&over.time)?over.time:time);
+  p.set("depth",(over&&over.depth)?over.depth:depth);
+  var L=(over&&over.lane)?over.lane:lane;
+  if(L==="platform"||L==="engineering") p.set("lane",L);
+  var lay=(over&&over.layer)?over.layer:layer;
+  if(lay==="1"||lay==="2") p.set("layer",lay);
+  return "?"+p.toString();
+}
+function go(path){ location.href = path + q(); }
+
+/* =========================================================
+   COMPASS DATA (2-LAYER: 5 + 12)
+========================================================= */
+var CORE1="/index-core/index.html";
+var CORE2="/index-spine/index.html";
+
+var L1=[
+  {code:"CORE",label:"CORE",href:CORE1,cls:"core"},
+  {code:"N",label:"LAWS",href:"/laws/",cls:"l1"},
+  {code:"E",label:"ENERGY",href:"/explore/frontier/energy/",cls:"l1"},
+  {code:"S",label:"FINANCE",href:"/finance/",cls:"l1"},
+  {code:"W",label:"GOVERNANCE",href:"/governance/",cls:"l1"}
+];
+
+var L2=[
+  {code:"CORE",label:"CORE",href:CORE2,cls:"core"},
+  {code:"NNE",label:"EDUCATION",href:"/products/education/",cls:"l3"},
+  {code:"NE",label:"PRODUCTS",href:"/products/",cls:"l2"},
+  {code:"ENE",label:"FRONTIER",href:"/explore/frontier/",cls:"l3"},
+  {code:"ESE",label:"INFRA",href:"/explore/infrastructure/",cls:"l3"},
+  {code:"E",label:"RESEARCH",href:"/research/",cls:"l2"},
+  {code:"SE",label:"EXPLORE",href:"/explore/",cls:"l2"},
+  {code:"SSE",label:"AGRICULTURE",href:"/products/agriculture/",cls:"l3"},
+  {code:"S",label:"GAUGES",href:"/gauges/",cls:"l2"},
+  {code:"SSW",label:"DOCTRINE",href:"/products/capital-doctrine/",cls:"l3"},
+  {code:"WNW",label:"LATTICE",href:"/explore/frontier/lattice/",cls:"l3"},
+  {code:"NW",label:"SHIMMER",href:"/explore/frontier/shimmer/",cls:"l3"},
+  {code:"W",label:"VISION",href:"/explore/frontier/vision/",cls:"l3"}
+];
+
+/* =========================================================
+   RENDER
+========================================================= */
 var stage=document.getElementById("stage");
 
-function mkNode(label, code, cls, dx, dy, href){
+function mkNode(it){
   var d=document.createElement("div");
-  d.className="node "+cls;
+  d.className="node "+it.cls;
   d.setAttribute("role","button");
   d.tabIndex=0;
 
   var inner=document.createElement("div");
   inner.className="inner";
-  var w=document.createElement("div"); w.className="word"; w.textContent=label;
-  var c=document.createElement("div"); c.className="code"; c.textContent=code;
-  inner.appendChild(w); inner.appendChild(c);
+
+  var w=document.createElement("div"); w.className="word"; w.textContent=it.label;
+  var c=document.createElement("div"); c.className="code"; c.textContent=it.code;
+
+  inner.appendChild(w);
+  inner.appendChild(c);
   d.appendChild(inner);
 
-  d.style.left="50%";
-  d.style.top="50%";
-  d.style.transform="translate("+dx+"px,"+dy+"px) rotate(45deg)";
+  function act(){ go(it.href); }
+  d.addEventListener("click", act, {passive:true});
+  d.addEventListener("keydown", function(e){
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+  });
 
-  function go(){
-    if(!href) return;
-    location.href = href;
-  }
-  if(href){
-    d.addEventListener("click", go, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
-    });
-  }
-
-  stage.appendChild(d);
+  return d;
 }
 
-mkNode("CORE","CORE","core",0,0,"/index-core/index.html");
-mkNode("LAWS","N","l1",0,-164,"/laws/");
-mkNode("ENERGY","E","l1",164,0,"/explore/frontier/energy/");
-mkNode("FINANCE","S","l1",0,164,"/finance/");
-mkNode("GOVERNANCE","W","l1",-164,"/governance/");
+function clearNodes(){
+  var nodes=stage.querySelectorAll(".node");
+  for(var i=0;i<nodes.length;i++) nodes[i].remove();
+}
+
+function layout1(){
+  clearNodes();
+  var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
+  var R1=164;
+
+  var core=mkNode(L1[0]);
+  core.style.left=cx+"px"; core.style.top=cy+"px";
+  stage.appendChild(core);
+
+  var map={N:L1[1],E:L1[2],S:L1[3],W:L1[4]};
+  var order=["N","E","S","W"];
+  var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
+
+  for(var i=0;i<4;i++){
+    var it=map[order[i]];
+    var x=cx + R1*Math.cos(ang[i]);
+    var y=cy + R1*Math.sin(ang[i]);
+    var n=mkNode(it);
+    n.style.left=x+"px"; n.style.top=y+"px";
+    stage.appendChild(n);
+  }
+}
+
+function layout2(){
+  clearNodes();
+  var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
+  var R2=236, R3=300;
+
+  var core=mkNode(L2[0]);
+  core.style.left=cx+"px"; core.style.top=cy+"px";
+  stage.appendChild(core);
+
+  var list=L2.slice(1);
+  for(var i=0;i<list.length;i++){
+    var it=list[i];
+    var a=(i/list.length)*Math.PI*2 - Math.PI/2;
+    var rad=(it.cls==="l2")?R2:R3;
+    var x=cx + rad*Math.cos(a);
+    var y=cy + rad*Math.sin(a);
+    var n=mkNode(it);
+    n.style.left=x+"px"; n.style.top=y+"px";
+    stage.appendChild(n);
+  }
+}
+
+function render(){
+  (layer==="1") ? layout1() : layout2();
+}
+
+function setPressed(id,on){
+  document.getElementById(id).setAttribute("aria-pressed", on?"true":"false");
+}
+function paint(){
+  setPressed("layer1", layer==="1");
+  setPressed("layer2", layer==="2");
+  setPressed("lanePlatform", lane==="platform");
+  setPressed("laneEngineering", lane==="engineering");
+}
+
+/* Controls */
+function setLayer(v){
+  layer=(v==="2")?"2":"1";
+  history.replaceState({}, "", location.pathname + q({layer:layer}));
+  paint(); render();
+}
+function setLane(v){
+  lane=(v==="engineering")?"engineering":"platform";
+  history.replaceState({}, "", location.pathname + q({lane:lane}));
+  paint(); render();
+}
+
+document.getElementById("layer1").addEventListener("click", function(){ setLayer("1"); }, {passive:true});
+document.getElementById("layer2").addEventListener("click", function(){ setLayer("2"); }, {passive:true});
+document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+document.getElementById("btnExit").addEventListener("click", function(){ go("/door/"); }, {passive:true});
+document.getElementById("btnHub").addEventListener("click", function(){ go("/home/"); }, {passive:true});
 
 /* Engine status + mount */
 window.addEventListener("load", function(){
@@ -162,24 +344,9 @@ window.addEventListener("load", function(){
   try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
 });
 
-/* Corner nav */
-document.getElementById("btnExit").addEventListener("click", function(){ location.href="/door/"; }, {passive:true});
-document.getElementById("btnHub").addEventListener("click", function(){ location.href="/home/"; }, {passive:true});
-
-/* Buttons (UI only; no behavior changes for now) */
-function setPressed(id,on){ document.getElementById(id).setAttribute("aria-pressed", on?"true":"false"); }
-document.getElementById("layer1").addEventListener("click", function(){
-  setPressed("layer1",true); setPressed("layer2",false);
-}, {passive:true});
-document.getElementById("layer2").addEventListener("click", function(){
-  setPressed("layer1",false); setPressed("layer2",true);
-}, {passive:true});
-document.getElementById("lanePlatform").addEventListener("click", function(){
-  setPressed("lanePlatform",true); setPressed("laneEngineering",false);
-}, {passive:true});
-document.getElementById("laneEngineering").addEventListener("click", function(){
-  setPressed("lanePlatform",false); setPressed("laneEngineering",true);
-}, {passive:true});
+paint();
+requestAnimationFrame(render);
+window.addEventListener("resize", function(){ render(); }, {passive:true});
 
 })();
 </script>

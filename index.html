@@ -1,10 +1,9 @@
 <!doctype html>
 <!-- TNT — /index.html
      COMPASS · 2-LAYER (5 + 12) · ENGLISH ONLY · STABLE ENGINE LOAD
-     CANON LAYERING FIX:
-     - #gd-field hosts bg canvas + glassPlate (BEHIND DRAGON)
-     - #gd-dragon hosts dragon canvas (ABOVE PLATE, BELOW UI)
-     - #gd-ui hosts dial + nodes + controls (ABOVE DRAGON)
+     PURPOSE:
+     - Force-load latest JS via cache-bust
+     - Provide visible engine version confirmation (no DevTools needed)
 -->
 <html lang="en">
 <head>
@@ -12,20 +11,19 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Compass · DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+<link rel="stylesheet" href="/assets/ui.css?v=cb_20260304_01"/>
+<link rel="stylesheet" href="/assets/branch.css?v=cb_20260304_01"/>
 
-<!-- IMPORTANT: cache-bust so mobile stops serving old JS -->
-<script defer src="/assets/instruments.js?v=cb_v2"></script>
-<script defer src="/assets/bg-engine.js?v=cb_v2"></script>
-<script defer src="/assets/dragon-anatomy.js?v=cb_v2"></script>
+<!-- HARD cache-bust: bump these values whenever JS changes -->
+<script defer src="/assets/instruments.js?v=cb_20260304_01"></script>
+<script defer src="/assets/bg-engine.js?v=cb_20260304_01"></script>
+<script defer src="/assets/dragon-anatomy.js?v=cb_20260304_02"></script>
 
 <style>
 body{margin:0}
 
 /* =========================================================
-   CANON LAYER HOSTS (device-stable)
-   field (0-4) < dragon (5-9) < ui (10+)
+   CANON LAYER HOSTS
 ========================================================= */
 #gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
 #gd-field{z-index:0;pointer-events:none}
@@ -47,7 +45,6 @@ body{margin:0}
 .word{font-weight:980;letter-spacing:.6px}
 .code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
 
-/* Top controls + corners live in UI layer */
 .top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
 .topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
 .controls{display:flex;gap:10px;justify-content:flex-end}
@@ -59,12 +56,26 @@ body{margin:0}
 .corner.left{left:16px}
 .corner.right{right:16px}
 .corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));color:#fff;font-weight:980}
+
+/* Visible engine status (non-invasive) */
+.engstat{
+  position:fixed;
+  left:14px;
+  top:14px;
+  z-index:999;
+  pointer-events:none;
+  font-weight:900;
+  font-size:12px;
+  letter-spacing:.9px;
+  opacity:.70;
+  color:rgba(255,255,255,.85);
+  text-shadow:0 10px 30px rgba(0,0,0,.70);
+}
 </style>
 </head>
 
 <body>
 
-<!-- CANON LAYER HOSTS -->
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
@@ -86,9 +97,7 @@ body{margin:0}
   </div>
 
   <div class="stage" id="stage">
-    <!-- glass plate belongs BEHIND dragon => we will move it into gd-field at runtime -->
     <div class="glassPlate" id="glassPlate"></div>
-
     <div class="dial"></div>
   </div>
 
@@ -96,6 +105,8 @@ body{margin:0}
   <div class="corner right"><button class="btn" id="btnHub">HUB</button></div>
 
 </div>
+
+<div class="engstat" id="engstat">ENG: …</div>
 
 <script>
 (function(){
@@ -132,28 +143,19 @@ body{margin:0}
   }
   function go(path){ location.href = path + q(); }
 
-  // Move glassPlate behind dragon (into gd-field) while keeping its geometry
-  function relocatePlate(){
-    var field=document.getElementById("gd-field");
-    var plate=document.getElementById("glassPlate");
-    if(!field || !plate) return;
-
-    // Freeze current computed box relative to viewport
-    var r=plate.getBoundingClientRect();
-
-    plate.style.position="fixed";
-    plate.style.left = (r.left)+"px";
-    plate.style.top  = (r.top)+"px";
-    plate.style.transform="none";
-    plate.style.width = (r.width)+"px";
-    plate.style.height= (r.height)+"px";
-    plate.style.zIndex="2"; // within field layer
-    field.appendChild(plate);
+  // Visible engine version/status (no DevTools needed)
+  function setEng(text){
+    var el=document.getElementById("engstat");
+    if(!el) return;
+    el.textContent = text;
   }
 
-  // Mount engines ONCE after load (never remount on resize/tabs)
+  // Mount engines once after load
   window.addEventListener("load", function(){
-    relocatePlate();
+    // show versions if available
+    var bgV = (window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : "BG?";
+    var drV = (window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : "DR?";
+    setEng("ENG: " + bgV + " | " + drV);
 
     try{
       if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({
@@ -162,9 +164,8 @@ body{margin:0}
     }catch(e){}
 
     try{
-      // slow dragon; must be ABOVE plate but BELOW nodes
       if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({
-        speed:55, girth:2.6, segments:110
+        // keep overrides minimal; body sizing is handled in dragon engine per your spec
       });
     }catch(e){}
   });

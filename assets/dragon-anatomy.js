@@ -1,226 +1,386 @@
-/* TNT — /assets/dragon-anatomy.js
-   GEODIAMETRICS DRAGON ENGINE — CANON v2 (SLOW + SCALES)
-   ENGLISH VISUAL PASS
+/* =====================================================
+   GEODIAMETRICS DRAGON ANATOMY ENGINE — RIBBON MESH
+   FILE: /assets/dragon-anatomy.js
+   TNT: FULL FILE REPLACEMENT
 
-   FIXES:
+   FEATURES
+   - Ribbon mesh body (dragon silhouette)
+   - Thick torso profile taper
+   - Dorsal spikes
+   - Belly shading
+   - Honeycomb scale glints
    - Singleton guard (prevents duplicate loops)
-   - TRUE speed control (time-based; speed is actually honored)
-   - Slower default speed (natural, readable)
-   - Thick body (girth) + scale arcs
-   - Always exits the screen fully before respawn
+   - dt-based motion (speed stable)
 
-   NOTE:
-   - NO bg, NO moon, NO clouds here. Just dragons.
-*/
+   ENGLISH-ONLY VISUAL PASS
+   NO NEW gd_* KEYS
+===================================================== */
+
 (function(){
-  "use strict";
+"use strict";
 
-  if (window.__GD_DRAGON_RUNNING__) return;
-  window.__GD_DRAGON_RUNNING__ = true;
+/* =====================================================
+   SINGLETON GUARD
+===================================================== */
 
-  var VERSION = "DRAGON_CANON_v2";
+if (window.__GD_DRAGON_RUNNING__) return;
+window.__GD_DRAGON_RUNNING__ = true;
 
-  var canvas = document.getElementById("gd_dragon_canvas");
-  if(!canvas){
-    canvas = document.createElement("canvas");
-    canvas.id = "gd_dragon_canvas";
-    canvas.style.position = "fixed";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "9";
-    document.body.appendChild(canvas);
-  }
+/* =====================================================
+   CONFIG
+===================================================== */
 
-  var ctx = canvas.getContext("2d", { alpha:true, desynchronized:true });
-  if(!ctx) return;
+const CFG = {
+speed: 48,          // px/sec (stable readable motion)
+segments: 120,
+girth: 4.8,         // THICK dragon
+amplitude: 20,
+laneY: 0.30
+};
 
-  var W=0,H=0,DPR=1;
-  function resize(){
-    var ww=Math.max(1, window.innerWidth||1);
-    var hh=Math.max(1, window.innerHeight||1);
-    var dpr=1; try{ dpr=window.devicePixelRatio||1; }catch(e){}
-    DPR=Math.min(1.6, Math.max(1,dpr));
-    W=Math.floor(ww*DPR);
-    H=Math.floor(hh*DPR);
-    canvas.width=W;
-    canvas.height=H;
-  }
-  resize();
-  window.addEventListener("resize", resize, {passive:true});
+/* allow index override */
+if(window.__GD_DRAGON_CFG__){
+Object.assign(CFG,window.__GD_DRAGON_CFG__);
+}
 
-  // ---------- Config (defaults = SLOW) ----------
-  var CFG = {
-    speed_px_s: 55,          // << SLOW DEFAULT
-    girth: 2.6,              // thickness
-    segments: 110,           // smooth
-    laneY: 0.28,             // top dragon
-    laneY2: 0.72,            // bottom dragon
-    amp: 16,                 // slither amplitude
-    wave: 0.9,               // slither frequency
-    body: "rgba(0,55,35,0.86)",
-    edge: "rgba(0,0,0,0.30)",
-    gold: "rgba(212,175,55,0.32)"
-  };
+/* public API */
 
-  window.GD_DRAGON = {
-    mount: function(opts){
-      if(!opts) return true;
-      if(typeof opts.speed==="number") CFG.speed_px_s = Math.max(12, Math.min(120, opts.speed));
-      if(typeof opts.girth==="number") CFG.girth = Math.max(1.2, Math.min(6.0, opts.girth));
-      if(typeof opts.segments==="number") CFG.segments = Math.max(50, Math.min(160, opts.segments));
-      return true;
-    },
-    version: VERSION
-  };
+window.GD_DRAGON = {
+mount(opts){
+Object.assign(CFG,opts||{});
+},
+version:"RIBBON_DRAGON_v1"
+};
 
-  // allow preconfig
-  try{
-    if(window.__GD_DRAGON_CFG__) window.GD_DRAGON.mount(window.__GD_DRAGON_CFG__);
-  }catch(e){}
+/* =====================================================
+   CANVAS
+===================================================== */
 
-  function makeSpine(yFrac){
-    var s=[];
-    var seg=CFG.segments;
-    for(var i=0;i<seg;i++){
-      s.push({x: -i*16*DPR, y: H*yFrac});
-    }
-    return s;
-  }
+let canvas=document.getElementById("gd_dragon_canvas");
 
-  var top = makeSpine(CFG.laneY);
-  var bot = makeSpine(CFG.laneY2);
+if(!canvas){
+canvas=document.createElement("canvas");
+canvas.id="gd_dragon_canvas";
+canvas.style.position="fixed";
+canvas.style.inset="0";
+canvas.style.pointerEvents="none";
+canvas.style.zIndex="9";
+document.body.appendChild(canvas);
+}
 
-  function ensureCounts(){
-    if(top.length !== CFG.segments) top = makeSpine(CFG.laneY);
-    if(bot.length !== CFG.segments) bot = makeSpine(CFG.laneY2);
-  }
+const ctx=canvas.getContext("2d",{alpha:true,desynchronized:true});
 
-  function follow(spine, targetDist){
-    for(var i=1;i<spine.length;i++){
-      var p=spine[i-1], c=spine[i];
-      var dx=p.x-c.x, dy=p.y-c.y;
-      var dist=Math.sqrt(dx*dx+dy*dy) || 0.0001;
-      c.x = p.x - (dx/dist)*targetDist;
-      c.y = p.y - (dy/dist)*targetDist;
-    }
-  }
+let W=0,H=0,DPR=1;
 
-  function drawBody(spine){
-    var thick = 10 * CFG.girth * DPR;
+function resize(){
+let dpr=window.devicePixelRatio||1;
+DPR=Math.min(1.6,Math.max(1,dpr));
 
-    // shadow edge
-    ctx.strokeStyle = CFG.edge;
-    ctx.lineWidth = thick + 7*DPR;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.beginPath();
-    for(var i=0;i<spine.length;i++){
-      var p=spine[i];
-      if(i===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
-    }
-    ctx.stroke();
+W=Math.floor(window.innerWidth*DPR);
+H=Math.floor(window.innerHeight*DPR);
 
-    // main
-    ctx.strokeStyle = CFG.body;
-    ctx.lineWidth = thick;
-    ctx.beginPath();
-    for(var j=0;j<spine.length;j++){
-      var q=spine[j];
-      if(j===0) ctx.moveTo(q.x,q.y); else ctx.lineTo(q.x,q.y);
-    }
-    ctx.stroke();
+canvas.width=W;
+canvas.height=H;
+}
 
-    // scales (arcs)
-    ctx.strokeStyle = "rgba(255,255,255,0.06)";
-    ctx.lineWidth = 1.2*DPR;
-    for(var k=8;k<spine.length-8;k+=3){
-      var a=spine[k], b=spine[k+1];
-      var ang=Math.atan2(b.y-a.y, b.x-a.x);
-      var rr=thick*0.55;
-      ctx.beginPath();
-      ctx.arc(a.x, a.y, rr, ang+0.7, ang+2.0);
-      ctx.stroke();
-    }
-  }
+resize();
+window.addEventListener("resize",resize);
 
-  function drawHead(p, dir){
-    var s = 18 * CFG.girth * DPR;
+/* =====================================================
+   SPINE
+===================================================== */
 
-    // skull
-    ctx.fillStyle = "rgba(0,75,45,0.92)";
-    ctx.beginPath();
-    ctx.ellipse(p.x, p.y, s*1.05, s*0.85, 0, 0, Math.PI*2);
-    ctx.fill();
+let spine=[];
+function initSpine(){
+spine=[];
+for(let i=0;i<CFG.segments;i++){
+spine.push({
+x:-i*18*DPR,
+y:H*CFG.laneY
+});
+}
+}
+initSpine();
 
-    // snout
-    ctx.fillStyle = "rgba(0,60,38,0.92)";
-    ctx.beginPath();
-    ctx.ellipse(p.x + dir*s*0.95, p.y + s*0.10, s*0.95, s*0.55, 0, 0, Math.PI*2);
-    ctx.fill();
+/* =====================================================
+   PROFILE (thick torso taper)
+===================================================== */
 
-    // eye
-    ctx.fillStyle = "rgba(212,175,55,0.95)";
-    ctx.beginPath();
-    ctx.arc(p.x + dir*s*0.35, p.y - s*0.18, s*0.14, 0, Math.PI*2);
-    ctx.fill();
+function radius(i){
+const t=i/(spine.length-1);
 
-    // horns + whiskers
-    ctx.strokeStyle = CFG.gold;
-    ctx.lineWidth = 2*DPR;
-    ctx.beginPath();
-    ctx.moveTo(p.x - dir*s*0.15, p.y - s*0.55);
-    ctx.lineTo(p.x - dir*s*0.55, p.y - s*1.25);
-    ctx.moveTo(p.x + dir*s*0.25, p.y - s*0.55);
-    ctx.lineTo(p.x + dir*s*0.05, p.y - s*1.35);
-    ctx.stroke();
+if(t<0.12) return 22*CFG.girth*DPR*(0.5+t*2);
+if(t<0.45) return 30*CFG.girth*DPR;
+if(t<0.75) return 28*CFG.girth*DPR*(1-(t-0.45));
+return 10*CFG.girth*DPR*(1-t);
+}
 
-    ctx.lineWidth = 1.5*DPR;
-    ctx.beginPath();
-    ctx.moveTo(p.x + dir*s*1.55, p.y + s*0.10);
-    ctx.lineTo(p.x + dir*s*2.40, p.y - s*0.40);
-    ctx.moveTo(p.x + dir*s*1.55, p.y + s*0.18);
-    ctx.lineTo(p.x + dir*s*2.30, p.y + s*0.55);
-    ctx.stroke();
-  }
+/* =====================================================
+   NORMAL + TANGENT
+===================================================== */
 
-  var lastT=0;
-  var phase=Math.random()*10;
+function normal(i){
 
-  function advance(spine, dt, yFrac){
-    var head=spine[0];
-    phase += dt;
+const p0=spine[Math.max(0,i-1)];
+const p1=spine[Math.min(spine.length-1,i+1)];
 
-    head.x += (CFG.speed_px_s * DPR) * dt;
-    head.y = H*yFrac + Math.sin(phase*CFG.wave) * (CFG.amp*DPR);
+let dx=p1.x-p0.x;
+let dy=p1.y-p0.y;
 
-    // must fully exit before respawn
-    if(head.x > W + 320*DPR){
-      head.x = -320*DPR;
-    }
+let len=Math.hypot(dx,dy)||1;
 
-    follow(spine, 16*DPR);
-  }
+dx/=len;
+dy/=len;
 
-  function render(t){
-    if(!lastT) lastT=t;
-    var dt=(t-lastT)/1000;
-    lastT=t;
+/* perpendicular */
 
-    ensureCounts();
+return {x:-dy,y:dx};
+}
 
-    ctx.clearRect(0,0,W,H);
+/* =====================================================
+   DRAW BODY (RIBBON MESH)
+===================================================== */
 
-    advance(top, dt, CFG.laneY);
-    advance(bot, dt, CFG.laneY2);
+function drawBody(){
 
-    drawBody(top); drawHead(top[0], 1);
-    drawBody(bot); drawHead(bot[0], 1);
+const left=[];
+const right=[];
 
-    requestAnimationFrame(render);
-  }
+for(let i=0;i<spine.length;i++){
 
-  requestAnimationFrame(render);
+const n=normal(i);
+const r=radius(i);
+
+left.push({
+x:spine[i].x+n.x*r,
+y:spine[i].y+n.y*r
+});
+
+right.push({
+x:spine[i].x-n.x*r,
+y:spine[i].y-n.y*r
+});
+}
+
+/* main fill */
+
+ctx.beginPath();
+
+ctx.moveTo(left[0].x,left[0].y);
+
+for(let p of left){
+ctx.lineTo(p.x,p.y);
+}
+
+for(let i=right.length-1;i>=0;i--){
+ctx.lineTo(right[i].x,right[i].y);
+}
+
+ctx.closePath();
+
+ctx.fillStyle="rgba(0,70,40,0.95)";
+ctx.fill();
+
+/* belly shading */
+
+ctx.globalAlpha=0.45;
+
+ctx.beginPath();
+
+for(let i=0;i<spine.length;i++){
+const p=spine[i];
+ctx.lineTo(p.x,p.y+radius(i)*0.4);
+}
+
+ctx.strokeStyle="rgba(0,0,0,0.4)";
+ctx.lineWidth=radius(2)*0.3;
+ctx.stroke();
+
+ctx.globalAlpha=1;
+
+/* rim highlight */
+
+ctx.strokeStyle="rgba(255,255,255,0.12)";
+ctx.lineWidth=2*DPR;
+
+ctx.beginPath();
+
+for(let p of left){
+ctx.lineTo(p.x,p.y);
+}
+
+ctx.stroke();
+}
+
+/* =====================================================
+   DORSAL SPIKES
+===================================================== */
+
+function drawSpikes(){
+
+ctx.fillStyle="rgba(0,55,30,1)";
+
+for(let i=6;i<spine.length-6;i+=4){
+
+const p=spine[i];
+const n=normal(i);
+
+const r=radius(i);
+
+ctx.beginPath();
+
+ctx.moveTo(p.x+n.x*r,p.y+n.y*r);
+
+ctx.lineTo(
+p.x+n.x*(r+14*DPR),
+p.y+n.y*(r+14*DPR)
+);
+
+ctx.lineTo(
+p.x+n.x*(r*0.5),
+p.y+n.y*(r*0.5)
+);
+
+ctx.closePath();
+ctx.fill();
+}
+}
+
+/* =====================================================
+   SCALE GLINTS (honeycomb illusion)
+===================================================== */
+
+function drawScales(){
+
+ctx.strokeStyle="rgba(255,255,255,0.08)";
+ctx.lineWidth=1.2*DPR;
+
+for(let i=8;i<spine.length-8;i+=3){
+
+const p=spine[i];
+const r=radius(i)*0.6;
+
+ctx.beginPath();
+
+ctx.arc(p.x,p.y,r,0.2,1.6);
+
+ctx.stroke();
+}
+}
+
+/* =====================================================
+   HEAD
+===================================================== */
+
+function drawHead(){
+
+const p=spine[0];
+
+const s=radius(0)*1.2;
+
+/* skull */
+
+ctx.fillStyle="rgba(0,80,45,1)";
+
+ctx.beginPath();
+ctx.ellipse(p.x,p.y,s,s*0.7,0,0,Math.PI*2);
+ctx.fill();
+
+/* snout */
+
+ctx.beginPath();
+ctx.ellipse(p.x+s*0.9,p.y+s*0.1,s*0.9,s*0.5,0,0,Math.PI*2);
+ctx.fill();
+
+/* eye */
+
+ctx.fillStyle="rgba(212,175,55,1)";
+ctx.beginPath();
+ctx.arc(p.x+s*0.3,p.y-s*0.1,s*0.12,0,Math.PI*2);
+ctx.fill();
+
+/* whiskers */
+
+ctx.strokeStyle="rgba(212,175,55,0.6)";
+ctx.lineWidth=2*DPR;
+
+ctx.beginPath();
+ctx.moveTo(p.x+s*1.4,p.y);
+ctx.lineTo(p.x+s*2.3,p.y-s*0.4);
+
+ctx.moveTo(p.x+s*1.4,p.y);
+ctx.lineTo(p.x+s*2.2,p.y+s*0.5);
+
+ctx.stroke();
+}
+
+/* =====================================================
+   MOTION
+===================================================== */
+
+let phase=Math.random()*10;
+let last=0;
+
+function step(t){
+
+if(!last) last=t;
+
+const dt=(t-last)/1000;
+last=t;
+
+phase+=dt;
+
+/* head motion */
+
+const head=spine[0];
+
+head.x+=CFG.speed*DPR*dt;
+
+head.y=H*CFG.laneY+Math.sin(phase*2)*CFG.amplitude*DPR;
+
+/* wrap */
+
+if(head.x>W+300*DPR){
+head.x=-300*DPR;
+}
+
+/* follow */
+
+const target=18*DPR;
+
+for(let i=1;i<spine.length;i++){
+
+const prev=spine[i-1];
+const cur=spine[i];
+
+let dx=prev.x-cur.x;
+let dy=prev.y-cur.y;
+
+let dist=Math.hypot(dx,dy)||1;
+
+cur.x=prev.x-(dx/dist)*target;
+cur.y=prev.y-(dy/dist)*target;
+}
+}
+
+/* =====================================================
+   RENDER LOOP
+===================================================== */
+
+function render(t){
+
+ctx.clearRect(0,0,W,H);
+
+step(t);
+
+drawBody();
+drawSpikes();
+drawScales();
+drawHead();
+
+requestAnimationFrame(render);
+}
+
+requestAnimationFrame(render);
 
 })();

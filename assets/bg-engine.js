@@ -1,6 +1,26 @@
 /* TNT — /assets/bg-engine.js
-   GEODIAMETRICS BACKGROUND ENGINE — CANON v2.1
-   CHANGE: mounts into #gd-field when present (device-stable stacking)
+   GEODIAMETRICS BACKGROUND ENGINE — CANON v2.2
+   FULL FILE REPLACEMENT
+
+   DOES:
+   - Singleton guarded
+   - Mounts into #gd-field when present (stable stacking)
+   - Single canvas only (#gd_bg_canvas)
+   - Sky gradient (red dusk)
+   - Single moon w/ stable craters + stable phase per load
+   - Moon glow + reflection
+   - Clouds w/ depth (3 parallax layers)
+   - Lanterns drifting upward
+   - Water ripple outward from center
+
+   DOES NOT:
+   - NO DRAGON LOGIC (dragons belong to /assets/dragon-anatomy.js)
+
+   CONSTRAINTS:
+   - Canvas only, pointer-events none
+   - 30fps cap + DPR cap
+   - No gd_* keys
+   - Version exposed for index readout: window.GD_BG.version
 */
 (function(){
   "use strict";
@@ -9,6 +29,7 @@
   window.__GD_BG_RUNNING__ = true;
 
   function lerp(a,b,t){ return a+(b-a)*t; }
+
   function mulberry32(seed){
     var t = seed >>> 0;
     return function(){
@@ -28,11 +49,14 @@
     c.style.height = "100%";
     c.style.pointerEvents = "none";
     c.style.userSelect = "none";
+    c.style.zIndex = "0";
     return c;
   }
 
   function mount(opts){
     opts = opts || {};
+
+    // if already mounted, update opts only
     var existing = document.getElementById("gd_bg_canvas");
     if (existing){
       existing.__GD_OPTS = opts;
@@ -40,6 +64,7 @@
     }
 
     var host = document.getElementById("gd-field") || document.body || document.documentElement;
+
     var canvas = createCanvas();
     canvas.__GD_OPTS = opts;
     host.appendChild(canvas);
@@ -52,7 +77,9 @@
     var FRAME_MS = 1000 / FPS;
 
     var reduce = false;
-    try{ reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){}
+    try{
+      reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }catch(e){}
 
     var W=0,H=0,DPR=1;
 
@@ -70,6 +97,7 @@
     resize();
     window.addEventListener("resize", resize, {passive:true});
 
+    // ---- moon (stable per page load) ----
     var moonPhase = Math.random();
     var craterSeed = ((Date.now() ^ (Math.random()*1e9)) >>> 0);
     var rnd = mulberry32(craterSeed);
@@ -79,7 +107,12 @@
       for (var i=0;i<n;i++){
         var ang = rnd()*Math.PI*2;
         var rad = Math.pow(rnd(), 0.62) * 0.78;
-        craters.push({u:Math.cos(ang)*rad,v:Math.sin(ang)*rad,rr:lerp(0.05,0.16,rnd()),a:lerp(0.10,0.26,rnd())});
+        craters.push({
+          u: Math.cos(ang)*rad,
+          v: Math.sin(ang)*rad,
+          rr: lerp(0.05,0.16,rnd()),
+          a:  lerp(0.10,0.26,rnd())
+        });
       }
     })();
 
@@ -93,35 +126,78 @@
       ctx.fillRect(0,0,W,H);
     }
 
+    function drawMoonReflection(mx,mr){
+      var y0 = H*0.62, w = mr*2.8, h = mr*4.0;
+
+      ctx.save();
+      ctx.globalCompositeOperation = "screen";
+      ctx.globalAlpha = 0.58;
+
+      var g = ctx.createLinearGradient(mx,y0,mx,y0+h);
+      g.addColorStop(0,"rgba(255,235,190,0.18)");
+      g.addColorStop(0.35,"rgba(255,200,150,0.10)");
+      g.addColorStop(1,"rgba(0,0,0,0)");
+      ctx.fillStyle = g;
+
+      ctx.beginPath();
+      ctx.ellipse(mx,y0+h*0.22,w*0.40,h*0.44,0,0,Math.PI*2);
+      ctx.fill();
+
+      ctx.globalAlpha = 0.44;
+      ctx.strokeStyle = "rgba(255,255,255,0.05)";
+      ctx.lineWidth = 1*DPR;
+      for (var i=0;i<7;i++){
+        var yy = y0 + i*(h/7);
+        ctx.beginPath();
+        ctx.ellipse(mx,yy,w*(0.22+i*0.10),6*DPR,0,0,Math.PI*2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
     function drawMoon(){
       var mx = W*0.78, my = H*0.18;
       var mr = Math.min(W,H) * ((opts.moon_radius != null) ? opts.moon_radius : 0.065);
 
       ctx.save();
 
+      // glow
       var halo = ctx.createRadialGradient(mx,my,mr*0.2,mx,my,mr*2.8);
       halo.addColorStop(0,"rgba(255,248,230,0.26)");
       halo.addColorStop(0.40,"rgba(255,225,170,0.14)");
       halo.addColorStop(1,"rgba(255,225,170,0)");
       ctx.fillStyle = halo;
-      ctx.beginPath(); ctx.arc(mx,my,mr*2.8,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(mx,my,mr*2.8,0,Math.PI*2);
+      ctx.fill();
 
+      // disc
       ctx.shadowColor = "rgba(255,245,225,0.48)";
       ctx.shadowBlur = 28*DPR;
       ctx.fillStyle = "rgba(255,246,232,0.98)";
-      ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(mx,my,mr,0,Math.PI*2);
+      ctx.fill();
       ctx.shadowBlur = 0;
 
+      // phase shadow inside disc (no double moon)
       var k = Math.cos(moonPhase*Math.PI*2);
       var shift = k*mr*0.58;
       ctx.save();
-      ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.clip();
+      ctx.beginPath();
+      ctx.arc(mx,my,mr,0,Math.PI*2);
+      ctx.clip();
       ctx.fillStyle = "rgba(0,0,0,0.62)";
-      ctx.beginPath(); ctx.arc(mx+shift,my,mr,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(mx+shift,my,mr,0,Math.PI*2);
+      ctx.fill();
       ctx.restore();
 
+      // crater detail
       ctx.save();
-      ctx.beginPath(); ctx.arc(mx,my,mr,0,Math.PI*2); ctx.clip();
+      ctx.beginPath();
+      ctx.arc(mx,my,mr,0,Math.PI*2);
+      ctx.clip();
 
       var rim = ctx.createRadialGradient(mx-mr*0.25,my-mr*0.25,mr*0.15,mx,my,mr);
       rim.addColorStop(0,"rgba(0,0,0,0.00)");
@@ -131,11 +207,19 @@
 
       for (var i=0;i<craters.length;i++){
         var c = craters[i];
-        var cx = mx + c.u*mr, cy = my + c.v*mr, cr = c.rr*mr;
+        var cx = mx + c.u*mr;
+        var cy = my + c.v*mr;
+        var cr = c.rr*mr;
+
         ctx.fillStyle = "rgba(0,0,0,"+c.a+")";
-        ctx.beginPath(); ctx.arc(cx,cy,cr,0,Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx,cy,cr,0,Math.PI*2);
+        ctx.fill();
+
         ctx.fillStyle = "rgba(255,255,255,0.10)";
-        ctx.beginPath(); ctx.arc(cx-cr*0.18,cy-cr*0.18,cr*0.55,0,Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx-cr*0.18,cy-cr*0.18,cr*0.55,0,Math.PI*2);
+        ctx.fill();
       }
       ctx.restore();
 
@@ -143,28 +227,7 @@
       ctx.restore();
     }
 
-    function drawMoonReflection(mx,mr){
-      var y0 = H*0.62, w = mr*2.8, h = mr*4.0;
-      ctx.save();
-      ctx.globalCompositeOperation = "screen";
-      ctx.globalAlpha = 0.58;
-      var g = ctx.createLinearGradient(mx,y0,mx,y0+h);
-      g.addColorStop(0,"rgba(255,235,190,0.18)");
-      g.addColorStop(0.35,"rgba(255,200,150,0.10)");
-      g.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.fillStyle = g;
-      ctx.beginPath(); ctx.ellipse(mx,y0+h*0.22,w*0.40,h*0.44,0,0,Math.PI*2); ctx.fill();
-
-      ctx.globalAlpha = 0.44;
-      ctx.strokeStyle = "rgba(255,255,255,0.05)";
-      ctx.lineWidth = 1*DPR;
-      for (var i=0;i<7;i++){
-        var yy = y0 + i*(h/7);
-        ctx.beginPath(); ctx.ellipse(mx,yy,w*(0.22+i*0.10),6*DPR,0,0,Math.PI*2); ctx.stroke();
-      }
-      ctx.restore();
-    }
-
+    // ---- clouds ----
     var crnd = mulberry32(((Date.now()+1337)>>>0));
     var clouds = [];
     (function seedClouds(){
@@ -186,19 +249,30 @@
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.globalCompositeOperation = "screen";
+
       ctx.fillStyle = "rgba(255,210,160,1)";
-      ctx.beginPath(); ctx.ellipse(x,y,w,h,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(x,y,w,h,0,0,Math.PI*2);
+      ctx.fill();
+
       ctx.beginPath();
       ctx.ellipse(x-w*0.28,y-h*0.12,w*0.55,h*0.85,0,0,Math.PI*2);
       ctx.ellipse(x+w*0.18,y-h*0.18,w*0.60,h*0.95,0,0,Math.PI*2);
       ctx.ellipse(x+w*0.42,y+h*0.05,w*0.45,h*0.78,0,0,Math.PI*2);
       ctx.fill();
+
       ctx.globalAlpha = alpha*0.55;
       ctx.fillStyle = "rgba(0,0,0,0.35)";
-      ctx.beginPath(); ctx.ellipse(x+w*0.10,y+h*0.18,w*0.72,h*0.60,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(x+w*0.10,y+h*0.18,w*0.72,h*0.60,0,0,Math.PI*2);
+      ctx.fill();
+
       ctx.globalAlpha = alpha*0.55;
       ctx.fillStyle = "rgba(255,255,255,0.28)";
-      ctx.beginPath(); ctx.ellipse(x-w*0.10,y-h*0.20,w*0.70,h*0.55,0,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(x-w*0.10,y-h*0.20,w*0.70,h*0.55,0,0,Math.PI*2);
+      ctx.fill();
+
       ctx.restore();
     }
 
@@ -211,6 +285,7 @@
       }
     }
 
+    // ---- lanterns ----
     var lanterns = [];
     (function seedLanterns(){
       var n = (opts.lantern_count != null) ? opts.lantern_count : 26;
@@ -241,16 +316,22 @@
         g.addColorStop(0.35,"rgba(255,140,90,0.22)");
         g.addColorStop(1,"rgba(0,0,0,0)");
         ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(l.x,l.y,l.r*8,0,Math.PI*2); ctx.fill();
+        ctx.beginPath();
+        ctx.arc(l.x,l.y,l.r*8,0,Math.PI*2);
+        ctx.fill();
       }
       ctx.restore();
     }
 
+    // ---- water ripple ----
     function drawWaterDial(t){
       var cx=W*0.5, cy=H*0.50;
       var r=Math.min(W,H)*0.32;
+
       ctx.save();
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
+      ctx.beginPath();
+      ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.clip();
 
       var grd=ctx.createRadialGradient(cx,cy-r*0.2,r*0.2,cx,cy,r);
       grd.addColorStop(0,"rgba(255,220,180,0.08)");
@@ -265,18 +346,21 @@
       var base=(t*0.00018)%1;
       for(var i=0;i<9;i++){
         var rr=r*(0.18 + i*0.09 + base*0.09);
-        ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(cx,cy,rr,0,Math.PI*2);
+        ctx.stroke();
       }
 
       ctx.globalAlpha=0.70;
       ctx.strokeStyle="rgba(212,175,55,0.06)";
       ctx.lineWidth=2*DPR;
       var a=t*0.00018;
-      ctx.beginPath(); ctx.arc(cx,cy,r*0.78,a,a+1.1); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx,cy,r*0.78,a,a+1.1);
+      ctx.stroke();
+
       ctx.restore();
     }
-
-    var last=0, acc=0;
 
     function renderOnce(ts, dtMs){
       ctx.clearRect(0,0,W,H);
@@ -286,6 +370,8 @@
       drawLanterns(dtMs||0);
       drawWaterDial(ts);
     }
+
+    var last=0, acc=0;
 
     function frame(ts){
       if(!last) last=ts;
@@ -313,5 +399,9 @@
     return canvas;
   }
 
-  window.GD_BG = { mount: mount };
+  window.GD_BG = {
+    version: "BG_CANON_v2_2",
+    mount: mount
+  };
+
 })();

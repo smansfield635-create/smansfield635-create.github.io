@@ -1,24 +1,13 @@
 <!doctype html>
-<!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (ENGLISH-ONLY BUILD MODE)
-     GEOMETRY-DECIDES EXECUTION (LOCKED BEHAVIOR):
-       - One center CORE + 16 hubs (unique destinations; duplicates/unbuilt → /404.html)
-       - Bottom corner controls: EXIT → /door/ | HUB → /home/
-       - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
-       - Canon carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
-       - ui.css owns html/body background (NO overrides)
-       - NO overlays/modals; no inline onclick; addEventListener only
-     VISUAL LAYER STACK (BOTTOM→TOP, LOCKED):
-       1) SKY (warm night) + 16 stars + moon (phase/halo)
-       2) CLOUDS (translucent) L→R
-       3) WATER (subtle ripples) + reflections
-       4) COMPASS GLASS DIAL (transparent engravings; 16 marks)
-       5) DRAGONS (2) R→L (above compass, below gems); top=ancient CN banner, bottom=selected language banner (EN only here)
-       6) GEM NODES (opaque; 3D bevel + fractal texture; corner cardinal micro-marks)
-       7) UI (header + toggles)
-     NOTE:
-       - ENGLISH ONLY for speed until visuals are final (per Sean).
-       - No text on page except: header, button labels, dragon banners.
+<!-- TNT v5-L1 — /index.html
+     COMPASS · GEM DIAL (OBSIDIAN) · LAYERED BUILD
+     L1: SKY+MOON+WATER DIAL ONLY (NO CLOUDS, NO DRAGONS)
+     EN-ONLY (visual calibration phase)
+     RULES:
+       - No external assets
+       - No inline onclick; addEventListener only
+       - Canon state keys only: gd_lang/gd_style/gd_time/gd_depth (lane URL-only)
+       - ui.css owns html/body background (no overrides)
 -->
 
 <html lang="en">
@@ -36,32 +25,31 @@ a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-/* =========================
-   GEOMETRY (one dominant center; progressively smaller outward)
-   ========================= */
 :root{
-  --D0:210px;  /* CORE */
+  /* ===== GEOMETRY ===== */
+  --D0:210px;  /* CORE (dominant) */
   --D1:150px;  /* Cardinals */
   --D2:112px;  /* Diagonals */
   --D3:86px;   /* Outer 8 */
 
-  --R1:164px;
-  --R2:236px;
-  --R3:304px;
+  --R1:168px;
+  --R2:246px;
+  --R3:314px;
 
   --padTop:102px;
 
+  /* ===== MATERIAL ===== */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
-  --crimson:rgba(120,0,22,.45);
-  --festival:rgba(255,43,43,.22);
-  --opalV:rgba(90,40,120,.16);
+  --crimson:rgba(120,0,22,.44);
+  --festival:rgba(255,43,43,.26);
+  --opalV:rgba(90,40,120,.18);
 
-  --gold:rgba(201,162,74,.62);
+  --gold:rgba(201,162,74,.58);
   --goldGlow:rgba(201,162,74,.22);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
@@ -69,9 +57,7 @@ body::before,body::after{pointer-events:none!important}
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* =========================
-   TOP BAR
-   ========================= */
+/* ===== TOP BAR (minimal, EN-only) ===== */
 .top{
   position:fixed;top:14px;left:0;right:0;
   padding:0 14px;
@@ -88,44 +74,18 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(8,10,14,.82), rgba(4,6,10,.90));
+    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
   box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
 }
-.brandLeft{
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
-}
-.brandTitle{
-  font-weight:980;
-  letter-spacing:.6px;
-  font-size:14px;
-  color:rgba(255,255,255,.94);
-  white-space:nowrap;
-}
-.brandSub{
-  font-size:12px;
-  color:rgba(255,255,255,.74);
-  letter-spacing:.2px;
-  white-space:nowrap;
-}
-.brandLinks{
-  display:flex;gap:10px;flex-wrap:wrap;
-  font-size:12px;
-  color:rgba(255,255,255,.70);
-}
-.brandLinks a{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(201,162,74,.16);
-  background:rgba(0,0,0,.14);
-}
-.controlsRight{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
-}
-
-/* Segmented controls */
+.brandLeft{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0}
+.brandTitle{font-weight:980;letter-spacing:.6px;font-size:14px;color:rgba(255,255,255,.94);white-space:nowrap}
+.brandSub{font-size:12px;color:rgba(255,255,255,.72);letter-spacing:.2px;white-space:nowrap}
+.brandLinks{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.70)}
+.brandLinks a{padding:6px 10px;border-radius:999px;border:1px solid rgba(201,162,74,.16);background:rgba(0,0,0,.14)}
+.controlsRight{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -137,9 +97,7 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.78);
   padding:10px 12px;min-height:42px;
   font-weight:980;font-size:13px;letter-spacing:.25px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 .seg button[aria-pressed="true"]{
   color:rgba(255,255,255,.95);
@@ -149,287 +107,101 @@ body::before,body::after{pointer-events:none!important}
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
 }
 
-/* =========================
-   STAGE (all visuals live inside; body background untouched)
-   ========================= */
+/* ===== STAGE ===== */
 .stage{
   position:relative;
   width:min(1200px,94vw);
   height:min(1200px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
+  border-radius:34px;
 }
 
-/* ===== Layer containers (absolute) ===== */
+/* LAYER CANVASES (separate layers to prevent “competing UI”) */
 .layer{
   position:absolute;inset:0;
   pointer-events:none;
+  border-radius:34px;
+  overflow:hidden;
 }
-canvas.layerCanvas{
-  width:100%;
-  height:100%;
-  display:block;
-}
+#bgCanvas{z-index:0}
+#dialCanvas{z-index:1}
 
-/* Compass glass slab */
-.compassGlass{
-  position:absolute;
-  left:50%;top:50%;
+/* Compass slab (dark crystal plate) */
+.slab{
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(980px,92vw);
   height:min(980px,92vw);
   border-radius:44px;
   pointer-events:none;
-  z-index:3;
-  background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.10), transparent 58%),
-    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 62%),
-    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
-    linear-gradient(160deg, rgba(255,255,255,.04), rgba(0,0,0,.12));
+  z-index:2;
   border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    0 70px 240px rgba(0,0,0,.42),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -70px 140px rgba(0,0,0,.22);
-  backdrop-filter: blur(6px);
-  opacity:.72; /* transparent glass */
-}
-
-/* Obsidian dial face (transparent) */
-.dial{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  border-radius:999px;
-  pointer-events:none;
-  z-index:4;
-  overflow:hidden;
-}
-.dial::before{
-  content:"";
-  position:absolute;inset:0;border-radius:999px;
   background:
-    radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.12) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.00));
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
+    linear-gradient(160deg, rgba(10,12,16,.88), rgba(6,8,10,.96));
   box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.08),
-    inset 0 0 80px rgba(0,0,0,.30),
-    0 50px 180px rgba(0,0,0,.18);
-  opacity:.78;
-}
-.dial::after{
-  content:"";
-  position:absolute;inset:-14%;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
-
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.12) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.12) 49.7% 50.3%, transparent 50.3% 100%),
-
-    /* curved “3D” inlay (no flat orthogonal grid) */
-    repeating-radial-gradient(circle at 50% 50%,
-      rgba(201,162,74,.07) 0 1px,
-      transparent 1px 26px
-    ),
-
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.2px);
-  opacity:.60;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-}
-
-/* Engraved 16 direction labels on dial (black print + gold overlay) */
-.dirMarks{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  pointer-events:none;
-  z-index:5;
-}
-.dirMarks span{
-  position:absolute;
-  font-weight:980;
-  letter-spacing:1.5px;
-  font-size:11px;
-  color:rgba(0,0,0,.70);
-  text-shadow:
-    0 0 0 rgba(0,0,0,0),
-    0 0 18px rgba(0,0,0,.28);
-}
-.dirMarks span::after{
-  content:attr(data-t);
-  position:absolute;
-  left:0;top:0;
-  color:rgba(201,162,74,.55);
-  transform:translate(1px, -1px);
-  text-shadow:0 0 12px rgba(201,162,74,.22);
-  pointer-events:none;
-}
-.dirMarks .N{left:50%;top:14px;transform:translateX(-50%);font-size:12px}
-.dirMarks .E{right:14px;top:50%;transform:translateY(-50%);font-size:12px}
-.dirMarks .S{left:50%;bottom:14px;transform:translateX(-50%);font-size:12px}
-.dirMarks .W{left:14px;top:50%;transform:translateY(-50%);font-size:12px}
-
-/* place 16 around ring */
-.dirMarks .NNE{left:67%;top:6%;transform:translate(-50%,-50%)}
-.dirMarks .NE {left:78%;top:18%;transform:translate(-50%,-50%)}
-.dirMarks .ENE{left:92%;top:34%;transform:translate(-50%,-50%)}
-.dirMarks .ESE{left:92%;top:66%;transform:translate(-50%,-50%)}
-.dirMarks .SE {left:78%;top:82%;transform:translate(-50%,-50%)}
-.dirMarks .SSE{left:67%;top:94%;transform:translate(-50%,-50%)}
-.dirMarks .SSW{left:33%;top:94%;transform:translate(-50%,-50%)}
-.dirMarks .SW {left:22%;top:82%;transform:translate(-50%,-50%)}
-.dirMarks .WSW{left:8%; top:66%;transform:translate(-50%,-50%)}
-.dirMarks .WNW{left:8%; top:34%;transform:translate(-50%,-50%)}
-.dirMarks .NW {left:22%;top:18%;transform:translate(-50%,-50%)}
-.dirMarks .NNW{left:33%;top:6%; transform:translate(-50%,-50%)}
-
-/* ===== Dragons layer ===== */
-.dragons{
-  position:absolute;inset:0;
-  pointer-events:none;
-  z-index:6; /* above dial, below gems */
-  overflow:hidden;
-}
-.dragonWrap{
-  position:absolute;
-  left:-30%;
-  width:160%;
-  height:42%;
-  pointer-events:none;
+    0 70px 240px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -70px 140px rgba(0,0,0,.65);
   opacity:.92;
-  filter: drop-shadow(0 18px 40px rgba(0,0,0,.55));
-}
-.dragonTop{top:8%}
-.dragonBot{bottom:8%}
-
-/* Dragon SVG style (dark green; gold glow text) */
-svg.dragon{
-  width:100%;
-  height:100%;
-}
-.dragonBody{
-  fill:none;
-  stroke:rgba(8,40,22,.95);
-  stroke-width:28;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  filter:url(#softGlow);
-}
-.dragonScales{
-  fill:none;
-  stroke:rgba(10,70,34,.75);
-  stroke-width:10;
-  stroke-linecap:round;
-  stroke-dasharray:10 18;
-  opacity:.75;
-}
-.dragonSpines{
-  fill:none;
-  stroke:rgba(12,90,42,.75);
-  stroke-width:6;
-  stroke-linecap:round;
-  stroke-dasharray:1 22;
-  opacity:.85;
-}
-.dragonHead{
-  fill:rgba(6,28,16,.95);
-  stroke:rgba(201,162,74,.18);
-  stroke-width:2;
-}
-.dragonArm{
-  stroke:rgba(6,28,16,.95);
-  stroke-width:10;
-  stroke-linecap:round;
-}
-.bannerText{
-  font-weight:950;
-  font-size:22px;
-  letter-spacing:.8px;
-  fill:rgba(201,162,74,.92);
-  filter:url(#textGlow);
-  opacity:.95;
 }
 
-/* ===== GEM NODES ===== */
+/* Nodes */
 .node{
-  position:absolute;
-  left:50%;top:50%;
+  position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%) rotate(45deg);
-  cursor:pointer;
-  pointer-events:auto;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.18);
+  cursor:pointer;pointer-events:auto;
+  overflow:hidden;border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:10;
-  border-radius:22px;
+  z-index:10;border-radius:22px;
 }
 .core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
-/* Opaque gem surface (fractal + bevel) */
 .surface{
   background:
-    /* fractal noise (embedded SVG) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 .55 0 0 0  0 0 .35 0 0  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E"),
-    /* top gloss */
-    radial-gradient(120% 90% at 22% 12%, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 52%),
-    /* red energy pocket */
-    radial-gradient(90% 80% at 78% 22%, rgba(255,43,43,.12) 0%, rgba(255,43,43,0) 62%),
-    /* opal sheen */
-    radial-gradient(90% 90% at 76% 78%, rgba(160,90,255,.10) 0%, rgba(160,90,255,0) 64%),
-    /* base onyx */
-    linear-gradient(145deg, rgba(17,22,28,.98), rgba(11,15,20,1));
-  background-blend-mode:screen, normal, normal, normal, normal;
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
+    radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
+    linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
     var(--shadowDeep),
     0 0 24px rgba(255,43,43,.08),
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-
-/* Curved “3D” inlay (no flat grid) */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
   background:
-    radial-gradient(140% 140% at 50% 50%, rgba(201,162,74,0) 58%, rgba(201,162,74,.16) 82%, rgba(201,162,74,0) 100%),
-    repeating-radial-gradient(circle at 50% 50%,
-      rgba(201,162,74,.10) 0 1px,
-      transparent 1px 20px
-    );
-  opacity:.50;
+    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
+  opacity:.34;
+  /* keep inlay in trim zone only */
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 68%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 68%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
 }
-
-/* Bevel edge */
 .surface::after{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,0) 42%),
-    linear-gradient(-45deg, rgba(0,0,0,.50), rgba(0,0,0,0) 46%);
-  opacity:.55;
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
 }
-
-/* glow-only hover */
 .node:hover{
   border-color:rgba(201,162,74,.44);
   box-shadow:
@@ -441,14 +213,12 @@ svg.dragon{
 }
 .node:active{filter:brightness(.98)}
 
-/* inner text */
+/* Inner */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
   text-align:center;
   padding:10px;
   gap:6px;
@@ -461,8 +231,6 @@ svg.dragon{
   line-height:1.05;
   text-shadow:0 0 18px rgba(0,0,0,.42);
   font-size:clamp(10px, 1.15vw, 16px);
-  max-width:100%;
-  word-break:keep-all;
 }
 .code{
   font-weight:950;
@@ -471,48 +239,16 @@ svg.dragon{
   opacity:.78;
 }
 
-/* Corner micro-cardinals on EACH diamond (on corners) */
-.micro{
-  position:absolute;inset:0;
-  pointer-events:none;
-  transform:rotate(-45deg);
-  display:block;
-}
-.micro span{
-  position:absolute;
-  font-weight:980;
-  font-size:10px;
-  letter-spacing:.8px;
-  color:rgba(201,162,74,.62);
-  text-shadow:0 0 10px rgba(0,0,0,.55);
-  opacity:.85;
-}
-.micro .mN{left:50%;top:6px;transform:translateX(-50%)}
-.micro .mE{right:8px;top:50%;transform:translateY(-50%)}
-.micro .mS{left:50%;bottom:6px;transform:translateX(-50%)}
-.micro .mW{left:8px;top:50%;transform:translateY(-50%)}
-
-/* CORE emphasis */
-.core{
-  border-color:rgba(201,162,74,.26);
-  box-shadow:
-    0 54px 170px rgba(0,0,0,.88),
-    0 0 46px rgba(201,162,74,.12),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -64px 110px rgba(0,0,0,.92);
-}
-
-/* ===== BOTTOM CORNERS (EXIT/HUB) ===== */
+/* Corner buttons */
 .corner{
   position:fixed;
   bottom:max(16px, env(safe-area-inset-bottom));
-  z-index:270;
+  z-index:260;
   pointer-events:none;
 }
 .corner .dmini{pointer-events:auto}
 .corner.left{left:16px}
 .corner.right{right:16px}
-
 .dmini{
   width:56px;height:56px;
   border-radius:16px;
@@ -550,43 +286,14 @@ svg.dragon{
   letter-spacing:.4px;
 }
 
-/* ===== BOTTOM PILL ===== */
-.pillWrap{
-  width:min(1120px,94vw);
-  margin:14px auto 0;
-  padding-bottom:90px;
-}
-.pill{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:14px 16px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.14);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.5px;
-}
-.pill b{color:rgba(255,255,255,.95)}
-.pill .g{color:rgba(201,162,74,.80);font-weight:980}
-
-/* ===== RESPONSIVE ===== */
+/* Mobile */
 @media (max-width:720px){
   :root{
-    --D0:196px;--D1:142px;--D2:108px;--D3:84px;
-    --R1:154px;--R2:224px;--R3:288px;
+    --D0:196px; --D1:142px; --D2:108px; --D3:84px;
+    --R1:156px; --R2:228px; --R3:292px;
     --padTop:112px;
   }
-  .stage{height:min(980px,86vh)}
-}
-@media (max-width:520px){
-  :root{
-    --D0:184px;--D1:136px;--D2:104px;--D3:80px;
-    --R1:146px;--R2:214px;--R3:274px;
-  }
+  .stage{height:min(1200px,86vh)}
   .brandSub{display:none}
 }
 </style>
@@ -597,19 +304,15 @@ svg.dragon{
 <div class="top" aria-label="Top controls">
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
-      <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">Mid-Autumn sky · Obsidian dial · Gem navigation · Lens: PLATFORM</div>
+      <div class="brandTitle">WELCOME TO THE COMPASS</div>
+      <div class="brandSub">Visual calibration · L1 (sky+moon+water)</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
       </div>
     </div>
 
-    <div class="controlsRight" aria-label="Language and lens">
-      <!-- ENGLISH ONLY BUILD MODE (locked visible) -->
-      <div class="seg" role="group" aria-label="Language">
-        <button type="button" id="btnEN" aria-pressed="true">EN</button>
-      </div>
+    <div class="controlsRight" aria-label="Lens">
       <div class="seg" role="group" aria-label="Lane">
         <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
         <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
@@ -618,143 +321,36 @@ svg.dragon{
   </div>
 </div>
 
-<div class="stage" id="stage" aria-label="Compass dial">
-  <!-- Layer canvases -->
-  <div class="layer" style="z-index:0"><canvas id="skyC" class="layerCanvas" aria-hidden="true"></canvas></div>
-  <div class="layer" style="z-index:1"><canvas id="cloudC" class="layerCanvas" aria-hidden="true"></canvas></div>
-  <div class="layer" style="z-index:2"><canvas id="waterC" class="layerCanvas" aria-hidden="true"></canvas></div>
-
-  <!-- Glass compass -->
-  <div class="compassGlass" aria-hidden="true"></div>
-  <div class="dial" aria-hidden="true"></div>
-
-  <!-- 16 direction engravings -->
-  <div class="dirMarks" aria-hidden="true">
-    <span class="N" data-t="N">N</span>
-    <span class="E" data-t="E">E</span>
-    <span class="S" data-t="S">S</span>
-    <span class="W" data-t="W">W</span>
-
-    <span class="NNE" data-t="NNE">NNE</span>
-    <span class="NE"  data-t="NE">NE</span>
-    <span class="ENE" data-t="ENE">ENE</span>
-    <span class="ESE" data-t="ESE">ESE</span>
-    <span class="SE"  data-t="SE">SE</span>
-    <span class="SSE" data-t="SSE">SSE</span>
-    <span class="SSW" data-t="SSW">SSW</span>
-    <span class="SW"  data-t="SW">SW</span>
-    <span class="WSW" data-t="WSW">WSW</span>
-    <span class="WNW" data-t="WNW">WNW</span>
-    <span class="NW"  data-t="NW">NW</span>
-    <span class="NNW" data-t="NNW">NNW</span>
-  </div>
-
-  <!-- Dragons (above compass, below gems) -->
-  <div class="dragons" aria-hidden="true">
-    <div class="dragonWrap dragonTop">
-      <svg class="dragon" viewBox="0 0 1400 420" preserveAspectRatio="none">
-        <defs>
-          <filter id="softGlow">
-            <feGaussianBlur stdDeviation="1.6" result="b"/>
-            <feMerge>
-              <feMergeNode in="b"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <filter id="textGlow">
-            <feGaussianBlur stdDeviation="1.2" result="tb"/>
-            <feMerge>
-              <feMergeNode in="tb"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        <!-- main path (animated by JS via path data updates) -->
-        <path id="pTop" class="dragonBody" d="M0,220 C220,120 420,320 640,200 C860,80 1020,320 1200,210 C1300,160 1350,190 1400,210"/>
-        <path id="sTop" class="dragonScales" d="M0,220 C220,120 420,320 640,200 C860,80 1020,320 1200,210 C1300,160 1350,190 1400,210"/>
-        <path id="spTop" class="dragonSpines" d="M0,220 C220,120 420,320 640,200 C860,80 1020,320 1200,210 C1300,160 1350,190 1400,210"/>
-
-        <!-- head (positioned by JS) -->
-        <g id="hTop">
-          <path class="dragonHead" d="M1260 190c26-22 62-22 84 2 18 20 12 46-12 62-22 14-54 16-78 0-22-14-20-44 6-64Z"/>
-          <path class="dragonArm" d="M1240 240c18-20 42-28 62-20"/>
-          <path class="dragonArm" d="M1288 250c18 8 30 22 34 40"/>
-        </g>
-
-        <!-- banner text (ancient CN as requested; simplified to avoid font issues) -->
-        <text id="tTop" class="bannerText" x="720" y="110" text-anchor="middle">少说多做 · 急所不欲，无施于人 · 道可道，非常道</text>
-      </svg>
-    </div>
-
-    <div class="dragonWrap dragonBot">
-      <svg class="dragon" viewBox="0 0 1400 420" preserveAspectRatio="none">
-        <defs>
-          <filter id="softGlow2">
-            <feGaussianBlur stdDeviation="1.6" result="b2"/>
-            <feMerge>
-              <feMergeNode in="b2"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <filter id="textGlow2">
-            <feGaussianBlur stdDeviation="1.2" result="tb2"/>
-            <feMerge>
-              <feMergeNode in="tb2"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        <path id="pBot" class="dragonBody" style="filter:url(#softGlow2)" d="M0,220 C220,320 420,120 640,240 C860,360 1020,120 1200,230 C1300,280 1350,250 1400,230"/>
-        <path id="sBot" class="dragonScales" d="M0,220 C220,320 420,120 640,240 C860,360 1020,120 1200,230 C1300,280 1350,250 1400,230"/>
-        <path id="spBot" class="dragonSpines" d="M0,220 C220,320 420,120 640,240 C860,360 1020,120 1200,230 C1300,280 1350,250 1400,230"/>
-
-        <g id="hBot">
-          <path class="dragonHead" d="M1260 210c26-22 62-22 84 2 18 20 12 46-12 62-22 14-54 16-78 0-22-14-20-44 6-64Z"/>
-          <path class="dragonArm" d="M1240 260c18-20 42-28 62-20"/>
-          <path class="dragonArm" d="M1288 270c18 8 30 22 34 40"/>
-        </g>
-
-        <!-- bottom banner: selected language (EN only build mode) -->
-        <text id="tBot" class="bannerText" style="filter:url(#textGlow2)" x="720" y="330" text-anchor="middle">Say less, do more · If you cannot defend it, do not publish it</text>
-      </svg>
-    </div>
-  </div>
-
-  <!-- Nodes injected by JS -->
-</div>
-
-<div class="pillWrap" aria-label="Compass note">
-  <div class="pill" id="pill">
-    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
-  </div>
+<div class="stage" id="stage" aria-label="Compass">
+  <canvas class="layer" id="bgCanvas"></canvas>
+  <canvas class="layer" id="dialCanvas"></canvas>
+  <div class="slab" aria-hidden="true"></div>
+  <!-- nodes injected -->
 </div>
 
 <div class="corner left" aria-label="Exit">
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
-  <div class="cornerLabel" id="lblExit">EXIT</div>
+  <div class="cornerLabel">EXIT</div>
 </div>
 <div class="corner right" aria-label="Hub">
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
-  <div class="cornerLabel" id="lblHub">HUB</div>
+  <div class="cornerLabel">HUB</div>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only; lane URL-only) =====
+  // ===== state (gd_* only; lane URL-only) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en"; // EN only build mode
+  var lang  = "en"; // EN-only calibration phase
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
-  if(lang!=="en") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -762,11 +358,13 @@ svg.dragon{
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
-    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_lang","en");
     LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
     LS.setItem("gd_depth",depth);
   }catch(e){}
+
+  document.documentElement.lang="en";
 
   function q(over){
     var p=new URLSearchParams();
@@ -778,43 +376,34 @@ svg.dragon{
     if(L==="platform"||L==="engineering") p.set("lane",L);
     return "?"+p.toString();
   }
-
   function go(path){ window.location.href = path + q(); }
 
-  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
-  var CORE_ROUTE = "/index-core/index.html";
-  var EXIT_ROUTE = "/door/";
-  var HUB_ROUTE  = "/home/";
-  var PLACEHOLDER_404 = "/404.html";
+  // ===== routing =====
+  var CORE_ROUTE="/index-core/index.html";
+  var EXIT_ROUTE="/door/";
+  var HUB_ROUTE="/home/";
+  var PLACEHOLDER_404="/404.html";
 
-  // NOTE: Prelude removed. Doctrine fixed. Research included. N/E/S/W meaning per request.
-  var ROUTES_RAW = [
-    // Tier 1 (cardinals)
-    {tier:1, code:"N",  label:{platform:"LAWS",       engineering:"BOUNDS"},   href:"/laws/"},
-    {tier:1, code:"E",  label:{platform:"ENERGY",      engineering:"POWER"},    href:"/explore/frontier/energy/"},
-    {tier:1, code:"S",  label:{platform:"FINANCE",     engineering:"CAPITAL"},  href:"/finance/"},
-    {tier:1, code:"W",  label:{platform:"GOVERNANCE",  engineering:"EXEC"},     href:"/governance/"},
-
-    // Tier 2 (diagonals)
-    {tier:2, code:"NE", label:{platform:"PRODUCTS",    engineering:"DEPLOY"},   href:"/products/"},
-    {tier:2, code:"SE", label:{platform:"RESEARCH",    engineering:"R&D"},      href:"/research/"},
-    {tier:2, code:"SW", label:{platform:"EXPLORE",     engineering:"MODELS"},   href:"/explore/"},
-    {tier:2, code:"NW", label:{platform:"DOCTRINE",    engineering:"CCD"},      href:"/products/capital-doctrine/"},
-
-    // Tier 3 (outer 8)
-    {tier:3, code:"NNE",label:{platform:"EDUCATION",   engineering:"ESL"},      href:"/products/education/"},
-    {tier:3, code:"ENE",label:{platform:"FRONTIER",    engineering:"FRONTIER"}, href:"/explore/frontier/"},
-    {tier:3, code:"ESE",label:{platform:"INFRA",       engineering:"SUBST"},    href:"/explore/infrastructure/"},
-    {tier:3, code:"SSE",label:{platform:"AGRICULTURE", engineering:"FOOD"},     href:"/products/agriculture/"},
-    {tier:3, code:"SSW",label:{platform:"GAUGES",      engineering:"SIGNALS"},  href:"/gauges/"},
-    {tier:3, code:"WSW",label:{platform:"VISION",      engineering:"MAP"},      href:"/explore/frontier/vision/"},
-    {tier:3, code:"WNW",label:{platform:"LATTICE",     engineering:"256"},      href:"/explore/frontier/lattice/"},
-    {tier:3, code:"NNW",label:{platform:"SHIMMER",     engineering:"S.H.I.M.M.E.R."}, href:"/explore/frontier/shimmer/"}
+  var ROUTES_RAW=[
+    {tier:1, code:"N",  label:"LAWS",       href:"/laws/"},
+    {tier:1, code:"E",  label:"ENERGY",     href:"/explore/frontier/energy/"},
+    {tier:1, code:"S",  label:"FINANCE",    href:"/finance/"},
+    {tier:1, code:"W",  label:"GOVERNANCE", href:"/governance/"},
+    {tier:2, code:"NE", label:"PRODUCTS",   href:"/products/"},
+    {tier:2, code:"SE", label:"RESEARCH",   href:"/research/"},
+    {tier:2, code:"SW", label:"EXPLORE",    href:"/explore/"},
+    {tier:2, code:"NW", label:"DOCTRINE",   href:"/products/capital-doctrine/"},
+    {tier:3, code:"NNE",label:"EDUCATION",  href:"/products/education/"},
+    {tier:3, code:"ENE",label:"FRONTIER",   href:"/explore/frontier/"},
+    {tier:3, code:"ESE",label:"INFRA",      href:"/explore/infrastructure/"},
+    {tier:3, code:"SSE",label:"AGRICULTURE",href:"/products/agriculture/"},
+    {tier:3, code:"SSW",label:"GAUGES",     href:"/gauges/"},
+    {tier:3, code:"WSW",label:"VISION",     href:"/explore/frontier/vision/"},
+    {tier:3, code:"WNW",label:"LATTICE",    href:"/explore/frontier/lattice/"},
+    {tier:3, code:"NNW",label:"SHIMMER",    href:"/explore/frontier/shimmer/"}
   ];
-
   function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
+    var seen=Object.create(null), out=[];
     for(var i=0;i<list.length;i++){
       var it=list[i];
       var h=(it.href||"").trim();
@@ -825,82 +414,34 @@ svg.dragon{
     }
     return out;
   }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
+  var ROUTES=normalizeRoutes(ROUTES_RAW);
 
-  function labelFor(it){
-    return (lane==="engineering") ? it.label.engineering : it.label.platform;
-  }
-
-  // ===== UI wiring =====
-  var btnLP=document.getElementById("lanePlatform");
-  var btnLE=document.getElementById("laneEngineering");
-  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
-
-  function paintHeader(){
-    document.getElementById("brandSub").textContent =
-      "Mid-Autumn sky · Obsidian dial · Gem navigation · Lens: " + (lane==="engineering"?"ENGINEERING":"PLATFORM");
-  }
-  paintHeader();
-
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-    paintHeader();
-    layoutNodes();
-  }
-  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  // corners
-  function bindCorner(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  bindCorner("btnExit", EXIT_ROUTE);
-  bindCorner("btnHub", HUB_ROUTE);
-
-  // ===== Build gem nodes =====
+  // ===== nodes =====
   var stage=document.getElementById("stage");
-
   function mkNode(word, code, cls){
     var d=document.createElement("div");
-    d.className="node "+cls;
-
-    var surf=document.createElement("div");
-    surf.className="surface";
-    surf.style.position="absolute";
-    surf.style.inset="0";
-    surf.style.borderRadius="inherit";
-
-    var micro=document.createElement("div");
-    micro.className="micro";
-    micro.innerHTML='<span class="mN">N</span><span class="mE">E</span><span class="mS">S</span><span class="mW">W</span>';
+    d.className="node surface "+cls;
+    d.setAttribute("role","button");
+    d.tabIndex=0;
 
     var inner=document.createElement("div");
     inner.className="inner";
-    inner.innerHTML='<div class="word"></div><div class="code"></div>';
-    inner.querySelector(".word").textContent = word;
-    inner.querySelector(".code").textContent = code;
 
-    d.appendChild(surf);
-    d.appendChild(micro);
+    var w=document.createElement("div");
+    w.className="word";
+    w.textContent=word;
+
+    var c=document.createElement("div");
+    c.className="code";
+    c.textContent=code;
+
+    inner.appendChild(w);
+    inner.appendChild(c);
     d.appendChild(inner);
-
     return d;
   }
 
-  function layoutNodes(){
-    // remove old nodes
+  function layout(){
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
@@ -911,29 +452,29 @@ svg.dragon{
     var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
 
     // CORE
-    var core=mkNode("START","CORE","core");
+    var core=mkNode("CORE","INDEX","core");
     core.style.left=cx+"px"; core.style.top=cy+"px";
     core.addEventListener("click", function(){ go(CORE_ROUTE); }, {passive:true});
     core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
     stage.appendChild(core);
 
-    // split tiers
-    var t1=[], t2=[], t3=[];
+    var t1=[],t2=[],t3=[];
     for(var i=0;i<ROUTES.length;i++){
       if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
       else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
       else t3.push(ROUTES[i]);
     }
 
-    // Tier 1 pinned to N/E/S/W
     function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+
     var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
     var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+
     for(var i=0;i<ordered.length;i++){
       var it=ordered[i];
       var x=cx + R1*Math.cos(ang[i]);
       var y=cy + R1*Math.sin(ang[i]);
-      var n=mkNode(labelFor(it), it.code, "l1");
+      var n=mkNode(it.label, it.code, "l1");
       n.style.left=x+"px"; n.style.top=y+"px";
       (function(path, el){
         el.addEventListener("click", function(){ go(path); }, {passive:true});
@@ -942,13 +483,12 @@ svg.dragon{
       stage.appendChild(n);
     }
 
-    // Tier 2 (4 diagonals) start -45°
     for(var i=0;i<t2.length;i++){
       var it=t2[i];
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
       var x=cx + R2*Math.cos(a);
       var y=cy + R2*Math.sin(a);
-      var n=mkNode(labelFor(it), it.code, "l2");
+      var n=mkNode(it.label, it.code, "l2");
       n.style.left=x+"px"; n.style.top=y+"px";
       (function(path, el){
         el.addEventListener("click", function(){ go(path); }, {passive:true});
@@ -957,13 +497,12 @@ svg.dragon{
       stage.appendChild(n);
     }
 
-    // Tier 3 (8) start -67.5°
     for(var i=0;i<t3.length;i++){
       var it=t3[i];
       var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
       var x=cx + R3*Math.cos(a);
       var y=cy + R3*Math.sin(a);
-      var n=mkNode(labelFor(it), it.code, "l3");
+      var n=mkNode(it.label, it.code, "l3");
       n.style.left=x+"px"; n.style.top=y+"px";
       (function(path, el){
         el.addEventListener("click", function(){ go(path); }, {passive:true});
@@ -973,322 +512,183 @@ svg.dragon{
     }
   }
 
+  function bindCorner(id, path){
+    var el=document.getElementById(id);
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+  }
+  bindCorner("btnExit", EXIT_ROUTE);
+  bindCorner("btnHub", HUB_ROUTE);
+
+  // ===== lane toggle (URL-only, no reload) =====
+  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
+  var btnLP=document.getElementById("lanePlatform");
+  var btnLE=document.getElementById("laneEngineering");
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+  }
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== L1 visuals: sky + moon phases + water dial =====
+  var bg=document.getElementById("bgCanvas");
+  var dial=document.getElementById("dialCanvas");
+  var bgCtx=bg.getContext("2d");
+  var dCtx=dial.getContext("2d");
+
+  function resize(){
+    var r=stage.getBoundingClientRect();
+    bg.width=Math.max(1, Math.floor(r.width));
+    bg.height=Math.max(1, Math.floor(r.height));
+    dial.width=bg.width;
+    dial.height=bg.height;
+  }
+
+  // moon phase increments on each visit
+  function getMoonPhase(){
+    var k="gd_moon_phase_v1"; // NOT gd_* (do not persist). Use session only.
+    // Use sessionStorage so it changes per return without polluting LS.
+    var v=0;
+    try{
+      v=parseInt(sessionStorage.getItem(k)||"0",10);
+      if(!isFinite(v)) v=0;
+      v=(v+1)%8;
+      sessionStorage.setItem(k,String(v));
+    }catch(e){ v=(Math.floor(Math.random()*8))%8; }
+    return v;
+  }
+  var moonPhase=getMoonPhase();
+
+  function drawMoon(ctx, x,y, radius, phase){
+    // base glow
+    var g=ctx.createRadialGradient(x,y, radius*0.2, x,y, radius*1.8);
+    g.addColorStop(0,"rgba(255,245,220,.35)");
+    g.addColorStop(1,"rgba(255,245,220,0)");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(x,y,radius*1.8,0,Math.PI*2); ctx.fill();
+
+    // full disc
+    ctx.fillStyle="rgba(255,245,220,.92)";
+    ctx.beginPath(); ctx.arc(x,y,radius,0,Math.PI*2); ctx.fill();
+
+    // crater texture (simple dots)
+    ctx.globalAlpha=0.18;
+    ctx.fillStyle="rgba(0,0,0,.35)";
+    for(var i=0;i<18;i++){
+      var a=i*0.9;
+      var rx=x + Math.cos(a)*radius*0.55 + (i%3)*2;
+      var ry=y + Math.sin(a)*radius*0.35;
+      var rr=radius*(0.05 + (i%5)*0.01);
+      ctx.beginPath(); ctx.arc(rx,ry,rr,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+
+    // phase mask (single disc, no “double moon”)
+    // phase 0 new, 4 full. We keep full possible.
+    var t=phase/7; // 0..1
+    var k=(t<0.5)?(t*2):(1-(t-0.5)*2); // 0..1..0
+    // k=1 full, k=0 new
+    var offset=(1-k)*radius*1.1;
+
+    ctx.save();
+    ctx.globalCompositeOperation="destination-out";
+    ctx.fillStyle="rgba(0,0,0,1)";
+    ctx.beginPath();
+    // dark mask circle shifted
+    ctx.arc(x+offset, y, radius*1.02, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  var t0=performance.now();
+
+  function draw(){
+    var w=bg.width, h=bg.height;
+    var now=performance.now();
+    var t=(now-t0)/1000;
+
+    // BG sky gradient (do not fight ui.css; only inside stage)
+    bgCtx.clearRect(0,0,w,h);
+    var sky=bgCtx.createLinearGradient(0,0,0,h);
+    sky.addColorStop(0,"rgba(255,120,60,.18)");
+    sky.addColorStop(0.45,"rgba(120,0,22,.10)");
+    sky.addColorStop(1,"rgba(0,0,0,.20)");
+    bgCtx.fillStyle=sky;
+    bgCtx.fillRect(0,0,w,h);
+
+    // subtle haze
+    bgCtx.globalAlpha=0.55;
+    for(var i=0;i<5;i++){
+      var cx=w*(0.2+i*0.18);
+      var cy=h*(0.15+i*0.08);
+      var rr=Math.min(w,h)*(0.18+i*0.03);
+      var hz=bgCtx.createRadialGradient(cx,cy,rr*0.1,cx,cy,rr);
+      hz.addColorStop(0,"rgba(255,220,170,.08)");
+      hz.addColorStop(1,"rgba(255,220,170,0)");
+      bgCtx.fillStyle=hz;
+      bgCtx.beginPath(); bgCtx.arc(cx,cy,rr,0,Math.PI*2); bgCtx.fill();
+    }
+    bgCtx.globalAlpha=1;
+
+    // moon (top-right) — L1 only
+    drawMoon(bgCtx, w*0.86, h*0.16, Math.min(w,h)*0.07, moonPhase);
+
+    // Dial canvas: water-like ripples inside a circular “compass lake”
+    dCtx.clearRect(0,0,w,h);
+
+    var cx=w*0.5, cy=h*0.52;
+    var R=Math.min(w,h)*0.38;
+
+    // clip circle
+    dCtx.save();
+    dCtx.beginPath(); dCtx.arc(cx,cy,R,0,Math.PI*2); dCtx.clip();
+
+    // water base
+    var base=dCtx.createRadialGradient(cx,cy,R*0.1,cx,cy,R);
+    base.addColorStop(0,"rgba(255,255,255,.08)");
+    base.addColorStop(0.65,"rgba(0,0,0,.10)");
+    base.addColorStop(1,"rgba(0,0,0,.18)");
+    dCtx.fillStyle=base;
+    dCtx.fillRect(cx-R,cy-R,R*2,R*2);
+
+    // ripples (subtle in L1)
+    dCtx.globalAlpha=0.55;
+    dCtx.strokeStyle="rgba(201,162,74,.12)";
+    for(var k=0;k<10;k++){
+      var r=R*(0.15 + k*0.08) + Math.sin(t*0.9 + k)*3;
+      dCtx.lineWidth=(k%3===0)?1.2:0.8;
+      dCtx.beginPath();
+      dCtx.arc(cx,cy,r,0,Math.PI*2);
+      dCtx.stroke();
+    }
+    dCtx.globalAlpha=1;
+
+    // restore clip
+    dCtx.restore();
+
+    requestAnimationFrame(draw);
+  }
+
   function safeLayout(){
     var r=stage.getBoundingClientRect();
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    layoutNodes();
+    resize();
+    layout();
   }
-  requestAnimationFrame(safeLayout);
+
+  requestAnimationFrame(function(){
+    safeLayout();
+    draw();
+  });
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
-
-  // ===== Visual engines (sky/cloud/water) =====
-  var skyC=document.getElementById("skyC");
-  var cloudC=document.getElementById("cloudC");
-  var waterC=document.getElementById("waterC");
-  var sky=skyC.getContext("2d");
-  var cld=cloudC.getContext("2d");
-  var wat=waterC.getContext("2d");
-
-  function fitCanvas(){
-    var r=stage.getBoundingClientRect();
-    [skyC, cloudC, waterC].forEach(function(c){
-      c.width = Math.max(1, Math.floor(r.width*devicePixelRatio));
-      c.height= Math.max(1, Math.floor(r.height*devicePixelRatio));
-    });
-  }
-  fitCanvas();
-  window.addEventListener("resize", function(){ fitCanvas(); }, {passive:true});
-
-  // Moon phase (no new gd_* keys; non-gd key allowed)
-  var phaseKey="moon_phase_v1";
-  var phase = 0;
-  try{
-    var cur = parseInt(LS.getItem(phaseKey)||"",10);
-    if(isFinite(cur)) phase = cur;
-    // advance one phase each load (wrap 0..7)
-    phase = (phase + 1) % 8;
-    LS.setItem(phaseKey, String(phase));
-  }catch(e){
-    phase = Math.floor(Math.random()*8);
-  }
-
-  // Moon phase mask amount (0=new, 4=full)
-  function phaseLit(p){
-    // map 0..7 to lit fraction; ensure full exists at p=4
-    var table=[0.02,0.18,0.35,0.55,1.0,0.55,0.35,0.18];
-    return table[p%8];
-  }
-
-  // Star positions (fixed)
-  var stars = [];
-  for(var i=0;i<16;i++){
-    stars.push({
-      x: Math.random()*0.9+0.05,
-      y: Math.random()*0.25+0.05,
-      r: Math.random()*1.6+0.8,
-      tw: Math.random()*Math.PI*2
-    });
-  }
-
-  // Lanterns (rise)
-  var lanterns=[];
-  for(var i=0;i<10;i++){
-    lanterns.push({
-      x: Math.random()*0.9+0.05,
-      y: 1.0 + Math.random()*0.7,
-      s: Math.random()*0.9+0.6,
-      v: Math.random()*0.12+0.06
-    });
-  }
-
-  // Clouds (left->right)
-  var clouds=[];
-  for(var i=0;i<8;i++){
-    clouds.push({
-      x: -0.3 + Math.random()*1.6,
-      y: 0.10 + Math.random()*0.55,
-      s: Math.random()*0.55+0.35,
-      v: Math.random()*0.018+0.01
-    });
-  }
-
-  // Dragon animation (right->left across full width; restart only when fully offscreen)
-  var dTop = {t:0, x:1.2};
-  var dBot = {t:0, x:1.2};
-  function updateDragonPositions(dt){
-    dTop.t += dt;
-    dBot.t += dt;
-
-    dTop.x -= dt*0.06;
-    dBot.x -= dt*0.05;
-
-    if(dTop.x < -0.2) dTop.x = 1.2;
-    if(dBot.x < -0.2) dBot.x = 1.2;
-
-    // apply to DOM wrappers
-    var top=document.querySelector(".dragonTop");
-    var bot=document.querySelector(".dragonBot");
-    if(top) top.style.transform = "translateX("+(dTop.x*100)+"vw)";
-    if(bot) bot.style.transform = "translateX("+(dBot.x*100)+"vw)";
-  }
-
-  // Build smooth dragon paths (segmented feel via layered strokes)
-  function makeDragonPath(w,h,flip,tt){
-    // base curve
-    var pts=[];
-    var N=10;
-    for(var i=0;i<=N;i++){
-      var t=i/N;
-      var x=t*w;
-      var y=h*0.5 + Math.sin((t*3.1 + tt*0.8) * Math.PI)*h*0.18 + Math.sin((t*7.4 + tt*1.2)*Math.PI)*h*0.05;
-      if(flip) y = h - y;
-      pts.push({x:x,y:y});
-    }
-    // catmull-rom -> bezier-ish (simple)
-    function p(i){ return pts[Math.max(0, Math.min(N, i))]; }
-    var d="M"+pts[0].x.toFixed(1)+","+pts[0].y.toFixed(1);
-    for(var i=1;i<=N;i++){
-      var p0=p(i-1), p1=p(i), p2=p(i+1);
-      var cx = (p0.x + p1.x)/2;
-      var cy = (p0.y + p1.y)/2;
-      var cx2= (p1.x + p2.x)/2;
-      var cy2= (p1.y + p2.y)/2;
-      d += " Q"+p1.x.toFixed(1)+","+p1.y.toFixed(1)+" "+cx2.toFixed(1)+","+cy2.toFixed(1);
-    }
-    return d;
-  }
-
-  // Sky draw (warm night + moon + stars + reflections hint)
-  function drawSky(t){
-    var w=skyC.width, h=skyC.height;
-    sky.clearRect(0,0,w,h);
-
-    // background gradient (evening sky)
-    var g=sky.createLinearGradient(0,0,0,h);
-    g.addColorStop(0,"rgba(180,30,30,0.85)");
-    g.addColorStop(0.35,"rgba(120,12,20,0.72)");
-    g.addColorStop(0.70,"rgba(40,12,20,0.62)");
-    g.addColorStop(1,"rgba(10,10,18,0.78)");
-    sky.fillStyle=g;
-    sky.fillRect(0,0,w,h);
-
-    // subtle orange haze
-    var hz=sky.createRadialGradient(w*0.25,h*0.18,0,w*0.25,h*0.18,w*0.55);
-    hz.addColorStop(0,"rgba(255,160,80,0.12)");
-    hz.addColorStop(1,"rgba(255,160,80,0)");
-    sky.fillStyle=hz;
-    sky.fillRect(0,0,w,h);
-
-    // moon (single) + craters + glow
-    var mx=w*0.72, my=h*0.16;
-    var mr=Math.min(w,h)*0.055;
-
-    // glow halo
-    var halo=sky.createRadialGradient(mx,my,0,mx,my,mr*4.2);
-    halo.addColorStop(0,"rgba(255,245,220,0.18)");
-    halo.addColorStop(0.35,"rgba(255,245,220,0.10)");
-    halo.addColorStop(1,"rgba(255,245,220,0)");
-    sky.fillStyle=halo;
-    sky.fillRect(0,0,w,h);
-
-    // moon disc
-    sky.save();
-    sky.beginPath();
-    sky.arc(mx,my,mr,0,Math.PI*2);
-    sky.closePath();
-    sky.fillStyle="rgba(255,250,235,0.92)";
-    sky.fill();
-
-    // crater texture
-    sky.globalAlpha=0.22;
-    for(var i=0;i<10;i++){
-      var cx=mx + (Math.random()-0.5)*mr*1.2;
-      var cy=my + (Math.random()-0.5)*mr*1.2;
-      var rr=(Math.random()*0.22+0.06)*mr;
-      sky.beginPath();
-      sky.arc(cx,cy,rr,0,Math.PI*2);
-      sky.fillStyle="rgba(180,160,140,0.55)";
-      sky.fill();
-    }
-
-    // phase shadow (use red-tint rather than black)
-    var lit=phaseLit(phase);
-    sky.globalAlpha=0.95;
-    sky.beginPath();
-    sky.arc(mx,my,mr,0,Math.PI*2);
-    sky.clip();
-    var sx = mx + (1.0-lit)*mr*1.0;
-    var shadow=sky.createRadialGradient(sx,my,mr*0.2,sx,my,mr*1.4);
-    shadow.addColorStop(0,"rgba(180,20,30,0.10)");
-    shadow.addColorStop(0.55,"rgba(120,10,20,0.58)");
-    shadow.addColorStop(1,"rgba(120,10,20,0.92)");
-    sky.fillStyle=shadow;
-    sky.fillRect(mx-mr*2,my-mr*2,mr*4,mr*4);
-    sky.restore();
-
-    // stars (16 + North Star)
-    sky.globalAlpha=1;
-    for(var i=0;i<stars.length;i++){
-      var s=stars[i];
-      var px=w*s.x, py=h*s.y;
-      var tw = 0.65 + 0.35*Math.sin(t*0.8 + s.tw);
-      sky.fillStyle="rgba(255,250,235,"+(0.38*tw)+")";
-      sky.beginPath();
-      sky.arc(px,py,s.r*devicePixelRatio*0.9,0,Math.PI*2);
-      sky.fill();
-    }
-    // North Star (brighter)
-    var nx=w*0.50, ny=h*0.06;
-    var ns=sky.createRadialGradient(nx,ny,0,nx,ny,mr*1.6);
-    ns.addColorStop(0,"rgba(255,250,235,0.65)");
-    ns.addColorStop(0.25,"rgba(255,250,235,0.22)");
-    ns.addColorStop(1,"rgba(255,250,235,0)");
-    sky.fillStyle=ns;
-    sky.fillRect(0,0,w,h);
-  }
-
-  // Cloud draw (translucent, left->right)
-  function drawClouds(t,dt){
-    var w=cloudC.width, h=cloudC.height;
-    cld.clearRect(0,0,w,h);
-
-    for(var i=0;i<clouds.length;i++){
-      var c=clouds[i];
-      c.x += c.v*dt;
-      if(c.x > 1.35) c.x = -0.35;
-
-      var cx=w*c.x, cy=h*c.y;
-      var r=Math.min(w,h)*0.10*c.s;
-
-      cld.globalAlpha=0.12;
-      var g=cld.createRadialGradient(cx,cy,0,cx,cy,r*2.0);
-      g.addColorStop(0,"rgba(255,240,220,0.18)");
-      g.addColorStop(0.4,"rgba(255,200,180,0.10)");
-      g.addColorStop(1,"rgba(255,200,180,0)");
-      cld.fillStyle=g;
-      cld.fillRect(cx-r*2.2, cy-r*1.8, r*4.4, r*3.6);
-    }
-    cld.globalAlpha=1;
-  }
-
-  // Water draw (ripples + reflections)
-  function drawWater(t){
-    var w=waterC.width, h=waterC.height;
-    wat.clearRect(0,0,w,h);
-
-    // water field (lighter than previous to avoid "too dark")
-    var g=wat.createLinearGradient(0,h*0.35,0,h);
-    g.addColorStop(0,"rgba(210,70,70,0.10)");   // sky reflection
-    g.addColorStop(0.45,"rgba(70,30,40,0.18)");
-    g.addColorStop(1,"rgba(10,12,18,0.28)");
-    wat.fillStyle=g;
-    wat.fillRect(0,0,w,h);
-
-    // ripples (subtle but visible; cyclical)
-    wat.globalAlpha=0.18;
-    for(var i=0;i<16;i++){
-      var rr = (i/16)*Math.min(w,h)*0.55 + (Math.sin(t*0.6)*8*devicePixelRatio);
-      wat.beginPath();
-      wat.ellipse(w*0.5,h*0.55, rr*1.6, rr*0.55, 0, 0, Math.PI*2);
-      wat.strokeStyle="rgba(255,250,235,0.18)";
-      wat.lineWidth=1*devicePixelRatio;
-      wat.stroke();
-    }
-    wat.globalAlpha=1;
-
-    // moon reflection
-    var mx=w*0.72, my=h*0.16;
-    var mr=Math.min(w,h)*0.055;
-    var rx=mx, ry=h*0.82;
-    var rg=wat.createRadialGradient(rx,ry,0,rx,ry,mr*6.0);
-    rg.addColorStop(0,"rgba(255,245,220,0.14)");
-    rg.addColorStop(0.35,"rgba(255,245,220,0.08)");
-    rg.addColorStop(1,"rgba(255,245,220,0)");
-    wat.fillStyle=rg;
-    wat.fillRect(0,0,w,h);
-
-    // star sparkles reflection line
-    wat.globalAlpha=0.10;
-    wat.fillStyle="rgba(255,250,235,0.20)";
-    for(var i=0;i<stars.length;i++){
-      var s=stars[i];
-      var px=w*s.x;
-      var py=h*(1 - s.y*0.55);
-      wat.fillRect(px, py, 1*devicePixelRatio, 6*devicePixelRatio);
-    }
-    wat.globalAlpha=1;
-  }
-
-  // ===== Animation loop =====
-  var last=performance.now();
-  function tick(now){
-    var dt=(now-last)/1000;
-    if(dt>0.05) dt=0.05;
-    last=now;
-
-    // canvases
-    drawSky(now/1000);
-    drawClouds(now/1000, dt);
-    drawWater(now/1000);
-
-    // dragons: update path for segmented feel
-    try{
-      var wTop=1400, hTop=420;
-      var pT=makeDragonPath(wTop,hTop,false, now/1000);
-      var pB=makeDragonPath(wTop,hTop,true, now/1000);
-      document.getElementById("pTop").setAttribute("d", pT);
-      document.getElementById("sTop").setAttribute("d", pT);
-      document.getElementById("spTop").setAttribute("d", pT);
-      document.getElementById("pBot").setAttribute("d", pB);
-      document.getElementById("sBot").setAttribute("d", pB);
-      document.getElementById("spBot").setAttribute("d", pB);
-    }catch(e){}
-
-    updateDragonPositions(dt);
-
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
 
 })();
 </script>

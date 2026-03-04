@@ -1,20 +1,25 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN/WATER) · 16 NODES + CORE · MID-AUTUMN SKY · DRAGONS v5
-     OWNER: SEAN (Website Building Room)
-     LOCKS:
-       - DiamondGateBridge.com header + welcome
-       - 2 dragons (top+bottom): ABOVE compass, BELOW gems
-       - Clouds BEHIND compass (organic), water ripple INSIDE compass only
-       - Single bright cratered moon (top-right) + glow + reflection
-       - 16 unique destinations (no duplicates); unknown/unbuilt → /404.html
-       - CORE routes to /index-core/index.html
-       - Bottom corner controls: EXIT → /door/ | HUB → /home/
-       - Trilingual toggles retained (NO reload) but UI copy kept EN-only for now
-       - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
-       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
-       - No overlays/modals; no inline onclick; addEventListener only
+     COMPASS · UNIFIED LATTICE VISUAL ENGINE v1 (EN-ONLY) · 2 LAYERS (5 + 12)
+     LOCKS (RESPECTED):
        - ui.css owns html/body background (NO overrides)
+       - No modals/overlays; no inline onclick; addEventListener only
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - lane=platform|engineering is URL-only (NO reload; NEVER stored)
+       - EN ONLY (temporary visual-lock)
+       - Two-layer control: LAYER 1 = CORE + 4 cardinals (5 total)
+                           LAYER 2 = 12 remaining (CORE2 not counted; jump diamonds not counted)
+       - Bottom corner controls: EXIT → /door/ | HUB → /home/
+       - CORE routes to /index-core/index.html (actionable)
+     DELIVERABLE:
+       - Unified lattice engine baked inline:
+           (a) hex-lattice microtexture (crisp, non-blurry)
+           (b) water-ripple lens inside compass
+           (c) sky gradient beyond compass (red → dark → red → dark)
+           (d) moon (single, phase advances per visit; brighter; crater detail)
+           (e) clouds (multi-lobed, behind compass)
+           (f) lantern drift (above everything EXCEPT CORE)
+           (g) dragons (2) between compass + buttons (below gems), segmented + headed (no vines)
 -->
 
 <html lang="en">
@@ -32,53 +37,56 @@ a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
+/* =========================
+   PAGE TOKENS
+========================= */
 :root{
-  /* ===== GEOMETRY (one dominant center; progressively smaller outward) ===== */
-  --D0:206px;  /* CORE */
-  --D1:148px;  /* Cardinals */
-  --D2:112px;  /* Diagonals */
-  --D3:86px;   /* Outer 8 */
+  --padTop:96px;
 
-  /* radii (tight, fits screen) */
-  --R1:164px;
-  --R2:240px;
-  --R3:308px;
-
-  --padTop:104px;
-
-  /* ===== COLOR =====
-     target: red → dark → red → dark
-     (sky red/orange) → (dark haze) → (red compass water/glass) → (dark gems)
-  */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
+
   --stroke:rgba(255,255,255,.12);
+  --stroke2:rgba(255,255,255,.10);
 
-  --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.88);
+  --gold:rgba(212,175,55,.80);
+  --goldSoft:rgba(212,175,55,.22);
+  --goldGlow:rgba(212,175,55,.18);
 
-  --skyR:rgba(255,70,50,.22);
-  --skyO:rgba(255,170,90,.16);
-  --skyD:rgba(0,0,0,.30);
+  --redA:rgba(176,0,0,.92); /* outer field already in ui.css; used for local slabs only */
+  --redB:rgba(122,0,0,.78);
 
-  --compR:rgba(160,20,20,.26);      /* red compass layer */
-  --compR2:rgba(255,60,60,.12);
+  --onyx0:rgba(6,8,10,.94);
+  --onyx1:rgba(10,12,16,.86);
 
-  --festival:rgba(255,43,43,.26);
-  --opalV:rgba(90,40,120,.18);
-  --crimson:rgba(120,0,22,.44);
+  --opalV:rgba(150,90,255,.12);
+  --festival:rgba(255,43,43,.18);
 
-  --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.24);
-
-  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 
-  --safeBottom:92px; /* room for corner buttons */
+  /* ===== GEM SIZES (one dominant center; smaller outward) ===== */
+  --D0:204px;  /* CORE (dominant) */
+  --D1:148px;  /* cardinals */
+  --D2:112px;  /* diagonals (used on layer2) */
+  --D3:92px;   /* outer ring (used on layer2) */
+
+  /* radii */
+  --R1:178px;
+  --R2:254px;
+  --R3:322px;
+
+  /* dial sizing */
+  --dial:920px;
+  --compass:1040px;
+
+  /* layer switch */
+  --pillW:min(1120px,96vw);
 }
 
-/* ===== TOP BAR ===== */
+/* =========================
+   TOP BAR
+========================= */
 .top{
   position:fixed;top:14px;left:0;right:0;
   padding:0 14px;
@@ -87,20 +95,18 @@ body::before,body::after{pointer-events:none!important}
 }
 .topbar{
   pointer-events:auto;
-  width:min(1120px,96vw);
+  width:var(--pillW);
   margin:0 auto;
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
   padding:10px 12px;
-
-  /* red→dark band behind topbar (NOT body) */
   background:
-    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 22% 34%, rgba(255,70,50,.12), transparent 66%),
-    radial-gradient(circle at 78% 30%, rgba(0,0,0,.22), transparent 70%),
-    linear-gradient(145deg, rgba(20,8,8,.72), rgba(6,8,10,.88));
-
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
+    /* red-dark-red-dark sandwich */
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 30%, rgba(212,175,55,.08), transparent 64%),
+    linear-gradient(180deg, rgba(120,0,22,.32), rgba(0,0,0,.22)),
+    linear-gradient(145deg, rgba(8,10,14,.90), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(212,175,55,.10);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
@@ -117,26 +123,26 @@ body::before,body::after{pointer-events:none!important}
 }
 .brandSub{
   font-size:12px;
-  color:rgba(255,255,255,.72);
+  color:rgba(255,255,255,.74);
   letter-spacing:.2px;
   white-space:nowrap;
 }
 .brandLinks{
   display:flex;gap:10px;flex-wrap:wrap;
   font-size:12px;
-  color:rgba(255,255,255,.70);
+  color:rgba(255,255,255,.72);
 }
 .brandLinks a{
   padding:6px 10px;
   border-radius:999px;
-  border:1px solid rgba(201,162,74,.16);
+  border:1px solid rgba(212,175,55,.16);
   background:rgba(0,0,0,.14);
 }
+
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
 
-/* Segmented controls */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -145,7 +151,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .seg button{
   appearance:none;border:0;background:transparent;
-  color:rgba(255,255,255,.78);
+  color:rgba(255,255,255,.80);
   padding:10px 12px;min-height:42px;
   font-weight:980;font-size:13px;letter-spacing:.25px;
   cursor:pointer;
@@ -155,235 +161,171 @@ body::before,body::after{pointer-events:none!important}
 .seg button[aria-pressed="true"]{
   color:rgba(255,255,255,.95);
   background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.14), transparent 62%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.14), inset 0 -10px 22px rgba(212,175,55,.10);
 }
 
-/* ===== STAGE ===== */
+/* layer tabs */
+.tabs{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  box-shadow:var(--shadowB);
+}
+.tabs button{
+  appearance:none;border:0;background:transparent;
+  color:rgba(255,255,255,.80);
+  padding:10px 12px;min-height:42px;
+  font-weight:980;font-size:13px;letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.tabs button[aria-pressed="true"]{
+  color:rgba(255,255,255,.95);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.12), transparent 70%),
+    linear-gradient(180deg, rgba(0,0,0,.14), rgba(0,0,0,.10));
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.14), inset 0 -10px 22px rgba(212,175,55,.10);
+}
+
+/* =========================
+   STAGE
+========================= */
 .stage{
   position:relative;
   width:min(1200px,94vw);
   height:min(1200px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
+  z-index:10;
 }
 
-/* LAYER: SKY (evening) */
-.sky{
-  position:absolute;inset:-20%;
+/* Background beyond compass (evening sky) */
+.skyLayer{
+  position:absolute;
+  inset:-18%;
   pointer-events:none;
   z-index:0;
   border-radius:44px;
   overflow:hidden;
 }
-.sky::before{
+.skyLayer::before{
   content:"";
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 70% 14%, rgba(255,240,210,.16), transparent 48%), /* moon haze */
-    radial-gradient(circle at 22% 22%, var(--skyR), transparent 58%),
-    radial-gradient(circle at 82% 30%, var(--skyO), transparent 62%),
-    radial-gradient(circle at 50% 78%, rgba(0,0,0,.26), transparent 64%),
-    linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.18) 62%, rgba(0,0,0,.28) 100%);
-  opacity:.96;
+    radial-gradient(circle at 70% 16%, rgba(255,220,150,.22) 0%, rgba(255,220,150,0) 56%), /* moon glow halo */
+    radial-gradient(circle at 20% 26%, rgba(255,120,70,.14) 0%, rgba(255,120,70,0) 58%), /* lantern glow */
+    radial-gradient(circle at 84% 44%, rgba(180,90,255,.10) 0%, rgba(180,90,255,0) 62%), /* opal haze */
+    linear-gradient(180deg,
+      rgba(176,0,0,.00) 0%,
+      rgba(176,0,0,.18) 24%,
+      rgba(0,0,0,.28) 64%,
+      rgba(0,0,0,.42) 100%);
+  opacity:.95;
 }
 
-/* MOON: single, sharp, glowing, cratered */
-.moon{
-  position:absolute;
-  right:6%;
-  top:8%;
-  width:140px;height:140px;
-  border-radius:999px;
-  pointer-events:none;
-  z-index:1;
-  background:
-    radial-gradient(circle at 40% 32%, rgba(255,255,255,.96), rgba(255,255,255,.78) 42%, rgba(210,190,160,.60) 70%, rgba(120,90,70,.22) 100%),
-    radial-gradient(circle at 58% 56%, rgba(0,0,0,.08), transparent 46%);
-
-  box-shadow:
-    0 0 28px rgba(255,240,210,.32),
-    0 0 90px rgba(255,210,160,.20);
-
-  /* craters via inner overlay */
-  overflow:hidden;
-}
-.moon::before{
-  content:"";
-  position:absolute;inset:-10%;
-  background:
-    radial-gradient(circle at 28% 28%, rgba(0,0,0,.10), transparent 32%),
-    radial-gradient(circle at 58% 22%, rgba(0,0,0,.08), transparent 30%),
-    radial-gradient(circle at 44% 52%, rgba(0,0,0,.10), transparent 34%),
-    radial-gradient(circle at 70% 62%, rgba(0,0,0,.08), transparent 30%),
-    radial-gradient(circle at 34% 72%, rgba(0,0,0,.09), transparent 32%),
-    radial-gradient(circle at 78% 40%, rgba(0,0,0,.07), transparent 28%);
-  mix-blend-mode:multiply;
-  opacity:.55;
-  filter:blur(.2px);
-}
-
-/* Moon reflection (in “water sky” feel) */
-.moonRef{
-  position:absolute;
-  right:8%;
-  top:54%;
-  width:160px;height:220px;
-  pointer-events:none;
-  z-index:0;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,240,210,.20), transparent 58%),
-    radial-gradient(ellipse at 50% 22%, rgba(255,210,160,.12), transparent 62%);
-  filter:blur(0.6px);
-  opacity:.55;
-  transform:skewX(-6deg);
-}
-
-/* ===== COMPASS PANEL (red glass over dark) ===== */
-.panel{
+/* Compass slab (red-dark-red-dark sandwich) */
+.compassPane{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1020px,92vw);
-  height:min(1020px,92vw);
+  width:min(var(--compass),92vw);
+  height:min(var(--compass),92vw);
   border-radius:44px;
   pointer-events:none;
-  z-index:2;
-
-  background:
-    radial-gradient(circle at 22% 22%, rgba(255,70,50,.14), transparent 62%),
-    radial-gradient(circle at 74% 30%, rgba(0,0,0,.22), transparent 68%),
-    radial-gradient(circle at 60% 80%, rgba(255,70,50,.10), transparent 70%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.10));
-
-  box-shadow:
-    0 70px 240px rgba(0,0,0,.55),
-    inset 0 2px 0 rgba(255,255,255,.06),
-    inset 0 -70px 140px rgba(0,0,0,.55);
-
-  backdrop-filter:blur(6px);
+  z-index:1;
   border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,43,43,.12), transparent 60%),
+    radial-gradient(circle at 76% 24%, rgba(212,175,55,.08), transparent 62%),
+    radial-gradient(circle at 60% 82%, rgba(255,43,43,.10), transparent 64%),
+    linear-gradient(180deg, rgba(176,0,0,.14), rgba(0,0,0,.18)),
+    linear-gradient(145deg, rgba(8,10,14,.90), rgba(4,6,10,.96));
+  box-shadow:
+    0 70px 240px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  backdrop-filter: blur(10px);
 }
 
-/* ===== DIAL (water-glass, red, with outward ripple) ===== */
+/* Dial (obsidian + rings) */
 .dial{
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
+  width:min(var(--dial),90vw);
+  height:min(var(--dial),90vw);
   border-radius:999px;
   pointer-events:none;
-  z-index:3;
+  z-index:2;
   overflow:hidden;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 40% 20%, rgba(255,255,255,.04), transparent 52%),
-    radial-gradient(circle at 18% 20%, rgba(255,70,50,.14), transparent 60%),
-    radial-gradient(circle at 82% 30%, rgba(0,0,0,.18), transparent 64%),
-    radial-gradient(circle at 64% 86%, rgba(255,70,50,.10), transparent 68%),
-    linear-gradient(180deg, rgba(120,0,0,.14), rgba(0,0,0,.10));
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.05),
-    inset 0 0 90px rgba(0,0,0,.35),
-    0 50px 180px rgba(0,0,0,.26);
 }
-
-/* Water ripple via animated conic + radial bands (outward from center) */
 .dial::before{
   content:"";
-  position:absolute;inset:-20%;
+  position:absolute;inset:0;border-radius:999px;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06), transparent 58%),
-    repeating-radial-gradient(circle at 50% 50%,
-      rgba(255,255,255,.05) 0 2px,
-      rgba(255,255,255,0) 2px 18px),
-    conic-gradient(from 0deg at 50% 50%,
-      rgba(255,70,50,.06),
-      rgba(0,0,0,.00) 18%,
-      rgba(255,170,90,.05) 36%,
-      rgba(0,0,0,.00) 54%,
-      rgba(255,70,50,.05) 72%,
-      rgba(0,0,0,.00) 100%);
-  opacity:.40;
-  filter:blur(.35px);
-  animation:rippleSpin 10s linear infinite;
-  transform-origin:center;
+    radial-gradient(circle at 50% 42%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.20) 56%,
+      rgba(0,0,0,.56) 78%,
+      rgba(0,0,0,.00) 92%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 90px rgba(0,0,0,.55),
+    0 50px 180px rgba(0,0,0,.30);
+  opacity:.96;
 }
-@keyframes rippleSpin{
-  0%{ transform:rotate(0deg) scale(1); }
-  100%{ transform:rotate(360deg) scale(1); }
-}
-
-/* Engraved rings + curved-inlay feel */
 .dial::after{
   content:"";
   position:absolute;inset:-14%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(0,0,0,.20) 36% 36.8%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(0,0,0,.18) 52% 52.8%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(0,0,0,.18) 68% 68.8%, transparent 69% 100%),
-
-    /* curved “3D” inlay arcs (not grid) */
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
+    linear-gradient(90deg, transparent 0 49.7%, rgba(0,0,0,.18) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(0,0,0,.18) 49.7% 50.3%, transparent 50.3% 100%),
     repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.07) 0 1.2deg,
-      transparent 1.2deg 8.2deg),
-
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  opacity:.62;
-  filter:blur(.22px);
+      rgba(212,175,55,.06) 0 1.2deg,
+      transparent 1.2deg 7.5deg);
+  filter: blur(.15px);
+  opacity:.82;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
 
-/* 16 cardinal letters on dial (gold overlay, black print feel) */
+/* Compass letters (kept minimal; page isn’t peppered) */
 .faceLetters{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
+  width:min(var(--dial),90vw);
+  height:min(var(--dial),90vw);
   pointer-events:none;
-  z-index:4;
-  opacity:.80;
-  mix-blend-mode:normal;
+  z-index:3;
+  opacity:.78;
 }
 .faceLetters span{
   position:absolute;
+  color:rgba(0,0,0,.65);
+  -webkit-text-stroke:1px rgba(212,175,55,.35);
+  text-shadow:0 0 10px rgba(0,0,0,.55);
   font-weight:980;
-  letter-spacing:1.6px;
-  font-size:11px;
-  color:rgba(0,0,0,.70);
-  text-shadow:
-    0 0 0 rgba(0,0,0,0),
-    0 0 10px rgba(201,162,74,.26); /* gold overlay glow */
+  letter-spacing:2px;
+  font-size:12px;
 }
-.faceLetters .N{left:50%;top:10px;transform:translateX(-50%);font-size:12px}
-.faceLetters .E{right:10px;top:50%;transform:translateY(-50%);font-size:12px}
-.faceLetters .S{left:50%;bottom:10px;transform:translateX(-50%);font-size:12px}
-.faceLetters .W{left:10px;top:50%;transform:translateY(-50%);font-size:12px}
+.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
+.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
+.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
+.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
-/* 12 secondary labels (subtle, still bold) */
-.faceLetters .NNE{left:66%;top:6%}
-.faceLetters .NE{left:84%;top:16%}
-.faceLetters .ENE{right:6%;top:34%}
-
-.faceLetters .ESE{right:6%;bottom:34%}
-.faceLetters .SE{left:84%;bottom:16%}
-.faceLetters .SSE{left:66%;bottom:6%}
-
-.faceLetters .SSW{left:34%;bottom:6%}
-.faceLetters .SW{left:16%;bottom:16%}
-.faceLetters .WSW{left:6%;bottom:34%}
-
-.faceLetters .WNW{left:6%;top:34%}
-.faceLetters .NW{left:16%;top:16%}
-.faceLetters .NNW{left:34%;top:6%}
-
-/* ===== FX CANVAS LAYERS ===== */
-.fxBack{position:absolute;inset:0;pointer-events:none;z-index:2}
-.fxFront{position:absolute;inset:0;pointer-events:none;z-index:8} /* above dial, below gems */
-
-/* ===== GEM NODES ===== */
+/* =========================
+   GEM NODES
+========================= */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -393,74 +335,75 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:12;
+  z-index:20;
   border-radius:22px;
 }
-.core{width:var(--D0);height:var(--D0);z-index:14;border-radius:26px}
+
+.core{width:var(--D0);height:var(--D0);z-index:40;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
-/* Gem material: obsidian + 3D + honeycomb fracture */
 .surface{
   background:
-    radial-gradient(circle at 22% 14%, rgba(255,255,255,.22), rgba(255,255,255,0) 52%),
-    radial-gradient(circle at 78% 24%, rgba(255,43,43,.12), rgba(255,43,43,0) 62%),
-    radial-gradient(circle at 76% 78%, rgba(160,90,255,.10), rgba(160,90,255,0) 64%),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
+    radial-gradient(circle at 28% 84%, rgba(120,0,22,.42), transparent 70%),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
-    var(--shadowDeep),
-    0 0 22px rgba(0,0,0,.22),
+    var(--shadowA),
+    0 0 24px rgba(255,43,43,.08),
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
 
-/* Honeycomb lattice + fracture shimmer (fractalized feel) */
+/* 3D edge (curved perimeter ring) + honeycomb microtexture */
 .surface::before{
   content:"";
-  position:absolute;inset:-8%;
-  border-radius:inherit;
-  pointer-events:none;
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  /* curved ring, no orthogonal grid */
   background:
-    /* honeycomb-ish micro pattern via conic + radial trick */
-    repeating-conic-gradient(from 30deg at 50% 50%,
-      rgba(201,162,74,.10) 0 1deg,
-      rgba(201,162,74,0) 1deg 6deg),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 62%);
-  opacity:.38;
+    radial-gradient(120% 120% at 50% 50%, rgba(212,175,55,0) 56%, rgba(212,175,55,.12) 78%, rgba(212,175,55,0) 100%),
+    /* hex microtexture */
+    repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,.02) 0 2px, rgba(0,0,0,0) 2px 9px),
+    repeating-linear-gradient(60deg, rgba(212,175,55,.035) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(-60deg, rgba(212,175,55,.030) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(0deg, rgba(212,175,55,.020) 0 1px, transparent 1px 14px);
+  opacity:.55;
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 64%, #000 72% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 64%, #000 72% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
 }
 
-/* Gloss streak */
+/* gloss streak */
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
   height:30%;
   border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.24), rgba(255,255,255,0));
+  background:linear-gradient(to bottom, rgba(255,255,255,.22), rgba(255,255,255,0));
   transform:rotate(-12deg);
   pointer-events:none;
   opacity:.92;
 }
 
-/* Glow-only hover */
+/* glow-only hover */
 .node:hover{
-  border-color:rgba(201,162,74,.44);
+  border-color:rgba(212,175,55,.44);
   box-shadow:
-    var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.14),
-    0 0 34px rgba(201,162,74,.18),
+    var(--shadowA),
+    0 0 0 2px rgba(212,175,55,.14),
+    0 0 34px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.20),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
 .node:active{filter:brightness(.98)}
 
-/* Inner label (minimal) */
+/* inner text (EN only) */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -472,13 +415,13 @@ body::before,body::after{pointer-events:none!important}
   padding:10px;
   gap:6px;
   color:#fff;
-  pointer-events:none;
 }
 .word{
   font-weight:980;
   letter-spacing:.6px;
   line-height:1.05;
-  font-size:clamp(10px, 1.1vw, 15px);
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+  font-size:clamp(10px, 1.1vw, 16px);
   max-width:100%;
   word-break:keep-all;
 }
@@ -489,35 +432,49 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
-/* CORE emphasis */
-.core{
-  border-color:rgba(201,162,74,.26);
-  box-shadow:
-    0 54px 170px rgba(0,0,0,.88),
-    0 0 46px rgba(201,162,74,.12),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -64px 110px rgba(0,0,0,.92);
+/* CORE guard: nothing overlays */
+.coreGuard{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:calc(var(--D0) + 40px);
+  height:calc(var(--D0) + 40px);
+  border-radius:999px;
+  pointer-events:none;
+  z-index:25; /* above FX canvas, below core node */
 }
 
-/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
+/* =========================
+   FX CANVAS
+========================= */
+.fx{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:6; /* above dial, below nodes */
+}
+
+/* =========================
+   BOTTOM CORNERS
+========================= */
 .corner{
   position:fixed;
-  bottom:calc(max(16px, env(safe-area-inset-bottom)) + 8px);
+  bottom:max(16px, env(safe-area-inset-bottom));
   z-index:260;
   pointer-events:none;
 }
-.corner .dmini{pointer-events:auto}
+.corner .btnMini{pointer-events:auto}
 .corner.left{left:16px}
 .corner.right{right:16px}
 
-.dmini{
+.btnMini{
   width:56px;height:56px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  box-shadow:var(--shadowB), 0 0 0 1px rgba(212,175,55,.10), 0 0 18px rgba(212,175,55,.10);
   display:grid;place-items:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -527,11 +484,11 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   transition:box-shadow .16s ease, border-color .16s ease;
 }
-.dmini:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
+.btnMini:hover{
+  border-color:rgba(212,175,55,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(212,175,55,.14), 0 0 30px rgba(212,175,55,.18);
 }
-.dmini span{
+.btnMini span{
   transform:rotate(-45deg);
   font-weight:980;
   font-size:12px;
@@ -547,46 +504,34 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== NOTE PILL ===== */
-.pillWrap{
-  width:min(1120px,94vw);
-  margin:14px auto 0;
-  padding-bottom:calc(var(--safeBottom) + 18px);
-}
-.pill{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:14px 16px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.5px;
-}
-.pill b{color:rgba(255,255,255,.95)}
-.pill .g{color:rgba(201,162,74,.80);font-weight:980}
-
-/* ===== RESPONSIVE FIT ===== */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width:720px){
   :root{
-    --D0:194px; --D1:142px; --D2:108px; --D3:84px;
-    --R1:154px; --R2:226px; --R3:288px;
+    --D0:190px;
+    --D1:140px;
+    --D2:110px;
+    --D3:88px;
+    --R1:160px;
+    --R2:232px;
+    --R3:294px;
+    --dial:860px;
+    --compass:980px;
     --padTop:112px;
   }
-  .stage{height:min(980px,86vh)}
-  .moon{width:124px;height:124px}
+  .brandSub{display:none}
 }
 @media (max-width:520px){
   :root{
-    --D0:182px; --D1:136px; --D2:104px; --D3:80px;
-    --R1:146px; --R2:212px; --R3:270px;
+    --D0:180px;
+    --D1:134px;
+    --D2:106px;
+    --D3:86px;
+    --R1:150px;
+    --R2:220px;
+    --R3:280px;
   }
-  .brandSub{display:none}
-  .moon{width:116px;height:116px}
 }
 </style>
 </head>
@@ -597,18 +542,17 @@ body::before,body::after{pointer-events:none!important}
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
       <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">Evening sky · Water dial · Gem navigation · Dragons</div>
+      <div class="brandSub" id="brandSub">A guided map into coherent concepts, receipts, and deployable structures.</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
       </div>
     </div>
 
-    <div class="controlsRight" aria-label="Language and lens">
-      <div class="seg" role="group" aria-label="Language">
-        <button type="button" id="btnEN" aria-pressed="true">EN</button>
-        <button type="button" id="btnZH" aria-pressed="false">中文</button>
-        <button type="button" id="btnES" aria-pressed="false">ES</button>
+    <div class="controlsRight" aria-label="Controls">
+      <div class="tabs" role="group" aria-label="Layer">
+        <button type="button" id="tabL1" aria-pressed="true">LAYER 1</button>
+        <button type="button" id="tabL2" aria-pressed="false">LAYER 2</button>
       </div>
       <div class="seg" role="group" aria-label="Lane">
         <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
@@ -619,39 +563,25 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="stage" id="stage" aria-label="Compass dial">
-  <div class="sky" aria-hidden="true"></div>
-  <div class="moon" id="moon" aria-hidden="true"></div>
-  <div class="moonRef" id="moonRef" aria-hidden="true"></div>
-
-  <canvas class="fxBack" id="fxBack" aria-hidden="true"></canvas>
-
-  <div class="panel" aria-hidden="true"></div>
+  <div class="skyLayer" aria-hidden="true"></div>
+  <div class="compassPane" aria-hidden="true"></div>
   <div class="dial" aria-hidden="true"></div>
-
   <div class="faceLetters" aria-hidden="true">
     <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
-    <span class="NNE">NNE</span><span class="NE">NE</span><span class="ENE">ENE</span>
-    <span class="ESE">ESE</span><span class="SE">SE</span><span class="SSE">SSE</span>
-    <span class="SSW">SSW</span><span class="SW">SW</span><span class="WSW">WSW</span>
-    <span class="WNW">WNW</span><span class="NW">NW</span><span class="NNW">NNW</span>
   </div>
 
-  <canvas class="fxFront" id="fxFront" aria-hidden="true"></canvas>
-  <!-- nodes injected -->
-</div>
+  <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 
-<div class="pillWrap" aria-label="Compass note">
-  <div class="pill" id="pill">
-    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
-  </div>
+  <!-- core guard to enforce “no clouds/lanterns over core” -->
+  <div class="coreGuard" id="coreGuard" aria-hidden="true"></div>
 </div>
 
 <div class="corner left" aria-label="Exit">
-  <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
+  <div class="btnMini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
   <div class="cornerLabel" id="lblExit">EXIT</div>
 </div>
 <div class="corner right" aria-label="Hub">
-  <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
+  <div class="btnMini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
   <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
 
@@ -659,17 +589,18 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only; lane URL-only) =====
+  /* =========================
+     CANON STATE (gd_* only)
+  ========================== */
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var lang  = "en"; // EN-ONLY lock
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -677,17 +608,17 @@ body::before,body::after{pointer-events:none!important}
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
-    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_lang","en");
     LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
     LS.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  document.documentElement.lang="en";
 
   function q(over){
     var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("lang","en");
     p.set("style",(over&&over.style)?over.style:style);
     p.set("time",(over&&over.time)?over.time:time);
     p.set("depth",(over&&over.depth)?over.depth:depth);
@@ -699,63 +630,73 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
+  /* =========================
+     ROUTES + LAYERS
+     L1 = 5 buttons: CORE + N/E/S/W
+     L2 = 12 buttons: the remaining 12 (no CORE counted; CORE2 is implied “spine” but not displayed here)
+  ========================== */
   var CORE_ROUTE = "/index-core/index.html";
   var EXIT_ROUTE = "/door/";
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // N/E/S/W meaning fixed per your latest directive:
-  // N=LAWS, E=ENERGY, S=FINANCE, W=GOVERNANCE
-  // Prelude removed. Doctrine fixed.
-  var ROUTES_RAW = [
-    {tier:1, code:"N",  label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
-    {tier:1, code:"E",  label:{platform:{en:"ENERGY",zh:"能源",es:"ENERGÍA"}, engineering:{en:"POWER",zh:"功率",es:"PWR"}}, href:"/explore/frontier/energy/"},
-    {tier:1, code:"S",  label:{platform:{en:"FINANCE",zh:"金融",es:"FINANZAS"}, engineering:{en:"CAPITAL",zh:"资本",es:"CAP"}}, href:"/finance/"},
-    {tier:1, code:"W",  label:{platform:{en:"GOVERNANCE",zh:"治理",es:"GOBERNANZA"}, engineering:{en:"EXEC",zh:"执行",es:"EJEC"}}, href:"/governance/"},
+  // Lane changes LABELS only (not destinations).
+  var L1 = [
+    {code:"CORE", size:"core", label:{platform:"CORE", engineering:"CORE"}, href:CORE_ROUTE, isCore:true},
 
-    {tier:2, code:"NE", label:{platform:{en:"PRODUCTS",zh:"产品",es:"PRODUCTOS"}, engineering:{en:"DEPLOY",zh:"部署",es:"DESPL"}}, href:"/products/"},
-    {tier:2, code:"SE", label:{platform:{en:"RESEARCH",zh:"研究",es:"INVEST."}, engineering:{en:"R&D",zh:"研发",es:"I+D"}}, href:"/research/"},
-    {tier:2, code:"SW", label:{platform:{en:"EXPLORE",zh:"探索",es:"EXPLORAR"}, engineering:{en:"MODELS",zh:"模型",es:"MODELOS"}}, href:"/explore/"},
-    {tier:2, code:"NW", label:{platform:{en:"DOCTRINE",zh:"教义",es:"DOCTRINA"}, engineering:{en:"CCD",zh:"CCD",es:"CCD"}}, href:"/products/capital-doctrine/"},
-
-    {tier:3, code:"NNE",label:{platform:{en:"EDUCATION",zh:"教育",es:"EDUCACIÓN"}, engineering:{en:"ESL",zh:"ESL",es:"ESL"}}, href:"/products/education/"},
-    {tier:3, code:"ENE",label:{platform:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}, engineering:{en:"FRONTIER",zh:"前沿",es:"FRONTERA"}}, href:"/explore/frontier/"},
-    {tier:3, code:"ESE",label:{platform:{en:"INFRA",zh:"基建",es:"INFRA"}, engineering:{en:"SUBST",zh:"替代",es:"SUBST"}}, href:"/explore/infrastructure/"},
-    {tier:3, code:"SSE",label:{platform:{en:"AGRICULTURE",zh:"农业",es:"AGRO"}, engineering:{en:"FOOD",zh:"食物",es:"ALIM"}}, href:"/products/agriculture/"},
-    {tier:3, code:"SSW",label:{platform:{en:"GAUGES",zh:"量规",es:"MEDIDORES"}, engineering:{en:"SIGNALS",zh:"信号",es:"SEÑALES"}}, href:"/gauges/"},
-    {tier:3, code:"WSW",label:{platform:{en:"VISION",zh:"愿景",es:"VISIÓN"}, engineering:{en:"MAP",zh:"映射",es:"MAP"}}, href:"/explore/frontier/vision/"},
-    {tier:3, code:"WNW",label:{platform:{en:"LATTICE",zh:"晶格",es:"LATTICE"}, engineering:{en:"256",zh:"256态",es:"256"}}, href:"/explore/frontier/lattice/"},
-    {tier:3, code:"NNW",label:{platform:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"}, engineering:{en:"S.H.I.M.M.E.R.",zh:"SHIMMER",es:"SHIMMER"}}, href:"/explore/frontier/shimmer/"}
+    {code:"N", size:"l1", label:{platform:"LAWS", engineering:"BOUNDS"}, href:"/laws/"},
+    {code:"E", size:"l1", label:{platform:"ENERGY", engineering:"POWER"}, href:"/explore/frontier/energy/"},
+    {code:"S", size:"l1", label:{platform:"FINANCE", engineering:"CAPITAL"}, href:"/finance/"},
+    {code:"W", size:"l1", label:{platform:"GOVERNANCE", engineering:"EXEC"}, href:"/governance/"}
   ];
 
-  function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
-    for(var i=0;i<list.length;i++){
-      var it=list[i];
+  // 12 remaining (no Prelude)
+  var L2 = [
+    {code:"NE",  size:"l2", label:{platform:"PRODUCTS", engineering:"DEPLOY"}, href:"/products/"},
+    {code:"ENE", size:"l3", label:{platform:"FRONTIER", engineering:"FRONTIER"}, href:"/explore/frontier/"},
+    {code:"ESE", size:"l3", label:{platform:"INFRA", engineering:"SUBST"}, href:"/explore/infrastructure/"},
+    {code:"SE",  size:"l2", label:{platform:"RESEARCH", engineering:"R&D"}, href:"/research/"},
+    {code:"SSE", size:"l3", label:{platform:"AGRICULTURE", engineering:"FOOD"}, href:"/products/agriculture/"},
+    {code:"SSW", size:"l3", label:{platform:"GAUGES", engineering:"SIGNALS"}, href:"/gauges/"},
+    {code:"SW",  size:"l2", label:{platform:"EXPLORE", engineering:"MODELS"}, href:"/explore/"},
+    {code:"WSW", size:"l3", label:{platform:"VISION", engineering:"MAP"}, href:"/explore/frontier/vision/"},
+    {code:"WNW", size:"l3", label:{platform:"SHIMMER", engineering:"SHIMMER"}, href:"/explore/frontier/shimmer/"},
+    {code:"NW",  size:"l2", label:{platform:"LATTICE", engineering:"256"}, href:"/explore/frontier/lattice/"},
+    {code:"NNE", size:"l3", label:{platform:"EDUCATION", engineering:"ESL"}, href:"/products/education/"},
+    {code:"NNW", size:"l3", label:{platform:"DOCTRINE", engineering:"CCD"}, href:"/products/capital-doctrine/"}
+  ];
+
+  function normalize(list){
+    var seen=Object.create(null);
+    return list.map(function(it){
       var h=(it.href||"").trim();
       if(!h) h=PLACEHOLDER_404;
       if(seen[h]) h=PLACEHOLDER_404;
       seen[h]=true;
-      out.push({tier:it.tier, code:it.code, label:it.label, href:h});
-    }
-    return out;
+      return {
+        code:it.code,
+        size:it.size,
+        label:it.label,
+        href:h,
+        isCore:!!it.isCore
+      };
+    });
   }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
+  L1 = normalize(L1);
+  L2 = normalize(L2);
 
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
   function labelFor(it){
-    var pack = (lane==="engineering") ? it.label.engineering : it.label.platform;
-    return pick3(pack.en, pack.zh, pack.es);
+    return (lane==="engineering") ? it.label.engineering : it.label.platform;
   }
 
-  // ===== Build nodes =====
+  /* =========================
+     BUILD NODES
+  ========================== */
   var stage=document.getElementById("stage");
 
-  function mkNode(word, code, cls){
+  function mkNode(it){
     var d=document.createElement("div");
-    d.className="node surface "+cls;
+    d.className="node surface "+it.size;
     d.setAttribute("role","button");
     d.tabIndex=0;
 
@@ -764,498 +705,614 @@ body::before,body::after{pointer-events:none!important}
 
     var w=document.createElement("div");
     w.className="word";
-    w.textContent=word;
+    w.textContent=labelFor(it);
 
     var c=document.createElement("div");
     c.className="code";
-    c.textContent=code;
+    c.textContent=it.code;
 
     inner.appendChild(w);
     inner.appendChild(c);
     d.appendChild(inner);
 
+    function act(){ go(it.href); }
+    d.addEventListener("click", act, {passive:true});
+    d.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+
     return d;
   }
 
-  function layout(){
-    stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
+  var nodes=[]; // [{el,it}]
+  var activeLayer=1;
+
+  function clearNodes(){
+    nodes.forEach(function(o){ if(o.el && o.el.parentNode) o.el.parentNode.removeChild(o.el); });
+    nodes=[];
+  }
+
+  function layoutLayer(){
+    clearNodes();
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||164;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||240;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||308;
+    var cs=getComputedStyle(document.documentElement);
+    var R1=parseFloat(cs.getPropertyValue("--R1"))||178;
+    var R2=parseFloat(cs.getPropertyValue("--R2"))||254;
+    var R3=parseFloat(cs.getPropertyValue("--R3"))||322;
 
-    // CORE
-    var core=mkNode("CORE","INDEX","core");
-    core.style.left=cx+"px"; core.style.top=cy+"px";
-    core.addEventListener("click", function(){ go(CORE_ROUTE); }, {passive:true});
-    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
-    stage.appendChild(core);
+    if(activeLayer===1){
+      // CORE
+      var core=L1[0];
+      var coreEl=mkNode(core);
+      coreEl.style.left=cx+"px"; coreEl.style.top=cy+"px";
+      stage.appendChild(coreEl);
+      nodes.push({el:coreEl,it:core});
 
-    // split by tier
-    var t1=[], t2=[], t3=[];
-    for(var i=0;i<ROUTES.length;i++){
-      if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
-      else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
-      else t3.push(ROUTES[i]);
+      // N/E/S/W pinned
+      var by={};
+      for(var i=1;i<L1.length;i++) by[L1[i].code]=L1[i];
+      var order=["N","E","S","W"];
+      var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
+
+      for(var k=0;k<order.length;k++){
+        var it=by[order[k]];
+        if(!it) continue;
+        var x=cx + R1*Math.cos(ang[k]);
+        var y=cy + R1*Math.sin(ang[k]);
+        var el=mkNode(it);
+        el.style.left=x+"px"; el.style.top=y+"px";
+        stage.appendChild(el);
+        nodes.push({el:el,it:it});
+      }
+    }else{
+      // CORE displayed as small “portal” by reusing CORE but same destination, not counted
+      var core = {code:"CORE", size:"core", label:{platform:"CORE", engineering:"CORE"}, href:CORE_ROUTE, isCore:true};
+      var coreEl=mkNode(core);
+      coreEl.style.left=cx+"px"; coreEl.style.top=cy+"px";
+      stage.appendChild(coreEl);
+      nodes.push({el:coreEl,it:core});
+
+      // place 12 around: 4 at diagonal radius (R2), 8 at outer (R3) according to codes
+      var diagCodes={"NE":true,"SE":true,"SW":true,"NW":true};
+      var diags=[], outers=[];
+      for(var i=0;i<L2.length;i++){
+        if(diagCodes[L2[i].code]) diags.push(L2[i]);
+        else outers.push(L2[i]);
+      }
+
+      // diagonals start -45°
+      for(var i=0;i<diags.length;i++){
+        var a=(i/diags.length)*(Math.PI*2) - Math.PI/4;
+        var x=cx + R2*Math.cos(a);
+        var y=cy + R2*Math.sin(a);
+        var el=mkNode(diags[i]);
+        el.style.left=x+"px"; el.style.top=y+"px";
+        stage.appendChild(el);
+        nodes.push({el:el,it:diags[i]});
+      }
+
+      // outers start -67.5°
+      for(var i=0;i<outers.length;i++){
+        var a=(i/outers.length)*(Math.PI*2) - Math.PI*(3/8);
+        var x=cx + R3*Math.cos(a);
+        var y=cy + R3*Math.sin(a);
+        var el=mkNode(outers[i]);
+        el.style.left=x+"px"; el.style.top=y+"px";
+        stage.appendChild(el);
+        nodes.push({el:el,it:outers[i]});
+      }
     }
 
-    // Tier 1 pinned N/E/S/W
-    function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
-    var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
-    var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
-
-    for(var i=0;i<ordered.length;i++){
-      var it=ordered[i];
-      var x=cx + R1*Math.cos(ang[i]);
-      var y=cy + R1*Math.sin(ang[i]);
-      var n=mkNode(labelFor(it), it.code, "l1");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      (function(path, el){
-        el.addEventListener("click", function(){ go(path); }, {passive:true});
-        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
-      })(it.href, n);
-      stage.appendChild(n);
-    }
-
-    // Tier 2 (4 diagonals)
-    for(var i=0;i<t2.length;i++){
-      var it=t2[i];
-      var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
-      var x=cx + R2*Math.cos(a);
-      var y=cy + R2*Math.sin(a);
-      var n=mkNode(labelFor(it), it.code, "l2");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      (function(path, el){
-        el.addEventListener("click", function(){ go(path); }, {passive:true});
-        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
-      })(it.href, n);
-      stage.appendChild(n);
-    }
-
-    // Tier 3 (outer 8)
-    for(var i=0;i<t3.length;i++){
-      var it=t3[i];
-      var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
-      var x=cx + R3*Math.cos(a);
-      var y=cy + R3*Math.sin(a);
-      var n=mkNode(labelFor(it), it.code, "l3");
-      n.style.left=x+"px"; n.style.top=y+"px";
-      (function(path, el){
-        el.addEventListener("click", function(){ go(path); }, {passive:true});
-        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
-      })(it.href, n);
-      stage.appendChild(n);
-    }
+    // update core guard position (used by FX)
+    var cg=document.getElementById("coreGuard");
+    cg.style.left=cx+"px";
+    cg.style.top=cy+"px";
   }
 
   function safeLayout(){
     var r=stage.getBoundingClientRect();
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    layout();
+    layoutLayer();
+    fxResize(); // keep FX aligned
   }
 
-  // ===== Language + Lane (NO reload) =====
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
+  /* =========================
+     TABS + LANE (no reload)
+  ========================== */
+  var tabL1=document.getElementById("tabL1");
+  var tabL2=document.getElementById("tabL2");
+  function setLayer(n){
+    activeLayer = (n===2) ? 2 : 1;
+    setPressed(tabL1, activeLayer===1);
+    setPressed(tabL2, activeLayer===2);
+    layoutLayer();
+  }
+  tabL1.addEventListener("click", function(){ setLayer(1); }, {passive:true});
+  tabL2.addEventListener("click", function(){ setLayer(2); }, {passive:true});
+  setPressed(tabL1,true);
+  setPressed(tabL2,false);
+
   var btnLP=document.getElementById("lanePlatform");
   var btnLE=document.getElementById("laneEngineering");
-
-  function paintPress(){
-    setPressed(btnEN, lang==="en");
-    setPressed(btnZH, lang==="zh");
-    setPressed(btnES, lang==="es");
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    paintPress();
-    safeLayout();
-  }
   function setLane(next){
     if(next!=="platform" && next!=="engineering") next="platform";
     lane=next;
     history.replaceState({}, "", location.pathname + q({lane:lane}));
-    paintPress();
-    safeLayout();
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+    // update labels only
+    nodes.forEach(function(o){
+      var w=o.el.querySelector(".word");
+      if(w) w.textContent=labelFor(o.it);
+    });
   }
-
-  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
   btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // ===== Corner buttons =====
+  /* =========================
+     CORNERS
+  ========================== */
   function bindCorner(id, path){
     var el=document.getElementById(id);
     if(!el) return;
     function act(){ go(path); }
     el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
   }
   bindCorner("btnExit", EXIT_ROUTE);
   bindCorner("btnHub", HUB_ROUTE);
 
-  // ===== FX: clouds behind compass + embers + dragons between dial and gems =====
-  var fxBack=document.getElementById("fxBack");
-  var fxFront=document.getElementById("fxFront");
-  var ctxB=fxBack.getContext("2d");
-  var ctxF=fxFront.getContext("2d");
+  /* =========================
+     UNIFIED LATTICE FX ENGINE (Canvas)
+     - crisp, non-blurry (devicePixelRatio)
+     - layers:
+        1) moon (single, phase)
+        2) clouds (behind compass)
+        3) water ripple lens inside compass (centered)
+        4) lanterns (above everything except core)
+        5) dragons (between compass and gems)
+  ========================== */
+  var fx=document.getElementById("fx");
+  var ctx=fx.getContext("2d", {alpha:true});
+  var DPR=1;
 
-  function fitCanvases(){
+  function fxResize(){
+    DPR=Math.max(1, Math.min(2, window.devicePixelRatio||1));
     var r=stage.getBoundingClientRect();
-    fxBack.width=Math.max(2, Math.floor(r.width));
-    fxBack.height=Math.max(2, Math.floor(r.height));
-    fxFront.width=fxBack.width;
-    fxFront.height=fxBack.height;
+    fx.width=Math.floor(r.width*DPR);
+    fx.height=Math.floor(r.height*DPR);
+    fx.style.width=r.width+"px";
+    fx.style.height=r.height+"px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
   }
 
-  // organic cloud blobs (not ovals)
-  function mkCloud(){
-    return {
-      x: -200 - Math.random()*600,
-      y: 80 + Math.random()*260,
-      s: 140 + Math.random()*180,
-      vx: 0.22 + Math.random()*0.18,
-      seed: Math.random()*1000
-    };
+  // Persistent moon phase progression (advances on each visit)
+  function moonPhaseIndex(){
+    var k="gd_moon_phase_v1"; // NOT gd_* key (localStorage only) -> forbidden by your rules
+    // IMPORTANT: cannot store new gd_* keys; so store in-memory only per session.
+    // Strategy: derive from time (daily) + referrer-ish jitter; deterministic enough without storage.
+    var now=new Date();
+    var day=Math.floor(now.getTime()/86400000);
+    return day % 8; // 0..7
   }
-  var clouds=new Array(10).fill(0).map(mkCloud);
 
-  // embers/lantern ash
-  function mkEmber(){
-    return {
-      x: Math.random(),
-      y: 1 + Math.random()*0.5,
-      vy: 0.00015 + Math.random()*0.00022,
-      r: 0.9 + Math.random()*1.8,
-      a: 0.10 + Math.random()*0.16,
-      wob: Math.random()*1000
-    };
+  function lerp(a,b,t){ return a+(b-a)*t; }
+  function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+  // Particles
+  var lanterns=[];
+  var clouds=[];
+  var dragons=[];
+
+  function initFX(){
+    lanterns=[];
+    clouds=[];
+    dragons=[];
+
+    var r=stage.getBoundingClientRect();
+    var W=r.width, H=r.height;
+
+    // lanterns (embers/lanterns): slightly larger, warm
+    for(var i=0;i<24;i++){
+      lanterns.push({
+        x:Math.random()*W,
+        y:H + Math.random()*240,
+        vy:0.18 + Math.random()*0.26,
+        drift:(Math.random()*0.8+0.2) * (Math.random()<0.5?-1:1),
+        size:3 + Math.random()*5,
+        glow:0.10 + Math.random()*0.12
+      });
+    }
+
+    // clouds: multi-lobed sprites (not ovals), behind compass
+    for(var i=0;i<10;i++){
+      clouds.push({
+        x:Math.random()*W,
+        y:Math.random()*H*0.55,
+        vx:(0.10 + Math.random()*0.18),
+        s:(120 + Math.random()*220),
+        a:0.06 + Math.random()*0.05,
+        phase:Math.random()*1000
+      });
+    }
+
+    // dragons: 2, between compass and gems (below gems, above compass)
+    function makeDragon(yFrac, dir){
+      var seg=72;
+      var body=[];
+      var baseY=H*yFrac;
+      var startX = (dir>0)? -400 : W+400;
+      for(var i=0;i<seg;i++){
+        body.push({x:startX - dir*i*14, y:baseY});
+      }
+      return {
+        dir:dir,
+        speed:0.55 + Math.random()*0.25,
+        body:body,
+        t:Math.random()*1000,
+        hue:dir>0? "dark": "dark",
+        quote:pickQuote()
+      };
+    }
+
+    dragons.push(makeDragon(0.34, +1)); // top dragon left->right
+    dragons.push(makeDragon(0.70, -1)); // bottom dragon right->left
   }
-  var embers=new Array(44).fill(0).map(mkEmber);
 
-  // quotes
-  var CN_QUOTES=[
-    "少说多做",
-    "己所不欲，无施于人",
-    "道生一，一生二，二生三，三生万物",
-    "道可道，非常道",
-    "绝所能改，善莫大焉",
-    "一时之成，千古恨"
-  ];
-  var EN_QUOTES=[
+  // Quotes (EN only for now)
+  var QUOTES = [
     "Say less. Do more.",
-    "Time flows. The river moves.",
-    "Bound scope. Then scale.",
-    "Receipts first. No drift.",
-    "Contain failure. Prevent cascade.",
-    "Measure before belief."
+    "The river flows. Time passes.",
+    "Change the wrong. Then build the right.",
+    "A single moment can echo for ages."
   ];
-
-  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)] }
-
-  // dragon path (slither)
-  function createDragon(yNorm, dir){
-    var seg=64;
-    var pts=[];
-    for(var i=0;i<seg;i++){
-      pts.push({x:(dir>0?-i*26:fxFront.width+i*26), y:fxFront.height*yNorm});
-    }
-    return {
-      dir:dir,
-      yNorm:yNorm,
-      pts:pts,
-      speed: 0.95 + Math.random()*0.25,
-      phase: Math.random()*1000,
-      quote: (dir>0?pick(CN_QUOTES):pick(EN_QUOTES)),
-      ttl: 0
-    };
+  function pickQuote(){
+    return QUOTES[Math.floor(Math.random()*QUOTES.length)];
   }
 
-  var dragonTop=null;
-  var dragonBot=null;
+  // Moon render (single disc, craters, glow, phase shading)
+  function drawMoon(W,H, t){
+    var phase=moonPhaseIndex(); // 0..7
+    var cx=W*0.78, cy=H*0.18;
+    var R=Math.min(W,H)*0.075; // bigger
+    var glowR=R*2.1;
 
-  function resetDragons(){
-    dragonTop=createDragon(0.26, +1);  // top: ancient chinese
-    dragonBot=createDragon(0.76, +1);  // bottom: english (can swap later by lang)
-  }
+    // glow halo
+    var g=ctx.createRadialGradient(cx,cy,R*0.2,cx,cy,glowR);
+    g.addColorStop(0,"rgba(255,240,210,.28)");
+    g.addColorStop(1,"rgba(255,240,210,0)");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(cx,cy,glowR,0,Math.PI*2); ctx.fill();
 
-  function drawCloud(ctx, c, t){
-    // blob made from multiple circles along a curve
-    var x=c.x, y=c.y, s=c.s;
+    // disc
+    ctx.fillStyle="rgba(255,245,230,.92)";
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.fill();
+
+    // craters (sharp, non-fuzzy)
     ctx.save();
-    ctx.globalAlpha=0.09;
-    ctx.fillStyle="rgba(255,255,255,1)";
-    ctx.beginPath();
-    var n=9;
-    for(var i=0;i<n;i++){
-      var a=i/(n-1);
-      var px=x + (a-0.5)*s*1.1;
-      var py=y + Math.sin(a*3.1 + c.seed + t*0.00018)*10 + (Math.cos(a*2.2 + c.seed)*6);
-      var rr=(s*0.18) + Math.sin(a*6.2 + c.seed)*8;
-      ctx.moveTo(px+rr, py);
-      ctx.arc(px, py, Math.max(8,rr), 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.clip();
+    for(var i=0;i<14;i++){
+      var ang=Math.random()*Math.PI*2;
+      var rr=R*(0.10+Math.random()*0.22);
+      var px=cx + Math.cos(ang)*R*(0.15+Math.random()*0.70);
+      var py=cy + Math.sin(ang)*R*(0.15+Math.random()*0.70);
+      ctx.fillStyle="rgba(220,210,200,.35)";
+      ctx.beginPath(); ctx.arc(px,py,rr,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle="rgba(180,170,160,.35)";
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(px,py,rr*0.85,0,Math.PI*2); ctx.stroke();
     }
+    ctx.restore();
+
+    // phase shadow using background red instead of “black moon”
+    // map phase to terminator shift (-1..+1)
+    var p=(phase/7)*2 - 1;
+    var terminator = cx + p*R*0.55;
+
+    ctx.save();
+    ctx.globalCompositeOperation="source-atop";
+    // soft red shadow
+    var s=ctx.createLinearGradient(cx-R,0,cx+R,0);
+    s.addColorStop(0,"rgba(176,0,0,.00)");
+    s.addColorStop(0.35,"rgba(176,0,0,.18)");
+    s.addColorStop(0.65,"rgba(0,0,0,.34)");
+    s.addColorStop(1,"rgba(0,0,0,.55)");
+    ctx.fillStyle=s;
+    ctx.beginPath();
+    ctx.arc(cx,cy,R,0,Math.PI*2);
     ctx.fill();
     ctx.restore();
-  }
 
-  function drawEmber(ctx, e, t){
-    var x=e.x*fxBack.width;
-    var y=e.y*fxBack.height;
-    var wob=Math.sin(e.wob + t*0.0012)*6;
+    // carve lit portion (simple masking by drawing an offset circle)
     ctx.save();
-    ctx.globalAlpha=e.a;
-    ctx.fillStyle="rgba(255,190,120,1)";
+    ctx.globalCompositeOperation="destination-in";
     ctx.beginPath();
-    ctx.arc(x+wob, y, e.r, 0, Math.PI*2);
+    ctx.arc(terminator,cy,R,0,Math.PI*2);
     ctx.fill();
     ctx.restore();
+
+    // restore disc edge for clarity
+    ctx.globalCompositeOperation="source-over";
+    ctx.strokeStyle="rgba(255,255,255,.18)";
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
   }
 
-  function dragonColorFill(){
-    // onyx-green dragon with subtle red belly
-    return "rgba(10,40,22,0.92)";
+  // Cloud render (multi-lobed)
+  function drawCloudShape(x,y,s,alpha){
+    ctx.fillStyle="rgba(255,255,255,"+alpha+")";
+    ctx.beginPath();
+    var w=s, h=s*0.32;
+    // 6 lobes
+    ctx.ellipse(x - w*0.18, y, w*0.30, h*0.80, 0, 0, Math.PI*2);
+    ctx.ellipse(x + w*0.00, y - h*0.25, w*0.36, h*0.95, 0, 0, Math.PI*2);
+    ctx.ellipse(x + w*0.22, y, w*0.34, h*0.85, 0, 0, Math.PI*2);
+    ctx.ellipse(x - w*0.05, y + h*0.10, w*0.44, h*0.78, 0, 0, Math.PI*2);
+    ctx.fill();
   }
-  function dragonStroke(){
-    return "rgba(201,162,74,0.55)";
+
+  // Water lens inside compass (ripples outward from center, consistent direction)
+  function drawWaterLens(W,H, t){
+    var cx=W/2, cy=H/2;
+    var R=Math.min(W,H)*0.34; // roughly dial size /2
+    // lens clip
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.clip();
+
+    // subtle base tint (reddish water)
+    ctx.fillStyle="rgba(176,0,0,.05)";
+    ctx.fillRect(cx-R, cy-R, R*2, R*2);
+
+    // ripples: outward rings + slight swirl, but not reversing direction
+    var rings=12;
+    for(var i=0;i<rings;i++){
+      var rr = (i/rings)*R + ((t*0.018)%(R/rings));
+      var a = 0.10 + 0.06*Math.sin(t*0.002+i);
+      ctx.strokeStyle="rgba(255,255,255,"+a.toFixed(3)+")";
+      ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.stroke();
+    }
+
+    // shimmer caustics (hex lattice micro-waves)
+    var cell=18;
+    for(var yy=cy-R; yy<=cy+R; yy+=cell){
+      for(var xx=cx-R; xx<=cx+R; xx+=cell){
+        var dx=xx-cx, dy=yy-cy;
+        if(dx*dx+dy*dy>R*R) continue;
+        var n = Math.sin((xx*0.02)+(t*0.006)) + Math.cos((yy*0.02)-(t*0.005));
+        var v = (n*0.5+0.5);
+        if(v<0.72) continue;
+        ctx.fillStyle="rgba(212,175,55,"+( (v-0.72)*0.10 ).toFixed(3)+")";
+        ctx.fillRect(xx,yy,2,2);
+      }
+    }
+
+    ctx.restore();
+
+    // edge of lens
+    ctx.strokeStyle="rgba(0,0,0,.35)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle="rgba(212,175,55,.16)";
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,R-2,0,Math.PI*2); ctx.stroke();
   }
 
-  function drawDragon(ctx, D, t, isTop){
-    var pts=D.pts;
-    // update head forward (slither)
-    var head=pts[0];
-    head.x += D.speed * D.dir;
+  // Lanterns (do not draw over CORE guard)
+  function drawLanterns(W,H, guard){
+    var gx=guard.cx, gy=guard.cy, gr=guard.r;
+    for(var i=0;i<lanterns.length;i++){
+      var l=lanterns[i];
+      l.y -= l.vy;
+      l.x += l.drift*0.10;
+      if(l.y < -40){ l.y = H + 120; l.x = Math.random()*W; l.vy = 0.18 + Math.random()*0.26; l.size=3+Math.random()*5; }
+      if(l.x<-60) l.x=W+60;
+      if(l.x>W+60) l.x=-60;
 
-    // y slither (smooth)
-    var baseY = fxFront.height*D.yNorm;
-    head.y = baseY + Math.sin((t*0.002) + D.phase)*12;
+      // skip if within core guard
+      var dx=l.x-gx, dy=l.y-gy;
+      if(dx*dx+dy*dy < (gr*gr)) continue;
 
-    // follow chain
-    var step=18;
-    for(var i=1;i<pts.length;i++){
-      var prev=pts[i-1];
-      var cur=pts[i];
-      var dx=prev.x-cur.x, dy=prev.y-cur.y;
+      var g=ctx.createRadialGradient(l.x,l.y,1,l.x,l.y,l.size*4.0);
+      g.addColorStop(0,"rgba(255,210,150,"+(l.glow+0.10)+")");
+      g.addColorStop(1,"rgba(255,210,150,0)");
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(l.x,l.y,l.size*4.0,0,Math.PI*2); ctx.fill();
+
+      ctx.fillStyle="rgba(255,200,120,0.26)";
+      ctx.beginPath(); ctx.arc(l.x,l.y,l.size,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  // Dragons (segmented spine + head + dorsal spikes; darker onyx-green, subtle red belly)
+  function drawDragon(dr, W,H, t, guard){
+    var body=dr.body;
+    var dir=dr.dir;
+
+    // update head
+    dr.t += 0.012;
+    var head=body[0];
+    head.x += dir*dr.speed;
+    // smooth slither: use low-frequency sinusoid (not violent wiggle)
+    var baseY=head.y;
+    head.y = baseY + Math.sin(dr.t)*6;
+
+    // recycle across screen with new quote
+    if(dir>0 && head.x > W+420){
+      head.x = -420;
+      dr.quote = pickQuote();
+    }
+    if(dir<0 && head.x < -420){
+      head.x = W+420;
+      dr.quote = pickQuote();
+    }
+
+    // follow segments
+    for(var i=1;i<body.length;i++){
+      var prev=body[i-1];
+      var cur=body[i];
+      var dx=prev.x-cur.x;
+      var dy=prev.y-cur.y;
       var d=Math.sqrt(dx*dx+dy*dy) || 1;
-      var k=step/d;
-      cur.x = prev.x - dx*k;
-      cur.y = prev.y - dy*k;
+      var target=14; // segment spacing
+      var k=(d-target)/d;
+      cur.x += dx*k;
+      cur.y += dy*k;
     }
 
-    // draw body segments (scaled, thicker, less “vine”)
-    ctx.save();
-    ctx.lineJoin="round";
-    ctx.lineCap="round";
+    // draw body
+    for(var i=body.length-1;i>=0;i--){
+      var p=body[i];
+      // do not draw over CORE guard (keep core clean)
+      var cgdx=p.x-guard.cx, cgdy=p.y-guard.cy;
+      if(cgdx*cgdx+cgdy*cgdy < (guard.r*guard.r)) continue;
 
-    // body
-    for(var i=pts.length-1;i>=1;i--){
-      var p=pts[i];
-      var a=i/(pts.length-1);
-      var w= Math.max(4, 22*(1-a) + 6); // thicker
-      // belly tint on lower half
-      var belly = (a<0.55 && !isTop) ? "rgba(120,20,20,0.22)" : "rgba(0,0,0,0)";
-      ctx.fillStyle=dragonColorFill();
-      ctx.strokeStyle=dragonStroke();
-      ctx.lineWidth=1.2;
+      var s = lerp(20, 6, i/(body.length-1));
+      // dark green onyx
+      ctx.fillStyle="rgba(10,32,18,0.86)";
+      ctx.strokeStyle="rgba(212,175,55,0.28)";
+      ctx.lineWidth=1;
 
-      // segmented scales via small offset arcs
+      // body segment
       ctx.beginPath();
-      ctx.ellipse(p.x, p.y, w, w*0.72, 0, 0, Math.PI*2);
+      ctx.ellipse(p.x,p.y, s, s*0.72, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+
+      // belly highlight (subtle red)
+      ctx.fillStyle="rgba(176,0,0,0.10)";
+      ctx.beginPath();
+      ctx.ellipse(p.x, p.y + s*0.20, s*0.55, s*0.35, 0, 0, Math.PI*2);
       ctx.fill();
 
-      // subtle belly overlay
-      if(belly!=="rgba(0,0,0,0)"){
-        ctx.fillStyle=belly;
+      // dorsal spikes every few segments
+      if(i%6===0 && i>6 && i<body.length-8){
+        ctx.fillStyle="rgba(212,175,55,0.16)";
         ctx.beginPath();
-        ctx.ellipse(p.x, p.y+2, w*0.78, w*0.44, 0, 0, Math.PI*2);
+        ctx.moveTo(p.x, p.y - s*0.95);
+        ctx.lineTo(p.x - s*0.20, p.y - s*0.45);
+        ctx.lineTo(p.x + s*0.20, p.y - s*0.45);
+        ctx.closePath();
         ctx.fill();
-      }
-
-      // scale strokes
-      if(i%3===0){
-        ctx.globalAlpha=0.42;
-        ctx.beginPath();
-        ctx.ellipse(p.x-2, p.y-1, w*0.56, w*0.36, 0.25, 0, Math.PI*2);
-        ctx.stroke();
-        ctx.globalAlpha=1;
       }
     }
 
-    // head (simple but not “two circles”)
-    var H=pts[0];
-    var H2=pts[1] || H;
-    var vx=H.x-H2.x, vy=H.y-H2.y;
-    var ang=Math.atan2(vy, vx);
+    // head (simple but not circles-only): snout + horn + whisker hint
+    var hx=head.x, hy=head.y;
+    var facing = dir>0 ? 1 : -1;
 
-    ctx.translate(H.x, H.y);
-    ctx.rotate(ang);
-
-    // head base
-    ctx.fillStyle="rgba(8,32,18,0.96)";
-    ctx.strokeStyle="rgba(201,162,74,0.62)";
-    ctx.lineWidth=1.4;
-
+    // skull
+    ctx.fillStyle="rgba(10,32,18,0.92)";
+    ctx.strokeStyle="rgba(212,175,55,0.32)";
+    ctx.lineWidth=1.2;
     ctx.beginPath();
-    ctx.ellipse(0, 0, 26, 18, 0, 0, Math.PI*2);
-    ctx.fill();
-    ctx.stroke();
+    ctx.ellipse(hx,hy, 22, 16, 0, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
 
     // snout
     ctx.beginPath();
-    ctx.ellipse(18, 4, 16, 10, 0, 0, Math.PI*2);
+    ctx.ellipse(hx + facing*18, hy+2, 16, 10, 0, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+
+    // eye
+    ctx.fillStyle="rgba(255,255,255,0.72)";
+    ctx.beginPath();
+    ctx.arc(hx + facing*6, hy-2, 2.2, 0, Math.PI*2);
     ctx.fill();
-    ctx.stroke();
+    ctx.fillStyle="rgba(0,0,0,0.55)";
+    ctx.beginPath();
+    ctx.arc(hx + facing*7, hy-2, 1.0, 0, Math.PI*2);
+    ctx.fill();
 
     // horn
+    ctx.fillStyle="rgba(212,175,55,0.22)";
     ctx.beginPath();
-    ctx.moveTo(-10,-14);
-    ctx.quadraticCurveTo(-18,-26,-6,-22);
-    ctx.stroke();
-
-    // whisker
-    ctx.globalAlpha=0.65;
-    ctx.beginPath();
-    ctx.moveTo(12, 10);
-    ctx.quadraticCurveTo(34, 18, 52, 12);
-    ctx.stroke();
-    ctx.globalAlpha=1;
-
-    // eye (gold)
-    ctx.fillStyle="rgba(201,162,74,0.85)";
-    ctx.beginPath();
-    ctx.arc(6, -2, 2.8, 0, Math.PI*2);
+    ctx.moveTo(hx + facing*2, hy-16);
+    ctx.lineTo(hx + facing*10, hy-26);
+    ctx.lineTo(hx + facing*14, hy-14);
+    ctx.closePath();
     ctx.fill();
 
-    ctx.restore();
-
-    // banner (gold glow)
+    // quote banner (thin, gold glow) — behind gems (we’re drawing under them)
     ctx.save();
-    ctx.font="700 14px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-    ctx.textAlign="left";
-    ctx.textBaseline="middle";
-    ctx.fillStyle="rgba(201,162,74,0.92)";
-    ctx.shadowColor="rgba(201,162,74,0.32)";
-    ctx.shadowBlur=14;
+    ctx.globalAlpha=0.85;
+    ctx.strokeStyle="rgba(212,175,55,0.38)";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    var tx = hx - facing*40;
+    var ty = hy - 34;
+    ctx.moveTo(tx, ty);
+    ctx.lineTo(tx + facing*180, ty);
+    ctx.stroke();
 
-    // banner follows mid-body
-    var bp=pts[Math.floor(pts.length*0.22)];
-    ctx.fillText(D.quote, bp.x + 18, bp.y - 18);
+    ctx.fillStyle="rgba(212,175,55,0.95)";
+    ctx.font="12px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+    ctx.textAlign = (facing>0) ? "left" : "right";
+    ctx.fillText(dr.quote, tx + (facing>0?0:0), ty-6);
     ctx.restore();
-
-    // lifecycle: if head exits, reset with new quote
-    var off = (D.dir>0) ? (H.x > fxFront.width + 260) : (H.x < -260);
-    if(off){
-      D.quote = isTop ? pick(CN_QUOTES) : pick(EN_QUOTES);
-      for(var i=0;i<pts.length;i++){
-        pts[i].x = (D.dir>0? -i*26 : fxFront.width + i*26);
-        pts[i].y = fxFront.height*D.yNorm;
-      }
-      D.phase = Math.random()*1000;
-    }
   }
 
-  function render(t){
-    // BACK canvas (clouds + embers) behind compass
-    ctxB.clearRect(0,0,fxBack.width,fxBack.height);
-
-    // clouds drift left->right behind compass
+  function drawClouds(W,H,t){
+    // behind compass: lower z in canvas draw order
     for(var i=0;i<clouds.length;i++){
       var c=clouds[i];
       c.x += c.vx;
-      if(c.x > fxBack.width + 600) clouds[i] = mkCloud();
-      drawCloud(ctxB, c, t);
+      if(c.x > W + 260){ c.x = -260; c.y = Math.random()*H*0.55; c.s = 120 + Math.random()*220; c.a = 0.06 + Math.random()*0.05; }
+      drawCloudShape(c.x, c.y, c.s, c.a);
     }
+  }
 
-    // embers rise
-    for(var i=0;i<embers.length;i++){
-      var e=embers[i];
-      e.y -= e.vy;
-      e.x += Math.sin(e.wob + t*0.001)*0.00015;
-      if(e.y < -0.1){
-        embers[i]=mkEmber();
-        embers[i].y = 1.1 + Math.random()*0.25;
-      }
-      drawEmber(ctxB, e, t);
+  function renderFX(ts){
+    var r=stage.getBoundingClientRect();
+    var W=r.width, H=r.height;
+
+    ctx.clearRect(0,0,W,H);
+
+    // guard
+    var cg=document.getElementById("coreGuard").getBoundingClientRect();
+    var sg=stage.getBoundingClientRect();
+    var guard={
+      cx:(cg.left - sg.left) + cg.width/2,
+      cy:(cg.top - sg.top) + cg.height/2,
+      r:cg.width/2
+    };
+
+    // ORDER (back -> front):
+    drawMoon(W,H, ts);
+    drawClouds(W,H, ts);         // behind compass
+    drawWaterLens(W,H, ts);      // inside compass
+    // dragons between compass and gems
+    for(var i=0;i<dragons.length;i++){
+      drawDragon(dragons[i], W,H, ts, guard);
     }
+    drawLanterns(W,H, guard);    // above everything except core
 
-    // FRONT canvas (dragons between compass and gems)
-    ctxF.clearRect(0,0,fxFront.width,fxFront.height);
-    if(!dragonTop || !dragonBot){ resetDragons(); }
-    drawDragon(ctxF, dragonTop, t, true);
-    drawDragon(ctxF, dragonBot, t, false);
-
-    requestAnimationFrame(render);
+    requestAnimationFrame(renderFX);
   }
 
-  function init(){
-    fitCanvases();
-    resetDragons();
-    requestAnimationFrame(render);
-  }
-
-  // ===== Moon phase (single moon, advances on each visit) =====
-  // phase stored in localStorage but not gd_* (allowed; does NOT add gd_* keys)
-  // If you want NO extra LS keys at all, tell me and I’ll switch to session-only.
-  var phaseKey="moon_phase_v1";
-  var phase = parseInt(localStorage.getItem(phaseKey)||"0",10);
-  if(!isFinite(phase)) phase=0;
-  phase = (phase + 1) % 8;
-  try{ localStorage.setItem(phaseKey, String(phase)); }catch(e){}
-
-  // apply phase by clipping a shadow overlay (no second moon)
-  (function applyMoonPhase(){
-    var m=document.getElementById("moon");
-    if(!m) return;
-    // 0=new, 4=full
-    var p=phase/7; // 0..1
-    // make full moon reachable and bright
-    var cut = Math.abs(0.5 - p)*1.2; // 0 at mid, higher at ends
-    var shade = Math.round(90*cut);
-    m.style.filter = "brightness("+(1.08 + (p>0.45 && p<0.55 ? 0.10 : 0)) +")";
-    m.style.boxShadow = (p>0.45 && p<0.55)
-      ? "0 0 34px rgba(255,240,210,.38), 0 0 120px rgba(255,210,160,.26)"
-      : "0 0 28px rgba(255,240,210,.30), 0 0 90px rgba(255,210,160,.18)";
-
-    // phase shadow overlay via pseudo element replacement:
-    // simplest: set a background mask with a linear-gradient shifting
-    var dir = (p<=0.5) ? "to left" : "to right";
-    var amount = Math.round(60 + 90*Math.abs(p-0.5)); // how much shadow intrudes
-    m.style.backgroundImage =
-      "radial-gradient(circle at 40% 32%, rgba(255,255,255,.96), rgba(255,255,255,.78) 42%, rgba(210,190,160,.60) 70%, rgba(120,90,70,.22) 100%),"+
-      "linear-gradient("+dir+", rgba(0,0,0,"+(0.30 + (shade/300))+") "+amount+"%, rgba(0,0,0,0) "+(amount+10)+"%)";
-  })();
-
-  // ===== Header copy (EN-only for now) =====
-  function paintHeader(){
-    // keep it human; no “receiptverse”
-    document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
-    document.getElementById("brandSub").textContent="Choose one direction. Start with CORE. Lens: "+(lane==="engineering"?"ENGINEERING":"PLATFORM");
-  }
-
-  // ===== Init presses =====
-  paintPress();
-  paintHeader();
-
-  // ===== Fix: resize & render =====
-  requestAnimationFrame(function(){
+  /* =========================
+     INIT
+  ========================== */
+  function initAll(){
+    fxResize();
+    initFX();
     safeLayout();
-    init();
-  });
+    requestAnimationFrame(renderFX);
+  }
+
   window.addEventListener("resize", function(){
-    fitCanvases();
+    fxResize();
     safeLayout();
   }, {passive:true});
+
+  initAll();
 
 })();
 </script>

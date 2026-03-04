@@ -8,13 +8,17 @@
    - Does NOT touch html/body background (ui.css owns field)
    - Does NOT define geometry (branch.css owns geometry)
    - Canon keys only: gd_lang, gd_depth, gd_time, gd_style
-   - Canon langs: ["en","zh","es"]  primary: "en"
+   - Canon langs: ["en","zh","es"] primary: "en"
    - Gate deep pages if gd_lang invalid (root/index/door are ungated)
 
    TELEMETRY (ADDED):
    - Emits minimal events to Cloudflare Worker endpoint (POST JSON)
    - No new gd_* keys
    - Stores only a non-gd session id under cte_sid_v1
+
+   PATCH (PER SEAN / DRIFT FIX):
+   - Accept uppercase lang inputs (EN/ZH/ES) by coercing to lowercase
+   - Accept common zh variants (zh-cn/zh-hans -> zh)
    ============================================================ */
 
 (function(){
@@ -67,6 +71,18 @@
     }
   }
 
+  // ---------- Canon coercion ----------
+  function canonLang(v){
+    if(!v) return "";
+    v = String(v).trim();
+    if(!v) return "";
+    v = v.toLowerCase();
+    // common variants -> zh
+    if(v === "zh-cn" || v === "zh-hans" || v === "zh-hans-cn" || v === "zh-hans-hk" || v === "zh-hant") return "zh";
+    // tolerate EN/ZH/ES etc already handled by lowercasing
+    return v;
+  }
+
   // ---------- Drift cleanup (LOCKED) ----------
   function cleanupDrift(){
     var lang  = lsGet(K_LANG);
@@ -74,7 +90,11 @@
     var time  = lsGet(K_TIME);
     var style = lsGet(K_STYLE);
 
-    if(lang && !ALLOW_LANG[lang])     lsDel(K_LANG);
+    if(lang){
+      var cl = canonLang(lang);
+      if(!ALLOW_LANG[cl]) lsDel(K_LANG);
+      else if(cl !== lang) lsSet(K_LANG, cl);
+    }
     if(depth && !ALLOW_DEPTH[depth])  lsDel(K_DEPTH);
     if(time && !ALLOW_TIME[time])     lsDel(K_TIME);
     if(style && !ALLOW_STYLE[style])  lsDel(K_STYLE);
@@ -82,7 +102,7 @@
 
   // ---------- Normalize (URL → LS → defaults) ----------
   function normalize(){
-    var lang  = qsGet("lang")  || lsGet(K_LANG)  || PRIMARY_LANG;
+    var lang  = canonLang(qsGet("lang")  || lsGet(K_LANG)  || PRIMARY_LANG);
     var depth = qsGet("depth") || lsGet(K_DEPTH) || "explore";
     var time  = qsGet("time")  || lsGet(K_TIME)  || "now";
     var style = qsGet("style") || lsGet(K_STYLE) || "formal";
@@ -115,7 +135,7 @@
 
     if(isRoot || isIndex || isDoor) return;
 
-    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/gauges", "/innovation", "/prelude", "/research"];
+    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/gauges", "/innovation", "/prelude", "/research", "/index-core", "/governance", "/finance"];
     var isDeep = false;
     for(var i=0;i<deepPrefixes.length;i++){
       if(path.indexOf(deepPrefixes[i]) === 0){ isDeep = true; break; }
@@ -237,7 +257,6 @@
   }
 
   function emit(type, state, payload){
-    // Worker requires {type}
     var evt = {
       ts: nowISO(),
       sid: getSid(),
@@ -255,13 +274,11 @@
   }
 
   function initTelemetry(state){
-    // page_view
     emit("page_view", state, {
       title: String(document.title || "").slice(0,140),
       ref: String(document.referrer || "").slice(0,300)
     });
 
-    // scroll_depth thresholds
     var thresholds = [25,50,75,90];
     var hit = {25:false,50:false,75:false,90:false};
     var last = 0;
@@ -290,7 +307,6 @@
 
     window.addEventListener("scroll", onScroll, {passive:true});
 
-    // click capture (anchors/buttons/accordion-ish)
     function findAnchor(target){
       var el = target;
       for(var i=0;i<8 && el;i++){
@@ -363,7 +379,6 @@
   gate(state);
   loadCanonI18n(state.lang);
 
-  // Telemetry emit (non-blocking)
   initTelemetry(state);
 
   // Optional debug surface (keep existing)

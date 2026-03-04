@@ -1,30 +1,283 @@
-<!doctype html>
-<!-- TNT — /index.html (CACHE-BUSTED ENGINE LOAD) -->
+<!DOCTYPE html>
+<!-- TNT — /index.html
+     GEODIAMETRICS COMPASS INDEX
+     2-LAYER SYSTEM (5 + 12)
+     ENGLISH ONLY
+-->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>Compass · DiamondGateBridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 
-<script defer src="/assets/instruments.js?v=20260304a"></script>
-<script defer src="/assets/bg-engine.js?v=20260304a"></script>
-<script defer src="/assets/dragon-anatomy.js?v=20260304a"></script>
+<script defer src="/assets/instruments.js"></script>
+<script defer src="/assets/bg-engine.js"></script>
+<script defer src="/assets/dragon-anatomy.js"></script>
 
 <style>
+
+/* ===== STAGE ===== */
+
 body{margin:0}
+
+.stage{
+position:relative;
+width:min(1200px,94vw);
+height:min(1100px,86vh);
+margin:90px auto 0;
+pointer-events:none;
+}
+
+/* ===== COMPASS DIAL ===== */
+
+.dial{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:min(900px,90vw);
+height:min(900px,90vw);
+border-radius:999px;
+z-index:2;
+
+background:
+radial-gradient(circle at 50% 40%,rgba(255,255,255,.05),rgba(0,0,0,.45) 80%);
+
+box-shadow:
+0 40px 160px rgba(0,0,0,.75),
+inset 0 0 60px rgba(0,0,0,.65);
+}
+
+/* ===== NODES ===== */
+
+.node{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(45deg);
+
+border-radius:22px;
+border:1px solid rgba(255,255,255,.15);
+
+background:linear-gradient(160deg,#0b0f16,#050608);
+
+box-shadow:
+0 40px 120px rgba(0,0,0,.85),
+inset 0 2px 0 rgba(255,255,255,.1);
+
+cursor:pointer;
+pointer-events:auto;
+transition:.18s;
+}
+
+.node:hover{
+box-shadow:
+0 0 25px rgba(212,175,55,.25),
+0 40px 120px rgba(0,0,0,.85);
+}
+
+/* sizes */
+
+.core{width:200px;height:200px}
+.l1{width:150px;height:150px}
+.l2{width:110px;height:110px}
+.l3{width:92px;height:92px}
+
+/* text */
+
+.inner{
+width:100%;
+height:100%;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+transform:rotate(-45deg);
+
+color:white;
+font-weight:900;
+letter-spacing:.6px;
+font-size:14px;
+text-align:center;
+}
+
+/* ===== TOP BAR ===== */
+
+.topbar{
+position:fixed;
+top:12px;
+left:50%;
+transform:translateX(-50%);
+
+display:flex;
+gap:12px;
+
+padding:8px 14px;
+
+background:#050608;
+border:1px solid rgba(255,255,255,.15);
+border-radius:14px;
+
+z-index:300;
+}
+
+.topbar button{
+background:none;
+border:none;
+color:white;
+font-weight:800;
+cursor:pointer;
+}
+
+/* ===== CORNERS ===== */
+
+.corner{
+position:fixed;
+bottom:20px;
+z-index:300;
+}
+
+.corner.left{left:20px}
+.corner.right{right:20px}
+
+.corner button{
+background:#050608;
+color:white;
+border:1px solid rgba(255,255,255,.15);
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+}
+
 </style>
 </head>
+
+
 <body>
 
-<!-- nothing else needed; your existing compass html can stay,
-     but this file’s sole job is: force engine refresh + prove dragon version -->
+<div class="topbar">
 
-<div style="padding:120px 16px;color:rgba(255,255,255,.75);font:14px ui-monospace,Menlo,Consolas,monospace;">
-  Engine refresh active. If you can see "DRAGON_ANATOMY v1.0" in the bottom-left for 8 seconds, caching is fixed.
+<button id="layer1">LAYER 1</button>
+<button id="layer2">LAYER 2</button>
+
 </div>
+
+<div class="stage" id="stage">
+
+<div class="dial"></div>
+
+</div>
+
+<div class="corner left">
+<button id="exit">EXIT</button>
+</div>
+
+<div class="corner right">
+<button id="hub">HUB</button>
+</div>
+
+
+<script>
+
+(function(){
+
+"use strict"
+
+const stage=document.getElementById("stage")
+
+/* ======================================================
+   LAYER DATA
+====================================================== */
+
+const LAYER1=[
+{label:"CORE",cls:"core",x:0,y:0,href:"/index-core/index.html"},
+
+{label:"LAWS",cls:"l1",x:0,y:-200,href:"/laws/"},
+{label:"ENERGY",cls:"l1",x:200,y:0,href:"/explore/frontier/energy/"},
+{label:"FINANCE",cls:"l1",x:0,y:200,href:"/finance/"},
+{label:"GOVERNANCE",cls:"l1",x:-200,y:0,href:"/governance/"}
+]
+
+const LAYER2=[
+{label:"CORE",cls:"core",x:0,y:0,href:"/index-spine/index.html"},
+
+{label:"PRODUCTS",cls:"l2",x:0,y:-280,href:"/products/"},
+{label:"FRONTIER",cls:"l3",x:150,y:-240,href:"/explore/frontier/"},
+{label:"INFRA",cls:"l3",x:280,y:-120,href:"/explore/infrastructure/"},
+{label:"RESEARCH",cls:"l2",x:280,y:0,href:"/research/"},
+{label:"EXPLORE",cls:"l2",x:280,y:120,href:"/explore/"},
+{label:"AGRICULTURE",cls:"l3",x:150,y:240,href:"/products/agriculture/"},
+{label:"GAUGES",cls:"l2",x:0,y:280,href:"/gauges/"},
+{label:"DOCTRINE",cls:"l3",x:-150,y:240,href:"/products/capital-doctrine/"},
+{label:"LATTICE",cls:"l3",x:-280,y:120,href:"/explore/frontier/lattice/"},
+{label:"SHIMMER",cls:"l3",x:-280,y:0,href:"/explore/frontier/shimmer/"},
+{label:"VISION",cls:"l3",x:-280,y:-120,href:"/explore/frontier/vision/"},
+{label:"EDUCATION",cls:"l3",x:-150,y:-240,href:"/products/education/"}
+]
+
+/* ======================================================
+   BUILD
+====================================================== */
+
+function clearNodes(){
+
+document.querySelectorAll(".node").forEach(n=>n.remove())
+
+}
+
+function createNode(data){
+
+const d=document.createElement("div")
+d.className="node "+data.cls
+
+const inner=document.createElement("div")
+inner.className="inner"
+inner.textContent=data.label
+
+d.appendChild(inner)
+
+d.style.left=`calc(50% + ${data.x}px)`
+d.style.top=`calc(50% + ${data.y}px)`
+
+d.onclick=()=>location.href=data.href
+
+stage.appendChild(d)
+
+}
+
+function render(layer){
+
+clearNodes()
+
+layer.forEach(createNode)
+
+}
+
+/* ======================================================
+   CONTROLS
+====================================================== */
+
+document.getElementById("layer1").onclick=()=>render(LAYER1)
+document.getElementById("layer2").onclick=()=>render(LAYER2)
+
+document.getElementById("exit").onclick=()=>location.href="/door/"
+document.getElementById("hub").onclick=()=>location.href="/home/"
+
+/* ======================================================
+   INITIAL
+====================================================== */
+
+render(LAYER1)
+
+})()
+
+</script>
 
 </body>
 </html>

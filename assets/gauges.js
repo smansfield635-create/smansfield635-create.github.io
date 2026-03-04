@@ -1,278 +1,306 @@
 /* TNT — /assets/gauges.js
-   PURPOSE: Local-only telemetry capture for /gauges/live/ (no backend).
-   OUTPUT: Writes events to localStorage["cte_gauges_v1"].
-   SAFE: No new gd_* keys. Uses existing gd_lang/gd_style/gd_time/gd_depth read-only.
-   NOTE: This file intentionally exists even if you already have /assets/guages.js.
-         Your pages should reference THIS exact path:
-         <script defer src="/assets/gauges.js"></script>
-*/
+   GEODIAMETRICS GAUGES — DEV AUDIT PANEL + SPEC-RUN DUMP (BGC SUPPORT)
+   FULL FILE REPLACEMENT
 
+   PURPOSE:
+   - Provide a dev-only audit overlay (U3) + one-click spec-run dump (U4)
+   - Show: build token, engine versions, canvas counts, RAF loop count (est), FPS avg/p95/p99, longtasks (if available)
+   - Copy JSON report to clipboard
+
+   ACTIVATION (DEV-ONLY):
+   - URL: ?audit=1
+   - OR localStorage key (NON-gd): cte_audit_v1 = "1"
+
+   RULES:
+   - NO new gd_* keys
+   - NO external libs
+   - MUST NOT change engine behavior (read-only + passive hooks)
+*/
 (function(){
   "use strict";
 
-  var STORE_KEY = "cte_gauges_v1";
-  var SID_KEY   = "cte_sid_v1";
-  var DBG_KEY   = "cte_gauges_debug";
-  var MAX_EVENTS = 5000;
+  // ---------- dev-only gate ----------
+  function qsHas(name){
+    try{ return new URLSearchParams(location.search).get(name); }catch(e){ return null; }
+  }
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,String(v)); }catch(e){} }
 
+  var AUDIT_KEY = "cte_audit_v1"; // allowed (non-gd)
+  var enabled = (qsHas("audit")==="1") || (lsGet(AUDIT_KEY)==="1");
+  if(!enabled) return;
+
+  // persist if query used
+  if(qsHas("audit")==="1") lsSet(AUDIT_KEY,"1");
+
+  // ---------- minimal helpers ----------
   function nowISO(){ try{ return new Date().toISOString(); }catch(e){ return ""; } }
+  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+  function px(n){ return (Math.round(n*10)/10); }
 
-  function safeGetLS(k){
-    try{ return localStorage.getItem(k); }catch(e){ return null; }
-  }
-  function safeSetLS(k,v){
-    try{ localStorage.setItem(k,v); }catch(e){}
-  }
-
-  function randHex(n){
-    var s=""; var chars="0123456789abcdef";
-    for(var i=0;i<n;i++) s += chars[(Math.random()*16)|0];
-    return s;
-  }
-  function getSid(){
-    var sid = safeGetLS(SID_KEY);
-    if(sid && sid.length>6) return sid;
-    sid = "cte_" + randHex(8) + "_" + randHex(8);
-    safeSetLS(SID_KEY, sid);
-    return sid;
-  }
-
-  function loadStore(){
-    try{
-      var raw = safeGetLS(STORE_KEY);
-      if(!raw) return {v:1, events:[]};
-      var obj = JSON.parse(raw);
-      if(!obj || !Array.isArray(obj.events)) return {v:1, events:[]};
-      return obj;
-    }catch(e){
-      return {v:1, events:[]};
-    }
-  }
-
-  function saveStore(store){
-    try{
-      if(store.events.length > MAX_EVENTS){
-        store.events = store.events.slice(store.events.length - MAX_EVENTS);
-      }
-      safeSetLS(STORE_KEY, JSON.stringify(store));
-    }catch(e){}
-  }
-
-  function dbgOn(){ return safeGetLS(DBG_KEY)==="1"; }
-  function dbg(){ if(!dbgOn()) return; try{ console.log.apply(console, arguments); }catch(e){} }
-
-  function getState(){
-    var qs = new URLSearchParams(location.search);
-    var lang  = qs.get("lang")  || safeGetLS("gd_lang")  || "en";
-    var style = qs.get("style") || safeGetLS("gd_style") || "informal";
-    var time  = qs.get("time")  || safeGetLS("gd_time")  || "now";
-    var depth = qs.get("depth") || safeGetLS("gd_depth") || "explore";
-    // do not write gd_* here (capture layer is read-only)
-    return {lang:lang, style:style, time:time, depth:depth};
-  }
-
-  function textOf(el){
-    if(!el) return "";
-    var t = (el.getAttribute && el.getAttribute("aria-label")) || "";
-    if(t) return t;
-    t = (el.textContent || "").trim();
-    if(t.length>120) t = t.slice(0,120) + "…";
-    return t;
-  }
-
-  function pathOf(el){
-    try{
-      if(!el) return "";
-      var href = el.getAttribute && el.getAttribute("href");
-      if(!href) return "";
-      // normalize absolute to path+search
-      try{
-        var u = new URL(href, location.origin);
-        return u.pathname + (u.search || "") + (u.hash || "");
-      }catch(e){
-        return href;
-      }
-    }catch(e){
-      return "";
-    }
-  }
-
-  function toSearchOf(el){
-    try{
-      if(!el) return "";
-      var href = el.getAttribute && el.getAttribute("href");
-      if(!href) return "";
-      var u = new URL(href, location.origin);
-      return u.search || "";
-    }catch(e){
-      return "";
-    }
-  }
-
-  function storeEvent(type, payload){
-    var sid = getSid();
-    var evt = {
-      ts: nowISO(),
-      sid: sid,
-      type: type,
-      page: location.pathname,
-      state: getState(),
-      payload: payload || {}
+  // ---------- RAF counting (dev estimate) ----------
+  // We do NOT block RAF. We only count calls.
+  var rafCount = 0;
+  var _raf = window.requestAnimationFrame;
+  if(typeof _raf === "function"){
+    window.requestAnimationFrame = function(cb){
+      rafCount++;
+      return _raf.call(window, cb);
     };
-    var store = loadStore();
-    store.events.push(evt);
-    saveStore(store);
-    dbg("[cte]", type, evt.page, evt.payload);
   }
 
-  // ===== Page view =====
-  storeEvent("page_view", {
-    ref: (document.referrer || "").slice(0, 300),
-    title: (document.title || "").slice(0, 140)
-  });
-
-  // ===== Time-on-page =====
-  var t0 = Date.now();
-  var lastEmit = 0;
-  function emitTime(force){
-    var ms = Date.now() - t0;
-    if(!force){
-      if(ms - lastEmit < 15000) return; // every 15s max
+  // ---------- longtask observer ----------
+  var longtasks = {count:0, max:0};
+  try{
+    if(window.PerformanceObserver){
+      var po = new PerformanceObserver(function(list){
+        var entries = list.getEntries();
+        for(var i=0;i<entries.length;i++){
+          var d = entries[i].duration || 0;
+          longtasks.count++;
+          if(d > longtasks.max) longtasks.max = d;
+        }
+      });
+      po.observe({entryTypes:["longtask"]});
     }
-    lastEmit = ms;
-    storeEvent("time_on_page", {ms: ms});
+  }catch(e){}
+
+  // ---------- FPS + frame stats ----------
+  var frames = [];
+  var lastTs = 0;
+
+  function pushFrame(dtms){
+    frames.push(dtms);
+    if(frames.length > 600) frames.shift(); // rolling window
   }
-  var timeTimer = setInterval(function(){ emitTime(false); }, 15000);
 
-  window.addEventListener("beforeunload", function(){
-    try{ clearInterval(timeTimer); }catch(e){}
-    emitTime(true);
-  });
+  function pctl(arr, p){
+    if(!arr.length) return 0;
+    var a = arr.slice(0).sort(function(x,y){return x-y;});
+    var idx = Math.floor((p/100) * (a.length-1));
+    idx = clamp(idx, 0, a.length-1);
+    return a[idx];
+  }
 
-  // ===== Scroll depth =====
-  var thresholds = [25,50,75,90];
-  var hit = {25:false,50:false,75:false,90:false};
-  function emitScroll(){
-    var doc = document.documentElement;
-    var body = document.body;
-    var scrollTop = (doc && doc.scrollTop) || (body && body.scrollTop) || 0;
-    var scrollH = (doc && doc.scrollHeight) || (body && body.scrollHeight) || 0;
-    var clientH = (doc && doc.clientHeight) || (body && body.clientHeight) || 1;
-    var maxScroll = Math.max(1, scrollH - clientH);
-    var pct = Math.round((scrollTop / maxScroll) * 100);
+  function tick(ts){
+    if(!lastTs) lastTs = ts;
+    var dt = ts - lastTs;
+    lastTs = ts;
+    pushFrame(dt);
+    _raf.call(window, tick);
+  }
+  _raf.call(window, tick);
 
-    for(var i=0;i<thresholds.length;i++){
-      var th = thresholds[i];
-      if(!hit[th] && pct >= th){
-        hit[th] = true;
-        storeEvent("scroll_depth", {pct: th});
+  // ---------- DOM overlay ----------
+  function el(tag, cls, txt){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(txt != null) e.textContent = txt;
+    return e;
+  }
+
+  var panel = el("div","gd_audit");
+  panel.style.position = "fixed";
+  panel.style.right = "12px";
+  panel.style.bottom = "12px";
+  panel.style.zIndex = "99999";
+  panel.style.maxWidth = "360px";
+  panel.style.pointerEvents = "auto";
+  panel.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace";
+  panel.style.fontSize = "12px";
+  panel.style.color = "rgba(255,255,255,.92)";
+  panel.style.background = "rgba(0,0,0,.62)";
+  panel.style.border = "1px solid rgba(255,255,255,.14)";
+  panel.style.borderRadius = "14px";
+  panel.style.boxShadow = "0 18px 60px rgba(0,0,0,.55)";
+  panel.style.backdropFilter = "blur(8px)";
+  panel.style.padding = "10px 10px 8px";
+
+  var title = el("div","gd_audit_t","BGC AUDIT");
+  title.style.fontWeight = "900";
+  title.style.letterSpacing = ".8px";
+  title.style.marginBottom = "6px";
+  panel.appendChild(title);
+
+  var body = el("div","gd_audit_b");
+  panel.appendChild(body);
+
+  var rowWrap = el("div");
+  rowWrap.style.display = "flex";
+  rowWrap.style.gap = "8px";
+  rowWrap.style.marginTop = "8px";
+
+  function mkBtn(label){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.style.cursor = "pointer";
+    b.style.padding = "8px 10px";
+    b.style.borderRadius = "12px";
+    b.style.border = "1px solid rgba(255,255,255,.14)";
+    b.style.background = "rgba(0,0,0,.22)";
+    b.style.color = "rgba(255,255,255,.92)";
+    b.style.fontWeight = "900";
+    b.style.letterSpacing = ".4px";
+    return b;
+  }
+
+  var btnSpec = mkBtn("SPEC-RUN");
+  var btnCopy = mkBtn("COPY JSON");
+  var btnHide = mkBtn("HIDE");
+
+  rowWrap.appendChild(btnSpec);
+  rowWrap.appendChild(btnCopy);
+  rowWrap.appendChild(btnHide);
+  panel.appendChild(rowWrap);
+
+  var note = el("div",null,"dev-only (?audit=1)");
+  note.style.opacity = ".75";
+  note.style.marginTop = "6px";
+  panel.appendChild(note);
+
+  document.body.appendChild(panel);
+
+  // ---------- data collection ----------
+  var lastReport = null;
+
+  function getEngineVersions(){
+    var bgV = (window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : (window.GD_BG ? "BG_OK" : "BG?");
+    var drV = (window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
+    var idxV = (window.__GD_BUILD__) ? String(window.__GD_BUILD__) : "IDX_UNKNOWN";
+    return {idx: idxV, bg: bgV, dragon: drV};
+  }
+
+  function count(sel){
+    try{ return document.querySelectorAll(sel).length; }catch(e){ return 0; }
+  }
+
+  function estimateFps(){
+    if(frames.length < 10) return {avg:0,p95:0,p99:0};
+    var avgMs = frames.reduce(function(a,b){return a+b;},0) / frames.length;
+    var p95 = pctl(frames,95);
+    var p99 = pctl(frames,99);
+    return {
+      avg: (avgMs>0) ? (1000/avgMs) : 0,
+      p95: (p95>0) ? (1000/p95) : 0,
+      p99: (p99>0) ? (1000/p99) : 0,
+      ms_avg: avgMs,
+      ms_p95: p95,
+      ms_p99: p99
+    };
+  }
+
+  function getMem(){
+    try{
+      if(performance && performance.memory && typeof performance.memory.usedJSHeapSize === "number"){
+        return {used: performance.memory.usedJSHeapSize, total: performance.memory.totalJSHeapSize};
       }
-    }
-  }
-  window.addEventListener("scroll", function(){
-    // cheap throttle
-    if((Date.now() - lastEmit) < 800) return;
-    emitScroll();
-  }, {passive:true});
-
-  // ===== Click capture (nav + buttons + “accordions”) =====
-  function findAnchor(target){
-    var el = target;
-    for(var i=0;i<8 && el;i++){
-      if(el.tagName === "A" && el.getAttribute("href")) return el;
-      el = el.parentElement;
-    }
+    }catch(e){}
     return null;
   }
 
-  function classStr(el){
-    try{ return (el && el.className) ? String(el.className).slice(0, 160) : ""; }
-    catch(e){ return ""; }
+  function buildReport(scenarioId){
+    var v = getEngineVersions();
+    var fps = estimateFps();
+    var mem = getMem();
+
+    var rep = {
+      ts: nowISO(),
+      build_token: v.idx,
+      page: location.pathname || "/",
+      engines: { bg: v.bg, dragon: v.dragon },
+      canvas_counts: {
+        gd_bg_canvas: count("#gd_bg_canvas"),
+        gd_dragon_canvas: count("#gd_dragon_canvas")
+      },
+      raf_call_count_est: rafCount,
+      fps: {
+        fps_avg: px(fps.avg),
+        fps_p95: px(fps.p95),
+        fps_p99: px(fps.p99),
+        frame_ms_avg: px(fps.ms_avg),
+        frame_ms_p95: px(fps.ms_p95),
+        frame_ms_p99: px(fps.ms_p99)
+      },
+      longtasks: {
+        count: longtasks.count,
+        max_ms: px(longtasks.max)
+      },
+      viewport: {
+        w: window.innerWidth || 0,
+        h: window.innerHeight || 0,
+        dpr: (function(){ try{ return window.devicePixelRatio||1; }catch(e){ return 1; } })()
+      },
+      memory: mem ? { used_bytes: mem.used, total_bytes: mem.total } : "UNKNOWN",
+      scenario_id: scenarioId || "MANUAL_SPEC_RUN"
+    };
+    return rep;
   }
 
-  function clickHandler(e){
-    var t = e.target;
+  function renderPanel(){
+    var v = getEngineVersions();
+    var fps = estimateFps();
 
-    // anchor click
-    var a = findAnchor(t);
-    if(a){
-      var toPath = pathOf(a);
-      // ignore external nav (only record internal)
-      var internal = true;
-      try{
-        var u = new URL(a.getAttribute("href"), location.origin);
-        internal = (u.origin === location.origin);
-      }catch(err){
-        internal = true;
-      }
-      if(internal){
-        storeEvent("nav_click", {
-          label: textOf(a),
-          to_path: (function(){
-            try{
-              var u2 = new URL(a.getAttribute("href"), location.origin);
-              return u2.pathname;
-            }catch(err2){
-              return toPath;
-            }
-          })(),
-          to_search: toSearchOf(a),
-          to_full: toPath,
-          from: location.pathname,
-          classes: classStr(a)
-        });
-      }
-      return;
-    }
+    var lines = [];
+    lines.push("IDX: " + v.idx);
+    lines.push("BG : " + v.bg);
+    lines.push("DR : " + v.dragon);
+    lines.push("CANVAS bg/dr: " + count("#gd_bg_canvas") + " / " + count("#gd_dragon_canvas"));
+    lines.push("FPS avg/p95/p99: " + px(fps.avg) + " / " + px(fps.p95) + " / " + px(fps.p99));
+    lines.push("ms  avg/p95/p99: " + px(fps.ms_avg) + " / " + px(fps.ms_p95) + " / " + px(fps.ms_p99));
+    lines.push("Longtasks c/max: " + longtasks.count + " / " + px(longtasks.max));
+    lines.push("RAF calls est: " + rafCount);
 
-    // button-like click (lens toggles are usually buttons)
-    var el = t;
-    for(var j=0;j<8 && el;j++){
-      if(el.tagName === "BUTTON"){
-        var label = textOf(el);
-        var cls = classStr(el).toLowerCase();
-        // heuristic: lens toggles often have words like INFORMAL/FORMAL/PLATFORM/ENGINEERING/NARRATIVE
-        var isLens = /informal|formal|platform|engineering|narrative/.test(label.toLowerCase()) || /pill/.test(cls);
-        storeEvent(isLens ? "lens_toggle" : "button_click", {
-          label: label,
-          classes: classStr(el),
-          id: (el.id || ""),
-          page: location.pathname
-        });
-        return;
-      }
-      el = el.parentElement;
-    }
-
-    // accordion header clicks (common patterns: .head, role=button, or data-* contracts)
-    var h = t;
-    for(var k=0;k<10 && h;k++){
-      var cls2 = classStr(h).toLowerCase();
-      var role = (h.getAttribute && h.getAttribute("role")) || "";
-      var looksLikeHead = (cls2.indexOf("head")>=0) || (role==="button");
-      if(looksLikeHead){
-        storeEvent("accordion_toggle", {
-          label: textOf(h),
-          classes: classStr(h),
-          id: (h.id || ""),
-          page: location.pathname
-        });
-        return;
-      }
-      h = h.parentElement;
+    body.innerHTML = "";
+    for(var i=0;i<lines.length;i++){
+      var r = el("div",null,lines[i]);
+      r.style.whiteSpace = "nowrap";
+      r.style.overflow = "hidden";
+      r.style.textOverflow = "ellipsis";
+      r.style.opacity = (i<3) ? "1" : ".88";
+      body.appendChild(r);
     }
   }
 
-  document.addEventListener("click", clickHandler, {passive:true});
+  // refresh UI
+  setInterval(renderPanel, 500);
 
-  // expose minimal debug handle
-  window.__cte = window.__cte || {};
-  window.__cte.telemetry = {
-    store_key: STORE_KEY,
-    sid_key: SID_KEY,
-    sid: getSid,
-    read: loadStore,
-    write: saveStore,
-    push: storeEvent
-  };
+  // ---------- clipboard helpers ----------
+  function copyText(txt){
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        return navigator.clipboard.writeText(txt);
+      }
+    }catch(e){}
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }catch(e){}
+    return Promise.resolve();
+  }
+
+  // ---------- buttons ----------
+  btnSpec.addEventListener("click", function(){
+    lastReport = buildReport("SPEC_RUN_BUTTON");
+    copyText(JSON.stringify(lastReport, null, 2));
+    note.textContent = "SPEC-RUN copied (" + nowISO() + ")";
+  }, {passive:true});
+
+  btnCopy.addEventListener("click", function(){
+    if(!lastReport) lastReport = buildReport("COPY_JSON");
+    copyText(JSON.stringify(lastReport, null, 2));
+    note.textContent = "JSON copied (" + nowISO() + ")";
+  }, {passive:true});
+
+  btnHide.addEventListener("click", function(){
+    panel.remove();
+  }, {passive:true});
+
 })();

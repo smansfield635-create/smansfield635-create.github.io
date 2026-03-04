@@ -1,332 +1,347 @@
 /* TNT — /assets/dragon-engine.js
-   GEODIAMETRICS DRAGON ENGINE v1.0 (SLOW + SCALES)
-   FIXES:
-   - Dragons were too fast → slowed by default (readable)
-   - “No scales” → adds interlocking scale band (scalloped hex-arc look)
-   - One-piece feel → draws a continuous body ribbon + scale overlay (not bead circles)
+   GEODIAMETRICS DRAGON ENGINE v2 (SLOW SLITHER + ONE-PIECE BODY)
+   GOALS:
+     - Slow, natural slither (no vibration)
+     - Continuous body (not segmented beads)
+     - Subtle scale texture (gold hint)
+     - Two dragons: top + bottom, right→left, full traverse then reset
+     - New quote each pass (per dragon)
    CONSTRAINTS:
-   - Canvas-only, pointer-events none
-   - English-only (no i18n here)
-   - No gd_* keys
-   - 30fps cap + DPR cap for mobile
+     - Canvas only, pointer-events none
+     - No gd_* keys
+     - English only
 */
-
 (function(){
   "use strict";
 
-  // ---------- Config ----------
-  var DPR_CAP = 1.6;
-  var FPS = 30;
-  var FRAME_MS = 1000 / FPS;
-
-  // speed: pixels per second (SLOW + readable)
-  var SPEED_PX_S = 110;        // was effectively ~800+; this is readable
-  var BODY_THICK = 26;         // girth
-  var SCALE_STEP = 14;         // spacing between scales
-  var WAVE_AMP = 18;
-  var WAVE_FREQ = 0.0085;
-
-  // Colors (onyx-green)
-  var BODY_FILL = "rgba(0,55,35,0.78)";
-  var BODY_EDGE = "rgba(0,0,0,0.38)";
-  var BELLY_GLOW = "rgba(160,40,30,0.16)";
-
-  var SCALE_EDGE = "rgba(212,175,55,0.22)";
-  var SCALE_FILL = "rgba(255,255,255,0.06)";
-
   // ---------- Canvas ----------
-  var c = document.createElement("canvas");
-  c.id = "gd_dragon_canvas";
-  c.style.position = "fixed";
-  c.style.inset = "0";
-  c.style.width = "100%";
-  c.style.height = "100%";
-  c.style.pointerEvents = "none";
-  c.style.userSelect = "none";
-  c.style.zIndex = "9"; // above bg/water, below gems/buttons (your page sets gems higher)
-  document.body.appendChild(c);
-
+  var c = document.getElementById("gd_dragon_canvas");
+  if(!c){
+    c = document.createElement("canvas");
+    c.id = "gd_dragon_canvas";
+    c.style.position = "fixed";
+    c.style.inset = "0";
+    c.style.width = "100%";
+    c.style.height = "100%";
+    c.style.pointerEvents = "none";
+    // Layering: above bg/water, below gems/buttons (most pages put gems ~10+)
+    c.style.zIndex = "6";
+    c.style.userSelect = "none";
+    (document.body || document.documentElement).appendChild(c);
+  }
   var ctx = c.getContext("2d", { alpha:true, desynchronized:true });
 
-  var W=0,H=0,DPR=1;
+  // ---------- Perf budget ----------
+  var FPS = 30;
+  var FRAME_MS = 1000 / FPS;
+  var DPR_CAP = 1.6;
 
+  var W=0,H=0,DPR=1;
   function resize(){
-    var ww = Math.max(1, window.innerWidth||1);
-    var hh = Math.max(1, window.innerHeight||1);
+    var ww = Math.max(1, window.innerWidth || 1);
+    var hh = Math.max(1, window.innerHeight || 1);
     var dpr = 1;
     try{ dpr = window.devicePixelRatio || 1; }catch(e){}
     DPR = Math.min(DPR_CAP, Math.max(1, dpr));
     W = Math.floor(ww * DPR);
     H = Math.floor(hh * DPR);
-    c.width = W; c.height = H;
+    c.width = W;
+    c.height = H;
   }
   resize();
   window.addEventListener("resize", resize, {passive:true});
 
-  // ---------- Helpers ----------
-  function lerp(a,b,t){ return a+(b-a)*t; }
-  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+  // ---------- Quotes (English only, rotate per pass) ----------
+  var QUOTES = [
+    "THE RIVER FLOWS. TIME PASSES.",
+    "MEASURE THEN MOVE.",
+    "BOUND THEN SCALE.",
+    "RECEIPTS > ARGUMENTS.",
+    "CONTAIN FIRST."
+  ];
 
-  // Build a dragon path (top + bottom)
-  function makeDragon(yFrac, phase){
+  // ---------- Dragon model ----------
+  function makeDragon(yFrac, dir){
+    var segs = 64; // enough for smooth body
+    var spacing = 18 * DPR;
+    var pts = [];
+    for(var i=0;i<segs;i++){
+      pts.push({ x: (W*0.8) + i*spacing, y: H*yFrac });
+    }
     return {
-      yFrac: yFrac,
-      phase: phase,
-      // quote changes only when fully restarted (exit left -> re-enter right)
-      quoteIdx: 0,
-      // offset for full traverse
-      offset: 0
+      pts: pts,
+      dir: dir,                 // -1 right->left
+      y0: H*yFrac,
+      t0: Math.random()*1000,
+      speed: 60 * DPR,          // px/sec (SLOW)
+      waveAmp: 14 * DPR,        // subtle
+      waveFreq: 1.15,           // low frequency (no vibration)
+      thickness: 22 * DPR,      // girth
+      margin: 0.35 * W,         // off-screen margin
+      quoteIndex: (Math.random()*QUOTES.length)|0,
+      quote: "",
+      quoteX: 0,
+      quoteY: 0
     };
   }
 
-  var dragons = [
-    makeDragon(0.26, 0.3),
-    makeDragon(0.74, 1.1)
-  ];
+  var topDragon = makeDragon(0.28, -1);
+  var botDragon = makeDragon(0.72, -1);
 
-  // Simple phrase set (kept short so readable)
-  var PHRASES = [
-    "SAY LESS. DO MORE.",
-    "THE RIVER FLOWS. TIME PASSES.",
-    "BOUND THEN SCALE.",
-    "RECEIPTS > ARGUMENTS.",
-    "MEASURE THEN MOVE."
-  ];
-
-  function nextQuote(d){
-    d.quoteIdx = (d.quoteIdx + 1) % PHRASES.length;
+  function pickNextQuote(d){
+    d.quoteIndex = (d.quoteIndex + 1) % QUOTES.length;
+    d.quote = QUOTES[d.quoteIndex];
   }
+  pickNextQuote(topDragon);
+  pickNextQuote(botDragon);
 
-  // ---------- Dragon drawing ----------
-  function sampleSpine(d, t){
-    // returns points from head→tail
-    var pts = [];
-    var yMid = H * d.yFrac;
+  // ---------- Helpers ----------
+  function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
 
-    var segCount = 34;
-    var len = W * 0.95;
-    var amp = WAVE_AMP * DPR;
-    var thick = BODY_THICK * DPR;
+  // Build a smooth “ribbon” body from spine points
+  function drawRibbon(d, now){
+    var pts = d.pts;
 
-    // Travel from right→left with full exit and restart
-    var margin = W * 0.35;
-    var travel = W + margin * 2;
+    // Colors: onyx-green + reddish belly hint + gold edge
+    var edge = "rgba(212,175,55,0.32)";
+    var body = "rgba(5,30,18,0.78)";          // onyx-green
+    var belly = "rgba(120,0,22,0.14)";        // subtle crimson belly glow
 
-    // offset grows with time; wrap when fully offscreen
-    var u = (t * (SPEED_PX_S * DPR / 1000) + d.offset) % travel;
-    var headX = (W + margin) - u;
-
-    // When dragon completes a wrap (near reset), advance quote
-    // Detect wrap by checking if u is very small (frame-local)
-    if(u < (SPEED_PX_S * DPR / 1000) * 2){
-      // only once per wrap: jitter-safe latch
-      if(!d._wrapped){
-        d._wrapped = true;
-        nextQuote(d);
-      }
-    }else{
-      d._wrapped = false;
-    }
-
-    for(var i=0;i<=segCount;i++){
-      var s = i/segCount;
-      var x = headX + (len * s); // tail trails to the right (but head moves left)
-      var y = yMid + Math.sin((x * WAVE_FREQ) + (t*0.0012) + d.phase) * amp;
-      // taper tail slightly
-      var w = thick * lerp(1.0, 0.55, s);
-      pts.push({x:x, y:y, w:w});
-    }
-    return pts;
-  }
-
-  function drawBodyRibbon(pts){
-    // Draw thick ribbon by stroking a centerline with variable thickness.
-    // Shadow edge
+    // Shadow pass (depth)
+    ctx.save();
+    ctx.globalCompositeOperation = "source-over";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
-    ctx.strokeStyle = BODY_EDGE;
-    ctx.lineWidth = (BODY_THICK*DPR) + (10*DPR);
+    // Outer shadow
+    ctx.strokeStyle = "rgba(0,0,0,0.35)";
+    ctx.lineWidth = d.thickness + 10*DPR;
     ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(var i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.stroke();
-
-    // Main body
-    ctx.strokeStyle = BODY_FILL;
-    ctx.lineWidth = (BODY_THICK*DPR);
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(var j=1;j<pts.length;j++) ctx.lineTo(pts[j].x, pts[j].y);
-    ctx.stroke();
-
-    // Belly glow (subtle red belly)
-    ctx.strokeStyle = BELLY_GLOW;
-    ctx.lineWidth = (BODY_THICK*DPR) * 0.55;
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y + (BODY_THICK*DPR)*0.22);
-    for(var k=1;k<pts.length;k++){
-      ctx.lineTo(pts[k].x, pts[k].y + (BODY_THICK*DPR)*0.22);
+    for(var i=0;i<pts.length;i++){
+      var p = pts[i];
+      if(i===0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
     }
     ctx.stroke();
-  }
 
-  function drawScaleBand(pts){
-    // Scales: scalloped arcs along body, alternating rows.
-    // Looks like interlocking “hex-ish” scales without heavy compute.
-    ctx.save();
-    ctx.globalCompositeOperation = "source-over";
+    // Main body stroke
+    ctx.strokeStyle = body;
+    ctx.lineWidth = d.thickness;
+    ctx.beginPath();
+    for(var j=0;j<pts.length;j++){
+      var p2 = pts[j];
+      if(j===0) ctx.moveTo(p2.x, p2.y);
+      else ctx.lineTo(p2.x, p2.y);
+    }
+    ctx.stroke();
 
-    var step = SCALE_STEP * DPR;
-    var baseR = (BODY_THICK*DPR) * 0.42;
+    // Belly highlight (inner)
+    ctx.strokeStyle = belly;
+    ctx.lineWidth = Math.max(1, d.thickness*0.55);
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    for(var k=0;k<pts.length;k++){
+      var p3 = pts[k];
+      // small offset for “belly”
+      if(k===0) ctx.moveTo(p3.x, p3.y + d.thickness*0.18);
+      else ctx.lineTo(p3.x, p3.y + d.thickness*0.18);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
 
-    for(var i=2;i<pts.length-2;i++){
-      var p = pts[i];
-      var p2 = pts[i+1];
+    // Gold edge (thin)
+    ctx.strokeStyle = edge;
+    ctx.lineWidth = 1.6*DPR;
+    ctx.beginPath();
+    for(var m=0;m<pts.length;m++){
+      var p4 = pts[m];
+      if(m===0) ctx.moveTo(p4.x, p4.y - d.thickness*0.28);
+      else ctx.lineTo(p4.x, p4.y - d.thickness*0.28);
+    }
+    ctx.stroke();
 
-      // distance-based skip so scale spacing is stable
-      if((i*step) % (step*2) !== 0) continue;
-
-      var ang = Math.atan2(p2.y - p.y, p2.x - p.x);
-      var r = clamp(baseR * (p.w / (BODY_THICK*DPR)), baseR*0.65, baseR);
-
-      // edge
-      ctx.strokeStyle = SCALE_EDGE;
-      ctx.lineWidth = 1.2*DPR;
-
-      // fill
-      ctx.fillStyle = SCALE_FILL;
-
-      // upper row arc
+    // Scale texture (subtle arcs)
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.lineWidth = 1.1*DPR;
+    for(var s=4;s<pts.length-2;s+=3){
+      var a = pts[s];
+      var b = pts[s+1];
+      var ang = Math.atan2(b.y-a.y, b.x-a.x);
+      var rr = d.thickness*0.55;
       ctx.beginPath();
-      ctx.arc(p.x, p.y - r*0.55, r, ang + 0.4, ang + 2.2);
+      ctx.arc(a.x, a.y, rr, ang+0.75, ang+1.95);
       ctx.stroke();
-
-      // lower row arc (offset)
-      ctx.beginPath();
-      ctx.arc(p.x, p.y + r*0.55, r*0.92, ang + 0.9, ang + 2.7);
-      ctx.stroke();
-
-      // tiny fill highlights to give scale “plate” feel
-      ctx.globalAlpha = 0.85;
-      ctx.beginPath();
-      ctx.arc(p.x - Math.cos(ang)*r*0.25, p.y - r*0.55, r*0.28, 0, Math.PI*2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
     }
 
     ctx.restore();
   }
 
-  function drawHead(pts){
-    // More than “two circles”: add snout, jaw, horn, whiskers, eye.
-    var hd = pts[0];
-    var nx = pts[1].x - hd.x;
-    var ny = pts[1].y - hd.y;
-    var ang = Math.atan2(ny, nx);
+  function drawHead(d){
+    // Head sits at pts[0], facing along tangent to pts[1]
+    var p0 = d.pts[0];
+    var p1 = d.pts[1];
+    var ang = Math.atan2(p1.y-p0.y, p1.x-p0.x);
 
-    var r = (BODY_THICK*DPR) * 0.70;
+    var hx = p0.x;
+    var hy = p0.y;
+    var r = d.thickness*0.65;
 
     ctx.save();
-    ctx.translate(hd.x, hd.y);
+    ctx.translate(hx, hy);
     ctx.rotate(ang);
 
-    // skull
-    ctx.fillStyle = "rgba(0,70,40,0.92)";
+    // Head shadow
+    ctx.fillStyle = "rgba(0,0,0,0.35)";
     ctx.beginPath();
-    ctx.ellipse(0, 0, r*1.1, r*0.85, 0, 0, Math.PI*2);
+    ctx.ellipse(-r*0.05, r*0.05, r*1.15, r*0.85, 0, 0, Math.PI*2);
     ctx.fill();
 
-    // snout
-    ctx.fillStyle = "rgba(0,62,36,0.92)";
+    // Skull
+    ctx.fillStyle = "rgba(6,32,20,0.92)";
     ctx.beginPath();
-    ctx.ellipse(-r*0.95, r*0.05, r*0.95, r*0.55, 0, 0, Math.PI*2);
+    ctx.ellipse(0, 0, r*1.10, r*0.80, 0, 0, Math.PI*2);
     ctx.fill();
 
-    // jaw
-    ctx.fillStyle = "rgba(0,50,30,0.92)";
+    // Snout
+    ctx.fillStyle = "rgba(6,28,18,0.92)";
     ctx.beginPath();
-    ctx.ellipse(-r*0.85, r*0.42, r*0.88, r*0.40, 0.12, 0, Math.PI*2);
+    ctx.ellipse(r*0.85, r*0.10, r*0.85, r*0.55, 0, 0, Math.PI*2);
     ctx.fill();
 
-    // eye
+    // Jaw line
+    ctx.strokeStyle = "rgba(212,175,55,0.28)";
+    ctx.lineWidth = 1.6*DPR;
+    ctx.beginPath();
+    ctx.moveTo(r*0.25, r*0.35);
+    ctx.lineTo(r*1.35, r*0.30);
+    ctx.stroke();
+
+    // Eye
     ctx.fillStyle = "rgba(212,175,55,0.85)";
     ctx.beginPath();
-    ctx.arc(-r*0.25, -r*0.18, r*0.14, 0, Math.PI*2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(0,0,0,0.55)";
-    ctx.beginPath();
-    ctx.arc(-r*0.23, -r*0.18, r*0.06, 0, Math.PI*2);
+    ctx.arc(r*0.35, -r*0.10, r*0.12, 0, Math.PI*2);
     ctx.fill();
 
-    // horn
-    ctx.strokeStyle = "rgba(212,175,55,0.55)";
-    ctx.lineWidth = 2*DPR;
-    ctx.beginPath();
-    ctx.moveTo(r*0.10, -r*0.65);
-    ctx.lineTo(r*0.55, -r*1.45);
-    ctx.stroke();
-
-    // whiskers
-    ctx.strokeStyle = "rgba(212,175,55,0.35)";
+    // Horns/whiskers (gold)
+    ctx.strokeStyle = "rgba(212,175,55,0.45)";
     ctx.lineWidth = 1.3*DPR;
     ctx.beginPath();
-    ctx.moveTo(-r*1.55, r*0.05);
-    ctx.lineTo(-r*2.45, -r*0.55);
-    ctx.moveTo(-r*1.55, r*0.18);
-    ctx.lineTo(-r*2.35, r*0.70);
+    ctx.moveTo(-r*0.10, -r*0.55);
+    ctx.lineTo(-r*0.65, -r*1.20);
+    ctx.moveTo(r*0.15, -r*0.55);
+    ctx.lineTo(-r*0.15, -r*1.35);
+    ctx.moveTo(r*1.10, r*0.15);
+    ctx.lineTo(r*1.90, -r*0.25);
     ctx.stroke();
 
     ctx.restore();
   }
 
-  function drawQuote(d, pts){
-    // Quote travels with the body (near head but offset)
-    var text = PHRASES[d.quoteIdx];
-    var p = pts[4];
-    var p2 = pts[5];
-    var ang = Math.atan2(p2.y-p.y, p2.x-p.x);
+  function drawQuote(d){
+    // Quote follows near head, but never in the exact CORE center region
+    if(!d.quote) return;
+
+    var p0 = d.pts[0];
+    var p1 = d.pts[1];
+    var ang = Math.atan2(p1.y-p0.y, p1.x-p0.x);
 
     ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(ang);
-    ctx.font = (14*DPR) + "px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-    ctx.fillStyle = "rgba(212,175,55,0.70)";
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle = "rgba(212,175,55,0.78)";
     ctx.shadowColor = "rgba(212,175,55,0.35)";
     ctx.shadowBlur = 10*DPR;
-    ctx.fillText(text, -ctx.measureText(text).width*0.05, -(BODY_THICK*DPR)*1.35);
+    ctx.font = (12*DPR) + "px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+
+    ctx.translate(p0.x, p0.y);
+    ctx.rotate(ang);
+
+    // offset above body
+    ctx.fillText(d.quote, -ctx.measureText(d.quote).width*0.10, -d.thickness*1.15);
+
     ctx.restore();
   }
 
-  function drawDragon(d, t){
-    var pts = sampleSpine(d, t);
-    drawBodyRibbon(pts);
-    drawScaleBand(pts);
-    drawHead(pts);
-    drawQuote(d, pts);
+  // ---------- Motion update ----------
+  function updateDragon(d, dt, t){
+    var pts = d.pts;
+    var head = pts[0];
+
+    // Natural slither: slow phase + low-frequency curve
+    var vy = Math.sin((t*0.0007) + d.t0) * d.waveAmp;
+    var yTarget = d.y0 + vy;
+
+    // Head x target moves steadily; y is smoothed
+    head.x += d.dir * d.speed * dt;
+    head.y = lerp(head.y, yTarget, 0.065);
+
+    // Follow chain with springy distance constraint
+    var targetDist = 18*DPR;
+    for(var i=1;i<pts.length;i++){
+      var prev = pts[i-1];
+      var cur = pts[i];
+
+      var dx = prev.x - cur.x;
+      var dy = prev.y - cur.y;
+      var dist = Math.sqrt(dx*dx + dy*dy) || 1;
+
+      var nx = dx / dist;
+      var ny = dy / dist;
+
+      var desiredX = prev.x - nx*targetDist;
+      var desiredY = prev.y - ny*targetDist;
+
+      // Smooth correction (prevents jitter)
+      cur.x = lerp(cur.x, desiredX, 0.28);
+      cur.y = lerp(cur.y, desiredY, 0.28);
+    }
+
+    // Reset only when FULLY off-screen (so you get a complete traverse)
+    if(d.dir < 0 && head.x < -d.margin){
+      head.x = W + d.margin;
+      // keep y continuous but re-center slightly
+      head.y = d.y0 + Math.sin((t*0.0007) + d.t0) * d.waveAmp;
+      pickNextQuote(d);
+    }
   }
 
   // ---------- Loop ----------
-  var last=0, acc=0;
+  var last = 0;
+  var acc = 0;
+
   function frame(ts){
     if(!last) last = ts;
-    var dt = ts - last; last = ts;
-    acc += dt;
+    var dtMs = ts - last;
+    last = ts;
 
+    acc += dtMs;
     if(acc < FRAME_MS){
       requestAnimationFrame(frame);
       return;
     }
+    // drop lag to avoid spiral-of-death
     acc = 0;
+
+    var dt = clamp(dtMs/1000, 0, 0.05);
 
     ctx.clearRect(0,0,W,H);
 
-    // Two dragons: top + bottom (kept far from CORE by yFrac)
-    drawDragon(dragons[0], ts);
-    drawDragon(dragons[1], ts + 9000); // phase offset
+    // Update + render order: body -> head -> quote
+    updateDragon(topDragon, dt, ts);
+    updateDragon(botDragon, dt, ts);
+
+    drawRibbon(topDragon, ts);
+    drawRibbon(botDragon, ts);
+
+    drawHead(topDragon);
+    drawHead(botDragon);
+
+    drawQuote(topDragon);
+    drawQuote(botDragon);
 
     requestAnimationFrame(frame);
   }
+
   requestAnimationFrame(frame);
 
 })();

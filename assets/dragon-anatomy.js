@@ -1,23 +1,19 @@
 /* TNT — /assets/dragon-anatomy.js
-   GEODIAMETRICS DRAGON ENGINE — WIRED LANES + FACE DEPTH
-   VERSION: DRAGON_v14_WIRED
+   GEODIAMETRICS DRAGON ENGINE — SPEED FIX + DRAGON HEAD (NO KOI)
+   VERSION: DRAGON_v15_DRAGON_NOT_KOI
 
-   THIS FILE NOW CONSUMES INDEX “WIRING” (CSS VARS) IF PRESENT:
-   --gd_laneTop (px), --gd_laneBot (px), --gd_noFlyTop (px), --gd_noFlyBot (px)
-   Falls back safely if vars are missing.
-
-   DELIVERS:
-   - Body: segmented silhouette + neck flare + hex scales + flame crest + belly plates
-   - Head: DISTINCT parts (horns vs snout vs jaw), animated jaw gape, whisker lag, head swivel
-   - Two dragons: TOP jade (L→R), BOTTOM crimson (R→L)
-   - Watermark proof
+   FIXES:
+   - Speed: remove DPR multiplier from x motion (was making it too fast on mobile)
+   - Shape: replace koi-like oval head with dragon wedge snout + jaw + cheek ridge + beard + horns pushed back
+   - Keeps: wired lanes from index CSS vars, segmented body, hex lattice, crest, belly plates
 */
+
 (function(){
 "use strict";
 if(window.__GD_DRAGON_RUNNING__) return;
 window.__GD_DRAGON_RUNNING__ = true;
 
-window.GD_DRAGON = { version:"DRAGON_v14_WIRED", mount:function(){} };
+window.GD_DRAGON = { version:"DRAGON_v15_DRAGON_NOT_KOI", mount:function(){} };
 
 const DPR_CAP=1.6;
 
@@ -25,15 +21,15 @@ const DPR_CAP=1.6;
 const BODY_W=81;
 const BODY_R=BODY_W*0.5;
 
-/* MOTION */
+/* MOTION (slower + calmer) */
 const SEG=170;
 const GAP=15;
-const SPEED=92;
-const AMP=12;
-const SWIV=10;
+const SPEED=56;     // was ~92; now slower
+const AMP=10;       // calmer
+const SWIV=8;
 
 /* HEAD SWIVEL */
-const YAW_MAX=0.30;
+const YAW_MAX=0.26;
 const YAW_RATE=4.2;
 
 /* CANVAS */
@@ -80,7 +76,6 @@ function palJade(){
     a:"rgba(0,165,92,0.95)",
     b:"rgba(0,82,50,0.95)",
     outline:"rgba(0,0,0,0.70)",
-    rim:"rgba(255,255,255,0.14)",
     gold:"rgba(212,175,55,0.99)",
     goldSoft:"rgba(212,175,55,0.26)",
     belly:"rgba(0,0,0,0.24)",
@@ -93,7 +88,6 @@ function palCrimson(){
     a:"rgba(235,72,72,0.95)",
     b:"rgba(120,18,22,0.95)",
     outline:"rgba(0,0,0,0.70)",
-    rim:"rgba(255,255,255,0.14)",
     gold:"rgba(212,175,55,0.99)",
     goldSoft:"rgba(212,175,55,0.26)",
     belly:"rgba(0,0,0,0.24)",
@@ -104,13 +98,12 @@ function palCrimson(){
 
 /* DRAGON */
 function makeDragon(isTop){
+  const vh = window.innerHeight||1;
   return {
     top:isTop,
     dir:isTop?1:-1,
-    // lane will be wired each frame; default fallback:
-    baseY:isTop?0.31:0.69,
-    yPx: (isTop?0.31:0.69) * (window.innerHeight||1),
-    x:isTop?-(window.innerWidth||1)*0.22:(window.innerWidth||1)*1.22,
+    yPx: (isTop?0.31:0.69)*vh,
+    x: isTop?-(window.innerWidth||1)*0.22:(window.innerWidth||1)*1.22, // CSS px space
     phase:Math.random()*10,
     spine:new Array(SEG),
     pal:isTop?palJade():palCrimson(),
@@ -146,7 +139,7 @@ function radiusAt(i){
   return BODY_R*tail*flare*head*DPR;
 }
 
-/* WIRING: read CSS lane px; smooth to avoid jitter */
+/* WIRING: read CSS lane px; smooth */
 function updateLanePx(){
   const laneTop=cssPx("--gd_laneTop");
   const laneBot=cssPx("--gd_laneBot");
@@ -157,29 +150,27 @@ function updateLanePx(){
   let topPx = Number.isFinite(laneTop) ? laneTop : vh*0.31;
   let botPx = Number.isFinite(laneBot) ? laneBot : vh*0.69;
 
-  // respect no-fly if provided
   if(Number.isFinite(noFlyTop)) topPx = Math.max(topPx, noFlyTop + 24);
   if(Number.isFinite(noFlyBot)) botPx = Math.min(botPx, noFlyBot - 24);
 
-  // clamp sane
   topPx = clamp(topPx, vh*0.20, vh*0.48);
   botPx = clamp(botPx, vh*0.52, vh*0.88);
 
-  // smooth toward target
   TOP.yPx = TOP.yPx + (topPx - TOP.yPx)*0.12;
   BOT.yPx = BOT.yPx + (botPx - BOT.yPx)*0.12;
 }
 
-/* BUILD SPINE */
+/* BUILD SPINE (NOTE: x is CSS px; convert to canvas px by *DPR once) */
 function build(dr,t,dt){
   const gap=GAP*DPR, amp=AMP*DPR, sw=SWIV*DPR;
 
-  // x motion
-  dr.x += dr.dir*SPEED*(window.devicePixelRatio||1)*dt;
+  // ✅ speed fix: DO NOT multiply by DPR here (x is already CSS px)
+  dr.x += dr.dir * SPEED * dt;
 
-  const margin=(window.innerWidth||1)*0.45;
-  if(dr.dir>0 && dr.x>(window.innerWidth||1)+margin) dr.x=-margin;
-  if(dr.dir<0 && dr.x<-margin) dr.x=(window.innerWidth||1)+margin;
+  const vw = window.innerWidth||1;
+  const margin = vw*0.45;
+  if(dr.dir>0 && dr.x>vw+margin) dr.x=-margin;
+  if(dr.dir<0 && dr.x<-margin) dr.x=vw+margin;
 
   const sign=dr.top?1:-1;
   const baseY = (dr.yPx||((dr.top?0.31:0.69)*(window.innerHeight||1))) * DPR;
@@ -201,7 +192,7 @@ function build(dr,t,dt){
   const t0=tangent(dr.spine,0);
   const t6=tangent(dr.spine,6);
   const curv=(t6.y*t0.x - t6.x*t0.y);
-  dr.yawT = clamp(curv*0.9 + Math.sin(t*0.75 + dr.phase)*0.10, -YAW_MAX, YAW_MAX);
+  dr.yawT = clamp(curv*0.9 + Math.sin(t*0.75 + dr.phase)*0.08, -YAW_MAX, YAW_MAX);
   dr.yaw += (dr.yawT - dr.yaw) * clamp(YAW_RATE*dt, 0, 1);
 }
 
@@ -360,92 +351,93 @@ function drawBellyPlates(dr){
   ctx.restore();
 }
 
-/* HEAD DISTINCT (jaw vs snout vs horns) */
-function drawHeadDistinct(dr, t){
+/* DRAGON HEAD (wedge + jaw + beard) — removes koi silhouette */
+function drawHeadDragon(dr, t){
   const sp=dr.spine;
   const p=sp[0];
   const tv=tangent(sp,0);
 
   const ang=Math.atan2(tv.y,tv.x) + dr.yaw;
-  const s=radiusAt(0)*1.10;
+  const s=radiusAt(0)*1.05;
 
-  const gape = 0.10 + 0.06*Math.sin(t*2.2 + dr.phase);
-  const wlag = 0.18*Math.sin(t*1.6 + dr.phase*0.7);
+  const gape = 0.10 + 0.05*Math.sin(t*2.0 + dr.phase);
+  const wlag = 0.14*Math.sin(t*1.4 + dr.phase*0.7);
 
   ctx.save();
   ctx.translate(p.x,p.y);
   ctx.rotate(ang);
   if(dr.dir<0) ctx.scale(-1,1);
 
-  // HORNS (gold, rear/top)
+  // horns pushed BACK (distinct)
   ctx.strokeStyle="rgba(212,175,55,0.92)";
-  ctx.lineWidth=4.0*DPR;
+  ctx.lineWidth=3.6*DPR;
   ctx.lineCap="round";
   ctx.beginPath();
-  ctx.moveTo(-s*0.55, -s*0.55);
-  ctx.quadraticCurveTo(-s*0.35, -s*1.25, s*0.50, -s*1.55);
-  ctx.moveTo(-s*0.70, -s*0.42);
-  ctx.quadraticCurveTo(-s*0.50, -s*1.10, s*0.20, -s*1.38);
+  ctx.moveTo(-s*0.85, -s*0.55);
+  ctx.quadraticCurveTo(-s*0.65, -s*1.25, s*0.05, -s*1.55);
+  ctx.moveTo(-s*1.00, -s*0.40);
+  ctx.quadraticCurveTo(-s*0.85, -s*1.10, -s*0.25, -s*1.40);
   ctx.stroke();
 
-  // SKULL
-  ctx.fillStyle="rgba(0,0,0,0.28)";
+  // skull base (less oval)
+  ctx.fillStyle="rgba(0,0,0,0.30)";
   ctx.beginPath();
-  ctx.ellipse(0,0,s*1.08,s*0.70,0,0,Math.PI*2);
+  ctx.ellipse(-s*0.10, 0, s*1.05, s*0.62, 0, 0, Math.PI*2);
   ctx.fill();
 
-  // SNOUT (upper, lighter)
-  const snG=ctx.createLinearGradient(0,0,s*2.6,0);
+  // snout wedge (angular)
+  const snG=ctx.createLinearGradient(0,0,s*2.8,0);
   snG.addColorStop(0.0, dr.pal.a);
   snG.addColorStop(1.0, dr.pal.b);
   ctx.fillStyle=snG;
   ctx.beginPath();
-  ctx.moveTo(s*0.05, -s*0.22);
-  ctx.quadraticCurveTo(s*1.15, -s*0.46, s*2.15, -s*0.08);
-  ctx.quadraticCurveTo(s*1.80,  0.06, s*0.20,  0.10);
+  ctx.moveTo(-s*0.20, -s*0.22);
+  ctx.quadraticCurveTo(s*0.95, -s*0.52, s*2.30, -s*0.10);
+  ctx.quadraticCurveTo(s*1.85,  s*0.10, s*0.05,  s*0.18);
   ctx.closePath();
   ctx.fill();
 
-  // nose ridge
+  // ridge line
   ctx.globalCompositeOperation="screen";
   ctx.strokeStyle="rgba(255,255,255,0.14)";
   ctx.lineWidth=2.0*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.25, -s*0.18);
-  ctx.quadraticCurveTo(s*1.10, -s*0.36, s*2.00, -s*0.06);
+  ctx.moveTo(s*0.05, -s*0.20);
+  ctx.quadraticCurveTo(s*1.05, -s*0.40, s*2.05, -s*0.08);
   ctx.stroke();
   ctx.globalCompositeOperation="source-over";
 
   // nostrils
   ctx.fillStyle="rgba(0,0,0,0.45)";
-  ctx.beginPath(); ctx.arc(s*1.95, -s*0.02, s*0.10, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(s*1.82,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*2.10, -s*0.03, s*0.10, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*1.95,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
 
-  // LOWER JAW (darker, hinged)
+  // jaw (hinged)
   ctx.save();
-  ctx.translate(s*0.55, s*0.18);
+  ctx.translate(s*0.35, s*0.18);
   ctx.rotate(gape);
-  ctx.translate(-s*0.55, -s*0.18);
+  ctx.translate(-s*0.35, -s*0.18);
 
   ctx.fillStyle="rgba(0,0,0,0.22)";
   ctx.beginPath();
-  ctx.moveTo(s*0.35, s*0.18);
-  ctx.quadraticCurveTo(s*1.10, s*0.70, s*2.10, s*0.20);
-  ctx.quadraticCurveTo(s*1.35, s*0.85, s*0.42, s*0.48);
+  ctx.moveTo(s*0.05, s*0.18);
+  ctx.quadraticCurveTo(s*0.95, s*0.78, s*2.20, s*0.18);
+  ctx.quadraticCurveTo(s*1.30, s*0.92, s*0.18, s*0.50);
   ctx.closePath();
   ctx.fill();
 
   ctx.strokeStyle="rgba(0,0,0,0.55)";
-  ctx.lineWidth=2.6*DPR;
+  ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.40, s*0.16);
-  ctx.quadraticCurveTo(s*1.15, s*0.56, s*2.05, s*0.16);
+  ctx.moveTo(s*0.10, s*0.16);
+  ctx.quadraticCurveTo(s*1.00, s*0.60, s*2.10, s*0.16);
   ctx.stroke();
 
+  // teeth hints
   ctx.strokeStyle="rgba(255,255,255,0.18)";
   ctx.lineWidth=1.2*DPR;
   for(let i=0;i<5;i++){
-    const tx=s*(1.12 + i*0.16);
+    const tx=s*(1.10 + i*0.18);
     const ty=s*(0.22 + (i%2)*0.02);
     ctx.beginPath();
     ctx.moveTo(tx,ty);
@@ -454,50 +446,39 @@ function drawHeadDistinct(dr, t){
   }
   ctx.restore();
 
-  // EYE
+  // eye (slit)
   ctx.fillStyle=dr.pal.gold;
   ctx.beginPath();
-  ctx.ellipse(s*0.10, -s*0.08, s*0.18, s*0.10, 0.10, 0, Math.PI*2);
+  ctx.ellipse(s*0.20, -s*0.12, s*0.18, s*0.10, 0.10, 0, Math.PI*2);
   ctx.fill();
   ctx.fillStyle="rgba(0,0,0,0.72)";
   ctx.beginPath();
-  ctx.ellipse(s*0.16, -s*0.08, s*0.05, s*0.14, 0.00, 0, Math.PI*2);
+  ctx.ellipse(s*0.26, -s*0.12, s*0.05, s*0.14, 0.00, 0, Math.PI*2);
   ctx.fill();
 
-  // WHISKERS (lag)
+  // whiskers (anchored behind tip)
   ctx.strokeStyle="rgba(212,175,55,0.66)";
-  ctx.lineWidth=2.8*DPR;
+  ctx.lineWidth=2.6*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*1.05, 0);
-  ctx.quadraticCurveTo(s*2.05, -s*(0.55 + wlag), s*3.10, -s*(0.86 + wlag));
-  ctx.moveTo(s*1.05, 0);
-  ctx.quadraticCurveTo(s*1.90,  s*(0.50 + wlag), s*2.95,  s*(0.70 + wlag));
+  ctx.moveTo(s*1.20, 0);
+  ctx.quadraticCurveTo(s*2.20, -s*(0.55 + wlag), s*3.30, -s*(0.86 + wlag));
+  ctx.moveTo(s*1.20, 0);
+  ctx.quadraticCurveTo(s*2.05,  s*(0.50 + wlag), s*3.10,  s*(0.70 + wlag));
   ctx.stroke();
 
   // beard
   ctx.strokeStyle="rgba(255,255,255,0.18)";
-  ctx.lineWidth=2.4*DPR;
+  ctx.lineWidth=2.2*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.78, s*0.30);
-  ctx.quadraticCurveTo(s*0.55, s*1.10, s*0.00, s*1.42);
+  ctx.moveTo(s*0.95, s*0.32);
+  ctx.quadraticCurveTo(s*0.60, s*1.12, -s*0.10, s*1.40);
   ctx.stroke();
 
-  // head mane
-  ctx.strokeStyle="rgba(255,255,255,0.14)";
-  ctx.lineWidth=2.2*DPR;
-  for(let i=0;i<9;i++){
-    const yy=-s*0.52 + i*(s*0.12);
-    ctx.beginPath();
-    ctx.moveTo(-s*0.70, yy);
-    ctx.quadraticCurveTo(-s*1.30, yy + s*0.20, -s*2.05, yy + s*0.62);
-    ctx.stroke();
-  }
-
-  // final head outline
+  // head outline to keep it crisp
   ctx.strokeStyle=dr.pal.outline;
   ctx.lineWidth=2.6*DPR;
   ctx.beginPath();
-  ctx.ellipse(0,0,s*1.08,s*0.70,0,0,Math.PI*2);
+  ctx.ellipse(-s*0.10, 0, s*1.05, s*0.62, 0, 0, Math.PI*2);
   ctx.stroke();
 
   ctx.restore();
@@ -509,7 +490,7 @@ function watermark(){
   ctx.globalCompositeOperation="source-over";
   ctx.fillStyle="rgba(255,255,255,0.18)";
   ctx.font=(16*DPR)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("DRAGON_v14_WIRED", 12*DPR, (H-14*DPR));
+  ctx.fillText("DRAGON_v15_DRAGON_NOT_KOI", 12*DPR, (H-14*DPR));
   ctx.restore();
 }
 
@@ -521,9 +502,7 @@ function frame(ts){
   last=ts;
   const t=ts/1000;
 
-  // wiring lanes (from index)
   updateLanePx();
-
   ctx.clearRect(0,0,W,H);
 
   build(TOP,t,dt);
@@ -531,14 +510,14 @@ function frame(ts){
   drawFlameCrest(TOP);
   drawHexScales(TOP);
   drawBellyPlates(TOP);
-  drawHeadDistinct(TOP,t);
+  drawHeadDragon(TOP,t);
 
   build(BOT,t,dt);
   drawSegmentedSilhouette(BOT);
   drawFlameCrest(BOT);
   drawHexScales(BOT);
   drawBellyPlates(BOT);
-  drawHeadDistinct(BOT,t);
+  drawHeadDragon(BOT,t);
 
   watermark();
   requestAnimationFrame(frame);

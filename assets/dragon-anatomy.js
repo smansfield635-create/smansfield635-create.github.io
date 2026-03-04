@@ -1,22 +1,27 @@
 /* TNT — /assets/dragon-anatomy.js
-   GEODIAMETRICS DRAGON ENGINE — BODY KEPT + HEAD FIXED (IN ONE PASS)
-   VERSION: DRAGON_v11_HEADFIX
+   GEODIAMETRICS DRAGON ENGINE — HEAD DISTINCT (JAW vs SNOUT vs HORNS)
+   VERSION: DRAGON_v12_HEAD_DISTINCT
 
-   WHAT THIS DOES:
-   - Keeps the v9 body exactly in the “better” direction: segmented silhouette + neck flare + hex scales + crest + belly plates
-   - Replaces the head renderer with a real Chinese-dragon head profile:
-     snout ridge + jaw + open mouth shadow + tooth hints + nostrils + eye + horns + whiskers (anchored correctly) + beard + mane
-   - Head still swivels (bounded) and always faces travel direction
-   - Watermark proof on canvas
+   YOUR REQUEST:
+   - You can’t distinguish jaw/snout from horns.
+   - Make them DISTINCTIVE and DIRECTIVE.
 
-   NOTE: No layout changes. Pure dragon upgrade.
+   THIS DELIVERS:
+   - Jaw is DARK + lower + hinged + has teeth
+   - Snout is LIGHTER + upper + has nose ridge + nostrils
+   - Horns are GOLD + rear/top + swept back (never overlaps snout lines)
+   - Keeps the improved body direction: segmented silhouette + neck flare + hex scales + dorsal flame crest + belly plates
+   - Two dragons, correct facing, head swivel, watermark proof
+
+   NOTE:
+   - No layout changes. Pure dragon upgrade.
 */
 (function(){
 "use strict";
 if(window.__GD_DRAGON_RUNNING__) return;
 window.__GD_DRAGON_RUNNING__ = true;
 
-window.GD_DRAGON = { version:"DRAGON_v11_HEADFIX", mount:function(){} };
+window.GD_DRAGON = { version:"DRAGON_v12_HEAD_DISTINCT", mount:function(){} };
 
 const DPR_CAP=1.6;
 
@@ -72,7 +77,7 @@ function palJade(){
     b:"rgba(0,82,50,0.95)",
     outline:"rgba(0,0,0,0.70)",
     rim:"rgba(255,255,255,0.14)",
-    gold:"rgba(212,175,55,0.98)",
+    gold:"rgba(212,175,55,0.99)",
     goldSoft:"rgba(212,175,55,0.26)",
     belly:"rgba(0,0,0,0.24)",
     scale:"rgba(255,255,255,0.18)",
@@ -126,11 +131,13 @@ function normal(sp,i){
 function radiusAt(i){
   const u=i/(SEG-1);
   const tail=(u<0.78)?1.0:lerp(1.0,0.10,(u-0.78)/0.22);
+
   let flare=1.0;
   if(u<0.22){
     const t=u/0.22;
     flare=1.0 + 0.55*Math.sin(Math.PI*t);
   }
+
   const head=(u<0.08)?lerp(1.18,1.0,u/0.08):1.0;
   return BODY_R*tail*flare*head*DPR;
 }
@@ -169,7 +176,7 @@ function build(dr,t,dt){
   dr.yaw += (dr.yawT - dr.yaw) * clamp(YAW_RATE*dt, 0, 1);
 }
 
-/* BODY (keep v9 style) */
+/* BODY */
 function drawSegmentedSilhouette(dr){
   const sp=dr.spine;
 
@@ -239,7 +246,6 @@ function drawFlameCrest(dr){
 
   ctx.strokeStyle="rgba(255,255,255,0.16)";
   ctx.lineWidth=2.2*DPR;
-
   const end=Math.floor(sp.length*0.52);
   for(let i=6;i<end;i+=4){
     const p=sp[i];
@@ -301,16 +307,6 @@ function drawHexScales(dr){
     hex(p.x + n.x*(r*0.05), p.y + n.y*(r*0.05), Math.max(4.6*DPR,r*0.09));
   }
 
-  ctx.strokeStyle="rgba(212,175,55,0.20)";
-  for(let i=28;i<sp.length-90;i+=12){
-    const p=sp[i];
-    const n=normal(sp,i);
-    const r=radiusAt(i);
-    ctx.beginPath();
-    ctx.arc(p.x + n.x*(r*0.62), p.y + n.y*(r*0.62), Math.max(1.6*DPR,r*0.06), 0.2, 2.2);
-    ctx.stroke();
-  }
-
   ctx.restore();
 }
 
@@ -335,8 +331,12 @@ function drawBellyPlates(dr){
   ctx.restore();
 }
 
-/* HEAD FIX (real profile, no “backwards blob”) */
-function drawHead(dr, t){
+/* DISTINCT HEAD PARTS:
+   - HORNS (gold, rear/top, swept back)
+   - SNOUT (upper, lighter, ridge line)
+   - JAW (lower, darker, hinged, teeth)
+*/
+function drawHeadDistinct(dr, t){
   const sp=dr.spine;
   const p=sp[0];
   const tv=tangent(sp,0);
@@ -348,127 +348,128 @@ function drawHead(dr, t){
   ctx.translate(p.x,p.y);
   ctx.rotate(ang);
 
-  // face direction into travel
   if(dr.dir<0) ctx.scale(-1,1);
 
-  // === HEAD SILHOUETTE (profile) ===
-  ctx.fillStyle="rgba(0,0,0,0.34)";
+  // ---------- HORNS (TOP/REAR ONLY) ----------
+  ctx.strokeStyle="rgba(212,175,55,0.92)";
+  ctx.lineWidth=3.8*DPR;
+  ctx.lineCap="round";
   ctx.beginPath();
-  // skull
-  ctx.ellipse(0,0,s*1.10,s*0.74,0,0,Math.PI*2);
-  // snout wedge (profile)
-  ctx.moveTo(s*0.30, -s*0.28);
-  ctx.quadraticCurveTo(s*1.10,-s*0.48,s*2.00,-s*0.10);
-  ctx.quadraticCurveTo(s*2.25, 0, s*2.00, s*0.12);
-  ctx.quadraticCurveTo(s*1.10, s*0.55, s*0.25, s*0.30);
-  ctx.closePath();
-  ctx.fill();
-
-  // head fill gradient
-  const hg=ctx.createLinearGradient(-s,0,s*2.6,0);
-  hg.addColorStop(0.0, dr.pal.b);
-  hg.addColorStop(0.55, dr.pal.a);
-  hg.addColorStop(1.0, dr.pal.b);
-  ctx.fillStyle=hg;
-  ctx.beginPath();
-  ctx.ellipse(0,0,s*1.00,s*0.66,0,0,Math.PI*2);
-  ctx.fill();
-  // snout fill
-  ctx.beginPath();
-  ctx.moveTo(s*0.25, -s*0.24);
-  ctx.quadraticCurveTo(s*1.05,-s*0.42,s*1.92,-s*0.08);
-  ctx.quadraticCurveTo(s*2.15, 0, s*1.92, s*0.10);
-  ctx.quadraticCurveTo(s*1.05, s*0.48, s*0.22, s*0.26);
-  ctx.closePath();
-  ctx.fill();
-
-  // outline (face definition)
-  ctx.strokeStyle=dr.pal.outline;
-  ctx.lineWidth=3.0*DPR;
+  // horn 1
+  ctx.moveTo(-s*0.40, -s*0.48);
+  ctx.quadraticCurveTo(-s*0.15, -s*1.20, s*0.55, -s*1.42);
+  // horn 2
+  ctx.moveTo(-s*0.55, -s*0.38);
+  ctx.quadraticCurveTo(-s*0.30, -s*1.05, s*0.30, -s*1.28);
   ctx.stroke();
 
-  // === MOUTH OPENING + TEETH ===
-  ctx.fillStyle="rgba(0,0,0,0.22)";
+  // ---------- SKULL BASE (neutral) ----------
+  ctx.fillStyle="rgba(0,0,0,0.28)";
   ctx.beginPath();
-  ctx.moveTo(s*0.62, s*0.12);
-  ctx.quadraticCurveTo(s*1.30, s*0.42, s*2.05, s*0.12);
-  ctx.quadraticCurveTo(s*1.45, s*0.62, s*0.70, s*0.30);
+  ctx.ellipse(0,0,s*1.05,s*0.70,0,0,Math.PI*2);
+  ctx.fill();
+
+  // ---------- SNOUT (UPPER, LIGHTER) ----------
+  const snG=ctx.createLinearGradient(0,0,s*2.6,0);
+  snG.addColorStop(0.0, dr.pal.a);
+  snG.addColorStop(1.0, dr.pal.b);
+  ctx.fillStyle=snG;
+  ctx.beginPath();
+  ctx.moveTo(s*0.10, -s*0.22);
+  ctx.quadraticCurveTo(s*1.20, -s*0.46, s*2.15, -s*0.08);
+  ctx.quadraticCurveTo(s*1.70,  0.08, s*0.20,  0.10);
   ctx.closePath();
   ctx.fill();
 
-  ctx.strokeStyle="rgba(255,255,255,0.16)";
+  // snout ridge line (directive)
+  ctx.globalCompositeOperation="screen";
+  ctx.strokeStyle="rgba(255,255,255,0.14)";
+  ctx.lineWidth=2.0*DPR;
+  ctx.beginPath();
+  ctx.moveTo(s*0.25, -s*0.18);
+  ctx.quadraticCurveTo(s*1.10, -s*0.36, s*2.00, -s*0.06);
+  ctx.stroke();
+  ctx.globalCompositeOperation="source-over";
+
+  // nostrils (on snout tip)
+  ctx.fillStyle="rgba(0,0,0,0.45)";
+  ctx.beginPath(); ctx.arc(s*1.95, -s*0.02, s*0.10, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*1.82,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
+
+  // ---------- JAW (LOWER, DARKER) ----------
+  ctx.fillStyle="rgba(0,0,0,0.22)";
+  ctx.beginPath();
+  ctx.moveTo(s*0.40, s*0.18);
+  ctx.quadraticCurveTo(s*1.10, s*0.62, s*2.05, s*0.18);
+  ctx.quadraticCurveTo(s*1.25, s*0.78, s*0.45, s*0.46);
+  ctx.closePath();
+  ctx.fill();
+
+  // mouth line (directive)
+  ctx.strokeStyle="rgba(0,0,0,0.55)";
+  ctx.lineWidth=2.6*DPR;
+  ctx.beginPath();
+  ctx.moveTo(s*0.45, s*0.16);
+  ctx.quadraticCurveTo(s*1.15, s*0.52, s*2.05, s*0.16);
+  ctx.stroke();
+
+  // teeth (white hints, clearly jaw)
+  ctx.strokeStyle="rgba(255,255,255,0.18)";
   ctx.lineWidth=1.2*DPR;
   for(let i=0;i<5;i++){
     const tx=s*(1.10 + i*0.16);
-    const ty=s*(0.18 + (i%2)*0.02);
+    const ty=s*(0.22 + (i%2)*0.02);
     ctx.beginPath();
     ctx.moveTo(tx,ty);
     ctx.lineTo(tx+s*0.06, ty+s*0.14);
     ctx.stroke();
   }
 
-  // mouth line
-  ctx.strokeStyle="rgba(0,0,0,0.45)";
-  ctx.lineWidth=2.4*DPR;
-  ctx.beginPath();
-  ctx.moveTo(s*0.55, s*0.10);
-  ctx.quadraticCurveTo(s*1.25, s*0.46, s*2.05, s*0.10);
-  ctx.stroke();
-
-  // === NOSTRILS ===
-  ctx.fillStyle="rgba(0,0,0,0.42)";
-  ctx.beginPath(); ctx.arc(s*1.92, -s*0.02, s*0.10, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(s*1.80,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
-
-  // === EYE (slit) ===
+  // ---------- EYE ----------
   ctx.fillStyle=dr.pal.gold;
   ctx.beginPath();
-  ctx.ellipse(s*0.20, -s*0.10, s*0.20, s*0.11, 0.08, 0, Math.PI*2);
+  ctx.ellipse(s*0.10, -s*0.08, s*0.18, s*0.10, 0.12, 0, Math.PI*2);
   ctx.fill();
   ctx.fillStyle="rgba(0,0,0,0.72)";
   ctx.beginPath();
-  ctx.ellipse(s*0.26, -s*0.10, s*0.05, s*0.15, 0.00, 0, Math.PI*2);
+  ctx.ellipse(s*0.16, -s*0.08, s*0.05, s*0.14, 0.00, 0, Math.PI*2);
   ctx.fill();
 
-  // === HORNS (swept back, clearly horns) ===
-  ctx.strokeStyle="rgba(212,175,55,0.84)";
-  ctx.lineWidth=3.6*DPR;
-  ctx.lineCap="round";
-  ctx.beginPath();
-  ctx.moveTo(-s*0.20,-s*0.42);
-  ctx.quadraticCurveTo(s*0.05,-s*1.20,s*0.78,-s*1.40);
-  ctx.moveTo(-s*0.30,-s*0.34);
-  ctx.quadraticCurveTo(-s*0.05,-s*1.04,s*0.52,-s*1.24);
-  ctx.stroke();
-
-  // === WHISKERS (anchored behind snout tip) ===
+  // ---------- WHISKERS (anchored behind snout tip) ----------
   ctx.strokeStyle="rgba(212,175,55,0.66)";
   ctx.lineWidth=2.8*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*1.20, 0);
-  ctx.quadraticCurveTo(s*2.10, -s*0.55, s*3.20, -s*0.86);
-  ctx.moveTo(s*1.20, 0);
-  ctx.quadraticCurveTo(s*1.95,  s*0.50, s*3.00,  s*0.70);
+  ctx.moveTo(s*1.10, 0);
+  ctx.quadraticCurveTo(s*2.05, -s*0.55, s*3.10, -s*0.86);
+  ctx.moveTo(s*1.10, 0);
+  ctx.quadraticCurveTo(s*1.90,  s*0.50, s*2.95,  s*0.70);
   ctx.stroke();
 
   // beard
   ctx.strokeStyle="rgba(255,255,255,0.18)";
   ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.92, s*0.30);
-  ctx.quadraticCurveTo(s*0.70, s*1.12, s*0.12, s*1.42);
+  ctx.moveTo(s*0.78, s*0.30);
+  ctx.quadraticCurveTo(s*0.55, s*1.10, s*0.00, s*1.42);
   ctx.stroke();
 
-  // head mane
+  // head mane (kept)
   ctx.strokeStyle="rgba(255,255,255,0.14)";
   ctx.lineWidth=2.2*DPR;
   for(let i=0;i<9;i++){
-    const yy=-s*0.56 + i*(s*0.12);
+    const yy=-s*0.52 + i*(s*0.12);
     ctx.beginPath();
-    ctx.moveTo(-s*0.40, yy);
-    ctx.quadraticCurveTo(-s*1.24, yy + s*0.18, -s*2.00, yy + s*0.60);
+    ctx.moveTo(-s*0.60, yy);
+    ctx.quadraticCurveTo(-s*1.25, yy + s*0.18, -s*2.00, yy + s*0.60);
     ctx.stroke();
   }
+
+  // final head outline (keeps it crisp)
+  ctx.strokeStyle=dr.pal.outline;
+  ctx.lineWidth=2.8*DPR;
+  ctx.beginPath();
+  ctx.ellipse(0,0,s*1.05,s*0.70,0,0,Math.PI*2);
+  ctx.stroke();
 
   ctx.restore();
 }
@@ -479,7 +480,7 @@ function watermark(){
   ctx.globalCompositeOperation="source-over";
   ctx.fillStyle="rgba(255,255,255,0.18)";
   ctx.font=(16*DPR)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("DRAGON_v11_HEADFIX", 12*DPR, (H-14*DPR));
+  ctx.fillText("DRAGON_v12_HEAD_DISTINCT", 12*DPR, (H-14*DPR));
   ctx.restore();
 }
 
@@ -498,14 +499,14 @@ function frame(ts){
   drawFlameCrest(TOP);
   drawHexScales(TOP);
   drawBellyPlates(TOP);
-  drawHead(TOP,t);
+  drawHeadDistinct(TOP,t);
 
   build(BOT,t,dt);
   drawSegmentedSilhouette(BOT);
   drawFlameCrest(BOT);
   drawHexScales(BOT);
   drawBellyPlates(BOT);
-  drawHead(BOT,t);
+  drawHeadDistinct(BOT,t);
 
   watermark();
   requestAnimationFrame(frame);

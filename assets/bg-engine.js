@@ -1,367 +1,415 @@
 /* TNT — /assets/bg-engine.js
-   GEODIAMETRICS BACKGROUND ENGINE v1.3 (MOON FIX + NO-SPIN)
-   RULES:
-   - Single canvas only: id="gd_bg_canvas" (reuse if exists)
-   - Moon is STATIC per page load (random phase once; NO animation)
-   - No transforms on moon (no rotate/translate accumulation)
-   - 30fps budget + DPR cap for mobile
-   - Pointer-events none
+   GEODIAMETRICS BACKGROUND ENGINE v1.3
+   FIXES THIS PASS:
+     - Moon no longer “spins” (stable craters, stable phase per load)
+     - Lanterns restored (sky drift upward; excludes no zones)
+     - Clouds get depth (3 parallax layers + soft shading, not flat ovals)
+     - Water ripple flows outward from center only (no direction flipping)
+     - No dragons here (dragons are ONLY in /assets/dragon-anatomy.js)
+   CONSTRAINTS:
+     - Canvas-only, pointer-events none
+     - No new gd_* keys
+     - 30fps + DPR cap
 */
-
 (function(){
-  "use strict";
+"use strict";
 
-  // ---------- helpers ----------
-  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
-  function lerp(a,b,t){ return a + (b-a)*t; }
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+function mulberry32(seed){
+let t=seed>>>0;
+return function(){
+t+=0x6D2B79F5;
+let r=Math.imul(t^(t>>>15),1|t);
+r^=r+Math.imul(r^(r>>>7),61|r);
+return((r^(r>>>14))>>>0)/4294967296;
+};
+}
 
-  // stable RNG (for crater layout, clouds)
-  function mulberry32(seed){
-    var t = seed >>> 0;
-    return function(){
-      t += 0x6D2B79F5;
-      var r = Math.imul(t ^ (t >>> 15), 1 | t);
-      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-    };
-  }
+function createCanvas(){
+const c=document.createElement("canvas");
+c.id="gd_bg_canvas";
+c.style.position="fixed";
+c.style.inset="0";
+c.style.width="100%";
+c.style.height="100%";
+c.style.zIndex="0";
+c.style.pointerEvents="none";
+c.style.userSelect="none";
+c.style.opacity="1";
+return c;
+}
 
-  // ---------- canvas (single instance) ----------
-  function getOrCreateCanvas(){
-    var c = document.getElementById("gd_bg_canvas");
-    if(c) return c;
+function mount(opts){
+opts=opts||{};
+let reduce=false;
+try{reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
 
-    c = document.createElement("canvas");
-    c.id = "gd_bg_canvas";
-    c.style.position = "fixed";
-    c.style.inset = "0";
-    c.style.width = "100%";
-    c.style.height = "100%";
-    c.style.zIndex = "0";
-    c.style.pointerEvents = "none";
-    c.style.userSelect = "none";
-    c.style.opacity = "1";
-    (document.body || document.documentElement).prepend(c);
-    return c;
-  }
+const existing=document.getElementById("gd_bg_canvas");
+if(existing){existing.__GD_OPTS=opts;return existing;}
 
-  var canvas = getOrCreateCanvas();
-  var ctx = canvas.getContext("2d", { alpha:true, desynchronized:true });
-  if(!ctx) return;
+const canvas=createCanvas();
+canvas.__GD_OPTS=opts;
+(document.body||document.documentElement).prepend(canvas);
 
-  // ---------- budget ----------
-  var DPR_CAP = 1.6;
-  var TARGET_FPS = 30;
-  var FRAME_MS = 1000 / TARGET_FPS;
+const ctx=canvas.getContext("2d",{alpha:true,desynchronized:true});
+if(!ctx) return canvas;
 
-  var W=0,H=0,DPR=1;
+const DPR_CAP=(opts.dpr_cap!=null)?opts.dpr_cap:1.6;
+const FPS=(opts.fps!=null)?opts.fps:30;
+const FRAME_MS=1000/FPS;
 
-  function resize(){
-    var ww = Math.max(1, window.innerWidth || 1);
-    var hh = Math.max(1, window.innerHeight || 1);
-    var dpr = 1;
-    try{ dpr = window.devicePixelRatio || 1; }catch(e){}
-    DPR = clamp(dpr, 1, DPR_CAP);
-    W = Math.floor(ww * DPR);
-    H = Math.floor(hh * DPR);
-    canvas.width = W;
-    canvas.height = H;
-  }
-  resize();
-  window.addEventListener("resize", resize, {passive:true});
+let W=0,H=0,DPR=1;
 
-  // ---------- STATIC MOON (drawn to sprite ONCE) ----------
-  // Random phase once per page load. No storage.
-  var moonPhase = Math.random(); // 0=new, 0.5=full
-  var moonSeed  = ((Date.now() ^ ((Math.random()*1e9)|0)) >>> 0);
-  var rnd = mulberry32(moonSeed);
+function resize(){
+const ww=Math.max(1,window.innerWidth||1);
+const hh=Math.max(1,window.innerHeight||1);
+let dpr=1; try{dpr=window.devicePixelRatio||1;}catch(e){}
+DPR=Math.min(DPR_CAP,Math.max(1,dpr));
+W=Math.floor(ww*DPR);
+H=Math.floor(hh*DPR);
+canvas.width=W;
+canvas.height=H;
+}
+resize();
+window.addEventListener("resize",resize,{passive:true});
 
-  // crater layout (normalized in [-1,1])
-  var craters = [];
-  (function seedCraters(){
-    var count = 18;
-    for(var i=0;i<count;i++){
-      var ang = rnd()*Math.PI*2;
-      var rad = Math.pow(rnd(), 0.62) * 0.78;
-      craters.push({
-        u: Math.cos(ang)*rad,
-        v: Math.sin(ang)*rad,
-        rr: lerp(0.05, 0.16, rnd()),
-        a:  lerp(0.10, 0.28, rnd())
-      });
-    }
-  })();
+/* =========================================================
+   MOON (single, stable per load)
+========================================================= */
+const moonPhase=Math.random();          // stable this load
+const craterSeed=((Date.now()^(Math.random()*1e9))>>>0);
+const rnd=mulberry32(craterSeed);
+const craters=[];
+(function seedCraters(){
+const n=(opts.crater_count!=null)?opts.crater_count:18;
+for(let i=0;i<n;i++){
+const ang=rnd()*Math.PI*2;
+const rad=Math.pow(rnd(),0.62)*0.78;
+craters.push({
+u:Math.cos(ang)*rad,
+v:Math.sin(ang)*rad,
+rr:lerp(0.05,0.16,rnd()),
+a:lerp(0.10,0.26,rnd())
+});
+}
+})();
 
-  // Offscreen sprite so moon never “spins”
-  var moonSprite = document.createElement("canvas");
-  var mctx = moonSprite.getContext("2d");
+function drawSky(){
+/* red, dark, red, dark */
+const g=ctx.createLinearGradient(0,0,0,H);
+g.addColorStop(0.00,"rgba(210,70,40,0.26)");
+g.addColorStop(0.22,"rgba(120,20,20,0.14)");
+g.addColorStop(0.58,"rgba(180,55,30,0.18)");
+g.addColorStop(1.00,"rgba(0,0,0,0.14)");
+ctx.fillStyle=g;
+ctx.fillRect(0,0,W,H);
+}
 
-  function buildMoonSprite(){
-    // size in device pixels for sharpness
-    var mr = Math.min(W,H) * 0.062;          // radius
-    var pad = mr * 3.2;                      // halo padding
-    var S = Math.ceil((mr*2) + pad*2);
+function drawMoon(){
+const mx=W*0.78;
+const my=H*0.18;
+const mr=Math.min(W,H)*((opts.moon_radius!=null)?opts.moon_radius:0.065);
 
-    moonSprite.width = S;
-    moonSprite.height = S;
+/* glow */
+ctx.save();
+let halo=ctx.createRadialGradient(mx,my,mr*0.2,mx,my,mr*2.8);
+halo.addColorStop(0,"rgba(255,248,230,0.26)");
+halo.addColorStop(0.40,"rgba(255,225,170,0.14)");
+halo.addColorStop(1,"rgba(255,225,170,0)");
+ctx.fillStyle=halo;
+ctx.beginPath();
+ctx.arc(mx,my,mr*2.8,0,Math.PI*2);
+ctx.fill();
 
-    var cx = S/2, cy = S/2;
+/* disc */
+ctx.shadowColor="rgba(255,245,225,0.48)";
+ctx.shadowBlur=28*DPR;
+ctx.fillStyle="rgba(255,246,232,0.98)";
+ctx.beginPath();
+ctx.arc(mx,my,mr,0,Math.PI*2);
+ctx.fill();
+ctx.shadowBlur=0;
 
-    mctx.clearRect(0,0,S,S);
-    mctx.save();
+/* phase shadow INSIDE same disc (no double moon) */
+const k=Math.cos(moonPhase*Math.PI*2);
+const shift=k*mr*0.58;
+ctx.save();
+ctx.beginPath();
+ctx.arc(mx,my,mr,0,Math.PI*2);
+ctx.clip();
+ctx.fillStyle="rgba(0,0,0,0.62)";
+ctx.beginPath();
+ctx.arc(mx+shift,my,mr,0,Math.PI*2);
+ctx.fill();
+ctx.restore();
 
-    // halo
-    var halo = mctx.createRadialGradient(cx, cy, mr*0.2, cx, cy, mr*2.8);
-    halo.addColorStop(0, "rgba(255,248,230,0.24)");
-    halo.addColorStop(0.35, "rgba(255,225,170,0.14)");
-    halo.addColorStop(1, "rgba(255,225,170,0)");
-    mctx.fillStyle = halo;
-    mctx.beginPath();
-    mctx.arc(cx, cy, mr*2.8, 0, Math.PI*2);
-    mctx.fill();
+/* crater shading (stable, not flicker) */
+ctx.save();
+ctx.beginPath();
+ctx.arc(mx,my,mr,0,Math.PI*2);
+ctx.clip();
 
-    // base disc
-    mctx.shadowColor = "rgba(255,245,225,0.48)";
-    mctx.shadowBlur = 28*DPR;
-    mctx.fillStyle = "rgba(255,246,232,0.98)";
-    mctx.beginPath();
-    mctx.arc(cx, cy, mr, 0, Math.PI*2);
-    mctx.fill();
-    mctx.shadowBlur = 0;
+/* rim depth */
+let rim=ctx.createRadialGradient(mx-mr*0.25,my-mr*0.25,mr*0.15,mx,my,mr);
+rim.addColorStop(0,"rgba(0,0,0,0.00)");
+rim.addColorStop(1,"rgba(0,0,0,0.18)");
+ctx.fillStyle=rim;
+ctx.fillRect(mx-mr,my-mr,mr*2,mr*2);
 
-    // phase shading INSIDE SAME DISC (no double moon)
-    var k = Math.cos(moonPhase * Math.PI * 2); // -1..1
-    var shift = k * mr * 0.58;
+for(let i=0;i<craters.length;i++){
+const c=craters[i];
+const cx=mx+c.u*mr;
+const cy=my+c.v*mr;
+const cr=c.rr*mr;
 
-    mctx.save();
-    mctx.beginPath();
-    mctx.arc(cx, cy, mr, 0, Math.PI*2);
-    mctx.clip();
-    mctx.fillStyle = "rgba(0,0,0,0.62)";
-    mctx.beginPath();
-    mctx.arc(cx + shift, cy, mr, 0, Math.PI*2);
-    mctx.fill();
-    mctx.restore();
+/* crater */
+ctx.fillStyle="rgba(0,0,0,"+c.a+")";
+ctx.beginPath();
+ctx.arc(cx,cy,cr,0,Math.PI*2);
+ctx.fill();
 
-    // crater detail (stable)
-    mctx.save();
-    mctx.beginPath();
-    mctx.arc(cx, cy, mr, 0, Math.PI*2);
-    mctx.clip();
+/* lip highlight */
+ctx.fillStyle="rgba(255,255,255,0.10)";
+ctx.beginPath();
+ctx.arc(cx-cr*0.18,cy-cr*0.18,cr*0.55,0,Math.PI*2);
+ctx.fill();
+}
+ctx.restore();
 
-    // rim shading for depth
-    var rim = mctx.createRadialGradient(cx - mr*0.25, cy - mr*0.25, mr*0.15, cx, cy, mr);
-    rim.addColorStop(0, "rgba(0,0,0,0.00)");
-    rim.addColorStop(1, "rgba(0,0,0,0.18)");
-    mctx.fillStyle = rim;
-    mctx.fillRect(cx-mr, cy-mr, mr*2, mr*2);
+drawMoonReflection(mx,mr);
+ctx.restore();
+}
 
-    for(var i=0;i<craters.length;i++){
-      var c = craters[i];
-      var px = cx + c.u * mr;
-      var py = cy + c.v * mr;
-      var pr = c.rr * mr;
+function drawMoonReflection(mx,mr){
+const y0=H*0.62;
+const w=mr*2.8;
+const h=mr*4.0;
 
-      // crater body
-      mctx.fillStyle = "rgba(0,0,0,"+c.a+")";
-      mctx.beginPath();
-      mctx.arc(px, py, pr, 0, Math.PI*2);
-      mctx.fill();
+ctx.save();
+ctx.globalCompositeOperation="screen";
+ctx.globalAlpha=0.58;
 
-      // inner highlight lip
-      mctx.fillStyle = "rgba(255,255,255,0.09)";
-      mctx.beginPath();
-      mctx.arc(px - pr*0.18, py - pr*0.18, pr*0.55, 0, Math.PI*2);
-      mctx.fill();
-    }
+let g=ctx.createLinearGradient(mx,y0,mx,y0+h);
+g.addColorStop(0,"rgba(255,235,190,0.18)");
+g.addColorStop(0.35,"rgba(255,200,150,0.10)");
+g.addColorStop(1,"rgba(0,0,0,0)");
+ctx.fillStyle=g;
 
-    mctx.restore();
-    mctx.restore();
-  }
+ctx.beginPath();
+ctx.ellipse(mx,y0+h*0.22,w*0.40,h*0.44,0,0,Math.PI*2);
+ctx.fill();
 
-  buildMoonSprite();
+/* ripple breakup */
+ctx.globalAlpha=0.44;
+ctx.strokeStyle="rgba(255,255,255,0.05)";
+ctx.lineWidth=1*DPR;
+for(let i=0;i<7;i++){
+const yy=y0+i*(h/7);
+ctx.beginPath();
+ctx.ellipse(mx,yy,w*(0.22+i*0.10),6*DPR,0,0,Math.PI*2);
+ctx.stroke();
+}
+ctx.restore();
+}
 
-  // Rebuild sprite on resize to keep sharpness (still static)
-  window.addEventListener("resize", function(){
-    // resize() already updated W/H/DPR; rebuild sprite once
-    buildMoonSprite();
-  }, {passive:true});
+/* =========================================================
+   CLOUDS (3-layer parallax + depth)
+========================================================= */
+const cloudSeed=((Date.now()+1337)>>>0);
+const crnd=mulberry32(cloudSeed);
+const clouds=[];
+(function seedClouds(){
+const n=(opts.cloud_count!=null)?opts.cloud_count:22;
+for(let i=0;i<n;i++){
+const layer=(i%3); // 0 near, 1 mid, 2 far
+clouds.push({
+layer:layer,
+x:crnd()*W,
+y:lerp(H*0.45,H*0.95,crnd()),
+w:lerp(180,520,crnd())*DPR*(layer===0?1.15:layer===1?0.95:0.80),
+h:lerp(38,92,crnd())*DPR*(layer===0?1.10:layer===1?0.95:0.85),
+a:layer===0?0.10:layer===1?0.07:0.05,
+vx:(layer===0?0.028:layer===1?0.020:0.014)*DPR
+});
+}
+})();
 
-  // ---------- clouds (reflection plane) ----------
-  var cloudSeed = ((moonSeed ^ 0xA5A5A5A5) >>> 0);
-  var crnd = mulberry32(cloudSeed);
-  var blobs = [];
-  var blobCount = 36;
-  function seedClouds(){
-    blobs = [];
-    for(var i=0;i<blobCount;i++){
-      blobs.push({
-        x: crnd()*W,
-        y: crnd()*H,
-        r: lerp(60, 220, crnd()) * DPR,
-        a: lerp(0.02, 0.07, crnd()),
-        sx: lerp(10, 32, crnd()) * DPR, // px/sec (slow)
-        hue: (crnd()<0.7) ? "warm" : "opal"
-      });
-    }
-  }
-  seedClouds();
-  window.addEventListener("resize", seedClouds, {passive:true});
+function drawCloudShape(x,y,w,h,alpha){
+/* stacked ellipses + shading to avoid “flat ovals” */
+ctx.save();
+ctx.globalAlpha=alpha;
+ctx.globalCompositeOperation="screen";
 
-  // ---------- draw sky ----------
-  function drawSky(){
-    // Target: red, dark, red, dark (not red-dark-dark-dark)
-    var g = ctx.createLinearGradient(0,0,0,H);
-    g.addColorStop(0.00, "rgba(210,70,40,0.22)");
-    g.addColorStop(0.30, "rgba(70,10,20,0.20)");
-    g.addColorStop(0.62, "rgba(180,55,30,0.16)");
-    g.addColorStop(1.00, "rgba(0,0,0,0.18)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,W,H);
-  }
+/* base */
+ctx.fillStyle="rgba(255,210,160,1)";
+ctx.beginPath();
+ctx.ellipse(x,y,w,h,0,0,Math.PI*2);
+ctx.fill();
 
-  // ---------- draw clouds (soft, with depth) ----------
-  function drawClouds(t){
-    var yMin = H*0.45; // reflection plane
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    for(var i=0;i<blobs.length;i++){
-      var b = blobs[i];
-      var x = (b.x + (t*0.001)*b.sx) % (W + b.r*2) - b.r;
-      var y = clamp(b.y, yMin, H);
+/* lobes */
+ctx.beginPath();
+ctx.ellipse(x-w*0.28,y-h*0.12,w*0.55,h*0.85,0,0,Math.PI*2);
+ctx.ellipse(x+w*0.18,y-h*0.18,w*0.60,h*0.95,0,0,Math.PI*2);
+ctx.ellipse(x+w*0.42,y+h*0.05,w*0.45,h*0.78,0,0,Math.PI*2);
+ctx.fill();
 
-      // depth: layered radial gradient (core + outer)
-      var col = (b.hue==="opal") ? "rgba(160,120,255,1)" : "rgba(255,200,140,1)";
-      ctx.globalAlpha = b.a;
+/* inner shadow */
+ctx.globalAlpha=alpha*0.55;
+ctx.fillStyle="rgba(0,0,0,0.35)";
+ctx.beginPath();
+ctx.ellipse(x+w*0.10,y+h*0.18,w*0.72,h*0.60,0,0,Math.PI*2);
+ctx.fill();
 
-      var g1 = ctx.createRadialGradient(x, y, 0, x, y, b.r);
-      g1.addColorStop(0, col);
-      g1.addColorStop(0.55, "rgba(255,255,255,0.10)");
-      g1.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g1;
-      ctx.beginPath();
-      ctx.arc(x, y, b.r, 0, Math.PI*2);
-      ctx.fill();
+/* rim highlight */
+ctx.globalAlpha=alpha*0.55;
+ctx.fillStyle="rgba(255,255,255,0.28)";
+ctx.beginPath();
+ctx.ellipse(x-w*0.10,y-h*0.20,w*0.70,h*0.55,0,0,Math.PI*2);
+ctx.fill();
 
-      // subtle shadow underlayer (adds form)
-      ctx.globalAlpha = b.a*0.65;
-      var g2 = ctx.createRadialGradient(x, y + b.r*0.15, 0, x, y + b.r*0.15, b.r*0.9);
-      g2.addColorStop(0, "rgba(0,0,0,0.14)");
-      g2.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = g2;
-      ctx.beginPath();
-      ctx.arc(x, y + b.r*0.15, b.r*0.9, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
+ctx.restore();
+}
 
-  // ---------- draw moon (static sprite blit) ----------
-  function drawMoon(){
-    var mx = W*0.78;
-    var my = H*0.18;
-    var S = moonSprite.width;
-    ctx.save();
-    ctx.globalAlpha = 1;
-    ctx.drawImage(moonSprite, mx - S/2, my - S/2);
-    ctx.restore();
-  }
+function drawClouds(dt){
+for(let i=0;i<clouds.length;i++){
+const c=clouds[i];
+c.x+=c.vx*dt;
+if(c.x>W+c.w) c.x=-c.w;
 
-  // ---------- moon reflection ----------
-  function drawMoonReflection(){
-    var mx = W*0.78;
-    var mr = Math.min(W,H) * 0.062;
-    var y0 = H*0.62;
-    var w = mr*2.8;
-    var h = mr*4.0;
+drawCloudShape(c.x,c.y,c.w,c.h,c.a);
+}
+}
 
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.56;
+/* =========================================================
+   LANTERNS (floating upward)
+========================================================= */
+const lanterns=[];
+(function seedLanterns(){
+const n=(opts.lantern_count!=null)?opts.lantern_count:26;
+for(let i=0;i<n;i++){
+lanterns.push({
+x:Math.random()*W,
+y:H+Math.random()*H*0.6,
+vy:lerp(0.016,0.05,Math.random())*DPR,
+r:lerp(1.4,3.2,Math.random())*DPR,
+a:lerp(0.08,0.20,Math.random())
+});
+}
+})();
 
-    var g = ctx.createLinearGradient(mx, y0, mx, y0+h);
-    g.addColorStop(0, "rgba(255,235,190,0.18)");
-    g.addColorStop(0.35, "rgba(255,200,150,0.10)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.ellipse(mx, y0 + h*0.22, w*0.40, h*0.44, 0, 0, Math.PI*2);
-    ctx.fill();
+function drawLanterns(dt){
+ctx.save();
+ctx.globalCompositeOperation="screen";
+for(let i=0;i<lanterns.length;i++){
+const l=lanterns[i];
+l.y-=l.vy*dt;
+if(l.y<-40*DPR){
+l.y=H+Math.random()*H*0.4;
+l.x=Math.random()*W;
+}
 
-    // gentle ripple breakup
-    ctx.globalAlpha = 0.42;
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
-    ctx.lineWidth = 1*DPR;
-    for(var i=0;i<7;i++){
-      var yy = y0 + i*(h/7);
-      ctx.beginPath();
-      ctx.ellipse(mx, yy, w*(0.22 + i*0.10), 6*DPR, 0, 0, Math.PI*2);
-      ctx.stroke();
-    }
+ctx.globalAlpha=l.a;
+const g=ctx.createRadialGradient(l.x,l.y,0,l.x,l.y,l.r*8);
+g.addColorStop(0,"rgba(255,210,140,0.55)");
+g.addColorStop(0.35,"rgba(255,140,90,0.22)");
+g.addColorStop(1,"rgba(0,0,0,0)");
+ctx.fillStyle=g;
+ctx.beginPath();
+ctx.arc(l.x,l.y,l.r*8,0,Math.PI*2);
+ctx.fill();
+}
+ctx.restore();
+}
 
-    ctx.restore();
-  }
+/* =========================================================
+   WATER RIPPLE (outward only, no direction flip)
+========================================================= */
+function drawWaterDial(t){
+const cx=W*0.5, cy=H*0.50;
+const r=Math.min(W,H)*0.32;
 
-  // ---------- water dial ripple (slow, outward feel) ----------
-  function drawWaterDial(t){
-    var cx = W*0.5, cy = H*0.50;
-    var r = Math.min(W,H)*0.32;
+ctx.save();
+ctx.beginPath();
+ctx.arc(cx,cy,r,0,Math.PI*2);
+ctx.clip();
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.clip();
+/* tint */
+const grd=ctx.createRadialGradient(cx,cy-r*0.2,r*0.2,cx,cy,r);
+grd.addColorStop(0,"rgba(255,220,180,0.08)");
+grd.addColorStop(0.55,"rgba(255,160,120,0.05)");
+grd.addColorStop(1,"rgba(0,0,0,0.00)");
+ctx.fillStyle=grd;
+ctx.fillRect(cx-r,cy-r,r*2,r*2);
 
-    // base tint
-    var grd = ctx.createRadialGradient(cx, cy-r*0.2, r*0.2, cx, cy, r);
-    grd.addColorStop(0, "rgba(255,220,180,0.08)");
-    grd.addColorStop(0.55, "rgba(255,160,120,0.05)");
-    grd.addColorStop(1, "rgba(0,0,0,0.00)");
-    ctx.fillStyle = grd;
-    ctx.fillRect(cx-r, cy-r, r*2, r*2);
+/* rings: purely outward progression */
+ctx.strokeStyle="rgba(255,255,255,0.05)";
+ctx.lineWidth=1*DPR;
 
-    // outward motion (slow)
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
-    ctx.lineWidth = 1*DPR;
-    var base = (t*0.00022) % 1; // MUCH slower than before
-    for(var i=0;i<8;i++){
-      var rr = r * (0.18 + (i*0.105) + base*0.105);
-      ctx.beginPath();
-      ctx.arc(cx, cy, rr, 0, Math.PI*2);
-      ctx.stroke();
-    }
+const base=(t*0.00018)%1; // slow
+for(let i=0;i<9;i++){
+const rr=r*(0.18 + i*0.09 + base*0.09);
+ctx.beginPath();
+ctx.arc(cx,cy,rr,0,Math.PI*2);
+ctx.stroke();
+}
 
-    ctx.restore();
-  }
+/* gold arc highlight (slow drift) */
+ctx.globalAlpha=0.70;
+ctx.strokeStyle="rgba(212,175,55,0.06)";
+ctx.lineWidth=2*DPR;
+const a=t*0.00018;
+ctx.beginPath();
+ctx.arc(cx,cy,r*0.78,a,a+1.1);
+ctx.stroke();
 
-  // ---------- loop ----------
-  var last = 0;
-  var acc = 0;
+ctx.restore();
+}
 
-  function frame(ts){
-    if(!last) last = ts;
-    var dt = ts - last;
-    last = ts;
+/* =========================================================
+   LOOP
+========================================================= */
+let last=0;
+let acc=0;
 
-    acc += dt;
-    if(acc < FRAME_MS){
-      requestAnimationFrame(frame);
-      return;
-    }
-    acc = 0;
+function frame(ts){
+if(!last) last=ts;
+const dt=ts-last;
+last=ts;
 
-    ctx.clearRect(0,0,W,H);
+if(reduce){
+ctx.clearRect(0,0,W,H);
+drawSky();
+drawMoon();
+drawWaterDial(ts);
+return;
+}
 
-    // ORDER: sky → moon (static) → reflection → clouds → dial ripples
-    drawSky();
-    drawMoon();
-    drawMoonReflection();
-    drawClouds(ts);
-    drawWaterDial(ts);
+acc+=dt;
+if(acc<FRAME_MS){
+requestAnimationFrame(frame);
+return;
+}
+acc=0;
 
-    requestAnimationFrame(frame);
-  }
+ctx.clearRect(0,0,W,H);
 
-  requestAnimationFrame(frame);
+/* order */
+drawSky();
+drawMoon();
+drawClouds(dt);
+drawLanterns(dt);
+drawWaterDial(ts);
+
+requestAnimationFrame(frame);
+}
+
+requestAnimationFrame(frame);
+
+return canvas;
+}
+
+/* public */
+window.GD_BG={mount:mount};
 
 })();

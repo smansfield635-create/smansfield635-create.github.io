@@ -1,315 +1,669 @@
-/* =====================================================
-   GEODIAMETRICS ATMOSPHERE ENGINE — LAYER 6
-   PURPOSE:
-   - Single moon (no double-moon) + phase advances on each load/return
-   - Smooth cloud drift (slither-smooth, not jitter)
-   - Lanterns drifting upward
-   - Runs as one fixed canvas layer (no DOM clutter)
-   CONSTRAINTS:
-   - No gd_* keys added
-   - No timers as gates (animation via requestAnimationFrame only)
-===================================================== */
-
+/* ============================================================
+   TNT — /assets/atmosphere-engine.js
+   GEODIAMETRICS ATMOSPHERE ENGINE (MOON + CLOUDS + DRAGON HEAD TEMPLATE)
+   EN-ONLY (VISUAL DEV MODE)
+   RULES:
+     - No external assets
+     - ui.css owns html/body background (we only draw overlay canvases)
+     - Two canvases:
+         BG = clouds + sky glow (behind compass)
+         MID = moon + dragons + lantern embers (above compass, below buttons)
+     - Deterministic + performant: precomputed craters + cloud blobs
+   ============================================================ */
 (function(){
   "use strict";
 
-  /* ---------- Canvas mount ---------- */
-  const fx = document.createElement("canvas");
-  fx.id = "gd_atmo_layer";
-  fx.style.position = "fixed";
-  fx.style.top = "0";
-  fx.style.left = "0";
-  fx.style.width = "100%";
-  fx.style.height = "100%";
-  fx.style.pointerEvents = "none";
+  // ---- guard: avoid duplicates ----
+  if(window.GD_ATMO && window.GD_ATMO.__alive) return;
 
-  /* Layering:
-     - below gems (usually z=10+)
-     - above dial/face (usually z=1–3)
-     Adjust if needed: */
-  fx.style.zIndex = "6";
+  const GD_ATMO = window.GD_ATMO = {
+    __alive:true,
+    state:{
+      enabled:true,
+      dpi: Math.min(2, window.devicePixelRatio || 1),
+      moon:{
+        // phase advances on each load; single moon only (no double)
+        phaseIndex: 0,         // 0..15
+        glow: 0.85,
+        size: 170,
+        xNorm: 0.88,
+        yNorm: 0.22
+      },
+      clouds:{
+        count: 8,
+        speed: 0.06,
+        opacity: 0.18
+      },
+      embers:{
+        count: 28,
+        speed: 0.14,
+        opacity: 0.30
+      },
+      dragons:{
+        enabled:true,
+        count: 2,
+        colorBody: "rgba(10,35,18,0.92)",      // onyx-green
+        colorBelly:"rgba(120,0,22,0.16)",      // subtle red belly tint
+        colorStroke:"rgba(212,175,55,0.65)",   // gold edge
+        bannerEnabled:true,
+        bannerTextPool:[
+          "Say less, do more.",
+          "Time passes, the river flows.",
+          "Correct mistakes; virtue is greatest.",
+          "One moment becomes a thousand years."
+        ],
+        speed: 0.65,
+        slitherAmp: 14,
+        slitherFreq: 0.020
+      }
+    },
+    canvases:{},
+    ctx:{},
+    cache:{},
+    api:{}
+  };
 
-  document.body.appendChild(fx);
+  // ============================================================
+  // Utilities
+  // ============================================================
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  const now=()=>performance.now();
 
-  const ctx = fx.getContext("2d", { alpha: true });
-
-  function resize(){
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    fx.width  = Math.floor(window.innerWidth * dpr);
-    fx.height = Math.floor(window.innerHeight * dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+  function setStyle(el, css){
+    for(const k in css) el.style[k]=css[k];
   }
-  resize();
-  window.addEventListener("resize", resize, { passive:true });
 
-  /* ---------- Moon phase (single moon; advances per page load) ---------- */
-  // 0..7 : new → waxing → full → waning
-  const PHASES = 8;
-  const PHASE_KEY = "gd_moon_phase_idx_v1"; // NOT gd_* (allowed)
-  let phaseIdx = 0;
-
-  try{
-    const prev = parseInt(sessionStorage.getItem(PHASE_KEY) || "0", 10);
-    phaseIdx = (isFinite(prev) ? (prev + 1) : 0) % PHASES;
-    sessionStorage.setItem(PHASE_KEY, String(phaseIdx));
-  }catch(e){
-    // fallback deterministic
-    phaseIdx = (Math.floor(Date.now()/1000) % PHASES);
+  function mkCanvas(id, z){
+    let c=document.getElementById(id);
+    if(c) return c;
+    c=document.createElement("canvas");
+    c.id=id;
+    setStyle(c,{
+      position:"fixed",
+      inset:"0",
+      width:"100vw",
+      height:"100vh",
+      pointerEvents:"none",
+      zIndex:String(z),
+      transform:"translateZ(0)"
+    });
+    document.body.appendChild(c);
+    return c;
   }
 
-  function drawMoon(x,y,r){
-    // craters
-    ctx.save();
-    ctx.translate(x,y);
+  function resizeCanvas(c, dpi){
+    const w=Math.floor(window.innerWidth * dpi);
+    const h=Math.floor(window.innerHeight * dpi);
+    if(c.width===w && c.height===h) return;
+    c.width=w; c.height=h;
+  }
 
-    // glow
-    ctx.globalAlpha = 0.9;
-    const g = ctx.createRadialGradient(0,0, r*0.3, 0,0, r*2.3);
-    g.addColorStop(0, "rgba(255,245,220,0.22)");
-    g.addColorStop(0.25, "rgba(255,235,200,0.14)");
-    g.addColorStop(1, "rgba(255,235,200,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(0,0,r*2.3,0,Math.PI*2); ctx.fill();
-
-    // base disk
-    ctx.globalAlpha = 0.95;
-    const m = ctx.createRadialGradient(-r*0.25,-r*0.25, r*0.2, 0,0, r*1.05);
-    m.addColorStop(0, "rgba(255,250,235,0.98)");
-    m.addColorStop(0.55, "rgba(245,235,215,0.96)");
-    m.addColorStop(1, "rgba(220,205,185,0.94)");
-    ctx.fillStyle = m;
-    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
-
-    // craters (subtle)
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle = "rgba(120,100,90,1)";
-    const cr = [
-      {x:-0.28,y:0.10,s:0.18},
-      {x:0.22,y:-0.06,s:0.14},
-      {x:0.08,y:0.24,s:0.10},
-      {x:-0.06,y:-0.26,s:0.08}
-    ];
-    for(const c of cr){
-      ctx.beginPath();
-      ctx.ellipse(c.x*r, c.y*r, c.s*r, c.s*r*0.78, 0, 0, Math.PI*2);
-      ctx.fill();
+  // ============================================================
+  // Moon phase + crater cache (single moon, no “double”)
+  // ============================================================
+  function buildCraterMap(sizePx){
+    // Precompute crater circles with a shaded rim.
+    // Deterministic-ish for stability per load.
+    const craters=[];
+    const n = 26; // crater count (kept modest for perf)
+    for(let i=0;i<n;i++){
+      const r = rand(sizePx*0.010, sizePx*0.060);
+      const x = rand(-sizePx*0.32, sizePx*0.32);
+      const y = rand(-sizePx*0.32, sizePx*0.32);
+      const d = Math.sqrt(x*x+y*y);
+      if(d > sizePx*0.34) { i--; continue; }
+      craters.push({x,y,r,shade:rand(0.10,0.26)});
     }
+    return craters;
+  }
 
-    // phase mask (SINGLE moon, not double disk)
-    // k in [-1..1]: -1=new, 0=half, 1=full
-    const k = (phaseIdx / (PHASES-1)) * 2 - 1;
-    // waxing (k>0) show right; waning (k<0) show left
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.globalAlpha = 1;
+  function moonPhaseMask(ctx, cx, cy, r, phase01){
+    // phase01: 0 new -> 0.5 full -> 1 new
+    // We draw: base disc, then subtract shadow disc offset.
+    // This avoids “double moons” by never drawing two bright discs.
+    ctx.save();
+    ctx.translate(cx,cy);
+
+    // Base disc clip
     ctx.beginPath();
     ctx.arc(0,0,r,0,Math.PI*2);
     ctx.clip();
 
-    // shadow overlay
-    ctx.globalCompositeOperation = "source-atop";
-    ctx.fillStyle = "rgba(0,0,0,0.62)";
+    // Shadow: offset depends on phase
+    const t = phase01<=0.5 ? (phase01/0.5) : ((1-phase01)/0.5); // 0..1..0
+    const dir = phase01<=0.5 ? -1 : 1; // waxing vs waning
+    const off = dir * lerp(r*1.05, 0, t);
+
+    ctx.globalCompositeOperation="source-over";
+    ctx.fillStyle="rgba(0,0,0,0.55)";
     ctx.beginPath();
-    const offset = (-k) * r; // move shadow circle across
-    ctx.arc(offset, 0, r, 0, Math.PI*2);
+    ctx.arc(off,0,r*1.02,0,Math.PI*2);
     ctx.fill();
 
-    // restore normal drawing
-    ctx.globalCompositeOperation = "source-over";
     ctx.restore();
   }
 
-  function drawMoonReflection(x,y,r,waterY){
-    // reflection is vertically flipped with blur-like alpha falloff
-    const dy = (waterY - y);
-    const ry = waterY + dy; // mirror across water line
+  function drawMoon(ctx, W, H, S){
+    const m=S.moon;
+    const dpi=S.dpi;
+
+    const r = m.size * dpi * 0.5;
+    const cx = W*m.xNorm;
+    const cy = H*m.yNorm;
+
+    // glow halo
+    ctx.save();
+    ctx.globalCompositeOperation="screen";
+    const g=ctx.createRadialGradient(cx,cy,r*0.30, cx,cy, r*1.9);
+    g.addColorStop(0, `rgba(255,235,205,${0.22*m.glow})`);
+    g.addColorStop(1, "rgba(255,235,205,0)");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(cx,cy,r*1.9,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // moon disc (single)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle="rgba(245,245,245,0.96)";
+    ctx.fill();
+
+    // subtle terminator shading
+    const phase01 = (m.phaseIndex % 16)/16; // 0..0.9375
+    moonPhaseMask(ctx, cx, cy, r, phase01);
+
+    // craters
+    const key="craters_"+Math.round(r);
+    if(!GD_ATMO.cache[key]) GD_ATMO.cache[key]=buildCraterMap(r*2);
+    const craters = GD_ATMO.cache[key];
 
     ctx.save();
-    ctx.translate(x, ry);
-    ctx.scale(1, -1);
+    ctx.translate(cx,cy);
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.clip();
 
-    // fade with distance from water line
-    const fade = Math.max(0, Math.min(1, 1 - (dy / (window.innerHeight*0.9))));
-    ctx.globalAlpha = 0.18 * fade;
+    // limb darkening
+    const ld=ctx.createRadialGradient(0,0,r*0.25, 0,0,r);
+    ld.addColorStop(0,"rgba(255,255,255,0)");
+    ld.addColorStop(1,"rgba(0,0,0,0.18)");
+    ctx.fillStyle=ld;
+    ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.fill();
 
-    // smudge streaks
-    const grad = ctx.createRadialGradient(0,0, r*0.2, 0,0, r*2.4);
-    grad.addColorStop(0, "rgba(255,240,210,0.20)");
-    grad.addColorStop(1, "rgba(255,240,210,0)");
-    ctx.fillStyle = grad;
-    ctx.beginPath(); ctx.arc(0,0,r*2.4,0,Math.PI*2); ctx.fill();
-
-    // main reflected moon (simpler)
-    ctx.globalAlpha = 0.22 * fade;
-    ctx.fillStyle = "rgba(245,235,215,0.95)";
-    ctx.beginPath(); ctx.arc(0,0,r*0.98,0,Math.PI*2); ctx.fill();
+    for(const c of craters){
+      // crater body
+      ctx.fillStyle=`rgba(170,170,170,${c.shade})`;
+      ctx.beginPath(); ctx.arc(c.x,c.y,c.r,0,Math.PI*2); ctx.fill();
+      // rim highlight
+      ctx.strokeStyle="rgba(255,255,255,0.12)";
+      ctx.lineWidth=Math.max(1, r*0.002);
+      ctx.beginPath(); ctx.arc(c.x-c.r*0.15, c.y-c.r*0.15, c.r*0.98, 0, Math.PI*2);
+      ctx.stroke();
+    }
+    ctx.restore(); // crater clip
+    ctx.restore(); // translate
 
     ctx.restore();
   }
 
-  /* ---------- Clouds (smooth drift) ---------- */
-  const clouds = [];
-  const CLOUDS = 10;
-
-  function spawnCloud(){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    return {
-      x: Math.random()*w,
-      y: Math.random()*(h*0.55),
-      vx: 0.12 + Math.random()*0.18,
-      a: 0.035 + Math.random()*0.02,
-      sx: 220 + Math.random()*320,
-      sy: 50 + Math.random()*90,
-      t: Math.random()*1000
-    };
+  // ============================================================
+  // Cloud blobs (multi-lobed, not ovals)
+  // ============================================================
+  function makeCloudField(count){
+    const out=[];
+    for(let i=0;i<count;i++){
+      out.push({
+        x: rand(-0.2,1.2),
+        y: rand(0.10,0.60),
+        s: rand(0.60,1.30),
+        v: rand(0.020,0.060),
+        lobes: Math.floor(rand(5,9)),
+        wob: rand(0.8,1.6),
+        seed: Math.random()*1000
+      });
+    }
+    return out;
   }
-  for(let i=0;i<CLOUDS;i++) clouds.push(spawnCloud());
 
-  function drawCloudField(t){
+  function drawCloud(ctx, x, y, size, lobes, wob, t, alpha){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle="rgba(255,255,255,1)";
+    ctx.beginPath();
+
+    // lobe ring
+    for(let i=0;i<lobes;i++){
+      const a=(i/lobes)*Math.PI*2;
+      const rr=size*(0.22 + 0.06*Math.sin(t*wob + i));
+      const rx=size*(0.32 + 0.08*Math.cos(t*wob*0.7 + i*1.3));
+      const px=Math.cos(a)*rx;
+      const py=Math.sin(a)*rr;
+      ctx.moveTo(px+rr,py);
+      ctx.arc(px,py,rr,0,Math.PI*2);
+    }
+    ctx.fill();
+
+    // soften edges
+    ctx.globalCompositeOperation="source-in";
+    const g=ctx.createRadialGradient(0,0,size*0.15, 0,0,size*0.9);
+    g.addColorStop(0,"rgba(255,255,255,1)");
+    g.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=g;
+    ctx.beginPath(); ctx.arc(0,0,size,0,Math.PI*2); ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawClouds(ctx, W, H, S, t){
+    const C=S.clouds;
+    if(!GD_ATMO.cache.clouds) GD_ATMO.cache.clouds=makeCloudField(C.count);
+    const clouds=GD_ATMO.cache.clouds;
+
+    ctx.save();
+    ctx.globalCompositeOperation="screen";
     for(const c of clouds){
-      c.t += 0.002;
-      c.x += c.vx;
+      c.x += (c.v * C.speed) * (S.dpi*0.9);
+      if(c.x > 1.25) c.x = -0.25;
 
-      // gentle vertical drift (not wiggle)
-      const yy = c.y + Math.sin(c.t)*6;
+      const px = c.x * W;
+      const py = c.y * H;
+      const size = (220 * c.s) * S.dpi;
 
-      if(c.x > window.innerWidth + c.sx) {
-        c.x = -c.sx;
-        c.y = Math.random()*(window.innerHeight*0.55);
-      }
-
-      ctx.globalAlpha = c.a;
-      ctx.fillStyle = "rgba(255,255,255,1)";
-      ctx.beginPath();
-      ctx.ellipse(c.x, yy, c.sx, c.sy, 0, 0, Math.PI*2);
-      ctx.fill();
+      // cloud color tint (warm night)
+      ctx.save();
+      ctx.globalAlpha = C.opacity;
+      drawCloud(ctx, px, py, size, c.lobes, c.wob, t*0.001 + c.seed, 1);
+      ctx.restore();
     }
-    ctx.globalAlpha = 1;
+    ctx.restore();
   }
 
-  /* ---------- Lanterns (drift upward) ---------- */
-  const lanterns = [];
-  const LANTERNS = 18;
-
-  function spawnLantern(resetTop){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    return {
-      x: Math.random()*w,
-      y: resetTop ? (-50 - Math.random()*400) : (h + Math.random()*500),
-      vy: 0.14 + Math.random()*0.26,
-      sway: 0.35 + Math.random()*0.45,
-      s: 4 + Math.random()*5,
-      t: Math.random()*1000
-    };
-  }
-  for(let i=0;i<LANTERNS;i++) lanterns.push(spawnLantern(false));
-
-  function drawLanterns(t){
-    for(const L of lanterns){
-      L.t += 0.004;
-      L.y -= L.vy;
-      L.x += Math.sin(L.t)*L.sway;
-
-      if(L.y < -120){
-        // recycle at bottom
-        const nw = spawnLantern(false);
-        L.x=nw.x; L.y=nw.y; L.vy=nw.vy; L.sway=nw.sway; L.s=nw.s; L.t=nw.t;
-      }
-
-      // glow orb
-      const g = ctx.createRadialGradient(L.x, L.y, 0, L.x, L.y, L.s*7);
-      g.addColorStop(0, "rgba(255,210,140,0.18)");
-      g.addColorStop(0.25, "rgba(255,170,90,0.12)");
-      g.addColorStop(1, "rgba(255,170,90,0)");
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(L.x, L.y, L.s*7, 0, Math.PI*2);
-      ctx.fill();
-
-      // core
-      ctx.fillStyle = "rgba(255,210,140,0.22)";
-      ctx.beginPath();
-      ctx.arc(L.x, L.y, L.s, 0, Math.PI*2);
-      ctx.fill();
+  // ============================================================
+  // Embers / lantern drift (kept subtle)
+  // ============================================================
+  function makeEmbers(count){
+    const out=[];
+    for(let i=0;i<count;i++){
+      out.push({
+        x: Math.random(),
+        y: 1 + Math.random()*0.6,
+        s: rand(1.6,4.4),
+        v: rand(0.020,0.060),
+        a: rand(0.12,0.32)
+      });
     }
+    return out;
   }
 
-  /* ---------- Waterline + subtle ripple field (cyclic, stronger) ---------- */
-  function drawRipples(t, waterY){
-    // ripple band near center + slight across screen
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+  function drawEmbers(ctx, W, H, S, t){
+    const E=S.embers;
+    if(!GD_ATMO.cache.embers) GD_ATMO.cache.embers=makeEmbers(E.count);
+    const embers=GD_ATMO.cache.embers;
 
     ctx.save();
-    ctx.globalAlpha = 0.10;
+    ctx.globalCompositeOperation="screen";
+    for(const e of embers){
+      e.y -= e.v * E.speed;
+      e.x += Math.sin(t*0.0004 + e.y*6.0)*0.00035;
+      if(e.y < -0.1){ e.y = 1.05 + Math.random()*0.6; e.x = Math.random(); }
 
-    // wide horizontal shimmer (reflection)
-    const band = ctx.createLinearGradient(0, waterY-120, 0, waterY+220);
-    band.addColorStop(0, "rgba(255,220,170,0.00)");
-    band.addColorStop(0.35, "rgba(255,220,170,0.08)");
-    band.addColorStop(0.7, "rgba(255,220,170,0.05)");
-    band.addColorStop(1, "rgba(255,220,170,0.00)");
-    ctx.fillStyle = band;
-    ctx.fillRect(0, waterY-140, w, 420);
+      const px=e.x*W;
+      const py=e.y*H;
+      const r=e.s*S.dpi;
 
-    // ripple lines (sinusoidal)
-    ctx.globalAlpha = 0.12;
-    ctx.strokeStyle = "rgba(255,235,200,0.55)";
-    ctx.lineWidth = 1;
+      const g=ctx.createRadialGradient(px,py,0, px,py,r*5);
+      g.addColorStop(0, `rgba(255,190,120,${e.a*E.opacity})`);
+      g.addColorStop(1, "rgba(255,190,120,0)");
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(px,py,r*5,0,Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
 
-    const lines = 10;
-    for(let i=0;i<lines;i++){
-      const yy = waterY - 90 + i*26;
-      const amp = 4 + i*0.6;
-      const freq = 0.010 + i*0.0008;
-      const speed = 0.0016 + i*0.0002;
+  // ============================================================
+  // Dragon engine (spine + REAL head template)
+  //   - We draw ONE head per dragon, rotated to velocity vector.
+  //   - Body is segments with scale arcs (not perfect circles).
+  // ============================================================
+  function makeDragon(yNorm, dir){
+    const seg=64;
+    const body=[];
+    for(let i=0;i<seg;i++) body.push({x: -i*24, y: window.innerHeight*yNorm});
+    return {
+      dir: dir, // 1 left->right, -1 right->left
+      body,
+      seed: Math.random()*999,
+      banner: GD_ATMO.state.dragons.bannerTextPool[Math.floor(Math.random()*GD_ATMO.state.dragons.bannerTextPool.length)],
+      bannerX: -99999
+    };
+  }
 
+  function dragonAngle(d){
+    const p0=d.body[0], p1=d.body[1];
+    return Math.atan2(p0.y-p1.y, p0.x-p1.x);
+  }
+
+  function drawDragonHead(ctx, x, y, ang, scale, S){
+    // “real” head silhouette: snout + jaw + horns + whiskers + mane
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(ang);
+    ctx.scale(scale, scale);
+
+    // head base
+    ctx.fillStyle = "rgba(10,35,18,0.96)";
+    ctx.strokeStyle = "rgba(212,175,55,0.70)";
+    ctx.lineWidth = 2;
+
+    // skull/snout polygon
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.quadraticCurveTo(26,-10, 46,-4);   // snout top
+    ctx.quadraticCurveTo(60,2, 54,10);    // nose tip
+    ctx.quadraticCurveTo(38,16, 22,12);   // cheek
+    ctx.quadraticCurveTo(10,10, 0,0);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+
+    // lower jaw
+    ctx.beginPath();
+    ctx.moveTo(18,10);
+    ctx.quadraticCurveTo(34,20, 52,14);
+    ctx.quadraticCurveTo(40,28, 18,18);
+    ctx.closePath();
+    ctx.fillStyle="rgba(8,24,12,0.92)";
+    ctx.fill();
+    ctx.strokeStyle="rgba(212,175,55,0.55)";
+    ctx.stroke();
+
+    // teeth (simple spikes)
+    ctx.strokeStyle="rgba(255,255,255,0.35)";
+    ctx.lineWidth=1.2;
+    for(let i=0;i<5;i++){
+      const tx=34+i*4;
       ctx.beginPath();
-      for(let x=0;x<=w;x+=14){
-        const y = yy + Math.sin(x*freq + t*speed + i)*amp;
-        if(x===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-      }
+      ctx.moveTo(tx,14);
+      ctx.lineTo(tx+2,18);
+      ctx.stroke();
+    }
+
+    // eye slit
+    ctx.strokeStyle="rgba(255,255,255,0.55)";
+    ctx.lineWidth=2.4;
+    ctx.beginPath();
+    ctx.moveTo(24,2);
+    ctx.quadraticCurveTo(30,0, 36,2);
+    ctx.stroke();
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.beginPath(); ctx.arc(32,3,1.7,0,Math.PI*2); ctx.fill();
+
+    // horns
+    ctx.strokeStyle="rgba(212,175,55,0.55)";
+    ctx.lineWidth=2;
+    ctx.beginPath(); // horn 1
+    ctx.moveTo(18,-6);
+    ctx.quadraticCurveTo(6,-20, -8,-18);
+    ctx.stroke();
+    ctx.beginPath(); // horn 2
+    ctx.moveTo(26,-6);
+    ctx.quadraticCurveTo(14,-24, 2,-24);
+    ctx.stroke();
+
+    // whiskers
+    ctx.strokeStyle="rgba(255,255,255,0.22)";
+    ctx.lineWidth=1.6;
+    ctx.beginPath();
+    ctx.moveTo(50,6);
+    ctx.quadraticCurveTo(70,0, 88,10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(46,10);
+    ctx.quadraticCurveTo(66,18, 86,22);
+    ctx.stroke();
+
+    // mane spikes
+    ctx.strokeStyle="rgba(212,175,55,0.20)";
+    ctx.lineWidth=2.2;
+    for(let i=0;i<7;i++){
+      const mx=-6 - i*6;
+      const my=-6 + i*2;
+      ctx.beginPath();
+      ctx.moveTo(mx,my);
+      ctx.lineTo(mx-8, my-10);
       ctx.stroke();
     }
 
     ctx.restore();
   }
 
-  /* ---------- Main loop ---------- */
-  function frame(){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+  function drawDragonBody(ctx, d, S, t){
+    const D=S.dragons;
+    ctx.save();
+    ctx.globalCompositeOperation="source-over";
 
-    ctx.clearRect(0,0,w,h);
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
 
-    const t = performance.now();
+    // body segments (scale arcs)
+    for(let i=d.body.length-1;i>=0;i--){
+      const p=d.body[i];
+      const size = (22 - i*0.22) * S.dpi;
+      if(size<=2) continue;
 
-    // waterline fixed (compass sits roughly above center)
-    const waterY = Math.floor(h*0.56);
+      // belly tint gradient
+      const belly = ctx.createRadialGradient(p.x, p.y+size*0.28, 1, p.x, p.y, size*1.2);
+      belly.addColorStop(0, D.colorBelly);
+      belly.addColorStop(1, "rgba(0,0,0,0)");
 
-    // clouds first (behind)
-    drawCloudField(t);
+      ctx.fillStyle = D.colorBody;
+      ctx.strokeStyle = D.colorStroke;
+      ctx.lineWidth = Math.max(1.2, 1.6*S.dpi);
 
-    // ripples + reflection base
-    drawRipples(t, waterY);
+      // segment
+      ctx.beginPath();
+      ctx.ellipse(p.x,p.y, size*0.95, size*0.74, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
 
-    // moon (single) + reflection
-    // place moon outside compass area (upper right-ish)
-    const mx = Math.floor(w*0.78);
-    const my = Math.floor(h*0.18);
-    const mr = Math.floor(Math.min(w,h)*0.06);
+      // belly shimmer
+      ctx.fillStyle=belly;
+      ctx.beginPath();
+      ctx.ellipse(p.x,p.y, size*1.0, size*0.9, 0, 0, Math.PI*2);
+      ctx.fill();
 
-    drawMoon(mx,my,mr);
-    drawMoonReflection(mx,my,mr,waterY);
+      // scale arcs (the key: not circles-on-circles)
+      ctx.strokeStyle="rgba(212,175,55,0.22)";
+      ctx.lineWidth=Math.max(0.8, 1.0*S.dpi);
+      const arcCount=3;
+      for(let k=0;k<arcCount;k++){
+        const r=size*(0.45 + k*0.12);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, Math.PI*0.10, Math.PI*0.90);
+        ctx.stroke();
+      }
+    }
 
-    // lanterns last (above water/glow, still under gems)
-    drawLanterns(t);
+    // head (draw after body)
+    const p0=d.body[0];
+    const ang = dragonAngle(d);
+    drawDragonHead(ctx, p0.x, p0.y, ang, 1.05*S.dpi, S);
 
-    requestAnimationFrame(frame);
+    ctx.restore();
   }
 
-  frame();
+  function stepDragon(d, W, H, S, t){
+    const D=S.dragons;
+    const speed = D.speed * S.dpi * d.dir;
+
+    // move head forward
+    d.body[0].x += speed;
+
+    // slither: coherent sine wave (not “wiggle spam”)
+    const baseY = d.body[0].y;
+    const amp = D.slitherAmp * S.dpi;
+    const freq = D.slitherFreq;
+    d.body[0].y = baseY + Math.sin(t*freq + d.seed)*amp*0.12;
+
+    // follow chain with fixed spacing
+    const dist=18*S.dpi;
+    for(let i=1;i<d.body.length;i++){
+      const prev=d.body[i-1];
+      const cur=d.body[i];
+      const dx=prev.x-cur.x;
+      const dy=prev.y-cur.y;
+      const mag=Math.sqrt(dx*dx+dy*dy) || 1;
+      const ux=dx/mag;
+      const uy=dy/mag;
+
+      // coherent wave offset per segment
+      const w = Math.sin(t*freq + i*0.28 + d.seed)*amp*0.016;
+      cur.x = prev.x - ux*dist;
+      cur.y = prev.y - uy*dist + w;
+    }
+
+    // recycle fully offscreen → new quote
+    const margin=220*S.dpi;
+    const headX=d.body[0].x;
+    if(d.dir===1 && headX > W+margin){
+      for(let i=0;i<d.body.length;i++){ d.body[i].x = -margin - i*24*S.dpi; }
+      d.banner = D.bannerTextPool[Math.floor(Math.random()*D.bannerTextPool.length)];
+    }
+    if(d.dir===-1 && headX < -margin){
+      for(let i=0;i<d.body.length;i++){ d.body[i].x = W+margin + i*24*S.dpi; }
+      d.banner = D.bannerTextPool[Math.floor(Math.random()*D.bannerTextPool.length)];
+    }
+  }
+
+  function drawDragonBanner(ctx, d, W, H, S){
+    const D=S.dragons;
+    if(!D.bannerEnabled) return;
+
+    // banner follows head, slightly behind
+    const p0=d.body[6] || d.body[d.body.length-1];
+    const bx=p0.x;
+    const by=p0.y - 34*S.dpi;
+
+    ctx.save();
+    ctx.globalCompositeOperation="screen";
+    ctx.font = `${Math.round(14*S.dpi)}px system-ui, -apple-system, Segoe UI, Roboto, sans-serif`;
+    ctx.fillStyle="rgba(212,175,55,0.80)";
+    ctx.shadowColor="rgba(212,175,55,0.45)";
+    ctx.shadowBlur=10*S.dpi;
+    ctx.fillText(d.banner, bx, by);
+    ctx.restore();
+  }
+
+  // ============================================================
+  // Draw loop
+  // ============================================================
+  function ensure(){
+    // BG behind compass (z=1), MID above compass but below nodes (z=7)
+    const bg=mkCanvas("gd-atmo-bg", 1);
+    const mid=mkCanvas("gd-atmo-mid", 7);
+
+    GD_ATMO.canvases.bg=bg;
+    GD_ATMO.canvases.mid=mid;
+    GD_ATMO.ctx.bg=bg.getContext("2d");
+    GD_ATMO.ctx.mid=mid.getContext("2d");
+
+    resizeCanvas(bg, GD_ATMO.state.dpi);
+    resizeCanvas(mid, GD_ATMO.state.dpi);
+  }
+
+  function readMoonPhase(){
+    // advance per load; persist in localStorage
+    try{
+      const k="gd_moon_phase";
+      const v=parseInt(localStorage.getItem(k)||"0",10);
+      const next=(v+1)%16;
+      localStorage.setItem(k,String(next));
+      GD_ATMO.state.moon.phaseIndex=next;
+    }catch(e){
+      GD_ATMO.state.moon.phaseIndex=(GD_ATMO.state.moon.phaseIndex+1)%16;
+    }
+  }
+
+  function tick(){
+    if(!GD_ATMO.state.enabled) return;
+
+    ensure();
+
+    const dpi=GD_ATMO.state.dpi;
+    const W=GD_ATMO.canvases.bg.width;
+    const H=GD_ATMO.canvases.bg.height;
+
+    const t=now();
+
+    // BG: clouds only (behind compass)
+    const b=GD_ATMO.ctx.bg;
+    b.clearRect(0,0,W,H);
+    drawClouds(b, W, H, GD_ATMO.state, t);
+
+    // MID: moon + embers + dragons + banner (above compass, below buttons)
+    const m=GD_ATMO.ctx.mid;
+    m.clearRect(0,0,W,H);
+
+    drawMoon(m, W, H, GD_ATMO.state);
+    drawEmbers(m, W, H, GD_ATMO.state, t);
+
+    // dragons
+    if(GD_ATMO.state.dragons.enabled){
+      if(!GD_ATMO.cache.dragons){
+        GD_ATMO.cache.dragons=[
+          makeDragon(0.34, 1),
+          makeDragon(0.68, -1)
+        ];
+      }
+      for(const d of GD_ATMO.cache.dragons){
+        stepDragon(d, W, H, GD_ATMO.state, t);
+        drawDragonBody(m, d, GD_ATMO.state, t);
+        drawDragonBanner(m, d, W, H, GD_ATMO.state);
+      }
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  // ============================================================
+  // Public API (optional)
+  // ============================================================
+  GD_ATMO.api.setEnabled=function(on){
+    GD_ATMO.state.enabled=!!on;
+    if(on) tick();
+    if(!on){
+      try{
+        GD_ATMO.ctx.bg && GD_ATMO.ctx.bg.clearRect(0,0,GD_ATMO.canvases.bg.width, GD_ATMO.canvases.bg.height);
+        GD_ATMO.ctx.mid && GD_ATMO.ctx.mid.clearRect(0,0,GD_ATMO.canvases.mid.width, GD_ATMO.canvases.mid.height);
+      }catch(e){}
+    }
+  };
+  GD_ATMO.api.setDragonEnabled=function(on){ GD_ATMO.state.dragons.enabled=!!on; };
+  GD_ATMO.api.setCloudOpacity=function(v){ GD_ATMO.state.clouds.opacity=clamp(v,0,1); };
+  GD_ATMO.api.setMoonGlow=function(v){ GD_ATMO.state.moon.glow=clamp(v,0,1); };
+  GD_ATMO.api.setMoonSize=function(px){ GD_ATMO.state.moon.size=clamp(px,80,420); };
+  GD_ATMO.api.setDragonColors=function(body,belly,stroke){
+    if(body) GD_ATMO.state.dragons.colorBody=body;
+    if(belly) GD_ATMO.state.dragons.colorBelly=belly;
+    if(stroke) GD_ATMO.state.dragons.colorStroke=stroke;
+  };
+  GD_ATMO.api.setBannerPool=function(arr){
+    if(Array.isArray(arr) && arr.length) GD_ATMO.state.dragons.bannerTextPool=arr.slice(0,24);
+  };
+
+  // ============================================================
+  // Init
+  // ============================================================
+  function init(){
+    readMoonPhase();
+    ensure();
+    tick();
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded", init, {once:true});
+  }else{
+    init();
+  }
 
 })();

@@ -1,418 +1,807 @@
 <!doctype html>
-<!-- =========================================================
-   GEODIAMETRICS COMPASS — TNT FULL FILE
-   VERSION: LAYER 4 STABLE BASELINE
-   OWNER: SEAN
-   PURPOSE:
-     - Obsidian compass with water lens
-     - Single moon (phase changes per load)
-     - Atmospheric clouds + lantern drift
-     - Dual dragon flight system (clean base body)
-     - English only (temporary build rule)
-     - No competing UI layers
-     - Full file replacement (TNT)
-========================================================= -->
+<!-- TNT — /index.html
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (EN ONLY)
+     VERSION: V5 (VISUAL + LAYERING FIX)
+     FIXES (PER SEAN):
+       - ENGLISH ONLY (no CN/ES) until visuals are locked
+       - Background not “too dark”: warm evening sky (red→orange→deep) INSIDE page layers (ui.css untouched)
+       - Compass slab + dial are more translucent (glass/water vibe) so sky reads through
+       - Dragons are NOT vines: use external engine file (dragon-orbit-engine.js) with thick body + head + horns + whiskers
+         Layer rule: sky (bottom) → slab/dial (middle) → dragons (above dial) → gems (top)
+       - No extra diamonds: exactly CORE + 16 hubs (no Prelude on compass)
+       - CORE routes to /index-core/index.html
+       - Bottom corners: EXIT → /door/  |  HUB → /home/ (above any dock)
+       - No duplicates; missing/unbuilt → /404.html
+       - No motion on buttons; glow only
+       - Use 3D inlay that is NOT orthogonal grid: conic “curved” silk trim inside gems
+     LOCKS:
+       - ui.css owns html/body background (NO overrides)
+       - No inline onclick; addEventListener only
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - lane=platform|engineering is URL-only; no reload; never stored
+-->
 
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Compass</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Compass · DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css">
-<link rel="stylesheet" href="/assets/branch.css">
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instruments.js"></script>
+
+<!-- DRAGON ENGINE (must exist as /assets/dragon-orbit-engine.js) -->
+<script defer src="/assets/dragon-orbit-engine.js"></script>
 
 <style>
+a{color:inherit;text-decoration:none}
+body{margin:0}
+body::before,body::after{pointer-events:none!important}
 
-/* ===============================
-   CORE LAYOUT
-=============================== */
+:root{
+  /* ===== GEOMETRY ===== */
+  --D0:210px;  /* CORE */
+  --D1:150px;  /* Cardinals */
+  --D2:112px;  /* Diagonals */
+  --D3:86px;   /* Outer 8 */
 
-body{
-margin:0;
-overflow:hidden;
-font-family:system-ui;
+  --R1:168px;
+  --R2:246px;
+  --R3:314px;
+
+  --padTop:102px;
+
+  /* Material */
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.78);
+  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.88);
+
+  --crimson:rgba(120,0,22,.44);
+  --festival:rgba(255,43,43,.26);
+  --opalV:rgba(90,40,120,.18);
+
+  --gold:rgba(201,162,74,.58);
+  --goldGlow:rgba(201,162,74,.22);
 }
 
+/* ===== TOP BAR ===== */
+.top{
+  position:fixed;top:14px;left:0;right:0;
+  padding:0 14px;
+  z-index:260;
+  pointer-events:none;
+}
+.topbar{
+  pointer-events:auto;
+  width:min(1120px,96vw);
+  margin:0 auto;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:10px 12px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
+    linear-gradient(145deg, rgba(8,10,14,.78), rgba(4,6,10,.84));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
+  backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;
+}
+.brandLeft{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
+}
+.brandTitle{
+  font-weight:980;
+  letter-spacing:.6px;
+  font-size:14px;
+  color:rgba(255,255,255,.94);
+  white-space:nowrap;
+}
+.brandSub{
+  font-size:12px;
+  color:rgba(255,255,255,.74);
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+.brandLinks{
+  display:flex;gap:10px;flex-wrap:wrap;
+  font-size:12px;
+  color:rgba(255,255,255,.72);
+}
+.brandLinks a{
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(201,162,74,.16);
+  background:rgba(0,0,0,.10);
+}
+.controlsRight{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+}
+
+/* Segmented controls */
+.seg{
+  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.14);
+  box-shadow:var(--shadowB);
+}
+.seg button{
+  appearance:none;border:0;background:transparent;
+  color:rgba(255,255,255,.78);
+  padding:10px 12px;min-height:42px;
+  font-weight:980;font-size:13px;letter-spacing:.25px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.seg button[aria-pressed="true"]{
+  color:rgba(255,255,255,.95);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
+}
+
+/* ===== STAGE ===== */
 .stage{
-position:fixed;
-inset:0;
-pointer-events:none;
+  position:relative;
+  width:min(1200px,94vw);
+  height:min(1200px,86vh);
+  margin:var(--padTop) auto 0;
+  pointer-events:none;
 }
 
-/* ===============================
-   SKY LAYER
-=============================== */
-
+/* ===== SKY (inside page, not body) ===== */
 .sky{
-position:absolute;
-inset:0;
-z-index:1;
-
-background:
-radial-gradient(circle at 70% 15%,rgba(255,230,180,.18),transparent 40%),
-radial-gradient(circle at 30% 30%,rgba(255,100,80,.12),transparent 60%),
-linear-gradient(180deg,#7b0000,#2b0000);
+  position:absolute;inset:-18%;
+  pointer-events:none;
+  z-index:0;
+  border-radius:44px;
+  overflow:hidden;
+}
+.sky::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    /* warm evening gradient (red → orange → deep) */
+    radial-gradient(circle at 20% 22%, rgba(255,120,60,.22), transparent 54%),
+    radial-gradient(circle at 80% 28%, rgba(255,60,60,.18), transparent 58%),
+    radial-gradient(circle at 60% 70%, rgba(0,0,0,.28), transparent 62%),
+    linear-gradient(180deg, rgba(140,0,0,.22) 0%, rgba(40,0,0,.28) 52%, rgba(0,0,0,.38) 100%);
+  opacity:1;
+}
+.sky::after{
+  content:"";
+  position:absolute;inset:0;
+  /* single moon (no “double moon”) */
+  background:
+    radial-gradient(circle at 76% 18%,
+      rgba(255,245,220,.28) 0%,
+      rgba(255,245,220,.14) 18%,
+      rgba(255,245,220,.06) 34%,
+      rgba(255,245,220,0) 52%),
+    radial-gradient(circle at 76% 18%,
+      rgba(255,255,255,.22) 0%,
+      rgba(255,255,255,.10) 10%,
+      rgba(255,255,255,0) 22%),
+    radial-gradient(circle at 76% 18%,
+      rgba(255,255,255,.06) 0%,
+      rgba(255,255,255,0) 18%);
+  filter:blur(.2px);
+  opacity:.90;
+  mix-blend-mode:screen;
 }
 
-/* ===============================
-   MOON
-=============================== */
-
-.moon{
-position:absolute;
-right:14%;
-top:12%;
-width:140px;
-height:140px;
-border-radius:50%;
-z-index:2;
-
-background:
-radial-gradient(circle at 35% 35%,#fff,#ddd 60%,#999 100%);
-
-box-shadow:
-0 0 40px rgba(255,230,180,.4),
-0 0 90px rgba(255,200,120,.2);
+/* ===== COMPASS SLAB (glass/water vibe) ===== */
+.slab{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(980px,92vw);
+  height:min(980px,92vw);
+  border-radius:44px;
+  pointer-events:none;
+  z-index:1;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 74% 28%, rgba(255,90,70,.10), transparent 62%),
+    radial-gradient(circle at 68% 82%, rgba(255,120,60,.10), transparent 66%),
+    linear-gradient(160deg, rgba(60,0,0,.26), rgba(0,0,0,.34));
+  box-shadow:
+    0 70px 240px rgba(0,0,0,.55),
+    inset 0 2px 0 rgba(255,255,255,.06),
+    inset 0 -70px 140px rgba(0,0,0,.55);
+  backdrop-filter:blur(8px);
+  opacity:.92;
 }
 
-/* ===============================
-   COMPASS WATER LENS
-=============================== */
-
-.compassLens{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:720px;
-height:720px;
-border-radius:50%;
-z-index:3;
-
-background:
-radial-gradient(circle at 50% 40%,rgba(255,255,255,.1),transparent 60%),
-radial-gradient(circle at 50% 70%,rgba(255,255,255,.08),transparent 60%),
-rgba(120,0,0,.35);
-
-backdrop-filter:blur(6px);
-
-box-shadow:
-0 0 120px rgba(0,0,0,.8),
-inset 0 0 60px rgba(0,0,0,.8);
+/* ===== DIAL (obsidian face) ===== */
+.dial{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  border-radius:999px;
+  pointer-events:none;
+  z-index:2;
+  overflow:hidden;
 }
-
-/* ===============================
-   COMPASS RINGS
-=============================== */
-
-.compassLines{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:720px;
-height:720px;
-border-radius:50%;
-z-index:4;
-pointer-events:none;
+.dial::before{
+  content:"";
+  position:absolute;inset:0;border-radius:999px;
+  background:
+    radial-gradient(circle at 50% 42%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
+      rgba(0,0,0,.00) 92%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.06),
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 80px rgba(0,0,0,.52),
+    0 50px 180px rgba(0,0,0,.24);
+  opacity:.92;
 }
+.dial::after{
+  content:"";
+  position:absolute;inset:-14%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
 
-.compassLines:before,
-.compassLines:after{
-content:"";
-position:absolute;
-inset:0;
-border-radius:50%;
-border:1px solid rgba(212,175,55,.4);
+    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+
+    /* conic trim (curved, not grid) */
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.06) 0 1.2deg,
+      transparent 1.2deg 7.5deg),
+
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter: blur(.25px);
+  opacity:.78;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
-
-.compassLines:after{
-transform:scale(.68);
+.faceLetters{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  pointer-events:none;
+  z-index:3;
+  opacity:.72;
 }
-
-/* ===============================
-   DRAGON CANVAS
-=============================== */
-
-#dragonCanvas{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:5;
+.faceLetters span{
+  position:absolute;
+  color:rgba(201,162,74,.45);
+  font-weight:980;
+  letter-spacing:2px;
+  font-size:12px;
+  text-shadow:0 0 12px rgba(0,0,0,.55);
 }
+.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
+.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
+.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
+.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
-/* ===============================
-   ATMOSPHERE CANVAS
-=============================== */
-
-#atmosCanvas{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:2;
-}
-
-/* ===============================
-   COMPASS BUTTONS
-=============================== */
-
+/* ===== GEM NODES ===== */
 .node{
-position:absolute;
-width:120px;
-height:120px;
-background:#0c0c0c;
-border:1px solid rgba(255,255,255,.15);
-border-radius:18px;
-box-shadow:
-0 0 40px rgba(0,0,0,.7),
-0 0 20px rgba(212,175,55,.2);
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%) rotate(45deg);
+  cursor:pointer;
+  pointer-events:auto;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.18);
+  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  z-index:20;
+  border-radius:22px;
+}
+.core{width:var(--D0);height:var(--D0);z-index:22;border-radius:26px}
+.l1{width:var(--D1);height:var(--D1)}
+.l2{width:var(--D2);height:var(--D2)}
+.l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
-pointer-events:auto;
-cursor:pointer;
+.surface{
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
+    radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
+    radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
+    linear-gradient(160deg, var(--onyx1), var(--onyx0));
+  box-shadow:
+    var(--shadowDeep),
+    0 0 24px rgba(255,43,43,.08),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -52px 92px rgba(0,0,0,.88);
 }
 
+/* Curved “3D” inlay (NO orthogonal grid) */
+.surface::before{
+  content:"";
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+  background:
+    /* curved silk (conic) */
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.10) 0 1.2deg,
+      transparent 1.2deg 8.4deg),
+    /* secondary arc shimmer */
+    conic-gradient(from 0deg at 50% 50%,
+      rgba(255,255,255,.04),
+      rgba(201,162,74,.06),
+      rgba(255,255,255,.03),
+      rgba(201,162,74,.06),
+      rgba(255,255,255,.04));
+  opacity:.38;
+  mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    linear-gradient(#000,#000);
+}
+.surface::after{
+  content:"";
+  position:absolute;left:12%;right:12%;top:10%;
+  height:30%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
+  transform:rotate(-12deg);
+  pointer-events:none;
+  opacity:.92;
+}
+
+/* glow-only hover */
 .node:hover{
-box-shadow:
-0 0 40px rgba(212,175,55,.4),
-0 0 80px rgba(212,175,55,.3);
+  border-color:rgba(201,162,74,.44);
+  box-shadow:
+    var(--shadowDeep),
+    0 0 0 2px rgba(201,162,74,.14),
+    0 0 34px rgba(201,162,74,.18),
+    inset 0 2px 0 rgba(255,255,255,.20),
+    inset 0 -52px 92px rgba(0,0,0,.88);
+}
+.node:active{filter:brightness(.98)}
+
+/* inner text */
+.inner{
+  width:100%;height:100%;
+  transform:rotate(-45deg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:10px;
+  gap:6px;
+  color:#fff;
+}
+.word{
+  font-weight:980;
+  letter-spacing:.6px;
+  line-height:1.05;
+  text-shadow:0 0 18px rgba(0,0,0,.42);
+  font-size:clamp(10px, 1.15vw, 16px);
+  max-width:100%;
+  word-break:keep-all;
+}
+.code{
+  font-weight:950;
+  font-size:10px;
+  letter-spacing:1.2px;
+  opacity:.78;
 }
 
+/* CORE emphasis */
 .core{
-width:200px;
-height:200px;
-border-radius:24px;
+  border-color:rgba(201,162,74,.26);
+  box-shadow:
+    0 54px 170px rgba(0,0,0,.80),
+    0 0 46px rgba(201,162,74,.12),
+    inset 0 2px 0 rgba(255,255,255,.22),
+    inset 0 -64px 110px rgba(0,0,0,.90);
 }
 
+/* ===== BOTTOM CORNERS ===== */
+.corner{
+  position:fixed;
+  bottom:max(16px, env(safe-area-inset-bottom));
+  z-index:270; /* above any dock */
+  pointer-events:none;
+}
+.corner .dmini{pointer-events:auto}
+.corner.left{left:16px}
+.corner.right{right:16px}
+
+.dmini{
+  width:56px;height:56px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
+    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
+  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  display:grid;place-items:center;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transform:rotate(45deg);
+  position:relative;
+  overflow:hidden;
+  transition:box-shadow .16s ease, border-color .16s ease;
+}
+.dmini:hover{
+  border-color:rgba(201,162,74,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
+}
+.dmini span{
+  transform:rotate(-45deg);
+  font-weight:980;
+  font-size:12px;
+  letter-spacing:.6px;
+  color:rgba(255,255,255,.92);
+  user-select:none;
+}
+.cornerLabel{
+  margin-top:10px;
+  text-align:center;
+  color:rgba(255,255,255,.72);
+  font-size:11px;
+  letter-spacing:.4px;
+}
+
+/* ===== NOTE PILL ===== */
+.pillWrap{
+  width:min(1120px,94vw);
+  margin:14px auto 0;
+  padding-bottom:90px;
+}
+.pill{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:22px;
+  padding:14px 16px;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
+    rgba(0,0,0,.14);
+  box-shadow:0 26px 90px rgba(0,0,0,.55);
+  color:rgba(255,255,255,.86);
+  line-height:1.55;
+  font-size:13.5px;
+}
+.pill b{color:rgba(255,255,255,.95)}
+.pill .g{color:rgba(201,162,74,.80);font-weight:980}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:720px){
+  :root{
+    --D0:196px; --D1:142px; --D2:108px; --D3:84px;
+    --R1:156px; --R2:228px; --R3:292px;
+    --padTop:112px;
+  }
+  .stage{height:min(980px,86vh)}
+}
+@media (max-width:520px){
+  :root{
+    --D0:184px; --D1:136px; --D2:104px; --D3:80px;
+    --R1:146px; --R2:214px; --R3:274px;
+  }
+  .brandSub{display:none}
+}
 </style>
 </head>
 
-
 <body>
 
-<div class="stage">
+<div class="top" aria-label="Top controls">
+  <div class="topbar">
+    <div class="brandLeft" aria-label="Brand">
+      <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
+      <div class="brandSub" id="brandSub">Gem navigation · Obsidian dial · Lens: PLATFORM</div>
+      <div class="brandLinks" aria-label="Brand links">
+        <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
+        <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
+      </div>
+    </div>
 
-<div class="sky"></div>
-
-<div class="moon"></div>
-
-<div class="compassLens"></div>
-
-<div class="compassLines"></div>
-
-<canvas id="atmosCanvas"></canvas>
-<canvas id="dragonCanvas"></canvas>
-
+    <div class="controlsRight" aria-label="Language and lens">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" id="btnEN" aria-pressed="true">EN</button>
+      </div>
+      <div class="seg" role="group" aria-label="Lane">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
+      </div>
+    </div>
+  </div>
 </div>
 
+<div class="stage" id="stage" aria-label="Compass dial">
+  <div class="sky" aria-hidden="true"></div>
+  <div class="slab" aria-hidden="true"></div>
+  <div class="dial" aria-hidden="true"></div>
+  <div class="faceLetters" aria-hidden="true">
+    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
+  </div>
+  <!-- nodes injected by JS -->
+</div>
 
+<div class="pillWrap" aria-label="Compass note">
+  <div class="pill" id="pill">
+    <b>Compass:</b> One center (<span class="g">CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class="g">/404.html</span>.
+  </div>
+</div>
+
+<div class="corner left" aria-label="Exit">
+  <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
+  <div class="cornerLabel" id="lblExit">EXIT</div>
+</div>
+<div class="corner right" aria-label="Hub">
+  <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
+  <div class="cornerLabel" id="lblHub">HUB</div>
+</div>
 
 <script>
-
-/* =========================================================
-   MOON PHASE ENGINE
-========================================================= */
-
 (function(){
-
-let moon=document.querySelector(".moon")
-
-let phase=Math.floor(Math.random()*8)
-
-let mask=document.createElement("div")
-
-mask.style.position="absolute"
-mask.style.inset="0"
-mask.style.borderRadius="50%"
-
-let offset=(phase-4)*20
-
-mask.style.boxShadow=`${offset}px 0 0 0 rgba(0,0,0,.8)`
-
-moon.appendChild(mask)
-
-})()
-
-
-
-/* =========================================================
-   ATMOSPHERE ENGINE (clouds + lanterns)
-========================================================= */
-
-const atmosCanvas=document.getElementById("atmosCanvas")
-const atmos=atmosCanvas.getContext("2d")
-
-function resizeAtmos(){
-atmosCanvas.width=window.innerWidth
-atmosCanvas.height=window.innerHeight
-}
-
-resizeAtmos()
-window.addEventListener("resize",resizeAtmos)
-
-let lanterns=[]
-let clouds=[]
-
-for(let i=0;i<18;i++){
-lanterns.push({
-x:Math.random()*window.innerWidth,
-y:window.innerHeight+Math.random()*400,
-speed:.12+Math.random()*.18,
-size:3+Math.random()*4
-})
-}
-
-for(let i=0;i<8;i++){
-clouds.push({
-x:Math.random()*window.innerWidth,
-y:Math.random()*window.innerHeight*.6,
-speed:.18+Math.random()*.15,
-size:260+Math.random()*200
-})
-}
-
-function drawLanterns(){
-
-atmos.fillStyle="rgba(255,200,120,.25)"
-
-lanterns.forEach(l=>{
-
-atmos.beginPath()
-atmos.arc(l.x,l.y,l.size,0,Math.PI*2)
-atmos.fill()
-
-l.y-=l.speed
-
-if(l.y<-20){
-l.y=window.innerHeight+40
-l.x=Math.random()*window.innerWidth
-}
-
-})
-
-}
-
-function drawClouds(){
-
-atmos.fillStyle="rgba(255,255,255,.05)"
-
-clouds.forEach(c=>{
-
-atmos.beginPath()
-atmos.ellipse(c.x,c.y,c.size,60,0,0,Math.PI*2)
-atmos.fill()
-
-c.x+=c.speed
-
-if(c.x>window.innerWidth+200){
-c.x=-200
-}
-
-})
-
-}
-
-function renderAtmos(){
-
-atmos.clearRect(0,0,atmosCanvas.width,atmosCanvas.height)
-
-drawClouds()
-drawLanterns()
-
-requestAnimationFrame(renderAtmos)
-
-}
-
-renderAtmos()
-
-
-
-/* =========================================================
-   DRAGON ENGINE (clean baseline body)
-========================================================= */
-
-const dragonCanvas=document.getElementById("dragonCanvas")
-const ctx=dragonCanvas.getContext("2d")
-
-function resizeDragon(){
-dragonCanvas.width=window.innerWidth
-dragonCanvas.height=window.innerHeight
-}
-
-resizeDragon()
-window.addEventListener("resize",resizeDragon)
-
-
-function createDragon(y){
-
-let body=[]
-let segments=70
-
-for(let i=0;i<segments;i++){
-body.push({
-x:-i*30,
-y:y
-})
-}
-
-return{
-body:body,
-speed:.9
-}
-
-}
-
-let dragons=[
-createDragon(window.innerHeight*.35),
-createDragon(window.innerHeight*.70)
-]
-
-
-function drawDragon(dragon){
-
-let body=dragon.body
-
-for(let i=0;i<body.length;i++){
-
-let p=body[i]
-
-let wave=Math.sin(i*.35+performance.now()*.002)*10
-
-p.x+=dragon.speed
-p.y+=wave*.03
-
-if(p.x>window.innerWidth+200){
-p.x=-200
-}
-
-ctx.fillStyle="rgba(10,60,20,.9)"
-ctx.strokeStyle="rgba(212,175,55,.7)"
-ctx.lineWidth=1.5
-
-let size=18-i*.22
-
-ctx.beginPath()
-ctx.ellipse(p.x,p.y,size,size*.8,0,0,Math.PI*2)
-ctx.fill()
-ctx.stroke()
-
-}
-
-}
-
-function renderDragon(){
-
-ctx.clearRect(0,0,dragonCanvas.width,dragonCanvas.height)
-
-dragons.forEach(d=>drawDragon(d))
-
-requestAnimationFrame(renderDragon)
-
-}
-
-renderDragon()
-
-
+  "use strict";
+
+  // ===== Canon state (gd_* only; lane URL-only) =====
+  var qs=new URLSearchParams(location.search);
+  var LS=window.localStorage;
+
+  var lang  = "en"; // EN-only for now
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+
+  if(style!=="informal" && style!=="formal") style="informal";
+  if(time==="trajectory") time="post";
+  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  if(depth!=="explore" && depth!=="learn") depth="explore";
+  if(lane!=="platform" && lane!=="engineering") lane="platform";
+
+  try{
+    LS.setItem("gd_lang", lang);
+    LS.setItem("gd_style", style);
+    LS.setItem("gd_time", time);
+    LS.setItem("gd_depth", depth);
+  }catch(e){}
+
+  document.documentElement.lang="en";
+
+  function q(over){
+    var p=new URLSearchParams();
+    p.set("lang","en");
+    p.set("style",(over&&over.style)?over.style:style);
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?over.depth:depth);
+    var L=(over&&over.lane)?over.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane",L);
+    return "?"+p.toString();
+  }
+
+  function go(path){ window.location.href = path + q(); }
+
+  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
+
+  // ===== Routing =====
+  var CORE_ROUTE = "/index-core/index.html";
+  var EXIT_ROUTE = "/door/";
+  var HUB_ROUTE  = "/home/";
+  var PLACEHOLDER_404 = "/404.html";
+
+  // N/E/S/W meaning locked:
+  // N=LAWS, E=ENERGY, S=FINANCE, W=GOVERNANCE
+  var ROUTES_RAW = [
+    // Tier 1
+    {tier:1, code:"N",  label:{platform:"LAWS",       engineering:"BOUNDS"},   href:"/laws/"},
+    {tier:1, code:"E",  label:{platform:"ENERGY",     engineering:"POWER"},    href:"/explore/frontier/energy/"},
+    {tier:1, code:"S",  label:{platform:"FINANCE",    engineering:"CAPITAL"},  href:"/finance/"},
+    {tier:1, code:"W",  label:{platform:"GOVERNANCE", engineering:"EXEC"},     href:"/governance/"},
+
+    // Tier 2
+    {tier:2, code:"NE", label:{platform:"PRODUCTS",   engineering:"DEPLOY"},   href:"/products/"},
+    {tier:2, code:"SE", label:{platform:"RESEARCH",   engineering:"R&D"},      href:"/research/"},
+    {tier:2, code:"SW", label:{platform:"EXPLORE",    engineering:"MODELS"},   href:"/explore/"},
+    {tier:2, code:"NW", label:{platform:"DOCTRINE",   engineering:"CCD"},      href:"/products/capital-doctrine/"},
+
+    // Tier 3 (outer 8)
+    {tier:3, code:"NNE",label:{platform:"EDUCATION",  engineering:"ESL"},      href:"/products/education/"},
+    {tier:3, code:"ENE",label:{platform:"FRONTIER",   engineering:"FRONTIER"}, href:"/explore/frontier/"},
+    {tier:3, code:"ESE",label:{platform:"INFRA",      engineering:"SUBST"},    href:"/explore/infrastructure/"},
+    {tier:3, code:"SSE",label:{platform:"AGRICULTURE",engineering:"FOOD"},     href:"/products/agriculture/"},
+    {tier:3, code:"SSW",label:{platform:"GAUGES",     engineering:"SIGNALS"},  href:"/gauges/"},
+    {tier:3, code:"WSW",label:{platform:"VISION",     engineering:"MAP"},      href:"/explore/frontier/vision/"},
+    {tier:3, code:"WNW",label:{platform:"LATTICE",    engineering:"256"},      href:"/explore/frontier/lattice/"},
+    {tier:3, code:"NNW",label:{platform:"SHIMMER",    engineering:"SHIMMER"},  href:"/explore/frontier/shimmer/"}
+  ];
+
+  function normalizeRoutes(list){
+    var seen = Object.create(null);
+    var out = [];
+    for(var i=0;i<list.length;i++){
+      var it=list[i];
+      var h=(it.href||"").trim();
+      if(!h) h=PLACEHOLDER_404;
+      if(seen[h]) h=PLACEHOLDER_404;
+      seen[h]=true;
+      out.push({tier:it.tier, code:it.code, label:it.label, href:h});
+    }
+    return out;
+  }
+  var ROUTES = normalizeRoutes(ROUTES_RAW);
+
+  function labelFor(it){
+    return (lane==="engineering") ? it.label.engineering : it.label.platform;
+  }
+
+  // ===== Build nodes =====
+  var stage=document.getElementById("stage");
+
+  function mkNode(word, code, cls){
+    var d=document.createElement("div");
+    d.className="node surface "+cls;
+    d.setAttribute("role","button");
+    d.tabIndex=0;
+
+    var inner=document.createElement("div");
+    inner.className="inner";
+
+    var w=document.createElement("div");
+    w.className="word";
+    w.textContent=word;
+
+    var c=document.createElement("div");
+    c.className="code";
+    c.textContent=code;
+
+    inner.appendChild(w);
+    inner.appendChild(c);
+    d.appendChild(inner);
+
+    return d;
+  }
+
+  function layout(){
+    stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
+
+    var rect=stage.getBoundingClientRect();
+    var cx=rect.width/2, cy=rect.height/2;
+
+    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
+    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||246;
+    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
+
+    // CORE
+    var core=mkNode("CORE", "INDEX", "core");
+    core.style.left=cx+"px"; core.style.top=cy+"px";
+    core.addEventListener("click", function(){ go(CORE_ROUTE); }, {passive:true});
+    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
+    stage.appendChild(core);
+
+    // split
+    var t1=[], t2=[], t3=[];
+    for(var i=0;i<ROUTES.length;i++){
+      if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
+      else if(ROUTES[i].tier===2) t2.push(ROUTES[i]);
+      else t3.push(ROUTES[i]);
+    }
+
+    // Tier 1 pinned to N/E/S/W angles (N,E,S,W)
+    function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
+    var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
+    var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+
+    for(var i=0;i<ordered.length;i++){
+      var it=ordered[i];
+      var x=cx + R1*Math.cos(ang[i]);
+      var y=cy + R1*Math.sin(ang[i]);
+      var n=mkNode(labelFor(it), it.code, "l1");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
+
+    // Tier 2 (4) start -45°
+    for(var i=0;i<t2.length;i++){
+      var it=t2[i];
+      var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
+      var x=cx + R2*Math.cos(a);
+      var y=cy + R2*Math.sin(a);
+      var n=mkNode(labelFor(it), it.code, "l2");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
+
+    // Tier 3 (8) start -67.5°
+    for(var i=0;i<t3.length;i++){
+      var it=t3[i];
+      var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
+      var x=cx + R3*Math.cos(a);
+      var y=cy + R3*Math.sin(a);
+      var n=mkNode(labelFor(it), it.code, "l3");
+      n.style.left=x+"px"; n.style.top=y+"px";
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
+  }
+
+  function safeLayout(){
+    var r=stage.getBoundingClientRect();
+    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
+    layout();
+  }
+
+  // ===== Lane toggle (NO reload; URL-only) =====
+  var btnLP=document.getElementById("lanePlatform");
+  var btnLE=document.getElementById("laneEngineering");
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
+
+  function paintHeader(){
+    document.getElementById("brandSub").textContent =
+      "Gem navigation · Obsidian dial · Lens: " + (lane==="engineering" ? "ENGINEERING" : "PLATFORM");
+    document.getElementById("pill").innerHTML =
+      "<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
+  }
+
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+    paintHeader();
+    safeLayout();
+  }
+
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // ===== Bottom corners =====
+  function bindCorner(id, path){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
+  }
+  bindCorner("btnExit", EXIT_ROUTE);
+  bindCorner("btnHub", HUB_ROUTE);
+
+  // ===== Init =====
+  paintHeader();
+  requestAnimationFrame(safeLayout);
+  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+
+})();
 </script>
 
 </body>

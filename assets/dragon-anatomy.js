@@ -1,31 +1,22 @@
 /* TNT — /assets/dragon-anatomy.js
-   GEODIAMETRICS DRAGON ENGINE — 50% PREVIEW DELIVERY
-   VERSION: DRAGON_v9_HEX_SEGMENTED
+   GEODIAMETRICS DRAGON ENGINE — BODY KEPT + HEAD FIXED (IN ONE PASS)
+   VERSION: DRAGON_v11_HEADFIX
 
-   NO MORE QUESTIONS. THIS IS THE DELIVERABLE.
-   GOAL: STOP “SNAKE IN A BOX.” DELIVER A RECOGNIZABLE CHINESE DRAGON SILHOUETTE.
+   WHAT THIS DOES:
+   - Keeps the v9 body exactly in the “better” direction: segmented silhouette + neck flare + hex scales + crest + belly plates
+   - Replaces the head renderer with a real Chinese-dragon head profile:
+     snout ridge + jaw + open mouth shadow + tooth hints + nostrils + eye + horns + whiskers (anchored correctly) + beard + mane
+   - Head still swivels (bounded) and always faces travel direction
+   - Watermark proof on canvas
 
-   DELIVERS:
-   - TRUE SILHOUETTE FIRST (segmented body, no box-shoulders)
-   - NECK FLARE + SHOULDER TRANSITION
-   - DORSAL FLAME MANE (spine crest)
-   - HEX/HONEYCOMB SCALE LATTICE (not diamonds)
-   - BELLY PLATES + SHADING
-   - REAL FACE: snout + jaw + mouth line + nostrils + slit eye + horns + beard + whiskers
-   - TWO DRAGONS: TOP jade (L→R), BOTTOM crimson (R→L)
-   - HEAD ON SWIVEL (bounded) + CORRECT FACING (snout into travel)
-   - SINGLE CANVAS, SINGLE RAF, DT-BASED, MOUNTS INTO #gd-dragon
-   - WATERMARK PROOF ON CANVAS
-
-   NOTE:
-   - Layout/wiring comes AFTER the dragon reads as a dragon.
+   NOTE: No layout changes. Pure dragon upgrade.
 */
 (function(){
 "use strict";
 if(window.__GD_DRAGON_RUNNING__) return;
 window.__GD_DRAGON_RUNNING__ = true;
 
-window.GD_DRAGON = { version:"DRAGON_v9_HEX_SEGMENTED", mount:function(){} };
+window.GD_DRAGON = { version:"DRAGON_v11_HEADFIX", mount:function(){} };
 
 const DPR_CAP=1.6;
 
@@ -41,7 +32,7 @@ const AMP=12;
 const SWIV=10;
 
 /* HEAD SWIVEL */
-const YAW_MAX=0.32;
+const YAW_MAX=0.30;
 const YAW_RATE=4.2;
 
 /* CANVAS */
@@ -79,22 +70,26 @@ function palJade(){
   return {
     a:"rgba(0,165,92,0.95)",
     b:"rgba(0,82,50,0.95)",
-    outline:"rgba(0,0,0,0.72)",
+    outline:"rgba(0,0,0,0.70)",
     rim:"rgba(255,255,255,0.14)",
     gold:"rgba(212,175,55,0.98)",
     goldSoft:"rgba(212,175,55,0.26)",
-    belly:"rgba(0,0,0,0.24)"
+    belly:"rgba(0,0,0,0.24)",
+    scale:"rgba(255,255,255,0.18)",
+    scaleDark:"rgba(0,0,0,0.16)"
   };
 }
 function palCrimson(){
   return {
     a:"rgba(235,72,72,0.95)",
     b:"rgba(120,18,22,0.95)",
-    outline:"rgba(0,0,0,0.72)",
+    outline:"rgba(0,0,0,0.70)",
     rim:"rgba(255,255,255,0.14)",
     gold:"rgba(212,175,55,0.99)",
     goldSoft:"rgba(212,175,55,0.26)",
-    belly:"rgba(0,0,0,0.24)"
+    belly:"rgba(0,0,0,0.24)",
+    scale:"rgba(255,255,255,0.18)",
+    scaleDark:"rgba(0,0,0,0.16)"
   };
 }
 
@@ -127,24 +122,16 @@ function normal(sp,i){
   return {x:-t.y,y:t.x};
 }
 
-/* smooth taper + NECK FLARE (kills box shoulders) */
+/* TAPER + NECK FLARE */
 function radiusAt(i){
   const u=i/(SEG-1);
-
-  // base taper
-  const tail = (u<0.78)?1.0:lerp(1.0,0.10,(u-0.78)/0.22);
-
-  // neck/shoulder flare: peak around u≈0.12 then relax
+  const tail=(u<0.78)?1.0:lerp(1.0,0.10,(u-0.78)/0.22);
   let flare=1.0;
   if(u<0.22){
     const t=u/0.22;
-    // bell-ish flare
-    flare = 1.0 + 0.55*Math.sin(Math.PI*t); // max +55%
+    flare=1.0 + 0.55*Math.sin(Math.PI*t);
   }
-
-  // head slightly fuller
-  const head = (u<0.08)?lerp(1.20,1.0,u/0.08):1.0;
-
+  const head=(u<0.08)?lerp(1.18,1.0,u/0.08):1.0;
   return BODY_R*tail*flare*head*DPR;
 }
 
@@ -175,7 +162,6 @@ function build(dr,t,dt){
     dr.spine[i]={x:prev.x-(dx/d)*gap, y:prev.y-(dy/d)*gap};
   }
 
-  // yaw target from curvature proxy
   const t0=tangent(dr.spine,0);
   const t6=tangent(dr.spine,6);
   const curv=(t6.y*t0.x - t6.x*t0.y);
@@ -183,43 +169,36 @@ function build(dr,t,dt){
   dr.yaw += (dr.yawT - dr.yaw) * clamp(YAW_RATE*dt, 0, 1);
 }
 
-/* SILHOUETTE: SEGMENTED BODY (metaball-like) */
+/* BODY (keep v9 style) */
 function drawSegmentedSilhouette(dr){
   const sp=dr.spine;
 
-  // silhouette fill using overlapping circles along the spine
-  // (this creates segmentation and removes “box shoulders”)
-  ctx.save();
-
-  // body gradient
   const g=ctx.createLinearGradient(0,0,0,H);
   g.addColorStop(0.00, dr.pal.a);
   g.addColorStop(0.55, dr.pal.b);
   g.addColorStop(1.00, dr.pal.b);
 
+  ctx.save();
+
   ctx.fillStyle=g;
   ctx.beginPath();
-
-  // add circles as one composite path
-  const step=2; // dense enough to read
+  const step=2;
   for(let i=0;i<sp.length;i+=step){
     const p=sp[i];
     const r=radiusAt(i);
-    ctx.moveTo(p.x+r, p.y);
+    ctx.moveTo(p.x+r,p.y);
     ctx.arc(p.x,p.y,r,0,Math.PI*2);
   }
   ctx.fill("nonzero");
 
-  // hard outline (dragon reads as silhouette)
   ctx.strokeStyle=dr.pal.outline;
-  ctx.lineWidth=4.4*DPR;
+  ctx.lineWidth=3.8*DPR;
   ctx.lineJoin="round";
   ctx.lineCap="round";
   ctx.stroke();
 
-  // specular band (volume)
   ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(255,255,255,0.11)";
+  ctx.strokeStyle="rgba(255,255,255,0.10)";
   ctx.lineWidth=10*DPR;
   ctx.beginPath();
   for(let i=0;i<sp.length;i+=3){
@@ -229,7 +208,6 @@ function drawSegmentedSilhouette(dr){
   }
   ctx.stroke();
 
-  // belly shadow
   ctx.globalCompositeOperation="multiply";
   ctx.strokeStyle=dr.pal.belly;
   ctx.lineWidth=12*DPR;
@@ -237,43 +215,20 @@ function drawSegmentedSilhouette(dr){
   for(let i=0;i<sp.length;i+=3){
     const n=normal(sp,i);
     const r=radiusAt(i);
-    ctx.lineTo(sp[i].x - n.x*(r*0.42), sp[i].y - n.y*(r*0.42));
+    ctx.lineTo(sp[i].x - n.x*(r*0.44), sp[i].y - n.y*(r*0.44));
   }
   ctx.stroke();
 
   ctx.restore();
 }
 
-/* DORSAL FLAME MANE (strong definition) */
-function drawFlameMane(dr){
+function drawFlameCrest(dr){
   const sp=dr.spine;
   ctx.save();
   ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(255,255,255,0.14)";
-  ctx.lineWidth=2.0*DPR;
 
-  const end=Math.floor(sp.length*0.42);
-  for(let i=6;i<end;i+=4){
-    const p=sp[i];
-    const n=normal(sp,i);
-    const r=radiusAt(i);
-
-    const h=r*(0.80 + (i%7)*0.05); // taller flames for definition
-    const sx=p.x + n.x*(r*0.92);
-    const sy=p.y + n.y*(r*0.92);
-
-    ctx.beginPath();
-    ctx.moveTo(sx,sy);
-    ctx.quadraticCurveTo(
-      sx - n.y*h*0.40, sy + n.x*h*0.40,
-      sx - n.y*h*1.10, sy + n.x*h*1.10
-    );
-    ctx.stroke();
-  }
-
-  // gold ridge under the mane
   ctx.strokeStyle=dr.pal.goldSoft;
-  ctx.lineWidth=2.6*DPR;
+  ctx.lineWidth=2.8*DPR;
   ctx.beginPath();
   for(let i=0;i<sp.length;i+=3){
     const n=normal(sp,i);
@@ -282,18 +237,33 @@ function drawFlameMane(dr){
   }
   ctx.stroke();
 
+  ctx.strokeStyle="rgba(255,255,255,0.16)";
+  ctx.lineWidth=2.2*DPR;
+
+  const end=Math.floor(sp.length*0.52);
+  for(let i=6;i<end;i+=4){
+    const p=sp[i];
+    const n=normal(sp,i);
+    const r=radiusAt(i);
+    const h=r*(0.95 + (i%9)*0.05);
+    const sx=p.x + n.x*(r*0.92);
+    const sy=p.y + n.y*(r*0.92);
+    ctx.beginPath();
+    ctx.moveTo(sx,sy);
+    ctx.quadraticCurveTo(sx - n.y*h*0.45, sy + n.x*h*0.45, sx - n.y*h*1.15, sy + n.x*h*1.15);
+    ctx.stroke();
+  }
+
   ctx.restore();
 }
 
-/* HEX SCALE LATTICE (honeycomb pixels) */
 function drawHexScales(dr){
   const sp=dr.spine;
   ctx.save();
   ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(255,255,255,0.24)";
-  ctx.lineWidth=1.15*DPR;
+  ctx.strokeStyle=dr.pal.scale;
+  ctx.lineWidth=1.0*DPR;
 
-  // hex cell drawing helper (flat-top hex)
   function hex(cx,cy,s){
     const a=Math.PI/3;
     ctx.beginPath();
@@ -306,31 +276,33 @@ function drawHexScales(dr){
     ctx.stroke();
   }
 
-  // place cells on two flank rows; size is readable
-  for(let i=20;i<sp.length-70;i+=5){
+  for(let i=20;i<sp.length-80;i+=5){
     const p=sp[i];
     const t=tangent(sp,i);
     const n=normal(sp,i);
     const r=radiusAt(i);
-
-    const s=Math.max(6.5*DPR, r*0.13);
-
-    // offsets for two rows
+    const s=Math.max(6.0*DPR, r*0.12);
     const rows=[0.20,-0.05];
     for(let rr=0; rr<rows.length; rr++){
       const off=rows[rr];
       const cx=p.x + n.x*(r*off);
       const cy=p.y + n.y*(r*off);
-
-      // slight stagger along tangent to create honeycomb flow
-      const jitter=((i+rr)%2===0)?(s*0.45):0;
+      const jitter=((i+rr)%2===0)?(s*0.42):0;
       hex(cx + t.x*jitter, cy + t.y*jitter, s);
     }
   }
 
-  // gold glints near ridge
+  ctx.strokeStyle=dr.pal.scaleDark;
+  ctx.lineWidth=1.0*DPR;
+  for(let i=26;i<sp.length-88;i+=9){
+    const p=sp[i];
+    const n=normal(sp,i);
+    const r=radiusAt(i);
+    hex(p.x + n.x*(r*0.05), p.y + n.y*(r*0.05), Math.max(4.6*DPR,r*0.09));
+  }
+
   ctx.strokeStyle="rgba(212,175,55,0.20)";
-  for(let i=28;i<sp.length-80;i+=12){
+  for(let i=28;i<sp.length-90;i+=12){
     const p=sp[i];
     const n=normal(sp,i);
     const r=radiusAt(i);
@@ -342,143 +314,159 @@ function drawHexScales(dr){
   ctx.restore();
 }
 
-/* BELLY PLATES */
 function drawBellyPlates(dr){
   const sp=dr.spine;
   ctx.save();
   ctx.globalCompositeOperation="screen";
   ctx.strokeStyle="rgba(255,255,255,0.10)";
   ctx.lineWidth=1.4*DPR;
-
-  for(let i=22;i<sp.length-75;i+=8){
+  for(let i=22;i<sp.length-80;i+=8){
     const p=sp[i];
     const n=normal(sp,i);
     const r=radiusAt(i);
-
     const bx=p.x - n.x*(r*0.62);
     const by=p.y - n.y*(r*0.62);
-
     const w=Math.max(7*DPR,r*0.26);
     const h=Math.max(3*DPR,r*0.12);
-
     ctx.beginPath();
     ctx.ellipse(bx,by,w,h,0,0.12,Math.PI-0.12);
     ctx.stroke();
   }
-
   ctx.restore();
 }
 
-/* REAL FACE (NOT A DOT) */
-function drawFace(dr, t){
+/* HEAD FIX (real profile, no “backwards blob”) */
+function drawHead(dr, t){
   const sp=dr.spine;
   const p=sp[0];
   const tv=tangent(sp,0);
-  const baseAng=Math.atan2(tv.y,tv.x);
-  const ang=baseAng + dr.yaw;
 
-  const s=radiusAt(0)*1.15;
+  const ang=Math.atan2(tv.y,tv.x) + dr.yaw;
+  const s=radiusAt(0)*1.10;
 
   ctx.save();
   ctx.translate(p.x,p.y);
   ctx.rotate(ang);
 
-  // face direction: always into travel
+  // face direction into travel
   if(dr.dir<0) ctx.scale(-1,1);
 
-  // head silhouette
-  ctx.fillStyle="rgba(0,0,0,0.30)";
+  // === HEAD SILHOUETTE (profile) ===
+  ctx.fillStyle="rgba(0,0,0,0.34)";
   ctx.beginPath();
-  ctx.ellipse(0,0,s*1.22,s*0.82,0,0,Math.PI*2);
+  // skull
+  ctx.ellipse(0,0,s*1.10,s*0.74,0,0,Math.PI*2);
+  // snout wedge (profile)
+  ctx.moveTo(s*0.30, -s*0.28);
+  ctx.quadraticCurveTo(s*1.10,-s*0.48,s*2.00,-s*0.10);
+  ctx.quadraticCurveTo(s*2.25, 0, s*2.00, s*0.12);
+  ctx.quadraticCurveTo(s*1.10, s*0.55, s*0.25, s*0.30);
+  ctx.closePath();
   ctx.fill();
 
-  // head fill
-  const hg=ctx.createLinearGradient(-s,0,s*2.4,0);
+  // head fill gradient
+  const hg=ctx.createLinearGradient(-s,0,s*2.6,0);
   hg.addColorStop(0.0, dr.pal.b);
-  hg.addColorStop(0.6, dr.pal.a);
+  hg.addColorStop(0.55, dr.pal.a);
   hg.addColorStop(1.0, dr.pal.b);
   ctx.fillStyle=hg;
   ctx.beginPath();
-  ctx.ellipse(0,0,s*1.10,s*0.74,0,0,Math.PI*2);
+  ctx.ellipse(0,0,s*1.00,s*0.66,0,0,Math.PI*2);
+  ctx.fill();
+  // snout fill
+  ctx.beginPath();
+  ctx.moveTo(s*0.25, -s*0.24);
+  ctx.quadraticCurveTo(s*1.05,-s*0.42,s*1.92,-s*0.08);
+  ctx.quadraticCurveTo(s*2.15, 0, s*1.92, s*0.10);
+  ctx.quadraticCurveTo(s*1.05, s*0.48, s*0.22, s*0.26);
+  ctx.closePath();
   ctx.fill();
 
-  // snout
-  ctx.fillStyle=dr.pal.b;
+  // outline (face definition)
+  ctx.strokeStyle=dr.pal.outline;
+  ctx.lineWidth=3.0*DPR;
+  ctx.stroke();
+
+  // === MOUTH OPENING + TEETH ===
+  ctx.fillStyle="rgba(0,0,0,0.22)";
   ctx.beginPath();
-  ctx.ellipse(s*1.10, s*0.04, s*1.38, s*0.42, 0.05, 0, Math.PI*2);
+  ctx.moveTo(s*0.62, s*0.12);
+  ctx.quadraticCurveTo(s*1.30, s*0.42, s*2.05, s*0.12);
+  ctx.quadraticCurveTo(s*1.45, s*0.62, s*0.70, s*0.30);
+  ctx.closePath();
   ctx.fill();
 
-  // jaw shadow
-  ctx.fillStyle="rgba(0,0,0,0.18)";
-  ctx.beginPath();
-  ctx.ellipse(s*0.80, s*0.36, s*1.12, s*0.32, 0.10, 0, Math.PI*2);
-  ctx.fill();
+  ctx.strokeStyle="rgba(255,255,255,0.16)";
+  ctx.lineWidth=1.2*DPR;
+  for(let i=0;i<5;i++){
+    const tx=s*(1.10 + i*0.16);
+    const ty=s*(0.18 + (i%2)*0.02);
+    ctx.beginPath();
+    ctx.moveTo(tx,ty);
+    ctx.lineTo(tx+s*0.06, ty+s*0.14);
+    ctx.stroke();
+  }
 
   // mouth line
-  ctx.strokeStyle="rgba(0,0,0,0.42)";
+  ctx.strokeStyle="rgba(0,0,0,0.45)";
   ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.55, s*0.22);
-  ctx.quadraticCurveTo(s*1.18, s*0.52, s*2.10, s*0.18);
+  ctx.moveTo(s*0.55, s*0.10);
+  ctx.quadraticCurveTo(s*1.25, s*0.46, s*2.05, s*0.10);
   ctx.stroke();
 
-  // outline (face reads)
-  ctx.strokeStyle=dr.pal.outline;
-  ctx.lineWidth=3.2*DPR;
-  ctx.stroke();
+  // === NOSTRILS ===
+  ctx.fillStyle="rgba(0,0,0,0.42)";
+  ctx.beginPath(); ctx.arc(s*1.92, -s*0.02, s*0.10, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(s*1.80,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
 
-  // nostrils
-  ctx.fillStyle="rgba(0,0,0,0.40)";
-  ctx.beginPath(); ctx.arc(s*1.85, s*0.06, s*0.11, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(s*1.70, s*0.14, s*0.09, 0, Math.PI*2); ctx.fill();
-
-  // eye (slit + glow)
+  // === EYE (slit) ===
   ctx.fillStyle=dr.pal.gold;
   ctx.beginPath();
-  ctx.ellipse(s*0.26, -s*0.10, s*0.20, s*0.11, 0.12, 0, Math.PI*2);
+  ctx.ellipse(s*0.20, -s*0.10, s*0.20, s*0.11, 0.08, 0, Math.PI*2);
   ctx.fill();
-  ctx.fillStyle="rgba(0,0,0,0.70)";
+  ctx.fillStyle="rgba(0,0,0,0.72)";
   ctx.beginPath();
-  ctx.ellipse(s*0.30, -s*0.10, s*0.06, s*0.14, 0.05, 0, Math.PI*2);
+  ctx.ellipse(s*0.26, -s*0.10, s*0.05, s*0.15, 0.00, 0, Math.PI*2);
   ctx.fill();
 
-  // horns (swept back)
-  ctx.strokeStyle="rgba(212,175,55,0.80)";
-  ctx.lineWidth=3.3*DPR;
+  // === HORNS (swept back, clearly horns) ===
+  ctx.strokeStyle="rgba(212,175,55,0.84)";
+  ctx.lineWidth=3.6*DPR;
   ctx.lineCap="round";
   ctx.beginPath();
-  ctx.moveTo(-s*0.14,-s*0.42);
-  ctx.quadraticCurveTo(s*0.10,-s*1.18,s*0.78,-s*1.32);
-  ctx.moveTo(-s*0.22,-s*0.34);
-  ctx.quadraticCurveTo(s*0.00,-s*1.04,s*0.54,-s*1.18);
+  ctx.moveTo(-s*0.20,-s*0.42);
+  ctx.quadraticCurveTo(s*0.05,-s*1.20,s*0.78,-s*1.40);
+  ctx.moveTo(-s*0.30,-s*0.34);
+  ctx.quadraticCurveTo(-s*0.05,-s*1.04,s*0.52,-s*1.24);
   ctx.stroke();
 
-  // whiskers (long, anchored, trailing)
-  ctx.strokeStyle="rgba(212,175,55,0.64)";
-  ctx.lineWidth=2.6*DPR;
+  // === WHISKERS (anchored behind snout tip) ===
+  ctx.strokeStyle="rgba(212,175,55,0.66)";
+  ctx.lineWidth=2.8*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*1.25, 0);
-  ctx.quadraticCurveTo(s*2.20, -s*0.55, s*3.30, -s*0.80);
-  ctx.moveTo(s*1.25, 0);
-  ctx.quadraticCurveTo(s*2.05,  s*0.50, s*3.10,  s*0.70);
+  ctx.moveTo(s*1.20, 0);
+  ctx.quadraticCurveTo(s*2.10, -s*0.55, s*3.20, -s*0.86);
+  ctx.moveTo(s*1.20, 0);
+  ctx.quadraticCurveTo(s*1.95,  s*0.50, s*3.00,  s*0.70);
   ctx.stroke();
 
   // beard
   ctx.strokeStyle="rgba(255,255,255,0.18)";
-  ctx.lineWidth=2.2*DPR;
+  ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.98, s*0.30);
-  ctx.quadraticCurveTo(s*0.76, s*1.12, s*0.18, s*1.32);
+  ctx.moveTo(s*0.92, s*0.30);
+  ctx.quadraticCurveTo(s*0.70, s*1.12, s*0.12, s*1.42);
   ctx.stroke();
 
-  // mane at head
+  // head mane
   ctx.strokeStyle="rgba(255,255,255,0.14)";
-  ctx.lineWidth=2.0*DPR;
+  ctx.lineWidth=2.2*DPR;
   for(let i=0;i<9;i++){
-    const yy=-s*0.52 + i*(s*0.12);
+    const yy=-s*0.56 + i*(s*0.12);
     ctx.beginPath();
-    ctx.moveTo(-s*0.34, yy);
-    ctx.quadraticCurveTo(-s*1.18, yy + s*0.14, -s*1.86, yy + s*0.52);
+    ctx.moveTo(-s*0.40, yy);
+    ctx.quadraticCurveTo(-s*1.24, yy + s*0.18, -s*2.00, yy + s*0.60);
     ctx.stroke();
   }
 
@@ -491,7 +479,7 @@ function watermark(){
   ctx.globalCompositeOperation="source-over";
   ctx.fillStyle="rgba(255,255,255,0.18)";
   ctx.font=(16*DPR)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("DRAGON_v9_HEX_SEGMENTED", 12*DPR, (H-14*DPR));
+  ctx.fillText("DRAGON_v11_HEADFIX", 12*DPR, (H-14*DPR));
   ctx.restore();
 }
 
@@ -507,17 +495,17 @@ function frame(ts){
 
   build(TOP,t,dt);
   drawSegmentedSilhouette(TOP);
-  drawFlameMane(TOP);
+  drawFlameCrest(TOP);
   drawHexScales(TOP);
   drawBellyPlates(TOP);
-  drawFace(TOP,t);
+  drawHead(TOP,t);
 
   build(BOT,t,dt);
   drawSegmentedSilhouette(BOT);
-  drawFlameMane(BOT);
+  drawFlameCrest(BOT);
   drawHexScales(BOT);
   drawBellyPlates(BOT);
-  drawFace(BOT,t);
+  drawHead(BOT,t);
 
   watermark();
   requestAnimationFrame(frame);

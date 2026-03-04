@@ -1,95 +1,67 @@
 <!doctype html>
 <!-- TNT — /index.html
-     GEODIAMETRICS COMPASS INDEX (INDEX-FIRST CANON)
+     COMPASS · CANON INDEX (UI + DRAGON) — STABLE LOADER
+     VERSION: IDX_CANON_20260304_1400
+     FULL FILE REPLACEMENT
+
      PURPOSE:
-     - LOCK DOM CONTRACTS + LOAD ORDER + CACHE POLICY
-     - PROVIDE STABLE HOST LAYERS FOR ALL ASSETS
-     - PROVIDE COMPASS UI (2-LAYER: 5 + 12) FOR SPATIAL EVAL
-     - KEEP MINIMAL VERSION STATUS (NO DIAGNOSTIC WALL)
+     - Keep the structure stable
+     - Keep the UI (Layer 1 + Layer 2 toggles + compass nodes)
+     - Keep a minimal version readout
+     - Load the new dragon engine deterministically
 
-     CONTRACTS (LOCKED):
-     1) DOM HOSTS MUST EXIST:
-        #gd-field  (bg-engine mounts here)
-        #gd-dragon (dragon-engine mounts here)
-        #gd-ui     (all UI lives here)
-     2) LOAD ORDER:
-        ui.css → branch.css → instruments.js → bg-engine.js → dragon-anatomy.js
-     3) CACHE POLICY:
-        Single build token controls all assets (bump 1 string to force reload)
+     NOTE:
+     - No diagnostics wall
+     - No extra gd_* keys
 -->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Compass · DiamondGateBridge</title>
 
-<!-- SINGLE BUILD TOKEN (BUMP THIS ONE STRING ONLY WHEN YOU NEED A HARD RELOAD) -->
 <script>
-window.__GD_BUILD__="IDX_CANON_20260304_1200";
+window.__GD_BUILD__="IDX_CANON_20260304_1400";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_20260304_1200"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_20260304_1200"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_20260304_1400"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_20260304_1400"/>
 
-<script defer src="/assets/instruments.js?v=IDX_CANON_20260304_1200"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_CANON_20260304_1200"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_20260304_1200"></script>
+<script defer src="/assets/instruments.js?v=IDX_CANON_20260304_1400"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_CANON_20260304_1400"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_20260304_1400"></script>
 
 <style>
 body{margin:0}
 
-/* =========================================================
-   CANON HOST LAYERS
-========================================================= */
+/* HOST LAYERS */
 #gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
 
-/* =========================================================
-   MINIMAL ENGINE STATUS (VERSIONED)
-========================================================= */
+/* MINIMAL ENGINE STATUS (VERSIONED) */
 #engstat{
-position:fixed;
-top:10px;
-left:10px;
-z-index:9999;
-pointer-events:none;
-font-weight:900;
-font-size:12px;
-letter-spacing:.9px;
-color:rgba(255,255,255,.80);
-text-shadow:0 10px 30px rgba(0,0,0,.75);
-opacity:.75;
+position:fixed;top:10px;left:10px;z-index:9999;pointer-events:none;
+font-weight:900;font-size:12px;letter-spacing:.9px;color:rgba(255,255,255,.80);
+text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 }
 
-/* =========================================================
-   TOP BAR
-========================================================= */
+/* TOP BAR */
 .top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
 .topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
 .controls{display:flex;gap:10px;justify-content:flex-end}
 .seg{display:inline-flex;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18)}
 .seg button{border:0;background:transparent;color:rgba(255,255,255,.78);padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
-.seg button[aria-pressed="true"]{
-color:#fff;
-background:
-radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
-linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-}
+.seg button[aria-pressed="true"]{color:#fff;background:radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%), linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10))}
 
-/* =========================================================
-   STAGE
-========================================================= */
+/* STAGE */
 .stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
 .glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;border:1px solid rgba(255,255,255,.10);background:linear-gradient(160deg, rgba(10,12,16,.34), rgba(6,8,10,.44));box-shadow:0 70px 240px rgba(0,0,0,.48), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -70px 140px rgba(0,0,0,.52);opacity:.86}
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
 .dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
 
-/* =========================================================
-   COMPASS NODES
-========================================================= */
+/* NODES */
 .node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:auto;overflow:hidden;border:1px solid rgba(255,255,255,.18);z-index:20;border-radius:22px;background:linear-gradient(160deg,#111827,#0b0f16);box-shadow:0 44px 140px rgba(0,0,0,.82)}
 .core{width:208px;height:208px;border-radius:26px}
 .l1{width:150px;height:150px}
@@ -99,9 +71,7 @@ linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
 .word{font-weight:980;letter-spacing:.6px}
 .code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
 
-/* =========================================================
-   CORNERS
-========================================================= */
+/* CORNERS */
 .corner{position:fixed;bottom:16px;z-index:270;pointer-events:none}
 .corner.left{left:16px}
 .corner.right{right:16px}
@@ -111,7 +81,6 @@ linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
 
 <body>
 
-<!-- CANON HOSTS -->
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
@@ -148,32 +117,21 @@ linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
 (function(){
 "use strict";
 
-/* =========================================================
-   STATE (EN-only; minimal; no new gd_* keys)
-========================================================= */
+/* EN-only minimal state write (gd_* only; no new keys) */
 var qs=new URLSearchParams(location.search);
 var LS=window.localStorage;
-
 var style=(qs.get("style")||LS.getItem("gd_style")||"informal");
 var time =(qs.get("time") ||LS.getItem("gd_time") ||"now");
 var depth=(qs.get("depth")||LS.getItem("gd_depth")||"explore");
 var lane =(qs.get("lane") ||"platform").toLowerCase();
 var layer=(qs.get("layer")||"1");
-
 if(style!=="informal"&&style!=="formal") style="informal";
 if(time==="trajectory") time="post";
 if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
 if(depth!=="explore"&&depth!=="learn") depth="explore";
 if(lane!=="platform"&&lane!=="engineering") lane="platform";
 if(layer!=="1"&&layer!=="2") layer="1";
-
-try{
-  LS.setItem("gd_lang","en");
-  LS.setItem("gd_style",style);
-  LS.setItem("gd_time",time);
-  LS.setItem("gd_depth",depth);
-}catch(e){}
-
+try{ LS.setItem("gd_lang","en"); LS.setItem("gd_style",style); LS.setItem("gd_time",time); LS.setItem("gd_depth",depth); }catch(e){}
 document.documentElement.lang="en";
 
 function q(over){
@@ -190,12 +148,9 @@ function q(over){
 }
 function go(path){ location.href = path + q(); }
 
-/* =========================================================
-   COMPASS DATA (2-LAYER: 5 + 12)
-========================================================= */
+/* COMPASS DATA */
 var CORE1="/index-core/index.html";
 var CORE2="/index-spine/index.html";
-
 var L1=[
   {code:"CORE",label:"CORE",href:CORE1,cls:"core"},
   {code:"N",label:"LAWS",href:"/laws/",cls:"l1"},
@@ -203,7 +158,6 @@ var L1=[
   {code:"S",label:"FINANCE",href:"/finance/",cls:"l1"},
   {code:"W",label:"GOVERNANCE",href:"/governance/",cls:"l1"}
 ];
-
 var L2=[
   {code:"CORE",label:"CORE",href:CORE2,cls:"core"},
   {code:"NNE",label:"EDUCATION",href:"/products/education/",cls:"l3"},
@@ -220,9 +174,6 @@ var L2=[
   {code:"W",label:"VISION",href:"/explore/frontier/vision/",cls:"l3"}
 ];
 
-/* =========================================================
-   RENDER
-========================================================= */
 var stage=document.getElementById("stage");
 
 function mkNode(it){
@@ -233,36 +184,26 @@ function mkNode(it){
 
   var inner=document.createElement("div");
   inner.className="inner";
-
   var w=document.createElement("div"); w.className="word"; w.textContent=it.label;
   var c=document.createElement("div"); c.className="code"; c.textContent=it.code;
-
-  inner.appendChild(w);
-  inner.appendChild(c);
+  inner.appendChild(w); inner.appendChild(c);
   d.appendChild(inner);
 
   function act(){ go(it.href); }
   d.addEventListener("click", act, {passive:true});
-  d.addEventListener("keydown", function(e){
-    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-  });
+  d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
   return d;
 }
-
 function clearNodes(){
   var nodes=stage.querySelectorAll(".node");
   for(var i=0;i<nodes.length;i++) nodes[i].remove();
 }
-
 function layout1(){
   clearNodes();
   var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
   var R1=164;
-
-  var core=mkNode(L1[0]);
-  core.style.left=cx+"px"; core.style.top=cy+"px";
-  stage.appendChild(core);
+  var core=mkNode(L1[0]); core.style.left=cx+"px"; core.style.top=cy+"px"; stage.appendChild(core);
 
   var map={N:L1[1],E:L1[2],S:L1[3],W:L1[4]};
   var order=["N","E","S","W"];
@@ -272,21 +213,14 @@ function layout1(){
     var it=map[order[i]];
     var x=cx + R1*Math.cos(ang[i]);
     var y=cy + R1*Math.sin(ang[i]);
-    var n=mkNode(it);
-    n.style.left=x+"px"; n.style.top=y+"px";
-    stage.appendChild(n);
+    var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
   }
 }
-
 function layout2(){
   clearNodes();
   var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
   var R2=236, R3=300;
-
-  var core=mkNode(L2[0]);
-  core.style.left=cx+"px"; core.style.top=cy+"px";
-  stage.appendChild(core);
-
+  var core=mkNode(L2[0]); core.style.left=cx+"px"; core.style.top=cy+"px"; stage.appendChild(core);
   var list=L2.slice(1);
   for(var i=0;i<list.length;i++){
     var it=list[i];
@@ -294,27 +228,18 @@ function layout2(){
     var rad=(it.cls==="l2")?R2:R3;
     var x=cx + rad*Math.cos(a);
     var y=cy + rad*Math.sin(a);
-    var n=mkNode(it);
-    n.style.left=x+"px"; n.style.top=y+"px";
-    stage.appendChild(n);
+    var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
   }
 }
+function render(){ (layer==="1") ? layout1() : layout2(); }
 
-function render(){
-  (layer==="1") ? layout1() : layout2();
-}
-
-function setPressed(id,on){
-  document.getElementById(id).setAttribute("aria-pressed", on?"true":"false");
-}
+function setPressed(id,on){ document.getElementById(id).setAttribute("aria-pressed", on?"true":"false"); }
 function paint(){
   setPressed("layer1", layer==="1");
   setPressed("layer2", layer==="2");
   setPressed("lanePlatform", lane==="platform");
   setPressed("laneEngineering", lane==="engineering");
 }
-
-/* Controls */
 function setLayer(v){
   layer=(v==="2")?"2":"1";
   history.replaceState({}, "", location.pathname + q({layer:layer}));
@@ -334,11 +259,11 @@ document.getElementById("laneEngineering").addEventListener("click", function(){
 document.getElementById("btnExit").addEventListener("click", function(){ go("/door/"); }, {passive:true});
 document.getElementById("btnHub").addEventListener("click", function(){ go("/home/"); }, {passive:true});
 
-/* Engine status + mount */
+/* engine status + mount */
 window.addEventListener("load", function(){
-  var bgV = (window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : (window.GD_BG ? "BG_OK" : "BG?");
-  var drV = (window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
-  document.getElementById("engstat").textContent = "ENG: " + bgV + " | " + drV;
+  var bgV=(window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : (window.GD_BG ? "BG_OK" : "BG?");
+  var drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
+  document.getElementById("engstat").textContent="ENG: "+bgV+" | "+drV;
 
   try{ if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
   try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}

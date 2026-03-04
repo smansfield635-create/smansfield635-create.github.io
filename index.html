@@ -1,24 +1,24 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN WATER SKY + TRUE DRAGONS (GOLD/ONYX)
+     COMPASS · GEM DIAL (OBSIDIAN) · V5 (WATER FACE + DRAGONS + CLOUDS + FRACTAL GEMS)
      OWNER: SEAN (Website Building Room)
      LOCKS:
-       - DiamondGateBridge.com header + human tutorial line
-       - Obsidian dial face + gemstone nodes (opaque)
-       - Background = night-sky reflection on water (inside page only; NO html/body override)
-       - Dragons: TWO ONLY (top R→L, bottom L→R) BETWEEN compass and gems
-       - Clouds: translucent, multi-layer L→R (clouds NEVER over CORE)
-       - Moon: SINGLE moon with crater texture + glow + water reflection; phase advances by time window (no new storage keys)
-       - 16 direction labels visible on compass face (gold/black)
-       - 16 unique destinations (no duplicates); unknown/unbuilt → /404.html
-       - Center CORE routes to /index-core/index.html
-       - Bottom dock: DOOR · LAWS · PRODUCTS · RESEARCH · HUB
-       - Corner controls: EXIT → /door/ | HUB → /home/ (sit ABOVE dock, no overlap)
+       - ui.css owns html/body background (NO overrides here)
+       - One center CORE (dominant) + 16 hubs
+       - Hover = glow only (NO movement)
+       - 16 unique destinations; missing/duplicate → /404.html
+       - CORE routes to /index-core/index.html
+       - Bottom corner controls: EXIT → /door/ | HUB → /home/ (above any bottom UI)
        - Trilingual: EN / 中文 / ES (NO reload)
-       - Lens: lane=platform|engineering (URL-only; NO reload; NEVER stored)
-       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - Lane: lane=platform|engineering (URL-only; NO reload; NEVER stored)
+       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth via URL + LocalStorage ONLY (NO new gd_* keys)
        - No overlays/modals; no inline onclick; addEventListener only
-       - ui.css owns html/body background (NO overrides)
+     VISUAL MODEL (LAYER STACK):
+       L1 SkyReflection (evening sky gradient + stars + moon + reflection)
+       L2 WaterCompass (translucent “water face” + ripples + engraved rings + 16 direction letters)
+       L3 CloudReflection (translucent clouds drift left→right; masked to avoid CORE area)
+       L4 Dragons (opaque dark-green dragons drift right→left; gold glowing text; above compass, below gems)
+       L5 Gems (opaque 3D fractalized diamonds)
 -->
 
 <html lang="en">
@@ -37,39 +37,35 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY (dominant center; smaller outward) ===== */
-  --D0:210px;  /* CORE */
-  --D1:150px;  /* Cardinals */
+  /* ===== GEOMETRY ===== */
+  --D0:200px;  /* CORE (dominant) */
+  --D1:148px;  /* Cardinals */
   --D2:112px;  /* Diagonals */
-  --D3:86px;   /* Outer 8 */
+  --D3:88px;   /* Outer 8 */
 
-  --R1:168px;
-  --R2:246px;
-  --R3:314px;
+  --R1:170px;
+  --R2:248px;
+  --R3:316px;
 
-  --padTop:102px;
+  --padTop:104px;
 
-  /* ===== MATERIAL (ONYX + GOLD) ===== */
+  /* ===== MATERIAL ===== */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
-  --stroke:rgba(255,255,255,.12);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
 
   --crimson:rgba(120,0,22,.44);
-  --festival:rgba(255,43,43,.22);
-  --opalV:rgba(90,40,120,.16);
+  --festival:rgba(255,43,43,.26);
+  --opalV:rgba(90,40,120,.18);
 
-  --gold:rgba(201,162,74,.60);
-  --goldGlow:rgba(201,162,74,.24);
-  --goldGlow2:rgba(201,162,74,.14);
+  --gold:rgba(201,162,74,.58);
+  --goldGlow:rgba(201,162,74,.22);
 
   --shadowDeep:0 44px 140px rgba(0,0,0,.82);
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
-
-  --dockH:86px;
 }
 
 /* ===== TOP BAR ===== */
@@ -81,23 +77,25 @@ body::before,body::after{pointer-events:none!important}
 }
 .topbar{
   pointer-events:auto;
-  width:min(1120px,96vw);
+  width:min(1180px,96vw);
   margin:0 auto;
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
   padding:10px 12px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 20% 18%, rgba(255,170,90,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
+    radial-gradient(circle at 60% 20%, rgba(201,162,74,.10), transparent 58%),
+    linear-gradient(145deg, rgba(8,10,14,.78), rgba(4,6,10,.86));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
-  gap:10px;
+  gap:12px;
 }
 .brandLeft{
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
+  display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;min-width:0;
 }
+.brandBlock{display:flex;flex-direction:column;gap:4px;min-width:0}
 .brandTitle{
   font-weight:980;
   letter-spacing:.6px;
@@ -106,10 +104,11 @@ body::before,body::after{pointer-events:none!important}
   white-space:nowrap;
 }
 .brandSub{
-  font-size:12px;
-  color:rgba(255,255,255,.72);
+  font-size:12.5px;
+  color:rgba(255,255,255,.74);
   letter-spacing:.2px;
-  white-space:nowrap;
+  line-height:1.35;
+  max-width:min(640px,60vw);
 }
 .brandLinks{
   display:flex;gap:10px;flex-wrap:wrap;
@@ -120,7 +119,7 @@ body::before,body::after{pointer-events:none!important}
   padding:6px 10px;
   border-radius:999px;
   border:1px solid rgba(201,162,74,.16);
-  background:rgba(0,0,0,.14);
+  background:rgba(0,0,0,.12);
 }
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
@@ -130,7 +129,7 @@ body::before,body::after{pointer-events:none!important}
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.16);
   box-shadow:var(--shadowB);
 }
 .seg button{
@@ -153,79 +152,176 @@ body::before,body::after{pointer-events:none!important}
 /* ===== STAGE ===== */
 .stage{
   position:relative;
-  width:min(1200px,94vw);
-  height:min(1200px,86vh);
+  width:min(1220px,94vw);
+  height:min(1220px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
 }
 
-/* ===== BACKGROUND: water night sky reflection (inside page only) ===== */
-.bg{
+/* ===== L1: SKY REFLECTION (brighter evening palette) ===== */
+.sky{
   position:absolute;inset:-18%;
   pointer-events:none;
   z-index:0;
   border-radius:44px;
   overflow:hidden;
 }
-/* night gradient + water sheen */
-.bg::before{
+.sky::before{
   content:"";
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 62% 16%, rgba(255,230,160,.16), transparent 50%), /* moon haze */
-    radial-gradient(circle at 22% 24%, rgba(255,120,80,.14), transparent 56%), /* lantern glow */
-    radial-gradient(circle at 86% 34%, rgba(120,70,255,.12), transparent 62%), /* opal haze */
-    linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22) 55%, rgba(0,0,0,.34) 100%),
-    radial-gradient(circle at 50% 80%, rgba(255,255,255,.06), transparent 58%),
-    linear-gradient(180deg, rgba(168,40,0,.42) 0%, rgba(112,10,0,.44) 50%, rgba(40,0,0,.50) 100%);
+    radial-gradient(900px 520px at 68% 18%, rgba(255,220,170,.20) 0%, rgba(255,220,170,0) 56%), /* moon haze */
+    radial-gradient(640px 420px at 20% 20%, rgba(255,120,90,.16) 0%, rgba(255,120,90,0) 60%),  /* lantern sky glow */
+    radial-gradient(760px 520px at 84% 34%, rgba(255,140,70,.12) 0%, rgba(255,140,70,0) 64%),  /* warm horizon */
+    radial-gradient(900px 620px at 50% 100%, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 62%),
+    linear-gradient(180deg,
+      rgba(180,20,20,.22) 0%,
+      rgba(120,0,0,.26) 44%,
+      rgba(50,0,0,.22) 72%,
+      rgba(0,0,0,.18) 100%);
   opacity:.98;
 }
-/* subtle animated water ripples (cheap: transforms only) */
-.bg::after{
+.sky::after{
   content:"";
-  position:absolute;inset:-10%;
+  position:absolute;inset:0;
   background:
-    repeating-radial-gradient(circle at 40% 70%,
-      rgba(255,255,255,.06) 0 2px,
-      rgba(255,255,255,0) 2px 18px),
-    repeating-radial-gradient(circle at 70% 72%,
-      rgba(201,162,74,.06) 0 2px,
-      rgba(0,0,0,0) 2px 22px);
-  filter: blur(0.6px);
-  opacity:.22;
-  transform:translate3d(0,0,0);
-  animation:rip 9.5s linear infinite;
-}
-@keyframes rip{
-  0%{ transform:translate3d(-1.5%,0,0) scale(1.02); }
-  50%{ transform:translate3d(1.5%,0,0) scale(1.04); }
-  100%{ transform:translate3d(-1.5%,0,0) scale(1.02); }
+    radial-gradient(2px 2px at 18% 22%, rgba(255,255,255,.22) 0%, transparent 60%),
+    radial-gradient(2px 2px at 28% 30%, rgba(255,255,255,.16) 0%, transparent 60%),
+    radial-gradient(2px 2px at 34% 18%, rgba(255,255,255,.16) 0%, transparent 60%),
+    radial-gradient(2px 2px at 54% 26%, rgba(255,255,255,.18) 0%, transparent 60%),
+    radial-gradient(2px 2px at 66% 20%, rgba(255,255,255,.18) 0%, transparent 60%),
+    radial-gradient(2px 2px at 76% 30%, rgba(255,255,255,.16) 0%, transparent 60%),
+    radial-gradient(2px 2px at 84% 18%, rgba(255,255,255,.14) 0%, transparent 60%),
+    radial-gradient(2px 2px at 12% 40%, rgba(255,255,255,.14) 0%, transparent 60%),
+    radial-gradient(2px 2px at 90% 44%, rgba(255,255,255,.12) 0%, transparent 60%);
+  opacity:.65;
+  mix-blend-mode:screen;
 }
 
-/* ===== COMPASS PLATE (transparent/glass + obsidian dial) ===== */
-.plate{
-  position:absolute;left:50%;top:50%;
+/* ===== Moon (single) + reflection ===== */
+.moonWrap{
+  position:absolute;
+  right:6%;
+  top:7%;
+  width:160px;height:160px;
+  pointer-events:none;
+  z-index:1;
+  filter: drop-shadow(0 0 18px rgba(255,240,210,.22));
+}
+.moon{
+  width:160px;height:160px;border-radius:999px;
+  position:relative;
+  background:
+    radial-gradient(circle at 32% 30%, rgba(255,255,255,.50), rgba(255,255,255,.18) 38%, rgba(255,255,255,.06) 62%, rgba(255,255,255,0) 78%),
+    radial-gradient(circle at 50% 50%, rgba(255,240,210,.40), rgba(255,240,210,.10) 58%, rgba(255,240,210,0) 76%),
+    radial-gradient(circle at 45% 55%, rgba(0,0,0,.18), rgba(0,0,0,0) 46%),
+    radial-gradient(circle at 62% 42%, rgba(0,0,0,.14), rgba(0,0,0,0) 40%),
+    radial-gradient(circle at 35% 70%, rgba(0,0,0,.12), rgba(0,0,0,0) 44%),
+    radial-gradient(circle at 50% 50%, rgba(255,240,210,.55), rgba(255,240,210,.10) 62%, rgba(255,240,210,0) 78%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10),
+    0 0 30px rgba(255,240,210,.20),
+    inset 0 0 18px rgba(255,255,255,.10);
+  overflow:hidden;
+}
+.moon::after{
+  content:"";
+  position:absolute;inset:-40%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,240,210,.18), rgba(255,240,210,0) 62%);
+  animation: moonGlow 6s ease-in-out infinite;
+  opacity:.85;
+}
+@keyframes moonGlow{
+  0%,100%{transform:scale(1);opacity:.75}
+  50%{transform:scale(1.06);opacity:.95}
+}
+/* phase mask (changes periodically; no storage, no new keys) */
+.phaseMask{
+  position:absolute;inset:0;border-radius:999px;
+  background: rgba(0,0,0,.0);
+  mix-blend-mode:multiply;
+  opacity:.92;
+}
+
+/* reflection: faint and stretched in the lower sky */
+.moonReflect{
+  position:absolute;
+  right:8%;
+  top:46%;
+  width:220px;height:360px;
+  pointer-events:none;
+  z-index:0;
+  opacity:.18;
+  transform:skewX(-10deg);
+  filter: blur(1px);
+}
+.moonReflect::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(closest-side at 50% 0%, rgba(255,240,210,.55), rgba(255,240,210,0) 72%),
+    linear-gradient(180deg, rgba(255,240,210,.22), rgba(255,240,210,0));
+}
+
+/* ===== L2: WATER COMPASS (translucent) ===== */
+.waterFace{
+  position:absolute;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(980px,92vw);
   height:min(980px,92vw);
-  border-radius:44px;
+  border-radius:999px;
   pointer-events:none;
   z-index:2;
+  overflow:hidden;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.06), transparent 55%),
-    radial-gradient(circle at 78% 28%, rgba(255,43,43,.06), transparent 60%),
-    radial-gradient(circle at 70% 82%, rgba(90,40,120,.06), transparent 64%),
-    linear-gradient(160deg, rgba(10,12,16,.10), rgba(6,8,10,.14));
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 68%),
+    linear-gradient(180deg, rgba(255,120,80,.08), rgba(0,0,0,.10));
   box-shadow:
-    0 70px 240px rgba(0,0,0,.42),
-    inset 0 2px 0 rgba(255,255,255,.06),
-    inset 0 -70px 140px rgba(0,0,0,.34);
-  backdrop-filter: blur(6px);
+    0 60px 220px rgba(0,0,0,.42),
+    inset 0 0 60px rgba(0,0,0,.25);
+  opacity:.86;
+}
+.waterFace::before{
+  content:"";
+  position:absolute;inset:-20%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06), transparent 62%),
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,.04) 0 2px,
+      transparent 2px 16px),
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.06) 0 1.2deg,
+      transparent 1.2deg 7.2deg);
+  opacity:.75;
+  filter: blur(.35px);
+  animation: ripple 10s linear infinite;
+}
+.waterFace::after{
+  content:"";
+  position:absolute;inset:-18%;
+  background:
+    radial-gradient(110% 80% at 20% 10%, rgba(255,255,255,.10), rgba(255,255,255,0) 58%),
+    radial-gradient(100% 90% at 70% 80%, rgba(255,255,255,.08), rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, rgba(255,200,140,.08), rgba(0,0,0,0));
+  opacity:.50;
+  animation: ripple2 14s ease-in-out infinite;
+}
+@keyframes ripple{
+  0%{transform:translate(0,0) rotate(0deg)}
+  100%{transform:translate(2.5%,1.5%) rotate(8deg)}
+}
+@keyframes ripple2{
+  0%,100%{transform:translate(0,0) rotate(0deg);opacity:.45}
+  50%{transform:translate(-2.2%,1.4%) rotate(-6deg);opacity:.60}
 }
 
-/* Obsidian dial */
-.dial{
+/* engraved rings/ticks (instrument grade) */
+.dialEngrave{
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -234,227 +330,125 @@ body::before,body::after{pointer-events:none!important}
   border-radius:999px;
   pointer-events:none;
   z-index:3;
-  overflow:hidden;
+  opacity:.78;
 }
-.dial::before{
+.dialEngrave::before{
   content:"";
   position:absolute;inset:0;border-radius:999px;
   background:
-    radial-gradient(circle at 50% 42%,
-      rgba(255,255,255,.05),
-      rgba(0,0,0,.22) 56%,
-      rgba(0,0,0,.58) 78%,
-      rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.12),
-    inset 0 0 80px rgba(0,0,0,.55),
-    0 50px 180px rgba(0,0,0,.24);
-  opacity:.96;
+    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(0,0,0,.24) 36% 36.6%, transparent 37% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(0,0,0,.22) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(0,0,0,.20) 68% 68.6%, transparent 69% 100%),
+    linear-gradient(90deg, transparent 0 49.7%, rgba(0,0,0,.22) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(0,0,0,.22) 49.7% 50.3%, transparent 50.3% 100%);
+  mix-blend-mode:multiply;
 }
-.dial::after{
+.dialEngrave::after{
   content:"";
-  position:absolute;inset:-14%;
+  position:absolute;inset:-10%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
-
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
-    /* 45° aligned "curved" inlay: conic + subtle radial bend */
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
-  opacity:.78;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+    repeating-conic-gradient(from -90deg at 50% 50%,
+      rgba(0,0,0,.22) 0deg 0.8deg,
+      transparent 0.8deg 7.5deg);
+  opacity:.50;
+  filter: blur(.2px);
+  mask: radial-gradient(circle at 50% 50%, transparent 0 22%, #000 26% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 22%, #000 26% 100%);
 }
 
-/* 16 direction labels (injected by JS into this layer) */
-.face16{
-  position:absolute;left:50%;top:50%;
+/* 16 direction labels on the compass face */
+.dirRing{
+  position:absolute;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(900px,90vw);
   height:min(900px,90vw);
   pointer-events:none;
   z-index:4;
 }
-.face16 span{
+.dirTxt{
   position:absolute;
+  transform:translate(-50%,-50%);
   font-weight:980;
-  letter-spacing:1.6px;
-  font-size:11px;
-  color:rgba(201,162,74,.46);
-  text-shadow:0 0 12px rgba(0,0,0,.55);
+  letter-spacing:1px;
+  font-size:10px;
+  color:rgba(0,0,0,.55);
+  text-shadow:
+    0 0 0 rgba(0,0,0,0),
+    0 0 10px rgba(201,162,74,.22);
+}
+.dirTxt::after{
+  content:attr(data-t);
+  position:absolute;left:0;top:0;
+  transform:translate(0,0);
+  color:rgba(201,162,74,.58);
+  text-shadow:0 0 12px rgba(201,162,74,.18);
   mix-blend-mode:screen;
-}
-
-/* ===== MOON (single) + reflection ===== */
-.moon{
-  position:absolute;
-  right:6%;
-  top:10%;
-  width:150px;
-  height:150px;
-  pointer-events:none;
-  z-index:1;
-  border-radius:999px;
-  opacity:.92;
-  filter: drop-shadow(0 0 22px rgba(255,240,210,.22));
-}
-.moon::before{
-  content:"";
-  position:absolute;inset:0;border-radius:999px;
-  background:
-    radial-gradient(circle at 34% 32%, rgba(255,255,255,.22), transparent 45%),
-    radial-gradient(circle at 62% 66%, rgba(0,0,0,.12), transparent 44%),
-    radial-gradient(circle at 52% 44%, rgba(0,0,0,.10), transparent 46%),
-    radial-gradient(circle at 70% 30%, rgba(0,0,0,.08), transparent 42%),
-    radial-gradient(circle at 44% 72%, rgba(0,0,0,.10), transparent 44%),
-    radial-gradient(circle at 50% 50%, rgba(255,240,210,.92), rgba(255,240,210,.66));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.10),
-    inset 0 -18px 36px rgba(0,0,0,.22);
-}
-/* phase mask (set via JS using --phaseX) */
-.moon::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:999px;
-  background: radial-gradient(circle at 50% 50%, rgba(0,0,0,.82), rgba(0,0,0,.92));
-  transform: translateX(var(--phaseX, 0px));
-  mix-blend-mode:multiply;
-  opacity:.92;
-}
-
-/* reflection */
-.moonRef{
-  position:absolute;
-  right:7%;
-  top:56%;
-  width:160px;
-  height:160px;
-  pointer-events:none;
-  z-index:1;
-  border-radius:999px;
-  transform: scaleY(-1);
-  opacity:.20;
-  filter: blur(1.6px);
-}
-.moonRef::before{ content:""; position:absolute; inset:0; border-radius:999px; background:rgba(255,240,210,.55); }
-.moonRef::after{
-  content:"";
-  position:absolute; inset:-6px; border-radius:999px;
-  background:
-    radial-gradient(circle at 50% 20%, rgba(255,240,210,.45), transparent 62%),
-    repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0 2px, rgba(0,0,0,0) 2px 18px);
-  opacity:.55;
-  animation:rip2 6.8s ease-in-out infinite;
-}
-@keyframes rip2{
-  0%{ transform:translate3d(0,0,0) scale(1.02); }
-  50%{ transform:translate3d(0.8%,0,0) scale(1.06); }
-  100%{ transform:translate3d(0,0,0) scale(1.02); }
-}
-
-/* ===== CLOUDS (translucent) ===== */
-.clouds{
-  position:absolute;inset:0;
-  pointer-events:none;
-  z-index:5; /* above compass plate/dial */
-  opacity:.22;
-  mix-blend-mode:screen;
-  mask-image: radial-gradient(circle at 50% 50%, #000 0 72%, transparent 78%); /* keeps CORE mostly clear */
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 72%, transparent 78%);
-}
-.clouds::before,
-.clouds::after{
-  content:"";
-  position:absolute;inset:-10%;
-  background:
-    radial-gradient(260px 140px at 12% 22%, rgba(255,255,255,.10), transparent 62%),
-    radial-gradient(240px 120px at 32% 30%, rgba(255,255,255,.08), transparent 62%),
-    radial-gradient(280px 150px at 58% 26%, rgba(255,255,255,.10), transparent 64%),
-    radial-gradient(260px 140px at 78% 34%, rgba(255,255,255,.08), transparent 64%),
-    radial-gradient(320px 170px at 92% 28%, rgba(255,255,255,.08), transparent 66%);
-  filter: blur(2.2px);
-  transform:translate3d(-12%,0,0);
-  animation:cloudA 22s linear infinite;
-}
-.clouds::after{
   opacity:.75;
-  filter: blur(3.2px);
-  transform:translate3d(-20%,0,0) scale(1.05);
-  animation:cloudB 34s linear infinite;
 }
-@keyframes cloudA{ 0%{transform:translate3d(-18%,0,0)} 100%{transform:translate3d(18%,0,0)} }
-@keyframes cloudB{ 0%{transform:translate3d(-24%,0,0) scale(1.05)} 100%{transform:translate3d(24%,0,0) scale(1.05)} }
 
-/* ===== DRAGONS (two; between dial and gems) ===== */
-.dragons{
+/* ===== L3: CLOUDS (reflection) ===== */
+.cloudLayer{
   position:absolute;inset:0;
   pointer-events:none;
-  z-index:7; /* ABOVE compass, BELOW gems */
+  z-index:5;
+  opacity:.55;
+  mix-blend-mode:screen;
+  /* mask hole at center so clouds never pass over CORE */
+  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 22% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 22% 100%);
+}
+.cloud{
+  position:absolute;
+  left:-40%;
+  width:60%;
+  height:26%;
+  top:18%;
+  background:
+    radial-gradient(40% 50% at 20% 60%, rgba(255,255,255,.10), rgba(255,255,255,0) 66%),
+    radial-gradient(44% 56% at 44% 52%, rgba(255,255,255,.10), rgba(255,255,255,0) 68%),
+    radial-gradient(48% 60% at 70% 56%, rgba(255,255,255,.10), rgba(255,255,255,0) 70%),
+    radial-gradient(60% 80% at 50% 60%, rgba(255,255,255,.06), rgba(255,255,255,0) 72%);
+  filter: blur(1.2px);
+  opacity:.70;
+  animation: cloudsLR 22s linear infinite;
+}
+.cloud.c2{
+  top:56%;
+  height:24%;
+  width:66%;
+  opacity:.55;
+  animation-duration:28s;
+  animation-delay:-10s;
+}
+@keyframes cloudsLR{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(220%)}
+}
+
+/* ===== L4: DRAGONS (two) ===== */
+.dragonLayer{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:6;
 }
 .dragon{
   position:absolute;
-  left:-50%;
-  width:140%;
-  height:120px;
-  opacity:.78;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,.45));
+  left:110%;
+  width:70%;
+  height:24%;
+  filter: drop-shadow(0 0 10px rgba(0,0,0,.40));
+  opacity:.92;
+  animation: dragonRL 26s linear infinite;
 }
-.dragon.top{ top:20%; height:120px; animation:dragTop 22s linear infinite; }
-.dragon.bottom{ top:74%; height:120px; animation:dragBot 26s linear infinite; }
-@keyframes dragTop{ 0%{ transform:translate3d(0,0,0); } 100%{ transform:translate3d(110%,0,0); } } /* R→L achieved by SVG flip */
-@keyframes dragBot{ 0%{ transform:translate3d(0,0,0); } 100%{ transform:translate3d(110%,0,0); } }
-
-/* Dragon SVG styling */
-.dragon svg{ width:100%; height:100%; display:block; }
-.dragon .body{
-  fill: rgba(0,0,0,.86); /* ONYX */
-  stroke: rgba(201,162,74,.18);
-  stroke-width: 1.2;
-}
-.dragon .belly{
-  fill: rgba(201,162,74,.10);
-}
-.dragon .spine{
-  fill: rgba(201,162,74,.14);
-}
-.dragon .scaleStroke{
-  stroke: rgba(201,162,74,.18);
-  stroke-width: 1;
-  opacity:.85;
-}
-.dragon .head{
-  fill: rgba(0,0,0,.90);
-  stroke: rgba(201,162,74,.22);
-  stroke-width: 1.2;
-}
-.dragon .horn{
-  fill: rgba(201,162,74,.16);
-}
-.dragon .whisker{
-  stroke: rgba(201,162,74,.20);
-  stroke-width: 1.1;
-  opacity:.8;
-}
-.dragon .textGlow{
-  fill: rgba(201,162,74,.92);
-  filter: drop-shadow(0 0 8px rgba(201,162,74,.30));
-  font-weight:900;
-  letter-spacing:.8px;
-  opacity:.85;
+.dragon.top{ top:18%; animation-duration:30s; }
+.dragon.bot{ top:64%; animation-duration:34s; animation-delay:-14s; }
+@keyframes dragonRL{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-260%)}
 }
 
-/* ===== GEM NODES ===== */
+/* ===== L5: GEM NODES ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -464,20 +458,27 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:10;
+  z-index:12;
   border-radius:22px;
 }
-.core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
+.core{width:var(--D0);height:var(--D0);z-index:14;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
+/* gem material + fractalization */
 .surface{
   background:
-    radial-gradient(circle at 18% 18%, rgba(255,255,255,.30), transparent 48%),
-    radial-gradient(circle at 78% 24%, var(--festival), transparent 62%),
-    radial-gradient(circle at 76% 84%, var(--opalV), transparent 64%),
-    radial-gradient(circle at 30% 84%, var(--crimson), transparent 72%),
+    radial-gradient(120% 90% at 22% 12%, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 52%),
+    radial-gradient(90% 80% at 78% 22%, rgba(255,43,43,.14) 0%, rgba(255,43,43,0) 62%),
+    radial-gradient(90% 90% at 76% 78%, rgba(160,90,255,.12) 0%, rgba(160,90,255,0) 64%),
+    /* fractal-like micro facets */
+    repeating-conic-gradient(from 18deg at 45% 55%,
+      rgba(255,255,255,.08) 0 6deg,
+      rgba(0,0,0,0) 6deg 14deg),
+    repeating-conic-gradient(from 80deg at 58% 42%,
+      rgba(201,162,74,.08) 0 4deg,
+      rgba(0,0,0,0) 4deg 12deg),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
     var(--shadowDeep),
@@ -486,38 +487,25 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
 
-/* 3D EDGE + CURVED INLAY (no orthogonal grid) */
+/* 3D edge + curved inlay (NO orthogonal grid) */
 .surface::before{
   content:"";
-  position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  /* curved inlay arcs + perimeter rim */
   background:
-    /* beveled rim */
-    radial-gradient(circle at 50% 50%,
-      rgba(201,162,74,.16) 0 52%,
-      rgba(0,0,0,0) 58% 100%),
-    /* curved “cross” illusion: conic arcs */
-    conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.10) 0deg 6deg,
-      transparent 6deg 84deg,
-      rgba(201,162,74,.10) 84deg 90deg,
-      transparent 90deg 174deg,
-      rgba(201,162,74,.10) 174deg 180deg,
-      transparent 180deg 264deg,
-      rgba(201,162,74,.10) 264deg 270deg,
-      transparent 270deg 360deg),
-    /* subtle fractal noise via SVG turbulence (data URI) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
-  background-size:auto,auto,240px 240px;
-  background-repeat:no-repeat,no-repeat,repeat;
-  opacity:.55;
-  mix-blend-mode:screen;
+    radial-gradient(120% 120% at 50% 50%, rgba(201,162,74,0) 58%, rgba(201,162,74,.14) 82%, rgba(201,162,74,0) 100%),
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(201,162,74,.07) 0 1.2deg,
+      transparent 1.2deg 7.5deg),
+    radial-gradient(110% 80% at 20% 10%, rgba(255,255,255,.10), rgba(255,255,255,0) 58%),
+    radial-gradient(110% 80% at 80% 90%, rgba(0,0,0,.18), rgba(0,0,0,0) 62%);
+  opacity:.75;
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
     radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
 }
 
 /* highlight streak */
@@ -532,7 +520,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.92;
 }
 
-/* glow-only hover (NO movement) */
+/* glow-only hover */
 .node:hover{
   border-color:rgba(201,162,74,.44);
   box-shadow:
@@ -574,29 +562,8 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
-/* per-gem cardinal corner marks (N/E/S/W) */
-.corners{
-  position:absolute; inset:6px;
-  pointer-events:none;
-  transform:rotate(-45deg);
-}
-.corners i{
-  position:absolute;
-  font-style:normal;
-  font-weight:980;
-  font-size:10px;
-  letter-spacing:.6px;
-  color:rgba(201,162,74,.50);
-  text-shadow:0 0 10px rgba(0,0,0,.45);
-  opacity:.85;
-}
-.corners .n{ left:50%; top:0; transform:translateX(-50%); }
-.corners .e{ right:0; top:50%; transform:translateY(-50%); }
-.corners .s{ left:50%; bottom:0; transform:translateX(-50%); }
-.corners .w{ left:0; top:50%; transform:translateY(-50%); }
-
 /* CORE emphasis */
-.node.core{
+.core{
   border-color:rgba(201,162,74,.26);
   box-shadow:
     0 54px 170px rgba(0,0,0,.88),
@@ -605,66 +572,22 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -64px 110px rgba(0,0,0,.92);
 }
 
-/* ===== BOTTOM DOCK ===== */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:240;
-  width:min(1120px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(5, minmax(0,1fr));
-  gap:10px;
-}
-.dock a{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-height:44px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  box-shadow:var(--shadowB);
-  font-weight:950;
-  letter-spacing:.25px;
-  color:rgba(255,255,255,.92);
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.dock a:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 24px rgba(201,162,74,.14);
-}
-@media (max-width:720px){
-  .dock{grid-template-columns:repeat(3,minmax(0,1fr));}
-}
-
-/* ===== CORNER CONTROLS (ABOVE dock; no overlap) ===== */
+/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
 .corner{
   position:fixed;
-  bottom:calc(max(10px, env(safe-area-inset-bottom)) + var(--dockH));
-  z-index:250;
+  bottom:max(16px, env(safe-area-inset-bottom));
+  z-index:270;
   pointer-events:none;
 }
 .corner .dmini{pointer-events:auto}
 .corner.left{left:16px}
 .corner.right{right:16px}
-
 .dmini{
   width:56px;height:56px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
   box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
   display:grid;place-items:center;
@@ -696,11 +619,11 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== NOTE PILL (above dock) ===== */
+/* ===== BOTTOM PILL ===== */
 .pillWrap{
-  width:min(1120px,94vw);
+  width:min(1180px,94vw);
   margin:14px auto 0;
-  padding-bottom:120px;
+  padding-bottom:90px;
 }
 .pill{
   border:1px solid rgba(255,255,255,.12);
@@ -710,7 +633,7 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
     radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
     radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
+    rgba(0,0,0,.14);
   box-shadow:0 26px 90px rgba(0,0,0,.55);
   color:rgba(255,255,255,.86);
   line-height:1.55;
@@ -719,25 +642,26 @@ body::before,body::after{pointer-events:none!important}
 .pill b{color:rgba(255,255,255,.95)}
 .pill .g{color:rgba(201,162,74,.80);font-weight:980}
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE FIT ===== */
 @media (max-width:720px){
   :root{
-    --D0:196px;
-    --D1:142px;
+    --D0:190px;
+    --D1:140px;
     --D2:108px;
     --D3:84px;
     --R1:156px;
     --R2:228px;
     --R3:292px;
-    --padTop:112px;
+    --padTop:110px;
   }
-  .stage{height:min(980px,86vh)}
-  .moon{width:120px;height:120px}
+  .stage{height:min(1040px,86vh)}
+  .moonWrap{transform:scale(.90);transform-origin:top right}
+  .moonReflect{opacity:.16}
 }
 @media (max-width:520px){
   :root{
-    --D0:184px;
-    --D1:136px;
+    --D0:178px;
+    --D1:134px;
     --D2:104px;
     --D3:80px;
     --R1:146px;
@@ -745,8 +669,7 @@ body::before,body::after{pointer-events:none!important}
     --R3:274px;
   }
   .brandSub{display:none}
-  .moon{width:112px;height:112px;right:4%;top:8%}
-  .moonRef{right:5%;top:58%;width:120px;height:120px}
+  .dragon{opacity:.86}
 }
 </style>
 </head>
@@ -756,9 +679,11 @@ body::before,body::after{pointer-events:none!important}
 <div class="top" aria-label="Top controls">
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
-      <div>
+      <div class="brandBlock">
         <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-        <div class="brandSub" id="brandSub">Choose one gem. Finish one thought. Return to CORE when you need the map.</div>
+        <div class="brandSub" id="brandSub">
+          This page is a tutorial: pick one hub, read one block, then move. Use CORE to reset if you feel a loop.
+        </div>
       </div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
@@ -781,24 +706,29 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <div class="stage" id="stage" aria-label="Compass dial">
-  <div class="bg" aria-hidden="true"></div>
+  <div class="sky" aria-hidden="true"></div>
 
-  <div class="moon" id="moon" aria-hidden="true"></div>
-  <div class="moonRef" aria-hidden="true"></div>
-
-  <div class="plate" aria-hidden="true"></div>
-  <div class="dial" aria-hidden="true"></div>
-
-  <div class="face16" id="face16" aria-hidden="true"></div>
-
-  <div class="clouds" aria-hidden="true"></div>
-
-  <div class="dragons" aria-hidden="true">
-    <!-- TOP: right→left (we flip svg horizontally) -->
-    <div class="dragon top" id="dragonTop"></div>
-    <!-- BOTTOM: left→right -->
-    <div class="dragon bottom" id="dragonBottom"></div>
+  <div class="moonWrap" aria-hidden="true">
+    <div class="moon">
+      <div class="phaseMask" id="phaseMask"></div>
+    </div>
   </div>
+  <div class="moonReflect" aria-hidden="true"></div>
+
+  <div class="waterFace" aria-hidden="true"></div>
+  <div class="dialEngrave" aria-hidden="true"></div>
+  <div class="dirRing" id="dirRing" aria-hidden="true"></div>
+
+  <div class="cloudLayer" aria-hidden="true">
+    <div class="cloud"></div>
+    <div class="cloud c2"></div>
+  </div>
+
+  <div class="dragonLayer" aria-hidden="true">
+    <div class="dragon top" id="dragonTop"></div>
+    <div class="dragon bot" id="dragonBot"></div>
+  </div>
+
   <!-- nodes injected by JS -->
 </div>
 
@@ -816,14 +746,6 @@ body::before,body::after{pointer-events:none!important}
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
   <div class="cornerLabel" id="lblHub">HUB</div>
 </div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
-  <a id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-  <a id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  <a id="dockResearch" data-route="/research/" href="/research/">RESEARCH</a>
-  <a id="dockHub" data-route="/home/" href="/home/">HUB</a>
-</nav>
 
 <script>
 (function(){
@@ -868,14 +790,41 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
+  // ===== Moon phase (no storage / no new keys) =====
+  // phase advances every 5 minutes (approximates “time passing” without persistence)
+  function moonPhaseIndex(){
+    var step = Math.floor(Date.now()/(1000*60*5));
+    return step % 8; // 0..7
+  }
+  function applyMoonPhase(){
+    var i = moonPhaseIndex();
+    // 0 new, 1 waxing crescent, 2 first quarter, 3 waxing gibbous, 4 full, 5 waning gibbous, 6 last quarter, 7 waning crescent
+    // Use a soft dark mask that slides; never create a second moon.
+    var mask = document.getElementById("phaseMask");
+    if(!mask) return;
+
+    var x = [92,78,62,46,0,46,62,78][i];  // how much dark covers (0=full)
+    var o = (i===4)?0.0:0.80;
+
+    mask.style.background =
+      "radial-gradient(130% 130% at "+x+"% 50%, rgba(0,0,0,"+o+") 0%, rgba(0,0,0,"+o+") 58%, rgba(0,0,0,0) 62%)";
+    // Boost glow for full moon
+    var moon = mask.parentElement;
+    if(moon){
+      moon.style.filter = (i===4) ? "drop-shadow(0 0 18px rgba(255,240,210,.28))" : "none";
+    }
+  }
+
   // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
   var CORE_ROUTE = "/index-core/index.html";
   var EXIT_ROUTE = "/door/";
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // N/E/S/W meaning (locked):
+  // REQUIRED mapping:
   // N = Laws, E = Energy, S = Finance, W = Governance
+  // Must include Research; Doctrine must route to /products/capital-doctrine/
+  // Prelude removed from compass.
   var ROUTES_RAW = [
     // Tier 1 (cardinals)
     {tier:1, code:"N",  label:{platform:{en:"LAWS",zh:"法则",es:"LEYES"}, engineering:{en:"BOUNDS",zh:"边界",es:"LÍMIT"}}, href:"/laws/"},
@@ -921,165 +870,7 @@ body::before,body::after{pointer-events:none!important}
     return pick3(pack.en, pack.zh, pack.es);
   }
 
-  // ===== Moon phase (single, time-advancing; includes full moon) =====
-  // 8 phases, advances every 6 hours (no storage keys)
-  function setMoonPhase(){
-    var step = Math.floor(Date.now() / (1000*60*60*6)) % 8; // 0..7
-    // translateX mask offsets:
-    // 0 new (-60), 1 crescent (-40), 2 quarter (-22), 3 gibbous (-8),
-    // 4 full (0 with low opacity), 5 gibbous (+8), 6 quarter (+22), 7 crescent (+40)
-    var map = [-60,-40,-22,-8,0,8,22,40];
-    var moon = document.getElementById("moon");
-    if(!moon) return;
-    moon.style.setProperty("--phaseX", map[step] + "px");
-    // ensure FULL visible at step=4 by reducing mask opacity a bit
-    moon.style.opacity = (step===4) ? ".98" : ".92";
-    // tweak mask darkness when full
-    moon.classList.remove("full");
-    if(step===4){
-      // soften phase overlay by reducing after opacity
-      moon.style.setProperty("--phaseX", "0px");
-      // we can't target ::after opacity directly; so we accept full via minimal translate and strong glow
-    }
-  }
-
-  // ===== 16 face directions =====
-  var FACE16 = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-  function buildFace16(){
-    var holder=document.getElementById("face16");
-    if(!holder) return;
-    holder.innerHTML="";
-    var rect=holder.getBoundingClientRect();
-    var cx=rect.width/2, cy=rect.height/2;
-    var R=Math.min(cx,cy) * 0.47; // label radius
-    for(var i=0;i<FACE16.length;i++){
-      var a=(i/FACE16.length)*(Math.PI*2) - Math.PI/2;
-      var x=cx + R*Math.cos(a);
-      var y=cy + R*Math.sin(a);
-      var sp=document.createElement("span");
-      sp.textContent=FACE16[i];
-      sp.style.left = x+"px";
-      sp.style.top  = y+"px";
-      sp.style.transform = "translate(-50%,-50%)";
-      holder.appendChild(sp);
-    }
-  }
-
-  // ===== Dragon SVG (thicker, segmented, head, limbs, spines) =====
-  function dragonSVG(text, flip){
-    // flip = true => mirror for R→L top dragon
-    var scaleX = flip ? -1 : 1;
-    var tx = flip ? "translate(1400 0)" : "";
-    return ''+
-    '<svg viewBox="0 0 1400 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
-    '<g transform="'+tx+' scale('+scaleX+',1)">'+
-      // body spine path (thicker, segmented)
-      '<path class="body" d="M60 92 C 180 20, 320 20, 420 72 C 520 124, 640 124, 740 72 C 860 8, 980 20, 1080 86 C 1180 150, 1280 138, 1340 108 C 1370 94, 1390 86, 1396 86 L 1396 118 C 1390 118, 1370 126, 1340 140 C 1260 178, 1160 170, 1060 118 C 960 64, 860 64, 740 118 C 620 176, 500 176, 380 118 C 260 60, 160 70, 86 112 Z" />'+
-      // belly ridge
-      '<path class="belly" d="M110 108 C 220 66, 300 70, 380 110 C 480 162, 580 158, 690 110 C 812 56, 920 58, 1042 112 C 1140 154, 1240 150, 1320 124 C 1248 152, 1144 158, 1034 118 C 914 72, 812 78, 694 126 C 570 178, 460 176, 344 122 C 246 78, 170 84, 110 108 Z" />'+
-      // dorsal spines
-      '<path class="spine" d="M260 58 l18 -22 l8 28 Z M420 62 l18 -24 l10 30 Z M590 64 l18 -24 l10 30 Z M760 60 l18 -24 l10 30 Z M920 58 l18 -22 l8 28 Z M1080 66 l18 -20 l6 26 Z" />'+
-      // head
-      '<path class="head" d="M58 86 C 46 74, 46 58, 58 48 C 74 34, 98 30, 124 34 C 148 38, 164 52, 168 66 C 172 82, 160 96, 140 102 C 118 108, 84 104, 58 86 Z" />'+
-      // horn
-      '<path class="horn" d="M84 38 C 92 20, 114 18, 130 30 C 112 30, 98 34, 84 38 Z" />'+
-      // whiskers
-      '<path class="whisker" d="M128 62 C 150 54, 170 54, 190 60" fill="none"/>'+
-      '<path class="whisker" d="M124 72 C 152 72, 176 78, 198 90" fill="none"/>'+
-      // limbs (small)
-      '<path class="body" d="M360 122 C 346 122, 336 132, 336 144 C 356 148, 378 146, 394 138 C 390 128, 378 122, 360 122 Z" opacity=".82"/>'+
-      '<path class="body" d="M860 122 C 846 122, 836 132, 836 144 C 856 148, 878 146, 894 138 C 890 128, 878 122, 860 122 Z" opacity=".82"/>'+
-      // scale strokes (segmented feel)
-      '<path class="scaleStroke" d="M220 104 C 252 78, 288 74, 320 92" fill="none"/>'+
-      '<path class="scaleStroke" d="M420 110 C 456 86, 492 86, 528 110" fill="none"/>'+
-      '<path class="scaleStroke" d="M620 110 C 656 86, 692 86, 728 110" fill="none"/>'+
-      '<path class="scaleStroke" d="M820 110 C 856 86, 892 86, 928 110" fill="none"/>'+
-      '<path class="scaleStroke" d="M1020 112 C 1054 92, 1090 94, 1124 114" fill="none"/>'+
-      // glowing text banner (engraved on body)
-      '<text class="textGlow" x="520" y="84" font-size="14">'+ escapeXML(text) +'</text>'+
-    '</g></svg>';
-  }
-
-  function escapeXML(s){
-    return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-
-  // top dragon: classical Chinese phrases
-  var TOP_PHRASE = "道可道 非常道 · 一生二 二生三 三生万物";
-  // bottom dragon: localized phrase by UI language
-  function bottomPhrase(){
-    if(lang==="zh") return "己所不欲 勿施于人 · 仁者爱人";
-    if(lang==="es") return "La verdad sin límites no escala.";
-    return "Truth without bounds cannot scale.";
-  }
-
-  function paintDragons(){
-    var top=document.getElementById("dragonTop");
-    var bot=document.getElementById("dragonBottom");
-    if(top) top.innerHTML = dragonSVG(TOP_PHRASE, true);
-    if(bot) bot.innerHTML = dragonSVG(bottomPhrase(), false);
-  }
-
-  // ===== Wire dock with state carry =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-
-  // ===== Header i18n =====
-  function paintHeader(){
-    var laneWord = (lane==="engineering") ? pick3("ENGINEERING","工程","INGENIERÍA") : pick3("PLATFORM","平台","PLATAFORMA");
-
-    if(lang==="zh"){
-      document.getElementById("brandTitle").textContent="欢迎来到指南针";
-      document.getElementById("brandSub").textContent="选一个宝石，完成一个想法，需要地图就回到核心。透镜："+laneWord;
-      document.getElementById("pill").innerHTML="<b>指南针：</b>一个中心（<span class='g'>核心</span>）+ 16 枢纽。禁止重复目的地。未建页面暂时路由到 <span class='g'>/404.html</span>。";
-      document.getElementById("dockDoor").textContent="门";
-      document.getElementById("dockLaws").textContent="法则";
-      document.getElementById("dockProducts").textContent="产品";
-      document.getElementById("dockResearch").textContent="研究";
-      document.getElementById("dockHub").textContent="枢纽";
-      document.getElementById("lblExit").textContent="退出";
-      document.getElementById("lblHub").textContent="枢纽";
-      document.querySelector("#btnExit span").textContent="退出";
-      document.querySelector("#btnHub span").textContent="枢纽";
-    }else if(lang==="es"){
-      document.getElementById("brandTitle").textContent="BIENVENIDO A LA BRÚJULA";
-      document.getElementById("brandSub").textContent="Elige una gema. Termina una idea. Vuelve al CORE cuando necesites el mapa. Lente: "+laneWord;
-      document.getElementById("pill").innerHTML="<b>Brújula:</b> Un centro (<span class='g'>CORE</span>) + 16 hubs. Sin destinos duplicados. No construido → <span class='g'>/404.html</span>.";
-      document.getElementById("dockDoor").textContent="PUERTA";
-      document.getElementById("dockLaws").textContent="LEYES";
-      document.getElementById("dockProducts").textContent="PRODUCTOS";
-      document.getElementById("dockResearch").textContent="INVEST.";
-      document.getElementById("dockHub").textContent="HUB";
-      document.getElementById("lblExit").textContent="SALIR";
-      document.getElementById("lblHub").textContent="HUB";
-      document.querySelector("#btnExit span").textContent="SALIR";
-      document.querySelector("#btnHub span").textContent="HUB";
-    }else{
-      document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
-      document.getElementById("brandSub").textContent="Choose one gem. Finish one thought. Return to CORE when you need the map. Lens: "+laneWord;
-      document.getElementById("pill").innerHTML="<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
-      document.getElementById("dockDoor").textContent="DOOR";
-      document.getElementById("dockLaws").textContent="LAWS";
-      document.getElementById("dockProducts").textContent="PRODUCTS";
-      document.getElementById("dockResearch").textContent="RESEARCH";
-      document.getElementById("dockHub").textContent="HUB";
-      document.getElementById("lblExit").textContent="EXIT";
-      document.getElementById("lblHub").textContent="HUB";
-      document.querySelector("#btnExit span").textContent="EXIT";
-      document.querySelector("#btnHub span").textContent="HUB";
-    }
-
-    paintDragons();
-  }
-
-  // ===== Build nodes =====
+  // ===== Node build =====
   var stage=document.getElementById("stage");
 
   function mkNode(word, code, cls){
@@ -1099,30 +890,23 @@ body::before,body::after{pointer-events:none!important}
     c.className="code";
     c.textContent=code;
 
-    // per-gem corner marks
-    var corners=document.createElement("div");
-    corners.className="corners";
-    corners.innerHTML = '<i class="n">N</i><i class="e">E</i><i class="s">S</i><i class="w">W</i>';
-
     inner.appendChild(w);
     inner.appendChild(c);
-
-    d.appendChild(corners);
     d.appendChild(inner);
-
     return d;
   }
 
   function layout(){
-    // remove existing nodes only
+    // remove existing nodes
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var R1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R1"))||168;
-    var R2=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R2"))||246;
-    var R3=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--R3"))||314;
+    var cs=getComputedStyle(document.documentElement);
+    var R1=parseFloat(cs.getPropertyValue("--R1"))||170;
+    var R2=parseFloat(cs.getPropertyValue("--R2"))||248;
+    var R3=parseFloat(cs.getPropertyValue("--R3"))||316;
 
     // CORE
     var core=mkNode(pick3("CORE","核心","NÚCLEO"), "INDEX", "core");
@@ -1139,7 +923,7 @@ body::before,body::after{pointer-events:none!important}
       else t3.push(ROUTES[i]);
     }
 
-    // Tier 1 pinned to N/E/S/W angles by code order
+    // Tier 1 pinned to N/E/S/W angles
     function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
     var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
     var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
@@ -1156,7 +940,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 2 (4 diagonals) start at -45°
+    // Tier 2 (diagonals) start at -45°
     for(var i=0;i<t2.length;i++){
       var it=t2[i];
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
@@ -1171,7 +955,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 3 (8) start at -67.5°
+    // Tier 3 (outer 8) start at -67.5°
     for(var i=0;i<t3.length;i++){
       var it=t3[i];
       var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
@@ -1190,8 +974,138 @@ body::before,body::after{pointer-events:none!important}
   function safeLayout(){
     var r=stage.getBoundingClientRect();
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    buildFace16();
     layout();
+  }
+
+  // ===== 16 direction labels on compass face =====
+  var DIRS = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  function buildDirRing(){
+    var ring=document.getElementById("dirRing");
+    if(!ring) return;
+    ring.innerHTML="";
+    var rect=ring.getBoundingClientRect();
+    var cx=rect.width/2, cy=rect.height/2;
+    var R = Math.min(cx,cy)*0.47; // label radius inside face
+
+    for(var i=0;i<DIRS.length;i++){
+      var a=(i/DIRS.length)*(Math.PI*2) - Math.PI/2;
+      var x=cx + R*Math.cos(a);
+      var y=cy + R*Math.sin(a);
+
+      var s=document.createElement("div");
+      s.className="dirTxt";
+      s.style.left=x+"px";
+      s.style.top=y+"px";
+      s.setAttribute("data-t", DIRS[i]);
+      s.textContent=DIRS[i];
+      ring.appendChild(s);
+    }
+  }
+
+  // ===== Dragons (SVG with textPath) =====
+  function dragonSVG(text, isTop){
+    // Body path: curvy but segmented look; head + horns + limbs as shapes.
+    // Text: along main path, gold glow.
+    var fill = "rgba(6,70,40,0.92)"; // dark green
+    var stroke = "rgba(0,0,0,0.55)";
+    var glow = "rgba(212,175,55,0.75)";
+
+    var id = isTop ? "pTop" : "pBot";
+    var tsize = isTop ? 18 : 16;
+
+    // NOTE: keep svg light (no filters that kill mobile)
+    return ""+
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 320' preserveAspectRatio='xMidYMid meet'>"+
+      "<defs>"+
+        "<path id='"+id+"' d='M40 190 C120 110, 220 90, 320 120 C410 146, 468 190, 560 178 C650 166, 720 118, 820 108 C930 98, 1000 130, 1086 174 C1180 222, 1260 230, 1360 170'/>"+
+      "</defs>"+
+
+      /* segmented body */
+      "<g opacity='0.96'>"+
+        "<path d='M40 190 C120 110, 220 90, 320 120 C410 146, 468 190, 560 178 C650 166, 720 118, 820 108 C930 98, 1000 130, 1086 174 C1180 222, 1260 230, 1360 170' fill='none' stroke='"+stroke+"' stroke-width='30' stroke-linecap='round' stroke-linejoin='round'/>"+
+        "<path d='M40 190 C120 110, 220 90, 320 120 C410 146, 468 190, 560 178 C650 166, 720 118, 820 108 C930 98, 1000 130, 1086 174 C1180 222, 1260 230, 1360 170' fill='none' stroke='"+fill+"' stroke-width='24' stroke-linecap='round' stroke-linejoin='round'/>"+
+
+        /* scales hint */
+        "<path d='M90 175 C140 150, 200 142, 250 152' fill='none' stroke='rgba(255,255,255,0.10)' stroke-width='3'/>"+
+        "<path d='M260 152 C320 166, 360 190, 420 184' fill='none' stroke='rgba(255,255,255,0.10)' stroke-width='3'/>"+
+        "<path d='M520 182 C590 168, 650 150, 710 142' fill='none' stroke='rgba(255,255,255,0.10)' stroke-width='3'/>"+
+        "<path d='M850 112 C910 110, 960 120, 1010 144' fill='none' stroke='rgba(255,255,255,0.10)' stroke-width='3'/>"+
+
+        /* head (left) */
+        "<g transform='translate(62,176) rotate(-18)'>"+
+          "<path d='M0 0 C22 -24, 54 -20, 72 0 C58 18, 34 22, 0 0Z' fill='"+fill+"' stroke='"+stroke+"' stroke-width='3'/>"+
+          "<circle cx='46' cy='-2' r='3' fill='rgba(255,255,255,0.55)'/>"+
+          "<path d='M18 -18 C10 -34, 22 -46, 34 -38' fill='none' stroke='"+fill+"' stroke-width='6' stroke-linecap='round'/>"+
+          "<path d='M34 -16 C30 -34, 48 -48, 60 -34' fill='none' stroke='"+fill+"' stroke-width='6' stroke-linecap='round'/>"+
+          "<path d='M62 2 C76 0, 84 6, 90 14' fill='none' stroke='"+fill+"' stroke-width='5' stroke-linecap='round'/>"+
+        "</g>"+
+
+        /* small limbs */
+        "<g fill='"+fill+"' opacity='0.92'>"+
+          "<path d='M360 170 C346 196, 360 214, 382 210 C374 196, 372 184, 382 168Z'/>"+
+          "<path d='M690 152 C678 176, 690 194, 712 190 C704 176, 702 164, 712 150Z'/>"+
+        "</g>"+
+
+        /* tail tip (right) */
+        "<g transform='translate(1328,174) rotate(14)'>"+
+          "<path d='M0 0 C18 -8, 30 -2, 40 10 C26 18, 12 16, 0 0Z' fill='"+fill+"' stroke='"+stroke+"' stroke-width='2'/>"+
+        "</g>"+
+      "</g>"+
+
+      /* glowing text along body */
+      "<text font-family='system-ui, -apple-system, Segoe UI, Roboto, sans-serif' font-weight='900' font-size='"+tsize+"' letter-spacing='1'>"+
+        "<textPath href='#"+id+"' startOffset='10%'>"+
+          "<tspan fill='rgba(0,0,0,0)'>"+""+"</tspan>"+
+          "<tspan fill='"+glow+"' opacity='0.92'>"+escapeXML(text)+"</tspan>"+
+        "</textPath>"+
+      "</text>"+
+      "<text font-family='system-ui, -apple-system, Segoe UI, Roboto, sans-serif' font-weight='900' font-size='"+tsize+"' letter-spacing='1' opacity='0.60'>"+
+        "<textPath href='#"+id+"' startOffset='10%'>"+
+          "<tspan fill='rgba(212,175,55,0.30)'>"+escapeXML(text)+"</tspan>"+
+        "</textPath>"+
+      "</text>"+
+    "</svg>";
+  }
+
+  function escapeXML(s){
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&apos;");
+  }
+
+  // Top dragon = ancient Chinese sayings (static set, rotates by time)
+  var CN_SAYINGS = [
+    "道生一，一生二，二生三，三生万物",
+    "道可道，非常道；名可名，非常名",
+    "己所不欲，勿施于人",
+    "上善若水，水善利万物而不争"
+  ];
+
+  function selectedLanguageSayings(){
+    // bottom dragon = selected language
+    if(lang==="zh"){
+      return ["以事实为锚，以边界为准，以收据为证"];
+    }
+    if(lang==="es"){
+      return ["Hechos → límites → recibos → ejecución"];
+    }
+    return ["Facts → bounds → receipts → execution"];
+  }
+
+  function paintDragons(){
+    var top=document.getElementById("dragonTop");
+    var bot=document.getElementById("dragonBot");
+    if(!top || !bot) return;
+
+    var idx = Math.floor(Date.now()/(1000*20)) % CN_SAYINGS.length;
+    var topText = CN_SAYINGS[idx];
+    var botText = selectedLanguageSayings()[0];
+
+    top.innerHTML = dragonSVG(topText, true);
+    bot.innerHTML = dragonSVG(botText, false);
   }
 
   // ===== Language (NO reload) =====
@@ -1202,6 +1116,38 @@ body::before,body::after{pointer-events:none!important}
   setPressed(btnZH, lang==="zh");
   setPressed(btnES, lang==="es");
 
+  function paintHeader(){
+    var laneWord = (lane==="engineering")
+      ? pick3("ENGINEERING","工程","INGENIERÍA")
+      : pick3("PLATFORM","平台","PLATAFORMA");
+
+    if(lang==="zh"){
+      document.getElementById("brandTitle").textContent="欢迎来到指南针";
+      document.getElementById("brandSub").textContent="这是教程页：选一个枢纽，读一块，然后移动。感觉循环时回到 CORE 重置。透镜："+laneWord;
+      document.getElementById("lblExit").textContent="退出";
+      document.getElementById("lblHub").textContent="枢纽";
+      document.querySelector("#btnExit span").textContent="退出";
+      document.querySelector("#btnHub span").textContent="枢纽";
+      document.getElementById("pill").innerHTML="<b>指南针：</b>一个中心（<span class='g'>CORE</span>）+ 16 枢纽。禁止重复目的地。未建页面暂时路由到 <span class='g'>/404.html</span>。";
+    }else if(lang==="es"){
+      document.getElementById("brandTitle").textContent="BIENVENIDO A LA BRÚJULA";
+      document.getElementById("brandSub").textContent="Tutorial: elige un hub, lee un bloque y avanza. Si aparece un bucle, vuelve a CORE para reset. Lente: "+laneWord;
+      document.getElementById("lblExit").textContent="SALIR";
+      document.getElementById("lblHub").textContent="HUB";
+      document.querySelector("#btnExit span").textContent="SALIR";
+      document.querySelector("#btnHub span").textContent="HUB";
+      document.getElementById("pill").innerHTML="<b>Brújula:</b> Un centro (<span class='g'>CORE</span>) + 16 hubs. Sin destinos duplicados. No construido → <span class='g'>/404.html</span>.";
+    }else{
+      document.getElementById("brandTitle").textContent="WELCOME TO THE COMPASS";
+      document.getElementById("brandSub").textContent="This is a tutorial: pick one hub, read one block, then move. Use CORE to reset if you feel a loop. Lens: "+laneWord;
+      document.getElementById("lblExit").textContent="EXIT";
+      document.getElementById("lblHub").textContent="HUB";
+      document.querySelector("#btnExit span").textContent="EXIT";
+      document.querySelector("#btnHub span").textContent="HUB";
+      document.getElementById("pill").innerHTML="<b>Compass:</b> One center (<span class='g'>CORE</span>) + 16 hubs. No duplicate destinations. Unbuilt hubs route to <span class='g'>/404.html</span>.";
+    }
+  }
+
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -1211,10 +1157,9 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnZH, lang==="zh");
     setPressed(btnES, lang==="es");
     paintHeader();
+    paintDragons();
     safeLayout();
-    wireAll();
   }
-
   btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
   btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
@@ -1232,10 +1177,9 @@ body::before,body::after{pointer-events:none!important}
     setPressed(btnLP, lane==="platform");
     setPressed(btnLE, lane==="engineering");
     paintHeader();
+    paintDragons();
     safeLayout();
-    wireAll();
   }
-
   btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
@@ -1253,11 +1197,21 @@ body::before,body::after{pointer-events:none!important}
   bindCorner("btnHub", HUB_ROUTE);
 
   // ===== Init =====
-  setMoonPhase();
   paintHeader();
-  wireAll();
+  applyMoonPhase();
+  buildDirRing();
+  paintDragons();
   requestAnimationFrame(safeLayout);
-  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
+  window.addEventListener("resize", function(){
+    buildDirRing();
+    safeLayout();
+  }, {passive:true});
+
+  // refresh dragons text occasionally (new phrase every pass window)
+  setInterval(function(){
+    paintDragons();
+    applyMoonPhase();
+  }, 12000);
 
 })();
 </script>

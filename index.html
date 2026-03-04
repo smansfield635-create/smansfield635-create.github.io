@@ -1,18 +1,22 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · CANON INDEX (UI + DRAGON) — STABLE LOADER
-     VERSION: IDX_CANON_20260304_1400
-     FULL FILE REPLACEMENT
-
+     LAYOUT WIRING v1 — (ALTERNATE LAYER STEP: INDEX)
+     VERSION: IDX_WIRING_v1_20260304_1600
      PURPOSE:
-     - Keep the structure stable
-     - Keep the UI (Layer 1 + Layer 2 toggles + compass nodes)
-     - Keep a minimal version readout
-     - Load the new dragon engine deterministically
+     - DO NOT TOUCH DRAGON ENGINE HERE
+     - DEFINE THE LAYOUT “WIRING” SO THE DRAGONS HAVE CLEAR CORRIDORS
+     - MAKE UI/DRAGON DEPTH LEGIBLE (NO OVERLAP WITH TOP BAR / CORNERS)
+     - EXPORT LANE METRICS AS CSS VARS (NO gd_* KEYS)
 
-     NOTE:
-     - No diagnostics wall
-     - No extra gd_* keys
+     EXPORTS (:root CSS vars, px):
+     --gd_noFlyTop
+     --gd_noFlyBot
+     --gd_laneTop
+     --gd_laneBot
+     --gd_centerX
+     --gd_centerY
+     --gd_stageTop
+     --gd_stageBot
 -->
 <html lang="en">
 <head>
@@ -21,15 +25,15 @@
 <title>Compass · DiamondGateBridge</title>
 
 <script>
-window.__GD_BUILD__="IDX_CANON_20260304_1400";
+window.__GD_BUILD__="IDX_WIRING_v1_20260304_1600";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_20260304_1400"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_20260304_1400"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_WIRING_v1_20260304_1600"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_WIRING_v1_20260304_1600"/>
 
-<script defer src="/assets/instruments.js?v=IDX_CANON_20260304_1400"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_CANON_20260304_1400"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_20260304_1400"></script>
+<script defer src="/assets/instruments.js?v=IDX_WIRING_v1_20260304_1600"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_WIRING_v1_20260304_1600"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_WIRING_v1_20260304_1600"></script>
 
 <style>
 body{margin:0}
@@ -38,9 +42,11 @@ body{margin:0}
 #gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
+
+/* UI above dragons */
 #gd-ui{z-index:20;pointer-events:none}
 
-/* MINIMAL ENGINE STATUS (VERSIONED) */
+/* MINIMAL VERSION STATUS */
 #engstat{
 position:fixed;top:10px;left:10px;z-index:9999;pointer-events:none;
 font-weight:900;font-size:12px;letter-spacing:.9px;color:rgba(255,255,255,.80);
@@ -56,7 +62,13 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 .seg button[aria-pressed="true"]{color:#fff;background:radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%), linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10))}
 
 /* STAGE */
-.stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
+.stage{
+position:relative;
+width:min(1200px,94vw);
+height:min(1200px,86vh);
+margin:96px auto 0;
+pointer-events:none
+}
 .glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;border:1px solid rgba(255,255,255,.10);background:linear-gradient(160deg, rgba(10,12,16,.34), rgba(6,8,10,.44));box-shadow:0 70px 240px rgba(0,0,0,.48), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -70px 140px rgba(0,0,0,.52);opacity:.86}
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
 .dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
@@ -76,6 +88,17 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 .corner.left{left:16px}
 .corner.right{right:16px}
 .corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));color:#fff;font-weight:980;cursor:pointer}
+
+/* WIRING OVERLAY (UI only, subtle guides; remove later) */
+.wire{
+position:fixed;left:0;right:0;z-index:50;pointer-events:none;
+border-top:1px dashed rgba(212,175,55,.18);
+opacity:.55;
+}
+.wire.top{top:var(--gd_noFlyTop, 0px)}
+.wire.bot{top:var(--gd_noFlyBot, 0px)}
+.wire.laneT{top:var(--gd_laneTop, 0px);border-top:1px solid rgba(255,255,255,.10)}
+.wire.laneB{top:var(--gd_laneBot, 0px);border-top:1px solid rgba(255,255,255,.10)}
 </style>
 </head>
 
@@ -87,7 +110,7 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 <div id="gd-ui">
 
   <div class="top">
-    <div class="topbar">
+    <div class="topbar" id="topbar">
       <div class="controls">
         <div class="seg" role="group" aria-label="Compass Layer">
           <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
@@ -106,8 +129,14 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
     <div class="dial"></div>
   </div>
 
-  <div class="corner left"><button class="btn" id="btnExit">EXIT</button></div>
-  <div class="corner right"><button class="btn" id="btnHub">HUB</button></div>
+  <div class="corner left" id="cornerLeft"><button class="btn" id="btnExit">EXIT</button></div>
+  <div class="corner right" id="cornerRight"><button class="btn" id="btnHub">HUB</button></div>
+
+  <!-- WIRING GUIDES (subtle; for layout verification only) -->
+  <div class="wire top"></div>
+  <div class="wire laneT"></div>
+  <div class="wire laneB"></div>
+  <div class="wire bot"></div>
 
 </div>
 
@@ -117,7 +146,7 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 (function(){
 "use strict";
 
-/* EN-only minimal state write (gd_* only; no new keys) */
+/* minimal EN state (gd_* only) */
 var qs=new URLSearchParams(location.search);
 var LS=window.localStorage;
 var style=(qs.get("style")||LS.getItem("gd_style")||"informal");
@@ -148,7 +177,7 @@ function q(over){
 }
 function go(path){ location.href = path + q(); }
 
-/* COMPASS DATA */
+/* compass data (unchanged) */
 var CORE1="/index-core/index.html";
 var CORE2="/index-spine/index.html";
 var L1=[
@@ -204,11 +233,9 @@ function layout1(){
   var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
   var R1=164;
   var core=mkNode(L1[0]); core.style.left=cx+"px"; core.style.top=cy+"px"; stage.appendChild(core);
-
   var map={N:L1[1],E:L1[2],S:L1[3],W:L1[4]};
   var order=["N","E","S","W"];
   var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
-
   for(var i=0;i<4;i++){
     var it=map[order[i]];
     var x=cx + R1*Math.cos(ang[i]);
@@ -250,7 +277,6 @@ function setLane(v){
   history.replaceState({}, "", location.pathname + q({lane:lane}));
   paint(); render();
 }
-
 document.getElementById("layer1").addEventListener("click", function(){ setLayer("1"); }, {passive:true});
 document.getElementById("layer2").addEventListener("click", function(){ setLayer("2"); }, {passive:true});
 document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
@@ -259,14 +285,55 @@ document.getElementById("laneEngineering").addEventListener("click", function(){
 document.getElementById("btnExit").addEventListener("click", function(){ go("/door/"); }, {passive:true});
 document.getElementById("btnHub").addEventListener("click", function(){ go("/home/"); }, {passive:true});
 
+/* EXPORT WIRING METRICS AS CSS VARS (no new storage keys) */
+function exportWiring(){
+  var root=document.documentElement;
+
+  var topbar=document.getElementById("topbar");
+  var noFlyTop=0;
+  if(topbar){
+    var tr=topbar.getBoundingClientRect();
+    noFlyTop=Math.round(tr.bottom + 16);
+  }
+
+  var cl=document.getElementById("cornerLeft");
+  var cr=document.getElementById("cornerRight");
+  var botTop=Infinity;
+  if(cl) botTop=Math.min(botTop, cl.getBoundingClientRect().top);
+  if(cr) botTop=Math.min(botTop, cr.getBoundingClientRect().top);
+  var noFlyBot=(botTop!==Infinity) ? Math.round(botTop - 16) : Math.round(window.innerHeight - 16);
+
+  var sr=stage.getBoundingClientRect();
+  var centerX=Math.round(sr.left + sr.width/2);
+  var centerY=Math.round(sr.top  + sr.height/2);
+
+  var bandTop=Math.max(noFlyTop + 24, 0);
+  var bandBot=Math.min(noFlyBot - 24, window.innerHeight);
+  var bandH=Math.max(1, bandBot - bandTop);
+
+  var laneTop=Math.round(bandTop + bandH*0.30);
+  var laneBot=Math.round(bandTop + bandH*0.70);
+
+  root.style.setProperty("--gd_noFlyTop", noFlyTop+"px");
+  root.style.setProperty("--gd_noFlyBot", noFlyBot+"px");
+  root.style.setProperty("--gd_laneTop",  laneTop+"px");
+  root.style.setProperty("--gd_laneBot",  laneBot+"px");
+  root.style.setProperty("--gd_centerX",  centerX+"px");
+  root.style.setProperty("--gd_centerY",  centerY+"px");
+  root.style.setProperty("--gd_stageTop", Math.round(sr.top)+"px");
+  root.style.setProperty("--gd_stageBot", Math.round(sr.bottom)+"px");
+}
+exportWiring();
+window.addEventListener("resize", exportWiring, {passive:true});
+
 /* engine status + mount */
 window.addEventListener("load", function(){
-  var bgV=(window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : (window.GD_BG ? "BG_OK" : "BG?");
-  var drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
+  var bgV=(window.GD_BG&&window.GD_BG.version)?window.GD_BG.version:(window.GD_BG?"BG_OK":"BG?");
+  var drV=(window.GD_DRAGON&&window.GD_DRAGON.version)?window.GD_DRAGON.version:(window.GD_DRAGON?"DR_OK":"DR?");
   document.getElementById("engstat").textContent="ENG: "+bgV+" | "+drV;
 
-  try{ if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
-  try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
+  try{ if(window.GD_BG&&window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
+  try{ if(window.GD_DRAGON&&window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
 });
 
 paint();

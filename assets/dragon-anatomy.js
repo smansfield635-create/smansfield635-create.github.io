@@ -1,19 +1,28 @@
 /* TNT — /assets/dragon-anatomy.js
-   GEODIAMETRICS DRAGON ENGINE — SPEED FIX + DRAGON HEAD (NO KOI)
-   VERSION: DRAGON_v15_DRAGON_NOT_KOI
+   GEODIAMETRICS DRAGON ENGINE — NECK + DICHOTOMY HORNS (SPIRAL vs PRONG)
+   VERSION: DRAGON_v18_NECK_DICHOTOMY
+
+   DECISIONS (LOCKED IN THIS FILE):
+   - Best geometry fit: SPIRAL horn (continuous curvature) → TOP dragon
+   - Opposite dichotomy: PRONG horn (directive angular) → BOTTOM dragon
+   - Uniform everything else: head profile, jaw, whiskers, neck/shoulder/body rules
 
    FIXES:
-   - Speed: remove DPR multiplier from x motion (was making it too fast on mobile)
-   - Shape: replace koi-like oval head with dragon wedge snout + jaw + cheek ridge + beard + horns pushed back
-   - Keeps: wired lanes from index CSS vars, segmented body, hex lattice, crest, belly plates
-*/
+   - Adds a TRUE NECK: neck dip (narrow) then shoulder expansion (wide) before main body
+   - Head silhouette matches your bottom doodle: wedge snout + skull + neck drop
 
+   KEEPS:
+   - Wired lanes from index CSS vars
+   - Short body (~40% shorter)
+   - Slower speed
+   - Hex scale lattice + crest + belly plates
+*/
 (function(){
 "use strict";
 if(window.__GD_DRAGON_RUNNING__) return;
 window.__GD_DRAGON_RUNNING__ = true;
 
-window.GD_DRAGON = { version:"DRAGON_v15_DRAGON_NOT_KOI", mount:function(){} };
+window.GD_DRAGON = { version:"DRAGON_v18_NECK_DICHOTOMY", mount:function(){} };
 
 const DPR_CAP=1.6;
 
@@ -21,16 +30,16 @@ const DPR_CAP=1.6;
 const BODY_W=81;
 const BODY_R=BODY_W*0.5;
 
-/* MOTION (slower + calmer) */
-const SEG=170;
-const GAP=15;
-const SPEED=56;     // was ~92; now slower
-const AMP=10;       // calmer
+/* MOTION */
+const SEG=104;      // short body
+const GAP=16;
+const SPEED=56;     // slow
+const AMP=10;
 const SWIV=8;
 
 /* HEAD SWIVEL */
-const YAW_MAX=0.26;
-const YAW_RATE=4.2;
+const YAW_MAX=0.24;
+const YAW_RATE=4.0;
 
 /* CANVAS */
 let canvas=document.getElementById("gd_dragon_canvas");
@@ -98,12 +107,13 @@ function palCrimson(){
 
 /* DRAGON */
 function makeDragon(isTop){
-  const vh = window.innerHeight||1;
+  const vh=window.innerHeight||1;
+  const vw=window.innerWidth||1;
   return {
     top:isTop,
     dir:isTop?1:-1,
-    yPx: (isTop?0.31:0.69)*vh,
-    x: isTop?-(window.innerWidth||1)*0.22:(window.innerWidth||1)*1.22, // CSS px space
+    yPx:(isTop?0.31:0.69)*vh,
+    x:isTop?-vw*0.22:vw*1.22,
     phase:Math.random()*10,
     spine:new Array(SEG),
     pal:isTop?palJade():palCrimson(),
@@ -111,8 +121,8 @@ function makeDragon(isTop){
     yawT:0
   };
 }
-const TOP=makeDragon(true);
-const BOT=makeDragon(false);
+const TOP=makeDragon(true);   // spiral horn
+const BOT=makeDragon(false);  // prong horn
 
 /* GEOMETRY */
 function tangent(sp,i){
@@ -126,57 +136,80 @@ function normal(sp,i){
   return {x:-t.y,y:t.x};
 }
 
-/* TAPER + NECK FLARE */
+/* TRUE NECK PROFILE (fish-killer)
+   u in [0,1]
+   - head: fuller
+   - neck dip: narrow
+   - shoulder expansion: wide
+   - main body: stable
+   - tail: taper
+*/
 function radiusAt(i){
   const u=i/(SEG-1);
-  const tail=(u<0.78)?1.0:lerp(1.0,0.10,(u-0.78)/0.22);
-  let flare=1.0;
-  if(u<0.22){
-    const t=u/0.22;
-    flare=1.0 + 0.55*Math.sin(Math.PI*t);
+
+  // tail taper
+  const tail=(u<0.78)?1.0:lerp(1.0,0.12,(u-0.78)/0.22);
+
+  // head fullness
+  const head=(u<0.07)?lerp(1.18,1.00,u/0.07):1.00;
+
+  // neck dip (0.07 → 0.18)
+  let neck=1.0;
+  if(u>=0.07 && u<0.18){
+    const t=(u-0.07)/0.11;
+    neck = lerp(0.72, 0.60, t);     // narrow down
   }
-  const head=(u<0.08)?lerp(1.18,1.0,u/0.08):1.0;
-  return BODY_R*tail*flare*head*DPR;
+
+  // shoulder expansion (0.18 → 0.34)
+  let shoulder=1.0;
+  if(u>=0.18 && u<0.34){
+    const t=(u-0.18)/0.16;
+    shoulder = lerp(1.10, 1.32, Math.sin(Math.PI*t)); // bulge then settle
+  } else if(u>=0.34){
+    shoulder = 1.06; // main body baseline
+  }
+
+  const mult = tail * head * neck * shoulder;
+  return BODY_R * mult * DPR;
 }
 
-/* WIRING: read CSS lane px; smooth */
+/* WIRED LANES */
 function updateLanePx(){
   const laneTop=cssPx("--gd_laneTop");
   const laneBot=cssPx("--gd_laneBot");
   const noFlyTop=cssPx("--gd_noFlyTop");
   const noFlyBot=cssPx("--gd_noFlyBot");
 
-  const vh = window.innerHeight||1;
-  let topPx = Number.isFinite(laneTop) ? laneTop : vh*0.31;
-  let botPx = Number.isFinite(laneBot) ? laneBot : vh*0.69;
+  const vh=window.innerHeight||1;
+  let topPx=Number.isFinite(laneTop)?laneTop:vh*0.31;
+  let botPx=Number.isFinite(laneBot)?laneBot:vh*0.69;
 
-  if(Number.isFinite(noFlyTop)) topPx = Math.max(topPx, noFlyTop + 24);
-  if(Number.isFinite(noFlyBot)) botPx = Math.min(botPx, noFlyBot - 24);
+  if(Number.isFinite(noFlyTop)) topPx=Math.max(topPx,noFlyTop+24);
+  if(Number.isFinite(noFlyBot)) botPx=Math.min(botPx,noFlyBot-24);
 
-  topPx = clamp(topPx, vh*0.20, vh*0.48);
-  botPx = clamp(botPx, vh*0.52, vh*0.88);
+  topPx=clamp(topPx,vh*0.20,vh*0.48);
+  botPx=clamp(botPx,vh*0.52,vh*0.88);
 
   TOP.yPx = TOP.yPx + (topPx - TOP.yPx)*0.12;
   BOT.yPx = BOT.yPx + (botPx - BOT.yPx)*0.12;
 }
 
-/* BUILD SPINE (NOTE: x is CSS px; convert to canvas px by *DPR once) */
+/* BUILD SPINE (x in CSS px) */
 function build(dr,t,dt){
   const gap=GAP*DPR, amp=AMP*DPR, sw=SWIV*DPR;
 
-  // ✅ speed fix: DO NOT multiply by DPR here (x is already CSS px)
-  dr.x += dr.dir * SPEED * dt;
+  dr.x += dr.dir*SPEED*dt;
 
-  const vw = window.innerWidth||1;
-  const margin = vw*0.45;
+  const vw=window.innerWidth||1;
+  const margin=vw*0.45;
   if(dr.dir>0 && dr.x>vw+margin) dr.x=-margin;
   if(dr.dir<0 && dr.x<-margin) dr.x=vw+margin;
 
   const sign=dr.top?1:-1;
-  const baseY = (dr.yPx||((dr.top?0.31:0.69)*(window.innerHeight||1))) * DPR;
+  const baseY=(dr.yPx||((dr.top?0.31:0.69)*(window.innerHeight||1))) * DPR;
 
-  const headX = (dr.x*DPR) + Math.sin(t*0.90 + dr.phase)*sw*sign;
-  const headY = baseY + Math.sin(t*1.35 + dr.phase)*amp*sign;
+  const headX=(dr.x*DPR) + Math.sin(t*0.90 + dr.phase)*sw*sign;
+  const headY=baseY + Math.sin(t*1.35 + dr.phase)*amp*sign;
 
   dr.spine[0]={x:headX,y:headY};
 
@@ -184,55 +217,39 @@ function build(dr,t,dt){
     const prev=dr.spine[i-1];
     const candX=prev.x - dr.dir*gap;
     const candY=baseY + Math.sin(t*1.35 + dr.phase - i*0.095)*amp*sign;
-
     let dx=prev.x-candX, dy=prev.y-candY, d=hypot(dx,dy);
     dr.spine[i]={x:prev.x-(dx/d)*gap, y:prev.y-(dy/d)*gap};
   }
 
   const t0=tangent(dr.spine,0);
-  const t6=tangent(dr.spine,6);
+  const t6=tangent(dr.spine,Math.min(6,SEG-1));
   const curv=(t6.y*t0.x - t6.x*t0.y);
-  dr.yawT = clamp(curv*0.9 + Math.sin(t*0.75 + dr.phase)*0.08, -YAW_MAX, YAW_MAX);
+  dr.yawT = clamp(curv*0.9 + Math.sin(t*0.75 + dr.phase)*0.06, -YAW_MAX, YAW_MAX);
   dr.yaw += (dr.yawT - dr.yaw) * clamp(YAW_RATE*dt, 0, 1);
 }
 
-/* BODY */
+/* DRAW — BODY */
 function drawSegmentedSilhouette(dr){
   const sp=dr.spine;
-
   const g=ctx.createLinearGradient(0,0,0,H);
   g.addColorStop(0.00, dr.pal.a);
   g.addColorStop(0.55, dr.pal.b);
   g.addColorStop(1.00, dr.pal.b);
 
   ctx.save();
-
   ctx.fillStyle=g;
   ctx.beginPath();
-  const step=2;
-  for(let i=0;i<sp.length;i+=step){
-    const p=sp[i];
-    const r=radiusAt(i);
+  for(let i=0;i<sp.length;i+=2){
+    const p=sp[i], r=radiusAt(i);
     ctx.moveTo(p.x+r,p.y);
     ctx.arc(p.x,p.y,r,0,Math.PI*2);
   }
   ctx.fill("nonzero");
 
   ctx.strokeStyle=dr.pal.outline;
-  ctx.lineWidth=3.8*DPR;
+  ctx.lineWidth=3.6*DPR;
   ctx.lineJoin="round";
   ctx.lineCap="round";
-  ctx.stroke();
-
-  ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(255,255,255,0.10)";
-  ctx.lineWidth=10*DPR;
-  ctx.beginPath();
-  for(let i=0;i<sp.length;i+=3){
-    const n=normal(sp,i);
-    const r=radiusAt(i);
-    ctx.lineTo(sp[i].x + n.x*(r*0.30), sp[i].y + n.y*(r*0.30));
-  }
   ctx.stroke();
 
   ctx.globalCompositeOperation="multiply";
@@ -240,45 +257,10 @@ function drawSegmentedSilhouette(dr){
   ctx.lineWidth=12*DPR;
   ctx.beginPath();
   for(let i=0;i<sp.length;i+=3){
-    const n=normal(sp,i);
-    const r=radiusAt(i);
+    const n=normal(sp,i), r=radiusAt(i);
     ctx.lineTo(sp[i].x - n.x*(r*0.44), sp[i].y - n.y*(r*0.44));
   }
   ctx.stroke();
-
-  ctx.restore();
-}
-
-function drawFlameCrest(dr){
-  const sp=dr.spine;
-  ctx.save();
-  ctx.globalCompositeOperation="screen";
-
-  ctx.strokeStyle=dr.pal.goldSoft;
-  ctx.lineWidth=2.8*DPR;
-  ctx.beginPath();
-  for(let i=0;i<sp.length;i+=3){
-    const n=normal(sp,i);
-    const r=radiusAt(i);
-    ctx.lineTo(sp[i].x + n.x*(r*0.82), sp[i].y + n.y*(r*0.82));
-  }
-  ctx.stroke();
-
-  ctx.strokeStyle="rgba(255,255,255,0.16)";
-  ctx.lineWidth=2.2*DPR;
-  const end=Math.floor(sp.length*0.52);
-  for(let i=6;i<end;i+=4){
-    const p=sp[i];
-    const n=normal(sp,i);
-    const r=radiusAt(i);
-    const h=r*(0.95 + (i%9)*0.05);
-    const sx=p.x + n.x*(r*0.92);
-    const sy=p.y + n.y*(r*0.92);
-    ctx.beginPath();
-    ctx.moveTo(sx,sy);
-    ctx.quadraticCurveTo(sx - n.y*h*0.45, sy + n.x*h*0.45, sx - n.y*h*1.15, sy + n.x*h*1.15);
-    ctx.stroke();
-  }
 
   ctx.restore();
 }
@@ -302,11 +284,8 @@ function drawHexScales(dr){
     ctx.stroke();
   }
 
-  for(let i=20;i<sp.length-80;i+=5){
-    const p=sp[i];
-    const t=tangent(sp,i);
-    const n=normal(sp,i);
-    const r=radiusAt(i);
+  for(let i=10;i<sp.length-18;i+=5){
+    const p=sp[i], t=tangent(sp,i), n=normal(sp,i), r=radiusAt(i);
     const s=Math.max(6.0*DPR, r*0.12);
     const rows=[0.20,-0.05];
     for(let rr=0; rr<rows.length; rr++){
@@ -319,14 +298,10 @@ function drawHexScales(dr){
   }
 
   ctx.strokeStyle=dr.pal.scaleDark;
-  ctx.lineWidth=1.0*DPR;
-  for(let i=26;i<sp.length-88;i+=9){
-    const p=sp[i];
-    const n=normal(sp,i);
-    const r=radiusAt(i);
+  for(let i=14;i<sp.length-22;i+=9){
+    const p=sp[i], n=normal(sp,i), r=radiusAt(i);
     hex(p.x + n.x*(r*0.05), p.y + n.y*(r*0.05), Math.max(4.6*DPR,r*0.09));
   }
-
   ctx.restore();
 }
 
@@ -335,11 +310,9 @@ function drawBellyPlates(dr){
   ctx.save();
   ctx.globalCompositeOperation="screen";
   ctx.strokeStyle="rgba(255,255,255,0.10)";
-  ctx.lineWidth=1.4*DPR;
-  for(let i=22;i<sp.length-80;i+=8){
-    const p=sp[i];
-    const n=normal(sp,i);
-    const r=radiusAt(i);
+  ctx.lineWidth=1.3*DPR;
+  for(let i=12;i<sp.length-18;i+=8){
+    const p=sp[i], n=normal(sp,i), r=radiusAt(i);
     const bx=p.x - n.x*(r*0.62);
     const by=p.y - n.y*(r*0.62);
     const w=Math.max(7*DPR,r*0.26);
@@ -351,134 +324,119 @@ function drawBellyPlates(dr){
   ctx.restore();
 }
 
-/* DRAGON HEAD (wedge + jaw + beard) — removes koi silhouette */
+/* HORNS */
+function drawSpiralHorn(x,y,dir,att){
+  ctx.strokeStyle="rgba(212,175,55,0.92)";
+  ctx.lineWidth=3.2*DPR;
+  ctx.lineCap="round";
+  ctx.beginPath();
+  const loops=2.3, step=0.28;
+  for(let a=0; a<loops*Math.PI*2; a+=step){
+    const rr=(1.0 - a/(loops*Math.PI*2))*(14*DPR);
+    const px=x + Math.cos(a)*rr*dir;
+    const py=y + Math.sin(a)*rr*att;
+    if(a===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+}
+function drawProngHorn(x,y,dir,att){
+  ctx.strokeStyle="rgba(212,175,55,0.92)";
+  ctx.lineWidth=3.2*DPR;
+  ctx.lineCap="round";
+  ctx.beginPath();
+  ctx.moveTo(x,y);
+  ctx.lineTo(x + 22*DPR*dir, y + 10*DPR*att);
+  ctx.moveTo(x + 22*DPR*dir, y + 10*DPR*att);
+  ctx.lineTo(x + 28*DPR*dir, y + 4*DPR*att);
+  ctx.moveTo(x + 22*DPR*dir, y + 10*DPR*att);
+  ctx.lineTo(x + 28*DPR*dir, y + 16*DPR*att);
+  ctx.stroke();
+}
+
+/* HEAD — doodle silhouette: wedge snout + skull + neck drop */
 function drawHeadDragon(dr, t){
   const sp=dr.spine;
   const p=sp[0];
   const tv=tangent(sp,0);
-
   const ang=Math.atan2(tv.y,tv.x) + dr.yaw;
-  const s=radiusAt(0)*1.05;
+  const s=radiusAt(0)*1.02;
 
-  const gape = 0.10 + 0.05*Math.sin(t*2.0 + dr.phase);
-  const wlag = 0.14*Math.sin(t*1.4 + dr.phase*0.7);
+  const gape=0.10 + 0.05*Math.sin(t*2.0 + dr.phase);
+  const wlag=0.12*Math.sin(t*1.3 + dr.phase*0.7);
 
   ctx.save();
   ctx.translate(p.x,p.y);
   ctx.rotate(ang);
   if(dr.dir<0) ctx.scale(-1,1);
 
-  // horns pushed BACK (distinct)
-  ctx.strokeStyle="rgba(212,175,55,0.92)";
-  ctx.lineWidth=3.6*DPR;
-  ctx.lineCap="round";
-  ctx.beginPath();
-  ctx.moveTo(-s*0.85, -s*0.55);
-  ctx.quadraticCurveTo(-s*0.65, -s*1.25, s*0.05, -s*1.55);
-  ctx.moveTo(-s*1.00, -s*0.40);
-  ctx.quadraticCurveTo(-s*0.85, -s*1.10, -s*0.25, -s*1.40);
-  ctx.stroke();
+  // Horn dichotomy
+  if(dr.top){
+    // TOP: spiral (best geometry)
+    drawSpiralHorn(-s*0.75, -s*0.45, 1, -1);
+  }else{
+    // BOTTOM: prong (opposite)
+    drawProngHorn(-s*0.65, -s*0.35, 1, 1);
+  }
 
-  // skull base (less oval)
+  // Skull (less oval, pushed back)
   ctx.fillStyle="rgba(0,0,0,0.30)";
   ctx.beginPath();
-  ctx.ellipse(-s*0.10, 0, s*1.05, s*0.62, 0, 0, Math.PI*2);
+  ctx.ellipse(-s*0.22, 0, s*0.95, s*0.58, 0, 0, Math.PI*2);
   ctx.fill();
 
-  // snout wedge (angular)
+  // Snout wedge (your doodle)
   const snG=ctx.createLinearGradient(0,0,s*2.8,0);
   snG.addColorStop(0.0, dr.pal.a);
   snG.addColorStop(1.0, dr.pal.b);
   ctx.fillStyle=snG;
   ctx.beginPath();
-  ctx.moveTo(-s*0.20, -s*0.22);
-  ctx.quadraticCurveTo(s*0.95, -s*0.52, s*2.30, -s*0.10);
-  ctx.quadraticCurveTo(s*1.85,  s*0.10, s*0.05,  s*0.18);
+  ctx.moveTo(-s*0.10, -s*0.18);
+  ctx.quadraticCurveTo(s*0.95, -s*0.28, s*2.35, -s*0.10);
+  ctx.quadraticCurveTo(s*1.35,  s*0.04, s*0.05,  s*0.14);
   ctx.closePath();
   ctx.fill();
 
-  // ridge line
-  ctx.globalCompositeOperation="screen";
-  ctx.strokeStyle="rgba(255,255,255,0.14)";
-  ctx.lineWidth=2.0*DPR;
-  ctx.beginPath();
-  ctx.moveTo(s*0.05, -s*0.20);
-  ctx.quadraticCurveTo(s*1.05, -s*0.40, s*2.05, -s*0.08);
-  ctx.stroke();
-  ctx.globalCompositeOperation="source-over";
-
-  // nostrils
-  ctx.fillStyle="rgba(0,0,0,0.45)";
-  ctx.beginPath(); ctx.arc(s*2.10, -s*0.03, s*0.10, 0, Math.PI*2); ctx.fill();
-  ctx.beginPath(); ctx.arc(s*1.95,  s*0.08, s*0.08, 0, Math.PI*2); ctx.fill();
-
-  // jaw (hinged)
-  ctx.save();
-  ctx.translate(s*0.35, s*0.18);
-  ctx.rotate(gape);
-  ctx.translate(-s*0.35, -s*0.18);
-
-  ctx.fillStyle="rgba(0,0,0,0.22)";
-  ctx.beginPath();
-  ctx.moveTo(s*0.05, s*0.18);
-  ctx.quadraticCurveTo(s*0.95, s*0.78, s*2.20, s*0.18);
-  ctx.quadraticCurveTo(s*1.30, s*0.92, s*0.18, s*0.50);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle="rgba(0,0,0,0.55)";
+  // Neck drop line (forces “neck” visually)
+  ctx.strokeStyle="rgba(0,0,0,0.35)";
   ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*0.10, s*0.16);
-  ctx.quadraticCurveTo(s*1.00, s*0.60, s*2.10, s*0.16);
+  ctx.moveTo(-s*0.38, s*0.10);
+  ctx.quadraticCurveTo(-s*0.60, s*0.78, -s*0.22, s*1.08);
   ctx.stroke();
 
-  // teeth hints
-  ctx.strokeStyle="rgba(255,255,255,0.18)";
-  ctx.lineWidth=1.2*DPR;
-  for(let i=0;i<5;i++){
-    const tx=s*(1.10 + i*0.18);
-    const ty=s*(0.22 + (i%2)*0.02);
-    ctx.beginPath();
-    ctx.moveTo(tx,ty);
-    ctx.lineTo(tx+s*0.06, ty+s*0.14);
-    ctx.stroke();
-  }
+  // Jaw (hinged)
+  ctx.save();
+  ctx.translate(s*0.30, s*0.16);
+  ctx.rotate(gape);
+  ctx.translate(-s*0.30, -s*0.16);
+  ctx.fillStyle="rgba(0,0,0,0.22)";
+  ctx.beginPath();
+  ctx.moveTo(s*0.10, s*0.18);
+  ctx.quadraticCurveTo(s*0.92, s*0.62, s*2.20, s*0.18);
+  ctx.quadraticCurveTo(s*1.05, s*0.78, s*0.18, s*0.48);
+  ctx.closePath();
+  ctx.fill();
   ctx.restore();
 
-  // eye (slit)
+  // Eye
   ctx.fillStyle=dr.pal.gold;
   ctx.beginPath();
-  ctx.ellipse(s*0.20, -s*0.12, s*0.18, s*0.10, 0.10, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle="rgba(0,0,0,0.72)";
-  ctx.beginPath();
-  ctx.ellipse(s*0.26, -s*0.12, s*0.05, s*0.14, 0.00, 0, Math.PI*2);
+  ctx.ellipse(s*0.20, -s*0.10, s*0.16, s*0.10, 0.10, 0, Math.PI*2);
   ctx.fill();
 
-  // whiskers (anchored behind tip)
+  // Whiskers uniform (trail)
   ctx.strokeStyle="rgba(212,175,55,0.66)";
-  ctx.lineWidth=2.6*DPR;
+  ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.moveTo(s*1.20, 0);
-  ctx.quadraticCurveTo(s*2.20, -s*(0.55 + wlag), s*3.30, -s*(0.86 + wlag));
-  ctx.moveTo(s*1.20, 0);
-  ctx.quadraticCurveTo(s*2.05,  s*(0.50 + wlag), s*3.10,  s*(0.70 + wlag));
+  ctx.moveTo(s*1.10, 0);
+  ctx.quadraticCurveTo(s*2.00, -s*(0.52 + wlag), s*3.00, -s*(0.80 + wlag));
   ctx.stroke();
 
-  // beard
-  ctx.strokeStyle="rgba(255,255,255,0.18)";
-  ctx.lineWidth=2.2*DPR;
-  ctx.beginPath();
-  ctx.moveTo(s*0.95, s*0.32);
-  ctx.quadraticCurveTo(s*0.60, s*1.12, -s*0.10, s*1.40);
-  ctx.stroke();
-
-  // head outline to keep it crisp
+  // Outline
   ctx.strokeStyle=dr.pal.outline;
-  ctx.lineWidth=2.6*DPR;
+  ctx.lineWidth=2.4*DPR;
   ctx.beginPath();
-  ctx.ellipse(-s*0.10, 0, s*1.05, s*0.62, 0, 0, Math.PI*2);
+  ctx.ellipse(-s*0.22, 0, s*0.95, s*0.58, 0, 0, Math.PI*2);
   ctx.stroke();
 
   ctx.restore();
@@ -490,7 +448,7 @@ function watermark(){
   ctx.globalCompositeOperation="source-over";
   ctx.fillStyle="rgba(255,255,255,0.18)";
   ctx.font=(16*DPR)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("DRAGON_v15_DRAGON_NOT_KOI", 12*DPR, (H-14*DPR));
+  ctx.fillText("DRAGON_v18_NECK_DICHOTOMY", 12*DPR, (H-14*DPR));
   ctx.restore();
 }
 
@@ -507,14 +465,12 @@ function frame(ts){
 
   build(TOP,t,dt);
   drawSegmentedSilhouette(TOP);
-  drawFlameCrest(TOP);
   drawHexScales(TOP);
   drawBellyPlates(TOP);
   drawHeadDragon(TOP,t);
 
   build(BOT,t,dt);
   drawSegmentedSilhouette(BOT);
-  drawFlameCrest(BOT);
   drawHexScales(BOT);
   drawBellyPlates(BOT);
   drawHeadDragon(BOT,t);

@@ -1,27 +1,19 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · DUAL-LENS (8 NODES) · ROTATION ANIMATION (B)
-     OWNER: SEAN (Website Building Room)
-
-     PURPOSE (THIS BUILD):
-       - Reduce on-screen clutter: show 8 nodes per lens (PLATFORM vs ENGINEERING)
-       - Lens switch uses a 180° compass rotation animation (no reload)
-       - English-only UI until visuals are locked (per Sean)
-       - Keep existing compass/dial aesthetic + buttons + routing discipline
-
-     LOCKS:
-       - ui.css owns html/body background (NO overrides)
-       - Use /assets/ui.css + /assets/branch.css + /assets/instruments.js only
-       - lane=platform|engineering is URL-only (NEVER stored)
-       - Canon state carry via URL + LS: gd_lang/gd_style/gd_time/gd_depth ONLY (NO new gd_* keys)
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Center CORE routes to /index-core/index.html
-       - Bottom corner controls: EXIT → /door/ | HUB → /home/
-       - No duplicate destinations: duplicates/unbuilt → /404.html
-
-     NOTE:
-       - This TNT intentionally DOES NOT touch moon/dragons/water/ripples.
-       - This is the isolated “dual-lens visibility” upgrade so you can SEE it.
+     COMPASS · FIELD LATTICE (FUNNEL-GRAVITY) · COLOR FIX (RED/DARK/RED/DARK) · 2-LANE DUAL-LAYER
+     OWNER: SEAN
+     FIX (YOUR ASK):
+       - Palette becomes: RED (site field via ui.css) → DARK (header glass) → RED (compass slab/water face) → DARK (dial + gems)
+       - ui.css still owns html/body background (NO overrides)
+       - English-only for speed (no CN/ES toggles in this build)
+       - lane=platform|engineering is URL-only; NO storage; NO reload
+       - gd_* carry only: gd_lang/gd_style/gd_time/gd_depth
+       - Dual-layer compass: PLATFORM shows inner 8 hubs; ENGINEERING swaps diagonals (still 8 hubs + CORE + cardinals)
+       - No ring layout; funnel lattice layout (gravity field), not circle distribution
+       - No inline onclick; addEventListener only
+     ROUTES:
+       - CORE routes to /index-core/index.html
+       - Unknown/unbuilt routes to /404.html
 -->
 
 <html lang="en">
@@ -39,38 +31,52 @@ a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== GEOMETRY ===== */
 :root{
+  /* ===== GEOMETRY (GRAVITY FIELD) ===== */
+  --padTop:108px;
+
   --D0:210px;  /* CORE */
-  --D1:150px;  /* Cardinals (largest ring nodes) */
-  --D2:112px;  /* Diagonals */
-  --D3:86px;   /* Outer 8 */
+  --D1:148px;  /* cardinals */
+  --D2:118px;  /* diagonals */
 
-  --R1:168px;
-  --R2:246px;
-  --R3:314px;
-
-  --padTop:102px;
-
+  /* ===== COLOR MODEL (RED/DARK/RED/DARK) =====
+     - RED is ui.css field (global)
+     - DARK = header glass + dial + gems
+     - RED = compass slab "water face" (internal panel layer)
+  */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
+  --stroke:rgba(255,255,255,.12);
 
+  /* header glass (DARK) */
+  --hdrA:rgba(8,10,14,.74);
+  --hdrB:rgba(4,6,10,.82);
+
+  /* compass slab (RED layer) */
+  --slabR0:rgba(255,95,70,.10);
+  --slabR1:rgba(255,60,60,.10);
+  --slabR2:rgba(212,175,55,.08);
+
+  /* dial (DARK layer) */
+  --dialA:rgba(0,0,0,.18);
+  --dialB:rgba(0,0,0,.44);
+
+  /* gem material (DARK) */
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.88);
+  --crimson:rgba(120,0,22,.38);
+  --festival:rgba(255,43,43,.18);
+  --opalV:rgba(90,40,120,.12);
 
-  --crimson:rgba(120,0,22,.44);
-  --festival:rgba(255,43,43,.26);
-  --opalV:rgba(90,40,120,.18);
+  --gold:rgba(212,175,55,.55);
+  --goldGlow:rgba(212,175,55,.22);
 
-  --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.22);
-
-  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
-  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowDeep:0 44px 140px rgba(0,0,0,.80);
+  --shadowA:0 26px 90px rgba(0,0,0,.60);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== TOP BAR ===== */
+/* ===== TOP BAR (DARK glass layer) ===== */
 .top{
   position:fixed;top:14px;left:0;right:0;
   padding:0 14px;
@@ -85,14 +91,15 @@ body::before,body::after{pointer-events:none!important}
   border-radius:22px;
   padding:10px 12px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 18% 18%, rgba(212,175,55,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(8,10,14,.92), rgba(4,6,10,.96));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
+    linear-gradient(145deg, var(--hdrA), var(--hdrB));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(212,175,55,.10);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
 }
+
 .brandLeft{
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
 }
@@ -105,26 +112,25 @@ body::before,body::after{pointer-events:none!important}
 }
 .brandSub{
   font-size:12px;
-  color:rgba(255,255,255,.72);
+  color:rgba(255,255,255,.74);
   letter-spacing:.2px;
   white-space:nowrap;
 }
 .brandLinks{
   display:flex;gap:10px;flex-wrap:wrap;
-  font-size:12px;
-  color:rgba(255,255,255,.70);
+  font-size:12px;color:rgba(255,255,255,.70);
 }
 .brandLinks a{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(201,162,74,.16);
+  padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(212,175,55,.16);
   background:rgba(0,0,0,.14);
 }
+
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
 
-/* Segmented controls */
+/* segmented controls */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -143,9 +149,9 @@ body::before,body::after{pointer-events:none!important}
 .seg button[aria-pressed="true"]{
   color:rgba(255,255,255,.95);
   background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.14), transparent 62%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.10);
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.14), inset 0 -10px 22px rgba(212,175,55,.10);
 }
 
 /* ===== STAGE ===== */
@@ -157,34 +163,36 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-/* Compass slab */
+/* slab is the RED layer (water-face) */
 .slab{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(980px,92vw);
-  height:min(980px,92vw);
+  width:min(1020px,92vw);
+  height:min(1020px,92vw);
   border-radius:44px;
   pointer-events:none;
   z-index:1;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
-    linear-gradient(160deg, rgba(10,12,16,.90), rgba(6,8,10,.96));
+    radial-gradient(circle at 78% 28%, var(--slabR1), transparent 60%),
+    radial-gradient(circle at 70% 82%, var(--slabR0), transparent 64%),
+    radial-gradient(circle at 50% 50%, var(--slabR2), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.14), rgba(0,0,0,.08));
   box-shadow:
-    0 70px 240px rgba(0,0,0,.62),
+    0 70px 240px rgba(0,0,0,.50),
     inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -70px 140px rgba(0,0,0,.65);
+    inset 0 -70px 140px rgba(0,0,0,.40);
+  opacity:.98;
 }
 
-/* Obsidian dial */
+/* dial is DARK layer */
 .dial{
   position:absolute;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
+  width:min(940px,90vw);
+  height:min(940px,90vw);
   border-radius:999px;
   pointer-events:none;
   z-index:2;
@@ -196,55 +204,54 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 50% 42%,
       rgba(255,255,255,.05),
-      rgba(0,0,0,.22) 56%,
-      rgba(0,0,0,.58) 78%,
+      var(--dialA) 56%,
+      var(--dialB) 78%,
       rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.10), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%);
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
     inset 0 0 0 10px rgba(0,0,0,.12),
     inset 0 0 80px rgba(0,0,0,.55),
-    0 50px 180px rgba(0,0,0,.30);
+    0 50px 180px rgba(0,0,0,.26);
   opacity:.96;
 }
 .dial::after{
   content:"";
   position:absolute;inset:-14%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-    radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
+    /* rings (gold) */
+    radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(212,175,55,.10) 34% 34.6%, transparent 35% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(212,175,55,.10) 52% 52.6%, transparent 53% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, rgba(212,175,55,.10) 70% 70.6%, transparent 71% 100%),
 
-    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+    /* axes */
+    linear-gradient(90deg, transparent 0 49.7%, rgba(212,175,55,.16) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(212,175,55,.16) 49.7% 50.3%, transparent 50.3% 100%),
 
-    /* 45° aligned inlay (no orthogonal grid) */
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
+    /* subtle curved shimmer (breaks "grid" look) */
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(212,175,55,.05) 0 2px,
+      transparent 2px 18px);
 
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter: blur(.25px);
-  opacity:.78;
+  opacity:.55;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
 
-/* Cardinal letters */
 .faceLetters{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
+  width:min(940px,90vw);
+  height:min(940px,90vw);
   pointer-events:none;
   z-index:3;
   opacity:.72;
 }
 .faceLetters span{
   position:absolute;
-  color:rgba(201,162,74,.45);
+  color:rgba(212,175,55,.55);
   font-weight:980;
   letter-spacing:2px;
   font-size:12px;
@@ -255,17 +262,7 @@ body::before,body::after{pointer-events:none!important}
 .faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
 .faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
-/* ===== NODE LAYER (animated rotate) ===== */
-.nodeLayer{
-  position:absolute;
-  inset:0;
-  z-index:10;
-  pointer-events:none;
-  transform-origin:50% 50%;
-  will-change:transform, opacity;
-}
-
-/* ===== GEM NODES ===== */
+/* ===== GEM NODES (DARK) ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -275,42 +272,44 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
+  z-index:10;
   border-radius:22px;
 }
 .core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
-.l2{width:var(--D2);height:var(--D2)}
-.l3{width:var(--D3);height:var(--D3);border-radius:18px}
+.l2{width:var(--D2);height:var(--D2);border-radius:20px}
 
 .surface{
   background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.22), transparent 46%),
     radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
     radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
     radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
   box-shadow:
     var(--shadowDeep),
-    0 0 24px rgba(255,43,43,.08),
-    inset 0 2px 0 rgba(255,255,255,.18),
+    0 0 24px rgba(255,43,43,.06),
+    inset 0 2px 0 rgba(255,255,255,.16),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
+
+/* “3D” inlay that is NOT vertical/horizontal grid */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+
+  /* curved + diamond-aligned */
   background:
-    /* diamond-aligned silk (kept, not orthogonal grid) */
-    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
-  opacity:.30;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
-    linear-gradient(#000,#000);
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(212,175,55,.10) 0 1.1deg,
+      transparent 1.1deg 10deg),
+    radial-gradient(circle at 50% 50%, transparent 0 62%, rgba(212,175,55,.14) 66%, transparent 72%);
+
+  opacity:.26;
+  mask: radial-gradient(circle at 50% 50%, transparent 0 64%, #000 74% 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 64%, #000 74% 100%);
 }
+
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -321,17 +320,19 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.92;
 }
+
 .node:hover{
-  border-color:rgba(201,162,74,.44);
+  border-color:rgba(212,175,55,.44);
   box-shadow:
     var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.14),
-    0 0 34px rgba(201,162,74,.18),
-    inset 0 2px 0 rgba(255,255,255,.20),
+    0 0 0 2px rgba(212,175,55,.14),
+    0 0 34px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-.node:active{filter:brightness(.98)}
+.node:active{filter:brightness(.985)}
 
+/* inner text */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -343,14 +344,15 @@ body::before,body::after{pointer-events:none!important}
   padding:10px;
   gap:6px;
   color:#fff;
+  pointer-events:none;
+  user-select:none;
 }
 .word{
   font-weight:980;
   letter-spacing:.6px;
   line-height:1.05;
   text-shadow:0 0 18px rgba(0,0,0,.42);
-  font-size:clamp(10px, 1.15vw, 16px);
-  max-width:100%;
+  font-size:clamp(12px, 1.1vw, 18px);
 }
 .code{
   font-weight:950;
@@ -358,18 +360,9 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:1.2px;
   opacity:.78;
 }
+.core .word{font-size:clamp(14px, 1.35vw, 20px)}
 
-/* CORE emphasis */
-.core{
-  border-color:rgba(201,162,74,.26);
-  box-shadow:
-    0 54px 170px rgba(0,0,0,.88),
-    0 0 46px rgba(201,162,74,.12),
-    inset 0 2px 0 rgba(255,255,255,.22),
-    inset 0 -64px 110px rgba(0,0,0,.92);
-}
-
-/* ===== CORNERS ===== */
+/* bottom corners */
 .corner{
   position:fixed;
   bottom:max(16px, env(safe-area-inset-bottom));
@@ -387,7 +380,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  box-shadow:var(--shadowB), 0 0 0 1px rgba(212,175,55,.10), 0 0 18px rgba(212,175,55,.10);
   display:grid;place-items:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -398,8 +391,8 @@ body::before,body::after{pointer-events:none!important}
   transition:box-shadow .16s ease, border-color .16s ease;
 }
 .dmini:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
+  border-color:rgba(212,175,55,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(212,175,55,.14), 0 0 30px rgba(212,175,55,.18);
 }
 .dmini span{
   transform:rotate(-45deg);
@@ -407,7 +400,6 @@ body::before,body::after{pointer-events:none!important}
   font-size:12px;
   letter-spacing:.6px;
   color:rgba(255,255,255,.92);
-  user-select:none;
 }
 .cornerLabel{
   margin-top:10px;
@@ -417,42 +409,21 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== BOTTOM NOTE ===== */
-.pillWrap{
-  width:min(1120px,94vw);
-  margin:14px auto 0;
-  padding-bottom:90px;
-}
-.pill{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:14px 16px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.16);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.5px;
-}
-.pill b{color:rgba(255,255,255,.95)}
-.pill .g{color:rgba(201,162,74,.80);font-weight:980}
-
-/* Responsive */
+/* mobile */
 @media (max-width:720px){
   :root{
-    --D0:196px; --D1:142px; --D2:108px; --D3:84px;
-    --R1:156px; --R2:228px; --R3:292px;
+    --D0:196px;
+    --D1:142px;
+    --D2:112px;
     --padTop:112px;
   }
   .stage{height:min(980px,86vh)}
 }
 @media (max-width:520px){
   :root{
-    --D0:184px; --D1:136px; --D2:104px; --D3:80px;
-    --R1:146px; --R2:214px; --R3:274px;
+    --D0:184px;
+    --D1:136px;
+    --D2:108px;
   }
   .brandSub{display:none}
 }
@@ -464,15 +435,15 @@ body::before,body::after{pointer-events:none!important}
 <div class="top" aria-label="Top controls">
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
-      <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">Visual tutorial · pick one hub → get one clear next step · Lens: PLATFORM</div>
+      <div class="brandTitle">WELCOME TO THE COMPASS</div>
+      <div class="brandSub" id="brandSub">A visual tutorial: pick one hub → get one clear next step.</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
       </div>
     </div>
 
-    <div class="controlsRight" aria-label="Lens">
+    <div class="controlsRight" aria-label="Controls">
       <div class="seg" role="group" aria-label="Lane">
         <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
         <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
@@ -481,29 +452,21 @@ body::before,body::after{pointer-events:none!important}
   </div>
 </div>
 
-<div class="stage" id="stage" aria-label="Compass dial">
+<div class="stage" id="stage" aria-label="Compass field">
   <div class="slab" aria-hidden="true"></div>
   <div class="dial" aria-hidden="true"></div>
   <div class="faceLetters" aria-hidden="true">
     <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
   </div>
-
-  <div class="nodeLayer" id="nodeLayer" aria-hidden="false"></div>
-</div>
-
-<div class="pillWrap" aria-label="Compass note">
-  <div class="pill" id="pill">
-    <b>Compass:</b> One center (<span class="g">CORE</span>) + <span class="g">8</span> hubs per lens. Switch lens to see the other half. Duplicates/unbuilt route to <span class="g">/404.html</span>.
-  </div>
 </div>
 
 <div class="corner left" aria-label="Exit">
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
-  <div class="cornerLabel" id="lblExit">EXIT</div>
+  <div class="cornerLabel">EXIT</div>
 </div>
 <div class="corner right" aria-label="Hub">
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
-  <div class="cornerLabel" id="lblHub">HUB</div>
+  <div class="cornerLabel">HUB</div>
 </div>
 
 <script>
@@ -514,13 +477,12 @@ body::before,body::after{pointer-events:none!important}
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var lang  = "en"; // English-only build
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal"; // informal = your “RED/DARK/RED/DARK”
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
   var lane  = qs.get("lane")  || "platform"; // URL-only
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
@@ -528,17 +490,28 @@ body::before,body::after{pointer-events:none!important}
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
-    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_lang","en");
     LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
     LS.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang="en"; // EN-only UI in this build
+  document.documentElement.lang="en";
+
+  // ===== Color variant (NO new keys):
+  // informal = your target palette; formal = darker “night” variant.
+  if(style==="formal"){
+    document.documentElement.style.setProperty("--hdrA","rgba(0,0,0,.78)");
+    document.documentElement.style.setProperty("--hdrB","rgba(0,0,0,.88)");
+    document.documentElement.style.setProperty("--slabR0","rgba(255,95,70,.06)");
+    document.documentElement.style.setProperty("--slabR1","rgba(255,43,43,.06)");
+    document.documentElement.style.setProperty("--slabR2","rgba(212,175,55,.06)");
+    document.documentElement.style.setProperty("--dialB","rgba(0,0,0,.52)");
+  }
 
   function q(over){
     var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
+    p.set("lang","en");
     p.set("style",(over&&over.style)?over.style:style);
     p.set("time",(over&&over.time)?over.time:time);
     p.set("depth",(over&&over.depth)?over.depth:depth);
@@ -546,93 +519,44 @@ body::before,body::after{pointer-events:none!important}
     if(L==="platform"||L==="engineering") p.set("lane",L);
     return "?"+p.toString();
   }
-
   function go(path){ window.location.href = path + q(); }
 
-  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
-  var CORE_ROUTE = "/index-core/index.html";
-  var EXIT_ROUTE = "/door/";
-  var HUB_ROUTE  = "/home/";
-  var PLACEHOLDER_404 = "/404.html";
+  // ===== ROUTING =====
+  var PLACEHOLDER_404="/404.html";
+  var CORE_ROUTE="/index-core/index.html";
+  var EXIT_ROUTE="/door/";
+  var HUB_ROUTE="/home/";
 
-  // Full 16 unique destinations must remain unique across both lenses.
-  // Each lens only shows 8 at a time.
-  var ROUTES_RAW = [
-    // Cardinals (always visible in both lenses, but assigned to lens halves below)
-    {code:"N",  label:"LAWS",        href:"/laws/"},
-    {code:"E",  label:"ENERGY",      href:"/explore/frontier/energy/"},
-    {code:"S",  label:"FINANCE",     href:"/finance/"},
-    {code:"W",  label:"GOVERNANCE",  href:"/governance/"},
-
-    // Diagonals
-    {code:"NE", label:"PRODUCTS",    href:"/products/"},
-    {code:"SE", label:"RESEARCH",    href:"/research/"},
-    {code:"SW", label:"EXPLORE",     href:"/explore/"},
-    {code:"NW", label:"DOCTRINE",    href:"/products/capital-doctrine/"},
-
-    // Outer 8
-    {code:"NNE",label:"EDUCATION",   href:"/products/education/"},
-    {code:"ENE",label:"FRONTIER",    href:"/explore/frontier/"},
-    {code:"ESE",label:"INFRA",       href:"/explore/infrastructure/"},
-    {code:"SSE",label:"AGRICULTURE", href:"/products/agriculture/"},
-    {code:"SSW",label:"GAUGES",      href:"/gauges/"},
-    {code:"WSW",label:"VISION",      href:"/explore/frontier/vision/"},
-    {code:"WNW",label:"LATTICE",     href:"/explore/frontier/lattice/"},
-    {code:"NNW",label:"SHIMMER",     href:"/explore/frontier/shimmer/"}
+  // always-present cardinals (you set: N laws, E energy, S finance, W governance)
+  var CARDINALS=[
+    {code:"N", label:"LAWS", href:"/laws/"},
+    {code:"E", label:"ENERGY", href:"/explore/frontier/energy/"},
+    {code:"S", label:"FINANCE", href:"/finance/"},
+    {code:"W", label:"GOVERNANCE", href:"/governance/"}
   ];
 
-  function normalizeRoutes(list){
-    var seen = Object.create(null);
-    var out = [];
-    for(var i=0;i<list.length;i++){
-      var it=list[i];
-      var h=(it.href||"").trim();
-      if(!h) h=PLACEHOLDER_404;
-      if(seen[h]) h=PLACEHOLDER_404;
-      seen[h]=true;
-      out.push({code:it.code,label:it.label,href:h});
-    }
-    return out;
-  }
-  var ROUTES = normalizeRoutes(ROUTES_RAW);
+  // platform diagonals (inner 4)
+  var DIAG_PLATFORM=[
+    {code:"NE", label:"PRODUCTS", href:"/products/"},
+    {code:"SE", label:"RESEARCH", href:"/research/"},
+    {code:"SW", label:"EXPLORE", href:"/explore/"},
+    {code:"NW", label:"DOCTRINE", href:"/products/capital-doctrine/"}
+  ];
 
-  // Lens halves (8 each) — chosen to reduce cognitive load and keep “top meaning” coherent.
-  // PLATFORM = meaning + boundaries + exploration posture
-  // ENGINEERING = build + execute + apply posture
-  var PLATFORM_SET = ["N","W","SW","NW","NNW","WNW","WSW","SSW"]; // LAWS, GOVERNANCE, EXPLORE, DOCTRINE, SHIMMER, LATTICE, VISION, GAUGES
-  var ENGINEERING_SET = ["E","S","NE","SE","NNE","ENE","ESE","SSE"]; // ENERGY, FINANCE, PRODUCTS, RESEARCH, EDUCATION, FRONTIER, INFRA, AGRICULTURE
+  // engineering diagonals (swap set; keeps it to 8 hubs, not 16)
+  var DIAG_ENGINEERING=[
+    {code:"NE", label:"EDUCATION", href:"/products/education/"},
+    {code:"SE", label:"INFRA", href:"/explore/infrastructure/"},
+    {code:"SW", label:"AGRICULTURE", href:"/products/agriculture/"},
+    {code:"NW", label:"SHIMMER", href:"/explore/frontier/shimmer/"}
+  ];
 
-  function byCode(code){
-    for(var i=0;i<ROUTES.length;i++) if(ROUTES[i].code===code) return ROUTES[i];
-    return {code:code,label:code,href:PLACEHOLDER_404};
+  function safeHref(h){
+    if(!h) return PLACEHOLDER_404;
+    return String(h).trim() || PLACEHOLDER_404;
   }
 
-  // ===== TIERING =====
-  function tierFor(code){
-    // Tier 1 cardinals
-    if(code==="N"||code==="E"||code==="S"||code==="W") return {cls:"l1", r:"--R1", angleHint:"cardinal"};
-    // Tier 2 diagonals
-    if(code==="NE"||code==="SE"||code==="SW"||code==="NW") return {cls:"l2", r:"--R2", angleHint:"diag"};
-    // Tier 3 outer 8
-    return {cls:"l3", r:"--R3", angleHint:"outer"};
-  }
-
-  // We keep perfect 16-angle positions even when hidden, so lens swap feels like “rotation of what’s present”
-  var ORDER_16 = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
-
-  // ===== UI REFS =====
-  var nodeLayer=document.getElementById("nodeLayer");
-  var btnLP=document.getElementById("lanePlatform");
-  var btnLE=document.getElementById("laneEngineering");
-
-  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
-  function paintHeader(){
-    document.getElementById("brandSub").textContent =
-      "Visual tutorial · pick one hub → get one clear next step · Lens: " + (lane==="engineering" ? "ENGINEERING" : "PLATFORM");
-  }
-
-  // ===== BUILD NODE =====
-  function mkNode(item, cls){
+  function mkNode(word, code, cls){
     var d=document.createElement("div");
     d.className="node surface "+cls;
     d.setAttribute("role","button");
@@ -643,153 +567,115 @@ body::before,body::after{pointer-events:none!important}
 
     var w=document.createElement("div");
     w.className="word";
-    w.textContent=item.label;
+    w.textContent=word;
 
     var c=document.createElement("div");
     c.className="code";
-    c.textContent=item.code;
+    c.textContent=code;
 
     inner.appendChild(w);
     inner.appendChild(c);
     d.appendChild(inner);
-
-    function act(){ go(item.href); }
-    d.addEventListener("click", act, {passive:true});
-    d.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
     return d;
   }
 
-  // ===== LAYOUT (8 visible, 16-position geometry) =====
-  function renderNodes(activeSet){
-    nodeLayer.innerHTML="";
+  var stage=document.getElementById("stage");
 
-    var rect=nodeLayer.getBoundingClientRect();
+  // ===== Funnel lattice positions (NOT ring)
+  // Core at center.
+  // Cardinals: up/right/down/left around core.
+  // Diagonals: four corners around that.
+  function layout(){
+    stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
+
+    var rect=stage.getBoundingClientRect();
     var cx=rect.width/2, cy=rect.height/2;
 
-    var cs=getComputedStyle(document.documentElement);
-    var R1=parseFloat(cs.getPropertyValue("--R1"))||168;
-    var R2=parseFloat(cs.getPropertyValue("--R2"))||246;
-    var R3=parseFloat(cs.getPropertyValue("--R3"))||314;
-
-    // CORE
-    var core=mkNode({label:"START CORE",code:"CORE",href:CORE_ROUTE},"core");
+    // core
+    var core=mkNode("CORE INDEX","CORE","core");
     core.style.left=cx+"px"; core.style.top=cy+"px";
-    nodeLayer.appendChild(core);
+    core.addEventListener("click", function(){ go(CORE_ROUTE); }, {passive:true});
+    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
+    stage.appendChild(core);
 
-    // activeSet nodes only
-    for(var i=0;i<ORDER_16.length;i++){
-      var code=ORDER_16[i];
-      if(activeSet.indexOf(code)===-1) continue;
+    // spacing derived from core size (gravity)
+    var D0=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--D0"))||210;
+    var D1=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--D1"))||148;
+    var gap = Math.max(18, Math.round(D0*0.12));
+    var r1 = (D0/2) + (D1/2) - gap; // pulls inward (funnel feel)
+    var r2 = r1 + (D1*0.62);        // diagonal ring
 
-      var it=byCode(code);
-      var t=tierFor(code);
-
-      var ang=(i/ORDER_16.length)*Math.PI*2 - Math.PI/2; // N at top
-      var r=(t.r==="--R1")?R1:(t.r==="--R2")?R2:R3;
-
-      var x=cx + r*Math.cos(ang);
-      var y=cy + r*Math.sin(ang);
-
-      var n=mkNode(it, t.cls);
+    // cardinals pinned
+    var angC=[-Math.PI/2, 0, Math.PI/2, Math.PI];
+    for(var i=0;i<CARDINALS.length;i++){
+      var it=CARDINALS[i];
+      var x=cx + r1*Math.cos(angC[i]);
+      var y=cy + r1*Math.sin(angC[i]);
+      var n=mkNode(it.label, it.code, "l1");
       n.style.left=x+"px"; n.style.top=y+"px";
-      nodeLayer.appendChild(n);
+      (function(path, el){
+        var href=safeHref(path);
+        el.addEventListener("click", function(){ go(href); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(href); }});
+      })(it.href, n);
+      stage.appendChild(n);
+    }
+
+    // diagonals swapped by lane
+    var diags = (lane==="engineering") ? DIAG_ENGINEERING : DIAG_PLATFORM;
+    var angD=[-Math.PI/4, Math.PI/4, 3*Math.PI/4, -3*Math.PI/4]; // NE, SE, SW, NW
+    for(var j=0;j<diags.length;j++){
+      var it2=diags[j];
+      var x2=cx + r2*Math.cos(angD[j]);
+      var y2=cy + r2*Math.sin(angD[j]);
+      var n2=mkNode(it2.label, it2.code, "l2");
+      n2.style.left=x2+"px"; n2.style.top=y2+"px";
+      (function(path, el){
+        var href=safeHref(path);
+        el.addEventListener("click", function(){ go(href); }, {passive:true});
+        el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(href); }});
+      })(it2.href, n2);
+      stage.appendChild(n2);
     }
   }
 
-  // ===== ROTATION ANIMATION (B) =====
-  var animBusy=false;
-
-  function animateSwap(nextLane){
-    if(animBusy) return;
-    animBusy=true;
-
-    var startRot=0;
-    var endRot=180;
-
-    // If already rotated by previous state, keep it consistent by using dataset
-    var cur = parseFloat(nodeLayer.dataset.rot || "0");
-    startRot = cur;
-    endRot = cur + 180;
-
-    // Phase 1: rotate out + fade a bit
-    nodeLayer.style.transition="transform 520ms ease, opacity 520ms ease";
-    nodeLayer.style.opacity="0.82";
-    nodeLayer.style.transform="rotate("+endRot+"deg)";
-
-    // Midpoint swap (after 260ms)
-    window.setTimeout(function(){
-      lane=nextLane;
-      history.replaceState({}, "", location.pathname + q({lane:lane}));
-
-      setPressed(btnLP, lane==="platform");
-      setPressed(btnLE, lane==="engineering");
-      paintHeader();
-
-      // Swap the visible set
-      var set = (lane==="engineering") ? ENGINEERING_SET : PLATFORM_SET;
-      renderNodes(set);
-
-      // Keep rotation continuity so it feels like the compass rotated and “revealed” a new face
-      // We render nodes at 0, then immediately apply the same rotation so the visual doesn't jump
-      nodeLayer.style.transition="none";
-      nodeLayer.dataset.rot = String(endRot);
-      nodeLayer.style.transform="rotate("+endRot+"deg)";
-      nodeLayer.style.opacity="0.82";
-
-      // Phase 2: settle + brighten slightly
-      window.requestAnimationFrame(function(){
-        nodeLayer.style.transition="transform 520ms ease, opacity 520ms ease";
-        nodeLayer.style.opacity="1";
-        nodeLayer.style.transform="rotate("+(endRot)+"deg)";
-      });
-
-      window.setTimeout(function(){
-        animBusy=false;
-      }, 560);
-
-    }, 260);
-  }
-
-  // ===== SAFE LAYOUT =====
   function safeLayout(){
-    var r=nodeLayer.getBoundingClientRect();
+    var r=stage.getBoundingClientRect();
     if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
-    var set = (lane==="engineering") ? ENGINEERING_SET : PLATFORM_SET;
-    renderNodes(set);
+    layout();
   }
 
-  // ===== LANE EVENTS =====
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
-  paintHeader();
+  // ===== Lane toggle (URL-only; no storage; no reload)
+  function setPressed(idOn){
+    var p=document.getElementById("lanePlatform");
+    var e=document.getElementById("laneEngineering");
+    if(p) p.setAttribute("aria-pressed", idOn==="platform" ? "true" : "false");
+    if(e) e.setAttribute("aria-pressed", idOn==="engineering" ? "true" : "false");
+  }
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(lane);
+    safeLayout();
+  }
 
-  btnLP.addEventListener("click", function(){
-    if(lane==="platform") return;
-    animateSwap("platform");
-  }, {passive:true});
+  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  setPressed(lane);
 
-  btnLE.addEventListener("click", function(){
-    if(lane==="engineering") return;
-    animateSwap("engineering");
-  }, {passive:true});
-
-  // ===== CORNERS =====
+  // ===== Corners
   function bindCorner(id, path){
     var el=document.getElementById(id);
     if(!el) return;
     function act(){ go(path); }
     el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindCorner("btnExit", EXIT_ROUTE);
   bindCorner("btnHub", HUB_ROUTE);
 
-  // ===== INIT =====
+  // init
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
 

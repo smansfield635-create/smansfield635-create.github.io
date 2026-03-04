@@ -2,12 +2,10 @@
    GEODIAMETRICS UI — CANONICAL FIELD OWNER
    FILE: /assets/ui.css
    RULE (LOCKED): This file owns html/body background. NOTHING ELSE may.
-
-   UPDATE (V1.1 — PER SEAN):
+   UPDATE (PER SEAN):
    - UNIFORM 3D GLOSS ADOPTION
    - PERIMETER GOLD GLOW (NOT BOTTOM-ONLY UNDERLIGHT)
    - BUTTONS DO NOT MOVE ON PRESS (NO TRANSLATE/SCALE); GLOW CHANGES ONLY
-   - PREVENT “COMPETING UI”: safe pointer events + focus rules
    - KEEP: Red field · Gold grid · Black material
    ============================================================ */
 
@@ -31,7 +29,7 @@
   --white-1:#ffffff;
   --white-2:rgba(255,255,255,.82);
 
-  /* ===== MATERIAL / GLOSS / GLOW SYSTEM ===== */
+  /* ===== NEW: MATERIAL / GLOSS / GLOW SYSTEM ===== */
   --gd-stroke:rgba(255,255,255,.12);
   --gd-stroke-strong:rgba(255,255,255,.16);
 
@@ -44,7 +42,7 @@
 
   --gd-press-ring:rgba(255,255,255,.10);
 
-  /* Perimeter ring (around edges) */
+  /* Perimeter ring (the thing you asked for) */
   --gd-perim-a:rgba(212,175,55,.28);
   --gd-perim-b:rgba(212,175,55,.14);
 
@@ -63,16 +61,18 @@ html, body{
   margin:0;
   padding:0;
   min-height:100%;
+
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:var(--white-1);
 
+  /* Base field (richer gold haze + slightly deeper reds) */
   background:
     radial-gradient(circle at 62% 14%, rgba(255,230,160,.14) 0%, rgba(255,230,160,0) 58%), /* moon haze */
     radial-gradient(circle at 50% 20%, rgba(255,210,120,.11) 0%, transparent 55%),
     radial-gradient(circle at 20% 40%, rgba(255,140,90,.09) 0%, transparent 60%),
     radial-gradient(circle at 85% 70%, rgba(255,160,90,.07) 0%, transparent 60%),
 
-    /* subtle gold crown glow band near top */
+    /* subtle gold “crown molding” glow band near top */
     linear-gradient(180deg, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 18%),
 
     linear-gradient(180deg, var(--red-top) 0%, var(--red-mid) 60%, var(--red-deep) 100%);
@@ -123,7 +123,7 @@ body::before{
       transparent 16px
     ),
 
-    /* diamond grid overlay */
+    /* diamond grid overlay (slightly stronger gold) */
     repeating-linear-gradient(
       45deg,
       rgba(212,175,55,.045) 0px,
@@ -142,7 +142,8 @@ body::before{
   opacity:1;
 }
 
-/* Atmospheric overlay (lantern bokeh + fireworks + haze) */
+/* Mid-Autumn atmospheric overlay (lantern bokeh + fireworks in distance + landscape haze)
+   + added subtle gold “trim glint” at corners */
 body::after{
   content:"";
   position:fixed;
@@ -156,14 +157,14 @@ body::after{
     radial-gradient(260px 120px at 6% 96%, rgba(212,175,55,.08) 0%, rgba(212,175,55,0) 70%),
     radial-gradient(260px 120px at 94% 96%, rgba(212,175,55,.08) 0%, rgba(212,175,55,0) 70%),
 
-    /* lantern bokeh */
+    /* lantern bokeh (warm) — slightly richer */
     radial-gradient(22px 22px at 14% 22%, rgba(255,190,120,.12) 0%, rgba(255,190,120,0) 72%),
     radial-gradient(30px 30px at 24% 34%, rgba(255,160,90,.10) 0%, rgba(255,160,90,0) 76%),
     radial-gradient(18px 18px at 78% 26%, rgba(255,210,140,.10) 0%, rgba(255,210,140,0) 72%),
     radial-gradient(26px 26px at 70% 40%, rgba(255,150,80,.08) 0%, rgba(255,150,80,0) 78%),
     radial-gradient(20px 20px at 58% 30%, rgba(255,220,160,.07) 0%, rgba(255,220,160,0) 78%),
 
-    /* fireworks bursts */
+    /* fireworks bursts (upper distance; stronger and more gold) */
     radial-gradient(140px 140px at 18% 12%, rgba(255,240,210,.14) 0%, rgba(255,240,210,0) 62%),
     radial-gradient(190px 190px at 34% 18%, rgba(255,210,150,.11) 0%, rgba(255,210,150,0) 64%),
     radial-gradient(160px 160px at 78% 15%, rgba(255,235,200,.12) 0%, rgba(255,235,200,0) 64%),
@@ -173,7 +174,7 @@ body::after{
     radial-gradient(90px 90px at 22% 16%, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 70%),
     radial-gradient(110px 110px at 74% 18%, rgba(212,175,55,.09) 0%, rgba(212,175,55,0) 72%),
 
-    /* distant ridge / haze */
+    /* distant ridge / haze near bottom */
     radial-gradient(1200px 520px at 50% 100%, rgba(0,0,0,.24) 0%, rgba(0,0,0,0) 62%),
     linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.12) 100%);
 
@@ -182,16 +183,9 @@ body::after{
 }
 
 /* =========================
-   SAFETY: TAP / OVERLAY
+   LINK NORMALIZATION (FIX BLUE/PURPLE)
    ========================= */
-body::before,
-body::after{
-  pointer-events:none !important;
-}
 
-/* =========================
-   LINK NORMALIZATION
-   ========================= */
 a, a:visited, a:hover, a:active{
   color:inherit;
   text-decoration:none;
@@ -204,8 +198,9 @@ a:focus-visible{
 
 /* =========================
    MATERIAL BUTTON SYSTEM (UNIFORM 3D + PERIMETER GLOW)
-   - NO bottom-only underlight
-   - NO motion on press (no translate/scale)
+   NOTES:
+   - NO “bottom-only underlight”
+   - NO movement on press (no translate/scale)
    - GLOW changes only
    ========================= */
 
@@ -247,12 +242,11 @@ button,
     box-shadow .18s ease,
     border-color .18s ease,
     filter .18s ease;
-
   position:relative;
   overflow:hidden;
 }
 
-/* Perimeter gold ring (around edges; no bottom bias) */
+/* Perimeter gold ring (the “around the perimeter” glow) */
 button::before,
 .btn::before{
   content:"";
@@ -261,6 +255,7 @@ button::before,
   border-radius:inherit;
   pointer-events:none;
 
+  /* ring glows around edges; no bottom bias */
   background:
     radial-gradient(120% 120% at 50% 50%,
       rgba(212,175,55,0) 58%,
@@ -270,7 +265,7 @@ button::before,
   opacity:.55;
 }
 
-/* Silk trim (diamond-aligned; edge-only) */
+/* Micro “silk” trim (edge-only, follows surface) */
 button::after,
 .btn::after{
   content:"";
@@ -283,7 +278,6 @@ button::after,
     repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
 
-  /* edge-only mask so it reads as trim, not a flat grid */
   mask:
     radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
@@ -313,7 +307,7 @@ button:focus-visible,
   outline-offset:2px;
 }
 
-/* Active/Pressed = engaged glow + inner ring; NO translate/scale */
+/* Active/Pressed = “engaged glow” + inner ring, NO translate/scale */
 button:active,
 .btn:active{
   border-color:rgba(212,175,55,.62);
@@ -362,11 +356,13 @@ button.red:hover{
 /* =========================
    TYPOGRAPHY
    ========================= */
+
 h1,h2,h3,h4{
   margin:0;
   font-weight:900;
   letter-spacing:.3px;
 }
+
 p{
   color:var(--white-2);
   line-height:1.5;
@@ -375,6 +371,7 @@ p{
 /* =========================
    GLASS CONTAINERS
    ========================= */
+
 .glass{
   background:rgba(0,0,0,.22);
   border:1px solid rgba(255,255,255,.10);
@@ -384,7 +381,8 @@ p{
 
 /* =========================
    DO NOT ADD:
-   - .diamond geometry transforms
+   - .diamond
+   - geometry transforms
    - layout positioning
-   Those belong in branch.css or page-level CSS
+   Those belong in branch.css
    ========================= */

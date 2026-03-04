@@ -12,15 +12,15 @@
 
 <!-- SINGLE BUILD TOKEN (BUMP THIS STRING ONLY WHEN YOU NEED A HARD RELOAD) -->
 <script>
-window.__GD_BUILD__="IDX_PROD_20260304_1000";
+window.__GD_BUILD__="IDX_PROD_20260304_1100";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_PROD_20260304_1000"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_PROD_20260304_1000"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_PROD_20260304_1100"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_PROD_20260304_1100"/>
 
-<script defer src="/assets/instruments.js?v=IDX_PROD_20260304_1000"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_PROD_20260304_1000"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_PROD_20260304_1000"></script>
+<script defer src="/assets/instruments.js?v=IDX_PROD_20260304_1100"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_PROD_20260304_1100"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_PROD_20260304_1100"></script>
 
 <style>
 body{margin:0}
@@ -31,7 +31,7 @@ body{margin:0}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
 
-/* MINIMAL ENGINE STATUS (VERSIONED, NOT DIAGNOSTIC WALL) */
+/* MINIMAL ENGINE STATUS (VERSIONED) */
 #engstat{
 position:fixed;
 top:10px;
@@ -51,7 +51,8 @@ opacity:.75;
 .topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
 .controls{display:flex;gap:10px;justify-content:flex-end}
 .seg{display:inline-flex;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18)}
-.seg button{border:0;background:transparent;color:rgba(255,255,255,.78);padding:10px 12px;min-height:42px;font-weight:980}
+.seg button{border:0;background:transparent;color:rgba(255,255,255,.78);padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
+.seg button[aria-pressed="true"]{color:#fff;background:radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%), linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10))}
 
 /* STAGE */
 .stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
@@ -59,7 +60,7 @@ opacity:.75;
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
 .dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
 
-/* COMPASS NODES (L1 only, for spatial evaluation) */
+/* COMPASS NODES (L1 only; for spacing evaluation) */
 .node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:auto;overflow:hidden;border:1px solid rgba(255,255,255,.18);z-index:20;border-radius:22px;background:linear-gradient(160deg,#111827,#0b0f16);box-shadow:0 44px 140px rgba(0,0,0,.82)}
 .core{width:208px;height:208px;border-radius:26px}
 .l1{width:150px;height:150px}
@@ -71,7 +72,7 @@ opacity:.75;
 .corner{position:fixed;bottom:16px;z-index:270;pointer-events:none}
 .corner.left{left:16px}
 .corner.right{right:16px}
-.corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));color:#fff;font-weight:980}
+.corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));color:#fff;font-weight:980;cursor:pointer}
 </style>
 </head>
 
@@ -80,16 +81,17 @@ opacity:.75;
 <div id="gd-dragon"></div>
 
 <div id="gd-ui">
+
   <div class="top">
     <div class="topbar">
       <div class="controls">
-        <div class="seg">
-          <button aria-pressed="true">LAYER 1</button>
-          <button aria-pressed="false">LAYER 2</button>
+        <div class="seg" role="group" aria-label="Compass Layer">
+          <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
+          <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
         </div>
-        <div class="seg">
-          <button aria-pressed="true">PLATFORM</button>
-          <button aria-pressed="false">ENGINEERING</button>
+        <div class="seg" role="group" aria-label="Lane">
+          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
         </div>
       </div>
     </div>
@@ -100,8 +102,9 @@ opacity:.75;
     <div class="dial"></div>
   </div>
 
-  <div class="corner left"><button class="btn">EXIT</button></div>
-  <div class="corner right"><button class="btn">HUB</button></div>
+  <div class="corner left"><button class="btn" id="btnExit">EXIT</button></div>
+  <div class="corner right"><button class="btn" id="btnHub">HUB</button></div>
+
 </div>
 
 <div id="engstat">ENG: …</div>
@@ -110,27 +113,44 @@ opacity:.75;
 (function(){
 "use strict";
 
-/* L1 compass nodes (for spacing tests) */
 var stage=document.getElementById("stage");
-function mkNode(label, code, cls, dx, dy){
+
+function mkNode(label, code, cls, dx, dy, href){
   var d=document.createElement("div");
   d.className="node "+cls;
+  d.setAttribute("role","button");
+  d.tabIndex=0;
+
   var inner=document.createElement("div");
   inner.className="inner";
   var w=document.createElement("div"); w.className="word"; w.textContent=label;
   var c=document.createElement("div"); c.className="code"; c.textContent=code;
   inner.appendChild(w); inner.appendChild(c);
   d.appendChild(inner);
+
   d.style.left="50%";
   d.style.top="50%";
   d.style.transform="translate("+dx+"px,"+dy+"px) rotate(45deg)";
+
+  function go(){
+    if(!href) return;
+    location.href = href;
+  }
+  if(href){
+    d.addEventListener("click", go, {passive:true});
+    d.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); }
+    });
+  }
+
   stage.appendChild(d);
 }
-mkNode("CORE","CORE","core",0,0);
-mkNode("LAWS","N","l1",0,-164);
-mkNode("ENERGY","E","l1",164,0);
-mkNode("FINANCE","S","l1",0,164);
-mkNode("GOVERNANCE","W","l1",-164,0);
+
+mkNode("CORE","CORE","core",0,0,"/index-core/index.html");
+mkNode("LAWS","N","l1",0,-164,"/laws/");
+mkNode("ENERGY","E","l1",164,0,"/explore/frontier/energy/");
+mkNode("FINANCE","S","l1",0,164,"/finance/");
+mkNode("GOVERNANCE","W","l1",-164,"/governance/");
 
 /* Engine status + mount */
 window.addEventListener("load", function(){
@@ -141,6 +161,26 @@ window.addEventListener("load", function(){
   try{ if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
   try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
 });
+
+/* Corner nav */
+document.getElementById("btnExit").addEventListener("click", function(){ location.href="/door/"; }, {passive:true});
+document.getElementById("btnHub").addEventListener("click", function(){ location.href="/home/"; }, {passive:true});
+
+/* Buttons (UI only; no behavior changes for now) */
+function setPressed(id,on){ document.getElementById(id).setAttribute("aria-pressed", on?"true":"false"); }
+document.getElementById("layer1").addEventListener("click", function(){
+  setPressed("layer1",true); setPressed("layer2",false);
+}, {passive:true});
+document.getElementById("layer2").addEventListener("click", function(){
+  setPressed("layer1",false); setPressed("layer2",true);
+}, {passive:true});
+document.getElementById("lanePlatform").addEventListener("click", function(){
+  setPressed("lanePlatform",true); setPressed("laneEngineering",false);
+}, {passive:true});
+document.getElementById("laneEngineering").addEventListener("click", function(){
+  setPressed("lanePlatform",false); setPressed("laneEngineering",true);
+}, {passive:true});
+
 })();
 </script>
 

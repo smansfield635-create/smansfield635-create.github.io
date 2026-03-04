@@ -1,7 +1,10 @@
-/* ============================================================
+/* TNT — /assets/instruments.js
    GEODIAMETRICS INSTRUMENT — CANONICAL STATE + i18n LOADER + TELEMETRY EMIT
-   FILE: /assets/instruments.js
-   MODE: TNT (FULL FILE REPLACEMENT)
+   FULL FILE REPLACEMENT
+
+   REQUIRED ACTION (DO THIS NOW):
+   1) Rename /assets/instrument.js  →  /assets/instruments.js
+   2) Ensure pages reference:  <script defer src="/assets/instruments.js"></script>
 
    LOCKS:
    - Owns ONLY: gd_* state normalization + minimal gating + i18n apply + telemetry emit
@@ -11,16 +14,15 @@
    - Canon langs: ["en","zh","es"] primary: "en"
    - Gate deep pages if gd_lang invalid (root/index/door are ungated)
 
-   TELEMETRY (ADDED):
+   TELEMETRY:
    - Emits minimal events to Cloudflare Worker endpoint (POST JSON)
    - No new gd_* keys
    - Stores only a non-gd session id under cte_sid_v1
 
-   PATCH (PER SEAN / DRIFT FIX):
+   PATCH:
    - Accept uppercase lang inputs (EN/ZH/ES) by coercing to lowercase
    - Accept common zh variants (zh-cn/zh-hans -> zh)
-   ============================================================ */
-
+*/
 (function(){
   "use strict";
 
@@ -46,20 +48,13 @@
   var ALLOW_TIME  = {origin:1, now:1, post:1};
   var ALLOW_STYLE = {formal:1, informal:1};
 
-  // ---------- TELEMETRY ENDPOINT (SET) ----------
-  // Cloudflare Worker (live):
+  // ---------- TELEMETRY ENDPOINT ----------
   var TELEMETRY_ENDPOINT = "https://cte-telemetry.smansfield635.workers.dev";
 
   // ---------- LocalStorage helpers ----------
-  function lsGet(k){
-    try{ return localStorage.getItem(k); }catch(e){ return null; }
-  }
-  function lsSet(k,v){
-    try{ localStorage.setItem(k, String(v)); }catch(e){}
-  }
-  function lsDel(k){
-    try{ localStorage.removeItem(k); }catch(e){}
-  }
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k, String(v)); }catch(e){} }
+  function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 
   // ---------- Query helpers ----------
   function qsGet(name){
@@ -77,7 +72,6 @@
     v = String(v).trim();
     if(!v) return "";
     v = v.toLowerCase();
-    // common variants -> zh
     if(v === "zh-cn" || v === "zh-hans" || v === "zh-hans-cn" || v === "zh-hans-hk" || v === "zh-hant") return "zh";
     return v;
   }
@@ -134,7 +128,11 @@
 
     if(isRoot || isIndex || isDoor) return;
 
-    var deepPrefixes = ["/home", "/explore", "/links", "/about", "/products", "/laws", "/gauges", "/innovation", "/prelude", "/research", "/index-core", "/governance", "/finance"];
+    var deepPrefixes = [
+      "/home", "/explore", "/links", "/about", "/products", "/laws", "/gauges",
+      "/innovation", "/prelude", "/research", "/index-core", "/governance", "/finance"
+    ];
+
     var isDeep = false;
     for(var i=0;i<deepPrefixes.length;i++){
       if(path.indexOf(deepPrefixes[i]) === 0){ isDeep = true; break; }
@@ -200,9 +198,7 @@
   // TELEMETRY EMIT (MINIMAL, GLOBAL)
   // ============================================================
 
-  function nowISO(){
-    try{ return new Date().toISOString(); }catch(e){ return ""; }
-  }
+  function nowISO(){ try{ return new Date().toISOString(); }catch(e){ return ""; } }
 
   function randHex(n){
     var s=""; var chars="0123456789abcdef";
@@ -261,12 +257,7 @@
       sid: getSid(),
       type: type,
       page: (window.location && window.location.pathname) ? window.location.pathname : "/",
-      state: {
-        lang: state.lang,
-        depth: state.depth,
-        time: state.time,
-        style: state.style
-      },
+      state: { lang: state.lang, depth: state.depth, time: state.time, style: state.style },
       payload: payload || {}
     };
     postTelemetry(evt);
@@ -278,7 +269,6 @@
       ref: String(document.referrer || "").slice(0,300)
     });
 
-    // scroll_depth thresholds
     var thresholds = [25,50,75,90];
     var hit = {25:false,50:false,75:false,90:false};
     var last = 0;
@@ -304,10 +294,8 @@
         }
       }
     }
-
     window.addEventListener("scroll", onScroll, {passive:true});
 
-    // click capture (anchors/buttons/accordion-ish)
     function findAnchor(target){
       var el = target;
       for(var i=0;i<8 && el;i++){
@@ -343,10 +331,7 @@
 
       var a = findAnchor(t);
       if(a){
-        emit("nav_click", state, {
-          label: safeText(a),
-          to: safeHref(a)
-        });
+        emit("nav_click", state, { label: safeText(a), to: safeHref(a) });
         return;
       }
 
@@ -355,26 +340,17 @@
         var label = safeText(b).toLowerCase();
         var cls = (b.className ? String(b.className).toLowerCase() : "");
         var isLens = (
-          label.indexOf("informal")>=0 ||
-          label.indexOf("formal")>=0 ||
-          label.indexOf("platform")>=0 ||
-          label.indexOf("engineering")>=0 ||
-          label.indexOf("narrative")>=0 ||
-          cls.indexOf("pill")>=0
+          label.indexOf("informal")>=0 || label.indexOf("formal")>=0 ||
+          label.indexOf("platform")>=0 || label.indexOf("engineering")>=0 ||
+          label.indexOf("narrative")>=0 || cls.indexOf("pill")>=0
         );
-        emit(isLens ? "lens_toggle" : "button_click", state, {
-          label: safeText(b),
-          id: (b.id || "")
-        });
+        emit(isLens ? "lens_toggle" : "button_click", state, { label: safeText(b), id: (b.id || "") });
         return;
       }
 
       var h = looksLikeAccordion(t);
       if(h){
-        emit("accordion_toggle", state, {
-          label: safeText(h),
-          id: (h.id || "")
-        });
+        emit("accordion_toggle", state, { label: safeText(h), id: (h.id || "") });
       }
     }
 
@@ -386,11 +362,8 @@
   var state = normalize();
   gate(state);
   loadCanonI18n(state.lang);
-
-  // Telemetry emit (non-blocking)
   initTelemetry(state);
 
-  // Optional debug surface (keep existing)
   window.CRP_INSTRUMENT = {
     getState: function(){
       return {

@@ -5,7 +5,9 @@
      - RANDOM PHASE EACH PAGE LOAD (no storage)
      - CINEMATIC GLOW + REAL CRATER DETAIL (stable, not flickering)
      - MOON REFLECTION ON WATER PLANE
-   KEEP (FROM v1):
+     - KEEP: subtle water ripple over compass face region (circular clip)
+     - KEEP: evening sky gradient (brighter, no competition)
+   CONSTRAINTS:
      - Canvas-only (no DOM animation, no pointer capture)
      - No new gd_* keys
      - 30fps target + DPR cap
@@ -17,7 +19,7 @@
   function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
   function lerp(a,b,t){ return a + (b-a)*t; }
 
-  // -------- deterministic-ish rand (stable craters) --------
+  // -------- deterministic rand (stable craters) --------
   function mulberry32(seed){
     var t = seed >>> 0;
     return function(){
@@ -66,11 +68,36 @@
     if(!ctx) return canvas;
 
     // ---- Render budget ----
-    var DPR_CAP = opts.dpr_cap || 1.6;
-    var TARGET_FPS = opts.fps || 30;
+    var DPR_CAP = (opts.dpr_cap != null) ? opts.dpr_cap : 1.6;
+    var TARGET_FPS = (opts.fps != null) ? opts.fps : 30;
     var FRAME_MS = 1000 / TARGET_FPS;
 
     var W=0,H=0,DPR=1;
+
+    // ---- moon params (random per load; no storage) ----
+    var moonPhase = Math.random(); // 0=new, 0.5=full
+    var craterSeed = ((Date.now() ^ (Math.random()*1e9)) >>> 0);
+    var rnd = mulberry32(craterSeed);
+
+    // Store craters in normalized coords so resize does NOT change pattern
+    // Each crater: u,v ∈ [-1,1] disc space, rr ∈ (0,1), alpha
+    var cratersN = [];
+
+    function seedCratersNormalized(){
+      cratersN = [];
+      var count = (opts.crater_count != null) ? opts.crater_count : 16;
+      for(var i=0;i<count;i++){
+        var ang = rnd()*Math.PI*2;
+        var rad = Math.pow(rnd(), 0.62) * 0.78;  // bias inward
+        var u = Math.cos(ang)*rad;
+        var v = Math.sin(ang)*rad;
+        var rr = lerp(0.05, 0.16, rnd());
+        var a  = lerp(0.10, 0.28, rnd());
+        cratersN.push({u:u,v:v,rr:rr,a:a});
+      }
+    }
+    seedCratersNormalized();
+
     function resize(){
       var ww = Math.max(1, window.innerWidth || 1);
       var hh = Math.max(1, window.innerHeight || 1);
@@ -86,64 +113,54 @@
     window.addEventListener("resize", resize, {passive:true});
 
     // =========================================================
-    // MOON (SINGLE, RANDOM PHASE PER LOAD, STABLE CRATERS)
+    // SKY — brighter evening gradient (no competition)
     // =========================================================
-    // Phase: 0=new, 0.5=full, 1=wrap
-    var moonPhase = Math.random();
-
-    // Fixed seed for crater placement this load
-    var craterSeed = ((Date.now() ^ (Math.random()*1e9)) >>> 0);
-    var rnd = mulberry32(craterSeed);
-
-    var craters = [];
-    function seedCraters(mx,my,mr){
-      craters = [];
-      var count = 12;
-      for(var i=0;i<count;i++){
-        // keep within disc (bias toward mid)
-        var ang = rnd()*Math.PI*2;
-        var rad = Math.pow(rnd(), 0.65) * mr * 0.78;
-        var x = mx + Math.cos(ang)*rad;
-        var y = my + Math.sin(ang)*rad;
-        var r = mr * lerp(0.05, 0.16, rnd());
-        var a = lerp(0.10, 0.28, rnd());
-        craters.push({x:x,y:y,r:r,a:a});
-      }
+    function drawSky(){
+      // “red, dark, red, dark” feeling: red sky, darker mid, red haze, dark base
+      var g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0.00, "rgba(210,70,40,0.22)");
+      g.addColorStop(0.28, "rgba(120,20,20,0.16)");
+      g.addColorStop(0.58, "rgba(180,55,30,0.14)");
+      g.addColorStop(1.00, "rgba(0,0,0,0.18)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
     }
 
-    function drawMoon(t){
+    // =========================================================
+    // MOON — single disc + clipped phase shadow (no double moon)
+    // =========================================================
+    function drawMoon(){
       var mx = W*0.78;
       var my = H*0.18;
-      var mr = Math.min(W,H) * (opts.moon_radius || 0.060); // slightly larger than before
-      if(craters.length === 0) seedCraters(mx,my,mr);
+
+      // slightly larger, brighter, clearer
+      var mr = Math.min(W,H) * ((opts.moon_radius != null) ? opts.moon_radius : 0.062);
 
       // glow halo
       ctx.save();
       ctx.globalCompositeOperation = "source-over";
 
-      var halo = ctx.createRadialGradient(mx, my, mr*0.2, mx, my, mr*2.6);
-      halo.addColorStop(0, "rgba(255,248,230,0.22)");
-      halo.addColorStop(0.35, "rgba(255,225,170,0.12)");
+      var halo = ctx.createRadialGradient(mx, my, mr*0.2, mx, my, mr*2.8);
+      halo.addColorStop(0, "rgba(255,248,230,0.24)");
+      halo.addColorStop(0.35, "rgba(255,225,170,0.14)");
       halo.addColorStop(1, "rgba(255,225,170,0)");
       ctx.fillStyle = halo;
       ctx.beginPath();
-      ctx.arc(mx, my, mr*2.6, 0, Math.PI*2);
+      ctx.arc(mx, my, mr*2.8, 0, Math.PI*2);
       ctx.fill();
 
       // base disc
-      ctx.shadowColor = "rgba(255,245,225,0.40)";
-      ctx.shadowBlur = 26*DPR;
-      ctx.fillStyle = "rgba(255,246,232,0.96)";
+      ctx.shadowColor = "rgba(255,245,225,0.48)";
+      ctx.shadowBlur = 28*DPR;
+      ctx.fillStyle = "rgba(255,246,232,0.98)";
       ctx.beginPath();
       ctx.arc(mx, my, mr, 0, Math.PI*2);
       ctx.fill();
       ctx.shadowBlur = 0;
 
-      // phase shading (SINGLE-MOON METHOD)
-      // Use a dark disc shifted by terminator parameter, but CLIPPED to the moon.
-      // This avoids the “double moon” / eclipse look.
+      // phase shading: clipped inside the SAME moon circle
       var k = Math.cos(moonPhase * Math.PI * 2); // -1..1
-      var shift = k * mr * 0.55;
+      var shift = k * mr * 0.58;
 
       ctx.save();
       ctx.beginPath();
@@ -155,67 +172,72 @@
       ctx.fill();
       ctx.restore();
 
-      // crater shading (stable; no flicker)
+      // crater detail (stable; no flicker)
       ctx.save();
       ctx.beginPath();
       ctx.arc(mx, my, mr, 0, Math.PI*2);
       ctx.clip();
 
-      // subtle terminator-side darkening for depth
-      var rim = ctx.createRadialGradient(mx - mr*0.2, my - mr*0.2, mr*0.2, mx, my, mr);
+      // subtle rim shading for depth
+      var rim = ctx.createRadialGradient(mx - mr*0.25, my - mr*0.25, mr*0.15, mx, my, mr);
       rim.addColorStop(0, "rgba(0,0,0,0.00)");
       rim.addColorStop(1, "rgba(0,0,0,0.18)");
       ctx.fillStyle = rim;
       ctx.fillRect(mx-mr, my-mr, mr*2, mr*2);
 
-      for(var i=0;i<craters.length;i++){
-        var c = craters[i];
-        // crater ring
+      for(var i=0;i<cratersN.length;i++){
+        var c = cratersN[i];
+
+        var cx = mx + c.u * mr;
+        var cy = my + c.v * mr;
+        var cr = c.rr * mr;
+
+        // crater body
         ctx.fillStyle = "rgba(0,0,0,"+c.a+")";
         ctx.beginPath();
-        ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+        ctx.arc(cx, cy, cr, 0, Math.PI*2);
         ctx.fill();
-        // inner highlight (gives crater lip)
-        ctx.fillStyle = "rgba(255,255,255,0.08)";
+
+        // inner highlight (lip)
+        ctx.fillStyle = "rgba(255,255,255,0.09)";
         ctx.beginPath();
-        ctx.arc(c.x - c.r*0.18, c.y - c.r*0.18, c.r*0.55, 0, Math.PI*2);
+        ctx.arc(cx - cr*0.18, cy - cr*0.18, cr*0.55, 0, Math.PI*2);
         ctx.fill();
       }
-      ctx.restore();
 
       ctx.restore();
+      ctx.restore();
 
-      drawMoonReflection(mx, my, mr);
+      drawMoonReflection(mx, mr);
     }
 
-    function drawMoonReflection(mx, my, mr){
+    function drawMoonReflection(mx, mr){
       // reflection lives in water plane (lower half)
       var y0 = H*0.62;
-      var w = mr*2.6;
-      var h = mr*3.8;
+      var w = mr*2.8;
+      var h = mr*4.0;
 
       ctx.save();
       ctx.globalCompositeOperation = "screen";
-      ctx.globalAlpha = 0.55;
+      ctx.globalAlpha = 0.56;
 
-      // soft column
       var g = ctx.createLinearGradient(mx, y0, mx, y0+h);
-      g.addColorStop(0, "rgba(255,235,190,0.16)");
-      g.addColorStop(0.35, "rgba(255,200,150,0.09)");
+      g.addColorStop(0, "rgba(255,235,190,0.18)");
+      g.addColorStop(0.35, "rgba(255,200,150,0.10)");
       g.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.ellipse(mx, y0 + h*0.22, w*0.38, h*0.42, 0, 0, Math.PI*2);
+      ctx.ellipse(mx, y0 + h*0.22, w*0.40, h*0.44, 0, 0, Math.PI*2);
       ctx.fill();
 
-      // slight ripple breakup
+      // gentle ripple breakup (cheap)
       ctx.globalAlpha = 0.42;
       ctx.strokeStyle = "rgba(255,255,255,0.05)";
       ctx.lineWidth = 1*DPR;
-      for(var i=0;i<6;i++){
-        var yy = y0 + i*(h/6);
+      for(var i=0;i<7;i++){
+        var yy = y0 + i*(h/7);
         ctx.beginPath();
-        ctx.ellipse(mx, yy, w*(0.20 + i*0.10), 6*DPR, 0, 0, Math.PI*2);
+        ctx.ellipse(mx, yy, w*(0.22 + i*0.10), 6*DPR, 0, 0, Math.PI*2);
         ctx.stroke();
       }
 
@@ -223,26 +245,12 @@
     }
 
     // =========================================================
-    // SKY (brighter evening gradient; no competition with compass)
-    // =========================================================
-    function drawSky(t){
-      // “red, dark, red, dark” feeling: red sky, darker mid, red haze, dark base
-      var g = ctx.createLinearGradient(0,0,0,H);
-      g.addColorStop(0.00, "rgba(210,70,40,0.20)");
-      g.addColorStop(0.28, "rgba(120,20,20,0.16)");
-      g.addColorStop(0.58, "rgba(180,55,30,0.14)");
-      g.addColorStop(1.00, "rgba(0,0,0,0.18)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-    }
-
-    // =========================================================
-    // Minimal placeholders for later layers (kept, but “safe”)
+    // WATER DIAL RIPPLE — subtle center clip (kept)
     // =========================================================
     function drawWaterDial(t){
-      // Subtle center ripple (kept)
       var cx = W*0.5, cy = H*0.50;
       var r = Math.min(W,H)*0.32;
+
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, Math.PI*2);
@@ -269,10 +277,11 @@
     }
 
     // =========================================================
-    // LOOP
+    // LOOP (30fps)
     // =========================================================
     var last = 0;
     var acc = 0;
+
     function frame(ts){
       if(!last) last = ts;
       var dt = ts - last;
@@ -280,8 +289,8 @@
 
       if(reduce){
         ctx.clearRect(0,0,W,H);
-        drawSky(ts);
-        drawMoon(ts);
+        drawSky();
+        drawMoon();
         drawWaterDial(ts);
         return;
       }
@@ -296,12 +305,13 @@
       ctx.clearRect(0,0,W,H);
 
       // Order: sky → moon(+reflection) → water dial
-      drawSky(ts);
-      drawMoon(ts);
+      drawSky();
+      drawMoon();
       drawWaterDial(ts);
 
       requestAnimationFrame(frame);
     }
+
     requestAnimationFrame(frame);
 
     return canvas;

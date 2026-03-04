@@ -1,92 +1,79 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL v5 (2-LAYER COMPASS + STABLE MOON + SLITHER DRAGONS) — ENGLISH ONLY
-     OWNER: SEAN — WEBSITE BUILD ROOM
-     GOAL (PER SEAN): one last solid TNT tonight: stable visuals, no loops, no competing UI.
-
-     WHAT THIS FIXES (DELIVERED):
-       - Layer 1 / Layer 2 tabs (no reload, no new gd_* keys)
-         • Layer 1: CORE + N/E/S/W (4)  + EXIT/HUB (outside 16)
-         • Layer 2: CORE2 + remaining 12 + EXIT/HUB (outside 16)
-       - Single moon (NO double-moon), stable craters (seeded once), visible glow + reflection
-       - Water ripple stays radial (flows outward), clipped to dial
-       - Clouds: multi-depth (3 layers), behind dial; NOT over the active core
-       - Lanterns: float upward (embers/lantern vibe), NOT over the active core
-       - Dragons: 2 dragons, darker onyx-green, slower slither (NOT violent wiggle)
-         • top dragon: classic CN glyphs (as symbols, still EN-only page) — gold glow
-         • bottom dragon: EN phrases — gold glow
-         • both fly ABOVE compass face (water) but BELOW buttons; NOT over the active core
-       - Red / Dark / Red / Dark contrast:
-         • ui.css red field (outside)
-         • stage “sky” layer (red/orange night)
-         • compass “water glass” layer (lighter red glass)
-         • buttons remain opaque dark-gems
-
-     LOCKS:
+     COMPASS (DUAL-LAYER) — ENGLISH ONLY (VISUAL-FIRST) — V5 RETRY
+     FIXES THIS PASS:
+       - NO extra diamonds (no “4 random extras”)
+       - LAYER 1 = CORE + N/E/S/W (4 of the 16)
+       - LAYER 2 = CORE2 + 12 (remaining 12 of the 16)
+       - Cores + EXIT/HUB are NOT counted in the 16
+       - COLOR STACK: red (field) → dark (panel) → red (dial rim glow) → dark (dial) → dark (gems)
+       - CRISP dial rings (no blur)
+       - ONE background engine only: /assets/bg-engine.js (canvas zIndex 0)
+       - NO other animation scripts on this page
+     STATE (LOCKED):
+       - gd_* keys only: gd_lang/gd_style/gd_time/gd_depth (LS + URL)
+       - layer=1|2 URL-only (NOT stored)
+       - lane=platform|engineering URL-only (NOT stored)
+     ROUTING (LOCKED):
+       - CORE  -> /index-core/index.html
+       - CORE2 -> /index-core/index.html (temporary spine)
+       - EXIT  -> /door/
+       - HUB   -> /home/
+     RULES:
        - ui.css owns html/body background (NO overrides)
-       - NO new gd_* keys (uses only gd_lang/gd_style/gd_time/gd_depth)
-       - lane is URL-only if present (not stored)
        - No overlays/modals; no inline onclick; addEventListener only
-       - Unbuilt links go to /404.html
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Compass · DiamondGateBridge</title>
+<title>Compass</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
 <script defer src="/assets/instruments.js"></script>
+<script defer src="/assets/bg-engine.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
 body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
-/* =========================
-   GEOMETRY
-   ========================= */
 :root{
-  --padTop:92px;
+  --padTop:96px;
 
-  /* dial sizes */
-  --stage: min(1180px, 94vw);
-  --stageH: min(1180px, 86vh);
+  /* geometry sizes */
+  --D0:204px; /* CORE */
+  --D1:146px; /* N/E/S/W */
+  --D2:114px; /* Layer2 ring nodes */
 
-  /* ring radii */
-  --R1: 176px;  /* cardinals */
-  --R2: 264px;  /* outer ring */
+  /* radii */
+  --R1:176px;
+  --R2:268px;
 
-  /* node sizes (one big core; others smaller by distance, NOT “importance”) */
-  --core: 206px;
-  --nodeA: 142px; /* cardinals */
-  --nodeB: 96px;  /* outer */
+  /* local material tokens (NO body bg) */
+  --stroke:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.94);
+  --mut:rgba(255,255,255,.72);
 
-  /* material */
-  --ink: rgba(255,255,255,.94);
-  --mut: rgba(255,255,255,.78);
-  --stroke: rgba(255,255,255,.12);
+  --onyx0:rgba(6,8,10,.96);
+  --onyx1:rgba(10,12,16,.88);
 
-  --onyx0: rgba(6,8,10,.96);
-  --onyx1: rgba(10,12,16,.88);
+  --crimson:rgba(120,0,22,.40);
+  --festival:rgba(255,43,43,.22);
+  --opalV:rgba(90,40,120,.12);
 
-  --crimson: rgba(120,0,22,.44);
-  --festival: rgba(255,43,43,.22);
-  --opalV: rgba(90,40,120,.14);
+  --gold:rgba(212,175,55,.62);
 
-  --gold: rgba(201,162,74,.58);
-  --goldGlow: rgba(201,162,74,.22);
+  --shadowA:0 28px 110px rgba(0,0,0,.70);
+  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --shadowDeep:0 44px 140px rgba(0,0,0,.82);
 
-  --shadowDeep: 0 44px 140px rgba(0,0,0,.82);
-  --shadowA: 0 28px 110px rgba(0,0,0,.70);
-  --shadowB: 0 18px 60px rgba(0,0,0,.55);
+  --dialW:min(980px,92vw);
 }
 
-/* =========================
-   TOP BAR
-   ========================= */
+/* ===== TOP BAR ===== */
 .top{
   position:fixed;top:14px;left:0;right:0;
   padding:0 14px;
@@ -101,10 +88,10 @@ body::before,body::after{pointer-events:none!important}
   border-radius:22px;
   padding:10px 12px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
+    radial-gradient(circle at 18% 18%, rgba(212,175,55,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(16,10,12,.86), rgba(8,6,10,.92));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
+    linear-gradient(145deg, rgba(8,10,14,.90), rgba(4,6,10,.96));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(212,175,55,.10);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
@@ -113,34 +100,25 @@ body::before,body::after{pointer-events:none!important}
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-width:0;
 }
 .brandTitle{
-  font-weight:980;
-  letter-spacing:.6px;
-  font-size:14px;
-  color:rgba(255,255,255,.94);
+  font-weight:980;letter-spacing:.6px;font-size:14px;color:rgba(255,255,255,.94);
   white-space:nowrap;
 }
 .brandSub{
-  font-size:12px;
-  color:rgba(255,255,255,.74);
-  letter-spacing:.2px;
-  white-space:nowrap;
+  font-size:12px;color:rgba(255,255,255,.72);letter-spacing:.2px;white-space:nowrap;
 }
 .brandLinks{
-  display:flex;gap:10px;flex-wrap:wrap;
-  font-size:12px;
-  color:rgba(255,255,255,.72);
+  display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,.70);
 }
 .brandLinks a{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(201,162,74,.16);
-  background:rgba(0,0,0,.12);
+  padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(212,175,55,.16);
+  background:rgba(0,0,0,.14);
 }
+
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
 }
 
-/* Segmented controls */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
@@ -149,7 +127,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .seg button{
   appearance:none;border:0;background:transparent;
-  color:rgba(255,255,255,.82);
+  color:rgba(255,255,255,.78);
   padding:10px 12px;min-height:42px;
   font-weight:980;font-size:13px;letter-spacing:.25px;
   cursor:pointer;
@@ -157,132 +135,103 @@ body::before,body::after{pointer-events:none!important}
   touch-action:manipulation;
 }
 .seg button[aria-pressed="true"]{
-  color:rgba(255,255,255,.96);
+  color:rgba(255,255,255,.95);
   background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.12), rgba(0,0,0,.10));
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14), inset 0 -10px 22px rgba(201,162,74,.08);
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.14), transparent 62%),
+    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.14), inset 0 -10px 22px rgba(212,175,55,.10);
 }
 
-/* =========================
-   STAGE
-   ========================= */
+/* ===== STAGE ===== */
 .stage{
   position:relative;
-  width:var(--stage);
-  height:var(--stageH);
+  width:min(1200px,94vw);
+  height:min(1200px,86vh);
   margin:var(--padTop) auto 0;
   pointer-events:none;
+  z-index:10; /* above bg canvas */
 }
 
-/* sky “panel” inside stage: red/orange night (lighter than obsidian) */
-.skyPanel{
+/* “dark” panel behind dial (dark layer) */
+.panel{
   position:absolute;inset:0;
   border-radius:34px;
-  overflow:hidden;
-  z-index:0;
   pointer-events:none;
-}
-.skyPanel::before{
-  content:"";
-  position:absolute;inset:0;
   background:
-    radial-gradient(circle at 70% 12%, rgba(255,210,150,.18), transparent 52%),
-    radial-gradient(circle at 14% 20%, rgba(255,70,60,.16), transparent 56%),
-    radial-gradient(circle at 88% 38%, rgba(255,140,60,.10), transparent 62%),
-    radial-gradient(circle at 50% 90%, rgba(0,0,0,.26), transparent 62%),
-    linear-gradient(180deg, rgba(140,20,20,.22), rgba(90,10,20,.20) 55%, rgba(0,0,0,.18));
-  opacity:1;
+    radial-gradient(circle at 28% 18%, rgba(255,80,60,.10), transparent 58%),
+    radial-gradient(circle at 78% 22%, rgba(212,175,55,.08), transparent 62%),
+    linear-gradient(160deg, rgba(0,0,0,.14), rgba(0,0,0,.24));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 70px 240px rgba(0,0,0,.44);
 }
 
-/* dark-red “slab” under the dial (not black) */
-.slab{
+/* Dial: red sheen (thin) over dark obsidian */
+.dialWrap{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(1040px,92vw);
-  height:min(1040px,92vw);
-  border-radius:44px;
-  pointer-events:none;
-  z-index:1;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 28% 20%, rgba(255,255,255,.08), transparent 55%),
-    radial-gradient(circle at 78% 26%, rgba(255,43,43,.10), transparent 60%),
-    radial-gradient(circle at 72% 82%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(160deg, rgba(40,0,12,.62), rgba(10,8,12,.90));
-  box-shadow:
-    0 70px 240px rgba(0,0,0,.58),
-    inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -70px 140px rgba(0,0,0,.58);
-}
-
-/* water-glass compass face (lighter red “glass”), where ripples live */
-.dial{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(940px,90vw);
-  height:min(940px,90vw);
+  width:var(--dialW);height:var(--dialW);
   border-radius:999px;
   pointer-events:none;
-  z-index:2;
-  overflow:hidden;
+  z-index:12;
 }
-.dial::before{
-  content:"";
-  position:absolute;inset:0;border-radius:999px;
+.dialRed{
+  position:absolute;inset:-2px;border-radius:999px;
   background:
-    radial-gradient(circle at 50% 40%,
-      rgba(255,255,255,.06),
-      rgba(0,0,0,.16) 56%,
-      rgba(0,0,0,.36) 78%,
+    radial-gradient(circle at 50% 40%, rgba(255,80,60,.10), transparent 64%),
+    radial-gradient(circle at 50% 55%, rgba(255,43,43,.08), transparent 70%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.08), transparent 72%);
+  opacity:.80;
+}
+.dial{
+  position:absolute;inset:0;border-radius:999px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 42%,
+      rgba(255,255,255,.05),
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
       rgba(0,0,0,.00) 92%),
-    radial-gradient(circle at 50% 50%, rgba(255,120,90,.14), transparent 62%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 68%),
-    linear-gradient(180deg, rgba(255,70,60,.08), rgba(0,0,0,.00));
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,.08), transparent 62%),
+    radial-gradient(circle at 50% 50%, rgba(255,43,43,.06), transparent 66%),
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
-    inset 0 0 0 10px rgba(0,0,0,.10),
-    inset 0 0 80px rgba(0,0,0,.35),
+    inset 0 0 0 10px rgba(0,0,0,.12),
+    inset 0 0 80px rgba(0,0,0,.55),
     0 50px 180px rgba(0,0,0,.28);
-  opacity:.96;
 }
 .dial::after{
   content:"";
   position:absolute;inset:-14%;
   background:
-    /* rings */
     radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
 
-    /* cardinal engrave (black + gold overlay feel) */
-    linear-gradient(90deg, transparent 0 49.7%, rgba(0,0,0,.22) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(0,0,0,.22) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(90deg, transparent 0 49.7%, rgba(212,175,55,.12) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(212,175,55,.12) 49.7% 50.3%, transparent 50.3% 100%),
 
-    /* gold “curved” resonance (no flat orthogonal grid) */
     repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.07) 0 1.2deg,
+      rgba(212,175,55,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
 
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
-  opacity:.84;
-  mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+  opacity:.78;
+  filter:none; /* CRISP */
 }
+
+/* Letters */
 .faceLetters{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
-  width:min(940px,90vw);
-  height:min(940px,90vw);
+  width:var(--dialW);height:var(--dialW);
   pointer-events:none;
-  z-index:3;
-  opacity:.78;
+  z-index:13;
+  opacity:.86;
 }
 .faceLetters span{
   position:absolute;
-  color:rgba(201,162,74,.50);
+  color:rgba(212,175,55,.62);
   font-weight:980;
   letter-spacing:2px;
   font-size:12px;
@@ -293,9 +242,7 @@ body::before,body::after{pointer-events:none!important}
 .faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
 .faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
-/* =========================
-   GEM NODES
-   ========================= */
+/* ===== NODES ===== */
 .node{
   position:absolute;
   left:50%;top:50%;
@@ -305,12 +252,12 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:10;
+  z-index:40;
   border-radius:22px;
 }
-.core{width:var(--core);height:var(--core);z-index:12;border-radius:26px}
-.a{width:var(--nodeA);height:var(--nodeA)}
-.b{width:var(--nodeB);height:var(--nodeB);border-radius:18px}
+.core{width:var(--D0);height:var(--D0);border-radius:26px;z-index:50;}
+.l1{width:var(--D1);height:var(--D1);border-radius:22px;}
+.l2{width:var(--D2);height:var(--D2);border-radius:20px;}
 
 .surface{
   background:
@@ -325,25 +272,21 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-
-/* honeycomb / lattice “fractalized” surface hint (edge-only + subtle) */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  opacity:.28;
+  box-shadow: inset 0 0 0 1px rgba(212,175,55,.18);
   background:
-    repeating-linear-gradient(60deg, rgba(201,162,74,.10) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(-60deg, rgba(201,162,74,.08) 0 1px, transparent 1px 14px),
-    repeating-linear-gradient(0deg, rgba(201,162,74,.06) 0 1px, transparent 1px 14px);
+    repeating-linear-gradient(45deg, rgba(212,175,55,.09) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(-45deg, rgba(212,175,55,.07) 0 1px, transparent 1px 18px);
+  opacity:.34;
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
 }
-
-/* highlight streak */
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -355,19 +298,17 @@ body::before,body::after{pointer-events:none!important}
   opacity:.92;
 }
 
-/* glow-only hover (NO movement) */
 .node:hover{
-  border-color:rgba(201,162,74,.44);
+  border-color:rgba(212,175,55,.50);
   box-shadow:
     var(--shadowDeep),
-    0 0 0 2px rgba(201,162,74,.14),
-    0 0 34px rgba(201,162,74,.18),
+    0 0 0 2px rgba(212,175,55,.14),
+    0 0 34px rgba(212,175,55,.18),
     inset 0 2px 0 rgba(255,255,255,.20),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-.node:active{filter:brightness(.98)}
+.node:active{filter:brightness(.98);}
 
-/* text */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -383,8 +324,7 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.6px;
   line-height:1.05;
   text-shadow:0 0 18px rgba(0,0,0,.42);
-  font-size:clamp(10px, 1.15vw, 16px);
-  max-width:100%;
+  font-size:clamp(10px, 1.2vw, 16px);
 }
 .code{
   font-weight:950;
@@ -393,9 +333,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.78;
 }
 
-/* =========================
-   CORNER BUTTONS (EXIT/HUB)
-   ========================= */
+/* ===== CORNERS ===== */
 .corner{
   position:fixed;
   bottom:max(16px, env(safe-area-inset-bottom));
@@ -413,7 +351,7 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 50% 40%, rgba(255,255,255,.08), transparent 52%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));
-  box-shadow:var(--shadowB), 0 0 0 1px rgba(201,162,74,.10), 0 0 18px rgba(201,162,74,.10);
+  box-shadow:var(--shadowB), 0 0 0 1px rgba(212,175,55,.10), 0 0 18px rgba(212,175,55,.10);
   display:grid;place-items:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
@@ -424,8 +362,8 @@ body::before,body::after{pointer-events:none!important}
   transition:box-shadow .16s ease, border-color .16s ease;
 }
 .dmini:hover{
-  border-color:rgba(201,162,74,.44);
-  box-shadow:var(--shadowB), 0 0 0 2px rgba(201,162,74,.14), 0 0 30px rgba(201,162,74,.18);
+  border-color:rgba(212,175,55,.44);
+  box-shadow:var(--shadowB), 0 0 0 2px rgba(212,175,55,.14), 0 0 30px rgba(212,175,55,.18);
 }
 .dmini span{
   transform:rotate(-45deg);
@@ -443,47 +381,19 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* bottom note */
-.noteWrap{
-  width:min(1120px,94vw);
-  margin:14px auto 0;
-  padding-bottom:90px;
-}
-.note{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
-  padding:14px 16px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 32%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 92%, rgba(201,162,74,.10), transparent 62%),
-    rgba(0,0,0,.14);
-  box-shadow:0 26px 90px rgba(0,0,0,.50);
-  color:rgba(255,255,255,.86);
-  line-height:1.55;
-  font-size:13.5px;
-}
-.note b{color:rgba(255,255,255,.95)}
-.note .g{color:rgba(201,162,74,.82);font-weight:980}
-
+/* responsive */
 @media (max-width:720px){
   :root{
-    --core:196px;
-    --nodeA:136px;
-    --nodeB:92px;
-    --R1:164px;
-    --R2:244px;
-    --padTop:108px;
+    --D0:194px; --D1:140px; --D2:112px;
+    --R1:166px; --R2:248px;
+    --padTop:110px;
   }
-  .stage{height:min(1100px,86vh)}
+  .stage{height:min(980px,86vh)}
 }
 @media (max-width:520px){
   :root{
-    --core:186px;
-    --nodeA:130px;
-    --nodeB:90px;
-    --R1:154px;
-    --R2:232px;
+    --D0:182px; --D1:134px; --D2:108px;
+    --R1:154px; --R2:234px;
   }
   .brandSub{display:none}
 }
@@ -496,35 +406,36 @@ body::before,body::after{pointer-events:none!important}
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
       <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">A visual navigation interface. Start at CORE. Pick one hub. Move clean.</div>
+      <div class="brandSub" id="brandSub">Layer 1: CORE + N/E/S/W · Layer 2: CORE2 + 12</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
       </div>
     </div>
 
-    <div class="controlsRight" aria-label="Layer controls">
-      <div class="seg" role="group" aria-label="Compass layer">
-        <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
-        <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
+    <div class="controlsRight" aria-label="Controls">
+      <div class="seg" role="group" aria-label="Layer">
+        <button type="button" id="btnLayer1" aria-pressed="true">LAYER 1</button>
+        <button type="button" id="btnLayer2" aria-pressed="false">LAYER 2</button>
+      </div>
+      <div class="seg" role="group" aria-label="Lane">
+        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
+        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="stage" id="stage" aria-label="Compass dial">
-  <div class="skyPanel" aria-hidden="true"></div>
-  <div class="slab" aria-hidden="true"></div>
-  <div class="dial" aria-hidden="true"></div>
+<div class="stage" id="stage" aria-label="Compass stage">
+  <div class="panel" aria-hidden="true"></div>
+
+  <div class="dialWrap" aria-hidden="true">
+    <div class="dialRed" aria-hidden="true"></div>
+    <div class="dial" aria-hidden="true"></div>
+  </div>
+
   <div class="faceLetters" aria-hidden="true">
     <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
-  </div>
-  <!-- buttons injected by JS -->
-</div>
-
-<div class="noteWrap" aria-label="Compass note">
-  <div class="note" id="note">
-    <b>Compass:</b> Two layers. <span class="g">Layer 1</span> shows CORE + N/E/S/W. <span class="g">Layer 2</span> shows the other 12 hubs. Unbuilt hubs route to <span class="g">/404.html</span>.
   </div>
 </div>
 
@@ -532,7 +443,6 @@ body::before,body::after{pointer-events:none!important}
   <div class="dmini" id="btnExit" role="button" tabindex="0" aria-label="Exit"><span>EXIT</span></div>
   <div class="cornerLabel" id="lblExit">EXIT</div>
 </div>
-
 <div class="corner right" aria-label="Hub">
   <div class="dmini" id="btnHub" role="button" tabindex="0" aria-label="Hub"><span>HUB</span></div>
   <div class="cornerLabel" id="lblHub">HUB</div>
@@ -542,27 +452,28 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // =========================
-  // STATE (gd_* only; no new keys)
-  // =========================
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
+  // ===== STATE (gd_* only; layer + lane URL-only) =====
+  var qs = new URLSearchParams(location.search);
+  var LS = window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";     // kept, but EN-only UI
+  // ENGLISH ONLY for this pass
+  var lang  = "en";
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
-  var lane  = qs.get("lane")  || "platform"; // URL-only if present, not stored
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  var lane  = qs.get("lane")  || "platform"; // URL-only
+  var layer = qs.get("layer") || "1";        // URL-only
+
   if(style!=="informal" && style!=="formal") style="informal";
   if(time==="trajectory") time="post";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
   if(depth!=="explore" && depth!=="learn") depth="explore";
   if(lane!=="platform" && lane!=="engineering") lane="platform";
+  if(layer!=="1" && layer!=="2") layer="1";
 
   try{
-    LS.setItem("gd_lang","en");       // EN-only tonight
+    LS.setItem("gd_lang","en");
     LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
     LS.setItem("gd_depth",depth);
@@ -570,95 +481,95 @@ body::before,body::after{pointer-events:none!important}
 
   document.documentElement.lang="en";
 
-  function q(){
-    var p=new URLSearchParams();
+  function q(over){
+    var p = new URLSearchParams();
     p.set("lang","en");
-    p.set("style",style);
-    p.set("time",time);
-    p.set("depth",depth);
-    if(lane==="platform"||lane==="engineering") p.set("lane",lane);
-    return "?"+p.toString();
-  }
-  function go(path){ window.location.href = path + q(); }
+    p.set("style",(over&&over.style)?over.style:style);
+    p.set("time",(over&&over.time)?over.time:time);
+    p.set("depth",(over&&over.depth)?over.depth:depth);
 
-  // =========================
-  // ROUTING (16 hubs split across 2 layers; no duplicates)
-  // =========================
+    var L = (over&&over.lane)?over.lane:lane;
+    var Y = (over&&over.layer)?over.layer:layer;
+
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    if(Y==="1"||Y==="2") p.set("layer", Y);
+
+    return "?" + p.toString();
+  }
+
+  function go(path){ window.location.href = path + q(); }
+  function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
+
+  // ===== ROUTES =====
+  var CORE1_ROUTE = "/index-core/index.html";
+  var CORE2_ROUTE = "/index-core/index.html"; // TEMP
+  var EXIT_ROUTE  = "/door/";
+  var HUB_ROUTE   = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // CORE routes
-  var CORE1_ROUTE = "/index-core/index.html";     // diagnostic gravitational well entry
-  var CORE2_ROUTE = "/index-spine/index.html";    // (placeholder spine core) create later; will 404 if missing
-
-  // exit / hub
-  var EXIT_ROUTE = "/door/";
-  var HUB_ROUTE  = "/home/";
-
-  // LAYER 1: 4 hubs + CORE1 (not counted in 16)
-  // N/E/S/W meaning (locked by your last accepted hierarchy):
-  // N=LAWS, E=ENERGY, S=FINANCE, W=GOVERNANCE
+  // Layer 1 (4 of 16)
   var L1 = [
-    {code:"N", label:"LAWS",      href:"/laws/"},
-    {code:"E", label:"ENERGY",    href:"/explore/frontier/energy/"},
-    {code:"S", label:"FINANCE",   href:"/finance/"},
-    {code:"W", label:"GOVERNANCE",href:"/governance/"}
+    {code:"N", label:{platform:"LAWS",       engineering:"BOUNDS"},  href:"/laws/"},
+    {code:"E", label:{platform:"ENERGY",     engineering:"POWER"},   href:"/explore/frontier/energy/"},
+    {code:"S", label:{platform:"FINANCE",    engineering:"CAPITAL"}, href:"/finance/"},
+    {code:"W", label:{platform:"GOVERNANCE", engineering:"EXEC"},    href:"/governance/"}
   ];
 
-  // LAYER 2: remaining 12 hubs + CORE2 (not counted in 16)
+  // Layer 2 (remaining 12 of 16)
   var L2 = [
-    {code:"NE",  label:"PRODUCTS",   href:"/products/"},
-    {code:"SE",  label:"RESEARCH",   href:"/research/"},
-    {code:"SW",  label:"EXPLORE",    href:"/explore/"},
-    {code:"NW",  label:"DOCTRINE",   href:"/products/capital-doctrine/"},
-    {code:"NNE", label:"EDUCATION",  href:"/products/education/"},
-    {code:"ENE", label:"FRONTIER",   href:"/explore/frontier/"},
-    {code:"ESE", label:"INFRA",      href:"/explore/infrastructure/"},
-    {code:"SSE", label:"AGRICULTURE",href:"/products/agriculture/"},
-    {code:"SSW", label:"GAUGES",     href:"/gauges/"},
-    {code:"WSW", label:"VISION",     href:"/explore/frontier/vision/"},
-    {code:"WNW", label:"LATTICE",    href:"/explore/frontier/lattice/"},
-    {code:"NNW", label:"SHIMMER",    href:"/explore/frontier/shimmer/"}
+    {code:"NNE", label:{platform:"EDUCATION",  engineering:"ESL"},     href:"/products/education/"},
+    {code:"NE",  label:{platform:"PRODUCTS",   engineering:"DEPLOY"},  href:"/products/"},
+    {code:"ENE", label:{platform:"FRONTIER",   engineering:"FRONTIER"},href:"/explore/frontier/"},
+    {code:"ESE", label:{platform:"INFRA",      engineering:"SUBST"},   href:"/explore/infrastructure/"},
+    {code:"SE",  label:{platform:"RESEARCH",   engineering:"R&D"},     href:"/research/"},
+    {code:"SSE", label:{platform:"AGRICULTURE",engineering:"FOOD"},    href:"/products/agriculture/"},
+    {code:"SSW", label:{platform:"GAUGES",     engineering:"SIGNALS"}, href:"/gauges/"},
+    {code:"SW",  label:{platform:"EXPLORE",    engineering:"MODELS"},  href:"/explore/"},
+    {code:"WSW", label:{platform:"VISION",     engineering:"MAP"},     href:"/explore/frontier/vision/"},
+    {code:"WNW", label:{platform:"LATTICE",    engineering:"256"},     href:"/explore/frontier/lattice/"},
+    {code:"NW",  label:{platform:"DOCTRINE",   engineering:"CCD"},     href:"/products/capital-doctrine/"},
+    {code:"NNW", label:{platform:"SHIMMER",    engineering:"SHIMMER"}, href:"/explore/frontier/shimmer/"}
   ];
 
-  function normalizeNoDup(list){
+  function normalizeUnique(list){
     var seen = Object.create(null);
     var out = [];
     for(var i=0;i<list.length;i++){
-      var it=list[i];
-      var h=(it.href||"").trim();
-      if(!h) h=PLACEHOLDER_404;
-      if(seen[h]) h=PLACEHOLDER_404;
-      seen[h]=true;
-      out.push({code:it.code,label:it.label,href:h});
+      var it = list[i];
+      var h = (it.href||"").trim();
+      if(!h) h = PLACEHOLDER_404;
+      if(seen[h]) h = PLACEHOLDER_404;
+      seen[h] = true;
+      out.push({code:it.code, label:it.label, href:h});
     }
     return out;
   }
-  L1 = normalizeNoDup(L1);
-  L2 = normalizeNoDup(L2);
+  L1 = normalizeUnique(L1);
+  L2 = normalizeUnique(L2);
 
-  // =========================
-  // BUILD BUTTONS
-  // =========================
-  var stage=document.getElementById("stage");
-  var currentLayer = "1"; // "1" or "2"
-  var nodes = [];         // {el, data}
+  function labelFor(it){
+    return (lane==="engineering") ? it.label.engineering : it.label.platform;
+  }
 
-  function mkNode(label, code, cls){
-    var d=document.createElement("div");
-    d.className="node surface "+cls;
+  // ===== BUILD NODES =====
+  var stage = document.getElementById("stage");
+
+  function mkNode(word, code, cls){
+    var d = document.createElement("div");
+    d.className = "node surface " + cls;
     d.setAttribute("role","button");
-    d.tabIndex=0;
+    d.tabIndex = 0;
 
-    var inner=document.createElement("div");
-    inner.className="inner";
+    var inner = document.createElement("div");
+    inner.className = "inner";
 
-    var w=document.createElement("div");
-    w.className="word";
-    w.textContent=label;
+    var w = document.createElement("div");
+    w.className = "word";
+    w.textContent = word;
 
-    var c=document.createElement("div");
-    c.className="code";
-    c.textContent=code;
+    var c = document.createElement("div");
+    c.className = "code";
+    c.textContent = code;
 
     inner.appendChild(w);
     inner.appendChild(c);
@@ -667,627 +578,132 @@ body::before,body::after{pointer-events:none!important}
     return d;
   }
 
-  function placeAt(el, x, y){
-    el.style.left = x+"px";
-    el.style.top  = y+"px";
-  }
-
   function clearNodes(){
-    nodes = [];
-    stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
+    var nodes = stage.querySelectorAll(".node");
+    for(var i=0;i<nodes.length;i++) nodes[i].remove();
   }
 
-  function buildLayer(layer){
+  function layout(){
     clearNodes();
 
-    var rect=stage.getBoundingClientRect();
-    var cx=rect.width/2, cy=rect.height/2;
+    var rect = stage.getBoundingClientRect();
+    var cx = rect.width/2, cy = rect.height/2;
 
-    var cs=getComputedStyle(document.documentElement);
-    var R1=parseFloat(cs.getPropertyValue("--R1"))||176;
-    var R2=parseFloat(cs.getPropertyValue("--R2"))||264;
+    var cs = getComputedStyle(document.documentElement);
+    var R1 = parseFloat(cs.getPropertyValue("--R1")) || 176;
+    var R2 = parseFloat(cs.getPropertyValue("--R2")) || 268;
 
-    // Core
-    var core = mkNode(layer==="1" ? "CORE" : "CORE 2", layer==="1" ? "INDEX" : "SPINE", "core");
-    placeAt(core, cx, cy);
-    stage.appendChild(core);
+    if(layer === "1"){
+      var core = mkNode("CORE", "INDEX", "core");
+      core.style.left = cx+"px"; core.style.top = cy+"px";
+      core.addEventListener("click", function(){ go(CORE1_ROUTE); }, {passive:true});
+      core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE1_ROUTE); }});
+      stage.appendChild(core);
 
-    var coreRoute = (layer==="1") ? CORE1_ROUTE : CORE2_ROUTE;
-    core.addEventListener("click", function(){ go(coreRoute || PLACEHOLDER_404); }, {passive:true});
-    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(coreRoute || PLACEHOLDER_404); }});
-
-    // Keep FX from drawing over the active core
-    window.__GD_CORE_EXCLUDE = { x: cx, y: cy, r: Math.max(96, Math.min(rect.width,rect.height)*0.12) };
-
-    if(layer==="1"){
-      // N/E/S/W pinned
-      var map = {N:-Math.PI/2, E:0, S:Math.PI/2, W:Math.PI};
+      var ang = {N:-Math.PI/2, E:0, S:Math.PI/2, W:Math.PI};
       for(var i=0;i<L1.length;i++){
-        var it=L1[i];
-        var a=map[it.code] || (-Math.PI/2 + i*Math.PI/2);
-        var x=cx + R1*Math.cos(a);
-        var y=cy + R1*Math.sin(a);
-        var n=mkNode(it.label, it.code, "a");
-        placeAt(n,x,y);
-        stage.appendChild(n);
-
+        var it = L1[i];
+        var a = ang[it.code] || 0;
+        var x = cx + R1*Math.cos(a);
+        var y = cy + R1*Math.sin(a);
+        var n = mkNode(labelFor(it), it.code, "l1");
+        n.style.left = x+"px"; n.style.top = y+"px";
         (function(path, el){
           el.addEventListener("click", function(){ go(path); }, {passive:true});
           el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
         })(it.href, n);
-
-        nodes.push({el:n, data:it});
+        stage.appendChild(n);
       }
     }else{
-      // 12 around the ring
-      var nCount=L2.length;
-      for(var j=0;j<nCount;j++){
-        var it2=L2[j];
-        var ang = (j/nCount)*Math.PI*2 - Math.PI/2;
-        var x2 = cx + R2*Math.cos(ang);
-        var y2 = cy + R2*Math.sin(ang);
-        var n2 = mkNode(it2.label, it2.code, "b");
-        placeAt(n2,x2,y2);
-        stage.appendChild(n2);
+      var core2 = mkNode("CORE2", "SPINE", "core");
+      core2.style.left = cx+"px"; core2.style.top = cy+"px";
+      core2.addEventListener("click", function(){ go(CORE2_ROUTE); }, {passive:true});
+      core2.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE2_ROUTE); }});
+      stage.appendChild(core2);
 
+      for(var j=0;j<L2.length;j++){
+        var it2 = L2[j];
+        var a2 = (j/L2.length) * (Math.PI*2) - Math.PI/2;
+        var x2 = cx + R2*Math.cos(a2);
+        var y2 = cy + R2*Math.sin(a2);
+        var n2 = mkNode(labelFor(it2), it2.code, "l2");
+        n2.style.left = x2+"px"; n2.style.top = y2+"px";
         (function(path, el){
           el.addEventListener("click", function(){ go(path); }, {passive:true});
           el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
         })(it2.href, n2);
-
-        nodes.push({el:n2, data:it2});
+        stage.appendChild(n2);
       }
     }
   }
 
-  // =========================
-  // BACKGROUND FX (single canvas; stable moon; slither dragons; lanterns; clouds)
-  // =========================
-  (function initFX(){
-    var canvas = document.getElementById("gd_fx_canvas");
-    if(canvas) canvas.remove();
+  function safeLayout(){
+    var r = stage.getBoundingClientRect();
+    if(r.width < 10 || r.height < 10){ requestAnimationFrame(safeLayout); return; }
+    layout();
+  }
 
-    canvas = document.createElement("canvas");
-    canvas.id = "gd_fx_canvas";
-    canvas.style.position = "fixed";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "4"; // above dial, below buttons
-    document.body.prepend(canvas);
-
-    var ctx = canvas.getContext("2d", {alpha:true, desynchronized:true});
-    if(!ctx) return;
-
-    var DPR_CAP = 1.6;
-    var DPR = 1;
-    var W=1,H=1;
-    function resize(){
-      var ww = Math.max(1, window.innerWidth || 1);
-      var hh = Math.max(1, window.innerHeight || 1);
-      var dpr = 1;
-      try{ dpr = window.devicePixelRatio || 1; }catch(e){}
-      DPR = Math.min(DPR_CAP, Math.max(1, dpr));
-      W = Math.floor(ww * DPR);
-      H = Math.floor(hh * DPR);
-      canvas.width = W;
-      canvas.height = H;
-    }
-    resize();
-    window.addEventListener("resize", resize, {passive:true});
-
-    function lerp(a,b,t){ return a+(b-a)*t; }
-    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-
-    // ---- seeded moon craters (stable) ----
-    var moonSeed = Math.random()*1e9;
-    function rnd(){
-      // deterministic LCG
-      moonSeed = (moonSeed * 1664525 + 1013904223) % 4294967296;
-      return moonSeed / 4294967296;
-    }
-    var moonCraters = [];
-    function seedMoonCraters(){
-      moonCraters = [];
-      for(var i=0;i<14;i++){
-        moonCraters.push({
-          ox: (rnd()*2-1)*0.58,
-          oy: (rnd()*2-1)*0.58,
-          r: lerp(0.05, 0.16, rnd()),
-          a: lerp(0.10, 0.28, rnd())
-        });
-      }
-    }
-    seedMoonCraters();
-
-    // ---- phase (random per load, advances by referrer return without storage) ----
-    var phase = Math.random(); // 0..1
-    // If returning from inside site, nudge forward using time delta only
-    // (no storage; just makes it *feel* progressive)
-    var t0 = Date.now();
-    function phase01(){
-      var dt = (Date.now() - t0) / 1000;
-      var p = (phase + dt/240.0) % 1; // very slow drift while on page
-      return p;
-    }
-
-    // ---- clouds (3 depth layers) ----
-    var clouds = [];
-    function seedClouds(){
-      clouds = [];
-      var count = 26;
-      for(var i=0;i<count;i++){
-        clouds.push({
-          x: rnd()*W,
-          y: lerp(H*0.52, H*0.92, rnd()),
-          r: lerp(80, 240, rnd())*DPR,
-          a: lerp(0.02, 0.07, rnd()),
-          sp: lerp(0.015, 0.045, rnd())*DPR,
-          z: rnd() // depth
-        });
-      }
-    }
-    seedClouds();
-
-    // ---- lanterns (embers/lantern drift upward) ----
-    var lanterns = [];
-    function seedLanterns(){
-      lanterns = [];
-      var n = 26;
-      for(var i=0;i<n;i++){
-        lanterns.push({
-          x: rnd()*W,
-          y: H + rnd()*H*0.4,
-          r: lerp(1.6, 3.4, rnd())*DPR,
-          sp: lerp(0.018, 0.050, rnd())*DPR,
-          wob: rnd()*6.28,
-          a: lerp(0.18, 0.32, rnd())
-        });
-      }
-    }
-    seedLanterns();
-
-    // ---- dragons (2) ----
-    var CN_CLASSIC = ["道生一","一生二","二生三","三生万物","道可道","非常道"];
-    var EN_PHRASES = ["SAY LESS, DO MORE","BOUND THEN SCALE","RECEIPTS > ARGUMENTS","CONTAIN FIRST","MEASURE THEN MOVE"];
-
-    function drawDragon(yMid, t, top){
-      var exclude = window.__GD_CORE_EXCLUDE || {x:W*0.5,y:H*0.5,r:120*DPR};
-      // slower speed
-      var speed = (top ? 0.020 : 0.018) * DPR; // px/ms
-      var margin = W*0.35;
-      var travel = W + margin*2;
-      var u = (t*speed) % travel;
-      var headX = (W + margin - u);
-
-      var len = W*0.92;
-      var segs = 34;
-      var amp = (top ? 18 : 22) * DPR;
-      var thick = (top ? 16 : 15) * DPR;
-
-      var bodyFill = top ? "rgba(6,26,16,0.88)" : "rgba(5,22,14,0.86)";
-      var belly = "rgba(120,0,22,0.24)"; // subtle red belly tint
-      var edge = "rgba(0,0,0,0.40)";
-
-      // build spine points
-      var pts = [];
-      for(var i=0;i<=segs;i++){
-        var s = i/segs;
-        var x = headX - len*s;
-        var y = yMid + Math.sin(s*6.6 + t*0.0010 + (top?0.2:1.1))*amp;
-        pts.push({x:x,y:y});
-      }
-
-      // clip so dragon does NOT pass over core
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0,0,W,H);
-      ctx.moveTo(exclude.x + exclude.r, exclude.y);
-      ctx.arc(exclude.x, exclude.y, exclude.r*1.05, 0, Math.PI*2, true);
-      ctx.closePath();
-      ctx.clip("evenodd");
-
-      // body shadow stroke
-      ctx.lineCap="round"; ctx.lineJoin="round";
-      ctx.strokeStyle=edge;
-      ctx.lineWidth=thick + 6*DPR;
-      ctx.beginPath();
-      for(var j=0;j<pts.length;j++){
-        var p=pts[j];
-        if(j===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
-      }
-      ctx.stroke();
-
-      // body fill stroke (main)
-      ctx.strokeStyle=bodyFill;
-      ctx.lineWidth=thick;
-      ctx.beginPath();
-      for(var k=0;k<pts.length;k++){
-        var p2=pts[k];
-        if(k===0) ctx.moveTo(p2.x,p2.y); else ctx.lineTo(p2.x,p2.y);
-      }
-      ctx.stroke();
-
-      // belly glow stroke
-      ctx.globalAlpha=0.65;
-      ctx.strokeStyle=belly;
-      ctx.lineWidth=thick*0.65;
-      ctx.beginPath();
-      for(var m=0;m<pts.length;m++){
-        var p3=pts[m];
-        if(m===0) ctx.moveTo(p3.x,p3.y+thick*0.42); else ctx.lineTo(p3.x,p3.y+thick*0.42);
-      }
-      ctx.stroke();
-      ctx.globalAlpha=1;
-
-      // scale “plates” (hex-ish highlights)
-      ctx.strokeStyle="rgba(212,175,55,0.10)";
-      ctx.lineWidth=1.2*DPR;
-      for(var sIdx=2;sIdx<pts.length-2;sIdx++){
-        if(sIdx%2!==0) continue;
-        var a=pts[sIdx], b=pts[sIdx+1];
-        var ang=Math.atan2(b.y-a.y, b.x-a.x);
-        var rr=thick*0.60;
-        ctx.beginPath();
-        ctx.arc(a.x, a.y, rr, ang+0.6, ang+1.8);
-        ctx.stroke();
-      }
-
-      // head (more “dragon” than circles: snout + crest + jaw)
-      var hd=pts[0];
-      ctx.save();
-      ctx.translate(hd.x, hd.y);
-      // direction is left
-      ctx.rotate(Math.PI);
-
-      // skull
-      ctx.fillStyle="rgba(6,30,18,0.96)";
-      ctx.beginPath();
-      ctx.ellipse(0,0,thick*1.05,thick*0.82,0,0,Math.PI*2);
-      ctx.fill();
-
-      // snout
-      ctx.fillStyle="rgba(5,24,15,0.96)";
-      ctx.beginPath();
-      ctx.ellipse(thick*0.85, thick*0.18, thick*0.88, thick*0.52, 0, 0, Math.PI*2);
-      ctx.fill();
-
-      // jaw line
-      ctx.strokeStyle="rgba(0,0,0,0.35)";
-      ctx.lineWidth=2*DPR;
-      ctx.beginPath();
-      ctx.moveTo(thick*0.15, thick*0.35);
-      ctx.lineTo(thick*1.35, thick*0.55);
-      ctx.stroke();
-
-      // eye
-      ctx.fillStyle="rgba(212,175,55,0.95)";
-      ctx.beginPath();
-      ctx.arc(thick*0.25, -thick*0.12, thick*0.15, 0, Math.PI*2);
-      ctx.fill();
-
-      // horns
-      ctx.strokeStyle="rgba(212,175,55,0.55)";
-      ctx.lineWidth=2*DPR;
-      ctx.beginPath();
-      ctx.moveTo(-thick*0.20, -thick*0.55);
-      ctx.lineTo(-thick*0.95, -thick*1.40);
-      ctx.moveTo(thick*0.05, -thick*0.60);
-      ctx.lineTo(-thick*0.20, -thick*1.55);
-      ctx.stroke();
-
-      // whiskers
-      ctx.strokeStyle="rgba(212,175,55,0.40)";
-      ctx.lineWidth=1.3*DPR;
-      ctx.beginPath();
-      ctx.moveTo(thick*1.45, thick*0.10);
-      ctx.lineTo(thick*2.40, -thick*0.35);
-      ctx.moveTo(thick*1.45, thick*0.20);
-      ctx.lineTo(thick*2.35, thick*0.55);
-      ctx.stroke();
-
-      ctx.restore(); // head
-
-      // text “tattoo” (gold glow)
-      var phrases = top ? CN_CLASSIC : EN_PHRASES;
-      var phrase = phrases[Math.floor((t*0.00012) % phrases.length)];
-      ctx.save();
-      ctx.globalAlpha=0.92;
-      ctx.fillStyle="rgba(212,175,55,0.78)";
-      ctx.shadowColor="rgba(212,175,55,0.35)";
-      ctx.shadowBlur=10*DPR;
-      ctx.font=(12*DPR)+"px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
-      for(var q=6;q<pts.length-6;q+=7){
-        var pA=pts[q], pB=pts[q+1];
-        var ang2=Math.atan2(pB.y-pA.y, pB.x-pA.x);
-        ctx.save();
-        ctx.translate(pA.x, pA.y);
-        ctx.rotate(ang2);
-        ctx.fillText(phrase, -ctx.measureText(phrase).width*0.12, -thick*0.95);
-        ctx.restore();
-      }
-      ctx.restore();
-
-      ctx.restore(); // clip
-    }
-
-    // ---- water ripples (radial outward, stable direction) ----
-    function drawWater(t){
-      var rect=stage.getBoundingClientRect();
-      var cx=(rect.left + rect.width*0.5) * DPR;
-      var cy=(rect.top  + rect.height*0.5) * DPR;
-      var r=Math.min(rect.width,rect.height)*0.34*DPR;
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI*2);
-      ctx.clip();
-
-      // gentle tint
-      var grd=ctx.createRadialGradient(cx, cy-r*0.2, r*0.2, cx, cy, r);
-      grd.addColorStop(0, "rgba(255,210,170,0.12)");
-      grd.addColorStop(0.55, "rgba(255,120,90,0.07)");
-      grd.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle=grd;
-      ctx.fillRect(cx-r, cy-r, r*2, r*2);
-
-      // outward rings
-      ctx.strokeStyle="rgba(255,255,255,0.05)";
-      ctx.lineWidth=1.1*DPR;
-      var base=(t*0.00055) % 1; // outward drift
-      for(var i=0;i<8;i++){
-        var rr=r*(0.18 + i*0.10 + base*0.10);
-        ctx.beginPath();
-        ctx.arc(cx, cy, rr, 0, Math.PI*2);
-        ctx.stroke();
-      }
-
-      // moving gold arc highlight
-      ctx.globalAlpha=0.72;
-      ctx.strokeStyle="rgba(212,175,55,0.06)";
-      ctx.lineWidth=2*DPR;
-      var a=t*0.00030;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r*0.80, a, a+1.2);
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    // ---- moon + reflection (single) ----
-    function drawMoon(t){
-      var mx=W*0.78, my=H*0.16;
-      var mr=Math.min(W,H)*0.062;
-
-      // glow
-      ctx.save();
-      ctx.globalAlpha=1;
-      var g=ctx.createRadialGradient(mx,my,mr*0.2,mx,my,mr*2.6);
-      g.addColorStop(0,"rgba(255,245,210,0.95)");
-      g.addColorStop(0.35,"rgba(255,220,160,0.50)");
-      g.addColorStop(1,"rgba(255,220,160,0)");
-      ctx.fillStyle=g;
-      ctx.beginPath();
-      ctx.arc(mx,my,mr*2.6,0,Math.PI*2);
-      ctx.fill();
-
-      // disk
-      ctx.shadowColor="rgba(255,240,220,0.40)";
-      ctx.shadowBlur=18*DPR;
-      ctx.fillStyle="rgba(255,248,232,0.95)";
-      ctx.beginPath();
-      ctx.arc(mx,my,mr,0,Math.PI*2);
-      ctx.fill();
-      ctx.shadowBlur=0;
-
-      // shadow (single-moon phase, source-atop)
-      var p=phase01();                 // 0..1
-      var k=Math.cos(p*Math.PI*2);     // -1..1
-      ctx.globalCompositeOperation="source-atop";
-      ctx.fillStyle="rgba(0,0,0,0.60)";
-      ctx.beginPath();
-      ctx.ellipse(mx + (k*mr*0.58), my, mr, mr, 0, 0, Math.PI*2);
-      ctx.fill();
-      ctx.globalCompositeOperation="source-over";
-
-      // craters (seeded)
-      ctx.globalAlpha=1;
-      for(var i=0;i<moonCraters.length;i++){
-        var c=moonCraters[i];
-        var cx=mx + c.ox*mr*0.90;
-        var cy=my + c.oy*mr*0.90;
-        var rr=mr*c.r;
-        ctx.fillStyle="rgba(0,0,0,"+c.a.toFixed(3)+")";
-        ctx.beginPath();
-        ctx.arc(cx,cy,rr,0,Math.PI*2);
-        ctx.fill();
-      }
-
-      // reflection on “water line” (lower half)
-      var wy=H*0.60;
-      var rg=ctx.createLinearGradient(0,wy,0,wy+mr*4.2);
-      rg.addColorStop(0,"rgba(255,235,180,0.18)");
-      rg.addColorStop(1,"rgba(255,235,180,0)");
-      ctx.fillStyle=rg;
-      ctx.beginPath();
-      ctx.ellipse(mx, wy+mr*0.8, mr*0.95, mr*2.2, 0, 0, Math.PI*2);
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    // ---- clouds (behind dial, in reflection plane), NOT over core ----
-    function drawClouds(t){
-      var exclude = window.__GD_CORE_EXCLUDE || {x:W*0.5,y:H*0.5,r:120*DPR};
-      var yMin=H*0.50;
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0,0,W,H);
-      ctx.moveTo(exclude.x + exclude.r, exclude.y);
-      ctx.arc(exclude.x, exclude.y, exclude.r*1.10, 0, Math.PI*2, true);
-      ctx.closePath();
-      ctx.clip("evenodd");
-
-      // three depth layers via z
-      for(var i=0;i<clouds.length;i++){
-        var c=clouds[i];
-        var z=c.z;
-        var sp = c.sp * lerp(0.65, 1.35, z);
-        var x = (c.x + t*sp*0.04) % (W + c.r*2) - c.r;
-        var y = clamp(c.y, yMin, H);
-        var rr = c.r * lerp(0.75, 1.25, z);
-        var a  = c.a * lerp(0.70, 1.25, z);
-
-        // depth shading: darker base + bright crown
-        ctx.globalCompositeOperation="screen";
-        ctx.globalAlpha=a;
-        var g=ctx.createRadialGradient(x, y-rr*0.15, 0, x, y, rr);
-        g.addColorStop(0, "rgba(255,230,190,1)");
-        g.addColorStop(0.45, "rgba(255,170,130,0.55)");
-        g.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle=g;
-        ctx.beginPath();
-        ctx.arc(x,y,rr,0,Math.PI*2);
-        ctx.fill();
-
-        ctx.globalCompositeOperation="source-over";
-        ctx.globalAlpha=a*0.55;
-        var g2=ctx.createRadialGradient(x, y+rr*0.10, 0, x, y, rr);
-        g2.addColorStop(0, "rgba(0,0,0,0.18)");
-        g2.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle=g2;
-        ctx.beginPath();
-        ctx.arc(x,y,rr,0,Math.PI*2);
-        ctx.fill();
-      }
-
-      ctx.restore();
-      ctx.globalAlpha=1;
-      ctx.globalCompositeOperation="source-over";
-    }
-
-    // ---- lanterns (upward drift), NOT over core ----
-    function drawLanterns(t){
-      var exclude = window.__GD_CORE_EXCLUDE || {x:W*0.5,y:H*0.5,r:120*DPR};
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0,0,W,H);
-      ctx.moveTo(exclude.x + exclude.r, exclude.y);
-      ctx.arc(exclude.x, exclude.y, exclude.r*1.08, 0, Math.PI*2, true);
-      ctx.closePath();
-      ctx.clip("evenodd");
-
-      for(var i=0;i<lanterns.length;i++){
-        var l=lanterns[i];
-        l.y -= l.sp;
-        l.x += Math.sin(t*0.0005 + l.wob)*0.12*DPR;
-
-        if(l.y < -40*DPR){
-          l.y = H + rnd()*H*0.25;
-          l.x = rnd()*W;
-        }
-
-        // warm glow dot
-        ctx.save();
-        ctx.globalCompositeOperation="screen";
-        ctx.globalAlpha=l.a;
-        var g=ctx.createRadialGradient(l.x,l.y,0,l.x,l.y,l.r*6);
-        g.addColorStop(0,"rgba(255,220,150,1)");
-        g.addColorStop(0.35,"rgba(255,140,90,0.55)");
-        g.addColorStop(1,"rgba(0,0,0,0)");
-        ctx.fillStyle=g;
-        ctx.beginPath();
-        ctx.arc(l.x,l.y,l.r*6,0,Math.PI*2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      ctx.restore();
-      ctx.globalCompositeOperation="source-over";
-      ctx.globalAlpha=1;
-    }
-
-    // deterministic rand for lantern respawn (uses moonSeed’s LCG stream)
-    function rnd(){ return rnd._f ? rnd._f() : Math.random(); }
-    rnd._f = (function(){
-      var s = (Math.random()*1e9)|0;
-      return function(){
-        s = (s * 1664525 + 1013904223) >>> 0;
-        return (s / 4294967296);
-      };
-    })();
-
-    // ---- loop (30fps) ----
-    var last=0, acc=0, FRAME=1000/30;
-
-    function frame(ts){
-      if(!last) last=ts;
-      var dt=ts-last; last=ts;
-      acc+=dt;
-      if(acc<FRAME){ requestAnimationFrame(frame); return; }
-      acc=0;
-
-      ctx.clearRect(0,0,W,H);
-
-      // paint order: clouds (behind dial), moon (outside dial), water ripples (in dial), lanterns, dragons
-      drawClouds(ts);
-      drawMoon(ts);
-      drawWater(ts);
-      drawLanterns(ts);
-
-      // dragons: above water, below buttons
-      drawDragon(H*0.28, ts, true);
-      drawDragon(H*0.76, ts, false);
-
-      requestAnimationFrame(frame);
-    }
-
-    requestAnimationFrame(frame);
-  })();
-
-  // =========================
-  // LAYER TOGGLE
-  // =========================
-  var b1=document.getElementById("layer1");
-  var b2=document.getElementById("layer2");
+  // ===== CONTROLS =====
+  var btnLayer1 = document.getElementById("btnLayer1");
+  var btnLayer2 = document.getElementById("btnLayer2");
+  setPressed(btnLayer1, layer==="1");
+  setPressed(btnLayer2, layer==="2");
 
   function setLayer(next){
-    currentLayer = (next==="2") ? "2" : "1";
-    b1.setAttribute("aria-pressed", currentLayer==="1" ? "true" : "false");
-    b2.setAttribute("aria-pressed", currentLayer==="2" ? "true" : "false");
-    buildLayer(currentLayer);
+    if(next!=="1" && next!=="2") next="1";
+    layer = next;
+    history.replaceState({}, "", location.pathname + q({layer:layer}));
+    setPressed(btnLayer1, layer==="1");
+    setPressed(btnLayer2, layer==="2");
+    safeLayout();
   }
+  btnLayer1.addEventListener("click", function(){ setLayer("1"); }, {passive:true});
+  btnLayer2.addEventListener("click", function(){ setLayer("2"); }, {passive:true});
 
-  b1.addEventListener("click", function(){ setLayer("1"); }, {passive:true});
-  b2.addEventListener("click", function(){ setLayer("2"); }, {passive:true});
+  var btnLP = document.getElementById("lanePlatform");
+  var btnLE = document.getElementById("laneEngineering");
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
 
-  // =========================
-  // EXIT / HUB
-  // =========================
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane = next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+    safeLayout();
+  }
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+
+  // corners
   function bindCorner(id, path){
-    var el=document.getElementById(id);
+    var el = document.getElementById(id);
     if(!el) return;
     function act(){ go(path); }
     el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
+    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   }
   bindCorner("btnExit", EXIT_ROUTE);
   bindCorner("btnHub", HUB_ROUTE);
 
-  // =========================
-  // INIT
-  // =========================
-  function safeBuild(){
-    var r=stage.getBoundingClientRect();
-    if(r.width<10||r.height<10){ requestAnimationFrame(safeBuild); return; }
-    buildLayer(currentLayer);
+  // ===== BACKGROUND ENGINE (ONE CANVAS ONLY) =====
+  function mountBG(){
+    if(!window.GD_BG || !window.GD_BG.mount) return;
+    window.GD_BG.mount({
+      fps: 30,
+      dpr_cap: 1.6,
+      // keep moon-only version stable if that's what bg-engine.js implements
+      moon_radius: 0.062,
+      crater_count: 16
+    });
   }
-  requestAnimationFrame(safeBuild);
-  window.addEventListener("resize", function(){ buildLayer(currentLayer); }, {passive:true});
+
+  requestAnimationFrame(function(){
+    mountBG();
+    safeLayout();
+  });
+  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
 
 })();
 </script>

@@ -1,23 +1,20 @@
 <!doctype html>
 <!-- TNT — /index.html
-     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (EN-ONLY VISUAL PASS)
+     COMPASS · GEM DIAL (OBSIDIAN) · 16 NODES + CORE · MID-AUTUMN SKY (EN ONLY) · REAL MOON CRATERS
      OWNER: SEAN (Website Building Room)
 
-     EXECUTION GOAL (THIS PASS):
-       - Fix dragons: true head + segmented spine + smooth SLITHER (no vibration, no “vines”)
-       - Fix clouds: placed BEHIND compass lens (under water/glass)
-       - Fix color stack: red → dark → red (water lens) → dark (buttons)
-       - Keep: 16 hubs + CORE only (no extra diamonds)
-       - Keep: no duplicate destinations; missing/unbuilt → /404.html
-       - CORE routes to /index-core/index.html
+     UPDATE (PER SEAN — VISUAL FOCUS):
+       - EN ONLY until further notice (no 中文 / ES toggles; no extra text noise)
+       - Single moon (NO double-moon). Realistic cratered moon texture + glow + reflection hint.
+       - Keep: ui.css owns html/body background (NO overrides)
+       - Keep: no overlays/modals; no inline onclick; addEventListener only
+       - Keep: lane=platform|engineering (URL-only; no reload; NEVER stored)
+       - Keep: canon state carry gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
+       - Keep: 16 unique destinations; duplicates/unbuilt → /404.html
+       - Center CORE routes to /index-core/index.html
        - Bottom corner controls: EXIT → /door/ | HUB → /home/
-       - State carry: gd_lang/gd_style/gd_time/gd_depth via URL + LS ONLY (NO new gd_* keys)
-       - lane=platform|engineering is URL-only (no reload; never stored) — kept
-       - ui.css owns html/body background (NO overrides)
-
-     NOTE (PER YOUR LAST DIRECTION):
-       - ENGLISH ONLY for now (visual correctness first). No CN/ES text on UI in this pass.
-       - Only dragon banner text is rendered (English quotes). Can swap to CN top / locale bottom later.
+       - Keep: obsidian dial face, gem nodes, glow-only hover (no motion)
+       - Upgrade: gold inlay on nodes uses curved conic inlay (less “flat grid”)
 -->
 
 <html lang="en">
@@ -36,13 +33,12 @@ body{margin:0}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== GEOMETRY (one dominant center; progressively smaller outward) ===== */
+  /* ===== GEOMETRY ===== */
   --D0:210px;  /* CORE (dominant) */
   --D1:150px;  /* Cardinals */
   --D2:112px;  /* Diagonals */
   --D3:86px;   /* Outer 8 */
 
-  /* radii (tight, fit on screen) */
   --R1:168px;
   --R2:246px;
   --R3:314px;
@@ -52,9 +48,10 @@ body::before,body::after{pointer-events:none!important}
   /* ===== MATERIAL ===== */
   --ink:rgba(255,255,255,.94);
   --mut:rgba(255,255,255,.78);
+  --stroke:rgba(255,255,255,.12);
 
   --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.90);
+  --onyx1:rgba(10,12,16,.88);
 
   --crimson:rgba(120,0,22,.44);
   --festival:rgba(255,43,43,.26);
@@ -85,8 +82,8 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 62%),
     radial-gradient(circle at 82% 30%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,10,14,.70), rgba(4,6,10,.82));
-  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.10);
+    linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));
+  box-shadow:var(--shadowA), inset 0 0 0 1px rgba(201,162,74,.12);
   backdrop-filter:blur(10px);
   display:flex;align-items:center;justify-content:space-between;
   gap:10px;
@@ -96,27 +93,27 @@ body::before,body::after{pointer-events:none!important}
 }
 .brandTitle{
   font-weight:980;
-  letter-spacing:.6px;
+  letter-spacing:.8px;
   font-size:14px;
   color:rgba(255,255,255,.94);
   white-space:nowrap;
 }
 .brandSub{
   font-size:12px;
-  color:rgba(255,255,255,.74);
+  color:rgba(255,255,255,.72);
   letter-spacing:.2px;
   white-space:nowrap;
 }
 .brandLinks{
   display:flex;gap:10px;flex-wrap:wrap;
   font-size:12px;
-  color:rgba(255,255,255,.72);
+  color:rgba(255,255,255,.70);
 }
 .brandLinks a{
   padding:6px 10px;
   border-radius:999px;
   border:1px solid rgba(201,162,74,.16);
-  background:rgba(0,0,0,.12);
+  background:rgba(0,0,0,.14);
 }
 .controlsRight{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
@@ -155,9 +152,9 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-/* ===== OUTER SKY (brighter evening sky; NOT too dark) ===== */
+/* ===== BACKGROUND BEYOND DIAL (evening sky) ===== */
 .sky{
-  position:absolute;inset:-18%;
+  position:absolute;inset:-20%;
   pointer-events:none;
   z-index:0;
   border-radius:44px;
@@ -167,28 +164,86 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 62% 14%, rgba(255,230,160,.16) 0%, rgba(255,230,160,0) 56%), /* moon haze */
-    radial-gradient(circle at 20% 24%, rgba(255,120,60,.14) 0%, rgba(255,120,60,0) 58%),  /* orange dusk */
-    radial-gradient(circle at 86% 34%, rgba(160,90,255,.10) 0%, rgba(160,90,255,0) 62%),   /* opal */
-    radial-gradient(circle at 48% 72%, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 62%),
+    /* evening red→amber→night */
+    radial-gradient(circle at 62% 14%, rgba(255,220,150,.16), transparent 44%),
+    radial-gradient(circle at 20% 26%, rgba(255,120,70,.14), transparent 52%),
+    radial-gradient(circle at 86% 38%, rgba(120,70,255,.10), transparent 62%),
+    radial-gradient(circle at 42% 76%, rgba(0,0,0,.22), transparent 62%),
     linear-gradient(180deg,
-      rgba(180,0,0,.00) 0%,
-      rgba(122,0,0,.10) 35%,
-      rgba(40,0,0,.22) 100%);
+      rgba(120,0,22,.00) 0%,
+      rgba(120,0,22,.18) 35%,
+      rgba(0,0,0,.18) 70%,
+      rgba(0,0,0,.28) 100%);
   opacity:.98;
 }
 .sky::after{
   content:"";
   position:absolute;inset:0;
+  /* subtle fireworks ribbons (no “busy” noise) */
   background:
-    radial-gradient(900px 520px at 50% 100%, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 68%),
-    radial-gradient(220px 220px at 18% 18%, rgba(255,220,160,.10) 0%, rgba(255,220,160,0) 66%),
-    radial-gradient(260px 260px at 80% 22%, rgba(255,210,150,.08) 0%, rgba(255,210,150,0) 70%);
-  mix-blend-mode:screen;
+    conic-gradient(from 20deg at 26% 18%,
+      rgba(212,175,55,.08), transparent 18%,
+      rgba(255,43,43,.06), transparent 34%,
+      rgba(212,175,55,.06), transparent 50%,
+      transparent 100%),
+    conic-gradient(from 190deg at 74% 22%,
+      rgba(255,43,43,.06), transparent 18%,
+      rgba(212,175,55,.06), transparent 36%,
+      transparent 100%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+  filter:blur(1px);
   opacity:.55;
 }
 
-/* ===== STAGE SLAB (dark container) ===== */
+/* ===== MOON (single, cratered, glowing) ===== */
+.moonWrap{
+  position:absolute;
+  right:8%;
+  top:8%;
+  width:190px;
+  height:190px;
+  pointer-events:none;
+  z-index:1; /* behind dial, above sky */
+  opacity:.98;
+}
+.moon{
+  position:absolute;inset:0;
+  border-radius:999px;
+  /* cratered moon via inline SVG (high clarity; no external assets) */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320' viewBox='0 0 320 320'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='.95'/%3E%3Cstop offset='45%25' stop-color='%23f2f2f2' stop-opacity='.88'/%3E%3Cstop offset='78%25' stop-color='%23cfcfcf' stop-opacity='.78'/%3E%3Cstop offset='100%25' stop-color='%239d9d9d' stop-opacity='.72'/%3E%3C/radialGradient%3E%3CradialGradient id='rim' cx='50%25' cy='50%25' r='52%25'%3E%3Cstop offset='78%25' stop-color='%23000000' stop-opacity='0'/%3E%3Cstop offset='100%25' stop-color='%23000000' stop-opacity='.25'/%3E%3C/radialGradient%3E%3Cfilter id='soft'%3E%3CfeGaussianBlur stdDeviation='0.35'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='160' cy='160' r='152' fill='url(%23g)'/%3E%3Ccircle cx='160' cy='160' r='152' fill='url(%23rim)'/%3E%3Cg filter='url(%23soft)'%3E%3C!-- craters (realistic: soft rims + inner shadow) --%3E%3Cg opacity='.55'%3E%3Ccircle cx='108' cy='120' r='22' fill='%23bdbdbd'/%3E%3Ccircle cx='112' cy='124' r='18' fill='%23d7d7d7'/%3E%3Ccircle cx='118' cy='128' r='10' fill='%23a8a8a8'/%3E%3C/g%3E%3Cg opacity='.40'%3E%3Ccircle cx='206' cy='98' r='16' fill='%23b6b6b6'/%3E%3Ccircle cx='210' cy='102' r='12' fill='%23d6d6d6'/%3E%3Ccircle cx='214' cy='106' r='7' fill='%23a3a3a3'/%3E%3C/g%3E%3Cg opacity='.42'%3E%3Ccircle cx='212' cy='190' r='28' fill='%23b1b1b1'/%3E%3Ccircle cx='218' cy='196' r='23' fill='%23d8d8d8'/%3E%3Ccircle cx='226' cy='204' r='12' fill='%23a6a6a6'/%3E%3C/g%3E%3Cg opacity='.30'%3E%3Ccircle cx='138' cy='214' r='18' fill='%23b7b7b7'/%3E%3Ccircle cx='142' cy='218' r='13' fill='%23dcdcdc'/%3E%3Ccircle cx='146' cy='222' r='7' fill='%23a0a0a0'/%3E%3C/g%3E%3Cg opacity='.22'%3E%3Ccircle cx='164' cy='74' r='10' fill='%23bdbdbd'/%3E%3Ccircle cx='166' cy='76' r='7' fill='%23dcdcdc'/%3E%3C/g%3E%3Cg opacity='.18'%3E%3Ccircle cx='78' cy='172' r='11' fill='%23b6b6b6'/%3E%3Ccircle cx='80' cy='174' r='7' fill='%23dcdcdc'/%3E%3C/g%3E%3C/g%3E%3C!-- micro crater noise --%3E%3Cg opacity='.12'%3E%3Ccircle cx='96' cy='92' r='3' fill='%23b0b0b0'/%3E%3Ccircle cx='122' cy='86' r='2.6' fill='%23b0b0b0'/%3E%3Ccircle cx='186' cy='78' r='2.8' fill='%23b0b0b0'/%3E%3Ccircle cx='236' cy='132' r='3.2' fill='%23b0b0b0'/%3E%3Ccircle cx='92' cy='206' r='3.0' fill='%23b0b0b0'/%3E%3Ccircle cx='174' cy='238' r='2.8' fill='%23b0b0b0'/%3E%3Ccircle cx='210' cy='232' r='2.6' fill='%23b0b0b0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:cover;
+  background-position:center;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.10),
+    0 0 26px rgba(255,235,200,.22),
+    0 0 70px rgba(255,235,200,.10);
+  filter:saturate(1.02) contrast(1.05);
+}
+/* subtle moon “glow halo” */
+.moon::after{
+  content:"";
+  position:absolute;inset:-26%;
+  border-radius:999px;
+  background:radial-gradient(circle at 50% 50%, rgba(255,240,210,.20), rgba(255,240,210,0) 62%);
+  opacity:.65;
+  filter:blur(.2px);
+}
+
+/* faint reflection hint below moon (still in sky layer) */
+.moonRefl{
+  position:absolute;
+  left:50%;
+  top:calc(100% + 18px);
+  width:150px;
+  height:70px;
+  transform:translateX(-50%);
+  border-radius:999px;
+  background:radial-gradient(ellipse at 50% 40%, rgba(255,235,200,.16), rgba(255,235,200,0) 70%);
+  opacity:.55;
+  filter:blur(1px);
+}
+
+/* Compass slab (dark crystal) */
 .slab{
   position:absolute;left:50%;top:50%;
   transform:translate(-50%,-50%);
@@ -196,61 +251,20 @@ body::before,body::after{pointer-events:none!important}
   height:min(980px,92vw);
   border-radius:44px;
   pointer-events:none;
-  z-index:1;
+  z-index:2;
   border:1px solid rgba(255,255,255,.10);
   background:
-    radial-gradient(circle at 30% 22%, rgba(255,255,255,.06), transparent 55%),
+    radial-gradient(circle at 30% 22%, rgba(255,255,255,.08), transparent 55%),
     radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 60%),
     radial-gradient(circle at 70% 82%, rgba(90,40,120,.08), transparent 64%),
     linear-gradient(160deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
   box-shadow:
-    0 70px 240px rgba(0,0,0,.52),
+    0 70px 240px rgba(0,0,0,.58),
     inset 0 2px 0 rgba(255,255,255,.08),
-    inset 0 -70px 140px rgba(0,0,0,.58);
+    inset 0 -70px 140px rgba(0,0,0,.62);
 }
 
-/* ===== COMPASS WATER LENS (red/translucent; provides the missing RED layer) ===== */
-.waterLens{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(940px,90vw);
-  height:min(940px,90vw);
-  border-radius:999px;
-  pointer-events:none;
-  z-index:4; /* sits above clouds and dial, below dragons and buttons */
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:
-    inset 0 0 0 1px rgba(201,162,74,.10),
-    inset 0 0 90px rgba(0,0,0,.22);
-  background:
-    radial-gradient(circle at 50% 40%, rgba(255,255,255,.05), transparent 60%),
-    radial-gradient(circle at 50% 55%, rgba(255,43,43,.10), rgba(255,43,43,.04) 58%, rgba(0,0,0,0) 78%),
-    linear-gradient(180deg, rgba(255,43,43,.06), rgba(0,0,0,.06));
-  opacity:.92;
-}
-.waterLens::before{
-  content:"";
-  position:absolute;inset:-30%;
-  background:
-    radial-gradient(circle at 30% 35%, rgba(255,255,255,.06), transparent 46%),
-    radial-gradient(circle at 70% 60%, rgba(255,255,255,.04), transparent 52%),
-    repeating-radial-gradient(circle at 50% 50%,
-      rgba(255,255,255,.055) 0 2px,
-      rgba(255,255,255,0) 2px 18px);
-  filter:blur(.35px);
-  opacity:.55;
-  animation: rippleMove 10s linear infinite;
-  mix-blend-mode:screen;
-}
-@keyframes rippleMove{
-  0%{ transform:translate(-4%, -2%) rotate(0deg); }
-  50%{ transform:translate(3%, 2%) rotate(6deg); }
-  100%{ transform:translate(-4%, -2%) rotate(0deg); }
-}
-
-/* ===== OBISIDIAN DIAL FACE (under water lens) ===== */
+/* Obsidian dial face (instrument grade) */
 .dial{
   position:absolute;
   left:50%;top:50%;
@@ -259,7 +273,7 @@ body::before,body::after{pointer-events:none!important}
   height:min(900px,90vw);
   border-radius:999px;
   pointer-events:none;
-  z-index:2;
+  z-index:3;
   overflow:hidden;
 }
 .dial::before{
@@ -268,12 +282,12 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 50% 42%,
       rgba(255,255,255,.05),
-      rgba(0,0,0,.20) 56%,
-      rgba(0,0,0,.56) 78%,
+      rgba(0,0,0,.22) 56%,
+      rgba(0,0,0,.58) 78%,
       rgba(0,0,0,.00) 92%),
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
     radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
-    linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.00));
+    linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.00));
   box-shadow:
     inset 0 0 0 2px rgba(255,255,255,.06),
     inset 0 0 0 10px rgba(0,0,0,.12),
@@ -288,17 +302,38 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 68%, rgba(255,255,255,.06) 68% 68.6%, transparent 69% 100%),
-    linear-gradient(90deg, transparent 0 49.7%, rgba(0,0,0,.16) 49.7% 50.3%, transparent 50.3% 100%),
-    linear-gradient(0deg,  transparent 0 49.7%, rgba(0,0,0,.16) 49.7% 50.3%, transparent 50.3% 100%),
-    repeating-conic-gradient(from 45deg at 50% 50%,
-      rgba(201,162,74,.06) 0 1.2deg,
-      transparent 1.2deg 7.5deg),
+
+    linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+    linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
+
+    repeating-conic-gradient(from 45deg at 50% 50%, rgba(201,162,74,.06) 0 1.2deg, transparent 1.2deg 7.5deg),
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter: blur(.25px);
   opacity:.78;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
+.faceLetters{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  pointer-events:none;
+  z-index:4;
+  opacity:.72;
+}
+.faceLetters span{
+  position:absolute;
+  color:rgba(201,162,74,.45);
+  font-weight:980;
+  letter-spacing:2px;
+  font-size:12px;
+  text-shadow:0 0 12px rgba(0,0,0,.55);
+}
+.faceLetters .N{left:50%;top:12px;transform:translateX(-50%)}
+.faceLetters .E{right:12px;top:50%;transform:translateY(-50%)}
+.faceLetters .S{left:50%;bottom:12px;transform:translateX(-50%)}
+.faceLetters .W{left:12px;top:50%;transform:translateY(-50%)}
 
 /* ===== GEM NODES ===== */
 .node{
@@ -310,10 +345,10 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   border:1px solid rgba(255,255,255,.18);
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
-  z-index:20;
+  z-index:10;
   border-radius:22px;
 }
-.core{width:var(--D0);height:var(--D0);z-index:22;border-radius:26px}
+.core{width:var(--D0);height:var(--D0);z-index:12;border-radius:26px}
 .l1{width:var(--D1);height:var(--D1)}
 .l2{width:var(--D2);height:var(--D2)}
 .l3{width:var(--D3);height:var(--D3);border-radius:18px}
@@ -331,26 +366,34 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -52px 92px rgba(0,0,0,.88);
 }
-/* 3D edge inlay aligned to diamond, not orthogonal grid */
+
+/* CURVED “3D” GOLD INLAY (no flat orthogonal feel) */
 .surface::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.18);
+
+  /* curved conic inlay + very light silk */
   background:
-    /* curved “edge sweep” to suggest bevel */
-    radial-gradient(140% 120% at 18% 20%, rgba(212,175,55,.16) 0%, rgba(212,175,55,0) 55%),
-    radial-gradient(140% 120% at 82% 82%, rgba(212,175,55,.10) 0%, rgba(212,175,55,0) 58%),
-    /* silk trim follows diamond orientation */
-    repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
-  opacity:.34;
+    repeating-conic-gradient(from 45deg at 50% 50%,
+      rgba(212,175,55,.085) 0 1.0deg,
+      transparent 1.0deg 6.0deg),
+    radial-gradient(circle at 50% 50%,
+      rgba(212,175,55,.10) 0%,
+      rgba(212,175,55,0) 58%);
+
+  /* keep it edge-biased so it reads as trim, not “grid” */
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 72%, #000 78% 100%),
     linear-gradient(#000,#000);
+
+  opacity:.34;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
 }
+
+/* highlight streak */
 .surface::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -361,6 +404,8 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.92;
 }
+
+/* glow-only hover (NO movement) */
 .node:hover{
   border-color:rgba(201,162,74,.44);
   box-shadow:
@@ -372,7 +417,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .node:active{filter:brightness(.98)}
 
-/* inner text (kept; full word fit via clamp) */
+/* inner text */
 .inner{
   width:100%;height:100%;
   transform:rotate(-45deg);
@@ -384,7 +429,6 @@ body::before,body::after{pointer-events:none!important}
   padding:10px;
   gap:6px;
   color:#fff;
-  pointer-events:none;
 }
 .word{
   font-weight:980;
@@ -412,7 +456,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -64px 110px rgba(0,0,0,.92);
 }
 
-/* ===== CORNERS ===== */
+/* ===== BOTTOM CORNERS ===== */
 .corner{
   position:fixed;
   bottom:max(16px, env(safe-area-inset-bottom));
@@ -460,7 +504,7 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== NOTE PILL ===== */
+/* ===== BOTTOM PILL ===== */
 .pillWrap{
   width:min(1120px,94vw);
   margin:14px auto 0;
@@ -483,7 +527,7 @@ body::before,body::after{pointer-events:none!important}
 .pill b{color:rgba(255,255,255,.95)}
 .pill .g{color:rgba(201,162,74,.80);font-weight:980}
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE FIT ===== */
 @media (max-width:720px){
   :root{
     --D0:196px;
@@ -496,6 +540,7 @@ body::before,body::after{pointer-events:none!important}
     --padTop:112px;
   }
   .stage{height:min(980px,86vh)}
+  .moonWrap{right:6%; top:9%; width:168px; height:168px;}
 }
 @media (max-width:520px){
   :root{
@@ -508,6 +553,7 @@ body::before,body::after{pointer-events:none!important}
     --R3:274px;
   }
   .brandSub{display:none}
+  .moonWrap{right:5%; top:10%; width:152px; height:152px;}
 }
 </style>
 </head>
@@ -518,7 +564,7 @@ body::before,body::after{pointer-events:none!important}
   <div class="topbar">
     <div class="brandLeft" aria-label="Brand">
       <div class="brandTitle" id="brandTitle">WELCOME TO THE COMPASS</div>
-      <div class="brandSub" id="brandSub">A visual tutorial: choose a construct, enter a hub, keep your path clean.</div>
+      <div class="brandSub" id="brandSub">Gem navigation · Receipt-first structure · Lens: PLATFORM</div>
       <div class="brandLinks" aria-label="Brand links">
         <a href="https://diamondgatebridge.com" target="_blank" rel="noopener">diamondgatebridge.com</a>
         <a href="https://cogrid.net" target="_blank" rel="noopener">cogrid.net</a>
@@ -536,18 +582,17 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="stage" id="stage" aria-label="Compass dial">
   <div class="sky" aria-hidden="true"></div>
+
+  <div class="moonWrap" aria-hidden="true">
+    <div class="moon"></div>
+    <div class="moonRefl"></div>
+  </div>
+
   <div class="slab" aria-hidden="true"></div>
   <div class="dial" aria-hidden="true"></div>
-
-  <!-- clouds + moon live on fxBackCanvas (z behind lens) -->
-  <canvas id="fxBack"></canvas>
-
-  <!-- compass lens (RED layer) -->
-  <div class="waterLens" aria-hidden="true"></div>
-
-  <!-- dragons + banners live on fxMidCanvas (above lens, below buttons) -->
-  <canvas id="fxMid"></canvas>
-
+  <div class="faceLetters" aria-hidden="true">
+    <span class="N">N</span><span class="E">E</span><span class="S">S</span><span class="W">W</span>
+  </div>
   <!-- nodes injected by JS -->
 </div>
 
@@ -574,7 +619,7 @@ body::before,body::after{pointer-events:none!important}
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en"; // kept, EN only UI in this pass
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";   // kept canonical; EN-only UI on this page
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
@@ -594,8 +639,6 @@ body::before,body::after{pointer-events:none!important}
     LS.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
   function q(over){
     var p=new URLSearchParams();
     p.set("lang",(over&&over.lang)?over.lang:lang);
@@ -610,36 +653,36 @@ body::before,body::after{pointer-events:none!important}
   function go(path){ window.location.href = path + q(); }
   function setPressed(btn, on){ btn.setAttribute("aria-pressed", on ? "true" : "false"); }
 
-  // ===== ROUTING (NO DUPLICATES; missing/unbuilt → 404) =====
+  // ===== ROUTING (NO DUPLICATES; unknown/unbuilt → 404) =====
   var CORE_ROUTE = "/index-core/index.html";
   var EXIT_ROUTE = "/door/";
   var HUB_ROUTE  = "/home/";
   var PLACEHOLDER_404 = "/404.html";
 
-  // N/E/S/W mapping per your latest accepted hierarchy:
+  // N/E/S/W meaning per your directive:
   // N = Laws, E = Energy, S = Finance, W = Governance
-  // Prelude removed. Research included. Doctrine fixed.
+  // Prelude removed from compass. Research included. Doctrine fixed.
   var ROUTES_RAW = [
     // Tier 1 (cardinals)
-    {tier:1, code:"N",  label:{platform:"LAWS",        engineering:"BOUNDS"},     href:"/laws/"},
-    {tier:1, code:"E",  label:{platform:"ENERGY",      engineering:"POWER"},      href:"/explore/frontier/energy/"},
-    {tier:1, code:"S",  label:{platform:"FINANCE",     engineering:"CAPITAL"},    href:"/finance/"},
-    {tier:1, code:"W",  label:{platform:"GOVERNANCE",  engineering:"EXEC"},       href:"/governance/"},
+    {tier:1, code:"N",  label:{platform:"LAWS",        engineering:"BOUNDS"},   href:"/laws/"},
+    {tier:1, code:"E",  label:{platform:"ENERGY",      engineering:"POWER"},    href:"/explore/frontier/energy/"},
+    {tier:1, code:"S",  label:{platform:"FINANCE",     engineering:"CAPITAL"},  href:"/finance/"},
+    {tier:1, code:"W",  label:{platform:"GOVERNANCE",  engineering:"EXEC"},     href:"/governance/"},
 
     // Tier 2 (diagonals)
-    {tier:2, code:"NE", label:{platform:"PRODUCTS",    engineering:"DEPLOY"},     href:"/products/"},
-    {tier:2, code:"SE", label:{platform:"RESEARCH",    engineering:"R&D"},        href:"/research/"},
-    {tier:2, code:"SW", label:{platform:"EXPLORE",     engineering:"MODELS"},     href:"/explore/"},
-    {tier:2, code:"NW", label:{platform:"DOCTRINE",    engineering:"CCD"},        href:"/products/capital-doctrine/"},
+    {tier:2, code:"NE", label:{platform:"PRODUCTS",    engineering:"DEPLOY"},   href:"/products/"},
+    {tier:2, code:"SE", label:{platform:"RESEARCH",    engineering:"R&D"},      href:"/research/"},
+    {tier:2, code:"SW", label:{platform:"EXPLORE",     engineering:"MODELS"},   href:"/explore/"},
+    {tier:2, code:"NW", label:{platform:"DOCTRINE",    engineering:"CCD"},      href:"/products/capital-doctrine/"},
 
     // Tier 3 (outer 8)
-    {tier:3, code:"NNE",label:{platform:"EDUCATION",   engineering:"ESL"},        href:"/products/education/"},
-    {tier:3, code:"ENE",label:{platform:"FRONTIER",    engineering:"FRONTIER"},   href:"/explore/frontier/"},
-    {tier:3, code:"ESE",label:{platform:"INFRA",       engineering:"SUBST"},      href:"/explore/infrastructure/"},
-    {tier:3, code:"SSE",label:{platform:"AGRICULTURE", engineering:"FOOD"},       href:"/products/agriculture/"},
-    {tier:3, code:"SSW",label:{platform:"GAUGES",      engineering:"SIGNALS"},    href:"/gauges/"},
-    {tier:3, code:"WSW",label:{platform:"VISION",      engineering:"MAP"},        href:"/explore/frontier/vision/"},
-    {tier:3, code:"WNW",label:{platform:"LATTICE",     engineering:"256"},        href:"/explore/frontier/lattice/"},
+    {tier:3, code:"NNE",label:{platform:"EDUCATION",   engineering:"ESL"},      href:"/products/education/"},
+    {tier:3, code:"ENE",label:{platform:"FRONTIER",    engineering:"FRONTIER"}, href:"/explore/frontier/"},
+    {tier:3, code:"ESE",label:{platform:"INFRA",       engineering:"SUBST"},    href:"/explore/infrastructure/"},
+    {tier:3, code:"SSE",label:{platform:"AGRICULTURE", engineering:"FOOD"},     href:"/products/agriculture/"},
+    {tier:3, code:"SSW",label:{platform:"GAUGES",      engineering:"SIGNALS"},  href:"/gauges/"},
+    {tier:3, code:"WSW",label:{platform:"VISION",      engineering:"MAP"},      href:"/explore/frontier/vision/"},
+    {tier:3, code:"WNW",label:{platform:"LATTICE",     engineering:"256"},      href:"/explore/frontier/lattice/"},
     {tier:3, code:"NNW",label:{platform:"SHIMMER",     engineering:"S.H.I.M.M.E.R."}, href:"/explore/frontier/shimmer/"}
   ];
 
@@ -662,45 +705,7 @@ body::before,body::after{pointer-events:none!important}
     return (lane==="engineering") ? it.label.engineering : it.label.platform;
   }
 
-  // ===== Lane toggle (NO reload) =====
-  var btnLP=document.getElementById("lanePlatform");
-  var btnLE=document.getElementById("laneEngineering");
-  setPressed(btnLP, lane==="platform");
-  setPressed(btnLE, lane==="engineering");
-
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(btnLP, lane==="platform");
-    setPressed(btnLE, lane==="engineering");
-    paintHeader();
-    layoutNodes();
-  }
-  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  function paintHeader(){
-    var laneWord = (lane==="engineering") ? "ENGINEERING" : "PLATFORM";
-    document.getElementById("brandSub").textContent =
-      "A visual tutorial: choose a construct, enter a hub, keep your path clean. Lens: "+laneWord+".";
-  }
-  paintHeader();
-
-  // ===== Corner buttons =====
-  function bindCorner(id, path){
-    var el=document.getElementById(id);
-    if(!el) return;
-    function act(){ go(path); }
-    el.addEventListener("click", act, {passive:true});
-    el.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  bindCorner("btnExit", EXIT_ROUTE);
-  bindCorner("btnHub", HUB_ROUTE);
-
-  // ===== Nodes (16 + core only) =====
+  // ===== Build nodes =====
   var stage=document.getElementById("stage");
 
   function mkNode(word, code, cls){
@@ -727,8 +732,7 @@ body::before,body::after{pointer-events:none!important}
     return d;
   }
 
-  function layoutNodes(){
-    // remove existing nodes
+  function layout(){
     stage.querySelectorAll(".node").forEach(function(n){ n.remove(); });
 
     var rect=stage.getBoundingClientRect();
@@ -745,6 +749,7 @@ body::before,body::after{pointer-events:none!important}
     core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(CORE_ROUTE); }});
     stage.appendChild(core);
 
+    // split by tier
     var t1=[], t2=[], t3=[];
     for(var i=0;i<ROUTES.length;i++){
       if(ROUTES[i].tier===1) t1.push(ROUTES[i]);
@@ -752,12 +757,8 @@ body::before,body::after{pointer-events:none!important}
       else t3.push(ROUTES[i]);
     }
 
-    function byCode(arr, code){
-      for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i];
-      return null;
-    }
-
-    // Tier 1 pinned N/E/S/W
+    // Tier 1 pinned to N/E/S/W angles
+    function byCode(arr, code){ for(var i=0;i<arr.length;i++) if(arr[i].code===code) return arr[i]; return null; }
     var ordered=[byCode(t1,"N"),byCode(t1,"E"),byCode(t1,"S"),byCode(t1,"W")].filter(Boolean);
     var ang=[-Math.PI/2, 0, Math.PI/2, Math.PI];
     for(var i=0;i<ordered.length;i++){
@@ -773,7 +774,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 2 diagonals
+    // Tier 2 start at -45°
     for(var i=0;i<t2.length;i++){
       var it=t2[i];
       var a=(i/t2.length)*(Math.PI*2) - Math.PI/4;
@@ -788,7 +789,7 @@ body::before,body::after{pointer-events:none!important}
       stage.appendChild(n);
     }
 
-    // Tier 3 outer 8
+    // Tier 3 start at -67.5°
     for(var i=0;i<t3.length;i++){
       var it=t3[i];
       var a=(i/t3.length)*(Math.PI*2) - Math.PI*(3/8);
@@ -804,428 +805,47 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function safeLayoutNodes(){
+  function safeLayout(){
     var r=stage.getBoundingClientRect();
-    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayoutNodes); return; }
-    layoutNodes();
+    if(r.width<10||r.height<10){ requestAnimationFrame(safeLayout); return; }
+    layout();
   }
 
-  // ===== FX CANVASES =====
-  var fxBack=document.getElementById("fxBack");
-  var fxMid =document.getElementById("fxMid");
-  var back=fxBack.getContext("2d");
-  var mid =fxMid.getContext("2d");
+  // ===== Lane toggle (NO reload; URL-only) =====
+  var btnLP=document.getElementById("lanePlatform");
+  var btnLE=document.getElementById("laneEngineering");
+  setPressed(btnLP, lane==="platform");
+  setPressed(btnLE, lane==="engineering");
 
-  fxBack.style.position="absolute";
-  fxBack.style.left="0"; fxBack.style.top="0";
-  fxBack.style.width="100%"; fxBack.style.height="100%";
-  fxBack.style.pointerEvents="none";
-  fxBack.style.zIndex="3"; // clouds+moon under water lens
-
-  fxMid.style.position="absolute";
-  fxMid.style.left="0"; fxMid.style.top="0";
-  fxMid.style.width="100%"; fxMid.style.height="100%";
-  fxMid.style.pointerEvents="none";
-  fxMid.style.zIndex="6"; // dragons above lens, below nodes
-
-  function dpr(){
-    return Math.min(2, window.devicePixelRatio || 1);
+  function setLane(next){
+    if(next!=="platform" && next!=="engineering") next="platform";
+    lane=next;
+    history.replaceState({}, "", location.pathname + q({lane:lane}));
+    setPressed(btnLP, lane==="platform");
+    setPressed(btnLE, lane==="engineering");
+    document.getElementById("brandSub").textContent =
+      "Gem navigation · Receipt-first structure · Lens: " + (lane==="engineering"?"ENGINEERING":"PLATFORM");
+    safeLayout();
   }
+  btnLP.addEventListener("click", function(){ setLane("platform"); }, {passive:true});
+  btnLE.addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  function resizeFX(){
-    var r=stage.getBoundingClientRect();
-    var s=dpr();
-    fxBack.width=Math.max(1, Math.floor(r.width*s));
-    fxBack.height=Math.max(1, Math.floor(r.height*s));
-    fxMid.width=fxBack.width;
-    fxMid.height=fxBack.height;
-    back.setTransform(s,0,0,s,0,0);
-    mid.setTransform(s,0,0,s,0,0);
+  // ===== Corner buttons =====
+  function bindCorner(id, path){
+    var el=document.getElementById(id);
+    if(!el) return;
+    function act(){ go(path); }
+    el.addEventListener("click", act, {passive:true});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+    });
   }
+  bindCorner("btnExit", EXIT_ROUTE);
+  bindCorner("btnHub", HUB_ROUTE);
 
-  window.addEventListener("resize", function(){
-    resizeFX();
-    safeLayoutNodes();
-  }, {passive:true});
-
-  // ===== MOON (single moon, phase advance per return) =====
-  function nextMoonPhase(){
-    var key="moon_phase_step";
-    var v=0;
-    try{ v=parseInt(sessionStorage.getItem(key)||"0",10); if(!isFinite(v)) v=0; }catch(e){ v=0; }
-    v=(v+1)%8;
-    try{ sessionStorage.setItem(key,String(v)); }catch(e){}
-    return v; // 0..7
-  }
-  var moonPhase=nextMoonPhase();
-
-  function drawMoon(ctx, w, h){
-    var mx=w*0.78, my=h*0.16;
-    var r=Math.min(w,h)*0.07; // bigger than before
-    // glow
-    var g=ctx.createRadialGradient(mx,my,0,mx,my,r*2.2);
-    g.addColorStop(0,"rgba(255,240,210,0.26)");
-    g.addColorStop(0.35,"rgba(255,240,210,0.12)");
-    g.addColorStop(1,"rgba(255,240,210,0)");
-    ctx.fillStyle=g;
-    ctx.beginPath(); ctx.arc(mx,my,r*2.2,0,Math.PI*2); ctx.fill();
-
-    // moon body
-    ctx.save();
-    ctx.beginPath(); ctx.arc(mx,my,r,0,Math.PI*2);
-    ctx.clip();
-    var mgrad=ctx.createRadialGradient(mx-r*0.25,my-r*0.2,r*0.2,mx,my,r*1.1);
-    mgrad.addColorStop(0,"rgba(255,250,240,0.92)");
-    mgrad.addColorStop(1,"rgba(210,190,160,0.92)");
-    ctx.fillStyle=mgrad;
-    ctx.fillRect(mx-r,my-r,r*2,r*2);
-
-    // craters
-    ctx.globalAlpha=0.22;
-    ctx.fillStyle="rgba(0,0,0,0.45)";
-    for(var i=0;i<10;i++){
-      var cx=mx + (Math.sin(i*2.2)*0.55)*r*0.7;
-      var cy=my + (Math.cos(i*1.9)*0.55)*r*0.65;
-      var rr=r*(0.08 + (i%3)*0.04);
-      ctx.beginPath(); ctx.arc(cx,cy,rr,0,Math.PI*2); ctx.fill();
-    }
-    ctx.globalAlpha=1;
-
-    // phase shadow (single moon, no double)
-    var phase = moonPhase; // 0 new .. 4 full .. 7 waning crescent
-    var t = phase/7;       // 0..1
-    // map: new -> full -> new
-    var illum = (phase<=4) ? (phase/4) : ((8-phase)/4); // 0..1..0
-    // shadow offset
-    var off = (phase<=4) ? (1-illum) : -(1-illum);
-    ctx.globalCompositeOperation="source-over";
-    ctx.fillStyle="rgba(0,0,0,0.55)";
-    ctx.beginPath();
-    ctx.ellipse(mx + off*r*0.85, my, r, r, 0, 0, Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  // ===== CLOUDS (behind compass lens) =====
-  var clouds=[];
-  function seedClouds(){
-    clouds=[];
-    for(var i=0;i<12;i++){
-      clouds.push({
-        x: Math.random()*stage.clientWidth,
-        y: Math.random()*stage.clientHeight*0.45 + stage.clientHeight*0.06,
-        v: 0.12 + Math.random()*0.18,
-        s: 140 + Math.random()*220,
-        a: 0.030 + Math.random()*0.020,
-        o: Math.random()*1000
-      });
-    }
-  }
-
-  function drawCloudBlob(ctx, x, y, size, alpha){
-    ctx.save();
-    ctx.globalAlpha=alpha;
-    ctx.fillStyle="rgba(255,255,255,1)";
-    // multi-lobe cloud
-    var lobes=6;
-    for(var i=0;i<lobes;i++){
-      var ang=i*(Math.PI*2/lobes);
-      var rx=size*(0.32+0.10*Math.sin(i*1.7));
-      var ry=size*(0.16+0.06*Math.cos(i*1.3));
-      var lx=x + Math.cos(ang)*size*0.18;
-      var ly=y + Math.sin(ang)*size*0.06;
-      ctx.beginPath();
-      ctx.ellipse(lx,ly,rx,ry,0,0,Math.PI*2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  function drawClouds(){
-    var w=stage.clientWidth, h=stage.clientHeight;
-    back.save();
-    back.globalCompositeOperation="screen";
-    for(var i=0;i<clouds.length;i++){
-      var c=clouds[i];
-      // soft drift left->right
-      c.x += c.v;
-      // subtle vertical drift
-      c.y += Math.sin((performance.now()*0.00008)+c.o)*0.03;
-      if(c.x > w + c.s) c.x = -c.s;
-
-      // translucent, so buttons always show
-      drawCloudBlob(back, c.x, c.y, c.s, c.a);
-    }
-    back.restore();
-  }
-
-  // ===== LANTERN EMBERS (behind dragons; above clouds) =====
-  var embers=[];
-  function seedEmbers(){
-    embers=[];
-    for(var i=0;i<36;i++){
-      embers.push({
-        x: Math.random()*stage.clientWidth,
-        y: stage.clientHeight + Math.random()*240,
-        v: 0.25 + Math.random()*0.45,
-        s: 1.4 + Math.random()*2.6,
-        w: 0.6 + Math.random()*1.2,
-        o: Math.random()*1000
-      });
-    }
-  }
-  function drawEmbers(ctx){
-    var w=stage.clientWidth, h=stage.clientHeight;
-    ctx.save();
-    ctx.globalCompositeOperation="screen";
-    for(var i=0;i<embers.length;i++){
-      var e=embers[i];
-      e.y -= e.v;
-      e.x += Math.sin((performance.now()*0.0012)+e.o)*0.18;
-      if(e.y < -30){
-        e.y = h + 30;
-        e.x = Math.random()*w;
-      }
-      ctx.fillStyle="rgba(255,200,120,0.18)";
-      ctx.beginPath();
-      ctx.ellipse(e.x,e.y,e.s*1.2,e.s*2.0,0,0,Math.PI*2);
-      ctx.fill();
-
-      ctx.fillStyle="rgba(255,160,90,0.08)";
-      ctx.beginPath();
-      ctx.arc(e.x,e.y,e.s*2.2,0,Math.PI*2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  // ===== DRAGON ENGINE (true head + segmented spine; smooth slither) =====
-  var quotes = [
-    "Say less. Do more.",
-    "Time passes. The river flows.",
-    "Fix what you can. Learn from what you can’t.",
-    "Do not do to others what you do not want done to you.",
-    "A moment’s mistake can become a long regret."
-  ];
-  var quoteIndex = Math.floor(Math.random()*quotes.length);
-
-  function Dragon(opts){
-    this.dir = opts.dir;            // 1 = left->right, -1 = right->left
-    this.yBase = opts.yBase;        // baseline
-    this.yAmp  = opts.yAmp;         // slither amplitude
-    this.speed = opts.speed;        // px per frame
-    this.len   = opts.len;          // segment count
-    this.segDist = opts.segDist;    // distance between segments
-    this.phase = Math.random()*1000;
-    this.reset();
-  }
-
-  Dragon.prototype.reset = function(){
-    var w=stage.clientWidth;
-    var startX = (this.dir===1) ? -200 : (w+200);
-    this.head = {x:startX, y:this.yBase};
-    this.body=[];
-    for(var i=0;i<this.len;i++){
-      this.body.push({x:startX - this.dir*i*this.segDist, y:this.yBase});
-    }
-    quoteIndex = (quoteIndex+1)%quotes.length;
-    this.quote = quotes[quoteIndex];
-    this.bannerT = 0;
-  };
-
-  Dragon.prototype.step = function(t){
-    var w=stage.clientWidth;
-    // head movement: smooth slither, low frequency (not violent)
-    var drift = Math.sin((t*0.00045)+this.phase)*this.yAmp;
-    this.head.x += this.speed*this.dir;
-    this.head.y = this.yBase + drift;
-
-    // follow chain (inverse kinematics)
-    this.body[0].x = this.head.x;
-    this.body[0].y = this.head.y;
-
-    for(var i=1;i<this.body.length;i++){
-      var p=this.body[i];
-      var prev=this.body[i-1];
-
-      var dx = prev.x - p.x;
-      var dy = prev.y - p.y;
-      var dist = Math.sqrt(dx*dx+dy*dy) || 1;
-
-      var target = this.segDist;
-      var k = (dist - target)/dist;
-
-      // pull segment toward fixed distance
-      p.x += dx*k;
-      p.y += dy*k;
-    }
-
-    // offscreen reset after full pass
-    if(this.dir===1 && this.head.x > w+240) this.reset();
-    if(this.dir===-1 && this.head.x < -240) this.reset();
-  };
-
-  function drawDragon(ctx, dragon, t){
-    // dark green dragon with segmented body + ridge spikes + head details
-    var body=dragon.body;
-    if(body.length<6) return;
-
-    ctx.save();
-    ctx.globalCompositeOperation="source-over";
-
-    // colors
-    var fill="rgba(10,40,18,0.92)";
-    var edge="rgba(0,0,0,0.55)";
-    var gold="rgba(212,175,55,0.70)";
-
-    // draw body back-to-front
-    for(var i=body.length-1;i>=0;i--){
-      var p=body[i];
-
-      // taper: thick near head, thinner to tail
-      var u = i/(body.length-1);
-      var base = (1-u);
-      var w = 22*base + 6;
-      var h = 16*base + 5;
-
-      // slight local rotation following tangent
-      var prev = body[Math.max(0,i-1)];
-      var next = body[Math.min(body.length-1,i+1)];
-      var ang = Math.atan2(next.y - prev.y, next.x - prev.x);
-
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(ang);
-
-      // segment
-      ctx.fillStyle=fill;
-      ctx.beginPath();
-      ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
-      ctx.fill();
-
-      // shadow edge
-      ctx.strokeStyle="rgba(0,0,0,0.28)";
-      ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.ellipse(0,0,w,h,0,0,Math.PI*2);
-      ctx.stroke();
-
-      // ridge spikes (not leaves): small triangles along top edge near head-mid
-      if(i<42 && i>10 && (i%3===0)){
-        ctx.fillStyle="rgba(212,175,55,0.18)";
-        ctx.beginPath();
-        ctx.moveTo(-w*0.10, -h*0.98);
-        ctx.lineTo(0, -h*1.55);
-        ctx.lineTo(w*0.10, -h*0.98);
-        ctx.closePath();
-        ctx.fill();
-      }
-
-      ctx.restore();
-    }
-
-    // head (draw on top)
-    var hx=dragon.head.x, hy=dragon.head.y;
-    var h2=body[3];
-    var hAng=Math.atan2(hy - h2.y, hx - h2.x);
-
-    ctx.save();
-    ctx.translate(hx, hy);
-    ctx.rotate(hAng);
-
-    // skull
-    ctx.fillStyle="rgba(12,48,20,0.98)";
-    ctx.beginPath();
-    ctx.ellipse(0,0,28,20,0,0,Math.PI*2);
-    ctx.fill();
-
-    // snout
-    ctx.beginPath();
-    ctx.ellipse(16,4,18,12,0,0,Math.PI*2);
-    ctx.fill();
-
-    // jaw shadow
-    ctx.fillStyle="rgba(0,0,0,0.25)";
-    ctx.beginPath();
-    ctx.ellipse(10,10,20,10,0,0,Math.PI*2);
-    ctx.fill();
-
-    // eye glow
-    ctx.fillStyle="rgba(212,175,55,0.75)";
-    ctx.beginPath();
-    ctx.arc(8,-4,2.2,0,Math.PI*2);
-    ctx.fill();
-
-    // horns
-    ctx.fillStyle="rgba(212,175,55,0.18)";
-    ctx.beginPath();
-    ctx.moveTo(-6,-18); ctx.lineTo(-14,-34); ctx.lineTo(2,-22);
-    ctx.closePath(); ctx.fill();
-    ctx.beginPath();
-    ctx.moveTo(2,-18); ctx.lineTo(-2,-36); ctx.lineTo(10,-22);
-    ctx.closePath(); ctx.fill();
-
-    // whisker
-    ctx.strokeStyle="rgba(255,255,255,0.12)";
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(26,4);
-    ctx.quadraticCurveTo(46,0,62,-8);
-    ctx.stroke();
-
-    ctx.restore();
-
-    // banner (English only; gold glow) follows dragon, below head slightly
-    ctx.save();
-    ctx.globalCompositeOperation="screen";
-    ctx.font="700 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
-    ctx.fillStyle="rgba(212,175,55,0.68)";
-    ctx.shadowColor="rgba(212,175,55,0.18)";
-    ctx.shadowBlur=14;
-
-    // place banner near segment 10..20
-    var bx=body[14].x, by=body[14].y + 22;
-    ctx.fillText(dragon.quote, bx, by);
-    ctx.restore();
-  }
-
-  // ===== Render loop =====
-  var dragonTop = new Dragon({dir:-1, yBase: stage.clientHeight*0.30, yAmp: 18, speed: 0.70, len: 70, segDist: 10});
-  var dragonBot = new Dragon({dir: 1, yBase: stage.clientHeight*0.72, yAmp: 16, speed: 0.62, len: 68, segDist: 10});
-
-  function render(){
-    var w=stage.clientWidth, h=stage.clientHeight;
-    // clear
-    back.clearRect(0,0,w,h);
-    mid.clearRect(0,0,w,h);
-
-    // BACK LAYER: moon + clouds
-    drawMoon(back, w, h);
-    drawClouds();
-
-    // MID LAYER: dragons + embers (embers above clouds, still under buttons)
-    drawEmbers(mid);
-
-    var t=performance.now();
-    dragonTop.step(t);
-    dragonBot.step(t);
-
-    drawDragon(mid, dragonTop, t);
-    drawDragon(mid, dragonBot, t);
-
-    requestAnimationFrame(render);
-  }
-
-  // ===== Init =====
-  function init(){
-    resizeFX();
-    seedClouds();
-    seedEmbers();
-    safeLayoutNodes();
-    requestAnimationFrame(render);
-  }
-  init();
+  // Init
+  requestAnimationFrame(safeLayout);
+  window.addEventListener("resize", function(){ safeLayout(); }, {passive:true});
 
 })();
 </script>

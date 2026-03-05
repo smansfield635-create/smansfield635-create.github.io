@@ -1,6 +1,6 @@
 /* TNT — /assets/branch.css
-   YOUR EXISTING FILE + ONE COMPAT LINE
-   CHANGE: add --gd_r1 alias so hel-client reads correct ring radius
+   YOUR EXISTING FILE + RENDER STABILITY BLOCK
+   CHANGE: add rendering stabilization to prevent Safari/Chrome grid artifacts
    NOTHING ELSE MODIFIED
 */
 
@@ -29,8 +29,8 @@
   --gd-oct-radius: 22px;
 
   /* Ring radii for 4-lane + 8-lane */
-  --gd-ring-r: 154px;          /* 4-lane default */
-  --gd-ring-r8: 210px;         /* 8-lane default */
+  --gd-ring-r: 154px;          
+  --gd-ring-r8: 210px;         
 
   /* Center core */
   --gd-core: 78px;
@@ -50,7 +50,6 @@
 
 /* ============================================================
    LEGACY DIAMOND PRIMITIVES (KEPT FOR BACKWARD COMPAT)
-   (GEOMETRY ONLY — NO COLORS)
    ============================================================ */
 
 .diamond,
@@ -90,7 +89,8 @@
   letter-spacing:.4px;
 }
 
-/* ---------- Compass platform (big diamond made of 4 diamonds) ---------- */
+/* ---------- Compass platform ---------- */
+
 .platform,
 .gd-platform{
   position:relative;
@@ -99,17 +99,18 @@
   display:block;
 }
 
-/* Position helpers (top/right/bottom/left) */
 .platform .top,
 .gd-platform .top{ position:absolute; left:50%; top:0; transform:translateX(-50%) rotate(45deg); }
+
 .platform .right,
 .gd-platform .right{ position:absolute; right:0; top:50%; transform:translateY(-50%) rotate(45deg); }
+
 .platform .bottom,
 .gd-platform .bottom{ position:absolute; left:50%; bottom:0; transform:translateX(-50%) rotate(45deg); }
+
 .platform .left,
 .gd-platform .left{ position:absolute; left:0; top:50%; transform:translateY(-50%) rotate(45deg); }
 
-/* Center nucleus (small diamond) */
 .platform .center,
 .gd-platform .center{
   position:absolute;
@@ -123,6 +124,7 @@
   align-items:center;
   justify-content:center;
 }
+
 .platform .center > span,
 .gd-platform .center > span{
   transform:rotate(-45deg);
@@ -130,7 +132,6 @@
   letter-spacing:.6px;
 }
 
-/* ---------- Grid-style diamonds ---------- */
 .diamond-grid,
 .gd-diamond-grid{
   display:grid;
@@ -140,16 +141,14 @@
 }
 
 /* ============================================================
-   OCTAGONAL PROCESSOR PRIMITIVES (NEW)
-   (GEOMETRY ONLY — NO COLORS)
+   OCTAGONAL PROCESSOR PRIMITIVES
    ============================================================ */
 
-/* Octagon clip-path token */
 .gd-oct{
   position:relative;
   width:var(--gd-oct);
   height:var(--gd-oct);
-  border-radius:var(--gd-oct-radius); /* fallback for browsers that dislike clip-path */
+  border-radius:var(--gd-oct-radius);
   clip-path:polygon(
     30% 0%, 70% 0%,
     100% 30%, 100% 70%,
@@ -165,7 +164,6 @@
   touch-action:manipulation;
 }
 
-/* Inner label orientation for octagon nodes (no rotation) */
 .gd-oct > span,
 .gd-oct span{
   display:flex;
@@ -179,7 +177,6 @@
   padding:14px;
 }
 
-/* Optional small label blocks (geometry only) */
 .gd-oct small{
   opacity:.82;
   font-size:12px;
@@ -187,7 +184,7 @@
 }
 
 /* ============================================================
-   OCTAGONAL PROCESSOR STAGE (NEW)
+   PROCESSOR STAGE
    ============================================================ */
 
 .gd-proc{
@@ -198,7 +195,6 @@
   display:block;
 }
 
-/* Decorative ring (geometry only; style in ui.css/page if desired) */
 .gd-proc-ring{
   position:absolute;
   left:50%;
@@ -216,7 +212,6 @@
   pointer-events:none;
 }
 
-/* Center core (geometry only) */
 .gd-proc-core{
   position:absolute;
   left:50%;
@@ -236,13 +231,14 @@
   justify-content:center;
   pointer-events:none;
 }
+
 .gd-proc-core > span{
   font-weight:900;
   letter-spacing:.6px;
 }
 
 /* ============================================================
-   4-LANE POSITIONS (N/E/S/W) — OCTAGON NODES
+   4-LANE POSITIONS
    ============================================================ */
 
 .gd-proc-n,
@@ -260,7 +256,7 @@
 .gd-proc-w{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r) * -1), 0); }
 
 /* ============================================================
-   8-LANE POSITIONS (N, NE, E, SE, S, SW, W, NW) — OCTAGON NODES
+   8-LANE POSITIONS
    ============================================================ */
 
 .gd-proc8-n,
@@ -276,25 +272,20 @@
   top:50%;
 }
 
-.gd-proc8-n {  transform:translate(-50%,-50%) translate(0, calc(var(--gd-ring-r8) * -1)); }
-.gd-proc8-ne{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * -.707)); }
-.gd-proc8-e {  transform:translate(-50%,-50%) translate(var(--gd-ring-r8), 0); }
-.gd-proc8-se{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * .707)); }
-.gd-proc8-s {  transform:translate(-50%,-50%) translate(0, var(--gd-ring-r8)); }
-.gd-proc8-sw{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * .707)); }
-.gd-proc8-w {  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -1), 0); }
-.gd-proc8-nw{  transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * -.707)); }
+.gd-proc8-n { transform:translate(-50%,-50%) translate(0, calc(var(--gd-ring-r8) * -1)); }
+.gd-proc8-ne{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * -.707)); }
+.gd-proc8-e { transform:translate(-50%,-50%) translate(var(--gd-ring-r8), 0); }
+.gd-proc8-se{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * .707), calc(var(--gd-ring-r8) * .707)); }
+.gd-proc8-s { transform:translate(-50%,-50%) translate(0, var(--gd-ring-r8)); }
+.gd-proc8-sw{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * .707)); }
+.gd-proc8-w { transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -1), 0); }
+.gd-proc8-nw{ transform:translate(-50%,-50%) translate(calc(var(--gd-ring-r8) * -.707), calc(var(--gd-ring-r8) * -.707)); }
 
 /* ============================================================
-   MODAL GEOMETRY (NO COLORS / NO MATERIAL)
+   MODAL GEOMETRY
    ============================================================ */
 
-.bd{
-  position:fixed;
-  inset:0;
-  display:none;
-  z-index:200;
-}
+.bd{ position:fixed; inset:0; display:none; z-index:200; }
 .bd.show{ display:block; }
 
 .modal{
@@ -343,10 +334,8 @@
   margin:-6px -6px 14px;
 }
 
-.mgrid{
-  display:grid;
-  gap:14px;
-}
+.mgrid{ display:grid; gap:14px; }
+
 @media (min-width:920px){
   .mgrid{ grid-template-columns:1fr 1fr; }
 }
@@ -388,11 +377,25 @@
   .shell{ height:90vh; max-height:90vh; }
 }
 
-/* ---------- Pointer event safety (geometry only) ---------- */
+/* ---------- Pointer event safety ---------- */
+
 .platform a,
 .gd-platform a,
 .diamond,
 .gd-diamond,
 .gd-oct{
   pointer-events:auto;
+}
+
+/* ============================================================
+   RENDER STABILITY (NEW)
+   Prevent Safari/Chrome device-pixel grid artifacts
+   ============================================================ */
+
+.gd-proc,
+.gd-proc-ring{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }

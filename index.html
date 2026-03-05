@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- TNT — /index.html
-     PURPOSE: Root page for HEX_SILHOUETTE_PROOF
-     LOADS: ui.css, branch.css, dragon-engine.js
+     PURPOSE: Root page for HEL dragon silhouette system
+     BUILD: HEL_INDEX_L1
 -->
 
 <html lang="en">
@@ -23,8 +23,9 @@ padding:0;
 width:100%;
 height:100%;
 overflow:hidden;
-background:#050505;
 }
+
+/* dragon stage */
 
 #gd-dragon{
 position:relative;
@@ -38,10 +39,14 @@ height:100vh;
 
 <body>
 
-<!-- Dragon simulation host -->
+<!-- stage container for HEL simulation -->
 <div id="gd-dragon"></div>
 
-<script defer src="/assets/dragon-engine.js"></script>
+<!-- render layer -->
+<script defer src="/assets/hel-render.js"></script>
+
+<!-- simulation layer -->
+<script defer src="/assets/hel-client.js"></script>
 
 </body>
 </html>

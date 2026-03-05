@@ -1,6 +1,8 @@
 /* TNT — /assets/dragon-engine.js
-   BUILD: HEX_SILHOUETTE_PROOF_v4
-   GOAL: two good-looking dragons (capsule body, smooth taper)
+   BUILD: HEX_SILHOUETTE_PROOF_v5
+   GOAL UPDATE:
+   - BODY LENGTH: -25% (SPINE_LEN 36 → 27)
+   - BODY THICKNESS: ~5× (radius rings scaled ×5)
 
    CONTROLS
    F → freeze
@@ -15,9 +17,10 @@ window.__HEX_SIL_RUNNING__ = true;
 
 /* ===== PARAMS ===== */
 
-const HEX = 6;
-const SPINE_LEN = 36;
-const SHOULDER_R = 6;
+const HEX = 6;                 // 1 hex = 6 px
+const SPINE_LEN = 27;          // 36 → 27 (≈ -25%)
+const THICK_MUL = 5;           // thickness multiplier (≈ 5×)
+const SHOULDER_R = 30;         // max rings
 const TAIL_R = 0;
 const CGG_SIZE = 16;
 
@@ -61,20 +64,22 @@ return((r^(r>>>14))>>>0)/4294967296
 }
 }
 
-/* ===== SMOOTH RADIUS PROFILE ===== */
+/* ===== RADIUS PROFILE (SCALED × THICK_MUL) ===== */
 
 function radiusAt(i){
 const u=i/(SPINE_LEN-1)
-let r
+let r0
 
-if(u<0.10) r=4
-else if(u<0.25) r=3
-else if(u<0.45) r=6
-else if(u<0.65) r=5
-else if(u<0.80) r=4
-else if(u<0.90) r=2
-else if(u<0.97) r=1
-else r=0
+if(u<0.10) r0=4
+else if(u<0.25) r0=3
+else if(u<0.45) r0=6
+else if(u<0.65) r0=5
+else if(u<0.80) r0=4
+else if(u<0.90) r0=2
+else if(u<0.97) r0=1
+else r0=0
+
+let r=Math.round(r0*THICK_MUL)
 
 r=Math.min(r,SHOULDER_R)
 r=Math.max(r,TAIL_R)
@@ -217,8 +222,9 @@ let headingBot=3
 
 const rnd=mulberry32(0xC0FFEE)
 
-let spineTop=initSpine(headingTop,{q:-10,r:-10})
-let spineBot=initSpine(headingBot,{q:10,r:10})
+/* moved closer to center since thickness increased */
+let spineTop=initSpine(headingTop,{q:-4,r:-4})
+let spineBot=initSpine(headingBot,{q: 4,r: 4})
 
 let freeze=false
 

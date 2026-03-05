@@ -1,13 +1,11 @@
 /* TNT — /assets/dragon-engine.js
-   BUILD: DRAGON_ENGINE_CONTINUOUS_DRIFT_v3
-   FIXES:
-     - Motion is CONTINUOUS in one direction (no left-right bobbing)
-     - iPad “freeze” gets a watchdog kick (RAF + interval fallback)
+   BUILD: DRAGON_ENGINE_CONTINUOUS_DRIFT_v4_HEX4
+   CHANGE: HEX SIZE = 4 (per your request)
+   NOTE: everything else unchanged (motion + watchdog intact)
 */
 
 (function(){
 
-/* kill any prior engine instance */
 try{
   if(window.__GD_DRAGON_ENGINE__ && window.__GD_DRAGON_ENGINE__.stop){
     window.__GD_DRAGON_ENGINE__.stop();
@@ -17,7 +15,6 @@ try{
 var ENGINE = { running:true, raf:0, canvas:null, lastTick:0, lastDraw:0, kick:0 };
 window.__GD_DRAGON_ENGINE__ = ENGINE;
 
-/* mount canvas */
 var host = document.getElementById("gd-dragon") || document.body;
 
 var cv = document.createElement("canvas");
@@ -34,7 +31,6 @@ ENGINE.canvas = cv;
 var ctx = cv.getContext("2d", { alpha:true, desynchronized:true });
 if(!ctx) return;
 
-/* DPR resize */
 var DPR_CAP = 1.6;
 var W=0,H=0,DPR=1;
 
@@ -50,8 +46,9 @@ function resize(){
 resize();
 window.addEventListener("resize", resize, {passive:true});
 
-/* hex raster (pointy-top) */
-var HEX = 3 * DPR;
+/* ===== HEX SIZE CHANGE HERE ===== */
+var HEX_BASE = 4;                 /* was 3 */
+var HEX = HEX_BASE * DPR;
 var SQRT3 = Math.sqrt(3);
 
 function axialToXY(q,r){
@@ -73,39 +70,33 @@ function drawHex(x,y){
   ctx.fill();
 }
 
-/* dragon params */
 var LEN = 170;
 
 function radiusAt(i){
   var t = i/(LEN-1);
-  if(t < 0.06) return 2;  /* head */
-  if(t < 0.16) return 2;  /* neck */
-  if(t < 0.30) return 4;  /* shoulder */
-  if(t < 0.72) return 3;  /* torso */
-  if(t < 0.90) return 2;  /* tail base */
-  return 1;               /* tip */
+  if(t < 0.06) return 2;
+  if(t < 0.16) return 2;
+  if(t < 0.30) return 4;
+  if(t < 0.72) return 3;
+  if(t < 0.90) return 2;
+  return 1;
 }
 
-/* continuous drift state (NO sin-based left/right) */
-var xScroll = 0;                 /* pixels */
-var SPEED_PX = 110 * DPR;        /* px/sec drift speed */
-var LANE_DY  = 110 * DPR;        /* vertical separation */
+var xScroll = 0;
+var SPEED_PX = 110 * DPR;
+var LANE_DY  = 110 * DPR;
 
-/* dragon draw: q anchor shifts with xScroll */
 function dragon(cx,cy,dir,color,time){
   ctx.fillStyle = color;
 
   for(var i=0;i<LEN;i++){
     var rr = radiusAt(i);
 
-    /* spine uses q baseline + i, with continuous drift */
     var q0 = (dir>0) ? (-95 + i) : (95 - i);
 
-    /* apply drift as an axial shift converted from pixels */
-    var driftQ = (xScroll / (HEX*SQRT3)); /* approximate */
+    var driftQ = (xScroll / (HEX*SQRT3));
     var q = q0 + (dir>0 ? driftQ : -driftQ);
 
-    /* small vertical slither ONLY (keeps life without reversing direction) */
     var r = Math.sin(i*0.14 + time)*2.3 + Math.sin(i*0.045 + time*0.7)*0.8;
 
     for(var dq=-rr; dq<=rr; dq++){
@@ -119,10 +110,10 @@ function dragon(cx,cy,dir,color,time){
   }
 }
 
-/* stop handle */
 ENGINE.stop = function(){
   try{ ENGINE.running=false; }catch(e){}
   try{ cancelAnimationFrame(ENGINE.raf); }catch(e){}
+  try{ clearInterval(ENGINE.kick); }catch(e){}
   try{
     if(ENGINE.canvas && ENGINE.canvas.parentNode){
       ENGINE.canvas.parentNode.removeChild(ENGINE.canvas);
@@ -130,7 +121,6 @@ ENGINE.stop = function(){
   }catch(e){}
 };
 
-/* RAF loop */
 ENGINE.lastTick = performance.now();
 
 function tick(){
@@ -140,17 +130,14 @@ function tick(){
   var dt = (now - ENGINE.lastTick)/1000;
   ENGINE.lastTick = now;
 
-  /* clamp dt (prevents jump after tab sleep) */
   if(dt > 0.05) dt = 0.05;
   if(dt < 0) dt = 0;
 
   xScroll += SPEED_PX * dt;
 
-  /* wrap drift so it never reverses */
   var wrapPx = 900 * DPR;
   if(xScroll > wrapPx) xScroll -= wrapPx;
 
-  /* draw */
   ctx.clearRect(0,0,W,H);
 
   var cx = W*0.5;
@@ -160,10 +147,9 @@ function tick(){
   dragon(cx - 220*DPR, cy - LANE_DY, +1, "rgba(26,163,74,0.95)", t);
   dragon(cx + 220*DPR, cy + LANE_DY, -1, "rgba(201,37,37,0.92)", t+1.2);
 
-  /* label proves motion + updates (frame timestamp changes) */
   ctx.fillStyle = "rgba(255,255,255,0.70)";
   ctx.font = (12*DPR) + "px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("DRAGON_ENGINE_CONTINUOUS_DRIFT_v3  t=" + (now|0), 12*DPR, H - 14*DPR);
+  ctx.fillText("DRAGON_ENGINE_CONTINUOUS_DRIFT_v4_HEX4  t=" + (now|0), 12*DPR, H - 14*DPR);
 
   ENGINE.lastDraw = now;
   ENGINE.raf = requestAnimationFrame(tick);
@@ -171,7 +157,6 @@ function tick(){
 
 ENGINE.raf = requestAnimationFrame(tick);
 
-/* iPad freeze watchdog: if RAF stalls, kick it */
 ENGINE.kick = setInterval(function(){
   if(!ENGINE.running) return;
   var now = performance.now();

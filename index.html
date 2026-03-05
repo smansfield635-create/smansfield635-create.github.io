@@ -1,77 +1,39 @@
 <!doctype html>
-<!-- TNT — /index.html
-     BUILD: DRAGON_INDEX_RUNTIME_v1
-     PURPOSE: Stable runtime loader for dragon engine
--->
-
 <html lang="en">
-
 <head>
-
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DiamondGateBridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
 
 <style>
-
 html,body{
+margin:0;
 height:100%;
 width:100%;
-margin:0;
 overflow:hidden;
+background:#8b0000;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-#stage{
+/* dragon host layer */
+#gd-dragon{
 position:fixed;
 inset:0;
+pointer-events:none;
+z-index:5;
 }
-
-#gd-dragon{
-position:absolute;
-inset:0;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div id="stage">
-
 <div id="gd-dragon"></div>
 
-</div>
-
-<script>
-
-(function(){
-
-/* runtime loader (always reloads engine cleanly) */
-
-function loadDragon(){
-
-var old=document.getElementById("dragon_engine_script");
-if(old) old.remove();
-
-var s=document.createElement("script");
-s.id="dragon_engine_script";
-s.src="/assets/dragon-engine.js?v="+Date.now();
-s.defer=true;
-
-document.body.appendChild(s);
-
-}
-
-window.addEventListener("DOMContentLoaded",loadDragon);
-
-})();
-
-</script>
+<!-- Dragon engine -->
+<script src="/assets/dragon-engine.js?v=HEX4"></script>
 
 </body>
 </html>

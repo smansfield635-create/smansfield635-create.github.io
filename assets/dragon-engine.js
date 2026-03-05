@@ -1,9 +1,12 @@
 /* TNT — /assets/dragon-engine.js
-   HEX SILHOUETTE (FILLED HEX CELLS) — PROOF-FIRST
-   BUILD: HEX_SILHOUETTE_PROOF_v2
-   ADDITIONS:
-   - FREEZE MODE (press F)
-   - EXPORT HEX MASK (press E)
+   BUILD: HEX_SILHOUETTE_PROOF_v3
+
+   ADDS:
+   - FREEZE (F)
+   - EXPORT RAW HEX CELLS (E)
+   - EXPORT CGG-256 GRID MASK (G)
+
+   CGG-256 = 16x16 creature geometry grid
 */
 
 (function(){
@@ -13,19 +16,25 @@ window.__HEX_SIL_RUNNING__ = true;
 
 /* ===== LOCKED PARAMS ===== */
 
-const HEX = 6;
-const SPINE_LEN = 36;
-const SHOULDER_R = 6;
-const TAIL_R = 0;
+const HEX=6
+const SPINE_LEN=36
+const SHOULDER_R=6
+const TAIL_R=0
 
-const DIRS = [
-{q:+1,r:0},
-{q:+1,r:-1},
+/* ===== CGG GRID ===== */
+
+const CGG_SIZE=16
+
+/* ===== AXIAL DIRS ===== */
+
+const DIRS=[
+{q:1,r:0},
+{q:1,r:-1},
 {q:0,r:-1},
 {q:-1,r:0},
-{q:-1,r:+1},
-{q:0,r:+1}
-];
+{q:-1,r:1},
+{q:0,r:1}
+]
 
 function add(a,b){return{q:a.q+b.q,r:a.r+b.r}}
 function k(a){return a.q+","+a.r}
@@ -67,6 +76,7 @@ return((r^(r>>>14))>>>0)/4294967296
 /* ===== RADIUS PROFILE ===== */
 
 function radiusAt(i){
+
 const u=i/(SPINE_LEN-1)
 let r
 
@@ -82,6 +92,7 @@ else r=0
 
 if(r>SHOULDER_R) r=SHOULDER_R
 if(r<TAIL_R) r=TAIL_R
+
 return r|0
 }
 
@@ -105,8 +116,10 @@ const ctx=cv.getContext("2d",{alpha:true,desynchronized:true})
 let W=0,H=0,DPR=1
 
 function resize(){
+
 let dpr=1
 try{dpr=window.devicePixelRatio||1}catch(e){}
+
 DPR=Math.min(1.6,Math.max(1,dpr))
 
 W=Math.floor((window.innerWidth||1)*DPR)
@@ -114,6 +127,7 @@ H=Math.floor((window.innerHeight||1)*DPR)
 
 cv.width=W
 cv.height=H
+
 }
 
 resize()
@@ -122,6 +136,7 @@ window.addEventListener("resize",resize,{passive:true})
 /* ===== SPINE INIT ===== */
 
 function initSpine(heading,offset){
+
 const spine=new Array(SPINE_LEN)
 spine[0]={q:offset.q,r:offset.r}
 
@@ -219,7 +234,53 @@ const y=cy+p.y*DPR
 drawHex(x,y,size)
 ctx.fill()
 ctx.stroke()
+
 }
+}
+
+/* ===== EXPORT RAW ===== */
+
+function exportRaw(set){
+
+const arr=[...set.values()]
+console.log("HEX RAW",arr)
+
+}
+
+/* ===== EXPORT CGG 256 GRID ===== */
+
+function exportCGG(set){
+
+const grid=[]
+
+for(let r=0;r<CGG_SIZE;r++){
+
+let row=""
+
+for(let q=0;q<CGG_SIZE;q++){
+
+const key=q+","+r
+
+row+=set.has(key)?"1":"0"
+
+}
+
+grid.push(row)
+
+}
+
+console.log("CGG-256 MASK",grid)
+
+const blob=new Blob([JSON.stringify(grid,null,2)],{type:"application/json"})
+const url=URL.createObjectURL(blob)
+
+const a=document.createElement("a")
+a.href=url
+a.download="dragon_cgg256_mask.json"
+a.click()
+
+URL.revokeObjectURL(url)
+
 }
 
 /* ===== MIRROR DRAGONS ===== */
@@ -230,30 +291,9 @@ let headingBot=3
 const rnd=mulberry32(0xC0FFEE)
 
 let spineTop=initSpine(headingTop,{q:-10,r:-10})
-let spineBot=initSpine(headingBot,{q:+10,r:+10})
+let spineBot=initSpine(headingBot,{q:10,r:10})
 
 let freeze=false
-
-/* ===== EXPORT ===== */
-
-function exportMask(set){
-
-const mask=[...set.values()]
-
-const json=JSON.stringify(mask,null,2)
-
-console.log("HEX MASK EXPORT",json)
-
-const blob=new Blob([json],{type:"application/json"})
-const url=URL.createObjectURL(blob)
-
-const a=document.createElement("a")
-a.href=url
-a.download="dragon_hex_mask.json"
-a.click()
-
-URL.revokeObjectURL(url)
-}
 
 /* ===== KEY CONTROLS ===== */
 
@@ -265,7 +305,12 @@ freeze=!freeze
 
 if(e.key==="e"||e.key==="E"){
 const body=buildBody(spineTop)
-exportMask(body)
+exportRaw(body)
+}
+
+if(e.key==="g"||e.key==="G"){
+const body=buildBody(spineTop)
+exportCGG(body)
 }
 
 })
@@ -300,6 +345,7 @@ spineBot[i].r=spineBot[i-1].r
 
 spineBot[0].q=newHead.q
 spineBot[0].r=newHead.r
+
 }
 
 ctx.clearRect(0,0,W,H)
@@ -310,11 +356,12 @@ const bodyBot=buildBody(spineBot)
 renderBody(bodyTop,"rgba(14,124,58,0.82)")
 renderBody(bodyBot,"rgba(179,33,33,0.78)")
 
-ctx.fillStyle="rgba(255,255,255,0.80)"
-ctx.font=(12*DPR)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif"
-ctx.fillText("HEX_SILHOUETTE_PROOF_v2 (HEX=6)",12*DPR,H-14*DPR)
+ctx.fillStyle="rgba(255,255,255,0.8)"
+ctx.font=(12*DPR)+"px system-ui"
+ctx.fillText("HEX_SILHOUETTE_PROOF_v3",12*DPR,H-14*DPR)
 
 requestAnimationFrame(loop)
+
 }
 
 requestAnimationFrame(loop)

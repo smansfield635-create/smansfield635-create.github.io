@@ -1,8 +1,6 @@
 /* TNT — /assets/hel-client.js
-   HEL CLIENT (HELL MODE)
-   PURPOSE: prove boot, prove draw, prove renderer presence, surface errors on-screen
-   BUILD: HEL_CLIENT_HELL_DIAG_v1
-   OUTPUT: same two dragons when HEL_RENDER is present; fallback drawing if not
+   HEL CLIENT — STABLE SPINE + MORPH ANCHORS
+   BUILD: HEL_CLIENT_DRAGON_MORPH_v1
 */
 (function(){
 "use strict";
@@ -21,41 +19,6 @@ function cssNum(name){
     return Number.isFinite(n)?n:NaN;
   }catch(e){return NaN;}
 }
-
-function ensureBootPanel(){
-  let b=document.getElementById("hel_boot_panel");
-  if(b) return b;
-  b=document.createElement("div");
-  b.id="hel_boot_panel";
-  b.style.position="fixed";
-  b.style.left="10px";
-  b.style.top="10px";
-  b.style.zIndex="99999";
-  b.style.padding="8px 10px";
-  b.style.borderRadius="10px";
-  b.style.background="rgba(0,0,0,.70)";
-  b.style.color="rgba(255,255,255,.92)";
-  b.style.font="12px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace";
-  b.style.pointerEvents="none";
-  b.textContent="HEL: init…";
-  document.body.appendChild(b);
-  return b;
-}
-function bootMsg(s){
-  try{
-    const b=ensureBootPanel();
-    b.textContent=s;
-  }catch(e){}
-  try{ console.log(s); }catch(e){}
-}
-
-/* Catch hard failures */
-window.addEventListener("error", function(ev){
-  bootMsg("HEL ERROR: "+(ev && ev.message ? ev.message : "unknown"));
-});
-window.addEventListener("unhandledrejection", function(ev){
-  bootMsg("HEL REJECT: "+(ev && ev.reason ? String(ev.reason) : "unknown"));
-});
 
 function mountCanvas(){
   let c=document.getElementById("hel_entity_canvas");
@@ -88,11 +51,12 @@ function stage(){
   return {Cx,Cy,R,vw,vh};
 }
 
+/* ====== STABILITY LOCKS (prevents collapse) ====== */
 const SEG=96;
-const GAP=18;
+const GAP=28;
 const SPEED=0.45;
-const WOB=0.06;
-const BASE_R=28;
+const WOB=0.05;
+const BASE_R=12;
 
 const TOP_MIN=Math.PI*1.10, TOP_MAX=Math.PI*1.88;
 const BOT_MIN=Math.PI*0.12, BOT_MAX=Math.PI*0.92;
@@ -110,23 +74,22 @@ function reflect(a,lo,hi){
 }
 
 function radiusMul(u){
-  if(u<0.06) return 1.45;
-  if(u<0.18){ const t=(u-0.06)/0.12; return 0.65 + 0.35*Math.sin(Math.PI*t); }
-  if(u<0.34){ const t=(u-0.18)/0.16; return 1.25 + 0.35*Math.sin(Math.PI*t); }
-  if(u<0.78) return 1.05;
+  if(u<0.06) return 1.35;
+  if(u<0.18){ const t=(u-0.06)/0.12; return 0.70 + 0.30*Math.sin(Math.PI*t); }
+  if(u<0.34){ const t=(u-0.18)/0.16; return 1.15 + 0.30*Math.sin(Math.PI*t); }
+  if(u<0.78) return 1.00;
   const t=(u-0.78)/0.22;
-  return Math.max(0.18, 1.05*(1-0.82*t));
+  return Math.max(0.18, 1.00*(1-0.82*t));
 }
-function R(u){ return Math.max(6, BASE_R*radiusMul(u)); }
+function R(u){
+  const rr=Math.max(6, BASE_R*radiusMul(u));
+  return Math.min(rr, GAP*0.60);
+}
 
 function tangent(sp,i){
   const a=sp[Math.max(0,i-1)], b=sp[Math.min(sp.length-1,i+1)];
   let dx=b.x-a.x, dy=b.y-a.y, d=Math.max(0.0001,hypot(dx,dy));
   return {x:dx/d,y:dy/d};
-}
-function normal(sp,i){
-  const t=tangent(sp,i);
-  return {x:-t.y,y:t.x};
 }
 function enforce(sp){
   for(let i=1;i<sp.length;i++){
@@ -173,49 +136,96 @@ class DragonSim{
     enforce(this.spine); smooth(this.spine); enforce(this.spine);
   }
   frame(dpr){
-    const L=[], Rr=[];
+    /* Build tangents/normals + continuity */
+    const spinePx=new Array(SEG);
+    const tArr=new Array(SEG);
+    const nArr=new Array(SEG);
+    const rArr=new Array(SEG);
+
+    let prevN=null;
     for(let i=0;i<SEG;i++){
       const p=this.spine[i];
       const u=i/(SEG-1);
       const rr=R(u);
-      const n=normal(this.spine,i);
-      L.push({x:(p.x+n.x*rr)*dpr,y:(p.y+n.y*rr)*dpr});
-      Rr.push({x:(p.x-n.x*rr)*dpr,y:(p.y-n.y*rr)*dpr});
+
+      const t=tangent(this.spine,i);
+      let n={x:-t.y,y:t.x};
+
+      if(prevN){
+        const dot=n.x*prevN.x+n.y*prevN.y;
+        if(dot<0){ n.x=-n.x; n.y=-n.y; }
+      }
+      prevN={x:n.x,y:n.y};
+
+      spinePx[i]={x:p.x*dpr,y:p.y*dpr};
+      tArr[i]={x:t.x,y:t.y};
+      nArr[i]={x:n.x,y:n.y};
+      rArr[i]=rr*dpr;
     }
-    const h=this.spine[0];
-    const t=tangent(this.spine,0);
-    const nx=-t.y, ny=t.x;
-    const forward=34, back=22, jaw=18;
-    const tip={x:(h.x+t.x*forward)*dpr,y:(h.y+t.y*forward)*dpr};
-    const left={x:(h.x-t.x*back+nx*jaw)*dpr,y:(h.y-t.y*back+ny*jaw)*dpr};
-    const right={x:(h.x-t.x*back-nx*jaw)*dpr,y:(h.y-t.y*back-ny*jaw)*dpr};
-    const cap={x:(h.x-t.x*10)*dpr,y:(h.y-t.y*10)*dpr,rx:18*dpr,ry:12*dpr};
 
-    const tail=this.spine[SEG-1];
-    const tt=tangent(this.spine,SEG-1);
-    const fnx=-tt.y, fny=tt.x;
-    const a2={x:tail.x*dpr,y:tail.y*dpr};
-    const b2={x:(tail.x-tt.x*28+fnx*16)*dpr,y:(tail.y-tt.y*28+fny*16)*dpr};
-    const c2={x:(tail.x-tt.x*28-fnx*16)*dpr,y:(tail.y-tt.y*28-fny*16)*dpr};
+    /* Rails for body hull */
+    const L=[], Rr=[];
+    for(let i=0;i<SEG;i++){
+      const p=spinePx[i];
+      const n=nArr[i];
+      const rr=rArr[i];
+      L.push({x:p.x+n.x*rr,y:p.y+n.y*rr});
+      Rr.push({x:p.x-n.x*rr,y:p.y-n.y*rr});
+    }
 
-    return {L:L,R:Rr,head:{tip,left,right,cap},tailFin:{a:a2,b:b2,c:c2}};
+    /* Anchors by spine fraction */
+    const idx=(u)=>Math.max(0,Math.min(SEG-1, Math.round(u*(SEG-1))));
+    const A={
+      head: idx(0.00),
+      neck: idx(0.08),
+      leg1: idx(0.25),
+      leg2: idx(0.40),
+      leg3: idx(0.55),
+      leg4: idx(0.70),
+      ridge0: idx(0.10),
+      ridge1: idx(0.80),
+      tail: idx(0.98)
+    };
+
+    /* Head wedge primitives (stable direction from head segment) */
+    const h=A.head;
+    const h0=this.spine[h], h1=this.spine[Math.min(SEG-1,h+1)];
+    let dx=h0.x-h1.x, dy=h0.y-h1.y, dd=Math.hypot(dx,dy)||1;
+    const th={x:dx/dd,y:dy/dd};
+    const nh={x:-th.y,y:th.x};
+
+    const rh=rArr[h];
+    const forward=2.1*rh, back=1.2*rh, jaw=1.25*rh;
+
+    const Ph=spinePx[h];
+    const tip ={x:Ph.x+th.x*forward,y:Ph.y+th.y*forward};
+    const left={x:Ph.x-th.x*back+nh.x*jaw,y:Ph.y-th.y*back+nh.y*jaw};
+    const right={x:Ph.x-th.x*back-nh.x*jaw,y:Ph.y-th.y*back-nh.y*jaw};
+    const cap ={x:Ph.x-th.x*(0.55*rh),y:Ph.y-th.y*(0.55*rh),rx:1.25*rh,ry:0.90*rh};
+
+    const tail=A.tail;
+    const Pt=spinePx[tail];
+    const tt=tArr[tail];
+    const nt=nArr[tail];
+    const rt=rArr[tail];
+    const a2={x:Pt.x,y:Pt.y};
+    const b2={x:Pt.x-tt.x*(2.0*rt)+nt.x*(1.1*rt),y:Pt.y-tt.y*(2.0*rt)+nt.y*(1.1*rt)};
+    const c2={x:Pt.x-tt.x*(2.0*rt)-nt.x*(1.1*rt),y:Pt.y-tt.y*(2.0*rt)-nt.y*(1.1*rt)};
+
+    return {
+      L, R:Rr,
+      spine: spinePx,
+      t: tArr,
+      n: nArr,
+      rad: rArr,
+      anchors: A,
+      head: {tip,left,right,cap},
+      tailFin: {a:a2,b:b2,c:c2}
+    };
   }
 }
 
-/* FALLBACK DRAW (if renderer missing) */
-function fallback(ctx, f, fill){
-  const L=f.L, R=f.R;
-  ctx.beginPath();
-  ctx.moveTo(L[0].x,L[0].y);
-  for(let i=1;i<L.length;i++) ctx.lineTo(L[i].x,L[i].y);
-  for(let i=R.length-1;i>=0;i--) ctx.lineTo(R[i].x,R[i].y);
-  ctx.closePath();
-  ctx.fillStyle=fill;
-  ctx.fill();
-}
-
 function BOOT(){
-  bootMsg("HEL: boot start (client running)");
   const cv=mountCanvas();
   const ctx=cv.getContext("2d",{alpha:true,desynchronized:true});
   let dpr=resize(cv);
@@ -239,24 +249,20 @@ function BOOT(){
     const fT=topD.frame(dpr);
     const fB=botD.frame(dpr);
 
-    const hasRenderer = !!(window.HEL_RENDER && window.HEL_RENDER.drawDragon);
-
-    if(hasRenderer){
-      window.HEL_RENDER.drawDragon(ctx, fT, {fill:"rgba(0,110,60,0.92)", strokeW:2.6*dpr});
-      window.HEL_RENDER.drawDragon(ctx, fB, {fill:"rgba(170,20,20,0.90)", strokeW:2.6*dpr});
-      bootMsg("HEL: DRAW OK (renderer present)");
-    }else{
-      fallback(ctx, fT, "rgba(0,110,60,0.92)");
-      fallback(ctx, fB, "rgba(170,20,20,0.90)");
-      bootMsg("HEL: FALLBACK (renderer missing)");
+    if(window.HEL_RENDER && window.HEL_RENDER.drawDragon){
+      window.HEL_RENDER.drawDragon(ctx, fT, {fill:"rgba(0,110,60,0.92)", strokeW:2.4*dpr});
+      window.HEL_RENDER.drawDragon(ctx, fB, {fill:"rgba(170,20,20,0.90)", strokeW:2.4*dpr});
     }
+
+    ctx.fillStyle="rgba(255,255,255,0.18)";
+    ctx.font=(14*dpr)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
+    ctx.fillText("HEL_CLIENT_DRAGON_MORPH_v1", 12*dpr, cv.height-14*dpr);
 
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
 }
 
-/* Boot regardless of script timing */
 if(document.readyState==="complete" || document.readyState==="interactive"){
   setTimeout(BOOT,0);
 }else{

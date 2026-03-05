@@ -1,90 +1,34 @@
 <!doctype html>
 <!-- TNT — /index.html
-     PURPOSE: clean runtime + guaranteed dragon silhouette
-     BUILD: DRAGON_SILHOUETTE_BOOT_v1
+     BUILD: IDX_DRAGON_L2
+     PURPOSE: host layers + load dragon silhouette engine
 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1">
-<link rel="stylesheet" href="/assets/branch.css?v=1">
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
-<!-- Dragon engine -->
-<script defer src="/assets/dragon-engine.js?v=1"></script>
+<!-- Dragon engine (cache-bust) -->
+<script defer src="/assets/dragon-engine.js?v=2"></script>
 
 <style>
-body{
-margin:0;
-overflow:hidden;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-}
-
-#gd-field,
-#gd-dragon,
-#gd-ui{
-position:fixed;
-inset:0;
-width:100%;
-height:100%;
-}
-
+body{margin:0;overflow:hidden}
+#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
-
-.stage{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:min(900px,90vw);
-height:min(900px,90vw);
-pointer-events:none;
-}
-
-.node{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%) rotate(45deg);
-pointer-events:auto;
-border-radius:20px;
-width:140px;
-height:140px;
-background:linear-gradient(160deg,#111827,#0b0f16);
-border:1px solid rgba(255,255,255,.18);
-display:flex;
-align-items:center;
-justify-content:center;
-color:white;
-font-weight:900;
-letter-spacing:.5px;
-}
 </style>
 </head>
 
 <body>
-
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
-
-<div id="gd-ui">
-
-<div class="stage">
-
-<div class="node" style="left:50%;top:20%">LAWS</div>
-<div class="node" style="left:80%;top:50%">ENERGY</div>
-<div class="node" style="left:50%;top:80%">FINANCE</div>
-<div class="node" style="left:20%;top:50%">GOV</div>
-
-<div class="node" style="width:200px;height:200px;">CORE</div>
-
-</div>
-
-</div>
-
+<div id="gd-ui"></div>
 </body>
 </html>

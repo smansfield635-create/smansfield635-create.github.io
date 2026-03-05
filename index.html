@@ -1,8 +1,7 @@
 <!doctype html>
 <!-- TNT — /index.html
-     CORE L1 — WIRING (CATEGORY 1/4)
-     PURPOSE: hosts + load order + lane exports + minimal stage
-     BUILD: CORE_WIRING_L1
+     HEL TERMINAL WIRING (PUBLIC)
+     BUILD: IDX_HEL_TERMINAL_v1
 -->
 <html lang="en">
 <head>
@@ -10,12 +9,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>DiamondGateBridge</title>
 
-<script>window.__GD_BUILD__="CORE_WIRING_L1";</script>
-
-<link rel="stylesheet" href="/assets/ui.css?v=CORE_WIRING_L1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=CORE_WIRING_L1"/>
-
-<script defer src="/assets/dragon-anatomy.js?v=CORE_WIRING_L1"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
 body{margin:0;overflow:hidden}
@@ -23,20 +18,20 @@ body{margin:0;overflow:hidden}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
-#engstat{position:fixed;top:12px;left:12px;z-index:9999;pointer-events:none;font:800 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;opacity:.8}
 .stage{position:relative;width:min(980px,95vw);height:min(980px,82vh);margin:120px auto 0;pointer-events:none}
 </style>
-</head>
 
+<script defer src="/assets/hel-render.js"></script>
+<script defer src="/assets/hel-client.js"></script>
+</head>
 <body>
+
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
 <div id="gd-ui">
-  <div class="stage" id="stage">
-    <!-- minimal dial face -->
+  <div class="stage">
     <div class="gd_dialFace"></div>
-    <!-- minimal diamonds -->
     <div class="gd_diamond gd_core" style="left:50%;top:50%"><div class="gd_inner"><div class="gd_word">CORE</div><div class="gd_code">CORE</div></div></div>
     <div class="gd_diamond gd_l1" style="left:50%;top:calc(50% - var(--gd_r1))"><div class="gd_inner"><div class="gd_word">LAWS</div><div class="gd_code">N</div></div></div>
     <div class="gd_diamond gd_l1" style="left:calc(50% + var(--gd_r1));top:50%"><div class="gd_inner"><div class="gd_word">ENERGY</div><div class="gd_code">E</div></div></div>
@@ -45,32 +40,5 @@ body{margin:0;overflow:hidden}
   </div>
 </div>
 
-<div id="engstat">ENG: …</div>
-
-<script>
-(function(){
-"use strict";
-
-/* lane exports (CSS px) — dragon reads these if present */
-function exportLanes(){
-  const root=document.documentElement;
-  const vh=window.innerHeight||1;
-  const top=Math.round(vh*0.33);
-  const bot=Math.round(vh*0.67);
-  root.style.setProperty("--gd_laneTop", top+"px");
-  root.style.setProperty("--gd_laneBot", bot+"px");
-  root.style.setProperty("--gd_noFlyTop", "0px");
-  root.style.setProperty("--gd_noFlyBot", (vh|0)+"px");
-}
-exportLanes();
-window.addEventListener("resize", exportLanes, {passive:true});
-
-window.addEventListener("load", function(){
-  const drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
-  document.getElementById("engstat").textContent="ENG: "+drV;
-  try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
-});
-})();
-</script>
 </body>
 </html>

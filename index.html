@@ -1,34 +1,32 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: DRAGON_SPLIT_LOCKED+UNLOCKED_v1
-     PURPOSE: Same folder (/assets). Two engine files + two dragon files.
-     ORDER:
-       1) hel-render.js (wiring)
-       2) dragon-core.js (locked dragon parts)
-       3) dragon-skin.js (iterated dragon parts)
-       4) hel-client.js (simulation; starts loop)
+     BUILD: IDX_HEX_SILHOUETTE_BOOT_v1
+     PURPOSE: load /assets/dragon-engine.js (hex filled-cell silhouette)
 -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Diamond Gate Bridge</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=dragonsplit1">
-<link rel="stylesheet" href="/assets/branch.css?v=dragonsplit1">
+<link rel="stylesheet" href="/assets/ui.css?v=1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1"/>
+
+<!-- DRAGON ENGINE (cache-bust) -->
+<script defer src="/assets/dragon-engine.js?v=1"></script>
 
 <style>
-html,body{margin:0;height:100%;width:100%;overflow:hidden;background:#000;}
-#gd-dragon{position:fixed;inset:0;width:100vw;height:100vh;}
+body{margin:0;overflow:hidden}
+#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
+#gd-field{z-index:0;pointer-events:none}
+#gd-dragon{z-index:6;pointer-events:none}
+#gd-ui{z-index:20;pointer-events:none}
 </style>
 </head>
+
 <body>
+<div id="gd-field"></div>
 <div id="gd-dragon"></div>
-
-<script src="/assets/hel-render.js?v=dragonsplit1"></script>
-<script src="/assets/dragon-core.js?v=dragonsplit1"></script>
-<script src="/assets/dragon-skin.js?v=dragonsplit1"></script>
-<script src="/assets/hel-client.js?v=dragonsplit1"></script>
-
+<div id="gd-ui"></div>
 </body>
 </html>

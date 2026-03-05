@@ -1,28 +1,121 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: IDX_DRAGON_RUNTIME_HEX4_v1
-     PURPOSE: Stable loader for the current dragon engine (HEX4 Chinese no-wings)
+     BUILD: IDX_DIAG_LOADER_v1
+     PURPOSE: PROVE (on-screen) which dragon-engine.js is served + whether it runs
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DiamondGateBridge</title>
+<title>IDX_DIAG_LOADER_v1</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
 
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden}
 #gd-dragon{position:fixed;inset:0;pointer-events:none;z-index:6}
+#diag{
+position:fixed;left:10px;top:10px;z-index:999999;
+max-width:min(92vw,780px);
+background:rgba(0,0,0,0.55);
+color:rgba(255,255,255,0.95);
+border:1px solid rgba(255,255,255,0.18);
+border-radius:12px;
+padding:10px 12px;
+font:12px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+white-space:pre-wrap;
+pointer-events:none;
+}
 </style>
 </head>
 
 <body>
 <div id="gd-dragon"></div>
+<pre id="diag">IDX_DIAG_LOADER_v1
+loading…</pre>
 
-<!-- Load dragon engine with cache-bust so edits always show -->
-<script src="/assets/dragon-engine.js?v=HEX4_NOWING_V1_20260305"></script>
+<script>
+(function(){
+  "use strict";
+
+  var diag=document.getElementById("diag");
+  function out(s){ diag.textContent = String(s); }
+
+  // hard clear any prior globals that could prevent re-run
+  try{
+    delete window.__GD_DRAGON_ENGINE__;
+    delete window.__DRAGON_ENGINE_RUNNING__;
+    delete window.__HEX_DRAGON_RUNNING__;
+    delete window.__HEX_DRAGON_ENGINE__;
+    delete window.__GD_DRAGON_RUNNING__;
+  }catch(e){}
+
+  // remove old canvases if they exist
+  try{
+    var old = document.getElementById("gd_dragon_canvas") ||
+              document.getElementById("gd_dragon_engine_canvas") ||
+              document.getElementById("gd_hex_dragon_canvas");
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+  }catch(e){}
+
+  // build token (changes every load so cache cannot win)
+  var BT = "IDX_DIAG_LOADER_v1_" + Date.now();
+  var SRC = "/assets/dragon-engine.js?v=" + encodeURIComponent(BT);
+
+  // index-side tick (proves page RAF works even if engine fails)
+  var idxTick=0;
+  function idxLoop(){
+    idxTick++;
+    requestAnimationFrame(idxLoop);
+  }
+  requestAnimationFrame(idxLoop);
+
+  // fetch engine text and extract BUILD line (proves what file is served)
+  function extractBuild(text){
+    var m = text.match(/BUILD:\s*([^\n\r]+)/i);
+    return m ? m[1].trim() : "BUILD_NOT_FOUND";
+  }
+
+  function renderStatus(engineBuild, fetchStatus){
+    var s =
+"IDX_DIAG_LOADER_v1\n" +
+"PAGE_URL: " + location.href + "\n" +
+"ENGINE_SRC: " + SRC + "\n" +
+"FETCH: " + fetchStatus + "\n" +
+"ENGINE_BUILD_FROM_FILE: " + engineBuild + "\n" +
+"IDX_RAF_TICK: " + idxTick + "\n" +
+"ENGINE_STATE: " + (window.__GD_DRAGON_ENGINE__ ? "HAS __GD_DRAGON_ENGINE__" : "NO __GD_DRAGON_ENGINE__") + "\n";
+    out(s);
+  }
+
+  // live update panel
+  setInterval(function(){
+    renderStatus(window.__ENGINE_BUILD__ || "UNKNOWN_RUNTIME_BUILD", "see above");
+  }, 250);
+
+  // 1) fetch to prove what’s served
+  fetch(SRC, {cache:"no-store"}).then(function(r){
+    return r.text().then(function(t){
+      var b = extractBuild(t);
+      window.__ENGINE_BUILD__ = b;
+      renderStatus(b, "HTTP " + r.status);
+      // 2) then actually load it
+      var s=document.createElement("script");
+      s.async=false;
+      s.src=SRC;
+      document.body.appendChild(s);
+    });
+  }).catch(function(err){
+    renderStatus("FETCH_FAILED", String(err && err.message ? err.message : err));
+  });
+
+})();
+</script>
 
 </body>
 </html>

@@ -1,23 +1,20 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: IDX_PROFILE_INLINE_v1
-     PURPOSE:
-       - inline creature profile DATA (no new assets)
-       - keep engines frozen
-       - cache-bust engine loads
+     PURPOSE: wire the silhouette runtime (hel-render + hel-client)
+     BUILD: IDX_HEL_SILHOUETTE_L1
 -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css">
-<link rel="stylesheet" href="/assets/branch.css">
+<link rel="stylesheet" href="/assets/ui.css?v=1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=1"/>
 
-<!-- cache-bust engines -->
-<script defer src="/assets/bg-engine.js?v=3"></script>
-<script defer src="/assets/dragon-anatomy.js?v=3"></script>
+<!-- load order matters -->
+<script defer src="/assets/hel-render.js?v=1"></script>
+<script defer src="/assets/hel-client.js?v=1"></script>
 
 <style>
 body{margin:0;overflow:hidden}
@@ -25,7 +22,16 @@ body{margin:0;overflow:hidden}
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
-.stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);pointer-events:none}
+
+/* minimal stage container for dial + nodes */
+.stage{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(900px,90vw);
+  height:min(900px,90vw);
+  pointer-events:none;
+}
 .node{position:absolute;left:50%;top:50%;pointer-events:auto}
 </style>
 </head>
@@ -38,54 +44,27 @@ body{margin:0;overflow:hidden}
   <div class="stage">
     <div class="gd_dialFace"></div>
 
-    <div class="node gd_diamond gd_core" style="left:50%;top:50%;">
+    <div class="node gd_diamond gd_core" style="left:50%;top:50%">
       <div class="gd_inner"><div class="gd_word">CORE</div><div class="gd_code">CORE</div></div>
     </div>
-    <div class="node gd_diamond gd_l1" style="left:50%;top:20%;">
+
+    <div class="node gd_diamond gd_l1" style="left:50%;top:20%">
       <div class="gd_inner"><div class="gd_word">LAWS</div><div class="gd_code">N</div></div>
     </div>
-    <div class="node gd_diamond gd_l1" style="left:80%;top:50%;">
+
+    <div class="node gd_diamond gd_l1" style="left:80%;top:50%">
       <div class="gd_inner"><div class="gd_word">ENERGY</div><div class="gd_code">E</div></div>
     </div>
-    <div class="node gd_diamond gd_l1" style="left:50%;top:80%;">
+
+    <div class="node gd_diamond gd_l1" style="left:50%;top:80%">
       <div class="gd_inner"><div class="gd_word">FINANCE</div><div class="gd_code">S</div></div>
     </div>
-    <div class="node gd_diamond gd_l1" style="left:20%;top:50%;">
+
+    <div class="node gd_diamond gd_l1" style="left:20%;top:50%">
       <div class="gd_inner"><div class="gd_word">GOV</div><div class="gd_code">W</div></div>
     </div>
   </div>
 </div>
 
-<!-- INLINE PROFILE DATA (NO NEW ASSETS) -->
-<script>
-window.CREATURE_PROFILES = window.CREATURE_PROFILES || {};
-window.CREATURE_PROFILES.DRAGON_V1 = {
-  segments: 96,
-  baseRadius: 28,
-  // u in [0,1]
-  radiusMultiplier: function(u){
-    if(u < 0.06) return 1.45; // head mass
-    if(u < 0.18){
-      var t=(u-0.06)/0.12;
-      return 0.65 + 0.35*Math.sin(Math.PI*t); // neck pinch
-    }
-    if(u < 0.34){
-      var t2=(u-0.18)/0.16;
-      return 1.25 + 0.35*Math.sin(Math.PI*t2); // shoulder bulge
-    }
-    if(u < 0.78) return 1.05; // body
-    var t3=(u-0.78)/0.22;
-    var v=1.05*(1 - 0.82*t3); // tail taper
-    return (v < 0.18) ? 0.18 : v;
-  }
-};
-</script>
-
-<script>
-window.addEventListener("load", function(){
-  try{ if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
-  try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({profile:"DRAGON_V1"}); }catch(e){}
-});
-</script>
 </body>
 </html>

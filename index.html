@@ -1,34 +1,72 @@
 <!doctype html>
 <html lang="en">
 <head>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-<title>Compass</title>
+<title>Diamond Compass</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
-<script defer src="/assets/dragon-engine.js"></script>
+<link rel="stylesheet" href="/assets/branch.css">
+
+<!-- dragon engine -->
+<script defer src="/assets/dragon-engine.js?v=1"></script>
 
 <style>
-#stage{position:relative}
+
+body{margin:0}
+
+.stage{
+position:relative;
+width:min(1000px,95vw);
+height:min(1000px,90vh);
+margin:90px auto 0;
+}
+
+.dial{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:720px;
+height:720px;
+border-radius:50%;
+}
+
+.diamond{
+position:absolute;
+width:150px;
+height:150px;
+transform:translate(-50%,-50%) rotate(45deg);
+}
+
+.inner{
+width:100%;
+height:100%;
+transform:rotate(-45deg);
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:900;
+}
 
 .core{left:50%;top:50%}
+.n{left:50%;top:18%}
+.e{left:82%;top:50%}
+.s{left:50%;top:82%}
+.w{left:18%;top:50%}
 
-.n{left:50%;top:20%}
-.e{left:80%;top:50%}
-.s{left:50%;top:80%}
-.w{left:20%;top:50%}
 </style>
 </head>
 
 <body>
 
-<div class="stage" id="stage">
+<div class="stage">
 
 <div class="dial"></div>
 
 <div class="diamond core"><div class="inner">CORE</div></div>
-
 <div class="diamond n"><div class="inner">LAWS</div></div>
 <div class="diamond e"><div class="inner">ENERGY</div></div>
 <div class="diamond s"><div class="inner">FINANCE</div></div>

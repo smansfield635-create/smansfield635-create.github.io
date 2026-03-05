@@ -1,7 +1,10 @@
 <!doctype html>
 <!-- TNT — /index.html
-     CORE INDEX RESTORE
-     PURPOSE: restore stage hosts + diamonds + dragon engine mount
+     BUILD: IDX_FORCE_ENGINE_REFRESH_v2
+     PURPOSE:
+       - force reload of dragon engine (cache bust)
+       - guarantee host containers exist
+       - mount engines after DOM parse
 -->
 
 <html lang="en">
@@ -14,12 +17,18 @@
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
 
-<script defer src="/assets/instruments.js"></script>
-<script defer src="/assets/bg-engine.js"></script>
-<script defer src="/assets/dragon-anatomy.js"></script>
+<!-- engines -->
+<script defer src="/assets/instruments.js?v=2"></script>
+<script defer src="/assets/bg-engine.js?v=2"></script>
+<script defer src="/assets/dragon-anatomy.js?v=2"></script>
 
 <style>
-body{margin:0}
+
+body{
+margin:0;
+}
+
+/* engine layers */
 
 #gd-field,
 #gd-dragon,
@@ -30,9 +39,22 @@ width:100%;
 height:100%;
 }
 
-#gd-field{z-index:0;pointer-events:none}
-#gd-dragon{z-index:6;pointer-events:none}
-#gd-ui{z-index:20;pointer-events:none}
+#gd-field{
+z-index:0;
+pointer-events:none;
+}
+
+#gd-dragon{
+z-index:6;
+pointer-events:none;
+}
+
+#gd-ui{
+z-index:20;
+pointer-events:none;
+}
+
+/* stage */
 
 .stage{
 position:absolute;
@@ -50,10 +72,13 @@ left:50%;
 top:50%;
 pointer-events:auto;
 }
+
 </style>
 </head>
 
 <body>
+
+<!-- engine hosts -->
 
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
@@ -100,23 +125,26 @@ pointer-events:auto;
 </div>
 
 </div>
-
 </div>
 
 <script>
+
+/* mount engines after DOM ready */
+
 window.addEventListener("load",function(){
 
 try{
 if(window.GD_BG && window.GD_BG.mount)
-window.GD_BG.mount({fps:30,dpr_cap:1.6})
+window.GD_BG.mount({fps:30,dpr_cap:1.6});
 }catch(e){}
 
 try{
 if(window.GD_DRAGON && window.GD_DRAGON.mount)
-window.GD_DRAGON.mount({})
+window.GD_DRAGON.mount({});
 }catch(e){}
 
 });
+
 </script>
 
 </body>

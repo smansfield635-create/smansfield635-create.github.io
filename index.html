@@ -1,68 +1,36 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
 
-<title>DiamondGateBridge</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<!-- CORE STYLE ENGINES -->
+<title>Diamond Gate Bridge</title>
+
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
 
-<!-- CORE GRAPHICS ENGINES -->
-<script defer src="/assets/bg-engine.js"></script>
-<script defer src="/assets/dragon-engine.js"></script>
-
 <style>
-
-/* host layers only — permanent */
-
 html,body{
 margin:0;
-height:100%;
 width:100%;
+height:100%;
 overflow:hidden;
+background:#9d0000;
 }
 
-/* rendering layers */
-
-#gd-field{
+#gd_stage{
 position:fixed;
 inset:0;
-z-index:0;
-pointer-events:none;
 }
-
-#gd-dragon{
-position:fixed;
-inset:0;
-z-index:6;
-pointer-events:none;
-}
-
-#gd-ui{
-position:fixed;
-inset:0;
-z-index:20;
-pointer-events:auto;
-}
-
 </style>
+
 </head>
-
-
 <body>
 
-<!-- BACKGROUND ENGINE HOST -->
-<div id="gd-field"></div>
+<div id="gd_stage"></div>
 
-<!-- DRAGON ENGINE HOST -->
-<div id="gd-dragon"></div>
-
-<!-- UI HOST -->
-<div id="gd-ui"></div>
+<script src="/assets/dragon-engine.js"></script>
 
 </body>
 </html>

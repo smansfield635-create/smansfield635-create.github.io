@@ -1,71 +1,29 @@
 <!doctype html>
-<!-- TNT — /index.html
-     BUILD: HEX_DRAGON_TEST_STAGE
-     PURPOSE: minimal host for dragon-engine.js
--->
-
 <html lang="en">
 
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DiamondGateBridge</title>
 
-<title>Dragon Test</title>
-
-<link rel="stylesheet" href="/assets/ui.css?v=1">
-<link rel="stylesheet" href="/assets/branch.css?v=1">
-
-<!-- Dragon engine -->
-<script defer src="/assets/dragon-engine.js?v=1"></script>
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/branch.css">
 
 <style>
-
-html,body{
+body{
 margin:0;
-padding:0;
-width:100%;
-height:100%;
-overflow:hidden;
+background:#8a0000;
 }
-
-/* host layers */
-
-#gd-field,
-#gd-dragon,
-#gd-ui{
-position:fixed;
-inset:0;
-width:100%;
-height:100%;
-}
-
-#gd-field{
-z-index:0;
-pointer-events:none;
-}
-
-#gd-dragon{
-z-index:6;
-pointer-events:none;
-}
-
-#gd-ui{
-z-index:20;
-pointer-events:none;
-}
-
 </style>
 
 </head>
 
 <body>
 
-<div id="gd-field"></div>
-
 <div id="gd-dragon"></div>
 
-<div id="gd-ui"></div>
+<script src="/assets/dragon-engine.js?v=HEX3"></script>
 
 </body>
 

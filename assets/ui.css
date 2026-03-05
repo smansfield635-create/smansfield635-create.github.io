@@ -1,7 +1,7 @@
 /* TNT — /assets/ui.css
-   CORE L1 — MATERIAL (CATEGORY 2/4)
-   PURPOSE: background field + diamond material + dial face material
-   BUILD: CORE_MATERIAL_L1
+   CORE L1 — MATERIAL (REWASH/REWRITE)
+   PURPOSE: field background + dial face material + glossy diamonds (UI only)
+   BUILD: CORE_MATERIAL_L1_REWASH
 */
 :root{
   --gd_r1:180px;
@@ -14,7 +14,6 @@
   --goldSoft:rgba(212,175,55,.20);
 
   --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.78);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.86);
@@ -23,6 +22,7 @@
 html,body{
   height:100%;
   width:100%;
+  margin:0;
   background:
     radial-gradient(circle at 62% 14%, rgba(255,230,160,.12) 0%, rgba(255,230,160,0) 58%),
     radial-gradient(circle at 20% 40%, rgba(255,140,90,.08) 0%, transparent 60%),
@@ -33,7 +33,12 @@ html,body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-body::before,body::after{pointer-events:none!important;content:"";position:fixed;inset:0}
+body::before,body::after{
+  pointer-events:none!important;
+  content:"";
+  position:fixed;
+  inset:0;
+}
 body::before{
   background:
     repeating-linear-gradient(45deg, rgba(212,175,55,.04) 0 1px, transparent 1px 140px),
@@ -51,7 +56,8 @@ body::after{
 
 /* dial face */
 .gd_dialFace{
-  position:absolute;left:50%;top:50%;
+  position:absolute;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   width:min(860px,92vw);
   height:min(860px,92vw);

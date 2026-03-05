@@ -1,45 +1,31 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: HEL_INDEX_L2_STABLE
+     BUILD: HEL_INDEX_THOROUGH_v2
+     PURPOSE: deterministic boot (no race), cache-bust, correct container
 -->
 
 <html lang="en">
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Diamond Gate Bridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css">
-<link rel="stylesheet" href="/assets/branch.css">
+<link rel="stylesheet" href="/assets/ui.css?v=20260305a">
+<link rel="stylesheet" href="/assets/branch.css?v=20260305a">
 
 <style>
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-}
-
-#gd-dragon{
-position:fixed;
-inset:0;
-width:100vw;
-height:100vh;
-}
+html,body{margin:0;height:100%;width:100%;overflow:hidden;}
+#gd-dragon{position:fixed;inset:0;width:100vw;height:100vh;}
 </style>
-
 </head>
 
 <body>
 
 <div id="gd-dragon"></div>
 
-<!-- LOAD ORDER IS CRITICAL -->
-
-<script src="/assets/hel-render.js"></script>
-<script src="/assets/hel-client.js"></script>
+<!-- Renderer must load before client -->
+<script src="/assets/hel-render.js?v=20260305a"></script>
+<script src="/assets/hel-client.js?v=20260305a"></script>
 
 </body>
 </html>

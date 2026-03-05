@@ -1,12 +1,11 @@
 /* TNT — /assets/dragon-engine.js
-   BUILD: HEX_SILHOUETTE_PROOF_v3
+   BUILD: HEX_SILHOUETTE_PROOF_v4
+   GOAL: two good-looking dragons (capsule body, smooth taper)
 
-   ADDS:
-   - FREEZE (F)
-   - EXPORT RAW HEX CELLS (E)
-   - EXPORT CGG-256 GRID MASK (G)
-
-   CGG-256 = 16x16 creature geometry grid
+   CONTROLS
+   F → freeze
+   E → export raw hex cells
+   G → export CGG-256 mask
 */
 
 (function(){
@@ -14,32 +13,22 @@
 if(window.__HEX_SIL_RUNNING__) return;
 window.__HEX_SIL_RUNNING__ = true;
 
-/* ===== LOCKED PARAMS ===== */
+/* ===== PARAMS ===== */
 
-const HEX=6
-const SPINE_LEN=36
-const SHOULDER_R=6
-const TAIL_R=0
+const HEX = 6;
+const SPINE_LEN = 36;
+const SHOULDER_R = 6;
+const TAIL_R = 0;
+const CGG_SIZE = 16;
 
-/* ===== CGG GRID ===== */
-
-const CGG_SIZE=16
-
-/* ===== AXIAL DIRS ===== */
-
-const DIRS=[
-{q:1,r:0},
-{q:1,r:-1},
-{q:0,r:-1},
-{q:-1,r:0},
-{q:-1,r:1},
-{q:0,r:1}
-]
+const DIRS = [
+{q:1,r:0},{q:1,r:-1},{q:0,r:-1},{q:-1,r:0},{q:-1,r:1},{q:0,r:1}
+];
 
 function add(a,b){return{q:a.q+b.q,r:a.r+b.r}}
 function k(a){return a.q+","+a.r}
 
-/* ===== AXIAL → PIXEL ===== */
+/* ===== AXIAL→PIXEL ===== */
 
 function axialToPx(h){
 const x=HEX*Math.sqrt(3)*(h.q+h.r/2)
@@ -49,8 +38,7 @@ return{x,y}
 
 /* ===== HEX DISK ===== */
 
-function disk(center,radius){
-const r=radius|0
+function disk(center,r){
 const out=[]
 for(let dq=-r;dq<=r;dq++){
 const r1=Math.max(-r,-dq-r)
@@ -73,26 +61,23 @@ return((r^(r>>>14))>>>0)/4294967296
 }
 }
 
-/* ===== RADIUS PROFILE ===== */
+/* ===== SMOOTH RADIUS PROFILE ===== */
 
 function radiusAt(i){
-
 const u=i/(SPINE_LEN-1)
 let r
 
-if(u<0.08) r=4
-else if(u<0.18) r=3
-else if(u<0.28) r=2
-else if(u<0.42) r=6
-else if(u<0.62) r=5
-else if(u<0.78) r=4
-else if(u<0.88) r=2
-else if(u<0.95) r=1
+if(u<0.10) r=4
+else if(u<0.25) r=3
+else if(u<0.45) r=6
+else if(u<0.65) r=5
+else if(u<0.80) r=4
+else if(u<0.90) r=2
+else if(u<0.97) r=1
 else r=0
 
-if(r>SHOULDER_R) r=SHOULDER_R
-if(r<TAIL_R) r=TAIL_R
-
+r=Math.min(r,SHOULDER_R)
+r=Math.max(r,TAIL_R)
 return r|0
 }
 
@@ -100,190 +85,132 @@ return r|0
 
 const host=document.getElementById("gd-dragon")||document.body
 const cv=document.createElement("canvas")
-
-cv.id="gd_hex_sil_canvas"
 cv.style.position="absolute"
 cv.style.inset="0"
 cv.style.width="100%"
 cv.style.height="100%"
 cv.style.pointerEvents="none"
 cv.style.zIndex="6"
-
+cv.style.background="#000"
 host.appendChild(cv)
 
-const ctx=cv.getContext("2d",{alpha:true,desynchronized:true})
+const ctx=cv.getContext("2d",{alpha:true})
 
 let W=0,H=0,DPR=1
 
 function resize(){
-
-let dpr=1
-try{dpr=window.devicePixelRatio||1}catch(e){}
-
+let dpr=window.devicePixelRatio||1
 DPR=Math.min(1.6,Math.max(1,dpr))
-
-W=Math.floor((window.innerWidth||1)*DPR)
-H=Math.floor((window.innerHeight||1)*DPR)
-
+W=Math.floor(innerWidth*DPR)
+H=Math.floor(innerHeight*DPR)
 cv.width=W
 cv.height=H
-
 }
-
 resize()
-window.addEventListener("resize",resize,{passive:true})
+addEventListener("resize",resize,{passive:true})
 
-/* ===== SPINE INIT ===== */
+/* ===== SPINE ===== */
 
-function initSpine(heading,offset){
-
-const spine=new Array(SPINE_LEN)
-spine[0]={q:offset.q,r:offset.r}
-
-const back=(heading+3)%6
-
-for(let i=1;i<SPINE_LEN;i++){
-spine[i]=add(spine[i-1],DIRS[back])
+function initSpine(h,o){
+const s=new Array(SPINE_LEN)
+s[0]={q:o.q,r:o.r}
+const back=(h+3)%6
+for(let i=1;i<SPINE_LEN;i++) s[i]=add(s[i-1],DIRS[back])
+return s
 }
-
-return spine
-}
-
-/* ===== SPINE STEP ===== */
 
 function stepSpine(spine,heading,rnd){
-
 const roll=rnd()
-
 let turn=0
 if(roll<0.06) turn=-1
 else if(roll>0.94) turn=1
-
 heading=(heading+turn+6)%6
-
-const newHead=add(spine[0],DIRS[heading])
-
+const nh=add(spine[0],DIRS[heading])
 for(let i=SPINE_LEN-1;i>=1;i--){
 spine[i].q=spine[i-1].q
 spine[i].r=spine[i-1].r
 }
-
-spine[0].q=newHead.q
-spine[0].r=newHead.r
-
+spine[0]=nh
 return heading
 }
 
-/* ===== BUILD BODY ===== */
+/* ===== CAPSULE BODY BUILDER ===== */
 
 function buildBody(spine){
-
 const set=new Map()
 
 for(let i=0;i<SPINE_LEN;i++){
 
 const r=radiusAt(i)
-
 const cells=(r>0)?disk(spine[i],r):[spine[i]]
 
 for(const c of cells){
 set.set(k(c),c)
-}}
+}
+
+/* blend with next segment */
+if(i<SPINE_LEN-1){
+const mid={
+q:(spine[i].q+spine[i+1].q)>>1,
+r:(spine[i].r+spine[i+1].r)>>1
+}
+const mrad=Math.max(1,(radiusAt(i)+radiusAt(i+1))>>1)
+for(const c of disk(mid,mrad)){
+set.set(k(c),c)
+}
+}
+
+}
 
 return set
 }
 
 /* ===== DRAW HEX ===== */
 
-function drawHex(x,y,size){
-
+function drawHex(x,y,s){
 ctx.beginPath()
-
 for(let i=0;i<6;i++){
 const a=(Math.PI/180)*(60*i-30)
-const px=x+Math.cos(a)*size
-const py=y+Math.sin(a)*size
-
+const px=x+Math.cos(a)*s
+const py=y+Math.sin(a)*s
 if(i===0) ctx.moveTo(px,py)
 else ctx.lineTo(px,py)
 }
-
 ctx.closePath()
 }
 
-function renderBody(set,fill){
-
+function renderBody(set,color){
 const cx=W*0.5
 const cy=H*0.52
-
-ctx.fillStyle=fill
-ctx.strokeStyle="rgba(0,0,0,0.55)"
-ctx.lineWidth=1*DPR
-
-const keys=Array.from(set.keys()).sort()
+ctx.fillStyle=color
 const size=HEX*DPR*0.98
 
-for(const kk of keys){
-
-const h=set.get(kk)
+for(const h of set.values()){
 const p=axialToPx(h)
-
-const x=cx+p.x*DPR
-const y=cy+p.y*DPR
-
-drawHex(x,y,size)
+drawHex(cx+p.x*DPR,cy+p.y*DPR,size)
 ctx.fill()
-ctx.stroke()
-
 }
 }
 
-/* ===== EXPORT RAW ===== */
+/* ===== EXPORTS ===== */
 
 function exportRaw(set){
-
-const arr=[...set.values()]
-console.log("HEX RAW",arr)
-
+console.log([...set.values()])
 }
-
-/* ===== EXPORT CGG 256 GRID ===== */
 
 function exportCGG(set){
-
 const grid=[]
-
 for(let r=0;r<CGG_SIZE;r++){
-
 let row=""
-
 for(let q=0;q<CGG_SIZE;q++){
-
-const key=q+","+r
-
-row+=set.has(key)?"1":"0"
-
+row+=set.has(q+","+r)?"1":"0"
 }
-
 grid.push(row)
-
+}
+console.log(grid)
 }
 
-console.log("CGG-256 MASK",grid)
-
-const blob=new Blob([JSON.stringify(grid,null,2)],{type:"application/json"})
-const url=URL.createObjectURL(blob)
-
-const a=document.createElement("a")
-a.href=url
-a.download="dragon_cgg256_mask.json"
-a.click()
-
-URL.revokeObjectURL(url)
-
-}
-
-/* ===== MIRROR DRAGONS ===== */
+/* ===== DRAGONS ===== */
 
 let headingTop=0
 let headingBot=3
@@ -295,24 +222,10 @@ let spineBot=initSpine(headingBot,{q:10,r:10})
 
 let freeze=false
 
-/* ===== KEY CONTROLS ===== */
-
-window.addEventListener("keydown",(e)=>{
-
-if(e.key==="f"||e.key==="F"){
-freeze=!freeze
-}
-
-if(e.key==="e"||e.key==="E"){
-const body=buildBody(spineTop)
-exportRaw(body)
-}
-
-if(e.key==="g"||e.key==="G"){
-const body=buildBody(spineTop)
-exportCGG(body)
-}
-
+addEventListener("keydown",(e)=>{
+if(e.key==="f") freeze=!freeze
+if(e.key==="e") exportRaw(buildBody(spineTop))
+if(e.key==="g") exportCGG(buildBody(spineTop))
 })
 
 /* ===== LOOP ===== */
@@ -320,32 +233,25 @@ exportCGG(body)
 let last=0
 let acc=0
 
-function loop(ts){
+function loop(t){
 
-if(!last) last=ts
-const dt=ts-last
-last=ts
-
+if(!last) last=t
+const dt=t-last
+last=t
 acc+=dt
 
-if(!freeze && acc>=83){
-
+if(!freeze && acc>=40){
 acc=0
 
 headingTop=stepSpine(spineTop,headingTop,rnd)
 
 headingBot=(headingTop+3)%6
-
-const newHead=add(spineBot[0],DIRS[headingBot])
-
+const nh=add(spineBot[0],DIRS[headingBot])
 for(let i=SPINE_LEN-1;i>=1;i--){
 spineBot[i].q=spineBot[i-1].q
 spineBot[i].r=spineBot[i-1].r
 }
-
-spineBot[0].q=newHead.q
-spineBot[0].r=newHead.r
-
+spineBot[0]=nh
 }
 
 ctx.clearRect(0,0,W,H)
@@ -353,15 +259,10 @@ ctx.clearRect(0,0,W,H)
 const bodyTop=buildBody(spineTop)
 const bodyBot=buildBody(spineBot)
 
-renderBody(bodyTop,"rgba(14,124,58,0.82)")
-renderBody(bodyBot,"rgba(179,33,33,0.78)")
-
-ctx.fillStyle="rgba(255,255,255,0.8)"
-ctx.font=(12*DPR)+"px system-ui"
-ctx.fillText("HEX_SILHOUETTE_PROOF_v3",12*DPR,H-14*DPR)
+renderBody(bodyTop,"rgba(20,220,120,0.9)")
+renderBody(bodyBot,"rgba(255,60,60,0.9)")
 
 requestAnimationFrame(loop)
-
 }
 
 requestAnimationFrame(loop)

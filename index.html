@@ -1,276 +1,76 @@
 <!doctype html>
 <!-- TNT — /index.html
-     CANON INDEX WIRING RESET
-     PURPOSE: restore deterministic wiring layer
-     BUILD: IDX_CANON_RESET_2
-     FULL FILE REPLACEMENT
+     CORE L1 — WIRING (CATEGORY 1/4)
+     PURPOSE: hosts + load order + lane exports + minimal stage
+     BUILD: CORE_WIRING_L1
 -->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>DiamondGateBridge</title>
 
-<script>
-window.__GD_BUILD__="IDX_CANON_RESET_2";
-</script>
+<script>window.__GD_BUILD__="CORE_WIRING_L1";</script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_RESET_2"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_RESET_2"/>
+<link rel="stylesheet" href="/assets/ui.css?v=CORE_WIRING_L1"/>
+<link rel="stylesheet" href="/assets/branch.css?v=CORE_WIRING_L1"/>
 
-<script defer src="/assets/instruments.js?v=IDX_CANON_RESET_2"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_CANON_RESET_2"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_RESET_2"></script>
+<script defer src="/assets/dragon-anatomy.js?v=CORE_WIRING_L1"></script>
 
 <style>
-
-/* ===== GLOBAL RESET ===== */
-
-body{
-margin:0;
-overflow:hidden;
-font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-color:#fff;
-}
-
-/* ===== HOST LAYERS ===== */
-
-#gd-field,
-#gd-dragon,
-#gd-ui{
-position:fixed;
-inset:0;
-width:100%;
-height:100%;
-}
-
-#gd-field{
-z-index:0;
-pointer-events:none;
-}
-
-#gd-dragon{
-z-index:6;
-pointer-events:none;
-}
-
-#gd-ui{
-z-index:20;
-pointer-events:none;
-}
-
-/* ===== STAGE ===== */
-
-.stage{
-position:relative;
-width:min(980px,95vw);
-height:min(980px,82vh);
-margin:120px auto 0;
-pointer-events:none;
-}
-
-.dial{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:min(860px,92vw);
-height:min(860px,92vw);
-border-radius:999px;
-pointer-events:none;
-}
-
-/* ===== DIAMONDS ===== */
-
-.node{
-position:absolute;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%) rotate(45deg);
-border-radius:20px;
-pointer-events:auto;
-cursor:pointer;
-overflow:hidden;
-}
-
-.core{width:200px;height:200px}
-.l1{width:140px;height:140px}
-.l2{width:110px;height:110px}
-.l3{width:88px;height:88px}
-
-.inner{
-width:100%;
-height:100%;
-transform:rotate(-45deg);
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-}
-
-.word{
-font-weight:900;
-font-size:14px;
-letter-spacing:.6px;
-}
-
-.cardinal{
-font-size:10px;
-opacity:.75;
-letter-spacing:1px;
-}
-
-/* ===== ENGINE STATUS ===== */
-
-#engstat{
-position:fixed;
-top:12px;
-left:12px;
-z-index:9999;
-font-size:12px;
-font-weight:800;
-opacity:.8;
-pointer-events:none;
-}
-
+body{margin:0;overflow:hidden}
+#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
+#gd-field{z-index:0;pointer-events:none}
+#gd-dragon{z-index:6;pointer-events:none}
+#gd-ui{z-index:20;pointer-events:none}
+#engstat{position:fixed;top:12px;left:12px;z-index:9999;pointer-events:none;font:800 12px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;opacity:.8}
+.stage{position:relative;width:min(980px,95vw);height:min(980px,82vh);margin:120px auto 0;pointer-events:none}
 </style>
 </head>
 
 <body>
-
-<!-- ENGINE HOSTS -->
-
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
 <div id="gd-ui">
-
-<div class="stage" id="stage">
-<div class="dial"></div>
-</div>
-
+  <div class="stage" id="stage">
+    <!-- minimal dial face -->
+    <div class="gd_dialFace"></div>
+    <!-- minimal diamonds -->
+    <div class="gd_diamond gd_core" style="left:50%;top:50%"><div class="gd_inner"><div class="gd_word">CORE</div><div class="gd_code">CORE</div></div></div>
+    <div class="gd_diamond gd_l1" style="left:50%;top:calc(50% - var(--gd_r1))"><div class="gd_inner"><div class="gd_word">LAWS</div><div class="gd_code">N</div></div></div>
+    <div class="gd_diamond gd_l1" style="left:calc(50% + var(--gd_r1));top:50%"><div class="gd_inner"><div class="gd_word">ENERGY</div><div class="gd_code">E</div></div></div>
+    <div class="gd_diamond gd_l1" style="left:50%;top:calc(50% + var(--gd_r1))"><div class="gd_inner"><div class="gd_word">FINANCE</div><div class="gd_code">S</div></div></div>
+    <div class="gd_diamond gd_l1" style="left:calc(50% - var(--gd_r1));top:50%"><div class="gd_inner"><div class="gd_word">GOV</div><div class="gd_code">W</div></div></div>
+  </div>
 </div>
 
 <div id="engstat">ENG: …</div>
 
 <script>
-
 (function(){
-
 "use strict";
 
-/* ===== CANON STATE ===== */
+/* lane exports (CSS px) — dragon reads these if present */
+function exportLanes(){
+  const root=document.documentElement;
+  const vh=window.innerHeight||1;
+  const top=Math.round(vh*0.33);
+  const bot=Math.round(vh*0.67);
+  root.style.setProperty("--gd_laneTop", top+"px");
+  root.style.setProperty("--gd_laneBot", bot+"px");
+  root.style.setProperty("--gd_noFlyTop", "0px");
+  root.style.setProperty("--gd_noFlyBot", (vh|0)+"px");
+}
+exportLanes();
+window.addEventListener("resize", exportLanes, {passive:true});
 
-var LS=window.localStorage;
-
-try{
-LS.setItem("gd_lang","en");
-LS.setItem("gd_style","informal");
-LS.setItem("gd_time","now");
-LS.setItem("gd_depth","explore");
-}catch(e){}
-
-document.documentElement.lang="en";
-
-/* ===== NODE MAP ===== */
-
-var nodes=[
-{code:"CORE",label:"CORE",cls:"core",x:0,y:0,href:"/index-core/"},
-{code:"N",label:"LAWS",cls:"l1",x:0,y:-180,href:"/laws/"},
-{code:"E",label:"ENERGY",cls:"l1",x:180,y:0,href:"/explore/frontier/energy/"},
-{code:"S",label:"FINANCE",cls:"l1",x:0,y:180,href:"/finance/"},
-{code:"W",label:"GOVERNANCE",cls:"l1",x:-180,y:0,href:"/governance/"}
-];
-
-/* ===== NODE CREATOR ===== */
-
-function createNode(n){
-
-var el=document.createElement("div");
-el.className="node "+n.cls;
-
-var inner=document.createElement("div");
-inner.className="inner";
-
-var w=document.createElement("div");
-w.className="word";
-w.textContent=n.label;
-
-var c=document.createElement("div");
-c.className="cardinal";
-c.textContent=n.code;
-
-inner.appendChild(w);
-inner.appendChild(c);
-el.appendChild(inner);
-
-el.addEventListener("click",function(){
-location.href=n.href;
+window.addEventListener("load", function(){
+  const drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
+  document.getElementById("engstat").textContent="ENG: "+drV;
+  try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
 });
-
-return el;
-
-}
-
-/* ===== LAYOUT ===== */
-
-function layout(){
-
-var stage=document.getElementById("stage");
-
-var rect=stage.getBoundingClientRect();
-var cx=rect.width/2;
-var cy=rect.height/2;
-
-for(var i=0;i<nodes.length;i++){
-
-var n=nodes[i];
-var node=createNode(n);
-
-node.style.left=(cx+n.x)+"px";
-node.style.top=(cy+n.y)+"px";
-
-stage.appendChild(node);
-
-}
-
-}
-
-/* ===== ENGINE BOOT ===== */
-
-window.addEventListener("load",function(){
-
-var bgV=(window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : "BG?";
-var drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : "DR?";
-
-document.getElementById("engstat").textContent="ENG: "+bgV+" | "+drV;
-
-try{
-if(window.GD_BG && window.GD_BG.mount){
-window.GD_BG.mount({
-fps:30,
-dpr_cap:1.6
-});
-}
-}catch(e){}
-
-try{
-if(window.GD_DRAGON && window.GD_DRAGON.mount){
-window.GD_DRAGON.mount({});
-}
-}catch(e){}
-
-});
-
-/* ===== RUN ===== */
-
-layout();
-
 })();
-
 </script>
-
 </body>
 </html>

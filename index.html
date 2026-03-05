@@ -1,31 +1,40 @@
 <!doctype html>
-<!-- TNT — /index.html
-     BUILD: IDX_DRAGON_ENGINE_BOOT_v1
-     PURPOSE: load /assets/dragon-engine.js (cache-busted)
--->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1"/>
+<title>Compass</title>
 
-<!-- DRAGON ENGINE (cache-bust) -->
-<script defer src="/assets/dragon-engine.js?v=1"></script>
+<link rel="stylesheet" href="/assets/ui.css">
+<script defer src="/assets/dragon-engine.js"></script>
 
 <style>
-body{margin:0;overflow:hidden}
-#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
-#gd-field{z-index:0;pointer-events:none}
-#gd-dragon{z-index:6;pointer-events:none}
-#gd-ui{z-index:20;pointer-events:none}
+#stage{position:relative}
+
+.core{left:50%;top:50%}
+
+.n{left:50%;top:20%}
+.e{left:80%;top:50%}
+.s{left:50%;top:80%}
+.w{left:20%;top:50%}
 </style>
 </head>
+
 <body>
-<div id="gd-field"></div>
-<div id="gd-dragon"></div>
-<div id="gd-ui"></div>
+
+<div class="stage" id="stage">
+
+<div class="dial"></div>
+
+<div class="diamond core"><div class="inner">CORE</div></div>
+
+<div class="diamond n"><div class="inner">LAWS</div></div>
+<div class="diamond e"><div class="inner">ENERGY</div></div>
+<div class="diamond s"><div class="inner">FINANCE</div></div>
+<div class="diamond w"><div class="inner">GOVERNANCE</div></div>
+
+</div>
+
 </body>
 </html>

@@ -1,8 +1,8 @@
 /* TNT — /assets/hel-client.js
-   HEL CLIENT (REWASH/REWRITE)
-   PURPOSE: minimal stable silhouette generator + playback (no external engines)
-   BUILD: HEL_CLIENT_L1_REWASH
-   OUTPUT: two serpentine “dragon silhouettes” (top jade, bottom crimson)
+   HEL CLIENT (HELL MODE)
+   PURPOSE: prove boot, prove draw, prove renderer presence, surface errors on-screen
+   BUILD: HEL_CLIENT_HELL_DIAG_v1
+   OUTPUT: same two dragons when HEL_RENDER is present; fallback drawing if not
 */
 (function(){
 "use strict";
@@ -22,6 +22,41 @@ function cssNum(name){
   }catch(e){return NaN;}
 }
 
+function ensureBootPanel(){
+  let b=document.getElementById("hel_boot_panel");
+  if(b) return b;
+  b=document.createElement("div");
+  b.id="hel_boot_panel";
+  b.style.position="fixed";
+  b.style.left="10px";
+  b.style.top="10px";
+  b.style.zIndex="99999";
+  b.style.padding="8px 10px";
+  b.style.borderRadius="10px";
+  b.style.background="rgba(0,0,0,.70)";
+  b.style.color="rgba(255,255,255,.92)";
+  b.style.font="12px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace";
+  b.style.pointerEvents="none";
+  b.textContent="HEL: init…";
+  document.body.appendChild(b);
+  return b;
+}
+function bootMsg(s){
+  try{
+    const b=ensureBootPanel();
+    b.textContent=s;
+  }catch(e){}
+  try{ console.log(s); }catch(e){}
+}
+
+/* Catch hard failures */
+window.addEventListener("error", function(ev){
+  bootMsg("HEL ERROR: "+(ev && ev.message ? ev.message : "unknown"));
+});
+window.addEventListener("unhandledrejection", function(ev){
+  bootMsg("HEL REJECT: "+(ev && ev.reason ? String(ev.reason) : "unknown"));
+});
+
 function mountCanvas(){
   let c=document.getElementById("hel_entity_canvas");
   if(c) return c;
@@ -32,6 +67,7 @@ function mountCanvas(){
   c.style.width="100%";
   c.style.height="100%";
   c.style.pointerEvents="none";
+  c.style.transform="translateZ(0)";
   (document.getElementById("gd-dragon")||document.body).appendChild(c);
   return c;
 }
@@ -85,7 +121,7 @@ function R(u){ return Math.max(6, BASE_R*radiusMul(u)); }
 
 function tangent(sp,i){
   const a=sp[Math.max(0,i-1)], b=sp[Math.min(sp.length-1,i+1)];
-  let dx=b.x-a.x, dy=b.y-a.y, d=hypot(dx,dy);
+  let dx=b.x-a.x, dy=b.y-a.y, d=Math.max(0.0001,hypot(dx,dy));
   return {x:dx/d,y:dy/d};
 }
 function normal(sp,i){
@@ -95,7 +131,7 @@ function normal(sp,i){
 function enforce(sp){
   for(let i=1;i<sp.length;i++){
     const p=sp[i-1], c=sp[i];
-    const dx=p.x-c.x, dy=p.y-c.y, d=hypot(dx,dy);
+    const dx=p.x-c.x, dy=p.y-c.y, d=Math.max(0.0001,hypot(dx,dy));
     const tx=p.x-(dx/d)*GAP;
     const ty=p.y-(dy/d)*GAP;
     c.x=lerp(c.x,tx,0.62);
@@ -146,7 +182,6 @@ class DragonSim{
       L.push({x:(p.x+n.x*rr)*dpr,y:(p.y+n.y*rr)*dpr});
       Rr.push({x:(p.x-n.x*rr)*dpr,y:(p.y-n.y*rr)*dpr});
     }
-    // head wedge from tangent
     const h=this.spine[0];
     const t=tangent(this.spine,0);
     const nx=-t.y, ny=t.x;
@@ -156,7 +191,6 @@ class DragonSim{
     const right={x:(h.x-t.x*back-nx*jaw)*dpr,y:(h.y-t.y*back-ny*jaw)*dpr};
     const cap={x:(h.x-t.x*10)*dpr,y:(h.y-t.y*10)*dpr,rx:18*dpr,ry:12*dpr};
 
-    // tail fin
     const tail=this.spine[SEG-1];
     const tt=tangent(this.spine,SEG-1);
     const fnx=-tt.y, fny=tt.x;
@@ -168,7 +202,20 @@ class DragonSim{
   }
 }
 
-window.addEventListener("load", function(){
+/* FALLBACK DRAW (if renderer missing) */
+function fallback(ctx, f, fill){
+  const L=f.L, R=f.R;
+  ctx.beginPath();
+  ctx.moveTo(L[0].x,L[0].y);
+  for(let i=1;i<L.length;i++) ctx.lineTo(L[i].x,L[i].y);
+  for(let i=R.length-1;i>=0;i--) ctx.lineTo(R[i].x,R[i].y);
+  ctx.closePath();
+  ctx.fillStyle=fill;
+  ctx.fill();
+}
+
+function BOOT(){
+  bootMsg("HEL: boot start (client running)");
   const cv=mountCanvas();
   const ctx=cv.getContext("2d",{alpha:true,desynchronized:true});
   let dpr=resize(cv);
@@ -192,17 +239,28 @@ window.addEventListener("load", function(){
     const fT=topD.frame(dpr);
     const fB=botD.frame(dpr);
 
-    if(window.HEL_RENDER){
+    const hasRenderer = !!(window.HEL_RENDER && window.HEL_RENDER.drawDragon);
+
+    if(hasRenderer){
       window.HEL_RENDER.drawDragon(ctx, fT, {fill:"rgba(0,110,60,0.92)", strokeW:2.6*dpr});
       window.HEL_RENDER.drawDragon(ctx, fB, {fill:"rgba(170,20,20,0.90)", strokeW:2.6*dpr});
+      bootMsg("HEL: DRAW OK (renderer present)");
+    }else{
+      fallback(ctx, fT, "rgba(0,110,60,0.92)");
+      fallback(ctx, fB, "rgba(170,20,20,0.90)");
+      bootMsg("HEL: FALLBACK (renderer missing)");
     }
-
-    ctx.fillStyle="rgba(255,255,255,0.18)";
-    ctx.font=(14*dpr)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-    ctx.fillText("HEL_CLIENT_L1_REWASH", 12*dpr, cv.height-14*dpr);
 
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
-});
+}
+
+/* Boot regardless of script timing */
+if(document.readyState==="complete" || document.readyState==="interactive"){
+  setTimeout(BOOT,0);
+}else{
+  document.addEventListener("DOMContentLoaded", BOOT, {once:true});
+}
+
 })();

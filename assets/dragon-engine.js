@@ -1,302 +1,152 @@
 /* TNT — /assets/dragon-engine.js
-   HEX DRAGON ENGINE (FILLED HEX CELLS) — SILHOUETTE PROOF
-   BUILD: HEX_DRAGON_ENGINE_v2_HEX4
-
-   CHANGE:
-   - HEX_PX: 6 → 4 (smaller cells)
-
-   LOCKED CANON (from your packet):
-   - POINTY-TOP, AXIAL (q,r)
-   - D0=(+1,0) D1=(+1,-1) D2=(0,-1) D3=(-1,0) D4=(-1,+1) D5=(0,+1)
-   - World map: E=D0, W=D3, N=D2, S=D5, NE=D1, SW=D4
-   - Spine length: 36
-   - Max shoulder radius: 6 rings
-   - Tail tip radius: 0
-   - Max bend per step: 1 neighbor (turn -1/0/+1)
-   - Update: head moves, rest follow
-   - Silhouette: FILLED HEX CELLS (no boundary polygon)
-
-   DESIGN:
-   - Two dragons: mirror opposition
-   - Random but harmonized (shared seeded RNG)
-   - LOVE (jade) vs FEAR (crimson)
-   - Horns separate later (NOT included)
-
-   IMPORTANT FIX:
-   - Prevent “corner clusters” by bounding + resetting the spine when it drifts offscreen.
+   DRAGON HEX SILHOUETTE ENGINE
+   BUILD: DRAGON_HEX_L3
 */
 
 (function(){
-"use strict";
-if(window.__HEX_DRAGON_ENGINE_RUNNING__) return;
-window.__HEX_DRAGON_ENGINE_RUNNING__ = true;
 
-/* ====== TUNABLE (TEST) ====== */
-const HEX_PX = 4;           // 1 hex = 4 px (smaller)
-const DPR_CAP = 1.6;
+if(window.__DRAGON_ENGINE_RUNNING__) return;
+window.__DRAGON_ENGINE_RUNNING__ = true;
 
-/* ====== LOCKED BASELINE ====== */
+const HEX = 3;           // <-- resolution (3px hex)
 const SPINE_LEN = 36;
-const SHOULDER_R = 6;
-const TAIL_R = 0;
+const SHOULDER = 6;
 
-/* Canon axial direction order */
-const DIRS = [
-  {q:+1,r: 0}, // D0
-  {q:+1,r:-1}, // D1
-  {q: 0,r:-1}, // D2
-  {q:-1,r: 0}, // D3
-  {q:-1,r:+1}, // D4
-  {q: 0,r:+1}  // D5
-];
+const canvas=document.createElement("canvas");
+canvas.style.position="fixed";
+canvas.style.inset="0";
+canvas.style.pointerEvents="none";
+canvas.style.zIndex="6";
+document.body.appendChild(canvas);
 
-function add(a,b){ return {q:a.q+b.q, r:a.r+b.r}; }
-function key(h){ return h.q + "," + h.r; }
-
-/* Pointy-top axial -> pixel */
-function axialToPx(h){
-  const x = HEX_PX * Math.sqrt(3) * (h.q + h.r/2);
-  const y = HEX_PX * 1.5 * h.r;
-  return {x,y};
-}
-
-/* Hex disk */
-function disk(center, radius){
-  const r = radius|0;
-  const out=[];
-  for(let dq=-r; dq<=r; dq++){
-    const r1 = Math.max(-r, -dq-r);
-    const r2 = Math.min(r, -dq+r);
-    for(let dr=r1; dr<=r2; dr++){
-      out.push({q:center.q+dq, r:center.r+dr});
-    }
-  }
-  return out;
-}
-
-/* Deterministic RNG */
-function mulberry32(seed){
-  let t = seed >>> 0;
-  return function(){
-    t += 0x6D2B79F5;
-    let r = Math.imul(t ^ (t >>> 15), 1 | t);
-    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/* ====== Radius profiles (rings) ====== */
-function clampR(r){
-  r = r|0;
-  if(r > SHOULDER_R) r = SHOULDER_R;
-  if(r < TAIL_R) r = TAIL_R;
-  return r;
-}
-
-function radiusLove(i){
-  const u = i/(SPINE_LEN-1);
-  let r;
-  if(u < 0.10) r = 4;
-  else if(u < 0.22) r = 3;
-  else if(u < 0.34) r = 5;
-  else if(u < 0.48) r = 6;
-  else if(u < 0.68) r = 5;
-  else if(u < 0.82) r = 3;
-  else if(u < 0.92) r = 2;
-  else if(u < 0.97) r = 1;
-  else r = 0;
-  if(u >= 0.10 && u < 0.34 && r < 2) r = 2; // neck floor
-  return clampR(r);
-}
-
-function radiusFear(i){
-  const u = i/(SPINE_LEN-1);
-  let r;
-  if(u < 0.08) r = 5;
-  else if(u < 0.18) r = 3;
-  else if(u < 0.28) r = 2;
-  else if(u < 0.44) r = 6;
-  else if(u < 0.64) r = 5;
-  else if(u < 0.80) r = 4;
-  else if(u < 0.92) r = 2;
-  else if(u < 0.97) r = 1;
-  else r = 0;
-  if(u >= 0.12 && u < 0.32 && r < 2) r = 2; // neck floor
-  return clampR(r);
-}
-
-/* ====== Canvas mount ====== */
-const host = document.getElementById("gd-dragon") || document.body;
-const cv = document.createElement("canvas");
-cv.id = "gd_hex_dragon_canvas";
-cv.style.position = "absolute";
-cv.style.inset = "0";
-cv.style.width = "100%";
-cv.style.height = "100%";
-cv.style.pointerEvents = "none";
-cv.style.zIndex = "6";
-host.appendChild(cv);
-
-const ctx = cv.getContext("2d", {alpha:true, desynchronized:true});
-let W=0,H=0,DPR=1;
+const ctx=canvas.getContext("2d");
 
 function resize(){
-  let dpr=1; try{ dpr=window.devicePixelRatio||1; }catch(e){}
-  DPR = Math.min(DPR_CAP, Math.max(1,dpr));
-  W = Math.floor((window.innerWidth||1)*DPR);
-  H = Math.floor((window.innerHeight||1)*DPR);
-  cv.width=W; cv.height=H;
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 }
 resize();
-window.addEventListener("resize", resize, {passive:true});
+window.addEventListener("resize",resize);
 
-/* ====== Hex drawing ====== */
-function drawHex(x,y,size){
-  ctx.beginPath();
-  for(let i=0;i<6;i++){
-    const a = (Math.PI/180) * (60*i - 30);
-    const px = x + Math.cos(a)*size;
-    const py = y + Math.sin(a)*size;
-    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
-  }
-  ctx.closePath();
+function hexToXY(q,r){
+const x = HEX * Math.sqrt(3) * (q + r/2);
+const y = HEX * 1.5 * r;
+return [x,y];
 }
 
-/* ====== Spine init ====== */
-function initSpine(heading, start){
-  const spine = new Array(SPINE_LEN);
-  spine[0] = {q:start.q, r:start.r};
-  const back = (heading + 3) % 6;
-  for(let i=1;i<SPINE_LEN;i++){
-    spine[i] = add(spine[i-1], DIRS[back]);
-  }
-  return spine;
+function hexDisk(q,r,rad){
+const cells=[];
+for(let dq=-rad;dq<=rad;dq++){
+const r1=Math.max(-rad,-dq-rad);
+const r2=Math.min(rad,-dq+rad);
+for(let dr=r1;dr<=r2;dr++){
+cells.push([q+dq,r+dr]);
+}
+}
+return cells;
 }
 
-/* ====== Motion (bend <= 1 neighbor) ====== */
-function stepSpine(spine, heading, rnd){
-  const roll = rnd();
-  let turn = 0;
-  if(roll < 0.06) turn = -1;
-  else if(roll > 0.94) turn = +1;
+function radiusProfile(i){
+const u=i/(SPINE_LEN-1);
 
-  heading = (heading + turn + 6) % 6;
+if(u<0.08) return 5;
+if(u<0.20) return 3;
+if(u<0.35) return 6;
+if(u<0.60) return 5;
+if(u<0.80) return 3;
+if(u<0.92) return 2;
+if(u<0.97) return 1;
 
-  const newHead = add(spine[0], DIRS[heading]);
-
-  for(let i=SPINE_LEN-1;i>=1;i--){
-    spine[i].q = spine[i-1].q;
-    spine[i].r = spine[i-1].r;
-  }
-  spine[0].q = newHead.q;
-  spine[0].r = newHead.r;
-
-  return heading;
+return 0;
 }
 
-/* ====== Build body ====== */
-function buildBody(spine, radiusFn){
-  const set = new Map();
-  for(let i=0;i<SPINE_LEN;i++){
-    const r = radiusFn(i);
-    const cells = (r>0) ? disk(spine[i], r) : [spine[i]];
-    for(const c of cells){
-      set.set(key(c), c);
-    }
-  }
-  return set;
+function buildDragonCells(headQ,headR){
+
+const cells=new Set();
+
+for(let i=0;i<SPINE_LEN;i++){
+
+const q=headQ-i;
+const r=headR;
+
+const rad=radiusProfile(i);
+
+const disk=hexDisk(q,r,rad);
+
+for(const c of disk){
+cells.add(c[0]+","+c[1]);
 }
 
-/* ====== Render body ====== */
-function renderBody(set, fill){
-  const cx = W*0.5;
-  const cy = H*0.52;
-
-  ctx.fillStyle = fill;
-  ctx.strokeStyle = "rgba(0,0,0,0.55)";
-  ctx.lineWidth = 1*DPR;
-
-  const size = HEX_PX*DPR*0.98;
-
-  const keys = Array.from(set.keys()).sort();
-  for(const kk of keys){
-    const h = set.get(kk);
-    const p = axialToPx(h);
-    const x = cx + p.x*DPR;
-    const y = cy + p.y*DPR;
-    drawHex(x,y,size);
-    ctx.fill();
-    ctx.stroke();
-  }
 }
 
-/* ====== Mirror opposition ====== */
-function mirrorSpine(spine){
-  const out = new Array(SPINE_LEN);
-  for(let i=0;i<SPINE_LEN;i++){
-    out[i] = {q:-spine[i].q, r:-spine[i].r};
-  }
-  return out;
+return cells;
+
 }
 
-/* ====== Offscreen drift guard (prevents corner-only clusters) ====== */
-function headOnscreen(spine){
-  const p = axialToPx(spine[0]);
-  const cx = (window.innerWidth||1)*0.5;
-  const cy = (window.innerHeight||1)*0.52;
-  const x = cx + p.x;
-  const y = cy + p.y;
-  const margin = 80; // css px
-  return (x > -margin && x < (window.innerWidth||1)+margin && y > -margin && y < (window.innerHeight||1)+margin);
+function drawHex(q,r,color){
+
+const [x,y]=hexToXY(q,r);
+
+ctx.beginPath();
+
+for(let i=0;i<6;i++){
+const ang=Math.PI/3*i + Math.PI/6;
+const px=x + HEX*Math.cos(ang);
+const py=y + HEX*Math.sin(ang);
+
+if(i===0) ctx.moveTo(px,py);
+else ctx.lineTo(px,py);
 }
 
-/* ====== State ====== */
-const rnd = mulberry32(0xC0FFEE);
-let heading = 0;
+ctx.closePath();
 
-// start near center so bodies are visible immediately
-let spineTop = initSpine(heading, {q:-6, r:-2});
+ctx.fillStyle=color;
+ctx.fill();
 
-function resetSpines(){
-  heading = 0;
-  spineTop = initSpine(heading, {q:-6, r:-2});
 }
 
-/* ====== Loop ====== */
-let last=0, acc=0;
+let t=0;
 
-function loop(ts){
-  if(!last) last=ts;
-  const dt = ts - last;
-  last = ts;
+function frame(){
 
-  acc += dt;
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  if(acc >= 83){
-    acc = 0;
-    heading = stepSpine(spineTop, heading, rnd);
+const cx=canvas.width/2;
+const cy=canvas.height/2;
 
-    // if head drifted offscreen, reset (prevents disappearing/corner clustering)
-    if(!headOnscreen(spineTop)) resetSpines();
-  }
+const q0=Math.floor(cx/(HEX*Math.sqrt(3)));
+const r0=Math.floor(cy/(HEX*1.5));
 
-  const spineBot = mirrorSpine(spineTop);
+t+=0.02;
 
-  ctx.clearRect(0,0,W,H);
+const topCells=buildDragonCells(q0-40+Math.floor(Math.sin(t)*6),r0-20);
+const botCells=buildDragonCells(q0+40+Math.floor(Math.sin(t+1.4)*6),r0+20);
 
-  const bodyTop = buildBody(spineTop, radiusLove);
-  const bodyBot = buildBody(spineBot, radiusFear);
+ctx.save();
+ctx.translate(cx,cy);
 
-  renderBody(bodyTop, "rgba(14,124,58,0.82)");
-  renderBody(bodyBot, "rgba(179,33,33,0.78)");
+for(const key of topCells){
 
-  ctx.fillStyle="rgba(255,255,255,0.80)";
-  ctx.font = (12*DPR) + "px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("HEX_DRAGON_ENGINE_v2_HEX4", 12*DPR, H-14*DPR);
+const [q,r]=key.split(",").map(Number);
 
-  requestAnimationFrame(loop);
+drawHex(q-q0,r-r0,"#0e7c3a");
+
 }
 
-requestAnimationFrame(loop);
+for(const key of botCells){
+
+const [q,r]=key.split(",").map(Number);
+
+drawHex(q-q0,r-r0,"#b32121");
+
+}
+
+ctx.restore();
+
+requestAnimationFrame(frame);
+
+}
+
+frame();
 
 })();

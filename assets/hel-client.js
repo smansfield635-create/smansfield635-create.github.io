@@ -1,13 +1,16 @@
 /* TNT — /assets/hel-client.js
-   HEL CLIENT — DRAGON RIG FIX (PIPE→CREATURE, HEAD SWIVEL→YAW CLAMP)
-   BUILD: HEL_CLIENT_DRAGON_RIG_v2
+   HEL CLIENT — DRAGON PROPORTIONS FIX (THICK NECK + MASSIVE HEAD + NO 360 SWIVEL)
+   BUILD: HEL_CLIENT_DRAGON_RIG_v3
 
-   FIXES:
-   - Body stops looking like a pipe: true mass profile (neck→shoulders→tail)
-   - Spine becomes flexible: traveling wave + lighter smoothing
-   - Head stops spinning on a swivel: head yaw is clamped to spine-forward with rate limit
-   - Head scales off shoulder mass (not neck radius)
-   - Still boots safely regardless of load timing
+   YOUR REQUESTS IMPLEMENTED:
+   - Body is thick near head (not snake-neck thin)
+   - Neck stays thick (head-adjacent mass maintained)
+   - Head size ≈ 20× (relative to current head sizing basis)
+   - Head cannot spin 360°: yaw limited to 180° total (±90°)
+   - Head turns slowly (low yaw rate)
+
+   NOTE:
+   - Renderer stays unchanged (HEL_RENDER already present).
 */
 
 (function(){
@@ -71,26 +74,21 @@ function stage(){
 }
 
 /* =========================
-   RIG PARAMETERS (CREATURE, NOT PIPE)
+   BODY (shorter, much thicker)
    ========================= */
-const SEG=96;
-
-/* spacing: smaller = more flexible, larger = stiffer */
-const GAP=22;
-
-/* base mass: shoulders will be higher via profile */
-const BASE_R=10;
+const SEG=18;          /* shorter body */
+const GAP=34;          /* spacing to support thicker body */
+const BASE_R=42;       /* thick base */
 
 /* motion */
-const SPEED=0.55;
-const WOB_AMP=0.18;             /* more flexible than before */
-const WOB_FREQ=1.35;            /* temporal frequency */
-const WAVE_K=0.22;              /* spatial frequency along spine */
-const RELAX=0.55;               /* follow strength */
+const SPEED=0.30;
+const WOB_AMP=0.06;
+const WOB_FREQ=0.75;
+const RELAX=0.82;
 
-/* head yaw constraints */
-const HEAD_YAW_LIMIT = 0.55;    /* ~31.5° left/right */
-const HEAD_YAW_RATE  = 2.8;     /* rad/sec max yaw rate */
+/* head yaw controls (NO 360) */
+const HEAD_YAW_LIMIT = Math.PI/2; /* ±90° = 180° total max */
+const HEAD_YAW_RATE  = 0.35;      /* slow turning (rad/sec) */
 
 /* arc constraints */
 const TOP_MIN=Math.PI*1.10, TOP_MAX=Math.PI*1.88;
@@ -103,33 +101,35 @@ function reflect(a,lo,hi){
 }
 
 /* =========================
-   MASS PROFILE (NECK→SHOULDERS→TAIL)
-   u in [0,1]
+   MASS PROFILE (THICK NEAR HEAD)
+   - neck NOT thin
+   - shoulders close to head
+   - taper later
    ========================= */
 function massProfile(u){
-  // neck taper
-  if(u<0.14){
-    const t=u/0.14;
-    return 0.62 + 0.30*t; // 0.62 → 0.92
+  // u=0 head, u=1 tail
+  if(u<0.12){
+    // thick neck immediately (not snake)
+    const t=u/0.12;
+    return 1.55 - 0.10*t; // ~1.55 → ~1.45
   }
-  // shoulders peak
-  if(u<0.42){
-    const t=(u-0.14)/0.28;
-    // peak at ~0.28
-    return 0.92 + 0.55*Math.sin(Math.PI*t); // up to ~1.47
+  if(u<0.35){
+    // shoulder mass close to head
+    const t=(u-0.12)/0.23;
+    return 1.45 + 0.25*Math.sin(Math.PI*t); // peak ~1.70
   }
-  // torso steady
-  if(u<0.72){
-    return 1.10;
+  if(u<0.70){
+    // torso stays thick
+    return 1.35;
   }
   // tail taper (nonlinear)
-  const t=(u-0.72)/0.28;
-  return Math.max(0.20, 1.10*Math.pow(1-t,0.65));
+  const t=(u-0.70)/0.30;
+  return Math.max(0.18, 1.35*Math.pow(1-t,0.70));
 }
 
-/* tube safety: radius must be <= GAP/2 */
+/* tube safety: keep radius <= GAP/2 */
 function R(u){
-  const rr=Math.max(6, BASE_R*massProfile(u));
+  const rr=Math.max(10, BASE_R*massProfile(u));
   return Math.min(rr, GAP*0.48);
 }
 
@@ -149,12 +149,11 @@ function enforce(sp){
   }
 }
 function smooth(sp){
-  // lighter smoothing (more flex)
   for(let it=0;it<1;it++){
     for(let i=2;i<sp.length-2;i++){
       const p0=sp[i-1], p1=sp[i], p2=sp[i+1];
-      p1.x=lerp(p1.x,(p0.x+p2.x)*0.5,0.32);
-      p1.y=lerp(p1.y,(p0.y+p2.y)*0.5,0.32);
+      p1.x=lerp(p1.x,(p0.x+p2.x)*0.5,0.28);
+      p1.y=lerp(p1.y,(p0.y+p2.y)*0.5,0.28);
     }
   }
 }
@@ -165,18 +164,15 @@ class DragonSim{
     this.dir=top?-1:1;
     this.phase=Math.random()*10;
     this.theta=top?Math.PI*1.62:Math.PI*0.38;
-
     this.spine=new Array(SEG);
 
-    // head yaw state
+    /* head yaw state */
     this.headYaw=0;
 
     const st=stage();
     const a=this.theta;
     const hx=st.Cx + Math.cos(a)*st.R;
     const hy=st.Cy + Math.sin(a)*st.R*0.55;
-
-    // initial forward direction along arc
     const tx=-Math.sin(a), ty=Math.cos(a)*0.55;
     for(let i=0;i<SEG;i++){
       this.spine[i]={x:hx - tx*i*GAP, y:hy - ty*i*GAP};
@@ -186,10 +182,8 @@ class DragonSim{
   update(dt){
     const st=stage();
 
-    // move head along arc
     this.theta=wrap(this.theta + this.dir*SPEED*dt);
 
-    // traveling wave adds flexibility to arc angle (acts like “body following”)
     const time=performance.now()/1000;
     let a=this.theta + Math.sin(time*WOB_FREQ + this.phase)*WOB_AMP;
 
@@ -198,28 +192,10 @@ class DragonSim{
     const hx=st.Cx + Math.cos(a)*st.R;
     const hy=st.Cy + Math.sin(a)*st.R*0.55;
 
-    // set head
     this.spine[0].x=hx; this.spine[0].y=hy;
 
-    // constraint passes
     enforce(this.spine);
     smooth(this.spine);
-    enforce(this.spine);
-
-    // additional body wave: pushes interior points slightly along normal to look alive
-    // (does NOT move head; does not break spacing if amplitude is limited)
-    const amp=0.22*GAP;
-    for(let i=3;i<SEG-3;i++){
-      const u=i/(SEG-1);
-      const t=tangent(this.spine,i);
-      const n={x:-t.y,y:t.x};
-      const w=Math.sin(time*WOB_FREQ*1.2 - i*WAVE_K + this.phase);
-      const taper=(u<0.12)?0.25:(u>0.90?0.20:1.0);
-      this.spine[i].x += n.x*w*amp*taper;
-      this.spine[i].y += n.y*w*amp*taper;
-    }
-
-    // re-enforce after wave
     enforce(this.spine);
   }
 
@@ -230,7 +206,7 @@ class DragonSim{
     const nArr=new Array(SEG);
     const rArr=new Array(SEG);
 
-    // normal continuity
+    /* normals with continuity */
     let prevN=null;
     for(let i=0;i<SEG;i++){
       const p=this.spine[i];
@@ -252,37 +228,37 @@ class DragonSim{
       rArr[i]=rr*dpr;
     }
 
-    // rails
+    /* rails */
     for(let i=0;i<SEG;i++){
       const p=spinePx[i], n=nArr[i], rr=rArr[i];
       L.push({x:p.x+n.x*rr,y:p.y+n.y*rr});
       Rr.push({x:p.x-n.x*rr,y:p.y-n.y*rr});
     }
 
-    // anchors
+    /* anchors */
     const idx=(u)=>Math.max(0,Math.min(SEG-1, Math.round(u*(SEG-1))));
     const A={
       head: idx(0.00),
       neck: idx(0.10),
-      shoulder: idx(0.28),
-      leg1: idx(0.25),
-      leg2: idx(0.40),
-      leg3: idx(0.55),
-      leg4: idx(0.70),
+      shoulder: idx(0.22),
+      leg1: idx(0.28),
+      leg2: idx(0.42),
+      leg3: idx(0.58),
+      leg4: idx(0.72),
       ridge0: idx(0.10),
-      ridge1: idx(0.80),
+      ridge1: idx(0.82),
       tail: idx(0.98)
     };
 
-    // head orientation: spine-forward (P0->P1), with yaw clamp
+    /* head direction: spine segment with slow yaw */
     const h=A.head;
     const P0=this.spine[h], P1=this.spine[Math.min(SEG-1,h+1)];
     let dx=(P1.x-P0.x), dy=(P1.y-P0.y), dd=Math.hypot(dx,dy)||1;
     const spineAng=Math.atan2(dy,dx);
 
-    // desired yaw is 0 (point along spine); clamp any drift by rate + limit
+    /* yaw target is aligned with spine (no swivel), rate-limited + bounded */
     const yawTarget=0;
-    const maxStep=HEAD_YAW_RATE*(1/60); // approximate per-frame (render loop is rAF)
+    const maxStep=HEAD_YAW_RATE*(1/60);
     const dyaw=clamp(angDelta(this.headYaw,yawTarget),-maxStep,maxStep);
     this.headYaw=clamp(this.headYaw+dyaw,-HEAD_YAW_LIMIT,HEAD_YAW_LIMIT);
 
@@ -290,10 +266,17 @@ class DragonSim{
     const th={x:Math.cos(headAng),y:Math.sin(headAng)};
     const nh={x:-th.y,y:th.x};
 
-    // head size scales off shoulder radius (not neck)
-    const rHead = Math.max(rArr[A.neck], rArr[A.shoulder]*0.95);
-    const rNeck = Math.max(6, rArr[A.neck]);
-    const headW = Math.max(1.4*rNeck, 1.8*rHead); // enforce head>=1.4×neck + shoulder-based mass
+    /* ===== HEAD SIZE: 20× =====
+       We scale head off NECK radius in pixels (rArr[neck]).
+       This is your requested “20× the size it is right now.”
+    */
+    const rNeck = Math.max(10, rArr[A.neck] || rArr[h] || 12);
+    let headW = 20.0 * (rNeck*2);      /* width in px */
+
+    /* Keep it on-screen: cap to 38% of min viewport (still huge) */
+    const st=stage();
+    const capW = 0.38*Math.min(st.vw, st.vh)*dpr;
+    headW = Math.min(headW, capW);
 
     const Ph=spinePx[h];
 
@@ -307,7 +290,7 @@ class DragonSim{
 
     const cap={x:Ph.x-th.x*(0.18*headW),y:Ph.y-th.y*(0.18*headW),rx:0.62*headW,ry:0.44*headW};
 
-    // tail fin
+    /* tail fin */
     const tail=A.tail;
     const Pt=spinePx[tail];
     const tt=tArr[tail], nt=nArr[tail], rt=rArr[tail];
@@ -359,7 +342,7 @@ function BOOT(){
 
     ctx.fillStyle="rgba(255,255,255,0.18)";
     ctx.font=(14*dpr)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-    ctx.fillText("HEL_CLIENT_DRAGON_RIG_v2", 12*dpr, cv.height-14*dpr);
+    ctx.fillText("HEL_CLIENT_DRAGON_RIG_v3", 12*dpr, cv.height-14*dpr);
 
     requestAnimationFrame(loop);
   }

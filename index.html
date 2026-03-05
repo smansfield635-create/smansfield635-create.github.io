@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- TNT — /index.html
-     PURPOSE: wire the silhouette runtime (hel-render + hel-client)
-     BUILD: IDX_HEL_SILHOUETTE_L1
+     PURPOSE: clean runtime + guaranteed dragon silhouette
+     BUILD: DRAGON_SILHOUETTE_BOOT_v1
 -->
 <html lang="en">
 <head>
@@ -9,61 +9,81 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1">
+<link rel="stylesheet" href="/assets/branch.css?v=1">
 
-<!-- load order matters -->
-<script defer src="/assets/hel-render.js?v=1"></script>
-<script defer src="/assets/hel-client.js?v=1"></script>
+<!-- Dragon engine -->
+<script defer src="/assets/dragon-engine.js?v=1"></script>
 
 <style>
-body{margin:0;overflow:hidden}
-#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
+body{
+margin:0;
+overflow:hidden;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+#gd-field,
+#gd-dragon,
+#gd-ui{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+}
+
 #gd-field{z-index:0;pointer-events:none}
 #gd-dragon{z-index:6;pointer-events:none}
 #gd-ui{z-index:20;pointer-events:none}
 
-/* minimal stage container for dial + nodes */
 .stage{
-  position:absolute;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:min(900px,90vw);
-  height:min(900px,90vw);
-  pointer-events:none;
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:min(900px,90vw);
+height:min(900px,90vw);
+pointer-events:none;
 }
-.node{position:absolute;left:50%;top:50%;pointer-events:auto}
+
+.node{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(45deg);
+pointer-events:auto;
+border-radius:20px;
+width:140px;
+height:140px;
+background:linear-gradient(160deg,#111827,#0b0f16);
+border:1px solid rgba(255,255,255,.18);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-weight:900;
+letter-spacing:.5px;
+}
 </style>
 </head>
 
 <body>
+
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
 <div id="gd-ui">
-  <div class="stage">
-    <div class="gd_dialFace"></div>
 
-    <div class="node gd_diamond gd_core" style="left:50%;top:50%">
-      <div class="gd_inner"><div class="gd_word">CORE</div><div class="gd_code">CORE</div></div>
-    </div>
+<div class="stage">
 
-    <div class="node gd_diamond gd_l1" style="left:50%;top:20%">
-      <div class="gd_inner"><div class="gd_word">LAWS</div><div class="gd_code">N</div></div>
-    </div>
+<div class="node" style="left:50%;top:20%">LAWS</div>
+<div class="node" style="left:80%;top:50%">ENERGY</div>
+<div class="node" style="left:50%;top:80%">FINANCE</div>
+<div class="node" style="left:20%;top:50%">GOV</div>
 
-    <div class="node gd_diamond gd_l1" style="left:80%;top:50%">
-      <div class="gd_inner"><div class="gd_word">ENERGY</div><div class="gd_code">E</div></div>
-    </div>
+<div class="node" style="width:200px;height:200px;">CORE</div>
 
-    <div class="node gd_diamond gd_l1" style="left:50%;top:80%">
-      <div class="gd_inner"><div class="gd_word">FINANCE</div><div class="gd_code">S</div></div>
-    </div>
+</div>
 
-    <div class="node gd_diamond gd_l1" style="left:20%;top:50%">
-      <div class="gd_inner"><div class="gd_word">GOV</div><div class="gd_code">W</div></div>
-    </div>
-  </div>
 </div>
 
 </body>

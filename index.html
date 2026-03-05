@@ -1,307 +1,276 @@
 <!doctype html>
 <!-- TNT — /index.html
-     STRUCTURE LAYER EXECUTION (PAIR 1/2) — INDEX WIRING + HOST CONTRACT + GEM-COMPAT UI
-     VERSION: IDX_STRUCT_20260304_2200
+     CANON INDEX WIRING RESET
+     PURPOSE: restore deterministic wiring layer
+     BUILD: IDX_CANON_RESET_2
      FULL FILE REPLACEMENT
-
-     LOCKS:
-     - Hosts: #gd-field / #gd-dragon / #gd-ui
-     - Load order: instruments → bg → dragon
-     - Build token cache bust (single token)
-     - Wiring export CSS vars: --gd_noFlyTop/--gd_noFlyBot/--gd_laneTop/--gd_laneBot/--gd_centerX/--gd_centerY
-     - No new gd_* keys
 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Compass · DiamondGateBridge</title>
+<title>DiamondGateBridge</title>
 
 <script>
-window.__GD_BUILD__="IDX_STRUCT_20260304_2200";
+window.__GD_BUILD__="IDX_CANON_RESET_2";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_STRUCT_20260304_2200"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_STRUCT_20260304_2200"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_CANON_RESET_2"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_CANON_RESET_2"/>
 
-<script defer src="/assets/instruments.js?v=IDX_STRUCT_20260304_2200"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_STRUCT_20260304_2200"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_STRUCT_20260304_2200"></script>
+<script defer src="/assets/instruments.js?v=IDX_CANON_RESET_2"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_CANON_RESET_2"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_CANON_RESET_2"></script>
 
 <style>
-/* INDEX OWNS ONLY STRUCTURE (layout + wiring). MATERIAL LIVES IN ui.css. */
-body{margin:0}
 
-/* HOST LAYERS */
-#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
-#gd-field{z-index:0;pointer-events:none}
-#gd-dragon{z-index:6;pointer-events:none}
-#gd-ui{z-index:20;pointer-events:none}
+/* ===== GLOBAL RESET ===== */
 
-/* MINIMAL STATUS */
-#engstat{
-position:fixed;top:10px;left:10px;z-index:9999;pointer-events:none;
-font-weight:900;font-size:12px;letter-spacing:.9px;color:rgba(255,255,255,.80);
-text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
+body{
+margin:0;
+overflow:hidden;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+color:#fff;
 }
 
-/* TOP BAR */
-.top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
-.topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border-radius:22px;padding:10px 12px}
-.controls{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
-.seg{display:inline-flex;overflow:hidden;border-radius:16px}
-.seg button{border:0;background:transparent;padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
-.seg button[aria-pressed="true"]{}
+/* ===== HOST LAYERS ===== */
 
-/* STAGE */
-.stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
-.glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;opacity:.86}
-.dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
+#gd-field,
+#gd-dragon,
+#gd-ui{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+}
 
-/* NODES (size/position only; gem material from ui.css) */
-.node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:auto;z-index:20;border-radius:22px;overflow:hidden}
-.core{width:208px;height:208px;border-radius:26px}
-.l1{width:150px;height:150px}
-.l2{width:116px;height:116px}
-.l3{width:92px;height:92px;border-radius:18px}
-.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
-.word{font-weight:980;letter-spacing:.6px}
-.code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
+#gd-field{
+z-index:0;
+pointer-events:none;
+}
 
-/* CORNERS */
-.corner{position:fixed;bottom:16px;z-index:270;pointer-events:none}
-.corner.left{left:16px}
-.corner.right{right:16px}
-.corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;cursor:pointer}
+#gd-dragon{
+z-index:6;
+pointer-events:none;
+}
+
+#gd-ui{
+z-index:20;
+pointer-events:none;
+}
+
+/* ===== STAGE ===== */
+
+.stage{
+position:relative;
+width:min(980px,95vw);
+height:min(980px,82vh);
+margin:120px auto 0;
+pointer-events:none;
+}
+
+.dial{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:min(860px,92vw);
+height:min(860px,92vw);
+border-radius:999px;
+pointer-events:none;
+}
+
+/* ===== DIAMONDS ===== */
+
+.node{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%) rotate(45deg);
+border-radius:20px;
+pointer-events:auto;
+cursor:pointer;
+overflow:hidden;
+}
+
+.core{width:200px;height:200px}
+.l1{width:140px;height:140px}
+.l2{width:110px;height:110px}
+.l3{width:88px;height:88px}
+
+.inner{
+width:100%;
+height:100%;
+transform:rotate(-45deg);
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+}
+
+.word{
+font-weight:900;
+font-size:14px;
+letter-spacing:.6px;
+}
+
+.cardinal{
+font-size:10px;
+opacity:.75;
+letter-spacing:1px;
+}
+
+/* ===== ENGINE STATUS ===== */
+
+#engstat{
+position:fixed;
+top:12px;
+left:12px;
+z-index:9999;
+font-size:12px;
+font-weight:800;
+opacity:.8;
+pointer-events:none;
+}
+
 </style>
 </head>
 
 <body>
+
+<!-- ENGINE HOSTS -->
+
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 
 <div id="gd-ui">
-  <div class="top">
-    <div class="topbar gd_panel" id="topbar">
-      <div class="controls">
-        <div class="seg gd_seg" role="group" aria-label="Compass Layer">
-          <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
-          <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
-        </div>
-        <div class="seg gd_seg" role="group" aria-label="Lane">
-          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="stage" id="stage">
-    <div class="glassPlate gd_plate"></div>
-    <div class="dial gd_dial"></div>
-  </div>
+<div class="stage" id="stage">
+<div class="dial"></div>
+</div>
 
-  <div class="corner left" id="cornerLeft"><button class="btn gd_btn" id="btnExit">EXIT</button></div>
-  <div class="corner right" id="cornerRight"><button class="btn gd_btn" id="btnHub">HUB</button></div>
 </div>
 
 <div id="engstat">ENG: …</div>
 
 <script>
+
 (function(){
+
 "use strict";
 
-/* EN-only minimal state write (gd_* only) */
-var qs=new URLSearchParams(location.search);
+/* ===== CANON STATE ===== */
+
 var LS=window.localStorage;
-var style=(qs.get("style")||LS.getItem("gd_style")||"informal");
-var time =(qs.get("time") ||LS.getItem("gd_time") ||"now");
-var depth=(qs.get("depth")||LS.getItem("gd_depth")||"explore");
-var lane =(qs.get("lane") ||"platform").toLowerCase();
-var layer=(qs.get("layer")||"1");
-if(style!=="informal"&&style!=="formal") style="informal";
-if(time==="trajectory") time="post";
-if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-if(depth!=="explore"&&depth!=="learn") depth="explore";
-if(lane!=="platform"&&lane!=="engineering") lane="platform";
-if(layer!=="1"&&layer!=="2") layer="1";
-try{ LS.setItem("gd_lang","en"); LS.setItem("gd_style",style); LS.setItem("gd_time",time); LS.setItem("gd_depth",depth); }catch(e){}
+
+try{
+LS.setItem("gd_lang","en");
+LS.setItem("gd_style","informal");
+LS.setItem("gd_time","now");
+LS.setItem("gd_depth","explore");
+}catch(e){}
+
 document.documentElement.lang="en";
 
-function q(over){
-  var p=new URLSearchParams();
-  p.set("lang","en");
-  p.set("style",(over&&over.style)?over.style:style);
-  p.set("time",(over&&over.time)?over.time:time);
-  p.set("depth",(over&&over.depth)?over.depth:depth);
-  var L=(over&&over.lane)?over.lane:lane;
-  if(L==="platform"||L==="engineering") p.set("lane",L);
-  var lay=(over&&over.layer)?over.layer:layer;
-  if(lay==="1"||lay==="2") p.set("layer",lay);
-  return "?"+p.toString();
-}
-function go(path){ location.href = path + q(); }
+/* ===== NODE MAP ===== */
 
-/* compass data */
-var CORE1="/index-core/index.html";
-var CORE2="/index-spine/index.html";
-var L1=[
-  {code:"CORE",label:"CORE",href:CORE1,cls:"core"},
-  {code:"N",label:"LAWS",href:"/laws/",cls:"l1"},
-  {code:"E",label:"ENERGY",href:"/explore/frontier/energy/",cls:"l1"},
-  {code:"S",label:"FINANCE",href:"/finance/",cls:"l1"},
-  {code:"W",label:"GOVERNANCE",href:"/governance/",cls:"l1"}
+var nodes=[
+{code:"CORE",label:"CORE",cls:"core",x:0,y:0,href:"/index-core/"},
+{code:"N",label:"LAWS",cls:"l1",x:0,y:-180,href:"/laws/"},
+{code:"E",label:"ENERGY",cls:"l1",x:180,y:0,href:"/explore/frontier/energy/"},
+{code:"S",label:"FINANCE",cls:"l1",x:0,y:180,href:"/finance/"},
+{code:"W",label:"GOVERNANCE",cls:"l1",x:-180,y:0,href:"/governance/"}
 ];
-var L2=[
-  {code:"CORE",label:"CORE",href:CORE2,cls:"core"},
-  {code:"NNE",label:"EDUCATION",href:"/products/education/",cls:"l3"},
-  {code:"NE",label:"PRODUCTS",href:"/products/",cls:"l2"},
-  {code:"ENE",label:"FRONTIER",href:"/explore/frontier/",cls:"l3"},
-  {code:"ESE",label:"INFRA",href:"/explore/infrastructure/",cls:"l3"},
-  {code:"E",label:"RESEARCH",href:"/research/",cls:"l2"},
-  {code:"SE",label:"EXPLORE",href:"/explore/",cls:"l2"},
-  {code:"SSE",label:"AGRICULTURE",href:"/products/agriculture/",cls:"l3"},
-  {code:"S",label:"GAUGES",href:"/gauges/",cls:"l2"},
-  {code:"SSW",label:"DOCTRINE",href:"/products/capital-doctrine/",cls:"l3"},
-  {code:"WNW",label:"LATTICE",href:"/explore/frontier/lattice/",cls:"l3"},
-  {code:"NW",label:"SHIMMER",href:"/explore/frontier/shimmer/",cls:"l3"},
-  {code:"W",label:"VISION",href:"/explore/frontier/vision/",cls:"l3"}
-];
+
+/* ===== NODE CREATOR ===== */
+
+function createNode(n){
+
+var el=document.createElement("div");
+el.className="node "+n.cls;
+
+var inner=document.createElement("div");
+inner.className="inner";
+
+var w=document.createElement("div");
+w.className="word";
+w.textContent=n.label;
+
+var c=document.createElement("div");
+c.className="cardinal";
+c.textContent=n.code;
+
+inner.appendChild(w);
+inner.appendChild(c);
+el.appendChild(inner);
+
+el.addEventListener("click",function(){
+location.href=n.href;
+});
+
+return el;
+
+}
+
+/* ===== LAYOUT ===== */
+
+function layout(){
 
 var stage=document.getElementById("stage");
 
-function mkNode(it){
-  var d=document.createElement("div");
-  d.className="node gd_gem "+it.cls;
-  d.setAttribute("role","button");
-  d.tabIndex=0;
+var rect=stage.getBoundingClientRect();
+var cx=rect.width/2;
+var cy=rect.height/2;
 
-  var inner=document.createElement("div");
-  inner.className="inner";
-  var w=document.createElement("div"); w.className="word"; w.textContent=it.label;
-  var c=document.createElement("div"); c.className="code"; c.textContent=it.code;
-  inner.appendChild(w); inner.appendChild(c);
-  d.appendChild(inner);
+for(var i=0;i<nodes.length;i++){
 
-  function act(){ go(it.href); }
-  d.addEventListener("click", act, {passive:true});
-  d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-  return d;
+var n=nodes[i];
+var node=createNode(n);
+
+node.style.left=(cx+n.x)+"px";
+node.style.top=(cy+n.y)+"px";
+
+stage.appendChild(node);
+
 }
 
-function clearNodes(){
-  var nodes=stage.querySelectorAll(".node");
-  for(var i=0;i<nodes.length;i++) nodes[i].remove();
 }
 
-function layout1(){
-  clearNodes();
-  var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
-  var R1=164;
-  var core=mkNode(L1[0]); core.style.left=cx+"px"; core.style.top=cy+"px"; stage.appendChild(core);
+/* ===== ENGINE BOOT ===== */
 
-  var map={N:L1[1],E:L1[2],S:L1[3],W:L1[4]};
-  var order=["N","E","S","W"];
-  var ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
-  for(var i=0;i<4;i++){
-    var it=map[order[i]];
-    var x=cx + R1*Math.cos(ang[i]);
-    var y=cy + R1*Math.sin(ang[i]);
-    var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
-  }
+window.addEventListener("load",function(){
+
+var bgV=(window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : "BG?";
+var drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : "DR?";
+
+document.getElementById("engstat").textContent="ENG: "+bgV+" | "+drV;
+
+try{
+if(window.GD_BG && window.GD_BG.mount){
+window.GD_BG.mount({
+fps:30,
+dpr_cap:1.6
+});
 }
+}catch(e){}
 
-function layout2(){
-  clearNodes();
-  var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
-  var R2=236, R3=300;
-  var core=mkNode(L2[0]); core.style.left=cx+"px"; core.style.top=cy+"px"; stage.appendChild(core);
-  var list=L2.slice(1);
-  for(var i=0;i<list.length;i++){
-    var it=list[i];
-    var a=(i/list.length)*Math.PI*2 - Math.PI/2;
-    var rad=(it.cls==="l2")?R2:R3;
-    var x=cx + rad*Math.cos(a);
-    var y=cy + rad*Math.sin(a);
-    var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
-  }
+try{
+if(window.GD_DRAGON && window.GD_DRAGON.mount){
+window.GD_DRAGON.mount({});
 }
+}catch(e){}
 
-function render(){ (layer==="1") ? layout1() : layout2(); }
-
-function setPressed(id,on){ document.getElementById(id).setAttribute("aria-pressed", on?"true":"false"); }
-function paint(){
-  setPressed("layer1", layer==="1");
-  setPressed("layer2", layer==="2");
-  setPressed("lanePlatform", lane==="platform");
-  setPressed("laneEngineering", lane==="engineering");
-}
-
-function setLayer(v){ layer=(v==="2")?"2":"1"; history.replaceState({}, "", location.pathname + q({layer:layer})); paint(); render(); }
-function setLane(v){ lane=(v==="engineering")?"engineering":"platform"; history.replaceState({}, "", location.pathname + q({lane:lane})); paint(); render(); }
-
-document.getElementById("layer1").addEventListener("click", function(){ setLayer("1"); }, {passive:true});
-document.getElementById("layer2").addEventListener("click", function(){ setLayer("2"); }, {passive:true});
-document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-document.getElementById("btnExit").addEventListener("click", function(){ go("/door/"); }, {passive:true});
-document.getElementById("btnHub").addEventListener("click", function(){ go("/home/"); }, {passive:true});
-
-/* WIRING EXPORT (CSS vars only) */
-function exportWiring(){
-  var root=document.documentElement;
-
-  var topbar=document.getElementById("topbar");
-  var noFlyTop=0;
-  if(topbar){
-    var tr=topbar.getBoundingClientRect();
-    noFlyTop=Math.round(tr.bottom + 16);
-  }
-
-  var cl=document.getElementById("cornerLeft");
-  var cr=document.getElementById("cornerRight");
-  var botTop=Infinity;
-  if(cl) botTop=Math.min(botTop, cl.getBoundingClientRect().top);
-  if(cr) botTop=Math.min(botTop, cr.getBoundingClientRect().top);
-  var noFlyBot=(botTop!==Infinity) ? Math.round(botTop - 16) : Math.round(window.innerHeight - 16);
-
-  var sr=stage.getBoundingClientRect();
-  var centerX=Math.round(sr.left + sr.width/2);
-  var centerY=Math.round(sr.top  + sr.height/2);
-
-  var bandTop=Math.max(noFlyTop + 24, 0);
-  var bandBot=Math.min(noFlyBot - 24, window.innerHeight);
-  var bandH=Math.max(1, bandBot - bandTop);
-
-  var laneTop=Math.round(bandTop + bandH*0.30);
-  var laneBot=Math.round(bandTop + bandH*0.70);
-
-  root.style.setProperty("--gd_noFlyTop", noFlyTop+"px");
-  root.style.setProperty("--gd_noFlyBot", noFlyBot+"px");
-  root.style.setProperty("--gd_laneTop",  laneTop+"px");
-  root.style.setProperty("--gd_laneBot",  laneBot+"px");
-  root.style.setProperty("--gd_centerX",  centerX+"px");
-  root.style.setProperty("--gd_centerY",  centerY+"px");
-}
-exportWiring();
-window.addEventListener("resize", exportWiring, {passive:true});
-
-/* engine status + mount */
-window.addEventListener("load", function(){
-  var bgV=(window.GD_BG && window.GD_BG.version) ? window.GD_BG.version : (window.GD_BG ? "BG_OK" : "BG?");
-  var drV=(window.GD_DRAGON && window.GD_DRAGON.version) ? window.GD_DRAGON.version : (window.GD_DRAGON ? "DR_OK" : "DR?");
-  document.getElementById("engstat").textContent="ENG: "+bgV+" | "+drV;
-
-  try{ if(window.GD_BG && window.GD_BG.mount) window.GD_BG.mount({fps:30,dpr_cap:1.6}); }catch(e){}
-  try{ if(window.GD_DRAGON && window.GD_DRAGON.mount) window.GD_DRAGON.mount({}); }catch(e){}
 });
 
-paint();
-requestAnimationFrame(render);
-window.addEventListener("resize", function(){ render(); }, {passive:true});
+/* ===== RUN ===== */
+
+layout();
 
 })();
+
 </script>
+
 </body>
 </html>

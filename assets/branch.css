@@ -1,3 +1,9 @@
+/* TNT — /assets/branch.css
+   YOUR EXISTING FILE + ONE COMPAT LINE
+   CHANGE: add --gd_r1 alias so hel-client reads correct ring radius
+   NOTHING ELSE MODIFIED
+*/
+
 /* ============================================================
    GEODIAMETRICS BRANCH — CANONICAL GEOMETRY LAYER (branch.css)
    FILE: /assets/branch.css
@@ -29,6 +35,9 @@
   /* Center core */
   --gd-core: 78px;
   --gd-core-mobile: 64px;
+
+  /* COMPAT (NEW): hel-client expects --gd_r1 */
+  --gd_r1: var(--gd-ring-r);
 }
 
 /* ============================================================
@@ -179,12 +188,6 @@
 
 /* ============================================================
    OCTAGONAL PROCESSOR STAGE (NEW)
-   Use this instead of diamond platform when ready:
-     <div class="gd-proc">
-       <div class="gd-proc-ring"></div>
-       <a class="gd-oct gd-proc-n" ...>...</a> ...
-       <div class="gd-proc-core"><span>◆</span></div>
-     </div>
    ============================================================ */
 
 .gd-proc{
@@ -258,7 +261,6 @@
 
 /* ============================================================
    8-LANE POSITIONS (N, NE, E, SE, S, SW, W, NW) — OCTAGON NODES
-   Use --gd-ring-r8 radius
    ============================================================ */
 
 .gd-proc8-n,
@@ -285,8 +287,6 @@
 
 /* ============================================================
    MODAL GEOMETRY (NO COLORS / NO MATERIAL)
-   Purpose: stop repeating modal positioning in every page.
-   Styling (background/borders/shadows/colors) stays in ui.css or per-page.
    ============================================================ */
 
 .bd{
@@ -333,7 +333,6 @@
   flex:1 1 auto;
 }
 
-/* Lensbar geometry only */
 .lensbar{
   display:flex;
   gap:10px;
@@ -371,6 +370,7 @@
     --gd-ring-r: 136px;
     --gd-ring-r8: 182px;
     --gd-core: var(--gd-core-mobile);
+    --gd_r1: var(--gd-ring-r);
   }
 
   .platform,

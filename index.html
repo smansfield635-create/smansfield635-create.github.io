@@ -1,32 +1,64 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: IDX_HEX_SILHOUETTE_BOOT_v1
-     PURPOSE: load /assets/dragon-engine.js (hex filled-cell silhouette)
+     BUILD: IDX_HEX_DRAGON_BOOT_v1
+     PURPOSE: clean host + load hex dragon engine
 -->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+
 <title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1"/>
+<link rel="stylesheet" href="/assets/ui.css?v=1">
+<link rel="stylesheet" href="/assets/branch.css?v=1">
 
-<!-- DRAGON ENGINE (cache-bust) -->
+<!-- Dragon engine -->
 <script defer src="/assets/dragon-engine.js?v=1"></script>
 
 <style>
-body{margin:0;overflow:hidden}
-#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
-#gd-field{z-index:0;pointer-events:none}
-#gd-dragon{z-index:6;pointer-events:none}
-#gd-ui{z-index:20;pointer-events:none}
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+overflow:hidden;
+}
+
+/* host layers */
+#gd-field,
+#gd-dragon,
+#gd-ui{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+}
+
+#gd-field{
+z-index:0;
+pointer-events:none;
+}
+
+#gd-dragon{
+z-index:6;
+pointer-events:none;
+}
+
+#gd-ui{
+z-index:20;
+pointer-events:none;
+}
 </style>
+
 </head>
 
 <body>
+
 <div id="gd-field"></div>
 <div id="gd-dragon"></div>
 <div id="gd-ui"></div>
+
 </body>
 </html>

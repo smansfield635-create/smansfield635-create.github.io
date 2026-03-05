@@ -1,139 +1,139 @@
 /* TNT — /assets/dragon-engine.js
-   DRAGON SILHOUETTE ENGINE
-   BUILD: DRAGON_SILHOUETTE_TRUE_v1
+   DRAGON SILHOUETTE (HARD-PROOF RESET)
+   RESET_ID: RESET_20260304_2359
+   WHAT THIS DOES:
+   - draws TWO obvious dragon silhouettes (not tubes)
+   - prints RESET_ID bottom-left so you can prove the correct file is running
 */
-
 (function(){
+"use strict";
 
 if(window.__DRAGON_ENGINE_RUNNING__) return;
 window.__DRAGON_ENGINE_RUNNING__ = true;
 
-const canvas=document.createElement("canvas");
-canvas.style.position="fixed";
-canvas.style.inset="0";
-canvas.style.pointerEvents="none";
-canvas.style.zIndex="6";
-document.body.appendChild(canvas);
+const RESET_ID = "RESET_20260304_2359";
 
-const ctx=canvas.getContext("2d");
+/* mount into gd-dragon layer if it exists */
+const host = document.getElementById("gd-dragon") || document.body;
+
+const canvas = document.createElement("canvas");
+canvas.id = "gd_dragon_engine_canvas";
+canvas.style.position = "absolute";
+canvas.style.inset = "0";
+canvas.style.width = "100%";
+canvas.style.height = "100%";
+canvas.style.pointerEvents = "none";
+canvas.style.zIndex = "6";
+host.appendChild(canvas);
+
+const ctx = canvas.getContext("2d", {alpha:true, desynchronized:true});
 
 function resize(){
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+  canvas.width = Math.max(1, window.innerWidth|0);
+  canvas.height = Math.max(1, window.innerHeight|0);
 }
 resize();
-window.addEventListener("resize",resize);
+window.addEventListener("resize", resize, {passive:true});
 
-let t=0;
+let tt = 0;
 
-function dragon(x,y,s,flip,color){
+function dragonSilhouette(x,y,s,flip,fill){
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.scale(s*flip,s);
 
-ctx.save();
-ctx.translate(x,y);
-ctx.scale(s*flip,s);
+  ctx.fillStyle = fill;
 
-ctx.fillStyle=color;
+  // BODY (closed hull) — distinct head/neck/torso/tail
+  ctx.beginPath();
 
-ctx.beginPath();
+  // tail tip
+  ctx.moveTo(-260, 0);
 
-/* tail */
-ctx.moveTo(-260,0);
+  // dorsal tail/body
+  ctx.quadraticCurveTo(-210,-30,-170,-18);
+  ctx.quadraticCurveTo(-110,-10,-70,-18);
 
-/* tail taper */
-ctx.quadraticCurveTo(-200,-30,-160,-15);
+  // shoulder/torso mass (this is what prevents “tube”)
+  ctx.quadraticCurveTo(-10,-70, 60,-48);
+  ctx.quadraticCurveTo(120,-28, 165,-22);
 
-/* back body */
-ctx.quadraticCurveTo(-120,-10,-80,-15);
+  // neck rise
+  ctx.quadraticCurveTo(215,  8, 240,  62);
 
-/* shoulder hump */
-ctx.quadraticCurveTo(-30,-60,40,-40);
+  // skull top
+  ctx.quadraticCurveTo(260,  92, 225, 108);
 
-/* back to neck */
-ctx.quadraticCurveTo(90,-20,140,-10);
+  // snout wedge (hard head read)
+  ctx.lineTo(250,  88);
+  ctx.lineTo(292,  86);
+  ctx.lineTo(250,  66);
 
-/* neck rise */
-ctx.quadraticCurveTo(200,30,230,80);
+  // jaw / throat
+  ctx.quadraticCurveTo(215,  52, 178,  70);
 
-/* head top */
-ctx.quadraticCurveTo(250,100,210,110);
+  // belly return (torso underside)
+  ctx.quadraticCurveTo(120,  92,  55,  82);
+  ctx.quadraticCurveTo(-10,  72, -70,  78);
+  ctx.quadraticCurveTo(-145, 62, -205, 32);
 
-/* snout */
-ctx.lineTo(240,90);
-ctx.lineTo(270,90);
-ctx.lineTo(240,70);
+  // close at tail
+  ctx.quadraticCurveTo(-245, 18, -260, 0);
 
-/* jaw */
-ctx.quadraticCurveTo(210,60,180,70);
+  ctx.closePath();
+  ctx.fill();
 
-/* chest */
-ctx.quadraticCurveTo(150,90,90,80);
+  // WING MASS (triangle) — immediate dragon-class read
+  ctx.beginPath();
+  ctx.moveTo(40,-30);
+  ctx.lineTo(-70,-165);
+  ctx.lineTo(100,-55);
+  ctx.closePath();
+  ctx.fill();
 
-/* wing mass */
-ctx.quadraticCurveTo(30,70,-40,80);
+  // HORNS (two triangles)
+  ctx.beginPath();
+  ctx.moveTo(225,102);
+  ctx.lineTo(210,132);
+  ctx.lineTo(238,112);
+  ctx.closePath();
+  ctx.fill();
 
-/* belly */
-ctx.quadraticCurveTo(-120,70,-180,40);
+  ctx.beginPath();
+  ctx.moveTo(245,98);
+  ctx.lineTo(268,130);
+  ctx.lineTo(246,112);
+  ctx.closePath();
+  ctx.fill();
 
-/* tail bottom */
-ctx.quadraticCurveTo(-230,20,-260,0);
+  // TAIL FIN (prevents dot tail)
+  ctx.beginPath();
+  ctx.moveTo(-260,0);
+  ctx.lineTo(-300,-20);
+  ctx.lineTo(-292,18);
+  ctx.closePath();
+  ctx.fill();
 
-ctx.closePath();
-ctx.fill();
-
-/* wing triangle silhouette */
-
-ctx.beginPath();
-ctx.moveTo(-10,-20);
-ctx.lineTo(-90,-140);
-ctx.lineTo(60,-40);
-ctx.closePath();
-ctx.fill();
-
-/* horn */
-
-ctx.beginPath();
-ctx.moveTo(215,100);
-ctx.lineTo(205,130);
-ctx.lineTo(230,110);
-ctx.closePath();
-ctx.fill();
-
-ctx.restore();
+  ctx.restore();
 }
 
 function frame(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx = canvas.width/2;
+  const cy = canvas.height/2;
 
-const cx=canvas.width/2;
-const cy=canvas.height/2;
+  tt += 0.012;
 
-t+=0.01;
+  // top dragon (jade)
+  dragonSilhouette(
+    cx - 320 + Math.sin(tt)*55,
+    cy - 170,
+    1.1,
+    1,
+    "rgba(14,124,58,0.92)"
+  );
 
-/* top dragon */
-
-dragon(
-cx-300+Math.sin(t)*60,
-cy-160,
-1.4,
-1,
-"#0e7c3a"
-);
-
-/* bottom dragon */
-
-dragon(
-cx+300+Math.sin(t+1.7)*60,
-cy+160,
-1.4,
--1,
-"#b32121"
-);
-
-requestAnimationFrame(frame);
-
-}
-
-frame();
-
-})();
+  // bottom dragon (crimson, mirrored)
+  dragonSilhouette(
+    cx + 320 + Math.sin(tt+1.4)*55,

@@ -1,8 +1,15 @@
 <!doctype html>
 <!-- TNT — /index.html
-     PAIR 1/2 — INDEX (WIRING CANON + GLOSSY GEMS RESTORE)
-     VERSION: IDX_PAIR_20260304_2100
+     STRUCTURE LAYER EXECUTION (PAIR 1/2) — INDEX WIRING + HOST CONTRACT + GEM-COMPAT UI
+     VERSION: IDX_STRUCT_20260304_2200
      FULL FILE REPLACEMENT
+
+     LOCKS:
+     - Hosts: #gd-field / #gd-dragon / #gd-ui
+     - Load order: instruments → bg → dragon
+     - Build token cache bust (single token)
+     - Wiring export CSS vars: --gd_noFlyTop/--gd_noFlyBot/--gd_laneTop/--gd_laneBot/--gd_centerX/--gd_centerY
+     - No new gd_* keys
 -->
 <html lang="en">
 <head>
@@ -11,17 +18,18 @@
 <title>Compass · DiamondGateBridge</title>
 
 <script>
-window.__GD_BUILD__="IDX_PAIR_20260304_2100";
+window.__GD_BUILD__="IDX_STRUCT_20260304_2200";
 </script>
 
-<link rel="stylesheet" href="/assets/ui.css?v=IDX_PAIR_20260304_2100"/>
-<link rel="stylesheet" href="/assets/branch.css?v=IDX_PAIR_20260304_2100"/>
+<link rel="stylesheet" href="/assets/ui.css?v=IDX_STRUCT_20260304_2200"/>
+<link rel="stylesheet" href="/assets/branch.css?v=IDX_STRUCT_20260304_2200"/>
 
-<script defer src="/assets/instruments.js?v=IDX_PAIR_20260304_2100"></script>
-<script defer src="/assets/bg-engine.js?v=IDX_PAIR_20260304_2100"></script>
-<script defer src="/assets/dragon-anatomy.js?v=IDX_PAIR_20260304_2100"></script>
+<script defer src="/assets/instruments.js?v=IDX_STRUCT_20260304_2200"></script>
+<script defer src="/assets/bg-engine.js?v=IDX_STRUCT_20260304_2200"></script>
+<script defer src="/assets/dragon-anatomy.js?v=IDX_STRUCT_20260304_2200"></script>
 
 <style>
+/* INDEX OWNS ONLY STRUCTURE (layout + wiring). MATERIAL LIVES IN ui.css. */
 body{margin:0}
 
 /* HOST LAYERS */
@@ -39,84 +47,24 @@ text-shadow:0 10px 30px rgba(0,0,0,.75);opacity:.75;
 
 /* TOP BAR */
 .top{position:fixed;top:14px;left:0;right:0;padding:0 14px;z-index:260;pointer-events:none}
-.topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:10px 12px;background:linear-gradient(145deg, rgba(8,10,14,.86), rgba(4,6,10,.92));box-shadow:0 28px 110px rgba(0,0,0,.70)}
-.controls{display:flex;gap:10px;justify-content:flex-end}
-.seg{display:inline-flex;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18)}
-.seg button{border:0;background:transparent;color:rgba(255,255,255,.78);padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
-.seg button[aria-pressed="true"]{color:#fff;background:radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%), linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10))}
+.topbar{pointer-events:auto;width:min(1120px,96vw);margin:0 auto;border-radius:22px;padding:10px 12px}
+.controls{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.seg{display:inline-flex;overflow:hidden;border-radius:16px}
+.seg button{border:0;background:transparent;padding:10px 12px;min-height:42px;font-weight:980;cursor:pointer}
+.seg button[aria-pressed="true"]{}
 
 /* STAGE */
 .stage{position:relative;width:min(1200px,94vw);height:min(1200px,86vh);margin:96px auto 0;pointer-events:none}
-.glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;border:1px solid rgba(255,255,255,.10);background:linear-gradient(160deg, rgba(10,12,16,.34), rgba(6,8,10,.44));box-shadow:0 70px 240px rgba(0,0,0,.48), inset 0 2px 0 rgba(255,255,255,.08), inset 0 -70px 140px rgba(0,0,0,.52);opacity:.86}
+.glassPlate{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(980px,92vw);height:min(980px,92vw);border-radius:44px;pointer-events:none;z-index:1;opacity:.86}
 .dial{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(900px,90vw);height:min(900px,90vw);border-radius:999px;pointer-events:none;z-index:2;overflow:hidden}
-.dial::before{content:"";position:absolute;inset:0;border-radius:999px;background:radial-gradient(circle at 50% 42%, rgba(255,255,255,.05), rgba(0,0,0,.14) 56%, rgba(0,0,0,.34) 78%, rgba(0,0,0,0) 92%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.06), inset 0 0 80px rgba(0,0,0,.35), 0 50px 180px rgba(0,0,0,.22);opacity:.92}
 
-/* NODES (GLOSSY GEMS RESTORED) */
-.node{
-position:absolute;left:50%;top:50%;
-transform:translate(-50%,-50%) rotate(45deg);
-pointer-events:auto;overflow:hidden;
-z-index:20;border-radius:22px;
-border:1px solid rgba(255,255,255,.16);
-box-shadow:
-  0 48px 150px rgba(0,0,0,.82),
-  0 0 26px rgba(212,175,55,.12),
-  inset 0 1px 0 rgba(255,255,255,.10),
-  inset 0 -28px 60px rgba(0,0,0,.55);
-background:
-  radial-gradient(140% 120% at 22% 16%, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 54%),
-  radial-gradient(120% 120% at 74% 26%, rgba(212,175,55,.16) 0%, rgba(212,175,55,0) 58%),
-  radial-gradient(120% 120% at 74% 78%, rgba(255,43,43,.10) 0%, rgba(255,43,43,0) 62%),
-  linear-gradient(145deg, rgba(17,24,39,.96), rgba(11,15,22,.98));
-}
-.node::before{
-content:"";
-position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-background:
-  radial-gradient(120% 120% at 50% 50%,
-    rgba(212,175,55,0) 58%,
-    rgba(212,175,55,.16) 82%,
-    rgba(212,175,55,0) 100%);
-opacity:.72;
-}
-.node::after{
-content:"";
-position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-background:
-  repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
-  repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
-mask:
-  radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
-  linear-gradient(#000,#000);
--webkit-mask:
-  radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
-  linear-gradient(#000,#000);
-opacity:.30;
-}
-.node:hover{
-border-color:rgba(212,175,55,.55);
-box-shadow:
-  0 56px 180px rgba(0,0,0,.85),
-  0 0 30px rgba(212,175,55,.22),
-  0 0 18px rgba(255,43,43,.10),
-  inset 0 1px 0 rgba(255,255,255,.12),
-  inset 0 -30px 70px rgba(0,0,0,.58);
-}
-.node:active{
-border-color:rgba(212,175,55,.62);
-box-shadow:
-  0 48px 150px rgba(0,0,0,.82),
-  0 0 34px rgba(212,175,55,.30),
-  inset 0 0 0 2px rgba(255,255,255,.06),
-  inset 0 -32px 74px rgba(0,0,0,.62);
-}
-
+/* NODES (size/position only; gem material from ui.css) */
+.node{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);pointer-events:auto;z-index:20;border-radius:22px;overflow:hidden}
 .core{width:208px;height:208px;border-radius:26px}
 .l1{width:150px;height:150px}
 .l2{width:116px;height:116px}
 .l3{width:92px;height:92px;border-radius:18px}
-
-.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#fff;text-align:center}
+.inner{width:100%;height:100%;transform:rotate(-45deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
 .word{font-weight:980;letter-spacing:.6px}
 .code{font-weight:900;font-size:10px;opacity:.78;letter-spacing:1.2px}
 
@@ -124,7 +72,7 @@ box-shadow:
 .corner{position:fixed;bottom:16px;z-index:270;pointer-events:none}
 .corner.left{left:16px}
 .corner.right{right:16px}
-.corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.92));color:#fff;font-weight:980;cursor:pointer}
+.corner .btn{pointer-events:auto;width:56px;height:56px;border-radius:16px;cursor:pointer}
 </style>
 </head>
 
@@ -134,13 +82,13 @@ box-shadow:
 
 <div id="gd-ui">
   <div class="top">
-    <div class="topbar" id="topbar">
+    <div class="topbar gd_panel" id="topbar">
       <div class="controls">
-        <div class="seg" role="group" aria-label="Compass Layer">
+        <div class="seg gd_seg" role="group" aria-label="Compass Layer">
           <button type="button" id="layer1" aria-pressed="true">LAYER 1</button>
           <button type="button" id="layer2" aria-pressed="false">LAYER 2</button>
         </div>
-        <div class="seg" role="group" aria-label="Lane">
+        <div class="seg gd_seg" role="group" aria-label="Lane">
           <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
           <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
         </div>
@@ -149,12 +97,12 @@ box-shadow:
   </div>
 
   <div class="stage" id="stage">
-    <div class="glassPlate"></div>
-    <div class="dial"></div>
+    <div class="glassPlate gd_plate"></div>
+    <div class="dial gd_dial"></div>
   </div>
 
-  <div class="corner left" id="cornerLeft"><button class="btn" id="btnExit">EXIT</button></div>
-  <div class="corner right" id="cornerRight"><button class="btn" id="btnHub">HUB</button></div>
+  <div class="corner left" id="cornerLeft"><button class="btn gd_btn" id="btnExit">EXIT</button></div>
+  <div class="corner right" id="cornerRight"><button class="btn gd_btn" id="btnHub">HUB</button></div>
 </div>
 
 <div id="engstat">ENG: …</div>
@@ -163,7 +111,7 @@ box-shadow:
 (function(){
 "use strict";
 
-/* minimal EN state (gd_* only) */
+/* EN-only minimal state write (gd_* only) */
 var qs=new URLSearchParams(location.search);
 var LS=window.localStorage;
 var style=(qs.get("style")||LS.getItem("gd_style")||"informal");
@@ -224,7 +172,7 @@ var stage=document.getElementById("stage");
 
 function mkNode(it){
   var d=document.createElement("div");
-  d.className="node "+it.cls;
+  d.className="node gd_gem "+it.cls;
   d.setAttribute("role","button");
   d.tabIndex=0;
 
@@ -240,10 +188,12 @@ function mkNode(it){
   d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
   return d;
 }
+
 function clearNodes(){
   var nodes=stage.querySelectorAll(".node");
   for(var i=0;i<nodes.length;i++) nodes[i].remove();
 }
+
 function layout1(){
   clearNodes();
   var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
@@ -260,6 +210,7 @@ function layout1(){
     var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
   }
 }
+
 function layout2(){
   clearNodes();
   var r=stage.getBoundingClientRect(), cx=r.width/2, cy=r.height/2;
@@ -275,7 +226,9 @@ function layout2(){
     var n=mkNode(it); n.style.left=x+"px"; n.style.top=y+"px"; stage.appendChild(n);
   }
 }
+
 function render(){ (layer==="1") ? layout1() : layout2(); }
+
 function setPressed(id,on){ document.getElementById(id).setAttribute("aria-pressed", on?"true":"false"); }
 function paint(){
   setPressed("layer1", layer==="1");
@@ -283,6 +236,7 @@ function paint(){
   setPressed("lanePlatform", lane==="platform");
   setPressed("laneEngineering", lane==="engineering");
 }
+
 function setLayer(v){ layer=(v==="2")?"2":"1"; history.replaceState({}, "", location.pathname + q({layer:layer})); paint(); render(); }
 function setLane(v){ lane=(v==="engineering")?"engineering":"platform"; history.replaceState({}, "", location.pathname + q({lane:lane})); paint(); render(); }
 
@@ -349,6 +303,5 @@ window.addEventListener("resize", function(){ render(); }, {passive:true});
 
 })();
 </script>
-
 </body>
 </html>

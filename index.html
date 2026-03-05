@@ -1,17 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>DiamondGateBridge</title>
 
 <style>
 html,body{
 margin:0;
 height:100%;
-background:#b30000;
 overflow:hidden;
+background:#b00000;
+}
+#gd-dragon{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:6;
 }
 </style>
 
@@ -19,11 +25,9 @@ overflow:hidden;
 
 <body>
 
-<!-- dragon host -->
 <div id="gd-dragon"></div>
 
-<!-- dragon engine -->
-<script src="assets/dragon-engine.js?v=HEX4"></script>
+<script src="/assets/dragon-engine.js?v=HEX4"></script>
 
 </body>
 </html>

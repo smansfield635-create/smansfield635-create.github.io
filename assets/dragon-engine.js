@@ -1,6 +1,9 @@
 /* TNT — /assets/dragon-engine.js
    HEX DRAGON ENGINE (FILLED HEX CELLS) — SILHOUETTE PROOF
-   BUILD: HEX_DRAGON_ENGINE_v1
+   BUILD: HEX_DRAGON_ENGINE_v2_HEX4
+
+   CHANGE:
+   - HEX_PX: 6 → 4 (smaller cells)
 
    LOCKED CANON (from your packet):
    - POINTY-TOP, AXIAL (q,r)
@@ -11,13 +14,16 @@
    - Tail tip radius: 0
    - Max bend per step: 1 neighbor (turn -1/0/+1)
    - Update: head moves, rest follow
-   - Silhouette: FILLED HEX CELLS (no boundary polygon yet)
+   - Silhouette: FILLED HEX CELLS (no boundary polygon)
 
-   DESIGN (per your latest):
+   DESIGN:
    - Two dragons: mirror opposition
    - Random but harmonized (shared seeded RNG)
-   - One friendlier (LOVE/prosperity), one scarier (FEAR/collapse)
+   - LOVE (jade) vs FEAR (crimson)
    - Horns separate later (NOT included)
+
+   IMPORTANT FIX:
+   - Prevent “corner clusters” by bounding + resetting the spine when it drifts offscreen.
 */
 
 (function(){
@@ -25,8 +31,8 @@
 if(window.__HEX_DRAGON_ENGINE_RUNNING__) return;
 window.__HEX_DRAGON_ENGINE_RUNNING__ = true;
 
-/* ====== TUNABLE (you asked to try 6) ====== */
-const HEX_PX = 6;           // 1 hex = 6 px (smaller = smoother)
+/* ====== TUNABLE (TEST) ====== */
+const HEX_PX = 4;           // 1 hex = 4 px (smaller)
 const DPR_CAP = 1.6;
 
 /* ====== LOCKED BASELINE ====== */
@@ -49,13 +55,12 @@ function key(h){ return h.q + "," + h.r; }
 
 /* Pointy-top axial -> pixel */
 function axialToPx(h){
-  // x = size*sqrt(3)*(q + r/2), y = size*3/2*r
   const x = HEX_PX * Math.sqrt(3) * (h.q + h.r/2);
   const y = HEX_PX * 1.5 * h.r;
   return {x,y};
 }
 
-/* Hex disk (union cells within radius) */
+/* Hex disk */
 function disk(center, radius){
   const r = radius|0;
   const out=[];
@@ -80,11 +85,7 @@ function mulberry32(seed){
   };
 }
 
-/* ====== Two radius profiles (rings) ======
-   LOVE: smoother/rounder mass distribution
-   FEAR: sharper neck pinch + heavier shoulder
-   Both respect max=6 and tail=0.
-*/
+/* ====== Radius profiles (rings) ====== */
 function clampR(r){
   r = r|0;
   if(r > SHOULDER_R) r = SHOULDER_R;
@@ -94,41 +95,33 @@ function clampR(r){
 
 function radiusLove(i){
   const u = i/(SPINE_LEN-1);
-
   let r;
-  if(u < 0.10) r = 4;          // head
-  else if(u < 0.22) r = 3;     // neck
-  else if(u < 0.34) r = 5;     // shoulder build
-  else if(u < 0.48) r = 6;     // shoulder peak
-  else if(u < 0.68) r = 5;     // torso
-  else if(u < 0.82) r = 3;     // taper
-  else if(u < 0.92) r = 2;     // tail base
-  else if(u < 0.97) r = 1;     // tail
-  else r = 0;                  // tip
-
-  // neck floor ≥2 (per stability spec)
-  if(u >= 0.10 && u < 0.34 && r < 2) r = 2;
-
+  if(u < 0.10) r = 4;
+  else if(u < 0.22) r = 3;
+  else if(u < 0.34) r = 5;
+  else if(u < 0.48) r = 6;
+  else if(u < 0.68) r = 5;
+  else if(u < 0.82) r = 3;
+  else if(u < 0.92) r = 2;
+  else if(u < 0.97) r = 1;
+  else r = 0;
+  if(u >= 0.10 && u < 0.34 && r < 2) r = 2; // neck floor
   return clampR(r);
 }
 
 function radiusFear(i){
   const u = i/(SPINE_LEN-1);
-
   let r;
-  if(u < 0.08) r = 5;          // heavier head
-  else if(u < 0.18) r = 3;     // neck start
-  else if(u < 0.28) r = 2;     // sharper pinch
-  else if(u < 0.44) r = 6;     // shoulder peak sooner
-  else if(u < 0.64) r = 5;     // torso
-  else if(u < 0.80) r = 4;     // taper
-  else if(u < 0.92) r = 2;     // tail base
-  else if(u < 0.97) r = 1;     // tail
-  else r = 0;                  // tip
-
-  // neck floor ≥2
-  if(u >= 0.12 && u < 0.32 && r < 2) r = 2;
-
+  if(u < 0.08) r = 5;
+  else if(u < 0.18) r = 3;
+  else if(u < 0.28) r = 2;
+  else if(u < 0.44) r = 6;
+  else if(u < 0.64) r = 5;
+  else if(u < 0.80) r = 4;
+  else if(u < 0.92) r = 2;
+  else if(u < 0.97) r = 1;
+  else r = 0;
+  if(u >= 0.12 && u < 0.32 && r < 2) r = 2; // neck floor
   return clampR(r);
 }
 
@@ -161,7 +154,7 @@ window.addEventListener("resize", resize, {passive:true});
 function drawHex(x,y,size){
   ctx.beginPath();
   for(let i=0;i<6;i++){
-    const a = (Math.PI/180) * (60*i - 30); // pointy-top
+    const a = (Math.PI/180) * (60*i - 30);
     const px = x + Math.cos(a)*size;
     const py = y + Math.sin(a)*size;
     if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
@@ -173,7 +166,6 @@ function drawHex(x,y,size){
 function initSpine(heading, start){
   const spine = new Array(SPINE_LEN);
   spine[0] = {q:start.q, r:start.r};
-
   const back = (heading + 3) % 6;
   for(let i=1;i<SPINE_LEN;i++){
     spine[i] = add(spine[i-1], DIRS[back]);
@@ -181,9 +173,8 @@ function initSpine(heading, start){
   return spine;
 }
 
-/* ====== Motion: head moves, body follows; bend <= 1 ====== */
+/* ====== Motion (bend <= 1 neighbor) ====== */
 function stepSpine(spine, heading, rnd){
-  // turn in {-1,0,+1}, rare turns for smooth slither
   const roll = rnd();
   let turn = 0;
   if(roll < 0.06) turn = -1;
@@ -203,7 +194,7 @@ function stepSpine(spine, heading, rnd){
   return heading;
 }
 
-/* ====== Build body cell sets ====== */
+/* ====== Build body ====== */
 function buildBody(spine, radiusFn){
   const set = new Map();
   for(let i=0;i<SPINE_LEN;i++){
@@ -216,7 +207,7 @@ function buildBody(spine, radiusFn){
   return set;
 }
 
-/* ====== Render ====== */
+/* ====== Render body ====== */
 function renderBody(set, fill){
   const cx = W*0.5;
   const cy = H*0.52;
@@ -227,31 +218,48 @@ function renderBody(set, fill){
 
   const size = HEX_PX*DPR*0.98;
 
-  // deterministic order for stability
   const keys = Array.from(set.keys()).sort();
   for(const kk of keys){
     const h = set.get(kk);
     const p = axialToPx(h);
     const x = cx + p.x*DPR;
     const y = cy + p.y*DPR;
-
     drawHex(x,y,size);
     ctx.fill();
     ctx.stroke();
   }
 }
 
-/* ====== Mirror opposition + harmonized randomness ====== */
-const rnd = mulberry32(0xC0FFEE);     // shared seed (harmonized)
-let heading = 0;                      // top starts E (D0)
-let spineTop = initSpine(heading, {q:-10,r:-10});
-
+/* ====== Mirror opposition ====== */
 function mirrorSpine(spine){
   const out = new Array(SPINE_LEN);
   for(let i=0;i<SPINE_LEN;i++){
     out[i] = {q:-spine[i].q, r:-spine[i].r};
   }
   return out;
+}
+
+/* ====== Offscreen drift guard (prevents corner-only clusters) ====== */
+function headOnscreen(spine){
+  const p = axialToPx(spine[0]);
+  const cx = (window.innerWidth||1)*0.5;
+  const cy = (window.innerHeight||1)*0.52;
+  const x = cx + p.x;
+  const y = cy + p.y;
+  const margin = 80; // css px
+  return (x > -margin && x < (window.innerWidth||1)+margin && y > -margin && y < (window.innerHeight||1)+margin);
+}
+
+/* ====== State ====== */
+const rnd = mulberry32(0xC0FFEE);
+let heading = 0;
+
+// start near center so bodies are visible immediately
+let spineTop = initSpine(heading, {q:-6, r:-2});
+
+function resetSpines(){
+  heading = 0;
+  spineTop = initSpine(heading, {q:-6, r:-2});
 }
 
 /* ====== Loop ====== */
@@ -264,28 +272,27 @@ function loop(ts){
 
   acc += dt;
 
-  // logic at ~12 fps (stable); draw each frame
   if(acc >= 83){
     acc = 0;
     heading = stepSpine(spineTop, heading, rnd);
+
+    // if head drifted offscreen, reset (prevents disappearing/corner clustering)
+    if(!headOnscreen(spineTop)) resetSpines();
   }
 
   const spineBot = mirrorSpine(spineTop);
 
   ctx.clearRect(0,0,W,H);
 
-  // Top = LOVE (jade)
   const bodyTop = buildBody(spineTop, radiusLove);
-  renderBody(bodyTop, "rgba(14,124,58,0.82)");
-
-  // Bottom = FEAR (crimson), mirrored opposition
   const bodyBot = buildBody(spineBot, radiusFear);
+
+  renderBody(bodyTop, "rgba(14,124,58,0.82)");
   renderBody(bodyBot, "rgba(179,33,33,0.78)");
 
-  // watermark
   ctx.fillStyle="rgba(255,255,255,0.80)";
   ctx.font = (12*DPR) + "px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-  ctx.fillText("HEX_DRAGON_ENGINE_v1 (HEX=6)", 12*DPR, H-14*DPR);
+  ctx.fillText("HEX_DRAGON_ENGINE_v2_HEX4", 12*DPR, H-14*DPR);
 
   requestAnimationFrame(loop);
 }

@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: HEL_INDEX_RELOCK
-     PURPOSE: Run HEL system (ribbon dragons). Do NOT run dragon-engine.js.
+     BUILD: HEL_INDEX_DRAGON_RIG_v3
+     PURPOSE: cache-bust + deterministic load order for HEL dragon rig
 -->
 <html lang="en">
 <head>
@@ -9,8 +9,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Diamond Gate Bridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=helrelock">
-<link rel="stylesheet" href="/assets/branch.css?v=helrelock">
+<link rel="stylesheet" href="/assets/ui.css?v=dragonrig3">
+<link rel="stylesheet" href="/assets/branch.css?v=dragonrig3">
 
 <style>
 html,body{margin:0;height:100%;width:100%;overflow:hidden;}
@@ -18,10 +18,11 @@ html,body{margin:0;height:100%;width:100%;overflow:hidden;}
 </style>
 </head>
 <body>
+
 <div id="gd-dragon"></div>
 
-<script src="/assets/hel-render.js?v=helrelock"></script>
-<script src="/assets/hel-client.js?v=helrelock"></script>
+<script src="/assets/hel-render.js?v=dragonrig3"></script>
+<script src="/assets/hel-client.js?v=dragonrig3"></script>
 
 </body>
 </html>

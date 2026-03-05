@@ -1,32 +1,47 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: IDX_HEX_SILHOUETTE_BOOT_v1
-     PURPOSE: load /assets/dragon-engine.js (hex filled-cell silhouette)
+     PURPOSE: Root page for HEX_SILHOUETTE_PROOF
+     LOADS: ui.css, branch.css, dragon-engine.js
 -->
+
 <html lang="en">
 <head>
+
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>DiamondGateBridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=1"/>
-<link rel="stylesheet" href="/assets/branch.css?v=1"/>
+<title>Diamond Gate Bridge</title>
 
-<!-- DRAGON ENGINE (cache-bust) -->
-<script defer src="/assets/dragon-engine.js?v=1"></script>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-body{margin:0;overflow:hidden}
-#gd-field,#gd-dragon,#gd-ui{position:fixed;inset:0;width:100%;height:100%}
-#gd-field{z-index:0;pointer-events:none}
-#gd-dragon{z-index:6;pointer-events:none}
-#gd-ui{z-index:20;pointer-events:none}
+
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+overflow:hidden;
+background:#050505;
+}
+
+#gd-dragon{
+position:relative;
+width:100vw;
+height:100vh;
+}
+
 </style>
+
 </head>
 
 <body>
-<div id="gd-field"></div>
+
+<!-- Dragon simulation host -->
 <div id="gd-dragon"></div>
-<div id="gd-ui"></div>
+
+<script defer src="/assets/dragon-engine.js"></script>
+
 </body>
 </html>

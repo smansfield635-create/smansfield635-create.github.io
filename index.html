@@ -1,48 +1,34 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: DRAGON_ENGINE_HOLLOW_HEX_RIM_v1_INDEX
-     PURPOSE: run the single-file dragon engine
+     BUILD: DRAGON_SPLIT_LOCKED+UNLOCKED_v1
+     PURPOSE: Same folder (/assets). Two engine files + two dragon files.
+     ORDER:
+       1) hel-render.js (wiring)
+       2) dragon-core.js (locked dragon parts)
+       3) dragon-skin.js (iterated dragon parts)
+       4) hel-client.js (simulation; starts loop)
 -->
-
 <html lang="en">
 <head>
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Diamond Gate Bridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=dragonhex1">
-<link rel="stylesheet" href="/assets/branch.css?v=dragonhex1">
+<link rel="stylesheet" href="/assets/ui.css?v=dragonsplit1">
+<link rel="stylesheet" href="/assets/branch.css?v=dragonsplit1">
 
 <style>
-
-html,body{
-margin:0;
-height:100%;
-width:100%;
-overflow:hidden;
-background:#000;
-}
-
-#gd-dragon{
-position:fixed;
-inset:0;
-width:100vw;
-height:100vh;
-}
-
+html,body{margin:0;height:100%;width:100%;overflow:hidden;background:#000;}
+#gd-dragon{position:fixed;inset:0;width:100vw;height:100vh;}
 </style>
-
 </head>
-
 <body>
-
 <div id="gd-dragon"></div>
 
-<!-- SINGLE ENGINE -->
-<script src="/assets/dragon-engine.js?v=dragonhex1"></script>
+<script src="/assets/hel-render.js?v=dragonsplit1"></script>
+<script src="/assets/dragon-core.js?v=dragonsplit1"></script>
+<script src="/assets/dragon-skin.js?v=dragonsplit1"></script>
+<script src="/assets/hel-client.js?v=dragonsplit1"></script>
 
 </body>
-
 </html>

@@ -1,7 +1,5 @@
 /* TNT — /assets/dragon-anatomy.js
-   DRAGON SILHOUETTE ENGINE
-   BUILD: DRAGON_SILHOUETTE_v1
-   PURPOSE: render solid dragon body silhouette using spine hull
+   DRAGON ENGINE — SILHOUETTE vB
 */
 
 (function(){
@@ -10,21 +8,14 @@
 if(window.__GD_DRAGON_RUNNING__) return;
 window.__GD_DRAGON_RUNNING__ = true;
 
-window.GD_DRAGON = {
-version:"DRAGON_SILHOUETTE_v1",
-mount:function(){}
-};
-
-/* ===== CANVAS ===== */
+window.GD_DRAGON = { version:"DRAGON_SILHOUETTE_vB", mount:function(){} };
 
 let canvas=document.createElement("canvas");
-canvas.id="gd_dragon_canvas";
 canvas.style.position="absolute";
 canvas.style.inset="0";
 canvas.style.pointerEvents="none";
 
-let host=document.getElementById("gd-dragon")||document.body;
-host.appendChild(canvas);
+(document.getElementById("gd-dragon")||document.body).appendChild(canvas);
 
 let ctx=canvas.getContext("2d");
 
@@ -32,65 +23,44 @@ let W=0,H=0,DPR=1;
 
 function resize(){
 DPR=Math.min(1.6,window.devicePixelRatio||1);
-W=Math.floor(window.innerWidth*DPR);
-H=Math.floor(window.innerHeight*DPR);
-canvas.width=W;
-canvas.height=H;
+W=canvas.width=Math.floor(window.innerWidth*DPR);
+H=canvas.height=Math.floor(window.innerHeight*DPR);
 }
-
 resize();
 window.addEventListener("resize",resize);
 
-/* ===== DRAGON CONFIG ===== */
-
-const SEG=110;
+const SEG=130;
 const GAP=16;
-const WIDTH=70;
-
-const SPEED=60;
-
-/* ===== DRAGON ===== */
+const SPEED=50;
+const BODY=70;
 
 class Dragon{
 
 constructor(top){
-
 this.top=top;
 this.dir=top?1:-1;
-
 this.spine=[];
 this.reset();
-
 }
 
 reset(){
-
-this.spine=[];
-
 for(let i=0;i<SEG;i++){
-
 this.spine.push({
-x:this.dir>0?-i*GAP:W+i*GAP,
-y:(this.top?0.35:0.65)*H
+x:(this.dir>0?-i*GAP:W+i*GAP),
+y:(this.top?0.34:0.66)*H
 });
-
 }
-
-this.phase=Math.random()*10;
-
 }
 
 update(dt){
 
 let head=this.spine[0];
-
 head.x+=this.dir*SPEED*dt;
 
-let wave=Math.sin(performance.now()*0.002+this.phase)*20;
+let wave=Math.sin(performance.now()*0.002)*18;
+head.y=(this.top?0.34:0.66)*H+wave;
 
-head.y=(this.top?0.35:0.65)*H+wave;
-
-for(let i=1;i<this.spine.length;i++){
+for(let i=1;i<SEG;i++){
 
 let p=this.spine[i-1];
 let c=this.spine[i];
@@ -105,84 +75,44 @@ c.y=p.y-(dy/d)*GAP;
 
 }
 
-if(head.x>W+200) head.x=-200;
-if(head.x<-200) head.x=W+200;
+if(head.x>W+250) head.x=-250;
+if(head.x<-250) head.x=W+250;
 
 }
 
-draw(){
+draw(color){
 
-let left=[];
-let right=[];
-
-for(let i=0;i<this.spine.length;i++){
+for(let i=SEG-1;i>=0;i--){
 
 let p=this.spine[i];
-let t=i/(this.spine.length-1);
+let t=i/(SEG-1);
 
-let r=(WIDTH*(1-t*0.9))*DPR;
+/* neck bulge */
+let profile=(1-t);
+if(t<0.15) profile=0.8+(t*1.2);
 
-let nx=0,ny=1;
+/* tail taper */
+if(t>0.75) profile=0.25*(1-t);
 
-if(i>0){
-
-let dx=this.spine[i].x-this.spine[i-1].x;
-let dy=this.spine[i].y-this.spine[i-1].y;
-
-let l=Math.hypot(dx,dy)||1;
-
-nx=-dy/l;
-ny=dx/l;
-
-}
-
-left.push({
-x:p.x+nx*r,
-y:p.y+ny*r
-});
-
-right.push({
-x:p.x-nx*r,
-y:p.y-ny*r
-});
-
-}
-
-/* BODY SILHOUETTE */
+let r=(BODY*profile)*DPR;
 
 ctx.beginPath();
-
-ctx.moveTo(left[0].x,left[0].y);
-
-for(let p of left) ctx.lineTo(p.x,p.y);
-
-for(let i=right.length-1;i>=0;i--){
-ctx.lineTo(right[i].x,right[i].y);
-}
-
-ctx.closePath();
-
-ctx.fillStyle=this.top
-? "rgba(0,110,60,0.95)"
-: "rgba(170,20,20,0.95)";
-
+ctx.ellipse(p.x,p.y,r,r*0.65,0,0,Math.PI*2);
+ctx.fillStyle=color;
 ctx.fill();
 
-/* SIMPLE HEAD */
+}
 
 let h=this.spine[0];
 
-ctx.fillStyle="black";
-
 ctx.beginPath();
-ctx.ellipse(h.x,h.y,18,12,0,0,Math.PI*2);
+ctx.ellipse(h.x,h.y,20,14,0,0,Math.PI*2);
+ctx.fillStyle="black";
 ctx.fill();
 
 }
 
 }
-
-/* ===== CREATE DRAGONS ===== */
 
 const topDragon=new Dragon(true);
 const botDragon=new Dragon(false);
@@ -201,8 +131,8 @@ ctx.clearRect(0,0,W,H);
 topDragon.update(dt);
 botDragon.update(dt);
 
-topDragon.draw();
-botDragon.draw();
+topDragon.draw("rgba(0,120,60,0.95)");
+botDragon.draw("rgba(170,20,20,0.95)");
 
 requestAnimationFrame(frame);
 

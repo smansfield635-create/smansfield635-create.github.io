@@ -1,8 +1,12 @@
-<!-- TNT 1/2 — /index.html
-     BUILD: IDX_PERMA_LOADER_DRAGON_v1
-     PURPOSE: permanent loader that ALWAYS starts latest dragon-engine.js (no freeze)
--->
 <!doctype html>
+<!-- TNT — /index.html
+     BUILD: IDX_DYNAMIC_ENGINE_BOOT_v3
+     PURPOSE:
+       - FORCE dragon-engine.js to reload AND rerun every refresh
+       - NO “once-and-done” behavior (index is the active boot switch)
+     HOW TO USE:
+       - If you want a hard reset, change BUILD_TOKEN below (any text).
+-->
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -22,11 +26,29 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden}
 <div id="gd-dragon"></div>
 
 <script>
-/* ALWAYS load newest dragon engine (kills cache + fixes “freeze”) */
+/* ===== ACTIVE BOOT SWITCH (EDIT THIS WHEN YOU WANT A FORCED CHANGE) ===== */
+var BUILD_TOKEN = "IDX_DYNAMIC_ENGINE_BOOT_v3";   // change this string anytime
+
+/* ===== HARD RESET: clear prior engine guards + old canvas ===== */
+try{
+  delete window.__DRAGON_ENGINE_RUNNING__;
+  delete window.__HEX_DRAGON_RUNNING__;
+  delete window.__HEX_DRAGON_ENGINE__;
+  delete window.__DRAGON_ENGINE__;
+  delete window.__HEX_DRAGON_ENGINE_RUNNING__;
+  delete window.__DRAGON_ENGINE_LOOP__;
+}catch(e){}
+
+try{
+  var old=document.getElementById("gd_dragon_canvas") || document.getElementById("gd_hex_dragon_canvas") || document.getElementById("gd_dragon_engine_canvas");
+  if(old && old.parentNode) old.parentNode.removeChild(old);
+}catch(e){}
+
+/* ===== LOAD ENGINE AFTER DOM READY + CACHE BUST EVERY TIME ===== */
 window.addEventListener("load", function(){
   var s=document.createElement("script");
-  s.src="/assets/dragon-engine.js?v=" + Date.now();
   s.async=false;
+  s.src="/assets/dragon-engine.js?v=" + encodeURIComponent(BUILD_TOKEN) + "_" + Date.now();
   document.body.appendChild(s);
 });
 </script>

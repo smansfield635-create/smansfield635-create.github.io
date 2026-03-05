@@ -1,18 +1,8 @@
 /* TNT — /assets/hel-client.js
-   HEL CLIENT — DRAGON PROPORTIONS FIX (THICK NECK + MASSIVE HEAD + NO 360 SWIVEL)
-   BUILD: HEL_CLIENT_DRAGON_RIG_v3
-
-   YOUR REQUESTS IMPLEMENTED:
-   - Body is thick near head (not snake-neck thin)
-   - Neck stays thick (head-adjacent mass maintained)
-   - Head size ≈ 20× (relative to current head sizing basis)
-   - Head cannot spin 360°: yaw limited to 180° total (±90°)
-   - Head turns slowly (low yaw rate)
-
-   NOTE:
-   - Renderer stays unchanged (HEL_RENDER already present).
+   HEL_CLIENT_BASE_v1
+   PURPOSE: stable spine simulation + stable ribbon body frame
+   RULE: NEVER PUT DRAGON MORPHOLOGY HERE AGAIN. THIS FILE STAYS STABLE.
 */
-
 (function(){
 "use strict";
 if(window.__HEL_CLIENT_RUNNING__) return;
@@ -20,28 +10,31 @@ window.__HEL_CLIENT_RUNNING__=true;
 
 const DPR_CAP=1.6;
 
+/* ===== BASE STABLE PARAMS (LOCKED) ===== */
+const SEG=28;                // stable default
+const GAP=26;                // spacing
+const BASE_R=18;             // thickness baseline (UI can scale via style)
+const SPEED=0.40;            // arc speed
+const WOB_AMP=0.06;          // small wobble for life
+const WOB_FREQ=0.85;         // wobble speed
+const RELAX=0.74;            // constraint strength
+const SMOOTH_ITERS=1;        // keep flexible but stable
+
+const TOP_MIN=Math.PI*1.10, TOP_MAX=Math.PI*1.88;
+const BOT_MIN=Math.PI*0.12, BOT_MAX=Math.PI*0.92;
+
 function lerp(a,b,t){return a+(b-a)*t;}
 function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
 function hypot(x,y){return Math.hypot(x,y)||1;}
+function wrap(a){const two=Math.PI*2; while(a<0)a+=two; while(a>=two)a-=two; return a;}
+function reflect(a,lo,hi){ if(a<lo) return lo+(lo-a); if(a>hi) return hi-(a-hi); return a; }
+
 function cssNum(name){
   try{
     const v=getComputedStyle(document.documentElement).getPropertyValue(name);
     const n=parseFloat(String(v).trim());
     return Number.isFinite(n)?n:NaN;
   }catch(e){return NaN;}
-}
-function wrap(a){
-  const two=Math.PI*2;
-  while(a<0) a+=two;
-  while(a>=two) a-=two;
-  return a;
-}
-function angDelta(a,b){
-  const two=Math.PI*2;
-  let d=(b-a)%two;
-  if(d>Math.PI) d-=two;
-  if(d<-Math.PI) d+=two;
-  return d;
 }
 
 function mountCanvas(){
@@ -58,6 +51,7 @@ function mountCanvas(){
   (document.getElementById("gd-dragon")||document.body).appendChild(c);
   return c;
 }
+
 function resize(c){
   let dpr=1; try{dpr=window.devicePixelRatio||1;}catch(e){}
   dpr=Math.min(DPR_CAP,Math.max(1,dpr));
@@ -65,6 +59,7 @@ function resize(c){
   c.height=Math.floor((window.innerHeight||1)*dpr);
   return dpr;
 }
+
 function stage(){
   const vw=window.innerWidth||1, vh=window.innerHeight||1;
   const r1=cssNum("--gd_r1");
@@ -73,64 +68,17 @@ function stage(){
   return {Cx,Cy,R,vw,vh};
 }
 
-/* =========================
-   BODY (shorter, much thicker)
-   ========================= */
-const SEG=18;          /* shorter body */
-const GAP=34;          /* spacing to support thicker body */
-const BASE_R=42;       /* thick base */
-
-/* motion */
-const SPEED=0.30;
-const WOB_AMP=0.06;
-const WOB_FREQ=0.75;
-const RELAX=0.82;
-
-/* head yaw controls (NO 360) */
-const HEAD_YAW_LIMIT = Math.PI/2; /* ±90° = 180° total max */
-const HEAD_YAW_RATE  = 0.35;      /* slow turning (rad/sec) */
-
-/* arc constraints */
-const TOP_MIN=Math.PI*1.10, TOP_MAX=Math.PI*1.88;
-const BOT_MIN=Math.PI*0.12, BOT_MAX=Math.PI*0.92;
-
-function reflect(a,lo,hi){
-  if(a<lo) return lo+(lo-a);
-  if(a>hi) return hi-(a-hi);
-  return a;
-}
-
-/* =========================
-   MASS PROFILE (THICK NEAR HEAD)
-   - neck NOT thin
-   - shoulders close to head
-   - taper later
-   ========================= */
+/* ===== MASS PROFILE (LOCKED, NON-SNAKE PIPE MITIGATION) ===== */
 function massProfile(u){
-  // u=0 head, u=1 tail
-  if(u<0.12){
-    // thick neck immediately (not snake)
-    const t=u/0.12;
-    return 1.55 - 0.10*t; // ~1.55 → ~1.45
-  }
-  if(u<0.35){
-    // shoulder mass close to head
-    const t=(u-0.12)/0.23;
-    return 1.45 + 0.25*Math.sin(Math.PI*t); // peak ~1.70
-  }
-  if(u<0.70){
-    // torso stays thick
-    return 1.35;
-  }
-  // tail taper (nonlinear)
-  const t=(u-0.70)/0.30;
-  return Math.max(0.18, 1.35*Math.pow(1-t,0.70));
+  // neck not too thin, shoulders near front, tail taper
+  if(u<0.14){ const t=u/0.14; return 1.10 - 0.05*t; }                 // thick neck
+  if(u<0.38){ const t=(u-0.14)/0.24; return 1.05 + 0.30*Math.sin(Math.PI*t); } // shoulders
+  if(u<0.72) return 1.00;                                              // torso
+  const t=(u-0.72)/0.28; return Math.max(0.22, 1.00*Math.pow(1-t,0.70));// tail
 }
-
-/* tube safety: keep radius <= GAP/2 */
 function R(u){
-  const rr=Math.max(10, BASE_R*massProfile(u));
-  return Math.min(rr, GAP*0.48);
+  const rr=Math.max(8, BASE_R*massProfile(u));
+  return Math.min(rr, GAP*0.49); // tube safety
 }
 
 function tangent(sp,i){
@@ -149,16 +97,16 @@ function enforce(sp){
   }
 }
 function smooth(sp){
-  for(let it=0;it<1;it++){
+  for(let it=0;it<SMOOTH_ITERS;it++){
     for(let i=2;i<sp.length-2;i++){
       const p0=sp[i-1], p1=sp[i], p2=sp[i+1];
-      p1.x=lerp(p1.x,(p0.x+p2.x)*0.5,0.28);
-      p1.y=lerp(p1.y,(p0.y+p2.y)*0.5,0.28);
+      p1.x=lerp(p1.x,(p0.x+p2.x)*0.5,0.30);
+      p1.y=lerp(p1.y,(p0.y+p2.y)*0.5,0.30);
     }
   }
 }
 
-class DragonSim{
+class HelSerpent{
   constructor(top){
     this.top=top;
     this.dir=top?-1:1;
@@ -166,22 +114,15 @@ class DragonSim{
     this.theta=top?Math.PI*1.62:Math.PI*0.38;
     this.spine=new Array(SEG);
 
-    /* head yaw state */
-    this.headYaw=0;
-
     const st=stage();
     const a=this.theta;
     const hx=st.Cx + Math.cos(a)*st.R;
     const hy=st.Cy + Math.sin(a)*st.R*0.55;
     const tx=-Math.sin(a), ty=Math.cos(a)*0.55;
-    for(let i=0;i<SEG;i++){
-      this.spine[i]={x:hx - tx*i*GAP, y:hy - ty*i*GAP};
-    }
+    for(let i=0;i<SEG;i++) this.spine[i]={x:hx - tx*i*GAP, y:hy - ty*i*GAP};
   }
-
   update(dt){
     const st=stage();
-
     this.theta=wrap(this.theta + this.dir*SPEED*dt);
 
     const time=performance.now()/1000;
@@ -193,21 +134,12 @@ class DragonSim{
     const hy=st.Cy + Math.sin(a)*st.R*0.55;
 
     this.spine[0].x=hx; this.spine[0].y=hy;
-
-    enforce(this.spine);
-    smooth(this.spine);
-    enforce(this.spine);
+    enforce(this.spine); smooth(this.spine); enforce(this.spine);
   }
-
   frame(dpr){
-    const L=[], Rr=[];
-    const spinePx=new Array(SEG);
-    const tArr=new Array(SEG);
-    const nArr=new Array(SEG);
-    const rArr=new Array(SEG);
-
-    /* normals with continuity */
+    const L=[], Rr=[], spinePx=[], tArr=[], nArr=[], rArr=[];
     let prevN=null;
+
     for(let i=0;i<SEG;i++){
       const p=this.spine[i];
       const u=i/(SEG-1);
@@ -223,91 +155,32 @@ class DragonSim{
       prevN={x:n.x,y:n.y};
 
       spinePx[i]={x:p.x*dpr,y:p.y*dpr};
-      tArr[i]={x:t.x,y:t.y};
-      nArr[i]={x:n.x,y:n.y};
+      tArr[i]=t;
+      nArr[i]=n;
       rArr[i]=rr*dpr;
     }
 
-    /* rails */
     for(let i=0;i<SEG;i++){
       const p=spinePx[i], n=nArr[i], rr=rArr[i];
       L.push({x:p.x+n.x*rr,y:p.y+n.y*rr});
       Rr.push({x:p.x-n.x*rr,y:p.y-n.y*rr});
     }
 
-    /* anchors */
     const idx=(u)=>Math.max(0,Math.min(SEG-1, Math.round(u*(SEG-1))));
-    const A={
+    const anchors={
       head: idx(0.00),
       neck: idx(0.10),
-      shoulder: idx(0.22),
+      shoulder: idx(0.26),
       leg1: idx(0.28),
       leg2: idx(0.42),
       leg3: idx(0.58),
       leg4: idx(0.72),
-      ridge0: idx(0.10),
+      ridge0: idx(0.12),
       ridge1: idx(0.82),
       tail: idx(0.98)
     };
 
-    /* head direction: spine segment with slow yaw */
-    const h=A.head;
-    const P0=this.spine[h], P1=this.spine[Math.min(SEG-1,h+1)];
-    let dx=(P1.x-P0.x), dy=(P1.y-P0.y), dd=Math.hypot(dx,dy)||1;
-    const spineAng=Math.atan2(dy,dx);
-
-    /* yaw target is aligned with spine (no swivel), rate-limited + bounded */
-    const yawTarget=0;
-    const maxStep=HEAD_YAW_RATE*(1/60);
-    const dyaw=clamp(angDelta(this.headYaw,yawTarget),-maxStep,maxStep);
-    this.headYaw=clamp(this.headYaw+dyaw,-HEAD_YAW_LIMIT,HEAD_YAW_LIMIT);
-
-    const headAng=spineAng+this.headYaw;
-    const th={x:Math.cos(headAng),y:Math.sin(headAng)};
-    const nh={x:-th.y,y:th.x};
-
-    /* ===== HEAD SIZE: 20× =====
-       We scale head off NECK radius in pixels (rArr[neck]).
-       This is your requested “20× the size it is right now.”
-    */
-    const rNeck = Math.max(10, rArr[A.neck] || rArr[h] || 12);
-    let headW = 20.0 * (rNeck*2);      /* width in px */
-
-    /* Keep it on-screen: cap to 38% of min viewport (still huge) */
-    const st=stage();
-    const capW = 0.38*Math.min(st.vw, st.vh)*dpr;
-    headW = Math.min(headW, capW);
-
-    const Ph=spinePx[h];
-
-    const forward=0.95*headW;
-    const back=0.55*headW;
-    const jaw=0.55*headW;
-
-    const tip ={x:Ph.x+th.x*forward,y:Ph.y+th.y*forward};
-    const left={x:Ph.x-th.x*back+nh.x*jaw,y:Ph.y-th.y*back+nh.y*jaw};
-    const right={x:Ph.x-th.x*back-nh.x*jaw,y:Ph.y-th.y*back-nh.y*jaw};
-
-    const cap={x:Ph.x-th.x*(0.18*headW),y:Ph.y-th.y*(0.18*headW),rx:0.62*headW,ry:0.44*headW};
-
-    /* tail fin */
-    const tail=A.tail;
-    const Pt=spinePx[tail];
-    const tt=tArr[tail], nt=nArr[tail], rt=rArr[tail];
-    const a2={x:Pt.x,y:Pt.y};
-    const b2={x:Pt.x-tt.x*(2.0*rt)+nt.x*(1.1*rt),y:Pt.y-tt.y*(2.0*rt)+nt.y*(1.1*rt)};
-    const c2={x:Pt.x-tt.x*(2.0*rt)-nt.x*(1.1*rt),y:Pt.y-tt.y*(2.0*rt)-nt.y*(1.1*rt)};
-
-    return {
-      L, R:Rr,
-      spine: spinePx,
-      t: tArr,
-      n: nArr,
-      rad: rArr,
-      anchors: A,
-      head: {tip,left,right,cap},
-      tailFin: {a:a2,b:b2,c:c2}
-    };
+    return {L, R:Rr, spine:spinePx, t:tArr, n:nArr, rad:rArr, anchors:anchors};
   }
 }
 
@@ -315,10 +188,10 @@ function BOOT(){
   const cv=mountCanvas();
   const ctx=cv.getContext("2d",{alpha:true,desynchronized:true});
   let dpr=resize(cv);
-  window.addEventListener("resize", ()=>{ dpr=resize(cv); }, {passive:true});
+  addEventListener("resize", ()=>{ dpr=resize(cv); }, {passive:true });
 
-  const topD=new DragonSim(true);
-  const botD=new DragonSim(false);
+  const top=new HelSerpent(true);
+  const bot=new HelSerpent(false);
 
   let last=0;
   function loop(ts){
@@ -329,20 +202,16 @@ function BOOT(){
     ctx.setTransform(1,0,0,1,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
 
-    topD.update(dt);
-    botD.update(dt);
+    top.update(dt);
+    bot.update(dt);
 
-    const fT=topD.frame(dpr);
-    const fB=botD.frame(dpr);
+    const fT=top.frame(dpr);
+    const fB=bot.frame(dpr);
 
     if(window.HEL_RENDER && window.HEL_RENDER.drawDragon){
-      window.HEL_RENDER.drawDragon(ctx, fT, {fill:"rgba(0,110,60,0.92)", strokeW:2.3*dpr});
-      window.HEL_RENDER.drawDragon(ctx, fB, {fill:"rgba(170,20,20,0.90)", strokeW:2.3*dpr});
+      window.HEL_RENDER.drawDragon(ctx, fT, {fill:"rgba(0,110,60,0.92)", strokeW:2.2*dpr});
+      window.HEL_RENDER.drawDragon(ctx, fB, {fill:"rgba(170,20,20,0.90)", strokeW:2.2*dpr});
     }
-
-    ctx.fillStyle="rgba(255,255,255,0.18)";
-    ctx.font=(14*dpr)+"px system-ui,-apple-system,Segoe UI,Roboto,sans-serif";
-    ctx.fillText("HEL_CLIENT_DRAGON_RIG_v3", 12*dpr, cv.height-14*dpr);
 
     requestAnimationFrame(loop);
   }

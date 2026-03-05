@@ -1,36 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Diamond Gate Bridge</title>
-
-<link rel="stylesheet" href="/assets/ui.css">
-<link rel="stylesheet" href="/assets/branch.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DiamondGateBridge</title>
 
 <style>
 html,body{
 margin:0;
-width:100%;
+padding:0;
 height:100%;
+width:100%;
+background:linear-gradient(180deg,#b00000 0%,#7a0000 60%,#4a0000 100%);
 overflow:hidden;
-background:#9d0000;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-#gd_stage{
+/* subtle field pattern */
+body::before{
+content:"";
 position:fixed;
 inset:0;
+background:
+repeating-linear-gradient(45deg,rgba(212,175,55,.05) 0 1px,transparent 1px 140px),
+repeating-linear-gradient(-45deg,rgba(212,175,55,.05) 0 1px,transparent 1px 140px);
+pointer-events:none;
+opacity:.5;
 }
 </style>
 
 </head>
 <body>
 
-<div id="gd_stage"></div>
+<div id="gd-dragon"></div>
 
-<script src="/assets/dragon-engine.js"></script>
+<!-- DRAGON ENGINE -->
+<script src="/assets/dragon-engine.js" defer></script>
 
 </body>
 </html>

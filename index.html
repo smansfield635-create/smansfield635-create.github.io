@@ -1,31 +1,43 @@
 <!doctype html>
 <!-- TNT — /index.html
-     BUILD: HEL_INDEX_DRAGON_MORPH_v1
-     PURPOSE: deterministic load order + cache-bust so new hel-client/hel-render ship immediately
+     BUILD: HEL_INDEX_DRAGON_RIG_v2
 -->
 
 <html lang="en">
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>Diamond Gate Bridge</title>
 
-<link rel="stylesheet" href="/assets/ui.css?v=20260305-dragonmorph">
-<link rel="stylesheet" href="/assets/branch.css?v=20260305-dragonmorph">
+<link rel="stylesheet" href="/assets/ui.css?v=dragonrig2">
+<link rel="stylesheet" href="/assets/branch.css?v=dragonrig2">
 
 <style>
-html,body{margin:0;height:100%;width:100%;overflow:hidden;}
-#gd-dragon{position:fixed;inset:0;width:100vw;height:100vh;}
+html,body{
+margin:0;
+height:100%;
+width:100%;
+overflow:hidden;
+}
+
+#gd-dragon{
+position:fixed;
+inset:0;
+width:100vw;
+height:100vh;
+}
 </style>
+
 </head>
 
 <body>
 
 <div id="gd-dragon"></div>
 
-<!-- ORDER: renderer first, then client -->
-<script src="/assets/hel-render.js?v=20260305-dragonmorph"></script>
-<script src="/assets/hel-client.js?v=20260305-dragonmorph"></script>
+<script src="/assets/hel-render.js?v=dragonrig2"></script>
+<script src="/assets/hel-client.js?v=dragonrig2"></script>
 
 </body>
 </html>

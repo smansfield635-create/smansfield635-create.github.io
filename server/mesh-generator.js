@@ -1,28 +1,26 @@
-/* TNT — /server/mesh-generator.js
-   ENGINE 2/4 — MESH GENERATOR (SERVER-ONLY)
-   VERSION: HEL_MESH_GEN_v1
+/* TNT — /assets/hel-mesh.js
+   ENGINE: MESH GENERATOR (CANON)
+   VERSION: HEL_MESH_v1
+   PURPOSE:
+     - Consume a solved spine (from Rig Solver) + a body profile
+     - Output:
+         (1) Silhouette Hull (Left/Right edges)  ✅ fixes “toothbrush”
+         (2) Surface Param Field (u,v) basis for scales/skin
+         (3) Optional Triangulated Mesh (2.5D tube) for future WebGL
+   RULES:
+     - No DOM access, no rendering, no RAF
+     - Pure functions only
+     - Deterministic for same inputs
 */
+
+(function(global){
 "use strict";
 
-/*
-Generates a quad-loft mesh around a 2D spine (for WebGL later),
-and also provides a 2D silhouette hull for Canvas.
-Input:
-  spine: [{x,y}]
-  radiusFn: (i, u)->r
-  rings: number of samples around circumference (>=6), default 12
-Output:
-  {
-    hull2d: {L:[{x,y}], R:[{x,y}]},
-    mesh: {positions:Float32Array, uvs:Float32Array, indices:Uint32Array}
-  }
-Note:
-  - In 2D, hull uses normal offset (L/R).
-  - 3D mesh is a “tube” with rings around the spine line (z=0 baseline).
-*/
-
+function lerp(a,b,t){ return a+(b-a)*t; }
+function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
 function hypot(x,y){ return Math.hypot(x,y) || 1; }
 
+/* ---------- Frames ---------- */
 function tangent(sp,i){
   const a=sp[Math.max(0,i-1)];
   const b=sp[Math.min(sp.length-1,i+1)];
@@ -34,43 +32,115 @@ function normal(sp,i){
   return {x:-t.y,y:t.x};
 }
 
-function buildHull2D(spine, radiusFn){
-  const L=[], R=[];
-  const n=spine.length;
-  for(let i=0;i<n;i++){
-    const p=spine[i];
-    const nn=normal(spine,i);
-    const u=i/(n-1);
-    const r=radiusFn(i,u);
-    L.push({x:p.x + nn.x*r, y:p.y + nn.y*r});
-    R.push({x:p.x - nn.x*r, y:p.y - nn.y*r});
+/* ---------- Default Dragon Profile (can be replaced by caller) ---------- */
+function defaultRadiusProfile(i, u){
+  // BASE_R concept baked as R0; caller can override via custom fn
+  const R0 = 28;
+  let m=1.0;
+
+  // head mass
+  if(u<0.06) m*=lerp(1.45,1.10,u/0.06);
+
+  // neck pinch
+  if(u>=0.06 && u<0.18){
+    const t=(u-0.06)/0.12;
+    m*=lerp(0.84,0.56,Math.sin(Math.PI*t));
   }
-  return {L,R};
+
+  // shoulder bulge
+  if(u>=0.18 && u<0.34){
+    const t=(u-0.18)/0.16;
+    m*=(1.05 + 0.58*Math.sin(Math.PI*t));
+  }
+
+  // body
+  if(u>=0.34 && u<0.78) m*=1.06;
+
+  // tail taper (no dot)
+  if(u>=0.78){
+    const t=(u-0.78)/0.22;
+    m*=lerp(1.0,0.20,t);
+  }
+
+  return Math.max(6, R0*m);
 }
 
-function buildTubeMesh(spine, radiusFn, rings=12){
+/* ---------- 1) Silhouette Hull (what you needed) ---------- */
+function buildHull2D(spine, radiusFn){
   const n=spine.length;
-  const ringN=Math.max(6, rings|0);
+  const L=new Array(n);
+  const R=new Array(n);
 
-  // positions: (n * ringN) vertices, each xyz
+  for(let i=0;i<n;i++){
+    const p=spine[i];
+    const u = (n<=1)?0:(i/(n-1));
+    const r = radiusFn(i,u);
+    const nn=normal(spine,i);
+    L[i] = { x: p.x + nn.x*r, y: p.y + nn.y*r, u:u, v:+1 };
+    R[i] = { x: p.x - nn.x*r, y: p.y - nn.y*r, u:u, v:-1 };
+  }
+
+  // Closed polygon order (for rendering):
+  // [L0..Ln-1, Rn-1..R0]
+  return { L, R };
+}
+
+/* ---------- 2) Surface Field (u,v mapping + lattice helpers) ---------- */
+/* This returns stable anchors to draw scales/etc. WITHOUT inventing a new engine. */
+function buildSurfaceField(spine, radiusFn, opts){
+  opts = opts || {};
+  const n=spine.length;
+
+  // density controls (lightweight)
+  const along = Math.max(4, (opts.along|0) || 28);  // samples along u
+  const across= Math.max(2, (opts.across|0) || 4);  // samples across v
+  const rows  = (opts.rows || [0.42, 0.18, -0.06, -0.30]); // default 4 “scale rows” across body
+  const anchors=[];
+
+  for(let ai=0; ai<along; ai++){
+    const u = (along<=1)?0:(ai/(along-1));
+    const i = Math.round(u*(n-1));
+    const p = spine[i];
+    const nn=normal(spine,i);
+    const r = radiusFn(i,u);
+
+    for(let ri=0; ri<rows.length; ri++){
+      const v = clamp(rows[ri], -1, 1);
+      anchors.push({
+        u:u, v:v,
+        x: p.x + nn.x*r*v,
+        y: p.y + nn.y*r*v,
+        // local frame for oriented scale placement
+        tx: tangent(spine,i).x,
+        ty: tangent(spine,i).y,
+        nx: nn.x,
+        ny: nn.y
+      });
+    }
+  }
+
+  return { anchors };
+}
+
+/* ---------- 3) Optional tube mesh (2.5D) for future WebGL ---------- */
+/* Quad-author, tri-commit: returns positions + uvs + indices */
+function buildTubeMesh(spine, radiusFn, rings){
+  const n=spine.length;
+  const ringN = Math.max(6, (rings|0) || 12);
+
   const positions = new Float32Array(n*ringN*3);
   const uvs = new Float32Array(n*ringN*2);
-
-  // indices for quads → triangles: (n-1)*ringN quads, 2 tris each
-  const triCount = (n-1)*ringN*2;
-  const indices = new Uint32Array(triCount*3);
+  const indices = new Uint32Array((n-1)*ringN*6);
 
   let vp=0, up=0;
 
   for(let i=0;i<n;i++){
     const p=spine[i];
-    const nn=normal(spine,i);
-    const u=i/(n-1);
+    const u=(n<=1)?0:(i/(n-1));
     const r=radiusFn(i,u);
+    const nn=normal(spine,i);
 
-    // ring plane: use normal + tangent rotated basis in 2D→pseudo-3D
-    // basis1 = normal in XY, basis2 = perpendicular in Z for “roundness”
-    // This yields a stable tube even in 2D. (Real 3D would use Frenet frame.)
+    // Frenet-lite basis: normal in XY, and pseudo-binormal in Z
     for(let k=0;k<ringN;k++){
       const a=(k/ringN)*Math.PI*2;
       const ca=Math.cos(a), sa=Math.sin(a);
@@ -79,17 +149,17 @@ function buildTubeMesh(spine, radiusFn, rings=12){
       const y = p.y + nn.y*r*ca;
       const z = r*sa;
 
-      positions[vp++] = x;
-      positions[vp++] = y;
-      positions[vp++] = z;
+      positions[vp++]=x;
+      positions[vp++]=y;
+      positions[vp++]=z;
 
-      uvs[up++] = k/(ringN-1);
-      uvs[up++] = u;
+      uvs[up++]=k/(ringN-1);
+      uvs[up++]=u;
     }
   }
 
   let ip=0;
-  function vid(i,k){ return i*ringN + k; }
+  const vid=(i,k)=> i*ringN + k;
 
   for(let i=0;i<n-1;i++){
     for(let k=0;k<ringN;k++){
@@ -99,23 +169,24 @@ function buildTubeMesh(spine, radiusFn, rings=12){
       const c=vid(i+1,k);
       const d=vid(i+1,k2);
 
-      // tri1: a c b
-      indices[ip++] = a;
-      indices[ip++] = c;
-      indices[ip++] = b;
-
-      // tri2: b c d
-      indices[ip++] = b;
-      indices[ip++] = c;
-      indices[ip++] = d;
+      indices[ip++]=a; indices[ip++]=c; indices[ip++]=b;
+      indices[ip++]=b; indices[ip++]=c; indices[ip++]=d;
     }
   }
 
-  return {positions, uvs, indices};
+  return { positions, uvs, indices, ringN };
 }
 
-module.exports = {
-  VERSION: "HEL_MESH_GEN_v1",
-  buildHull2D,
-  buildTubeMesh
+/* ---------- Public API ---------- */
+const HEL_MESH = {
+  version: "HEL_MESH_v1",
+  defaultRadiusProfile,
+
+  buildHull2D,        // <- silhouette hull (main deliverable)
+  buildSurfaceField,  // <- anchors for scales/skin/whisker roots, etc.
+  buildTubeMesh        // <- optional future WebGL mesh output
 };
+
+global.HEL_MESH = HEL_MESH;
+
+})(typeof window!=="undefined" ? window : globalThis);

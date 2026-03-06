@@ -4,33 +4,177 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Navigator</title>
+<meta name="description" content="Primary navigator mount page">
 
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
 
-</head>
+<style>
+/* page-local mount safety only */
+html,body{
+  margin:0;
+  min-height:100%;
+}
 
-<body>
+#scene{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  z-index:0;
+}
+
+#uiLayer{
+  position:relative;
+  z-index:2;
+  pointer-events:auto;
+  min-height:100vh;
+}
+
+.topbar{
+  position:relative;
+  z-index:3;
+  padding:18px 24px 10px;
+}
+
+.navigator-shell{
+  position:relative;
+  z-index:3;
+  width:min(1280px,96vw);
+  margin:0 auto;
+  padding:12px 0 120px;
+}
+
+#navigatorLayer{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+#layerToggle{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+#layerToggle button,
+#resumeSpinBtn{
+  cursor:pointer;
+}
+
+.poly-stage-wrap{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 320px;
+  gap:18px;
+  align-items:start;
+}
+
+#polyStage{
+  position:relative;
+  min-height:620px;
+  height:min(860px,76vh);
+  border-radius:32px;
+  overflow:hidden;
+}
+
+#polyScene{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  perspective:1400px;
+  perspective-origin:50% 50%;
+}
+
+#polyObject{
+  position:relative;
+  width:420px;
+  height:420px;
+  transform-style:preserve-3d;
+}
+
+.selection-readout{
+  position:relative;
+  z-index:3;
+}
+
+@media (max-width:1100px){
+  .poly-stage-wrap{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:680px){
+  #polyStage{
+    min-height:520px;
+    height:72vh;
+  }
+  #polyObject{
+    width:320px;
+    height:320px;
+  }
+}
+</style>
+</head>
+<body data-page="index">
 
 <!-- RENDER MOUNT -->
-<canvas id="scene"></canvas>
+<canvas id="scene" aria-hidden="true"></canvas>
 
 <!-- UI MOUNT -->
 <div id="uiLayer">
 
-<header class="topbar">
-  <div class="title">Navigator</div>
-</header>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-kicker">Primary Navigator</div>
+      <div class="brand-title">Diamond Gate Bridge</div>
+    </div>
+  </header>
 
-<!-- NAVIGATOR CONTROL -->
-<div id="navigatorLayer">
+  <main class="navigator-shell">
+    <section class="hero">
+      <div class="hero-kicker">Navigator</div>
+      <h1 class="hero-title">Stop the globe and choose a face</h1>
+      <p class="hero-body">
+        Layer 1 is the cardinal cube. Layer 2 is the twelve-face navigator.
+        Tap once to stop and focus. Tap again to enter.
+      </p>
 
-<div id="layerToggle">
-<button data-layer="1">Layer 1</button>
-<button data-layer="2">Layer 2</button>
-</div>
+      <div class="hero-actions">
+        <button class="action-btn primary" id="resumeSpinBtn" type="button">Resume Spin</button>
+        <button class="action-btn" data-route="/door/" type="button">Door</button>
+        <button class="action-btn" data-route="/home/" type="button">Home</button>
+      </div>
+    </section>
 
-</div>
+    <!-- NAVIGATOR MOUNT -->
+    <section id="navigatorLayer">
+      <!-- LAYER CONTROL MOUNT -->
+      <div id="layerToggle">
+        <button class="chip active" data-layer="1" type="button">Layer 1</button>
+        <button class="chip" data-layer="2" type="button">Layer 2</button>
+      </div>
+
+      <div class="poly-stage-wrap">
+        <div id="polyStage">
+          <div id="polyScene">
+            <div id="polyObject" aria-label="Navigator object"></div>
+          </div>
+        </div>
+
+        <aside class="selection-readout">
+          <div class="readout-kicker">Selection</div>
+          <div class="readout-title" id="selectedFaceName">No face selected</div>
+          <div class="readout-body" id="selectedFaceHint">
+            Tap a face to stop rotation and bring it forward.
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
 
 </div>
 

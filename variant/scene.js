@@ -25,8 +25,8 @@ faceZones:{},
 compassZones:{},
 rotY:0,
 fireworks:[],
-lanterns:[],
-dragonClock:0
+dragonClock:0,
+lanterns:[]
 };
 
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
@@ -69,13 +69,13 @@ window.addEventListener("orientationchange",resize,{passive:true});
 function initLanterns(){
 const w=window.innerWidth||1;
 const h=window.innerHeight||1;
-const count=Math.max(10,Math.round(w/130));
+const count=Math.max(10,Math.round(w/140));
 state.lanterns=[];
 for(let i=0;i<count;i++){
 const seed=i+1;
 state.lanterns.push({
 x:hash(seed*2.17)*w,
-y:h*(0.56+hash(seed*3.91)*0.34),
+y:h*(0.55+hash(seed*3.91)*0.34),
 size:18+hash(seed*5.31)*12,
 speed:0.12+hash(seed*6.17)*0.24,
 sway:8+hash(seed*7.33)*16,
@@ -175,33 +175,43 @@ setLayer(Number(n)||1);
 function sky(){
 const w=window.innerWidth;
 const h=window.innerHeight;
+
 const g=ctx.createLinearGradient(0,0,0,h);
-g.addColorStop(0,"#0f1026");
-g.addColorStop(0.28,"#251133");
-g.addColorStop(0.60,"#4d1326");
-g.addColorStop(0.84,"#8b2d1b");
-g.addColorStop(1,"#2a0908");
+g.addColorStop(0,"#19060b");
+g.addColorStop(0.20,"#3b0912");
+g.addColorStop(0.46,"#7a1b16");
+g.addColorStop(0.68,"#d14b20");
+g.addColorStop(0.82,"#ff7a2d");
+g.addColorStop(1,"#45110d");
 ctx.fillStyle=g;
 ctx.fillRect(0,0,w,h);
 
+const horizonY=h*0.69;
 ctx.save();
-ctx.globalAlpha=0.12;
-for(let i=0;i<7;i++){
-const y=h*(0.08+i*0.07);
-const gg=ctx.createLinearGradient(0,y,w,y+140);
-gg.addColorStop(0,rgba(255,180,110,0));
-gg.addColorStop(0.5,rgba(255,180,110,0.4));
-gg.addColorStop(1,rgba(255,180,110,0));
-ctx.fillStyle=gg;
-ctx.fillRect(0,y,w,140);
-}
+const glow=ctx.createLinearGradient(0,horizonY-90,0,horizonY+50);
+glow.addColorStop(0,"rgba(255,180,90,0)");
+glow.addColorStop(0.45,"rgba(255,136,52,0.28)");
+glow.addColorStop(0.75,"rgba(255,96,36,0.18)");
+glow.addColorStop(1,"rgba(255,96,36,0)");
+ctx.fillStyle=glow;
+ctx.fillRect(0,horizonY-90,w,140);
+ctx.restore();
+
+ctx.save();
+ctx.globalAlpha=0.18;
+ctx.strokeStyle="rgba(255,170,90,0.32)";
+ctx.lineWidth=1.4;
+ctx.beginPath();
+ctx.moveTo(0,horizonY);
+ctx.lineTo(w,horizonY);
+ctx.stroke();
 ctx.restore();
 }
 
 function moon(){
 const x=window.innerWidth*0.80;
 const y=window.innerHeight*0.15;
-const r=Math.min(window.innerWidth,window.innerHeight)*0.075;
+const r=Math.min(window.innerWidth,window.innerHeight)*0.074;
 ctx.save();
 ctx.shadowBlur=42;
 ctx.shadowColor="rgba(255,224,170,0.55)";
@@ -228,7 +238,7 @@ const x=cx+Math.sin(state.tick*0.002+drift)*18;
 const y=cy+Math.cos(state.tick*0.0016+drift)*4;
 ctx.save();
 ctx.globalAlpha=alpha;
-ctx.fillStyle="rgba(255,230,215,0.16)";
+ctx.fillStyle="rgba(255,230,215,0.14)";
 ctx.beginPath();
 ctx.ellipse(x-scale*0.85,y,scale*0.62,scale*0.28,0,0,TAU);
 ctx.ellipse(x-scale*0.2,y-scale*0.12,scale*0.56,scale*0.30,0,0,TAU);
@@ -250,19 +260,19 @@ drawCloud(w*0.86,h*0.30,74,0.14,4.1);
 
 function lanternGlowFactor(ln){
 let boost=0;
-if(state.activeDirection==="W"&&ln.group===0)boost=0.38;
-if(state.activeDirection==="N"&&ln.group===1)boost=0.38;
-if(state.activeDirection==="E"&&ln.group===2)boost=0.38;
-if(state.activeDirection==="S"&&ln.group===3)boost=0.38;
+if(state.activeDirection==="W"&&ln.group===0)boost=0.36;
+if(state.activeDirection==="N"&&ln.group===1)boost=0.36;
+if(state.activeDirection==="E"&&ln.group===2)boost=0.36;
+if(state.activeDirection==="S"&&ln.group===3)boost=0.36;
 if(state.activeDirection==="C")boost=0.22;
-return 0.58+boost+state.compassReveal*0.08;
+return 0.56+boost+state.compassReveal*0.08;
 }
 
 function lanterns(){
 for(let i=0;i<state.lanterns.length;i++){
 const ln=state.lanterns[i];
-const driftY=(state.tick*ln.speed)%((window.innerHeight*0.7)+120);
-const y=ln.y-driftY<-80?ln.y-driftY+(window.innerHeight*0.7)+140:ln.y-driftY;
+const driftY=(state.tick*ln.speed)%((window.innerHeight*0.72)+120);
+const y=ln.y-driftY<-80?ln.y-driftY+(window.innerHeight*0.72)+140:ln.y-driftY;
 const x=ln.x+Math.sin(state.tick*0.01+ln.phase)*ln.sway;
 const glow=lanternGlowFactor(ln);
 
@@ -273,7 +283,7 @@ ctx.fillStyle="rgba(120,12,18,0.88)";
 roundedRectPath(-ln.size*0.42,-ln.size*0.62,ln.size*0.84,ln.size*1.10,ln.size*0.18);
 ctx.fill();
 
-ctx.strokeStyle="rgba(255,210,120,0.85)";
+ctx.strokeStyle="rgba(255,210,120,0.82)";
 ctx.lineWidth=1.2;
 ctx.stroke();
 
@@ -283,9 +293,9 @@ ctx.lineTo(0,-ln.size*0.62);
 ctx.strokeStyle="rgba(255,210,120,0.72)";
 ctx.stroke();
 
-ctx.shadowBlur=26;
+ctx.shadowBlur=24;
 ctx.shadowColor=`rgba(255,190,90,${0.28*glow})`;
-ctx.fillStyle=`rgba(255,192,92,${0.30*glow})`;
+ctx.fillStyle=`rgba(255,192,92,${0.28*glow})`;
 roundedRectPath(-ln.size*0.22,-ln.size*0.36,ln.size*0.44,ln.size*0.62,ln.size*0.10);
 ctx.fill();
 ctx.restore();
@@ -295,7 +305,8 @@ ctx.restore();
 function water(){
 const h=window.innerHeight;
 const w=window.innerWidth;
-const base=h*0.78;
+const horizon=h*0.69;
+const base=h*0.79;
 const dir=state.activeDirection;
 const reveal=state.compassReveal;
 const calmAmp=4;
@@ -311,7 +322,16 @@ dir==="W"?-0.03:
 dir==="E"?0.03:
 0;
 
-for(let i=0;i<8;i++){
+ctx.save();
+const g=ctx.createLinearGradient(0,horizon,0,h);
+g.addColorStop(0,"rgba(35,10,14,0.90)");
+g.addColorStop(0.36,"rgba(20,8,12,0.95)");
+g.addColorStop(1,"rgba(8,3,5,1)");
+ctx.fillStyle=g;
+ctx.fillRect(0,horizon,w,h-horizon);
+ctx.restore();
+
+for(let i=0;i<9;i++){
 ctx.beginPath();
 for(let x=0;x<=w;x+=10){
 const wave1=Math.sin((x+state.tick*(1+drift))*0.018+i*0.82)*amp;
@@ -321,19 +341,19 @@ const y=base+i*18+wave1+wave2+slope;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
 }
-ctx.strokeStyle=`rgba(255,220,170,${0.04+i*0.018})`;
+ctx.strokeStyle=`rgba(255,160,112,${0.03+i*0.014})`;
 ctx.lineWidth=2;
 ctx.stroke();
 }
 
 ctx.save();
-ctx.globalAlpha=0.10;
-const g=ctx.createLinearGradient(0,base,w,base+180);
-g.addColorStop(0,"rgba(255,215,160,0)");
-g.addColorStop(0.5,"rgba(255,215,160,0.45)");
-g.addColorStop(1,"rgba(255,215,160,0)");
-ctx.fillStyle=g;
-ctx.fillRect(0,base-8,w,180);
+ctx.globalAlpha=0.12;
+const shimmer=ctx.createLinearGradient(0,base-12,w,base+180);
+shimmer.addColorStop(0,"rgba(255,120,72,0)");
+shimmer.addColorStop(0.5,"rgba(255,132,84,0.42)");
+shimmer.addColorStop(1,"rgba(255,120,72,0)");
+ctx.fillStyle=shimmer;
+ctx.fillRect(0,base-12,w,180);
 ctx.restore();
 }
 
@@ -361,7 +381,7 @@ return{x:x1,y:y2,z:z2};
 
 function getCubeGeometry(){
 const size=Math.min(window.innerWidth,window.innerHeight)*0.16;
-const tiltX=-0.92;
+const tiltX=-1.08;
 const verts=[
 [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
 [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]
@@ -481,31 +501,31 @@ return;
 
 const cx=geo.centerX;
 const cy=geo.centerY;
-const radius=geo.size*1.26;
-const outer=radius+34*reveal;
-const inner=radius-30*reveal;
+const radius=geo.size*1.18;
+const outer=radius+28*reveal;
+const inner=radius-24*reveal;
 
 ctx.save();
-ctx.globalAlpha=0.15*reveal;
+ctx.globalAlpha=0.14*reveal;
 for(let i=0;i<3;i++){
 ctx.beginPath();
-ctx.arc(cx,cy,outer+i*28,0,TAU);
-ctx.strokeStyle="rgba(255,235,200,0.22)";
+ctx.arc(cx,cy,outer+i*24,0,TAU);
+ctx.strokeStyle="rgba(255,235,200,0.20)";
 ctx.lineWidth=2;
 ctx.stroke();
 }
-for(let i=0;i<24;i++){
-const a=(i/24)*TAU;
+for(let i=0;i<20;i++){
+const a=(i/20)*TAU;
 ctx.beginPath();
 ctx.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);
-ctx.lineTo(cx+Math.cos(a)*(outer+44),cy+Math.sin(a)*(outer+44));
-ctx.strokeStyle="rgba(255,235,200,0.10)";
+ctx.lineTo(cx+Math.cos(a)*(outer+38),cy+Math.sin(a)*(outer+38));
+ctx.strokeStyle="rgba(255,235,200,0.08)";
 ctx.lineWidth=1;
 ctx.stroke();
 }
 ctx.restore();
 
-const nodeDist=radius+22;
+const nodeDist=radius+16;
 const nodes={
 N:{x:cx,y:cy-nodeDist},
 E:{x:cx+nodeDist,y:cy},
@@ -517,12 +537,12 @@ state.compassZones={};
 
 for(const key of ["N","W","C","E","S"]){
 const node=nodes[key];
-const hw=key==="C"?geo.size*0.34:geo.size*0.21;
-const hh=key==="C"?geo.size*0.34:geo.size*0.21;
+const hw=key==="C"?geo.size*0.32:geo.size*0.19;
+const hh=key==="C"?geo.size*0.32:geo.size*0.19;
 state.compassZones[key]={x:node.x,y:node.y,hw,hh};
 const active=state.activeDirection===key;
 const hover=state.hoveredRegion===key;
-const alpha=key==="C"?0.84:0.74;
+const alpha=key==="C"?0.82:0.72;
 
 ctx.save();
 ctx.globalAlpha=alpha*reveal;
@@ -556,16 +576,16 @@ const h=window.innerHeight;
 const cx=w*0.5;
 const cy=h*0.48;
 const dir=mirror?-1:1;
-const cycle=1100;
+const cycle=1080;
 const t=(state.dragonClock%cycle)/cycle;
 
 let phase,u;
-if(t<0.22){
+if(t<0.20){
 phase="enter";
-u=t/0.22;
+u=t/0.20;
 }else if(t<0.58){
 phase="orbit";
-u=(t-0.22)/0.36;
+u=(t-0.20)/0.38;
 }else if(t<0.78){
 phase="exit";
 u=(t-0.58)/0.20;
@@ -577,67 +597,90 @@ u=(t-0.78)/0.22;
 if(phase==="pause")return[];
 
 const pts=[];
-for(let i=0;i<36;i++){
+for(let i=0;i<30;i++){
+const segT=i/29;
+const lag=segT*0.22;
 let x,y;
 if(phase==="enter"){
-const startX=mirror?w+220:-220;
-const startY=cy+(mirror?-16:16);
+const startX=mirror?w+260:-260;
+const startY=cy+(mirror?-22:22);
 const endAngle=mirror?0:Math.PI;
-const targetX=cx+Math.cos(endAngle)*180;
+const targetX=cx+Math.cos(endAngle)*190;
 const targetY=cy+Math.sin(endAngle)*58;
-x=lerp(startX,targetX,u)+(-dir*i*10);
-y=lerp(startY,targetY,u)+Math.sin(i*0.42+state.tick*0.04*dir)*8;
+const uu=clamp(u-lag,0,1);
+x=lerp(startX,targetX,uu)+(-dir*i*6);
+y=lerp(startY,targetY,uu)+Math.sin(i*0.44+state.tick*0.035*dir)*6;
 }else if(phase==="orbit"){
-const angle=(mirror?0:Math.PI)+(mirror?1:-1)*u*TAU;
-x=cx+Math.cos(angle)*180+(-dir*i*10);
-y=cy+Math.sin(angle)*58+Math.sin(i*0.40+u*TAU)*7;
+const uu=clamp(u-lag*0.55,0,1);
+const angle=(mirror?0:Math.PI)+(mirror?1:-1)*uu*TAU;
+x=cx+Math.cos(angle)*190+(-dir*i*5);
+y=cy+Math.sin(angle)*58+Math.sin(i*0.40+uu*TAU)*6;
 }else{
 const startAngle=mirror?Math.PI:0;
-const startX=cx+Math.cos(startAngle)*180;
+const startX=cx+Math.cos(startAngle)*190;
 const startY=cy+Math.sin(startAngle)*58;
-const endX=mirror?-220:w+220;
-const endY=cy+(mirror?20:-20);
-x=lerp(startX,endX,u)+(-dir*i*10);
-y=lerp(startY,endY,u)+Math.sin(i*0.42+state.tick*0.04*dir)*8;
+const endX=mirror?-260:w+260;
+const endY=cy+(mirror?24:-24);
+const uu=clamp(u-lag,0,1);
+x=lerp(startX,endX,uu)+(-dir*i*6);
+y=lerp(startY,endY,uu)+Math.sin(i*0.44+state.tick*0.035*dir)*6;
 }
 pts.push({x,y});
 }
 return pts;
 }
 
-function drawDragon(points,mainColor,accentColor){
+function drawSegmentedDragon(points,baseFill,glowColor,accent){
 if(!points.length)return;
 
+for(let i=points.length-1;i>=0;i--){
+const p=points[i];
+const t=i/(points.length-1);
+const r=lerp(9.5,2.4,t);
+
 ctx.save();
-ctx.strokeStyle=mainColor;
-ctx.lineWidth=12;
-ctx.lineCap="round";
-ctx.lineJoin="round";
-ctx.shadowBlur=18;
-ctx.shadowColor=mainColor;
+ctx.globalAlpha=0.92-(t*0.30);
+ctx.shadowBlur=12;
+ctx.shadowColor=glowColor;
+ctx.fillStyle=baseFill;
 ctx.beginPath();
-ctx.moveTo(points[0].x,points[0].y);
-for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);
-ctx.stroke();
+ctx.ellipse(p.x,p.y,r*1.18,r,0,0,TAU);
+ctx.fill();
 ctx.restore();
 
 ctx.save();
-ctx.strokeStyle=accentColor;
-ctx.lineWidth=4;
-ctx.lineCap="round";
-ctx.lineJoin="round";
-ctx.shadowBlur=10;
-ctx.shadowColor=accentColor;
+ctx.globalAlpha=0.55-(t*0.18);
+ctx.fillStyle=accent;
 ctx.beginPath();
-ctx.moveTo(points[0].x,points[0].y);
-for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);
-ctx.stroke();
+ctx.arc(p.x,p.y,r*0.34,0,TAU);
+ctx.fill();
+ctx.restore();
+}
+
+const head=points[0];
+ctx.save();
+ctx.shadowBlur=16;
+ctx.shadowColor=glowColor;
+ctx.fillStyle=baseFill;
+ctx.beginPath();
+ctx.ellipse(head.x,head.y,12,9,0,0,TAU);
+ctx.fill();
 ctx.restore();
 }
 
 function dragons(){
-drawDragon(buildDragonPoints(false),"rgba(198,54,40,0.76)","rgba(255,214,126,0.24)");
-drawDragon(buildDragonPoints(true),"rgba(206,154,54,0.68)","rgba(255,240,180,0.18)");
+drawSegmentedDragon(
+buildDragonPoints(false),
+"rgba(132,18,18,0.88)",
+"rgba(210,62,40,0.48)",
+"rgba(255,132,72,0.72)"
+);
+drawSegmentedDragon(
+buildDragonPoints(true),
+"rgba(186,132,30,0.88)",
+"rgba(255,210,110,0.44)",
+"rgba(255,244,188,0.72)"
+);
 }
 
 function fireworks(){
@@ -681,7 +724,6 @@ moon();
 clouds();
 lanterns();
 water();
-
 const geo=getCubeGeometry();
 drawCube(geo);
 dragons();
@@ -783,12 +825,17 @@ state.hoveredRegion=null;
 function animateState(){
 state.tick++;
 state.dragonClock++;
-state.rotY+=state.activeLayer===1?0.0032:0.0028;
+state.rotY+=state.activeLayer===1?0.0030:0.0026;
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);
 
 if(state.activeLayer===2&&state.tick%320===0){
-spawnFirework(window.innerWidth*(0.24+hash(state.tick)*0.52),window.innerHeight*(0.18+hash(state.tick*0.3)*0.20),16,1.7);
+spawnFirework(
+window.innerWidth*(0.24+hash(state.tick)*0.52),
+window.innerHeight*(0.18+hash(state.tick*0.3)*0.20),
+16,
+1.7
+);
 }
 }
 

@@ -1,16 +1,70 @@
 #navigatorLayer{
-position:absolute;
-top:80px;
-left:40px;
+position:fixed;
+left:50%;
+bottom:24px;
+transform:translateX(-50%);
+z-index:12;
 display:flex;
-flex-direction:column;
-gap:12px;
+align-items:center;
+justify-content:center;
+pointer-events:none;
+}
+
+#layerToggle{
+display:flex;
+gap:10px;
+align-items:center;
+justify-content:center;
+pointer-events:auto;
+padding:10px 12px;
+border:1px solid rgba(255,235,200,.18);
+background:rgba(10,10,14,.28);
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+border-radius:999px;
+box-shadow:0 10px 30px rgba(0,0,0,.24);
 }
 
 #layerToggle button{
+appearance:none;
+border:1px solid rgba(255,235,200,.22);
+background:rgba(18,18,24,.58);
+color:rgba(255,248,235,.92);
 padding:10px 16px;
-font-weight:700;
-border-radius:6px;
-border:none;
+border-radius:999px;
+font:700 13px/1 system-ui,Segoe UI,Roboto,sans-serif;
+letter-spacing:.08em;
+text-transform:uppercase;
 cursor:pointer;
+transition:transform .16s ease,background .16s ease,border-color .16s ease,opacity .16s ease;
+min-width:96px;
+}
+
+#layerToggle button:hover{
+transform:translateY(-1px);
+border-color:rgba(255,235,200,.38);
+background:rgba(28,28,36,.72);
+}
+
+#layerToggle button[aria-pressed="true"],
+#layerToggle button.is-active{
+background:rgba(255,245,220,.16);
+border-color:rgba(255,235,200,.56);
+color:#fffaf0;
+box-shadow:0 0 0 1px rgba(255,235,200,.18) inset,0 0 24px rgba(255,210,150,.14);
+}
+
+@media (max-width:700px){
+#navigatorLayer{
+bottom:18px;
+}
+#layerToggle{
+gap:8px;
+padding:8px 10px;
+}
+#layerToggle button{
+min-width:86px;
+padding:10px 14px;
+font-size:12px;
+}
 }

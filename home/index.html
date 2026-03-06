@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home</title>
-<meta name="description" content="Launchpad surface.">
+<meta name="description" content="Launch surface">
 <link rel="stylesheet" href="/variant/styles.css">
 </head>
 <body data-page="home">
-<canvas id="scene" aria-hidden="true"></canvas>
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
 
 <header class="toprail">
   <div class="brand">
@@ -30,27 +30,24 @@
     <div class="hero-kicker" data-i18n="home.heroKicker">Home Surface</div>
     <h1 class="hero-title" data-i18n="home.heroTitle">Where do you want to go next?</h1>
     <p class="hero-body" data-i18n="home.heroBody">
-      Home is the fast lane. It routes you to the next surface with one clean choice.
+      Home is the readable bridge. The navigator is the immersive first impression.
     </p>
-    <div class="hero-rule" data-i18n="home.rule">
-      Rule: open one block, read one paragraph, then jump.
-    </div>
   </section>
 
   <section class="launchpad">
-    <div class="band" data-i18n="home.band">Surfaces (open one)</div>
+    <div class="band" data-i18n="home.band">Surfaces</div>
     <div class="accordion" id="accordion"></div>
   </section>
 </main>
 
 <nav class="dock">
-  <button class="dock-btn" data-route="/index.html" type="button" data-i18n="common.compass">Compass</button>
+  <button class="dock-btn" data-route="/index.html" type="button" data-i18n="common.navigator">Navigator</button>
   <button class="dock-btn" data-route="/products/" type="button" data-i18n="common.products">Products</button>
   <button class="dock-btn" data-route="/explore/" type="button" data-i18n="common.explore">Explore</button>
   <button class="dock-btn" data-route="/laws/" type="button" data-i18n="common.laws">Laws</button>
   <button class="dock-btn" data-route="/gauges/" type="button" data-i18n="common.gauges">Gauges</button>
 </nav>
 
-<script src="/variant/index.js"></script>
+<script src="/variant/runtime.js"></script>
 </body>
 </html>

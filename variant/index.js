@@ -2,26 +2,23 @@
   "use strict";
 
   const ROOT_ID = "variant-root";
-  const CANON_DEFAULTS = {
+
+  const DEFAULT_STATE = {
     lang: "en",
     style: "formal",
     time: "now",
     depth: "explore"
   };
 
-  function readCanonicalState(){
-    try{
-      if(window.CORE_STATE && typeof window.CORE_STATE.get === "function"){
-        const state = window.CORE_STATE.get();
-        return {
-          lang: state.lang || CANON_DEFAULTS.lang,
-          style: state.style || CANON_DEFAULTS.style,
-          time: state.time || CANON_DEFAULTS.time,
-          depth: state.depth || CANON_DEFAULTS.depth
-        };
-      }
-    }catch(err){}
-    return { ...CANON_DEFAULTS };
+  function readState(){
+    const query = new URLSearchParams(window.location.search);
+
+    const lang = query.get("lang") || localStorage.getItem("gd_lang") || DEFAULT_STATE.lang;
+    const style = query.get("style") || localStorage.getItem("gd_style") || DEFAULT_STATE.style;
+    const time = query.get("time") || localStorage.getItem("gd_time") || DEFAULT_STATE.time;
+    const depth = query.get("depth") || localStorage.getItem("gd_depth") || DEFAULT_STATE.depth;
+
+    return { lang, style, time, depth };
   }
 
   function mountShell(){
@@ -33,7 +30,7 @@
       '  <canvas class="sceneCanvas" aria-hidden="true"></canvas>',
       '  <div class="sceneHud" aria-hidden="true">',
       '    <div class="sceneBadge" data-role="state"></div>',
-      '    <div class="sceneBadge" data-role="sector"></div>',
+      '    <div class="sceneBadge" data-role="mode"></div>',
       '    <div class="sceneBadge" data-role="signal"></div>',
       '  </div>',
       '</div>'
@@ -43,55 +40,46 @@
       root,
       canvas: root.querySelector(".sceneCanvas"),
       stateBadge: root.querySelector('[data-role="state"]'),
-      sectorBadge: root.querySelector('[data-role="sector"]'),
+      modeBadge: root.querySelector('[data-role="mode"]'),
       signalBadge: root.querySelector('[data-role="signal"]')
     };
   }
 
-  function buildLabels(state){
-    const stateLabel = [state.lang, state.style, state.time, state.depth].join(" · ");
-    const sectorMap = {
-      formal: "west bias",
-      informal: "east bias"
-    };
-    const signalMap = {
-      origin: "origin trace",
-      now: "live frame",
-      post: "post frame"
-    };
-    return {
-      state: stateLabel,
-      sector: sectorMap[state.style] || "center bias",
-      signal: signalMap[state.time] || "live frame"
-    };
+  function labelMode(state){
+    if(state.depth === "learn") return "verification lean";
+    if(state.style === "informal") return "frontier lean";
+    return "foundation lean";
   }
 
-  function start(){
+  function labelSignal(state){
+    if(state.time === "origin") return "origin frame";
+    if(state.time === "post") return "post frame";
+    return "live frame";
+  }
+
+  function boot(){
+    if(!window.RD12_SCENE || typeof window.RD12_SCENE.start !== "function") return;
+
     const shell = mountShell();
     if(!shell) return;
 
-    if(!window.RD12_SCENE || typeof window.RD12_SCENE.start !== "function"){
-      return;
-    }
+    const state = readState();
 
-    const state = readCanonicalState();
-    const labels = buildLabels(state);
-
-    shell.stateBadge.textContent = labels.state;
-    shell.sectorBadge.textContent = labels.sector;
-    shell.signalBadge.textContent = labels.signal;
+    shell.stateBadge.textContent = [state.lang, state.style, state.time, state.depth].join(" · ");
+    shell.modeBadge.textContent = labelMode(state);
+    shell.signalBadge.textContent = labelSignal(state);
 
     window.RD12_SCENE.start(shell.canvas, {
       state,
-      nodeCount: 12,
       family: "rhombic_dodecahedron",
-      mode: "immersive_primary_hub"
+      nodeCount: 12,
+      gate: "home_primary_hub"
     });
   }
 
   if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", start);
+    document.addEventListener("DOMContentLoaded", boot);
   }else{
-    start();
+    boot();
   }
 })();

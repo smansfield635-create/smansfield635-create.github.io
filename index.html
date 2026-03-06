@@ -3,34 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Diamond Gate Bridge</title>
+
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
+
 </head>
 <body>
 
+<!-- WORLD RENDER SURFACE -->
 <canvas id="scene"></canvas>
 
+
+<!-- MINIMAL UTILITY OVERLAY -->
 <div id="uiLayer">
-  <div class="topbar">Home</div>
 
-  <nav id="navigatorLayer" aria-label="Primary">
+  <div class="topbar">
+    Home
+  </div>
+
+  <div id="navigatorLayer">
     <div id="layerToggle">
-      <button type="button" data-layer="1">Layer 1</button>
-      <button type="button" data-layer="2">Layer 2</button>
+      <button data-layer="1">Layer 1</button>
+      <button data-layer="2">Layer 2</button>
     </div>
-  </nav>
+  </div>
 
-  <nav class="routebar" aria-label="Site">
-    <a href="/navigator/">Navigator</a>
-    <a href="/products/">Products</a>
-    <a href="/explore/">Explore</a>
-    <a href="/laws/">Laws</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
 </div>
 
+
+<!-- CONTROLLER -->
 <script src="/assets/instruments.js"></script>
+
+<!-- IMMERSIVE WORLD ENGINE -->
 <script src="/variant/scene.js"></script>
 
 </body>

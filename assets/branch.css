@@ -1,16 +1,16 @@
-.navigatorStage{
-  position:relative;
-  width:100%;
-  height:80vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:2;
+#navigatorLayer{
+position:absolute;
+top:80px;
+left:40px;
+display:flex;
+flex-direction:column;
+gap:12px;
 }
 
-.faceLabel{
-  position:absolute;
-  text-align:center;
-  font-weight:800;
-  letter-spacing:.1em;
+#layerToggle button{
+padding:10px 16px;
+font-weight:700;
+border-radius:6px;
+border:none;
+cursor:pointer;
 }

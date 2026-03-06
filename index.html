@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Diamond Gate Bridge</title>
-<meta name="description" content="Compass first entry.">
+<meta name="description" content="Primary 12-face navigator">
 <link rel="stylesheet" href="/variant/styles.css">
 </head>
 <body data-page="index">
-<canvas id="scene" aria-hidden="true"></canvas>
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
 
 <header class="toprail">
   <div class="brand">
-    <div class="brand-kicker" data-i18n="index.kicker">Primary Compass</div>
+    <div class="brand-kicker" data-i18n="index.kicker">Primary Navigator</div>
     <div class="brand-title">Diamond Gate Bridge</div>
   </div>
 
@@ -22,42 +22,41 @@
       <button class="chip" data-lang="zh" type="button">中文</button>
       <button class="chip" data-lang="es" type="button">ES</button>
     </div>
-
-    <div class="chipset" aria-label="Layer">
-      <button class="chip" data-layer="1" type="button">Layer 1</button>
-      <button class="chip" data-layer="2" type="button">Layer 2</button>
-    </div>
-
-    <div class="chipset" aria-label="Lane">
-      <button class="chip" data-lane="platform" type="button">Platform</button>
-      <button class="chip" data-lane="engineering" type="button">Engineering</button>
-    </div>
   </div>
 </header>
 
 <main class="shell">
   <section class="hero">
-    <div class="hero-kicker" data-i18n="index.heroKicker">Compass First Entry</div>
-    <h1 class="hero-title" data-i18n="index.heroTitle">Choose your direction</h1>
+    <div class="hero-kicker" data-i18n="index.heroKicker">Rhombic Navigator</div>
+    <h1 class="hero-title" data-i18n="index.heroTitle">Stop the globe and choose a face</h1>
     <p class="hero-body" data-i18n="index.heroBody">
-      A liquid compass instrument with mounted diamond navigation, mirrored dragon traversal,
-      and accessible controls.
+      A twelve-face navigator. Let it rotate. Tap once to stop and focus a face. Tap the same face again to enter it.
     </p>
+
+    <div class="hero-actions">
+      <button class="action-btn primary" id="resumeSpinBtn" type="button" data-i18n="index.resume">Resume Spin</button>
+      <button class="action-btn" data-route="/door/" type="button" data-i18n="common.door">Door</button>
+      <button class="action-btn" data-route="/home/" type="button" data-i18n="common.home">Home</button>
+    </div>
   </section>
 
-  <section class="stage stage-compass" id="compassStage" aria-label="Compass navigation surface">
-    <div class="gem-layer" id="gemLayer"></div>
+  <section class="poly-stage-wrap">
+    <div class="poly-stage" id="polyStage">
+      <div class="poly-scene" id="polyScene">
+        <div class="poly-object" id="polyObject" aria-label="12 face navigator"></div>
+      </div>
+    </div>
+
+    <div class="selection-readout">
+      <div class="readout-kicker" data-i18n="index.readoutKicker">Selection</div>
+      <div class="readout-title" id="selectedFaceName" data-i18n="index.readoutIdle">No face selected</div>
+      <div class="readout-body" id="selectedFaceHint" data-i18n="index.readoutBody">
+        Tap any face to stop rotation and bring it forward.
+      </div>
+    </div>
   </section>
 </main>
 
-<nav class="corner-nav corner-left">
-  <button class="corner-btn" data-route="/door/" type="button" data-i18n="common.door">Door</button>
-</nav>
-
-<nav class="corner-nav corner-right">
-  <button class="corner-btn" data-route="/home/" type="button" data-i18n="common.home">Home</button>
-</nav>
-
-<script src="/variant/index.js"></script>
+<script src="/variant/runtime.js"></script>
 </body>
 </html>

@@ -1,12 +1,20 @@
 (function(){
 
-let layer = 1
+let layer=1
 
-window.navigatorLayer = function(n){
-  layer = n
-  if(window.__renderEngine){
-     window.__renderEngine.setLayer(n)
-  }
+function setLayer(n){
+layer=n
+if(window.__renderEngine){
+window.__renderEngine.setLayer(n)
 }
+}
+
+document.addEventListener("click",e=>{
+
+if(e.target.dataset.layer){
+setLayer(Number(e.target.dataset.layer))
+}
+
+})
 
 })();

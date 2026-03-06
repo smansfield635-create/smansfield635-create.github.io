@@ -3,44 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Compass Hub</title>
-
+<title>Diamond Gate Bridge</title>
+<meta name="description" content="Compass entrypoint of the Governed Discovery Platform">
 <link rel="stylesheet" href="/variant/styles.css">
-
 </head>
-
 <body>
 
-<canvas id="scene"></canvas>
+<canvas id="scene" aria-hidden="true"></canvas>
 
-<div class="ui">
+<div class="topRail" aria-label="Compass controls">
+  <div class="brandBlock">
+    <p class="brandKicker">Primary Compass</p>
+    <p class="brandTitle">Diamond Gate Bridge</p>
+  </div>
 
-<div class="panel">
+  <div class="toggleWrap" aria-label="Mode toggles">
+    <div class="toggleGroup" role="group" aria-label="Layer toggle">
+      <button class="toggleBtn on" id="btnLayer1" type="button" aria-pressed="true">Layer 1</button>
+      <button class="toggleBtn" id="btnLayer2" type="button" aria-pressed="false">Layer 2</button>
+    </div>
 
-<h1>Compass Hub</h1>
-<p>Liquid compass instrument with embedded navigation gems.</p>
-
-<div class="grid">
-
-<div class="gem core">CORE</div>
-
-<div class="gem">Governance</div>
-<div class="gem">Finance</div>
-<div class="gem">Energy</div>
-<div class="gem">Medical</div>
-
-<div class="gem">Verification</div>
-<div class="gem">Software</div>
-<div class="gem">Education</div>
-<div class="gem">Gauges</div>
-
+    <div class="toggleGroup" role="group" aria-label="Lane toggle">
+      <button class="toggleBtn on" id="btnPlatform" type="button" aria-pressed="true">Platform</button>
+      <button class="toggleBtn" id="btnEngineering" type="button" aria-pressed="false">Engineering</button>
+    </div>
+  </div>
 </div>
 
+<main class="shell" id="main">
+  <section class="heroPanel" aria-labelledby="heroTitle">
+    <p class="heroEyebrow">Compass First Entry</p>
+    <h1 id="heroTitle">Choose your direction</h1>
+    <p class="heroBody">
+      Instrument-grade compass with embedded diamond navigation, liquid dial movement,
+      mirrored dragon traversal, and accessible gem controls.
+    </p>
+  </section>
+
+  <section class="compassStage" id="compassStage" aria-label="Compass navigation">
+    <div class="gemLayer" id="gemLayer"></div>
+  </section>
+</main>
+
+<div class="corner left">
+  <button class="cornerBtn" id="btnDoor" type="button" aria-label="Exit to door">Door</button>
 </div>
 
+<div class="corner right">
+  <button class="cornerBtn" id="btnExplore" type="button" aria-label="Jump to explore">Explore</button>
 </div>
 
 <script src="/variant/index.js"></script>
-
 </body>
 </html>

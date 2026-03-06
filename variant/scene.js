@@ -25,7 +25,6 @@ faceZones:{},
 gemZones:{},
 rotY:0,
 fireworks:[],
-dragonClock:0,
 lanterns:[],
 cube:null
 };
@@ -33,9 +32,12 @@ cube:null
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function lerp(a,b,t){return a+(b-a)*t;}
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+function easeInOutSine(t){return -(Math.cos(Math.PI*t)-1)/2;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function rgba(r,g,b,a){return `rgba(${r},${g},${b},${a})`;}
+function dist(ax,ay,bx,by){const dx=bx-ax,dy=by-ay;return Math.sqrt(dx*dx+dy*dy);}
+function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
 
 function roundedRectPath(x,y,w,h,r){
 const rr=Math.min(r,w*0.5,h*0.5);
@@ -110,7 +112,7 @@ return inside;
 }
 
 function diamondContains(x,y,node){
-return(Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
+return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
 }
 
 function spawnFirework(x,y,count,sizeBase){
@@ -560,7 +562,7 @@ const cx=w*0.5;
 const cy=h*0.46;
 const dir=mirror?-1:1;
 const cycle=1180;
-const t=(state.dragonClock%cycle)/cycle;
+const t=(state.tick%cycle)/cycle;
 
 let phase,u;
 if(t<0.18){
@@ -613,53 +615,191 @@ pts.push({x,y});
 return pts;
 }
 
-function drawSegmentedDragon(points,baseFill,glowColor,accent){
-if(!points.length)return;
+function drawScalePatch(x,y,a,sx,sy,color,alpha){
+ctx.save();
+ctx.translate(x,y);
+ctx.rotate(a);
+ctx.globalAlpha=alpha;
+ctx.fillStyle=color;
+ctx.beginPath();
+ctx.moveTo(-sx,0);
+ctx.quadraticCurveTo(0,-sy,sx,0);
+ctx.quadraticCurveTo(0,sy,-sx,0);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+}
 
-for(let i=points.length-1;i>=0;i--){
+function drawWhisker(x,y,angle,len,dir,alpha){
+ctx.save();
+ctx.translate(x,y);
+ctx.rotate(angle+dir*0.30);
+ctx.globalAlpha=alpha;
+ctx.strokeStyle="rgba(255,238,205,0.72)";
+ctx.lineWidth=1.6;
+ctx.beginPath();
+ctx.moveTo(0,0);
+ctx.quadraticCurveTo(len*0.18,dir*len*0.10,len*0.60,dir*len*0.20);
+ctx.quadraticCurveTo(len*0.82,dir*len*0.26,len,dir*len*0.38);
+ctx.stroke();
+ctx.restore();
+}
+
+function drawDragonHead(head,next,baseFill,glowColor,accentFill){
+const a=angleBetween(head,next);
+ctx.save();
+ctx.translate(head.x,head.y);
+ctx.rotate(a);
+ctx.shadowBlur=18;
+ctx.shadowColor=glowColor;
+ctx.fillStyle=baseFill;
+
+ctx.beginPath();
+ctx.moveTo(26,0);
+ctx.lineTo(12,-12);
+ctx.lineTo(-10,-14);
+ctx.lineTo(-22,-8);
+ctx.lineTo(-28,0);
+ctx.lineTo(-22,8);
+ctx.lineTo(-10,14);
+ctx.lineTo(12,12);
+ctx.closePath();
+ctx.fill();
+
+ctx.fillStyle=accentFill;
+ctx.beginPath();
+ctx.moveTo(10,-4);
+ctx.lineTo(18,0);
+ctx.lineTo(10,4);
+ctx.lineTo(0,3);
+ctx.lineTo(0,-3);
+ctx.closePath();
+ctx.fill();
+
+ctx.fillStyle="rgba(255,246,218,0.95)";
+ctx.beginPath();
+ctx.arc(4,-4.2,1.9,0,TAU);
+ctx.fill();
+
+ctx.fillStyle="rgba(255,220,140,0.88)";
+ctx.beginPath();
+ctx.moveTo(-6,-10);
+ctx.lineTo(-16,-18);
+ctx.lineTo(-10,-8);
+ctx.closePath();
+ctx.fill();
+ctx.beginPath();
+ctx.moveTo(-6,10);
+ctx.lineTo(-16,18);
+ctx.lineTo(-10,8);
+ctx.closePath();
+ctx.fill();
+
+ctx.beginPath();
+ctx.moveTo(-14,-8);
+ctx.lineTo(-24,-16);
+ctx.lineTo(-18,-6);
+ctx.closePath();
+ctx.fill();
+ctx.beginPath();
+ctx.moveTo(-14,8);
+ctx.lineTo(-24,16);
+ctx.lineTo(-18,6);
+ctx.closePath();
+ctx.fill();
+
+ctx.restore();
+
+drawWhisker(head.x+2,head.y+2,a,38,1,0.72);
+drawWhisker(head.x+2,head.y-2,a,38,-1,0.72);
+}
+
+function drawDragonHair(points,glowColor){
+if(points.length<6)return;
+const head=points[0];
+const neck=points[4];
+const a=angleBetween(head,neck);
+for(let i=0;i<5;i++){
+const len=26+i*8;
+const offset=i*2.4;
+ctx.save();
+ctx.translate(head.x-4-offset,head.y);
+ctx.rotate(a+Math.PI);
+ctx.globalAlpha=0.20+(i*0.04);
+ctx.strokeStyle=glowColor;
+ctx.lineWidth=1.4;
+ctx.beginPath();
+ctx.moveTo(0,0);
+ctx.quadraticCurveTo(-len*0.20,-len*0.18,-len*0.70,-len*0.12);
+ctx.quadraticCurveTo(-len,-len*0.04,-len*1.08,len*0.06);
+ctx.stroke();
+ctx.restore();
+}
+}
+
+function drawSegmentedDragon(points,baseFill,glowColor,accent){
+if(points.length<6)return;
+
+for(let i=points.length-1;i>=1;i--){
 const p=points[i];
+const prev=points[Math.max(0,i-1)];
+const next=points[Math.min(points.length-1,i+1)];
 const t=i/(points.length-1);
 const r=lerp(36,6.4,t);
+const a=angleBetween(prev,next);
 
 ctx.save();
 ctx.globalAlpha=0.94-(t*0.26);
 ctx.shadowBlur=16;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
+ctx.translate(p.x,p.y);
+ctx.rotate(a);
 ctx.beginPath();
-ctx.ellipse(p.x,p.y,r*1.28,r,0,0,TAU);
+ctx.ellipse(0,0,r*1.25,r,0,0,TAU);
 ctx.fill();
 ctx.restore();
 
+drawScalePatch(p.x,p.y-r*0.12,a,r*0.54,r*0.30,accent,0.26);
+drawScalePatch(p.x-r*0.20,p.y+r*0.08,a,r*0.38,r*0.22,"rgba(255,250,228,0.22)",0.22);
+}
+
+for(let i=3;i<points.length-2;i+=2){
+const p=points[i];
+const prev=points[i-1];
+const next=points[i+1];
+const a=angleBetween(prev,next);
+const t=i/(points.length-1);
+const fin=lerp(13,2.4,t);
 ctx.save();
-ctx.globalAlpha=0.42-(t*0.16);
-ctx.fillStyle=accent;
+ctx.translate(p.x,p.y);
+ctx.rotate(a);
+ctx.globalAlpha=0.22*(1-t);
+ctx.fillStyle="rgba(255,236,190,0.42)";
 ctx.beginPath();
-ctx.arc(p.x,p.y,r*0.30,0,TAU);
+ctx.moveTo(-fin*0.30,0);
+ctx.lineTo(0,-fin);
+ctx.lineTo(fin*0.36,0);
+ctx.closePath();
 ctx.fill();
 ctx.restore();
 }
 
-const head=points[0];
-ctx.save();
-ctx.shadowBlur=20;
-ctx.shadowColor=glowColor;
-ctx.fillStyle=baseFill;
-ctx.beginPath();
-ctx.ellipse(head.x,head.y,26,18,0,0,TAU);
-ctx.fill();
-ctx.restore();
+drawDragonHair(points,glowColor);
+drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
 }
 
 function dragons(){
+const fear=buildDragonSpine(false);
+const love=buildDragonSpine(true);
 drawSegmentedDragon(
-buildDragonSpine(false),
+fear,
 "rgba(128,18,18,0.92)",
 "rgba(210,62,40,0.52)",
 "rgba(255,132,72,0.72)"
 );
 drawSegmentedDragon(
-buildDragonSpine(true),
+love,
 "rgba(186,132,30,0.92)",
 "rgba(255,210,110,0.50)",
 "rgba(255,244,188,0.76)"
@@ -805,7 +945,6 @@ state.hoveredRegion=null;
 
 function animateState(){
 state.tick++;
-state.dragonClock++;
 state.rotY+=state.activeLayer===1?0.0030:0.0026;
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);

@@ -1,53 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home</title>
-<meta name="description" content="Launch surface">
-<link rel="stylesheet" href="/variant/styles.css">
+
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/branch.css">
+
 </head>
-<body data-page="home">
-<canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-<header class="toprail">
-  <div class="brand">
-    <div class="brand-kicker" data-i18n="home.kicker">Launchpad</div>
-    <div class="brand-title" data-i18n="home.title">Where do you want to go next?</div>
-  </div>
+<body>
 
-  <div class="toprail-controls">
-    <div class="chipset" aria-label="Language">
-      <button class="chip" data-lang="en" type="button">EN</button>
-      <button class="chip" data-lang="zh" type="button">中文</button>
-      <button class="chip" data-lang="es" type="button">ES</button>
-    </div>
-  </div>
+<header>
+<h1>Launchpad</h1>
 </header>
 
-<main class="shell">
-  <section class="hero">
-    <div class="hero-kicker" data-i18n="home.heroKicker">Home Surface</div>
-    <h1 class="hero-title" data-i18n="home.heroTitle">Where do you want to go next?</h1>
-    <p class="hero-body" data-i18n="home.heroBody">
-      Home is the readable bridge. The navigator is the immersive first impression.
-    </p>
-  </section>
+<nav>
 
-  <section class="launchpad">
-    <div class="band" data-i18n="home.band">Surfaces</div>
-    <div class="accordion" id="accordion"></div>
-  </section>
-</main>
+<a href="/index.html">Navigator</a>
+<a href="/products/">Products</a>
+<a href="/explore/">Explore</a>
+<a href="/laws/">Laws</a>
+<a href="/gauges/">Gauges</a>
 
-<nav class="dock">
-  <button class="dock-btn" data-route="/index.html" type="button" data-i18n="common.navigator">Navigator</button>
-  <button class="dock-btn" data-route="/products/" type="button" data-i18n="common.products">Products</button>
-  <button class="dock-btn" data-route="/explore/" type="button" data-i18n="common.explore">Explore</button>
-  <button class="dock-btn" data-route="/laws/" type="button" data-i18n="common.laws">Laws</button>
-  <button class="dock-btn" data-route="/gauges/" type="button" data-i18n="common.gauges">Gauges</button>
 </nav>
 
-<script src="/variant/runtime.js"></script>
+<script src="/assets/instruments.js"></script>
+
 </body>
 </html>

@@ -27,6 +27,16 @@ compassZones:{},
 lastTapRegion:null
 };
 
+const CUBE_STYLE={
+edgeGold:"rgba(255,215,0,0.92)",
+edgeGoldDim:"rgba(255,215,0,0.38)",
+faceRubyFront:"rgba(139,0,0,0.24)",
+faceRubySide:"rgba(120,0,0,0.19)",
+faceRubyBack:"rgba(70,0,0,0.14)",
+innerShade:"rgba(0,0,0,0.18)",
+glowGold:"rgba(255,215,0,0.20)"
+};
+
 function resize(){
 const dpr=Math.max(1,window.devicePixelRatio||1);
 const w=window.innerWidth;
@@ -58,23 +68,17 @@ return inside;
 }
 
 function diamondContains(x,y,node){
-return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
+return(Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
 }
 
 function getPointerPos(e){
 const rect=canvas.getBoundingClientRect();
-return{
-x:e.clientX-rect.left,
-y:e.clientY-rect.top
-};
+return{x:e.clientX-rect.left,y:e.clientY-rect.top};
 }
 
 function getTouchPos(touch){
 const rect=canvas.getBoundingClientRect();
-return{
-x:touch.clientX-rect.left,
-y:touch.clientY-rect.top
-};
+return{x:touch.clientX-rect.left,y:touch.clientY-rect.top};
 }
 
 function setLayer(n){
@@ -97,17 +101,16 @@ state.transitionProgress=0;
 }
 
 window.renderEngine={
-setLayer(n){
-setLayer(Number(n)||1);
-}
+setLayer(n){setLayer(Number(n)||1);}
 };
 
 function sky(){
 const g=ctx.createLinearGradient(0,0,0,window.innerHeight);
-g.addColorStop(0,"#240909");
-g.addColorStop(.36,"#7d1d15");
-g.addColorStop(.72,"#d84d22");
-g.addColorStop(1,"#1a0606");
+g.addColorStop(0,"#160810");
+g.addColorStop(.28,"#2d0b18");
+g.addColorStop(.56,"#5a1120");
+g.addColorStop(.82,"#8d2a18");
+g.addColorStop(1,"#2a0908");
 ctx.fillStyle=g;
 ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
 }
@@ -115,16 +118,19 @@ ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
 function moon(){
 const x=window.innerWidth*.82;
 const y=window.innerHeight*.16;
-const r=Math.min(window.innerWidth,window.innerHeight)*.05;
+const r=Math.min(window.innerWidth,window.innerHeight)*.065;
 ctx.save();
-ctx.globalAlpha=.22+.1*state.compassReveal;
-ctx.fillStyle="rgba(255,245,220,.9)";
+ctx.globalAlpha=.34+.08*state.compassReveal;
+ctx.shadowBlur=38;
+ctx.shadowColor="rgba(255,228,170,.45)";
+ctx.fillStyle="rgba(255,244,215,.92)";
 ctx.beginPath();
 ctx.arc(x,y,r,0,Math.PI*2);
 ctx.fill();
+ctx.shadowBlur=0;
 ctx.globalCompositeOperation="destination-out";
 ctx.beginPath();
-ctx.arc(x+r*.34,y-r*.08,r*.92,0,Math.PI*2);
+ctx.arc(x+r*.33,y-r*.05,r*.9,0,Math.PI*2);
 ctx.fill();
 ctx.restore();
 }
@@ -158,14 +164,14 @@ const y=base+i*18+wave1+wave2+slope;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
 }
-ctx.strokeStyle=`rgba(255,230,200,${0.06+i*0.018})`;
+ctx.strokeStyle=`rgba(255,220,170,${0.05+i*0.018})`;
 ctx.lineWidth=2;
 ctx.stroke();
 }
 }
 
 function project(x,y,z){
-const scale=400/(400+z);
+const scale=420/(420+z);
 return{
 x:window.innerWidth/2+x*scale,
 y:window.innerHeight*.6+y*scale,
@@ -173,8 +179,22 @@ scale
 };
 }
 
+function rotateVertex(x,y,z,rotY,tiltX){
+const cy=Math.cos(rotY),sy=Math.sin(rotY);
+const cx=Math.cos(tiltX),sx=Math.sin(tiltX);
+
+const x1=x*cy-z*sy;
+const z1=x*sy+z*cy;
+
+const y2=y*cx-z1*sx;
+const z2=y*sx+z1*cx;
+
+return{x:x1,y:y2,z:z2};
+}
+
 function getCubeGeometry(){
 const size=Math.min(window.innerWidth,window.innerHeight)*.16;
+const tiltX=-0.58;
 const verts=[
 [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
 [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]
@@ -184,30 +204,81 @@ const edges=[
 [4,5],[5,6],[6,7],[7,4],
 [0,4],[1,5],[2,6],[3,7]
 ];
+const faces3D={
+BACK:[0,1,2,3],
+FRONT:[4,5,6,7],
+LEFT:[0,3,7,4],
+RIGHT:[1,2,6,5],
+TOP:[3,2,6,7],
+BOTTOM:[0,1,5,4]
+};
+
+const rotated=[];
 const pts=[];
+
 for(const v of verts){
-const x=v[0]*size;
-const y=v[1]*size;
-const z=v[2]*size;
-const xr=x*Math.cos(state.rot)-z*Math.sin(state.rot);
-const zr=x*Math.sin(state.rot)+z*Math.cos(state.rot);
-pts.push(project(xr,y,zr));
+const p=rotateVertex(v[0]*size,v[1]*size,v[2]*size,state.rot,tiltX);
+rotated.push(p);
+pts.push(project(p.x,p.y,p.z));
 }
-const faces={
+
+const faces2D={
 C:[pts[4],pts[5],pts[6],pts[7]],
 W:[pts[0],pts[3],pts[7],pts[4]],
 E:[pts[1],pts[2],pts[6],pts[5]],
 N:[pts[3],pts[2],pts[6],pts[7]]
 };
+
+const renderFaces=Object.entries(faces3D).map(([key,idxs])=>{
+const avgZ=(rotated[idxs[0]].z+rotated[idxs[1]].z+rotated[idxs[2]].z+rotated[idxs[3]].z)/4;
+return{key,idxs,avgZ};
+}).sort((a,b)=>a.avgZ-b.avgZ);
+
 const centerX=(pts[4].x+pts[5].x+pts[6].x+pts[7].x)/4;
 const centerY=(pts[4].y+pts[5].y+pts[6].y+pts[7].y)/4;
-return{pts,edges,faces,centerX,centerY,size};
+
+return{
+pts,
+rotated,
+edges,
+faces:faces2D,
+renderFaces,
+centerX,
+centerY,
+size
+};
+}
+
+function faceFillFor(key,avgZ){
+if(key==="FRONT")return CUBE_STYLE.faceRubyFront;
+if(key==="TOP")return "rgba(170,20,20,0.22)";
+if(key==="RIGHT"||key==="LEFT")return CUBE_STYLE.faceRubySide;
+if(key==="BOTTOM")return "rgba(35,0,0,0.16)";
+return CUBE_STYLE.faceRubyBack;
 }
 
 function drawCube(geo){
 state.faceZones=geo.faces;
 const hovered=state.hoveredRegion;
 const selected=state.activeDirection;
+
+for(const face of geo.renderFaces){
+const poly=face.idxs.map(i=>geo.pts[i]);
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(poly[0].x,poly[0].y);
+for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
+ctx.closePath();
+
+ctx.fillStyle=faceFillFor(face.key,face.avgZ);
+ctx.fill();
+
+ctx.fillStyle=CUBE_STYLE.innerShade;
+ctx.globalAlpha=face.avgZ<0?0.24:0.08;
+ctx.fill();
+
+ctx.restore();
+}
 
 for(const key of ["W","E","N","C"]){
 const poly=geo.faces[key];
@@ -217,22 +288,24 @@ ctx.beginPath();
 ctx.moveTo(poly[0].x,poly[0].y);
 for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
 ctx.closePath();
-ctx.fillStyle=isHot?"rgba(255,245,220,.08)":"rgba(255,255,255,.02)";
+ctx.fillStyle=isHot?"rgba(255,215,0,0.07)":"rgba(255,255,255,0)";
 ctx.fill();
-ctx.lineWidth=isHot?2.5:1.2;
-ctx.strokeStyle=isHot?"rgba(255,245,220,.65)":"rgba(255,255,255,.08)";
-ctx.stroke();
 ctx.restore();
 }
 
-ctx.strokeStyle="white";
-ctx.lineWidth=2.2;
+ctx.save();
+ctx.shadowBlur=14;
+ctx.shadowColor=CUBE_STYLE.glowGold;
 for(const e of geo.edges){
+const a=geo.rotated[e[0]].z+geo.rotated[e[1]].z;
 ctx.beginPath();
 ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
 ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
+ctx.lineWidth=2.2;
+ctx.strokeStyle=a<0?CUBE_STYLE.edgeGoldDim:CUBE_STYLE.edgeGold;
 ctx.stroke();
 }
+ctx.restore();
 }
 
 function drawCompass(geo){
@@ -472,7 +545,7 @@ state.hoveredRegion=null;
 
 function animateState(){
 state.tick++;
-state.rot+=state.activeLayer===1?.008:.0065;
+state.rot+=state.activeLayer===1?.0044:.0039;
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,.08);
 state.transitionProgress=clamp(state.transitionProgress+.04,0,1);

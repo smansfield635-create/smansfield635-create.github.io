@@ -1,9 +1,12 @@
+TNT
+/index.html
+
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Navigator</title>
+<title>Diamond Gate Bridge</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
@@ -15,19 +18,18 @@ height:100%;
 overflow:hidden;
 font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 color:#fff;
+background:#000;
 }
 
-/* RENDER MOUNT */
 #scene{
 position:fixed;
 inset:0;
-width:100%;
-height:100%;
+width:100vw;
+height:100vh;
 display:block;
 z-index:0;
 }
 
-/* UI MOUNT */
 #uiLayer{
 position:relative;
 z-index:2;
@@ -35,10 +37,9 @@ pointer-events:auto;
 padding:24px;
 }
 
-/* CONTROLS */
 .controls{
 display:flex;
-gap:12px;
+gap:10px;
 margin-bottom:20px;
 }
 
@@ -48,21 +49,26 @@ font-weight:700;
 border-radius:6px;
 border:none;
 cursor:pointer;
+background:rgba(255,255,255,.08);
+color:#fff;
+}
+
+button:hover{
+background:rgba(255,255,255,.18);
 }
 </style>
 </head>
 
 <body data-page="index">
 
-<!-- RENDER ENGINE MOUNT -->
 <canvas id="scene"></canvas>
 
-<!-- UI LAYER -->
 <div id="uiLayer">
 
 <div class="controls">
 <button onclick="navigatorLayer(1)">Layer 1</button>
 <button onclick="navigatorLayer(2)">Layer 2</button>
+<button onclick="__DGB_RENDER__.resume()">Resume Spin</button>
 </div>
 
 <h1>Navigator</h1>

@@ -36,6 +36,7 @@ height:100%;
 display:block;
 z-index:0;
 touch-action:manipulation;
+pointer-events:auto;
 }
 
 #uiLayer{
@@ -62,6 +63,13 @@ letter-spacing:.16em;
 text-transform:uppercase;
 pointer-events:none;
 user-select:none;
+}
+
+#navigatorLayer,
+#layerToggle,
+#layerToggle button{
+pointer-events:auto;
+touch-action:manipulation;
 }
 
 a,button,canvas{

@@ -1,33 +1,149 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DiamondGateBridge</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Home</title>
+<meta name="description" content="Governed Discovery Platform primary hub."/>
 
-<style>
-html,body{
-margin:0;
-height:100%;
-overflow:hidden;
-background:#b00000;
-}
-#gd-dragon{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:6;
-}
-</style>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<link rel="stylesheet" href="/variant/styles.css"/>
 
+<script defer src="/assets/instruments.js"></script>
+<script defer src="/variant/scene.js"></script>
+<script defer src="/variant/index.js"></script>
 </head>
+<body data-room="WEBSITE_BUILD_ROOM" data-hub="primary">
+<a class="skiplink" href="#main">Skip to content</a>
 
-<body>
+<div id="variant-root" aria-hidden="true"></div>
 
-<div id="gd-dragon"></div>
+<header class="hubShell hubTop">
+  <div class="hubBar">
+    <div class="hubBrand">
+      <div class="hubBrandMark" aria-hidden="true"></div>
+      <div class="hubBrandCopy">
+        <p class="hubKicker">Primary Hub</p>
+        <h1 class="hubName">Governed Discovery Platform</h1>
+      </div>
+    </div>
 
-<script src="/assets/dragon-engine.js?v=HEX4"></script>
+    <nav class="hubNav" aria-label="Primary navigation">
+      <a href="/door/index.html?lang=en&style=formal&time=now&depth=explore">Door</a>
+      <a href="/home/index.html?lang=en&style=formal&time=now&depth=explore" aria-current="page">Home</a>
+      <a href="/explore/index.html?lang=en&style=formal&time=now&depth=explore">Explore</a>
+      <a href="/products/index.html?lang=en&style=formal&time=now&depth=explore">Products</a>
+      <a href="/laws/index.html?lang=en&style=formal&time=now&depth=learn">Laws</a>
+      <a href="/gauges/index.html?lang=en&style=formal&time=now&depth=learn">Gauges</a>
+      <a href="/links/index.html?lang=en&style=formal&time=now&depth=explore">Links</a>
+    </nav>
+  </div>
+</header>
 
+<main id="main" class="hubShell hubMain">
+  <section class="heroCard" aria-labelledby="hero-title">
+    <p class="heroEyebrow">Primary Coordinate Hub</p>
+    <h2 id="hero-title" class="heroTitle">Compass aligned entry into the platform</h2>
+    <p class="heroBody">
+      This hub preserves the gate order, exposes the directional system, and mounts the immersive
+      scene behind the host shell without leaking protected engine behavior into the entry surface.
+    </p>
+
+    <div class="heroActions">
+      <a class="heroButton heroButtonPrimary" href="/explore/index.html?lang=en&style=formal&time=now&depth=explore">Enter frontier</a>
+      <a class="heroButton" href="/laws/index.html?lang=en&style=formal&time=now&depth=learn">Read doctrine</a>
+    </div>
+
+    <div class="heroMeta">
+      <div class="metaCard">
+        <span class="metaLabel">Gate order</span>
+        <span class="metaValue">Language → Lens → Domain → Hub</span>
+      </div>
+      <div class="metaCard">
+        <span class="metaLabel">Hub status</span>
+        <span class="metaValue">Active</span>
+      </div>
+      <div class="metaCard">
+        <span class="metaLabel">Failure policy</span>
+        <span class="metaValue">Safe skip</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="nodeBand" aria-label="Main twelve nodes">
+    <article class="nodeCard">
+      <span class="nodeFace">N</span>
+      <h3>Governance</h3>
+      <p>Ratification, validation, invariant protection.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">E</span>
+      <h3>Finance</h3>
+      <p>Allocation, value routing, external viability.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">S</span>
+      <h3>Energy</h3>
+      <p>Power, infrastructure, sustained operation.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">W</span>
+      <h3>Medical</h3>
+      <p>Health interfaces, diagnostics, restorative use.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">N★</span>
+      <h3>Verification</h3>
+      <p>Evidence posture, audit stance, empirical frame.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">E★</span>
+      <h3>Software</h3>
+      <p>Executable systems, interfaces, compiled artifacts.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">S★</span>
+      <h3>Education</h3>
+      <p>Traversal, fluency, transmission of the method.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">W★</span>
+      <h3>Gauges</h3>
+      <p>Metrics, measures, bounded instrumentation surfaces.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">N:NE</span>
+      <h3>Governance × Finance</h3>
+      <p>Institutional rule binding to allocation and value flow.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">N:NW</span>
+      <h3>Governance × Medical</h3>
+      <p>Protected health systems under lawful coordination.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">N:SE</span>
+      <h3>Finance × Energy</h3>
+      <p>Capital routing into energetic continuity and build.</p>
+    </article>
+
+    <article class="nodeCard">
+      <span class="nodeFace">N:SW</span>
+      <h3>Energy × Medical</h3>
+      <p>Vital infrastructure sustaining care and recovery.</p>
+    </article>
+  </section>
+</main>
 </body>
 </html>

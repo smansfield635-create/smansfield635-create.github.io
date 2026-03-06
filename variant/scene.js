@@ -110,7 +110,7 @@ return inside;
 }
 
 function diamondContains(x,y,node){
-return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
+return(Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
 }
 
 function spawnFirework(x,y,count,sizeBase){
@@ -136,8 +136,6 @@ spawnFirework(w*0.78,h*0.22,24,2.3);
 }
 
 function spawnDirectionFirework(dir){
-const geo=state.cube;
-if(!geo)return;
 const gem=state.gemZones[dir];
 if(gem){
 spawnFirework(gem.x,gem.y,18,1.8);
@@ -549,7 +547,7 @@ ctx.globalAlpha=0.94*reveal;
 ctx.textAlign="center";
 ctx.textBaseline="middle";
 ctx.fillStyle="rgba(255,250,240,0.96)";
-ctx.font=`700 ${key==="C"?10:9}px system-ui,Segoe UI,Roboto,sans-serif`;
+ctx.font=`700 ${key==="C"?"10":"9"}px system-ui,Segoe UI,Roboto,sans-serif`;
 ctx.fillText(DOMAIN_MAP[key].short,proj.x,proj.y);
 ctx.restore();
 }
@@ -582,8 +580,8 @@ u=(t-0.80)/0.20;
 if(phase==="pause")return[];
 
 const pts=[];
-for(let i=0;i<44;i++){
-const segT=i/43;
+for(let i=0;i<55;i++){
+const segT=i/54;
 const lag=segT*0.26;
 let x,y;
 if(phase==="enter"){
@@ -593,12 +591,12 @@ const endAngle=mirror?0:Math.PI;
 const targetX=cx+Math.cos(endAngle)*250;
 const targetY=cy+Math.sin(endAngle)*96;
 const uu=clamp(u-lag,0,1);
-x=lerp(startX,targetX,uu)+(-dir*i*9);
+x=lerp(startX,targetX,uu)+(-dir*i*11);
 y=lerp(startY,targetY,uu)+Math.sin(i*0.48+state.tick*0.028*dir)*12;
 }else if(phase==="orbit"){
 const uu=clamp(u-lag*0.45,0,1);
 const angle=(mirror?0:Math.PI)+(mirror?1:-1)*uu*TAU;
-x=cx+Math.cos(angle)*250+(-dir*i*7);
+x=cx+Math.cos(angle)*250+(-dir*i*9);
 y=cy+Math.sin(angle)*96+Math.sin(i*0.42+uu*TAU*1.25)*11;
 }else{
 const startAngle=mirror?Math.PI:0;
@@ -607,7 +605,7 @@ const startY=cy+Math.sin(startAngle)*96;
 const endX=mirror?-420:w+420;
 const endY=cy+(mirror?46:-46);
 const uu=clamp(u-lag,0,1);
-x=lerp(startX,endX,uu)+(-dir*i*9);
+x=lerp(startX,endX,uu)+(-dir*i*11);
 y=lerp(startY,endY,uu)+Math.sin(i*0.48+state.tick*0.028*dir)*12;
 }
 pts.push({x,y});
@@ -621,7 +619,7 @@ if(!points.length)return;
 for(let i=points.length-1;i>=0;i--){
 const p=points[i];
 const t=i/(points.length-1);
-const r=lerp(18,3.2,t);
+const r=lerp(36,6.4,t);
 
 ctx.save();
 ctx.globalAlpha=0.94-(t*0.26);
@@ -648,7 +646,7 @@ ctx.shadowBlur=20;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 ctx.beginPath();
-ctx.ellipse(head.x,head.y,20,14,0,0,TAU);
+ctx.ellipse(head.x,head.y,26,18,0,0,TAU);
 ctx.fill();
 ctx.restore();
 }

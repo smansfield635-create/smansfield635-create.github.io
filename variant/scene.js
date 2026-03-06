@@ -45,6 +45,7 @@ resize();
 function lerp(a,b,t){return a+(b-a)*t}
 function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
 function easeOut(t){return 1-Math.pow(1-t,3)}
+
 function pointInPoly(x,y,poly){
 let inside=false;
 for(let i=0,j=poly.length-1;i<poly.length;j=i++){
@@ -55,12 +56,11 @@ if(hit)inside=!inside;
 }
 return inside;
 }
+
 function diamondContains(x,y,node){
 return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
 }
-function glow(color,a){
-return color.replace("__A__",String(a));
-}
+
 function getPointerPos(e){
 const rect=canvas.getBoundingClientRect();
 return{
@@ -69,15 +69,24 @@ y:e.clientY-rect.top
 };
 }
 
+function getTouchPos(touch){
+const rect=canvas.getBoundingClientRect();
+return{
+x:touch.clientX-rect.left,
+y:touch.clientY-rect.top
+};
+}
+
 function setLayer(n){
-const next=n===2?2:1;
+const next=Number(n)===2?2:1;
 state.activeLayer=next;
 state.transitionProgress=0;
-if(next===1){
+if(next!==2){
 state.activeDirection=null;
 state.hoveredRegion=null;
 }
 }
+
 function selectDirection(dir){
 state.activeDirection=dir;
 state.lastTapRegion=dir;
@@ -86,8 +95,11 @@ state.activeLayer=2;
 state.transitionProgress=0;
 }
 }
-window.__renderEngine={
-setLayer(n){setLayer(Number(n)||1);}
+
+window.renderEngine={
+setLayer(n){
+setLayer(Number(n)||1);
+}
 };
 
 function sky(){
@@ -274,8 +286,9 @@ state.compassZones[key]={x:node.x,y:node.y,hw,hh};
 const active=state.activeDirection===key;
 const hover=state.hoveredRegion===key;
 const alpha=key==="C"?0.82:.74;
+
 ctx.save();
-ctx.globalAlpha=(alpha*reveal);
+ctx.globalAlpha=alpha*reveal;
 ctx.translate(node.x,node.y);
 ctx.rotate(Math.PI/4);
 ctx.fillStyle=active?"rgba(18,18,26,.95)":hover?"rgba(28,28,38,.92)":"rgba(18,18,26,.86)";
@@ -333,6 +346,7 @@ band(botY,"rgba(255,210,120,.18)","rgba(0,0,0,.34)",-1,false);
 
 const topGlow=state.activeDirection==="N"?"rgba(70,255,120,.72)":"rgba(70,255,120,.16)";
 const botGlow=state.activeDirection==="S"?"rgba(255,80,80,.62)":"rgba(255,80,80,.12)";
+
 ctx.strokeStyle=topGlow;
 ctx.lineWidth=10;
 ctx.beginPath();
@@ -397,16 +411,21 @@ selectDirection("S");
 }
 }
 
-function updateInteractionFromPointer(x,y){
+function updateInteractionFromPoint(x,y){
 state.hoveredRegion=getRegionAt(x,y);
-canvas.style.cursor=state.hoveredRegion?"pointer":"default";
+}
+
+function activateAtPoint(x,y){
+updateInteractionFromPoint(x,y);
+const hit=getRegionAt(x,y);
+if(hit)routeRegion(hit);
 }
 
 canvas.addEventListener("pointermove",e=>{
 const p=getPointerPos(e);
 state.pointer.x=p.x;
 state.pointer.y=p.y;
-updateInteractionFromPointer(p.x,p.y);
+updateInteractionFromPoint(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("pointerdown",e=>{
@@ -414,7 +433,7 @@ const p=getPointerPos(e);
 state.pointer.down=true;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
-updateInteractionFromPointer(p.x,p.y);
+updateInteractionFromPoint(p.x,p.y);
 });
 
 canvas.addEventListener("pointerup",e=>{
@@ -422,20 +441,33 @@ const p=getPointerPos(e);
 state.pointer.down=false;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
-const hit=getRegionAt(p.x,p.y);
-if(hit)routeRegion(hit);
+activateAtPoint(p.x,p.y);
 });
+
+canvas.addEventListener("touchstart",e=>{
+const touch=e.changedTouches&&e.changedTouches[0];
+if(!touch)return;
+const p=getTouchPos(touch);
+state.pointer.down=true;
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+updateInteractionFromPoint(p.x,p.y);
+},{passive:true});
+
+canvas.addEventListener("touchend",e=>{
+const touch=e.changedTouches&&e.changedTouches[0];
+if(!touch)return;
+const p=getTouchPos(touch);
+state.pointer.down=false;
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+activateAtPoint(p.x,p.y);
+e.preventDefault();
+},{passive:false});
 
 canvas.addEventListener("pointerleave",()=>{
 state.pointer.down=false;
 state.hoveredRegion=null;
-canvas.style.cursor="default";
-});
-
-document.addEventListener("click",e=>{
-const btn=e.target.closest("[data-layer]");
-if(!btn)return;
-setLayer(Number(btn.dataset.layer)||1);
 });
 
 function animateState(){

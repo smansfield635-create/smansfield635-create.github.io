@@ -1,7 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Navigator</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
@@ -11,18 +12,27 @@
 
 <body>
 
+<!-- RENDER MOUNT -->
 <canvas id="scene"></canvas>
 
-<header>
+<!-- UI MOUNT -->
+<div id="uiLayer">
 
-<div class="layerToggle">
-<button onclick="navigatorLayer(1)">Layer 1</button>
-<button onclick="navigatorLayer(2)">Layer 2</button>
-</div>
-
+<header class="topbar">
+  <div class="title">Navigator</div>
 </header>
 
-<div class="navigatorStage"></div>
+<!-- NAVIGATOR CONTROL -->
+<div id="navigatorLayer">
+
+<div id="layerToggle">
+<button data-layer="1">Layer 1</button>
+<button data-layer="2">Layer 2</button>
+</div>
+
+</div>
+
+</div>
 
 <script src="/assets/instruments.js"></script>
 <script src="/variant/scene.js"></script>

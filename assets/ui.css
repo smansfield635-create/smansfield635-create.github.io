@@ -1,36 +1,34 @@
 :root{
-  --bg0:#120707;
-  --bg1:#3a0f0f;
-  --bg2:#c4421e;
-  --ink:#fff7f2;
-  --gold:#e7c37a;
+--ink:#fff;
+--gold:#e7c37a;
+--bg0:#140606;
+--bg1:#7c1b13;
+--bg2:#d64a22;
 }
 
 html,body{
-  margin:0;
-  height:100%;
-  background:linear-gradient(180deg,var(--bg2),var(--bg0));
-  color:var(--ink);
-  font-family:system-ui,Segoe UI,Roboto,sans-serif;
+margin:0;
+height:100%;
+font-family:system-ui,Segoe UI,Roboto,sans-serif;
+background:linear-gradient(180deg,var(--bg2),var(--bg0));
+color:var(--ink);
+overflow:hidden;
 }
 
 #scene{
-  position:fixed;
-  inset:0;
-  z-index:0;
+position:fixed;
+inset:0;
+z-index:0;
 }
 
-header{
-  position:relative;
-  z-index:2;
-  padding:14px 20px;
+#uiLayer{
+position:relative;
+z-index:2;
+pointer-events:auto;
 }
 
-.layerToggle{
-  display:flex;
-  gap:10px;
-}
-
-button{
-  cursor:pointer;
+.topbar{
+padding:20px;
+font-weight:800;
+font-size:22px;
 }

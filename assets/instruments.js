@@ -4,10 +4,10 @@ function setLayer(n){
 const next = Number(n) || 1;
 
 if(
-window.__renderEngine &&
-typeof window.__renderEngine.setLayer === "function"
+window.renderEngine &&
+typeof window.renderEngine.setLayer === "function"
 ){
-window.__renderEngine.setLayer(next);
+window.renderEngine.setLayer(next);
 }
 
 document.documentElement.setAttribute("data-layer",String(next));

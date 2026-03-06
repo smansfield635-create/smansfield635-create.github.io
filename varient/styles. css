@@ -1,0 +1,335 @@
+:root{
+  --hub-max:1280px;
+  --glass-bg:rgba(6,9,14,.36);
+  --glass-stroke:rgba(255,255,255,.14);
+  --ink:rgba(255,255,255,.96);
+  --muted:rgba(255,255,255,.72);
+  --soft:rgba(255,255,255,.14);
+  --blur:18px;
+}
+
+html,body{
+  min-height:100%;
+}
+
+body{
+  margin:0;
+  color:var(--ink);
+  overflow-x:hidden;
+}
+
+#variant-root{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.sceneRoot,
+.sceneCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  pointer-events:none;
+}
+
+.sceneHud{
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:flex-end;
+  pointer-events:none;
+}
+
+.sceneBadge{
+  border:1px solid var(--glass-stroke);
+  background:rgba(0,0,0,.28);
+  backdrop-filter:blur(10px);
+  color:rgba(255,255,255,.86);
+  border-radius:999px;
+  padding:8px 12px;
+  font:600 12px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.05em;
+  text-transform:lowercase;
+}
+
+.skiplink{
+  position:absolute;
+  left:-9999px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+.skiplink:focus{
+  left:12px;
+  top:12px;
+  z-index:100;
+  width:auto;
+  height:auto;
+  background:#111;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:12px;
+}
+
+.hubShell{
+  position:relative;
+  z-index:1;
+  width:min(calc(100% - 28px), var(--hub-max));
+  margin-inline:auto;
+}
+
+.hubTop{
+  padding-top:18px;
+}
+
+.hubBar{
+  display:flex;
+  gap:16px;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  border:1px solid var(--glass-stroke);
+  background:var(--glass-bg);
+  backdrop-filter:blur(var(--blur));
+  border-radius:26px;
+  box-shadow:0 18px 48px rgba(0,0,0,.16);
+}
+
+.hubBrand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.hubBrandMark{
+  width:16px;
+  height:16px;
+  transform:rotate(45deg);
+  border:1px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.06);
+  flex:0 0 auto;
+}
+
+.hubBrandCopy{
+  min-width:0;
+}
+
+.hubKicker{
+  margin:0 0 4px;
+  color:var(--muted);
+  font:700 11px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.hubName{
+  margin:0;
+  font:700 15px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.hubNav{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.hubNav a{
+  color:inherit;
+  text-decoration:none;
+  padding:10px 12px;
+  border-radius:14px;
+  font:600 13px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+.hubNav a:hover,
+.hubNav a[aria-current="page"]{
+  background:rgba(255,255,255,.06);
+}
+
+.hubMain{
+  min-height:calc(100vh - 96px);
+  padding:28px 0 30px;
+  display:grid;
+  gap:18px;
+  align-content:center;
+}
+
+.heroCard{
+  max-width:760px;
+  padding:30px;
+  border:1px solid var(--glass-stroke);
+  background:var(--glass-bg);
+  backdrop-filter:blur(var(--blur));
+  border-radius:30px;
+  box-shadow:0 26px 72px rgba(0,0,0,.22);
+}
+
+.heroEyebrow{
+  margin:0 0 10px;
+  color:var(--muted);
+  font:700 12px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.heroTitle{
+  margin:0 0 14px;
+  font:800 clamp(34px,6vw,72px)/.96 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:-.04em;
+}
+
+.heroBody{
+  margin:0;
+  max-width:58ch;
+  color:var(--muted);
+  font:400 clamp(16px,2vw,19px)/1.58 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+.heroActions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:22px;
+}
+
+.heroButton{
+  color:inherit;
+  text-decoration:none;
+  border:1px solid var(--glass-stroke);
+  background:rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:12px 16px;
+  font:700 13px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.heroButtonPrimary{
+  background:rgba(255,255,255,.12);
+}
+
+.heroMeta{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:22px;
+}
+
+.metaCard{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:14px;
+  border:1px solid var(--soft);
+  background:rgba(255,255,255,.03);
+  border-radius:18px;
+}
+
+.metaLabel{
+  color:var(--muted);
+  font:700 11px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.metaValue{
+  font:600 14px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+.nodeBand{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+
+.nodeCard{
+  padding:18px;
+  border:1px solid var(--soft);
+  background:rgba(255,255,255,.03);
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+}
+
+.nodeFace{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:52px;
+  min-height:28px;
+  padding:0 10px;
+  border:1px solid var(--glass-stroke);
+  border-radius:999px;
+  color:var(--muted);
+  font:700 11px/1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.nodeCard h3{
+  margin:12px 0 8px;
+  font:700 18px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+.nodeCard p{
+  margin:0;
+  color:var(--muted);
+  font:400 14px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+
+@media (max-width:1020px){
+  .heroMeta{
+    grid-template-columns:1fr;
+  }
+
+  .nodeBand{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width:760px){
+  .hubBar{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .hubNav{
+    justify-content:flex-start;
+  }
+
+  .sceneHud{
+    left:10px;
+    right:10px;
+    bottom:10px;
+    justify-content:flex-start;
+  }
+}
+
+@media (max-width:640px){
+  .hubShell{
+    width:min(calc(100% - 18px), var(--hub-max));
+  }
+
+  .heroCard{
+    padding:22px;
+    border-radius:24px;
+  }
+
+  .nodeBand{
+    grid-template-columns:1fr;
+  }
+}

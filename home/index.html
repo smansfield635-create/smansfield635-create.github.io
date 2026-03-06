@@ -4,52 +4,51 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home</title>
-<meta name="description" content="Launchpad surface for Diamond Gate Bridge.">
+<meta name="description" content="Launchpad surface.">
 <link rel="stylesheet" href="/variant/styles.css">
 </head>
 <body data-page="home">
-
 <canvas id="scene" aria-hidden="true"></canvas>
 
-<header class="topRail" aria-label="Top controls">
-  <div class="brandBlock">
-    <p class="brandKicker">Launchpad</p>
-    <p class="brandTitle">Where do you want to go next?</p>
+<header class="toprail">
+  <div class="brand">
+    <div class="brand-kicker" data-i18n="home.kicker">Launchpad</div>
+    <div class="brand-title" data-i18n="home.title">Where do you want to go next?</div>
   </div>
 
-  <div class="toggleWrap">
-    <div class="toggleGroup" role="group" aria-label="Language">
-      <button class="toggleBtn small on" id="btnEN" type="button">EN</button>
-      <button class="toggleBtn small" id="btnZH" type="button">中文</button>
-      <button class="toggleBtn small" id="btnES" type="button">ES</button>
+  <div class="toprail-controls">
+    <div class="chipset" aria-label="Language">
+      <button class="chip" data-lang="en" type="button">EN</button>
+      <button class="chip" data-lang="zh" type="button">中文</button>
+      <button class="chip" data-lang="es" type="button">ES</button>
     </div>
   </div>
 </header>
 
 <main class="shell">
-  <section class="heroPanel" aria-labelledby="homeTitle">
-    <p class="heroEyebrow" id="homeKicker">Home</p>
-    <h1 id="homeTitle">Where do you want to go next?</h1>
-    <p class="heroBody" id="homeTag">
-      Home is the fast lane. It does not teach taxonomy. It routes you to the next surface with one clean choice.
+  <section class="hero">
+    <div class="hero-kicker" data-i18n="home.heroKicker">Home Surface</div>
+    <h1 class="hero-title" data-i18n="home.heroTitle">Where do you want to go next?</h1>
+    <p class="hero-body" data-i18n="home.heroBody">
+      Home is the fast lane. It routes you to the next surface with one clean choice.
     </p>
-    <div class="heroRule" id="homeRule">
-      Rule: open one block, read one paragraph, then jump. If you want the big table first, go to Door.
+    <div class="hero-rule" data-i18n="home.rule">
+      Rule: open one block, read one paragraph, then jump.
     </div>
   </section>
 
-  <section class="launchSection">
-    <div class="launchBand" id="bandLabel">Surfaces (open one)</div>
-    <div class="stack" id="stack"></div>
+  <section class="launchpad">
+    <div class="band" data-i18n="home.band">Surfaces (open one)</div>
+    <div class="accordion" id="accordion"></div>
   </section>
 </main>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="dockBtn" id="dockCompass" href="/index.html">Compass</a>
-  <a class="dockBtn" id="dockProducts" href="/products/">Products</a>
-  <a class="dockBtn" id="dockExplore" href="/explore/">Explore</a>
-  <a class="dockBtn" id="dockLaws" href="/laws/">Laws</a>
-  <a class="dockBtn" id="dockGauges" href="/gauges/">Gauges</a>
+<nav class="dock">
+  <button class="dock-btn" data-route="/index.html" type="button" data-i18n="common.compass">Compass</button>
+  <button class="dock-btn" data-route="/products/" type="button" data-i18n="common.products">Products</button>
+  <button class="dock-btn" data-route="/explore/" type="button" data-i18n="common.explore">Explore</button>
+  <button class="dock-btn" data-route="/laws/" type="button" data-i18n="common.laws">Laws</button>
+  <button class="dock-btn" data-route="/gauges/" type="button" data-i18n="common.gauges">Gauges</button>
 </nav>
 
 <script src="/variant/index.js"></script>

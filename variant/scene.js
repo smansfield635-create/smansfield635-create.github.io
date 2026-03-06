@@ -1,13 +1,41 @@
 (function(){
   "use strict";
 
-  const canvas = document.getElementById("scene");
+  const PAGE = document.body.dataset.page || "index";
+  const canvas = document.getElementById("bgCanvas");
   if (!canvas) return;
-  const ctx = canvas.getContext("2d", { alpha: true });
+  const ctx = canvas.getContext("2d", { alpha:true });
+
+  const FACE_DEFS = [
+    { key:"N",  label:{en:"Governance",zh:"治理",es:"Gobernanza"}, code:"N",  route:"/governance/",          rx: 58, ry:   0 },
+    { key:"E",  label:{en:"Finance",zh:"金融",es:"Finanzas"},      code:"E",  route:"/finance/",             rx:  0, ry:  90 },
+    { key:"S",  label:{en:"Energy",zh:"能源",es:"Energía"},       code:"S",  route:"/energy/",              rx:-58, ry:   0 },
+    { key:"W",  label:{en:"Medical",zh:"医疗",es:"Médico"},       code:"W",  route:"/medical/",             rx:  0, ry: -90 },
+
+    { key:"NSTAR", label:{en:"Verification",zh:"核验",es:"Verificación"}, code:"N★", route:"/verification/",    rx: 58, ry:  90 },
+    { key:"ESTAR", label:{en:"Software",zh:"软件",es:"Software"},          code:"E★", route:"/software/",        rx:  0, ry:  45 },
+    { key:"SSTAR", label:{en:"Education",zh:"教育",es:"Educación"},        code:"S★", route:"/education/",       rx:-58, ry: -90 },
+    { key:"WSTAR", label:{en:"Gauges",zh:"量规",es:"Medidores"},           code:"W★", route:"/gauges/",          rx:  0, ry:-135 },
+
+    { key:"NE", label:{en:"Gov × Fin",zh:"治理×金融",es:"Gob × Fin"},      code:"NE", route:"/governance-finance/", rx: 30, ry:  45 },
+    { key:"NW", label:{en:"Gov × Med",zh:"治理×医疗",es:"Gob × Med"},      code:"NW", route:"/governance-medical/", rx: 30, ry: -45 },
+    { key:"SE", label:{en:"Fin × Energy",zh:"金融×能源",es:"Fin × Energía"}, code:"SE", route:"/finance-energy/", rx:-30, ry: 135 },
+    { key:"SW", label:{en:"Energy × Med",zh:"能源×医疗",es:"Energía × Méd"}, code:"SW", route:"/energy-medical/", rx:-30, ry:-135 }
+  ];
 
   const state = {
-    tick: 0
+    tick: 0,
+    spinning: true,
+    rotX: -18,
+    rotY: 0,
+    targetRotX: -18,
+    targetRotY: 0,
+    selected: null,
+    lang: (new URLSearchParams(location.search).get("lang") || localStorage.getItem("gd_lang") || "en")
   };
+
+  let polyObject = null;
+  let faceMap = new Map();
 
   function resize(){
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -15,259 +43,181 @@
     canvas.height = Math.floor(window.innerHeight * dpr);
     canvas.style.width = window.innerWidth + "px";
     canvas.style.height = window.innerHeight + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   }
 
-  function drawSky(w,h){
+  function drawBg(w,h,t){
     const g = ctx.createLinearGradient(0,0,0,h);
-    g.addColorStop(0, "#260b0b");
-    g.addColorStop(0.30, "#7d1d15");
-    g.addColorStop(0.68, "#d34e24");
-    g.addColorStop(1, "#41130e");
+    g.addColorStop(0,"#260b0b");
+    g.addColorStop(0.30,"#7d1d15");
+    g.addColorStop(0.68,"#d34e24");
+    g.addColorStop(1,"#41130e");
     ctx.fillStyle = g;
     ctx.fillRect(0,0,w,h);
 
-    const rg = ctx.createRadialGradient(w*0.5, h*0.34, 0, w*0.5, h*0.34, Math.max(w,h)*0.72);
-    rg.addColorStop(0, "rgba(255,228,180,0.18)");
-    rg.addColorStop(0.30, "rgba(255,195,120,0.07)");
-    rg.addColorStop(1, "rgba(0,0,0,0)");
+    const rg = ctx.createRadialGradient(w*0.52,h*0.35,0,w*0.52,h*0.35,Math.max(w,h)*0.72);
+    rg.addColorStop(0,"rgba(255,228,180,0.18)");
+    rg.addColorStop(0.30,"rgba(255,195,120,0.07)");
+    rg.addColorStop(1,"rgba(0,0,0,0)");
     ctx.fillStyle = rg;
     ctx.fillRect(0,0,w,h);
-  }
 
-  function drawMoon(w,h){
-    const x = w * 0.76;
-    const y = h * 0.18;
-    const r = Math.max(24, Math.min(w,h) * 0.036);
+    const moonX = w * 0.80;
+    const moonY = h * 0.18;
+    const moonR = Math.max(22, Math.min(w,h) * 0.034);
 
-    const glow = ctx.createRadialGradient(x,y,0,x,y,r*2.4);
-    glow.addColorStop(0, "rgba(255,245,215,.42)");
-    glow.addColorStop(0.45, "rgba(255,228,170,.18)");
-    glow.addColorStop(1, "rgba(255,220,170,0)");
+    const glow = ctx.createRadialGradient(moonX,moonY,0,moonX,moonY,moonR*2.6);
+    glow.addColorStop(0,"rgba(255,245,215,.42)");
+    glow.addColorStop(0.45,"rgba(255,228,170,.18)");
+    glow.addColorStop(1,"rgba(255,220,170,0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(x,y,r*2.4,0,Math.PI*2);
+    ctx.arc(moonX,moonY,moonR*2.6,0,Math.PI*2);
     ctx.fill();
 
     ctx.fillStyle = "rgba(220,220,205,.95)";
     ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fill();
-  }
-
-  function drawCompass(w,h,t){
-    const cx = w * 0.50;
-    const cy = h * 0.56;
-    const r = Math.min(w,h) * 0.305;
-
-    const dome = ctx.createRadialGradient(cx, cy-r*0.30, 0, cx, cy, r*1.18);
-    dome.addColorStop(0, "rgba(255,245,230,.12)");
-    dome.addColorStop(0.32, "rgba(255,205,150,.07)");
-    dome.addColorStop(0.76, "rgba(82,22,16,.18)");
-    dome.addColorStop(1, "rgba(18,8,10,.36)");
-    ctx.fillStyle = dome;
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.arc(moonX,moonY,moonR,0,Math.PI*2);
     ctx.fill();
 
-    for(let i=0;i<52;i++){
-      const a = -Math.PI/2 + (i/52) * Math.PI*2;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(cx + Math.cos(a)*r*0.98, cy + Math.sin(a)*r*0.98);
-      ctx.strokeStyle = "rgba(255,245,230,0.08)";
-      ctx.lineWidth = 1.1;
-      ctx.stroke();
-    }
-
-    for(let i=1;i<=5;i++){
-      ctx.beginPath();
-      ctx.arc(cx, cy, r*(i/5), 0, Math.PI*2);
-      ctx.strokeStyle = "rgba(255,245,230," + (0.035 + i*0.01) + ")";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-
-    for(let i=0;i<80;i++){
-      const frac = i / 79;
-      const a = frac * Math.PI*2;
-      const wav = Math.sin(frac*14 - t*1.8) * 8 + Math.sin(frac*7 - t*1.1) * 5;
-      const rr = r * (0.08 + frac*0.88) + wav;
-      ctx.beginPath();
-      ctx.arc(cx, cy, rr, a, a + Math.PI/2.85);
-      ctx.strokeStyle = "rgba(255,232,195," + (0.028 + frac*0.05) + ")";
-      ctx.lineWidth = 1.15;
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.strokeStyle = "rgba(255,248,235,.12)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(235,199,120,.95)";
-    ctx.font = "800 14px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("N", cx, cy-r-18);
-    ctx.fillText("E", cx+r+18, cy);
-    ctx.fillText("S", cx, cy+r+18);
-    ctx.fillText("W", cx-r-18, cy);
-  }
-
-  function drawWater(w,h,t){
-    const y0 = h * 0.72;
-    const g = ctx.createLinearGradient(0,y0,0,h);
-    g.addColorStop(0, "rgba(255,225,185,.08)");
-    g.addColorStop(0.5, "rgba(230,175,128,.14)");
-    g.addColorStop(1, "rgba(90,30,18,.28)");
-    ctx.fillStyle = g;
+    const y0 = h * 0.78;
+    const wg = ctx.createLinearGradient(0,y0,0,h);
+    wg.addColorStop(0,"rgba(255,225,185,.06)");
+    wg.addColorStop(0.5,"rgba(230,175,128,.12)");
+    wg.addColorStop(1,"rgba(90,30,18,.24)");
+    ctx.fillStyle = wg;
     ctx.fillRect(0,y0,w,h-y0);
 
     for(let row=0; row<5; row++){
-      const yy = y0 + row*22;
+      const yy = y0 + row*18;
       ctx.beginPath();
       for(let x=0; x<=w; x+=12){
-        const y = yy + Math.sin(x*0.014 + t*1.0 + row*0.5) * (5 + row*2.2);
+        const y = yy + Math.sin(x*0.015 + t*0.9 + row*0.5) * (5 + row*1.8);
         if(x===0) ctx.moveTo(x,y);
         else ctx.lineTo(x,y);
       }
-      ctx.strokeStyle = "rgba(255,235,210," + (0.055 + row*0.022) + ")";
+      ctx.strokeStyle = "rgba(255,235,210," + (0.05 + row*0.02) + ")";
       ctx.lineWidth = 1.1;
       ctx.stroke();
     }
   }
 
-  function dragonBody(dir, offsetY, offsetPhase){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const progress = ((state.tick * 0.00062) + offsetPhase) % 1;
-    const headStart = dir > 0 ? -w * 0.32 : w * 1.32;
-    const headEnd = dir > 0 ? w * 1.32 : -w * 0.32;
-    const headX = headStart + (headEnd - headStart) * progress;
-    const baseY = h * 0.31 + offsetY;
-    const segs = 34;
-    const spacing = 18;
-    const pts = [];
+  function buildPolyhedron(){
+    if (PAGE !== "index") return;
+    const mount = document.getElementById("polyObject");
+    if (!mount) return;
+    polyObject = mount;
+    mount.innerHTML = "";
+    faceMap.clear();
 
-    for(let i=0;i<segs;i++){
-      const x = headX - dir * i * spacing;
-      const y = baseY
-        + Math.sin((progress*6.0 + i*0.13 + state.tick*0.028) * Math.PI) * 24
-        + Math.sin((progress*14.0 + i*0.22 + state.tick*0.013) * Math.PI) * 8;
-      const size = Math.max(5, 18 - i*0.34);
-      pts.push({ x, y, size });
-    }
-    return pts;
+    FACE_DEFS.forEach(function(face){
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = "face";
+      el.dataset.key = face.key;
+      el.innerHTML =
+        '<div class="face-shell"></div>' +
+        '<div class="face-label">' +
+          '<div class="face-word"></div>' +
+          '<div class="face-code">' + face.code + '</div>' +
+        '</div>';
+
+      const shell = el.querySelector(".face-shell");
+      const label = el.querySelector(".face-word");
+      label.textContent = face.label[state.lang] || face.label.en;
+
+      const z = 142;
+      el.style.transform =
+        "translate(-50%,-50%) rotateY(" + face.ry + "deg) rotateX(" + face.rx + "deg) translateZ(" + z + "px)";
+
+      el.addEventListener("click", function(){
+        onFaceClick(face, el);
+      });
+
+      mount.appendChild(el);
+      faceMap.set(face.key, { data:face, el:el, label:label, shell:shell });
+    });
   }
 
-  function drawDragon(pts, palette, dir){
-    const upper = [];
-    const lower = [];
-
-    for(let i=0;i<pts.length;i++){
-      const p = pts[i];
-      const prev = pts[Math.max(0, i-1)];
-      const next = pts[Math.min(pts.length-1, i+1)];
-      const dx = next.x - prev.x;
-      const dy = next.y - prev.y;
-      const len = Math.max(1, Math.hypot(dx, dy));
-      const nx = -dy / len;
-      const ny = dx / len;
-
-      upper.push({ x: p.x + nx * p.size, y: p.y + ny * p.size });
-      lower.push({ x: p.x - nx * p.size, y: p.y - ny * p.size });
-    }
-
-    ctx.beginPath();
-    ctx.moveTo(upper[0].x, upper[0].y);
-    for(let i=1;i<upper.length;i++) ctx.lineTo(upper[i].x, upper[i].y);
-    for(let i=lower.length-1;i>=0;i--) ctx.lineTo(lower[i].x, lower[i].y);
-    ctx.closePath();
-
-    const grad = ctx.createLinearGradient(pts[0].x, pts[0].y, pts[pts.length-1].x, pts[pts.length-1].y);
-    grad.addColorStop(0, palette[0]);
-    grad.addColorStop(0.55, palette[1]);
-    grad.addColorStop(1, palette[2]);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(12,12,12,.92)";
-    ctx.lineWidth = 2.2;
-    ctx.stroke();
-
-    const head = pts[0];
-    ctx.beginPath();
-    ctx.arc(head.x, head.y, head.size*0.9, 0, Math.PI*2);
-    ctx.fillStyle = palette[1];
-    ctx.fill();
-    ctx.strokeStyle = "rgba(12,12,12,.94)";
-    ctx.lineWidth = 2.3;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(head.x + dir*head.size*0.40, head.y);
-    ctx.lineTo(head.x + dir*head.size*1.40, head.y - head.size*0.22);
-    ctx.lineTo(head.x + dir*head.size*1.12, head.y + head.size*0.20);
-    ctx.closePath();
-    ctx.fillStyle = palette[1];
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(head.x - dir*head.size*0.10, head.y - head.size*0.14);
-    ctx.lineTo(head.x + dir*head.size*0.58, head.y - head.size*1.05);
-    ctx.lineTo(head.x + dir*head.size*0.16, head.y - head.size*1.30);
-    ctx.strokeStyle = "rgba(240,220,150,.76)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
+  function updateFaceLabels(){
+    faceMap.forEach(function(v){
+      v.label.textContent = v.data.label[state.lang] || v.data.label.en;
+    });
   }
 
-  function drawReflections(){
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const y0 = h * 0.74;
+  function onFaceClick(face, el){
+    if (state.selected === face.key){
+      window.dispatchEvent(new CustomEvent("dgb:face-enter", { detail:{ face:face } }));
+      return;
+    }
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(0, y0, w, h-y0);
-    ctx.clip();
-    ctx.globalAlpha = 0.15;
-    ctx.translate(0, h*1.48);
-    ctx.scale(1, -0.34);
+    state.selected = face.key;
+    state.spinning = false;
+    state.targetRotX = -face.rx;
+    state.targetRotY = -face.ry;
 
-    const wise = dragonBody(1, -28, 0.00);
-    const fear = dragonBody(-1, 44, 0.22);
+    faceMap.forEach(function(v){
+      v.el.classList.toggle("active", v.data.key === face.key);
+    });
 
-    drawDragon(wise, ["rgba(70,150,105,.18)","rgba(28,110,64,.24)","rgba(14,52,30,.20)"], 1);
-    drawDragon(fear, ["rgba(150,40,32,.18)","rgba(110,10,12,.24)","rgba(52,8,10,.20)"], -1);
+    window.dispatchEvent(new CustomEvent("dgb:face-focus", { detail:{ face:{
+      key:face.key,
+      label:face.label[state.lang] || face.label.en,
+      route:face.route
+    }}}));
+  }
 
-    ctx.restore();
+  function resume(){
+    state.selected = null;
+    state.spinning = true;
+    faceMap.forEach(function(v){
+      v.el.classList.remove("active");
+    });
+  }
+
+  function stepPoly(){
+    if (!polyObject) return;
+
+    if (state.spinning){
+      state.rotY += 0.18;
+      state.rotX = -16 + Math.sin(state.tick * 0.008) * 6;
+      state.targetRotX = state.rotX;
+      state.targetRotY = state.rotY;
+    }else{
+      state.rotX += (state.targetRotX - state.rotX) * 0.10;
+      state.rotY += (state.targetRotY - state.rotY) * 0.10;
+    }
+
+    polyObject.style.transform =
+      "rotateX(" + state.rotX + "deg) rotateY(" + state.rotY + "deg)";
   }
 
   function frame(){
     state.tick += 1;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-
-    ctx.clearRect(0,0,w,h);
-    drawSky(w,h);
-    drawMoon(w,h);
-    drawWater(w,h, state.tick * 0.012);
-    drawCompass(w,h, state.tick * 0.012);
-
-    const wise = dragonBody(1, -28, 0.00);
-    const fear = dragonBody(-1, 44, 0.22);
-
-    drawDragon(wise, ["rgba(55,160,90,.95)","rgba(26,122,54,.98)","rgba(12,70,30,.98)"], 1);
-    drawDragon(fear, ["rgba(178,32,30,.96)","rgba(142,10,12,.98)","rgba(84,8,10,.98)"], -1);
-
-    drawReflections();
+    drawBg(window.innerWidth, window.innerHeight, state.tick * 0.012);
+    stepPoly();
     requestAnimationFrame(frame);
   }
 
+  window.__DGB_RENDER__ = {
+    resume
+  };
+
+  window.addEventListener("dgb:update-face-labels", function(e){
+    state.lang = e.detail.lang || state.lang;
+    updateFaceLabels();
+    if (state.selected && faceMap.has(state.selected)){
+      const face = faceMap.get(state.selected).data;
+      window.dispatchEvent(new CustomEvent("dgb:face-focus", { detail:{ face:{
+        key:face.key,
+        label:face.label[state.lang] || face.label.en,
+        route:face.route
+      }}}));
+    }
+  });
+
   resize();
   window.addEventListener("resize", resize);
+  buildPolyhedron();
   frame();
 })();

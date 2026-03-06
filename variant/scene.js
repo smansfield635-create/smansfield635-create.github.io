@@ -5,11 +5,11 @@ const ctx=canvas.getContext("2d");
 if(!ctx)return;
 
 const DOMAIN_MAP={
-N:{label:"LAWS",short:"N",fill:"rgba(198,46,46,0.98)",glow:"rgba(255,120,90,0.46)"},
-E:{label:"ENERGY",short:"E",fill:"rgba(214,162,58,0.98)",glow:"rgba(255,220,120,0.44)"},
-S:{label:"FINANCE",short:"S",fill:"rgba(86,180,176,0.98)",glow:"rgba(120,255,245,0.38)"},
-W:{label:"GOVERNANCE",short:"W",fill:"rgba(160,96,212,0.98)",glow:"rgba(215,170,255,0.38)"},
-C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.98)",glow:"rgba(255,255,255,0.42)"}
+N:{label:"LAWS",short:"N",fill:"rgba(198,46,46,0.34)",edge:"rgba(255,170,150,0.70)",glow:"rgba(255,120,90,0.24)"},
+E:{label:"ENERGY",short:"E",fill:"rgba(214,162,58,0.34)",edge:"rgba(255,235,170,0.72)",glow:"rgba(255,220,120,0.24)"},
+S:{label:"FINANCE",short:"S",fill:"rgba(86,180,176,0.30)",edge:"rgba(190,255,246,0.72)",glow:"rgba(120,255,245,0.22)"},
+W:{label:"GOVERNANCE",short:"W",fill:"rgba(160,96,212,0.30)",edge:"rgba(232,210,255,0.72)",glow:"rgba(215,170,255,0.22)"},
+C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.22)",edge:"rgba(255,255,255,0.84)",glow:"rgba(255,255,255,0.22)"}
 };
 
 const TAU=Math.PI*2;
@@ -20,10 +20,8 @@ activeLayer:1,
 activeDirection:null,
 hoveredRegion:null,
 compassReveal:0,
-morphProgress:0,
 pointer:{x:0,y:0,down:false},
 faceZones:{},
-gemZones:{},
 rotY:0,
 fireworks:[],
 lanterns:[],
@@ -35,12 +33,7 @@ function lerp(a,b,t){return a+(b-a)*t;}
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
-function rgba(r,g,b,a){return `rgba(${r},${g},${b},${a})`;}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
-function normalize(x,y){
-const d=Math.sqrt(x*x+y*y)||1;
-return{x:x/d,y:y/d};
-}
 
 function roundedRectPath(x,y,w,h,r){
 const rr=Math.min(r,w*0.5,h*0.5);
@@ -75,7 +68,7 @@ window.addEventListener("orientationchange",resize,{passive:true});
 function initLanterns(){
 const w=window.innerWidth||1;
 const h=window.innerHeight||1;
-const count=Math.max(12,Math.round(w/145));
+const count=Math.max(12,Math.round(w/150));
 state.lanterns=[];
 for(let i=0;i<count;i++){
 const seed=i+1;
@@ -114,10 +107,6 @@ if(hit)inside=!inside;
 return inside;
 }
 
-function diamondContains(x,y,node){
-return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
-}
-
 function spawnFirework(x,y,count,sizeBase){
 const particles=[];
 for(let i=0;i<count;i++){
@@ -140,15 +129,6 @@ spawnFirework(w*0.22,h*0.24,22,2.1);
 spawnFirework(w*0.78,h*0.22,24,2.3);
 }
 
-function spawnDirectionFirework(dir){
-const gem=state.gemZones[dir];
-if(gem){
-spawnFirework(gem.x,gem.y,18,1.8);
-return;
-}
-spawnFirework(window.innerWidth*0.5,window.innerHeight*0.4,18,1.8);
-}
-
 function setLayer(n){
 const next=Number(n)===2?2:1;
 if(state.activeLayer!==next&&next===2)spawnTransitionFireworks();
@@ -165,7 +145,10 @@ if(state.activeLayer!==2){
 state.activeLayer=2;
 spawnTransitionFireworks();
 }
-spawnDirectionFirework(dir);
+const geo=state.cube;
+if(geo&&geo.faceCenters[dir]){
+spawnFirework(geo.faceCenters[dir].x,geo.faceCenters[dir].y,18,1.8);
+}
 }
 
 window.renderEngine={
@@ -361,14 +344,20 @@ scale
 function rotateVertex(x,y,z,rotY,tiltX){
 const cy=Math.cos(rotY),sy=Math.sin(rotY);
 const cx=Math.cos(tiltX),sx=Math.sin(tiltX);
-
 const x1=x*cy-z*sy;
 const z1=x*sy+z*cy;
-
 const y2=y*cx-z1*sx;
 const z2=y*sx+z1*cx;
-
 return{x:x1,y:y2,z:z2};
+}
+
+function polyCenter(poly){
+let x=0,y=0;
+for(let i=0;i<poly.length;i++){
+x+=poly[i].x;
+y+=poly[i].y;
+}
+return{x:x/poly.length,y:y/poly.length};
 }
 
 function getCubeGeometry(){
@@ -405,13 +394,17 @@ const faces2D={
 C:[pts[4],pts[5],pts[6],pts[7]],
 W:[pts[0],pts[3],pts[7],pts[4]],
 E:[pts[1],pts[2],pts[6],pts[5]],
-N:[pts[3],pts[2],pts[6],pts[7]]
+N:[pts[3],pts[2],pts[6],pts[7]],
+S:[pts[0],pts[1],pts[5],pts[4]]
 };
 
 const renderFaces=Object.entries(faces3D).map(([key,idxs])=>{
 const avgZ=(rotated[idxs[0]].z+rotated[idxs[1]].z+rotated[idxs[2]].z+rotated[idxs[3]].z)/4;
 return{key,idxs,avgZ};
 }).sort((a,b)=>a.avgZ-b.avgZ);
+
+const faceCenters={};
+for(const k of Object.keys(faces2D))faceCenters[k]=polyCenter(faces2D[k]);
 
 const centerX=(pts[4].x+pts[5].x+pts[6].x+pts[7].x)/4;
 const centerY=(pts[4].y+pts[5].y+pts[6].y+pts[7].y)/4;
@@ -422,6 +415,7 @@ rotated,
 edges,
 faces:faces2D,
 renderFaces,
+faceCenters,
 centerX,
 centerY,
 size,
@@ -437,10 +431,36 @@ if(key==="BOTTOM")return "rgba(35,0,0,0.12)";
 return "rgba(70,0,0,0.10)";
 }
 
+function drawFaceGem(poly,dir,active,hover,reveal){
+const spec=DOMAIN_MAP[dir];
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(poly[0].x,poly[0].y);
+for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
+ctx.closePath();
+ctx.fillStyle=spec.fill;
+ctx.globalAlpha=(0.45+0.25*reveal)+(active?0.12:0)+(hover?0.06:0);
+ctx.fill();
+
+ctx.lineWidth=active?2.6:1.6;
+ctx.strokeStyle=active?spec.edge:"rgba(255,215,150,0.22)";
+ctx.stroke();
+ctx.restore();
+
+const c=polyCenter(poly);
+ctx.save();
+ctx.globalAlpha=0.88*reveal;
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillStyle="rgba(255,250,240,0.96)";
+ctx.font=`700 ${dir==="C"?"10":"9"}px system-ui,Segoe UI,Roboto,sans-serif`;
+ctx.fillText(DOMAIN_MAP[dir].short,c.x,c.y);
+ctx.restore();
+}
+
 function drawCube(geo){
 state.faceZones=geo.faces;
-const hovered=state.hoveredRegion;
-const selected=state.activeDirection;
+const reveal=easeOutCubic(state.compassReveal);
 
 for(const face of geo.renderFaces){
 const poly=face.idxs.map(i=>geo.pts[i]);
@@ -457,17 +477,12 @@ ctx.fill();
 ctx.restore();
 }
 
-for(const key of ["W","E","N","C"]){
-const poly=geo.faces[key];
-const isHot=hovered===key||selected===key||(selected==="C"&&key==="C");
-ctx.save();
-ctx.beginPath();
-ctx.moveTo(poly[0].x,poly[0].y);
-for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
-ctx.closePath();
-ctx.fillStyle=isHot?"rgba(255,215,0,0.06)":"rgba(255,255,255,0)";
-ctx.fill();
-ctx.restore();
+if(reveal>0.001){
+for(const dir of ["W","E","N","S","C"]){
+const poly=geo.faces[dir];
+if(!poly)continue;
+drawFaceGem(poly,dir,state.activeDirection===dir,state.hoveredRegion===dir,reveal);
+}
 }
 
 ctx.save();
@@ -485,202 +500,44 @@ ctx.stroke();
 ctx.restore();
 }
 
-function gemAnchorMap(){
-return{
-N:{x:0,y:0.88,z:0.34},
-W:{x:-0.88,y:0,z:0.34},
-C:{x:0,y:0,z:1.08},
-E:{x:0.88,y:0,z:0.34},
-S:{x:0,y:-0.88,z:0.34}
-};
-}
-
-function drawGem(x,y,size,fill,glow,active,hover){
-ctx.save();
-ctx.translate(x,y);
-ctx.shadowBlur=active?24:(hover?18:12);
-ctx.shadowColor=glow;
-ctx.fillStyle=fill;
-ctx.beginPath();
-ctx.moveTo(0,-size);
-ctx.lineTo(size*0.78,0);
-ctx.lineTo(0,size);
-ctx.lineTo(-size*0.78,0);
-ctx.closePath();
-ctx.fill();
-
-ctx.fillStyle="rgba(255,255,255,0.18)";
-ctx.beginPath();
-ctx.moveTo(0,-size*0.72);
-ctx.lineTo(size*0.24,-size*0.10);
-ctx.lineTo(-size*0.24,-size*0.10);
-ctx.closePath();
-ctx.fill();
-
-ctx.lineWidth=active?2.2:1.4;
-ctx.strokeStyle=active?"rgba(255,250,238,0.96)":"rgba(255,245,225,0.70)";
-ctx.stroke();
-ctx.restore();
-}
-
-function drawEmbeddedGems(geo){
-const reveal=easeOutCubic(state.compassReveal);
-state.gemZones={};
-if(reveal<=0.001)return;
-
-const anchors=gemAnchorMap();
-for(const key of ["N","W","C","E","S"]){
-const a=anchors[key];
-const size=geo.size*0.14*(key==="C"?1.10:0.92);
-const p=rotateVertex(a.x*geo.size,a.y*geo.size,a.z*geo.size,state.rotY,geo.tiltX);
-const proj=project(p.x,p.y,p.z);
-const active=state.activeDirection===key;
-const hover=state.hoveredRegion===key;
-const gemSize=size*proj.scale*reveal;
-
-state.gemZones[key]={
-x:proj.x,
-y:proj.y,
-hw:gemSize*0.92,
-hh:gemSize*1.02
-};
-
-drawGem(proj.x,proj.y,gemSize,DOMAIN_MAP[key].fill,DOMAIN_MAP[key].glow,active,hover);
-
-ctx.save();
-ctx.globalAlpha=0.94*reveal;
-ctx.textAlign="center";
-ctx.textBaseline="middle";
-ctx.fillStyle="rgba(255,250,240,0.96)";
-ctx.font=`700 ${key==="C"?"10":"9"}px system-ui,Segoe UI,Roboto,sans-serif`;
-ctx.fillText(DOMAIN_MAP[key].short,proj.x,proj.y);
-ctx.restore();
-}
-}
-
-function expandedFacetPoints(){
-return[
-{x: 0.00,y: 1.22,z: 0.16},
-{x: 0.82,y: 0.84,z: 0.22},
-{x: 1.18,y: 0.00,z: 0.16},
-{x: 0.82,y:-0.84,z: 0.22},
-{x: 0.00,y:-1.22,z: 0.16},
-{x:-0.82,y:-0.84,z: 0.22},
-{x:-1.18,y: 0.00,z: 0.16},
-{x:-0.82,y: 0.84,z: 0.22},
-{x: 0.38,y: 0.50,z: 1.12},
-{x:-0.38,y: 0.50,z: 1.12},
-{x: 0.38,y:-0.50,z: 1.12},
-{x:-0.38,y:-0.50,z: 1.12}
-];
-}
-
-function drawMorphFacets(geo){
-const t=easeOutCubic(state.morphProgress);
-if(t<=0.001)return;
-const points=expandedFacetPoints();
-ctx.save();
-ctx.globalAlpha=0.18+0.52*t;
-for(let i=0;i<points.length;i++){
-const p=points[i];
-const rp=rotateVertex(p.x*geo.size,p.y*geo.size,p.z*geo.size,state.rotY,geo.tiltX);
-const pr=project(rp.x,rp.y,rp.z);
-const s=geo.size*0.072*pr.scale*lerp(0.70,1,t);
-ctx.save();
-ctx.translate(pr.x,pr.y);
-ctx.rotate(Math.PI/4+(i*0.12));
-ctx.shadowBlur=10+10*t;
-ctx.shadowColor="rgba(255,225,180,0.20)";
-ctx.fillStyle=i<8?"rgba(185,62,48,0.48)":"rgba(242,220,170,0.36)";
-roundedRectPath(-s,-s,s*2,s*2,s*0.24);
-ctx.fill();
-ctx.lineWidth=1.2;
-ctx.strokeStyle="rgba(255,235,200,0.58)";
-ctx.stroke();
-ctx.restore();
-}
-ctx.restore();
-}
-
-function dragonHeadPoint(path){return path(0);}
-function dragonPathPoint(t,mirror){
-const w=window.innerWidth;
-const h=window.innerHeight;
-const cx=w*0.5;
-const cy=h*0.45;
+function dragonPathPoint(geo,t,mirror){
+const cx=geo.centerX;
+const cy=geo.centerY;
 const dir=mirror?-1:1;
-
-if(t<0.18){
-const u=t/0.18;
-const startX=mirror?w+460:-460;
-const startY=cy+(mirror?-80:80);
-const endX=cx+dir*-280;
-const endY=cy+dir*18;
+const rX=geo.size*2.05;
+const rY=geo.size*0.98;
+const a=t*TAU*dir+(mirror?0:Math.PI);
+const bob=Math.sin(t*TAU*2.0+dir)*geo.size*0.06;
 return{
-x:lerp(startX,endX,u),
-y:lerp(startY,endY,u)+Math.sin(u*TAU*1.4+dir)*26,
-z:lerp(-0.8,-0.15,u)
+x:cx+Math.cos(a)*rX,
+y:cy+Math.sin(a)*rY*0.56+bob,
+z:Math.sin(a)*1.05,
+a
 };
 }
 
-if(t<0.68){
-const u=(t-0.18)/0.50;
-const a=(mirror?0:Math.PI)+(mirror?1:-1)*u*TAU*1.12;
-return{
-x:cx+Math.cos(a)*260,
-y:cy+Math.sin(a)*102+Math.sin(u*TAU*2.2+dir)*18,
-z:Math.sin(a+dir*0.8)*0.85
-};
-}
-
-if(t<0.86){
-const u=(t-0.68)/0.18;
-const startX=cx+dir*280;
-const startY=cy-dir*18;
-const endX=mirror?-460:w+460;
-const endY=cy+(mirror?76:-76);
-return{
-x:lerp(startX,endX,u),
-y:lerp(startY,endY,u)+Math.sin((u+0.2)*TAU+dir)*18,
-z:lerp(0.25,0.95,u)
-};
-}
-
-return null;
-}
-
-function buildDragonBody(mirror){
-const cycle=920;
-const t=(state.tick%cycle)/cycle;
-const head=dragonPathPoint(t,mirror);
-if(!head)return null;
-
+function buildDragonBody(geo,mirror){
+const t=((state.tick*0.0015)+(mirror?0:0.5))%1;
 const segments=[];
-const count=46;
+const count=44;
 for(let i=0;i<count;i++){
 const lag=i*0.0105;
 let tt=t-lag;
 while(tt<0)tt+=1;
-const p=dragonPathPoint(tt,mirror)||head;
-const motionBias=Math.sin((t*TAU*2.4)+(i*0.38)+(mirror?0:Math.PI))*5.5;
-const motionBiasY=Math.cos((t*TAU*1.6)+(i*0.32)+(mirror?0:Math.PI))*3.0;
+const p=dragonPathPoint(geo,tt,mirror);
+const ripple=Math.sin((t*TAU*3.0)+(i*0.42)+(mirror?0:Math.PI))*geo.size*0.022;
+const rippleY=Math.cos((t*TAU*2.0)+(i*0.31)+(mirror?0:Math.PI))*geo.size*0.015;
+const normal={x:-Math.sin(p.a)*dirSign(mirror),y:Math.cos(p.a)*0.30};
 segments.push({
-x:p.x+(mirror?-1:1)*motionBias,
-y:p.y+motionBiasY+(i*0.15*(mirror?1:-1)),
+x:p.x+normal.x*ripple,
+y:p.y+normal.y*ripple+rippleY,
 z:p.z
 });
 }
 return segments;
 }
 
-function projectDragonPoint(p){
-const depth=1.0+p.z*0.24;
-return{
-x:p.x,
-y:p.y,
-scale:depth
-};
-}
+function dirSign(mirror){return mirror?-1:1;}
 
 function drawScalePatch(x,y,a,sx,sy,color,alpha){
 ctx.save();
@@ -720,7 +577,6 @@ ctx.rotate(a);
 ctx.shadowBlur=18;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
-
 ctx.beginPath();
 ctx.moveTo(30,0);
 ctx.lineTo(12,-14);
@@ -774,7 +630,6 @@ ctx.lineTo(-26,17);
 ctx.lineTo(-19,5);
 ctx.closePath();
 ctx.fill();
-
 ctx.restore();
 
 drawWhisker(head.x+2,head.y+2,a,42,1,0.76);
@@ -804,23 +659,22 @@ ctx.restore();
 }
 }
 
-function drawDragon(points,baseFill,glowColor,accent){
+function drawDragonHalf(points,baseFill,glowColor,accent,front){
 if(!points||points.length<6)return;
 
-const projected=points.map(projectDragonPoint);
-
-for(let i=projected.length-1;i>=1;i--){
-const p=projected[i];
-const prev=projected[Math.max(0,i-1)];
-const next=projected[Math.min(projected.length-1,i+1)];
-const t=i/(projected.length-1);
-const depthScale=lerp(1.16,0.84,(points[i].z+1)/2);
-const r=lerp(34,5.8,t)*p.scale*depthScale;
+for(let i=points.length-1;i>=1;i--){
+const p=points[i];
+if(front?(p.z<0):(p.z>=0))continue;
+const prev=points[Math.max(0,i-1)];
+const next=points[Math.min(points.length-1,i+1)];
+const t=i/(points.length-1);
+const depthScale=lerp(1.18,0.84,(p.z+1)/2);
+const r=lerp(34,5.8,t)*depthScale;
 const a=angleBetween(prev,next);
 
 ctx.save();
-ctx.globalAlpha=(0.94-(t*0.22))*clamp(p.scale,0.72,1.28);
-ctx.shadowBlur=16*p.scale;
+ctx.globalAlpha=(0.94-(t*0.22))*clamp(1+p.z*0.16,0.72,1.26);
+ctx.shadowBlur=16*(1+p.z*0.10);
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 ctx.translate(p.x,p.y);
@@ -834,13 +688,14 @@ drawScalePatch(p.x,p.y-r*0.10,a,r*0.48,r*0.24,accent,0.34);
 drawScalePatch(p.x-r*0.22,p.y+r*0.06,a,r*0.32,r*0.18,"rgba(255,250,228,0.22)",0.22);
 }
 
-for(let i=3;i<projected.length-2;i+=2){
-const p=projected[i];
-const prev=projected[i-1];
-const next=projected[i+1];
+for(let i=3;i<points.length-2;i+=2){
+const p=points[i];
+if(front?(p.z<0):(p.z>=0))continue;
+const prev=points[i-1];
+const next=points[i+1];
 const a=angleBetween(prev,next);
-const t=i/(projected.length-1);
-const fin=lerp(12,2.4,t)*p.scale;
+const t=i/(points.length-1);
+const fin=lerp(12,2.4,t)*(1+p.z*0.10);
 ctx.save();
 ctx.translate(p.x,p.y);
 ctx.rotate(a);
@@ -855,25 +710,24 @@ ctx.fill();
 ctx.restore();
 }
 
-drawDragonHair(projected,glowColor);
-drawDragonHead(projected[0],projected[3],baseFill,glowColor,accent);
+if(front){
+drawDragonHair(points,glowColor);
+drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
+}
 }
 
-function dragons(){
-const fear=buildDragonBody(false);
-const love=buildDragonBody(true);
-drawDragon(
-fear,
-"rgba(128,18,18,0.92)",
-"rgba(210,62,40,0.52)",
-"rgba(255,132,72,0.72)"
-);
-drawDragon(
-love,
-"rgba(186,132,30,0.92)",
-"rgba(255,210,110,0.50)",
-"rgba(255,244,188,0.76)"
-);
+function dragonsBack(geo){
+const fear=buildDragonBody(geo,false);
+const love=buildDragonBody(geo,true);
+drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
+drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
+}
+
+function dragonsFront(geo){
+const fear=buildDragonBody(geo,false);
+const love=buildDragonBody(geo,true);
+drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
+drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
 }
 
 function fireworks(){
@@ -920,23 +774,19 @@ water();
 
 const geo=getCubeGeometry();
 state.cube=geo;
+
+dragonsBack(geo);
 drawCube(geo);
-drawMorphFacets(geo);
-dragons();
-drawEmbeddedGems(geo);
+dragonsFront(geo);
 fireworks();
 }
 
 function getRegionAt(x,y){
 if(state.activeLayer===2){
-for(const key of ["N","E","S","W","C"]){
-const gem=state.gemZones[key];
-if(gem&&diamondContains(x,y,gem))return key;
-}
-}
-for(const key of ["C","W","E","N"]){
+for(const key of ["C","W","E","N","S"]){
 const poly=state.faceZones[key];
 if(poly&&pointInPoly(x,y,poly))return key;
+}
 }
 return null;
 }
@@ -1019,9 +869,6 @@ state.tick++;
 state.rotY+=state.activeLayer===1?0.0030:0.0026;
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);
-
-const targetMorph=state.activeLayer===2&&state.activeDirection==="C"?1:0;
-state.morphProgress=lerp(state.morphProgress,targetMorph,0.06);
 
 if(state.activeLayer===2&&state.tick%320===0){
 spawnFirework(

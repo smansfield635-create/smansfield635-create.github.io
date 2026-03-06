@@ -5,11 +5,11 @@ const ctx=canvas.getContext("2d");
 if(!ctx)return;
 
 const DOMAIN_MAP={
-N:{label:"LAWS",short:"N",fill:"rgba(198,46,46,0.96)",glow:"rgba(255,120,90,0.42)"},
-E:{label:"ENERGY",short:"E",fill:"rgba(214,162,58,0.96)",glow:"rgba(255,220,120,0.40)"},
-S:{label:"FINANCE",short:"S",fill:"rgba(86,180,176,0.96)",glow:"rgba(120,255,245,0.34)"},
-W:{label:"GOVERNANCE",short:"W",fill:"rgba(160,96,212,0.96)",glow:"rgba(215,170,255,0.34)"},
-C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.98)",glow:"rgba(255,255,255,0.38)"}
+N:{label:"LAWS",short:"N",fill:"rgba(198,46,46,0.98)",glow:"rgba(255,120,90,0.46)"},
+E:{label:"ENERGY",short:"E",fill:"rgba(214,162,58,0.98)",glow:"rgba(255,220,120,0.44)"},
+S:{label:"FINANCE",short:"S",fill:"rgba(86,180,176,0.98)",glow:"rgba(120,255,245,0.38)"},
+W:{label:"GOVERNANCE",short:"W",fill:"rgba(160,96,212,0.98)",glow:"rgba(215,170,255,0.38)"},
+C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.98)",glow:"rgba(255,255,255,0.42)"}
 };
 
 const TAU=Math.PI*2;
@@ -20,6 +20,7 @@ activeLayer:1,
 activeDirection:null,
 hoveredRegion:null,
 compassReveal:0,
+morphProgress:0,
 pointer:{x:0,y:0,down:false},
 faceZones:{},
 gemZones:{},
@@ -32,12 +33,14 @@ cube:null
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function lerp(a,b,t){return a+(b-a)*t;}
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
-function easeInOutSine(t){return -(Math.cos(Math.PI*t)-1)/2;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function rgba(r,g,b,a){return `rgba(${r},${g},${b},${a})`;}
-function dist(ax,ay,bx,by){const dx=bx-ax,dy=by-ay;return Math.sqrt(dx*dx+dy*dy);}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
+function normalize(x,y){
+const d=Math.sqrt(x*x+y*y)||1;
+return{x:x/d,y:y/d};
+}
 
 function roundedRectPath(x,y,w,h,r){
 const rr=Math.min(r,w*0.5,h*0.5);
@@ -72,16 +75,16 @@ window.addEventListener("orientationchange",resize,{passive:true});
 function initLanterns(){
 const w=window.innerWidth||1;
 const h=window.innerHeight||1;
-const count=Math.max(10,Math.round(w/150));
+const count=Math.max(12,Math.round(w/145));
 state.lanterns=[];
 for(let i=0;i<count;i++){
 const seed=i+1;
 state.lanterns.push({
 x:hash(seed*2.17)*w,
-y:h*(0.52+hash(seed*3.91)*0.34),
+y:h*(0.50+hash(seed*3.91)*0.36),
 size:18+hash(seed*5.31)*12,
-speed:0.10+hash(seed*6.17)*0.20,
-sway:8+hash(seed*7.33)*16,
+speed:0.10+hash(seed*6.17)*0.18,
+sway:8+hash(seed*7.33)*18,
 phase:hash(seed*8.07)*TAU,
 group:i%5
 });
@@ -174,7 +177,6 @@ setLayer(Number(n)||1);
 function sky(){
 const w=window.innerWidth;
 const h=window.innerHeight;
-
 const g=ctx.createLinearGradient(0,0,0,h);
 g.addColorStop(0,"#18060c");
 g.addColorStop(0.18,"#340a12");
@@ -187,13 +189,13 @@ ctx.fillRect(0,0,w,h);
 
 const horizonY=h*0.66;
 ctx.save();
-const glow=ctx.createLinearGradient(0,horizonY-110,0,horizonY+70);
+const glow=ctx.createLinearGradient(0,horizonY-120,0,horizonY+90);
 glow.addColorStop(0,"rgba(255,175,88,0)");
-glow.addColorStop(0.42,"rgba(255,132,52,0.30)");
+glow.addColorStop(0.40,"rgba(255,132,52,0.30)");
 glow.addColorStop(0.72,"rgba(255,96,36,0.20)");
 glow.addColorStop(1,"rgba(255,96,36,0)");
 ctx.fillStyle=glow;
-ctx.fillRect(0,horizonY-110,w,180);
+ctx.fillRect(0,horizonY-120,w,210);
 ctx.restore();
 }
 
@@ -422,7 +424,8 @@ faces:faces2D,
 renderFaces,
 centerX,
 centerY,
-size
+size,
+tiltX
 };
 }
 
@@ -529,7 +532,7 @@ const anchors=gemAnchorMap();
 for(const key of ["N","W","C","E","S"]){
 const a=anchors[key];
 const size=geo.size*0.14*(key==="C"?1.10:0.92);
-const p=rotateVertex(a.x*geo.size,a.y*geo.size,a.z*geo.size,state.rotY,-1.08);
+const p=rotateVertex(a.x*geo.size,a.y*geo.size,a.z*geo.size,state.rotY,geo.tiltX);
 const proj=project(p.x,p.y,p.z);
 const active=state.activeDirection===key;
 const hover=state.hoveredRegion===key;
@@ -555,64 +558,128 @@ ctx.restore();
 }
 }
 
-function buildDragonSpine(mirror){
+function expandedFacetPoints(){
+return[
+{x: 0.00,y: 1.22,z: 0.16},
+{x: 0.82,y: 0.84,z: 0.22},
+{x: 1.18,y: 0.00,z: 0.16},
+{x: 0.82,y:-0.84,z: 0.22},
+{x: 0.00,y:-1.22,z: 0.16},
+{x:-0.82,y:-0.84,z: 0.22},
+{x:-1.18,y: 0.00,z: 0.16},
+{x:-0.82,y: 0.84,z: 0.22},
+{x: 0.38,y: 0.50,z: 1.12},
+{x:-0.38,y: 0.50,z: 1.12},
+{x: 0.38,y:-0.50,z: 1.12},
+{x:-0.38,y:-0.50,z: 1.12}
+];
+}
+
+function drawMorphFacets(geo){
+const t=easeOutCubic(state.morphProgress);
+if(t<=0.001)return;
+const points=expandedFacetPoints();
+ctx.save();
+ctx.globalAlpha=0.18+0.52*t;
+for(let i=0;i<points.length;i++){
+const p=points[i];
+const rp=rotateVertex(p.x*geo.size,p.y*geo.size,p.z*geo.size,state.rotY,geo.tiltX);
+const pr=project(rp.x,rp.y,rp.z);
+const s=geo.size*0.072*pr.scale*lerp(0.70,1,t);
+ctx.save();
+ctx.translate(pr.x,pr.y);
+ctx.rotate(Math.PI/4+(i*0.12));
+ctx.shadowBlur=10+10*t;
+ctx.shadowColor="rgba(255,225,180,0.20)";
+ctx.fillStyle=i<8?"rgba(185,62,48,0.48)":"rgba(242,220,170,0.36)";
+roundedRectPath(-s,-s,s*2,s*2,s*0.24);
+ctx.fill();
+ctx.lineWidth=1.2;
+ctx.strokeStyle="rgba(255,235,200,0.58)";
+ctx.stroke();
+ctx.restore();
+}
+ctx.restore();
+}
+
+function dragonHeadPoint(path){return path(0);}
+function dragonPathPoint(t,mirror){
 const w=window.innerWidth;
 const h=window.innerHeight;
 const cx=w*0.5;
-const cy=h*0.46;
+const cy=h*0.45;
 const dir=mirror?-1:1;
-const cycle=1180;
-const t=(state.tick%cycle)/cycle;
 
-let phase,u;
 if(t<0.18){
-phase="enter";
-u=t/0.18;
-}else if(t<0.60){
-phase="orbit";
-u=(t-0.18)/0.42;
-}else if(t<0.80){
-phase="exit";
-u=(t-0.60)/0.20;
-}else{
-phase="pause";
-u=(t-0.80)/0.20;
+const u=t/0.18;
+const startX=mirror?w+460:-460;
+const startY=cy+(mirror?-80:80);
+const endX=cx+dir*-280;
+const endY=cy+dir*18;
+return{
+x:lerp(startX,endX,u),
+y:lerp(startY,endY,u)+Math.sin(u*TAU*1.4+dir)*26,
+z:lerp(-0.8,-0.15,u)
+};
 }
 
-if(phase==="pause")return[];
+if(t<0.68){
+const u=(t-0.18)/0.50;
+const a=(mirror?0:Math.PI)+(mirror?1:-1)*u*TAU*1.12;
+return{
+x:cx+Math.cos(a)*260,
+y:cy+Math.sin(a)*102+Math.sin(u*TAU*2.2+dir)*18,
+z:Math.sin(a+dir*0.8)*0.85
+};
+}
 
-const pts=[];
-for(let i=0;i<55;i++){
-const segT=i/54;
-const lag=segT*0.26;
-let x,y;
-if(phase==="enter"){
-const startX=mirror?w+420:-420;
-const startY=cy+(mirror?-40:40);
-const endAngle=mirror?0:Math.PI;
-const targetX=cx+Math.cos(endAngle)*250;
-const targetY=cy+Math.sin(endAngle)*96;
-const uu=clamp(u-lag,0,1);
-x=lerp(startX,targetX,uu)+(-dir*i*11);
-y=lerp(startY,targetY,uu)+Math.sin(i*0.48+state.tick*0.028*dir)*12;
-}else if(phase==="orbit"){
-const uu=clamp(u-lag*0.45,0,1);
-const angle=(mirror?0:Math.PI)+(mirror?1:-1)*uu*TAU;
-x=cx+Math.cos(angle)*250+(-dir*i*9);
-y=cy+Math.sin(angle)*96+Math.sin(i*0.42+uu*TAU*1.25)*11;
-}else{
-const startAngle=mirror?Math.PI:0;
-const startX=cx+Math.cos(startAngle)*250;
-const startY=cy+Math.sin(startAngle)*96;
-const endX=mirror?-420:w+420;
-const endY=cy+(mirror?46:-46);
-const uu=clamp(u-lag,0,1);
-x=lerp(startX,endX,uu)+(-dir*i*11);
-y=lerp(startY,endY,uu)+Math.sin(i*0.48+state.tick*0.028*dir)*12;
+if(t<0.86){
+const u=(t-0.68)/0.18;
+const startX=cx+dir*280;
+const startY=cy-dir*18;
+const endX=mirror?-460:w+460;
+const endY=cy+(mirror?76:-76);
+return{
+x:lerp(startX,endX,u),
+y:lerp(startY,endY,u)+Math.sin((u+0.2)*TAU+dir)*18,
+z:lerp(0.25,0.95,u)
+};
 }
-pts.push({x,y});
+
+return null;
 }
-return pts;
+
+function buildDragonBody(mirror){
+const cycle=920;
+const t=(state.tick%cycle)/cycle;
+const head=dragonPathPoint(t,mirror);
+if(!head)return null;
+
+const segments=[];
+const count=46;
+for(let i=0;i<count;i++){
+const lag=i*0.0105;
+let tt=t-lag;
+while(tt<0)tt+=1;
+const p=dragonPathPoint(tt,mirror)||head;
+const motionBias=Math.sin((t*TAU*2.4)+(i*0.38)+(mirror?0:Math.PI))*5.5;
+const motionBiasY=Math.cos((t*TAU*1.6)+(i*0.32)+(mirror?0:Math.PI))*3.0;
+segments.push({
+x:p.x+(mirror?-1:1)*motionBias,
+y:p.y+motionBiasY+(i*0.15*(mirror?1:-1)),
+z:p.z
+});
+}
+return segments;
+}
+
+function projectDragonPoint(p){
+const depth=1.0+p.z*0.24;
+return{
+x:p.x,
+y:p.y,
+scale:depth
+};
 }
 
 function drawScalePatch(x,y,a,sx,sy,color,alpha){
@@ -633,10 +700,10 @@ ctx.restore();
 function drawWhisker(x,y,angle,len,dir,alpha){
 ctx.save();
 ctx.translate(x,y);
-ctx.rotate(angle+dir*0.30);
+ctx.rotate(angle+dir*0.34);
 ctx.globalAlpha=alpha;
-ctx.strokeStyle="rgba(255,238,205,0.72)";
-ctx.lineWidth=1.6;
+ctx.strokeStyle="rgba(255,238,205,0.74)";
+ctx.lineWidth=1.8;
 ctx.beginPath();
 ctx.moveTo(0,0);
 ctx.quadraticCurveTo(len*0.18,dir*len*0.10,len*0.60,dir*len*0.20);
@@ -655,63 +722,63 @@ ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 
 ctx.beginPath();
-ctx.moveTo(26,0);
-ctx.lineTo(12,-12);
-ctx.lineTo(-10,-14);
-ctx.lineTo(-22,-8);
-ctx.lineTo(-28,0);
-ctx.lineTo(-22,8);
-ctx.lineTo(-10,14);
-ctx.lineTo(12,12);
+ctx.moveTo(30,0);
+ctx.lineTo(12,-14);
+ctx.lineTo(-8,-16);
+ctx.lineTo(-22,-10);
+ctx.lineTo(-30,0);
+ctx.lineTo(-22,10);
+ctx.lineTo(-8,16);
+ctx.lineTo(12,14);
 ctx.closePath();
 ctx.fill();
 
 ctx.fillStyle=accentFill;
 ctx.beginPath();
-ctx.moveTo(10,-4);
-ctx.lineTo(18,0);
-ctx.lineTo(10,4);
-ctx.lineTo(0,3);
-ctx.lineTo(0,-3);
+ctx.moveTo(12,-5);
+ctx.lineTo(22,0);
+ctx.lineTo(12,5);
+ctx.lineTo(-1,4);
+ctx.lineTo(-1,-4);
 ctx.closePath();
 ctx.fill();
 
-ctx.fillStyle="rgba(255,246,218,0.95)";
+ctx.fillStyle="rgba(255,246,218,0.96)";
 ctx.beginPath();
-ctx.arc(4,-4.2,1.9,0,TAU);
+ctx.arc(5,-5.2,2.2,0,TAU);
 ctx.fill();
 
 ctx.fillStyle="rgba(255,220,140,0.88)";
 ctx.beginPath();
-ctx.moveTo(-6,-10);
-ctx.lineTo(-16,-18);
-ctx.lineTo(-10,-8);
+ctx.moveTo(-7,-11);
+ctx.lineTo(-18,-22);
+ctx.lineTo(-11,-9);
 ctx.closePath();
 ctx.fill();
 ctx.beginPath();
-ctx.moveTo(-6,10);
-ctx.lineTo(-16,18);
-ctx.lineTo(-10,8);
+ctx.moveTo(-7,11);
+ctx.lineTo(-18,22);
+ctx.lineTo(-11,9);
 ctx.closePath();
 ctx.fill();
 
 ctx.beginPath();
-ctx.moveTo(-14,-8);
-ctx.lineTo(-24,-16);
-ctx.lineTo(-18,-6);
+ctx.moveTo(-15,-8);
+ctx.lineTo(-26,-17);
+ctx.lineTo(-19,-5);
 ctx.closePath();
 ctx.fill();
 ctx.beginPath();
-ctx.moveTo(-14,8);
-ctx.lineTo(-24,16);
-ctx.lineTo(-18,6);
+ctx.moveTo(-15,8);
+ctx.lineTo(-26,17);
+ctx.lineTo(-19,5);
 ctx.closePath();
 ctx.fill();
 
 ctx.restore();
 
-drawWhisker(head.x+2,head.y+2,a,38,1,0.72);
-drawWhisker(head.x+2,head.y-2,a,38,-1,0.72);
+drawWhisker(head.x+2,head.y+2,a,42,1,0.76);
+drawWhisker(head.x+2,head.y-2,a,42,-1,0.76);
 }
 
 function drawDragonHair(points,glowColor){
@@ -721,13 +788,13 @@ const neck=points[4];
 const a=angleBetween(head,neck);
 for(let i=0;i<5;i++){
 const len=26+i*8;
-const offset=i*2.4;
+const offset=i*2.6;
 ctx.save();
 ctx.translate(head.x-4-offset,head.y);
 ctx.rotate(a+Math.PI);
 ctx.globalAlpha=0.20+(i*0.04);
 ctx.strokeStyle=glowColor;
-ctx.lineWidth=1.4;
+ctx.lineWidth=1.5;
 ctx.beginPath();
 ctx.moveTo(0,0);
 ctx.quadraticCurveTo(-len*0.20,-len*0.18,-len*0.70,-len*0.12);
@@ -737,40 +804,43 @@ ctx.restore();
 }
 }
 
-function drawSegmentedDragon(points,baseFill,glowColor,accent){
-if(points.length<6)return;
+function drawDragon(points,baseFill,glowColor,accent){
+if(!points||points.length<6)return;
 
-for(let i=points.length-1;i>=1;i--){
-const p=points[i];
-const prev=points[Math.max(0,i-1)];
-const next=points[Math.min(points.length-1,i+1)];
-const t=i/(points.length-1);
-const r=lerp(36,6.4,t);
+const projected=points.map(projectDragonPoint);
+
+for(let i=projected.length-1;i>=1;i--){
+const p=projected[i];
+const prev=projected[Math.max(0,i-1)];
+const next=projected[Math.min(projected.length-1,i+1)];
+const t=i/(projected.length-1);
+const depthScale=lerp(1.16,0.84,(points[i].z+1)/2);
+const r=lerp(34,5.8,t)*p.scale*depthScale;
 const a=angleBetween(prev,next);
 
 ctx.save();
-ctx.globalAlpha=0.94-(t*0.26);
-ctx.shadowBlur=16;
+ctx.globalAlpha=(0.94-(t*0.22))*clamp(p.scale,0.72,1.28);
+ctx.shadowBlur=16*p.scale;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 ctx.translate(p.x,p.y);
 ctx.rotate(a);
 ctx.beginPath();
-ctx.ellipse(0,0,r*1.25,r,0,0,TAU);
+ctx.ellipse(0,0,r*1.16,r,0,0,TAU);
 ctx.fill();
 ctx.restore();
 
-drawScalePatch(p.x,p.y-r*0.12,a,r*0.54,r*0.30,accent,0.26);
-drawScalePatch(p.x-r*0.20,p.y+r*0.08,a,r*0.38,r*0.22,"rgba(255,250,228,0.22)",0.22);
+drawScalePatch(p.x,p.y-r*0.10,a,r*0.48,r*0.24,accent,0.34);
+drawScalePatch(p.x-r*0.22,p.y+r*0.06,a,r*0.32,r*0.18,"rgba(255,250,228,0.22)",0.22);
 }
 
-for(let i=3;i<points.length-2;i+=2){
-const p=points[i];
-const prev=points[i-1];
-const next=points[i+1];
+for(let i=3;i<projected.length-2;i+=2){
+const p=projected[i];
+const prev=projected[i-1];
+const next=projected[i+1];
 const a=angleBetween(prev,next);
-const t=i/(points.length-1);
-const fin=lerp(13,2.4,t);
+const t=i/(projected.length-1);
+const fin=lerp(12,2.4,t)*p.scale;
 ctx.save();
 ctx.translate(p.x,p.y);
 ctx.rotate(a);
@@ -785,20 +855,20 @@ ctx.fill();
 ctx.restore();
 }
 
-drawDragonHair(points,glowColor);
-drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
+drawDragonHair(projected,glowColor);
+drawDragonHead(projected[0],projected[3],baseFill,glowColor,accent);
 }
 
 function dragons(){
-const fear=buildDragonSpine(false);
-const love=buildDragonSpine(true);
-drawSegmentedDragon(
+const fear=buildDragonBody(false);
+const love=buildDragonBody(true);
+drawDragon(
 fear,
 "rgba(128,18,18,0.92)",
 "rgba(210,62,40,0.52)",
 "rgba(255,132,72,0.72)"
 );
-drawSegmentedDragon(
+drawDragon(
 love,
 "rgba(186,132,30,0.92)",
 "rgba(255,210,110,0.50)",
@@ -851,6 +921,7 @@ water();
 const geo=getCubeGeometry();
 state.cube=geo;
 drawCube(geo);
+drawMorphFacets(geo);
 dragons();
 drawEmbeddedGems(geo);
 fireworks();
@@ -948,6 +1019,9 @@ state.tick++;
 state.rotY+=state.activeLayer===1?0.0030:0.0026;
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);
+
+const targetMorph=state.activeLayer===2&&state.activeDirection==="C"?1:0;
+state.morphProgress=lerp(state.morphProgress,targetMorph,0.06);
 
 if(state.activeLayer===2&&state.tick%320===0){
 spawnFirework(

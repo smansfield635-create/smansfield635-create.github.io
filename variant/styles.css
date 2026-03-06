@@ -6,13 +6,15 @@
 
   --ink:#fff8f1;
   --mut:rgba(255,246,238,.78);
+  --mut2:rgba(255,246,238,.62);
   --gold:rgba(235,199,120,.95);
-
-  --glass:rgba(18,8,10,.54);
   --line:rgba(255,255,255,.14);
+
+  --glass:rgba(18,8,10,.56);
+  --glass2:rgba(255,255,255,.04);
   --shadow:0 24px 90px rgba(0,0,0,.40);
 
-  --gemBase:122px;
+  --gem:118px;
 }
 
 *{box-sizing:border-box}
@@ -24,9 +26,7 @@ html,body{
   color:var(--ink);
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
 }
-body{
-  overflow-x:hidden;
-}
+body{overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 
@@ -35,13 +35,13 @@ button{font:inherit}
   inset:0;
   width:100%;
   height:100%;
-  z-index:0;
   display:block;
+  z-index:0;
 }
 
-.topRail{
+.toprail{
   position:relative;
-  z-index:5;
+  z-index:6;
   width:min(1220px,95vw);
   margin:14px auto 0;
   padding:14px 16px;
@@ -59,28 +59,26 @@ button{font:inherit}
   flex-wrap:wrap;
 }
 
-.brandKicker{
-  margin:0 0 5px;
+.brand-kicker{
+  margin:0 0 4px;
   font-size:11px;
-  line-height:1;
   letter-spacing:.16em;
   text-transform:uppercase;
   color:var(--mut);
   font-weight:900;
 }
-.brandTitle{
-  margin:0;
+.brand-title{
   font-size:16px;
-  line-height:1.1;
   font-weight:800;
+  line-height:1.1;
 }
 
-.toggleWrap{
+.toprail-controls{
   display:flex;
-  gap:12px;
   flex-wrap:wrap;
+  gap:12px;
 }
-.toggleGroup{
+.chipset{
   display:flex;
   gap:8px;
   padding:6px;
@@ -88,9 +86,9 @@ button{font:inherit}
   border:1px solid rgba(255,255,255,.10);
   background:rgba(0,0,0,.18);
 }
-.toggleBtn{
-  min-width:116px;
-  min-height:48px;
+.chip{
+  min-width:92px;
+  min-height:44px;
   padding:10px 14px;
   border-radius:16px;
   border:1px solid rgba(255,255,255,.10);
@@ -107,10 +105,7 @@ button{font:inherit}
     inset 0 1px 0 rgba(255,255,255,.12),
     inset 0 -28px 46px rgba(0,0,0,.38);
 }
-.toggleBtn.small{
-  min-width:84px;
-}
-.toggleBtn.on{
+.chip.active{
   border-color:rgba(235,199,120,.34);
   box-shadow:
     0 10px 30px rgba(0,0,0,.28),
@@ -122,12 +117,12 @@ button{font:inherit}
 
 .shell{
   position:relative;
-  z-index:4;
+  z-index:5;
   width:min(1220px,95vw);
   margin:16px auto 0;
 }
 
-.heroPanel{
+.hero{
   max-width:760px;
   padding:24px 26px;
   border:1px solid var(--line);
@@ -138,29 +133,28 @@ button{font:inherit}
   box-shadow:var(--shadow);
   backdrop-filter:blur(18px);
 }
-.heroEyebrow{
+.hero-kicker{
   margin:0 0 10px;
   font-size:12px;
-  line-height:1;
   letter-spacing:.16em;
   text-transform:uppercase;
   color:var(--gold);
   font-weight:900;
 }
-.heroPanel h1{
+.hero-title{
   margin:0 0 12px;
   font-size:clamp(34px,6vw,72px);
   line-height:.96;
   letter-spacing:-.04em;
 }
-.heroBody{
+.hero-body{
   margin:0;
   max-width:58ch;
   color:var(--mut);
   font-size:clamp(16px,2vw,19px);
   line-height:1.58;
 }
-.heroRule{
+.hero-rule{
   margin-top:12px;
   padding:12px 14px;
   border-radius:18px;
@@ -171,26 +165,28 @@ button{font:inherit}
   line-height:1.52;
 }
 
-.compassStage{
+.stage{
   position:relative;
+  margin-top:10px;
+}
+.stage-compass{
   height:min(900px,78vh);
   min-height:620px;
-  margin-top:10px;
   overflow:visible;
 }
-.gemLayer{
+
+.gem-layer{
   position:absolute;
   inset:0;
-  z-index:6;
+  z-index:7;
   pointer-events:none;
 }
-
 .gem{
   position:absolute;
   left:50%;
   top:50%;
-  width:var(--gemBase);
-  height:var(--gemBase);
+  width:var(--gem);
+  height:var(--gem);
   border:1px solid rgba(255,255,255,.16);
   border-radius:22px;
   background:
@@ -204,7 +200,7 @@ button{font:inherit}
   pointer-events:auto;
   cursor:pointer;
   overflow:hidden;
-  transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease, transform .16s ease;
+  transition:box-shadow .16s ease,border-color .16s ease,filter .16s ease,transform .16s ease;
 }
 .gem::before{
   content:"";
@@ -227,8 +223,12 @@ button{font:inherit}
     inset 0 1px 0 rgba(255,255,255,.30),
     inset 0 -62px 100px rgba(0,0,0,.78);
 }
+.gem.core{z-index:40 !important}
+.gem.front{z-index:30}
+.gem.mid{z-index:22}
+.gem.back{z-index:14;filter:saturate(.92) brightness(.96)}
 
-.gemInner{
+.gem-inner{
   width:100%;
   height:100%;
   transform:rotate(-45deg);
@@ -240,7 +240,7 @@ button{font:inherit}
   text-align:center;
   pointer-events:none;
 }
-.gWord{
+.gem-word{
   font-weight:980;
   font-size:13px;
   line-height:1.04;
@@ -248,7 +248,7 @@ button{font:inherit}
   text-transform:uppercase;
   text-shadow:0 0 12px rgba(0,0,0,.38);
 }
-.gCode{
+.gem-code{
   margin-top:6px;
   color:rgba(255,246,238,.72);
   font-size:10px;
@@ -258,46 +258,42 @@ button{font:inherit}
   text-transform:uppercase;
 }
 
-.gem.core{z-index:40 !important}
-.gem.front{z-index:30}
-.gem.mid{z-index:22}
-.gem.back{
-  z-index:14;
-  filter:saturate(.92) brightness(.96);
-}
-
-.corner{
+.corner-nav{
   position:fixed;
   bottom:max(18px, env(safe-area-inset-bottom));
-  z-index:7;
+  z-index:8;
 }
-.corner.left{left:18px}
-.corner.right{right:18px}
-.cornerBtn{
-  min-width:88px;
-  min-height:88px;
-  padding:14px 18px;
-  border:none;
-  border-radius:22px;
+.corner-left{left:18px}
+.corner-right{right:18px}
+.corner-btn,
+.dock-btn,
+.action-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:10px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
   background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.16), transparent 34%),
-    radial-gradient(circle at 50% 120%, rgba(235,199,120,.18), transparent 62%),
-    linear-gradient(160deg, rgba(24,10,12,.94), rgba(8,6,8,.98));
+    radial-gradient(circle at 30% 18%, rgba(255,255,255,.14), transparent 34%),
+    linear-gradient(160deg, rgba(38,18,22,.94), rgba(10,7,9,.98));
   color:var(--ink);
-  font-weight:980;
-  letter-spacing:.08em;
+  font-weight:900;
+  letter-spacing:.05em;
   text-transform:uppercase;
   box-shadow:
-    0 24px 60px rgba(0,0,0,.36),
-    inset 0 1px 0 rgba(255,255,255,.14);
+    0 10px 30px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 -28px 46px rgba(0,0,0,.38);
   cursor:pointer;
 }
 
-.launchSection{
+.launchpad{
   margin-top:14px;
   max-width:1040px;
 }
-.launchBand{
+.band{
   margin-bottom:12px;
   padding:10px 14px;
   border-radius:18px;
@@ -308,7 +304,8 @@ button{font:inherit}
   letter-spacing:.04em;
   text-transform:uppercase;
 }
-.stack{
+
+.accordion{
   display:flex;
   flex-direction:column;
   gap:12px;
@@ -323,7 +320,7 @@ button{font:inherit}
   box-shadow:0 16px 52px rgba(0,0,0,.42);
   overflow:hidden;
 }
-.cardHead{
+.card-head{
   width:100%;
   border:none;
   background:transparent;
@@ -336,7 +333,7 @@ button{font:inherit}
   text-align:left;
   cursor:pointer;
 }
-.cardMark{
+.card-mark{
   width:10px;
   height:10px;
   transform:rotate(45deg);
@@ -346,45 +343,41 @@ button{font:inherit}
   flex:0 0 auto;
   margin-top:5px;
 }
-.cardText{
+.card-text{
   display:flex;
   flex-direction:column;
   gap:8px;
-  min-width:0;
   flex:1 1 auto;
 }
-.cardQ{
+.card-q{
   font-size:18px;
   font-weight:950;
-  letter-spacing:.02em;
 }
-.cardS{
+.card-s{
   font-size:14px;
   line-height:1.42;
   color:rgba(255,255,255,.84);
 }
-.cardChev{
+.card-chev{
   width:34px;
   text-align:center;
   font-weight:900;
   color:rgba(255,255,255,.78);
 }
-.cardBody{
+.card-body{
   display:none;
   padding:0 16px 16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:rgba(0,0,0,.12);
 }
-.cardBody.open{
-  display:block;
-}
-.cardBody p{
+.card-body.open{display:block}
+.card-body p{
   margin:14px 0 0;
   color:rgba(255,255,255,.90);
   line-height:1.68;
   font-size:14px;
 }
-.cardActions{
+.card-actions{
   display:flex;
   justify-content:flex-end;
   margin-top:14px;
@@ -395,7 +388,7 @@ button{font:inherit}
   left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:7;
+  z-index:8;
   width:min(980px,94vw);
   padding:10px 12px;
   border-radius:22px;
@@ -407,68 +400,20 @@ button{font:inherit}
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(5, minmax(0,1fr));
+  grid-template-columns:repeat(5,minmax(0,1fr));
   gap:10px;
-}
-.dockBtn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  padding:10px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 30% 20%, rgba(255,255,255,.14), transparent 34%),
-    linear-gradient(160deg, rgba(38,18,22,.94), rgba(10,7,9,.98));
-  color:var(--ink);
-  font-weight:900;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25),
-    inset 0 1px 0 rgba(255,255,255,.12),
-    inset 0 -28px 46px rgba(0,0,0,.38);
-}
-.actionBtn{
-  min-width:132px;
 }
 
 @media (max-width:900px){
-  .topRail{
-    align-items:flex-start;
-  }
-  .dock{
-    grid-template-columns:repeat(3, minmax(0,1fr));
-  }
+  .toprail{align-items:flex-start}
+  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:680px){
-  .toggleBtn{
-    min-width:96px;
-    min-height:44px;
-    font-size:12px;
-  }
-  .toggleBtn.small{
-    min-width:72px;
-  }
-  .gem{
-    width:110px;
-    height:110px;
-  }
-  .compassStage{
-    min-height:560px;
-  }
+  .chip{min-width:78px;font-size:12px}
+  .stage-compass{min-height:560px}
+  .gem{width:108px;height:108px}
 }
 @media (max-width:520px){
-  .heroPanel{
-    padding:20px 18px;
-  }
-  .cornerBtn{
-    min-width:78px;
-    min-height:78px;
-    border-radius:20px;
-  }
-  .dock{
-    grid-template-columns:repeat(2, minmax(0,1fr));
-  }
+  .dock{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .corner-btn{min-width:78px}
 }

@@ -1,202 +1,456 @@
 (function(){
-
 const canvas=document.getElementById("scene");
+if(!canvas)return;
 const ctx=canvas.getContext("2d");
+if(!ctx)return;
 
-let state={
+const DOMAIN_MAP={
+N:{label:"LAWS",short:"N"},
+E:{label:"ENERGY",short:"E"},
+S:{label:"FINANCE",short:"S"},
+W:{label:"GOVERNANCE",short:"W"},
+C:{label:"CORE",short:"CORE"}
+};
+
+const state={
 tick:0,
-layer:1,
-rot:0
+activeLayer:1,
+rot:0,
+hoveredRegion:null,
+activeDirection:null,
+compassReveal:0,
+transitionProgress:0,
+pointer:{x:0,y:0,down:false},
+cube:null,
+faceZones:{},
+compassZones:{},
+lastTapRegion:null
 };
 
 function resize(){
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+const dpr=Math.max(1,window.devicePixelRatio||1);
+const w=window.innerWidth;
+const h=window.innerHeight;
+canvas.style.width=w+"px";
+canvas.style.height=h+"px";
+canvas.width=Math.floor(w*dpr);
+canvas.height=Math.floor(h*dpr);
+ctx.setTransform(1,0,0,1,0,0);
+ctx.scale(dpr,dpr);
 }
-
-window.addEventListener("resize",resize);
+window.addEventListener("resize",resize,{passive:true});
+window.addEventListener("orientationchange",resize,{passive:true});
 resize();
 
+function lerp(a,b,t){return a+(b-a)*t}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+function easeOut(t){return 1-Math.pow(1-t,3)}
+function pointInPoly(x,y,poly){
+let inside=false;
+for(let i=0,j=poly.length-1;i<poly.length;j=i++){
+const xi=poly[i].x,yi=poly[i].y;
+const xj=poly[j].x,yj=poly[j].y;
+const hit=((yi>y)!==(yj>y))&&(x<((xj-xi)*(y-yi))/(yj-yi)+xi);
+if(hit)inside=!inside;
+}
+return inside;
+}
+function diamondContains(x,y,node){
+return (Math.abs(x-node.x)/node.hw)+(Math.abs(y-node.y)/node.hh)<=1;
+}
+function glow(color,a){
+return color.replace("__A__",String(a));
+}
+function getPointerPos(e){
+const rect=canvas.getBoundingClientRect();
+return{
+x:e.clientX-rect.left,
+y:e.clientY-rect.top
+};
+}
+
+function setLayer(n){
+const next=n===2?2:1;
+state.activeLayer=next;
+state.transitionProgress=0;
+if(next===1){
+state.activeDirection=null;
+state.hoveredRegion=null;
+}
+}
+function selectDirection(dir){
+state.activeDirection=dir;
+state.lastTapRegion=dir;
+if(state.activeLayer!==2){
+state.activeLayer=2;
+state.transitionProgress=0;
+}
+}
+window.__renderEngine={
+setLayer(n){setLayer(Number(n)||1);}
+};
+
 function sky(){
-
-const g=ctx.createLinearGradient(0,0,0,canvas.height);
+const g=ctx.createLinearGradient(0,0,0,window.innerHeight);
 g.addColorStop(0,"#240909");
-g.addColorStop(.4,"#7d1d15");
-g.addColorStop(.7,"#d84d22");
+g.addColorStop(.36,"#7d1d15");
+g.addColorStop(.72,"#d84d22");
 g.addColorStop(1,"#1a0606");
-
 ctx.fillStyle=g;
-ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+}
 
+function moon(){
+const x=window.innerWidth*.82;
+const y=window.innerHeight*.16;
+const r=Math.min(window.innerWidth,window.innerHeight)*.05;
+ctx.save();
+ctx.globalAlpha=.22+.1*state.compassReveal;
+ctx.fillStyle="rgba(255,245,220,.9)";
+ctx.beginPath();
+ctx.arc(x,y,r,0,Math.PI*2);
+ctx.fill();
+ctx.globalCompositeOperation="destination-out";
+ctx.beginPath();
+ctx.arc(x+r*.34,y-r*.08,r*.92,0,Math.PI*2);
+ctx.fill();
+ctx.restore();
 }
 
 function water(){
+const h=window.innerHeight;
+const w=window.innerWidth;
+const base=h*.78;
+const dir=state.activeDirection;
+const reveal=state.compassReveal;
+const calmAmp=4;
+const activeAmp=10;
+const amp=lerp(calmAmp,activeAmp,reveal*(dir?1:0));
+const tilt=
+dir==="W"?-12:
+dir==="E"?12:
+dir==="N"?-6:
+dir==="S"?8:0;
+const drift=
+dir==="W"?-.03:
+dir==="E"?.03:
+0;
 
-const base=canvas.height*.75;
-
-for(let i=0;i<6;i++){
-
+for(let i=0;i<7;i++){
 ctx.beginPath();
-
-for(let x=0;x<canvas.width;x+=10){
-
-const y=
-base+i*18+
-Math.sin((x+state.tick)*.02+i)*6;
-
+for(let x=0;x<=w;x+=10){
+const wave1=Math.sin((x+state.tick*(1+drift))*.018+i*.85)*amp;
+const wave2=Math.sin((x-state.tick*.65)*.008+i*1.1)*amp*.45;
+const slope=(x/w-.5)*tilt;
+const y=base+i*18+wave1+wave2+slope;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
-
 }
-
-ctx.strokeStyle="rgba(255,230,200,.1)";
+ctx.strokeStyle=`rgba(255,230,200,${0.06+i*0.018})`;
+ctx.lineWidth=2;
 ctx.stroke();
-
 }
-
 }
 
 function project(x,y,z){
-
 const scale=400/(400+z);
-
 return{
-x:canvas.width/2+x*scale,
-y:canvas.height*.55+y*scale
+x:window.innerWidth/2+x*scale,
+y:window.innerHeight*.6+y*scale,
+scale
 };
-
 }
 
-function drawCube(){
-
-const size=120;
-
+function getCubeGeometry(){
+const size=Math.min(window.innerWidth,window.innerHeight)*.16;
 const verts=[
 [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
 [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]
 ];
-
 const edges=[
 [0,1],[1,2],[2,3],[3,0],
 [4,5],[5,6],[6,7],[7,4],
 [0,4],[1,5],[2,6],[3,7]
 ];
-
-let pts=[];
-
-verts.forEach(v=>{
-
-let x=v[0]*size;
-let y=v[1]*size;
-let z=v[2]*size;
-
-let xr=x*Math.cos(state.rot)-z*Math.sin(state.rot);
-let zr=x*Math.sin(state.rot)+z*Math.cos(state.rot);
-
+const pts=[];
+for(const v of verts){
+const x=v[0]*size;
+const y=v[1]*size;
+const z=v[2]*size;
+const xr=x*Math.cos(state.rot)-z*Math.sin(state.rot);
+const zr=x*Math.sin(state.rot)+z*Math.cos(state.rot);
 pts.push(project(xr,y,zr));
+}
+const faces={
+C:[pts[4],pts[5],pts[6],pts[7]],
+W:[pts[0],pts[3],pts[7],pts[4]],
+E:[pts[1],pts[2],pts[6],pts[5]],
+N:[pts[3],pts[2],pts[6],pts[7]]
+};
+const centerX=(pts[4].x+pts[5].x+pts[6].x+pts[7].x)/4;
+const centerY=(pts[4].y+pts[5].y+pts[6].y+pts[7].y)/4;
+return{pts,edges,faces,centerX,centerY,size};
+}
 
-});
+function drawCube(geo){
+state.faceZones=geo.faces;
+const hovered=state.hoveredRegion;
+const selected=state.activeDirection;
+
+for(const key of ["W","E","N","C"]){
+const poly=geo.faces[key];
+const isHot=hovered===key||selected===key||(selected==="C"&&key==="C");
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(poly[0].x,poly[0].y);
+for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
+ctx.closePath();
+ctx.fillStyle=isHot?"rgba(255,245,220,.08)":"rgba(255,255,255,.02)";
+ctx.fill();
+ctx.lineWidth=isHot?2.5:1.2;
+ctx.strokeStyle=isHot?"rgba(255,245,220,.65)":"rgba(255,255,255,.08)";
+ctx.stroke();
+ctx.restore();
+}
 
 ctx.strokeStyle="white";
-ctx.lineWidth=2;
-
-edges.forEach(e=>{
-
+ctx.lineWidth=2.2;
+for(const e of geo.edges){
 ctx.beginPath();
-ctx.moveTo(pts[e[0]].x,pts[e[0]].y);
-ctx.lineTo(pts[e[1]].x,pts[e[1]].y);
+ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
+ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
+ctx.stroke();
+}
+}
+
+function drawCompass(geo){
+const reveal=easeOut(state.compassReveal);
+if(reveal<=0.001){
+state.compassZones={};
+return;
+}
+
+const cx=geo.centerX;
+const cy=geo.centerY;
+const radius=geo.size*1.35;
+const outer=radius+40*reveal;
+const inner=radius-40*reveal;
+
+ctx.save();
+ctx.globalAlpha=.16*reveal;
+for(let i=0;i<3;i++){
+ctx.beginPath();
+ctx.arc(cx,cy,outer+i*34,0,Math.PI*2);
+ctx.strokeStyle="rgba(255,235,200,.25)";
+ctx.lineWidth=2;
+ctx.stroke();
+}
+for(let i=0;i<32;i++){
+const a=(i/32)*Math.PI*2;
+ctx.beginPath();
+ctx.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);
+ctx.lineTo(cx+Math.cos(a)*(outer+56),cy+Math.sin(a)*(outer+56));
+ctx.strokeStyle="rgba(255,235,200,.12)";
+ctx.lineWidth=1;
+ctx.stroke();
+}
+ctx.restore();
+
+const nodeDist=radius+30;
+const nodes={
+N:{x:cx,y:cy-nodeDist},
+E:{x:cx+nodeDist,y:cy},
+S:{x:cx,y:cy+nodeDist},
+W:{x:cx-nodeDist,y:cy},
+C:{x:cx,y:cy}
+};
+state.compassZones={};
+
+for(const key of ["N","W","C","E","S"]){
+const node=nodes[key];
+const hw=key==="C"?geo.size*.38:geo.size*.24;
+const hh=key==="C"?geo.size*.38:geo.size*.24;
+state.compassZones[key]={x:node.x,y:node.y,hw,hh};
+const active=state.activeDirection===key;
+const hover=state.hoveredRegion===key;
+const alpha=key==="C"?0.82:.74;
+ctx.save();
+ctx.globalAlpha=(alpha*reveal);
+ctx.translate(node.x,node.y);
+ctx.rotate(Math.PI/4);
+ctx.fillStyle=active?"rgba(18,18,26,.95)":hover?"rgba(28,28,38,.92)":"rgba(18,18,26,.86)";
+ctx.strokeStyle=active?"rgba(255,245,220,.78)":hover?"rgba(255,245,220,.55)":"rgba(255,255,255,.26)";
+ctx.lineWidth=active?2.6:1.6;
+ctx.beginPath();
+ctx.roundRect(-hw,-hh,hw*2,hh*2,18);
+ctx.fill();
+ctx.stroke();
+ctx.restore();
+
+ctx.save();
+ctx.globalAlpha=reveal;
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillStyle="rgba(255,255,255,.96)";
+ctx.font=`${key==="C"?"700":"800"} ${key==="C"?16:14}px system-ui,Segoe UI,Roboto,sans-serif`;
+ctx.fillText(DOMAIN_MAP[key].label,node.x,node.y-(key==="C"?8:4));
+ctx.font=`700 ${key==="C"?12:11}px system-ui,Segoe UI,Roboto,sans-serif`;
+ctx.fillStyle="rgba(240,240,240,.92)";
+ctx.fillText(DOMAIN_MAP[key].short,node.x,node.y+(key==="C"?14:16));
+ctx.restore();
+}
+
+ctx.save();
+ctx.globalAlpha=.12*reveal;
+ctx.beginPath();
+ctx.arc(cx,cy,outer+72,0,Math.PI*2);
+ctx.fillStyle="rgba(0,0,0,.35)";
+ctx.fill();
+ctx.restore();
+}
+
+function dragonBands(){
+const reveal=state.compassReveal;
+const topY=window.innerHeight*.26;
+const botY=window.innerHeight*.73;
+const drift=state.tick*.035;
+
+function band(y,color1,color2,dir,isTop){
+for(let i=0;i<28;i++){
+const x=(i*44+(drift*dir))%(window.innerWidth+120)-60;
+ctx.beginPath();
+ctx.arc(x,y,28,0,Math.PI*2);
+ctx.strokeStyle=isTop?color1:color2;
+ctx.lineWidth=3;
+ctx.globalAlpha=.28+.12*reveal;
+ctx.stroke();
+}
+ctx.globalAlpha=1;
+}
+
+band(topY,"rgba(70,255,120,.45)","rgba(0,0,0,.28)",1,true);
+band(botY,"rgba(255,210,120,.18)","rgba(0,0,0,.34)",-1,false);
+
+const topGlow=state.activeDirection==="N"?"rgba(70,255,120,.72)":"rgba(70,255,120,.16)";
+const botGlow=state.activeDirection==="S"?"rgba(255,80,80,.62)":"rgba(255,80,80,.12)";
+ctx.strokeStyle=topGlow;
+ctx.lineWidth=10;
+ctx.beginPath();
+ctx.moveTo(0,topY);
+for(let x=0;x<=window.innerWidth;x+=18){
+ctx.lineTo(x,topY+Math.sin((x+state.tick)*.02)*7);
+}
 ctx.stroke();
 
+ctx.strokeStyle=botGlow;
+ctx.lineWidth=10;
+ctx.beginPath();
+ctx.moveTo(0,botY);
+for(let x=0;x<=window.innerWidth;x+=18){
+ctx.lineTo(x,botY+Math.sin((x-state.tick)*.02+1.2)*7);
+}
+ctx.stroke();
+}
+
+function drawSceneFrame(){
+ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+sky();
+moon();
+water();
+dragonBands();
+
+const geo=getCubeGeometry();
+state.cube=geo;
+drawCube(geo);
+drawCompass(geo);
+}
+
+function getRegionAt(x,y){
+if(state.activeLayer===2){
+for(const key of ["N","E","S","W","C"]){
+const node=state.compassZones[key];
+if(node&&diamondContains(x,y,node))return key;
+}
+}
+for(const key of ["C","W","E","N"]){
+const poly=state.faceZones[key];
+if(poly&&pointInPoly(x,y,poly))return key;
+}
+return null;
+}
+
+function routeRegion(region){
+if(region==="C"){
+if(state.activeLayer===1){
+setLayer(2);
+return;
+}
+selectDirection("C");
+return;
+}
+if(region==="W"||region==="E"||region==="N"){
+selectDirection(region);
+return;
+}
+if(region==="S"){
+selectDirection("S");
+}
+}
+
+function updateInteractionFromPointer(x,y){
+state.hoveredRegion=getRegionAt(x,y);
+canvas.style.cursor=state.hoveredRegion?"pointer":"default";
+}
+
+canvas.addEventListener("pointermove",e=>{
+const p=getPointerPos(e);
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+updateInteractionFromPointer(p.x,p.y);
+},{passive:true});
+
+canvas.addEventListener("pointerdown",e=>{
+const p=getPointerPos(e);
+state.pointer.down=true;
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+updateInteractionFromPointer(p.x,p.y);
 });
 
-}
+canvas.addEventListener("pointerup",e=>{
+const p=getPointerPos(e);
+state.pointer.down=false;
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+const hit=getRegionAt(p.x,p.y);
+if(hit)routeRegion(hit);
+});
 
-function drawNodes(){
+canvas.addEventListener("pointerleave",()=>{
+state.pointer.down=false;
+state.hoveredRegion=null;
+canvas.style.cursor="default";
+});
 
-const count=12;
-const r=180;
+document.addEventListener("click",e=>{
+const btn=e.target.closest("[data-layer]");
+if(!btn)return;
+setLayer(Number(btn.dataset.layer)||1);
+});
 
-for(let i=0;i<count;i++){
-
-const a=i/count*Math.PI*2+state.rot;
-
-const x=Math.cos(a)*r;
-const y=Math.sin(a)*r*.6;
-const z=Math.sin(a)*r;
-
-const p=project(x,y,z);
-
-ctx.beginPath();
-ctx.arc(p.x,p.y,24,0,Math.PI*2);
-
-ctx.fillStyle="rgba(0,0,0,.7)";
-ctx.fill();
-
-ctx.strokeStyle="rgba(255,230,180,.4)";
-ctx.stroke();
-
-}
-
-}
-
-function dragon(dir,color,yoff){
-
-const seg=36;
-
-const start=dir>0?-200:canvas.width+200;
-const end=dir>0?canvas.width+200:-200;
-
-const progress=(state.tick*.0006)%1;
-
-const head=start+(end-start)*progress;
-
-ctx.beginPath();
-
-for(let i=0;i<seg;i++){
-
-const x=head-dir*i*16;
-const y=canvas.height*.3+yoff+
-Math.sin(i*.4+state.tick*.04)*18;
-
-if(i===0)ctx.moveTo(x,y);
-else ctx.lineTo(x,y);
-
-}
-
-ctx.strokeStyle=color;
-ctx.lineWidth=14;
-ctx.lineCap="round";
-ctx.stroke();
-
+function animateState(){
+state.tick++;
+state.rot+=state.activeLayer===1?.008:.0065;
+const targetReveal=state.activeLayer===2?1:0;
+state.compassReveal=lerp(state.compassReveal,targetReveal,.08);
+state.transitionProgress=clamp(state.transitionProgress+.04,0,1);
 }
 
 function frame(){
-
-state.tick++;
-state.rot+=.01;
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-sky();
-water();
-
-if(state.layer===1){
-drawCube();
-}else{
-drawNodes();
-}
-
-dragon(1,"rgba(50,160,80,.9)",-20);
-dragon(-1,"rgba(180,40,40,.9)",40);
-
+animateState();
+drawSceneFrame();
 requestAnimationFrame(frame);
-
 }
-
-window.navigatorLayer=function(n){
-state.layer=n;
-};
 
 frame();
-
 })();

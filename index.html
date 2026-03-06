@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Diamond Gate Bridge</title>
-<meta name="description" content="Compass entrypoint of the Governed Discovery Platform">
+<meta name="description" content="Compass-first entry to Diamond Gate Bridge.">
 <link rel="stylesheet" href="/variant/styles.css">
 </head>
-<body>
+<body data-page="index">
 
 <canvas id="scene" aria-hidden="true"></canvas>
 
-<div class="topRail" aria-label="Compass controls">
+<header class="topRail" aria-label="Primary controls">
   <div class="brandBlock">
     <p class="brandKicker">Primary Compass</p>
     <p class="brandTitle">Diamond Gate Bridge</p>
   </div>
 
-  <div class="toggleWrap" aria-label="Mode toggles">
+  <div class="toggleWrap">
     <div class="toggleGroup" role="group" aria-label="Layer toggle">
       <button class="toggleBtn on" id="btnLayer1" type="button" aria-pressed="true">Layer 1</button>
       <button class="toggleBtn" id="btnLayer2" type="button" aria-pressed="false">Layer 2</button>
@@ -28,15 +28,15 @@
       <button class="toggleBtn" id="btnEngineering" type="button" aria-pressed="false">Engineering</button>
     </div>
   </div>
-</div>
+</header>
 
-<main class="shell" id="main">
+<main class="shell">
   <section class="heroPanel" aria-labelledby="heroTitle">
     <p class="heroEyebrow">Compass First Entry</p>
     <h1 id="heroTitle">Choose your direction</h1>
     <p class="heroBody">
-      Instrument-grade compass with embedded diamond navigation, liquid dial movement,
-      mirrored dragon traversal, and accessible gem controls.
+      A liquid compass instrument with mounted gem navigation, mirrored dragon traversal,
+      outward-flowing water, and accessible directional controls.
     </p>
   </section>
 
@@ -45,13 +45,13 @@
   </section>
 </main>
 
-<div class="corner left">
-  <button class="cornerBtn" id="btnDoor" type="button" aria-label="Exit to door">Door</button>
-</div>
+<nav class="corner left" aria-label="Left corner">
+  <button class="cornerBtn" id="btnDoor" type="button">Door</button>
+</nav>
 
-<div class="corner right">
-  <button class="cornerBtn" id="btnExplore" type="button" aria-label="Jump to explore">Explore</button>
-</div>
+<nav class="corner right" aria-label="Right corner">
+  <button class="cornerBtn" id="btnHome" type="button">Home</button>
+</nav>
 
 <script src="/variant/index.js"></script>
 </body>

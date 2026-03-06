@@ -4,53 +4,58 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Diamond Gate Bridge</title>
-<meta name="description" content="Compass-first entry to Diamond Gate Bridge.">
+<meta name="description" content="Compass first entry.">
 <link rel="stylesheet" href="/variant/styles.css">
 </head>
 <body data-page="index">
-
 <canvas id="scene" aria-hidden="true"></canvas>
 
-<header class="topRail" aria-label="Primary controls">
-  <div class="brandBlock">
-    <p class="brandKicker">Primary Compass</p>
-    <p class="brandTitle">Diamond Gate Bridge</p>
+<header class="toprail">
+  <div class="brand">
+    <div class="brand-kicker" data-i18n="index.kicker">Primary Compass</div>
+    <div class="brand-title">Diamond Gate Bridge</div>
   </div>
 
-  <div class="toggleWrap">
-    <div class="toggleGroup" role="group" aria-label="Layer toggle">
-      <button class="toggleBtn on" id="btnLayer1" type="button" aria-pressed="true">Layer 1</button>
-      <button class="toggleBtn" id="btnLayer2" type="button" aria-pressed="false">Layer 2</button>
+  <div class="toprail-controls">
+    <div class="chipset" aria-label="Language">
+      <button class="chip" data-lang="en" type="button">EN</button>
+      <button class="chip" data-lang="zh" type="button">中文</button>
+      <button class="chip" data-lang="es" type="button">ES</button>
     </div>
 
-    <div class="toggleGroup" role="group" aria-label="Lane toggle">
-      <button class="toggleBtn on" id="btnPlatform" type="button" aria-pressed="true">Platform</button>
-      <button class="toggleBtn" id="btnEngineering" type="button" aria-pressed="false">Engineering</button>
+    <div class="chipset" aria-label="Layer">
+      <button class="chip" data-layer="1" type="button">Layer 1</button>
+      <button class="chip" data-layer="2" type="button">Layer 2</button>
+    </div>
+
+    <div class="chipset" aria-label="Lane">
+      <button class="chip" data-lane="platform" type="button">Platform</button>
+      <button class="chip" data-lane="engineering" type="button">Engineering</button>
     </div>
   </div>
 </header>
 
 <main class="shell">
-  <section class="heroPanel" aria-labelledby="heroTitle">
-    <p class="heroEyebrow">Compass First Entry</p>
-    <h1 id="heroTitle">Choose your direction</h1>
-    <p class="heroBody">
-      A liquid compass instrument with mounted gem navigation, mirrored dragon traversal,
-      outward-flowing water, and accessible directional controls.
+  <section class="hero">
+    <div class="hero-kicker" data-i18n="index.heroKicker">Compass First Entry</div>
+    <h1 class="hero-title" data-i18n="index.heroTitle">Choose your direction</h1>
+    <p class="hero-body" data-i18n="index.heroBody">
+      A liquid compass instrument with mounted diamond navigation, mirrored dragon traversal,
+      and accessible controls.
     </p>
   </section>
 
-  <section class="compassStage" id="compassStage" aria-label="Compass navigation">
-    <div class="gemLayer" id="gemLayer"></div>
+  <section class="stage stage-compass" id="compassStage" aria-label="Compass navigation surface">
+    <div class="gem-layer" id="gemLayer"></div>
   </section>
 </main>
 
-<nav class="corner left" aria-label="Left corner">
-  <button class="cornerBtn" id="btnDoor" type="button">Door</button>
+<nav class="corner-nav corner-left">
+  <button class="corner-btn" data-route="/door/" type="button" data-i18n="common.door">Door</button>
 </nav>
 
-<nav class="corner right" aria-label="Right corner">
-  <button class="cornerBtn" id="btnHome" type="button">Home</button>
+<nav class="corner-nav corner-right">
+  <button class="corner-btn" data-route="/home/" type="button" data-i18n="common.home">Home</button>
 </nav>
 
 <script src="/variant/index.js"></script>

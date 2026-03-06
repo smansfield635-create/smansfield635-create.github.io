@@ -13,6 +13,7 @@ C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.22)",edge:"rgba(255,255,25
 };
 
 const TAU=Math.PI*2;
+const DRAGON_ORBIT_ROTATIONS=1.5; // 540 degrees
 
 const state={
 tick:0,
@@ -23,6 +24,12 @@ compassReveal:0,
 pointer:{x:0,y:0,down:false},
 faceZones:{},
 rotY:0,
+rotVel:0,
+isDragging:false,
+lastPointerAngle:0,
+hasTriggeredDragons:false,
+entryPolarityHigh:true,
+dragonEvent:null,
 fireworks:[],
 lanterns:[],
 cube:null
@@ -31,9 +38,15 @@ cube:null
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function lerp(a,b,t){return a+(b-a)*t;}
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
+function wrapPi(a){
+while(a>Math.PI)a-=TAU;
+while(a<-Math.PI)a+=TAU;
+return a;
+}
 
 function roundedRectPath(x,y,w,h,r){
 const rr=Math.min(r,w*0.5,h*0.5);
@@ -127,6 +140,17 @@ const w=window.innerWidth;
 const h=window.innerHeight;
 spawnFirework(w*0.22,h*0.24,22,2.1);
 spawnFirework(w*0.78,h*0.22,24,2.3);
+}
+
+function startDragonEvent(){
+if(state.dragonEvent)return;
+state.dragonEvent={
+startTick:state.tick,
+entryHigh:state.entryPolarityHigh
+};
+state.entryPolarityHigh=!state.entryPolarityHigh;
+state.hasTriggeredDragons=true;
+spawnTransitionFireworks();
 }
 
 function setLayer(n){
@@ -500,44 +524,76 @@ ctx.stroke();
 ctx.restore();
 }
 
-function dragonPathPoint(geo,t,mirror){
-const cx=geo.centerX;
-const cy=geo.centerY;
-const dir=mirror?-1:1;
-const rX=geo.size*2.05;
-const rY=geo.size*0.98;
-const a=t*TAU*dir+(mirror?0:Math.PI);
-const bob=Math.sin(t*TAU*2.0+dir)*geo.size*0.06;
-return{
-x:cx+Math.cos(a)*rX,
-y:cy+Math.sin(a)*rY*0.56+bob,
-z:Math.sin(a)*1.05,
-a
-};
+function dragonEventProgress(){
+if(!state.dragonEvent)return null;
+const elapsed=state.tick-state.dragonEvent.startTick;
+const duration=360;
+const p=elapsed/duration;
+if(p>=1){
+state.dragonEvent=null;
+return null;
+}
+return p;
 }
 
-function buildDragonBody(geo,mirror){
-const t=((state.tick*0.0015)+(mirror?0:0.5))%1;
+function dragonPathPoint(geo,p,mirror,entryHigh){
+const cx=geo.centerX;
+const cy=geo.centerY;
+const sign=mirror?1:-1;
+const progress=easeInOutCubic(clamp(p,0,1));
+const theta=(progress*DRAGON_ORBIT_ROTATIONS*TAU)+(mirror?0:Math.PI);
+
+const rX=geo.size*2.85;
+const rY=geo.size*1.40;
+const baseX=cx+Math.cos(theta)*rX;
+const baseY=cy+Math.sin(theta)*rY*0.58;
+
+const highY=cy-geo.size*1.60;
+const lowY=cy+geo.size*1.60;
+const startY=entryHigh?highY:lowY;
+const endY=entryHigh?lowY:highY;
+const gateMix=Math.sin(progress*Math.PI);
+const guidedY=lerp(startY,endY,progress);
+const y=lerp(guidedY,baseY,gateMix)+Math.sin(progress*TAU*2.0+sign)*geo.size*0.06;
+
+const enterX=mirror?(cx+rX+geo.size*2.1):(cx-rX-geo.size*2.1);
+const exitX=mirror?(cx-rX-geo.size*2.1):(cx+rX+geo.size*2.1);
+let x;
+if(progress<0.14){
+x=lerp(enterX,baseX,progress/0.14);
+}else if(progress>0.86){
+x=lerp(baseX,exitX,(progress-0.86)/0.14);
+}else{
+x=baseX;
+}
+
+const orbitZ=Math.sin(theta+sign*0.55)*1.18;
+const z=progress<0.14?lerp(-0.25,orbitZ,progress/0.14):progress>0.86?lerp(orbitZ,0.25,(progress-0.86)/0.14):orbitZ;
+
+return{x,y,z,theta};
+}
+
+function buildDragonBody(geo,mirror,entryHigh){
+const p=dragonEventProgress();
+if(p===null)return null;
 const segments=[];
 const count=44;
 for(let i=0;i<count;i++){
-const lag=i*0.0105;
-let tt=t-lag;
-while(tt<0)tt+=1;
-const p=dragonPathPoint(geo,tt,mirror);
-const ripple=Math.sin((t*TAU*3.0)+(i*0.42)+(mirror?0:Math.PI))*geo.size*0.022;
-const rippleY=Math.cos((t*TAU*2.0)+(i*0.31)+(mirror?0:Math.PI))*geo.size*0.015;
-const normal={x:-Math.sin(p.a)*dirSign(mirror),y:Math.cos(p.a)*0.30};
+const lag=i*0.0095;
+const pp=clamp(p-lag,0,1);
+const head=dragonPathPoint(geo,pp,mirror,entryHigh);
+const ripple=Math.sin((p*TAU*4.0)+(i*0.40)+(mirror?0:Math.PI))*geo.size*0.020;
+const rippleY=Math.cos((p*TAU*2.2)+(i*0.31)+(mirror?0:Math.PI))*geo.size*0.012;
+const nx=-Math.sin(head.theta);
+const ny=Math.cos(head.theta)*0.28;
 segments.push({
-x:p.x+normal.x*ripple,
-y:p.y+normal.y*ripple+rippleY,
-z:p.z
+x:head.x+nx*ripple,
+y:head.y+ny*ripple+rippleY,
+z:head.z
 });
 }
 return segments;
 }
-
-function dirSign(mirror){return mirror?-1:1;}
 
 function drawScalePatch(x,y,a,sx,sy,color,alpha){
 ctx.save();
@@ -717,15 +773,19 @@ drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
 }
 
 function dragonsBack(geo){
-const fear=buildDragonBody(geo,false);
-const love=buildDragonBody(geo,true);
+if(!state.dragonEvent)return;
+const entryHigh=state.dragonEvent.entryHigh;
+const fear=buildDragonBody(geo,false,entryHigh);
+const love=buildDragonBody(geo,true,!entryHigh);
 drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
 drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
 }
 
 function dragonsFront(geo){
-const fear=buildDragonBody(geo,false);
-const love=buildDragonBody(geo,true);
+if(!state.dragonEvent)return;
+const entryHigh=state.dragonEvent.entryHigh;
+const fear=buildDragonBody(geo,false,entryHigh);
+const love=buildDragonBody(geo,true,!entryHigh);
 drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
 drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
 }
@@ -782,37 +842,48 @@ fireworks();
 }
 
 function getRegionAt(x,y){
-if(state.activeLayer===2){
 for(const key of ["C","W","E","N","S"]){
 const poly=state.faceZones[key];
 if(poly&&pointInPoly(x,y,poly))return key;
 }
-}
 return null;
-}
-
-function routeRegion(region){
-if(region==="C"){
-if(state.activeLayer===1){
-setLayer(2);
-return;
-}
-selectDirection("C");
-return;
-}
-if(region==="W"||region==="E"||region==="N"||region==="S"){
-selectDirection(region);
-}
 }
 
 function updateInteractionFromPoint(x,y){
 state.hoveredRegion=getRegionAt(x,y);
 }
 
+function pointerAngleFromCenter(x,y){
+const geo=state.cube;
+if(!geo)return 0;
+return Math.atan2(y-geo.centerY,x-geo.centerX);
+}
+
+function engageDial(x,y){
+state.isDragging=true;
+state.lastPointerAngle=pointerAngleFromCenter(x,y);
+if(state.activeLayer!==2)setLayer(2);
+if(!state.hasTriggeredDragons)startDragonEvent();
+}
+
+function moveDial(x,y){
+if(!state.isDragging)return;
+const a=pointerAngleFromCenter(x,y);
+let delta=wrapPi(a-state.lastPointerAngle);
+state.lastPointerAngle=a;
+state.rotVel+=delta*0.32;
+}
+
+function releaseDial(){
+state.isDragging=false;
+}
+
 function activateAtPoint(x,y){
 updateInteractionFromPoint(x,y);
 const hit=getRegionAt(x,y);
-if(hit)routeRegion(hit);
+if(hit){
+selectDirection(hit);
+}
 }
 
 canvas.addEventListener("pointermove",e=>{
@@ -820,6 +891,7 @@ const p=getPointerPos(e);
 state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
+moveDial(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("pointerdown",e=>{
@@ -828,6 +900,8 @@ state.pointer.down=true;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
+const hit=getRegionAt(p.x,p.y);
+if(hit)engageDial(p.x,p.y);
 });
 
 canvas.addEventListener("pointerup",e=>{
@@ -835,7 +909,12 @@ const p=getPointerPos(e);
 state.pointer.down=false;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
+if(state.isDragging){
+releaseDial();
 activateAtPoint(p.x,p.y);
+}else{
+activateAtPoint(p.x,p.y);
+}
 });
 
 canvas.addEventListener("touchstart",e=>{
@@ -846,6 +925,18 @@ state.pointer.down=true;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
+const hit=getRegionAt(p.x,p.y);
+if(hit)engageDial(p.x,p.y);
+},{passive:true});
+
+canvas.addEventListener("touchmove",e=>{
+const touch=e.changedTouches&&e.changedTouches[0];
+if(!touch)return;
+const p=getTouchPos(touch);
+state.pointer.x=p.x;
+state.pointer.y=p.y;
+updateInteractionFromPoint(p.x,p.y);
+moveDial(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("touchend",e=>{
@@ -855,18 +946,28 @@ const p=getTouchPos(touch);
 state.pointer.down=false;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
+if(state.isDragging){
+releaseDial();
 activateAtPoint(p.x,p.y);
+}else{
+activateAtPoint(p.x,p.y);
+}
 e.preventDefault();
 },{passive:false});
 
 canvas.addEventListener("pointerleave",()=>{
 state.pointer.down=false;
 state.hoveredRegion=null;
+releaseDial();
 });
 
 function animateState(){
 state.tick++;
-state.rotY+=state.activeLayer===1?0.0030:0.0026;
+state.rotY+=state.rotVel;
+state.rotVel*=state.isDragging?0.88:0.94;
+state.rotVel=clamp(state.rotVel,-0.08,0.08);
+if(!state.isDragging)state.rotY+=state.activeLayer===1?0.0016:0.0008;
+
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);
 

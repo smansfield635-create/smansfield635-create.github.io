@@ -1,853 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home</title>
-<meta name="description" content="Primary hub compass scene."/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compass</title>
 
 <style>
-:root{
-  --bg0:#12080a;
-  --bg1:#2b0f0f;
-  --bg2:#7a1914;
-  --bg3:#da4a21;
-
-  --ink:#fff8f2;
-  --mut:rgba(255,245,238,.78);
-  --gold:rgba(233,197,118,.95);
-  --gold2:rgba(203,162,78,.78);
-
-  --glass:rgba(20,10,12,.48);
-  --glass2:rgba(255,255,255,.05);
-  --line:rgba(255,255,255,.14);
-
-  --panelShadow:0 24px 80px rgba(0,0,0,.32);
-  --uiW:min(1180px,95vw);
-}
-*{box-sizing:border-box}
 html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  background:linear-gradient(180deg,var(--bg2),var(--bg0));
-  color:var(--ink);
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-}
-body{
-  overflow-x:hidden;
-}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-
-#scene{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  z-index:0;
-  display:block;
+margin:0;
+padding:0;
+height:100%;
+background:#120706;
+font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+color:#fff;
+overflow-x:hidden;
 }
 
-.shell{
-  position:relative;
-  z-index:3;
-  width:var(--uiW);
-  margin:0 auto;
-}
-
-.topRail{
-  position:relative;
-  z-index:4;
-  width:var(--uiW);
-  margin:14px auto 0;
-  padding:14px 16px;
-  border:1px solid var(--line);
-  border-radius:26px;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(255,255,255,.06), transparent 32%),
-    linear-gradient(180deg, rgba(20,9,12,.80), rgba(10,7,9,.82));
-  box-shadow:var(--panelShadow);
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  backdrop-filter:blur(16px);
-}
-
-.topLeft{
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.railTitle{
-  margin:0;
-  font-size:11px;
-  line-height:1;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--mut);
-  font-weight:900;
-}
-.railSub{
-  margin:0;
-  font-size:13px;
-  line-height:1.3;
-  color:var(--ink);
-  font-weight:700;
-}
-
-.topRight{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  align-items:center;
-  justify-content:flex-end;
-}
-
-.toggleGroup{
-  display:flex;
-  gap:8px;
-  padding:6px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:rgba(0,0,0,.16);
-}
-
-.tbtn{
-  appearance:none;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  color:var(--ink);
-  min-width:106px;
-  min-height:54px;
-  padding:10px 14px;
-  border-radius:18px;
-  font-weight:900;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  cursor:pointer;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
-}
-.tbtn.small{
-  min-width:152px;
-}
-.tbtn.on{
-  border-color:rgba(233,197,118,.34);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.12),
-    0 0 0 1px rgba(233,197,118,.12),
-    0 0 22px rgba(233,197,118,.10);
-}
-.tbtn span{
-  display:block;
-  text-align:center;
-  line-height:1.08;
-}
-
-.stageShell{
-  position:relative;
-  width:var(--uiW);
-  margin:16px auto 0;
-  padding:10px 0 118px;
+canvas{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+z-index:0;
 }
 
 .stage{
-  position:relative;
-  height:min(880px,76vh);
-  min-height:620px;
-  border-radius:36px;
-  overflow:hidden;
-  background:rgba(0,0,0,.10);
+position:relative;
+z-index:3;
+width:min(1200px,95vw);
+margin:auto;
+padding-top:60px;
 }
 
-.gemLayer{
-  position:absolute;
-  inset:0;
-  z-index:5;
-  pointer-events:none;
+.panel{
+background:rgba(20,10,12,.6);
+border:1px solid rgba(255,255,255,.14);
+border-radius:26px;
+padding:28px;
+backdrop-filter:blur(18px);
+box-shadow:0 30px 90px rgba(0,0,0,.5);
+}
+
+h1{
+margin:0 0 12px;
+font-size:42px;
+}
+
+.grid{
+margin-top:36px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:14px;
 }
 
 .gem{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) rotate(45deg);
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 32% 20%, rgba(255,255,255,.20), transparent 34%),
-    radial-gradient(circle at 78% 80%, rgba(90,10,18,.22), transparent 54%),
-    linear-gradient(160deg, rgba(25,12,16,.94), rgba(10,7,9,.98));
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.34),
-    inset 0 1px 0 rgba(255,255,255,.12),
-    inset 0 -30px 60px rgba(0,0,0,.55);
-  pointer-events:auto;
-  cursor:pointer;
-  overflow:hidden;
-  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
-}
-.gem::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,.08), transparent 32%),
-    radial-gradient(circle at 50% 50%, rgba(233,197,118,.12), transparent 70%);
-  opacity:.8;
-  pointer-events:none;
-}
-.gem:hover{
-  border-color:rgba(233,197,118,.34);
-  box-shadow:
-    0 18px 50px rgba(0,0,0,.36),
-    0 0 0 1px rgba(233,197,118,.16),
-    0 0 18px rgba(233,197,118,.16),
-    inset 0 1px 0 rgba(255,255,255,.14),
-    inset 0 -30px 60px rgba(0,0,0,.55);
-}
-.gem.core{width:182px;height:182px;border-radius:28px}
-.gem.l1{width:124px;height:124px}
-.gem.l2{width:104px;height:104px}
-.gem.l3{width:92px;height:92px;border-radius:18px}
-
-.gemInner{
-  width:100%;
-  height:100%;
-  transform:rotate(-45deg);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:8px;
-  pointer-events:none;
-}
-.gWord{
-  font-weight:980;
-  font-size:14px;
-  line-height:1.02;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  text-shadow:0 0 12px rgba(0,0,0,.36);
-}
-.gCode{
-  margin-top:6px;
-  font-weight:800;
-  font-size:10px;
-  line-height:1;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:rgba(255,245,238,.72);
-}
-.gem.l1 .gWord{font-size:13px}
-.gem.l2 .gWord{font-size:12px}
-.gem.l3 .gWord{font-size:11px}
-
-.corner{
-  position:fixed;
-  bottom:max(18px, env(safe-area-inset-bottom));
-  z-index:6;
-}
-.corner.left{left:18px}
-.corner.right{right:18px}
-.cornerBtn{
-  min-width:86px;
-  min-height:86px;
-  border:none;
-  border-radius:22px;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(233,197,118,.18), transparent 60%),
-    linear-gradient(160deg, rgba(18,10,12,.92), rgba(8,6,8,.98));
-  box-shadow:
-    0 24px 60px rgba(0,0,0,.34),
-    inset 0 1px 0 rgba(255,255,255,.10);
-  font-weight:980;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  cursor:pointer;
+padding:18px;
+border-radius:18px;
+border:1px solid rgba(255,255,255,.14);
+background:
+radial-gradient(circle at 30% 25%,rgba(255,255,255,.45),transparent 40%),
+linear-gradient(160deg,rgba(40,20,24,.9),rgba(8,5,6,.95));
+box-shadow:
+0 18px 60px rgba(0,0,0,.45),
+inset 0 1px 0 rgba(255,255,255,.3),
+inset 0 -60px 90px rgba(0,0,0,.7);
+font-weight:800;
+text-transform:uppercase;
+letter-spacing:.06em;
+text-align:center;
 }
 
-.hud{
-  position:fixed;
-  left:18px;
-  top:86px;
-  z-index:6;
-  color:rgba(255,248,240,.92);
-  font:800 12px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  opacity:.78;
-}
-
-@media (max-width:900px){
-  .topRail{
-    align-items:flex-start;
-  }
-  .topRight{
-    justify-content:flex-start;
-  }
-  .stage{
-    height:78vh;
-  }
-}
-
-@media (max-width:680px){
-  .tbtn{
-    min-width:92px;
-    min-height:50px;
-    padding:8px 10px;
-    font-size:12px;
-  }
-  .tbtn.small{
-    min-width:134px;
-  }
-  .stage{
-    min-height:560px;
-  }
-  .gem.core{width:156px;height:156px}
-  .gem.l1{width:112px;height:112px}
-  .gem.l2{width:96px;height:96px}
-  .gem.l3{width:84px;height:84px}
-}
-
-@media (max-width:520px){
-  .stageShell{
-    padding-bottom:104px;
-  }
-  .stage{
-    min-height:520px;
-  }
-  .cornerBtn{
-    min-width:76px;
-    min-height:76px;
-    border-radius:20px;
-  }
+.gem.core{
+font-size:18px;
+border-color:rgba(233,197,118,.45);
+box-shadow:
+0 30px 120px rgba(0,0,0,.8),
+0 0 30px rgba(233,197,118,.35),
+inset 0 1px 0 rgba(255,255,255,.4),
+inset 0 -60px 120px rgba(0,0,0,.8);
 }
 </style>
 </head>
+
 <body>
 
 <canvas id="scene"></canvas>
 
-<div class="hud" id="hud">BG_OK | COMPASS_OK | DRAGON_OK</div>
+<div class="stage">
 
-<div class="topRail">
-  <div class="topLeft">
-    <p class="railTitle">Welcome to the Compass</p>
-    <p class="railSub">Water-dial navigation · embedded gems · mirrored dragon traversal</p>
-  </div>
+<div class="panel">
+<h1>Compass Hub</h1>
+<p>Liquid compass instrument with embedded navigation gems.</p>
 
-  <div class="topRight">
-    <div class="toggleGroup" aria-label="Layer toggle">
-      <button class="tbtn on" id="btnLayer1" type="button"><span>Layer<br>1</span></button>
-      <button class="tbtn" id="btnLayer2" type="button"><span>Layer<br>2</span></button>
-    </div>
+<div class="grid">
 
-    <div class="toggleGroup" aria-label="Lane toggle">
-      <button class="tbtn small on" id="btnPlatform" type="button"><span>Platform</span></button>
-      <button class="tbtn small" id="btnEngineering" type="button"><span>Engineering</span></button>
-    </div>
-  </div>
+<div class="gem core">CORE</div>
+
+<div class="gem">Governance</div>
+<div class="gem">Finance</div>
+<div class="gem">Energy</div>
+<div class="gem">Medical</div>
+
+<div class="gem">Verification</div>
+<div class="gem">Software</div>
+<div class="gem">Education</div>
+<div class="gem">Gauges</div>
+
 </div>
 
-<div class="stageShell">
-  <div class="shell stage" id="stage">
-    <div class="gemLayer" id="gemLayer"></div>
-  </div>
 </div>
 
-<div class="corner left">
-  <button class="cornerBtn" id="btnExit" type="button">Exit</button>
 </div>
 
-<div class="corner right">
-  <button class="cornerBtn" id="btnHub" type="button">Hub</button>
-</div>
+<script src="/variant/scene.js"></script>
 
-<script>
-(function(){
-  "use strict";
-
-  const canvas = document.getElementById("scene");
-  const ctx = canvas.getContext("2d");
-  const stage = document.getElementById("stage");
-  const gemLayer = document.getElementById("gemLayer");
-  const hud = document.getElementById("hud");
-
-  const state = {
-    layer: 1,
-    lane: "platform",
-    time: 0
-  };
-
-  const ROUTES = {
-    exit: "/door/",
-    hub: "/index.html",
-    core: "/home/",
-    N: "/governance/",
-    E: "/finance/",
-    S: "/energy/",
-    W: "/medical/",
-    NS: "/verification/",
-    ES: "/software/",
-    SS: "/education/",
-    WS: "/gauges/",
-    NE: "/governance-finance/",
-    NW: "/governance-medical/",
-    SE: "/finance-energy/",
-    SW: "/energy-medical/"
-  };
-
-  const PLATFORM = {
-    core: "Core",
-    N: "Governance",
-    E: "Finance",
-    S: "Energy",
-    W: "Medical",
-    NS: "Verification",
-    ES: "Software",
-    SS: "Education",
-    WS: "Gauges",
-    NE: "Gov × Fin",
-    NW: "Gov × Med",
-    SE: "Fin × Energy",
-    SW: "Energy × Med"
-  };
-
-  const ENGINEERING = {
-    core: "Core Index",
-    N: "Laws",
-    E: "Energy",
-    S: "Finance",
-    W: "Governance",
-    NS: "Verify",
-    ES: "Software",
-    SS: "Education",
-    WS: "Gauges",
-    NE: "Route NE",
-    NW: "Route NW",
-    SE: "Route SE",
-    SW: "Route SW"
-  };
-
-  function resize(){
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-
-  function currentLabels(){
-    return state.lane === "engineering" ? ENGINEERING : PLATFORM;
-  }
-
-  function gemSpec(){
-    const labels = currentLabels();
-    if(state.layer === 1){
-      return [
-        { id:"core", code:"CORE", word:labels.core, tier:"core", x:0, y:0, href:ROUTES.core },
-        { id:"N", code:"N", word:labels.N, tier:"l1", x:0, y:-158, href:ROUTES.N },
-        { id:"E", code:"E", word:labels.E, tier:"l1", x:158, y:0, href:ROUTES.E },
-        { id:"S", code:"S", word:labels.S, tier:"l1", x:0, y:158, href:ROUTES.S },
-        { id:"W", code:"W", word:labels.W, tier:"l1", x:-158, y:0, href:ROUTES.W }
-      ];
-    }
-    return [
-      { id:"NS", code:"N★", word:labels.NS, tier:"l2", x:0, y:-210, href:ROUTES.NS },
-      { id:"ES", code:"E★", word:labels.ES, tier:"l2", x:210, y:0, href:ROUTES.ES },
-      { id:"SS", code:"S★", word:labels.SS, tier:"l2", x:0, y:210, href:ROUTES.SS },
-      { id:"WS", code:"W★", word:labels.WS, tier:"l2", x:-210, y:0, href:ROUTES.WS },
-
-      { id:"NE", code:"NE", word:labels.NE, tier:"l3", x:150, y:-150, href:ROUTES.NE },
-      { id:"NW", code:"NW", word:labels.NW, tier:"l3", x:-150, y:-150, href:ROUTES.NW },
-      { id:"SE", code:"SE", word:labels.SE, tier:"l3", x:150, y:150, href:ROUTES.SE },
-      { id:"SW", code:"SW", word:labels.SW, tier:"l3", x:-150, y:150, href:ROUTES.SW }
-    ];
-  }
-
-  function renderGems(){
-    gemLayer.innerHTML = "";
-    const rect = stage.getBoundingClientRect();
-    const cx = rect.width * 0.5;
-    const cy = rect.height * 0.50;
-
-    gemSpec().forEach(item=>{
-      const el = document.createElement("button");
-      el.className = "gem " + item.tier;
-      el.type = "button";
-      el.style.left = (cx + item.x) + "px";
-      el.style.top = (cy + item.y) + "px";
-      el.setAttribute("aria-label", item.word);
-
-      el.innerHTML = [
-        '<div class="gemInner">',
-        '<div class="gWord">' + item.word + '</div>',
-        '<div class="gCode">' + item.code + '</div>',
-        '</div>'
-      ].join("");
-
-      el.addEventListener("click", function(){
-        window.location.href = item.href;
-      });
-
-      gemLayer.appendChild(el);
-    });
-  }
-
-  function gradientSky(w,h){
-    const g = ctx.createLinearGradient(0,0,0,h);
-    g.addColorStop(0,"#2a0b0b");
-    g.addColorStop(0.28,"#862018");
-    g.addColorStop(0.62,"#c83c1e");
-    g.addColorStop(1,"#5a180d");
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,w,h);
-
-    const rg = ctx.createRadialGradient(w*0.5,h*0.38,0,w*0.5,h*0.38,Math.max(w,h)*0.7);
-    rg.addColorStop(0,"rgba(255,220,170,0.18)");
-    rg.addColorStop(.28,"rgba(255,190,120,0.08)");
-    rg.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.fillStyle = rg;
-    ctx.fillRect(0,0,w,h);
-  }
-
-  function drawMoon(w,h){
-    const x = w * 0.78;
-    const y = h * 0.18;
-    const r = Math.max(28, Math.min(w,h) * 0.04);
-
-    const glow = ctx.createRadialGradient(x,y,0,x,y,r*2.2);
-    glow.addColorStop(0,"rgba(255,245,210,.40)");
-    glow.addColorStop(.45,"rgba(255,225,170,.18)");
-    glow.addColorStop(1,"rgba(255,220,170,0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(x,y,r*2.2,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(214,216,198,.95)";
-    ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(110,112,108,.42)";
-    [
-      [-.35,-.22,.16],[.12,-.08,.12],[.22,.15,.11],[-.12,.18,.09],[.34,-.28,.07]
-    ].forEach(c=>{
-      ctx.beginPath();
-      ctx.arc(x + c[0]*r*1.2, y + c[1]*r*1.2, c[2]*r, 0, Math.PI*2);
-      ctx.fill();
-    });
-  }
-
-  function drawCompass(w,h,t){
-    const cx = w * 0.5;
-    const cy = h * 0.53;
-    const r = Math.min(w,h) * 0.31;
-
-    const dome = ctx.createRadialGradient(cx,cy-r*0.35,0,cx,cy,r*1.2);
-    dome.addColorStop(0,"rgba(255,240,225,.12)");
-    dome.addColorStop(.35,"rgba(255,190,140,.07)");
-    dome.addColorStop(.72,"rgba(90,24,12,.18)");
-    dome.addColorStop(1,"rgba(20,10,10,.36)");
-    ctx.fillStyle = dome;
-    ctx.beginPath();
-    ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.lineWidth = 1.15;
-    ctx.strokeStyle = "rgba(255,240,225,.08)";
-    for(let i=0;i<48;i++){
-      const a = -Math.PI/2 + (i/48) * Math.PI*2;
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.lineTo(cx + Math.cos(a)*r*0.98, cy + Math.sin(a)*r*0.98);
-      ctx.stroke();
-    }
-
-    for(let i=1;i<=5;i++){
-      ctx.beginPath();
-      ctx.arc(cx,cy,r*(i/5),0,Math.PI*2);
-      ctx.strokeStyle = "rgba(255,240,225," + (0.035 + i*0.01) + ")";
-      ctx.stroke();
-    }
-
-    const n = 80;
-    for(let i=0;i<n;i++){
-      const frac = i / (n-1);
-      const wave = Math.sin(frac*14 - t*1.8) * 8 + Math.sin(frac*7 - t*1.1) * 5;
-      const ang = frac * Math.PI*2;
-      const rr = r * (0.08 + frac*0.88) + wave * (1-frac*0.2);
-      const alpha = 0.03 + frac*0.04;
-      ctx.strokeStyle = "rgba(255,232,195," + alpha + ")";
-      ctx.beginPath();
-      ctx.arc(cx,cy,rr,ang,ang + Math.PI/2.9);
-      ctx.stroke();
-    }
-
-    const flow = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-    flow.addColorStop(0,"rgba(255,240,210,.11)");
-    flow.addColorStop(.35,"rgba(255,210,160,.06)");
-    flow.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.fillStyle = flow;
-    ctx.beginPath();
-    ctx.arc(cx,cy,r*0.96,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(255,245,230,.10)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx,cy,r,0,Math.PI*2);
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(233,197,118,.95)";
-    ctx.font = "800 14px system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("N", cx, cy-r-18);
-    ctx.fillText("E", cx+r+18, cy);
-    ctx.fillText("S", cx, cy+r+18);
-    ctx.fillText("W", cx-r-18, cy);
-
-    return {cx,cy,r};
-  }
-
-  function drawWaterHorizon(w,h,t){
-    const y0 = h * 0.70;
-
-    const g = ctx.createLinearGradient(0,y0,0,h);
-    g.addColorStop(0,"rgba(255,220,180,.10)");
-    g.addColorStop(.5,"rgba(240,180,130,.16)");
-    g.addColorStop(1,"rgba(90,30,16,.28)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0,y0,w,h-y0);
-
-    for(let row=0;row<5;row++){
-      const yy = y0 + row*22;
-      ctx.beginPath();
-      for(let x=0;x<=w;x+=12){
-        const y = yy + Math.sin(x*0.014 + t*1.1 + row*0.5) * (6 + row*1.4);
-        if(x===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
-      }
-      ctx.strokeStyle = "rgba(255,230,205," + (0.06 + row*0.025) + ")";
-      ctx.lineWidth = 1.1;
-      ctx.stroke();
-    }
-  }
-
-  function dragonPath(dir,w,h,t){
-    const baseY = h * 0.30 + (dir < 0 ? h*0.10 : h*0.22);
-    const startX = dir > 0 ? -w*0.18 : w*1.18;
-    const endX = dir > 0 ? w*1.18 : -w*0.18;
-    const progress = ((t*0.05) % 1);
-    const xHead = startX + (endX-startX)*progress;
-
-    const path = [];
-    const segs = 26;
-    for(let i=0;i<segs;i++){
-      const lag = i * 0.032;
-      const p = progress - lag;
-      const x = startX + (endX-startX)*p;
-      const y =
-        baseY +
-        Math.sin((p*7.0 + t*0.85) * Math.PI) * 22 +
-        Math.sin((p*14.0 + t*0.6) * Math.PI) * 10;
-
-      const width = Math.max(10, 30 - i*0.75);
-      path.push({x,y,w:width});
-    }
-
-    return {path, headX:xHead, headY:path[0].y};
-  }
-
-  function drawRibbonDragon(dragon, dir, colorFill, colorEdge, accent){
-    const pts = dragon.path;
-
-    const upper = [];
-    const lower = [];
-
-    for(let i=0;i<pts.length;i++){
-      const p = pts[i];
-      const prev = pts[Math.max(0,i-1)];
-      const next = pts[Math.min(pts.length-1,i+1)];
-      const dx = next.x - prev.x;
-      const dy = next.y - prev.y;
-      const len = Math.max(1, Math.hypot(dx,dy));
-      const nx = -dy / len;
-      const ny = dx / len;
-
-      upper.push({x:p.x + nx*p.w, y:p.y + ny*p.w});
-      lower.push({x:p.x - nx*p.w, y:p.y - ny*p.w});
-    }
-
-    ctx.beginPath();
-    ctx.moveTo(upper[0].x, upper[0].y);
-    for(let i=1;i<upper.length;i++) ctx.lineTo(upper[i].x, upper[i].y);
-    for(let i=lower.length-1;i>=0;i--) ctx.lineTo(lower[i].x, lower[i].y);
-    ctx.closePath();
-
-    const grad = ctx.createLinearGradient(pts[0].x, pts[0].y, pts[pts.length-1].x, pts[pts.length-1].y);
-    grad.addColorStop(0,colorFill[0]);
-    grad.addColorStop(.55,colorFill[1]);
-    grad.addColorStop(1,colorFill[2]);
-    ctx.fillStyle = grad;
-    ctx.fill();
-
-    ctx.strokeStyle = colorEdge;
-    ctx.lineWidth = 4.5;
-    ctx.stroke();
-
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 1.5;
-    for(let i=2;i<pts.length-2;i+=3){
-      const p = pts[i];
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y - p.w*0.72);
-      ctx.lineTo(p.x + dir*10, p.y - p.w*1.18);
-      ctx.stroke();
-    }
-
-    const head = pts[0];
-    ctx.beginPath();
-    ctx.arc(head.x, head.y, head.w*0.72, 0, Math.PI*2);
-    ctx.fillStyle = colorFill[1];
-    ctx.fill();
-    ctx.strokeStyle = colorEdge;
-    ctx.lineWidth = 4;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(head.x + dir*head.w*0.46, head.y);
-    ctx.lineTo(head.x + dir*head.w*1.28, head.y - head.w*0.20);
-    ctx.lineTo(head.x + dir*head.w*1.08, head.y + head.w*0.12);
-    ctx.closePath();
-    ctx.fillStyle = colorFill[1];
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(head.x - dir*head.w*0.14, head.y - head.w*0.12);
-    ctx.lineTo(head.x + dir*head.w*0.55, head.y - head.w*0.92);
-    ctx.lineTo(head.x + dir*head.w*0.10, head.y - head.w*1.18);
-    ctx.strokeStyle = accent;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(head.x - dir*head.w*0.14, head.y + head.w*0.08);
-    ctx.lineTo(head.x + dir*head.w*0.60, head.y + head.w*0.92);
-    ctx.lineTo(head.x + dir*head.w*0.04, head.y + head.w*1.02);
-    ctx.stroke();
-  }
-
-  function drawReflections(w,h,t){
-    const y0 = h*0.72;
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(0,y0,w,h-y0);
-    ctx.clip();
-    ctx.globalAlpha = 0.16;
-    ctx.translate(0, h*1.43);
-    ctx.scale(1,-0.34);
-
-    const d1 = dragonPath(1,w,h,t+0.6);
-    const d2 = dragonPath(-1,w,h,t+0.6);
-
-    drawRibbonDragon(d1,1,
-      ["rgba(110,160,120,.18)","rgba(50,110,70,.24)","rgba(24,50,30,.18)"],
-      "rgba(240,230,190,.12)",
-      "rgba(230,210,130,.12)"
-    );
-
-    drawRibbonDragon(d2,-1,
-      ["rgba(170,52,42,.18)","rgba(116,16,12,.24)","rgba(46,8,10,.18)"],
-      "rgba(240,210,180,.12)",
-      "rgba(250,180,90,.10)"
-    );
-
-    ctx.restore();
-  }
-
-  function drawFrame(){
-    state.time += 0.012;
-
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-
-    ctx.clearRect(0,0,w,h);
-
-    gradientSky(w,h);
-    drawMoon(w,h);
-    drawWaterHorizon(w,h,state.time);
-    drawCompass(w,h,state.time);
-
-    const wise = dragonPath(1,w,h,state.time);
-    const fear = dragonPath(-1,w,h,state.time);
-
-    drawRibbonDragon(
-      wise,
-      1,
-      ["rgba(60,150,84,.94)","rgba(28,122,56,.97)","rgba(16,84,34,.96)"],
-      "rgba(12,12,12,.92)",
-      "rgba(233,197,118,.85)"
-    );
-
-    drawRibbonDragon(
-      fear,
-      -1,
-      ["rgba(178,28,30,.96)","rgba(145,10,12,.98)","rgba(84,8,10,.98)"],
-      "rgba(12,12,12,.94)",
-      "rgba(244,184,98,.86)"
-    );
-
-    drawReflections(w,h,state.time);
-
-    requestAnimationFrame(drawFrame);
-  }
-
-  function setLayer(next){
-    state.layer = next;
-    document.getElementById("btnLayer1").classList.toggle("on", next === 1);
-    document.getElementById("btnLayer2").classList.toggle("on", next === 2);
-    renderGems();
-  }
-
-  function setLane(next){
-    state.lane = next;
-    document.getElementById("btnPlatform").classList.toggle("on", next === "platform");
-    document.getElementById("btnEngineering").classList.toggle("on", next === "engineering");
-    renderGems();
-  }
-
-  document.getElementById("btnLayer1").addEventListener("click", ()=>setLayer(1));
-  document.getElementById("btnLayer2").addEventListener("click", ()=>setLayer(2));
-  document.getElementById("btnPlatform").addEventListener("click", ()=>setLane("platform"));
-  document.getElementById("btnEngineering").addEventListener("click", ()=>setLane("engineering"));
-  document.getElementById("btnExit").addEventListener("click", ()=>window.location.href = ROUTES.exit);
-  document.getElementById("btnHub").addEventListener("click", ()=>window.location.href = ROUTES.hub);
-  window.addEventListener("resize", ()=>{
-    resize();
-    renderGems();
-  });
-
-  resize();
-  setLayer(1);
-  setLane("platform");
-  drawFrame();
-
-})();
-</script>
 </body>
 </html>

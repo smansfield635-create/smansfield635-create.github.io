@@ -4,32 +4,124 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Home</title>
-<meta name="description" content="Governed Discovery Platform primary hub."/>
+<meta name="description" content="Primary hub of the Governed Discovery Platform."/>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
 <link rel="stylesheet" href="/variant/styles.css"/>
 
-<script defer src="/assets/instruments.js"></script>
+<style>
+:root{
+  --bg:#05070c;
+  --panel:rgba(8,12,18,.48);
+  --panel2:rgba(255,255,255,.05);
+  --line:rgba(255,255,255,.12);
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.72);
+  --gold:rgba(233,199,126,.88);
+  --max:1320px;
+  --blur:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+#variant-root{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.skiplink{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skiplink:focus{left:12px;top:12px;width:auto;height:auto;padding:10px 12px;border-radius:12px;background:#111;color:#fff;z-index:100}
+.shell{position:relative;z-index:1;width:min(calc(100% - 24px),var(--max));margin-inline:auto}
+.top{padding:16px 0 0}
+.bar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:14px 16px;border:1px solid var(--line);border-radius:26px;
+  background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(255,255,255,.02));
+  backdrop-filter:blur(var(--blur));
+  box-shadow:0 18px 60px rgba(0,0,0,.22);
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{
+  width:16px;height:16px;transform:rotate(45deg);
+  border:1px solid rgba(255,255,255,.28);
+  background:linear-gradient(135deg,rgba(233,199,126,.24),rgba(255,255,255,.04));
+  flex:0 0 auto;
+}
+.copy{min-width:0}
+.kicker{margin:0 0 4px;font-size:11px;line-height:1;letter-spacing:.16em;text-transform:uppercase;color:var(--mut)}
+.name{margin:0;font-size:15px;line-height:1.1;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav a{
+  padding:10px 12px;border-radius:14px;font-size:13px;font-weight:600;
+  border:1px solid transparent;color:var(--mut);transition:.18s ease;
+}
+.nav a:hover,.nav a[aria-current="page"]{color:var(--ink);background:rgba(255,255,255,.06);border-color:var(--line)}
+main{padding:26px 0 30px;min-height:calc(100vh - 84px);display:grid;gap:18px;align-content:center}
+.hero{
+  max-width:780px;padding:30px;border:1px solid var(--line);border-radius:30px;
+  background:linear-gradient(180deg,var(--panel),rgba(255,255,255,.03));
+  backdrop-filter:blur(var(--blur));
+  box-shadow:0 28px 80px rgba(0,0,0,.24);
+}
+.eyebrow{margin:0 0 10px;font-size:12px;line-height:1;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.hero h1{margin:0 0 14px;font-size:clamp(34px,6vw,72px);line-height:.96;letter-spacing:-.04em}
+.hero p{margin:0;max-width:58ch;color:var(--mut);font-size:clamp(16px,2vw,19px);line-height:1.58}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{
+  padding:12px 16px;border-radius:16px;border:1px solid var(--line);
+  background:rgba(255,255,255,.06);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.btn.primary{background:rgba(255,255,255,.12)}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.card{
+  padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:var(--panel2)
+}
+.label{display:block;font-size:11px;line-height:1;letter-spacing:.15em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.value{display:block;margin-top:8px;font-size:14px;line-height:1.35;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.node{
+  padding:18px;border:1px solid rgba(255,255,255,.1);border-radius:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+  backdrop-filter:blur(12px)
+}
+.face{
+  display:inline-flex;align-items:center;justify-content:center;min-width:54px;min-height:28px;padding:0 10px;
+  border:1px solid var(--line);border-radius:999px;color:var(--gold);
+  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase
+}
+.node h2{margin:12px 0 8px;font-size:18px;line-height:1.1}
+.node p{margin:0;color:var(--mut);font-size:14px;line-height:1.55}
+footer{padding:0 0 24px;color:var(--mut);font-size:12px}
+@media (max-width:1020px){
+  .meta{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .bar{align-items:flex-start;flex-direction:column}
+  .nav{justify-content:flex-start}
+}
+@media (max-width:640px){
+  .shell{width:min(calc(100% - 18px),var(--max))}
+  .hero{padding:22px;border-radius:24px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+
 <script defer src="/variant/scene.js"></script>
 <script defer src="/variant/index.js"></script>
 </head>
-<body data-room="WEBSITE_BUILD_ROOM" data-hub="primary">
+<body>
 <a class="skiplink" href="#main">Skip to content</a>
 
 <div id="variant-root" aria-hidden="true"></div>
 
-<header class="hubShell hubTop">
-  <div class="hubBar">
-    <div class="hubBrand">
-      <div class="hubBrandMark" aria-hidden="true"></div>
-      <div class="hubBrandCopy">
-        <p class="hubKicker">Primary Hub</p>
-        <h1 class="hubName">Governed Discovery Platform</h1>
+<header class="shell top">
+  <div class="bar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div class="copy">
+        <p class="kicker">Primary Hub</p>
+        <p class="name">Governed Discovery Platform</p>
       </div>
     </div>
 
-    <nav class="hubNav" aria-label="Primary navigation">
+    <nav class="nav" aria-label="Primary">
       <a href="/door/index.html?lang=en&style=formal&time=now&depth=explore">Door</a>
       <a href="/home/index.html?lang=en&style=formal&time=now&depth=explore" aria-current="page">Home</a>
       <a href="/explore/index.html?lang=en&style=formal&time=now&depth=explore">Explore</a>
@@ -41,109 +133,56 @@
   </div>
 </header>
 
-<main id="main" class="hubShell hubMain">
-  <section class="heroCard" aria-labelledby="hero-title">
-    <p class="heroEyebrow">Primary Coordinate Hub</p>
-    <h2 id="hero-title" class="heroTitle">Compass aligned entry into the platform</h2>
-    <p class="heroBody">
+<main id="main" class="shell">
+  <section class="hero" aria-labelledby="hero-title">
+    <p class="eyebrow">Primary Coordinate Hub</p>
+    <h1 id="hero-title">Compass aligned entry into the platform</h1>
+    <p>
       This hub preserves the gate order, exposes the directional system, and mounts the immersive
       scene behind the host shell without leaking protected engine behavior into the entry surface.
     </p>
 
-    <div class="heroActions">
-      <a class="heroButton heroButtonPrimary" href="/explore/index.html?lang=en&style=formal&time=now&depth=explore">Enter frontier</a>
-      <a class="heroButton" href="/laws/index.html?lang=en&style=formal&time=now&depth=learn">Read doctrine</a>
+    <div class="actions">
+      <a class="btn primary" href="/explore/index.html?lang=en&style=formal&time=now&depth=explore">Enter frontier</a>
+      <a class="btn" href="/laws/index.html?lang=en&style=formal&time=now&depth=learn">Read doctrine</a>
     </div>
 
-    <div class="heroMeta">
-      <div class="metaCard">
-        <span class="metaLabel">Gate order</span>
-        <span class="metaValue">Language → Lens → Domain → Hub</span>
+    <div class="meta">
+      <div class="card">
+        <span class="label">Gate order</span>
+        <span class="value">Language → Lens → Domain → Hub</span>
       </div>
-      <div class="metaCard">
-        <span class="metaLabel">Hub status</span>
-        <span class="metaValue">Active</span>
+      <div class="card">
+        <span class="label">Hub status</span>
+        <span class="value">Active</span>
       </div>
-      <div class="metaCard">
-        <span class="metaLabel">Failure policy</span>
-        <span class="metaValue">Safe skip</span>
+      <div class="card">
+        <span class="label">Failure policy</span>
+        <span class="value">Safe skip</span>
       </div>
     </div>
   </section>
 
-  <section class="nodeBand" aria-label="Main twelve nodes">
-    <article class="nodeCard">
-      <span class="nodeFace">N</span>
-      <h3>Governance</h3>
-      <p>Ratification, validation, invariant protection.</p>
-    </article>
+  <section class="grid" aria-label="Main twelve nodes">
+    <article class="node"><span class="face">N</span><h2>Governance</h2><p>Ratification, validation, invariant protection.</p></article>
+    <article class="node"><span class="face">E</span><h2>Finance</h2><p>Allocation, value routing, external viability.</p></article>
+    <article class="node"><span class="face">S</span><h2>Energy</h2><p>Power, infrastructure, sustained operation.</p></article>
+    <article class="node"><span class="face">W</span><h2>Medical</h2><p>Health interfaces, diagnostics, restorative use.</p></article>
 
-    <article class="nodeCard">
-      <span class="nodeFace">E</span>
-      <h3>Finance</h3>
-      <p>Allocation, value routing, external viability.</p>
-    </article>
+    <article class="node"><span class="face">N★</span><h2>Verification</h2><p>Evidence posture, audit stance, empirical frame.</p></article>
+    <article class="node"><span class="face">E★</span><h2>Software</h2><p>Executable systems, interfaces, compiled artifacts.</p></article>
+    <article class="node"><span class="face">S★</span><h2>Education</h2><p>Traversal, fluency, transmission of method.</p></article>
+    <article class="node"><span class="face">W★</span><h2>Gauges</h2><p>Metrics, measures, bounded instrumentation surfaces.</p></article>
 
-    <article class="nodeCard">
-      <span class="nodeFace">S</span>
-      <h3>Energy</h3>
-      <p>Power, infrastructure, sustained operation.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">W</span>
-      <h3>Medical</h3>
-      <p>Health interfaces, diagnostics, restorative use.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">N★</span>
-      <h3>Verification</h3>
-      <p>Evidence posture, audit stance, empirical frame.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">E★</span>
-      <h3>Software</h3>
-      <p>Executable systems, interfaces, compiled artifacts.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">S★</span>
-      <h3>Education</h3>
-      <p>Traversal, fluency, transmission of the method.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">W★</span>
-      <h3>Gauges</h3>
-      <p>Metrics, measures, bounded instrumentation surfaces.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">N:NE</span>
-      <h3>Governance × Finance</h3>
-      <p>Institutional rule binding to allocation and value flow.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">N:NW</span>
-      <h3>Governance × Medical</h3>
-      <p>Protected health systems under lawful coordination.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">N:SE</span>
-      <h3>Finance × Energy</h3>
-      <p>Capital routing into energetic continuity and build.</p>
-    </article>
-
-    <article class="nodeCard">
-      <span class="nodeFace">N:SW</span>
-      <h3>Energy × Medical</h3>
-      <p>Vital infrastructure sustaining care and recovery.</p>
-    </article>
+    <article class="node"><span class="face">N NE</span><h2>Governance × Finance</h2><p>Institutional rule binding to allocation and value flow.</p></article>
+    <article class="node"><span class="face">N NW</span><h2>Governance × Medical</h2><p>Protected health systems under lawful coordination.</p></article>
+    <article class="node"><span class="face">N SE</span><h2>Finance × Energy</h2><p>Capital routing into energetic continuity and build.</p></article>
+    <article class="node"><span class="face">N SW</span><h2>Energy × Medical</h2><p>Vital infrastructure sustaining care and recovery.</p></article>
   </section>
 </main>
+
+<footer class="shell">
+  Primary hub active · immersive scene mounted separately · host shell preserved
+</footer>
 </body>
 </html>

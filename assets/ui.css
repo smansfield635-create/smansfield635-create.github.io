@@ -1,0 +1,36 @@
+:root{
+  --bg0:#120707;
+  --bg1:#3a0f0f;
+  --bg2:#c4421e;
+  --ink:#fff7f2;
+  --gold:#e7c37a;
+}
+
+html,body{
+  margin:0;
+  height:100%;
+  background:linear-gradient(180deg,var(--bg2),var(--bg0));
+  color:var(--ink);
+  font-family:system-ui,Segoe UI,Roboto,sans-serif;
+}
+
+#scene{
+  position:fixed;
+  inset:0;
+  z-index:0;
+}
+
+header{
+  position:relative;
+  z-index:2;
+  padding:14px 20px;
+}
+
+.layerToggle{
+  display:flex;
+  gap:10px;
+}
+
+button{
+  cursor:pointer;
+}

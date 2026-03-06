@@ -1,31 +1,70 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Home</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Navigator</title>
 
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
+
+<style>
+/* minimal mount styling */
+
+#scene{
+  position:fixed;
+  inset:0;
+  z-index:0;
+}
+
+.uiLayer{
+  position:relative;
+  z-index:2;
+  pointer-events:auto;
+}
+
+.navigatorHeader{
+  padding:18px 24px;
+  font-size:28px;
+  font-weight:800;
+}
+
+.layerControls{
+  padding:12px 24px;
+  display:flex;
+  gap:12px;
+}
+
+.layerControls button{
+  padding:10px 16px;
+  font-weight:700;
+  border-radius:8px;
+}
+</style>
 
 </head>
 
 <body>
 
-<header>
-<h1>Launchpad</h1>
-</header>
+<!-- RENDER ENGINE MOUNT -->
+<canvas id="scene"></canvas>
 
-<nav>
+<!-- UI ABOVE THE SCENE -->
+<div class="uiLayer">
 
-<a href="/index.html">Navigator</a>
-<a href="/products/">Products</a>
-<a href="/explore/">Explore</a>
-<a href="/laws/">Laws</a>
-<a href="/gauges/">Gauges</a>
+<div class="navigatorHeader">
+Navigator
+</div>
 
-</nav>
+<div class="layerControls">
+<button onclick="navigatorLayer(1)">Layer 1</button>
+<button onclick="navigatorLayer(2)">Layer 2</button>
+</div>
+
+</div>
 
 <script src="/assets/instruments.js"></script>
+<script src="/variant/scene.js"></script>
 
 </body>
 </html>

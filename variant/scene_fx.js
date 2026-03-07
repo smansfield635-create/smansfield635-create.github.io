@@ -1,10 +1,51 @@
 (function () {
   "use strict";
 
-  const TAU = Math.PI * 2;
-
   function clamp(v, min, max) {
     return Math.max(min, Math.min(max, v));
+  }
+
+  function createState() {
+    return {
+      fireworks: [],
+      lockedFace: null,
+      lockedPulse: 0,
+      overlayAlpha: 0,
+    };
+  }
+
+  function hash(n) {
+    return (Math.sin(n * 127.1) * 43758.5453123) % 1;
+  }
+
+  function spawnFirework(state, x, y, count, sizeBase) {
+    const particles = [];
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 + Math.abs(hash(i + count)) * 0.32;
+      const speed = sizeBase * (0.75 + Math.abs(hash(i * 5.7)) * 0.65);
+      particles.push({
+        x,
+        y,
+        vx: Math.cos(a) * speed,
+        vy: Math.sin(a) * speed,
+        life: 46 + Math.floor(Math.abs(hash(i * 2.1)) * 20),
+      });
+    }
+    state.fireworks.push({ particles, life: 60, maxLife: 60 });
+  }
+
+  function triggerLocked(state, face) {
+    state.lockedFace = face;
+    state.lockedPulse = 1;
+  }
+
+  function triggerOverlay(state, alpha) {
+    state.overlayAlpha = Math.max(state.overlayAlpha, alpha);
+  }
+
+  function decay(state) {
+    state.lockedPulse *= 0.93;
+    state.overlayAlpha *= 0.88;
   }
 
   function roundedRectPath(ctx, x, y, w, h, r) {
@@ -22,45 +63,6 @@
     ctx.closePath();
   }
 
-  function createState() {
-    return {
-      fireworks: [],
-      overlayAlpha: 0,
-      lockedFace: null,
-      lockedPulse: 0,
-    };
-  }
-
-  function spawnFirework(state, x, y, count, sizeBase) {
-    const particles = [];
-    for (let i = 0; i < count; i++) {
-      const a = (i / count) * TAU + Math.sin(i + count) * 0.32;
-      const speed = sizeBase * (0.75 + ((Math.sin(i * 5.7) + 1) * 0.5) * 0.65);
-      particles.push({
-        x,
-        y,
-        vx: Math.cos(a) * speed,
-        vy: Math.sin(a) * speed,
-        life: 46 + Math.floor((((Math.sin(i * 2.1) + 1) * 0.5) * 20)),
-      });
-    }
-    state.fireworks.push({ particles, life: 60, maxLife: 60 });
-  }
-
-  function triggerLocked(state, face) {
-    state.lockedFace = face;
-    state.lockedPulse = 1;
-  }
-
-  function triggerOverlay(state, amount) {
-    state.overlayAlpha = Math.max(state.overlayAlpha, typeof amount === "number" ? amount : 1);
-  }
-
-  function decay(state) {
-    state.lockedPulse *= 0.93;
-    state.overlayAlpha *= 0.88;
-  }
-
   function drawFireworks(ctx, state) {
     for (let f = state.fireworks.length - 1; f >= 0; f--) {
       const burst = state.fireworks[f];
@@ -74,7 +76,9 @@
         p.vy *= 0.985;
         p.vy += 0.012;
         p.life--;
-        if (p.life <= 0) burst.particles.splice(i, 1);
+        if (p.life <= 0) {
+          burst.particles.splice(i, 1);
+        }
       }
 
       if (burst.life <= 0 || burst.particles.length === 0) {
@@ -96,14 +100,14 @@
         ctx.shadowBlur = 10;
         ctx.shadowColor = ctx.fillStyle;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.8, 0, TAU);
+        ctx.arc(p.x, p.y, 1.8, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
     }
   }
 
-  function drawLockedOverlay(ctx, state, labelResolver) {
+  function drawLockedOverlay(ctx, state, getLabel) {
     if (state.lockedPulse <= 0 || !state.lockedFace) return;
 
     const alpha = clamp(state.lockedPulse, 0, 1);
@@ -111,7 +115,6 @@
     const h = 50;
     const x = window.innerWidth * 0.5 - w * 0.5;
     const y = window.innerHeight * 0.12;
-    const label = typeof labelResolver === "function" ? labelResolver(state.lockedFace) : state.lockedFace;
 
     ctx.save();
     ctx.globalAlpha = 0.82 * alpha;
@@ -125,7 +128,7 @@
     ctx.font = "700 14px system-ui,Segoe UI,Roboto,sans-serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(String(label || "LOCKED").toUpperCase(), x + w * 0.5, y + h * 0.5);
+    ctx.fillText(getLabel(state.lockedFace), x + w * 0.5, y + h * 0.5);
     ctx.restore();
   }
 

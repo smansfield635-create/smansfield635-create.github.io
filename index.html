@@ -1,28 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Diamond Gate Bridge</title>
-
 <link rel="stylesheet" href="/assets/ui.css">
 <link rel="stylesheet" href="/assets/branch.css">
-
 </head>
-<body>
+<body class="branch-shell" data-region-id="harbor_core">
 
 <canvas id="scene"></canvas>
 
 <div id="uiLayer">
-  <div class="topbar">
-    Home
+  <div class="topbar" id="topbarTitle">
+    Harbor Core
   </div>
+
+  <div class="route-fade" id="routeFade" aria-hidden="true"></div>
+  <div class="locked-toast" id="lockedToast" aria-hidden="true"></div>
 </div>
 
+<script src="/world/world_kernel.js"></script>
+<script src="/world/environment_runtime.js"></script>
+<script src="/world/island_regions.js"></script>
+<script src="/world/region_router.js"></script>
 <script src="/assets/instruments.js"></script>
 <script src="/variant/scene.js"></script>
+
+<script>
+(function(){
+"use strict";
+
+const router=window.REGION_ROUTER;
+const env=window.ENVIRONMENT_RUNTIME;
+const body=document.body;
+const topbar=document.getElementById("topbarTitle");
+
+if(router){
+const ctx=router.getRegionContext("/harbor/");
+if(ctx){
+body.dataset.regionId=ctx.regionId;
+body.dataset.regionType=ctx.type;
+body.dataset.regionBiome=ctx.biome;
+if(topbar)topbar.textContent=ctx.label;
+}
+}
+
+if(env){
+env.setSector("harbor_core");
+env.tick(0);
+}
+})();
+</script>
 
 </body>
 </html>

@@ -12,10 +12,7 @@
 <canvas id="scene"></canvas>
 
 <div id="uiLayer">
-  <div class="topbar" id="topbarTitle">
-    Harbor Core
-  </div>
-
+  <div class="topbar" id="topbarTitle">Harbor Core</div>
   <div class="route-fade" id="routeFade" aria-hidden="true"></div>
   <div class="locked-toast" id="lockedToast" aria-hidden="true"></div>
 </div>
@@ -31,24 +28,75 @@
 (function(){
 "use strict";
 
-const router=window.REGION_ROUTER;
-const env=window.ENVIRONMENT_RUNTIME;
+const router=window.REGION_ROUTER||null;
+const env=window.ENVIRONMENT_RUNTIME||null;
 const body=document.body;
 const topbar=document.getElementById("topbarTitle");
+const routeFade=document.getElementById("routeFade");
+const lockedToast=document.getElementById("lockedToast");
 
-if(router){
-const ctx=router.getRegionContext("/harbor/");
-if(ctx){
-body.dataset.regionId=ctx.regionId;
-body.dataset.regionType=ctx.type;
-body.dataset.regionBiome=ctx.biome;
-if(topbar)topbar.textContent=ctx.label;
+function setRegionContext(route){
+if(!router)return null;
+const ctx=router.getRegionContext(route||window.location.pathname||"/");
+if(!ctx)return null;
+
+body.dataset.regionId=ctx.regionId||"";
+body.dataset.regionType=ctx.type||"";
+body.dataset.regionBiome=ctx.biome||"";
+if(topbar)topbar.textContent=ctx.label||"Harbor Core";
+
+return ctx;
 }
+
+function activateRouteFade(){
+if(!routeFade)return;
+routeFade.classList.add("is-active");
+window.setTimeout(function(){
+routeFade.classList.remove("is-active");
+},220);
 }
+
+function showLockedToast(message){
+if(!lockedToast)return;
+lockedToast.textContent=message||"Locked";
+lockedToast.classList.add("is-active");
+window.setTimeout(function(){
+lockedToast.classList.remove("is-active");
+},1400);
+}
+
+function bindUIEvents(){
+document.addEventListener("compass:route",function(){
+activateRouteFade();
+});
+
+document.addEventListener("compass:locked",function(e){
+const face=e&&e.detail&&e.detail.face?e.detail.face:"Route";
+showLockedToast(face+" Locked");
+});
+
+document.addEventListener("environment:tap",function(){
+if(env&&typeof env.advanceByInteraction==="function"){
+env.advanceByInteraction(0.012);
+}
+});
+}
+
+function boot(){
+const ctx=setRegionContext("/harbor/");
 
 if(env){
-env.setSector("harbor_core");
+env.setSector((ctx&&ctx.regionId)||"harbor_core");
 env.tick(0);
+}
+
+bindUIEvents();
+}
+
+if(document.readyState==="loading"){
+document.addEventListener("DOMContentLoaded",boot,{once:true});
+}else{
+boot();
 }
 })();
 </script>

@@ -17,6 +17,11 @@ C:{label:"CORE",short:"CORE",route:"/home/"},
 M:{label:"MORPH",short:"MORPH",route:"SCENE_ACTION_ONLY"}
 };
 
+const PHRASE_ROLE_BY_DRAGON={
+fear:"control",
+wisdom:"alignment"
+};
+
 const BANNER_PHRASES={
 zh:{
 alignment:[
@@ -100,8 +105,6 @@ function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function lerp(a,b,t){return a+(b-a)*t;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
-function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
-function easeOutCubic(t){return 1-Math.pow(1-t,3);}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
 
 function getSceneLanguage(){
@@ -124,17 +127,22 @@ return Math.floor(Math.max(0,state.tick-state.dragonStart)/DRAGON_CYCLE_FRAMES);
 }
 
 function getBannerPair(dragonType){
+const role=PHRASE_ROLE_BY_DRAGON[dragonType]||"alignment";
 const cycle=getCycleIndex();
 const sceneLang=getSceneLanguage();
 const secondaryLang=sceneLang==="es"?"es":"en";
-const zhList=BANNER_PHRASES.zh[dragonType];
-const secList=BANNER_PHRASES[secondaryLang][dragonType];
+
+const zhList=BANNER_PHRASES.zh[role]||BANNER_PHRASES.zh.alignment;
+const secList=(BANNER_PHRASES[secondaryLang]&&BANNER_PHRASES[secondaryLang][role])||BANNER_PHRASES.en.alignment;
+
 const zhPhrase=zhList[cycle%zhList.length];
 const secPhrase=secList[cycle%secList.length];
 const swap=cycle%2===1;
+
 const text=dragonType==="fear"
-  ? (swap?secPhrase:zhPhrase)
-  : (swap?zhPhrase:secPhrase);
+? (swap?secPhrase:zhPhrase)
+: (swap?zhPhrase:secPhrase);
+
 return{
 text,
 isChinese:dragonType==="fear"?!swap:swap
@@ -552,14 +560,14 @@ ctx.closePath();
 ctx.fill();
 ctx.restore();
 
-for(let layer=0;layer<12;layer++){
-const depth=layer/11;
-const yBase=base+layer*12;
-const amp=lerp(2.0,10.5,depth);
-const f1=lerp(0.008,0.026,depth);
-const f2=lerp(0.004,0.014,depth);
+for(let layer=0;layer<10;layer++){
+const depth=layer/9;
+const yBase=base+layer*14;
+const amp=lerp(2.0,9.6,depth);
+const f1=lerp(0.008,0.024,depth);
+const f2=lerp(0.004,0.013,depth);
 ctx.beginPath();
-for(let x=0;x<=w;x+=8){
+for(let x=0;x<=w;x+=10){
 const wave1=Math.sin((x*f1)+(state.tick*(0.010+depth*0.028))+layer*0.72)*amp;
 const wave2=Math.sin((x*f2)-(state.tick*(0.006+depth*0.010))+layer*1.22)*amp*0.52;
 const wave3=Math.sin((x*0.017)+(state.tick*0.017)+layer*0.45)*amp*0.18;
@@ -567,48 +575,48 @@ const y=yBase+wave1+wave2+wave3;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
 }
-ctx.strokeStyle=`rgba(255,${Math.round(110+depth*70)},${Math.round(88+depth*40)},${0.018+depth*0.050})`;
-ctx.lineWidth=1.5+depth*1.1;
+ctx.strokeStyle=`rgba(255,${Math.round(110+depth*70)},${Math.round(88+depth*40)},${0.018+depth*0.046})`;
+ctx.lineWidth=1.35+depth*1.0;
 ctx.stroke();
 }
 
-for(let crest=0;crest<8;crest++){
-ctx.beginPath();
-for(let x=0;x<=w;x+=10){
-const y=base+crest*17+
-Math.sin((x*0.020)+(state.tick*0.026)+crest*0.9)*4.6+
-Math.sin((x*0.006)-(state.tick*0.009)+crest*1.4)*2.2;
-if(x===0)ctx.moveTo(x,y);
-else ctx.lineTo(x,y);
-}
-ctx.strokeStyle=`rgba(255,228,176,${0.038-crest*0.003})`;
-ctx.lineWidth=1.0;
-ctx.stroke();
-}
-
-for(let foam=0;foam<5;foam++){
+for(let crest=0;crest<5;crest++){
 ctx.beginPath();
 for(let x=0;x<=w;x+=14){
-const y=base+foam*24+
-Math.sin(x*0.028+state.tick*0.038+foam)*2.6+
-Math.sin(x*0.011-state.tick*0.012+foam*1.8)*1.2;
+const y=base+crest*22+
+Math.sin((x*0.020)+(state.tick*0.026)+crest*0.9)*4.2+
+Math.sin((x*0.006)-(state.tick*0.009)+crest*1.4)*2.0;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
 }
-ctx.strokeStyle=`rgba(255,244,214,${0.024-foam*0.003})`;
-ctx.lineWidth=0.9;
+ctx.strokeStyle=`rgba(255,228,176,${0.032-crest*0.004})`;
+ctx.lineWidth=0.95;
+ctx.stroke();
+}
+
+for(let foam=0;foam<3;foam++){
+ctx.beginPath();
+for(let x=0;x<=w;x+=18){
+const y=base+foam*28+
+Math.sin(x*0.028+state.tick*0.038+foam)*2.2+
+Math.sin(x*0.011-state.tick*0.012+foam*1.8)*1.0;
+if(x===0)ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+}
+ctx.strokeStyle=`rgba(255,244,214,${0.020-foam*0.003})`;
+ctx.lineWidth=0.8;
 ctx.stroke();
 }
 
 const geo=state.cube;
 if(geo){
-const dragonReflectAlpha=0.09+0.02*Math.sin(state.tick*0.03);
+const dragonReflectAlpha=0.08+0.02*Math.sin(state.tick*0.03);
 ctx.save();
 ctx.globalAlpha=dragonReflectAlpha;
 const shimmer=ctx.createLinearGradient(geo.centerX-120,horizon,geo.centerX+120,h);
 shimmer.addColorStop(0,"rgba(255,92,72,0)");
-shimmer.addColorStop(0.30,"rgba(255,92,72,0.28)");
-shimmer.addColorStop(0.52,"rgba(255,220,124,0.22)");
+shimmer.addColorStop(0.30,"rgba(255,92,72,0.24)");
+shimmer.addColorStop(0.52,"rgba(255,220,124,0.18)");
 shimmer.addColorStop(1,"rgba(255,220,124,0)");
 ctx.fillStyle=shimmer;
 ctx.beginPath();
@@ -907,6 +915,13 @@ crossThin
 return{points};
 }
 
+function getDragonBundles(geo){
+return{
+fear:buildDragonBody(geo,"fear",0.00),
+wisdom:buildDragonBody(geo,"wisdom",WISDOM_DELAY)
+};
+}
+
 function drawPortalAt(x,y,r,colorA,colorB){
 ctx.save();
 ctx.translate(x,y);
@@ -1115,35 +1130,36 @@ drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
 }
 }
 
-function drawDragonReflections(geo){
+function drawDragonReflections(geo,bundles){
 const horizon=window.innerHeight*0.66;
-const fear=buildDragonBody(geo,"fear",0.00);
-const wisdom=buildDragonBody(geo,"wisdom",WISDOM_DELAY);
-const bundles=[{bundle:fear,color:"rgba(255,100,76,0.18)"},{bundle:wisdom,color:"rgba(255,214,126,0.16)"}];
+const reflectionSets=[
+{bundle:bundles.fear,color:"rgba(255,100,76,0.16)"},
+{bundle:bundles.wisdom,color:"rgba(255,214,126,0.14)"}
+];
 
-for(let b=0;b<bundles.length;b++){
-const bundle=bundles[b].bundle;
-if(!bundle||!bundle.points||!bundle.points.length)continue;
+for(let b=0;b<reflectionSets.length;b++){
+const bundle=reflectionSets[b].bundle;
+if(!bundle||!bundle.points||bundle.points.length<2)continue;
 ctx.save();
-ctx.globalAlpha=1;
-ctx.shadowBlur=12;
-ctx.shadowColor=bundles[b].color;
-for(let i=bundle.points.length-1;i>=1;i--){
+ctx.shadowBlur=10;
+ctx.shadowColor=reflectionSets[b].color;
+for(let i=bundle.points.length-1;i>=1;i-=2){
 const p=bundle.points[i];
 const prev=bundle.points[Math.max(0,i-1)];
 const next=bundle.points[Math.min(bundle.points.length-1,i+1)];
 const t=i/(bundle.points.length-1);
 const a=angleBetween(prev,next);
 const ry=horizon+(horizon-p.y);
-const rippleX=Math.sin(state.tick*0.028+i*0.8)*2.1;
-const rippleY=Math.sin(state.tick*0.017+i*0.55)*0.9;
-const radius=(18*Math.pow(1-t,1.18)+2.8)*0.66;
+const rippleX=Math.sin(state.tick*0.028+i*0.8)*1.7;
+const rippleY=Math.sin(state.tick*0.017+i*0.55)*0.7;
+const radius=(16*Math.pow(1-t,1.18)+2.4)*0.58;
 ctx.save();
+ctx.globalAlpha=0.56;
 ctx.translate(p.x+rippleX,ry+rippleY);
 ctx.rotate(-a);
-ctx.fillStyle=bundles[b].color;
+ctx.fillStyle=reflectionSets[b].color;
 ctx.beginPath();
-ctx.ellipse(0,0,radius*1.26,radius*0.52,0,0,TAU);
+ctx.ellipse(0,0,radius*1.22,radius*0.48,0,0,TAU);
 ctx.fill();
 ctx.restore();
 }
@@ -1151,26 +1167,22 @@ ctx.restore();
 }
 }
 
-function dragonsBack(geo){
-const fear=buildDragonBody(geo,"fear",0.00);
-const wisdom=buildDragonBody(geo,"wisdom",WISDOM_DELAY);
-if(fear&&fear.points.length){
-drawPortalAt(fear.points[0].x,fear.points[0].y,geo.size,"rgba(255,96,72,0.82)","rgba(255,80,80,0.42)");
-drawDragonWake(fear,"rgba(255,98,78,0.42)");
-drawDragonHalf(fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
+function dragonsBack(geo,bundles){
+if(bundles.fear&&bundles.fear.points.length){
+drawPortalAt(bundles.fear.points[0].x,bundles.fear.points[0].y,geo.size,"rgba(255,96,72,0.82)","rgba(255,80,80,0.42)");
+drawDragonWake(bundles.fear,"rgba(255,98,78,0.42)");
+drawDragonHalf(bundles.fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
 }
-if(wisdom&&wisdom.points.length){
-drawPortalAt(wisdom.points[0].x,wisdom.points[0].y,geo.size,"rgba(255,220,130,0.82)","rgba(255,220,130,0.36)");
-drawDragonWake(wisdom,"rgba(255,214,122,0.40)");
-drawDragonHalf(wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
+if(bundles.wisdom&&bundles.wisdom.points.length){
+drawPortalAt(bundles.wisdom.points[0].x,bundles.wisdom.points[0].y,geo.size,"rgba(255,220,130,0.82)","rgba(255,220,130,0.36)");
+drawDragonWake(bundles.wisdom,"rgba(255,214,122,0.40)");
+drawDragonHalf(bundles.wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
 }
 }
 
-function dragonsFront(geo){
-const fear=buildDragonBody(geo,"fear",0.00);
-const wisdom=buildDragonBody(geo,"wisdom",WISDOM_DELAY);
-if(fear)drawDragonHalf(fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
-if(wisdom)drawDragonHalf(wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
+function dragonsFront(_geo,bundles){
+if(bundles.fear)drawDragonHalf(bundles.fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
+if(bundles.wisdom)drawDragonHalf(bundles.wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
 }
 
 function fireworks(){
@@ -1278,11 +1290,12 @@ water();
 
 const geo=getCubeGeometry();
 state.cube=geo;
+const bundles=getDragonBundles(geo);
 
-drawDragonReflections(geo);
-dragonsBack(geo);
+drawDragonReflections(geo,bundles);
+dragonsBack(geo,bundles);
 drawCube(geo);
-dragonsFront(geo);
+dragonsFront(geo,bundles);
 drawSecondCompassOverlay();
 fireworks();
 drawLockedOverlay();

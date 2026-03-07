@@ -32,10 +32,23 @@
 <script src="/world/island_regions.js"></script>
 <script src="/world/region_router.js"></script>
 <script src="/world/harbor_renderer.js"></script>
+<script src="/world/compass_navigation_authority.js"></script>
+<script src="/world/navigation_math.js"></script>
+<script src="/world/instruments_runtime.js"></script>
 
 <!-- CORE UI + INPUT -->
 
 <script src="/assets/instruments.js"></script>
+
+<!-- SCENE MODULES -->
+
+<script src="/variant/camera.js"></script>
+<script src="/variant/background_renderer.js"></script>
+<script src="/variant/compass_renderer.js"></script>
+<script src="/variant/dragon_renderer.js"></script>
+<script src="/variant/showroom_renderer.js"></script>
+<script src="/variant/scene_fx.js"></script>
+<script src="/variant/scene_input.js"></script>
 
 <!-- MAIN SCENE ENGINE -->
 
@@ -52,14 +65,11 @@ const body=document.body;
 const topbar=document.getElementById("topbarTitle");
 
 if(router){
-
   const ctx=router.getRegionContext("/harbor/");
-
   if(ctx){
     body.dataset.regionId=ctx.regionId;
     body.dataset.regionType=ctx.type;
     body.dataset.regionBiome=ctx.biome;
-
     if(topbar) topbar.textContent=ctx.label;
   }
 }

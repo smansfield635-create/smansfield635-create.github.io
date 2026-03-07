@@ -111,7 +111,7 @@ glow:0.86
 regionId:(document.body&&document.body.dataset&&document.body.dataset.regionId)||"harbor_core",
 regionContext:null,
 showroom:{
-mode:"idle",     // idle | shatter | swirl | show | return
+mode:"idle",
 t:0,
 fragments:[],
 nodes:[]
@@ -217,7 +217,7 @@ return {label:"MORPH",short:"MORPH",route:"SCENE_ACTION_ONLY"};
 }
 
 if(face==="N"){
-const target=map.N;
+const target=map.N||(state.regionId==="harbor_core"?"gratitude_southlands":null);
 if(target&&REGIONS&&REGIONS.byId){
 const region=REGIONS.byId(target);
 if(region)return {label:"NORTH",short:"N",route:region.route};
@@ -414,7 +414,7 @@ const labels=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW"];
 const nodes=[];
 for(let i=0;i<12;i++){
 const a=(-Math.PI/2)+(i/12)*TAU;
-	nodes.push({
+nodes.push({
 label:labels[i],
 targetX:cx+Math.cos(a)*rx,
 targetY:cy+Math.sin(a)*ry,
@@ -514,21 +514,23 @@ state.moon.glow=snapshot.moon.glow;
 function sky(){
 const w=window.innerWidth;
 const h=window.innerHeight;
+const warmMix=0.28+Math.sin(state.tick*0.002)*0.04;
 const g=ctx.createLinearGradient(0,0,0,h);
-g.addColorStop(0,"#12050a");
-g.addColorStop(0.14,"#2b0b10");
-g.addColorStop(0.36,"#571410");
-g.addColorStop(0.58,"#9f2817");
-g.addColorStop(0.78,"#dd6130");
-g.addColorStop(1,"#1a0606");
+g.addColorStop(0,`rgba(${Math.round(18+25*warmMix)},${Math.round(8+10*warmMix)},${Math.round(22+34*(1-warmMix))},1)`);
+g.addColorStop(0.14,`rgba(${Math.round(36+18*warmMix)},${Math.round(11+8*warmMix)},${Math.round(30+18*(1-warmMix))},1)`);
+g.addColorStop(0.36,`rgba(${Math.round(72+28*warmMix)},${Math.round(18+10*warmMix)},${Math.round(46+10*(1-warmMix))},1)`);
+g.addColorStop(0.58,`rgba(${Math.round(124+34*warmMix)},${Math.round(34+18*warmMix)},${Math.round(68+6*(1-warmMix))},1)`);
+g.addColorStop(0.78,`rgba(${Math.round(192+28*warmMix)},${Math.round(88+24*warmMix)},${Math.round(74+4*(1-warmMix))},1)`);
+g.addColorStop(1,"rgba(26,6,6,1)");
 ctx.fillStyle=g;
 ctx.fillRect(0,0,w,h);
 
 const horizonY=h*0.66;
 const glow=ctx.createLinearGradient(0,horizonY-150,0,horizonY+110);
 glow.addColorStop(0,"rgba(255,175,88,0)");
-glow.addColorStop(0.32,"rgba(255,152,62,0.18)");
-glow.addColorStop(0.56,"rgba(255,112,48,0.26)");
+glow.addColorStop(0.22,`rgba(108,140,255,${0.09*state.moon.glow})`);
+glow.addColorStop(0.48,`rgba(255,152,62,${0.16*state.sun.glow})`);
+glow.addColorStop(0.72,`rgba(255,112,48,${0.20*state.sun.glow})`);
 glow.addColorStop(1,"rgba(255,96,36,0)");
 ctx.fillStyle=glow;
 ctx.fillRect(0,horizonY-150,w,260);
@@ -745,6 +747,296 @@ haze.addColorStop(0.45,"rgba(34,18,20,0.12)");
 haze.addColorStop(1,"rgba(0,0,0,0)");
 ctx.fillStyle=haze;
 ctx.fillRect(0,horizon-18,w,140);
+}
+
+function drawHarborTerrain(){
+if(state.regionId!=="harbor_core")return;
+
+const w=window.innerWidth;
+const h=window.innerHeight;
+const horizon=h*0.66;
+const cx=w*0.5;
+
+ctx.save();
+
+ctx.beginPath();
+ctx.moveTo(0,h);
+ctx.lineTo(0,horizon+22);
+
+ctx.bezierCurveTo(
+w*0.08,horizon+8,
+w*0.16,horizon-10,
+w*0.24,horizon-20
+);
+
+ctx.bezierCurveTo(
+w*0.31,horizon-22,
+w*0.35,horizon+4,
+w*0.39,horizon+36
+);
+
+ctx.bezierCurveTo(
+w*0.43,horizon+64,
+w*0.46,horizon+88,
+w*0.50,horizon+98
+);
+
+ctx.bezierCurveTo(
+w*0.54,horizon+88,
+w*0.57,horizon+64,
+w*0.61,horizon+36
+);
+
+ctx.bezierCurveTo(
+w*0.65,horizon+4,
+w*0.69,horizon-22,
+w*0.76,horizon-20
+);
+
+ctx.bezierCurveTo(
+w*0.84,horizon-10,
+w*0.92,horizon+8,
+w,horizon+22
+);
+
+ctx.lineTo(w,h);
+ctx.closePath();
+
+const landGrad=ctx.createLinearGradient(0,horizon-28,0,h);
+landGrad.addColorStop(0,"rgba(54,34,28,0.96)");
+landGrad.addColorStop(0.36,"rgba(42,24,22,0.98)");
+landGrad.addColorStop(1,"rgba(18,12,14,1)");
+ctx.fillStyle=landGrad;
+ctx.fill();
+
+ctx.beginPath();
+ctx.moveTo(0,horizon+22);
+ctx.bezierCurveTo(
+w*0.08,horizon+8,
+w*0.16,horizon-10,
+w*0.24,horizon-20
+);
+ctx.bezierCurveTo(
+w*0.31,horizon-22,
+w*0.35,horizon+4,
+w*0.39,horizon+36
+);
+ctx.bezierCurveTo(
+w*0.43,horizon+64,
+w*0.46,horizon+88,
+w*0.50,horizon+98
+);
+ctx.bezierCurveTo(
+w*0.54,horizon+88,
+w*0.57,horizon+64,
+w*0.61,horizon+36
+);
+ctx.bezierCurveTo(
+w*0.65,horizon+4,
+w*0.69,horizon-22,
+w*0.76,horizon-20
+);
+ctx.bezierCurveTo(
+w*0.84,horizon-10,
+w*0.92,horizon+8,
+w,horizon+22
+);
+ctx.lineWidth=2.2;
+ctx.strokeStyle="rgba(255,214,150,0.18)";
+ctx.stroke();
+
+ctx.globalAlpha=0.28;
+ctx.fillStyle="rgba(255,186,126,0.14)";
+ctx.beginPath();
+ctx.ellipse(cx,horizon+86,w*0.21,h*0.026,0,0,TAU);
+ctx.fill();
+
+ctx.restore();
+}
+
+function drawHarborVillage(){
+if(state.regionId!=="harbor_core")return;
+
+const w=window.innerWidth;
+const h=window.innerHeight;
+const horizon=h*0.66;
+const buildings=[
+{x:0.21,y:horizon-2,w:34,h:28,roof:"pagoda"},
+{x:0.26,y:horizon-8,w:42,h:34,roof:"merchant"},
+{x:0.32,y:horizon+2,w:38,h:30,roof:"merchant"},
+{x:0.40,y:horizon+26,w:44,h:34,roof:"pagoda"},
+{x:0.57,y:horizon+26,w:44,h:34,roof:"pagoda"},
+{x:0.66,y:horizon+2,w:38,h:30,roof:"merchant"},
+{x:0.72,y:horizon-8,w:42,h:34,roof:"merchant"},
+{x:0.77,y:horizon-2,w:34,h:28,roof:"pagoda"}
+];
+
+for(let i=0;i<buildings.length;i++){
+const b=buildings[i];
+const bx=w*b.x;
+const by=b.y;
+const bw=b.w;
+const bh=b.h;
+
+ctx.save();
+ctx.fillStyle="rgba(26,18,18,0.92)";
+ctx.fillRect(bx-bw*0.5,by-bh,bw,bh);
+
+if(b.roof==="pagoda"){
+ctx.fillStyle="rgba(116,28,24,0.94)";
+ctx.beginPath();
+ctx.moveTo(bx-bw*0.68,by-bh);
+ctx.lineTo(bx,by-bh-14);
+ctx.lineTo(bx+bw*0.68,by-bh);
+ctx.lineTo(bx+bw*0.44,by-bh+4);
+ctx.lineTo(bx-bw*0.44,by-bh+4);
+ctx.closePath();
+ctx.fill();
+
+ctx.fillStyle="rgba(84,20,18,0.96)";
+ctx.beginPath();
+ctx.moveTo(bx-bw*0.44,by-bh+4);
+ctx.lineTo(bx,by-bh-6);
+ctx.lineTo(bx+bw*0.44,by-bh+4);
+ctx.lineTo(bx+bw*0.28,by-bh+8);
+ctx.lineTo(bx-bw*0.28,by-bh+8);
+ctx.closePath();
+ctx.fill();
+}else{
+ctx.fillStyle="rgba(168,154,132,0.92)";
+ctx.beginPath();
+ctx.moveTo(bx-bw*0.60,by-bh);
+ctx.lineTo(bx,by-bh-12);
+ctx.lineTo(bx+bw*0.60,by-bh);
+ctx.closePath();
+ctx.fill();
+}
+
+ctx.fillStyle="rgba(255,214,150,0.20)";
+for(let wi=0;wi<3;wi++){
+ctx.fillRect(bx-bw*0.30+wi*(bw*0.22),by-bh*0.62,5,8);
+}
+ctx.restore();
+}
+}
+
+function drawHarborDocks(){
+if(state.regionId!=="harbor_core")return;
+
+const w=window.innerWidth;
+const h=window.innerHeight;
+const horizon=h*0.66;
+const dockY=horizon+78;
+
+const docks=[
+{x:0.34,len:110,wid:10},
+{x:0.46,len:132,wid:12},
+{x:0.54,len:132,wid:12},
+{x:0.66,len:110,wid:10}
+];
+
+for(let i=0;i<docks.length;i++){
+const d=docks[i];
+const x=w*d.x;
+	ctx.save();
+	ctx.strokeStyle="rgba(92,62,48,0.96)";
+	ctx.lineWidth=d.wid;
+	ctx.beginPath();
+	ctx.moveTo(x,dockY);
+	ctx.lineTo(x,dockY+d.len);
+	ctx.stroke();
+
+	ctx.lineWidth=2;
+	ctx.strokeStyle="rgba(160,114,76,0.62)";
+	for(let j=0;j<5;j++){
+const yy=dockY+18+j*22;
+ctx.beginPath();
+ctx.moveTo(x-d.wid*0.85,yy);
+ctx.lineTo(x+d.wid*0.85,yy);
+ctx.stroke();
+}
+	ctx.restore();
+}
+
+const boats=[
+{x:0.28,y:dockY+52,s:22},
+{x:0.72,y:dockY+58,s:26}
+];
+
+for(let i=0;i<boats.length;i++){
+const b=boats[i];
+const bx=w*b.x;
+const by=b.y;
+const s=b.s;
+ctx.save();
+ctx.fillStyle="rgba(34,22,24,0.94)";
+ctx.beginPath();
+ctx.moveTo(bx-s,by);
+ctx.quadraticCurveTo(bx,by+s*0.44,bx+s,by);
+ctx.lineTo(bx+s*0.74,by+8);
+ctx.lineTo(bx-s*0.74,by+8);
+ctx.closePath();
+ctx.fill();
+
+ctx.strokeStyle="rgba(182,154,116,0.72)";
+ctx.lineWidth=1.2;
+ctx.beginPath();
+ctx.moveTo(bx,by-18);
+ctx.lineTo(bx,by+2);
+ctx.stroke();
+
+ctx.fillStyle="rgba(214,196,172,0.82)";
+ctx.beginPath();
+ctx.moveTo(bx,by-18);
+ctx.lineTo(bx+s*0.72,by-6);
+ctx.lineTo(bx,by-2);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+}
+}
+
+function drawNorthPath(){
+if(state.regionId!=="harbor_core")return;
+const w=window.innerWidth;
+const h=window.innerHeight;
+const horizon=h*0.66;
+const cx=w*0.5;
+const pathTopY=horizon-24;
+const pathBottomY=horizon+104;
+
+ctx.save();
+
+const pathGrad=ctx.createLinearGradient(cx,pathTopY,cx,pathBottomY);
+pathGrad.addColorStop(0,"rgba(170,142,108,0.18)");
+pathGrad.addColorStop(1,"rgba(110,84,62,0.34)");
+ctx.fillStyle=pathGrad;
+
+ctx.beginPath();
+ctx.moveTo(cx-18,pathTopY);
+ctx.lineTo(cx+18,pathTopY);
+ctx.lineTo(cx+74,pathBottomY);
+ctx.lineTo(cx-74,pathBottomY);
+ctx.closePath();
+ctx.fill();
+
+ctx.strokeStyle="rgba(255,220,170,0.16)";
+ctx.lineWidth=1.4;
+ctx.beginPath();
+ctx.moveTo(cx,pathTopY-16);
+ctx.lineTo(cx,pathBottomY);
+ctx.stroke();
+
+ctx.fillStyle="rgba(255,214,150,0.80)";
+ctx.beginPath();
+ctx.moveTo(cx,pathTopY-28);
+ctx.lineTo(cx+10,pathTopY-10);
+ctx.lineTo(cx,pathTopY-16);
+ctx.lineTo(cx-10,pathTopY-10);
+ctx.closePath();
+ctx.fill();
+
+ctx.restore();
 }
 
 function water(){
@@ -1675,6 +1967,10 @@ clouds();
 lanterns();
 mountains();
 water();
+drawHarborTerrain();
+drawHarborVillage();
+drawHarborDocks();
+drawNorthPath();
 
 const geo=getCubeGeometry();
 state.cube=geo;

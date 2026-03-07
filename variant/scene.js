@@ -1,11 +1,21 @@
 (function(){
 "use strict";
 
+/*
+OPENWORLD_SCENE_v2
+Compass rise/set system
+Moon tap phase cycling
+Dragon spawn triggers
+Global action consequence system
+*/
+
 const canvas=document.getElementById("scene");
 if(!canvas)return;
 
 const ctx=canvas.getContext("2d");
 if(!ctx)return;
+
+/* MODULES */
 
 const CAMERA=window.OPENWORLD_CAMERA;
 const BG=window.OPENWORLD_BACKGROUND_RENDERER;
@@ -18,10 +28,17 @@ const INPUT=window.OPENWORLD_SCENE_INPUT;
 const ENV=window.ENVIRONMENT_RUNTIME||null;
 const HARBOR=window.HARBOR_RENDERER||null;
 
+/* CONSTANTS */
+
+const COMPASS_REST_Y_FACTOR=0.16;
+const COMPASS_ACTIVE_Y_FACTOR=0.28;
+
+/* GLOBAL STATE */
+
 const state={
 tick:0,
 
-rotX:-0.30,
+rotX:-0.3,
 rotY:0.24,
 rotVelX:0,
 rotVelY:0,
@@ -30,20 +47,37 @@ dragging:false,
 lastX:0,
 lastY:0,
 
-hoverFace:null,
 faceZones:{},
 cube:null,
+
+/* compass */
+
+compassState:"REST",
+compassLift:0,
+
+/* moons */
+
+moonPhaseLeft:0,
+moonPhaseRight:0,
+
+/* dragons */
+
+dragonLeftActive:false,
+dragonRightActive:false,
+
+/* action system */
+
+actionCounter:0,
+
+/* rendering */
 
 camera:CAMERA.createState("fixed_harbor"),
 background:BG.createState(),
 showroom:SHOWROOM.createState(),
-fx:FX.createState(),
-
-compass:{
-mode:"rest",       // rest | rising | active | setting
-height:0,          // 0 = hidden | 1 = full raised
-}
+fx:FX.createState()
 };
+
+/* UTIL */
 
 function clamp(v,min,max){
 return Math.max(min,Math.min(max,v));
@@ -53,6 +87,93 @@ function dispatch(name,detail){
 document.dispatchEvent(new CustomEvent(name,{detail}));
 }
 
+/* ACTION CONSEQUENCE SYSTEM */
+
+function registerAction(){
+
+state.actionCounter++;
+
+state.moonPhaseLeft=(state.moonPhaseLeft)%4;
+state.moonPhaseRight=(state.moonPhaseRight)%4;
+
+}
+
+/* MOON TAP */
+
+function tapMoonLeft(){
+
+state.moonPhaseLeft=(state.moonPhaseLeft+1)%4;
+
+state.dragonLeftActive=true;
+
+registerAction();
+
+}
+
+function tapMoonRight(){
+
+state.moonPhaseRight=(state.moonPhaseRight+1)%4;
+
+state.dragonRightActive=true;
+
+registerAction();
+
+}
+
+/* COMPASS STATE MACHINE */
+
+function summonCompass(){
+
+if(state.compassState==="REST"){
+
+state.compassState="RISING";
+
+}
+
+}
+
+function lowerCompass(){
+
+if(state.compassState==="ACTIVE"){
+
+state.compassState="SETTING";
+
+}
+
+}
+
+function updateCompass(){
+
+if(state.compassState==="RISING"){
+
+state.compassLift+=0.05;
+
+if(state.compassLift>=1){
+
+state.compassLift=1;
+state.compassState="ACTIVE";
+
+}
+
+}
+
+else if(state.compassState==="SETTING"){
+
+state.compassLift-=0.05;
+
+if(state.compassLift<=0){
+
+state.compassLift=0;
+state.compassState="REST";
+
+}
+
+}
+
+}
+
+/* RESIZE */
+
 function resize(){
 
 const dpr=Math.max(1,window.devicePixelRatio||1);
@@ -61,6 +182,7 @@ const h=window.innerHeight;
 
 canvas.style.width=w+"px";
 canvas.style.height=h+"px";
+
 canvas.width=Math.floor(w*dpr);
 canvas.height=Math.floor(h*dpr);
 
@@ -74,25 +196,20 @@ BG.initClouds(state.background,w,h);
 BG.initMountains(state.background,w,h,preset);
 
 SHOWROOM.refreshTargets(state.showroom,w,h);
+
 }
 
-function getFaceAt(x,y){
-for(const key of ["C","W","E","N","S","M"]){
-const poly=state.faceZones[key];
-if(poly && INPUT.pointInPoly(x,y,poly)) return key;
-}
-return null;
-}
+/* INTERACTION */
 
 function engageDrag(x,y){
+
 state.dragging=true;
 state.lastX=x;
 state.lastY=y;
+
 }
 
 function moveDrag(x,y){
-
-state.hoverFace=getFaceAt(x,y);
 
 if(!state.dragging)return;
 
@@ -105,60 +222,35 @@ state.lastY=y;
 state.rotVelY+=dx*0.001;
 state.rotVelX+=dy*0.001;
 
-if(state.compass.mode==="rest"){
-state.compass.mode="rising";
 }
 
-}
+function releaseDrag(x,y){
 
-function releaseDrag(){
 state.dragging=false;
-}
-
-function updateCompass(){
-
-if(state.compass.mode==="rising"){
-state.compass.height+=0.05;
-if(state.compass.height>=1){
-state.compass.height=1;
-state.compass.mode="active";
-}
-}
-
-if(state.compass.mode==="setting"){
-state.compass.height-=0.05;
-if(state.compass.height<=0){
-state.compass.height=0;
-state.compass.mode="rest";
-}
-}
-
-if(state.compass.mode==="active" && !state.dragging){
-state.compass.mode="setting";
-}
 
 }
+
+/* ANIMATE */
 
 function animate(){
 
 state.tick++;
-
-BG.syncCelestials(state.background,ENV,state.tick);
-
-CAMERA.update(state.camera,0.06);
 
 updateCompass();
 
 state.rotY+=state.rotVelY;
 state.rotX+=state.rotVelX;
 
-state.rotVelY*=0.96;
-state.rotVelX*=0.96;
+state.rotVelY*=0.97;
+state.rotVelX*=0.97;
 
-draw();
+CAMERA.update(state.camera,0.06);
 
-requestAnimationFrame(animate);
+BG.syncCelestials(state.background,ENV,state.tick);
+
 }
+
+/* DRAW */
 
 function draw(){
 
@@ -169,60 +261,144 @@ const preset=CAMERA.getBlendedPreset(state.camera);
 
 ctx.clearRect(0,0,w,h);
 
+/* SKY */
+
 BG.drawSky(ctx,w,h,state.tick,preset,state.background);
 BG.drawSun(ctx,w,h,state.background);
 BG.drawMoon(ctx,w,h,state.background);
 
-BG.drawClouds(ctx,state.background,state.tick);
+/* CLOUDS */
+
+BG.drawClouds(ctx,state.background,state.tick,null);
+
+/* LANTERNS */
+
 BG.drawLanterns(ctx,state.background,state.tick,1);
 
-BG.drawMountains(ctx,w,h,state.background,preset);
-BG.drawWater(ctx,w,h,state.tick,preset,state.background);
+/* MOUNTAINS */
 
-if(HARBOR && HARBOR.draw){
-HARBOR.draw(ctx,w,h,state.tick);
-}
+BG.drawMountains(ctx,w,h,state.background,preset);
+
+/* WATER */
+
+BG.drawWater(ctx,w,h,state.tick,preset,state.background,null);
+
+/* HARBOR */
+
+if(HARBOR)HARBOR.draw(ctx,w,h,state.tick);
+
+/* COMPASS POSITION */
+
+const liftY=lerp(
+
+h*COMPASS_REST_Y_FACTOR,
+h*COMPASS_ACTIVE_Y_FACTOR,
+state.compassLift
+
+);
+
+/* COMPASS */
 
 const geo=COMPASS.getCubeGeometry({
+
 width:w,
 height:h,
 preset:preset,
 rotX:state.rotX,
 rotY:state.rotY,
+morphPulse:0,
 cameraRequested:state.camera.requested
+
 });
+
+geo.centerY=liftY;
 
 state.cube=geo;
 state.faceZones=geo.faces;
 
-/* vertical lift */
+/* DRAGONS */
 
-geo.centerY -= geo.size*2.2*state.compass.height;
+const dragonBundles=DRAGONS.getDragonBundles(geo,state);
 
-COMPASS.drawCube(ctx,geo,state.tick,()=>({short:""}),state.hoverFace);
+if(state.dragonLeftActive||state.dragonRightActive){
 
-const bundles=DRAGONS.getDragonBundles(geo,state);
+DRAGONS.drawBack(ctx,geo,dragonBundles,state.tick);
 
-DRAGONS.drawDragonReflections(ctx,geo,preset,bundles,state.tick);
-DRAGONS.drawBack(ctx,geo,bundles,state.tick);
-DRAGONS.drawFront(ctx,geo,bundles,state.tick,"en",state);
-
-SHOWROOM.drawFragments(ctx,state.showroom,state.tick);
-
-FX.drawFireworks(ctx,state.fx);
 }
 
+/* COMPASS DRAW */
+
+COMPASS.drawCube(ctx,geo,state.tick,()=>null,null);
+
+/* FRONT DRAGONS */
+
+if(state.dragonLeftActive||state.dragonRightActive){
+
+DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,"en",state);
+
+}
+
+}
+
+/* FRAME */
+
+function frame(){
+
+animate();
+draw();
+
+requestAnimationFrame(frame);
+
+}
+
+/* INPUT */
+
 INPUT.bind(canvas,{
-onPointerMove:p=>moveDrag(p.x,p.y),
-onPointerDown:p=>engageDrag(p.x,p.y),
-onPointerUp:releaseDrag,
-onPointerLeave:releaseDrag
+
+onPointerMove:function(p){
+
+moveDrag(p.x,p.y);
+
+},
+
+onPointerDown:function(p){
+
+engageDrag(p.x,p.y);
+
+},
+
+onPointerUp:function(p){
+
+releaseDrag(p.x,p.y);
+
+},
+
+onTouchStart:function(p){
+
+engageDrag(p.x,p.y);
+
+},
+
+onTouchMove:function(p){
+
+moveDrag(p.x,p.y);
+
+},
+
+onTouchEnd:function(p){
+
+releaseDrag(p.x,p.y);
+
+}
+
 });
+
+/* BOOT */
 
 window.addEventListener("resize",resize,{passive:true});
 window.addEventListener("orientationchange",resize,{passive:true});
 
 resize();
-animate();
+frame();
 
 })();

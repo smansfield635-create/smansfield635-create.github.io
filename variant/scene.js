@@ -13,78 +13,12 @@ const ENV=window.ENVIRONMENT_RUNTIME||window.ENVIRONMENT_CYCLE||null;
 const REGIONS=window.ISLAND_REGIONS||null;
 const ROUTER=window.REGION_ROUTER||null;
 
-const WORLD_MAP=
-window.ISLAND_MAP||
-window.WORLD_ISLAND_MAP||
-{
-ISLAND_MAP_ID:"LOCAL_FALLBACK",
-ISLAND_SCALE:1,
-ISLAND_CENTER_COORDINATE:{x:0,y:0,z:0},
-SUMMIT_COORDINATE_SET:{
-Gratitude:{x:-220,y:-140,z:60},
-Generosity:{x:-120,y:-60,z:120},
-Dependability:{x:-20,y:10,z:190},
-Accountability:{x:70,y:90,z:260},
-Humility:{x:0,y:150,z:340},
-Forgiveness:{x:-90,y:240,z:430},
-Self_Control:{x:-180,y:320,z:520},
-Patience:{x:-60,y:430,z:640},
-Purity:{x:0,y:560,z:820}
-},
-HARBOR_COORDINATE:{x:0,y:-260,z:0},
-WORLD_BOUNDARY_RADIUS:900,
-NAVIGATION_SECTOR_GRID:"16x16"
-};
-
-const ENV_CYCLE=
-window.ENVIRONMENT_CYCLE||
-{
-WEATHER_SYSTEM:"LOCAL_FALLBACK",
-SUN_ORBIT_PATH:"U_ARC",
-MOON_ORBIT_PATH:"U_ARC",
-SUN_ARC_RADIUS:1100,
-SUN_ARC_SPEED:0.0035,
-MOON_ARC_RADIUS:980,
-MOON_ARC_SPEED:0.0028,
-BIOME_RULE_SET:{
-Gratitude:"SPRING_FOREST",
-Generosity:"SUMMER_TRADE_VALLEY",
-Dependability:"WIND_MOUNTAIN_PASS",
-Accountability:"RED_CANYON_PLATEAU",
-Humility:"DEEP_RAINFOREST",
-Forgiveness:"GOLDEN_AUTUMN_FIELDS",
-Self_Control:"WINTER_MONASTERY_RIDGE",
-Patience:"DESERT_PLATEAU",
-Purity:"SNOW_PEAK_TEMPLE"
-},
-FOG_RULE:"DUAL_DUSK",
-AMBIENT_LIGHT_RULE:"DUAL_CELESTIAL_DUSK"
-};
-
-const TRAVERSAL=
-window.TRAVERSAL_GRAPH||
-{
-PRIMARY_ASCENT_PATH:["Harbor","Gratitude","Generosity","Dependability","Accountability","Humility","Forgiveness","Self_Control","Patience","Purity"],
-SECONDARY_BRANCHES:{
-Generosity:["Humility"],
-Dependability:["Forgiveness"],
-Accountability:["Self_Control"],
-Humility:["Patience"]
-},
-RETURN_PORTALS:{
-Purity:"Harbor",
-Patience:"Generosity",
-Self_Control:"Accountability"
-},
-SECTOR_GRID_BINDINGS:"16x16"
-};
-
 const LOCAL_FACE_FALLBACK={
 N:{label:"NORTH",short:"N",route:null},
 E:{label:"EAST",short:"E",route:"/products/"},
 S:{label:"SOUTH",short:"S",route:"/laws/"},
 W:{label:"WEST",short:"W",route:"/gauges/"},
-C:{label:"CORE",short:"CORE",route:"/home/"},
+C:{label:"CORE",short:"CORE",route:null},
 M:{label:"MORPH",short:"MORPH",route:"SCENE_ACTION_ONLY"}
 };
 
@@ -108,45 +42,46 @@ control:["Habla Menos Haz Mas","Ganancia Breve Arrepentimiento Largo","Decide Si
 const CAMERA_PRESETS={
 fixed_harbor:{
 horizon:0.66,
-cubeScale:0.128,
-cubeYOffset:0.36,
-cubeXBias:0.0,
-harborAlpha:1.0,
+cubeScale:0.118,
+cubeYOffset:0.33,
 pathAlpha:1.0,
-worldAlpha:0.28,
-labelAlpha:0.88
+labelAlpha:0.78,
+perspectiveBias:0
 },
 travel_projection:{
 horizon:0.62,
-cubeScale:0.108,
-cubeYOffset:0.31,
-cubeXBias:0.0,
-harborAlpha:0.84,
+cubeScale:0.100,
+cubeYOffset:0.29,
 pathAlpha:1.0,
-worldAlpha:0.46,
-labelAlpha:0.82
+labelAlpha:0.72,
+perspectiveBias:80
 },
 aerial_one:{
 horizon:0.57,
-cubeScale:0.096,
-cubeYOffset:0.24,
-cubeXBias:0.0,
-harborAlpha:0.78,
+cubeScale:0.092,
+cubeYOffset:0.23,
 pathAlpha:0.90,
-worldAlpha:0.72,
-labelAlpha:0.72
+labelAlpha:0.62,
+perspectiveBias:120
 },
 aerial_two:{
 horizon:0.52,
-cubeScale:0.088,
+cubeScale:0.084,
 cubeYOffset:0.18,
-cubeXBias:0.0,
-harborAlpha:0.66,
 pathAlpha:0.78,
-worldAlpha:0.88,
-labelAlpha:0.62
+labelAlpha:0.54,
+perspectiveBias:160
 }
 };
+
+const DRAGON_RULES=Object.freeze({
+BODY_SCALE:0.35,
+GLOW_INTENSITY:0.40,
+WAKE_INTENSITY:0.30,
+REFLECTION_INTENSITY:0.20,
+DISTANCE_FACTOR:0.55,
+COLOR_DIM:0.72
+});
 
 const state={
 tick:0,
@@ -180,50 +115,13 @@ navObjectState:"expanded_compass",
 camera:{
 mode:"fixed_harbor",
 requested:"fixed_harbor",
-blend:1,
-transition:0,
-travelBias:0,
-aerialBias:0
-},
-world:{
-mapId:WORLD_MAP.ISLAND_MAP_ID,
-scale:WORLD_MAP.ISLAND_SCALE,
-center:WORLD_MAP.ISLAND_CENTER_COORDINATE,
-harbor:WORLD_MAP.HARBOR_COORDINATE,
-summits:WORLD_MAP.SUMMIT_COORDINATE_SET,
-boundaryRadius:WORLD_MAP.WORLD_BOUNDARY_RADIUS,
-navGrid:WORLD_MAP.NAVIGATION_SECTOR_GRID
-},
-environment:{
-weatherModel:ENV_CYCLE.WEATHER_SYSTEM,
-sun:{
-pathType:ENV_CYCLE.SUN_ORBIT_PATH,
-arcRadius:ENV_CYCLE.SUN_ARC_RADIUS,
-arcSpeed:ENV_CYCLE.SUN_ARC_SPEED
-},
-moon:{
-pathType:ENV_CYCLE.MOON_ORBIT_PATH,
-arcRadius:ENV_CYCLE.MOON_ARC_RADIUS,
-arcSpeed:ENV_CYCLE.MOON_ARC_SPEED
-},
-biomeRules:ENV_CYCLE.BIOME_RULE_SET,
-fogModel:ENV_CYCLE.FOG_RULE,
-lightModel:ENV_CYCLE.AMBIENT_LIGHT_RULE
-},
-traversal:{
-primaryPath:TRAVERSAL.PRIMARY_ASCENT_PATH,
-branchPaths:TRAVERSAL.SECONDARY_BRANCHES,
-returnPaths:TRAVERSAL.RETURN_PORTALS,
-sectorBindings:TRAVERSAL.SECTOR_GRID_BINDINGS
+transition:0
 },
 motion:{
 dragons:{
 orbitCenter:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitCenter)||{x:0,y:240,z:420},
 orbitRadius:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitRadius)||420,
-orbitSpeed:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitSpeed)||0.0019,
-entryRule:"portal_entry",
-exitRule:"portal_exit",
-persistence:true
+orbitSpeed:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitSpeed)||0.0019
 }
 }
 };
@@ -357,7 +255,7 @@ if(target&&REGIONS&&REGIONS.byId){
 const region=REGIONS.byId(target);
 if(region)return{label:"CORE",short:"CORE",route:region.route};
 }
-return fallback;
+return{label:"CORE",short:"CORE",route:null};
 }
 
 return fallback||null;
@@ -589,17 +487,13 @@ return;
 }
 }
 
-const sunRadius=state.environment.sun.arcRadius;
-const moonRadius=state.environment.moon.arcRadius;
-const sunSpeed=state.environment.sun.arcSpeed;
-const moonSpeed=state.environment.moon.arcSpeed;
-const sunA=state.tick*sunSpeed;
-const moonA=state.tick*moonSpeed+Math.PI;
-state.sun.x=window.innerWidth*0.5+Math.cos(sunA)*(sunRadius*0.24);
-state.sun.y=window.innerHeight*0.22+Math.sin(sunA)*(sunRadius*0.06);
+const sunA=state.tick*0.0035;
+const moonA=state.tick*0.0028+Math.PI;
+state.sun.x=window.innerWidth*0.5+Math.cos(sunA)*(1100*0.24);
+state.sun.y=window.innerHeight*0.22+Math.sin(sunA)*(1100*0.06);
 state.sun.glow=0.72;
-state.moon.x=window.innerWidth*0.5+Math.cos(moonA)*(moonRadius*0.26);
-state.moon.y=window.innerHeight*0.20+Math.sin(moonA)*(moonRadius*0.07);
+state.moon.x=window.innerWidth*0.5+Math.cos(moonA)*(980*0.26);
+state.moon.y=window.innerHeight*0.20+Math.sin(moonA)*(980*0.07);
 state.moon.glow=0.86;
 }
 
@@ -622,9 +516,6 @@ state.camera.transition=0;
 }else{
 state.camera.transition=0;
 }
-const mode=state.camera.requested;
-state.camera.travelBias=mode==="travel_projection"?1:0;
-state.camera.aerialBias=(mode==="aerial_one"||mode==="aerial_two")?1:0;
 }
 
 function blendedPreset(){
@@ -636,11 +527,9 @@ return{
 horizon:lerp(current.horizon,target.horizon,t),
 cubeScale:lerp(current.cubeScale,target.cubeScale,t),
 cubeYOffset:lerp(current.cubeYOffset,target.cubeYOffset,t),
-cubeXBias:lerp(current.cubeXBias,target.cubeXBias,t),
-harborAlpha:lerp(current.harborAlpha,target.harborAlpha,t),
 pathAlpha:lerp(current.pathAlpha,target.pathAlpha,t),
-worldAlpha:lerp(current.worldAlpha,target.worldAlpha,t),
-labelAlpha:lerp(current.labelAlpha,target.labelAlpha,t)
+labelAlpha:lerp(current.labelAlpha,target.labelAlpha,t),
+perspectiveBias:lerp(current.perspectiveBias,target.perspectiveBias,t)
 };
 }
 
@@ -856,250 +745,6 @@ ctx.fillStyle=haze;
 ctx.fillRect(0,horizon-18,w,140);
 }
 
-function drawHarborTerrain(){
-if(state.regionId!=="harbor_core")return;
-const preset=blendedPreset();
-const w=window.innerWidth;
-const h=window.innerHeight;
-const horizon=h*preset.horizon;
-const cx=w*0.5;
-ctx.save();
-ctx.globalAlpha=preset.harborAlpha;
-ctx.beginPath();
-ctx.moveTo(0,h);
-ctx.lineTo(0,horizon+22);
-ctx.bezierCurveTo(w*0.08,horizon+8,w*0.16,horizon-10,w*0.24,horizon-20);
-ctx.bezierCurveTo(w*0.31,horizon-22,w*0.35,horizon+4,w*0.39,horizon+36);
-ctx.bezierCurveTo(w*0.43,horizon+64,w*0.46,horizon+88,w*0.50,horizon+98);
-ctx.bezierCurveTo(w*0.54,horizon+88,w*0.57,horizon+64,w*0.61,horizon+36);
-ctx.bezierCurveTo(w*0.65,horizon+4,w*0.69,horizon-22,w*0.76,horizon-20);
-ctx.bezierCurveTo(w*0.84,horizon-10,w*0.92,horizon+8,w,horizon+22);
-ctx.lineTo(w,h);
-ctx.closePath();
-const landGrad=ctx.createLinearGradient(0,horizon-28,0,h);
-landGrad.addColorStop(0,"rgba(54,34,28,0.96)");
-landGrad.addColorStop(0.36,"rgba(42,24,22,0.98)");
-landGrad.addColorStop(1,"rgba(18,12,14,1)");
-ctx.fillStyle=landGrad;
-ctx.fill();
-ctx.beginPath();
-ctx.moveTo(0,horizon+22);
-ctx.bezierCurveTo(w*0.08,horizon+8,w*0.16,horizon-10,w*0.24,horizon-20);
-ctx.bezierCurveTo(w*0.31,horizon-22,w*0.35,horizon+4,w*0.39,horizon+36);
-ctx.bezierCurveTo(w*0.43,horizon+64,w*0.46,horizon+88,w*0.50,horizon+98);
-ctx.bezierCurveTo(w*0.54,horizon+88,w*0.57,horizon+64,w*0.61,horizon+36);
-ctx.bezierCurveTo(w*0.65,horizon+4,w*0.69,horizon-22,w*0.76,horizon-20);
-ctx.bezierCurveTo(w*0.84,horizon-10,w*0.92,horizon+8,w,horizon+22);
-ctx.lineWidth=2.2;
-ctx.strokeStyle="rgba(255,214,150,0.18)";
-ctx.stroke();
-ctx.globalAlpha=0.28*preset.harborAlpha;
-ctx.fillStyle="rgba(255,186,126,0.14)";
-ctx.beginPath();
-ctx.ellipse(cx,horizon+86,w*0.21,h*0.026,0,0,TAU);
-ctx.fill();
-ctx.restore();
-}
-
-function drawHarborVillage(){
-if(state.regionId!=="harbor_core")return;
-const preset=blendedPreset();
-const w=window.innerWidth;
-const h=window.innerHeight;
-const horizon=h*preset.horizon;
-const buildings=[
-{x:0.21,y:horizon-2,w:34,h:28,roof:"pagoda"},
-{x:0.26,y:horizon-8,w:42,h:34,roof:"merchant"},
-{x:0.32,y:horizon+2,w:38,h:30,roof:"merchant"},
-{x:0.40,y:horizon+26,w:44,h:34,roof:"pagoda"},
-{x:0.57,y:horizon+26,w:44,h:34,roof:"pagoda"},
-{x:0.66,y:horizon+2,w:38,h:30,roof:"merchant"},
-{x:0.72,y:horizon-8,w:42,h:34,roof:"merchant"},
-{x:0.77,y:horizon-2,w:34,h:28,roof:"pagoda"}
-];
-for(let i=0;i<buildings.length;i++){
-const b=buildings[i];
-const bx=w*b.x;
-const by=b.y;
-const bw=b.w;
-const bh=b.h;
-ctx.save();
-ctx.globalAlpha=preset.harborAlpha;
-ctx.fillStyle="rgba(26,18,18,0.92)";
-ctx.fillRect(bx-bw*0.5,by-bh,bw,bh);
-if(b.roof==="pagoda"){
-ctx.fillStyle="rgba(116,28,24,0.94)";
-ctx.beginPath();
-ctx.moveTo(bx-bw*0.68,by-bh);
-ctx.lineTo(bx,by-bh-14);
-ctx.lineTo(bx+bw*0.68,by-bh);
-ctx.lineTo(bx+bw*0.44,by-bh+4);
-ctx.lineTo(bx-bw*0.44,by-bh+4);
-ctx.closePath();
-ctx.fill();
-ctx.fillStyle="rgba(84,20,18,0.96)";
-ctx.beginPath();
-ctx.moveTo(bx-bw*0.44,by-bh+4);
-ctx.lineTo(bx,by-bh-6);
-ctx.lineTo(bx+bw*0.44,by-bh+4);
-ctx.lineTo(bx+bw*0.28,by-bh+8);
-ctx.lineTo(bx-bw*0.28,by-bh+8);
-ctx.closePath();
-ctx.fill();
-}else{
-ctx.fillStyle="rgba(168,154,132,0.92)";
-ctx.beginPath();
-ctx.moveTo(bx-bw*0.60,by-bh);
-ctx.lineTo(bx,by-bh-12);
-ctx.lineTo(bx+bw*0.60,by-bh);
-ctx.closePath();
-ctx.fill();
-}
-ctx.fillStyle="rgba(255,214,150,0.20)";
-for(let wi=0;wi<3;wi++)ctx.fillRect(bx-bw*0.30+wi*(bw*0.22),by-bh*0.62,5,8);
-ctx.restore();
-}
-}
-
-function drawHarborDocks(){
-if(state.regionId!=="harbor_core")return;
-const preset=blendedPreset();
-const w=window.innerWidth;
-const h=window.innerHeight;
-const horizon=h*preset.horizon;
-const dockY=horizon+78;
-const docks=[{x:0.34,len:110,wid:10},{x:0.46,len:132,wid:12},{x:0.54,len:132,wid:12},{x:0.66,len:110,wid:10}];
-for(let i=0;i<docks.length;i++){
-const d=docks[i];
-const x=w*d.x;
-ctx.save();
-ctx.globalAlpha=preset.harborAlpha;
-ctx.strokeStyle="rgba(92,62,48,0.96)";
-ctx.lineWidth=d.wid;
-ctx.beginPath();
-ctx.moveTo(x,dockY);
-ctx.lineTo(x,dockY+d.len);
-ctx.stroke();
-ctx.lineWidth=2;
-ctx.strokeStyle="rgba(160,114,76,0.62)";
-for(let j=0;j<5;j++){
-const yy=dockY+18+j*22;
-ctx.beginPath();
-ctx.moveTo(x-d.wid*0.85,yy);
-ctx.lineTo(x+d.wid*0.85,yy);
-ctx.stroke();
-}
-ctx.restore();
-}
-const boats=[{x:0.28,y:dockY+52,s:22},{x:0.72,y:dockY+58,s:26}];
-for(let i=0;i<boats.length;i++){
-const b=boats[i];
-const bx=w*b.x;
-const by=b.y;
-const s=b.s;
-ctx.save();
-ctx.globalAlpha=preset.harborAlpha;
-ctx.fillStyle="rgba(34,22,24,0.94)";
-ctx.beginPath();
-ctx.moveTo(bx-s,by);
-ctx.quadraticCurveTo(bx,by+s*0.44,bx+s,by);
-ctx.lineTo(bx+s*0.74,by+8);
-ctx.lineTo(bx-s*0.74,by+8);
-ctx.closePath();
-ctx.fill();
-ctx.strokeStyle="rgba(182,154,116,0.72)";
-ctx.lineWidth=1.2;
-ctx.beginPath();
-ctx.moveTo(bx,by-18);
-ctx.lineTo(bx,by+2);
-ctx.stroke();
-ctx.fillStyle="rgba(214,196,172,0.82)";
-ctx.beginPath();
-ctx.moveTo(bx,by-18);
-ctx.lineTo(bx+s*0.72,by-6);
-ctx.lineTo(bx,by-2);
-ctx.closePath();
-ctx.fill();
-ctx.restore();
-}
-}
-
-function drawNorthPath(){
-if(state.regionId!=="harbor_core")return;
-const preset=blendedPreset();
-const w=window.innerWidth;
-const h=window.innerHeight;
-const horizon=h*preset.horizon;
-const cx=w*0.5;
-const pathTopY=horizon-24;
-const pathBottomY=horizon+104;
-ctx.save();
-ctx.globalAlpha=preset.pathAlpha;
-const pathGrad=ctx.createLinearGradient(cx,pathTopY,cx,pathBottomY);
-pathGrad.addColorStop(0,"rgba(170,142,108,0.18)");
-pathGrad.addColorStop(1,"rgba(110,84,62,0.34)");
-ctx.fillStyle=pathGrad;
-ctx.beginPath();
-ctx.moveTo(cx-18,pathTopY);
-ctx.lineTo(cx+18,pathTopY);
-ctx.lineTo(cx+74,pathBottomY);
-ctx.lineTo(cx-74,pathBottomY);
-ctx.closePath();
-ctx.fill();
-ctx.strokeStyle="rgba(255,220,170,0.16)";
-ctx.lineWidth=1.4;
-ctx.beginPath();
-ctx.moveTo(cx,pathTopY-16);
-ctx.lineTo(cx,pathBottomY);
-ctx.stroke();
-ctx.fillStyle="rgba(255,214,150,0.80)";
-ctx.beginPath();
-ctx.moveTo(cx,pathTopY-28);
-ctx.lineTo(cx+10,pathTopY-10);
-ctx.lineTo(cx,pathTopY-16);
-ctx.lineTo(cx-10,pathTopY-10);
-ctx.closePath();
-ctx.fill();
-ctx.restore();
-}
-
-function drawWorldAnchors(){
-const preset=blendedPreset();
-if(preset.worldAlpha<=0.01)return;
-const w=window.innerWidth;
-const h=window.innerHeight;
-const horizon=h*preset.horizon;
-ctx.save();
-ctx.globalAlpha=preset.worldAlpha;
-ctx.strokeStyle="rgba(255,214,150,0.16)";
-ctx.lineWidth=1;
-const harborX=w*0.5;
-const harborY=horizon+92;
-ctx.beginPath();
-ctx.moveTo(harborX,harborY);
-ctx.lineTo(harborX,horizon-36);
-ctx.stroke();
-const labels=[
-["Gratitude",-74,horizon-28],
-["Generosity",-106,horizon-58],
-["Dependability",-58,horizon-82],
-["Accountability",18,horizon-98],
-["Humility",0,horizon-126],
-["Forgiveness",62,horizon-146],
-["Self-Control",100,horizon-170],
-["Patience",54,horizon-194],
-["Purity",0,horizon-224]
-];
-ctx.fillStyle=`rgba(255,236,196,${0.72*preset.labelAlpha})`;
-ctx.font='600 10px system-ui,Segoe UI,Roboto,sans-serif';
-ctx.textAlign="center";
-ctx.textBaseline="middle";
-for(let i=0;i<labels.length;i++){
-ctx.fillText(labels[i][0],harborX+labels[i][1],labels[i][2]);
-}
-ctx.restore();
-}
-
 function water(){
 const h=window.innerHeight;
 const w=window.innerWidth;
@@ -1113,6 +758,7 @@ g.addColorStop(0.54,"rgba(11,8,14,0.96)");
 g.addColorStop(1,"rgba(5,4,8,1)");
 ctx.fillStyle=g;
 ctx.fillRect(0,horizon-24,w,h-(horizon-24));
+
 ctx.save();
 ctx.globalAlpha=0.16;
 const moonReflectionX=state.moon.x||window.innerWidth*0.80;
@@ -1171,36 +817,16 @@ ctx.strokeStyle=`rgba(255,244,214,${0.020-foam*0.003})`;
 ctx.lineWidth=0.8;
 ctx.stroke();
 }
-const geo=state.cube;
-if(geo){
-const dragonReflectAlpha=0.08+0.02*Math.sin(state.tick*0.03);
-ctx.save();
-ctx.globalAlpha=dragonReflectAlpha;
-const shimmer=ctx.createLinearGradient(geo.centerX-120,horizon,geo.centerX+120,h);
-shimmer.addColorStop(0,"rgba(255,92,72,0)");
-shimmer.addColorStop(0.30,"rgba(255,92,72,0.24)");
-shimmer.addColorStop(0.52,"rgba(255,220,124,0.18)");
-shimmer.addColorStop(1,"rgba(255,220,124,0)");
-ctx.fillStyle=shimmer;
-ctx.beginPath();
-ctx.moveTo(geo.centerX-70,horizon+10);
-ctx.lineTo(geo.centerX+55,horizon+10);
-ctx.lineTo(geo.centerX+160,h);
-ctx.lineTo(geo.centerX-170,h);
-ctx.closePath();
-ctx.fill();
-ctx.restore();
-}
 }
 
 function project(x,y,z){
 const preset=blendedPreset();
-const travelBias=state.camera.requested==="travel_projection"?0.22:0;
-const aerialBias=(state.camera.requested==="aerial_one"?0.16:(state.camera.requested==="aerial_two"?0.30:0));
-const perspective=420/(420+z+(travelBias*120));
+const perspective=420/(420+z+preset.perspectiveBias);
+const travelBias=state.camera.requested==="travel_projection"?0.03:0;
+const aerialBias=(state.camera.requested==="aerial_one"?0.06:(state.camera.requested==="aerial_two"?0.12:0));
 return{
 x:window.innerWidth*0.5 + x*perspective,
-y:window.innerHeight*(preset.cubeYOffset+0.26+aerialBias*0.08) + y*perspective - z*(0.03+travelBias*0.02+aerialBias*0.06),
+y:window.innerHeight*(preset.cubeYOffset+0.26+aerialBias) + y*perspective - z*(travelBias+aerialBias),
 scale:perspective
 };
 }
@@ -1306,8 +932,6 @@ ctx.fill();
 ctx.lineWidth=1.0;
 ctx.strokeStyle="rgba(212,175,88,0.78)";
 ctx.stroke();
-ctx.shadowBlur=10;
-ctx.shadowColor="rgba(255,215,150,0.18)";
 ctx.fillStyle="rgba(255,238,190,0.96)";
 ctx.font='italic 700 10px "Georgia","Times New Roman",serif';
 ctx.textAlign="center";
@@ -1433,23 +1057,22 @@ return ((state.tick-state.dragonStart)%DRAGON_CYCLE_FRAMES)/DRAGON_CYCLE_FRAMES;
 
 function dragonOrbit(geo,t,dragonType){
 const center=state.motion.dragons.orbitCenter;
-const moonWeight=dragonType==="wisdom"?0.78:0.62;
-const cubeWeight=dragonType==="wisdom"?0.22:0.38;
+const moonWeight=dragonType==="wisdom"?0.85:0.70;
 const moonAnchorX=state.moon.x||window.innerWidth*0.80;
-const moonAnchorY=(state.moon.y||window.innerHeight*0.15)+geo.size*0.24;
+const moonAnchorY=(state.moon.y||window.innerHeight*0.15)+geo.size*0.10;
 const cubeAnchorX=geo.centerX;
 const cubeAnchorY=geo.centerY-geo.size*0.18;
 const anchorX=lerp(cubeAnchorX,moonAnchorX,moonWeight);
 const anchorY=lerp(cubeAnchorY,moonAnchorY,moonWeight);
-const corridorBiasX=(center.x||0)*0.08;
-const corridorBiasY=(center.y||240)*-0.04;
-const shell=(geo.size*2.56) * ((state.motion.dragons.orbitRadius||420)/420);
+const corridorBiasX=(center.x||0)*0.08*DRAGON_RULES.DISTANCE_FACTOR;
+const corridorBiasY=(center.y||240)*-0.04*DRAGON_RULES.DISTANCE_FACTOR;
+const shell=(geo.size*4.6)*((state.motion.dragons.orbitRadius||420)/420)*DRAGON_RULES.DISTANCE_FACTOR;
 const phase=dragonType==="fear"?0:Math.PI;
-const a=t*TAU*(0.86 + ((state.motion.dragons.orbitSpeed||0.0019)*380)) + phase;
+const a=t*TAU*(0.86+((state.motion.dragons.orbitSpeed||0.0019)*380))+phase;
 const bend=Math.sin(a)*Math.cos(a);
 const northPull=(state.camera.requested==="travel_projection"?1.18:1);
 const x=Math.cos(a)*shell + Math.sin(a*2.0)*shell*0.14;
-const y=bend*shell*0.32* northPull - Math.cos(a*0.5)*shell*0.08;
+const y=bend*shell*0.24*northPull - Math.cos(a*0.5)*shell*0.06;
 const z=Math.sin(a)*shell*0.30 + Math.cos(a*2.0)*shell*0.10 + (dragonType==="fear"?-0.10:0.10);
 return{
 x:anchorX + corridorBiasX + x,
@@ -1469,16 +1092,16 @@ const t=((raw%1)+1)%1;
 const p=dragonOrbit(geo,t,dragonType);
 const cross=1-Math.min(1,Math.abs(Math.sin(p.a+(dragonType==="fear"?0:Math.PI))));
 const crossThin=1-cross*0.22;
-const wavePrimary=Math.sin((state.tick*0.018)+(i*0.37)+(dragonType==="fear"?0:Math.PI))*geo.size*0.018;
-const waveSecondary=Math.sin((state.tick*0.031)+(i*0.71)+(dragonType==="fear"?0.4:Math.PI+0.4))*geo.size*0.0105;
-const waveTertiary=Math.cos((state.tick*0.013)+(i*0.23)+(dragonType==="fear"?0.9:Math.PI+0.9))*geo.size*0.0055;
+const wavePrimary=Math.sin((state.tick*0.018)+(i*0.37)+(dragonType==="fear"?0:Math.PI))*geo.size*0.010;
+const waveSecondary=Math.sin((state.tick*0.031)+(i*0.71)+(dragonType==="fear"?0.4:Math.PI+0.4))*geo.size*0.006;
+const waveTertiary=Math.cos((state.tick*0.013)+(i*0.23)+(dragonType==="fear"?0.9:Math.PI+0.9))*geo.size*0.0035;
 const wave=(wavePrimary*0.62)+(waveSecondary*0.28)+(waveTertiary*0.10);
-const liftPrimary=Math.cos((state.tick*0.012)+(i*0.28)+(dragonType==="fear"?0:Math.PI))*geo.size*0.011;
-const liftSecondary=Math.sin((state.tick*0.022)+(i*0.49)+(dragonType==="fear"?0.6:Math.PI+0.6))*geo.size*0.0068;
+const liftPrimary=Math.cos((state.tick*0.012)+(i*0.28)+(dragonType==="fear"?0:Math.PI))*geo.size*0.007;
+const liftSecondary=Math.sin((state.tick*0.022)+(i*0.49)+(dragonType==="fear"?0.6:Math.PI+0.6))*geo.size*0.004;
 const waveY=(liftPrimary*0.72)+(liftSecondary*0.28);
 const nx=-Math.sin(p.a);
-const ny=Math.cos(p.a)*0.22;
-points.push({x:p.x+nx*wave,y:p.y+ny*wave+waveY,z:p.z,a:p.a,crossThin});
+const ny=Math.cos(p.a)*0.18;
+points.push({x:p.x+nx*wave,y:p.y+ny*wave+waveY,z:p.z,a:p.a,crossThin,t});
 }
 return{points};
 }
@@ -1494,16 +1117,16 @@ function drawPortalAt(x,y,r,colorA,colorB){
 ctx.save();
 ctx.translate(x,y);
 ctx.rotate(Math.sin(state.tick*0.01+x*0.01)*0.12);
-ctx.globalAlpha=0.55;
+ctx.globalAlpha=0.34*DRAGON_RULES.GLOW_INTENSITY;
 ctx.strokeStyle=colorA;
-ctx.lineWidth=2.2;
-ctx.shadowBlur=18;
+ctx.lineWidth=1.6;
+ctx.shadowBlur=10;
 ctx.shadowColor=colorB;
 ctx.beginPath();
-ctx.ellipse(0,0,r*0.28,r*0.09,0,0,TAU);
+ctx.ellipse(0,0,r*0.22,r*0.07,0,0,TAU);
 ctx.stroke();
 ctx.beginPath();
-ctx.ellipse(0,0,r*0.18,r*0.05,0,0,TAU);
+ctx.ellipse(0,0,r*0.14,r*0.04,0,0,TAU);
 ctx.stroke();
 ctx.restore();
 }
@@ -1532,7 +1155,7 @@ ctx.translate(x,y+(i===0?0:dir*3.2));
 ctx.rotate(angle+dir*(0.22+i*0.12));
 ctx.globalAlpha=alpha*(i===0?1:0.8);
 ctx.strokeStyle=color;
-ctx.lineWidth=i===0?1.9:1.35;
+ctx.lineWidth=i===0?1.5:1.1;
 ctx.beginPath();
 ctx.moveTo(0,0);
 ctx.quadraticCurveTo(localLen*0.16,dir*localLen*0.08,localLen*0.58,dir*localLen*0.20);
@@ -1547,11 +1170,11 @@ if(!bundle||!bundle.points||bundle.points.length<8)return;
 ctx.save();
 ctx.lineCap="round";
 ctx.lineJoin="round";
-ctx.shadowBlur=18;
+ctx.shadowBlur=8;
 ctx.shadowColor=color;
 ctx.strokeStyle=color;
-ctx.globalAlpha=0.18;
-ctx.lineWidth=5.2;
+ctx.globalAlpha=0.18*DRAGON_RULES.WAKE_INTENSITY;
+ctx.lineWidth=3.0;
 ctx.beginPath();
 ctx.moveTo(bundle.points[0].x,bundle.points[0].y);
 for(let i=1;i<Math.min(bundle.points.length,16);i++)ctx.lineTo(bundle.points[i].x,bundle.points[i].y);
@@ -1559,95 +1182,122 @@ ctx.stroke();
 ctx.restore();
 }
 
-function drawDragonHead(head,next,baseFill,glowColor,accentFill,dragonType){
+function drawDragonSpines(points,a,color){
+const max=Math.min(points.length-2,points.length);
+for(let i=1;i<max;i+=2){
+const p=points[i];
+const t=p.t;
+const size=t<0.16?6:(t<0.45?4.5:(t<0.75?3.2:2.0));
+ctx.save();
+ctx.translate(p.x,p.y);
+ctx.rotate(a);
+ctx.globalAlpha=0.30*DRAGON_RULES.COLOR_DIM;
+ctx.fillStyle=color;
+ctx.beginPath();
+ctx.moveTo(-size*0.35,-size*0.05);
+ctx.lineTo(0,-size);
+ctx.lineTo(size*0.35,-size*0.05);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+}
+}
+
+function drawFearFire(head,next){
 const a=angleBetween(head,next);
-const headScale=dragonType==="fear"?1.16:1.12;
+const pulse=0.78+Math.sin(state.tick*0.16)*0.12+Math.sin(state.tick*0.05)*0.08;
+const len=24*pulse;
+const width=7*pulse;
 ctx.save();
 ctx.translate(head.x,head.y);
 ctx.rotate(a);
-ctx.shadowBlur=22;
+ctx.globalAlpha=0.42*DRAGON_RULES.GLOW_INTENSITY;
+const g=ctx.createLinearGradient(0,0,len,0);
+g.addColorStop(0,"rgba(255,244,200,0.86)");
+g.addColorStop(0.28,"rgba(255,182,84,0.78)");
+g.addColorStop(0.72,"rgba(228,82,38,0.54)");
+g.addColorStop(1,"rgba(160,24,16,0)");
+ctx.fillStyle=g;
+ctx.beginPath();
+ctx.moveTo(16,-width*0.55);
+ctx.quadraticCurveTo(24,-width*0.80,16+len,0);
+ctx.quadraticCurveTo(24,width*0.80,16,width*0.55);
+ctx.closePath();
+ctx.fill();
+
+ctx.globalAlpha=0.28*DRAGON_RULES.GLOW_INTENSITY;
+ctx.fillStyle="rgba(255,220,140,0.80)";
+ctx.beginPath();
+ctx.moveTo(16,-width*0.20);
+ctx.quadraticCurveTo(22,-width*0.35,16+(len*0.58),0);
+ctx.quadraticCurveTo(22,width*0.35,16,width*0.20);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+}
+
+function drawDragonHead(head,next,baseFill,glowColor,accentFill,dragonType){
+const a=angleBetween(head,next);
+const headScale=dragonType==="fear"?0.98:0.94;
+ctx.save();
+ctx.translate(head.x,head.y);
+ctx.rotate(a);
+ctx.shadowBlur=10*DRAGON_RULES.GLOW_INTENSITY;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 ctx.beginPath();
-ctx.moveTo(34*headScale,0);
-ctx.lineTo(22*headScale,-8*headScale);
-ctx.lineTo(10*headScale,-18*headScale);
-ctx.lineTo(-6*headScale,-20*headScale);
-ctx.lineTo(-22*headScale,-13*headScale);
-ctx.lineTo(-34*headScale,-4*headScale);
-ctx.lineTo(-38*headScale,0);
-ctx.lineTo(-34*headScale,4*headScale);
-ctx.lineTo(-22*headScale,13*headScale);
-ctx.lineTo(-6*headScale,20*headScale);
-ctx.lineTo(10*headScale,18*headScale);
-ctx.lineTo(22*headScale,8*headScale);
+ctx.moveTo(26*headScale,0);
+ctx.lineTo(17*headScale,-6*headScale);
+ctx.lineTo(8*headScale,-14*headScale);
+ctx.lineTo(-3*headScale,-16*headScale);
+ctx.lineTo(-17*headScale,-10*headScale);
+ctx.lineTo(-27*headScale,-3*headScale);
+ctx.lineTo(-31*headScale,0);
+ctx.lineTo(-27*headScale,3*headScale);
+ctx.lineTo(-17*headScale,10*headScale);
+ctx.lineTo(-3*headScale,16*headScale);
+ctx.lineTo(8*headScale,14*headScale);
+ctx.lineTo(17*headScale,6*headScale);
 ctx.closePath();
 ctx.fill();
+
 ctx.fillStyle=accentFill;
 ctx.beginPath();
-ctx.moveTo(22*headScale,0);
-ctx.lineTo(10*headScale,-8*headScale);
-ctx.lineTo(-4*headScale,-7*headScale);
-ctx.lineTo(-10*headScale,0);
-ctx.lineTo(-4*headScale,7*headScale);
-ctx.lineTo(10*headScale,8*headScale);
+ctx.moveTo(17*headScale,0);
+ctx.lineTo(8*headScale,-6*headScale);
+ctx.lineTo(-3*headScale,-5*headScale);
+ctx.lineTo(-8*headScale,0);
+ctx.lineTo(-3*headScale,5*headScale);
+ctx.lineTo(8*headScale,6*headScale);
 ctx.closePath();
 ctx.fill();
-ctx.fillStyle="rgba(255,248,224,0.96)";
+
+ctx.fillStyle="rgba(255,248,224,0.92)";
 ctx.beginPath();
-ctx.arc(8*headScale,-5.5*headScale,2.7*headScale,0,TAU);
+ctx.arc(7*headScale,-4.5*headScale,2.1*headScale,0,TAU);
 ctx.fill();
 ctx.beginPath();
-ctx.arc(8*headScale,5.5*headScale,1.15*headScale,0,TAU);
+ctx.arc(7*headScale,4.5*headScale,0.95*headScale,0,TAU);
 ctx.fill();
-ctx.fillStyle="rgba(255,232,170,0.94)";
+
+ctx.fillStyle="rgba(255,232,170,0.84)";
 ctx.beginPath();
-ctx.moveTo(4*headScale,-15*headScale);
-ctx.lineTo(-10*headScale,-28*headScale);
-ctx.lineTo(-3*headScale,-12*headScale);
-ctx.closePath();
-ctx.fill();
-ctx.beginPath();
-ctx.moveTo(4*headScale,15*headScale);
-ctx.lineTo(-10*headScale,28*headScale);
-ctx.lineTo(-3*headScale,12*headScale);
-ctx.closePath();
-ctx.fill();
-ctx.fillStyle="rgba(255,226,152,0.88)";
-ctx.beginPath();
-ctx.moveTo(-10*headScale,-12*headScale);
-ctx.lineTo(-26*headScale,-26*headScale);
-ctx.lineTo(-16*headScale,-8*headScale);
+ctx.moveTo(3*headScale,-12*headScale);
+ctx.lineTo(-7*headScale,-22*headScale);
+ctx.lineTo(-2*headScale,-9*headScale);
 ctx.closePath();
 ctx.fill();
 ctx.beginPath();
-ctx.moveTo(-10*headScale,12*headScale);
-ctx.lineTo(-26*headScale,26*headScale);
-ctx.lineTo(-16*headScale,8*headScale);
+ctx.moveTo(3*headScale,12*headScale);
+ctx.lineTo(-7*headScale,22*headScale);
+ctx.lineTo(-2*headScale,9*headScale);
 ctx.closePath();
 ctx.fill();
-ctx.strokeStyle="rgba(255,244,206,0.82)";
-ctx.lineWidth=1.4*headScale;
-ctx.beginPath();
-ctx.moveTo(18*headScale,-2*headScale);
-ctx.lineTo(30*headScale,-4*headScale);
-ctx.moveTo(18*headScale,2*headScale);
-ctx.lineTo(30*headScale,4*headScale);
-ctx.stroke();
-ctx.fillStyle="rgba(255,246,218,0.92)";
-for(let i=0;i<4;i++){
-const tx=(6+i*5)*headScale;
-const ty=(i%2===0?-1.8:1.8)*headScale;
-ctx.beginPath();
-ctx.moveTo(tx,ty);
-ctx.lineTo((tx+4.4*headScale),0);
-ctx.lineTo(tx,-ty);
-ctx.closePath();
-ctx.fill();
-}
 ctx.restore();
-drawWhiskerSet(head.x+4*headScale,head.y-3*headScale,a,48*headScale,"rgba(255,238,205,0.76)",0.92,false);
-drawWhiskerSet(head.x+4*headScale,head.y+3*headScale,a,48*headScale,"rgba(255,238,205,0.76)",0.92,true);
+
+drawWhiskerSet(head.x+3*headScale,head.y-2*headScale,a,34*headScale,"rgba(255,238,205,0.60)",0.72,false);
+drawWhiskerSet(head.x+3*headScale,head.y+2*headScale,a,34*headScale,"rgba(255,238,205,0.60)",0.72,true);
+if(dragonType==="fear")drawFearFire(head,next);
 }
 
 function drawDragonHair(points,glowColor){
@@ -1655,15 +1305,15 @@ if(points.length<6)return;
 const head=points[0];
 const neck=points[4];
 const a=angleBetween(head,neck);
-for(let i=0;i<6;i++){
-const len=28+i*9;
-const offset=i*2.7;
+for(let i=0;i<5;i++){
+const len=18+i*6;
+const offset=i*2.2;
 ctx.save();
-ctx.translate(head.x-5-offset,head.y);
+ctx.translate(head.x-4-offset,head.y);
 ctx.rotate(a+Math.PI);
-ctx.globalAlpha=0.20+(i*0.04);
+ctx.globalAlpha=0.10+(i*0.03);
 ctx.strokeStyle=glowColor;
-ctx.lineWidth=i<2?1.7:1.35;
+ctx.lineWidth=i<2?1.2:0.9;
 ctx.beginPath();
 ctx.moveTo(0,0);
 ctx.quadraticCurveTo(-len*0.18,-len*0.22,-len*0.66,-len*0.16);
@@ -1678,9 +1328,9 @@ if(!bundle||!bundle.points||bundle.points.length<18)return;
 const pts=bundle.points;
 const start=5;
 const end=17;
-const baseColor=dragonType==="fear"?"rgba(168,34,36,0.84)":"rgba(214,166,58,0.84)";
-const edgeColor=dragonType==="fear"?"rgba(255,182,160,0.84)":"rgba(255,239,196,0.86)";
-const textColor=dragonType==="fear"?"rgba(255,238,228,0.95)":"rgba(48,20,8,0.95)";
+const baseColor=dragonType==="fear"?"rgba(120,26,24,0.54)":"rgba(154,118,34,0.52)";
+const edgeColor=dragonType==="fear"?"rgba(220,132,110,0.52)":"rgba(236,214,160,0.54)";
+const textColor=dragonType==="fear"?"rgba(255,230,218,0.72)":"rgba(58,30,12,0.74)";
 const wavePhase=state.tick*0.08+(dragonType==="fear"?0:1.4);
 const phrase=getBannerPair(dragonType);
 const upper=[];
@@ -1692,13 +1342,13 @@ const next=pts[Math.min(pts.length-1,i+1)];
 const a=angleBetween(prev,next);
 const nx=-Math.sin(a);
 const ny=Math.cos(a);
-const width=(i===start?14.6:lerp(13.4,5.4,(i-start)/(end-start)))*p.crossThin;
-const flutter=Math.sin(wavePhase+i*0.55)*(i===start?1.7:2.7);
+const width=(i===start?9.4:lerp(8.6,3.4,(i-start)/(end-start)))*p.crossThin;
+const flutter=Math.sin(wavePhase+i*0.55)*(i===start?1.0:1.5);
 upper.push({x:p.x+nx*(width+flutter*0.18),y:p.y+ny*(width+flutter*0.28)});
 lower.push({x:p.x-nx*(width*0.66+flutter*0.20),y:p.y-ny*(width*0.66+flutter*0.30)});
 }
 ctx.save();
-ctx.globalAlpha=0.90;
+ctx.globalAlpha=0.54;
 ctx.beginPath();
 ctx.moveTo(upper[0].x,upper[0].y);
 for(let i=1;i<upper.length;i++)ctx.lineTo(upper[i].x,upper[i].y);
@@ -1707,13 +1357,11 @@ ctx.closePath();
 const grad=ctx.createLinearGradient(upper[0].x,upper[0].y,lower[lower.length-1].x,lower[lower.length-1].y);
 grad.addColorStop(0,edgeColor);
 grad.addColorStop(0.16,baseColor);
-grad.addColorStop(1,dragonType==="fear"?"rgba(168,34,36,0.26)":"rgba(214,166,58,0.26)");
+grad.addColorStop(1,"rgba(0,0,0,0)");
 ctx.fillStyle=grad;
 ctx.fill();
-ctx.lineWidth=0.9;
-ctx.strokeStyle=edgeColor;
-ctx.stroke();
 ctx.restore();
+
 const textAnchor=pts[11];
 const leftAnchor=pts[8];
 const rightAnchor=pts[14];
@@ -1722,7 +1370,7 @@ ctx.save();
 ctx.translate(textAnchor.x,textAnchor.y);
 ctx.rotate(textDir);
 ctx.fillStyle=textColor;
-ctx.font=phrase.isChinese?'italic 700 10.2px "Georgia","Times New Roman",serif':'italic 700 8.5px "Georgia","Times New Roman",serif';
+ctx.font=phrase.isChinese?'italic 700 7.8px "Georgia","Times New Roman",serif':'italic 700 6.8px "Georgia","Times New Roman",serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
 ctx.fillText(phrase.text,0,0);
@@ -1732,45 +1380,61 @@ ctx.restore();
 function drawDragonHalf(bundle,dragonType,baseFill,glowColor,accent,front){
 if(!bundle||!bundle.points||bundle.points.length<6)return;
 const points=bundle.points;
+let spineAngle=0;
+
 for(let i=points.length-1;i>=1;i--){
 const p=points[i];
 if(front?(p.z<0):(p.z>=0))continue;
 const prev=points[Math.max(0,i-1)];
 const next=points[Math.min(points.length-1,i+1)];
 const t=i/(points.length-1);
-const depthScale=lerp(1.18,0.84,(p.z+1)/2);
-const radius=(30*Math.pow(1-t,1.20)+5.8)*depthScale*p.crossThin;
+const depthScale=lerp(1.06,0.82,(p.z+1)/2);
+let baseRadius;
+if(t<0.08)baseRadius=18;
+else if(t<0.20)baseRadius=lerp(18,9,(t-0.08)/0.12);
+else if(t<0.70)baseRadius=lerp(9,6,(t-0.20)/0.50);
+else baseRadius=lerp(6,2,(t-0.70)/0.30);
+const radius=baseRadius*DRAGON_RULES.BODY_SCALE*depthScale*p.crossThin;
 const a=angleBetween(prev,next);
+spineAngle=a;
+
 ctx.save();
-ctx.globalAlpha=(0.95-(t*0.20))*clamp(1+p.z*0.16,0.72,1.26);
-ctx.shadowBlur=17*(1+p.z*0.10);
+ctx.globalAlpha=(0.72-(t*0.14))*clamp(1+p.z*0.10,0.66,1.08)*DRAGON_RULES.COLOR_DIM;
+ctx.shadowBlur=8*DRAGON_RULES.GLOW_INTENSITY;
 ctx.shadowColor=glowColor;
 ctx.fillStyle=baseFill;
 ctx.translate(p.x,p.y);
 ctx.rotate(a);
 ctx.beginPath();
-ctx.ellipse(0,0,radius*1.20,radius,0,0,TAU);
+ctx.ellipse(0,0,radius*1.16,radius,0,0,TAU);
 ctx.fill();
 ctx.restore();
-drawScalePatch(p.x,p.y-radius*0.10,a,radius*0.50,radius*0.24,accent,0.36);
-drawScalePatch(p.x-radius*0.24,p.y+radius*0.07,a,radius*0.34,radius*0.18,"rgba(255,250,228,0.24)",0.24);
-if(i%3===0)drawScalePatch(p.x+radius*0.12,p.y-radius*0.20,a,radius*0.18,radius*0.09,"rgba(255,244,210,0.28)",0.18);
+
+drawScalePatch(p.x,p.y-radius*0.08,a,radius*0.42,radius*0.18,accent,0.22);
+if(i%3===0){
+drawScalePatch(p.x+radius*0.10,p.y-radius*0.16,a,radius*0.12,radius*0.06,"rgba(255,244,210,0.20)",0.12);
 }
+}
+
 if(front){
 drawBanner(bundle,dragonType);
 drawDragonHair(points,glowColor);
+drawDragonSpines(points,spineAngle,accent);
 drawDragonHead(points[0],points[3],baseFill,glowColor,accent,dragonType);
 }
 }
 
 function drawDragonReflections(geo,bundles){
 const horizon=window.innerHeight*blendedPreset().horizon;
-const reflectionSets=[{bundle:bundles.fear,color:"rgba(255,100,76,0.16)"},{bundle:bundles.wisdom,color:"rgba(255,214,126,0.14)"}];
+const reflectionSets=[
+{bundle:bundles.fear,color:"rgba(255,100,76,0.16)"},
+{bundle:bundles.wisdom,color:"rgba(255,214,126,0.14)"}
+];
 for(let b=0;b<reflectionSets.length;b++){
 const bundle=reflectionSets[b].bundle;
 if(!bundle||!bundle.points||bundle.points.length<2)continue;
 ctx.save();
-ctx.shadowBlur=10;
+ctx.shadowBlur=6;
 ctx.shadowColor=reflectionSets[b].color;
 for(let i=bundle.points.length-1;i>=1;i-=2){
 const p=bundle.points[i];
@@ -1779,11 +1443,11 @@ const next=bundle.points[Math.min(bundle.points.length-1,i+1)];
 const t=i/(bundle.points.length-1);
 const a=angleBetween(prev,next);
 const ry=horizon+(horizon-p.y);
-const rippleX=Math.sin(state.tick*0.028+i*0.8)*1.7;
-const rippleY=Math.sin(state.tick*0.017+i*0.55)*0.7;
-const radius=(16*Math.pow(1-t,1.18)+2.4)*0.58;
+const rippleX=Math.sin(state.tick*0.028+i*0.8)*1.2;
+const rippleY=Math.sin(state.tick*0.017+i*0.55)*0.5;
+const radius=(8*Math.pow(1-t,1.18)+1.2)*0.58*DRAGON_RULES.REFLECTION_INTENSITY;
 ctx.save();
-ctx.globalAlpha=0.56;
+ctx.globalAlpha=0.40*DRAGON_RULES.REFLECTION_INTENSITY;
 ctx.translate(p.x+rippleX,ry+rippleY);
 ctx.rotate(-a);
 ctx.fillStyle=reflectionSets[b].color;
@@ -1798,20 +1462,20 @@ ctx.restore();
 
 function dragonsBack(geo,bundles){
 if(bundles.fear&&bundles.fear.points.length){
-drawPortalAt(bundles.fear.points[0].x,bundles.fear.points[0].y,geo.size,"rgba(255,96,72,0.82)","rgba(255,80,80,0.42)");
-drawDragonWake(bundles.fear,"rgba(255,98,78,0.44)");
-drawDragonHalf(bundles.fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
+drawPortalAt(bundles.fear.points[0].x,bundles.fear.points[0].y,geo.size,"rgba(180,72,48,0.54)","rgba(180,72,48,0.28)");
+drawDragonWake(bundles.fear,"rgba(150,72,54,0.40)");
+drawDragonHalf(bundles.fear,"fear","rgba(92,20,18,0.82)","rgba(148,58,34,0.34)","rgba(176,98,62,0.48)",false);
 }
 if(bundles.wisdom&&bundles.wisdom.points.length){
-drawPortalAt(bundles.wisdom.points[0].x,bundles.wisdom.points[0].y,geo.size,"rgba(255,220,130,0.82)","rgba(255,220,130,0.36)");
-drawDragonWake(bundles.wisdom,"rgba(255,214,122,0.42)");
-drawDragonHalf(bundles.wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
+drawPortalAt(bundles.wisdom.points[0].x,bundles.wisdom.points[0].y,geo.size,"rgba(180,154,84,0.54)","rgba(180,154,84,0.22)");
+drawDragonWake(bundles.wisdom,"rgba(170,150,84,0.34)");
+drawDragonHalf(bundles.wisdom,"wisdom","rgba(112,92,24,0.78)","rgba(190,168,84,0.26)","rgba(212,188,112,0.42)",false);
 }
 }
 
-function dragonsFront(_geo,bundles){
-if(bundles.fear)drawDragonHalf(bundles.fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
-if(bundles.wisdom)drawDragonHalf(bundles.wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
+function dragonsFront(geo,bundles){
+if(bundles.fear)drawDragonHalf(bundles.fear,"fear","rgba(92,20,18,0.82)","rgba(148,58,34,0.34)","rgba(176,98,62,0.48)",true);
+if(bundles.wisdom)drawDragonHalf(bundles.wisdom,"wisdom","rgba(112,92,24,0.78)","rgba(190,168,84,0.26)","rgba(212,188,112,0.42)",true);
 }
 
 function fireworks(){
@@ -1978,11 +1642,7 @@ clouds();
 lanterns();
 mountains();
 water();
-drawHarborTerrain();
-drawNorthPath();
-drawHarborVillage();
-drawHarborDocks();
-drawWorldAnchors();
+
 try{
 const harbor=window.HARBOR_RENDERER;
 if(harbor&&harbor.draw){
@@ -1991,11 +1651,13 @@ harbor.draw(ctx,window.innerWidth,window.innerHeight,state.tick);
 }catch(err){
 console.warn("Harbor renderer failed",err);
 }
+
 const geo=getCubeGeometry();
 state.cube=geo;
 const bundles=getDragonBundles(geo);
 drawDragonReflections(geo,bundles);
 dragonsBack(geo,bundles);
+
 if(state.showroom.mode==="idle"||state.showroom.mode==="return"||state.showroom.mode==="shatter"){
 if(state.navObjectState==="compressed_navigation_stick"&&state.camera.requested!=="fixed_harbor"){
 drawNavigationStick(geo);
@@ -2003,6 +1665,7 @@ drawNavigationStick(geo);
 drawCube(geo);
 }
 }
+
 dragonsFront(geo,bundles);
 drawShowroomFragments();
 drawShowroomCompass();

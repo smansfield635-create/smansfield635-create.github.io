@@ -2,7 +2,7 @@
 "use strict";
 
 /* ══════════════════════════════════════════════════════════════════════
-REGION_ROUTER_v1
+REGION_ROUTER_v2
 MODE: EXECUTION-ONLY · NON-DRIFT · REGION NAVIGATION AUTHORITY
 OWNER: SEAN
 
@@ -22,11 +22,11 @@ const kernel=window.WORLD_KERNEL;
 const regionsApi=window.ISLAND_REGIONS;
 
 if(!kernel){
-console.error("REGION_ROUTER_v1: WORLD_KERNEL missing.");
+console.error("REGION_ROUTER_v2: WORLD_KERNEL missing.");
 return;
 }
 if(!regionsApi){
-console.error("REGION_ROUTER_v1: ISLAND_REGIONS missing.");
+console.error("REGION_ROUTER_v2: ISLAND_REGIONS missing.");
 return;
 }
 
@@ -70,16 +70,6 @@ return regionsApi.byRoute(normalizeRoute(route));
 function getCurrentRegion(){
 const region=getRegionByRoute(currentPathname());
 return region||getRegionById("harbor_core");
-}
-
-function resolveSummitRegionIds(){
-const out=Object.create(null);
-const keys=Object.keys(REGION_ID_BY_SUMMIT_KEY);
-for(let i=0;i<keys.length;i++){
-const key=keys[i];
-out[key]=REGION_ID_BY_SUMMIT_KEY[key];
-}
-return out;
 }
 
 function resolvePrimaryPathRegions(){
@@ -175,6 +165,8 @@ const region=typeof input==="string"
 
 if(!region)return null;
 
+const isHarbor=region.id==="harbor_core";
+
 return{
 regionId:region.id,
 label:region.label,
@@ -188,7 +180,9 @@ neighbors:getNeighbors(region.id),
 nextPrimary:getNextPrimary(region.id),
 previousPrimary:getPreviousPrimary(region.id),
 branches:resolveBranchesForRegion(region.id),
-returnTarget:resolveReturnTarget(region.id)
+returnTarget:resolveReturnTarget(region.id),
+isHarborCore:isHarbor,
+localCompassMode:isHarbor?"harbor_local":"region_standard"
 };
 }
 
@@ -217,33 +211,54 @@ if(!ctx||!ctx.returnTarget)return false;
 return navigateToRegion(ctx.returnTarget.id);
 }
 
+function chooseDirectionalNeighbors(neighbors){
+const out={E:null,W:null};
+
+for(let i=0;i<neighbors.length;i++){
+const n=neighbors[i];
+if(!out.E&&/east|trade|delta|patience|accountability/i.test(n.id))out.E=n.id;
+if(!out.W&&/west|wilds|forgiveness|dependability|generosity/i.test(n.id))out.W=n.id;
+}
+
+for(let i=0;i<neighbors.length;i++){
+const n=neighbors[i];
+if(!out.E)out.E=n.id;
+else if(!out.W&&n.id!==out.E)out.W=n.id;
+}
+
+return out;
+}
+
 function compassTargetMap(regionId){
 const ctx=getRegionContext(regionId);
 if(!ctx)return null;
 
-const defaults={
-N:ctx.nextPrimary?ctx.nextPrimary.id:null,
-S:ctx.returnTarget?ctx.returnTarget.id:"harbor_core",
-E:null,
-W:null,
+const neighbors=ctx.neighbors||[];
+const dirs=chooseDirectionalNeighbors(neighbors);
+
+if(ctx.regionId==="harbor_core"){
+return{
+N:"gratitude_southlands",
+S:null,
+E:dirs.E,
+W:dirs.W,
 C:"harbor_core",
 M:"dragon_corridor"
 };
-
-const neighbors=ctx.neighbors||[];
-for(let i=0;i<neighbors.length;i++){
-const n=neighbors[i];
-if(!defaults.E&&/east|trade/i.test(n.id))defaults.E=n.id;
-if(!defaults.W&&/west|wilds|forgiveness/i.test(n.id))defaults.W=n.id;
 }
-if(!defaults.E&&neighbors[0])defaults.E=neighbors[0].id;
-if(!defaults.W&&neighbors[1])defaults.W=neighbors[1].id;
 
-return defaults;
+return{
+N:ctx.nextPrimary?ctx.nextPrimary.id:null,
+S:ctx.returnTarget?ctx.returnTarget.id:"harbor_core",
+E:dirs.E,
+W:dirs.W,
+C:ctx.regionId,
+M:"dragon_corridor"
+};
 }
 
 window.REGION_ROUTER={
-version:"REGION_ROUTER_v1",
+version:"REGION_ROUTER_v2",
 normalizeRoute,
 currentPathname,
 getRegionById,

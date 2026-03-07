@@ -84,31 +84,57 @@ y:geo.centerY-(geo.size*1.34)
 };
 }
 
-function getMoonAnchor(dragonType){
-const moonX=(window.OPENWORLD_BACKGROUND_RENDERER&&window.OPENWORLD_BACKGROUND_RENDERER._state&&window.OPENWORLD_BACKGROUND_RENDERER._state.moon&&window.OPENWORLD_BACKGROUND_RENDERER._state.moon.x)||window.innerWidth*0.80;
-const moonY=(window.OPENWORLD_BACKGROUND_RENDERER&&window.OPENWORLD_BACKGROUND_RENDERER._state&&window.OPENWORLD_BACKGROUND_RENDERER._state.moon&&window.OPENWORLD_BACKGROUND_RENDERER._state.moon.y)||window.innerHeight*0.15;
+function getMoonState(){
+const bg=window.OPENWORLD_BACKGROUND_RENDERER;
+if(bg&&bg._state&&bg._state.moon){
+return bg._state.moon;
+}
+return null;
+}
+
+function getRuntimeMotion(state){
+const fallbackCenter={x:0,y:520,z:420};
+const fallbackRadius=420;
+const fallbackSpeed=0.0019;
+const motion=state&&state.motion&&state.motion.dragons?state.motion.dragons:null;
 return{
-x:dragonType==="wisdom"?moonX:(window.innerWidth*0.24),
-y:dragonType==="wisdom"?moonY:(window.innerHeight*0.18)
+orbitCenter:(motion&&motion.orbitCenter)?motion.orbitCenter:fallbackCenter,
+orbitRadius:(motion&&typeof motion.orbitRadius==="number")?motion.orbitRadius:fallbackRadius,
+orbitSpeed:(motion&&typeof motion.orbitSpeed==="number")?motion.orbitSpeed:fallbackSpeed
 };
 }
 
 function dragonOrbit(geo,t,dragonType,state){
-const shell=geo.size*DRAGON_RULES.SHELL_MULT;
+const runtime=getRuntimeMotion(state);
+const orbitCenter=runtime.orbitCenter;
+const orbitRadius=runtime.orbitRadius;
+const orbitSpeed=runtime.orbitSpeed;
 
 const compassAnchor=getCompassAnchor(geo);
-const moonAnchor=getMoonAnchor(dragonType);
+const moon=getMoonState();
 
-const anchorWeight=dragonType==="wisdom"?0.54:0.34;
-const anchorX=lerp(compassAnchor.x,moonAnchor.x,anchorWeight);
-const anchorY=lerp(compassAnchor.y,moonAnchor.y,anchorWeight);
+const moonAnchor={
+x:moon&&typeof moon.x==="number"?moon.x:window.innerWidth*0.80,
+y:moon&&typeof moon.y==="number"?moon.y:window.innerHeight*0.15
+};
+
+const shell=geo.size*DRAGON_RULES.SHELL_MULT*(orbitRadius/420);
+
+const baseAnchorX=window.innerWidth*0.5+(orbitCenter.x||0)*0.08;
+const baseAnchorY=(window.innerHeight*0.5)-((orbitCenter.y||0)*0.42);
+
+const moonBlend=dragonType==="wisdom"?0.22:0.10;
+const compassBlend=dragonType==="wisdom"?0.08:0.04;
+
+const anchorX=lerp(lerp(baseAnchorX,moonAnchor.x,moonBlend),compassAnchor.x,compassBlend);
+const anchorY=lerp(lerp(baseAnchorY,moonAnchor.y,moonBlend*0.65),compassAnchor.y,compassBlend*0.35);
 
 const phase=dragonType==="fear"?0:Math.PI;
-const speedFactor=0.88;
+const speedFactor=0.86+(orbitSpeed*380);
 const a=t*TAU*speedFactor+phase;
 
 const x=Math.cos(a)*shell + Math.sin(a*2.0)*shell*0.15;
-const y=(Math.sin(a)*shell*0.24 - Math.cos(a*0.5)*shell*0.08) - (geo.size*2.18*DRAGON_RULES.VERTICAL_LIFT);
+const y=(Math.sin(a)*shell*0.24 - Math.cos(a*0.5)*shell*0.08) - (geo.size*1.22*DRAGON_RULES.VERTICAL_LIFT);
 const z=Math.sin(a)*shell*0.30 + Math.cos(a*2.0)*shell*0.10 + (dragonType==="fear"?-0.12:0.12);
 
 return{

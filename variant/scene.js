@@ -1967,8 +1967,13 @@ clouds();
 lanterns();
 mountains();
 water();
-if(window.HARBOR_RENDERER){
-HARBOR_RENDERER.draw(ctx,window.innerWidth,window.innerHeight,state.tick);
+try{
+const harbor=window.HARBOR_RENDERER;
+if(harbor&&harbor.draw){
+harbor.draw(ctx,window.innerWidth,window.innerHeight,state.tick);
+}
+}catch(err){
+console.warn("Harbor renderer failed",err);
 }
 const geo=getCubeGeometry();
 state.cube=geo;

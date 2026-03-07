@@ -8,9 +8,7 @@ BODY_SCALE:0.34,
 GLOW_INTENSITY:0.42,
 WAKE_INTENSITY:0.26,
 REFLECTION_INTENSITY:0.18,
-COLOR_DIM:0.76,
-SHELL_MULT:5.05,
-VERTICAL_LIFT:1.0
+COLOR_DIM:0.76
 });
 
 const DRAGON_SEGMENTS=44;
@@ -77,69 +75,58 @@ isChinese:dragonType==="fear"?!swap:swap
 };
 }
 
-function getCompassAnchor(geo){
-return{
-x:geo.centerX,
-y:geo.centerY-(geo.size*1.34)
-};
-}
-
 function getMoonState(){
 const bg=window.OPENWORLD_BACKGROUND_RENDERER;
-if(bg&&bg._state&&bg._state.moon){
-return bg._state.moon;
-}
+if(bg&&bg._state&&bg._state.moon)return bg._state.moon;
 return null;
 }
 
 function getRuntimeMotion(state){
-const fallbackCenter={x:0,y:520,z:420};
-const fallbackRadius=420;
-const fallbackSpeed=0.0019;
 const motion=state&&state.motion&&state.motion.dragons?state.motion.dragons:null;
 return{
-orbitCenter:(motion&&motion.orbitCenter)?motion.orbitCenter:fallbackCenter,
-orbitRadius:(motion&&typeof motion.orbitRadius==="number")?motion.orbitRadius:fallbackRadius,
-orbitSpeed:(motion&&typeof motion.orbitSpeed==="number")?motion.orbitSpeed:fallbackSpeed
+orbitCenter:(motion&&motion.orbitCenter)?motion.orbitCenter:{x:0,y:520,z:420},
+orbitRadius:(motion&&typeof motion.orbitRadius==="number")?motion.orbitRadius:420,
+orbitSpeed:(motion&&typeof motion.orbitSpeed==="number")?motion.orbitSpeed:0.0019
+};
+}
+
+function getRuntimeAnchor(geo,dragonType,state){
+const runtime=getRuntimeMotion(state);
+const center=runtime.orbitCenter;
+const moon=getMoonState();
+
+const baseX=(window.innerWidth*0.5)+((center.x||0)*0.08);
+const baseY=(window.innerHeight*0.5)-((center.y||0)*0.42);
+
+if(dragonType==="wisdom"&&moon&&typeof moon.x==="number"&&typeof moon.y==="number"){
+return{
+x:lerp(baseX,moon.x,0.18),
+y:lerp(baseY,moon.y,0.12)
+};
+}
+
+return{
+x:baseX,
+y:baseY
 };
 }
 
 function dragonOrbit(geo,t,dragonType,state){
 const runtime=getRuntimeMotion(state);
-const orbitCenter=runtime.orbitCenter;
-const orbitRadius=runtime.orbitRadius;
-const orbitSpeed=runtime.orbitSpeed;
+const anchor=getRuntimeAnchor(geo,dragonType,state);
 
-const compassAnchor=getCompassAnchor(geo);
-const moon=getMoonState();
-
-const moonAnchor={
-x:moon&&typeof moon.x==="number"?moon.x:window.innerWidth*0.80,
-y:moon&&typeof moon.y==="number"?moon.y:window.innerHeight*0.15
-};
-
-const shell=geo.size*DRAGON_RULES.SHELL_MULT*(orbitRadius/420);
-
-const baseAnchorX=window.innerWidth*0.5+(orbitCenter.x||0)*0.08;
-const baseAnchorY=(window.innerHeight*0.5)-((orbitCenter.y||0)*0.42);
-
-const moonBlend=dragonType==="wisdom"?0.22:0.10;
-const compassBlend=dragonType==="wisdom"?0.08:0.04;
-
-const anchorX=lerp(lerp(baseAnchorX,moonAnchor.x,moonBlend),compassAnchor.x,compassBlend);
-const anchorY=lerp(lerp(baseAnchorY,moonAnchor.y,moonBlend*0.65),compassAnchor.y,compassBlend*0.35);
-
+const shell=(geo.size*5.05)*(runtime.orbitRadius/420);
+const speedFactor=0.86+(runtime.orbitSpeed*380);
 const phase=dragonType==="fear"?0:Math.PI;
-const speedFactor=0.86+(orbitSpeed*380);
-const a=t*TAU*speedFactor+phase;
+const a=(t*TAU*speedFactor)+phase;
 
 const x=Math.cos(a)*shell + Math.sin(a*2.0)*shell*0.15;
-const y=(Math.sin(a)*shell*0.24 - Math.cos(a*0.5)*shell*0.08) - (geo.size*1.22*DRAGON_RULES.VERTICAL_LIFT);
+const y=(Math.sin(a)*shell*0.24 - Math.cos(a*0.5)*shell*0.08) - (geo.size*1.10);
 const z=Math.sin(a)*shell*0.30 + Math.cos(a*2.0)*shell*0.10 + (dragonType==="fear"?-0.12:0.12);
 
 return{
-x:anchorX+x,
-y:anchorY+y,
+x:anchor.x+x,
+y:anchor.y+y,
 z:z/(shell*0.40),
 a
 };
@@ -245,7 +232,6 @@ ctx.restore();
 
 function drawDragonWake(ctx,bundle,color){
 if(!bundle||!bundle.points||bundle.points.length<8)return;
-
 ctx.save();
 ctx.lineCap="round";
 ctx.lineJoin="round";
@@ -565,16 +551,16 @@ ctx.restore();
 }
 }
 
-function drawBack(ctx,geo,bundles,tick){
+function drawBack(ctx,geo,bundles,tick,state){
 if(bundles.fear&&bundles.fear.points.length){
 drawPortalAt(ctx,bundles.fear.points[0].x,bundles.fear.points[0].y,geo.size,"rgba(180,72,48,0.54)","rgba(180,72,48,0.28)",tick);
 drawDragonWake(ctx,bundles.fear,"rgba(150,72,54,0.40)");
-drawDragonHalf(ctx,bundles.fear,"fear","rgba(92,20,18,0.80)","rgba(148,58,34,0.34)","rgba(176,98,62,0.48)",false,tick,"en",{tick,dragonLoop:true,dragonStart:0});
+drawDragonHalf(ctx,bundles.fear,"fear","rgba(92,20,18,0.80)","rgba(148,58,34,0.34)","rgba(176,98,62,0.48)",false,tick,"en",state);
 }
 if(bundles.wisdom&&bundles.wisdom.points.length){
 drawPortalAt(ctx,bundles.wisdom.points[0].x,bundles.wisdom.points[0].y,geo.size,"rgba(180,154,84,0.54)","rgba(180,154,84,0.22)",tick);
 drawDragonWake(ctx,bundles.wisdom,"rgba(170,150,84,0.34)");
-drawDragonHalf(ctx,bundles.wisdom,"wisdom","rgba(112,92,24,0.76)","rgba(190,168,84,0.26)","rgba(212,188,112,0.42)",false,tick,"en",{tick,dragonLoop:true,dragonStart:0});
+drawDragonHalf(ctx,bundles.wisdom,"wisdom","rgba(112,92,24,0.76)","rgba(190,168,84,0.26)","rgba(212,188,112,0.42)",false,tick,"en",state);
 }
 }
 
@@ -588,7 +574,7 @@ drawDragonHalf(ctx,bundles.wisdom,"wisdom","rgba(112,92,24,0.78)","rgba(190,168,
 }
 
 window.OPENWORLD_DRAGON_RENDERER=Object.freeze({
-version:"OPENWORLD_DRAGON_RENDERER_v2",
+version:"OPENWORLD_DRAGON_RENDERER_v3",
 getDragonBundles,
 drawDragonReflections,
 drawBack,

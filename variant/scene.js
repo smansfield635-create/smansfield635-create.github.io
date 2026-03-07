@@ -137,8 +137,7 @@
     fx: FX.createState(),
     motion: {
       dragons: {
-        orbitCenter:
-          (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitCenter) || { x: 0, y: 240, z: 420 },
+        orbitCenter: { x: 0, y: 340, z: 420 },
         orbitRadius: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitRadius) || 420,
         orbitSpeed: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitSpeed) || 0.0019,
       },

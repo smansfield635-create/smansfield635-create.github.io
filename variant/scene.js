@@ -14,20 +14,26 @@
   const SHOWROOM = window.OPENWORLD_SHOWROOM_RENDERER;
   const FX = window.OPENWORLD_SCENE_FX;
   const INPUT = window.OPENWORLD_SCENE_INPUT;
-  const AUTH = window.OPENWORLD_COMPASS_NAVIGATION_AUTHORITY;
-  const NAV_MATH = window.OPENWORLD_NAVIGATION_MATH;
-  const INSTRUMENTS_RUNTIME = window.OPENWORLD_INSTRUMENTS_RUNTIME;
 
   const KERNEL = window.WORLD_KERNEL || null;
-  const ENV = window.ENVIRONMENT_RUNTIME || null;
   const REGIONS = window.ISLAND_REGIONS || null;
   const ROUTER = window.REGION_ROUTER || null;
+  const ENV = window.ENVIRONMENT_RUNTIME || null;
   const HARBOR = window.HARBOR_RENDERER || null;
 
-  if (!CAMERA || !BG || !COMPASS || !DRAGONS || !SHOWROOM || !FX || !INPUT || !AUTH) {
+  if (!CAMERA || !BG || !COMPASS || !DRAGONS || !SHOWROOM || !FX || !INPUT) {
     console.error("OPENWORLD_SCENE_v1: missing required scene modules.");
     return;
   }
+
+  const LOCAL_FACE_FALLBACK = Object.freeze({
+    N: { label: "NORTH", short: "N", route: null, type: "locked" },
+    E: { label: "EAST", short: "E", route: "/products/", type: "route" },
+    S: { label: "SOUTH", short: "S", route: "/laws/", type: "route" },
+    W: { label: "WEST", short: "W", route: "/gauges/", type: "route" },
+    C: { label: "CORE", short: "CORE", route: null, type: "locked" },
+    M: { label: "MORPH", short: "MORPH", route: null, type: "morph" },
+  });
 
   function clamp(v, min, max) {
     return Math.max(min, Math.min(max, v));
@@ -49,6 +55,59 @@
     } catch (_e) {
       return "en";
     }
+  }
+
+  function normalizeCurrentPath() {
+    try {
+      const p = String(window.location.pathname || "/");
+      return p.endsWith("/") ? p : p + "/";
+    } catch (_e) {
+      return "/";
+    }
+  }
+
+  function currentRegionContext(regionIdHint) {
+    if (!ROUTER || typeof ROUTER.getRegionContext !== "function") return null;
+    return ROUTER.getRegionContext(regionIdHint || normalizeCurrentPath());
+  }
+
+  function currentCompassMap(regionId) {
+    if (!ROUTER || typeof ROUTER.compassTargetMap !== "function") return null;
+    return ROUTER.compassTargetMap(regionId);
+  }
+
+  function resolveFaceMeta(face) {
+    const fallback = LOCAL_FACE_FALLBACK[face] || null;
+    const map = currentCompassMap(state.regionId);
+    if (!map || !REGIONS || typeof REGIONS.byId !== "function") {
+      return fallback;
+    }
+
+    if (face === "M") {
+      return fallback;
+    }
+
+    const targetId = map[face] || null;
+    if (!targetId) {
+      return fallback;
+    }
+
+    const region = REGIONS.byId(targetId);
+    if (!region) {
+      return fallback;
+    }
+
+    const sameRegion = region.id === state.regionId;
+    const sameRoute = region.route === normalizeCurrentPath();
+    const route = sameRegion || sameRoute ? null : region.route;
+
+    if (face === "N") return { label: "NORTH", short: "N", route, type: route ? "route" : "locked" };
+    if (face === "E") return { label: "EAST", short: "E", route, type: route ? "route" : "locked" };
+    if (face === "S") return { label: "SOUTH", short: "S", route, type: route ? "route" : "locked" };
+    if (face === "W") return { label: "WEST", short: "W", route, type: route ? "route" : "locked" };
+    if (face === "C") return { label: "CORE", short: "CORE", route, type: route ? "route" : "locked" };
+
+    return fallback;
   }
 
   const state = {
@@ -84,30 +143,6 @@
         orbitSpeed: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitSpeed) || 0.0019,
       },
     },
-    interactionState: {
-      helm_input: {
-        commanded_heading_deg: 0,
-        throttle_class: "cruise",
-        steering_delta: 0,
-        helm_mode: "manual",
-      },
-      course_selection: {
-        selected_course_deg: 0,
-        selection_source: "default",
-        lock_state: "unlocked",
-      },
-      target_selection: {
-        target_type: "route",
-        target_id: "harbor_core",
-        target_lock_state: "locked",
-      },
-      instrument_mode: "free_nav",
-    },
-    navigationRuntime: {
-      mathOutput: null,
-      instrumentState: null,
-      instrumentSurfaces: null,
-    },
   };
 
   function resize() {
@@ -130,14 +165,6 @@
     SHOWROOM.refreshTargets(state.showroom, w, h);
   }
 
-  function currentPathname() {
-    try {
-      return String(window.location.pathname || "/");
-    } catch (_e) {
-      return "/";
-    }
-  }
-
   function getFaceAt(x, y) {
     if (state.showroom.mode === "show") return "M";
     for (const key of ["C", "W", "E", "N", "S", "M"]) {
@@ -147,23 +174,19 @@
     return null;
   }
 
-  function getFaceLabel(face) {
-    const meta = AUTH.getFaceMeta(face, {
-      regionId: state.regionId,
-      currentPath: currentPathname(),
-      router: ROUTER,
-      regions: REGIONS,
-    });
+  function getLockedLabel(face) {
+    const meta = resolveFaceMeta(face);
     return meta ? meta.label + " LOCKED" : "LOCKED";
   }
 
-  function queueNavigation(route) {
+  function queueNavigation(route, face) {
     if (!route) return;
     state.navigateTo = route;
     state.navigateDelay = 12;
     state.navObjectState = "compressed_navigation_stick";
     CAMERA.blendTo(state.camera, "travel_projection");
     FX.triggerOverlay(state.fx, 1);
+    dispatch("compass:route", { face, route });
   }
 
   function engageDrag(x, y) {
@@ -201,19 +224,13 @@
   }
 
   function handleFaceAction(face) {
-    const action = AUTH.activateFace(face, {
-      regionId: state.regionId,
-      currentPath: currentPathname(),
-      router: ROUTER,
-      regions: REGIONS,
-    });
+    const meta = resolveFaceMeta(face);
+    if (!meta) return;
 
-    if (!action || !action.ok) return;
-
-    if (action.status === "morph") {
+    if (face === "M" || meta.type === "morph") {
       if (state.showroom.mode === "show") {
         SHOWROOM.close(state.showroom, dispatch);
-      } else {
+      } else if (state.cube) {
         SHOWROOM.start(state.showroom, state.cube, dispatch, function (x, y, count, sizeBase) {
           FX.spawnFirework(state.fx, x, y, count, sizeBase);
         });
@@ -222,7 +239,7 @@
       return;
     }
 
-    if (action.status === "locked") {
+    if (!meta.route) {
       FX.triggerLocked(state.fx, face);
       dispatch("compass:locked", { face });
       if (state.cube && state.cube.faceCenters[face]) {
@@ -237,19 +254,17 @@
       return;
     }
 
-    if (action.status === "route") {
-      dispatch("compass:route", { face, route: action.route });
-      if (state.cube && state.cube.faceCenters[face]) {
-        FX.spawnFirework(
-          state.fx,
-          state.cube.faceCenters[face].x,
-          state.cube.faceCenters[face].y,
-          16,
-          1.7
-        );
-      }
-      queueNavigation(action.route);
+    if (state.cube && state.cube.faceCenters[face]) {
+      FX.spawnFirework(
+        state.fx,
+        state.cube.faceCenters[face].x,
+        state.cube.faceCenters[face].y,
+        16,
+        1.7
+      );
     }
+
+    queueNavigation(meta.route, face);
   }
 
   function releaseDrag(x, y) {
@@ -259,112 +274,11 @@
   }
 
   function syncRegionContext() {
-    if (ROUTER && typeof ROUTER.getRegionContext === "function") {
-      state.regionContext = ROUTER.getRegionContext(currentPathname());
-      if (state.regionContext && state.regionContext.regionId) {
-        state.regionId = state.regionContext.regionId;
-      }
+    const ctxValue = currentRegionContext();
+    if (ctxValue && ctxValue.regionId) {
+      state.regionContext = ctxValue;
+      state.regionId = ctxValue.regionId;
     }
-  }
-
-  function syncNavigationRuntime() {
-    if (!NAV_MATH || !INSTRUMENTS_RUNTIME || !ROUTER || !REGIONS) return;
-
-    const region = REGIONS.byId ? REGIONS.byId(state.regionId) : null;
-    const envSnapshot = ENV && typeof ENV.getSnapshot === "function" ? ENV.getSnapshot() : null;
-    const compassMap =
-      ROUTER && typeof ROUTER.compassTargetMap === "function"
-        ? ROUTER.compassTargetMap(state.regionId)
-        : null;
-
-    const northTargetId = compassMap && compassMap.N ? compassMap.N : state.regionId;
-    const targetRegion = REGIONS.byId ? REGIONS.byId(northTargetId) : null;
-
-    state.interactionState.target_selection.target_id = northTargetId || state.regionId;
-    state.interactionState.instrument_mode =
-      state.navObjectState === "compressed_navigation_stick" ? "route_nav" : "free_nav";
-
-    const mathInput = {
-      world_state: {
-        origin_ref: (KERNEL && KERNEL.mapId) || "NINE_SUMMITS_ISLAND_MAP_v1",
-        region_id: state.regionId,
-        vessel_position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        vessel_track_ref: {
-          heading_ref: state.rotY,
-          track_ref: state.rotY,
-          frame_id: "world_frame",
-        },
-        route_graph: {
-          nodes:
-            REGIONS && REGIONS.list
-              ? REGIONS.list.map(function (r) {
-                  return { id: r.id, route: r.route, anchor: r.anchor };
-                })
-              : [],
-          edges: region ? [].concat(region.ingress || [], region.egress || []) : [],
-          traversal_rules: (KERNEL && KERNEL.traversal) || {},
-        },
-        active_route: targetRegion
-          ? {
-              route_id: targetRegion.id,
-              ordered_waypoints: [targetRegion.id],
-              route_constraints: {},
-            }
-          : null,
-        active_waypoint: targetRegion
-          ? {
-              waypoint_id: targetRegion.id,
-              coordinate: targetRegion.anchor,
-              waypoint_class: targetRegion.type,
-            }
-          : null,
-        neighbor_waypoints:
-          state.regionContext && state.regionContext.neighbors
-            ? state.regionContext.neighbors.map(function (n) {
-                return {
-                  waypoint_id: n.id,
-                  coordinate: n.anchor,
-                  admissibility_state: "admissible",
-                };
-              })
-            : [],
-      },
-      environment_state: {
-        timestamp: Date.now(),
-        time_of_day_class: "dusk",
-        wind: {
-          direction_deg: 0,
-          speed: envSnapshot && envSnapshot.weather ? envSnapshot.weather.wind || 0 : 0,
-          frame_id: "world_frame",
-        },
-        current: {
-          direction_deg: 0,
-          speed: 0,
-          frame_id: "world_frame",
-        },
-        celestial_state: {
-          sun: envSnapshot ? envSnapshot.sun : null,
-          moon: envSnapshot ? envSnapshot.moon : null,
-          stars: [],
-          observer_frame: "world_frame",
-        },
-        visibility_class: "clear",
-      },
-      interaction_state: state.interactionState,
-      derivation_request: "full",
-    };
-
-    const mathOutput = NAV_MATH.compute(mathInput);
-    const instrumentState = INSTRUMENTS_RUNTIME.buildState(mathOutput, state.interactionState);
-    const instrumentSurfaces = INSTRUMENTS_RUNTIME.buildSurfaces(instrumentState);
-
-    state.navigationRuntime.mathOutput = mathOutput;
-    state.navigationRuntime.instrumentState = instrumentState;
-    state.navigationRuntime.instrumentSurfaces = instrumentSurfaces;
   }
 
   function updateCamera() {
@@ -382,7 +296,6 @@
     state.tick++;
     syncRegionContext();
     BG.syncCelestials(state.background, ENV, state.tick);
-    syncNavigationRuntime();
     updateCamera();
 
     state.rotY += state.rotVelY;
@@ -478,12 +391,7 @@
           geo,
           state.tick,
           function (face) {
-            return AUTH.getFaceMeta(face, {
-              regionId: state.regionId,
-              currentPath: currentPathname(),
-              router: ROUTER,
-              regions: REGIONS,
-            });
+            return resolveFaceMeta(face);
           },
           state.hoverFace
         );
@@ -494,7 +402,7 @@
     SHOWROOM.drawFragments(ctx, state.showroom, state.tick);
     SHOWROOM.drawCompass(ctx, state.showroom);
     FX.drawFireworks(ctx, state.fx);
-    FX.drawLockedOverlay(ctx, state.fx, getFaceLabel);
+    FX.drawLockedOverlay(ctx, state.fx, getLockedLabel);
     FX.drawNavigationOverlay(ctx, state.fx);
   }
 

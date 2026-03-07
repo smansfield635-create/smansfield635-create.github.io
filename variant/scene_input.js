@@ -30,26 +30,27 @@
     return inside;
   }
 
-  function bind(canvas, api) {
-    if (!canvas || !api) return;
-
+  function bind(canvas, handlers) {
     canvas.addEventListener(
       "pointermove",
       function (e) {
-        const p = getPointerPos(canvas, e);
-        if (typeof api.onPointerMove === "function") api.onPointerMove(p, e);
+        if (handlers.onPointerMove) {
+          handlers.onPointerMove(getPointerPos(canvas, e), e);
+        }
       },
       { passive: true }
     );
 
     canvas.addEventListener("pointerdown", function (e) {
-      const p = getPointerPos(canvas, e);
-      if (typeof api.onPointerDown === "function") api.onPointerDown(p, e);
+      if (handlers.onPointerDown) {
+        handlers.onPointerDown(getPointerPos(canvas, e), e);
+      }
     });
 
     canvas.addEventListener("pointerup", function (e) {
-      const p = getPointerPos(canvas, e);
-      if (typeof api.onPointerUp === "function") api.onPointerUp(p, e);
+      if (handlers.onPointerUp) {
+        handlers.onPointerUp(getPointerPos(canvas, e), e);
+      }
     });
 
     canvas.addEventListener(
@@ -57,8 +58,9 @@
       function (e) {
         const touch = e.changedTouches && e.changedTouches[0];
         if (!touch) return;
-        const p = getTouchPos(canvas, touch);
-        if (typeof api.onTouchStart === "function") api.onTouchStart(p, touch, e);
+        if (handlers.onTouchStart) {
+          handlers.onTouchStart(getTouchPos(canvas, touch), touch, e);
+        }
       },
       { passive: true }
     );
@@ -68,8 +70,9 @@
       function (e) {
         const touch = e.changedTouches && e.changedTouches[0];
         if (!touch) return;
-        const p = getTouchPos(canvas, touch);
-        if (typeof api.onTouchMove === "function") api.onTouchMove(p, touch, e);
+        if (handlers.onTouchMove) {
+          handlers.onTouchMove(getTouchPos(canvas, touch), touch, e);
+        }
       },
       { passive: true }
     );
@@ -79,40 +82,41 @@
       function (e) {
         const touch = e.changedTouches && e.changedTouches[0];
         if (!touch) return;
-        const p = getTouchPos(canvas, touch);
-        if (typeof api.onTouchEnd === "function") api.onTouchEnd(p, touch, e);
+        if (handlers.onTouchEnd) {
+          handlers.onTouchEnd(getTouchPos(canvas, touch), touch, e);
+        }
         e.preventDefault();
       },
       { passive: false }
     );
 
     canvas.addEventListener("pointerleave", function (e) {
-      if (typeof api.onPointerLeave === "function") api.onPointerLeave(e);
+      if (handlers.onPointerLeave) {
+        handlers.onPointerLeave(e);
+      }
     });
 
-    if (typeof api.onMorphEvent === "function") {
-      document.addEventListener("compass:morph", function (e) {
-        api.onMorphEvent(e);
-      });
-    }
+    document.addEventListener("compass:morph", function (e) {
+      if (handlers.onMorphEvent) {
+        handlers.onMorphEvent(e);
+      }
+    });
 
-    if (typeof api.onSceneCamera === "function") {
-      document.addEventListener("scene:camera", function (e) {
-        api.onSceneCamera(e);
-      });
-    }
+    document.addEventListener("scene:camera", function (e) {
+      if (handlers.onSceneCamera) {
+        handlers.onSceneCamera(e);
+      }
+    });
 
-    if (typeof api.onSceneCameraCycle === "function") {
-      document.addEventListener("scene:camera:cycle", function (e) {
-        api.onSceneCameraCycle(e);
-      });
-    }
+    document.addEventListener("scene:camera:cycle", function (e) {
+      if (handlers.onSceneCameraCycle) {
+        handlers.onSceneCameraCycle(e);
+      }
+    });
   }
 
   window.OPENWORLD_SCENE_INPUT = Object.freeze({
     version: "OPENWORLD_SCENE_INPUT_v1",
-    getPointerPos,
-    getTouchPos,
     pointInPoly,
     bind,
   });

@@ -1967,11 +1967,9 @@ clouds();
 lanterns();
 mountains();
 water();
-drawHarborTerrain();
-drawHarborVillage();
-drawHarborDocks();
-drawNorthPath();
-
+if(window.HARBOR_RENDERER){
+HARBOR_RENDERER.draw(ctx,window.innerWidth,window.innerHeight,state.tick);
+}
 const geo=getCubeGeometry();
 state.cube=geo;
 const bundles=getDragonBundles(geo);

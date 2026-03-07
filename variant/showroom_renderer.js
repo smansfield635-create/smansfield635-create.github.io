@@ -3,20 +3,12 @@
 
   const TAU = Math.PI * 2;
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function fract(v) {
-    return v - Math.floor(v);
-  }
-
-  function hash(n) {
-    return fract(Math.sin(n * 127.1) * 43758.5453123);
-  }
-
   function clamp(v, min, max) {
     return Math.max(min, Math.min(max, v));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
   }
 
   function easeOutCubic(t) {
@@ -25,6 +17,10 @@
 
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function hash(n) {
+    return (Math.sin(n * 127.1) * 43758.5453123) % 1;
   }
 
   function roundedRectPath(ctx, x, y, w, h, r) {
@@ -57,8 +53,8 @@
     const rx = Math.min(width, height) * 0.22;
     const ry = rx * 0.48;
     const labels = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW"];
-
     const nodes = [];
+
     for (let i = 0; i < 12; i++) {
       const a = -Math.PI / 2 + (i / 12) * TAU;
       nodes.push({
@@ -69,6 +65,7 @@
         y: cy,
       });
     }
+
     return nodes;
   }
 
@@ -81,27 +78,25 @@
     }
   }
 
-  function start(state, geo, dispatch, spawnFirework) {
-    if (state.mode === "show" || state.mode === "swirl" || state.mode === "shatter") {
-      return state;
-    }
+  function start(state, cube, dispatch, spawnFirework) {
+    if (!cube) return;
+    if (state.mode === "show" || state.mode === "swirl" || state.mode === "shatter") return;
 
-    const center = { x: geo.centerX, y: geo.centerY };
+    const center = { x: cube.centerX, y: cube.centerY };
     const fragments = [];
-    const points = geo.pts;
 
-    for (let i = 0; i < points.length; i++) {
-      const p = points[i];
+    for (let i = 0; i < cube.pts.length; i++) {
+      const p = cube.pts[i];
       const a = Math.atan2(p.y - center.y, p.x - center.x) + (i % 2 === 0 ? 0.22 : -0.22);
-      const speed = 18 + hash(i * 4.7) * 26;
+      const speed = 18 + Math.abs(hash(i * 4.7)) * 26;
       fragments.push({
         x: p.x,
         y: p.y,
         vx: Math.cos(a) * speed,
         vy: Math.sin(a) * speed,
-        r: 8 + hash(i * 7.1) * 14,
-        rot: hash(i * 8.3) * TAU,
-        rotVel: (hash(i * 9.1) - 0.5) * 0.22,
+        r: 8 + Math.abs(hash(i * 7.1)) * 14,
+        rot: Math.abs(hash(i * 8.3)) * TAU,
+        rotVel: (Math.abs(hash(i * 9.1)) - 0.5) * 0.22,
       });
     }
 
@@ -110,28 +105,21 @@
     state.mode = "shatter";
     state.t = 0;
 
-    if (typeof dispatch === "function") {
-      dispatch("compass:morph", { face: "M", mode: "start" });
-    }
-    if (typeof spawnFirework === "function") {
+    dispatch("compass:morph", { face: "M", mode: "start" });
+    if (spawnFirework) {
       spawnFirework(center.x, center.y, 28, 2.8);
     }
-
-    return state;
   }
 
   function close(state, dispatch) {
     state.mode = "return";
     state.t = 0;
-    if (typeof dispatch === "function") {
-      dispatch("compass:morph", { face: "M", mode: "return" });
-    }
-    return state;
+    dispatch("compass:morph", { face: "M", mode: "return" });
   }
 
   function update(state, onReturnComplete) {
     const mode = state.mode;
-    if (mode === "idle") return state;
+    if (mode === "idle") return;
 
     if (mode === "shatter") {
       state.t += 0.075;
@@ -139,7 +127,7 @@
         state.mode = "swirl";
         state.t = 0;
       }
-      return state;
+      return;
     }
 
     if (mode === "swirl") {
@@ -148,10 +136,10 @@
         state.mode = "show";
         state.t = 1;
       }
-      return state;
+      return;
     }
 
-    if (mode === "show") return state;
+    if (mode === "show") return;
 
     if (mode === "return") {
       state.t += 0.065;
@@ -164,8 +152,6 @@
         }
       }
     }
-
-    return state;
   }
 
   function drawFragments(ctx, state, tick) {
@@ -173,7 +159,6 @@
     if (mode !== "shatter" && mode !== "swirl" && mode !== "return") return;
 
     const t = clamp(state.t, 0, 1);
-
     for (let i = 0; i < state.fragments.length; i++) {
       const frag = state.fragments[i];
       let x = frag.x;
@@ -230,6 +215,7 @@
 
     for (let i = 0; i < state.nodes.length; i++) {
       const node = state.nodes[i];
+
       if (state.mode === "swirl") {
         const cx = window.innerWidth * 0.5;
         const cy = window.innerHeight * 0.24;
@@ -247,7 +233,8 @@
       ctx.fillStyle = "rgba(18,18,28,0.82)";
       ctx.fill();
       ctx.lineWidth = 1.3;
-      ctx.strokeStyle = i % 3 === 0 ? "rgba(255,216,150,0.82)" : "rgba(120,168,255,0.78)";
+      ctx.strokeStyle =
+        i % 3 === 0 ? "rgba(255,216,150,0.82)" : "rgba(120,168,255,0.78)";
       ctx.stroke();
       ctx.fillStyle = "rgba(255,246,230,0.96)";
       ctx.font = 'italic 700 10px "Georgia","Times New Roman",serif';
@@ -269,7 +256,6 @@
   window.OPENWORLD_SHOWROOM_RENDERER = Object.freeze({
     version: "OPENWORLD_SHOWROOM_RENDERER_v1",
     createState,
-    buildNodes,
     refreshTargets,
     start,
     close,

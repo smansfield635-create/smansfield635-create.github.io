@@ -1,6 +1,3 @@
-DESTINATION FILE: /variant/scene.js
-ACTION: Full TNT replacement
-
 (function(){
 const canvas=document.getElementById("scene");
 if(!canvas)return;

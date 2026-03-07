@@ -8,7 +8,12 @@ if(!ctx)return;
 
 const TAU=Math.PI*2;
 
-const FACE_MAP={
+const KERNEL=window.WORLD_KERNEL||null;
+const ENV=window.ENVIRONMENT_RUNTIME||null;
+const REGIONS=window.ISLAND_REGIONS||null;
+const ROUTER=window.REGION_ROUTER||null;
+
+const LOCAL_FACE_FALLBACK={
 N:{label:"NORTH",short:"N",route:null},
 E:{label:"EAST",short:"E",route:"/products/"},
 S:{label:"SOUTH",short:"S",route:"/laws/"},
@@ -88,12 +93,29 @@ navigateDelay:0,
 overlayAlpha:0,
 lockedFace:null,
 lockedPulse:0,
-secondCompassOpen:false,
 morphPulse:0,
 lanterns:[],
 clouds:[],
 mountains:[],
-fireworks:[]
+fireworks:[],
+sun:{
+x:0,
+y:0,
+glow:0.72
+},
+moon:{
+x:0,
+y:0,
+glow:0.86
+},
+regionId:(document.body&&document.body.dataset&&document.body.dataset.regionId)||"harbor_core",
+regionContext:null,
+showroom:{
+mode:"idle",     // idle | shatter | swirl | show | return
+t:0,
+fragments:[],
+nodes:[]
+}
 };
 
 const DRAGON_CYCLE_FRAMES=1890;
@@ -106,6 +128,12 @@ function lerp(a,b,t){return a+(b-a)*t;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
+function easeOutCubic(t){return 1-Math.pow(1-t,3);}
+function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+
+function dispatch(name,detail){
+document.dispatchEvent(new CustomEvent(name,{detail}));
+}
 
 function getSceneLanguage(){
 try{
@@ -162,6 +190,78 @@ ctx.quadraticCurveTo(x,y+h,x,y+h-rr);
 ctx.lineTo(x,y+rr);
 ctx.quadraticCurveTo(x,y,x+rr,y);
 ctx.closePath();
+}
+
+function currentRegionContext(){
+if(ROUTER&&typeof ROUTER.getRegionContext==="function"){
+return ROUTER.getRegionContext(window.location.pathname||"/");
+}
+return null;
+}
+
+function currentCompassMap(){
+if(ROUTER&&typeof ROUTER.compassTargetMap==="function"){
+const map=ROUTER.compassTargetMap(state.regionId);
+if(map)return map;
+}
+return null;
+}
+
+function getFaceMeta(face){
+const fallback=LOCAL_FACE_FALLBACK[face];
+const map=currentCompassMap();
+if(!map)return fallback||null;
+
+if(face==="M"){
+return {label:"MORPH",short:"MORPH",route:"SCENE_ACTION_ONLY"};
+}
+
+if(face==="N"){
+const target=map.N;
+if(target&&REGIONS&&REGIONS.byId){
+const region=REGIONS.byId(target);
+if(region)return {label:"NORTH",short:"N",route:region.route};
+}
+return {label:"NORTH",short:"N",route:null};
+}
+
+if(face==="E"){
+const target=map.E;
+if(target&&REGIONS&&REGIONS.byId){
+const region=REGIONS.byId(target);
+if(region)return {label:"EAST",short:"E",route:region.route};
+}
+return fallback;
+}
+
+if(face==="S"){
+const target=map.S;
+if(target&&REGIONS&&REGIONS.byId){
+const region=REGIONS.byId(target);
+if(region)return {label:"SOUTH",short:"S",route:region.route};
+}
+return fallback;
+}
+
+if(face==="W"){
+const target=map.W;
+if(target&&REGIONS&&REGIONS.byId){
+const region=REGIONS.byId(target);
+if(region)return {label:"WEST",short:"W",route:region.route};
+}
+return fallback;
+}
+
+if(face==="C"){
+const target=map.C;
+if(target&&REGIONS&&REGIONS.byId){
+const region=REGIONS.byId(target);
+if(region)return {label:"CORE",short:"CORE",route:region.route};
+}
+return fallback;
+}
+
+return fallback||null;
 }
 
 function initLanterns(){
@@ -238,6 +338,7 @@ ctx.scale(dpr,dpr);
 initLanterns();
 initClouds();
 initMountains();
+refreshShowroomTargets();
 }
 window.addEventListener("resize",resize,{passive:true});
 window.addEventListener("orientationchange",resize,{passive:true});
@@ -290,35 +391,124 @@ spawnFirework(window.innerWidth*0.76,window.innerHeight*0.22,22,2.2);
 function triggerLocked(face){
 state.lockedFace=face;
 state.lockedPulse=1;
+dispatch("compass:locked",{face});
 const geo=state.cube;
 if(geo&&geo.faceCenters[face]){
 spawnFirework(geo.faceCenters[face].x,geo.faceCenters[face].y,14,1.5);
 }
 }
 
-function queueNavigation(route){
+function queueNavigation(route,face){
 state.navigateTo=route;
 state.navigateDelay=12;
 state.overlayAlpha=1;
+dispatch("compass:route",{face,route});
+}
+
+function buildShowroomNodes(){
+const cx=window.innerWidth*0.5;
+const cy=window.innerHeight*0.23;
+const rx=Math.min(window.innerWidth,window.innerHeight)*0.22;
+const ry=rx*0.48;
+const labels=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW"];
+const nodes=[];
+for(let i=0;i<12;i++){
+const a=(-Math.PI/2)+(i/12)*TAU;
+	nodes.push({
+label:labels[i],
+targetX:cx+Math.cos(a)*rx,
+targetY:cy+Math.sin(a)*ry,
+x:cx,
+y:cy
+});
+}
+return nodes;
+}
+
+function refreshShowroomTargets(){
+if(state.showroom.nodes.length){
+const rebuilt=buildShowroomNodes();
+for(let i=0;i<state.showroom.nodes.length&&i<rebuilt.length;i++){
+state.showroom.nodes[i].targetX=rebuilt[i].targetX;
+state.showroom.nodes[i].targetY=rebuilt[i].targetY;
+}
+}
+}
+
+function startMorphSequence(){
+if(state.showroom.mode==="show"||state.showroom.mode==="swirl"||state.showroom.mode==="shatter")return;
+const geo=state.cube||getCubeGeometry();
+const center={x:geo.centerX,y:geo.centerY};
+const fragments=[];
+const points=geo.pts;
+for(let i=0;i<points.length;i++){
+const p=points[i];
+const a=Math.atan2(p.y-center.y,p.x-center.x)+((i%2===0)?0.22:-0.22);
+const speed=18+hash(i*4.7)*26;
+fragments.push({
+x:p.x,
+y:p.y,
+vx:Math.cos(a)*speed,
+vy:Math.sin(a)*speed,
+r:8+hash(i*7.1)*14,
+rot:hash(i*8.3)*TAU,
+rotVel:(hash(i*9.1)-0.5)*0.22
+});
+}
+state.showroom.fragments=fragments;
+state.showroom.nodes=buildShowroomNodes();
+state.showroom.mode="shatter";
+state.showroom.t=0;
+state.morphPulse=1;
+dispatch("compass:morph",{face:"M",mode:"start"});
+spawnFirework(center.x,center.y,28,2.8);
+}
+
+function closeMorphSequence(){
+state.showroom.mode="return";
+state.showroom.t=0;
+dispatch("compass:morph",{face:"M",mode:"return"});
 }
 
 function selectFace(face){
-const meta=FACE_MAP[face];
+const meta=getFaceMeta(face);
 if(!meta)return;
-if(meta.route===null){
-triggerLocked(face);
+if(face==="M"){
+if(state.showroom.mode==="show"){
+closeMorphSequence();
+}else{
+startMorphSequence();
+}
 return;
 }
-if(meta.route==="SCENE_ACTION_ONLY"){
-state.morphPulse=1;
-state.secondCompassOpen=!state.secondCompassOpen;
+if(meta.route===null){
+triggerLocked(face);
 return;
 }
 const geo=state.cube;
 if(geo&&geo.faceCenters[face]){
 spawnFirework(geo.faceCenters[face].x,geo.faceCenters[face].y,16,1.7);
 }
-queueNavigation(meta.route);
+queueNavigation(meta.route,face);
+}
+
+function syncEnvironment(){
+if(!ENV||typeof ENV.tick!=="function")return;
+const snapshot=ENV.tick(1);
+if(!snapshot)return;
+
+const sunX=window.innerWidth*0.5 + (snapshot.sun.x*0.18);
+const sunY=window.innerHeight*0.24 + (snapshot.sun.y*0.10);
+const moonX=window.innerWidth*0.5 + (snapshot.moon.x*0.20);
+const moonY=window.innerHeight*0.22 + (snapshot.moon.y*0.10);
+
+state.sun.x=sunX;
+state.sun.y=sunY;
+state.sun.glow=snapshot.sun.glow;
+
+state.moon.x=moonX;
+state.moon.y=moonY;
+state.moon.glow=snapshot.moon.glow;
 }
 
 function sky(){
@@ -354,9 +544,37 @@ ctx.fill();
 }
 }
 
+function sun(){
+const x=state.sun.x||window.innerWidth*0.20;
+const y=state.sun.y||window.innerHeight*0.18;
+const r=Math.min(window.innerWidth,window.innerHeight)*0.045;
+
+ctx.save();
+const halo=ctx.createRadialGradient(x,y,r*0.28,x,y,r*2.8);
+halo.addColorStop(0,`rgba(255,190,110,${0.22*state.sun.glow})`);
+halo.addColorStop(0.45,`rgba(255,146,82,${0.14*state.sun.glow})`);
+halo.addColorStop(1,"rgba(255,146,82,0)");
+ctx.fillStyle=halo;
+ctx.beginPath();
+ctx.arc(x,y,r*2.8,0,TAU);
+ctx.fill();
+
+ctx.shadowBlur=54;
+ctx.shadowColor=`rgba(255,180,120,${0.18*state.sun.glow})`;
+const grad=ctx.createRadialGradient(x-r*0.22,y-r*0.22,r*0.08,x,y,r*1.1);
+grad.addColorStop(0,"rgba(255,248,214,0.92)");
+grad.addColorStop(0.55,"rgba(255,204,130,0.88)");
+grad.addColorStop(1,"rgba(226,122,72,0.86)");
+ctx.fillStyle=grad;
+ctx.beginPath();
+ctx.arc(x,y,r,0,TAU);
+ctx.fill();
+ctx.restore();
+}
+
 function moon(){
-const x=window.innerWidth*0.80;
-const y=window.innerHeight*0.15;
+const x=state.moon.x||window.innerWidth*0.80;
+const y=state.moon.y||window.innerHeight*0.15;
 const r=Math.min(window.innerWidth,window.innerHeight)*0.074;
 ctx.save();
 
@@ -399,6 +617,7 @@ ctx.restore();
 }
 
 function drawCloudBank(cl){
+const drift=(ENV&&ENV.getSnapshot)?(ENV.getSnapshot().weather.cloudDrift||0.26):0.26;
 const x=cl.x+Math.sin(state.tick*0.0016+cl.phase)*18;
 const y=cl.y+Math.cos(state.tick*0.0012+cl.phase)*4;
 const scale=cl.size;
@@ -430,15 +649,14 @@ ctx.beginPath();
 ctx.ellipse(x+scale*0.10,y+scale*0.06,scale*0.70,scale*0.18,0.02,0,TAU);
 ctx.fill();
 ctx.restore();
+
+cl.x+=cl.speed*0.12*drift;
+if(cl.x-cl.size>window.innerWidth+cl.size*1.6)cl.x=-cl.size*1.4;
 }
 
 function clouds(){
-const w=window.innerWidth;
 for(let i=0;i<state.clouds.length;i++){
-const cl=state.clouds[i];
-cl.x+=cl.speed*0.12;
-if(cl.x-cl.size>w+cl.size*1.6)cl.x=-cl.size*1.4;
-drawCloudBank(cl);
+drawCloudBank(state.clouds[i]);
 }
 }
 
@@ -534,6 +752,7 @@ const h=window.innerHeight;
 const w=window.innerWidth;
 const horizon=h*0.66;
 const base=h*0.80;
+const waveEnergy=(ENV&&ENV.getSnapshot)?(ENV.getSnapshot().weather.waveEnergy||0.34):0.34;
 
 const g=ctx.createLinearGradient(0,horizon-24,0,h);
 g.addColorStop(0,"rgba(56,20,20,0.46)");
@@ -545,7 +764,7 @@ ctx.fillRect(0,horizon-24,w,h-(horizon-24));
 
 ctx.save();
 ctx.globalAlpha=0.16;
-const moonReflectionX=window.innerWidth*0.80;
+const moonReflectionX=state.moon.x||window.innerWidth*0.80;
 const refl=ctx.createLinearGradient(moonReflectionX-80,horizon,moonReflectionX+120,h);
 refl.addColorStop(0,"rgba(255,220,160,0)");
 refl.addColorStop(0.48,"rgba(255,220,160,0.30)");
@@ -563,7 +782,7 @@ ctx.restore();
 for(let layer=0;layer<10;layer++){
 const depth=layer/9;
 const yBase=base+layer*14;
-const amp=lerp(2.0,9.6,depth);
+const amp=lerp(2.0,9.6,depth)*(0.8+waveEnergy*0.6);
 const f1=lerp(0.008,0.024,depth);
 const f2=lerp(0.004,0.013,depth);
 ctx.beginPath();
@@ -584,7 +803,7 @@ for(let crest=0;crest<5;crest++){
 ctx.beginPath();
 for(let x=0;x<=w;x+=14){
 const y=base+crest*22+
-Math.sin((x*0.020)+(state.tick*0.026)+crest*0.9)*4.2+
+Math.sin((x*0.020)+(state.tick*0.026)+crest*0.9)*4.2*(0.85+waveEnergy*0.5)+
 Math.sin((x*0.006)-(state.tick*0.009)+crest*1.4)*2.0;
 if(x===0)ctx.moveTo(x,y);
 else ctx.lineTo(x,y);
@@ -743,13 +962,14 @@ return "rgba(70,0,0,0.08)";
 
 function drawCompassPlate(poly,key){
 const c=polyCenter(poly);
+const meta=getFaceMeta(key)||LOCAL_FACE_FALLBACK[key];
 if(key==="C"||key==="M"){
 ctx.save();
 ctx.textAlign="center";
 ctx.textBaseline="middle";
 ctx.fillStyle="rgba(255,244,224,0.96)";
 ctx.font=`700 ${key==="C"||key==="M"?"9":"10"}px system-ui,Segoe UI,Roboto,sans-serif`;
-ctx.fillText(FACE_MAP[key].short,c.x,c.y+1.5);
+ctx.fillText(meta.short,c.x,c.y+1.5);
 ctx.restore();
 return;
 }
@@ -779,7 +999,7 @@ ctx.fillStyle="rgba(255,238,190,0.96)";
 ctx.font='italic 700 11px "Georgia","Times New Roman",serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText(FACE_MAP[key].short,px,py+0.5);
+ctx.fillText(meta.short,px,py+0.5);
 ctx.restore();
 }
 
@@ -875,15 +1095,20 @@ return ((state.tick-state.dragonStart)%DRAGON_CYCLE_FRAMES)/DRAGON_CYCLE_FRAMES;
 }
 
 function dragonOrbit(geo,t,dragonType){
-const shell=dragonType==="fear"?geo.size*2.96:geo.size*3.42;
+const orbitCenter=(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitCenter)||null;
+const anchorX=orbitCenter?window.innerWidth*0.5+(orbitCenter.x*0.18):geo.centerX;
+const anchorY=orbitCenter?window.innerHeight*0.42-(orbitCenter.y*0.06):geo.centerY;
+const radius=(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitRadius)||420;
+const radiusScale=(radius/420);
+const shell=(dragonType==="fear"?geo.size*2.96:geo.size*3.42)*radiusScale;
 const phase=dragonType==="fear"?0:Math.PI;
 const a=t*1.18*TAU+phase;
 const x=Math.sin(a)*shell;
 const y=Math.sin(a)*Math.cos(a)*shell*0.40;
 const z=Math.cos(a)*shell*0.46+(dragonType==="fear"?-0.18:0.18);
 return{
-x:geo.centerX+x,
-y:geo.centerY+y,
+x:anchorX+x,
+y:anchorY+y,
 z:z/(shell*0.46),
 a
 };
@@ -895,7 +1120,6 @@ if(prog===null)return null;
 const points=[];
 for(let i=0;i<DRAGON_SEGMENTS;i++){
 const raw=prog-delay-i*DRAGON_LAG;
-if(raw<0)break;
 const t=((raw%1)+1)%1;
 const p=dragonOrbit(geo,t,dragonType);
 const cross=1-Math.min(1,Math.abs(Math.sin(p.a+(dragonType==="fear"?0:Math.PI))));
@@ -1315,31 +1539,98 @@ ctx.restore();
 }
 }
 
-function drawSecondCompassOverlay(){
-if(!state.secondCompassOpen)return;
+function drawShowroomFragments(){
+const mode=state.showroom.mode;
+if(mode!=="shatter"&&mode!=="swirl"&&mode!=="return")return;
+const t=clamp(state.showroom.t,0,1);
+
+for(let i=0;i<state.showroom.fragments.length;i++){
+const frag=state.showroom.fragments[i];
+let x=frag.x;
+let y=frag.y;
+let alpha=1;
+
+if(mode==="shatter"){
+const e=easeOutCubic(t);
+x=frag.x+frag.vx*e;
+y=frag.y+frag.vy*e;
+alpha=1-t*0.15;
+}else if(mode==="swirl"){
+const node=state.showroom.nodes[i%state.showroom.nodes.length];
 const cx=window.innerWidth*0.5;
-const cy=window.innerHeight*0.20;
-const r1=Math.min(window.innerWidth,window.innerHeight)*0.15;
-const nodes=["NNE","NE","ENE","ESE","SE","SSE","SSW","SW","WSW","WNW","NW","NNW"];
+const cy=window.innerHeight*0.24;
+const swirlA=(i/state.showroom.fragments.length)*TAU + t*6.2;
+const swirlR=lerp(160,22,t);
+x=lerp(cx+Math.cos(swirlA)*swirlR,node.targetX,t);
+y=lerp(cy+Math.sin(swirlA)*swirlR*0.56,node.targetY,t);
+alpha=0.84;
+}else if(mode==="return"){
+const e=easeInOutCubic(t);
+const node=state.showroom.nodes[i%state.showroom.nodes.length];
+x=lerp(node.targetX,frag.x,e);
+y=lerp(node.targetY,frag.y,e);
+alpha=1-e*0.15;
+}
+
 ctx.save();
-ctx.globalAlpha=0.78;
-for(let i=0;i<nodes.length;i++){
-const a=(-Math.PI/2)+(i/nodes.length)*TAU;
-const x=cx+Math.cos(a)*r1;
-const y=cy+Math.sin(a)*r1*0.55;
+ctx.translate(x,y);
+ctx.rotate(frag.rot + state.tick*0.02 + frag.rotVel*t*10);
+ctx.globalAlpha=alpha;
+ctx.fillStyle=i%2===0?"rgba(255,220,160,0.86)":"rgba(92,146,255,0.66)";
+ctx.shadowBlur=14;
+ctx.shadowColor=ctx.fillStyle;
 ctx.beginPath();
-ctx.arc(x,y,16,0,TAU);
-ctx.fillStyle="rgba(24,20,34,0.84)";
+ctx.moveTo(-frag.r*0.9,0);
+ctx.lineTo(0,-frag.r*0.58);
+ctx.lineTo(frag.r,0);
+ctx.lineTo(0,frag.r*0.58);
+ctx.closePath();
 ctx.fill();
-ctx.lineWidth=1.5;
-ctx.strokeStyle="rgba(255,215,150,0.58)";
+ctx.restore();
+}
+}
+
+function drawShowroomCompass(){
+if(state.showroom.mode!=="show"&&state.showroom.mode!=="swirl")return;
+const alpha=state.showroom.mode==="show"?1:clamp(state.showroom.t,0,1);
+ctx.save();
+ctx.globalAlpha=0.90*alpha;
+
+for(let i=0;i<state.showroom.nodes.length;i++){
+const node=state.showroom.nodes[i];
+if(state.showroom.mode==="swirl"){
+const cx=window.innerWidth*0.5;
+const cy=window.innerHeight*0.24;
+const swirlA=(i/state.showroom.nodes.length)*TAU + state.showroom.t*6.2;
+const swirlR=lerp(160,22,state.showroom.t);
+node.x=lerp(cx+Math.cos(swirlA)*swirlR,node.targetX,state.showroom.t);
+node.y=lerp(cy+Math.sin(swirlA)*swirlR*0.56,node.targetY,state.showroom.t);
+}else{
+node.x=node.targetX;
+node.y=node.targetY;
+}
+
+ctx.save();
+roundedRectPath(node.x-20,node.y-12,40,24,12);
+ctx.fillStyle="rgba(18,18,28,0.82)";
+ctx.fill();
+ctx.lineWidth=1.3;
+ctx.strokeStyle=i%3===0?"rgba(255,216,150,0.82)":"rgba(120,168,255,0.78)";
 ctx.stroke();
-ctx.fillStyle="rgba(255,245,232,0.92)";
-ctx.font="700 8px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.fillStyle="rgba(255,246,230,0.96)";
+ctx.font='italic 700 10px "Georgia","Times New Roman",serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText(nodes[i],x,y);
+ctx.fillText(node.label,node.x,node.y+0.5);
+ctx.restore();
 }
+
+ctx.globalAlpha=0.82*alpha;
+ctx.fillStyle="rgba(255,245,235,0.94)";
+ctx.font="700 14px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText("12-FACE SHOWROOM",window.innerWidth*0.5,window.innerHeight*0.11);
 ctx.restore();
 }
 
@@ -1362,7 +1653,7 @@ ctx.fillStyle="rgba(255,245,235,0.94)";
 ctx.font="700 14px system-ui,Segoe UI,Roboto,sans-serif";
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText(`${FACE_MAP[state.lockedFace].label} LOCKED`,x+w*0.5,y+h*0.5);
+ctx.fillText(`${(getFaceMeta(state.lockedFace)||LOCAL_FACE_FALLBACK[state.lockedFace]).label} LOCKED`,x+w*0.5,y+h*0.5);
 ctx.restore();
 }
 
@@ -1378,6 +1669,7 @@ ctx.restore();
 function drawSceneFrame(){
 ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
 sky();
+sun();
 moon();
 clouds();
 lanterns();
@@ -1390,15 +1682,21 @@ const bundles=getDragonBundles(geo);
 
 drawDragonReflections(geo,bundles);
 dragonsBack(geo,bundles);
+
+if(state.showroom.mode==="idle"||state.showroom.mode==="return"||state.showroom.mode==="shatter"){
 drawCube(geo);
+}
+
 dragonsFront(geo,bundles);
-drawSecondCompassOverlay();
+drawShowroomFragments();
+drawShowroomCompass();
 fireworks();
 drawLockedOverlay();
 drawNavigationOverlay();
 }
 
 function getRegionAt(x,y){
+if(state.showroom.mode==="show")return "M";
 for(const key of ["C","W","E","N","S","M"]){
 const poly=state.faceZones[key];
 if(poly&&pointInPoly(x,y,poly))return key;
@@ -1416,6 +1714,7 @@ if(hit&&!state.dragonLoop)startDragonLoop();
 
 function moveDrag(x,y){
 if(!state.dragging)return;
+if(state.showroom.mode==="show"||state.showroom.mode==="swirl"||state.showroom.mode==="shatter")return;
 const dx=x-state.lastX;
 const dy=y-state.lastY;
 state.lastX=x;
@@ -1438,6 +1737,7 @@ moveDrag(p.x,p.y);
 canvas.addEventListener("pointerdown",e=>{
 const p=getPointerPos(e);
 engageDrag(p.x,p.y);
+dispatch("environment:tap",{x:e.clientX,y:e.clientY});
 });
 
 canvas.addEventListener("pointerup",e=>{
@@ -1450,6 +1750,7 @@ const touch=e.changedTouches&&e.changedTouches[0];
 if(!touch)return;
 const p=getTouchPos(touch);
 engageDrag(p.x,p.y);
+dispatch("environment:tap",{x:touch.clientX,y:touch.clientY});
 },{passive:true});
 
 canvas.addEventListener("touchmove",e=>{
@@ -1471,8 +1772,52 @@ canvas.addEventListener("pointerleave",()=>{
 state.dragging=false;
 });
 
+document.addEventListener("compass:morph",function(e){
+if(e&&e.detail&&e.detail.mode==="return")closeMorphSequence();
+});
+
+function updateShowroomState(){
+const mode=state.showroom.mode;
+if(mode==="idle")return;
+
+if(mode==="shatter"){
+state.showroom.t+=0.075;
+if(state.showroom.t>=1){
+state.showroom.mode="swirl";
+state.showroom.t=0;
+}
+return;
+}
+
+if(mode==="swirl"){
+state.showroom.t+=0.055;
+if(state.showroom.t>=1){
+state.showroom.mode="show";
+state.showroom.t=1;
+}
+return;
+}
+
+if(mode==="show"){
+return;
+}
+
+if(mode==="return"){
+state.showroom.t+=0.065;
+if(state.showroom.t>=1){
+state.showroom.mode="idle";
+state.showroom.t=0;
+state.showroom.fragments=[];
+}
+}
+}
+
 function animateState(){
 state.tick++;
+state.regionContext=currentRegionContext();
+if(state.regionContext)state.regionId=state.regionContext.regionId||state.regionId;
+
+syncEnvironment();
 
 state.rotY+=state.rotVelY;
 state.rotX+=state.rotVelX;
@@ -1483,11 +1828,13 @@ state.rotVelX*=state.dragging?0.91:0.972;
 state.rotVelY=clamp(state.rotVelY,-0.14,0.14);
 state.rotVelX=clamp(state.rotVelX,-0.14,0.14);
 
-if(!state.dragging)state.rotY+=0.0008;
+if(!state.dragging&&state.showroom.mode==="idle")state.rotY+=0.0008;
 
 state.morphPulse*=0.94;
 state.lockedPulse*=0.93;
 state.overlayAlpha*=0.88;
+
+updateShowroomState();
 
 if(state.navigateTo){
 state.navigateDelay--;

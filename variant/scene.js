@@ -32,7 +32,7 @@
     S: { label: "SOUTH", short: "S", route: "/laws/", type: "route" },
     W: { label: "WEST", short: "W", route: "/gauges/", type: "route" },
     C: { label: "CORE", short: "CORE", route: null, type: "locked" },
-    M: { label: "MORPH", short: "MORPH", route: null, type: "morph" },
+    M: { label: "MORPH", short: "MORPH", route: null, type: "morph" }
   });
 
   function clamp(v, min, max) {
@@ -128,8 +128,7 @@
     navObjectState: "expanded_compass",
     navigateTo: null,
     navigateDelay: 0,
-    regionId:
-      (document.body && document.body.dataset && document.body.dataset.regionId) || "harbor_core",
+    regionId: (document.body && document.body.dataset && document.body.dataset.regionId) || "harbor_core",
     regionContext: null,
     camera: CAMERA.createState("fixed_harbor"),
     background: BG.createState(),
@@ -137,11 +136,11 @@
     fx: FX.createState(),
     motion: {
       dragons: {
-        orbitCenter: { x: 0, y: 340, z: 420 },
+        orbitCenter: { x: 0, y: 520, z: 420 },
         orbitRadius: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitRadius) || 420,
-        orbitSpeed: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitSpeed) || 0.0019,
-      },
-    },
+        orbitSpeed: (KERNEL && KERNEL.dragons && KERNEL.dragons.orbitSpeed) || 0.0019
+      }
+    }
   };
 
   function resize() {
@@ -335,10 +334,7 @@
     BG.drawSky(ctx, w, h, state.tick, preset, state.background);
     BG.drawSun(ctx, w, h, state.background);
     BG.drawMoon(ctx, w, h, state.background);
-
-    const envSnapshot = ENV && typeof ENV.getSnapshot === "function" ? ENV.getSnapshot() : null;
-
-    BG.drawClouds(ctx, state.background, state.tick, envSnapshot);
+    BG.drawClouds(ctx, state.background, state.tick, ENV && typeof ENV.getSnapshot === "function" ? ENV.getSnapshot() : null);
     BG.drawLanterns(
       ctx,
       state.background,
@@ -346,15 +342,6 @@
       state.hoverFace === "N" || state.camera.requested === "travel_projection" ? 1.18 : 1
     );
     BG.drawMountains(ctx, w, h, state.background, preset);
-    BG.drawWater(ctx, w, h, state.tick, preset, state.background, envSnapshot);
-
-    try {
-      if (HARBOR && typeof HARBOR.draw === "function") {
-        HARBOR.draw(ctx, w, h, state.tick);
-      }
-    } catch (err) {
-      console.warn("Harbor renderer failed", err);
-    }
 
     const geo = COMPASS.getCubeGeometry({
       width: w,
@@ -363,7 +350,7 @@
       rotX: state.rotX,
       rotY: state.rotY,
       morphPulse: state.morphPulse,
-      cameraRequested: state.camera.requested,
+      cameraRequested: state.camera.requested
     });
 
     state.cube = geo;
@@ -371,8 +358,7 @@
 
     const dragonBundles = DRAGONS.getDragonBundles(geo, state);
 
-    DRAGONS.drawDragonReflections(ctx, geo, preset, dragonBundles, state.tick);
-    DRAGONS.drawBack(ctx, geo, dragonBundles, state.tick);
+    DRAGONS.drawBack(ctx, geo, dragonBundles, state.tick, state);
 
     if (
       state.showroom.mode === "idle" ||
@@ -398,6 +384,27 @@
     }
 
     DRAGONS.drawFront(ctx, geo, dragonBundles, state.tick, getSceneLanguage(), state);
+
+    try {
+      if (HARBOR && typeof HARBOR.draw === "function") {
+        HARBOR.draw(ctx, w, h, state.tick);
+      }
+    } catch (err) {
+      console.warn("Harbor renderer failed", err);
+    }
+
+    BG.drawWater(
+      ctx,
+      w,
+      h,
+      state.tick,
+      preset,
+      state.background,
+      ENV && typeof ENV.getSnapshot === "function" ? ENV.getSnapshot() : null
+    );
+
+    DRAGONS.drawDragonReflections(ctx, geo, preset, dragonBundles, state.tick);
+
     SHOWROOM.drawFragments(ctx, state.showroom, state.tick);
     SHOWROOM.drawCompass(ctx, state.showroom);
     FX.drawFireworks(ctx, state.fx);
@@ -450,7 +457,7 @@
     },
     onSceneCameraCycle: function () {
       CAMERA.cycle(state.camera);
-    },
+    }
   });
 
   resize();

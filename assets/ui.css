@@ -1,11 +1,3 @@
-DESTINATION FILE
-/assets/ui.css
-
-ACTION
-Full TNT replacement
-UI wired for world/scene kernels
-No visual drift
-
 :root{
 --bg-top:#240909;
 --bg-mid:#7d1d15;

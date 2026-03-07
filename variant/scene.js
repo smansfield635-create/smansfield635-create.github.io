@@ -44,7 +44,7 @@ fixed_harbor:{
 horizon:0.66,
 cubeScale:0.118,
 cubeYOffset:0.33,
-pathAlpha:1.0,
+pathAlpha:1.00,
 labelAlpha:0.78,
 perspectiveBias:0
 },
@@ -52,7 +52,7 @@ travel_projection:{
 horizon:0.62,
 cubeScale:0.100,
 cubeYOffset:0.29,
-pathAlpha:1.0,
+pathAlpha:1.00,
 labelAlpha:0.72,
 perspectiveBias:80
 },
@@ -83,6 +83,11 @@ DISTANCE_FACTOR:0.55,
 COLOR_DIM:0.72
 });
 
+const DRAGON_CYCLE_FRAMES=1890;
+const WISDOM_DELAY=0.12;
+const DRAGON_SEGMENTS=44;
+const DRAGON_LAG=0.0092;
+
 const state={
 tick:0,
 rotX:-0.30,
@@ -94,7 +99,7 @@ lastX:0,
 lastY:0,
 faceZones:{},
 cube:null,
-dragonLoop:false,
+dragonLoop:true,
 dragonStart:0,
 navigateTo:null,
 navigateDelay:0,
@@ -102,6 +107,7 @@ overlayAlpha:0,
 lockedFace:null,
 lockedPulse:0,
 morphPulse:0,
+hoverFace:null,
 lanterns:[],
 clouds:[],
 mountains:[],
@@ -125,11 +131,6 @@ orbitSpeed:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitSpeed)||0.0019
 }
 }
 };
-
-const DRAGON_CYCLE_FRAMES=1890;
-const WISDOM_DELAY=0.12;
-const DRAGON_SEGMENTS=44;
-const DRAGON_LAG=0.0092;
 
 function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function lerp(a,b,t){return a+(b-a)*t;}
@@ -206,6 +207,15 @@ if(map)return map;
 return null;
 }
 
+function normalizeCurrentPath(){
+try{
+const p=String(window.location.pathname||"/");
+return p.endsWith("/")?p:(p+"/");
+}catch(_e){
+return "/";
+}
+}
+
 function getFaceMeta(face){
 const fallback=LOCAL_FACE_FALLBACK[face];
 const map=currentCompassMap();
@@ -213,49 +223,19 @@ if(!map)return fallback||null;
 
 if(face==="M")return{label:"MORPH",short:"MORPH",route:"SCENE_ACTION_ONLY"};
 
-if(face==="N"){
-const target=map.N||(state.regionId==="harbor_core"?"gratitude_southlands":null);
+const target=map[face]||null;
 if(target&&REGIONS&&REGIONS.byId){
 const region=REGIONS.byId(target);
-if(region)return{label:"NORTH",short:"N",route:region.route};
+if(region){
+const sameRegion=region.id===state.regionId;
+const sameRoute=region.route===normalizeCurrentPath();
+const route=(sameRegion||sameRoute)?null:region.route;
+if(face==="N")return{label:"NORTH",short:"N",route};
+if(face==="E")return{label:"EAST",short:"E",route};
+if(face==="S")return{label:"SOUTH",short:"S",route};
+if(face==="W")return{label:"WEST",short:"W",route};
+if(face==="C")return{label:"CORE",short:"CORE",route};
 }
-return{label:"NORTH",short:"N",route:null};
-}
-
-if(face==="E"){
-const target=map.E;
-if(target&&REGIONS&&REGIONS.byId){
-const region=REGIONS.byId(target);
-if(region)return{label:"EAST",short:"E",route:region.route};
-}
-return fallback;
-}
-
-if(face==="S"){
-const target=map.S;
-if(target&&REGIONS&&REGIONS.byId){
-const region=REGIONS.byId(target);
-if(region)return{label:"SOUTH",short:"S",route:region.route};
-}
-return fallback;
-}
-
-if(face==="W"){
-const target=map.W;
-if(target&&REGIONS&&REGIONS.byId){
-const region=REGIONS.byId(target);
-if(region)return{label:"WEST",short:"W",route:region.route};
-}
-return fallback;
-}
-
-if(face==="C"){
-const target=map.C;
-if(target&&REGIONS&&REGIONS.byId){
-const region=REGIONS.byId(target);
-if(region)return{label:"CORE",short:"CORE",route:region.route};
-}
-return{label:"CORE",short:"CORE",route:null};
 }
 
 return fallback||null;
@@ -302,6 +282,10 @@ phase:hash(seed*15.1)*TAU,
 layer
 });
 }
+}
+
+function getCameraPreset(){
+return CAMERA_PRESETS[state.camera.mode]||CAMERA_PRESETS.fixed_harbor;
 }
 
 function initMountains(){
@@ -376,8 +360,6 @@ function startDragonLoop(){
 if(state.dragonLoop)return;
 state.dragonLoop=true;
 state.dragonStart=state.tick;
-spawnFirework(window.innerWidth*0.24,window.innerHeight*0.22,22,2.2);
-spawnFirework(window.innerWidth*0.76,window.innerHeight*0.22,22,2.2);
 }
 
 function triggerLocked(face){
@@ -486,7 +468,6 @@ state.moon.glow=snapshot.moon.glow;
 return;
 }
 }
-
 const sunA=state.tick*0.0035;
 const moonA=state.tick*0.0028+Math.PI;
 state.sun.x=window.innerWidth*0.5+Math.cos(sunA)*(1100*0.24);
@@ -495,10 +476,6 @@ state.sun.glow=0.72;
 state.moon.x=window.innerWidth*0.5+Math.cos(moonA)*(980*0.26);
 state.moon.y=window.innerHeight*0.20+Math.sin(moonA)*(980*0.07);
 state.moon.glow=0.86;
-}
-
-function getCameraPreset(){
-return CAMERA_PRESETS[state.camera.mode]||CAMERA_PRESETS.fixed_harbor;
 }
 
 function cameraBlendTo(target){
@@ -670,12 +647,13 @@ for(let i=0;i<state.clouds.length;i++)drawCloudBank(state.clouds[i]);
 
 function lanterns(){
 const h=window.innerHeight;
+const northBoost=state.hoverFace==="N"||state.camera.requested==="travel_projection"?1.18:1;
 for(let i=0;i<state.lanterns.length;i++){
 const ln=state.lanterns[i];
 const driftY=(state.tick*ln.speed)%((h*0.86)+180);
 const y=ln.y-driftY<-120?ln.y-driftY+(h*0.86)+200:ln.y-driftY;
 const x=ln.x+Math.sin(state.tick*0.008+ln.phase)*ln.sway;
-const flicker=0.82+Math.sin(state.tick*0.09+ln.flame)*0.12+Math.sin(state.tick*0.043+ln.flame*0.7)*0.06;
+const flicker=(0.82+Math.sin(state.tick*0.09+ln.flame)*0.12+Math.sin(state.tick*0.043+ln.flame*0.7)*0.06)*northBoost;
 ctx.save();
 ctx.translate(x,y);
 ctx.rotate(ln.tilt+Math.sin(state.tick*0.01+ln.phase)*0.04);
@@ -927,10 +905,10 @@ const w=22;
 const h=14;
 ctx.save();
 roundedRectPath(px-w*0.5,py-h*0.5,w,h,4.5);
-ctx.fillStyle="rgba(10,10,12,0.72)";
+ctx.fillStyle=state.hoverFace===key?"rgba(28,20,16,0.86)":"rgba(10,10,12,0.72)";
 ctx.fill();
 ctx.lineWidth=1.0;
-ctx.strokeStyle="rgba(212,175,88,0.78)";
+ctx.strokeStyle=state.hoverFace===key?"rgba(255,230,176,0.94)":"rgba(212,175,88,0.78)";
 ctx.stroke();
 ctx.fillStyle="rgba(255,238,190,0.96)";
 ctx.font='italic 700 10px "Georgia","Times New Roman",serif';
@@ -1687,11 +1665,11 @@ function engageDrag(x,y){
 state.dragging=true;
 state.lastX=x;
 state.lastY=y;
-const hit=getRegionAt(x,y);
-if(hit&&!state.dragonLoop)startDragonLoop();
+getRegionAt(x,y);
 }
 
 function moveDrag(x,y){
+state.hoverFace=getRegionAt(x,y);
 if(!state.dragging)return;
 if(state.showroom.mode==="show"||state.showroom.mode==="swirl"||state.showroom.mode==="shatter")return;
 const dx=x-state.lastX;
@@ -1752,7 +1730,10 @@ releaseDrag(p.x,p.y);
 e.preventDefault();
 },{passive:false});
 
-canvas.addEventListener("pointerleave",()=>{state.dragging=false;});
+canvas.addEventListener("pointerleave",()=>{
+state.dragging=false;
+state.hoverFace=null;
+});
 
 document.addEventListener("compass:morph",function(e){
 if(e&&e.detail&&e.detail.mode==="return")closeMorphSequence();

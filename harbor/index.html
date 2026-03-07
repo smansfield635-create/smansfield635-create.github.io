@@ -279,7 +279,7 @@
     }
   </style>
 </head>
-<body>
+<body data-region-id="harbor_core">
   <div class="page">
     <canvas id="scene" aria-label="Harbor Core scene"></canvas>
 
@@ -343,26 +343,46 @@
   <script src="/world/environment_runtime.js"></script>
   <script src="/world/island_regions.js"></script>
   <script src="/world/region_router.js"></script>
+  <script src="/world/harbor_renderer.js"></script>
+
+  <script src="/assets/openworld_camera.js"></script>
+  <script src="/assets/openworld_background_renderer.js"></script>
+  <script src="/assets/openworld_compass_renderer.js"></script>
+  <script src="/assets/openworld_dragon_renderer.js"></script>
+  <script src="/assets/openworld_showroom_renderer.js"></script>
+  <script src="/assets/openworld_scene_fx.js"></script>
+  <script src="/assets/openworld_scene_input.js"></script>
+
   <script src="/variant/scene.js"></script>
+
   <script>
     (function(){
       "use strict";
 
       var regionRouter=window.REGION_ROUTER;
       var env=window.ENVIRONMENT_RUNTIME;
+      var body=document.body;
 
       if(regionRouter){
         var ctx=regionRouter.getRegionContext("/harbor/");
         if(ctx){
+          if(body){
+            body.dataset.regionId=ctx.regionId;
+            body.dataset.regionType=ctx.type;
+            body.dataset.regionBiome=ctx.biome;
+          }
+
           var badge=document.getElementById("regionBadge");
           var biomeValue=document.getElementById("biomeValue");
+
           if(badge)badge.textContent=ctx.label;
-          if(biomeValue)biomeValue.textContent=ctx.biome.replaceAll("_"," ");
+          if(biomeValue)biomeValue.textContent=String(ctx.biome||"").replaceAll("_"," ");
         }
       }
 
       if(env){
         env.setSector("harbor_core");
+        env.tick(0);
       }
 
       var advanceBtn=document.getElementById("advanceTimeBtn");

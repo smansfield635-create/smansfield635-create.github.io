@@ -7,21 +7,21 @@ if(!ctx)return;
 const TAU=Math.PI*2;
 
 const FACE_MAP={
-N:{label:"NORTH",short:"N",role:"direction"},
-E:{label:"EAST",short:"E",role:"direction"},
-S:{label:"SOUTH",short:"S",role:"direction"},
-W:{label:"WEST",short:"W",role:"direction"},
-C:{label:"CORE",short:"CORE",role:"core"},
-M:{label:"MORPH",short:"MORPH",role:"morph"}
+N:{label:"NORTH",short:"N",role:"direction",route:null},
+E:{label:"EAST",short:"E",role:"direction",route:"/products/"},
+S:{label:"SOUTH",short:"S",role:"direction",route:"/laws/"},
+W:{label:"WEST",short:"W",role:"direction",route:"/gauges/"},
+C:{label:"CORE",short:"CORE",role:"core",route:"/home/"},
+M:{label:"MORPH",short:"MORPH",role:"morph",route:"SCENE_ACTION_ONLY"}
 };
 
 const MATERIALS={
-ruby:{ridge:"rgba(255,210,190,0.90)",outer:"rgba(155,32,38,0.58)",inner:"rgba(214,58,48,0.72)",glow:"rgba(255,96,72,0.24)"},
-amber:{ridge:"rgba(255,238,188,0.92)",outer:"rgba(164,104,16,0.54)",inner:"rgba(230,168,46,0.70)",glow:"rgba(255,208,96,0.24)"},
-jade:{ridge:"rgba(214,255,232,0.90)",outer:"rgba(26,112,88,0.52)",inner:"rgba(78,182,142,0.68)",glow:"rgba(110,255,205,0.22)"},
-obsidian:{ridge:"rgba(236,224,255,0.92)",outer:"rgba(28,26,42,0.62)",inner:"rgba(78,72,112,0.62)",glow:"rgba(180,150,255,0.20)"},
-core:{ridge:"rgba(255,255,255,0.96)",outer:"rgba(130,130,140,0.38)",inner:"rgba(238,238,244,0.56)",glow:"rgba(255,255,255,0.22)"},
-morph:{ridge:"rgba(198,226,255,0.94)",outer:"rgba(42,72,146,0.48)",inner:"rgba(92,148,255,0.62)",glow:"rgba(120,182,255,0.24)"}
+ruby:{ridge:"rgba(255,210,190,0.94)",outer:"rgba(155,32,38,0.52)",inner:"rgba(214,58,48,0.66)",glow:"rgba(255,96,72,0.26)"},
+amber:{ridge:"rgba(255,238,188,0.94)",outer:"rgba(164,104,16,0.50)",inner:"rgba(230,168,46,0.64)",glow:"rgba(255,208,96,0.26)"},
+jade:{ridge:"rgba(214,255,232,0.92)",outer:"rgba(26,112,88,0.48)",inner:"rgba(78,182,142,0.62)",glow:"rgba(110,255,205,0.22)"},
+obsidian:{ridge:"rgba(236,224,255,0.94)",outer:"rgba(28,26,42,0.56)",inner:"rgba(78,72,112,0.58)",glow:"rgba(180,150,255,0.22)"},
+core:{ridge:"rgba(255,255,255,0.98)",outer:"rgba(130,130,140,0.34)",inner:"rgba(238,238,244,0.52)",glow:"rgba(255,255,255,0.24)"},
+morph:{ridge:"rgba(198,226,255,0.96)",outer:"rgba(42,72,146,0.42)",inner:"rgba(92,148,255,0.56)",glow:"rgba(120,182,255,0.26)"}
 };
 
 const FACE_MATERIAL={
@@ -51,7 +51,13 @@ lanterns:[],
 cube:null,
 dragonLoopStarted:false,
 dragonLoopStartTick:0,
-morphPulse:0
+morphPulse:0,
+secondCompassOpen:false,
+lockedPulse:0,
+lockedFace:null,
+navigateTo:null,
+navigateDelay:0,
+overlayAlpha:0
 };
 
 const DRAGON_CYCLE_FRAMES=1800;
@@ -166,13 +172,39 @@ spawnFirework(window.innerWidth*0.24,window.innerHeight*0.22,22,2.2);
 spawnFirework(window.innerWidth*0.76,window.innerHeight*0.22,22,2.2);
 }
 
+function triggerLocked(face){
+state.lockedFace=face;
+state.lockedPulse=1;
+const geo=state.cube;
+if(geo&&geo.faceCenters[face]){
+spawnFirework(geo.faceCenters[face].x,geo.faceCenters[face].y,14,1.5);
+}
+}
+
+function queueNavigation(route){
+state.navigateTo=route;
+state.navigateDelay=12;
+state.overlayAlpha=1;
+}
+
 function selectFace(face){
 state.activeFace=face;
 const geo=state.cube;
 if(geo&&geo.faceCenters[face]){
 spawnFirework(geo.faceCenters[face].x,geo.faceCenters[face].y,16,1.7);
 }
-if(face==="M")state.morphPulse=1;
+const meta=FACE_MAP[face];
+if(!meta)return;
+if(meta.route===null){
+triggerLocked(face);
+return;
+}
+if(meta.route==="SCENE_ACTION_ONLY"){
+state.morphPulse=1;
+state.secondCompassOpen=!state.secondCompassOpen;
+return;
+}
+queueNavigation(meta.route);
 }
 
 function sky(){
@@ -327,6 +359,18 @@ scale
 };
 }
 
+function spherify(x,y,z,blend){
+const len=Math.sqrt(x*x+y*y+z*z)||1;
+const sx=x/len;
+const sy=y/len;
+const sz=z/len;
+return{
+x:lerp(x,sx,blend),
+y:lerp(y,sy,blend),
+z:lerp(z,sz,blend)
+};
+}
+
 function rotateVertex(x,y,z,rotY,rotX){
 const cy=Math.cos(rotY), sy=Math.sin(rotY);
 const cx=Math.cos(rotX), sx=Math.sin(rotX);
@@ -360,7 +404,8 @@ y:lerp(p.y,c.y,amount)
 function getCubeGeometry(){
 const size=Math.min(window.innerWidth,window.innerHeight)*0.16;
 const pulse=1+state.morphPulse*0.03;
-const verts=[
+const soften=0.42;
+const vertsRaw=[
 [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
 [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]
 ];
@@ -381,8 +426,9 @@ S:[0,1,5,4]
 const rotated=[];
 const pts=[];
 
-for(const v of verts){
-const p=rotateVertex(v[0]*size*pulse,v[1]*size*pulse,v[2]*size*pulse,state.rotY,state.rotX);
+for(const v of vertsRaw){
+const sv=spherify(v[0],v[1],v[2],soften);
+const p=rotateVertex(sv.x*size*pulse,sv.y*size*pulse,sv.z*size*pulse,state.rotY,state.rotX);
 rotated.push(p);
 pts.push(project(p.x,p.y,p.z));
 }
@@ -421,11 +467,11 @@ size:size*pulse
 }
 
 function faceBaseFill(key){
-if(key==="C")return "rgba(139,0,0,0.18)";
-if(key==="N")return "rgba(176,24,24,0.16)";
-if(key==="E"||key==="W")return "rgba(120,0,0,0.14)";
-if(key==="S")return "rgba(35,0,0,0.12)";
-return "rgba(70,0,0,0.10)";
+if(key==="C")return "rgba(139,0,0,0.16)";
+if(key==="N")return "rgba(176,24,24,0.14)";
+if(key==="E"||key==="W")return "rgba(120,0,0,0.12)";
+if(key==="S")return "rgba(35,0,0,0.10)";
+return "rgba(70,0,0,0.08)";
 }
 
 function drawBeveledFace(poly,key,active,hover){
@@ -447,7 +493,6 @@ ctx.beginPath();
 ctx.moveTo(poly[0].x,poly[0].y);
 for(let i=1;i<poly.length;i++)ctx.lineTo(poly[i].x,poly[i].y);
 ctx.closePath();
-
 ctx.moveTo(inner[0].x,inner[0].y);
 for(let i=1;i<inner.length;i++)ctx.lineTo(inner[i].x,inner[i].y);
 ctx.closePath();
@@ -498,25 +543,18 @@ function drawCube(geo){
 state.faceZones=geo.faces;
 for(const face of geo.renderFaces){
 const poly=face.idxs.map(i=>geo.pts[i]);
-const key=face.key;
-drawBeveledFace(
-  poly,
-  key,
-  state.activeFace===key,
-  state.hoveredFace===key
-);
+drawBeveledFace(poly,face.key,state.activeFace===face.key,state.hoveredFace===face.key);
 }
-
 ctx.save();
-ctx.shadowBlur=16;
-ctx.shadowColor="rgba(255,215,0,0.22)";
+ctx.shadowBlur=14;
+ctx.shadowColor="rgba(255,215,0,0.18)";
 for(const e of geo.edges){
 const a=geo.rotated[e[0]].z+geo.rotated[e[1]].z;
 ctx.beginPath();
 ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
 ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
-ctx.lineWidth=2.2;
-ctx.strokeStyle=a<0?"rgba(255,215,0,0.42)":"rgba(255,215,0,0.92)";
+ctx.lineWidth=1.9;
+ctx.strokeStyle=a<0?"rgba(255,215,0,0.28)":"rgba(255,215,0,0.70)";
 ctx.stroke();
 }
 ctx.restore();
@@ -530,19 +568,12 @@ if(!state.dragonLoopStarted)return null;
 const local=(state.tick-state.dragonLoopStartTick)%DRAGON_CYCLE_FRAMES;
 return local/DRAGON_CYCLE_FRAMES;
 }
-function getPortalSeed(cycleIndex,channel){
-return cycleIndex*17.131 + channel*31.717;
-}
 function cycleDirection(cycleIndex){
 return cycleIndex%2===0?1:-1;
 }
-function laneBias(cycleIndex,dragonType){
-const base=dragonType==="fear"?-0.22:0.22;
-const wobble=(hash(cycleIndex*3.17+(dragonType==="fear"?1:2))-0.5)*0.10;
-return base+wobble;
-}
 function entryAngle(cycleIndex,dragonType){
-return hash(getPortalSeed(cycleIndex,dragonType==="fear"?1:2))*TAU;
+const channel=dragonType==="fear"?1:2;
+return hash(cycleIndex*19.37+channel*41.11)*TAU;
 }
 function dragonCycleState(dragonType,delay){
 const p=getCycleProgress();
@@ -551,10 +582,7 @@ const cycleIndex=getCycleIndex();
 const delayed=p-delay;
 if(delayed<0)return null;
 
-const dir=cycleDirection(cycleIndex);
-let phase;
-let localT;
-
+let phase, localT;
 if(delayed<ENTRY_RATIO){
 phase="entry";
 localT=delayed/ENTRY_RATIO;
@@ -568,17 +596,26 @@ localT=(delayed-ENTRY_RATIO-ORBIT_RATIO)/EXIT_RATIO;
 return null;
 }
 
-const startAngle=entryAngle(cycleIndex,dragonType);
-const pathAngle=startAngle+dir*(localT*DRAGON_TOTAL_ROTATIONS*TAU);
 return{
 cycleIndex,
 phase,
 t:localT,
-dir,
-startAngle,
-pathAngle,
-lane:laneBias(cycleIndex,dragonType),
-entryHigh:hash(cycleIndex*5.11+(dragonType==="fear"?0.7:1.4))>0.5
+dir:cycleDirection(cycleIndex),
+startAngle:entryAngle(cycleIndex,dragonType),
+phaseOffset:dragonType==="fear"?0:Math.PI
+};
+}
+
+function figureEightOrbit(geo,a,phaseOffset){
+const shell=geo.size*3.18;
+const t=a+phaseOffset;
+const x=Math.sin(t)*shell;
+const y=Math.sin(t)*Math.cos(t)*shell*0.42;
+const z=Math.cos(t)*shell*0.40;
+return{
+x:geo.centerX+x,
+y:geo.centerY+y,
+z:z/(shell*0.40)
 };
 }
 
@@ -586,49 +623,41 @@ function dragonPathPoint(geo,dragonType,delay){
 const cycle=dragonCycleState(dragonType,delay);
 if(!cycle)return null;
 
-const cx=geo.centerX;
-const cy=geo.centerY;
-const inner=geo.size*2.90;
-const outer=geo.size*3.65;
-const shell=lerp(inner,outer,0.5+cycle.lane*0.5);
-const rx=shell;
-const ry=shell*0.48;
+const orbitAngle=cycle.startAngle+cycle.dir*(cycle.t*1.18*TAU);
+const orbit=figureEightOrbit(geo,orbitAngle,cycle.phaseOffset);
 
-const orbitX=cx+Math.cos(cycle.pathAngle)*rx;
-const orbitY=cy+Math.sin(cycle.pathAngle)*ry + Math.sin(cycle.t*TAU*2.0+(dragonType==="fear"?0:1.3))*geo.size*0.050;
-const orbitZ=Math.sin(cycle.pathAngle+(dragonType==="fear"?-0.35:0.35))*1.15;
-
-const portalRadius=shell+geo.size*1.4;
-const portalX=cx+Math.cos(cycle.startAngle)*portalRadius;
-const portalY=cy+Math.sin(cycle.startAngle)*portalRadius*0.52 + (cycle.entryHigh?-geo.size*0.90:geo.size*0.90);
-
-const exitAngle=cycle.startAngle+cycle.dir*(DRAGON_TOTAL_ROTATIONS*TAU);
-const exitX=cx+Math.cos(exitAngle)*portalRadius;
-const exitY=cy+Math.sin(exitAngle)*portalRadius*0.52 + (cycle.entryHigh?geo.size*0.90:-geo.size*0.90);
+const portalRadius=geo.size*4.65;
+const portalX=geo.centerX+Math.cos(cycle.startAngle)*portalRadius;
+const portalY=geo.centerY+Math.sin(cycle.startAngle)*portalRadius*0.52;
+const exitAngle=cycle.startAngle+cycle.dir*(1.65*TAU);
+const exitX=geo.centerX+Math.cos(exitAngle)*portalRadius;
+const exitY=geo.centerY+Math.sin(exitAngle)*portalRadius*0.52;
 
 if(cycle.phase==="entry"){
+const t=easeInOutCubic(cycle.t);
 return{
-x:lerp(portalX,orbitX,easeInOutCubic(cycle.t)),
-y:lerp(portalY,orbitY,easeInOutCubic(cycle.t)),
-z:lerp(-0.16,orbitZ,cycle.t),
-a:cycle.pathAngle,
+x:lerp(portalX,orbit.x,t),
+y:lerp(portalY,orbit.y,t),
+z:lerp(-0.22,orbit.z,t),
+a:orbitAngle,
 portal:{x:portalX,y:portalY,phase:"entry",alpha:1-cycle.t}
 };
 }
 if(cycle.phase==="orbit"){
 return{
-x:orbitX,
-y:orbitY,
-z:orbitZ,
-a:cycle.pathAngle,
+x:orbit.x,
+y:orbit.y,
+z:orbit.z,
+a:orbitAngle,
 portal:null
 };
 }
+const t=easeInOutCubic(cycle.t);
 return{
-x:lerp(orbitX,exitX,easeInOutCubic(cycle.t)),
-y:lerp(orbitY,exitY,easeInOutCubic(cycle.t)),
-z:lerp(orbitZ,0.18,cycle.t),
-a:cycle.pathAngle,
+x:lerp(orbit.x,exitX,t),
+y:lerp(orbit.y,exitY,t),
+z:lerp(orbit.z,0.22,t),
+a:orbitAngle,
 portal:{x:exitX,y:exitY,phase:"exit",alpha:cycle.t}
 };
 }
@@ -639,68 +668,58 @@ if(!headState)return null;
 const points=[];
 const count=44;
 for(let i=0;i<count;i++){
-const lag=i*0.0115;
-const phaseP=Math.max(0,(getCycleProgress()??0)-delay-lag);
-const localCycleIndex=getCycleIndex();
-let tempTick=phaseP; // normalized inside current cycle
-let fakePhase;
-let fakeT;
-if(tempTick<ENTRY_RATIO){
-fakePhase="entry";
-fakeT=tempTick/ENTRY_RATIO;
-}else if(tempTick<ENTRY_RATIO+ORBIT_RATIO){
-fakePhase="orbit";
-fakeT=(tempTick-ENTRY_RATIO)/ORBIT_RATIO;
+const lag=i*0.0125;
+const raw=(getCycleProgress()??0)-delay-lag;
+if(raw<0)break;
+let phase, localT;
+if(raw<ENTRY_RATIO){
+phase="entry";
+localT=raw/ENTRY_RATIO;
+}else if(raw<ENTRY_RATIO+ORBIT_RATIO){
+phase="orbit";
+localT=(raw-ENTRY_RATIO)/ORBIT_RATIO;
 }else{
-fakePhase="exit";
-fakeT=(tempTick-ENTRY_RATIO-ORBIT_RATIO)/EXIT_RATIO;
+phase="exit";
+localT=(raw-ENTRY_RATIO-ORBIT_RATIO)/EXIT_RATIO;
 }
-const cycle=dragonCycleState(dragonType,delay);
-if(!cycle)break;
-const cx=geo.centerX;
-const cy=geo.centerY;
-const dir=cycleDirection(localCycleIndex);
-const startA=entryAngle(localCycleIndex,dragonType);
-const lane=laneBias(localCycleIndex,dragonType);
-const shell=lerp(geo.size*2.90,geo.size*3.65,0.5+lane*0.5);
-const pathAngle=startA+dir*(fakeT*DRAGON_TOTAL_ROTATIONS*TAU);
-const rx=shell;
-const ry=shell*0.48;
-const orbitX=cx+Math.cos(pathAngle)*rx;
-const orbitY=cy+Math.sin(pathAngle)*ry + Math.sin((state.tick*0.010)+(i*0.30)+(dragonType==="fear"?0:1.4))*geo.size*0.018;
-const orbitZ=Math.sin(pathAngle+(dragonType==="fear"?-0.35:0.35))*1.15;
+localT=clamp(localT,0,1);
 
-const portalRadius=shell+geo.size*1.4;
-const entryHigh=hash(localCycleIndex*5.11+(dragonType==="fear"?0.7:1.4))>0.5;
-const portalX=cx+Math.cos(startA)*portalRadius;
-const portalY=cy+Math.sin(startA)*portalRadius*0.52 + (entryHigh?-geo.size*0.90:geo.size*0.90);
-const exitAngle=startA+dir*(DRAGON_TOTAL_ROTATIONS*TAU);
-const exitX=cx+Math.cos(exitAngle)*portalRadius;
-const exitY=cy+Math.sin(exitAngle)*portalRadius*0.52 + (entryHigh?geo.size*0.90:-geo.size*0.90);
+const cycleIndex=getCycleIndex();
+const dir=cycleDirection(cycleIndex);
+const startAngle=entryAngle(cycleIndex,dragonType);
+const orbitAngle=startAngle+dir*(localT*1.18*TAU);
+const orbit=figureEightOrbit(geo,orbitAngle,dragonType==="fear"?0:Math.PI);
+
+const portalRadius=geo.size*4.65;
+const portalX=geo.centerX+Math.cos(startAngle)*portalRadius;
+const portalY=geo.centerY+Math.sin(startAngle)*portalRadius*0.52;
+const exitAngle=startAngle+dir*(1.65*TAU);
+const exitX=geo.centerX+Math.cos(exitAngle)*portalRadius;
+const exitY=geo.centerY+Math.sin(exitAngle)*portalRadius*0.52;
 
 let x,y,z;
-if(fakePhase==="entry"){
-x=lerp(portalX,orbitX,easeInOutCubic(fakeT));
-y=lerp(portalY,orbitY,easeInOutCubic(fakeT));
-z=lerp(-0.16,orbitZ,fakeT);
-}else if(fakePhase==="orbit"){
-x=orbitX; y=orbitY; z=orbitZ;
+if(phase==="entry"){
+const tt=easeInOutCubic(localT);
+x=lerp(portalX,orbit.x,tt);
+y=lerp(portalY,orbit.y,tt);
+z=lerp(-0.22,orbit.z,tt);
+}else if(phase==="orbit"){
+x=orbit.x;
+y=orbit.y;
+z=orbit.z;
 }else{
-x=lerp(orbitX,exitX,easeInOutCubic(fakeT));
-y=lerp(orbitY,exitY,easeInOutCubic(fakeT));
-z=lerp(orbitZ,0.18,fakeT);
+const tt=easeInOutCubic(localT);
+x=lerp(orbit.x,exitX,tt);
+y=lerp(orbit.y,exitY,tt);
+z=lerp(orbit.z,0.22,tt);
 }
-
 const wave=Math.sin((state.tick*0.018)+(i*0.40)+(dragonType==="fear"?0:Math.PI))*geo.size*0.018;
 const waveY=Math.cos((state.tick*0.012)+(i*0.31)+(dragonType==="fear"?0:Math.PI))*geo.size*0.012;
-const nx=-Math.sin(pathAngle);
-const ny=Math.cos(pathAngle)*0.28;
-points.push({x:x+nx*wave,y:y+ny*wave+waveY,z,a:pathAngle});
+const nx=-Math.sin(orbitAngle);
+const ny=Math.cos(orbitAngle)*0.22;
+points.push({x:x+nx*wave,y:y+ny*wave+waveY,z,a:orbitAngle});
 }
-return{
-points,
-portal:headState.portal
-};
+return{points,portal:headState.portal};
 }
 
 function drawPortal(portal,colorA,colorB,geo){
@@ -951,6 +970,66 @@ ctx.restore();
 }
 }
 
+function drawSecondCompassOverlay(){
+if(!state.secondCompassOpen)return;
+const cx=window.innerWidth*0.5;
+const cy=window.innerHeight*0.20;
+const r1=Math.min(window.innerWidth,window.innerHeight)*0.15;
+const nodes=["NNE","NE","ENE","ESE","SE","SSE","SSW","SW","WSW","WNW","NW","NNW"];
+ctx.save();
+ctx.globalAlpha=0.78;
+for(let i=0;i<nodes.length;i++){
+const a=(-Math.PI/2)+(i/nodes.length)*TAU;
+const x=cx+Math.cos(a)*r1;
+const y=cy+Math.sin(a)*r1*0.55;
+ctx.beginPath();
+ctx.arc(x,y,16,0,TAU);
+ctx.fillStyle="rgba(24,20,34,0.84)";
+ctx.fill();
+ctx.lineWidth=1.5;
+ctx.strokeStyle="rgba(255,215,150,0.58)";
+ctx.stroke();
+ctx.fillStyle="rgba(255,245,232,0.92)";
+ctx.font="700 8px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText(nodes[i],x,y);
+}
+ctx.restore();
+}
+
+function drawLockedOverlay(){
+if(state.lockedPulse<=0||!state.lockedFace)return;
+const alpha=clamp(state.lockedPulse,0,1);
+ctx.save();
+ctx.globalAlpha=0.82*alpha;
+const w=220;
+const h=50;
+const x=window.innerWidth*0.5-w*0.5;
+const y=window.innerHeight*0.12;
+roundedRectPath(x,y,w,h,16);
+ctx.fillStyle="rgba(20,18,28,0.88)";
+ctx.fill();
+ctx.lineWidth=1.4;
+ctx.strokeStyle="rgba(255,215,150,0.52)";
+ctx.stroke();
+ctx.fillStyle="rgba(255,245,235,0.94)";
+ctx.font="700 14px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText(`${FACE_MAP[state.lockedFace].label} LOCKED`,x+w*0.5,y+h*0.5);
+ctx.restore();
+}
+
+function drawNavigationOverlay(){
+if(state.overlayAlpha<=0)return;
+ctx.save();
+ctx.globalAlpha=clamp(state.overlayAlpha,0,1)*0.22;
+ctx.fillStyle="black";
+ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+ctx.restore();
+}
+
 function drawSceneFrame(){
 ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
 sky();
@@ -965,7 +1044,10 @@ state.cube=geo;
 dragonsBack(geo);
 drawCube(geo);
 dragonsFront(geo);
+drawSecondCompassOverlay();
 fireworks();
+drawLockedOverlay();
+drawNavigationOverlay();
 }
 
 function getRegionAt(x,y){
@@ -997,8 +1079,9 @@ const dy=y-state.lastPointer.y;
 state.lastPointer.x=x;
 state.lastPointer.y=y;
 state.dragDistance+=Math.abs(dx)+Math.abs(dy);
-state.rotVelY+=dx*0.0009;
-state.rotVelX+=dy*0.0009;
+
+state.rotVelY+=dx*0.0010;
+state.rotVelX+=dy*0.0010;
 }
 
 function releaseDrag(x,y){
@@ -1076,22 +1159,32 @@ state.tick++;
 state.rotY+=state.rotVelY;
 state.rotX+=state.rotVelX;
 
-state.rotVelY*=state.isDragging?0.90:0.94;
-state.rotVelX*=state.isDragging?0.90:0.94;
+state.rotVelY*=state.isDragging?0.91:0.972;
+state.rotVelX*=state.isDragging?0.91:0.972;
 
-state.rotVelY=clamp(state.rotVelY,-0.08,0.08);
-state.rotVelX=clamp(state.rotVelX,-0.05,0.05);
-state.rotX=clamp(state.rotX,-1.15,1.15);
+state.rotVelY=clamp(state.rotVelY,-0.14,0.14);
+state.rotVelX=clamp(state.rotVelX,-0.14,0.14);
 
 if(!state.isDragging){
 state.rotY+=0.0008;
 }
 
 state.morphPulse*=0.94;
+state.lockedPulse*=0.93;
+state.overlayAlpha*=0.88;
+
 if(state.tick%320===0&&state.activeFace){
 const geo=state.cube;
 if(geo&&geo.faceCenters[state.activeFace]){
 spawnFirework(geo.faceCenters[state.activeFace].x,geo.faceCenters[state.activeFace].y,12,1.5);
+}
+}
+
+if(state.navigateTo){
+state.navigateDelay--;
+state.overlayAlpha=Math.max(state.overlayAlpha,0.35);
+if(state.navigateDelay<=0){
+window.location.href=state.navigateTo;
 }
 }
 }

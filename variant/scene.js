@@ -1,3 +1,6 @@
+DESTINATION FILE: /variant/scene.js
+ACTION: Full TNT replacement
+
 (function(){
 const canvas=document.getElementById("scene");
 if(!canvas)return;
@@ -33,6 +36,11 @@ C:"core",
 M:"morph"
 };
 
+const BANNER_TEXT={
+fear:"CONTROL",
+wisdom:"ALIGNMENT"
+};
+
 const state={
 tick:0,
 activeFace:null,
@@ -48,6 +56,8 @@ lastPointer:{x:0,y:0},
 dragDistance:0,
 fireworks:[],
 lanterns:[],
+cloudBanks:[],
+mountains:[],
 cube:null,
 dragonLoopStarted:false,
 dragonLoopStartTick:0,
@@ -72,6 +82,7 @@ function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
 function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+function easeInQuad(t){return t*t;}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
 function wrapPi(a){
 while(a>Math.PI)a-=TAU;
@@ -90,6 +101,8 @@ canvas.height=Math.floor(h*dpr);
 ctx.setTransform(1,0,0,1,0,0);
 ctx.scale(dpr,dpr);
 initLanterns();
+initCloudBanks();
+initMountains();
 }
 window.addEventListener("resize",resize,{passive:true});
 window.addEventListener("orientationchange",resize,{passive:true});
@@ -112,18 +125,62 @@ ctx.closePath();
 function initLanterns(){
 const w=window.innerWidth||1;
 const h=window.innerHeight||1;
-const count=Math.max(12,Math.round(w/150));
+const count=Math.max(18,Math.round(w/110));
 state.lanterns=[];
 for(let i=0;i<count;i++){
 const seed=i+1;
+const depthBand=i%3;
+const depthScale=depthBand===0?1.0:(depthBand===1?0.78:0.58);
 state.lanterns.push({
 x:hash(seed*2.17)*w,
-y:h*(0.50+hash(seed*3.91)*0.36),
-size:18+hash(seed*5.31)*12,
-speed:0.10+hash(seed*6.17)*0.18,
-sway:8+hash(seed*7.33)*18,
-phase:hash(seed*8.07)*TAU
+y:h*(0.48+hash(seed*3.91)*0.42),
+size:(18+hash(seed*5.31)*12)*depthScale,
+speed:(0.08+hash(seed*6.17)*0.16)*(0.65+depthScale*0.8),
+sway:(8+hash(seed*7.33)*18)*(0.8+depthScale*0.45),
+phase:hash(seed*8.07)*TAU,
+flamePhase:hash(seed*9.13)*TAU,
+depth:depthScale,
+tilt:(hash(seed*10.11)-0.5)*0.16
 });
+}
+}
+
+function initCloudBanks(){
+const w=window.innerWidth||1;
+const h=window.innerHeight||1;
+const count=Math.max(9,Math.round(w/180));
+state.cloudBanks=[];
+for(let i=0;i<count;i++){
+const seed=i+1;
+const layer=i%3;
+const scale=layer===0?1.25:(layer===1?0.95:0.72);
+state.cloudBanks.push({
+x:hash(seed*12.1)*w,
+y:h*(layer===0?0.16+hash(seed*1.8)*0.10:layer===1?0.22+hash(seed*2.8)*0.12:0.30+hash(seed*3.8)*0.12),
+size:(110+hash(seed*13.7)*120)*scale,
+speed:(0.05+hash(seed*14.3)*0.12)*(layer===0?0.35:layer===1?0.55:0.85),
+alpha:layer===0?0.11:layer===1?0.15:0.18,
+phase:hash(seed*15.1)*TAU,
+layer
+});
+}
+}
+
+function initMountains(){
+const w=window.innerWidth||1;
+const h=window.innerHeight||1;
+const horizon=h*0.66;
+state.mountains=[];
+for(let band=0;band<3;band++){
+const pts=[];
+const baseY=horizon+(band===0?22:(band===1?44:68));
+const step=80-(band*12);
+for(let x=-120;x<=w+120;x+=step){
+const seed=(band+1)*1000+x;
+const peak=(hash(seed*0.013)-0.5)*(band===0?58:(band===1?44:30));
+pts.push({x,y:baseY+peak});
+}
+state.mountains.push({band,pts});
 }
 }
 
@@ -211,23 +268,33 @@ function sky(){
 const w=window.innerWidth;
 const h=window.innerHeight;
 const g=ctx.createLinearGradient(0,0,0,h);
-g.addColorStop(0,"#18060c");
-g.addColorStop(0.18,"#340a12");
-g.addColorStop(0.42,"#701715");
-g.addColorStop(0.64,"#cb451f");
-g.addColorStop(0.80,"#ff7c32");
-g.addColorStop(1,"#41130e");
+g.addColorStop(0,"#12050a");
+g.addColorStop(0.14,"#2b0b10");
+g.addColorStop(0.36,"#571410");
+g.addColorStop(0.58,"#9f2817");
+g.addColorStop(0.78,"#dd6130");
+g.addColorStop(1,"#1a0606");
 ctx.fillStyle=g;
 ctx.fillRect(0,0,w,h);
 
 const horizonY=h*0.66;
-const glow=ctx.createLinearGradient(0,horizonY-120,0,horizonY+90);
+const glow=ctx.createLinearGradient(0,horizonY-150,0,horizonY+110);
 glow.addColorStop(0,"rgba(255,175,88,0)");
-glow.addColorStop(0.40,"rgba(255,132,52,0.30)");
-glow.addColorStop(0.72,"rgba(255,96,36,0.20)");
+glow.addColorStop(0.32,"rgba(255,152,62,0.18)");
+glow.addColorStop(0.56,"rgba(255,112,48,0.26)");
 glow.addColorStop(1,"rgba(255,96,36,0)");
 ctx.fillStyle=glow;
-ctx.fillRect(0,horizonY-120,w,210);
+ctx.fillRect(0,horizonY-150,w,260);
+
+for(let i=0;i<26;i++){
+const x=hash(i*3.11)*w;
+const y=hash(i*4.17)*h*0.40;
+const a=0.05+hash(i*5.13)*0.10;
+ctx.fillStyle=`rgba(255,245,225,${a})`;
+ctx.beginPath();
+ctx.arc(x,y,0.8+hash(i*6.31)*1.2,0,TAU);
+ctx.fill();
+}
 }
 
 function moon(){
@@ -235,119 +302,237 @@ const x=window.innerWidth*0.80;
 const y=window.innerHeight*0.15;
 const r=Math.min(window.innerWidth,window.innerHeight)*0.074;
 ctx.save();
-ctx.shadowBlur=42;
-ctx.shadowColor="rgba(255,224,170,0.55)";
-ctx.fillStyle="rgba(255,244,215,0.94)";
+
+const halo=ctx.createRadialGradient(x,y,r*0.35,x,y,r*2.4);
+halo.addColorStop(0,"rgba(255,244,215,0.20)");
+halo.addColorStop(0.45,"rgba(255,226,176,0.14)");
+halo.addColorStop(1,"rgba(255,226,176,0)");
+ctx.fillStyle=halo;
+ctx.beginPath();
+ctx.arc(x,y,r*2.4,0,TAU);
+ctx.fill();
+
+ctx.shadowBlur=78;
+ctx.shadowColor="rgba(255,224,170,0.28)";
+const moonGrad=ctx.createRadialGradient(x-r*0.28,y-r*0.22,r*0.08,x,y,r*1.05);
+moonGrad.addColorStop(0,"rgba(255,252,236,0.96)");
+moonGrad.addColorStop(0.56,"rgba(255,238,200,0.95)");
+moonGrad.addColorStop(1,"rgba(228,206,164,0.94)");
+ctx.fillStyle=moonGrad;
 ctx.beginPath();
 ctx.arc(x,y,r,0,TAU);
 ctx.fill();
 ctx.shadowBlur=0;
-ctx.globalAlpha=0.18;
-ctx.fillStyle="rgba(255,230,180,0.85)";
+
+ctx.globalAlpha=0.16;
+ctx.fillStyle="rgba(180,150,122,0.90)";
+for(let i=0;i<6;i++){
+const a=(i/6)*TAU+0.2;
 ctx.beginPath();
-ctx.arc(x,y,r*1.45,0,TAU);
+ctx.ellipse(
+x+Math.cos(a)*r*0.35,
+y+Math.sin(a)*r*0.22,
+r*(0.08+hash(i*9.1)*0.10),
+r*(0.05+hash(i*10.2)*0.08),
+a*0.6,0,TAU
+);
 ctx.fill();
-ctx.globalCompositeOperation="destination-out";
-ctx.globalAlpha=1;
-ctx.beginPath();
-ctx.arc(x+r*0.30,y-r*0.05,r*0.90,0,TAU);
-ctx.fill();
+}
 ctx.restore();
 }
 
-function drawCloud(cx,cy,scale,alpha,drift){
-const x=cx+Math.sin(state.tick*0.002+drift)*18;
-const y=cy+Math.cos(state.tick*0.0016+drift)*4;
+function drawCloudBank(cl){
+const x=cl.x+Math.sin(state.tick*0.0016+cl.phase)*18;
+const y=cl.y+Math.cos(state.tick*0.0012+cl.phase)*4;
+const scale=cl.size;
 ctx.save();
-ctx.globalAlpha=alpha;
-ctx.fillStyle="rgba(255,230,215,0.14)";
+ctx.globalAlpha=cl.alpha;
+const g=ctx.createLinearGradient(x,y-scale*0.25,x,y+scale*0.28);
+g.addColorStop(0,"rgba(255,235,222,0.18)");
+g.addColorStop(0.42,"rgba(255,223,210,0.12)");
+g.addColorStop(1,"rgba(255,220,208,0.04)");
+ctx.fillStyle=g;
 ctx.beginPath();
-ctx.ellipse(x-scale*0.85,y,scale*0.62,scale*0.28,0,0,TAU);
-ctx.ellipse(x-scale*0.2,y-scale*0.12,scale*0.56,scale*0.30,0,0,TAU);
-ctx.ellipse(x+scale*0.42,y-scale*0.03,scale*0.72,scale*0.34,0,0,TAU);
-ctx.ellipse(x+scale*0.98,y+scale*0.03,scale*0.44,scale*0.23,0,0,TAU);
+ctx.ellipse(x-scale*0.78,y,scale*0.50,scale*0.18,0,0,TAU);
+ctx.ellipse(x-scale*0.34,y-scale*0.11,scale*0.42,scale*0.20,0,0,TAU);
+ctx.ellipse(x+scale*0.06,y-scale*0.13,scale*0.48,scale*0.22,0,0,TAU);
+ctx.ellipse(x+scale*0.48,y-scale*0.04,scale*0.58,scale*0.23,0,0,TAU);
+ctx.ellipse(x+scale*0.92,y+scale*0.01,scale*0.34,scale*0.14,0,0,TAU);
+ctx.fill();
+
+ctx.globalAlpha=cl.alpha*0.42;
+ctx.fillStyle="rgba(255,255,255,0.20)";
+ctx.beginPath();
+ctx.ellipse(x-scale*0.06,y-scale*0.16,scale*0.28,scale*0.08,-0.12,0,TAU);
+ctx.ellipse(x+scale*0.42,y-scale*0.10,scale*0.30,scale*0.08,-0.08,0,TAU);
 ctx.fill();
 ctx.restore();
 }
 
 function clouds(){
 const w=window.innerWidth;
-const h=window.innerHeight;
-drawCloud(w*0.15,h*0.18,68,0.20,0.2);
-drawCloud(w*0.42,h*0.12,92,0.13,1.1);
-drawCloud(w*0.72,h*0.24,82,0.18,2.4);
-drawCloud(w*0.30,h*0.30,108,0.10,3.5);
-drawCloud(w*0.86,h*0.30,74,0.14,4.1);
+for(let i=0;i<state.cloudBanks.length;i++){
+const cl=state.cloudBanks[i];
+cl.x+=cl.speed*0.12;
+if(cl.x-cl.size>w+cl.size*1.6)cl.x=-cl.size*1.4;
+drawCloudBank(cl);
+}
 }
 
 function lanterns(){
+const h=window.innerHeight;
 for(let i=0;i<state.lanterns.length;i++){
 const ln=state.lanterns[i];
-const driftY=(state.tick*ln.speed)%((window.innerHeight*0.76)+120);
-const y=ln.y-driftY<-80?ln.y-driftY+(window.innerHeight*0.76)+140:ln.y-driftY;
-const x=ln.x+Math.sin(state.tick*0.01+ln.phase)*ln.sway;
+const driftY=(state.tick*ln.speed)%((h*0.86)+180);
+const y=ln.y-driftY<-120?ln.y-driftY+(h*0.86)+200:ln.y-driftY;
+const x=ln.x+Math.sin(state.tick*0.008+ln.phase)*ln.sway;
+const flicker=0.82+Math.sin(state.tick*0.09+ln.flamePhase)*0.12+Math.sin(state.tick*0.043+ln.flamePhase*0.7)*0.06;
 
 ctx.save();
 ctx.translate(x,y);
-ctx.globalAlpha=0.88;
-ctx.fillStyle="rgba(120,12,18,0.88)";
-roundedRectPath(-ln.size*0.42,-ln.size*0.62,ln.size*0.84,ln.size*1.10,ln.size*0.18);
-ctx.fill();
-ctx.strokeStyle="rgba(255,210,120,0.82)";
-ctx.lineWidth=1.2;
-ctx.stroke();
+ctx.rotate(ln.tilt+Math.sin(state.tick*0.01+ln.phase)*0.04);
 
+ctx.globalAlpha=0.38*ln.depth;
+ctx.strokeStyle="rgba(255,214,160,0.42)";
+ctx.lineWidth=1;
 ctx.beginPath();
-ctx.moveTo(0,-ln.size*0.90);
+ctx.moveTo(0,-ln.size*1.10);
 ctx.lineTo(0,-ln.size*0.62);
-ctx.strokeStyle="rgba(255,210,120,0.72)";
 ctx.stroke();
 
-ctx.shadowBlur=24;
-ctx.shadowColor="rgba(255,190,90,0.18)";
-ctx.fillStyle="rgba(255,192,92,0.18)";
-roundedRectPath(-ln.size*0.22,-ln.size*0.36,ln.size*0.44,ln.size*0.62,ln.size*0.10);
+ctx.globalAlpha=0.95*ln.depth;
+ctx.fillStyle="rgba(105,15,18,0.88)";
+roundedRectPath(-ln.size*0.42,-ln.size*0.62,ln.size*0.84,ln.size*1.10,ln.size*0.20);
 ctx.fill();
+ctx.strokeStyle="rgba(255,218,148,0.74)";
+ctx.lineWidth=1.1;
+ctx.stroke();
+
+ctx.fillStyle="rgba(255,230,195,0.10)";
+roundedRectPath(-ln.size*0.20,-ln.size*0.38,ln.size*0.40,ln.size*0.64,ln.size*0.10);
+ctx.fill();
+
+ctx.globalAlpha=0.58*ln.depth;
+ctx.strokeStyle="rgba(255,228,188,0.26)";
+ctx.beginPath();
+ctx.moveTo(-ln.size*0.22,-ln.size*0.22);
+ctx.lineTo(ln.size*0.22,-ln.size*0.22);
+ctx.moveTo(-ln.size*0.22,0);
+ctx.lineTo(ln.size*0.22,0);
+ctx.moveTo(-ln.size*0.22,ln.size*0.22);
+ctx.lineTo(ln.size*0.22,ln.size*0.22);
+ctx.stroke();
+
+ctx.shadowBlur=26*ln.depth;
+ctx.shadowColor=`rgba(255,196,96,${0.32*flicker})`;
+ctx.globalAlpha=0.54*ln.depth;
+ctx.fillStyle=`rgba(255,196,96,${0.30*flicker})`;
+roundedRectPath(-ln.size*0.18,-ln.size*0.30,ln.size*0.36,ln.size*0.54,ln.size*0.10);
+ctx.fill();
+
+ctx.globalAlpha=0.86*ln.depth;
+ctx.fillStyle="rgba(255,244,216,0.95)";
+ctx.beginPath();
+ctx.moveTo(0,-ln.size*0.18);
+ctx.quadraticCurveTo(ln.size*0.09,0,0,ln.size*0.16);
+ctx.quadraticCurveTo(-ln.size*0.09,0,0,-ln.size*0.18);
+ctx.fill();
+
 ctx.restore();
 }
+}
+
+function mountains(){
+const w=window.innerWidth;
+const h=window.innerHeight;
+const horizon=h*0.66;
+
+for(let i=state.mountains.length-1;i>=0;i--){
+const band=state.mountains[i];
+ctx.beginPath();
+ctx.moveTo(-140,h);
+for(let p=0;p<band.pts.length;p++){
+ctx.lineTo(band.pts[p].x,band.pts[p].y);
+}
+ctx.lineTo(w+140,h);
+ctx.closePath();
+
+ctx.fillStyle=band.band===0?"rgba(22,14,18,0.82)":band.band===1?"rgba(28,16,20,0.62)":"rgba(34,18,20,0.44)";
+ctx.fill();
+}
+
+const haze=ctx.createLinearGradient(0,horizon-18,0,horizon+110);
+haze.addColorStop(0,"rgba(255,182,126,0.10)");
+haze.addColorStop(0.45,"rgba(34,18,20,0.12)");
+haze.addColorStop(1,"rgba(0,0,0,0)");
+ctx.fillStyle=haze;
+ctx.fillRect(0,horizon-18,w,140);
 }
 
 function water(){
 const h=window.innerHeight;
 const w=window.innerWidth;
 const horizon=h*0.66;
-const base=h*0.79;
-const amp=4;
+const base=h*0.80;
 
-const g=ctx.createLinearGradient(0,horizon-26,0,h);
-g.addColorStop(0,"rgba(52,18,20,0.58)");
-g.addColorStop(0.20,"rgba(34,12,18,0.86)");
-g.addColorStop(0.55,"rgba(16,8,14,0.96)");
-g.addColorStop(1,"rgba(6,4,8,1)");
+const g=ctx.createLinearGradient(0,horizon-24,0,h);
+g.addColorStop(0,"rgba(56,20,20,0.46)");
+g.addColorStop(0.16,"rgba(28,14,18,0.84)");
+g.addColorStop(0.54,"rgba(11,8,14,0.96)");
+g.addColorStop(1,"rgba(5,4,8,1)");
 ctx.fillStyle=g;
-ctx.fillRect(0,horizon-26,w,h-(horizon-26));
+ctx.fillRect(0,horizon-24,w,h-(horizon-24));
 
-for(let i=0;i<10;i++){
+ctx.save();
+ctx.globalAlpha=0.16;
+const moonReflectionX=window.innerWidth*0.80;
+const refl=ctx.createLinearGradient(moonReflectionX-80,horizon,moonReflectionX+120,h);
+refl.addColorStop(0,"rgba(255,220,160,0)");
+refl.addColorStop(0.48,"rgba(255,220,160,0.30)");
+refl.addColorStop(1,"rgba(255,220,160,0)");
+ctx.fillStyle=refl;
 ctx.beginPath();
-for(let x=0;x<=w;x+=10){
-const wave1=Math.sin((x+state.tick)*0.018+i*0.82)*amp;
-const wave2=Math.sin((x-state.tick*0.65)*0.008+i*1.12)*amp*0.45;
-const y=base+i*16+wave1+wave2;
-if(x===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);
+ctx.moveTo(moonReflectionX-72,horizon+6);
+ctx.lineTo(moonReflectionX+22,horizon+6);
+ctx.lineTo(moonReflectionX+110,h);
+ctx.lineTo(moonReflectionX-146,h);
+ctx.closePath();
+ctx.fill();
+ctx.restore();
+
+for(let layer=0;layer<12;layer++){
+const depth=layer/11;
+const yBase=base+layer*12;
+const amp=lerp(2.0,10.5,depth);
+const f1=lerp(0.008,0.026,depth);
+const f2=lerp(0.004,0.014,depth);
+ctx.beginPath();
+for(let x=0;x<=w;x+=8){
+const wave1=Math.sin((x* f1)+(state.tick*(0.010+depth*0.028))+layer*0.72)*amp;
+const wave2=Math.sin((x* f2)-(state.tick*(0.006+depth*0.010))+layer*1.22)*amp*0.52;
+const wave3=Math.sin((x*0.017)+(state.tick*0.017)+layer*0.45)*amp*0.18;
+const y=yBase+wave1+wave2+wave3;
+    if(x===0)ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
 }
-ctx.strokeStyle=`rgba(255,142,96,${0.022+i*0.012})`;
-ctx.lineWidth=2;
+ctx.strokeStyle=`rgba(255,${Math.round(110+depth*70)},${Math.round(88+depth*40)},${0.018+depth*0.050})`;
+ctx.lineWidth=1.5+depth*1.1;
 ctx.stroke();
 }
 
-ctx.globalAlpha=0.12;
-const shimmer=ctx.createLinearGradient(0,horizon,w,base+180);
-shimmer.addColorStop(0,"rgba(255,118,72,0)");
-shimmer.addColorStop(0.5,"rgba(255,136,88,0.40)");
-shimmer.addColorStop(1,"rgba(255,118,72,0)");
-ctx.fillStyle=shimmer;
-ctx.fillRect(0,horizon-6,w,220);
-ctx.globalAlpha=1;
+for(let crest=0;crest<6;crest++){
+ctx.beginPath();
+for(let x=0;x<=w;x+=10){
+const y=base+crest*20+
+Math.sin((x*0.020)+(state.tick*0.026)+crest*0.9)*4.6+
+Math.sin((x*0.006)-(state.tick*0.009)+crest*1.4)*2.2;
+if(x===0)ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+}
+ctx.strokeStyle=`rgba(255,228,176,${0.030-crest*0.003})`;
+ctx.lineWidth=1.0;
+ctx.stroke();
+}
 }
 
 function project(x,y,z){
@@ -606,16 +791,17 @@ phaseOffset:dragonType==="fear"?0:Math.PI
 };
 }
 
-function figureEightOrbit(geo,a,phaseOffset){
-const shell=geo.size*3.18;
+function figureEightOrbit(geo,a,phaseOffset,dragonType){
+const shell=dragonType==="fear"?geo.size*2.96:geo.size*3.42;
 const t=a+phaseOffset;
 const x=Math.sin(t)*shell;
-const y=Math.sin(t)*Math.cos(t)*shell*0.42;
-const z=Math.cos(t)*shell*0.40;
+const y=Math.sin(t)*Math.cos(t)*shell*0.40;
+const z=Math.cos(t)*shell*0.46 + (dragonType==="fear"?-0.18:0.18);
 return{
 x:geo.centerX+x,
 y:geo.centerY+y,
-z:z/(shell*0.40)
+z:z/(shell*0.46),
+rawZ:z
 };
 }
 
@@ -624,9 +810,9 @@ const cycle=dragonCycleState(dragonType,delay);
 if(!cycle)return null;
 
 const orbitAngle=cycle.startAngle+cycle.dir*(cycle.t*1.18*TAU);
-const orbit=figureEightOrbit(geo,orbitAngle,cycle.phaseOffset);
+const orbit=figureEightOrbit(geo,orbitAngle,cycle.phaseOffset,dragonType);
 
-const portalRadius=geo.size*4.65;
+const portalRadius=geo.size*4.78;
 const portalX=geo.centerX+Math.cos(cycle.startAngle)*portalRadius;
 const portalY=geo.centerY+Math.sin(cycle.startAngle)*portalRadius*0.52;
 const exitAngle=cycle.startAngle+cycle.dir*(1.65*TAU);
@@ -688,9 +874,9 @@ const cycleIndex=getCycleIndex();
 const dir=cycleDirection(cycleIndex);
 const startAngle=entryAngle(cycleIndex,dragonType);
 const orbitAngle=startAngle+dir*(localT*1.18*TAU);
-const orbit=figureEightOrbit(geo,orbitAngle,dragonType==="fear"?0:Math.PI);
+const orbit=figureEightOrbit(geo,orbitAngle,dragonType==="fear"?0:Math.PI,dragonType);
 
-const portalRadius=geo.size*4.65;
+const portalRadius=geo.size*4.78;
 const portalX=geo.centerX+Math.cos(startAngle)*portalRadius;
 const portalY=geo.centerY+Math.sin(startAngle)*portalRadius*0.52;
 const exitAngle=startAngle+dir*(1.65*TAU);
@@ -713,11 +899,13 @@ x=lerp(orbit.x,exitX,tt);
 y=lerp(orbit.y,exitY,tt);
 z=lerp(orbit.z,0.22,tt);
 }
+const cross=1-Math.min(1,Math.abs(Math.sin(orbitAngle+ (dragonType==="fear"?0:Math.PI))));
+const crossThin=1-cross*0.24;
 const wave=Math.sin((state.tick*0.018)+(i*0.40)+(dragonType==="fear"?0:Math.PI))*geo.size*0.018;
 const waveY=Math.cos((state.tick*0.012)+(i*0.31)+(dragonType==="fear"?0:Math.PI))*geo.size*0.012;
 const nx=-Math.sin(orbitAngle);
 const ny=Math.cos(orbitAngle)*0.22;
-points.push({x:x+nx*wave,y:y+ny*wave+waveY,z,a:orbitAngle});
+points.push({x:x+nx*wave,y:y+ny*wave+waveY,z,a:orbitAngle,crossThin});
 }
 return{points,portal:headState.portal};
 }
@@ -739,6 +927,15 @@ ctx.stroke();
 ctx.beginPath();
 ctx.ellipse(0,0,geo.size*0.18*pulse,geo.size*0.05*pulse,0,0,TAU);
 ctx.stroke();
+for(let i=0;i<4;i++){
+const a=(i/4)*TAU+state.tick*0.015*(i%2===0?1:-1);
+ctx.beginPath();
+ctx.moveTo(Math.cos(a)*geo.size*0.10,Math.sin(a)*geo.size*0.03);
+ctx.lineTo(Math.cos(a)*geo.size*0.26,Math.sin(a)*geo.size*0.09);
+ctx.strokeStyle=colorA;
+ctx.lineWidth=1.2;
+ctx.stroke();
+}
 ctx.restore();
 }
 
@@ -862,7 +1059,63 @@ ctx.restore();
 }
 }
 
-function drawDragonHalf(bundle,baseFill,glowColor,accent,front){
+function drawBanner(bundle,dragonType){
+if(!bundle||!bundle.points||bundle.points.length<16)return;
+const pts=bundle.points;
+const start=4;
+const end=14;
+const baseColor=dragonType==="fear"?"rgba(168,34,36,0.84)":"rgba(214,166,58,0.84)";
+const edgeColor=dragonType==="fear"?"rgba(255,182,160,0.84)":"rgba(255,239,196,0.86)";
+const textColor=dragonType==="fear"?"rgba(255,238,228,0.95)":"rgba(48,20,8,0.95)";
+const wavePhase=state.tick*0.08+(dragonType==="fear"?0:1.4);
+
+const upper=[];
+const lower=[];
+for(let i=start;i<=end;i++){
+const p=pts[i];
+const prev=pts[Math.max(0,i-1)];
+const next=pts[Math.min(pts.length-1,i+1)];
+const a=angleBetween(prev,next);
+const nx=-Math.sin(a);
+const ny=Math.cos(a);
+const width=(i===start?16:lerp(15,6,(i-start)/(end-start)))*p.crossThin;
+const flutter=Math.sin(wavePhase+i*0.5)*(i===start?2.0:3.2);
+upper.push({x:p.x+nx*(width+flutter*0.20),y:p.y+ny*(width+flutter*0.30)});
+lower.push({x:p.x-nx*(width*0.68+flutter*0.28),y:p.y-ny*(width*0.68+flutter*0.36)});
+}
+
+ctx.save();
+ctx.globalAlpha=0.88;
+ctx.beginPath();
+ctx.moveTo(upper[0].x,upper[0].y);
+for(let i=1;i<upper.length;i++)ctx.lineTo(upper[i].x,upper[i].y);
+for(let i=lower.length-1;i>=0;i--)ctx.lineTo(lower[i].x,lower[i].y);
+ctx.closePath();
+const grad=ctx.createLinearGradient(upper[0].x,upper[0].y,lower[lower.length-1].x,lower[lower.length-1].y);
+grad.addColorStop(0,edgeColor);
+grad.addColorStop(0.18,baseColor);
+grad.addColorStop(1,`${baseColor.replace(/0\.84\)/,"0.30)")}`);
+ctx.fillStyle=grad;
+ctx.fill();
+ctx.lineWidth=1.0;
+ctx.strokeStyle=edgeColor;
+ctx.stroke();
+ctx.restore();
+
+const textAnchor=pts[8];
+const textDir=angleBetween(pts[7],pts[9]);
+ctx.save();
+ctx.translate(textAnchor.x,textAnchor.y);
+ctx.rotate(textDir);
+ctx.fillStyle=textColor;
+ctx.font="800 9px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText(BANNER_TEXT[dragonType],0,0);
+ctx.restore();
+}
+
+function drawDragonHalf(bundle,dragonType,baseFill,glowColor,accent,front){
 if(!bundle||!bundle.points||bundle.points.length<6)return;
 const points=bundle.points;
 
@@ -873,7 +1126,7 @@ const prev=points[Math.max(0,i-1)];
 const next=points[Math.min(points.length-1,i+1)];
 const t=i/(points.length-1);
 const depthScale=lerp(1.18,0.84,(p.z+1)/2);
-const r=lerp(34,5.8,t)*depthScale;
+const r=lerp(34,5.8,t)*depthScale*p.crossThin;
 const a=angleBetween(prev,next);
 
 ctx.save();
@@ -899,7 +1152,7 @@ const prev=points[i-1];
 const next=points[i+1];
 const a=angleBetween(prev,next);
 const t=i/(points.length-1);
-const fin=lerp(12,2.4,t)*(1+p.z*0.10);
+const fin=lerp(12,2.4,t)*(1+p.z*0.10)*p.crossThin;
 ctx.save();
 ctx.translate(p.x,p.y);
 ctx.rotate(a);
@@ -915,6 +1168,7 @@ ctx.restore();
 }
 
 if(front){
+drawBanner(bundle,dragonType);
 drawDragonHair(points,glowColor);
 drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
 }
@@ -925,15 +1179,15 @@ const fear=buildDragonBody(geo,"fear",0.00);
 const wisdom=buildDragonBody(geo,"wisdom",WISDOM_DELAY);
 if(fear)drawPortal(fear.portal,"rgba(255,96,72,0.82)","rgba(255,80,80,0.42)",geo);
 if(wisdom)drawPortal(wisdom.portal,"rgba(255,220,130,0.82)","rgba(255,220,130,0.36)",geo);
-drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
-drawDragonHalf(wisdom,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
+drawDragonHalf(fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
+drawDragonHalf(wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
 }
 
 function dragonsFront(geo){
 const fear=buildDragonBody(geo,"fear",0.00);
 const wisdom=buildDragonBody(geo,"wisdom",WISDOM_DELAY);
-drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
-drawDragonHalf(wisdom,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
+drawDragonHalf(fear,"fear","rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
+drawDragonHalf(wisdom,"wisdom","rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
 }
 
 function fireworks(){
@@ -1036,6 +1290,7 @@ sky();
 moon();
 clouds();
 lanterns();
+mountains();
 water();
 
 const geo=getCubeGeometry();
@@ -1079,7 +1334,6 @@ const dy=y-state.lastPointer.y;
 state.lastPointer.x=x;
 state.lastPointer.y=y;
 state.dragDistance+=Math.abs(dx)+Math.abs(dy);
-
 state.rotVelY+=dx*0.0010;
 state.rotVelX+=dy*0.0010;
 }
@@ -1186,6 +1440,12 @@ state.overlayAlpha=Math.max(state.overlayAlpha,0.35);
 if(state.navigateDelay<=0){
 window.location.href=state.navigateTo;
 }
+}
+
+for(let i=0;i<state.cloudBanks.length;i++){
+const cl=state.cloudBanks[i];
+cl.x+=cl.speed;
+if(cl.x-cl.size>window.innerWidth+cl.size*1.6)cl.x=-cl.size*1.4;
 }
 }
 

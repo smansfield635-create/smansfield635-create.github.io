@@ -9,11 +9,17 @@ N:{label:"LAWS",short:"N",fill:"rgba(198,46,46,0.34)",edge:"rgba(255,170,150,0.7
 E:{label:"ENERGY",short:"E",fill:"rgba(214,162,58,0.34)",edge:"rgba(255,235,170,0.72)",glow:"rgba(255,220,120,0.24)"},
 S:{label:"FINANCE",short:"S",fill:"rgba(86,180,176,0.30)",edge:"rgba(190,255,246,0.72)",glow:"rgba(120,255,245,0.22)"},
 W:{label:"GOVERNANCE",short:"W",fill:"rgba(160,96,212,0.30)",edge:"rgba(232,210,255,0.72)",glow:"rgba(215,170,255,0.22)"},
-C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.22)",edge:"rgba(255,255,255,0.84)",glow:"rgba(255,255,255,0.22)"}
+C:{label:"CORE",short:"CORE",fill:"rgba(242,242,242,0.22)",edge:"rgba(255,255,255,0.84)",glow:"rgba(255,255,255,0.22)"},
+B:{label:"NEXT",short:"NEXT",fill:"rgba(84,136,255,0.28)",edge:"rgba(190,216,255,0.76)",glow:"rgba(110,180,255,0.24)"}
 };
 
 const TAU=Math.PI*2;
-const DRAGON_ORBIT_ROTATIONS=1.5; // 540 degrees
+const DRAGON_TOTAL_ROTATIONS=1.5;     // 540 degrees
+const DRAGON_CYCLE_FRAMES=1800;       // slowed ~80% from prior fast pass
+const DRAGON_DELAY_RATIO=0.14;        // wisdom follows fear
+const ENTRY_RATIO=0.22;
+const ORBIT_RATIO=0.54;
+const EXIT_RATIO=0.24;
 
 const state={
 tick:0,
@@ -24,12 +30,15 @@ compassReveal:0,
 pointer:{x:0,y:0,down:false},
 faceZones:{},
 rotY:0,
-rotVel:0,
+rotX:-0.18,
+rotVelY:0,
+rotVelX:0,
 isDragging:false,
-lastPointerAngle:0,
-hasTriggeredDragons:false,
-entryPolarityHigh:true,
-dragonEvent:null,
+dragStartHit:null,
+lastPointer:{x:0,y:0},
+dragDistance:0,
+dragonLoopStarted:false,
+dragonLoopStartTick:0,
 fireworks:[],
 lanterns:[],
 cube:null
@@ -42,11 +51,6 @@ function easeInOutCubic(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
 function fract(v){return v-Math.floor(v);}
 function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
 function angleBetween(a,b){return Math.atan2(b.y-a.y,b.x-a.x);}
-function wrapPi(a){
-while(a>Math.PI)a-=TAU;
-while(a<-Math.PI)a+=TAU;
-return a;
-}
 
 function roundedRectPath(x,y,w,h,r){
 const rr=Math.min(r,w*0.5,h*0.5);
@@ -142,14 +146,10 @@ spawnFirework(w*0.22,h*0.24,22,2.1);
 spawnFirework(w*0.78,h*0.22,24,2.3);
 }
 
-function startDragonEvent(){
-if(state.dragonEvent)return;
-state.dragonEvent={
-startTick:state.tick,
-entryHigh:state.entryPolarityHigh
-};
-state.entryPolarityHigh=!state.entryPolarityHigh;
-state.hasTriggeredDragons=true;
+function startDragonLoop(){
+if(state.dragonLoopStarted)return;
+state.dragonLoopStarted=true;
+state.dragonLoopStartTick=state.tick;
 spawnTransitionFireworks();
 }
 
@@ -365,13 +365,16 @@ scale
 };
 }
 
-function rotateVertex(x,y,z,rotY,tiltX){
+function rotateVertex(x,y,z,rotY,rotX){
 const cy=Math.cos(rotY),sy=Math.sin(rotY);
-const cx=Math.cos(tiltX),sx=Math.sin(tiltX);
+const cx=Math.cos(rotX),sx=Math.sin(rotX);
+
 const x1=x*cy-z*sy;
 const z1=x*sy+z*cy;
+
 const y2=y*cx-z1*sx;
 const z2=y*sx+z1*cx;
+
 return{x:x1,y:y2,z:z2};
 }
 
@@ -386,7 +389,6 @@ return{x:x/poly.length,y:y/poly.length};
 
 function getCubeGeometry(){
 const size=Math.min(window.innerWidth,window.innerHeight)*0.16;
-const tiltX=-1.08;
 const verts=[
 [-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],
 [-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]
@@ -397,24 +399,25 @@ const edges=[
 [0,4],[1,5],[2,6],[3,7]
 ];
 const faces3D={
-BACK:[0,1,2,3],
-FRONT:[4,5,6,7],
-LEFT:[0,3,7,4],
-RIGHT:[1,2,6,5],
-TOP:[3,2,6,7],
-BOTTOM:[0,1,5,4]
+B:[0,1,2,3],
+C:[4,5,6,7],
+W:[0,3,7,4],
+E:[1,2,6,5],
+N:[3,2,6,7],
+S:[0,1,5,4]
 };
 
 const rotated=[];
 const pts=[];
 
 for(const v of verts){
-const p=rotateVertex(v[0]*size,v[1]*size,v[2]*size,state.rotY,tiltX);
+const p=rotateVertex(v[0]*size,v[1]*size,v[2]*size,state.rotY,state.rotX);
 rotated.push(p);
 pts.push(project(p.x,p.y,p.z));
 }
 
 const faces2D={
+B:[pts[0],pts[1],pts[2],pts[3]],
 C:[pts[4],pts[5],pts[6],pts[7]],
 W:[pts[0],pts[3],pts[7],pts[4]],
 E:[pts[1],pts[2],pts[6],pts[5]],
@@ -442,16 +445,15 @@ renderFaces,
 faceCenters,
 centerX,
 centerY,
-size,
-tiltX
+size
 };
 }
 
 function faceFillFor(key){
-if(key==="FRONT")return "rgba(139,0,0,0.22)";
-if(key==="TOP")return "rgba(176,24,24,0.18)";
-if(key==="RIGHT"||key==="LEFT")return "rgba(120,0,0,0.15)";
-if(key==="BOTTOM")return "rgba(35,0,0,0.12)";
+if(key==="C")return "rgba(139,0,0,0.22)";
+if(key==="N")return "rgba(176,24,24,0.18)";
+if(key==="E"||key==="W")return "rgba(120,0,0,0.15)";
+if(key==="S")return "rgba(35,0,0,0.12)";
 return "rgba(70,0,0,0.10)";
 }
 
@@ -477,7 +479,7 @@ ctx.globalAlpha=0.88*reveal;
 ctx.textAlign="center";
 ctx.textBaseline="middle";
 ctx.fillStyle="rgba(255,250,240,0.96)";
-ctx.font=`700 ${dir==="C"?"10":"9"}px system-ui,Segoe UI,Roboto,sans-serif`;
+ctx.font=`700 ${dir==="C"||dir==="B"?"9":"9"}px system-ui,Segoe UI,Roboto,sans-serif`;
 ctx.fillText(DOMAIN_MAP[dir].short,c.x,c.y);
 ctx.restore();
 }
@@ -502,7 +504,7 @@ ctx.restore();
 }
 
 if(reveal>0.001){
-for(const dir of ["W","E","N","S","C"]){
+for(const dir of ["W","E","N","S","C","B"]){
 const poly=geo.faces[dir];
 if(!poly)continue;
 drawFaceGem(poly,dir,state.activeDirection===dir,state.hoveredRegion===dir,reveal);
@@ -524,72 +526,112 @@ ctx.stroke();
 ctx.restore();
 }
 
-function dragonEventProgress(){
-if(!state.dragonEvent)return null;
-const elapsed=state.tick-state.dragonEvent.startTick;
-const duration=360;
-const p=elapsed/duration;
-if(p>=1){
-state.dragonEvent=null;
+function dragonCycleState(offset){
+if(!state.dragonLoopStarted)return null;
+
+const cycleTick=state.tick-state.dragonLoopStartTick;
+const cycleIndex=Math.floor(Math.max(0,cycleTick)/DRAGON_CYCLE_FRAMES);
+const local=(cycleTick%DRAGON_CYCLE_FRAMES)/DRAGON_CYCLE_FRAMES;
+const delayed=local-offset;
+
+if(delayed<0)return null;
+
+const entryHigh=(cycleIndex%2===0);
+let progress=clamp(delayed,0,1);
+let phase;
+let localT;
+
+if(progress<ENTRY_RATIO){
+phase="entry";
+localT=progress/ENTRY_RATIO;
+}else if(progress<ENTRY_RATIO+ORBIT_RATIO){
+phase="orbit";
+localT=(progress-ENTRY_RATIO)/ORBIT_RATIO;
+}else if(progress<1){
+phase="exit";
+localT=(progress-ENTRY_RATIO-ORBIT_RATIO)/EXIT_RATIO;
+}else{
 return null;
 }
-return p;
+
+return{
+cycleIndex,
+entryHigh,
+phase,
+t:localT
+};
 }
 
-function dragonPathPoint(geo,p,mirror,entryHigh){
+function dragonPathPoint(geo,mirror,entryHigh,phase,t){
 const cx=geo.centerX;
 const cy=geo.centerY;
-const sign=mirror?1:-1;
-const progress=easeInOutCubic(clamp(p,0,1));
-const theta=(progress*DRAGON_ORBIT_ROTATIONS*TAU)+(mirror?0:Math.PI);
-
-const rX=geo.size*2.85;
-const rY=geo.size*1.40;
-const baseX=cx+Math.cos(theta)*rX;
-const baseY=cy+Math.sin(theta)*rY*0.58;
-
-const highY=cy-geo.size*1.60;
-const lowY=cy+geo.size*1.60;
+const highY=cy-geo.size*1.95;
+const lowY=cy+geo.size*1.95;
 const startY=entryHigh?highY:lowY;
 const endY=entryHigh?lowY:highY;
-const gateMix=Math.sin(progress*Math.PI);
-const guidedY=lerp(startY,endY,progress);
-const y=lerp(guidedY,baseY,gateMix)+Math.sin(progress*TAU*2.0+sign)*geo.size*0.06;
 
-const enterX=mirror?(cx+rX+geo.size*2.1):(cx-rX-geo.size*2.1);
-const exitX=mirror?(cx-rX-geo.size*2.1):(cx+rX+geo.size*2.1);
-let x;
-if(progress<0.14){
-x=lerp(enterX,baseX,progress/0.14);
-}else if(progress>0.86){
-x=lerp(baseX,exitX,(progress-0.86)/0.14);
-}else{
-x=baseX;
+const orbitStartAngle=mirror?0:Math.PI;
+const orbitAngle=orbitStartAngle+(mirror?1:-1)*(t*DRAGON_TOTAL_ROTATIONS*TAU);
+
+const radiusX=geo.size*3.45;
+const radiusY=geo.size*1.68;
+const orbitX=cx+Math.cos(orbitAngle)*radiusX;
+const orbitY=cy+Math.sin(orbitAngle)*radiusY*0.56+Math.sin(t*TAU*2.0+(mirror?0:Math.PI))*geo.size*0.055;
+const orbitZ=Math.sin(orbitAngle+(mirror?0.45:-0.45))*1.18;
+
+const leftEntry=cx-radiusX-geo.size*1.75;
+const rightEntry=cx+radiusX+geo.size*1.75;
+const startX=mirror?rightEntry:leftEntry;
+const endX=mirror?leftEntry:rightEntry;
+
+if(phase==="entry"){
+return{
+x:lerp(startX,cx+Math.cos(orbitStartAngle)*radiusX,t),
+y:lerp(startY,cy+Math.sin(orbitStartAngle)*radiusY*0.56,t),
+z:lerp(-0.22,orbitZ,t),
+a:orbitStartAngle
+};
 }
 
-const orbitZ=Math.sin(theta+sign*0.55)*1.18;
-const z=progress<0.14?lerp(-0.25,orbitZ,progress/0.14):progress>0.86?lerp(orbitZ,0.25,(progress-0.86)/0.14):orbitZ;
-
-return{x,y,z,theta};
+if(phase==="orbit"){
+return{
+x:orbitX,
+y:orbitY,
+z:orbitZ,
+a:orbitAngle
+};
 }
 
-function buildDragonBody(geo,mirror,entryHigh){
-const p=dragonEventProgress();
-if(p===null)return null;
+return{
+x:lerp(orbitX,endX,t),
+y:lerp(orbitY,endY,t),
+z:lerp(orbitZ,0.22,t),
+a:orbitAngle
+};
+}
+
+function buildDragonBody(geo,mirror,offset){
+const cycle=dragonCycleState(offset);
+if(!cycle)return null;
 const segments=[];
 const count=44;
 for(let i=0;i<count;i++){
-const lag=i*0.0095;
-const pp=clamp(p-lag,0,1);
-const head=dragonPathPoint(geo,pp,mirror,entryHigh);
-const ripple=Math.sin((p*TAU*4.0)+(i*0.40)+(mirror?0:Math.PI))*geo.size*0.020;
-const rippleY=Math.cos((p*TAU*2.2)+(i*0.31)+(mirror?0:Math.PI))*geo.size*0.012;
-const nx=-Math.sin(head.theta);
-const ny=Math.cos(head.theta)*0.28;
+const lag=i*0.0115;
+let segT=cycle.t-lag;
+let segPhase=cycle.phase;
+
+if(segT<0){
+segT=0;
+}
+const p=dragonPathPoint(geo,mirror,cycle.entryHigh,segPhase,segT);
+const wave=Math.sin((state.tick*0.018)+(i*0.40)+(mirror?0:Math.PI))*geo.size*0.018;
+const waveY=Math.cos((state.tick*0.012)+(i*0.31)+(mirror?0:Math.PI))*geo.size*0.012;
+const nx=-Math.sin(p.a);
+const ny=Math.cos(p.a)*0.28;
 segments.push({
-x:head.x+nx*ripple,
-y:head.y+ny*ripple+rippleY,
-z:head.z
+x:p.x+nx*wave,
+y:p.y+ny*wave+waveY,
+z:p.z
 });
 }
 return segments;
@@ -773,21 +815,17 @@ drawDragonHead(points[0],points[3],baseFill,glowColor,accent);
 }
 
 function dragonsBack(geo){
-if(!state.dragonEvent)return;
-const entryHigh=state.dragonEvent.entryHigh;
-const fear=buildDragonBody(geo,false,entryHigh);
-const love=buildDragonBody(geo,true,!entryHigh);
+const fear=buildDragonBody(geo,false,0.00);
+const wisdom=buildDragonBody(geo,true,DRAGON_DELAY_RATIO);
 drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",false);
-drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
+drawDragonHalf(wisdom,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",false);
 }
 
 function dragonsFront(geo){
-if(!state.dragonEvent)return;
-const entryHigh=state.dragonEvent.entryHigh;
-const fear=buildDragonBody(geo,false,entryHigh);
-const love=buildDragonBody(geo,true,!entryHigh);
+const fear=buildDragonBody(geo,false,0.00);
+const wisdom=buildDragonBody(geo,true,DRAGON_DELAY_RATIO);
 drawDragonHalf(fear,"rgba(128,18,18,0.92)","rgba(210,62,40,0.52)","rgba(255,132,72,0.72)",true);
-drawDragonHalf(love,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
+drawDragonHalf(wisdom,"rgba(186,132,30,0.92)","rgba(255,210,110,0.50)","rgba(255,244,188,0.76)",true);
 }
 
 function fireworks(){
@@ -842,7 +880,7 @@ fireworks();
 }
 
 function getRegionAt(x,y){
-for(const key of ["C","W","E","N","S"]){
+for(const key of ["C","W","E","N","S","B"]){
 const poly=state.faceZones[key];
 if(poly&&pointInPoly(x,y,poly))return key;
 }
@@ -853,36 +891,40 @@ function updateInteractionFromPoint(x,y){
 state.hoveredRegion=getRegionAt(x,y);
 }
 
-function pointerAngleFromCenter(x,y){
-const geo=state.cube;
-if(!geo)return 0;
-return Math.atan2(y-geo.centerY,x-geo.centerX);
-}
-
-function engageDial(x,y){
+function engageDrag(x,y){
 state.isDragging=true;
-state.lastPointerAngle=pointerAngleFromCenter(x,y);
+state.lastPointer.x=x;
+state.lastPointer.y=y;
+state.dragDistance=0;
+state.dragStartHit=getRegionAt(x,y);
 if(state.activeLayer!==2)setLayer(2);
-if(!state.hasTriggeredDragons)startDragonEvent();
+if(state.dragStartHit&&!state.dragonLoopStarted)startDragonLoop();
 }
 
-function moveDial(x,y){
+function moveDrag(x,y){
 if(!state.isDragging)return;
-const a=pointerAngleFromCenter(x,y);
-let delta=wrapPi(a-state.lastPointerAngle);
-state.lastPointerAngle=a;
-state.rotVel+=delta*0.32;
+const dx=x-state.lastPointer.x;
+const dy=y-state.lastPointer.y;
+state.lastPointer.x=x;
+state.lastPointer.y=y;
+state.dragDistance+=Math.abs(dx)+Math.abs(dy);
+
+state.rotVelY+=dx*0.0009;
+state.rotVelX+=dy*0.0009;
 }
 
-function releaseDial(){
-state.isDragging=false;
-}
-
-function activateAtPoint(x,y){
-updateInteractionFromPoint(x,y);
+function releaseDrag(x,y){
 const hit=getRegionAt(x,y);
-if(hit){
+const wasTap=state.dragDistance<10;
+state.isDragging=false;
+state.dragStartHit=null;
+
+if(wasTap&&hit){
+if(hit==="B"){
+selectDirection("B");
+}else{
 selectDirection(hit);
+}
 }
 }
 
@@ -891,7 +933,7 @@ const p=getPointerPos(e);
 state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
-moveDial(p.x,p.y);
+moveDrag(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("pointerdown",e=>{
@@ -901,7 +943,7 @@ state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
 const hit=getRegionAt(p.x,p.y);
-if(hit)engageDial(p.x,p.y);
+if(hit)engageDrag(p.x,p.y);
 });
 
 canvas.addEventListener("pointerup",e=>{
@@ -909,12 +951,7 @@ const p=getPointerPos(e);
 state.pointer.down=false;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
-if(state.isDragging){
-releaseDial();
-activateAtPoint(p.x,p.y);
-}else{
-activateAtPoint(p.x,p.y);
-}
+if(state.isDragging)releaseDrag(p.x,p.y);
 });
 
 canvas.addEventListener("touchstart",e=>{
@@ -926,7 +963,7 @@ state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
 const hit=getRegionAt(p.x,p.y);
-if(hit)engageDial(p.x,p.y);
+if(hit)engageDrag(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("touchmove",e=>{
@@ -936,7 +973,7 @@ const p=getTouchPos(touch);
 state.pointer.x=p.x;
 state.pointer.y=p.y;
 updateInteractionFromPoint(p.x,p.y);
-moveDial(p.x,p.y);
+moveDrag(p.x,p.y);
 },{passive:true});
 
 canvas.addEventListener("touchend",e=>{
@@ -946,27 +983,33 @@ const p=getTouchPos(touch);
 state.pointer.down=false;
 state.pointer.x=p.x;
 state.pointer.y=p.y;
-if(state.isDragging){
-releaseDial();
-activateAtPoint(p.x,p.y);
-}else{
-activateAtPoint(p.x,p.y);
-}
+if(state.isDragging)releaseDrag(p.x,p.y);
 e.preventDefault();
 },{passive:false});
 
 canvas.addEventListener("pointerleave",()=>{
 state.pointer.down=false;
 state.hoveredRegion=null;
-releaseDial();
+state.isDragging=false;
+state.dragStartHit=null;
 });
 
 function animateState(){
 state.tick++;
-state.rotY+=state.rotVel;
-state.rotVel*=state.isDragging?0.88:0.94;
-state.rotVel=clamp(state.rotVel,-0.08,0.08);
-if(!state.isDragging)state.rotY+=state.activeLayer===1?0.0016:0.0008;
+
+state.rotY+=state.rotVelY;
+state.rotX+=state.rotVelX;
+
+state.rotVelY*=state.isDragging?0.90:0.94;
+state.rotVelX*=state.isDragging?0.90:0.94;
+
+state.rotVelY=clamp(state.rotVelY,-0.08,0.08);
+state.rotVelX=clamp(state.rotVelX,-0.05,0.05);
+state.rotX=clamp(state.rotX,-1.10,1.10);
+
+if(!state.isDragging){
+state.rotY+=state.activeLayer===1?0.0016:0.0008;
+}
 
 const targetReveal=state.activeLayer===2?1:0;
 state.compassReveal=lerp(state.compassReveal,targetReveal,0.08);

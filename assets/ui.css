@@ -86,6 +86,7 @@ margin:0;
 
 #navigatorLayer,
 #layerToggle,
+#layerToggle button,
 [data-layer]{
 display:none !important;
 visibility:hidden !important;
@@ -149,7 +150,7 @@ z-index:14;
 pointer-events:none;
 background:rgba(0,0,0,0);
 opacity:0;
-transition:opacity .18s ease, background-color .18s ease;
+transition:opacity .18s ease,background-color .18s ease;
 }
 
 .route-fade.is-active{

@@ -83,6 +83,10 @@ function clamp(v,min,max){
 return Math.max(min,Math.min(max,v));
 }
 
+function lerp(a,b,t){
+return a+(b-a)*t;
+}
+
 function dispatch(name,detail){
 document.dispatchEvent(new CustomEvent(name,{detail}));
 }
@@ -90,86 +94,53 @@ document.dispatchEvent(new CustomEvent(name,{detail}));
 /* ACTION CONSEQUENCE SYSTEM */
 
 function registerAction(){
-
 state.actionCounter++;
-
-state.moonPhaseLeft=(state.moonPhaseLeft)%4;
-state.moonPhaseRight=(state.moonPhaseRight)%4;
-
+state.moonPhaseLeft=state.moonPhaseLeft%4;
+state.moonPhaseRight=state.moonPhaseRight%4;
 }
 
 /* MOON TAP */
 
 function tapMoonLeft(){
-
 state.moonPhaseLeft=(state.moonPhaseLeft+1)%4;
-
 state.dragonLeftActive=true;
-
 registerAction();
-
 }
 
 function tapMoonRight(){
-
 state.moonPhaseRight=(state.moonPhaseRight+1)%4;
-
 state.dragonRightActive=true;
-
 registerAction();
-
 }
 
 /* COMPASS STATE MACHINE */
 
 function summonCompass(){
-
 if(state.compassState==="REST"){
-
 state.compassState="RISING";
-
 }
-
 }
 
 function lowerCompass(){
-
 if(state.compassState==="ACTIVE"){
-
 state.compassState="SETTING";
-
 }
-
 }
 
 function updateCompass(){
-
 if(state.compassState==="RISING"){
-
 state.compassLift+=0.05;
-
 if(state.compassLift>=1){
-
 state.compassLift=1;
 state.compassState="ACTIVE";
-
 }
-
-}
-
-else if(state.compassState==="SETTING"){
-
+}else if(state.compassState==="SETTING"){
 state.compassLift-=0.05;
-
 if(state.compassLift<=0){
-
 state.compassLift=0;
 state.compassState="REST";
-
 }
-
 }
-
 }
 
 /* RESIZE */
@@ -202,11 +173,9 @@ SHOWROOM.refreshTargets(state.showroom,w,h);
 /* INTERACTION */
 
 function engageDrag(x,y){
-
 state.dragging=true;
 state.lastX=x;
 state.lastY=y;
-
 }
 
 function moveDrag(x,y){
@@ -221,13 +190,10 @@ state.lastY=y;
 
 state.rotVelY+=dx*0.001;
 state.rotVelX+=dy*0.001;
-
 }
 
-function releaseDrag(x,y){
-
+function releaseDrag(){
 state.dragging=false;
-
 }
 
 /* ANIMATE */
@@ -247,7 +213,6 @@ state.rotVelX*=0.97;
 CAMERA.update(state.camera,0.06);
 
 BG.syncCelestials(state.background,ENV,state.tick);
-
 }
 
 /* DRAW */
@@ -262,45 +227,34 @@ const preset=CAMERA.getBlendedPreset(state.camera);
 ctx.clearRect(0,0,w,h);
 
 /* SKY */
-
 BG.drawSky(ctx,w,h,state.tick,preset,state.background);
 BG.drawSun(ctx,w,h,state.background);
 BG.drawMoon(ctx,w,h,state.background);
 
 /* CLOUDS */
-
 BG.drawClouds(ctx,state.background,state.tick,null);
 
 /* LANTERNS */
-
 BG.drawLanterns(ctx,state.background,state.tick,1);
 
 /* MOUNTAINS */
-
 BG.drawMountains(ctx,w,h,state.background,preset);
 
 /* WATER */
-
 BG.drawWater(ctx,w,h,state.tick,preset,state.background,null);
 
 /* HARBOR */
-
 if(HARBOR)HARBOR.draw(ctx,w,h,state.tick);
 
 /* COMPASS POSITION */
-
 const liftY=lerp(
-
 h*COMPASS_REST_Y_FACTOR,
 h*COMPASS_ACTIVE_Y_FACTOR,
 state.compassLift
-
 );
 
 /* COMPASS */
-
 const geo=COMPASS.getCubeGeometry({
-
 width:w,
 height:h,
 preset:preset,
@@ -308,7 +262,6 @@ rotX:state.rotX,
 rotY:state.rotY,
 morphPulse:0,
 cameraRequested:state.camera.requested
-
 });
 
 geo.centerY=liftY;
@@ -317,25 +270,18 @@ state.cube=geo;
 state.faceZones=geo.faces;
 
 /* DRAGONS */
-
 const dragonBundles=DRAGONS.getDragonBundles(geo,state);
 
 if(state.dragonLeftActive||state.dragonRightActive){
-
 DRAGONS.drawBack(ctx,geo,dragonBundles,state.tick);
-
 }
 
 /* COMPASS DRAW */
-
 COMPASS.drawCube(ctx,geo,state.tick,()=>null,null);
 
 /* FRONT DRAGONS */
-
 if(state.dragonLeftActive||state.dragonRightActive){
-
 DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,"en",state);
-
 }
 
 }
@@ -343,54 +289,32 @@ DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,"en",state);
 /* FRAME */
 
 function frame(){
-
 animate();
 draw();
-
 requestAnimationFrame(frame);
-
 }
 
 /* INPUT */
 
 INPUT.bind(canvas,{
-
 onPointerMove:function(p){
-
 moveDrag(p.x,p.y);
-
 },
-
 onPointerDown:function(p){
-
 engageDrag(p.x,p.y);
-
 },
-
-onPointerUp:function(p){
-
-releaseDrag(p.x,p.y);
-
+onPointerUp:function(){
+releaseDrag();
 },
-
 onTouchStart:function(p){
-
 engageDrag(p.x,p.y);
-
 },
-
 onTouchMove:function(p){
-
 moveDrag(p.x,p.y);
-
 },
-
-onTouchEnd:function(p){
-
-releaseDrag(p.x,p.y);
-
+onTouchEnd:function(){
+releaseDrag();
 }
-
 });
 
 /* BOOT */

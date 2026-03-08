@@ -1,590 +1,399 @@
-(function(){
-"use strict";
-
-const canvas=document.getElementById("scene");
-if(!canvas)return;
-
-const ctx=canvas.getContext("2d");
-if(!ctx)return;
-
-const CAMERA=window.OPENWORLD_CAMERA;
-const BG=window.OPENWORLD_BACKGROUND_RENDERER;
-const COMPASS=window.OPENWORLD_COMPASS_RENDERER;
-const DRAGONS=window.OPENWORLD_DRAGON_RENDERER;
-const SHOWROOM=window.OPENWORLD_SHOWROOM_RENDERER;
-const FX=window.OPENWORLD_SCENE_FX;
-const INPUT=window.OPENWORLD_SCENE_INPUT;
-
-const KERNEL=window.WORLD_KERNEL||null;
-const REGIONS=window.ISLAND_REGIONS||null;
-const ROUTER=window.REGION_ROUTER||null;
-const ENV=window.ENVIRONMENT_RUNTIME||null;
-const HARBOR=window.HARBOR_RENDERER||null;
-
-const NAV_MATH=window.OPENWORLD_NAVIGATION_MATH||null;
-const INSTRUMENTS_RUNTIME=window.OPENWORLD_INSTRUMENTS_RUNTIME||null;
-
-if(!CAMERA||!BG||!COMPASS||!DRAGONS||!SHOWROOM||!FX||!INPUT){
-console.error("OPENWORLD_SCENE_v1: missing required scene modules.");
-return;
-}
-
-const LOCAL_FACE_FALLBACK=Object.freeze({
-N:{label:"NORTH",short:"N",route:null,type:"locked"},
-E:{label:"EAST",short:"E",route:"/products/",type:"route"},
-S:{label:"SOUTH",short:"S",route:"/laws/",type:"route"},
-W:{label:"WEST",short:"W",route:"/gauges/",type:"route"},
-C:{label:"CORE",short:"CORE",route:null,type:"locked"},
-M:{label:"MORPH",short:"MORPH",route:null,type:"morph"}
-});
-
-function clamp(v,min,max){
-return Math.max(min,Math.min(max,v));
-}
-
-function dispatch(name,detail){
-document.dispatchEvent(new CustomEvent(name,{detail}));
-}
-
-function getSceneLanguage(){
-try{
-const qs=new URLSearchParams(window.location.search||"");
-const q=qs.get("lang");
-const ls=window.localStorage.getItem("gd_lang");
-const lang=(q||ls||document.documentElement.lang||"en").toLowerCase();
-if(lang.startsWith("zh"))return"zh";
-if(lang.startsWith("es"))return"es";
-return"en";
-}catch(_e){
-return"en";
-}
-}
-
-function normalizeCurrentPath(){
-try{
-const p=String(window.location.pathname||"/");
-return p.endsWith("/")?p:(p+"/");
-}catch(_e){
-return"/";
-}
-}
-
-function currentRegionContext(regionIdHint){
-if(!ROUTER||typeof ROUTER.getRegionContext!=="function")return null;
-return ROUTER.getRegionContext(regionIdHint||normalizeCurrentPath());
-}
-
-function currentCompassMap(regionId){
-if(!ROUTER||typeof ROUTER.compassTargetMap!=="function")return null;
-return ROUTER.compassTargetMap(regionId);
-}
-
-function resolveFaceMeta(face){
-const fallback=LOCAL_FACE_FALLBACK[face]||null;
-const map=currentCompassMap(state.regionId);
-if(!map||!REGIONS||typeof REGIONS.byId!=="function"){
-return fallback;
-}
-
-if(face==="M"){
-return fallback;
-}
-
-const targetId=map[face]||null;
-if(!targetId){
-return fallback;
-}
-
-const region=REGIONS.byId(targetId);
-if(!region){
-return fallback;
-}
-
-const sameRegion=region.id===state.regionId;
-const sameRoute=region.route===normalizeCurrentPath();
-const route=sameRegion||sameRoute?null:region.route;
-
-if(face==="N")return{label:"NORTH",short:"N",route, type:route?"route":"locked"};
-if(face==="E")return{label:"EAST",short:"E",route, type:route?"route":"locked"};
-if(face==="S")return{label:"SOUTH",short:"S",route, type:route?"route":"locked"};
-if(face==="W")return{label:"WEST",short:"W",route, type:route?"route":"locked"};
-if(face==="C")return{label:"CORE",short:"CORE",route, type:route?"route":"locked"};
-
-return fallback;
-}
-
-const state={
-tick:0,
-rotX:-0.3,
-rotY:0.24,
-rotVelX:0,
-rotVelY:0,
-dragging:false,
-lastX:0,
-lastY:0,
-hoverFace:null,
-faceZones:{},
-cube:null,
-dragonLoop:true,
-dragonStart:0,
-morphPulse:0,
-navObjectState:"expanded_compass",
-navigateTo:null,
-navigateDelay:0,
-regionId:(document.body&&document.body.dataset&&document.body.dataset.regionId)||"harbor_core",
-regionContext:null,
-camera:CAMERA.createState("fixed_harbor"),
-background:BG.createState(),
-showroom:SHOWROOM.createState(),
-fx:FX.createState(),
-motion:{
-dragons:{
-orbitCenter:{x:0,y:520,z:420},
-orbitRadius:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitRadius)||420,
-orbitSpeed:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitSpeed)||0.0019
-}
-},
-interactionState:{
-helm_input:{
-commanded_heading_deg:0,
-throttle_class:"cruise",
-steering_delta:0,
-helm_mode:"manual"
-},
-course_selection:{
-selected_course_deg:0,
-selection_source:"default",
-lock_state:"unlocked"
-},
-target_selection:{
-target_type:"route",
-target_id:"harbor_core",
-target_lock_state:"locked"
-},
-instrument_mode:"free_nav"
-},
-navigationRuntime:{
-mathOutput:null,
-instrumentState:null,
-instrumentSurfaces:null
-}
-};
-
-function resize(){
-const dpr=Math.max(1,window.devicePixelRatio||1);
-const w=window.innerWidth;
-const h=window.innerHeight;
-
-canvas.style.width=w+"px";
-canvas.style.height=h+"px";
-canvas.width=Math.floor(w*dpr);
-canvas.height=Math.floor(h*dpr);
-
-ctx.setTransform(1,0,0,1,0,0);
-ctx.scale(dpr,dpr);
-
-const preset=CAMERA.getPreset(state.camera.mode);
-BG.initLanterns(state.background,w,h);
-BG.initClouds(state.background,w,h);
-BG.initMountains(state.background,w,h,preset);
-SHOWROOM.refreshTargets(state.showroom,w,h);
-}
-
-function getFaceAt(x,y){
-if(state.showroom.mode==="show")return"M";
-for(const key of["C","W","E","N","S","M"]){
-const poly=state.faceZones[key];
-if(poly&&INPUT.pointInPoly(x,y,poly))return key;
-}
-return null;
-}
-
-function getLockedLabel(face){
-const meta=resolveFaceMeta(face);
-return meta?meta.label+" LOCKED":"LOCKED";
-}
-
-function queueNavigation(route,face){
-if(!route)return;
-state.navigateTo=route;
-state.navigateDelay=12;
-state.navObjectState="compressed_navigation_stick";
-CAMERA.blendTo(state.camera,"travel_projection");
-FX.triggerOverlay(state.fx,1);
-dispatch("compass:route",{face,route});
-}
-
-function engageDrag(x,y){
-state.dragging=true;
-state.lastX=x;
-state.lastY=y;
-getFaceAt(x,y);
-}
-
-function moveDrag(x,y){
-state.hoverFace=getFaceAt(x,y);
-if(!state.dragging)return;
-if(
-state.showroom.mode==="show"||
-state.showroom.mode==="swirl"||
-state.showroom.mode==="shatter"
-){
-return;
-}
-
-const dx=x-state.lastX;
-const dy=y-state.lastY;
-
-state.lastX=x;
-state.lastY=y;
-
-if(state.navObjectState==="compressed_navigation_stick"){
-state.rotVelY+=dx*0.0004;
-state.rotVelX+=dy*0.0004;
-return;
-}
-
-state.rotVelY+=dx*0.001;
-state.rotVelX+=dy*0.001;
-}
-
-function handleFaceAction(face){
-const meta=resolveFaceMeta(face);
-if(!meta)return;
-
-if(face==="M"||meta.type==="morph"){
-if(state.showroom.mode==="show"){
-SHOWROOM.close(state.showroom,dispatch);
-}else if(state.cube){
-SHOWROOM.start(state.showroom,state.cube,dispatch,function(x,y,count,sizeBase){
-FX.spawnFirework(state.fx,x,y,count,sizeBase);
-});
-}
-state.morphPulse=1;
-return;
-}
-
-if(!meta.route){
-FX.triggerLocked(state.fx,face);
-dispatch("compass:locked",{face});
-if(state.cube&&state.cube.faceCenters[face]){
-FX.spawnFirework(
-state.fx,
-state.cube.faceCenters[face].x,
-state.cube.faceCenters[face].y,
-14,
-1.5
-);
-}
-return;
-}
-
-if(state.cube&&state.cube.faceCenters[face]){
-FX.spawnFirework(
-state.fx,
-state.cube.faceCenters[face].x,
-state.cube.faceCenters[face].y,
-16,
-1.7
-);
-}
-
-queueNavigation(meta.route,face);
-}
-
-function releaseDrag(x,y){
-const hit=getFaceAt(x,y);
-state.dragging=false;
-if(hit)handleFaceAction(hit);
-}
-
-function syncRegionContext(){
-const ctxValue=currentRegionContext();
-if(ctxValue&&ctxValue.regionId){
-state.regionContext=ctxValue;
-state.regionId=ctxValue.regionId;
-}
-}
-
-function syncNavigationRuntime(){
-if(!NAV_MATH||!INSTRUMENTS_RUNTIME||!ROUTER||!REGIONS)return;
-
-const region=REGIONS.byId?REGIONS.byId(state.regionId):null;
-const envSnapshot=ENV&&typeof ENV.getSnapshot==="function"?ENV.getSnapshot():null;
-const compassMap=ROUTER&&typeof ROUTER.compassTargetMap==="function"
-?ROUTER.compassTargetMap(state.regionId)
-:null;
-
-const northTargetId=compassMap&&compassMap.N?compassMap.N:state.regionId;
-const targetRegion=REGIONS.byId?REGIONS.byId(northTargetId):null;
-
-state.interactionState.target_selection.target_id=northTargetId||state.regionId;
-state.interactionState.instrument_mode=
-state.navObjectState==="compressed_navigation_stick"?"route_nav":"free_nav";
-
-const mathInput={
-world_state:{
-origin_ref:(KERNEL&&KERNEL.mapId)||"NINE_SUMMITS_ISLAND_MAP_v1",
-region_id:state.regionId,
-vessel_position:{x:0,y:0,z:0},
-vessel_track_ref:{
-heading_ref:state.rotY,
-track_ref:state.rotY,
-frame_id:"world_frame"
-},
-route_graph:{
-nodes:REGIONS&&REGIONS.list
-?REGIONS.list.map(function(r){
-return{id:r.id,route:r.route,anchor:r.anchor};
-})
-:[],
-edges:region?[].concat(region.ingress||[],region.egress||[]):[],
-traversal_rules:(KERNEL&&KERNEL.traversal)||{}
-},
-active_route:targetRegion
-?{
-route_id:targetRegion.id,
-ordered_waypoints:[targetRegion.id],
-route_constraints:{}
-}
-:null,
-active_waypoint:targetRegion
-?{
-waypoint_id:targetRegion.id,
-coordinate:targetRegion.anchor,
-waypoint_class:targetRegion.type
-}
-:null,
-neighbor_waypoints:state.regionContext&&state.regionContext.neighbors
-?state.regionContext.neighbors.map(function(n){
-return{
-waypoint_id:n.id,
-coordinate:n.anchor,
-admissibility_state:"admissible"
-};
-})
-:[]
-},
-environment_state:{
-timestamp:Date.now(),
-time_of_day_class:"dusk",
-wind:{
-direction_deg:0,
-speed:envSnapshot&&envSnapshot.weather?envSnapshot.weather.wind||0:0,
-frame_id:"world_frame"
-},
-current:{
-direction_deg:0,
-speed:0,
-frame_id:"world_frame"
-},
-celestial_state:{
-sun:envSnapshot?envSnapshot.sun:null,
-moon:envSnapshot?envSnapshot.moon:null,
-stars:[],
-observer_frame:"world_frame"
-},
-visibility_class:"clear"
-},
-interaction_state:state.interactionState,
-derivation_request:"full"
-};
-
-const mathOutput=NAV_MATH.compute(mathInput);
-const instrumentState=INSTRUMENTS_RUNTIME.buildState(mathOutput,state.interactionState);
-const instrumentSurfaces=INSTRUMENTS_RUNTIME.buildSurfaces(instrumentState);
-
-state.navigationRuntime.mathOutput=mathOutput;
-state.navigationRuntime.instrumentState=instrumentState;
-state.navigationRuntime.instrumentSurfaces=instrumentSurfaces;
-}
-
-function updateCamera(){
-CAMERA.update(state.camera,0.06);
-}
-
-function updateShowroom(){
-SHOWROOM.update(state.showroom,function(){
-state.navObjectState="expanded_compass";
-CAMERA.blendTo(state.camera,"fixed_harbor");
-});
-}
-
-function animateState(){
-state.tick++;
-syncRegionContext();
-BG.syncCelestials(state.background,ENV,state.tick);
-syncNavigationRuntime();
-updateCamera();
-
-state.rotY+=state.rotVelY;
-state.rotX+=state.rotVelX;
-state.rotVelY*=state.dragging?0.91:0.972;
-state.rotVelX*=state.dragging?0.91:0.972;
-state.rotVelY=clamp(state.rotVelY,-0.14,0.14);
-state.rotVelX=clamp(state.rotVelX,-0.14,0.14);
-
-if(
-!state.dragging&&
-state.showroom.mode==="idle"&&
-state.navObjectState==="expanded_compass"
-){
-state.rotY+=0.0008;
-}
-
-state.morphPulse*=0.94;
-FX.decay(state.fx);
-updateShowroom();
-
-if(state.navigateTo){
-state.navigateDelay--;
-FX.triggerOverlay(state.fx,0.35);
-if(state.navigateDelay<=0){
-window.location.href=state.navigateTo;
-}
-}
-}
-
-function drawSceneFrame(){
-const w=window.innerWidth;
-const h=window.innerHeight;
-const preset=CAMERA.getBlendedPreset(state.camera);
-
-ctx.clearRect(0,0,w,h);
-
-BG.drawSky(ctx,w,h,state.tick,preset,state.background);
-BG.drawSun(ctx,w,h,state.background);
-BG.drawMoon(ctx,w,h,state.background);
-
-const envSnapshot=ENV&&typeof ENV.getSnapshot==="function"?ENV.getSnapshot():null;
-
-BG.drawClouds(ctx,state.background,state.tick,envSnapshot);
-BG.drawLanterns(
-ctx,
-state.background,
-state.tick,
-state.hoverFace==="N"||state.camera.requested==="travel_projection"?1.18:1
-);
-BG.drawMountains(ctx,w,h,state.background,preset);
-
-const geo=COMPASS.getCubeGeometry({
-width:w,
-height:h,
-preset:preset,
-rotX:state.rotX,
-rotY:state.rotY,
-morphPulse:state.morphPulse,
-cameraRequested:state.camera.requested
-});
-
-state.cube=geo;
-state.faceZones=geo.faces;
-
-const dragonBundles=DRAGONS.getDragonBundles(geo,state);
-
-DRAGONS.drawBack(ctx,geo,dragonBundles,state.tick,state);
-
-if(
-state.showroom.mode==="idle"||
-state.showroom.mode==="return"||
-state.showroom.mode==="shatter"
-){
-if(
-state.navObjectState==="compressed_navigation_stick"&&
-state.camera.requested!=="fixed_harbor"
-){
-COMPASS.drawNavigationStick(ctx,geo);
-}else{
-COMPASS.drawCube(
-ctx,
-geo,
-state.tick,
-function(face){
-return resolveFaceMeta(face);
-},
-state.hoverFace
-);
-}
-}
-
-DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,getSceneLanguage(),state);
-
-try{
-if(HARBOR&&typeof HARBOR.draw==="function"){
-HARBOR.draw(ctx,w,h,state.tick);
-}
-}catch(err){
-console.warn("Harbor renderer failed",err);
-}
-
-BG.drawWater(
-ctx,
-w,
-h,
-state.tick,
-preset,
-state.background,
-envSnapshot
-);
-
-DRAGONS.drawDragonReflections(ctx,geo,preset,dragonBundles,state.tick);
-
-SHOWROOM.drawFragments(ctx,state.showroom,state.tick);
-SHOWROOM.drawCompass(ctx,state.showroom);
-
-FX.drawFireworks(ctx,state.fx);
-FX.drawLockedOverlay(ctx,state.fx,getLockedLabel);
-FX.drawNavigationOverlay(ctx,state.fx);
-}
-
-function frame(){
-animateState();
-drawSceneFrame();
-requestAnimationFrame(frame);
-}
-
-window.addEventListener("resize",resize,{passive:true});
-window.addEventListener("orientationchange",resize,{passive:true});
-
-INPUT.bind(canvas,{
-onPointerMove:function(p){
-moveDrag(p.x,p.y);
-},
-onPointerDown:function(p,e){
-engageDrag(p.x,p.y);
-dispatch("environment:tap",{x:e.clientX,y:e.clientY});
-},
-onPointerUp:function(p){
-releaseDrag(p.x,p.y);
-},
-onTouchStart:function(p,touch){
-engageDrag(p.x,p.y);
-dispatch("environment:tap",{x:touch.clientX,y:touch.clientY});
-},
-onTouchMove:function(p){
-moveDrag(p.x,p.y);
-},
-onTouchEnd:function(p){
-releaseDrag(p.x,p.y);
-},
-onPointerLeave:function(){
-state.dragging=false;
-state.hoverFace=null;
-},
-onMorphEvent:function(e){
-if(e&&e.detail&&e.detail.mode==="return"){
-SHOWROOM.close(state.showroom,dispatch);
-}
-},
-onSceneCamera:function(e){
-const mode=e&&e.detail&&e.detail.mode;
-if(mode)CAMERA.blendTo(state.camera,mode);
-},
-onSceneCameraCycle:function(){
-CAMERA.cycle(state.camera);
-}
-});
-
-resize();
-frame();
-})();
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Harbor Core · Nine Summits Island</title>
+  <meta name="description" content="Harbor Core entry region for Nine Summits Island.">
+  <style>
+    :root{
+      --bg-top:#12050a;
+      --bg-mid:#571410;
+      --bg-bot:#1a0606;
+      --panel-bg:rgba(12,10,16,0.58);
+      --panel-brd:rgba(255,215,150,0.22);
+      --text:#fff4e6;
+      --muted:rgba(255,244,230,0.72);
+      --gold:rgba(255,214,140,0.96);
+      --gold-soft:rgba(255,214,140,0.18);
+      --shadow:0 10px 30px rgba(0,0,0,0.28);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;height:100%;background:#09060a;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    body{overflow:hidden}
+
+    .page{
+      position:relative;
+      width:100%;
+      height:100%;
+      background:
+        radial-gradient(circle at 80% 14%, rgba(255,228,176,0.08), transparent 18%),
+        linear-gradient(180deg,var(--bg-top) 0%, var(--bg-mid) 48%, var(--bg-bot) 100%);
+    }
+
+    #scene{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      touch-action:none;
+    }
+
+    .hud{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:10;
+    }
+
+    .topbar{
+      position:absolute;
+      top:max(14px, env(safe-area-inset-top));
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--panel-bg);
+      border:1px solid var(--panel-brd);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      pointer-events:auto;
+    }
+
+    .topbar .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:78px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,215,150,0.16);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      text-decoration:none;
+    }
+
+    .topbar .pill.active{
+      color:#1c1006;
+      background:linear-gradient(180deg, rgba(255,231,182,0.98), rgba(222,176,86,0.94));
+      border-color:rgba(255,232,188,0.72);
+      box-shadow:0 0 18px rgba(255,216,120,0.22);
+    }
+
+    .panel{
+      position:absolute;
+      left:16px;
+      bottom:max(16px, env(safe-area-inset-bottom));
+      width:min(360px, calc(100vw - 32px));
+      padding:16px 16px 14px;
+      border-radius:var(--radius);
+      background:var(--panel-bg);
+      border:1px solid var(--panel-brd);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      pointer-events:auto;
+    }
+
+    .eyebrow{
+      margin:0 0 6px 0;
+      color:var(--gold);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .title{
+      margin:0;
+      font-size:24px;
+      line-height:1.05;
+      font-weight:800;
+    }
+
+    .desc{
+      margin:10px 0 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .meta{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+
+    .metaCard{
+      padding:10px 11px;
+      border-radius:14px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,215,150,0.12);
+    }
+
+    .metaCard .k{
+      display:block;
+      color:rgba(255,228,188,0.68);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin-bottom:4px;
+    }
+
+    .metaCard .v{
+      display:block;
+      color:var(--text);
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:0;
+      outline:0;
+      cursor:pointer;
+      pointer-events:auto;
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.04em;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform .16s ease, opacity .16s ease, background .16s ease;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      color:#1e1208;
+      background:linear-gradient(180deg, rgba(255,232,188,0.98), rgba(222,176,86,0.94));
+      box-shadow:0 0 18px rgba(255,216,120,0.20);
+    }
+    .btn.ghost{
+      color:var(--text);
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,215,150,0.16);
+    }
+
+    .legend{
+      position:absolute;
+      right:16px;
+      bottom:max(16px, env(safe-area-inset-bottom));
+      width:min(260px, calc(100vw - 32px));
+      padding:12px 12px 10px;
+      border-radius:16px;
+      background:var(--panel-bg);
+      border:1px solid var(--panel-brd);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      pointer-events:auto;
+    }
+
+    .legend h2{
+      margin:0 0 8px 0;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .legend ul{
+      margin:0;
+      padding-left:16px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .legend li+li{margin-top:4px}
+
+    .regionBadge{
+      position:absolute;
+      top:calc(max(14px, env(safe-area-inset-top)) + 54px);
+      right:16px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(12,10,16,0.52);
+      border:1px solid rgba(255,215,150,0.18);
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      box-shadow:var(--shadow);
+      pointer-events:auto;
+    }
+
+    @media (max-width: 820px){
+      .legend{display:none}
+      .panel{width:min(92vw, 380px)}
+    }
+
+    @media (max-width: 560px){
+      .topbar{
+        width:calc(100vw - 24px);
+        justify-content:center;
+        gap:8px;
+        flex-wrap:wrap;
+        border-radius:18px;
+      }
+      .topbar .pill{
+        min-width:unset;
+        padding:0 10px;
+      }
+      .panel{
+        left:12px;
+        right:12px;
+        width:auto;
+        bottom:max(12px, env(safe-area-inset-bottom));
+      }
+      .regionBadge{
+        right:12px;
+      }
+    }
+  </style>
+</head>
+<body data-region-id="harbor_core">
+  <div class="page">
+    <canvas id="scene" aria-label="Harbor Core scene"></canvas>
+
+    <div class="hud">
+      <div class="topbar">
+        <a class="pill active" href="/harbor/">Harbor</a>
+        <a class="pill" href="/gratitude/">Gratitude</a>
+        <a class="pill" href="/generosity/">Generosity</a>
+        <a class="pill" href="/dragon-corridor/">Dragons</a>
+      </div>
+
+      <div class="regionBadge" id="regionBadge">Harbor Core</div>
+
+      <section class="panel" aria-label="Region overview">
+        <p class="eyebrow">Region One</p>
+        <h1 class="title">Harbor Core</h1>
+        <p class="desc">
+          The harbor is the entry basin of Nine Summits Island. This page is the
+          live gateway sector: compass, dragons, lantern field, dusk sky, and
+          return routing all anchor here.
+        </p>
+
+        <div class="meta">
+          <div class="metaCard">
+            <span class="k">Biome</span>
+            <span class="v" id="biomeValue">Harbor Dusk</span>
+          </div>
+          <div class="metaCard">
+            <span class="k">Next Region</span>
+            <span class="v">Gratitude</span>
+          </div>
+          <div class="metaCard">
+            <span class="k">World Grid</span>
+            <span class="v">16 × 16</span>
+          </div>
+          <div class="metaCard">
+            <span class="k">Mode</span>
+            <span class="v">Gateway Sector</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn primary" href="/gratitude/">Enter Gratitude</a>
+          <button class="btn ghost" id="advanceTimeBtn" type="button">Advance Time</button>
+        </div>
+      </section>
+
+      <aside class="legend" aria-label="Region controls">
+        <h2>Controls</h2>
+        <ul>
+          <li>Drag the cube to rotate the gateway.</li>
+          <li>Tap cube faces to trigger region actions.</li>
+          <li>Tap the button to advance celestial time.</li>
+          <li>The harbor remains the global return anchor.</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <script src="/world/world_kernel.js"></script>
+  <script src="/world/environment_runtime.js"></script>
+  <script src="/world/island_regions.js"></script>
+  <script src="/world/region_router.js"></script>
+  <script src="/world/harbor_renderer.js"></script>
+  <script src="/world/navigation_math.js"></script>
+  <script src="/world/instruments_runtime.js"></script>
+
+  <script src="/assets/openworld_camera.js"></script>
+  <script src="/assets/openworld_background_renderer.js"></script>
+  <script src="/assets/openworld_compass_renderer.js"></script>
+  <script src="/assets/openworld_dragon_renderer.js"></script>
+  <script src="/assets/openworld_showroom_renderer.js"></script>
+  <script src="/assets/openworld_scene_fx.js"></script>
+  <script src="/assets/openworld_scene_input.js"></script>
+
+  <script src="/variant/scene.js"></script>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var regionRouter=window.REGION_ROUTER;
+      var env=window.ENVIRONMENT_RUNTIME;
+      var body=document.body;
+
+      if(regionRouter){
+        var ctx=regionRouter.getRegionContext("/harbor/");
+        if(ctx){
+          if(body){
+            body.dataset.regionId=ctx.regionId;
+            body.dataset.regionType=ctx.type;
+            body.dataset.regionBiome=ctx.biome;
+          }
+
+          var badge=document.getElementById("regionBadge");
+          var biomeValue=document.getElementById("biomeValue");
+
+          if(badge)badge.textContent=ctx.label;
+          if(biomeValue)biomeValue.textContent=String(ctx.biome||"").replaceAll("_"," ");
+        }
+      }
+
+      if(env){
+        env.setSector("harbor_core");
+        env.tick(0);
+      }
+
+      var advanceBtn=document.getElementById("advanceTimeBtn");
+      if(advanceBtn&&env){
+        advanceBtn.addEventListener("click",function(){
+          env.advanceByInteraction(0.035);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

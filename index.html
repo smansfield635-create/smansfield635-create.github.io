@@ -10,7 +10,6 @@
       --bg0:#05070b;
       --bg1:#0a1120;
       --text:#f5f7fb;
-      --gold:#f6d98a;
       --line:rgba(255,255,255,.12);
       --safe-top:max(12px,env(safe-area-inset-top));
       --safe-right:max(12px,env(safe-area-inset-right));
@@ -20,6 +19,7 @@
     }
 
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       padding:0;
@@ -137,13 +137,21 @@
     <div class="hint">Tap center to raise / lower compass · drag to tilt</div>
   </div>
 
+  <script src="variant/background_renderer.js"></script>
+  <script src="variant/compass_renderer.js"></script>
   <script>
     (function(){
       "use strict";
 
-      const TAU=Math.PI*2;
       const canvas=document.getElementById("scene");
       const ctx=canvas.getContext("2d");
+      const BG=window.VARIANT_BACKGROUND_RENDERER;
+      const COMPASS=window.VARIANT_COMPASS_RENDERER;
+
+      if(!canvas||!ctx||!BG||!COMPASS){
+        console.error("HARBOR_CORE_BOOT_v2 missing required modules.");
+        return;
+      }
 
       const state={
         tick:0,
@@ -158,14 +166,27 @@
         velX:0,
         velY:0,
         compassVisible:true,
-        clouds:[],
-        lanterns:[]
+        background:BG.createState()
       };
 
-      function fract(v){return v-Math.floor(v);}
-      function hash(n){return fract(Math.sin(n*127.1)*43758.5453123);}
-      function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-      function lerp(a,b,t){return a+(b-a)*t;}
+      function clamp(v,min,max){
+        return Math.max(min,Math.min(max,v));
+      }
+
+      function horizonY(){
+        return state.h*0.62;
+      }
+
+      function triggerRect(){
+        const w=Math.min(148,state.w*0.34);
+        const h=40;
+        return{
+          x:(state.w*0.5)-(w*0.5),
+          y:horizonY()-28,
+          w:w,
+          h:h
+        };
+      }
 
       function resize(){
         state.dpr=Math.max(1,window.devicePixelRatio||1);
@@ -177,403 +198,24 @@
         canvas.style.height=state.h+"px";
         ctx.setTransform(1,0,0,1,0,0);
         ctx.scale(state.dpr,state.dpr);
-
-        initClouds();
-        initLanterns();
+        BG.resizeState(state.background,state.w,state.h);
       }
 
-      function initClouds(){
-        const count=Math.max(8,Math.round(state.w/190));
-        state.clouds=[];
-        for(let i=0;i<count;i++){
-          const seed=i+1;
-          const layer=i%3;
-          state.clouds.push({
-            x:hash(seed*12.1)*state.w,
-            y:state.h*(layer===0?(0.15+hash(seed*1.8)*0.10):layer===1?(0.23+hash(seed*2.8)*0.10):(0.30+hash(seed*3.8)*0.10)),
-            size:(110+hash(seed*13.7)*120)*(layer===0?1.2:layer===1?0.95:0.72),
-            speed:(0.1+hash(seed*14.3)*0.12)*(layer===0?0.22:layer===1?0.38:0.6),
-            alpha:layer===0?0.10:layer===1?0.14:0.18,
-            phase:hash(seed*15.1)*TAU
-          });
-        }
-      }
-
-      function initLanterns(){
-        const count=Math.max(16,Math.round(state.w/120));
-        state.lanterns=[];
-        for(let i=0;i<count;i++){
-          const seed=i+1;
-          const depth=i%3===0?1:(i%3===1?0.78:0.58);
-          state.lanterns.push({
-            x:hash(seed*2.17)*state.w,
-            y:state.h*(0.48+hash(seed*3.91)*0.36),
-            size:(14+hash(seed*5.31)*10)*depth,
-            sway:(8+hash(seed*7.33)*18)*(0.8+depth*0.45),
-            phase:hash(seed*8.07)*TAU,
-            flame:hash(seed*9.07)*TAU,
-            tilt:(hash(seed*10.11)-0.5)*0.16,
-            depth:depth
-          });
-        }
-      }
-
-      function roundedRectPath(x,y,w,h,r){
-        const rr=Math.min(r,w*0.5,h*0.5);
-        ctx.beginPath();
-        ctx.moveTo(x+rr,y);
-        ctx.lineTo(x+w-rr,y);
-        ctx.quadraticCurveTo(x+w,y,x+w,y+rr);
-        ctx.lineTo(x+w,y+h-rr);
-        ctx.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);
-        ctx.lineTo(x+rr,y+h);
-        ctx.quadraticCurveTo(x,y+h,x,y+h-rr);
-        ctx.lineTo(x,y+rr);
-        ctx.quadraticCurveTo(x,y,x+rr,y);
-        ctx.closePath();
-      }
-
-      function rotateVertex(x,y,z,rotY,rotX){
-        const cy=Math.cos(rotY), sy=Math.sin(rotY);
-        const cx=Math.cos(rotX), sx=Math.sin(rotX);
-        const x1=x*cy-z*sy;
-        const z1=x*sy+z*cy;
-        const y2=y*cx-z1*sx;
-        const z2=y*sx+z1*cx;
-        return{x:x1,y:y2,z:z2};
-      }
-
-      function project(centerX,centerY,x,y,z){
-        const perspective=520/(520+z);
-        return{x:centerX+(x*perspective),y:centerY+(y*perspective),z:z};
-      }
-
-      function compassGeometry(centerX,centerY,size,rotX,rotY){
-        const vertsRaw=[
-          [0,-1.8,0],[1.2,0,0],[0,0,1.2],[-1.2,0,0],[0,0,-1.2],[0,1.8,0]
-        ];
-        const facesRaw=[
-          {name:"NE",idx:[0,4,1]},
-          {name:"ES",idx:[0,1,2]},
-          {name:"SW",idx:[0,2,3]},
-          {name:"WN",idx:[0,3,4]},
-          {name:"nE",idx:[5,1,4]},
-          {name:"sE",idx:[5,2,1]},
-          {name:"sW",idx:[5,3,2]},
-          {name:"nW",idx:[5,4,3]}
-        ];
-        const edges=[[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
-        const rotated=[];
-        const pts=[];
-        for(let i=0;i<vertsRaw.length;i++){
-          const v=vertsRaw[i];
-          const p=rotateVertex(v[0]*size,v[1]*size,v[2]*size,rotY,rotX);
-          rotated.push(p);
-          pts.push(project(centerX,centerY,p.x,p.y,p.z));
-        }
-        const faces=facesRaw.map(function(face){
-          const poly=face.idx.map(i=>pts[i]);
-          const avgZ=(rotated[face.idx[0]].z+rotated[face.idx[1]].z+rotated[face.idx[2]].z)/3;
-          const c=poly.reduce((a,p)=>({x:a.x+p.x,y:a.y+p.y}),{x:0,y:0});
-          return{name:face.name,poly:poly,avgZ:avgZ,center:{x:c.x/3,y:c.y/3}};
-        }).sort((a,b)=>a.avgZ-b.avgZ);
-        return{pts:pts,edges:edges,faces:faces,centerX:centerX,centerY:centerY,size:size};
-      }
-
-      function faceFill(name){
-        if(name==="NE"||name==="nE")return"rgba(255,210,120,0.52)";
-        if(name==="ES"||name==="sE")return"rgba(210,90,54,0.48)";
-        if(name==="SW"||name==="sW")return"rgba(128,24,18,0.44)";
-        return"rgba(180,48,34,0.46)";
-      }
-
-      function drawCompass(x,y,size,rotX,rotY){
-        const geo=compassGeometry(x,y,size,rotX,rotY);
-
-        ctx.save();
-        ctx.globalAlpha=0.22;
-        ctx.strokeStyle="rgba(255,226,170,0.86)";
-        ctx.lineWidth=1.2;
-        ctx.beginPath();
-        ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.95,geo.size*0.62,0,0,TAU);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.15,geo.size*0.34,0,0,TAU);
-        ctx.stroke();
-        ctx.restore();
-
-        for(const face of geo.faces){
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(face.poly[0].x,face.poly[0].y);
-          ctx.lineTo(face.poly[1].x,face.poly[1].y);
-          ctx.lineTo(face.poly[2].x,face.poly[2].y);
-          ctx.closePath();
-          ctx.fillStyle=faceFill(face.name);
-          ctx.fill();
-          ctx.lineWidth=1.8;
-          ctx.strokeStyle="rgba(255,236,186,0.96)";
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        ctx.save();
-        ctx.shadowBlur=16;
-        ctx.shadowColor="rgba(255,220,150,0.28)";
-        for(const e of geo.edges){
-          ctx.beginPath();
-          ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
-          ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
-          ctx.lineWidth=2;
-          ctx.strokeStyle="rgba(255,236,186,0.98)";
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(geo.centerX,geo.centerY,geo.size*0.10,0,TAU);
-        ctx.fillStyle="rgba(255,242,208,0.98)";
-        ctx.fill();
-        ctx.fillStyle="rgba(255,244,214,0.98)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.96));
-        ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.96));
-        ctx.fillText("E",geo.centerX+(geo.size*1.18),geo.centerY);
-        ctx.fillText("W",geo.centerX-(geo.size*1.18),geo.centerY);
-        ctx.restore();
-      }
-
-      function drawSky(){
-        const warmMix=0.28+Math.sin(state.tick*0.002)*0.04;
-        const g=ctx.createLinearGradient(0,0,0,state.h);
-        g.addColorStop(0,`rgba(${Math.round(18+18*warmMix)},${Math.round(8+8*warmMix)},${Math.round(20+20*(1-warmMix))},1)`);
-        g.addColorStop(0.2,`rgba(${Math.round(36+16*warmMix)},${Math.round(10+8*warmMix)},${Math.round(28+14*(1-warmMix))},1)`);
-        g.addColorStop(0.48,`rgba(${Math.round(84+24*warmMix)},${Math.round(20+12*warmMix)},${Math.round(48+12*(1-warmMix))},1)`);
-        g.addColorStop(0.72,`rgba(${Math.round(150+30*warmMix)},${Math.round(48+22*warmMix)},${Math.round(64+8*(1-warmMix))},1)`);
-        g.addColorStop(1,"rgba(20,6,8,1)");
-        ctx.fillStyle=g;
-        ctx.fillRect(0,0,state.w,state.h);
-
-        const horizon=state.h*0.62;
-        const glow=ctx.createLinearGradient(0,horizon-140,0,horizon+120);
-        glow.addColorStop(0,"rgba(255,175,88,0)");
-        glow.addColorStop(0.22,"rgba(108,140,255,0.08)");
-        glow.addColorStop(0.48,"rgba(255,152,62,0.16)");
-        glow.addColorStop(0.72,"rgba(255,112,48,0.18)");
-        glow.addColorStop(1,"rgba(255,96,36,0)");
-        ctx.fillStyle=glow;
-        ctx.fillRect(0,horizon-140,state.w,260);
-      }
-
-      function drawCelestials(){
-        const sunA=state.tick*0.0035;
-        const moonA=state.tick*0.0028+Math.PI;
-        const moonB=state.tick*0.0022+1.2;
-
-        const sunX=state.w*0.5+Math.cos(sunA)*(state.w*0.22);
-        const sunY=state.h*0.22+Math.sin(sunA)*(state.h*0.08);
-        const sunR=Math.min(state.w,state.h)*0.045;
-
-        const halo=ctx.createRadialGradient(sunX,sunY,sunR*0.2,sunX,sunY,sunR*2.6);
-        halo.addColorStop(0,"rgba(255,216,140,0.20)");
-        halo.addColorStop(0.45,"rgba(255,150,90,0.14)");
-        halo.addColorStop(1,"rgba(255,150,90,0)");
-        ctx.fillStyle=halo;
-        ctx.beginPath();
-        ctx.arc(sunX,sunY,sunR*2.6,0,TAU);
-        ctx.fill();
-        ctx.fillStyle="rgba(255,214,120,0.92)";
-        ctx.beginPath();
-        ctx.arc(sunX,sunY,sunR,0,TAU);
-        ctx.fill();
-
-        function moon(x,y,r,fill){
-          const h=ctx.createRadialGradient(x,y,r*0.3,x,y,r*2.2);
-          h.addColorStop(0,"rgba(255,244,215,0.18)");
-          h.addColorStop(0.48,"rgba(255,226,176,0.12)");
-          h.addColorStop(1,"rgba(255,226,176,0)");
-          ctx.fillStyle=h;
-          ctx.beginPath();
-          ctx.arc(x,y,r*2.2,0,TAU);
-          ctx.fill();
-          ctx.fillStyle=fill;
-          ctx.beginPath();
-          ctx.arc(x,y,r,0,TAU);
-          ctx.fill();
-        }
-
-        moon(state.w*0.24+Math.cos(moonA)*(state.w*0.05),state.h*0.18+Math.sin(moonA)*(state.h*0.04),Math.min(state.w,state.h)*0.045,"rgba(255,220,170,0.88)");
-        moon(state.w*0.76+Math.cos(moonB)*(state.w*0.05),state.h*0.16+Math.sin(moonB)*(state.h*0.04),Math.min(state.w,state.h)*0.060,"rgba(255,238,205,0.92)");
-      }
-
-      function drawClouds(){
-        for(const cl of state.clouds){
-          cl.x+=cl.speed;
-          if(cl.x>state.w+cl.size*1.2)cl.x=-cl.size*1.2;
-          const x=cl.x+Math.sin(state.tick*0.0016+cl.phase)*18;
-          const y=cl.y+Math.cos(state.tick*0.0012+cl.phase)*4;
-          ctx.save();
-          ctx.globalAlpha=cl.alpha;
-          ctx.beginPath();
-          ctx.ellipse(x-cl.size*0.26,y,cl.size*0.34,cl.size*0.12,0,0,TAU);
-          ctx.ellipse(x+cl.size*0.08,y-cl.size*0.05,cl.size*0.42,cl.size*0.15,0,0,TAU);
-          ctx.ellipse(x+cl.size*0.42,y,cl.size*0.30,cl.size*0.11,0,0,TAU);
-          ctx.fillStyle="rgba(255,230,210,0.14)";
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      function drawLanterns(){
-        for(const ln of state.lanterns){
-          const y=ln.y-Math.sin(state.tick*0.01+ln.phase)*ln.sway;
-          const x=ln.x;
-          const flicker=0.82+Math.sin(state.tick*0.09+ln.flame)*0.12+Math.sin(state.tick*0.043+ln.flame*0.7)*0.06;
-          ctx.save();
-          ctx.translate(x,y);
-          ctx.rotate(ln.tilt+Math.sin(state.tick*0.01+ln.phase)*0.04);
-          ctx.globalAlpha=0.95*ln.depth;
-          ctx.fillStyle="rgba(160,30,28,0.92)";
-          roundedRectPath(-6,-10,12,20,4);
-          ctx.fill();
-          ctx.globalAlpha=0.50*ln.depth;
-          ctx.fillStyle=`rgba(255,216,128,${0.30*flicker})`;
-          roundedRectPath(-2.5,-3.5,5,7,2);
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      function drawMountains(){
-        const horizon=state.h*0.62;
-        for(let band=0;band<3;band++){
-          const pts=[];
-          const baseY=horizon+(band===0?24:(band===1?48:76));
-          const step=band===0?82:(band===1?68:54);
-          const amp=band===0?60:(band===1?42:28);
-          for(let x=-120;x<=state.w+120;x+=step){
-            const seed=(band+1)*1000+x;
-            pts.push({x:x,y:baseY+(hash(seed*0.013)-0.5)*amp});
-          }
-          ctx.beginPath();
-          ctx.moveTo(-100,state.h);
-          for(const p of pts)ctx.lineTo(p.x,p.y);
-          ctx.lineTo(state.w+100,state.h);
-          ctx.closePath();
-          ctx.fillStyle=band===0?"rgba(28,16,18,0.78)":band===1?"rgba(34,18,20,0.58)":"rgba(42,20,22,0.42)";
-          ctx.fill();
-        }
-      }
-
-      function drawWater(){
-        const horizon=state.h*0.62;
-        const base=state.h*0.80;
-        const g=ctx.createLinearGradient(0,horizon,0,state.h);
-        g.addColorStop(0,"rgba(18,22,48,0.56)");
-        g.addColorStop(0.36,"rgba(10,14,28,0.82)");
-        g.addColorStop(1,"rgba(4,5,12,1)");
-        ctx.fillStyle=g;
-        ctx.fillRect(0,horizon,state.w,state.h-horizon);
-
-        for(let layer=0;layer<10;layer++){
-          const depth=layer/9;
-          const yBase=base+layer*14;
-          ctx.beginPath();
-          for(let x=0;x<=state.w;x+=10){
-            const wave1=Math.sin(x*0.020+state.tick*0.020+layer)*6*(0.7+depth*0.4);
-            const wave2=Math.sin(x*0.007-state.tick*0.012+layer*1.3)*2.4;
-            const y=yBase+wave1+wave2;
-            if(x===0)ctx.moveTo(x,y);
-            else ctx.lineTo(x,y);
-          }
-          ctx.strokeStyle=`rgba(255,${Math.round(120+depth*80)},${Math.round(110+depth*60)},${0.028+depth*0.056})`;
-          ctx.lineWidth=1.2;
-          ctx.stroke();
-        }
-      }
-
-      function triggerRect(){
-        const horizon=state.h*0.62;
-        const w=Math.min(148,state.w*0.34);
-        const h=40;
+      function pointFromClient(clientX,clientY){
+        const rect=canvas.getBoundingClientRect();
         return{
-          x:(state.w*0.5)-(w*0.5),
-          y:horizon-28,
-          w:w,
-          h:h
+          x:clientX-rect.left,
+          y:clientY-rect.top
         };
       }
 
-      function drawTrigger(){
-        const r=triggerRect();
-        ctx.save();
-        ctx.globalAlpha=0.92;
-        ctx.fillStyle="rgba(18,10,14,0.74)";
-        ctx.strokeStyle="rgba(255,222,168,0.82)";
-        ctx.lineWidth=1.2;
-        roundedRectPath(r.x,r.y,r.w,r.h,18);
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle="rgba(255,238,200,0.96)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText(state.compassVisible?"LOWER COMPASS":"RAISE COMPASS",r.x+(r.w*0.5),r.y+(r.h*0.5)+0.5);
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalAlpha=0.76;
-        ctx.fillStyle="rgba(255,232,190,0.96)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText("HARBOR CORE",state.w*0.5+(state.dragX*8),r.y+r.h+18);
-        ctx.restore();
+      function pointInRect(x,y,rect){
+        return x>=rect.x&&x<=rect.x+rect.w&&y>=rect.y&&y<=rect.y+rect.h;
       }
 
-      function draw(){
-        ctx.clearRect(0,0,state.w,state.h);
-        drawSky();
-        drawCelestials();
-        drawClouds();
-        drawLanterns();
-        drawMountains();
-
-        const horizon=state.h*0.62;
-        const raisedY=horizon-98;
-        const hiddenY=horizon+84;
-        const y=(state.compassVisible?raisedY:hiddenY);
-        drawCompass(state.w*0.5+(state.dragX*10),y,Math.min(state.w,state.h)*0.086,(state.dragY*0.18)-0.10,(state.tick*0.006)+(state.dragX*0.20));
-
-        drawWater();
-        drawTrigger();
-      }
-
-      function frame(){
-        state.tick++;
-        state.dragX+=state.velX;
-        state.dragY+=state.velY;
-        state.velX*=state.dragging?0.88:0.94;
-        state.velY*=state.dragging?0.88:0.94;
-        state.dragX=clamp(state.dragX,-1.2,1.2);
-        state.dragY=clamp(state.dragY,-0.8,0.8);
-        state.velX=clamp(state.velX,-0.12,0.12);
-        state.velY=clamp(state.velY,-0.12,0.12);
-        draw();
-        requestAnimationFrame(frame);
-      }
-
-      function point(e){
-        const rect=canvas.getBoundingClientRect();
-        return{x:e.clientX-rect.left,y:e.clientY-rect.top};
-      }
-
-      function down(x,y){
-        const r=triggerRect();
-        if(x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h){
+      function pointerDown(x,y){
+        const rect=triggerRect();
+        if(pointInRect(x,y,rect)){
           state.compassVisible=!state.compassVisible;
           return;
         }
@@ -582,7 +224,7 @@
         state.lastY=y;
       }
 
-      function move(x,y){
+      function pointerMove(x,y){
         if(!state.dragging)return;
         const dx=x-state.lastX;
         const dy=y-state.lastY;
@@ -592,45 +234,120 @@
         state.velY+=dy*0.0016;
       }
 
-      function up(){
+      function pointerUp(){
         state.dragging=false;
       }
 
-      canvas.addEventListener("pointerdown",e=>{
-        const p=point(e);
-        down(p.x,p.y);
-      });
+      function bindInput(){
+        canvas.addEventListener("pointerdown",function(e){
+          const p=pointFromClient(e.clientX,e.clientY);
+          pointerDown(p.x,p.y);
+        });
 
-      canvas.addEventListener("pointermove",e=>{
-        const p=point(e);
-        move(p.x,p.y);
-      });
+        canvas.addEventListener("pointermove",function(e){
+          const p=pointFromClient(e.clientX,e.clientY);
+          pointerMove(p.x,p.y);
+        });
 
-      canvas.addEventListener("pointerup",up);
-      canvas.addEventListener("pointerleave",up);
+        canvas.addEventListener("pointerup",pointerUp);
+        canvas.addEventListener("pointerleave",pointerUp);
 
-      canvas.addEventListener("touchstart",e=>{
-        const t=e.changedTouches[0];
-        const rect=canvas.getBoundingClientRect();
-        down(t.clientX-rect.left,t.clientY-rect.top);
-        e.preventDefault();
-      },{passive:false});
+        canvas.addEventListener("touchstart",function(e){
+          if(!e.changedTouches||!e.changedTouches.length)return;
+          const t=e.changedTouches[0];
+          const p=pointFromClient(t.clientX,t.clientY);
+          pointerDown(p.x,p.y);
+          e.preventDefault();
+        },{passive:false});
 
-      canvas.addEventListener("touchmove",e=>{
-        const t=e.changedTouches[0];
-        const rect=canvas.getBoundingClientRect();
-        move(t.clientX-rect.left,t.clientY-rect.top);
-        e.preventDefault();
-      },{passive:false});
+        canvas.addEventListener("touchmove",function(e){
+          if(!e.changedTouches||!e.changedTouches.length)return;
+          const t=e.changedTouches[0];
+          const p=pointFromClient(t.clientX,t.clientY);
+          pointerMove(p.x,p.y);
+          e.preventDefault();
+        },{passive:false});
 
-      canvas.addEventListener("touchend",e=>{
-        up();
-        e.preventDefault();
-      },{passive:false});
+        canvas.addEventListener("touchend",function(e){
+          pointerUp();
+          e.preventDefault();
+        },{passive:false});
+      }
+
+      function drawTrigger(){
+        const rect=triggerRect();
+
+        ctx.save();
+        ctx.globalAlpha=0.92;
+        ctx.fillStyle="rgba(18,10,14,0.74)";
+        ctx.strokeStyle="rgba(255,222,168,0.82)";
+        ctx.lineWidth=1.2;
+        BG.roundedRectPath(ctx,rect.x,rect.y,rect.w,rect.h,18);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle="rgba(255,238,200,0.96)";
+        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
+        ctx.textAlign="center";
+        ctx.textBaseline="middle";
+        ctx.fillText(state.compassVisible?"LOWER COMPASS":"RAISE COMPASS",rect.x+(rect.w*0.5),rect.y+(rect.h*0.5)+0.5);
+        ctx.restore();
+
+        ctx.save();
+        ctx.globalAlpha=0.76;
+        ctx.fillStyle="rgba(255,232,190,0.96)";
+        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
+        ctx.textAlign="center";
+        ctx.textBaseline="middle";
+        ctx.fillText("HARBOR CORE",state.w*0.5+(state.dragX*8),rect.y+rect.h+18);
+        ctx.restore();
+      }
+
+      function animate(){
+        state.tick++;
+        state.dragX+=state.velX;
+        state.dragY+=state.velY;
+        state.velX*=state.dragging?0.88:0.94;
+        state.velY*=state.dragging?0.88:0.94;
+        state.dragX=clamp(state.dragX,-1.2,1.2);
+        state.dragY=clamp(state.dragY,-0.8,0.8);
+        state.velX=clamp(state.velX,-0.12,0.12);
+        state.velY=clamp(state.velY,-0.12,0.12);
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,state.w,state.h);
+
+        BG.drawSky(ctx,state.w,state.h,state.tick);
+        BG.drawCelestials(ctx,state.w,state.h,state.tick);
+        BG.drawClouds(ctx,state.tick,state.background);
+        BG.drawLanterns(ctx,state.tick,state.background);
+        BG.drawMountains(ctx,state.w,state.h);
+        COMPASS.drawCompass(ctx,{
+          centerX:state.w*0.5+(state.dragX*10),
+          centerY:(state.compassVisible?(horizonY()-98):(horizonY()+84)),
+          size:Math.min(state.w,state.h)*0.086,
+          rotX:(state.dragY*0.18)-0.10,
+          rotY:(state.tick*0.006)+(state.dragX*0.20)
+        });
+        BG.drawWater(ctx,state.w,state.h,state.tick);
+        drawTrigger();
+      }
+
+      function frame(){
+        try{
+          animate();
+          draw();
+        }catch(err){
+          console.error("HARBOR_CORE_BOOT_v2 frame error",err);
+        }
+        requestAnimationFrame(frame);
+      }
 
       window.addEventListener("resize",resize,{passive:true});
       window.addEventListener("orientationchange",resize,{passive:true});
 
+      bindInput();
       resize();
       frame();
     })();

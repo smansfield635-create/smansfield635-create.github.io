@@ -39,55 +39,58 @@ export function createEnvironmentRenderer() {
 
     drawOuterWater(ctx, width, height, tick);
     drawDepthFog(ctx, tick);
-    drawIslandRing(ctx);
-    drawBasinWater(ctx, tick);
-    drawHarborMouth(ctx, tick);
-    drawShoreSurf(ctx, tick);
-    drawElevation(ctx);
+    drawIslandMass(ctx);
+    drawHarborCove(ctx, tick);
+    drawHarborShore(ctx, tick);
+    drawRouteBedCanyon(ctx, kernel);
+    drawCentralBasin(ctx, tick);
+    drawBasinShore(ctx, tick);
+    drawNorthernRise(ctx);
+    drawSummitPromontory(ctx);
     drawTerrainShadows(ctx, tick);
     drawRegionGrounds(ctx, kernel, projection, selection, destination, pulse);
     drawStructures(ctx, kernel, pulse);
     drawAmbient(ctx, tick);
-    drawRouteBeds(ctx, kernel, projection, destination, pulse);
+    drawRouteHighlights(ctx, kernel, projection, destination, pulse);
 
     ctx.restore();
   }
 
   function drawOuterWater(ctx, width, height, tick) {
-    const g = ctx.createLinearGradient(0, 200, 0, height + 300);
-    g.addColorStop(0, "rgba(100,156,182,1)");
-    g.addColorStop(0.35, "rgba(70,122,150,1)");
+    const g = ctx.createLinearGradient(0, 180, 0, height + 340);
+    g.addColorStop(0, "rgba(108,164,192,1)");
+    g.addColorStop(0.34, "rgba(74,126,154,1)");
     g.addColorStop(0.72, "rgba(38,84,114,1)");
-    g.addColorStop(1, "rgba(20,46,72,1)");
+    g.addColorStop(1, "rgba(18,42,70,1)");
     ctx.fillStyle = g;
-    ctx.fillRect(-700, 180, width + 1400, height + 800);
+    ctx.fillRect(-700, 120, width + 1400, height + 900);
 
-    for (let i = 0; i < 10; i += 1) {
-      strokeWaveLine(ctx, 360 + i * 24, -320, width + 320, tick * 0.03 + i * 0.7, 3.5 + i * 0.2, 0.012, 0.05 + i * 0.01);
+    for (let i = 0; i < 11; i += 1) {
+      strokeWaveLine(ctx, 380 + i * 22, -320, width + 320, tick * 0.03 + i * 0.7, 3.6 + i * 0.18, 0.012, 0.05 + i * 0.01);
     }
 
-    const reflect = ctx.createLinearGradient(650, 240, 650, 760);
-    reflect.addColorStop(0, "rgba(255,238,188,0.00)");
-    reflect.addColorStop(0.18, "rgba(255,234,178,0.08)");
-    reflect.addColorStop(0.36, "rgba(255,228,164,0.16)");
-    reflect.addColorStop(0.64, "rgba(255,220,150,0.20)");
-    reflect.addColorStop(1, "rgba(255,220,150,0.00)");
+    const reflect = ctx.createLinearGradient(560, 160, 560, 760);
+    reflect.addColorStop(0, "rgba(255,236,184,0.00)");
+    reflect.addColorStop(0.20, "rgba(255,230,172,0.08)");
+    reflect.addColorStop(0.42, "rgba(255,222,160,0.16)");
+    reflect.addColorStop(0.70, "rgba(255,216,150,0.20)");
+    reflect.addColorStop(1, "rgba(255,216,150,0.00)");
     ctx.fillStyle = reflect;
     ctx.beginPath();
-    ctx.moveTo(590, 250);
-    ctx.lineTo(710, 250);
-    ctx.lineTo(850, 780);
-    ctx.lineTo(450, 780);
+    ctx.moveTo(500, 200);
+    ctx.lineTo(620, 200);
+    ctx.lineTo(720, 780);
+    ctx.lineTo(400, 780);
     ctx.closePath();
     ctx.fill();
 
     ctx.beginPath();
-    ctx.ellipse(640, 456, 92, 220, -0.06, 0, Math.PI * 2);
-    const shimmer = ctx.createLinearGradient(640, 248, 640, 676);
+    ctx.ellipse(560, 442, 78, 232, 0, 0, Math.PI * 2);
+    const shimmer = ctx.createLinearGradient(560, 206, 560, 686);
     shimmer.addColorStop(0, "rgba(255,244,214,0.00)");
-    shimmer.addColorStop(0.28, "rgba(255,240,206,0.06)");
-    shimmer.addColorStop(0.58, "rgba(255,236,198,0.12)");
-    shimmer.addColorStop(1, "rgba(255,236,198,0.00)");
+    shimmer.addColorStop(0.30, "rgba(255,238,202,0.06)");
+    shimmer.addColorStop(0.60, "rgba(255,232,194,0.12)");
+    shimmer.addColorStop(1, "rgba(255,232,194,0.00)");
     ctx.fillStyle = shimmer;
     ctx.fill();
   }
@@ -95,29 +98,52 @@ export function createEnvironmentRenderer() {
   function drawDepthFog(ctx, tick) {
     const haze = ctx.createLinearGradient(0, 110, 0, 520);
     haze.addColorStop(0, "rgba(255,240,224,0.00)");
-    haze.addColorStop(0.52, "rgba(255,226,196,0.06)");
+    haze.addColorStop(0.54, "rgba(255,226,196,0.06)");
     haze.addColorStop(1, "rgba(214,230,238,0.02)");
     ctx.fillStyle = haze;
-    ctx.fillRect(120, 80, 860, 460);
+    ctx.fillRect(120, 70, 860, 480);
 
-    const glowX = 618 + Math.sin(tick * 0.01) * 8;
-    const glow = ctx.createRadialGradient(glowX, 362, 0, glowX, 362, 260);
-    glow.addColorStop(0, "rgba(255,236,204,0.10)");
-    glow.addColorStop(0.55, "rgba(248,234,210,0.05)");
+    const glowX = 560 + Math.sin(tick * 0.01) * 10;
+    const glow = ctx.createRadialGradient(glowX, 330, 0, glowX, 330, 270);
+    glow.addColorStop(0, "rgba(255,236,204,0.12)");
+    glow.addColorStop(0.58, "rgba(248,234,210,0.05)");
     glow.addColorStop(1, "rgba(248,234,210,0.00)");
     ctx.fillStyle = glow;
-    ctx.fillRect(240, 140, 760, 520);
+    ctx.fillRect(220, 110, 680, 520);
   }
 
-  function drawIslandRing(ctx) {
-    const outerRing = [
-      [440, 620],[350, 600],[260, 556],[190, 488],[160, 420],[176, 334],[226, 244],[300, 176],[396, 126],[502, 98],
-      [610, 94],[712, 116],[808, 160],[888, 230],[936, 316],[942, 402],[912, 486],[842, 552],[742, 602],[624, 632],
-      [520, 634]
+  function drawIslandMass(ctx) {
+    const island = [
+      [336, 638],
+      [276, 614],
+      [224, 572],
+      [198, 524],
+      [206, 468],
+      [248, 426],
+      [318, 398],
+      [394, 366],
+      [430, 324],
+      [438, 260],
+      [468, 198],
+      [516, 144],
+      [578, 116],
+      [646, 126],
+      [698, 154],
+      [736, 206],
+      [740, 270],
+      [712, 330],
+      [650, 390],
+      [616, 446],
+      [626, 520],
+      [666, 574],
+      [658, 620],
+      [602, 644],
+      [520, 650],
+      [430, 648]
     ];
 
-    polygon(ctx, outerRing);
-    const land = ctx.createLinearGradient(0, 90, 0, 660);
+    polygon(ctx, island);
+    const land = ctx.createLinearGradient(0, 110, 0, 670);
     land.addColorStop(0, "rgba(176,166,132,1)");
     land.addColorStop(0.28, "rgba(146,146,106,1)");
     land.addColorStop(0.58, "rgba(116,132,88,1)");
@@ -128,14 +154,72 @@ export function createEnvironmentRenderer() {
 
     ctx.lineWidth = 2.4;
     ctx.strokeStyle = "rgba(246,236,210,0.26)";
-    polygon(ctx, outerRing);
+    polygon(ctx, island);
     ctx.stroke();
   }
 
-  function drawBasinWater(ctx, tick) {
+  function drawHarborCove(ctx, tick) {
+    const harborWater = [
+      [438, 648],
+      [450, 610],
+      [488, 584],
+      [540, 572],
+      [594, 580],
+      [628, 604],
+      [638, 648]
+    ];
+    polygon(ctx, harborWater);
+    const g = ctx.createLinearGradient(438, 568, 638, 650);
+    g.addColorStop(0, "rgba(118,172,188,0.98)");
+    g.addColorStop(0.52, "rgba(82,136,158,0.98)");
+    g.addColorStop(1, "rgba(44,96,122,1)");
+    ctx.fillStyle = g;
+    ctx.fill();
+
+    for (let i = 0; i < 4; i += 1) {
+      strokeWaveLine(ctx, 596 + i * 10, 456, 622, tick * 0.05 + i, 1.8, 0.04, 0.10);
+    }
+  }
+
+  function drawHarborShore(ctx, tick) {
+    const foamPulse = 0.24 + (0.08 * Math.sin(tick * 0.05));
+
     ctx.beginPath();
-    ctx.ellipse(560, 340, 212, 146, 0, 0, Math.PI * 2);
-    const g = ctx.createLinearGradient(340, 210, 760, 500);
+    ctx.moveTo(450, 606);
+    ctx.quadraticCurveTo(540, 560, 626, 606);
+    ctx.strokeStyle = `rgba(250,242,220,${foamPulse + 0.14})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    const docksLine = [
+      [474, 580],
+      [506, 572],
+      [540, 568],
+      [576, 572],
+      [608, 584]
+    ];
+    polyline(ctx, docksLine);
+    ctx.strokeStyle = `rgba(244,236,214,${foamPulse * 0.78})`;
+    ctx.lineWidth = 2.2;
+    ctx.stroke();
+  }
+
+  function drawRouteBedCanyon(ctx, kernel) {
+    const rows = [...kernel.pathsById.values()];
+    for (const row of rows) {
+      polyline(ctx, row.centerline);
+      ctx.lineWidth = 36;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(84,72,54,0.16)";
+      ctx.stroke();
+    }
+  }
+
+  function drawCentralBasin(ctx, tick) {
+    ctx.beginPath();
+    ctx.ellipse(560, 320, 154, 104, 0, 0, Math.PI * 2);
+    const g = ctx.createLinearGradient(404, 214, 716, 430);
     g.addColorStop(0, "rgba(124,178,190,0.98)");
     g.addColorStop(0.46, "rgba(82,136,156,0.98)");
     g.addColorStop(1, "rgba(44,94,122,1)");
@@ -147,88 +231,86 @@ export function createEnvironmentRenderer() {
     ctx.stroke();
 
     for (let i = 0; i < 8; i += 1) {
-      strokeWaveLine(ctx, 280 + i * 18, 374, 746, tick * 0.04 + i * 0.7, 2.1, 0.03, 0.07 + i * 0.004);
+      strokeWaveLine(ctx, 274 + i * 16, 438, 682, tick * 0.04 + i * 0.7, 2.1, 0.03, 0.07 + i * 0.004);
     }
 
     ctx.beginPath();
-    ctx.ellipse(612, 350, 76, 20, 0.06, 0, Math.PI * 2);
+    ctx.ellipse(592, 334, 56, 16, 0.05, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(232,242,244,0.10)";
     ctx.fill();
   }
 
-  function drawHarborMouth(ctx, tick) {
-    const harborWater = [
-      [454, 610],[484, 600],[520, 588],[560, 584],[600, 588],[634, 600],[660, 618],[656, 650],[454, 650]
-    ];
-    polygon(ctx, harborWater);
-    const g = ctx.createLinearGradient(450, 580, 650, 660);
-    g.addColorStop(0, "rgba(118,172,188,0.98)");
-    g.addColorStop(0.5, "rgba(82,136,158,0.98)");
-    g.addColorStop(1, "rgba(44,96,122,1)");
-    ctx.fillStyle = g;
-    ctx.fill();
-
-    for (let i = 0; i < 4; i += 1) {
-      strokeWaveLine(ctx, 604 + i * 10, 462, 650, tick * 0.05 + i, 1.8, 0.04, 0.10);
-    }
-  }
-
-  function drawShoreSurf(ctx, tick) {
+  function drawBasinShore(ctx, tick) {
     const foamPulse = 0.24 + (0.08 * Math.sin(tick * 0.05));
-
-    ctx.beginPath();
-    ctx.moveTo(442, 607);
-    ctx.quadraticCurveTo(560, 566, 662, 607);
-    ctx.strokeStyle = `rgba(250,242,220,${foamPulse + 0.14})`;
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
     const basinFoam = [
-      [390, 430],[430, 462],[496, 486],[574, 492],[648, 478],[710, 448],[748, 408]
+      [446, 382],
+      [484, 404],
+      [536, 414],
+      [590, 410],
+      [642, 392],
+      [678, 360]
     ];
     polyline(ctx, basinFoam);
     ctx.strokeStyle = `rgba(244,248,250,${foamPulse})`;
     ctx.lineWidth = 2.6;
     ctx.stroke();
 
-    const outerShore = [
-      [222, 510],[252, 470],[306, 430],[372, 400],[450, 374],[542, 338],[646, 292],[742, 244],[826, 196],[892, 162]
-    ];
-    polyline(ctx, outerShore);
-    ctx.strokeStyle = `rgba(248,238,214,${foamPulse * 0.72})`;
-    ctx.lineWidth = 2.2;
-    ctx.stroke();
-
-    for (let i = 0; i < 10; i += 1) {
-      const x = 406 + i * 34;
-      const y = 440 + Math.sin(tick * 0.06 + i * 0.8) * 6;
+    for (let i = 0; i < 8; i += 1) {
+      const x = 462 + i * 26;
+      const y = 386 + Math.sin(tick * 0.06 + i * 0.8) * 5;
       ctx.beginPath();
-      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(248,248,244,${foamPulse * 0.58})`;
+      ctx.arc(x, y, 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(248,248,244,${foamPulse * 0.52})`;
       ctx.fill();
     }
   }
 
-  function drawElevation(ctx) {
-    const leftRidge = [
-      [246, 488],[214, 430],[224, 348],[264, 266],[324, 204],[404, 162],[490, 144],[478, 184],[430, 218],[382, 266],
-      [344, 322],[318, 384],[310, 444],[316, 498]
+  function drawNorthernRise(ctx) {
+    const leftRise = [
+      [430, 354],
+      [450, 304],
+      [474, 248],
+      [506, 190],
+      [542, 148],
+      [536, 212],
+      [520, 274],
+      [496, 330],
+      [472, 374]
     ];
-    const rightRidge = [
-      [736, 486],[784, 434],[814, 372],[822, 304],[804, 240],[760, 186],[692, 144],[620, 126],[628, 170],[674, 206],
-      [716, 256],[742, 316],[748, 386]
-    ];
-    const summitMass = [
-      [458, 188],[494, 132],[540, 88],[592, 96],[632, 142],[650, 198],[626, 222],[578, 200],[530, 194],[482, 212]
+    const rightRise = [
+      [618, 398],
+      [640, 346],
+      [662, 290],
+      [682, 236],
+      [694, 180],
+      [660, 208],
+      [632, 252],
+      [614, 310],
+      [604, 364]
     ];
 
-    polygon(ctx, leftRidge);
+    polygon(ctx, leftRise);
     ctx.fillStyle = "rgba(122,136,94,0.42)";
     ctx.fill();
 
-    polygon(ctx, rightRidge);
+    polygon(ctx, rightRise);
     ctx.fillStyle = "rgba(116,124,92,0.46)";
     ctx.fill();
+  }
+
+  function drawSummitPromontory(ctx) {
+    const summitMass = [
+      [508, 206],
+      [526, 164],
+      [548, 128],
+      [574, 110],
+      [600, 126],
+      [614, 164],
+      [610, 204],
+      [588, 226],
+      [552, 224],
+      [524, 220]
+    ];
 
     polygon(ctx, summitMass);
     ctx.fillStyle = "rgba(194,190,182,0.62)";
@@ -236,40 +318,48 @@ export function createEnvironmentRenderer() {
   }
 
   function drawTerrainShadows(ctx, tick) {
-    const leftShadow = [
-      [312, 506],[326, 448],[352, 388],[388, 330],[432, 274],[474, 228],[500, 188],[470, 206],[430, 244],[388, 304],
-      [356, 362],[334, 426],[322, 482]
+    const lowerShadow = [
+      [402, 628],
+      [428, 570],
+      [476, 520],
+      [536, 488],
+      [602, 484],
+      [648, 510],
+      [670, 560],
+      [654, 618],
+      [602, 640],
+      [512, 644],
+      [446, 640]
     ];
-    const rightShadow = [
-      [700, 490],[722, 430],[736, 374],[738, 316],[726, 262],[700, 220],[668, 188],[648, 172],[670, 208],[696, 264],
-      [708, 326],[708, 392]
-    ];
-    const basinInnerShadow = [
-      [404, 412],[446, 446],[516, 468],[592, 470],[660, 454],[712, 426],[742, 388],[726, 410],[680, 446],[622, 466],
-      [548, 472],[482, 460],[428, 436]
+    const basinShadow = [
+      [458, 376],
+      [500, 398],
+      [552, 406],
+      [606, 400],
+      [648, 378],
+      [626, 392],
+      [582, 404],
+      [532, 406],
+      [488, 396]
     ];
 
-    polygon(ctx, leftShadow);
-    ctx.fillStyle = "rgba(70,74,62,0.18)";
+    polygon(ctx, lowerShadow);
+    ctx.fillStyle = "rgba(68,72,60,0.16)";
     ctx.fill();
 
-    polygon(ctx, rightShadow);
-    ctx.fillStyle = "rgba(66,72,60,0.18)";
-    ctx.fill();
-
-    polygon(ctx, basinInnerShadow);
+    polygon(ctx, basinShadow);
     ctx.fillStyle = "rgba(54,72,74,0.10)";
     ctx.fill();
 
-    const mist = ctx.createLinearGradient(0, 188, 0, 408);
+    const mist = ctx.createLinearGradient(0, 154, 0, 422);
     mist.addColorStop(0, "rgba(255,246,236,0.04)");
     mist.addColorStop(1, "rgba(210,224,230,0.00)");
     ctx.fillStyle = mist;
-    ctx.fillRect(300, 180, 520, 240);
+    ctx.fillRect(360, 140, 420, 260);
 
-    const driftX = 556 + Math.sin(tick * 0.012) * 6;
+    const driftX = 560 + Math.sin(tick * 0.012) * 6;
     ctx.beginPath();
-    ctx.ellipse(driftX, 252, 106, 20, 0.02, 0, Math.PI * 2);
+    ctx.ellipse(driftX, 248, 100, 18, 0.02, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(236,236,232,0.07)";
     ctx.fill();
   }
@@ -288,23 +378,23 @@ export function createEnvironmentRenderer() {
 
       if (row.regionId === "harbor_village") {
         fill = "rgba(172,150,118,0.30)";
-        rx = 98;
-        ry = 42;
+        rx = 110;
+        ry = 40;
       }
       if (row.regionId === "market_district") {
         fill = "rgba(164,132,98,0.30)";
-        rx = 88;
-        ry = 44;
+        rx = 94;
+        ry = 46;
       }
       if (row.regionId === "exploration_basin") {
         fill = "rgba(108,124,108,0.16)";
-        rx = 112;
-        ry = 54;
+        rx = 124;
+        ry = 58;
       }
       if (row.regionId === "summit_plaza") {
         fill = "rgba(202,196,190,0.28)";
-        rx = 74;
-        ry = 36;
+        rx = 78;
+        ry = 34;
       }
 
       ctx.beginPath();
@@ -314,14 +404,14 @@ export function createEnvironmentRenderer() {
 
       if (row.regionId === "market_district") {
         ctx.beginPath();
-        ctx.ellipse(x, y + 8, 60, 28, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y + 8, 64, 28, 0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220,198,164,0.16)";
         ctx.fill();
       }
 
       if (row.regionId === "summit_plaza") {
         ctx.beginPath();
-        ctx.ellipse(x, y + 8, 52, 22, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y + 8, 54, 20, 0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(238,234,228,0.16)";
         ctx.fill();
       }
@@ -347,19 +437,19 @@ export function createEnvironmentRenderer() {
 
       if (row.regionId === "harbor_village") {
         ctx.fillStyle = "rgba(104,76,60,0.96)";
-        ctx.fillRect(x - 36, y + 8, 72, 10);
-        ctx.fillRect(x - 6, y - 14, 12, 28);
-        ctx.fillRect(x - 54, y + 14, 18, 8);
-        ctx.fillRect(x + 36, y + 14, 18, 8);
+        ctx.fillRect(x - 42, y + 10, 84, 10);
+        ctx.fillRect(x - 6, y - 16, 12, 30);
+        ctx.fillRect(x - 58, y + 16, 20, 8);
+        ctx.fillRect(x + 38, y + 16, 20, 8);
       }
 
       if (row.regionId === "market_district") {
         ctx.fillStyle = "rgba(156,112,80,0.96)";
-        ctx.fillRect(x - 28, y + 2, 56, 14);
+        ctx.fillRect(x - 30, y + 2, 60, 14);
         ctx.fillStyle = "rgba(224,192,138,0.90)";
-        ctx.fillRect(x - 18, y - 10, 36, 10);
-        ctx.fillRect(x - 42, y + 6, 10, 12);
-        ctx.fillRect(x + 32, y + 6, 10, 12);
+        ctx.fillRect(x - 20, y - 10, 40, 10);
+        ctx.fillRect(x - 44, y + 8, 10, 12);
+        ctx.fillRect(x + 34, y + 8, 10, 12);
       }
 
       if (row.regionId === "exploration_basin") {
@@ -371,7 +461,7 @@ export function createEnvironmentRenderer() {
 
       if (row.regionId === "summit_plaza") {
         ctx.beginPath();
-        ctx.moveTo(x, y - 28);
+        ctx.moveTo(x, y - 26);
         ctx.lineTo(x + 14, y + 4);
         ctx.lineTo(x - 14, y + 4);
         ctx.closePath();
@@ -379,7 +469,7 @@ export function createEnvironmentRenderer() {
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(x, y - 34, 7 + pulse * 1.3, 0, Math.PI * 2);
+        ctx.arc(x, y - 32, 7 + pulse * 1.3, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,244,224,0.42)";
         ctx.fill();
       }
@@ -390,16 +480,16 @@ export function createEnvironmentRenderer() {
     const t = tick * 0.02;
 
     for (let i = 0; i < 6; i += 1) {
-      const x = 260 + i * 78 + Math.sin(t + i) * 8;
-      const y = 116 + Math.cos(t * 0.8 + i) * 12;
+      const x = 360 + i * 64 + Math.sin(t + i) * 8;
+      const y = 132 + Math.cos(t * 0.8 + i) * 10;
       ctx.beginPath();
       ctx.arc(x, y, 2 + (i % 2), 0, Math.PI * 2);
       ctx.fillStyle = "rgba(255,216,170,0.14)";
       ctx.fill();
     }
 
-    const birdBaseX = 700 + Math.sin(t * 0.6) * 18;
-    const birdBaseY = 150 + Math.cos(t * 0.7) * 6;
+    const birdBaseX = 676 + Math.sin(t * 0.6) * 18;
+    const birdBaseY = 174 + Math.cos(t * 0.7) * 6;
     for (let i = 0; i < 2; i += 1) {
       const bx = birdBaseX + i * 24;
       const by = birdBaseY + i * 6;
@@ -413,21 +503,14 @@ export function createEnvironmentRenderer() {
     }
   }
 
-  function drawRouteBeds(ctx, kernel, projection, destination, pulse) {
+  function drawRouteHighlights(ctx, kernel, projection, destination, pulse) {
     const rows = [...kernel.pathsById.values()];
     for (const row of rows) {
       polyline(ctx, row.centerline);
-      ctx.lineWidth = 26;
+      ctx.lineWidth = 18;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = "rgba(86,72,54,0.30)";
-      ctx.stroke();
-
-      polyline(ctx, row.centerline);
-      ctx.lineWidth = 14;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = "rgba(156,132,98,0.16)";
+      ctx.strokeStyle = "rgba(156,132,98,0.14)";
       ctx.stroke();
 
       const isDestinationPath = destination && projection && (

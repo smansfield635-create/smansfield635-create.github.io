@@ -1,398 +1,381 @@
 (function(){
 "use strict";
 
-const NAVIGATION_MATH_VERSION="OPENWORLD_NAVIGATION_MATH_v1";
+const RAD=Math.PI/180;
+const DEG=180/Math.PI;
+const DEFAULT_EPSILON=1e-6;
+const DEFAULT_RECOVERY_GAIN=0.10;
+const DEFAULT_BEARING_WEIGHT=0.35;
+const DEFAULT_DRIFT_WEIGHT=0.20;
+
+function finiteOr(v,fallback){
+return Number.isFinite(v)?v:fallback;
+}
 
 function clamp(v,min,max){
 return Math.max(min,Math.min(max,v));
 }
 
-function isNum(v){
-return typeof v==="number"&&isFinite(v);
+function epsilonOf(input){
+return Math.max(DEFAULT_EPSILON,finiteOr(input&&input.epsilon,DEFAULT_EPSILON));
 }
 
-function safeNum(v,fallback){
-return isNum(v)?v:fallback;
+function normalizeAngle360(deg){
+let a=finiteOr(deg,0)%360;
+if(a<0)a+=360;
+return a;
 }
 
-function deg(rad){
-return rad*(180/Math.PI);
+function normalizeAngle180(deg){
+let a=finiteOr(deg,0)%360;
+if(a>180)a-=360;
+if(a<=-180)a+=360;
+return a;
 }
 
-function normalizeDeg(v){
-let out=v%360;
-if(out<0)out+=360;
-return out;
+function signedDelta(target,current){
+return normalizeAngle180(finiteOr(target,0)-finiteOr(current,0));
 }
 
-function shortestSignedDeltaDeg(fromDeg,toDeg){
-let d=normalizeDeg(toDeg)-normalizeDeg(fromDeg);
-if(d>180)d-=360;
-if(d<-180)d+=360;
-return d;
-}
-
-function magnitude2D(x,z){
-return Math.sqrt((x*x)+(z*z));
-}
-
-function bearingFromXZ(dx,dz){
-const raw=deg(Math.atan2(dx,dz));
-return normalizeDeg(raw);
-}
-
-function signedCrossTrackError(start,end,point){
-const ax=safeNum(start.x,0);
-const az=safeNum(start.z,0);
-const bx=safeNum(end.x,ax);
-const bz=safeNum(end.z,az);
-const px=safeNum(point.x,ax);
-const pz=safeNum(point.z,az);
-
-const abx=bx-ax;
-const abz=bz-az;
-const apx=px-ax;
-const apz=pz-az;
-
-const denom=Math.sqrt((abx*abx)+(abz*abz));
-if(denom<=1e-9)return 0;
-
-return ((abx*apz)-(abz*apx))/denom;
-}
-
-function classifyDeviation(absErr){
-if(absErr<5)return"on_track";
-if(absErr<20)return"minor";
-if(absErr<50)return"moderate";
-return"major";
-}
-
-function classifyEtaStability(distance,speed){
-if(speed<=1e-6)return"unavailable";
-const eta=distance/speed;
-if(eta<60)return"high";
-if(eta<300)return"medium";
-return"low";
-}
-
-function classifyCelestialAvailability(environmentState){
-const celestial=environmentState&&environmentState.celestial_state?environmentState.celestial_state:null;
-const visibility=String(environmentState&&environmentState.visibility_class?environmentState.visibility_class:"clear").toLowerCase();
-
-if(!celestial)return"unavailable";
-if(visibility==="obstructed"||visibility==="blocked")return"degraded";
-if(visibility==="low"||visibility==="poor"||visibility==="fog"||visibility==="storm")return"degraded";
-
-const hasSun=!!(celestial.sun);
-const hasMoon=!!(celestial.moon);
-const hasStars=Array.isArray(celestial.stars)&&celestial.stars.length>0;
-
-if(hasSun||hasMoon||hasStars)return"available";
-return"unavailable";
-}
-
-function classifyApparentWindConsistency(inputWind,truthWind){
-const dirKnown=isNum(inputWind.direction_deg)&&isNum(truthWind.apparent_wind_direction_deg);
-const spdKnown=isNum(inputWind.speed)&&isNum(truthWind.apparent_wind_speed);
-
-if(!dirKnown&&!spdKnown)return"unknown";
-
-const dirErr=dirKnown?Math.abs(shortestSignedDeltaDeg(inputWind.direction_deg,truthWind.apparent_wind_direction_deg)):0;
-const spdErr=spdKnown?Math.abs(inputWind.speed-truthWind.apparent_wind_speed):0;
-
-if(dirErr<=2&&spdErr<=0.25)return"exact";
-if(dirErr<=10&&spdErr<=1.0)return"consistent";
-return"inconsistent";
-}
-
-function getRouteNodes(worldState){
-const graph=worldState&&worldState.route_graph?worldState.route_graph:null;
-return graph&&Array.isArray(graph.nodes)?graph.nodes:[];
-}
-
-function getCurrentPosition(worldState){
-const p=worldState&&worldState.vessel_position?worldState.vessel_position:null;
+function vec(x,y){
 return{
-x:safeNum(p&&p.x,0),
-y:safeNum(p&&p.y,0),
-z:safeNum(p&&p.z,0)
+x:finiteOr(x,0),
+y:finiteOr(y,0)
 };
 }
 
-function getHeadingDeg(worldState,interactionState){
-const fromTrack=worldState&&worldState.vessel_track_ref&&isNum(worldState.vessel_track_ref.heading_ref)
-?deg(worldState.vessel_track_ref.heading_ref)
-:null;
-
-const fromInteraction=interactionState&&interactionState.helm_input&&isNum(interactionState.helm_input.commanded_heading_deg)
-?interactionState.helm_input.commanded_heading_deg
-:null;
-
-return normalizeDeg(fromInteraction!==null?fromInteraction:(fromTrack!==null?fromTrack:0));
+function add(a,b){
+return{x:a.x+b.x,y:a.y+b.y};
 }
 
-function getTrackDeg(worldState){
-const raw=worldState&&worldState.vessel_track_ref&&isNum(worldState.vessel_track_ref.track_ref)
-?deg(worldState.vessel_track_ref.track_ref)
-:null;
-return normalizeDeg(raw!==null?raw:0);
+function sub(a,b){
+return{x:a.x-b.x,y:a.y-b.y};
 }
 
-function resolveTarget(worldState,interactionState){
-const explicitWaypoint=worldState&&worldState.active_waypoint?worldState.active_waypoint:null;
-if(explicitWaypoint&&explicitWaypoint.coordinate){
+function scale(v,s){
+return{x:v.x*s,y:v.y*s};
+}
+
+function mag(v){
+return Math.hypot(v.x,v.y);
+}
+
+function dot(a,b){
+return a.x*b.x+a.y*b.y;
+}
+
+function cross2(a,b){
+return a.x*b.y-a.y*b.x;
+}
+
+function norm(v,eps){
+const m=mag(v);
+if(m<=eps)return{x:0,y:0};
+return{x:v.x/m,y:v.y/m};
+}
+
+function headingToUnit(headingTrue){
+const r=normalizeAngle360(headingTrue)*RAD;
 return{
-id:String(explicitWaypoint.waypoint_id||"active_waypoint"),
-coordinate:{
-x:safeNum(explicitWaypoint.coordinate.x,0),
-y:safeNum(explicitWaypoint.coordinate.y,0),
-z:safeNum(explicitWaypoint.coordinate.z,0)
-},
-source:"active_waypoint"
+x:Math.sin(r),
+y:Math.cos(r)
 };
 }
 
-const targetId=interactionState&&interactionState.target_selection?interactionState.target_selection.target_id:null;
-const nodes=getRouteNodes(worldState);
-if(targetId&&nodes.length){
-for(let i=0;i<nodes.length;i++){
-const n=nodes[i];
-if(String(n.id)===String(targetId)){
-const a=n.anchor||{};
-return{
-id:String(n.id),
-coordinate:{
-x:safeNum(a.x,0),
-y:safeNum(a.y,0),
-z:safeNum(a.z,0)
-},
-source:"route_graph"
-};
-}
-}
+function vectorToBearing(v,eps){
+if(mag(v)<=eps)return 0;
+return normalizeAngle360(Math.atan2(v.x,v.y)*DEG);
 }
 
+function computeTargetVector(position,waypointPosition){
+if(!waypointPosition)return null;
+return sub(waypointPosition,position);
+}
+
+function computeTargetBearing(targetVector,eps){
+if(!targetVector)return null;
+return vectorToBearing(targetVector,eps);
+}
+
+function computeTargetDistance(targetVector){
+if(!targetVector)return null;
+return mag(targetVector);
+}
+
+function computeSpeedOverWater(velocityWater){
+return mag(velocityWater);
+}
+
+function computeGroundVector(velocityWater,currentVector){
+return add(velocityWater,currentVector);
+}
+
+function computeCourseOverGround(groundVector,eps){
+return vectorToBearing(groundVector,eps);
+}
+
+function computeSpeedOverGround(groundVector){
+return mag(groundVector);
+}
+
+function projectPointToSegment(point,start,end,eps){
+const ab=sub(end,start);
+const ap=sub(point,start);
+const denom=Math.max(dot(ab,ab),eps);
+const t=clamp(dot(ap,ab)/denom,0,1);
+const closest=add(start,scale(ab,t));
+return{
+t:t,
+closest:closest,
+errorVector:sub(point,closest),
+routeVector:ab
+};
+}
+
+function computeCrossTrackError(position,plannedRouteSegment,eps){
+if(
+!plannedRouteSegment||
+!plannedRouteSegment.start||
+!plannedRouteSegment.end
+){
 return null;
 }
 
-function resolveRouteEndpoints(worldState,target){
-const nodes=getRouteNodes(worldState);
-const currentRegionId=worldState?worldState.region_id:null;
-let start=null;
-let end=null;
-
-if(nodes.length){
-for(let i=0;i<nodes.length;i++){
-const n=nodes[i];
-if(currentRegionId!==null&&String(n.id)===String(currentRegionId)){
-const a=n.anchor||{};
-start={x:safeNum(a.x,0),y:safeNum(a.y,0),z:safeNum(a.z,0)};
-}
-if(target&&String(n.id)===String(target.id)){
-const a=n.anchor||{};
-end={x:safeNum(a.x,0),y:safeNum(a.y,0),z:safeNum(a.z,0)};
-}
-}
+const start=vec(plannedRouteSegment.start.x,plannedRouteSegment.start.y);
+const end=vec(plannedRouteSegment.end.x,plannedRouteSegment.end.y);
+const proj=projectPointToSegment(position,start,end,eps);
+const sign=Math.sign(cross2(proj.routeVector,sub(position,proj.closest)))||0;
+return mag(proj.errorVector)*sign;
 }
 
-if(!start){
-const pos=getCurrentPosition(worldState);
-start={x:pos.x,y:pos.y,z:pos.z};
+function computeDriftAngle(headingTrue,courseOverGround){
+return signedDelta(courseOverGround,headingTrue);
 }
 
-if(!end&&target){
-end=target.coordinate;
+function computeRouteRecoveryTerm(crossTrackError,recoveryGain){
+if(crossTrackError===null)return 0;
+return -crossTrackError*recoveryGain;
 }
 
-return{start,end};
+function computeWeightedBearingTerm(targetBearing,courseOverGround,bearingWeight){
+if(targetBearing===null)return 0;
+return signedDelta(targetBearing,courseOverGround)*bearingWeight;
 }
 
-function computePositionalTruth(worldState,interactionState){
-const pos=getCurrentPosition(worldState);
-const target=resolveTarget(worldState,interactionState);
-const headingDeg=getHeadingDeg(worldState,interactionState);
-const trackDeg=getTrackDeg(worldState);
-
-let bearingToTargetDeg=headingDeg;
-let distanceToTarget=0;
-let targetAvailable=false;
-
-if(target){
-const dx=target.coordinate.x-pos.x;
-const dz=target.coordinate.z-pos.z;
-bearingToTargetDeg=bearingFromXZ(dx,dz);
-distanceToTarget=magnitude2D(dx,dz);
-targetAvailable=true;
+function computeWeightedDriftTerm(driftAngle,driftWeight){
+if(driftAngle===null)return 0;
+return (-driftAngle)*driftWeight;
 }
 
-const headingTrackDeltaDeg=shortestSignedDeltaDeg(headingDeg,trackDeg);
-
-let crossTrackError=0;
-let routeDeviationClass="unavailable";
-
-if(targetAvailable){
-const endpoints=resolveRouteEndpoints(worldState,target);
-if(endpoints.start&&endpoints.end){
-crossTrackError=signedCrossTrackError(endpoints.start,endpoints.end,pos);
-routeDeviationClass=classifyDeviation(Math.abs(crossTrackError));
-}
+function computeDriftCorrection(terms){
+return normalizeAngle180(
+finiteOr(terms.routeRecoveryTerm,0)+
+finiteOr(terms.weightedBearingTerm,0)+
+finiteOr(terms.weightedDriftTerm,0)
+);
 }
 
+function computeCourseToSteer(targetBearing,driftCorrection){
+if(targetBearing===null)return null;
+return normalizeAngle360(targetBearing+driftCorrection);
+}
+
+function computeEta(targetDistance,speedOverGround,eps){
+if(targetDistance===null)return null;
+if(speedOverGround<=eps)return Infinity;
+return targetDistance/speedOverGround;
+}
+
+function computeWindApparentVector(windTrueVector,groundVector){
+return sub(windTrueVector,groundVector);
+}
+
+function computeWindApparentDirection(windApparentVector,eps){
+if(mag(windApparentVector)<=eps)return 0;
+return vectorToBearing(windApparentVector,eps);
+}
+
+function computeWindApparentSpeed(windApparentVector){
+return mag(windApparentVector);
+}
+
+function getPrimaryCelestialBody(celestialBodies){
+if(!Array.isArray(celestialBodies)||celestialBodies.length===0)return null;
+return celestialBodies[0]||null;
+}
+
+function computeCelestialAzimuth(position,body,eps){
+if(!body)return null;
+if(Number.isFinite(body.azimuth))return normalizeAngle360(body.azimuth);
+if(!body.position)return null;
+const bodyPos=vec(body.position.x,body.position.y);
+const rel=sub(bodyPos,position);
+if(mag(rel)<=eps)return 0;
+return vectorToBearing(rel,eps);
+}
+
+function computeCelestialAltitude(position,body,eps){
+if(!body)return null;
+if(Number.isFinite(body.altitude))return body.altitude;
+if(!body.position)return null;
+const observerZ=finiteOr(position&&position.z,0);
+const bodyZ=finiteOr(body.position.z,0);
+const rel=sub(vec(body.position.x,body.position.y),vec(position.x,position.y));
+const planar=Math.max(mag(rel),eps);
+return Math.atan2(bodyZ-observerZ,planar)*DEG;
+}
+
+function computeCorridorError(crossTrackError,targetDistance,visibility,hazardBias){
+if(crossTrackError===null&&targetDistance===null)return null;
+const xte=Math.abs(finiteOr(crossTrackError,0));
+const td=Math.max(finiteOr(targetDistance,0),0);
+return xte*(1+hazardBias)+((1-visibility)*td*0.05);
+}
+
+function assembleNavigationState(fields){
 return{
-position_world:{x:pos.x,y:pos.y,z:pos.z},
-heading_deg:headingDeg,
-track_deg:trackDeg,
-bearing_to_target_deg:bearingToTargetDeg,
-distance_to_target:distanceToTarget,
-heading_track_delta_deg:headingTrackDeltaDeg,
-cross_track_error:crossTrackError,
-route_deviation_class:routeDeviationClass,
-target_available:targetAvailable,
-target_id:target?target.id:null
+targetBearing:fields.targetBearing,
+targetDistance:fields.targetDistance,
+courseOverGround:fields.courseOverGround,
+speedOverWater:fields.speedOverWater,
+speedOverGround:fields.speedOverGround,
+driftAngle:fields.driftAngle,
+driftCorrection:fields.driftCorrection,
+courseToSteer:fields.courseToSteer,
+crossTrackError:fields.crossTrackError,
+eta:fields.eta,
+windApparentVector:fields.windApparentVector,
+windApparentDirection:fields.windApparentDirection,
+windApparentSpeed:fields.windApparentSpeed,
+celestialAzimuth:fields.celestialAzimuth,
+celestialAltitude:fields.celestialAltitude,
+corridorError:fields.corridorError
 };
 }
 
-function computeRouteTruth(worldState,positionalTruth,interactionState){
-const targetLocked=!!(interactionState&&interactionState.target_selection&&String(interactionState.target_selection.target_lock_state||"").toLowerCase()==="locked");
-const selectedCourseDeg=interactionState&&interactionState.course_selection&&isNum(interactionState.course_selection.selected_course_deg)
-?normalizeDeg(interactionState.course_selection.selected_course_deg)
-:positionalTruth.bearing_to_target_deg;
+function computeNavigationState(input){
+input=input||{};
+const eps=epsilonOf(input);
 
-const distance=positionalTruth.distance_to_target;
-const throttleClass=String(interactionState&&interactionState.helm_input&&interactionState.helm_input.throttle_class?interactionState.helm_input.throttle_class:"cruise").toLowerCase();
-
-let nominalSpeed;
-if(throttleClass==="stop"||throttleClass==="hold")nominalSpeed=0;
-else if(throttleClass==="slow")nominalSpeed=4;
-else if(throttleClass==="cruise")nominalSpeed=8;
-else if(throttleClass==="fast")nominalSpeed=12;
-else nominalSpeed=8;
-
-const etaSeconds=nominalSpeed>0?(distance/nominalSpeed):null;
-
-return{
-route_id:positionalTruth.target_id,
-target_lock_state:targetLocked?"locked":"unlocked",
-selected_course_deg:selectedCourseDeg,
-recommended_course_deg:positionalTruth.target_available?positionalTruth.bearing_to_target_deg:selectedCourseDeg,
-distance_remaining:distance,
-eta_seconds:etaSeconds,
-eta_stability_class:classifyEtaStability(distance,nominalSpeed),
-route_available:!!positionalTruth.target_available
-};
-}
-
-function computeCorrectionTruth(positionalTruth,routeTruth,interactionState){
-const steeringDelta=safeNum(interactionState&&interactionState.helm_input&&interactionState.helm_input.steering_delta,0);
-const noTarget=!routeTruth.route_available;
-
-if(noTarget){
-return{
-course_correction_deg:0,
-correction_direction:"hold",
-correction_class:"degraded_safe",
-recommended_turn_state:"hold",
-degradation_state:"no_target_safe_degradation"
-};
-}
-
-const targetCourse=routeTruth.recommended_course_deg;
-const currentHeading=positionalTruth.heading_deg;
-const headingCorrection=shortestSignedDeltaDeg(currentHeading,targetCourse);
-const crossTrackCorrection=clamp((-positionalTruth.cross_track_error)*0.35,-20,20);
-const correction=clamp(headingCorrection+crossTrackCorrection+steeringDelta,-45,45);
-
-let direction="hold";
-if(correction>1)direction="starboard";
-else if(correction<-1)direction="port";
-
-let correctionClass="minor";
-const absCorrection=Math.abs(correction);
-if(absCorrection<3)correctionClass="minor";
-else if(absCorrection<12)correctionClass="moderate";
-else correctionClass="major";
-
-return{
-course_correction_deg:correction,
-correction_direction:direction,
-correction_class:correctionClass,
-recommended_turn_state:direction,
-degradation_state:"nominal"
-};
-}
-
-function computeEnvironmentTruth(environmentState,worldState){
-const wind=environmentState&&environmentState.wind?environmentState.wind:{};
-const current=environmentState&&environmentState.current?environmentState.current:{};
-const vesselTrackDeg=worldState&&worldState.vessel_track_ref&&isNum(worldState.vessel_track_ref.track_ref)
-?normalizeDeg(deg(worldState.vessel_track_ref.track_ref))
-:0;
-
-const windDir=safeNum(wind.direction_deg,0);
-const windSpeed=safeNum(wind.speed,0);
-const currentDir=safeNum(current.direction_deg,0);
-const currentSpeed=safeNum(current.speed,0);
-
-const apparentWindDirectionDeg=normalizeDeg(windDir-vesselTrackDeg);
-const apparentWindSpeed=Math.max(0,windSpeed-(currentSpeed*0.15));
-
-const truth={
-time_of_day_class:String(environmentState&&environmentState.time_of_day_class?environmentState.time_of_day_class:"unknown"),
-visibility_class:String(environmentState&&environmentState.visibility_class?environmentState.visibility_class:"clear"),
-wind_direction_deg:windDir,
-wind_speed:windSpeed,
-current_direction_deg:currentDir,
-current_speed:currentSpeed,
-apparent_wind_direction_deg:apparentWindDirectionDeg,
-apparent_wind_speed:apparentWindSpeed
+const position={
+x:finiteOr(input.position&&input.position.x,0),
+y:finiteOr(input.position&&input.position.y,0),
+z:finiteOr(input.position&&input.position.z,0)
 };
 
-truth.apparent_wind_consistency=classifyApparentWindConsistency(wind,truth);
+const velocityWater=vec(
+input.velocityWater&&input.velocityWater.x,
+input.velocityWater&&input.velocityWater.y
+);
 
-return truth;
+const currentVector=vec(
+input.currentVector&&input.currentVector.x,
+input.currentVector&&input.currentVector.y
+);
+
+const waypointPosition=input.waypointPosition?vec(
+input.waypointPosition.x,
+input.waypointPosition.y
+):null;
+
+const windTrueVector=vec(
+input.windTrueVector&&input.windTrueVector.x,
+input.windTrueVector&&input.windTrueVector.y
+);
+
+const headingTrue=normalizeAngle360(input.headingTrue);
+const visibility=clamp(finiteOr(input.visibility,1),0,1);
+const hazardBias=clamp(finiteOr(input.hazardBias,0),0,1);
+
+const plannedRouteSegment=input.plannedRouteSegment&&
+input.plannedRouteSegment.start&&
+input.plannedRouteSegment.end
+?{
+start:vec(input.plannedRouteSegment.start.x,input.plannedRouteSegment.start.y),
+end:vec(input.plannedRouteSegment.end.x,input.plannedRouteSegment.end.y),
+corridorWidth:finiteOr(input.plannedRouteSegment.corridorWidth,0),
+recoveryGain:finiteOr(input.plannedRouteSegment.recoveryGain,DEFAULT_RECOVERY_GAIN),
+bearingWeight:finiteOr(input.plannedRouteSegment.bearingWeight,DEFAULT_BEARING_WEIGHT),
+driftWeight:finiteOr(input.plannedRouteSegment.driftWeight,DEFAULT_DRIFT_WEIGHT)
+}
+:null;
+
+const speedOverWater=computeSpeedOverWater(velocityWater);
+const groundVector=computeGroundVector(velocityWater,currentVector);
+const courseOverGround=computeCourseOverGround(groundVector,eps);
+const speedOverGround=computeSpeedOverGround(groundVector);
+
+const targetVector=computeTargetVector(position,waypointPosition);
+const targetBearing=computeTargetBearing(targetVector,eps);
+const targetDistance=computeTargetDistance(targetVector);
+
+const crossTrackError=computeCrossTrackError(position,plannedRouteSegment,eps);
+
+const driftAngle=computeDriftAngle(headingTrue,courseOverGround);
+
+const routeRecoveryTerm=computeRouteRecoveryTerm(
+crossTrackError,
+plannedRouteSegment?plannedRouteSegment.recoveryGain:DEFAULT_RECOVERY_GAIN
+);
+
+const weightedBearingTerm=computeWeightedBearingTerm(
+targetBearing,
+courseOverGround,
+plannedRouteSegment?plannedRouteSegment.bearingWeight:DEFAULT_BEARING_WEIGHT
+);
+
+const weightedDriftTerm=computeWeightedDriftTerm(
+driftAngle,
+plannedRouteSegment?plannedRouteSegment.driftWeight:DEFAULT_DRIFT_WEIGHT
+);
+
+const driftCorrection=computeDriftCorrection({
+routeRecoveryTerm:routeRecoveryTerm,
+weightedBearingTerm:weightedBearingTerm,
+weightedDriftTerm:weightedDriftTerm
+});
+
+const courseToSteer=computeCourseToSteer(targetBearing,driftCorrection);
+
+const eta=computeEta(targetDistance,speedOverGround,eps);
+
+const windApparentVector=computeWindApparentVector(windTrueVector,groundVector);
+const windApparentDirection=computeWindApparentDirection(windApparentVector,eps);
+const windApparentSpeed=computeWindApparentSpeed(windApparentVector);
+
+const body=getPrimaryCelestialBody(input.celestialBodies);
+const celestialAzimuth=computeCelestialAzimuth(position,body,eps);
+const celestialAltitude=computeCelestialAltitude(position,body,eps);
+
+const corridorError=computeCorridorError(
+crossTrackError,
+targetDistance,
+visibility,
+hazardBias
+);
+
+return assembleNavigationState({
+targetBearing:targetBearing,
+targetDistance:targetDistance,
+courseOverGround:courseOverGround,
+speedOverWater:speedOverWater,
+speedOverGround:speedOverGround,
+driftAngle:driftAngle,
+driftCorrection:driftCorrection,
+courseToSteer:courseToSteer,
+crossTrackError:crossTrackError,
+eta:eta,
+windApparentVector:windApparentVector,
+windApparentDirection:windApparentDirection,
+windApparentSpeed:windApparentSpeed,
+celestialAzimuth:celestialAzimuth,
+celestialAltitude:celestialAltitude,
+corridorError:corridorError
+});
 }
 
-function computeCelestialTruth(environmentState){
-const celestial=environmentState&&environmentState.celestial_state?environmentState.celestial_state:{};
-const state=classifyCelestialAvailability(environmentState);
-
-return{
-celestial_alignment_state:state,
-sun_available:!!celestial.sun,
-moon_available:!!celestial.moon,
-star_field_available:Array.isArray(celestial.stars)&&celestial.stars.length>0,
-observer_frame:String(celestial.observer_frame||"world_frame")
-};
-}
-
-function compute(input){
-const worldState=input&&input.world_state?input.world_state:{};
-const environmentState=input&&input.environment_state?input.environment_state:{};
-const interactionState=input&&input.interaction_state?input.interaction_state:{};
-
-const positionalTruth=computePositionalTruth(worldState,interactionState);
-const routeTruth=computeRouteTruth(worldState,positionalTruth,interactionState);
-const correctionTruth=computeCorrectionTruth(positionalTruth,routeTruth,interactionState);
-const environmentTruth=computeEnvironmentTruth(environmentState,worldState);
-const celestialTruth=computeCelestialTruth(environmentState);
-
-return{
-meta:{
-kernel_name:"NAVIGATION_MATH_KERNEL",
-kernel_version:NAVIGATION_MATH_VERSION,
-derivation_request:String(input&&input.derivation_request?input.derivation_request:"full"),
-frame_id:String(worldState&&worldState.vessel_track_ref&&worldState.vessel_track_ref.frame_id?worldState.vessel_track_ref.frame_id:"world_frame")
-},
-positional_truth:positionalTruth,
-route_truth:routeTruth,
-correction_truth:correctionTruth,
-environment_truth:environmentTruth,
-celestial_truth:celestialTruth
-};
-}
-
-window.OPENWORLD_NAVIGATION_MATH=Object.freeze({
-version:NAVIGATION_MATH_VERSION,
-compute:compute
+window.NAVIGATION_MATH_KERNEL=Object.freeze({
+version:"NAVIGATION_MATH_KERNEL_v1",
+computeNavigationState:computeNavigationState
 });
 })();

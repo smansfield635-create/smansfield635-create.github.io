@@ -38,10 +38,13 @@ export function createEnvironmentRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOuterWater(ctx, width, height, tick);
+    drawDepthFog(ctx, tick);
     drawIslandRing(ctx);
     drawBasinWater(ctx, tick);
     drawHarborMouth(ctx, tick);
+    drawShoreSurf(ctx, tick);
     drawElevation(ctx);
+    drawTerrainShadows(ctx, tick);
     drawRegionGrounds(ctx, kernel, projection, selection, destination, pulse);
     drawStructures(ctx, kernel, pulse);
     drawAmbient(ctx, tick);
@@ -63,19 +66,47 @@ export function createEnvironmentRenderer() {
       strokeWaveLine(ctx, 360 + i * 24, -320, width + 320, tick * 0.03 + i * 0.7, 3.5 + i * 0.2, 0.012, 0.05 + i * 0.01);
     }
 
-    const reflect = ctx.createLinearGradient(650, 240, 650, 740);
+    const reflect = ctx.createLinearGradient(650, 240, 650, 760);
     reflect.addColorStop(0, "rgba(255,238,188,0.00)");
-    reflect.addColorStop(0.22, "rgba(255,234,178,0.09)");
-    reflect.addColorStop(0.46, "rgba(255,224,162,0.16)");
-    reflect.addColorStop(1, "rgba(255,224,162,0.00)");
+    reflect.addColorStop(0.18, "rgba(255,234,178,0.08)");
+    reflect.addColorStop(0.36, "rgba(255,228,164,0.16)");
+    reflect.addColorStop(0.64, "rgba(255,220,150,0.20)");
+    reflect.addColorStop(1, "rgba(255,220,150,0.00)");
     ctx.fillStyle = reflect;
     ctx.beginPath();
     ctx.moveTo(590, 250);
     ctx.lineTo(710, 250);
-    ctx.lineTo(820, 760);
-    ctx.lineTo(470, 760);
+    ctx.lineTo(850, 780);
+    ctx.lineTo(450, 780);
     ctx.closePath();
     ctx.fill();
+
+    ctx.beginPath();
+    ctx.ellipse(640, 456, 92, 220, -0.06, 0, Math.PI * 2);
+    const shimmer = ctx.createLinearGradient(640, 248, 640, 676);
+    shimmer.addColorStop(0, "rgba(255,244,214,0.00)");
+    shimmer.addColorStop(0.28, "rgba(255,240,206,0.06)");
+    shimmer.addColorStop(0.58, "rgba(255,236,198,0.12)");
+    shimmer.addColorStop(1, "rgba(255,236,198,0.00)");
+    ctx.fillStyle = shimmer;
+    ctx.fill();
+  }
+
+  function drawDepthFog(ctx, tick) {
+    const haze = ctx.createLinearGradient(0, 110, 0, 520);
+    haze.addColorStop(0, "rgba(255,240,224,0.00)");
+    haze.addColorStop(0.52, "rgba(255,226,196,0.06)");
+    haze.addColorStop(1, "rgba(214,230,238,0.02)");
+    ctx.fillStyle = haze;
+    ctx.fillRect(120, 80, 860, 460);
+
+    const glowX = 618 + Math.sin(tick * 0.01) * 8;
+    const glow = ctx.createRadialGradient(glowX, 362, 0, glowX, 362, 260);
+    glow.addColorStop(0, "rgba(255,236,204,0.10)");
+    glow.addColorStop(0.55, "rgba(248,234,210,0.05)");
+    glow.addColorStop(1, "rgba(248,234,210,0.00)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(240, 140, 760, 520);
   }
 
   function drawIslandRing(ctx) {
@@ -83,11 +114,6 @@ export function createEnvironmentRenderer() {
       [440, 620],[350, 600],[260, 556],[190, 488],[160, 420],[176, 334],[226, 244],[300, 176],[396, 126],[502, 98],
       [610, 94],[712, 116],[808, 160],[888, 230],[936, 316],[942, 402],[912, 486],[842, 552],[742, 602],[624, 632],
       [520, 634]
-    ];
-
-    const innerBasinEdge = [
-      [458, 478],[396, 456],[342, 408],[324, 354],[340, 294],[382, 244],[446, 214],[522, 202],[600, 204],[672, 226],
-      [730, 268],[766, 322],[772, 382],[752, 432],[708, 470],[646, 494],[572, 504],[510, 500]
     ];
 
     polygon(ctx, outerRing);
@@ -99,13 +125,6 @@ export function createEnvironmentRenderer() {
     land.addColorStop(1, "rgba(82,102,78,1)");
     ctx.fillStyle = land;
     ctx.fill();
-
-    polygon(ctx, innerBasinEdge);
-    const basinCut = ctx.createLinearGradient(0, 180, 0, 520);
-    basinCut.addColorStop(0, "rgba(176,164,128,0.92)");
-    basinCut.addColorStop(1, "rgba(142,134,102,0.92)");
-    ctx.fillStyle = basinCut;
-    ctx.fill("evenodd");
 
     ctx.lineWidth = 2.4;
     ctx.strokeStyle = "rgba(246,236,210,0.26)";
@@ -130,6 +149,11 @@ export function createEnvironmentRenderer() {
     for (let i = 0; i < 8; i += 1) {
       strokeWaveLine(ctx, 280 + i * 18, 374, 746, tick * 0.04 + i * 0.7, 2.1, 0.03, 0.07 + i * 0.004);
     }
+
+    ctx.beginPath();
+    ctx.ellipse(612, 350, 76, 20, 0.06, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(232,242,244,0.10)";
+    ctx.fill();
   }
 
   function drawHarborMouth(ctx, tick) {
@@ -147,13 +171,42 @@ export function createEnvironmentRenderer() {
     for (let i = 0; i < 4; i += 1) {
       strokeWaveLine(ctx, 604 + i * 10, 462, 650, tick * 0.05 + i, 1.8, 0.04, 0.10);
     }
+  }
+
+  function drawShoreSurf(ctx, tick) {
+    const foamPulse = 0.24 + (0.08 * Math.sin(tick * 0.05));
 
     ctx.beginPath();
-    ctx.moveTo(452, 606);
-    ctx.quadraticCurveTo(560, 570, 658, 606);
-    ctx.strokeStyle = `rgba(248,240,216,${0.30 + 0.08 * Math.sin(tick * 0.05)})`;
+    ctx.moveTo(442, 607);
+    ctx.quadraticCurveTo(560, 566, 662, 607);
+    ctx.strokeStyle = `rgba(250,242,220,${foamPulse + 0.14})`;
     ctx.lineWidth = 3;
     ctx.stroke();
+
+    const basinFoam = [
+      [390, 430],[430, 462],[496, 486],[574, 492],[648, 478],[710, 448],[748, 408]
+    ];
+    polyline(ctx, basinFoam);
+    ctx.strokeStyle = `rgba(244,248,250,${foamPulse})`;
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+
+    const outerShore = [
+      [222, 510],[252, 470],[306, 430],[372, 400],[450, 374],[542, 338],[646, 292],[742, 244],[826, 196],[892, 162]
+    ];
+    polyline(ctx, outerShore);
+    ctx.strokeStyle = `rgba(248,238,214,${foamPulse * 0.72})`;
+    ctx.lineWidth = 2.2;
+    ctx.stroke();
+
+    for (let i = 0; i < 10; i += 1) {
+      const x = 406 + i * 34;
+      const y = 440 + Math.sin(tick * 0.06 + i * 0.8) * 6;
+      ctx.beginPath();
+      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(248,248,244,${foamPulse * 0.58})`;
+      ctx.fill();
+    }
   }
 
   function drawElevation(ctx) {
@@ -179,6 +232,45 @@ export function createEnvironmentRenderer() {
 
     polygon(ctx, summitMass);
     ctx.fillStyle = "rgba(194,190,182,0.62)";
+    ctx.fill();
+  }
+
+  function drawTerrainShadows(ctx, tick) {
+    const leftShadow = [
+      [312, 506],[326, 448],[352, 388],[388, 330],[432, 274],[474, 228],[500, 188],[470, 206],[430, 244],[388, 304],
+      [356, 362],[334, 426],[322, 482]
+    ];
+    const rightShadow = [
+      [700, 490],[722, 430],[736, 374],[738, 316],[726, 262],[700, 220],[668, 188],[648, 172],[670, 208],[696, 264],
+      [708, 326],[708, 392]
+    ];
+    const basinInnerShadow = [
+      [404, 412],[446, 446],[516, 468],[592, 470],[660, 454],[712, 426],[742, 388],[726, 410],[680, 446],[622, 466],
+      [548, 472],[482, 460],[428, 436]
+    ];
+
+    polygon(ctx, leftShadow);
+    ctx.fillStyle = "rgba(70,74,62,0.18)";
+    ctx.fill();
+
+    polygon(ctx, rightShadow);
+    ctx.fillStyle = "rgba(66,72,60,0.18)";
+    ctx.fill();
+
+    polygon(ctx, basinInnerShadow);
+    ctx.fillStyle = "rgba(54,72,74,0.10)";
+    ctx.fill();
+
+    const mist = ctx.createLinearGradient(0, 188, 0, 408);
+    mist.addColorStop(0, "rgba(255,246,236,0.04)");
+    mist.addColorStop(1, "rgba(210,224,230,0.00)");
+    ctx.fillStyle = mist;
+    ctx.fillRect(300, 180, 520, 240);
+
+    const driftX = 556 + Math.sin(tick * 0.012) * 6;
+    ctx.beginPath();
+    ctx.ellipse(driftX, 252, 106, 20, 0.02, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(236,236,232,0.07)";
     ctx.fill();
   }
 

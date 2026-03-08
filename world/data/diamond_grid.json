@@ -19,7 +19,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "low",
       "gateClass": null,
-      "centerPoint": [180, 460],
+      "centerPoint": [540, 560],
       "neighborIds": ["band_1__sector_se__node_harbor_market_gate"],
       "stateEncodingId": "harbor_idle_open"
     },
@@ -33,7 +33,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "low",
       "gateClass": null,
-      "centerPoint": [300, 430],
+      "centerPoint": [660, 500],
       "neighborIds": [
         "band_0__sector_s__node_harbor_core",
         "band_1__sector_e__node_market_core"
@@ -50,7 +50,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "none",
       "gateClass": null,
-      "centerPoint": [420, 400],
+      "centerPoint": [770, 430],
       "neighborIds": [
         "band_1__sector_se__node_harbor_market_gate",
         "band_2__sector_ne__node_market_basin_gate"
@@ -67,7 +67,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "medium",
       "gateClass": null,
-      "centerPoint": [540, 360],
+      "centerPoint": [650, 356],
       "neighborIds": [
         "band_1__sector_e__node_market_core",
         "band_2__sector_n__node_basin_core"
@@ -84,7 +84,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "medium",
       "gateClass": null,
-      "centerPoint": [660, 320],
+      "centerPoint": [560, 320],
       "neighborIds": [
         "band_2__sector_ne__node_market_basin_gate",
         "band_3__sector_n__node_summit_gate"
@@ -101,7 +101,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "medium",
       "gateClass": "gate_summit_entry",
-      "centerPoint": [780, 250],
+      "centerPoint": [576, 206],
       "neighborIds": [
         "band_2__sector_n__node_basin_core",
         "band_3__sector_nne__node_summit_core"
@@ -118,7 +118,7 @@
       "modeSet": ["foot"],
       "hazardWeightClass": "low",
       "gateClass": "gate_summit_entry",
-      "centerPoint": [900, 180],
+      "centerPoint": [560, 120],
       "neighborIds": ["band_3__sector_n__node_summit_gate"],
       "stateEncodingId": "summit_gate_required"
     }

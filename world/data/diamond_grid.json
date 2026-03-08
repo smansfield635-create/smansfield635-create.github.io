@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "DIAMOND_RUNTIME_NAVIGATION_GRID_KERNEL_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "gridMeta": {
+    "gridType": "diamond_runtime_subset",
+    "bandCount": 4,
+    "sectorCount": 16,
+    "entryCellId": "band_0__sector_s__node_harbor_core"
+  },
+  "diamondCells": [
+    {
+      "diamondCellId": "band_0__sector_s__node_harbor_core",
+      "bandIndex": 0,
+      "sector": "S",
+      "regionId": "harbor_village",
+      "pathId": null,
+      "progressionClass": "entry",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "low",
+      "gateClass": null,
+      "centerPoint": [180, 460],
+      "neighborIds": ["band_1__sector_se__node_harbor_market_gate"],
+      "stateEncodingId": "harbor_idle_open"
+    },
+    {
+      "diamondCellId": "band_1__sector_se__node_harbor_market_gate",
+      "bandIndex": 1,
+      "sector": "SE",
+      "regionId": "harbor_village",
+      "pathId": "path_harbor_to_market",
+      "progressionClass": "corridor",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "low",
+      "gateClass": null,
+      "centerPoint": [300, 430],
+      "neighborIds": [
+        "band_0__sector_s__node_harbor_core",
+        "band_1__sector_e__node_market_core"
+      ],
+      "stateEncodingId": "harbor_idle_open"
+    },
+    {
+      "diamondCellId": "band_1__sector_e__node_market_core",
+      "bandIndex": 1,
+      "sector": "E",
+      "regionId": "market_district",
+      "pathId": null,
+      "progressionClass": "district",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "none",
+      "gateClass": null,
+      "centerPoint": [420, 400],
+      "neighborIds": [
+        "band_1__sector_se__node_harbor_market_gate",
+        "band_2__sector_ne__node_market_basin_gate"
+      ],
+      "stateEncodingId": "market_active_open"
+    },
+    {
+      "diamondCellId": "band_2__sector_ne__node_market_basin_gate",
+      "bandIndex": 2,
+      "sector": "NE",
+      "regionId": "market_district",
+      "pathId": "path_market_to_basin",
+      "progressionClass": "corridor",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "medium",
+      "gateClass": null,
+      "centerPoint": [540, 360],
+      "neighborIds": [
+        "band_1__sector_e__node_market_core",
+        "band_2__sector_n__node_basin_core"
+      ],
+      "stateEncodingId": "market_active_open"
+    },
+    {
+      "diamondCellId": "band_2__sector_n__node_basin_core",
+      "bandIndex": 2,
+      "sector": "N",
+      "regionId": "exploration_basin",
+      "pathId": null,
+      "progressionClass": "exploration",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "medium",
+      "gateClass": null,
+      "centerPoint": [660, 320],
+      "neighborIds": [
+        "band_2__sector_ne__node_market_basin_gate",
+        "band_3__sector_n__node_summit_gate"
+      ],
+      "stateEncodingId": "basin_explore_open"
+    },
+    {
+      "diamondCellId": "band_3__sector_n__node_summit_gate",
+      "bandIndex": 3,
+      "sector": "N",
+      "regionId": "exploration_basin",
+      "pathId": "path_basin_to_summit",
+      "progressionClass": "gate",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "medium",
+      "gateClass": "gate_summit_entry",
+      "centerPoint": [780, 250],
+      "neighborIds": [
+        "band_2__sector_n__node_basin_core",
+        "band_3__sector_nne__node_summit_core"
+      ],
+      "stateEncodingId": "summit_gate_required"
+    },
+    {
+      "diamondCellId": "band_3__sector_nne__node_summit_core",
+      "bandIndex": 3,
+      "sector": "NNE",
+      "regionId": "summit_plaza",
+      "pathId": null,
+      "progressionClass": "terminal",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "low",
+      "gateClass": "gate_summit_entry",
+      "centerPoint": [900, 180],
+      "neighborIds": ["band_3__sector_n__node_summit_gate"],
+      "stateEncodingId": "summit_gate_required"
+    }
+  ],
+  "sectorBindings": {
+    "harbor_village": "S",
+    "market_district": "E",
+    "exploration_basin": "N",
+    "summit_plaza": "NNE"
+  },
+  "bandBindings": {
+    "harbor_village": 0,
+    "market_district": 1,
+    "exploration_basin": 2,
+    "summit_plaza": 3
+  }
+}

@@ -26,6 +26,14 @@ function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
   return distanceSq(px, py, cx, cy);
 }
 
+function getCanvasPoint(canvas, clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
 export async function createScene(canvas, outputs) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2D canvas context unavailable");
@@ -59,8 +67,9 @@ export async function createScene(canvas, outputs) {
       x: 0,
       y: 0
     },
-    interaction: {
-      lastPointerDown: null
+    worldBounds: {
+      width: 1080,
+      height: 640
     }
   };
 
@@ -78,8 +87,8 @@ export async function createScene(canvas, outputs) {
   }
 
   function updateViewportOffset() {
-    const baseX = (state.width - 1080) * 0.5;
-    const baseY = (state.height - 640) * 0.5;
+    const baseX = (state.width - state.worldBounds.width) * 0.5;
+    const baseY = (state.height - state.worldBounds.height) * 0.5;
 
     const followX = state.width * 0.5 - (state.player.x + baseX);
     const followY = state.height * 0.62 - (state.player.y + baseY);
@@ -157,7 +166,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const radiusSq = 72 * 72;
+    const radiusSq = 96 * 96;
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
@@ -175,7 +184,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const toleranceSq = 30 * 30;
+    const toleranceSq = 44 * 44;
 
     for (const path of paths) {
       const pts = path.centerline;
@@ -194,20 +203,17 @@ export async function createScene(canvas, outputs) {
   }
 
   function worldPointFromClient(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    const localX = clientX - rect.left;
-    const localY = clientY - rect.top;
-
+    const local = getCanvasPoint(canvas, clientX, clientY);
     return {
-      x: localX - state.viewportOffset.x,
-      y: localY - state.viewportOffset.y
+      x: local.x - state.viewportOffset.x,
+      y: local.y - state.viewportOffset.y
     };
   }
 
   function handleWorldTap(clientX, clientY) {
     const worldPoint = worldPointFromClient(clientX, clientY);
-    const region = hitTestRegion(worldPoint.x, worldPoint.y);
 
+    const region = hitTestRegion(worldPoint.x, worldPoint.y);
     if (region) {
       state.selection = {
         kind: "region",
@@ -226,11 +232,13 @@ export async function createScene(canvas, outputs) {
         pathId: path.pathId,
         displayName: path.displayName
       };
+      state.destination = null;
       updateOutputs();
       return;
     }
 
     state.selection = null;
+    state.destination = null;
     updateOutputs();
   }
 
@@ -251,13 +259,12 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     const paths = [...state.kernel.pathsById.values()];
     const offset = state.viewportOffset;
+    const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
 
     drawAmbientMotes(offset);
 
     ctx.save();
     ctx.translate(offset.x, offset.y);
-
-    const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
 
     for (const path of paths) {
       const isSelected = state.selection?.kind === "path" && state.selection.pathId === path.pathId;
@@ -284,8 +291,7 @@ export async function createScene(canvas, outputs) {
       if (isSelected || isDestinationPath) {
         ctx.save();
         ctx.globalAlpha = 0.7;
-        for (let i = 0; i < path.centerline.length; i += 1) {
-          const [x, y] = path.centerline[i];
+        for (const [x, y] of path.centerline) {
           const rr = isSelected ? 5 : 4 + pulse * 2;
           ctx.beginPath();
           ctx.arc(x, y, rr, 0, Math.PI * 2);
@@ -388,26 +394,11 @@ export async function createScene(canvas, outputs) {
     state.keys.delete(event.key);
   }
 
-  function onPointerDown(event) {
-    state.interaction.lastPointerDown = {
-      x: event.clientX,
-      y: event.clientY
-    };
-  }
-
-  function onPointerUp(event) {
-    handleWorldTap(event.clientX, event.clientY);
-  }
-
-  function onClick(event) {
-    handleWorldTap(event.clientX, event.clientY);
-  }
-
-  function onTouchEnd(event) {
-    const touch = event.changedTouches?.[0];
-    if (!touch) return;
-    handleWorldTap(touch.clientX, touch.clientY);
-    event.preventDefault();
+  function onCanvasPress(event) {
+    const point = event.changedTouches?.[0] ?? event;
+    if (!point) return;
+    handleWorldTap(point.clientX, point.clientY);
+    if (typeof event.preventDefault === "function") event.preventDefault();
   }
 
   resize();
@@ -417,10 +408,9 @@ export async function createScene(canvas, outputs) {
   window.addEventListener("resize", resize, { passive: true });
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
-  canvas.addEventListener("pointerdown", onPointerDown);
-  canvas.addEventListener("pointerup", onPointerUp);
-  canvas.addEventListener("click", onClick);
-  canvas.addEventListener("touchend", onTouchEnd, { passive: false });
+  canvas.addEventListener("pointerup", onCanvasPress);
+  canvas.addEventListener("click", onCanvasPress);
+  canvas.addEventListener("touchend", onCanvasPress, { passive: false });
 
   return Object.freeze({
     start() {

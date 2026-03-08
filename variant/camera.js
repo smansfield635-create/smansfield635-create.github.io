@@ -1,134 +1,100 @@
-(function () {
-  "use strict";
+(function(){
+"use strict";
 
-  const PRESETS = Object.freeze({
-    fixed_harbor: {
-      horizon: 0.66,
-      cubeScale: 0.118,
-      cubeYOffset: 0.33,
-      pathAlpha: 1.0,
-      labelAlpha: 0.78,
-      perspectiveBias: 0,
-    },
-    travel_projection: {
-      horizon: 0.62,
-      cubeScale: 0.1,
-      cubeYOffset: 0.29,
-      pathAlpha: 1.0,
-      labelAlpha: 0.72,
-      perspectiveBias: 80,
-    },
-    aerial_one: {
-      horizon: 0.57,
-      cubeScale: 0.092,
-      cubeYOffset: 0.23,
-      pathAlpha: 0.9,
-      labelAlpha: 0.62,
-      perspectiveBias: 120,
-    },
-    aerial_two: {
-      horizon: 0.52,
-      cubeScale: 0.084,
-      cubeYOffset: 0.18,
-      pathAlpha: 0.78,
-      labelAlpha: 0.54,
-      perspectiveBias: 160,
-    },
-  });
+const PRESETS=Object.freeze({
+fixed_harbor:{
+horizon:0.615,
+skyDrift:1.0,
+waterDrift:1.0,
+parallax:1.0,
+compassLift:0.0
+},
+drag_view:{
+horizon:0.602,
+skyDrift:1.03,
+waterDrift:1.02,
+parallax:1.08,
+compassLift:0.04
+},
+compass_focus:{
+horizon:0.592,
+skyDrift:1.02,
+waterDrift:1.01,
+parallax:1.05,
+compassLift:0.10
+}
+});
 
-  const CAMERA_ORDER = Object.freeze([
-    "fixed_harbor",
-    "travel_projection",
-    "aerial_one",
-    "aerial_two",
-  ]);
+function clamp(v,min,max){
+return Math.max(min,Math.min(max,v));
+}
 
-  function clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
-  }
+function lerp(a,b,t){
+return a+(b-a)*t;
+}
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
+function createState(initialMode){
+const mode=PRESETS[initialMode]?initialMode:"fixed_harbor";
+return{
+mode:mode,
+requested:mode,
+transition:0
+};
+}
 
-  function isValidMode(mode) {
-    return Object.prototype.hasOwnProperty.call(PRESETS, mode);
-  }
+function blendTo(state,target){
+if(!state||!PRESETS[target])return state;
+state.requested=target;
+return state;
+}
 
-  function createState(initialMode) {
-    const mode = isValidMode(initialMode) ? initialMode : "fixed_harbor";
-    return {
-      mode,
-      requested: mode,
-      transition: 0,
-    };
-  }
+function update(state,step){
+if(!state)return state;
 
-  function blendTo(state, target) {
-    if (!state || !isValidMode(target)) return state;
-    state.requested = target;
-    return state;
-  }
+const dt=(typeof step==="number"&&isFinite(step))?step:0.08;
 
-  function cycle(state) {
-    if (!state) return state;
-    const index = CAMERA_ORDER.indexOf(state.requested);
-    const next = CAMERA_ORDER[(index + 1) % CAMERA_ORDER.length];
-    state.requested = next;
-    return state;
-  }
+if(state.mode!==state.requested){
+state.transition=clamp(state.transition+dt,0,1);
+if(state.transition>=1){
+state.mode=state.requested;
+state.transition=0;
+}
+}else{
+state.transition=0;
+}
 
-  function update(state, step) {
-    if (!state) return state;
-    const dt = typeof step === "number" && isFinite(step) ? step : 0.06;
+return state;
+}
 
-    if (state.mode !== state.requested) {
-      state.transition = clamp(state.transition + dt, 0, 1);
-      if (state.transition >= 1) {
-        state.mode = state.requested;
-        state.transition = 0;
-      }
-    } else {
-      state.transition = 0;
-    }
+function getPreset(mode){
+return PRESETS[mode]||PRESETS.fixed_harbor;
+}
 
-    return state;
-  }
+function getBlendedPreset(state){
+if(!state)return PRESETS.fixed_harbor;
 
-  function getPreset(mode) {
-    return PRESETS[mode] || PRESETS.fixed_harbor;
-  }
+const current=getPreset(state.mode);
+const target=getPreset(state.requested);
+const t=state.transition||0;
 
-  function getBlendedPreset(state) {
-    if (!state) return PRESETS.fixed_harbor;
+if(state.mode===state.requested)return current;
 
-    const current = getPreset(state.mode);
-    const target = getPreset(state.requested);
-    const t = state.transition || 0;
+return{
+horizon:lerp(current.horizon,target.horizon,t),
+skyDrift:lerp(current.skyDrift,target.skyDrift,t),
+waterDrift:lerp(current.waterDrift,target.waterDrift,t),
+parallax:lerp(current.parallax,target.parallax,t),
+compassLift:lerp(current.compassLift,target.compassLift,t)
+};
+}
 
-    if (!target || state.mode === state.requested) {
-      return current;
-    }
-
-    return {
-      horizon: lerp(current.horizon, target.horizon, t),
-      cubeScale: lerp(current.cubeScale, target.cubeScale, t),
-      cubeYOffset: lerp(current.cubeYOffset, target.cubeYOffset, t),
-      pathAlpha: lerp(current.pathAlpha, target.pathAlpha, t),
-      labelAlpha: lerp(current.labelAlpha, target.labelAlpha, t),
-      perspectiveBias: lerp(current.perspectiveBias, target.perspectiveBias, t),
-    };
-  }
-
-  window.OPENWORLD_CAMERA = Object.freeze({
-    version: "OPENWORLD_CAMERA_v1",
-    PRESETS,
-    CAMERA_ORDER,
-    createState,
-    blendTo,
-    cycle,
-    update,
-    getPreset,
-    getBlendedPreset,
-  });
+window.OPENWORLD_CAMERA=Object.freeze({
+version:"OPENWORLD_CAMERA_vMAX1",
+PRESETS:PRESETS,
+createState:createState,
+blendTo:blendTo,
+update:update,
+getPreset:getPreset,
+getBlendedPreset:getBlendedPreset
+});
 })();

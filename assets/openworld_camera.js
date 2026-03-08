@@ -1,39 +1,20 @@
 (function(){
 "use strict";
 
-const PRESETS={
+const PRESETS=Object.freeze({
 fixed_harbor:{
-horizon:0.66,
-cubeScale:0.118,
-cubeYOffset:0.22,
-perspectiveBias:0
-},
-travel_projection:{
 horizon:0.62,
-cubeScale:0.10,
-cubeYOffset:0.22,
-perspectiveBias:80
+skyDrift:1.0,
+waterDrift:1.0,
+parallax:1.0
 },
-aerial_one:{
-horizon:0.57,
-cubeScale:0.092,
-cubeYOffset:0.20,
-perspectiveBias:120
-},
-aerial_two:{
-horizon:0.52,
-cubeScale:0.084,
-cubeYOffset:0.18,
-perspectiveBias:160
+drag_view:{
+horizon:0.60,
+skyDrift:1.04,
+waterDrift:1.02,
+parallax:1.08
 }
-};
-
-const ORDER=[
-"fixed_harbor",
-"travel_projection",
-"aerial_one",
-"aerial_two"
-];
+});
 
 function clamp(v,min,max){
 return Math.max(min,Math.min(max,v));
@@ -43,38 +24,41 @@ function lerp(a,b,t){
 return a+(b-a)*t;
 }
 
-function createState(mode){
+function isValidMode(mode){
+return Object.prototype.hasOwnProperty.call(PRESETS,mode);
+}
+
+function createState(initialMode){
+const mode=isValidMode(initialMode)?initialMode:"fixed_harbor";
 return{
-mode:mode||"fixed_harbor",
-requested:mode||"fixed_harbor",
+mode:mode,
+requested:mode,
 transition:0
 };
 }
 
 function blendTo(state,target){
+if(!state||!isValidMode(target))return state;
 state.requested=target;
+return state;
 }
 
-function cycle(state){
-const i=ORDER.indexOf(state.requested);
-state.requested=ORDER[(i+1)%ORDER.length];
-}
+function update(state,step){
+if(!state)return state;
 
-function update(state,dt){
+const dt=(typeof step==="number"&&isFinite(step))?step:0.08;
 
 if(state.mode!==state.requested){
-
-state.transition+=dt;
-
+state.transition=clamp(state.transition+dt,0,1);
 if(state.transition>=1){
 state.mode=state.requested;
 state.transition=0;
 }
-
 }else{
 state.transition=0;
 }
 
+return state;
 }
 
 function getPreset(mode){
@@ -82,30 +66,29 @@ return PRESETS[mode]||PRESETS.fixed_harbor;
 }
 
 function getBlendedPreset(state){
+if(!state)return PRESETS.fixed_harbor;
 
-const a=getPreset(state.mode);
-const b=getPreset(state.requested);
+const current=getPreset(state.mode);
+const target=getPreset(state.requested);
+const t=state.transition||0;
 
-const t=state.transition;
-
-if(state.mode===state.requested)return a;
+if(state.mode===state.requested)return current;
 
 return{
-horizon:lerp(a.horizon,b.horizon,t),
-cubeScale:lerp(a.cubeScale,b.cubeScale,t),
-cubeYOffset:lerp(a.cubeYOffset,b.cubeYOffset,t),
-perspectiveBias:lerp(a.perspectiveBias,b.perspectiveBias,t)
+horizon:lerp(current.horizon,target.horizon,t),
+skyDrift:lerp(current.skyDrift,target.skyDrift,t),
+waterDrift:lerp(current.waterDrift,target.waterDrift,t),
+parallax:lerp(current.parallax,target.parallax,t)
 };
-
 }
 
-window.OPENWORLD_CAMERA={
-createState,
-blendTo,
-cycle,
-update,
-getPreset,
-getBlendedPreset
-};
-
+window.OPENWORLD_CAMERA=Object.freeze({
+version:"OPENWORLD_CAMERA_vMIN1",
+PRESETS:PRESETS,
+createState:createState,
+blendTo:blendTo,
+update:update,
+getPreset:getPreset,
+getBlendedPreset:getBlendedPreset
+});
 })();

@@ -70,6 +70,14 @@ export async function createScene(canvas, outputs) {
     worldBounds: {
       width: 1080,
       height: 640
+    },
+    touch: {
+      activeId: null,
+      startClientX: 0,
+      startClientY: 0,
+      lastClientX: 0,
+      lastClientY: 0,
+      moved: false
     }
   };
 
@@ -166,7 +174,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const radiusSq = 96 * 96;
+    const radiusSq = 110 * 110;
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
@@ -184,7 +192,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const toleranceSq = 44 * 44;
+    const toleranceSq = 52 * 52;
 
     for (const path of paths) {
       const pts = path.centerline;
@@ -394,10 +402,67 @@ export async function createScene(canvas, outputs) {
     state.keys.delete(event.key);
   }
 
-  function onCanvasPress(event) {
-    const point = event.changedTouches?.[0] ?? event;
-    if (!point) return;
-    handleWorldTap(point.clientX, point.clientY);
+  function onPointerUp(event) {
+    if (event.pointerType === "mouse") {
+      handleWorldTap(event.clientX, event.clientY);
+      return;
+    }
+
+    if (event.pointerType === "touch" || event.pointerType === "pen") {
+      handleWorldTap(event.clientX, event.clientY);
+      if (typeof event.preventDefault === "function") event.preventDefault();
+    }
+  }
+
+  function onTouchStart(event) {
+    const touch = event.changedTouches?.[0];
+    if (!touch) return;
+
+    state.touch.activeId = touch.identifier;
+    state.touch.startClientX = touch.clientX;
+    state.touch.startClientY = touch.clientY;
+    state.touch.lastClientX = touch.clientX;
+    state.touch.lastClientY = touch.clientY;
+    state.touch.moved = false;
+
+    if (typeof event.preventDefault === "function") event.preventDefault();
+  }
+
+  function onTouchMove(event) {
+    const touches = [...(event.changedTouches ?? [])];
+    const touch = touches.find((item) => item.identifier === state.touch.activeId) ?? touches[0];
+    if (!touch) return;
+
+    state.touch.lastClientX = touch.clientX;
+    state.touch.lastClientY = touch.clientY;
+
+    const dx = touch.clientX - state.touch.startClientX;
+    const dy = touch.clientY - state.touch.startClientY;
+    if ((dx * dx) + (dy * dy) > (12 * 12)) {
+      state.touch.moved = true;
+    }
+
+    if (typeof event.preventDefault === "function") event.preventDefault();
+  }
+
+  function onTouchEnd(event) {
+    const touches = [...(event.changedTouches ?? [])];
+    const touch = touches.find((item) => item.identifier === state.touch.activeId) ?? touches[0];
+    if (!touch) return;
+
+    if (!state.touch.moved) {
+      handleWorldTap(touch.clientX, touch.clientY);
+    }
+
+    state.touch.activeId = null;
+    state.touch.moved = false;
+
+    if (typeof event.preventDefault === "function") event.preventDefault();
+  }
+
+  function onTouchCancel(event) {
+    state.touch.activeId = null;
+    state.touch.moved = false;
     if (typeof event.preventDefault === "function") event.preventDefault();
   }
 
@@ -408,9 +473,12 @@ export async function createScene(canvas, outputs) {
   window.addEventListener("resize", resize, { passive: true });
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
-  canvas.addEventListener("pointerup", onCanvasPress);
-  canvas.addEventListener("click", onCanvasPress);
-  canvas.addEventListener("touchend", onCanvasPress, { passive: false });
+
+  canvas.addEventListener("pointerup", onPointerUp, { passive: false });
+  canvas.addEventListener("touchstart", onTouchStart, { passive: false });
+  canvas.addEventListener("touchmove", onTouchMove, { passive: false });
+  canvas.addEventListener("touchend", onTouchEnd, { passive: false });
+  canvas.addEventListener("touchcancel", onTouchCancel, { passive: false });
 
   return Object.freeze({
     start() {

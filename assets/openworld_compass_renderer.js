@@ -3,10 +3,6 @@
 
 const TAU=Math.PI*2;
 
-function lerp(a,b,t){
-return a+(b-a)*t;
-}
-
 function rotateVertex(x,y,z,rotY,rotX){
 const cy=Math.cos(rotY);
 const sy=Math.sin(rotY);
@@ -49,12 +45,12 @@ const rotX=opts.rotX||0;
 const rotY=opts.rotY||0;
 
 const vertsRaw=[
-[0,-1.55,0],   // top
-[1,0,0],       // east
-[0,0,1],       // south
-[-1,0,0],      // west
-[0,0,-1],      // north
-[0,1.55,0]     // bottom
+[0,-1.62,0],
+[1.06,0,0],
+[0,0,1.06],
+[-1.06,0,0],
+[0,0,-1.06],
+[0,1.62,0]
 ];
 
 const faces3D=[
@@ -107,13 +103,20 @@ size:size
 };
 }
 
+function faceFill(name){
+if(name==="NE"||name==="nE")return "rgba(162,42,36,0.34)";
+if(name==="ES"||name==="sE")return "rgba(128,24,22,0.30)";
+if(name==="SW"||name==="sW")return "rgba(92,12,18,0.28)";
+return "rgba(116,16,22,0.28)";
+}
+
 function drawFace(ctx,face){
 ctx.save();
 ctx.beginPath();
 ctx.moveTo(face.poly[0].x,face.poly[0].y);
 for(let i=1;i<face.poly.length;i++)ctx.lineTo(face.poly[i].x,face.poly[i].y);
 ctx.closePath();
-ctx.fillStyle="rgba(96,12,18,0.34)";
+ctx.fillStyle=faceFill(face.name);
 ctx.fill();
 ctx.lineWidth=1.1;
 ctx.strokeStyle="rgba(255,222,160,0.76)";
@@ -126,9 +129,15 @@ ctx.save();
 ctx.globalAlpha=0.14;
 ctx.strokeStyle="rgba(255,222,160,0.74)";
 ctx.lineWidth=1.0;
+
 ctx.beginPath();
-ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.65,geo.size*0.52,0,0,TAU);
+ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.70,geo.size*0.54,0,0,TAU);
 ctx.stroke();
+
+ctx.beginPath();
+ctx.ellipse(geo.centerX,geo.centerY,geo.size*0.94,geo.size*0.30,0,0,TAU);
+ctx.stroke();
+
 ctx.restore();
 }
 
@@ -138,10 +147,10 @@ ctx.fillStyle="rgba(255,236,196,0.92)";
 ctx.font='700 11px system-ui,Segoe UI,Roboto,sans-serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.78));
-ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.78));
-ctx.fillText("E",geo.centerX+(geo.size*1.05),geo.centerY);
-ctx.fillText("W",geo.centerX-(geo.size*1.05),geo.centerY);
+ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.82));
+ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.82));
+ctx.fillText("E",geo.centerX+(geo.size*1.08),geo.centerY);
+ctx.fillText("W",geo.centerX-(geo.size*1.08),geo.centerY);
 ctx.restore();
 }
 
@@ -171,7 +180,7 @@ if(settings.showLabels)drawLabels(ctx,geo);
 }
 
 window.OPENWORLD_COMPASS_RENDERER=Object.freeze({
-version:"OPENWORLD_COMPASS_RENDERER_vL2",
+version:"OPENWORLD_COMPASS_RENDERER_vL2B",
 getDiamondGeometry:getDiamondGeometry,
 drawCompass:drawCompass
 });

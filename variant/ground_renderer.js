@@ -243,8 +243,6 @@ export function createGroundRenderer() {
         ctx.fillRect(x - 26, y + 6, 52, 14);
         ctx.fillStyle = "rgba(212,180,132,0.86)";
         ctx.fillRect(x - 18, y - 8, 36, 10);
-        ctx.fillRect(x - 42, y + 8, 10, 12);
-        ctx.fillRect(x + 32, y + 8, 10, 12);
       }
 
       if (region.regionId === "exploration_basin") {

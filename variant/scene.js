@@ -86,6 +86,16 @@ function lerp(a,b,t){
 return a+(b-a)*t;
 }
 
+function resolveFaceMeta(face){
+if(face==="C")return{short:"CORE"};
+if(face==="M")return{short:"M"};
+if(face==="N")return{short:"N"};
+if(face==="E")return{short:"E"};
+if(face==="S")return{short:"S"};
+if(face==="W")return{short:"W"};
+return{short:String(face||"")};
+}
+
 /* COMPASS */
 
 function raiseCompass(){
@@ -113,15 +123,12 @@ raiseCompass();
 /* INPUT */
 
 function pointerDown(p){
-
 state.dragging=true;
 state.lastX=p.x;
 state.lastY=p.y;
-
 }
 
 function pointerMove(p){
-
 if(!state.dragging)return;
 
 const dx=p.x-state.lastX;
@@ -132,7 +139,6 @@ state.lastY=p.y;
 
 state.rotVelY+=dx*0.001;
 state.rotVelX+=dy*0.001;
-
 }
 
 function pointerUp(){
@@ -142,7 +148,6 @@ state.dragging=false;
 /* RESIZE */
 
 function resize(){
-
 const dpr=Math.max(1,window.devicePixelRatio||1);
 
 const w=window.innerWidth;
@@ -162,21 +167,17 @@ const preset=CAMERA.getPreset(state.camera.mode);
 BG.initLanterns(state.background,w,h);
 BG.initClouds(state.background,w,h);
 BG.initMountains(state.background,w,h,preset);
-
 }
 
 /* ANIMATION */
 
 function animate(){
-
 state.tick++;
 
 /* compass easing */
-
 state.compassLift=lerp(state.compassLift,state.compassTarget,0.06);
 
 /* rotation */
-
 state.rotY+=state.rotVelY;
 state.rotX+=state.rotVelX;
 
@@ -187,19 +188,15 @@ state.rotVelY=clamp(state.rotVelY,-0.14,0.14);
 state.rotVelX=clamp(state.rotVelX,-0.14,0.14);
 
 /* camera */
-
 CAMERA.update(state.camera,0.06);
 
 /* celestial */
-
 BG.syncCelestials(state.background,ENV,state.tick);
-
 }
 
 /* DRAW */
 
 function draw(){
-
 const w=window.innerWidth;
 const h=window.innerHeight;
 
@@ -208,35 +205,28 @@ const preset=CAMERA.getBlendedPreset(state.camera);
 ctx.clearRect(0,0,w,h);
 
 /* SKY */
-
 BG.drawSky(ctx,w,h,state.tick,preset,state.background);
 BG.drawSun(ctx,w,h,state.background);
 BG.drawMoon(ctx,w,h,state.background);
 
 /* CLOUDS */
-
 BG.drawClouds(ctx,state.background,state.tick,null);
 
 /* LANTERNS */
-
 BG.drawLanterns(ctx,state.background,state.tick,1);
 
 /* MOUNTAINS */
-
 BG.drawMountains(ctx,w,h,state.background,preset);
 
 /* WATER */
-
 BG.drawWater(ctx,w,h,state.tick,preset,state.background,null);
 
 /* HARBOR */
-
 if(HARBOR&&HARBOR.draw){
 HARBOR.draw(ctx,w,h,state.tick);
 }
 
 /* COMPASS HEIGHT */
-
 const compassY=lerp(
 h*COMPASS_REST,
 h*COMPASS_ACTIVE,
@@ -244,48 +234,58 @@ state.compassLift
 );
 
 /* COMPASS */
-
 const geo=COMPASS.getCubeGeometry({
 width:w,
 height:h,
 preset:preset,
 rotX:state.rotX,
 rotY:state.rotY,
+morphPulse:0,
 cameraRequested:state.camera.requested
 });
 
 geo.centerY=compassY;
-
 state.cube=geo;
 
 /* DRAGONS */
-
 const bundles=DRAGONS.getDragonBundles(geo,{
 tick:state.tick,
 dragonLoop:true,
-dragonStart:0
+dragonStart:0,
+background:state.background,
+motion:{
+dragons:{
+orbitCenter:{x:0,y:520,z:420},
+orbitRadius:420,
+orbitSpeed:0.0019
+}
+}
 });
 
 /* BACK */
-
 if(state.dragonLeft||state.dragonRight){
 DRAGONS.drawBack(ctx,geo,bundles,state.tick);
 }
 
 /* COMPASS */
-
-COMPASS.drawCube(ctx,geo,state.tick,()=>null,null);
+COMPASS.drawCube(ctx,geo,state.tick,resolveFaceMeta,null);
 
 /* FRONT */
-
 if(state.dragonLeft||state.dragonRight){
 DRAGONS.drawFront(ctx,geo,bundles,state.tick,"en",{
 tick:state.tick,
 dragonLoop:true,
-dragonStart:0
+dragonStart:0,
+background:state.background,
+motion:{
+dragons:{
+orbitCenter:{x:0,y:520,z:420},
+orbitRadius:420,
+orbitSpeed:0.0019
+}
+}
 });
 }
-
 }
 
 /* FRAME */

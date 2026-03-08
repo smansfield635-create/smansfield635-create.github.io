@@ -1,4 +1,5 @@
 import { createBackgroundRenderer } from "./background_renderer.js";
+import { createGroundRenderer } from "./ground_renderer.js";
 import { createCompassRenderer } from "./compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 import { loadWorldKernel } from "../world/world_kernel.js";
@@ -39,6 +40,7 @@ export async function createScene(canvas, outputs) {
   if (!ctx) throw new Error("2D canvas context unavailable");
 
   const background = createBackgroundRenderer();
+  const ground = createGroundRenderer();
   const compass = createCompassRenderer();
   const instruments = createInstruments();
 
@@ -99,7 +101,7 @@ export async function createScene(canvas, outputs) {
     const baseY = (state.height - state.worldBounds.height) * 0.5;
 
     const followX = state.width * 0.5 - (state.player.x + baseX);
-    const followY = state.height * 0.62 - (state.player.y + baseY);
+    const followY = state.height * 0.66 - (state.player.y + baseY);
 
     state.camera.x += (followX - state.camera.x) * 0.08;
     state.camera.y += (followY - state.camera.y) * 0.08;
@@ -250,34 +252,18 @@ export async function createScene(canvas, outputs) {
     updateOutputs();
   }
 
-  function drawAmbientMotes(offset) {
-    const t = state.tick * 0.02;
-    for (let i = 0; i < 7; i += 1) {
-      const x = offset.x + 120 + i * 130 + Math.sin(t + i) * 12;
-      const y = offset.y + 110 + Math.cos(t * 0.8 + i) * 18;
-      const r = 2 + ((i + state.tick) % 3) * 0.4;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,214,160,0.18)";
-      ctx.fill();
-    }
-  }
-
-  function drawWorld() {
+  function drawRegionsAndRoutes() {
     const regions = [...state.kernel.regionsById.values()];
     const paths = [...state.kernel.pathsById.values()];
-    const offset = state.viewportOffset;
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
 
-    drawAmbientMotes(offset);
-
     ctx.save();
-    ctx.translate(offset.x, offset.y);
+    ctx.translate(state.viewportOffset.x, state.viewportOffset.y);
 
     for (const path of paths) {
       const isSelected = state.selection?.kind === "path" && state.selection.pathId === path.pathId;
-      const isDestinationPath = state.destination && (
-        path.fromRegionId === state.region.regionId && path.toRegionId === state.destination.regionId
+      const isDestinationPath = state.destination && state.projection && (
+        path.fromRegionId === state.projection.regionId && path.toRegionId === state.destination.regionId
       );
 
       ctx.beginPath();
@@ -287,27 +273,14 @@ export async function createScene(canvas, outputs) {
       });
 
       ctx.strokeStyle = isSelected
-        ? "rgba(255,236,188,0.92)"
+        ? "rgba(255,244,220,0.96)"
         : isDestinationPath
-          ? `rgba(255,220,160,${0.46 + pulse * 0.32})`
-          : "rgba(160,190,255,0.22)";
-      ctx.lineWidth = isSelected ? 20 : isDestinationPath ? 18 : 16;
+          ? `rgba(255,230,176,${0.36 + pulse * 0.26})`
+          : "rgba(240,236,220,0.14)";
+      ctx.lineWidth = isSelected ? 8 : isDestinationPath ? 6 : 4;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.stroke();
-
-      if (isSelected || isDestinationPath) {
-        ctx.save();
-        ctx.globalAlpha = 0.7;
-        for (const [x, y] of path.centerline) {
-          const rr = isSelected ? 5 : 4 + pulse * 2;
-          ctx.beginPath();
-          ctx.arc(x, y, rr, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(255,244,220,0.86)";
-          ctx.fill();
-        }
-        ctx.restore();
-      }
     }
 
     for (const region of regions) {
@@ -316,59 +289,51 @@ export async function createScene(canvas, outputs) {
       const isSelected = state.selection?.kind === "region" && state.selection.regionId === region.regionId;
       const isDestination = state.destination?.regionId === region.regionId;
 
-      const ringPulse = isActive ? 6 + pulse * 7 : isDestination ? 4 + pulse * 6 : 0;
-      if (ringPulse > 0) {
+      if (isActive || isSelected || isDestination) {
         ctx.beginPath();
-        ctx.arc(x, y, 48 + ringPulse, 0, Math.PI * 2);
-        ctx.strokeStyle = isActive
-          ? `rgba(255,222,168,${0.18 + pulse * 0.22})`
-          : `rgba(185,225,255,${0.14 + pulse * 0.18})`;
-        ctx.lineWidth = 4;
+        ctx.arc(x, y, 52 + pulse * 4, 0, Math.PI * 2);
+        ctx.strokeStyle = isSelected
+          ? "rgba(255,245,224,0.92)"
+          : isActive
+            ? "rgba(255,230,186,0.72)"
+            : "rgba(218,236,248,0.62)";
+        ctx.lineWidth = 3;
         ctx.stroke();
       }
 
       ctx.beginPath();
-      ctx.arc(x, y, 42, 0, Math.PI * 2);
-      ctx.fillStyle = isSelected
-        ? "rgba(255,222,168,0.42)"
-        : isActive
-          ? "rgba(255,212,152,0.36)"
-          : "rgba(74,116,168,0.20)";
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? "rgba(255,236,188,0.96)" : "rgba(232,240,248,0.70)";
       ctx.fill();
-      ctx.lineWidth = isSelected ? 3 : 2;
-      ctx.strokeStyle = isSelected
-        ? "rgba(255,244,214,0.96)"
-        : isActive
-          ? "rgba(255,228,184,0.96)"
-          : "rgba(210,226,255,0.26)";
-      ctx.stroke();
 
-      ctx.fillStyle = "rgba(245,249,255,0.96)";
+      ctx.fillStyle = "rgba(248,248,244,0.96)";
       ctx.font = "600 13px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.fillText(region.displayName, x, y - 52);
+      ctx.fillText(region.displayName, x, y - 58);
     }
 
     for (const cell of state.kernel.diamondCellsById.values()) {
       const active = state.projection?.cellId === cell.diamondCellId;
+      if (!active) continue;
+
       ctx.beginPath();
-      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], active ? 10 + pulse * 1.8 : 7, 0, Math.PI * 2);
-      ctx.fillStyle = active ? "rgba(255,236,188,0.96)" : "rgba(220,230,255,0.36)";
+      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], 12 + pulse * 2, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,236,188,0.94)";
       ctx.fill();
     }
 
     ctx.beginPath();
     ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,126,86,0.98)";
+    ctx.fillStyle = "rgba(255,128,88,0.98)";
     ctx.fill();
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(255,240,220,0.96)";
+    ctx.strokeStyle = "rgba(255,242,224,0.96)";
     ctx.stroke();
 
     if (state.destination) {
       ctx.beginPath();
-      ctx.arc(state.destination.centerPoint[0], state.destination.centerPoint[1], 16 + pulse * 4, 0, Math.PI * 2);
+      ctx.arc(state.destination.centerPoint[0], state.destination.centerPoint[1], 18 + pulse * 4, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,246,220,${0.28 + pulse * 0.24})`;
       ctx.lineWidth = 3;
       ctx.stroke();
@@ -380,7 +345,17 @@ export async function createScene(canvas, outputs) {
   function drawFrame() {
     ctx.clearRect(0, 0, state.width, state.height);
     background.draw(ctx, state.width, state.height, state.tick);
-    drawWorld();
+    ground.draw(ctx, {
+      width: state.width,
+      height: state.height,
+      tick: state.tick,
+      viewportOffset: state.viewportOffset,
+      kernel: state.kernel,
+      projection: state.projection,
+      selection: state.selection,
+      destination: state.destination
+    });
+    drawRegionsAndRoutes();
     compass.draw(ctx, state, { width: state.width, height: state.height });
   }
 

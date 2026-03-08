@@ -12,8 +12,8 @@ const BG=window.OPENWORLD_BACKGROUND_RENDERER;
 const INPUT=window.OPENWORLD_SCENE_INPUT;
 const COMPASS=window.OPENWORLD_COMPASS_RENDERER||null;
 
-if(!CAMERA||!BG||!INPUT||!COMPASS){
-console.error("OPENWORLD_SCENE_vL2_STABLE missing required modules.");
+if(!CAMERA||!BG||!INPUT){
+console.error("OPENWORLD_SCENE_vRESET1 missing required modules.");
 return;
 }
 
@@ -30,7 +30,7 @@ velY:0,
 camera:CAMERA.createState("fixed_harbor"),
 background:BG.createState(),
 
-compassVisible:false,
+compassVisible:true,
 compassAnchor:{x:0,y:0},
 compassHiddenY:0,
 compassRaisedY:0,
@@ -52,8 +52,8 @@ const preset=CAMERA.getBlendedPreset(state.camera);
 const horizonY=h*preset.horizon;
 
 state.compassAnchor.x=w*0.5;
-state.compassHiddenY=horizonY+86;
-state.compassRaisedY=horizonY-92;
+state.compassHiddenY=horizonY+84;
+state.compassRaisedY=horizonY-98;
 
 state.compassTrigger.w=Math.min(148,w*0.34);
 state.compassTrigger.h=40;
@@ -82,14 +82,14 @@ BG.initMountains(state.background,w,h,preset);
 refreshWorldAnchors();
 }
 
-function onCompassTrigger(){
+function toggleCompass(){
 state.compassVisible=!state.compassVisible;
 CAMERA.blendTo(state.camera,state.compassVisible?"compass_focus":"fixed_harbor");
 }
 
 function pointerDown(p){
 if(pointInRect(p.x,p.y,state.compassTrigger)){
-onCompassTrigger();
+toggleCompass();
 return;
 }
 
@@ -108,8 +108,8 @@ const dy=p.y-state.lastY;
 state.lastX=p.x;
 state.lastY=p.y;
 
-state.velX+=dx*0.0023;
-state.velY+=dy*0.0017;
+state.velX+=dx*0.0022;
+state.velY+=dy*0.0016;
 }
 
 function pointerUp(){
@@ -196,6 +196,10 @@ ctx.restore();
 }
 
 function drawCompass(w,h){
+if(!COMPASS||typeof COMPASS.getDiamondGeometry!=="function"||typeof COMPASS.drawCompass!=="function"){
+return;
+}
+
 const y=state.compassVisible?state.compassRaisedY:state.compassHiddenY;
 
 const geo=COMPASS.getDiamondGeometry({
@@ -215,9 +219,9 @@ showHalo:true
 }
 
 function draw(){
-const preset=CAMERA.getBlendedPreset(state.camera);
 const w=window.innerWidth;
 const h=window.innerHeight;
+const preset=CAMERA.getBlendedPreset(state.camera);
 
 ctx.clearRect(0,0,w,h);
 
@@ -237,8 +241,12 @@ drawHarborCoreMarker();
 }
 
 function frame(){
+try{
 animate();
 draw();
+}catch(err){
+console.error("OPENWORLD_SCENE_vRESET1 frame error",err);
+}
 requestAnimationFrame(frame);
 }
 

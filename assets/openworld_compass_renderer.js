@@ -18,12 +18,11 @@ return{x:x1,y:y2,z:z2};
 }
 
 function project(centerX,centerY,x,y,z){
-const perspective=420/(420+z);
+const perspective=520/(520+z);
 return{
 x:centerX+(x*perspective),
 y:centerY+(y*perspective),
-z:z,
-scale:perspective
+z:z
 };
 }
 
@@ -40,17 +39,17 @@ return{x:x/poly.length,y:y/poly.length};
 function getDiamondGeometry(opts){
 const cx=opts.centerX;
 const cy=opts.centerY;
-const size=opts.size||80;
+const size=opts.size||96;
 const rotX=opts.rotX||0;
 const rotY=opts.rotY||0;
 
 const vertsRaw=[
-[0,-1.62,0],
-[1.06,0,0],
-[0,0,1.06],
-[-1.06,0,0],
-[0,0,-1.06],
-[0,1.62,0]
+[0,-1.8,0],
+[1.2,0,0],
+[0,0,1.2],
+[-1.2,0,0],
+[0,0,-1.2],
+[0,1.8,0]
 ];
 
 const faces3D=[
@@ -104,10 +103,10 @@ size:size
 }
 
 function faceFill(name){
-if(name==="NE"||name==="nE")return "rgba(162,42,36,0.34)";
-if(name==="ES"||name==="sE")return "rgba(128,24,22,0.30)";
-if(name==="SW"||name==="sW")return "rgba(92,12,18,0.28)";
-return "rgba(116,16,22,0.28)";
+if(name==="NE"||name==="nE")return "rgba(255,210,120,0.52)";
+if(name==="ES"||name==="sE")return "rgba(210,90,54,0.48)";
+if(name==="SW"||name==="sW")return "rgba(128,24,18,0.44)";
+return "rgba(180,48,34,0.46)";
 }
 
 function drawFace(ctx,face){
@@ -118,24 +117,24 @@ for(let i=1;i<face.poly.length;i++)ctx.lineTo(face.poly[i].x,face.poly[i].y);
 ctx.closePath();
 ctx.fillStyle=faceFill(face.name);
 ctx.fill();
-ctx.lineWidth=1.1;
-ctx.strokeStyle="rgba(255,222,160,0.76)";
+ctx.lineWidth=1.8;
+ctx.strokeStyle="rgba(255,236,186,0.96)";
 ctx.stroke();
 ctx.restore();
 }
 
 function drawHalo(ctx,geo){
 ctx.save();
-ctx.globalAlpha=0.14;
-ctx.strokeStyle="rgba(255,222,160,0.74)";
-ctx.lineWidth=1.0;
+ctx.globalAlpha=0.22;
+ctx.strokeStyle="rgba(255,226,170,0.86)";
+ctx.lineWidth=1.2;
 
 ctx.beginPath();
-ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.70,geo.size*0.54,0,0,TAU);
+ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.95,geo.size*0.62,0,0,TAU);
 ctx.stroke();
 
 ctx.beginPath();
-ctx.ellipse(geo.centerX,geo.centerY,geo.size*0.94,geo.size*0.30,0,0,TAU);
+ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.15,geo.size*0.34,0,0,TAU);
 ctx.stroke();
 
 ctx.restore();
@@ -143,44 +142,56 @@ ctx.restore();
 
 function drawLabels(ctx,geo){
 ctx.save();
-ctx.fillStyle="rgba(255,236,196,0.92)";
-ctx.font='700 11px system-ui,Segoe UI,Roboto,sans-serif';
+ctx.fillStyle="rgba(255,244,214,0.98)";
+ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.82));
-ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.82));
-ctx.fillText("E",geo.centerX+(geo.size*1.08),geo.centerY);
-ctx.fillText("W",geo.centerX-(geo.size*1.08),geo.centerY);
+ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.96));
+ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.96));
+ctx.fillText("E",geo.centerX+(geo.size*1.18),geo.centerY);
+ctx.fillText("W",geo.centerX-(geo.size*1.18),geo.centerY);
+ctx.restore();
+}
+
+function drawCoreMarker(ctx,geo){
+ctx.save();
+ctx.beginPath();
+ctx.arc(geo.centerX,geo.centerY,geo.size*0.10,0,TAU);
+ctx.fillStyle="rgba(255,242,208,0.98)";
+ctx.fill();
 ctx.restore();
 }
 
 function drawCompass(ctx,geo,opts){
 const settings=opts||{};
-if(settings.showHalo)drawHalo(ctx,geo);
+
+if(settings.showHalo!==false)drawHalo(ctx,geo);
 
 for(let i=0;i<geo.faces.length;i++){
 drawFace(ctx,geo.faces[i]);
 }
 
 ctx.save();
-ctx.shadowBlur=14;
-ctx.shadowColor="rgba(255,215,120,0.18)";
+ctx.shadowBlur=16;
+ctx.shadowColor="rgba(255,220,150,0.28)";
 for(let i=0;i<geo.edges.length;i++){
 const e=geo.edges[i];
 ctx.beginPath();
 ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
 ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
-ctx.lineWidth=1.4;
-ctx.strokeStyle="rgba(255,220,160,0.86)";
+ctx.lineWidth=2.0;
+ctx.strokeStyle="rgba(255,236,186,0.98)";
 ctx.stroke();
 }
 ctx.restore();
 
-if(settings.showLabels)drawLabels(ctx,geo);
+drawCoreMarker(ctx,geo);
+
+if(settings.showLabels!==false)drawLabels(ctx,geo);
 }
 
 window.OPENWORLD_COMPASS_RENDERER=Object.freeze({
-version:"OPENWORLD_COMPASS_RENDERER_vL2B",
+version:"OPENWORLD_COMPASS_RENDERER_vVISIBLE1",
 getDiamondGeometry:getDiamondGeometry,
 drawCompass:drawCompass
 });

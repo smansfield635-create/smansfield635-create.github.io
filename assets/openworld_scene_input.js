@@ -9,22 +9,9 @@ y:clientY-rect.top
 };
 }
 
-function pointInPoly(x,y,poly){
-if(!Array.isArray(poly)||poly.length<3)return false;
-
-let inside=false;
-
-for(let i=0,j=poly.length-1;i<poly.length;j=i++){
-const xi=poly[i].x;
-const yi=poly[i].y;
-const xj=poly[j].x;
-const yj=poly[j].y;
-
-const intersects=((yi>y)!==(yj>y))&&(x<((xj-xi)*(y-yi)/(yj-yi))+xi);
-if(intersects)inside=!inside;
-}
-
-return inside;
+function pointInRect(x,y,rect){
+if(!rect)return false;
+return x>=rect.x&&x<=rect.x+rect.w&&y>=rect.y&&y<=rect.y+rect.h;
 }
 
 function bind(canvas,handlers){
@@ -32,48 +19,48 @@ const h=handlers||{};
 
 canvas.addEventListener("pointerdown",function(e){
 const p=getPoint(canvas,e.clientX,e.clientY);
-if(h.onPointerDown)h.onPointerDown(p,e);
+if(typeof h.onPointerDown==="function")h.onPointerDown(p,e);
 });
 
 canvas.addEventListener("pointermove",function(e){
 const p=getPoint(canvas,e.clientX,e.clientY);
-if(h.onPointerMove)h.onPointerMove(p,e);
+if(typeof h.onPointerMove==="function")h.onPointerMove(p,e);
 });
 
 canvas.addEventListener("pointerup",function(e){
 const p=getPoint(canvas,e.clientX,e.clientY);
-if(h.onPointerUp)h.onPointerUp(p,e);
+if(typeof h.onPointerUp==="function")h.onPointerUp(p,e);
 });
 
 canvas.addEventListener("pointerleave",function(e){
-if(h.onPointerLeave)h.onPointerLeave(e);
+if(typeof h.onPointerLeave==="function")h.onPointerLeave(e);
 });
 
 canvas.addEventListener("touchstart",function(e){
 if(!e.changedTouches||!e.changedTouches.length)return;
 const t=e.changedTouches[0];
 const p=getPoint(canvas,t.clientX,t.clientY);
-if(h.onTouchStart)h.onTouchStart(p,t,e);
+if(typeof h.onTouchStart==="function")h.onTouchStart(p,t,e);
 },{passive:true});
 
 canvas.addEventListener("touchmove",function(e){
 if(!e.changedTouches||!e.changedTouches.length)return;
 const t=e.changedTouches[0];
 const p=getPoint(canvas,t.clientX,t.clientY);
-if(h.onTouchMove)h.onTouchMove(p,t,e);
+if(typeof h.onTouchMove==="function")h.onTouchMove(p,t,e);
 },{passive:true});
 
 canvas.addEventListener("touchend",function(e){
 if(!e.changedTouches||!e.changedTouches.length)return;
 const t=e.changedTouches[0];
 const p=getPoint(canvas,t.clientX,t.clientY);
-if(h.onTouchEnd)h.onTouchEnd(p,t,e);
+if(typeof h.onTouchEnd==="function")h.onTouchEnd(p,t,e);
 },{passive:true});
 }
 
 window.OPENWORLD_SCENE_INPUT=Object.freeze({
-version:"OPENWORLD_SCENE_INPUT_v1",
+version:"OPENWORLD_SCENE_INPUT_vMAX1",
 bind:bind,
-pointInPoly:pointInPoly
+pointInRect:pointInRect
 });
 })();

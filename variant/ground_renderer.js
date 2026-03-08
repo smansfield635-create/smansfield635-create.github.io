@@ -39,7 +39,7 @@ export function createGroundRenderer() {
   }
 
   function drawSeaBase(ctx, width, height) {
-    const water = ctx.createLinearGradient(0, 280, 0, height + 200);
+    const water = ctx.createLinearGradient(0, 240, 0, height + 260);
     water.addColorStop(0, "rgba(68,108,134,1)");
     water.addColorStop(0.42, "rgba(38,76,104,1)");
     water.addColorStop(1, "rgba(18,42,64,1)");
@@ -49,31 +49,36 @@ export function createGroundRenderer() {
 
   function drawIslandMass(ctx) {
     const island = [
-      [40, 520],
-      [90, 445],
-      [170, 380],
-      [280, 340],
-      [420, 305],
-      [585, 250],
-      [760, 185],
-      [920, 120],
-      [1010, 110],
-      [1035, 150],
-      [1010, 210],
-      [960, 260],
-      [910, 330],
-      [860, 395],
-      [785, 470],
-      [690, 535],
-      [575, 580],
-      [450, 606],
-      [320, 612],
-      [210, 596],
-      [120, 566]
+      [336, 638],
+      [276, 614],
+      [224, 572],
+      [198, 524],
+      [206, 468],
+      [248, 426],
+      [318, 398],
+      [394, 366],
+      [430, 324],
+      [438, 260],
+      [468, 198],
+      [516, 144],
+      [578, 116],
+      [646, 126],
+      [698, 154],
+      [736, 206],
+      [740, 270],
+      [712, 330],
+      [650, 390],
+      [616, 446],
+      [626, 520],
+      [666, 574],
+      [658, 620],
+      [602, 644],
+      [520, 650],
+      [430, 648]
     ];
 
     roundedPolygon(ctx, island);
-    const ground = ctx.createLinearGradient(0, 120, 0, 640);
+    const ground = ctx.createLinearGradient(0, 120, 0, 660);
     ground.addColorStop(0, "rgba(158,144,114,1)");
     ground.addColorStop(0.38, "rgba(122,124,92,1)");
     ground.addColorStop(0.72, "rgba(86,108,82,1)");
@@ -87,26 +92,25 @@ export function createGroundRenderer() {
   }
 
   function drawElevationBands(ctx) {
-    const ridge1 = [
-      [170, 520],[250,470],[350,420],[470,380],[590,325],[710,270],[835,220],[930,200],[955,235],[910,290],
-      [830,350],[730,410],[600,470],[470,520],[330,552],[220,550]
+    const harborRise = [
+      [384, 620],[422, 560],[484, 508],[552, 484],[614, 494],[656, 534],[664, 592],[632, 632],[578, 644],[504, 646],[432, 640]
     ];
-    const ridge2 = [
-      [520,505],[610,455],[710,395],[810,332],[885,290],[910,315],[872,366],[810,428],[730,488],[650,530],[565,548]
+    const basinRise = [
+      [434, 372],[460, 312],[500, 246],[538, 186],[566, 154],[552, 214],[516, 282],[482, 344],[460, 390]
     ];
-    const summit = [
-      [820,282],[860,238],[900,214],[930,226],[928,265],[902,305],[860,332],[820,320]
+    const summitMass = [
+      [508, 206],[526, 164],[548, 128],[574, 110],[600, 126],[614, 164],[610, 204],[588, 226],[552, 224],[524, 220]
     ];
 
-    roundedPolygon(ctx, ridge1);
+    roundedPolygon(ctx, harborRise);
     ctx.fillStyle = "rgba(126,136,100,0.42)";
     ctx.fill();
 
-    roundedPolygon(ctx, ridge2);
+    roundedPolygon(ctx, basinRise);
     ctx.fillStyle = "rgba(112,118,96,0.46)";
     ctx.fill();
 
-    roundedPolygon(ctx, summit);
+    roundedPolygon(ctx, summitMass);
     ctx.fillStyle = "rgba(186,182,170,0.55)";
     ctx.fill();
   }
@@ -121,19 +125,38 @@ export function createGroundRenderer() {
       const isDestination = destination?.regionId === region.regionId;
 
       let fill = "rgba(90,116,98,0.18)";
-      if (region.regionId === "harbor_village") fill = "rgba(116,128,108,0.26)";
-      if (region.regionId === "market_district") fill = "rgba(154,126,92,0.24)";
-      if (region.regionId === "exploration_basin") fill = "rgba(98,122,108,0.22)";
-      if (region.regionId === "summit_plaza") fill = "rgba(180,176,170,0.24)";
+      let rx = 74;
+      let ry = 38;
+
+      if (region.regionId === "harbor_village") {
+        fill = "rgba(148,128,102,0.24)";
+        rx = 102;
+        ry = 40;
+      }
+      if (region.regionId === "market_district") {
+        fill = "rgba(154,126,92,0.24)";
+        rx = 90;
+        ry = 44;
+      }
+      if (region.regionId === "exploration_basin") {
+        fill = "rgba(98,122,108,0.22)";
+        rx = 120;
+        ry = 56;
+      }
+      if (region.regionId === "summit_plaza") {
+        fill = "rgba(180,176,170,0.24)";
+        rx = 74;
+        ry = 34;
+      }
 
       ctx.beginPath();
-      ctx.ellipse(x, y + 8, 74, 38, 0, 0, Math.PI * 2);
+      ctx.ellipse(x, y + 8, rx, ry, 0, 0, Math.PI * 2);
       ctx.fillStyle = fill;
       ctx.fill();
 
       if (isActive || isSelected || isDestination) {
         ctx.beginPath();
-        ctx.ellipse(x, y + 8, 84 + pulse * 6, 44 + pulse * 2, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, y + 8, rx + 10 + pulse * 6, ry + 6 + pulse * 2, 0, 0, Math.PI * 2);
         ctx.strokeStyle = isSelected
           ? "rgba(255,240,210,0.88)"
           : isActive
@@ -147,8 +170,8 @@ export function createGroundRenderer() {
 
   function drawBasinWater(ctx) {
     ctx.beginPath();
-    ctx.ellipse(660, 330, 118, 70, -0.12, 0, Math.PI * 2);
-    const basin = ctx.createLinearGradient(580, 250, 720, 400);
+    ctx.ellipse(560, 320, 112, 72, 0, 0, Math.PI * 2);
+    const basin = ctx.createLinearGradient(448, 248, 672, 392);
     basin.addColorStop(0, "rgba(104,156,170,0.92)");
     basin.addColorStop(0.5, "rgba(62,118,142,0.94)");
     basin.addColorStop(1, "rgba(34,84,112,0.96)");
@@ -162,19 +185,17 @@ export function createGroundRenderer() {
 
   function drawHarborWater(ctx) {
     const harbor = [
-      [72, 518],
-      [112, 470],
-      [176, 430],
-      [252, 404],
-      [292, 430],
-      [262, 484],
-      [206, 526],
-      [138, 550],
-      [92, 544]
+      [448, 648],
+      [458, 610],
+      [488, 584],
+      [540, 572],
+      [594, 580],
+      [624, 604],
+      [634, 648]
     ];
 
     roundedPolygon(ctx, harbor);
-    const water = ctx.createLinearGradient(72, 404, 292, 560);
+    const water = ctx.createLinearGradient(448, 570, 634, 650);
     water.addColorStop(0, "rgba(114,164,180,0.94)");
     water.addColorStop(0.45, "rgba(72,124,150,0.94)");
     water.addColorStop(1, "rgba(40,90,118,0.96)");
@@ -187,19 +208,19 @@ export function createGroundRenderer() {
   }
 
   function drawShoreHighlights(ctx) {
-    const shoreA = [
-      [88, 520],[124, 490],[174, 458],[230, 438],[264, 446]
+    const harborFoam = [
+      [456, 606],[490, 584],[540, 574],[590, 582],[622, 606]
     ];
-    const shoreB = [
-      [580, 368],[626, 392],[690, 392],[744, 368]
+    const basinFoam = [
+      [446, 382],[482, 402],[534, 412],[590, 408],[640, 390],[676, 360]
     ];
 
-    drawPolyline(ctx, shoreA);
+    drawPolyline(ctx, harborFoam);
     ctx.lineWidth = 3;
     ctx.strokeStyle = "rgba(244,236,214,0.42)";
     ctx.stroke();
 
-    drawPolyline(ctx, shoreB);
+    drawPolyline(ctx, basinFoam);
     ctx.strokeStyle = "rgba(236,242,248,0.30)";
     ctx.stroke();
   }
@@ -211,15 +232,19 @@ export function createGroundRenderer() {
 
       if (region.regionId === "harbor_village") {
         ctx.fillStyle = "rgba(98,74,56,0.94)";
-        ctx.fillRect(x - 18, y + 16, 36, 8);
-        ctx.fillRect(x - 2, y - 8, 4, 28);
+        ctx.fillRect(x - 22, y + 16, 44, 8);
+        ctx.fillRect(x - 3, y - 10, 6, 30);
+        ctx.fillRect(x - 58, y + 18, 20, 8);
+        ctx.fillRect(x + 38, y + 18, 20, 8);
       }
 
       if (region.regionId === "market_district") {
         ctx.fillStyle = "rgba(152,108,74,0.94)";
-        ctx.fillRect(x - 24, y + 6, 48, 14);
+        ctx.fillRect(x - 26, y + 6, 52, 14);
         ctx.fillStyle = "rgba(212,180,132,0.86)";
-        ctx.fillRect(x - 16, y - 8, 32, 10);
+        ctx.fillRect(x - 18, y - 8, 36, 10);
+        ctx.fillRect(x - 42, y + 8, 10, 12);
+        ctx.fillRect(x + 32, y + 8, 10, 12);
       }
 
       if (region.regionId === "exploration_basin") {

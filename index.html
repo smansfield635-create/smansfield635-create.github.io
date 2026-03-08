@@ -3,36 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge — Harbor Core</title>
-  <meta name="description" content="Harbor Core minimal runtime shell.">
+  <title>Diamond Gate Bridge — Harbor Core Foundation</title>
+  <meta name="description" content="Diamond Gate Bridge Harbor Core foundation runtime bound to world truth and four-pixel state encoding.">
+  <meta name="theme-color" content="#0b1220">
   <style>
     :root{
+      --bg-0:#05070b;
+      --bg-1:#10192a;
+      --bg-2:#1d2140;
+      --panel:rgba(10,16,26,.74);
+      --line:rgba(255,255,255,.12);
+      --text:#edf4ff;
+      --muted:rgba(237,244,255,.74);
+      --gold:rgba(255,226,176,.96);
       --safe-top:max(12px,env(safe-area-inset-top));
       --safe-right:max(12px,env(safe-area-inset-right));
       --safe-bottom:max(12px,env(safe-area-inset-bottom));
       --safe-left:max(12px,env(safe-area-inset-left));
-      --text:#f5f7fb;
-      --line:rgba(255,255,255,.12);
       --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
     }
+
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       padding:0;
       width:100%;
       height:100%;
       overflow:hidden;
-      background:#05070b;
+      background:var(--bg-0);
       color:var(--text);
       font-family:var(--font);
     }
-    .runtime-shell{
+
+    body{
+      overscroll-behavior:none;
+      touch-action:none;
+    }
+
+    .app{
       position:relative;
       width:100vw;
       height:100dvh;
       overflow:hidden;
-      background:#05070b;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,140,120,.14), transparent 18%),
+        radial-gradient(circle at 24% 20%, rgba(150,115,215,.16), transparent 24%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
     }
+
     #scene{
       position:absolute;
       inset:0;
@@ -42,6 +61,7 @@
       z-index:1;
       touch-action:none;
     }
+
     .topbar{
       position:absolute;
       top:var(--safe-top);
@@ -49,556 +69,369 @@
       right:var(--safe-right);
       z-index:3;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
       pointer-events:none;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
+      gap:10px;
       min-height:38px;
-      padding:0 14px;
+      padding:10px 14px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(8,14,26,.56);
-      box-shadow:0 14px 34px rgba(0,0,0,.28);
+      background:var(--panel);
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(0,0,0,.28);
       pointer-events:auto;
     }
-    .brand{
+
+    .brand-mark{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.18) 36%, transparent 37%),
+        linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
+      flex:0 0 auto;
+    }
+
+    .brand-copy{
       display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:700;
+      flex-direction:column;
+      line-height:1.05;
+    }
+
+    .brand-copy strong{
+      font-size:13px;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
-    .brand-mark{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 26%,rgba(255,255,255,.92),rgba(255,255,255,.18) 34%,transparent 35%),
-        linear-gradient(180deg,#f1f7ff 0%,#adc8f3 42%,#1b3158 72%,#0d1830 100%);
-      border:1px solid rgba(255,255,255,.24);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.82),0 8px 18px rgba(0,0,0,.28);
-      flex:0 0 auto;
+
+    .brand-copy span{
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:.06em;
+      text-transform:uppercase;
     }
-    .hint{
+
+    .right-panel{
+      position:absolute;
+      top:calc(var(--safe-top) + 56px);
+      right:var(--safe-right);
+      z-index:3;
+      width:min(320px, calc(100vw - 24px));
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(0,0,0,.28);
+      pointer-events:none;
+    }
+
+    .right-panel h2{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .kv{
+      display:grid;
+      grid-template-columns:112px 1fr;
+      gap:8px 10px;
+      font-size:12px;
+      line-height:1.25;
+      margin:0;
+    }
+
+    .kv dt{
+      color:var(--muted);
+    }
+
+    .kv dd{
+      margin:0;
+      color:var(--text);
+      word-break:break-word;
+    }
+
+    .footer-hint{
       position:absolute;
       left:50%;
-      bottom:max(18px,env(safe-area-inset-bottom));
+      bottom:var(--safe-bottom);
       transform:translateX(-50%);
       z-index:3;
       padding:10px 14px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(8,14,26,.42);
-      color:rgba(245,247,251,.82);
+      border:1px solid var(--line);
+      background:rgba(9,14,22,.56);
+      color:var(--muted);
       font-size:12px;
-      line-height:1;
-      letter-spacing:.06em;
+      letter-spacing:.05em;
       text-transform:uppercase;
+      white-space:nowrap;
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
       pointer-events:none;
-      white-space:nowrap;
+    }
+
+    @media (max-width: 880px){
+      .right-panel{
+        top:auto;
+        right:var(--safe-right);
+        left:var(--safe-left);
+        bottom:calc(var(--safe-bottom) + 46px);
+        width:auto;
+      }
+
+      .kv{
+        grid-template-columns:88px 1fr;
+      }
+
+      .footer-hint{
+        font-size:11px;
+        max-width:calc(100vw - 24px);
+        text-align:center;
+        white-space:normal;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="runtime-shell">
+  <div class="app">
+    <canvas id="scene" aria-label="Harbor Core Foundation Scene"></canvas>
+
     <div class="topbar">
-      <div class="pill brand">
+      <div class="pill">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
+        <div class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Harbor Core Foundation</span>
+        </div>
       </div>
-      <div class="pill">Harbor Core</div>
+      <div class="pill">Closed Pilot</div>
     </div>
 
-    <canvas id="scene" aria-label="Harbor Core Scene"></canvas>
-    <div class="hint">Minimal shell · animated sky + water + compass</div>
+    <section class="right-panel" aria-live="polite">
+      <h2>Runtime State</h2>
+      <dl class="kv">
+        <dt>Region</dt><dd id="regionOut">—</dd>
+        <dt>Cell</dt><dd id="cellOut">—</dd>
+        <dt>Sector</dt><dd id="sectorOut">—</dd>
+        <dt>Band</dt><dd id="bandOut">—</dd>
+        <dt>Encoding</dt><dd id="encodingOut">—</dd>
+        <dt>Byte</dt><dd id="byteOut">—</dd>
+      </dl>
+    </section>
+
+    <div class="footer-hint">WASD / Arrow Keys · truth-bound Harbor pilot foundation</div>
   </div>
 
-  <script>
-    (function(){
-      "use strict";
+  <script type="module">
+    import { loadWorldKernel } from "./world/world_kernel.js";
+    import { drawByte, drawGlyphLabel, projectByteToSector } from "./assets/four_pixel_renderer.js";
 
-      const TAU=Math.PI*2;
-      const canvas=document.getElementById("scene");
-      const ctx=canvas.getContext("2d");
-      if(!canvas||!ctx)return;
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
 
-      const state={
-        tick:0,
-        w:0,
-        h:0,
-        dpr:1,
-        dragX:0,
-        dragY:0,
-        velX:0,
-        velY:0,
-        dragging:false,
-        lastX:0,
-        lastY:0,
-        compassVisible:true
-      };
+    const out = {
+      region: document.getElementById("regionOut"),
+      cell: document.getElementById("cellOut"),
+      sector: document.getElementById("sectorOut"),
+      band: document.getElementById("bandOut"),
+      encoding: document.getElementById("encodingOut"),
+      byte: document.getElementById("byteOut")
+    };
 
-      function clamp(v,min,max){
-        return Math.max(min,Math.min(max,v));
+    const state = {
+      w: 0,
+      h: 0,
+      dpr: 1,
+      kernel: null,
+      keys: new Set(),
+      player: {
+        x: 180,
+        y: 460,
+        speed: 2.1
+      },
+      projection: null,
+      tick: 0
+    };
+
+    function resize() {
+      state.dpr = Math.max(1, window.devicePixelRatio || 1);
+      state.w = window.innerWidth;
+      state.h = window.innerHeight;
+      canvas.width = Math.floor(state.w * state.dpr);
+      canvas.height = Math.floor(state.h * state.dpr);
+      canvas.style.width = `${state.w}px`;
+      canvas.style.height = `${state.h}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(state.dpr, state.dpr);
+    }
+
+    function updatePlayer() {
+      let dx = 0;
+      let dy = 0;
+
+      if (state.keys.has("ArrowLeft") || state.keys.has("a") || state.keys.has("A")) dx -= 1;
+      if (state.keys.has("ArrowRight") || state.keys.has("d") || state.keys.has("D")) dx += 1;
+      if (state.keys.has("ArrowUp") || state.keys.has("w") || state.keys.has("W")) dy -= 1;
+      if (state.keys.has("ArrowDown") || state.keys.has("s") || state.keys.has("S")) dy += 1;
+
+      if (dx !== 0 || dy !== 0) {
+        const length = Math.hypot(dx, dy) || 1;
+        dx /= length;
+        dy /= length;
+        state.player.x += dx * state.player.speed;
+        state.player.y += dy * state.player.speed;
       }
 
-      function resize(){
-        state.dpr=Math.max(1,window.devicePixelRatio||1);
-        state.w=window.innerWidth;
-        state.h=window.innerHeight;
-        canvas.width=Math.floor(state.w*state.dpr);
-        canvas.height=Math.floor(state.h*state.dpr);
-        canvas.style.width=state.w+"px";
-        canvas.style.height=state.h+"px";
-        ctx.setTransform(1,0,0,1,0,0);
-        ctx.scale(state.dpr,state.dpr);
-      }
+      state.player.x = Math.max(60, Math.min(1020, state.player.x));
+      state.player.y = Math.max(100, Math.min(560, state.player.y));
+    }
 
-      function horizonY(){
-        return state.h*0.64;
-      }
+    function projectState() {
+      state.projection = state.kernel.helpers.projectWorldPositionToCell({
+        x: state.player.x,
+        y: state.player.y,
+        previousCellId: state.projection?.cellId ?? null
+      });
 
-      function pointFromClient(clientX,clientY){
-        const rect=canvas.getBoundingClientRect();
-        return{x:clientX-rect.left,y:clientY-rect.top};
-      }
+      const region = state.kernel.helpers.getRegion(state.projection.regionId);
+      const encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
 
-      function buttonRect(){
-        const w=Math.min(156,state.w*0.36);
-        const h=42;
-        return{
-          x:(state.w*0.5)-(w*0.5),
-          y:horizonY()-28,
-          w:w,
-          h:h
-        };
-      }
+      out.region.textContent = region.displayName;
+      out.cell.textContent = state.projection.cellId;
+      out.sector.textContent = state.projection.sector;
+      out.band.textContent = String(state.projection.bandIndex);
+      out.encoding.textContent = encoding.label;
+      out.byte.textContent = state.projection.stateByte;
+    }
 
-      function pointInRect(x,y,r){
-        return x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h;
-      }
+    function drawBackground() {
+      const g = ctx.createLinearGradient(0, 0, 0, state.h);
+      g.addColorStop(0, "rgba(28,36,58,1)");
+      g.addColorStop(0.45, "rgba(16,24,40,1)");
+      g.addColorStop(1, "rgba(8,10,16,1)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, state.w, state.h);
 
-      function roundedRectPath(x,y,w,h,r){
-        const rr=Math.min(r,w*0.5,h*0.5);
+      const glow = ctx.createRadialGradient(
+        state.w * 0.52, state.h * 0.22, 30,
+        state.w * 0.52, state.h * 0.22, 280
+      );
+      glow.addColorStop(0, "rgba(255,184,132,0.36)");
+      glow.addColorStop(1, "rgba(255,184,132,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, state.w, state.h);
+    }
+
+    function drawWorld() {
+      const regions = [...state.kernel.regionsById.values()];
+      const paths = [...state.kernel.pathsById.values()];
+
+      ctx.save();
+      ctx.translate((state.w - 1080) * 0.5, (state.h - 640) * 0.5);
+
+      ctx.strokeStyle = "rgba(160, 190, 255, 0.22)";
+      ctx.lineWidth = 16;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      for (const path of paths) {
         ctx.beginPath();
-        ctx.moveTo(x+rr,y);
-        ctx.lineTo(x+w-rr,y);
-        ctx.quadraticCurveTo(x+w,y,x+w,y+rr);
-        ctx.lineTo(x+w,y+h-rr);
-        ctx.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);
-        ctx.lineTo(x+rr,y+h);
-        ctx.quadraticCurveTo(x,y+h,x,y+h-rr);
-        ctx.lineTo(x,y+rr);
-        ctx.quadraticCurveTo(x,y,x+rr,y);
-        ctx.closePath();
-      }
-
-      function rotateVertex(x,y,z,rotY,rotX){
-        const cy=Math.cos(rotY), sy=Math.sin(rotY);
-        const cx=Math.cos(rotX), sx=Math.sin(rotX);
-        const x1=x*cy-z*sy;
-        const z1=x*sy+z*cy;
-        const y2=y*cx-z1*sx;
-        const z2=y*sx+z1*cx;
-        return{x:x1,y:y2,z:z2};
-      }
-
-      function project(centerX,centerY,x,y,z){
-        const perspective=520/(520+z);
-        return{x:centerX+(x*perspective),y:centerY+(y*perspective),z:z};
-      }
-
-      function drawSky(){
-        const warmMix=0.30+Math.sin(state.tick*0.002)*0.05;
-        const g=ctx.createLinearGradient(0,0,0,state.h);
-        g.addColorStop(0,`rgba(${Math.round(16+16*warmMix)},${Math.round(10+8*warmMix)},${Math.round(42+20*(1-warmMix))},1)`);
-        g.addColorStop(0.32,`rgba(${Math.round(56+20*warmMix)},${Math.round(24+12*warmMix)},${Math.round(88+18*(1-warmMix))},1)`);
-        g.addColorStop(0.72,`rgba(${Math.round(196+22*warmMix)},${Math.round(54+28*warmMix)},${Math.round(116+8*(1-warmMix))},1)`);
-        g.addColorStop(1,"rgba(20,8,12,1)");
-        ctx.fillStyle=g;
-        ctx.fillRect(0,0,state.w,state.h);
-
-        const glow=ctx.createLinearGradient(0,horizonY()-160,0,horizonY()+120);
-        glow.addColorStop(0,"rgba(255,170,120,0)");
-        glow.addColorStop(0.45,"rgba(255,118,64,0.18)");
-        glow.addColorStop(1,"rgba(255,118,64,0)");
-        ctx.fillStyle=glow;
-        ctx.fillRect(0,horizonY()-160,state.w,280);
-      }
-
-      function drawClouds(){
-        const t=state.tick*0.01;
-        const clouds=[
-          {x:state.w*0.30+Math.sin(t*0.8)*20,y:state.h*0.22,w:110,h:24,a:0.12},
-          {x:state.w*0.57+Math.sin(t*0.6+1.5)*26,y:state.h*0.28,w:140,h:28,a:0.10},
-          {x:state.w*0.79+Math.sin(t*0.7+2.1)*20,y:state.h*0.34,w:110,h:24,a:0.11}
-        ];
-        for(const c of clouds){
-          ctx.save();
-          ctx.globalAlpha=c.a;
-          ctx.beginPath();
-          ctx.ellipse(c.x-c.w*0.22,c.y,c.w*0.34,c.h*0.52,0,0,TAU);
-          ctx.ellipse(c.x+c.w*0.10,c.y-c.h*0.14,c.w*0.42,c.h*0.60,0,0,TAU);
-          ctx.ellipse(c.x+c.w*0.38,c.y,c.w*0.28,c.h*0.48,0,0,TAU);
-          ctx.fillStyle="rgba(255,230,220,1)";
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      function drawCelestials(){
-        const t=state.tick*0.01;
-
-        const moon1X=state.w*0.30+Math.cos(t*0.22+2.7)*(state.w*0.03);
-        const moon1Y=state.h*0.20+Math.sin(t*0.22+2.7)*(state.h*0.02);
-        const moon2X=state.w*0.72+Math.cos(t*0.18+0.4)*(state.w*0.03);
-        const moon2Y=state.h*0.17+Math.sin(t*0.18+0.4)*(state.h*0.02);
-
-        const r1=Math.min(state.w,state.h)*0.048;
-        const r2=Math.min(state.w,state.h)*0.060;
-
-        drawMoon(moon1X,moon1Y,r1,"rgba(255,220,150,0.90)");
-        drawMoon(moon2X,moon2Y,r2,"rgba(255,236,198,0.94)");
-      }
-
-      function drawMoon(x,y,r,fill){
-        const halo=ctx.createRadialGradient(x,y,r*0.2,x,y,r*2.3);
-        halo.addColorStop(0,"rgba(255,244,210,0.24)");
-        halo.addColorStop(0.55,"rgba(255,178,170,0.12)");
-        halo.addColorStop(1,"rgba(255,178,170,0)");
-        ctx.fillStyle=halo;
-        ctx.beginPath();
-        ctx.arc(x,y,r*2.3,0,TAU);
-        ctx.fill();
-
-        ctx.fillStyle=fill;
-        ctx.beginPath();
-        ctx.arc(x,y,r,0,TAU);
-        ctx.fill();
-      }
-
-      function drawLanterns(){
-        const items=[
-          {x:state.w*0.14,y:state.h*0.53,p:0.0},
-          {x:state.w*0.22,y:state.h*0.59,p:1.2},
-          {x:state.w*0.63,y:state.h*0.50,p:2.0},
-          {x:state.w*0.76,y:state.h*0.60,p:0.7},
-          {x:state.w*0.86,y:state.h*0.54,p:2.4}
-        ];
-
-        for(const it of items){
-          const y=it.y-Math.sin(state.tick*0.06+it.p)*7;
-          const flicker=0.78+Math.sin(state.tick*0.11+it.p)*0.12;
-          ctx.save();
-          ctx.translate(it.x,y);
-          ctx.globalAlpha=0.42;
-          ctx.fillStyle="rgba(255,146,74,1)";
-          ctx.beginPath();
-          ctx.arc(0,0,18,0,TAU);
-          ctx.fill();
-
-          ctx.globalAlpha=0.95;
-          ctx.fillStyle="rgba(172,34,28,1)";
-          roundedRectPath(-6,-10,12,20,4);
-          ctx.fill();
-
-          ctx.globalAlpha=0.34*flicker;
-          ctx.fillStyle="rgba(255,226,130,1)";
-          roundedRectPath(-2.5,-3.5,5,7,2);
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      function drawMountains(){
-        const bands=[
-          {y:horizonY()+18,amp:26,step:92,color:"rgba(56,28,44,0.56)"},
-          {y:horizonY()+46,amp:34,step:76,color:"rgba(34,22,38,0.72)"},
-          {y:horizonY()+80,amp:22,step:64,color:"rgba(20,14,28,0.94)"}
-        ];
-
-        for(const band of bands){
-          ctx.beginPath();
-          ctx.moveTo(-100,state.h);
-          for(let x=-100;x<=state.w+100;x+=band.step){
-            const y=band.y+(Math.sin(x*0.012)*band.amp)+(Math.cos(x*0.021)*band.amp*0.42);
-            ctx.lineTo(x,y);
-          }
-          ctx.lineTo(state.w+100,state.h);
-          ctx.closePath();
-          ctx.fillStyle=band.color;
-          ctx.fill();
-        }
-      }
-
-      function drawWater(){
-        const g=ctx.createLinearGradient(0,horizonY(),0,state.h);
-        g.addColorStop(0,"rgba(54,50,78,0.46)");
-        g.addColorStop(0.18,"rgba(28,26,54,0.70)");
-        g.addColorStop(1,"rgba(6,8,18,1)");
-        ctx.fillStyle=g;
-        ctx.fillRect(0,horizonY(),state.w,state.h-horizonY());
-
-        const base=state.h*0.83;
-        for(let layer=0;layer<8;layer++){
-          const depth=layer/7;
-          const yBase=base+layer*13;
-          ctx.beginPath();
-          for(let x=0;x<=state.w;x+=10){
-            const wave1=Math.sin(x*0.018+state.tick*0.035+layer)*5*(0.8+depth*0.3);
-            const wave2=Math.sin(x*0.008-state.tick*0.022+layer*1.3)*2.0;
-            const y=yBase+wave1+wave2;
-            if(x===0)ctx.moveTo(x,y);
-            else ctx.lineTo(x,y);
-          }
-          ctx.strokeStyle=`rgba(196,188,224,${0.06+depth*0.10})`;
-          ctx.lineWidth=1.15;
-          ctx.stroke();
-        }
-      }
-
-      function getCompassGeometry(centerX,centerY,size,rotX,rotY){
-        const vertsRaw=[
-          [0,-1.8,0],[1.2,0,0],[0,0,1.2],[-1.2,0,0],[0,0,-1.2],[0,1.8,0]
-        ];
-        const facesRaw=[
-          {name:"NE",idx:[0,4,1]},
-          {name:"ES",idx:[0,1,2]},
-          {name:"SW",idx:[0,2,3]},
-          {name:"WN",idx:[0,3,4]},
-          {name:"nE",idx:[5,1,4]},
-          {name:"sE",idx:[5,2,1]},
-          {name:"sW",idx:[5,3,2]},
-          {name:"nW",idx:[5,4,3]}
-        ];
-        const edges=[[0,1],[0,2],[0,3],[0,4],[5,1],[5,2],[5,3],[5,4],[1,2],[2,3],[3,4],[4,1]];
-        const rotated=[];
-        const pts=[];
-
-        for(let i=0;i<vertsRaw.length;i++){
-          const v=vertsRaw[i];
-          const p=rotateVertex(v[0]*size,v[1]*size,v[2]*size,rotY,rotX);
-          rotated.push(p);
-          pts.push(project(centerX,centerY,p.x,p.y,p.z));
-        }
-
-        const faces=facesRaw.map(function(face){
-          const poly=face.idx.map(i=>pts[i]);
-          const avgZ=(rotated[face.idx[0]].z+rotated[face.idx[1]].z+rotated[face.idx[2]].z)/3;
-          return{name:face.name,poly:poly,avgZ:avgZ};
-        }).sort(function(a,b){
-          return a.avgZ-b.avgZ;
+        path.centerline.forEach(([x, y], index) => {
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         });
-
-        return{pts:pts,edges:edges,faces:faces,centerX:centerX,centerY:centerY,size:size};
+        ctx.stroke();
       }
 
-      function faceFill(name){
-        if(name==="NE"||name==="nE")return"rgba(255,214,118,0.54)";
-        if(name==="ES"||name==="sE")return"rgba(232,110,58,0.50)";
-        if(name==="SW"||name==="sW")return"rgba(156,28,22,0.46)";
-        return"rgba(196,62,42,0.48)";
-      }
+      for (const region of regions) {
+        const [x, y] = region.centerPoint;
+        const isActive = state.projection?.regionId === region.regionId;
 
-      function drawCompass(){
-        const y=state.compassVisible?(horizonY()-98):(horizonY()+84);
-        const geo=getCompassGeometry(
-          state.w*0.5+(state.dragX*10),
-          y,
-          Math.min(state.w,state.h)*0.086,
-          (state.dragY*0.18)-0.10,
-          (state.tick*0.006)+(state.dragX*0.20)
-        );
-
-        ctx.save();
-        ctx.globalAlpha=0.22;
-        ctx.strokeStyle="rgba(255,226,170,0.86)";
-        ctx.lineWidth=1.2;
         ctx.beginPath();
-        ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.95,geo.size*0.62,0,0,TAU);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.ellipse(geo.centerX,geo.centerY,geo.size*1.15,geo.size*0.34,0,0,TAU);
-        ctx.stroke();
-        ctx.restore();
-
-        for(const face of geo.faces){
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(face.poly[0].x,face.poly[0].y);
-          ctx.lineTo(face.poly[1].x,face.poly[1].y);
-          ctx.lineTo(face.poly[2].x,face.poly[2].y);
-          ctx.closePath();
-          ctx.fillStyle=faceFill(face.name);
-          ctx.fill();
-          ctx.lineWidth=1.8;
-          ctx.strokeStyle="rgba(255,236,186,0.96)";
-          ctx.stroke();
-          ctx.restore();
-        }
-
-        ctx.save();
-        ctx.shadowBlur=16;
-        ctx.shadowColor="rgba(255,220,150,0.28)";
-        for(const e of geo.edges){
-          ctx.beginPath();
-          ctx.moveTo(geo.pts[e[0]].x,geo.pts[e[0]].y);
-          ctx.lineTo(geo.pts[e[1]].x,geo.pts[e[1]].y);
-          ctx.lineWidth=2;
-          ctx.strokeStyle="rgba(255,236,186,0.98)";
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(geo.centerX,geo.centerY,geo.size*0.10,0,TAU);
-        ctx.fillStyle="rgba(255,242,208,0.98)";
+        ctx.arc(x, y, 42, 0, Math.PI * 2);
+        ctx.fillStyle = isActive ? "rgba(255,212,152,0.36)" : "rgba(74,116,168,0.20)";
         ctx.fill();
-        ctx.fillStyle="rgba(255,244,214,0.98)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText("N",geo.centerX,geo.centerY-(geo.size*0.96));
-        ctx.fillText("S",geo.centerX,geo.centerY+(geo.size*0.96));
-        ctx.fillText("E",geo.centerX+(geo.size*1.18),geo.centerY);
-        ctx.fillText("W",geo.centerX-(geo.size*1.18),geo.centerY);
-        ctx.restore();
-      }
-
-      function drawTrigger(){
-        const r=buttonRect();
-
-        ctx.save();
-        ctx.globalAlpha=0.92;
-        ctx.fillStyle="rgba(18,10,14,0.74)";
-        ctx.strokeStyle="rgba(255,222,168,0.82)";
-        ctx.lineWidth=1.2;
-        roundedRectPath(r.x,r.y,r.w,r.h,18);
-        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isActive ? "rgba(255,228,184,0.96)" : "rgba(210,226,255,0.26)";
         ctx.stroke();
 
-        ctx.fillStyle="rgba(255,238,200,0.96)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText(state.compassVisible?"LOWER COMPASS":"RAISE COMPASS",r.x+(r.w*0.5),r.y+(r.h*0.5)+0.5);
-        ctx.restore();
-
-        ctx.save();
-        ctx.globalAlpha=0.76;
-        ctx.fillStyle="rgba(255,232,190,0.96)";
-        ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-        ctx.textAlign="center";
-        ctx.textBaseline="middle";
-        ctx.fillText("HARBOR CORE",state.w*0.5+(state.dragX*8),r.y+r.h+18);
-        ctx.restore();
+        ctx.fillStyle = "rgba(245,249,255,0.96)";
+        ctx.font = "600 13px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(region.displayName, x, y - 52);
       }
 
-      function draw(){
-        ctx.clearRect(0,0,state.w,state.h);
-        drawSky();
-        drawCelestials();
-        drawClouds();
-        drawLanterns();
-        drawMountains();
-        drawCompass();
-        drawWater();
-        drawTrigger();
+      for (const cell of state.kernel.diamondCellsById.values()) {
+        const active = state.projection?.cellId === cell.diamondCellId;
+        ctx.beginPath();
+        ctx.arc(cell.centerPoint[0], cell.centerPoint[1], active ? 10 : 7, 0, Math.PI * 2);
+        ctx.fillStyle = active ? "rgba(255,236,188,0.96)" : "rgba(220,230,255,0.36)";
+        ctx.fill();
       }
 
-      function animate(){
-        state.tick++;
-        state.dragX+=state.velX;
-        state.dragY+=state.velY;
-        state.velX*=state.dragging?0.88:0.94;
-        state.velY*=state.dragging?0.88:0.94;
-        state.dragX=clamp(state.dragX,-1.2,1.2);
-        state.dragY=clamp(state.dragY,-0.8,0.8);
-        state.velX=clamp(state.velX,-0.12,0.12);
-        state.velY=clamp(state.velY,-0.12,0.12);
-      }
+      const headingSector = state.projection?.sector ?? "S";
+      const projected = projectByteToSector(state.projection?.stateByte ?? "11010010", headingSector);
+      drawByte(ctx, projected.byte, 150, 120, 56, { rotation: projected.rotation });
+      drawGlyphLabel(ctx, "ACTIVE STATE", 150, 168, { font: "700 11px system-ui, sans-serif" });
 
-      function frame(){
-        animate();
-        draw();
-        requestAnimationFrame(frame);
-      }
+      ctx.beginPath();
+      ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,126,86,0.98)";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,240,220,0.96)";
+      ctx.stroke();
 
-      function pointerDown(x,y){
-        const r=buttonRect();
-        if(pointInRect(x,y,r)){
-          state.compassVisible=!state.compassVisible;
-          return;
-        }
-        state.dragging=true;
-        state.lastX=x;
-        state.lastY=y;
-      }
+      ctx.restore();
+    }
 
-      function pointerMove(x,y){
-        if(!state.dragging)return;
-        const dx=x-state.lastX;
-        const dy=y-state.lastY;
-        state.lastX=x;
-        state.lastY=y;
-        state.velX+=dx*0.0022;
-        state.velY+=dy*0.0016;
-      }
+    function frame() {
+      state.tick += 1;
+      updatePlayer();
+      projectState();
 
-      function pointerUp(){
-        state.dragging=false;
-      }
+      ctx.clearRect(0, 0, state.w, state.h);
+      drawBackground();
+      drawWorld();
 
-      canvas.addEventListener("pointerdown",function(e){
-        const p=pointFromClient(e.clientX,e.clientY);
-        pointerDown(p.x,p.y);
-      });
+      requestAnimationFrame(frame);
+    }
 
-      canvas.addEventListener("pointermove",function(e){
-        const p=pointFromClient(e.clientX,e.clientY);
-        pointerMove(p.x,p.y);
-      });
-
-      canvas.addEventListener("pointerup",pointerUp);
-      canvas.addEventListener("pointerleave",pointerUp);
-
-      canvas.addEventListener("touchstart",function(e){
-        if(!e.changedTouches||!e.changedTouches.length)return;
-        const t=e.changedTouches[0];
-        const p=pointFromClient(t.clientX,t.clientY);
-        pointerDown(p.x,p.y);
-        e.preventDefault();
-      },{passive:false});
-
-      canvas.addEventListener("touchmove",function(e){
-        if(!e.changedTouches||!e.changedTouches.length)return;
-        const t=e.changedTouches[0];
-        const p=pointFromClient(t.clientX,t.clientY);
-        pointerMove(p.x,p.y);
-        e.preventDefault();
-      },{passive:false});
-
-      canvas.addEventListener("touchend",function(e){
-        pointerUp();
-        e.preventDefault();
-      },{passive:false});
-
-      window.addEventListener("resize",resize,{passive:true});
-      window.addEventListener("orientationchange",resize,{passive:true});
-
+    async function boot() {
       resize();
+      state.kernel = await loadWorldKernel();
+      projectState();
       frame();
-    })();
+    }
+
+    window.addEventListener("resize", resize, { passive: true });
+
+    window.addEventListener("keydown", (event) => {
+      state.keys.add(event.key);
+    });
+
+    window.addEventListener("keyup", (event) => {
+      state.keys.delete(event.key);
+    });
+
+    boot().catch((error) => {
+      console.error(error);
+      alert(`Harbor Core foundation failed to boot: ${error.message}`);
+    });
   </script>
 </body>
 </html>

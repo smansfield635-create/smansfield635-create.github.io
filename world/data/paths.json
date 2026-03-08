@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "WORLD_TRAVERSAL_RULES_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "pathRows": [
+    {
+      "pathId": "path_harbor_to_market",
+      "displayName": "Harbor to Market",
+      "pathClass": "harbor_entry",
+      "fromRegionId": "harbor_village",
+      "toRegionId": "market_district",
+      "centerline": [[180, 460], [260, 442], [340, 420], [420, 400]],
+      "nominalWidth": 72,
+      "allowedModes": ["foot"],
+      "requiredGateClass": null,
+      "prohibitionClass": "none",
+      "stateEncodingId": "harbor_idle_open"
+    },
+    {
+      "pathId": "path_market_to_basin",
+      "displayName": "Market to Basin",
+      "pathClass": "corridor",
+      "fromRegionId": "market_district",
+      "toRegionId": "exploration_basin",
+      "centerline": [[420, 400], [500, 376], [580, 344], [660, 320]],
+      "nominalWidth": 68,
+      "allowedModes": ["foot"],
+      "requiredGateClass": null,
+      "prohibitionClass": "none",
+      "stateEncodingId": "market_active_open"
+    },
+    {
+      "pathId": "path_basin_to_summit",
+      "displayName": "Basin to Summit",
+      "pathClass": "convergence",
+      "fromRegionId": "exploration_basin",
+      "toRegionId": "summit_plaza",
+      "centerline": [[660, 320], [740, 284], [820, 234], [900, 180]],
+      "nominalWidth": 60,
+      "allowedModes": ["foot"],
+      "requiredGateClass": "gate_summit_entry",
+      "prohibitionClass": "gate_blocked",
+      "stateEncodingId": "summit_gate_required"
+    }
+  ],
+  "gateRules": [
+    {
+      "gateClass": "gate_summit_entry",
+      "displayName": "Summit Entry Gate",
+      "requiredPredecessorRegionId": "exploration_basin",
+      "openStateEncodingId": "summit_open",
+      "blockedStateEncodingId": "summit_gate_required"
+    }
+  ],
+  "modeRules": [
+    {
+      "modeId": "foot",
+      "displayName": "Foot Travel"
+    }
+  ],
+  "severityRules": [
+    {
+      "severityRuleId": "rule_basin_edge_blocks_if_extreme",
+      "hazardId": "hazard_basin_edge",
+      "effect": "block_if_extreme"
+    }
+  ]
+}

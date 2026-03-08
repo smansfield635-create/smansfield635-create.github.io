@@ -1,163 +1,108 @@
 (function(){
 "use strict";
 
-const TAU=Math.PI*2;
-
-function clamp(v,min,max){
-return Math.max(min,Math.min(max,v));
-}
-
-function roundedRectPath(ctx,x,y,w,h,r){
-const rr=Math.min(r,w*0.5,h*0.5);
-ctx.beginPath();
-ctx.moveTo(x+rr,y);
-ctx.lineTo(x+w-rr,y);
-ctx.quadraticCurveTo(x+w,y,x+w,y+rr);
-ctx.lineTo(x+w,y+h-rr);
-ctx.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);
-ctx.lineTo(x+rr,y+h);
-ctx.quadraticCurveTo(x,y+h,x,y+h-rr);
-ctx.lineTo(x,y+rr);
-ctx.quadraticCurveTo(x,y,x+rr,y);
-ctx.closePath();
-}
-
-function hash(n){
-const x=Math.sin(n*127.1)*43758.5453123;
-return x-Math.floor(x);
-}
-
 function createState(){
 return{
 fireworks:[],
-lockedFace:null,
-lockedPulse:0,
-overlayAlpha:0
+overlay:0,
+lockedFace:null
 };
 }
 
-function triggerLocked(state,face){
-state.lockedFace=face;
-state.lockedPulse=1;
+function triggerOverlay(state,intensity){
+if(!state)return;
+const v=typeof intensity==="number"&&isFinite(intensity)?intensity:0;
+state.overlay=Math.max(state.overlay,v);
 }
 
-function triggerOverlay(state,alpha){
-state.overlayAlpha=Math.max(state.overlayAlpha,alpha||0);
+function triggerLocked(state,face){
+if(!state)return;
+state.lockedFace=face||null;
+state.overlay=Math.max(state.overlay,0.22);
 }
 
 function spawnFirework(state,x,y,count,sizeBase){
-const particles=[];
-const total=count||16;
-const base=sizeBase||1.5;
-
-for(let i=0;i<total;i++){
-const a=(i/total)*TAU+(hash(i+total)*0.32);
-const speed=base*(0.75+hash(i*5.7)*0.65);
-particles.push({
-x,
-y,
-vx:Math.cos(a)*speed,
-vy:Math.sin(a)*speed,
-life:46+Math.floor(hash(i*2.1)*20)
-});
-}
-
+if(!state)return;
 state.fireworks.push({
-particles,
-life:60,
-maxLife:60
+x:typeof x==="number"?x:0,
+y:typeof y==="number"?y:0,
+life:1,
+count:typeof count==="number"?count:10,
+sizeBase:typeof sizeBase==="number"?sizeBase:1
 });
+if(state.fireworks.length>16){
+state.fireworks.splice(0,state.fireworks.length-16);
+}
 }
 
 function decay(state){
-state.lockedPulse*=0.93;
-state.overlayAlpha*=0.88;
-
-for(let f=state.fireworks.length-1;f>=0;f--){
-const burst=state.fireworks[f];
-burst.life--;
-
-for(let i=burst.particles.length-1;i>=0;i--){
-const p=burst.particles[i];
-p.x+=p.vx;
-p.y+=p.vy;
-p.vx*=0.985;
-p.vy*=0.985;
-p.vy+=0.012;
-p.life--;
-if(p.life<=0)burst.particles.splice(i,1);
-}
-
-if(burst.life<=0||burst.particles.length===0){
-state.fireworks.splice(f,1);
+if(!state)return;
+state.overlay*=0.92;
+for(let i=state.fireworks.length-1;i>=0;i--){
+state.fireworks[i].life*=0.90;
+if(state.fireworks[i].life<0.05){
+state.fireworks.splice(i,1);
 }
 }
 }
 
 function drawFireworks(ctx,state){
-for(let f=0;f<state.fireworks.length;f++){
-const burst=state.fireworks[f];
-const alpha=burst.life/burst.maxLife;
+if(!state||!state.fireworks||!state.fireworks.length)return;
 
-for(let i=0;i<burst.particles.length;i++){
-const p=burst.particles[i];
 ctx.save();
-ctx.globalAlpha=alpha*0.9;
-ctx.fillStyle=i%3===0?"rgba(255,215,120,0.95)":(i%3===1?"rgba(255,82,82,0.92)":"rgba(255,245,225,0.92)");
-ctx.shadowBlur=10;
-ctx.shadowColor=ctx.fillStyle;
+for(let i=0;i<state.fireworks.length;i++){
+const fw=state.fireworks[i];
+ctx.globalAlpha=fw.life*0.45;
+ctx.strokeStyle="rgba(255,220,150,0.92)";
+ctx.lineWidth=1;
+for(let j=0;j<fw.count;j++){
+const a=(j/fw.count)*Math.PI*2;
+const r=(14+fw.sizeBase*8)*(1-fw.life+0.15);
 ctx.beginPath();
-ctx.arc(p.x,p.y,1.8,0,TAU);
-ctx.fill();
+ctx.moveTo(fw.x,fw.y);
+ctx.lineTo(fw.x+Math.cos(a)*r,fw.y+Math.sin(a)*r);
+ctx.stroke();
+}
+}
 ctx.restore();
-}
-}
 }
 
 function drawLockedOverlay(ctx,state,getLockedLabel){
-if(state.lockedPulse<=0||!state.lockedFace)return;
-
-const alpha=clamp(state.lockedPulse,0,1);
-const w=220;
-const h=50;
-const x=window.innerWidth*0.5-w*0.5;
-const y=window.innerHeight*0.12;
+if(!state||!state.lockedFace||state.overlay<0.04)return;
 
 ctx.save();
-ctx.globalAlpha=0.82*alpha;
-roundedRectPath(ctx,x,y,w,h,16);
-ctx.fillStyle="rgba(20,18,28,0.88)";
-ctx.fill();
-ctx.lineWidth=1.4;
-ctx.strokeStyle="rgba(255,215,150,0.52)";
-ctx.stroke();
-ctx.fillStyle="rgba(255,245,235,0.94)";
-ctx.font="700 14px system-ui,Segoe UI,Roboto,sans-serif";
+ctx.globalAlpha=Math.min(0.26,state.overlay*0.8);
+ctx.fillStyle="rgba(120,18,18,0.55)";
+ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+ctx.globalAlpha=Math.min(0.9,state.overlay*2.0);
+ctx.fillStyle="rgba(255,235,210,0.96)";
+ctx.font='700 18px system-ui,Segoe UI,Roboto,sans-serif';
 ctx.textAlign="center";
 ctx.textBaseline="middle";
-ctx.fillText(typeof getLockedLabel==="function"?getLockedLabel(state.lockedFace):"LOCKED",x+w*0.5,y+h*0.5);
+const label=typeof getLockedLabel==="function"?getLockedLabel(state.lockedFace):"LOCKED";
+ctx.fillText(label,window.innerWidth*0.5,window.innerHeight*0.18);
 ctx.restore();
 }
 
 function drawNavigationOverlay(ctx,state){
-if(state.overlayAlpha<=0)return;
+if(!state||state.overlay<0.02)return;
+
 ctx.save();
-ctx.globalAlpha=clamp(state.overlayAlpha,0,1)*0.22;
-ctx.fillStyle="black";
+ctx.globalAlpha=Math.min(0.18,state.overlay*0.4);
+ctx.fillStyle="rgba(255,215,120,0.30)";
 ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
 ctx.restore();
 }
 
 window.OPENWORLD_SCENE_FX=Object.freeze({
 version:"OPENWORLD_SCENE_FX_v1",
-createState,
-triggerLocked,
-triggerOverlay,
-spawnFirework,
-decay,
-drawFireworks,
-drawLockedOverlay,
-drawNavigationOverlay
+createState:createState,
+triggerOverlay:triggerOverlay,
+triggerLocked:triggerLocked,
+spawnFirework:spawnFirework,
+decay:decay,
+drawFireworks:drawFireworks,
+drawLockedOverlay:drawLockedOverlay,
+drawNavigationOverlay:drawNavigationOverlay
 });
-
 })();

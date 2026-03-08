@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "STATE_ENCODINGS_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "encodingRows": [
+    {
+      "encodingId": "harbor_idle_open",
+      "label": "Harbor Idle Open",
+      "byte": "11010010",
+      "hex": "D2",
+      "flags": []
+    },
+    {
+      "encodingId": "market_active_open",
+      "label": "Market Active Open",
+      "byte": "11111010",
+      "hex": "FA",
+      "flags": []
+    },
+    {
+      "encodingId": "basin_explore_open",
+      "label": "Basin Explore Open",
+      "byte": "10110111",
+      "hex": "B7",
+      "flags": []
+    },
+    {
+      "encodingId": "summit_gate_required",
+      "label": "Summit Gate Required",
+      "byte": "10111100",
+      "hex": "BC",
+      "flags": ["gate_required"]
+    },
+    {
+      "encodingId": "summit_open",
+      "label": "Summit Open",
+      "byte": "11111110",
+      "hex": "FE",
+      "flags": ["terminal"]
+    },
+    {
+      "encodingId": "hazard_high",
+      "label": "Hazard High",
+      "byte": "00110101",
+      "hex": "35",
+      "flags": []
+    },
+    {
+      "encodingId": "water_passage_open",
+      "label": "Water Passage Open",
+      "byte": "01011010",
+      "hex": "5A",
+      "flags": []
+    },
+    {
+      "encodingId": "water_passage_blocked",
+      "label": "Water Passage Blocked",
+      "byte": "01011000",
+      "hex": "58",
+      "flags": ["blocked"]
+    },
+    {
+      "encodingId": "npc_host_idle",
+      "label": "NPC Host Idle",
+      "byte": "10010010",
+      "hex": "92",
+      "flags": []
+    },
+    {
+      "encodingId": "npc_merchant_active",
+      "label": "NPC Merchant Active",
+      "byte": "11110010",
+      "hex": "F2",
+      "flags": []
+    }
+  ]
+}

@@ -1,68 +1,87 @@
 (function(){
 "use strict";
 
-function getPoint(canvas,clientX,clientY){
-const rect=canvas.getBoundingClientRect();
+function createState(){
 return{
-x:clientX-rect.left,
-y:clientY-rect.top
+overlay:0,
+bursts:[],
+lanternEvents:[]
 };
 }
 
-function bind(canvas,handlers){
-const h=handlers||{};
-
-canvas.addEventListener("pointerdown",function(e){
-if(typeof h.onPointerDown==="function"){
-h.onPointerDown(getPoint(canvas,e.clientX,e.clientY),e);
+function triggerOverlay(state,intensity){
+if(!state)return;
+const v=(typeof intensity==="number"&&isFinite(intensity))?intensity:0;
+state.overlay=Math.max(state.overlay,v);
 }
+
+function burstAt(state,x,y,kind){
+if(!state)return;
+state.bursts.push({
+x:x,
+y:y,
+kind:kind||"generic",
+life:1
 });
-
-canvas.addEventListener("pointermove",function(e){
-if(typeof h.onPointerMove==="function"){
-h.onPointerMove(getPoint(canvas,e.clientX,e.clientY),e);
-}
-});
-
-canvas.addEventListener("pointerup",function(e){
-if(typeof h.onPointerUp==="function"){
-h.onPointerUp(getPoint(canvas,e.clientX,e.clientY),e);
-}
-});
-
-canvas.addEventListener("pointerleave",function(e){
-if(typeof h.onPointerLeave==="function"){
-h.onPointerLeave(e);
-}
-});
-
-canvas.addEventListener("touchstart",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-if(typeof h.onTouchStart==="function"){
-h.onTouchStart(getPoint(canvas,t.clientX,t.clientY),t,e);
-}
-},{passive:true});
-
-canvas.addEventListener("touchmove",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-if(typeof h.onTouchMove==="function"){
-h.onTouchMove(getPoint(canvas,t.clientX,t.clientY),t,e);
-}
-},{passive:true});
-
-canvas.addEventListener("touchend",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-if(typeof h.onTouchEnd==="function"){
-h.onTouchEnd(getPoint(canvas,t.clientX,t.clientY),t,e);
-}
-},{passive:true});
+if(state.bursts.length>12)state.bursts.shift();
 }
 
-window.OPENWORLD_SCENE_INPUT=Object.freeze({
-version:"OPENWORLD_SCENE_INPUT_vMIN1",
-bind:bind
+function decay(state,tick){
+if(!state)return;
+
+state.overlay*=0.92;
+if(state.overlay<0.01)state.overlay=0;
+
+for(let i=state.bursts.length-1;i>=0;i--){
+state.bursts[i].life*=0.90;
+if(state.bursts[i].life<0.05){
+state.bursts.splice(i,1);
+}
+}
+}
+
+function drawBursts(ctx,state,tick){
+if(!state||!state.bursts.length)return;
+
+ctx.save();
+for(let i=0;i<state.bursts.length;i++){
+const b=state.bursts[i];
+const alpha=b.life*0.44;
+const radius=(1-b.life)*38+10;
+
+ctx.globalAlpha=alpha;
+ctx.strokeStyle=b.kind==="fear"
+?"rgba(255,138,98,0.88)"
+:(b.kind==="align"?"rgba(255,232,180,0.88)":"rgba(255,216,156,0.88)");
+ctx.lineWidth=1.2;
+
+ctx.beginPath();
+ctx.arc(b.x,b.y,radius,0,Math.PI*2);
+ctx.stroke();
+
+ctx.beginPath();
+ctx.arc(b.x,b.y,radius*0.58,0,Math.PI*2);
+ctx.stroke();
+}
+ctx.restore();
+}
+
+function drawNavigationOverlay(ctx,state){
+if(!state||!state.overlay)return;
+ctx.save();
+ctx.globalAlpha=Math.min(0.18,state.overlay);
+ctx.fillStyle="rgba(255,220,160,0.16)";
+ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+ctx.restore();
+}
+
+window.OPENWORLD_SCENE_FX=Object.freeze({
+version:"OPENWORLD_SCENE_FX_vL2B",
+createState:createState,
+triggerOverlay:triggerOverlay,
+burstAt:burstAt,
+decay:decay,
+drawBursts:drawBursts,
+drawNavigationOverlay:drawNavigationOverlay
 });
 })();

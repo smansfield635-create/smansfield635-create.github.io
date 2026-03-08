@@ -1,21 +1,11 @@
 (function(){
 "use strict";
 
-/*
-OPENWORLD_SCENE_v2
-Compass rise/set system
-Moon tap phase cycling
-Dragon spawn triggers
-Global action consequence system
-*/
-
 const canvas=document.getElementById("scene");
 if(!canvas)return;
 
 const ctx=canvas.getContext("2d");
 if(!ctx)return;
-
-/* MODULES */
 
 const CAMERA=window.OPENWORLD_CAMERA;
 const BG=window.OPENWORLD_BACKGROUND_RENDERER;
@@ -25,135 +15,168 @@ const SHOWROOM=window.OPENWORLD_SHOWROOM_RENDERER;
 const FX=window.OPENWORLD_SCENE_FX;
 const INPUT=window.OPENWORLD_SCENE_INPUT;
 
+const KERNEL=window.WORLD_KERNEL||null;
+const REGIONS=window.ISLAND_REGIONS||null;
+const ROUTER=window.REGION_ROUTER||null;
 const ENV=window.ENVIRONMENT_RUNTIME||null;
 const HARBOR=window.HARBOR_RENDERER||null;
 
-/* CONSTANTS */
+const NAV_MATH=window.OPENWORLD_NAVIGATION_MATH||null;
+const INSTRUMENTS_RUNTIME=window.OPENWORLD_INSTRUMENTS_RUNTIME||null;
 
-const COMPASS_REST_Y_FACTOR=0.16;
-const COMPASS_ACTIVE_Y_FACTOR=0.28;
+if(!CAMERA||!BG||!COMPASS||!DRAGONS||!SHOWROOM||!FX||!INPUT){
+console.error("OPENWORLD_SCENE_v1: missing required scene modules.");
+return;
+}
 
-/* GLOBAL STATE */
-
-const state={
-tick:0,
-
-rotX:-0.3,
-rotY:0.24,
-rotVelX:0,
-rotVelY:0,
-
-dragging:false,
-lastX:0,
-lastY:0,
-
-faceZones:{},
-cube:null,
-
-/* compass */
-
-compassState:"REST",
-compassLift:0,
-
-/* moons */
-
-moonPhaseLeft:0,
-moonPhaseRight:0,
-
-/* dragons */
-
-dragonLeftActive:false,
-dragonRightActive:false,
-
-/* action system */
-
-actionCounter:0,
-
-/* rendering */
-
-camera:CAMERA.createState("fixed_harbor"),
-background:BG.createState(),
-showroom:SHOWROOM.createState(),
-fx:FX.createState()
-};
-
-/* UTIL */
+const LOCAL_FACE_FALLBACK=Object.freeze({
+N:{label:"NORTH",short:"N",route:null,type:"locked"},
+E:{label:"EAST",short:"E",route:"/products/",type:"route"},
+S:{label:"SOUTH",short:"S",route:"/laws/",type:"route"},
+W:{label:"WEST",short:"W",route:"/gauges/",type:"route"},
+C:{label:"CORE",short:"CORE",route:null,type:"locked"},
+M:{label:"MORPH",short:"MORPH",route:null,type:"morph"}
+});
 
 function clamp(v,min,max){
 return Math.max(min,Math.min(max,v));
-}
-
-function lerp(a,b,t){
-return a+(b-a)*t;
 }
 
 function dispatch(name,detail){
 document.dispatchEvent(new CustomEvent(name,{detail}));
 }
 
-/* ACTION CONSEQUENCE SYSTEM */
-
-function registerAction(){
-state.actionCounter++;
-state.moonPhaseLeft=state.moonPhaseLeft%4;
-state.moonPhaseRight=state.moonPhaseRight%4;
-}
-
-/* MOON TAP */
-
-function tapMoonLeft(){
-state.moonPhaseLeft=(state.moonPhaseLeft+1)%4;
-state.dragonLeftActive=true;
-registerAction();
-}
-
-function tapMoonRight(){
-state.moonPhaseRight=(state.moonPhaseRight+1)%4;
-state.dragonRightActive=true;
-registerAction();
-}
-
-/* COMPASS STATE MACHINE */
-
-function summonCompass(){
-if(state.compassState==="REST"){
-state.compassState="RISING";
+function getSceneLanguage(){
+try{
+const qs=new URLSearchParams(window.location.search||"");
+const q=qs.get("lang");
+const ls=window.localStorage.getItem("gd_lang");
+const lang=(q||ls||document.documentElement.lang||"en").toLowerCase();
+if(lang.startsWith("zh"))return"zh";
+if(lang.startsWith("es"))return"es";
+return"en";
+}catch(_e){
+return"en";
 }
 }
 
-function lowerCompass(){
-if(state.compassState==="ACTIVE"){
-state.compassState="SETTING";
+function normalizeCurrentPath(){
+try{
+const p=String(window.location.pathname||"/");
+return p.endsWith("/")?p:(p+"/");
+}catch(_e){
+return"/";
 }
 }
 
-function updateCompass(){
-if(state.compassState==="RISING"){
-state.compassLift+=0.05;
-if(state.compassLift>=1){
-state.compassLift=1;
-state.compassState="ACTIVE";
-}
-}else if(state.compassState==="SETTING"){
-state.compassLift-=0.05;
-if(state.compassLift<=0){
-state.compassLift=0;
-state.compassState="REST";
-}
-}
+function currentRegionContext(regionIdHint){
+if(!ROUTER||typeof ROUTER.getRegionContext!=="function")return null;
+return ROUTER.getRegionContext(regionIdHint||normalizeCurrentPath());
 }
 
-/* RESIZE */
+function currentCompassMap(regionId){
+if(!ROUTER||typeof ROUTER.compassTargetMap!=="function")return null;
+return ROUTER.compassTargetMap(regionId);
+}
+
+function resolveFaceMeta(face){
+const fallback=LOCAL_FACE_FALLBACK[face]||null;
+const map=currentCompassMap(state.regionId);
+if(!map||!REGIONS||typeof REGIONS.byId!=="function"){
+return fallback;
+}
+
+if(face==="M"){
+return fallback;
+}
+
+const targetId=map[face]||null;
+if(!targetId){
+return fallback;
+}
+
+const region=REGIONS.byId(targetId);
+if(!region){
+return fallback;
+}
+
+const sameRegion=region.id===state.regionId;
+const sameRoute=region.route===normalizeCurrentPath();
+const route=sameRegion||sameRoute?null:region.route;
+
+if(face==="N")return{label:"NORTH",short:"N",route, type:route?"route":"locked"};
+if(face==="E")return{label:"EAST",short:"E",route, type:route?"route":"locked"};
+if(face==="S")return{label:"SOUTH",short:"S",route, type:route?"route":"locked"};
+if(face==="W")return{label:"WEST",short:"W",route, type:route?"route":"locked"};
+if(face==="C")return{label:"CORE",short:"CORE",route, type:route?"route":"locked"};
+
+return fallback;
+}
+
+const state={
+tick:0,
+rotX:-0.3,
+rotY:0.24,
+rotVelX:0,
+rotVelY:0,
+dragging:false,
+lastX:0,
+lastY:0,
+hoverFace:null,
+faceZones:{},
+cube:null,
+dragonLoop:true,
+dragonStart:0,
+morphPulse:0,
+navObjectState:"expanded_compass",
+navigateTo:null,
+navigateDelay:0,
+regionId:(document.body&&document.body.dataset&&document.body.dataset.regionId)||"harbor_core",
+regionContext:null,
+camera:CAMERA.createState("fixed_harbor"),
+background:BG.createState(),
+showroom:SHOWROOM.createState(),
+fx:FX.createState(),
+motion:{
+dragons:{
+orbitCenter:{x:0,y:520,z:420},
+orbitRadius:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitRadius)||420,
+orbitSpeed:(KERNEL&&KERNEL.dragons&&KERNEL.dragons.orbitSpeed)||0.0019
+}
+},
+interactionState:{
+helm_input:{
+commanded_heading_deg:0,
+throttle_class:"cruise",
+steering_delta:0,
+helm_mode:"manual"
+},
+course_selection:{
+selected_course_deg:0,
+selection_source:"default",
+lock_state:"unlocked"
+},
+target_selection:{
+target_type:"route",
+target_id:"harbor_core",
+target_lock_state:"locked"
+},
+instrument_mode:"free_nav"
+},
+navigationRuntime:{
+mathOutput:null,
+instrumentState:null,
+instrumentSurfaces:null
+}
+};
 
 function resize(){
-
 const dpr=Math.max(1,window.devicePixelRatio||1);
 const w=window.innerWidth;
 const h=window.innerHeight;
 
 canvas.style.width=w+"px";
 canvas.style.height=h+"px";
-
 canvas.width=Math.floor(w*dpr);
 canvas.height=Math.floor(h*dpr);
 
@@ -161,26 +184,53 @@ ctx.setTransform(1,0,0,1,0,0);
 ctx.scale(dpr,dpr);
 
 const preset=CAMERA.getPreset(state.camera.mode);
-
 BG.initLanterns(state.background,w,h);
 BG.initClouds(state.background,w,h);
 BG.initMountains(state.background,w,h,preset);
-
 SHOWROOM.refreshTargets(state.showroom,w,h);
-
 }
 
-/* INTERACTION */
+function getFaceAt(x,y){
+if(state.showroom.mode==="show")return"M";
+for(const key of["C","W","E","N","S","M"]){
+const poly=state.faceZones[key];
+if(poly&&INPUT.pointInPoly(x,y,poly))return key;
+}
+return null;
+}
+
+function getLockedLabel(face){
+const meta=resolveFaceMeta(face);
+return meta?meta.label+" LOCKED":"LOCKED";
+}
+
+function queueNavigation(route,face){
+if(!route)return;
+state.navigateTo=route;
+state.navigateDelay=12;
+state.navObjectState="compressed_navigation_stick";
+CAMERA.blendTo(state.camera,"travel_projection");
+FX.triggerOverlay(state.fx,1);
+dispatch("compass:route",{face,route});
+}
 
 function engageDrag(x,y){
 state.dragging=true;
 state.lastX=x;
 state.lastY=y;
+getFaceAt(x,y);
 }
 
 function moveDrag(x,y){
-
+state.hoverFace=getFaceAt(x,y);
 if(!state.dragging)return;
+if(
+state.showroom.mode==="show"||
+state.showroom.mode==="swirl"||
+state.showroom.mode==="shatter"
+){
+return;
+}
 
 const dx=x-state.lastX;
 const dy=y-state.lastY;
@@ -188,141 +238,353 @@ const dy=y-state.lastY;
 state.lastX=x;
 state.lastY=y;
 
+if(state.navObjectState==="compressed_navigation_stick"){
+state.rotVelY+=dx*0.0004;
+state.rotVelX+=dy*0.0004;
+return;
+}
+
 state.rotVelY+=dx*0.001;
 state.rotVelX+=dy*0.001;
 }
 
-function releaseDrag(){
-state.dragging=false;
+function handleFaceAction(face){
+const meta=resolveFaceMeta(face);
+if(!meta)return;
+
+if(face==="M"||meta.type==="morph"){
+if(state.showroom.mode==="show"){
+SHOWROOM.close(state.showroom,dispatch);
+}else if(state.cube){
+SHOWROOM.start(state.showroom,state.cube,dispatch,function(x,y,count,sizeBase){
+FX.spawnFirework(state.fx,x,y,count,sizeBase);
+});
+}
+state.morphPulse=1;
+return;
 }
 
-/* ANIMATE */
+if(!meta.route){
+FX.triggerLocked(state.fx,face);
+dispatch("compass:locked",{face});
+if(state.cube&&state.cube.faceCenters[face]){
+FX.spawnFirework(
+state.fx,
+state.cube.faceCenters[face].x,
+state.cube.faceCenters[face].y,
+14,
+1.5
+);
+}
+return;
+}
 
-function animate(){
+if(state.cube&&state.cube.faceCenters[face]){
+FX.spawnFirework(
+state.fx,
+state.cube.faceCenters[face].x,
+state.cube.faceCenters[face].y,
+16,
+1.7
+);
+}
 
+queueNavigation(meta.route,face);
+}
+
+function releaseDrag(x,y){
+const hit=getFaceAt(x,y);
+state.dragging=false;
+if(hit)handleFaceAction(hit);
+}
+
+function syncRegionContext(){
+const ctxValue=currentRegionContext();
+if(ctxValue&&ctxValue.regionId){
+state.regionContext=ctxValue;
+state.regionId=ctxValue.regionId;
+}
+}
+
+function syncNavigationRuntime(){
+if(!NAV_MATH||!INSTRUMENTS_RUNTIME||!ROUTER||!REGIONS)return;
+
+const region=REGIONS.byId?REGIONS.byId(state.regionId):null;
+const envSnapshot=ENV&&typeof ENV.getSnapshot==="function"?ENV.getSnapshot():null;
+const compassMap=ROUTER&&typeof ROUTER.compassTargetMap==="function"
+?ROUTER.compassTargetMap(state.regionId)
+:null;
+
+const northTargetId=compassMap&&compassMap.N?compassMap.N:state.regionId;
+const targetRegion=REGIONS.byId?REGIONS.byId(northTargetId):null;
+
+state.interactionState.target_selection.target_id=northTargetId||state.regionId;
+state.interactionState.instrument_mode=
+state.navObjectState==="compressed_navigation_stick"?"route_nav":"free_nav";
+
+const mathInput={
+world_state:{
+origin_ref:(KERNEL&&KERNEL.mapId)||"NINE_SUMMITS_ISLAND_MAP_v1",
+region_id:state.regionId,
+vessel_position:{x:0,y:0,z:0},
+vessel_track_ref:{
+heading_ref:state.rotY,
+track_ref:state.rotY,
+frame_id:"world_frame"
+},
+route_graph:{
+nodes:REGIONS&&REGIONS.list
+?REGIONS.list.map(function(r){
+return{id:r.id,route:r.route,anchor:r.anchor};
+})
+:[],
+edges:region?[].concat(region.ingress||[],region.egress||[]):[],
+traversal_rules:(KERNEL&&KERNEL.traversal)||{}
+},
+active_route:targetRegion
+?{
+route_id:targetRegion.id,
+ordered_waypoints:[targetRegion.id],
+route_constraints:{}
+}
+:null,
+active_waypoint:targetRegion
+?{
+waypoint_id:targetRegion.id,
+coordinate:targetRegion.anchor,
+waypoint_class:targetRegion.type
+}
+:null,
+neighbor_waypoints:state.regionContext&&state.regionContext.neighbors
+?state.regionContext.neighbors.map(function(n){
+return{
+waypoint_id:n.id,
+coordinate:n.anchor,
+admissibility_state:"admissible"
+};
+})
+:[]
+},
+environment_state:{
+timestamp:Date.now(),
+time_of_day_class:"dusk",
+wind:{
+direction_deg:0,
+speed:envSnapshot&&envSnapshot.weather?envSnapshot.weather.wind||0:0,
+frame_id:"world_frame"
+},
+current:{
+direction_deg:0,
+speed:0,
+frame_id:"world_frame"
+},
+celestial_state:{
+sun:envSnapshot?envSnapshot.sun:null,
+moon:envSnapshot?envSnapshot.moon:null,
+stars:[],
+observer_frame:"world_frame"
+},
+visibility_class:"clear"
+},
+interaction_state:state.interactionState,
+derivation_request:"full"
+};
+
+const mathOutput=NAV_MATH.compute(mathInput);
+const instrumentState=INSTRUMENTS_RUNTIME.buildState(mathOutput,state.interactionState);
+const instrumentSurfaces=INSTRUMENTS_RUNTIME.buildSurfaces(instrumentState);
+
+state.navigationRuntime.mathOutput=mathOutput;
+state.navigationRuntime.instrumentState=instrumentState;
+state.navigationRuntime.instrumentSurfaces=instrumentSurfaces;
+}
+
+function updateCamera(){
+CAMERA.update(state.camera,0.06);
+}
+
+function updateShowroom(){
+SHOWROOM.update(state.showroom,function(){
+state.navObjectState="expanded_compass";
+CAMERA.blendTo(state.camera,"fixed_harbor");
+});
+}
+
+function animateState(){
 state.tick++;
-
-updateCompass();
+syncRegionContext();
+BG.syncCelestials(state.background,ENV,state.tick);
+syncNavigationRuntime();
+updateCamera();
 
 state.rotY+=state.rotVelY;
 state.rotX+=state.rotVelX;
+state.rotVelY*=state.dragging?0.91:0.972;
+state.rotVelX*=state.dragging?0.91:0.972;
+state.rotVelY=clamp(state.rotVelY,-0.14,0.14);
+state.rotVelX=clamp(state.rotVelX,-0.14,0.14);
 
-state.rotVelY*=0.97;
-state.rotVelX*=0.97;
-
-CAMERA.update(state.camera,0.06);
-
-BG.syncCelestials(state.background,ENV,state.tick);
+if(
+!state.dragging&&
+state.showroom.mode==="idle"&&
+state.navObjectState==="expanded_compass"
+){
+state.rotY+=0.0008;
 }
 
-/* DRAW */
+state.morphPulse*=0.94;
+FX.decay(state.fx);
+updateShowroom();
 
-function draw(){
+if(state.navigateTo){
+state.navigateDelay--;
+FX.triggerOverlay(state.fx,0.35);
+if(state.navigateDelay<=0){
+window.location.href=state.navigateTo;
+}
+}
+}
 
+function drawSceneFrame(){
 const w=window.innerWidth;
 const h=window.innerHeight;
-
 const preset=CAMERA.getBlendedPreset(state.camera);
 
 ctx.clearRect(0,0,w,h);
 
-/* SKY */
 BG.drawSky(ctx,w,h,state.tick,preset,state.background);
 BG.drawSun(ctx,w,h,state.background);
 BG.drawMoon(ctx,w,h,state.background);
 
-/* CLOUDS */
-BG.drawClouds(ctx,state.background,state.tick,null);
+const envSnapshot=ENV&&typeof ENV.getSnapshot==="function"?ENV.getSnapshot():null;
 
-/* LANTERNS */
-BG.drawLanterns(ctx,state.background,state.tick,1);
-
-/* MOUNTAINS */
+BG.drawClouds(ctx,state.background,state.tick,envSnapshot);
+BG.drawLanterns(
+ctx,
+state.background,
+state.tick,
+state.hoverFace==="N"||state.camera.requested==="travel_projection"?1.18:1
+);
 BG.drawMountains(ctx,w,h,state.background,preset);
 
-/* WATER */
-BG.drawWater(ctx,w,h,state.tick,preset,state.background,null);
-
-/* HARBOR */
-if(HARBOR)HARBOR.draw(ctx,w,h,state.tick);
-
-/* COMPASS POSITION */
-const liftY=lerp(
-h*COMPASS_REST_Y_FACTOR,
-h*COMPASS_ACTIVE_Y_FACTOR,
-state.compassLift
-);
-
-/* COMPASS */
 const geo=COMPASS.getCubeGeometry({
 width:w,
 height:h,
 preset:preset,
 rotX:state.rotX,
 rotY:state.rotY,
-morphPulse:0,
+morphPulse:state.morphPulse,
 cameraRequested:state.camera.requested
 });
-
-geo.centerY=liftY;
 
 state.cube=geo;
 state.faceZones=geo.faces;
 
-/* DRAGONS */
 const dragonBundles=DRAGONS.getDragonBundles(geo,state);
 
-if(state.dragonLeftActive||state.dragonRightActive){
-DRAGONS.drawBack(ctx,geo,dragonBundles,state.tick);
+DRAGONS.drawBack(ctx,geo,dragonBundles,state.tick,state);
+
+if(
+state.showroom.mode==="idle"||
+state.showroom.mode==="return"||
+state.showroom.mode==="shatter"
+){
+if(
+state.navObjectState==="compressed_navigation_stick"&&
+state.camera.requested!=="fixed_harbor"
+){
+COMPASS.drawNavigationStick(ctx,geo);
+}else{
+COMPASS.drawCube(
+ctx,
+geo,
+state.tick,
+function(face){
+return resolveFaceMeta(face);
+},
+state.hoverFace
+);
+}
 }
 
-/* COMPASS DRAW */
-COMPASS.drawCube(ctx,geo,state.tick,()=>null,null);
+DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,getSceneLanguage(),state);
 
-/* FRONT DRAGONS */
-if(state.dragonLeftActive||state.dragonRightActive){
-DRAGONS.drawFront(ctx,geo,dragonBundles,state.tick,"en",state);
+try{
+if(HARBOR&&typeof HARBOR.draw==="function"){
+HARBOR.draw(ctx,w,h,state.tick);
+}
+}catch(err){
+console.warn("Harbor renderer failed",err);
 }
 
-}
+BG.drawWater(
+ctx,
+w,
+h,
+state.tick,
+preset,
+state.background,
+envSnapshot
+);
 
-/* FRAME */
+DRAGONS.drawDragonReflections(ctx,geo,preset,dragonBundles,state.tick);
+
+SHOWROOM.drawFragments(ctx,state.showroom,state.tick);
+SHOWROOM.drawCompass(ctx,state.showroom);
+
+FX.drawFireworks(ctx,state.fx);
+FX.drawLockedOverlay(ctx,state.fx,getLockedLabel);
+FX.drawNavigationOverlay(ctx,state.fx);
+}
 
 function frame(){
-animate();
-draw();
+animateState();
+drawSceneFrame();
 requestAnimationFrame(frame);
 }
 
-/* INPUT */
+window.addEventListener("resize",resize,{passive:true});
+window.addEventListener("orientationchange",resize,{passive:true});
 
 INPUT.bind(canvas,{
 onPointerMove:function(p){
 moveDrag(p.x,p.y);
 },
-onPointerDown:function(p){
+onPointerDown:function(p,e){
 engageDrag(p.x,p.y);
+dispatch("environment:tap",{x:e.clientX,y:e.clientY});
 },
-onPointerUp:function(){
-releaseDrag();
+onPointerUp:function(p){
+releaseDrag(p.x,p.y);
 },
-onTouchStart:function(p){
+onTouchStart:function(p,touch){
 engageDrag(p.x,p.y);
+dispatch("environment:tap",{x:touch.clientX,y:touch.clientY});
 },
 onTouchMove:function(p){
 moveDrag(p.x,p.y);
 },
-onTouchEnd:function(){
-releaseDrag();
+onTouchEnd:function(p){
+releaseDrag(p.x,p.y);
+},
+onPointerLeave:function(){
+state.dragging=false;
+state.hoverFace=null;
+},
+onMorphEvent:function(e){
+if(e&&e.detail&&e.detail.mode==="return"){
+SHOWROOM.close(state.showroom,dispatch);
+}
+},
+onSceneCamera:function(e){
+const mode=e&&e.detail&&e.detail.mode;
+if(mode)CAMERA.blendTo(state.camera,mode);
+},
+onSceneCameraCycle:function(){
+CAMERA.cycle(state.camera);
 }
 });
 
-/* BOOT */
-
-window.addEventListener("resize",resize,{passive:true});
-window.addEventListener("orientationchange",resize,{passive:true});
-
 resize();
 frame();
-
 })();

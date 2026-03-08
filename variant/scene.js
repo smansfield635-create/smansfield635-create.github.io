@@ -1,320 +1,307 @@
-import { createBackgroundRenderer } from "./background_renderer.js";
-import { createEnvironmentRenderer } from "./environment_renderer.js";
-import { createGroundRenderer } from "./ground_renderer.js";
-import { createCompassRenderer } from "./compass_renderer.js";
-import { createInstruments } from "../assets/instruments.js";
-import { loadWorldKernel } from "../world/world_kernel.js";
-
-function distanceSq(ax, ay, bx, by) {
-  const dx = ax - bx;
-  const dy = ay - by;
-  return dx * dx + dy * dy;
+function roundedPolygon(ctx, points) {
+  if (!points.length) return;
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i][0], points[i][1]);
+  }
+  ctx.closePath();
 }
 
-function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
-  const abx = bx - ax;
-  const aby = by - ay;
-  const apx = px - ax;
-  const apy = py - ay;
-
-  const abLenSq = abx * abx + aby * aby;
-  if (abLenSq === 0) return distanceSq(px, py, ax, ay);
-
-  let t = (apx * abx + apy * aby) / abLenSq;
-  t = Math.max(0, Math.min(1, t));
-
-  const cx = ax + abx * t;
-  const cy = ay + aby * t;
-
-  return distanceSq(px, py, cx, cy);
+function drawPolyline(ctx, points) {
+  if (!points.length) return;
+  ctx.beginPath();
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i][0], points[i][1]);
+  }
 }
 
-function getCanvasPoint(canvas, clientX, clientY) {
-  const rect = canvas.getBoundingClientRect();
-  return {
-    x: clientX - rect.left,
-    y: clientY - rect.top
-  };
-}
+export function createGroundRenderer() {
+  function draw(ctx, runtime) {
+    const { width, height, tick, viewportOffset, kernel, projection, selection, destination } = runtime;
+    const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
 
-export async function createScene(canvas, outputs) {
+    ctx.save();
+    ctx.translate(viewportOffset.x, viewportOffset.y);
 
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("Canvas context unavailable");
+    drawSeaBase(ctx, width, height);
+    drawIslandMass(ctx);
+    drawElevationBands(ctx);
+    drawDistrictPads(ctx, kernel, projection, selection, destination, pulse);
+    drawBasinWater(ctx);
+    drawHarborWater(ctx);
+    drawShoreHighlights(ctx);
+    drawLandmarks(ctx, kernel, pulse);
+    drawPathBeds(ctx, kernel, projection, destination, pulse);
 
-  const background = createBackgroundRenderer();
-  const environment = createEnvironmentRenderer();
-  const ground = createGroundRenderer();
-  const compass = createCompassRenderer();
-  const instruments = createInstruments();
-
-  const kernel = await loadWorldKernel();
-
-  const state = {
-    width: 0,
-    height: 0,
-    dpr: 1,
-    tick: 0,
-
-    kernel,
-
-    player: {
-      x: 540,
-      y: 560,
-      speed: 2.2
-    },
-
-    projection: null,
-    region: null,
-    encoding: null,
-
-    selection: null,
-    destination: null,
-
-    keys: new Set(),
-
-    camera: { x: 0, y: 0 },
-    viewportOffset: { x: 0, y: 0 },
-
-    worldBounds: {
-      width: 1080,
-      height: 640
-    }
-  };
-
-  function resize() {
-
-    state.dpr = Math.max(1, window.devicePixelRatio || 1);
-
-    state.width = window.innerWidth;
-    state.height = window.innerHeight;
-
-    canvas.width = Math.floor(state.width * state.dpr);
-    canvas.height = Math.floor(state.height * state.dpr);
-
-    canvas.style.width = `${state.width}px`;
-    canvas.style.height = `${state.height}px`;
-
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(state.dpr, state.dpr);
-
-    updateViewportOffset();
+    ctx.restore();
   }
 
-  function updateViewportOffset() {
-
-    const baseX = (state.width - state.worldBounds.width) * 0.5;
-    const baseY = (state.height - state.worldBounds.height) * 0.5;
-
-    const followX = state.width * 0.5 - (state.player.x + baseX);
-    const followY = state.height * 0.68 - (state.player.y + baseY);
-
-    state.camera.x += (followX - state.camera.x) * 0.08;
-    state.camera.y += (followY - state.camera.y) * 0.08;
-
-    state.viewportOffset.x = baseX + state.camera.x;
-    state.viewportOffset.y = baseY + state.camera.y;
+  function drawSeaBase(ctx, width, height) {
+    const water = ctx.createLinearGradient(0, 240, 0, height + 260);
+    water.addColorStop(0, "rgba(68,108,134,1)");
+    water.addColorStop(0.42, "rgba(38,76,104,1)");
+    water.addColorStop(1, "rgba(18,42,64,1)");
+    ctx.fillStyle = water;
+    ctx.fillRect(-600, 220, width + 1200, height + 500);
   }
 
-  function updatePlayer() {
+  function drawIslandMass(ctx) {
+    const island = [
+      [336, 638],
+      [276, 614],
+      [224, 572],
+      [198, 524],
+      [206, 468],
+      [248, 426],
+      [318, 398],
+      [394, 366],
+      [430, 324],
+      [438, 260],
+      [468, 198],
+      [516, 144],
+      [578, 116],
+      [646, 126],
+      [698, 154],
+      [736, 206],
+      [740, 270],
+      [712, 330],
+      [650, 390],
+      [616, 446],
+      [626, 520],
+      [666, 574],
+      [658, 620],
+      [602, 644],
+      [520, 650],
+      [430, 648]
+    ];
 
-    let dx = 0;
-    let dy = 0;
+    roundedPolygon(ctx, island);
+    const ground = ctx.createLinearGradient(0, 120, 0, 660);
+    ground.addColorStop(0, "rgba(158,144,114,1)");
+    ground.addColorStop(0.38, "rgba(122,124,92,1)");
+    ground.addColorStop(0.72, "rgba(86,108,82,1)");
+    ground.addColorStop(1, "rgba(70,92,78,1)");
+    ctx.fillStyle = ground;
+    ctx.fill();
 
-    if (state.keys.has("ArrowLeft") || state.keys.has("a")) dx -= 1;
-    if (state.keys.has("ArrowRight") || state.keys.has("d")) dx += 1;
-    if (state.keys.has("ArrowUp") || state.keys.has("w")) dy -= 1;
-    if (state.keys.has("ArrowDown") || state.keys.has("s")) dy += 1;
-
-    if (state.destination) {
-
-      const vx = state.destination.centerPoint[0] - state.player.x;
-      const vy = state.destination.centerPoint[1] - state.player.y;
-
-      const len = Math.hypot(vx, vy);
-
-      if (len <= state.player.speed + 1) {
-        state.player.x = state.destination.centerPoint[0];
-        state.player.y = state.destination.centerPoint[1];
-        state.destination = null;
-      } else {
-        dx += vx / len;
-        dy += vy / len;
-      }
-    }
-
-    if (dx !== 0 || dy !== 0) {
-
-      const length = Math.hypot(dx, dy) || 1;
-
-      dx /= length;
-      dy /= length;
-
-      state.player.x += dx * state.player.speed;
-      state.player.y += dy * state.player.speed;
-    }
-
-    state.player.x = Math.max(40, Math.min(1040, state.player.x));
-    state.player.y = Math.max(60, Math.min(600, state.player.y));
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "rgba(236,224,196,0.34)";
+    ctx.stroke();
   }
 
-  function projectState() {
+  function drawElevationBands(ctx) {
+    const harborRise = [
+      [384, 620],[422, 560],[484, 508],[552, 484],[614, 494],[656, 534],[664, 592],[632, 632],[578, 644],[504, 646],[432, 640]
+    ];
+    const basinRise = [
+      [434, 372],[460, 312],[500, 246],[538, 186],[566, 154],[552, 214],[516, 282],[482, 344],[460, 390]
+    ];
+    const summitMass = [
+      [508, 206],[526, 164],[548, 128],[574, 110],[600, 126],[614, 164],[610, 204],[588, 226],[552, 224],[524, 220]
+    ];
 
-    state.projection = state.kernel.helpers.projectWorldPositionToCell({
-      x: state.player.x,
-      y: state.player.y,
-      previousCellId: state.projection?.cellId ?? null
-    });
+    roundedPolygon(ctx, harborRise);
+    ctx.fillStyle = "rgba(126,136,100,0.42)";
+    ctx.fill();
 
-    state.region = state.kernel.helpers.getRegion(state.projection.regionId);
-    state.encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
+    roundedPolygon(ctx, basinRise);
+    ctx.fillStyle = "rgba(112,118,96,0.46)";
+    ctx.fill();
+
+    roundedPolygon(ctx, summitMass);
+    ctx.fillStyle = "rgba(186,182,170,0.55)";
+    ctx.fill();
   }
 
-  function updateOutputs() {
-
-    const runtimePanel = instruments.buildRuntimePanel(state);
-
-    outputs.region.textContent = runtimePanel.region;
-    outputs.cell.textContent = runtimePanel.cell;
-    outputs.sector.textContent = runtimePanel.sector;
-    outputs.band.textContent = runtimePanel.band;
-    outputs.encoding.textContent = runtimePanel.encoding;
-    outputs.byte.textContent = runtimePanel.byte;
-
-    const selectionPanel = instruments.buildSelectionPanel(state);
-
-    outputs.selectedName.textContent = selectionPanel.selectedName;
-    outputs.selectedType.textContent = selectionPanel.selectedType;
-    outputs.destination.textContent = selectionPanel.destination;
-    outputs.selectionHint.textContent = selectionPanel.hint;
-  }
-
-  function hitTestRegion(worldX, worldY) {
-
-    const regions = [...state.kernel.regionsById.values()];
-
-    let best = null;
-    let bestD2 = Infinity;
-
-    const radiusSq = 110 * 110;
+  function drawDistrictPads(ctx, kernel, projection, selection, destination, pulse) {
+    const regions = [...kernel.regionsById.values()];
 
     for (const region of regions) {
-
       const [x, y] = region.centerPoint;
+      const isActive = projection?.regionId === region.regionId;
+      const isSelected = selection?.kind === "region" && selection.regionId === region.regionId;
+      const isDestination = destination?.regionId === region.regionId;
 
-      const d2 = distanceSq(worldX, worldY, x, y);
+      let fill = "rgba(90,116,98,0.18)";
+      let rx = 74;
+      let ry = 38;
 
-      if (d2 <= radiusSq && d2 < bestD2) {
-        best = region;
-        bestD2 = d2;
+      if (region.regionId === "harbor_village") {
+        fill = "rgba(148,128,102,0.24)";
+        rx = 102;
+        ry = 40;
+      }
+      if (region.regionId === "market_district") {
+        fill = "rgba(154,126,92,0.24)";
+        rx = 90;
+        ry = 44;
+      }
+      if (region.regionId === "exploration_basin") {
+        fill = "rgba(98,122,108,0.22)";
+        rx = 120;
+        ry = 56;
+      }
+      if (region.regionId === "summit_plaza") {
+        fill = "rgba(180,176,170,0.24)";
+        rx = 74;
+        ry = 34;
+      }
+
+      ctx.beginPath();
+      ctx.ellipse(x, y + 8, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+
+      if (isActive || isSelected || isDestination) {
+        ctx.beginPath();
+        ctx.ellipse(x, y + 8, rx + 10 + pulse * 6, ry + 6 + pulse * 2, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = isSelected
+          ? "rgba(255,240,210,0.88)"
+          : isActive
+            ? "rgba(255,228,184,0.72)"
+            : "rgba(210,232,248,0.66)";
+        ctx.lineWidth = 3;
+        ctx.stroke();
       }
     }
-
-    return best;
   }
 
-  function worldPointFromClient(clientX, clientY) {
+  function drawBasinWater(ctx) {
+    ctx.beginPath();
+    ctx.ellipse(560, 320, 112, 72, 0, 0, Math.PI * 2);
+    const basin = ctx.createLinearGradient(448, 248, 672, 392);
+    basin.addColorStop(0, "rgba(104,156,170,0.92)");
+    basin.addColorStop(0.5, "rgba(62,118,142,0.94)");
+    basin.addColorStop(1, "rgba(34,84,112,0.96)");
+    ctx.fillStyle = basin;
+    ctx.fill();
 
-    const local = getCanvasPoint(canvas, clientX, clientY);
-
-    return {
-      x: local.x - state.viewportOffset.x,
-      y: local.y - state.viewportOffset.y
-    };
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(214,236,246,0.34)";
+    ctx.stroke();
   }
 
-  function handleWorldTap(clientX, clientY) {
+  function drawHarborWater(ctx) {
+    const harbor = [
+      [448, 648],
+      [458, 610],
+      [488, 584],
+      [540, 572],
+      [594, 580],
+      [624, 604],
+      [634, 648]
+    ];
 
-    const worldPoint = worldPointFromClient(clientX, clientY);
+    roundedPolygon(ctx, harbor);
+    const water = ctx.createLinearGradient(448, 570, 634, 650);
+    water.addColorStop(0, "rgba(114,164,180,0.94)");
+    water.addColorStop(0.45, "rgba(72,124,150,0.94)");
+    water.addColorStop(1, "rgba(40,90,118,0.96)");
+    ctx.fillStyle = water;
+    ctx.fill();
 
-    const region = hitTestRegion(worldPoint.x, worldPoint.y);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(222,238,248,0.34)";
+    ctx.stroke();
+  }
 
-    if (region) {
+  function drawShoreHighlights(ctx) {
+    const harborFoam = [
+      [456, 606],[490, 584],[540, 574],[590, 582],[622, 606]
+    ];
+    const basinFoam = [
+      [446, 382],[482, 402],[534, 412],[590, 408],[640, 390],[676, 360]
+    ];
 
-      state.selection = {
-        kind: "region",
-        regionId: region.regionId,
-        displayName: region.displayName
-      };
+    drawPolyline(ctx, harborFoam);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(244,236,214,0.42)";
+    ctx.stroke();
 
-      state.destination = region;
+    drawPolyline(ctx, basinFoam);
+    ctx.strokeStyle = "rgba(236,242,248,0.30)";
+    ctx.stroke();
+  }
 
-      updateOutputs();
+  function drawLandmarks(ctx, kernel, pulse) {
+    const regions = [...kernel.regionsById.values()];
+    for (const region of regions) {
+      const [x, y] = region.centerPoint;
 
-      return;
+      if (region.regionId === "harbor_village") {
+        ctx.fillStyle = "rgba(98,74,56,0.94)";
+        ctx.fillRect(x - 22, y + 16, 44, 8);
+        ctx.fillRect(x - 3, y - 10, 6, 30);
+        ctx.fillRect(x - 58, y + 18, 20, 8);
+        ctx.fillRect(x + 38, y + 18, 20, 8);
+      }
+
+      if (region.regionId === "market_district") {
+        ctx.fillStyle = "rgba(152,108,74,0.94)";
+        ctx.fillRect(x - 26, y + 6, 52, 14);
+        ctx.fillStyle = "rgba(212,180,132,0.86)";
+        ctx.fillRect(x - 18, y - 8, 36, 10);
+      }
+
+      if (region.regionId === "exploration_basin") {
+        ctx.beginPath();
+        ctx.arc(x, y - 6, 10 + pulse * 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(220,246,255,0.22)";
+        ctx.fill();
+      }
+
+      if (region.regionId === "summit_plaza") {
+        ctx.beginPath();
+        ctx.moveTo(x, y - 30);
+        ctx.lineTo(x + 12, y + 4);
+        ctx.lineTo(x - 12, y + 4);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(220,214,208,0.94)";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x, y - 34, 7 + pulse * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,244,222,0.38)";
+        ctx.fill();
+      }
     }
-
-    state.selection = null;
-    state.destination = null;
-
-    updateOutputs();
   }
 
-  function drawFrame() {
+  function drawPathBeds(ctx, kernel, projection, destination, pulse) {
+    const paths = [...kernel.pathsById.values()];
 
-    ctx.clearRect(0,0,state.width,state.height);
+    for (const path of paths) {
+      ctx.beginPath();
+      path.centerline.forEach(([x, y], index) => {
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.lineWidth = 26;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(80,68,52,0.28)";
+      ctx.stroke();
 
-    background.draw(ctx, state.width, state.height, state.tick);
+      const isDestinationPath = destination && projection && (
+        path.fromRegionId === projection.regionId && path.toRegionId === destination.regionId
+      );
 
-    environment.draw(ctx,{
-      width:state.width,
-      height:state.height,
-      tick:state.tick,
-      viewportOffset:state.viewportOffset,
-      kernel:state.kernel,
-      projection:state.projection,
-      selection:state.selection,
-      destination:state.destination
-    });
-
-    ground.draw(ctx,{
-      width:state.width,
-      height:state.height,
-      tick:state.tick,
-      viewportOffset:state.viewportOffset,
-      kernel:state.kernel,
-      projection:state.projection,
-      selection:state.selection,
-      destination:state.destination
-    });
-
-    compass.draw(ctx,state,{width:state.width,height:state.height});
-  }
-
-  function step() {
-
-    state.tick++;
-
-    updatePlayer();
-    updateViewportOffset();
-    projectState();
-    updateOutputs();
-
-    drawFrame();
-
-    requestAnimationFrame(step);
-  }
-
-  function onKeyDown(e){ state.keys.add(e.key); }
-  function onKeyUp(e){ state.keys.delete(e.key); }
-
-  function onPointerUp(e){
-    handleWorldTap(e.clientX,e.clientY);
-  }
-
-  resize();
-  projectState();
-  updateOutputs();
-
-  window.addEventListener("resize", resize);
-  window.addEventListener("keydown", onKeyDown);
-  window.addEventListener("keyup", onKeyUp);
-
-  canvas.addEventListener("pointerup", onPointerUp);
-
-  return Object.freeze({
-    start(){
-      requestAnimationFrame(step);
+      if (isDestinationPath) {
+        ctx.beginPath();
+        path.centerline.forEach(([x, y], index) => {
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.lineWidth = 10;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = `rgba(248,226,170,${0.22 + pulse * 0.18})`;
+        ctx.stroke();
+      }
     }
-  });
+  }
+
+  return Object.freeze({ draw });
 }

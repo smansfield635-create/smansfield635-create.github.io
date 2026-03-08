@@ -31,7 +31,7 @@
   margin:0 auto;
   max-width:760px;
   text-align:center;
-  color:var(--muted);
+  color:var(--gd-text-1);
   line-height:1.5;
 }
 
@@ -67,7 +67,7 @@
   display:grid;
   gap:14px;
   position:sticky;
-  top:calc(var(--safe-top) + 12px);
+  top:calc(var(--gd-safe-top) + 12px);
 }
 
 .branch-compass__title{
@@ -79,7 +79,7 @@
 
 .branch-compass__copy{
   margin:0;
-  color:var(--muted);
+  color:var(--gd-text-1);
   line-height:1.45;
 }
 
@@ -90,9 +90,9 @@
 
 .branch-band{
   border-radius:18px;
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(18,25,41,.82),rgba(8,12,22,.88));
-  box-shadow:var(--shadow-1);
+  border:1px solid var(--gd-line);
+  background:linear-gradient(180deg,var(--gd-panel-1),var(--gd-panel-0));
+  box-shadow:var(--gd-shadow-0);
   padding:16px;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .branch-band__meta{
-  color:var(--muted);
+  color:var(--gd-text-2);
   font-size:12px;
 }
 
@@ -131,7 +131,7 @@
 .branch-bubble{
   min-height:132px;
   border-radius:16px;
-  border:1px solid var(--line);
+  border:1px solid var(--gd-line);
   background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
   padding:14px;
 }
@@ -141,12 +141,12 @@
   font-size:12px;
   letter-spacing:.14em;
   text-transform:uppercase;
-  color:var(--gold-1);
+  color:var(--gd-gold-0);
 }
 
 .branch-bubble__copy{
   margin:0;
-  color:var(--muted);
+  color:var(--gd-text-1);
   line-height:1.45;
 }
 
@@ -168,9 +168,9 @@
   gap:14px;
   padding:0 16px;
   border-radius:16px;
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(18,25,41,.82),rgba(8,12,22,.88));
-  box-shadow:var(--shadow-1);
+  border:1px solid var(--gd-line);
+  background:linear-gradient(180deg,var(--gd-panel-1),var(--gd-panel-0));
+  box-shadow:var(--gd-shadow-0);
 }
 
 .branch-link-item__title{
@@ -180,13 +180,13 @@
 }
 
 .branch-link-item__meta{
-  color:var(--muted);
+  color:var(--gd-text-2);
   font-size:12px;
 }
 
 .branch-fork-note{
   text-align:center;
-  color:var(--muted);
+  color:var(--gd-text-2);
   font-size:12px;
   line-height:1.5;
 }

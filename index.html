@@ -1,86 +1,128 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-gd-lang="en" data-gd-style="dark" data-gd-time="present">
 <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Diamond Gate Bridge — Harbor Core</title>
+  <meta name="description" content="OpenWorld Harbor Core runtime." />
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <link rel="stylesheet" href="/assets/branch.css" />
+  <style>
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:#05070b;
+      overflow:hidden;
+    }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:#f5f7fb;
+    }
 
-<title>Diamond Gate Bridge</title>
+    .runtime-shell{
+      position:relative;
+      width:100vw;
+      height:100dvh;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(86,118,184,.16),transparent 34%),
+        linear-gradient(180deg,#091223 0%,#05070b 100%);
+    }
 
-<link rel="stylesheet" href="/assets/ui.css">
-<link rel="stylesheet" href="/assets/branch.css">
+    #scene{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      z-index:1;
+    }
 
+    .runtime-topbar{
+      position:absolute;
+      top:max(12px,env(safe-area-inset-top));
+      left:max(12px,env(safe-area-inset-left));
+      right:max(12px,env(safe-area-inset-right));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .runtime-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,14,26,.56);
+      box-shadow:0 14px 34px rgba(0,0,0,.28);
+      color:#f5f7fb;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      pointer-events:auto;
+    }
+
+    .runtime-brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .runtime-brand-mark{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 34% 26%,rgba(255,255,255,.92),rgba(255,255,255,.18) 34%,transparent 35%),
+        linear-gradient(180deg,#f1f7ff 0%,#adc8f3 42%,#1b3158 72%,#0d1830 100%);
+      border:1px solid rgba(255,255,255,.24);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.82),
+        0 8px 18px rgba(0,0,0,.28);
+      flex:0 0 auto;
+    }
+
+    .runtime-fallback{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:0;
+      color:rgba(245,247,251,.0);
+      user-select:none;
+    }
+  </style>
 </head>
+<body>
+  <div class="runtime-shell">
+    <div class="runtime-topbar">
+      <div class="runtime-pill runtime-brand">
+        <span class="runtime-brand-mark" aria-hidden="true"></span>
+        <span>Diamond Gate Bridge</span>
+      </div>
+      <div class="runtime-pill">Harbor Core</div>
+    </div>
 
-<body class="branch-shell" data-region-id="harbor_core">
+    <canvas id="scene" aria-label="Harbor Core Scene"></canvas>
 
-<canvas id="scene"></canvas>
-
-<div id="uiLayer">
-  <div class="topbar" id="topbarTitle">
-    Harbor Core
+    <div class="runtime-fallback" aria-hidden="true">Harbor Core Runtime</div>
   </div>
 
-  <div class="route-fade" id="routeFade" aria-hidden="true"></div>
-  <div class="locked-toast" id="lockedToast" aria-hidden="true"></div>
-</div>
-
-<!-- WORLD ENGINE LAYERS -->
-
-<script src="/world/world_kernel.js"></script>
-<script src="/world/environment_runtime.js"></script>
-<script src="/world/island_regions.js"></script>
-<script src="/world/region_router.js"></script>
-<script src="/world/harbor_renderer.js"></script>
-<script src="/world/compass_navigation_authority.js"></script>
-<script src="/world/navigation_math.js"></script>
-<script src="/world/instruments_runtime.js"></script>
-
-<!-- CORE UI + INPUT -->
-
-<script src="/assets/instruments.js"></script>
-
-<!-- SCENE MODULES -->
-
-<script src="/variant/camera.js"></script>
-<script src="/variant/background_renderer.js"></script>
-<script src="/variant/compass_renderer.js"></script>
-<script src="/variant/dragon_renderer.js"></script>
-<script src="/variant/showroom_renderer.js"></script>
-<script src="/variant/scene_fx.js"></script>
-<script src="/variant/scene_input.js"></script>
-
-<!-- MAIN SCENE ENGINE -->
-
-<script src="/variant/scene.js"></script>
-
-<script>
-(function(){
-"use strict";
-
-const router=window.REGION_ROUTER;
-const env=window.ENVIRONMENT_RUNTIME;
-
-const body=document.body;
-const topbar=document.getElementById("topbarTitle");
-
-if(router){
-  const ctx=router.getRegionContext("/harbor/");
-  if(ctx){
-    body.dataset.regionId=ctx.regionId;
-    body.dataset.regionType=ctx.type;
-    body.dataset.regionBiome=ctx.biome;
-    if(topbar) topbar.textContent=ctx.label;
-  }
-}
-
-if(env){
-  env.setSector("harbor_core");
-  env.tick(0);
-}
-
-})();
-</script>
-
+  <script src="/assets/instruments.js"></script>
+  <script src="/assets/openworld_camera.js"></script>
+  <script src="/assets/openworld_compass_renderer.js"></script>
+  <script src="/assets/openworld_background_renderer.js"></script>
+  <script src="/assets/openworld_scene_input.js"></script>
+  <script src="/variant/scene.js"></script>
 </body>
 </html>

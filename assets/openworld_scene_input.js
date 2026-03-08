@@ -1,66 +1,80 @@
-(function(){
-"use strict";
+(function () {
+  "use strict";
 
-function getPoint(canvas,clientX,clientY){
-const rect=canvas.getBoundingClientRect();
-return{
-x:clientX-rect.left,
-y:clientY-rect.top
-};
-}
+  function getPoint(canvas, clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    };
+  }
 
-function pointInRect(x,y,rect){
-if(!rect)return false;
-return x>=rect.x&&x<=rect.x+rect.w&&y>=rect.y&&y<=rect.y+rect.h;
-}
+  function bind(canvas, handlers) {
+    const h = handlers || {};
+    let touchActive = false;
 
-function bind(canvas,handlers){
-const h=handlers||{};
+    function emit(name, payload, raw) {
+      const fn = h[name];
+      if (typeof fn === "function") fn(payload, raw);
+    }
 
-canvas.addEventListener("pointerdown",function(e){
-const p=getPoint(canvas,e.clientX,e.clientY);
-if(typeof h.onPointerDown==="function")h.onPointerDown(p,e);
-});
+    canvas.style.touchAction = "none";
 
-canvas.addEventListener("pointermove",function(e){
-const p=getPoint(canvas,e.clientX,e.clientY);
-if(typeof h.onPointerMove==="function")h.onPointerMove(p,e);
-});
+    canvas.addEventListener("pointerdown", function (e) {
+      if (touchActive) return;
+      emit("onPointerDown", getPoint(canvas, e.clientX, e.clientY), e);
+    }, { passive: false });
 
-canvas.addEventListener("pointerup",function(e){
-const p=getPoint(canvas,e.clientX,e.clientY);
-if(typeof h.onPointerUp==="function")h.onPointerUp(p,e);
-});
+    canvas.addEventListener("pointermove", function (e) {
+      if (touchActive) return;
+      emit("onPointerMove", getPoint(canvas, e.clientX, e.clientY), e);
+    }, { passive: false });
 
-canvas.addEventListener("pointerleave",function(e){
-if(typeof h.onPointerLeave==="function")h.onPointerLeave(e);
-});
+    canvas.addEventListener("pointerup", function (e) {
+      if (touchActive) return;
+      emit("onPointerUp", getPoint(canvas, e.clientX, e.clientY), e);
+    }, { passive: false });
 
-canvas.addEventListener("touchstart",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-const p=getPoint(canvas,t.clientX,t.clientY);
-if(typeof h.onTouchStart==="function")h.onTouchStart(p,t,e);
-},{passive:true});
+    canvas.addEventListener("pointerleave", function (e) {
+      if (touchActive) return;
+      emit("onPointerLeave", null, e);
+    }, { passive: false });
 
-canvas.addEventListener("touchmove",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-const p=getPoint(canvas,t.clientX,t.clientY);
-if(typeof h.onTouchMove==="function")h.onTouchMove(p,t,e);
-},{passive:true});
+    canvas.addEventListener("touchstart", function (e) {
+      if (!e.changedTouches || !e.changedTouches.length) return;
+      touchActive = true;
+      const t = e.changedTouches[0];
+      emit("onTouchStart", getPoint(canvas, t.clientX, t.clientY), t);
+      e.preventDefault();
+    }, { passive: false });
 
-canvas.addEventListener("touchend",function(e){
-if(!e.changedTouches||!e.changedTouches.length)return;
-const t=e.changedTouches[0];
-const p=getPoint(canvas,t.clientX,t.clientY);
-if(typeof h.onTouchEnd==="function")h.onTouchEnd(p,t,e);
-},{passive:true});
-}
+    canvas.addEventListener("touchmove", function (e) {
+      if (!e.changedTouches || !e.changedTouches.length) return;
+      const t = e.changedTouches[0];
+      emit("onTouchMove", getPoint(canvas, t.clientX, t.clientY), t);
+      e.preventDefault();
+    }, { passive: false });
 
-window.OPENWORLD_SCENE_INPUT=Object.freeze({
-version:"OPENWORLD_SCENE_INPUT_vMAX1",
-bind:bind,
-pointInRect:pointInRect
-});
+    canvas.addEventListener("touchend", function (e) {
+      if (!e.changedTouches || !e.changedTouches.length) {
+        touchActive = false;
+        emit("onTouchEnd", null, e);
+        return;
+      }
+      const t = e.changedTouches[0];
+      emit("onTouchEnd", getPoint(canvas, t.clientX, t.clientY), t);
+      touchActive = false;
+      e.preventDefault();
+    }, { passive: false });
+
+    canvas.addEventListener("click", function (e) {
+      emit("onPointerDown", getPoint(canvas, e.clientX, e.clientY), e);
+      emit("onPointerUp", getPoint(canvas, e.clientX, e.clientY), e);
+    }, { passive: false });
+  }
+
+  window.OPENWORLD_SCENE_INPUT = Object.freeze({
+    version: "OPENWORLD_SCENE_INPUT_vSANITY1",
+    bind,
+  });
 })();

@@ -1,5 +1,5 @@
 import { createBackgroundRenderer } from "./background_renderer.js";
-import { createGroundRenderer } from "./ground_renderer.js";
+import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createCompassRenderer } from "./compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 import { loadWorldKernel } from "../world/world_kernel.js";
@@ -40,7 +40,7 @@ export async function createScene(canvas, outputs) {
   if (!ctx) throw new Error("2D canvas context unavailable");
 
   const background = createBackgroundRenderer();
-  const ground = createGroundRenderer();
+  const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
   const instruments = createInstruments();
 
@@ -101,7 +101,7 @@ export async function createScene(canvas, outputs) {
     const baseY = (state.height - state.worldBounds.height) * 0.5;
 
     const followX = state.width * 0.5 - (state.player.x + baseX);
-    const followY = state.height * 0.66 - (state.player.y + baseY);
+    const followY = state.height * 0.68 - (state.player.y + baseY);
 
     state.camera.x += (followX - state.camera.x) * 0.08;
     state.camera.y += (followY - state.camera.y) * 0.08;
@@ -252,9 +252,9 @@ export async function createScene(canvas, outputs) {
     updateOutputs();
   }
 
-  function drawRegionsAndRoutes() {
-    const regions = [...state.kernel.regionsById.values()];
+  function drawRoutesAndMarkers() {
     const paths = [...state.kernel.pathsById.values()];
+    const regions = [...state.kernel.regionsById.values()];
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
 
     ctx.save();
@@ -275,8 +275,8 @@ export async function createScene(canvas, outputs) {
       ctx.strokeStyle = isSelected
         ? "rgba(255,244,220,0.96)"
         : isDestinationPath
-          ? `rgba(255,230,176,${0.36 + pulse * 0.26})`
-          : "rgba(240,236,220,0.14)";
+          ? `rgba(255,230,176,${0.38 + pulse * 0.28})`
+          : "rgba(240,236,220,0.16)";
       ctx.lineWidth = isSelected ? 8 : isDestinationPath ? 6 : 4;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
@@ -345,7 +345,7 @@ export async function createScene(canvas, outputs) {
   function drawFrame() {
     ctx.clearRect(0, 0, state.width, state.height);
     background.draw(ctx, state.width, state.height, state.tick);
-    ground.draw(ctx, {
+    environment.draw(ctx, {
       width: state.width,
       height: state.height,
       tick: state.tick,
@@ -355,7 +355,7 @@ export async function createScene(canvas, outputs) {
       selection: state.selection,
       destination: state.destination
     });
-    drawRegionsAndRoutes();
+    drawRoutesAndMarkers();
     compass.draw(ctx, state, { width: state.width, height: state.height });
   }
 

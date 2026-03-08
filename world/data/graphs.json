@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "WORLD_RELATIONSHIP_GRAPH_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "graphRows": {
+    "spatialAdjacencyGraph": [
+      {
+        "edgeId": "harbor_village__market_district__spatial",
+        "fromId": "harbor_village",
+        "toId": "market_district",
+        "directionality": "undirected",
+        "edgeClass": "primary_ascent"
+      },
+      {
+        "edgeId": "market_district__exploration_basin__spatial",
+        "fromId": "market_district",
+        "toId": "exploration_basin",
+        "directionality": "undirected",
+        "edgeClass": "basin_transition"
+      },
+      {
+        "edgeId": "exploration_basin__summit_plaza__spatial",
+        "fromId": "exploration_basin",
+        "toId": "summit_plaza",
+        "directionality": "undirected",
+        "edgeClass": "convergence"
+      }
+    ],
+    "traversalGraph": [
+      {
+        "edgeId": "harbor_village_to_market_district__traversal",
+        "fromId": "harbor_village",
+        "toId": "market_district",
+        "directionality": "directed",
+        "edgeClass": "primary_ascent",
+        "pathId": "path_harbor_to_market"
+      },
+      {
+        "edgeId": "market_district_to_exploration_basin__traversal",
+        "fromId": "market_district",
+        "toId": "exploration_basin",
+        "directionality": "directed",
+        "edgeClass": "primary_ascent",
+        "pathId": "path_market_to_basin"
+      },
+      {
+        "edgeId": "exploration_basin_to_summit_plaza__traversal",
+        "fromId": "exploration_basin",
+        "toId": "summit_plaza",
+        "directionality": "directed",
+        "edgeClass": "convergence",
+        "pathId": "path_basin_to_summit"
+      }
+    ],
+    "progressionGraph": [
+      {
+        "edgeId": "harbor_village_to_market_district__progression",
+        "fromId": "harbor_village",
+        "toId": "market_district",
+        "directionality": "directed",
+        "edgeClass": "primary_ascent"
+      },
+      {
+        "edgeId": "market_district_to_exploration_basin__progression",
+        "fromId": "market_district",
+        "toId": "exploration_basin",
+        "directionality": "directed",
+        "edgeClass": "primary_ascent"
+      },
+      {
+        "edgeId": "exploration_basin_to_summit_plaza__progression",
+        "fromId": "exploration_basin",
+        "toId": "summit_plaza",
+        "directionality": "directed",
+        "edgeClass": "convergence"
+      }
+    ],
+    "hazardAdjacencyGraph": [
+      {
+        "edgeId": "harbor_village__hazard_harbor_swell__hazard",
+        "fromId": "harbor_village",
+        "toId": "hazard_harbor_swell",
+        "directionality": "undirected",
+        "edgeClass": "hazard_relation"
+      },
+      {
+        "edgeId": "exploration_basin__hazard_basin_edge__hazard",
+        "fromId": "exploration_basin",
+        "toId": "hazard_basin_edge",
+        "directionality": "undirected",
+        "edgeClass": "hazard_relation"
+      }
+    ],
+    "waterAdjacencyGraph": [
+      {
+        "edgeId": "harbor_village__harbor_water__water",
+        "fromId": "harbor_village",
+        "toId": "harbor_water",
+        "directionality": "undirected",
+        "edgeClass": "water_relation"
+      },
+      {
+        "edgeId": "exploration_basin__basin_water__water",
+        "fromId": "exploration_basin",
+        "toId": "basin_water",
+        "directionality": "undirected",
+        "edgeClass": "water_relation"
+      }
+    ]
+  }
+}

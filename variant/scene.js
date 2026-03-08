@@ -15,7 +15,7 @@ const FX=window.OPENWORLD_SCENE_FX||null;
 const SHOWROOM=window.OPENWORLD_SHOWROOM_RENDERER||null;
 
 if(!CAMERA||!BG||!INPUT||!COMPASS){
-console.error("OPENWORLD_SCENE_vL2 missing required modules.");
+console.error("OPENWORLD_SCENE_vL2D missing required modules.");
 return;
 }
 
@@ -35,8 +35,9 @@ background:BG.createState(),
 compassRaised:false,
 compassLift:0,
 compassTarget:0,
-compassSignalRect:{x:0,y:0,w:0,h:0},
+
 compassAnchor:{x:0,y:0},
+compassTrigger:{x:0,y:0,w:0,h:0},
 
 moonLeftPhase:0,
 moonRightPhase:0,
@@ -58,28 +59,30 @@ function lerp(a,b,t){
 return a+(b-a)*t;
 }
 
+function pointInRect(px,py,rect){
+return px>=rect.x&&px<=rect.x+rect.w&&py>=rect.y&&py<=rect.y+rect.h;
+}
+
 function pointInCircle(px,py,cx,cy,r){
 const dx=px-cx;
 const dy=py-cy;
 return (dx*dx+dy*dy)<=(r*r);
 }
 
-function refreshHotspots(){
+function refreshWorldAnchors(){
 const w=window.innerWidth;
 const h=window.innerHeight;
+const preset=CAMERA.getBlendedPreset(state.camera);
+const horizonY=h*preset.horizon;
 
 state.compassAnchor.x=w*0.5;
-state.compassAnchor.y=h*0.62;
+state.compassAnchor.y=horizonY+18;
 
-const sigW=112;
-const sigH=36;
-
-state.compassSignalRect={
-x:(w*0.5)-(sigW*0.5),
-y:h*0.53,
-w:sigW,
-h:sigH
-};
+state.compassTrigger.w=Math.min(148,w*0.34);
+state.compasstriggerh=40;
+state.compassTrigger.h=40;
+state.compassTrigger.x=state.compassAnchor.x-(state.compassTrigger.w*0.5);
+state.compassTrigger.y=horizonY-30;
 }
 
 function resize(){
@@ -100,27 +103,26 @@ BG.initClouds(state.background,w,h);
 BG.initLanterns(state.background,w,h);
 BG.initMountains(state.background,w,h,preset);
 
-refreshHotspots();
+refreshWorldAnchors();
 
 if(state.showroom&&SHOWROOM.refreshTargets){
 SHOWROOM.refreshTargets(state.showroom,w,h);
 }
 }
 
-function onHarborCorePressed(){
+function onCompassTrigger(){
 state.compassRaised=!state.compassRaised;
 state.compassTarget=state.compassRaised?1:0;
 CAMERA.blendTo(state.camera,state.compassRaised?"compass_focus":"fixed_harbor");
 
 if(state.fx&&FX.triggerOverlay){
-FX.triggerOverlay(state.fx,0.22);
+FX.triggerOverlay(state.fx,0.24);
 }
-
 if(state.fx&&FX.burstAt){
 FX.burstAt(
 state.fx,
-state.compassSignalRect.x+(state.compassSignalRect.w*0.5),
-state.compassSignalRect.y+(state.compassSignalRect.h*0.5),
+state.compassTrigger.x+(state.compassTrigger.w*0.5),
+state.compassTrigger.y+(state.compassTrigger.h*0.5),
 "compass"
 );
 }
@@ -151,19 +153,19 @@ FX.burstAt(state.fx,state.moonRightHot.x,state.moonRightHot.y,"align");
 }
 
 function pointerDown(p){
-if(INPUT.pointInRect&&INPUT.pointInRect(p.x,p.y,state.compassSignalRect)){
-onHarborCorePressed();
-	return;
+if(pointInRect(p.x,p.y,state.compassTrigger)){
+onCompassTrigger();
+return;
 }
 
 if(pointInCircle(p.x,p.y,state.moonLeftHot.x,state.moonLeftHot.y,state.moonLeftHot.r)){
 onLeftMoonPressed();
-	return;
+return;
 }
 
 if(pointInCircle(p.x,p.y,state.moonRightHot.x,state.moonRightHot.y,state.moonRightHot.r)){
 onRightMoonPressed();
-	return;
+return;
 }
 
 state.dragging=true;
@@ -209,6 +211,8 @@ state.dragY=clamp(state.dragY,-0.8,0.8);
 state.velX=clamp(state.velX,-0.12,0.12);
 state.velY=clamp(state.velY,-0.12,0.12);
 
+refreshWorldAnchors();
+
 if(state.fx&&FX.decay){
 FX.decay(state.fx,state.tick);
 }
@@ -217,48 +221,12 @@ SHOWROOM.update(state.showroom,state.tick,state);
 }
 }
 
-function drawCompassSignal(){
-const r=state.compassSignalRect;
+function drawHarborCoreMarker(w,h){
+const x=state.compassAnchor.x+(state.dragX*8);
+const y=state.compassTrigger.y+state.compassTrigger.h+18;
 
 ctx.save();
-ctx.globalAlpha=0.90;
-ctx.fillStyle="rgba(18,10,14,0.74)";
-ctx.strokeStyle="rgba(255,222,168,0.76)";
-ctx.lineWidth=1.0;
-ctx.beginPath();
-
-if(ctx.roundRect){
-ctx.roundRect(r.x,r.y,r.w,r.h,17);
-}else{
-ctx.moveTo(r.x+17,r.y);
-ctx.lineTo(r.x+r.w-17,r.y);
-ctx.quadraticCurveTo(r.x+r.w,r.y,r.x+r.w,r.y+17);
-ctx.lineTo(r.x+r.w,r.y+r.h-17);
-ctx.quadraticCurveTo(r.x+r.w,r.y+r.h,r.x+r.w-17,r.y+r.h);
-ctx.lineTo(r.x+17,r.y+r.h);
-ctx.quadraticCurveTo(r.x,r.y+r.h,r.x,r.y+r.h-17);
-ctx.lineTo(r.x,r.y+17);
-ctx.quadraticCurveTo(r.x,r.y,r.x+17,r.y);
-ctx.closePath();
-}
-
-ctx.fill();
-ctx.stroke();
-
-ctx.fillStyle="rgba(255,238,200,0.96)";
-ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-ctx.textAlign="center";
-ctx.textBaseline="middle";
-ctx.fillText(state.compassRaised?"LOWER COMPASS":"RAISE COMPASS",r.x+(r.w*0.5),r.y+(r.h*0.5)+0.5);
-ctx.restore();
-}
-
-function drawHarborMarker(w,h){
-const x=w*0.50+(state.dragX*18);
-const y=h*0.58+(state.dragY*10);
-
-ctx.save();
-ctx.globalAlpha=0.72;
+ctx.globalAlpha=0.76;
 ctx.fillStyle="rgba(255,232,190,0.96)";
 ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
 ctx.textAlign="center";
@@ -275,9 +243,45 @@ ctx.fill();
 ctx.restore();
 }
 
+function drawCompassTrigger(){
+const r=state.compassTrigger;
+
+ctx.save();
+ctx.globalAlpha=0.92;
+ctx.fillStyle="rgba(18,10,14,0.74)";
+ctx.strokeStyle="rgba(255,222,168,0.82)";
+ctx.lineWidth=1.2;
+ctx.beginPath();
+
+if(ctx.roundRect){
+ctx.roundRect(r.x,r.y,r.w,r.h,18);
+}else{
+ctx.moveTo(r.x+18,r.y);
+ctx.lineTo(r.x+r.w-18,r.y);
+ctx.quadraticCurveTo(r.x+r.w,r.y,r.x+r.w,r.y+18);
+ctx.lineTo(r.x+r.w,r.y+r.h-18);
+ctx.quadraticCurveTo(r.x+r.w,r.y+r.h,r.x+r.w-18,r.y+r.h);
+ctx.lineTo(r.x+18,r.y+r.h);
+ctx.quadraticCurveTo(r.x,r.y+r.h,r.x,r.y+r.h-18);
+ctx.lineTo(r.x,r.y+18);
+ctx.quadraticCurveTo(r.x,r.y,r.x+18,r.y);
+ctx.closePath();
+}
+
+ctx.fill();
+ctx.stroke();
+
+ctx.fillStyle="rgba(255,238,200,0.96)";
+ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText(state.compassRaised?"LOWER COMPASS":"RAISE COMPASS",r.x+(r.w*0.5),r.y+(r.h*0.5)+0.5);
+ctx.restore();
+}
+
 function drawMoonAnchors(){
 ctx.save();
-ctx.globalAlpha=0.22;
+ctx.globalAlpha=0.18;
 ctx.strokeStyle="rgba(255,232,190,0.40)";
 ctx.lineWidth=1.0;
 
@@ -293,12 +297,12 @@ ctx.restore();
 }
 
 function drawCompass(w,h,preset){
-const y=state.compassAnchor.y-(state.compassLift*100)+(preset.compassLift*window.innerHeight);
+const y=state.compassAnchor.y-(state.compassLift*112)+(preset.compassLift*h);
 
 const geo=COMPASS.getDiamondGeometry({
 width:w,
 height:h,
-centerX:state.compassAnchor.x+(state.dragX*12),
+centerX:state.compassAnchor.x+(state.dragX*10),
 centerY:y,
 size:Math.min(w,h)*0.086,
 rotX:(state.dragY*0.18)-0.10,
@@ -342,8 +346,8 @@ SHOWROOM.drawDragonMarkers(ctx,state,w,h);
 
 BG.drawWater(ctx,w,h,state.tick,preset,state.background,null);
 
-drawHarborMarker(w,h);
-drawCompassSignal();
+drawCompassTrigger();
+drawHarborCoreMarker(w,h);
 drawMoonAnchors();
 
 if(state.fx&&FX.drawBursts){

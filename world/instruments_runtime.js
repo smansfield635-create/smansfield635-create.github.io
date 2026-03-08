@@ -1,147 +1,258 @@
 (function(){
 "use strict";
 
-const INSTRUMENTS_RUNTIME_VERSION="OPENWORLD_INSTRUMENTS_RUNTIME_v1";
+const DEFAULT_EPSILON=1e-6;
 
-function isNum(v){
-return typeof v==="number"&&isFinite(v);
+function finiteOr(v,fallback){
+return Number.isFinite(v)?v:fallback;
 }
 
-function safeNum(v,fallback){
-return isNum(v)?v:fallback;
+function clamp(v,min,max){
+return Math.max(min,Math.min(max,v));
 }
 
-function normalizeDeg(v){
-let out=v%360;
-if(out<0)out+=360;
+function normalizeAngle360(deg){
+let a=finiteOr(deg,0)%360;
+if(a<0)a+=360;
+return a;
+}
+
+function epsilonOf(input){
+return Math.max(DEFAULT_EPSILON,finiteOr(input&&input.epsilon,DEFAULT_EPSILON));
+}
+
+function normalizeInstrumentInput(input){
+input=input||{};
+const nav=input.navigationState||null;
+const interactionState=input.interactionState&&typeof input.interactionState==="object"?input.interactionState:{};
+const instrumentConfig=input.instrumentConfig&&typeof input.instrumentConfig==="object"?input.instrumentConfig:{};
+
+return{
+navigationState:nav,
+timeUTC:input.timeUTC||null,
+interactionState:interactionState,
+instrumentConfig:instrumentConfig,
+epsilon:epsilonOf(input)
+};
+}
+
+function buildHelmCompassSurface(input){
+const nav=input.navigationState||{};
+const headingTrue=nav.headingTrue===undefined?null:normalizeAngle360(nav.headingTrue);
+const courseOverGround=nav.courseOverGround===undefined?null:normalizeAngle360(nav.courseOverGround);
+const courseToSteer=nav.courseToSteer===undefined?null:normalizeAngle360(nav.courseToSteer);
+const targetBearing=nav.targetBearing===undefined?null:normalizeAngle360(nav.targetBearing);
+const driftAngle=nav.driftAngle===undefined?null:finiteOr(nav.driftAngle,null);
+const driftCorrection=nav.driftCorrection===undefined?null:finiteOr(nav.driftCorrection,null);
+
+const headingBugSelection=input.interactionState.headingBugSelection;
+const bearingBugAngle=Number.isFinite(headingBugSelection)?normalizeAngle360(headingBugSelection):(targetBearing===null?null:targetBearing);
+
+return{
+headingTrue:headingTrue,
+courseOverGround:courseOverGround,
+courseToSteer:courseToSteer,
+targetBearing:targetBearing,
+driftAngle:driftAngle,
+driftCorrection:driftCorrection,
+bearingBugAngle:bearingBugAngle,
+driftArcStart:headingTrue,
+driftArcEnd:courseOverGround
+};
+}
+
+function buildAstrolabeSurface(input){
+const nav=input.navigationState||{};
+const celestialAzimuth=nav.celestialAzimuth===undefined?null:finiteOr(nav.celestialAzimuth,null);
+const celestialAltitude=nav.celestialAltitude===undefined?null:finiteOr(nav.celestialAltitude,null);
+const visibility=clamp(finiteOr(nav.visibility,input.instrumentConfig.visibilityDefault??1),0,1);
+const activeBodyType=input.interactionState.activeBodyType||null;
+
+return{
+celestialAzimuth:celestialAzimuth,
+celestialAltitude:celestialAltitude,
+activeBodyType:activeBodyType,
+visibility:visibility,
+observationConfidence:visibility,
+azimuthRingAngle:celestialAzimuth,
+altitudeArcAngle:celestialAltitude
+};
+}
+
+function buildChartTableSurface(input){
+const nav=input.navigationState||{};
+const interaction=input.interactionState||{};
+const route=interaction.plannedRouteSegment||null;
+const vesselPosition=interaction.position||null;
+const waypointPosition=interaction.waypointPosition||null;
+const crossTrackError=nav.crossTrackError===undefined?null:finiteOr(nav.crossTrackError,null);
+const corridorError=nav.corridorError===undefined?null:finiteOr(nav.corridorError,null);
+const hazardBias=clamp(finiteOr(interaction.hazardBias,input.instrumentConfig.hazardBiasDefault??0),0,1);
+
+const corridorWidth=route&&Number.isFinite(route.corridorWidth)?route.corridorWidth:null;
+const routeStart=route&&route.start?route.start:null;
+const routeEnd=route&&route.end?route.end:null;
+const offRouteState=(crossTrackError===null||corridorWidth===null)?null:(Math.abs(crossTrackError)>corridorWidth);
+
+return{
+vesselPosition:vesselPosition,
+waypointPosition:waypointPosition,
+routeStart:routeStart,
+routeEnd:routeEnd,
+corridorWidth:corridorWidth,
+crossTrackError:crossTrackError,
+corridorError:corridorError,
+hazardBias:hazardBias,
+offRouteState:offRouteState
+};
+}
+
+function classifyStatus(corridorError,driftCorrection){
+if(corridorError===null&&driftCorrection===null)return null;
+const ce=Math.abs(finiteOr(corridorError,0));
+const dc=Math.abs(finiteOr(driftCorrection,0));
+if(ce<=0.5&&dc<=5)return"GREEN";
+if(ce<=2.0&&dc<=20)return"YELLOW";
+return"RED";
+}
+
+function buildCourseIndicatorSurface(input){
+const nav=input.navigationState||{};
+const targetBearing=nav.targetBearing===undefined?null:finiteOr(nav.targetBearing,null);
+const targetDistance=nav.targetDistance===undefined?null:finiteOr(nav.targetDistance,null);
+const speedOverGround=nav.speedOverGround===undefined?null:finiteOr(nav.speedOverGround,null);
+const eta=nav.eta===undefined?null:nav.eta;
+const driftCorrection=nav.driftCorrection===undefined?null:finiteOr(nav.driftCorrection,null);
+const corridorError=nav.corridorError===undefined?null:finiteOr(nav.corridorError,null);
+
+return{
+targetBearing:targetBearing,
+targetDistance:targetDistance,
+speedOverGround:speedOverGround,
+eta:eta,
+driftCorrection:driftCorrection,
+corridorError:corridorError,
+statusClass:classifyStatus(corridorError,driftCorrection)
+};
+}
+
+function applySurfaceDegradation(surface,input,surfaceName){
+const nav=input.navigationState||{};
+if(surfaceName==="helmCompassSurface"){
+if(nav.targetBearing===null){
+surface.targetBearing=null;
+surface.courseToSteer=null;
+surface.bearingBugAngle=null;
+}
+return surface;
+}
+
+if(surfaceName==="astrolabeSurface"){
+if(nav.celestialAzimuth===null||nav.celestialAltitude===null){
+surface.celestialAzimuth=null;
+surface.celestialAltitude=null;
+surface.azimuthRingAngle=null;
+surface.altitudeArcAngle=null;
+surface.observationConfidence=0;
+}
+return surface;
+}
+
+if(surfaceName==="chartTableSurface"){
+const route=input.interactionState.plannedRouteSegment||null;
+if(!route){
+surface.routeStart=null;
+surface.routeEnd=null;
+surface.corridorWidth=null;
+surface.crossTrackError=null;
+surface.offRouteState=null;
+}
+return surface;
+}
+
+if(surfaceName==="courseIndicatorSurface"){
+if(nav.targetBearing===null){
+surface.targetBearing=null;
+surface.targetDistance=null;
+surface.eta=null;
+}
+return surface;
+}
+
+return surface;
+}
+
+function validateSurface(surface){
+const out={};
+for(const k in surface){
+const v=surface[k];
+if(v===undefined){
+out[k]=null;
+continue;
+}
+if(typeof v==="number"&&!Number.isFinite(v)){
+out[k]=null;
+continue;
+}
+out[k]=v;
+}
 return out;
 }
 
-function classifyNeedle(deltaDeg){
-const a=Math.abs(deltaDeg);
-if(a<3)return"steady";
-if(a<12)return"correcting";
-return"aggressive";
-}
-
-function buildAstrolabeSurface(mathOutput){
-const p=mathOutput.positional_truth||{};
-const r=mathOutput.route_truth||{};
-const c=mathOutput.correction_truth||{};
-const cel=mathOutput.celestial_truth||{};
-
+function assembleInstrumentRuntimeState(surfaces){
 return{
-device_id:"astrolabe_surface",
-target_available:!!p.target_available,
-bearing_to_target_deg:safeNum(p.bearing_to_target_deg,0),
-distance_to_target:safeNum(p.distance_to_target,0),
-cross_track_error:safeNum(p.cross_track_error,0),
-route_deviation_class:String(p.route_deviation_class||"unavailable"),
-recommended_course_deg:safeNum(r.recommended_course_deg,0),
-course_correction_deg:safeNum(c.course_correction_deg,0),
-celestial_alignment_state:String(cel.celestial_alignment_state||"unavailable")
+helmCompassSurface:surfaces.helmCompassSurface,
+astrolabeSurface:surfaces.astrolabeSurface,
+chartTableSurface:surfaces.chartTableSurface,
+courseIndicatorSurface:surfaces.courseIndicatorSurface
 };
 }
 
-function buildHelmCompassSurface(mathOutput,interactionState){
-const p=mathOutput.positional_truth||{};
-const c=mathOutput.correction_truth||{};
-const helm=interactionState&&interactionState.helm_input?interactionState.helm_input:{};
+function computeInstrumentRuntimeState(input){
+const normalized=normalizeInstrumentInput(input);
 
-return{
-device_id:"helm_compass_surface",
-commanded_heading_deg:safeNum(helm.commanded_heading_deg,safeNum(p.heading_deg,0)),
-track_deg:safeNum(p.track_deg,0),
-heading_track_delta_deg:safeNum(p.heading_track_delta_deg,0),
-course_correction_deg:safeNum(c.course_correction_deg,0),
-needle_state:classifyNeedle(safeNum(c.course_correction_deg,0)),
-recommended_turn_state:String(c.recommended_turn_state||"hold")
-};
+const helmCompassSurface=validateSurface(
+applySurfaceDegradation(
+buildHelmCompassSurface(normalized),
+normalized,
+"helmCompassSurface"
+)
+);
+
+const astrolabeSurface=validateSurface(
+applySurfaceDegradation(
+buildAstrolabeSurface(normalized),
+normalized,
+"astrolabeSurface"
+)
+);
+
+const chartTableSurface=validateSurface(
+applySurfaceDegradation(
+buildChartTableSurface(normalized),
+normalized,
+"chartTableSurface"
+)
+);
+
+const courseIndicatorSurface=validateSurface(
+applySurfaceDegradation(
+buildCourseIndicatorSurface(normalized),
+normalized,
+"courseIndicatorSurface"
+)
+);
+
+return assembleInstrumentRuntimeState({
+helmCompassSurface:helmCompassSurface,
+astrolabeSurface:astrolabeSurface,
+chartTableSurface:chartTableSurface,
+courseIndicatorSurface:courseIndicatorSurface
+});
 }
 
-function buildChartSurface(mathOutput,interactionState){
-const p=mathOutput.positional_truth||{};
-const r=mathOutput.route_truth||{};
-const target=interactionState&&interactionState.target_selection?interactionState.target_selection:{};
-
-return{
-device_id:"chart_surface",
-target_id:target.target_id||p.target_id||null,
-target_lock_state:String(target.target_lock_state||"unlocked"),
-route_id:r.route_id||null,
-route_available:!!r.route_available,
-distance_remaining:safeNum(r.distance_remaining,0),
-cross_track_error:safeNum(p.cross_track_error,0),
-route_deviation_class:String(p.route_deviation_class||"unavailable")
-};
-}
-
-function buildCourseSurface(mathOutput,interactionState){
-const r=mathOutput.route_truth||{};
-const c=mathOutput.correction_truth||{};
-const course=interactionState&&interactionState.course_selection?interactionState.course_selection:{};
-
-return{
-device_id:"course_surface",
-selected_course_deg:normalizeDeg(safeNum(course.selected_course_deg,safeNum(r.selected_course_deg,0))),
-recommended_course_deg:normalizeDeg(safeNum(r.recommended_course_deg,0)),
-course_correction_deg:safeNum(c.course_correction_deg,0),
-correction_direction:String(c.correction_direction||"hold"),
-correction_class:String(c.correction_class||"minor"),
-lock_state:String(course.lock_state||"unlocked")
-};
-}
-
-function buildEnvironmentSurface(mathOutput){
-const env=mathOutput.environment_truth||{};
-const cel=mathOutput.celestial_truth||{};
-
-return{
-device_id:"environment_surface",
-time_of_day_class:String(env.time_of_day_class||"unknown"),
-visibility_class:String(env.visibility_class||"clear"),
-wind_direction_deg:safeNum(env.wind_direction_deg,0),
-wind_speed:safeNum(env.wind_speed,0),
-current_direction_deg:safeNum(env.current_direction_deg,0),
-current_speed:safeNum(env.current_speed,0),
-apparent_wind_direction_deg:safeNum(env.apparent_wind_direction_deg,0),
-apparent_wind_speed:safeNum(env.apparent_wind_speed,0),
-apparent_wind_consistency:String(env.apparent_wind_consistency||"unknown"),
-celestial_alignment_state:String(cel.celestial_alignment_state||"unavailable")
-};
-}
-
-function buildState(mathOutput,interactionState){
-const astrolabeSurface=buildAstrolabeSurface(mathOutput);
-const helmCompassSurface=buildHelmCompassSurface(mathOutput,interactionState);
-const chartSurface=buildChartSurface(mathOutput,interactionState);
-const courseSurface=buildCourseSurface(mathOutput,interactionState);
-const environmentSurface=buildEnvironmentSurface(mathOutput);
-
-return{
-runtime_name:"INSTRUMENT_RUNTIME",
-runtime_version:INSTRUMENTS_RUNTIME_VERSION,
-astrolabe_surface:astrolabeSurface,
-helm_compass_surface:helmCompassSurface,
-chart_surface:chartSurface,
-course_surface:courseSurface,
-environment_surface:environmentSurface
-};
-}
-
-function buildSurfaces(instrumentState){
-return{
-astrolabe_surface:instrumentState.astrolabe_surface,
-helm_compass_surface:instrumentState.helm_compass_surface,
-chart_surface:instrumentState.chart_surface,
-course_surface:instrumentState.course_surface,
-environment_surface:instrumentState.environment_surface
-};
-}
-
-window.OPENWORLD_INSTRUMENTS_RUNTIME=Object.freeze({
-version:INSTRUMENTS_RUNTIME_VERSION,
-buildState:buildState,
-buildSurfaces:buildSurfaces
+window.INSTRUMENT_RUNTIME_KERNEL=Object.freeze({
+version:"INSTRUMENT_RUNTIME_KERNEL_v1",
+computeInstrumentRuntimeState:computeInstrumentRuntimeState
 });
 })();

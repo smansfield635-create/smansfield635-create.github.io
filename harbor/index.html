@@ -3,76 +3,350 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Harbor Core · Nine Summits Island</title>
-  <meta name="description" content="Harbor Core entry region for Nine Summits Island.">
+  <title>Diamond Gate Bridge — Harbor Core Foundation</title>
+  <meta name="description" content="Harbor Core foundation runtime bound to world truth and four-pixel state.">
   <style>
     :root{
-      --bg:#09060a;
+      --bg:#071019;
+      --panel:rgba(12,18,28,.74);
+      --line:rgba(255,255,255,.12);
+      --text:#edf4ff;
+      --muted:rgba(237,244,255,.74);
+      --gold:rgba(255,226,176,.96);
+      --safe-top:max(12px,env(safe-area-inset-top));
+      --safe-right:max(12px,env(safe-area-inset-right));
+      --safe-bottom:max(12px,env(safe-area-inset-bottom));
+      --safe-left:max(12px,env(safe-area-inset-left));
+      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
     }
     *{box-sizing:border-box}
     html,body{
       margin:0;
       padding:0;
-      height:100%;
-      background:var(--bg);
-      overflow:hidden;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:#fff4e6;
-    }
-    .page{
-      position:relative;
       width:100%;
       height:100%;
+      background:#05070b;
+      color:var(--text);
+      overflow:hidden;
+      font-family:var(--font);
     }
-    #scene{
+    .shell{
+      position:relative;
+      width:100vw;
+      height:100dvh;
+      overflow:hidden;
+      background:radial-gradient(circle at 50% 18%,rgba(120,90,130,.28),transparent 28%),linear-gradient(180deg,#131b2a 0%,#09111b 48%,#05070b 100%);
+    }
+    canvas{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       display:block;
-      touch-action:none;
+      z-index:1;
     }
-    .top-pill{
+    .topbar{
       position:absolute;
-      top:max(14px,env(safe-area-inset-top));
-      left:50%;
-      transform:translateX(-50%);
-      min-width:118px;
-      height:34px;
-      padding:0 16px;
+      top:var(--safe-top);
+      left:var(--safe-left);
+      right:var(--safe-right);
+      z-index:3;
       display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:999px;
-      background:rgba(12,10,16,0.58);
-      border:1px solid rgba(255,220,160,0.22);
-      box-shadow:0 10px 30px rgba(0,0,0,0.28);
-      backdrop-filter:blur(10px);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      z-index:10;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
       pointer-events:none;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-height:38px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(0,0,0,.28);
+      pointer-events:auto;
+    }
+    .brand-mark{
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.2);
+      background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(255,255,255,.18) 36%,transparent 37%),linear-gradient(180deg,#f1f7ff 0%,#a7c5f0 42%,#21385f 72%,#0d1730 100%);
+    }
+    .right-panel{
+      position:absolute;
+      top:calc(var(--safe-top) + 56px);
+      right:var(--safe-right);
+      z-index:3;
+      width:min(320px,calc(100vw - 24px));
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:0 12px 28px rgba(0,0,0,.28);
+    }
+    .right-panel h2{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+    .kv{
+      display:grid;
+      grid-template-columns:112px 1fr;
+      gap:8px 10px;
+      font-size:12px;
+      line-height:1.25;
+      margin:0;
+    }
+    .kv dt{color:var(--muted)}
+    .kv dd{margin:0;color:var(--text);word-break:break-word}
+    .footer-hint{
+      position:absolute;
+      left:50%;
+      bottom:var(--safe-bottom);
+      transform:translateX(-50%);
+      z-index:3;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(9,14,22,.56);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <canvas id="scene" aria-label="Harbor Core scene"></canvas>
-    <div class="top-pill">Harbor Core</div>
+  <div class="shell">
+    <canvas id="scene" aria-label="Harbor Core Foundation Scene"></canvas>
+
+    <div class="topbar">
+      <div class="pill">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <strong>Diamond Gate Bridge</strong>
+      </div>
+      <div class="pill">Harbor Core Foundation</div>
+    </div>
+
+    <section class="right-panel" aria-live="polite">
+      <h2>Runtime State</h2>
+      <dl class="kv">
+        <dt>Region</dt><dd id="regionOut">—</dd>
+        <dt>Cell</dt><dd id="cellOut">—</dd>
+        <dt>Sector</dt><dd id="sectorOut">—</dd>
+        <dt>Band</dt><dd id="bandOut">—</dd>
+        <dt>Encoding</dt><dd id="encodingOut">—</dd>
+        <dt>Byte</dt><dd id="byteOut">—</dd>
+      </dl>
+    </section>
+
+    <div class="footer-hint">WASD / Arrow Keys · truth-bound Harbor pilot foundation</div>
   </div>
 
-  <script src="/assets/openworld_camera.js?v=sanity1"></script>
-  <script src="/assets/openworld_background_renderer.js?v=sanity1"></script>
-  <script src="/assets/openworld_compass_renderer.js?v=sanity1"></script>
-  <script src="/assets/openworld_scene_input.js?v=sanity1"></script>
-  <script src="/assets/openworld_scene_fx.js?v=sanity1"></script>
-  <script src="/assets/openworld_showroom_renderer.js?v=sanity1"></script>
-  <script src="/assets/openworld_dragon_renderer.js?v=sanity1"></script>
-  <script src="/world/harbor_renderer.js?v=sanity1"></script>
-  <script src="/world/environment_runtime.js?v=sanity1"></script>
-  <script src="/world/island_regions.js?v=sanity1"></script>
-  <script src="/variant/scene.js?v=sanity1"></script>
+  <script type="module">
+    import { loadWorldKernel } from "../world/world_kernel.js";
+    import { drawByte, drawGlyphLabel, projectByteToSector } from "../assets/four_pixel_renderer.js";
+
+    const canvas = document.getElementById("scene");
+    const ctx = canvas.getContext("2d");
+
+    const out = {
+      region: document.getElementById("regionOut"),
+      cell: document.getElementById("cellOut"),
+      sector: document.getElementById("sectorOut"),
+      band: document.getElementById("bandOut"),
+      encoding: document.getElementById("encodingOut"),
+      byte: document.getElementById("byteOut")
+    };
+
+    const state = {
+      w: 0,
+      h: 0,
+      dpr: 1,
+      kernel: null,
+      keys: new Set(),
+      player: {
+        x: 180,
+        y: 460,
+        speed: 2.1
+      },
+      projection: null,
+      tick: 0
+    };
+
+    function resize() {
+      state.dpr = Math.max(1, window.devicePixelRatio || 1);
+      state.w = window.innerWidth;
+      state.h = window.innerHeight;
+      canvas.width = Math.floor(state.w * state.dpr);
+      canvas.height = Math.floor(state.h * state.dpr);
+      canvas.style.width = `${state.w}px`;
+      canvas.style.height = `${state.h}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(state.dpr, state.dpr);
+    }
+
+    function updatePlayer() {
+      let dx = 0;
+      let dy = 0;
+      if (state.keys.has("ArrowLeft") || state.keys.has("a")) dx -= 1;
+      if (state.keys.has("ArrowRight") || state.keys.has("d")) dx += 1;
+      if (state.keys.has("ArrowUp") || state.keys.has("w")) dy -= 1;
+      if (state.keys.has("ArrowDown") || state.keys.has("s")) dy += 1;
+
+      if (dx !== 0 || dy !== 0) {
+        const length = Math.hypot(dx, dy) || 1;
+        dx /= length;
+        dy /= length;
+        state.player.x += dx * state.player.speed;
+        state.player.y += dy * state.player.speed;
+      }
+
+      state.player.x = Math.max(60, Math.min(1020, state.player.x));
+      state.player.y = Math.max(100, Math.min(560, state.player.y));
+    }
+
+    function projectState() {
+      state.projection = state.kernel.helpers.projectWorldPositionToCell({
+        x: state.player.x,
+        y: state.player.y,
+        previousCellId: state.projection?.cellId ?? null
+      });
+
+      const region = state.kernel.helpers.getRegion(state.projection.regionId);
+      const encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
+
+      out.region.textContent = region.displayName;
+      out.cell.textContent = state.projection.cellId;
+      out.sector.textContent = state.projection.sector;
+      out.band.textContent = String(state.projection.bandIndex);
+      out.encoding.textContent = encoding.label;
+      out.byte.textContent = state.projection.stateByte;
+    }
+
+    function drawBackground() {
+      const g = ctx.createLinearGradient(0, 0, 0, state.h);
+      g.addColorStop(0, "rgba(28,36,58,1)");
+      g.addColorStop(0.45, "rgba(16,24,40,1)");
+      g.addColorStop(1, "rgba(8,10,16,1)");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, state.w, state.h);
+
+      const glow = ctx.createRadialGradient(state.w * 0.52, state.h * 0.22, 30, state.w * 0.52, state.h * 0.22, 280);
+      glow.addColorStop(0, "rgba(255,184,132,0.36)");
+      glow.addColorStop(1, "rgba(255,184,132,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, state.w, state.h);
+    }
+
+    function drawWorld() {
+      const regions = [...state.kernel.regionsById.values()];
+      const paths = [...state.kernel.pathsById.values()];
+
+      ctx.save();
+      ctx.translate((state.w - 1080) * 0.5, (state.h - 640) * 0.5);
+
+      ctx.strokeStyle = "rgba(160, 190, 255, 0.22)";
+      ctx.lineWidth = 16;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      for (const path of paths) {
+        ctx.beginPath();
+        path.centerline.forEach(([x, y], index) => {
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      }
+
+      for (const region of regions) {
+        const [x, y] = region.centerPoint;
+        ctx.beginPath();
+        ctx.arc(x, y, 42, 0, Math.PI * 2);
+        const isActive = state.projection?.regionId === region.regionId;
+        ctx.fillStyle = isActive ? "rgba(255,212,152,0.36)" : "rgba(74,116,168,0.20)";
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = isActive ? "rgba(255,228,184,0.96)" : "rgba(210,226,255,0.26)";
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(245,249,255,0.96)";
+        ctx.font = "600 13px system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(region.displayName, x, y - 52);
+      }
+
+      for (const cell of state.kernel.diamondCellsById.values()) {
+        const active = state.projection?.cellId === cell.diamondCellId;
+        ctx.beginPath();
+        ctx.arc(cell.centerPoint[0], cell.centerPoint[1], active ? 10 : 7, 0, Math.PI * 2);
+        ctx.fillStyle = active ? "rgba(255,236,188,0.96)" : "rgba(220,230,255,0.36)";
+        ctx.fill();
+      }
+
+      const headingSector = state.projection?.sector ?? "S";
+      const projected = projectByteToSector(state.projection?.stateByte ?? "11010010", headingSector);
+      drawByte(ctx, projected.byte, 150, 120, 56, { rotation: projected.rotation });
+
+      drawGlyphLabel(ctx, "ACTIVE STATE", 150, 168, { font: "700 11px system-ui, sans-serif" });
+
+      ctx.beginPath();
+      ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,126,86,0.98)";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,240,220,0.96)";
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function frame() {
+      state.tick += 1;
+      updatePlayer();
+      projectState();
+
+      ctx.clearRect(0, 0, state.w, state.h);
+      drawBackground();
+      drawWorld();
+
+      requestAnimationFrame(frame);
+    }
+
+    async function boot() {
+      resize();
+      state.kernel = await loadWorldKernel();
+      projectState();
+      frame();
+    }
+
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("keydown", (event) => {
+      state.keys.add(event.key);
+    });
+    window.addEventListener("keyup", (event) => {
+      state.keys.delete(event.key);
+    });
+
+    boot().catch((error) => {
+      console.error(error);
+      alert(`Harbor Core foundation failed to boot: ${error.message}`);
+    });
+  </script>
 </body>
 </html>

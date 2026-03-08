@@ -3,80 +3,46 @@
 
 function createState(){
 return{
-mode:"idle",
-targets:[]
+mode:"idle"
 };
 }
 
 function refreshTargets(state,w,h){
-if(!state)return;
-state.targets=[
-{x:w*0.38,y:h*0.42},
-{x:w*0.50,y:h*0.36},
-{x:w*0.62,y:h*0.42}
-];
+return state;
 }
 
-function start(state,cube,dispatch,spawnFirework){
-if(!state)return;
-state.mode="show";
-if(typeof dispatch==="function")dispatch("morph:open",{});
-if(cube&&typeof spawnFirework==="function"){
-spawnFirework(cube.centerX,cube.centerY,12,1.5);
-}
+function update(state,tick,sceneState){
+return state;
 }
 
-function close(state,dispatch){
-if(!state)return;
-state.mode="idle";
-if(typeof dispatch==="function")dispatch("morph:close",{mode:"return"});
-}
-
-function update(state,onReturnComplete){
-if(!state)return;
-if(state.mode==="return"){
-state.mode="idle";
-if(typeof onReturnComplete==="function")onReturnComplete();
-}
-}
-
-function drawFragments(ctx,state,tick){
-if(!state||state.mode==="idle"||!state.targets||!state.targets.length)return;
-
+function drawDragonMarkers(ctx,sceneState,w,h){
 ctx.save();
-ctx.globalAlpha=0.18;
-ctx.fillStyle="rgba(255,220,160,0.72)";
-for(let i=0;i<state.targets.length;i++){
-const t=state.targets[i];
-const r=6+Math.sin(tick*0.03+i)*2;
-ctx.beginPath();
-ctx.arc(t.x,t.y,r,0,Math.PI*2);
-ctx.fill();
-}
-ctx.restore();
+ctx.globalAlpha=0.82;
+
+if(sceneState.dragonFearActive){
+ctx.fillStyle="rgba(255,158,112,0.92)";
+ctx.font='700 11px system-ui,Segoe UI,Roboto,sans-serif';
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText("FEAR ACTIVE",sceneState.moonLeftHot.x,sceneState.moonLeftHot.y-(sceneState.moonLeftHot.r+18));
 }
 
-function drawCompass(ctx,state){
-if(!state||state.mode!=="show")return;
+if(sceneState.dragonAlignActive){
+ctx.fillStyle="rgba(255,236,190,0.92)";
+ctx.font='700 11px system-ui,Segoe UI,Roboto,sans-serif';
+ctx.textAlign="center";
+ctx.textBaseline="middle";
+ctx.fillText("ALIGN ACTIVE",sceneState.moonRightHot.x,sceneState.moonRightHot.y-(sceneState.moonRightHot.r+18));
+}
 
-ctx.save();
-ctx.globalAlpha=0.12;
-ctx.strokeStyle="rgba(255,220,160,0.82)";
-ctx.lineWidth=1.2;
-ctx.beginPath();
-ctx.arc(window.innerWidth*0.5,window.innerHeight*0.5,38,0,Math.PI*2);
-ctx.stroke();
 ctx.restore();
 }
 
 window.OPENWORLD_SHOWROOM_RENDERER=Object.freeze({
-version:"OPENWORLD_SHOWROOM_RENDERER_v1",
+version:"OPENWORLD_SHOWROOM_RENDERER_vL2B",
 createState:createState,
 refreshTargets:refreshTargets,
-start:start,
-close:close,
 update:update,
-drawFragments:drawFragments,
-drawCompass:drawCompass
+drawDragonMarkers:drawDragonMarkers
 });
 })();

@@ -1,261 +1,182 @@
-(function(){
-"use strict";
+import { createBackgroundRenderer } from "./background_renderer.js";
+import { createCompassRenderer } from "./compass_renderer.js";
+import { createInstruments } from "../assets/instruments.js";
+import { loadWorldKernel } from "../world/world_kernel.js";
 
-const canvas=document.getElementById("scene");
-if(!canvas)return;
+export async function createScene(canvas, outputs) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("2D canvas context unavailable");
 
-const ctx=canvas.getContext("2d");
-if(!ctx)return;
+  const background = createBackgroundRenderer();
+  const compass = createCompassRenderer();
+  const instruments = createInstruments();
 
-const CAMERA=window.OPENWORLD_CAMERA;
-const BG=window.OPENWORLD_BACKGROUND_RENDERER;
-const INPUT=window.OPENWORLD_SCENE_INPUT;
-const COMPASS=window.OPENWORLD_COMPASS_RENDERER;
+  const state = {
+    width: 0,
+    height: 0,
+    dpr: 1,
+    tick: 0,
+    kernel: await loadWorldKernel(),
+    keys: new Set(),
+    player: {
+      x: 180,
+      y: 460,
+      speed: 2.1
+    },
+    projection: null,
+    region: null,
+    encoding: null
+  };
 
-if(!CAMERA||!BG||!INPUT||!COMPASS){
-console.error("OPENWORLD_SCENE_v1 missing required modules.");
-return;
+  function resize() {
+    state.dpr = Math.max(1, window.devicePixelRatio || 1);
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    canvas.width = Math.floor(state.width * state.dpr);
+    canvas.height = Math.floor(state.height * state.dpr);
+    canvas.style.width = `${state.width}px`;
+    canvas.style.height = `${state.height}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(state.dpr, state.dpr);
+  }
+
+  function updatePlayer() {
+    let dx = 0;
+    let dy = 0;
+
+    if (state.keys.has("ArrowLeft") || state.keys.has("a") || state.keys.has("A")) dx -= 1;
+    if (state.keys.has("ArrowRight") || state.keys.has("d") || state.keys.has("D")) dx += 1;
+    if (state.keys.has("ArrowUp") || state.keys.has("w") || state.keys.has("W")) dy -= 1;
+    if (state.keys.has("ArrowDown") || state.keys.has("s") || state.keys.has("S")) dy += 1;
+
+    if (dx !== 0 || dy !== 0) {
+      const length = Math.hypot(dx, dy) || 1;
+      dx /= length;
+      dy /= length;
+      state.player.x += dx * state.player.speed;
+      state.player.y += dy * state.player.speed;
+    }
+
+    state.player.x = Math.max(60, Math.min(1020, state.player.x));
+    state.player.y = Math.max(100, Math.min(560, state.player.y));
+  }
+
+  function projectState() {
+    state.projection = state.kernel.helpers.projectWorldPositionToCell({
+      x: state.player.x,
+      y: state.player.y,
+      previousCellId: state.projection?.cellId ?? null
+    });
+    state.region = state.kernel.helpers.getRegion(state.projection.regionId);
+    state.encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
+  }
+
+  function updateOutputs() {
+    const panel = instruments.buildRuntimePanel(state);
+    outputs.region.textContent = panel.region;
+    outputs.cell.textContent = panel.cell;
+    outputs.sector.textContent = panel.sector;
+    outputs.band.textContent = panel.band;
+    outputs.encoding.textContent = panel.encoding;
+    outputs.byte.textContent = panel.byte;
+  }
+
+  function drawWorld() {
+    const regions = [...state.kernel.regionsById.values()];
+    const paths = [...state.kernel.pathsById.values()];
+    const offsetX = (state.width - 1080) * 0.5;
+    const offsetY = (state.height - 640) * 0.5;
+
+    ctx.save();
+    ctx.translate(offsetX, offsetY);
+
+    ctx.strokeStyle = "rgba(160,190,255,0.22)";
+    ctx.lineWidth = 16;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (const path of paths) {
+      ctx.beginPath();
+      path.centerline.forEach(([x, y], index) => {
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    for (const region of regions) {
+      const [x, y] = region.centerPoint;
+      const isActive = state.projection?.regionId === region.regionId;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 42, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? "rgba(255,212,152,0.36)" : "rgba(74,116,168,0.20)";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = isActive ? "rgba(255,228,184,0.96)" : "rgba(210,226,255,0.26)";
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(245,249,255,0.96)";
+      ctx.font = "600 13px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(region.displayName, x, y - 52);
+    }
+
+    for (const cell of state.kernel.diamondCellsById.values()) {
+      const active = state.projection?.cellId === cell.diamondCellId;
+      ctx.beginPath();
+      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], active ? 10 : 7, 0, Math.PI * 2);
+      ctx.fillStyle = active ? "rgba(255,236,188,0.96)" : "rgba(220,230,255,0.36)";
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,126,86,0.98)";
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "rgba(255,240,220,0.96)";
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawFrame() {
+    ctx.clearRect(0, 0, state.width, state.height);
+    background.draw(ctx, state.width, state.height, state.tick);
+    drawWorld();
+    compass.draw(ctx, state, { width: state.width, height: state.height });
+  }
+
+  function step() {
+    state.tick += 1;
+    updatePlayer();
+    projectState();
+    updateOutputs();
+    drawFrame();
+    requestAnimationFrame(step);
+  }
+
+  function onKeyDown(event) {
+    state.keys.add(event.key);
+  }
+
+  function onKeyUp(event) {
+    state.keys.delete(event.key);
+  }
+
+  resize();
+  projectState();
+  updateOutputs();
+
+  window.addEventListener("resize", resize, { passive: true });
+  window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);
+
+  return Object.freeze({
+    start() {
+      requestAnimationFrame(step);
+    }
+  });
 }
-
-const state={
-tick:0,
-dragging:false,
-lastX:0,
-lastY:0,
-dragX:0,
-dragY:0,
-velX:0,
-velY:0,
-camera:CAMERA.createState("fixed_harbor"),
-background:BG.createState(),
-compassVisible:true,
-compassAnchor:{x:0,y:0},
-compassHiddenY:0,
-compassRaisedY:0,
-compassTrigger:{x:0,y:0,w:0,h:0}
-};
-
-function clamp(v,min,max){
-return Math.max(min,Math.min(max,v));
-}
-
-function pointInRect(px,py,rect){
-return px>=rect.x&&px<=rect.x+rect.w&&py>=rect.y&&py<=rect.y+rect.h;
-}
-
-function refreshWorldAnchors(){
-const w=window.innerWidth;
-const h=window.innerHeight;
-const preset=CAMERA.getBlendedPreset(state.camera);
-const horizonY=h*preset.horizon;
-
-state.compassAnchor.x=w*0.5;
-state.compassHiddenY=horizonY+84;
-state.compassRaisedY=horizonY-98;
-
-state.compassTrigger.w=Math.min(148,w*0.34);
-state.compassTrigger.h=40;
-state.compassTrigger.x=state.compassAnchor.x-(state.compassTrigger.w*0.5);
-state.compassTrigger.y=horizonY-28;
-}
-
-function resize(){
-const dpr=Math.max(1,window.devicePixelRatio||1);
-const w=window.innerWidth;
-const h=window.innerHeight;
-
-canvas.style.width=w+"px";
-canvas.style.height=h+"px";
-canvas.width=Math.floor(w*dpr);
-canvas.height=Math.floor(h*dpr);
-
-ctx.setTransform(1,0,0,1,0,0);
-ctx.scale(dpr,dpr);
-
-const preset=CAMERA.getPreset(state.camera.mode);
-BG.initClouds(state.background,w,h);
-BG.initLanterns(state.background,w,h);
-BG.initMountains(state.background,w,h,preset);
-refreshWorldAnchors();
-}
-
-function toggleCompass(){
-state.compassVisible=!state.compassVisible;
-CAMERA.blendTo(state.camera,state.compassVisible?"compass_focus":"fixed_harbor");
-}
-
-function pointerDown(p){
-if(pointInRect(p.x,p.y,state.compassTrigger)){
-toggleCompass();
-return;
-}
-
-state.dragging=true;
-state.lastX=p.x;
-state.lastY=p.y;
-CAMERA.blendTo(state.camera,state.compassVisible?"compass_focus":"drag_view");
-}
-
-function pointerMove(p){
-if(!state.dragging)return;
-
-const dx=p.x-state.lastX;
-const dy=p.y-state.lastY;
-state.lastX=p.x;
-state.lastY=p.y;
-
-state.velX+=dx*0.0022;
-state.velY+=dy*0.0016;
-}
-
-function pointerUp(){
-state.dragging=false;
-CAMERA.blendTo(state.camera,state.compassVisible?"compass_focus":"fixed_harbor");
-}
-
-function animate(){
-state.tick++;
-CAMERA.update(state.camera,0.08);
-BG.syncCelestials(state.background,null,state.tick);
-
-state.dragX+=state.velX;
-state.dragY+=state.velY;
-
-state.velX*=state.dragging?0.88:0.94;
-state.velY*=state.dragging?0.88:0.94;
-
-state.dragX=clamp(state.dragX,-1.2,1.2);
-state.dragY=clamp(state.dragY,-0.8,0.8);
-state.velX=clamp(state.velX,-0.12,0.12);
-state.velY=clamp(state.velY,-0.12,0.12);
-
-refreshWorldAnchors();
-}
-
-function drawCompassTrigger(){
-const r=state.compassTrigger;
-
-ctx.save();
-ctx.globalAlpha=0.92;
-ctx.fillStyle="rgba(18,10,14,0.74)";
-ctx.strokeStyle="rgba(255,222,168,0.82)";
-ctx.lineWidth=1.2;
-ctx.beginPath();
-
-if(ctx.roundRect){
-ctx.roundRect(r.x,r.y,r.w,r.h,18);
-}else{
-ctx.moveTo(r.x+18,r.y);
-ctx.lineTo(r.x+r.w-18,r.y);
-ctx.quadraticCurveTo(r.x+r.w,r.y,r.x+r.w,r.y+18);
-ctx.lineTo(r.x+r.w,r.y+r.h-18);
-ctx.quadraticCurveTo(r.x+r.w,r.y+r.h,r.x+r.w-18,r.y+r.h);
-ctx.lineTo(r.x+18,r.y+r.h);
-ctx.quadraticCurveTo(r.x,r.y+r.h,r.x,r.y+r.h-18);
-ctx.lineTo(r.x,r.y+18);
-ctx.quadraticCurveTo(r.x,r.y,r.x+18,r.y);
-ctx.closePath();
-}
-
-ctx.fill();
-ctx.stroke();
-
-ctx.fillStyle="rgba(255,238,200,0.96)";
-ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-ctx.textAlign="center";
-ctx.textBaseline="middle";
-ctx.fillText(state.compassVisible?"LOWER COMPASS":"RAISE COMPASS",r.x+(r.w*0.5),r.y+(r.h*0.5)+0.5);
-ctx.restore();
-}
-
-function drawHarborCoreMarker(){
-const x=state.compassAnchor.x+(state.dragX*8);
-const y=state.compassTrigger.y+state.compassTrigger.h+18;
-
-ctx.save();
-ctx.globalAlpha=0.76;
-ctx.fillStyle="rgba(255,232,190,0.96)";
-ctx.font='700 12px system-ui,Segoe UI,Roboto,sans-serif';
-ctx.textAlign="center";
-ctx.textBaseline="middle";
-ctx.fillText("HARBOR CORE",x,y);
-
-ctx.globalAlpha=0.34;
-ctx.beginPath();
-ctx.moveTo(x,y-18);
-ctx.lineTo(x+9,y-2);
-ctx.lineTo(x-9,y-2);
-ctx.closePath();
-ctx.fill();
-ctx.restore();
-}
-
-function drawCompass(w,h){
-const preset=CAMERA.getBlendedPreset(state.camera);
-const y=(state.compassVisible?state.compassRaisedY:state.compassHiddenY)+(preset.compassLift||0);
-
-const geo=COMPASS.getDiamondGeometry({
-width:w,
-height:h,
-centerX:state.compassAnchor.x+(state.dragX*10),
-centerY:y,
-size:Math.min(w,h)*0.086,
-rotX:(state.dragY*0.18)-0.10,
-rotY:(state.tick*0.006)+(state.dragX*0.20)
-});
-
-COMPASS.drawCompass(ctx,geo,{
-showLabels:true,
-showHalo:true
-});
-}
-
-function draw(){
-const w=window.innerWidth;
-const h=window.innerHeight;
-const preset=CAMERA.getBlendedPreset(state.camera);
-
-ctx.clearRect(0,0,w,h);
-
-BG.drawSky(ctx,w,h,state.tick,preset,state.background);
-BG.drawSun(ctx,w,h,state.background);
-BG.drawMoon(ctx,w,h,state.background);
-BG.drawClouds(ctx,state.background,state.tick,null);
-BG.drawLanterns(ctx,state.background,state.tick,1);
-BG.drawMountains(ctx,w,h,state.background,preset);
-drawCompass(w,h);
-BG.drawWater(ctx,w,h,state.tick,preset,state.background);
-
-drawCompassTrigger();
-drawHarborCoreMarker();
-}
-
-function frame(){
-try{
-animate();
-draw();
-}catch(err){
-console.error("OPENWORLD_SCENE_v1 frame error",err);
-}
-requestAnimationFrame(frame);
-}
-
-INPUT.bind(canvas,{
-onPointerDown:pointerDown,
-onPointerMove:pointerMove,
-onPointerUp:pointerUp,
-onTouchStart:pointerDown,
-onTouchMove:pointerMove,
-onTouchEnd:pointerUp,
-onPointerLeave:function(){
-state.dragging=false;
-CAMERA.blendTo(state.camera,state.compassVisible?"compass_focus":"fixed_harbor");
-}
-});
-
-window.addEventListener("resize",resize,{passive:true});
-window.addEventListener("orientationchange",resize,{passive:true});
-
-resize();
-frame();
-})();

@@ -1,3 +1,5 @@
+/* DESTINATION FILE: /variant/ground_renderer.js */
+
 function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
@@ -17,6 +19,20 @@ function polyline(ctx, points) {
   }
 }
 
+function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0, maxR = 1.0) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+
+  for (let i = 0; i < count; i += 1) {
+    const px = x + (((i * 71) + (seedOffset * 17)) % w);
+    const py = y + (((i * 131) + (seedOffset * 23)) % h);
+    const r = 0.32 + ((i % 4) * (maxR / 5));
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 function fillMicroDots(ctx, bounds, count, color) {
   const { x, y, w, h } = bounds;
   ctx.fillStyle = color;
@@ -24,21 +40,7 @@ function fillMicroDots(ctx, bounds, count, color) {
   for (let i = 0; i < count; i += 1) {
     const px = x + ((i * 23) % w);
     const py = y + ((i * 41) % h);
-    const r = 0.5 + ((i % 3) * 0.14);
-    ctx.beginPath();
-    ctx.arc(px, py, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
-  const { x, y, w, h } = bounds;
-  ctx.fillStyle = color;
-
-  for (let i = 0; i < count; i += 1) {
-    const px = x + (((i * 71) + (seedOffset * 17)) % w);
-    const py = y + (((i * 131) + (seedOffset * 23)) % h);
-    const r = 0.55 + ((i % 4) * 0.28);
+    const r = 0.46 + ((i % 3) * 0.14);
     ctx.beginPath();
     ctx.arc(px, py, r, 0, Math.PI * 2);
     ctx.fill();

@@ -29,6 +29,16 @@ const SEDIMENT_EAST = [
   [790, 710], [850, 640], [912, 560], [972, 480], [1030, 420], [1086, 370]
 ];
 
+const SHALLOW_HARBOR = [
+  [474, 990], [496, 936], [538, 896], [594, 888], [644, 908], [672, 950],
+  [666, 1000], [632, 1042], [576, 1062], [520, 1054], [482, 1024], [470, 998]
+];
+
+const SHALLOW_BASIN = [
+  [446, 612], [484, 556], [544, 514], [620, 494], [696, 506], [754, 546],
+  [784, 604], [776, 666], [736, 718], [670, 752], [592, 760], [522, 736], [466, 688], [442, 634]
+];
+
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
     const { viewportOffset } = runtime;
@@ -66,6 +76,19 @@ export function createEnvironmentRenderer() {
   }
 
   function drawLocalWaterBodies(ctx) {
+    drawHarborWater(ctx);
+    drawBasinWater(ctx);
+  }
+
+  function drawHarborWater(ctx) {
+    polygon(ctx, SHALLOW_HARBOR);
+    const shallow = ctx.createLinearGradient(474, 896, 672, 1062);
+    shallow.addColorStop(0, "rgba(172,224,228,0.92)");
+    shallow.addColorStop(0.45, "rgba(152,214,222,0.90)");
+    shallow.addColorStop(1, "rgba(126,198,210,0.88)");
+    ctx.fillStyle = shallow;
+    ctx.fill();
+
     polygon(ctx, HARBOR_COVE);
     const harbor = ctx.createLinearGradient(488, 886, 656, 1054);
     harbor.addColorStop(0, "rgba(146,206,218,0.94)");
@@ -73,9 +96,20 @@ export function createEnvironmentRenderer() {
     harbor.addColorStop(1, "rgba(42,92,120,0.94)");
     ctx.fillStyle = harbor;
     ctx.fill();
+
     ctx.lineWidth = 1.0;
     ctx.strokeStyle = "rgba(238,246,248,0.06)";
     ctx.stroke();
+  }
+
+  function drawBasinWater(ctx) {
+    polygon(ctx, SHALLOW_BASIN);
+    const basinShallow = ctx.createLinearGradient(446, 514, 784, 760);
+    basinShallow.addColorStop(0, "rgba(170,220,224,0.82)");
+    basinShallow.addColorStop(0.55, "rgba(142,204,214,0.78)");
+    basinShallow.addColorStop(1, "rgba(110,184,198,0.72)");
+    ctx.fillStyle = basinShallow;
+    ctx.fill();
 
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(466, 492, 760, 754);
@@ -84,6 +118,7 @@ export function createEnvironmentRenderer() {
     basin.addColorStop(1, "rgba(38,90,120,0.96)");
     ctx.fillStyle = basin;
     ctx.fill();
+
     ctx.lineWidth = 1.2;
     ctx.strokeStyle = "rgba(238,246,248,0.10)";
     ctx.stroke();

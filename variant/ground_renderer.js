@@ -18,113 +18,120 @@ function polyline(ctx, points) {
 }
 
 const PENINSULA_CORE = [
-  [534, 900],
-  [494, 878],
-  [460, 840],
-  [444, 792],
-  [446, 742],
-  [462, 696],
-  [490, 650],
-  [526, 602],
-  [574, 552],
-  [628, 500],
-  [680, 442],
-  [724, 376],
-  [760, 300],
-  [788, 220],
-  [806, 136],
-  [822, 44],
-  [878, 44],
-  [878, -92],
-  [206, -92],
-  [206, 72],
-  [254, 116],
-  [294, 176],
-  [324, 248],
-  [352, 332],
-  [384, 418],
-  [420, 502],
-  [458, 580],
-  [496, 654],
-  [526, 730]
+  [538, 1120],
+  [514, 1062],
+  [498, 992],
+  [496, 918],
+  [506, 844],
+  [526, 774],
+  [556, 708],
+  [594, 650],
+  [642, 594],
+  [694, 540],
+  [742, 480],
+  [786, 414],
+  [830, 346],
+  [882, 282],
+  [940, 228],
+  [1002, 188],
+  [1070, 162],
+  [1140, 146],
+  [1150, 146],
+  [1150, -120],
+  [132, -120],
+  [132, 176],
+  [188, 222],
+  [240, 276],
+  [286, 338],
+  [328, 410],
+  [362, 488],
+  [396, 566],
+  [434, 638],
+  [474, 708],
+  [504, 782],
+  [526, 862],
+  [544, 960],
+  [554, 1050]
 ];
 
 const SOUTH_BEACH = [
-  [484, 842],
-  [512, 826],
-  [550, 822],
-  [586, 832],
-  [610, 856],
-  [610, 900],
-  [494, 900]
+  [500, 978],
+  [526, 944],
+  [566, 930],
+  [612, 934],
+  [648, 956],
+  [664, 994],
+  [660, 1042],
+  [628, 1080],
+  [582, 1098],
+  [536, 1090],
+  [508, 1056],
+  [498, 1014]
 ];
 
 const BASIN_RING = [
-  [476, 498],
-  [500, 448],
-  [548, 410],
-  [606, 396],
-  [660, 408],
-  [696, 444],
-  [706, 492],
-  [688, 538],
-  [648, 568],
-  [594, 578],
-  [540, 570],
-  [500, 544]
+  [482, 620],
+  [508, 566],
+  [552, 526],
+  [610, 506],
+  [674, 512],
+  [724, 540],
+  [754, 584],
+  [756, 634],
+  [732, 682],
+  [686, 718],
+  [626, 738],
+  [564, 734],
+  [514, 710],
+  [488, 668]
 ];
 
-const NORTH_ASCENT = [
-  [552, 338],
-  [580, 280],
-  [616, 230],
-  [662, 188],
-  [706, 166],
-  [746, 170],
-  [760, 204],
-  [752, 250],
-  [728, 292],
-  [694, 326],
-  [652, 352],
-  [602, 364]
+const SUMMIT_RIDGE = [
+  [600, 468],
+  [632, 410],
+  [672, 360],
+  [722, 314],
+  [778, 278],
+  [842, 254],
+  [904, 250],
+  [952, 272],
+  [980, 314],
+  [980, 362],
+  [956, 410],
+  [914, 452],
+  [858, 486],
+  [792, 504],
+  [722, 502],
+  [656, 488]
 ];
 
-const EAST_CIVIC_RISE = [
-  [650, 676],
-  [692, 632],
-  [734, 580],
-  [772, 516],
-  [804, 438],
-  [826, 348],
-  [838, 248],
-  [838, 176],
-  [858, 176],
-  [862, 250],
-  [852, 356],
-  [824, 454],
-  [786, 536],
-  [742, 602],
-  [694, 654]
+const WEST_ASCENT_BELT = [
+  [470, 876],
+  [446, 812],
+  [430, 744],
+  [420, 680],
+  [406, 612],
+  [388, 546],
+  [366, 480],
+  [340, 416],
+  [308, 356],
+  [270, 296],
+  [226, 244],
+  [182, 202]
 ];
 
-const WEST_SOLEMN_RISE = [
-  [452, 658],
-  [424, 610],
-  [400, 548],
-  [378, 482],
-  [354, 414],
-  [328, 338],
-  [300, 268],
-  [270, 204],
-  [240, 152],
-  [226, 132],
-  [244, 198],
-  [272, 266],
-  [304, 342],
-  [336, 422],
-  [368, 504],
-  [404, 582],
-  [438, 644]
+const EAST_ASCENT_BELT = [
+  [618, 906],
+  [654, 844],
+  [698, 784],
+  [748, 724],
+  [798, 660],
+  [850, 588],
+  [906, 516],
+  [968, 452],
+  [1030, 394],
+  [1092, 340],
+  [1142, 300]
 ];
 
 export function createGroundRenderer() {
@@ -146,70 +153,72 @@ export function createGroundRenderer() {
 
   function drawPeninsulaCore(ctx) {
     polygon(ctx, PENINSULA_CORE);
-    const ground = ctx.createLinearGradient(0, 44, 0, 900);
-    ground.addColorStop(0, "rgba(176,170,146,1)");
-    ground.addColorStop(0.24, "rgba(164,160,128,1)");
-    ground.addColorStop(0.56, "rgba(144,148,104,1)");
-    ground.addColorStop(1, "rgba(126,136,96,1)");
+    const ground = ctx.createLinearGradient(0, 146, 0, 1120);
+    ground.addColorStop(0, "rgba(178,170,148,1)");
+    ground.addColorStop(0.20, "rgba(168,160,132,1)");
+    ground.addColorStop(0.48, "rgba(150,148,112,1)");
+    ground.addColorStop(0.78, "rgba(136,144,102,1)");
+    ground.addColorStop(1, "rgba(124,136,96,1)");
     ctx.fillStyle = ground;
     ctx.fill();
 
     ctx.lineWidth = 2.4;
-    ctx.strokeStyle = "rgba(242,232,204,0.28)";
+    ctx.strokeStyle = "rgba(244,232,204,0.28)";
     ctx.stroke();
 
     polygon(ctx, SOUTH_BEACH);
-    ctx.fillStyle = "rgba(214,188,138,0.30)";
+    ctx.fillStyle = "rgba(216,190,138,0.34)";
     ctx.fill();
   }
 
   function drawElevationBands(ctx) {
     polygon(ctx, BASIN_RING);
-    const basin = ctx.createLinearGradient(0, 396, 0, 578);
-    basin.addColorStop(0, "rgba(176,170,132,0.22)");
-    basin.addColorStop(1, "rgba(100,118,86,0.14)");
+    const basin = ctx.createLinearGradient(0, 506, 0, 738);
+    basin.addColorStop(0, "rgba(182,174,132,0.22)");
+    basin.addColorStop(1, "rgba(108,122,88,0.14)");
     ctx.fillStyle = basin;
     ctx.fill();
 
-    polygon(ctx, NORTH_ASCENT);
-    const north = ctx.createLinearGradient(0, 166, 0, 364);
-    north.addColorStop(0, "rgba(218,214,206,0.72)");
-    north.addColorStop(0.42, "rgba(196,190,174,0.44)");
-    north.addColorStop(1, "rgba(156,150,136,0.18)");
-    ctx.fillStyle = north;
+    polygon(ctx, SUMMIT_RIDGE);
+    const ridge = ctx.createLinearGradient(0, 250, 0, 504);
+    ridge.addColorStop(0, "rgba(220,214,204,0.78)");
+    ridge.addColorStop(0.40, "rgba(194,186,170,0.40)");
+    ridge.addColorStop(1, "rgba(160,150,136,0.14)");
+    ctx.fillStyle = ridge;
     ctx.fill();
   }
 
   function drawTraversalBelts(ctx) {
-    polygon(ctx, EAST_CIVIC_RISE);
-    ctx.fillStyle = "rgba(186,174,126,0.12)";
+    polygon(ctx, WEST_ASCENT_BELT);
+    ctx.fillStyle = "rgba(118,140,98,0.12)";
     ctx.fill();
 
-    polygon(ctx, WEST_SOLEMN_RISE);
-    ctx.fillStyle = "rgba(118,138,96,0.12)";
+    polygon(ctx, EAST_ASCENT_BELT);
+    ctx.fillStyle = "rgba(190,176,126,0.12)";
     ctx.fill();
 
-    const ridge = [
-      [564, 344],
-      [610, 330],
-      [656, 302],
-      [700, 264],
-      [736, 220]
+    const ridgeStroke = [
+      [640, 490],
+      [698, 484],
+      [760, 468],
+      [824, 438],
+      [888, 392],
+      [940, 344]
     ];
-    polyline(ctx, ridge);
+    polyline(ctx, ridgeStroke);
     ctx.strokeStyle = "rgba(246,240,228,0.24)";
     ctx.lineWidth = 2.1;
     ctx.stroke();
 
     const harborBand = [
-      [486, 820],
-      [520, 808],
-      [560, 808],
-      [594, 820]
+      [512, 1008],
+      [544, 988],
+      [586, 986],
+      [626, 1002]
     ];
     polyline(ctx, harborBand);
     ctx.strokeStyle = "rgba(230,214,174,0.18)";
-    ctx.lineWidth = 2.6;
+    ctx.lineWidth = 2.8;
     ctx.stroke();
   }
 
@@ -254,17 +263,17 @@ export function createGroundRenderer() {
 
       if (row.regionId === "harbor_village") {
         ctx.fillStyle = "rgba(122,84,58,0.96)";
-        ctx.fillRect(x - 34, y + 10, 68, 12);
-        ctx.fillRect(x - 10, y - 4, 20, 18);
-        ctx.fillRect(x - 46, y + 16, 12, 8);
-        ctx.fillRect(x + 34, y + 16, 12, 8);
+        ctx.fillRect(x - 34, y + 12, 68, 12);
+        ctx.fillRect(x - 10, y - 2, 20, 18);
+        ctx.fillRect(x - 46, y + 18, 12, 8);
+        ctx.fillRect(x + 34, y + 18, 12, 8);
       }
 
       if (row.regionId === "market_district") {
         ctx.fillStyle = "rgba(162,114,76,0.98)";
-        ctx.fillRect(x - 26, y + 4, 52, 14);
+        ctx.fillRect(x - 26, y + 6, 52, 14);
         ctx.fillStyle = "rgba(230,194,132,0.90)";
-        ctx.fillRect(x - 18, y - 8, 36, 10);
+        ctx.fillRect(x - 18, y - 6, 36, 10);
       }
 
       if (row.regionId === "exploration_basin") {
@@ -276,7 +285,7 @@ export function createGroundRenderer() {
 
       if (row.regionId === "summit_plaza") {
         ctx.beginPath();
-        ctx.moveTo(x, y - 28);
+        ctx.moveTo(x, y - 34);
         ctx.lineTo(x + 12, y + 2);
         ctx.lineTo(x - 12, y + 2);
         ctx.closePath();
@@ -284,7 +293,7 @@ export function createGroundRenderer() {
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(x, y - 34, 6 + pulse * 1.0, 0, Math.PI * 2);
+        ctx.arc(x, y - 40, 6 + pulse * 1.0, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,244,224,0.36)";
         ctx.fill();
       }

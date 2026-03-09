@@ -1,20 +1,21 @@
+function appendPolygonPath(ctx, points) {
+  if (!points.length) return;
+  ctx.moveTo(points[0][0], points[0][1]);
+  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
+  ctx.closePath();
+}
+
 function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
-  }
-  ctx.closePath();
+  appendPolygonPath(ctx, points);
 }
 
 function polyline(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
-  }
+  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
 }
 
 function strokeWaveLine(ctx, y, xStart, xEnd, tick, amplitude, wavelength, alpha, step = 12) {
@@ -57,7 +58,7 @@ function fillMicroVegetation(ctx, patches) {
   }
 }
 
-const COASTLINE_PATH = [
+const PENINSULA_LAND_MASK = [
   [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730], [576, 650],
   [632, 580], [694, 520], [758, 466], [822, 402], [890, 328], [958, 260], [1028, 208],
   [1094, 176], [1144, 164], [1150, 162], [1150, -220], [118, -220], [118, 150], [186, 220],
@@ -65,15 +66,26 @@ const COASTLINE_PATH = [
   [494, 928], [516, 1018], [530, 1096]
 ];
 
-const WEST_SHORE = [
-  [494, 1088], [472, 1010], [464, 928], [474, 844], [500, 762], [538, 682], [584, 610],
-  [630, 548], [670, 486], [700, 420], [714, 352], [706, 288], [676, 228], [628, 176],
-  [570, 136], [508, 108], [444, 82], [384, 52], [326, 16]
+const COASTLINE_PATH_AUTHORITY = Object.freeze({
+  west: [
+    [534, 1160], [500, 1088], [472, 1010], [464, 928], [474, 844], [500, 762], [538, 682],
+    [584, 610], [630, 548], [670, 486], [700, 420], [714, 352], [706, 288], [676, 228],
+    [628, 176], [570, 136], [508, 108], [444, 82], [384, 52], [326, 16]
+  ],
+  east: [
+    [534, 1160], [562, 1086], [586, 1008], [624, 932], [674, 858], [734, 788], [802, 720],
+    [870, 650], [938, 576], [1006, 498], [1070, 424], [1128, 370], [1150, 350]
+  ]
+});
+
+const EAST_SHELF = [
+  [620, 990], [666, 920], [724, 850], [786, 780], [850, 710], [916, 636], [982, 558],
+  [1048, 482], [1110, 420], [1150, 388]
 ];
 
-const EAST_SHORE = [
-  [562, 1086], [586, 1008], [624, 932], [674, 858], [734, 788], [802, 720], [870, 650],
-  [938, 576], [1006, 498], [1070, 424], [1128, 370], [1150, 350]
+const WEST_SHELF = [
+  [450, 1018], [436, 944], [444, 866], [470, 786], [508, 710], [554, 642], [604, 584],
+  [644, 528], [668, 470], [672, 412], [656, 354], [622, 296], [570, 242], [512, 198], [452, 164], [392, 136]
 ];
 
 const HARBOR_COVE = [
@@ -127,6 +139,14 @@ const MICRO_VEGETATION_PATCHES = [
   { x: 886, y: 520, w: 68, h: 44, count: 26, color: "rgba(98,124,84,0.10)" }
 ];
 
+function clipOceanArea(ctx, width, height) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(-2400, -2400, width + 4800, height + 4800);
+  appendPolygonPath(ctx, PENINSULA_LAND_MASK);
+  ctx.clip("evenodd");
+}
+
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
     const { width, height, tick, viewportOffset, kernel, projection, selection, destination } = runtime;
@@ -135,11 +155,8 @@ export function createEnvironmentRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOcean(ctx, width, height, tick);
-    drawLandMaskAndCoast(ctx);
-    drawHarborCove(ctx, tick);
-    drawBasinShelf(ctx);
-    drawBasinWater(ctx, tick);
-    drawInnerInlet(ctx);
+    drawInnerCoastalWater(ctx, tick);
+    drawLandShadow(ctx);
     drawMountainMass(ctx);
     drawVegetation(ctx);
     drawSurfaceSpeckle(ctx);
@@ -151,6 +168,8 @@ export function createEnvironmentRenderer() {
   }
 
   function drawOcean(ctx, width, height, tick) {
+    clipOceanArea(ctx, width, height);
+
     const ocean = ctx.createLinearGradient(0, -180, 0, height + 580);
     ocean.addColorStop(0, "rgba(160,214,230,1)");
     ocean.addColorStop(0.18, "rgba(126,194,214,1)");
@@ -158,61 +177,54 @@ export function createEnvironmentRenderer() {
     ocean.addColorStop(1, "rgba(18,68,98,1)");
     ctx.fillStyle = ocean;
     ctx.fillRect(-1300, -320, width + 2600, height + 2200);
-  }
 
-  function drawLandMaskAndCoast(ctx) {
-    ctx.save();
-    ctx.translate(26, 28);
-    polygon(ctx, COASTLINE_PATH);
-    ctx.fillStyle = "rgba(8,20,28,0.20)";
-    ctx.fill();
-    ctx.restore();
-
-    polygon(ctx, COASTLINE_PATH);
-    const land = ctx.createLinearGradient(0, 96, 0, 1160);
-    land.addColorStop(0, "rgba(198,188,162,1)");
-    land.addColorStop(0.20, "rgba(182,170,140,1)");
-    land.addColorStop(0.44, "rgba(162,154,120,1)");
-    land.addColorStop(0.78, "rgba(142,148,106,1)");
-    land.addColorStop(1, "rgba(126,140,98,1)");
-    ctx.fillStyle = land;
-    ctx.fill();
-
-    ctx.lineWidth = 2.8;
-    ctx.strokeStyle = "rgba(248,240,220,0.34)";
-    ctx.stroke();
-
-    polyline(ctx, CLIFF_WEST);
-    ctx.strokeStyle = "rgba(92,88,78,0.12)";
-    ctx.lineWidth = 18;
+    polyline(ctx, WEST_SHELF);
+    ctx.strokeStyle = "rgba(224,246,252,0.08)";
+    ctx.lineWidth = 28;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    polyline(ctx, CLIFF_EAST);
-    ctx.strokeStyle = "rgba(92,88,78,0.12)";
-    ctx.lineWidth = 18;
+    polyline(ctx, EAST_SHELF);
+    ctx.strokeStyle = "rgba(224,246,252,0.08)";
+    ctx.lineWidth = 34;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    polyline(ctx, WEST_SHORE);
-    ctx.strokeStyle = "rgba(252,246,230,0.14)";
-    ctx.lineWidth = 1.6;
+    polyline(ctx, WEST_SHELF);
+    ctx.strokeStyle = "rgba(236,250,252,0.04)";
+    ctx.lineWidth = 10;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.stroke();
 
-    polyline(ctx, EAST_SHORE);
-    ctx.strokeStyle = "rgba(252,246,230,0.14)";
-    ctx.lineWidth = 1.6;
+    polyline(ctx, EAST_SHELF);
+    ctx.strokeStyle = "rgba(236,250,252,0.04)";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, COASTLINE_PATH_AUTHORITY.west);
+    ctx.strokeStyle = "rgba(252,246,230,0.16)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    polyline(ctx, COASTLINE_PATH_AUTHORITY.east);
+    ctx.strokeStyle = "rgba(252,246,230,0.16)";
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
     for (let i = 0; i < 6; i += 1) {
-      strokeWaveLine(ctx, 928 - (i * 116), 720 + (i * 40), 1150, i * 0.4, 0.95, 0.040, 0.026, 10);
-      strokeWaveLine(ctx, 930 - (i * 136), 118, 480 - (i * 14), i * 0.5, 0.95, 0.040, 0.026, 10);
+      strokeWaveLine(ctx, 930 - (i * 136), 118, 470 - (i * 12), tick * 0.036 + (i * 0.5), 0.8, 0.040, 0.022, 10);
+      strokeWaveLine(ctx, 928 - (i * 116), 730 + (i * 40), 1150, tick * 0.036 + i, 0.8, 0.040, 0.022, 10);
     }
+
+    ctx.restore();
   }
 
-  function drawHarborCove(ctx, tick) {
+  function drawInnerCoastalWater(ctx, tick) {
     polygon(ctx, HARBOR_COVE);
     const harbor = ctx.createLinearGradient(488, 886, 656, 1054);
     harbor.addColorStop(0, "rgba(146,206,218,0.98)");
@@ -220,26 +232,21 @@ export function createEnvironmentRenderer() {
     harbor.addColorStop(1, "rgba(42,92,120,1)");
     ctx.fillStyle = harbor;
     ctx.fill();
-
-    ctx.lineWidth = 1.8;
-    ctx.strokeStyle = "rgba(238,246,248,0.24)";
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = "rgba(238,246,248,0.20)";
     ctx.stroke();
 
-    for (let i = 0; i < 6; i += 1) {
-      strokeWaveLine(ctx, 920 + (i * 12), 512, 632, tick * 0.05 + i, 1.15, 0.046, 0.08, 10);
+    for (let i = 0; i < 5; i += 1) {
+      strokeWaveLine(ctx, 920 + (i * 12), 512, 632, tick * 0.05 + i, 1.0, 0.046, 0.06, 10);
     }
-  }
 
-  function drawBasinShelf(ctx) {
     polygon(ctx, BASIN_SHELF);
     const shelf = ctx.createRadialGradient(608, 654, 50, 608, 654, 210);
-    shelf.addColorStop(0, "rgba(130,146,108,0.16)");
-    shelf.addColorStop(1, "rgba(130,146,108,0.04)");
+    shelf.addColorStop(0, "rgba(130,146,108,0.14)");
+    shelf.addColorStop(1, "rgba(130,146,108,0.03)");
     ctx.fillStyle = shelf;
     ctx.fill();
-  }
 
-  function drawBasinWater(ctx, tick) {
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(466, 492, 760, 754);
     basin.addColorStop(0, "rgba(144,204,218,0.98)");
@@ -247,51 +254,68 @@ export function createEnvironmentRenderer() {
     basin.addColorStop(1, "rgba(38,90,120,1)");
     ctx.fillStyle = basin;
     ctx.fill();
-
-    ctx.lineWidth = 1.8;
-    ctx.strokeStyle = "rgba(238,246,248,0.24)";
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = "rgba(238,246,248,0.20)";
     ctx.stroke();
 
-    for (let i = 0; i < 8; i += 1) {
-      strokeWaveLine(ctx, 540 + (i * 16), 504, 704, tick * 0.042 + (i * 0.9), 1.25, 0.038, 0.08, 10);
+    for (let i = 0; i < 7; i += 1) {
+      strokeWaveLine(ctx, 540 + (i * 16), 504, 704, tick * 0.042 + (i * 0.9), 1.05, 0.038, 0.06, 10);
     }
-  }
 
-  function drawInnerInlet(ctx) {
+    clipOceanArea(ctx, 1400, 1400);
     polyline(ctx, INNER_INLET);
-    ctx.strokeStyle = "rgba(196,228,238,0.10)";
-    ctx.lineWidth = 10;
+    ctx.strokeStyle = "rgba(196,228,238,0.08)";
+    ctx.lineWidth = 8;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawLandShadow(ctx) {
+    ctx.save();
+    ctx.translate(26, 28);
+    polygon(ctx, PENINSULA_LAND_MASK);
+    ctx.fillStyle = "rgba(8,20,28,0.16)";
+    ctx.fill();
+    ctx.restore();
   }
 
   function drawMountainMass(ctx) {
+    polyline(ctx, CLIFF_WEST);
+    ctx.strokeStyle = "rgba(92,88,78,0.08)";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, CLIFF_EAST);
+    ctx.strokeStyle = "rgba(92,88,78,0.08)";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
     polygon(ctx, RIDGE_SHADOW);
     const ridgeShadow = ctx.createLinearGradient(0, 516, 0, 788);
-    ridgeShadow.addColorStop(0, "rgba(100,98,92,0.20)");
-    ridgeShadow.addColorStop(1, "rgba(74,82,78,0.05)");
+    ridgeShadow.addColorStop(0, "rgba(100,98,92,0.18)");
+    ridgeShadow.addColorStop(1, "rgba(74,82,78,0.04)");
     ctx.fillStyle = ridgeShadow;
     ctx.fill();
 
     polygon(ctx, MOUNTAIN_FOOTHILLS);
     const peak = ctx.createLinearGradient(0, 396, 0, 696);
-    peak.addColorStop(0, "rgba(230,224,210,0.90)");
-    peak.addColorStop(0.28, "rgba(202,190,172,0.52)");
-    peak.addColorStop(0.62, "rgba(160,150,138,0.22)");
-    peak.addColorStop(1, "rgba(120,126,116,0.06)");
+    peak.addColorStop(0, "rgba(230,224,210,0.70)");
+    peak.addColorStop(0.28, "rgba(202,190,172,0.40)");
+    peak.addColorStop(0.62, "rgba(160,150,138,0.16)");
+    peak.addColorStop(1, "rgba(120,126,116,0.04)");
     ctx.fillStyle = peak;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(842, 410, 230, 98, -0.08, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(250,246,238,0.06)";
     ctx.fill();
   }
 
   function drawVegetation(ctx) {
     ctx.save();
-    polygon(ctx, COASTLINE_PATH);
+    polygon(ctx, PENINSULA_LAND_MASK);
     ctx.clip();
     fillMicroVegetation(ctx, MICRO_VEGETATION_PATCHES);
     ctx.restore();
@@ -299,7 +323,7 @@ export function createEnvironmentRenderer() {
 
   function drawSurfaceSpeckle(ctx) {
     ctx.save();
-    polygon(ctx, COASTLINE_PATH);
+    polygon(ctx, PENINSULA_LAND_MASK);
     ctx.clip();
     fillNoiseDots(ctx, { x: 210, y: 150, w: 860, h: 970 }, 980, "rgba(110,120,84,0.05)", 1, 1.3);
     fillNoiseDots(ctx, { x: 250, y: 210, w: 800, h: 900 }, 620, "rgba(232,218,182,0.045)", 2, 1.0);
@@ -376,8 +400,8 @@ export function createEnvironmentRenderer() {
   function drawNorthAtmosphere(ctx) {
     polygon(ctx, NORTH_FOG);
     const fog = ctx.createLinearGradient(0, -90, 0, 274);
-    fog.addColorStop(0, "rgba(248,246,238,0.16)");
-    fog.addColorStop(0.56, "rgba(232,238,242,0.04)");
+    fog.addColorStop(0, "rgba(248,246,238,0.12)");
+    fog.addColorStop(0.56, "rgba(232,238,242,0.03)");
     fog.addColorStop(1, "rgba(232,238,242,0)");
     ctx.fillStyle = fog;
     ctx.fill();

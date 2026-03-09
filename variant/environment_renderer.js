@@ -1,5 +1,5 @@
 function polygon(ctx, points) {
-  if (!points.length) return;
+  if (!points || !points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
   for (let i = 1; i < points.length; i += 1) {
@@ -8,15 +8,24 @@ function polygon(ctx, points) {
   ctx.closePath();
 }
 
-const HARBOR_COVE = [
-  [488, 958], [512, 914], [554, 886], [606, 886], [644, 912], [656, 954],
-  [646, 1000], [612, 1040], [562, 1054], [518, 1046], [492, 1010], [484, 980]
-];
+function centroid(points) {
+  if (!points || !points.length) return [0, 0];
+  let x = 0;
+  let y = 0;
+  for (const [px, py] of points) {
+    x += px;
+    y += py;
+  }
+  return [x / points.length, y / points.length];
+}
 
-const BASIN_WATER = [
-  [466, 596], [498, 548], [550, 506], [618, 488], [688, 502], [742, 544], [770, 598],
-  [764, 656], [728, 708], [664, 744], [590, 754], [526, 732], [478, 692], [458, 640]
-];
+function expandPolygon(points, scaleX, scaleY, dx = 0, dy = 0) {
+  const [cx, cy] = centroid(points);
+  return points.map(([x, y]) => [
+    cx + ((x - cx) * scaleX) + dx,
+    cy + ((y - cy) * scaleY) + dy
+  ]);
+}
 
 const SEDIMENT_WEST = [
   [520, 1080], [500, 1000], [498, 920], [508, 840], [530, 760],
@@ -29,15 +38,63 @@ const SEDIMENT_EAST = [
   [790, 710], [850, 640], [912, 560], [972, 480], [1030, 420], [1086, 370]
 ];
 
+function getWaterRows(kernel) {
+  if (!kernel?.watersById) return [];
+  return [...kernel.watersById.values()];
+}
+
+function getWaterStyle(waterClass) {
+  if (waterClass === "harbor") {
+    return {
+      coreOuter: "rgba(52,108,136,0.96)",
+      coreInner: "rgba(106,182,194,0.95)",
+      shellOuter: "rgba(118,214,216,0.34)",
+      shellInner: "rgba(188,238,232,0.18)",
+      shadow: "rgba(126,198,210,0.16)",
+      driftX: 14,
+      driftY: 10,
+      pulse: 0.018
+    };
+  }
+
+  if (waterClass === "basin") {
+    return {
+      coreOuter: "rgba(44,98,128,0.95)",
+      coreInner: "rgba(94,164,184,0.93)",
+      shellOuter: "rgba(110,190,202,0.24)",
+      shellInner: "rgba(174,224,220,0.12)",
+      shadow: "rgba(112,178,194,0.12)",
+      driftX: 10,
+      driftY: 8,
+      pulse: 0.012
+    };
+  }
+
+  return {
+    coreOuter: "rgba(48,104,132,0.95)",
+    coreInner: "rgba(98,170,188,0.94)",
+    shellOuter: "rgba(112,196,206,0.22)",
+    shellInner: "rgba(176,226,220,0.10)",
+    shadow: "rgba(118,184,198,0.12)",
+    driftX: 10,
+    driftY: 8,
+    pulse: 0.012
+  };
+}
+
+function resolveWaterPolygon(row) {
+  return Array.isArray(row?.polygon) ? row.polygon : [];
+}
+
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
-    const { viewportOffset } = runtime;
+    const { viewportOffset, kernel, tick } = runtime;
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawCoastTransition(ctx);
-    drawLocalWaterBodies(ctx);
+    drawWaterBodies(ctx, kernel, tick);
 
     ctx.restore();
   }
@@ -65,51 +122,85 @@ export function createEnvironmentRenderer() {
     ctx.fill();
   }
 
-  function drawLocalWaterBodies(ctx) {
-    drawHarborWater(ctx);
-    drawBasinWater(ctx);
+  function drawWaterBodies(ctx, kernel, tick) {
+    const rows = getWaterRows(kernel);
+
+    for (const row of rows) {
+      const polygonPoints = resolveWaterPolygon(row);
+      if (polygonPoints.length < 3) continue;
+      drawWaterBody(ctx, polygonPoints, row.waterClass, tick);
+    }
   }
 
-  function drawHarborWater(ctx) {
+  function drawWaterBody(ctx, points, waterClass, tick) {
+    const style = getWaterStyle(waterClass);
+    const [cx, cy] = centroid(points);
+    const shell = expandPolygon(points, 1.16, 1.13, 0, 0);
+
+    const driftPhase = tick * style.pulse;
+    const driftX = Math.sin(driftPhase) * style.driftX;
+    const driftY = Math.cos(driftPhase * 0.82) * style.driftY;
+
     ctx.save();
-    ctx.shadowColor = "rgba(126,198,210,0.18)";
-    ctx.shadowBlur = 22;
+    ctx.shadowColor = style.shadow;
+    ctx.shadowBlur = waterClass === "harbor" ? 26 : 20;
 
-    polygon(ctx, HARBOR_COVE);
-    const harbor = ctx.createLinearGradient(488, 886, 656, 1054);
-    harbor.addColorStop(0, "rgba(148,208,220,0.96)");
-    harbor.addColorStop(0.40, "rgba(98,158,176,0.96)");
-    harbor.addColorStop(1, "rgba(44,96,124,0.96)");
-    ctx.fillStyle = harbor;
+    polygon(ctx, shell);
+    const shellGradient = ctx.createRadialGradient(
+      cx - (driftX * 0.35),
+      cy - (driftY * 0.25),
+      8,
+      cx,
+      cy,
+      Math.max(80, Math.hypot(style.driftX + 120, style.driftY + 80))
+    );
+    shellGradient.addColorStop(0, style.shellInner);
+    shellGradient.addColorStop(0.55, style.shellOuter);
+    shellGradient.addColorStop(1, "rgba(90,170,186,0)");
+    ctx.fillStyle = shellGradient;
     ctx.fill();
-
     ctx.restore();
 
-    polygon(ctx, HARBOR_COVE);
+    ctx.save();
+    polygon(ctx, points);
+    const coreGradient = ctx.createLinearGradient(
+      cx - 70 + driftX,
+      cy - 54 + driftY,
+      cx + 82 - driftX,
+      cy + 76 - driftY
+    );
+    coreGradient.addColorStop(0, style.coreInner);
+    coreGradient.addColorStop(0.48, "rgba(84,150,170,0.95)");
+    coreGradient.addColorStop(1, style.coreOuter);
+    ctx.fillStyle = coreGradient;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    polygon(ctx, points);
+    const sheen = ctx.createRadialGradient(
+      cx - 18 + (driftX * 0.5),
+      cy - 22 + (driftY * 0.4),
+      4,
+      cx,
+      cy,
+      96
+    );
+    sheen.addColorStop(0, "rgba(240,252,250,0.16)");
+    sheen.addColorStop(0.55, "rgba(214,244,242,0.05)");
+    sheen.addColorStop(1, "rgba(214,244,242,0)");
+    ctx.fillStyle = sheen;
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    polygon(ctx, points);
     ctx.lineWidth = 1.0;
-    ctx.strokeStyle = "rgba(238,246,248,0.08)";
+    ctx.strokeStyle = waterClass === "harbor"
+      ? "rgba(238,246,248,0.10)"
+      : "rgba(238,246,248,0.08)";
     ctx.stroke();
-  }
-
-  function drawBasinWater(ctx) {
-    ctx.save();
-    ctx.shadowColor = "rgba(120,190,204,0.14)";
-    ctx.shadowBlur = 18;
-
-    polygon(ctx, BASIN_WATER);
-    const basin = ctx.createLinearGradient(466, 492, 760, 754);
-    basin.addColorStop(0, "rgba(146,206,220,0.94)");
-    basin.addColorStop(0.42, "rgba(96,154,176,0.94)");
-    basin.addColorStop(1, "rgba(40,92,122,0.94)");
-    ctx.fillStyle = basin;
-    ctx.fill();
-
     ctx.restore();
-
-    polygon(ctx, BASIN_WATER);
-    ctx.lineWidth = 1.1;
-    ctx.strokeStyle = "rgba(238,246,248,0.08)";
-    ctx.stroke();
   }
 
   return Object.freeze({ draw });

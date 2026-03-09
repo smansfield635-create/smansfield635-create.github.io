@@ -57,7 +57,7 @@ function fillMicroVegetation(ctx, patches) {
   }
 }
 
-const PENINSULA_OUTLINE = [
+const COASTLINE_PATH = [
   [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730], [576, 650],
   [632, 580], [694, 520], [758, 466], [822, 402], [890, 328], [958, 260], [1028, 208],
   [1094, 176], [1144, 164], [1150, 162], [1150, -220], [118, -220], [118, 150], [186, 220],
@@ -111,16 +111,6 @@ const RIDGE_SHADOW = [
   [1072, 568], [1110, 628], [1100, 690], [1032, 740], [930, 770], [810, 782], [682, 772], [578, 748]
 ];
 
-const WEST_SHELF = [
-  [450, 1018], [436, 944], [444, 866], [470, 786], [508, 710], [554, 642], [604, 584],
-  [644, 528], [668, 470], [672, 412], [656, 354], [622, 296], [570, 242], [512, 198], [452, 164], [392, 136]
-];
-
-const EAST_SHELF = [
-  [620, 990], [666, 920], [724, 850], [786, 780], [850, 710], [916, 636], [982, 558],
-  [1048, 482], [1110, 420], [1150, 388]
-];
-
 const CLIFF_WEST = [
   [430, 938], [466, 880], [514, 822], [568, 762], [622, 700], [666, 640], [696, 584]
 ];
@@ -145,13 +135,11 @@ export function createEnvironmentRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOcean(ctx, width, height, tick);
-    drawBathymetry(ctx, tick);
-    drawPeninsulaShadow(ctx);
-    drawPeninsulaMass(ctx);
+    drawLandMaskAndCoast(ctx);
     drawHarborCove(ctx, tick);
     drawBasinShelf(ctx);
     drawBasinWater(ctx, tick);
-    drawInnerInlet(ctx, tick);
+    drawInnerInlet(ctx);
     drawMountainMass(ctx);
     drawVegetation(ctx);
     drawSurfaceSpeckle(ctx);
@@ -172,62 +160,15 @@ export function createEnvironmentRenderer() {
     ctx.fillRect(-1300, -320, width + 2600, height + 2200);
   }
 
-  function drawBathymetry(ctx, tick) {
-    polyline(ctx, WEST_SHELF);
-    ctx.strokeStyle = "rgba(224,246,252,0.12)";
-    ctx.lineWidth = 34;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, EAST_SHELF);
-    ctx.strokeStyle = "rgba(224,246,252,0.12)";
-    ctx.lineWidth = 40;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, WEST_SHELF);
-    ctx.strokeStyle = "rgba(236,250,252,0.06)";
-    ctx.lineWidth = 12;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, EAST_SHELF);
-    ctx.strokeStyle = "rgba(236,250,252,0.06)";
-    ctx.lineWidth = 14;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, WEST_SHORE);
-    ctx.strokeStyle = "rgba(252,246,230,0.14)";
-    ctx.lineWidth = 1.6;
-    ctx.stroke();
-
-    polyline(ctx, EAST_SHORE);
-    ctx.strokeStyle = "rgba(252,246,230,0.14)";
-    ctx.lineWidth = 1.6;
-    ctx.stroke();
-
-    for (let i = 0; i < 6; i += 1) {
-      strokeWaveLine(ctx, 928 - (i * 116), 720 + (i * 40), 1150, tick * 0.036 + i, 0.95, 0.040, 0.026, 10);
-      strokeWaveLine(ctx, 930 - (i * 136), 118, 480 - (i * 14), tick * 0.036 + (i * 0.7), 0.95, 0.040, 0.026, 10);
-    }
-  }
-
-  function drawPeninsulaShadow(ctx) {
+  function drawLandMaskAndCoast(ctx) {
     ctx.save();
     ctx.translate(26, 28);
-    polygon(ctx, PENINSULA_OUTLINE);
+    polygon(ctx, COASTLINE_PATH);
     ctx.fillStyle = "rgba(8,20,28,0.20)";
     ctx.fill();
     ctx.restore();
-  }
 
-  function drawPeninsulaMass(ctx) {
-    polygon(ctx, PENINSULA_OUTLINE);
+    polygon(ctx, COASTLINE_PATH);
     const land = ctx.createLinearGradient(0, 96, 0, 1160);
     land.addColorStop(0, "rgba(198,188,162,1)");
     land.addColorStop(0.20, "rgba(182,170,140,1)");
@@ -254,6 +195,21 @@ export function createEnvironmentRenderer() {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
+
+    polyline(ctx, WEST_SHORE);
+    ctx.strokeStyle = "rgba(252,246,230,0.14)";
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    polyline(ctx, EAST_SHORE);
+    ctx.strokeStyle = "rgba(252,246,230,0.14)";
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    for (let i = 0; i < 6; i += 1) {
+      strokeWaveLine(ctx, 928 - (i * 116), 720 + (i * 40), 1150, i * 0.4, 0.95, 0.040, 0.026, 10);
+      strokeWaveLine(ctx, 930 - (i * 136), 118, 480 - (i * 14), i * 0.5, 0.95, 0.040, 0.026, 10);
+    }
   }
 
   function drawHarborCove(ctx, tick) {
@@ -335,7 +291,7 @@ export function createEnvironmentRenderer() {
 
   function drawVegetation(ctx) {
     ctx.save();
-    polygon(ctx, PENINSULA_OUTLINE);
+    polygon(ctx, COASTLINE_PATH);
     ctx.clip();
     fillMicroVegetation(ctx, MICRO_VEGETATION_PATCHES);
     ctx.restore();
@@ -343,7 +299,7 @@ export function createEnvironmentRenderer() {
 
   function drawSurfaceSpeckle(ctx) {
     ctx.save();
-    polygon(ctx, PENINSULA_OUTLINE);
+    polygon(ctx, COASTLINE_PATH);
     ctx.clip();
     fillNoiseDots(ctx, { x: 210, y: 150, w: 860, h: 970 }, 980, "rgba(110,120,84,0.05)", 1, 1.3);
     fillNoiseDots(ctx, { x: 250, y: 210, w: 800, h: 900 }, 620, "rgba(232,218,182,0.045)", 2, 1.0);

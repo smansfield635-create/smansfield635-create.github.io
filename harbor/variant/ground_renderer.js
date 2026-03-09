@@ -1,4 +1,6 @@
-function roundedPolygon(ctx, points) {
+/* DESTINATION FILE: /variant/ground_renderer.js */
+
+function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
@@ -8,7 +10,7 @@ function roundedPolygon(ctx, points) {
   ctx.closePath();
 }
 
-function drawPolyline(ctx, points) {
+function polyline(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
@@ -17,289 +19,289 @@ function drawPolyline(ctx, points) {
   }
 }
 
+function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0, maxR = 1.0) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+
+  for (let i = 0; i < count; i += 1) {
+    const px = x + (((i * 71) + (seedOffset * 17)) % w);
+    const py = y + (((i * 131) + (seedOffset * 23)) % h);
+    const r = 0.32 + ((i % 4) * (maxR / 5));
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function fillMicroDots(ctx, bounds, count, color) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+
+  for (let i = 0; i < count; i += 1) {
+    const px = x + ((i * 23) % w);
+    const py = y + ((i * 41) % h);
+    const r = 0.46 + ((i % 3) * 0.14);
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+const LAND_MASK = [
+  [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730],
+  [576, 650], [632, 580], [694, 520], [758, 466], [822, 402], [890, 328],
+  [958, 260], [1028, 208], [1094, 176], [1144, 164], [1150, 162], [1150, -220],
+  [118, -220], [118, 150], [186, 220], [248, 300], [302, 390], [348, 486],
+  [384, 584], [414, 676], [442, 760], [468, 842], [494, 928], [516, 1018], [530, 1096]
+];
+
+const LOWLAND_ZONE = [
+  [492, 1088], [486, 1020], [492, 952], [510, 888], [542, 824], [590, 764],
+  [652, 712], [724, 674], [804, 650], [886, 638], [964, 636], [1028, 640],
+  [1044, 716], [992, 786], [916, 850], [832, 910], [744, 966], [654, 1016], [570, 1060]
+];
+
+const MIDLAND_ZONE = [
+  [530, 974], [570, 914], [624, 856], [690, 802], [766, 752], [846, 712],
+  [928, 682], [1006, 662], [1070, 656], [1090, 592], [1048, 560], [978, 556],
+  [892, 574], [804, 606], [722, 652], [648, 708], [588, 776], [544, 848]
+];
+
+const UPLAND_ZONE = [
+  [532, 784], [590, 724], [662, 670], [746, 626], [836, 594], [930, 574],
+  [1018, 566], [1084, 572], [1112, 520], [1088, 470], [1022, 444], [934, 442],
+  [840, 458], [748, 490], [664, 534], [592, 592], [546, 662]
+];
+
+const HIGHLAND_ZONE = [
+  [566, 640], [632, 582], [714, 530], [808, 490], [908, 464], [1004, 454],
+  [1080, 462], [1114, 420], [1094, 376], [1038, 352], [954, 346], [858, 360],
+  [762, 392], [676, 438], [610, 496], [572, 560]
+];
+
+const CONTOUR_A = [
+  [582, 734], [652, 680], [734, 638], [824, 610], [918, 594], [1008, 590]
+];
+
+const CONTOUR_B = [
+  [618, 688], [694, 642], [782, 608], [874, 590], [966, 588], [1048, 596]
+];
+
+const CONTOUR_C = [
+  [634, 560], [714, 512], [806, 476], [904, 456], [1000, 456], [1072, 470]
+];
+
+const CONTOUR_D = [
+  [676, 518], [760, 482], [854, 462], [950, 460], [1038, 472]
+];
+
+const VEGETATION_PATCHES = [
+  { x: 462, y: 914, w: 84, h: 52, count: 44, color: "rgba(98,124,84,0.15)" },
+  { x: 388, y: 754, w: 144, h: 72, count: 66, color: "rgba(98,124,84,0.13)" },
+  { x: 458, y: 628, w: 122, h: 74, count: 60, color: "rgba(98,124,84,0.12)" },
+  { x: 754, y: 632, w: 78, h: 48, count: 34, color: "rgba(98,124,84,0.11)" },
+  { x: 886, y: 520, w: 68, h: 44, count: 26, color: "rgba(98,124,84,0.10)" }
+];
+
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
-    const { width, height, tick, viewportOffset, kernel, projection, selection, destination } = runtime;
+    const { viewportOffset, kernel, projection, destination, tick } = runtime;
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    drawSeaBase(ctx, width, height);
-    drawIslandMass(ctx);
-    drawElevationBands(ctx);
-    drawDistrictPads(ctx, kernel, projection, selection, destination, pulse);
-    drawBasinWater(ctx);
-    drawHarborWater(ctx);
-    drawShoreHighlights(ctx);
-    drawLandmarks(ctx, kernel, pulse);
-    drawPathBeds(ctx, kernel, projection, destination, pulse);
+    drawLandBase(ctx);
+    drawTerrainZones(ctx);
+    drawSurfaceDetail(ctx);
+    drawPaths(ctx, kernel, projection, destination, pulse);
+    drawStructuresAndPads(ctx, kernel);
 
     ctx.restore();
   }
 
-  function drawSeaBase(ctx, width, height) {
-    const water = ctx.createLinearGradient(0, 240, 0, height + 260);
-    water.addColorStop(0, "rgba(68,108,134,1)");
-    water.addColorStop(0.42, "rgba(38,76,104,1)");
-    water.addColorStop(1, "rgba(18,42,64,1)");
-    ctx.fillStyle = water;
-    ctx.fillRect(-600, 220, width + 1200, height + 500);
-  }
+  function drawLandBase(ctx) {
+    polygon(ctx, LAND_MASK);
 
-  function drawIslandMass(ctx) {
-    const island = [
-      [336, 638],
-      [276, 614],
-      [224, 572],
-      [198, 524],
-      [206, 468],
-      [248, 426],
-      [318, 398],
-      [394, 366],
-      [430, 324],
-      [438, 260],
-      [468, 198],
-      [516, 144],
-      [578, 116],
-      [646, 126],
-      [698, 154],
-      [736, 206],
-      [740, 270],
-      [712, 330],
-      [650, 390],
-      [616, 446],
-      [626, 520],
-      [666, 574],
-      [658, 620],
-      [602, 644],
-      [520, 650],
-      [430, 648]
-    ];
-
-    roundedPolygon(ctx, island);
-    const ground = ctx.createLinearGradient(0, 120, 0, 660);
-    ground.addColorStop(0, "rgba(158,144,114,1)");
-    ground.addColorStop(0.38, "rgba(122,124,92,1)");
-    ground.addColorStop(0.72, "rgba(86,108,82,1)");
-    ground.addColorStop(1, "rgba(70,92,78,1)");
-    ctx.fillStyle = ground;
+    const base = ctx.createLinearGradient(0, 120, 0, 1120);
+    base.addColorStop(0, "rgba(214,206,176,1)");
+    base.addColorStop(0.35, "rgba(194,180,132,1)");
+    base.addColorStop(0.72, "rgba(150,158,104,1)");
+    base.addColorStop(1, "rgba(126,140,92,1)");
+    ctx.fillStyle = base;
     ctx.fill();
 
-    ctx.lineWidth = 2.5;
-    ctx.strokeStyle = "rgba(236,224,196,0.34)";
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = "rgba(246,236,210,0.22)";
     ctx.stroke();
   }
 
-  function drawElevationBands(ctx) {
-    const harborRise = [
-      [384, 620],[422, 560],[484, 508],[552, 484],[614, 494],[656, 534],[664, 592],[632, 632],[578, 644],[504, 646],[432, 640]
-    ];
-    const basinRise = [
-      [434, 372],[460, 312],[500, 246],[538, 186],[566, 154],[552, 214],[516, 282],[482, 344],[460, 390]
-    ];
-    const summitMass = [
-      [508, 206],[526, 164],[548, 128],[574, 110],[600, 126],[614, 164],[610, 204],[588, 226],[552, 224],[524, 220]
-    ];
+  function drawTerrainZones(ctx) {
+    ctx.save();
+    polygon(ctx, LAND_MASK);
+    ctx.clip();
 
-    roundedPolygon(ctx, harborRise);
-    ctx.fillStyle = "rgba(126,136,100,0.42)";
+    polygon(ctx, LOWLAND_ZONE);
+    const low = ctx.createLinearGradient(0, 620, 0, 1160);
+    low.addColorStop(0, "rgba(164,170,120,0.04)");
+    low.addColorStop(1, "rgba(122,142,94,0.10)");
+    ctx.fillStyle = low;
     ctx.fill();
 
-    roundedPolygon(ctx, basinRise);
-    ctx.fillStyle = "rgba(112,118,96,0.46)";
+    polygon(ctx, MIDLAND_ZONE);
+    const mid = ctx.createLinearGradient(0, 560, 0, 1040);
+    mid.addColorStop(0, "rgba(182,170,126,0.06)");
+    mid.addColorStop(1, "rgba(134,144,98,0.12)");
+    ctx.fillStyle = mid;
     ctx.fill();
 
-    roundedPolygon(ctx, summitMass);
-    ctx.fillStyle = "rgba(186,182,170,0.55)";
+    polygon(ctx, UPLAND_ZONE);
+    const up = ctx.createLinearGradient(0, 450, 0, 840);
+    up.addColorStop(0, "rgba(204,194,160,0.10)");
+    up.addColorStop(0.55, "rgba(154,156,116,0.10)");
+    up.addColorStop(1, "rgba(118,132,96,0.04)");
+    ctx.fillStyle = up;
     ctx.fill();
+
+    polygon(ctx, HIGHLAND_ZONE);
+    const high = ctx.createLinearGradient(0, 360, 0, 700);
+    high.addColorStop(0, "rgba(230,222,204,0.16)");
+    high.addColorStop(0.45, "rgba(186,178,156,0.10)");
+    high.addColorStop(1, "rgba(126,134,114,0.03)");
+    ctx.fillStyle = high;
+    ctx.fill();
+
+    polyline(ctx, CONTOUR_A);
+    ctx.strokeStyle = "rgba(244,236,216,0.06)";
+    ctx.lineWidth = 1.35;
+    ctx.stroke();
+
+    polyline(ctx, CONTOUR_B);
+    ctx.strokeStyle = "rgba(238,230,208,0.05)";
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    polyline(ctx, CONTOUR_C);
+    ctx.strokeStyle = "rgba(248,242,226,0.08)";
+    ctx.lineWidth = 1.3;
+    ctx.stroke();
+
+    polyline(ctx, CONTOUR_D);
+    ctx.strokeStyle = "rgba(242,236,220,0.06)";
+    ctx.lineWidth = 1.15;
+    ctx.stroke();
+
+    ctx.restore();
   }
 
-  function drawDistrictPads(ctx, kernel, projection, selection, destination, pulse) {
-    const regions = [...kernel.regionsById.values()];
+  function drawSurfaceDetail(ctx) {
+    ctx.save();
+    polygon(ctx, LAND_MASK);
+    ctx.clip();
 
-    for (const region of regions) {
-      const [x, y] = region.centerPoint;
-      const isActive = projection?.regionId === region.regionId;
-      const isSelected = selection?.kind === "region" && selection.regionId === region.regionId;
-      const isDestination = destination?.regionId === region.regionId;
-
-      let fill = "rgba(90,116,98,0.18)";
-      let rx = 74;
-      let ry = 38;
-
-      if (region.regionId === "harbor_village") {
-        fill = "rgba(148,128,102,0.24)";
-        rx = 102;
-        ry = 40;
-      }
-      if (region.regionId === "market_district") {
-        fill = "rgba(154,126,92,0.24)";
-        rx = 90;
-        ry = 44;
-      }
-      if (region.regionId === "exploration_basin") {
-        fill = "rgba(98,122,108,0.22)";
-        rx = 120;
-        ry = 56;
-      }
-      if (region.regionId === "summit_plaza") {
-        fill = "rgba(180,176,170,0.24)";
-        rx = 74;
-        ry = 34;
-      }
-
-      ctx.beginPath();
-      ctx.ellipse(x, y + 8, rx, ry, 0, 0, Math.PI * 2);
-      ctx.fillStyle = fill;
-      ctx.fill();
-
-      if (isActive || isSelected || isDestination) {
-        ctx.beginPath();
-        ctx.ellipse(x, y + 8, rx + 10 + pulse * 6, ry + 6 + pulse * 2, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = isSelected
-          ? "rgba(255,240,210,0.88)"
-          : isActive
-            ? "rgba(255,228,184,0.72)"
-            : "rgba(210,232,248,0.66)";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-      }
+    for (const patch of VEGETATION_PATCHES) {
+      fillMicroDots(ctx, patch, patch.count, patch.color);
     }
+
+    fillNoiseDots(ctx, { x: 210, y: 150, w: 860, h: 970 }, 980, "rgba(110,120,84,0.05)", 1);
+    fillNoiseDots(ctx, { x: 250, y: 210, w: 800, h: 900 }, 620, "rgba(232,218,182,0.045)", 2);
+    fillNoiseDots(ctx, { x: 280, y: 250, w: 740, h: 840 }, 320, "rgba(154,168,112,0.035)", 3);
+
+    ctx.restore();
   }
 
-  function drawBasinWater(ctx) {
-    ctx.beginPath();
-    ctx.ellipse(560, 320, 112, 72, 0, 0, Math.PI * 2);
-    const basin = ctx.createLinearGradient(448, 248, 672, 392);
-    basin.addColorStop(0, "rgba(104,156,170,0.92)");
-    basin.addColorStop(0.5, "rgba(62,118,142,0.94)");
-    basin.addColorStop(1, "rgba(34,84,112,0.96)");
-    ctx.fillStyle = basin;
-    ctx.fill();
+  function drawPaths(ctx, kernel, projection, destination, pulse) {
+    if (!kernel?.pathsById) return;
 
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(214,236,246,0.34)";
-    ctx.stroke();
-  }
-
-  function drawHarborWater(ctx) {
-    const harbor = [
-      [448, 648],
-      [458, 610],
-      [488, 584],
-      [540, 572],
-      [594, 580],
-      [624, 604],
-      [634, 648]
-    ];
-
-    roundedPolygon(ctx, harbor);
-    const water = ctx.createLinearGradient(448, 570, 634, 650);
-    water.addColorStop(0, "rgba(114,164,180,0.94)");
-    water.addColorStop(0.45, "rgba(72,124,150,0.94)");
-    water.addColorStop(1, "rgba(40,90,118,0.96)");
-    ctx.fillStyle = water;
-    ctx.fill();
-
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(222,238,248,0.34)";
-    ctx.stroke();
-  }
-
-  function drawShoreHighlights(ctx) {
-    const harborFoam = [
-      [456, 606],[490, 584],[540, 574],[590, 582],[622, 606]
-    ];
-    const basinFoam = [
-      [446, 382],[482, 402],[534, 412],[590, 408],[640, 390],[676, 360]
-    ];
-
-    drawPolyline(ctx, harborFoam);
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "rgba(244,236,214,0.42)";
-    ctx.stroke();
-
-    drawPolyline(ctx, basinFoam);
-    ctx.strokeStyle = "rgba(236,242,248,0.30)";
-    ctx.stroke();
-  }
-
-  function drawLandmarks(ctx, kernel, pulse) {
-    const regions = [...kernel.regionsById.values()];
-    for (const region of regions) {
-      const [x, y] = region.centerPoint;
-
-      if (region.regionId === "harbor_village") {
-        ctx.fillStyle = "rgba(98,74,56,0.94)";
-        ctx.fillRect(x - 22, y + 16, 44, 8);
-        ctx.fillRect(x - 3, y - 10, 6, 30);
-        ctx.fillRect(x - 58, y + 18, 20, 8);
-        ctx.fillRect(x + 38, y + 18, 20, 8);
-      }
-
-      if (region.regionId === "market_district") {
-        ctx.fillStyle = "rgba(152,108,74,0.94)";
-        ctx.fillRect(x - 26, y + 6, 52, 14);
-        ctx.fillStyle = "rgba(212,180,132,0.86)";
-        ctx.fillRect(x - 18, y - 8, 36, 10);
-      }
-
-      if (region.regionId === "exploration_basin") {
-        ctx.beginPath();
-        ctx.arc(x, y - 6, 10 + pulse * 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(220,246,255,0.22)";
-        ctx.fill();
-      }
-
-      if (region.regionId === "summit_plaza") {
-        ctx.beginPath();
-        ctx.moveTo(x, y - 30);
-        ctx.lineTo(x + 12, y + 4);
-        ctx.lineTo(x - 12, y + 4);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(220,214,208,0.94)";
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(x, y - 34, 7 + pulse * 1.2, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,244,222,0.38)";
-        ctx.fill();
-      }
-    }
-  }
-
-  function drawPathBeds(ctx, kernel, projection, destination, pulse) {
-    const paths = [...kernel.pathsById.values()];
-
-    for (const path of paths) {
-      ctx.beginPath();
-      path.centerline.forEach(([x, y], index) => {
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.lineWidth = 26;
+    const rows = [...kernel.pathsById.values()];
+    for (const row of rows) {
+      polyline(ctx, row.centerline);
+      ctx.lineWidth = 24;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      ctx.strokeStyle = "rgba(80,68,52,0.28)";
+      ctx.strokeStyle = "rgba(92,72,52,0.24)";
+      ctx.stroke();
+
+      polyline(ctx, row.centerline);
+      ctx.lineWidth = 9;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "rgba(216,190,136,0.20)";
       ctx.stroke();
 
       const isDestinationPath = destination && projection && (
-        path.fromRegionId === projection.regionId && path.toRegionId === destination.regionId
+        row.fromRegionId === projection.regionId && row.toRegionId === destination.regionId
       );
 
       if (isDestinationPath) {
-        ctx.beginPath();
-        path.centerline.forEach(([x, y], index) => {
-          if (index === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        });
-        ctx.lineWidth = 10;
+        polyline(ctx, row.centerline);
+        ctx.lineWidth = 7;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = `rgba(248,226,170,${0.22 + pulse * 0.18})`;
+        ctx.strokeStyle = `rgba(250,230,176,${0.18 + (pulse * 0.18)})`;
         ctx.stroke();
       }
+    }
+  }
+
+  function drawStructuresAndPads(ctx, kernel) {
+    if (!kernel?.regionsById) return;
+
+    const rows = [...kernel.regionsById.values()];
+    for (const row of rows) {
+      const [x, y] = row.centerPoint;
+
+      let fill = "rgba(112,128,102,0.16)";
+      let rx = 88;
+      let ry = 38;
+
+      if (row.regionId === "harbor_village") {
+        fill = "rgba(176,144,112,0.18)";
+        rx = 112;
+        ry = 38;
+
+        ctx.fillStyle = "rgba(122,84,58,0.94)";
+        ctx.fillRect(x - 34, y + 12, 68, 12);
+        ctx.fillRect(x - 10, y - 2, 20, 18);
+        ctx.fillRect(x - 46, y + 18, 12, 8);
+        ctx.fillRect(x + 34, y + 18, 12, 8);
+      }
+
+      if (row.regionId === "market_district") {
+        fill = "rgba(176,146,102,0.18)";
+        rx = 104;
+        ry = 46;
+
+        ctx.fillStyle = "rgba(162,114,76,0.96)";
+        ctx.fillRect(x - 26, y + 6, 52, 14);
+        ctx.fillStyle = "rgba(230,194,132,0.88)";
+        ctx.fillRect(x - 18, y - 6, 36, 10);
+      }
+
+      if (row.regionId === "exploration_basin") {
+        fill = "rgba(110,126,108,0.10)";
+        rx = 152;
+        ry = 70;
+      }
+
+      if (row.regionId === "summit_plaza") {
+        fill = "rgba(210,206,198,0.16)";
+        rx = 90;
+        ry = 32;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y - 34);
+        ctx.lineTo(x + 12, y + 2);
+        ctx.lineTo(x - 12, y + 2);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(230,222,214,0.92)";
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.ellipse(x, y + 6, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
     }
   }
 

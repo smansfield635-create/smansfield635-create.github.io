@@ -42,6 +42,21 @@ function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0, maxR = 1.1) {
   }
 }
 
+function fillMicroVegetation(ctx, patches) {
+  for (const patch of patches) {
+    const { x, y, w, h, count, color } = patch;
+    ctx.fillStyle = color;
+    for (let i = 0; i < count; i += 1) {
+      const px = x + ((i * 29) % w);
+      const py = y + ((i * 47) % h);
+      const r = 0.7 + ((i % 3) * 0.25);
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
 const PENINSULA_OUTLINE = [
   [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730], [576, 650],
   [632, 580], [694, 520], [758, 466], [822, 402], [890, 328], [958, 260], [1028, 208],
@@ -114,12 +129,12 @@ const CLIFF_EAST = [
   [706, 904], [758, 842], [816, 776], [874, 704], [930, 628], [986, 554], [1038, 494]
 ];
 
-const VEGETATION_PATCHES = [
-  [[448, 930], [488, 900], [544, 892], [590, 912], [606, 954], [584, 992], [530, 1008], [474, 984]],
-  [[364, 790], [420, 742], [500, 712], [586, 724], [626, 770], [612, 820], [548, 852], [458, 848], [392, 826]],
-  [[426, 652], [486, 612], [560, 594], [632, 610], [668, 648], [656, 696], [600, 730], [516, 736], [450, 704]],
-  [[724, 636], [770, 606], [830, 602], [874, 624], [886, 662], [856, 694], [798, 706], [742, 686]],
-  [[862, 520], [906, 492], [964, 490], [1006, 514], [1014, 548], [980, 578], [924, 584], [878, 562]]
+const MICRO_VEGETATION_PATCHES = [
+  { x: 455, y: 905, w: 95, h: 70, count: 55, color: "rgba(98,124,84,0.18)" },
+  { x: 372, y: 742, w: 180, h: 96, count: 90, color: "rgba(98,124,84,0.16)" },
+  { x: 450, y: 618, w: 150, h: 90, count: 82, color: "rgba(98,124,84,0.15)" },
+  { x: 742, y: 620, w: 110, h: 72, count: 58, color: "rgba(98,124,84,0.14)" },
+  { x: 878, y: 510, w: 92, h: 60, count: 44, color: "rgba(98,124,84,0.13)" }
 ];
 
 export function createEnvironmentRenderer() {
@@ -372,11 +387,11 @@ export function createEnvironmentRenderer() {
   }
 
   function drawVegetation(ctx) {
-    for (const patch of VEGETATION_PATCHES) {
-      polygon(ctx, patch);
-      ctx.fillStyle = "rgba(108,134,92,0.10)";
-      ctx.fill();
-    }
+    ctx.save();
+    polygon(ctx, PENINSULA_OUTLINE);
+    ctx.clip();
+    fillMicroVegetation(ctx, MICRO_VEGETATION_PATCHES);
+    ctx.restore();
   }
 
   function drawSurfaceSpeckle(ctx) {
@@ -458,15 +473,10 @@ export function createEnvironmentRenderer() {
   function drawNorthAtmosphere(ctx) {
     polygon(ctx, NORTH_FOG);
     const fog = ctx.createLinearGradient(0, -90, 0, 274);
-    fog.addColorStop(0, "rgba(248,246,238,0.28)");
-    fog.addColorStop(0.56, "rgba(232,238,242,0.08)");
+    fog.addColorStop(0, "rgba(248,246,238,0.16)");
+    fog.addColorStop(0.56, "rgba(232,238,242,0.04)");
     fog.addColorStop(1, "rgba(232,238,242,0)");
     ctx.fillStyle = fog;
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(804, 116, 332, 50, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(248,246,238,0.05)";
     ctx.fill();
   }
 

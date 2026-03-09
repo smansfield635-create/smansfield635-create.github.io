@@ -58,14 +58,14 @@ export function createBackgroundRenderer() {
   function drawFarOcean(ctx, width, height) {
     const bandY = height * 0.285;
     const ocean = ctx.createLinearGradient(0, bandY, 0, height * 0.63);
-    ocean.addColorStop(0, "rgba(176,224,236,0.86)");
-    ocean.addColorStop(0.36, "rgba(134,198,218,0.56)");
-    ocean.addColorStop(1, "rgba(96,160,190,0.18)");
+    ocean.addColorStop(0, "rgba(176,224,236,0.80)");
+    ocean.addColorStop(0.36, "rgba(134,198,218,0.46)");
+    ocean.addColorStop(1, "rgba(96,160,190,0.14)");
     ctx.fillStyle = ocean;
     ctx.fillRect(0, bandY, width, height * 0.34);
 
     for (let i = 0; i < 14; i += 1) {
-      seaBand(ctx, bandY + 10 + (i * 9), width, 0.07 - (i * 0.004));
+      seaBand(ctx, bandY + 10 + (i * 9), width, 0.055 - (i * 0.0036));
     }
   }
 
@@ -103,43 +103,37 @@ export function createBackgroundRenderer() {
       [width * 0.88, height * 0.56]
     ];
 
-    ridge(ctx, rear, "rgba(144,174,194,0.24)", "rgba(236,244,248,0.10)", 1.1);
-    ridge(ctx, summit, "rgba(188,188,184,0.58)", "rgba(248,244,236,0.18)", 1.45);
-    ridge(ctx, spur, "rgba(214,208,198,0.22)", "rgba(252,246,238,0.08)", 1.0);
+    ridge(ctx, rear, "rgba(144,174,194,0.22)", "rgba(236,244,248,0.08)", 1.0);
+    ridge(ctx, summit, "rgba(188,188,184,0.54)", "rgba(248,244,236,0.16)", 1.35);
+    ridge(ctx, spur, "rgba(214,208,198,0.18)", "rgba(252,246,238,0.06)", 0.9);
 
     ctx.beginPath();
-    ctx.ellipse(width * 0.70, height * 0.20, width * 0.21, 34, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(248,246,240,0.08)";
+    ctx.ellipse(width * 0.70, height * 0.20, width * 0.18, 28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(248,246,240,0.04)";
     ctx.fill();
   }
 
   function drawAtmosphere(ctx, width, height) {
-    const haze = ctx.createLinearGradient(0, height * 0.08, 0, height * 0.58);
-    haze.addColorStop(0, "rgba(248,244,236,0.16)");
-    haze.addColorStop(0.36, "rgba(242,244,246,0.08)");
+    const haze = ctx.createLinearGradient(0, height * 0.08, 0, height * 0.56);
+    haze.addColorStop(0, "rgba(248,244,236,0.10)");
+    haze.addColorStop(0.36, "rgba(242,244,246,0.05)");
     haze.addColorStop(1, "rgba(242,244,246,0)");
     ctx.fillStyle = haze;
     ctx.fillRect(0, height * 0.06, width, height * 0.52);
 
     const horizonGlow = ctx.createLinearGradient(0, height * 0.22, 0, height * 0.46);
-    horizonGlow.addColorStop(0, "rgba(248,246,240,0.16)");
+    horizonGlow.addColorStop(0, "rgba(248,246,240,0.10)");
     horizonGlow.addColorStop(1, "rgba(248,246,240,0)");
     ctx.fillStyle = horizonGlow;
     ctx.fillRect(0, height * 0.20, width, height * 0.28);
-
-    const nearGlow = ctx.createLinearGradient(0, height * 0.42, 0, height * 0.68);
-    nearGlow.addColorStop(0, "rgba(236,246,248,0.11)");
-    nearGlow.addColorStop(1, "rgba(236,246,248,0)");
-    ctx.fillStyle = nearGlow;
-    ctx.fillRect(0, height * 0.40, width, height * 0.30);
   }
 
   function drawClouds(ctx, width, height, tick) {
     const drift = Math.sin(tick * 0.004) * 18;
-    cloud(ctx, width * 0.18 + drift, height * 0.15, 1.06, 0.18);
-    cloud(ctx, width * 0.46 + (drift * 0.7), height * 0.10, 1.18, 0.16);
-    cloud(ctx, width * 0.78 + (drift * 0.5), height * 0.16, 0.94, 0.14);
-    cloud(ctx, width * 0.62 - (drift * 0.36), height * 0.08, 0.72, 0.13);
+    cloud(ctx, width * 0.18 + drift, height * 0.15, 1.06, 0.12);
+    cloud(ctx, width * 0.46 + (drift * 0.7), height * 0.10, 1.18, 0.10);
+    cloud(ctx, width * 0.78 + (drift * 0.5), height * 0.16, 0.94, 0.08);
+    cloud(ctx, width * 0.62 - (drift * 0.36), height * 0.08, 0.72, 0.07);
   }
 
   return Object.freeze({ draw });

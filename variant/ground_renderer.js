@@ -113,7 +113,7 @@ export function createGroundRenderer() {
     drawTerrainZones(ctx);
     drawSurfaceDetail(ctx);
     drawPaths(ctx, kernel, projection, destination, pulse);
-    drawStructuresAndPads(ctx, kernel, pulse);
+    drawStructuresAndPads(ctx, kernel);
 
     ctx.restore();
   }
@@ -122,15 +122,15 @@ export function createGroundRenderer() {
     polygon(ctx, LAND_MASK);
 
     const base = ctx.createLinearGradient(0, 120, 0, 1120);
-    base.addColorStop(0, "rgba(220,212,182,1)");
-    base.addColorStop(0.32, "rgba(198,184,136,1)");
-    base.addColorStop(0.68, "rgba(152,160,106,1)");
+    base.addColorStop(0, "rgba(214,206,176,1)");
+    base.addColorStop(0.35, "rgba(194,180,132,1)");
+    base.addColorStop(0.72, "rgba(150,158,104,1)");
     base.addColorStop(1, "rgba(126,140,92,1)");
     ctx.fillStyle = base;
     ctx.fill();
 
-    ctx.lineWidth = 2.1;
-    ctx.strokeStyle = "rgba(246,236,210,0.18)";
+    ctx.lineWidth = 2.2;
+    ctx.strokeStyle = "rgba(246,236,210,0.22)";
     ctx.stroke();
   }
 
@@ -141,51 +141,51 @@ export function createGroundRenderer() {
 
     polygon(ctx, LOWLAND_ZONE);
     const low = ctx.createLinearGradient(0, 620, 0, 1160);
-    low.addColorStop(0, "rgba(170,178,126,0.05)");
-    low.addColorStop(1, "rgba(122,144,94,0.11)");
+    low.addColorStop(0, "rgba(164,170,120,0.04)");
+    low.addColorStop(1, "rgba(122,142,94,0.10)");
     ctx.fillStyle = low;
     ctx.fill();
 
     polygon(ctx, MIDLAND_ZONE);
     const mid = ctx.createLinearGradient(0, 560, 0, 1040);
-    mid.addColorStop(0, "rgba(186,176,130,0.07)");
-    mid.addColorStop(1, "rgba(136,146,98,0.13)");
+    mid.addColorStop(0, "rgba(182,170,126,0.06)");
+    mid.addColorStop(1, "rgba(134,144,98,0.12)");
     ctx.fillStyle = mid;
     ctx.fill();
 
     polygon(ctx, UPLAND_ZONE);
     const up = ctx.createLinearGradient(0, 450, 0, 840);
-    up.addColorStop(0, "rgba(208,198,164,0.11)");
-    up.addColorStop(0.55, "rgba(156,158,116,0.11)");
+    up.addColorStop(0, "rgba(204,194,160,0.10)");
+    up.addColorStop(0.55, "rgba(154,156,116,0.10)");
     up.addColorStop(1, "rgba(118,132,96,0.04)");
     ctx.fillStyle = up;
     ctx.fill();
 
     polygon(ctx, HIGHLAND_ZONE);
     const high = ctx.createLinearGradient(0, 360, 0, 700);
-    high.addColorStop(0, "rgba(232,224,206,0.18)");
-    high.addColorStop(0.45, "rgba(188,180,158,0.11)");
+    high.addColorStop(0, "rgba(230,222,204,0.16)");
+    high.addColorStop(0.45, "rgba(186,178,156,0.10)");
     high.addColorStop(1, "rgba(126,134,114,0.03)");
     ctx.fillStyle = high;
     ctx.fill();
 
     polyline(ctx, CONTOUR_A);
-    ctx.strokeStyle = "rgba(244,236,216,0.08)";
+    ctx.strokeStyle = "rgba(244,236,216,0.06)";
     ctx.lineWidth = 1.35;
     ctx.stroke();
 
     polyline(ctx, CONTOUR_B);
-    ctx.strokeStyle = "rgba(238,230,208,0.06)";
+    ctx.strokeStyle = "rgba(238,230,208,0.05)";
     ctx.lineWidth = 1.2;
     ctx.stroke();
 
     polyline(ctx, CONTOUR_C);
-    ctx.strokeStyle = "rgba(248,242,226,0.09)";
+    ctx.strokeStyle = "rgba(248,242,226,0.08)";
     ctx.lineWidth = 1.3;
     ctx.stroke();
 
     polyline(ctx, CONTOUR_D);
-    ctx.strokeStyle = "rgba(242,236,220,0.07)";
+    ctx.strokeStyle = "rgba(242,236,220,0.06)";
     ctx.lineWidth = 1.15;
     ctx.stroke();
 
@@ -242,7 +242,7 @@ export function createGroundRenderer() {
     }
   }
 
-  function drawStructuresAndPads(ctx, kernel, pulse) {
+  function drawStructuresAndPads(ctx, kernel) {
     if (!kernel?.regionsById) return;
 
     const rows = [...kernel.regionsById.values()];
@@ -293,11 +293,6 @@ export function createGroundRenderer() {
         ctx.lineTo(x - 12, y + 2);
         ctx.closePath();
         ctx.fillStyle = "rgba(230,222,214,0.92)";
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(x, y - 40, 6 + (pulse * 0.9), 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,244,224,0.22)";
         ctx.fill();
       }
 

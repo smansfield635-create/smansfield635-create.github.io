@@ -30,148 +30,152 @@ function strokeWaveLine(ctx, y, xStart, xEnd, tick, amplitude, wavelength, alpha
 }
 
 const PENINSULA_OUTLINE = [
-  [530, 1140],
-  [498, 1086],
-  [476, 1022],
-  [468, 946],
-  [474, 870],
-  [492, 800],
-  [518, 734],
-  [554, 674],
-  [598, 618],
-  [648, 562],
-  [694, 500],
-  [734, 432],
-  [768, 356],
-  [800, 278],
-  [840, 200],
-  [892, 126],
-  [956, 74],
-  [1010, 54],
-  [1064, 38],
-  [1112, 22],
-  [1150, 10],
-  [1150, -180],
-  [124, -180],
-  [124, 124],
-  [176, 182],
-  [230, 242],
-  [278, 310],
-  [318, 384],
-  [350, 464],
-  [378, 548],
-  [410, 624],
-  [442, 694],
-  [472, 764],
-  [498, 836],
-  [522, 920],
-  [540, 1010],
-  [548, 1086]
+  [532, 1160],
+  [504, 1096],
+  [488, 1018],
+  [486, 936],
+  [498, 854],
+  [522, 778],
+  [558, 706],
+  [604, 640],
+  [658, 582],
+  [716, 526],
+  [772, 464],
+  [826, 392],
+  [882, 320],
+  [948, 256],
+  [1018, 206],
+  [1088, 174],
+  [1150, 154],
+  [1150, -220],
+  [118, -220],
+  [118, 146],
+  [176, 202],
+  [232, 266],
+  [282, 338],
+  [324, 420],
+  [362, 506],
+  [398, 592],
+  [432, 672],
+  [462, 754],
+  [488, 844],
+  [510, 948],
+  [526, 1058]
 ];
 
-const WEST_COAST = [
-  [498, 1088],
-  [474, 1028],
-  [462, 960],
-  [466, 890],
-  [480, 818],
-  [502, 750],
-  [530, 688],
-  [564, 630],
-  [598, 572],
-  [624, 514],
-  [640, 452],
-  [642, 386],
-  [630, 324],
-  [606, 262],
-  [568, 202],
-  [520, 148],
-  [466, 104],
-  [414, 70],
-  [368, 46],
-  [332, 24]
+const WEST_SHORE = [
+  [498, 1090],
+  [474, 1020],
+  [464, 946],
+  [470, 868],
+  [490, 790],
+  [522, 714],
+  [562, 642],
+  [608, 576],
+  [654, 510],
+  [690, 442],
+  [714, 372],
+  [720, 306],
+  [706, 244],
+  [670, 186],
+  [618, 138],
+  [558, 102],
+  [492, 72],
+  [424, 42],
+  [360, 12]
 ];
 
-const EAST_COAST = [
-  [564, 1090],
-  [570, 1018],
-  [586, 950],
-  [614, 886],
-  [654, 826],
-  [704, 766],
-  [760, 708],
-  [812, 646],
-  [858, 576],
-  [900, 498],
-  [944, 420],
-  [994, 346],
-  [1048, 280],
-  [1100, 222],
-  [1142, 166]
+const EAST_SHORE = [
+  [564, 1092],
+  [578, 1022],
+  [606, 954],
+  [648, 886],
+  [700, 822],
+  [760, 756],
+  [822, 686],
+  [884, 610],
+  [946, 528],
+  [1010, 450],
+  [1076, 382],
+  [1140, 324]
 ];
 
 const HARBOR_COVE = [
-  [488, 946],
-  [506, 908],
-  [540, 882],
-  [586, 878],
-  [626, 896],
-  [646, 930],
-  [644, 972],
-  [622, 1008],
-  [584, 1028],
-  [538, 1030],
-  [504, 1006],
-  [486, 970]
+  [490, 954],
+  [512, 918],
+  [548, 894],
+  [594, 892],
+  [634, 912],
+  [654, 948],
+  [650, 990],
+  [624, 1028],
+  [582, 1048],
+  [536, 1046],
+  [502, 1020],
+  [488, 986]
 ];
 
 const BASIN_WATER = [
-  [464, 556],
-  [486, 520],
-  [526, 486],
-  [580, 470],
-  [636, 474],
-  [684, 494],
-  [716, 530],
-  [722, 574],
-  [704, 616],
-  [664, 646],
-  [610, 662],
-  [554, 658],
-  [504, 638],
-  [472, 602]
+  [474, 594],
+  [496, 558],
+  [536, 526],
+  [592, 510],
+  [650, 514],
+  [700, 536],
+  [732, 572],
+  [738, 616],
+  [720, 658],
+  [680, 690],
+  [624, 708],
+  [568, 704],
+  [516, 686],
+  [486, 650]
+];
+
+const INNER_INLET = [
+  [592, 898],
+  [638, 864],
+  [692, 812],
+  [746, 748],
+  [794, 676],
+  [838, 598],
+  [876, 518],
+  [912, 446],
+  [952, 382],
+  [996, 330],
+  [1038, 292],
+  [1078, 264],
+  [1118, 248]
 ];
 
 const NORTH_FOG = [
-  [144, 8],
-  [300, -20],
-  [482, -44],
-  [704, -54],
-  [910, -32],
-  [1100, 14],
-  [1150, 34],
-  [1150, 244],
-  [124, 244],
-  [124, 38]
+  [118, -30],
+  [280, -64],
+  [486, -94],
+  [744, -96],
+  [986, -62],
+  [1150, -8],
+  [1150, 256],
+  [118, 256]
 ];
 
-const MOUNTAIN_BASE = [
-  [540, 398],
-  [568, 346],
-  [602, 302],
-  [646, 262],
-  [694, 232],
-  [748, 216],
-  [798, 220],
-  [834, 244],
-  [848, 286],
-  [840, 336],
-  [812, 384],
-  [770, 426],
-  [720, 456],
-  [664, 472],
-  [608, 466],
-  [564, 444]
+const MOUNTAIN_MASS = [
+  [594, 484],
+  [626, 426],
+  [670, 372],
+  [726, 322],
+  [792, 278],
+  [862, 248],
+  [930, 238],
+  [988, 252],
+  [1024, 286],
+  [1032, 336],
+  [1006, 392],
+  [958, 440],
+  [896, 476],
+  [822, 500],
+  [744, 510],
+  [668, 506]
 ];
 
 export function createEnvironmentRenderer() {
@@ -184,9 +188,10 @@ export function createEnvironmentRenderer() {
     drawOcean(ctx, width, height, tick);
     drawPeninsulaShadow(ctx);
     drawPeninsulaMass(ctx);
-    drawCoastalIrregularity(ctx);
+    drawCoastalHighlights(ctx);
     drawHarborCove(ctx, tick);
     drawBasinWater(ctx, tick);
+    drawInnerInlet(ctx, tick);
     drawMountainAtmosphere(ctx);
     drawRouteBeds(ctx, kernel);
     drawRegionPads(ctx, kernel, projection, selection, destination, tick);
@@ -196,25 +201,25 @@ export function createEnvironmentRenderer() {
   }
 
   function drawOcean(ctx, width, height, tick) {
-    const ocean = ctx.createLinearGradient(0, -140, 0, height + 400);
-    ocean.addColorStop(0, "rgba(146,192,210,1)");
-    ocean.addColorStop(0.26, "rgba(108,164,188,1)");
-    ocean.addColorStop(0.58, "rgba(58,110,140,1)");
-    ocean.addColorStop(1, "rgba(20,64,92,1)");
+    const ocean = ctx.createLinearGradient(0, -180, 0, height + 480);
+    ocean.addColorStop(0, "rgba(150,198,216,1)");
+    ocean.addColorStop(0.24, "rgba(112,170,194,1)");
+    ocean.addColorStop(0.56, "rgba(60,114,144,1)");
+    ocean.addColorStop(1, "rgba(18,66,94,1)");
     ctx.fillStyle = ocean;
-    ctx.fillRect(-1200, -260, width + 2400, height + 1800);
+    ctx.fillRect(-1300, -320, width + 2600, height + 2100);
 
-    for (let i = 0; i < 22; i += 1) {
-      const y = 220 + (i * 54);
-      strokeWaveLine(ctx, y, -300, width + 300, tick * 0.026 + i * 0.55, 2.6, 0.020, 0.055 + ((i % 3) * 0.01));
+    for (let i = 0; i < 24; i += 1) {
+      const y = 230 + (i * 54);
+      strokeWaveLine(ctx, y, -320, width + 320, tick * 0.026 + i * 0.55, 2.8, 0.019, 0.055 + ((i % 4) * 0.008));
     }
 
-    const swell = ctx.createRadialGradient(620, 760, 60, 620, 760, 760);
-    swell.addColorStop(0, "rgba(240,248,250,0.08)");
-    swell.addColorStop(0.48, "rgba(220,236,244,0.03)");
-    swell.addColorStop(1, "rgba(220,236,244,0)");
-    ctx.fillStyle = swell;
-    ctx.fillRect(-400, -260, width + 800, height + 1100);
+    const glow = ctx.createRadialGradient(650, 760, 80, 650, 760, 840);
+    glow.addColorStop(0, "rgba(244,250,252,0.08)");
+    glow.addColorStop(0.46, "rgba(224,238,246,0.03)");
+    glow.addColorStop(1, "rgba(224,238,246,0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(-450, -320, width + 900, height + 1200);
   }
 
   function drawPeninsulaShadow(ctx) {
@@ -228,35 +233,35 @@ export function createEnvironmentRenderer() {
 
   function drawPeninsulaMass(ctx) {
     polygon(ctx, PENINSULA_OUTLINE);
-    const land = ctx.createLinearGradient(0, 18, 0, 1140);
+    const land = ctx.createLinearGradient(0, 120, 0, 1160);
     land.addColorStop(0, "rgba(176,170,150,1)");
-    land.addColorStop(0.22, "rgba(166,160,136,1)");
-    land.addColorStop(0.52, "rgba(148,148,110,1)");
-    land.addColorStop(0.82, "rgba(132,142,100,1)");
-    land.addColorStop(1, "rgba(118,132,96,1)");
+    land.addColorStop(0.20, "rgba(166,160,136,1)");
+    land.addColorStop(0.48, "rgba(150,150,112,1)");
+    land.addColorStop(0.76, "rgba(136,144,102,1)");
+    land.addColorStop(1, "rgba(124,136,96,1)");
     ctx.fillStyle = land;
     ctx.fill();
 
     ctx.lineWidth = 2.4;
-    ctx.strokeStyle = "rgba(244,236,210,0.34)";
+    ctx.strokeStyle = "rgba(244,236,212,0.34)";
     ctx.stroke();
   }
 
-  function drawCoastalIrregularity(ctx) {
-    polyline(ctx, WEST_COAST);
-    ctx.strokeStyle = "rgba(246,240,220,0.26)";
+  function drawCoastalHighlights(ctx) {
+    polyline(ctx, WEST_SHORE);
+    ctx.strokeStyle = "rgba(246,240,220,0.24)";
     ctx.lineWidth = 2.2;
     ctx.stroke();
 
-    polyline(ctx, EAST_COAST);
+    polyline(ctx, EAST_SHORE);
     ctx.strokeStyle = "rgba(246,240,220,0.24)";
-    ctx.lineWidth = 2.1;
+    ctx.lineWidth = 2.2;
     ctx.stroke();
   }
 
   function drawHarborCove(ctx, tick) {
     polygon(ctx, HARBOR_COVE);
-    const harbor = ctx.createLinearGradient(488, 878, 646, 1030);
+    const harbor = ctx.createLinearGradient(490, 892, 654, 1048);
     harbor.addColorStop(0, "rgba(122,188,200,0.98)");
     harbor.addColorStop(0.45, "rgba(82,140,160,0.98)");
     harbor.addColorStop(1, "rgba(46,92,118,1)");
@@ -268,13 +273,13 @@ export function createEnvironmentRenderer() {
     ctx.stroke();
 
     for (let i = 0; i < 5; i += 1) {
-      strokeWaveLine(ctx, 914 + (i * 16), 504, 628, tick * 0.05 + i, 1.8, 0.046, 0.12);
+      strokeWaveLine(ctx, 920 + (i * 16), 504, 636, tick * 0.05 + i, 1.8, 0.046, 0.12);
     }
   }
 
   function drawBasinWater(ctx, tick) {
     polygon(ctx, BASIN_WATER);
-    const basin = ctx.createLinearGradient(464, 470, 722, 662);
+    const basin = ctx.createLinearGradient(474, 510, 738, 708);
     basin.addColorStop(0, "rgba(122,186,198,0.98)");
     basin.addColorStop(0.46, "rgba(84,140,160,0.98)");
     basin.addColorStop(1, "rgba(42,94,122,1)");
@@ -286,21 +291,41 @@ export function createEnvironmentRenderer() {
     ctx.stroke();
 
     for (let i = 0; i < 7; i += 1) {
-      strokeWaveLine(ctx, 510 + (i * 18), 490, 690, tick * 0.042 + i * 0.9, 2.1, 0.036, 0.10);
+      strokeWaveLine(ctx, 544 + (i * 18), 496, 704, tick * 0.042 + i * 0.9, 2.1, 0.036, 0.10);
+    }
+  }
+
+  function drawInnerInlet(ctx, tick) {
+    polyline(ctx, INNER_INLET);
+    ctx.strokeStyle = "rgba(214,236,246,0.16)";
+    ctx.lineWidth = 18;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, INNER_INLET);
+    ctx.strokeStyle = "rgba(194,226,238,0.18)";
+    ctx.lineWidth = 9;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    for (let i = 0; i < 3; i += 1) {
+      strokeWaveLine(ctx, 820 - (i * 118), 640 + i * 74, 1088, tick * 0.038 + i, 1.4, 0.042, 0.05);
     }
   }
 
   function drawMountainAtmosphere(ctx) {
-    polygon(ctx, MOUNTAIN_BASE);
-    const peak = ctx.createLinearGradient(0, 216, 0, 472);
-    peak.addColorStop(0, "rgba(214,210,204,0.54)");
-    peak.addColorStop(0.48, "rgba(184,178,164,0.24)");
-    peak.addColorStop(1, "rgba(156,150,140,0.08)");
+    polygon(ctx, MOUNTAIN_MASS);
+    const peak = ctx.createLinearGradient(0, 238, 0, 510);
+    peak.addColorStop(0, "rgba(220,214,204,0.70)");
+    peak.addColorStop(0.40, "rgba(194,186,170,0.34)");
+    peak.addColorStop(1, "rgba(160,150,136,0.10)");
     ctx.fillStyle = peak;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.ellipse(724, 286, 126, 40, -0.18, 0, Math.PI * 2);
+    ctx.ellipse(852, 304, 180, 54, -0.16, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(248,246,240,0.06)";
     ctx.fill();
   }
@@ -333,23 +358,23 @@ export function createEnvironmentRenderer() {
 
       if (row.regionId === "harbor_village") {
         fill = "rgba(176,144,112,0.20)";
-        rx = 110;
-        ry = 36;
+        rx = 112;
+        ry = 38;
       }
       if (row.regionId === "market_district") {
         fill = "rgba(176,146,102,0.18)";
-        rx = 98;
-        ry = 44;
+        rx = 104;
+        ry = 46;
       }
       if (row.regionId === "exploration_basin") {
         fill = "rgba(110,126,108,0.12)";
-        rx = 148;
-        ry = 66;
+        rx = 152;
+        ry = 70;
       }
       if (row.regionId === "summit_plaza") {
         fill = "rgba(210,206,198,0.18)";
-        rx = 86;
-        ry = 30;
+        rx = 90;
+        ry = 32;
       }
 
       ctx.beginPath();
@@ -373,16 +398,16 @@ export function createEnvironmentRenderer() {
 
   function drawNorthAtmosphere(ctx) {
     polygon(ctx, NORTH_FOG);
-    const fog = ctx.createLinearGradient(0, -40, 0, 250);
-    fog.addColorStop(0, "rgba(248,246,238,0.24)");
-    fog.addColorStop(0.58, "rgba(232,238,242,0.08)");
+    const fog = ctx.createLinearGradient(0, -80, 0, 268);
+    fog.addColorStop(0, "rgba(248,246,238,0.26)");
+    fog.addColorStop(0.56, "rgba(232,238,242,0.08)");
     fog.addColorStop(1, "rgba(232,238,242,0)");
     ctx.fillStyle = fog;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.ellipse(702, 132, 260, 42, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(248,246,238,0.06)";
+    ctx.ellipse(804, 114, 320, 48, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(248,246,238,0.05)";
     ctx.fill();
   }
 

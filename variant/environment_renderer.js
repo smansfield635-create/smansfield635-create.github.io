@@ -73,8 +73,8 @@ function offsetPolyline(points, outwardDistance) {
     const ty = next[1] - prev[1];
     const len = Math.hypot(tx, ty) || 1;
 
-    // Counterclockwise visible coast path.
-    // Land is left side of the path. Ocean is right side.
+    // Counterclockwise coastline path:
+    // land is left of path, ocean is right of path.
     const nx = ty / len;
     const ny = -tx / len;
 
@@ -116,7 +116,7 @@ function strokeWaveTrain(ctx, path, tick, color, amplitude, spacing, width) {
   for (let i = 0; i < samples.length - 1; i += 2) {
     const p0 = samples[i];
     const p1 = samples[Math.min(samples.length - 1, i + 1)];
-    const phase = (tick * 0.055) + (i * 0.32);
+    const phase = (tick * 0.052) + (i * 0.31);
 
     ctx.beginPath();
     ctx.moveTo(p0[0], p0[1]);
@@ -144,33 +144,33 @@ function resolveWaterPolygon(row) {
 function getWaterStyle(waterClass) {
   if (waterClass === "harbor") {
     return {
-      outer: "rgba(18,98,148,0.98)",
-      middle: "rgba(54,172,198,0.96)",
-      inner: "rgba(154,228,230,0.94)",
-      shellOuter: "rgba(126,214,222,0.24)",
-      shellInner: "rgba(220,248,240,0.10)",
+      outer: "rgba(16,98,148,0.98)",
+      middle: "rgba(52,174,198,0.96)",
+      inner: "rgba(162,232,230,0.95)",
+      shellOuter: "rgba(124,214,222,0.24)",
+      shellInner: "rgba(224,250,242,0.11)",
       sheen: "rgba(246,252,248,0.16)",
-      foam: "rgba(246,250,248,0.16)",
-      shadow: "rgba(78,154,182,0.18)"
+      foam: "rgba(248,252,248,0.18)",
+      shadow: "rgba(72,150,182,0.18)"
     };
   }
 
   if (waterClass === "basin") {
     return {
-      outer: "rgba(20,88,126,0.96)",
-      middle: "rgba(48,128,162,0.95)",
-      inner: "rgba(116,184,194,0.91)",
-      shellOuter: "rgba(96,174,192,0.18)",
+      outer: "rgba(20,88,124,0.96)",
+      middle: "rgba(46,126,160,0.95)",
+      inner: "rgba(114,182,194,0.91)",
+      shellOuter: "rgba(96,174,190,0.18)",
       shellInner: "rgba(184,228,222,0.08)",
       sheen: "rgba(228,244,246,0.10)",
       foam: "rgba(238,246,246,0.08)",
-      shadow: "rgba(70,130,154,0.15)"
+      shadow: "rgba(70,128,154,0.15)"
     };
   }
 
   return {
     outer: "rgba(22,94,132,0.96)",
-    middle: "rgba(56,142,172,0.95)",
+    middle: "rgba(54,142,172,0.95)",
     inner: "rgba(126,194,204,0.91)",
     shellOuter: "rgba(104,186,202,0.18)",
     shellInner: "rgba(188,230,226,0.08)",
@@ -180,8 +180,8 @@ function getWaterStyle(waterClass) {
   };
 }
 
-// This matches the active land authority in ground_renderer.js.
-// Used only to exclude coast water from drawing on land.
+// Match active land authority exactly.
+// Used only for ocean-only clipping in this file.
 const LAND_MASK = [
   [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730],
   [576, 650], [632, 580], [694, 520], [758, 466], [822, 402], [890, 328],
@@ -190,7 +190,7 @@ const LAND_MASK = [
   [384, 584], [414, 676], [442, 760], [468, 842], [494, 928], [516, 1018], [530, 1096]
 ];
 
-// Visible coastline display paths only. No closure edges.
+// Visible coastline segments only. No closure geometry.
 const WEST_COASTLINE = [
   [520, 1080], [500, 1000], [498, 920], [508, 840], [530, 760],
   [560, 690], [596, 620], [636, 560], [670, 500], [692, 430],
@@ -204,7 +204,7 @@ const EAST_COASTLINE = [
 
 function clipToOceanOnly(ctx) {
   ctx.beginPath();
-  ctx.rect(-600, -600, 2400, 2400);
+  ctx.rect(-700, -700, 2600, 2600);
   polygon(ctx, LAND_MASK);
   ctx.clip("evenodd");
 }
@@ -226,29 +226,40 @@ export function createEnvironmentRenderer() {
     ctx.save();
     clipToOceanOnly(ctx);
 
-    const westShallow = offsetPolyline(WEST_COASTLINE, 12);
-    const westNear = offsetPolyline(WEST_COASTLINE, 28);
-    const westMid = offsetPolyline(WEST_COASTLINE, 54);
+    const westSand = offsetPolyline(WEST_COASTLINE, 8);
+    const westShallow = offsetPolyline(WEST_COASTLINE, 18);
+    const westNear = offsetPolyline(WEST_COASTLINE, 34);
+    const westMid = offsetPolyline(WEST_COASTLINE, 58);
 
-    const eastShallow = offsetPolyline(EAST_COASTLINE, 12);
-    const eastNear = offsetPolyline(EAST_COASTLINE, 28);
-    const eastMid = offsetPolyline(EAST_COASTLINE, 54);
+    const eastSand = offsetPolyline(EAST_COASTLINE, 8);
+    const eastShallow = offsetPolyline(EAST_COASTLINE, 18);
+    const eastNear = offsetPolyline(EAST_COASTLINE, 34);
+    const eastMid = offsetPolyline(EAST_COASTLINE, 58);
 
-    fillBandBetween(ctx, WEST_COASTLINE, westShallow, "rgba(170,228,226,0.18)");
-    fillBandBetween(ctx, westShallow, westNear, "rgba(92,188,208,0.12)");
-    fillBandBetween(ctx, westNear, westMid, "rgba(42,142,182,0.08)");
+    // White sand halo
+    fillBandBetween(ctx, WEST_COASTLINE, westSand, "rgba(244,238,214,0.15)");
+    fillBandBetween(ctx, EAST_COASTLINE, eastSand, "rgba(244,238,214,0.14)");
 
-    fillBandBetween(ctx, EAST_COASTLINE, eastShallow, "rgba(170,228,226,0.17)");
-    fillBandBetween(ctx, eastShallow, eastNear, "rgba(90,186,206,0.11)");
-    fillBandBetween(ctx, eastNear, eastMid, "rgba(40,140,180,0.08)");
+    // Pale aqua shallow shelf
+    fillBandBetween(ctx, westSand, westShallow, "rgba(170,228,226,0.17)");
+    fillBandBetween(ctx, eastSand, eastShallow, "rgba(170,228,226,0.16)");
 
-    strokeWaveTrain(ctx, westMid, tick + 8, "rgba(238,248,250,0.04)", 2.6, 34, 1.0);
-    strokeWaveTrain(ctx, westNear, tick + 18, "rgba(240,248,250,0.07)", 2.0, 26, 0.95);
-    strokeWaveTrain(ctx, westShallow, tick + 30, "rgba(244,250,252,0.11)", 1.3, 18, 1.15);
+    // Turquoise transition
+    fillBandBetween(ctx, westShallow, westNear, "rgba(90,186,206,0.11)");
+    fillBandBetween(ctx, eastShallow, eastNear, "rgba(88,184,204,0.10)");
 
-    strokeWaveTrain(ctx, eastMid, tick + 12, "rgba(238,248,250,0.04)", 2.4, 34, 1.0);
-    strokeWaveTrain(ctx, eastNear, tick + 22, "rgba(240,248,250,0.07)", 1.9, 26, 0.95);
-    strokeWaveTrain(ctx, eastShallow, tick + 34, "rgba(244,250,252,0.10)", 1.2, 18, 1.15);
+    // Blue outer shelf
+    fillBandBetween(ctx, westNear, westMid, "rgba(38,138,180,0.08)");
+    fillBandBetween(ctx, eastNear, eastMid, "rgba(36,136,178,0.08)");
+
+    // Subtle wave rhythm: strongest at shallow edge, weakest outward
+    strokeWaveTrain(ctx, westMid, tick + 8, "rgba(236,248,250,0.035)", 2.4, 34, 0.95);
+    strokeWaveTrain(ctx, westNear, tick + 18, "rgba(240,248,250,0.06)", 1.8, 26, 0.9);
+    strokeWaveTrain(ctx, westShallow, tick + 30, "rgba(246,252,252,0.10)", 1.15, 18, 1.05);
+
+    strokeWaveTrain(ctx, eastMid, tick + 12, "rgba(236,248,250,0.035)", 2.2, 34, 0.95);
+    strokeWaveTrain(ctx, eastNear, tick + 22, "rgba(240,248,250,0.06)", 1.7, 26, 0.9);
+    strokeWaveTrain(ctx, eastShallow, tick + 34, "rgba(246,252,252,0.095)", 1.05, 18, 1.05);
 
     drawCoastlineHighlight(ctx, WEST_COASTLINE);
     drawCoastlineHighlight(ctx, EAST_COASTLINE);
@@ -259,8 +270,8 @@ export function createEnvironmentRenderer() {
   function drawCoastlineHighlight(ctx, path) {
     ctx.save();
     polyline(ctx, path);
-    ctx.lineWidth = 1.2;
-    ctx.strokeStyle = "rgba(246,242,228,0.12)";
+    ctx.lineWidth = 1.15;
+    ctx.strokeStyle = "rgba(246,242,228,0.10)";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();

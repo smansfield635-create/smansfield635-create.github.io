@@ -78,11 +78,6 @@ const COASTLINE_PATH_AUTHORITY = Object.freeze({
   ]
 });
 
-const EAST_SHELF = [
-  [620, 990], [666, 920], [724, 850], [786, 780], [850, 710], [916, 636], [982, 558],
-  [1048, 482], [1110, 420], [1150, 388]
-];
-
 const WEST_SHELF = [
   [450, 1018], [436, 944], [444, 866], [470, 786], [508, 710], [554, 642], [604, 584],
   [644, 528], [668, 470], [672, 412], [656, 354], [622, 296], [570, 242], [512, 198], [452, 164], [392, 136]
@@ -185,23 +180,9 @@ export function createEnvironmentRenderer() {
     ctx.lineJoin = "round";
     ctx.stroke();
 
-    polyline(ctx, EAST_SHELF);
-    ctx.strokeStyle = "rgba(224,246,252,0.08)";
-    ctx.lineWidth = 34;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
     polyline(ctx, WEST_SHELF);
     ctx.strokeStyle = "rgba(236,250,252,0.04)";
     ctx.lineWidth = 10;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, EAST_SHELF);
-    ctx.strokeStyle = "rgba(236,250,252,0.04)";
-    ctx.lineWidth = 12;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
@@ -211,14 +192,8 @@ export function createEnvironmentRenderer() {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    polyline(ctx, COASTLINE_PATH_AUTHORITY.east);
-    ctx.strokeStyle = "rgba(252,246,230,0.16)";
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
     for (let i = 0; i < 6; i += 1) {
       strokeWaveLine(ctx, 930 - (i * 136), 118, 470 - (i * 12), tick * 0.036 + (i * 0.5), 0.8, 0.040, 0.022, 10);
-      strokeWaveLine(ctx, 928 - (i * 116), 730 + (i * 40), 1150, tick * 0.036 + i, 0.8, 0.040, 0.022, 10);
     }
 
     ctx.restore();

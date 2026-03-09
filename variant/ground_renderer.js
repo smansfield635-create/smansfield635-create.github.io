@@ -17,6 +17,19 @@ function polyline(ctx, points) {
   }
 }
 
+function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+  for (let i = 0; i < count; i += 1) {
+    const px = x + (((i * 71) + seedOffset * 17) % w);
+    const py = y + (((i * 131) + seedOffset * 23) % h);
+    const r = 0.6 + ((i % 4) * 0.3);
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 const PENINSULA_CORE = [
   [540, 1140],
   [516, 1078],
@@ -135,6 +148,15 @@ const FOOTHILL_STROKE_B = [
   [908, 434]
 ];
 
+const RIDGE_HIGHLIGHT = [
+  [676, 408],
+  [720, 368],
+  [778, 334],
+  [846, 310],
+  [918, 298],
+  [986, 300]
+];
+
 const WEST_ASCENT_BELT = [
   [470, 882],
   [446, 818],
@@ -162,6 +184,19 @@ const EAST_ASCENT_BELT = [
   [1124, 334]
 ];
 
+const HARBOR_GRASS = [
+  [478, 954],
+  [500, 914],
+  [540, 888],
+  [588, 888],
+  [626, 908],
+  [642, 946],
+  [632, 988],
+  [594, 1018],
+  [548, 1028],
+  [504, 1008]
+];
+
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
     const { tick, viewportOffset, kernel, projection, destination } = runtime;
@@ -172,6 +207,7 @@ export function createGroundRenderer() {
 
     drawPeninsulaCore(ctx);
     drawElevationBands(ctx);
+    drawSurfaceTexture(ctx);
     drawTraversalBelts(ctx);
     drawPathBeds(ctx, kernel, projection, destination, pulse);
     drawLandmarks(ctx, kernel, pulse);
@@ -182,11 +218,11 @@ export function createGroundRenderer() {
   function drawPeninsulaCore(ctx) {
     polygon(ctx, PENINSULA_CORE);
     const ground = ctx.createLinearGradient(0, 180, 0, 1140);
-    ground.addColorStop(0, "rgba(182,174,150,1)");
-    ground.addColorStop(0.18, "rgba(172,162,134,1)");
-    ground.addColorStop(0.42, "rgba(156,152,116,1)");
-    ground.addColorStop(0.74, "rgba(140,146,104,1)");
-    ground.addColorStop(1, "rgba(126,138,98,1)");
+    ground.addColorStop(0, "rgba(184,176,152,1)");
+    ground.addColorStop(0.18, "rgba(174,164,136,1)");
+    ground.addColorStop(0.42, "rgba(158,152,118,1)");
+    ground.addColorStop(0.74, "rgba(142,146,104,1)");
+    ground.addColorStop(1, "rgba(126,140,98,1)");
     ctx.fillStyle = ground;
     ctx.fill();
 
@@ -195,7 +231,11 @@ export function createGroundRenderer() {
     ctx.stroke();
 
     polygon(ctx, SOUTH_BEACH);
-    ctx.fillStyle = "rgba(216,190,138,0.34)";
+    ctx.fillStyle = "rgba(216,190,138,0.36)";
+    ctx.fill();
+
+    polygon(ctx, HARBOR_GRASS);
+    ctx.fillStyle = "rgba(152,162,104,0.12)";
     ctx.fill();
   }
 
@@ -208,14 +248,14 @@ export function createGroundRenderer() {
     ctx.fill();
 
     polygon(ctx, BASIN_INNER);
-    ctx.fillStyle = "rgba(64,86,82,0.08)";
+    ctx.fillStyle = "rgba(64,86,82,0.10)";
     ctx.fill();
 
     polygon(ctx, SUMMIT_RIDGE);
     const ridge = ctx.createLinearGradient(0, 260, 0, 524);
-    ridge.addColorStop(0, "rgba(220,214,204,0.82)");
-    ridge.addColorStop(0.40, "rgba(194,186,170,0.42)");
-    ridge.addColorStop(1, "rgba(160,150,136,0.14)");
+    ridge.addColorStop(0, "rgba(222,216,206,0.86)");
+    ridge.addColorStop(0.40, "rgba(194,186,170,0.44)");
+    ridge.addColorStop(1, "rgba(160,150,136,0.16)");
     ctx.fillStyle = ridge;
     ctx.fill();
 
@@ -228,6 +268,47 @@ export function createGroundRenderer() {
     ctx.strokeStyle = "rgba(238,232,216,0.18)";
     ctx.lineWidth = 1.8;
     ctx.stroke();
+
+    polyline(ctx, RIDGE_HIGHLIGHT);
+    ctx.strokeStyle = "rgba(250,246,236,0.16)";
+    ctx.lineWidth = 2.6;
+    ctx.stroke();
+  }
+
+  function drawSurfaceTexture(ctx) {
+    ctx.save();
+    polygon(ctx, PENINSULA_CORE);
+    ctx.clip();
+
+    fillNoiseDots(ctx, { x: 220, y: 200, w: 860, h: 900 }, 520, "rgba(102,116,78,0.05)", 1);
+    fillNoiseDots(ctx, { x: 240, y: 220, w: 820, h: 860 }, 360, "rgba(230,216,180,0.045)", 2);
+
+    const contourA = [
+      [454, 920], [492, 878], [544, 838], [606, 804], [674, 770], [746, 726], [818, 666], [884, 592]
+    ];
+    const contourB = [
+      [430, 816], [470, 772], [526, 726], [596, 688], [668, 656], [742, 618], [814, 564], [884, 500]
+    ];
+    const contourC = [
+      [404, 706], [448, 664], [508, 624], [582, 592], [658, 566], [736, 534], [812, 486], [888, 430]
+    ];
+
+    polyline(ctx, contourA);
+    ctx.strokeStyle = "rgba(244,238,220,0.08)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    polyline(ctx, contourB);
+    ctx.strokeStyle = "rgba(244,238,220,0.08)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    polyline(ctx, contourC);
+    ctx.strokeStyle = "rgba(244,238,220,0.08)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    ctx.restore();
   }
 
   function drawTraversalBelts(ctx) {

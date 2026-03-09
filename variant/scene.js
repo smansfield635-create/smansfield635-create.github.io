@@ -8,7 +8,7 @@ import { loadWorldKernel } from "../world/world_kernel.js";
 function distanceSq(ax, ay, bx, by) {
   const dx = ax - bx;
   const dy = ay - by;
-  return dx * dx + dy * dy;
+  return (dx * dx) + (dy * dy);
 }
 
 function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
@@ -16,15 +16,15 @@ function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
   const aby = by - ay;
   const apx = px - ax;
   const apy = py - ay;
-  const abLenSq = abx * abx + aby * aby;
+  const abLenSq = (abx * abx) + (aby * aby);
 
   if (abLenSq === 0) return distanceSq(px, py, ax, ay);
 
-  let t = (apx * abx + apy * aby) / abLenSq;
+  let t = ((apx * abx) + (apy * aby)) / abLenSq;
   t = Math.max(0, Math.min(1, t));
 
-  const cx = ax + abx * t;
-  const cy = ay + aby * t;
+  const cx = ax + (abx * t);
+  const cy = ay + (aby * t);
   return distanceSq(px, py, cx, cy);
 }
 
@@ -55,8 +55,8 @@ export async function createScene(canvas, outputs) {
     keys: new Set(),
     player: {
       x: 540,
-      y: 560,
-      speed: 2.1
+      y: 590,
+      speed: 2.15
     },
     projection: null,
     region: null,
@@ -73,7 +73,7 @@ export async function createScene(canvas, outputs) {
     },
     worldBounds: {
       width: 1080,
-      height: 720
+      height: 760
     },
     touch: {
       activeId: null,
@@ -102,10 +102,10 @@ export async function createScene(canvas, outputs) {
     const baseX = (state.width - state.worldBounds.width) * 0.5;
     const baseY = (state.height - state.worldBounds.height) * 0.5;
 
-    const followX = state.width * 0.5 - (state.player.x + baseX);
-    const followY = state.height * 0.68 - (state.player.y + baseY);
+    const followX = (state.width * 0.5) - (state.player.x + baseX);
+    const followY = (state.height * 0.62) - (state.player.y + baseY);
 
-    state.camera.x += (followX - state.camera.x) * 0.08;
+    state.camera.x += (followX - state.camera.x) * 0.10;
     state.camera.y += (followY - state.camera.y) * 0.08;
 
     state.viewportOffset.x = baseX + state.camera.x;
@@ -144,8 +144,8 @@ export async function createScene(canvas, outputs) {
       state.player.y += dy * state.player.speed;
     }
 
-    state.player.x = Math.max(220, Math.min(760, state.player.x));
-    state.player.y = Math.max(96, Math.min(648, state.player.y));
+    state.player.x = Math.max(240, Math.min(748, state.player.x));
+    state.player.y = Math.max(116, Math.min(666, state.player.y));
   }
 
   function projectState() {
@@ -178,7 +178,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const radiusSq = 120 * 120;
+    const radiusSq = 124 * 124;
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
@@ -196,7 +196,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const toleranceSq = 52 * 52;
+    const toleranceSq = 54 * 54;
 
     for (const path of paths) {
       const pts = path.centerline;
@@ -277,9 +277,9 @@ export async function createScene(canvas, outputs) {
       ctx.strokeStyle = isSelected
         ? "rgba(255,244,220,0.96)"
         : isDestinationPath
-          ? `rgba(255,230,176,${0.38 + pulse * 0.28})`
-          : "rgba(240,236,220,0.16)";
-      ctx.lineWidth = isSelected ? 8 : isDestinationPath ? 6 : 4;
+          ? `rgba(255,230,176,${0.34 + pulse * 0.24})`
+          : "rgba(238,234,218,0.16)";
+      ctx.lineWidth = isSelected ? 7 : isDestinationPath ? 5 : 4;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.stroke();
@@ -293,7 +293,7 @@ export async function createScene(canvas, outputs) {
 
       if (isActive || isSelected || isDestination) {
         ctx.beginPath();
-        ctx.arc(x, y, 52 + pulse * 4, 0, Math.PI * 2);
+        ctx.arc(x, y, 48 + pulse * 4, 0, Math.PI * 2);
         ctx.strokeStyle = isSelected
           ? "rgba(255,245,224,0.92)"
           : isActive
@@ -312,7 +312,7 @@ export async function createScene(canvas, outputs) {
       ctx.font = "600 13px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.fillText(region.displayName, x, y - 58);
+      ctx.fillText(region.displayName, x, y - 54);
     }
 
     for (const cell of state.kernel.diamondCellsById.values()) {
@@ -320,14 +320,14 @@ export async function createScene(canvas, outputs) {
       if (!active) continue;
 
       ctx.beginPath();
-      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], 12 + pulse * 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,236,188,0.94)";
+      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], 11 + pulse * 2, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,236,188,0.92)";
       ctx.fill();
     }
 
     ctx.beginPath();
-    ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,128,88,0.98)";
+    ctx.ellipse(state.player.x, state.player.y + 2, 11, 13, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,132,88,0.98)";
     ctx.fill();
     ctx.lineWidth = 2;
     ctx.strokeStyle = "rgba(255,242,224,0.96)";
@@ -336,7 +336,7 @@ export async function createScene(canvas, outputs) {
     if (state.destination) {
       ctx.beginPath();
       ctx.arc(state.destination.centerPoint[0], state.destination.centerPoint[1], 18 + pulse * 4, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,246,220,${0.28 + pulse * 0.24})`;
+      ctx.strokeStyle = `rgba(255,246,220,${0.24 + pulse * 0.22})`;
       ctx.lineWidth = 3;
       ctx.stroke();
     }

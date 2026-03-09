@@ -1,3 +1,13 @@
+/* DESTINATION FILE: /variant/scene.js */
+/* APPLY FIRST */
+/*
+WHAT YOU SHOULD SEE AFTER THIS FILE:
+- Harbor and Market are visibly closer
+- Coastline occupies more screen space
+- Beach width becomes easier to judge
+- Movement, tapping, routing, and runtime panel still work
+*/
+
 import { createBackgroundRenderer } from "../assets/openworld_background_renderer.js";
 import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createGroundRenderer } from "./ground_renderer.js";
@@ -76,11 +86,10 @@ export async function createScene(canvas, outputs) {
       y: 0
     },
     viewportOffset: {
-      // Stored in screen-space pixels.
       x: 0,
       y: 0
     },
-    renderScale: 1.42,
+    renderScale: 1.72,
     worldBounds: {
       width: 1180,
       height: 1240
@@ -123,22 +132,17 @@ export async function createScene(canvas, outputs) {
     const baseY = (state.height - scaledWorldHeight) * 0.5;
 
     const targetScreenX = state.width * 0.50;
-    const targetScreenY = state.height * 0.84;
+    const targetScreenY = state.height * 0.88;
 
     const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
-    const dynamicForwardBiasY = 184 + (northProgress * 86);
-    const dynamicForwardBiasX = northProgress * 16;
+    const dynamicForwardBiasY = (160 + (northProgress * 54)) * state.renderScale;
+    const dynamicForwardBiasX = (northProgress * 10) * state.renderScale;
 
-    const scaledPlayerX = state.player.x * state.renderScale;
-    const scaledPlayerY = state.player.y * state.renderScale;
-    const scaledBiasX = dynamicForwardBiasX * state.renderScale;
-    const scaledBiasY = dynamicForwardBiasY * state.renderScale;
-
-    const followX = targetScreenX - (scaledPlayerX + baseX + scaledBiasX);
-    const followY = targetScreenY - (scaledPlayerY + baseY + scaledBiasY);
+    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX + dynamicForwardBiasX);
+    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY + dynamicForwardBiasY);
 
     const lerpX = forceSnap ? 1 : 0.11;
-    const lerpY = forceSnap ? 1 : 0.085;
+    const lerpY = forceSnap ? 1 : 0.09;
 
     state.camera.x = lerp(state.camera.x, followX, lerpX);
     state.camera.y = lerp(state.camera.y, followY, lerpY);
@@ -300,6 +304,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     const regions = [...state.kernel.regionsById.values()];
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
+    const px = 1 / state.renderScale;
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
@@ -321,7 +326,7 @@ export async function createScene(canvas, outputs) {
         : isDestinationPath
           ? `rgba(255,230,176,${0.34 + pulse * 0.26})`
           : "rgba(246,238,224,0.18)";
-      ctx.lineWidth = isSelected ? 7 : isDestinationPath ? 5 : 4;
+      ctx.lineWidth = (isSelected ? 7 : isDestinationPath ? 5 : 4) * px;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.stroke();
@@ -341,7 +346,7 @@ export async function createScene(canvas, outputs) {
           : isActive
             ? "rgba(255,230,186,0.74)"
             : "rgba(218,236,248,0.62)";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3 * px;
         ctx.stroke();
       }
 
@@ -351,7 +356,7 @@ export async function createScene(canvas, outputs) {
       ctx.fill();
 
       ctx.fillStyle = "rgba(248,248,244,0.98)";
-      ctx.font = "600 14px system-ui, sans-serif";
+      ctx.font = `${14 * px}px system-ui, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
       ctx.fillText(region.displayName, x, y - 54);
@@ -361,7 +366,7 @@ export async function createScene(canvas, outputs) {
     ctx.ellipse(state.player.x, state.player.y + 2, 11, 13, 0, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(255,132,88,0.98)";
     ctx.fill();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2 * px;
     ctx.strokeStyle = "rgba(255,242,224,0.98)";
     ctx.stroke();
 
@@ -369,7 +374,7 @@ export async function createScene(canvas, outputs) {
       ctx.beginPath();
       ctx.arc(state.destination.centerPoint[0], state.destination.centerPoint[1], 18 + pulse * 4, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(255,246,220,${0.24 + pulse * 0.22})`;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 3 * px;
       ctx.stroke();
     }
 
@@ -386,6 +391,7 @@ export async function createScene(canvas, outputs) {
       height: state.height,
       tick: state.tick,
       viewportOffset: worldViewportOffset,
+      renderScale: state.renderScale,
       kernel: state.kernel,
       projection: state.projection,
       selection: state.selection,

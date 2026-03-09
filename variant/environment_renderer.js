@@ -202,45 +202,41 @@ export function createEnvironmentRenderer() {
   function drawInnerCoastalWater(ctx, tick) {
     polygon(ctx, HARBOR_COVE);
     const harbor = ctx.createLinearGradient(488, 886, 656, 1054);
-    harbor.addColorStop(0, "rgba(146,206,218,0.98)");
-    harbor.addColorStop(0.38, "rgba(96,156,174,0.98)");
-    harbor.addColorStop(1, "rgba(42,92,120,1)");
+    harbor.addColorStop(0, "rgba(146,206,218,0.94)");
+    harbor.addColorStop(0.38, "rgba(96,156,174,0.94)");
+    harbor.addColorStop(1, "rgba(42,92,120,0.94)");
     ctx.fillStyle = harbor;
     ctx.fill();
-    ctx.lineWidth = 1.6;
-    ctx.strokeStyle = "rgba(238,246,248,0.20)";
+    ctx.lineWidth = 1.2;
+    ctx.strokeStyle = "rgba(238,246,248,0.08)";
     ctx.stroke();
-
-    for (let i = 0; i < 5; i += 1) {
-      strokeWaveLine(ctx, 920 + (i * 12), 512, 632, tick * 0.05 + i, 1.0, 0.046, 0.06, 10);
-    }
 
     polygon(ctx, BASIN_SHELF);
     const shelf = ctx.createRadialGradient(608, 654, 50, 608, 654, 210);
-    shelf.addColorStop(0, "rgba(130,146,108,0.14)");
-    shelf.addColorStop(1, "rgba(130,146,108,0.03)");
+    shelf.addColorStop(0, "rgba(130,146,108,0.12)");
+    shelf.addColorStop(1, "rgba(130,146,108,0.025)");
     ctx.fillStyle = shelf;
     ctx.fill();
 
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(466, 492, 760, 754);
-    basin.addColorStop(0, "rgba(144,204,218,0.98)");
-    basin.addColorStop(0.40, "rgba(96,154,174,0.98)");
-    basin.addColorStop(1, "rgba(38,90,120,1)");
+    basin.addColorStop(0, "rgba(144,204,218,0.96)");
+    basin.addColorStop(0.40, "rgba(96,154,174,0.96)");
+    basin.addColorStop(1, "rgba(38,90,120,0.96)");
     ctx.fillStyle = basin;
     ctx.fill();
-    ctx.lineWidth = 1.6;
-    ctx.strokeStyle = "rgba(238,246,248,0.20)";
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = "rgba(238,246,248,0.12)";
     ctx.stroke();
 
-    for (let i = 0; i < 7; i += 1) {
-      strokeWaveLine(ctx, 540 + (i * 16), 504, 704, tick * 0.042 + (i * 0.9), 1.05, 0.038, 0.06, 10);
+    for (let i = 0; i < 4; i += 1) {
+      strokeWaveLine(ctx, 548 + (i * 18), 516, 690, tick * 0.042 + (i * 0.8), 0.8, 0.038, 0.035, 10);
     }
 
     clipOceanArea(ctx, 1400, 1400);
     polyline(ctx, INNER_INLET);
-    ctx.strokeStyle = "rgba(196,228,238,0.08)";
-    ctx.lineWidth = 8;
+    ctx.strokeStyle = "rgba(196,228,238,0.03)";
+    ctx.lineWidth = 5;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();

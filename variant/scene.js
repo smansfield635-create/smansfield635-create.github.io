@@ -76,9 +76,11 @@ export async function createScene(canvas, outputs) {
       y: 0
     },
     viewportOffset: {
+      // Stored in screen-space pixels.
       x: 0,
       y: 0
     },
+    renderScale: 1.42,
     worldBounds: {
       width: 1180,
       height: 1240
@@ -92,6 +94,13 @@ export async function createScene(canvas, outputs) {
       moved: false
     }
   };
+
+  function getWorldViewportOffset() {
+    return {
+      x: state.viewportOffset.x / state.renderScale,
+      y: state.viewportOffset.y / state.renderScale
+    };
+  }
 
   function resize() {
     state.dpr = Math.max(1, window.devicePixelRatio || 1);
@@ -107,18 +116,26 @@ export async function createScene(canvas, outputs) {
   }
 
   function updateViewportOffset(forceSnap = false) {
-    const baseX = (state.width - state.worldBounds.width) * 0.5;
-    const baseY = (state.height - state.worldBounds.height) * 0.5;
+    const scaledWorldWidth = state.worldBounds.width * state.renderScale;
+    const scaledWorldHeight = state.worldBounds.height * state.renderScale;
+
+    const baseX = (state.width - scaledWorldWidth) * 0.5;
+    const baseY = (state.height - scaledWorldHeight) * 0.5;
 
     const targetScreenX = state.width * 0.50;
-    const targetScreenY = state.height * 0.82;
+    const targetScreenY = state.height * 0.84;
 
     const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
     const dynamicForwardBiasY = 184 + (northProgress * 86);
     const dynamicForwardBiasX = northProgress * 16;
 
-    const followX = targetScreenX - (state.player.x + baseX + dynamicForwardBiasX);
-    const followY = targetScreenY - (state.player.y + baseY + dynamicForwardBiasY);
+    const scaledPlayerX = state.player.x * state.renderScale;
+    const scaledPlayerY = state.player.y * state.renderScale;
+    const scaledBiasX = dynamicForwardBiasX * state.renderScale;
+    const scaledBiasY = dynamicForwardBiasY * state.renderScale;
+
+    const followX = targetScreenX - (scaledPlayerX + baseX + scaledBiasX);
+    const followY = targetScreenY - (scaledPlayerY + baseY + scaledBiasY);
 
     const lerpX = forceSnap ? 1 : 0.11;
     const lerpY = forceSnap ? 1 : 0.085;
@@ -239,9 +256,11 @@ export async function createScene(canvas, outputs) {
 
   function worldPointFromClient(clientX, clientY) {
     const local = getCanvasPoint(canvas, clientX, clientY);
+    const worldViewportOffset = getWorldViewportOffset();
+
     return {
-      x: local.x - state.viewportOffset.x,
-      y: local.y - state.viewportOffset.y
+      x: (local.x / state.renderScale) - worldViewportOffset.x,
+      y: (local.y / state.renderScale) - worldViewportOffset.y
     };
   }
 
@@ -277,13 +296,13 @@ export async function createScene(canvas, outputs) {
     updateOutputs();
   }
 
-  function drawRoutesAndMarkers() {
+  function drawRoutesAndMarkers(viewportOffset) {
     const paths = [...state.kernel.pathsById.values()];
     const regions = [...state.kernel.regionsById.values()];
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
 
     ctx.save();
-    ctx.translate(state.viewportOffset.x, state.viewportOffset.y);
+    ctx.translate(viewportOffset.x, viewportOffset.y);
 
     for (const path of paths) {
       const isSelected = state.selection?.kind === "path" && state.selection.pathId === path.pathId;
@@ -361,11 +380,12 @@ export async function createScene(canvas, outputs) {
     ctx.clearRect(0, 0, state.width, state.height);
     background.draw(ctx, state.width, state.height, state.tick);
 
+    const worldViewportOffset = getWorldViewportOffset();
     const renderState = {
       width: state.width,
       height: state.height,
       tick: state.tick,
-      viewportOffset: state.viewportOffset,
+      viewportOffset: worldViewportOffset,
       kernel: state.kernel,
       projection: state.projection,
       selection: state.selection,
@@ -373,9 +393,15 @@ export async function createScene(canvas, outputs) {
       player: state.player
     };
 
+    ctx.save();
+    ctx.scale(state.renderScale, state.renderScale);
+
     environment.draw(ctx, renderState);
     ground.draw(ctx, renderState);
-    drawRoutesAndMarkers();
+    drawRoutesAndMarkers(worldViewportOffset);
+
+    ctx.restore();
+
     compass.draw(ctx, state, { width: state.width, height: state.height });
   }
 

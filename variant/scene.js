@@ -62,9 +62,9 @@ export async function createScene(canvas, outputs) {
     kernel: await loadWorldKernel(),
     keys: new Set(),
     player: {
-      x: 540,
-      y: 626,
-      speed: 2.1
+      x: 544,
+      y: 770,
+      speed: 2.05
     },
     projection: null,
     region: null,
@@ -80,8 +80,8 @@ export async function createScene(canvas, outputs) {
       y: 0
     },
     worldBounds: {
-      width: 1100,
-      height: 980
+      width: 1180,
+      height: 1240
     },
     touch: {
       activeId: null,
@@ -110,17 +110,18 @@ export async function createScene(canvas, outputs) {
     const baseX = (state.width - state.worldBounds.width) * 0.5;
     const baseY = (state.height - state.worldBounds.height) * 0.5;
 
-    const forwardBiasX = 0;
-    const forwardBiasY = 168;
-
     const targetScreenX = state.width * 0.50;
-    const targetScreenY = state.height * 0.77;
+    const targetScreenY = state.height * 0.82;
 
-    const followX = targetScreenX - (state.player.x + baseX + forwardBiasX);
-    const followY = targetScreenY - (state.player.y + baseY + forwardBiasY);
+    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+    const dynamicForwardBiasY = 184 + (northProgress * 86);
+    const dynamicForwardBiasX = northProgress * 16;
 
-    const lerpX = forceSnap ? 1 : 0.10;
-    const lerpY = forceSnap ? 1 : 0.08;
+    const followX = targetScreenX - (state.player.x + baseX + dynamicForwardBiasX);
+    const followY = targetScreenY - (state.player.y + baseY + dynamicForwardBiasY);
+
+    const lerpX = forceSnap ? 1 : 0.11;
+    const lerpY = forceSnap ? 1 : 0.085;
 
     state.camera.x = lerp(state.camera.x, followX, lerpX);
     state.camera.y = lerp(state.camera.y, followY, lerpY);
@@ -158,13 +159,16 @@ export async function createScene(canvas, outputs) {
       dx /= length;
       dy /= length;
 
-      const slopeFactor = clamp(1 - ((state.player.y - 240) / 1100) * 0.08, 0.88, 1.02);
-      state.player.x += dx * state.player.speed * slopeFactor;
-      state.player.y += dy * state.player.speed * slopeFactor;
+      const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+      const uphillFactor = clamp(1 - (northProgress * 0.14), 0.82, 1);
+      const lateralDrag = clamp(1 - (Math.abs(dx) * northProgress * 0.06), 0.9, 1);
+
+      state.player.x += dx * state.player.speed * uphillFactor * lateralDrag;
+      state.player.y += dy * state.player.speed * uphillFactor;
     }
 
-    state.player.x = clamp(state.player.x, 176, 918);
-    state.player.y = clamp(state.player.y, 84, 904);
+    state.player.x = clamp(state.player.x, 150, 960);
+    state.player.y = clamp(state.player.y, 54, 1140);
   }
 
   function projectState() {
@@ -197,7 +201,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const radiusSq = 136 * 136;
+    const radiusSq = 148 * 148;
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
@@ -215,7 +219,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const toleranceSq = 60 * 60;
+    const toleranceSq = 64 * 64;
 
     for (const path of paths) {
       const pts = path.centerline;

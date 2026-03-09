@@ -93,37 +93,13 @@ const BASIN_WATER = [
   [764, 656], [728, 708], [664, 744], [590, 754], [526, 732], [478, 692], [458, 640]
 ];
 
-const BASIN_SHELF = [
-  [460, 626], [500, 566], [562, 522], [636, 508], [706, 528], [760, 576], [784, 638],
-  [770, 706], [724, 764], [650, 800], [572, 808], [508, 784], [462, 738], [444, 674]
+const NORTH_FOG = [
+  [118, -34], [286, -82], [538, -116], [820, -108], [1052, -62], [1150, -10], [1150, 264], [118, 264]
 ];
 
 const INNER_INLET = [
   [610, 912], [660, 878], [718, 826], [778, 758], [838, 678], [894, 596],
   [948, 518], [1000, 452], [1052, 398], [1102, 354], [1150, 320]
-];
-
-const NORTH_FOG = [
-  [118, -34], [286, -82], [538, -116], [820, -108], [1052, -62], [1150, -10], [1150, 264], [118, 264]
-];
-
-const MOUNTAIN_FOOTHILLS = [
-  [506, 652], [572, 580], [658, 514], [758, 456], [860, 414], [956, 398],
-  [1034, 412], [1086, 454], [1102, 514], [1078, 578], [1014, 632],
-  [922, 668], [814, 690], [700, 694], [590, 684]
-];
-
-const RIDGE_SHADOW = [
-  [530, 708], [602, 640], [694, 582], [796, 538], [900, 516], [998, 526],
-  [1072, 568], [1110, 628], [1100, 690], [1032, 740], [930, 770], [810, 782], [682, 772], [578, 748]
-];
-
-const CLIFF_WEST = [
-  [430, 938], [466, 880], [514, 822], [568, 762], [622, 700], [666, 640], [696, 584]
-];
-
-const CLIFF_EAST = [
-  [706, 904], [758, 842], [816, 776], [874, 704], [930, 628], [986, 554], [1038, 494]
 ];
 
 const MICRO_VEGETATION_PATCHES = [
@@ -132,6 +108,48 @@ const MICRO_VEGETATION_PATCHES = [
   { x: 458, y: 628, w: 122, h: 74, count: 60, color: "rgba(98,124,84,0.12)" },
   { x: 754, y: 632, w: 78, h: 48, count: 34, color: "rgba(98,124,84,0.11)" },
   { x: 886, y: 520, w: 68, h: 44, count: 26, color: "rgba(98,124,84,0.10)" }
+];
+
+const TERRAIN_BAND_HARBOR = [
+  [494, 1088], [486, 1018], [490, 944], [510, 878], [544, 816], [592, 760],
+  [648, 712], [708, 672], [772, 640], [836, 616], [898, 600], [946, 594],
+  [930, 684], [874, 748], [806, 814], [732, 882], [658, 946], [588, 1008],
+  [538, 1066]
+];
+
+const TERRAIN_BAND_MARKET = [
+  [520, 974], [556, 910], [606, 848], [664, 786], [730, 728], [800, 676],
+  [872, 632], [944, 600], [1006, 582], [1034, 574], [1030, 516], [982, 520],
+  [916, 544], [844, 588], [772, 642], [704, 704], [642, 772], [588, 842],
+  [548, 912]
+];
+
+const TERRAIN_BAND_BASIN = [
+  [500, 768], [548, 706], [612, 648], [688, 594], [772, 550], [858, 516],
+  [946, 492], [1024, 482], [1080, 488], [1102, 548], [1060, 606], [992, 648],
+  [910, 680], [824, 704], [734, 724], [646, 746], [566, 770]
+];
+
+const TERRAIN_BAND_SUMMIT = [
+  [532, 646], [590, 590], [666, 536], [756, 488], [850, 452], [946, 430],
+  [1032, 428], [1094, 446], [1110, 506], [1068, 560], [992, 598], [900, 624],
+  [804, 640], [708, 650], [614, 654]
+];
+
+const TERRAIN_CONTOUR_BASIN_A = [
+  [552, 742], [624, 686], [708, 638], [798, 600], [890, 574], [980, 562]
+];
+
+const TERRAIN_CONTOUR_BASIN_B = [
+  [584, 706], [660, 654], [748, 614], [840, 586], [932, 572], [1016, 572]
+];
+
+const TERRAIN_CONTOUR_SUMMIT_A = [
+  [612, 628], [694, 576], [788, 532], [888, 500], [988, 486], [1068, 490]
+];
+
+const TERRAIN_CONTOUR_SUMMIT_B = [
+  [650, 596], [738, 550], [836, 516], [938, 496], [1034, 494]
 ];
 
 function clipOceanArea(ctx, width, height) {
@@ -151,8 +169,7 @@ function drawShorelineSediment(ctx) {
 
   const SEDIMENT_EAST = [
     [548, 1080], [580, 1000], [620, 920], [670, 850], [730, 780],
-    [790, 710], [850, 640], [912, 560], [972, 480], [1030, 420],
-    [1086, 370]
+    [790, 710], [850, 640], [912, 560], [972, 480], [1030, 420], [1086, 370]
   ];
 
   function sedimentBand(points, inset) {
@@ -172,9 +189,65 @@ function drawShorelineSediment(ctx) {
   ctx.save();
   polygon(ctx, PENINSULA_LAND_MASK);
   ctx.clip();
-
   sedimentBand(SEDIMENT_WEST, 18);
   sedimentBand(SEDIMENT_EAST, 14);
+  ctx.restore();
+}
+
+function drawTerrainBands(ctx) {
+  ctx.save();
+  polygon(ctx, PENINSULA_LAND_MASK);
+  ctx.clip();
+
+  polygon(ctx, TERRAIN_BAND_HARBOR);
+  const harborLow = ctx.createLinearGradient(0, 600, 0, 1160);
+  harborLow.addColorStop(0, "rgba(150,160,112,0.06)");
+  harborLow.addColorStop(1, "rgba(112,130,88,0.16)");
+  ctx.fillStyle = harborLow;
+  ctx.fill();
+
+  polygon(ctx, TERRAIN_BAND_MARKET);
+  const coastalRise = ctx.createLinearGradient(0, 560, 0, 1040);
+  coastalRise.addColorStop(0, "rgba(170,156,114,0.06)");
+  coastalRise.addColorStop(1, "rgba(126,134,92,0.14)");
+  ctx.fillStyle = coastalRise;
+  ctx.fill();
+
+  polygon(ctx, TERRAIN_BAND_BASIN);
+  const basinRise = ctx.createLinearGradient(0, 480, 0, 820);
+  basinRise.addColorStop(0, "rgba(194,184,148,0.16)");
+  basinRise.addColorStop(0.55, "rgba(150,152,110,0.12)");
+  basinRise.addColorStop(1, "rgba(118,132,96,0.05)");
+  ctx.fillStyle = basinRise;
+  ctx.fill();
+
+  polygon(ctx, TERRAIN_BAND_SUMMIT);
+  const summitRise = ctx.createLinearGradient(0, 420, 0, 700);
+  summitRise.addColorStop(0, "rgba(228,220,202,0.22)");
+  summitRise.addColorStop(0.45, "rgba(184,176,154,0.14)");
+  summitRise.addColorStop(1, "rgba(126,134,114,0.04)");
+  ctx.fillStyle = summitRise;
+  ctx.fill();
+
+  polyline(ctx, TERRAIN_CONTOUR_BASIN_A);
+  ctx.strokeStyle = "rgba(246,238,218,0.08)";
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  polyline(ctx, TERRAIN_CONTOUR_BASIN_B);
+  ctx.strokeStyle = "rgba(240,232,210,0.07)";
+  ctx.lineWidth = 1.25;
+  ctx.stroke();
+
+  polyline(ctx, TERRAIN_CONTOUR_SUMMIT_A);
+  ctx.strokeStyle = "rgba(248,242,226,0.10)";
+  ctx.lineWidth = 1.35;
+  ctx.stroke();
+
+  polyline(ctx, TERRAIN_CONTOUR_SUMMIT_B);
+  ctx.strokeStyle = "rgba(244,236,220,0.08)";
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
 
   ctx.restore();
 }
@@ -190,7 +263,7 @@ export function createEnvironmentRenderer() {
     drawInnerCoastalWater(ctx, tick);
     drawShorelineSediment(ctx);
     drawLandShadow(ctx);
-    drawMountainMass(ctx);
+    drawTerrainBands(ctx);
     drawVegetation(ctx);
     drawSurfaceSpeckle(ctx);
     drawRouteBeds(ctx, kernel);
@@ -249,13 +322,6 @@ export function createEnvironmentRenderer() {
     ctx.strokeStyle = "rgba(238,246,248,0.08)";
     ctx.stroke();
 
-    polygon(ctx, BASIN_SHELF);
-    const shelf = ctx.createRadialGradient(608, 654, 50, 608, 654, 210);
-    shelf.addColorStop(0, "rgba(130,146,108,0.12)");
-    shelf.addColorStop(1, "rgba(130,146,108,0.025)");
-    ctx.fillStyle = shelf;
-    ctx.fill();
-
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(466, 492, 760, 754);
     basin.addColorStop(0, "rgba(144,204,218,0.96)");
@@ -285,41 +351,9 @@ export function createEnvironmentRenderer() {
     ctx.save();
     ctx.translate(26, 28);
     polygon(ctx, PENINSULA_LAND_MASK);
-    ctx.fillStyle = "rgba(8,20,28,0.16)";
+    ctx.fillStyle = "rgba(8,20,28,0.10)";
     ctx.fill();
     ctx.restore();
-  }
-
-  function drawMountainMass(ctx) {
-    polyline(ctx, CLIFF_WEST);
-    ctx.strokeStyle = "rgba(92,88,78,0.08)";
-    ctx.lineWidth = 12;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polyline(ctx, CLIFF_EAST);
-    ctx.strokeStyle = "rgba(92,88,78,0.08)";
-    ctx.lineWidth = 12;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.stroke();
-
-    polygon(ctx, RIDGE_SHADOW);
-    const ridgeShadow = ctx.createLinearGradient(0, 516, 0, 788);
-    ridgeShadow.addColorStop(0, "rgba(100,98,92,0.18)");
-    ridgeShadow.addColorStop(1, "rgba(74,82,78,0.04)");
-    ctx.fillStyle = ridgeShadow;
-    ctx.fill();
-
-    polygon(ctx, MOUNTAIN_FOOTHILLS);
-    const peak = ctx.createLinearGradient(0, 396, 0, 696);
-    peak.addColorStop(0, "rgba(230,224,210,0.70)");
-    peak.addColorStop(0.28, "rgba(202,190,172,0.40)");
-    peak.addColorStop(0.62, "rgba(160,150,138,0.16)");
-    peak.addColorStop(1, "rgba(120,126,116,0.04)");
-    ctx.fillStyle = peak;
-    ctx.fill();
   }
 
   function drawVegetation(ctx) {

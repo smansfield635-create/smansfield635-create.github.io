@@ -54,27 +54,27 @@ const BASIN_INNER = [
 ];
 
 const SUMMIT_RIDGE = [
-  [522, 640], [586, 572], [668, 512], [762, 462], [856, 428], [946, 422],
-  [1024, 446], [1078, 492], [1092, 550], [1062, 606], [984, 648],
-  [884, 672], [774, 680], [652, 674]
+  [494, 676], [572, 602], [668, 540], [778, 494], [890, 472], [994, 490],
+  [1078, 540], [1120, 608], [1100, 676], [1020, 726], [906, 754],
+  [776, 758], [638, 734]
 ];
 
 const RIDGE_SHADOW = [
-  [550, 684], [618, 618], [704, 560], [800, 520], [898, 502], [992, 516],
-  [1064, 556], [1098, 610], [1086, 662], [1018, 702], [918, 722],
-  [802, 726], [678, 716]
+  [514, 734], [598, 658], [702, 596], [818, 556], [930, 546], [1030, 580],
+  [1100, 640], [1120, 706], [1084, 768], [992, 808], [870, 824],
+  [732, 816], [598, 786]
 ];
 
 const FOOTHILL_STROKE_A = [
-  [594, 628], [662, 586], [738, 550], [820, 526], [904, 520], [986, 536], [1050, 566]
+  [584, 676], [662, 628], [752, 590], [848, 570], [944, 580], [1030, 620], [1090, 674]
 ];
 
 const FOOTHILL_STROKE_B = [
-  [548, 714], [620, 664], [704, 622], [796, 594], [890, 590], [982, 608], [1054, 642]
+  [530, 770], [614, 714], [712, 668], [816, 644], [920, 652], [1014, 690]
 ];
 
 const FOOTHILL_STROKE_C = [
-  [502, 796], [580, 740], [670, 692], [768, 658], [866, 650], [962, 670]
+  [482, 852], [572, 788], [676, 736], [786, 708], [896, 712], [1000, 744]
 ];
 
 const WEST_ASCENT_BELT = [
@@ -97,11 +97,23 @@ const SOUTH_CONTOUR = [
 ];
 
 const TERRACE_A = [
-  [430, 840], [500, 796], [582, 758], [672, 730], [764, 716], [850, 720]
+  [424, 860], [504, 812], [596, 770], [696, 740], [798, 730], [892, 738]
 ];
 
 const TERRACE_B = [
-  [396, 724], [472, 676], [560, 632], [658, 602], [756, 590], [856, 598]
+  [388, 748], [474, 694], [572, 646], [680, 612], [790, 600], [896, 608]
+];
+
+const TERRACE_C = [
+  [352, 634], [444, 574], [552, 524], [670, 490], [788, 480], [908, 492]
+];
+
+const FOREST_PATCHES = [
+  [[444, 934], [486, 896], [544, 884], [594, 908], [606, 952], [580, 994], [522, 1008], [470, 980]],
+  [[360, 792], [424, 742], [510, 714], [592, 726], [632, 772], [616, 822], [548, 854], [454, 848], [392, 824]],
+  [[430, 650], [492, 610], [566, 594], [636, 612], [668, 652], [654, 700], [592, 734], [506, 734], [446, 700]],
+  [[730, 634], [782, 604], [846, 604], [890, 630], [900, 670], [864, 702], [804, 710], [744, 686]],
+  [[860, 514], [908, 490], [968, 492], [1010, 520], [1016, 554], [980, 582], [920, 586], [872, 562]]
 ];
 
 export function createGroundRenderer() {
@@ -115,6 +127,7 @@ export function createGroundRenderer() {
     drawPeninsulaCore(ctx);
     drawElevationBands(ctx);
     drawSurfaceTexture(ctx);
+    drawForestPatches(ctx);
     drawTraversalBelts(ctx);
     drawPathBeds(ctx, kernel, projection, destination, pulse);
     drawLandmarks(ctx, kernel, pulse);
@@ -124,9 +137,9 @@ export function createGroundRenderer() {
 
   function drawPeninsulaCore(ctx) {
     polygon(ctx, PENINSULA_CORE);
-    const ground = ctx.createLinearGradient(0, 170, 0, 1140);
-    ground.addColorStop(0, "rgba(192,184,160,1)");
-    ground.addColorStop(0.18, "rgba(178,168,140,1)");
+    const ground = ctx.createLinearGradient(0, 160, 0, 1140);
+    ground.addColorStop(0, "rgba(194,186,162,1)");
+    ground.addColorStop(0.18, "rgba(180,170,142,1)");
     ground.addColorStop(0.44, "rgba(160,154,120,1)");
     ground.addColorStop(0.76, "rgba(142,148,106,1)");
     ground.addColorStop(1, "rgba(126,140,98,1)");
@@ -148,31 +161,31 @@ export function createGroundRenderer() {
 
   function drawElevationBands(ctx) {
     polygon(ctx, RIDGE_SHADOW);
-    ctx.fillStyle = "rgba(82,88,80,0.10)";
+    ctx.fillStyle = "rgba(78,84,78,0.12)";
     ctx.fill();
 
     polygon(ctx, BASIN_RING);
     const basin = ctx.createLinearGradient(0, 510, 0, 784);
     basin.addColorStop(0, "rgba(176,170,130,0.18)");
-    basin.addColorStop(1, "rgba(98,118,88,0.20)");
+    basin.addColorStop(1, "rgba(96,116,86,0.22)");
     ctx.fillStyle = basin;
     ctx.fill();
 
     polygon(ctx, BASIN_INNER);
-    ctx.fillStyle = "rgba(50,74,70,0.14)";
+    ctx.fillStyle = "rgba(46,70,68,0.16)";
     ctx.fill();
 
     polygon(ctx, SUMMIT_RIDGE);
-    const ridge = ctx.createLinearGradient(0, 420, 0, 680);
-    ridge.addColorStop(0, "rgba(228,222,210,0.88)");
-    ridge.addColorStop(0.34, "rgba(198,188,172,0.50)");
-    ridge.addColorStop(0.70, "rgba(156,148,136,0.20)");
-    ridge.addColorStop(1, "rgba(118,124,118,0.06)");
+    const ridge = ctx.createLinearGradient(0, 470, 0, 760);
+    ridge.addColorStop(0, "rgba(230,224,212,0.92)");
+    ridge.addColorStop(0.34, "rgba(198,188,172,0.54)");
+    ridge.addColorStop(0.70, "rgba(154,146,134,0.22)");
+    ridge.addColorStop(1, "rgba(116,122,116,0.06)");
     ctx.fillStyle = ridge;
     ctx.fill();
 
     polyline(ctx, FOOTHILL_STROKE_A);
-    ctx.strokeStyle = "rgba(248,242,228,0.20)";
+    ctx.strokeStyle = "rgba(248,242,228,0.22)";
     ctx.lineWidth = 2.2;
     ctx.stroke();
 
@@ -182,7 +195,7 @@ export function createGroundRenderer() {
     ctx.stroke();
 
     polyline(ctx, FOOTHILL_STROKE_C);
-    ctx.strokeStyle = "rgba(236,230,212,0.15)";
+    ctx.strokeStyle = "rgba(236,230,212,0.16)";
     ctx.lineWidth = 1.6;
     ctx.stroke();
   }
@@ -192,9 +205,9 @@ export function createGroundRenderer() {
     polygon(ctx, PENINSULA_CORE);
     ctx.clip();
 
-    fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 760, "rgba(108,118,84,0.048)", 1);
-    fillNoiseDots(ctx, { x: 230, y: 200, w: 840, h: 900 }, 500, "rgba(230,216,182,0.042)", 2);
-    fillNoiseDots(ctx, { x: 260, y: 240, w: 780, h: 840 }, 280, "rgba(150,164,110,0.032)", 3);
+    fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 920, "rgba(108,118,84,0.05)", 1);
+    fillNoiseDots(ctx, { x: 230, y: 200, w: 840, h: 900 }, 580, "rgba(230,216,182,0.044)", 2);
+    fillNoiseDots(ctx, { x: 260, y: 240, w: 780, h: 840 }, 360, "rgba(150,164,110,0.034)", 3);
 
     polyline(ctx, SOUTH_CONTOUR);
     ctx.strokeStyle = "rgba(238,224,194,0.10)";
@@ -202,16 +215,29 @@ export function createGroundRenderer() {
     ctx.stroke();
 
     polyline(ctx, TERRACE_A);
-    ctx.strokeStyle = "rgba(244,236,214,0.09)";
+    ctx.strokeStyle = "rgba(244,236,214,0.10)";
     ctx.lineWidth = 1.4;
     ctx.stroke();
 
     polyline(ctx, TERRACE_B);
-    ctx.strokeStyle = "rgba(242,232,208,0.09)";
+    ctx.strokeStyle = "rgba(242,232,208,0.10)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    polyline(ctx, TERRACE_C);
+    ctx.strokeStyle = "rgba(240,230,204,0.10)";
     ctx.lineWidth = 1.4;
     ctx.stroke();
 
     ctx.restore();
+  }
+
+  function drawForestPatches(ctx) {
+    for (const patch of FOREST_PATCHES) {
+      polygon(ctx, patch);
+      ctx.fillStyle = "rgba(102,128,88,0.12)";
+      ctx.fill();
+    }
   }
 
   function drawTraversalBelts(ctx) {

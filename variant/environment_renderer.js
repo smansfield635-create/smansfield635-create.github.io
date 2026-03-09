@@ -170,11 +170,6 @@ export function createEnvironmentRenderer() {
     ocean.addColorStop(1, "rgba(18,68,98,1)");
     ctx.fillStyle = ocean;
     ctx.fillRect(-1300, -320, width + 2600, height + 2200);
-
-    for (let i = 0; i < 38; i += 1) {
-      const y = 200 + (i * 36);
-      strokeWaveLine(ctx, y, -380, width + 380, tick * 0.023 + (i * 0.36), 2.0, 0.021, 0.046 + ((i % 4) * 0.008), 10);
-    }
   }
 
   function drawBathymetry(ctx, tick) {
@@ -306,7 +301,7 @@ export function createEnvironmentRenderer() {
     }
   }
 
-  function drawInnerInlet(ctx, tick) {
+  function drawInnerInlet(ctx) {
     polyline(ctx, INNER_INLET);
     ctx.strokeStyle = "rgba(196,228,238,0.10)";
     ctx.lineWidth = 10;

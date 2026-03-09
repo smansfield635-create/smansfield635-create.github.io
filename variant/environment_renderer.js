@@ -19,14 +19,27 @@ function polyline(ctx, points) {
 
 function strokeWaveLine(ctx, y, xStart, xEnd, tick, amplitude, wavelength, alpha) {
   ctx.beginPath();
-  for (let x = xStart; x <= xEnd; x += 18) {
+  for (let x = xStart; x <= xEnd; x += 14) {
     const yy = y + Math.sin((x * wavelength) + tick) * amplitude;
     if (x === xStart) ctx.moveTo(x, yy);
     else ctx.lineTo(x, yy);
   }
   ctx.strokeStyle = `rgba(232,242,246,${alpha})`;
-  ctx.lineWidth = 1.1;
+  ctx.lineWidth = 1;
   ctx.stroke();
+}
+
+function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+  for (let i = 0; i < count; i += 1) {
+    const px = x + (((i * 73) + seedOffset * 31) % w);
+    const py = y + (((i * 137) + seedOffset * 19) % h);
+    const r = 0.6 + ((i % 3) * 0.35);
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 const PENINSULA_OUTLINE = [
@@ -190,6 +203,39 @@ const BASIN_SHADOW = [
   [516, 680]
 ];
 
+const WEST_SHELF = [
+  [460, 1020],
+  [448, 952],
+  [456, 880],
+  [480, 806],
+  [516, 734],
+  [560, 664],
+  [610, 604],
+  [652, 550],
+  [682, 488],
+  [698, 424],
+  [694, 362],
+  [672, 302],
+  [634, 244],
+  [582, 188],
+  [526, 144],
+  [470, 118],
+  [414, 98]
+];
+
+const EAST_SHELF = [
+  [610, 990],
+  [654, 928],
+  [708, 862],
+  [766, 796],
+  [828, 728],
+  [892, 652],
+  [956, 568],
+  [1022, 486],
+  [1086, 418],
+  [1150, 376]
+];
+
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
     const { width, height, tick, viewportOffset, kernel, projection, selection, destination } = runtime;
@@ -198,13 +244,16 @@ export function createEnvironmentRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOcean(ctx, width, height, tick);
+    drawBathymetry(ctx, tick);
     drawPeninsulaShadow(ctx);
     drawPeninsulaMass(ctx);
+    drawCoastalShelves(ctx);
     drawCoastalHighlights(ctx);
     drawHarborCove(ctx, tick);
     drawBasinWater(ctx, tick);
     drawInnerInlet(ctx, tick);
     drawMountainAtmosphere(ctx);
+    drawSurfaceSpeckle(ctx);
     drawRouteBeds(ctx, kernel);
     drawRegionPads(ctx, kernel, projection, selection, destination, tick);
     drawNorthAtmosphere(ctx);
@@ -213,32 +262,60 @@ export function createEnvironmentRenderer() {
   }
 
   function drawOcean(ctx, width, height, tick) {
-    const ocean = ctx.createLinearGradient(0, -180, 0, height + 480);
-    ocean.addColorStop(0, "rgba(150,198,216,1)");
-    ocean.addColorStop(0.24, "rgba(112,170,194,1)");
-    ocean.addColorStop(0.56, "rgba(60,114,144,1)");
-    ocean.addColorStop(1, "rgba(18,66,94,1)");
+    const ocean = ctx.createLinearGradient(0, -180, 0, height + 520);
+    ocean.addColorStop(0, "rgba(148,200,220,1)");
+    ocean.addColorStop(0.24, "rgba(110,172,198,1)");
+    ocean.addColorStop(0.56, "rgba(60,116,148,1)");
+    ocean.addColorStop(1, "rgba(18,66,96,1)");
     ctx.fillStyle = ocean;
-    ctx.fillRect(-1300, -320, width + 2600, height + 2100);
+    ctx.fillRect(-1300, -320, width + 2600, height + 2200);
 
-    for (let i = 0; i < 24; i += 1) {
-      const y = 230 + (i * 54);
-      strokeWaveLine(ctx, y, -320, width + 320, tick * 0.026 + i * 0.55, 2.8, 0.019, 0.055 + ((i % 4) * 0.008));
+    for (let i = 0; i < 28; i += 1) {
+      const y = 220 + (i * 48);
+      strokeWaveLine(ctx, y, -360, width + 360, tick * 0.026 + i * 0.45, 2.5, 0.019, 0.05 + ((i % 4) * 0.008));
     }
+  }
 
-    const glow = ctx.createRadialGradient(650, 760, 80, 650, 760, 840);
-    glow.addColorStop(0, "rgba(244,250,252,0.08)");
-    glow.addColorStop(0.46, "rgba(224,238,246,0.03)");
-    glow.addColorStop(1, "rgba(224,238,246,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(-450, -320, width + 900, height + 1200);
+  function drawBathymetry(ctx, tick) {
+    polyline(ctx, WEST_SHELF);
+    ctx.strokeStyle = "rgba(214,240,248,0.12)";
+    ctx.lineWidth = 34;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, EAST_SHELF);
+    ctx.strokeStyle = "rgba(214,240,248,0.12)";
+    ctx.lineWidth = 42;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, WEST_SHELF);
+    ctx.strokeStyle = "rgba(226,246,252,0.10)";
+    ctx.lineWidth = 14;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, EAST_SHELF);
+    ctx.strokeStyle = "rgba(226,246,252,0.10)";
+    ctx.lineWidth = 18;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    for (let i = 0; i < 5; i += 1) {
+      strokeWaveLine(ctx, 930 - (i * 118), 704 + i * 60, 1150, tick * 0.038 + i, 1.4, 0.04, 0.04);
+      strokeWaveLine(ctx, 930 - (i * 144), 118, 486 - i * 18, tick * 0.038 + i * 0.8, 1.4, 0.04, 0.04);
+    }
   }
 
   function drawPeninsulaShadow(ctx) {
     ctx.save();
-    ctx.translate(18, 20);
+    ctx.translate(20, 22);
     polygon(ctx, PENINSULA_OUTLINE);
-    ctx.fillStyle = "rgba(8,20,28,0.16)";
+    ctx.fillStyle = "rgba(8,20,28,0.18)";
     ctx.fill();
     ctx.restore();
   }
@@ -246,11 +323,11 @@ export function createEnvironmentRenderer() {
   function drawPeninsulaMass(ctx) {
     polygon(ctx, PENINSULA_OUTLINE);
     const land = ctx.createLinearGradient(0, 120, 0, 1160);
-    land.addColorStop(0, "rgba(182,174,154,1)");
-    land.addColorStop(0.20, "rgba(172,164,140,1)");
-    land.addColorStop(0.44, "rgba(156,154,118,1)");
-    land.addColorStop(0.72, "rgba(140,148,106,1)");
-    land.addColorStop(1, "rgba(124,138,98,1)");
+    land.addColorStop(0, "rgba(184,176,154,1)");
+    land.addColorStop(0.18, "rgba(174,166,142,1)");
+    land.addColorStop(0.42, "rgba(158,154,120,1)");
+    land.addColorStop(0.72, "rgba(142,148,106,1)");
+    land.addColorStop(1, "rgba(126,140,98,1)");
     ctx.fillStyle = land;
     ctx.fill();
 
@@ -259,8 +336,24 @@ export function createEnvironmentRenderer() {
     ctx.stroke();
 
     polygon(ctx, BASIN_SHADOW);
-    ctx.fillStyle = "rgba(46,72,70,0.08)";
+    ctx.fillStyle = "rgba(44,72,68,0.10)";
     ctx.fill();
+  }
+
+  function drawCoastalShelves(ctx) {
+    polyline(ctx, WEST_SHELF);
+    ctx.strokeStyle = "rgba(208,190,148,0.10)";
+    ctx.lineWidth = 16;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+
+    polyline(ctx, EAST_SHELF);
+    ctx.strokeStyle = "rgba(208,190,148,0.10)";
+    ctx.lineWidth = 18;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
   }
 
   function drawCoastalHighlights(ctx) {
@@ -278,9 +371,9 @@ export function createEnvironmentRenderer() {
   function drawHarborCove(ctx, tick) {
     polygon(ctx, HARBOR_COVE);
     const harbor = ctx.createLinearGradient(492, 894, 654, 1050);
-    harbor.addColorStop(0, "rgba(122,188,200,0.98)");
-    harbor.addColorStop(0.45, "rgba(82,140,160,0.98)");
-    harbor.addColorStop(1, "rgba(46,92,118,1)");
+    harbor.addColorStop(0, "rgba(126,192,204,0.98)");
+    harbor.addColorStop(0.42, "rgba(86,144,164,0.98)");
+    harbor.addColorStop(1, "rgba(46,92,120,1)");
     ctx.fillStyle = harbor;
     ctx.fill();
 
@@ -288,15 +381,15 @@ export function createEnvironmentRenderer() {
     ctx.strokeStyle = "rgba(236,244,248,0.34)";
     ctx.stroke();
 
-    for (let i = 0; i < 5; i += 1) {
-      strokeWaveLine(ctx, 920 + (i * 16), 506, 636, tick * 0.05 + i, 1.8, 0.046, 0.12);
+    for (let i = 0; i < 6; i += 1) {
+      strokeWaveLine(ctx, 920 + (i * 14), 506, 636, tick * 0.05 + i, 1.8, 0.046, 0.12);
     }
   }
 
   function drawBasinWater(ctx, tick) {
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(476, 500, 748, 712);
-    basin.addColorStop(0, "rgba(122,186,198,0.98)");
+    basin.addColorStop(0, "rgba(126,188,202,0.98)");
     basin.addColorStop(0.46, "rgba(84,140,160,0.98)");
     basin.addColorStop(1, "rgba(42,94,122,1)");
     ctx.fillStyle = basin;
@@ -334,16 +427,25 @@ export function createEnvironmentRenderer() {
   function drawMountainAtmosphere(ctx) {
     polygon(ctx, MOUNTAIN_FOOTHILLS);
     const peak = ctx.createLinearGradient(0, 272, 0, 530);
-    peak.addColorStop(0, "rgba(220,214,204,0.74)");
-    peak.addColorStop(0.40, "rgba(194,186,170,0.40)");
+    peak.addColorStop(0, "rgba(220,214,204,0.76)");
+    peak.addColorStop(0.34, "rgba(194,186,170,0.44)");
     peak.addColorStop(1, "rgba(160,150,136,0.12)");
     ctx.fillStyle = peak;
     ctx.fill();
 
     ctx.beginPath();
-    ctx.ellipse(852, 304, 182, 56, -0.16, 0, Math.PI * 2);
+    ctx.ellipse(850, 302, 184, 58, -0.16, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(248,246,240,0.06)";
     ctx.fill();
+  }
+
+  function drawSurfaceSpeckle(ctx) {
+    ctx.save();
+    polygon(ctx, PENINSULA_OUTLINE);
+    ctx.clip();
+    fillNoiseDots(ctx, { x: 220, y: 160, w: 850, h: 950 }, 420, "rgba(110,118,86,0.055)", 1);
+    fillNoiseDots(ctx, { x: 260, y: 220, w: 760, h: 860 }, 280, "rgba(224,214,178,0.05)", 2);
+    ctx.restore();
   }
 
   function drawRouteBeds(ctx, kernel) {

@@ -29,16 +29,6 @@ const SEDIMENT_EAST = [
   [790, 710], [850, 640], [912, 560], [972, 480], [1030, 420], [1086, 370]
 ];
 
-const SHALLOW_HARBOR = [
-  [474, 990], [496, 936], [538, 896], [594, 888], [644, 908], [672, 950],
-  [666, 1000], [632, 1042], [576, 1062], [520, 1054], [482, 1024], [470, 998]
-];
-
-const SHALLOW_BASIN = [
-  [446, 612], [484, 556], [544, 514], [620, 494], [696, 506], [754, 546],
-  [784, 604], [776, 666], [736, 718], [670, 752], [592, 760], [522, 736], [466, 688], [442, 634]
-];
-
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
     const { viewportOffset } = runtime;
@@ -53,8 +43,8 @@ export function createEnvironmentRenderer() {
   }
 
   function drawCoastTransition(ctx) {
-    sedimentBand(ctx, SEDIMENT_WEST, 18, 0.16, 0.10);
-    sedimentBand(ctx, SEDIMENT_EAST, 14, 0.12, 0.08);
+    sedimentBand(ctx, SEDIMENT_WEST, 18, 0.14, 0.08);
+    sedimentBand(ctx, SEDIMENT_EAST, 14, 0.10, 0.06);
   }
 
   function sedimentBand(ctx, points, inset, alphaTop, alphaBottom) {
@@ -81,46 +71,44 @@ export function createEnvironmentRenderer() {
   }
 
   function drawHarborWater(ctx) {
-    polygon(ctx, SHALLOW_HARBOR);
-    const shallow = ctx.createLinearGradient(474, 896, 672, 1062);
-    shallow.addColorStop(0, "rgba(172,224,228,0.92)");
-    shallow.addColorStop(0.45, "rgba(152,214,222,0.90)");
-    shallow.addColorStop(1, "rgba(126,198,210,0.88)");
-    ctx.fillStyle = shallow;
-    ctx.fill();
+    ctx.save();
+    ctx.shadowColor = "rgba(126,198,210,0.18)";
+    ctx.shadowBlur = 22;
 
     polygon(ctx, HARBOR_COVE);
     const harbor = ctx.createLinearGradient(488, 886, 656, 1054);
-    harbor.addColorStop(0, "rgba(146,206,218,0.94)");
-    harbor.addColorStop(0.38, "rgba(96,156,174,0.94)");
-    harbor.addColorStop(1, "rgba(42,92,120,0.94)");
+    harbor.addColorStop(0, "rgba(148,208,220,0.96)");
+    harbor.addColorStop(0.40, "rgba(98,158,176,0.96)");
+    harbor.addColorStop(1, "rgba(44,96,124,0.96)");
     ctx.fillStyle = harbor;
     ctx.fill();
 
+    ctx.restore();
+
+    polygon(ctx, HARBOR_COVE);
     ctx.lineWidth = 1.0;
-    ctx.strokeStyle = "rgba(238,246,248,0.06)";
+    ctx.strokeStyle = "rgba(238,246,248,0.08)";
     ctx.stroke();
   }
 
   function drawBasinWater(ctx) {
-    polygon(ctx, SHALLOW_BASIN);
-    const basinShallow = ctx.createLinearGradient(446, 514, 784, 760);
-    basinShallow.addColorStop(0, "rgba(170,220,224,0.82)");
-    basinShallow.addColorStop(0.55, "rgba(142,204,214,0.78)");
-    basinShallow.addColorStop(1, "rgba(110,184,198,0.72)");
-    ctx.fillStyle = basinShallow;
-    ctx.fill();
+    ctx.save();
+    ctx.shadowColor = "rgba(120,190,204,0.14)";
+    ctx.shadowBlur = 18;
 
     polygon(ctx, BASIN_WATER);
     const basin = ctx.createLinearGradient(466, 492, 760, 754);
-    basin.addColorStop(0, "rgba(144,204,218,0.96)");
-    basin.addColorStop(0.40, "rgba(96,154,174,0.96)");
-    basin.addColorStop(1, "rgba(38,90,120,0.96)");
+    basin.addColorStop(0, "rgba(146,206,220,0.94)");
+    basin.addColorStop(0.42, "rgba(96,154,176,0.94)");
+    basin.addColorStop(1, "rgba(40,92,122,0.94)");
     ctx.fillStyle = basin;
     ctx.fill();
 
-    ctx.lineWidth = 1.2;
-    ctx.strokeStyle = "rgba(238,246,248,0.10)";
+    ctx.restore();
+
+    polygon(ctx, BASIN_WATER);
+    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = "rgba(238,246,248,0.08)";
     ctx.stroke();
   }
 

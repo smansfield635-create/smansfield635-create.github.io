@@ -4,11 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Diamond Gate Bridge — Harbor Core Foundation</title>
-  <meta name="description" content="Harbor Core foundation runtime bound to world truth and four-pixel state.">
+  <meta name="description" content="Diamond Gate Bridge Harbor Core interactive foundation runtime.">
+  <meta name="theme-color" content="#0b1220">
   <style>
     :root{
-      --bg:#071019;
-      --panel:rgba(12,18,28,.74);
+      --bg-0:#05070b;
+      --bg-1:#10192a;
+      --bg-2:#1d2140;
+      --panel:rgba(10,16,26,.74);
       --line:rgba(255,255,255,.12);
       --text:#edf4ff;
       --muted:rgba(237,244,255,.74);
@@ -25,25 +28,33 @@
       padding:0;
       width:100%;
       height:100%;
-      background:#05070b;
-      color:var(--text);
       overflow:hidden;
+      background:var(--bg-0);
+      color:var(--text);
       font-family:var(--font);
     }
-    .shell{
+    body{
+      overscroll-behavior:none;
+      touch-action:none;
+    }
+    .app{
       position:relative;
       width:100vw;
       height:100dvh;
       overflow:hidden;
-      background:radial-gradient(circle at 50% 18%,rgba(120,90,130,.28),transparent 28%),linear-gradient(180deg,#131b2a 0%,#09111b 48%,#05070b 100%);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,140,120,.14), transparent 18%),
+        radial-gradient(circle at 24% 20%, rgba(150,115,215,.16), transparent 24%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
     }
-    canvas{
+    #scene{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       display:block;
       z-index:1;
+      touch-action:none;
     }
     .topbar{
       position:absolute;
@@ -52,8 +63,8 @@
       right:var(--safe-right);
       z-index:3;
       display:flex;
-      justify-content:space-between;
       align-items:flex-start;
+      justify-content:space-between;
       gap:12px;
       pointer-events:none;
     }
@@ -75,15 +86,40 @@
       width:28px;
       height:28px;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.2);
-      background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.95),rgba(255,255,255,.18) 36%,transparent 37%),linear-gradient(180deg,#f1f7ff 0%,#a7c5f0 42%,#21385f 72%,#0d1730 100%);
+      border:1px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.18) 36%, transparent 37%),
+        linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
+      flex:0 0 auto;
     }
-    .right-panel{
+    .brand-copy{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+    }
+    .brand-copy strong{
+      font-size:13px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .brand-copy span{
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .panel-stack{
       position:absolute;
-      top:calc(var(--safe-top) + 56px);
       right:var(--safe-right);
+      top:calc(var(--safe-top) + 56px);
       z-index:3;
-      width:min(320px,calc(100vw - 24px));
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      width:min(340px, calc(100vw - 24px));
+      pointer-events:none;
+    }
+    .panel{
       padding:14px;
       border-radius:18px;
       border:1px solid var(--line);
@@ -91,8 +127,9 @@
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
       box-shadow:0 12px 28px rgba(0,0,0,.28);
+      pointer-events:none;
     }
-    .right-panel h2{
+    .panel h2{
       margin:0 0 10px;
       font-size:14px;
       letter-spacing:.08em;
@@ -109,6 +146,12 @@
     }
     .kv dt{color:var(--muted)}
     .kv dd{margin:0;color:var(--text);word-break:break-word}
+    .panel-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
     .footer-hint{
       position:absolute;
       left:50%;
@@ -126,227 +169,94 @@
       white-space:nowrap;
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
+      pointer-events:none;
+    }
+    @media (max-width: 920px){
+      .panel-stack{
+        top:auto;
+        left:var(--safe-left);
+        right:var(--safe-right);
+        bottom:calc(var(--safe-bottom) + 48px);
+        width:auto;
+      }
+      .kv{
+        grid-template-columns:88px 1fr;
+      }
+      .footer-hint{
+        font-size:11px;
+        max-width:calc(100vw - 24px);
+        text-align:center;
+        white-space:normal;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <canvas id="scene" aria-label="Harbor Core Foundation Scene"></canvas>
+  <div class="app">
+    <canvas id="scene" aria-label="Harbor Core Interactive Foundation Scene"></canvas>
 
     <div class="topbar">
       <div class="pill">
         <span class="brand-mark" aria-hidden="true"></span>
-        <strong>Diamond Gate Bridge</strong>
+        <div class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Harbor Core Interactive Foundation</span>
+        </div>
       </div>
-      <div class="pill">Harbor Core Foundation</div>
+      <div class="pill">Closed Pilot</div>
     </div>
 
-    <section class="right-panel" aria-live="polite">
-      <h2>Runtime State</h2>
-      <dl class="kv">
-        <dt>Region</dt><dd id="regionOut">—</dd>
-        <dt>Cell</dt><dd id="cellOut">—</dd>
-        <dt>Sector</dt><dd id="sectorOut">—</dd>
-        <dt>Band</dt><dd id="bandOut">—</dd>
-        <dt>Encoding</dt><dd id="encodingOut">—</dd>
-        <dt>Byte</dt><dd id="byteOut">—</dd>
-      </dl>
-    </section>
+    <div class="panel-stack">
+      <section class="panel" aria-live="polite">
+        <h2>Runtime State</h2>
+        <dl class="kv">
+          <dt>Region</dt><dd id="regionOut">—</dd>
+          <dt>Cell</dt><dd id="cellOut">—</dd>
+          <dt>Sector</dt><dd id="sectorOut">—</dd>
+          <dt>Band</dt><dd id="bandOut">—</dd>
+          <dt>Encoding</dt><dd id="encodingOut">—</dd>
+          <dt>Byte</dt><dd id="byteOut">—</dd>
+        </dl>
+      </section>
 
-    <div class="footer-hint">WASD / Arrow Keys · truth-bound Harbor pilot foundation</div>
+      <section class="panel" aria-live="polite">
+        <h2>Selection</h2>
+        <dl class="kv">
+          <dt>Selected</dt><dd id="selectedNameOut">—</dd>
+          <dt>Type</dt><dd id="selectedTypeOut">—</dd>
+          <dt>Destination</dt><dd id="destinationOut">—</dd>
+        </dl>
+        <p class="panel-copy" id="selectionHintOut">Tap a region or route to inspect. Tap a region to move there.</p>
+      </section>
+    </div>
+
+    <div class="footer-hint">Tap a district to inspect · tap a district to move · WASD / Arrow Keys also work</div>
   </div>
 
   <script type="module">
-    import { loadWorldKernel } from "../world/world_kernel.js";
-    import { drawByte, drawGlyphLabel, projectByteToSector } from "../assets/four_pixel_renderer.js";
+    import { createScene } from "./variant/scene.js";
 
-    const canvas = document.getElementById("scene");
-    const ctx = canvas.getContext("2d");
-
-    const out = {
+    const outputs = {
       region: document.getElementById("regionOut"),
       cell: document.getElementById("cellOut"),
       sector: document.getElementById("sectorOut"),
       band: document.getElementById("bandOut"),
       encoding: document.getElementById("encodingOut"),
-      byte: document.getElementById("byteOut")
+      byte: document.getElementById("byteOut"),
+      selectedName: document.getElementById("selectedNameOut"),
+      selectedType: document.getElementById("selectedTypeOut"),
+      destination: document.getElementById("destinationOut"),
+      selectionHint: document.getElementById("selectionHintOut")
     };
 
-    const state = {
-      w: 0,
-      h: 0,
-      dpr: 1,
-      kernel: null,
-      keys: new Set(),
-      player: {
-        x: 180,
-        y: 460,
-        speed: 2.1
-      },
-      projection: null,
-      tick: 0
-    };
+    const canvas = document.getElementById("scene");
 
-    function resize() {
-      state.dpr = Math.max(1, window.devicePixelRatio || 1);
-      state.w = window.innerWidth;
-      state.h = window.innerHeight;
-      canvas.width = Math.floor(state.w * state.dpr);
-      canvas.height = Math.floor(state.h * state.dpr);
-      canvas.style.width = `${state.w}px`;
-      canvas.style.height = `${state.h}px`;
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(state.dpr, state.dpr);
-    }
-
-    function updatePlayer() {
-      let dx = 0;
-      let dy = 0;
-      if (state.keys.has("ArrowLeft") || state.keys.has("a")) dx -= 1;
-      if (state.keys.has("ArrowRight") || state.keys.has("d")) dx += 1;
-      if (state.keys.has("ArrowUp") || state.keys.has("w")) dy -= 1;
-      if (state.keys.has("ArrowDown") || state.keys.has("s")) dy += 1;
-
-      if (dx !== 0 || dy !== 0) {
-        const length = Math.hypot(dx, dy) || 1;
-        dx /= length;
-        dy /= length;
-        state.player.x += dx * state.player.speed;
-        state.player.y += dy * state.player.speed;
-      }
-
-      state.player.x = Math.max(60, Math.min(1020, state.player.x));
-      state.player.y = Math.max(100, Math.min(560, state.player.y));
-    }
-
-    function projectState() {
-      state.projection = state.kernel.helpers.projectWorldPositionToCell({
-        x: state.player.x,
-        y: state.player.y,
-        previousCellId: state.projection?.cellId ?? null
+    createScene(canvas, outputs)
+      .then((scene) => scene.start())
+      .catch((error) => {
+        console.error(error);
+        alert(`Interactive foundation failed to boot: ${error.message}`);
       });
-
-      const region = state.kernel.helpers.getRegion(state.projection.regionId);
-      const encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
-
-      out.region.textContent = region.displayName;
-      out.cell.textContent = state.projection.cellId;
-      out.sector.textContent = state.projection.sector;
-      out.band.textContent = String(state.projection.bandIndex);
-      out.encoding.textContent = encoding.label;
-      out.byte.textContent = state.projection.stateByte;
-    }
-
-    function drawBackground() {
-      const g = ctx.createLinearGradient(0, 0, 0, state.h);
-      g.addColorStop(0, "rgba(28,36,58,1)");
-      g.addColorStop(0.45, "rgba(16,24,40,1)");
-      g.addColorStop(1, "rgba(8,10,16,1)");
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, state.w, state.h);
-
-      const glow = ctx.createRadialGradient(state.w * 0.52, state.h * 0.22, 30, state.w * 0.52, state.h * 0.22, 280);
-      glow.addColorStop(0, "rgba(255,184,132,0.36)");
-      glow.addColorStop(1, "rgba(255,184,132,0)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, state.w, state.h);
-    }
-
-    function drawWorld() {
-      const regions = [...state.kernel.regionsById.values()];
-      const paths = [...state.kernel.pathsById.values()];
-
-      ctx.save();
-      ctx.translate((state.w - 1080) * 0.5, (state.h - 640) * 0.5);
-
-      ctx.strokeStyle = "rgba(160, 190, 255, 0.22)";
-      ctx.lineWidth = 16;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-
-      for (const path of paths) {
-        ctx.beginPath();
-        path.centerline.forEach(([x, y], index) => {
-          if (index === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-      }
-
-      for (const region of regions) {
-        const [x, y] = region.centerPoint;
-        ctx.beginPath();
-        ctx.arc(x, y, 42, 0, Math.PI * 2);
-        const isActive = state.projection?.regionId === region.regionId;
-        ctx.fillStyle = isActive ? "rgba(255,212,152,0.36)" : "rgba(74,116,168,0.20)";
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = isActive ? "rgba(255,228,184,0.96)" : "rgba(210,226,255,0.26)";
-        ctx.stroke();
-
-        ctx.fillStyle = "rgba(245,249,255,0.96)";
-        ctx.font = "600 13px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(region.displayName, x, y - 52);
-      }
-
-      for (const cell of state.kernel.diamondCellsById.values()) {
-        const active = state.projection?.cellId === cell.diamondCellId;
-        ctx.beginPath();
-        ctx.arc(cell.centerPoint[0], cell.centerPoint[1], active ? 10 : 7, 0, Math.PI * 2);
-        ctx.fillStyle = active ? "rgba(255,236,188,0.96)" : "rgba(220,230,255,0.36)";
-        ctx.fill();
-      }
-
-      const headingSector = state.projection?.sector ?? "S";
-      const projected = projectByteToSector(state.projection?.stateByte ?? "11010010", headingSector);
-      drawByte(ctx, projected.byte, 150, 120, 56, { rotation: projected.rotation });
-
-      drawGlyphLabel(ctx, "ACTIVE STATE", 150, 168, { font: "700 11px system-ui, sans-serif" });
-
-      ctx.beginPath();
-      ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,126,86,0.98)";
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "rgba(255,240,220,0.96)";
-      ctx.stroke();
-
-      ctx.restore();
-    }
-
-    function frame() {
-      state.tick += 1;
-      updatePlayer();
-      projectState();
-
-      ctx.clearRect(0, 0, state.w, state.h);
-      drawBackground();
-      drawWorld();
-
-      requestAnimationFrame(frame);
-    }
-
-    async function boot() {
-      resize();
-      state.kernel = await loadWorldKernel();
-      projectState();
-      frame();
-    }
-
-    window.addEventListener("resize", resize, { passive: true });
-    window.addEventListener("keydown", (event) => {
-      state.keys.add(event.key);
-    });
-    window.addEventListener("keyup", (event) => {
-      state.keys.delete(event.key);
-    });
-
-    boot().catch((error) => {
-      console.error(error);
-      alert(`Harbor Core foundation failed to boot: ${error.message}`);
-    });
   </script>
 </body>
 </html>

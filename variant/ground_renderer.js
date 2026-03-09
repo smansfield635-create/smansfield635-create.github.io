@@ -43,12 +43,12 @@ function fillMicroDots(ctx, bounds, count, color) {
   }
 }
 
-const PENINSULA_CORE = [
-  [540, 1140], [514, 1076], [500, 998], [500, 914], [516, 830], [544, 750], [584, 678],
-  [636, 614], [694, 556], [754, 502], [812, 438], [874, 362], [940, 292], [1012, 234],
-  [1082, 194], [1146, 176], [1150, 176], [1150, -120], [132, -120], [132, 178], [192, 240],
-  [248, 314], [298, 396], [340, 488], [376, 580], [408, 668], [438, 752], [466, 832],
-  [492, 918], [514, 1012], [530, 1088]
+const COASTLINE_PATH = [
+  [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730], [576, 650],
+  [632, 580], [694, 520], [758, 466], [822, 402], [890, 328], [958, 260], [1028, 208],
+  [1094, 176], [1144, 164], [1150, 162], [1150, -220], [118, -220], [118, 150], [186, 220],
+  [248, 300], [302, 390], [348, 486], [384, 584], [414, 676], [442, 760], [468, 842],
+  [494, 928], [516, 1018], [530, 1096]
 ];
 
 const SOUTH_BEACH = [
@@ -149,7 +149,7 @@ export function createGroundRenderer() {
   }
 
   function drawPeninsulaCore(ctx) {
-    polygon(ctx, PENINSULA_CORE);
+    polygon(ctx, COASTLINE_PATH);
     const ground = ctx.createLinearGradient(0, 160, 0, 1140);
     ground.addColorStop(0, "rgba(194,186,162,1)");
     ground.addColorStop(0.18, "rgba(180,170,142,1)");
@@ -215,7 +215,7 @@ export function createGroundRenderer() {
 
   function drawSurfaceTexture(ctx) {
     ctx.save();
-    polygon(ctx, PENINSULA_CORE);
+    polygon(ctx, COASTLINE_PATH);
     ctx.clip();
 
     fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 920, "rgba(108,118,84,0.05)", 1);
@@ -247,7 +247,7 @@ export function createGroundRenderer() {
 
   function drawForestPatches(ctx) {
     ctx.save();
-    polygon(ctx, PENINSULA_CORE);
+    polygon(ctx, COASTLINE_PATH);
     ctx.clip();
     for (const patch of MICRO_FOREST_PATCHES) {
       fillMicroDots(ctx, patch, patch.count, patch.color);

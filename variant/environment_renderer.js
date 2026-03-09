@@ -1,3 +1,14 @@
+/* DESTINATION FILE: /variant/environment_renderer.js */
+/* APPLY SECOND */
+/*
+WHAT YOU SHOULD SEE AFTER THIS FILE:
+- A clearly visible beach band around the peninsula
+- Dry sand closest to land
+- Wet sand outside that
+- Shallow turquoise water outside the wet sand
+- Market District should feel much less like it hangs over raw water
+*/
+
 function polygon(ctx, points) {
   if (!points || !points.length) return;
   ctx.beginPath();
@@ -73,8 +84,6 @@ function offsetPolyline(points, outwardDistance) {
     const ty = next[1] - prev[1];
     const len = Math.hypot(tx, ty) || 1;
 
-    // Counterclockwise coastline segments:
-    // land is left of path, ocean is right of path.
     const nx = ty / len;
     const ny = -tx / len;
 
@@ -170,13 +179,13 @@ function getWaterStyle(waterClass) {
 
   return {
     outer: "rgba(20,92,130,0.96)",
-    middle: "rgba(52,138,170,0.95)",
-    inner: "rgba(122,192,202,0.90)",
-    shellOuter: "rgba(102,184,200,0.10)",
-    shellInner: "rgba(186,228,224,0.04)",
-    sheen: "rgba(230,246,248,0.06)",
-    foam: "rgba(240,248,248,0.06)",
-    shadow: "rgba(72,132,158,0.09)"
+      middle: "rgba(52,138,170,0.95)",
+      inner: "rgba(122,192,202,0.90)",
+      shellOuter: "rgba(102,184,200,0.10)",
+      shellInner: "rgba(186,228,224,0.04)",
+      sheen: "rgba(230,246,248,0.06)",
+      foam: "rgba(240,248,248,0.06)",
+      shadow: "rgba(72,132,158,0.09)"
   };
 }
 
@@ -188,9 +197,6 @@ const LAND_MASK = [
   [384, 584], [414, 676], [442, 760], [468, 842], [494, 928], [516, 1018], [530, 1096]
 ];
 
-// Geometry-derived coastline ownership.
-// East shore: south tip -> north-east visible coast.
-// West shore: north-west visible coast -> south tip.
 const EAST_SHORE = LAND_MASK.slice(0, 17);
 const WEST_SHORE = LAND_MASK.slice(18).concat([LAND_MASK[0]]);
 
@@ -203,11 +209,10 @@ function clipToOceanOnly(ctx) {
 
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
-    const { viewportOffset, renderScale = 1, kernel, tick } = runtime;
+    const { viewportOffset, kernel, tick } = runtime;
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
-    ctx.scale(renderScale, renderScale);
 
     drawDeterministicCoastalPass(ctx, tick);
     drawWaterBodies(ctx, kernel, tick);
@@ -231,19 +236,11 @@ export function createEnvironmentRenderer() {
     const shallow = offsetPolyline(coastPath, 124);
     const shelf = offsetPolyline(coastPath, 176);
 
-    // Dry sand beach: this should be obviously visible.
     fillBandBetween(ctx, coastPath, drySand, "rgba(236,216,168,0.30)");
-
-    // Wet sand: slightly darker and smoother.
     fillBandBetween(ctx, drySand, wetSand, "rgba(214,200,162,0.22)");
-
-    // Shallow tropical water.
     fillBandBetween(ctx, wetSand, shallow, "rgba(154,224,220,0.17)");
-
-    // Outer shelf blend.
     fillBandBetween(ctx, shallow, shelf, "rgba(78,190,206,0.10)");
 
-    // Thin foam line right at the coast.
     ctx.save();
     polyline(ctx, coastPath);
     ctx.lineWidth = 1.2;
@@ -253,7 +250,6 @@ export function createEnvironmentRenderer() {
     ctx.stroke();
     ctx.restore();
 
-    // Minimal motion only in water bands.
     strokeWaveTrain(ctx, shallow, tick + 10, "rgba(246,252,252,0.04)", 0.7, 22, 0.7);
     strokeWaveTrain(ctx, shelf, tick + 20, "rgba(238,248,250,0.025)", 0.9, 30, 0.65);
   }

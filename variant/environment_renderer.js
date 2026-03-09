@@ -2,7 +2,9 @@ function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i][0], points[i][1]);
+  }
   ctx.closePath();
 }
 
@@ -10,7 +12,9 @@ function polyline(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i][0], points[i][1]);
+  }
 }
 
 function strokeWaveLine(ctx, y, xStart, xEnd, tick, amplitude, wavelength, alpha, step = 12) {
@@ -110,6 +114,14 @@ const CLIFF_EAST = [
   [706, 904], [758, 842], [816, 776], [874, 704], [930, 628], [986, 554], [1038, 494]
 ];
 
+const VEGETATION_PATCHES = [
+  [[448, 930], [488, 900], [544, 892], [590, 912], [606, 954], [584, 992], [530, 1008], [474, 984]],
+  [[364, 790], [420, 742], [500, 712], [586, 724], [626, 770], [612, 820], [548, 852], [458, 848], [392, 826]],
+  [[426, 652], [486, 612], [560, 594], [632, 610], [668, 648], [656, 696], [600, 730], [516, 736], [450, 704]],
+  [[724, 636], [770, 606], [830, 602], [874, 624], [886, 662], [856, 694], [798, 706], [742, 686]],
+  [[862, 520], [906, 492], [964, 490], [1006, 514], [1014, 548], [980, 578], [924, 584], [878, 562]]
+];
+
 export function createEnvironmentRenderer() {
   function draw(ctx, runtime) {
     const { width, height, tick, viewportOffset, kernel, projection, selection, destination } = runtime;
@@ -129,6 +141,7 @@ export function createEnvironmentRenderer() {
     drawBasinWater(ctx, tick);
     drawInnerInlet(ctx, tick);
     drawMountainMass(ctx);
+    drawVegetation(ctx);
     drawSurfaceSpeckle(ctx);
     drawRouteBeds(ctx, kernel);
     drawRegionPads(ctx, kernel, projection, selection, destination, tick);
@@ -356,6 +369,14 @@ export function createEnvironmentRenderer() {
     ctx.ellipse(842, 410, 230, 98, -0.08, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(250,246,238,0.06)";
     ctx.fill();
+  }
+
+  function drawVegetation(ctx) {
+    for (const patch of VEGETATION_PATCHES) {
+      polygon(ctx, patch);
+      ctx.fillStyle = "rgba(108,134,92,0.10)";
+      ctx.fill();
+    }
   }
 
   function drawSurfaceSpeckle(ctx) {

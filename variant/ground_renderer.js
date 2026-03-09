@@ -21,8 +21,8 @@ function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
   const { x, y, w, h } = bounds;
   ctx.fillStyle = color;
   for (let i = 0; i < count; i += 1) {
-    const px = x + (((i * 71) + seedOffset * 17) % w);
-    const py = y + (((i * 131) + seedOffset * 23) % h);
+    const px = x + (((i * 71) + (seedOffset * 17)) % w);
+    const py = y + (((i * 131) + (seedOffset * 23)) % h);
     const r = 0.55 + ((i % 4) * 0.28);
     ctx.beginPath();
     ctx.arc(px, py, r, 0, Math.PI * 2);
@@ -31,146 +31,77 @@ function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
 }
 
 const PENINSULA_CORE = [
-  [540, 1140],
-  [514, 1076],
-  [500, 998],
-  [500, 914],
-  [516, 830],
-  [544, 750],
-  [584, 678],
-  [636, 614],
-  [694, 556],
-  [754, 502],
-  [812, 438],
-  [874, 362],
-  [940, 292],
-  [1012, 234],
-  [1082, 194],
-  [1146, 176],
-  [1150, 176],
-  [1150, -120],
-  [132, -120],
-  [132, 178],
-  [192, 240],
-  [248, 314],
-  [298, 396],
-  [340, 488],
-  [376, 580],
-  [408, 668],
-  [438, 752],
-  [466, 832],
-  [492, 918],
-  [514, 1012],
-  [530, 1088]
+  [540, 1140], [514, 1076], [500, 998], [500, 914], [516, 830], [544, 750], [584, 678],
+  [636, 614], [694, 556], [754, 502], [812, 438], [874, 362], [940, 292], [1012, 234],
+  [1082, 194], [1146, 176], [1150, 176], [1150, -120], [132, -120], [132, 178], [192, 240],
+  [248, 314], [298, 396], [340, 488], [376, 580], [408, 668], [438, 752], [466, 832],
+  [492, 918], [514, 1012], [530, 1088]
 ];
 
 const SOUTH_BEACH = [
-  [504, 978],
-  [528, 940],
-  [572, 928],
-  [620, 938],
-  [656, 966],
-  [666, 1008],
-  [652, 1050],
-  [616, 1086],
-  [568, 1098],
-  [524, 1084],
-  [500, 1046],
-  [496, 1000]
+  [504, 978], [528, 940], [572, 928], [620, 938], [656, 966], [666, 1008],
+  [652, 1050], [616, 1086], [568, 1098], [524, 1084], [500, 1046], [496, 1000]
 ];
 
 const BASIN_RING = [
-  [482, 624],
-  [514, 570],
-  [566, 528],
-  [632, 510],
-  [700, 522],
-  [752, 560],
-  [778, 616],
-  [770, 678],
-  [734, 732],
-  [672, 770],
-  [598, 784],
-  [532, 768],
-  [484, 730],
-  [462, 674]
+  [482, 624], [514, 570], [566, 528], [632, 510], [700, 522], [752, 560], [778, 616],
+  [770, 678], [734, 732], [672, 770], [598, 784], [532, 768], [484, 730], [462, 674]
 ];
 
 const BASIN_INNER = [
-  [520, 646],
-  [548, 612],
-  [592, 588],
-  [644, 590],
-  [688, 614],
-  [710, 652],
-  [698, 686],
-  [662, 710],
-  [614, 720],
-  [566, 710],
-  [530, 686]
+  [520, 646], [548, 612], [592, 588], [644, 590], [688, 614], [710, 652],
+  [698, 686], [662, 710], [614, 720], [566, 710], [530, 686]
 ];
 
 const SUMMIT_RIDGE = [
-  [566, 604],
-  [620, 542],
-  [690, 484],
-  [770, 430],
-  [856, 388],
-  [942, 370],
-  [1020, 378],
-  [1074, 412],
-  [1092, 466],
-  [1074, 524],
-  [1014, 572],
-  [930, 602],
-  [836, 616],
-  [736, 620],
-  [636, 616]
+  [522, 640], [586, 572], [668, 512], [762, 462], [856, 428], [946, 422],
+  [1024, 446], [1078, 492], [1092, 550], [1062, 606], [984, 648],
+  [884, 672], [774, 680], [652, 674]
 ];
 
 const RIDGE_SHADOW = [
-  [594, 652],
-  [650, 592],
-  [724, 540],
-  [808, 496],
-  [894, 468],
-  [978, 466],
-  [1048, 492],
-  [1092, 534],
-  [1098, 584],
-  [1072, 628],
-  [1000, 658],
-  [908, 676],
-  [806, 680],
-  [694, 678]
+  [550, 684], [618, 618], [704, 560], [800, 520], [898, 502], [992, 516],
+  [1064, 556], [1098, 610], [1086, 662], [1018, 702], [918, 722],
+  [802, 726], [678, 716]
 ];
 
 const FOOTHILL_STROKE_A = [
-  [606, 598], [668, 558], [738, 520], [814, 492], [894, 478], [972, 482], [1038, 506]
+  [594, 628], [662, 586], [738, 550], [820, 526], [904, 520], [986, 536], [1050, 566]
 ];
 
 const FOOTHILL_STROKE_B = [
-  [556, 684], [618, 632], [694, 590], [776, 558], [860, 542], [944, 544], [1018, 564]
+  [548, 714], [620, 664], [704, 622], [796, 594], [890, 590], [982, 608], [1054, 642]
 ];
 
 const FOOTHILL_STROKE_C = [
-  [520, 758], [584, 704], [666, 656], [758, 620], [852, 602], [946, 606]
+  [502, 796], [580, 740], [670, 692], [768, 658], [866, 650], [962, 670]
 ];
 
 const WEST_ASCENT_BELT = [
-  [464, 886], [438, 822], [422, 754], [410, 684], [396, 614], [378, 542], [354, 472], [324, 406], [290, 344], [248, 284], [206, 236]
+  [464, 886], [438, 822], [422, 754], [410, 684], [396, 614], [378, 542],
+  [354, 472], [324, 406], [290, 344], [248, 284], [206, 236]
 ];
 
 const EAST_ASCENT_BELT = [
-  [622, 908], [662, 846], [710, 784], [764, 718], [822, 646], [880, 570], [942, 496], [1004, 430], [1066, 380], [1122, 340]
+  [622, 908], [662, 846], [710, 784], [764, 718], [822, 646], [880, 570],
+  [942, 496], [1004, 430], [1066, 380], [1122, 340]
 ];
 
 const HARBOR_GRASS = [
-  [474, 956], [500, 910], [546, 882], [600, 884], [642, 910], [654, 952], [642, 996], [600, 1028], [548, 1036], [498, 1014]
+  [474, 956], [500, 910], [546, 882], [600, 884], [642, 910],
+  [654, 952], [642, 996], [600, 1028], [548, 1036], [498, 1014]
 ];
 
 const SOUTH_CONTOUR = [
-  [430, 930], [484, 892], [548, 864], [620, 852], [692, 860]
+  [430, 930], [486, 892], [552, 864], [626, 852], [700, 860]
+];
+
+const TERRACE_A = [
+  [430, 840], [500, 796], [582, 758], [672, 730], [764, 716], [850, 720]
+];
+
+const TERRACE_B = [
+  [396, 724], [472, 676], [560, 632], [658, 602], [756, 590], [856, 598]
 ];
 
 export function createGroundRenderer() {
@@ -194,10 +125,10 @@ export function createGroundRenderer() {
   function drawPeninsulaCore(ctx) {
     polygon(ctx, PENINSULA_CORE);
     const ground = ctx.createLinearGradient(0, 170, 0, 1140);
-    ground.addColorStop(0, "rgba(190,182,158,1)");
+    ground.addColorStop(0, "rgba(192,184,160,1)");
     ground.addColorStop(0.18, "rgba(178,168,140,1)");
-    ground.addColorStop(0.42, "rgba(160,154,120,1)");
-    ground.addColorStop(0.74, "rgba(142,148,106,1)");
+    ground.addColorStop(0.44, "rgba(160,154,120,1)");
+    ground.addColorStop(0.76, "rgba(142,148,106,1)");
     ground.addColorStop(1, "rgba(126,140,98,1)");
     ctx.fillStyle = ground;
     ctx.fill();
@@ -217,25 +148,25 @@ export function createGroundRenderer() {
 
   function drawElevationBands(ctx) {
     polygon(ctx, RIDGE_SHADOW);
-    ctx.fillStyle = "rgba(80,88,80,0.08)";
+    ctx.fillStyle = "rgba(82,88,80,0.10)";
     ctx.fill();
 
     polygon(ctx, BASIN_RING);
     const basin = ctx.createLinearGradient(0, 510, 0, 784);
     basin.addColorStop(0, "rgba(176,170,130,0.18)");
-    basin.addColorStop(1, "rgba(102,120,88,0.18)");
+    basin.addColorStop(1, "rgba(98,118,88,0.20)");
     ctx.fillStyle = basin;
     ctx.fill();
 
     polygon(ctx, BASIN_INNER);
-    ctx.fillStyle = "rgba(54,78,72,0.12)";
+    ctx.fillStyle = "rgba(50,74,70,0.14)";
     ctx.fill();
 
     polygon(ctx, SUMMIT_RIDGE);
-    const ridge = ctx.createLinearGradient(0, 372, 0, 620);
-    ridge.addColorStop(0, "rgba(226,220,208,0.84)");
-    ridge.addColorStop(0.36, "rgba(196,188,172,0.48)");
-    ridge.addColorStop(0.72, "rgba(156,148,136,0.18)");
+    const ridge = ctx.createLinearGradient(0, 420, 0, 680);
+    ridge.addColorStop(0, "rgba(228,222,210,0.88)");
+    ridge.addColorStop(0.34, "rgba(198,188,172,0.50)");
+    ridge.addColorStop(0.70, "rgba(156,148,136,0.20)");
     ridge.addColorStop(1, "rgba(118,124,118,0.06)");
     ctx.fillStyle = ridge;
     ctx.fill();
@@ -246,12 +177,12 @@ export function createGroundRenderer() {
     ctx.stroke();
 
     polyline(ctx, FOOTHILL_STROKE_B);
-    ctx.strokeStyle = "rgba(240,234,218,0.16)";
+    ctx.strokeStyle = "rgba(240,234,218,0.18)";
     ctx.lineWidth = 1.8;
     ctx.stroke();
 
     polyline(ctx, FOOTHILL_STROKE_C);
-    ctx.strokeStyle = "rgba(236,230,212,0.14)";
+    ctx.strokeStyle = "rgba(236,230,212,0.15)";
     ctx.lineWidth = 1.6;
     ctx.stroke();
   }
@@ -261,46 +192,23 @@ export function createGroundRenderer() {
     polygon(ctx, PENINSULA_CORE);
     ctx.clip();
 
-    fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 720, "rgba(108,118,84,0.048)", 1);
-    fillNoiseDots(ctx, { x: 230, y: 200, w: 840, h: 900 }, 480, "rgba(230,216,182,0.042)", 2);
-    fillNoiseDots(ctx, { x: 260, y: 240, w: 780, h: 840 }, 260, "rgba(150,164,110,0.032)", 3);
-
-    const contourA = [
-      [424, 930], [486, 890], [558, 856], [638, 834], [722, 826], [804, 830]
-    ];
-    const contourB = [
-      [392, 824], [458, 780], [538, 738], [626, 710], [716, 702], [806, 706]
-    ];
-    const contourC = [
-      [360, 722], [432, 674], [520, 628], [616, 596], [714, 584], [812, 590]
-    ];
-    const contourD = [
-      [330, 620], [404, 568], [500, 522], [604, 490], [714, 478], [824, 486]
-    ];
-
-    polyline(ctx, contourA);
-    ctx.strokeStyle = "rgba(246,238,220,0.08)";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-
-    polyline(ctx, contourB);
-    ctx.strokeStyle = "rgba(246,238,220,0.08)";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-
-    polyline(ctx, contourC);
-    ctx.strokeStyle = "rgba(246,238,220,0.08)";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
-
-    polyline(ctx, contourD);
-    ctx.strokeStyle = "rgba(246,238,220,0.08)";
-    ctx.lineWidth = 1.4;
-    ctx.stroke();
+    fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 760, "rgba(108,118,84,0.048)", 1);
+    fillNoiseDots(ctx, { x: 230, y: 200, w: 840, h: 900 }, 500, "rgba(230,216,182,0.042)", 2);
+    fillNoiseDots(ctx, { x: 260, y: 240, w: 780, h: 840 }, 280, "rgba(150,164,110,0.032)", 3);
 
     polyline(ctx, SOUTH_CONTOUR);
     ctx.strokeStyle = "rgba(238,224,194,0.10)";
     ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    polyline(ctx, TERRACE_A);
+    ctx.strokeStyle = "rgba(244,236,214,0.09)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    polyline(ctx, TERRACE_B);
+    ctx.strokeStyle = "rgba(242,232,208,0.09)";
+    ctx.lineWidth = 1.4;
     ctx.stroke();
 
     ctx.restore();
@@ -343,7 +251,7 @@ export function createGroundRenderer() {
         ctx.lineWidth = 8;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = `rgba(250,230,176,${0.22 + pulse * 0.22})`;
+        ctx.strokeStyle = `rgba(250,230,176,${0.22 + (pulse * 0.22)})`;
         ctx.stroke();
       }
     }
@@ -372,7 +280,7 @@ export function createGroundRenderer() {
 
       if (row.regionId === "exploration_basin") {
         ctx.beginPath();
-        ctx.arc(x, y - 4, 8 + pulse * 1.2, 0, Math.PI * 2);
+        ctx.arc(x, y - 4, 8 + (pulse * 1.2), 0, Math.PI * 2);
         ctx.fillStyle = "rgba(220,246,255,0.18)";
         ctx.fill();
       }
@@ -387,7 +295,7 @@ export function createGroundRenderer() {
         ctx.fill();
 
         ctx.beginPath();
-        ctx.arc(x, y - 40, 6 + pulse * 0.9, 0, Math.PI * 2);
+        ctx.arc(x, y - 40, 6 + (pulse * 0.9), 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,244,224,0.34)";
         ctx.fill();
       }

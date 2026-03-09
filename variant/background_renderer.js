@@ -1,8 +1,6 @@
-import { clamp } from "../assets/utils.js";
-
 export function createBackgroundRenderer() {
 
-  function drawSky(ctx, w, h, tick) {
+  function drawSky(ctx, w, h) {
     const grad = ctx.createLinearGradient(0, 0, 0, h * 0.65);
     grad.addColorStop(0, "#7aa6ff");
     grad.addColorStop(0.35, "#9ec4ff");
@@ -12,7 +10,7 @@ export function createBackgroundRenderer() {
     ctx.fillRect(0, 0, w, h);
   }
 
-  function drawSun(ctx, w, h, tick) {
+  function drawSun(ctx, w, h) {
     const sunX = w * 0.68;
     const sunY = h * 0.30;
     const r = 48;
@@ -91,16 +89,15 @@ export function createBackgroundRenderer() {
   }
 
   function drawClouds(ctx, w, h, tick) {
-
     const clouds = [
-      {x: w * 0.32, y: h * 0.22},
-      {x: w * 0.58, y: h * 0.25},
-      {x: w * 0.78, y: h * 0.28}
+      { x: w * 0.32, y: h * 0.22 },
+      { x: w * 0.58, y: h * 0.25 },
+      { x: w * 0.78, y: h * 0.28 }
     ];
 
     ctx.fillStyle = "rgba(255,255,255,0.55)";
 
-    clouds.forEach(c => {
+    clouds.forEach((c) => {
       const drift = Math.sin((tick + c.x) * 0.002) * 8;
 
       ctx.beginPath();
@@ -110,9 +107,8 @@ export function createBackgroundRenderer() {
   }
 
   function draw(ctx, w, h, tick) {
-
-    drawSky(ctx, w, h, tick);
-    drawSun(ctx, w, h, tick);
+    drawSky(ctx, w, h);
+    drawSun(ctx, w, h);
     drawWater(ctx, w, h);
     drawShoreline(ctx, w, h);
     drawFoam(ctx, w, h, tick);

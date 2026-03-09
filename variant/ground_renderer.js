@@ -30,6 +30,19 @@ function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
   }
 }
 
+function fillMicroDots(ctx, bounds, count, color) {
+  const { x, y, w, h } = bounds;
+  ctx.fillStyle = color;
+  for (let i = 0; i < count; i += 1) {
+    const px = x + ((i * 23) % w);
+    const py = y + ((i * 41) % h);
+    const r = 0.7 + ((i % 3) * 0.18);
+    ctx.beginPath();
+    ctx.arc(px, py, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 const PENINSULA_CORE = [
   [540, 1140], [514, 1076], [500, 998], [500, 914], [516, 830], [544, 750], [584, 678],
   [636, 614], [694, 556], [754, 502], [812, 438], [874, 362], [940, 292], [1012, 234],
@@ -108,12 +121,12 @@ const TERRACE_C = [
   [352, 634], [444, 574], [552, 524], [670, 490], [788, 480], [908, 492]
 ];
 
-const FOREST_PATCHES = [
-  [[444, 934], [486, 896], [544, 884], [594, 908], [606, 952], [580, 994], [522, 1008], [470, 980]],
-  [[360, 792], [424, 742], [510, 714], [592, 726], [632, 772], [616, 822], [548, 854], [454, 848], [392, 824]],
-  [[430, 650], [492, 610], [566, 594], [636, 612], [668, 652], [654, 700], [592, 734], [506, 734], [446, 700]],
-  [[730, 634], [782, 604], [846, 604], [890, 630], [900, 670], [864, 702], [804, 710], [744, 686]],
-  [[860, 514], [908, 490], [968, 492], [1010, 520], [1016, 554], [980, 582], [920, 586], [872, 562]]
+const MICRO_FOREST_PATCHES = [
+  { x: 452, y: 910, w: 92, h: 58, count: 54, color: "rgba(96,122,84,0.18)" },
+  { x: 376, y: 748, w: 164, h: 82, count: 76, color: "rgba(96,122,84,0.16)" },
+  { x: 448, y: 620, w: 136, h: 84, count: 70, color: "rgba(96,122,84,0.15)" },
+  { x: 748, y: 626, w: 92, h: 58, count: 44, color: "rgba(96,122,84,0.14)" },
+  { x: 882, y: 516, w: 80, h: 52, count: 36, color: "rgba(96,122,84,0.13)" }
 ];
 
 export function createGroundRenderer() {
@@ -233,11 +246,13 @@ export function createGroundRenderer() {
   }
 
   function drawForestPatches(ctx) {
-    for (const patch of FOREST_PATCHES) {
-      polygon(ctx, patch);
-      ctx.fillStyle = "rgba(102,128,88,0.12)";
-      ctx.fill();
+    ctx.save();
+    polygon(ctx, PENINSULA_CORE);
+    ctx.clip();
+    for (const patch of MICRO_FOREST_PATCHES) {
+      fillMicroDots(ctx, patch, patch.count, patch.color);
     }
+    ctx.restore();
   }
 
   function drawTraversalBelts(ctx) {

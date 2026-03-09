@@ -36,7 +36,7 @@ function fillMicroDots(ctx, bounds, count, color) {
   for (let i = 0; i < count; i += 1) {
     const px = x + ((i * 23) % w);
     const py = y + ((i * 41) % h);
-    const r = 0.7 + ((i % 3) * 0.18);
+    const r = 0.5 + ((i % 3) * 0.14);
     ctx.beginPath();
     ctx.arc(px, py, r, 0, Math.PI * 2);
     ctx.fill();
@@ -122,11 +122,11 @@ const TERRACE_C = [
 ];
 
 const MICRO_FOREST_PATCHES = [
-  { x: 452, y: 910, w: 92, h: 58, count: 54, color: "rgba(96,122,84,0.18)" },
-  { x: 376, y: 748, w: 164, h: 82, count: 76, color: "rgba(96,122,84,0.16)" },
-  { x: 448, y: 620, w: 136, h: 84, count: 70, color: "rgba(96,122,84,0.15)" },
-  { x: 748, y: 626, w: 92, h: 58, count: 44, color: "rgba(96,122,84,0.14)" },
-  { x: 882, y: 516, w: 80, h: 52, count: 36, color: "rgba(96,122,84,0.13)" }
+  { x: 458, y: 914, w: 78, h: 48, count: 38, color: "rgba(96,122,84,0.14)" },
+  { x: 386, y: 754, w: 136, h: 70, count: 58, color: "rgba(96,122,84,0.12)" },
+  { x: 456, y: 626, w: 116, h: 72, count: 52, color: "rgba(96,122,84,0.11)" },
+  { x: 754, y: 634, w: 72, h: 44, count: 28, color: "rgba(96,122,84,0.10)" },
+  { x: 888, y: 522, w: 60, h: 40, count: 22, color: "rgba(96,122,84,0.09)" }
 ];
 
 export function createGroundRenderer() {

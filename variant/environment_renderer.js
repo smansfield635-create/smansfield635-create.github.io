@@ -209,53 +209,53 @@ export function createEnvironmentRenderer() {
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    drawShorelineShelf(ctx, tick);
+    drawSandAndShore(ctx, tick);
     drawWaterBodies(ctx, kernel, tick);
 
     ctx.restore();
   }
 
-  function drawShorelineShelf(ctx, tick) {
+  function drawSandAndShore(ctx, tick) {
     ctx.save();
     clipToOceanOnly(ctx);
 
-    drawShoreForPath(ctx, WEST_SHORE, tick);
-    drawShoreForPath(ctx, EAST_SHORE, tick);
+    drawBeachForPath(ctx, WEST_SHORE, tick);
+    drawBeachForPath(ctx, EAST_SHORE, tick);
 
     ctx.restore();
   }
 
-  function drawShoreForPath(ctx, coastPath, tick) {
-    const sand = offsetPolyline(coastPath, 6);
-    const shallow = offsetPolyline(coastPath, 14);
-    const lagoon = offsetPolyline(coastPath, 28);
-    const shelf = offsetPolyline(coastPath, 46);
+  function drawBeachForPath(ctx, coastPath, tick) {
+    const drySand = offsetPolyline(coastPath, 10);
+    const wetSand = offsetPolyline(coastPath, 22);
+    const shallow = offsetPolyline(coastPath, 36);
+    const lagoon = offsetPolyline(coastPath, 56);
 
-    // Soft sand glow
-    fillBandBetween(ctx, coastPath, sand, "rgba(246,240,216,0.14)");
+    // Wider dry sand apron
+    fillBandBetween(ctx, coastPath, drySand, "rgba(238,220,172,0.18)");
 
-    // Pale aqua halo
-    fillBandBetween(ctx, sand, shallow, "rgba(176,232,228,0.16)");
+    // Wet sand transition
+    fillBandBetween(ctx, drySand, wetSand, "rgba(222,208,166,0.14)");
+
+    // Pale aqua first water
+    fillBandBetween(ctx, wetSand, shallow, "rgba(164,226,222,0.14)");
 
     // Tropical turquoise shelf
-    fillBandBetween(ctx, shallow, lagoon, "rgba(88,196,210,0.11)");
+    fillBandBetween(ctx, shallow, lagoon, "rgba(82,194,208,0.10)");
 
-    // Outer blue transition into ocean mass
-    fillBandBetween(ctx, lagoon, shelf, "rgba(34,138,180,0.06)");
-
-    // Very light foam/shoreline read
+    // Shoreline read
     ctx.save();
     polyline(ctx, coastPath);
-    ctx.lineWidth = 1.1;
-    ctx.strokeStyle = "rgba(248,246,236,0.14)";
+    ctx.lineWidth = 1.15;
+    ctx.strokeStyle = "rgba(248,244,230,0.14)";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.stroke();
     ctx.restore();
 
-    // Minimal liquid motion, subordinate to static read
-    strokeWaveTrain(ctx, shallow, tick + 12, "rgba(246,252,252,0.05)", 0.8, 20, 0.8);
-    strokeWaveTrain(ctx, lagoon, tick + 22, "rgba(238,248,250,0.035)", 1.1, 28, 0.75);
+    // Small liquid motion only in water bands
+    strokeWaveTrain(ctx, shallow, tick + 12, "rgba(246,252,252,0.045)", 0.8, 20, 0.75);
+    strokeWaveTrain(ctx, lagoon, tick + 22, "rgba(238,248,250,0.03)", 1.0, 28, 0.7);
   }
 
   function drawWaterBodies(ctx, kernel, tick) {

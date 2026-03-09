@@ -1,3 +1,13 @@
+/* DESTINATION FILE: /variant/ground_renderer.js */
+/* APPLY THIRD */
+/*
+WHAT YOU SHOULD SEE AFTER THIS FILE:
+- Land remains intact at the new camera scale
+- Terrain zones still read clearly
+- Paths, pads, and structures remain stable
+- This file is scale-safe and geometry-consistent with TNT 1 and TNT 2
+*/
+
 function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();

@@ -2,9 +2,7 @@ function polygon(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
-  }
+  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
   ctx.closePath();
 }
 
@@ -12,9 +10,7 @@ function polyline(ctx, points) {
   if (!points.length) return;
   ctx.beginPath();
   ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
-  }
+  for (let i = 1; i < points.length; i += 1) ctx.lineTo(points[i][0], points[i][1]);
 }
 
 function fillNoiseDots(ctx, bounds, count, color, seedOffset = 0) {
@@ -43,7 +39,7 @@ function fillMicroDots(ctx, bounds, count, color) {
   }
 }
 
-const COASTLINE_PATH = [
+const PENINSULA_LAND_MASK = [
   [534, 1160], [500, 1088], [482, 1002], [482, 910], [500, 818], [532, 730], [576, 650],
   [632, 580], [694, 520], [758, 466], [822, 402], [890, 328], [958, 260], [1028, 208],
   [1094, 176], [1144, 164], [1150, 162], [1150, -220], [118, -220], [118, 150], [186, 220],
@@ -149,7 +145,7 @@ export function createGroundRenderer() {
   }
 
   function drawPeninsulaCore(ctx) {
-    polygon(ctx, COASTLINE_PATH);
+    polygon(ctx, PENINSULA_LAND_MASK);
     const ground = ctx.createLinearGradient(0, 160, 0, 1140);
     ground.addColorStop(0, "rgba(194,186,162,1)");
     ground.addColorStop(0.18, "rgba(180,170,142,1)");
@@ -215,7 +211,7 @@ export function createGroundRenderer() {
 
   function drawSurfaceTexture(ctx) {
     ctx.save();
-    polygon(ctx, COASTLINE_PATH);
+    polygon(ctx, PENINSULA_LAND_MASK);
     ctx.clip();
 
     fillNoiseDots(ctx, { x: 200, y: 170, w: 880, h: 960 }, 920, "rgba(108,118,84,0.05)", 1);
@@ -247,11 +243,9 @@ export function createGroundRenderer() {
 
   function drawForestPatches(ctx) {
     ctx.save();
-    polygon(ctx, COASTLINE_PATH);
+    polygon(ctx, PENINSULA_LAND_MASK);
     ctx.clip();
-    for (const patch of MICRO_FOREST_PATCHES) {
-      fillMicroDots(ctx, patch, patch.count, patch.color);
-    }
+    for (const patch of MICRO_FOREST_PATCHES) fillMicroDots(ctx, patch, patch.count, patch.color);
     ctx.restore();
   }
 

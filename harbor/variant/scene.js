@@ -8,7 +8,7 @@ import { loadWorldKernel } from "../world/world_kernel.js";
 function distanceSq(ax, ay, bx, by) {
   const dx = ax - bx;
   const dy = ay - by;
-  return dx * dx + dy * dy;
+  return (dx * dx) + (dy * dy);
 }
 
 function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
@@ -16,15 +16,15 @@ function pointToSegmentDistanceSq(px, py, ax, ay, bx, by) {
   const aby = by - ay;
   const apx = px - ax;
   const apy = py - ay;
-  const abLenSq = abx * abx + aby * aby;
+  const abLenSq = (abx * abx) + (aby * aby);
 
   if (abLenSq === 0) return distanceSq(px, py, ax, ay);
 
-  let t = (apx * abx + apy * aby) / abLenSq;
+  let t = ((apx * abx) + (apy * aby)) / abLenSq;
   t = Math.max(0, Math.min(1, t));
 
-  const cx = ax + abx * t;
-  const cy = ay + aby * t;
+  const cx = ax + (abx * t);
+  const cy = ay + (aby * t);
   return distanceSq(px, py, cx, cy);
 }
 
@@ -34,6 +34,14 @@ function getCanvasPoint(canvas, clientX, clientY) {
     x: clientX - rect.left,
     y: clientY - rect.top
   };
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + ((b - a) * t);
 }
 
 export async function createScene(canvas, outputs) {
@@ -54,9 +62,9 @@ export async function createScene(canvas, outputs) {
     kernel: await loadWorldKernel(),
     keys: new Set(),
     player: {
-      x: 540,
-      y: 560,
-      speed: 2.1
+      x: 544,
+      y: 770,
+      speed: 2.05
     },
     projection: null,
     region: null,
@@ -72,8 +80,8 @@ export async function createScene(canvas, outputs) {
       y: 0
     },
     worldBounds: {
-      width: 1080,
-      height: 720
+      width: 1180,
+      height: 1240
     },
     touch: {
       activeId: null,
@@ -95,18 +103,28 @@ export async function createScene(canvas, outputs) {
     canvas.style.height = `${state.height}px`;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(state.dpr, state.dpr);
-    updateViewportOffset();
+    updateViewportOffset(true);
   }
 
-  function updateViewportOffset() {
+  function updateViewportOffset(forceSnap = false) {
     const baseX = (state.width - state.worldBounds.width) * 0.5;
     const baseY = (state.height - state.worldBounds.height) * 0.5;
 
-    const followX = state.width * 0.5 - (state.player.x + baseX);
-    const followY = state.height * 0.68 - (state.player.y + baseY);
+    const targetScreenX = state.width * 0.50;
+    const targetScreenY = state.height * 0.82;
 
-    state.camera.x += (followX - state.camera.x) * 0.08;
-    state.camera.y += (followY - state.camera.y) * 0.08;
+    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+    const dynamicForwardBiasY = 184 + (northProgress * 86);
+    const dynamicForwardBiasX = northProgress * 16;
+
+    const followX = targetScreenX - (state.player.x + baseX + dynamicForwardBiasX);
+    const followY = targetScreenY - (state.player.y + baseY + dynamicForwardBiasY);
+
+    const lerpX = forceSnap ? 1 : 0.11;
+    const lerpY = forceSnap ? 1 : 0.085;
+
+    state.camera.x = lerp(state.camera.x, followX, lerpX);
+    state.camera.y = lerp(state.camera.y, followY, lerpY);
 
     state.viewportOffset.x = baseX + state.camera.x;
     state.viewportOffset.y = baseY + state.camera.y;
@@ -140,12 +158,17 @@ export async function createScene(canvas, outputs) {
       const length = Math.hypot(dx, dy) || 1;
       dx /= length;
       dy /= length;
-      state.player.x += dx * state.player.speed;
-      state.player.y += dy * state.player.speed;
+
+      const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+      const uphillFactor = clamp(1 - (northProgress * 0.14), 0.82, 1);
+      const lateralDrag = clamp(1 - (Math.abs(dx) * northProgress * 0.06), 0.9, 1);
+
+      state.player.x += dx * state.player.speed * uphillFactor * lateralDrag;
+      state.player.y += dy * state.player.speed * uphillFactor;
     }
 
-    state.player.x = Math.max(220, Math.min(760, state.player.x));
-    state.player.y = Math.max(96, Math.min(648, state.player.y));
+    state.player.x = clamp(state.player.x, 150, 960);
+    state.player.y = clamp(state.player.y, 54, 1140);
   }
 
   function projectState() {
@@ -178,7 +201,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const radiusSq = 120 * 120;
+    const radiusSq = 148 * 148;
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
@@ -196,7 +219,7 @@ export async function createScene(canvas, outputs) {
     const paths = [...state.kernel.pathsById.values()];
     let best = null;
     let bestD2 = Infinity;
-    const toleranceSq = 52 * 52;
+    const toleranceSq = 64 * 64;
 
     for (const path of paths) {
       const pts = path.centerline;
@@ -275,11 +298,11 @@ export async function createScene(canvas, outputs) {
       });
 
       ctx.strokeStyle = isSelected
-        ? "rgba(255,244,220,0.96)"
+        ? "rgba(255,244,220,0.98)"
         : isDestinationPath
-          ? `rgba(255,230,176,${0.38 + pulse * 0.28})`
-          : "rgba(240,236,220,0.16)";
-      ctx.lineWidth = isSelected ? 8 : isDestinationPath ? 6 : 4;
+          ? `rgba(255,230,176,${0.34 + pulse * 0.26})`
+          : "rgba(246,238,224,0.18)";
+      ctx.lineWidth = isSelected ? 7 : isDestinationPath ? 5 : 4;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.stroke();
@@ -293,50 +316,40 @@ export async function createScene(canvas, outputs) {
 
       if (isActive || isSelected || isDestination) {
         ctx.beginPath();
-        ctx.arc(x, y, 52 + pulse * 4, 0, Math.PI * 2);
+        ctx.arc(x, y, 46 + pulse * 4, 0, Math.PI * 2);
         ctx.strokeStyle = isSelected
           ? "rgba(255,245,224,0.92)"
           : isActive
-            ? "rgba(255,230,186,0.72)"
+            ? "rgba(255,230,186,0.74)"
             : "rgba(218,236,248,0.62)";
         ctx.lineWidth = 3;
         ctx.stroke();
       }
 
       ctx.beginPath();
-      ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = isActive ? "rgba(255,236,188,0.96)" : "rgba(232,240,248,0.70)";
+      ctx.arc(x, y, 9, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? "rgba(255,236,188,0.98)" : "rgba(232,240,248,0.72)";
       ctx.fill();
 
-      ctx.fillStyle = "rgba(248,248,244,0.96)";
-      ctx.font = "600 13px system-ui, sans-serif";
+      ctx.fillStyle = "rgba(248,248,244,0.98)";
+      ctx.font = "600 14px system-ui, sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.fillText(region.displayName, x, y - 58);
-    }
-
-    for (const cell of state.kernel.diamondCellsById.values()) {
-      const active = state.projection?.cellId === cell.diamondCellId;
-      if (!active) continue;
-
-      ctx.beginPath();
-      ctx.arc(cell.centerPoint[0], cell.centerPoint[1], 12 + pulse * 2, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,236,188,0.94)";
-      ctx.fill();
+      ctx.fillText(region.displayName, x, y - 54);
     }
 
     ctx.beginPath();
-    ctx.arc(state.player.x, state.player.y, 12, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,128,88,0.98)";
+    ctx.ellipse(state.player.x, state.player.y + 2, 11, 13, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,132,88,0.98)";
     ctx.fill();
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "rgba(255,242,224,0.96)";
+    ctx.strokeStyle = "rgba(255,242,224,0.98)";
     ctx.stroke();
 
     if (state.destination) {
       ctx.beginPath();
       ctx.arc(state.destination.centerPoint[0], state.destination.centerPoint[1], 18 + pulse * 4, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(255,246,220,${0.28 + pulse * 0.24})`;
+      ctx.strokeStyle = `rgba(255,246,220,${0.24 + pulse * 0.22})`;
       ctx.lineWidth = 3;
       ctx.stroke();
     }
@@ -347,7 +360,8 @@ export async function createScene(canvas, outputs) {
   function drawFrame() {
     ctx.clearRect(0, 0, state.width, state.height);
     background.draw(ctx, state.width, state.height, state.tick);
-    environment.draw(ctx, {
+
+    const renderState = {
       width: state.width,
       height: state.height,
       tick: state.tick,
@@ -355,18 +369,12 @@ export async function createScene(canvas, outputs) {
       kernel: state.kernel,
       projection: state.projection,
       selection: state.selection,
-      destination: state.destination
-    });
-    ground.draw(ctx, {
-      width: state.width,
-      height: state.height,
-      tick: state.tick,
-      viewportOffset: state.viewportOffset,
-      kernel: state.kernel,
-      projection: state.projection,
-      selection: state.selection,
-      destination: state.destination
-    });
+      destination: state.destination,
+      player: state.player
+    };
+
+    environment.draw(ctx, renderState);
+    ground.draw(ctx, renderState);
     drawRoutesAndMarkers();
     compass.draw(ctx, state, { width: state.width, height: state.height });
   }

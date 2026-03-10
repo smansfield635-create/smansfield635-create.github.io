@@ -2,36 +2,167 @@
   "schemaVersion": "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
   "worldId": "nine_summits_island",
   "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
-  "version": 2,
+  "version": 3,
   "terrain": [
-
+    {
+      "terrainId": "harbor_lowland",
+      "terrainClass": "coastal_lowland",
+      "regionId": "harbor_peninsula",
+      "polygon": [
+        [388, 956],
+        [382, 892],
+        [406, 828],
+        [454, 766],
+        [516, 716],
+        [580, 686],
+        [634, 690],
+        [668, 732],
+        [660, 790],
+        [622, 844],
+        [566, 892],
+        [500, 936],
+        [440, 962]
+      ]
+    },
+    {
+      "terrainId": "harbor_edge_slope_main",
+      "terrainClass": "harbor_edge_slope",
+      "regionId": "harbor_peninsula",
+      "polygon": [
+        [470, 670],
+        [532, 616],
+        [606, 578],
+        [680, 566],
+        [742, 578],
+        [786, 610],
+        [806, 662],
+        [756, 664],
+        [688, 650],
+        [616, 650],
+        [548, 658],
+        [498, 674]
+      ]
+    },
+    {
+      "terrainId": "dock_hardscape",
+      "terrainClass": "dockside_hardscape",
+      "regionId": "harbor_basin",
+      "polygon": [
+        [566, 770],
+        [650, 770],
+        [650, 812],
+        [566, 812]
+      ]
+    },
+    {
+      "terrainId": "inland_harbor_rise_main",
+      "terrainClass": "inland_harbor_rise",
+      "regionId": "harbor_peninsula",
+      "polygon": [
+        [520, 708],
+        [580, 678],
+        [644, 674],
+        [694, 694],
+        [716, 732],
+        [700, 774],
+        [658, 806],
+        [602, 824],
+        [550, 814],
+        [518, 780]
+      ]
+    },
+    {
+      "terrainId": "cliff_edge_candidate_main",
+      "terrainClass": "cliff_candidate_edge",
+      "regionId": "harbor_peninsula",
+      "polygon": [
+        [612, 614],
+        [682, 594],
+        [748, 600],
+        [786, 628],
+        [790, 660],
+        [740, 660],
+        [676, 648],
+        [620, 648]
+      ]
+    },
     {
       "terrainId": "market_hardscape",
       "terrainClass": "market_hardscape",
       "regionId": "market_district",
-      "polygon": [[720,460],[780,440],[840,450],[860,480],[820,510],[760,510]]
+      "polygon": [
+        [720, 460],
+        [780, 440],
+        [840, 450],
+        [860, 480],
+        [820, 510],
+        [760, 510]
+      ]
     },
-
     {
       "terrainId": "market_edge_transition",
       "terrainClass": "market_edge_transition",
       "regionId": "market_district",
-      "polygon": [[700,470],[720,460],[760,510],[740,520]]
+      "polygon": [
+        [700, 470],
+        [720, 460],
+        [760, 510],
+        [740, 520]
+      ]
     },
-
+    {
+      "terrainId": "market_inner_ground",
+      "terrainClass": "market_inner_ground",
+      "regionId": "market_district",
+      "polygon": [
+        [750, 448],
+        [800, 440],
+        [842, 454],
+        [850, 484],
+        [816, 506],
+        [770, 502],
+        [742, 480]
+      ]
+    },
     {
       "terrainId": "basin_floor",
       "terrainClass": "basin_floor",
       "regionId": "exploration_basin",
-      "polygon": [[540,350],[600,330],[650,340],[660,370],[620,390],[560,380]]
+      "polygon": [
+        [540, 350],
+        [600, 330],
+        [650, 340],
+        [660, 370],
+        [620, 390],
+        [560, 380]
+      ]
     },
-
     {
       "terrainId": "basin_edge_slope",
       "terrainClass": "basin_edge_slope",
       "regionId": "exploration_basin",
-      "polygon": [[520,350],[560,320],[620,300],[650,340],[600,330]]
+      "polygon": [
+        [520, 350],
+        [560, 320],
+        [620, 300],
+        [650, 340],
+        [600, 330]
+      ]
+    },
+    {
+      "terrainId": "basin_rise_transition",
+      "terrainClass": "basin_rise_transition",
+      "regionId": "exploration_basin",
+      "polygon": [
+        [600, 330],
+        [650, 340],
+        [692, 356],
+        [682, 392],
+        [642, 410],
+        [596, 414],
+        [560, 396],
+        [560, 380]
+      ]
     }
-
   ]
 }

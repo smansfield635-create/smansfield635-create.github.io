@@ -56,7 +56,7 @@
         "toId": "summit_approach",
         "directionality": "directed",
         "edgeClass": "convergence",
-        "pathId": "path_basin_to_summit_approach"
+        "pathId": "path_basin_to_summit"
       },
       {
         "edgeId": "summit_approach_to_summit_plaza__traversal",

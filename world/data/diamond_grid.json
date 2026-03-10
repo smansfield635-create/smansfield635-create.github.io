@@ -96,7 +96,7 @@
       "bandIndex": 3,
       "sector": "N",
       "regionId": "summit_approach",
-      "pathId": "path_basin_to_summit_approach",
+      "pathId": "path_basin_to_summit",
       "progressionClass": "corridor",
       "modeSet": ["foot"],
       "hazardWeightClass": "medium",

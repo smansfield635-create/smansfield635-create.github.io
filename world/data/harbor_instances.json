@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "HARBOR_INSTANCE_LIBRARY_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "bindingOrder": [
+    "parentRegionId",
+    "coastlineDatasetId",
+    "waterBodyId",
+    "dockSetId",
+    "navigationGraphId",
+    "marketLinkRegionId",
+    "transferRules",
+    "receipts"
+  ],
+  "killConditions": [
+    "missing_parentRegionId",
+    "missing_coastlineDatasetId",
+    "missing_waterBodyId",
+    "missing_dockSetId",
+    "missing_navigationGraphId",
+    "missing_marketLinkRegionId"
+  ],
+  "instances": [
+    {
+      "harborInstanceId": "harbor_instance_primary",
+      "harborId": "harbor_primary",
+      "parentRegionId": "harbor_village",
+      "coastlineDatasetId": "coastline_primary_harbor",
+      "waterBodyId": "harbor_water",
+      "dockSetId": "dockset_primary_harbor",
+      "navigationGraphId": "harbor_navigation_primary",
+      "marketLinkRegionId": "market_district",
+      "transferRules": {
+        "dockTransfers": [
+          {
+            "dockId": "harbor_nav_dock_west",
+            "landRegionId": "harbor_village",
+            "modeIn": "foot",
+            "modeOut": "boat",
+            "transferClass": "dock_transfer"
+          },
+          {
+            "dockId": "harbor_nav_dock_east",
+            "landRegionId": "harbor_village",
+            "modeIn": "foot",
+            "modeOut": "boat",
+            "transferClass": "dock_transfer"
+          },
+          {
+            "dockId": "harbor_nav_market_link",
+            "landRegionId": "market_district",
+            "modeIn": "boat",
+            "modeOut": "foot",
+            "transferClass": "market_transfer"
+          }
+        ]
+      },
+      "operatingMode": "open",
+      "receipts": {
+        "coastlineReceipt": "bound",
+        "waterReceipt": "bound",
+        "dockReceipt": "bound",
+        "navigationReceipt": "bound",
+        "marketLinkReceipt": "bound"
+      }
+    }
+  ]
+}

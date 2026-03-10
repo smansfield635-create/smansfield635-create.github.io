@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "TERRAIN_TEMPLATE_LIBRARY_v1",
+  "templates": [
+    {
+      "templateId": "market_template",
+      "terrain": [
+        {
+          "terrainClass": "market_hardscape",
+          "shape": "hex",
+          "radius": 60
+        },
+        {
+          "terrainClass": "market_edge_transition",
+          "shape": "ring",
+          "radius": 80
+        }
+      ]
+    },
+    {
+      "templateId": "basin_template",
+      "terrain": [
+        {
+          "terrainClass": "basin_floor",
+          "shape": "oval",
+          "radiusX": 70,
+          "radiusY": 40
+        },
+        {
+          "terrainClass": "basin_edge_slope",
+          "shape": "ring",
+          "radius": 90
+        }
+      ]
+    },
+    {
+      "templateId": "ridge_template",
+      "terrain": [
+        {
+          "terrainClass": "ridge_spine",
+          "shape": "diamond",
+          "radius": 30
+        },
+        {
+          "terrainClass": "ridge_slope",
+          "shape": "ring",
+          "radius": 60
+        }
+      ]
+    }
+  ]
+}

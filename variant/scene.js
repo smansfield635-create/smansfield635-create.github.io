@@ -1,13 +1,3 @@
-/* DESTINATION FILE: /variant/scene.js */
-/* APPLY FIRST */
-/*
-WHAT YOU SHOULD SEE AFTER THIS FILE:
-- Harbor and Market are visibly closer
-- Coastline occupies more screen space
-- Beach width becomes easier to judge
-- Movement, tapping, routing, and runtime panel still work
-*/
-
 import { createBackgroundRenderer } from "../assets/openworld_background_renderer.js";
 import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createGroundRenderer } from "./ground_renderer.js";
@@ -71,6 +61,7 @@ export async function createScene(canvas, outputs) {
     tick: 0,
     kernel: await loadWorldKernel(),
     keys: new Set(),
+    renderMode: "styled",
     player: {
       x: 544,
       y: 770,
@@ -215,7 +206,7 @@ export async function createScene(canvas, outputs) {
     outputs.selectedName.textContent = selectionPanel.selectedName;
     outputs.selectedType.textContent = selectionPanel.selectedType;
     outputs.destination.textContent = selectionPanel.destination;
-    outputs.selectionHint.textContent = selectionPanel.hint;
+    outputs.selectionHint.textContent = `${selectionPanel.hint} · View: ${state.renderMode.toUpperCase()} · Press G to toggle`;
   }
 
   function hitTestRegion(worldX, worldY) {
@@ -392,6 +383,7 @@ export async function createScene(canvas, outputs) {
       tick: state.tick,
       viewportOffset: worldViewportOffset,
       renderScale: state.renderScale,
+      renderMode: state.renderMode,
       kernel: state.kernel,
       projection: state.projection,
       selection: state.selection,
@@ -422,6 +414,13 @@ export async function createScene(canvas, outputs) {
   }
 
   function onKeyDown(event) {
+    if (event.key === "g" || event.key === "G") {
+      state.renderMode = state.renderMode === "styled" ? "truth" : "styled";
+      updateOutputs();
+      if (typeof event.preventDefault === "function") event.preventDefault();
+      return;
+    }
+
     state.keys.add(event.key);
   }
 

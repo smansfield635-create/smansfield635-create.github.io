@@ -13,7 +13,8 @@ const DATA_FILES = {
   coastlines: new URL("./data/coastlines.json", import.meta.url),
   regionBoundaries: new URL("./data/region_boundaries.json", import.meta.url),
   terrainPolygons: new URL("./data/terrain_polygons.json", import.meta.url),
-  substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url)
+  substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
+  regionTemplates: new URL("./data/region_templates.json", import.meta.url)
 };
 
 function indexBy(rows, key) {
@@ -60,6 +61,17 @@ function assertPolygon(points, label) {
   }
 }
 
+function assertArrayOfStrings(value, label, minLength = 0) {
+  if (!Array.isArray(value) || value.length < minLength) {
+    throw new Error(`Invalid array for ${label}`);
+  }
+  for (const item of value) {
+    if (typeof item !== "string" || item.length === 0) {
+      throw new Error(`Invalid string entry in ${label}`);
+    }
+  }
+}
+
 function validateEncodingRows(encodingsById) {
   for (const row of encodingsById.values()) {
     if (!row.byte) throw new Error(`Encoding row ${row.encodingId} missing byte`);
@@ -100,6 +112,44 @@ function validateHarborPolygonDatasets(coastlines, regionBoundariesById, terrain
   for (const row of substratePolygonsById.values()) {
     assertReferenceExists(regionBoundariesById, row.regionId, "substrate.regionId");
     assertPolygon(row.polygon, `substrate.${row.substrateId}`);
+  }
+}
+
+function validateRegionTemplates(regionTemplatesById) {
+  const requiredTemplateIds = [
+    "harbor_template",
+    "market_template",
+    "basin_template",
+    "ridge_template",
+    "canyon_template",
+    "summit_template"
+  ];
+
+  for (const templateId of requiredTemplateIds) {
+    const row = regionTemplatesById.get(templateId);
+    if (!row) throw new Error(`Missing region template: ${templateId}`);
+
+    if (typeof row.templateClass !== "string" || row.templateClass.length === 0) {
+      throw new Error(`Invalid templateClass for ${templateId}`);
+    }
+
+    assertArrayOfStrings(row.defaultTerrainClasses, `${templateId}.defaultTerrainClasses`, 1);
+    assertArrayOfStrings(row.defaultSubstrateClasses, `${templateId}.defaultSubstrateClasses`, 1);
+
+    if (typeof row.defaultPathDockRule !== "string" || row.defaultPathDockRule.length === 0) {
+      throw new Error(`Invalid defaultPathDockRule for ${templateId}`);
+    }
+
+    if (!Array.isArray(row.defaultScaleRange) || row.defaultScaleRange.length !== 2) {
+      throw new Error(`Invalid defaultScaleRange for ${templateId}`);
+    }
+
+    const [minScale, maxScale] = row.defaultScaleRange;
+    if (!Number.isFinite(minScale) || !Number.isFinite(maxScale) || minScale <= 0 || maxScale <= 0 || minScale > maxScale) {
+      throw new Error(`Invalid scale bounds for ${templateId}`);
+    }
+
+    assertArrayOfStrings(row.orientationModes, `${templateId}.orientationModes`, 1);
   }
 }
 
@@ -194,7 +244,8 @@ export async function loadWorldKernel() {
     coastlines,
     regionBoundaries,
     terrainPolygons,
-    substratePolygons
+    substratePolygons,
+    regionTemplates
   ] = await Promise.all([
     readJson(DATA_FILES.regions),
     readJson(DATA_FILES.graphs),
@@ -208,7 +259,8 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.coastlines),
     readJson(DATA_FILES.regionBoundaries),
     readJson(DATA_FILES.terrainPolygons),
-    readJson(DATA_FILES.substratePolygons)
+    readJson(DATA_FILES.substratePolygons),
+    readJson(DATA_FILES.regionTemplates)
   ]);
 
   assertRoot(regions, "WORLD_REGION_DATA_SCHEMA_v1");
@@ -224,6 +276,7 @@ export async function loadWorldKernel() {
   assertRoot(regionBoundaries, "HARBOR_REGION_BOUNDARIES_DATASET_v1");
   assertRoot(terrainPolygons, "HARBOR_TERRAIN_POLYGONS_DATASET_v1");
   assertRoot(substratePolygons, "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1");
+  assertRoot(regionTemplates, "REGION_TEMPLATE_AUTHORITY_v1");
 
   const regionsById = indexBy(regions.regionRows, "regionId");
   const pathsById = indexBy(paths.pathRows, "pathId");
@@ -234,6 +287,7 @@ export async function loadWorldKernel() {
   const regionBoundariesById = indexBy(regionBoundaries.regions, "regionId");
   const terrainPolygonsById = indexBy(terrainPolygons.terrain, "terrainId");
   const substratePolygonsById = indexBy(substratePolygons.substrates, "substrateId");
+  const regionTemplatesById = indexBy(regionTemplates.templates, "templateId");
 
   validateEncodingRows(encodingsById);
 
@@ -251,6 +305,8 @@ export async function loadWorldKernel() {
     terrainPolygonsById,
     substratePolygonsById
   );
+
+  validateRegionTemplates(regionTemplatesById);
 
   const kernel = {
     worldMeta: Object.freeze({
@@ -280,6 +336,10 @@ export async function loadWorldKernel() {
     regionBoundariesById,
     terrainPolygonsById,
     substratePolygonsById,
+    templateRegistry: freezeObjectTree({
+      version: regionTemplates.version,
+      templatesById: regionTemplatesById
+    }),
     helpers: {
       getRegion(regionId) {
         return regionsById.get(regionId) ?? null;
@@ -319,6 +379,12 @@ export async function loadWorldKernel() {
       getSubstratePolygon(substrateId) {
         return substratePolygonsById.get(substrateId) ?? null;
       },
+      getRegionTemplate(templateId) {
+        return regionTemplatesById.get(templateId) ?? null;
+      },
+      listRegionTemplates() {
+        return [...regionTemplatesById.values()];
+      },
       decodeStateByte(byte) {
         validateByte(byte);
         return byteToStateVector(byte);
@@ -357,6 +423,7 @@ export async function loadWorldKernel() {
           terrainPolygonsById,
           substratePolygonsById
         );
+        validateRegionTemplates(regionTemplatesById);
         return true;
       }
     }

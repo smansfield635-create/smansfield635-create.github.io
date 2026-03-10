@@ -9,7 +9,12 @@
       "pathClass": "harbor_entry",
       "fromRegionId": "harbor_village",
       "toRegionId": "market_district",
-      "centerline": [[540, 560], [620, 540], [700, 500], [770, 430]],
+      "centerline": [
+        [540, 560],
+        [620, 540],
+        [700, 500],
+        [770, 430]
+      ],
       "nominalWidth": 72,
       "allowedModes": ["foot"],
       "requiredGateClass": null,
@@ -22,7 +27,12 @@
       "pathClass": "corridor",
       "fromRegionId": "market_district",
       "toRegionId": "exploration_basin",
-      "centerline": [[770, 430], [720, 402], [650, 356], [560, 320]],
+      "centerline": [
+        [770, 430],
+        [720, 402],
+        [650, 356],
+        [560, 320]
+      ],
       "nominalWidth": 68,
       "allowedModes": ["foot"],
       "requiredGateClass": null,
@@ -35,7 +45,12 @@
       "pathClass": "convergence",
       "fromRegionId": "exploration_basin",
       "toRegionId": "summit_approach",
-      "centerline": [[560, 320], [572, 278], [576, 238], [568, 196]],
+      "centerline": [
+        [560, 320],
+        [572, 278],
+        [576, 238],
+        [568, 196]
+      ],
       "nominalWidth": 60,
       "allowedModes": ["foot"],
       "requiredGateClass": null,
@@ -48,7 +63,12 @@
       "pathClass": "gate_ascent",
       "fromRegionId": "summit_approach",
       "toRegionId": "summit_plaza",
-      "centerline": [[568, 196], [570, 170], [566, 146], [560, 120]],
+      "centerline": [
+        [568, 196],
+        [570, 170],
+        [566, 146],
+        [560, 120]
+      ],
       "nominalWidth": 54,
       "allowedModes": ["foot"],
       "requiredGateClass": "gate_summit_entry",

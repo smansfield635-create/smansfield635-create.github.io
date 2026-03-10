@@ -7,7 +7,22 @@
       "waterId": "harbor_water",
       "displayName": "Harbor Water",
       "waterClass": "harbor",
-      "polygon": [[0, 0], [0, 0], [0, 0], [0, 0]],
+      "polygon": [
+        [492, 820],
+        [474, 782],
+        [478, 736],
+        [502, 696],
+        [548, 668],
+        [606, 656],
+        [664, 664],
+        [706, 692],
+        [722, 734],
+        [714, 780],
+        [684, 816],
+        [636, 840],
+        [578, 846],
+        [526, 838]
+      ],
       "connectedWaterIds": [],
       "navigabilityRatio": 0.9,
       "stateEncodingId": "water_passage_open"
@@ -16,7 +31,17 @@
       "waterId": "basin_water",
       "displayName": "Basin Water",
       "waterClass": "basin",
-      "polygon": [[0, 0], [0, 0], [0, 0], [0, 0]],
+      "polygon": [
+        [548, 382],
+        [536, 364],
+        [544, 344],
+        [570, 334],
+        [604, 336],
+        [628, 350],
+        [632, 372],
+        [614, 390],
+        [582, 396]
+      ],
       "connectedWaterIds": [],
       "navigabilityRatio": 0.68,
       "stateEncodingId": "water_passage_open"

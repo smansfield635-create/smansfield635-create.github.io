@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "REGION_TEMPLATE_LIBRARY_v1",
+  "templates": [
+    {
+      "templateId": "market_template",
+      "defaultTerrain": "market_template",
+      "defaultSubstrate": "market_template"
+    },
+    {
+      "templateId": "basin_template",
+      "defaultTerrain": "basin_template",
+      "defaultSubstrate": "basin_template"
+    },
+    {
+      "templateId": "ridge_template",
+      "defaultTerrain": "ridge_template",
+      "defaultSubstrate": "ridge_template"
+    }
+  ]
+}

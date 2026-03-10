@@ -1,18 +1,41 @@
 {
   "schemaVersion": "SUBSTRATE_TEMPLATE_LIBRARY_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
   "templates": [
+    {
+      "templateId": "harbor_template",
+      "substrates": [
+        {
+          "substrateClass": "wet_sand",
+          "shape": "ring",
+          "radius": 110
+        },
+        {
+          "substrateClass": "dry_sand",
+          "shape": "ring",
+          "radius": 130
+        },
+        {
+          "substrateClass": "dock_hard_surface",
+          "shape": "rect",
+          "width": 120,
+          "height": 60
+        }
+      ]
+    },
     {
       "templateId": "market_template",
       "substrates": [
         {
           "substrateClass": "market_stone_surface",
           "shape": "hex",
-          "radius": 50
+          "radius": 60
         },
         {
           "substrateClass": "market_dust_surface",
           "shape": "ring",
-          "radius": 70
+          "radius": 80
         }
       ]
     },
@@ -22,13 +45,18 @@
         {
           "substrateClass": "basin_packed_earth",
           "shape": "oval",
-          "radiusX": 60,
-          "radiusY": 30
+          "radiusX": 70,
+          "radiusY": 40
         },
         {
           "substrateClass": "basin_moist_margin",
           "shape": "ring",
-          "radius": 80
+          "radius": 90
+        },
+        {
+          "substrateClass": "basin_stone_edge",
+          "shape": "ring",
+          "radius": 110
         }
       ]
     },
@@ -36,9 +64,19 @@
       "templateId": "ridge_template",
       "substrates": [
         {
-          "substrateClass": "ridge_stone_surface",
+          "substrateClass": "ridge_stone",
           "shape": "diamond",
-          "radius": 24
+          "radius": 40
+        }
+      ]
+    },
+    {
+      "templateId": "summit_template",
+      "substrates": [
+        {
+          "substrateClass": "summit_stone",
+          "shape": "hex",
+          "radius": 45
         }
       ]
     }

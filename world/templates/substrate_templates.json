@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "SUBSTRATE_TEMPLATE_LIBRARY_v1",
+  "templates": [
+    {
+      "templateId": "market_template",
+      "substrates": [
+        {
+          "substrateClass": "market_stone_surface",
+          "shape": "hex",
+          "radius": 50
+        },
+        {
+          "substrateClass": "market_dust_surface",
+          "shape": "ring",
+          "radius": 70
+        }
+      ]
+    },
+    {
+      "templateId": "basin_template",
+      "substrates": [
+        {
+          "substrateClass": "basin_packed_earth",
+          "shape": "oval",
+          "radiusX": 60,
+          "radiusY": 30
+        },
+        {
+          "substrateClass": "basin_moist_margin",
+          "shape": "ring",
+          "radius": 80
+        }
+      ]
+    },
+    {
+      "templateId": "ridge_template",
+      "substrates": [
+        {
+          "substrateClass": "ridge_stone_surface",
+          "shape": "diamond",
+          "radius": 24
+        }
+      ]
+    }
+  ]
+}

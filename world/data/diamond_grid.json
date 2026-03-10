@@ -20,7 +20,9 @@
       "hazardWeightClass": "low",
       "gateClass": null,
       "centerPoint": [540, 560],
-      "neighborIds": ["band_1__sector_se__node_harbor_market_gate"],
+      "neighborIds": [
+        "band_1__sector_se__node_harbor_market_gate"
+      ],
       "stateEncodingId": "harbor_idle_open"
     },
     {

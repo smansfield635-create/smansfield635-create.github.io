@@ -7,7 +7,6 @@
       "regionId": "harbor_village",
       "displayName": "Harbor Village",
       "zoneId": "zone_harbor",
-      "templateId": "harbor_template",
       "regionClass": "settlement_region",
       "cardinalBand": "south",
       "doctrineRole": "entry",

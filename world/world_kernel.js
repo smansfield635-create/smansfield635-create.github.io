@@ -63,17 +63,6 @@ function assertPolygon(points, label) {
   }
 }
 
-function assertArrayOfStrings(value, label, minLength = 0) {
-  if (!Array.isArray(value) || value.length < minLength) {
-    throw new Error(`Invalid array for ${label}`);
-  }
-  for (const item of value) {
-    if (typeof item !== "string" || item.length === 0) {
-      throw new Error(`Invalid string entry in ${label}`);
-    }
-  }
-}
-
 function validateEncodingRows(encodingsById) {
   for (const row of encodingsById.values()) {
     if (!row.byte) throw new Error(`Encoding row ${row.encodingId} missing byte`);
@@ -137,15 +126,12 @@ function validateRegionTemplates(regionTemplatesById) {
   for (const templateId of requiredTemplateIds) {
     const row = regionTemplatesById.get(templateId);
     if (!row) throw new Error(`Missing region template: ${templateId}`);
-
     if (typeof row.templateClass !== "string" || row.templateClass.length === 0) {
       throw new Error(`Invalid templateClass for ${templateId}`);
     }
-
     if (typeof row.defaultTerrain !== "string" || row.defaultTerrain.length === 0) {
       throw new Error(`Invalid defaultTerrain for ${templateId}`);
     }
-
     if (typeof row.defaultSubstrate !== "string" || row.defaultSubstrate.length === 0) {
       throw new Error(`Invalid defaultSubstrate for ${templateId}`);
     }
@@ -194,6 +180,13 @@ function validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesBy
   for (const regionTemplate of regionTemplatesById.values()) {
     assertReferenceExists(terrainTemplatesById, regionTemplate.defaultTerrain, "regionTemplate.defaultTerrain");
     assertReferenceExists(substrateTemplatesById, regionTemplate.defaultSubstrate, "regionTemplate.defaultSubstrate");
+  }
+}
+
+function validateRegionTemplateBindings(regionsById, regionTemplatesById) {
+  for (const region of regionsById.values()) {
+    if (!region.templateId) continue;
+    assertReferenceExists(regionTemplatesById, region.templateId, "region.templateId");
   }
 }
 
@@ -272,6 +265,132 @@ function sectorFromVector(dx, dy) {
   const normalized = (angle + Math.PI * 2) % (Math.PI * 2);
   const idx = Math.round(normalized / (Math.PI * 2 / 16)) % 16;
   return sectors[idx];
+}
+
+function regularPolygon(cx, cy, radius, sides, rotation = -Math.PI / 2) {
+  const points = [];
+  for (let i = 0; i < sides; i += 1) {
+    const angle = rotation + ((Math.PI * 2 * i) / sides);
+    points.push([
+      Math.round((cx + Math.cos(angle) * radius) * 1000) / 1000,
+      Math.round((cy + Math.sin(angle) * radius) * 1000) / 1000
+    ]);
+  }
+  return points;
+}
+
+function ellipsePolygon(cx, cy, radiusX, radiusY, segments = 16) {
+  const points = [];
+  for (let i = 0; i < segments; i += 1) {
+    const angle = -Math.PI / 2 + ((Math.PI * 2 * i) / segments);
+    points.push([
+      Math.round((cx + Math.cos(angle) * radiusX) * 1000) / 1000,
+      Math.round((cy + Math.sin(angle) * radiusY) * 1000) / 1000
+    ]);
+  }
+  return points;
+}
+
+function rectPolygon(cx, cy, width, height) {
+  const hw = width * 0.5;
+  const hh = height * 0.5;
+  return [
+    [cx - hw, cy - hh],
+    [cx + hw, cy - hh],
+    [cx + hw, cy + hh],
+    [cx - hw, cy + hh]
+  ];
+}
+
+function shapeToPolygon(shapeSpec, centerPoint) {
+  const [cx, cy] = centerPoint;
+  const shape = shapeSpec.shape;
+
+  if (shape === "hex") {
+    return regularPolygon(cx, cy, shapeSpec.radius ?? 48, 6);
+  }
+
+  if (shape === "diamond") {
+    return regularPolygon(cx, cy, shapeSpec.radius ?? 36, 4, 0);
+  }
+
+  if (shape === "oval") {
+    return ellipsePolygon(cx, cy, shapeSpec.radiusX ?? 48, shapeSpec.radiusY ?? 28, 18);
+  }
+
+  if (shape === "rect") {
+    return rectPolygon(cx, cy, shapeSpec.width ?? 72, shapeSpec.height ?? 36);
+  }
+
+  if (shape === "ring") {
+    return regularPolygon(cx, cy, shapeSpec.radius ?? 64, 8);
+  }
+
+  return regularPolygon(cx, cy, shapeSpec.radius ?? 40, 6);
+}
+
+function buildGeneratedTerrainPolygons(regionsById, regionTemplatesById, terrainTemplatesById) {
+  const generated = [];
+
+  for (const region of regionsById.values()) {
+    if (!region.templateId) continue;
+
+    const regionTemplate = regionTemplatesById.get(region.templateId);
+    if (!regionTemplate) continue;
+
+    const terrainTemplate = terrainTemplatesById.get(regionTemplate.defaultTerrain);
+    if (!terrainTemplate) continue;
+
+    for (let index = 0; index < terrainTemplate.terrain.length; index += 1) {
+      const item = terrainTemplate.terrain[index];
+      generated.push(Object.freeze({
+        terrainId: `${region.regionId}__generated_terrain__${index}`,
+        terrainClass: item.terrainClass,
+        regionId: region.regionId,
+        polygon: shapeToPolygon(item, region.centerPoint),
+        generationSource: {
+          regionId: region.regionId,
+          templateId: region.templateId,
+          terrainTemplateId: terrainTemplate.templateId,
+          index
+        }
+      }));
+    }
+  }
+
+  return indexBy(generated, "terrainId");
+}
+
+function buildGeneratedSubstratePolygons(regionsById, regionTemplatesById, substrateTemplatesById) {
+  const generated = [];
+
+  for (const region of regionsById.values()) {
+    if (!region.templateId) continue;
+
+    const regionTemplate = regionTemplatesById.get(region.templateId);
+    if (!regionTemplate) continue;
+
+    const substrateTemplate = substrateTemplatesById.get(regionTemplate.defaultSubstrate);
+    if (!substrateTemplate) continue;
+
+    for (let index = 0; index < substrateTemplate.substrates.length; index += 1) {
+      const item = substrateTemplate.substrates[index];
+      generated.push(Object.freeze({
+        substrateId: `${region.regionId}__generated_substrate__${index}`,
+        substrateClass: item.substrateClass,
+        regionId: region.regionId,
+        polygon: shapeToPolygon(item, region.centerPoint),
+        generationSource: {
+          regionId: region.regionId,
+          templateId: region.templateId,
+          substrateTemplateId: substrateTemplate.templateId,
+          index
+        }
+      }));
+    }
+  }
+
+  return indexBy(generated, "substrateId");
 }
 
 export async function loadWorldKernel() {
@@ -362,6 +481,19 @@ export async function loadWorldKernel() {
   validateSubstrateTemplateLibrary(substrateTemplatesById);
   validateRegionTemplates(regionTemplatesById);
   validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
+  validateRegionTemplateBindings(regionsById, regionTemplatesById);
+
+  const generatedTerrainPolygonsById = buildGeneratedTerrainPolygons(
+    regionsById,
+    regionTemplatesById,
+    terrainTemplatesById
+  );
+
+  const generatedSubstratePolygonsById = buildGeneratedSubstratePolygons(
+    regionsById,
+    regionTemplatesById,
+    substrateTemplatesById
+  );
 
   const kernel = {
     worldMeta: Object.freeze({
@@ -391,6 +523,8 @@ export async function loadWorldKernel() {
     regionBoundariesById,
     terrainPolygonsById,
     substratePolygonsById,
+    generatedTerrainPolygonsById,
+    generatedSubstratePolygonsById,
     templateRegistry: freezeObjectTree({
       terrainTemplatesById,
       substrateTemplatesById,
@@ -435,6 +569,12 @@ export async function loadWorldKernel() {
       getSubstratePolygon(substrateId) {
         return substratePolygonsById.get(substrateId) ?? null;
       },
+      getGeneratedTerrainPolygon(terrainId) {
+        return generatedTerrainPolygonsById.get(terrainId) ?? null;
+      },
+      getGeneratedSubstratePolygon(substrateId) {
+        return generatedSubstratePolygonsById.get(substrateId) ?? null;
+      },
       getTerrainTemplate(templateId) {
         return terrainTemplatesById.get(templateId) ?? null;
       },
@@ -443,6 +583,12 @@ export async function loadWorldKernel() {
       },
       getRegionTemplate(templateId) {
         return regionTemplatesById.get(templateId) ?? null;
+      },
+      getGeneratedTerrainForRegion(regionId) {
+        return [...generatedTerrainPolygonsById.values()].filter((row) => row.regionId === regionId);
+      },
+      getGeneratedSubstrateForRegion(regionId) {
+        return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
       },
       decodeStateByte(byte) {
         validateByte(byte);
@@ -486,6 +632,16 @@ export async function loadWorldKernel() {
         validateSubstrateTemplateLibrary(substrateTemplatesById);
         validateRegionTemplates(regionTemplatesById);
         validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
+        validateRegionTemplateBindings(regionsById, regionTemplatesById);
+
+        for (const row of generatedTerrainPolygonsById.values()) {
+          assertPolygon(row.polygon, `generatedTerrain.${row.terrainId}`);
+        }
+
+        for (const row of generatedSubstratePolygonsById.values()) {
+          assertPolygon(row.polygon, `generatedSubstrate.${row.substrateId}`);
+        }
+
         return true;
       }
     }

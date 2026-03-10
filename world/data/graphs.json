@@ -19,8 +19,15 @@
         "edgeClass": "basin_transition"
       },
       {
-        "edgeId": "exploration_basin__summit_plaza__spatial",
+        "edgeId": "exploration_basin__summit_approach__spatial",
         "fromId": "exploration_basin",
+        "toId": "summit_approach",
+        "directionality": "undirected",
+        "edgeClass": "ascent_transition"
+      },
+      {
+        "edgeId": "summit_approach__summit_plaza__spatial",
+        "fromId": "summit_approach",
         "toId": "summit_plaza",
         "directionality": "undirected",
         "edgeClass": "convergence"
@@ -44,12 +51,20 @@
         "pathId": "path_market_to_basin"
       },
       {
-        "edgeId": "exploration_basin_to_summit_plaza__traversal",
+        "edgeId": "exploration_basin_to_summit_approach__traversal",
         "fromId": "exploration_basin",
-        "toId": "summit_plaza",
+        "toId": "summit_approach",
         "directionality": "directed",
         "edgeClass": "convergence",
-        "pathId": "path_basin_to_summit"
+        "pathId": "path_basin_to_summit_approach"
+      },
+      {
+        "edgeId": "summit_approach_to_summit_plaza__traversal",
+        "fromId": "summit_approach",
+        "toId": "summit_plaza",
+        "directionality": "directed",
+        "edgeClass": "terminal_gate",
+        "pathId": "path_summit_approach_to_summit"
       }
     ],
     "progressionGraph": [
@@ -68,8 +83,15 @@
         "edgeClass": "primary_ascent"
       },
       {
-        "edgeId": "exploration_basin_to_summit_plaza__progression",
+        "edgeId": "exploration_basin_to_summit_approach__progression",
         "fromId": "exploration_basin",
+        "toId": "summit_approach",
+        "directionality": "directed",
+        "edgeClass": "ascent_transition"
+      },
+      {
+        "edgeId": "summit_approach_to_summit_plaza__progression",
+        "fromId": "summit_approach",
         "toId": "summit_plaza",
         "directionality": "directed",
         "edgeClass": "convergence"
@@ -86,6 +108,13 @@
       {
         "edgeId": "exploration_basin__hazard_basin_edge__hazard",
         "fromId": "exploration_basin",
+        "toId": "hazard_basin_edge",
+        "directionality": "undirected",
+        "edgeClass": "hazard_relation"
+      },
+      {
+        "edgeId": "summit_approach__hazard_basin_edge__hazard",
+        "fromId": "summit_approach",
         "toId": "hazard_basin_edge",
         "directionality": "undirected",
         "edgeClass": "hazard_relation"

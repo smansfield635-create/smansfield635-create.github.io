@@ -62,6 +62,8 @@ export async function createScene(canvas, outputs) {
     kernel: await loadWorldKernel(),
     keys: new Set(),
     renderMode: "styled",
+    traversalMode: "foot",
+    activeHarborInstanceId: null,
     player: {
       x: 544,
       y: 770,
@@ -100,6 +102,49 @@ export async function createScene(canvas, outputs) {
       x: state.viewportOffset.x / state.renderScale,
       y: state.viewportOffset.y / state.renderScale
     };
+  }
+
+  function getHarborInstances() {
+    return state.kernel.helpers.getHarborInstances?.() ?? [];
+  }
+
+  function getHarborInstance(harborInstanceId) {
+    return state.kernel.helpers.getHarborInstance?.(harborInstanceId) ?? null;
+  }
+
+  function getHarborInstanceForRegion(regionId) {
+    if (!regionId) return null;
+
+    const direct = state.kernel.helpers.getHarborInstanceByRegion?.(regionId) ?? null;
+    if (direct) return direct;
+
+    for (const instance of getHarborInstances()) {
+      if (instance.marketLinkRegionId === regionId) return instance;
+      const transfers = instance.transferRules?.dockTransfers ?? [];
+      for (const transfer of transfers) {
+        if (transfer.landRegionId === regionId) return instance;
+      }
+    }
+
+    return null;
+  }
+
+  function getActiveHarborInstance() {
+    if (state.activeHarborInstanceId) {
+      const active = getHarborInstance(state.activeHarborInstanceId);
+      if (active) return active;
+    }
+
+    return getHarborInstanceForRegion(state.region?.regionId ?? null);
+  }
+
+  function getDockTransfersForInstance(instance) {
+    if (!instance) return [];
+    return state.kernel.helpers.getHarborDockTransfers?.(instance.harborInstanceId) ?? [];
+  }
+
+  function getTransferForDock(instance, dockId) {
+    return getDockTransfersForInstance(instance).find((transfer) => transfer.dockId === dockId) ?? null;
   }
 
   function resize() {
@@ -142,14 +187,88 @@ export async function createScene(canvas, outputs) {
     state.viewportOffset.y = baseY + state.camera.y;
   }
 
+  function resolveArrival(target) {
+    if (!target) return;
+
+    if (target.kind === "region") {
+      state.selection = {
+        kind: "region",
+        regionId: target.regionId,
+        displayName: target.displayName
+      };
+      return;
+    }
+
+    if (target.kind === "path") {
+      state.selection = {
+        kind: "path",
+        pathId: target.pathId,
+        displayName: target.displayName
+      };
+      return;
+    }
+
+    if (target.kind === "harbor_nav_node") {
+      state.selection = {
+        kind: "harbor_nav_node",
+        navNodeId: target.navNodeId,
+        displayName: target.displayName,
+        harborInstanceId: target.harborInstanceId
+      };
+      return;
+    }
+
+    if (target.kind === "dock_transfer") {
+      const transfer = target.transfer;
+      if (!transfer) return;
+
+      if (state.traversalMode !== transfer.modeIn) {
+        state.selection = {
+          kind: "dock_transfer",
+          dockId: target.dockId,
+          displayName: target.displayName,
+          harborInstanceId: target.harborInstanceId,
+          transferClass: transfer.transferClass
+        };
+        return;
+      }
+
+      state.traversalMode = transfer.modeOut;
+      state.activeHarborInstanceId = target.harborInstanceId ?? state.activeHarborInstanceId ?? null;
+
+      if (transfer.modeOut === "foot") {
+        const landRegion = state.kernel.helpers.getRegion(transfer.landRegionId);
+        if (landRegion) {
+          state.player.x = landRegion.centerPoint[0];
+          state.player.y = landRegion.centerPoint[1];
+          state.selection = {
+            kind: "region",
+            regionId: landRegion.regionId,
+            displayName: landRegion.displayName
+          };
+        }
+      } else {
+        state.selection = {
+          kind: "dock_transfer",
+          dockId: target.dockId,
+          displayName: target.displayName,
+          harborInstanceId: target.harborInstanceId,
+          transferClass: transfer.transferClass
+        };
+      }
+    }
+  }
+
   function updatePlayer() {
     let dx = 0;
     let dy = 0;
 
-    if (state.keys.has("ArrowLeft") || state.keys.has("a") || state.keys.has("A")) dx -= 1;
-    if (state.keys.has("ArrowRight") || state.keys.has("d") || state.keys.has("D")) dx += 1;
-    if (state.keys.has("ArrowUp") || state.keys.has("w") || state.keys.has("W")) dy -= 1;
-    if (state.keys.has("ArrowDown") || state.keys.has("s") || state.keys.has("S")) dy += 1;
+    if (state.traversalMode === "foot") {
+      if (state.keys.has("ArrowLeft") || state.keys.has("a") || state.keys.has("A")) dx -= 1;
+      if (state.keys.has("ArrowRight") || state.keys.has("d") || state.keys.has("D")) dx += 1;
+      if (state.keys.has("ArrowUp") || state.keys.has("w") || state.keys.has("W")) dy -= 1;
+      if (state.keys.has("ArrowDown") || state.keys.has("s") || state.keys.has("S")) dy += 1;
+    }
 
     if (state.destination) {
       const vx = state.destination.centerPoint[0] - state.player.x;
@@ -159,7 +278,9 @@ export async function createScene(canvas, outputs) {
       if (len <= state.player.speed + 1) {
         state.player.x = state.destination.centerPoint[0];
         state.player.y = state.destination.centerPoint[1];
+        const arrivedTarget = state.destination;
         state.destination = null;
+        resolveArrival(arrivedTarget);
       } else {
         dx += vx / len;
         dy += vy / len;
@@ -191,6 +312,14 @@ export async function createScene(canvas, outputs) {
     });
     state.region = state.kernel.helpers.getRegion(state.projection.regionId);
     state.encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
+
+    if (state.traversalMode === "foot") {
+      const instance = getHarborInstanceForRegion(state.region?.regionId ?? null);
+      state.activeHarborInstanceId = instance?.harborInstanceId ?? null;
+    } else if (!state.activeHarborInstanceId) {
+      const instance = getHarborInstanceForRegion(state.region?.regionId ?? null);
+      if (instance) state.activeHarborInstanceId = instance.harborInstanceId;
+    }
   }
 
   function updateOutputs() {
@@ -199,14 +328,31 @@ export async function createScene(canvas, outputs) {
     outputs.cell.textContent = runtimePanel.cell;
     outputs.sector.textContent = runtimePanel.sector;
     outputs.band.textContent = runtimePanel.band;
-    outputs.encoding.textContent = runtimePanel.encoding;
+    outputs.encoding.textContent = `${runtimePanel.encoding} · ${state.traversalMode.toUpperCase()}`;
     outputs.byte.textContent = runtimePanel.byte;
 
     const selectionPanel = instruments.buildSelectionPanel(state);
+
+    if (state.selection?.kind === "dock_transfer") {
+      selectionPanel.selectedName = state.selection.displayName ?? "Dock Transfer";
+      selectionPanel.selectedType = "Dock Transfer";
+      selectionPanel.destination = state.destination?.displayName ?? "—";
+      selectionPanel.hint = state.traversalMode === "foot"
+        ? "Tap dock transfer to board"
+        : "Tap dock transfer to disembark";
+    }
+
+    if (state.selection?.kind === "harbor_nav_node") {
+      selectionPanel.selectedName = state.selection.displayName ?? "Harbor Node";
+      selectionPanel.selectedType = "Harbor Nav Node";
+      selectionPanel.destination = state.destination?.displayName ?? "—";
+      selectionPanel.hint = "Tap a harbor node to move by boat";
+    }
+
     outputs.selectedName.textContent = selectionPanel.selectedName;
     outputs.selectedType.textContent = selectionPanel.selectedType;
     outputs.destination.textContent = selectionPanel.destination;
-    outputs.selectionHint.textContent = `${selectionPanel.hint} · View: ${state.renderMode.toUpperCase()} · Press G to toggle`;
+    outputs.selectionHint.textContent = `${selectionPanel.hint} · Mode: ${state.traversalMode.toUpperCase()} · View: ${state.renderMode.toUpperCase()} · Press G to toggle`;
   }
 
   function hitTestRegion(worldX, worldY) {
@@ -249,6 +395,53 @@ export async function createScene(canvas, outputs) {
     return best;
   }
 
+  function hitTestHarborInteraction(worldX, worldY) {
+    const instance = getActiveHarborInstance();
+    if (!instance) return null;
+
+    let best = null;
+    let bestD2 = Infinity;
+
+    for (const transfer of getDockTransfersForInstance(instance)) {
+      if (transfer.modeIn !== state.traversalMode) continue;
+
+      const navNode = state.kernel.helpers.getHarborNavNode(transfer.dockId);
+      if (!navNode) continue;
+
+      const d2 = distanceSq(worldX, worldY, navNode.centerPoint[0], navNode.centerPoint[1]);
+      if (d2 <= (34 * 34) && d2 < bestD2) {
+        best = {
+          kind: "dock_transfer",
+          dockId: transfer.dockId,
+          displayName: navNode.displayName,
+          harborInstanceId: instance.harborInstanceId,
+          transfer,
+          centerPoint: navNode.centerPoint,
+          regionId: transfer.landRegionId
+        };
+        bestD2 = d2;
+      }
+    }
+
+    if (state.traversalMode === "boat") {
+      for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
+        const d2 = distanceSq(worldX, worldY, navNode.centerPoint[0], navNode.centerPoint[1]);
+        if (d2 <= (28 * 28) && d2 < bestD2) {
+          best = {
+            kind: "harbor_nav_node",
+            navNodeId: navNode.navNodeId,
+            displayName: navNode.displayName,
+            harborInstanceId: instance.harborInstanceId,
+            centerPoint: navNode.centerPoint
+          };
+          bestD2 = d2;
+        }
+      }
+    }
+
+    return best;
+  }
+
   function worldPointFromClient(clientX, clientY) {
     const local = getCanvasPoint(canvas, clientX, clientY);
     const worldViewportOffset = getWorldViewportOffset();
@@ -262,6 +455,33 @@ export async function createScene(canvas, outputs) {
   function handleWorldTap(clientX, clientY) {
     const worldPoint = worldPointFromClient(clientX, clientY);
 
+    const harborInteraction = hitTestHarborInteraction(worldPoint.x, worldPoint.y);
+    if (harborInteraction) {
+      state.selection = harborInteraction.kind === "dock_transfer"
+        ? {
+            kind: "dock_transfer",
+            dockId: harborInteraction.dockId,
+            displayName: harborInteraction.displayName,
+            harborInstanceId: harborInteraction.harborInstanceId,
+            transferClass: harborInteraction.transfer.transferClass
+          }
+        : {
+            kind: "harbor_nav_node",
+            navNodeId: harborInteraction.navNodeId,
+            displayName: harborInteraction.displayName,
+            harborInstanceId: harborInteraction.harborInstanceId
+          };
+
+      state.destination = harborInteraction;
+      updateOutputs();
+      return;
+    }
+
+    if (state.traversalMode === "boat") {
+      updateOutputs();
+      return;
+    }
+
     const region = hitTestRegion(worldPoint.x, worldPoint.y);
     if (region) {
       state.selection = {
@@ -269,7 +489,12 @@ export async function createScene(canvas, outputs) {
         regionId: region.regionId,
         displayName: region.displayName
       };
-      state.destination = region;
+      state.destination = {
+        kind: "region",
+        regionId: region.regionId,
+        displayName: region.displayName,
+        centerPoint: region.centerPoint
+      };
       updateOutputs();
       return;
     }
@@ -300,34 +525,36 @@ export async function createScene(canvas, outputs) {
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    for (const path of paths) {
-      const isSelected = state.selection?.kind === "path" && state.selection.pathId === path.pathId;
-      const isDestinationPath = state.destination && state.projection && (
-        path.fromRegionId === state.projection.regionId && path.toRegionId === state.destination.regionId
-      );
+    if (state.traversalMode === "foot") {
+      for (const path of paths) {
+        const isSelected = state.selection?.kind === "path" && state.selection.pathId === path.pathId;
+        const isDestinationPath = state.destination && state.projection && state.destination.kind === "region" && (
+          path.fromRegionId === state.projection.regionId && path.toRegionId === state.destination.regionId
+        );
 
-      ctx.beginPath();
-      path.centerline.forEach(([x, y], index) => {
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
+        ctx.beginPath();
+        path.centerline.forEach(([x, y], index) => {
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
 
-      ctx.strokeStyle = isSelected
-        ? "rgba(255,244,220,0.98)"
-        : isDestinationPath
-          ? `rgba(255,230,176,${0.34 + pulse * 0.26})`
-          : "rgba(246,238,224,0.18)";
-      ctx.lineWidth = (isSelected ? 7 : isDestinationPath ? 5 : 4) * px;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.stroke();
+        ctx.strokeStyle = isSelected
+          ? "rgba(255,244,220,0.98)"
+          : isDestinationPath
+            ? `rgba(255,230,176,${0.34 + pulse * 0.26})`
+            : "rgba(246,238,224,0.18)";
+        ctx.lineWidth = (isSelected ? 7 : isDestinationPath ? 5 : 4) * px;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.stroke();
+      }
     }
 
     for (const region of regions) {
       const [x, y] = region.centerPoint;
       const isActive = state.projection?.regionId === region.regionId;
       const isSelected = state.selection?.kind === "region" && state.selection.regionId === region.regionId;
-      const isDestination = state.destination?.regionId === region.regionId;
+      const isDestination = state.destination?.kind === "region" && state.destination.regionId === region.regionId;
 
       if (isActive || isSelected || isDestination) {
         ctx.beginPath();
@@ -384,6 +611,8 @@ export async function createScene(canvas, outputs) {
       viewportOffset: worldViewportOffset,
       renderScale: state.renderScale,
       renderMode: state.renderMode,
+      traversalMode: state.traversalMode,
+      activeHarborInstanceId: state.activeHarborInstanceId,
       kernel: state.kernel,
       projection: state.projection,
       selection: state.selection,

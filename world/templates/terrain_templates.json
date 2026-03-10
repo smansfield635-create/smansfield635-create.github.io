@@ -1,6 +1,23 @@
 {
   "schemaVersion": "TERRAIN_TEMPLATE_LIBRARY_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
   "templates": [
+    {
+      "templateId": "harbor_template",
+      "terrain": [
+        {
+          "terrainClass": "coastal_lowland",
+          "shape": "ring",
+          "radius": 120
+        },
+        {
+          "terrainClass": "harbor_edge_slope",
+          "shape": "ring",
+          "radius": 140
+        }
+      ]
+    },
     {
       "templateId": "market_template",
       "terrain": [
@@ -44,6 +61,16 @@
           "terrainClass": "ridge_slope",
           "shape": "ring",
           "radius": 60
+        }
+      ]
+    },
+    {
+      "templateId": "summit_template",
+      "terrain": [
+        {
+          "terrainClass": "summit_platform",
+          "shape": "hex",
+          "radius": 45
         }
       ]
     }

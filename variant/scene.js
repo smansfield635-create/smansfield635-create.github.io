@@ -120,6 +120,7 @@ export async function createScene(canvas, outputs) {
 
     for (const instance of getHarborInstances()) {
       if (instance.marketLinkRegionId === regionId) return instance;
+
       const transfers = instance.transferRules?.dockTransfers ?? [];
       for (const transfer of transfers) {
         if (transfer.landRegionId === regionId) return instance;
@@ -141,50 +142,6 @@ export async function createScene(canvas, outputs) {
   function getDockTransfersForInstance(instance) {
     if (!instance) return [];
     return state.kernel.helpers.getHarborDockTransfers?.(instance.harborInstanceId) ?? [];
-  }
-
-  function getTransferForDock(instance, dockId) {
-    return getDockTransfersForInstance(instance).find((transfer) => transfer.dockId === dockId) ?? null;
-  }
-
-  function resize() {
-    state.dpr = Math.max(1, window.devicePixelRatio || 1);
-    state.width = window.innerWidth;
-    state.height = window.innerHeight;
-    canvas.width = Math.floor(state.width * state.dpr);
-    canvas.height = Math.floor(state.height * state.dpr);
-    canvas.style.width = `${state.width}px`;
-    canvas.style.height = `${state.height}px`;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(state.dpr, state.dpr);
-    updateViewportOffset(true);
-  }
-
-  function updateViewportOffset(forceSnap = false) {
-    const scaledWorldWidth = state.worldBounds.width * state.renderScale;
-    const scaledWorldHeight = state.worldBounds.height * state.renderScale;
-
-    const baseX = (state.width - scaledWorldWidth) * 0.5;
-    const baseY = (state.height - scaledWorldHeight) * 0.5;
-
-    const targetScreenX = state.width * 0.50;
-    const targetScreenY = state.height * 0.88;
-
-    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
-    const dynamicForwardBiasY = (160 + (northProgress * 54)) * state.renderScale;
-    const dynamicForwardBiasX = (northProgress * 10) * state.renderScale;
-
-    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX + dynamicForwardBiasX);
-    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY + dynamicForwardBiasY);
-
-    const lerpX = forceSnap ? 1 : 0.11;
-    const lerpY = forceSnap ? 1 : 0.09;
-
-    state.camera.x = lerp(state.camera.x, followX, lerpX);
-    state.camera.y = lerp(state.camera.y, followY, lerpY);
-
-    state.viewportOffset.x = baseX + state.camera.x;
-    state.viewportOffset.y = baseY + state.camera.y;
   }
 
   function resolveArrival(target) {
@@ -257,6 +214,46 @@ export async function createScene(canvas, outputs) {
         };
       }
     }
+  }
+
+  function resize() {
+    state.dpr = Math.max(1, window.devicePixelRatio || 1);
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    canvas.width = Math.floor(state.width * state.dpr);
+    canvas.height = Math.floor(state.height * state.dpr);
+    canvas.style.width = `${state.width}px`;
+    canvas.style.height = `${state.height}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(state.dpr, state.dpr);
+    updateViewportOffset(true);
+  }
+
+  function updateViewportOffset(forceSnap = false) {
+    const scaledWorldWidth = state.worldBounds.width * state.renderScale;
+    const scaledWorldHeight = state.worldBounds.height * state.renderScale;
+
+    const baseX = (state.width - scaledWorldWidth) * 0.5;
+    const baseY = (state.height - scaledWorldHeight) * 0.5;
+
+    const targetScreenX = state.width * 0.5;
+    const targetScreenY = state.height * 0.88;
+
+    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+    const dynamicForwardBiasY = (160 + (northProgress * 54)) * state.renderScale;
+    const dynamicForwardBiasX = (northProgress * 10) * state.renderScale;
+
+    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX + dynamicForwardBiasX);
+    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY + dynamicForwardBiasY);
+
+    const lerpX = forceSnap ? 1 : 0.11;
+    const lerpY = forceSnap ? 1 : 0.09;
+
+    state.camera.x = lerp(state.camera.x, followX, lerpX);
+    state.camera.y = lerp(state.camera.y, followY, lerpY);
+
+    state.viewportOffset.x = baseX + state.camera.x;
+    state.viewportOffset.y = baseY + state.camera.y;
   }
 
   function updatePlayer() {

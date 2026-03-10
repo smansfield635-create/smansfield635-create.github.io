@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "REGION_TEMPLATE_AUTHORITY_v1",
+  "worldId": "nine_summits_island",
+  "version": 1,
+
+  "templates": [
+
+    {
+      "templateId": "harbor_template",
+      "templateClass": "harbor",
+      "defaultTerrainClasses": [
+        "coastal_lowland",
+        "harbor_edge_slope",
+        "dockside_hardscape",
+        "inland_harbor_rise"
+      ],
+      "defaultSubstrateClasses": [
+        "wet_sand",
+        "dry_sand",
+        "dock_hard_surface",
+        "shallow_water_margin"
+      ],
+      "defaultPathDockRule": "coastal_entry",
+      "defaultScaleRange": [0.8, 1.2],
+      "orientationModes": ["coastal", "peninsula"]
+    },
+
+    {
+      "templateId": "market_template",
+      "templateClass": "market",
+      "defaultTerrainClasses": [
+        "market_hardscape",
+        "market_edge_transition",
+        "market_inner_ground"
+      ],
+      "defaultSubstrateClasses": [
+        "market_stone_surface",
+        "market_dust_surface"
+      ],
+      "defaultPathDockRule": "settlement_link",
+      "defaultScaleRange": [0.7, 1.1],
+      "orientationModes": ["cardinal", "path_aligned"]
+    },
+
+    {
+      "templateId": "basin_template",
+      "templateClass": "basin",
+      "defaultTerrainClasses": [
+        "basin_floor",
+        "basin_edge_slope",
+        "basin_rise_transition"
+      ],
+      "defaultSubstrateClasses": [
+        "basin_packed_earth",
+        "basin_moist_margin",
+        "basin_stone_edge"
+      ],
+      "defaultPathDockRule": "exploration_link",
+      "defaultScaleRange": [0.9, 1.4],
+      "orientationModes": ["centered", "path_aligned"]
+    },
+
+    {
+      "templateId": "ridge_template",
+      "templateClass": "ridge",
+      "defaultTerrainClasses": [
+        "ridge_spine",
+        "ridge_slope",
+        "ridge_outcrop"
+      ],
+      "defaultSubstrateClasses": [
+        "rock_surface",
+        "gravel_scree"
+      ],
+      "defaultPathDockRule": "ridge_pass",
+      "defaultScaleRange": [1.0, 1.6],
+      "orientationModes": ["axis_aligned"]
+    },
+
+    {
+      "templateId": "canyon_template",
+      "templateClass": "canyon",
+      "defaultTerrainClasses": [
+        "canyon_floor",
+        "canyon_wall",
+        "canyon_rim"
+      ],
+      "defaultSubstrateClasses": [
+        "rock_surface",
+        "dust_surface"
+      ],
+      "defaultPathDockRule": "canyon_crossing",
+      "defaultScaleRange": [1.1, 1.8],
+      "orientationModes": ["axis_aligned"]
+    },
+
+    {
+      "templateId": "summit_template",
+      "templateClass": "summit",
+      "defaultTerrainClasses": [
+        "summit_plaza",
+        "summit_approach",
+        "summit_edge"
+      ],
+      "defaultSubstrateClasses": [
+        "stone_surface",
+        "wind_scoured_rock"
+      ],
+      "defaultPathDockRule": "terminal_gate",
+      "defaultScaleRange": [0.8, 1.2],
+      "orientationModes": ["radial"]
+    }
+
+  ]
+}

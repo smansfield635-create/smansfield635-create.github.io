@@ -144,6 +144,34 @@ export async function createScene(canvas, outputs) {
     return state.kernel.helpers.getHarborDockTransfers?.(instance.harborInstanceId) ?? [];
   }
 
+  function getHarborNavNode(navNodeId) {
+    return state.kernel.helpers.getHarborNavNode?.(navNodeId) ?? null;
+  }
+
+  function getHarborNavNeighbors(navNodeId) {
+    return state.kernel.helpers.getHarborNavNeighbors?.(navNodeId) ?? [];
+  }
+
+  function isBoatNodeAllowed(instance, navNodeId) {
+    if (!instance || !navNodeId) return false;
+
+    const transfers = getDockTransfersForInstance(instance);
+    for (const transfer of transfers) {
+      if (transfer.dockId === navNodeId) return true;
+    }
+
+    const node = getHarborNavNode(navNodeId);
+    return Boolean(node);
+  }
+
+  function canTravelBetweenBoatNodes(fromNodeId, toNodeId) {
+    if (!fromNodeId || !toNodeId) return false;
+    if (fromNodeId === toNodeId) return true;
+
+    const neighbors = getHarborNavNeighbors(fromNodeId);
+    return neighbors.some((node) => node?.navNodeId === toNodeId);
+  }
+
   function resolveArrival(target) {
     if (!target) return;
 
@@ -236,7 +264,7 @@ export async function createScene(canvas, outputs) {
     const baseX = (state.width - scaledWorldWidth) * 0.5;
     const baseY = (state.height - scaledWorldHeight) * 0.5;
 
-    const targetScreenX = state.width * 0.5;
+    const targetScreenX = state.width * 0.50;
     const targetScreenY = state.height * 0.88;
 
     const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
@@ -402,7 +430,7 @@ export async function createScene(canvas, outputs) {
     for (const transfer of getDockTransfersForInstance(instance)) {
       if (transfer.modeIn !== state.traversalMode) continue;
 
-      const navNode = state.kernel.helpers.getHarborNavNode(transfer.dockId);
+      const navNode = getHarborNavNode(transfer.dockId);
       if (!navNode) continue;
 
       const d2 = distanceSq(worldX, worldY, navNode.centerPoint[0], navNode.centerPoint[1]);
@@ -422,6 +450,8 @@ export async function createScene(canvas, outputs) {
 
     if (state.traversalMode === "boat") {
       for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
+        if (!isBoatNodeAllowed(instance, navNode.navNodeId)) continue;
+
         const d2 = distanceSq(worldX, worldY, navNode.centerPoint[0], navNode.centerPoint[1]);
         if (d2 <= (28 * 28) && d2 < bestD2) {
           best = {
@@ -454,6 +484,19 @@ export async function createScene(canvas, outputs) {
 
     const harborInteraction = hitTestHarborInteraction(worldPoint.x, worldPoint.y);
     if (harborInteraction) {
+      if (harborInteraction.kind === "harbor_nav_node") {
+        const currentNodeId = state.selection?.kind === "harbor_nav_node"
+          ? state.selection.navNodeId
+          : state.selection?.kind === "dock_transfer"
+            ? state.selection.dockId
+            : null;
+
+        if (currentNodeId && !canTravelBetweenBoatNodes(currentNodeId, harborInteraction.navNodeId)) {
+          updateOutputs();
+          return;
+        }
+      }
+
       state.selection = harborInteraction.kind === "dock_transfer"
         ? {
             kind: "dock_transfer",
@@ -545,6 +588,20 @@ export async function createScene(canvas, outputs) {
         ctx.lineJoin = "round";
         ctx.stroke();
       }
+    } else {
+      for (const edge of state.kernel.harborNavigationGraph.navigationEdgesById.values()) {
+        ctx.beginPath();
+        edge.centerline.forEach(([x, y], index) => {
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+
+        ctx.strokeStyle = "rgba(210,244,255,0.20)";
+        ctx.lineWidth = 3 * px;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.stroke();
+      }
     }
 
     for (const region of regions) {
@@ -577,9 +634,25 @@ export async function createScene(canvas, outputs) {
       ctx.fillText(region.displayName, x, y - 54);
     }
 
+    if (state.traversalMode === "boat") {
+      for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
+        const isSelected = state.selection?.kind === "harbor_nav_node" && state.selection.navNodeId === navNode.navNodeId;
+        const isDestination = state.destination?.kind === "harbor_nav_node" && state.destination.navNodeId === navNode.navNodeId;
+        const isDockTransfer = state.selection?.kind === "dock_transfer" && state.selection.dockId === navNode.navNodeId;
+
+        if (isSelected || isDestination || isDockTransfer) {
+          ctx.beginPath();
+          ctx.arc(navNode.centerPoint[0], navNode.centerPoint[1], 20 + pulse * 3, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(214,248,255,0.72)";
+          ctx.lineWidth = 2.5 * px;
+          ctx.stroke();
+        }
+      }
+    }
+
     ctx.beginPath();
     ctx.ellipse(state.player.x, state.player.y + 2, 11, 13, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,132,88,0.98)";
+    ctx.fillStyle = state.traversalMode === "boat" ? "rgba(120,220,255,0.98)" : "rgba(255,132,88,0.98)";
     ctx.fill();
     ctx.lineWidth = 2 * px;
     ctx.strokeStyle = "rgba(255,242,224,0.98)";

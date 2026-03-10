@@ -87,23 +87,41 @@
       "centerPoint": [560, 320],
       "neighborIds": [
         "band_2__sector_ne__node_market_basin_gate",
-        "band_3__sector_n__node_summit_gate"
+        "band_3__sector_n__node_summit_approach"
       ],
       "stateEncodingId": "basin_explore_open"
     },
     {
-      "diamondCellId": "band_3__sector_n__node_summit_gate",
+      "diamondCellId": "band_3__sector_n__node_summit_approach",
       "bandIndex": 3,
       "sector": "N",
-      "regionId": "exploration_basin",
-      "pathId": "path_basin_to_summit",
+      "regionId": "summit_approach",
+      "pathId": "path_basin_to_summit_approach",
+      "progressionClass": "corridor",
+      "modeSet": ["foot"],
+      "hazardWeightClass": "medium",
+      "gateClass": null,
+      "centerPoint": [568, 196],
+      "neighborIds": [
+        "band_2__sector_n__node_basin_core",
+        "band_3__sector_nnw__node_summit_gate",
+        "band_3__sector_nne__node_summit_core"
+      ],
+      "stateEncodingId": "summit_gate_required"
+    },
+    {
+      "diamondCellId": "band_3__sector_nnw__node_summit_gate",
+      "bandIndex": 3,
+      "sector": "NNW",
+      "regionId": "summit_approach",
+      "pathId": "path_summit_approach_to_summit",
       "progressionClass": "gate",
       "modeSet": ["foot"],
       "hazardWeightClass": "medium",
       "gateClass": "gate_summit_entry",
-      "centerPoint": [576, 206],
+      "centerPoint": [566, 156],
       "neighborIds": [
-        "band_2__sector_n__node_basin_core",
+        "band_3__sector_n__node_summit_approach",
         "band_3__sector_nne__node_summit_core"
       ],
       "stateEncodingId": "summit_gate_required"
@@ -119,7 +137,10 @@
       "hazardWeightClass": "low",
       "gateClass": "gate_summit_entry",
       "centerPoint": [560, 120],
-      "neighborIds": ["band_3__sector_n__node_summit_gate"],
+      "neighborIds": [
+        "band_3__sector_n__node_summit_approach",
+        "band_3__sector_nnw__node_summit_gate"
+      ],
       "stateEncodingId": "summit_gate_required"
     }
   ],
@@ -127,12 +148,14 @@
     "harbor_village": "S",
     "market_district": "E",
     "exploration_basin": "N",
+    "summit_approach": "NNW",
     "summit_plaza": "NNE"
   },
   "bandBindings": {
     "harbor_village": 0,
     "market_district": 1,
     "exploration_basin": 2,
+    "summit_approach": 3,
     "summit_plaza": 3
   }
 }

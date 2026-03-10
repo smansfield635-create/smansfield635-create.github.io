@@ -152,6 +152,14 @@ export async function createScene(canvas, outputs) {
     return state.kernel.helpers.getHarborNavNeighbors?.(navNodeId) ?? [];
   }
 
+  function getCurrentBoatNodeId() {
+    if (state.selection?.kind === "harbor_nav_node") return state.selection.navNodeId;
+    if (state.selection?.kind === "dock_transfer") return state.selection.dockId;
+    if (state.destination?.kind === "harbor_nav_node") return state.destination.navNodeId;
+    if (state.destination?.kind === "dock_transfer") return state.destination.dockId;
+    return null;
+  }
+
   function isBoatNodeAllowed(instance, navNodeId) {
     if (!instance || !navNodeId) return false;
 
@@ -170,6 +178,54 @@ export async function createScene(canvas, outputs) {
 
     const neighbors = getHarborNavNeighbors(fromNodeId);
     return neighbors.some((node) => node?.navNodeId === toNodeId);
+  }
+
+  function setSelectionFromCurrentPosition() {
+    if (state.traversalMode === "boat") {
+      const instance = getActiveHarborInstance();
+      if (!instance) return;
+
+      let bestNode = null;
+      let bestD2 = Infinity;
+
+      for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
+        if (!isBoatNodeAllowed(instance, navNode.navNodeId)) continue;
+        const d2 = distanceSq(state.player.x, state.player.y, navNode.centerPoint[0], navNode.centerPoint[1]);
+        if (d2 < bestD2) {
+          bestD2 = d2;
+          bestNode = navNode;
+        }
+      }
+
+      if (!bestNode) return;
+
+      const transfer = getDockTransfersForInstance(instance).find((row) => row.dockId === bestNode.navNodeId) ?? null;
+      if (transfer) {
+        state.selection = {
+          kind: "dock_transfer",
+          dockId: bestNode.navNodeId,
+          displayName: bestNode.displayName,
+          harborInstanceId: instance.harborInstanceId,
+          transferClass: transfer.transferClass
+        };
+      } else {
+        state.selection = {
+          kind: "harbor_nav_node",
+          navNodeId: bestNode.navNodeId,
+          displayName: bestNode.displayName,
+          harborInstanceId: instance.harborInstanceId
+        };
+      }
+      return;
+    }
+
+    if (state.region) {
+      state.selection = {
+        kind: "region",
+        regionId: state.region.regionId,
+        displayName: state.region.displayName
+      };
+    }
   }
 
   function resolveArrival(target) {
@@ -317,12 +373,17 @@ export async function createScene(canvas, outputs) {
       dx /= length;
       dy /= length;
 
+      const speedMultiplier = state.traversalMode === "boat" ? 1.12 : 1;
       const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
-      const uphillFactor = clamp(1 - (northProgress * 0.14), 0.82, 1);
-      const lateralDrag = clamp(1 - (Math.abs(dx) * northProgress * 0.06), 0.9, 1);
+      const uphillFactor = state.traversalMode === "boat"
+        ? 1
+        : clamp(1 - (northProgress * 0.14), 0.82, 1);
+      const lateralDrag = state.traversalMode === "boat"
+        ? 1
+        : clamp(1 - (Math.abs(dx) * northProgress * 0.06), 0.9, 1);
 
-      state.player.x += dx * state.player.speed * uphillFactor * lateralDrag;
-      state.player.y += dy * state.player.speed * uphillFactor;
+      state.player.x += dx * state.player.speed * speedMultiplier * uphillFactor * lateralDrag;
+      state.player.y += dy * state.player.speed * speedMultiplier * uphillFactor;
     }
 
     state.player.x = clamp(state.player.x, 150, 960);
@@ -371,7 +432,7 @@ export async function createScene(canvas, outputs) {
       selectionPanel.selectedName = state.selection.displayName ?? "Harbor Node";
       selectionPanel.selectedType = "Harbor Nav Node";
       selectionPanel.destination = state.destination?.displayName ?? "—";
-      selectionPanel.hint = "Tap a harbor node to move by boat";
+      selectionPanel.hint = "Tap adjacent harbor node to move by boat";
     }
 
     outputs.selectedName.textContent = selectionPanel.selectedName;
@@ -485,12 +546,7 @@ export async function createScene(canvas, outputs) {
     const harborInteraction = hitTestHarborInteraction(worldPoint.x, worldPoint.y);
     if (harborInteraction) {
       if (harborInteraction.kind === "harbor_nav_node") {
-        const currentNodeId = state.selection?.kind === "harbor_nav_node"
-          ? state.selection.navNodeId
-          : state.selection?.kind === "dock_transfer"
-            ? state.selection.dockId
-            : null;
-
+        const currentNodeId = getCurrentBoatNodeId();
         if (currentNodeId && !canTravelBetweenBoatNodes(currentNodeId, harborInteraction.navNodeId)) {
           updateOutputs();
           return;
@@ -810,4 +866,4 @@ export async function createScene(canvas, outputs) {
       requestAnimationFrame(step);
     }
   });
-}
+          }

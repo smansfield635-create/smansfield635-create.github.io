@@ -1,20 +1,43 @@
 {
   "schemaVersion": "REGION_TEMPLATE_LIBRARY_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
   "templates": [
     {
+      "templateId": "harbor_template",
+      "templateClass": "harbor",
+      "defaultTerrain": "harbor_template",
+      "defaultSubstrate": "harbor_template"
+    },
+    {
       "templateId": "market_template",
+      "templateClass": "market",
       "defaultTerrain": "market_template",
       "defaultSubstrate": "market_template"
     },
     {
       "templateId": "basin_template",
+      "templateClass": "basin",
       "defaultTerrain": "basin_template",
       "defaultSubstrate": "basin_template"
     },
     {
       "templateId": "ridge_template",
+      "templateClass": "ridge",
       "defaultTerrain": "ridge_template",
       "defaultSubstrate": "ridge_template"
+    },
+    {
+      "templateId": "canyon_template",
+      "templateClass": "canyon",
+      "defaultTerrain": "ridge_template",
+      "defaultSubstrate": "ridge_template"
+    },
+    {
+      "templateId": "summit_template",
+      "templateClass": "summit",
+      "defaultTerrain": "summit_template",
+      "defaultSubstrate": "summit_template"
     }
   ]
 }

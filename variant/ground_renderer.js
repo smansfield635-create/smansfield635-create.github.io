@@ -206,6 +206,44 @@ function drawHarborCoastGeometry(ctx, kernel) {
   strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.20)", 1.4);
 }
 
+function drawExposureZones(ctx, kernel) {
+  const coast = kernel?.coastlineModel;
+  if (!coast || !Array.isArray(coast.exposureZones)) return;
+
+  for (const zone of coast.exposureZones) {
+    fillPolygon(ctx, zone.polygon, "rgba(90,140,180,0.08)");
+    strokePolygon(ctx, zone.polygon, "rgba(150,200,240,0.12)", 1);
+  }
+}
+
+function drawFirmnessZones(ctx, kernel) {
+  const coast = kernel?.coastlineModel;
+  if (!coast || !Array.isArray(coast.firmnessZones)) return;
+
+  for (const zone of coast.firmnessZones) {
+    fillPolygon(ctx, zone.polygon, "rgba(226,210,160,0.10)");
+    strokePolygon(ctx, zone.polygon, "rgba(255,236,182,0.14)", 1);
+  }
+}
+
+function drawBasinDepthTint(ctx, kernel) {
+  const coast = kernel?.coastlineModel;
+  if (!coast?.harborBasin) return;
+
+  polygon(ctx, coast.harborBasin);
+
+  const gradient = ctx.createRadialGradient(
+    590, 760, 10,
+    590, 760, 180
+  );
+
+  gradient.addColorStop(0, "rgba(70,120,160,0.16)");
+  gradient.addColorStop(1, "rgba(40,90,130,0.04)");
+
+  ctx.fillStyle = gradient;
+  ctx.fill();
+}
+
 function drawWaterRows(ctx, rows) {
   for (const water of rows) {
     fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx));
@@ -259,6 +297,59 @@ function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
   }
 
   return rows;
+}
+
+function drawHarborNavigationEdges(ctx, kernel, pulse) {
+  const harborGraph = kernel?.harborNavigationGraph;
+  if (!harborGraph?.navigationEdgesById) return;
+
+  for (const edge of harborGraph.navigationEdgesById.values()) {
+    polyline(ctx, edge.centerline);
+    ctx.lineWidth = Math.max(4, (edge.nominalWidth || 20) * 0.16);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(126,196,226,0.10)";
+    ctx.stroke();
+
+    polyline(ctx, edge.centerline);
+    ctx.lineWidth = Math.max(1.25, (edge.nominalWidth || 20) * 0.04);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = `rgba(220,246,255,${0.14 + (pulse * 0.08)})`;
+    ctx.stroke();
+  }
+}
+
+function drawHarborNavigationNodes(ctx, kernel) {
+  const harborGraph = kernel?.harborNavigationGraph;
+  if (!harborGraph?.navigationNodesById) return;
+
+  for (const node of harborGraph.navigationNodesById.values()) {
+    const [x, y] = node.centerPoint;
+    let radius = 4;
+    let fill = "rgba(214,240,250,0.42)";
+    let stroke = "rgba(255,255,255,0.10)";
+
+    if (node.nodeClass === "mooring") {
+      radius = 5;
+      fill = "rgba(242,224,166,0.52)";
+      stroke = "rgba(255,246,214,0.16)";
+    }
+
+    if (node.nodeClass === "transfer") {
+      radius = 5.5;
+      fill = "rgba(182,234,206,0.56)";
+      stroke = "rgba(226,255,242,0.18)";
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
 }
 
 function drawTraversalPaths(ctx, kernel, projection, destination, pulse) {
@@ -388,6 +479,9 @@ export function createGroundRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawHarborCoastGeometry(ctx, kernel);
+    drawExposureZones(ctx, kernel);
+    drawFirmnessZones(ctx, kernel);
+    drawBasinDepthTint(ctx, kernel);
     drawWaterRows(ctx, manualWaterRows);
     drawTerrainRows(ctx, manualTerrainRows);
     drawTerrainRows(ctx, generatedTerrainRows);
@@ -395,6 +489,8 @@ export function createGroundRenderer() {
     drawSubstrateRows(ctx, generatedSubstrateRows);
     drawRegionBoundaries(ctx, kernel);
     drawHarborChartAccents(ctx, kernel);
+    drawHarborNavigationEdges(ctx, kernel, pulse);
+    drawHarborNavigationNodes(ctx, kernel);
     drawTraversalPaths(ctx, kernel, projection, destination, pulse);
     drawRegionPads(ctx, kernel);
 

@@ -60,6 +60,45 @@ function terrainStyle(terrainClass, ctx) {
     return "rgba(162,154,138,0.86)";
   }
 
+  if (terrainClass === "market_hardscape") {
+    return "rgba(196,174,142,0.88)";
+  }
+
+  if (terrainClass === "market_edge_transition") {
+    return "rgba(182,164,126,0.78)";
+  }
+
+  if (terrainClass === "market_inner_ground") {
+    return "rgba(208,186,150,0.86)";
+  }
+
+  if (terrainClass === "basin_floor") {
+    const gradient = ctx.createLinearGradient(0, 260, 0, 420);
+    gradient.addColorStop(0, "rgba(170,178,154,0.78)");
+    gradient.addColorStop(1, "rgba(132,144,126,0.86)");
+    return gradient;
+  }
+
+  if (terrainClass === "basin_edge_slope") {
+    return "rgba(188,180,146,0.74)";
+  }
+
+  if (terrainClass === "basin_rise_transition") {
+    return "rgba(172,170,138,0.74)";
+  }
+
+  if (terrainClass === "ridge_spine") {
+    return "rgba(176,168,152,0.84)";
+  }
+
+  if (terrainClass === "ridge_slope") {
+    return "rgba(150,146,134,0.74)";
+  }
+
+  if (terrainClass === "summit_platform") {
+    return "rgba(214,208,194,0.88)";
+  }
+
   return "rgba(160,160,140,0.8)";
 }
 
@@ -94,26 +133,35 @@ function substrateStyle(substrateClass, ctx) {
     return gradient;
   }
 
+  if (substrateClass === "market_stone_surface") {
+    return "rgba(172,156,132,0.88)";
+  }
+
+  if (substrateClass === "market_dust_surface") {
+    return "rgba(198,180,142,0.78)";
+  }
+
+  if (substrateClass === "basin_packed_earth") {
+    return "rgba(150,146,124,0.82)";
+  }
+
+  if (substrateClass === "basin_moist_margin") {
+    return "rgba(118,142,146,0.58)";
+  }
+
+  if (substrateClass === "basin_stone_edge") {
+    return "rgba(136,136,142,0.78)";
+  }
+
+  if (substrateClass === "ridge_stone") {
+    return "rgba(148,144,138,0.82)";
+  }
+
+  if (substrateClass === "summit_stone") {
+    return "rgba(210,208,202,0.90)";
+  }
+
   return "rgba(140,140,140,0.8)";
-}
-
-function truthTerrainFill(terrainClass) {
-  if (terrainClass === "coastal_lowland") return "rgba(88,160,96,0.36)";
-  if (terrainClass === "harbor_edge_slope") return "rgba(228,182,72,0.34)";
-  if (terrainClass === "dockside_hardscape") return "rgba(164,112,76,0.48)";
-  if (terrainClass === "inland_harbor_rise") return "rgba(124,110,212,0.30)";
-  if (terrainClass === "cliff_candidate_edge") return "rgba(214,98,98,0.34)";
-  return "rgba(180,180,180,0.26)";
-}
-
-function truthSubstrateFill(substrateClass) {
-  if (substrateClass === "wet_sand") return "rgba(230,198,108,0.34)";
-  if (substrateClass === "dry_sand") return "rgba(248,230,154,0.30)";
-  if (substrateClass === "mixed_gravel") return "rgba(156,156,156,0.34)";
-  if (substrateClass === "bedrock_edge") return "rgba(96,122,162,0.36)";
-  if (substrateClass === "dock_hard_surface") return "rgba(164,108,72,0.48)";
-  if (substrateClass === "shallow_water_margin") return "rgba(90,188,228,0.30)";
-  return "rgba(200,200,200,0.26)";
 }
 
 function drawHarborCoastGeometry(ctx, kernel) {
@@ -149,22 +197,43 @@ function drawRegionBoundaries(ctx, kernel) {
   }
 }
 
-function drawTerrainPolygons(ctx, kernel) {
-  if (!kernel?.terrainPolygonsById) return;
-
-  for (const terrain of kernel.terrainPolygonsById.values()) {
+function drawTerrainRows(ctx, rows) {
+  for (const terrain of rows) {
     fillPolygon(ctx, terrain.polygon, terrainStyle(terrain.terrainClass, ctx));
     strokePolygon(ctx, terrain.polygon, "rgba(250,244,228,0.06)", 0.9);
   }
 }
 
-function drawSubstratePolygons(ctx, kernel) {
-  if (!kernel?.substratePolygonsById) return;
-
-  for (const substrate of kernel.substratePolygonsById.values()) {
+function drawSubstrateRows(ctx, rows) {
+  for (const substrate of rows) {
     fillPolygon(ctx, substrate.polygon, substrateStyle(substrate.substrateClass, ctx));
     strokePolygon(ctx, substrate.polygon, "rgba(252,246,232,0.05)", 0.8);
   }
+}
+
+function getManualRegionIds(rowsMap) {
+  const regionIds = new Set();
+  if (!rowsMap) return regionIds;
+
+  for (const row of rowsMap.values()) {
+    if (row?.regionId) regionIds.add(row.regionId);
+  }
+
+  return regionIds;
+}
+
+function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
+  if (!generatedMap) return [];
+  const manualRegionIds = getManualRegionIds(manualMap);
+  const rows = [];
+
+  for (const row of generatedMap.values()) {
+    if (!manualRegionIds.has(row.regionId)) {
+      rows.push(row);
+    }
+  }
+
+  return rows;
 }
 
 function drawTraversalPaths(ctx, kernel, projection, destination, pulse) {
@@ -232,6 +301,12 @@ function drawRegionPads(ctx, kernel) {
       fill = "rgba(112,128,112,0.08)";
     }
 
+    if (region.regionId === "summit_approach") {
+      rx = 56;
+      ry = 24;
+      fill = "rgba(198,194,184,0.10)";
+    }
+
     if (region.regionId === "summit_plaza") {
       rx = 40;
       ry = 18;
@@ -245,106 +320,30 @@ function drawRegionPads(ctx, kernel) {
   }
 }
 
-function drawTruthView(ctx, runtime) {
-  const { kernel, projection, destination, player } = runtime;
-
-  const coast = kernel?.coastlineModel;
-  if (coast) {
-    strokePolygon(ctx, coast.harborPeninsula, "rgba(255,242,188,0.92)", 2.2);
-    strokePolygon(ctx, coast.harborBasin, "rgba(110,220,255,0.96)", 1.8);
-    strokePolygon(ctx, coast.harborChannel, "rgba(110,220,255,0.96)", 1.4);
-
-    if (Array.isArray(coast.reefZones)) {
-      for (const reefPolygon of coast.reefZones) {
-        fillPolygon(ctx, reefPolygon, "rgba(96,198,188,0.18)");
-        strokePolygon(ctx, reefPolygon, "rgba(96,228,220,0.42)", 1);
-      }
-    }
-  }
-
-  if (kernel?.terrainPolygonsById) {
-    for (const terrain of kernel.terrainPolygonsById.values()) {
-      fillPolygon(ctx, terrain.polygon, truthTerrainFill(terrain.terrainClass));
-      strokePolygon(ctx, terrain.polygon, "rgba(255,255,255,0.26)", 1);
-    }
-  }
-
-  if (kernel?.substratePolygonsById) {
-    for (const substrate of kernel.substratePolygonsById.values()) {
-      fillPolygon(ctx, substrate.polygon, truthSubstrateFill(substrate.substrateClass));
-      strokePolygon(ctx, substrate.polygon, "rgba(255,255,255,0.18)", 0.9);
-    }
-  }
-
-  if (kernel?.regionBoundariesById) {
-    for (const boundary of kernel.regionBoundariesById.values()) {
-      if (boundary.parentRegion !== "harbor") continue;
-      strokePolygon(ctx, boundary.polygon, "rgba(255,255,255,0.48)", 1.2);
-    }
-  }
-
-  if (kernel?.pathsById) {
-    for (const path of kernel.pathsById.values()) {
-      polyline(ctx, path.centerline);
-      ctx.lineWidth = 3;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = "rgba(255,214,110,0.92)";
-      ctx.stroke();
-    }
-  }
-
-  if (kernel?.regionsById) {
-    for (const region of kernel.regionsById.values()) {
-      const [x, y] = region.centerPoint;
-      const isActive = projection?.regionId === region.regionId;
-      const isDestination = destination?.regionId === region.regionId;
-
-      ctx.beginPath();
-      ctx.arc(x, y, isActive || isDestination ? 10 : 7, 0, Math.PI * 2);
-      ctx.fillStyle = isActive
-        ? "rgba(255,122,92,0.98)"
-        : isDestination
-          ? "rgba(255,244,188,0.96)"
-          : "rgba(232,240,248,0.82)";
-      ctx.fill();
-
-      ctx.fillStyle = "rgba(248,248,244,0.98)";
-      ctx.font = "600 11px system-ui, sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "bottom";
-      ctx.fillText(region.displayName, x, y - 12);
-    }
-  }
-
-  if (player) {
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 7, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255,132,88,0.98)";
-    ctx.fill();
-    ctx.lineWidth = 1.5;
-    ctx.strokeStyle = "rgba(255,242,224,0.98)";
-    ctx.stroke();
-  }
-}
-
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
-    const { viewportOffset, kernel, projection, destination, tick, renderMode } = runtime;
+    const { viewportOffset, kernel, projection, destination, tick } = runtime;
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+
+    const manualTerrainRows = kernel?.terrainPolygonsById ? [...kernel.terrainPolygonsById.values()] : [];
+    const manualSubstrateRows = kernel?.substratePolygonsById ? [...kernel.substratePolygonsById.values()] : [];
+    const generatedTerrainRows = getGeneratedRowsForTemplateOnlyRegions(
+      kernel?.generatedTerrainPolygonsById,
+      kernel?.terrainPolygonsById
+    );
+    const generatedSubstrateRows = getGeneratedRowsForTemplateOnlyRegions(
+      kernel?.generatedSubstratePolygonsById,
+      kernel?.substratePolygonsById
+    );
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    if (renderMode === "truth") {
-      drawTruthView(ctx, runtime);
-      ctx.restore();
-      return;
-    }
-
     drawHarborCoastGeometry(ctx, kernel);
-    drawTerrainPolygons(ctx, kernel);
-    drawSubstratePolygons(ctx, kernel);
+    drawTerrainRows(ctx, manualTerrainRows);
+    drawTerrainRows(ctx, generatedTerrainRows);
+    drawSubstrateRows(ctx, manualSubstrateRows);
+    drawSubstrateRows(ctx, generatedSubstrateRows);
     drawRegionBoundaries(ctx, kernel);
     drawTraversalPaths(ctx, kernel, projection, destination, pulse);
     drawRegionPads(ctx, kernel);

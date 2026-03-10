@@ -10,84 +10,99 @@ function polygon(ctx, points) {
   ctx.closePath();
 }
 
-function beachBand(ctx, points, width, innerAlpha, outerAlpha) {
-  if (!points || points.length < 2) return;
-
-  ctx.beginPath();
-
-  ctx.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i++) {
-    ctx.lineTo(points[i][0], points[i][1]);
+function centroid(points) {
+  let x = 0;
+  let y = 0;
+  for (const [px, py] of points) {
+    x += px;
+    y += py;
   }
+  return [x / points.length, y / points.length];
+}
 
-  for (let i = points.length - 1; i >= 0; i--) {
-    ctx.lineTo(points[i][0] - width, points[i][1]);
-  }
+function expandPolygon(points, scale) {
+  const [cx, cy] = centroid(points);
+  return points.map(([x, y]) => [
+    cx + ((x - cx) * scale),
+    cy + ((y - cy) * scale)
+  ]);
+}
 
-  ctx.closePath();
+/* LAYER 2 — SURF BAND */
 
-  const g = ctx.createLinearGradient(0, 0, 0, 1200);
-  g.addColorStop(0, `rgba(238,218,170,${innerAlpha})`);
-  g.addColorStop(1, `rgba(214,192,142,${outerAlpha})`);
+function drawSurf(ctx, coast) {
+  const surf = expandPolygon(coast, 1.035);
+
+  ctx.save();
+  polygon(ctx, surf);
+
+  const g = ctx.createLinearGradient(0,0,0,1200);
+  g.addColorStop(0,"rgba(255,255,255,0.45)");
+  g.addColorStop(0.5,"rgba(255,255,255,0.25)");
+  g.addColorStop(1,"rgba(255,255,255,0.05)");
 
   ctx.fillStyle = g;
   ctx.fill();
+  ctx.restore();
 }
 
-/* coastline segments already defined in your file */
-const SEDIMENT_WEST = [
-  [520,1080],[500,1000],[498,920],[508,840],[530,760],
-  [560,690],[596,620],[636,560],[670,500],[692,430],
-  [702,360],[690,290],[662,220],[620,170]
-];
+/* LAYER 3 — WET SAND */
 
-const SEDIMENT_EAST = [
-  [548,1080],[580,1000],[620,920],[670,850],[730,780],
-  [790,710],[850,640],[912,560],[972,480],[1030,420],[1086,370]
-];
+function drawWetSand(ctx, coast) {
+  const wet = expandPolygon(coast, 1.015);
+
+  ctx.save();
+  polygon(ctx, wet);
+
+  const g = ctx.createLinearGradient(0,0,0,1200);
+  g.addColorStop(0,"rgba(198,178,132,0.55)");
+  g.addColorStop(1,"rgba(168,150,110,0.35)");
+
+  ctx.fillStyle = g;
+  ctx.fill();
+  ctx.restore();
+}
+
+/* WATER BODIES */
+
+function drawWater(ctx, polygonPoints) {
+  ctx.save();
+  polygon(ctx, polygonPoints);
+
+  const [cx, cy] = centroid(polygonPoints);
+
+  const g = ctx.createRadialGradient(cx,cy,20,cx,cy,200);
+  g.addColorStop(0,"rgba(82,162,196,0.9)");
+  g.addColorStop(1,"rgba(30,92,126,0.9)");
+
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  ctx.restore();
+}
 
 export function createEnvironmentRenderer() {
 
   function draw(ctx, runtime) {
-    const { viewportOffset, kernel, tick } = runtime;
+
+    const { viewportOffset, kernel } = runtime;
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    drawBeach(ctx);
-    drawWaterBodies(ctx, kernel, tick);
+    const waters = [...kernel.watersById.values()];
 
-    ctx.restore();
-  }
+    for (const row of waters) {
 
-  function drawBeach(ctx) {
+      if (!row.polygon) continue;
 
-    const BEACH_WIDTH = 85;
+      drawSurf(ctx, row.polygon);
+      drawWetSand(ctx, row.polygon);
+      drawWater(ctx, row.polygon);
 
-    beachBand(ctx, SEDIMENT_WEST, BEACH_WIDTH, 0.88, 0.46);
-    beachBand(ctx, SEDIMENT_EAST, BEACH_WIDTH, 0.88, 0.46);
-
-  }
-
-  function drawWaterBodies(ctx, kernel, tick) {
-
-    if (!kernel?.watersById) return;
-
-    const rows = [...kernel.watersById.values()];
-
-    for (const row of rows) {
-      if (!Array.isArray(row.polygon)) continue;
-
-      polygon(ctx, row.polygon);
-
-      const g = ctx.createLinearGradient(0,0,0,1000);
-      g.addColorStop(0,"rgba(42,116,168,0.96)");
-      g.addColorStop(1,"rgba(18,70,128,0.96)");
-
-      ctx.fillStyle = g;
-      ctx.fill();
     }
 
+    ctx.restore();
   }
 
   return Object.freeze({ draw });

@@ -1,110 +1,121 @@
 {
-  "schemaVersion": "WORLD_TRAVERSAL_RULES_v1",
+  "schemaVersion": "WORLD_REGION_DATA_SCHEMA_v1",
   "worldId": "nine_summits_island",
   "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
-
-  "pathRows": [
-
+  "regionRows": [
     {
-      "pathId": "path_harbor_to_market",
-      "displayName": "Harbor to Market",
-      "pathClass": "harbor_entry",
-      "fromRegionId": "harbor_village",
-      "toRegionId": "market_district",
-      "centerline": [
-        [540,560],
-        [620,540],
-        [700,500],
-        [770,430]
-      ],
-      "nominalWidth": 72,
-      "allowedModes": ["foot"],
-      "requiredGateClass": null,
-      "prohibitionClass": "none",
+      "regionId": "harbor_village",
+      "displayName": "Harbor Village",
+      "zoneId": "zone_harbor",
+      "templateId": "harbor_template",
+      "regionClass": "settlement_region",
+      "cardinalBand": "south",
+      "doctrineRole": "entry",
+      "settlementClass": "harbor",
+      "institutionClass": "harbor",
+      "supportsTraversal": true,
+      "supportsSettlement": true,
+      "isRequiredGate": false,
+      "isTerminal": false,
+      "centerPoint": [540, 560],
+      "pathAnchors": ["path_harbor_to_market"],
+      "hazardAdjacency": ["hazard_harbor_swell"],
+      "waterAdjacency": ["harbor_water"],
+      "requiredPredecessors": [],
       "stateEncodingId": "harbor_idle_open"
     },
-
     {
-      "pathId": "path_market_to_basin",
-      "displayName": "Market to Basin",
-      "pathClass": "corridor",
-      "fromRegionId": "market_district",
-      "toRegionId": "exploration_basin",
-      "centerline": [
-        [770,430],
-        [720,402],
-        [650,356],
-        [560,320]
+      "regionId": "market_district",
+      "displayName": "Market District",
+      "zoneId": "zone_market",
+      "templateId": "market_template",
+      "regionClass": "settlement_region",
+      "cardinalBand": "east",
+      "doctrineRole": "commerce",
+      "settlementClass": "market_town",
+      "institutionClass": "market",
+      "supportsTraversal": true,
+      "supportsSettlement": true,
+      "isRequiredGate": false,
+      "isTerminal": false,
+      "centerPoint": [770, 430],
+      "pathAnchors": [
+        "path_harbor_to_market",
+        "path_market_to_basin"
       ],
-      "nominalWidth": 68,
-      "allowedModes": ["foot"],
-      "requiredGateClass": null,
-      "prohibitionClass": "none",
+      "hazardAdjacency": [],
+      "waterAdjacency": [],
+      "requiredPredecessors": ["harbor_village"],
       "stateEncodingId": "market_active_open"
     },
-
     {
-      "pathId": "path_basin_to_summit_approach",
-      "displayName": "Basin to Summit Approach",
-      "pathClass": "convergence",
-      "fromRegionId": "exploration_basin",
-      "toRegionId": "summit_approach",
-      "centerline": [
-        [560,320],
-        [572,278],
-        [576,238],
-        [568,196]
+      "regionId": "exploration_basin",
+      "displayName": "Exploration Basin",
+      "zoneId": "zone_basin",
+      "templateId": "basin_template",
+      "regionClass": "basin_region",
+      "cardinalBand": "center",
+      "doctrineRole": "exploration",
+      "settlementClass": "none",
+      "institutionClass": "none",
+      "supportsTraversal": true,
+      "supportsSettlement": false,
+      "isRequiredGate": false,
+      "isTerminal": false,
+      "centerPoint": [560, 320],
+      "pathAnchors": [
+        "path_market_to_basin",
+        "path_basin_to_summit_approach"
       ],
-      "nominalWidth": 60,
-      "allowedModes": ["foot"],
-      "requiredGateClass": null,
-      "prohibitionClass": "none",
+      "hazardAdjacency": ["hazard_basin_edge"],
+      "waterAdjacency": ["basin_water"],
+      "requiredPredecessors": ["market_district"],
+      "stateEncodingId": "basin_explore_open"
+    },
+    {
+      "regionId": "summit_approach",
+      "displayName": "Summit Approach",
+      "zoneId": "zone_summit_approach",
+      "templateId": "ridge_template",
+      "regionClass": "ridge_region",
+      "cardinalBand": "north",
+      "doctrineRole": "ascent",
+      "settlementClass": "none",
+      "institutionClass": "none",
+      "supportsTraversal": true,
+      "supportsSettlement": false,
+      "isRequiredGate": false,
+      "isTerminal": false,
+      "centerPoint": [568, 196],
+      "pathAnchors": [
+        "path_basin_to_summit_approach",
+        "path_summit_approach_to_summit"
+      ],
+      "hazardAdjacency": [],
+      "waterAdjacency": [],
+      "requiredPredecessors": ["exploration_basin"],
       "stateEncodingId": "summit_gate_required"
     },
-
     {
-      "pathId": "path_summit_approach_to_summit",
-      "displayName": "Summit Approach to Summit",
-      "pathClass": "gate_ascent",
-      "fromRegionId": "summit_approach",
-      "toRegionId": "summit_plaza",
-      "centerline": [
-        [568,196],
-        [570,170],
-        [566,146],
-        [560,120]
-      ],
-      "nominalWidth": 54,
-      "allowedModes": ["foot"],
-      "requiredGateClass": "gate_summit_entry",
-      "prohibitionClass": "gate_blocked",
+      "regionId": "summit_plaza",
+      "displayName": "Summit Plaza",
+      "zoneId": "zone_summit",
+      "templateId": "summit_template",
+      "regionClass": "gate_region",
+      "cardinalBand": "north",
+      "doctrineRole": "convergence",
+      "settlementClass": "temple_settlement",
+      "institutionClass": "temple",
+      "supportsTraversal": true,
+      "supportsSettlement": true,
+      "isRequiredGate": true,
+      "isTerminal": true,
+      "centerPoint": [560, 120],
+      "pathAnchors": ["path_summit_approach_to_summit"],
+      "hazardAdjacency": [],
+      "waterAdjacency": [],
+      "requiredPredecessors": ["summit_approach"],
       "stateEncodingId": "summit_gate_required"
-    }
-
-  ],
-
-  "gateRules": [
-    {
-      "gateClass": "gate_summit_entry",
-      "displayName": "Summit Entry Gate",
-      "requiredPredecessorRegionId": "exploration_basin",
-      "openStateEncodingId": "summit_open",
-      "blockedStateEncodingId": "summit_gate_required"
-    }
-  ],
-
-  "modeRules": [
-    {
-      "modeId": "foot",
-      "displayName": "Foot Travel"
-    }
-  ],
-
-  "severityRules": [
-    {
-      "severityRuleId": "rule_basin_edge_blocks_if_extreme",
-      "hazardId": "hazard_basin_edge",
-      "effect": "block_if_extreme"
     }
   ]
 }

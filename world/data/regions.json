@@ -57,11 +57,31 @@
       "isRequiredGate": false,
       "isTerminal": false,
       "centerPoint": [560, 320],
-      "pathAnchors": ["path_market_to_basin", "path_basin_to_summit"],
+      "pathAnchors": ["path_market_to_basin", "path_basin_to_summit_approach"],
       "hazardAdjacency": ["hazard_basin_edge"],
       "waterAdjacency": ["basin_water"],
       "requiredPredecessors": ["market_district"],
       "stateEncodingId": "basin_explore_open"
+    },
+    {
+      "regionId": "summit_approach",
+      "displayName": "Summit Approach",
+      "zoneId": "zone_summit_approach",
+      "regionClass": "corridor_region",
+      "cardinalBand": "north",
+      "doctrineRole": "ascent",
+      "settlementClass": "none",
+      "institutionClass": "none",
+      "supportsTraversal": true,
+      "supportsSettlement": false,
+      "isRequiredGate": false,
+      "isTerminal": false,
+      "centerPoint": [568, 196],
+      "pathAnchors": ["path_basin_to_summit_approach", "path_summit_approach_to_summit"],
+      "hazardAdjacency": ["hazard_basin_edge"],
+      "waterAdjacency": [],
+      "requiredPredecessors": ["exploration_basin"],
+      "stateEncodingId": "summit_gate_required"
     },
     {
       "regionId": "summit_plaza",
@@ -77,10 +97,10 @@
       "isRequiredGate": true,
       "isTerminal": true,
       "centerPoint": [560, 120],
-      "pathAnchors": ["path_basin_to_summit"],
+      "pathAnchors": ["path_summit_approach_to_summit"],
       "hazardAdjacency": [],
       "waterAdjacency": [],
-      "requiredPredecessors": ["exploration_basin"],
+      "requiredPredecessors": ["summit_approach"],
       "stateEncodingId": "summit_gate_required"
     }
   ]

@@ -7,9 +7,18 @@
       "hazardId": "hazard_harbor_swell",
       "displayName": "Harbor Swell",
       "hazardClass": "water_motion",
-      "affectedRegionIds": ["harbor_village"],
-      "pathIds": ["path_harbor_to_market"],
-      "polygon": [[120, 500], [210, 520], [250, 468], [170, 446]],
+      "affectedRegionIds": [
+        "harbor_village"
+      ],
+      "pathIds": [
+        "path_harbor_to_market"
+      ],
+      "polygon": [
+        [120, 500],
+        [210, 520],
+        [250, 468],
+        [170, 446]
+      ],
       "severityDefault": "low",
       "stateEncodingId": "water_passage_open"
     },
@@ -17,9 +26,19 @@
       "hazardId": "hazard_basin_edge",
       "displayName": "Basin Edge",
       "hazardClass": "edge_drop",
-      "affectedRegionIds": ["exploration_basin"],
-      "pathIds": ["path_market_to_basin", "path_basin_to_summit"],
-      "polygon": [[620, 360], [700, 350], [720, 300], [640, 278]],
+      "affectedRegionIds": [
+        "exploration_basin"
+      ],
+      "pathIds": [
+        "path_market_to_basin",
+        "path_basin_to_summit_approach"
+      ],
+      "polygon": [
+        [620, 360],
+        [700, 350],
+        [720, 300],
+        [640, 278]
+      ],
       "severityDefault": "medium",
       "stateEncodingId": "hazard_high"
     }

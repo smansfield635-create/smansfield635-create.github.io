@@ -53,6 +53,7 @@ function assertPolygon(points, label) {
   if (!Array.isArray(points) || points.length < 3) {
     throw new Error(`Invalid polygon for ${label}`);
   }
+
   for (const point of points) {
     if (!Array.isArray(point) || point.length !== 2) {
       throw new Error(`Invalid point in ${label}`);
@@ -267,13 +268,17 @@ function sectorFromVector(dx, dy) {
   return sectors[idx];
 }
 
+function roundPoint(value) {
+  return Math.round(value * 1000) / 1000;
+}
+
 function regularPolygon(cx, cy, radius, sides, rotation = -Math.PI / 2) {
   const points = [];
   for (let i = 0; i < sides; i += 1) {
     const angle = rotation + ((Math.PI * 2 * i) / sides);
     points.push([
-      Math.round((cx + Math.cos(angle) * radius) * 1000) / 1000,
-      Math.round((cy + Math.sin(angle) * radius) * 1000) / 1000
+      roundPoint(cx + Math.cos(angle) * radius),
+      roundPoint(cy + Math.sin(angle) * radius)
     ]);
   }
   return points;
@@ -284,8 +289,8 @@ function ellipsePolygon(cx, cy, radiusX, radiusY, segments = 16) {
   for (let i = 0; i < segments; i += 1) {
     const angle = -Math.PI / 2 + ((Math.PI * 2 * i) / segments);
     points.push([
-      Math.round((cx + Math.cos(angle) * radiusX) * 1000) / 1000,
-      Math.round((cy + Math.sin(angle) * radiusY) * 1000) / 1000
+      roundPoint(cx + Math.cos(angle) * radiusX),
+      roundPoint(cy + Math.sin(angle) * radiusY)
     ]);
   }
   return points;
@@ -295,10 +300,10 @@ function rectPolygon(cx, cy, width, height) {
   const hw = width * 0.5;
   const hh = height * 0.5;
   return [
-    [cx - hw, cy - hh],
-    [cx + hw, cy - hh],
-    [cx + hw, cy + hh],
-    [cx - hw, cy + hh]
+    [roundPoint(cx - hw), roundPoint(cy - hh)],
+    [roundPoint(cx + hw), roundPoint(cy - hh)],
+    [roundPoint(cx + hw), roundPoint(cy + hh)],
+    [roundPoint(cx - hw), roundPoint(cy + hh)]
   ];
 }
 

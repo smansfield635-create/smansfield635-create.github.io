@@ -14,7 +14,9 @@ const DATA_FILES = {
   regionBoundaries: new URL("./data/region_boundaries.json", import.meta.url),
   terrainPolygons: new URL("./data/terrain_polygons.json", import.meta.url),
   substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
-  regionTemplates: new URL("./data/region_templates.json", import.meta.url)
+  terrainTemplates: new URL("./templates/terrain_templates.json", import.meta.url),
+  substrateTemplates: new URL("./templates/substrate_templates.json", import.meta.url),
+  regionTemplates: new URL("./templates/region_templates.json", import.meta.url)
 };
 
 function indexBy(rows, key) {
@@ -115,6 +117,13 @@ function validateHarborPolygonDatasets(coastlines, regionBoundariesById, terrain
   }
 }
 
+function validateTemplateLibrary(root, expectedSchema, containerKey) {
+  assertRoot(root, expectedSchema);
+  if (!Array.isArray(root[containerKey])) {
+    throw new Error(`Missing ${containerKey} in ${expectedSchema}`);
+  }
+}
+
 function validateRegionTemplates(regionTemplatesById) {
   const requiredTemplateIds = [
     "harbor_template",
@@ -133,23 +142,58 @@ function validateRegionTemplates(regionTemplatesById) {
       throw new Error(`Invalid templateClass for ${templateId}`);
     }
 
-    assertArrayOfStrings(row.defaultTerrainClasses, `${templateId}.defaultTerrainClasses`, 1);
-    assertArrayOfStrings(row.defaultSubstrateClasses, `${templateId}.defaultSubstrateClasses`, 1);
-
-    if (typeof row.defaultPathDockRule !== "string" || row.defaultPathDockRule.length === 0) {
-      throw new Error(`Invalid defaultPathDockRule for ${templateId}`);
+    if (typeof row.defaultTerrain !== "string" || row.defaultTerrain.length === 0) {
+      throw new Error(`Invalid defaultTerrain for ${templateId}`);
     }
 
-    if (!Array.isArray(row.defaultScaleRange) || row.defaultScaleRange.length !== 2) {
-      throw new Error(`Invalid defaultScaleRange for ${templateId}`);
+    if (typeof row.defaultSubstrate !== "string" || row.defaultSubstrate.length === 0) {
+      throw new Error(`Invalid defaultSubstrate for ${templateId}`);
     }
+  }
+}
 
-    const [minScale, maxScale] = row.defaultScaleRange;
-    if (!Number.isFinite(minScale) || !Number.isFinite(maxScale) || minScale <= 0 || maxScale <= 0 || minScale > maxScale) {
-      throw new Error(`Invalid scale bounds for ${templateId}`);
+function validateTerrainTemplateLibrary(terrainTemplatesById) {
+  for (const row of terrainTemplatesById.values()) {
+    if (typeof row.templateId !== "string" || row.templateId.length === 0) {
+      throw new Error("Invalid terrain templateId");
     }
+    if (!Array.isArray(row.terrain) || row.terrain.length === 0) {
+      throw new Error(`Missing terrain array for ${row.templateId}`);
+    }
+    for (const item of row.terrain) {
+      if (typeof item.terrainClass !== "string" || item.terrainClass.length === 0) {
+        throw new Error(`Invalid terrainClass in ${row.templateId}`);
+      }
+      if (typeof item.shape !== "string" || item.shape.length === 0) {
+        throw new Error(`Invalid terrain shape in ${row.templateId}`);
+      }
+    }
+  }
+}
 
-    assertArrayOfStrings(row.orientationModes, `${templateId}.orientationModes`, 1);
+function validateSubstrateTemplateLibrary(substrateTemplatesById) {
+  for (const row of substrateTemplatesById.values()) {
+    if (typeof row.templateId !== "string" || row.templateId.length === 0) {
+      throw new Error("Invalid substrate templateId");
+    }
+    if (!Array.isArray(row.substrates) || row.substrates.length === 0) {
+      throw new Error(`Missing substrates array for ${row.templateId}`);
+    }
+    for (const item of row.substrates) {
+      if (typeof item.substrateClass !== "string" || item.substrateClass.length === 0) {
+        throw new Error(`Invalid substrateClass in ${row.templateId}`);
+      }
+      if (typeof item.shape !== "string" || item.shape.length === 0) {
+        throw new Error(`Invalid substrate shape in ${row.templateId}`);
+      }
+    }
+  }
+}
+
+function validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById) {
+  for (const regionTemplate of regionTemplatesById.values()) {
+    assertReferenceExists(terrainTemplatesById, regionTemplate.defaultTerrain, "regionTemplate.defaultTerrain");
+    assertReferenceExists(substrateTemplatesById, regionTemplate.defaultSubstrate, "regionTemplate.defaultSubstrate");
   }
 }
 
@@ -245,6 +289,8 @@ export async function loadWorldKernel() {
     regionBoundaries,
     terrainPolygons,
     substratePolygons,
+    terrainTemplates,
+    substrateTemplates,
     regionTemplates
   ] = await Promise.all([
     readJson(DATA_FILES.regions),
@@ -260,6 +306,8 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.regionBoundaries),
     readJson(DATA_FILES.terrainPolygons),
     readJson(DATA_FILES.substratePolygons),
+    readJson(DATA_FILES.terrainTemplates),
+    readJson(DATA_FILES.substrateTemplates),
     readJson(DATA_FILES.regionTemplates)
   ]);
 
@@ -276,7 +324,9 @@ export async function loadWorldKernel() {
   assertRoot(regionBoundaries, "HARBOR_REGION_BOUNDARIES_DATASET_v1");
   assertRoot(terrainPolygons, "HARBOR_TERRAIN_POLYGONS_DATASET_v1");
   assertRoot(substratePolygons, "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1");
-  assertRoot(regionTemplates, "REGION_TEMPLATE_AUTHORITY_v1");
+  validateTemplateLibrary(terrainTemplates, "TERRAIN_TEMPLATE_LIBRARY_v1", "templates");
+  validateTemplateLibrary(substrateTemplates, "SUBSTRATE_TEMPLATE_LIBRARY_v1", "templates");
+  validateTemplateLibrary(regionTemplates, "REGION_TEMPLATE_LIBRARY_v1", "templates");
 
   const regionsById = indexBy(regions.regionRows, "regionId");
   const pathsById = indexBy(paths.pathRows, "pathId");
@@ -287,6 +337,8 @@ export async function loadWorldKernel() {
   const regionBoundariesById = indexBy(regionBoundaries.regions, "regionId");
   const terrainPolygonsById = indexBy(terrainPolygons.terrain, "terrainId");
   const substratePolygonsById = indexBy(substratePolygons.substrates, "substrateId");
+  const terrainTemplatesById = indexBy(terrainTemplates.templates, "templateId");
+  const substrateTemplatesById = indexBy(substrateTemplates.templates, "templateId");
   const regionTemplatesById = indexBy(regionTemplates.templates, "templateId");
 
   validateEncodingRows(encodingsById);
@@ -306,7 +358,10 @@ export async function loadWorldKernel() {
     substratePolygonsById
   );
 
+  validateTerrainTemplateLibrary(terrainTemplatesById);
+  validateSubstrateTemplateLibrary(substrateTemplatesById);
   validateRegionTemplates(regionTemplatesById);
+  validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
 
   const kernel = {
     worldMeta: Object.freeze({
@@ -337,8 +392,9 @@ export async function loadWorldKernel() {
     terrainPolygonsById,
     substratePolygonsById,
     templateRegistry: freezeObjectTree({
-      version: regionTemplates.version,
-      templatesById: regionTemplatesById
+      terrainTemplatesById,
+      substrateTemplatesById,
+      regionTemplatesById
     }),
     helpers: {
       getRegion(regionId) {
@@ -379,11 +435,14 @@ export async function loadWorldKernel() {
       getSubstratePolygon(substrateId) {
         return substratePolygonsById.get(substrateId) ?? null;
       },
+      getTerrainTemplate(templateId) {
+        return terrainTemplatesById.get(templateId) ?? null;
+      },
+      getSubstrateTemplate(templateId) {
+        return substrateTemplatesById.get(templateId) ?? null;
+      },
       getRegionTemplate(templateId) {
         return regionTemplatesById.get(templateId) ?? null;
-      },
-      listRegionTemplates() {
-        return [...regionTemplatesById.values()];
       },
       decodeStateByte(byte) {
         validateByte(byte);
@@ -423,7 +482,10 @@ export async function loadWorldKernel() {
           terrainPolygonsById,
           substratePolygonsById
         );
+        validateTerrainTemplateLibrary(terrainTemplatesById);
+        validateSubstrateTemplateLibrary(substrateTemplatesById);
         validateRegionTemplates(regionTemplatesById);
+        validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
         return true;
       }
     }

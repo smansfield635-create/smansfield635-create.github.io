@@ -40,7 +40,7 @@
       "stateEncodingId": "market_active_open"
     },
     {
-      "pathId": "path_basin_to_summit",
+      "pathId": "path_basin_to_summit_approach",
       "displayName": "Basin to Summit Approach",
       "pathClass": "convergence",
       "fromRegionId": "exploration_basin",

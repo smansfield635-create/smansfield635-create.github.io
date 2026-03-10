@@ -15,6 +15,7 @@ const DATA_FILES = {
   terrainPolygons: new URL("./data/terrain_polygons.json", import.meta.url),
   substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
   harborNavigationGraph: new URL("./data/harbor_navigation_graph.json", import.meta.url),
+  harborInstances: new URL("./data/harbor_instances.json", import.meta.url),
   terrainTemplates: new URL("./templates/terrain_templates.json", import.meta.url),
   substrateTemplates: new URL("./templates/substrate_templates.json", import.meta.url),
   regionTemplates: new URL("./templates/region_templates.json", import.meta.url)
@@ -264,6 +265,106 @@ function validateHarborNavigationGraph(harborNavigationGraph, encodingsById) {
   };
 }
 
+function validateHarborInstances(harborInstancesRoot, regionsById, watersById, harborNavigationGraph, coastlineModel) {
+  assertRoot(harborInstancesRoot, "HARBOR_INSTANCE_LIBRARY_v1");
+
+  if (!Array.isArray(harborInstancesRoot.bindingOrder) || harborInstancesRoot.bindingOrder.length === 0) {
+    throw new Error("Missing bindingOrder in HARBOR_INSTANCE_LIBRARY_v1");
+  }
+
+  if (!Array.isArray(harborInstancesRoot.killConditions) || harborInstancesRoot.killConditions.length === 0) {
+    throw new Error("Missing killConditions in HARBOR_INSTANCE_LIBRARY_v1");
+  }
+
+  if (!Array.isArray(harborInstancesRoot.instances) || harborInstancesRoot.instances.length === 0) {
+    throw new Error("Missing instances in HARBOR_INSTANCE_LIBRARY_v1");
+  }
+
+  const harborInstancesById = indexBy(harborInstancesRoot.instances, "harborInstanceId");
+
+  const validCoastlineDatasetIds = new Set(["coastline_primary_harbor"]);
+  const validNavigationGraphIds = new Set(["harbor_navigation_primary"]);
+  const validDockIds = new Set(
+    harborNavigationGraph.navigationNodes
+      .filter((node) => node.nodeClass === "mooring" || node.nodeClass === "transfer")
+      .map((node) => node.navNodeId)
+  );
+
+  if (!coastlineModel.harborPeninsula || !coastlineModel.harborBasin || !coastlineModel.harborChannel) {
+    throw new Error("Coastline model incomplete for harbor instances");
+  }
+
+  for (const instance of harborInstancesById.values()) {
+    if (typeof instance.harborId !== "string" || instance.harborId.length === 0) {
+      throw new Error(`Invalid harborId for ${instance.harborInstanceId}`);
+    }
+
+    assertReferenceExists(regionsById, instance.parentRegionId, "harborInstance.parentRegionId");
+    assertReferenceExists(watersById, instance.waterBodyId, "harborInstance.waterBodyId");
+    assertReferenceExists(regionsById, instance.marketLinkRegionId, "harborInstance.marketLinkRegionId");
+
+    if (!validCoastlineDatasetIds.has(instance.coastlineDatasetId)) {
+      throw new Error(`Invalid harborInstance.coastlineDatasetId: ${instance.coastlineDatasetId}`);
+    }
+
+    if (typeof instance.dockSetId !== "string" || instance.dockSetId.length === 0) {
+      throw new Error(`Invalid harborInstance.dockSetId for ${instance.harborInstanceId}`);
+    }
+
+    if (!validNavigationGraphIds.has(instance.navigationGraphId)) {
+      throw new Error(`Invalid harborInstance.navigationGraphId: ${instance.navigationGraphId}`);
+    }
+
+    if (!instance.transferRules || typeof instance.transferRules !== "object") {
+      throw new Error(`Missing transferRules for ${instance.harborInstanceId}`);
+    }
+
+    if (!Array.isArray(instance.transferRules.dockTransfers) || instance.transferRules.dockTransfers.length === 0) {
+      throw new Error(`Missing dockTransfers for ${instance.harborInstanceId}`);
+    }
+
+    for (const transfer of instance.transferRules.dockTransfers) {
+      if (!validDockIds.has(transfer.dockId)) {
+        throw new Error(`Invalid dock transfer dockId: ${transfer.dockId}`);
+      }
+      assertReferenceExists(regionsById, transfer.landRegionId, "harborInstance.transfer.landRegionId");
+      if (typeof transfer.modeIn !== "string" || transfer.modeIn.length === 0) {
+        throw new Error(`Invalid modeIn for dock transfer ${transfer.dockId}`);
+      }
+      if (typeof transfer.modeOut !== "string" || transfer.modeOut.length === 0) {
+        throw new Error(`Invalid modeOut for dock transfer ${transfer.dockId}`);
+      }
+      if (typeof transfer.transferClass !== "string" || transfer.transferClass.length === 0) {
+        throw new Error(`Invalid transferClass for dock transfer ${transfer.dockId}`);
+      }
+    }
+
+    if (typeof instance.operatingMode !== "string" || instance.operatingMode.length === 0) {
+      throw new Error(`Invalid operatingMode for ${instance.harborInstanceId}`);
+    }
+
+    if (!instance.receipts || typeof instance.receipts !== "object") {
+      throw new Error(`Missing receipts for ${instance.harborInstanceId}`);
+    }
+
+    const requiredReceiptKeys = [
+      "coastlineReceipt",
+      "waterReceipt",
+      "dockReceipt",
+      "navigationReceipt",
+      "marketLinkReceipt"
+    ];
+
+    for (const receiptKey of requiredReceiptKeys) {
+      if (typeof instance.receipts[receiptKey] !== "string" || instance.receipts[receiptKey].length === 0) {
+        throw new Error(`Missing ${receiptKey} for ${instance.harborInstanceId}`);
+      }
+    }
+  }
+
+  return harborInstancesById;
+}
+
 function validateCrossReferences(data) {
   const {
     regionsById,
@@ -487,6 +588,7 @@ export async function loadWorldKernel() {
     terrainPolygons,
     substratePolygons,
     harborNavigationGraph,
+    harborInstances,
     terrainTemplates,
     substrateTemplates,
     regionTemplates
@@ -505,6 +607,7 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.terrainPolygons),
     readJson(DATA_FILES.substratePolygons),
     readJson(DATA_FILES.harborNavigationGraph),
+    readJson(DATA_FILES.harborInstances),
     readJson(DATA_FILES.terrainTemplates),
     readJson(DATA_FILES.substrateTemplates),
     readJson(DATA_FILES.regionTemplates)
@@ -543,6 +646,26 @@ export async function loadWorldKernel() {
   validateEncodingRows(encodingsById);
 
   const harborNavigation = validateHarborNavigationGraph(harborNavigationGraph, encodingsById);
+
+  const coastlineModel = {
+    version: coastlines.version,
+    coastlineOuter: coastlines.coastlineOuter,
+    harborPeninsula: coastlines.harborPeninsula,
+    harborBasin: coastlines.harborBasin,
+    harborChannel: coastlines.harborChannel,
+    coastalSegmentMap: coastlines.coastalSegmentMap ?? {},
+    reefZones: coastlines.reefZones ?? [],
+    exposureZones: coastlines.exposureZones ?? [],
+    firmnessZones: coastlines.firmnessZones ?? []
+  };
+
+  const harborInstancesById = validateHarborInstances(
+    harborInstances,
+    regionsById,
+    watersById,
+    harborNavigationGraph,
+    coastlineModel
+  );
 
   const graphRows = freezeObjectTree({
     spatialAdjacencyGraph: graphs.graphRows.spatialAdjacencyGraph.map((edge) => Object.freeze({ ...edge })),
@@ -591,22 +714,13 @@ export async function loadWorldKernel() {
     environmentModel: freezeObjectTree(environment.environmentModel),
     diamondCellsById,
     graphRows,
-    coastlineModel: freezeObjectTree({
-      version: coastlines.version,
-      coastlineOuter: coastlines.coastlineOuter,
-      harborPeninsula: coastlines.harborPeninsula,
-      harborBasin: coastlines.harborBasin,
-      harborChannel: coastlines.harborChannel,
-      coastalSegmentMap: coastlines.coastalSegmentMap ?? {},
-      reefZones: coastlines.reefZones ?? [],
-      exposureZones: coastlines.exposureZones ?? [],
-      firmnessZones: coastlines.firmnessZones ?? []
-    }),
+    coastlineModel: freezeObjectTree(coastlineModel),
     harborNavigationGraph: freezeObjectTree({
       graphMeta: harborNavigationGraph.graphMeta,
       navigationNodesById: harborNavigation.navigationNodesById,
       navigationEdgesById: harborNavigation.navigationEdgesById
     }),
+    harborInstancesById,
     regionBoundariesById,
     terrainPolygonsById,
     substratePolygonsById,
@@ -691,6 +805,22 @@ export async function loadWorldKernel() {
         }
         return neighbors.filter(Boolean);
       },
+      getHarborInstance(harborInstanceId) {
+        return harborInstancesById.get(harborInstanceId) ?? null;
+      },
+      getHarborInstanceByRegion(regionId) {
+        for (const instance of harborInstancesById.values()) {
+          if (instance.parentRegionId === regionId) return instance;
+        }
+        return null;
+      },
+      getHarborInstances() {
+        return [...harborInstancesById.values()];
+      },
+      getHarborDockTransfers(harborInstanceId) {
+        const instance = harborInstancesById.get(harborInstanceId);
+        return instance?.transferRules?.dockTransfers ?? [];
+      },
       decodeStateByte(byte) {
         validateByte(byte);
         return byteToStateVector(byte);
@@ -723,17 +853,27 @@ export async function loadWorldKernel() {
           diamondCellsById,
           graphRows
         });
+
         validateHarborPolygonDatasets(
           coastlines,
           regionBoundariesById,
           terrainPolygonsById,
           substratePolygonsById
         );
+
         validateTerrainTemplateLibrary(terrainTemplatesById);
         validateSubstrateTemplateLibrary(substrateTemplatesById);
         validateRegionTemplates(regionTemplatesById);
         validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
         validateRegionTemplateBindings(regionsById, regionTemplatesById);
+
+        validateHarborInstances(
+          harborInstances,
+          regionsById,
+          watersById,
+          harborNavigationGraph,
+          coastlineModel
+        );
 
         for (const row of generatedTerrainPolygonsById.values()) {
           assertPolygon(row.polygon, `generatedTerrain.${row.terrainId}`);

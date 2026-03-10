@@ -14,6 +14,7 @@ const DATA_FILES = {
   regionBoundaries: new URL("./data/region_boundaries.json", import.meta.url),
   terrainPolygons: new URL("./data/terrain_polygons.json", import.meta.url),
   substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
+  harborNavigationGraph: new URL("./data/harbor_navigation_graph.json", import.meta.url),
   terrainTemplates: new URL("./templates/terrain_templates.json", import.meta.url),
   substrateTemplates: new URL("./templates/substrate_templates.json", import.meta.url),
   regionTemplates: new URL("./templates/region_templates.json", import.meta.url)
@@ -52,6 +53,21 @@ function assertRoot(root, expectedSchema) {
 function assertPolygon(points, label) {
   if (!Array.isArray(points) || points.length < 3) {
     throw new Error(`Invalid polygon for ${label}`);
+  }
+
+  for (const point of points) {
+    if (!Array.isArray(point) || point.length !== 2) {
+      throw new Error(`Invalid point in ${label}`);
+    }
+    if (!Number.isFinite(point[0]) || !Number.isFinite(point[1])) {
+      throw new Error(`Non-numeric point in ${label}`);
+    }
+  }
+}
+
+function assertPointList(points, label, minLength = 1) {
+  if (!Array.isArray(points) || points.length < minLength) {
+    throw new Error(`Invalid point list for ${label}`);
   }
 
   for (const point of points) {
@@ -189,6 +205,63 @@ function validateRegionTemplateBindings(regionsById, regionTemplatesById) {
     if (!region.templateId) continue;
     assertReferenceExists(regionTemplatesById, region.templateId, "region.templateId");
   }
+}
+
+function validateHarborNavigationGraph(harborNavigationGraph, encodingsById) {
+  assertRoot(harborNavigationGraph, "HARBOR_NAVIGATION_GRAPH_v1");
+
+  if (!harborNavigationGraph.graphMeta || typeof harborNavigationGraph.graphMeta !== "object") {
+    throw new Error("Missing graphMeta in HARBOR_NAVIGATION_GRAPH_v1");
+  }
+
+  if (!Array.isArray(harborNavigationGraph.navigationNodes)) {
+    throw new Error("Missing navigationNodes in HARBOR_NAVIGATION_GRAPH_v1");
+  }
+
+  if (!Array.isArray(harborNavigationGraph.navigationEdges)) {
+    throw new Error("Missing navigationEdges in HARBOR_NAVIGATION_GRAPH_v1");
+  }
+
+  const navigationNodesById = indexBy(harborNavigationGraph.navigationNodes, "navNodeId");
+  const navigationEdgesById = indexBy(harborNavigationGraph.navigationEdges, "edgeId");
+
+  const entryNodeId = harborNavigationGraph.graphMeta.entryNodeId;
+  const exitNodeId = harborNavigationGraph.graphMeta.exitNodeId;
+
+  assertReferenceExists(navigationNodesById, entryNodeId, "harborNavigation.entryNodeId");
+  assertReferenceExists(navigationNodesById, exitNodeId, "harborNavigation.exitNodeId");
+
+  for (const node of navigationNodesById.values()) {
+    if (typeof node.displayName !== "string" || node.displayName.length === 0) {
+      throw new Error(`Invalid displayName for harbor navigation node: ${node.navNodeId}`);
+    }
+    if (typeof node.nodeClass !== "string" || node.nodeClass.length === 0) {
+      throw new Error(`Invalid nodeClass for harbor navigation node: ${node.navNodeId}`);
+    }
+    assertPointList([node.centerPoint], `harborNavigation.node.${node.navNodeId}.centerPoint`, 1);
+    if (!Array.isArray(node.allowedModes) || node.allowedModes.length === 0) {
+      throw new Error(`Invalid allowedModes for harbor navigation node: ${node.navNodeId}`);
+    }
+    assertReferenceExists(encodingsById, node.stateEncodingId, "harborNavigation.node.stateEncodingId");
+  }
+
+  for (const edge of navigationEdgesById.values()) {
+    assertReferenceExists(navigationNodesById, edge.fromNodeId, "harborNavigation.edge.fromNodeId");
+    assertReferenceExists(navigationNodesById, edge.toNodeId, "harborNavigation.edge.toNodeId");
+    if (typeof edge.edgeClass !== "string" || edge.edgeClass.length === 0) {
+      throw new Error(`Invalid edgeClass for harbor navigation edge: ${edge.edgeId}`);
+    }
+    assertPointList(edge.centerline, `harborNavigation.edge.${edge.edgeId}.centerline`, 2);
+    if (!Number.isFinite(edge.nominalWidth) || edge.nominalWidth <= 0) {
+      throw new Error(`Invalid nominalWidth for harbor navigation edge: ${edge.edgeId}`);
+    }
+    assertReferenceExists(encodingsById, edge.stateEncodingId, "harborNavigation.edge.stateEncodingId");
+  }
+
+  return {
+    navigationNodesById,
+    navigationEdgesById
+  };
 }
 
 function validateCrossReferences(data) {
@@ -413,6 +486,7 @@ export async function loadWorldKernel() {
     regionBoundaries,
     terrainPolygons,
     substratePolygons,
+    harborNavigationGraph,
     terrainTemplates,
     substrateTemplates,
     regionTemplates
@@ -430,6 +504,7 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.regionBoundaries),
     readJson(DATA_FILES.terrainPolygons),
     readJson(DATA_FILES.substratePolygons),
+    readJson(DATA_FILES.harborNavigationGraph),
     readJson(DATA_FILES.terrainTemplates),
     readJson(DATA_FILES.substrateTemplates),
     readJson(DATA_FILES.regionTemplates)
@@ -466,6 +541,8 @@ export async function loadWorldKernel() {
   const regionTemplatesById = indexBy(regionTemplates.templates, "templateId");
 
   validateEncodingRows(encodingsById);
+
+  const harborNavigation = validateHarborNavigationGraph(harborNavigationGraph, encodingsById);
 
   const graphRows = freezeObjectTree({
     spatialAdjacencyGraph: graphs.graphRows.spatialAdjacencyGraph.map((edge) => Object.freeze({ ...edge })),
@@ -524,6 +601,11 @@ export async function loadWorldKernel() {
       reefZones: coastlines.reefZones ?? [],
       exposureZones: coastlines.exposureZones ?? [],
       firmnessZones: coastlines.firmnessZones ?? []
+    }),
+    harborNavigationGraph: freezeObjectTree({
+      graphMeta: harborNavigationGraph.graphMeta,
+      navigationNodesById: harborNavigation.navigationNodesById,
+      navigationEdgesById: harborNavigation.navigationEdgesById
     }),
     regionBoundariesById,
     terrainPolygonsById,
@@ -595,6 +677,20 @@ export async function loadWorldKernel() {
       getGeneratedSubstrateForRegion(regionId) {
         return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
       },
+      getHarborNavNode(navNodeId) {
+        return harborNavigation.navigationNodesById.get(navNodeId) ?? null;
+      },
+      getHarborNavEdge(edgeId) {
+        return harborNavigation.navigationEdgesById.get(edgeId) ?? null;
+      },
+      getHarborNavNeighbors(navNodeId) {
+        const neighbors = [];
+        for (const edge of harborNavigation.navigationEdgesById.values()) {
+          if (edge.fromNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.toNodeId));
+          if (edge.toNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.fromNodeId));
+        }
+        return neighbors.filter(Boolean);
+      },
       decodeStateByte(byte) {
         validateByte(byte);
         return byteToStateVector(byte);
@@ -645,6 +741,10 @@ export async function loadWorldKernel() {
 
         for (const row of generatedSubstratePolygonsById.values()) {
           assertPolygon(row.polygon, `generatedSubstrate.${row.substrateId}`);
+        }
+
+        for (const edge of harborNavigation.navigationEdgesById.values()) {
+          assertPointList(edge.centerline, `harborNavigation.edge.${edge.edgeId}.centerline`, 2);
         }
 
         return true;

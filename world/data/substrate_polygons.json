@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "version": 1,
+  "substrates": [
+    {
+      "substrateId": "wet_sand_band",
+      "substrateClass": "wet_sand",
+      "regionId": "harbor_inner_shore_west",
+      "polygon": [
+        [470, 822],
+        [458, 784],
+        [472, 740],
+        [506, 706],
+        [544, 700],
+        [542, 736],
+        [516, 780],
+        [488, 818]
+      ]
+    },
+    {
+      "substrateId": "dry_sand_band",
+      "substrateClass": "dry_sand",
+      "regionId": "harbor_inner_shore_west",
+      "polygon": [
+        [438, 862],
+        [428, 822],
+        [444, 780],
+        [474, 748],
+        [488, 790],
+        [474, 834],
+        [456, 864]
+      ]
+    },
+    {
+      "substrateId": "mixed_gravel_shore",
+      "substrateClass": "mixed_gravel",
+      "regionId": "harbor_inner_shore_east",
+      "polygon": [
+        [636, 816],
+        [628, 776],
+        [646, 734],
+        [678, 706],
+        [716, 716],
+        [720, 754],
+        [694, 792],
+        [660, 818]
+      ]
+    },
+    {
+      "substrateId": "bedrock_edge_main",
+      "substrateClass": "bedrock_edge",
+      "regionId": "harbor_peninsula",
+      "polygon": [
+        [646, 640],
+        [698, 626],
+        [746, 630],
+        [776, 648],
+        [774, 670],
+        [730, 670],
+        [680, 662],
+        [646, 658]
+      ]
+    },
+    {
+      "substrateId": "dock_surface_main",
+      "substrateClass": "dock_hard_surface",
+      "regionId": "harbor_basin",
+      "polygon": [
+        [556, 758],
+        [662, 758],
+        [662, 820],
+        [556, 820]
+      ]
+    },
+    {
+      "substrateId": "shallow_margin_main",
+      "substrateClass": "shallow_water_margin",
+      "regionId": "harbor_basin",
+      "polygon": [
+        [506, 810],
+        [492, 770],
+        [500, 724],
+        [532, 690],
+        [586, 670],
+        [644, 672],
+        [688, 694],
+        [708, 732],
+        [702, 772],
+        [672, 806],
+        [622, 832],
+        [560, 838]
+      ]
+    }
+  ]
+}

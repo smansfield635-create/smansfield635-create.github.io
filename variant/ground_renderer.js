@@ -164,6 +164,24 @@ function substrateStyle(substrateClass, ctx) {
   return "rgba(140,140,140,0.8)";
 }
 
+function waterStyle(waterClass, ctx) {
+  if (waterClass === "harbor") {
+    const gradient = ctx.createLinearGradient(0, 650, 0, 860);
+    gradient.addColorStop(0, "rgba(126,192,226,0.30)");
+    gradient.addColorStop(1, "rgba(72,134,176,0.52)");
+    return gradient;
+  }
+
+  if (waterClass === "basin") {
+    const gradient = ctx.createLinearGradient(0, 330, 0, 400);
+    gradient.addColorStop(0, "rgba(134,188,208,0.22)");
+    gradient.addColorStop(1, "rgba(86,136,156,0.44)");
+    return gradient;
+  }
+
+  return "rgba(90,150,190,0.34)";
+}
+
 function drawHarborCoastGeometry(ctx, kernel) {
   const coast = kernel?.coastlineModel;
   if (!coast) return;
@@ -186,6 +204,13 @@ function drawHarborCoastGeometry(ctx, kernel) {
 
   strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.34)", 2.1);
   strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.20)", 1.4);
+}
+
+function drawWaterRows(ctx, rows) {
+  for (const water of rows) {
+    fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx));
+    strokePolygon(ctx, water.polygon, "rgba(236,248,255,0.18)", 1.2);
+  }
 }
 
 function drawRegionBoundaries(ctx, kernel) {
@@ -349,6 +374,7 @@ export function createGroundRenderer() {
 
     const manualTerrainRows = kernel?.terrainPolygonsById ? [...kernel.terrainPolygonsById.values()] : [];
     const manualSubstrateRows = kernel?.substratePolygonsById ? [...kernel.substratePolygonsById.values()] : [];
+    const manualWaterRows = kernel?.watersById ? [...kernel.watersById.values()] : [];
     const generatedTerrainRows = getGeneratedRowsForTemplateOnlyRegions(
       kernel?.generatedTerrainPolygonsById,
       kernel?.terrainPolygonsById
@@ -362,6 +388,7 @@ export function createGroundRenderer() {
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawHarborCoastGeometry(ctx, kernel);
+    drawWaterRows(ctx, manualWaterRows);
     drawTerrainRows(ctx, manualTerrainRows);
     drawTerrainRows(ctx, generatedTerrainRows);
     drawSubstrateRows(ctx, manualSubstrateRows);

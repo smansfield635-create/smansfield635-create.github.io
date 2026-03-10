@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "HARBOR_REGION_BOUNDARIES_DATASET_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "version": 1,
+  "regions": [
+    {
+      "regionId": "harbor_peninsula",
+      "parentRegion": "harbor",
+      "polygon": [
+        [360, 980],
+        [346, 926],
+        [352, 866],
+        [378, 802],
+        [418, 734],
+        [470, 670],
+        [532, 616],
+        [606, 578],
+        [680, 566],
+        [742, 578],
+        [786, 610],
+        [806, 662],
+        [798, 726],
+        [764, 784],
+        [712, 836],
+        [650, 886],
+        [582, 936],
+        [516, 974],
+        [452, 992]
+      ]
+    },
+    {
+      "regionId": "harbor_basin",
+      "parentRegion": "harbor",
+      "polygon": [
+        [500, 822],
+        [478, 768],
+        [488, 714],
+        [526, 674],
+        [586, 650],
+        [650, 650],
+        [700, 676],
+        [722, 726],
+        [712, 782],
+        [674, 824],
+        [618, 850],
+        [554, 850]
+      ]
+    },
+    {
+      "regionId": "harbor_channel",
+      "parentRegion": "harbor",
+      "polygon": [
+        [700, 678],
+        [770, 648],
+        [850, 640],
+        [930, 656],
+        [950, 704],
+        [930, 742],
+        [872, 756],
+        [798, 748],
+        [726, 724]
+      ]
+    },
+    {
+      "regionId": "harbor_approach_reef_band",
+      "parentRegion": "harbor",
+      "polygon": [
+        [842, 626],
+        [930, 632],
+        [1006, 658],
+        [1022, 714],
+        [976, 758],
+        [892, 764],
+        [822, 736],
+        [830, 678]
+      ]
+    },
+    {
+      "regionId": "harbor_inner_shore_west",
+      "parentRegion": "harbor",
+      "polygon": [
+        [446, 818],
+        [430, 768],
+        [444, 714],
+        [482, 674],
+        [530, 658],
+        [544, 694],
+        [522, 748],
+        [486, 798]
+      ]
+    },
+    {
+      "regionId": "harbor_inner_shore_east",
+      "parentRegion": "harbor",
+      "polygon": [
+        [650, 650],
+        [708, 668],
+        [736, 710],
+        [730, 758],
+        [688, 804],
+        [636, 826],
+        [616, 786],
+        [626, 724]
+      ]
+    }
+  ]
+}

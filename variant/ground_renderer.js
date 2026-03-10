@@ -299,7 +299,14 @@ function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
   return rows;
 }
 
-function drawHarborNavigationEdges(ctx, kernel, pulse) {
+function getDockTransferIds(kernel, activeHarborInstanceId) {
+  if (!activeHarborInstanceId) return new Set();
+
+  const transfers = kernel?.helpers?.getHarborDockTransfers?.(activeHarborInstanceId) ?? [];
+  return new Set(transfers.map((transfer) => transfer.dockId));
+}
+
+function drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode) {
   const harborGraph = kernel?.harborNavigationGraph;
   if (!harborGraph?.navigationEdgesById) return;
 
@@ -308,38 +315,79 @@ function drawHarborNavigationEdges(ctx, kernel, pulse) {
     ctx.lineWidth = Math.max(4, (edge.nominalWidth || 20) * 0.16);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.strokeStyle = "rgba(126,196,226,0.10)";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? `rgba(160,222,248,${0.18 + (pulse * 0.10)})`
+      : "rgba(126,196,226,0.10)";
     ctx.stroke();
 
     polyline(ctx, edge.centerline);
     ctx.lineWidth = Math.max(1.25, (edge.nominalWidth || 20) * 0.04);
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-    ctx.strokeStyle = `rgba(220,246,255,${0.14 + (pulse * 0.08)})`;
+    ctx.strokeStyle = traversalMode === "boat"
+      ? `rgba(236,250,255,${0.30 + (pulse * 0.14)})`
+      : `rgba(220,246,255,${0.14 + (pulse * 0.08)})`;
     ctx.stroke();
   }
 }
 
-function drawHarborNavigationNodes(ctx, kernel) {
+function drawHarborNavigationNodes(ctx, runtime) {
+  const { kernel, traversalMode, activeHarborInstanceId, selection, destination, tick } = runtime;
   const harborGraph = kernel?.harborNavigationGraph;
   if (!harborGraph?.navigationNodesById) return;
 
+  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+  const dockTransferIds = getDockTransferIds(kernel, activeHarborInstanceId);
+
   for (const node of harborGraph.navigationNodesById.values()) {
     const [x, y] = node.centerPoint;
+    const isDockTransfer = dockTransferIds.has(node.navNodeId);
+    const isSelectedDockTransfer = selection?.kind === "dock_transfer" && selection.dockId === node.navNodeId;
+    const isSelectedNode = selection?.kind === "harbor_nav_node" && selection.navNodeId === node.navNodeId;
+    const isDestinationDockTransfer = destination?.kind === "dock_transfer" && destination.dockId === node.navNodeId;
+    const isDestinationNode = destination?.kind === "harbor_nav_node" && destination.navNodeId === node.navNodeId;
+    const isHighlighted = isDockTransfer || isSelectedDockTransfer || isSelectedNode || isDestinationDockTransfer || isDestinationNode;
+
     let radius = 4;
     let fill = "rgba(214,240,250,0.42)";
     let stroke = "rgba(255,255,255,0.10)";
 
     if (node.nodeClass === "mooring") {
-      radius = 5;
-      fill = "rgba(242,224,166,0.52)";
-      stroke = "rgba(255,246,214,0.16)";
+      radius = 6;
+      fill = "rgba(242,224,166,0.68)";
+      stroke = "rgba(255,246,214,0.28)";
     }
 
     if (node.nodeClass === "transfer") {
-      radius = 5.5;
-      fill = "rgba(182,234,206,0.56)";
-      stroke = "rgba(226,255,242,0.18)";
+      radius = 7;
+      fill = "rgba(182,234,206,0.72)";
+      stroke = "rgba(226,255,242,0.30)";
+    }
+
+    if (isDockTransfer) {
+      ctx.beginPath();
+      ctx.arc(x, y, 14 + (pulse * 2), 0, Math.PI * 2);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? `rgba(156,246,255,${0.42 + (pulse * 0.18)})`
+        : `rgba(255,236,170,${0.38 + (pulse * 0.12)})`;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(x, y, 20 + (pulse * 2.5), 0, Math.PI * 2);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? `rgba(156,246,255,${0.18 + (pulse * 0.10)})`
+        : `rgba(255,236,170,${0.16 + (pulse * 0.08)})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    if (isHighlighted) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius + 6 + (pulse * 1.5), 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(248,250,255,0.28)";
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
     }
 
     ctx.beginPath();
@@ -349,6 +397,19 @@ function drawHarborNavigationNodes(ctx, kernel) {
     ctx.strokeStyle = stroke;
     ctx.lineWidth = 1;
     ctx.stroke();
+
+    if (isDockTransfer) {
+      ctx.beginPath();
+      ctx.moveTo(x - 5, y);
+      ctx.lineTo(x + 5, y);
+      ctx.moveTo(x, y - 5);
+      ctx.lineTo(x, y + 5);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? "rgba(230,252,255,0.62)"
+        : "rgba(255,246,214,0.62)";
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
   }
 }
 
@@ -370,7 +431,7 @@ function drawTraversalPaths(ctx, kernel, projection, destination, pulse) {
     ctx.strokeStyle = "rgba(222,198,146,0.26)";
     ctx.stroke();
 
-    const isDestinationPath = destination && projection && (
+    const isDestinationPath = destination && projection && destination.kind === "region" && (
       path.fromRegionId === projection.regionId && path.toRegionId === destination.regionId
     );
 
@@ -460,7 +521,16 @@ function drawRegionPads(ctx, kernel) {
 
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
-    const { viewportOffset, kernel, projection, destination, tick } = runtime;
+    const {
+      viewportOffset,
+      kernel,
+      projection,
+      destination,
+      tick,
+      traversalMode = "foot",
+      activeHarborInstanceId = null
+    } = runtime;
+
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
 
     const manualTerrainRows = kernel?.terrainPolygonsById ? [...kernel.terrainPolygonsById.values()] : [];
@@ -489,8 +559,14 @@ export function createGroundRenderer() {
     drawSubstrateRows(ctx, generatedSubstrateRows);
     drawRegionBoundaries(ctx, kernel);
     drawHarborChartAccents(ctx, kernel);
-    drawHarborNavigationEdges(ctx, kernel, pulse);
-    drawHarborNavigationNodes(ctx, kernel);
+    drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode);
+    drawHarborNavigationNodes(ctx, {
+      ...runtime,
+      kernel,
+      tick,
+      traversalMode,
+      activeHarborInstanceId
+    });
     drawTraversalPaths(ctx, kernel, projection, destination, pulse);
     drawRegionPads(ctx, kernel);
 

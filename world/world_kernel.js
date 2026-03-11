@@ -1,4 +1,5 @@
 import { byteToStateVector, validateByte } from "../assets/four_pixel_codec.js";
+import { terrainSubstrateRebuildTool } from "./terrain_substrate_rebuild_tool.js";
 
 const DATA_FILES = {
   regions: new URL("./data/regions.json", import.meta.url),
@@ -26,8 +27,14 @@ const DATA_FILES = {
 function indexBy(rows, key) {
   const map = new Map();
   for (const row of rows) {
-    if (map.has(row[key])) throw new Error(`Duplicate ${key}: ${row[key]}`);
-    map.set(row[key], Object.freeze({ ...row }));
+    const id = row?.[key];
+    if (typeof id !== "string" || id.length === 0) {
+      throw new Error(`Invalid ${key} in indexed rows`);
+    }
+    if (map.has(id)) {
+      throw new Error(`Duplicate ${key}: ${id}`);
+    }
+    map.set(id, Object.freeze({ ...row }));
   }
   return map;
 }
@@ -35,7 +42,9 @@ function indexBy(rows, key) {
 function freezeObjectTree(value) {
   if (value && typeof value === "object" && !Object.isFrozen(value)) {
     Object.freeze(value);
-    for (const sub of Object.values(value)) freezeObjectTree(sub);
+    for (const sub of Object.values(value)) {
+      freezeObjectTree(sub);
+    }
   }
   return value;
 }
@@ -395,7 +404,11 @@ function validateMaritimeNetwork(maritimeNetworkRoot, encodingsById, regionsById
   const seaRoutesById = indexBy(maritimeNetworkRoot.seaRoutes, "seaRouteId");
   const seaHazardsById = indexBy(maritimeNetworkRoot.seaHazards, "seaHazardId");
 
-  assertReferenceExists(maritimeHarborInstancesById, maritimeNetworkRoot.networkMeta.entryHarborInstanceId, "maritime.networkMeta.entryHarborInstanceId");
+  assertReferenceExists(
+    maritimeHarborInstancesById,
+    maritimeNetworkRoot.networkMeta.entryHarborInstanceId,
+    "maritime.networkMeta.entryHarborInstanceId"
+  );
 
   const validMaritimeNodeIds = new Set([
     ...seaNodesById.keys(),
@@ -504,15 +517,7 @@ function validateCoastalBlueprintRoot(coastalBlueprintRoot) {
   }
 }
 
-function validateCoastalBlueprint(
-  coastalBlueprintRoot,
-  regionsById,
-  regionBoundariesById,
-  terrainPolygonsById,
-  substratePolygonsById,
-  generatedTerrainPolygonsById,
-  generatedSubstratePolygonsById
-) {
+function normalizeCoastalBlueprint(coastalBlueprintRoot, regionsById, regionBoundariesById) {
   validateCoastalBlueprintRoot(coastalBlueprintRoot);
 
   const coastalDomainsById = indexBy(coastalBlueprintRoot.coastalDomains, "domainId");
@@ -536,16 +541,22 @@ function validateCoastalBlueprint(
     if (!classRow || typeof classRow !== "object") {
       throw new Error(`Invalid coastal blueprint class row: ${classId}`);
     }
+
+    if (typeof classRow.targetClass !== "string" || classRow.targetClass.length === 0) {
+      throw new Error(`Invalid targetClass for coastal class: ${classId}`);
+    }
+    if (classRow.family !== "terrain" && classRow.family !== "substrate") {
+      throw new Error(`Invalid family for coastal class: ${classId}`);
+    }
+    if (typeof classRow.plantable !== "boolean") {
+      throw new Error(`Invalid plantable flag for coastal class: ${classId}`);
+    }
+    if (typeof classRow.status !== "string" || classRow.status.length === 0) {
+      throw new Error(`Invalid status for coastal class: ${classId}`);
+    }
+
     coastalClasses[classId] = Object.freeze({ classId, ...classRow });
   }
-
-  const activeTerrainClassNames = new Set();
-  for (const row of terrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
-  for (const row of generatedTerrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
-
-  const activeSubstrateClassNames = new Set();
-  for (const row of substratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
-  for (const row of generatedSubstratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
 
   for (const [stackId, stackRows] of Object.entries(materialStacks)) {
     for (const classToken of stackRows) {
@@ -555,37 +566,6 @@ function validateCoastalBlueprint(
       if (!coastalClasses[classToken]) {
         throw new Error(`Missing coastal class ${classToken} referenced by stack ${stackId}`);
       }
-    }
-  }
-
-  for (const coastalClass of Object.values(coastalClasses)) {
-    if (typeof coastalClass.targetClass !== "string" || coastalClass.targetClass.length === 0) {
-      throw new Error(`Invalid targetClass for coastal class: ${coastalClass.classId}`);
-    }
-
-    if (coastalClass.family !== "terrain" && coastalClass.family !== "substrate") {
-      throw new Error(`Invalid family for coastal class: ${coastalClass.classId}`);
-    }
-
-    if (typeof coastalClass.plantable !== "boolean") {
-      throw new Error(`Invalid plantable flag for coastal class: ${coastalClass.classId}`);
-    }
-
-    if (typeof coastalClass.status !== "string" || coastalClass.status.length === 0) {
-      throw new Error(`Invalid status for coastal class: ${coastalClass.classId}`);
-    }
-
-    if (coastalClass.status === "BOUND") {
-      if (coastalClass.family === "terrain" && !activeTerrainClassNames.has(coastalClass.targetClass)) {
-        throw new Error(`BOUND terrain coastal class target missing: ${coastalClass.targetClass}`);
-      }
-      if (coastalClass.family === "substrate" && !activeSubstrateClassNames.has(coastalClass.targetClass)) {
-        throw new Error(`BOUND substrate coastal class target missing: ${coastalClass.targetClass}`);
-      }
-    }
-
-    if (coastalClass.status === "NEW_CLASS_PENDING_BINDING") {
-      continue;
     }
   }
 
@@ -623,25 +603,57 @@ function validateCoastalBlueprint(
     }
   }
 
-  const scope = typeof coastalBlueprintRoot.scope === "string" && coastalBlueprintRoot.scope.length > 0
-    ? coastalBlueprintRoot.scope
-    : "harbor_baseline";
+  const scope =
+    typeof coastalBlueprintRoot.scope === "string" && coastalBlueprintRoot.scope.length > 0
+      ? coastalBlueprintRoot.scope
+      : "harbor_baseline";
 
-  const authority = typeof coastalBlueprintRoot.authority === "string" && coastalBlueprintRoot.authority.length > 0
-    ? coastalBlueprintRoot.authority
-    : "COASTAL_BLUEPRINT_V2_HARBOR_BASELINE";
+  const authority =
+    typeof coastalBlueprintRoot.authority === "string" && coastalBlueprintRoot.authority.length > 0
+      ? coastalBlueprintRoot.authority
+      : "COASTAL_BLUEPRINT_V2_HARBOR_BASELINE";
 
   const notes = typeof coastalBlueprintRoot.notes === "string" ? coastalBlueprintRoot.notes : "";
 
-  return {
+  return freezeObjectTree({
     version: coastalBlueprintRoot.version,
     scope,
     authority,
     notes,
     coastalDomainsById,
-    materialStacks: freezeObjectTree(materialStacks),
-    coastalClasses: freezeObjectTree(coastalClasses)
-  };
+    materialStacks,
+    coastalClasses
+  });
+}
+
+function validateCoastalBlueprintBindings(
+  coastalBlueprint,
+  terrainPolygonsById,
+  substratePolygonsById,
+  generatedTerrainPolygonsById,
+  generatedSubstratePolygonsById
+) {
+  const activeTerrainClassNames = new Set();
+  for (const row of terrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
+  for (const row of generatedTerrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
+
+  const activeSubstrateClassNames = new Set();
+  for (const row of substratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
+  for (const row of generatedSubstratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
+
+  for (const coastalClass of Object.values(coastalBlueprint.coastalClasses)) {
+    if (coastalClass.status !== "BOUND") continue;
+
+    if (coastalClass.family === "terrain" && !activeTerrainClassNames.has(coastalClass.targetClass)) {
+      throw new Error(`BOUND terrain coastal class target missing: ${coastalClass.targetClass}`);
+    }
+
+    if (coastalClass.family === "substrate" && !activeSubstrateClassNames.has(coastalClass.targetClass)) {
+      throw new Error(`BOUND substrate coastal class target missing: ${coastalClass.targetClass}`);
+    }
+  }
+
+  return true;
 }
 
 function validateCrossReferences(data) {
@@ -688,10 +700,18 @@ function validateCrossReferences(data) {
 
   for (const graphType of Object.keys(graphRows)) {
     for (const edge of graphRows[graphType]) {
-      if (regionsById.has(edge.fromId) === false && hazardsById.has(edge.fromId) === false && watersById.has(edge.fromId) === false) {
+      if (
+        regionsById.has(edge.fromId) === false &&
+        hazardsById.has(edge.fromId) === false &&
+        watersById.has(edge.fromId) === false
+      ) {
         throw new Error(`Graph fromId missing: ${edge.fromId}`);
       }
-      if (regionsById.has(edge.toId) === false && hazardsById.has(edge.toId) === false && watersById.has(edge.toId) === false) {
+      if (
+        regionsById.has(edge.toId) === false &&
+        hazardsById.has(edge.toId) === false &&
+        watersById.has(edge.toId) === false
+      ) {
         throw new Error(`Graph toId missing: ${edge.toId}`);
       }
     }
@@ -851,6 +871,22 @@ function buildGeneratedSubstratePolygons(regionsById, regionTemplatesById, subst
   return indexBy(generated, "substrateId");
 }
 
+function validateRebuiltDatasetRoot(root, expectedSchema, containerKey) {
+  assertRoot(root, expectedSchema);
+
+  if (!Array.isArray(root[containerKey]) || root[containerKey].length === 0) {
+    throw new Error(`Missing ${containerKey} in ${expectedSchema}`);
+  }
+}
+
+function buildCoastalRegionIdSet(coastalBlueprint) {
+  const ids = new Set();
+  for (const domain of coastalBlueprint.coastalDomainsById.values()) {
+    ids.add(domain.regionId);
+  }
+  return ids;
+}
+
 export async function loadWorldKernel() {
   const [
     regions,
@@ -863,7 +899,7 @@ export async function loadWorldKernel() {
     stateEncodings,
     latticeMap,
     coastlines,
-    coastalBlueprint,
+    coastalBlueprintRoot,
     regionBoundaries,
     terrainPolygons,
     substratePolygons,
@@ -912,7 +948,7 @@ export async function loadWorldKernel() {
   validateTemplateLibrary(terrainTemplates, "TERRAIN_TEMPLATE_LIBRARY_v1", "templates");
   validateTemplateLibrary(substrateTemplates, "SUBSTRATE_TEMPLATE_LIBRARY_v1", "templates");
   validateTemplateLibrary(regionTemplates, "REGION_TEMPLATE_LIBRARY_v1", "templates");
-  validateCoastalBlueprintRoot(coastalBlueprint);
+  validateCoastalBlueprintRoot(coastalBlueprintRoot);
 
   const regionsById = indexBy(regions.regionRows, "regionId");
   const pathsById = indexBy(paths.pathRows, "pathId");
@@ -921,8 +957,8 @@ export async function loadWorldKernel() {
   const encodingsById = indexBy(stateEncodings.encodingRows, "encodingId");
   const diamondCellsById = indexBy(diamondGrid.diamondCells, "diamondCellId");
   const regionBoundariesById = indexBy(regionBoundaries.regions, "regionId");
-  const terrainPolygonsById = indexBy(terrainPolygons.terrain, "terrainId");
-  const substratePolygonsById = indexBy(substratePolygons.substrates, "substrateId");
+  const legacyTerrainPolygonsById = indexBy(terrainPolygons.terrain, "terrainId");
+  const legacySubstratePolygonsById = indexBy(substratePolygons.substrates, "substrateId");
   const terrainTemplatesById = indexBy(terrainTemplates.templates, "templateId");
   const substrateTemplatesById = indexBy(substrateTemplates.templates, "templateId");
   const regionTemplatesById = indexBy(regionTemplates.templates, "templateId");
@@ -931,7 +967,7 @@ export async function loadWorldKernel() {
 
   const harborNavigation = validateHarborNavigationGraph(harborNavigationGraph, encodingsById);
 
-  const coastlineModel = {
+  const coastlineModel = freezeObjectTree({
     version: coastlines.version,
     coastlineOuter: coastlines.coastlineOuter,
     harborPeninsula: coastlines.harborPeninsula,
@@ -941,7 +977,13 @@ export async function loadWorldKernel() {
     reefZones: coastlines.reefZones ?? [],
     exposureZones: coastlines.exposureZones ?? [],
     firmnessZones: coastlines.firmnessZones ?? []
-  };
+  });
+
+  const coastalBlueprint = normalizeCoastalBlueprint(
+    coastalBlueprintRoot,
+    regionsById,
+    regionBoundariesById
+  );
 
   const harborInstancesById = validateHarborInstances(
     harborInstances,
@@ -969,8 +1011,8 @@ export async function loadWorldKernel() {
   validateHarborPolygonDatasets(
     coastlines,
     regionBoundariesById,
-    terrainPolygonsById,
-    substratePolygonsById
+    legacyTerrainPolygonsById,
+    legacySubstratePolygonsById
   );
 
   validateTerrainTemplateLibrary(terrainTemplatesById);
@@ -991,15 +1033,59 @@ export async function loadWorldKernel() {
     substrateTemplatesById
   );
 
-  const validatedCoastalBlueprint = validateCoastalBlueprint(
+  const provisionalKernel = freezeObjectTree({
+    worldMeta: {
+      worldId: regions.worldId,
+      encodingFamilyVersion: regions.encodingFamilyVersion
+    },
+    coastlineModel,
     coastalBlueprint,
-    regionsById,
     regionBoundariesById,
+    watersById,
+    terrainPolygonsById: legacyTerrainPolygonsById,
+    substratePolygonsById: legacySubstratePolygonsById,
+    terrainDatasetMeta: {
+      version: terrainPolygons.version
+    },
+    substrateDatasetMeta: {
+      version: substratePolygons.version
+    }
+  });
+
+  const rebuildResult = terrainSubstrateRebuildTool.rebuildTerrainAndSubstrateDatasets({
+    kernel: provisionalKernel
+  });
+
+  validateRebuiltDatasetRoot(
+    rebuildResult.terrainDataset,
+    "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
+    "terrain"
+  );
+  validateRebuiltDatasetRoot(
+    rebuildResult.substrateDataset,
+    "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
+    "substrates"
+  );
+
+  const terrainPolygonsById = indexBy(rebuildResult.terrainDataset.terrain, "terrainId");
+  const substratePolygonsById = indexBy(rebuildResult.substrateDataset.substrates, "substrateId");
+
+  validateHarborPolygonDatasets(
+    coastlines,
+    regionBoundariesById,
+    terrainPolygonsById,
+    substratePolygonsById
+  );
+
+  validateCoastalBlueprintBindings(
+    coastalBlueprint,
     terrainPolygonsById,
     substratePolygonsById,
     generatedTerrainPolygonsById,
     generatedSubstratePolygonsById
   );
+
+  const coastalRegionIds = buildCoastalRegionIdSet(coastalBlueprint);
 
   const kernel = {
     worldMeta: Object.freeze({
@@ -1015,16 +1101,8 @@ export async function loadWorldKernel() {
     environmentModel: freezeObjectTree(environment.environmentModel),
     diamondCellsById,
     graphRows,
-    coastlineModel: freezeObjectTree(coastlineModel),
-    coastalBlueprint: freezeObjectTree({
-      version: validatedCoastalBlueprint.version,
-      scope: validatedCoastalBlueprint.scope,
-      authority: validatedCoastalBlueprint.authority,
-      notes: validatedCoastalBlueprint.notes,
-      coastalDomainsById: validatedCoastalBlueprint.coastalDomainsById,
-      materialStacks: validatedCoastalBlueprint.materialStacks,
-      coastalClasses: validatedCoastalBlueprint.coastalClasses
-    }),
+    coastlineModel,
+    coastalBlueprint,
     harborNavigationGraph: freezeObjectTree({
       graphMeta: harborNavigationGraph.graphMeta,
       navigationNodesById: harborNavigation.navigationNodesById,
@@ -1040,10 +1118,24 @@ export async function loadWorldKernel() {
       seaHazardsById: maritimeNetworkModel.seaHazardsById
     }),
     regionBoundariesById,
+    terrainDatasetMeta: Object.freeze({
+      version: rebuildResult.terrainDataset.version,
+      sourceVersion: terrainPolygons.version
+    }),
+    substrateDatasetMeta: Object.freeze({
+      version: rebuildResult.substrateDataset.version,
+      sourceVersion: substratePolygons.version
+    }),
     terrainPolygonsById,
     substratePolygonsById,
+    legacyTerrainPolygonsById,
+    legacySubstratePolygonsById,
     generatedTerrainPolygonsById,
     generatedSubstratePolygonsById,
+    coastalGeneration: freezeObjectTree({
+      receipts: rebuildResult.receipts,
+      coastalRegionIds
+    }),
     templateRegistry: freezeObjectTree({
       terrainTemplatesById,
       substrateTemplatesById,
@@ -1088,6 +1180,12 @@ export async function loadWorldKernel() {
       getSubstratePolygon(substrateId) {
         return substratePolygonsById.get(substrateId) ?? null;
       },
+      getLegacyTerrainPolygon(terrainId) {
+        return legacyTerrainPolygonsById.get(terrainId) ?? null;
+      },
+      getLegacySubstratePolygon(substrateId) {
+        return legacySubstratePolygonsById.get(substrateId) ?? null;
+      },
       getGeneratedTerrainPolygon(terrainId) {
         return generatedTerrainPolygonsById.get(terrainId) ?? null;
       },
@@ -1108,6 +1206,12 @@ export async function loadWorldKernel() {
       },
       getGeneratedSubstrateForRegion(regionId) {
         return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
+      },
+      getActiveTerrainForRegion(regionId) {
+        return [...terrainPolygonsById.values()].filter((row) => row.regionId === regionId);
+      },
+      getActiveSubstrateForRegion(regionId) {
+        return [...substratePolygonsById.values()].filter((row) => row.regionId === regionId);
       },
       getCoastalDomain(domainId) {
         return kernel.coastalBlueprint.coastalDomainsById.get(domainId) ?? null;
@@ -1130,6 +1234,15 @@ export async function loadWorldKernel() {
       getCoastalClassesByFamily(family) {
         if (family !== "terrain" && family !== "substrate") return [];
         return Object.values(kernel.coastalBlueprint.coastalClasses).filter((coastalClass) => coastalClass.family === family);
+      },
+      getCoastalGenerationReceipts() {
+        return kernel.coastalGeneration.receipts;
+      },
+      getCoastalRegionIds() {
+        return [...kernel.coastalGeneration.coastalRegionIds];
+      },
+      isCoastalRegion(regionId) {
+        return kernel.coastalGeneration.coastalRegionIds.has(regionId);
       },
       getHarborNavNode(navNodeId) {
         return harborNavigation.navigationNodesById.get(navNodeId) ?? null;
@@ -1207,6 +1320,7 @@ export async function loadWorldKernel() {
         const dx = activeCell.centerPoint[0] - x;
         const dy = activeCell.centerPoint[1] - y;
         const encoding = encodingsById.get(activeCell.stateEncodingId);
+
         return Object.freeze({
           regionId: activeCell.regionId,
           pathId: activeCell.pathId,
@@ -1257,15 +1371,54 @@ export async function loadWorldKernel() {
           harborNavigation.navigationNodesById
         );
 
-        validateCoastalBlueprint(
+        validateCoastalBlueprintRoot(coastalBlueprintRoot);
+        validateCoastalBlueprintBindings(
           coastalBlueprint,
-          regionsById,
-          regionBoundariesById,
           terrainPolygonsById,
           substratePolygonsById,
           generatedTerrainPolygonsById,
           generatedSubstratePolygonsById
         );
+
+        const rebuildCheck = terrainSubstrateRebuildTool.rebuildTerrainAndSubstrateDatasets({
+          kernel: freezeObjectTree({
+            worldMeta: {
+              worldId: kernel.worldMeta.worldId,
+              encodingFamilyVersion: kernel.worldMeta.encodingFamilyVersion
+            },
+            coastlineModel: kernel.coastlineModel,
+            coastalBlueprint: kernel.coastalBlueprint,
+            regionBoundariesById: kernel.regionBoundariesById,
+            watersById: kernel.watersById,
+            terrainPolygonsById: kernel.legacyTerrainPolygonsById,
+            substratePolygonsById: kernel.legacySubstratePolygonsById,
+            terrainDatasetMeta: {
+              version: terrainPolygons.version
+            },
+            substrateDatasetMeta: {
+              version: substratePolygons.version
+            }
+          })
+        });
+
+        validateRebuiltDatasetRoot(
+          rebuildCheck.terrainDataset,
+          "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
+          "terrain"
+        );
+        validateRebuiltDatasetRoot(
+          rebuildCheck.substrateDataset,
+          "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
+          "substrates"
+        );
+
+        for (const row of terrainPolygonsById.values()) {
+          assertPolygon(row.polygon, `activeTerrain.${row.terrainId}`);
+        }
+
+        for (const row of substratePolygonsById.values()) {
+          assertPolygon(row.polygon, `activeSubstrate.${row.substrateId}`);
+        }
 
         for (const row of generatedTerrainPolygonsById.values()) {
           assertPolygon(row.polygon, `generatedTerrain.${row.terrainId}`);

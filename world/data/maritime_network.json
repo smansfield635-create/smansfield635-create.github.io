@@ -1,0 +1,276 @@
+{
+  "schemaVersion": "WORLD_MARITIME_NETWORK_v1",
+  "worldId": "nine_summits_island",
+  "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
+  "version": 1,
+  "networkMeta": {
+    "networkType": "coastal_harbor_ocean_network",
+    "entryHarborInstanceId": "harbor_village_instance",
+    "defaultMode": "boat"
+  },
+  "harborInstances": [
+    {
+      "harborInstanceId": "harbor_village_instance",
+      "displayName": "Harbor Village Maritime Instance",
+      "harborGraphId": "natural_harbor_navigation",
+      "primaryRegionId": "harbor_village",
+      "marketLinkRegionId": "market_district",
+      "transferRules": {
+        "dockTransfers": [
+          {
+            "transferId": "harbor_village_board_west",
+            "dockId": "harbor_nav_dock_west",
+            "landRegionId": "harbor_village",
+            "modeIn": "foot",
+            "modeOut": "boat",
+            "transferClass": "board"
+          },
+          {
+            "transferId": "harbor_village_disembark_west",
+            "dockId": "harbor_nav_dock_west",
+            "landRegionId": "harbor_village",
+            "modeIn": "boat",
+            "modeOut": "foot",
+            "transferClass": "disembark"
+          },
+          {
+            "transferId": "market_district_board_link",
+            "dockId": "harbor_nav_market_link",
+            "landRegionId": "market_district",
+            "modeIn": "foot",
+            "modeOut": "boat",
+            "transferClass": "board"
+          },
+          {
+            "transferId": "market_district_disembark_link",
+            "dockId": "harbor_nav_market_link",
+            "landRegionId": "market_district",
+            "modeIn": "boat",
+            "modeOut": "foot",
+            "transferClass": "disembark"
+          }
+        ]
+      }
+    },
+    {
+      "harborInstanceId": "exploration_basin_instance",
+      "displayName": "Exploration Basin Maritime Instance",
+      "harborGraphId": "natural_harbor_navigation",
+      "primaryRegionId": "exploration_basin",
+      "marketLinkRegionId": "exploration_basin",
+      "transferRules": {
+        "dockTransfers": [
+          {
+            "transferId": "exploration_basin_board_link",
+            "dockId": "harbor_nav_dock_east",
+            "landRegionId": "exploration_basin",
+            "modeIn": "foot",
+            "modeOut": "boat",
+            "transferClass": "board"
+          },
+          {
+            "transferId": "exploration_basin_disembark_link",
+            "dockId": "harbor_nav_dock_east",
+            "landRegionId": "exploration_basin",
+            "modeIn": "boat",
+            "modeOut": "foot",
+            "transferClass": "disembark"
+          }
+        ]
+      }
+    }
+  ],
+  "seaNodes": [
+    {
+      "seaNodeId": "sea_node_west_outer",
+      "displayName": "West Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [160, 760],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaNodeId": "sea_node_southwest_outer",
+      "displayName": "Southwest Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [208, 932],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaNodeId": "sea_node_south_outer",
+      "displayName": "South Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [500, 1098],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaNodeId": "sea_node_southeast_outer",
+      "displayName": "Southeast Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [930, 1038],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaNodeId": "sea_node_east_outer",
+      "displayName": "East Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [1030, 760],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaNodeId": "sea_node_northeast_outer",
+      "displayName": "Northeast Outer Sea",
+      "nodeClass": "open_sea",
+      "centerPoint": [1036, 530],
+      "allowedModes": ["boat"],
+      "stateEncodingId": "water_passage_open"
+    }
+  ],
+  "seaRoutes": [
+    {
+      "seaRouteId": "sea_route_harbor_channel_to_east_outer",
+      "fromNodeId": "harbor_nav_channel_outer",
+      "toNodeId": "sea_node_east_outer",
+      "directionality": "bidirectional",
+      "routeClass": "harbor_exit",
+      "centerline": [
+        [850, 700],
+        [910, 708],
+        [970, 726],
+        [1030, 760]
+      ],
+      "nominalWidth": 34,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_east_outer_to_northeast_outer",
+      "fromNodeId": "sea_node_east_outer",
+      "toNodeId": "sea_node_northeast_outer",
+      "directionality": "bidirectional",
+      "routeClass": "coastal_lane",
+      "centerline": [
+        [1030, 760],
+        [1040, 694],
+        [1040, 620],
+        [1036, 530]
+      ],
+      "nominalWidth": 38,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_east_outer_to_southeast_outer",
+      "fromNodeId": "sea_node_east_outer",
+      "toNodeId": "sea_node_southeast_outer",
+      "directionality": "bidirectional",
+      "routeClass": "coastal_lane",
+      "centerline": [
+        [1030, 760],
+        [1014, 844],
+        [986, 934],
+        [930, 1038]
+      ],
+      "nominalWidth": 38,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_southeast_outer_to_south_outer",
+      "fromNodeId": "sea_node_southeast_outer",
+      "toNodeId": "sea_node_south_outer",
+      "directionality": "bidirectional",
+      "routeClass": "southern_lane",
+      "centerline": [
+        [930, 1038],
+        [828, 1082],
+        [688, 1100],
+        [500, 1098]
+      ],
+      "nominalWidth": 40,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_south_outer_to_southwest_outer",
+      "fromNodeId": "sea_node_south_outer",
+      "toNodeId": "sea_node_southwest_outer",
+      "directionality": "bidirectional",
+      "routeClass": "southern_lane",
+      "centerline": [
+        [500, 1098],
+        [380, 1088],
+        [284, 1034],
+        [208, 932]
+      ],
+      "nominalWidth": 40,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_southwest_outer_to_west_outer",
+      "fromNodeId": "sea_node_southwest_outer",
+      "toNodeId": "sea_node_west_outer",
+      "directionality": "bidirectional",
+      "routeClass": "coastal_lane",
+      "centerline": [
+        [208, 932],
+        [174, 876],
+        [158, 822],
+        [160, 760]
+      ],
+      "nominalWidth": 38,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaRouteId": "sea_route_west_outer_to_harbor_entry",
+      "fromNodeId": "sea_node_west_outer",
+      "toNodeId": "harbor_nav_outer_west",
+      "directionality": "bidirectional",
+      "routeClass": "harbor_entry",
+      "centerline": [
+        [160, 760],
+        [212, 744],
+        [270, 720],
+        [332, 690]
+      ],
+      "nominalWidth": 34,
+      "stateEncodingId": "water_passage_open"
+    }
+  ],
+  "seaHazards": [
+    {
+      "seaHazardId": "reef_hazard_northeast",
+      "displayName": "Northeast Reef Shelf",
+      "hazardClass": "reef",
+      "polygon": [
+        [900, 566],
+        [960, 558],
+        [1024, 574],
+        [1050, 626],
+        [1022, 676],
+        [952, 678],
+        [900, 646],
+        [882, 602]
+      ],
+      "severity": 0.56,
+      "stateEncodingId": "water_passage_open"
+    },
+    {
+      "seaHazardId": "southern_current_band",
+      "displayName": "Southern Current Band",
+      "hazardClass": "current",
+      "polygon": [
+        [248, 1000],
+        [430, 1044],
+        [658, 1058],
+        [850, 1020],
+        [918, 1088],
+        [704, 1152],
+        [438, 1160],
+        [234, 1092]
+      ],
+      "severity": 0.34,
+      "stateEncodingId": "water_passage_open"
+    }
+  ]
+}

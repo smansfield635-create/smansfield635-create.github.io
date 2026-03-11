@@ -182,6 +182,51 @@ function waterStyle(waterClass, ctx) {
   return "rgba(90,150,190,0.34)";
 }
 
+function getManualRegionIds(rowsMap) {
+  const regionIds = new Set();
+  if (!rowsMap) return regionIds;
+
+  for (const row of rowsMap.values()) {
+    if (row?.regionId) regionIds.add(row.regionId);
+  }
+
+  return regionIds;
+}
+
+function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
+  if (!generatedMap) return [];
+  const manualRegionIds = getManualRegionIds(manualMap);
+  const rows = [];
+
+  for (const row of generatedMap.values()) {
+    if (!manualRegionIds.has(row.regionId)) {
+      rows.push(row);
+    }
+  }
+
+  return rows;
+}
+
+function buildRowsByRegion(rows) {
+  const byRegion = new Map();
+  for (const row of rows) {
+    if (!row?.regionId) continue;
+    if (!byRegion.has(row.regionId)) byRegion.set(row.regionId, []);
+    byRegion.get(row.regionId).push(row);
+  }
+  return byRegion;
+}
+
+function getRegionPolygon(kernel, regionId) {
+  const boundary = kernel?.helpers?.getRegionBoundary?.(regionId);
+  if (boundary?.polygon?.length) return boundary.polygon;
+
+  const region = kernel?.helpers?.getRegion?.(regionId);
+  if (region?.polygon?.length) return region.polygon;
+
+  return null;
+}
+
 function drawHarborCoastGeometry(ctx, kernel) {
   const coast = kernel?.coastlineModel;
   if (!coast) return;
@@ -240,6 +285,7 @@ function drawBasinDepthTint(ctx, kernel) {
 
 function drawWaterRows(ctx, rows) {
   for (const water of rows) {
+    if (!water?.polygon?.length) continue;
     fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx));
     strokePolygon(ctx, water.polygon, "rgba(236,248,255,0.18)", 1.2);
   }
@@ -256,6 +302,7 @@ function drawRegionBoundaries(ctx, kernel) {
 
 function drawTerrainRows(ctx, rows) {
   for (const terrain of rows) {
+    if (!terrain?.polygon?.length) continue;
     fillPolygon(ctx, terrain.polygon, terrainStyle(terrain.terrainClass, ctx));
     strokePolygon(ctx, terrain.polygon, "rgba(252,246,232,0.08)", 1);
   }
@@ -263,34 +310,10 @@ function drawTerrainRows(ctx, rows) {
 
 function drawSubstrateRows(ctx, rows) {
   for (const substrate of rows) {
+    if (!substrate?.polygon?.length) continue;
     fillPolygon(ctx, substrate.polygon, substrateStyle(substrate.substrateClass, ctx));
     strokePolygon(ctx, substrate.polygon, "rgba(255,248,236,0.06)", 0.9);
   }
-}
-
-function getManualRegionIds(rowsMap) {
-  const regionIds = new Set();
-  if (!rowsMap) return regionIds;
-
-  for (const row of rowsMap.values()) {
-    if (row?.regionId) regionIds.add(row.regionId);
-  }
-
-  return regionIds;
-}
-
-function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
-  if (!generatedMap) return [];
-  const manualRegionIds = getManualRegionIds(manualMap);
-  const rows = [];
-
-  for (const row of generatedMap.values()) {
-    if (!manualRegionIds.has(row.regionId)) {
-      rows.push(row);
-    }
-  }
-
-  return rows;
 }
 
 function drawTraversalPaths(ctx, kernel, projection, destination, pulse) {
@@ -399,22 +422,103 @@ function drawRegionPads(ctx, kernel) {
   }
 }
 
+function drawCoastalBlueprintRows(
+  ctx,
+  kernel,
+  terrainRows,
+  substrateRows
+) {
+  const helpers = kernel?.helpers;
+  if (!helpers?.getCoastalDomains || !helpers?.getCoastalStack || !helpers?.getCoastalClass) {
+    drawTerrainRows(ctx, terrainRows);
+    drawSubstrateRows(ctx, substrateRows);
+    return;
+  }
+
+  const terrainRowsByRegion = buildRowsByRegion(terrainRows);
+  const substrateRowsByRegion = buildRowsByRegion(substrateRows);
+
+  const drawnTerrainIds = new Set();
+  const drawnSubstrateIds = new Set();
+
+  const domains = helpers.getCoastalDomains();
+
+  for (const domain of domains) {
+    const stack = helpers.getCoastalStack(domain.stackId);
+    if (!Array.isArray(stack) || !stack.length) continue;
+
+    const regionTerrainRows = terrainRowsByRegion.get(domain.regionId) ?? [];
+    const regionSubstrateRows = substrateRowsByRegion.get(domain.regionId) ?? [];
+
+    for (const classToken of stack) {
+      const coastalClass = helpers.getCoastalClass(classToken);
+      if (!coastalClass || coastalClass.status !== "BOUND") continue;
+
+      if (coastalClass.family === "substrate") {
+        const rows = regionSubstrateRows.filter((row) => row.substrateClass === coastalClass.targetClass);
+        drawSubstrateRows(ctx, rows);
+        for (const row of rows) drawnSubstrateIds.add(row.substrateId);
+      }
+
+      if (coastalClass.family === "terrain") {
+        const rows = regionTerrainRows.filter((row) => row.terrainClass === coastalClass.targetClass);
+        drawTerrainRows(ctx, rows);
+        for (const row of rows) drawnTerrainIds.add(row.terrainId);
+      }
+    }
+  }
+
+  const remainingTerrainRows = terrainRows.filter((row) => !drawnTerrainIds.has(row.terrainId));
+  const remainingSubstrateRows = substrateRows.filter((row) => !drawnSubstrateIds.has(row.substrateId));
+
+  drawTerrainRows(ctx, remainingTerrainRows);
+  drawSubstrateRows(ctx, remainingSubstrateRows);
+}
+
+function drawCoastalDomainOverlays(ctx, kernel) {
+  const helpers = kernel?.helpers;
+  if (!helpers?.getCoastalDomains) return;
+
+  const drawnRegions = new Set();
+
+  for (const domain of helpers.getCoastalDomains()) {
+    const polygonPoints = getRegionPolygon(kernel, domain.regionId);
+    if (!polygonPoints?.length) continue;
+
+    const regionKey = `${domain.regionId}:${domain.stackId}`;
+    if (drawnRegions.has(regionKey)) continue;
+    drawnRegions.add(regionKey);
+
+    if (domain.plantable === true) {
+      fillPolygon(ctx, polygonPoints, "rgba(116,164,108,0.035)");
+      strokePolygon(ctx, polygonPoints, "rgba(188,232,174,0.07)", 1.1);
+    } else {
+      strokePolygon(ctx, polygonPoints, "rgba(232,220,182,0.05)", 0.9);
+    }
+  }
+}
+
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
     const { viewportOffset, kernel, projection, destination, tick } = runtime;
-    const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+    const pulse = 0.5 + (0.5 * Math.sin(tick * 0.08));
 
     const manualTerrainRows = kernel?.terrainPolygonsById ? [...kernel.terrainPolygonsById.values()] : [];
     const manualSubstrateRows = kernel?.substratePolygonsById ? [...kernel.substratePolygonsById.values()] : [];
     const manualWaterRows = kernel?.watersById ? [...kernel.watersById.values()] : [];
+
     const generatedTerrainRows = getGeneratedRowsForTemplateOnlyRegions(
       kernel?.generatedTerrainPolygonsById,
       kernel?.terrainPolygonsById
     );
+
     const generatedSubstrateRows = getGeneratedRowsForTemplateOnlyRegions(
       kernel?.generatedSubstratePolygonsById,
       kernel?.substratePolygonsById
     );
+
+    const allTerrainRows = manualTerrainRows.concat(generatedTerrainRows);
+    const allSubstrateRows = manualSubstrateRows.concat(generatedSubstrateRows);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
@@ -424,10 +528,15 @@ export function createGroundRenderer() {
     drawFirmnessZones(ctx, kernel);
     drawBasinDepthTint(ctx, kernel);
     drawWaterRows(ctx, manualWaterRows);
-    drawTerrainRows(ctx, manualTerrainRows);
-    drawTerrainRows(ctx, generatedTerrainRows);
-    drawSubstrateRows(ctx, manualSubstrateRows);
-    drawSubstrateRows(ctx, generatedSubstrateRows);
+
+    drawCoastalBlueprintRows(
+      ctx,
+      kernel,
+      allTerrainRows,
+      allSubstrateRows
+    );
+
+    drawCoastalDomainOverlays(ctx, kernel);
     drawRegionBoundaries(ctx, kernel);
     drawHarborChartAccents(ctx, kernel);
     drawTraversalPaths(ctx, kernel, projection, destination, pulse);

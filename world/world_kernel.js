@@ -16,6 +16,7 @@ const DATA_FILES = {
   substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
   harborNavigationGraph: new URL("./data/harbor_navigation_graph.json", import.meta.url),
   harborInstances: new URL("./data/harbor_instances.json", import.meta.url),
+  maritimeNetwork: new URL("./data/maritime_network.json", import.meta.url),
   terrainTemplates: new URL("./templates/terrain_templates.json", import.meta.url),
   substrateTemplates: new URL("./templates/substrate_templates.json", import.meta.url),
   regionTemplates: new URL("./templates/region_templates.json", import.meta.url)
@@ -365,6 +366,127 @@ function validateHarborInstances(harborInstancesRoot, regionsById, watersById, h
   return harborInstancesById;
 }
 
+function validateMaritimeNetwork(maritimeNetworkRoot, encodingsById, regionsById, harborNavigationNodesById) {
+  assertRoot(maritimeNetworkRoot, "WORLD_MARITIME_NETWORK_v1");
+
+  if (!maritimeNetworkRoot.networkMeta || typeof maritimeNetworkRoot.networkMeta !== "object") {
+    throw new Error("Missing networkMeta in WORLD_MARITIME_NETWORK_v1");
+  }
+
+  if (!Array.isArray(maritimeNetworkRoot.harborInstances) || maritimeNetworkRoot.harborInstances.length === 0) {
+    throw new Error("Missing harborInstances in WORLD_MARITIME_NETWORK_v1");
+  }
+
+  if (!Array.isArray(maritimeNetworkRoot.seaNodes) || maritimeNetworkRoot.seaNodes.length === 0) {
+    throw new Error("Missing seaNodes in WORLD_MARITIME_NETWORK_v1");
+  }
+
+  if (!Array.isArray(maritimeNetworkRoot.seaRoutes) || maritimeNetworkRoot.seaRoutes.length === 0) {
+    throw new Error("Missing seaRoutes in WORLD_MARITIME_NETWORK_v1");
+  }
+
+  if (!Array.isArray(maritimeNetworkRoot.seaHazards)) {
+    throw new Error("Missing seaHazards in WORLD_MARITIME_NETWORK_v1");
+  }
+
+  const maritimeHarborInstancesById = indexBy(maritimeNetworkRoot.harborInstances, "harborInstanceId");
+  const seaNodesById = indexBy(maritimeNetworkRoot.seaNodes, "seaNodeId");
+  const seaRoutesById = indexBy(maritimeNetworkRoot.seaRoutes, "seaRouteId");
+  const seaHazardsById = indexBy(maritimeNetworkRoot.seaHazards, "seaHazardId");
+
+  assertReferenceExists(maritimeHarborInstancesById, maritimeNetworkRoot.networkMeta.entryHarborInstanceId, "maritime.networkMeta.entryHarborInstanceId");
+
+  const validMaritimeNodeIds = new Set([
+    ...seaNodesById.keys(),
+    ...harborNavigationNodesById.keys()
+  ]);
+
+  for (const instance of maritimeHarborInstancesById.values()) {
+    if (typeof instance.displayName !== "string" || instance.displayName.length === 0) {
+      throw new Error(`Invalid displayName for maritime harbor instance: ${instance.harborInstanceId}`);
+    }
+    if (typeof instance.harborGraphId !== "string" || instance.harborGraphId.length === 0) {
+      throw new Error(`Invalid harborGraphId for maritime harbor instance: ${instance.harborInstanceId}`);
+    }
+    assertReferenceExists(regionsById, instance.primaryRegionId, "maritime.harborInstance.primaryRegionId");
+    assertReferenceExists(regionsById, instance.marketLinkRegionId, "maritime.harborInstance.marketLinkRegionId");
+
+    if (!instance.transferRules || typeof instance.transferRules !== "object") {
+      throw new Error(`Missing transferRules for maritime harbor instance: ${instance.harborInstanceId}`);
+    }
+    if (!Array.isArray(instance.transferRules.dockTransfers) || instance.transferRules.dockTransfers.length === 0) {
+      throw new Error(`Missing dockTransfers for maritime harbor instance: ${instance.harborInstanceId}`);
+    }
+
+    for (const transfer of instance.transferRules.dockTransfers) {
+      assertReferenceExists(harborNavigationNodesById, transfer.dockId, "maritime.harborInstance.transfer.dockId");
+      assertReferenceExists(regionsById, transfer.landRegionId, "maritime.harborInstance.transfer.landRegionId");
+
+      if (typeof transfer.modeIn !== "string" || transfer.modeIn.length === 0) {
+        throw new Error(`Invalid modeIn for maritime dock transfer: ${transfer.transferId ?? transfer.dockId}`);
+      }
+      if (typeof transfer.modeOut !== "string" || transfer.modeOut.length === 0) {
+        throw new Error(`Invalid modeOut for maritime dock transfer: ${transfer.transferId ?? transfer.dockId}`);
+      }
+      if (typeof transfer.transferClass !== "string" || transfer.transferClass.length === 0) {
+        throw new Error(`Invalid transferClass for maritime dock transfer: ${transfer.transferId ?? transfer.dockId}`);
+      }
+    }
+  }
+
+  for (const node of seaNodesById.values()) {
+    if (typeof node.displayName !== "string" || node.displayName.length === 0) {
+      throw new Error(`Invalid displayName for sea node: ${node.seaNodeId}`);
+    }
+    if (typeof node.nodeClass !== "string" || node.nodeClass.length === 0) {
+      throw new Error(`Invalid nodeClass for sea node: ${node.seaNodeId}`);
+    }
+    assertPointList([node.centerPoint], `maritime.seaNode.${node.seaNodeId}.centerPoint`, 1);
+    if (!Array.isArray(node.allowedModes) || node.allowedModes.length === 0) {
+      throw new Error(`Invalid allowedModes for sea node: ${node.seaNodeId}`);
+    }
+    assertReferenceExists(encodingsById, node.stateEncodingId, "maritime.seaNode.stateEncodingId");
+  }
+
+  for (const route of seaRoutesById.values()) {
+    if (!validMaritimeNodeIds.has(route.fromNodeId)) {
+      throw new Error(`Invalid maritime route fromNodeId: ${route.fromNodeId}`);
+    }
+    if (!validMaritimeNodeIds.has(route.toNodeId)) {
+      throw new Error(`Invalid maritime route toNodeId: ${route.toNodeId}`);
+    }
+    if (typeof route.routeClass !== "string" || route.routeClass.length === 0) {
+      throw new Error(`Invalid routeClass for maritime route: ${route.seaRouteId}`);
+    }
+    assertPointList(route.centerline, `maritime.seaRoute.${route.seaRouteId}.centerline`, 2);
+    if (!Number.isFinite(route.nominalWidth) || route.nominalWidth <= 0) {
+      throw new Error(`Invalid nominalWidth for maritime route: ${route.seaRouteId}`);
+    }
+    assertReferenceExists(encodingsById, route.stateEncodingId, "maritime.seaRoute.stateEncodingId");
+  }
+
+  for (const hazard of seaHazardsById.values()) {
+    if (typeof hazard.displayName !== "string" || hazard.displayName.length === 0) {
+      throw new Error(`Invalid displayName for sea hazard: ${hazard.seaHazardId}`);
+    }
+    if (typeof hazard.hazardClass !== "string" || hazard.hazardClass.length === 0) {
+      throw new Error(`Invalid hazardClass for sea hazard: ${hazard.seaHazardId}`);
+    }
+    assertPolygon(hazard.polygon, `maritime.seaHazard.${hazard.seaHazardId}.polygon`);
+    if (!Number.isFinite(hazard.severity) || hazard.severity < 0) {
+      throw new Error(`Invalid severity for sea hazard: ${hazard.seaHazardId}`);
+    }
+    assertReferenceExists(encodingsById, hazard.stateEncodingId, "maritime.seaHazard.stateEncodingId");
+  }
+
+  return {
+    maritimeHarborInstancesById,
+    seaNodesById,
+    seaRoutesById,
+    seaHazardsById
+  };
+}
+
 function validateCrossReferences(data) {
   const {
     regionsById,
@@ -589,6 +711,7 @@ export async function loadWorldKernel() {
     substratePolygons,
     harborNavigationGraph,
     harborInstances,
+    maritimeNetwork,
     terrainTemplates,
     substrateTemplates,
     regionTemplates
@@ -608,6 +731,7 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.substratePolygons),
     readJson(DATA_FILES.harborNavigationGraph),
     readJson(DATA_FILES.harborInstances),
+    readJson(DATA_FILES.maritimeNetwork),
     readJson(DATA_FILES.terrainTemplates),
     readJson(DATA_FILES.substrateTemplates),
     readJson(DATA_FILES.regionTemplates)
@@ -667,6 +791,13 @@ export async function loadWorldKernel() {
     coastlineModel
   );
 
+  const maritimeNetworkModel = validateMaritimeNetwork(
+    maritimeNetwork,
+    encodingsById,
+    regionsById,
+    harborNavigation.navigationNodesById
+  );
+
   const graphRows = freezeObjectTree({
     spatialAdjacencyGraph: graphs.graphRows.spatialAdjacencyGraph.map((edge) => Object.freeze({ ...edge })),
     traversalGraph: graphs.graphRows.traversalGraph.map((edge) => Object.freeze({ ...edge })),
@@ -721,6 +852,14 @@ export async function loadWorldKernel() {
       navigationEdgesById: harborNavigation.navigationEdgesById
     }),
     harborInstancesById,
+    maritimeNetwork: freezeObjectTree({
+      version: maritimeNetwork.version,
+      networkMeta: maritimeNetwork.networkMeta,
+      maritimeHarborInstancesById: maritimeNetworkModel.maritimeHarborInstancesById,
+      seaNodesById: maritimeNetworkModel.seaNodesById,
+      seaRoutesById: maritimeNetworkModel.seaRoutesById,
+      seaHazardsById: maritimeNetworkModel.seaHazardsById
+    }),
     regionBoundariesById,
     terrainPolygonsById,
     substratePolygonsById,
@@ -821,6 +960,41 @@ export async function loadWorldKernel() {
         const instance = harborInstancesById.get(harborInstanceId);
         return instance?.transferRules?.dockTransfers ?? [];
       },
+      getMaritimeHarborInstance(harborInstanceId) {
+        return kernel.maritimeNetwork.maritimeHarborInstancesById.get(harborInstanceId) ?? null;
+      },
+      getSeaNode(seaNodeId) {
+        return kernel.maritimeNetwork.seaNodesById.get(seaNodeId) ?? null;
+      },
+      getSeaRoute(seaRouteId) {
+        return kernel.maritimeNetwork.seaRoutesById.get(seaRouteId) ?? null;
+      },
+      getSeaHazard(seaHazardId) {
+        return kernel.maritimeNetwork.seaHazardsById.get(seaHazardId) ?? null;
+      },
+      getMaritimeNode(nodeId) {
+        return kernel.maritimeNetwork.seaNodesById.get(nodeId) ?? harborNavigation.navigationNodesById.get(nodeId) ?? null;
+      },
+      getMaritimeNeighbors(nodeId) {
+        const neighbors = [];
+
+        for (const edge of kernel.maritimeNetwork.seaRoutesById.values()) {
+          if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
+          if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
+        }
+
+        for (const edge of harborNavigation.navigationEdgesById.values()) {
+          if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
+          if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
+        }
+
+        return neighbors.filter(Boolean);
+      },
+      getSeaRoutesForNode(nodeId) {
+        return [...kernel.maritimeNetwork.seaRoutesById.values()].filter(
+          (route) => route.fromNodeId === nodeId || route.toNodeId === nodeId
+        );
+      },
       decodeStateByte(byte) {
         validateByte(byte);
         return byteToStateVector(byte);
@@ -875,6 +1049,13 @@ export async function loadWorldKernel() {
           coastlineModel
         );
 
+        validateMaritimeNetwork(
+          maritimeNetwork,
+          encodingsById,
+          regionsById,
+          harborNavigation.navigationNodesById
+        );
+
         for (const row of generatedTerrainPolygonsById.values()) {
           assertPolygon(row.polygon, `generatedTerrain.${row.terrainId}`);
         }
@@ -885,6 +1066,14 @@ export async function loadWorldKernel() {
 
         for (const edge of harborNavigation.navigationEdgesById.values()) {
           assertPointList(edge.centerline, `harborNavigation.edge.${edge.edgeId}.centerline`, 2);
+        }
+
+        for (const route of kernel.maritimeNetwork.seaRoutesById.values()) {
+          assertPointList(route.centerline, `maritime.seaRoute.${route.seaRouteId}.centerline`, 2);
+        }
+
+        for (const hazard of kernel.maritimeNetwork.seaHazardsById.values()) {
+          assertPolygon(hazard.polygon, `maritime.seaHazard.${hazard.seaHazardId}.polygon`);
         }
 
         return true;

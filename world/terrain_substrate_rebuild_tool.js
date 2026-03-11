@@ -1,4 +1,5 @@
 import { coastalGenerator } from "./coastal_generator.js";
+import { geometryClippingEngine } from "./geometry_clipping_engine.js";
 
 function freezeObjectTree(value) {
   if (value && typeof value === "object" && !Object.isFrozen(value)) {
@@ -40,7 +41,10 @@ function mapValuesToArray(mapLike, label) {
 
 function indexDomainOrder(coastalBlueprint) {
   const order = new Map();
-  const domains = mapValuesToArray(coastalBlueprint.coastalDomainsById, "coastalBlueprint.coastalDomainsById");
+  const domains = mapValuesToArray(
+    coastalBlueprint.coastalDomainsById,
+    "coastalBlueprint.coastalDomainsById"
+  );
 
   for (let i = 0; i < domains.length; i += 1) {
     order.set(domains[i].domainId, i);
@@ -65,7 +69,10 @@ function indexStackOrder(coastalBlueprint) {
 
 function getCoastalRegionIds(coastalBlueprint) {
   const regionIds = new Set();
-  for (const domain of mapValuesToArray(coastalBlueprint.coastalDomainsById, "coastalBlueprint.coastalDomainsById")) {
+  for (const domain of mapValuesToArray(
+    coastalBlueprint.coastalDomainsById,
+    "coastalBlueprint.coastalDomainsById"
+  )) {
     regionIds.add(domain.regionId);
   }
   return regionIds;
@@ -330,6 +337,10 @@ function assertKernelInput(kernel) {
   if (!kernel.substratePolygonsById || typeof kernel.substratePolygonsById.values !== "function") {
     throw new Error("Missing kernel.substratePolygonsById");
   }
+
+  if (!geometryClippingEngine || typeof geometryClippingEngine !== "object") {
+    throw new Error("Missing geometryClippingEngine");
+  }
 }
 
 function generateCoastalBands(input) {
@@ -340,15 +351,23 @@ function generateCoastalBands(input) {
     coastlineModel: kernel.coastlineModel,
     coastalBlueprint: kernel.coastalBlueprint,
     regionBoundariesById: kernel.regionBoundariesById,
-    watersById: kernel.watersById
+    watersById: kernel.watersById,
+    geometryClippingEngine
   });
 
-  const generatedTerrainBands = normalizeGeneratedBands(result.generatedTerrainBands ?? [], "terrain");
-  const generatedSubstrateBands = normalizeGeneratedBands(result.generatedSubstrateBands ?? [], "substrate");
+  const generatedTerrainBands = normalizeGeneratedBands(
+    result.generatedTerrainBands ?? [],
+    "terrain"
+  );
+  const generatedSubstrateBands = normalizeGeneratedBands(
+    result.generatedSubstrateBands ?? [],
+    "substrate"
+  );
 
   return freezeObjectTree({
     generatedTerrainBands,
-    generatedSubstrateBands
+    generatedSubstrateBands,
+    receipts: Array.isArray(result.receipts) ? result.receipts : []
   });
 }
 
@@ -363,8 +382,13 @@ function rebuildTerrainDataset(input) {
   const activeGeneratedTerrainBands = filterActiveBoundBands(coastalBands.generatedTerrainBands)
     .sort(bandComparator(indexes));
 
-  const preservedManualTerrainRows = preserveNonCoastalManualTerrainRows(kernel, coastalRegionIds);
-  const generatedTerrainRows = convertGeneratedTerrainBandsToDatasetRows(activeGeneratedTerrainBands);
+  const preservedManualTerrainRows = preserveNonCoastalManualTerrainRows(
+    kernel,
+    coastalRegionIds
+  );
+  const generatedTerrainRows = convertGeneratedTerrainBandsToDatasetRows(
+    activeGeneratedTerrainBands
+  );
 
   return buildTerrainDataset(kernel, preservedManualTerrainRows, generatedTerrainRows);
 }
@@ -377,13 +401,23 @@ function rebuildSubstrateDataset(input) {
   const coastalRegionIds = getCoastalRegionIds(kernel.coastalBlueprint);
   const indexes = buildBandSortKeyIndexes(kernel.coastalBlueprint);
 
-  const activeGeneratedSubstrateBands = filterActiveBoundBands(coastalBands.generatedSubstrateBands)
-    .sort(bandComparator(indexes));
+  const activeGeneratedSubstrateBands = filterActiveBoundBands(
+    coastalBands.generatedSubstrateBands
+  ).sort(bandComparator(indexes));
 
-  const preservedManualSubstrateRows = preserveNonCoastalManualSubstrateRows(kernel, coastalRegionIds);
-  const generatedSubstrateRows = convertGeneratedSubstrateBandsToDatasetRows(activeGeneratedSubstrateBands);
+  const preservedManualSubstrateRows = preserveNonCoastalManualSubstrateRows(
+    kernel,
+    coastalRegionIds
+  );
+  const generatedSubstrateRows = convertGeneratedSubstrateBandsToDatasetRows(
+    activeGeneratedSubstrateBands
+  );
 
-  return buildSubstrateDataset(kernel, preservedManualSubstrateRows, generatedSubstrateRows);
+  return buildSubstrateDataset(
+    kernel,
+    preservedManualSubstrateRows,
+    generatedSubstrateRows
+  );
 }
 
 function rebuildTerrainAndSubstrateDatasets(input) {
@@ -394,23 +428,45 @@ function rebuildTerrainAndSubstrateDatasets(input) {
   const coastalRegionIds = getCoastalRegionIds(kernel.coastalBlueprint);
   const indexes = buildBandSortKeyIndexes(kernel.coastalBlueprint);
 
-  const activeGeneratedTerrainBands = filterActiveBoundBands(coastalBands.generatedTerrainBands)
-    .sort(bandComparator(indexes));
+  const activeGeneratedTerrainBands = filterActiveBoundBands(
+    coastalBands.generatedTerrainBands
+  ).sort(bandComparator(indexes));
 
-  const activeGeneratedSubstrateBands = filterActiveBoundBands(coastalBands.generatedSubstrateBands)
-    .sort(bandComparator(indexes));
+  const activeGeneratedSubstrateBands = filterActiveBoundBands(
+    coastalBands.generatedSubstrateBands
+  ).sort(bandComparator(indexes));
 
-  const preservedManualTerrainRows = preserveNonCoastalManualTerrainRows(kernel, coastalRegionIds);
-  const preservedManualSubstrateRows = preserveNonCoastalManualSubstrateRows(kernel, coastalRegionIds);
+  const preservedManualTerrainRows = preserveNonCoastalManualTerrainRows(
+    kernel,
+    coastalRegionIds
+  );
+  const preservedManualSubstrateRows = preserveNonCoastalManualSubstrateRows(
+    kernel,
+    coastalRegionIds
+  );
 
-  const generatedTerrainRows = convertGeneratedTerrainBandsToDatasetRows(activeGeneratedTerrainBands);
-  const generatedSubstrateRows = convertGeneratedSubstrateBandsToDatasetRows(activeGeneratedSubstrateBands);
+  const generatedTerrainRows = convertGeneratedTerrainBandsToDatasetRows(
+    activeGeneratedTerrainBands
+  );
+  const generatedSubstrateRows = convertGeneratedSubstrateBandsToDatasetRows(
+    activeGeneratedSubstrateBands
+  );
 
-  const terrainDataset = buildTerrainDataset(kernel, preservedManualTerrainRows, generatedTerrainRows);
-  const substrateDataset = buildSubstrateDataset(kernel, preservedManualSubstrateRows, generatedSubstrateRows);
+  const terrainDataset = buildTerrainDataset(
+    kernel,
+    preservedManualTerrainRows,
+    generatedTerrainRows
+  );
+  const substrateDataset = buildSubstrateDataset(
+    kernel,
+    preservedManualSubstrateRows,
+    generatedSubstrateRows
+  );
 
   const pendingTerrainReceipts = buildPendingReceipts(coastalBands.generatedTerrainBands);
-  const pendingSubstrateReceipts = buildPendingReceipts(coastalBands.generatedSubstrateBands);
+  const pendingSubstrateReceipts = buildPendingReceipts(
+    coastalBands.generatedSubstrateBands
+  );
 
   return freezeObjectTree({
     terrainDataset,

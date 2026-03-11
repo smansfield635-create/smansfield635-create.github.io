@@ -43,6 +43,10 @@ function polygonArea(points) {
   return area * 0.5;
 }
 
+function isValidPolygon(points) {
+  return Array.isArray(points) && points.length >= 3 && Math.abs(polygonArea(points)) > 0.5;
+}
+
 function ensureCounterClockwise(points) {
   const polygon = clonePolygon(points, "ensureCounterClockwise");
   return polygonArea(polygon) < 0 ? polygon.reverse() : polygon;
@@ -66,40 +70,63 @@ function pointKey(point) {
   return `${roundPoint(point[0])},${roundPoint(point[1])}`;
 }
 
-function dedupePoints(points) {
-  const out = [];
-  const seen = new Set();
+function pointsEqual(a, b, epsilon = 1e-6) {
+  return Math.abs(a[0] - b[0]) <= epsilon && Math.abs(a[1] - b[1]) <= epsilon;
+}
 
+function dedupeSequentialPoints(points) {
+  const out = [];
   for (const point of points) {
     const normalized = [roundPoint(point[0]), roundPoint(point[1])];
-    const key = pointKey(normalized);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(normalized);
+    if (out.length === 0 || !pointsEqual(out[out.length - 1], normalized)) {
+      out.push(normalized);
+    }
+  }
+
+  if (out.length >= 2 && pointsEqual(out[0], out[out.length - 1])) {
+    out.pop();
   }
 
   return out;
 }
 
-function sortPointsRadially(points) {
-  const unique = dedupePoints(points);
-  if (unique.length < 3) return null;
+function removeCollinearPoints(points, epsilon = 1e-6) {
+  if (!Array.isArray(points) || points.length < 3) return points ?? [];
 
-  const [cx, cy] = centroid(unique);
-  unique.sort((a, b) => {
-    const aa = Math.atan2(a[1] - cy, a[0] - cx);
-    const ab = Math.atan2(b[1] - cy, b[0] - cx);
-    if (aa !== ab) return aa - ab;
-    const da = distance(cx, cy, a[0], a[1]);
-    const db = distance(cx, cy, b[0], b[1]);
-    return da - db;
-  });
+  const cleaned = [];
+  for (let i = 0; i < points.length; i += 1) {
+    const prev = points[(i - 1 + points.length) % points.length];
+    const curr = points[i];
+    const next = points[(i + 1) % points.length];
 
-  return unique;
+    const v1x = curr[0] - prev[0];
+    const v1y = curr[1] - prev[1];
+    const v2x = next[0] - curr[0];
+    const v2y = next[1] - curr[1];
+    const cross = (v1x * v2y) - (v1y * v2x);
+
+    if (Math.abs(cross) > epsilon || points.length <= 3) {
+      cleaned.push(curr);
+    }
+  }
+
+  return cleaned.length >= 3 ? cleaned : points;
 }
 
-function isValidPolygon(points) {
-  return Array.isArray(points) && points.length >= 3 && Math.abs(polygonArea(points)) > 0.5;
+function normalizePolygon(points) {
+  if (!Array.isArray(points) || points.length < 3) return null;
+
+  let polygon = clonePolygon(points, "normalizePolygon");
+  polygon = dedupeSequentialPoints(polygon);
+  if (polygon.length < 3) return null;
+
+  polygon = removeCollinearPoints(polygon);
+  if (polygon.length < 3) return null;
+
+  polygon = ensureCounterClockwise(polygon);
+  if (!isValidPolygon(polygon)) return null;
+
+  return polygon.map((point) => [roundPoint(point[0]), roundPoint(point[1])]);
 }
 
 function pointInPolygon(point, polygon) {
@@ -109,6 +136,15 @@ function pointInPolygon(point, polygon) {
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
     const [xi, yi] = polygon[i];
     const [xj, yj] = polygon[j];
+
+    const onSegment =
+      Math.abs(((x - xi) * (yj - yi)) - ((y - yi) * (xj - xi))) <= 1e-6 &&
+      x >= Math.min(xi, xj) - 1e-6 &&
+      x <= Math.max(xi, xj) + 1e-6 &&
+      y >= Math.min(yi, yj) - 1e-6 &&
+      y <= Math.max(yi, yj) + 1e-6;
+
+    if (onSegment) return true;
 
     const intersects =
       ((yi > y) !== (yj > y)) &&
@@ -173,78 +209,126 @@ function collectIntersections(polyA, polyB) {
   return intersections;
 }
 
-function collectIntersectionPolygon(subjectPolygon, clipPolygon) {
-  const candidates = [];
+function inwardNormal(p1, p2) {
+  const dx = p2[0] - p1[0];
+  const dy = p2[1] - p1[1];
+  const len = Math.hypot(dx, dy);
 
-  for (const point of subjectPolygon) {
-    if (pointInPolygon(point, clipPolygon)) candidates.push(point);
+  if (len < 1e-9) {
+    return [0, 0];
   }
 
-  for (const point of clipPolygon) {
-    if (pointInPolygon(point, subjectPolygon)) candidates.push(point);
-  }
-
-  candidates.push(...collectIntersections(subjectPolygon, clipPolygon));
-
-  const sorted = sortPointsRadially(candidates);
-  if (!sorted || !isValidPolygon(sorted)) return null;
-  return ensureCounterClockwise(sorted);
+  return [-(dy / len), dx / len];
 }
 
-function collectDifferencePolygon(subjectPolygon, maskPolygon) {
-  const candidates = [];
+function lineIntersection(p1, p2, p3, p4) {
+  const x1 = p1[0];
+  const y1 = p1[1];
+  const x2 = p2[0];
+  const y2 = p2[1];
+  const x3 = p3[0];
+  const y3 = p3[1];
+  const x4 = p4[0];
+  const y4 = p4[1];
 
-  for (const point of subjectPolygon) {
-    if (!pointInPolygon(point, maskPolygon)) candidates.push(point);
-  }
+  const denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
+  if (Math.abs(denominator) < 1e-9) return null;
 
-  candidates.push(...collectIntersections(subjectPolygon, maskPolygon));
+  const pre = (x1 * y2) - (y1 * x2);
+  const post = (x3 * y4) - (y3 * x4);
 
-  const sorted = sortPointsRadially(candidates);
-  if (!sorted || !isValidPolygon(sorted)) return null;
-  return ensureCounterClockwise(sorted);
+  const x = ((pre * (x3 - x4)) - ((x1 - x2) * post)) / denominator;
+  const y = ((pre * (y3 - y4)) - ((y1 - y2) * post)) / denominator;
+
+  return [roundPoint(x), roundPoint(y)];
 }
 
 function insetPolygon(points, insetDistance) {
-  const polygon = ensureCounterClockwise(points);
-  const [cx, cy] = centroid(polygon);
+  const polygon = normalizePolygon(points);
+  if (!polygon) return null;
+  if (insetDistance <= 0) return polygon;
+
   const inset = [];
 
-  for (const [x, y] of polygon) {
-    const dx = cx - x;
-    const dy = cy - y;
-    const len = Math.hypot(dx, dy);
+  for (let i = 0; i < polygon.length; i += 1) {
+    const prev = polygon[(i - 1 + polygon.length) % polygon.length];
+    const curr = polygon[i];
+    const next = polygon[(i + 1) % polygon.length];
 
-    if (len <= insetDistance + 1) {
-      return null;
+    const n1 = inwardNormal(prev, curr);
+    const n2 = inwardNormal(curr, next);
+
+    const p1a = [prev[0] + (n1[0] * insetDistance), prev[1] + (n1[1] * insetDistance)];
+    const p1b = [curr[0] + (n1[0] * insetDistance), curr[1] + (n1[1] * insetDistance)];
+    const p2a = [curr[0] + (n2[0] * insetDistance), curr[1] + (n2[1] * insetDistance)];
+    const p2b = [next[0] + (n2[0] * insetDistance), next[1] + (n2[1] * insetDistance)];
+
+    let intersection = lineIntersection(p1a, p1b, p2a, p2b);
+
+    if (!intersection) {
+      const avgNx = (n1[0] + n2[0]) * 0.5;
+      const avgNy = (n1[1] + n2[1]) * 0.5;
+      const len = Math.hypot(avgNx, avgNy) || 1;
+      intersection = [
+        roundPoint(curr[0] + ((avgNx / len) * insetDistance)),
+        roundPoint(curr[1] + ((avgNy / len) * insetDistance))
+      ];
     }
 
-    const nx = x + ((dx / len) * insetDistance);
-    const ny = y + ((dy / len) * insetDistance);
-    inset.push([roundPoint(nx), roundPoint(ny)]);
+    inset.push(intersection);
   }
 
-  if (!isValidPolygon(inset)) return null;
-  return ensureCounterClockwise(inset);
+  return normalizePolygon(inset);
+}
+
+function findClosestVertexPair(outer, inner) {
+  let best = { outerIndex: 0, innerIndex: 0, distance: Infinity };
+
+  for (let i = 0; i < outer.length; i += 1) {
+    for (let j = 0; j < inner.length; j += 1) {
+      const d = distance(outer[i][0], outer[i][1], inner[j][0], inner[j][1]);
+      if (d < best.distance) {
+        best = { outerIndex: i, innerIndex: j, distance: d };
+      }
+    }
+  }
+
+  return best;
+}
+
+function rotatePolygon(points, startIndex) {
+  return [...points.slice(startIndex), ...points.slice(0, startIndex)];
 }
 
 function buildRingPolygon(outerPolygon, innerPolygon) {
   if (!outerPolygon && !innerPolygon) return null;
-  if (outerPolygon && !innerPolygon) return ensureCounterClockwise(outerPolygon);
+  if (outerPolygon && !innerPolygon) return normalizePolygon(outerPolygon);
 
-  const outer = ensureCounterClockwise(outerPolygon);
-  const inner = ensureCounterClockwise(innerPolygon).reverse();
+  const outer = normalizePolygon(outerPolygon);
+  const inner = normalizePolygon(innerPolygon);
+
+  if (!outer) return null;
+  if (!inner) return outer;
+
+  const pair = findClosestVertexPair(outer, inner);
+  const outerRotated = rotatePolygon(outer, pair.outerIndex);
+  const innerRotated = rotatePolygon(inner, pair.innerIndex).reverse();
 
   const ring = [
-    ...outer,
-    ...inner
+    ...outerRotated,
+    outerRotated[0],
+    innerRotated[0],
+    ...innerRotated,
+    innerRotated[0],
+    outerRotated[0]
   ];
 
-  if (!isValidPolygon(ring)) {
-    return ensureCounterClockwise(outer);
+  const cleaned = dedupeSequentialPoints(ring);
+  if (!isValidPolygon(cleaned)) {
+    return outer;
   }
 
-  return ensureCounterClockwise(ring);
+  return ensureCounterClockwise(cleaned);
 }
 
 function getPolygonBySourceName(name, coastlineModel, regionBoundariesById, watersById) {
@@ -326,12 +410,103 @@ function createInsetBandPolygon({
   return normalizePolygon(buildRingPolygon(outerPolygon, innerPolygon));
 }
 
+function isInsideHalfPlane(point, edgeStart, edgeEnd) {
+  const cross =
+    ((edgeEnd[0] - edgeStart[0]) * (point[1] - edgeStart[1])) -
+    ((edgeEnd[1] - edgeStart[1]) * (point[0] - edgeStart[0]));
+  return cross >= -1e-6;
+}
+
+function clipAgainstEdge(subjectPolygon, edgeStart, edgeEnd) {
+  const output = [];
+  if (!subjectPolygon.length) return output;
+
+  for (let i = 0; i < subjectPolygon.length; i += 1) {
+    const current = subjectPolygon[i];
+    const previous = subjectPolygon[(i - 1 + subjectPolygon.length) % subjectPolygon.length];
+    const currentInside = isInsideHalfPlane(current, edgeStart, edgeEnd);
+    const previousInside = isInsideHalfPlane(previous, edgeStart, edgeEnd);
+
+    if (currentInside) {
+      if (!previousInside) {
+        const hit = segmentIntersection(previous, current, edgeStart, edgeEnd);
+        if (hit) output.push(hit);
+      }
+      output.push(current);
+    } else if (previousInside) {
+      const hit = segmentIntersection(previous, current, edgeStart, edgeEnd);
+      if (hit) output.push(hit);
+    }
+  }
+
+  return output;
+}
+
 function clipPolygonToPolygon(subjectPolygon, clipPolygon) {
-  const subject = normalizePolygon(subjectPolygon);
+  let subject = normalizePolygon(subjectPolygon);
   const clip = normalizePolygon(clipPolygon);
 
   if (!subject || !clip) return null;
-  return normalizePolygon(collectIntersectionPolygon(subject, clip));
+
+  for (let i = 0; i < clip.length; i += 1) {
+    const edgeStart = clip[i];
+    const edgeEnd = clip[(i + 1) % clip.length];
+    subject = clipAgainstEdge(subject, edgeStart, edgeEnd);
+    subject = normalizePolygon(subject);
+    if (!subject) return null;
+  }
+
+  return subject;
+}
+
+function collectDifferencePolygon(subjectPolygon, maskPolygon) {
+  const subject = normalizePolygon(subjectPolygon);
+  const mask = normalizePolygon(maskPolygon);
+
+  if (!subject) return null;
+  if (!mask) return subject;
+
+  const intersections = collectIntersections(subject, mask);
+  const hasOutsideVertex = subject.some((point) => !pointInPolygon(point, mask));
+
+  if (intersections.length === 0 && hasOutsideVertex) {
+    return subject;
+  }
+
+  if (intersections.length === 0 && !hasOutsideVertex) {
+    return null;
+  }
+
+  const result = [];
+
+  for (let i = 0; i < subject.length; i += 1) {
+    const current = subject[i];
+    const next = subject[(i + 1) % subject.length];
+    const currentOutside = !pointInPolygon(current, mask);
+    const nextOutside = !pointInPolygon(next, mask);
+
+    if (currentOutside) {
+      result.push(current);
+    }
+
+    const hit = segmentIntersection(current, next, mask[0], mask[1]);
+    if (hit) {
+      result.push(hit);
+    }
+
+    if (currentOutside !== nextOutside) {
+      for (let j = 0; j < mask.length; j += 1) {
+        const m1 = mask[j];
+        const m2 = mask[(j + 1) % mask.length];
+        const edgeHit = segmentIntersection(current, next, m1, m2);
+        if (edgeHit) {
+          result.push(edgeHit);
+        }
+      }
+    }
+  }
+
+  return normalizePolygon(result);
 }
 
 function subtractMasks(subjectPolygon, masks = []) {
@@ -356,18 +531,6 @@ function subtractMasks(subjectPolygon, masks = []) {
   }
 
   return current;
-}
-
-function normalizePolygon(points) {
-  if (!Array.isArray(points) || points.length < 3) return null;
-
-  const cleaned = dedupePoints(points.map((point) => clonePoint(point, "normalizePolygon.point")));
-  if (cleaned.length < 3) return null;
-
-  const sorted = sortPointsRadially(cleaned);
-  if (!sorted || !isValidPolygon(sorted)) return null;
-
-  return ensureCounterClockwise(sorted);
 }
 
 export const geometryClippingEngine = Object.freeze({

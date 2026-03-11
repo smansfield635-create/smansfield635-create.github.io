@@ -11,6 +11,7 @@ const DATA_FILES = {
   stateEncodings: new URL("./data/state_encodings.json", import.meta.url),
   latticeMap: new URL("./data/lattice_encoding_map.json", import.meta.url),
   coastlines: new URL("./data/coastlines.json", import.meta.url),
+  coastalBlueprint: new URL("./data/coastal_blueprint.json", import.meta.url),
   regionBoundaries: new URL("./data/region_boundaries.json", import.meta.url),
   terrainPolygons: new URL("./data/terrain_polygons.json", import.meta.url),
   substratePolygons: new URL("./data/substrate_polygons.json", import.meta.url),
@@ -487,6 +488,162 @@ function validateMaritimeNetwork(maritimeNetworkRoot, encodingsById, regionsById
   };
 }
 
+function validateCoastalBlueprintRoot(coastalBlueprintRoot) {
+  assertRoot(coastalBlueprintRoot, "COASTAL_BLUEPRINT_v2");
+
+  if (!Array.isArray(coastalBlueprintRoot.coastalDomains) || coastalBlueprintRoot.coastalDomains.length === 0) {
+    throw new Error("Missing coastalDomains in COASTAL_BLUEPRINT_v2");
+  }
+
+  if (!coastalBlueprintRoot.materialStacks || typeof coastalBlueprintRoot.materialStacks !== "object") {
+    throw new Error("Missing materialStacks in COASTAL_BLUEPRINT_v2");
+  }
+
+  if (!coastalBlueprintRoot.coastalClasses || typeof coastalBlueprintRoot.coastalClasses !== "object") {
+    throw new Error("Missing coastalClasses in COASTAL_BLUEPRINT_v2");
+  }
+}
+
+function validateCoastalBlueprint(
+  coastalBlueprintRoot,
+  regionsById,
+  regionBoundariesById,
+  terrainPolygonsById,
+  substratePolygonsById,
+  generatedTerrainPolygonsById,
+  generatedSubstratePolygonsById
+) {
+  validateCoastalBlueprintRoot(coastalBlueprintRoot);
+
+  const coastalDomainsById = indexBy(coastalBlueprintRoot.coastalDomains, "domainId");
+
+  const materialStacks = {};
+  for (const [stackId, stackRows] of Object.entries(coastalBlueprintRoot.materialStacks)) {
+    if (typeof stackId !== "string" || stackId.length === 0) {
+      throw new Error("Invalid coastal blueprint stack key");
+    }
+    if (!Array.isArray(stackRows) || stackRows.length === 0) {
+      throw new Error(`Invalid coastal blueprint stack: ${stackId}`);
+    }
+    materialStacks[stackId] = Object.freeze([...stackRows]);
+  }
+
+  const coastalClasses = {};
+  for (const [classId, classRow] of Object.entries(coastalBlueprintRoot.coastalClasses)) {
+    if (typeof classId !== "string" || classId.length === 0) {
+      throw new Error("Invalid coastal blueprint class key");
+    }
+    if (!classRow || typeof classRow !== "object") {
+      throw new Error(`Invalid coastal blueprint class row: ${classId}`);
+    }
+    coastalClasses[classId] = Object.freeze({ classId, ...classRow });
+  }
+
+  const activeTerrainClassNames = new Set();
+  for (const row of terrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
+  for (const row of generatedTerrainPolygonsById.values()) activeTerrainClassNames.add(row.terrainClass);
+
+  const activeSubstrateClassNames = new Set();
+  for (const row of substratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
+  for (const row of generatedSubstratePolygonsById.values()) activeSubstrateClassNames.add(row.substrateClass);
+
+  for (const [stackId, stackRows] of Object.entries(materialStacks)) {
+    for (const classToken of stackRows) {
+      if (typeof classToken !== "string" || classToken.length === 0) {
+        throw new Error(`Invalid class token in coastal stack: ${stackId}`);
+      }
+      if (!coastalClasses[classToken]) {
+        throw new Error(`Missing coastal class ${classToken} referenced by stack ${stackId}`);
+      }
+    }
+  }
+
+  for (const coastalClass of Object.values(coastalClasses)) {
+    if (typeof coastalClass.targetClass !== "string" || coastalClass.targetClass.length === 0) {
+      throw new Error(`Invalid targetClass for coastal class: ${coastalClass.classId}`);
+    }
+
+    if (coastalClass.family !== "terrain" && coastalClass.family !== "substrate") {
+      throw new Error(`Invalid family for coastal class: ${coastalClass.classId}`);
+    }
+
+    if (typeof coastalClass.plantable !== "boolean") {
+      throw new Error(`Invalid plantable flag for coastal class: ${coastalClass.classId}`);
+    }
+
+    if (typeof coastalClass.status !== "string" || coastalClass.status.length === 0) {
+      throw new Error(`Invalid status for coastal class: ${coastalClass.classId}`);
+    }
+
+    if (coastalClass.status === "BOUND") {
+      if (coastalClass.family === "terrain" && !activeTerrainClassNames.has(coastalClass.targetClass)) {
+        throw new Error(`BOUND terrain coastal class target missing: ${coastalClass.targetClass}`);
+      }
+      if (coastalClass.family === "substrate" && !activeSubstrateClassNames.has(coastalClass.targetClass)) {
+        throw new Error(`BOUND substrate coastal class target missing: ${coastalClass.targetClass}`);
+      }
+    }
+
+    if (coastalClass.status === "NEW_CLASS_PENDING_BINDING") {
+      continue;
+    }
+  }
+
+  for (const domain of coastalDomainsById.values()) {
+    if (typeof domain.geometrySource !== "string" || domain.geometrySource.length === 0) {
+      throw new Error(`Invalid geometrySource for coastal domain: ${domain.domainId}`);
+    }
+    if (typeof domain.coastType !== "string" || domain.coastType.length === 0) {
+      throw new Error(`Invalid coastType for coastal domain: ${domain.domainId}`);
+    }
+    if (typeof domain.exposureClass !== "string" || domain.exposureClass.length === 0) {
+      throw new Error(`Invalid exposureClass for coastal domain: ${domain.domainId}`);
+    }
+    if (typeof domain.sedimentType !== "string" || domain.sedimentType.length === 0) {
+      throw new Error(`Invalid sedimentType for coastal domain: ${domain.domainId}`);
+    }
+    if (typeof domain.plantable !== "boolean") {
+      throw new Error(`Invalid plantable flag for coastal domain: ${domain.domainId}`);
+    }
+
+    if (!regionsById.has(domain.regionId) && !regionBoundariesById.has(domain.regionId)) {
+      throw new Error(`Missing coastal domain region reference: ${domain.regionId}`);
+    }
+
+    if (!materialStacks[domain.stackId]) {
+      throw new Error(`Missing coastal stack ${domain.stackId} for domain ${domain.domainId}`);
+    }
+
+    if (Array.isArray(domain.adjacentDomains)) {
+      for (const adjacentDomainId of domain.adjacentDomains) {
+        if (!coastalDomainsById.has(adjacentDomainId)) {
+          throw new Error(`Invalid adjacent coastal domain ${adjacentDomainId} for ${domain.domainId}`);
+        }
+      }
+    }
+  }
+
+  const scope = typeof coastalBlueprintRoot.scope === "string" && coastalBlueprintRoot.scope.length > 0
+    ? coastalBlueprintRoot.scope
+    : "harbor_baseline";
+
+  const authority = typeof coastalBlueprintRoot.authority === "string" && coastalBlueprintRoot.authority.length > 0
+    ? coastalBlueprintRoot.authority
+    : "COASTAL_BLUEPRINT_V2_HARBOR_BASELINE";
+
+  const notes = typeof coastalBlueprintRoot.notes === "string" ? coastalBlueprintRoot.notes : "";
+
+  return {
+    version: coastalBlueprintRoot.version,
+    scope,
+    authority,
+    notes,
+    coastalDomainsById,
+    materialStacks: freezeObjectTree(materialStacks),
+    coastalClasses: freezeObjectTree(coastalClasses)
+  };
+}
+
 function validateCrossReferences(data) {
   const {
     regionsById,
@@ -573,8 +730,8 @@ function regularPolygon(cx, cy, radius, sides, rotation = -Math.PI / 2) {
   for (let i = 0; i < sides; i += 1) {
     const angle = rotation + ((Math.PI * 2 * i) / sides);
     points.push([
-      roundPoint(cx + Math.cos(angle) * radius),
-      roundPoint(cy + Math.sin(angle) * radius)
+      roundPoint(cx + (Math.cos(angle) * radius)),
+      roundPoint(cy + (Math.sin(angle) * radius))
     ]);
   }
   return points;
@@ -585,8 +742,8 @@ function ellipsePolygon(cx, cy, radiusX, radiusY, segments = 16) {
   for (let i = 0; i < segments; i += 1) {
     const angle = -Math.PI / 2 + ((Math.PI * 2 * i) / segments);
     points.push([
-      roundPoint(cx + Math.cos(angle) * radiusX),
-      roundPoint(cy + Math.sin(angle) * radiusY)
+      roundPoint(cx + (Math.cos(angle) * radiusX)),
+      roundPoint(cy + (Math.sin(angle) * radiusY))
     ]);
   }
   return points;
@@ -706,6 +863,7 @@ export async function loadWorldKernel() {
     stateEncodings,
     latticeMap,
     coastlines,
+    coastalBlueprint,
     regionBoundaries,
     terrainPolygons,
     substratePolygons,
@@ -726,6 +884,7 @@ export async function loadWorldKernel() {
     readJson(DATA_FILES.stateEncodings),
     readJson(DATA_FILES.latticeMap),
     readJson(DATA_FILES.coastlines),
+    readJson(DATA_FILES.coastalBlueprint),
     readJson(DATA_FILES.regionBoundaries),
     readJson(DATA_FILES.terrainPolygons),
     readJson(DATA_FILES.substratePolygons),
@@ -753,6 +912,7 @@ export async function loadWorldKernel() {
   validateTemplateLibrary(terrainTemplates, "TERRAIN_TEMPLATE_LIBRARY_v1", "templates");
   validateTemplateLibrary(substrateTemplates, "SUBSTRATE_TEMPLATE_LIBRARY_v1", "templates");
   validateTemplateLibrary(regionTemplates, "REGION_TEMPLATE_LIBRARY_v1", "templates");
+  validateCoastalBlueprintRoot(coastalBlueprint);
 
   const regionsById = indexBy(regions.regionRows, "regionId");
   const pathsById = indexBy(paths.pathRows, "pathId");
@@ -831,6 +991,16 @@ export async function loadWorldKernel() {
     substrateTemplatesById
   );
 
+  const validatedCoastalBlueprint = validateCoastalBlueprint(
+    coastalBlueprint,
+    regionsById,
+    regionBoundariesById,
+    terrainPolygonsById,
+    substratePolygonsById,
+    generatedTerrainPolygonsById,
+    generatedSubstratePolygonsById
+  );
+
   const kernel = {
     worldMeta: Object.freeze({
       worldId: regions.worldId,
@@ -846,6 +1016,15 @@ export async function loadWorldKernel() {
     diamondCellsById,
     graphRows,
     coastlineModel: freezeObjectTree(coastlineModel),
+    coastalBlueprint: freezeObjectTree({
+      version: validatedCoastalBlueprint.version,
+      scope: validatedCoastalBlueprint.scope,
+      authority: validatedCoastalBlueprint.authority,
+      notes: validatedCoastalBlueprint.notes,
+      coastalDomainsById: validatedCoastalBlueprint.coastalDomainsById,
+      materialStacks: validatedCoastalBlueprint.materialStacks,
+      coastalClasses: validatedCoastalBlueprint.coastalClasses
+    }),
     harborNavigationGraph: freezeObjectTree({
       graphMeta: harborNavigationGraph.graphMeta,
       navigationNodesById: harborNavigation.navigationNodesById,
@@ -929,6 +1108,28 @@ export async function loadWorldKernel() {
       },
       getGeneratedSubstrateForRegion(regionId) {
         return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
+      },
+      getCoastalDomain(domainId) {
+        return kernel.coastalBlueprint.coastalDomainsById.get(domainId) ?? null;
+      },
+      getCoastalStack(stackId) {
+        return kernel.coastalBlueprint.materialStacks[stackId] ?? null;
+      },
+      getCoastalClass(classId) {
+        return kernel.coastalBlueprint.coastalClasses[classId] ?? null;
+      },
+      getCoastalDomains() {
+        return [...kernel.coastalBlueprint.coastalDomainsById.values()];
+      },
+      getCoastalDomainsByRegion(regionId) {
+        return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.regionId === regionId);
+      },
+      getPlantableCoastalDomains() {
+        return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.plantable === true);
+      },
+      getCoastalClassesByFamily(family) {
+        if (family !== "terrain" && family !== "substrate") return [];
+        return Object.values(kernel.coastalBlueprint.coastalClasses).filter((coastalClass) => coastalClass.family === family);
       },
       getHarborNavNode(navNodeId) {
         return harborNavigation.navigationNodesById.get(navNodeId) ?? null;
@@ -1054,6 +1255,16 @@ export async function loadWorldKernel() {
           encodingsById,
           regionsById,
           harborNavigation.navigationNodesById
+        );
+
+        validateCoastalBlueprint(
+          coastalBlueprint,
+          regionsById,
+          regionBoundariesById,
+          terrainPolygonsById,
+          substratePolygonsById,
+          generatedTerrainPolygonsById,
+          generatedSubstratePolygonsById
         );
 
         for (const row of generatedTerrainPolygonsById.values()) {

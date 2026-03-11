@@ -162,13 +162,6 @@ function firstString(...values) {
   return "";
 }
 
-function firstPolygon(...values) {
-  for (const value of values) {
-    if (Array.isArray(value) && value.length >= 3 && Array.isArray(value[0])) return value;
-  }
-  return null;
-}
-
 function collectMapValues(candidate) {
   if (!candidate) return [];
   if (candidate instanceof Map) return [...candidate.values()];
@@ -187,58 +180,77 @@ function classifyVegetationProfile(zone) {
   ].join(" ").toLowerCase();
 
   if (label.includes("market")) {
-    return { shrubs: 8, grass: 2, trees: 0, inset: 16, coastBias: 0.2 };
+    return { shrubs: 8, grass: 2, trees: 0, inset: 16 };
   }
 
   if (label.includes("summit") || label.includes("plaza") || label.includes("gate")) {
-    return { shrubs: 4, grass: 1, trees: 0, inset: 18, coastBias: 0.1 };
+    return { shrubs: 4, grass: 1, trees: 0, inset: 18 };
   }
 
   if (label.includes("harbor") || label.includes("village")) {
-    return { shrubs: 18, grass: 7, trees: 3, inset: 18, coastBias: 0.4 };
+    return { shrubs: 18, grass: 7, trees: 3, inset: 18 };
   }
 
   if (label.includes("basin")) {
-    return { shrubs: 22, grass: 12, trees: 2, inset: 16, coastBias: 0.35 };
+    return { shrubs: 22, grass: 12, trees: 2, inset: 16 };
   }
 
   if (label.includes("coast") || label.includes("shore")) {
-    return { shrubs: 20, grass: 10, trees: 2, inset: 14, coastBias: 0.55 };
+    return { shrubs: 20, grass: 10, trees: 2, inset: 14 };
   }
 
-  return { shrubs: 12, grass: 6, trees: 1, inset: 16, coastBias: 0.3 };
+  return { shrubs: 12, grass: 6, trees: 1, inset: 16 };
 }
 
 function collectVegetationZones(kernel) {
   const zones = [];
   const seen = new Set();
 
-  const sources = [
-    kernel?.regionsById,
-    kernel?.districtsById,
-    kernel?.terrainPolygonsById,
-    kernel?.maritimeNetwork?.regionsById,
-    kernel?.maritimeNetwork?.districtsById
+  const explicitTerrain = [
+    ...collectMapValues(kernel?.terrainPolygonsById),
+    ...collectMapValues(kernel?.generatedTerrainPolygonsById)
   ];
 
-  for (const source of sources) {
-    for (const row of collectMapValues(source)) {
-      const polygonPoints = firstPolygon(row?.polygon, row?.footprint, row?.landPolygon);
-      if (!polygonPoints) continue;
+  for (const row of explicitTerrain) {
+    if (!row?.polygon?.length) continue;
 
-      const id = firstString(row?.id, row?.regionId, row?.key, row?.name, `zone_${zones.length}`);
-      if (seen.has(id)) continue;
+    const id = firstString(row.terrainId, row.regionId, `terrain_${zones.length}`);
+    if (seen.has(id)) continue;
+    seen.add(id);
 
-      seen.add(id);
-      zones.push({
-        id,
-        name: firstString(row?.name, row?.label, row?.title),
-        kind: firstString(row?.kind, row?.type, row?.regionType),
-        regionClass: firstString(row?.regionClass, row?.districtClass, row?.class),
-        terrainType: firstString(row?.terrainType, row?.surfaceType, row?.materialType),
-        polygon: polygonPoints
-      });
-    }
+    zones.push({
+      id,
+      name: firstString(row.terrainId, row.regionId),
+      kind: "terrain",
+      regionClass: firstString(row.regionId),
+      terrainType: firstString(row.terrainClass),
+      polygon: row.polygon
+    });
+  }
+
+  const regionLookup = kernel?.regionsById instanceof Map ? kernel.regionsById : null;
+  for (const row of collectMapValues(kernel?.regionBoundariesById)) {
+    if (!row?.polygon?.length) continue;
+
+    const region = regionLookup?.get(row.regionId) ?? null;
+    const regionLabel = firstString(
+      region?.displayName,
+      region?.name,
+      row.regionId
+    );
+
+    const id = `boundary_${row.regionId}`;
+    if (seen.has(id)) continue;
+    seen.add(id);
+
+    zones.push({
+      id,
+      name: regionLabel,
+      kind: "boundary",
+      regionClass: firstString(region?.regionClass, region?.templateId, row.regionId),
+      terrainType: firstString(region?.templateId, row.regionId),
+      polygon: row.polygon
+    });
   }
 
   return zones;
@@ -248,44 +260,37 @@ function collectNodeCenters(kernel) {
   const nodes = [];
   const seen = new Set();
 
-  const candidates = [
-    kernel?.nodesById,
-    kernel?.regionsById,
-    kernel?.districtsById,
-    kernel?.maritimeNetwork?.nodesById,
-    kernel?.maritimeNetwork?.regionsById,
-    kernel?.maritimeNetwork?.districtsById
-  ];
+  for (const row of collectMapValues(kernel?.harborNavigationGraph?.navigationNodesById)) {
+    if (!row) continue;
+    const point = Array.isArray(row.centerPoint) ? row.centerPoint : null;
+    if (!point || point.length < 2) continue;
 
-  for (const source of candidates) {
-    for (const row of collectMapValues(source)) {
-      if (!row) continue;
+    const x = point[0];
+    const y = point[1];
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
 
-      let x = Number.isFinite(row.x) ? row.x : null;
-      let y = Number.isFinite(row.y) ? row.y : null;
+    const id = firstString(row.navNodeId, `${x}:${y}`);
+    if (seen.has(id)) continue;
+    seen.add(id);
 
-      if ((x === null || y === null) && row.position) {
-        x = Number.isFinite(row.position.x) ? row.position.x : x;
-        y = Number.isFinite(row.position.y) ? row.position.y : y;
-      }
+    const radius = row.nodeClass === "transfer" || row.nodeClass === "mooring" ? 54 : 44;
+    nodes.push({ x, y, r: radius });
+  }
 
-      if ((x === null || y === null) && Array.isArray(row.center) && row.center.length >= 2) {
-        x = Number.isFinite(row.center[0]) ? row.center[0] : x;
-        y = Number.isFinite(row.center[1]) ? row.center[1] : y;
-      }
+  for (const row of collectMapValues(kernel?.maritimeNetwork?.seaNodesById)) {
+    if (!row) continue;
+    const point = Array.isArray(row.centerPoint) ? row.centerPoint : null;
+    if (!point || point.length < 2) continue;
 
-      if ((x === null || y === null) && Array.isArray(row.polygon) && row.polygon.length >= 3) {
-        [x, y] = centroid(row.polygon);
-      }
+    const x = point[0];
+    const y = point[1];
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
 
-      if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    const id = firstString(row.seaNodeId, `${x}:${y}`);
+    if (seen.has(id)) continue;
+    seen.add(id);
 
-      const id = firstString(row.id, row.regionId, row.key, `${x}:${y}`);
-      if (seen.has(id)) continue;
-      seen.add(id);
-
-      nodes.push({ x, y, r: 48 });
-    }
+    nodes.push({ x, y, r: 42 });
   }
 
   return nodes;
@@ -295,26 +300,43 @@ function collectRouteSegments(kernel) {
   const segments = [];
   const seen = new Set();
 
-  const candidates = [
-    kernel?.routesById,
-    kernel?.maritimeNetwork?.routesById,
-    kernel?.pathsById,
-    kernel?.maritimeNetwork?.pathsById
-  ];
+  for (const row of collectMapValues(kernel?.harborNavigationGraph?.navigationEdgesById)) {
+    const pts = Array.isArray(row?.centerline) ? row.centerline : null;
+    if (!pts || pts.length < 2) continue;
 
-  for (const source of candidates) {
-    for (const row of collectMapValues(source)) {
-      const pts = firstPolygon(row?.points, row?.polyline, row?.path, row?.curvePoints);
-      if (!pts || pts.length < 2) continue;
+    for (let i = 1; i < pts.length; i += 1) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      const key = `${a[0]},${a[1]}:${b[0]},${b[1]}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      segments.push({
+        ax: a[0],
+        ay: a[1],
+        bx: b[0],
+        by: b[1],
+        r: Math.max(14, Number.isFinite(row.nominalWidth) ? (row.nominalWidth * 0.9) : 18)
+      });
+    }
+  }
 
-      for (let i = 1; i < pts.length; i += 1) {
-        const a = pts[i - 1];
-        const b = pts[i];
-        const key = `${a[0]},${a[1]}:${b[0]},${b[1]}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        segments.push({ ax: a[0], ay: a[1], bx: b[0], by: b[1], r: 18 });
-      }
+  for (const row of collectMapValues(kernel?.maritimeNetwork?.seaRoutesById)) {
+    const pts = Array.isArray(row?.centerline) ? row.centerline : null;
+    if (!pts || pts.length < 2) continue;
+
+    for (let i = 1; i < pts.length; i += 1) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      const key = `sea:${a[0]},${a[1]}:${b[0]},${b[1]}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      segments.push({
+        ax: a[0],
+        ay: a[1],
+        bx: b[0],
+        by: b[1],
+        r: Math.max(12, Number.isFinite(row.nominalWidth) ? (row.nominalWidth * 0.7) : 16)
+      });
     }
   }
 

@@ -2,8 +2,32 @@
   "schemaVersion": "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
   "worldId": "nine_summits_island",
   "encodingFamilyVersion": "FOUR_PIXEL_STATE_ENCODING_MASTER_AUTHORITY_v1",
-  "version": 4,
+  "version": 5,
   "terrain": [
+    {
+      "terrainId": "harbor_outer_beach_west",
+      "terrainClass": "outer_beach_band",
+      "regionId": "harbor_peninsula",
+      "polygon": [[314,1008],[300,954],[304,900],[324,844],[360,786],[402,734],[438,702],[470,670],[418,734],[378,802],[352,866],[346,926],[360,980]]
+    },
+    {
+      "terrainId": "harbor_outer_beach_south",
+      "terrainClass": "outer_beach_band",
+      "regionId": "harbor_peninsula",
+      "polygon": [[314,1008],[360,980],[452,992],[516,974],[582,936],[650,886],[712,836],[736,844],[650,928],[574,982],[484,1014],[394,1018]]
+    },
+    {
+      "terrainId": "harbor_outer_beach_east",
+      "terrainClass": "outer_beach_band",
+      "regionId": "harbor_peninsula",
+      "polygon": [[736,844],[712,836],[764,784],[798,726],[806,662],[786,610],[820,612],[886,676],[906,748],[896,812],[856,872],[804,924]]
+    },
+    {
+      "terrainId": "harbor_outer_shore_shoulder_main",
+      "terrainClass": "outer_shore_shoulder",
+      "regionId": "harbor_peninsula",
+      "polygon": [[366,988],[354,934],[360,878],[384,818],[426,754],[476,694],[532,650],[598,622],[664,618],[724,634],[764,666],[776,716],[760,772],[722,824],[666,874],[598,924],[530,964],[462,986],[404,990]]
+    },
     {
       "terrainId": "harbor_lowland",
       "terrainClass": "coastal_lowland",

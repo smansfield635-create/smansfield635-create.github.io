@@ -1,0 +1,291 @@
+{
+  "schemaVersion": "COASTAL_BLUEPRINT_v2",
+  "worldId": "nine_summits_island",
+  "version": 1,
+  "scope": "harbor_baseline",
+  "authority": "COASTAL_BLUEPRINT_V2_HARBOR_BASELINE",
+  "notes": "Deterministic harbor-scoped coastal morphology grammar and organic seaboard marriage layer. Template authority for future continental coast systems.",
+
+  "coastalDomains": [
+    {
+      "domainId": "outer_west_exposed_beach",
+      "geometrySource": "coastlineOuter:segment_southwest_outer_coast",
+      "coastType": "exposed_beach",
+      "exposureClass": "moderate",
+      "sedimentType": "sand_gravel_mix",
+      "plantable": true,
+      "regionId": "harbor_peninsula",
+      "stackId": "EXPOSED_BEACH_STACK",
+      "adjacentDomains": [
+        "outer_south_sheltered_beach",
+        "outer_inland_shoulder"
+      ]
+    },
+    {
+      "domainId": "outer_south_sheltered_beach",
+      "geometrySource": "coastlineOuter:segment_south_harbor_approach",
+      "coastType": "sheltered_cove",
+      "exposureClass": "sheltered",
+      "sedimentType": "fine_sand",
+      "plantable": true,
+      "regionId": "harbor_peninsula",
+      "stackId": "SHELTERED_COVE_STACK",
+      "adjacentDomains": [
+        "outer_west_exposed_beach",
+        "outer_east_rock_shoulder",
+        "channel_transition_edge"
+      ]
+    },
+    {
+      "domainId": "outer_east_rock_shoulder",
+      "geometrySource": "coastlineOuter:segment_southeast_outer_shoulder",
+      "coastType": "rocky_shoulder",
+      "exposureClass": "moderate",
+      "sedimentType": "rock_gravel_mix",
+      "plantable": false,
+      "regionId": "harbor_peninsula",
+      "stackId": "ROCKY_SHOULDER_STACK",
+      "adjacentDomains": [
+        "outer_south_sheltered_beach",
+        "outer_inland_shoulder"
+      ]
+    },
+    {
+      "domainId": "outer_inland_shoulder",
+      "geometrySource": "harborPeninsula:outer_inland_edge_band",
+      "coastType": "raised_shoulder_transition",
+      "exposureClass": "moderate",
+      "sedimentType": "packed_soil_stone",
+      "plantable": true,
+      "regionId": "harbor_peninsula",
+      "stackId": "SHOULDER_TO_INLAND_STACK",
+      "adjacentDomains": [
+        "outer_west_exposed_beach",
+        "outer_east_rock_shoulder"
+      ]
+    },
+    {
+      "domainId": "inner_west_wet_margin",
+      "geometrySource": "harborBasin:west_inner_edge",
+      "coastType": "inner_wet_margin",
+      "exposureClass": "sheltered",
+      "sedimentType": "wet_sand_silt",
+      "plantable": true,
+      "regionId": "harbor_inner_shore_west",
+      "stackId": "INNER_WET_MARGIN_STACK",
+      "adjacentDomains": [
+        "basin_inner_edge",
+        "channel_transition_edge"
+      ]
+    },
+    {
+      "domainId": "inner_east_mixed_margin",
+      "geometrySource": "harborBasin:east_inner_edge",
+      "coastType": "inner_mixed_margin",
+      "exposureClass": "sheltered",
+      "sedimentType": "sand_gravel_mix",
+      "plantable": true,
+      "regionId": "harbor_inner_shore_east",
+      "stackId": "INNER_MIXED_MARGIN_STACK",
+      "adjacentDomains": [
+        "basin_inner_edge",
+        "channel_transition_edge"
+      ]
+    },
+    {
+      "domainId": "basin_inner_edge",
+      "geometrySource": "harborBasin:full_inner_perimeter",
+      "coastType": "protected_basin_edge",
+      "exposureClass": "sheltered",
+      "sedimentType": "fine_sand_silt",
+      "plantable": true,
+      "regionId": "harbor_basin",
+      "stackId": "BASIN_EDGE_STACK",
+      "adjacentDomains": [
+        "inner_west_wet_margin",
+        "inner_east_mixed_margin",
+        "channel_transition_edge"
+      ]
+    },
+    {
+      "domainId": "channel_transition_edge",
+      "geometrySource": "harborChannel:full_edge_band",
+      "coastType": "channel_transition",
+      "exposureClass": "exposed",
+      "sedimentType": "scoured_mixed_gravel",
+      "plantable": false,
+      "regionId": "harbor_channel",
+      "stackId": "CHANNEL_TRANSITION_STACK",
+      "adjacentDomains": [
+        "outer_south_sheltered_beach",
+        "inner_west_wet_margin",
+        "inner_east_mixed_margin",
+        "basin_inner_edge"
+      ]
+    }
+  ],
+
+  "materialStacks": {
+    "EXPOSED_BEACH_STACK": [
+      "seaward_edge",
+      "wet_margin",
+      "dry_margin",
+      "beach_band",
+      "shore_shoulder",
+      "inland_rise"
+    ],
+    "ROCKY_SHOULDER_STACK": [
+      "seaward_edge",
+      "rock_apron",
+      "rock_transition",
+      "shoulder_band",
+      "inland_rise"
+    ],
+    "SHELTERED_COVE_STACK": [
+      "wet_margin",
+      "dry_margin",
+      "sand_beach",
+      "low_shoulder",
+      "inland_lowland"
+    ],
+    "SHOULDER_TO_INLAND_STACK": [
+      "shore_shoulder",
+      "shoulder_band",
+      "inland_rise",
+      "inland_lowland"
+    ],
+    "INNER_WET_MARGIN_STACK": [
+      "shallow_edge",
+      "wet_margin",
+      "soft_transition",
+      "low_shoulder",
+      "inland_lowland"
+    ],
+    "INNER_MIXED_MARGIN_STACK": [
+      "shallow_edge",
+      "wet_margin",
+      "mixed_margin",
+      "low_shoulder",
+      "inland_lowland"
+    ],
+    "BASIN_EDGE_STACK": [
+      "shallow_edge",
+      "wet_margin",
+      "dry_margin",
+      "low_shoulder",
+      "inland_lowland"
+    ],
+    "CHANNEL_TRANSITION_STACK": [
+      "channel_edge",
+      "scoured_margin",
+      "rock_transition",
+      "shore_shoulder",
+      "inland_rise"
+    ]
+  },
+
+  "coastalClasses": {
+    "seaward_edge": {
+      "targetClass": "shallow_water_margin",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "shallow_edge": {
+      "targetClass": "shallow_water_margin",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "channel_edge": {
+      "targetClass": "shallow_water_margin",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "wet_margin": {
+      "targetClass": "wet_sand",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "dry_margin": {
+      "targetClass": "dry_sand",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "beach_band": {
+      "targetClass": "outer_beach_band",
+      "family": "terrain",
+      "plantable": false,
+      "status": "NEW_CLASS_PENDING_BINDING"
+    },
+    "sand_beach": {
+      "targetClass": "outer_beach_band",
+      "family": "terrain",
+      "plantable": false,
+      "status": "NEW_CLASS_PENDING_BINDING"
+    },
+    "shore_shoulder": {
+      "targetClass": "outer_shore_shoulder",
+      "family": "terrain",
+      "plantable": false,
+      "status": "NEW_CLASS_PENDING_BINDING"
+    },
+    "low_shoulder": {
+      "targetClass": "coastal_lowland",
+      "family": "terrain",
+      "plantable": true,
+      "status": "BOUND"
+    },
+    "shoulder_band": {
+      "targetClass": "harbor_edge_slope",
+      "family": "terrain",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "inland_rise": {
+      "targetClass": "inland_harbor_rise",
+      "family": "terrain",
+      "plantable": true,
+      "status": "BOUND"
+    },
+    "inland_lowland": {
+      "targetClass": "coastal_lowland",
+      "family": "terrain",
+      "plantable": true,
+      "status": "BOUND"
+    },
+    "rock_apron": {
+      "targetClass": "mixed_gravel",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "rock_transition": {
+      "targetClass": "bedrock_edge",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "soft_transition": {
+      "targetClass": "wet_sand",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "mixed_margin": {
+      "targetClass": "mixed_gravel",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    },
+    "scoured_margin": {
+      "targetClass": "mixed_gravel",
+      "family": "substrate",
+      "plantable": false,
+      "status": "BOUND"
+    }
+  }
+}

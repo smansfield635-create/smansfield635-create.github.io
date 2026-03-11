@@ -46,6 +46,22 @@ function roundRect(ctx, x, y, width, height, radius) {
 }
 
 function terrainStyle(terrainClass, ctx) {
+  if (terrainClass === "outer_beach_band") {
+    const gradient = ctx.createLinearGradient(260, 700, 860, 1020);
+    gradient.addColorStop(0, "rgba(244,228,186,0.96)");
+    gradient.addColorStop(0.48, "rgba(228,210,168,0.95)");
+    gradient.addColorStop(1, "rgba(204,186,146,0.96)");
+    return gradient;
+  }
+
+  if (terrainClass === "outer_shore_shoulder") {
+    const gradient = ctx.createLinearGradient(300, 650, 860, 980);
+    gradient.addColorStop(0, "rgba(210,198,156,0.92)");
+    gradient.addColorStop(0.52, "rgba(184,176,134,0.94)");
+    gradient.addColorStop(1, "rgba(156,154,116,0.96)");
+    return gradient;
+  }
+
   if (terrainClass === "coastal_lowland") {
     const gradient = ctx.createLinearGradient(260, 640, 780, 990);
     gradient.addColorStop(0, "rgba(236,222,186,0.96)");
@@ -285,8 +301,8 @@ function drawHarborCoastGeometry(ctx, kernel) {
   const coast = kernel?.coastlineModel;
   if (!coast) return;
 
-  fillPolygon(ctx, coast.harborPeninsula, "rgba(174,166,130,0.98)");
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(254,244,226,0.26)", 2.4);
+  fillPolygon(ctx, coast.harborPeninsula, "rgba(170,162,126,0.28)");
+  strokePolygon(ctx, coast.harborPeninsula, "rgba(254,244,226,0.18)", 1.8);
 
   if (Array.isArray(coast.reefZones)) {
     for (const reefPolygon of coast.reefZones) {
@@ -297,12 +313,12 @@ function drawHarborCoastGeometry(ctx, kernel) {
 
   if (Array.isArray(coast.firmnessZones)) {
     for (const zone of coast.firmnessZones) {
-      fillPolygon(ctx, zone.polygon, "rgba(220,210,176,0.05)");
+      fillPolygon(ctx, zone.polygon, "rgba(220,210,176,0.04)");
     }
   }
 
-  strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.30)", 1.9);
-  strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.18)", 1.3);
+  strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.28)", 1.7);
+  strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.16)", 1.2);
 }
 
 function drawExposureZones(ctx, kernel) {
@@ -331,11 +347,7 @@ function drawBasinDepthTint(ctx, kernel) {
 
   polygon(ctx, coast.harborBasin);
 
-  const gradient = ctx.createRadialGradient(
-    590, 760, 16,
-    590, 760, 240
-  );
-
+  const gradient = ctx.createRadialGradient(590, 760, 16, 590, 760, 240);
   gradient.addColorStop(0, "rgba(56,114,156,0.26)");
   gradient.addColorStop(0.42, "rgba(44,98,140,0.14)");
   gradient.addColorStop(1, "rgba(28,72,116,0.02)");
@@ -354,12 +366,12 @@ function drawWaterRows(ctx, rows) {
 function drawWaterRipples(ctx, tick) {
   const pulse = 0.5 + 0.5 * Math.sin(tick * 0.05);
   const lanes = [
-    { x: 280, y: 724, w: 200, h: 32, a: 0.08 + pulse * 0.02 },
-    { x: 426, y: 754, w: 210, h: 36, a: 0.07 + pulse * 0.02 },
-    { x: 600, y: 738, w: 180, h: 32, a: 0.08 + pulse * 0.02 },
-    { x: 790, y: 714, w: 170, h: 30, a: 0.07 + pulse * 0.02 },
-    { x: 808, y: 828, w: 160, h: 28, a: 0.05 + pulse * 0.01 },
-    { x: 182, y: 842, w: 142, h: 26, a: 0.05 + pulse * 0.01 }
+    { x: 280, y: 724, w: 200, h: 32, a: 0.08 + (pulse * 0.02) },
+    { x: 426, y: 754, w: 210, h: 36, a: 0.07 + (pulse * 0.02) },
+    { x: 600, y: 738, w: 180, h: 32, a: 0.08 + (pulse * 0.02) },
+    { x: 790, y: 714, w: 170, h: 30, a: 0.07 + (pulse * 0.02) },
+    { x: 808, y: 828, w: 160, h: 28, a: 0.05 + (pulse * 0.01) },
+    { x: 182, y: 842, w: 142, h: 26, a: 0.05 + (pulse * 0.01) }
   ];
 
   ctx.save();
@@ -375,26 +387,11 @@ function drawWaterRipples(ctx, tick) {
   ctx.restore();
 }
 
-function drawBeachBands(ctx) {
-  const bands = [
-    { x: 350, y: 820, rx: 122, ry: 42, fill: "rgba(236,218,174,0.14)" },
-    { x: 474, y: 846, rx: 136, ry: 46, fill: "rgba(222,202,160,0.12)" },
-    { x: 634, y: 820, rx: 124, ry: 40, fill: "rgba(236,218,174,0.12)" }
-  ];
-
-  for (const band of bands) {
-    ctx.beginPath();
-    ctx.ellipse(band.x, band.y, band.rx, band.ry, 0, 0, Math.PI * 2);
-    ctx.fillStyle = band.fill;
-    ctx.fill();
-  }
-}
-
 function drawWetEdgeHighlights(ctx, kernel) {
   const coast = kernel?.coastlineModel;
   if (!coast) return;
 
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,244,212,0.10)", 7);
+  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,244,212,0.06)", 3.2);
   strokePolygon(ctx, coast.harborBasin, "rgba(168,214,236,0.10)", 5);
   strokePolygon(ctx, coast.harborChannel, "rgba(182,224,244,0.08)", 4);
 }
@@ -708,9 +705,9 @@ function drawTraversalPaths(ctx, kernel, projection, destination, pulse) {
     ctx.strokeStyle = "rgba(222,198,146,0.22)";
     ctx.stroke();
 
-    const isDestinationPath = destination && projection && destination.kind === "region" && (
-      path.fromRegionId === projection.regionId && path.toRegionId === destination.regionId
-    );
+    const isDestinationPath = destination && projection && destination.kind === "region"
+      && path.fromRegionId === projection.regionId
+      && path.toRegionId === destination.regionId;
 
     if (isDestinationPath) {
       polyline(ctx, path.centerline);
@@ -731,7 +728,7 @@ function drawHarborChartAccents(ctx, kernel) {
     strokePolygon(ctx, coast.coastlineOuter, "rgba(255,255,255,0.04)", 4);
   }
 
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,248,214,0.10)", 3);
+  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,248,214,0.08)", 2.4);
 
   if (kernel?.regionBoundariesById) {
     const west = kernel.regionBoundariesById.get("harbor_inner_shore_west");
@@ -947,7 +944,6 @@ export function createGroundRenderer() {
     drawWaterRows(ctx, manualWaterRows);
     drawWaterRipples(ctx, tick);
     drawSeaRoutes(ctx, kernel, pulse, traversalMode);
-    drawBeachBands(ctx);
     drawWetEdgeHighlights(ctx, kernel);
     drawFoamBands(ctx);
     drawTerrainRows(ctx, manualTerrainRows);

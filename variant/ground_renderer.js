@@ -45,6 +45,62 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.closePath();
 }
 
+function terrainPriority(terrainClass) {
+  if (terrainClass === "coastal_lowland") return 10;
+  if (terrainClass === "outer_beach_band") return 20;
+  if (terrainClass === "outer_shore_shoulder") return 30;
+  if (terrainClass === "harbor_edge_slope") return 40;
+  if (terrainClass === "inland_harbor_rise") return 50;
+  if (terrainClass === "cliff_candidate_edge") return 60;
+  if (terrainClass === "dockside_hardscape") return 70;
+  if (terrainClass === "market_hardscape") return 80;
+  if (terrainClass === "market_edge_transition") return 90;
+  if (terrainClass === "market_inner_ground") return 100;
+  if (terrainClass === "basin_floor") return 110;
+  if (terrainClass === "basin_edge_slope") return 120;
+  if (terrainClass === "basin_rise_transition") return 130;
+  if (terrainClass === "ridge_spine") return 140;
+  if (terrainClass === "ridge_slope") return 150;
+  if (terrainClass === "summit_platform") return 160;
+  return 1000;
+}
+
+function substratePriority(substrateClass) {
+  if (substrateClass === "shallow_water_margin") return 10;
+  if (substrateClass === "wet_sand") return 20;
+  if (substrateClass === "dry_sand") return 30;
+  if (substrateClass === "outer_beach_band") return 40;
+  if (substrateClass === "mixed_gravel") return 50;
+  if (substrateClass === "bedrock_edge") return 60;
+  if (substrateClass === "dock_hard_surface") return 70;
+  if (substrateClass === "market_stone_surface") return 80;
+  if (substrateClass === "market_dust_surface") return 90;
+  if (substrateClass === "basin_packed_earth") return 100;
+  if (substrateClass === "basin_moist_margin") return 110;
+  if (substrateClass === "basin_stone_edge") return 120;
+  if (substrateClass === "ridge_stone") return 130;
+  if (substrateClass === "summit_stone") return 140;
+  return 1000;
+}
+
+function sortTerrainRows(rows) {
+  return [...rows].sort((a, b) => {
+    const pa = terrainPriority(a.terrainClass);
+    const pb = terrainPriority(b.terrainClass);
+    if (pa !== pb) return pa - pb;
+    return String(a.terrainId).localeCompare(String(b.terrainId));
+  });
+}
+
+function sortSubstrateRows(rows) {
+  return [...rows].sort((a, b) => {
+    const pa = substratePriority(a.substrateClass);
+    const pb = substratePriority(b.substrateClass);
+    if (pa !== pb) return pa - pb;
+    return String(a.substrateId).localeCompare(String(b.substrateId));
+  });
+}
+
 function terrainStyle(terrainClass, ctx) {
   if (terrainClass === "outer_beach_band") {
     const gradient = ctx.createLinearGradient(260, 700, 860, 1020);
@@ -183,6 +239,13 @@ function substrateStyle(substrateClass, ctx) {
     return gradient;
   }
 
+  if (substrateClass === "outer_beach_band") {
+    const gradient = ctx.createLinearGradient(300, 680, 820, 980);
+    gradient.addColorStop(0, "rgba(222,204,162,0.90)");
+    gradient.addColorStop(1, "rgba(192,174,136,0.92)");
+    return gradient;
+  }
+
   if (substrateClass === "mixed_gravel") {
     const gradient = ctx.createLinearGradient(420, 640, 760, 840);
     gradient.addColorStop(0, "rgba(164,158,142,0.90)");
@@ -301,8 +364,8 @@ function drawHarborCoastGeometry(ctx, kernel) {
   const coast = kernel?.coastlineModel;
   if (!coast) return;
 
-  fillPolygon(ctx, coast.harborPeninsula, "rgba(170,162,126,0.28)");
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(254,244,226,0.18)", 1.8);
+  fillPolygon(ctx, coast.harborPeninsula, "rgba(170,162,126,0.18)");
+  strokePolygon(ctx, coast.harborPeninsula, "rgba(254,244,226,0.14)", 1.6);
 
   if (Array.isArray(coast.reefZones)) {
     for (const reefPolygon of coast.reefZones) {
@@ -317,8 +380,8 @@ function drawHarborCoastGeometry(ctx, kernel) {
     }
   }
 
-  strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.28)", 1.7);
-  strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.16)", 1.2);
+  strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.22)", 1.4);
+  strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.14)", 1.1);
 }
 
 function drawExposureZones(ctx, kernel) {
@@ -354,6 +417,18 @@ function drawBasinDepthTint(ctx, kernel) {
 
   ctx.fillStyle = gradient;
   ctx.fill();
+}
+
+function getActiveTerrainRows(kernel) {
+  return kernel?.terrainPolygonsById ? sortTerrainRows([...kernel.terrainPolygonsById.values()]) : [];
+}
+
+function getActiveSubstrateRows(kernel) {
+  return kernel?.substratePolygonsById ? sortSubstrateRows([...kernel.substratePolygonsById.values()]) : [];
+}
+
+function getManualWaterRows(kernel) {
+  return kernel?.watersById ? [...kernel.watersById.values()] : [];
 }
 
 function drawWaterRows(ctx, rows) {
@@ -416,15 +491,6 @@ function drawFoamBands(ctx) {
   ctx.restore();
 }
 
-function drawRegionBoundaries(ctx, kernel) {
-  if (!kernel?.regionBoundariesById) return;
-
-  for (const boundary of kernel.regionBoundariesById.values()) {
-    if (boundary.parentRegion !== "harbor") continue;
-    strokePolygon(ctx, boundary.polygon, "rgba(246,240,226,0.08)", 1);
-  }
-}
-
 function drawTerrainRows(ctx, rows) {
   for (const terrain of rows) {
     fillPolygon(ctx, terrain.polygon, terrainStyle(terrain.terrainClass, ctx));
@@ -436,6 +502,28 @@ function drawSubstrateRows(ctx, rows) {
   for (const substrate of rows) {
     fillPolygon(ctx, substrate.polygon, substrateStyle(substrate.substrateClass, ctx));
     strokePolygon(ctx, substrate.polygon, "rgba(255,248,236,0.05)", 0.9);
+  }
+}
+
+function drawBeachReadBoost(ctx, substrateRows, terrainRows) {
+  for (const substrate of substrateRows) {
+    if (
+      substrate.substrateClass === "wet_sand" ||
+      substrate.substrateClass === "dry_sand" ||
+      substrate.substrateClass === "outer_beach_band"
+    ) {
+      strokePolygon(ctx, substrate.polygon, "rgba(255,244,216,0.12)", 1.15);
+    }
+
+    if (substrate.substrateClass === "shallow_water_margin") {
+      strokePolygon(ctx, substrate.polygon, "rgba(214,242,255,0.14)", 1.25);
+    }
+  }
+
+  for (const terrain of terrainRows) {
+    if (terrain.terrainClass === "outer_beach_band" || terrain.terrainClass === "outer_shore_shoulder") {
+      strokePolygon(ctx, terrain.polygon, "rgba(248,232,196,0.10)", 1.1);
+    }
   }
 }
 
@@ -456,34 +544,8 @@ function drawTerrainGrain(ctx) {
   ctx.restore();
 }
 
-function getManualRegionIds(rowsMap) {
-  const regionIds = new Set();
-  if (!rowsMap) return regionIds;
-
-  for (const row of rowsMap.values()) {
-    if (row?.regionId) regionIds.add(row.regionId);
-  }
-
-  return regionIds;
-}
-
-function getGeneratedRowsForTemplateOnlyRegions(generatedMap, manualMap) {
-  if (!generatedMap) return [];
-  const manualRegionIds = getManualRegionIds(manualMap);
-  const rows = [];
-
-  for (const row of generatedMap.values()) {
-    if (!manualRegionIds.has(row.regionId)) {
-      rows.push(row);
-    }
-  }
-
-  return rows;
-}
-
 function getDockTransferIds(kernel, activeHarborInstanceId) {
   if (!activeHarborInstanceId) return new Set();
-
   const transfers = kernel?.helpers?.getHarborDockTransfers?.(activeHarborInstanceId) ?? [];
   return new Set(transfers.map((transfer) => transfer.dockId));
 }
@@ -497,21 +559,13 @@ function drawSeaHazards(ctx, kernel, traversalMode) {
     let stroke = "rgba(140,196,224,0.08)";
 
     if (hazard.hazardClass === "reef") {
-      fill = traversalMode === "boat"
-        ? "rgba(126,196,176,0.10)"
-        : "rgba(126,196,176,0.05)";
-      stroke = traversalMode === "boat"
-        ? "rgba(196,244,226,0.16)"
-        : "rgba(196,244,226,0.08)";
+      fill = traversalMode === "boat" ? "rgba(126,196,176,0.10)" : "rgba(126,196,176,0.05)";
+      stroke = traversalMode === "boat" ? "rgba(196,244,226,0.16)" : "rgba(196,244,226,0.08)";
     }
 
     if (hazard.hazardClass === "current") {
-      fill = traversalMode === "boat"
-        ? "rgba(110,156,220,0.08)"
-        : "rgba(110,156,220,0.04)";
-      stroke = traversalMode === "boat"
-        ? "rgba(198,226,255,0.14)"
-        : "rgba(198,226,255,0.08)";
+      fill = traversalMode === "boat" ? "rgba(110,156,220,0.08)" : "rgba(110,156,220,0.04)";
+      stroke = traversalMode === "boat" ? "rgba(198,226,255,0.14)" : "rgba(198,226,255,0.08)";
     }
 
     fillPolygon(ctx, hazard.polygon, fill);
@@ -842,6 +896,15 @@ function drawHarborProps(ctx) {
   ctx.restore();
 }
 
+function drawRegionBoundaries(ctx, kernel) {
+  if (!kernel?.regionBoundariesById) return;
+
+  for (const boundary of kernel.regionBoundariesById.values()) {
+    if (boundary.parentRegion !== "harbor") continue;
+    strokePolygon(ctx, boundary.polygon, "rgba(246,240,226,0.08)", 1);
+  }
+}
+
 function drawRegionPads(ctx, kernel) {
   if (!kernel?.regionsById) return;
 
@@ -920,17 +983,9 @@ export function createGroundRenderer() {
 
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
 
-    const manualTerrainRows = kernel?.terrainPolygonsById ? [...kernel.terrainPolygonsById.values()] : [];
-    const manualSubstrateRows = kernel?.substratePolygonsById ? [...kernel.substratePolygonsById.values()] : [];
-    const manualWaterRows = kernel?.watersById ? [...kernel.watersById.values()] : [];
-    const generatedTerrainRows = getGeneratedRowsForTemplateOnlyRegions(
-      kernel?.generatedTerrainPolygonsById,
-      kernel?.terrainPolygonsById
-    );
-    const generatedSubstrateRows = getGeneratedRowsForTemplateOnlyRegions(
-      kernel?.generatedSubstratePolygonsById,
-      kernel?.substratePolygonsById
-    );
+    const activeTerrainRows = getActiveTerrainRows(kernel);
+    const activeSubstrateRows = getActiveSubstrateRows(kernel);
+    const manualWaterRows = getManualWaterRows(kernel);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
@@ -946,10 +1001,11 @@ export function createGroundRenderer() {
     drawSeaRoutes(ctx, kernel, pulse, traversalMode);
     drawWetEdgeHighlights(ctx, kernel);
     drawFoamBands(ctx);
-    drawTerrainRows(ctx, manualTerrainRows);
-    drawTerrainRows(ctx, generatedTerrainRows);
-    drawSubstrateRows(ctx, manualSubstrateRows);
-    drawSubstrateRows(ctx, generatedSubstrateRows);
+
+    drawTerrainRows(ctx, activeTerrainRows);
+    drawSubstrateRows(ctx, activeSubstrateRows);
+    drawBeachReadBoost(ctx, activeSubstrateRows, activeTerrainRows);
+
     drawTerrainGrain(ctx);
     drawStructureShadows(ctx, kernel);
     drawRegionBoundaries(ctx, kernel);

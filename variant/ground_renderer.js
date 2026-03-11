@@ -306,6 +306,37 @@ function getDockTransferIds(kernel, activeHarborInstanceId) {
   return new Set(transfers.map((transfer) => transfer.dockId));
 }
 
+function drawSeaHazards(ctx, kernel, traversalMode) {
+  const seaHazardsById = kernel?.maritimeNetwork?.seaHazardsById;
+  if (!seaHazardsById) return;
+
+  for (const hazard of seaHazardsById.values()) {
+    let fill = "rgba(86,132,164,0.06)";
+    let stroke = "rgba(140,196,224,0.10)";
+
+    if (hazard.hazardClass === "reef") {
+      fill = traversalMode === "boat"
+        ? "rgba(126,196,176,0.10)"
+        : "rgba(126,196,176,0.06)";
+      stroke = traversalMode === "boat"
+        ? "rgba(196,244,226,0.16)"
+        : "rgba(196,244,226,0.10)";
+    }
+
+    if (hazard.hazardClass === "current") {
+      fill = traversalMode === "boat"
+        ? "rgba(110,156,220,0.08)"
+        : "rgba(110,156,220,0.05)";
+      stroke = traversalMode === "boat"
+        ? "rgba(198,226,255,0.14)"
+        : "rgba(198,226,255,0.08)";
+    }
+
+    fillPolygon(ctx, hazard.polygon, fill);
+    strokePolygon(ctx, hazard.polygon, stroke, 1);
+  }
+}
+
 function drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode) {
   const harborGraph = kernel?.harborNavigationGraph;
   if (!harborGraph?.navigationEdgesById) return;
@@ -327,6 +358,31 @@ function drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode) {
     ctx.strokeStyle = traversalMode === "boat"
       ? `rgba(236,250,255,${0.30 + (pulse * 0.14)})`
       : `rgba(220,246,255,${0.14 + (pulse * 0.08)})`;
+    ctx.stroke();
+  }
+}
+
+function drawSeaRoutes(ctx, kernel, pulse, traversalMode) {
+  const seaRoutesById = kernel?.maritimeNetwork?.seaRoutesById;
+  if (!seaRoutesById) return;
+
+  for (const route of seaRoutesById.values()) {
+    polyline(ctx, route.centerline);
+    ctx.lineWidth = Math.max(5, (route.nominalWidth || 24) * 0.18);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? `rgba(104,186,234,${0.22 + (pulse * 0.10)})`
+      : "rgba(88,168,214,0.10)";
+    ctx.stroke();
+
+    polyline(ctx, route.centerline);
+    ctx.lineWidth = Math.max(1.5, (route.nominalWidth || 24) * 0.05);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? `rgba(228,248,255,${0.34 + (pulse * 0.14)})`
+      : `rgba(214,240,255,${0.12 + (pulse * 0.06)})`;
     ctx.stroke();
   }
 }
@@ -410,6 +466,42 @@ function drawHarborNavigationNodes(ctx, runtime) {
       ctx.lineWidth = 1.2;
       ctx.stroke();
     }
+  }
+}
+
+function drawSeaNodes(ctx, runtime) {
+  const { kernel, traversalMode, selection, destination, tick } = runtime;
+  const seaNodesById = kernel?.maritimeNetwork?.seaNodesById;
+  if (!seaNodesById) return;
+
+  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+
+  for (const node of seaNodesById.values()) {
+    const [x, y] = node.centerPoint;
+    const isSelected = selection?.kind === "sea_node" && selection.seaNodeId === node.seaNodeId;
+    const isDestination = destination?.kind === "sea_node" && destination.seaNodeId === node.seaNodeId;
+
+    if (isSelected || isDestination) {
+      ctx.beginPath();
+      ctx.arc(x, y, 15 + (pulse * 2), 0, Math.PI * 2);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? `rgba(188,240,255,${0.42 + (pulse * 0.18)})`
+        : "rgba(188,240,255,0.16)";
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = traversalMode === "boat"
+      ? "rgba(174,226,255,0.76)"
+      : "rgba(154,204,236,0.40)";
+    ctx.fill();
+    ctx.strokeStyle = traversalMode === "boat"
+      ? "rgba(242,250,255,0.28)"
+      : "rgba(242,250,255,0.12)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 }
 
@@ -548,11 +640,13 @@ export function createGroundRenderer() {
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
+    drawSeaHazards(ctx, kernel, traversalMode);
     drawHarborCoastGeometry(ctx, kernel);
     drawExposureZones(ctx, kernel);
     drawFirmnessZones(ctx, kernel);
     drawBasinDepthTint(ctx, kernel);
     drawWaterRows(ctx, manualWaterRows);
+    drawSeaRoutes(ctx, kernel, pulse, traversalMode);
     drawTerrainRows(ctx, manualTerrainRows);
     drawTerrainRows(ctx, generatedTerrainRows);
     drawSubstrateRows(ctx, manualSubstrateRows);
@@ -560,6 +654,13 @@ export function createGroundRenderer() {
     drawRegionBoundaries(ctx, kernel);
     drawHarborChartAccents(ctx, kernel);
     drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode);
+    drawSeaNodes(ctx, {
+      ...runtime,
+      kernel,
+      tick,
+      traversalMode,
+      activeHarborInstanceId
+    });
     drawHarborNavigationNodes(ctx, {
       ...runtime,
       kernel,

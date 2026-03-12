@@ -150,7 +150,7 @@
     "harbor_village": "S",
     "market_district": "E",
     "exploration_basin": "N",
-    "summit_approach": "NNW",
+    "summit_approach": "N",
     "summit_plaza": "NNE"
   },
   "bandBindings": {

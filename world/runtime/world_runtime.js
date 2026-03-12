@@ -4,6 +4,7 @@ import { createGroundRenderer } from "../../variant/ground_renderer.js";
 import { createCompassRenderer } from "../../assets/openworld_compass_renderer.js";
 import { createInstruments } from "../../assets/instruments.js";
 import { loadWorldKernel } from "../world_kernel.js";
+import { createPlanetGeometryEngine } from "../planet_geometry.js";
 import { createWorldPhaseEngine } from "../../variant/world_phase_engine.js";
 
 function distanceSq(ax, ay, bx, by) {
@@ -45,6 +46,18 @@ function lerp(a, b, t) {
   return a + ((b - a) * t);
 }
 
+function sub3(a, b) {
+  return [
+    (a?.[0] ?? 0) - (b?.[0] ?? 0),
+    (a?.[1] ?? 0) - (b?.[1] ?? 0),
+    (a?.[2] ?? 0) - (b?.[2] ?? 0)
+  ];
+}
+
+function length3(v) {
+  return Math.hypot(v?.[0] ?? 0, v?.[1] ?? 0, v?.[2] ?? 0);
+}
+
 function getPhasePanelString(phase) {
   const globalPhase = typeof phase?.globalPhase === "string" ? phase.globalPhase : "CALM";
   const intensity = Number.isFinite(phase?.intensity) ? phase.intensity.toFixed(2) : "0.20";
@@ -64,6 +77,11 @@ export async function createScene(canvas, outputs) {
   const compass = createCompassRenderer();
   const instruments = createInstruments();
 
+  const worldBounds = Object.freeze({
+    width: 1180,
+    height: 1240
+  });
+
   const state = {
     width: 0,
     height: 0,
@@ -77,6 +95,20 @@ export async function createScene(canvas, outputs) {
       nextShiftTick: 0
     },
     phaseEngine: createWorldPhaseEngine(12345),
+    planetGeometryEngine: createPlanetGeometryEngine({
+      worldBounds,
+      planetRadius: 1600,
+      atmosphereThickness: 140,
+      waterOffset: -18,
+      longitudeSpanDeg: 84,
+      latitudeSpanDeg: 62,
+      longitudeCenterDeg: 0,
+      latitudeCenterDeg: 0,
+      defaultCameraAltitude: 260,
+      defaultCameraHeadingDeg: -28
+    }),
+    planetaryGeometry: null,
+    atmosphericLimbState: null,
     keys: new Set(),
     renderMode: "styled",
 
@@ -98,10 +130,7 @@ export async function createScene(canvas, outputs) {
 
     renderScale: 1.72,
 
-    worldBounds: {
-      width: 1180,
-      height: 1240
-    },
+    worldBounds,
 
     touch: {
       activeId: null,
@@ -244,6 +273,45 @@ export async function createScene(canvas, outputs) {
     };
   }
 
+  function updatePlanetaryGeometry() {
+    const eastProgress = clamp((state.player.x - 150) / (960 - 150), 0, 1);
+    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
+
+    const headingDeg = lerp(-36, 20, eastProgress);
+    const altitude = lerp(300, 238, northProgress);
+
+    const cameraInput = {
+      worldPoint: {
+        x: state.player.x,
+        y: state.player.y
+      },
+      altitude,
+      headingDeg
+    };
+
+    const planetaryGeometry = state.planetGeometryEngine.getPlanetaryGeometry(cameraInput);
+    const camera = state.planetGeometryEngine.createCamera(cameraInput);
+    const cameraRadialVector = sub3(camera.cameraPosition, planetaryGeometry.planetCenter);
+    const cameraDistanceFromCenter = length3(cameraRadialVector);
+    const limbVisibilityActive = cameraDistanceFromCenter > planetaryGeometry.planetRadius;
+
+    state.planetaryGeometry = planetaryGeometry;
+    state.atmosphericLimbState = Object.freeze({
+      cameraRadialVector,
+      cameraDistanceFromCenter,
+      cameraLocalUp: camera.cameraLocalUp,
+      horizonAngle: planetaryGeometry.horizonAngle,
+      visibleLimbDirection: planetaryGeometry.visibleLimbDirection,
+      limbVisibilityActive,
+      atmosphereEdgeStrength: clamp(
+        (cameraDistanceFromCenter - planetaryGeometry.planetRadius) /
+          Math.max(1, planetaryGeometry.atmosphereThickness),
+        0,
+        1
+      )
+    });
+  }
+
   function updateOutputs() {
     const runtimePanel = instruments.buildRuntimePanel(state);
 
@@ -285,6 +353,8 @@ export async function createScene(canvas, outputs) {
       selection: state.selection,
       destination: state.destination,
       player: state.player,
+      planetaryGeometry: state.planetaryGeometry,
+      atmosphericLimbState: state.atmosphericLimbState,
       activeHarborInstanceId:
         state.kernel.helpers.getHarborInstanceByRegion(state.projection?.regionId ?? "")?.harborInstanceId ?? null
     };
@@ -303,6 +373,7 @@ export async function createScene(canvas, outputs) {
     updateViewportOffset();
     projectState();
     updatePhase();
+    updatePlanetaryGeometry();
     updateOutputs();
     drawFrame();
 
@@ -312,6 +383,7 @@ export async function createScene(canvas, outputs) {
   resize();
   projectState();
   updatePhase();
+  updatePlanetaryGeometry();
   updateOutputs();
 
   window.addEventListener("resize", resize, { passive: true });

@@ -6,7 +6,7 @@ import { createGroundRenderer } from "./ground_renderer.js";
 import { createCompassRenderer } from "../assets/openworld_compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 import { loadWorldKernel } from "../world/world_kernel.js";
-import { phaseKernel } from "../world/phase_kernel.js";
+import { createWorldPhaseEngine } from "./world_phase_engine.js";
 
 function distanceSq(ax, ay, bx, by) {
   const dx = ax - bx;
@@ -63,7 +63,13 @@ export async function createScene(canvas, outputs) {
     dpr: 1,
     tick: 0,
     kernel: await loadWorldKernel(),
-    phase: null,
+    phase: {
+      globalPhase: "CALM",
+      intensity: 0.2,
+      cyclePosition: 0,
+      nextShiftTick: 0
+    },
+    phaseEngine: createWorldPhaseEngine(12345),
     keys: new Set(),
     renderMode: "styled",
 
@@ -112,10 +118,15 @@ export async function createScene(canvas, outputs) {
 
       const dx = state.player.x - node.centerPoint[0];
       const dy = state.player.y - node.centerPoint[1];
+
       const distSq = (dx * dx) + (dy * dy);
 
       if (distSq < 40 * 40) {
-        state.player.mode = state.player.mode === "FOOT" ? "BOAT" : "FOOT";
+        if (state.player.mode === "FOOT") {
+          state.player.mode = "BOAT";
+        } else {
+          state.player.mode = "FOOT";
+        }
       }
     }
   }
@@ -183,6 +194,7 @@ export async function createScene(canvas, outputs) {
 
     if (dx !== 0 || dy !== 0) {
       const length = Math.hypot(dx, dy) || 1;
+
       dx /= length;
       dy /= length;
 
@@ -205,11 +217,18 @@ export async function createScene(canvas, outputs) {
     state.encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
   }
 
-  function computePhase() {
-    state.phase = phaseKernel.computePhase({
+  function updatePhase() {
+    state.phaseEngine.update({
+      tick: state.tick,
+      projection: state.projection,
+      region: state.region,
       kernel: state.kernel,
-      tick: state.tick
+      phase: state.phase
     });
+
+    state.phase = {
+      ...state.phase
+    };
   }
 
   function updateOutputs() {
@@ -231,10 +250,8 @@ export async function createScene(canvas, outputs) {
     outputs.selectedType.textContent = selectionPanel.selectedType;
     outputs.destination.textContent = selectionPanel.destination;
 
-    const phaseLabel = state.phase?.globalPhase ?? "CALM";
-
     outputs.selectionHint.textContent =
-      `${selectionPanel.hint} · Mode: ${state.player.mode} · View: ${state.renderMode.toUpperCase()} · Phase: ${phaseLabel} · Press G to toggle`;
+      `${selectionPanel.hint} · Mode: ${state.player.mode} · View: ${state.renderMode.toUpperCase()} · Phase: ${state.phase.globalPhase} · Press G to toggle`;
   }
 
   function drawFrame() {
@@ -255,7 +272,8 @@ export async function createScene(canvas, outputs) {
       selection: state.selection,
       destination: state.destination,
       player: state.player,
-      activeHarborInstanceId: state.kernel.helpers.getHarborInstanceByRegion(state.projection?.regionId ?? "")?.harborInstanceId ?? null
+      activeHarborInstanceId:
+        state.kernel.helpers.getHarborInstanceByRegion(state.projection?.regionId ?? "")?.harborInstanceId ?? null
     };
 
     background.draw(ctx, runtime);
@@ -271,7 +289,7 @@ export async function createScene(canvas, outputs) {
     detectDockTransfer();
     updateViewportOffset();
     projectState();
-    computePhase();
+    updatePhase();
     updateOutputs();
     drawFrame();
 
@@ -280,7 +298,7 @@ export async function createScene(canvas, outputs) {
 
   resize();
   projectState();
-  computePhase();
+  updatePhase();
   updateOutputs();
 
   window.addEventListener("resize", resize, { passive: true });

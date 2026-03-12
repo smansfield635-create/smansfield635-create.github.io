@@ -83,6 +83,21 @@ function substratePriority(substrateClass) {
   return 1000;
 }
 
+function waterPriority(waterClass) {
+  if (waterClass === "shoreline_shallow") return 10;
+  if (waterClass === "basin_shallow_margin") return 20;
+  if (waterClass === "channel_edge_shallow") return 30;
+  if (waterClass === "harbor_midwater") return 40;
+  if (waterClass === "basin_mid") return 50;
+  if (waterClass === "channel_mid") return 60;
+  if (waterClass === "harbor_deepwater") return 70;
+  if (waterClass === "basin_deep_core") return 80;
+  if (waterClass === "channel_core") return 90;
+  if (waterClass === "harbor") return 100;
+  if (waterClass === "basin") return 110;
+  return 1000;
+}
+
 function sortTerrainRows(rows) {
   return [...rows].sort((a, b) => {
     const pa = terrainPriority(a.terrainClass);
@@ -98,6 +113,18 @@ function sortSubstrateRows(rows) {
     const pb = substratePriority(b.substrateClass);
     if (pa !== pb) return pa - pb;
     return String(a.substrateId).localeCompare(String(b.substrateId));
+  });
+}
+
+function sortWaterRows(rows) {
+  return [...rows].sort((a, b) => {
+    const pa = waterPriority(a.waterClass);
+    const pb = waterPriority(b.waterClass);
+    if (pa !== pb) return pa - pb;
+
+    const idA = String(a.generatedWaterBandId ?? a.waterId ?? "");
+    const idB = String(b.generatedWaterBandId ?? b.waterId ?? "");
+    return idA.localeCompare(idB);
   });
 }
 
@@ -328,6 +355,72 @@ function substrateStyle(substrateClass, ctx) {
 }
 
 function waterStyle(waterClass, ctx) {
+  if (waterClass === "shoreline_shallow") {
+    const gradient = ctx.createLinearGradient(260, 660, 850, 930);
+    gradient.addColorStop(0, "rgba(146,204,226,0.36)");
+    gradient.addColorStop(0.5, "rgba(120,186,214,0.42)");
+    gradient.addColorStop(1, "rgba(86,156,194,0.50)");
+    return gradient;
+  }
+
+  if (waterClass === "basin_shallow_margin") {
+    const gradient = ctx.createLinearGradient(420, 680, 760, 860);
+    gradient.addColorStop(0, "rgba(138,196,214,0.32)");
+    gradient.addColorStop(1, "rgba(96,158,184,0.46)");
+    return gradient;
+  }
+
+  if (waterClass === "channel_edge_shallow") {
+    const gradient = ctx.createLinearGradient(700, 650, 960, 760);
+    gradient.addColorStop(0, "rgba(132,194,220,0.34)");
+    gradient.addColorStop(1, "rgba(88,156,194,0.48)");
+    return gradient;
+  }
+
+  if (waterClass === "harbor_midwater") {
+    const gradient = ctx.createLinearGradient(220, 620, 980, 900);
+    gradient.addColorStop(0, "rgba(102,176,220,0.34)");
+    gradient.addColorStop(0.55, "rgba(74,148,202,0.42)");
+    gradient.addColorStop(1, "rgba(48,118,174,0.54)");
+    return gradient;
+  }
+
+  if (waterClass === "basin_mid") {
+    const gradient = ctx.createLinearGradient(460, 690, 740, 850);
+    gradient.addColorStop(0, "rgba(102,168,200,0.30)");
+    gradient.addColorStop(1, "rgba(62,126,166,0.46)");
+    return gradient;
+  }
+
+  if (waterClass === "channel_mid") {
+    const gradient = ctx.createLinearGradient(720, 650, 960, 750);
+    gradient.addColorStop(0, "rgba(94,166,208,0.34)");
+    gradient.addColorStop(1, "rgba(56,126,176,0.50)");
+    return gradient;
+  }
+
+  if (waterClass === "harbor_deepwater") {
+    const gradient = ctx.createLinearGradient(180, 590, 1040, 930);
+    gradient.addColorStop(0, "rgba(78,154,210,0.34)");
+    gradient.addColorStop(0.5, "rgba(54,122,182,0.46)");
+    gradient.addColorStop(1, "rgba(30,90,146,0.62)");
+    return gradient;
+  }
+
+  if (waterClass === "basin_deep_core") {
+    const gradient = ctx.createLinearGradient(500, 700, 720, 840);
+    gradient.addColorStop(0, "rgba(80,146,182,0.30)");
+    gradient.addColorStop(1, "rgba(40,100,142,0.48)");
+    return gradient;
+  }
+
+  if (waterClass === "channel_core") {
+    const gradient = ctx.createLinearGradient(760, 646, 970, 736);
+    gradient.addColorStop(0, "rgba(78,146,196,0.34)");
+    gradient.addColorStop(1, "rgba(34,98,156,0.54)");
+    return gradient;
+  }
+
   if (waterClass === "harbor") {
     const gradient = ctx.createLinearGradient(180, 560, 1040, 940);
     gradient.addColorStop(0, "rgba(94,174,226,0.34)");
@@ -360,65 +453,6 @@ function drawOpenSeaAtmosphere(ctx) {
   ctx.fillRect(0, 0, 1180, 1240);
 }
 
-function drawHarborCoastGeometry(ctx, kernel) {
-  const coast = kernel?.coastlineModel;
-  if (!coast) return;
-
-  fillPolygon(ctx, coast.harborPeninsula, "rgba(170,162,126,0.18)");
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(254,244,226,0.14)", 1.6);
-
-  if (Array.isArray(coast.reefZones)) {
-    for (const reefPolygon of coast.reefZones) {
-      fillPolygon(ctx, reefPolygon, "rgba(118,170,164,0.10)");
-      strokePolygon(ctx, reefPolygon, "rgba(214,236,232,0.12)", 1);
-    }
-  }
-
-  if (Array.isArray(coast.firmnessZones)) {
-    for (const zone of coast.firmnessZones) {
-      fillPolygon(ctx, zone.polygon, "rgba(220,210,176,0.04)");
-    }
-  }
-
-  strokePolygon(ctx, coast.harborBasin, "rgba(246,250,255,0.22)", 1.4);
-  strokePolygon(ctx, coast.harborChannel, "rgba(236,246,255,0.14)", 1.1);
-}
-
-function drawExposureZones(ctx, kernel) {
-  const coast = kernel?.coastlineModel;
-  if (!coast || !Array.isArray(coast.exposureZones)) return;
-
-  for (const zone of coast.exposureZones) {
-    fillPolygon(ctx, zone.polygon, "rgba(90,140,180,0.06)");
-    strokePolygon(ctx, zone.polygon, "rgba(150,200,240,0.10)", 1);
-  }
-}
-
-function drawFirmnessZones(ctx, kernel) {
-  const coast = kernel?.coastlineModel;
-  if (!coast || !Array.isArray(coast.firmnessZones)) return;
-
-  for (const zone of coast.firmnessZones) {
-    fillPolygon(ctx, zone.polygon, "rgba(226,210,160,0.08)");
-    strokePolygon(ctx, zone.polygon, "rgba(255,236,182,0.12)", 1);
-  }
-}
-
-function drawBasinDepthTint(ctx, kernel) {
-  const coast = kernel?.coastlineModel;
-  if (!coast?.harborBasin) return;
-
-  polygon(ctx, coast.harborBasin);
-
-  const gradient = ctx.createRadialGradient(590, 760, 16, 590, 760, 240);
-  gradient.addColorStop(0, "rgba(56,114,156,0.26)");
-  gradient.addColorStop(0.42, "rgba(44,98,140,0.14)");
-  gradient.addColorStop(1, "rgba(28,72,116,0.02)");
-
-  ctx.fillStyle = gradient;
-  ctx.fill();
-}
-
 function getActiveTerrainRows(kernel) {
   return kernel?.terrainPolygonsById ? sortTerrainRows([...kernel.terrainPolygonsById.values()]) : [];
 }
@@ -427,14 +461,30 @@ function getActiveSubstrateRows(kernel) {
   return kernel?.substratePolygonsById ? sortSubstrateRows([...kernel.substratePolygonsById.values()]) : [];
 }
 
-function getManualWaterRows(kernel) {
-  return kernel?.watersById ? [...kernel.watersById.values()] : [];
+function getActiveWaterRows(kernel) {
+  if (kernel?.generatedWaterBandsById) {
+    return sortWaterRows([...kernel.generatedWaterBandsById.values()]);
+  }
+  return [];
+}
+
+function getLegacyWaterRows(kernel) {
+  if (kernel?.legacyWatersById) {
+    return sortWaterRows([...kernel.legacyWatersById.values()]);
+  }
+  return kernel?.watersById ? sortWaterRows([...kernel.watersById.values()]) : [];
 }
 
 function drawWaterRows(ctx, rows) {
   for (const water of rows) {
     fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx));
-    strokePolygon(ctx, water.polygon, "rgba(236,248,255,0.16)", 1.1);
+    strokePolygon(ctx, water.polygon, "rgba(236,248,255,0.12)", 0.9);
+  }
+}
+
+function drawLegacyWaterRows(ctx, rows) {
+  for (const water of rows) {
+    fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx));
   }
 }
 
@@ -462,31 +512,37 @@ function drawWaterRipples(ctx, tick) {
   ctx.restore();
 }
 
-function drawWetEdgeHighlights(ctx, kernel) {
-  const coast = kernel?.coastlineModel;
-  if (!coast) return;
+function drawGeneratedWaterHighlights(ctx, waterRows) {
+  for (const row of waterRows) {
+    if (
+      row.waterClass === "shoreline_shallow" ||
+      row.waterClass === "basin_shallow_margin" ||
+      row.waterClass === "channel_edge_shallow"
+    ) {
+      strokePolygon(ctx, row.polygon, "rgba(220,246,255,0.18)", 1.2);
+    }
 
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,244,212,0.06)", 3.2);
-  strokePolygon(ctx, coast.harborBasin, "rgba(168,214,236,0.10)", 5);
-  strokePolygon(ctx, coast.harborChannel, "rgba(182,224,244,0.08)", 4);
+    if (
+      row.waterClass === "channel_mid" ||
+      row.waterClass === "channel_core"
+    ) {
+      strokePolygon(ctx, row.polygon, "rgba(204,238,255,0.14)", 1.1);
+    }
+  }
 }
 
-function drawFoamBands(ctx) {
-  const foamArcs = [
-    { x: 372, y: 782, rx: 74, ry: 18, lw: 2.2, a: 0.22 },
-    { x: 474, y: 804, rx: 92, ry: 24, lw: 2.4, a: 0.24 },
-    { x: 614, y: 790, rx: 86, ry: 22, lw: 2.1, a: 0.22 },
-    { x: 790, y: 708, rx: 66, ry: 18, lw: 1.8, a: 0.18 },
-    { x: 882, y: 724, rx: 56, ry: 14, lw: 1.6, a: 0.16 }
-  ];
-
+function drawFoamBandsFromWater(ctx, waterRows) {
   ctx.save();
-  for (const arc of foamArcs) {
-    ctx.beginPath();
-    ctx.ellipse(arc.x, arc.y, arc.rx, arc.ry, 0, Math.PI * 1.06, Math.PI * 1.94);
-    ctx.strokeStyle = `rgba(246,252,255,${arc.a})`;
-    ctx.lineWidth = arc.lw;
-    ctx.stroke();
+  for (const row of waterRows) {
+    if (
+      row.waterClass !== "shoreline_shallow" &&
+      row.waterClass !== "basin_shallow_margin" &&
+      row.waterClass !== "channel_edge_shallow"
+    ) {
+      continue;
+    }
+
+    strokePolygon(ctx, row.polygon, "rgba(246,252,255,0.12)", 1.8);
   }
   ctx.restore();
 }
@@ -559,13 +615,21 @@ function drawSeaHazards(ctx, kernel, traversalMode) {
     let stroke = "rgba(140,196,224,0.08)";
 
     if (hazard.hazardClass === "reef") {
-      fill = traversalMode === "boat" ? "rgba(126,196,176,0.10)" : "rgba(126,196,176,0.05)";
-      stroke = traversalMode === "boat" ? "rgba(196,244,226,0.16)" : "rgba(196,244,226,0.08)";
+      fill = traversalMode === "boat"
+        ? "rgba(126,196,176,0.10)"
+        : "rgba(126,196,176,0.05)";
+      stroke = traversalMode === "boat"
+        ? "rgba(196,244,226,0.16)"
+        : "rgba(196,244,226,0.08)";
     }
 
     if (hazard.hazardClass === "current") {
-      fill = traversalMode === "boat" ? "rgba(110,156,220,0.08)" : "rgba(110,156,220,0.04)";
-      stroke = traversalMode === "boat" ? "rgba(198,226,255,0.14)" : "rgba(198,226,255,0.08)";
+      fill = traversalMode === "boat"
+        ? "rgba(110,156,220,0.08)"
+        : "rgba(110,156,220,0.04)";
+      stroke = traversalMode === "boat"
+        ? "rgba(198,226,255,0.14)"
+        : "rgba(198,226,255,0.08)";
     }
 
     fillPolygon(ctx, hazard.polygon, fill);
@@ -779,16 +843,16 @@ function drawHarborChartAccents(ctx, kernel) {
   if (!coast) return;
 
   if (Array.isArray(coast.coastlineOuter) && coast.coastlineOuter.length) {
-    strokePolygon(ctx, coast.coastlineOuter, "rgba(255,255,255,0.04)", 4);
+    strokePolygon(ctx, coast.coastlineOuter, "rgba(255,255,255,0.04)", 2.8);
   }
 
-  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,248,214,0.08)", 2.4);
+  strokePolygon(ctx, coast.harborPeninsula, "rgba(255,248,214,0.06)", 1.6);
 
   if (kernel?.regionBoundariesById) {
     const west = kernel.regionBoundariesById.get("harbor_inner_shore_west");
     const east = kernel.regionBoundariesById.get("harbor_inner_shore_east");
-    if (west) strokePolygon(ctx, west.polygon, "rgba(255,244,214,0.10)", 1.2);
-    if (east) strokePolygon(ctx, east.polygon, "rgba(255,244,214,0.10)", 1.2);
+    if (west) strokePolygon(ctx, west.polygon, "rgba(255,244,214,0.08)", 1);
+    if (east) strokePolygon(ctx, east.polygon, "rgba(255,244,214,0.08)", 1);
   }
 }
 
@@ -985,31 +1049,29 @@ export function createGroundRenderer() {
 
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
-    const manualWaterRows = getManualWaterRows(kernel);
+    const activeWaterRows = getActiveWaterRows(kernel);
+    const legacyWaterRows = getLegacyWaterRows(kernel);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOpenSeaAtmosphere(ctx);
+    drawLegacyWaterRows(ctx, legacyWaterRows);
+    drawWaterRows(ctx, activeWaterRows);
     drawSeaHazards(ctx, kernel, traversalMode);
-    drawHarborCoastGeometry(ctx, kernel);
-    drawExposureZones(ctx, kernel);
-    drawFirmnessZones(ctx, kernel);
-    drawBasinDepthTint(ctx, kernel);
-    drawWaterRows(ctx, manualWaterRows);
     drawWaterRipples(ctx, tick);
-    drawSeaRoutes(ctx, kernel, pulse, traversalMode);
-    drawWetEdgeHighlights(ctx, kernel);
-    drawFoamBands(ctx);
+    drawGeneratedWaterHighlights(ctx, activeWaterRows);
+    drawFoamBandsFromWater(ctx, activeWaterRows);
 
-    drawTerrainRows(ctx, activeTerrainRows);
     drawSubstrateRows(ctx, activeSubstrateRows);
+    drawTerrainRows(ctx, activeTerrainRows);
     drawBeachReadBoost(ctx, activeSubstrateRows, activeTerrainRows);
 
     drawTerrainGrain(ctx);
     drawStructureShadows(ctx, kernel);
     drawRegionBoundaries(ctx, kernel);
     drawHarborChartAccents(ctx, kernel);
+    drawSeaRoutes(ctx, kernel, pulse, traversalMode);
     drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode);
     drawSeaNodes(ctx, {
       ...runtime,

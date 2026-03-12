@@ -223,25 +223,70 @@ function rgbaAdjusted(r, g, b, a, mods) {
   return `rgba(${nr.toFixed(0)},${ng.toFixed(0)},${nb.toFixed(0)},${clamp(a, 0, 1).toFixed(3)})`;
 }
 
-function createSurfaceProjector() {
+function createSurfaceProjector(runtime) {
+  const worldWidth = 1180;
+  const worldHeight = 1240;
+
+  const playerX = Number.isFinite(runtime?.player?.x) ? runtime.player.x : worldWidth * 0.5;
+  const playerY = Number.isFinite(runtime?.player?.y) ? runtime.player.y : worldHeight * 0.62;
+
+  const northProgress = clamp((930 - playerY) / 930, 0, 1);
+  const eastProgress = clamp((playerX - 150) / (960 - 150), 0, 1);
+
+  const shellCenterX = lerp(worldWidth * 0.26, worldWidth * 0.16, northProgress);
+  const shellCenterY = lerp(worldHeight * 1.08, worldHeight * 0.88, northProgress);
+
+  const wrapStrength = lerp(0.16, 0.38, northProgress);
+  const depthLift = lerp(36, 142, northProgress);
+  const sideDrop = lerp(18, 104, northProgress);
+  const compression = lerp(0.05, 0.18, northProgress);
+  const azimuthShift = ((eastProgress - 0.5) * lerp(18, 44, northProgress));
+
   function point(x, y) {
-    return { x, y };
+    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
+    const depthSq = depth * depth;
+
+    const dx = x - shellCenterX;
+    const lateralNorm = dx / (worldWidth * 0.72);
+
+    const arc = lateralNorm * wrapStrength;
+    const wrapX = Math.sin(arc) * depth * lerp(18, 120, northProgress);
+    const wrapY = (1 - Math.cos(arc)) * depth * sideDrop;
+
+    const radialAngle =
+      lerp(-1.18, -0.62, northProgress) +
+      (lateralNorm * lerp(0.22, 0.70, northProgress)) +
+      ((eastProgress - 0.5) * 0.18);
+
+    const radialPush = depthSq * depthLift;
+    const nx = Math.cos(radialAngle);
+    const ny = Math.sin(radialAngle);
+
+    return {
+      x: x - (dx * compression * depth) + azimuthShift * depth + wrapX + (nx * radialPush * 0.36),
+      y: y - wrapY + (ny * radialPush)
+    };
   }
 
-  function radius(value) {
-    return Math.max(0.5, value);
+  function radius(value, y) {
+    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
+    const scale = 1 - (lerp(0.08, 0.24, northProgress) * depth);
+    return Math.max(0.5, value * scale);
   }
 
-  function lineWidth(value) {
-    return Math.max(0.5, value);
+  function lineWidth(value, y) {
+    return radius(value, y);
   }
 
   function rect(x, y, width, height) {
+    const p = point(x + (width * 0.5), y + (height * 0.5));
+    const scaledWidth = radius(width, y + height);
+    const scaledHeight = radius(height, y + height);
     return {
-      x,
-      y,
-      width,
-      height
+      x: p.x - (scaledWidth * 0.5),
+      y: p.y - (scaledHeight * 0.5),
+      width: scaledWidth,
+      height: scaledHeight
     };
   }
 
@@ -1128,7 +1173,7 @@ export function createGroundRenderer() {
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
     const manualWaterRows = getManualWaterRows(kernel);
-    const projector = createSurfaceProjector();
+    const projector = createSurfaceProjector(runtime);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);

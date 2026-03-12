@@ -8,10 +8,6 @@ function freezeObjectTree(value) {
   return value;
 }
 
-function roundPoint(value) {
-  return Math.round(value * 1000) / 1000;
-}
-
 function indexBy(rows, key) {
   const map = new Map();
 
@@ -103,38 +99,67 @@ function getDomainOrderIndexMap(coastalDomainsById) {
   return map;
 }
 
-function getStackScaleConfig(domain) {
-  const coastType = String(domain?.coastType ?? "");
-  const exposureClass = String(domain?.exposureClass ?? "");
+function getStackScaleConfig(domain, stackIndex) {
+  const coastType = String(domain?.coastType ?? "").toLowerCase();
+  const exposureClass = String(domain?.exposureClass ?? "").toLowerCase();
+  const sedimentType = String(domain?.sedimentType ?? "").toLowerCase();
 
-  let startInset = 6;
-  let insetStep = 8;
+  let startInset = 8;
+  let insetStep = 11;
 
-  if (coastType.includes("exposed")) {
-    startInset = 8;
-    insetStep = 10;
-  } else if (coastType.includes("sheltered")) {
-    startInset = 5;
-    insetStep = 7;
-  } else if (coastType.includes("rock")) {
-    startInset = 7;
+  if (coastType.includes("sheltered")) {
+    startInset = 6;
     insetStep = 9;
-  } else if (coastType.includes("basin")) {
+  }
+
+  if (coastType.includes("basin")) {
     startInset = 4;
-    insetStep = 6;
-  } else if (coastType.includes("channel")) {
-    startInset = 5;
     insetStep = 7;
   }
 
-  if (exposureClass.includes("moderate")) insetStep += 1;
-  if (exposureClass.includes("exposed")) insetStep += 2;
-  if (exposureClass.includes("sheltered")) insetStep -= 1;
+  if (coastType.includes("channel")) {
+    startInset = 5;
+    insetStep = 8;
+  }
+
+  if (coastType.includes("rock")) {
+    startInset = 7;
+    insetStep = 10;
+  }
+
+  if (exposureClass.includes("moderate")) {
+    insetStep += 1;
+  }
+
+  if (exposureClass.includes("exposed")) {
+    insetStep += 2;
+  }
+
+  if (exposureClass.includes("light") || exposureClass.includes("sheltered")) {
+    insetStep -= 1;
+  }
+
+  if (sedimentType.includes("sand")) {
+    insetStep += 1;
+  }
+
+  if (sedimentType.includes("rock") || sedimentType.includes("bedrock")) {
+    startInset += 1;
+  }
+
+  const shorelineBias = stackIndex === 0 ? 0 : Math.min(stackIndex, 2);
 
   return Object.freeze({
-    startInset: Math.max(2, startInset),
+    startInset: Math.max(2, startInset + shorelineBias),
     insetStep: Math.max(2, insetStep)
   });
+}
+
+function normalizeBandGeometry(engine, polygon, label) {
+  const normalized = engine.normalizePolygon(polygon);
+  if (!normalized) return null;
+  assertPolygon(normalized, label);
+  return normalized;
 }
 
 function buildBandGeometry({
@@ -146,10 +171,11 @@ function buildBandGeometry({
   stackIndex,
   stackLength
 }) {
-  const { startInset, insetStep } = getStackScaleConfig(domain);
+  const { startInset, insetStep } = getStackScaleConfig(domain, stackIndex);
+
   const outerInset = startInset + (stackIndex * insetStep);
   const innerInset = stackIndex === stackLength - 1
-    ? outerInset + insetStep + 1000
+    ? outerInset + insetStep + 2000
     : startInset + ((stackIndex + 1) * insetStep);
 
   const candidatePolygon = engine.createInsetBandPolygon({
@@ -160,40 +186,17 @@ function buildBandGeometry({
 
   if (!candidatePolygon) return null;
 
-  let clipped = engine.clipPolygonToPolygon(candidatePolygon, regionPolygon);
-  if (!clipped) return null;
+  const clippedToRegion = engine.clipPolygonToPolygon(candidatePolygon, regionPolygon);
+  if (!clippedToRegion) return null;
 
-  clipped = engine.subtractMasks(clipped, masks);
-  if (!clipped) return null;
+  const withMasksRemoved = engine.subtractMasks(clippedToRegion, masks);
+  if (!withMasksRemoved) return null;
 
-  clipped = engine.normalizePolygon(clipped);
-  if (!clipped) return null;
-
-  assertPolygon(clipped, `generatedBand.${domain.domainId}.${stackIndex}`);
-  return clipped;
-}
-
-function createBandReceipt({
-  generatedBandId,
-  domain,
-  stackId,
-  coastalClassId,
-  coastalClass,
-  polygon
-}) {
-  return Object.freeze({
-    generatedBandId,
-    domainId: domain.domainId,
-    stackId,
-    coastalClassId,
-    targetClass: coastalClass.targetClass,
-    family: coastalClass.family,
-    regionId: domain.regionId,
-    plantable: coastalClass.plantable,
-    geometrySource: domain.geometrySource,
-    status: coastalClass.status,
-    polygon
-  });
+  return normalizeBandGeometry(
+    engine,
+    withMasksRemoved,
+    `generatedBand.${domain.domainId}.${stackIndex}`
+  );
 }
 
 function createBandRow({
@@ -219,15 +222,42 @@ function createBandRow({
   });
 }
 
-function sortGeneratedRows(rows, domainOrderIndexMap) {
+function createBandReceipt({
+  generatedBandId,
+  domain,
+  stackId,
+  coastalClassId,
+  coastalClass,
+  polygon
+}) {
+  return Object.freeze({
+    generatedBandId,
+    domainId: domain.domainId,
+    stackId,
+    coastalClassId,
+    targetClass: coastalClass.targetClass,
+    family: coastalClass.family,
+    regionId: domain.regionId,
+    plantable: coastalClass.plantable,
+    geometrySource: domain.geometrySource,
+    status: coastalClass.status,
+    polygon
+  });
+}
+
+function sortGeneratedRows(rows, domainOrderIndexMap, coastalBlueprint) {
   return [...rows].sort((a, b) => {
     const domainCmp =
       (domainOrderIndexMap.get(a.domainId) ?? Infinity) -
       (domainOrderIndexMap.get(b.domainId) ?? Infinity);
     if (domainCmp !== 0) return domainCmp;
 
-    const stackCmp = lexicalCompare(a.stackId, b.stackId);
-    if (stackCmp !== 0) return stackCmp;
+    const stackA = coastalBlueprint.materialStacks[a.stackId] ?? [];
+    const stackB = coastalBlueprint.materialStacks[b.stackId] ?? [];
+
+    const stackIndexA = stackA.indexOf(a.coastalClassId);
+    const stackIndexB = stackB.indexOf(b.coastalClassId);
+    if (stackIndexA !== stackIndexB) return stackIndexA - stackIndexB;
 
     const familyCmp = familyOrderValue(a.family) - familyOrderValue(b.family);
     if (familyCmp !== 0) return familyCmp;
@@ -257,7 +287,6 @@ function generateCoastalBands(input) {
   const generatedTerrainBands = [];
   const generatedSubstrateBands = [];
   const receipts = [];
-
   const domainOrderIndexMap = getDomainOrderIndexMap(coastalBlueprint.coastalDomainsById);
 
   for (const domain of coastalBlueprint.coastalDomainsById.values()) {
@@ -266,7 +295,11 @@ function generateCoastalBands(input) {
       throw new Error(`Missing owning region polygon for coastal domain: ${domain.domainId}`);
     }
 
-    const regionPolygon = geometryClippingEngine.normalizePolygon(regionBoundary.polygon);
+    const regionPolygon = normalizeBandGeometry(
+      geometryClippingEngine,
+      regionBoundary.polygon,
+      `regionBoundary.${domain.regionId}`
+    );
     if (!regionPolygon) {
       throw new Error(`Unable to normalize region polygon for coastal domain: ${domain.domainId}`);
     }
@@ -337,10 +370,6 @@ function generateCoastalBands(input) {
       receipts.push(receipt);
       masks.push(polygon);
 
-      if (coastalClass.status === "NEW_CLASS_PENDING_BINDING") {
-        continue;
-      }
-
       const row = createBandRow({
         generatedBandId,
         domain,
@@ -352,17 +381,33 @@ function generateCoastalBands(input) {
 
       if (coastalClass.family === "terrain") {
         generatedTerrainBands.push(row);
-      } else if (coastalClass.family === "substrate") {
-        generatedSubstrateBands.push(row);
-      } else {
-        throw new Error(`Invalid family for coastal class ${coastalClassId}`);
+        continue;
       }
+
+      if (coastalClass.family === "substrate") {
+        generatedSubstrateBands.push(row);
+        continue;
+      }
+
+      throw new Error(`Invalid family for coastal class ${coastalClassId}`);
     }
   }
 
-  const sortedTerrainBands = sortGeneratedRows(generatedTerrainBands, domainOrderIndexMap);
-  const sortedSubstrateBands = sortGeneratedRows(generatedSubstrateBands, domainOrderIndexMap);
-  const sortedReceipts = sortGeneratedRows(receipts, domainOrderIndexMap);
+  const sortedTerrainBands = sortGeneratedRows(
+    generatedTerrainBands,
+    domainOrderIndexMap,
+    coastalBlueprint
+  );
+  const sortedSubstrateBands = sortGeneratedRows(
+    generatedSubstrateBands,
+    domainOrderIndexMap,
+    coastalBlueprint
+  );
+  const sortedReceipts = sortGeneratedRows(
+    receipts,
+    domainOrderIndexMap,
+    coastalBlueprint
+  );
 
   return freezeObjectTree({
     generatedTerrainBands: sortedTerrainBands,
@@ -387,3 +432,5 @@ export const coastalGenerator = Object.freeze({
   generateTerrainBands,
   generateSubstrateBands
 });
+
+freezeObjectTree(coastalGenerator);

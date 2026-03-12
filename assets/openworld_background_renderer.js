@@ -28,14 +28,15 @@ export function createBackgroundRenderer() {
     return clamp((px - 150) / (960 - 150), 0, 1);
   }
 
-  function getHorizonGeometry(runtime, width, height) {
+  function getWorldCurve(runtime, width, height) {
     const northProgress = getNorthProgress(runtime);
     const eastProgress = getEastProgress(runtime);
     const phaseLabel = getPhaseLabel(runtime);
     const phaseIntensity = getPhaseIntensity(runtime);
 
-    const baseMidY = lerp(height * 0.64, height * 0.50, northProgress);
-    const lateralTilt = lerp(-height * 0.04, height * 0.04, eastProgress);
+    const horizonBaseY = lerp(height * 0.66, height * 0.54, northProgress);
+    const lateralTilt = lerp(-height * 0.025, height * 0.025, eastProgress);
+
     const phaseLift =
       phaseLabel === "LOCKDOWN"
         ? height * 0.010
@@ -45,19 +46,34 @@ export function createBackgroundRenderer() {
             ? -height * 0.006
             : 0;
 
-    const leftY = baseMidY + (height * 0.035) - lateralTilt + phaseLift;
-    const centerY = baseMidY - (height * 0.018) + phaseLift;
-    const rightY = baseMidY - (height * 0.030) + lateralTilt + phaseLift;
+    const centerY = horizonBaseY + phaseLift;
+    const edgeLift = lerp(height * 0.040, height * 0.085, northProgress) + (phaseIntensity * height * 0.010);
+
+    const leftY = centerY + edgeLift - lateralTilt;
+    const rightY = centerY + (edgeLift * 0.92) + lateralTilt;
 
     const bandThickness =
-      lerp(height * 0.070, height * 0.105, northProgress) +
+      lerp(height * 0.055, height * 0.090, northProgress) +
       (phaseIntensity * height * 0.008);
 
+    const oceanCenterY =
+      centerY + lerp(height * 0.62, height * 0.78, northProgress);
+
+    const oceanRadiusX =
+      lerp(width * 1.08, width * 1.24, northProgress);
+
+    const oceanRadiusY =
+      lerp(height * 0.66, height * 0.88, northProgress);
+
     return {
-      leftY,
       centerY,
+      leftY,
       rightY,
-      bandThickness
+      edgeLift,
+      bandThickness,
+      oceanCenterY,
+      oceanRadiusX,
+      oceanRadiusY
     };
   }
 
@@ -66,121 +82,118 @@ export function createBackgroundRenderer() {
     ctx.moveTo(0, curve.leftY);
     ctx.bezierCurveTo(
       width * 0.22,
-      curve.leftY - curve.bandThickness * 0.55,
-      width * 0.68,
-      curve.centerY - curve.bandThickness * 0.30,
+      curve.leftY - (curve.edgeLift * 0.82),
+      width * 0.38,
+      curve.centerY - (curve.edgeLift * 0.34),
       width * 0.5,
       curve.centerY
     );
     ctx.bezierCurveTo(
-      width * 0.76,
-      curve.centerY - curve.bandThickness * 0.18,
-      width * 0.90,
-      curve.rightY + curve.bandThickness * 0.10,
+      width * 0.66,
+      curve.centerY - (curve.edgeLift * 0.24),
+      width * 0.82,
+      curve.rightY - (curve.edgeLift * 0.10),
       width,
       curve.rightY
     );
   }
 
-  function fillAboveHorizon(ctx, width, height, curve, fillStyle) {
-    ctx.save();
+  function buildSkyMask(ctx, width, height, curve) {
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(width, 0);
     ctx.lineTo(width, curve.rightY);
     ctx.bezierCurveTo(
-      width * 0.90,
-      curve.rightY + curve.bandThickness * 0.10,
-      width * 0.76,
-      curve.centerY - curve.bandThickness * 0.18,
+      width * 0.82,
+      curve.rightY - (curve.edgeLift * 0.10),
+      width * 0.66,
+      curve.centerY - (curve.edgeLift * 0.24),
       width * 0.5,
       curve.centerY
     );
     ctx.bezierCurveTo(
-      width * 0.68,
-      curve.centerY - curve.bandThickness * 0.30,
+      width * 0.38,
+      curve.centerY - (curve.edgeLift * 0.34),
       width * 0.22,
-      curve.leftY - curve.bandThickness * 0.55,
+      curve.leftY - (curve.edgeLift * 0.82),
       0,
       curve.leftY
     );
     ctx.closePath();
-    ctx.fillStyle = fillStyle;
-    ctx.fill();
-    ctx.restore();
   }
 
-  function fillBelowHorizon(ctx, width, height, curve, fillStyle) {
-    ctx.save();
+  function buildOceanMask(ctx, width, height, curve) {
     ctx.beginPath();
     ctx.moveTo(0, curve.leftY);
     ctx.bezierCurveTo(
       width * 0.22,
-      curve.leftY - curve.bandThickness * 0.55,
-      width * 0.68,
-      curve.centerY - curve.bandThickness * 0.30,
+      curve.leftY - (curve.edgeLift * 0.82),
+      width * 0.38,
+      curve.centerY - (curve.edgeLift * 0.34),
       width * 0.5,
       curve.centerY
     );
     ctx.bezierCurveTo(
-      width * 0.76,
-      curve.centerY - curve.bandThickness * 0.18,
-      width * 0.90,
-      curve.rightY + curve.bandThickness * 0.10,
+      width * 0.66,
+      curve.centerY - (curve.edgeLift * 0.24),
+      width * 0.82,
+      curve.rightY - (curve.edgeLift * 0.10),
       width,
       curve.rightY
     );
     ctx.lineTo(width, height);
     ctx.lineTo(0, height);
     ctx.closePath();
-    ctx.fillStyle = fillStyle;
-    ctx.fill();
-    ctx.restore();
   }
 
-  function drawSkyField(ctx, width, height, runtime, curve) {
+  function fillSkyField(ctx, width, height, runtime, curve) {
     const phaseLabel = getPhaseLabel(runtime);
     const phaseIntensity = getPhaseIntensity(runtime);
 
-    const sky = ctx.createLinearGradient(0, 0, 0, curve.centerY + (curve.bandThickness * 0.75));
+    const sky = ctx.createLinearGradient(0, 0, 0, curve.centerY + (curve.bandThickness * 0.70));
 
     if (phaseLabel === "CLEAR_WINDOW") {
-      sky.addColorStop(0, "rgba(12,34,74,1)");
-      sky.addColorStop(0.20, "rgba(30,88,164,1)");
-      sky.addColorStop(0.56, "rgba(98,188,242,1)");
-      sky.addColorStop(1, "rgba(194,238,255,1)");
+      sky.addColorStop(0, "rgba(10,34,76,1)");
+      sky.addColorStop(0.18, "rgba(28,92,170,1)");
+      sky.addColorStop(0.52, "rgba(92,188,240,1)");
+      sky.addColorStop(1, "rgba(196,240,255,1)");
     } else if (phaseLabel === "LOCKDOWN") {
-      sky.addColorStop(0, "rgba(16,26,48,1)");
-      sky.addColorStop(0.24, "rgba(26,54,94,1)");
-      sky.addColorStop(0.60, "rgba(68,120,172,1)");
-      sky.addColorStop(1, "rgba(148,194,228,1)");
+      sky.addColorStop(0, "rgba(14,24,44,1)");
+      sky.addColorStop(0.22, "rgba(24,50,88,1)");
+      sky.addColorStop(0.56, "rgba(68,116,166,1)");
+      sky.addColorStop(1, "rgba(144,190,224,1)");
     } else if (phaseLabel === "SEVERE") {
-      sky.addColorStop(0, "rgba(12,30,60,1)");
-      sky.addColorStop(0.24, "rgba(24,70,130,1)");
-      sky.addColorStop(0.60, "rgba(66,148,212,1)");
-      sky.addColorStop(1, "rgba(160,218,244,1)");
+      sky.addColorStop(0, "rgba(12,28,58,1)");
+      sky.addColorStop(0.22, "rgba(24,68,128,1)");
+      sky.addColorStop(0.56, "rgba(70,148,212,1)");
+      sky.addColorStop(1, "rgba(162,220,246,1)");
     } else {
       sky.addColorStop(0, "rgba(10,34,74,1)");
-      sky.addColorStop(0.22, "rgba(24,82,148,1)");
-      sky.addColorStop(0.58, "rgba(58,160,224,1)");
-      sky.addColorStop(1, "rgba(156,224,248,1)");
+      sky.addColorStop(0.20, "rgba(24,82,148,1)");
+      sky.addColorStop(0.56, "rgba(58,160,224,1)");
+      sky.addColorStop(1, "rgba(158,226,248,1)");
     }
 
-    fillAboveHorizon(ctx, width, height, curve, sky);
+    ctx.save();
+    buildSkyMask(ctx, width, height, curve);
+    ctx.clip();
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, width, curve.rightY + (curve.bandThickness * 2.0));
+    ctx.restore();
 
     const upperGlow = ctx.createRadialGradient(
-      width * 0.56,
+      width * 0.58,
       curve.centerY * 0.34,
       16,
-      width * 0.56,
+      width * 0.58,
       curve.centerY * 0.34,
       Math.max(width, height) * 0.42
     );
 
     if (phaseLabel === "CLEAR_WINDOW") {
       upperGlow.addColorStop(0, "rgba(255,244,218,0.16)");
-      upperGlow.addColorStop(0.34, "rgba(210,236,255,0.10)");
-      upperGlow.addColorStop(1, "rgba(210,236,255,0)");
+      upperGlow.addColorStop(0.34, "rgba(212,236,255,0.10)");
+      upperGlow.addColorStop(1, "rgba(212,236,255,0)");
     } else if (phaseLabel === "LOCKDOWN") {
       upperGlow.addColorStop(0, `rgba(228,238,255,${0.06 + (phaseIntensity * 0.05)})`);
       upperGlow.addColorStop(0.34, "rgba(164,190,226,0.06)");
@@ -191,71 +204,103 @@ export function createBackgroundRenderer() {
       upperGlow.addColorStop(1, "rgba(146,202,240,0)");
     }
 
-    fillAboveHorizon(ctx, width, height, curve, upperGlow);
+    ctx.save();
+    buildSkyMask(ctx, width, height, curve);
+    ctx.clip();
+    ctx.fillStyle = upperGlow;
+    ctx.fillRect(0, 0, width, curve.rightY + (curve.bandThickness * 2.0));
+    ctx.restore();
   }
 
-  function drawOceanField(ctx, width, height, runtime, curve) {
+  function fillCurvedOceanMass(ctx, width, height, runtime, curve) {
     const phaseLabel = getPhaseLabel(runtime);
     const phaseIntensity = getPhaseIntensity(runtime);
-    const northProgress = getNorthProgress(runtime);
 
-    const ocean = ctx.createLinearGradient(0, curve.centerY - (curve.bandThickness * 0.10), width, height);
+    ctx.save();
+    buildOceanMask(ctx, width, height, curve);
+    ctx.clip();
+
+    ctx.beginPath();
+    ctx.ellipse(
+      width * 0.5,
+      curve.oceanCenterY,
+      curve.oceanRadiusX,
+      curve.oceanRadiusY,
+      0,
+      Math.PI,
+      0,
+      true
+    );
+    ctx.closePath();
+
+    const ocean = ctx.createLinearGradient(0, curve.centerY - (curve.bandThickness * 0.15), 0, height);
 
     if (phaseLabel === "CLEAR_WINDOW") {
-      ocean.addColorStop(0, "rgba(24,136,194,1)");
-      ocean.addColorStop(0.34, "rgba(20,116,176,1)");
-      ocean.addColorStop(0.68, "rgba(14,92,148,1)");
-      ocean.addColorStop(1, "rgba(10,66,118,1)");
+      ocean.addColorStop(0, "rgba(22,136,194,1)");
+      ocean.addColorStop(0.28, "rgba(18,118,178,1)");
+      ocean.addColorStop(0.62, "rgba(12,94,150,1)");
+      ocean.addColorStop(1, "rgba(10,68,122,1)");
     } else if (phaseLabel === "LOCKDOWN") {
-      ocean.addColorStop(0, "rgba(28,118,164,1)");
-      ocean.addColorStop(0.34, "rgba(18,92,136,1)");
-      ocean.addColorStop(0.68, "rgba(12,66,108,1)");
-      ocean.addColorStop(1, "rgba(8,44,84,1)");
+      ocean.addColorStop(0, "rgba(28,116,164,1)");
+      ocean.addColorStop(0.28, "rgba(18,92,136,1)");
+      ocean.addColorStop(0.62, "rgba(12,66,108,1)");
+      ocean.addColorStop(1, "rgba(8,42,82,1)");
     } else if (phaseLabel === "SEVERE") {
       ocean.addColorStop(0, "rgba(24,126,180,1)");
-      ocean.addColorStop(0.34, "rgba(18,100,150,1)");
-      ocean.addColorStop(0.68, "rgba(12,78,126,1)");
+      ocean.addColorStop(0.28, "rgba(18,100,150,1)");
+      ocean.addColorStop(0.62, "rgba(12,78,126,1)");
       ocean.addColorStop(1, "rgba(8,54,98,1)");
     } else {
-      ocean.addColorStop(0, "rgba(44,146,188,1)");
-      ocean.addColorStop(0.34, "rgba(28,116,166,1)");
-      ocean.addColorStop(0.68, "rgba(18,88,138,1)");
+      ocean.addColorStop(0, "rgba(42,146,188,1)");
+      ocean.addColorStop(0.28, "rgba(28,116,166,1)");
+      ocean.addColorStop(0.62, "rgba(18,88,138,1)");
       ocean.addColorStop(1, "rgba(12,68,114,1)");
     }
 
-    fillBelowHorizon(ctx, width, height, curve, ocean);
+    ctx.fillStyle = ocean;
+    ctx.fill();
 
     const westDepth = ctx.createRadialGradient(
-      width * 0.14,
-      lerp(height * 0.76, height * 0.68, northProgress),
+      width * 0.18,
+      curve.oceanCenterY - (curve.oceanRadiusY * 0.14),
       12,
-      width * 0.14,
-      lerp(height * 0.76, height * 0.68, northProgress),
-      width * 0.58
+      width * 0.18,
+      curve.oceanCenterY - (curve.oceanRadiusY * 0.14),
+      width * 0.62
     );
-    westDepth.addColorStop(0, `rgba(6,36,74,${0.32 + (phaseIntensity * 0.06)})`);
+    westDepth.addColorStop(0, `rgba(6,36,74,${0.30 + (phaseIntensity * 0.06)})`);
     westDepth.addColorStop(0.52, `rgba(8,48,88,${0.14 + (phaseIntensity * 0.04)})`);
     westDepth.addColorStop(1, "rgba(8,48,88,0)");
-    fillBelowHorizon(ctx, width, height, curve, westDepth);
+    ctx.fillStyle = westDepth;
+    ctx.fillRect(0, curve.centerY - (curve.bandThickness * 2), width, height);
 
     const eastDepth = ctx.createRadialGradient(
-      width * 0.88,
-      lerp(height * 0.54, height * 0.58, northProgress),
-      10,
-      width * 0.88,
-      lerp(height * 0.54, height * 0.58, northProgress),
-      width * 0.44
+      width * 0.84,
+      curve.oceanCenterY - (curve.oceanRadiusY * 0.26),
+      12,
+      width * 0.84,
+      curve.oceanCenterY - (curve.oceanRadiusY * 0.26),
+      width * 0.46
     );
     eastDepth.addColorStop(0, `rgba(8,42,82,${0.24 + (phaseIntensity * 0.06)})`);
     eastDepth.addColorStop(0.56, `rgba(8,42,82,${0.10 + (phaseIntensity * 0.04)})`);
     eastDepth.addColorStop(1, "rgba(8,42,82,0)");
-    fillBelowHorizon(ctx, width, height, curve, eastDepth);
+    ctx.fillStyle = eastDepth;
+    ctx.fillRect(0, curve.centerY - (curve.bandThickness * 2), width, height);
 
-    const surfaceLift = ctx.createLinearGradient(0, curve.centerY - (curve.bandThickness * 0.20), 0, height);
-    surfaceLift.addColorStop(0, "rgba(224,244,248,0.022)");
+    const surfaceLift = ctx.createLinearGradient(
+      0,
+      curve.centerY - (curve.bandThickness * 0.18),
+      0,
+      curve.oceanCenterY + (curve.oceanRadiusY * 0.36)
+    );
+    surfaceLift.addColorStop(0, "rgba(224,244,248,0.026)");
     surfaceLift.addColorStop(0.24, "rgba(224,244,248,0.012)");
     surfaceLift.addColorStop(1, "rgba(224,244,248,0)");
-    fillBelowHorizon(ctx, width, height, curve, surfaceLift);
+    ctx.fillStyle = surfaceLift;
+    ctx.fillRect(0, curve.centerY - (curve.bandThickness * 2), width, height);
+
+    ctx.restore();
   }
 
   function drawHorizonBand(ctx, width, runtime, curve) {
@@ -289,9 +334,9 @@ export function createBackgroundRenderer() {
 
     const bloom = ctx.createLinearGradient(
       0,
-      curve.centerY - (curve.bandThickness * 0.65),
+      curve.centerY - (curve.bandThickness * 0.70),
       0,
-      curve.centerY + (curve.bandThickness * 1.25)
+      curve.centerY + (curve.bandThickness * 1.30)
     );
 
     if (phaseLabel === "CLEAR_WINDOW") {
@@ -306,28 +351,53 @@ export function createBackgroundRenderer() {
 
     ctx.save();
     ctx.beginPath();
-    ctx.moveTo(0, curve.leftY - curve.bandThickness * 0.50);
+    ctx.moveTo(0, curve.leftY - (curve.bandThickness * 0.48));
     ctx.bezierCurveTo(
       width * 0.22,
-      curve.leftY - curve.bandThickness * 0.95,
-      width * 0.68,
-      curve.centerY - curve.bandThickness * 0.65,
+      curve.leftY - (curve.edgeLift * 1.10),
+      width * 0.38,
+      curve.centerY - (curve.edgeLift * 0.58),
       width * 0.5,
-      curve.centerY - curve.bandThickness * 0.30
+      curve.centerY - (curve.bandThickness * 0.28)
     );
     ctx.bezierCurveTo(
-      width * 0.76,
-      curve.centerY - curve.bandThickness * 0.12,
-      width * 0.90,
-      curve.rightY + curve.bandThickness * 0.04,
+      width * 0.66,
+      curve.centerY - (curve.edgeLift * 0.40),
+      width * 0.82,
+      curve.rightY - (curve.edgeLift * 0.08),
       width,
-      curve.rightY + curve.bandThickness * 0.22
+      curve.rightY + (curve.bandThickness * 0.20)
     );
-    ctx.lineTo(width, curve.rightY + curve.bandThickness * 1.25);
-    ctx.lineTo(0, curve.leftY + curve.bandThickness * 1.25);
+    ctx.lineTo(width, curve.rightY + (curve.bandThickness * 1.30));
+    ctx.lineTo(0, curve.leftY + (curve.bandThickness * 1.30));
     ctx.closePath();
     ctx.fillStyle = bloom;
     ctx.fill();
+    ctx.restore();
+  }
+
+  function drawPlanetFalloff(ctx, width, height, runtime, curve) {
+    const phaseLabel = getPhaseLabel(runtime);
+
+    const falloff = ctx.createLinearGradient(0, 0, 0, height);
+
+    if (phaseLabel === "LOCKDOWN") {
+      falloff.addColorStop(0, "rgba(255,255,255,0.06)");
+      falloff.addColorStop(0.24, "rgba(255,255,255,0.03)");
+      falloff.addColorStop(0.62, "rgba(0,0,0,0.00)");
+      falloff.addColorStop(1, "rgba(0,0,0,0.12)");
+    } else {
+      falloff.addColorStop(0, "rgba(255,255,255,0.04)");
+      falloff.addColorStop(0.26, "rgba(255,255,255,0.02)");
+      falloff.addColorStop(0.62, "rgba(0,0,0,0.00)");
+      falloff.addColorStop(1, "rgba(0,0,0,0.08)");
+    }
+
+    ctx.save();
+    buildOceanMask(ctx, width, height, curve);
+    ctx.clip();
+    ctx.fillStyle = falloff;
+    ctx.fillRect(0, curve.centerY - (curve.bandThickness * 2), width, height);
     ctx.restore();
   }
 
@@ -341,13 +411,14 @@ export function createBackgroundRenderer() {
     const height = runtime.height;
     if (!Number.isFinite(width) || !Number.isFinite(height)) return;
 
-    const curve = getHorizonGeometry(runtime, width, height);
+    const curve = getWorldCurve(runtime, width, height);
 
     ctx.save();
-    drawSkyField(ctx, width, height, runtime, curve);
-    drawOceanField(ctx, width, height, runtime, curve);
+    fillSkyField(ctx, width, height, runtime, curve);
+    fillCurvedOceanMass(ctx, width, height, runtime, curve);
     drawHorizonBand(ctx, width, runtime, curve);
     drawHorizonBloom(ctx, width, height, runtime, curve);
+    drawPlanetFalloff(ctx, width, height, runtime, curve);
     ctx.restore();
   }
 

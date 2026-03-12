@@ -696,6 +696,9 @@ function validateCrossReferences(data) {
     if (cell.pathId) assertReferenceExists(pathsById, cell.pathId, "cell.pathId");
     assertReferenceExists(encodingsById, cell.stateEncodingId, "cell.stateEncodingId");
     for (const neighborId of cell.neighborIds) assertReferenceExists(diamondCellsById, neighborId, "cell.neighborId");
+    if (typeof cell.sector !== "string" || cell.sector.length === 0) {
+      throw new Error(`Missing sealed sector for cell ${cell.diamondCellId}`);
+    }
   }
 
   for (const graphType of Object.keys(graphRows)) {
@@ -731,14 +734,6 @@ function nearestCell(cells, x, y) {
     }
   }
   return best;
-}
-
-function sectorFromVector(dx, dy) {
-  const sectors = ["E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N", "NNE", "NE", "ENE"];
-  const angle = Math.atan2(dy, dx);
-  const normalized = (angle + Math.PI * 2) % (Math.PI * 2);
-  const idx = Math.round(normalized / (Math.PI * 2 / 16)) % 16;
-  return sectors[idx];
 }
 
 function roundPoint(value) {
@@ -1317,16 +1312,18 @@ export async function loadWorldKernel() {
         const { x, y, previousCellId = null } = input;
         const activeCell = nearestCell(diamondCellsById, x, y);
         const previousCell = previousCellId ? diamondCellsById.get(previousCellId) : null;
-        const dx = activeCell.centerPoint[0] - x;
-        const dy = activeCell.centerPoint[1] - y;
         const encoding = encodingsById.get(activeCell.stateEncodingId);
+
+        if (typeof activeCell.sector !== "string" || activeCell.sector.length === 0) {
+          throw new Error(`Missing sealed sector for cell ${activeCell.diamondCellId}`);
+        }
 
         return Object.freeze({
           regionId: activeCell.regionId,
           pathId: activeCell.pathId,
           cellId: activeCell.diamondCellId,
           bandIndex: activeCell.bandIndex,
-          sector: activeCell.sector || sectorFromVector(dx, dy),
+          sector: activeCell.sector,
           stateByte: encoding.byte,
           stateEncodingId: activeCell.stateEncodingId,
           previousCellId: previousCell?.diamondCellId ?? null

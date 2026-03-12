@@ -69,12 +69,14 @@ function indexStackOrder(coastalBlueprint) {
 
 function getCoastalRegionIds(coastalBlueprint) {
   const regionIds = new Set();
+
   for (const domain of mapValuesToArray(
     coastalBlueprint.coastalDomainsById,
     "coastalBlueprint.coastalDomainsById"
   )) {
     regionIds.add(domain.regionId);
   }
+
   return regionIds;
 }
 
@@ -196,6 +198,7 @@ function filterActiveBoundBands(rows) {
 
 function preserveNonCoastalManualTerrainRows(kernel, coastalRegionIds) {
   const preserved = [];
+
   for (const row of kernel.terrainPolygonsById.values()) {
     if (!coastalRegionIds.has(row.regionId)) {
       preserved.push(
@@ -208,11 +211,13 @@ function preserveNonCoastalManualTerrainRows(kernel, coastalRegionIds) {
       );
     }
   }
+
   return preserved;
 }
 
 function preserveNonCoastalManualSubstrateRows(kernel, coastalRegionIds) {
   const preserved = [];
+
   for (const row of kernel.substratePolygonsById.values()) {
     if (!coastalRegionIds.has(row.regionId)) {
       preserved.push(
@@ -225,6 +230,7 @@ function preserveNonCoastalManualSubstrateRows(kernel, coastalRegionIds) {
       );
     }
   }
+
   return preserved;
 }
 
@@ -379,8 +385,9 @@ function rebuildTerrainDataset(input) {
   const coastalRegionIds = getCoastalRegionIds(kernel.coastalBlueprint);
   const indexes = buildBandSortKeyIndexes(kernel.coastalBlueprint);
 
-  const activeGeneratedTerrainBands = filterActiveBoundBands(coastalBands.generatedTerrainBands)
-    .sort(bandComparator(indexes));
+  const activeGeneratedTerrainBands = filterActiveBoundBands(
+    coastalBands.generatedTerrainBands
+  ).sort(bandComparator(indexes));
 
   const preservedManualTerrainRows = preserveNonCoastalManualTerrainRows(
     kernel,
@@ -478,7 +485,8 @@ function rebuildTerrainAndSubstrateDatasets(input) {
       pendingTerrainReceipts,
       pendingSubstrateReceipts,
       preservedManualTerrainRowCount: preservedManualTerrainRows.length,
-      preservedManualSubstrateRowCount: preservedManualSubstrateRows.length
+      preservedManualSubstrateRowCount: preservedManualSubstrateRows.length,
+      generationReceipts: coastalBands.receipts
     }
   });
 }

@@ -121,6 +121,10 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function lerp(a, b, t) {
+  return a + ((b - a) * t);
+}
+
 function insetPolygon(points, inset) {
   if (!points?.length || inset <= 0) return points ? points.slice() : [];
   if (points.length < 3) return points.slice();
@@ -631,7 +635,28 @@ function drawVegetationInstances(ctx, instances, drawFn) {
   }
 }
 
-function drawVegetationLayer(ctx, kernel, vegetationCache) {
+function getPhaseLabel(runtime) {
+  return runtime?.phase?.globalPhase ?? "CALM";
+}
+
+function getSkyPhaseStrength(phaseLabel) {
+  if (phaseLabel === "LOCKDOWN") return 1.0;
+  if (phaseLabel === "SEVERE") return 0.78;
+  if (phaseLabel === "UNSTABLE") return 0.56;
+  if (phaseLabel === "BUILDING") return 0.34;
+  if (phaseLabel === "RECOVERY") return 0.20;
+  if (phaseLabel === "CLEAR_WINDOW") return 0.08;
+  return 0.14;
+}
+
+function getVegetationSuppression(phaseLabel) {
+  if (phaseLabel === "LOCKDOWN") return 0.56;
+  if (phaseLabel === "SEVERE") return 0.34;
+  if (phaseLabel === "UNSTABLE") return 0.18;
+  return 0;
+}
+
+function drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel) {
   const zones = collectVegetationZones(kernel);
   if (!zones.length) return;
 
@@ -667,37 +692,67 @@ function drawVegetationLayer(ctx, kernel, vegetationCache) {
   allShrubs.sort((a, b) => a.y - b.y);
   allGrasses.sort((a, b) => a.y - b.y);
 
+  const suppression = getVegetationSuppression(phaseLabel);
+
+  ctx.save();
+  if (suppression > 0) {
+    ctx.globalAlpha = 1 - suppression;
+  }
   drawVegetationInstances(ctx, allGrasses, drawGrassCluster);
   drawVegetationInstances(ctx, allShrubs, drawShrub);
   drawVegetationInstances(ctx, allTrees, drawTree);
+  ctx.restore();
 }
 
-function drawGlobalSkyWash(ctx) {
+function drawGlobalSkyWash(ctx, phaseLabel) {
   const gradient = ctx.createLinearGradient(0, 0, 0, 1240);
-  gradient.addColorStop(0, "rgba(246,244,236,0.10)");
-  gradient.addColorStop(0.34, "rgba(182,220,244,0.05)");
-  gradient.addColorStop(0.72, "rgba(88,150,204,0.03)");
-  gradient.addColorStop(1, "rgba(20,42,72,0.00)");
+
+  if (phaseLabel === "CLEAR_WINDOW") {
+    gradient.addColorStop(0, "rgba(255,252,244,0.16)");
+    gradient.addColorStop(0.28, "rgba(210,238,255,0.09)");
+    gradient.addColorStop(0.68, "rgba(116,180,232,0.04)");
+    gradient.addColorStop(1, "rgba(20,42,72,0.00)");
+  } else if (phaseLabel === "LOCKDOWN") {
+    gradient.addColorStop(0, "rgba(206,214,228,0.08)");
+    gradient.addColorStop(0.34, "rgba(132,154,188,0.10)");
+    gradient.addColorStop(0.72, "rgba(70,96,134,0.08)");
+    gradient.addColorStop(1, "rgba(20,32,54,0.04)");
+  } else if (phaseLabel === "SEVERE") {
+    gradient.addColorStop(0, "rgba(226,228,234,0.08)");
+    gradient.addColorStop(0.34, "rgba(154,182,212,0.08)");
+    gradient.addColorStop(0.72, "rgba(82,132,184,0.05)");
+    gradient.addColorStop(1, "rgba(20,42,72,0.02)");
+  } else {
+    gradient.addColorStop(0, "rgba(246,244,236,0.10)");
+    gradient.addColorStop(0.34, "rgba(182,220,244,0.05)");
+    gradient.addColorStop(0.72, "rgba(88,150,204,0.03)");
+    gradient.addColorStop(1, "rgba(20,42,72,0.00)");
+  }
+
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, 1180, 1240);
 }
 
-function drawOpenSeaLightField(ctx) {
+function drawOpenSeaLightField(ctx, phaseLabel) {
+  if (phaseLabel === "LOCKDOWN") return;
+
+  const intensity = phaseLabel === "CLEAR_WINDOW" ? 1.25 : phaseLabel === "SEVERE" ? 0.72 : 1.0;
+
   const glowA = ctx.createRadialGradient(784, 468, 20, 784, 468, 520);
-  glowA.addColorStop(0, "rgba(186,238,255,0.18)");
-  glowA.addColorStop(0.35, "rgba(124,196,236,0.08)");
+  glowA.addColorStop(0, `rgba(186,238,255,${0.18 * intensity})`);
+  glowA.addColorStop(0.35, `rgba(124,196,236,${0.08 * intensity})`);
   glowA.addColorStop(1, "rgba(36,88,140,0.00)");
   ctx.fillStyle = glowA;
   ctx.fillRect(0, 0, 1180, 1240);
 
   const glowB = ctx.createRadialGradient(284, 820, 30, 284, 820, 360);
-  glowB.addColorStop(0, "rgba(174,224,248,0.08)");
+  glowB.addColorStop(0, `rgba(174,224,248,${0.08 * intensity})`);
   glowB.addColorStop(1, "rgba(50,110,166,0.00)");
   ctx.fillStyle = glowB;
   ctx.fillRect(0, 0, 1180, 1240);
 }
 
-function drawWaterBodyAtmosphere(ctx, points, tick, waterClass) {
+function drawWaterBodyAtmosphere(ctx, points, tick, waterClass, phaseLabel) {
   if (!points?.length) return;
 
   const [cx, cy] = centroid(points);
@@ -707,25 +762,61 @@ function drawWaterBodyAtmosphere(ctx, points, tick, waterClass) {
 
   const radius = waterClass === "harbor" ? 240 : 140;
   const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, radius);
-  if (waterClass === "harbor") {
-    gradient.addColorStop(0, `rgba(210,246,255,${0.08 + (pulse * 0.03)})`);
-    gradient.addColorStop(0.45, "rgba(124,196,232,0.05)");
-    gradient.addColorStop(1, "rgba(30,78,132,0.00)");
+
+  if (phaseLabel === "LOCKDOWN") {
+    gradient.addColorStop(0, `rgba(210,230,255,${0.06 + (pulse * 0.02)})`);
+    gradient.addColorStop(0.45, "rgba(132,164,212,0.05)");
+    gradient.addColorStop(1, "rgba(40,66,108,0.02)");
+  } else if (phaseLabel === "SEVERE" || phaseLabel === "UNSTABLE") {
+    if (waterClass === "harbor") {
+      gradient.addColorStop(0, `rgba(224,246,255,${0.10 + (pulse * 0.04)})`);
+      gradient.addColorStop(0.45, "rgba(134,206,244,0.07)");
+      gradient.addColorStop(1, "rgba(38,88,142,0.00)");
+    } else {
+      gradient.addColorStop(0, `rgba(204,236,255,${0.08 + (pulse * 0.03)})`);
+      gradient.addColorStop(0.5, "rgba(126,184,220,0.05)");
+      gradient.addColorStop(1, "rgba(36,74,116,0.00)");
+    }
+  } else if (phaseLabel === "CLEAR_WINDOW") {
+    if (waterClass === "harbor") {
+      gradient.addColorStop(0, `rgba(236,250,255,${0.12 + (pulse * 0.04)})`);
+      gradient.addColorStop(0.45, "rgba(156,220,250,0.07)");
+      gradient.addColorStop(1, "rgba(30,78,132,0.00)");
+    } else {
+      gradient.addColorStop(0, `rgba(214,246,255,${0.10 + (pulse * 0.03)})`);
+      gradient.addColorStop(0.5, "rgba(138,196,224,0.05)");
+      gradient.addColorStop(1, "rgba(34,74,110,0.00)");
+    }
   } else {
-    gradient.addColorStop(0, `rgba(196,236,248,${0.06 + (pulse * 0.02)})`);
-    gradient.addColorStop(0.5, "rgba(126,178,204,0.04)");
-    gradient.addColorStop(1, "rgba(34,74,110,0.00)");
+    if (waterClass === "harbor") {
+      gradient.addColorStop(0, `rgba(210,246,255,${0.08 + (pulse * 0.03)})`);
+      gradient.addColorStop(0.45, "rgba(124,196,232,0.05)");
+      gradient.addColorStop(1, "rgba(30,78,132,0.00)");
+    } else {
+      gradient.addColorStop(0, `rgba(196,236,248,${0.06 + (pulse * 0.02)})`);
+      gradient.addColorStop(0.5, "rgba(126,178,204,0.04)");
+      gradient.addColorStop(1, "rgba(34,74,110,0.00)");
+    }
   }
 
   ctx.fillStyle = gradient;
   ctx.fill();
 }
 
-function drawWaterBodyShimmer(ctx, points, tick, waterClass) {
+function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel) {
   if (!points?.length) return;
+  if (phaseLabel === "LOCKDOWN") return;
 
   const [cx, cy] = centroid(points);
   const pulse = 0.5 + (0.5 * Math.sin((tick * 0.06) + (cx * 0.01)));
+
+  const alphaScale = phaseLabel === "CLEAR_WINDOW"
+    ? 1.28
+    : phaseLabel === "SEVERE"
+      ? 0.88
+      : phaseLabel === "UNSTABLE"
+        ? 1.02
+        : 1.0;
 
   ctx.save();
   polygon(ctx, points);
@@ -733,13 +824,13 @@ function drawWaterBodyShimmer(ctx, points, tick, waterClass) {
 
   const shimmerBands = waterClass === "harbor"
     ? [
-        { x: cx - 150, y: cy - 30, w: 180, h: 18, a: 0.05 + (pulse * 0.03) },
-        { x: cx - 40, y: cy + 8, w: 140, h: 16, a: 0.04 + (pulse * 0.025) },
-        { x: cx + 40, y: cy - 56, w: 120, h: 14, a: 0.035 + (pulse * 0.02) }
+        { x: cx - 150, y: cy - 30, w: 180, h: 18, a: (0.05 + (pulse * 0.03)) * alphaScale },
+        { x: cx - 40, y: cy + 8, w: 140, h: 16, a: (0.04 + (pulse * 0.025)) * alphaScale },
+        { x: cx + 40, y: cy - 56, w: 120, h: 14, a: (0.035 + (pulse * 0.02)) * alphaScale }
       ]
     : [
-        { x: cx - 74, y: cy - 14, w: 92, h: 12, a: 0.04 + (pulse * 0.02) },
-        { x: cx - 14, y: cy + 10, w: 80, h: 10, a: 0.03 + (pulse * 0.016) }
+        { x: cx - 74, y: cy - 14, w: 92, h: 12, a: (0.04 + (pulse * 0.02)) * alphaScale },
+        { x: cx - 14, y: cy + 10, w: 80, h: 10, a: (0.03 + (pulse * 0.016)) * alphaScale }
       ];
 
   for (const band of shimmerBands) {
@@ -754,7 +845,7 @@ function drawWaterBodyShimmer(ctx, points, tick, waterClass) {
   ctx.restore();
 }
 
-function drawHarborMist(ctx, kernel) {
+function drawHarborMist(ctx, kernel, phaseLabel) {
   const harborBasin = kernel?.coastlineModel?.harborBasin;
   if (!harborBasin?.length) return;
 
@@ -765,18 +856,38 @@ function drawHarborMist(ctx, kernel) {
   ctx.clip();
 
   const mist = ctx.createRadialGradient(cx, cy - 60, 20, cx, cy - 60, 280);
-  mist.addColorStop(0, "rgba(232,244,255,0.08)");
-  mist.addColorStop(0.4, "rgba(188,222,244,0.04)");
-  mist.addColorStop(1, "rgba(188,222,244,0.00)");
+
+  if (phaseLabel === "CLEAR_WINDOW") {
+    mist.addColorStop(0, "rgba(238,248,255,0.05)");
+    mist.addColorStop(0.4, "rgba(198,228,246,0.02)");
+    mist.addColorStop(1, "rgba(188,222,244,0.00)");
+  } else if (phaseLabel === "LOCKDOWN" || phaseLabel === "SEVERE") {
+    mist.addColorStop(0, "rgba(236,244,255,0.14)");
+    mist.addColorStop(0.4, "rgba(194,220,246,0.08)");
+    mist.addColorStop(1, "rgba(188,222,244,0.00)");
+  } else {
+    mist.addColorStop(0, "rgba(232,244,255,0.08)");
+    mist.addColorStop(0.4, "rgba(188,222,244,0.04)");
+    mist.addColorStop(1, "rgba(188,222,244,0.00)");
+  }
+
   ctx.fillStyle = mist;
   ctx.fillRect(cx - 320, cy - 300, 640, 520);
 
   ctx.restore();
 }
 
-function drawSeaHazardAtmosphere(ctx, kernel) {
+function drawSeaHazardAtmosphere(ctx, kernel, phaseLabel) {
   const seaHazardsById = kernel?.maritimeNetwork?.seaHazardsById;
   if (!seaHazardsById) return;
+
+  const multiplier = phaseLabel === "SEVERE" || phaseLabel === "LOCKDOWN"
+    ? 1.35
+    : phaseLabel === "UNSTABLE"
+      ? 1.15
+      : phaseLabel === "CLEAR_WINDOW"
+        ? 0.72
+        : 1.0;
 
   for (const hazard of seaHazardsById.values()) {
     if (!hazard?.polygon?.length) continue;
@@ -788,12 +899,12 @@ function drawSeaHazardAtmosphere(ctx, kernel) {
     const gradient = ctx.createRadialGradient(cx, cy, 16, cx, cy, radius);
 
     if (hazard.hazardClass === "reef") {
-      gradient.addColorStop(0, "rgba(166,236,214,0.08)");
-      gradient.addColorStop(0.5, "rgba(110,182,168,0.04)");
+      gradient.addColorStop(0, `rgba(166,236,214,${0.08 * multiplier})`);
+      gradient.addColorStop(0.5, `rgba(110,182,168,${0.04 * multiplier})`);
       gradient.addColorStop(1, "rgba(110,182,168,0.00)");
     } else {
-      gradient.addColorStop(0, "rgba(176,214,255,0.08)");
-      gradient.addColorStop(0.55, "rgba(116,156,220,0.04)");
+      gradient.addColorStop(0, `rgba(176,214,255,${0.08 * multiplier})`);
+      gradient.addColorStop(0.55, `rgba(116,156,220,${0.04 * multiplier})`);
       gradient.addColorStop(1, "rgba(116,156,220,0.00)");
     }
 
@@ -802,35 +913,156 @@ function drawSeaHazardAtmosphere(ctx, kernel) {
   }
 }
 
-function drawDistanceVeil(ctx) {
+function drawPhaseRadiationVeil(ctx, phaseLabel, tick) {
+  const strength = getSkyPhaseStrength(phaseLabel);
+  if (strength <= 0.12 && phaseLabel !== "CLEAR_WINDOW") return;
+
+  if (phaseLabel === "CLEAR_WINDOW") {
+    const glow = ctx.createRadialGradient(590, 250, 60, 590, 250, 760);
+    glow.addColorStop(0, "rgba(255,250,236,0.12)");
+    glow.addColorStop(0.32, "rgba(214,238,255,0.07)");
+    glow.addColorStop(1, "rgba(180,220,255,0.00)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, 1180, 1240);
+    return;
+  }
+
+  const pulse = 0.5 + (0.5 * Math.sin(tick * 0.045));
+  const alphaA = (0.035 + (pulse * 0.02)) * strength;
+  const alphaB = (0.03 + (pulse * 0.016)) * strength;
+
+  const veilA = ctx.createLinearGradient(0, 0, 1180, 1240);
+  veilA.addColorStop(0, `rgba(198,222,255,${alphaA})`);
+  veilA.addColorStop(0.42, `rgba(132,170,228,${alphaB})`);
+  veilA.addColorStop(1, "rgba(52,92,152,0.00)");
+  ctx.fillStyle = veilA;
+  ctx.fillRect(0, 0, 1180, 1240);
+
+  if (phaseLabel === "SEVERE" || phaseLabel === "LOCKDOWN") {
+    const veilB = ctx.createLinearGradient(0, 0, 0, 1240);
+    veilB.addColorStop(0, `rgba(228,236,255,${0.03 + (strength * 0.04)})`);
+    veilB.addColorStop(0.65, `rgba(126,152,204,${0.03 + (strength * 0.03)})`);
+    veilB.addColorStop(1, "rgba(36,58,92,0.00)");
+    ctx.fillStyle = veilB;
+    ctx.fillRect(0, 0, 1180, 1240);
+  }
+}
+
+function drawChargedCloudBands(ctx, phaseLabel, tick) {
+  if (
+    phaseLabel !== "BUILDING" &&
+    phaseLabel !== "UNSTABLE" &&
+    phaseLabel !== "SEVERE" &&
+    phaseLabel !== "LOCKDOWN"
+  ) {
+    return;
+  }
+
+  const phaseStrength = getSkyPhaseStrength(phaseLabel);
+  const drift = Math.sin(tick * 0.01) * 18;
+
+  const bands = [
+    { x: 110 + drift, y: 114, w: 280, h: 54, a: 0.032 + (phaseStrength * 0.028) },
+    { x: 386 - (drift * 0.4), y: 170, w: 360, h: 62, a: 0.028 + (phaseStrength * 0.026) },
+    { x: 728 + (drift * 0.7), y: 128, w: 270, h: 58, a: 0.03 + (phaseStrength * 0.03) },
+    { x: 218 - (drift * 0.6), y: 246, w: 430, h: 72, a: 0.022 + (phaseStrength * 0.024) }
+  ];
+
+  ctx.save();
+  for (const band of bands) {
+    const gradient = ctx.createLinearGradient(band.x, band.y, band.x + band.w, band.y + band.h);
+    gradient.addColorStop(0, `rgba(234,240,248,${band.a})`);
+    gradient.addColorStop(0.5, `rgba(162,186,220,${band.a * 1.1})`);
+    gradient.addColorStop(1, "rgba(98,128,170,0.00)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(band.x, band.y, band.w, band.h);
+  }
+  ctx.restore();
+}
+
+function drawStormChargeFlashes(ctx, phaseLabel, tick) {
+  if (phaseLabel !== "SEVERE" && phaseLabel !== "LOCKDOWN") return;
+
+  const pulseA = 0.5 + (0.5 * Math.sin((tick * 0.13) + 0.7));
+  const pulseB = 0.5 + (0.5 * Math.sin((tick * 0.17) + 2.2));
+
+  if (pulseA > 0.90) {
+    ctx.fillStyle = `rgba(228,242,255,${(pulseA - 0.90) * 0.24})`;
+    ctx.fillRect(0, 0, 1180, 1240);
+  }
+
+  if (pulseB > 0.94) {
+    const gradient = ctx.createRadialGradient(820, 210, 20, 820, 210, 340);
+    gradient.addColorStop(0, `rgba(244,250,255,${(pulseB - 0.94) * 1.6})`);
+    gradient.addColorStop(0.3, `rgba(210,232,255,${(pulseB - 0.94) * 0.8})`);
+    gradient.addColorStop(1, "rgba(210,232,255,0.00)");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(520, 0, 520, 500);
+  }
+}
+
+function drawDistanceVeil(ctx, phaseLabel) {
   const topVeil = ctx.createLinearGradient(0, 0, 0, 420);
-  topVeil.addColorStop(0, "rgba(255,255,255,0.06)");
-  topVeil.addColorStop(1, "rgba(255,255,255,0.00)");
+  if (phaseLabel === "CLEAR_WINDOW") {
+    topVeil.addColorStop(0, "rgba(255,255,255,0.03)");
+    topVeil.addColorStop(1, "rgba(255,255,255,0.00)");
+  } else if (phaseLabel === "LOCKDOWN" || phaseLabel === "SEVERE") {
+    topVeil.addColorStop(0, "rgba(248,250,255,0.12)");
+    topVeil.addColorStop(1, "rgba(255,255,255,0.00)");
+  } else {
+    topVeil.addColorStop(0, "rgba(255,255,255,0.06)");
+    topVeil.addColorStop(1, "rgba(255,255,255,0.00)");
+  }
   ctx.fillStyle = topVeil;
   ctx.fillRect(0, 0, 1180, 420);
 
   const lowerVeil = ctx.createLinearGradient(0, 700, 0, 1240);
-  lowerVeil.addColorStop(0, "rgba(28,58,94,0.00)");
-  lowerVeil.addColorStop(1, "rgba(14,28,46,0.08)");
+  if (phaseLabel === "LOCKDOWN") {
+    lowerVeil.addColorStop(0, "rgba(36,60,96,0.04)");
+    lowerVeil.addColorStop(1, "rgba(12,20,34,0.18)");
+  } else if (phaseLabel === "SEVERE") {
+    lowerVeil.addColorStop(0, "rgba(34,66,106,0.03)");
+    lowerVeil.addColorStop(1, "rgba(12,24,40,0.12)");
+  } else {
+    lowerVeil.addColorStop(0, "rgba(28,58,94,0.00)");
+    lowerVeil.addColorStop(1, "rgba(14,28,46,0.08)");
+  }
   ctx.fillStyle = lowerVeil;
   ctx.fillRect(0, 700, 1180, 540);
 }
 
-function drawVignette(ctx) {
-  const gradient = ctx.createRadialGradient(590, 620, 220, 590, 620, 860);
+function drawVignette(ctx, phaseLabel) {
+  const radius = phaseLabel === "CLEAR_WINDOW" ? 920 : 860;
+  const alpha = phaseLabel === "LOCKDOWN"
+    ? 0.16
+    : phaseLabel === "SEVERE"
+      ? 0.13
+      : phaseLabel === "CLEAR_WINDOW"
+        ? 0.06
+        : 0.10;
+
+  const gradient = ctx.createRadialGradient(590, 620, 220, 590, 620, radius);
   gradient.addColorStop(0, "rgba(0,0,0,0.00)");
-  gradient.addColorStop(1, "rgba(10,18,28,0.10)");
+  gradient.addColorStop(1, `rgba(10,18,28,${alpha})`);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, 1180, 1240);
 }
 
-function drawHarborChannelGuidanceGlow(ctx, kernel, tick) {
+function drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel) {
   const channel = kernel?.coastlineModel?.harborChannel;
   if (!channel?.length) return;
 
   const pulse = 0.5 + (0.5 * Math.sin(tick * 0.05));
-  strokePolygon(ctx, channel, `rgba(210,244,255,${0.04 + (pulse * 0.03)})`, 8);
-  strokePolygon(ctx, channel, `rgba(160,214,246,${0.03 + (pulse * 0.02)})`, 14);
+  const intensity = phaseLabel === "CLEAR_WINDOW"
+    ? 1.2
+    : phaseLabel === "LOCKDOWN"
+      ? 0.7
+      : phaseLabel === "SEVERE"
+        ? 0.85
+        : 1.0;
+
+  strokePolygon(ctx, channel, `rgba(210,244,255,${(0.04 + (pulse * 0.03)) * intensity})`, 8);
+  strokePolygon(ctx, channel, `rgba(160,214,246,${(0.03 + (pulse * 0.02)) * intensity})`, 14);
 }
 
 export function createEnvironmentRenderer() {
@@ -838,26 +1070,30 @@ export function createEnvironmentRenderer() {
 
   function draw(ctx, runtime) {
     const { viewportOffset, kernel, tick = 0 } = runtime;
+    const phaseLabel = getPhaseLabel(runtime);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    drawGlobalSkyWash(ctx);
-    drawOpenSeaLightField(ctx);
+    drawGlobalSkyWash(ctx, phaseLabel);
+    drawOpenSeaLightField(ctx, phaseLabel);
+    drawPhaseRadiationVeil(ctx, phaseLabel, tick);
+    drawChargedCloudBands(ctx, phaseLabel, tick);
 
     const waters = kernel?.watersById ? [...kernel.watersById.values()] : [];
     for (const row of waters) {
       if (!row?.polygon) continue;
-      drawWaterBodyAtmosphere(ctx, row.polygon, tick, row.waterClass);
-      drawWaterBodyShimmer(ctx, row.polygon, tick, row.waterClass);
+      drawWaterBodyAtmosphere(ctx, row.polygon, tick, row.waterClass, phaseLabel);
+      drawWaterBodyShimmer(ctx, row.polygon, tick, row.waterClass, phaseLabel);
     }
 
-    drawHarborMist(ctx, kernel);
-    drawSeaHazardAtmosphere(ctx, kernel);
-    drawVegetationLayer(ctx, kernel, vegetationCache);
-    drawHarborChannelGuidanceGlow(ctx, kernel, tick);
-    drawDistanceVeil(ctx);
-    drawVignette(ctx);
+    drawHarborMist(ctx, kernel, phaseLabel);
+    drawSeaHazardAtmosphere(ctx, kernel, phaseLabel);
+    drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel);
+    drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel);
+    drawStormChargeFlashes(ctx, phaseLabel, tick);
+    drawDistanceVeil(ctx, phaseLabel);
+    drawVignette(ctx, phaseLabel);
 
     ctx.restore();
   }

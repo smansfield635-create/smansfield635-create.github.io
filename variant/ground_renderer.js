@@ -230,35 +230,65 @@ function createSurfaceProjector(runtime) {
   const playerX = Number.isFinite(runtime?.player?.x) ? runtime.player.x : worldWidth * 0.5;
   const playerY = Number.isFinite(runtime?.player?.y) ? runtime.player.y : worldHeight * 0.62;
   const northProgress = clamp((930 - playerY) / 930, 0, 1);
+  const eastProgress = clamp((playerX - 150) / (960 - 150), 0, 1);
 
-  const planetAnchorX = lerp(worldWidth * 0.28, worldWidth * 0.18, northProgress);
-  const planetAnchorY = lerp(worldHeight * 1.05, worldHeight * 0.86, northProgress);
-  const horizonLift = lerp(38, 132, northProgress);
-  const curveStrength = lerp(0.08, 0.24, northProgress);
-  const compressionStrength = lerp(0.06, 0.22, northProgress);
-  const azimuthShift = ((playerX - (worldWidth * 0.5)) / (worldWidth * 0.5)) * lerp(16, 42, northProgress);
+  const planetaryGeometry = runtime?.planetaryGeometry ?? null;
+  const atmosphericLimbState = runtime?.atmosphericLimbState ?? null;
+
+  const limbVec = atmosphericLimbState?.visibleLimbDirection;
+  const limbX = Number.isFinite(limbVec?.[0]) ? limbVec[0] : -0.72;
+  const limbY = Number.isFinite(limbVec?.[1]) ? limbVec[1] : 0.30;
+
+  const limbTilt = clamp((-limbX * 0.34) + (limbY * 0.12), -0.42, 0.42);
+  const normalTilt = clamp((limbX * 0.22) + (limbY * 0.28), -0.38, 0.38);
+
+  const shellStrength = planetaryGeometry
+    ? clamp((planetaryGeometry.planetRadius / Math.max(1, planetaryGeometry.cameraDistanceFromCenter)) * 0.34, 0.18, 0.33)
+    : 0.24;
+
+  const atmosphereEdgeStrength = clamp(atmosphericLimbState?.atmosphereEdgeStrength ?? 0.45, 0, 1);
+
+  const planetAnchorX = lerp(worldWidth * 0.26, worldWidth * 0.16, northProgress) + (limbTilt * 92);
+  const planetAnchorY = lerp(worldHeight * 1.02, worldHeight * 0.82, northProgress);
+
+  const shellRise = lerp(52, 148, northProgress) * (0.84 + (shellStrength * 0.46));
+  const shellCurl = lerp(34, 132, northProgress) * (0.82 + (shellStrength * 0.62));
+  const compressionStrength = lerp(0.08, 0.24, northProgress) * (0.86 + (shellStrength * 0.28));
+  const azimuthShift = (((playerX - (worldWidth * 0.5)) / (worldWidth * 0.5)) * lerp(18, 48, northProgress)) + (limbTilt * 54);
+
+  const normalAxisTurn = lerp(0.08, 0.28, northProgress) + (Math.abs(normalTilt) * 0.18);
+  const verticalShellBias = lerp(18, 78, northProgress) * (0.82 + (Math.abs(normalTilt) * 0.9));
+  const depthShear = lerp(10, 34, northProgress) * (0.7 + atmosphereEdgeStrength * 0.5);
+  const sideBend = (eastProgress - 0.5) * lerp(12, 28, northProgress);
 
   function point(x, y) {
     const dy = clamp((worldHeight - y) / worldHeight, 0, 1);
     const dx = x - planetAnchorX;
     const lateralNorm = dx / (worldWidth * 0.70);
     const depth = dy * dy;
+    const depth3 = depth * dy;
 
-    const lift = depth * horizonLift;
-    const sideCurl = (lateralNorm * lateralNorm) * depth * lerp(24, 118, northProgress);
+    const lift = depth * shellRise;
+    const sideCurl = (lateralNorm * lateralNorm) * depth * shellCurl;
     const centerPull = dx * compressionStrength * depth;
     const skew = azimuthShift * depth;
 
+    const localNormalMix = clamp(1 - Math.abs(lateralNorm), 0, 1);
+    const normalRise = localNormalMix * depth3 * verticalShellBias;
+    const normalShearX = normalTilt * localNormalMix * depth * depthShear;
+    const rimDrop = (1 - localNormalMix) * depth3 * lerp(4, 24, northProgress);
+    const azimuthArc = lateralNorm * depth * sideBend;
+
     return {
-      x: x - centerPull + skew,
-      y: y - lift - sideCurl
+      x: x - centerPull + skew + normalShearX + azimuthArc,
+      y: y - lift - sideCurl - normalRise + rimDrop
     };
   }
 
   function radius(value, y) {
     const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const scale = 1 - (curveStrength * depth);
-    return Math.max(0.5, value * scale);
+    const localScale = 1 - ((lerp(0.08, 0.24, northProgress) + (shellStrength * 0.04)) * depth);
+    return Math.max(0.5, value * localScale);
   }
 
   function lineWidth(value, y) {

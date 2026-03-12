@@ -223,87 +223,25 @@ function rgbaAdjusted(r, g, b, a, mods) {
   return `rgba(${nr.toFixed(0)},${ng.toFixed(0)},${nb.toFixed(0)},${clamp(a, 0, 1).toFixed(3)})`;
 }
 
-function createSurfaceProjector(runtime) {
-  const worldWidth = 1180;
-  const worldHeight = 1240;
-
-  const playerX = Number.isFinite(runtime?.player?.x) ? runtime.player.x : worldWidth * 0.5;
-  const playerY = Number.isFinite(runtime?.player?.y) ? runtime.player.y : worldHeight * 0.62;
-  const northProgress = clamp((930 - playerY) / 930, 0, 1);
-  const eastProgress = clamp((playerX - 150) / (960 - 150), 0, 1);
-
-  const planetaryGeometry = runtime?.planetaryGeometry ?? null;
-  const atmosphericLimbState = runtime?.atmosphericLimbState ?? null;
-
-  const limbVec = atmosphericLimbState?.visibleLimbDirection;
-  const limbX = Number.isFinite(limbVec?.[0]) ? limbVec[0] : -0.72;
-  const limbY = Number.isFinite(limbVec?.[1]) ? limbVec[1] : 0.30;
-
-  const limbTilt = clamp((-limbX * 0.34) + (limbY * 0.12), -0.42, 0.42);
-  const normalTilt = clamp((limbX * 0.22) + (limbY * 0.28), -0.38, 0.38);
-
-  const shellStrength = planetaryGeometry
-    ? clamp((planetaryGeometry.planetRadius / Math.max(1, planetaryGeometry.cameraDistanceFromCenter)) * 0.34, 0.18, 0.33)
-    : 0.24;
-
-  const atmosphereEdgeStrength = clamp(atmosphericLimbState?.atmosphereEdgeStrength ?? 0.45, 0, 1);
-
-  const planetAnchorX = lerp(worldWidth * 0.26, worldWidth * 0.16, northProgress) + (limbTilt * 92);
-  const planetAnchorY = lerp(worldHeight * 1.02, worldHeight * 0.82, northProgress);
-
-  const shellRise = lerp(52, 148, northProgress) * (0.84 + (shellStrength * 0.46));
-  const shellCurl = lerp(34, 132, northProgress) * (0.82 + (shellStrength * 0.62));
-  const compressionStrength = lerp(0.08, 0.24, northProgress) * (0.86 + (shellStrength * 0.28));
-  const azimuthShift = (((playerX - (worldWidth * 0.5)) / (worldWidth * 0.5)) * lerp(18, 48, northProgress)) + (limbTilt * 54);
-
-  const normalAxisTurn = lerp(0.08, 0.28, northProgress) + (Math.abs(normalTilt) * 0.18);
-  const verticalShellBias = lerp(18, 78, northProgress) * (0.82 + (Math.abs(normalTilt) * 0.9));
-  const depthShear = lerp(10, 34, northProgress) * (0.7 + atmosphereEdgeStrength * 0.5);
-  const sideBend = (eastProgress - 0.5) * lerp(12, 28, northProgress);
-
+function createSurfaceProjector() {
   function point(x, y) {
-    const dy = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const dx = x - planetAnchorX;
-    const lateralNorm = dx / (worldWidth * 0.70);
-    const depth = dy * dy;
-    const depth3 = depth * dy;
-
-    const lift = depth * shellRise;
-    const sideCurl = (lateralNorm * lateralNorm) * depth * shellCurl;
-    const centerPull = dx * compressionStrength * depth;
-    const skew = azimuthShift * depth;
-
-    const localNormalMix = clamp(1 - Math.abs(lateralNorm), 0, 1);
-    const normalRise = localNormalMix * depth3 * verticalShellBias;
-    const normalShearX = normalTilt * localNormalMix * depth * depthShear;
-    const rimDrop = (1 - localNormalMix) * depth3 * lerp(4, 24, northProgress);
-    const azimuthArc = lateralNorm * depth * sideBend;
-
-    return {
-      x: x - centerPull + skew + normalShearX + azimuthArc,
-      y: y - lift - sideCurl - normalRise + rimDrop
-    };
+    return { x, y };
   }
 
-  function radius(value, y) {
-    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const localScale = 1 - ((lerp(0.08, 0.24, northProgress) + (shellStrength * 0.04)) * depth);
-    return Math.max(0.5, value * localScale);
+  function radius(value) {
+    return Math.max(0.5, value);
   }
 
-  function lineWidth(value, y) {
-    return radius(value, y);
+  function lineWidth(value) {
+    return Math.max(0.5, value);
   }
 
   function rect(x, y, width, height) {
-    const p = point(x + (width * 0.5), y + (height * 0.5));
-    const scaledWidth = radius(width, y + height);
-    const scaledHeight = radius(height, y + height);
     return {
-      x: p.x - (scaledWidth * 0.5),
-      y: p.y - (scaledHeight * 0.5),
-      width: scaledWidth,
-      height: scaledHeight
+      x,
+      y,
+      width,
+      height
     };
   }
 
@@ -1190,7 +1128,7 @@ export function createGroundRenderer() {
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
     const manualWaterRows = getManualWaterRows(kernel);
-    const projector = createSurfaceProjector(runtime);
+    const projector = createSurfaceProjector();
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);

@@ -323,12 +323,8 @@ export async function createScene(canvas, outputs) {
     const targetScreenX = state.width * 0.50;
     const targetScreenY = state.height * 0.88;
 
-    const northProgress = clamp((930 - state.player.y) / 930, 0, 1);
-    const dynamicForwardBiasY = (160 + (northProgress * 54)) * state.renderScale;
-    const dynamicForwardBiasX = (northProgress * 10) * state.renderScale;
-
-    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX + dynamicForwardBiasX);
-    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY + dynamicForwardBiasY);
+    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX);
+    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY);
 
     const lerpX = forceSnap ? 1 : 0.11;
     const lerpY = forceSnap ? 1 : 0.09;
@@ -866,4 +862,4 @@ export async function createScene(canvas, outputs) {
       requestAnimationFrame(step);
     }
   });
-          }
+}

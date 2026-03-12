@@ -7,8 +7,8 @@ import { loadWorldKernel } from "../world/world_kernel.js";
 import { createWorldPhaseEngine } from "./world_phase_engine.js";
 
 function distanceSq(ax, ay, bx, by) {
-  const dx = ax - bx;
-  const dy = ay - by;
+  const dx = bx - ax;
+  const dy = by - ay;
   return (dx * dx) + (dy * dy);
 }
 
@@ -94,7 +94,6 @@ export async function createScene(canvas, outputs) {
     destination: null,
 
     camera: { x: 0, y: 0 },
-
     viewportOffset: { x: 0, y: 0 },
 
     renderScale: 1.72,

@@ -1,15 +1,14 @@
-(import code continues exactly as you already have it)
-
-import { createBackgroundRenderer } from "../assets/openworld_background_renderer.js";
-import { createEnvironmentRenderer } from "./environment_renderer.js";
-import { createGroundRenderer } from "./ground_renderer.js";
-import { createCompassRenderer } from "../assets/openworld_compass_renderer.js";
-import { createInstruments } from "../assets/instruments.js";
-import { loadWorldKernel } from "../world/world_kernel.js";
+import { createBackgroundRenderer } from "../../assets/openworld_background_renderer.js";
+import { createEnvironmentRenderer } from "../../variant/environment_renderer.js";
+import { createGroundRenderer } from "../../variant/ground_renderer.js";
+import { createCompassRenderer } from "../../assets/openworld_compass_renderer.js";
+import { createInstruments } from "../../assets/instruments.js";
+import { loadWorldKernel } from "../world_kernel.js";
+import { createWorldPhaseEngine } from "../../variant/world_phase_engine.js";
 
 function distanceSq(ax, ay, bx, by) {
-  const dx = ax - bx;
-  const dy = ay - by;
+  const dx = bx - ax;
+  const dy = by - ay;
   return (dx * dx) + (dy * dy);
 }
 
@@ -46,8 +45,16 @@ function lerp(a, b, t) {
   return a + ((b - a) * t);
 }
 
-export async function createScene(canvas, outputs) {
+function getPhasePanelString(phase) {
+  const globalPhase = typeof phase?.globalPhase === "string" ? phase.globalPhase : "CALM";
+  const intensity = Number.isFinite(phase?.intensity) ? phase.intensity.toFixed(2) : "0.20";
+  const cyclePosition = Number.isFinite(phase?.cyclePosition) ? String(phase.cyclePosition) : "0";
+  const nextShiftTick = Number.isFinite(phase?.nextShiftTick) ? String(Math.round(phase.nextShiftTick)) : "0";
 
+  return `${globalPhase} · I:${intensity} · C:${cyclePosition} · N:${nextShiftTick}`;
+}
+
+export async function createScene(canvas, outputs) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2D canvas context unavailable");
 
@@ -63,6 +70,13 @@ export async function createScene(canvas, outputs) {
     dpr: 1,
     tick: 0,
     kernel: await loadWorldKernel(),
+    phase: {
+      globalPhase: "CALM",
+      intensity: 0.2,
+      cyclePosition: 0,
+      nextShiftTick: 0
+    },
+    phaseEngine: createWorldPhaseEngine(12345),
     keys: new Set(),
     renderMode: "styled",
 
@@ -80,7 +94,6 @@ export async function createScene(canvas, outputs) {
     destination: null,
 
     camera: { x: 0, y: 0 },
-
     viewportOffset: { x: 0, y: 0 },
 
     renderScale: 1.72,
@@ -101,29 +114,20 @@ export async function createScene(canvas, outputs) {
   };
 
   function detectDockTransfer() {
-
     const harborGraph = state.kernel.harborNavigationGraph;
     if (!harborGraph) return;
 
     const nodes = [...harborGraph.navigationNodesById.values()];
 
     for (const node of nodes) {
-
       if (node.nodeClass !== "mooring") continue;
 
       const dx = state.player.x - node.centerPoint[0];
       const dy = state.player.y - node.centerPoint[1];
-
       const distSq = (dx * dx) + (dy * dy);
 
       if (distSq < 40 * 40) {
-
-        if (state.player.mode === "FOOT") {
-          state.player.mode = "BOAT";
-        } else {
-          state.player.mode = "FOOT";
-        }
-
+        state.player.mode = state.player.mode === "FOOT" ? "BOAT" : "FOOT";
       }
     }
   }
@@ -136,7 +140,6 @@ export async function createScene(canvas, outputs) {
   }
 
   function resize() {
-
     state.dpr = Math.max(1, window.devicePixelRatio || 1);
     state.width = window.innerWidth;
     state.height = window.innerHeight;
@@ -147,14 +150,13 @@ export async function createScene(canvas, outputs) {
     canvas.style.width = `${state.width}px`;
     canvas.style.height = `${state.height}px`;
 
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(state.dpr,state.dpr);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(state.dpr, state.dpr);
 
     updateViewportOffset(true);
   }
 
-  function updateViewportOffset(forceSnap=false){
-
+  function updateViewportOffset(forceSnap = false) {
     const scaledWorldWidth = state.worldBounds.width * state.renderScale;
     const scaledWorldHeight = state.worldBounds.height * state.renderScale;
 
@@ -182,33 +184,29 @@ export async function createScene(canvas, outputs) {
     state.viewportOffset.y = baseY + state.camera.y;
   }
 
-  function updatePlayer(){
+  function updatePlayer() {
+    let dx = 0;
+    let dy = 0;
 
-    let dx=0;
-    let dy=0;
+    if (state.keys.has("ArrowLeft") || state.keys.has("a") || state.keys.has("A")) dx -= 1;
+    if (state.keys.has("ArrowRight") || state.keys.has("d") || state.keys.has("D")) dx += 1;
+    if (state.keys.has("ArrowUp") || state.keys.has("w") || state.keys.has("W")) dy -= 1;
+    if (state.keys.has("ArrowDown") || state.keys.has("s") || state.keys.has("S")) dy += 1;
 
-    if(state.keys.has("ArrowLeft")||state.keys.has("a")||state.keys.has("A"))dx-=1;
-    if(state.keys.has("ArrowRight")||state.keys.has("d")||state.keys.has("D"))dx+=1;
-    if(state.keys.has("ArrowUp")||state.keys.has("w")||state.keys.has("W"))dy-=1;
-    if(state.keys.has("ArrowDown")||state.keys.has("s")||state.keys.has("S"))dy+=1;
+    if (dx !== 0 || dy !== 0) {
+      const length = Math.hypot(dx, dy) || 1;
+      dx /= length;
+      dy /= length;
 
-    if(dx!==0||dy!==0){
-
-      const length=Math.hypot(dx,dy)||1;
-
-      dx/=length;
-      dy/=length;
-
-      state.player.x+=dx*state.player.speed;
-      state.player.y+=dy*state.player.speed;
+      state.player.x += dx * state.player.speed;
+      state.player.y += dy * state.player.speed;
     }
 
-    state.player.x=clamp(state.player.x,150,960);
-    state.player.y=clamp(state.player.y,54,1140);
+    state.player.x = clamp(state.player.x, 150, 960);
+    state.player.y = clamp(state.player.y, 54, 1140);
   }
 
-  function projectState(){
-
+  function projectState() {
     state.projection = state.kernel.helpers.projectWorldPositionToCell({
       x: state.player.x,
       y: state.player.y,
@@ -219,8 +217,34 @@ export async function createScene(canvas, outputs) {
     state.encoding = state.kernel.helpers.getEncoding(state.projection.stateEncodingId);
   }
 
-  function updateOutputs(){
+  function updatePhase() {
+    const phaseRuntime = {
+      tick: state.tick,
+      projection: state.projection,
+      region: state.region,
+      kernel: state.kernel,
+      phase: state.phase
+    };
 
+    state.phaseEngine.update(phaseRuntime);
+
+    state.phase = {
+      globalPhase: typeof phaseRuntime.phase?.globalPhase === "string"
+        ? phaseRuntime.phase.globalPhase
+        : "CALM",
+      intensity: Number.isFinite(phaseRuntime.phase?.intensity)
+        ? phaseRuntime.phase.intensity
+        : 0.2,
+      cyclePosition: Number.isFinite(phaseRuntime.phase?.cyclePosition)
+        ? phaseRuntime.phase.cyclePosition
+        : 0,
+      nextShiftTick: Number.isFinite(phaseRuntime.phase?.nextShiftTick)
+        ? phaseRuntime.phase.nextShiftTick
+        : 0
+    };
+  }
+
+  function updateOutputs() {
     const runtimePanel = instruments.buildRuntimePanel(state);
 
     outputs.region.textContent = runtimePanel.region;
@@ -229,7 +253,7 @@ export async function createScene(canvas, outputs) {
     outputs.band.textContent = runtimePanel.band;
 
     outputs.encoding.textContent =
-      runtimePanel.encoding + " · " + state.player.mode;
+      `${runtimePanel.encoding} · ${state.player.mode} · ${getPhasePanelString(state.phase)}`;
 
     outputs.byte.textContent = runtimePanel.byte;
 
@@ -240,23 +264,46 @@ export async function createScene(canvas, outputs) {
     outputs.destination.textContent = selectionPanel.destination;
 
     outputs.selectionHint.textContent =
-      `${selectionPanel.hint} · Mode: ${state.player.mode} · View: ${state.renderMode.toUpperCase()} · Press G to toggle`;
+      `${selectionPanel.hint} · Mode: ${state.player.mode} · View: ${state.renderMode.toUpperCase()} · Phase: ${state.phase.globalPhase} · Press G to toggle`;
   }
 
-  function step(){
+  function drawFrame() {
+    ctx.clearRect(0, 0, state.width, state.height);
 
+    const runtime = {
+      width: state.width,
+      height: state.height,
+      tick: state.tick,
+      kernel: state.kernel,
+      phase: state.phase,
+      renderMode: state.renderMode,
+      viewportOffset: state.viewportOffset,
+      worldViewportOffset: getWorldViewportOffset(),
+      projection: state.projection,
+      region: state.region,
+      encoding: state.encoding,
+      selection: state.selection,
+      destination: state.destination,
+      player: state.player,
+      activeHarborInstanceId:
+        state.kernel.helpers.getHarborInstanceByRegion(state.projection?.regionId ?? "")?.harborInstanceId ?? null
+    };
+
+    background.draw(ctx, runtime);
+    environment.draw(ctx, runtime);
+    ground.draw(ctx, runtime);
+    compass.draw(ctx, runtime);
+  }
+
+  function step() {
     state.tick += 1;
 
     updatePlayer();
-
     detectDockTransfer();
-
     updateViewportOffset();
-
     projectState();
-
+    updatePhase();
     updateOutputs();
-
     drawFrame();
 
     requestAnimationFrame(step);
@@ -264,12 +311,13 @@ export async function createScene(canvas, outputs) {
 
   resize();
   projectState();
+  updatePhase();
   updateOutputs();
 
-  window.addEventListener("resize",resize,{passive:true});
+  window.addEventListener("resize", resize, { passive: true });
 
   return Object.freeze({
-    start(){
+    start() {
       requestAnimationFrame(step);
     }
   });

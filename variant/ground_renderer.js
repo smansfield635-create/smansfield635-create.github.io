@@ -1,30 +1,49 @@
-function polygon(ctx, points) {
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + ((b - a) * t);
+}
+
+function polygon(ctx, points, projector = null) {
   if (!points || !points.length) return;
+
+  const first = projector ? projector.point(points[0][0], points[0][1]) : { x: points[0][0], y: points[0][1] };
+
   ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
+  ctx.moveTo(first.x, first.y);
+
   for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
+    const p = projector ? projector.point(points[i][0], points[i][1]) : { x: points[i][0], y: points[i][1] };
+    ctx.lineTo(p.x, p.y);
   }
+
   ctx.closePath();
 }
 
-function polyline(ctx, points) {
+function polyline(ctx, points, projector = null) {
   if (!points || !points.length) return;
+
+  const first = projector ? projector.point(points[0][0], points[0][1]) : { x: points[0][0], y: points[0][1] };
+
   ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
+  ctx.moveTo(first.x, first.y);
+
   for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
+    const p = projector ? projector.point(points[i][0], points[i][1]) : { x: points[i][0], y: points[i][1] };
+    ctx.lineTo(p.x, p.y);
   }
 }
 
-function fillPolygon(ctx, points, fillStyle) {
-  polygon(ctx, points);
+function fillPolygon(ctx, points, fillStyle, projector = null) {
+  polygon(ctx, points, projector);
   ctx.fillStyle = fillStyle;
   ctx.fill();
 }
 
-function strokePolygon(ctx, points, strokeStyle, lineWidth = 1) {
-  polygon(ctx, points);
+function strokePolygon(ctx, points, strokeStyle, lineWidth = 1, projector = null) {
+  polygon(ctx, points, projector);
   ctx.strokeStyle = strokeStyle;
   ctx.lineWidth = lineWidth;
   ctx.stroke();
@@ -43,14 +62,6 @@ function roundRect(ctx, x, y, width, height, radius) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function lerp(a, b, t) {
-  return a + ((b - a) * t);
 }
 
 function terrainPriority(terrainClass) {
@@ -210,6 +221,68 @@ function rgbaAdjusted(r, g, b, a, mods) {
   nb = clamp(nb + (mods.wash * 22), 0, 255);
 
   return `rgba(${nr.toFixed(0)},${ng.toFixed(0)},${nb.toFixed(0)},${clamp(a, 0, 1).toFixed(3)})`;
+}
+
+function createSurfaceProjector(runtime) {
+  const worldWidth = 1180;
+  const worldHeight = 1240;
+
+  const playerX = Number.isFinite(runtime?.player?.x) ? runtime.player.x : worldWidth * 0.5;
+  const playerY = Number.isFinite(runtime?.player?.y) ? runtime.player.y : worldHeight * 0.62;
+  const northProgress = clamp((930 - playerY) / 930, 0, 1);
+
+  const planetAnchorX = lerp(worldWidth * 0.28, worldWidth * 0.18, northProgress);
+  const planetAnchorY = lerp(worldHeight * 1.05, worldHeight * 0.86, northProgress);
+  const horizonLift = lerp(38, 132, northProgress);
+  const curveStrength = lerp(0.08, 0.24, northProgress);
+  const compressionStrength = lerp(0.06, 0.22, northProgress);
+  const azimuthShift = ((playerX - (worldWidth * 0.5)) / (worldWidth * 0.5)) * lerp(16, 42, northProgress);
+
+  function point(x, y) {
+    const dy = clamp((worldHeight - y) / worldHeight, 0, 1);
+    const dx = x - planetAnchorX;
+    const lateralNorm = dx / (worldWidth * 0.70);
+    const depth = dy * dy;
+
+    const lift = depth * horizonLift;
+    const sideCurl = (lateralNorm * lateralNorm) * depth * lerp(24, 118, northProgress);
+    const centerPull = dx * compressionStrength * depth;
+    const skew = azimuthShift * depth;
+
+    return {
+      x: x - centerPull + skew,
+      y: y - lift - sideCurl
+    };
+  }
+
+  function radius(value, y) {
+    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
+    const scale = 1 - (curveStrength * depth);
+    return Math.max(0.5, value * scale);
+  }
+
+  function lineWidth(value, y) {
+    return radius(value, y);
+  }
+
+  function rect(x, y, width, height) {
+    const p = point(x + (width * 0.5), y + (height * 0.5));
+    const scaledWidth = radius(width, y + height);
+    const scaledHeight = radius(height, y + height);
+    return {
+      x: p.x - (scaledWidth * 0.5),
+      y: p.y - (scaledHeight * 0.5),
+      width: scaledWidth,
+      height: scaledHeight
+    };
+  }
+
+  return Object.freeze({
+    point,
+    radius,
+    lineWidth,
+    rect
+  });
 }
 
 function terrainStyle(terrainClass, ctx, mods) {
@@ -476,74 +549,6 @@ function waterStyle(waterClass, ctx, mods) {
   return gradient;
 }
 
-function drawOpenSeaAtmosphere(ctx, mods) {
-  const gradient = ctx.createRadialGradient(680, 520, 80, 680, 520, 760);
-  gradient.addColorStop(0, rgbaAdjusted(122, 214, 255, 0.12 + Math.max(0, mods.glow * 0.04), mods));
-  gradient.addColorStop(0.38, rgbaAdjusted(82, 170, 224, 0.08 + Math.max(0, mods.glow * 0.03), mods));
-  gradient.addColorStop(1, "rgba(18,62,108,0.00)");
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 1180, 1240);
-}
-
-function drawHarborCoastGeometry(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast) return;
-
-  fillPolygon(ctx, coast.harborPeninsula, rgbaAdjusted(170, 162, 126, 0.18, mods));
-  strokePolygon(ctx, coast.harborPeninsula, rgbaAdjusted(254, 244, 226, 0.14 + Math.max(0, mods.glow * 0.04), mods), 1.6);
-
-  if (Array.isArray(coast.reefZones)) {
-    for (const reefPolygon of coast.reefZones) {
-      fillPolygon(ctx, reefPolygon, rgbaAdjusted(118, 170, 164, 0.10 + Math.max(0, mods.glow * 0.03), mods));
-      strokePolygon(ctx, reefPolygon, rgbaAdjusted(214, 236, 232, 0.12 + Math.max(0, mods.glow * 0.04), mods), 1);
-    }
-  }
-
-  if (Array.isArray(coast.firmnessZones)) {
-    for (const zone of coast.firmnessZones) {
-      fillPolygon(ctx, zone.polygon, rgbaAdjusted(220, 210, 176, 0.04 + Math.max(0, mods.wash * 0.05), mods));
-    }
-  }
-
-  strokePolygon(ctx, coast.harborBasin, rgbaAdjusted(246, 250, 255, 0.22 + mods.waterEdge * 0.06, mods), 1.4);
-  strokePolygon(ctx, coast.harborChannel, rgbaAdjusted(236, 246, 255, 0.14 + mods.waterEdge * 0.06, mods), 1.1);
-}
-
-function drawExposureZones(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast || !Array.isArray(coast.exposureZones)) return;
-
-  for (const zone of coast.exposureZones) {
-    fillPolygon(ctx, zone.polygon, rgbaAdjusted(90, 140, 180, 0.06 + mods.wash * 0.02, mods));
-    strokePolygon(ctx, zone.polygon, rgbaAdjusted(150, 200, 240, 0.10 + Math.max(0, mods.glow * 0.03), mods), 1);
-  }
-}
-
-function drawFirmnessZones(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast || !Array.isArray(coast.firmnessZones)) return;
-
-  for (const zone of coast.firmnessZones) {
-    fillPolygon(ctx, zone.polygon, rgbaAdjusted(226, 210, 160, 0.08 + mods.wash * 0.02, mods));
-    strokePolygon(ctx, zone.polygon, rgbaAdjusted(255, 236, 182, 0.12 + Math.max(0, mods.glow * 0.02), mods), 1);
-  }
-}
-
-function drawBasinDepthTint(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast?.harborBasin) return;
-
-  polygon(ctx, coast.harborBasin);
-
-  const gradient = ctx.createRadialGradient(590, 760, 16, 590, 760, 240);
-  gradient.addColorStop(0, rgbaAdjusted(56, 114, 156, 0.26 + mods.waterEdge * 0.04, mods));
-  gradient.addColorStop(0.42, rgbaAdjusted(44, 98, 140, 0.14 + mods.waterEdge * 0.03, mods));
-  gradient.addColorStop(1, "rgba(28,72,116,0.02)");
-
-  ctx.fillStyle = gradient;
-  ctx.fill();
-}
-
 function getActiveTerrainRows(kernel) {
   return kernel?.terrainPolygonsById ? sortTerrainRows([...kernel.terrainPolygonsById.values()]) : [];
 }
@@ -556,130 +561,107 @@ function getManualWaterRows(kernel) {
   return kernel?.watersById ? [...kernel.watersById.values()] : [];
 }
 
-function drawWaterRows(ctx, rows, mods) {
+function drawOpenSeaAtmosphere(ctx, mods, projector) {
+  const c = projector.point(680, 520);
+  const gradient = ctx.createRadialGradient(c.x, c.y, 80, c.x, c.y, 760);
+  gradient.addColorStop(0, rgbaAdjusted(122, 214, 255, 0.12 + Math.max(0, mods.glow * 0.04), mods));
+  gradient.addColorStop(0.38, rgbaAdjusted(82, 170, 224, 0.08 + Math.max(0, mods.glow * 0.03), mods));
+  gradient.addColorStop(1, "rgba(18,62,108,0.00)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(-200, -200, 1800, 1800);
+}
+
+function drawWaterRows(ctx, rows, mods, projector) {
   for (const water of rows) {
-    fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx, mods));
-    strokePolygon(ctx, water.polygon, rgbaAdjusted(236, 248, 255, 0.16 + mods.waterEdge * 0.05, mods), 1.1);
+    fillPolygon(ctx, water.polygon, waterStyle(water.waterClass, ctx, mods), projector);
+    strokePolygon(
+      ctx,
+      water.polygon,
+      rgbaAdjusted(236, 248, 255, 0.16 + mods.waterEdge * 0.05, mods),
+      projector.lineWidth(1.1, water.polygon[0]?.[1] ?? 800),
+      projector
+    );
   }
 }
 
-function drawWaterRipples(ctx, tick, mods, phaseLabel) {
-  if (phaseLabel === "LOCKDOWN") return;
-
-  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.05);
-  const scale = phaseLabel === "SEVERE" ? 1.18 : phaseLabel === "UNSTABLE" ? 1.08 : phaseLabel === "CLEAR_WINDOW" ? 1.10 : 1;
-  const alphaBoost = phaseLabel === "CLEAR_WINDOW" ? 0.02 : phaseLabel === "SEVERE" ? 0.015 : 0;
-
-  const lanes = [
-    { x: 280, y: 724, w: 200, h: 32, a: 0.08 + (pulse * 0.02) + alphaBoost },
-    { x: 426, y: 754, w: 210, h: 36, a: 0.07 + (pulse * 0.02) + alphaBoost },
-    { x: 600, y: 738, w: 180, h: 32, a: 0.08 + (pulse * 0.02) + alphaBoost },
-    { x: 790, y: 714, w: 170, h: 30, a: 0.07 + (pulse * 0.02) + alphaBoost },
-    { x: 808, y: 828, w: 160, h: 28, a: 0.05 + (pulse * 0.01) + alphaBoost },
-    { x: 182, y: 842, w: 142, h: 26, a: 0.05 + (pulse * 0.01) + alphaBoost }
-  ];
-
-  ctx.save();
-  for (const lane of lanes) {
-    const gradient = ctx.createLinearGradient(lane.x, lane.y, lane.x + lane.w, lane.y + lane.h);
-    gradient.addColorStop(0, rgbaAdjusted(236, 248, 255, lane.a * scale, mods));
-    gradient.addColorStop(0.5, rgbaAdjusted(190, 228, 248, lane.a * 0.72 * scale, mods));
-    gradient.addColorStop(1, "rgba(236,248,255,0.00)");
-    ctx.fillStyle = gradient;
-    roundRect(ctx, lane.x, lane.y, lane.w, lane.h, 18);
-    ctx.fill();
+function drawTerrainRows(ctx, rows, mods, projector) {
+  for (const terrain of rows) {
+    fillPolygon(ctx, terrain.polygon, terrainStyle(terrain.terrainClass, ctx, mods), projector);
+    strokePolygon(
+      ctx,
+      terrain.polygon,
+      rgbaAdjusted(252, 246, 232, 0.06 + Math.max(0, mods.glow * 0.02), mods),
+      projector.lineWidth(1, terrain.polygon[0]?.[1] ?? 800),
+      projector
+    );
   }
-  ctx.restore();
 }
 
-function drawWetEdgeHighlights(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast) return;
-
-  strokePolygon(ctx, coast.harborPeninsula, rgbaAdjusted(255, 244, 212, 0.06 + mods.glow * 0.03, mods), 3.2);
-  strokePolygon(ctx, coast.harborBasin, rgbaAdjusted(168, 214, 236, 0.10 + mods.waterEdge * 0.05, mods), 5);
-  strokePolygon(ctx, coast.harborChannel, rgbaAdjusted(182, 224, 244, 0.08 + mods.waterEdge * 0.05, mods), 4);
+function drawSubstrateRows(ctx, rows, mods, projector) {
+  for (const substrate of rows) {
+    fillPolygon(ctx, substrate.polygon, substrateStyle(substrate.substrateClass, ctx, mods), projector);
+    strokePolygon(
+      ctx,
+      substrate.polygon,
+      rgbaAdjusted(255, 248, 236, 0.05 + Math.max(0, mods.glow * 0.02), mods),
+      projector.lineWidth(0.9, substrate.polygon[0]?.[1] ?? 800),
+      projector
+    );
+  }
 }
 
-function drawFoamBands(ctx, mods, phaseLabel) {
-  if (phaseLabel === "LOCKDOWN") return;
+function drawSeaRoutes(ctx, kernel, pulse, traversalMode, mods, phaseLabel, projector) {
+  const seaRoutesById = kernel?.maritimeNetwork?.seaRoutesById;
+  if (!seaRoutesById) return;
 
-  const foamArcs = [
-    { x: 372, y: 782, rx: 74, ry: 18, lw: 2.2, a: 0.22 },
-    { x: 474, y: 804, rx: 92, ry: 24, lw: 2.4, a: 0.24 },
-    { x: 614, y: 790, rx: 86, ry: 22, lw: 2.1, a: 0.22 },
-    { x: 790, y: 708, rx: 66, ry: 18, lw: 1.8, a: 0.18 },
-    { x: 882, y: 724, rx: 56, ry: 14, lw: 1.6, a: 0.16 }
-  ];
+  const pathGlow = mods.pathGlow + (phaseLabel === "SEVERE" ? 0.03 : 0);
 
-  const multiplier = phaseLabel === "SEVERE" ? 1.18 : phaseLabel === "UNSTABLE" ? 1.08 : phaseLabel === "CLEAR_WINDOW" ? 0.94 : 1;
+  for (const route of seaRoutesById.values()) {
+    polyline(ctx, route.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(5, (route.nominalWidth || 24) * 0.18), route.centerline[0]?.[1] ?? 700);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? rgbaAdjusted(104, 186, 234, 0.22 + (pulse * 0.10) + pathGlow, mods)
+      : rgbaAdjusted(88, 168, 214, 0.08 + Math.max(0, pathGlow * 0.5), mods);
+    ctx.stroke();
 
-  ctx.save();
-  for (const arc of foamArcs) {
-    ctx.beginPath();
-    ctx.ellipse(arc.x, arc.y, arc.rx, arc.ry, 0, Math.PI * 1.06, Math.PI * 1.94);
-    ctx.strokeStyle = rgbaAdjusted(246, 252, 255, arc.a * multiplier, mods);
-    ctx.lineWidth = arc.lw;
+    polyline(ctx, route.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(1.5, (route.nominalWidth || 24) * 0.05), route.centerline[0]?.[1] ?? 700);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? rgbaAdjusted(228, 248, 255, 0.34 + (pulse * 0.14) + pathGlow, mods)
+      : rgbaAdjusted(214, 240, 255, 0.10 + (pulse * 0.05) + Math.max(0, pathGlow * 0.4), mods);
     ctx.stroke();
   }
-  ctx.restore();
 }
 
-function drawTerrainRows(ctx, rows, mods) {
-  for (const terrain of rows) {
-    fillPolygon(ctx, terrain.polygon, terrainStyle(terrain.terrainClass, ctx, mods));
-    strokePolygon(ctx, terrain.polygon, rgbaAdjusted(252, 246, 232, 0.06 + Math.max(0, mods.glow * 0.02), mods), 1);
+function drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode, mods, phaseLabel, projector) {
+  const harborGraph = kernel?.harborNavigationGraph;
+  if (!harborGraph?.navigationEdgesById) return;
+
+  const pathGlow = mods.pathGlow + (phaseLabel === "CLEAR_WINDOW" ? 0.04 : 0);
+
+  for (const edge of harborGraph.navigationEdgesById.values()) {
+    polyline(ctx, edge.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(4, (edge.nominalWidth || 20) * 0.16), edge.centerline[0]?.[1] ?? 800);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? rgbaAdjusted(160, 222, 248, 0.18 + (pulse * 0.10) + pathGlow, mods)
+      : rgbaAdjusted(126, 196, 226, 0.08 + Math.max(0, pathGlow * 0.6), mods);
+    ctx.stroke();
+
+    polyline(ctx, edge.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(1.25, (edge.nominalWidth || 20) * 0.04), edge.centerline[0]?.[1] ?? 800);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = traversalMode === "boat"
+      ? rgbaAdjusted(236, 250, 255, 0.30 + (pulse * 0.14) + pathGlow, mods)
+      : rgbaAdjusted(220, 246, 255, 0.12 + (pulse * 0.06) + Math.max(0, pathGlow * 0.5), mods);
+    ctx.stroke();
   }
-}
-
-function drawSubstrateRows(ctx, rows, mods) {
-  for (const substrate of rows) {
-    fillPolygon(ctx, substrate.polygon, substrateStyle(substrate.substrateClass, ctx, mods));
-    strokePolygon(ctx, substrate.polygon, rgbaAdjusted(255, 248, 236, 0.05 + Math.max(0, mods.glow * 0.02), mods), 0.9);
-  }
-}
-
-function drawBeachReadBoost(ctx, substrateRows, terrainRows, mods) {
-  for (const substrate of substrateRows) {
-    if (
-      substrate.substrateClass === "wet_sand" ||
-      substrate.substrateClass === "dry_sand" ||
-      substrate.substrateClass === "outer_beach_band"
-    ) {
-      strokePolygon(ctx, substrate.polygon, rgbaAdjusted(255, 244, 216, 0.12 + Math.max(0, mods.glow * 0.03), mods), 1.15);
-    }
-
-    if (substrate.substrateClass === "shallow_water_margin") {
-      strokePolygon(ctx, substrate.polygon, rgbaAdjusted(214, 242, 255, 0.14 + mods.waterEdge * 0.04, mods), 1.25);
-    }
-  }
-
-  for (const terrain of terrainRows) {
-    if (terrain.terrainClass === "outer_beach_band" || terrain.terrainClass === "outer_shore_shoulder") {
-      strokePolygon(ctx, terrain.polygon, rgbaAdjusted(248, 232, 196, 0.10 + Math.max(0, mods.glow * 0.03), mods), 1.1);
-    }
-  }
-}
-
-function drawTerrainGrain(ctx, mods, phaseLabel) {
-  if (phaseLabel === "LOCKDOWN") return;
-
-  const grains = [
-    [332, 788], [366, 802], [404, 826], [452, 836], [498, 846], [540, 836],
-    [586, 822], [628, 804], [670, 792], [708, 776], [748, 754], [530, 308],
-    [562, 326], [604, 340], [644, 354], [282, 250], [316, 274], [352, 298]
-  ];
-
-  const alpha = phaseLabel === "CLEAR_WINDOW" ? 0.08 : phaseLabel === "SEVERE" ? 0.12 : 0.10;
-
-  ctx.save();
-  for (const [x, y] of grains) {
-    ctx.beginPath();
-    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-    ctx.fillStyle = rgbaAdjusted(110, 92, 66, alpha, mods);
-    ctx.fill();
-  }
-  ctx.restore();
 }
 
 function getDockTransferIds(kernel, activeHarborInstanceId) {
@@ -688,7 +670,355 @@ function getDockTransferIds(kernel, activeHarborInstanceId) {
   return new Set(transfers.map((transfer) => transfer.dockId));
 }
 
-function drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel) {
+function drawHarborNavigationNodes(ctx, runtime, mods, phaseLabel, projector) {
+  const { kernel, traversalMode, activeHarborInstanceId, selection, destination, tick } = runtime;
+  const harborGraph = kernel?.harborNavigationGraph;
+  if (!harborGraph?.navigationNodesById) return;
+
+  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+  const dockTransferIds = getDockTransferIds(kernel, activeHarborInstanceId);
+  const phaseGlow = phaseLabel === "CLEAR_WINDOW" ? 0.06 : phaseLabel === "SEVERE" ? 0.04 : 0;
+
+  for (const node of harborGraph.navigationNodesById.values()) {
+    const p = projector.point(node.centerPoint[0], node.centerPoint[1]);
+    const y = node.centerPoint[1];
+    const isDockTransfer = dockTransferIds.has(node.navNodeId);
+    const isSelectedDockTransfer = selection?.kind === "dock_transfer" && selection.dockId === node.navNodeId;
+    const isSelectedNode = selection?.kind === "harbor_nav_node" && selection.navNodeId === node.navNodeId;
+    const isDestinationDockTransfer = destination?.kind === "dock_transfer" && destination.dockId === node.navNodeId;
+    const isDestinationNode = destination?.kind === "harbor_nav_node" && destination.navNodeId === node.navNodeId;
+    const isHighlighted = isDockTransfer || isSelectedDockTransfer || isSelectedNode || isDestinationDockTransfer || isDestinationNode;
+
+    let radius = projector.radius(4, y);
+    let fill = rgbaAdjusted(214, 240, 250, 0.36 + phaseGlow, mods);
+    let stroke = rgbaAdjusted(255, 255, 255, 0.08 + phaseGlow, mods);
+
+    if (node.nodeClass === "mooring") {
+      radius = projector.radius(6, y);
+      fill = rgbaAdjusted(242, 224, 166, 0.72 + phaseGlow, mods);
+      stroke = rgbaAdjusted(255, 246, 214, 0.26 + phaseGlow, mods);
+    }
+
+    if (node.nodeClass === "transfer") {
+      radius = projector.radius(7, y);
+      fill = rgbaAdjusted(182, 234, 206, 0.74 + phaseGlow, mods);
+      stroke = rgbaAdjusted(226, 255, 242, 0.28 + phaseGlow, mods);
+    }
+
+    if (isDockTransfer) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, projector.radius(14 + (pulse * 2), y), 0, Math.PI * 2);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? rgbaAdjusted(156, 246, 255, 0.40 + (pulse * 0.16) + phaseGlow, mods)
+        : rgbaAdjusted(255, 236, 170, 0.34 + (pulse * 0.10) + phaseGlow, mods);
+      ctx.lineWidth = projector.lineWidth(2, y);
+      ctx.stroke();
+    }
+
+    if (isHighlighted) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, projector.radius(10 + (pulse * 1.5), y), 0, Math.PI * 2);
+      ctx.strokeStyle = rgbaAdjusted(248, 250, 255, 0.24 + phaseGlow, mods);
+      ctx.lineWidth = projector.lineWidth(1.4, y);
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = projector.lineWidth(1, y);
+    ctx.stroke();
+
+    if (isDockTransfer) {
+      ctx.beginPath();
+      ctx.moveTo(p.x - projector.radius(5, y), p.y);
+      ctx.lineTo(p.x + projector.radius(5, y), p.y);
+      ctx.moveTo(p.x, p.y - projector.radius(5, y));
+      ctx.lineTo(p.x, p.y + projector.radius(5, y));
+      ctx.strokeStyle = traversalMode === "boat"
+        ? rgbaAdjusted(230, 252, 255, 0.58 + phaseGlow, mods)
+        : rgbaAdjusted(255, 246, 214, 0.58 + phaseGlow, mods);
+      ctx.lineWidth = projector.lineWidth(1.2, y);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawSeaNodes(ctx, runtime, mods, phaseLabel, projector) {
+  const { kernel, traversalMode, selection, destination, tick } = runtime;
+  const seaNodesById = kernel?.maritimeNetwork?.seaNodesById;
+  if (!seaNodesById) return;
+
+  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+  const phaseGlow = phaseLabel === "CLEAR_WINDOW" ? 0.06 : phaseLabel === "SEVERE" ? 0.03 : 0;
+
+  for (const node of seaNodesById.values()) {
+    const p = projector.point(node.centerPoint[0], node.centerPoint[1]);
+    const y = node.centerPoint[1];
+    const isSelected = selection?.kind === "sea_node" && selection.seaNodeId === node.seaNodeId;
+    const isDestination = destination?.kind === "sea_node" && destination.seaNodeId === node.seaNodeId;
+
+    if (isSelected || isDestination) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, projector.radius(15 + (pulse * 2), y), 0, Math.PI * 2);
+      ctx.strokeStyle = traversalMode === "boat"
+        ? rgbaAdjusted(188, 240, 255, 0.40 + (pulse * 0.16) + phaseGlow, mods)
+        : rgbaAdjusted(188, 240, 255, 0.12 + phaseGlow, mods);
+      ctx.lineWidth = projector.lineWidth(1.8, y);
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, projector.radius(5.5, y), 0, Math.PI * 2);
+    ctx.fillStyle = traversalMode === "boat"
+      ? rgbaAdjusted(174, 226, 255, 0.74 + phaseGlow, mods)
+      : rgbaAdjusted(154, 204, 236, 0.34 + phaseGlow, mods);
+    ctx.fill();
+    ctx.strokeStyle = traversalMode === "boat"
+      ? rgbaAdjusted(242, 250, 255, 0.24 + phaseGlow, mods)
+      : rgbaAdjusted(242, 250, 255, 0.10 + phaseGlow, mods);
+    ctx.lineWidth = projector.lineWidth(1, y);
+    ctx.stroke();
+  }
+}
+
+function drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods, projector) {
+  if (!kernel?.pathsById) return;
+
+  const pathGlow = mods.pathGlow;
+
+  for (const path of kernel.pathsById.values()) {
+    polyline(ctx, path.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(6, (path.nominalWidth || 56) * 0.24), path.centerline[0]?.[1] ?? 700);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = rgbaAdjusted(82, 72, 60, 0.28 + Math.max(0, mods.wash * 0.04), mods);
+    ctx.stroke();
+
+    polyline(ctx, path.centerline, projector);
+    ctx.lineWidth = projector.lineWidth(Math.max(3, (path.nominalWidth || 56) * 0.11), path.centerline[0]?.[1] ?? 700);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = rgbaAdjusted(222, 198, 146, 0.22 + Math.max(0, pathGlow * 0.4), mods);
+    ctx.stroke();
+
+    const isDestinationPath = destination && projection && destination.kind === "region"
+      && path.fromRegionId === projection.regionId
+      && path.toRegionId === destination.regionId;
+
+    if (isDestinationPath) {
+      polyline(ctx, path.centerline, projector);
+      ctx.lineWidth = projector.lineWidth(Math.max(4, (path.nominalWidth || 56) * 0.1), path.centerline[0]?.[1] ?? 700);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = rgbaAdjusted(255, 240, 188, 0.16 + (pulse * 0.18) + pathGlow, mods);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawRegionPads(ctx, kernel, mods, projector) {
+  if (!kernel?.regionsById) return;
+
+  for (const region of kernel.regionsById.values()) {
+    const p = projector.point(region.centerPoint[0], region.centerPoint[1]);
+    const y = region.centerPoint[1];
+    let rx = projector.radius(44, y);
+    let ry = projector.radius(22, y);
+    let fill = rgbaAdjusted(122, 136, 112, 0.10, mods);
+
+    if (region.regionId === "harbor_village") {
+      rx = projector.radius(66, y);
+      ry = projector.radius(26, y);
+      fill = rgbaAdjusted(120, 170, 196, 0.12, mods);
+
+      const body = projector.rect(region.centerPoint[0] - 36, region.centerPoint[1] + 9, 72, 13);
+      const tower = projector.rect(region.centerPoint[0] - 10, region.centerPoint[1] - 2, 20, 18);
+      ctx.fillStyle = rgbaAdjusted(150, 108, 82, 0.96, mods);
+      ctx.fillRect(body.x, body.y, body.width, body.height);
+      ctx.fillRect(tower.x, tower.y, tower.width, tower.height);
+    }
+
+    if (region.regionId === "market_district") {
+      rx = projector.radius(58, y);
+      ry = projector.radius(24, y);
+      fill = rgbaAdjusted(176, 146, 102, 0.14, mods);
+
+      const rect = projector.rect(region.centerPoint[0] - 24, region.centerPoint[1] + 4, 48, 12);
+      ctx.fillStyle = rgbaAdjusted(172, 124, 84, 0.92, mods);
+      ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    if (region.regionId === "exploration_basin") {
+      rx = projector.radius(76, y);
+      ry = projector.radius(30, y);
+      fill = rgbaAdjusted(112, 128, 112, 0.06, mods);
+    }
+
+    if (region.regionId === "summit_approach") {
+      rx = projector.radius(56, y);
+      ry = projector.radius(24, y);
+      fill = rgbaAdjusted(198, 194, 184, 0.08, mods);
+    }
+
+    if (region.regionId === "summit_plaza") {
+      rx = projector.radius(40, y);
+      ry = projector.radius(18, y);
+      fill = rgbaAdjusted(210, 206, 198, 0.12, mods);
+    }
+
+    ctx.beginPath();
+    ctx.ellipse(p.x, p.y + projector.radius(6, y), rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
+}
+
+function drawStructureShadows(ctx, kernel, mods, phaseLabel, projector) {
+  if (!kernel?.regionsById) return;
+
+  const alphaScale = phaseLabel === "CLEAR_WINDOW" ? 0.80 : phaseLabel === "LOCKDOWN" ? 1.15 : 1.0;
+
+  for (const region of kernel.regionsById.values()) {
+    const p = projector.point(region.centerPoint[0], region.centerPoint[1]);
+    const y = region.centerPoint[1];
+
+    if (region.regionId === "harbor_village") {
+      const a = projector.rect(region.centerPoint[0] - 26, region.centerPoint[1] + 20, 78, 12);
+      const b = projector.rect(region.centerPoint[0] - 2, region.centerPoint[1] + 8, 24, 20);
+      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.16 * alphaScale, mods);
+      ctx.fillRect(a.x, a.y, a.width, a.height);
+      ctx.fillRect(b.x, b.y, b.width, b.height);
+    }
+
+    if (region.regionId === "market_district") {
+      const a = projector.rect(region.centerPoint[0] - 18, region.centerPoint[1] + 14, 54, 10);
+      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.14 * alphaScale, mods);
+      ctx.fillRect(a.x, a.y, a.width, a.height);
+    }
+
+    if (region.regionId === "summit_plaza") {
+      ctx.beginPath();
+      ctx.ellipse(
+        p.x + projector.radius(6, y),
+        p.y + projector.radius(14, y),
+        projector.radius(24, y),
+        projector.radius(10, y),
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.12 * alphaScale, mods);
+      ctx.fill();
+    }
+  }
+}
+
+function drawHarborProps(ctx, mods, phaseLabel, projector) {
+  if (phaseLabel === "LOCKDOWN") {
+    ctx.save();
+    ctx.globalAlpha = 0.78;
+  }
+
+  const props = [
+    { kind: "post", x: 482, y: 768, h: 18 },
+    { kind: "post", x: 506, y: 762, h: 16 },
+    { kind: "post", x: 614, y: 762, h: 16 },
+    { kind: "post", x: 638, y: 756, h: 18 },
+    { kind: "crate", x: 548, y: 748, w: 11, h: 9 },
+    { kind: "crate", x: 561, y: 744, w: 10, h: 8 },
+    { kind: "crate", x: 692, y: 622, w: 10, h: 8 },
+    { kind: "boat", x: 456, y: 784, w: 30, h: 10, a: -0.10 },
+    { kind: "boat", x: 644, y: 778, w: 34, h: 11, a: 0.06 },
+    { kind: "lantern", x: 706, y: 620, h: 12 }
+  ];
+
+  ctx.save();
+
+  for (const prop of props) {
+    if (prop.kind === "post") {
+      const p = projector.point(prop.x, prop.y);
+      const h = projector.radius(prop.h, prop.y);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - h);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = rgbaAdjusted(92, 66, 46, 0.82, mods);
+      ctx.lineWidth = projector.lineWidth(2.2, prop.y);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y - h, projector.radius(2.4, prop.y), 0, Math.PI * 2);
+      ctx.fillStyle = rgbaAdjusted(182, 146, 96, 0.78, mods);
+      ctx.fill();
+    }
+
+    if (prop.kind === "crate") {
+      const r = projector.rect(prop.x, prop.y, prop.w, prop.h);
+      ctx.fillStyle = rgbaAdjusted(148, 112, 78, 0.88, mods);
+      ctx.fillRect(r.x, r.y, r.width, r.height);
+      ctx.strokeStyle = rgbaAdjusted(244, 226, 188, 0.12 + Math.max(0, mods.glow * 0.02), mods);
+      ctx.lineWidth = projector.lineWidth(1, prop.y);
+      ctx.strokeRect(r.x, r.y, r.width, r.height);
+    }
+
+    if (prop.kind === "boat") {
+      const p = projector.point(prop.x, prop.y);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(prop.a);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, projector.radius(prop.w * 0.5, prop.y), projector.radius(prop.h * 0.5, prop.y), 0, 0, Math.PI * 2);
+      ctx.fillStyle = rgbaAdjusted(88, 58, 42, 0.80, mods);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(0, -projector.radius(1, prop.y), projector.radius(prop.w * 0.34, prop.y), projector.radius(prop.h * 0.22, prop.y), 0, 0, Math.PI * 2);
+      ctx.fillStyle = rgbaAdjusted(196, 170, 126, 0.56, mods);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    if (prop.kind === "lantern") {
+      const p = projector.point(prop.x, prop.y);
+      const h = projector.radius(prop.h, prop.y);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y - h);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = rgbaAdjusted(106, 84, 60, 0.82, mods);
+      ctx.lineWidth = projector.lineWidth(1.8, prop.y);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y - h, projector.radius(2.6, prop.y), 0, Math.PI * 2);
+      ctx.fillStyle = rgbaAdjusted(255, 220, 146, 0.68 + Math.max(0, mods.glow * 0.04), mods);
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+
+  if (phaseLabel === "LOCKDOWN") {
+    ctx.restore();
+  }
+}
+
+function drawRegionBoundaries(ctx, kernel, mods, projector) {
+  if (!kernel?.regionBoundariesById) return;
+
+  for (const boundary of kernel.regionBoundariesById.values()) {
+    if (boundary.parentRegion !== "harbor") continue;
+    strokePolygon(
+      ctx,
+      boundary.polygon,
+      rgbaAdjusted(246, 240, 226, 0.08 + Math.max(0, mods.glow * 0.02), mods),
+      projector.lineWidth(1, boundary.polygon[0]?.[1] ?? 700),
+      projector
+    );
+  }
+}
+
+function drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel, projector) {
   const seaHazardsById = kernel?.maritimeNetwork?.seaHazardsById;
   if (!seaHazardsById) return;
 
@@ -720,415 +1050,45 @@ function drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel) {
         : rgbaAdjusted(198, 226, 255, 0.08 + (phaseBoost * 0.5), mods);
     }
 
-    fillPolygon(ctx, hazard.polygon, fill);
-    strokePolygon(ctx, hazard.polygon, stroke, 1);
+    fillPolygon(ctx, hazard.polygon, fill, projector);
+    strokePolygon(
+      ctx,
+      hazard.polygon,
+      stroke,
+      projector.lineWidth(1, hazard.polygon[0]?.[1] ?? 700),
+      projector
+    );
   }
 }
 
-function drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode, mods, phaseLabel) {
-  const harborGraph = kernel?.harborNavigationGraph;
-  if (!harborGraph?.navigationEdgesById) return;
+function drawWaterRipples(ctx, tick, mods, phaseLabel, projector) {
+  if (phaseLabel === "LOCKDOWN") return;
 
-  const pathGlow = mods.pathGlow + (phaseLabel === "CLEAR_WINDOW" ? 0.04 : 0);
+  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.05);
+  const scale = phaseLabel === "SEVERE" ? 1.18 : phaseLabel === "UNSTABLE" ? 1.08 : phaseLabel === "CLEAR_WINDOW" ? 1.10 : 1;
+  const alphaBoost = phaseLabel === "CLEAR_WINDOW" ? 0.02 : phaseLabel === "SEVERE" ? 0.015 : 0;
 
-  for (const edge of harborGraph.navigationEdgesById.values()) {
-    polyline(ctx, edge.centerline);
-    ctx.lineWidth = Math.max(4, (edge.nominalWidth || 20) * 0.16);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = traversalMode === "boat"
-      ? rgbaAdjusted(160, 222, 248, 0.18 + (pulse * 0.10) + pathGlow, mods)
-      : rgbaAdjusted(126, 196, 226, 0.08 + Math.max(0, pathGlow * 0.6), mods);
-    ctx.stroke();
-
-    polyline(ctx, edge.centerline);
-    ctx.lineWidth = Math.max(1.25, (edge.nominalWidth || 20) * 0.04);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = traversalMode === "boat"
-      ? rgbaAdjusted(236, 250, 255, 0.30 + (pulse * 0.14) + pathGlow, mods)
-      : rgbaAdjusted(220, 246, 255, 0.12 + (pulse * 0.06) + Math.max(0, pathGlow * 0.5), mods);
-    ctx.stroke();
-  }
-}
-
-function drawSeaRoutes(ctx, kernel, pulse, traversalMode, mods, phaseLabel) {
-  const seaRoutesById = kernel?.maritimeNetwork?.seaRoutesById;
-  if (!seaRoutesById) return;
-
-  const pathGlow = mods.pathGlow + (phaseLabel === "SEVERE" ? 0.03 : 0);
-
-  for (const route of seaRoutesById.values()) {
-    polyline(ctx, route.centerline);
-    ctx.lineWidth = Math.max(5, (route.nominalWidth || 24) * 0.18);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = traversalMode === "boat"
-      ? rgbaAdjusted(104, 186, 234, 0.22 + (pulse * 0.10) + pathGlow, mods)
-      : rgbaAdjusted(88, 168, 214, 0.08 + Math.max(0, pathGlow * 0.5), mods);
-    ctx.stroke();
-
-    polyline(ctx, route.centerline);
-    ctx.lineWidth = Math.max(1.5, (route.nominalWidth || 24) * 0.05);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = traversalMode === "boat"
-      ? rgbaAdjusted(228, 248, 255, 0.34 + (pulse * 0.14) + pathGlow, mods)
-      : rgbaAdjusted(214, 240, 255, 0.10 + (pulse * 0.05) + Math.max(0, pathGlow * 0.4), mods);
-    ctx.stroke();
-  }
-}
-
-function drawHarborNavigationNodes(ctx, runtime, mods, phaseLabel) {
-  const { kernel, traversalMode, activeHarborInstanceId, selection, destination, tick } = runtime;
-  const harborGraph = kernel?.harborNavigationGraph;
-  if (!harborGraph?.navigationNodesById) return;
-
-  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
-  const dockTransferIds = getDockTransferIds(kernel, activeHarborInstanceId);
-  const phaseGlow = phaseLabel === "CLEAR_WINDOW" ? 0.06 : phaseLabel === "SEVERE" ? 0.04 : 0;
-
-  for (const node of harborGraph.navigationNodesById.values()) {
-    const [x, y] = node.centerPoint;
-    const isDockTransfer = dockTransferIds.has(node.navNodeId);
-    const isSelectedDockTransfer = selection?.kind === "dock_transfer" && selection.dockId === node.navNodeId;
-    const isSelectedNode = selection?.kind === "harbor_nav_node" && selection.navNodeId === node.navNodeId;
-    const isDestinationDockTransfer = destination?.kind === "dock_transfer" && destination.dockId === node.navNodeId;
-    const isDestinationNode = destination?.kind === "harbor_nav_node" && destination.navNodeId === node.navNodeId;
-    const isHighlighted = isDockTransfer || isSelectedDockTransfer || isSelectedNode || isDestinationDockTransfer || isDestinationNode;
-
-    let radius = 4;
-    let fill = rgbaAdjusted(214, 240, 250, 0.36 + phaseGlow, mods);
-    let stroke = rgbaAdjusted(255, 255, 255, 0.08 + phaseGlow, mods);
-
-    if (node.nodeClass === "mooring") {
-      radius = 6;
-      fill = rgbaAdjusted(242, 224, 166, 0.72 + phaseGlow, mods);
-      stroke = rgbaAdjusted(255, 246, 214, 0.26 + phaseGlow, mods);
-    }
-
-    if (node.nodeClass === "transfer") {
-      radius = 7;
-      fill = rgbaAdjusted(182, 234, 206, 0.74 + phaseGlow, mods);
-      stroke = rgbaAdjusted(226, 255, 242, 0.28 + phaseGlow, mods);
-    }
-
-    if (isDockTransfer) {
-      ctx.beginPath();
-      ctx.arc(x, y, 14 + (pulse * 2), 0, Math.PI * 2);
-      ctx.strokeStyle = traversalMode === "boat"
-        ? rgbaAdjusted(156, 246, 255, 0.40 + (pulse * 0.16) + phaseGlow, mods)
-        : rgbaAdjusted(255, 236, 170, 0.34 + (pulse * 0.10) + phaseGlow, mods);
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(x, y, 20 + (pulse * 2.5), 0, Math.PI * 2);
-      ctx.strokeStyle = traversalMode === "boat"
-        ? rgbaAdjusted(156, 246, 255, 0.18 + (pulse * 0.08) + phaseGlow, mods)
-        : rgbaAdjusted(255, 236, 170, 0.14 + (pulse * 0.06) + phaseGlow, mods);
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-    }
-
-    if (isHighlighted) {
-      ctx.beginPath();
-      ctx.arc(x, y, radius + 6 + (pulse * 1.5), 0, Math.PI * 2);
-      ctx.strokeStyle = rgbaAdjusted(248, 250, 255, 0.24 + phaseGlow, mods);
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = fill;
-    ctx.fill();
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    if (isDockTransfer) {
-      ctx.beginPath();
-      ctx.moveTo(x - 5, y);
-      ctx.lineTo(x + 5, y);
-      ctx.moveTo(x, y - 5);
-      ctx.lineTo(x, y + 5);
-      ctx.strokeStyle = traversalMode === "boat"
-        ? rgbaAdjusted(230, 252, 255, 0.58 + phaseGlow, mods)
-        : rgbaAdjusted(255, 246, 214, 0.58 + phaseGlow, mods);
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-    }
-  }
-}
-
-function drawSeaNodes(ctx, runtime, mods, phaseLabel) {
-  const { kernel, traversalMode, selection, destination, tick } = runtime;
-  const seaNodesById = kernel?.maritimeNetwork?.seaNodesById;
-  if (!seaNodesById) return;
-
-  const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
-  const phaseGlow = phaseLabel === "CLEAR_WINDOW" ? 0.06 : phaseLabel === "SEVERE" ? 0.03 : 0;
-
-  for (const node of seaNodesById.values()) {
-    const [x, y] = node.centerPoint;
-    const isSelected = selection?.kind === "sea_node" && selection.seaNodeId === node.seaNodeId;
-    const isDestination = destination?.kind === "sea_node" && destination.seaNodeId === node.seaNodeId;
-
-    if (isSelected || isDestination) {
-      ctx.beginPath();
-      ctx.arc(x, y, 15 + (pulse * 2), 0, Math.PI * 2);
-      ctx.strokeStyle = traversalMode === "boat"
-        ? rgbaAdjusted(188, 240, 255, 0.40 + (pulse * 0.16) + phaseGlow, mods)
-        : rgbaAdjusted(188, 240, 255, 0.12 + phaseGlow, mods);
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-    }
-
-    ctx.beginPath();
-    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
-    ctx.fillStyle = traversalMode === "boat"
-      ? rgbaAdjusted(174, 226, 255, 0.74 + phaseGlow, mods)
-      : rgbaAdjusted(154, 204, 236, 0.34 + phaseGlow, mods);
-    ctx.fill();
-    ctx.strokeStyle = traversalMode === "boat"
-      ? rgbaAdjusted(242, 250, 255, 0.24 + phaseGlow, mods)
-      : rgbaAdjusted(242, 250, 255, 0.10 + phaseGlow, mods);
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-}
-
-function drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods) {
-  if (!kernel?.pathsById) return;
-
-  const pathGlow = mods.pathGlow;
-
-  for (const path of kernel.pathsById.values()) {
-    polyline(ctx, path.centerline);
-    ctx.lineWidth = Math.max(6, (path.nominalWidth || 56) * 0.24);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = rgbaAdjusted(82, 72, 60, 0.28 + Math.max(0, mods.wash * 0.04), mods);
-    ctx.stroke();
-
-    polyline(ctx, path.centerline);
-    ctx.lineWidth = Math.max(3, (path.nominalWidth || 56) * 0.11);
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = rgbaAdjusted(222, 198, 146, 0.22 + Math.max(0, pathGlow * 0.4), mods);
-    ctx.stroke();
-
-    const isDestinationPath = destination && projection && destination.kind === "region"
-      && path.fromRegionId === projection.regionId
-      && path.toRegionId === destination.regionId;
-
-    if (isDestinationPath) {
-      polyline(ctx, path.centerline);
-      ctx.lineWidth = Math.max(4, (path.nominalWidth || 56) * 0.1);
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = rgbaAdjusted(255, 240, 188, 0.16 + (pulse * 0.18) + pathGlow, mods);
-      ctx.stroke();
-    }
-  }
-}
-
-function drawHarborChartAccents(ctx, kernel, mods) {
-  const coast = kernel?.coastlineModel;
-  if (!coast) return;
-
-  if (Array.isArray(coast.coastlineOuter) && coast.coastlineOuter.length) {
-    strokePolygon(ctx, coast.coastlineOuter, rgbaAdjusted(255, 255, 255, 0.04 + Math.max(0, mods.glow * 0.02), mods), 4);
-  }
-
-  strokePolygon(ctx, coast.harborPeninsula, rgbaAdjusted(255, 248, 214, 0.08 + Math.max(0, mods.glow * 0.03), mods), 2.4);
-
-  if (kernel?.regionBoundariesById) {
-    const west = kernel.regionBoundariesById.get("harbor_inner_shore_west");
-    const east = kernel.regionBoundariesById.get("harbor_inner_shore_east");
-    if (west) strokePolygon(ctx, west.polygon, rgbaAdjusted(255, 244, 214, 0.10 + Math.max(0, mods.glow * 0.02), mods), 1.2);
-    if (east) strokePolygon(ctx, east.polygon, rgbaAdjusted(255, 244, 214, 0.10 + Math.max(0, mods.glow * 0.02), mods), 1.2);
-  }
-}
-
-function drawStructureShadows(ctx, kernel, mods, phaseLabel) {
-  if (!kernel?.regionsById) return;
-
-  const alphaScale = phaseLabel === "CLEAR_WINDOW" ? 0.80 : phaseLabel === "LOCKDOWN" ? 1.15 : 1.0;
-
-  for (const region of kernel.regionsById.values()) {
-    const [x, y] = region.centerPoint;
-
-    if (region.regionId === "harbor_village") {
-      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.16 * alphaScale, mods);
-      ctx.fillRect(x - 26, y + 20, 78, 12);
-      ctx.fillRect(x - 2, y + 8, 24, 20);
-    }
-
-    if (region.regionId === "market_district") {
-      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.14 * alphaScale, mods);
-      ctx.fillRect(x - 18, y + 14, 54, 10);
-    }
-
-    if (region.regionId === "summit_plaza") {
-      ctx.beginPath();
-      ctx.ellipse(x + 6, y + 14, 24, 10, 0, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaAdjusted(22, 34, 48, 0.12 * alphaScale, mods);
-      ctx.fill();
-    }
-  }
-}
-
-function drawHarborProps(ctx, mods, phaseLabel) {
-  if (phaseLabel === "LOCKDOWN") {
-    ctx.save();
-    ctx.globalAlpha = 0.78;
-  }
-
-  const props = [
-    { kind: "post", x: 482, y: 768, h: 18 },
-    { kind: "post", x: 506, y: 762, h: 16 },
-    { kind: "post", x: 614, y: 762, h: 16 },
-    { kind: "post", x: 638, y: 756, h: 18 },
-    { kind: "crate", x: 548, y: 748, w: 11, h: 9 },
-    { kind: "crate", x: 561, y: 744, w: 10, h: 8 },
-    { kind: "crate", x: 692, y: 622, w: 10, h: 8 },
-    { kind: "boat", x: 456, y: 784, w: 30, h: 10, a: -0.10 },
-    { kind: "boat", x: 644, y: 778, w: 34, h: 11, a: 0.06 },
-    { kind: "lantern", x: 706, y: 620, h: 12 }
+  const lanes = [
+    { x: 280, y: 724, w: 200, h: 32, a: 0.08 + (pulse * 0.02) + alphaBoost },
+    { x: 426, y: 754, w: 210, h: 36, a: 0.07 + (pulse * 0.02) + alphaBoost },
+    { x: 600, y: 738, w: 180, h: 32, a: 0.08 + (pulse * 0.02) + alphaBoost },
+    { x: 790, y: 714, w: 170, h: 30, a: 0.07 + (pulse * 0.02) + alphaBoost },
+    { x: 808, y: 828, w: 160, h: 28, a: 0.05 + (pulse * 0.01) + alphaBoost },
+    { x: 182, y: 842, w: 142, h: 26, a: 0.05 + (pulse * 0.01) + alphaBoost }
   ];
 
   ctx.save();
-
-  for (const prop of props) {
-    if (prop.kind === "post") {
-      ctx.beginPath();
-      ctx.moveTo(prop.x, prop.y - prop.h);
-      ctx.lineTo(prop.x, prop.y);
-      ctx.strokeStyle = rgbaAdjusted(92, 66, 46, 0.82, mods);
-      ctx.lineWidth = 2.2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(prop.x, prop.y - prop.h, 2.4, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaAdjusted(182, 146, 96, 0.78, mods);
-      ctx.fill();
-    }
-
-    if (prop.kind === "crate") {
-      ctx.fillStyle = rgbaAdjusted(148, 112, 78, 0.88, mods);
-      ctx.fillRect(prop.x, prop.y, prop.w, prop.h);
-      ctx.strokeStyle = rgbaAdjusted(244, 226, 188, 0.12 + Math.max(0, mods.glow * 0.02), mods);
-      ctx.lineWidth = 1;
-      ctx.strokeRect(prop.x, prop.y, prop.w, prop.h);
-    }
-
-    if (prop.kind === "boat") {
-      ctx.save();
-      ctx.translate(prop.x, prop.y);
-      ctx.rotate(prop.a);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, prop.w * 0.5, prop.h * 0.5, 0, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaAdjusted(88, 58, 42, 0.80, mods);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(0, -1, prop.w * 0.34, prop.h * 0.22, 0, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaAdjusted(196, 170, 126, 0.56, mods);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    if (prop.kind === "lantern") {
-      ctx.beginPath();
-      ctx.moveTo(prop.x, prop.y - prop.h);
-      ctx.lineTo(prop.x, prop.y);
-      ctx.strokeStyle = rgbaAdjusted(106, 84, 60, 0.82, mods);
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(prop.x, prop.y - prop.h, 2.6, 0, Math.PI * 2);
-      ctx.fillStyle = rgbaAdjusted(255, 220, 146, 0.68 + Math.max(0, mods.glow * 0.04), mods);
-      ctx.fill();
-
-      const glow = ctx.createRadialGradient(prop.x, prop.y - prop.h, 1, prop.x, prop.y - prop.h, 18);
-      glow.addColorStop(0, rgbaAdjusted(255, 224, 162, 0.18 + Math.max(0, mods.glow * 0.05), mods));
-      glow.addColorStop(1, "rgba(255,224,162,0.00)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(prop.x - 18, prop.y - prop.h - 18, 36, 36);
-    }
-  }
-
-  ctx.restore();
-
-  if (phaseLabel === "LOCKDOWN") {
-    ctx.restore();
-  }
-}
-
-function drawRegionBoundaries(ctx, kernel, mods) {
-  if (!kernel?.regionBoundariesById) return;
-
-  for (const boundary of kernel.regionBoundariesById.values()) {
-    if (boundary.parentRegion !== "harbor") continue;
-    strokePolygon(ctx, boundary.polygon, rgbaAdjusted(246, 240, 226, 0.08 + Math.max(0, mods.glow * 0.02), mods), 1);
-  }
-}
-
-function drawRegionPads(ctx, kernel, mods) {
-  if (!kernel?.regionsById) return;
-
-  for (const region of kernel.regionsById.values()) {
-    const [x, y] = region.centerPoint;
-    let rx = 44;
-    let ry = 22;
-    let fill = rgbaAdjusted(122, 136, 112, 0.10, mods);
-
-    if (region.regionId === "harbor_village") {
-      rx = 66;
-      ry = 26;
-      fill = rgbaAdjusted(120, 170, 196, 0.12, mods);
-      ctx.fillStyle = rgbaAdjusted(150, 108, 82, 0.96, mods);
-      ctx.fillRect(x - 36, y + 9, 72, 13);
-      ctx.fillRect(x - 10, y - 2, 20, 18);
-      ctx.strokeStyle = rgbaAdjusted(255, 240, 220, 0.08 + Math.max(0, mods.glow * 0.02), mods);
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x - 36, y + 9, 72, 13);
-      ctx.strokeRect(x - 10, y - 2, 20, 18);
-    }
-
-    if (region.regionId === "market_district") {
-      rx = 58;
-      ry = 24;
-      fill = rgbaAdjusted(176, 146, 102, 0.14, mods);
-      ctx.fillStyle = rgbaAdjusted(172, 124, 84, 0.92, mods);
-      ctx.fillRect(x - 24, y + 4, 48, 12);
-    }
-
-    if (region.regionId === "exploration_basin") {
-      rx = 76;
-      ry = 30;
-      fill = rgbaAdjusted(112, 128, 112, 0.06, mods);
-    }
-
-    if (region.regionId === "summit_approach") {
-      rx = 56;
-      ry = 24;
-      fill = rgbaAdjusted(198, 194, 184, 0.08, mods);
-    }
-
-    if (region.regionId === "summit_plaza") {
-      rx = 40;
-      ry = 18;
-      fill = rgbaAdjusted(210, 206, 198, 0.12, mods);
-    }
-
-    ctx.beginPath();
-    ctx.ellipse(x, y + 6, rx, ry, 0, 0, Math.PI * 2);
-    ctx.fillStyle = fill;
+  for (const lane of lanes) {
+    const r = projector.rect(lane.x, lane.y, lane.w, lane.h);
+    const gradient = ctx.createLinearGradient(r.x, r.y, r.x + r.width, r.y + r.height);
+    gradient.addColorStop(0, rgbaAdjusted(236, 248, 255, lane.a * scale, mods));
+    gradient.addColorStop(0.5, rgbaAdjusted(190, 228, 248, lane.a * 0.72 * scale, mods));
+    gradient.addColorStop(1, "rgba(236,248,255,0.00)");
+    ctx.fillStyle = gradient;
+    roundRect(ctx, r.x, r.y, r.width, r.height, projector.radius(18, lane.y));
     ctx.fill();
   }
+  ctx.restore();
 }
 
 function drawAtmosphericVeil(ctx, mods, phaseLabel) {
@@ -1149,7 +1109,7 @@ function drawAtmosphericVeil(ctx, mods, phaseLabel) {
   }
 
   ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 1180, 1240);
+  ctx.fillRect(-200, -200, 1800, 1800);
 }
 
 function drawPhaseGroundOverlay(ctx, phaseLabel, intensity) {
@@ -1159,7 +1119,7 @@ function drawPhaseGroundOverlay(ctx, phaseLabel, intensity) {
     gradient.addColorStop(0.45, `rgba(218,238,255,${0.015 + (intensity * 0.02)})`);
     gradient.addColorStop(1, "rgba(218,238,255,0.00)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 1180, 1240);
+    ctx.fillRect(-200, -200, 1800, 1800);
     return;
   }
 
@@ -1175,7 +1135,7 @@ function drawPhaseGroundOverlay(ctx, phaseLabel, intensity) {
     gradient.addColorStop(0.46, `rgba(110,144,196,${alpha * 0.56})`);
     gradient.addColorStop(1, "rgba(40,66,102,0.00)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 1180, 1240);
+    ctx.fillRect(-200, -200, 1800, 1800);
   }
 }
 
@@ -1187,7 +1147,7 @@ export function createGroundRenderer() {
       projection,
       destination,
       tick,
-      traversalMode = "foot",
+      player,
       activeHarborInstanceId = null
     } = runtime;
 
@@ -1195,52 +1155,46 @@ export function createGroundRenderer() {
     const phaseIntensity = getPhaseIntensity(runtime);
     const mods = getGroundPhaseModifiers(phaseLabel, phaseIntensity);
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
+    const traversalMode = player?.mode === "BOAT" ? "boat" : "foot";
 
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
     const manualWaterRows = getManualWaterRows(kernel);
+    const projector = createSurfaceProjector(runtime);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
 
-    drawOpenSeaAtmosphere(ctx, mods);
-    drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel);
-    drawHarborCoastGeometry(ctx, kernel, mods);
-    drawExposureZones(ctx, kernel, mods);
-    drawFirmnessZones(ctx, kernel, mods);
-    drawBasinDepthTint(ctx, kernel, mods);
-    drawWaterRows(ctx, manualWaterRows, mods);
-    drawWaterRipples(ctx, tick, mods, phaseLabel);
-    drawSeaRoutes(ctx, kernel, pulse, traversalMode, mods, phaseLabel);
-    drawWetEdgeHighlights(ctx, kernel, mods);
-    drawFoamBands(ctx, mods, phaseLabel);
+    drawOpenSeaAtmosphere(ctx, mods, projector);
+    drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel, projector);
+    drawWaterRows(ctx, manualWaterRows, mods, projector);
+    drawWaterRipples(ctx, tick, mods, phaseLabel, projector);
+    drawSeaRoutes(ctx, kernel, pulse, traversalMode, mods, phaseLabel, projector);
 
-    drawTerrainRows(ctx, activeTerrainRows, mods);
-    drawSubstrateRows(ctx, activeSubstrateRows, mods);
-    drawBeachReadBoost(ctx, activeSubstrateRows, activeTerrainRows, mods);
+    drawTerrainRows(ctx, activeTerrainRows, mods, projector);
+    drawSubstrateRows(ctx, activeSubstrateRows, mods, projector);
 
-    drawTerrainGrain(ctx, mods, phaseLabel);
-    drawStructureShadows(ctx, kernel, mods, phaseLabel);
-    drawRegionBoundaries(ctx, kernel, mods);
-    drawHarborChartAccents(ctx, kernel, mods);
-    drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode, mods, phaseLabel);
+    drawStructureShadows(ctx, kernel, mods, phaseLabel, projector);
+    drawRegionBoundaries(ctx, kernel, mods, projector);
+    drawHarborNavigationEdges(ctx, kernel, pulse, traversalMode, mods, phaseLabel, projector);
     drawSeaNodes(ctx, {
       ...runtime,
       kernel,
       tick,
       traversalMode,
       activeHarborInstanceId
-    }, mods, phaseLabel);
+    }, mods, phaseLabel, projector);
     drawHarborNavigationNodes(ctx, {
       ...runtime,
       kernel,
       tick,
       traversalMode,
       activeHarborInstanceId
-    }, mods, phaseLabel);
-    drawHarborProps(ctx, mods, phaseLabel);
-    drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods);
-    drawRegionPads(ctx, kernel, mods);
+    }, mods, phaseLabel, projector);
+    drawHarborProps(ctx, mods, phaseLabel, projector);
+    drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods, projector);
+    drawRegionPads(ctx, kernel, mods, projector);
+
     drawPhaseGroundOverlay(ctx, phaseLabel, phaseIntensity);
     drawAtmosphericVeil(ctx, mods, phaseLabel);
 

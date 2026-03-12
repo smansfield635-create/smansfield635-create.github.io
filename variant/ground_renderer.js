@@ -233,44 +233,46 @@ function createSurfaceProjector(runtime) {
   const northProgress = clamp((930 - playerY) / 930, 0, 1);
   const eastProgress = clamp((playerX - 150) / (960 - 150), 0, 1);
 
-  const shellCenterX = lerp(worldWidth * 0.26, worldWidth * 0.16, northProgress);
-  const shellCenterY = lerp(worldHeight * 1.08, worldHeight * 0.88, northProgress);
+  const shellCenterX = lerp(worldWidth * 0.26, worldWidth * 0.18, northProgress);
+  const shellCenterY = lerp(worldHeight * 1.10, worldHeight * 0.92, northProgress);
 
-  const wrapStrength = lerp(0.16, 0.38, northProgress);
-  const depthLift = lerp(36, 142, northProgress);
-  const sideDrop = lerp(18, 104, northProgress);
-  const compression = lerp(0.05, 0.18, northProgress);
-  const azimuthShift = ((eastProgress - 0.5) * lerp(18, 44, northProgress));
+  const verticalLift = lerp(30, 132, northProgress);
+  const lateralDrop = lerp(22, 108, northProgress);
+  const horizontalCompression = lerp(0.05, 0.20, northProgress);
+  const azimuthShift = (eastProgress - 0.5) * lerp(14, 34, northProgress);
+  const shellCurveStrength = lerp(0.85, 1.28, northProgress);
+  const sideWrapStrength = lerp(14, 64, northProgress);
 
   function point(x, y) {
     const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
     const depthSq = depth * depth;
+    const depthCube = depthSq * depth;
 
     const dx = x - shellCenterX;
-    const lateralNorm = dx / (worldWidth * 0.72);
+    const lateralNorm = dx / (worldWidth * 0.74);
 
-    const arc = lateralNorm * wrapStrength;
-    const wrapX = Math.sin(arc) * depth * lerp(18, 120, northProgress);
-    const wrapY = (1 - Math.cos(arc)) * depth * sideDrop;
+    const wrappedX =
+      x -
+      (dx * horizontalCompression * depth) +
+      (Math.sin(lateralNorm * shellCurveStrength) * sideWrapStrength * depth) +
+      (azimuthShift * depth);
 
-    const radialAngle =
-      lerp(-1.18, -0.62, northProgress) +
-      (lateralNorm * lerp(0.22, 0.70, northProgress)) +
-      ((eastProgress - 0.5) * 0.18);
+    const uShapeDrop =
+      (lateralNorm * lateralNorm) *
+      lateralDrop *
+      depth;
 
-    const radialPush = depthSq * depthLift;
-    const nx = Math.cos(radialAngle);
-    const ny = Math.sin(radialAngle);
+    const northLift = verticalLift * depthSq;
 
     return {
-      x: x - (dx * compression * depth) + azimuthShift * depth + wrapX + (nx * radialPush * 0.36),
-      y: y - wrapY + (ny * radialPush)
+      x: wrappedX,
+      y: y - northLift + uShapeDrop
     };
   }
 
   function radius(value, y) {
     const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const scale = 1 - (lerp(0.08, 0.24, northProgress) * depth);
+    const scale = 1 - (lerp(0.04, 0.16, northProgress) * depth);
     return Math.max(0.5, value * scale);
   }
 
@@ -282,6 +284,7 @@ function createSurfaceProjector(runtime) {
     const p = point(x + (width * 0.5), y + (height * 0.5));
     const scaledWidth = radius(width, y + height);
     const scaledHeight = radius(height, y + height);
+
     return {
       x: p.x - (scaledWidth * 0.5),
       y: p.y - (scaledHeight * 0.5),
@@ -575,13 +578,20 @@ function getManualWaterRows(kernel) {
 }
 
 function drawOpenSeaAtmosphere(ctx, mods, projector) {
-  const c = projector.point(680, 520);
-  const gradient = ctx.createRadialGradient(c.x, c.y, 80, c.x, c.y, 760);
-  gradient.addColorStop(0, rgbaAdjusted(122, 214, 255, 0.12 + Math.max(0, mods.glow * 0.04), mods));
-  gradient.addColorStop(0.38, rgbaAdjusted(82, 170, 224, 0.08 + Math.max(0, mods.glow * 0.03), mods));
+  const center = projector.point(650, 600);
+  const gradient = ctx.createRadialGradient(
+    center.x,
+    center.y,
+    60,
+    center.x,
+    center.y,
+    860
+  );
+  gradient.addColorStop(0, rgbaAdjusted(120, 208, 248, 0.09 + Math.max(0, mods.glow * 0.04), mods));
+  gradient.addColorStop(0.38, rgbaAdjusted(78, 164, 214, 0.06 + Math.max(0, mods.glow * 0.03), mods));
   gradient.addColorStop(1, "rgba(18,62,108,0.00)");
   ctx.fillStyle = gradient;
-  ctx.fillRect(-200, -200, 1800, 1800);
+  ctx.fillRect(-220, -220, 1840, 1840);
 }
 
 function drawWaterRows(ctx, rows, mods, projector) {
@@ -1104,51 +1114,61 @@ function drawWaterRipples(ctx, tick, mods, phaseLabel, projector) {
   ctx.restore();
 }
 
-function drawAtmosphericVeil(ctx, mods, phaseLabel) {
-  const gradient = ctx.createLinearGradient(0, 0, 1180, 1240);
+function drawAtmosphericVeil(ctx, mods, phaseLabel, projector) {
+  const center = projector.point(620, 610);
+  const gradient = ctx.createRadialGradient(
+    center.x,
+    center.y,
+    120,
+    center.x,
+    center.y,
+    1120
+  );
 
   if (phaseLabel === "CLEAR_WINDOW") {
-    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.02, mods));
-    gradient.addColorStop(0.45, rgbaAdjusted(196, 228, 250, 0.01, mods));
-    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.03, mods));
+    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.012, mods));
+    gradient.addColorStop(0.42, rgbaAdjusted(196, 228, 250, 0.010, mods));
+    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.035, mods));
   } else if (phaseLabel === "LOCKDOWN") {
-    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.08, mods));
-    gradient.addColorStop(0.45, rgbaAdjusted(180, 220, 244, 0.05, mods));
-    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.10, mods));
+    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.028, mods));
+    gradient.addColorStop(0.42, rgbaAdjusted(180, 220, 244, 0.030, mods));
+    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.080, mods));
   } else {
-    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.04, mods));
-    gradient.addColorStop(0.45, rgbaAdjusted(180, 220, 244, 0.02, mods));
-    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.06, mods));
+    gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.020, mods));
+    gradient.addColorStop(0.42, rgbaAdjusted(180, 220, 244, 0.018, mods));
+    gradient.addColorStop(1, rgbaAdjusted(18, 32, 52, 0.055, mods));
   }
 
   ctx.fillStyle = gradient;
-  ctx.fillRect(-200, -200, 1800, 1800);
+  ctx.fillRect(-220, -220, 1840, 1840);
 }
 
-function drawPhaseGroundOverlay(ctx, phaseLabel, intensity) {
+function drawPhaseGroundOverlay(ctx, phaseLabel, intensity, projector, mods) {
+  const center = projector.point(620, 520);
+
   if (phaseLabel === "CLEAR_WINDOW") {
-    const gradient = ctx.createRadialGradient(620, 420, 80, 620, 420, 720);
-    gradient.addColorStop(0, `rgba(255,248,228,${0.035 + (intensity * 0.04)})`);
-    gradient.addColorStop(0.45, `rgba(218,238,255,${0.015 + (intensity * 0.02)})`);
+    const gradient = ctx.createRadialGradient(center.x, center.y, 70, center.x, center.y, 760);
+    gradient.addColorStop(0, `rgba(255,248,228,${0.028 + (intensity * 0.03)})`);
+    gradient.addColorStop(0.42, `rgba(218,238,255,${0.012 + (intensity * 0.016)})`);
     gradient.addColorStop(1, "rgba(218,238,255,0.00)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(-200, -200, 1800, 1800);
+    ctx.fillRect(-220, -220, 1840, 1840);
     return;
   }
 
   if (phaseLabel === "UNSTABLE" || phaseLabel === "SEVERE" || phaseLabel === "LOCKDOWN") {
     const alpha = phaseLabel === "LOCKDOWN"
-      ? 0.08 + (intensity * 0.06)
+      ? 0.050 + (intensity * 0.04)
       : phaseLabel === "SEVERE"
-        ? 0.05 + (intensity * 0.04)
-        : 0.03 + (intensity * 0.03);
+        ? 0.034 + (intensity * 0.03)
+        : 0.022 + (intensity * 0.022);
 
-    const gradient = ctx.createLinearGradient(0, 0, 1180, 1240);
+    const gradient = ctx.createRadialGradient(center.x, center.y, 120, center.x, center.y, 880);
     gradient.addColorStop(0, `rgba(188,214,255,${alpha})`);
-    gradient.addColorStop(0.46, `rgba(110,144,196,${alpha * 0.56})`);
+    gradient.addColorStop(0.44, `rgba(110,144,196,${alpha * 0.50})`);
     gradient.addColorStop(1, "rgba(40,66,102,0.00)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(-200, -200, 1800, 1800);
+    ctx.fillRect(-220, -220, 1840, 1840);
   }
 }
 
@@ -1208,8 +1228,8 @@ export function createGroundRenderer() {
     drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods, projector);
     drawRegionPads(ctx, kernel, mods, projector);
 
-    drawPhaseGroundOverlay(ctx, phaseLabel, phaseIntensity);
-    drawAtmosphericVeil(ctx, mods, phaseLabel);
+    drawPhaseGroundOverlay(ctx, phaseLabel, phaseIntensity, projector, mods);
+    drawAtmosphericVeil(ctx, mods, phaseLabel, projector);
 
     ctx.restore();
   }

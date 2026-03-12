@@ -1,5 +1,3 @@
-(import code continues exactly as you already have it)
-
 import { createBackgroundRenderer } from "../assets/openworld_background_renderer.js";
 import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createGroundRenderer } from "./ground_renderer.js";
@@ -45,6 +43,15 @@ function clamp(value, min, max) {
 
 function lerp(a, b, t) {
   return a + ((b - a) * t);
+}
+
+function getPhasePanelString(phase) {
+  const globalPhase = typeof phase?.globalPhase === "string" ? phase.globalPhase : "CALM";
+  const intensity = Number.isFinite(phase?.intensity) ? phase.intensity.toFixed(2) : "0.20";
+  const cyclePosition = Number.isFinite(phase?.cyclePosition) ? String(phase.cyclePosition) : "0";
+  const nextShiftTick = Number.isFinite(phase?.nextShiftTick) ? String(Math.round(phase.nextShiftTick)) : "0";
+
+  return `${globalPhase} · I:${intensity} · C:${cyclePosition} · N:${nextShiftTick}`;
 }
 
 export async function createScene(canvas, outputs) {
@@ -118,15 +125,10 @@ export async function createScene(canvas, outputs) {
 
       const dx = state.player.x - node.centerPoint[0];
       const dy = state.player.y - node.centerPoint[1];
-
       const distSq = (dx * dx) + (dy * dy);
 
       if (distSq < 40 * 40) {
-        if (state.player.mode === "FOOT") {
-          state.player.mode = "BOAT";
-        } else {
-          state.player.mode = "FOOT";
-        }
+        state.player.mode = state.player.mode === "FOOT" ? "BOAT" : "FOOT";
       }
     }
   }
@@ -194,7 +196,6 @@ export async function createScene(canvas, outputs) {
 
     if (dx !== 0 || dy !== 0) {
       const length = Math.hypot(dx, dy) || 1;
-
       dx /= length;
       dy /= length;
 
@@ -218,16 +219,29 @@ export async function createScene(canvas, outputs) {
   }
 
   function updatePhase() {
-    state.phaseEngine.update({
+    const phaseRuntime = {
       tick: state.tick,
       projection: state.projection,
       region: state.region,
       kernel: state.kernel,
       phase: state.phase
-    });
+    };
+
+    state.phaseEngine.update(phaseRuntime);
 
     state.phase = {
-      ...state.phase
+      globalPhase: typeof phaseRuntime.phase?.globalPhase === "string"
+        ? phaseRuntime.phase.globalPhase
+        : "CALM",
+      intensity: Number.isFinite(phaseRuntime.phase?.intensity)
+        ? phaseRuntime.phase.intensity
+        : 0.2,
+      cyclePosition: Number.isFinite(phaseRuntime.phase?.cyclePosition)
+        ? phaseRuntime.phase.cyclePosition
+        : 0,
+      nextShiftTick: Number.isFinite(phaseRuntime.phase?.nextShiftTick)
+        ? phaseRuntime.phase.nextShiftTick
+        : 0
     };
   }
 
@@ -240,7 +254,7 @@ export async function createScene(canvas, outputs) {
     outputs.band.textContent = runtimePanel.band;
 
     outputs.encoding.textContent =
-      runtimePanel.encoding + " · " + state.player.mode;
+      `${runtimePanel.encoding} · ${state.player.mode} · ${getPhasePanelString(state.phase)}`;
 
     outputs.byte.textContent = runtimePanel.byte;
 

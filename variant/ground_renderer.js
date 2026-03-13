@@ -11,13 +11,17 @@ function lerp(a, b, t) {
 function polygon(ctx, points, projector = null) {
   if (!points || !points.length) return;
 
-  const first = projector ? projector.point(points[0][0], points[0][1]) : { x: points[0][0], y: points[0][1] };
+  const first = projector
+    ? projector.point(points[0][0], points[0][1])
+    : { x: points[0][0], y: points[0][1] };
 
   ctx.beginPath();
   ctx.moveTo(first.x, first.y);
 
   for (let i = 1; i < points.length; i += 1) {
-    const p = projector ? projector.point(points[i][0], points[i][1]) : { x: points[i][0], y: points[i][1] };
+    const p = projector
+      ? projector.point(points[i][0], points[i][1])
+      : { x: points[i][0], y: points[i][1] };
     ctx.lineTo(p.x, p.y);
   }
 
@@ -27,13 +31,17 @@ function polygon(ctx, points, projector = null) {
 function polyline(ctx, points, projector = null) {
   if (!points || !points.length) return;
 
-  const first = projector ? projector.point(points[0][0], points[0][1]) : { x: points[0][0], y: points[0][1] };
+  const first = projector
+    ? projector.point(points[0][0], points[0][1])
+    : { x: points[0][0], y: points[0][1] };
 
   ctx.beginPath();
   ctx.moveTo(first.x, first.y);
 
   for (let i = 1; i < points.length; i += 1) {
-    const p = projector ? projector.point(points[i][0], points[i][1]) : { x: points[i][0], y: points[i][1] };
+    const p = projector
+      ? projector.point(points[i][0], points[i][1])
+      : { x: points[i][0], y: points[i][1] };
     ctx.lineTo(p.x, p.y);
   }
 }
@@ -913,11 +921,27 @@ function drawHarborProps(ctx, mods, phaseLabel, projector) {
       ctx.translate(p.x, p.y);
       ctx.rotate(prop.a);
       ctx.beginPath();
-      ctx.ellipse(0, 0, projector.radius(prop.w * 0.5, prop.y), projector.radius(prop.h * 0.5, prop.y), 0, 0, Math.PI * 2);
+      ctx.ellipse(
+        0,
+        0,
+        projector.radius(prop.w * 0.5, prop.y),
+        projector.radius(prop.h * 0.5, prop.y),
+        0,
+        0,
+        Math.PI * 2
+      );
       ctx.fillStyle = rgbaAdjusted(88, 58, 42, 0.80, mods);
       ctx.fill();
       ctx.beginPath();
-      ctx.ellipse(0, -projector.radius(1, prop.y), projector.radius(prop.w * 0.34, prop.y), projector.radius(prop.h * 0.22, prop.y), 0, 0, Math.PI * 2);
+      ctx.ellipse(
+        0,
+        -projector.radius(1, prop.y),
+        projector.radius(prop.w * 0.34, prop.y),
+        projector.radius(prop.h * 0.22, prop.y),
+        0,
+        0,
+        Math.PI * 2
+      );
       ctx.fillStyle = rgbaAdjusted(196, 170, 126, 0.56, mods);
       ctx.fill();
       ctx.restore();
@@ -1089,7 +1113,6 @@ function drawPhaseGroundOverlay(ctx, phaseLabel, intensity, projector) {
 export function createGroundRenderer() {
   function draw(ctx, runtime) {
     const {
-      viewportOffset,
       kernel,
       projection,
       destination,
@@ -1115,7 +1138,6 @@ export function createGroundRenderer() {
     const projector = createSurfaceProjector(runtime);
 
     ctx.save();
-    ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawOpenSeaAtmosphere(ctx, mods, projector);
     drawSeaHazards(ctx, kernel, traversalMode, mods, phaseLabel, projector);

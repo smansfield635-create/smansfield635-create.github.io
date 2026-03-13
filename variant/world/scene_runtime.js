@@ -3,8 +3,8 @@ import { createEnvironmentRenderer } from "../../variant/environment_renderer.js
 import { createGroundRenderer } from "../../variant/ground_renderer.js";
 import { createCompassRenderer } from "../../assets/openworld_compass_renderer.js";
 import { createInstruments } from "../../assets/instruments.js";
-import { loadWorldKernel } from "../world_kernel.js";
-import { createPlanetGeometryEngine } from "../planet_geometry.js";
+import { loadWorldKernel } from "../../world/world_kernel.js";
+import { createPlanetGeometryEngine } from "../../world/planet_geometry.js";
 import { createWorldPhaseEngine } from "../../variant/world_phase_engine.js";
 import { createPlanetSurfaceProjector } from "../../variant/planet_surface_projector.js";
 
@@ -406,4 +406,3 @@ export async function createScene(canvas, outputs) {
       requestAnimationFrame(step);
     }
   });
-}

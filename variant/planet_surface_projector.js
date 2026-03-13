@@ -1,173 +1,211 @@
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function lerp(a,b,t){return a+((b-a)*t);}
+function normalize(v,f=0){return Number.isFinite(v)?v:f;}
+
+function getNorthProgress(runtime){
+const py=normalize(runtime?.player?.y,770);
+return clamp((930-py)/930,0,1);
 }
 
-function lerp(a, b, t) {
-  return a + ((b - a) * t);
+function getEastProgress(runtime){
+const px=normalize(runtime?.player?.x,544);
+return clamp((px-150)/(960-150),0,1);
 }
 
-function normalize(value, fallback = 0) {
-  return Number.isFinite(value) ? value : fallback;
+function getViewportWidth(runtime){
+return normalize(runtime?.width,1180);
 }
 
-function getNorthProgress(runtime) {
-  const playerY = normalize(runtime?.player?.y, 770);
-  return clamp((930 - playerY) / 930, 0, 1);
+function getViewportHeight(runtime){
+return normalize(runtime?.height,1240);
 }
 
-function getEastProgress(runtime) {
-  const playerX = normalize(runtime?.player?.x, 544);
-  return clamp((playerX - 150) / (960 - 150), 0, 1);
+function getWorldBounds(runtime){
+return{
+width:normalize(runtime?.worldBounds?.width,1180),
+height:normalize(runtime?.worldBounds?.height,1240)
+};
 }
 
-function getViewportWidth(runtime) {
-  return normalize(runtime?.width, 1180);
+function getPlanetBodyGeometry(runtime){
+
+const width=getViewportWidth(runtime);
+const height=getViewportHeight(runtime);
+
+const northProgress=getNorthProgress(runtime);
+const eastProgress=getEastProgress(runtime);
+
+/*
+NEW CAMERA MODEL
+
+Goals:
+• lower horizon
+• center landmass
+• increase visible ground share
+*/
+
+const centerX=
+width*0.50+
+((eastProgress-0.5)*width*0.04);
+
+const centerY=
+lerp(height*1.52,height*1.28,northProgress);
+
+/*
+Larger radius increases visible curvature
+but exposes more terrain
+*/
+
+const radius=
+lerp(width*1.28,width*1.08,northProgress);
+
+/*
+Lower horizon exposes terrain
+*/
+
+const horizonY=
+centerY-(radius*0.74);
+
+return Object.freeze({
+width,
+height,
+centerX,
+centerY,
+radius,
+horizonY,
+northProgress,
+eastProgress
+});
 }
 
-function getViewportHeight(runtime) {
-  return normalize(runtime?.height, 1240);
+function projectSpherePoint(runtime,worldX,worldY){
+
+const bounds=getWorldBounds(runtime);
+const body=getPlanetBodyGeometry(runtime);
+
+const worldWidth=bounds.width;
+const worldHeight=bounds.height;
+
+const x=clamp(normalize(worldX,worldWidth*0.5),0,worldWidth);
+const y=clamp(normalize(worldY,worldHeight*0.5),0,worldHeight);
+
+const u=x/worldWidth;
+const v=y/worldHeight;
+
+const northDepth=clamp(1-v,0,1);
+const southDepth=1-northDepth;
+
+const longitudeSpan=lerp(1.16,1.36,body.northProgress);
+const latitudeSpan=lerp(0.86,1.10,body.northProgress);
+
+const longitude=(u-0.5)*longitudeSpan;
+const latitude=(0.5-v)*latitudeSpan;
+
+const cosLat=Math.cos(latitude);
+const sinLat=Math.sin(latitude);
+const sinLon=Math.sin(longitude);
+const cosLon=Math.cos(longitude);
+
+const sx=body.radius*sinLon*cosLat;
+const sy=-body.radius*sinLat;
+const sz=body.radius*cosLon*cosLat;
+
+/*
+Tilt stabilized for horizon balance
+*/
+
+const tilt=0.98;
+
+const cosTilt=Math.cos(tilt);
+const sinTilt=Math.sin(tilt);
+
+const ry=(sy*cosTilt)-(sz*sinTilt);
+const rz=(sy*sinTilt)+(sz*cosTilt);
+
+/*
+Camera slightly farther to reduce distortion
+*/
+
+const cameraDistance=body.radius*2.46;
+
+const perspective=
+cameraDistance/Math.max(1,cameraDistance-rz);
+
+const screenX=
+body.centerX+(sx*perspective);
+
+const screenY=
+body.centerY+(ry*perspective);
+
+const scale=clamp(perspective,0.60,1.38);
+
+return Object.freeze({
+x:screenX,
+y:screenY,
+scale,
+northDepth,
+southDepth,
+horizonY:body.horizonY
+});
 }
 
-function getWorldBounds(runtime) {
-  const width = normalize(runtime?.worldBounds?.width, 1180);
-  const height = normalize(runtime?.worldBounds?.height, 1240);
-  return { width, height };
+function projectRadius(runtime,value,worldY){
+const sample=projectSpherePoint(runtime,590,normalize(worldY,620));
+const northDepth=sample.northDepth;
+const depthScale=lerp(1.0,0.70,northDepth);
+const projected=normalize(value,1)*depthScale*sample.scale;
+return Math.max(0.5,projected);
 }
 
-function getPlanetBodyGeometry(runtime) {
-  const width = getViewportWidth(runtime);
-  const height = getViewportHeight(runtime);
-
-  const northProgress = getNorthProgress(runtime);
-  const eastProgress = getEastProgress(runtime);
-
-  const centerX =
-    lerp(width * 0.50, width * 0.50, northProgress) +
-    ((eastProgress - 0.5) * width * 0.06);
-
-  const centerY = lerp(height * 1.34, height * 1.12, northProgress);
-  const radius = lerp(width * 1.16, width * 0.96, northProgress);
-  const horizonY = centerY - (radius * 0.78);
-
-  return Object.freeze({
-    width,
-    height,
-    centerX,
-    centerY,
-    radius,
-    horizonY,
-    northProgress,
-    eastProgress
-  });
+function projectLineWidth(runtime,value,worldY){
+return projectRadius(runtime,value,worldY);
 }
 
-function projectSpherePoint(runtime, worldX, worldY) {
-  const bounds = getWorldBounds(runtime);
-  const body = getPlanetBodyGeometry(runtime);
+function projectRect(runtime,x,y,width,height){
 
-  const worldWidth = bounds.width;
-  const worldHeight = bounds.height;
+const center=projectSpherePoint(runtime,x+(width*0.5),y+(height*0.5));
 
-  const x = clamp(normalize(worldX, worldWidth * 0.5), 0, worldWidth);
-  const y = clamp(normalize(worldY, worldHeight * 0.5), 0, worldHeight);
+const projectedWidth=
+projectRadius(runtime,width,y+(height*0.5));
 
-  const u = x / worldWidth;
-  const v = y / worldHeight;
+const projectedHeight=
+projectRadius(runtime,height,y+height);
 
-  const northDepth = clamp(1 - v, 0, 1);
-  const southDepth = 1 - northDepth;
-
-  const longitudeSpan = lerp(1.14, 1.34, body.northProgress);
-  const latitudeSpan = lerp(0.84, 1.08, body.northProgress);
-
-  const longitude = (u - 0.5) * longitudeSpan;
-  const latitude = (0.5 - v) * latitudeSpan;
-
-  const cosLat = Math.cos(latitude);
-  const sinLat = Math.sin(latitude);
-  const sinLon = Math.sin(longitude);
-  const cosLon = Math.cos(longitude);
-
-  const sx = body.radius * sinLon * cosLat;
-  const sy = -body.radius * sinLat;
-  const sz = body.radius * cosLon * cosLat;
-
-  const tilt = lerp(0.92, 1.08, body.northProgress);
-  const cosTilt = Math.cos(tilt);
-  const sinTilt = Math.sin(tilt);
-
-  const rotatedY = (sy * cosTilt) - (sz * sinTilt);
-  const rotatedZ = (sy * sinTilt) + (sz * cosTilt);
-
-  const cameraDistance = body.radius * lerp(2.18, 2.58, body.northProgress);
-  const perspective = cameraDistance / Math.max(1, cameraDistance - rotatedZ);
-
-  const screenX = body.centerX + (sx * perspective);
-  const screenY = body.centerY + (rotatedY * perspective);
-
-  const scale = clamp(perspective, 0.58, 1.36);
-
-  return Object.freeze({
-    x: screenX,
-    y: screenY,
-    scale,
-    northDepth,
-    southDepth,
-    horizonY: body.horizonY
-  });
+return Object.freeze({
+x:center.x-(projectedWidth*0.5),
+y:center.y-(projectedHeight*0.5),
+width:projectedWidth,
+height:projectedHeight
+});
 }
 
-function projectRadius(runtime, value, worldY) {
-  const sample = projectSpherePoint(runtime, 590, normalize(worldY, 620));
-  const northDepth = sample.northDepth;
-  const depthScale = lerp(1.00, 0.68, northDepth);
-  const projected = normalize(value, 1) * depthScale * sample.scale;
-  return Math.max(0.5, projected);
+export function createPlanetSurfaceProjector(runtime){
+
+const body=getPlanetBodyGeometry(runtime);
+
+function point(x,y){
+return projectSpherePoint(runtime,x,y);
 }
 
-function projectLineWidth(runtime, value, worldY) {
-  return projectRadius(runtime, value, worldY);
+function radius(v,y=620){
+return projectRadius(runtime,v,y);
 }
 
-function projectRect(runtime, x, y, width, height) {
-  const center = projectSpherePoint(runtime, x + (width * 0.5), y + (height * 0.5));
-  const projectedWidth = projectRadius(runtime, width, y + (height * 0.5));
-  const projectedHeight = projectRadius(runtime, height, y + height);
-
-  return Object.freeze({
-    x: center.x - (projectedWidth * 0.5),
-    y: center.y - (projectedHeight * 0.5),
-    width: projectedWidth,
-    height: projectedHeight
-  });
+function lineWidth(v,y=620){
+return projectLineWidth(runtime,v,y);
 }
 
-export function createPlanetSurfaceProjector(runtime) {
-  const body = getPlanetBodyGeometry(runtime);
-
-  function point(x, y) {
-    return projectSpherePoint(runtime, x, y);
-  }
-
-  function radius(value, y = 620) {
-    return projectRadius(runtime, value, y);
-  }
-
-  function lineWidth(value, y = 620) {
-    return projectLineWidth(runtime, value, y);
-  }
-
-  function rect(x, y, width, height) {
-    return projectRect(runtime, x, y, width, height);
-  }
-
-  return Object.freeze({
-    body,
-    point,
-    radius,
-    lineWidth,
-    rect
-  });
+function rect(x,y,w,h){
+return projectRect(runtime,x,y,w,h);
 }
 
-export { getPlanetBodyGeometry };
+return Object.freeze({
+body,
+point,
+radius,
+lineWidth,
+rect
+});
+}
+
+export{getPlanetBodyGeometry};

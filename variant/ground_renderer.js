@@ -1,3 +1,5 @@
+import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -224,81 +226,7 @@ function rgbaAdjusted(r, g, b, a, mods) {
 }
 
 function createSurfaceProjector(runtime) {
-  const worldWidth = 1180;
-  const worldHeight = 1240;
-
-  const playerX = Number.isFinite(runtime?.player?.x) ? runtime.player.x : worldWidth * 0.5;
-  const playerY = Number.isFinite(runtime?.player?.y) ? runtime.player.y : worldHeight * 0.62;
-
-  const northProgress = clamp((930 - playerY) / 930, 0, 1);
-  const eastProgress = clamp((playerX - 150) / (960 - 150), 0, 1);
-
-  const shellCenterX = lerp(worldWidth * 0.26, worldWidth * 0.18, northProgress);
-  const shellCenterY = lerp(worldHeight * 1.10, worldHeight * 0.92, northProgress);
-
-  const verticalLift = lerp(30, 132, northProgress);
-  const lateralDrop = lerp(22, 108, northProgress);
-  const horizontalCompression = lerp(0.05, 0.20, northProgress);
-  const azimuthShift = (eastProgress - 0.5) * lerp(14, 34, northProgress);
-  const shellCurveStrength = lerp(0.85, 1.28, northProgress);
-  const sideWrapStrength = lerp(14, 64, northProgress);
-
-  function point(x, y) {
-    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const depthSq = depth * depth;
-    const depthCube = depthSq * depth;
-
-    const dx = x - shellCenterX;
-    const lateralNorm = dx / (worldWidth * 0.74);
-
-    const wrappedX =
-      x -
-      (dx * horizontalCompression * depth) +
-      (Math.sin(lateralNorm * shellCurveStrength) * sideWrapStrength * depth) +
-      (azimuthShift * depth);
-
-    const uShapeDrop =
-      (lateralNorm * lateralNorm) *
-      lateralDrop *
-      depth;
-
-    const northLift = verticalLift * depthSq;
-
-    return {
-      x: wrappedX,
-      y: y - northLift + uShapeDrop
-    };
-  }
-
-  function radius(value, y) {
-    const depth = clamp((worldHeight - y) / worldHeight, 0, 1);
-    const scale = 1 - (lerp(0.04, 0.16, northProgress) * depth);
-    return Math.max(0.5, value * scale);
-  }
-
-  function lineWidth(value, y) {
-    return radius(value, y);
-  }
-
-  function rect(x, y, width, height) {
-    const p = point(x + (width * 0.5), y + (height * 0.5));
-    const scaledWidth = radius(width, y + height);
-    const scaledHeight = radius(height, y + height);
-
-    return {
-      x: p.x - (scaledWidth * 0.5),
-      y: p.y - (scaledHeight * 0.5),
-      width: scaledWidth,
-      height: scaledHeight
-    };
-  }
-
-  return Object.freeze({
-    point,
-    radius,
-    lineWidth,
-    rect
-  });
+  return createPlanetSurfaceProjector(runtime);
 }
 
 function terrainStyle(terrainClass, ctx, mods) {
@@ -579,14 +507,7 @@ function getManualWaterRows(kernel) {
 
 function drawOpenSeaAtmosphere(ctx, mods, projector) {
   const center = projector.point(650, 600);
-  const gradient = ctx.createRadialGradient(
-    center.x,
-    center.y,
-    60,
-    center.x,
-    center.y,
-    860
-  );
+  const gradient = ctx.createRadialGradient(center.x, center.y, 60, center.x, center.y, 860);
   gradient.addColorStop(0, rgbaAdjusted(120, 208, 248, 0.09 + Math.max(0, mods.glow * 0.04), mods));
   gradient.addColorStop(0.38, rgbaAdjusted(78, 164, 214, 0.06 + Math.max(0, mods.glow * 0.03), mods));
   gradient.addColorStop(1, "rgba(18,62,108,0.00)");
@@ -1116,14 +1037,7 @@ function drawWaterRipples(ctx, tick, mods, phaseLabel, projector) {
 
 function drawAtmosphericVeil(ctx, mods, phaseLabel, projector) {
   const center = projector.point(620, 610);
-  const gradient = ctx.createRadialGradient(
-    center.x,
-    center.y,
-    120,
-    center.x,
-    center.y,
-    1120
-  );
+  const gradient = ctx.createRadialGradient(center.x, center.y, 120, center.x, center.y, 1120);
 
   if (phaseLabel === "CLEAR_WINDOW") {
     gradient.addColorStop(0, rgbaAdjusted(255, 255, 255, 0.012, mods));
@@ -1143,7 +1057,7 @@ function drawAtmosphericVeil(ctx, mods, phaseLabel, projector) {
   ctx.fillRect(-220, -220, 1840, 1840);
 }
 
-function drawPhaseGroundOverlay(ctx, phaseLabel, intensity, projector, mods) {
+function drawPhaseGroundOverlay(ctx, phaseLabel, intensity, projector) {
   const center = projector.point(620, 520);
 
   if (phaseLabel === "CLEAR_WINDOW") {
@@ -1188,7 +1102,12 @@ export function createGroundRenderer() {
     const phaseIntensity = getPhaseIntensity(runtime);
     const mods = getGroundPhaseModifiers(phaseLabel, phaseIntensity);
     const pulse = 0.5 + 0.5 * Math.sin(tick * 0.08);
-    const traversalMode = player?.mode === "BOAT" ? "boat" : "foot";
+    const traversalMode =
+      runtime?.traversalMode === "boat" || runtime?.traversalMode === "BOAT"
+        ? "boat"
+        : player?.mode === "BOAT"
+          ? "boat"
+          : "foot";
 
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
@@ -1228,7 +1147,7 @@ export function createGroundRenderer() {
     drawTraversalPaths(ctx, kernel, projection, destination, pulse, mods, projector);
     drawRegionPads(ctx, kernel, mods, projector);
 
-    drawPhaseGroundOverlay(ctx, phaseLabel, phaseIntensity, projector, mods);
+    drawPhaseGroundOverlay(ctx, phaseLabel, phaseIntensity, projector);
     drawAtmosphericVeil(ctx, mods, phaseLabel, projector);
 
     ctx.restore();

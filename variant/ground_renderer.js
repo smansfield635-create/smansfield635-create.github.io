@@ -1,5 +1,3 @@
-import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
-
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -231,10 +229,6 @@ function rgbaAdjusted(r, g, b, a, mods) {
   nb = clamp(nb + (mods.wash * 22), 0, 255);
 
   return `rgba(${nr.toFixed(0)},${ng.toFixed(0)},${nb.toFixed(0)},${clamp(a, 0, 1).toFixed(3)})`;
-}
-
-function createSurfaceProjector(runtime) {
-  return createPlanetSurfaceProjector(runtime);
 }
 
 function terrainStyle(terrainClass, ctx, mods) {
@@ -1118,8 +1112,13 @@ export function createGroundRenderer() {
       destination,
       tick,
       player,
-      activeHarborInstanceId = null
+      activeHarborInstanceId = null,
+      surfaceProjector = null
     } = runtime;
+
+    if (!surfaceProjector) {
+      throw new Error("ground_renderer requires runtime.surfaceProjector");
+    }
 
     const phaseLabel = getPhaseLabel(runtime);
     const phaseIntensity = getPhaseIntensity(runtime);
@@ -1135,7 +1134,7 @@ export function createGroundRenderer() {
     const activeTerrainRows = getActiveTerrainRows(kernel);
     const activeSubstrateRows = getActiveSubstrateRows(kernel);
     const manualWaterRows = getManualWaterRows(kernel);
-    const projector = createSurfaceProjector(runtime);
+    const projector = surfaceProjector;
 
     ctx.save();
 

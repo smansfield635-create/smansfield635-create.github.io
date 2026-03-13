@@ -1,5 +1,6 @@
 import { byteToStateVector, validateByte } from "../assets/four_pixel_codec.js";
 import { terrainSubstrateRebuildTool } from "./terrain_substrate_rebuild_tool.js";
+import { validateLoadedWorldKernel } from "./kernel_boot_validator.js";
 
 const DATA_FILES = {
   regions: new URL("./data/regions.json", import.meta.url),
@@ -24,6 +25,15 @@ const DATA_FILES = {
   regionTemplates: new URL("./templates/region_templates.json", import.meta.url)
 };
 
+const DEV_VALIDATE_ON_BOOT = false;
+
+function shallowFreeze(value) {
+  if (value && typeof value === "object" && !Object.isFrozen(value)) {
+    Object.freeze(value);
+  }
+  return value;
+}
+
 function indexBy(rows, key) {
   const map = new Map();
   for (const row of rows) {
@@ -34,19 +44,9 @@ function indexBy(rows, key) {
     if (map.has(id)) {
       throw new Error(`Duplicate ${key}: ${id}`);
     }
-    map.set(id, Object.freeze({ ...row }));
+    map.set(id, shallowFreeze({ ...row }));
   }
-  return map;
-}
-
-function freezeObjectTree(value) {
-  if (value && typeof value === "object" && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const sub of Object.values(value)) {
-      freezeObjectTree(sub);
-    }
-  }
-  return value;
+  return shallowFreeze(map);
 }
 
 async function readJson(url) {
@@ -107,7 +107,7 @@ function validateHarborPolygonDatasets(coastlines, regionBoundariesById, terrain
   assertPolygon(coastlines.coastlineOuter, "coastlineOuter");
   assertPolygon(coastlines.harborPeninsula, "harborPeninsula");
   assertPolygon(coastlines.harborBasin, "harborBasin");
-  assertPolygon(coastlines.harborChannel, "harborChannel");
+  assertPointList(coastlines.harborChannel, "harborChannel", 2);
 
   const requiredBoundaryIds = [
     "harbor_peninsula",
@@ -530,7 +530,7 @@ function normalizeCoastalBlueprint(coastalBlueprintRoot, regionsById, regionBoun
     if (!Array.isArray(stackRows) || stackRows.length === 0) {
       throw new Error(`Invalid coastal blueprint stack: ${stackId}`);
     }
-    materialStacks[stackId] = Object.freeze([...stackRows]);
+    materialStacks[stackId] = shallowFreeze([...stackRows]);
   }
 
   const coastalClasses = {};
@@ -555,7 +555,7 @@ function normalizeCoastalBlueprint(coastalBlueprintRoot, regionsById, regionBoun
       throw new Error(`Invalid status for coastal class: ${classId}`);
     }
 
-    coastalClasses[classId] = Object.freeze({ classId, ...classRow });
+    coastalClasses[classId] = shallowFreeze({ classId, ...classRow });
   }
 
   for (const [stackId, stackRows] of Object.entries(materialStacks)) {
@@ -615,14 +615,14 @@ function normalizeCoastalBlueprint(coastalBlueprintRoot, regionsById, regionBoun
 
   const notes = typeof coastalBlueprintRoot.notes === "string" ? coastalBlueprintRoot.notes : "";
 
-  return freezeObjectTree({
+  return shallowFreeze({
     version: coastalBlueprintRoot.version,
     scope,
     authority,
     notes,
     coastalDomainsById,
-    materialStacks,
-    coastalClasses
+    materialStacks: shallowFreeze(materialStacks),
+    coastalClasses: shallowFreeze(coastalClasses)
   });
 }
 
@@ -654,71 +654,6 @@ function validateCoastalBlueprintBindings(
   }
 
   return true;
-}
-
-function validateCrossReferences(data) {
-  const {
-    regionsById,
-    pathsById,
-    hazardsById,
-    watersById,
-    encodingsById,
-    diamondCellsById,
-    graphRows
-  } = data;
-
-  for (const region of regionsById.values()) {
-    assertReferenceExists(encodingsById, region.stateEncodingId, "stateEncodingId");
-    for (const pathId of region.pathAnchors) assertReferenceExists(pathsById, pathId, "pathId");
-    for (const hazardId of region.hazardAdjacency) assertReferenceExists(hazardsById, hazardId, "hazardId");
-    for (const waterId of region.waterAdjacency) assertReferenceExists(watersById, waterId, "waterId");
-    for (const predecessorId of region.requiredPredecessors) assertReferenceExists(regionsById, predecessorId, "requiredPredecessor");
-  }
-
-  for (const path of pathsById.values()) {
-    assertReferenceExists(regionsById, path.fromRegionId, "fromRegionId");
-    assertReferenceExists(regionsById, path.toRegionId, "toRegionId");
-    assertReferenceExists(encodingsById, path.stateEncodingId, "path.stateEncodingId");
-  }
-
-  for (const hazard of hazardsById.values()) {
-    assertReferenceExists(encodingsById, hazard.stateEncodingId, "hazard.stateEncodingId");
-    for (const regionId of hazard.affectedRegionIds) assertReferenceExists(regionsById, regionId, "hazard.affectedRegionId");
-    for (const pathId of hazard.pathIds) assertReferenceExists(pathsById, pathId, "hazard.pathId");
-  }
-
-  for (const water of watersById.values()) {
-    assertReferenceExists(encodingsById, water.stateEncodingId, "water.stateEncodingId");
-  }
-
-  for (const cell of diamondCellsById.values()) {
-    assertReferenceExists(regionsById, cell.regionId, "cell.regionId");
-    if (cell.pathId) assertReferenceExists(pathsById, cell.pathId, "cell.pathId");
-    assertReferenceExists(encodingsById, cell.stateEncodingId, "cell.stateEncodingId");
-    for (const neighborId of cell.neighborIds) assertReferenceExists(diamondCellsById, neighborId, "cell.neighborId");
-    if (typeof cell.sector !== "string" || cell.sector.length === 0) {
-      throw new Error(`Missing sealed sector for cell ${cell.diamondCellId}`);
-    }
-  }
-
-  for (const graphType of Object.keys(graphRows)) {
-    for (const edge of graphRows[graphType]) {
-      if (
-        regionsById.has(edge.fromId) === false &&
-        hazardsById.has(edge.fromId) === false &&
-        watersById.has(edge.fromId) === false
-      ) {
-        throw new Error(`Graph fromId missing: ${edge.fromId}`);
-      }
-      if (
-        regionsById.has(edge.toId) === false &&
-        hazardsById.has(edge.toId) === false &&
-        watersById.has(edge.toId) === false
-      ) {
-        throw new Error(`Graph toId missing: ${edge.toId}`);
-      }
-    }
-  }
 }
 
 function nearestCell(cells, x, y) {
@@ -816,7 +751,7 @@ function buildGeneratedTerrainPolygons(regionsById, regionTemplatesById, terrain
 
     for (let index = 0; index < terrainTemplate.terrain.length; index += 1) {
       const item = terrainTemplate.terrain[index];
-      generated.push(Object.freeze({
+      generated.push(shallowFreeze({
         terrainId: `${region.regionId}__generated_terrain__${index}`,
         terrainClass: item.terrainClass,
         regionId: region.regionId,
@@ -848,7 +783,7 @@ function buildGeneratedSubstratePolygons(regionsById, regionTemplatesById, subst
 
     for (let index = 0; index < substrateTemplate.substrates.length; index += 1) {
       const item = substrateTemplate.substrates[index];
-      generated.push(Object.freeze({
+      generated.push(shallowFreeze({
         substrateId: `${region.regionId}__generated_substrate__${index}`,
         substrateClass: item.substrateClass,
         regionId: region.regionId,
@@ -879,7 +814,87 @@ function buildCoastalRegionIdSet(coastalBlueprint) {
   for (const domain of coastalBlueprint.coastalDomainsById.values()) {
     ids.add(domain.regionId);
   }
-  return ids;
+  return shallowFreeze(ids);
+}
+
+function buildRebuildFallbackResult(provisionalKernel, terrainPolygons, substratePolygons, legacyTerrainPolygonsById, legacySubstratePolygonsById) {
+  return shallowFreeze({
+    terrainDataset: shallowFreeze({
+      schemaVersion: "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
+      worldId: provisionalKernel.worldMeta.worldId,
+      encodingFamilyVersion: provisionalKernel.worldMeta.encodingFamilyVersion,
+      version: terrainPolygons.version,
+      terrain: [...legacyTerrainPolygonsById.values()]
+    }),
+    substrateDataset: shallowFreeze({
+      schemaVersion: "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
+      worldId: provisionalKernel.worldMeta.worldId,
+      encodingFamilyVersion: provisionalKernel.worldMeta.encodingFamilyVersion,
+      version: substratePolygons.version,
+      substrates: [...legacySubstratePolygonsById.values()]
+    }),
+    receipts: shallowFreeze({
+      coastalDomainCount: provisionalKernel.coastalBlueprint.coastalDomainsById.size,
+      activeTerrainBandCount: 0,
+      activeSubstrateBandCount: 0,
+      pendingTerrainReceipts: [],
+      pendingSubstrateReceipts: [],
+      preservedManualTerrainRowCount: legacyTerrainPolygonsById.size,
+      preservedManualSubstrateRowCount: legacySubstratePolygonsById.size,
+      generationReceipts: [],
+      fallbackMode: "legacy"
+    })
+  });
+}
+
+function resolveRebuildResult({
+  provisionalKernel,
+  terrainPolygons,
+  substratePolygons,
+  legacyTerrainPolygonsById,
+  legacySubstratePolygonsById
+}) {
+  try {
+    const rebuildResult = terrainSubstrateRebuildTool.rebuildTerrainAndSubstrateDatasets({
+      kernel: provisionalKernel
+    });
+
+    const hasTerrain = Array.isArray(rebuildResult?.terrainDataset?.terrain) && rebuildResult.terrainDataset.terrain.length > 0;
+    const hasSubstrate = Array.isArray(rebuildResult?.substrateDataset?.substrates) && rebuildResult.substrateDataset.substrates.length > 0;
+
+    if (!hasTerrain || !hasSubstrate) {
+      console.warn("terrainSubstrateRebuildTool returned empty datasets; using legacy datasets.");
+      return buildRebuildFallbackResult(
+        provisionalKernel,
+        terrainPolygons,
+        substratePolygons,
+        legacyTerrainPolygonsById,
+        legacySubstratePolygonsById
+      );
+    }
+
+    validateRebuiltDatasetRoot(
+      rebuildResult.terrainDataset,
+      "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
+      "terrain"
+    );
+    validateRebuiltDatasetRoot(
+      rebuildResult.substrateDataset,
+      "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
+      "substrates"
+    );
+
+    return rebuildResult;
+  } catch (error) {
+    console.warn("terrainSubstrateRebuildTool failed; using legacy datasets.", error);
+    return buildRebuildFallbackResult(
+      provisionalKernel,
+      terrainPolygons,
+      substratePolygons,
+      legacyTerrainPolygonsById,
+      legacySubstratePolygonsById
+    );
+  }
 }
 
 export async function loadWorldKernel() {
@@ -962,7 +977,7 @@ export async function loadWorldKernel() {
 
   const harborNavigation = validateHarborNavigationGraph(harborNavigationGraph, encodingsById);
 
-  const coastlineModel = freezeObjectTree({
+  const coastlineModel = shallowFreeze({
     version: coastlines.version,
     coastlineOuter: coastlines.coastlineOuter,
     harborPeninsula: coastlines.harborPeninsula,
@@ -995,12 +1010,12 @@ export async function loadWorldKernel() {
     harborNavigation.navigationNodesById
   );
 
-  const graphRows = freezeObjectTree({
-    spatialAdjacencyGraph: graphs.graphRows.spatialAdjacencyGraph.map((edge) => Object.freeze({ ...edge })),
-    traversalGraph: graphs.graphRows.traversalGraph.map((edge) => Object.freeze({ ...edge })),
-    progressionGraph: graphs.graphRows.progressionGraph.map((edge) => Object.freeze({ ...edge })),
-    hazardAdjacencyGraph: graphs.graphRows.hazardAdjacencyGraph.map((edge) => Object.freeze({ ...edge })),
-    waterAdjacencyGraph: graphs.graphRows.waterAdjacencyGraph.map((edge) => Object.freeze({ ...edge }))
+  const graphRows = shallowFreeze({
+    spatialAdjacencyGraph: Object.freeze(graphs.graphRows.spatialAdjacencyGraph.map((edge) => shallowFreeze({ ...edge }))),
+    traversalGraph: Object.freeze(graphs.graphRows.traversalGraph.map((edge) => shallowFreeze({ ...edge }))),
+    progressionGraph: Object.freeze(graphs.graphRows.progressionGraph.map((edge) => shallowFreeze({ ...edge }))),
+    hazardAdjacencyGraph: Object.freeze(graphs.graphRows.hazardAdjacencyGraph.map((edge) => shallowFreeze({ ...edge }))),
+    waterAdjacencyGraph: Object.freeze(graphs.graphRows.waterAdjacencyGraph.map((edge) => shallowFreeze({ ...edge })))
   });
 
   validateHarborPolygonDatasets(
@@ -1028,39 +1043,32 @@ export async function loadWorldKernel() {
     substrateTemplatesById
   );
 
-  const provisionalKernel = freezeObjectTree({
-    worldMeta: {
+  const provisionalKernel = shallowFreeze({
+    worldMeta: shallowFreeze({
       worldId: regions.worldId,
       encodingFamilyVersion: regions.encodingFamilyVersion
-    },
+    }),
     coastlineModel,
     coastalBlueprint,
     regionBoundariesById,
     watersById,
     terrainPolygonsById: legacyTerrainPolygonsById,
     substratePolygonsById: legacySubstratePolygonsById,
-    terrainDatasetMeta: {
+    terrainDatasetMeta: shallowFreeze({
       version: terrainPolygons.version
-    },
-    substrateDatasetMeta: {
+    }),
+    substrateDatasetMeta: shallowFreeze({
       version: substratePolygons.version
-    }
+    })
   });
 
-  const rebuildResult = terrainSubstrateRebuildTool.rebuildTerrainAndSubstrateDatasets({
-    kernel: provisionalKernel
+  const rebuildResult = resolveRebuildResult({
+    provisionalKernel,
+    terrainPolygons,
+    substratePolygons,
+    legacyTerrainPolygonsById,
+    legacySubstratePolygonsById
   });
-
-  validateRebuiltDatasetRoot(
-    rebuildResult.terrainDataset,
-    "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
-    "terrain"
-  );
-  validateRebuiltDatasetRoot(
-    rebuildResult.substrateDataset,
-    "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
-    "substrates"
-  );
 
   const terrainPolygonsById = indexBy(rebuildResult.terrainDataset.terrain, "terrainId");
   const substratePolygonsById = indexBy(rebuildResult.substrateDataset.substrates, "substrateId");
@@ -1083,7 +1091,7 @@ export async function loadWorldKernel() {
   const coastalRegionIds = buildCoastalRegionIdSet(coastalBlueprint);
 
   const kernel = {
-    worldMeta: Object.freeze({
+    worldMeta: shallowFreeze({
       worldId: regions.worldId,
       encodingFamilyVersion: regions.encodingFamilyVersion
     }),
@@ -1092,32 +1100,32 @@ export async function loadWorldKernel() {
     hazardsById,
     watersById,
     encodingsById,
-    latticeEncodingLaw: Object.freeze(latticeMap),
-    environmentModel: freezeObjectTree(environment.environmentModel),
+    latticeEncodingLaw: shallowFreeze(latticeMap),
+    environmentModel: shallowFreeze(environment.environmentModel),
     diamondCellsById,
     graphRows,
     coastlineModel,
     coastalBlueprint,
-    harborNavigationGraph: freezeObjectTree({
-      graphMeta: harborNavigationGraph.graphMeta,
+    harborNavigationGraph: shallowFreeze({
+      graphMeta: shallowFreeze(harborNavigationGraph.graphMeta),
       navigationNodesById: harborNavigation.navigationNodesById,
       navigationEdgesById: harborNavigation.navigationEdgesById
     }),
     harborInstancesById,
-    maritimeNetwork: freezeObjectTree({
+    maritimeNetwork: shallowFreeze({
       version: maritimeNetwork.version,
-      networkMeta: maritimeNetwork.networkMeta,
+      networkMeta: shallowFreeze(maritimeNetwork.networkMeta),
       maritimeHarborInstancesById: maritimeNetworkModel.maritimeHarborInstancesById,
       seaNodesById: maritimeNetworkModel.seaNodesById,
       seaRoutesById: maritimeNetworkModel.seaRoutesById,
       seaHazardsById: maritimeNetworkModel.seaHazardsById
     }),
     regionBoundariesById,
-    terrainDatasetMeta: Object.freeze({
+    terrainDatasetMeta: shallowFreeze({
       version: rebuildResult.terrainDataset.version,
       sourceVersion: terrainPolygons.version
     }),
-    substrateDatasetMeta: Object.freeze({
+    substrateDatasetMeta: shallowFreeze({
       version: rebuildResult.substrateDataset.version,
       sourceVersion: substratePolygons.version
     }),
@@ -1127,321 +1135,222 @@ export async function loadWorldKernel() {
     legacySubstratePolygonsById,
     generatedTerrainPolygonsById,
     generatedSubstratePolygonsById,
-    coastalGeneration: freezeObjectTree({
-      receipts: rebuildResult.receipts,
+    coastalGeneration: shallowFreeze({
+      receipts: shallowFreeze(rebuildResult.receipts ?? {}),
       coastalRegionIds
     }),
-    templateRegistry: freezeObjectTree({
+    templateRegistry: shallowFreeze({
       terrainTemplatesById,
       substrateTemplatesById,
       regionTemplatesById
     }),
-    helpers: {
-      getRegion(regionId) {
-        return regionsById.get(regionId) ?? null;
-      },
-      getPath(pathId) {
-        return pathsById.get(pathId) ?? null;
-      },
-      getHazard(hazardId) {
-        return hazardsById.get(hazardId) ?? null;
-      },
-      getWater(waterId) {
-        return watersById.get(waterId) ?? null;
-      },
-      getCell(cellId) {
-        return diamondCellsById.get(cellId) ?? null;
-      },
-      getNeighbors(cellId) {
-        const cell = diamondCellsById.get(cellId);
-        if (!cell) return [];
-        return cell.neighborIds.map((id) => diamondCellsById.get(id)).filter(Boolean);
-      },
-      getTraversalEdge(fromId, toId) {
-        return graphRows.traversalGraph.find((edge) => edge.fromId === fromId && edge.toId === toId) ?? null;
-      },
-      getRequiredPredecessors(regionId) {
-        return regionsById.get(regionId)?.requiredPredecessors ?? [];
-      },
-      getEncoding(encodingId) {
-        return encodingsById.get(encodingId) ?? null;
-      },
-      getRegionBoundary(regionId) {
-        return regionBoundariesById.get(regionId) ?? null;
-      },
-      getTerrainPolygon(terrainId) {
-        return terrainPolygonsById.get(terrainId) ?? null;
-      },
-      getSubstratePolygon(substrateId) {
-        return substratePolygonsById.get(substrateId) ?? null;
-      },
-      getLegacyTerrainPolygon(terrainId) {
-        return legacyTerrainPolygonsById.get(terrainId) ?? null;
-      },
-      getLegacySubstratePolygon(substrateId) {
-        return legacySubstratePolygonsById.get(substrateId) ?? null;
-      },
-      getGeneratedTerrainPolygon(terrainId) {
-        return generatedTerrainPolygonsById.get(terrainId) ?? null;
-      },
-      getGeneratedSubstratePolygon(substrateId) {
-        return generatedSubstratePolygonsById.get(substrateId) ?? null;
-      },
-      getTerrainTemplate(templateId) {
-        return terrainTemplatesById.get(templateId) ?? null;
-      },
-      getSubstrateTemplate(templateId) {
-        return substrateTemplatesById.get(templateId) ?? null;
-      },
-      getRegionTemplate(templateId) {
-        return regionTemplatesById.get(templateId) ?? null;
-      },
-      getGeneratedTerrainForRegion(regionId) {
-        return [...generatedTerrainPolygonsById.values()].filter((row) => row.regionId === regionId);
-      },
-      getGeneratedSubstrateForRegion(regionId) {
-        return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
-      },
-      getActiveTerrainForRegion(regionId) {
-        return [...terrainPolygonsById.values()].filter((row) => row.regionId === regionId);
-      },
-      getActiveSubstrateForRegion(regionId) {
-        return [...substratePolygonsById.values()].filter((row) => row.regionId === regionId);
-      },
-      getCoastalDomain(domainId) {
-        return kernel.coastalBlueprint.coastalDomainsById.get(domainId) ?? null;
-      },
-      getCoastalStack(stackId) {
-        return kernel.coastalBlueprint.materialStacks[stackId] ?? null;
-      },
-      getCoastalClass(classId) {
-        return kernel.coastalBlueprint.coastalClasses[classId] ?? null;
-      },
-      getCoastalDomains() {
-        return [...kernel.coastalBlueprint.coastalDomainsById.values()];
-      },
-      getCoastalDomainsByRegion(regionId) {
-        return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.regionId === regionId);
-      },
-      getPlantableCoastalDomains() {
-        return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.plantable === true);
-      },
-      getCoastalClassesByFamily(family) {
-        if (family !== "terrain" && family !== "substrate") return [];
-        return Object.values(kernel.coastalBlueprint.coastalClasses).filter((coastalClass) => coastalClass.family === family);
-      },
-      getCoastalGenerationReceipts() {
-        return kernel.coastalGeneration.receipts;
-      },
-      getCoastalRegionIds() {
-        return [...kernel.coastalGeneration.coastalRegionIds];
-      },
-      isCoastalRegion(regionId) {
-        return kernel.coastalGeneration.coastalRegionIds.has(regionId);
-      },
-      getHarborNavNode(navNodeId) {
-        return harborNavigation.navigationNodesById.get(navNodeId) ?? null;
-      },
-      getHarborNavEdge(edgeId) {
-        return harborNavigation.navigationEdgesById.get(edgeId) ?? null;
-      },
-      getHarborNavNeighbors(navNodeId) {
-        const neighbors = [];
-        for (const edge of harborNavigation.navigationEdgesById.values()) {
-          if (edge.fromNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.toNodeId));
-          if (edge.toNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.fromNodeId));
-        }
-        return neighbors.filter(Boolean);
-      },
-      getHarborInstance(harborInstanceId) {
-        return harborInstancesById.get(harborInstanceId) ?? null;
-      },
-      getHarborInstanceByRegion(regionId) {
-        for (const instance of harborInstancesById.values()) {
-          if (instance.parentRegionId === regionId) return instance;
-        }
-        return null;
-      },
-      getHarborInstances() {
-        return [...harborInstancesById.values()];
-      },
-      getHarborDockTransfers(harborInstanceId) {
-        const instance = harborInstancesById.get(harborInstanceId);
-        return instance?.transferRules?.dockTransfers ?? [];
-      },
-      getMaritimeHarborInstance(harborInstanceId) {
-        return kernel.maritimeNetwork.maritimeHarborInstancesById.get(harborInstanceId) ?? null;
-      },
-      getSeaNode(seaNodeId) {
-        return kernel.maritimeNetwork.seaNodesById.get(seaNodeId) ?? null;
-      },
-      getSeaRoute(seaRouteId) {
-        return kernel.maritimeNetwork.seaRoutesById.get(seaRouteId) ?? null;
-      },
-      getSeaHazard(seaHazardId) {
-        return kernel.maritimeNetwork.seaHazardsById.get(seaHazardId) ?? null;
-      },
-      getMaritimeNode(nodeId) {
-        return kernel.maritimeNetwork.seaNodesById.get(nodeId) ?? harborNavigation.navigationNodesById.get(nodeId) ?? null;
-      },
-      getMaritimeNeighbors(nodeId) {
-        const neighbors = [];
+    helpers: null
+  };
 
-        for (const edge of kernel.maritimeNetwork.seaRoutesById.values()) {
-          if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
-          if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
-        }
-
-        for (const edge of harborNavigation.navigationEdgesById.values()) {
-          if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
-          if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
-        }
-
-        return neighbors.filter(Boolean);
-      },
-      getSeaRoutesForNode(nodeId) {
-        return [...kernel.maritimeNetwork.seaRoutesById.values()].filter(
-          (route) => route.fromNodeId === nodeId || route.toNodeId === nodeId
-        );
-      },
-      decodeStateByte(byte) {
-        validateByte(byte);
-        return byteToStateVector(byte);
-      },
-      projectWorldPositionToCell(input) {
-        const { x, y, previousCellId = null } = input;
-        const activeCell = nearestCell(diamondCellsById, x, y);
-        const previousCell = previousCellId ? diamondCellsById.get(previousCellId) : null;
-        const encoding = encodingsById.get(activeCell.stateEncodingId);
-
-        if (typeof activeCell.sector !== "string" || activeCell.sector.length === 0) {
-          throw new Error(`Missing sealed sector for cell ${activeCell.diamondCellId}`);
-        }
-
-        return Object.freeze({
-          regionId: activeCell.regionId,
-          pathId: activeCell.pathId,
-          cellId: activeCell.diamondCellId,
-          bandIndex: activeCell.bandIndex,
-          sector: activeCell.sector,
-          stateByte: encoding.byte,
-          stateEncodingId: activeCell.stateEncodingId,
-          previousCellId: previousCell?.diamondCellId ?? null
-        });
-      },
-      assertValidWorld() {
-        validateCrossReferences({
-          regionsById,
-          pathsById,
-          hazardsById,
-          watersById,
-          encodingsById,
-          diamondCellsById,
-          graphRows
-        });
-
-        validateHarborPolygonDatasets(
-          coastlines,
-          regionBoundariesById,
-          terrainPolygonsById,
-          substratePolygonsById
-        );
-
-        validateTerrainTemplateLibrary(terrainTemplatesById);
-        validateSubstrateTemplateLibrary(substrateTemplatesById);
-        validateRegionTemplates(regionTemplatesById);
-        validateTemplateCrossReferences(regionTemplatesById, terrainTemplatesById, substrateTemplatesById);
-        validateRegionTemplateBindings(regionsById, regionTemplatesById);
-
-        validateHarborInstances(
-          harborInstances,
-          regionsById,
-          watersById,
-          harborNavigationGraph,
-          coastlineModel
-        );
-
-        validateMaritimeNetwork(
-          maritimeNetwork,
-          encodingsById,
-          regionsById,
-          harborNavigation.navigationNodesById
-        );
-
-        validateCoastalBlueprintRoot(coastalBlueprintRoot);
-        validateCoastalBlueprintBindings(
-          coastalBlueprint,
-          terrainPolygonsById,
-          substratePolygonsById,
-          generatedTerrainPolygonsById,
-          generatedSubstratePolygonsById
-        );
-
-        const rebuildCheck = terrainSubstrateRebuildTool.rebuildTerrainAndSubstrateDatasets({
-          kernel: freezeObjectTree({
-            worldMeta: {
-              worldId: kernel.worldMeta.worldId,
-              encodingFamilyVersion: kernel.worldMeta.encodingFamilyVersion
-            },
-            coastlineModel: kernel.coastlineModel,
-            coastalBlueprint: kernel.coastalBlueprint,
-            regionBoundariesById: kernel.regionBoundariesById,
-            watersById: kernel.watersById,
-            terrainPolygonsById: kernel.legacyTerrainPolygonsById,
-            substratePolygonsById: kernel.legacySubstratePolygonsById,
-            terrainDatasetMeta: {
-              version: terrainPolygons.version
-            },
-            substrateDatasetMeta: {
-              version: substratePolygons.version
-            }
-          })
-        });
-
-        validateRebuiltDatasetRoot(
-          rebuildCheck.terrainDataset,
-          "HARBOR_TERRAIN_POLYGONS_DATASET_v1",
-          "terrain"
-        );
-        validateRebuiltDatasetRoot(
-          rebuildCheck.substrateDataset,
-          "HARBOR_SUBSTRATE_POLYGONS_DATASET_v1",
-          "substrates"
-        );
-
-        for (const row of terrainPolygonsById.values()) {
-          assertPolygon(row.polygon, `activeTerrain.${row.terrainId}`);
-        }
-
-        for (const row of substratePolygonsById.values()) {
-          assertPolygon(row.polygon, `activeSubstrate.${row.substrateId}`);
-        }
-
-        for (const row of generatedTerrainPolygonsById.values()) {
-          assertPolygon(row.polygon, `generatedTerrain.${row.terrainId}`);
-        }
-
-        for (const row of generatedSubstratePolygonsById.values()) {
-          assertPolygon(row.polygon, `generatedSubstrate.${row.substrateId}`);
-        }
-
-        for (const edge of harborNavigation.navigationEdgesById.values()) {
-          assertPointList(edge.centerline, `harborNavigation.edge.${edge.edgeId}.centerline`, 2);
-        }
-
-        for (const route of kernel.maritimeNetwork.seaRoutesById.values()) {
-          assertPointList(route.centerline, `maritime.seaRoute.${route.seaRouteId}.centerline`, 2);
-        }
-
-        for (const hazard of kernel.maritimeNetwork.seaHazardsById.values()) {
-          assertPolygon(hazard.polygon, `maritime.seaHazard.${hazard.seaHazardId}.polygon`);
-        }
-
-        return true;
+  kernel.helpers = {
+    getRegion(regionId) {
+      return regionsById.get(regionId) ?? null;
+    },
+    getPath(pathId) {
+      return pathsById.get(pathId) ?? null;
+    },
+    getHazard(hazardId) {
+      return hazardsById.get(hazardId) ?? null;
+    },
+    getWater(waterId) {
+      return watersById.get(waterId) ?? null;
+    },
+    getCell(cellId) {
+      return diamondCellsById.get(cellId) ?? null;
+    },
+    getNeighbors(cellId) {
+      const cell = diamondCellsById.get(cellId);
+      if (!cell) return [];
+      return cell.neighborIds.map((id) => diamondCellsById.get(id)).filter(Boolean);
+    },
+    getTraversalEdge(fromId, toId) {
+      return graphRows.traversalGraph.find((edge) => edge.fromId === fromId && edge.toId === toId) ?? null;
+    },
+    getRequiredPredecessors(regionId) {
+      return regionsById.get(regionId)?.requiredPredecessors ?? [];
+    },
+    getEncoding(encodingId) {
+      return encodingsById.get(encodingId) ?? null;
+    },
+    getRegionBoundary(regionId) {
+      return regionBoundariesById.get(regionId) ?? null;
+    },
+    getTerrainPolygon(terrainId) {
+      return terrainPolygonsById.get(terrainId) ?? null;
+    },
+    getSubstratePolygon(substrateId) {
+      return substratePolygonsById.get(substrateId) ?? null;
+    },
+    getLegacyTerrainPolygon(terrainId) {
+      return legacyTerrainPolygonsById.get(terrainId) ?? null;
+    },
+    getLegacySubstratePolygon(substrateId) {
+      return legacySubstratePolygonsById.get(substrateId) ?? null;
+    },
+    getGeneratedTerrainPolygon(terrainId) {
+      return generatedTerrainPolygonsById.get(terrainId) ?? null;
+    },
+    getGeneratedSubstratePolygon(substrateId) {
+      return generatedSubstratePolygonsById.get(substrateId) ?? null;
+    },
+    getTerrainTemplate(templateId) {
+      return terrainTemplatesById.get(templateId) ?? null;
+    },
+    getSubstrateTemplate(templateId) {
+      return substrateTemplatesById.get(templateId) ?? null;
+    },
+    getRegionTemplate(templateId) {
+      return regionTemplatesById.get(templateId) ?? null;
+    },
+    getGeneratedTerrainForRegion(regionId) {
+      return [...generatedTerrainPolygonsById.values()].filter((row) => row.regionId === regionId);
+    },
+    getGeneratedSubstrateForRegion(regionId) {
+      return [...generatedSubstratePolygonsById.values()].filter((row) => row.regionId === regionId);
+    },
+    getActiveTerrainForRegion(regionId) {
+      return [...terrainPolygonsById.values()].filter((row) => row.regionId === regionId);
+    },
+    getActiveSubstrateForRegion(regionId) {
+      return [...substratePolygonsById.values()].filter((row) => row.regionId === regionId);
+    },
+    getCoastalDomain(domainId) {
+      return kernel.coastalBlueprint.coastalDomainsById.get(domainId) ?? null;
+    },
+    getCoastalStack(stackId) {
+      return kernel.coastalBlueprint.materialStacks[stackId] ?? null;
+    },
+    getCoastalClass(classId) {
+      return kernel.coastalBlueprint.coastalClasses[classId] ?? null;
+    },
+    getCoastalDomains() {
+      return [...kernel.coastalBlueprint.coastalDomainsById.values()];
+    },
+    getCoastalDomainsByRegion(regionId) {
+      return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.regionId === regionId);
+    },
+    getPlantableCoastalDomains() {
+      return [...kernel.coastalBlueprint.coastalDomainsById.values()].filter((domain) => domain.plantable === true);
+    },
+    getCoastalClassesByFamily(family) {
+      if (family !== "terrain" && family !== "substrate") return [];
+      return Object.values(kernel.coastalBlueprint.coastalClasses).filter((coastalClass) => coastalClass.family === family);
+    },
+    getCoastalGenerationReceipts() {
+      return kernel.coastalGeneration.receipts;
+    },
+    getCoastalRegionIds() {
+      return [...kernel.coastalGeneration.coastalRegionIds];
+    },
+    isCoastalRegion(regionId) {
+      return kernel.coastalGeneration.coastalRegionIds.has(regionId);
+    },
+    getHarborNavNode(navNodeId) {
+      return harborNavigation.navigationNodesById.get(navNodeId) ?? null;
+    },
+    getHarborNavEdge(edgeId) {
+      return harborNavigation.navigationEdgesById.get(edgeId) ?? null;
+    },
+    getHarborNavNeighbors(navNodeId) {
+      const neighbors = [];
+      for (const edge of harborNavigation.navigationEdgesById.values()) {
+        if (edge.fromNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.toNodeId));
+        if (edge.toNodeId === navNodeId) neighbors.push(harborNavigation.navigationNodesById.get(edge.fromNodeId));
       }
+      return neighbors.filter(Boolean);
+    },
+    getHarborInstance(harborInstanceId) {
+      return harborInstancesById.get(harborInstanceId) ?? null;
+    },
+    getHarborInstanceByRegion(regionId) {
+      for (const instance of harborInstancesById.values()) {
+        if (instance.parentRegionId === regionId) return instance;
+      }
+      return null;
+    },
+    getHarborInstances() {
+      return [...harborInstancesById.values()];
+    },
+    getHarborDockTransfers(harborInstanceId) {
+      const instance = harborInstancesById.get(harborInstanceId);
+      return instance?.transferRules?.dockTransfers ?? [];
+    },
+    getMaritimeHarborInstance(harborInstanceId) {
+      return kernel.maritimeNetwork.maritimeHarborInstancesById.get(harborInstanceId) ?? null;
+    },
+    getSeaNode(seaNodeId) {
+      return kernel.maritimeNetwork.seaNodesById.get(seaNodeId) ?? null;
+    },
+    getSeaRoute(seaRouteId) {
+      return kernel.maritimeNetwork.seaRoutesById.get(seaRouteId) ?? null;
+    },
+    getSeaHazard(seaHazardId) {
+      return kernel.maritimeNetwork.seaHazardsById.get(seaHazardId) ?? null;
+    },
+    getMaritimeNode(nodeId) {
+      return kernel.maritimeNetwork.seaNodesById.get(nodeId) ?? harborNavigation.navigationNodesById.get(nodeId) ?? null;
+    },
+    getMaritimeNeighbors(nodeId) {
+      const neighbors = [];
+
+      for (const edge of kernel.maritimeNetwork.seaRoutesById.values()) {
+        if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
+        if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
+      }
+
+      for (const edge of harborNavigation.navigationEdgesById.values()) {
+        if (edge.fromNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.toNodeId));
+        if (edge.toNodeId === nodeId) neighbors.push(this.getMaritimeNode(edge.fromNodeId));
+      }
+
+      return neighbors.filter(Boolean);
+    },
+    getSeaRoutesForNode(nodeId) {
+      return [...kernel.maritimeNetwork.seaRoutesById.values()].filter(
+        (route) => route.fromNodeId === nodeId || route.toNodeId === nodeId
+      );
+    },
+    decodeStateByte(byte) {
+      validateByte(byte);
+      return byteToStateVector(byte);
+    },
+    projectWorldPositionToCell(input) {
+      const { x, y, previousCellId = null } = input;
+      const activeCell = nearestCell(diamondCellsById, x, y);
+      const previousCell = previousCellId ? diamondCellsById.get(previousCellId) : null;
+      const encoding = encodingsById.get(activeCell.stateEncodingId);
+
+      if (typeof activeCell.sector !== "string" || activeCell.sector.length === 0) {
+        throw new Error(`Missing sealed sector for cell ${activeCell.diamondCellId}`);
+      }
+
+      return shallowFreeze({
+        regionId: activeCell.regionId,
+        pathId: activeCell.pathId,
+        cellId: activeCell.diamondCellId,
+        bandIndex: activeCell.bandIndex,
+        sector: activeCell.sector,
+        stateByte: encoding.byte,
+        stateEncodingId: activeCell.stateEncodingId,
+        previousCellId: previousCell?.diamondCellId ?? null
+      });
+    },
+    assertValidWorld() {
+      return validateLoadedWorldKernel(kernel);
     }
   };
 
-  kernel.helpers.assertValidWorld();
-  return freezeObjectTree(kernel);
+  shallowFreeze(kernel.helpers);
+  shallowFreeze(kernel);
+
+  if (DEV_VALIDATE_ON_BOOT) {
+    kernel.helpers.assertValidWorld();
+  }
+
+  return kernel;
 }

@@ -58,10 +58,6 @@ function drawProjectedPolyline(ctx, points, projector) {
   }
 }
 
-function getSharedSurfaceProjector(renderState) {
-  return renderState.surfaceProjector ?? createPlanetSurfaceProjector(renderState);
-}
-
 export async function createScene(canvas, outputs) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2D canvas context unavailable");
@@ -626,15 +622,12 @@ export async function createScene(canvas, outputs) {
     updateOutputs();
   }
 
-  function drawRoutesAndMarkers(viewportOffset, renderState) {
+  function drawRoutesAndMarkers(renderState) {
     const paths = [...state.kernel.pathsById.values()];
     const regions = [...state.kernel.regionsById.values()];
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
     const px = 1 / state.renderScale;
-    const projector = getSharedSurfaceProjector(renderState);
-
-    ctx.save();
-    ctx.translate(viewportOffset.x, viewportOffset.y);
+    const projector = renderState.surfaceProjector;
 
     if (state.traversalMode === "foot") {
       for (const path of paths) {
@@ -746,8 +739,6 @@ export async function createScene(canvas, outputs) {
       ctx.lineWidth = projector.lineWidth(3 * px, state.destination.centerPoint[1]);
       ctx.stroke();
     }
-
-    ctx.restore();
   }
 
   function drawFrame() {
@@ -772,14 +763,15 @@ export async function createScene(canvas, outputs) {
       worldBounds: state.worldBounds
     };
 
-    renderState.surfaceProjector = createPlanetSurfaceProjector(renderState);
+    const surfaceProjector = createPlanetSurfaceProjector(renderState);
+    renderState.surfaceProjector = surfaceProjector;
 
     ctx.save();
     ctx.scale(state.renderScale, state.renderScale);
 
     environment.draw(ctx, renderState);
     ground.draw(ctx, renderState);
-    drawRoutesAndMarkers(worldViewportOffset, renderState);
+    drawRoutesAndMarkers(renderState);
 
     ctx.restore();
 

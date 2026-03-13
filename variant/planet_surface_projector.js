@@ -41,11 +41,21 @@ function getPlanetBodyGeometry(runtime) {
   const northProgress = getNorthProgress(runtime);
   const eastProgress = getEastProgress(runtime);
 
-  const centerX = (width * 0.50) + ((eastProgress - 0.5) * width * 0.02);
-  const centerY = lerp(height * 1.30, height * 1.18, northProgress);
-  const radius = lerp(width * 1.10, width * 0.98, northProgress);
-  const horizonY = centerY - (radius * 0.92);
-  const visibleDepth = lerp(height * 0.64, height * 0.56, northProgress);
+  const centerX =
+    (width * 0.50) +
+    ((eastProgress - 0.5) * width * 0.03);
+
+  const centerY =
+    lerp(height * 1.55, height * 1.35, northProgress);
+
+  const radius =
+    lerp(width * 1.25, width * 1.05, northProgress);
+
+  const horizonY =
+    centerY - (radius * 0.98);
+
+  const visibleDepth =
+    lerp(height * 0.78, height * 0.66, northProgress);
 
   return Object.freeze({
     width,
@@ -77,20 +87,31 @@ function projectSpherePoint(runtime, worldX, worldY) {
   const southDepth = v;
 
   const lateralScale =
-    lerp(0.44, 0.98, Math.pow(v, 0.92)) *
-    lerp(1.00, 1.04, body.northProgress);
+    lerp(0.40, 1.02, Math.pow(v, 0.92));
 
-  const archX = u * body.radius * lateralScale;
-  const edgeDrop = (u * u) * body.radius * lerp(0.08, 0.16, v);
-  const verticalTravel = Math.pow(v, 0.94) * body.visibleDepth;
-  const northLift = northDepth * body.radius * 0.02;
+  const archX =
+    u * body.radius * lateralScale;
 
-  const screenX = body.centerX + archX;
-  const screenY = body.horizonY + verticalTravel + edgeDrop - northLift;
+  const edgeDrop =
+    (u * u) * body.radius * 0.12;
+
+  const verticalTravel =
+    Math.pow(v, 0.96) * body.visibleDepth;
+
+  const northLift =
+    northDepth * body.radius * 0.02;
+
+  const screenX =
+    body.centerX + archX;
+
+  const screenY =
+    body.horizonY +
+    verticalTravel +
+    edgeDrop -
+    northLift;
 
   const scale =
-    lerp(0.70, 1.14, Math.pow(v, 0.90)) *
-    lerp(0.98, 1.04, body.northProgress);
+    lerp(0.68, 1.18, Math.pow(v, 0.92));
 
   return Object.freeze({
     x: screenX,
@@ -106,11 +127,9 @@ function projectRadius(runtime, value, worldY) {
   const bounds = getWorldBounds(runtime);
   const y = clamp(normalize(worldY, bounds.height * 0.5), 0, bounds.height);
   const v = y / bounds.height;
-  const body = getPlanetBodyGeometry(runtime);
 
   const depthScale =
-    lerp(0.72, 1.10, Math.pow(v, 0.92)) *
-    lerp(0.98, 1.04, body.northProgress);
+    lerp(0.72, 1.14, Math.pow(v, 0.92));
 
   return Math.max(0.5, normalize(value, 1) * depthScale);
 }
@@ -121,8 +140,12 @@ function projectLineWidth(runtime, value, worldY) {
 
 function projectRect(runtime, x, y, width, height) {
   const center = projectSpherePoint(runtime, x + (width * 0.5), y + (height * 0.5));
-  const projectedWidth = projectRadius(runtime, width, y + (height * 0.5));
-  const projectedHeight = projectRadius(runtime, height, y + height);
+
+  const projectedWidth =
+    projectRadius(runtime, width, y + (height * 0.5));
+
+  const projectedHeight =
+    projectRadius(runtime, height, y + height);
 
   return Object.freeze({
     x: center.x - (projectedWidth * 0.5),

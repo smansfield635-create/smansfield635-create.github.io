@@ -1,5 +1,3 @@
-import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
-
 function polygon(ctx, points, projector = null) {
   if (!points || !points.length) return;
 
@@ -46,19 +44,6 @@ function centroid(points) {
     y += py;
   }
   return [x / points.length, y / points.length];
-}
-
-function fillPolygon(ctx, points, fillStyle, projector = null) {
-  polygon(ctx, points, projector);
-  ctx.fillStyle = fillStyle;
-  ctx.fill();
-}
-
-function strokePolygon(ctx, points, strokeStyle, lineWidth = 1, projector = null) {
-  polygon(ctx, points, projector);
-  ctx.strokeStyle = strokeStyle;
-  ctx.lineWidth = lineWidth;
-  ctx.stroke();
 }
 
 function boundsOf(points) {
@@ -1184,9 +1169,14 @@ export function createEnvironmentRenderer() {
   const vegetationCache = new Map();
 
   function draw(ctx, runtime) {
-    const { kernel, tick = 0 } = runtime;
+    const { kernel, tick = 0, surfaceProjector = null } = runtime;
+
+    if (!surfaceProjector) {
+      throw new Error("environment_renderer requires runtime.surfaceProjector");
+    }
+
     const phaseLabel = getPhaseLabel(runtime);
-    const projector = createPlanetSurfaceProjector(runtime);
+    const projector = surfaceProjector;
 
     drawGlobalSkyWash(ctx, phaseLabel, runtime);
     drawUpperSkyBloom(ctx, phaseLabel, runtime);

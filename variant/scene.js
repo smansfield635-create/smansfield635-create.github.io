@@ -4,6 +4,7 @@ import { createGroundRenderer } from "./ground_renderer.js";
 import { createCompassRenderer } from "../assets/openworld_compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 import { loadWorldKernel } from "../world/world_kernel.js";
+import { phaseKernel } from "../world/phase_kernel.js";
 import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
 
 function distanceSq(ax, ay, bx, by) {
@@ -58,6 +59,99 @@ function drawProjectedPolyline(ctx, points, projector) {
   }
 }
 
+function getRegionLabelCandidates(state, projector) {
+  const regions = [...state.kernel.regionsById.values()];
+  const candidates = [];
+
+  for (const region of regions) {
+    const [x, y] = region.centerPoint;
+    const p = projector.point(x, y);
+
+    const isActive = state.projection?.regionId === region.regionId;
+    const isSelected = state.selection?.kind === "region" && state.selection.regionId === region.regionId;
+    const isDestination = state.destination?.kind === "region" && state.destination.regionId === region.regionId;
+
+    const dx = p.x - (state.width * 0.5);
+    const dy = p.y - (state.height * 0.58);
+    const centerBias = Math.hypot(dx, dy);
+
+    let priority = 0;
+    if (isActive) priority += 1000;
+    if (isSelected) priority += 900;
+    if (isDestination) priority += 800;
+
+    priority += Math.max(0, 400 - centerBias);
+    priority += (1200 - y) * 0.12;
+
+    candidates.push({
+      region,
+      p,
+      y,
+      isActive,
+      isSelected,
+      isDestination,
+      priority
+    });
+  }
+
+  candidates.sort((a, b) => b.priority - a.priority);
+  return candidates;
+}
+
+function drawDisciplinedRegionLabels(ctx, state, projector) {
+  const candidates = getRegionLabelCandidates(state, projector);
+  const placed = [];
+  const px = 1 / state.renderScale;
+  const maxLabels = state.width <= 900 ? 3 : 5;
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "bottom";
+
+  for (const item of candidates) {
+    if (!item.isActive && !item.isSelected && !item.isDestination && placed.length >= maxLabels) {
+      continue;
+    }
+
+    const fontPx = Math.max(9, projector.radius(14, item.y) * px);
+    const labelY = item.p.y - projector.radius(54, item.y);
+    const labelWidth = Math.max(72, item.region.displayName.length * fontPx * 0.58);
+    const labelHeight = fontPx + 8;
+
+    const box = {
+      left: item.p.x - (labelWidth * 0.5),
+      right: item.p.x + (labelWidth * 0.5),
+      top: labelY - labelHeight,
+      bottom: labelY + 4
+    };
+
+    let collides = false;
+    for (const prior of placed) {
+      const separated =
+        box.right < prior.left ||
+        box.left > prior.right ||
+        box.bottom < prior.top ||
+        box.top > prior.bottom;
+
+      if (!separated) {
+        collides = true;
+        break;
+      }
+    }
+
+    if (collides && !item.isActive && !item.isSelected && !item.isDestination) {
+      continue;
+    }
+
+    ctx.font = `${fontPx}px system-ui, sans-serif`;
+    ctx.fillStyle = item.isActive || item.isSelected || item.isDestination
+      ? "rgba(248,248,244,0.98)"
+      : "rgba(248,248,244,0.82)";
+    ctx.fillText(item.region.displayName, item.p.x, labelY);
+
+    placed.push(box);
+  }
+}
+
 export async function createScene(canvas, outputs) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2D canvas context unavailable");
@@ -79,7 +173,22 @@ export async function createScene(canvas, outputs) {
     traversalMode: "foot",
     activeHarborInstanceId: null,
     phase: {
+      tick: 0,
+      cosmicPressure: 0,
+      environmentalLoad: 0,
+      civilizationBuffer: 0,
+      netStress: 0,
       globalPhase: "CALM",
+      stormClass: "calm",
+      radiationLevel: 0.10,
+      skyState: "stable_reflection",
+      traversalState: {
+        portalsOpen: true,
+        maritimeOpen: true,
+        localFastTravelOpen: true,
+        surfaceTravelAdvisory: "open"
+      },
+      regionalPhaseById: new Map(),
       intensity: 0.2
     },
     player: {
@@ -281,6 +390,18 @@ export async function createScene(canvas, outputs) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(state.dpr, state.dpr);
     updateViewportOffset(true);
+  }
+
+  function updatePhase() {
+    const computed = phaseKernel.computePhase({
+      kernel: state.kernel,
+      tick: state.tick
+    });
+
+    state.phase = Object.freeze({
+      ...computed,
+      intensity: computed.netStress
+    });
   }
 
   function updateViewportOffset(forceSnap = false) {
@@ -650,6 +771,8 @@ export async function createScene(canvas, outputs) {
       ctx.fill();
     }
 
+    drawDisciplinedRegionLabels(ctx, state, projector);
+
     if (state.traversalMode === "boat") {
       for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
         const isSelected = state.selection?.kind === "harbor_nav_node" && state.selection.navNodeId === navNode.navNodeId;
@@ -704,12 +827,20 @@ export async function createScene(canvas, outputs) {
 
   function drawFrame() {
     ctx.clearRect(0, 0, state.width, state.height);
+    background.draw(ctx, {
+      width: state.width,
+      height: state.height,
+      tick: state.tick,
+      player: state.player,
+      phase: state.phase
+    });
 
+    const worldViewportOffset = getWorldViewportOffset();
     const renderState = {
       width: state.width,
       height: state.height,
       tick: state.tick,
-      viewportOffset: getWorldViewportOffset(),
+      viewportOffset: worldViewportOffset,
       renderScale: state.renderScale,
       renderMode: state.renderMode,
       traversalMode: state.traversalMode,
@@ -726,8 +857,6 @@ export async function createScene(canvas, outputs) {
     const surfaceProjector = createPlanetSurfaceProjector(renderState);
     renderState.surfaceProjector = surfaceProjector;
 
-    background.draw(ctx, renderState);
-
     ctx.save();
     ctx.scale(state.renderScale, state.renderScale);
 
@@ -742,6 +871,7 @@ export async function createScene(canvas, outputs) {
 
   function step() {
     state.tick += 1;
+    updatePhase();
     updatePlayer();
     updateViewportOffset();
     projectState();
@@ -830,6 +960,7 @@ export async function createScene(canvas, outputs) {
   }
 
   resize();
+  updatePhase();
   projectState();
   updateOutputs();
 

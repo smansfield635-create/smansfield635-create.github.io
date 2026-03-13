@@ -915,7 +915,6 @@ function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel, project
   if (phaseLabel === "LOCKDOWN") return;
 
   const [cx, cy] = centroid(points);
-  const c = projector.point(cx, cy);
   const pulse = 0.5 + (0.5 * Math.sin((tick * 0.06) + (cx * 0.01)));
 
   const alphaScale = phaseLabel === "CLEAR_WINDOW"
@@ -1185,12 +1184,9 @@ export function createEnvironmentRenderer() {
   const vegetationCache = new Map();
 
   function draw(ctx, runtime) {
-    const { viewportOffset, kernel, tick = 0 } = runtime;
+    const { kernel, tick = 0 } = runtime;
     const phaseLabel = getPhaseLabel(runtime);
     const projector = createPlanetSurfaceProjector(runtime);
-
-    ctx.save();
-    ctx.translate(viewportOffset.x, viewportOffset.y);
 
     drawGlobalSkyWash(ctx, phaseLabel, runtime);
     drawUpperSkyBloom(ctx, phaseLabel, runtime);
@@ -1212,8 +1208,6 @@ export function createEnvironmentRenderer() {
     drawStormChargeFlashes(ctx, phaseLabel, tick, runtime);
     drawDistanceVeil(ctx, phaseLabel, runtime);
     drawVignette(ctx, phaseLabel, runtime);
-
-    ctx.restore();
   }
 
   return Object.freeze({ draw });

@@ -58,6 +58,10 @@ function drawProjectedPolyline(ctx, points, projector) {
   }
 }
 
+function getSharedSurfaceProjector(renderState) {
+  return renderState.surfaceProjector ?? createPlanetSurfaceProjector(renderState);
+}
+
 export async function createScene(canvas, outputs) {
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2D canvas context unavailable");
@@ -627,7 +631,7 @@ export async function createScene(canvas, outputs) {
     const regions = [...state.kernel.regionsById.values()];
     const pulse = 0.5 + 0.5 * Math.sin(state.tick * 0.08);
     const px = 1 / state.renderScale;
-    const projector = createPlanetSurfaceProjector(renderState);
+    const projector = getSharedSurfaceProjector(renderState);
 
     ctx.save();
     ctx.translate(viewportOffset.x, viewportOffset.y);
@@ -767,6 +771,8 @@ export async function createScene(canvas, outputs) {
       player: state.player,
       worldBounds: state.worldBounds
     };
+
+    renderState.surfaceProjector = createPlanetSurfaceProjector(renderState);
 
     ctx.save();
     ctx.scale(state.renderScale, state.renderScale);

@@ -648,12 +648,6 @@ export async function createScene(canvas, outputs) {
       ctx.arc(p.x, p.y, projector.radius(9, y), 0, Math.PI * 2);
       ctx.fillStyle = isActive ? "rgba(255,236,188,0.98)" : "rgba(232,240,248,0.72)";
       ctx.fill();
-
-      ctx.fillStyle = "rgba(248,248,244,0.98)";
-      ctx.font = `${Math.max(8, projector.radius(14, y) * px)}px system-ui, sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "bottom";
-      ctx.fillText(region.displayName, p.x, p.y - projector.radius(54, y));
     }
 
     if (state.traversalMode === "boat") {
@@ -710,14 +704,12 @@ export async function createScene(canvas, outputs) {
 
   function drawFrame() {
     ctx.clearRect(0, 0, state.width, state.height);
-    background.draw(ctx, state.width, state.height, state.tick);
 
-    const worldViewportOffset = getWorldViewportOffset();
     const renderState = {
       width: state.width,
       height: state.height,
       tick: state.tick,
-      viewportOffset: worldViewportOffset,
+      viewportOffset: getWorldViewportOffset(),
       renderScale: state.renderScale,
       renderMode: state.renderMode,
       traversalMode: state.traversalMode,
@@ -733,6 +725,8 @@ export async function createScene(canvas, outputs) {
 
     const surfaceProjector = createPlanetSurfaceProjector(renderState);
     renderState.surfaceProjector = surfaceProjector;
+
+    background.draw(ctx, renderState);
 
     ctx.save();
     ctx.scale(state.renderScale, state.renderScale);

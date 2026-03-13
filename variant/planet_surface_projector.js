@@ -42,21 +42,13 @@ function getPlanetBodyGeometry(runtime) {
   const eastProgress = getEastProgress(runtime);
 
   const centerX =
-    (width * 0.5) +
-    ((eastProgress - 0.5) * width * 0.04);
+    lerp(width * 0.34, width * 0.22, northProgress) +
+    ((eastProgress - 0.5) * width * 0.08);
 
-  /* LOWER THE CAMERA ANCHOR */
-  const centerY =
-    lerp(height * 1.85, height * 1.55, northProgress);
-
-  const radius =
-    lerp(width * 1.35, width * 1.12, northProgress);
-
-  const horizonY =
-    centerY - (radius * 1.05);
-
-  const visibleDepth =
-    lerp(height * 0.95, height * 0.82, northProgress);
+  const centerY = lerp(height * 1.42, height * 1.10, northProgress);
+  const radius = lerp(width * 1.18, width * 0.92, northProgress);
+  const visibleLift = lerp(height * 0.10, height * 0.22, northProgress);
+  const horizonY = centerY - radius + visibleLift;
 
   return Object.freeze({
     width,
@@ -65,7 +57,6 @@ function getPlanetBodyGeometry(runtime) {
     centerY,
     radius,
     horizonY,
-    visibleDepth,
     northProgress,
     eastProgress
   });
@@ -81,38 +72,41 @@ function projectSpherePoint(runtime, worldX, worldY) {
   const x = clamp(normalize(worldX, worldWidth * 0.5), 0, worldWidth);
   const y = clamp(normalize(worldY, worldHeight * 0.5), 0, worldHeight);
 
-  const u = (x / worldWidth) - 0.5;
-  const v = clamp(y / worldHeight, 0, 1);
+  const u = x / worldWidth;
+  const v = y / worldHeight;
 
-  const northDepth = 1 - v;
-  const southDepth = v;
+  const northDepth = clamp(1 - v, 0, 1);
+  const southDepth = 1 - northDepth;
 
-  const lateralScale =
-    lerp(0.55, 1.05, Math.pow(v, 0.9));
+  const longitudeSpan = lerp(0.92, 1.08, body.northProgress);
+  const latitudeSpan = lerp(0.62, 0.84, body.northProgress);
 
-  const archX =
-    u * body.radius * lateralScale;
+  const longitude = (u - 0.5) * longitudeSpan;
+  const latitude = (0.5 - v) * latitudeSpan;
 
-  const edgeDrop =
-    (u * u) * body.radius * 0.10;
+  const cosLat = Math.cos(latitude);
+  const sinLat = Math.sin(latitude);
+  const sinLon = Math.sin(longitude);
+  const cosLon = Math.cos(longitude);
 
-  const verticalTravel =
-    Math.pow(v, 0.92) * body.visibleDepth;
+  const sx = body.radius * sinLon * cosLat;
+  const sy = -body.radius * sinLat;
+  const sz = body.radius * cosLon * cosLat;
 
-  const northLift =
-    northDepth * body.radius * 0.03;
+  const tilt = lerp(0.64, 0.80, body.northProgress);
+  const cosTilt = Math.cos(tilt);
+  const sinTilt = Math.sin(tilt);
 
-  const screenX =
-    body.centerX + archX;
+  const rotatedY = (sy * cosTilt) - (sz * sinTilt);
+  const rotatedZ = (sy * sinTilt) + (sz * cosTilt);
 
-  const screenY =
-    body.horizonY +
-    verticalTravel +
-    edgeDrop -
-    northLift;
+  const cameraDistance = body.radius * lerp(2.42, 2.86, body.northProgress);
+  const perspective = cameraDistance / Math.max(1, cameraDistance - rotatedZ);
 
-  const scale =
-    lerp(0.70, 1.20, Math.pow(v, 0.92));
+  const screenX = body.centerX + (sx * perspective);
+  const screenY = body.centerY + (rotatedY * perspective);
+
+  const scale = clamp(perspective, 0.52, 1.24);
 
   return Object.freeze({
     x: screenX,
@@ -125,14 +119,11 @@ function projectSpherePoint(runtime, worldX, worldY) {
 }
 
 function projectRadius(runtime, value, worldY) {
-  const bounds = getWorldBounds(runtime);
-  const y = clamp(normalize(worldY, bounds.height * 0.5), 0, bounds.height);
-  const v = y / bounds.height;
-
-  const depthScale =
-    lerp(0.75, 1.15, Math.pow(v, 0.9));
-
-  return Math.max(0.5, normalize(value, 1) * depthScale);
+  const sample = projectSpherePoint(runtime, 590, normalize(worldY, 620));
+  const northDepth = sample.northDepth;
+  const depthScale = lerp(0.96, 0.66, northDepth);
+  const projected = normalize(value, 1) * depthScale * sample.scale;
+  return Math.max(0.5, projected);
 }
 
 function projectLineWidth(runtime, value, worldY) {
@@ -141,12 +132,8 @@ function projectLineWidth(runtime, value, worldY) {
 
 function projectRect(runtime, x, y, width, height) {
   const center = projectSpherePoint(runtime, x + (width * 0.5), y + (height * 0.5));
-
-  const projectedWidth =
-    projectRadius(runtime, width, y + (height * 0.5));
-
-  const projectedHeight =
-    projectRadius(runtime, height, y + height);
+  const projectedWidth = projectRadius(runtime, width, y + (height * 0.5));
+  const projectedHeight = projectRadius(runtime, height, y + height);
 
   return Object.freeze({
     x: center.x - (projectedWidth * 0.5),

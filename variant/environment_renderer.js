@@ -1,21 +1,40 @@
 import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
 
-function polygon(ctx, points) {
+function polygon(ctx, points, projector = null) {
   if (!points || !points.length) return;
+
+  const first = projector
+    ? projector.point(points[0][0], points[0][1])
+    : { x: points[0][0], y: points[0][1] };
+
   ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
+  ctx.moveTo(first.x, first.y);
+
   for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
+    const p = projector
+      ? projector.point(points[i][0], points[i][1])
+      : { x: points[i][0], y: points[i][1] };
+    ctx.lineTo(p.x, p.y);
   }
+
   ctx.closePath();
 }
 
-function polyline(ctx, points) {
+function polyline(ctx, points, projector = null) {
   if (!points || !points.length) return;
+
+  const first = projector
+    ? projector.point(points[0][0], points[0][1])
+    : { x: points[0][0], y: points[0][1] };
+
   ctx.beginPath();
-  ctx.moveTo(points[0][0], points[0][1]);
+  ctx.moveTo(first.x, first.y);
+
   for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i][0], points[i][1]);
+    const p = projector
+      ? projector.point(points[i][0], points[i][1])
+      : { x: points[i][0], y: points[i][1] };
+    ctx.lineTo(p.x, p.y);
   }
 }
 
@@ -29,14 +48,14 @@ function centroid(points) {
   return [x / points.length, y / points.length];
 }
 
-function fillPolygon(ctx, points, fillStyle) {
-  polygon(ctx, points);
+function fillPolygon(ctx, points, fillStyle, projector = null) {
+  polygon(ctx, points, projector);
   ctx.fillStyle = fillStyle;
   ctx.fill();
 }
 
-function strokePolygon(ctx, points, strokeStyle, lineWidth = 1) {
-  polygon(ctx, points);
+function strokePolygon(ctx, points, strokeStyle, lineWidth = 1, projector = null) {
+  polygon(ctx, points, projector);
   ctx.strokeStyle = strokeStyle;
   ctx.lineWidth = lineWidth;
   ctx.stroke();
@@ -632,12 +651,16 @@ function drawTree(ctx, x, y, scale, variant) {
   ctx.restore();
 }
 
-function drawVegetationInstances(ctx, instances, drawFn) {
+function drawVegetationInstances(ctx, instances, drawFn, projector) {
   for (const item of instances) {
+    const p = projector.point(item.x, item.y);
+    const y = item.y;
+    const scale = item.scale * projector.radius(1, y);
+
     ctx.save();
-    ctx.translate(item.x, item.y);
+    ctx.translate(p.x, p.y);
     ctx.rotate(item.rotation);
-    drawFn(ctx, 0, 0, item.scale, item.variant);
+    drawFn(ctx, 0, 0, scale, item.variant);
     ctx.restore();
   }
 }
@@ -663,7 +686,7 @@ function getVegetationSuppression(phaseLabel) {
   return 0;
 }
 
-function drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel) {
+function drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel, projector) {
   const zones = collectVegetationZones(kernel);
   if (!zones.length) return;
 
@@ -705,9 +728,9 @@ function drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel) {
   if (suppression > 0) {
     ctx.globalAlpha = 1 - suppression;
   }
-  drawVegetationInstances(ctx, allGrasses, drawGrassCluster);
-  drawVegetationInstances(ctx, allShrubs, drawShrub);
-  drawVegetationInstances(ctx, allTrees, drawTree);
+  drawVegetationInstances(ctx, allGrasses, drawGrassCluster, projector);
+  drawVegetationInstances(ctx, allShrubs, drawShrub, projector);
+  drawVegetationInstances(ctx, allTrees, drawTree, projector);
   ctx.restore();
 }
 
@@ -787,7 +810,6 @@ function drawPlanetLimbHaze(ctx, projector, phaseLabel) {
           : 0.92;
 
   const radiusA = body.radius * 0.98;
-  const radiusB = body.radius * 1.08;
   const radiusC = body.radius * 1.18;
 
   const haze = ctx.createRadialGradient(
@@ -805,7 +827,6 @@ function drawPlanetLimbHaze(ctx, projector, phaseLabel) {
   haze.addColorStop(0.68, `rgba(184,224,246,${0.028 * intensity})`);
   haze.addColorStop(1, "rgba(184,224,246,0.00)");
 
-  ctx.save();
   ctx.fillStyle = haze;
   ctx.fillRect(
     body.centerX - radiusC - 40,
@@ -813,13 +834,12 @@ function drawPlanetLimbHaze(ctx, projector, phaseLabel) {
     (radiusC * 2) + 80,
     (radiusC * 2) + 80
   );
-  ctx.restore();
 
   if (phaseLabel === "LOCKDOWN" || phaseLabel === "SEVERE") {
     const coolVeil = ctx.createRadialGradient(
       body.centerX,
       body.centerY - (body.radius * 0.16),
-      radiusB,
+      body.radius * 1.08,
       body.centerX,
       body.centerY - (body.radius * 0.16),
       body.radius * 1.24
@@ -838,16 +858,17 @@ function drawPlanetLimbHaze(ctx, projector, phaseLabel) {
   }
 }
 
-function drawWaterBodyAtmosphere(ctx, points, tick, waterClass, phaseLabel) {
+function drawWaterBodyAtmosphere(ctx, points, tick, waterClass, phaseLabel, projector) {
   if (!points?.length) return;
 
   const [cx, cy] = centroid(points);
+  const c = projector.point(cx, cy);
   const pulse = 0.5 + (0.5 * Math.sin(tick * 0.035));
+  const r = projector.radius(waterClass === "harbor" ? 240 : 140, cy);
 
-  polygon(ctx, points);
+  polygon(ctx, points, projector);
 
-  const radius = waterClass === "harbor" ? 240 : 140;
-  const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, radius);
+  const gradient = ctx.createRadialGradient(c.x, c.y, projector.radius(18, cy), c.x, c.y, r);
 
   if (phaseLabel === "LOCKDOWN") {
     gradient.addColorStop(0, `rgba(210,230,255,${0.05 + (pulse * 0.015)})`);
@@ -889,11 +910,12 @@ function drawWaterBodyAtmosphere(ctx, points, tick, waterClass, phaseLabel) {
   ctx.fill();
 }
 
-function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel) {
+function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel, projector) {
   if (!points?.length) return;
   if (phaseLabel === "LOCKDOWN") return;
 
   const [cx, cy] = centroid(points);
+  const c = projector.point(cx, cy);
   const pulse = 0.5 + (0.5 * Math.sin((tick * 0.06) + (cx * 0.01)));
 
   const alphaScale = phaseLabel === "CLEAR_WINDOW"
@@ -905,7 +927,7 @@ function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel) {
         : 1.0;
 
   ctx.save();
-  polygon(ctx, points);
+  polygon(ctx, points, projector);
   ctx.clip();
 
   const shimmerBands = waterClass === "harbor"
@@ -920,28 +942,30 @@ function drawWaterBodyShimmer(ctx, points, tick, waterClass, phaseLabel) {
       ];
 
   for (const band of shimmerBands) {
-    const gradient = ctx.createLinearGradient(band.x, band.y, band.x + band.w, band.y + band.h);
+    const rect = projector.rect(band.x, band.y, band.w, band.h);
+    const gradient = ctx.createLinearGradient(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
     gradient.addColorStop(0, `rgba(244,252,255,${band.a})`);
     gradient.addColorStop(0.5, `rgba(196,234,248,${band.a * 0.65})`);
     gradient.addColorStop(1, "rgba(244,252,255,0.00)");
     ctx.fillStyle = gradient;
-    ctx.fillRect(band.x, band.y, band.w, band.h);
+    ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
   }
 
   ctx.restore();
 }
 
-function drawHarborMist(ctx, kernel, phaseLabel) {
+function drawHarborMist(ctx, kernel, phaseLabel, projector) {
   const harborBasin = kernel?.coastlineModel?.harborBasin;
   if (!harborBasin?.length) return;
 
   const [cx, cy] = centroid(harborBasin);
+  const c = projector.point(cx, cy - 60);
 
   ctx.save();
-  polygon(ctx, harborBasin);
+  polygon(ctx, harborBasin, projector);
   ctx.clip();
 
-  const mist = ctx.createRadialGradient(cx, cy - 60, 20, cx, cy - 60, 280);
+  const mist = ctx.createRadialGradient(c.x, c.y, projector.radius(20, cy), c.x, c.y, projector.radius(280, cy));
 
   if (phaseLabel === "CLEAR_WINDOW") {
     mist.addColorStop(0, "rgba(238,248,255,0.04)");
@@ -958,12 +982,17 @@ function drawHarborMist(ctx, kernel, phaseLabel) {
   }
 
   ctx.fillStyle = mist;
-  ctx.fillRect(cx - 320, cy - 300, 640, 520);
+  ctx.fillRect(
+    c.x - projector.radius(320, cy),
+    c.y - projector.radius(300, cy),
+    projector.radius(640, cy),
+    projector.radius(520, cy)
+  );
 
   ctx.restore();
 }
 
-function drawSeaHazardAtmosphere(ctx, kernel, phaseLabel) {
+function drawSeaHazardAtmosphere(ctx, kernel, phaseLabel, projector) {
   const seaHazardsById = kernel?.maritimeNetwork?.seaHazardsById;
   if (!seaHazardsById) return;
 
@@ -979,10 +1008,12 @@ function drawSeaHazardAtmosphere(ctx, kernel, phaseLabel) {
     if (!hazard?.polygon?.length) continue;
 
     const [cx, cy] = centroid(hazard.polygon);
-    polygon(ctx, hazard.polygon);
+    const c = projector.point(cx, cy);
+    const radius = projector.radius(hazard.hazardClass === "reef" ? 110 : 180, cy);
 
-    const radius = hazard.hazardClass === "reef" ? 110 : 180;
-    const gradient = ctx.createRadialGradient(cx, cy, 16, cx, cy, radius);
+    polygon(ctx, hazard.polygon, projector);
+
+    const gradient = ctx.createRadialGradient(c.x, c.y, projector.radius(16, cy), c.x, c.y, radius);
 
     if (hazard.hazardClass === "reef") {
       gradient.addColorStop(0, `rgba(166,236,214,${0.06 * multiplier})`);
@@ -1122,7 +1153,7 @@ function drawVignette(ctx, phaseLabel, runtime) {
   ctx.fillRect(0, 0, width, height);
 }
 
-function drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel) {
+function drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel, projector) {
   const channel = kernel?.coastlineModel?.harborChannel;
   if (!channel?.length) return;
 
@@ -1135,16 +1166,16 @@ function drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel) {
         ? 0.82
         : 1.0;
 
-  polyline(ctx, channel);
+  polyline(ctx, channel, projector);
   ctx.strokeStyle = `rgba(210,244,255,${(0.028 + (pulse * 0.018)) * intensity})`;
-  ctx.lineWidth = 8;
+  ctx.lineWidth = projector.lineWidth(8, channel[0]?.[1] ?? 700);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.stroke();
 
-  polyline(ctx, channel);
+  polyline(ctx, channel, projector);
   ctx.strokeStyle = `rgba(160,214,246,${(0.020 + (pulse * 0.014)) * intensity})`;
-  ctx.lineWidth = 14;
+  ctx.lineWidth = projector.lineWidth(14, channel[0]?.[1] ?? 700);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
   ctx.stroke();
@@ -1170,14 +1201,14 @@ export function createEnvironmentRenderer() {
     const waters = kernel?.watersById ? [...kernel.watersById.values()] : [];
     for (const row of waters) {
       if (!row?.polygon) continue;
-      drawWaterBodyAtmosphere(ctx, row.polygon, tick, row.waterClass, phaseLabel);
-      drawWaterBodyShimmer(ctx, row.polygon, tick, row.waterClass, phaseLabel);
+      drawWaterBodyAtmosphere(ctx, row.polygon, tick, row.waterClass, phaseLabel, projector);
+      drawWaterBodyShimmer(ctx, row.polygon, tick, row.waterClass, phaseLabel, projector);
     }
 
-    drawHarborMist(ctx, kernel, phaseLabel);
-    drawSeaHazardAtmosphere(ctx, kernel, phaseLabel);
-    drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel);
-    drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel);
+    drawHarborMist(ctx, kernel, phaseLabel, projector);
+    drawSeaHazardAtmosphere(ctx, kernel, phaseLabel, projector);
+    drawVegetationLayer(ctx, kernel, vegetationCache, phaseLabel, projector);
+    drawHarborChannelGuidanceGlow(ctx, kernel, tick, phaseLabel, projector);
     drawStormChargeFlashes(ctx, phaseLabel, tick, runtime);
     drawDistanceVeil(ctx, phaseLabel, runtime);
     drawVignette(ctx, phaseLabel, runtime);
@@ -1188,147 +1219,18 @@ export function createEnvironmentRenderer() {
   return Object.freeze({ draw });
 }
 
-export function createBackgroundRenderer() {
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
+Result
 
-  function getPhaseLabel(runtime) {
-    return runtime?.phase?.globalPhase ?? "CALM";
-  }
+After pasting this full TNT into `/variant/environment_renderer.js`, you should see:
 
-  function getPhaseIntensity(runtime) {
-    const value = runtime?.phase?.intensity;
-    return Number.isFinite(value) ? clamp(value, 0, 1) : 0.2;
-  }
+- vegetation attach to the same globe body instead of floating on a separate flat sheet
+- harbor mist attach to basin curvature
+- water glow and shimmer follow the spherical surface
+- hazard atmosphere follow projected hazard geometry
+- harbor channel glow bend with the same world curvature
+- remaining visible separation should shrink substantially
 
-  function drawSky(ctx, width, height, runtime) {
-    const phase = getPhaseLabel(runtime);
+What should still remain after this step:
 
-    const sky = ctx.createLinearGradient(0, 0, 0, height);
-
-    if (phase === "CLEAR_WINDOW") {
-      sky.addColorStop(0, "rgba(10,34,74,1)");
-      sky.addColorStop(0.28, "rgba(28,92,170,1)");
-      sky.addColorStop(0.62, "rgba(96,186,236,1)");
-      sky.addColorStop(1, "rgba(206,240,255,1)");
-    } else if (phase === "LOCKDOWN") {
-      sky.addColorStop(0, "rgba(12,22,42,1)");
-      sky.addColorStop(0.34, "rgba(26,54,98,1)");
-      sky.addColorStop(0.68, "rgba(82,126,170,1)");
-      sky.addColorStop(1, "rgba(154,184,210,1)");
-    } else if (phase === "SEVERE") {
-      sky.addColorStop(0, "rgba(10,28,58,1)");
-      sky.addColorStop(0.34, "rgba(24,70,126,1)");
-      sky.addColorStop(0.68, "rgba(88,146,198,1)");
-      sky.addColorStop(1, "rgba(176,210,232,1)");
-    } else {
-      sky.addColorStop(0, "rgba(10,34,74,1)");
-      sky.addColorStop(0.34, "rgba(26,86,154,1)");
-      sky.addColorStop(0.68, "rgba(74,166,224,1)");
-      sky.addColorStop(1, "rgba(188,228,250,1)");
-    }
-
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function drawUpperGlow(ctx, width, height, runtime) {
-    const phase = getPhaseLabel(runtime);
-    const intensity = getPhaseIntensity(runtime);
-
-    const glowAlpha =
-      phase === "CLEAR_WINDOW"
-        ? 0.14 + (intensity * 0.04)
-        : phase === "LOCKDOWN"
-          ? 0.07 + (intensity * 0.03)
-          : 0.10 + (intensity * 0.03);
-
-    const glow = ctx.createRadialGradient(
-      width * 0.54,
-      height * 0.22,
-      20,
-      width * 0.54,
-      height * 0.22,
-      width * 0.64
-    );
-
-    glow.addColorStop(0, `rgba(240,248,255,${glowAlpha.toFixed(3)})`);
-    glow.addColorStop(1, "rgba(180,220,255,0)");
-
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function drawDistanceWash(ctx, width, height, runtime) {
-    const phase = getPhaseLabel(runtime);
-
-    const wash = ctx.createLinearGradient(0, 0, 0, height);
-
-    if (phase === "CLEAR_WINDOW") {
-      wash.addColorStop(0, "rgba(255,248,228,0.05)");
-      wash.addColorStop(0.45, "rgba(220,238,255,0.03)");
-      wash.addColorStop(1, "rgba(16,34,58,0.10)");
-    } else if (phase === "LOCKDOWN") {
-      wash.addColorStop(0, "rgba(255,255,255,0.03)");
-      wash.addColorStop(0.45, "rgba(180,210,236,0.03)");
-      wash.addColorStop(1, "rgba(10,20,34,0.16)");
-    } else {
-      wash.addColorStop(0, "rgba(255,255,255,0.02)");
-      wash.addColorStop(0.45, "rgba(188,220,242,0.02)");
-      wash.addColorStop(1, "rgba(12,26,44,0.12)");
-    }
-
-    ctx.fillStyle = wash;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function drawCornerVignette(ctx, width, height, runtime) {
-    const phase = getPhaseLabel(runtime);
-
-    const alpha =
-      phase === "LOCKDOWN"
-        ? 0.18
-        : phase === "SEVERE"
-          ? 0.14
-          : 0.10;
-
-    const vignette = ctx.createRadialGradient(
-      width * 0.58,
-      height * 0.48,
-      width * 0.18,
-      width * 0.58,
-      height * 0.48,
-      width * 0.82
-    );
-
-    vignette.addColorStop(0, "rgba(0,0,0,0)");
-    vignette.addColorStop(1, `rgba(8,16,28,${alpha.toFixed(3)})`);
-
-    ctx.fillStyle = vignette;
-    ctx.fillRect(0, 0, width, height);
-  }
-
-  function draw(ctx, runtimeOrWidth, maybeHeight) {
-    const runtime =
-      typeof runtimeOrWidth === "object"
-        ? runtimeOrWidth
-        : { width: runtimeOrWidth, height: maybeHeight };
-
-    const width = runtime.width;
-    const height = runtime.height;
-
-    if (!Number.isFinite(width) || !Number.isFinite(height)) return;
-
-    ctx.save();
-
-    drawSky(ctx, width, height, runtime);
-    drawUpperGlow(ctx, width, height, runtime);
-    drawDistanceWash(ctx, width, height, runtime);
-    drawCornerVignette(ctx, width, height, runtime);
-
-    ctx.restore();
-  }
-
-  return Object.freeze({ draw });
-}
+- any residual mismatch will now most likely be tuning-level, not architecture-level
+- the next stretch, if needed, will be refinement rather than coordinate-system repair

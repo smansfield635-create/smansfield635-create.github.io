@@ -42,20 +42,21 @@ function getPlanetBodyGeometry(runtime) {
   const eastProgress = getEastProgress(runtime);
 
   const centerX =
-    (width * 0.50) +
-    ((eastProgress - 0.5) * width * 0.03);
+    (width * 0.5) +
+    ((eastProgress - 0.5) * width * 0.04);
 
+  /* LOWER THE CAMERA ANCHOR */
   const centerY =
-    lerp(height * 1.55, height * 1.35, northProgress);
+    lerp(height * 1.85, height * 1.55, northProgress);
 
   const radius =
-    lerp(width * 1.25, width * 1.05, northProgress);
+    lerp(width * 1.35, width * 1.12, northProgress);
 
   const horizonY =
-    centerY - (radius * 0.98);
+    centerY - (radius * 1.05);
 
   const visibleDepth =
-    lerp(height * 0.78, height * 0.66, northProgress);
+    lerp(height * 0.95, height * 0.82, northProgress);
 
   return Object.freeze({
     width,
@@ -87,19 +88,19 @@ function projectSpherePoint(runtime, worldX, worldY) {
   const southDepth = v;
 
   const lateralScale =
-    lerp(0.40, 1.02, Math.pow(v, 0.92));
+    lerp(0.55, 1.05, Math.pow(v, 0.9));
 
   const archX =
     u * body.radius * lateralScale;
 
   const edgeDrop =
-    (u * u) * body.radius * 0.12;
+    (u * u) * body.radius * 0.10;
 
   const verticalTravel =
-    Math.pow(v, 0.96) * body.visibleDepth;
+    Math.pow(v, 0.92) * body.visibleDepth;
 
   const northLift =
-    northDepth * body.radius * 0.02;
+    northDepth * body.radius * 0.03;
 
   const screenX =
     body.centerX + archX;
@@ -111,7 +112,7 @@ function projectSpherePoint(runtime, worldX, worldY) {
     northLift;
 
   const scale =
-    lerp(0.68, 1.18, Math.pow(v, 0.92));
+    lerp(0.70, 1.20, Math.pow(v, 0.92));
 
   return Object.freeze({
     x: screenX,
@@ -129,7 +130,7 @@ function projectRadius(runtime, value, worldY) {
   const v = y / bounds.height;
 
   const depthScale =
-    lerp(0.72, 1.14, Math.pow(v, 0.92));
+    lerp(0.75, 1.15, Math.pow(v, 0.9));
 
   return Math.max(0.5, normalize(value, 1) * depthScale);
 }

@@ -1218,19 +1218,3 @@ export function createEnvironmentRenderer() {
 
   return Object.freeze({ draw });
 }
-
-Result
-
-After pasting this full TNT into `/variant/environment_renderer.js`, you should see:
-
-- vegetation attach to the same globe body instead of floating on a separate flat sheet
-- harbor mist attach to basin curvature
-- water glow and shimmer follow the spherical surface
-- hazard atmosphere follow projected hazard geometry
-- harbor channel glow bend with the same world curvature
-- remaining visible separation should shrink substantially
-
-What should still remain after this step:
-
-- any residual mismatch will now most likely be tuning-level, not architecture-level
-- the next stretch, if needed, will be refinement rather than coordinate-system repair

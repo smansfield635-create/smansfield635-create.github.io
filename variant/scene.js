@@ -78,6 +78,10 @@ export async function createScene(canvas, outputs) {
     renderMode: "styled",
     traversalMode: "foot",
     activeHarborInstanceId: null,
+    phase: {
+      globalPhase: "CALM",
+      intensity: 0.2
+    },
     player: {
       x: 544,
       y: 770,
@@ -194,54 +198,6 @@ export async function createScene(canvas, outputs) {
     return neighbors.some((node) => node?.navNodeId === toNodeId);
   }
 
-  function setSelectionFromCurrentPosition() {
-    if (state.traversalMode === "boat") {
-      const instance = getActiveHarborInstance();
-      if (!instance) return;
-
-      let bestNode = null;
-      let bestD2 = Infinity;
-
-      for (const navNode of state.kernel.harborNavigationGraph.navigationNodesById.values()) {
-        if (!isBoatNodeAllowed(instance, navNode.navNodeId)) continue;
-        const d2 = distanceSq(state.player.x, state.player.y, navNode.centerPoint[0], navNode.centerPoint[1]);
-        if (d2 < bestD2) {
-          bestD2 = d2;
-          bestNode = navNode;
-        }
-      }
-
-      if (!bestNode) return;
-
-      const transfer = getDockTransfersForInstance(instance).find((row) => row.dockId === bestNode.navNodeId) ?? null;
-      if (transfer) {
-        state.selection = {
-          kind: "dock_transfer",
-          dockId: bestNode.navNodeId,
-          displayName: bestNode.displayName,
-          harborInstanceId: instance.harborInstanceId,
-          transferClass: transfer.transferClass
-        };
-      } else {
-        state.selection = {
-          kind: "harbor_nav_node",
-          navNodeId: bestNode.navNodeId,
-          displayName: bestNode.displayName,
-          harborInstanceId: instance.harborInstanceId
-        };
-      }
-      return;
-    }
-
-    if (state.region) {
-      state.selection = {
-        kind: "region",
-        regionId: state.region.regionId,
-        displayName: state.region.displayName
-      };
-    }
-  }
-
   function resolveArrival(target) {
     if (!target) return;
 
@@ -337,8 +293,19 @@ export async function createScene(canvas, outputs) {
     const targetScreenX = state.width * 0.50;
     const targetScreenY = state.height * 0.88;
 
-    const followX = targetScreenX - ((state.player.x * state.renderScale) + baseX);
-    const followY = targetScreenY - ((state.player.y * state.renderScale) + baseY);
+    const cameraProjector = createPlanetSurfaceProjector({
+      width: state.width,
+      height: state.height,
+      worldBounds: state.worldBounds,
+      player: state.player,
+      traversalMode: state.traversalMode,
+      phase: state.phase
+    });
+
+    const projectedPlayer = cameraProjector.point(state.player.x, state.player.y);
+
+    const followX = targetScreenX - ((projectedPlayer.x * state.renderScale) + baseX);
+    const followY = targetScreenY - ((projectedPlayer.y * state.renderScale) + baseY);
 
     const lerpX = forceSnap ? 1 : 0.11;
     const lerpY = forceSnap ? 1 : 0.09;
@@ -760,7 +727,8 @@ export async function createScene(canvas, outputs) {
       selection: state.selection,
       destination: state.destination,
       player: state.player,
-      worldBounds: state.worldBounds
+      worldBounds: state.worldBounds,
+      phase: state.phase
     };
 
     const surfaceProjector = createPlanetSurfaceProjector(renderState);

@@ -23,22 +23,20 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   function getBody() {
     const width = canvas.width;
     const height = canvas.height;
-    const radius = Math.max(width * 0.70, height * 0.74);
-    const centerX = width * 0.60;
-    const centerY = height * 1.22;
+
+    const radius = Math.max(width * 0.66, height * 0.68);
 
     return {
-      centerX,
-      centerY,
+      centerX: width * 0.61,
+      centerY: height * 1.34,
       radius,
-      horizonY: centerY - radius
+      horizonY: (height * 1.34) - radius
     };
   }
 
   function toSurface(x, y) {
     const lon = (x - camera.focusX) * Math.PI * 1.18;
     const lat = (camera.focusY - y) * Math.PI * 0.86;
-
     return { lon, lat };
   }
 
@@ -66,7 +64,7 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const rotatedZ = (worldY * sinP) + (worldZ * cosP);
     const rotatedX = worldX;
 
-    const visible = rotatedZ > -0.20;
+    const visible = rotatedZ > -0.85;
     const depth = clamp((rotatedZ + 1) * 0.5, 0, 1);
 
     const px = body.centerX + (rotatedX * body.radius * 0.92 * camera.zoom);

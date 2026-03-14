@@ -11,44 +11,89 @@ function drawPolygonPath(ctx, polygon, projector) {
   return projected;
 }
 
-function centroid(points) {
-  let x = 0;
-  let y = 0;
-  for (const [px, py] of points) {
-    x += px;
-    y += py;
-  }
-  return [x / points.length, y / points.length];
-}
-
 function createStarField() {
   return [
-    [0.08, 0.09, 1.0, 0.58],
-    [0.14, 0.16, 0.9, 0.42],
-    [0.23, 0.07, 1.2, 0.54],
-    [0.31, 0.14, 0.8, 0.40],
-    [0.42, 0.08, 1.0, 0.50],
-    [0.53, 0.12, 1.1, 0.46],
-    [0.68, 0.08, 1.2, 0.56],
-    [0.79, 0.14, 0.9, 0.44],
-    [0.87, 0.06, 1.0, 0.52],
-    [0.91, 0.18, 0.8, 0.40],
-    [0.18, 0.23, 0.9, 0.34],
-    [0.36, 0.20, 0.8, 0.28],
-    [0.58, 0.22, 0.9, 0.34],
-    [0.74, 0.24, 0.8, 0.30]
+    [0.06, 0.08, 1.0, 0.60, 0.2],
+    [0.10, 0.16, 0.8, 0.38, 0.9],
+    [0.16, 0.05, 1.2, 0.56, 1.4],
+    [0.22, 0.12, 0.9, 0.48, 2.1],
+    [0.28, 0.18, 0.8, 0.34, 0.6],
+    [0.34, 0.07, 1.1, 0.54, 2.8],
+    [0.41, 0.14, 1.0, 0.46, 1.7],
+    [0.48, 0.06, 0.9, 0.42, 0.1],
+    [0.54, 0.16, 1.1, 0.44, 2.3],
+    [0.61, 0.09, 1.3, 0.58, 1.1],
+    [0.68, 0.05, 1.0, 0.48, 2.9],
+    [0.74, 0.15, 0.8, 0.36, 0.8],
+    [0.80, 0.08, 1.2, 0.54, 2.5],
+    [0.87, 0.12, 0.9, 0.44, 1.6],
+    [0.92, 0.07, 1.0, 0.52, 0.5],
+    [0.13, 0.23, 0.8, 0.28, 0.7],
+    [0.26, 0.25, 0.7, 0.26, 1.8],
+    [0.39, 0.22, 0.8, 0.30, 2.7],
+    [0.52, 0.24, 0.7, 0.26, 0.3],
+    [0.66, 0.23, 0.8, 0.30, 1.4],
+    [0.83, 0.24, 0.7, 0.28, 2.0]
   ];
 }
 
 function drawStars(ctx, width, height, tick) {
   const stars = createStarField();
-  for (const [x, y, r, a] of stars) {
-    const pulse = 0.82 + (0.18 * Math.sin((tick * 0.012) + (x * 10)));
+
+  for (const [x, y, r, a, phase] of stars) {
+    const sparkle = 0.72 + (0.28 * Math.sin((tick * 0.035) + phase * 3.2));
+    const alpha = a * sparkle;
+    const radius = r * Math.max(1.2, width / 1200);
+
     ctx.beginPath();
-    ctx.fillStyle = `rgba(255,255,255,${a * pulse})`;
-    ctx.arc(width * x, height * y, r * Math.max(1.15, width / 1100), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.arc(width * x, height * y, radius, 0, Math.PI * 2);
     ctx.fill();
+
+    if (sparkle > 0.93) {
+      ctx.strokeStyle = `rgba(255,255,255,${alpha * 0.6})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo((width * x) - radius * 2.4, height * y);
+      ctx.lineTo((width * x) + radius * 2.4, height * y);
+      ctx.moveTo(width * x, (height * y) - radius * 2.4);
+      ctx.lineTo(width * x, (height * y) + radius * 2.4);
+      ctx.stroke();
+    }
   }
+}
+
+function drawShootingStar(ctx, width, height, tick) {
+  const cycle = tick % 1400;
+  if (cycle > 140) return;
+
+  const t = cycle / 140;
+  const startX = width * 0.18;
+  const startY = height * 0.14;
+  const endX = width * 0.74;
+  const endY = height * 0.31;
+
+  const x = startX + ((endX - startX) * t);
+  const y = startY + ((endY - startY) * t);
+  const tailX = x - 120;
+  const tailY = y - 36;
+
+  const gradient = ctx.createLinearGradient(tailX, tailY, x, y);
+  gradient.addColorStop(0, "rgba(255,255,255,0)");
+  gradient.addColorStop(0.45, "rgba(180,220,255,0.18)");
+  gradient.addColorStop(1, "rgba(255,255,255,0.95)");
+
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  ctx.moveTo(tailX, tailY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  ctx.beginPath();
+  ctx.arc(x, y, 2.6, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function drawMoon(ctx, x, y, radius, fill, glow, width) {
@@ -81,13 +126,13 @@ function drawOrbitingMoons(ctx, width, height, tick) {
   const northAngle = (tick || 0) * 0.0038;
   const southAngle = (tick || 0) * 0.0029 + 2.1;
 
-  const northCx = width * 0.76;
-  const northCy = height * 0.13;
+  const northCx = width * 0.80;
+  const northCy = height * 0.12;
   const northRx = width * 0.08;
   const northRy = height * 0.035;
 
-  const southCx = width * 0.63;
-  const southCy = height * 0.24;
+  const southCx = width * 0.64;
+  const southCy = height * 0.25;
   const southRx = width * 0.10;
   const southRy = height * 0.045;
 
@@ -133,15 +178,15 @@ function drawOceanWaveBands(ctx, body, tick) {
   const left = body.centerX - body.radius;
   const right = body.centerX + body.radius;
   const top = body.horizonY;
-  const bottom = body.centerY + (body.radius * 0.70);
+  const bottom = body.centerY + (body.radius * 0.72);
 
-  for (let band = 0; band < 9; band += 1) {
+  for (let band = 0; band < 10; band += 1) {
     const yBase = top + (band * 28);
-    ctx.beginPath();
 
+    ctx.beginPath();
     for (let x = left; x <= right; x += 8) {
       const phase = (tick * 0.026) + (band * 0.72) + (x * 0.012);
-      const wave = Math.sin(phase) * (2.8 + band * 0.18);
+      const wave = Math.sin(phase) * (2.8 + band * 0.20);
       const drift = Math.cos((tick * 0.014) + (x * 0.005)) * 1.2;
       const y = yBase + wave + drift;
 
@@ -149,15 +194,15 @@ function drawOceanWaveBands(ctx, body, tick) {
       else ctx.lineTo(x, y);
     }
 
-    ctx.strokeStyle = `rgba(255,255,255,${0.10 - (band * 0.007)})`;
+    ctx.strokeStyle = `rgba(255,255,255,${0.12 - (band * 0.007)})`;
     ctx.lineWidth = 1;
     ctx.stroke();
   }
 
   const lowerGlow = ctx.createLinearGradient(0, top, 0, bottom);
   lowerGlow.addColorStop(0, "rgba(255,255,255,0)");
-  lowerGlow.addColorStop(0.36, "rgba(120,244,255,0.06)");
-  lowerGlow.addColorStop(1, "rgba(0,44,84,0.12)");
+  lowerGlow.addColorStop(0.34, "rgba(102,240,255,0.06)");
+  lowerGlow.addColorStop(1, "rgba(0,34,76,0.16)");
   ctx.fillStyle = lowerGlow;
   ctx.fillRect(left, top, body.radius * 2, bottom - top);
 }
@@ -203,14 +248,29 @@ export function createEnvironmentRenderer() {
 
       const sky = ctx.createLinearGradient(0, 0, 0, height);
       sky.addColorStop(0, "#03050e");
-      sky.addColorStop(0.16, "#0b1730");
-      sky.addColorStop(0.36, "#173864");
-      sky.addColorStop(0.66, "#3f82b8");
+      sky.addColorStop(0.14, "#0a1330");
+      sky.addColorStop(0.34, "#173864");
+      sky.addColorStop(0.62, "#3f82b8");
       sky.addColorStop(1, "#d4f1ff");
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
 
+      const nebula = ctx.createRadialGradient(
+        width * 0.28,
+        height * 0.20,
+        width * 0.04,
+        width * 0.28,
+        height * 0.20,
+        width * 0.34
+      );
+      nebula.addColorStop(0, "rgba(132,120,255,0.14)");
+      nebula.addColorStop(0.40, "rgba(82,132,255,0.08)");
+      nebula.addColorStop(1, "rgba(82,132,255,0)");
+      ctx.fillStyle = nebula;
+      ctx.fillRect(0, 0, width, height * 0.46);
+
       drawStars(ctx, width, height, tick);
+      drawShootingStar(ctx, width, height, tick);
       drawOrbitingMoons(ctx, width, height, tick);
 
       const atmosphere = ctx.createRadialGradient(
@@ -240,13 +300,13 @@ export function createEnvironmentRenderer() {
       ctx.clip();
 
       const globeOcean = ctx.createLinearGradient(0, body.horizonY, 0, body.centerY + body.radius);
-      globeOcean.addColorStop(0, "#8be4ff");
-      globeOcean.addColorStop(0.18, "#5ac7f2");
-      globeOcean.addColorStop(0.42, "#2e95d2");
-      globeOcean.addColorStop(0.72, "#115c97");
+      globeOcean.addColorStop(0, "#92e8ff");
+      globeOcean.addColorStop(0.16, "#61d2f3");
+      globeOcean.addColorStop(0.38, "#2ea3db");
+      globeOcean.addColorStop(0.68, "#125f99");
       globeOcean.addColorStop(1, "#082d56");
       ctx.fillStyle = globeOcean;
-      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.28);
+      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.30);
 
       const globeShadow = ctx.createRadialGradient(
         body.centerX,

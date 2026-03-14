@@ -1,242 +1,108 @@
 import { createWorldKernel } from "../world_kernel.js";
-import { createPlanetSurfaceProjector } from "../../variant/planet_surface_projector.js";
-import { createEnvironmentRenderer } from "../../variant/environment_renderer.js";
-import { createGroundRenderer } from "../../variant/ground_renderer.js";
 
-const RECEIPT_NAME = "SIMULATION_STRESS_TEST_RECEIPT_v1";
-const SIMULATION_HZ = 10;
-const FIXED_STEP_MS = 1000 / SIMULATION_HZ;
-const MAX_CATCH_UP_STEPS = 5;
+function clamp01(value) {
+  return Math.max(0, Math.min(1, value));
+}
 
-function ensureFinite(label, value) {
-  if (!Number.isFinite(value)) {
-    throw new Error(`STATE_PROPAGATION_FAILURE: ${label} became non-finite.`);
+function pointInPolygon(x, y, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i][0];
+    const yi = polygon[i][1];
+    const xj = polygon[j][0];
+    const yj = polygon[j][1];
+
+    const intersects =
+      ((yi > y) !== (yj > y)) &&
+      (x < ((xj - xi) * (y - yi)) / ((yj - yi) || 1e-9) + xi);
+
+    if (intersects) inside = !inside;
   }
+  return inside;
 }
 
-function formatStatus(snapshot) {
-  return [
-    `boot: ${snapshot.bootStatus}`,
-    `payload: ${snapshot.payloadStatus}`,
-    `render: ${snapshot.renderStatus.toLowerCase()}`,
-    `coherence: ${snapshot.coherenceBand} ${snapshot.coherence.score.toFixed(3)}`,
-  ].join("\n");
+function distanceSquared(ax, ay, bx, by) {
+  const dx = ax - bx;
+  const dy = ay - by;
+  return (dx * dx) + (dy * dy);
 }
 
-export async function createWorldRuntime({
-  canvas,
-  context,
-  statusRoot,
-  getViewport,
-}) {
+export async function createWorldRuntime() {
   const kernel = await createWorldKernel();
-  const worldPayload = kernel.createWorldPayload();
-  const initialState = kernel.getInitialState();
-  const initialPressure = kernel.getInitialPressure();
 
-  let currentState = { ...initialState };
-  let currentPressure = { ...initialPressure };
+  let tick = 0;
+  let coherence = 0.7;
+  let selectedId = "harbor_region";
 
-  let viewState = {
-    cameraX: 0.5,
-    cameraY: 0.58,
-    cameraZ: 1,
-    targetX: 0.5,
-    targetY: 0.58,
-    zoom: 1,
-    heading: 0,
-    pitch: 0,
-    roll: 0,
-    viewportWidth: getViewport().cssWidth,
-    viewportHeight: getViewport().cssHeight,
-    horizonOffset: 0,
-    projectionMode: "PSEUDO_PLANET_SURFACE_PROJECTION",
-  };
+  function computeSelection() {
+    const region = kernel.regions.find((row) => row.id === "harbor_region");
+    const village = kernel.markers.find((row) => row.id === "harbor_village_anchor");
 
-  const projector = createPlanetSurfaceProjector({
-    viewState,
-    viewport: getViewport(),
-  });
-
-  const environmentRenderer = createEnvironmentRenderer();
-  const groundRenderer = createGroundRenderer();
-
-  let running = false;
-  let tickId = 0;
-  let accumulatedMs = 0;
-  let latestSnapshot = null;
-
-  function writeRuntimeState() {
-    worldPayload.runtimeState = {
-      tickId: latestSnapshot.tickId,
-      timestamp: latestSnapshot.timestamp,
-      stateBefore: latestSnapshot.stateBefore,
-      pressureBefore: latestSnapshot.pressureBefore,
-      stateAfter: latestSnapshot.stateAfter,
-      coherenceBand: latestSnapshot.coherenceBand,
-      gateResult: latestSnapshot.gate,
-      basinClassification: latestSnapshot.basin,
-      renderStatus: latestSnapshot.renderStatus,
-      performanceStatus: latestSnapshot.performanceStatus,
-      receipt: {
-        RECEIPT_NAME,
-        RESULT: latestSnapshot.renderStatus === "PASS" ? "PASS" : "FAIL",
-        BOOT_STATUS: latestSnapshot.bootStatus.toUpperCase(),
-        PAYLOAD_STATUS: latestSnapshot.payloadStatus.toUpperCase(),
-        PROJECTION_STATUS: latestSnapshot.projectionStatus.toUpperCase(),
-        RENDER_STATUS: latestSnapshot.renderStatus,
-        STATE_PROPAGATION_STATUS: "PASS",
-        PRESSURE_PROPAGATION_STATUS: "PASS",
-        BASIN_STATUS: "PASS",
-        GATE_STATUS: "PASS",
-        PERFORMANCE_STATUS: latestSnapshot.performanceStatus,
-        INSTRUMENTATION_STATUS: "PASS",
-        NEXT_STEP_ALLOWED: latestSnapshot.renderStatus === "PASS",
-      },
-    };
-
-    worldPayload.environment = {
-      ...worldPayload.environment,
-      pressure: { ...latestSnapshot.pressureBefore },
-      coherence: { ...latestSnapshot.coherence },
-      basin: { ...latestSnapshot.basin },
-      gate: { ...latestSnapshot.gate },
-      visibility: Math.max(0, 1 - latestSnapshot.pressureBefore.visibilityLoss),
-      stormIntensity: latestSnapshot.pressureBefore.stormIntensity,
-      humidityFogLoad: latestSnapshot.pressureBefore.humidityFogLoad,
-      waterAccessVariance: latestSnapshot.pressureBefore.waterAccessVariance,
-    };
-
-    statusRoot.textContent = formatStatus(latestSnapshot);
-  }
-
-  function advanceTick(now) {
-    const stateBefore = { ...currentState };
-    const pressureBefore = { ...currentPressure };
-
-    const coherenceBefore = kernel.computeCoherence(stateBefore);
-    const gateBefore = kernel.evaluateGate(coherenceBefore, pressureBefore);
-
-    const pressureDelta = kernel.computePressureDelta(pressureBefore);
-    const internalDelta = kernel.computeInternalDelta(stateBefore);
-    const repairDelta = kernel.computeRepairDelta(coherenceBefore, gateBefore);
-
-    const stateAfter = {};
-
-    for (const key of Object.keys(stateBefore)) {
-      const nextValue =
-        stateBefore[key] +
-        internalDelta[key] -
-        pressureDelta[key] +
-        repairDelta[key];
-
-      ensureFinite(key, nextValue);
-      stateAfter[key] = kernel.clampState(nextValue);
+    if (selectedId === "harbor_village_anchor" && village) {
+      return {
+        selectedName: village.name,
+        selectedType: village.type,
+        selectionHint: "Harbor entry point active"
+      };
     }
 
-    currentState = stateAfter;
-    tickId += 1;
-
-    const coherence = kernel.computeCoherence(stateAfter);
-    const coherenceBand = kernel.getCoherenceBand(coherence.score);
-    const basin = kernel.classifyBasin(stateAfter);
-    const gate = kernel.evaluateGate(coherence, pressureBefore);
-
-    latestSnapshot = {
-      tickId,
-      timestamp: Math.round(now),
-      stateBefore,
-      pressureBefore,
-      stateAfter,
-      coherence,
-      coherenceBand,
-      basin,
-      gate,
-      bootStatus: "pass",
-      payloadStatus: "pass",
-      projectionStatus: "pass",
-      renderStatus: "PENDING",
-      performanceStatus: "PASS",
+    return {
+      selectedName: region?.name ?? "Harbor Region",
+      selectedType: "region",
+      selectionHint: "Harbor entry point active"
     };
-
-    writeRuntimeState();
   }
 
-  function draw(now, deltaMs) {
-    const viewport = getViewport();
+  function getSnapshot() {
+    const selection = computeSelection();
 
-    viewState = {
-      ...viewState,
-      viewportWidth: viewport.cssWidth,
-      viewportHeight: viewport.cssHeight,
+    return {
+      tick,
+      coherence,
+      kernel,
+      selection: {
+        selectedId
+      },
+      readout: {
+        region: "Harbor Region",
+        selectedName: selection.selectedName,
+        selectedType: selection.selectedType,
+        selectionHint: selection.selectionHint
+      }
     };
-
-    projector.update(viewState, viewport);
-
-    context.save();
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.restore();
-
-    const environmentResult = environmentRenderer.render({
-      context,
-      projector,
-      worldPayload,
-      viewState,
-      viewport,
-    });
-
-    const groundResult = groundRenderer.render({
-      context,
-      projector,
-      worldPayload,
-      viewState,
-      viewport,
-    });
-
-    latestSnapshot.timestamp = Math.round(now);
-    latestSnapshot.renderStatus =
-      environmentResult.visible && groundResult.visible ? "PASS" : "FAIL";
-    latestSnapshot.performanceStatus = deltaMs > 33 ? "WARN" : "PASS";
-
-    writeRuntimeState();
   }
 
   return {
-    start() {
-      running = true;
-      advanceTick(performance.now());
-      draw(performance.now(), 0);
+    step() {
+      tick += 1;
+      const drift = kernel.pressure.stormIntensity * 0.00045;
+      const repair = kernel.environment.harborStability * 0.00015;
+      coherence = clamp01(coherence - drift + repair);
     },
+    selectAt(x, y) {
+      const village = kernel.markers.find((row) => row.id === "harbor_village_anchor");
+      if (village) {
+        const d2 = distanceSquared(x, y, village.point[0], village.point[1]);
+        if (d2 <= village.hitRadius * village.hitRadius) {
+          selectedId = "harbor_village_anchor";
+          return;
+        }
+      }
 
-    stop() {
-      running = false;
-    },
-
-    resize(viewport) {
-      viewState = {
-        ...viewState,
-        viewportWidth: viewport.cssWidth,
-        viewportHeight: viewport.cssHeight,
-      };
-      projector.update(viewState, viewport);
-    },
-
-    frame(now, deltaMs) {
-      if (!running) {
+      const harborRegion = kernel.regions.find((row) => row.id === "harbor_region");
+      if (harborRegion && pointInPolygon(x, y, harborRegion.polygon)) {
+        selectedId = "harbor_region";
         return;
       }
 
-      accumulatedMs += deltaMs;
-      let steps = 0;
-
-      while (accumulatedMs >= FIXED_STEP_MS && steps < MAX_CATCH_UP_STEPS) {
-        advanceTick(now);
-        accumulatedMs -= FIXED_STEP_MS;
-        steps += 1;
+      const exploration = kernel.regions.find((row) => row.id === "exploration_basin");
+      if (exploration && pointInPolygon(x, y, exploration.polygon)) {
+        selectedId = "exploration_basin";
+        return;
       }
 
-      draw(now, deltaMs);
+      selectedId = "harbor_region";
     },
+    getSnapshot
   };
 }

@@ -1,102 +1,64 @@
-import { createSceneRuntime } from "./world/scene_runtime.js";
+function drawShellBackground(ctx, width, height, viewState) {
+  const bg = ctx.createLinearGradient(0, 0, 0, height);
+  bg.addColorStop(0, "#02050d");
+  bg.addColorStop(0.18, "#050a18");
+  bg.addColorStop(0.52, "#081124");
+  bg.addColorStop(1, viewState === "PLANET_LAYER" ? "#091427" : "#04070f");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
 
-function requireCanvas(canvas) {
-  if (!(canvas instanceof HTMLCanvasElement)) {
-    throw new Error("BOOT_FAILURE: #scene canvas missing.");
-  }
-  return canvas;
+  const vignette = ctx.createRadialGradient(
+    width * 0.5,
+    height * 0.42,
+    Math.min(width, height) * 0.10,
+    width * 0.5,
+    height * 0.5,
+    Math.max(width, height) * 0.72
+  );
+  vignette.addColorStop(0, "rgba(20,44,82,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.28)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
 }
 
-function requireOutputs(outputs) {
-  const required = [
-    "region",
-    "cell",
-    "sector",
-    "band",
-    "encoding",
-    "byte",
-    "selectedName",
-    "selectedType",
-    "destination",
-    "selectionHint"
-  ];
-
-  for (const key of required) {
-    if (!outputs?.[key]) {
-      throw new Error(`BOOT_FAILURE: Missing output binding for ${key}.`);
-    }
-  }
-  return outputs;
+function drawPlanetAtmosphereShell(ctx, body) {
+  const shell = ctx.createRadialGradient(
+    body.centerX,
+    body.centerY,
+    body.radius * 0.90,
+    body.centerX,
+    body.centerY,
+    body.radius * 1.18
+  );
+  shell.addColorStop(0, "rgba(255,255,255,0)");
+  shell.addColorStop(0.56, "rgba(114,188,255,0.10)");
+  shell.addColorStop(0.82, "rgba(84,162,255,0.12)");
+  shell.addColorStop(1, "rgba(84,162,255,0)");
+  ctx.fillStyle = shell;
+  ctx.beginPath();
+  ctx.arc(body.centerX, body.centerY, body.radius * 1.18, 0, Math.PI * 2);
+  ctx.fill();
 }
 
-function fitCanvas(canvas) {
-  const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-  const width = Math.max(1, Math.floor(canvas.clientWidth || window.innerWidth));
-  const height = Math.max(1, Math.floor(canvas.clientHeight || window.innerHeight));
-
-  canvas.width = Math.max(1, Math.floor(width * dpr));
-  canvas.height = Math.max(1, Math.floor(height * dpr));
-
+export function createEnvironmentRenderer({ renderRouter }) {
   return {
-    width,
-    height,
-    pixelWidth: canvas.width,
-    pixelHeight: canvas.height,
-    dpr
-  };
-}
+    draw(ctx, snapshot, projector, viewState) {
+      const width = ctx.canvas.width;
+      const height = ctx.canvas.height;
+      const body = projector.getBody();
 
-export async function createScene(canvas, outputs) {
-  const safeCanvas = requireCanvas(canvas);
-  const safeOutputs = requireOutputs(outputs);
+      drawShellBackground(ctx, width, height, viewState);
 
-  const context = safeCanvas.getContext("2d", {
-    alpha: false,
-    desynchronized: true
-  });
+      renderRouter.drawActiveLayer(ctx, snapshot, projector, viewState, {
+        width,
+        height,
+        tick: snapshot.tick ?? 0,
+        viewState
+      });
 
-  if (!context) {
-    throw new Error("BOOT_FAILURE: Could not acquire 2D context.");
-  }
-
-  let viewport = fitCanvas(safeCanvas);
-
-  const sceneRuntime = await createSceneRuntime({
-    canvas: safeCanvas,
-    context,
-    outputs: safeOutputs,
-    getViewport: () => viewport
-  });
-
-  function handleResize() {
-    viewport = fitCanvas(safeCanvas);
-    sceneRuntime.resize(viewport);
-  }
-
-  window.addEventListener("resize", handleResize, { passive: true });
-  handleResize();
-
-  let rafId = 0;
-  let started = false;
-  let lastNow = 0;
-
-  function frame(now) {
-    const deltaMs = started ? Math.max(0, now - lastNow) : 0;
-    lastNow = now;
-    sceneRuntime.frame(now, deltaMs);
-    rafId = window.requestAnimationFrame(frame);
-  }
-
-  return {
-    start() {
-      if (started) return;
-      started = true;
-      sceneRuntime.start();
-      rafId = window.requestAnimationFrame(frame);
-    },
-    stop() {
-      if (rafId) window.cancelAnimationFrame(rafId);
-      sceneRuntime.stop();
+      if (viewState === "PLANET_LAYER") {
+        drawPlanetAtmosphereShell(ctx, body);
+      }
     }
   };
 }

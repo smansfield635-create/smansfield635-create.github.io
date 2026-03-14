@@ -11,6 +11,16 @@ function drawPolygonPath(ctx, polygon, projector) {
   return projected;
 }
 
+function centroid(points) {
+  let x = 0;
+  let y = 0;
+  for (const [px, py] of points) {
+    x += px;
+    y += py;
+  }
+  return [x / points.length, y / points.length];
+}
+
 function createStarField() {
   return [
     [0.06, 0.08, 1.0, 0.60, 0.2],
@@ -174,11 +184,77 @@ function drawOrbitingMoons(ctx, width, height, tick) {
   );
 }
 
-function drawOceanWaveBands(ctx, body, tick) {
+function drawOceanDepthBands(ctx, body) {
+  const left = body.centerX - body.radius;
+  const top = body.horizonY;
+  const width = body.radius * 2;
+  const height = body.radius * 1.34;
+
+  const globeOcean = ctx.createLinearGradient(0, top, 0, top + height);
+  globeOcean.addColorStop(0.00, "#a0f1ff");
+  globeOcean.addColorStop(0.10, "#74ddfb");
+  globeOcean.addColorStop(0.22, "#47bde9");
+  globeOcean.addColorStop(0.40, "#2492cf");
+  globeOcean.addColorStop(0.62, "#12639e");
+  globeOcean.addColorStop(0.82, "#0a3f74");
+  globeOcean.addColorStop(1.00, "#061c42");
+
+  ctx.fillStyle = globeOcean;
+  ctx.fillRect(left, top, width, height);
+
+  const specular = ctx.createLinearGradient(0, top, 0, top + (height * 0.46));
+  specular.addColorStop(0, "rgba(255,255,255,0.10)");
+  specular.addColorStop(0.28, "rgba(190,245,255,0.07)");
+  specular.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = specular;
+  ctx.fillRect(left, top, width, height * 0.46);
+
+  const abyssShade = ctx.createLinearGradient(0, top + (height * 0.52), 0, top + height);
+  abyssShade.addColorStop(0, "rgba(0,0,0,0)");
+  abyssShade.addColorStop(1, "rgba(0,6,24,0.24)");
+  ctx.fillStyle = abyssShade;
+  ctx.fillRect(left, top + (height * 0.52), width, height * 0.48);
+}
+
+function drawCurrentRibbon(ctx, left, right, yBase, amp, tick, alpha, hueShift) {
+  ctx.beginPath();
+
+  for (let x = left; x <= right; x += 8) {
+    const waveA = Math.sin((x * 0.010) + (tick * 0.020) + hueShift) * amp;
+    const waveB = Math.cos((x * 0.004) - (tick * 0.012) + (hueShift * 0.6)) * (amp * 0.32);
+    const y = yBase + waveA + waveB;
+
+    if (x === left) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+  ctx.strokeStyle = `rgba(180,245,255,${alpha})`;
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+}
+
+function drawOceanCurrents(ctx, body, tick) {
   const left = body.centerX - body.radius;
   const right = body.centerX + body.radius;
   const top = body.horizonY;
-  const bottom = body.centerY + (body.radius * 0.72);
+  const bands = [
+    { y: top + 26,  amp: 3.4, alpha: 0.18, shift: 0.2 },
+    { y: top + 58,  amp: 4.0, alpha: 0.16, shift: 1.0 },
+    { y: top + 92,  amp: 5.0, alpha: 0.14, shift: 2.0 },
+    { y: top + 132, amp: 6.0, alpha: 0.12, shift: 3.1 },
+    { y: top + 178, amp: 7.2, alpha: 0.10, shift: 4.3 },
+    { y: top + 232, amp: 8.2, alpha: 0.08, shift: 5.2 }
+  ];
+
+  for (const band of bands) {
+    drawCurrentRibbon(ctx, left, right, band.y, band.amp, tick, band.alpha, band.shift);
+  }
+}
+
+function drawWaveHighlights(ctx, body, tick) {
+  const left = body.centerX - body.radius;
+  const right = body.centerX + body.radius;
+  const top = body.horizonY;
 
   for (let band = 0; band < 10; band += 1) {
     const yBase = top + (band * 28);
@@ -198,13 +274,6 @@ function drawOceanWaveBands(ctx, body, tick) {
     ctx.lineWidth = 1;
     ctx.stroke();
   }
-
-  const lowerGlow = ctx.createLinearGradient(0, top, 0, bottom);
-  lowerGlow.addColorStop(0, "rgba(255,255,255,0)");
-  lowerGlow.addColorStop(0.34, "rgba(102,240,255,0.06)");
-  lowerGlow.addColorStop(1, "rgba(0,34,76,0.16)");
-  ctx.fillStyle = lowerGlow;
-  ctx.fillRect(left, top, body.radius * 2, bottom - top);
 }
 
 function drawShallowShelf(ctx, polygon, projector, colorA, colorB) {
@@ -299,14 +368,7 @@ export function createEnvironmentRenderer() {
       ctx.closePath();
       ctx.clip();
 
-      const globeOcean = ctx.createLinearGradient(0, body.horizonY, 0, body.centerY + body.radius);
-      globeOcean.addColorStop(0, "#92e8ff");
-      globeOcean.addColorStop(0.16, "#61d2f3");
-      globeOcean.addColorStop(0.38, "#2ea3db");
-      globeOcean.addColorStop(0.68, "#125f99");
-      globeOcean.addColorStop(1, "#082d56");
-      ctx.fillStyle = globeOcean;
-      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.30);
+      drawOceanDepthBands(ctx, body);
 
       const globeShadow = ctx.createRadialGradient(
         body.centerX,
@@ -323,7 +385,8 @@ export function createEnvironmentRenderer() {
       ctx.fillStyle = globeShadow;
       ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.30);
 
-      drawOceanWaveBands(ctx, body, tick);
+      drawOceanCurrents(ctx, body, tick);
+      drawWaveHighlights(ctx, body, tick);
 
       if (outerOcean) {
         drawShallowShelf(

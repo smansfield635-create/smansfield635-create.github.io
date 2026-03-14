@@ -522,6 +522,7 @@ export function createEnvironmentRenderer() {
       const height = ctx.canvas.height;
       const tick = snapshot.tick ?? 0;
       const body = projector.getBody();
+      const camera = projector.getCameraState?.() ?? { azimuth: 0, latitudeTilt: 0 };
 
       ctx.fillStyle = "#02050d";
       ctx.fillRect(0, 0, width, height);
@@ -542,8 +543,8 @@ export function createEnvironmentRenderer() {
       drawSubsurfaceRipples(ctx, body, tick);
 
       const globeShadow = ctx.createRadialGradient(
-        body.centerX,
-        body.centerY - (body.radius * 0.18),
+        body.centerX + (Math.sin(camera.azimuth) * body.radius * 0.12),
+        body.centerY - (body.radius * 0.18) + (camera.latitudeTilt * body.radius * 0.08),
         body.radius * 0.12,
         body.centerX,
         body.centerY,

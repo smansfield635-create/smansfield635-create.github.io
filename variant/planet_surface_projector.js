@@ -3,9 +3,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
     width: canvas.width,
     height: canvas.height,
     yaw: 0,
-    pitch: -0.45,
-    cameraDistance: 2.4,
-    radius: 1,
+    pitch: -0.38,
+    cameraDistance: 2.42,
     centerX: 0,
     centerY: 0,
     pixelRadius: 0
@@ -19,41 +18,56 @@ export function createPlanetSurfaceProjector({ canvas }) {
     canvas.height = height;
 
     state.centerX = width * 0.5;
-    state.centerY = height * 0.54;
+    state.centerY = height * 0.56;
 
     const minAxis = Math.min(width, height);
     state.pixelRadius = minAxis * 0.34;
   }
 
-  function rotatePoint(x, y) {
-    const sinY = Math.sin(state.yaw);
+  function clampPitch() {
+    const minPitch = -0.62;
+    const maxPitch = -0.16;
+    if (state.pitch < minPitch) state.pitch = minPitch;
+    if (state.pitch > maxPitch) state.pitch = maxPitch;
+  }
+
+  function rotateUnitVector(x, y, z) {
     const cosY = Math.cos(state.yaw);
-    const sinP = Math.sin(state.pitch);
+    const sinY = Math.sin(state.yaw);
     const cosP = Math.cos(state.pitch);
+    const sinP = Math.sin(state.pitch);
 
-    const px = x - 0.5;
-    const py = y - 0.5;
-    const pz = Math.sqrt(Math.max(0, 1 - (px * px) - (py * py)));
+    const rx = (cosY * x) + (sinY * z);
+    const rz = (-sinY * x) + (cosY * z);
 
-    const rx = (cosY * px) + (sinY * pz);
-    const rz = (-sinY * px) + (cosY * pz);
-
-    const ry = (cosP * py) - (sinP * rz);
-    const rz2 = (sinP * py) + (cosP * rz);
+    const ry = (cosP * y) - (sinP * rz);
+    const rz2 = (sinP * y) + (cosP * rz);
 
     return { x: rx, y: ry, z: rz2 };
   }
 
-  function project(x, y) {
-    const p = rotatePoint(x, y);
-    const scale = state.pixelRadius / (state.cameraDistance - p.z);
+  function planetPointToUnitSphere(x, y) {
+    const px = (x * 2) - 1;
+    const py = (y * 2) - 1;
+    const d2 = (px * px) + (py * py);
+    const pz = Math.sqrt(Math.max(0, 1 - d2));
+    return { x: px, y: py, z: pz };
+  }
+
+  function projectUnitVector(v) {
+    const p = rotateUnitVector(v.x, v.y, v.z);
+    const perspective = state.pixelRadius / (state.cameraDistance - p.z);
 
     return {
-      x: state.centerX + (p.x * scale),
-      y: state.centerY + (p.y * scale),
+      x: state.centerX + (p.x * perspective),
+      y: state.centerY + (p.y * perspective),
       z: p.z,
       visible: p.z >= -0.08
     };
+  }
+
+  function project(x, y) {
+    return projectUnitVector(planetPointToUnitSphere(x, y));
   }
 
   function point(x, y) {
@@ -66,7 +80,7 @@ export function createPlanetSurfaceProjector({ canvas }) {
   }
 
   function scaleAt(x, y) {
-    const p = rotatePoint(x, y);
+    const p = point(x, y);
     const scale = state.pixelRadius / (state.cameraDistance - p.z);
     return Math.max(0.35, Math.min(2.2, scale / Math.max(1, state.pixelRadius * 0.52)));
   }
@@ -91,25 +105,27 @@ export function createPlanetSurfaceProjector({ canvas }) {
   }
 
   function unproject(px, py) {
-    const nx = (px - state.centerX) / state.pixelRadius;
-    const ny = (py - state.centerY) / state.pixelRadius;
+    const nx = (px - state.centerX) / Math.max(1, state.pixelRadius);
+    const ny = (py - state.centerY) / Math.max(1, state.pixelRadius);
+
+    const d2 = (nx * nx) + (ny * ny);
+    if (d2 > 1) {
+      const d = Math.sqrt(d2);
+      return {
+        x: ((nx / d) * 0.5) + 0.5,
+        y: ((ny / d) * 0.5) + 0.5
+      };
+    }
 
     return {
-      x: Math.max(0, Math.min(1, nx + 0.5)),
-      y: Math.max(0, Math.min(1, ny + 0.5))
+      x: (nx * 0.5) + 0.5,
+      y: (ny * 0.5) + 0.5
     };
   }
 
   function update(viewport) {
     resize(viewport.width, viewport.height);
-  }
-
-  function clampPitch() {
-    const minPitch = -0.65;
-    const maxPitch = -0.15;
-
-    if (state.pitch > maxPitch) state.pitch = maxPitch;
-    if (state.pitch < minPitch) state.pitch = minPitch;
+    clampPitch();
   }
 
   function drag(dx, dy) {
@@ -129,10 +145,6 @@ export function createPlanetSurfaceProjector({ canvas }) {
     };
   }
 
-  function getBody() {
-    return body;
-  }
-
   const body = {
     get centerX() {
       return state.centerX;
@@ -147,6 +159,10 @@ export function createPlanetSurfaceProjector({ canvas }) {
       return state.centerY;
     }
   };
+
+  function getBody() {
+    return body;
+  }
 
   clampPitch();
 

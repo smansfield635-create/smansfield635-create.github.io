@@ -1,239 +1,246 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge — Harbor Core Foundation</title>
-  <meta name="description" content="Diamond Gate Bridge Harbor Core interactive foundation runtime.">
-  <meta name="theme-color" content="#0b1220">
-  <style>
-    :root{
-      --bg-0:#05070b;
-      --panel:rgba(10,16,26,.50);
-      --line:rgba(255,255,255,.12);
-      --text:#edf4ff;
-      --muted:rgba(237,244,255,.74);
-      --gold:rgba(255,226,176,.96);
-      --safe-top:max(10px,env(safe-area-inset-top));
-      --safe-right:max(10px,env(safe-area-inset-right));
-      --safe-bottom:max(10px,env(safe-area-inset-bottom));
-      --safe-left:max(10px,env(safe-area-inset-left));
-      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Diamond Gate Bridge — Harbor Core Foundation</title>
 
-    *{box-sizing:border-box}
+<style>
+:root{
+  --safe-top:max(12px,env(safe-area-inset-top));
+  --safe-right:max(12px,env(safe-area-inset-right));
+  --safe-bottom:max(12px,env(safe-area-inset-bottom));
+  --safe-left:max(12px,env(safe-area-inset-left));
+  --font:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
 
-    html,body{
-      margin:0;
-      padding:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:var(--bg-0);
-      color:var(--text);
-      font-family:var(--font);
-    }
+*{box-sizing:border-box}
 
-    body{
-      overscroll-behavior:none;
-      touch-action:none;
-    }
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#05070b;
+  font-family:var(--font);
+}
 
-    .app{
-      position:relative;
-      width:100vw;
-      height:100dvh;
-      overflow:hidden;
-      background:#05070b;
-    }
+.app{
+  position:relative;
+  width:100vw;
+  height:100dvh;
+  overflow:hidden;
+}
 
-    #scene{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      display:block;
-      z-index:1;
-      touch-action:none;
-    }
+/* CAMERA CONTROL (INDEX CHOKE POINT) */
 
-    .topbar{
-      position:absolute;
-      top:var(--safe-top);
-      left:var(--safe-left);
-      right:var(--safe-right);
-      z-index:3;
-      display:flex;
-      align-items:flex-start;
-      justify-content:flex-start;
-      gap:10px;
-      pointer-events:none;
-    }
+#scene{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:var(--panel);
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      box-shadow:0 8px 20px rgba(0,0,0,.20);
-      pointer-events:auto;
-    }
+  /* This is the camera control */
+  transform:scale(.62);
+  transform-origin:50% 76%;
 
-    .brand-mark{
-      width:24px;
-      height:24px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.20);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.18) 36%, transparent 37%),
-        linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
-      flex:0 0 auto;
-    }
+  display:block;
+  z-index:1;
+  touch-action:none;
+}
 
-    .brand-copy{
-      display:flex;
-      flex-direction:column;
-      line-height:1.03;
-    }
+/* TOP BAR */
 
-    .brand-copy strong{
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
+.topbar{
+  position:absolute;
+  top:var(--safe-top);
+  left:var(--safe-left);
+  z-index:3;
+}
 
-    .brand-copy span{
-      font-size:10px;
-      color:var(--muted);
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
+.pill{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,16,26,.45);
+  backdrop-filter:blur(10px);
+  color:#edf4ff;
+}
 
-    .panel-stack{
-      position:absolute;
-      right:var(--safe-right);
-      bottom:var(--safe-bottom);
-      z-index:3;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      width:98px;
-      pointer-events:none;
-    }
+.brand-mark{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:
+  radial-gradient(circle at 35% 30%,#fff,rgba(255,255,255,.2) 36%,transparent 37%),
+  linear-gradient(180deg,#f1f7ff,#21385f,#0d1730);
+}
 
-    .panel{
-      padding:4px 5px;
-      border-radius:9px;
-      border:1px solid var(--line);
-      background:rgba(10,16,26,.40);
-      backdrop-filter:blur(6px);
-      -webkit-backdrop-filter:blur(6px);
-      box-shadow:0 6px 14px rgba(0,0,0,.16);
-      pointer-events:none;
-    }
+/* COMPASS */
 
-    .panel h2{
-      margin:0 0 2px;
-      font-size:8px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
+.compass{
+  position:absolute;
+  right:calc(var(--safe-right) + 8px);
 
-    .kv{
-      display:grid;
-      grid-template-columns:30px 1fr;
-      gap:1px 3px;
-      font-size:8px;
-      line-height:1.0;
-      margin:0;
-    }
+  /* LOWERED slightly */
+  top:calc(var(--safe-top) + 84px);
 
-    .kv dt{color:var(--muted)}
-    .kv dd{margin:0;color:var(--text);word-break:break-word}
+  width:120px;
+  height:120px;
 
-    .panel-copy{
-      margin:2px 0 0;
-      color:var(--muted);
-      font-size:7px;
-      line-height:1.0;
-      opacity:.76;
-    }
+  z-index:3;
+  pointer-events:none;
+}
 
-    .footer-hint{
-      display:none;
-    }
+.compass svg{
+  width:100%;
+  height:100%;
+}
 
-    @media (max-width: 920px){
-      .panel-stack{
-        width:92px;
-      }
+/* SELECTION PANEL */
 
-      .kv{
-        grid-template-columns:28px 1fr;
-      }
-    }
-  </style>
+.panel-stack{
+  position:absolute;
+  right:var(--safe-right);
+  bottom:var(--safe-bottom);
+  width:110px;
+  z-index:3;
+}
+
+.panel{
+  padding:6px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,16,26,.45);
+  backdrop-filter:blur(6px);
+  color:#edf4ff;
+  font-size:9px;
+}
+
+.kv{
+  display:grid;
+  grid-template-columns:32px 1fr;
+  gap:2px 4px;
+}
+
+.kv dt{opacity:.7}
+.kv dd{margin:0}
+
+.footer-hint{
+  position:absolute;
+  bottom:var(--safe-bottom);
+  left:50%;
+  transform:translateX(-50%);
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(9,14,22,.56);
+  color:#edf4ff;
+  font-size:11px;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="app">
-    <canvas id="scene" aria-label="Harbor Core Interactive Foundation Scene"></canvas>
 
-    <div class="topbar">
-      <div class="pill">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <div class="brand-copy">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Harbor Core Interactive Foundation</span>
-        </div>
-      </div>
+<div class="app">
+
+<canvas id="scene"></canvas>
+
+<div class="topbar">
+  <div class="pill">
+    <span class="brand-mark"></span>
+    <div>
+      <strong>Diamond Gate Bridge</strong><br>
+      <span style="font-size:10px;opacity:.7">Harbor Core Interactive Foundation</span>
     </div>
-
-    <div class="panel-stack">
-      <section class="panel" aria-live="polite">
-        <h2>Selection</h2>
-        <dl class="kv">
-          <dt>Sel</dt><dd id="selectedNameOut">—</dd>
-          <dt>Type</dt><dd id="selectedTypeOut">—</dd>
-          <dt>Dest</dt><dd id="destinationOut">—</dd>
-        </dl>
-        <p class="panel-copy" id="selectionHintOut">Tap region.</p>
-      </section>
-    </div>
-
-    <div class="footer-hint">Tap Harbor Region or Harbor Village · fixed camera pilot</div>
   </div>
+</div>
 
-  <script type="module">
-    import { createScene } from "./variant/scene.js";
+<!-- COMPASS -->
 
-    const outputs = {
-      region: document.createElement("span"),
-      cell: document.createElement("span"),
-      sector: document.createElement("span"),
-      band: document.createElement("span"),
-      encoding: document.createElement("span"),
-      byte: document.createElement("span"),
-      selectedName: document.getElementById("selectedNameOut"),
-      selectedType: document.getElementById("selectedTypeOut"),
-      destination: document.getElementById("destinationOut"),
-      selectionHint: document.getElementById("selectionHintOut")
-    };
+<div class="compass">
 
-    const canvas = document.getElementById("scene");
+<svg viewBox="0 0 112 112">
 
-    createScene(canvas, outputs)
-      .then((scene) => scene.start())
-      .catch((error) => {
-        console.error(error);
-        alert(`Interactive foundation failed to boot: ${error.message}`);
-      });
-  </script>
+<defs>
+<radialGradient id="c1">
+<stop offset="0%" stop-color="#ffe9b5"/>
+<stop offset="60%" stop-color="#8fd4ff"/>
+<stop offset="100%" stop-color="transparent"/>
+</radialGradient>
+</defs>
+
+<circle cx="56" cy="56" r="42" fill="url(#c1)" opacity=".6"/>
+
+<polygon points="56,10 102,56 56,102 10,56"
+fill="rgba(0,0,0,.35)"
+stroke="rgba(255,230,170,.9)"
+stroke-width="1.4"/>
+
+<polygon points="56,20 63,49 92,56 63,63 56,92 49,63 20,56 49,49"
+fill="rgba(255,240,200,.25)"
+stroke="rgba(255,235,170,.9)"
+stroke-width="1"/>
+
+<circle cx="56" cy="56" r="4.5" fill="#ffe6b0"/>
+
+<text x="56" y="8" text-anchor="middle" fill="#fff" font-size="9">N</text>
+<text x="106" y="59" text-anchor="middle" fill="#fff" font-size="9">E</text>
+<text x="56" y="110" text-anchor="middle" fill="#fff" font-size="9">S</text>
+<text x="6" y="59" text-anchor="middle" fill="#fff" font-size="9">W</text>
+
+</svg>
+
+</div>
+
+<div class="panel-stack">
+<section class="panel">
+<dl class="kv">
+<dt>Sel</dt><dd id="selectedNameOut">—</dd>
+<dt>Type</dt><dd id="selectedTypeOut">—</dd>
+<dt>Dest</dt><dd id="destinationOut">—</dd>
+</dl>
+<p id="selectionHintOut" style="opacity:.7;margin-top:4px">Tap region.</p>
+</section>
+</div>
+
+<div class="footer-hint">Tap Harbor Region or Harbor Village · fixed camera pilot</div>
+
+</div>
+
+<script type="module">
+
+import { createScene } from "./variant/scene.js";
+
+const outputs={
+region:document.createElement("span"),
+cell:document.createElement("span"),
+sector:document.createElement("span"),
+band:document.createElement("span"),
+encoding:document.createElement("span"),
+byte:document.createElement("span"),
+selectedName:document.getElementById("selectedNameOut"),
+selectedType:document.getElementById("selectedTypeOut"),
+destination:document.getElementById("destinationOut"),
+selectionHint:document.getElementById("selectionHintOut")
+};
+
+const canvas=document.getElementById("scene");
+
+createScene(canvas,outputs)
+.then(scene=>scene.start())
+.catch(error=>{
+console.error(error);
+alert(`Interactive foundation failed to boot: ${error.message}`);
+});
+
+</script>
+
 </body>
 </html>

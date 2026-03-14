@@ -342,20 +342,23 @@ function drawMoons(ctx, width, height, tick, body) {
   return { moonNorth, moonSouth };
 }
 
-function drawOceanBody(ctx, body) {
+function drawOceanBody(ctx, body, camera) {
+  const yawBiasX = Math.sin(camera.azimuth || 0) * body.radius * 0.12;
+  const pitchBiasY = (camera.latitudeTilt || 0) * body.radius * 0.08;
+
   const base = ctx.createRadialGradient(
-    body.centerX - (body.radius * 0.18),
-    body.centerY - (body.radius * 0.26),
+    body.centerX - (body.radius * 0.14) + yawBiasX,
+    body.centerY - (body.radius * 0.26) + pitchBiasY,
     body.radius * 0.08,
     body.centerX,
-    body.centerY + (body.radius * 0.12),
+    body.centerY + (body.radius * 0.10),
     body.radius * 1.05
   );
-  base.addColorStop(0.00, "#2fd3ff");
-  base.addColorStop(0.10, "#118dff");
-  base.addColorStop(0.26, "#1748d8");
-  base.addColorStop(0.52, "#12268c");
-  base.addColorStop(0.80, "#090f4f");
+  base.addColorStop(0.00, "#42e3ff");
+  base.addColorStop(0.10, "#18a4ff");
+  base.addColorStop(0.28, "#1558de");
+  base.addColorStop(0.56, "#10237f");
+  base.addColorStop(0.82, "#080f45");
   base.addColorStop(1.00, "#040723");
 
   ctx.fillStyle = base;
@@ -364,16 +367,16 @@ function drawOceanBody(ctx, body) {
   ctx.fill();
 
   const abyss = ctx.createRadialGradient(
-    body.centerX,
+    body.centerX - yawBiasX * 0.4,
     body.centerY + (body.radius * 0.26),
-    body.radius * 0.14,
+    body.radius * 0.16,
     body.centerX,
     body.centerY + (body.radius * 0.42),
-    body.radius * 1.12
+    body.radius * 1.16
   );
   abyss.addColorStop(0.00, "rgba(0,0,0,0)");
-  abyss.addColorStop(0.55, "rgba(0,0,20,0.12)");
-  abyss.addColorStop(1.00, "rgba(0,0,36,0.34)");
+  abyss.addColorStop(0.55, "rgba(0,0,16,0.12)");
+  abyss.addColorStop(1.00, "rgba(0,0,38,0.36)");
 
   ctx.fillStyle = abyss;
   ctx.beginPath();
@@ -381,81 +384,111 @@ function drawOceanBody(ctx, body) {
   ctx.fill();
 }
 
-function drawDeepCurrents(ctx, body, tick) {
-  const left = body.centerX - (body.radius * 0.92);
-  const right = body.centerX + (body.radius * 0.92);
-  const top = body.centerY - (body.radius * 0.70);
-  const bottom = body.centerY + (body.radius * 0.70);
-
+function drawMassFlow(ctx, body, tick, camera) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  for (let band = 0; band < 12; band += 1) {
-    const yBase = top + ((bottom - top) * (band / 11));
-    const amp = 2.0 + (band * 0.42);
-    const alpha = 0.06 - (band * 0.003);
+  const yaw = camera.azimuth || 0;
+  const tilt = camera.latitudeTilt || 0;
+
+  for (let i = 0; i < 7; i += 1) {
+    const angle = (i / 7) * Math.PI * 2 + (yaw * 0.8) + (tick * 0.00018);
+    const radiusFactor = 0.18 + (i * 0.10);
+    const px = body.centerX + (Math.cos(angle) * body.radius * radiusFactor * 0.82);
+    const py = body.centerY + (Math.sin(angle) * body.radius * radiusFactor * 0.46) + (tilt * body.radius * 0.08);
+    const rx = body.radius * (0.18 + (i * 0.02));
+    const ry = body.radius * (0.05 + (i * 0.008));
+
+    const g = ctx.createRadialGradient(px, py, 4, px, py, rx);
+    g.addColorStop(0, "rgba(118,230,255,0.08)");
+    g.addColorStop(0.45, "rgba(88,190,255,0.05)");
+    g.addColorStop(1, "rgba(88,190,255,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(px, py, rx, ry, angle * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawCurrentGyres(ctx, body, tick, camera) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const yaw = camera.azimuth || 0;
+  const tilt = camera.latitudeTilt || 0;
+
+  for (let ring = 0; ring < 5; ring += 1) {
+    const ringRadius = body.radius * (0.22 + (ring * 0.12));
+    const lineWidth = body.radius * (0.018 - (ring * 0.0018));
+    const alpha = 0.12 - (ring * 0.016);
 
     ctx.beginPath();
-    for (let x = left; x <= right; x += 7) {
-      const nx = (x - left) / Math.max(1, right - left);
-      const wave1 = Math.sin((nx * 19.0) + (tick * 0.0016) + (band * 0.42)) * amp;
-      const wave2 = Math.cos((nx * 9.0) - (tick * 0.0011) + (band * 0.68)) * (amp * 0.52);
-      const y = yBase + wave1 + wave2;
-      if (x === left) ctx.moveTo(x, y);
+
+    for (let step = 0; step <= 96; step += 1) {
+      const t = step / 96;
+      const angle = (t * Math.PI * 2) + (yaw * (1.0 + ring * 0.12)) + (tick * 0.00055 * (1 + ring * 0.08));
+      const swirl = Math.sin((angle * 3.0) + (tick * 0.0012) + ring) * body.radius * (0.028 + ring * 0.003);
+      const pulse = Math.cos((angle * 2.0) - (tick * 0.0009) + ring) * body.radius * 0.010;
+
+      const rx = ringRadius + swirl + pulse;
+      const x = body.centerX + (Math.cos(angle) * rx);
+      const y = body.centerY + (Math.sin(angle) * rx * (0.58 + (tilt * 0.08)));
+
+      if (step === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = `rgba(122,182,255,${Math.max(0.014, alpha)})`;
-    ctx.lineWidth = 0.9 + (band * 0.04);
+
+    ctx.strokeStyle = `rgba(196,244,255,${Math.max(0.02, alpha)})`;
+    ctx.lineWidth = Math.max(1, lineWidth);
+    ctx.stroke();
+  }
+
+  for (let arcIndex = 0; arcIndex < 10; arcIndex += 1) {
+    const startAngle = (arcIndex / 10) * Math.PI * 2 + (yaw * 1.1) + (tick * 0.00042);
+    const arcLength = 0.9 + (hashNoise(900, arcIndex, 1) * 0.8);
+    const orbit = body.radius * (0.20 + (hashNoise(900, arcIndex, 2) * 0.54));
+
+    ctx.beginPath();
+    for (let step = 0; step <= 24; step += 1) {
+      const t = step / 24;
+      const a = startAngle + (t * arcLength);
+      const bend = Math.sin((a * 2.4) + (tick * 0.0010) + arcIndex) * body.radius * 0.022;
+      const x = body.centerX + (Math.cos(a) * (orbit + bend));
+      const y = body.centerY + (Math.sin(a) * (orbit + bend) * (0.58 + (tilt * 0.08)));
+
+      if (step === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+    ctx.strokeStyle = "rgba(104,208,255,0.10)";
+    ctx.lineWidth = Math.max(1, body.radius * 0.010);
     ctx.stroke();
   }
 
   ctx.restore();
 }
 
-function drawWaveField(ctx, body, tick) {
-  const left = body.centerX - (body.radius * 0.94);
-  const right = body.centerX + (body.radius * 0.94);
-  const top = body.centerY - (body.radius * 0.74);
-  const bottom = body.centerY + (body.radius * 0.74);
-
-  for (let band = 0; band < 14; band += 1) {
-    const t = band / 13;
-    const yBase = top + ((bottom - top) * t);
-    const amp = 1.8 + (t * 6.2);
-    const alpha = 0.12 - (t * 0.08);
-
-    ctx.beginPath();
-    for (let x = left; x <= right; x += 6) {
-      const nx = (x - left) / Math.max(1, right - left);
-      const waveA = Math.sin((nx * 24.0) + (tick * 0.0022) + (band * 0.36)) * amp;
-      const waveB = Math.cos((nx * 11.0) - (tick * 0.0017) + (band * 0.58)) * (amp * 0.48);
-      const waveC = Math.sin((nx * 42.0) + (tick * 0.0030)) * (amp * 0.12);
-      const y = yBase + waveA + waveB + waveC;
-      if (x === left) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.strokeStyle = `rgba(214,246,255,${Math.max(0.01, alpha)})`;
-    ctx.lineWidth = 0.85 + (t * 0.65);
-    ctx.stroke();
-  }
-}
-
-function drawSubsurfaceRipples(ctx, body, tick) {
+function drawSubsurfaceField(ctx, body, tick, camera) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
-  for (let i = 0; i < 38; i += 1) {
-    const u = hashNoise(700, i, 1);
-    const v = hashNoise(700, i, 2);
-    const px = body.centerX + ((u * 2) - 1) * body.radius * 0.86;
-    const py = body.centerY + (((v * 2) - 1) * body.radius * 0.76);
-    const rx = body.radius * (0.025 + (hashNoise(700, i, 3) * 0.055));
-    const ry = body.radius * (0.006 + (hashNoise(700, i, 4) * 0.015));
-    const rot = ((hashNoise(700, i, 5) - 0.5) * 1.4) + (Math.sin((tick * 0.0005) + i) * 0.08);
+  const yaw = camera.azimuth || 0;
+  const tilt = camera.latitudeTilt || 0;
+
+  for (let i = 0; i < 34; i += 1) {
+    const baseAngle = (hashNoise(700, i, 1) * Math.PI * 2) + (yaw * 0.72) + (tick * 0.00024);
+    const orbit = body.radius * (0.18 + (hashNoise(700, i, 2) * 0.60));
+    const px = body.centerX + (Math.cos(baseAngle) * orbit);
+    const py = body.centerY + (Math.sin(baseAngle) * orbit * (0.60 + (tilt * 0.08)));
+    const rx = body.radius * (0.024 + (hashNoise(700, i, 3) * 0.065));
+    const ry = body.radius * (0.008 + (hashNoise(700, i, 4) * 0.020));
+    const rot = baseAngle + ((hashNoise(700, i, 5) - 0.5) * 1.2);
 
     const g = ctx.createRadialGradient(px, py, 2, px, py, rx);
-    g.addColorStop(0, "rgba(126,222,255,0.08)");
-    g.addColorStop(0.55, "rgba(72,148,255,0.04)");
+    g.addColorStop(0, "rgba(126,222,255,0.10)");
+    g.addColorStop(0.55, "rgba(72,148,255,0.05)");
     g.addColorStop(1, "rgba(72,148,255,0)");
     ctx.fillStyle = g;
     ctx.beginPath();
@@ -466,25 +499,12 @@ function drawSubsurfaceRipples(ctx, body, tick) {
   ctx.restore();
 }
 
-function drawSpecularSweep(ctx, body, tick) {
-  const phase = ((tick % 1600) / 1600);
-  const centerX = body.centerX - (body.radius * 0.28) + (phase * body.radius * 0.50);
-  const centerY = body.centerY + (body.radius * 0.02);
+function drawBodyRelativeMoonReflections(ctx, body, moonNorth, moonSouth, camera) {
+  const yaw = camera.azimuth || 0;
 
-  const glow = ctx.createRadialGradient(centerX, centerY, 6, centerX, centerY, body.radius * 0.32);
-  glow.addColorStop(0, "rgba(255,255,255,0.09)");
-  glow.addColorStop(0.34, "rgba(220,252,255,0.05)");
-  glow.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.ellipse(centerX, centerY, body.radius * 0.34, body.radius * 0.10, -0.08, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
   const northReflect = ctx.createRadialGradient(
-    moonNorth.x,
-    body.centerY + (body.radius * 0.06),
+    moonNorth.x + (Math.sin(yaw) * body.radius * 0.05),
+    body.centerY + (body.radius * 0.08),
     6,
     moonNorth.x,
     body.centerY + (body.radius * 0.10),
@@ -499,8 +519,8 @@ function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
   ctx.fill();
 
   const southReflect = ctx.createRadialGradient(
-    moonSouth.x,
-    body.centerY + (body.radius * 0.12),
+    moonSouth.x + (Math.sin(yaw) * body.radius * 0.03),
+    body.centerY + (body.radius * 0.16),
     6,
     moonSouth.x,
     body.centerY + (body.radius * 0.18),
@@ -512,6 +532,26 @@ function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
   ctx.fillStyle = southReflect;
   ctx.beginPath();
   ctx.arc(body.centerX, body.centerY, body.radius, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawBodyRelativeSpecular(ctx, body, tick, camera) {
+  const yaw = camera.azimuth || 0;
+  const tilt = camera.latitudeTilt || 0;
+
+  const phase = ((tick % 2200) / 2200);
+  const sweepOffset = (phase - 0.5) * body.radius * 0.36;
+
+  const centerX = body.centerX + sweepOffset + (Math.sin(yaw) * body.radius * 0.16);
+  const centerY = body.centerY + (tilt * body.radius * 0.10);
+
+  const glow = ctx.createRadialGradient(centerX, centerY, 6, centerX, centerY, body.radius * 0.34);
+  glow.addColorStop(0, "rgba(255,255,255,0.11)");
+  glow.addColorStop(0.34, "rgba(220,252,255,0.06)");
+  glow.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.ellipse(centerX, centerY, body.radius * 0.36, body.radius * 0.12, -0.12 + (yaw * 0.12), 0, Math.PI * 2);
   ctx.fill();
 }
 
@@ -537,14 +577,14 @@ export function createEnvironmentRenderer() {
       ctx.closePath();
       ctx.clip();
 
-      drawOceanBody(ctx, body);
-      drawDeepCurrents(ctx, body, tick);
-      drawWaveField(ctx, body, tick);
-      drawSubsurfaceRipples(ctx, body, tick);
+      drawOceanBody(ctx, body, camera);
+      drawMassFlow(ctx, body, tick, camera);
+      drawCurrentGyres(ctx, body, tick, camera);
+      drawSubsurfaceField(ctx, body, tick, camera);
 
       const globeShadow = ctx.createRadialGradient(
-        body.centerX + (Math.sin(camera.azimuth) * body.radius * 0.12),
-        body.centerY - (body.radius * 0.18) + (camera.latitudeTilt * body.radius * 0.08),
+        body.centerX + (Math.sin(camera.azimuth || 0) * body.radius * 0.18),
+        body.centerY - (body.radius * 0.18) + ((camera.latitudeTilt || 0) * body.radius * 0.10),
         body.radius * 0.12,
         body.centerX,
         body.centerY,
@@ -552,15 +592,15 @@ export function createEnvironmentRenderer() {
       );
       globeShadow.addColorStop(0, "rgba(255,255,255,0.06)");
       globeShadow.addColorStop(0.34, "rgba(164,232,255,0.04)");
-      globeShadow.addColorStop(0.70, "rgba(24,90,144,0.08)");
+      globeShadow.addColorStop(0.70, "rgba(24,90,144,0.09)");
       globeShadow.addColorStop(1, "rgba(4,22,48,0.18)");
       ctx.fillStyle = globeShadow;
       ctx.beginPath();
       ctx.arc(body.centerX, body.centerY, body.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      drawMoonReflections(ctx, body, moons.moonNorth, moons.moonSouth);
-      drawSpecularSweep(ctx, body, tick);
+      drawBodyRelativeMoonReflections(ctx, body, moons.moonNorth, moons.moonSouth, camera);
+      drawBodyRelativeSpecular(ctx, body, tick, camera);
 
       ctx.restore();
     }

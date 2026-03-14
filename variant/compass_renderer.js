@@ -215,6 +215,8 @@ function drawBackgroundHalo(ctx, cx, cy, radius) {
 
 export function createCompassRenderer() {
   const model = buildCompassModel();
+  const BASE_PITCH = 0.88;
+  const PITCH_GAIN = 0.55;
 
   return {
     draw(ctx, projector, now = 0) {
@@ -253,7 +255,7 @@ export function createCompassRenderer() {
 
       const camera = projector.getCameraState?.() ?? { azimuth: 0, latitudeTilt: 0 };
       const worldYaw = -(camera.azimuth || 0);
-      const worldPitch = 0.88 + ((camera.latitudeTilt || 0) * 0.55);
+      const worldPitch = BASE_PITCH + ((camera.latitudeTilt || 0) * PITCH_GAIN);
       const projected = projectCompass(model, worldYaw, worldPitch, size * 0.90);
 
       drawDiamondBody(ctx, cx, cy, projected);

@@ -13,8 +13,7 @@ function project3DPoint(x, y, z, yaw, pitch, scale) {
   const perspective = 1 / (1 + (z2 * 0.9));
   return {
     x: x1 * scale * perspective,
-    y: y2 * scale * perspective,
-    z: z2
+    y: y2 * scale * perspective
   };
 }
 
@@ -65,12 +64,6 @@ function drawCore(ctx, cx, cy, pulseRadius) {
   ctx.beginPath();
   ctx.arc(cx, cy, pulseRadius, 0, Math.PI * 2);
   ctx.fill();
-
-  ctx.strokeStyle = "rgba(255,248,220,0.74)";
-  ctx.lineWidth = 1.25;
-  ctx.beginPath();
-  ctx.arc(cx, cy, pulseRadius * 1.42, 0, Math.PI * 2);
-  ctx.stroke();
 }
 
 function buildCompassModel() {
@@ -116,65 +109,16 @@ function drawDiamondBody(ctx, cx, cy, projected) {
   ];
 
   for (const [a, b] of edgesBack) {
-    drawGlowingLine(
-      ctx,
-      cx + projected[a].x,
-      cy + projected[a].y,
-      cx + projected[b].x,
-      cy + projected[b].y,
-      "rgba(114,180,255,0.28)",
-      1.25,
-      0.42
-    );
+    drawGlowingLine(ctx, cx + projected[a].x, cy + projected[a].y, cx + projected[b].x, cy + projected[b].y, "rgba(114,180,255,0.28)", 1.25, 0.42);
   }
 
   for (const [a, b] of spineEdges) {
-    drawGlowingLine(
-      ctx,
-      cx + projected[a].x,
-      cy + projected[a].y,
-      cx + projected[b].x,
-      cy + projected[b].y,
-      "rgba(174,224,255,0.58)",
-      1.5,
-      0.58
-    );
+    drawGlowingLine(ctx, cx + projected[a].x, cy + projected[a].y, cx + projected[b].x, cy + projected[b].y, "rgba(174,224,255,0.58)", 1.5, 0.58);
   }
 
   for (const [a, b] of edgesFront) {
-    drawGlowingLine(
-      ctx,
-      cx + projected[a].x,
-      cy + projected[a].y,
-      cx + projected[b].x,
-      cy + projected[b].y,
-      "rgba(255,210,132,0.92)",
-      2.0,
-      1.0
-    );
+    drawGlowingLine(ctx, cx + projected[a].x, cy + projected[a].y, cx + projected[b].x, cy + projected[b].y, "rgba(255,210,132,0.92)", 2, 1);
   }
-
-  drawGlowingLine(
-    ctx,
-    cx + projected.top.x,
-    cy + projected.top.y,
-    cx + projected.bottom.x,
-    cy + projected.bottom.y,
-    "rgba(255,238,182,0.86)",
-    1.75,
-    0.9
-  );
-
-  drawGlowingLine(
-    ctx,
-    cx + projected.west.x,
-    cy + projected.west.y,
-    cx + projected.east.x,
-    cy + projected.east.y,
-    "rgba(255,238,182,0.54)",
-    1.35,
-    0.66
-  );
 }
 
 function drawLabels(ctx, cx, cy, size, worldYaw) {
@@ -224,34 +168,9 @@ export function createCompassRenderer() {
       const cx = Math.round(ctx.canvas.width - (78 + size));
       const cy = Math.round(94 + size);
 
-      const ringDrift = now * 0.00022;
-      const pulse = 1 + (Math.sin(now * 0.0032) * 0.06);
-
       drawBackgroundHalo(ctx, cx, cy, size);
-
-      drawRing(
-        ctx,
-        cx,
-        cy,
-        size * 1.12,
-        size * 0.30,
-        ringDrift,
-        "rgba(124,190,255,0.46)",
-        1.1,
-        0.62
-      );
-
-      drawRing(
-        ctx,
-        cx,
-        cy,
-        size * 0.80,
-        size * 0.53,
-        ringDrift + 0.78,
-        "rgba(255,214,144,0.28)",
-        1.0,
-        0.48
-      );
+      drawRing(ctx, cx, cy, size * 1.12, size * 0.30, now * 0.00022, "rgba(124,190,255,0.46)", 1.1, 0.62);
+      drawRing(ctx, cx, cy, size * 0.80, size * 0.53, now * 0.00022 + 0.78, "rgba(255,214,144,0.28)", 1.0, 0.48);
 
       const camera = projector.getCameraState?.() ?? { azimuth: 0, latitudeTilt: 0 };
       const worldYaw = -(camera.azimuth || 0);
@@ -259,7 +178,7 @@ export function createCompassRenderer() {
       const projected = projectCompass(model, worldYaw, worldPitch, size * 0.90);
 
       drawDiamondBody(ctx, cx, cy, projected);
-      drawCore(ctx, cx, cy, size * 0.123 * pulse);
+      drawCore(ctx, cx, cy, size * 0.123 * (1 + (Math.sin(now * 0.0032) * 0.06)));
       drawLabels(ctx, cx, cy, size, worldYaw);
     }
   };

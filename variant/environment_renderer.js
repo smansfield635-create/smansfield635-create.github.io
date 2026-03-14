@@ -79,17 +79,6 @@ function hashNoise(a, b, c = 0) {
   return v - Math.floor(v);
 }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function sampleWaveHeight(u, v, tick) {
-  const w1 = Math.sin((u * 14.0) + (tick * 0.0016));
-  const w2 = Math.cos((v * 18.0) - (tick * 0.0013));
-  const w3 = Math.sin(((u + v) * 11.0) + (tick * 0.0021));
-  return (w1 * 0.42) + (w2 * 0.33) + (w3 * 0.25);
-}
-
 function createMoonCraterField(seed, count, minSpacing, largeBias = 0.18) {
   const out = [];
   let attempts = 0;
@@ -354,47 +343,6 @@ function drawMoons(ctx, width, height, tick, body) {
   return { moonNorth, moonSouth };
 }
 
-function drawAtmosphericChargeRibbon(ctx, width, tick, yBase, amp, alpha, phaseShift) {
-  ctx.beginPath();
-  for (let x = 0; x <= width; x += 10) {
-    const waveA = Math.sin((x * 0.009) + (tick * 0.012) + phaseShift) * amp;
-    const waveB = Math.cos((x * 0.004) - (tick * 0.008) + (phaseShift * 0.7)) * (amp * 0.34);
-    const y = yBase + waveA + waveB;
-    if (x === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-
-  const gradient = ctx.createLinearGradient(0, yBase - (amp * 2), width, yBase + (amp * 2));
-  gradient.addColorStop(0, `rgba(120,180,255,${alpha * 0.55})`);
-  gradient.addColorStop(0.5, `rgba(200,240,255,${alpha})`);
-  gradient.addColorStop(1, `rgba(150,210,255,${alpha * 0.52})`);
-
-  ctx.strokeStyle = gradient;
-  ctx.lineWidth = 1.1;
-  ctx.stroke();
-}
-
-function drawAtmosphericCharge(ctx, width, height, tick, body) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(body.centerX, body.centerY, body.radius * 1.08, Math.PI, Math.PI * 2);
-  ctx.arc(body.centerX, body.centerY, body.radius * 0.98, Math.PI * 2, Math.PI, true);
-  ctx.closePath();
-  ctx.clip();
-
-  const topBand = body.horizonY - (body.radius * 0.18);
-  const ribbons = [
-    { y: topBand + 18, amp: 5.0, alpha: 0.07, shift: 0.4 },
-    { y: topBand + 40, amp: 6.0, alpha: 0.05, shift: 1.6 }
-  ];
-
-  for (const ribbon of ribbons) {
-    drawAtmosphericChargeRibbon(ctx, width, tick, ribbon.y, ribbon.amp, ribbon.alpha, ribbon.shift);
-  }
-
-  ctx.restore();
-}
-
 function drawOceanBase(ctx, body) {
   const left = body.centerX - body.radius;
   const top = body.horizonY;
@@ -559,23 +507,6 @@ function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
   ctx.fillRect(body.centerX - body.radius, top, body.radius * 2, height);
 }
 
-function drawNebulaBand(ctx, width, height, body) {
-  const band = ctx.createRadialGradient(
-    body.centerX,
-    body.horizonY + (body.radius * 0.10),
-    body.radius * 0.18,
-    body.centerX,
-    body.horizonY + (body.radius * 0.10),
-    body.radius * 1.16
-  );
-  band.addColorStop(0, "rgba(130,162,255,0.00)");
-  band.addColorStop(0.48, "rgba(122,154,236,0.04)");
-  band.addColorStop(0.72, "rgba(102,130,210,0.06)");
-  band.addColorStop(1, "rgba(60,78,140,0.00)");
-  ctx.fillStyle = band;
-  ctx.fillRect(0, 0, width, height);
-}
-
 export function createEnvironmentRenderer() {
   return {
     draw(ctx, snapshot, projector) {
@@ -583,52 +514,13 @@ export function createEnvironmentRenderer() {
       const height = ctx.canvas.height;
       const tick = snapshot.tick ?? 0;
       const body = projector.getBody();
-      const environment = snapshot.kernel.environment ?? {};
-      const mistAmount = typeof environment.mistAmount === "number" ? environment.mistAmount : 0.22;
 
-      const sky = ctx.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, "#02050d");
-      sky.addColorStop(0.16, "#07142c");
-      sky.addColorStop(0.42, "#184579");
-      sky.addColorStop(0.72, "#3a8bd0");
-      sky.addColorStop(1, "#cbf0ff");
-      ctx.fillStyle = sky;
+      ctx.fillStyle = "#02050d";
       ctx.fillRect(0, 0, width, height);
 
-      drawNebulaBand(ctx, width, height, body);
       drawStars(ctx, width, height, tick);
       drawShootingStar(ctx, width, height, tick);
       const moons = drawMoons(ctx, width, height, tick, body);
-      drawAtmosphericCharge(ctx, width, height, tick, body);
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(body.centerX, body.centerY, body.radius * 1.07, Math.PI, Math.PI * 2);
-      ctx.arc(body.centerX, body.centerY, body.radius * 0.985, Math.PI * 2, Math.PI, true);
-      ctx.closePath();
-      ctx.clip();
-
-      const atmosphereShell = ctx.createRadialGradient(
-        body.centerX,
-        body.centerY,
-        body.radius * 0.97,
-        body.centerX,
-        body.centerY,
-        body.radius * 1.08
-      );
-      atmosphereShell.addColorStop(0, "rgba(255,255,255,0)");
-      atmosphereShell.addColorStop(0.54, `rgba(132,218,255,${0.16 + (mistAmount * 0.04)})`);
-      atmosphereShell.addColorStop(0.80, `rgba(94,176,255,${0.18 + (mistAmount * 0.04)})`);
-      atmosphereShell.addColorStop(1, "rgba(94,176,255,0)");
-      ctx.fillStyle = atmosphereShell;
-      ctx.fillRect(
-        body.centerX - (body.radius * 1.20),
-        body.horizonY - (body.radius * 0.26),
-        body.radius * 2.40,
-        body.radius * 0.66
-      );
-
-      ctx.restore();
 
       ctx.save();
       ctx.beginPath();
@@ -660,19 +552,6 @@ export function createEnvironmentRenderer() {
       drawSpecularSweep(ctx, body, tick);
 
       ctx.restore();
-
-      const limbGlow = ctx.createLinearGradient(0, body.horizonY - 8, 0, body.horizonY + (body.radius * 0.18));
-      limbGlow.addColorStop(0, "rgba(255,255,255,0)");
-      limbGlow.addColorStop(0.30, "rgba(250,255,255,0.12)");
-      limbGlow.addColorStop(0.60, "rgba(168,242,255,0.08)");
-      limbGlow.addColorStop(1, "rgba(168,242,255,0)");
-      ctx.fillStyle = limbGlow;
-      ctx.fillRect(
-        body.centerX - (body.radius * 1.20),
-        body.horizonY - 8,
-        body.radius * 2.40,
-        body.radius * 0.20
-      );
     }
   };
 }

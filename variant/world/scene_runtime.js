@@ -2,6 +2,13 @@ import { createWorldRuntime } from "../../world/runtime/world_runtime.js";
 import { createPlanetSurfaceProjector } from "../planet_surface_projector.js";
 import { createEnvironmentRenderer } from "../environment_renderer.js";
 import { createCompassRenderer } from "../compass_renderer.js";
+import { createViewStateStore, VIEW_STATE } from "../runtime/view_state.js";
+import { createRenderRouter } from "../runtime/render_router.js";
+import { createInteractionRouter } from "../runtime/interaction_router.js";
+import { createCosmicEngine } from "../engines/cosmic_engine.js";
+import { createPlanetEngine } from "../engines/planet_engine.js";
+import { createRegionEngine } from "../engines/region_engine.js";
+import { createHarborEngine } from "../engines/harbor_engine.js";
 
 const DRAG_THRESHOLD_SQ = 9;
 
@@ -14,11 +21,16 @@ function setPlaceholderOutputs(outputs) {
   outputs.destination.textContent = "—";
 }
 
-function writeOutputs(outputs, snapshot) {
+function writeOutputs(outputs, snapshot, viewState) {
   outputs.region.textContent = snapshot.readout.region;
   outputs.selectedName.textContent = snapshot.readout.selectedName;
-  outputs.selectedType.textContent = snapshot.readout.selectedType;
-  outputs.selectionHint.textContent = snapshot.readout.selectionHint;
+  outputs.selectedType.textContent = viewState;
+  outputs.selectionHint.textContent =
+    viewState === VIEW_STATE.COSMIC_LAYER
+      ? "Tap globe to descend."
+      : viewState === VIEW_STATE.PLANET_LAYER
+        ? "Tap background to return."
+        : "Layer active.";
   setPlaceholderOutputs(outputs);
 }
 
@@ -30,12 +42,6 @@ function getCanvasPixelPoint(canvas, clientX, clientY) {
   };
 }
 
-function isPointInsideGlobe(canvasX, canvasY, body) {
-  const dx = canvasX - body.centerX;
-  const dy = canvasY - body.centerY;
-  return ((dx * dx) + (dy * dy)) <= (body.radius * body.radius);
-}
-
 export async function createSceneRuntime({
   canvas,
   context,
@@ -44,8 +50,21 @@ export async function createSceneRuntime({
 }) {
   const worldRuntime = await createWorldRuntime();
   const projector = createPlanetSurfaceProjector({ canvas, getViewport });
-  const environmentRenderer = createEnvironmentRenderer();
+  const viewStateStore = createViewStateStore(VIEW_STATE.COSMIC_LAYER);
+
+  const renderRouter = createRenderRouter({
+    cosmicEngine: createCosmicEngine(),
+    planetEngine: createPlanetEngine(),
+    regionEngine: createRegionEngine(),
+    harborEngine: createHarborEngine()
+  });
+
+  const environmentRenderer = createEnvironmentRenderer({ renderRouter });
   const compassRenderer = createCompassRenderer();
+  const interactionRouter = createInteractionRouter({
+    viewStateStore,
+    projector
+  });
 
   let latestSnapshot = worldRuntime.getSnapshot();
   let latestNow = 0;
@@ -62,7 +81,8 @@ export async function createSceneRuntime({
     lastMoveDy: 0,
     lastMoveDt: 16.67,
     movedSq: 0,
-    didDrag: false
+    didDrag: false,
+    admitted: false
   };
 
   function draw(snapshot) {
@@ -72,20 +92,22 @@ export async function createSceneRuntime({
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    environmentRenderer.draw(context, snapshot, projector);
-    compassRenderer.draw(context, projector, latestNow);
+    environmentRenderer.draw(
+      context,
+      snapshot,
+      projector,
+      viewStateStore.get()
+    );
+
+    if (viewStateStore.get() === VIEW_STATE.COSMIC_LAYER || viewStateStore.get() === VIEW_STATE.PLANET_LAYER) {
+      compassRenderer.draw(context, projector, latestNow);
+    }
   }
 
-  function refreshSelectionOnly() {
+  function refresh() {
     latestSnapshot = worldRuntime.getSnapshot();
-    writeOutputs(outputs, latestSnapshot);
+    writeOutputs(outputs, latestSnapshot, viewStateStore.get());
     draw(latestSnapshot);
-  }
-
-  function pickSelection(canvasX, canvasY) {
-    const worldPoint = projector.unproject(canvasX, canvasY);
-    worldRuntime.selectAt(worldPoint.x, worldPoint.y);
-    refreshSelectionOnly();
   }
 
   function resetPointerState() {
@@ -93,17 +115,14 @@ export async function createSceneRuntime({
     pointer.id = null;
     pointer.movedSq = 0;
     pointer.didDrag = false;
+    pointer.admitted = false;
     pointer.lastMoveDx = 0;
     pointer.lastMoveDy = 0;
     pointer.lastMoveDt = 16.67;
   }
 
   function beginDrag(id, canvasX, canvasY, nowMs) {
-    const body = projector.getBody();
-    if (!isPointInsideGlobe(canvasX, canvasY, body)) {
-      resetPointerState();
-      return false;
-    }
+    const admitted = interactionRouter.canRotate(canvasX, canvasY);
 
     pointer.active = true;
     pointer.id = id;
@@ -117,7 +136,7 @@ export async function createSceneRuntime({
     pointer.lastMoveDt = 16.67;
     pointer.movedSq = 0;
     pointer.didDrag = false;
-    return true;
+    pointer.admitted = admitted;
   }
 
   function moveDrag(canvasX, canvasY, nowMs) {
@@ -137,7 +156,7 @@ export async function createSceneRuntime({
     pointer.lastMoveDy = dy;
     pointer.lastMoveDt = dt;
 
-    if (pointer.didDrag) {
+    if (pointer.admitted && pointer.didDrag) {
       projector.drag(dx, dy);
     }
 
@@ -149,19 +168,23 @@ export async function createSceneRuntime({
   function endDrag(canvasX, canvasY) {
     if (!pointer.active) return;
 
-    const shouldSelect = !pointer.didDrag;
+    const shouldTreatAsTap = !pointer.didDrag;
     const seedDx = pointer.lastMoveDx;
     const seedDy = pointer.lastMoveDy;
     const seedDt = pointer.lastMoveDt;
+    const admitted = pointer.admitted;
 
     resetPointerState();
 
-    if (shouldSelect) {
-      pickSelection(canvasX, canvasY);
+    if (shouldTreatAsTap) {
+      interactionRouter.handleTap(canvasX, canvasY);
+      refresh();
       return;
     }
 
-    projector.seedMomentum(seedDx, seedDy, seedDt);
+    if (admitted) {
+      projector.seedMomentum(seedDx, seedDy, seedDt);
+    }
   }
 
   canvas.style.touchAction = "none";
@@ -169,8 +192,7 @@ export async function createSceneRuntime({
   if (window.PointerEvent) {
     canvas.addEventListener("pointerdown", (event) => {
       const p = getCanvasPixelPoint(canvas, event.clientX, event.clientY);
-      const admitted = beginDrag(event.pointerId, p.x, p.y, event.timeStamp || performance.now());
-      if (!admitted) return;
+      beginDrag(event.pointerId, p.x, p.y, event.timeStamp || performance.now());
       if (canvas.setPointerCapture) {
         canvas.setPointerCapture(event.pointerId);
       }
@@ -250,7 +272,7 @@ export async function createSceneRuntime({
 
   return {
     start() {
-      refreshSelectionOnly();
+      refresh();
     },
     stop() {},
     resize() {
@@ -261,7 +283,7 @@ export async function createSceneRuntime({
       projector.step(deltaMs);
       worldRuntime.step(now, deltaMs);
       latestSnapshot = worldRuntime.getSnapshot();
-      writeOutputs(outputs, latestSnapshot);
+      writeOutputs(outputs, latestSnapshot, viewStateStore.get());
       draw(latestSnapshot);
     }
   };

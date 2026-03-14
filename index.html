@@ -48,10 +48,10 @@
     }
 
     /* INDEX CHOKE-POINT PASS
-       more downward push
-       more scale
-       less visible sky
-       compass comes down with scene */
+       - no badge
+       - much stronger framing shift
+       - much less visible sky
+       - compass stays where it is relative to scene */
     #scene{
       position:absolute;
       left:0;
@@ -61,7 +61,7 @@
       display:block;
       z-index:1;
       touch-action:none;
-      transform:translateY(82px) scale(1.17);
+      transform:translateY(180px) scale(1.28);
       transform-origin:center top;
     }
 
@@ -73,7 +73,7 @@
       z-index:3;
       display:flex;
       align-items:flex-start;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap:10px;
       pointer-events:none;
     }
@@ -180,7 +180,7 @@
 
     @media (max-width: 920px){
       #scene{
-        transform:translateY(72px) scale(1.15);
+        transform:translateY(170px) scale(1.25);
       }
 
       .panel-stack{
@@ -205,7 +205,6 @@
           <span>Harbor Core Interactive Foundation</span>
         </div>
       </div>
-      <div class="pill">Closed Pilot</div>
     </div>
 
     <div class="panel-stack">

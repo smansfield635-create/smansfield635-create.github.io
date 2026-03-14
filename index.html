@@ -1,262 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge — Harbor Core Foundation</title>
-  <meta name="description" content="Diamond Gate Bridge Harbor Core interactive foundation runtime.">
-  <meta name="theme-color" content="#0b1220">
+  <title>Nine Summits Stage 1 Runtime</title>
   <style>
     :root{
-      --bg-0:#05070b;
-      --bg-1:#10192a;
-      --bg-2:#1d2140;
-      --panel:rgba(10,16,26,.74);
+      color-scheme:dark;
+      --bg:#071018;
+      --panel:rgba(7,16,24,.82);
       --line:rgba(255,255,255,.12);
-      --text:#edf4ff;
-      --muted:rgba(237,244,255,.74);
-      --gold:rgba(255,226,176,.96);
-      --safe-top:max(12px,env(safe-area-inset-top));
-      --safe-right:max(12px,env(safe-area-inset-right));
-      --safe-bottom:max(12px,env(safe-area-inset-bottom));
-      --safe-left:max(12px,env(safe-area-inset-left));
-      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      --text:#dce8f4;
+      --muted:#9db2c7;
     }
     *{box-sizing:border-box}
     html,body{
       margin:0;
-      padding:0;
       width:100%;
       height:100%;
       overflow:hidden;
-      background:var(--bg-0);
+      background:var(--bg);
       color:var(--text);
-      font-family:var(--font);
+      font-family:Arial,Helvetica,sans-serif;
     }
-    body{
-      overscroll-behavior:none;
-      touch-action:none;
-    }
-    .app{
-      position:relative;
-      width:100vw;
-      height:100dvh;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255,140,120,.14), transparent 18%),
-        radial-gradient(circle at 24% 20%, rgba(150,115,215,.16), transparent 24%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
-    }
-    #scene{
+    body{position:relative}
+    #world-canvas{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       display:block;
-      z-index:1;
-      touch-action:none;
+      background:#071018;
     }
-    .topbar{
+    #runtime-status{
       position:absolute;
-      top:var(--safe-top);
-      left:var(--safe-left);
-      right:var(--safe-right);
-      z-index:3;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      pointer-events:none;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      min-height:38px;
-      padding:10px 14px;
-      border-radius:999px;
+      top:12px;
+      left:12px;
+      z-index:10;
+      min-width:220px;
+      padding:10px 12px;
       border:1px solid var(--line);
+      border-radius:10px;
       background:var(--panel);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:0 12px 28px rgba(0,0,0,.28);
-      pointer-events:auto;
-    }
-    .brand-mark{
-      width:28px;
-      height:28px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.20);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.18) 36%, transparent 37%),
-        linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
-      flex:0 0 auto;
-    }
-    .brand-copy{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-    }
-    .brand-copy strong{
-      font-size:13px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .brand-copy span{
-      font-size:11px;
-      color:var(--muted);
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-    .panel-stack{
-      position:absolute;
-      right:var(--safe-right);
-      top:calc(var(--safe-top) + 56px);
-      z-index:3;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      width:min(340px, calc(100vw - 24px));
-      pointer-events:none;
-    }
-    .panel{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:var(--panel);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:0 12px 28px rgba(0,0,0,.28);
-      pointer-events:none;
-    }
-    .panel h2{
-      margin:0 0 10px;
-      font-size:14px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
-    .kv{
-      display:grid;
-      grid-template-columns:112px 1fr;
-      gap:8px 10px;
-      font-size:12px;
-      line-height:1.25;
-      margin:0;
-    }
-    .kv dt{color:var(--muted)}
-    .kv dd{margin:0;color:var(--text);word-break:break-word}
-    .panel-copy{
-      margin:0;
       color:var(--muted);
       font-size:12px;
-      line-height:1.35;
-    }
-    .footer-hint{
-      position:absolute;
-      left:50%;
-      bottom:var(--safe-bottom);
-      transform:translateX(-50%);
-      z-index:3;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(9,14,22,.56);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
+      line-height:1.45;
+      white-space:pre-line;
       pointer-events:none;
-    }
-    @media (max-width: 920px){
-      .panel-stack{
-        top:auto;
-        left:var(--safe-left);
-        right:var(--safe-right);
-        bottom:calc(var(--safe-bottom) + 48px);
-        width:auto;
-      }
-      .kv{
-        grid-template-columns:88px 1fr;
-      }
-      .footer-hint{
-        font-size:11px;
-        max-width:calc(100vw - 24px);
-        text-align:center;
-        white-space:normal;
-      }
+      user-select:none;
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <canvas id="scene" aria-label="Harbor Core Interactive Foundation Scene"></canvas>
-
-    <div class="topbar">
-      <div class="pill">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <div class="brand-copy">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Harbor Core Interactive Foundation</span>
-        </div>
-      </div>
-      <div class="pill">Closed Pilot</div>
-    </div>
-
-    <div class="panel-stack">
-      <section class="panel" aria-live="polite">
-        <h2>Runtime State</h2>
-        <dl class="kv">
-          <dt>Region</dt><dd id="regionOut">—</dd>
-          <dt>Cell</dt><dd id="cellOut">—</dd>
-          <dt>Sector</dt><dd id="sectorOut">—</dd>
-          <dt>Band</dt><dd id="bandOut">—</dd>
-          <dt>Encoding</dt><dd id="encodingOut">—</dd>
-          <dt>Byte</dt><dd id="byteOut">—</dd>
-        </dl>
-      </section>
-
-      <section class="panel" aria-live="polite">
-        <h2>Selection</h2>
-        <dl class="kv">
-          <dt>Selected</dt><dd id="selectedNameOut">—</dd>
-          <dt>Type</dt><dd id="selectedTypeOut">—</dd>
-          <dt>Destination</dt><dd id="destinationOut">—</dd>
-        </dl>
-        <p class="panel-copy" id="selectionHintOut">Tap a region or route to inspect. Tap a region to move there.</p>
-      </section>
-    </div>
-
-    <div class="footer-hint">Tap a district to inspect · tap a district to move · WASD / Arrow Keys also work</div>
-  </div>
-
-  <script type="module">
-    import { createScene } from "./variant/scene.js";
-
-    const outputs = {
-      region: document.getElementById("regionOut"),
-      cell: document.getElementById("cellOut"),
-      sector: document.getElementById("sectorOut"),
-      band: document.getElementById("bandOut"),
-      encoding: document.getElementById("encodingOut"),
-      byte: document.getElementById("byteOut"),
-      selectedName: document.getElementById("selectedNameOut"),
-      selectedType: document.getElementById("selectedTypeOut"),
-      destination: document.getElementById("destinationOut"),
-      selectionHint: document.getElementById("selectionHintOut")
-    };
-
-    const canvas = document.getElementById("scene");
-
-    createScene(canvas, outputs)
-      .then((scene) => scene.start())
-      .catch((error) => {
-        console.error(error);
-        alert(`Interactive foundation failed to boot: ${error.message}`);
-      });
-  </script>
+  <canvas id="world-canvas" aria-label="Nine Summits Stage 1 simulation canvas"></canvas>
+  <pre id="runtime-status">boot: pending
+payload: pending
+render: pending
+coherence: pending</pre>
+  <script type="module" src="./variant/scene.js"></script>
 </body>
 </html>

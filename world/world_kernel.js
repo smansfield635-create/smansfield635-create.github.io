@@ -35,69 +35,45 @@ function shallowFreeze(v){
 }
 
 async function readJsonSafe(url,label){
-
   try{
-
     const r=await fetch(url);
-
     if(!r.ok){
       console.warn("Kernel data missing:",label);
       return null;
     }
-
     return await r.json();
-
   }catch(e){
-
     console.warn("Kernel load failed:",label,e);
     return null;
-
   }
-
 }
 
 function indexBy(rows,key){
-
   if(!rows) return new Map();
-
   const map=new Map();
-
   for(const row of rows){
-
     const id=row?.[key];
-
-    if(typeof id!=="string" || id.length===0){
-      continue;
-    }
-
+    if(typeof id!=="string" || id.length===0) continue;
     map.set(id,shallowFreeze({...row}));
-
   }
-
   return shallowFreeze(map);
-
 }
 
 function nearestCell(cells,x,y){
-
   let best=null;
   let bestD=Infinity;
 
   for(const c of cells.values()){
-
     const dx=c.centerPoint[0]-x;
     const dy=c.centerPoint[1]-y;
     const d=dx*dx+dy*dy;
-
     if(d<bestD){
       bestD=d;
       best=c;
     }
-
   }
 
   return best;
-
 }
 
 export async function loadWorldKernel(){
@@ -110,7 +86,9 @@ export async function loadWorldKernel(){
     waters,
     environment,
     diamondGrid,
-    stateEncodings
+    stateEncodings,
+    harborNavigationGraph,
+    harborInstances
   ] = await Promise.all([
     readJsonSafe(DATA_FILES.regions,"regions"),
     readJsonSafe(DATA_FILES.graphs,"graphs"),
@@ -119,7 +97,9 @@ export async function loadWorldKernel(){
     readJsonSafe(DATA_FILES.waters,"waters"),
     readJsonSafe(DATA_FILES.environment,"environment"),
     readJsonSafe(DATA_FILES.diamondGrid,"diamondGrid"),
-    readJsonSafe(DATA_FILES.stateEncodings,"stateEncodings")
+    readJsonSafe(DATA_FILES.stateEncodings,"stateEncodings"),
+    readJsonSafe(DATA_FILES.harborNavigationGraph,"harborNavigationGraph"),
+    readJsonSafe(DATA_FILES.harborInstances,"harborInstances")
   ]);
 
   if(!regions) throw new Error("Critical kernel file missing: regions");
@@ -130,6 +110,21 @@ export async function loadWorldKernel(){
   const watersById=indexBy(waters?.waterRows,"waterId");
   const encodingsById=indexBy(stateEncodings?.encodingRows,"encodingId");
   const diamondCellsById=indexBy(diamondGrid?.diamondCells,"diamondCellId");
+
+  const harborNavigationNodes=indexBy(
+    harborNavigationGraph?.navigationNodes ?? [],
+    "navNodeId"
+  );
+
+  const harborNavigationEdges=indexBy(
+    harborNavigationGraph?.navigationEdges ?? [],
+    "navEdgeId"
+  );
+
+  const harborInstancesById=indexBy(
+    harborInstances?.harborInstances ?? [],
+    "harborInstanceId"
+  );
 
   const kernel={
 
@@ -145,8 +140,14 @@ export async function loadWorldKernel(){
     encodingsById,
     diamondCellsById,
 
-    helpers:null
+    harborNavigationGraph:{
+      navigationNodesById:harborNavigationNodes,
+      navigationEdgesById:harborNavigationEdges
+    },
 
+    harborInstancesById,
+
+    helpers:null
   };
 
   kernel.helpers={
@@ -159,32 +160,79 @@ export async function loadWorldKernel(){
       return encodingsById.get(id) ?? null;
     },
 
+    getHarborInstances(){
+      return [...harborInstancesById.values()];
+    },
+
+    getHarborInstance(id){
+      return harborInstancesById.get(id) ?? null;
+    },
+
+    getHarborInstanceByRegion(regionId){
+      for(const inst of harborInstancesById.values()){
+        if(inst.marketLinkRegionId===regionId) return inst;
+      }
+      return null;
+    },
+
+    getHarborDockTransfers(harborInstanceId){
+      const inst=harborInstancesById.get(harborInstanceId);
+      return inst?.transferRules?.dockTransfers ?? [];
+    },
+
+    getHarborNavNode(navNodeId){
+      return harborNavigationNodes.get(navNodeId) ?? null;
+    },
+
+    getHarborNavNeighbors(navNodeId){
+      const edges=[...harborNavigationEdges.values()];
+      const neighbors=[];
+      for(const e of edges){
+        if(e.fromNavNodeId===navNodeId){
+          neighbors.push(harborNavigationNodes.get(e.toNavNodeId));
+        }
+        if(e.toNavNodeId===navNodeId){
+          neighbors.push(harborNavigationNodes.get(e.fromNavNodeId));
+        }
+      }
+      return neighbors.filter(Boolean);
+    },
+
     projectWorldPositionToCell({x,y,previousCellId=null}){
 
       const cell=nearestCell(diamondCellsById,x,y);
 
+      if(!cell){
+        return shallowFreeze({
+          regionId:null,
+          pathId:null,
+          cellId:null,
+          bandIndex:0,
+          sector:0,
+          stateByte:0,
+          stateEncodingId:null,
+          previousCellId
+        });
+      }
+
       const enc=encodingsById.get(cell.stateEncodingId);
 
       return shallowFreeze({
-
         regionId:cell.regionId,
         pathId:cell.pathId,
         cellId:cell.diamondCellId,
         bandIndex:cell.bandIndex,
         sector:cell.sector,
-        stateByte:enc.byte,
-        stateEncodingId:cell.stateEncodingId,
+        stateByte:enc?.byte ?? 0,
+        stateEncodingId:cell.stateEncodingId ?? null,
         previousCellId
-
       });
 
     },
 
     decodeStateByte(byte){
-
       validateByte(byte);
       return byteToStateVector(byte);
-
     },
 
     assertValidWorld(){
@@ -201,5 +249,4 @@ export async function loadWorldKernel(){
   }
 
   return kernel;
-
 }

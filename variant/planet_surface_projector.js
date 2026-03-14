@@ -160,12 +160,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
     state.angularVelocityYaw *= decay;
     state.angularVelocityPitch *= decay;
 
-    if (Math.abs(state.angularVelocityYaw) < 0.00001) {
-      state.angularVelocityYaw = 0;
-    }
-    if (Math.abs(state.angularVelocityPitch) < 0.00001) {
-      state.angularVelocityPitch = 0;
-    }
+    if (Math.abs(state.angularVelocityYaw) < 0.00001) state.angularVelocityYaw = 0;
+    if (Math.abs(state.angularVelocityPitch) < 0.00001) state.angularVelocityPitch = 0;
 
     clampPitch();
   }

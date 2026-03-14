@@ -36,6 +36,17 @@ export async function createSceneRuntime({
 
   let latestSnapshot = worldRuntime.getSnapshot();
 
+  const pointerState = {
+    active: false,
+    pointerId: null,
+    startClientX: 0,
+    startClientY: 0,
+    lastClientX: 0,
+    lastClientY: 0,
+    dragDistanceSquared: 0,
+    didDrag: false
+  };
+
   function draw(snapshot) {
     const viewport = getViewport();
     projector.update(viewport);
@@ -47,32 +58,96 @@ export async function createSceneRuntime({
     groundRenderer.draw(context, snapshot, projector);
   }
 
+  function refreshOutputsAndDraw() {
+    latestSnapshot = worldRuntime.getSnapshot();
+    writeOutputs(outputs, latestSnapshot);
+    draw(latestSnapshot);
+  }
+
   function pickSelection(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
     const px = (clientX - rect.left) * (canvas.width / rect.width);
     const py = (clientY - rect.top) * (canvas.height / rect.height);
     const worldPoint = projector.unproject(px, py);
     worldRuntime.selectAt(worldPoint.x, worldPoint.y);
-    latestSnapshot = worldRuntime.getSnapshot();
-    writeOutputs(outputs, latestSnapshot);
-    draw(latestSnapshot);
+    refreshOutputsAndDraw();
   }
 
-  canvas.addEventListener("click", (event) => {
-    pickSelection(event.clientX, event.clientY);
+  function beginPointer(pointerId, clientX, clientY) {
+    pointerState.active = true;
+    pointerState.pointerId = pointerId;
+    pointerState.startClientX = clientX;
+    pointerState.startClientY = clientY;
+    pointerState.lastClientX = clientX;
+    pointerState.lastClientY = clientY;
+    pointerState.dragDistanceSquared = 0;
+    pointerState.didDrag = false;
+  }
+
+  function movePointer(clientX, clientY) {
+    const dx = clientX - pointerState.lastClientX;
+    const dy = clientY - pointerState.lastClientY;
+
+    const totalDx = clientX - pointerState.startClientX;
+    const totalDy = clientY - pointerState.startClientY;
+    pointerState.dragDistanceSquared = (totalDx * totalDx) + (totalDy * totalDy);
+
+    if (pointerState.dragDistanceSquared > 25) {
+      pointerState.didDrag = true;
+    }
+
+    if (pointerState.didDrag) {
+      projector.dragRotate(dx, dy);
+      draw(latestSnapshot);
+    }
+
+    pointerState.lastClientX = clientX;
+    pointerState.lastClientY = clientY;
+  }
+
+  function endPointer(clientX, clientY) {
+    const wasDrag = pointerState.didDrag;
+
+    pointerState.active = false;
+    pointerState.pointerId = null;
+
+    if (!wasDrag) {
+      pickSelection(clientX, clientY);
+    } else {
+      draw(latestSnapshot);
+    }
+  }
+
+  canvas.addEventListener("pointerdown", (event) => {
+    if (pointerState.active) return;
+    beginPointer(event.pointerId, event.clientX, event.clientY);
+    canvas.setPointerCapture(event.pointerId);
   });
 
-  canvas.addEventListener("touchend", (event) => {
-    const touch = event.changedTouches?.[0];
-    if (!touch) return;
-    pickSelection(touch.clientX, touch.clientY);
-  }, { passive: true });
+  canvas.addEventListener("pointermove", (event) => {
+    if (!pointerState.active) return;
+    if (event.pointerId !== pointerState.pointerId) return;
+    movePointer(event.clientX, event.clientY);
+  });
+
+  canvas.addEventListener("pointerup", (event) => {
+    if (!pointerState.active) return;
+    if (event.pointerId !== pointerState.pointerId) return;
+    endPointer(event.clientX, event.clientY);
+    canvas.releasePointerCapture(event.pointerId);
+  });
+
+  canvas.addEventListener("pointercancel", (event) => {
+    if (!pointerState.active) return;
+    if (event.pointerId !== pointerState.pointerId) return;
+    pointerState.active = false;
+    pointerState.pointerId = null;
+    draw(latestSnapshot);
+  });
 
   return {
     start() {
-      latestSnapshot = worldRuntime.getSnapshot();
-      writeOutputs(outputs, latestSnapshot);
-      draw(latestSnapshot);
+      refreshOutputsAndDraw();
     },
     stop() {},
     resize() {

@@ -18,7 +18,7 @@ export function createPlanetSurfaceProjector({ canvas }) {
     canvas.height = height;
 
     state.centerX = width * 0.5;
-    state.centerY = height * 0.56;
+    state.centerY = height * 0.5;
 
     const minAxis = Math.min(width, height);
     state.pixelRadius = minAxis * 0.34;
@@ -37,13 +37,13 @@ export function createPlanetSurfaceProjector({ canvas }) {
     const cosP = Math.cos(state.pitch);
     const sinP = Math.sin(state.pitch);
 
-    const rx = (cosY * x) + (sinY * z);
-    const rz = (-sinY * x) + (cosY * z);
+    const x1 = (x * cosY) + (z * sinY);
+    const z1 = (-x * sinY) + (z * cosY);
 
-    const ry = (cosP * y) - (sinP * rz);
-    const rz2 = (sinP * y) + (cosP * rz);
+    const y2 = (y * cosP) - (z1 * sinP);
+    const z2 = (y * sinP) + (z1 * cosP);
 
-    return { x: rx, y: ry, z: rz2 };
+    return { x: x1, y: y2, z: z2 };
   }
 
   function planetPointToUnitSphere(x, y) {
@@ -154,9 +154,6 @@ export function createPlanetSurfaceProjector({ canvas }) {
     },
     get radius() {
       return state.pixelRadius;
-    },
-    get horizonY() {
-      return state.centerY;
     }
   };
 

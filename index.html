@@ -9,20 +9,20 @@
   <style>
     :root{
       --bg-0:#05070b;
-      --bg-1:#10192a;
-      --bg-2:#1d2140;
-      --panel:rgba(10,16,26,.66);
+      --panel:rgba(10,16,26,.50);
       --line:rgba(255,255,255,.12);
       --text:#edf4ff;
       --muted:rgba(237,244,255,.74);
       --gold:rgba(255,226,176,.96);
-      --safe-top:max(12px,env(safe-area-inset-top));
-      --safe-right:max(12px,env(safe-area-inset-right));
-      --safe-bottom:max(12px,env(safe-area-inset-bottom));
-      --safe-left:max(12px,env(safe-area-inset-left));
+      --safe-top:max(10px,env(safe-area-inset-top));
+      --safe-right:max(10px,env(safe-area-inset-right));
+      --safe-bottom:max(10px,env(safe-area-inset-bottom));
+      --safe-left:max(10px,env(safe-area-inset-left));
       --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
     }
+
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       padding:0;
@@ -33,26 +33,38 @@
       color:var(--text);
       font-family:var(--font);
     }
+
     body{
       overscroll-behavior:none;
       touch-action:none;
     }
+
     .app{
       position:relative;
       width:100vw;
       height:100dvh;
       overflow:hidden;
-      background:linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+      background:#05070b;
     }
+
+    /* INDEX CHOKE-POINT RESET
+       - scale up the scene slightly
+       - push the rendered scene downward
+       - this reduces dead sky and lowers the canvas-rendered compass
+       - no runtime/projector changes */
     #scene{
       position:absolute;
-      inset:0;
+      left:0;
+      top:0;
       width:100%;
       height:100%;
       display:block;
       z-index:1;
       touch-action:none;
+      transform:translateY(38px) scale(1.075);
+      transform-origin:center top;
     }
+
     .topbar{
       position:absolute;
       top:var(--safe-top);
@@ -62,26 +74,28 @@
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       pointer-events:none;
     }
+
     .pill{
       display:inline-flex;
       align-items:center;
-      gap:10px;
-      min-height:38px;
-      padding:10px 14px;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--line);
       background:var(--panel);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:0 12px 28px rgba(0,0,0,.28);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      box-shadow:0 8px 20px rgba(0,0,0,.20);
       pointer-events:auto;
     }
+
     .brand-mark{
-      width:28px;
-      height:28px;
+      width:24px;
+      height:24px;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.20);
       background:
@@ -89,100 +103,92 @@
         linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
       flex:0 0 auto;
     }
+
     .brand-copy{
       display:flex;
       flex-direction:column;
-      line-height:1.05;
+      line-height:1.03;
     }
+
     .brand-copy strong{
-      font-size:13px;
+      font-size:12px;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
+
     .brand-copy span{
-      font-size:11px;
+      font-size:10px;
       color:var(--muted);
-      letter-spacing:.06em;
+      letter-spacing:.05em;
       text-transform:uppercase;
     }
+
     .panel-stack{
       position:absolute;
       right:var(--safe-right);
-      bottom:calc(var(--safe-bottom) + 54px);
+      bottom:var(--safe-bottom);
       z-index:3;
       display:flex;
       flex-direction:column;
-      gap:6px;
-      width:136px;
+      gap:4px;
+      width:98px;
       pointer-events:none;
     }
+
     .panel{
-      padding:5px 7px;
-      border-radius:11px;
+      padding:4px 5px;
+      border-radius:9px;
       border:1px solid var(--line);
-      background:rgba(10,16,26,.52);
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      box-shadow:0 8px 18px rgba(0,0,0,.20);
+      background:rgba(10,16,26,.40);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      box-shadow:0 6px 14px rgba(0,0,0,.16);
       pointer-events:none;
     }
+
     .panel h2{
-      margin:0 0 3px;
-      font-size:10px;
+      margin:0 0 2px;
+      font-size:8px;
       letter-spacing:.08em;
       text-transform:uppercase;
       color:var(--gold);
     }
+
     .kv{
       display:grid;
-      grid-template-columns:44px 1fr;
-      gap:2px 6px;
-      font-size:9px;
-      line-height:1.05;
+      grid-template-columns:30px 1fr;
+      gap:1px 3px;
+      font-size:8px;
+      line-height:1.0;
       margin:0;
     }
+
     .kv dt{color:var(--muted)}
     .kv dd{margin:0;color:var(--text);word-break:break-word}
+
     .panel-copy{
-      margin:3px 0 0;
+      margin:2px 0 0;
       color:var(--muted);
-      font-size:9px;
-      line-height:1.1;
-      opacity:.82;
+      font-size:7px;
+      line-height:1.0;
+      opacity:.76;
     }
+
     .footer-hint{
-      position:absolute;
-      left:50%;
-      bottom:var(--safe-bottom);
-      transform:translateX(-50%);
-      z-index:3;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(9,14,22,.56);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      pointer-events:none;
+      display:none;
     }
+
     @media (max-width: 920px){
+      #scene{
+        transform:translateY(32px) scale(1.065);
+      }
+
       .panel-stack{
-        right:var(--safe-right);
-        bottom:calc(var(--safe-bottom) + 54px);
-        width:128px;
+        width:92px;
       }
+
       .kv{
-        grid-template-columns:40px 1fr;
-      }
-      .footer-hint{
-        font-size:11px;
-        max-width:calc(100vw - 24px);
-        text-align:center;
-        white-space:normal;
+        grid-template-columns:28px 1fr;
       }
     }
   </style>
@@ -206,11 +212,11 @@
       <section class="panel" aria-live="polite">
         <h2>Selection</h2>
         <dl class="kv">
-          <dt>Selected</dt><dd id="selectedNameOut">—</dd>
+          <dt>Sel</dt><dd id="selectedNameOut">—</dd>
           <dt>Type</dt><dd id="selectedTypeOut">—</dd>
-          <dt>Destination</dt><dd id="destinationOut">—</dd>
+          <dt>Dest</dt><dd id="destinationOut">—</dd>
         </dl>
-        <p class="panel-copy" id="selectionHintOut">Tap a region to inspect.</p>
+        <p class="panel-copy" id="selectionHintOut">Tap region.</p>
       </section>
     </div>
 

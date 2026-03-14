@@ -218,7 +218,6 @@ export function createCompassRenderer() {
 
   return {
     draw(ctx, projector, now = 0) {
-      const body = projector.body;
       const size = Math.max(44, Math.min(ctx.canvas.width, ctx.canvas.height) * 0.072);
       const cx = Math.round(ctx.canvas.width - (78 + size));
       const cy = Math.round(94 + size);
@@ -260,7 +259,7 @@ export function createCompassRenderer() {
       drawCore(ctx, cx, cy, size * 0.123 * pulse);
       drawLabels(ctx, cx, cy, size, worldYaw);
 
-      void body;
+      void projector;
     }
   };
 }

@@ -12,27 +12,35 @@ import { createSurfaceEngine } from "../engines/surface_engine.js";
 
 const DRAG_THRESHOLD_SQ = 9;
 
+function setText(node, value) {
+  if (node) node.textContent = value;
+}
+
 function setPlaceholderOutputs(outputs) {
-  outputs.cell.textContent = "—";
-  outputs.sector.textContent = "—";
-  outputs.band.textContent = "—";
-  outputs.encoding.textContent = "—";
-  outputs.byte.textContent = "—";
-  outputs.destination.textContent = "—";
+  if (!outputs) return;
+  setText(outputs.cell, "—");
+  setText(outputs.sector, "—");
+  setText(outputs.band, "—");
+  setText(outputs.encoding, "—");
+  setText(outputs.byte, "—");
+  setText(outputs.destination, "—");
 }
 
 function writeOutputs(outputs, snapshot, viewState) {
-  outputs.region.textContent = snapshot.readout.region;
-  outputs.selectedName.textContent = snapshot.readout.selectedName;
-  outputs.selectedType.textContent = viewState;
+  if (!outputs) return;
 
-  outputs.selectionHint.textContent =
+  setText(outputs.region, snapshot?.readout?.region ?? "Galaxy / Planet Runtime");
+  setText(outputs.selectedName, snapshot?.readout?.selectedName ?? "Earth");
+  setText(outputs.selectedType, viewState);
+
+  const hint =
     viewState === VIEW_STATE.GALAXY_LAYER
       ? "Tap Earth to descend."
       : viewState === VIEW_STATE.PLANET_LAYER
         ? "Tap background to return."
         : "Layer active.";
 
+  setText(outputs.selectionHint, hint);
   setPlaceholderOutputs(outputs);
 }
 
@@ -46,8 +54,8 @@ function getCanvasPixelPoint(canvas, clientX, clientY) {
 
 function resolveViewport(canvas, getViewport) {
   const fallback = {
-    width: canvas.width,
-    height: canvas.height
+    width: Math.max(1, canvas.clientWidth || canvas.width || 1),
+    height: Math.max(1, canvas.clientHeight || canvas.height || 1)
   };
 
   if (typeof getViewport !== "function") {
@@ -58,7 +66,10 @@ function resolveViewport(canvas, getViewport) {
   const width = Number.isFinite(viewport?.width) ? viewport.width : fallback.width;
   const height = Number.isFinite(viewport?.height) ? viewport.height : fallback.height;
 
-  return { width, height };
+  return {
+    width: Math.max(1, width),
+    height: Math.max(1, height)
+  };
 }
 
 export async function createSceneRuntime({
@@ -127,6 +138,7 @@ export async function createSceneRuntime({
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     const currentViewState = viewStateStore.get();
+
     environmentRenderer.draw(context, snapshot, projector, currentViewState);
 
     if (

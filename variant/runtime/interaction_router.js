@@ -1,38 +1,55 @@
-import { VIEW_STATE, getDescendTarget, getReturnTarget } from "./view_state.js";
+import { VIEW_STATE } from "./view_state.js";
 
-function isPointInsideGlobe(canvasX, canvasY, body) {
-  const dx = canvasX - body.centerX;
-  const dy = canvasY - body.centerY;
-  return ((dx * dx) + (dy * dy)) <= (body.radius * body.radius);
+function isPointInsideCircle(px, py, cx, cy, radius) {
+  const dx = px - cx;
+  const dy = py - cy;
+  return ((dx * dx) + (dy * dy)) <= (radius * radius);
 }
 
 export function createInteractionRouter({
   viewStateStore,
-  projector
+  projector,
+  getGalaxyEarthNode
 }) {
   function getViewState() {
     return viewStateStore.get();
   }
 
   function canRotate(canvasX, canvasY) {
-    const viewState = getViewState();
-    if (viewState !== VIEW_STATE.COSMIC_LAYER && viewState !== VIEW_STATE.PLANET_LAYER) {
-      return false;
+    const current = getViewState();
+
+    if (current === VIEW_STATE.GALAXY_LAYER) {
+      const earthNode = getGalaxyEarthNode();
+      return isPointInsideCircle(canvasX, canvasY, earthNode.x, earthNode.y, earthNode.radius * 1.6);
     }
-    return isPointInsideGlobe(canvasX, canvasY, projector.getBody());
+
+    if (current === VIEW_STATE.PLANET_LAYER) {
+      const body = projector.getBody();
+      return isPointInsideCircle(canvasX, canvasY, body.centerX, body.centerY, body.radius);
+    }
+
+    return false;
   }
 
   function handleTap(canvasX, canvasY) {
-    const body = projector.getBody();
-    const insideGlobe = isPointInsideGlobe(canvasX, canvasY, body);
     const current = getViewState();
 
-    if (current === VIEW_STATE.COSMIC_LAYER && insideGlobe) {
-      return viewStateStore.set(getDescendTarget(current));
+    if (current === VIEW_STATE.GALAXY_LAYER) {
+      const earthNode = getGalaxyEarthNode();
+      const hitEarth = isPointInsideCircle(canvasX, canvasY, earthNode.x, earthNode.y, earthNode.radius * 1.6);
+      if (hitEarth) {
+        return viewStateStore.set(VIEW_STATE.PLANET_LAYER);
+      }
+      return current;
     }
 
-    if (current === VIEW_STATE.PLANET_LAYER && !insideGlobe) {
-      return viewStateStore.set(getReturnTarget(current));
+    if (current === VIEW_STATE.PLANET_LAYER) {
+      const body = projector.getBody();
+      const hitPlanet = isPointInsideCircle(canvasX, canvasY, body.centerX, body.centerY, body.radius);
+      if (!hitPlanet) {
+        return viewStateStore.set(VIEW_STATE.GALAXY_LAYER);
+      }
+      return current;
     }
 
     return current;

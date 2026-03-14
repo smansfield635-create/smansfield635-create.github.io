@@ -1,20 +1,3 @@
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function lerp(a, b, t) {
-  return a + ((b - a) * t);
-}
-
-function rotatePoint(x, y, angle) {
-  const cosA = Math.cos(angle);
-  const sinA = Math.sin(angle);
-  return {
-    x: (x * cosA) - (y * sinA),
-    y: (x * sinA) + (y * cosA)
-  };
-}
-
 function project3DPoint(x, y, z, yaw, pitch, scale) {
   const cosY = Math.cos(yaw);
   const sinY = Math.sin(yaw);
@@ -65,31 +48,31 @@ function drawRing(ctx, cx, cy, rx, ry, rotation, strokeStyle, lineWidth, alpha) 
 }
 
 function drawCore(ctx, cx, cy, pulseRadius) {
-  const halo = ctx.createRadialGradient(cx, cy, pulseRadius * 0.2, cx, cy, pulseRadius * 2.6);
-  halo.addColorStop(0, "rgba(255,248,220,0.95)");
-  halo.addColorStop(0.25, "rgba(255,222,160,0.55)");
-  halo.addColorStop(0.60, "rgba(255,188,104,0.22)");
+  const halo = ctx.createRadialGradient(cx, cy, pulseRadius * 0.2, cx, cy, pulseRadius * 2.9);
+  halo.addColorStop(0, "rgba(255,248,220,0.96)");
+  halo.addColorStop(0.24, "rgba(255,222,160,0.58)");
+  halo.addColorStop(0.58, "rgba(255,188,104,0.24)");
   halo.addColorStop(1, "rgba(255,188,104,0)");
 
   ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.arc(cx, cy, pulseRadius * 2.6, 0, Math.PI * 2);
+  ctx.arc(cx, cy, pulseRadius * 2.9, 0, Math.PI * 2);
   ctx.fill();
 
   const core = ctx.createRadialGradient(cx, cy, pulseRadius * 0.12, cx, cy, pulseRadius);
   core.addColorStop(0, "rgba(255,255,245,1)");
-  core.addColorStop(0.45, "rgba(255,236,176,0.95)");
-  core.addColorStop(1, "rgba(255,198,108,0.92)");
+  core.addColorStop(0.45, "rgba(255,236,176,0.96)");
+  core.addColorStop(1, "rgba(255,198,108,0.94)");
 
   ctx.fillStyle = core;
   ctx.beginPath();
   ctx.arc(cx, cy, pulseRadius, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(255,248,220,0.72)";
-  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = "rgba(255,248,220,0.74)";
+  ctx.lineWidth = 1.25;
   ctx.beginPath();
-  ctx.arc(cx, cy, pulseRadius * 1.35, 0, Math.PI * 2);
+  ctx.arc(cx, cy, pulseRadius * 1.4, 0, Math.PI * 2);
   ctx.stroke();
 }
 
@@ -142,9 +125,9 @@ function drawDiamondBody(ctx, cx, cy, projected) {
       cy + projected[a].y,
       cx + projected[b].x,
       cy + projected[b].y,
-      "rgba(114,180,255,0.30)",
-      1.2,
-      0.4
+      "rgba(114,180,255,0.28)",
+      1.35,
+      0.42
     );
   }
 
@@ -156,8 +139,8 @@ function drawDiamondBody(ctx, cx, cy, projected) {
       cx + projected[b].x,
       cy + projected[b].y,
       "rgba(174,224,255,0.58)",
-      1.45,
-      0.55
+      1.55,
+      0.58
     );
   }
 
@@ -168,9 +151,9 @@ function drawDiamondBody(ctx, cx, cy, projected) {
       cy + projected[a].y,
       cx + projected[b].x,
       cy + projected[b].y,
-      "rgba(255,210,132,0.88)",
-      1.9,
-      0.95
+      "rgba(255,210,132,0.90)",
+      2.05,
+      1.0
     );
   }
 
@@ -180,9 +163,9 @@ function drawDiamondBody(ctx, cx, cy, projected) {
     cy + projected.top.y,
     cx + projected.bottom.x,
     cy + projected.bottom.y,
-    "rgba(255,238,182,0.84)",
-    1.6,
-    0.85
+    "rgba(255,238,182,0.86)",
+    1.8,
+    0.9
   );
 
   drawGlowingLine(
@@ -191,30 +174,30 @@ function drawDiamondBody(ctx, cx, cy, projected) {
     cy + projected.west.y,
     cx + projected.east.x,
     cy + projected.east.y,
-    "rgba(255,238,182,0.52)",
-    1.3,
-    0.6
+    "rgba(255,238,182,0.54)",
+    1.45,
+    0.66
   );
 }
 
 function drawLabels(ctx, cx, cy, size, worldYaw) {
   const labels = [
-    { text: "N", x: 0, y: -size * 1.18 },
-    { text: "E", x: size * 1.10, y: 0 },
-    { text: "S", x: 0, y: size * 1.18 },
-    { text: "W", x: -size * 1.10, y: 0 }
+    { text: "N", x: 0, y: -size * 1.20 },
+    { text: "E", x: size * 1.12, y: 0 },
+    { text: "S", x: 0, y: size * 1.20 },
+    { text: "W", x: -size * 1.12, y: 0 }
   ];
 
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(-worldYaw);
-  ctx.font = `600 ${Math.max(10, Math.round(size * 0.21))}px system-ui, sans-serif`;
+  ctx.font = `600 ${Math.max(10, Math.round(size * 0.20))}px system-ui, sans-serif`;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
   for (const label of labels) {
-    ctx.fillStyle = "rgba(255,244,212,0.92)";
-    ctx.shadowColor = "rgba(255,214,140,0.48)";
+    ctx.fillStyle = "rgba(255,244,212,0.94)";
+    ctx.shadowColor = "rgba(255,214,140,0.52)";
     ctx.shadowBlur = 8;
     ctx.fillText(label.text, label.x, label.y);
   }
@@ -223,14 +206,14 @@ function drawLabels(ctx, cx, cy, size, worldYaw) {
 }
 
 function drawBackgroundHalo(ctx, cx, cy, radius) {
-  const halo = ctx.createRadialGradient(cx, cy, radius * 0.12, cx, cy, radius * 1.42);
-  halo.addColorStop(0, "rgba(255,216,136,0.10)");
-  halo.addColorStop(0.50, "rgba(116,184,255,0.09)");
+  const halo = ctx.createRadialGradient(cx, cy, radius * 0.12, cx, cy, radius * 1.52);
+  halo.addColorStop(0, "rgba(255,216,136,0.12)");
+  halo.addColorStop(0.46, "rgba(116,184,255,0.10)");
   halo.addColorStop(1, "rgba(116,184,255,0)");
 
   ctx.fillStyle = halo;
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 1.42, 0, Math.PI * 2);
+  ctx.arc(cx, cy, radius * 1.52, 0, Math.PI * 2);
   ctx.fill();
 }
 
@@ -240,11 +223,10 @@ export function createCompassRenderer() {
   return {
     draw(ctx, projector, now = 0) {
       const camera = projector.getCameraState();
-      const body = projector.getBody();
 
-      const size = Math.max(34, Math.min(ctx.canvas.width, ctx.canvas.height) * 0.055);
-      const cx = Math.round(Math.max(88, body.centerX - (body.radius * 1.03)));
-      const cy = Math.round(Math.max(102, body.horizonY - (body.radius * 0.22)));
+      const size = Math.max(48, Math.min(ctx.canvas.width, ctx.canvas.height) * 0.078);
+      const cx = Math.round(ctx.canvas.width - (36 + size));
+      const cy = Math.round(56 + size);
 
       const ringDrift = now * 0.00022;
       const pulse = 1 + (Math.sin(now * 0.0032) * 0.06);
@@ -255,32 +237,32 @@ export function createCompassRenderer() {
         ctx,
         cx,
         cy,
-        size * 1.10,
+        size * 1.14,
         size * 0.30,
         ringDrift,
         "rgba(124,190,255,0.46)",
-        1.1,
-        0.62
+        1.15,
+        0.64
       );
 
       drawRing(
         ctx,
         cx,
         cy,
-        size * 0.78,
-        size * 0.52,
+        size * 0.82,
+        size * 0.54,
         ringDrift + 0.78,
         "rgba(255,214,144,0.28)",
-        1.0,
-        0.48
+        1.05,
+        0.50
       );
 
       const worldYaw = -(camera.azimuth || 0);
       const worldPitch = 0.88 + ((camera.latitudeTilt || 0) * 0.90);
-      const projected = projectCompass(model, worldYaw, worldPitch, size * 0.90);
+      const projected = projectCompass(model, worldYaw, worldPitch, size * 0.92);
 
       drawDiamondBody(ctx, cx, cy, projected);
-      drawCore(ctx, cx, cy, size * 0.12 * pulse);
+      drawCore(ctx, cx, cy, size * 0.125 * pulse);
       drawLabels(ctx, cx, cy, size, worldYaw);
     }
   };

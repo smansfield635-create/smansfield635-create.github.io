@@ -1,63 +1,75 @@
 import { createSceneRuntime } from "./world/scene_runtime.js";
 
-function requireElement(id, expectedTagName) {
-  const element = document.getElementById(id);
-
-  if (!element) {
-    throw new Error(`BOOT_FAILURE: Missing required element #${id}.`);
+function requireCanvas(canvas) {
+  if (!(canvas instanceof HTMLCanvasElement)) {
+    throw new Error("BOOT_FAILURE: #scene canvas missing.");
   }
+  return canvas;
+}
 
-  if (
-    expectedTagName &&
-    element.tagName.toLowerCase() !== expectedTagName.toLowerCase()
-  ) {
-    throw new Error(
-      `BOOT_FAILURE: Element #${id} must be <${expectedTagName}>.`,
-    );
+function requireOutputs(outputs) {
+  const required = [
+    "region",
+    "cell",
+    "sector",
+    "band",
+    "encoding",
+    "byte",
+    "selectedName",
+    "selectedType",
+    "destination",
+    "selectionHint"
+  ];
+
+  for (const key of required) {
+    if (!outputs?.[key]) {
+      throw new Error(`BOOT_FAILURE: Missing output binding for ${key}.`);
+    }
   }
-
-  return element;
+  return outputs;
 }
 
 function fitCanvas(canvas) {
   const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-  const cssWidth = Math.max(1, Math.floor(canvas.clientWidth || window.innerWidth));
-  const cssHeight = Math.max(1, Math.floor(canvas.clientHeight || window.innerHeight));
-  const pixelWidth = Math.max(1, Math.floor(cssWidth * dpr));
-  const pixelHeight = Math.max(1, Math.floor(cssHeight * dpr));
+  const width = Math.max(1, Math.floor(canvas.clientWidth || window.innerWidth));
+  const height = Math.max(1, Math.floor(canvas.clientHeight || window.innerHeight));
 
-  if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-    canvas.width = pixelWidth;
-    canvas.height = pixelHeight;
-  }
+  canvas.width = Math.max(1, Math.floor(width * dpr));
+  canvas.height = Math.max(1, Math.floor(height * dpr));
 
-  return { cssWidth, cssHeight, pixelWidth, pixelHeight, dpr };
+  return {
+    width,
+    height,
+    pixelWidth: canvas.width,
+    pixelHeight: canvas.height,
+    dpr
+  };
 }
 
-export async function bootScene() {
-  const canvas = requireElement("world-canvas", "canvas");
-  const statusRoot = requireElement("runtime-status", "pre");
+export async function createScene(canvas, outputs) {
+  const safeCanvas = requireCanvas(canvas);
+  const safeOutputs = requireOutputs(outputs);
 
-  const context = canvas.getContext("2d", {
+  const context = safeCanvas.getContext("2d", {
     alpha: false,
-    desynchronized: true,
+    desynchronized: true
   });
 
   if (!context) {
-    throw new Error("BOOT_FAILURE: Canvas2D context could not be created.");
+    throw new Error("BOOT_FAILURE: Could not acquire 2D context.");
   }
 
-  let viewport = fitCanvas(canvas);
+  let viewport = fitCanvas(safeCanvas);
 
   const sceneRuntime = await createSceneRuntime({
-    canvas,
+    canvas: safeCanvas,
     context,
-    statusRoot,
-    getViewport: () => viewport,
+    outputs: safeOutputs,
+    getViewport: () => viewport
   });
 
   function handleResize() {
-    viewport = fitCanvas(canvas);
+    viewport = fitCanvas(safeCanvas);
     sceneRuntime.resize(viewport);
   }
 
@@ -65,41 +77,26 @@ export async function bootScene() {
   handleResize();
 
   let rafId = 0;
-  let lastNow = performance.now();
+  let started = false;
+  let lastNow = 0;
 
   function frame(now) {
-    const deltaMs = Math.max(0, now - lastNow);
+    const deltaMs = started ? Math.max(0, now - lastNow) : 0;
     lastNow = now;
     sceneRuntime.frame(now, deltaMs);
     rafId = window.requestAnimationFrame(frame);
   }
 
-  sceneRuntime.start();
-  rafId = window.requestAnimationFrame(frame);
-
-  window.addEventListener("beforeunload", () => {
-    if (rafId) {
-      window.cancelAnimationFrame(rafId);
+  return {
+    start() {
+      if (started) return;
+      started = true;
+      sceneRuntime.start();
+      rafId = window.requestAnimationFrame(frame);
+    },
+    stop() {
+      if (rafId) window.cancelAnimationFrame(rafId);
+      sceneRuntime.stop();
     }
-    sceneRuntime.stop();
-  });
+  };
 }
-
-bootScene().catch((error) => {
-  const statusRoot = document.getElementById("runtime-status");
-  const message =
-    error instanceof Error ? error.message : "BOOT_FAILURE: Unknown error.";
-
-  if (statusRoot) {
-    statusRoot.textContent = [
-      "boot: fail",
-      "payload: pending",
-      "render: pending",
-      "coherence: pending",
-      "",
-      message,
-    ].join("\n");
-  }
-
-  throw error;
-});

@@ -1,6 +1,6 @@
 function drawPolygonPath(ctx, polygon, projector) {
-  const projected = projector.poly(polygon);
-  if (!projected.length) return projected;
+  const projected = projector.poly(polygon).filter((p) => p.visible);
+  if (projected.length < 3) return projected;
 
   ctx.beginPath();
   ctx.moveTo(projected[0].x, projected[0].y);
@@ -20,89 +20,118 @@ export function createEnvironmentRenderer() {
       const environment = snapshot.kernel.environment ?? {};
       const mistAmount = typeof environment.mistAmount === "number" ? environment.mistAmount : 0.36;
       const waters = Array.isArray(snapshot.kernel.waters) ? snapshot.kernel.waters : [];
+      const outerOcean = waters[0] ?? null;
       const harborBasin = waters[1] ?? null;
 
       const sky = ctx.createLinearGradient(0, 0, 0, height);
-      sky.addColorStop(0, "#b8d8ef");
-      sky.addColorStop(0.38, "#c9e6f8");
-      sky.addColorStop(0.72, "#d9f2ff");
-      sky.addColorStop(1, "#eefbff");
+      sky.addColorStop(0, "#06101d");
+      sky.addColorStop(0.18, "#112842");
+      sky.addColorStop(0.42, "#29507b");
+      sky.addColorStop(0.68, "#5b8fbe");
+      sky.addColorStop(1, "#c7ecff");
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
 
+      const stars = [
+        [0.14, 0.12, 1.0],
+        [0.22, 0.20, 0.8],
+        [0.35, 0.10, 0.9],
+        [0.48, 0.18, 0.7],
+        [0.66, 0.13, 1.0],
+        [0.79, 0.22, 0.8],
+        [0.86, 0.09, 0.9]
+      ];
+
+      ctx.save();
+      for (const [sx, sy, sr] of stars) {
+        ctx.fillStyle = "rgba(255,255,255,0.42)";
+        ctx.beginPath();
+        ctx.arc(width * sx, height * sy, sr * Math.max(1, width / 900), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
       const atmosphere = ctx.createRadialGradient(
         body.centerX,
-        body.topY + (body.radius * 0.12),
-        body.radius * 0.68,
+        body.horizonY + (body.radius * 0.08),
+        body.radius * 0.72,
         body.centerX,
-        body.topY + (body.radius * 0.12),
-        body.radius * 1.02
+        body.horizonY + (body.radius * 0.08),
+        body.radius * 1.08
       );
-      atmosphere.addColorStop(0, `rgba(255,255,255,${0.00})`);
-      atmosphere.addColorStop(0.52, `rgba(214,244,255,${0.18 + (mistAmount * 0.10)})`);
-      atmosphere.addColorStop(0.78, `rgba(170,224,246,${0.22 + (mistAmount * 0.12)})`);
-      atmosphere.addColorStop(1, "rgba(170,224,246,0.00)");
+      atmosphere.addColorStop(0, "rgba(255,255,255,0)");
+      atmosphere.addColorStop(0.52, `rgba(150,220,255,${0.18 + (mistAmount * 0.10)})`);
+      atmosphere.addColorStop(0.78, `rgba(110,188,255,${0.22 + (mistAmount * 0.12)})`);
+      atmosphere.addColorStop(1, "rgba(110,188,255,0)");
       ctx.fillStyle = atmosphere;
       ctx.fillRect(
-        body.centerX - (body.radius * 1.08),
-        body.topY - (body.radius * 0.30),
-        body.radius * 2.16,
-        body.radius * 1.22
+        body.centerX - (body.radius * 1.14),
+        body.horizonY - (body.radius * 0.26),
+        body.radius * 2.28,
+        body.radius * 1.40
       );
 
       ctx.save();
       ctx.beginPath();
-      ctx.arc(body.centerX, body.centerY, body.radius, 0, Math.PI * 2);
+      ctx.arc(body.centerX, body.centerY, body.radius, Math.PI, Math.PI * 2);
+      ctx.closePath();
       ctx.clip();
 
-      const globeOcean = ctx.createLinearGradient(0, body.topY, 0, body.centerY + body.radius);
-      globeOcean.addColorStop(0, "#7fd4f2");
-      globeOcean.addColorStop(0.34, "#64c4ec");
-      globeOcean.addColorStop(0.72, "#48abde");
-      globeOcean.addColorStop(1, "#2b7fba");
+      const globeOcean = ctx.createLinearGradient(0, body.horizonY, 0, body.centerY + body.radius);
+      globeOcean.addColorStop(0, "#7fd7ff");
+      globeOcean.addColorStop(0.24, "#59bff0");
+      globeOcean.addColorStop(0.56, "#2a85c4");
+      globeOcean.addColorStop(1, "#0d3b6c");
       ctx.fillStyle = globeOcean;
-      ctx.fillRect(body.centerX - body.radius, body.topY, body.radius * 2, body.radius * 2);
+      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.2);
 
-      const globeDepth = ctx.createRadialGradient(
+      const globeShadow = ctx.createRadialGradient(
         body.centerX,
-        body.topY + (body.radius * 0.36),
-        body.radius * 0.10,
+        body.centerY - (body.radius * 0.20),
+        body.radius * 0.14,
         body.centerX,
         body.centerY,
-        body.radius * 1.04
+        body.radius * 1.05
       );
-      globeDepth.addColorStop(0, "rgba(255,255,255,0.18)");
-      globeDepth.addColorStop(0.40, "rgba(194,238,255,0.10)");
-      globeDepth.addColorStop(0.78, "rgba(28,94,140,0.06)");
-      globeDepth.addColorStop(1, "rgba(12,44,78,0.14)");
-      ctx.fillStyle = globeDepth;
-      ctx.fillRect(body.centerX - body.radius, body.topY, body.radius * 2, body.radius * 2);
+      globeShadow.addColorStop(0, "rgba(255,255,255,0.16)");
+      globeShadow.addColorStop(0.36, "rgba(160,228,255,0.08)");
+      globeShadow.addColorStop(0.72, "rgba(18,76,128,0.12)");
+      globeShadow.addColorStop(1, "rgba(4,26,54,0.20)");
+      ctx.fillStyle = globeShadow;
+      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.3);
+
+      if (outerOcean) {
+        drawPolygonPath(ctx, outerOcean, projector);
+        ctx.fillStyle = "rgba(155,232,255,0.14)";
+        ctx.fill();
+      }
 
       if (harborBasin) {
         drawPolygonPath(ctx, harborBasin, projector);
-        ctx.fillStyle = "rgba(170,238,252,0.68)";
+        ctx.fillStyle = "rgba(214,247,255,0.56)";
         ctx.fill();
 
         drawPolygonPath(ctx, harborBasin, projector);
         ctx.strokeStyle = "rgba(255,255,255,0.22)";
-        ctx.lineWidth = projector.lineWidth(2.0, 0.73);
+        ctx.lineWidth = projector.lineWidth(1.8, 0.73);
         ctx.stroke();
       }
 
       ctx.restore();
 
-      const horizonGlow = ctx.createLinearGradient(0, body.topY - 8, 0, body.topY + (body.radius * 0.18));
+      const horizonGlow = ctx.createLinearGradient(0, body.horizonY - 10, 0, body.horizonY + (body.radius * 0.16));
       horizonGlow.addColorStop(0, "rgba(255,255,255,0)");
-      horizonGlow.addColorStop(0.40, `rgba(246,255,255,${0.18 + (mistAmount * 0.08)})`);
-      horizonGlow.addColorStop(1, "rgba(246,255,255,0)");
+      horizonGlow.addColorStop(0.34, "rgba(246,255,255,0.28)");
+      horizonGlow.addColorStop(0.70, "rgba(194,242,255,0.16)");
+      horizonGlow.addColorStop(1, "rgba(194,242,255,0)");
       ctx.fillStyle = horizonGlow;
-      ctx.fillRect(0, body.topY - 8, width, body.radius * 0.22);
+      ctx.fillRect(0, body.horizonY - 10, width, body.radius * 0.18);
 
-      const skyMist = ctx.createLinearGradient(0, height * 0.24, 0, height * 0.92);
-      skyMist.addColorStop(0, `rgba(255,255,255,${0.02 + (mistAmount * 0.04)})`);
-      skyMist.addColorStop(0.54, `rgba(228,247,255,${0.05 + (mistAmount * 0.06)})`);
-      skyMist.addColorStop(1, "rgba(194,228,244,0.06)");
-      ctx.fillStyle = skyMist;
+      const veil = ctx.createLinearGradient(0, height * 0.16, 0, height);
+      veil.addColorStop(0, "rgba(255,255,255,0.02)");
+      veil.addColorStop(0.52, `rgba(228,247,255,${0.05 + (mistAmount * 0.08)})`);
+      veil.addColorStop(1, "rgba(196,228,244,0.08)");
+      ctx.fillStyle = veil;
       ctx.fillRect(0, 0, width, height);
     }
   };

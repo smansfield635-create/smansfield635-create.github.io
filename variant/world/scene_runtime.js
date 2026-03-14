@@ -111,7 +111,7 @@ export async function createSceneRuntime({
     }
 
     if (pointer.didDrag) {
-      projector.dragRotate(dx, dy);
+      projector.drag(dx, dy);
       draw(latestSnapshot);
     }
 

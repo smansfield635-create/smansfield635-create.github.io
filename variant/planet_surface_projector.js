@@ -2,85 +2,57 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function lerp(a, b, t) {
-  return a + ((b - a) * t);
+function computeBody(canvas) {
+  const width = canvas.width;
+  const height = canvas.height;
+  const radius = Math.max(width * 0.62, height * 0.54);
+
+  return {
+    centerX: width * 0.5,
+    centerY: height * 1.08,
+    radius,
+    topY: (height * 1.08) - radius
+  };
 }
 
 export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   let viewport = getViewport();
 
-  const camera = {
-    azimuth: 0,
-    elevation: 0.34,
-    radius: 1
-  };
-
   function update(nextViewport) {
     viewport = nextViewport;
   }
 
-  function worldToView(x, y) {
-    const centeredX = (x - 0.5) * 2;
-    const centeredY = (y - 0.72) * 2;
-
-    const cosA = Math.cos(camera.azimuth);
-    const sinA = Math.sin(camera.azimuth);
-
-    const rotatedX = (centeredX * cosA) - (centeredY * sinA);
-    const rotatedY = (centeredX * sinA) + (centeredY * cosA);
-
-    const horizonLift = 0.18 + (camera.elevation * 0.16);
-    const bowl = 1 - clamp(Math.abs(rotatedX), 0, 1);
-    const curvature = bowl * bowl;
-
-    const depth = clamp(0.5 + (rotatedY * 0.42) + (curvature * 0.18), 0, 1);
-    const frontness = clamp(0.58 + (rotatedY * 0.65) + (curvature * 0.22), 0, 1);
-
-    return {
-      rotatedX,
-      rotatedY,
-      depth,
-      frontness,
-      horizonLift
-    };
-  }
-
-  function screenPoint(x, y) {
-    const view = worldToView(x, y);
-    const width = canvas.width;
-    const height = canvas.height;
-
-    const px = width * (0.5 + (view.rotatedX * 0.48));
-    const py = height * (0.54 + (view.horizonLift * 0.08) + (view.rotatedY * 0.26) + ((1 - view.depth) * 0.22));
-
-    return {
-      x: px,
-      y: py,
-      depth: view.depth,
-      frontness: view.frontness
-    };
+  function getBody() {
+    return computeBody(canvas);
   }
 
   function point(x, y) {
-    return screenPoint(x, y);
+    const body = getBody();
+
+    const normalizedX = (x - 0.5) * 1.58;
+    const clampedX = clamp(normalizedX, -0.985, 0.985);
+    const horizonFactor = Math.sqrt(Math.max(0, 1 - (clampedX * clampedX)));
+
+    const horizonY = body.centerY - (horizonFactor * body.radius);
+    const verticalProgress = clamp((y - 0.50) / 0.50, 0, 1);
+    const localDepth = clamp(0.32 + (verticalProgress * 0.68), 0, 1);
+    const thickness = Math.max(body.radius * 0.10, (body.centerY - horizonY) * 0.58);
+
+    return {
+      x: body.centerX + (clampedX * body.radius * 0.96),
+      y: horizonY + (verticalProgress * thickness),
+      depth: localDepth,
+      frontness: localDepth
+    };
   }
 
   function poly(points) {
-    return points.map(([x, y]) => screenPoint(x, y));
-  }
-
-  function averageDepth(points) {
-    if (!points?.length) return 0.5;
-    let sum = 0;
-    for (const [x, y] of points) {
-      sum += worldToView(x, y).depth;
-    }
-    return sum / points.length;
+    return points.map(([x, y]) => point(x, y));
   }
 
   function scaleAt(x, y) {
-    const { depth } = worldToView(x, y);
-    return lerp(0.68, 1.16, depth);
+    const projected = point(x, y);
+    return 0.72 + (projected.depth * 0.42);
   }
 
   function radius(value, y = 0.72) {
@@ -92,27 +64,47 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     return Math.max(1, radius(value, y));
   }
 
+  function averageDepth(points) {
+    if (!points?.length) return 0.5;
+    let total = 0;
+    for (const [x, y] of points) {
+      total += point(x, y).depth;
+    }
+    return total / points.length;
+  }
+
   function isFrontFacing(x, y) {
-    return worldToView(x, y).frontness > 0.12;
+    return point(x, y).frontness > 0.14;
   }
 
   function unproject(px, py) {
-    const x = clamp(px / canvas.width, 0, 1);
-    const y = clamp((py / canvas.height) * 0.9 + 0.18, 0, 1);
+    const body = getBody();
+    const nx = clamp((px - body.centerX) / (body.radius * 0.96), -0.985, 0.985);
+    const x = clamp(0.5 + (nx / 1.58), 0, 1);
+
+    const horizonFactor = Math.sqrt(Math.max(0, 1 - (nx * nx)));
+    const horizonY = body.centerY - (horizonFactor * body.radius);
+    const thickness = Math.max(body.radius * 0.10, (body.centerY - horizonY) * 0.58);
+    const verticalProgress = clamp((py - horizonY) / Math.max(1, thickness), 0, 1);
+    const y = clamp(0.50 + (verticalProgress * 0.50), 0, 1);
+
     return { x, y };
   }
 
   function getCameraState() {
-    return { ...camera };
+    return {
+      mode: "FIXED_SURVEY_STAGE_1"
+    };
   }
 
   return {
     update,
+    getBody,
     point,
     poly,
+    scaleAt,
     radius,
     lineWidth,
-    scaleAt,
     averageDepth,
     isFrontFacing,
     unproject,

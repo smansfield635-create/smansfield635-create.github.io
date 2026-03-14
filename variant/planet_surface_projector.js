@@ -4,6 +4,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
     height: canvas.height,
     yaw: 0,
     pitch: -0.34,
+    angularVelocityYaw: 0,
+    angularVelocityPitch: 0,
     cameraDistance: 2.42,
     centerX: 0,
     centerY: 0,
@@ -138,6 +140,36 @@ export function createPlanetSurfaceProjector({ canvas }) {
     drag(dx, dy);
   }
 
+  function seedMomentum(dx, dy, dtMs) {
+    const dt = Math.max(1, dtMs);
+    const frameScale = 16.67 / dt;
+
+    state.angularVelocityYaw = dx * 0.003 * frameScale;
+    state.angularVelocityPitch = dy * 0.003 * frameScale;
+  }
+
+  function step(deltaMs = 16.67) {
+    const dt = Math.max(1, deltaMs);
+    const frameScale = dt / 16.67;
+    const decayPerFrame = 0.95;
+    const decay = Math.pow(decayPerFrame, frameScale);
+
+    state.yaw += state.angularVelocityYaw * frameScale;
+    state.pitch += state.angularVelocityPitch * frameScale;
+
+    state.angularVelocityYaw *= decay;
+    state.angularVelocityPitch *= decay;
+
+    if (Math.abs(state.angularVelocityYaw) < 0.00001) {
+      state.angularVelocityYaw = 0;
+    }
+    if (Math.abs(state.angularVelocityPitch) < 0.00001) {
+      state.angularVelocityPitch = 0;
+    }
+
+    clampPitch();
+  }
+
   function getCameraState() {
     return {
       azimuth: state.yaw,
@@ -174,6 +206,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
     unproject,
     drag,
     dragRotate,
+    seedMomentum,
+    step,
     getCameraState,
     getBody,
     body

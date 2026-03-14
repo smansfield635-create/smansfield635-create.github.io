@@ -858,7 +858,6 @@ export async function createScene(canvas, outputs) {
     renderState.surfaceProjector = surfaceProjector;
 
     ctx.save();
-    ctx.scale(state.renderScale, state.renderScale);
 
     environment.draw(ctx, renderState);
     ground.draw(ctx, renderState);

@@ -14,10 +14,10 @@ function createCameraState() {
   return {
     azimuth: 0,
     latitudeTilt: 0,
-    pitch: Math.PI * 0.34,
+    pitch: Math.PI * 0.40,
     focusX: 0.56,
     focusY: 0.72,
-    zoom: 1.18
+    zoom: 1.10
   };
 }
 
@@ -32,20 +32,19 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   function getBody() {
     const width = canvas.width;
     const height = canvas.height;
-
-    const radius = Math.max(width * 0.56, height * 0.58);
+    const radius = Math.max(width * 0.54, height * 0.56);
 
     return {
-      centerX: width * 0.62,
-      centerY: height * 1.18,
+      centerX: width * 0.64,
+      centerY: height * 1.20,
       radius,
-      horizonY: (height * 1.18) - radius
+      horizonY: (height * 1.20) - radius
     };
   }
 
   function toSurface(x, y) {
-    const lon = (x - camera.focusX) * Math.PI * 1.10;
-    const lat = (camera.focusY - y) * Math.PI * 0.80;
+    const lon = (x - camera.focusX) * Math.PI * 1.08;
+    const lat = (camera.focusY - y) * Math.PI * 0.78;
     return { lon, lat };
   }
 
@@ -54,12 +53,10 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const surface = toSurface(x, y);
 
     const lon = surface.lon + camera.azimuth;
-    const lat = surface.lat + camera.latitudeTilt;
+    const lat = clamp(surface.lat + camera.latitudeTilt, -Math.PI * 0.48, Math.PI * 0.48);
 
-    const clampedLat = clamp(lat, -Math.PI * 0.48, Math.PI * 0.48);
-
-    const cosLat = Math.cos(clampedLat);
-    const sinLat = Math.sin(clampedLat);
+    const cosLat = Math.cos(lat);
+    const sinLat = Math.sin(lat);
     const sinLon = Math.sin(lon);
     const cosLon = Math.cos(lon);
 
@@ -75,10 +72,10 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const rotatedZ = (worldY * sinP) + (worldZ * cosP);
     const rotatedX = worldX;
 
-    const visible = rotatedZ > -0.85;
+    const visible = rotatedZ > -0.86;
     const depth = clamp((rotatedZ + 1) * 0.5, 0, 1);
 
-    const px = body.centerX + (rotatedX * body.radius * 0.96 * camera.zoom);
+    const px = body.centerX + (rotatedX * body.radius * 0.98 * camera.zoom);
     const py = body.centerY - (rotatedY * body.radius * 0.88 * camera.zoom);
 
     return {
@@ -102,7 +99,7 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
 
   function scaleAt(x, y) {
     const projected = point(x, y);
-    return 0.56 + (projected.depth * 0.70);
+    return 0.56 + (projected.depth * 0.72);
   }
 
   function radius(value, y = 0.72) {
@@ -129,7 +126,7 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
 
   function unproject(px, py) {
     const body = getBody();
-    const dx = (px - body.centerX) / Math.max(1, body.radius * 0.96 * camera.zoom);
+    const dx = (px - body.centerX) / Math.max(1, body.radius * 0.98 * camera.zoom);
     const dy = (body.centerY - py) / Math.max(1, body.radius * 0.88 * camera.zoom);
     const d2 = (dx * dx) + (dy * dy);
 
@@ -152,8 +149,8 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const lon = Math.atan2(wx, wz) - camera.azimuth;
     const lat = Math.asin(clamp(wy, -1, 1)) - camera.latitudeTilt;
 
-    const x = clamp(camera.focusX + (lon / (Math.PI * 1.10)), 0, 1);
-    const y = clamp(camera.focusY - (lat / (Math.PI * 0.80)), 0, 1);
+    const x = clamp(camera.focusX + (lon / (Math.PI * 1.08)), 0, 1);
+    const y = clamp(camera.focusY - (lat / (Math.PI * 0.78)), 0, 1);
 
     return { x, y };
   }
@@ -171,8 +168,8 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const width = Math.max(1, canvas.width);
     const height = Math.max(1, canvas.height);
 
-    const azimuthDelta = (deltaX / width) * Math.PI * 1.35;
-    const latitudeDelta = (deltaY / height) * Math.PI * 0.82;
+    const azimuthDelta = (deltaX / width) * Math.PI * 2.2;
+    const latitudeDelta = (deltaY / height) * Math.PI * 1.2;
 
     camera.azimuth = wrapAngleRadians(camera.azimuth + azimuthDelta);
     camera.latitudeTilt = clamp(

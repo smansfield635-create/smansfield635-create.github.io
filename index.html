@@ -47,11 +47,11 @@
       background:#05070b;
     }
 
-    /* INDEX CHOKE-POINT RESET
-       - scale up the scene slightly
-       - push the rendered scene downward
-       - this reduces dead sky and lowers the canvas-rendered compass
-       - no runtime/projector changes */
+    /* INDEX CHOKE-POINT PASS
+       more downward push
+       more scale
+       less visible sky
+       compass comes down with scene */
     #scene{
       position:absolute;
       left:0;
@@ -61,7 +61,7 @@
       display:block;
       z-index:1;
       touch-action:none;
-      transform:translateY(38px) scale(1.075);
+      transform:translateY(82px) scale(1.17);
       transform-origin:center top;
     }
 
@@ -180,7 +180,7 @@
 
     @media (max-width: 920px){
       #scene{
-        transform:translateY(32px) scale(1.065);
+        transform:translateY(72px) scale(1.15);
       }
 
       .panel-stack{

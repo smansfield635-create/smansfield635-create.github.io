@@ -1,7 +1,6 @@
 import { createWorldRuntime } from "../../world/runtime/world_runtime.js";
 import { createPlanetSurfaceProjector } from "../planet_surface_projector.js";
 import { createEnvironmentRenderer } from "../environment_renderer.js";
-import { createGroundRenderer } from "../ground_renderer.js";
 import { createCompassRenderer } from "../compass_renderer.js";
 
 function setPlaceholderOutputs(outputs) {
@@ -41,7 +40,6 @@ export async function createSceneRuntime({
     getViewport
   });
   const environmentRenderer = createEnvironmentRenderer();
-  const groundRenderer = createGroundRenderer();
   const compassRenderer = createCompassRenderer();
 
   let latestSnapshot = worldRuntime.getSnapshot();
@@ -66,7 +64,6 @@ export async function createSceneRuntime({
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     environmentRenderer.draw(context, snapshot, projector);
-    groundRenderer.draw(context, snapshot, projector);
     compassRenderer.draw(context, projector, latestNow);
   }
 

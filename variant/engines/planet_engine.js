@@ -179,12 +179,33 @@ function drawBodyRelativeSpecular(ctx, body, tick, camera) {
   ctx.fill();
 }
 
+function drawPlanetShell(ctx, body) {
+  const shell = ctx.createRadialGradient(
+    body.centerX,
+    body.centerY,
+    body.radius * 0.88,
+    body.centerX,
+    body.centerY,
+    body.radius * 1.18
+  );
+  shell.addColorStop(0, "rgba(255,255,255,0)");
+  shell.addColorStop(0.58, "rgba(110,188,255,0.10)");
+  shell.addColorStop(0.84, "rgba(84,162,255,0.12)");
+  shell.addColorStop(1, "rgba(84,162,255,0)");
+  ctx.fillStyle = shell;
+  ctx.beginPath();
+  ctx.arc(body.centerX, body.centerY, body.radius * 1.18, 0, Math.PI * 2);
+  ctx.fill();
+}
+
 export function createPlanetEngine() {
   return Object.freeze({
     draw(ctx, snapshot, projector) {
       const tick = snapshot.tick ?? 0;
       const body = projector.getBody();
       const camera = projector.getCameraState?.() ?? { azimuth: 0, latitudeTilt: 0 };
+
+      drawPlanetShell(ctx, body);
 
       ctx.save();
       ctx.beginPath();

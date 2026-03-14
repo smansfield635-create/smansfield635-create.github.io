@@ -1,4 +1,4 @@
-function drawCosmicShell(ctx, width, height, viewState) {
+function drawShellBackground(ctx, width, height, viewState) {
   const bg = ctx.createLinearGradient(0, 0, 0, height);
   bg.addColorStop(0, "#02050d");
   bg.addColorStop(0.18, "#050a18");
@@ -21,7 +21,7 @@ function drawCosmicShell(ctx, width, height, viewState) {
   ctx.fillRect(0, 0, width, height);
 }
 
-function drawPlanetLayerShell(ctx, body) {
+function drawPlanetAtmosphereShell(ctx, body) {
   const shell = ctx.createRadialGradient(
     body.centerX,
     body.centerY,
@@ -47,7 +47,8 @@ export function createEnvironmentRenderer({ renderRouter }) {
       const height = ctx.canvas.height;
       const body = projector.getBody();
 
-      drawCosmicShell(ctx, width, height, viewState);
+      drawShellBackground(ctx, width, height, viewState);
+
       renderRouter.drawActiveLayer(ctx, snapshot, projector, viewState, {
         width,
         height,
@@ -56,7 +57,7 @@ export function createEnvironmentRenderer({ renderRouter }) {
       });
 
       if (viewState === "PLANET_LAYER") {
-        drawPlanetLayerShell(ctx, body);
+        drawPlanetAtmosphereShell(ctx, body);
       }
     }
   };

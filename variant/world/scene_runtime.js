@@ -76,7 +76,7 @@ export async function createSceneRuntime({
     compassRenderer.draw(context, projector, latestNow);
   }
 
-  function refresh() {
+  function refreshSelectionOnly() {
     latestSnapshot = worldRuntime.getSnapshot();
     writeOutputs(outputs, latestSnapshot);
     draw(latestSnapshot);
@@ -85,7 +85,7 @@ export async function createSceneRuntime({
   function pickSelection(canvasX, canvasY) {
     const worldPoint = projector.unproject(canvasX, canvasY);
     worldRuntime.selectAt(worldPoint.x, worldPoint.y);
-    refresh();
+    refreshSelectionOnly();
   }
 
   function resetPointerState() {
@@ -139,7 +139,6 @@ export async function createSceneRuntime({
 
     if (pointer.didDrag) {
       projector.drag(dx, dy);
-      draw(latestSnapshot);
     }
 
     pointer.lastX = canvasX;
@@ -163,7 +162,6 @@ export async function createSceneRuntime({
     }
 
     projector.seedMomentum(seedDx, seedDy, seedDt);
-    draw(latestSnapshot);
   }
 
   canvas.style.touchAction = "none";
@@ -202,7 +200,6 @@ export async function createSceneRuntime({
       if (canvas.releasePointerCapture) {
         canvas.releasePointerCapture(event.pointerId);
       }
-      draw(latestSnapshot);
       event.preventDefault();
     });
   } else {
@@ -253,7 +250,7 @@ export async function createSceneRuntime({
 
   return {
     start() {
-      refresh();
+      refreshSelectionOnly();
     },
     stop() {},
     resize() {

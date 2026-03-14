@@ -1,6 +1,7 @@
 function drawPolygonPath(ctx, polygon, projector) {
-  const projected = projector.poly(polygon).filter((p) => p.visible);
-  if (projected.length < 3) return projected;
+  if (!Array.isArray(polygon) || polygon.length < 3) return null;
+  const projected = polygon.map(([x, y]) => projector.point(x, y));
+  if (projected.length < 3) return null;
 
   ctx.beginPath();
   ctx.moveTo(projected[0].x, projected[0].y);
@@ -265,14 +266,14 @@ function getSouthMoonCraters() {
   ];
 }
 
-function drawMoons(ctx, width, height, tick, body) {
+function drawMoons(ctx, width, height, tick, body, horizonY) {
   const northRadius = body.radius * 0.20;
   const southRadius = body.radius * 0.10;
 
   const northBaseX = body.centerX + (body.radius * 0.04);
-  const northBaseY = body.horizonY - (body.radius * 0.01);
+  const northBaseY = horizonY - (body.radius * 0.01);
   const southBaseX = body.centerX - (body.radius * 0.22);
-  const southBaseY = body.horizonY + (body.radius * 0.01);
+  const southBaseY = horizonY + (body.radius * 0.01);
 
   const northAngle = (tick || 0) * 0.0010 + 0.18;
   const southAngle = (tick || 0) * 0.0014 + 1.7;
@@ -364,7 +365,7 @@ function drawAtmosphericChargeRibbon(ctx, width, tick, yBase, amp, alpha, phaseS
   ctx.stroke();
 }
 
-function drawAtmosphericCharge(ctx, width, height, tick, body) {
+function drawAtmosphericCharge(ctx, width, height, tick, body, horizonY) {
   ctx.save();
   ctx.beginPath();
   ctx.arc(body.centerX, body.centerY, body.radius * 1.08, Math.PI, Math.PI * 2);
@@ -372,7 +373,7 @@ function drawAtmosphericCharge(ctx, width, height, tick, body) {
   ctx.closePath();
   ctx.clip();
 
-  const topBand = body.horizonY - (body.radius * 0.18);
+  const topBand = horizonY - (body.radius * 0.18);
   const ribbons = [
     { y: topBand + 18, amp: 5.0, alpha: 0.07, shift: 0.4 },
     { y: topBand + 40, amp: 6.0, alpha: 0.05, shift: 1.6 }
@@ -385,9 +386,9 @@ function drawAtmosphericCharge(ctx, width, height, tick, body) {
   ctx.restore();
 }
 
-function drawOceanDepthBands(ctx, body, tick) {
+function drawOceanDepthBands(ctx, body, tick, horizonY) {
   const left = body.centerX - body.radius;
-  const top = body.horizonY;
+  const top = horizonY;
   const width = body.radius * 2;
   const height = body.radius * 1.34;
 
@@ -430,10 +431,10 @@ function drawOceanDepthBands(ctx, body, tick) {
   const drift = (Math.sin(tick * 0.0012) * body.radius * 0.016);
   const shelf = ctx.createRadialGradient(
     body.centerX + drift,
-    body.horizonY + (body.radius * 0.06),
+    horizonY + (body.radius * 0.06),
     body.radius * 0.18,
     body.centerX + drift,
-    body.horizonY + (body.radius * 0.10),
+    horizonY + (body.radius * 0.10),
     body.radius * 0.66
   );
   shelf.addColorStop(0, "rgba(168,255,238,0.16)");
@@ -460,10 +461,10 @@ function drawCurrentRibbon(ctx, left, right, yBase, amp, tick, alpha, phaseShift
   ctx.stroke();
 }
 
-function drawOceanCurrents(ctx, body, tick) {
+function drawOceanCurrents(ctx, body, tick, horizonY) {
   const left = body.centerX - body.radius;
   const right = body.centerX + body.radius;
-  const top = body.horizonY;
+  const top = horizonY;
 
   const bands = [
     { y: top + 18, amp: 2.8, alpha: 0.14, shift: 0.2, color: "rgba(200,255,246,{a})", width: 1.2 },
@@ -489,10 +490,10 @@ function drawOceanCurrents(ctx, body, tick) {
   }
 }
 
-function drawWaveHighlights(ctx, body, tick) {
+function drawWaveHighlights(ctx, body, tick, horizonY) {
   const left = body.centerX - body.radius;
   const right = body.centerX + body.radius;
-  const top = body.horizonY;
+  const top = horizonY;
 
   for (let band = 0; band < 11; band += 1) {
     const yBase = top + (band * 22);
@@ -514,8 +515,8 @@ function drawWaveHighlights(ctx, body, tick) {
   }
 }
 
-function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
-  const top = body.horizonY;
+function drawMoonReflections(ctx, body, moonNorth, moonSouth, horizonY) {
+  const top = horizonY;
   const height = body.radius * 1.28;
 
   const northReflect = ctx.createRadialGradient(
@@ -547,10 +548,10 @@ function drawMoonReflections(ctx, body, moonNorth, moonSouth) {
   ctx.fillRect(body.centerX - body.radius, top, body.radius * 2, height);
 }
 
-function drawSpecularSweep(ctx, body, tick) {
+function drawSpecularSweep(ctx, body, tick, horizonY) {
   const phase = ((tick % 1200) / 1200);
   const centerX = body.centerX - (body.radius * 0.34) + (phase * body.radius * 0.64);
-  const centerY = body.horizonY + (body.radius * 0.18);
+  const centerY = horizonY + (body.radius * 0.18);
 
   const glow = ctx.createRadialGradient(
     centerX,
@@ -581,7 +582,7 @@ function drawShallowShelf(ctx, polygon, projector, colorA, colorB) {
     6,
     center.x,
     center.y,
-    Math.max(90, projector.radius(260, cy))
+    Math.max(90, projector.radius(260))
   );
   gradient.addColorStop(0, colorA);
   gradient.addColorStop(1, colorB);
@@ -591,17 +592,17 @@ function drawShallowShelf(ctx, polygon, projector, colorA, colorB) {
 
   drawPolygonPath(ctx, polygon, projector);
   ctx.strokeStyle = "rgba(255,255,255,0.08)";
-  ctx.lineWidth = projector.lineWidth(1.6, cy);
+  ctx.lineWidth = projector.lineWidth(1.6);
   ctx.stroke();
 }
 
-function drawNebulaBand(ctx, width, height, body) {
+function drawNebulaBand(ctx, width, height, body, horizonY) {
   const band = ctx.createRadialGradient(
     body.centerX,
-    body.horizonY + (body.radius * 0.10),
+    horizonY + (body.radius * 0.10),
     body.radius * 0.18,
     body.centerX,
-    body.horizonY + (body.radius * 0.10),
+    horizonY + (body.radius * 0.10),
     body.radius * 1.16
   );
   band.addColorStop(0, "rgba(130,162,255,0.00)");
@@ -618,7 +619,8 @@ export function createEnvironmentRenderer() {
       const width = ctx.canvas.width;
       const height = ctx.canvas.height;
       const tick = snapshot.tick ?? 0;
-      const body = projector.getBody();
+      const body = projector.body;
+      const horizonY = body.centerY;
       const environment = snapshot.kernel.environment ?? {};
       const mistAmount = typeof environment.mistAmount === "number" ? environment.mistAmount : 0.22;
       const waters = Array.isArray(snapshot.kernel.waters) ? snapshot.kernel.waters : [];
@@ -634,11 +636,11 @@ export function createEnvironmentRenderer() {
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
 
-      drawNebulaBand(ctx, width, height, body);
+      drawNebulaBand(ctx, width, height, body, horizonY);
       drawStars(ctx, width, height, tick);
       drawShootingStar(ctx, width, height, tick);
-      const moons = drawMoons(ctx, width, height, tick, body);
-      drawAtmosphericCharge(ctx, width, height, tick, body);
+      const moons = drawMoons(ctx, width, height, tick, body, horizonY);
+      drawAtmosphericCharge(ctx, width, height, tick, body, horizonY);
 
       ctx.save();
       ctx.beginPath();
@@ -662,7 +664,7 @@ export function createEnvironmentRenderer() {
       ctx.fillStyle = atmosphereShell;
       ctx.fillRect(
         body.centerX - (body.radius * 1.20),
-        body.horizonY - (body.radius * 0.26),
+        horizonY - (body.radius * 0.26),
         body.radius * 2.40,
         body.radius * 0.66
       );
@@ -675,7 +677,7 @@ export function createEnvironmentRenderer() {
       ctx.closePath();
       ctx.clip();
 
-      drawOceanDepthBands(ctx, body, tick);
+      drawOceanDepthBands(ctx, body, tick, horizonY);
 
       const globeShadow = ctx.createRadialGradient(
         body.centerX,
@@ -690,12 +692,12 @@ export function createEnvironmentRenderer() {
       globeShadow.addColorStop(0.70, "rgba(24,90,144,0.08)");
       globeShadow.addColorStop(1, "rgba(4,22,48,0.16)");
       ctx.fillStyle = globeShadow;
-      ctx.fillRect(body.centerX - body.radius, body.horizonY, body.radius * 2, body.radius * 1.30);
+      ctx.fillRect(body.centerX - body.radius, horizonY, body.radius * 2, body.radius * 1.30);
 
-      drawMoonReflections(ctx, body, moons.moonNorth, moons.moonSouth);
-      drawOceanCurrents(ctx, body, tick);
-      drawWaveHighlights(ctx, body, tick);
-      drawSpecularSweep(ctx, body, tick);
+      drawMoonReflections(ctx, body, moons.moonNorth, moons.moonSouth, horizonY);
+      drawOceanCurrents(ctx, body, tick, horizonY);
+      drawWaveHighlights(ctx, body, tick, horizonY);
+      drawSpecularSweep(ctx, body, tick, horizonY);
 
       if (outerOcean) {
         drawShallowShelf(
@@ -719,7 +721,7 @@ export function createEnvironmentRenderer() {
 
       ctx.restore();
 
-      const limbGlow = ctx.createLinearGradient(0, body.horizonY - 8, 0, body.horizonY + (body.radius * 0.18));
+      const limbGlow = ctx.createLinearGradient(0, horizonY - 8, 0, horizonY + (body.radius * 0.18));
       limbGlow.addColorStop(0, "rgba(255,255,255,0)");
       limbGlow.addColorStop(0.30, "rgba(250,255,255,0.14)");
       limbGlow.addColorStop(0.60, "rgba(168,242,255,0.10)");
@@ -727,7 +729,7 @@ export function createEnvironmentRenderer() {
       ctx.fillStyle = limbGlow;
       ctx.fillRect(
         body.centerX - (body.radius * 1.20),
-        body.horizonY - 8,
+        horizonY - 8,
         body.radius * 2.40,
         body.radius * 0.20
       );

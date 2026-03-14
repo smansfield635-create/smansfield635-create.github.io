@@ -78,6 +78,14 @@ function drawVillageCluster(ctx, marker, projector) {
   ctx.restore();
 }
 
+function clipGlobe(ctx, projector) {
+  const body = projector.body;
+  ctx.beginPath();
+  ctx.arc(body.centerX, body.centerY, body.radius, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+}
+
 export function createGroundRenderer() {
   return {
     draw(ctx, snapshot, projector) {
@@ -93,6 +101,9 @@ export function createGroundRenderer() {
       const exploration = explorationRegion?.polygon ?? terrain[2] ?? null;
       const village = markers.find((row) => row.id === "harbor_village_anchor") ?? null;
 
+      ctx.save();
+      clipGlobe(ctx, projector);
+
       if (exploration) {
         drawPolygonPath(ctx, exploration, projector);
         ctx.fillStyle = "rgba(210,226,194,0.18)";
@@ -100,7 +111,7 @@ export function createGroundRenderer() {
 
         drawPolygonPath(ctx, exploration, projector);
         ctx.strokeStyle = "rgba(245,241,214,0.14)";
-        ctx.lineWidth = projector.lineWidth(1.4, centroid(exploration)[1]);
+        ctx.lineWidth = projector.lineWidth(1.4);
         ctx.stroke();
       }
 
@@ -111,7 +122,7 @@ export function createGroundRenderer() {
 
         drawPolygonPath(ctx, inlandRise, projector);
         ctx.strokeStyle = "rgba(255,230,176,0.16)";
-        ctx.lineWidth = projector.lineWidth(1.6, centroid(inlandRise)[1]);
+        ctx.lineWidth = projector.lineWidth(1.6);
         ctx.stroke();
       }
 
@@ -122,21 +133,23 @@ export function createGroundRenderer() {
 
         drawPolygonPath(ctx, peninsula, projector);
         ctx.strokeStyle = "rgba(255,209,142,0.86)";
-        ctx.lineWidth = projector.lineWidth(1.8, centroid(peninsula)[1]);
+        ctx.lineWidth = projector.lineWidth(1.8);
         ctx.stroke();
 
         drawPolygonPath(ctx, peninsula, projector);
         ctx.strokeStyle = "rgba(255,248,216,0.10)";
-        ctx.lineWidth = projector.lineWidth(4.4, centroid(peninsula)[1]);
+        ctx.lineWidth = projector.lineWidth(4.4);
         ctx.stroke();
       }
 
       for (const coastline of coastlines) {
         drawPolygonPath(ctx, coastline, projector);
         ctx.strokeStyle = "rgba(255,236,184,0.42)";
-        ctx.lineWidth = projector.lineWidth(1.1, centroid(coastline)[1]);
+        ctx.lineWidth = projector.lineWidth(1.1);
         ctx.stroke();
       }
+
+      ctx.restore();
 
       if (village) {
         drawVillageCluster(ctx, village, projector);

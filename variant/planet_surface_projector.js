@@ -3,7 +3,7 @@ export function createPlanetSurfaceProjector({ canvas }) {
     width: canvas.width,
     height: canvas.height,
     yaw: 0,
-    pitch: -0.38,
+    pitch: -0.34,
     cameraDistance: 2.42,
     centerX: 0,
     centerY: 0,
@@ -25,8 +25,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
   }
 
   function clampPitch() {
-    const minPitch = -0.62;
-    const maxPitch = -0.16;
+    const minPitch = -0.60;
+    const maxPitch = -0.12;
     if (state.pitch < minPitch) state.pitch = minPitch;
     if (state.pitch > maxPitch) state.pitch = maxPitch;
   }

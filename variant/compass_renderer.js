@@ -222,7 +222,7 @@ export function createCompassRenderer() {
 
       const size = Math.max(44, Math.min(ctx.canvas.width, ctx.canvas.height) * 0.072);
       const cx = Math.round(ctx.canvas.width - (78 + size));
-      const cy = Math.round(42 + size);
+      const cy = Math.round(74 + size);
 
       const ringDrift = now * 0.00022;
       const pulse = 1 + (Math.sin(now * 0.0032) * 0.06);

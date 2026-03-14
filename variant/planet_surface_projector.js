@@ -2,57 +2,104 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function computeBody(canvas) {
-  const width = canvas.width;
-  const height = canvas.height;
-  const radius = Math.max(width * 0.62, height * 0.54);
+function smoothstep(edge0, edge1, x) {
+  const t = clamp((x - edge0) / Math.max(1e-6, edge1 - edge0), 0, 1);
+  return t * t * (3 - (2 * t));
+}
 
+function createCameraState() {
   return {
-    centerX: width * 0.5,
-    centerY: height * 1.08,
-    radius,
-    topY: (height * 1.08) - radius
+    azimuth: 0,
+    pitch: Math.PI * 0.25,
+    focusX: 0.56,
+    focusY: 0.72,
+    zoom: 1
   };
 }
 
 export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   let viewport = getViewport();
+  const camera = createCameraState();
 
   function update(nextViewport) {
     viewport = nextViewport;
   }
 
   function getBody() {
-    return computeBody(canvas);
-  }
-
-  function point(x, y) {
-    const body = getBody();
-
-    const normalizedX = (x - 0.5) * 1.58;
-    const clampedX = clamp(normalizedX, -0.985, 0.985);
-    const horizonFactor = Math.sqrt(Math.max(0, 1 - (clampedX * clampedX)));
-
-    const horizonY = body.centerY - (horizonFactor * body.radius);
-    const verticalProgress = clamp((y - 0.50) / 0.50, 0, 1);
-    const localDepth = clamp(0.32 + (verticalProgress * 0.68), 0, 1);
-    const thickness = Math.max(body.radius * 0.10, (body.centerY - horizonY) * 0.58);
+    const width = canvas.width;
+    const height = canvas.height;
+    const radius = Math.max(width * 0.72, height * 0.78);
 
     return {
-      x: body.centerX + (clampedX * body.radius * 0.96),
-      y: horizonY + (verticalProgress * thickness),
-      depth: localDepth,
-      frontness: localDepth
+      centerX: width * 0.50,
+      centerY: height * 1.12,
+      radius,
+      horizonY: (height * 1.12) - radius
     };
   }
 
+  function toSurface(x, y) {
+    const lon = (x - camera.focusX) * Math.PI * 1.28;
+    const lat = (camera.focusY - y) * Math.PI * 0.92;
+
+    return {
+      lon,
+      lat
+    };
+  }
+
+  function projectSurface(x, y) {
+    const body = getBody();
+    const surface = toSurface(x, y);
+
+    const lon = surface.lon + camera.azimuth;
+    const lat = surface.lat;
+
+    const cosLat = Math.cos(lat);
+    const sinLat = Math.sin(lat);
+    const sinLon = Math.sin(lon);
+    const cosLon = Math.cos(lon);
+
+    const worldX = sinLon * cosLat;
+    const worldY = sinLat;
+    const worldZ = cosLon * cosLat;
+
+    const pitch = camera.pitch;
+    const cosP = Math.cos(pitch);
+    const sinP = Math.sin(pitch);
+
+    const rotatedY = (worldY * cosP) - (worldZ * sinP);
+    const rotatedZ = (worldY * sinP) + (worldZ * cosP);
+    const rotatedX = worldX;
+
+    const visible = rotatedZ > -0.22;
+    const depth = clamp((rotatedZ + 1) * 0.5, 0, 1);
+
+    const px = body.centerX + (rotatedX * body.radius * 0.92 * camera.zoom);
+    const py = body.centerY - (rotatedY * body.radius * 0.92 * camera.zoom);
+
+    return {
+      x: px,
+      y: py,
+      depth,
+      visible,
+      rotatedX,
+      rotatedY,
+      rotatedZ
+    };
+  }
+
+  function point(x, y) {
+    return projectSurface(x, y);
+  }
+
   function poly(points) {
-    return points.map(([x, y]) => point(x, y));
+    return points.map(([x, y]) => projectSurface(x, y));
   }
 
   function scaleAt(x, y) {
     const projected = point(x, y);
-    return 0.72 + (projected.depth * 0.42);
+    return 0.54 + (projected.depth * 0.70);
   }
 
   function radius(value, y = 0.72) {
@@ -74,27 +121,62 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   }
 
   function isFrontFacing(x, y) {
-    return point(x, y).frontness > 0.14;
+    return point(x, y).visible;
   }
 
   function unproject(px, py) {
     const body = getBody();
-    const nx = clamp((px - body.centerX) / (body.radius * 0.96), -0.985, 0.985);
-    const x = clamp(0.5 + (nx / 1.58), 0, 1);
+    const dx = (px - body.centerX) / Math.max(1, body.radius * 0.92 * camera.zoom);
+    const dy = (body.centerY - py) / Math.max(1, body.radius * 0.92 * camera.zoom);
+    const d2 = (dx * dx) + (dy * dy);
 
-    const horizonFactor = Math.sqrt(Math.max(0, 1 - (nx * nx)));
-    const horizonY = body.centerY - (horizonFactor * body.radius);
-    const thickness = Math.max(body.radius * 0.10, (body.centerY - horizonY) * 0.58);
-    const verticalProgress = clamp((py - horizonY) / Math.max(1, thickness), 0, 1);
-    const y = clamp(0.50 + (verticalProgress * 0.50), 0, 1);
+    if (d2 >= 1) {
+      return {
+        x: camera.focusX,
+        y: camera.focusY
+      };
+    }
+
+    const dz = Math.sqrt(Math.max(0, 1 - d2));
+    const pitch = camera.pitch;
+    const cosP = Math.cos(pitch);
+    const sinP = Math.sin(pitch);
+
+    const wx = dx;
+    const wy = (dy * cosP) + (dz * sinP);
+    const wz = (dz * cosP) - (dy * sinP);
+
+    const lon = Math.atan2(wx, wz) - camera.azimuth;
+    const lat = Math.asin(clamp(wy, -1, 1));
+
+    const x = clamp(camera.focusX + (lon / (Math.PI * 1.28)), 0, 1);
+    const y = clamp(camera.focusY - (lat / (Math.PI * 0.92)), 0, 1);
 
     return { x, y };
   }
 
+  function setFocus(x, y) {
+    camera.focusX = clamp(x, 0.04, 0.96);
+    camera.focusY = clamp(y, 0.50, 0.94);
+  }
+
+  function nudgeAzimuth(delta) {
+    camera.azimuth += delta;
+  }
+
   function getCameraState() {
     return {
-      mode: "FIXED_SURVEY_STAGE_1"
+      azimuth: camera.azimuth,
+      pitch: camera.pitch,
+      zoom: camera.zoom,
+      focusX: camera.focusX,
+      focusY: camera.focusY
     };
+  }
+
+  function horizonAlphaAtScreenY(screenY) {
+    const body = getBody();
+    return smoothstep(body.horizonY - (body.radius * 0.08), body.horizonY + (body.radius * 0.18), screenY);
   }
 
   return {
@@ -108,6 +190,9 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     averageDepth,
     isFrontFacing,
     unproject,
-    getCameraState
+    setFocus,
+    nudgeAzimuth,
+    getCameraState,
+    horizonAlphaAtScreenY
   };
 }

@@ -66,7 +66,11 @@ export async function createSceneRuntime({
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     environmentRenderer.draw(context, snapshot, projector);
-    groundRenderer.draw(context, snapshot, projector);
+
+    // STABILIZATION RULE:
+    // land rendering is intentionally disabled until globe/camera composition is locked again.
+    // groundRenderer.draw(context, snapshot, projector);
+
     compassRenderer.draw(context, projector, latestNow);
   }
 

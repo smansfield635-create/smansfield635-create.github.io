@@ -1,7 +1,7 @@
 import { createWorldRuntime } from "../../world/runtime/world_runtime.js";
-import { createPlanetSurfaceProjector } from "../planet_surface_projector.js";
-import { createEnvironmentRenderer } from "../environment_renderer.js";
-import { createCompassRenderer } from "../compass_renderer.js";
+import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
+import { createEnvironmentRenderer } from "./environment_renderer.js";
+import { createCompassRenderer } from "./compass_renderer.js";
 import { createViewStateStore, VIEW_STATE } from "../runtime/view_state.js";
 import { createRenderRouter } from "../runtime/render_router.js";
 import { createInteractionRouter } from "../runtime/interaction_router.js";
@@ -39,9 +39,26 @@ function writeOutputs(outputs, snapshot, viewState) {
 function getCanvasPixelPoint(canvas, clientX, clientY) {
   const rect = canvas.getBoundingClientRect();
   return {
-    x: (clientX - rect.left) * (canvas.width / rect.width),
-    y: (clientY - rect.top) * (canvas.height / rect.height)
+    x: (clientX - rect.left) * (canvas.width / Math.max(1, rect.width)),
+    y: (clientY - rect.top) * (canvas.height / Math.max(1, rect.height))
   };
+}
+
+function resolveViewport(canvas, getViewport) {
+  const fallback = {
+    width: canvas.width,
+    height: canvas.height
+  };
+
+  if (typeof getViewport !== "function") {
+    return fallback;
+  }
+
+  const viewport = getViewport();
+  const width = Number.isFinite(viewport?.width) ? viewport.width : fallback.width;
+  const height = Number.isFinite(viewport?.height) ? viewport.height : fallback.height;
+
+  return { width, height };
 }
 
 export async function createSceneRuntime({
@@ -51,7 +68,7 @@ export async function createSceneRuntime({
   getViewport
 }) {
   const worldRuntime = await createWorldRuntime();
-  const projector = createPlanetSurfaceProjector({ canvas, getViewport });
+  const projector = createPlanetSurfaceProjector({ canvas });
   const viewStateStore = createViewStateStore(VIEW_STATE.GALAXY_LAYER);
 
   function getGalaxyEarthNode() {
@@ -98,16 +115,24 @@ export async function createSceneRuntime({
     admitted: false
   };
 
-  function draw(snapshot) {
-    const viewport = getViewport();
+  function updateProjector() {
+    const viewport = resolveViewport(canvas, getViewport);
     projector.update(viewport);
+  }
+
+  function draw(snapshot) {
+    updateProjector();
 
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    environmentRenderer.draw(context, snapshot, projector, viewStateStore.get());
+    const currentViewState = viewStateStore.get();
+    environmentRenderer.draw(context, snapshot, projector, currentViewState);
 
-    if (viewStateStore.get() === VIEW_STATE.GALAXY_LAYER || viewStateStore.get() === VIEW_STATE.PLANET_LAYER) {
+    if (
+      currentViewState === VIEW_STATE.GALAXY_LAYER ||
+      currentViewState === VIEW_STATE.PLANET_LAYER
+    ) {
       compassRenderer.draw(context, projector, latestNow);
     }
   }
@@ -199,9 +224,11 @@ export async function createSceneRuntime({
     canvas.addEventListener("pointerdown", (event) => {
       const p = getCanvasPixelPoint(canvas, event.clientX, event.clientY);
       beginDrag(event.pointerId, p.x, p.y, event.timeStamp || performance.now());
+
       if (canvas.setPointerCapture) {
         canvas.setPointerCapture(event.pointerId);
       }
+
       event.preventDefault();
     });
 
@@ -216,18 +243,22 @@ export async function createSceneRuntime({
       if (!pointer.active || event.pointerId !== pointer.id) return;
       const p = getCanvasPixelPoint(canvas, event.clientX, event.clientY);
       endDrag(p.x, p.y);
+
       if (canvas.releasePointerCapture) {
         canvas.releasePointerCapture(event.pointerId);
       }
+
       event.preventDefault();
     });
 
     canvas.addEventListener("pointercancel", (event) => {
       if (!pointer.active || event.pointerId !== pointer.id) return;
       resetPointerState();
+
       if (canvas.releasePointerCapture) {
         canvas.releasePointerCapture(event.pointerId);
       }
+
       event.preventDefault();
     });
   } else {

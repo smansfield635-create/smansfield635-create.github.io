@@ -1,70 +1,58 @@
 import { byteToStateVector, validateByte } from "../assets/four_pixel_codec.js";
 
-const DEV_VALIDATE_ON_BOOT = false;
-
 const DATA_FILES = {
   regions: new URL("./data/regions.json", import.meta.url),
   paths: new URL("./data/paths.json", import.meta.url),
   hazards: new URL("./data/hazards.json", import.meta.url),
   waters: new URL("./data/waters.json", import.meta.url),
   diamondGrid: new URL("./data/diamond_grid.json", import.meta.url),
-  stateEncodings: new URL("./data/state_encodings.json", import.meta.url)
+  stateEncodings: new URL("./data/state_encodings.json", import.meta.url),
+
+  terrain: new URL("./data/terrain_polygons.json", import.meta.url),
+  substrates: new URL("./data/substrate_polygons.json", import.meta.url),
+  regionBoundaries: new URL("./data/region_boundaries.json", import.meta.url),
+  coastlines: new URL("./data/coastlines.json", import.meta.url),
+  coastalBlueprint: new URL("./data/coastal_blueprint.json", import.meta.url),
+  harborNavigationGraph: new URL("./data/harbor_navigation_graph.json", import.meta.url),
+  harborInstances: new URL("./data/harbor_instances.json", import.meta.url),
+  maritimeNetwork: new URL("./data/maritime_network.json", import.meta.url)
 };
 
-function shallowFreeze(v) {
-  if (v && typeof v === "object" && !Object.isFrozen(v)) {
-    Object.freeze(v);
-  }
-  return v;
+async function read(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error("Missing dataset: "+url);
+  return r.json();
 }
 
-async function readJsonSafe(url, label) {
-  try {
-    const r = await fetch(url);
-    if (!r.ok) {
-      console.warn("Kernel data missing:", label);
-      return null;
-    }
-    return await r.json();
-  } catch (e) {
-    console.warn("Kernel load failed:", label, e);
-    return null;
+function mapIndex(rows,key){
+  const m=new Map();
+  if(!rows) return m;
+  for(const r of rows){
+    const id=r[key];
+    if(id) m.set(id,Object.freeze({...r}));
   }
+  return m;
 }
 
-function indexBy(rows, key) {
-  if (!rows) return new Map();
+function nearestCell(cells,x,y){
+  let best=null;
+  let bestD=Infinity;
 
-  const map = new Map();
+  for(const c of cells.values()){
+    const dx=c.centerPoint[0]-x;
+    const dy=c.centerPoint[1]-y;
+    const d=dx*dx+dy*dy;
 
-  for (const row of rows) {
-    const id = row?.[key];
-    if (typeof id !== "string" || id.length === 0) continue;
-    map.set(id, shallowFreeze({ ...row }));
-  }
-
-  return shallowFreeze(map);
-}
-
-function nearestCell(cells, x, y) {
-  let best = null;
-  let bestD = Infinity;
-
-  for (const c of cells.values()) {
-    const dx = c.centerPoint[0] - x;
-    const dy = c.centerPoint[1] - y;
-    const d = dx * dx + dy * dy;
-
-    if (d < bestD) {
-      bestD = d;
-      best = c;
+    if(d<bestD){
+      best=c;
+      bestD=d;
     }
   }
 
   return best;
 }
 
-export async function loadWorldKernel() {
+export async function loadWorldKernel(){
 
   const [
     regions,
@@ -72,31 +60,58 @@ export async function loadWorldKernel() {
     hazards,
     waters,
     diamondGrid,
-    stateEncodings
+    encodings,
+
+    terrain,
+    substrates,
+    regionBoundaries,
+    coastlines,
+    coastalBlueprint,
+    harborNavigationGraph,
+    harborInstances,
+    maritimeNetwork
   ] = await Promise.all([
-    readJsonSafe(DATA_FILES.regions, "regions"),
-    readJsonSafe(DATA_FILES.paths, "paths"),
-    readJsonSafe(DATA_FILES.hazards, "hazards"),
-    readJsonSafe(DATA_FILES.waters, "waters"),
-    readJsonSafe(DATA_FILES.diamondGrid, "diamondGrid"),
-    readJsonSafe(DATA_FILES.stateEncodings, "stateEncodings")
+    read(DATA_FILES.regions),
+    read(DATA_FILES.paths),
+    read(DATA_FILES.hazards),
+    read(DATA_FILES.waters),
+    read(DATA_FILES.diamondGrid),
+    read(DATA_FILES.stateEncodings),
+
+    read(DATA_FILES.terrain),
+    read(DATA_FILES.substrates),
+    read(DATA_FILES.regionBoundaries),
+    read(DATA_FILES.coastlines),
+    read(DATA_FILES.coastalBlueprint),
+    read(DATA_FILES.harborNavigationGraph),
+    read(DATA_FILES.harborInstances),
+    read(DATA_FILES.maritimeNetwork)
   ]);
 
-  if (!regions) throw new Error("Critical kernel file missing: regions");
+  const regionsById = mapIndex(regions.regionRows,"regionId");
+  const pathsById = mapIndex(paths?.pathRows,"pathId");
+  const hazardsById = mapIndex(hazards?.hazardRows,"hazardId");
+  const watersById = mapIndex(waters?.waterRows,"waterId");
+  const encodingsById = mapIndex(encodings?.encodingRows,"encodingId");
+  const diamondCellsById = mapIndex(diamondGrid?.diamondCells,"diamondCellId");
 
-  const regionsById = indexBy(regions.regionRows, "regionId");
-  const pathsById = indexBy(paths?.pathRows, "pathId");
-  const hazardsById = indexBy(hazards?.hazardRows, "hazardId");
-  const watersById = indexBy(waters?.waterRows, "waterId");
-  const encodingsById = indexBy(stateEncodings?.encodingRows, "encodingId");
-  const diamondCellsById = indexBy(diamondGrid?.diamondCells, "diamondCellId");
+  const terrainPolygonsById = mapIndex(terrain?.terrain,"terrainId");
+  const substratePolygonsById = mapIndex(substrates?.substrates,"substrateId");
+  const regionBoundariesById = mapIndex(regionBoundaries?.regions,"regionId");
 
-  const kernel = {
+  const harborNodes = mapIndex(harborNavigationGraph?.navigationNodes,"navNodeId");
+  const harborEdges = mapIndex(harborNavigationGraph?.navigationEdges,"edgeId");
 
-    worldMeta: shallowFreeze({
-      worldId: regions.worldId,
-      encodingFamilyVersion: regions.encodingFamilyVersion
-    }),
+  const seaNodes = mapIndex(maritimeNetwork?.seaNodes,"seaNodeId");
+  const seaRoutes = mapIndex(maritimeNetwork?.seaRoutes,"seaRouteId");
+  const seaHazards = mapIndex(maritimeNetwork?.seaHazards,"hazardId");
+
+  const kernel={
+
+    worldMeta:{
+      worldId:regions.worldId,
+      encodingFamilyVersion:regions.encodingFamilyVersion
+    },
 
     regionsById,
     pathsById,
@@ -105,44 +120,67 @@ export async function loadWorldKernel() {
     encodingsById,
     diamondCellsById,
 
-    helpers: null
+    terrainPolygonsById,
+    substratePolygonsById,
+    regionBoundariesById,
+
+    coastlineModel:coastlines,
+
+    coastalBlueprint,
+
+    harborNavigationGraph:{
+      navigationNodesById:harborNodes,
+      navigationEdgesById:harborEdges
+    },
+
+    maritimeNetwork:{
+      seaNodesById:seaNodes,
+      seaRoutesById:seaRoutes,
+      seaHazardsById:seaHazards
+    },
+
+    harborInstances:harborInstances.instances ?? [],
+
+    helpers:null
   };
 
-  kernel.helpers = {
+  kernel.helpers={
 
-    getRegion(id) {
+    getRegion(id){
       return regionsById.get(id) ?? null;
     },
 
-    getEncoding(id) {
+    getEncoding(id){
       return encodingsById.get(id) ?? null;
     },
 
-    projectWorldPositionToCell({ x, y, previousCellId = null }) {
+    projectWorldPositionToCell({x,y,previousCellId=null}){
 
-      const cell = nearestCell(diamondCellsById, x, y);
-      const enc = encodingsById.get(cell.stateEncodingId);
+      const cell=nearestCell(diamondCellsById,x,y);
+      const enc=encodingsById.get(cell.stateEncodingId);
 
-      return shallowFreeze({
-        regionId: cell.regionId,
-        pathId: cell.pathId,
-        cellId: cell.diamondCellId,
-        bandIndex: cell.bandIndex,
-        sector: cell.sector,
-        stateByte: enc.byte,
-        stateEncodingId: cell.stateEncodingId,
+      return Object.freeze({
+        regionId:cell.regionId,
+        pathId:cell.pathId,
+        cellId:cell.diamondCellId,
+        bandIndex:cell.bandIndex,
+        sector:cell.sector,
+        stateByte:enc.byte,
+        stateEncodingId:cell.stateEncodingId,
         previousCellId
       });
+
     },
 
-    decodeStateByte(byte) {
+    decodeStateByte(byte){
       validateByte(byte);
       return byteToStateVector(byte);
     }
+
   };
 
-  shallowFreeze(kernel.helpers);
-  shallowFreeze(kernel);
+  Object.freeze(kernel.helpers);
+  Object.freeze(kernel);
 
   return kernel;
 }

@@ -14,10 +14,10 @@ function createCameraState() {
   return {
     azimuth: 0,
     latitudeTilt: 0,
-    pitch: Math.PI * 0.40,
+    pitch: Math.PI * 0.47,
     focusX: 0.56,
     focusY: 0.72,
-    zoom: 1.10
+    zoom: 1.18
   };
 }
 
@@ -32,13 +32,13 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   function getBody() {
     const width = canvas.width;
     const height = canvas.height;
-    const radius = Math.max(width * 0.54, height * 0.56);
+    const radius = Math.max(width * 0.56, height * 0.58);
 
     return {
       centerX: width * 0.64,
-      centerY: height * 1.20,
+      centerY: height * 1.30,
       radius,
-      horizonY: (height * 1.20) - radius
+      horizonY: (height * 1.30) - radius
     };
   }
 

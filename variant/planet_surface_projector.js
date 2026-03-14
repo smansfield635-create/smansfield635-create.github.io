@@ -1,5 +1,4 @@
 export function createPlanetSurfaceProjector({ canvas }) {
-
   const state = {
     width: canvas.width,
     height: canvas.height,
@@ -30,23 +29,20 @@ export function createPlanetSurfaceProjector({ canvas }) {
     state.centerX = width * 0.5;
     state.centerY = height * 0.60;
 
-    // important: radius derived from smaller axis
     const minAxis = Math.min(width, height);
-
     state.pixelRadius = minAxis * 0.38;
   }
 
   function rotatePoint(x, y) {
-
     const sinY = Math.sin(state.yaw);
     const cosY = Math.cos(state.yaw);
 
     const sinP = Math.sin(state.pitch);
     const cosP = Math.cos(state.pitch);
 
-    let px = x - 0.5;
-    let py = y - 0.5;
-    let pz = Math.sqrt(Math.max(0, 1 - px * px - py * py));
+    const px = x - 0.5;
+    const py = y - 0.5;
+    const pz = Math.sqrt(Math.max(0, 1 - px * px - py * py));
 
     const rx = cosY * px + sinY * pz;
     const rz = -sinY * px + cosY * pz;
@@ -58,9 +54,7 @@ export function createPlanetSurfaceProjector({ canvas }) {
   }
 
   function project(x, y) {
-
     const p = rotatePoint(x, y);
-
     const scale = state.pixelRadius / (state.cameraDistance - p.z);
 
     return {
@@ -71,11 +65,13 @@ export function createPlanetSurfaceProjector({ canvas }) {
   }
 
   function unproject(px, py) {
-
     const nx = (px - state.centerX) / state.pixelRadius;
     const ny = (py - state.centerY) / state.pixelRadius;
 
-    return { x: nx + 0.5, y: ny + 0.5 };
+    return {
+      x: nx + 0.5,
+      y: ny + 0.5
+    };
   }
 
   function point(x, y) {
@@ -109,9 +105,15 @@ export function createPlanetSurfaceProjector({ canvas }) {
     state.pitch += dy * 0.003;
 
     const limit = Math.PI * 0.45;
-
     if (state.pitch > limit) state.pitch = limit;
     if (state.pitch < -limit) state.pitch = -limit;
+  }
+
+  function getCameraState() {
+    return {
+      azimuth: state.yaw,
+      latitudeTilt: state.pitch
+    };
   }
 
   return Object.freeze({
@@ -122,10 +124,17 @@ export function createPlanetSurfaceProjector({ canvas }) {
     radius,
     unproject,
     drag,
+    getCameraState,
     body: {
-      get centerX() { return state.centerX; },
-      get centerY() { return state.centerY; },
-      get radius() { return state.pixelRadius; }
+      get centerX() {
+        return state.centerX;
+      },
+      get centerY() {
+        return state.centerY;
+      },
+      get radius() {
+        return state.pixelRadius;
+      }
     }
   });
 }

@@ -1,20 +1,20 @@
 import { VIEW_STATE } from "./view_state.js";
 
 export function createRenderRouter({
-  cosmicEngine,
+  galaxyEngine,
+  solarSystemEngine,
   planetEngine,
-  regionEngine,
-  harborEngine
+  surfaceEngine
 }) {
   const registry = Object.freeze({
-    [VIEW_STATE.COSMIC_LAYER]: cosmicEngine,
+    [VIEW_STATE.GALAXY_LAYER]: galaxyEngine,
+    [VIEW_STATE.SOLAR_SYSTEM_LAYER]: solarSystemEngine,
     [VIEW_STATE.PLANET_LAYER]: planetEngine,
-    [VIEW_STATE.REGION_LAYER]: regionEngine,
-    [VIEW_STATE.HARBOR_LAYER]: harborEngine
+    [VIEW_STATE.SURFACE_LAYER]: surfaceEngine
   });
 
   function getActiveEngine(viewState) {
-    return registry[viewState] ?? registry[VIEW_STATE.COSMIC_LAYER];
+    return registry[viewState] ?? registry[VIEW_STATE.GALAXY_LAYER];
   }
 
   function drawActiveLayer(ctx, snapshot, projector, viewState, helpers = {}) {

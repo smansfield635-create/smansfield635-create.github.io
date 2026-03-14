@@ -1,67 +1,52 @@
-function drawPolygon(context, points) {
-  if (points.length < 3) {
-    return;
+function drawPolygon(ctx, polygon, projector) {
+  const first = projector.point(polygon[0][0], polygon[0][1]);
+  ctx.beginPath();
+  ctx.moveTo(first.x, first.y);
+  for (let i = 1; i < polygon.length; i += 1) {
+    const p = projector.point(polygon[i][0], polygon[i][1]);
+    ctx.lineTo(p.x, p.y);
   }
-
-  context.beginPath();
-  context.moveTo(points[0].x, points[0].y);
-  for (let index = 1; index < points.length; index += 1) {
-    context.lineTo(points[index].x, points[index].y);
-  }
-  context.closePath();
+  ctx.closePath();
 }
 
 export function createEnvironmentRenderer() {
   return {
-    render({ context, projector, worldPayload, viewport }) {
-      const width = viewport.pixelWidth;
-      const height = viewport.pixelHeight;
-      const environment = worldPayload.environment || {};
-      const waters = worldPayload.waters || [];
+    draw(ctx, snapshot, projector) {
+      const width = ctx.canvas.width;
+      const height = ctx.canvas.height;
+      const environment = snapshot.kernel.environment;
 
-      const skyGradient = context.createLinearGradient(0, 0, 0, height);
-      skyGradient.addColorStop(0, "#183350");
-      skyGradient.addColorStop(0.55, "#3d6889");
-      skyGradient.addColorStop(1, "#7c96a8");
+      const sky = ctx.createLinearGradient(0, 0, 0, height);
+      sky.addColorStop(0, "#314765");
+      sky.addColorStop(0.50, "#223755");
+      sky.addColorStop(1, "#0b1628");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, width, height);
 
-      context.save();
+      ctx.fillStyle = `rgba(220,235,245,${0.10 + environment.mistAmount * 0.12})`;
+      ctx.fillRect(0, 0, width, height * 0.78);
 
-      context.fillStyle = skyGradient;
-      context.fillRect(0, 0, width, height);
+      const waters = snapshot.kernel.waters;
+      const outerOcean = waters[0];
+      const harborBasin = waters[1];
 
-      const visibility = Number.isFinite(environment.visibility)
-        ? environment.visibility
-        : 1;
-      const humidityFogLoad = Number.isFinite(environment.humidityFogLoad)
-        ? environment.humidityFogLoad
-        : 0.2;
-
-      const hazeAlpha = Math.max(
-        0,
-        Math.min(0.35, humidityFogLoad * 0.25 + (1 - visibility) * 0.15),
-      );
-
-      if (hazeAlpha > 0) {
-        context.fillStyle = `rgba(224,235,245,${hazeAlpha.toFixed(3)})`;
-        context.fillRect(0, 0, width, height);
+      if (outerOcean) {
+        drawPolygon(ctx, outerOcean, projector);
+        ctx.fillStyle = "#1e4468";
+        ctx.fill();
       }
 
-      for (const water of waters) {
-        const points = projector.projectPoints(water.points || []);
-        if (points.length < 3) {
-          continue;
-        }
-
-        drawPolygon(context, points);
-        context.fillStyle = "#2c5f90";
-        context.fill();
+      if (harborBasin) {
+        drawPolygon(ctx, harborBasin, projector);
+        ctx.fillStyle = "#2f668f";
+        ctx.fill();
       }
 
-      context.restore();
-
-      return {
-        visible: true,
-      };
-    },
+      if (harborBasin) {
+        drawPolygon(ctx, harborBasin, projector);
+        ctx.fillStyle = "rgba(255,255,255,0.05)";
+        ctx.fill();
+      }
+    }
   };
 }

@@ -191,6 +191,7 @@ export function createHarborContinentPayload() {
       outerOcean,
       lagoon
     ],
+    paths: [],
     regions: [
       {
         id: "gratitude_region",
@@ -257,6 +258,16 @@ export function createHarborContinentPayload() {
     },
     runtimeState: {
       phase: "stage_1_harbor_continent"
+    },
+    pressure: {
+      terrainFriction: 0.18,
+      visibilityLoss: 0.04,
+      stormIntensity: 0.08,
+      humidityFogLoad: 0.10,
+      waterAccessVariance: 0.04,
+      routeObstruction: 0.06,
+      resourceScarcity: 0.06,
+      environmentalNoise: 0.08
     },
     arcs: [
       {

@@ -5,10 +5,10 @@ import { createCompassRenderer } from "../compass_renderer.js";
 import { createViewStateStore, VIEW_STATE } from "../runtime/view_state.js";
 import { createRenderRouter } from "../runtime/render_router.js";
 import { createInteractionRouter } from "../runtime/interaction_router.js";
-import { createCosmicEngine } from "../engines/cosmic_engine.js";
+import { createGalaxyEngine } from "../engines/galaxy_engine.js";
+import { createSolarSystemEngine } from "../engines/solar_system_engine.js";
 import { createPlanetEngine } from "../engines/planet_engine.js";
-import { createRegionEngine } from "../engines/region_engine.js";
-import { createHarborEngine } from "../engines/harbor_engine.js";
+import { createSurfaceEngine } from "../engines/surface_engine.js";
 
 const DRAG_THRESHOLD_SQ = 9;
 
@@ -25,12 +25,14 @@ function writeOutputs(outputs, snapshot, viewState) {
   outputs.region.textContent = snapshot.readout.region;
   outputs.selectedName.textContent = snapshot.readout.selectedName;
   outputs.selectedType.textContent = viewState;
+
   outputs.selectionHint.textContent =
-    viewState === VIEW_STATE.COSMIC_LAYER
-      ? "Tap globe to descend."
+    viewState === VIEW_STATE.GALAXY_LAYER
+      ? "Tap Earth to descend."
       : viewState === VIEW_STATE.PLANET_LAYER
         ? "Tap background to return."
         : "Layer active.";
+
   setPlaceholderOutputs(outputs);
 }
 
@@ -50,20 +52,31 @@ export async function createSceneRuntime({
 }) {
   const worldRuntime = await createWorldRuntime();
   const projector = createPlanetSurfaceProjector({ canvas, getViewport });
-  const viewStateStore = createViewStateStore(VIEW_STATE.COSMIC_LAYER);
+  const viewStateStore = createViewStateStore(VIEW_STATE.GALAXY_LAYER);
+
+  function getGalaxyEarthNode() {
+    const body = projector.getBody();
+    return {
+      x: body.centerX,
+      y: body.centerY,
+      radius: body.radius * 0.14
+    };
+  }
 
   const renderRouter = createRenderRouter({
-    cosmicEngine: createCosmicEngine(),
+    galaxyEngine: createGalaxyEngine({ getEarthNode: getGalaxyEarthNode }),
+    solarSystemEngine: createSolarSystemEngine(),
     planetEngine: createPlanetEngine(),
-    regionEngine: createRegionEngine(),
-    harborEngine: createHarborEngine()
+    surfaceEngine: createSurfaceEngine()
   });
 
   const environmentRenderer = createEnvironmentRenderer({ renderRouter });
   const compassRenderer = createCompassRenderer();
+
   const interactionRouter = createInteractionRouter({
     viewStateStore,
-    projector
+    projector,
+    getGalaxyEarthNode
   });
 
   let latestSnapshot = worldRuntime.getSnapshot();
@@ -92,14 +105,9 @@ export async function createSceneRuntime({
     context.setTransform(1, 0, 0, 1, 0, 0);
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    environmentRenderer.draw(
-      context,
-      snapshot,
-      projector,
-      viewStateStore.get()
-    );
+    environmentRenderer.draw(context, snapshot, projector, viewStateStore.get());
 
-    if (viewStateStore.get() === VIEW_STATE.COSMIC_LAYER || viewStateStore.get() === VIEW_STATE.PLANET_LAYER) {
+    if (viewStateStore.get() === VIEW_STATE.GALAXY_LAYER || viewStateStore.get() === VIEW_STATE.PLANET_LAYER) {
       compassRenderer.draw(context, projector, latestNow);
     }
   }
@@ -122,8 +130,6 @@ export async function createSceneRuntime({
   }
 
   function beginDrag(id, canvasX, canvasY, nowMs) {
-    const admitted = interactionRouter.canRotate(canvasX, canvasY);
-
     pointer.active = true;
     pointer.id = id;
     pointer.startX = canvasX;
@@ -136,7 +142,7 @@ export async function createSceneRuntime({
     pointer.lastMoveDt = 16.67;
     pointer.movedSq = 0;
     pointer.didDrag = false;
-    pointer.admitted = admitted;
+    pointer.admitted = interactionRouter.canRotate(canvasX, canvasY);
   }
 
   function moveDrag(canvasX, canvasY, nowMs) {

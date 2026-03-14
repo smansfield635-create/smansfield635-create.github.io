@@ -51,7 +51,7 @@ function drawStars(ctx, width, height, tick) {
   const stars = createStarField();
 
   for (const [x, y, r, a, phase] of stars) {
-    const sparkle = 0.72 + (0.28 * Math.sin((tick * 0.035) + phase * 3.2));
+    const sparkle = 0.72 + (0.28 * Math.sin((tick * 0.035) + (phase * 3.2)));
     const alpha = a * sparkle;
     const radius = r * Math.max(1.2, width / 1200);
 
@@ -150,15 +150,16 @@ function drawMoonLightFields(ctx, width, height, moonA, moonB) {
 
 function drawOrbitingMoons(ctx, width, height, tick, body) {
   const horizon = body.horizonY;
+
   const primaryCx = width * 0.78;
   const primaryCy = Math.max(height * 0.14, horizon - (height * 0.10));
-  const primaryRx = width * 0.07;
-  const primaryRy = height * 0.024;
+  const primaryRx = width * 0.045;
+  const primaryRy = height * 0.015;
 
-  const secondaryCx = width * 0.63;
+  const secondaryCx = width * 0.64;
   const secondaryCy = Math.max(height * 0.19, horizon - (height * 0.05));
-  const secondaryRx = width * 0.06;
-  const secondaryRy = height * 0.020;
+  const secondaryRx = width * 0.036;
+  const secondaryRy = height * 0.013;
 
   const primaryAngle = (tick || 0) * 0.0032 + 0.5;
   const secondaryAngle = (tick || 0) * 0.0024 + 2.3;
@@ -198,6 +199,101 @@ function drawOrbitingMoons(ctx, width, height, tick, body) {
   );
 
   return { moonA, moonB };
+}
+
+function drawAtmosphericChargeRibbon(ctx, width, height, tick, yBase, amp, alpha, hueShift) {
+  ctx.beginPath();
+
+  for (let x = 0; x <= width; x += 10) {
+    const waveA = Math.sin((x * 0.009) + (tick * 0.012) + hueShift) * amp;
+    const waveB = Math.cos((x * 0.004) - (tick * 0.008) + (hueShift * 0.7)) * (amp * 0.34);
+    const y = yBase + waveA + waveB;
+
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+  const gradient = ctx.createLinearGradient(0, yBase - amp * 2, width, yBase + amp * 2);
+  gradient.addColorStop(0, `rgba(120,180,255,${alpha * 0.55})`);
+  gradient.addColorStop(0.5, `rgba(200,240,255,${alpha})`);
+  gradient.addColorStop(1, `rgba(150,210,255,${alpha * 0.52})`);
+
+  ctx.strokeStyle = gradient;
+  ctx.lineWidth = 1.1;
+  ctx.stroke();
+}
+
+function drawAtmosphericChargeSheets(ctx, width, height, tick, body) {
+  const horizon = body.horizonY;
+  const topBand = Math.max(height * 0.16, horizon - (height * 0.18));
+  const bottomBand = Math.max(height * 0.28, horizon - (height * 0.04));
+
+  const sheetA = ctx.createRadialGradient(
+    width * 0.30,
+    topBand,
+    width * 0.04,
+    width * 0.30,
+    topBand,
+    width * 0.40
+  );
+  sheetA.addColorStop(0, "rgba(110,190,255,0.08)");
+  sheetA.addColorStop(0.52, "rgba(110,190,255,0.03)");
+  sheetA.addColorStop(1, "rgba(110,190,255,0)");
+  ctx.fillStyle = sheetA;
+  ctx.fillRect(0, 0, width, bottomBand);
+
+  const sheetB = ctx.createRadialGradient(
+    width * 0.70,
+    topBand + (height * 0.03),
+    width * 0.04,
+    width * 0.70,
+    topBand + (height * 0.03),
+    width * 0.34
+  );
+  sheetB.addColorStop(0, "rgba(168,220,255,0.06)");
+  sheetB.addColorStop(0.50, "rgba(168,220,255,0.025)");
+  sheetB.addColorStop(1, "rgba(168,220,255,0)");
+  ctx.fillStyle = sheetB;
+  ctx.fillRect(0, 0, width, bottomBand);
+
+  const ribbons = [
+    { y: topBand + 12, amp: 5.0, alpha: 0.08, shift: 0.4 },
+    { y: topBand + 34, amp: 6.4, alpha: 0.06, shift: 1.7 },
+    { y: topBand + 62, amp: 7.4, alpha: 0.05, shift: 2.9 }
+  ];
+
+  for (const ribbon of ribbons) {
+    drawAtmosphericChargeRibbon(ctx, width, height, tick, ribbon.y, ribbon.amp, ribbon.alpha, ribbon.shift);
+  }
+
+  const flashPhase = tick % 2200;
+  if (flashPhase < 18) {
+    const boltX = width * (0.24 + ((Math.sin(tick * 0.0017) + 1) * 0.18));
+    const startY = topBand + 10;
+    const endY = bottomBand - 18;
+
+    ctx.beginPath();
+    ctx.moveTo(boltX, startY);
+
+    let currentX = boltX;
+    let currentY = startY;
+
+    while (currentY < endY) {
+      currentX += Math.sin((currentY * 0.08) + tick * 0.03) * 8;
+      currentY += 16;
+      ctx.lineTo(currentX, currentY);
+    }
+
+    ctx.strokeStyle = "rgba(216,244,255,0.18)";
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+
+    const flashGlow = ctx.createRadialGradient(currentX, endY - 20, 8, currentX, endY - 20, 100);
+    flashGlow.addColorStop(0, "rgba(216,244,255,0.14)");
+    flashGlow.addColorStop(1, "rgba(216,244,255,0)");
+    ctx.fillStyle = flashGlow;
+    ctx.fillRect(currentX - 100, endY - 120, 200, 200);
+  }
 }
 
 function drawOceanDepthBands(ctx, body) {
@@ -403,6 +499,7 @@ export function createEnvironmentRenderer() {
       drawStars(ctx, width, height, tick);
       drawShootingStar(ctx, width, height, tick);
       const moons = drawOrbitingMoons(ctx, width, height, tick, body);
+      drawAtmosphericChargeSheets(ctx, width, height, tick, body);
 
       const atmosphere = ctx.createRadialGradient(
         body.centerX,

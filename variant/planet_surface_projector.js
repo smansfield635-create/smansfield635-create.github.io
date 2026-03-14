@@ -2,9 +2,18 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function wrapAngleRadians(value) {
+  const twoPi = Math.PI * 2;
+  let out = value % twoPi;
+  if (out > Math.PI) out -= twoPi;
+  if (out < -Math.PI) out += twoPi;
+  return out;
+}
+
 function createCameraState() {
   return {
     azimuth: 0,
+    latitudeTilt: 0,
     pitch: Math.PI * 0.34,
     focusX: 0.56,
     focusY: 0.72,
@@ -45,10 +54,12 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const surface = toSurface(x, y);
 
     const lon = surface.lon + camera.azimuth;
-    const lat = surface.lat;
+    const lat = surface.lat + camera.latitudeTilt;
 
-    const cosLat = Math.cos(lat);
-    const sinLat = Math.sin(lat);
+    const clampedLat = clamp(lat, -Math.PI * 0.48, Math.PI * 0.48);
+
+    const cosLat = Math.cos(clampedLat);
+    const sinLat = Math.sin(clampedLat);
     const sinLon = Math.sin(lon);
     const cosLon = Math.cos(lon);
 
@@ -139,7 +150,7 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     const wz = (dz * cosP) - (dy * sinP);
 
     const lon = Math.atan2(wx, wz) - camera.azimuth;
-    const lat = Math.asin(clamp(wy, -1, 1));
+    const lat = Math.asin(clamp(wy, -1, 1)) - camera.latitudeTilt;
 
     const x = clamp(camera.focusX + (lon / (Math.PI * 1.10)), 0, 1);
     const y = clamp(camera.focusY - (lat / (Math.PI * 0.80)), 0, 1);
@@ -153,12 +164,28 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
   }
 
   function nudgeAzimuth(delta) {
-    camera.azimuth += delta;
+    camera.azimuth = wrapAngleRadians(camera.azimuth + delta);
+  }
+
+  function dragRotate(deltaX, deltaY) {
+    const width = Math.max(1, canvas.width);
+    const height = Math.max(1, canvas.height);
+
+    const azimuthDelta = (deltaX / width) * Math.PI * 1.35;
+    const latitudeDelta = (deltaY / height) * Math.PI * 0.82;
+
+    camera.azimuth = wrapAngleRadians(camera.azimuth + azimuthDelta);
+    camera.latitudeTilt = clamp(
+      camera.latitudeTilt - latitudeDelta,
+      -Math.PI * 0.24,
+      Math.PI * 0.24
+    );
   }
 
   function getCameraState() {
     return {
       azimuth: camera.azimuth,
+      latitudeTilt: camera.latitudeTilt,
       pitch: camera.pitch,
       zoom: camera.zoom,
       focusX: camera.focusX,
@@ -179,6 +206,7 @@ export function createPlanetSurfaceProjector({ canvas, getViewport }) {
     unproject,
     setFocus,
     nudgeAzimuth,
+    dragRotate,
     getCameraState
   };
 }

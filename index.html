@@ -171,6 +171,47 @@
       -webkit-backdrop-filter:blur(8px);
       pointer-events:none;
     }
+    .diamond-compass{
+      position:absolute;
+      left:var(--safe-left);
+      top:calc(var(--safe-top) + 58px);
+      width:112px;
+      height:112px;
+      z-index:3;
+      pointer-events:none;
+      filter:drop-shadow(0 8px 24px rgba(0,0,0,.28));
+    }
+    .diamond-compass svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+    .compass-glow{
+      animation:compassPulse 4.2s ease-in-out infinite;
+      transform-origin:50% 50%;
+    }
+    .compass-star{
+      animation:compassDrift 10s linear infinite;
+      transform-origin:50% 50%;
+    }
+    .compass-ring{
+      opacity:.82;
+    }
+    .compass-label{
+      fill:rgba(237,244,255,.92);
+      font-size:9px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+    @keyframes compassPulse{
+      0%,100%{opacity:.78;transform:scale(1)}
+      50%{opacity:1;transform:scale(1.035)}
+    }
+    @keyframes compassDrift{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
     @media (max-width: 920px){
       .panel-stack{
         top:auto;
@@ -188,6 +229,11 @@
         text-align:center;
         white-space:normal;
       }
+      .diamond-compass{
+        width:92px;
+        height:92px;
+        top:calc(var(--safe-top) + 52px);
+      }
     }
   </style>
 </head>
@@ -204,6 +250,44 @@
         </div>
       </div>
       <div class="pill">Closed Pilot</div>
+    </div>
+
+    <div class="diamond-compass" aria-hidden="true">
+      <svg viewBox="0 0 112 112" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="compassCore" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,244,216,0.95)"/>
+            <stop offset="55%" stop-color="rgba(120,196,255,0.70)"/>
+            <stop offset="100%" stop-color="rgba(120,196,255,0)"/>
+          </radialGradient>
+          <linearGradient id="compassStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(255,238,196,0.95)"/>
+            <stop offset="100%" stop-color="rgba(142,214,255,0.90)"/>
+          </linearGradient>
+        </defs>
+
+        <g class="compass-glow">
+          <circle cx="56" cy="56" r="42" fill="url(#compassCore)"/>
+        </g>
+
+        <g class="compass-ring">
+          <polygon points="56,10 102,56 56,102 10,56" fill="rgba(8,18,32,0.36)" stroke="url(#compassStroke)" stroke-width="1.4"/>
+          <polygon points="56,18 94,56 56,94 18,56" fill="rgba(8,18,32,0.14)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+          <line x1="56" y1="12" x2="56" y2="100" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+          <line x1="12" y1="56" x2="100" y2="56" stroke="rgba(255,255,255,0.20)" stroke-width="1"/>
+        </g>
+
+        <g class="compass-star">
+          <polygon points="56,20 63,49 92,56 63,63 56,92 49,63 20,56 49,49" fill="rgba(255,243,212,0.24)" stroke="rgba(255,232,186,0.90)" stroke-width="1.3"/>
+          <polygon points="56,28 60,52 84,56 60,60 56,84 52,60 28,56 52,52" fill="rgba(114,204,255,0.18)" stroke="rgba(148,216,255,0.86)" stroke-width="1"/>
+          <circle cx="56" cy="56" r="4.8" fill="rgba(255,244,212,0.94)"/>
+        </g>
+
+        <text x="56" y="8" text-anchor="middle" class="compass-label">N</text>
+        <text x="106" y="59" text-anchor="middle" class="compass-label">E</text>
+        <text x="56" y="110" text-anchor="middle" class="compass-label">S</text>
+        <text x="6" y="59" text-anchor="middle" class="compass-label">W</text>
+      </svg>
     </div>
 
     <div class="panel-stack">

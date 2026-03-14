@@ -251,15 +251,14 @@ export function createCompassRenderer() {
         0.48
       );
 
-      const worldYaw = Math.sin(now * 0.00035) * 0.25;
-      const worldPitch = 0.88 + (Math.cos(now * 0.00028) * 0.08);
+      const camera = projector.getCameraState?.() ?? { azimuth: 0, latitudeTilt: 0 };
+      const worldYaw = -(camera.azimuth || 0);
+      const worldPitch = 0.88 + ((camera.latitudeTilt || 0) * 0.55);
       const projected = projectCompass(model, worldYaw, worldPitch, size * 0.90);
 
       drawDiamondBody(ctx, cx, cy, projected);
       drawCore(ctx, cx, cy, size * 0.123 * pulse);
       drawLabels(ctx, cx, cy, size, worldYaw);
-
-      void projector;
     }
   };
 }

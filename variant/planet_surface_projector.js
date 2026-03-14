@@ -104,13 +104,18 @@ export function createPlanetSurfaceProjector({ canvas }) {
     resize(viewport.width, viewport.height);
   }
 
+  function clampPitch() {
+    const minPitch = -0.65;
+    const maxPitch = -0.15;
+
+    if (state.pitch > maxPitch) state.pitch = maxPitch;
+    if (state.pitch < minPitch) state.pitch = minPitch;
+  }
+
   function drag(dx, dy) {
     state.yaw += dx * 0.003;
     state.pitch += dy * 0.003;
-
-    const limit = Math.PI * 0.45;
-    if (state.pitch > limit) state.pitch = limit;
-    if (state.pitch < -limit) state.pitch = -limit;
+    clampPitch();
   }
 
   function dragRotate(dx, dy) {
@@ -142,6 +147,8 @@ export function createPlanetSurfaceProjector({ canvas }) {
       return state.centerY;
     }
   };
+
+  clampPitch();
 
   return Object.freeze({
     update,

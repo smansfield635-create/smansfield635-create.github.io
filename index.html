@@ -47,22 +47,14 @@
       background:#05070b;
     }
 
-    /* INDEX CHOKE-POINT PASS
-       - no badge
-       - much stronger framing shift
-       - much less visible sky
-       - compass stays where it is relative to scene */
     #scene{
       position:absolute;
-      left:0;
-      top:0;
+      inset:0;
       width:100%;
       height:100%;
       display:block;
       z-index:1;
       touch-action:none;
-      transform:translateY(180px) scale(1.28);
-      transform-origin:center top;
     }
 
     .topbar{
@@ -179,10 +171,6 @@
     }
 
     @media (max-width: 920px){
-      #scene{
-        transform:translateY(170px) scale(1.25);
-      }
-
       .panel-stack{
         width:92px;
       }

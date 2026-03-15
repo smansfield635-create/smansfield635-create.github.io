@@ -47,24 +47,23 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
 
-  const startupCurrentDepth = "galaxy";
-  const startupRequestedDepth = spine.getNextLegalDepth(startupCurrentDepth) ?? startupCurrentDepth;
+  // CORRECT DEPTH TRANSITION
+  const START_CURRENT_DEPTH = "galaxy";
+  const START_REQUESTED_DEPTH = "harbor";
 
   const canonVerification = verifyCanonicalStructure(buildCanonicalInput());
-  let executionGate = spine.evaluateExecutionGate(
-    canonVerification,
-    spine.buildExecutionRequest({
-      mode: "runtime_execution",
-      fileCount: 9,
-      currentDepth: startupCurrentDepth,
-      requestedDepth: startupRequestedDepth,
-      scopePath: WORLD_KERNEL.scope.activePath,
-      roleConflict: false,
-      ownershipDrift: false,
-      chronologyValid: true,
-      duplicateTruth: false
-    })
-  );
+
+  let executionGate = spine.evaluateExecutionGate(canonVerification, {
+    mode: "runtime_execution",
+    fileCount: 9,
+    currentDepth: START_CURRENT_DEPTH,
+    requestedDepth: START_REQUESTED_DEPTH,
+    scopePath: WORLD_KERNEL.scope.activePath,
+    roleConflict: false,
+    ownershipDrift: false,
+    chronologyValid: true,
+    duplicateTruth: false
+  });
 
   const runtime = {
     phase: executionGate.allow ? "BOOT" : "BLOCKED",
@@ -73,8 +72,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     canonVerification,
     executionGate,
     resolvedState: spine.resolveWorldState({
-      activeDepth: startupRequestedDepth,
-      currentDepth: startupCurrentDepth,
+      activeDepth: START_REQUESTED_DEPTH,
+      currentDepth: START_CURRENT_DEPTH,
       selection: {
         zone: "local_zone_alpha",
         row: 0,
@@ -122,59 +121,17 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     runtime.timing.fps = dt > 0 ? 1000 / dt : 0;
   }
 
-  function updateResolvedState() {
-    const currentDepth = runtime.resolvedState?.transition?.to ?? runtime.resolvedState?.activeDepth ?? startupRequestedDepth;
-    const requestedDepth = spine.getNextLegalDepth(currentDepth) ?? currentDepth;
-
-    runtime.resolvedState = spine.resolveWorldState({
-      activeDepth: currentDepth,
-      currentDepth,
-      selection: {
-        zone: runtime.resolvedState?.localSelection?.zone ?? "local_zone_alpha",
-        row: runtime.projection?.row ?? 0,
-        col: runtime.projection?.col ?? 0
-      }
-    });
-
-    runtime.region = runtime.resolvedState.region;
-    runtime.nextDepth = requestedDepth;
-  }
-
   function updateDerivedState() {
     runtime.orientation = projector.getOrientation();
     runtime.projection = projector.getProjectionSummary();
     runtime.cardinals = projector.getCardinalWeights();
-    updateResolvedState();
-  }
-
-  function evaluateRuntimeGate() {
-    const currentDepth = runtime.resolvedState?.activeDepth ?? startupRequestedDepth;
-    const requestedDepth = spine.getNextLegalDepth(currentDepth) ?? currentDepth;
-
-    executionGate = spine.evaluateExecutionGate(
-      runtime.canonVerification,
-      spine.buildExecutionRequest({
-        mode: "runtime_execution",
-        fileCount: 9,
-        currentDepth,
-        requestedDepth,
-        scopePath: WORLD_KERNEL.scope.activePath,
-        roleConflict: false,
-        ownershipDrift: false,
-        chronologyValid: true,
-        duplicateTruth: false
-      })
-    );
-
-    runtime.executionGate = executionGate;
-    runtime.nextDepth = requestedDepth;
-    return executionGate.allow;
+    runtime.region = runtime.resolvedState.region;
   }
 
   function update(now) {
     updateTiming(now);
 
-    if (!evaluateRuntimeGate()) {
+    if (!executionGate.allow) {
       runtime.phase = "BLOCKED";
       return;
     }
@@ -192,35 +149,6 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     writeDebugPanels();
   }
 
-  function failRuntime(error, phase) {
-    runtime.phase = "FAILED";
-    runtime.failure = {
-      phase,
-      message: error instanceof Error ? error.message : String(error)
-    };
-    writeDebugPanels();
-    if (frameHandle) {
-      cancelAnimationFrame(frameHandle);
-      frameHandle = 0;
-    }
-  }
-
-  function guardedUpdate(now) {
-    try {
-      update(now);
-    } catch (error) {
-      failRuntime(error, "update");
-    }
-  }
-
-  function guardedRender() {
-    try {
-      render();
-    } catch (error) {
-      failRuntime(error, "render");
-    }
-  }
-
   function frame(now) {
     if (runtime.phase === "FAILED" || runtime.phase === "BLOCKED") {
       writeDebugPanels();
@@ -228,10 +156,9 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     }
 
     runtime.phase = "RUNNING";
-    guardedUpdate(now);
-    if (runtime.phase === "FAILED") return;
-    guardedRender();
-    if (runtime.phase === "FAILED") return;
+
+    update(now);
+    render();
 
     frameHandle = requestAnimationFrame(frame);
   }
@@ -244,44 +171,41 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   }
 
   function onPointerMove(event) {
-    if (!isDragging || runtime.phase === "FAILED" || runtime.phase === "BLOCKED") return;
+    if (!isDragging) return;
 
     const dx = event.clientX - lastX;
     const dy = event.clientY - lastY;
+
     lastX = event.clientX;
     lastY = event.clientY;
+
     projector.applyDrag(dx, dy);
   }
 
   function onPointerUp() {
     isDragging = false;
-    if (runtime.phase !== "FAILED" && runtime.phase !== "BLOCKED") {
-      runtime.phase = "RUNNING";
-    }
+    runtime.phase = "RUNNING";
   }
 
   function start() {
-    try {
-      resizeCanvases();
-      updateDerivedState();
+    resizeCanvases();
+    updateDerivedState();
+    writeDebugPanels();
+
+    if (!executionGate.allow) {
+      runtime.phase = "BLOCKED";
       writeDebugPanels();
-
-      if (!executionGate.allow) {
-        runtime.phase = "BLOCKED";
-        writeDebugPanels();
-        return;
-      }
-
-      window.addEventListener("resize", resizeCanvases);
-      worldCanvas.addEventListener("pointerdown", onPointerDown);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp);
-      window.addEventListener("pointercancel", onPointerUp);
-
-      frameHandle = requestAnimationFrame(frame);
-    } catch (error) {
-      failRuntime(error, "startup");
+      return;
     }
+
+    window.addEventListener("resize", resizeCanvases);
+
+    worldCanvas.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+
+    frameHandle = requestAnimationFrame(frame);
   }
 
   return Object.freeze({

@@ -12,6 +12,9 @@ export function createInstruments() {
     "Depth Lattice",
     "Canon Verification",
     "Execution Gate",
+    "Magnetic Field",
+    "Thermodynamic Field",
+    "Hydrology Field",
     "Failure"
   ]);
 
@@ -132,6 +135,18 @@ export function createInstruments() {
 
   function getAuditLabels(runtime) {
     return normalizeObject(getResolvedState(runtime)?.auditLabels);
+  }
+
+  function getMagneticField(runtime) {
+    return normalizeObject(runtime?.magneticField);
+  }
+
+  function getThermodynamicField(runtime) {
+    return normalizeObject(runtime?.thermodynamicField);
+  }
+
+  function getHydrologyField(runtime) {
+    return normalizeObject(runtime?.hydrologyField);
   }
 
   function buildRuntimePanel(runtime) {
@@ -309,6 +324,52 @@ export function createInstruments() {
     });
   }
 
+  function buildMagneticFieldPanel(runtime) {
+    const field = getMagneticField(runtime);
+    const navigationBasis = normalizeObject(field?.navigationFieldBasis);
+
+    return Object.freeze({
+      latitude: toFixedSafe(field?.latDeg, 2),
+      longitude: toFixedSafe(field?.lonDeg, 2),
+      magneticIntensity: toFixedSafe(field?.magneticIntensityField, 3),
+      shieldingGradient: toFixedSafe(field?.shieldingGradientField, 3),
+      auroralPotential: toFixedSafe(field?.auroralPotentialField, 3),
+      headingBias: normalizePrimitive(navigationBasis?.headingBias),
+      navigationStability: toFixedSafe(navigationBasis?.stability, 3)
+    });
+  }
+
+  function buildThermodynamicFieldPanel(runtime) {
+    const field = getThermodynamicField(runtime);
+    const gradient = normalizeObject(field?.thermalGradientField);
+
+    return Object.freeze({
+      latitude: toFixedSafe(field?.latDeg, 2),
+      longitude: toFixedSafe(field?.lonDeg, 2),
+      temperature: toFixedSafe(field?.temperatureField, 3),
+      freezePotential: toFixedSafe(field?.freezePotentialField, 3),
+      meltPotential: toFixedSafe(field?.meltPotentialField, 3),
+      evaporationPressure: toFixedSafe(field?.evaporationPressureField, 3),
+      polarCooling: toFixedSafe(gradient?.polarCooling, 3),
+      heatNodeInfluence: toFixedSafe(gradient?.heatNodeInfluence, 3),
+      wildernessDecay: toFixedSafe(gradient?.wildernessDecay, 3),
+      nearestHeatDistance: toFixedSafe(gradient?.nearestHeatDistanceDeg, 2)
+    });
+  }
+
+  function buildHydrologyFieldPanel(runtime) {
+    const field = getHydrologyField(runtime);
+    const summary = normalizeObject(field?.summary);
+
+    return Object.freeze({
+      sampleCount: normalizePrimitive(field?.samples?.length ?? summary?.sampleCount),
+      runoffAverage: toFixedSafe(summary?.runoffAverage, 3),
+      basinAverage: toFixedSafe(summary?.basinAverage, 3),
+      riverCandidateCount: normalizePrimitive(summary?.riverCandidateCount),
+      lakeCandidateCount: normalizePrimitive(summary?.lakeCandidateCount)
+    });
+  }
+
   function buildFailurePanel(runtime) {
     const failure = getFailure(runtime);
 
@@ -362,6 +423,9 @@ export function createInstruments() {
       "Depth Lattice": buildDepthLatticePanel(runtime),
       "Canon Verification": buildCanonVerificationPanel(runtime),
       "Execution Gate": buildExecutionGatePanel(runtime),
+      "Magnetic Field": buildMagneticFieldPanel(runtime),
+      "Thermodynamic Field": buildThermodynamicFieldPanel(runtime),
+      "Hydrology Field": buildHydrologyFieldPanel(runtime),
       Failure: buildFailurePanel(runtime)
     });
 
@@ -379,6 +443,9 @@ export function createInstruments() {
     buildDepthLatticePanel,
     buildCanonVerificationPanel,
     buildExecutionGatePanel,
+    buildMagneticFieldPanel,
+    buildThermodynamicFieldPanel,
+    buildHydrologyFieldPanel,
     buildFailurePanel,
     renderKeyValueSection,
     renderPanelHTML

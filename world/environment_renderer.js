@@ -107,8 +107,8 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
     oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
+    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
     oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField);
     surfaceEngine.renderOverlay(ctx, projector, runtime, renderState);

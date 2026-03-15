@@ -29,18 +29,20 @@ function resolveDepthNodes() {
   const cosmic = makeScaleNode("cosmic", "Cosmic", 0, null);
   const region = makeScaleNode("region", "Region", 1, cosmic.id);
   const galaxy = makeScaleNode("galaxy", "Galaxy", 2, region.id);
-  const system = makeScaleNode("system", "System", 3, galaxy.id);
-  const planet = makeScaleNode("planet", "Planet", 4, system.id);
-  const macroSurface = makeScaleNode("macro_surface", "Macro Surface", 5, planet.id);
-  const regionalSurface = makeScaleNode("regional_surface", "Regional Surface", 6, macroSurface.id);
-  const localZone = makeScaleNode("local_zone", "Local Zone", 7, regionalSurface.id);
-  const siteCell = makeScaleNode("site_cell", "Site Cell", 8, localZone.id);
-  const microCell = makeScaleNode("micro_cell", "Micro Cell", 9, siteCell.id);
+  const harbor = makeScaleNode("harbor", "Harbor", 3, galaxy.id);
+  const system = makeScaleNode("system", "System", 4, harbor.id);
+  const planet = makeScaleNode("planet", "Planet", 5, system.id);
+  const macroSurface = makeScaleNode("macro_surface", "Macro Surface", 6, planet.id);
+  const regionalSurface = makeScaleNode("regional_surface", "Regional Surface", 7, macroSurface.id);
+  const localZone = makeScaleNode("local_zone", "Local Zone", 8, regionalSurface.id);
+  const siteCell = makeScaleNode("site_cell", "Site Cell", 9, localZone.id);
+  const microCell = makeScaleNode("micro_cell", "Micro Cell", 10, siteCell.id);
 
   return Object.freeze({
     cosmic,
     region,
     galaxy,
+    harbor,
     system,
     planet,
     macroSurface,
@@ -164,8 +166,8 @@ function normalizeExecutionRequest(input = {}) {
   return Object.freeze({
     mode: normalizeString(normalized.mode, "runtime_execution"),
     fileCount: normalizeInteger(normalized.fileCount, 9),
-    requestedDepth: normalizeString(normalized.requestedDepth, "planet"),
-    currentDepth: normalizeString(normalized.currentDepth, "galaxy"),
+    requestedDepth: normalizeString(normalized.requestedDepth, "harbor"),
+    currentDepth: normalizeString(normalized.currentDepth, "region"),
     scopePath: Array.isArray(normalized.scopePath)
       ? normalized.scopePath.map((item) => String(item))
       : WORLD_KERNEL.scope.activePath,
@@ -201,7 +203,7 @@ function packageExecutionVerdict({ allow, mode, blockedBy, reasons, canonVerdict
 export function createCosmicEngineSpine() {
   function resolveWorldState(input = {}) {
     const nodes = resolveDepthNodes();
-    const activeDepth = normalizeString(input.activeDepth, "planet");
+    const activeDepth = normalizeString(input.activeDepth, "harbor");
     const localCell = buildLocalCellSelection(input);
 
     const gratitudeSplit = splitHarborGratitude();
@@ -212,7 +214,7 @@ export function createCosmicEngineSpine() {
     const nodeConclusion = concludeNodeState(gratitudeRecombination, generosityRecombination, harborExchange);
 
     const transition = buildScaleTransitionState(
-      normalizeString(input.currentDepth, "galaxy"),
+      normalizeString(input.currentDepth, "region"),
       activeDepth
     );
 
@@ -228,6 +230,7 @@ export function createCosmicEngineSpine() {
       cosmic: nodes.cosmic,
       region: nodes.region,
       galaxy: nodes.galaxy,
+      harbor: nodes.harbor,
       system: nodes.system,
       planet: nodes.planet,
       macroSurface: nodes.macroSurface,

@@ -5,203 +5,255 @@ import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createCompassRenderer } from "./compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 
-function now() {
+function nowMs() {
   return performance.now();
-}
-
-function safeText(el, value) {
-  if (el) el.textContent = value;
 }
 
 function buildCanonicalInput() {
   const expected = getExpectedCanonStructure();
-  return {
+  return Object.freeze({
     fileHomes: expected.fileHomes,
     chronology: expected.chronology,
     ownership: expected.ownership,
     scope: expected.scope,
     duplicateTruth: expected.duplicateTruth
+  });
+}
+
+function buildInitialTiming() {
+  const startedAt = nowMs();
+  return {
+    startedAt,
+    elapsedMs: 0,
+    dtMs: 0,
+    fps: 0,
+    previousFrameAt: startedAt
   };
 }
 
-function buildTiming() {
-  const start = now();
-  return {
-    startedAt: start,
-    previousFrameAt: start,
-    elapsedMs: 0,
-    dtMs: 0,
-    fps: 0
-  };
+function safeText(target, value) {
+  if (target) target.textContent = value;
 }
 
 export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtimePhase }) {
-
-  const ctx = worldCanvas.getContext("2d");
+  const worldCtx = worldCanvas.getContext("2d");
   const compassCtx = compassCanvas.getContext("2d");
 
+  const instruments = createInstruments();
   const spine = createCosmicEngineSpine();
   const projector = createPlanetSurfaceProjector();
   const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
-  const instruments = createInstruments();
 
-  const canon = verifyCanonicalStructure(buildCanonicalInput());
-
-  const CURRENT_DEPTH = "galaxy";
-  const REQUESTED_DEPTH = "harbor";
-
-  let gate = spine.evaluateExecutionGate(canon, {
-    mode: "runtime_execution",
-    fileCount: 9,
-    currentDepth: CURRENT_DEPTH,
-    requestedDepth: REQUESTED_DEPTH,
-    scopePath: WORLD_KERNEL.scope.activePath,
-    roleConflict: false,
-    ownershipDrift: false,
-    chronologyValid: true,
-    duplicateTruth: false
-  });
+  const startupCurrentDepth = "surface";
+  const startupRequestedDepth = "harbor";
 
   const runtime = {
-    phase: gate.allow ? "BOOT" : "BLOCKED",
+    phase: "BOOT",
+    failure: null,
     kernel: WORLD_KERNEL,
-    canonVerification: canon,
-    executionGate: gate,
+    canonVerification: null,
+    executionGate: null,
     resolvedState: spine.resolveWorldState({
-      currentDepth: CURRENT_DEPTH,
-      activeDepth: REQUESTED_DEPTH,
-      selection: { zone: "local_zone_alpha", row: 0, col: 0 }
+      activeDepth: startupRequestedDepth,
+      currentDepth: startupCurrentDepth,
+      selection: {
+        zone: "surface_zone_alpha",
+        row: 0,
+        col: 0
+      }
     }),
     projector,
     orientation: projector.getOrientation(),
     projection: projector.getProjectionSummary(),
     region: null,
     encoding: { label: "external_round_baseline" },
-    timing: buildTiming(),
+    selection: null,
+    destination: null,
+    timing: buildInitialTiming(),
     cardinals: projector.getCardinalWeights(),
+    renderAudit: null,
+    compassAudit: null,
     renderError: null,
     updateError: null
   };
 
-  let dragging = false;
+  let frameHandle = 0;
+  let isDragging = false;
   let lastX = 0;
   let lastY = 0;
 
-  function resize() {
+  function resizeCanvases() {
     worldCanvas.width = window.innerWidth;
     worldCanvas.height = window.innerHeight;
-    compassCanvas.width = 180;
-    compassCanvas.height = 180;
+    compassCanvas.width = compassCanvas.clientWidth || 180;
+    compassCanvas.height = compassCanvas.clientHeight || 180;
     projector.resize(worldCanvas.width, worldCanvas.height);
   }
 
-  function writeDiagnostics() {
-    if (!debugContent) return;
-
-    const diagnostics = {
-      runtime_phase: runtime.phase,
-      gate_allow: runtime.executionGate.allow,
-      gate_blocked_by: runtime.executionGate.blocked_by,
-      gate_reason: runtime.executionGate.reasons,
-      current_depth: runtime.resolvedState?.transition?.from,
-      requested_depth: runtime.resolvedState?.transition?.to,
-      active_depth: runtime.resolvedState?.activeDepth,
-      projector_yaw: runtime.orientation?.yaw,
-      projector_pitch: runtime.orientation?.pitch,
-      projector_radius: runtime.projector?.state?.radius,
-      projection_cell: runtime.projection?.cellId,
-      projection_sector: runtime.projection?.sector,
-      projection_band: runtime.projection?.bandIndex,
-      fps: runtime.timing?.fps,
-      dt: runtime.timing?.dtMs,
-      branch_premise: runtime.resolvedState?.branches?.harbor?.corePremise?.label,
-      error_render: runtime.renderError,
-      error_update: runtime.updateError
-    };
-
-    debugContent.innerHTML = instruments.renderPanelHTML(diagnostics);
+  function writeDebugPanels() {
+    if (debugContent) {
+      debugContent.innerHTML = instruments.renderPanelHTML(runtime);
+    }
     safeText(runtimePhase, runtime.phase);
   }
 
-  function updateTiming(t) {
-    const dt = t - runtime.timing.previousFrameAt;
-    runtime.timing.previousFrameAt = t;
-    runtime.timing.elapsedMs = t - runtime.timing.startedAt;
+  function updateTiming(now) {
+    const dt = now - runtime.timing.previousFrameAt;
+    runtime.timing.previousFrameAt = now;
+    runtime.timing.elapsedMs = now - runtime.timing.startedAt;
     runtime.timing.dtMs = dt;
     runtime.timing.fps = dt > 0 ? 1000 / dt : 0;
   }
 
-  function update(t) {
+  function verifyAndAuthorize() {
+    runtime.phase = "VERIFYING";
+    runtime.canonVerification = verifyCanonicalStructure(buildCanonicalInput());
+    runtime.executionGate = spine.evaluateExecutionGate(runtime.canonVerification, {
+      mode: "runtime_execution",
+      fileCount: 9,
+      currentDepth: startupCurrentDepth,
+      requestedDepth: startupRequestedDepth,
+      scopePath: WORLD_KERNEL.scope.activePath,
+      roleConflict: false,
+      ownershipDrift: false,
+      chronologyValid: true,
+      duplicateTruth: false
+    });
+
+    if (!runtime.canonVerification.pass || !runtime.executionGate.allow) {
+      runtime.phase = "ERROR";
+      return false;
+    }
+
+    runtime.phase = "AUTHORIZED";
+    return true;
+  }
+
+  function updateResolvedState() {
+    runtime.resolvedState = spine.resolveWorldState({
+      activeDepth: startupRequestedDepth,
+      currentDepth: startupCurrentDepth,
+      selection: {
+        zone: runtime.resolvedState?.localSelection?.zone ?? "surface_zone_alpha",
+        row: runtime.projection?.row ?? 0,
+        col: runtime.projection?.col ?? 0
+      }
+    });
+
+    runtime.region = runtime.resolvedState.region;
+  }
+
+  function updateDerivedState() {
+    runtime.orientation = projector.getOrientation();
+    runtime.projection = projector.getProjectionSummary();
+    runtime.cardinals = projector.getCardinalWeights();
+    updateResolvedState();
+  }
+
+  function update(now) {
     try {
+      runtime.updateError = null;
+      updateTiming(now);
 
-      updateTiming(t);
-
-      if (!dragging) {
+      if (!isDragging) {
         projector.stepInertia();
       }
 
-      runtime.orientation = projector.getOrientation();
-      runtime.projection = projector.getProjectionSummary();
-      runtime.cardinals = projector.getCardinalWeights();
-
-    } catch (err) {
-      runtime.updateError = err.message;
+      updateDerivedState();
+    } catch (error) {
+      runtime.phase = "ERROR";
+      runtime.failure = {
+        phase: "update",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      runtime.updateError = runtime.failure.message;
     }
   }
 
   function render() {
     try {
-
-      environment.render(ctx, projector, runtime);
-      compass.render(compassCtx, runtime);
-
-    } catch (err) {
-      runtime.renderError = err.message;
+      runtime.renderError = null;
+      runtime.renderAudit = environment.render(worldCtx, projector, runtime);
+      runtime.compassAudit = compass.render(compassCtx, runtime);
+    } catch (error) {
+      runtime.phase = "ERROR";
+      runtime.failure = {
+        phase: "render",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      runtime.renderError = runtime.failure.message;
     }
   }
 
-  function frame(t) {
+  function frame(now) {
+    if (runtime.phase === "ERROR") {
+      writeDebugPanels();
+      return;
+    }
 
     runtime.phase = "RUNNING";
-
-    update(t);
+    update(now);
     render();
-    writeDiagnostics();
+    writeDebugPanels();
 
-    requestAnimationFrame(frame);
+    if (runtime.phase !== "ERROR") {
+      frameHandle = requestAnimationFrame(frame);
+    }
   }
 
-  function pointerDown(e) {
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
+  function onPointerDown(event) {
+    isDragging = true;
+    lastX = event.clientX;
+    lastY = event.clientY;
   }
 
-  function pointerMove(e) {
-    if (!dragging) return;
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    lastX = e.clientX;
-    lastY = e.clientY;
+  function onPointerMove(event) {
+    if (!isDragging || runtime.phase === "ERROR") return;
+
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+    lastX = event.clientX;
+    lastY = event.clientY;
     projector.applyDrag(dx, dy);
   }
 
-  function pointerUp() {
-    dragging = false;
+  function onPointerUp() {
+    isDragging = false;
   }
 
   function start() {
+    try {
+      runtime.phase = "INITIALIZING";
+      resizeCanvases();
+      updateDerivedState();
+      writeDebugPanels();
 
-    resize();
-    writeDiagnostics();
+      if (!verifyAndAuthorize()) {
+        writeDebugPanels();
+        return;
+      }
 
-    window.addEventListener("resize", resize);
-    worldCanvas.addEventListener("pointerdown", pointerDown);
-    window.addEventListener("pointermove", pointerMove);
-    window.addEventListener("pointerup", pointerUp);
+      window.addEventListener("resize", resizeCanvases);
+      worldCanvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
 
-    requestAnimationFrame(frame);
+      writeDebugPanels();
+      frameHandle = requestAnimationFrame(frame);
+    } catch (error) {
+      runtime.phase = "ERROR";
+      runtime.failure = {
+        phase: "startup",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      writeDebugPanels();
+      if (frameHandle) {
+        cancelAnimationFrame(frameHandle);
+        frameHandle = 0;
+      }
+    }
   }
 
   return Object.freeze({

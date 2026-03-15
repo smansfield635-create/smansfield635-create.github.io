@@ -167,7 +167,7 @@ function normalizeExecutionRequest(input = {}) {
     mode: normalizeString(normalized.mode, "runtime_execution"),
     fileCount: normalizeInteger(normalized.fileCount, 9),
     requestedDepth: normalizeString(normalized.requestedDepth, "harbor"),
-    currentDepth: normalizeString(normalized.currentDepth, "region"),
+    currentDepth: normalizeString(normalized.currentDepth, "galaxy"),
     scopePath: Array.isArray(normalized.scopePath)
       ? normalized.scopePath.map((item) => String(item))
       : WORLD_KERNEL.scope.activePath,
@@ -201,6 +201,36 @@ function packageExecutionVerdict({ allow, mode, blockedBy, reasons, canonVerdict
 }
 
 export function createCosmicEngineSpine() {
+  function getNextLegalDepth(currentDepthId) {
+    const currentIndex = WORLD_KERNEL.depthOrder.indexOf(currentDepthId);
+    if (currentIndex === -1) return null;
+    if (currentIndex >= WORLD_KERNEL.depthOrder.length - 1) return null;
+
+    return WORLD_KERNEL.depthOrder[currentIndex + 1];
+  }
+
+  function buildExecutionRequest(options = {}) {
+    const currentDepth = normalizeString(options.currentDepth, "galaxy");
+    const requestedDepth = normalizeString(
+      options.requestedDepth,
+      getNextLegalDepth(currentDepth) ?? currentDepth
+    );
+
+    return Object.freeze({
+      mode: normalizeString(options.mode, "runtime_execution"),
+      fileCount: normalizeInteger(options.fileCount, 9),
+      requestedDepth,
+      currentDepth,
+      scopePath: Array.isArray(options.scopePath)
+        ? options.scopePath.map((item) => String(item))
+        : WORLD_KERNEL.scope.activePath,
+      roleConflict: options.roleConflict === true,
+      ownershipDrift: options.ownershipDrift === true,
+      chronologyValid: options.chronologyValid !== false,
+      duplicateTruth: options.duplicateTruth === true
+    });
+  }
+
   function resolveWorldState(input = {}) {
     const nodes = resolveDepthNodes();
     const activeDepth = normalizeString(input.activeDepth, "harbor");
@@ -214,7 +244,7 @@ export function createCosmicEngineSpine() {
     const nodeConclusion = concludeNodeState(gratitudeRecombination, generosityRecombination, harborExchange);
 
     const transition = buildScaleTransitionState(
-      normalizeString(input.currentDepth, "region"),
+      normalizeString(input.currentDepth, "galaxy"),
       activeDepth
     );
 
@@ -323,6 +353,8 @@ export function createCosmicEngineSpine() {
   }
 
   return Object.freeze({
+    getNextLegalDepth,
+    buildExecutionRequest,
     resolveWorldState,
     evaluateExecutionGate
   });

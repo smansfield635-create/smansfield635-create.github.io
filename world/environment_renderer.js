@@ -51,7 +51,7 @@ function createEnvironmentAudit(runtime, renderState) {
 function drawCosmicField(ctx, width, height) {
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
   gradient.addColorStop(0, "#020611");
-  gradient.addColorStop(0.24, "#050c1b");
+  gradient.addColorStop(0.22, "#06101f");
   gradient.addColorStop(0.58, "#040813");
   gradient.addColorStop(1, "#010309");
   ctx.fillStyle = gradient;
@@ -62,15 +62,14 @@ function drawNebulaBands(ctx, width, height, time) {
   ctx.save();
 
   const bands = [
-    { x: 0.14, y: 0.20, rx: 0.30, ry: 0.11, rot: -0.42, c0: "rgba(64,114,255,0.18)", c1: "rgba(36,60,145,0)" },
-    { x: 0.77, y: 0.16, rx: 0.22, ry: 0.085, rot: 0.18, c0: "rgba(104,82,255,0.14)", c1: "rgba(58,38,145,0)" },
-    { x: 0.74, y: 0.78, rx: 0.34, ry: 0.12, rot: 0.28, c0: "rgba(58,126,255,0.14)", c1: "rgba(28,72,155,0)" },
-    { x: 0.24, y: 0.72, rx: 0.24, ry: 0.09, rot: -0.14, c0: "rgba(120,78,220,0.12)", c1: "rgba(64,32,122,0)" }
+    { x: 0.18, y: 0.16, rx: 0.34, ry: 0.12, rot: -0.38, c0: "rgba(74,124,255,0.20)", c1: "rgba(36,60,145,0)" },
+    { x: 0.72, y: 0.14, rx: 0.28, ry: 0.10, rot: 0.14, c0: "rgba(118,96,255,0.16)", c1: "rgba(58,38,145,0)" },
+    { x: 0.60, y: 0.34, rx: 0.24, ry: 0.08, rot: -0.08, c0: "rgba(78,140,255,0.10)", c1: "rgba(28,72,155,0)" }
   ];
 
   bands.forEach((band, index) => {
     const wobbleX = Math.sin(time * 0.00012 + index * 1.31) * width * 0.018;
-    const wobbleY = Math.cos(time * 0.0001 + index * 1.07) * height * 0.016;
+    const wobbleY = Math.cos(time * 0.0001 + index * 1.07) * height * 0.014;
     const cx = width * band.x + wobbleX;
     const cy = height * band.y + wobbleY;
     const rx = width * band.rx;
@@ -113,9 +112,9 @@ function drawStarStreaks(ctx, width, height, time) {
   ctx.strokeStyle = "rgba(215,230,255,0.45)";
   ctx.lineWidth = 1;
 
-  for (let i = 0; i < 7; i += 1) {
-    const x = ((i + 1) / 8) * width + Math.sin(time * 0.00016 + i) * 14;
-    const y = ((i % 4) / 4 + 0.12) * height + Math.cos(time * 0.00011 + i) * 10;
+  for (let i = 0; i < 6; i += 1) {
+    const x = ((i + 1) / 7) * width + Math.sin(time * 0.00016 + i) * 14;
+    const y = (0.10 + (i % 3) * 0.12) * height + Math.cos(time * 0.00011 + i) * 10;
     ctx.beginPath();
     ctx.moveTo(x - 7, y + 2.5);
     ctx.lineTo(x + 7, y - 2.5);
@@ -129,12 +128,12 @@ function drawDeepSpaceOrbits(ctx, projector) {
   const { centerX, centerY, radius } = projector.state;
 
   ctx.save();
-  ctx.strokeStyle = "rgba(120, 165, 255, 0.075)";
+  ctx.strokeStyle = "rgba(120, 165, 255, 0.07)";
   ctx.lineWidth = 1;
 
-  for (let i = 1; i <= 3; i += 1) {
+  for (let i = 1; i <= 2; i += 1) {
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * (1.18 + i * 0.125), 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, radius * (1.18 + i * 0.13), 0, Math.PI * 2);
     ctx.stroke();
   }
 
@@ -146,18 +145,18 @@ function drawPlanetShadow(ctx, projector) {
 
   ctx.save();
   const gradient = ctx.createRadialGradient(
-    centerX + radius * 0.26,
-    centerY + radius * 0.20,
+    centerX + radius * 0.24,
+    centerY + radius * 0.18,
     radius * 0.06,
     centerX + radius * 0.22,
     centerY + radius * 0.18,
-    radius * 1.08
+    radius * 1.06
   );
 
   gradient.addColorStop(0, "rgba(0,0,0,0)");
-  gradient.addColorStop(0.46, "rgba(0,0,0,0.04)");
-  gradient.addColorStop(0.72, "rgba(0,0,0,0.16)");
-  gradient.addColorStop(1, "rgba(0,0,0,0.34)");
+  gradient.addColorStop(0.44, "rgba(0,0,0,0.04)");
+  gradient.addColorStop(0.70, "rgba(0,0,0,0.15)");
+  gradient.addColorStop(1, "rgba(0,0,0,0.30)");
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * 1.03, 0, Math.PI * 2);
@@ -176,16 +175,16 @@ function drawPlanetOuterGlow(ctx, projector) {
     radius * 0.96,
     centerX,
     centerY,
-    radius * 1.34
+    radius * 1.30
   );
 
   gradient.addColorStop(0, "rgba(110,180,255,0)");
-  gradient.addColorStop(0.58, "rgba(84,146,255,0.035)");
-  gradient.addColorStop(0.78, "rgba(72,125,255,0.11)");
+  gradient.addColorStop(0.58, "rgba(84,146,255,0.03)");
+  gradient.addColorStop(0.80, "rgba(72,125,255,0.10)");
   gradient.addColorStop(1, "rgba(44,92,210,0)");
 
   ctx.beginPath();
-  ctx.arc(centerX, centerY, radius * 1.34, 0, Math.PI * 2);
+  ctx.arc(centerX, centerY, radius * 1.30, 0, Math.PI * 2);
   ctx.fillStyle = gradient;
   ctx.fill();
   ctx.restore();
@@ -197,43 +196,67 @@ function drawAtmosphereShell(ctx, projector) {
 
   const gradient = ctx.createRadialGradient(
     centerX,
-    centerY,
-    radius * 0.985,
+    centerY - radius * 0.06,
+    radius * 0.98,
     centerX,
-    centerY,
-    radius + thickness * 2.8
+    centerY - radius * 0.08,
+    radius + thickness * 2.7
   );
 
   gradient.addColorStop(0, "rgba(75,145,255,0)");
-  gradient.addColorStop(0.72, "rgba(84,168,255,0.04)");
-  gradient.addColorStop(0.84, "rgba(112,216,255,0.28)");
-  gradient.addColorStop(0.93, "rgba(135,225,255,0.18)");
+  gradient.addColorStop(0.72, "rgba(84,168,255,0.03)");
+  gradient.addColorStop(0.84, "rgba(112,216,255,0.22)");
+  gradient.addColorStop(0.92, "rgba(160,235,255,0.22)");
   gradient.addColorStop(1, "rgba(75,145,255,0)");
 
   ctx.beginPath();
-  ctx.arc(centerX, centerY, radius + thickness * 2.8, 0, Math.PI * 2);
+  ctx.arc(centerX, centerY, radius + thickness * 2.7, 0, Math.PI * 2);
   ctx.fillStyle = gradient;
   ctx.fill();
+}
+
+function drawUpperAtmosphereAccent(ctx, projector) {
+  const { centerX, centerY, radius } = projector.state;
+
+  ctx.save();
+  ctx.globalAlpha = 0.16;
+  const gradient = ctx.createRadialGradient(
+    centerX,
+    centerY - radius * 0.44,
+    radius * 0.04,
+    centerX,
+    centerY - radius * 0.44,
+    radius * 0.42
+  );
+  gradient.addColorStop(0, "rgba(205,240,255,0.36)");
+  gradient.addColorStop(0.55, "rgba(120,220,255,0.10)");
+  gradient.addColorStop(1, "rgba(120,220,255,0)");
+
+  ctx.beginPath();
+  ctx.ellipse(centerX, centerY - radius * 0.46, radius * 0.42, radius * 0.12, 0, 0, Math.PI * 2);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawGlobeBase(ctx, projector) {
   const { centerX, centerY, radius } = projector.state;
 
   const globeGradient = ctx.createRadialGradient(
-    centerX - radius * 0.34,
-    centerY - radius * 0.34,
-    radius * 0.08,
+    centerX - radius * 0.30,
+    centerY - radius * 0.26,
+    radius * 0.05,
     centerX + radius * 0.08,
-    centerY + radius * 0.04,
+    centerY + radius * 0.08,
     radius * 1.02
   );
 
-  globeGradient.addColorStop(0, "#47b8ff");
-  globeGradient.addColorStop(0.16, "#1695ff");
-  globeGradient.addColorStop(0.34, "#0d63cf");
-  globeGradient.addColorStop(0.56, "#083f94");
-  globeGradient.addColorStop(0.76, "#042353");
-  globeGradient.addColorStop(1, "#010913");
+  globeGradient.addColorStop(0, "#3fb9ff");
+  globeGradient.addColorStop(0.12, "#1690ff");
+  globeGradient.addColorStop(0.26, "#0e62ca");
+  globeGradient.addColorStop(0.44, "#083f94");
+  globeGradient.addColorStop(0.68, "#04214d");
+  globeGradient.addColorStop(1, "#010812");
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -252,14 +275,14 @@ function drawNightSideVignette(ctx, projector) {
   ctx.save();
   const gradient = ctx.createLinearGradient(
     centerX - radius,
-    centerY - radius * 0.10,
-    centerX + radius * 0.85,
-    centerY + radius * 0.18
+    centerY - radius * 0.12,
+    centerX + radius * 0.90,
+    centerY + radius * 0.16
   );
 
-  gradient.addColorStop(0, "rgba(0,0,0,0.34)");
-  gradient.addColorStop(0.28, "rgba(0,0,0,0.22)");
-  gradient.addColorStop(0.58, "rgba(0,0,0,0.07)");
+  gradient.addColorStop(0, "rgba(0,0,0,0.28)");
+  gradient.addColorStop(0.30, "rgba(0,0,0,0.18)");
+  gradient.addColorStop(0.58, "rgba(0,0,0,0.05)");
   gradient.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.beginPath();
@@ -275,17 +298,17 @@ function drawOceanTone(ctx, projector) {
   ctx.save();
 
   const gradient = ctx.createRadialGradient(
-    centerX - radius * 0.18,
-    centerY - radius * 0.18,
+    centerX - radius * 0.12,
+    centerY - radius * 0.14,
     radius * 0.03,
     centerX,
     centerY,
     radius
   );
 
-  gradient.addColorStop(0, "rgba(122,232,255,0.12)");
-  gradient.addColorStop(0.22, "rgba(66,190,255,0.08)");
-  gradient.addColorStop(0.52, "rgba(20,118,214,0.05)");
+  gradient.addColorStop(0, "rgba(122,232,255,0.08)");
+  gradient.addColorStop(0.20, "rgba(66,190,255,0.05)");
+  gradient.addColorStop(0.46, "rgba(20,118,214,0.03)");
   gradient.addColorStop(1, "rgba(4,34,90,0)");
 
   ctx.beginPath();
@@ -297,7 +320,7 @@ function drawOceanTone(ctx, projector) {
 }
 
 function drawLatitudeBands(ctx, projector) {
-  ctx.strokeStyle = "rgba(255,255,255,0.05)";
+  ctx.strokeStyle = "rgba(255,255,255,0.045)";
   ctx.lineWidth = 1;
 
   for (let latDeg = -60; latDeg <= 60; latDeg += 20) {
@@ -325,7 +348,7 @@ function drawLatitudeBands(ctx, projector) {
 }
 
 function drawLongitudeBands(ctx, projector) {
-  ctx.strokeStyle = "rgba(190,220,255,0.035)";
+  ctx.strokeStyle = "rgba(190,220,255,0.03)";
   ctx.lineWidth = 1;
 
   for (let lonDeg = 0; lonDeg < 360; lonDeg += 20) {
@@ -354,11 +377,11 @@ function drawLongitudeBands(ctx, projector) {
 
 function drawContinents(ctx, projector) {
   const continents = [
-    { lon: -0.74, lat: 0.36, rx: 0.34, ry: 0.19, hue: "#92f06d", edge: "#efffcf" },
-    { lon: 1.12, lat: 0.04, rx: 0.27, ry: 0.145, hue: "#b0f07a", edge: "#f4ffd8" },
-    { lon: -2.18, lat: -0.26, rx: 0.19, ry: 0.12, hue: "#6fe07a", edge: "#e4ffd2" },
-    { lon: 2.52, lat: 0.49, rx: 0.15, ry: 0.10, hue: "#98df7f", edge: "#efffd9" },
-    { lon: 0.18, lat: -0.56, rx: 0.10, ry: 0.07, hue: "#c0f084", edge: "#f7ffde" }
+    { lon: -0.82, lat: 0.52, rx: 0.18, ry: 0.11, hue: "#b6ef72", edge: "#f6ffd6" },
+    { lon: 1.08, lat: 0.06, rx: 0.30, ry: 0.16, hue: "#c3f06f", edge: "#fbffd8" },
+    { lon: -2.14, lat: -0.20, rx: 0.13, ry: 0.10, hue: "#82e076", edge: "#ecffd8" },
+    { lon: 2.44, lat: 0.62, rx: 0.12, ry: 0.08, hue: "#d0f27d", edge: "#fbffe2" },
+    { lon: 0.14, lat: -0.58, rx: 0.08, ry: 0.06, hue: "#a6ea80", edge: "#f3ffdf" }
   ];
 
   continents.forEach((continent, index) => {
@@ -371,7 +394,7 @@ function drawContinents(ctx, projector) {
       center.y,
       projector.state.radius * continent.rx,
       projector.state.radius * continent.ry,
-      continent.lon + projector.getOrientation().yaw * 0.36 + index * 0.03,
+      continent.lon + projector.getOrientation().yaw * 0.34 + index * 0.03,
       0,
       Math.PI * 2
     );
@@ -379,9 +402,9 @@ function drawContinents(ctx, projector) {
     ctx.fill();
 
     ctx.save();
-    ctx.globalAlpha = 0.18;
+    ctx.globalAlpha = 0.16;
     ctx.strokeStyle = continent.edge;
-    ctx.lineWidth = 1.15;
+    ctx.lineWidth = 1.05;
     ctx.stroke();
     ctx.restore();
   });
@@ -391,15 +414,11 @@ function drawPolarGlow(ctx, projector) {
   const { centerX, centerY, radius } = projector.state;
 
   ctx.save();
-  ctx.globalAlpha = 0.14;
-  ctx.fillStyle = "rgba(220,245,255,0.56)";
+  ctx.globalAlpha = 0.16;
+  ctx.fillStyle = "rgba(220,245,255,0.58)";
 
   ctx.beginPath();
-  ctx.ellipse(centerX, centerY - radius * 0.73, radius * 0.25, radius * 0.085, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.ellipse(centerX, centerY + radius * 0.73, radius * 0.19, radius * 0.065, 0, 0, Math.PI * 2);
+  ctx.ellipse(centerX, centerY - radius * 0.72, radius * 0.28, radius * 0.09, 0, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.restore();
@@ -409,17 +428,17 @@ function drawCloudArcs(ctx, projector, time) {
   const { centerX, centerY, radius } = projector.state;
 
   ctx.save();
-  ctx.globalAlpha = 0.15;
+  ctx.globalAlpha = 0.16;
 
-  for (let i = 0; i < 5; i += 1) {
-    const arcRadius = radius * (0.48 + i * 0.08);
-    const start = 0.22 * Math.PI + Math.sin(time * 0.0007 + i * 0.8) * 0.08;
-    const end = 0.8 * Math.PI + Math.cos(time * 0.00055 + i * 0.6) * 0.05;
+  for (let i = 0; i < 4; i += 1) {
+    const arcRadius = radius * (0.44 + i * 0.08);
+    const start = 0.14 * Math.PI + Math.sin(time * 0.0007 + i * 0.8) * 0.05;
+    const end = 0.70 * Math.PI + Math.cos(time * 0.00055 + i * 0.6) * 0.04;
 
     ctx.beginPath();
-    ctx.arc(centerX, centerY - radius * 0.03, arcRadius, start, end);
-    ctx.strokeStyle = "rgba(225,238,255,0.86)";
-    ctx.lineWidth = 1.35;
+    ctx.arc(centerX, centerY - radius * 0.22, arcRadius, start, end);
+    ctx.strokeStyle = "rgba(225,238,255,0.84)";
+    ctx.lineWidth = 1.25;
     ctx.stroke();
   }
 
@@ -429,17 +448,17 @@ function drawCloudArcs(ctx, projector, time) {
 function drawCloudSoftMasses(ctx, projector, time) {
   const { centerX, centerY, radius } = projector.state;
   const bodies = [
-    { x: -0.24, y: -0.18, rx: 0.20, ry: 0.065, rot: -0.22 },
-    { x: 0.10, y: -0.02, rx: 0.28, ry: 0.08, rot: 0.08 },
-    { x: -0.06, y: 0.18, rx: 0.25, ry: 0.075, rot: -0.12 }
+    { x: -0.10, y: -0.22, rx: 0.22, ry: 0.06, rot: -0.10 },
+    { x: 0.12, y: -0.08, rx: 0.28, ry: 0.07, rot: 0.04 },
+    { x: 0.04, y: 0.08, rx: 0.18, ry: 0.055, rot: -0.06 }
   ];
 
   ctx.save();
-  ctx.globalAlpha = 0.075;
+  ctx.globalAlpha = 0.07;
 
   bodies.forEach((body, index) => {
-    const wobbleX = Math.sin(time * 0.00018 + index) * radius * 0.025;
-    const wobbleY = Math.cos(time * 0.00015 + index) * radius * 0.012;
+    const wobbleX = Math.sin(time * 0.00018 + index) * radius * 0.018;
+    const wobbleY = Math.cos(time * 0.00015 + index) * radius * 0.010;
     ctx.beginPath();
     ctx.ellipse(
       centerX + radius * body.x + wobbleX,
@@ -450,7 +469,7 @@ function drawCloudSoftMasses(ctx, projector, time) {
       0,
       Math.PI * 2
     );
-    ctx.fillStyle = "rgba(240,248,255,0.75)";
+    ctx.fillStyle = "rgba(240,248,255,0.72)";
     ctx.fill();
   });
 
@@ -461,16 +480,16 @@ function drawAtmosphericSheen(ctx, projector) {
   const { centerX, centerY, radius } = projector.state;
 
   const gradient = ctx.createRadialGradient(
-    centerX - radius * 0.34,
-    centerY - radius * 0.34,
-    radius * 0.04,
+    centerX - radius * 0.30,
+    centerY - radius * 0.26,
+    radius * 0.03,
     centerX,
     centerY,
     radius
   );
 
-  gradient.addColorStop(0, "rgba(255,255,255,0.14)");
-  gradient.addColorStop(0.18, "rgba(255,255,255,0.07)");
+  gradient.addColorStop(0, "rgba(255,255,255,0.08)");
+  gradient.addColorStop(0.14, "rgba(255,255,255,0.04)");
   gradient.addColorStop(1, "rgba(255,255,255,0)");
 
   ctx.beginPath();
@@ -486,14 +505,14 @@ function drawTerminatorGlow(ctx, projector) {
   ctx.globalAlpha = 0.18;
   const gradient = ctx.createLinearGradient(
     centerX - radius,
-    centerY - radius * 0.10,
+    centerY - radius * 0.14,
     centerX + radius,
-    centerY + radius * 0.15
+    centerY + radius * 0.12
   );
   gradient.addColorStop(0, "rgba(0,0,0,0)");
-  gradient.addColorStop(0.34, "rgba(0,0,0,0.16)");
-  gradient.addColorStop(0.48, "rgba(150,225,255,0.12)");
-  gradient.addColorStop(0.58, "rgba(255,255,255,0.03)");
+  gradient.addColorStop(0.30, "rgba(0,0,0,0.14)");
+  gradient.addColorStop(0.42, "rgba(150,225,255,0.14)");
+  gradient.addColorStop(0.54, "rgba(255,255,255,0.025)");
   gradient.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.beginPath();
@@ -507,13 +526,13 @@ function drawCurrents(ctx, projector, time) {
   const { centerX, centerY, radius } = projector.state;
   const wave = 0.5 + 0.5 * Math.sin(time * 0.0014);
 
-  ctx.strokeStyle = `rgba(130,220,255,${0.10 + wave * 0.08})`;
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = `rgba(130,220,255,${0.08 + wave * 0.06})`;
+  ctx.lineWidth = 1.8;
 
-  for (let i = 0; i < 5; i += 1) {
-    const y = centerY + (i - 2) * radius * 0.15;
+  for (let i = 0; i < 4; i += 1) {
+    const y = centerY + (i - 1.3) * radius * 0.11;
     ctx.beginPath();
-    ctx.arc(centerX, y, radius * (0.70 - i * 0.07), 0.16 * Math.PI, 0.84 * Math.PI);
+    ctx.arc(centerX, y, radius * (0.58 - i * 0.055), 0.22 * Math.PI, 0.78 * Math.PI);
     ctx.stroke();
   }
 }
@@ -522,17 +541,17 @@ function drawCycleArc(ctx, projector, time) {
   const { centerX, centerY, radius } = projector.state;
 
   ctx.save();
-  ctx.globalAlpha = 0.12;
+  ctx.globalAlpha = 0.08;
   ctx.beginPath();
   ctx.arc(
     centerX,
-    centerY,
-    radius * 0.8,
+    centerY - radius * 0.10,
+    radius * 0.72,
     time * 0.00045,
-    time * 0.00045 + Math.PI * 0.72
+    time * 0.00045 + Math.PI * 0.60
   );
-  ctx.strokeStyle = "rgba(255,255,255,0.68)";
-  ctx.lineWidth = 1.1;
+  ctx.strokeStyle = "rgba(255,255,255,0.54)";
+  ctx.lineWidth = 1.0;
   ctx.stroke();
   ctx.restore();
 }
@@ -549,8 +568,8 @@ function drawSurfaceCellHighlight(ctx, projector, renderState) {
   const y = centerY - radius * 0.54 + row * cellHeight;
 
   ctx.save();
-  ctx.fillStyle = "rgba(121,169,255,0.06)";
-  ctx.strokeStyle = "rgba(121,169,255,0.22)";
+  ctx.fillStyle = "rgba(121,169,255,0.05)";
+  ctx.strokeStyle = "rgba(121,169,255,0.18)";
   ctx.lineWidth = 1.0;
   ctx.beginPath();
   ctx.rect(x, y, cellWidth, cellHeight);
@@ -566,8 +585,8 @@ function drawPlanetMaskOutline(ctx, projector) {
 
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(255,255,255,0.15)";
-  ctx.lineWidth = 1.45;
+  ctx.strokeStyle = "rgba(255,255,255,0.14)";
+  ctx.lineWidth = 1.35;
   ctx.stroke();
 }
 
@@ -614,6 +633,7 @@ export function createEnvironmentRenderer() {
     drawPlanetShadow(ctx, projector);
     drawPlanetOuterGlow(ctx, projector);
     drawAtmosphereShell(ctx, projector);
+    drawUpperAtmosphereAccent(ctx, projector);
     drawGlobeBase(ctx, projector);
     drawNightSideVignette(ctx, projector);
     drawOceanTone(ctx, projector);

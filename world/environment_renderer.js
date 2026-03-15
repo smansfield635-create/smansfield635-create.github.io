@@ -69,7 +69,7 @@ function drawNebulaBands(ctx, width, height, time) {
 
   bands.forEach((band, index) => {
     const wobbleX = Math.sin(time * 0.00012 + index * 1.31) * width * 0.018;
-    const wobbleY = Math.cos(time * 0.0001 + index * 1.07) * height * 0.014;
+    const wobbleY = Math.cos(time * 0.00010 + index * 1.07) * height * 0.014;
     const cx = width * band.x + wobbleX;
     const cy = height * band.y + wobbleY;
     const rx = width * band.rx;
@@ -375,38 +375,222 @@ function drawLongitudeBands(ctx, projector) {
   }
 }
 
+/*
+  Surface content truth layer.
+  Replaces ellipse placeholders with curated projected landmass paths.
+  Points are expressed in normalized local coordinates around a continent anchor,
+  then converted to lon/lat and projected through the existing projector.
+*/
+
+function createLeafContour() {
+  return Object.freeze([
+    { x: -1.00, y: -0.05 },
+    { x: -0.84, y: -0.34 },
+    { x: -0.58, y: -0.56 },
+    { x: -0.24, y: -0.68 },
+    { x: 0.10, y: -0.62 },
+    { x: 0.42, y: -0.44 },
+    { x: 0.70, y: -0.16 },
+    { x: 0.86, y: 0.16 },
+    { x: 0.82, y: 0.42 },
+    { x: 0.60, y: 0.66 },
+    { x: 0.26, y: 0.82 },
+    { x: -0.14, y: 0.84 },
+    { x: -0.46, y: 0.68 },
+    { x: -0.72, y: 0.42 },
+    { x: -0.90, y: 0.12 }
+  ]);
+}
+
+function createHookContour() {
+  return Object.freeze([
+    { x: -0.96, y: -0.18 },
+    { x: -0.74, y: -0.50 },
+    { x: -0.38, y: -0.72 },
+    { x: 0.02, y: -0.74 },
+    { x: 0.34, y: -0.54 },
+    { x: 0.56, y: -0.18 },
+    { x: 0.60, y: 0.10 },
+    { x: 0.46, y: 0.40 },
+    { x: 0.14, y: 0.66 },
+    { x: -0.20, y: 0.78 },
+    { x: -0.42, y: 0.70 },
+    { x: -0.18, y: 0.44 },
+    { x: 0.04, y: 0.20 },
+    { x: 0.02, y: -0.02 },
+    { x: -0.20, y: 0.04 },
+    { x: -0.48, y: 0.18 },
+    { x: -0.76, y: 0.08 }
+  ]);
+}
+
+function createShardContour() {
+  return Object.freeze([
+    { x: -0.90, y: -0.10 },
+    { x: -0.66, y: -0.44 },
+    { x: -0.28, y: -0.70 },
+    { x: 0.10, y: -0.64 },
+    { x: 0.36, y: -0.30 },
+    { x: 0.42, y: 0.08 },
+    { x: 0.24, y: 0.44 },
+    { x: -0.08, y: 0.72 },
+    { x: -0.42, y: 0.80 },
+    { x: -0.68, y: 0.56 },
+    { x: -0.84, y: 0.24 }
+  ]);
+}
+
+function createPebbleContour() {
+  return Object.freeze([
+    { x: -0.82, y: -0.06 },
+    { x: -0.62, y: -0.42 },
+    { x: -0.24, y: -0.66 },
+    { x: 0.18, y: -0.64 },
+    { x: 0.54, y: -0.40 },
+    { x: 0.76, y: -0.04 },
+    { x: 0.72, y: 0.28 },
+    { x: 0.46, y: 0.58 },
+    { x: 0.08, y: 0.76 },
+    { x: -0.30, y: 0.72 },
+    { x: -0.62, y: 0.48 },
+    { x: -0.80, y: 0.16 }
+  ]);
+}
+
+const LANDMASS_REGISTRY = Object.freeze([
+  Object.freeze({
+    id: "northwest_crown",
+    anchorLon: -0.88,
+    anchorLat: 0.52,
+    lonScale: 0.30,
+    latScale: 0.19,
+    fill: "#b9ef79",
+    edge: "#f5ffd8",
+    highlight: "rgba(255,255,255,0.10)",
+    contour: createLeafContour()
+  }),
+  Object.freeze({
+    id: "eastern_main",
+    anchorLon: 1.05,
+    anchorLat: 0.04,
+    lonScale: 0.38,
+    latScale: 0.22,
+    fill: "#c7f178",
+    edge: "#fbffda",
+    highlight: "rgba(255,255,255,0.10)",
+    contour: createHookContour()
+  }),
+  Object.freeze({
+    id: "southwest_shard",
+    anchorLon: -2.08,
+    anchorLat: -0.18,
+    lonScale: 0.18,
+    latScale: 0.15,
+    fill: "#88e27c",
+    edge: "#ecffd7",
+    highlight: "rgba(255,255,255,0.08)",
+    contour: createShardContour()
+  }),
+  Object.freeze({
+    id: "northeast_isle",
+    anchorLon: 2.42,
+    anchorLat: 0.62,
+    lonScale: 0.15,
+    latScale: 0.10,
+    fill: "#d3f37f",
+    edge: "#fbffe2",
+    highlight: "rgba(255,255,255,0.09)",
+    contour: createPebbleContour()
+  }),
+  Object.freeze({
+    id: "southern_isle",
+    anchorLon: 0.14,
+    anchorLat: -0.58,
+    lonScale: 0.10,
+    latScale: 0.08,
+    fill: "#aeea82",
+    edge: "#f3ffdf",
+    highlight: "rgba(255,255,255,0.08)",
+    contour: createPebbleContour()
+  })
+]);
+
+function projectLandmassPoint(projector, landmass, point) {
+  const lon = landmass.anchorLon + point.x * landmass.lonScale;
+  const lat = landmass.anchorLat + point.y * landmass.latScale;
+  const projected = projector.projectSphere(lon, lat);
+
+  return Object.freeze({
+    lon,
+    lat,
+    x: projected.x,
+    y: projected.y,
+    z: projected.z,
+    visible: projected.visible
+  });
+}
+
+function buildProjectedLandmass(projector, landmass) {
+  const projectedPoints = landmass.contour.map((point) => projectLandmassPoint(projector, landmass, point));
+  const visiblePoints = projectedPoints.filter((point) => point.visible);
+
+  return Object.freeze({
+    landmass,
+    projectedPoints,
+    visiblePoints,
+    visibleRatio: projectedPoints.length ? visiblePoints.length / projectedPoints.length : 0
+  });
+}
+
+function drawProjectedLandmass(ctx, projectedLandmass) {
+  const { landmass, visiblePoints, visibleRatio } = projectedLandmass;
+  if (visiblePoints.length < 4) return;
+  if (visibleRatio < 0.45) return;
+
+  ctx.beginPath();
+  ctx.moveTo(visiblePoints[0].x, visiblePoints[0].y);
+
+  for (let i = 1; i < visiblePoints.length; i += 1) {
+    ctx.lineTo(visiblePoints[i].x, visiblePoints[i].y);
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = landmass.fill;
+  ctx.fill();
+
+  ctx.save();
+  ctx.globalAlpha = 0.16;
+  ctx.strokeStyle = landmass.edge;
+  ctx.lineWidth = 1.05;
+  ctx.stroke();
+  ctx.restore();
+
+  const minX = Math.min(...visiblePoints.map((p) => p.x));
+  const minY = Math.min(...visiblePoints.map((p) => p.y));
+  const maxX = Math.max(...visiblePoints.map((p) => p.x));
+  const maxY = Math.max(...visiblePoints.map((p) => p.y));
+
+  const gradient = ctx.createLinearGradient(minX, minY, maxX, maxY);
+  gradient.addColorStop(0, landmass.highlight);
+  gradient.addColorStop(0.55, "rgba(255,255,255,0.00)");
+  gradient.addColorStop(1, "rgba(0,0,0,0.04)");
+
+  ctx.beginPath();
+  ctx.moveTo(visiblePoints[0].x, visiblePoints[0].y);
+
+  for (let i = 1; i < visiblePoints.length; i += 1) {
+    ctx.lineTo(visiblePoints[i].x, visiblePoints[i].y);
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+}
+
 function drawContinents(ctx, projector) {
-  const continents = [
-    { lon: -0.82, lat: 0.52, rx: 0.18, ry: 0.11, hue: "#b6ef72", edge: "#f6ffd6" },
-    { lon: 1.08, lat: 0.06, rx: 0.30, ry: 0.16, hue: "#c3f06f", edge: "#fbffd8" },
-    { lon: -2.14, lat: -0.20, rx: 0.13, ry: 0.10, hue: "#82e076", edge: "#ecffd8" },
-    { lon: 2.44, lat: 0.62, rx: 0.12, ry: 0.08, hue: "#d0f27d", edge: "#fbffe2" },
-    { lon: 0.14, lat: -0.58, rx: 0.08, ry: 0.06, hue: "#a6ea80", edge: "#f3ffdf" }
-  ];
-
-  continents.forEach((continent, index) => {
-    const center = projector.projectSphere(continent.lon, continent.lat);
-    if (!center.visible) return;
-
-    ctx.beginPath();
-    ctx.ellipse(
-      center.x,
-      center.y,
-      projector.state.radius * continent.rx,
-      projector.state.radius * continent.ry,
-      continent.lon + projector.getOrientation().yaw * 0.34 + index * 0.03,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = continent.hue;
-    ctx.fill();
-
-    ctx.save();
-    ctx.globalAlpha = 0.16;
-    ctx.strokeStyle = continent.edge;
-    ctx.lineWidth = 1.05;
-    ctx.stroke();
-    ctx.restore();
+  LANDMASS_REGISTRY.forEach((landmass) => {
+    const projectedLandmass = buildProjectedLandmass(projector, landmass);
+    drawProjectedLandmass(ctx, projectedLandmass);
   });
 }
 

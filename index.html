@@ -13,7 +13,7 @@
   <title>World Is Round · External Harbor Branch</title>
   <link rel="stylesheet" href="./assets/ui.css" />
 </head>
-<body data-shell="canonical" data-runtime="booting">
+<body data-shell="canonical" data-runtime="booting" data-diagnostics="peek">
   <div id="app" aria-label="World runtime host">
     <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
@@ -31,6 +31,17 @@
           <div id="runtime-phase" class="state-value">BOOT</div>
         </div>
       </div>
+
+      <button
+        id="diagnostics-toggle"
+        class="diagnostics-toggle"
+        type="button"
+        aria-label="Toggle diagnostics"
+        aria-controls="debug-panel"
+        aria-expanded="false"
+      >
+        ⌁
+      </button>
 
       <div id="debug-panel" class="panel-card" aria-label="Debug instrumentation panel">
         <div id="debug-content" class="panel-grid"></div>
@@ -57,12 +68,14 @@
     const compassCanvas = document.getElementById("compass-canvas");
     const debugContent = document.getElementById("debug-content");
     const runtimePhase = document.getElementById("runtime-phase");
+    const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
     const runtime = createRuntime({
       worldCanvas,
       compassCanvas,
       debugContent,
-      runtimePhase
+      runtimePhase,
+      diagnosticsToggle
     });
 
     runtime.start();

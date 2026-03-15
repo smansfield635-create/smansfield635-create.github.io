@@ -6,15 +6,19 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
+  <meta
+    name="description"
+    content="Constraint-governed world runtime baseline for the external harbor branch."
+  />
   <title>World Is Round · External Harbor Branch</title>
   <link rel="stylesheet" href="./assets/ui.css" />
 </head>
-<body>
-  <div id="app">
+<body data-shell="original" data-runtime="booting">
+  <div id="app" aria-label="World runtime host">
     <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
-    <div id="hud">
-      <div id="title-bar">
+    <div id="hud" aria-label="Heads-up display">
+      <div id="title-bar" aria-label="Title and runtime state">
         <div class="brand-card">
           <h1 class="brand-title">World Is Round</h1>
           <div class="brand-subtitle">
@@ -28,19 +32,19 @@
         </div>
       </div>
 
-      <div id="debug-panel" class="panel-card">
+      <div id="debug-panel" class="panel-card" aria-label="Debug instrumentation panel">
         <div id="debug-content" class="panel-grid"></div>
       </div>
 
-      <div id="compass-overlay" class="panel-card">
-        <canvas id="compass-canvas" aria-label="Compass overlay"></canvas>
+      <div id="compass-overlay" class="panel-card" aria-label="Compass overlay">
+        <canvas id="compass-canvas" aria-label="Compass canvas"></canvas>
       </div>
     </div>
   </div>
 
   <noscript>
     <div
-      style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;font-family:system-ui,sans-serif;"
+      style="position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#000;color:#fff;font-family:system-ui,sans-serif;"
     >
       JavaScript is required to run the external world baseline.
     </div>
@@ -49,15 +53,21 @@
   <script type="module">
     import { createRuntime } from "./world/scene_runtime.js";
 
+    const worldCanvas = document.getElementById("world-canvas");
+    const compassCanvas = document.getElementById("compass-canvas");
+    const debugContent = document.getElementById("debug-content");
+    const runtimePhase = document.getElementById("runtime-phase");
+
     const runtime = createRuntime({
-      worldCanvas: document.getElementById("world-canvas"),
-      compassCanvas: document.getElementById("compass-canvas"),
-      debugContent: document.getElementById("debug-content"),
-      runtimePhase: document.getElementById("runtime-phase")
+      worldCanvas,
+      compassCanvas,
+      debugContent,
+      runtimePhase
     });
 
     runtime.start();
     window.__WORLD_RUNTIME__ = runtime;
+    document.body.dataset.runtime = "running";
   </script>
 </body>
 </html>

@@ -10,7 +10,9 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "canon_verification_panel",
     "execution_gate_panel",
     "failure_panel",
-    "diagnostic_render_surface"
+    "diagnostic_render_surface",
+    "magnetic_field_panel",
+    "thermodynamic_field_panel"
   ]),
   "assets/ui.css": Object.freeze([
     "page_baseline",
@@ -95,8 +97,23 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "cardinal_mapping",
     "world_state_handoff"
   ]),
+  "world/environment/magnetic_field_engine.js": Object.freeze([
+    "magnetic_intensity_field",
+    "shielding_gradient_field",
+    "auroral_potential_field",
+    "navigation_field_basis"
+  ]),
+  "world/environment/thermodynamic_engine.js": Object.freeze([
+    "temperature_field",
+    "thermal_gradient_field",
+    "freeze_potential_field",
+    "melt_potential_field",
+    "evaporation_pressure_field"
+  ]),
   "world/environment_renderer.js": Object.freeze([
     "space_family",
+    "magnetic_field_family",
+    "thermodynamic_family",
     "atmosphere_family",
     "land_family",
     "water_family",
@@ -157,6 +174,8 @@ const CHRONOLOGY_REGISTRY = Object.freeze([
   "world/world_kernel.js",
   "world/cosmic_engine_spine.js",
   "world/planet_surface_projector.js",
+  "world/environment/magnetic_field_engine.js",
+  "world/environment/thermodynamic_engine.js",
   "world/environment_renderer.js",
   "world/compass_renderer.js",
   "world/scene_runtime.js"
@@ -237,6 +256,8 @@ const DEPTH_TO_GRID_BINDING = Object.freeze({
 
 const ENVIRONMENT_FAMILIES = Object.freeze({
   space: Object.freeze(["cosmic", "stellar", "orbital", "deep_space"]),
+  magnetic_field: Object.freeze(["magnetic_intensity", "shielding_gradient", "auroral_potential", "navigation_basis"]),
+  thermodynamic: Object.freeze(["temperature", "thermal_gradient", "freeze_potential", "melt_potential", "evaporation_pressure"]),
   atmosphere: Object.freeze(["climate", "weather", "aerial", "optics"]),
   land: Object.freeze(["continents", "regions", "topography", "geography"]),
   water: Object.freeze(["oceans", "currents", "surfaces", "cycles"])
@@ -317,7 +338,11 @@ const CONSTANTS = Object.freeze({
   structuralCoordinateCount: 16,
   executionCoordinateCount: 16,
   stateFieldCount: 256,
-  causalCoverageCount: 65536
+  causalCoverageCount: 65536,
+  thermalBaseline: 0.48,
+  thermalPolarCoolingStrength: 0.82,
+  thermalWildernessDecayStrength: 0.26,
+  magneticBaseline: 0.20
 });
 
 const NAMING_REGISTRY = Object.freeze({
@@ -325,7 +350,9 @@ const NAMING_REGISTRY = Object.freeze({
   baselineLabel: "world_is_round_external",
   reconnectionTarget: "world_is_flat",
   liveDepthBaseline: "harbor",
-  localGridLabel: "4x4_surface_field"
+  localGridLabel: "4x4_surface_field",
+  thermodynamicFieldLabel: "planetary_thermodynamic_field",
+  magneticFieldLabel: "planetary_magnetic_field"
 });
 
 const FEATURE_FLAGS = Object.freeze({
@@ -334,7 +361,9 @@ const FEATURE_FLAGS = Object.freeze({
   showDebugPanels: true,
   showVerificationPanel: true,
   showExecutionGatePanel: true,
-  enable4x4LocalField: true
+  enable4x4LocalField: true,
+  enableThermodynamicField: true,
+  enableMagneticField: true
 });
 
 const SCOPE_REGISTRY = Object.freeze({

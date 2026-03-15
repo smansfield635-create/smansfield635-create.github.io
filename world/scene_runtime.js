@@ -5,202 +5,201 @@ import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createCompassRenderer } from "./compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
 
-function nowMs() {
+function now() {
   return performance.now();
+}
+
+function safeText(el, value) {
+  if (el) el.textContent = value;
 }
 
 function buildCanonicalInput() {
   const expected = getExpectedCanonStructure();
-  return Object.freeze({
+  return {
     fileHomes: expected.fileHomes,
     chronology: expected.chronology,
     ownership: expected.ownership,
     scope: expected.scope,
     duplicateTruth: expected.duplicateTruth
-  });
-}
-
-function buildInitialTiming() {
-  const startedAt = nowMs();
-  return {
-    startedAt,
-    elapsedMs: 0,
-    dtMs: 0,
-    fps: 0,
-    previousFrameAt: startedAt
   };
 }
 
-function safeText(target, value) {
-  if (target) target.textContent = value;
+function buildTiming() {
+  const start = now();
+  return {
+    startedAt: start,
+    previousFrameAt: start,
+    elapsedMs: 0,
+    dtMs: 0,
+    fps: 0
+  };
 }
 
 export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtimePhase }) {
 
-  const worldCtx = worldCanvas.getContext("2d");
+  const ctx = worldCanvas.getContext("2d");
   const compassCtx = compassCanvas.getContext("2d");
 
-  const instruments = createInstruments();
   const spine = createCosmicEngineSpine();
   const projector = createPlanetSurfaceProjector();
   const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
+  const instruments = createInstruments();
 
-  const START_CURRENT_DEPTH = "galaxy";
-  const START_REQUESTED_DEPTH = "harbor";
+  const canon = verifyCanonicalStructure(buildCanonicalInput());
 
-  const canonVerification = verifyCanonicalStructure(buildCanonicalInput());
+  const CURRENT_DEPTH = "galaxy";
+  const REQUESTED_DEPTH = "harbor";
 
-  let executionGate = spine.evaluateExecutionGate(canonVerification,{
-    mode:"runtime_execution",
-    fileCount:9,
-    currentDepth:START_CURRENT_DEPTH,
-    requestedDepth:START_REQUESTED_DEPTH,
-    scopePath:WORLD_KERNEL.scope.activePath,
-    roleConflict:false,
-    ownershipDrift:false,
-    chronologyValid:true,
-    duplicateTruth:false
+  let gate = spine.evaluateExecutionGate(canon, {
+    mode: "runtime_execution",
+    fileCount: 9,
+    currentDepth: CURRENT_DEPTH,
+    requestedDepth: REQUESTED_DEPTH,
+    scopePath: WORLD_KERNEL.scope.activePath,
+    roleConflict: false,
+    ownershipDrift: false,
+    chronologyValid: true,
+    duplicateTruth: false
   });
 
   const runtime = {
-    phase: executionGate.allow ? "BOOT" : "BLOCKED",
-    failure:null,
-    kernel:WORLD_KERNEL,
-    canonVerification,
-    executionGate,
+    phase: gate.allow ? "BOOT" : "BLOCKED",
+    kernel: WORLD_KERNEL,
+    canonVerification: canon,
+    executionGate: gate,
     resolvedState: spine.resolveWorldState({
-      activeDepth:START_REQUESTED_DEPTH,
-      currentDepth:START_CURRENT_DEPTH,
-      selection:{
-        zone:"local_zone_alpha",
-        row:0,
-        col:0
-      }
+      currentDepth: CURRENT_DEPTH,
+      activeDepth: REQUESTED_DEPTH,
+      selection: { zone: "local_zone_alpha", row: 0, col: 0 }
     }),
     projector,
-    orientation:projector.getOrientation(),
-    projection:projector.getProjectionSummary(),
-    region:null,
-    encoding:{label:"external_round_baseline"},
-    selection:null,
-    destination:null,
-    timing:buildInitialTiming(),
-    cardinals:projector.getCardinalWeights(),
-    renderAudit:null,
-    compassAudit:null
+    orientation: projector.getOrientation(),
+    projection: projector.getProjectionSummary(),
+    region: null,
+    encoding: { label: "external_round_baseline" },
+    timing: buildTiming(),
+    cardinals: projector.getCardinalWeights(),
+    renderError: null,
+    updateError: null
   };
 
-  let isDragging=false;
-  let lastX=0;
-  let lastY=0;
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
 
-  function resizeCanvases(){
-    worldCanvas.width=window.innerWidth;
-    worldCanvas.height=window.innerHeight;
-    compassCanvas.width=180;
-    compassCanvas.height=180;
-    projector.resize(worldCanvas.width,worldCanvas.height);
+  function resize() {
+    worldCanvas.width = window.innerWidth;
+    worldCanvas.height = window.innerHeight;
+    compassCanvas.width = 180;
+    compassCanvas.height = 180;
+    projector.resize(worldCanvas.width, worldCanvas.height);
   }
 
-  function writeDebugPanels(){
-    if(debugContent){
-      debugContent.innerHTML=instruments.renderPanelHTML(runtime);
+  function writeDiagnostics() {
+    if (!debugContent) return;
+
+    const diagnostics = {
+      runtime_phase: runtime.phase,
+      gate_allow: runtime.executionGate.allow,
+      gate_blocked_by: runtime.executionGate.blocked_by,
+      gate_reason: runtime.executionGate.reasons,
+      current_depth: runtime.resolvedState?.transition?.from,
+      requested_depth: runtime.resolvedState?.transition?.to,
+      active_depth: runtime.resolvedState?.activeDepth,
+      projector_yaw: runtime.orientation?.yaw,
+      projector_pitch: runtime.orientation?.pitch,
+      projector_radius: runtime.projector?.state?.radius,
+      projection_cell: runtime.projection?.cellId,
+      projection_sector: runtime.projection?.sector,
+      projection_band: runtime.projection?.bandIndex,
+      fps: runtime.timing?.fps,
+      dt: runtime.timing?.dtMs,
+      branch_premise: runtime.resolvedState?.branches?.harbor?.corePremise?.label,
+      error_render: runtime.renderError,
+      error_update: runtime.updateError
+    };
+
+    debugContent.innerHTML = instruments.renderPanelHTML(diagnostics);
+    safeText(runtimePhase, runtime.phase);
+  }
+
+  function updateTiming(t) {
+    const dt = t - runtime.timing.previousFrameAt;
+    runtime.timing.previousFrameAt = t;
+    runtime.timing.elapsedMs = t - runtime.timing.startedAt;
+    runtime.timing.dtMs = dt;
+    runtime.timing.fps = dt > 0 ? 1000 / dt : 0;
+  }
+
+  function update(t) {
+    try {
+
+      updateTiming(t);
+
+      if (!dragging) {
+        projector.stepInertia();
+      }
+
+      runtime.orientation = projector.getOrientation();
+      runtime.projection = projector.getProjectionSummary();
+      runtime.cardinals = projector.getCardinalWeights();
+
+    } catch (err) {
+      runtime.updateError = err.message;
     }
-    safeText(runtimePhase,runtime.phase);
   }
 
-  function updateTiming(now){
-    const dt=now-runtime.timing.previousFrameAt;
-    runtime.timing.previousFrameAt=now;
-    runtime.timing.elapsedMs=now-runtime.timing.startedAt;
-    runtime.timing.dtMs=dt;
-    runtime.timing.fps=dt>0?1000/dt:0;
-  }
+  function render() {
+    try {
 
-  function updateDerivedState(){
-    runtime.orientation=projector.getOrientation();
-    runtime.projection=projector.getProjectionSummary();
-    runtime.cardinals=projector.getCardinalWeights();
-    runtime.region=runtime.resolvedState.region;
-  }
+      environment.render(ctx, projector, runtime);
+      compass.render(compassCtx, runtime);
 
-  function update(now){
-    updateTiming(now);
-
-    if(!executionGate.allow){
-      runtime.phase="BLOCKED";
-      return;
+    } catch (err) {
+      runtime.renderError = err.message;
     }
-
-    if(!isDragging){
-      projector.stepInertia();
-    }
-
-    updateDerivedState();
   }
 
-  function render(){
-    runtime.renderAudit=environment.render(worldCtx,projector,runtime);
-    runtime.compassAudit=compass.render(compassCtx,runtime);
-    writeDebugPanels();
-  }
+  function frame(t) {
 
-  function frame(now){
-    if(runtime.phase==="FAILED"||runtime.phase==="BLOCKED"){
-      writeDebugPanels();
-      return;
-    }
+    runtime.phase = "RUNNING";
 
-    runtime.phase="RUNNING";
-    update(now);
+    update(t);
     render();
+    writeDiagnostics();
 
     requestAnimationFrame(frame);
   }
 
-  function onPointerDown(event){
-    isDragging=true;
-    lastX=event.clientX;
-    lastY=event.clientY;
-    runtime.phase="DRAG";
+  function pointerDown(e) {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
   }
 
-  function onPointerMove(event){
-    if(!isDragging) return;
-
-    const dx=event.clientX-lastX;
-    const dy=event.clientY-lastY;
-
-    lastX=event.clientX;
-    lastY=event.clientY;
-
-    projector.applyDrag(dx,dy);
+  function pointerMove(e) {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    projector.applyDrag(dx, dy);
   }
 
-  function onPointerUp(){
-    isDragging=false;
-    runtime.phase="RUNNING";
+  function pointerUp() {
+    dragging = false;
   }
 
-  function start(){
+  function start() {
 
-    resizeCanvases();
-    updateDerivedState();
-    writeDebugPanels();
+    resize();
+    writeDiagnostics();
 
-    if(!executionGate.allow){
-      runtime.phase="BLOCKED";
-      writeDebugPanels();
-      return;
-    }
-
-    window.addEventListener("resize",resizeCanvases);
-
-    worldCanvas.addEventListener("pointerdown",onPointerDown);
-    window.addEventListener("pointermove",onPointerMove);
-    window.addEventListener("pointerup",onPointerUp);
-    window.addEventListener("pointercancel",onPointerUp);
+    window.addEventListener("resize", resize);
+    worldCanvas.addEventListener("pointerdown", pointerDown);
+    window.addEventListener("pointermove", pointerMove);
+    window.addEventListener("pointerup", pointerUp);
 
     requestAnimationFrame(frame);
   }

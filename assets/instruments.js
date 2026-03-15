@@ -1,6 +1,20 @@
 export function createInstruments() {
   const EMPTY = "—";
 
+  const PANEL_ORDER = Object.freeze([
+    "Runtime",
+    "Kernel",
+    "Selection",
+    "Harbor",
+    "Gratitude",
+    "Generosity",
+    "Orientation",
+    "Depth Lattice",
+    "Canon Verification",
+    "Execution Gate",
+    "Failure"
+  ]);
+
   function isFiniteNumber(value) {
     return typeof value === "number" && Number.isFinite(value);
   }
@@ -11,10 +25,29 @@ export function createInstruments() {
 
   function normalizePrimitive(value, fallback = EMPTY) {
     if (value === null || value === undefined) return fallback;
-    if (typeof value === "string") return value.trim() || fallback;
-    if (typeof value === "number") return Number.isFinite(value) ? String(value) : fallback;
-    if (typeof value === "boolean") return value ? "true" : "false";
+
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      return trimmed ? trimmed : fallback;
+    }
+
+    if (typeof value === "number") {
+      return Number.isFinite(value) ? String(value) : fallback;
+    }
+
+    if (typeof value === "boolean") {
+      return value ? "true" : "false";
+    }
+
     return fallback;
+  }
+
+  function normalizeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function normalizeObject(value) {
+    return value && typeof value === "object" && !Array.isArray(value) ? value : {};
   }
 
   function escapeHTML(value) {
@@ -33,294 +66,320 @@ export function createInstruments() {
       .replace(/^./, (s) => s.toUpperCase());
   }
 
-  function deriveDepthState(runtime) {
-    const projection = runtime?.projection ?? {};
-    const resolved = runtime?.resolvedState ?? {};
-    const lattice = runtime?.lattice ?? {};
-    const cellIndexRaw =
-      projection.cellIndex ??
-      projection.cell ??
-      lattice.cellIndex ??
-      runtime?.selection?.cellIndex ??
-      null;
+  function joinList(value) {
+    const items = normalizeArray(value)
+      .map((item) => normalizePrimitive(item))
+      .filter((item) => item !== EMPTY);
 
-    const rowRaw =
-      projection.row ??
-      lattice.row ??
-      runtime?.selection?.row ??
-      null;
-
-    const colRaw =
-      projection.col ??
-      lattice.col ??
-      runtime?.selection?.col ??
-      null;
-
-    const zoneRaw =
-      projection.zone ??
-      resolved.zone?.displayName ??
-      resolved.zone?.id ??
-      runtime?.selection?.zone ??
-      null;
-
-    const depthRaw =
-      resolved.depth ??
-      resolved.depthLabel ??
-      projection.depth ??
-      runtime?.depth ??
-      runtime?.resolvedState?.activeScale ??
-      null;
-
-    return {
-      depth: normalizePrimitive(depthRaw),
-      zone: normalizePrimitive(zoneRaw),
-      row: normalizePrimitive(rowRaw),
-      col: normalizePrimitive(colRaw),
-      cellIndex: normalizePrimitive(cellIndexRaw),
-      cellId: normalizePrimitive(projection.cellId ?? runtime?.selection?.cellId),
-      sector: normalizePrimitive(projection.sector),
-      band: normalizePrimitive(projection.bandIndex)
-    };
+    return items.length ? items.join(", ") : EMPTY;
   }
 
-  function deriveVerificationState(runtime) {
-    const verification =
-      runtime?.canonVerification ??
-      runtime?.verification ??
-      runtime?.resolvedState?.verification ??
-      null;
-
-    const pass = verification?.pass;
-    const reasons = Array.isArray(verification?.reasons) ? verification.reasons : [];
-
-    return {
-      status: pass === true ? "PASS" : pass === false ? "BLOCK" : EMPTY,
-      topology: verification?.file_home_pass ?? verification?.topology_pass ?? EMPTY,
-      chronology: verification?.chronology_pass ?? EMPTY,
-      ownership: verification?.ownership_pass ?? EMPTY,
-      scope: verification?.scope_pass ?? EMPTY,
-      duplicateTruth: verification?.duplicate_truth_pass ?? EMPTY,
-      reasonCount: reasons.length ? String(reasons.length) : "0",
-      primaryReason: reasons[0] ?? EMPTY
-    };
+  function getResolvedState(runtime) {
+    return normalizeObject(runtime?.resolvedState);
   }
 
-  function deriveExecutionGateState(runtime) {
-    const gate =
-      runtime?.executionGate ??
-      runtime?.gate ??
-      runtime?.resolvedState?.executionGate ??
-      null;
+  function getProjection(runtime) {
+    return normalizeObject(runtime?.projection);
+  }
 
-    const blockedBy = Array.isArray(gate?.blocked_by) ? gate.blocked_by : [];
-    const reasons = Array.isArray(gate?.reasons) ? gate.reasons : [];
+  function getOrientation(runtime) {
+    return normalizeObject(runtime?.orientation);
+  }
 
-    return {
-      allow: gate?.allow === true ? "ALLOW" : gate?.allow === false ? "BLOCK" : EMPTY,
-      mode: normalizePrimitive(gate?.mode),
-      blockedBy: blockedBy.length ? blockedBy.join(", ") : EMPTY,
-      reasonCount: reasons.length ? String(reasons.length) : "0",
-      primaryReason: reasons[0] ?? EMPTY,
-      nextAuthorizedAction: normalizePrimitive(gate?.next_authorized_action)
-    };
+  function getCardinals(runtime) {
+    return normalizeObject(runtime?.cardinals);
+  }
+
+  function getTiming(runtime) {
+    return normalizeObject(runtime?.timing);
+  }
+
+  function getKernel(runtime) {
+    return normalizeObject(runtime?.kernel);
+  }
+
+  function getSelection(runtime) {
+    return runtime?.selection ?? null;
+  }
+
+  function getDestination(runtime) {
+    return runtime?.destination ?? null;
+  }
+
+  function getHarbor(runtime) {
+    return normalizeObject(getResolvedState(runtime)?.branches?.harbor);
+  }
+
+  function getLocalSelection(runtime) {
+    return normalizeObject(getResolvedState(runtime)?.localSelection);
+  }
+
+  function getTransition(runtime) {
+    return normalizeObject(getResolvedState(runtime)?.transition);
+  }
+
+  function getCanonVerification(runtime) {
+    return normalizeObject(runtime?.canonVerification);
+  }
+
+  function getExecutionGate(runtime) {
+    return normalizeObject(runtime?.executionGate);
+  }
+
+  function getFailure(runtime) {
+    return normalizeObject(runtime?.failure);
+  }
+
+  function getAuditLabels(runtime) {
+    return normalizeObject(getResolvedState(runtime)?.auditLabels);
   }
 
   function buildRuntimePanel(runtime) {
-    const projection = runtime?.projection ?? null;
-    const region = runtime?.resolvedState?.region ?? runtime?.region ?? null;
-    const encoding = runtime?.encoding ?? null;
-    const orientation = runtime?.orientation ?? null;
-    const timing = runtime?.timing ?? null;
-    const branch = runtime?.resolvedState?.branches?.harbor ?? null;
+    const resolvedState = getResolvedState(runtime);
+    const projection = getProjection(runtime);
+    const orientation = getOrientation(runtime);
+    const timing = getTiming(runtime);
 
-    return {
+    return Object.freeze({
       phase: normalizePrimitive(runtime?.phase, "BOOT"),
-      region: normalizePrimitive(region?.displayName ?? region?.id),
-      scale: normalizePrimitive(runtime?.resolvedState?.activeScale),
+      region: normalizePrimitive(
+        runtime?.region?.displayName ??
+          runtime?.region?.id ??
+          resolvedState?.region?.displayName ??
+          resolvedState?.region?.id
+      ),
+      scale: normalizePrimitive(resolvedState?.activeScale ?? getKernel(runtime)?.naming?.activeScale),
+      encoding: normalizePrimitive(runtime?.encoding?.label),
+      depth: normalizePrimitive(resolvedState?.activeDepth),
       cell: normalizePrimitive(projection?.cellId),
       sector: normalizePrimitive(projection?.sector),
       band: normalizePrimitive(projection?.bandIndex),
-      encoding: normalizePrimitive(encoding?.label),
-      byte: normalizePrimitive(projection?.stateByte),
       yaw: toFixedSafe(orientation?.yaw, 3),
       pitch: toFixedSafe(orientation?.pitch, 3),
       radius: toFixedSafe(runtime?.projector?.state?.radius, 1),
       fps: toFixedSafe(timing?.fps, 1),
       dt: toFixedSafe(timing?.dtMs, 1),
-      harbor: normalizePrimitive(branch?.corePremise?.label)
-    };
+      elapsed: toFixedSafe(timing?.elapsedMs, 1)
+    });
+  }
+
+  function buildKernelPanel(runtime) {
+    const kernel = getKernel(runtime);
+    const naming = normalizeObject(kernel?.naming);
+    const scope = normalizeObject(kernel?.scope);
+    const modes = normalizeObject(kernel?.modes);
+
+    return Object.freeze({
+      version: normalizePrimitive(kernel?.version),
+      baselineLabel: normalizePrimitive(naming?.baselineLabel),
+      activeScale: normalizePrimitive(naming?.activeScale),
+      activeBranch: normalizePrimitive(scope?.activeBranch),
+      externalViewOnly: normalizePrimitive(modes?.externalViewOnly),
+      roundWorld: normalizePrimitive(modes?.roundWorld),
+      flatWorldReconnection: normalizePrimitive(modes?.flatWorldReconnection)
+    });
   }
 
   function buildSelectionPanel(runtime) {
-    const selected = runtime?.selection ?? null;
-    const destination = runtime?.destination ?? null;
+    const selected = getSelection(runtime);
+    const destination = getDestination(runtime);
 
     if (!selected) {
-      return {
+      return Object.freeze({
         selectedName: EMPTY,
         selectedType: EMPTY,
-        destination: normalizePrimitive(destination?.displayName),
-        hint: "External branch baseline active. Drag globe to rotate."
-      };
+        destination: normalizePrimitive(destination?.displayName ?? destination?.id),
+        hint: "No active selection."
+      });
     }
 
-    const selectedType =
-      selected.kind === "region"
-        ? "Region"
-        : selected.kind === "path"
-          ? "Path"
-          : selected.kind === "node"
-            ? "Node"
-            : selected.kind === "cell"
-              ? "Cell"
-              : "Unknown";
-
-    return {
-      selectedName: normalizePrimitive(selected.displayName ?? selected.id),
-      selectedType,
-      destination: normalizePrimitive(destination?.displayName),
-      hint: normalizePrimitive(selected.hint, "Selection active.")
-    };
+    return Object.freeze({
+      selectedName: normalizePrimitive(selected?.displayName ?? selected?.id),
+      selectedType: normalizePrimitive(selected?.kind),
+      destination: normalizePrimitive(destination?.displayName ?? destination?.id),
+      hint: normalizePrimitive(selected?.hint, "Selection active.")
+    });
   }
 
-  function buildHarborStatePanel(runtime) {
-    const harbor = runtime?.resolvedState?.branches?.harbor ?? null;
-    const core = harbor?.corePremise ?? null;
+  function buildHarborPanel(runtime) {
+    const harbor = getHarbor(runtime);
+    const conclusion = normalizeObject(harbor?.nodeConclusion);
+    const premise = normalizeObject(harbor?.corePremise);
 
-    return {
-      branch: normalizePrimitive(harbor?.id ?? "harbor"),
-      premise: normalizePrimitive(core?.label),
-      region: normalizePrimitive(runtime?.resolvedState?.region?.displayName ?? runtime?.resolvedState?.region?.id),
-      scale: normalizePrimitive(runtime?.resolvedState?.activeScale),
-      mode: normalizePrimitive(runtime?.mode ?? runtime?.phase)
-    };
+    return Object.freeze({
+      branch: normalizePrimitive(getAuditLabels(runtime)?.branch, "external.harbor"),
+      premise: normalizePrimitive(premise?.premise ?? premise?.label),
+      status: normalizePrimitive(conclusion?.status),
+      node: normalizePrimitive(conclusion?.node),
+      gratitudeConclusion: normalizePrimitive(conclusion?.gratitudeConclusion),
+      generosityConclusion: normalizePrimitive(conclusion?.generosityConclusion),
+      exchangePremise: normalizePrimitive(conclusion?.exchangePremise)
+    });
   }
 
-  function buildGratitudeStatePanel(runtime) {
-    const gratitude = runtime?.resolvedState?.branches?.harbor?.gratitude ?? null;
+  function buildGratitudePanel(runtime) {
+    const harbor = getHarbor(runtime);
+    const gratitude = normalizeObject(harbor?.gratitude);
+    const recombination = normalizeObject(harbor?.gratitudeRecombination);
 
-    return {
+    return Object.freeze({
       north: normalizePrimitive(gratitude?.north),
       south: normalizePrimitive(gratitude?.south),
       east: normalizePrimitive(gratitude?.east),
-      west: normalizePrimitive(gratitude?.west)
-    };
+      west: normalizePrimitive(gratitude?.west),
+      recombination: normalizePrimitive(recombination?.conclusion ?? gratitude?.recombination)
+    });
   }
 
-  function buildGenerosityStatePanel(runtime) {
-    const generosity = runtime?.resolvedState?.branches?.harbor?.generosity ?? null;
+  function buildGenerosityPanel(runtime) {
+    const harbor = getHarbor(runtime);
+    const generosity = normalizeObject(harbor?.generosity);
+    const recombination = normalizeObject(harbor?.generosityRecombination);
 
-    return {
+    return Object.freeze({
       north: normalizePrimitive(generosity?.north),
       south: normalizePrimitive(generosity?.south),
       east: normalizePrimitive(generosity?.east),
-      west: normalizePrimitive(generosity?.west)
-    };
-  }
-
-  function buildBranchAuditPanel(runtime) {
-    const harbor = runtime?.resolvedState?.branches?.harbor ?? null;
-    const gratitude = harbor?.gratitude ?? null;
-    const generosity = harbor?.generosity ?? null;
-    const core = harbor?.corePremise ?? null;
-
-    return {
-      branch: "harbor",
-      gratitudeNorth: normalizePrimitive(gratitude?.north),
-      gratitudeSouth: normalizePrimitive(gratitude?.south),
-      gratitudeEast: normalizePrimitive(gratitude?.east),
-      gratitudeWest: normalizePrimitive(gratitude?.west),
-      generosityNorth: normalizePrimitive(generosity?.north),
-      generositySouth: normalizePrimitive(generosity?.south),
-      generosityEast: normalizePrimitive(generosity?.east),
-      generosityWest: normalizePrimitive(generosity?.west),
-      premise: normalizePrimitive(core?.label)
-    };
+      west: normalizePrimitive(generosity?.west),
+      recombination: normalizePrimitive(recombination?.conclusion ?? generosity?.recombination)
+    });
   }
 
   function buildOrientationPanel(runtime) {
-    const orientation = runtime?.orientation ?? null;
-    const cardinals = runtime?.cardinals ?? null;
+    const orientation = getOrientation(runtime);
+    const cardinals = getCardinals(runtime);
 
-    return {
+    return Object.freeze({
       heading: normalizePrimitive(cardinals?.heading),
       yaw: toFixedSafe(orientation?.yaw, 3),
       pitch: toFixedSafe(orientation?.pitch, 3),
+      yawVelocity: toFixedSafe(orientation?.yawVelocity, 4),
+      pitchVelocity: toFixedSafe(orientation?.pitchVelocity, 4),
       northWeight: toFixedSafe(cardinals?.north, 2),
       southWeight: toFixedSafe(cardinals?.south, 2),
       eastWeight: toFixedSafe(cardinals?.east, 2),
       westWeight: toFixedSafe(cardinals?.west, 2)
-    };
+    });
   }
 
   function buildDepthLatticePanel(runtime) {
-    const depth = deriveDepthState(runtime);
+    const resolvedState = getResolvedState(runtime);
+    const localSelection = getLocalSelection(runtime);
+    const transition = getTransition(runtime);
+    const projection = getProjection(runtime);
 
-    return {
-      depth: depth.depth,
-      zone: depth.zone,
-      row: depth.row,
-      col: depth.col,
-      cellIndex: depth.cellIndex,
-      cellId: depth.cellId,
-      sector: depth.sector,
-      band: depth.band
-    };
+    return Object.freeze({
+      depth: normalizePrimitive(resolvedState?.activeDepth),
+      depthLabel: normalizePrimitive(resolvedState?.activeDepthLabel),
+      from: normalizePrimitive(transition?.from),
+      to: normalizePrimitive(transition?.to),
+      legal: normalizePrimitive(transition?.legal),
+      gridBound: normalizePrimitive(resolvedState?.gridBound),
+      zone: normalizePrimitive(localSelection?.zone),
+      row: normalizePrimitive(localSelection?.row ?? projection?.row),
+      col: normalizePrimitive(localSelection?.col ?? projection?.col),
+      cellIndex: normalizePrimitive(localSelection?.cellIndex ?? projection?.cellIndex),
+      cellId: normalizePrimitive(localSelection?.cellId ?? projection?.cellId)
+    });
   }
 
-  function buildVerificationPanel(runtime) {
-    return deriveVerificationState(runtime);
+  function buildCanonVerificationPanel(runtime) {
+    const canon = getCanonVerification(runtime);
+
+    return Object.freeze({
+      pass: normalizePrimitive(canon?.pass),
+      fileHomePass: normalizePrimitive(canon?.file_home_pass),
+      chronologyPass: normalizePrimitive(canon?.chronology_pass),
+      ownershipPass: normalizePrimitive(canon?.ownership_pass),
+      scopePass: normalizePrimitive(canon?.scope_pass),
+      duplicateTruthPass: normalizePrimitive(canon?.duplicate_truth_pass),
+      reasons: joinList(canon?.reasons)
+    });
   }
 
   function buildExecutionGatePanel(runtime) {
-    return deriveExecutionGateState(runtime);
+    const gate = getExecutionGate(runtime);
+
+    return Object.freeze({
+      allow: gate?.allow === true ? "ALLOW" : gate?.allow === false ? "BLOCK" : EMPTY,
+      mode: normalizePrimitive(gate?.mode),
+      blockedBy: joinList(gate?.blocked_by),
+      reasons: joinList(gate?.reasons),
+      nextAuthorizedAction: normalizePrimitive(gate?.next_authorized_action)
+    });
+  }
+
+  function buildFailurePanel(runtime) {
+    const failure = getFailure(runtime);
+
+    return Object.freeze({
+      phase: normalizePrimitive(failure?.phase),
+      message: normalizePrimitive(failure?.message),
+      renderError: normalizePrimitive(runtime?.renderError),
+      updateError: normalizePrimitive(runtime?.updateError)
+    });
+  }
+
+  function classifyValue(value) {
+    const normalized = normalizePrimitive(value);
+
+    if (normalized === "ALLOW" || normalized === "true") return "ok";
+    if (normalized === "BLOCK" || normalized === "ERROR" || normalized === "FAILED") return "danger";
+    if (normalized === EMPTY) return "muted";
+    return "default";
   }
 
   function renderKeyValueSection(title, data, sectionClass = "") {
     const rows = Object.entries(data).map(([key, value]) => {
       const safeLabel = escapeHTML(labelize(key));
       const safeValue = escapeHTML(normalizePrimitive(value));
-      const dataKind =
-        /depth/i.test(key) ? "depth" :
-        /(cell|row|col|zone)/i.test(key) ? "cell" :
-        /verification/i.test(key) ? "verification" :
-        /gate/i.test(key) ? "gate" :
-        "generic";
+      const tone = classifyValue(value);
+      const valueClass =
+        tone === "ok"
+          ? "panel-value panel-value--ok"
+          : tone === "danger"
+            ? "panel-value panel-value--danger"
+            : tone === "muted"
+              ? "panel-value panel-value--muted"
+              : "panel-value";
 
-      return `<div class="panel-row" data-kind="${dataKind}"><span class="panel-key">${safeLabel}</span><span class="panel-value">${safeValue}</span></div>`;
+      return `<div class="panel-row"><span class="panel-key">${safeLabel}</span><span class="${valueClass}">${safeValue}</span></div>`;
     });
 
     const className = sectionClass ? `panel-section ${sectionClass}` : "panel-section";
-
     return `<section class="${className}"><h3 class="panel-title">${escapeHTML(title)}</h3>${rows.join("")}</section>`;
   }
 
   function renderPanelHTML(runtime) {
-    return [
-      renderKeyValueSection("Runtime", buildRuntimePanel(runtime)),
-      renderKeyValueSection("Selection", buildSelectionPanel(runtime)),
-      renderKeyValueSection("Harbor", buildHarborStatePanel(runtime)),
-      renderKeyValueSection("Gratitude", buildGratitudeStatePanel(runtime)),
-      renderKeyValueSection("Generosity", buildGenerosityStatePanel(runtime)),
-      renderKeyValueSection("Orientation", buildOrientationPanel(runtime)),
-      renderKeyValueSection("Depth Lattice", buildDepthLatticePanel(runtime), "is-depth-aware"),
-      renderKeyValueSection("Canon Verification", buildVerificationPanel(runtime)),
-      renderKeyValueSection("Execution Gate", buildExecutionGatePanel(runtime)),
-      renderKeyValueSection("Harbor Audit", buildBranchAuditPanel(runtime))
-    ].join("");
+    const sectionMap = Object.freeze({
+      Runtime: buildRuntimePanel(runtime),
+      Kernel: buildKernelPanel(runtime),
+      Selection: buildSelectionPanel(runtime),
+      Harbor: buildHarborPanel(runtime),
+      Gratitude: buildGratitudePanel(runtime),
+      Generosity: buildGenerosityPanel(runtime),
+      Orientation: buildOrientationPanel(runtime),
+      "Depth Lattice": buildDepthLatticePanel(runtime),
+      "Canon Verification": buildCanonVerificationPanel(runtime),
+      "Execution Gate": buildExecutionGatePanel(runtime),
+      Failure: buildFailurePanel(runtime)
+    });
+
+    return PANEL_ORDER.map((title) => renderKeyValueSection(title, sectionMap[title])).join("");
   }
 
   return Object.freeze({
     buildRuntimePanel,
+    buildKernelPanel,
     buildSelectionPanel,
-    buildHarborStatePanel,
-    buildGratitudeStatePanel,
-    buildGenerosityStatePanel,
-    buildBranchAuditPanel,
+    buildHarborPanel,
+    buildGratitudePanel,
+    buildGenerosityPanel,
     buildOrientationPanel,
     buildDepthLatticePanel,
-    buildVerificationPanel,
+    buildCanonVerificationPanel,
     buildExecutionGatePanel,
+    buildFailurePanel,
     renderKeyValueSection,
     renderPanelHTML
   });

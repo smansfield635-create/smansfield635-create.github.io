@@ -9,6 +9,62 @@ function normalizeLonDeg(lonDeg) {
   return value;
 }
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function smoothstep(edge0, edge1, x) {
+  const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function fract(value) {
+  return value - Math.floor(value);
+}
+
+function hash2(x, y) {
+  return fract(Math.sin(x * 127.1 + y * 311.7) * 43758.5453123);
+}
+
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function valueNoise(x, y) {
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const x1 = x0 + 1;
+  const y1 = y0 + 1;
+
+  const sx = x - x0;
+  const sy = y - y0;
+
+  const n00 = hash2(x0, y0);
+  const n10 = hash2(x1, y0);
+  const n01 = hash2(x0, y1);
+  const n11 = hash2(x1, y1);
+
+  const ix0 = lerp(n00, n10, sx);
+  const ix1 = lerp(n01, n11, sx);
+  return lerp(ix0, ix1, sy);
+}
+
+function fbm(x, y) {
+  let total = 0;
+  let amplitude = 0.5;
+  let frequency = 1.0;
+  let amplitudeSum = 0;
+
+  for (let i = 0; i < 4; i += 1) {
+    total += valueNoise(x * frequency, y * frequency) * amplitude;
+    amplitudeSum += amplitude;
+    amplitude *= 0.5;
+    frequency *= 2.0;
+  }
+
+  return amplitudeSum > 0 ? total / amplitudeSum : 0;
+}
+
 function angularDistanceDeg(latA, lonA, latB, lonB) {
   const latARad = toRad(latA);
   const lonARad = toRad(lonA);
@@ -29,63 +85,84 @@ const CONTINENTS = Object.freeze([
     centerLat: 0,
     centerLon: 0,
     radiusDeg: 45,
-    fill: "#97dc6d",
-    edge: "#dff7b5",
-    highlight: "rgba(255,255,255,0.10)"
+    fill: "#8fcb63",
+    edge: "#dff3b3",
+    highlight: "rgba(255,255,255,0.10)",
+    roughness: 9.5,
+    elongationX: 1.18,
+    elongationY: 0.90
   }),
   Object.freeze({
     id: "gratitude",
     centerLat: 35,
     centerLon: 60,
     radiusDeg: 28,
-    fill: "#88d567",
-    edge: "#d8f0af",
-    highlight: "rgba(255,255,255,0.09)"
+    fill: "#81c35e",
+    edge: "#d7ebb0",
+    highlight: "rgba(255,255,255,0.09)",
+    roughness: 7.0,
+    elongationX: 1.05,
+    elongationY: 0.94
   }),
   Object.freeze({
     id: "generosity",
     centerLat: 35,
     centerLon: -60,
     radiusDeg: 28,
-    fill: "#8eda72",
-    edge: "#dff4b8",
-    highlight: "rgba(255,255,255,0.09)"
+    fill: "#87ca68",
+    edge: "#dcf1b6",
+    highlight: "rgba(255,255,255,0.09)",
+    roughness: 7.0,
+    elongationX: 1.08,
+    elongationY: 0.92
   }),
   Object.freeze({
     id: "northland",
     centerLat: 60,
     centerLon: 120,
     radiusDeg: 25,
-    fill: "#9ad978",
-    edge: "#e0f5ba",
-    highlight: "rgba(255,255,255,0.08)"
+    fill: "#96d170",
+    edge: "#e2f3be",
+    highlight: "rgba(255,255,255,0.08)",
+    roughness: 6.2,
+    elongationX: 0.96,
+    elongationY: 1.08
   }),
   Object.freeze({
     id: "eastreach",
     centerLat: 10,
     centerLon: 150,
     radiusDeg: 22,
-    fill: "#86cf62",
-    edge: "#d4edaa",
-    highlight: "rgba(255,255,255,0.08)"
+    fill: "#7abd58",
+    edge: "#d3e8aa",
+    highlight: "rgba(255,255,255,0.08)",
+    roughness: 5.8,
+    elongationX: 1.12,
+    elongationY: 0.88
   }),
   Object.freeze({
     id: "southfields",
     centerLat: -45,
     centerLon: -90,
     radiusDeg: 24,
-    fill: "#8ad26a",
-    edge: "#d7efb0",
-    highlight: "rgba(255,255,255,0.08)"
+    fill: "#81c661",
+    edge: "#d8edb2",
+    highlight: "rgba(255,255,255,0.08)",
+    roughness: 6.0,
+    elongationX: 1.00,
+    elongationY: 0.98
   }),
   Object.freeze({
     id: "westwilds",
     centerLat: -10,
     centerLon: -150,
     radiusDeg: 24,
-    fill: "#93d872",
-    edge: "#ddf4b6",
-    highlight: "rgba(255,255,255,0.08)"
+    fill: "#8bce69",
+    edge: "#def2b7",
+    highlight: "rgba(255,255,255,0.08)",
+    roughness: 6.4,
+    elongationX: 1.06,
+    elongationY: 0.93
   })
 ]);
 
@@ -94,50 +171,98 @@ function getContinentById(id) {
 }
 
 function getLandColor(continentId) {
-  const continent = getContinentById(continentId);
-  return continent?.fill ?? "#90d46c";
+  return getContinentById(continentId)?.fill ?? "#8fcb63";
 }
 
 function getLandEdgeColor(continentId) {
-  const continent = getContinentById(continentId);
-  return continent?.edge ?? "#dcf3b7";
+  return getContinentById(continentId)?.edge ?? "#dff3b3";
 }
 
 function getLandHighlight(continentId) {
-  const continent = getContinentById(continentId);
-  return continent?.highlight ?? "rgba(255,255,255,0.08)";
+  return getContinentById(continentId)?.highlight ?? "rgba(255,255,255,0.08)";
+}
+
+function getContinentInfluence(continent, latDeg, lonDeg) {
+  const normalizedLon = normalizeLonDeg(lonDeg);
+  const dLat = latDeg - continent.centerLat;
+  const dLonRaw = normalizeLonDeg(normalizedLon - continent.centerLon);
+
+  const dLatScaled = dLat / continent.elongationY;
+  const dLonScaled = dLonRaw / continent.elongationX;
+  const baseDistance = Math.sqrt(dLatScaled * dLatScaled + dLonScaled * dLonScaled);
+
+  const n1 = fbm(
+    (latDeg + 90 + continent.centerLat * 0.7) * 0.08,
+    (normalizedLon + 180 + continent.centerLon * 0.7) * 0.08
+  );
+  const n2 = fbm(
+    (latDeg + 90 + continent.centerLat * 1.1) * 0.17,
+    (normalizedLon + 180 + continent.centerLon * 1.1) * 0.17
+  );
+  const n3 = valueNoise(
+    (latDeg + 90 + continent.centerLat * 0.4) * 0.32,
+    (normalizedLon + 180 + continent.centerLon * 0.4) * 0.32
+  );
+
+  const coastlineOffset =
+    (n1 - 0.5) * continent.roughness +
+    (n2 - 0.5) * (continent.roughness * 0.46) +
+    (n3 - 0.5) * (continent.roughness * 0.22);
+
+  const inletBias =
+    Math.sin(toRad(dLonRaw * 2.3)) *
+    Math.cos(toRad(dLat * 1.7)) *
+    1.4;
+
+  const effectiveRadius = continent.radiusDeg + coastlineOffset + inletBias;
+  const signedDistance = effectiveRadius - baseDistance;
+
+  return Object.freeze({
+    signedDistance,
+    effectiveRadius,
+    baseDistance
+  });
 }
 
 export function createSurfaceEngine() {
   function continentMask(latDeg, lonDeg) {
     const normalizedLon = normalizeLonDeg(lonDeg);
 
-    for (const continent of CONTINENTS) {
-      const distance = angularDistanceDeg(
-        latDeg,
-        normalizedLon,
-        continent.centerLat,
-        continent.centerLon
-      );
+    let winningContinent = null;
+    let winningDistance = -Infinity;
 
-      if (distance <= continent.radiusDeg) {
-        return continent.id;
+    for (const continent of CONTINENTS) {
+      const influence = getContinentInfluence(continent, latDeg, normalizedLon);
+
+      if (influence.signedDistance > 0 && influence.signedDistance > winningDistance) {
+        winningContinent = continent.id;
+        winningDistance = influence.signedDistance;
       }
     }
 
-    return null;
+    return winningContinent;
   }
 
   function buildTerrainField(projector) {
     const samples = [];
-    const latStep = 6;
-    const lonStep = 6;
+    const latStep = 2;
+    const lonStep = 2;
 
     for (let latDeg = -84; latDeg <= 84; latDeg += latStep) {
       for (let lonDeg = -180; lonDeg < 180; lonDeg += lonStep) {
         const normalizedLon = normalizeLonDeg(lonDeg);
         const continentId = continentMask(latDeg, normalizedLon);
-        const projected = projector.projectSphere(toRad(normalizedLon), toRad(latDeg));
+        const projected = projector.projectSphere(
+          toRad(normalizedLon),
+          toRad(latDeg)
+        );
+
+        let shoreline = 0;
+        if (continentId) {
+          const continent = getContinentById(continentId);
+          const influence = getContinentInfluence(continent, latDeg, normalizedLon);
+          shoreline = 1 - smoothstep(0, 3.8, influence.signedDistance);
+        }
 
         samples.push(
           Object.freeze({
@@ -145,6 +270,7 @@ export function createSurfaceEngine() {
             lonDeg: normalizedLon,
             continentId,
             terrain: continentId ? "LAND" : "OCEAN",
+            shoreline,
             x: projected.x,
             y: projected.y,
             z: projected.z,
@@ -166,7 +292,7 @@ export function createSurfaceEngine() {
   }
 
   function drawLatitudeBands(ctx, projector) {
-    ctx.strokeStyle = "rgba(255,255,255,0.045)";
+    ctx.strokeStyle = "rgba(255,255,255,0.040)";
     ctx.lineWidth = 1;
 
     for (let latDeg = -60; latDeg <= 60; latDeg += 20) {
@@ -197,7 +323,7 @@ export function createSurfaceEngine() {
   }
 
   function drawLongitudeBands(ctx, projector) {
-    ctx.strokeStyle = "rgba(190,220,255,0.03)";
+    ctx.strokeStyle = "rgba(190,220,255,0.028)";
     ctx.lineWidth = 1;
 
     for (let lonDeg = 0; lonDeg < 360; lonDeg += 20) {
@@ -234,81 +360,20 @@ export function createSurfaceEngine() {
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(projector.state.centerX, projector.state.centerY, radius * 0.995, 0, Math.PI * 2);
+    ctx.arc(
+      projector.state.centerX,
+      projector.state.centerY,
+      radius * 0.995,
+      0,
+      Math.PI * 2
+    );
     ctx.clip();
 
     for (const sample of terrainField.samples) {
       if (!sample.visible) continue;
       if (sample.terrain !== "LAND") continue;
 
-      const sampleRadius = radius * 0.030;
+      const sampleRadius = radius * 0.0105;
 
       ctx.beginPath();
-      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = getLandColor(sample.continentId);
-      ctx.fill();
-
-      ctx.save();
-      ctx.globalAlpha = 0.14;
-      ctx.strokeStyle = getLandEdgeColor(sample.continentId);
-      ctx.lineWidth = 0.9;
-      ctx.stroke();
-      ctx.restore();
-
-      const highlight = ctx.createRadialGradient(
-        sample.x - sampleRadius * 0.35,
-        sample.y - sampleRadius * 0.35,
-        sampleRadius * 0.10,
-        sample.x,
-        sample.y,
-        sampleRadius
-      );
-
-      highlight.addColorStop(0, getLandHighlight(sample.continentId));
-      highlight.addColorStop(0.6, "rgba(255,255,255,0.00)");
-      highlight.addColorStop(1, "rgba(0,0,0,0.04)");
-
-      ctx.beginPath();
-      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = highlight;
-      ctx.fill();
-    }
-
-    ctx.restore();
-  }
-
-  function renderBase(ctx, projector, runtime, state, terrainField) {
-    drawLatitudeBands(ctx, projector);
-    drawLongitudeBands(ctx, projector);
-    drawLandSamples(ctx, projector, terrainField);
-  }
-
-  function renderOverlay(ctx, projector, runtime, state) {
-    if (!state.gridBound) return;
-
-    const { centerX, centerY, radius } = projector.state;
-    const row = state.localSelection.row;
-    const col = state.localSelection.col;
-    const cellWidth = (radius * 1.08) / 4;
-    const cellHeight = (radius * 1.08) / 4;
-    const x = centerX - radius * 0.54 + col * cellWidth;
-    const y = centerY - radius * 0.54 + row * cellHeight;
-
-    ctx.save();
-    ctx.fillStyle = "rgba(121,169,255,0.05)";
-    ctx.strokeStyle = "rgba(121,169,255,0.18)";
-    ctx.lineWidth = 1.0;
-    ctx.beginPath();
-    ctx.rect(x, y, cellWidth, cellHeight);
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  return Object.freeze({
-    continentMask,
-    buildTerrainField,
-    renderBase,
-    renderOverlay
-  });
-}
+      ctx.arc(sample.x, sample

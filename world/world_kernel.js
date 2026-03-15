@@ -12,7 +12,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "failure_panel",
     "diagnostic_render_surface",
     "magnetic_field_panel",
-    "thermodynamic_field_panel"
+    "thermodynamic_field_panel",
+    "hydrology_field_panel"
   ]),
   "assets/ui.css": Object.freeze([
     "page_baseline",
@@ -110,10 +111,19 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "melt_potential_field",
     "evaporation_pressure_field"
   ]),
+  "world/environment/hydrology_engine.js": Object.freeze([
+    "rainfall_field",
+    "runoff_field",
+    "basin_accumulation_field",
+    "drainage_field",
+    "river_path_field",
+    "lake_formation_field"
+  ]),
   "world/environment_renderer.js": Object.freeze([
     "space_family",
     "magnetic_field_family",
     "thermodynamic_family",
+    "hydrology_family",
     "atmosphere_family",
     "land_family",
     "water_family",
@@ -176,6 +186,7 @@ const CHRONOLOGY_REGISTRY = Object.freeze([
   "world/planet_surface_projector.js",
   "world/environment/magnetic_field_engine.js",
   "world/environment/thermodynamic_engine.js",
+  "world/environment/hydrology_engine.js",
   "world/environment_renderer.js",
   "world/compass_renderer.js",
   "world/scene_runtime.js"
@@ -258,6 +269,7 @@ const ENVIRONMENT_FAMILIES = Object.freeze({
   space: Object.freeze(["cosmic", "stellar", "orbital", "deep_space"]),
   magnetic_field: Object.freeze(["magnetic_intensity", "shielding_gradient", "auroral_potential", "navigation_basis"]),
   thermodynamic: Object.freeze(["temperature", "thermal_gradient", "freeze_potential", "melt_potential", "evaporation_pressure"]),
+  hydrology: Object.freeze(["rainfall", "runoff", "basin_accumulation", "drainage", "river_path", "lake_formation"]),
   atmosphere: Object.freeze(["climate", "weather", "aerial", "optics"]),
   land: Object.freeze(["continents", "regions", "topography", "geography"]),
   water: Object.freeze(["oceans", "currents", "surfaces", "cycles"])
@@ -342,7 +354,11 @@ const CONSTANTS = Object.freeze({
   thermalBaseline: 0.48,
   thermalPolarCoolingStrength: 0.82,
   thermalWildernessDecayStrength: 0.26,
-  magneticBaseline: 0.20
+  magneticBaseline: 0.20,
+  hydrologyRunoffStrength: 0.58,
+  hydrologyBasinThreshold: 0.62,
+  hydrologyRiverThreshold: 0.56,
+  hydrologyLakeThreshold: 0.62
 });
 
 const NAMING_REGISTRY = Object.freeze({
@@ -352,7 +368,8 @@ const NAMING_REGISTRY = Object.freeze({
   liveDepthBaseline: "harbor",
   localGridLabel: "4x4_surface_field",
   thermodynamicFieldLabel: "planetary_thermodynamic_field",
-  magneticFieldLabel: "planetary_magnetic_field"
+  magneticFieldLabel: "planetary_magnetic_field",
+  hydrologyFieldLabel: "planetary_hydrology_field"
 });
 
 const FEATURE_FLAGS = Object.freeze({
@@ -363,7 +380,8 @@ const FEATURE_FLAGS = Object.freeze({
   showExecutionGatePanel: true,
   enable4x4LocalField: true,
   enableThermodynamicField: true,
-  enableMagneticField: true
+  enableMagneticField: true,
+  enableHydrologyField: true
 });
 
 const SCOPE_REGISTRY = Object.freeze({

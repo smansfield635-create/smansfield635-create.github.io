@@ -51,8 +51,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   let executionGate = spine.evaluateExecutionGate(canonVerification, {
     mode: "runtime_execution",
     fileCount: 9,
-    requestedDepth: "planet",
-    currentDepth: "galaxy",
+    requestedDepth: "harbor",
+    currentDepth: "region",
     scopePath: WORLD_KERNEL.scope.activePath,
     roleConflict: false,
     ownershipDrift: false,
@@ -67,8 +67,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     canonVerification,
     executionGate,
     resolvedState: spine.resolveWorldState({
-      activeDepth: "planet",
-      currentDepth: "galaxy",
+      activeDepth: "harbor",
+      currentDepth: "region",
       selection: {
         zone: "local_zone_alpha",
         row: 0,
@@ -118,8 +118,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
 
   function updateResolvedState() {
     runtime.resolvedState = spine.resolveWorldState({
-      activeDepth: "planet",
-      currentDepth: "galaxy",
+      activeDepth: "harbor",
+      currentDepth: "region",
       selection: {
         zone: runtime.resolvedState?.localSelection?.zone ?? "local_zone_alpha",
         row: runtime.projection?.row ?? 0,
@@ -140,8 +140,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     executionGate = spine.evaluateExecutionGate(runtime.canonVerification, {
       mode: "runtime_execution",
       fileCount: 9,
-      requestedDepth: runtime.resolvedState?.activeDepth ?? "planet",
-      currentDepth: runtime.resolvedState?.transition?.from ?? "galaxy",
+      requestedDepth: runtime.resolvedState?.activeDepth ?? "harbor",
+      currentDepth: runtime.resolvedState?.transition?.from ?? "region",
       scopePath: WORLD_KERNEL.scope.activePath,
       roleConflict: false,
       ownershipDrift: false,

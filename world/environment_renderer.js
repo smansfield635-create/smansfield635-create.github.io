@@ -89,12 +89,13 @@ export function createEnvironmentRenderer() {
     const renderState = getRenderState(runtime);
     const audit = createEnvironmentAudit(runtime, renderState);
     const { width, height } = getCanvasMetrics(ctx);
+    const terrainField = surfaceEngine.buildTerrainField(projector);
 
     ctx.clearRect(0, 0, width, height);
 
     spaceEngine.render(ctx, projector, runtime, renderState);
     atmosphereEngine.renderOuter(ctx, projector, runtime, renderState);
-    oceanEngine.renderBase(ctx, projector, runtime, renderState);
+    oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
 
     ctx.save();
     ctx.beginPath();
@@ -107,9 +108,9 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    surfaceEngine.renderBase(ctx, projector, runtime, renderState);
+    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
+    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField);
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
-    oceanEngine.renderDynamic(ctx, projector, runtime, renderState);
     surfaceEngine.renderOverlay(ctx, projector, runtime, renderState);
 
     ctx.restore();

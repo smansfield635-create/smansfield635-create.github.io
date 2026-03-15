@@ -1,242 +1,611 @@
-export function createTopologyEngine() {
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
+const FILE_HOME_REGISTRY = Object.freeze({
+  "assets/instruments.js": Object.freeze([
+    "runtime_panel",
+    "selection_panel",
+    "harbor_panel",
+    "gratitude_panel",
+    "generosity_panel",
+    "orientation_panel",
+    "depth_lattice_panel",
+    "canon_verification_panel",
+    "execution_gate_panel",
+    "failure_panel",
+    "diagnostic_render_surface",
+    "magnetic_field_panel",
+    "thermodynamic_field_panel",
+    "hydrology_field_panel",
+    "topology_field_panel"
+  ]),
+  "assets/ui.css": Object.freeze([
+    "page_baseline",
+    "app_shell",
+    "canvas_layer",
+    "debug_panel",
+    "info_panel",
+    "typography",
+    "spacing",
+    "overlay",
+    "z_index_layering",
+    "responsive_shell"
+  ]),
+  "index.html": Object.freeze([
+    "document_shell",
+    "mount_point",
+    "canvas_host",
+    "panel_host",
+    "module_boot_order",
+    "runtime_bootstrap",
+    "fail_safe_fallback"
+  ]),
+  "world/world_kernel.js": Object.freeze([
+    "cardinal_law",
+    "round_world_law",
+    "flat_world_reconnection",
+    "environment_family_registry",
+    "branch_registry",
+    "harbor_branch",
+    "gratitude_branch",
+    "generosity_branch",
+    "recursion_1_to_4_to_1",
+    "depth_lattice",
+    "descent_order",
+    "recombination_order",
+    "allowed_scope",
+    "feature_flag",
+    "canonical_constants",
+    "naming_registry",
+    "canon_verification"
+  ]),
+  "world/cosmic_engine_spine.js": Object.freeze([
+    "cosmic_resolver",
+    "galaxy_resolver",
+    "solar_resolver",
+    "planet_resolver",
+    "surface_resolver",
+    "harbor_resolver",
+    "gratitude_resolver",
+    "generosity_resolver",
+    "upstream_downstream_handoff",
+    "normalized_state_packaging",
+    "branch_descent",
+    "branch_recombination",
+    "harbor_exchange",
+    "gratitude_recombination",
+    "generosity_recombination",
+    "node_state_conclusion",
+    "scale_transition",
+    "scale_containment",
+    "audit_labeling",
+    "execution_gate"
+  ]),
+  "world/planet_surface_projector.js": Object.freeze([
+    "center",
+    "radius",
+    "resize",
+    "yaw",
+    "pitch",
+    "momentum",
+    "drag_application",
+    "decay",
+    "sphere_projection",
+    "inverse_projection",
+    "lat_long_conversion",
+    "surface_coordinate",
+    "orbital_view_projection",
+    "body_relative_attachment",
+    "horizon_exclusion",
+    "full_circle_law",
+    "orientation_extraction",
+    "cardinal_mapping",
+    "world_state_handoff"
+  ]),
+  "world/environment/magnetic_field_engine.js": Object.freeze([
+    "magnetic_intensity_field",
+    "shielding_gradient_field",
+    "auroral_potential_field",
+    "navigation_field_basis"
+  ]),
+  "world/environment/thermodynamic_engine.js": Object.freeze([
+    "temperature_field",
+    "thermal_gradient_field",
+    "freeze_potential_field",
+    "melt_potential_field",
+    "evaporation_pressure_field"
+  ]),
+  "world/environment/hydrology_engine.js": Object.freeze([
+    "rainfall_field",
+    "runoff_field",
+    "basin_accumulation_field",
+    "drainage_field",
+    "river_path_field",
+    "lake_formation_field"
+  ]),
+  "world/environment/topology_engine.js": Object.freeze([
+    "elevation_field",
+    "slope_field",
+    "ridge_field",
+    "valley_field",
+    "cliff_field",
+    "canyon_field",
+    "hill_field",
+    "basin_field",
+    "plateau_field",
+    "cave_potential_field"
+  ]),
+  "world/environment_renderer.js": Object.freeze([
+    "space_family",
+    "magnetic_field_family",
+    "thermodynamic_family",
+    "hydrology_family",
+    "topology_family",
+    "atmosphere_family",
+    "land_family",
+    "water_family",
+    "cosmic_field",
+    "stellar",
+    "orbital",
+    "deep_space",
+    "continents",
+    "oceans",
+    "currents",
+    "surfaces",
+    "family_dispatch",
+    "subfamily_dispatch",
+    "external_view_render",
+    "environment_audit",
+    "no_npc_no_event_exclusion"
+  ]),
+  "world/compass_renderer.js": Object.freeze([
+    "cardinal_ring",
+    "center_marker",
+    "heading_transform",
+    "label_placement",
+    "external_view_framing",
+    "harbor_node_display",
+    "branch_indicator",
+    "recombination_readout",
+    "orientation_text",
+    "audit_overlay"
+  ]),
+  "world/scene_runtime.js": Object.freeze([
+    "boot_sequence",
+    "initialization_state",
+    "verification_state",
+    "authorization_state",
+    "running_state",
+    "error_state",
+    "world_boot",
+    "spine_boot",
+    "projector_boot",
+    "environment_boot",
+    "compass_boot",
+    "instruments_boot",
+    "canvas_initialization",
+    "resize_orchestration",
+    "update_order",
+    "render_order",
+    "runtime_state_container",
+    "frame_scheduler",
+    "error_isolation",
+    "debug_panel_write"
+  ])
+});
 
-  function toRad(deg) {
-    return (deg * Math.PI) / 180;
-  }
+const CHRONOLOGY_REGISTRY = Object.freeze([
+  "assets/instruments.js",
+  "assets/ui.css",
+  "index.html",
+  "world/world_kernel.js",
+  "world/cosmic_engine_spine.js",
+  "world/planet_surface_projector.js",
+  "world/environment/magnetic_field_engine.js",
+  "world/environment/thermodynamic_engine.js",
+  "world/environment/hydrology_engine.js",
+  "world/environment/topology_engine.js",
+  "world/environment_renderer.js",
+  "world/compass_renderer.js",
+  "world/scene_runtime.js"
+]);
 
-  function fract(value) {
-    return value - Math.floor(value);
-  }
+const OWNERSHIP_REGISTRY = Object.freeze(
+  Object.fromEntries(
+    Object.entries(FILE_HOME_REGISTRY).flatMap(([filePath, constructs]) =>
+      constructs.map((construct) => [construct, filePath])
+    )
+  )
+);
 
-  function noise(latDeg, lonDeg) {
-    return fract(
-      Math.sin(latDeg * 12.9898 + lonDeg * 78.233) * 43758.5453123
-    );
-  }
+const DUPLICATE_TRUTH_REGISTRY = Object.freeze([
+  "cardinal_law",
+  "round_world_law",
+  "flat_world_reconnection",
+  "environment_family_registry",
+  "branch_registry",
+  "harbor_branch",
+  "gratitude_branch",
+  "generosity_branch",
+  "recursion_1_to_4_to_1",
+  "depth_lattice",
+  "descent_order",
+  "recombination_order",
+  "allowed_scope",
+  "feature_flag",
+  "canonical_constants",
+  "naming_registry",
+  "canon_verification",
+  "execution_gate",
+  "world_state_handoff",
+  "orientation_extraction",
+  "cardinal_mapping"
+]);
 
-  function getBaseElevation(sample) {
-    if (Number.isFinite(sample?.elevation)) {
-      return clamp(sample.elevation, -1, 1);
-    }
+const DEPTH_REGISTRY = Object.freeze([
+  Object.freeze({ id: "cosmic", index: 0, label: "Cosmic", zoneBearing: false }),
+  Object.freeze({ id: "galaxy", index: 1, label: "Galaxy", zoneBearing: false }),
+  Object.freeze({ id: "solar", index: 2, label: "Solar", zoneBearing: false }),
+  Object.freeze({ id: "planet", index: 3, label: "Planet", zoneBearing: false }),
+  Object.freeze({ id: "surface", index: 4, label: "Surface", zoneBearing: true }),
+  Object.freeze({ id: "harbor", index: 5, label: "Harbor", zoneBearing: false }),
+  Object.freeze({ id: "gratitude", index: 6, label: "Gratitude", zoneBearing: false }),
+  Object.freeze({ id: "generosity", index: 7, label: "Generosity", zoneBearing: false })
+]);
 
-    const shoreline = Number.isFinite(sample?.shoreline) ? sample.shoreline : 0;
-    const terrainBias = sample?.terrain === "LAND" ? 0.18 : -0.12;
-    const continentalBias =
-      Math.sin(toRad((sample?.latDeg ?? 0) * 1.1)) * 0.14 +
-      Math.cos(toRad((sample?.lonDeg ?? 0) * 0.8)) * 0.10;
-    const noiseBias = (noise(sample?.latDeg ?? 0, sample?.lonDeg ?? 0) - 0.5) * 0.26;
+const DEPTH_ORDER = Object.freeze(DEPTH_REGISTRY.map((item) => item.id));
 
-    return clamp(
-      terrainBias + continentalBias + noiseBias + shoreline * 0.22,
-      -1,
-      1
-    );
-  }
+const DEPTH_SCOPE_LOCK = Object.freeze({
+  live: Object.freeze(["cosmic", "galaxy", "solar", "planet", "surface", "harbor", "gratitude", "generosity"]),
+  scaffolded: Object.freeze([]),
+  externalBranchOnly: true
+});
 
-  function getSlope(sample, elevation) {
-    const shoreline = Number.isFinite(sample?.shoreline) ? sample.shoreline : 0;
-    const latTerm = Math.abs(Math.cos(toRad((sample?.latDeg ?? 0) * 1.7))) * 0.18;
-    const lonTerm = Math.abs(Math.sin(toRad((sample?.lonDeg ?? 0) * 1.3))) * 0.16;
-    const coastalTerm = shoreline * 0.34;
-    const elevationTerm = Math.abs(elevation) * 0.22;
+const LOCAL_GRID_REGISTRY = Object.freeze({
+  rows: Object.freeze([0, 1, 2, 3]),
+  cols: Object.freeze([0, 1, 2, 3]),
+  cellIds: Object.freeze([
+    "R0C0", "R0C1", "R0C2", "R0C3",
+    "R1C0", "R1C1", "R1C2", "R1C3",
+    "R2C0", "R2C1", "R2C2", "R2C3",
+    "R3C0", "R3C1", "R3C2", "R3C3"
+  ])
+});
 
-    return clamp(latTerm + lonTerm + coastalTerm + elevationTerm, 0, 1);
-  }
+const DEPTH_TO_GRID_BINDING = Object.freeze({
+  cosmic: false,
+  galaxy: false,
+  solar: false,
+  planet: false,
+  surface: true,
+  harbor: false,
+  gratitude: false,
+  generosity: false
+});
 
-  function getCurvature(sample) {
-    const latWave = Math.sin(toRad((sample?.latDeg ?? 0) * 2.2)) * 0.28;
-    const lonWave = Math.cos(toRad((sample?.lonDeg ?? 0) * 1.9)) * 0.24;
-    const micro = (noise((sample?.latDeg ?? 0) + 17, (sample?.lonDeg ?? 0) + 29) - 0.5) * 0.20;
+const ENVIRONMENT_FAMILIES = Object.freeze({
+  space: Object.freeze(["cosmic", "stellar", "orbital", "deep_space"]),
+  magnetic_field: Object.freeze(["magnetic_intensity", "shielding_gradient", "auroral_potential", "navigation_basis"]),
+  thermodynamic: Object.freeze(["temperature", "thermal_gradient", "freeze_potential", "melt_potential", "evaporation_pressure"]),
+  hydrology: Object.freeze(["rainfall", "runoff", "basin_accumulation", "drainage", "river_path", "lake_formation"]),
+  topology: Object.freeze(["elevation", "slope", "ridge", "valley", "cliff", "canyon", "hill", "basin", "plateau", "cave_potential"]),
+  atmosphere: Object.freeze(["climate", "weather", "aerial", "optics"]),
+  land: Object.freeze(["continents", "regions", "topography", "geography"]),
+  water: Object.freeze(["oceans", "currents", "surfaces", "cycles"])
+});
 
-    return clamp(latWave + lonWave + micro, -1, 1);
-  }
+const CARDINAL_REGISTRY = Object.freeze({
+  north: Object.freeze({ id: "north", role: "constraint" }),
+  south: Object.freeze({ id: "south", role: "stability" }),
+  east: Object.freeze({ id: "east", role: "behavior" }),
+  west: Object.freeze({ id: "west", role: "alignment" })
+});
 
-  function getRidgeStrength(elevation, slope, curvature) {
-    return clamp(
-      Math.max(0, elevation) * 0.48 +
-        slope * 0.34 +
-        Math.max(0, curvature) * 0.18,
-      0,
-      1
-    );
-  }
+const RECURSION_LAW = Object.freeze({
+  pattern: "1→4→1",
+  description: "Core differentiates into cardinal branches and recombines into a single conclusion."
+});
 
-  function getValleyStrength(elevation, slope, curvature) {
-    return clamp(
-      Math.max(0, -elevation) * 0.22 +
-        Math.max(0, -curvature) * 0.46 +
-        (1 - slope) * 0.18,
-      0,
-      1
-    );
-  }
+const DESCENT_ORDER = Object.freeze([
+  "cosmic",
+  "galaxy",
+  "solar",
+  "planet",
+  "surface",
+  "harbor",
+  "gratitude",
+  "generosity"
+]);
 
-  function getBasinPotential(elevation, curvature) {
-    return clamp(
-      Math.max(0, -elevation) * 0.42 +
-        Math.max(0, -curvature) * 0.58,
-      0,
-      1
-    );
-  }
+const RECOMBINATION_ORDER = Object.freeze([
+  "gratitude",
+  "harbor",
+  "generosity",
+  "harbor",
+  "surface",
+  "planet",
+  "solar",
+  "galaxy",
+  "cosmic"
+]);
 
-  function getCanyonPotential(slope, ridgeStrength, valleyStrength) {
-    return clamp(
-      slope * 0.42 +
-        ridgeStrength * 0.18 +
-        valleyStrength * 0.40,
-      0,
-      1
-    );
-  }
+const BRANCH_REGISTRY = Object.freeze({
+  harbor: Object.freeze({
+    id: "harbor",
+    external: true,
+    dualStatus: true,
+    children: Object.freeze(["gratitude", "generosity"]),
+    gratitude: Object.freeze({
+      north: "recognition_of_value",
+      south: "stabilization_of_relationship",
+      east: "outward_acknowledgement",
+      west: "reciprocal_alignment",
+      recombination: "acknowledged_value_stabilized"
+    }),
+    generosity: Object.freeze({
+      north: "awareness_of_need",
+      south: "sustained_support",
+      east: "outward_distribution",
+      west: "relational_coherence",
+      recombination: "outward_support_coherently_distributed"
+    }),
+    recombination: "recognized_value_and_distributed_value_balance_at_the_node"
+  })
+});
 
-  function getCliffPotential(slope, elevation) {
-    return clamp(
-      slope * 0.72 + Math.max(0, elevation) * 0.18,
-      0,
-      1
-    );
-  }
+const CONSTANTS = Object.freeze({
+  initialYaw: -0.18,
+  initialPitch: -0.34,
+  minPitch: -1.15,
+  maxPitch: 1.15,
+  inertiaDecay: 0.94,
+  dragSensitivity: 0.0065,
+  worldRadiusFactor: 0.34,
+  atmosphereThicknessFactor: 0.08,
+  oceanCoverThreshold: 0.48,
+  localGridRows: 4,
+  localGridCols: 4,
+  localGridCells: 16,
+  structuralCoordinateCount: 16,
+  executionCoordinateCount: 16,
+  stateFieldCount: 256,
+  causalCoverageCount: 65536,
+  thermalBaseline: 0.48,
+  thermalPolarCoolingStrength: 0.82,
+  thermalWildernessDecayStrength: 0.26,
+  magneticBaseline: 0.20,
+  hydrologyRunoffStrength: 0.58,
+  hydrologyBasinThreshold: 0.62,
+  hydrologyRiverThreshold: 0.56,
+  hydrologyLakeThreshold: 0.62,
+  topologyMountainThreshold: 0.66,
+  topologyBasinThreshold: 0.68,
+  topologyCanyonThreshold: 0.68,
+  topologyCaveThreshold: 0.62
+});
 
-  function getPlateauPotential(elevation, slope) {
-    return clamp(
-      Math.max(0, elevation) * 0.55 + (1 - slope) * 0.30,
-      0,
-      1
-    );
-  }
+const NAMING_REGISTRY = Object.freeze({
+  activeScale: "harbor",
+  baselineLabel: "world_is_round_external",
+  reconnectionTarget: "world_is_flat",
+  liveDepthBaseline: "harbor",
+  localGridLabel: "4x4_surface_field",
+  thermodynamicFieldLabel: "planetary_thermodynamic_field",
+  magneticFieldLabel: "planetary_magnetic_field",
+  hydrologyFieldLabel: "planetary_hydrology_field",
+  topologyFieldLabel: "planetary_topology_field"
+});
 
-  function getCavePotential(elevation, slope, canyonPotential) {
-    return clamp(
-      Math.max(0, elevation) * 0.30 +
-        slope * 0.22 +
-        canyonPotential * 0.48,
-      0,
-      1
-    );
-  }
+const FEATURE_FLAGS = Object.freeze({
+  showHarborAudit: true,
+  showCompassOverlay: true,
+  showDebugPanels: true,
+  showVerificationPanel: true,
+  showExecutionGatePanel: true,
+  enable4x4LocalField: true,
+  enableThermodynamicField: true,
+  enableMagneticField: true,
+  enableHydrologyField: true,
+  enableTopologyField: true
+});
 
-  function classifyTerrainType(elevation, slope, ridgeStrength, valleyStrength, basinPotential, canyonPotential, cliffPotential, plateauPotential) {
-    if (elevation > 0.72) return "summit";
-    if (ridgeStrength > 0.66 && elevation > 0.32) return "mountain";
-    if (cliffPotential > 0.70) return "cliff";
-    if (canyonPotential > 0.68) return "canyon";
-    if (plateauPotential > 0.62 && elevation > 0.20) return "plateau";
-    if (valleyStrength > 0.62) return "valley";
-    if (basinPotential > 0.68) return "basin";
-    if (elevation > 0.18) return "hill";
-    if (elevation > 0.03) return "plain";
-    if (elevation > -0.06) return "shoreline";
-    return "subsea";
-  }
+const SCOPE_REGISTRY = Object.freeze({
+  includeEvents: false,
+  includeNPCs: false,
+  includeEconomy: false,
+  includeAgriculture: false,
+  includeInfrastructureBehavior: false,
+  activeBranch: "external",
+  activePath: Object.freeze(["cosmic", "galaxy", "solar", "planet", "surface", "harbor"])
+});
 
-  function buildTopologyField(terrainField) {
-    if (!terrainField || !Array.isArray(terrainField.samples)) {
-      return Object.freeze({
-        samples: Object.freeze([]),
-        summary: Object.freeze({
-          elevationAverage: 0,
-          slopeAverage: 0,
-          ridgeAverage: 0,
-          valleyAverage: 0,
-          mountainCount: 0,
-          basinCount: 0,
-          canyonCount: 0,
-          caveCandidateCount: 0
-        })
-      });
-    }
+function normalizeArray(value) {
+  return Array.isArray(value) ? value.map((item) => String(item)) : [];
+}
 
-    let elevationTotal = 0;
-    let slopeTotal = 0;
-    let ridgeTotal = 0;
-    let valleyTotal = 0;
-    let mountainCount = 0;
-    let basinCount = 0;
-    let canyonCount = 0;
-    let caveCandidateCount = 0;
+function normalizeBoolean(value, fallback = false) {
+  return typeof value === "boolean" ? value : fallback;
+}
 
-    const samples = terrainField.samples.map((sample) => {
-      const elevation = getBaseElevation(sample);
-      const slope = getSlope(sample, elevation);
-      const curvature = getCurvature(sample);
-      const ridgeStrength = getRidgeStrength(elevation, slope, curvature);
-      const valleyStrength = getValleyStrength(elevation, slope, curvature);
-      const basinPotential = getBasinPotential(elevation, curvature);
-      const canyonPotential = getCanyonPotential(slope, ridgeStrength, valleyStrength);
-      const cliffPotential = getCliffPotential(slope, elevation);
-      const plateauPotential = getPlateauPotential(elevation, slope);
-      const cavePotential = getCavePotential(elevation, slope, canyonPotential);
-      const terrainType = classifyTerrainType(
-        elevation,
-        slope,
-        ridgeStrength,
-        valleyStrength,
-        basinPotential,
-        canyonPotential,
-        cliffPotential,
-        plateauPotential
-      );
+function normalizeString(value, fallback = "") {
+  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+}
 
-      elevationTotal += elevation;
-      slopeTotal += slope;
-      ridgeTotal += ridgeStrength;
-      valleyTotal += valleyStrength;
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
 
-      if (terrainType === "mountain" || terrainType === "summit") mountainCount += 1;
-      if (terrainType === "basin") basinCount += 1;
-      if (terrainType === "canyon") canyonCount += 1;
-      if (cavePotential > 0.62) caveCandidateCount += 1;
+function buildExpectedStructure() {
+  return Object.freeze({
+    fileHomes: FILE_HOME_REGISTRY,
+    chronology: CHRONOLOGY_REGISTRY,
+    ownership: OWNERSHIP_REGISTRY,
+    scope: SCOPE_REGISTRY,
+    duplicateTruth: DUPLICATE_TRUTH_REGISTRY
+  });
+}
 
-      return Object.freeze({
-        latDeg: sample.latDeg,
-        lonDeg: sample.lonDeg,
-        visible: sample.visible,
-        elevation,
-        slope,
-        curvature,
-        ridgeStrength,
-        valleyStrength,
-        basinPotential,
-        canyonPotential,
-        cliffPotential,
-        plateauPotential,
-        cavePotential,
-        terrainType
-      });
-    });
-
-    const count = samples.length || 1;
-
-    return Object.freeze({
-      samples: Object.freeze(samples),
-      summary: Object.freeze({
-        elevationAverage: elevationTotal / count,
-        slopeAverage: slopeTotal / count,
-        ridgeAverage: ridgeTotal / count,
-        valleyAverage: valleyTotal / count,
-        mountainCount,
-        basinCount,
-        canyonCount,
-        caveCandidateCount
-      })
-    });
-  }
-
-  function render(ctx, projector, runtime, state, terrainField) {
-    const field = buildTopologyField(terrainField);
-
-    return Object.freeze({
-      mode: "topology_field",
-      field,
-      summary: field.summary
-    });
-  }
+function buildReceivedStructure(input = {}) {
+  const normalizedInput = normalizeObject(input);
 
   return Object.freeze({
-    render
+    fileHomes: normalizeObject(normalizedInput.fileHomes),
+    chronology: normalizeArray(normalizedInput.chronology),
+    ownership: normalizeObject(normalizedInput.ownership),
+    scope: normalizeObject(normalizedInput.scope),
+    duplicateTruth: normalizeArray(normalizedInput.duplicateTruth)
   });
+}
+
+function compareFileHomes(expected, received) {
+  const expectedEntries = Object.entries(expected);
+  if (!expectedEntries.length) return false;
+
+  return expectedEntries.every(([filePath, constructs]) => {
+    const receivedConstructs = received[filePath];
+    if (!Array.isArray(receivedConstructs)) return false;
+    if (receivedConstructs.length !== constructs.length) return false;
+
+    return constructs.every((construct, index) => receivedConstructs[index] === construct);
+  });
+}
+
+function compareChronology(expected, received) {
+  if (!Array.isArray(received) || received.length !== expected.length) return false;
+  return expected.every((filePath, index) => received[index] === filePath);
+}
+
+function compareOwnership(expected, received) {
+  const expectedEntries = Object.entries(expected);
+  if (!expectedEntries.length) return false;
+
+  return expectedEntries.every(([construct, filePath]) => received[construct] === filePath);
+}
+
+function compareScope(expected, received) {
+  return (
+    normalizeBoolean(received.includeEvents, true) === expected.includeEvents &&
+    normalizeBoolean(received.includeNPCs, true) === expected.includeNPCs &&
+    normalizeBoolean(received.includeEconomy, true) === expected.includeEconomy &&
+    normalizeBoolean(received.includeAgriculture, true) === expected.includeAgriculture &&
+    normalizeBoolean(received.includeInfrastructureBehavior, true) === expected.includeInfrastructureBehavior &&
+    normalizeString(received.activeBranch) === expected.activeBranch &&
+    JSON.stringify(normalizeArray(received.activePath)) === JSON.stringify(expected.activePath)
+  );
+}
+
+function detectDuplicateTruth(expected, received) {
+  if (!Array.isArray(received)) return false;
+  if (received.length !== expected.length) return false;
+
+  const seen = new Set();
+  for (const truthName of received) {
+    if (seen.has(truthName)) return false;
+    seen.add(truthName);
+  }
+
+  return expected.every((truthName) => seen.has(truthName));
+}
+
+function packageVerificationVerdict(expected, received) {
+  const file_home_pass = compareFileHomes(expected.fileHomes, received.fileHomes);
+  const chronology_pass = compareChronology(expected.chronology, received.chronology);
+  const ownership_pass = compareOwnership(expected.ownership, received.ownership);
+  const scope_pass = compareScope(expected.scope, received.scope);
+  const duplicate_truth_pass = detectDuplicateTruth(expected.duplicateTruth, received.duplicateTruth);
+
+  const reasons = [];
+  if (!file_home_pass) reasons.push("file_home_mismatch");
+  if (!chronology_pass) reasons.push("chronology_mismatch");
+  if (!ownership_pass) reasons.push("ownership_mismatch");
+  if (!scope_pass) reasons.push("scope_mismatch");
+  if (!duplicate_truth_pass) reasons.push("duplicate_truth_detected");
+
+  return Object.freeze({
+    pass: file_home_pass && chronology_pass && ownership_pass && scope_pass && duplicate_truth_pass,
+    file_home_pass,
+    chronology_pass,
+    ownership_pass,
+    scope_pass,
+    duplicate_truth_pass,
+    reasons: Object.freeze(reasons),
+    expected,
+    received
+  });
+}
+
+export const WORLD_KERNEL = Object.freeze({
+  version: "optimum-baseline-v1",
+  modes: Object.freeze({
+    roundWorld: true,
+    flatWorldReconnection: true,
+    externalViewOnly: true
+  }),
+  cardinals: CARDINAL_REGISTRY,
+  recursionLaw: RECURSION_LAW,
+  depthRegistry: DEPTH_REGISTRY,
+  depthOrder: DEPTH_ORDER,
+  depthScope: DEPTH_SCOPE_LOCK,
+  descentOrder: DESCENT_ORDER,
+  recombinationOrder: RECOMBINATION_ORDER,
+  localGrid: LOCAL_GRID_REGISTRY,
+  depthToGridBinding: DEPTH_TO_GRID_BINDING,
+  environment: Object.freeze({
+    families: ENVIRONMENT_FAMILIES
+  }),
+  branches: BRANCH_REGISTRY,
+  constants: CONSTANTS,
+  naming: NAMING_REGISTRY,
+  scope: SCOPE_REGISTRY,
+  flags: FEATURE_FLAGS,
+  canon: Object.freeze({
+    fileHomeRegistry: FILE_HOME_REGISTRY,
+    chronologyRegistry: CHRONOLOGY_REGISTRY,
+    ownershipRegistry: OWNERSHIP_REGISTRY,
+    duplicateTruthRegistry: DUPLICATE_TRUTH_REGISTRY
+  })
+});
+
+export function getEnvironmentFamilies() {
+  return WORLD_KERNEL.environment.families;
+}
+
+export function getHarborBranch() {
+  return WORLD_KERNEL.branches.harbor;
+}
+
+export function getCardinalRoles() {
+  return WORLD_KERNEL.cardinals;
+}
+
+export function getDepthRegistry() {
+  return WORLD_KERNEL.depthRegistry;
+}
+
+export function getDepthById(depthId) {
+  return WORLD_KERNEL.depthRegistry.find((depth) => depth.id === depthId) ?? null;
+}
+
+export function isGridBoundDepth(depthId) {
+  return WORLD_KERNEL.depthToGridBinding[depthId] === true;
+}
+
+export function getLocalGridCell(row, col) {
+  if (!Number.isInteger(row) || !Number.isInteger(col)) return null;
+  if (row < 0 || row > 3 || col < 0 || col > 3) return null;
+
+  const cellIndex = row * 4 + col;
+  return Object.freeze({
+    row,
+    col,
+    cellIndex,
+    cellId: WORLD_KERNEL.localGrid.cellIds[cellIndex]
+  });
+}
+
+export function getExpectedCanonStructure() {
+  return buildExpectedStructure();
+}
+
+export function verifyCanonicalStructure(input = {}) {
+  const expected = buildExpectedStructure();
+  const received = buildReceivedStructure(input);
+  return packageVerificationVerdict(expected, received);
 }

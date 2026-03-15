@@ -42,14 +42,7 @@ function getRenderState(runtime) {
   });
 }
 
-function createEnvironmentAudit(
-  runtime,
-  renderState,
-  magneticField,
-  thermodynamicField,
-  hydrologyField,
-  topologyField
-) {
+function createEnvironmentAudit(runtime, renderState, planetField) {
   return Object.freeze({
     activeDepth: renderState.activeDepth,
     gridBound: renderState.gridBound,
@@ -60,10 +53,7 @@ function createEnvironmentAudit(
       npc: WORLD_KERNEL.scope.includeNPCs === false,
       events: WORLD_KERNEL.scope.includeEvents === false
     }),
-    magneticField,
-    thermodynamicField,
-    hydrologyField,
-    topologyField
+    planetField
   });
 }
 
@@ -140,45 +130,29 @@ export function createEnvironmentRenderer() {
 
   function render(ctx, projector, runtime) {
     const renderState = getRenderState(runtime);
-    const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
-    const thermodynamicField = thermodynamicEngine.compute(projector, runtime, renderState);
-
-    runtime.magneticField = magneticField;
-    runtime.thermodynamicField = thermodynamicField;
-
     const { width, height } = getCanvasMetrics(ctx);
+
     const terrainField = surfaceEngine.buildTerrainField(projector);
+    const topologyField = topologyEngine.buildTopologyField(terrainField);
+    const thermodynamicField = thermodynamicEngine.buildThermodynamicField(terrainField, topologyField);
+    const hydrologyField = hydrologyEngine.buildHydrologyField(terrainField, topologyField, thermodynamicField);
+    const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
 
-    const topologyAudit = topologyEngine.render(
-      ctx,
-      projector,
-      runtime,
-      renderState,
-      terrainField
-    );
-    const topologyField = topologyAudit.field;
-
-    runtime.topologyField = topologyField;
-
-    const hydrologyAudit = hydrologyEngine.render(
-      ctx,
-      projector,
-      runtime,
-      renderState,
-      terrainField
-    );
-    const hydrologyField = hydrologyAudit.field;
-
-    runtime.hydrologyField = hydrologyField;
-
-    const audit = createEnvironmentAudit(
-      runtime,
-      renderState,
-      magneticField,
+    const planetField = runtime.spine.assemblePlanetField({
+      terrainField,
+      topologyField,
       thermodynamicField,
       hydrologyField,
-      topologyField
-    );
+      magneticField
+    });
+
+    runtime.planetField = planetField;
+    runtime.magneticField = magneticField;
+    runtime.thermodynamicField = thermodynamicField;
+    runtime.hydrologyField = hydrologyField;
+    runtime.topologyField = topologyField;
+
+    const audit = createEnvironmentAudit(runtime, renderState, planetField);
 
     ctx.clearRect(0, 0, width, height);
 
@@ -196,11 +170,11 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField, topologyField);
-    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField, topologyField);
+    oceanEngine.renderBase(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
+    surfaceEngine.renderBase(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
-    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField, topologyField);
-    surfaceEngine.renderOverlay(ctx, projector, runtime, renderState, topologyField);
+    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
+    surfaceEngine.renderOverlay(ctx, projector, runtime, renderState, planetField.topologyField);
 
     ctx.restore();
 
@@ -210,7 +184,8 @@ export function createEnvironmentRenderer() {
       width,
       height,
       families,
-      audit
+      audit,
+      planetField
     });
   }
 

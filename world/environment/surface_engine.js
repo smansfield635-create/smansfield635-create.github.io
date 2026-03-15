@@ -212,8 +212,11 @@ function getContinentInfluence(continent, latDeg, lonDeg) {
 
   const effectiveRadius = continent.radiusDeg + coastlineOffset + inletBias;
   const signedDistance = effectiveRadius - baseDistance;
-
-  const normalizedMass = clamp(signedDistance / Math.max(6, continent.radiusDeg * 0.18), -1, 1);
+  const normalizedMass = clamp(
+    signedDistance / Math.max(6, continent.radiusDeg * 0.18),
+    -1,
+    1
+  );
 
   return Object.freeze({
     signedDistance,
@@ -286,10 +289,14 @@ function getElevationAndContinent(latDeg, lonDeg) {
   });
 }
 
+function getLandRadiusOffsetPx(baseRadius, sample) {
+  const emergentHeight = clamp((sample.elevation - sample.seaLevel) / 0.24, 0, 1);
+  return baseRadius * (0.008 + emergentHeight * 0.020);
+}
+
 export function createSurfaceEngine() {
   function continentMask(latDeg, lonDeg) {
-    const result = getElevationAndContinent(latDeg, lonDeg);
-    return result.continentId;
+    return getElevationAndContinent(latDeg, lonDeg).continentId;
   }
 
   function buildTerrainField(projector) {
@@ -301,7 +308,17 @@ export function createSurfaceEngine() {
       for (let lonDeg = -180; lonDeg < 180; lonDeg += lonStep) {
         const normalizedLon = normalizeLonDeg(lonDeg);
         const terrainResult = getElevationAndContinent(latDeg, normalizedLon);
-        const projected = projector.projectSphere(toRad(normalizedLon), toRad(latDeg));
+
+        let radialOffsetPx = 0;
+        if (terrainResult.terrain === "LAND") {
+          radialOffsetPx = getLandRadiusOffsetPx(projector.state.radius, terrainResult);
+        }
+
+        const projected = projector.projectSphereWithOffset(
+          toRad(normalizedLon),
+          toRad(latDeg),
+          radialOffsetPx
+        );
 
         samples.push(
           Object.freeze({
@@ -312,6 +329,7 @@ export function createSurfaceEngine() {
             shoreline: terrainResult.shoreline,
             elevation: terrainResult.elevation,
             seaLevel: terrainResult.seaLevel,
+            radialOffsetPx,
             x: projected.x,
             y: projected.y,
             z: projected.z,
@@ -345,10 +363,7 @@ export function createSurfaceEngine() {
       ctx.beginPath();
 
       for (let lonDeg = 0; lonDeg <= 360; lonDeg += 8) {
-        const point = projector.projectSphere(
-          (lonDeg * Math.PI) / 180,
-          (latDeg * Math.PI) / 180
-        );
+        const point = projector.projectSphere((lonDeg * Math.PI) / 180, (latDeg * Math.PI) / 180);
 
         if (!point.visible) {
           first = true;
@@ -376,10 +391,7 @@ export function createSurfaceEngine() {
       ctx.beginPath();
 
       for (let latDeg = -90; latDeg <= 90; latDeg += 5) {
-        const point = projector.projectSphere(
-          (lonDeg * Math.PI) / 180,
-          (latDeg * Math.PI) / 180
-        );
+        const point = projector.projectSphere((lonDeg * Math.PI) / 180, (latDeg * Math.PI) / 180);
 
         if (!point.visible) {
           first = true;
@@ -405,26 +417,15 @@ export function createSurfaceEngine() {
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(
-      projector.state.centerX,
-      projector.state.centerY,
-      radius * 0.995,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(projector.state.centerX, projector.state.centerY, radius * 1.03, 0, Math.PI * 2);
     ctx.clip();
 
     for (const sample of terrainField.samples) {
       if (!sample.visible) continue;
       if (sample.terrain !== "LAND") continue;
 
-      const emergentHeight = clamp(
-        (sample.elevation - sample.seaLevel) / 0.24,
-        0,
-        1
-      );
-
-      const sampleRadius = radius * (0.012 + emergentHeight * 0.010);
+      const emergentHeight = clamp((sample.elevation - sample.seaLevel) / 0.24, 0, 1);
+      const sampleRadius = radius * (0.011 + emergentHeight * 0.010);
 
       ctx.beginPath();
       ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);

@@ -1,9 +1,41 @@
-import { WORLD_KERNEL } from "./world_kernel.js";
+import { WORLD_KERNEL, getExpectedCanonStructure, verifyCanonicalStructure } from "./world_kernel.js";
 import { createCosmicEngineSpine } from "./cosmic_engine_spine.js";
 import { createPlanetSurfaceProjector } from "./planet_surface_projector.js";
 import { createEnvironmentRenderer } from "./environment_renderer.js";
 import { createCompassRenderer } from "./compass_renderer.js";
 import { createInstruments } from "../assets/instruments.js";
+
+function nowMs() {
+  return performance.now();
+}
+
+function buildCanonicalInput() {
+  const expected = getExpectedCanonStructure();
+  return Object.freeze({
+    fileHomes: expected.fileHomes,
+    chronology: expected.chronology,
+    ownership: expected.ownership,
+    scope: expected.scope,
+    duplicateTruth: expected.duplicateTruth
+  });
+}
+
+function buildInitialTiming() {
+  const startedAt = nowMs();
+  return {
+    startedAt,
+    elapsedMs: 0,
+    dtMs: 0,
+    fps: 0,
+    previousFrameAt: startedAt
+  };
+}
+
+function safeText(target, value) {
+  if (target) {
+    target.textContent = value;
+  }
+}
 
 export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtimePhase }) {
   const worldCtx = worldCanvas.getContext("2d");
@@ -15,10 +47,34 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
 
+  const canonVerification = verifyCanonicalStructure(buildCanonicalInput());
+  let executionGate = spine.evaluateExecutionGate(canonVerification, {
+    mode: "runtime_execution",
+    fileCount: 9,
+    requestedDepth: "planet",
+    currentDepth: "galaxy",
+    scopePath: WORLD_KERNEL.scope.activePath,
+    roleConflict: false,
+    ownershipDrift: false,
+    chronologyValid: true,
+    duplicateTruth: false
+  });
+
   const runtime = {
-    phase: "BOOT",
+    phase: executionGate.allow ? "BOOT" : "BLOCKED",
+    failure: null,
     kernel: WORLD_KERNEL,
-    resolvedState: spine.resolveWorldState(),
+    canonVerification,
+    executionGate,
+    resolvedState: spine.resolveWorldState({
+      activeDepth: "planet",
+      currentDepth: "galaxy",
+      selection: {
+        zone: "local_zone_alpha",
+        row: 0,
+        col: 0
+      }
+    }),
     projector,
     orientation: projector.getOrientation(),
     projection: projector.getProjectionSummary(),
@@ -26,16 +82,13 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     encoding: { label: "external_round_baseline" },
     selection: null,
     destination: null,
-    timing: {
-      startedAt: performance.now(),
-      elapsedMs: 0,
-      dtMs: 0,
-      fps: 0,
-      previousFrameAt: performance.now()
-    },
-    cardinals: projector.getCardinalWeights()
+    timing: buildInitialTiming(),
+    cardinals: projector.getCardinalWeights(),
+    renderAudit: null,
+    compassAudit: null
   };
 
+  let frameHandle = 0;
   let isDragging = false;
   let lastX = 0;
   let lastY = 0;
@@ -49,8 +102,10 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   }
 
   function writeDebugPanels() {
-    debugContent.innerHTML = instruments.renderPanelHTML(runtime);
-    runtimePhase.textContent = runtime.phase;
+    if (debugContent) {
+      debugContent.innerHTML = instruments.renderPanelHTML(runtime);
+    }
+    safeText(runtimePhase, runtime.phase);
   }
 
   function updateTiming(now) {
@@ -61,32 +116,105 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     runtime.timing.fps = dt > 0 ? 1000 / dt : 0;
   }
 
+  function updateResolvedState() {
+    runtime.resolvedState = spine.resolveWorldState({
+      activeDepth: "planet",
+      currentDepth: "galaxy",
+      selection: {
+        zone: runtime.resolvedState?.localSelection?.zone ?? "local_zone_alpha",
+        row: runtime.projection?.row ?? 0,
+        col: runtime.projection?.col ?? 0
+      }
+    });
+    runtime.region = runtime.resolvedState.region;
+  }
+
   function updateDerivedState() {
     runtime.orientation = projector.getOrientation();
     runtime.projection = projector.getProjectionSummary();
     runtime.cardinals = projector.getCardinalWeights();
-    runtime.region = runtime.resolvedState.region;
+    updateResolvedState();
+  }
+
+  function evaluateRuntimeGate() {
+    executionGate = spine.evaluateExecutionGate(runtime.canonVerification, {
+      mode: "runtime_execution",
+      fileCount: 9,
+      requestedDepth: runtime.resolvedState?.activeDepth ?? "planet",
+      currentDepth: runtime.resolvedState?.transition?.from ?? "galaxy",
+      scopePath: WORLD_KERNEL.scope.activePath,
+      roleConflict: false,
+      ownershipDrift: false,
+      chronologyValid: true,
+      duplicateTruth: false
+    });
+    runtime.executionGate = executionGate;
+    return executionGate.allow;
   }
 
   function update(now) {
     updateTiming(now);
+
+    if (!evaluateRuntimeGate()) {
+      runtime.phase = "BLOCKED";
+      return;
+    }
+
     if (!isDragging) {
       projector.stepInertia();
     }
+
     updateDerivedState();
   }
 
   function render() {
-    environment.render(worldCtx, projector, runtime);
-    compass.render(compassCtx, runtime);
+    runtime.renderAudit = environment.render(worldCtx, projector, runtime);
+    runtime.compassAudit = compass.render(compassCtx, runtime);
     writeDebugPanels();
   }
 
+  function failRuntime(error, phase) {
+    runtime.phase = "FAILED";
+    runtime.failure = {
+      phase,
+      message: error instanceof Error ? error.message : String(error)
+    };
+    writeDebugPanels();
+    if (frameHandle) {
+      cancelAnimationFrame(frameHandle);
+      frameHandle = 0;
+    }
+  }
+
+  function guardedUpdate(now) {
+    try {
+      update(now);
+    } catch (error) {
+      failRuntime(error, "update");
+    }
+  }
+
+  function guardedRender() {
+    try {
+      render();
+    } catch (error) {
+      failRuntime(error, "render");
+    }
+  }
+
   function frame(now) {
+    if (runtime.phase === "FAILED" || runtime.phase === "BLOCKED") {
+      writeDebugPanels();
+      return;
+    }
+
     runtime.phase = "RUNNING";
-    update(now);
-    render();
-    requestAnimationFrame(frame);
+    guardedUpdate(now);
+    if (runtime.phase === "FAILED") return;
+    guardedRender();
+    if (runtime.phase === "FAILED") return;
+
+    frameHandle = requestAnimationFrame(frame);
   }
 
   function onPointerDown(event) {
@@ -97,7 +225,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   }
 
   function onPointerMove(event) {
-    if (!isDragging) return;
+    if (!isDragging || runtime.phase === "FAILED" || runtime.phase === "BLOCKED") return;
+
     const dx = event.clientX - lastX;
     const dy = event.clientY - lastY;
     lastX = event.clientX;
@@ -107,21 +236,33 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
 
   function onPointerUp() {
     isDragging = false;
-    runtime.phase = "RUNNING";
+    if (runtime.phase !== "FAILED" && runtime.phase !== "BLOCKED") {
+      runtime.phase = "RUNNING";
+    }
   }
 
   function start() {
-    resizeCanvases();
-    updateDerivedState();
-    writeDebugPanels();
+    try {
+      resizeCanvases();
+      updateDerivedState();
+      writeDebugPanels();
 
-    window.addEventListener("resize", resizeCanvases);
-    worldCanvas.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    window.addEventListener("pointercancel", onPointerUp);
+      if (!executionGate.allow) {
+        runtime.phase = "BLOCKED";
+        writeDebugPanels();
+        return;
+      }
 
-    requestAnimationFrame(frame);
+      window.addEventListener("resize", resizeCanvases);
+      worldCanvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+
+      frameHandle = requestAnimationFrame(frame);
+    } catch (error) {
+      failRuntime(error, "startup");
+    }
   }
 
   return Object.freeze({

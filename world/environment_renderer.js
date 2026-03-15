@@ -6,6 +6,7 @@ import { createOceanEngine } from "./environment/ocean/index.js";
 import { createMagneticFieldEngine } from "./environment/magnetic_field_engine.js";
 import { createThermodynamicEngine } from "./environment/thermodynamic_engine.js";
 import { createHydrologyEngine } from "./environment/hydrology_engine.js";
+import { createTopologyEngine } from "./environment/topology_engine.js";
 
 function getCanvasMetrics(ctx) {
   return Object.freeze({
@@ -41,7 +42,14 @@ function getRenderState(runtime) {
   });
 }
 
-function createEnvironmentAudit(runtime, renderState, magneticField, thermodynamicField, hydrologyField) {
+function createEnvironmentAudit(
+  runtime,
+  renderState,
+  magneticField,
+  thermodynamicField,
+  hydrologyField,
+  topologyField
+) {
   return Object.freeze({
     activeDepth: renderState.activeDepth,
     gridBound: renderState.gridBound,
@@ -54,7 +62,8 @@ function createEnvironmentAudit(runtime, renderState, magneticField, thermodynam
     }),
     magneticField,
     thermodynamicField,
-    hydrologyField
+    hydrologyField,
+    topologyField
   });
 }
 
@@ -62,9 +71,10 @@ export function createEnvironmentRenderer() {
   const spaceEngine = createSpaceEngine();
   const magneticFieldEngine = createMagneticFieldEngine();
   const thermodynamicEngine = createThermodynamicEngine();
-  const atmosphereEngine = createAtmosphereEngine();
   const hydrologyEngine = createHydrologyEngine();
+  const atmosphereEngine = createAtmosphereEngine();
   const surfaceEngine = createSurfaceEngine();
+  const topologyEngine = createTopologyEngine();
   const oceanEngine = createOceanEngine();
 
   const families = Object.freeze({
@@ -94,6 +104,18 @@ export function createEnvironmentRenderer() {
       drainage: true,
       river_path: true,
       lake_formation: true
+    }),
+    topology: Object.freeze({
+      elevation: true,
+      slope: true,
+      ridge: true,
+      valley: true,
+      cliff: true,
+      canyon: true,
+      hill: true,
+      basin: true,
+      plateau: true,
+      cave_potential: true
     }),
     atmosphere: Object.freeze({
       wind: true,
@@ -125,7 +147,24 @@ export function createEnvironmentRenderer() {
 
     const { width, height } = getCanvasMetrics(ctx);
     const terrainField = surfaceEngine.buildTerrainField(projector);
-    const hydrologyAudit = hydrologyEngine.render(ctx, projector, runtime, renderState, terrainField);
+    const topologyAudit = topologyEngine.render(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      terrainField
+    );
+    const topologyField = topologyAudit.field;
+
+    runtime.topologyField = topologyField;
+
+    const hydrologyAudit = hydrologyEngine.render(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      terrainField
+    );
     const hydrologyField = hydrologyAudit.field;
 
     runtime.hydrologyField = hydrologyField;
@@ -135,7 +174,8 @@ export function createEnvironmentRenderer() {
       renderState,
       magneticField,
       thermodynamicField,
-      hydrologyField
+      hydrologyField,
+      topologyField
     );
 
     ctx.clearRect(0, 0, width, height);

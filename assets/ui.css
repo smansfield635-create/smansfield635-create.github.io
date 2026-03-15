@@ -30,7 +30,7 @@
 
   --title-width-min: 240px;
   --state-width-min: 210px;
-  --debug-width-max: 440px;
+  --debug-width-max: 460px;
   --debug-width-fluid: min(var(--debug-width-max), calc(100vw - (var(--shell-pad) * 2)));
   --debug-height-max: calc(100vh - 128px);
 
@@ -265,12 +265,12 @@ body[data-runtime="booting"] {
   color: var(--accent-2);
 }
 
-.panel-value--warn {
-  color: var(--warning);
-}
-
 .panel-value--danger {
   color: var(--danger);
+}
+
+.panel-value--muted {
+  color: var(--muted);
 }
 
 #compass-overlay {
@@ -287,26 +287,6 @@ body[data-runtime="booting"] {
   width: 100%;
   height: 100%;
   display: block;
-}
-
-.depth-grid-preview {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.depth-grid-preview__cell {
-  min-height: 18px;
-  border-radius: 6px;
-  border: 1px solid rgba(125, 170, 255, 0.16);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.is-depth-aware .panel-row[data-kind="depth"],
-.is-depth-aware .panel-row[data-kind="cell"],
-.is-depth-aware .panel-row[data-kind="zone"] {
-  background: rgba(121, 169, 255, 0.04);
 }
 
 .hidden {

@@ -59,8 +59,10 @@ export function createRuntime({
     diagnosticsMode: "peek",
     failure: null,
     kernel: WORLD_KERNEL,
+    spine,
     canonVerification: null,
     executionGate: null,
+    planetField: null,
     resolvedState: spine.resolveWorldState({
       activeDepth: startupRequestedDepth,
       currentDepth: startupCurrentDepth,
@@ -82,7 +84,11 @@ export function createRuntime({
     renderAudit: null,
     compassAudit: null,
     renderError: null,
-    updateError: null
+    updateError: null,
+    magneticField: null,
+    thermodynamicField: null,
+    hydrologyField: null,
+    topologyField: null
   };
 
   let frameHandle = 0;

@@ -133,7 +133,8 @@ export function createEnvironmentRenderer() {
       shoreline: true,
       infrastructure: true,
       terrain: true,
-      foliage: true
+      foliage: true,
+      topology_visible_adoption: true
     })
   });
 
@@ -147,6 +148,7 @@ export function createEnvironmentRenderer() {
 
     const { width, height } = getCanvasMetrics(ctx);
     const terrainField = surfaceEngine.buildTerrainField(projector);
+
     const topologyAudit = topologyEngine.render(
       ctx,
       projector,
@@ -194,11 +196,11 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
-    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
+    oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField, topologyField);
+    surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField, topologyField);
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
-    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField);
-    surfaceEngine.renderOverlay(ctx, projector, runtime, renderState);
+    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField, topologyField);
+    surfaceEngine.renderOverlay(ctx, projector, runtime, renderState, topologyField);
 
     ctx.restore();
 

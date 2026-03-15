@@ -294,6 +294,61 @@ function getLandRadiusOffsetPx(baseRadius, sample) {
   return baseRadius * (0.008 + emergentHeight * 0.020);
 }
 
+function buildTopologyLookup(topologyField) {
+  if (!topologyField || !Array.isArray(topologyField.samples)) {
+    return new Map();
+  }
+
+  const map = new Map();
+
+  for (const sample of topologyField.samples) {
+    const latDeg = Number.isFinite(sample?.latDeg) ? sample.latDeg : null;
+    const lonDeg = Number.isFinite(sample?.lonDeg) ? normalizeLonDeg(sample.lonDeg) : null;
+
+    if (latDeg === null || lonDeg === null) continue;
+    map.set(`${latDeg}:${lonDeg}`, sample);
+  }
+
+  return map;
+}
+
+function getTopologySample(topologyLookup, terrainSample) {
+  if (!topologyLookup || !terrainSample) return null;
+  return topologyLookup.get(`${terrainSample.latDeg}:${normalizeLonDeg(terrainSample.lonDeg)}`) ?? null;
+}
+
+function getTerrainTone(topologySample) {
+  if (!topologySample) {
+    return Object.freeze({
+      shadowAlpha: 0,
+      ridgeAlpha: 0,
+      valleyAlpha: 0,
+      cliffAlpha: 0,
+      canyonAlpha: 0,
+      plateauAlpha: 0,
+      summitAlpha: 0
+    });
+  }
+
+  const elevation = clamp(topologySample.elevation ?? 0, -1, 1);
+  const slope = clamp(topologySample.slope ?? 0, 0, 1);
+  const ridge = clamp(topologySample.ridgeStrength ?? 0, 0, 1);
+  const valley = clamp(topologySample.valleyStrength ?? 0, 0, 1);
+  const cliff = clamp(topologySample.cliffPotential ?? 0, 0, 1);
+  const canyon = clamp(topologySample.canyonPotential ?? 0, 0, 1);
+  const plateau = clamp(topologySample.plateauPotential ?? 0, 0, 1);
+
+  return Object.freeze({
+    shadowAlpha: clamp(0.03 + slope * 0.10 + Math.max(0, elevation) * 0.05, 0, 0.18),
+    ridgeAlpha: clamp(ridge * 0.18, 0, 0.20),
+    valleyAlpha: clamp(valley * 0.15, 0, 0.18),
+    cliffAlpha: clamp(cliff * 0.16, 0, 0.18),
+    canyonAlpha: clamp(canyon * 0.17, 0, 0.20),
+    plateauAlpha: clamp(plateau * 0.08, 0, 0.10),
+    summitAlpha: clamp(Math.max(0, elevation - 0.72) * 0.40, 0, 0.10)
+  });
+}
+
 export function createSurfaceEngine() {
   function continentMask(latDeg, lonDeg) {
     return getElevationAndContinent(latDeg, lonDeg).continentId;
@@ -410,10 +465,11 @@ export function createSurfaceEngine() {
     }
   }
 
-  function drawLandSamples(ctx, projector, terrainField) {
+  function drawLandSamples(ctx, projector, terrainField, topologyField) {
     if (!terrainField || !Array.isArray(terrainField.samples)) return;
 
     const radius = projector.state.radius;
+    const topologyLookup = buildTopologyLookup(topologyField);
 
     ctx.save();
     ctx.beginPath();
@@ -426,11 +482,31 @@ export function createSurfaceEngine() {
 
       const emergentHeight = clamp((sample.elevation - sample.seaLevel) / 0.24, 0, 1);
       const sampleRadius = radius * (0.011 + emergentHeight * 0.010);
+      const topologySample = getTopologySample(topologyLookup, sample);
+      const tone = getTerrainTone(topologySample);
 
       ctx.beginPath();
       ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
       ctx.fillStyle = getLandColor(sample.continentId);
       ctx.fill();
+
+      if (tone.shadowAlpha > 0) {
+        const shadow = ctx.createRadialGradient(
+          sample.x + sampleRadius * 0.22,
+          sample.y + sampleRadius * 0.26,
+          sampleRadius * 0.12,
+          sample.x,
+          sample.y,
+          sampleRadius * 1.10
+        );
+        shadow.addColorStop(0, `rgba(0,0,0,${tone.shadowAlpha * 0.35})`);
+        shadow.addColorStop(0.75, `rgba(0,0,0,${tone.shadowAlpha})`);
+        shadow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 1.04, 0, Math.PI * 2);
+        ctx.fillStyle = shadow;
+        ctx.fill();
+      }
 
       if (sample.shoreline > 0.05) {
         ctx.beginPath();
@@ -458,24 +534,89 @@ export function createSurfaceEngine() {
       ctx.fillStyle = highlight;
       ctx.fill();
 
+      if (tone.ridgeAlpha > 0 || tone.plateauAlpha > 0 || tone.summitAlpha > 0) {
+        const crest = ctx.createRadialGradient(
+          sample.x - sampleRadius * 0.26,
+          sample.y - sampleRadius * 0.28,
+          sampleRadius * 0.05,
+          sample.x - sampleRadius * 0.08,
+          sample.y - sampleRadius * 0.10,
+          sampleRadius * 0.62
+        );
+        crest.addColorStop(
+          0,
+          `rgba(255,255,255,${tone.ridgeAlpha * 0.45 + tone.plateauAlpha * 0.35 + tone.summitAlpha})`
+        );
+        crest.addColorStop(
+          0.45,
+          `rgba(245,255,235,${tone.ridgeAlpha * 0.24 + tone.plateauAlpha * 0.18})`
+        );
+        crest.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 0.95, 0, Math.PI * 2);
+        ctx.fillStyle = crest;
+        ctx.fill();
+      }
+
+      if (tone.valleyAlpha > 0 || tone.canyonAlpha > 0 || tone.cliffAlpha > 0) {
+        const relief = ctx.createLinearGradient(
+          sample.x - sampleRadius * 0.8,
+          sample.y - sampleRadius * 0.4,
+          sample.x + sampleRadius * 0.8,
+          sample.y + sampleRadius * 0.6
+        );
+        relief.addColorStop(
+          0,
+          `rgba(255,255,255,${tone.cliffAlpha * 0.18 + tone.plateauAlpha * 0.08})`
+        );
+        relief.addColorStop(
+          0.45,
+          `rgba(0,0,0,${tone.valleyAlpha * 0.12 + tone.canyonAlpha * 0.10})`
+        );
+        relief.addColorStop(
+          1,
+          `rgba(0,0,0,${tone.cliffAlpha * 0.18 + tone.canyonAlpha * 0.22})`
+        );
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 0.98, 0, Math.PI * 2);
+        ctx.fillStyle = relief;
+        ctx.fill();
+      }
+
       if (emergentHeight > 0.55) {
         ctx.beginPath();
         ctx.arc(sample.x, sample.y, sampleRadius * 0.42, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,255,255,0.035)";
         ctx.fill();
       }
+
+      if (topologySample?.terrainType === "cliff") {
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 1.02, Math.PI * 0.15, Math.PI * 0.80);
+        ctx.strokeStyle = `rgba(110,80,46,${0.10 + tone.cliffAlpha * 0.35})`;
+        ctx.lineWidth = 0.9;
+        ctx.stroke();
+      }
+
+      if (topologySample?.terrainType === "canyon") {
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 0.52, Math.PI * 1.10, Math.PI * 1.85);
+        ctx.strokeStyle = `rgba(88,56,32,${0.14 + tone.canyonAlpha * 0.30})`;
+        ctx.lineWidth = 0.75;
+        ctx.stroke();
+      }
     }
 
     ctx.restore();
   }
 
-  function renderBase(ctx, projector, runtime, state, terrainField) {
-    drawLandSamples(ctx, projector, terrainField);
+  function renderBase(ctx, projector, runtime, state, terrainField, topologyField) {
+    drawLandSamples(ctx, projector, terrainField, topologyField);
     drawLatitudeBands(ctx, projector);
     drawLongitudeBands(ctx, projector);
   }
 
-  function renderOverlay(ctx, projector, runtime, state) {
+  function renderOverlay(ctx, projector, runtime, state, topologyField) {
     if (!state.gridBound) return;
 
     const { centerX, centerY, radius } = projector.state;
@@ -494,6 +635,21 @@ export function createSurfaceEngine() {
     ctx.rect(x, y, cellWidth, cellHeight);
     ctx.fill();
     ctx.stroke();
+
+    if (topologyField && Array.isArray(topologyField.samples)) {
+      const visibleCount = topologyField.samples.reduce(
+        (total, sample) => total + (sample.visible ? 1 : 0),
+        0
+      );
+
+      if (visibleCount > 0) {
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = "11px system-ui, sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(`Topo ${visibleCount}`, x + cellWidth - 6, y + cellHeight - 6);
+      }
+    }
+
     ctx.restore();
   }
 

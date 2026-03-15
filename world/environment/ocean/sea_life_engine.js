@@ -1,5 +1,5 @@
 export function createSeaLifeEngine() {
-  function render(ctx, projector, runtime, state) {
+  function render(ctx, projector, runtime, state, terrainField) {
     const { centerX, centerY, radius } = projector.state;
 
     ctx.save();

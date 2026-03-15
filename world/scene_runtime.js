@@ -35,7 +35,13 @@ function safeText(target, value) {
   if (target) target.textContent = value;
 }
 
-export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtimePhase }) {
+export function createRuntime({
+  worldCanvas,
+  compassCanvas,
+  debugContent,
+  runtimePhase,
+  diagnosticsToggle
+}) {
   const worldCtx = worldCanvas.getContext("2d");
   const compassCtx = compassCanvas.getContext("2d");
 
@@ -50,6 +56,7 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
 
   const runtime = {
     phase: "BOOT",
+    diagnosticsMode: "peek",
     failure: null,
     kernel: WORLD_KERNEL,
     canonVerification: null,
@@ -82,6 +89,33 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   let isDragging = false;
   let lastX = 0;
   let lastY = 0;
+
+  function applyDiagnosticsMode(mode) {
+    runtime.diagnosticsMode = mode;
+    document.body.dataset.diagnostics = mode;
+
+    if (diagnosticsToggle) {
+      diagnosticsToggle.setAttribute("aria-expanded", mode === "full" ? "true" : "false");
+      diagnosticsToggle.textContent = mode === "hidden" ? "⌁" : mode === "peek" ? "◫" : "✕";
+    }
+  }
+
+  function cycleDiagnosticsMode() {
+    const nextMode =
+      runtime.diagnosticsMode === "hidden"
+        ? "peek"
+        : runtime.diagnosticsMode === "peek"
+          ? "full"
+          : "hidden";
+
+    applyDiagnosticsMode(nextMode);
+    writeDebugPanels();
+  }
+
+  function bindDiagnosticsToggle() {
+    if (!diagnosticsToggle) return;
+    diagnosticsToggle.addEventListener("click", cycleDiagnosticsMode);
+  }
 
   function resizeCanvases() {
     worldCanvas.width = window.innerWidth;
@@ -225,6 +259,7 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   function start() {
     try {
       runtime.phase = "INITIALIZING";
+      applyDiagnosticsMode(runtime.diagnosticsMode);
       resizeCanvases();
       updateDerivedState();
       writeDebugPanels();
@@ -234,6 +269,7 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
         return;
       }
 
+      bindDiagnosticsToggle();
       window.addEventListener("resize", resizeCanvases);
       worldCanvas.addEventListener("pointerdown", onPointerDown);
       window.addEventListener("pointermove", onPointerMove);

@@ -3,6 +3,8 @@ import { createSpaceEngine } from "./environment/space_engine.js";
 import { createAtmosphereEngine } from "./environment/atmosphere_engine.js";
 import { createSurfaceEngine } from "./environment/surface_engine.js";
 import { createOceanEngine } from "./environment/ocean/index.js";
+import { createMagneticFieldEngine } from "./environment/magnetic_field_engine.js";
+import { createThermodynamicEngine } from "./environment/thermodynamic_engine.js";
 
 function getCanvasMetrics(ctx) {
   return Object.freeze({
@@ -38,7 +40,7 @@ function getRenderState(runtime) {
   });
 }
 
-function createEnvironmentAudit(runtime, renderState) {
+function createEnvironmentAudit(runtime, renderState, magneticField, thermodynamicField) {
   return Object.freeze({
     activeDepth: renderState.activeDepth,
     gridBound: renderState.gridBound,
@@ -48,12 +50,16 @@ function createEnvironmentAudit(runtime, renderState) {
     exclusions: Object.freeze({
       npc: WORLD_KERNEL.scope.includeNPCs === false,
       events: WORLD_KERNEL.scope.includeEvents === false
-    })
+    }),
+    magneticField,
+    thermodynamicField
   });
 }
 
 export function createEnvironmentRenderer() {
   const spaceEngine = createSpaceEngine();
+  const magneticFieldEngine = createMagneticFieldEngine();
+  const thermodynamicEngine = createThermodynamicEngine();
   const atmosphereEngine = createAtmosphereEngine();
   const surfaceEngine = createSurfaceEngine();
   const oceanEngine = createOceanEngine();
@@ -64,6 +70,19 @@ export function createEnvironmentRenderer() {
       nebula: true,
       orbits: true,
       bodies: true
+    }),
+    magnetic_field: Object.freeze({
+      magnetic_intensity: true,
+      shielding_gradient: true,
+      auroral_potential: true,
+      navigation_basis: true
+    }),
+    thermodynamic: Object.freeze({
+      temperature: true,
+      thermal_gradient: true,
+      freeze_potential: true,
+      melt_potential: true,
+      evaporation_pressure: true
     }),
     atmosphere: Object.freeze({
       wind: true,
@@ -87,9 +106,14 @@ export function createEnvironmentRenderer() {
 
   function render(ctx, projector, runtime) {
     const renderState = getRenderState(runtime);
-    const audit = createEnvironmentAudit(runtime, renderState);
+    const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
+    const thermodynamicField = thermodynamicEngine.compute(projector, runtime, renderState);
+    const audit = createEnvironmentAudit(runtime, renderState, magneticField, thermodynamicField);
     const { width, height } = getCanvasMetrics(ctx);
     const terrainField = surfaceEngine.buildTerrainField(projector);
+
+    runtime.magneticField = magneticField;
+    runtime.thermodynamicField = thermodynamicField;
 
     ctx.clearRect(0, 0, width, height);
 

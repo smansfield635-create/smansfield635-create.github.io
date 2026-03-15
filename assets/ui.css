@@ -4,7 +4,6 @@
   --bg-bottom: #02040a;
 
   --panel: rgba(10, 16, 28, 0.82);
-  --panel-strong: rgba(8, 14, 24, 0.9);
   --panel-soft: rgba(255, 255, 255, 0.025);
   --panel-border: rgba(125, 170, 255, 0.26);
   --panel-border-soft: rgba(255, 255, 255, 0.06);
@@ -22,8 +21,6 @@
   --radius: 16px;
   --radius-soft: 12px;
   --gap: 12px;
-  --gap-tight: 8px;
-  --gap-loose: 16px;
 
   --shell-pad: 16px;
   --shell-pad-mobile: 12px;
@@ -79,10 +76,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body[data-runtime="booting"] {
-  cursor: progress;
 }
 
 #app {
@@ -291,10 +284,6 @@ body[data-runtime="booting"] {
 
 .hidden {
   display: none !important;
-}
-
-[aria-busy="true"] {
-  cursor: progress;
 }
 
 @media (max-width: 840px) {

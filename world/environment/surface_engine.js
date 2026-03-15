@@ -65,19 +65,8 @@ function fbm(x, y) {
   return amplitudeSum > 0 ? total / amplitudeSum : 0;
 }
 
-function angularDistanceDeg(latA, lonA, latB, lonB) {
-  const latARad = toRad(latA);
-  const lonARad = toRad(lonA);
-  const latBRad = toRad(latB);
-  const lonBRad = toRad(lonB);
-
-  const cosine =
-    Math.sin(latARad) * Math.sin(latBRad) +
-    Math.cos(latARad) * Math.cos(latBRad) * Math.cos(lonARad - lonBRad);
-
-  const clamped = Math.max(-1, Math.min(1, cosine));
-  return (Math.acos(clamped) * 180) / Math.PI;
-}
+const SEA_LEVEL = 0.06;
+const SHORELINE_HALF_BAND = 0.07;
 
 const CONTINENTS = Object.freeze([
   Object.freeze({
@@ -90,7 +79,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.10)",
     roughness: 9.5,
     elongationX: 1.18,
-    elongationY: 0.90
+    elongationY: 0.90,
+    mass: 1.00
   }),
   Object.freeze({
     id: "gratitude",
@@ -102,7 +92,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.09)",
     roughness: 7.0,
     elongationX: 1.05,
-    elongationY: 0.94
+    elongationY: 0.94,
+    mass: 0.78
   }),
   Object.freeze({
     id: "generosity",
@@ -114,7 +105,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.09)",
     roughness: 7.0,
     elongationX: 1.08,
-    elongationY: 0.92
+    elongationY: 0.92,
+    mass: 0.78
   }),
   Object.freeze({
     id: "northland",
@@ -126,7 +118,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.08)",
     roughness: 6.2,
     elongationX: 0.96,
-    elongationY: 1.08
+    elongationY: 1.08,
+    mass: 0.72
   }),
   Object.freeze({
     id: "eastreach",
@@ -138,7 +131,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.08)",
     roughness: 5.8,
     elongationX: 1.12,
-    elongationY: 0.88
+    elongationY: 0.88,
+    mass: 0.68
   }),
   Object.freeze({
     id: "southfields",
@@ -150,7 +144,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.08)",
     roughness: 6.0,
     elongationX: 1.00,
-    elongationY: 0.98
+    elongationY: 0.98,
+    mass: 0.70
   }),
   Object.freeze({
     id: "westwilds",
@@ -162,7 +157,8 @@ const CONTINENTS = Object.freeze([
     highlight: "rgba(255,255,255,0.08)",
     roughness: 6.4,
     elongationX: 1.06,
-    elongationY: 0.93
+    elongationY: 0.93,
+    mass: 0.70
   })
 ]);
 
@@ -189,7 +185,6 @@ function getContinentInfluence(continent, latDeg, lonDeg) {
 
   const dLatScaled = dLat / continent.elongationY;
   const dLonScaled = dLonRaw / continent.elongationX;
-
   const baseDistance = Math.sqrt(dLatScaled * dLatScaled + dLonScaled * dLonScaled);
 
   const n1 = fbm(
@@ -210,34 +205,91 @@ function getContinentInfluence(continent, latDeg, lonDeg) {
     (n2 - 0.5) * (continent.roughness * 0.46) +
     (n3 - 0.5) * (continent.roughness * 0.22);
 
-  const inletBias = Math.sin(toRad(dLonRaw * 2.3)) * Math.cos(toRad(dLat * 1.7)) * 1.4;
+  const inletBias =
+    Math.sin(toRad(dLonRaw * 2.3)) *
+    Math.cos(toRad(dLat * 1.7)) *
+    1.4;
+
   const effectiveRadius = continent.radiusDeg + coastlineOffset + inletBias;
   const signedDistance = effectiveRadius - baseDistance;
+
+  const normalizedMass = clamp(signedDistance / Math.max(6, continent.radiusDeg * 0.18), -1, 1);
 
   return Object.freeze({
     signedDistance,
     effectiveRadius,
-    baseDistance
+    baseDistance,
+    normalizedMass
+  });
+}
+
+function getElevationAndContinent(latDeg, lonDeg) {
+  const normalizedLon = normalizeLonDeg(lonDeg);
+
+  let winningContinent = null;
+  let winningInfluence = null;
+  let winningDistance = -Infinity;
+
+  for (const continent of CONTINENTS) {
+    const influence = getContinentInfluence(continent, latDeg, normalizedLon);
+
+    if (influence.signedDistance > winningDistance) {
+      winningContinent = continent;
+      winningInfluence = influence;
+      winningDistance = influence.signedDistance;
+    }
+  }
+
+  const broadNoise = fbm(
+    (latDeg + 90 + 41.0) * 0.06,
+    (normalizedLon + 180 + 17.0) * 0.06
+  );
+  const mediumNoise = fbm(
+    (latDeg + 90 + 13.0) * 0.15,
+    (normalizedLon + 180 + 29.0) * 0.15
+  );
+  const fineNoise = valueNoise(
+    (latDeg + 90 + 7.0) * 0.34,
+    (normalizedLon + 180 + 11.0) * 0.34
+  );
+
+  const oceanBase =
+    -0.34 +
+    (broadNoise - 0.5) * 0.08 +
+    (mediumNoise - 0.5) * 0.05;
+
+  let elevation = oceanBase;
+  let continentId = null;
+
+  if (winningContinent && winningInfluence) {
+    const crust =
+      winningInfluence.normalizedMass * 0.26 * winningContinent.mass +
+      Math.max(0, winningInfluence.signedDistance) * 0.012 * winningContinent.mass;
+
+    const relief =
+      (mediumNoise - 0.5) * 0.08 +
+      (fineNoise - 0.5) * 0.04;
+
+    elevation = oceanBase + crust + relief;
+    continentId = winningContinent.id;
+  }
+
+  const terrain = elevation >= SEA_LEVEL ? "LAND" : "OCEAN";
+  const shoreline = 1 - smoothstep(0, SHORELINE_HALF_BAND, Math.abs(elevation - SEA_LEVEL));
+
+  return Object.freeze({
+    elevation,
+    seaLevel: SEA_LEVEL,
+    terrain,
+    shoreline,
+    continentId
   });
 }
 
 export function createSurfaceEngine() {
   function continentMask(latDeg, lonDeg) {
-    const normalizedLon = normalizeLonDeg(lonDeg);
-
-    let winningContinent = null;
-    let winningDistance = -Infinity;
-
-    for (const continent of CONTINENTS) {
-      const influence = getContinentInfluence(continent, latDeg, normalizedLon);
-
-      if (influence.signedDistance > 0 && influence.signedDistance > winningDistance) {
-        winningContinent = continent.id;
-        winningDistance = influence.signedDistance;
-      }
-    }
-
-    return winningContinent;
+    const result = getElevationAndContinent(latDeg, lonDeg);
+    return result.continentId;
   }
 
   function buildTerrainField(projector) {
@@ -248,23 +300,18 @@ export function createSurfaceEngine() {
     for (let latDeg = -84; latDeg <= 84; latDeg += latStep) {
       for (let lonDeg = -180; lonDeg < 180; lonDeg += lonStep) {
         const normalizedLon = normalizeLonDeg(lonDeg);
-        const continentId = continentMask(latDeg, normalizedLon);
+        const terrainResult = getElevationAndContinent(latDeg, normalizedLon);
         const projected = projector.projectSphere(toRad(normalizedLon), toRad(latDeg));
-
-        let shoreline = 0;
-        if (continentId) {
-          const continent = getContinentById(continentId);
-          const influence = getContinentInfluence(continent, latDeg, normalizedLon);
-          shoreline = 1 - smoothstep(0, 3.8, influence.signedDistance);
-        }
 
         samples.push(
           Object.freeze({
             latDeg,
             lonDeg: normalizedLon,
-            continentId,
-            terrain: continentId ? "LAND" : "OCEAN",
-            shoreline,
+            continentId: terrainResult.continentId,
+            terrain: terrainResult.terrain,
+            shoreline: terrainResult.shoreline,
+            elevation: terrainResult.elevation,
+            seaLevel: terrainResult.seaLevel,
             x: projected.x,
             y: projected.y,
             z: projected.z,
@@ -277,11 +324,15 @@ export function createSurfaceEngine() {
     return Object.freeze({
       samples: Object.freeze(samples),
       classify(latDeg, lonDeg) {
-        return continentMask(latDeg, lonDeg) ? "LAND" : "OCEAN";
+        return getElevationAndContinent(latDeg, lonDeg).terrain;
       },
       continentAt(latDeg, lonDeg) {
-        return continentMask(latDeg, lonDeg);
-      }
+        return getElevationAndContinent(latDeg, lonDeg).continentId;
+      },
+      elevationAt(latDeg, lonDeg) {
+        return getElevationAndContinent(latDeg, lonDeg).elevation;
+      },
+      seaLevel: SEA_LEVEL
     });
   }
 
@@ -367,25 +418,31 @@ export function createSurfaceEngine() {
       if (!sample.visible) continue;
       if (sample.terrain !== "LAND") continue;
 
-      const sampleRadius = radius * 0.017;
+      const emergentHeight = clamp(
+        (sample.elevation - sample.seaLevel) / 0.24,
+        0,
+        1
+      );
+
+      const sampleRadius = radius * (0.012 + emergentHeight * 0.010);
 
       ctx.beginPath();
       ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
       ctx.fillStyle = getLandColor(sample.continentId);
       ctx.fill();
 
-      if (sample.shoreline > 0.08) {
+      if (sample.shoreline > 0.05) {
         ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 1.08, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(225,245,200,${0.08 + sample.shoreline * 0.16})`;
-        ctx.lineWidth = 0.7;
+        ctx.arc(sample.x, sample.y, sampleRadius * 1.07, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(225,245,200,${0.06 + sample.shoreline * 0.12})`;
+        ctx.lineWidth = 0.65;
         ctx.stroke();
       }
 
       const highlight = ctx.createRadialGradient(
-        sample.x - sampleRadius * 0.32,
-        sample.y - sampleRadius * 0.32,
-        sampleRadius * 0.10,
+        sample.x - sampleRadius * 0.30,
+        sample.y - sampleRadius * 0.30,
+        sampleRadius * 0.08,
         sample.x,
         sample.y,
         sampleRadius
@@ -399,6 +456,13 @@ export function createSurfaceEngine() {
       ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
       ctx.fillStyle = highlight;
       ctx.fill();
+
+      if (emergentHeight > 0.55) {
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, sampleRadius * 0.42, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.035)";
+        ctx.fill();
+      }
     }
 
     ctx.restore();

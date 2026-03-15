@@ -36,24 +36,13 @@ export function createThermodynamicEngine() {
     return Math.acos(clamp(cosine, -1, 1)) * (180 / Math.PI);
   }
 
-  function getLatLonFromProjector(projector) {
-    const inverse = projector?.inverseProject?.(
-      projector?.state?.centerX ?? 0,
-      projector?.state?.centerY ?? 0
-    );
+  function computeSampleThermalState(sample, topologySample) {
+    const latDeg = sample.latDeg;
+    const lonDeg = normalizeLonDeg(sample.lonDeg);
+    const elevation = Number.isFinite(sample.elevation) ? sample.elevation : 0;
+    const slope = Number.isFinite(topologySample?.slope) ? topologySample.slope : 0;
+    const continentMass = Number.isFinite(topologySample?.continentMass) ? topologySample.continentMass : 0;
 
-    if (!inverse) {
-      return Object.freeze({ latDeg: 0, lonDeg: 0 });
-    }
-
-    return Object.freeze({
-      latDeg: inverse.lat * (180 / Math.PI),
-      lonDeg: inverse.lon * (180 / Math.PI)
-    });
-  }
-
-  function computeThermalState(latDeg, lonDeg) {
-    const normalizedLon = normalizeLonDeg(lonDeg);
     const polarCooling = Math.pow(Math.abs(latDeg) / 90, 1.35) * 0.82;
     const ambient = 0.48 - polarCooling;
 
@@ -61,7 +50,7 @@ export function createThermodynamicEngine() {
     let nearestHeatDistanceDeg = 180;
 
     for (const node of HEAT_NODES) {
-      const distanceDeg = angularDistanceDeg(latDeg, normalizedLon, node.latDeg, node.lonDeg);
+      const distanceDeg = angularDistanceDeg(latDeg, lonDeg, node.latDeg, node.lonDeg);
       nearestHeatDistanceDeg = Math.min(nearestHeatDistanceDeg, distanceDeg);
 
       const influence = Math.exp(-distanceDeg / 34) * node.strength;
@@ -69,36 +58,91 @@ export function createThermodynamicEngine() {
     }
 
     const wildernessDecay = clamp(nearestHeatDistanceDeg / 140, 0, 1) * 0.26;
-    const temperatureField = clamp(ambient + heatNodeInfluence * 0.34 - wildernessDecay, 0, 1);
+    const elevationCooling = clamp((elevation - (sample.seaLevel ?? 0)) * 0.85, 0, 0.22);
+    const continentalRetention = continentMass * 0.05;
+    const slopeExposure = slope * 0.04;
+
+    const temperatureField = clamp(
+      ambient +
+        heatNodeInfluence * 0.34 -
+        wildernessDecay -
+        elevationCooling -
+        slopeExposure +
+        continentalRetention,
+      0,
+      1
+    );
 
     const freezePotentialField = clamp((0.42 - temperatureField) / 0.42, 0, 1);
     const meltPotentialField = clamp((temperatureField - 0.38) / 0.42, 0, 1);
     const evaporationPressureField = clamp((temperatureField - 0.28) / 0.52, 0, 1);
 
-    const thermalGradientField = Object.freeze({
-      polarCooling,
-      heatNodeInfluence: clamp(heatNodeInfluence, 0, 1.5),
-      wildernessDecay,
-      nearestHeatDistanceDeg
-    });
-
     return Object.freeze({
       latDeg,
-      lonDeg: normalizedLon,
+      lonDeg,
+      visible: sample.visible,
       temperatureField,
-      thermalGradientField,
+      thermalGradientField: Object.freeze({
+        polarCooling,
+        heatNodeInfluence: clamp(heatNodeInfluence, 0, 1.5),
+        wildernessDecay,
+        nearestHeatDistanceDeg
+      }),
       freezePotentialField,
       meltPotentialField,
       evaporationPressureField
     });
   }
 
-  function compute(projector, runtime, renderState) {
-    const sample = getLatLonFromProjector(projector);
-    return computeThermalState(sample.latDeg, sample.lonDeg);
+  function buildThermodynamicField(terrainField, topologyField) {
+    if (!terrainField || !Array.isArray(terrainField.samples)) {
+      return Object.freeze({
+        samples: Object.freeze([]),
+        summary: Object.freeze({
+          temperatureAverage: 0,
+          freezeAverage: 0,
+          meltAverage: 0,
+          evaporationAverage: 0
+        })
+      });
+    }
+
+    const topologySamples = Array.isArray(topologyField?.samples) ? topologyField.samples : [];
+    const topologyIndex = new Map(
+      topologySamples.map((sample) => [`${sample.latDeg}:${sample.lonDeg}`, sample])
+    );
+
+    let temperatureTotal = 0;
+    let freezeTotal = 0;
+    let meltTotal = 0;
+    let evaporationTotal = 0;
+
+    const samples = terrainField.samples.map((sample) => {
+      const topologySample = topologyIndex.get(`${sample.latDeg}:${sample.lonDeg}`) ?? null;
+      const thermalSample = computeSampleThermalState(sample, topologySample);
+
+      temperatureTotal += thermalSample.temperatureField;
+      freezeTotal += thermalSample.freezePotentialField;
+      meltTotal += thermalSample.meltPotentialField;
+      evaporationTotal += thermalSample.evaporationPressureField;
+
+      return thermalSample;
+    });
+
+    const count = samples.length || 1;
+
+    return Object.freeze({
+      samples: Object.freeze(samples),
+      summary: Object.freeze({
+        temperatureAverage: temperatureTotal / count,
+        freezeAverage: freezeTotal / count,
+        meltAverage: meltTotal / count,
+        evaporationAverage: evaporationTotal / count
+      })
+    });
   }
 
   return Object.freeze({
-    compute
+    buildThermodynamicField
   });
 }

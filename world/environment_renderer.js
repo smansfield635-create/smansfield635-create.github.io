@@ -1,9 +1,5 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
 function getCanvasMetrics(ctx) {
   return Object.freeze({
     width: ctx.canvas.width,
@@ -33,9 +29,7 @@ function getRenderState(runtime) {
       row: Number.isInteger(projection.row) ? projection.row : 0,
       col: Number.isInteger(projection.col) ? projection.col : 0,
       cellIndex: Number.isInteger(projection.cellIndex) ? projection.cellIndex : 0,
-      cellId: projection.cellId ?? "R0C0",
-      sector: Number.isInteger(projection.sector) ? projection.sector : 0,
-      bandIndex: Number.isInteger(projection.bandIndex) ? projection.bandIndex : 0
+      cellId: projection.cellId ?? "R0C0"
     })
   });
 }
@@ -57,7 +51,7 @@ function createEnvironmentAudit(runtime, renderState) {
 function drawCosmicField(ctx, width, height) {
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
   gradient.addColorStop(0, "#06111f");
-  gradient.addColorStop(0.35, "#040914");
+  gradient.addColorStop(0.32, "#040914");
   gradient.addColorStop(0.72, "#030610");
   gradient.addColorStop(1, "#02050b");
   ctx.fillStyle = gradient;
@@ -84,7 +78,7 @@ function drawNebulaBands(ctx, width, height, time) {
       radiusX
     );
 
-    gradient.addColorStop(0, "rgba(90, 120, 255, 0.12)");
+    gradient.addColorStop(0, "rgba(90, 120, 255, 0.13)");
     gradient.addColorStop(0.45, "rgba(70, 110, 230, 0.07)");
     gradient.addColorStop(1, "rgba(40, 80, 170, 0)");
 

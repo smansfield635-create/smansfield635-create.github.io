@@ -134,8 +134,15 @@ export function createEnvironmentRenderer() {
 
     const terrainField = surfaceEngine.buildTerrainField(projector);
     const topologyField = topologyEngine.buildTopologyField(terrainField);
-    const thermodynamicField = thermodynamicEngine.buildThermodynamicField(terrainField, topologyField);
-    const hydrologyField = hydrologyEngine.buildHydrologyField(terrainField, topologyField, thermodynamicField);
+    const thermodynamicField = thermodynamicEngine.buildThermodynamicField(
+      terrainField,
+      topologyField
+    );
+    const hydrologyField = hydrologyEngine.buildHydrologyField(
+      terrainField,
+      topologyField,
+      thermodynamicField
+    );
     const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
 
     const planetField = runtime.spine.assemblePlanetField({
@@ -170,11 +177,38 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    oceanEngine.renderBase(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
-    surfaceEngine.renderBase(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
+    oceanEngine.renderBase(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      planetField.terrainField,
+      planetField.topologyField
+    );
+    surfaceEngine.renderBase(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      planetField.terrainField,
+      planetField.topologyField
+    );
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
-    oceanEngine.renderDynamic(ctx, projector, runtime, renderState, planetField.terrainField, planetField.topologyField);
-    surfaceEngine.renderOverlay(ctx, projector, runtime, renderState, planetField.topologyField);
+    oceanEngine.renderDynamic(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      planetField.terrainField,
+      planetField.topologyField
+    );
+    surfaceEngine.renderOverlay(
+      ctx,
+      projector,
+      runtime,
+      renderState,
+      planetField.topologyField
+    );
 
     ctx.restore();
 

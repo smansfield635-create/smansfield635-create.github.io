@@ -3,42 +3,6 @@ export function createDepthEngine() {
     return Math.max(min, Math.min(max, value));
   }
 
-  function toRad(deg) {
-    return (deg * Math.PI) / 180;
-  }
-
-  function fract(value) {
-    return value - Math.floor(value);
-  }
-
-  function noise(latDeg, lonDeg) {
-    return fract(
-      Math.sin(latDeg * 12.9898 + lonDeg * 78.233) * 43758.5453123
-    );
-  }
-
-  function getDepthLevel(latDeg, lonDeg) {
-    const latRad = toRad(latDeg);
-    const lonRad = toRad(lonDeg);
-
-    const base =
-      0.58 +
-      0.22 * Math.sin(latRad * 2.1) +
-      0.10 * Math.cos(lonRad * 1.45) +
-      (noise(latDeg, lonDeg) - 0.5) * 0.18;
-
-    return clamp(base, 0, 1);
-  }
-
-  function getDepthColor(depth) {
-    if (depth < 0.18) return "rgba(115,255,240,0.34)";
-    if (depth < 0.34) return "rgba(74,244,233,0.26)";
-    if (depth < 0.52) return "rgba(44,212,229,0.19)";
-    if (depth < 0.70) return "rgba(20,160,221,0.15)";
-    if (depth < 0.86) return "rgba(12,98,186,0.13)";
-    return "rgba(3,24,74,0.16)";
-  }
-
   function drawBaseOceanBody(ctx, centerX, centerY, radius) {
     const baseGradient = ctx.createRadialGradient(
       centerX - radius * 0.30,
@@ -49,18 +13,51 @@ export function createDepthEngine() {
       radius * 1.04
     );
 
-    baseGradient.addColorStop(0.00, "#7affef");
+    baseGradient.addColorStop(0.00, "#79ffef");
     baseGradient.addColorStop(0.10, "#49f1e7");
     baseGradient.addColorStop(0.22, "#22d7e7");
-    baseGradient.addColorStop(0.40, "#1798d4");
-    baseGradient.addColorStop(0.62, "#0d61b1");
-    baseGradient.addColorStop(0.84, "#063978");
-    baseGradient.addColorStop(1.00, "#021743");
+    baseGradient.addColorStop(0.40, "#1696d2");
+    baseGradient.addColorStop(0.62, "#0d5da8");
+    baseGradient.addColorStop(0.84, "#063673");
+    baseGradient.addColorStop(1.00, "#02153f");
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
     ctx.fillStyle = baseGradient;
     ctx.fill();
+  }
+
+  function getWaterDepthBand(sample) {
+    const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+
+    if (waterDepth < 0.025) return "shore";
+    if (waterDepth < 0.09) return "upper_shelf";
+    if (waterDepth < 0.18) return "shelf";
+    if (waterDepth < 0.32) return "mid";
+    if (waterDepth < 0.52) return "deep";
+    return "abyss";
+  }
+
+  function getWaterColor(sample) {
+    const band = getWaterDepthBand(sample);
+
+    if (band === "shore") return "rgba(135,255,242,0.36)";
+    if (band === "upper_shelf") return "rgba(90,248,235,0.28)";
+    if (band === "shelf") return "rgba(50,221,232,0.22)";
+    if (band === "mid") return "rgba(20,166,223,0.17)";
+    if (band === "deep") return "rgba(10,96,184,0.15)";
+    return "rgba(3,23,72,0.18)";
+  }
+
+  function getWaterRadius(radius, sample) {
+    const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+
+    if (waterDepth < 0.025) return radius * 0.026;
+    if (waterDepth < 0.09) return radius * 0.023;
+    if (waterDepth < 0.18) return radius * 0.020;
+    if (waterDepth < 0.32) return radius * 0.018;
+    if (waterDepth < 0.52) return radius * 0.016;
+    return radius * 0.015;
   }
 
   function drawDepthSamples(ctx, terrainField, radius) {
@@ -72,13 +69,9 @@ export function createDepthEngine() {
       if (!sample.visible) continue;
       if (sample.terrain !== "OCEAN") continue;
 
-      const depth = getDepthLevel(sample.latDeg, sample.lonDeg);
-      const sampleRadius =
-        radius * (depth < 0.24 ? 0.024 : depth < 0.62 ? 0.019 : 0.016);
-
       ctx.beginPath();
-      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = getDepthColor(depth);
+      ctx.arc(sample.x, sample.y, getWaterRadius(radius, sample), 0, Math.PI * 2);
+      ctx.fillStyle = getWaterColor(sample);
       ctx.fill();
     }
 
@@ -92,24 +85,26 @@ export function createDepthEngine() {
 
     for (const sample of terrainField.samples) {
       if (!sample.visible) continue;
-      if (sample.terrain !== "LAND") continue;
-      if (!(sample.shoreline > 0.04)) continue;
+      if (sample.terrain !== "OCEAN") continue;
 
-      const glowRadius = radius * 0.018;
-      const alpha = 0.04 + sample.shoreline * 0.10;
+      const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+      if (waterDepth > 0.11) continue;
+
+      const alpha = 0.05 + (1 - clamp(waterDepth / 0.11, 0, 1)) * 0.14;
+      const glowRadius = radius * (0.020 + (0.11 - waterDepth) * 0.10);
 
       const gradient = ctx.createRadialGradient(
         sample.x,
         sample.y,
-        glowRadius * 0.15,
+        glowRadius * 0.16,
         sample.x,
         sample.y,
         glowRadius * 1.9
       );
 
       gradient.addColorStop(0.00, `rgba(145,255,242,${alpha})`);
-      gradient.addColorStop(0.45, `rgba(88,240,230,${alpha * 0.75})`);
-      gradient.addColorStop(1.00, "rgba(88,240,230,0)");
+      gradient.addColorStop(0.42, `rgba(90,242,231,${alpha * 0.75})`);
+      gradient.addColorStop(1.00, "rgba(90,242,231,0)");
 
       ctx.beginPath();
       ctx.arc(sample.x, sample.y, glowRadius * 1.9, 0, Math.PI * 2);

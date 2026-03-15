@@ -54,7 +54,10 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "feature_flag",
     "canonical_constants",
     "naming_registry",
-    "canon_verification"
+    "canon_verification",
+    "planet_field_contract",
+    "planet_field_order",
+    "planet_sample_contract"
   ]),
   "world/cosmic_engine_spine.js": Object.freeze([
     "cosmic_resolver",
@@ -76,7 +79,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "scale_transition",
     "scale_containment",
     "audit_labeling",
-    "execution_gate"
+    "execution_gate",
+    "planet_field_assembly"
   ]),
   "world/planet_surface_projector.js": Object.freeze([
     "center",
@@ -110,7 +114,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "thermal_gradient_field",
     "freeze_potential_field",
     "melt_potential_field",
-    "evaporation_pressure_field"
+    "evaporation_pressure_field",
+    "sample_thermal_enrichment"
   ]),
   "world/environment/hydrology_engine.js": Object.freeze([
     "rainfall_field",
@@ -118,7 +123,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "basin_accumulation_field",
     "drainage_field",
     "river_path_field",
-    "lake_formation_field"
+    "lake_formation_field",
+    "sample_hydrology_enrichment"
   ]),
   "world/environment/topology_engine.js": Object.freeze([
     "elevation_field",
@@ -130,7 +136,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "hill_field",
     "basin_field",
     "plateau_field",
-    "cave_potential_field"
+    "cave_potential_field",
+    "sample_topology_enrichment"
   ]),
   "world/environment_renderer.js": Object.freeze([
     "space_family",
@@ -153,6 +160,7 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "subfamily_dispatch",
     "external_view_render",
     "environment_audit",
+    "planet_field_assembly_handoff",
     "no_npc_no_event_exclusion"
   ]),
   "world/compass_renderer.js": Object.freeze([
@@ -187,7 +195,8 @@ const FILE_HOME_REGISTRY = Object.freeze({
     "runtime_state_container",
     "frame_scheduler",
     "error_isolation",
-    "debug_panel_write"
+    "debug_panel_write",
+    "planet_field_runtime_receipt"
   ])
 });
 
@@ -236,7 +245,10 @@ const DUPLICATE_TRUTH_REGISTRY = Object.freeze([
   "execution_gate",
   "world_state_handoff",
   "orientation_extraction",
-  "cardinal_mapping"
+  "cardinal_mapping",
+  "planet_field_contract",
+  "planet_field_order",
+  "planet_sample_contract"
 ]);
 
 const DEPTH_REGISTRY = Object.freeze([
@@ -350,6 +362,41 @@ const BRANCH_REGISTRY = Object.freeze({
   })
 });
 
+const PLANET_FIELD_ORDER = Object.freeze([
+  "terrainField",
+  "topologyField",
+  "thermodynamicField",
+  "hydrologyField",
+  "magneticField"
+]);
+
+const PLANET_SAMPLE_CONTRACT = Object.freeze([
+  "latDeg",
+  "lonDeg",
+  "visible",
+  "elevation",
+  "seaLevel",
+  "terrain",
+  "shoreline",
+  "continentMass",
+  "slope",
+  "curvature",
+  "ridgeStrength",
+  "basinStrength",
+  "divideStrength",
+  "watershedSeed",
+  "temperatureField",
+  "freezePotentialField",
+  "meltPotentialField",
+  "evaporationPressureField",
+  "rainfall",
+  "runoff",
+  "basinAccumulation",
+  "drainage",
+  "riverCandidate",
+  "lakeCandidate"
+]);
+
 const CONSTANTS = Object.freeze({
   initialYaw: -0.18,
   initialPitch: -0.34,
@@ -390,7 +437,8 @@ const NAMING_REGISTRY = Object.freeze({
   thermodynamicFieldLabel: "planetary_thermodynamic_field",
   magneticFieldLabel: "planetary_magnetic_field",
   hydrologyFieldLabel: "planetary_hydrology_field",
-  topologyFieldLabel: "planetary_topology_field"
+  topologyFieldLabel: "planetary_topology_field",
+  planetFieldLabel: "planetary_parent_field"
 });
 
 const FEATURE_FLAGS = Object.freeze({
@@ -403,7 +451,8 @@ const FEATURE_FLAGS = Object.freeze({
   enableThermodynamicField: true,
   enableMagneticField: true,
   enableHydrologyField: true,
-  enableTopologyField: true
+  enableTopologyField: true,
+  enablePlanetField: true
 });
 
 const SCOPE_REGISTRY = Object.freeze({
@@ -555,6 +604,10 @@ export const WORLD_KERNEL = Object.freeze({
   naming: NAMING_REGISTRY,
   scope: SCOPE_REGISTRY,
   flags: FEATURE_FLAGS,
+  planetField: Object.freeze({
+    order: PLANET_FIELD_ORDER,
+    sampleContract: PLANET_SAMPLE_CONTRACT
+  }),
   canon: Object.freeze({
     fileHomeRegistry: FILE_HOME_REGISTRY,
     chronologyRegistry: CHRONOLOGY_REGISTRY,
@@ -598,6 +651,18 @@ export function getLocalGridCell(row, col) {
     cellIndex,
     cellId: WORLD_KERNEL.localGrid.cellIds[cellIndex]
   });
+}
+
+export function getPlanetFieldContract() {
+  return WORLD_KERNEL.planetField;
+}
+
+export function getPlanetFieldOrder() {
+  return WORLD_KERNEL.planetField.order;
+}
+
+export function getCanonicalSampleContract() {
+  return WORLD_KERNEL.planetField.sampleContract;
 }
 
 export function getExpectedCanonStructure() {

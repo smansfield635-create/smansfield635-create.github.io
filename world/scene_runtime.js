@@ -47,18 +47,24 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   const environment = createEnvironmentRenderer();
   const compass = createCompassRenderer();
 
+  const startupCurrentDepth = "galaxy";
+  const startupRequestedDepth = spine.getNextLegalDepth(startupCurrentDepth) ?? startupCurrentDepth;
+
   const canonVerification = verifyCanonicalStructure(buildCanonicalInput());
-  let executionGate = spine.evaluateExecutionGate(canonVerification, {
-    mode: "runtime_execution",
-    fileCount: 9,
-    requestedDepth: "harbor",
-    currentDepth: "region",
-    scopePath: WORLD_KERNEL.scope.activePath,
-    roleConflict: false,
-    ownershipDrift: false,
-    chronologyValid: true,
-    duplicateTruth: false
-  });
+  let executionGate = spine.evaluateExecutionGate(
+    canonVerification,
+    spine.buildExecutionRequest({
+      mode: "runtime_execution",
+      fileCount: 9,
+      currentDepth: startupCurrentDepth,
+      requestedDepth: startupRequestedDepth,
+      scopePath: WORLD_KERNEL.scope.activePath,
+      roleConflict: false,
+      ownershipDrift: false,
+      chronologyValid: true,
+      duplicateTruth: false
+    })
+  );
 
   const runtime = {
     phase: executionGate.allow ? "BOOT" : "BLOCKED",
@@ -67,8 +73,8 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
     canonVerification,
     executionGate,
     resolvedState: spine.resolveWorldState({
-      activeDepth: "harbor",
-      currentDepth: "region",
+      activeDepth: startupRequestedDepth,
+      currentDepth: startupCurrentDepth,
       selection: {
         zone: "local_zone_alpha",
         row: 0,
@@ -117,16 +123,21 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   }
 
   function updateResolvedState() {
+    const currentDepth = runtime.resolvedState?.transition?.to ?? runtime.resolvedState?.activeDepth ?? startupRequestedDepth;
+    const requestedDepth = spine.getNextLegalDepth(currentDepth) ?? currentDepth;
+
     runtime.resolvedState = spine.resolveWorldState({
-      activeDepth: "harbor",
-      currentDepth: "region",
+      activeDepth: currentDepth,
+      currentDepth,
       selection: {
         zone: runtime.resolvedState?.localSelection?.zone ?? "local_zone_alpha",
         row: runtime.projection?.row ?? 0,
         col: runtime.projection?.col ?? 0
       }
     });
+
     runtime.region = runtime.resolvedState.region;
+    runtime.nextDepth = requestedDepth;
   }
 
   function updateDerivedState() {
@@ -137,18 +148,26 @@ export function createRuntime({ worldCanvas, compassCanvas, debugContent, runtim
   }
 
   function evaluateRuntimeGate() {
-    executionGate = spine.evaluateExecutionGate(runtime.canonVerification, {
-      mode: "runtime_execution",
-      fileCount: 9,
-      requestedDepth: runtime.resolvedState?.activeDepth ?? "harbor",
-      currentDepth: runtime.resolvedState?.transition?.from ?? "region",
-      scopePath: WORLD_KERNEL.scope.activePath,
-      roleConflict: false,
-      ownershipDrift: false,
-      chronologyValid: true,
-      duplicateTruth: false
-    });
+    const currentDepth = runtime.resolvedState?.activeDepth ?? startupRequestedDepth;
+    const requestedDepth = spine.getNextLegalDepth(currentDepth) ?? currentDepth;
+
+    executionGate = spine.evaluateExecutionGate(
+      runtime.canonVerification,
+      spine.buildExecutionRequest({
+        mode: "runtime_execution",
+        fileCount: 9,
+        currentDepth,
+        requestedDepth,
+        scopePath: WORLD_KERNEL.scope.activePath,
+        roleConflict: false,
+        ownershipDrift: false,
+        chronologyValid: true,
+        duplicateTruth: false
+      })
+    );
+
     runtime.executionGate = executionGate;
+    runtime.nextDepth = requestedDepth;
     return executionGate.allow;
   }
 

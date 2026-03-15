@@ -60,8 +60,8 @@ export function createTopologyEngine() {
 
   function buildNeighborIndex(samples) {
     const index = new Map();
-    for (const s of samples) {
-      index.set(`${s.latDeg}:${normalizeLonDeg(s.lonDeg)}`, s);
+    for (const sample of samples) {
+      index.set(`${sample.latDeg}:${normalizeLonDeg(sample.lonDeg)}`, sample);
     }
     return index;
   }
@@ -76,11 +76,13 @@ export function createTopologyEngine() {
     ];
 
     const neighbors = [];
+
     for (const [dLat, dLon] of offsets) {
       const key = `${lat + dLat}:${normalizeLonDeg(lon + dLon)}`;
       const neighbor = index.get(key);
       if (neighbor) neighbors.push(neighbor);
     }
+
     return neighbors;
   }
 
@@ -92,18 +94,53 @@ export function createTopologyEngine() {
     for (const neighbor of neighbors) {
       total += neighbor.elevation ?? 0;
     }
+
     return total / neighbors.length;
+  }
+
+  function classifyTerrainClass(sample) {
+    const aboveSea = (sample.elevation ?? 0) > (sample.seaLevel ?? 0);
+
+    if (!aboveSea) {
+      if ((sample.elevation ?? 0) < (sample.seaLevel ?? 0) - 0.22) return "deep_ocean";
+      if ((sample.elevation ?? 0) < (sample.seaLevel ?? 0) - 0.08) return "ocean";
+      return "shelf";
+    }
+
+    if (sample.mountainMask > 0.62 && sample.cliffMask > 0.36) return "peak";
+    if (sample.mountainMask > 0.48) return "mountain";
+    if (sample.plateauMask > 0.46) return "plateau";
+    if (sample.canyonMask > 0.46) return "canyon";
+    if (sample.cliffMask > 0.42) return "cliff";
+    if (sample.valleyMask > 0.40) return "valley";
+    if (sample.basinStrength > 0.34) return "basin";
+    if (sample.ridgeStrength > 0.34) return "ridge";
+    return "plain";
+  }
+
+  function buildEmptyField() {
+    return Object.freeze({
+      samples: Object.freeze([]),
+      ridgeCandidates: Object.freeze([]),
+      basinCandidates: Object.freeze([]),
+      divideCandidates: Object.freeze([]),
+      watershedSeeds: Object.freeze([]),
+      summary: Object.freeze({
+        elevationAverage: 0,
+        slopeAverage: 0,
+        ridgeAverage: 0,
+        valleyAverage: 0,
+        mountainCount: 0,
+        basinCount: 0,
+        canyonCount: 0,
+        caveCandidateCount: 0
+      })
+    });
   }
 
   function buildTopologyField(terrainField) {
     if (!terrainField || !Array.isArray(terrainField.samples)) {
-      return Object.freeze({
-        samples: Object.freeze([]),
-        ridgeCandidates: Object.freeze([]),
-        basinCandidates: Object.freeze([]),
-        divideCandidates: Object.freeze([]),
-        watershedSeeds: Object.freeze([])
-      });
+      return buildEmptyField();
     }
 
     const samples = terrainField.samples;
@@ -114,6 +151,15 @@ export function createTopologyEngine() {
     const basinCandidates = [];
     const divideCandidates = [];
     const watershedSeeds = [];
+
+    let elevationTotal = 0;
+    let slopeTotal = 0;
+    let ridgeTotal = 0;
+    let valleyTotal = 0;
+    let mountainCount = 0;
+    let basinCount = 0;
+    let canyonCount = 0;
+    let caveCandidateCount = 0;
 
     const enrichedSamples = samples.map((sample) => {
       const elevation = sample.elevation ?? 0;
@@ -143,6 +189,53 @@ export function createTopologyEngine() {
       const divideStrength = clamp(ridgeStrength * continentMass, 0, 1);
       const watershedSeed = ridgeStrength > 0.55 && continentMass > 0.35;
 
+      const mountainMask = clamp(
+        ridgeStrength * 0.72 +
+          continentMass * 0.24 +
+          clamp((elevation - seaLevel) / 0.30, 0, 1) * 0.22,
+        0,
+        1
+      );
+
+      const cliffMask = clamp(
+        slope * 0.68 +
+          divideStrength * 0.18 +
+          Math.max(0, gradient) * 0.16,
+        0,
+        1
+      );
+
+      const valleyMask = clamp(
+        basinStrength * 0.72 +
+          Math.max(0, curvature) * 0.18,
+        0,
+        1
+      );
+
+      const canyonMask = clamp(
+        valleyMask * 0.52 +
+          cliffMask * 0.34 +
+          basinStrength * 0.20,
+        0,
+        1
+      );
+
+      const plateauMask = clamp(
+        continentMass * 0.30 +
+          clamp((elevation - seaLevel) / 0.26, 0, 1) * 0.34 +
+          clamp(0.42 - slope, 0, 0.42) * 0.72,
+        0,
+        1
+      );
+
+      const caveCandidateMask = clamp(
+        cliffMask * 0.42 +
+          canyonMask * 0.28 +
+          basinStrength * 0.12,
+        0,
+        1
+      );
+
       const enrichedSample = Object.freeze({
         latDeg: sample.latDeg,
         lonDeg: normalizeLonDeg(sample.lonDeg),
@@ -162,23 +255,58 @@ export function createTopologyEngine() {
         ridgeStrength,
         basinStrength,
         divideStrength,
-        watershedSeed
+        watershedSeed,
+        mountainMask,
+        cliffMask,
+        valleyMask,
+        canyonMask,
+        plateauMask,
+        caveCandidateMask,
+        terrainClass: ""
       });
 
-      if (ridgeStrength > 0.55) ridgeCandidates.push(enrichedSample);
-      if (basinStrength > 0.55) basinCandidates.push(enrichedSample);
-      if (divideStrength > 0.55) divideCandidates.push(enrichedSample);
-      if (watershedSeed) watershedSeeds.push(enrichedSample);
+      const terrainClass = classifyTerrainClass(enrichedSample);
+      const finalSample = Object.freeze({
+        ...enrichedSample,
+        terrainClass
+      });
 
-      return enrichedSample;
+      elevationTotal += elevation;
+      slopeTotal += slope;
+      ridgeTotal += ridgeStrength;
+      valleyTotal += valleyMask;
+
+      if (terrainClass === "peak" || terrainClass === "mountain") mountainCount += 1;
+      if (terrainClass === "basin" || terrainClass === "valley") basinCount += 1;
+      if (terrainClass === "canyon") canyonCount += 1;
+      if (caveCandidateMask > 0.50) caveCandidateCount += 1;
+
+      if (ridgeStrength > 0.55) ridgeCandidates.push(finalSample);
+      if (basinStrength > 0.55) basinCandidates.push(finalSample);
+      if (divideStrength > 0.55) divideCandidates.push(finalSample);
+      if (watershedSeed) watershedSeeds.push(finalSample);
+
+      return finalSample;
     });
+
+    const count = enrichedSamples.length || 1;
 
     return Object.freeze({
       samples: Object.freeze(enrichedSamples),
       ridgeCandidates: Object.freeze(ridgeCandidates),
       basinCandidates: Object.freeze(basinCandidates),
       divideCandidates: Object.freeze(divideCandidates),
-      watershedSeeds: Object.freeze(watershedSeeds)
+      watershedSeeds: Object.freeze(watershedSeeds),
+      summary: Object.freeze({
+        elevationAverage: elevationTotal / count,
+        slopeAverage: slopeTotal / count,
+        ridgeAverage: ridgeTotal / count,
+        valleyAverage: valleyTotal / count,
+        mountainCount,
+        basinCount,
+        canyonCount,
+        caveCandidateCount
+      })
     });
   }
 

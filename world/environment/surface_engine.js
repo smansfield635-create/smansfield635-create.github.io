@@ -317,35 +317,164 @@ function getTopologySample(topologyLookup, terrainSample) {
   return topologyLookup.get(`${terrainSample.latDeg}:${normalizeLonDeg(terrainSample.lonDeg)}`) ?? null;
 }
 
-function getTerrainTone(topologySample) {
-  if (!topologySample) {
-    return Object.freeze({
-      shadowAlpha: 0,
-      ridgeAlpha: 0,
-      valleyAlpha: 0,
-      cliffAlpha: 0,
-      canyonAlpha: 0,
-      plateauAlpha: 0,
-      summitAlpha: 0
-    });
+function getTerrainPalette(sample, topologySample) {
+  const shoreline = clamp(sample?.shoreline ?? 0, 0, 1);
+  const terrainClass = topologySample?.terrainClass ?? "plain";
+  const continentId = sample?.continentId ?? null;
+  const baseColor = getLandColor(continentId);
+  const edgeColor = getLandEdgeColor(continentId);
+  const highlightColor = getLandHighlight(continentId);
+
+  let fill = baseColor;
+  let shadow = "rgba(0,0,0,0.06)";
+  let ridge = "rgba(255,255,255,0.05)";
+  let canyon = "rgba(84,58,34,0.10)";
+  let line = edgeColor;
+
+  switch (terrainClass) {
+    case "peak":
+      fill = "#cdd0c7";
+      shadow = "rgba(0,0,0,0.16)";
+      ridge = "rgba(255,255,255,0.20)";
+      canyon = "rgba(120,102,86,0.18)";
+      line = "rgba(240,242,236,0.30)";
+      break;
+    case "mountain":
+      fill = "#9dad78";
+      shadow = "rgba(0,0,0,0.13)";
+      ridge = "rgba(255,255,255,0.12)";
+      canyon = "rgba(92,72,48,0.16)";
+      line = "rgba(226,238,204,0.22)";
+      break;
+    case "plateau":
+      fill = "#99b26e";
+      shadow = "rgba(0,0,0,0.09)";
+      ridge = "rgba(255,255,255,0.09)";
+      canyon = "rgba(90,72,48,0.10)";
+      line = "rgba(220,236,196,0.18)";
+      break;
+    case "cliff":
+      fill = "#8ea567";
+      shadow = "rgba(0,0,0,0.15)";
+      ridge = "rgba(255,255,255,0.08)";
+      canyon = "rgba(84,62,38,0.22)";
+      line = "rgba(214,230,186,0.16)";
+      break;
+    case "canyon":
+      fill = "#88a160";
+      shadow = "rgba(0,0,0,0.18)";
+      ridge = "rgba(255,255,255,0.05)";
+      canyon = "rgba(80,52,28,0.30)";
+      line = "rgba(204,224,176,0.14)";
+      break;
+    case "valley":
+      fill = "#83b25e";
+      shadow = "rgba(0,0,0,0.12)";
+      ridge = "rgba(255,255,255,0.05)";
+      canyon = "rgba(90,68,40,0.10)";
+      line = "rgba(216,236,188,0.16)";
+      break;
+    case "basin":
+      fill = "#79aa57";
+      shadow = "rgba(0,0,0,0.12)";
+      ridge = "rgba(255,255,255,0.05)";
+      canyon = "rgba(84,64,36,0.10)";
+      line = "rgba(206,226,178,0.15)";
+      break;
+    case "ridge":
+      fill = "#92b868";
+      shadow = "rgba(0,0,0,0.10)";
+      ridge = "rgba(255,255,255,0.10)";
+      canyon = "rgba(88,66,40,0.12)";
+      line = "rgba(220,236,192,0.18)";
+      break;
+    default:
+      break;
   }
 
-  const elevation = clamp(topologySample.elevation ?? 0, -1, 1);
-  const slope = clamp(topologySample.slope ?? 0, 0, 1);
-  const ridge = clamp(topologySample.ridgeStrength ?? 0, 0, 1);
-  const valley = clamp(topologySample.valleyStrength ?? 0, 0, 1);
-  const cliff = clamp(topologySample.cliffPotential ?? 0, 0, 1);
-  const canyon = clamp(topologySample.canyonPotential ?? 0, 0, 1);
-  const plateau = clamp(topologySample.plateauPotential ?? 0, 0, 1);
+  if (shoreline > 0.14) {
+    line = `rgba(225,245,200,${(0.08 + shoreline * 0.16).toFixed(3)})`;
+  }
 
   return Object.freeze({
-    shadowAlpha: clamp(0.03 + slope * 0.10 + Math.max(0, elevation) * 0.05, 0, 0.18),
-    ridgeAlpha: clamp(ridge * 0.18, 0, 0.20),
-    valleyAlpha: clamp(valley * 0.15, 0, 0.18),
-    cliffAlpha: clamp(cliff * 0.16, 0, 0.18),
-    canyonAlpha: clamp(canyon * 0.17, 0, 0.20),
-    plateauAlpha: clamp(plateau * 0.08, 0, 0.10),
-    summitAlpha: clamp(Math.max(0, elevation - 0.72) * 0.40, 0, 0.10)
+    fill,
+    shadow,
+    ridge,
+    canyon,
+    line,
+    highlightColor
+  });
+}
+
+function getTerrainShape(sample, topologySample, radius) {
+  const emergentHeight = clamp((sample.elevation - sample.seaLevel) / 0.24, 0, 1);
+  const slope = clamp(topologySample?.slope ?? 0, 0, 1);
+  const ridgeStrength = clamp(topologySample?.ridgeStrength ?? 0, 0, 1);
+  const basinStrength = clamp(topologySample?.basinStrength ?? 0, 0, 1);
+  const mountainMask = clamp(topologySample?.mountainMask ?? 0, 0, 1);
+  const cliffMask = clamp(topologySample?.cliffMask ?? 0, 0, 1);
+  const valleyMask = clamp(topologySample?.valleyMask ?? 0, 0, 1);
+  const canyonMask = clamp(topologySample?.canyonMask ?? 0, 0, 1);
+  const plateauMask = clamp(topologySample?.plateauMask ?? 0, 0, 1);
+
+  const bodyRadius =
+    radius *
+    (
+      0.014 +
+      emergentHeight * 0.016 +
+      mountainMask * 0.010 +
+      plateauMask * 0.004 -
+      basinStrength * 0.003
+    );
+
+  const stretchX =
+    1.06 +
+    ridgeStrength * 0.22 +
+    plateauMask * 0.10 -
+    canyonMask * 0.06;
+
+  const stretchY =
+    0.94 +
+    mountainMask * 0.18 +
+    cliffMask * 0.10 +
+    valleyMask * 0.06;
+
+  const shadowAlpha = clamp(
+    0.06 +
+      slope * 0.11 +
+      cliffMask * 0.08 +
+      canyonMask * 0.06,
+    0,
+    0.30
+  );
+
+  const highlightAlpha = clamp(
+    0.04 +
+      ridgeStrength * 0.10 +
+      mountainMask * 0.14 +
+      plateauMask * 0.06,
+    0,
+    0.28
+  );
+
+  const lowlandAlpha = clamp(
+    basinStrength * 0.10 + valleyMask * 0.06,
+    0,
+    0.20
+  );
+
+  return Object.freeze({
+    bodyRadius,
+    stretchX,
+    stretchY,
+    shadowAlpha,
+    highlightAlpha,
+    lowlandAlpha,
+    cliffMask,
+    canyonMask,
+    valleyMask,
+    ridgeStrength,
+    plateauMask
   });
 }
 
@@ -410,7 +539,7 @@ export function createSurfaceEngine() {
   }
 
   function drawLatitudeBands(ctx, projector) {
-    ctx.strokeStyle = "rgba(255,255,255,0.040)";
+    ctx.strokeStyle = "rgba(255,255,255,0.026)";
     ctx.lineWidth = 1;
 
     for (let latDeg = -60; latDeg <= 60; latDeg += 20) {
@@ -438,7 +567,7 @@ export function createSurfaceEngine() {
   }
 
   function drawLongitudeBands(ctx, projector) {
-    ctx.strokeStyle = "rgba(190,220,255,0.028)";
+    ctx.strokeStyle = "rgba(190,220,255,0.020)";
     ctx.lineWidth = 1;
 
     for (let lonDeg = 0; lonDeg < 360; lonDeg += 20) {
@@ -465,7 +594,7 @@ export function createSurfaceEngine() {
     }
   }
 
-  function drawLandSamples(ctx, projector, terrainField, topologyField) {
+  function drawLandBodies(ctx, projector, terrainField, topologyField) {
     if (!terrainField || !Array.isArray(terrainField.samples)) return;
 
     const radius = projector.state.radius;
@@ -473,145 +602,123 @@ export function createSurfaceEngine() {
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(projector.state.centerX, projector.state.centerY, radius * 1.03, 0, Math.PI * 2);
+    ctx.arc(projector.state.centerX, projector.state.centerY, radius * 1.04, 0, Math.PI * 2);
     ctx.clip();
 
     for (const sample of terrainField.samples) {
       if (!sample.visible) continue;
       if (sample.terrain !== "LAND") continue;
 
-      const emergentHeight = clamp((sample.elevation - sample.seaLevel) / 0.24, 0, 1);
-      const sampleRadius = radius * (0.011 + emergentHeight * 0.010);
       const topologySample = getTopologySample(topologyLookup, sample);
-      const tone = getTerrainTone(topologySample);
+      const palette = getTerrainPalette(sample, topologySample);
+      const shape = getTerrainShape(sample, topologySample, radius);
 
-      ctx.beginPath();
-      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = getLandColor(sample.continentId);
-      ctx.fill();
+      ctx.save();
+      ctx.translate(sample.x, sample.y);
+      ctx.scale(shape.stretchX, shape.stretchY);
 
-      if (tone.shadowAlpha > 0) {
-        const shadow = ctx.createRadialGradient(
-          sample.x + sampleRadius * 0.22,
-          sample.y + sampleRadius * 0.26,
-          sampleRadius * 0.12,
-          sample.x,
-          sample.y,
-          sampleRadius * 1.10
-        );
-        shadow.addColorStop(0, `rgba(0,0,0,${tone.shadowAlpha * 0.35})`);
-        shadow.addColorStop(0.75, `rgba(0,0,0,${tone.shadowAlpha})`);
-        shadow.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 1.04, 0, Math.PI * 2);
-        ctx.fillStyle = shadow;
-        ctx.fill();
-      }
-
-      if (sample.shoreline > 0.05) {
-        ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 1.07, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(225,245,200,${0.06 + sample.shoreline * 0.12})`;
-        ctx.lineWidth = 0.65;
-        ctx.stroke();
-      }
-
-      const highlight = ctx.createRadialGradient(
-        sample.x - sampleRadius * 0.30,
-        sample.y - sampleRadius * 0.30,
-        sampleRadius * 0.08,
-        sample.x,
-        sample.y,
-        sampleRadius
+      const shadow = ctx.createRadialGradient(
+        shape.bodyRadius * 0.18,
+        shape.bodyRadius * 0.20,
+        shape.bodyRadius * 0.08,
+        0,
+        0,
+        shape.bodyRadius * 1.22
       );
-
-      highlight.addColorStop(0, getLandHighlight(sample.continentId));
-      highlight.addColorStop(0.6, "rgba(255,255,255,0.00)");
-      highlight.addColorStop(1, "rgba(0,0,0,0.04)");
+      shadow.addColorStop(0, `rgba(0,0,0,${(shape.shadowAlpha * 0.10).toFixed(3)})`);
+      shadow.addColorStop(0.74, palette.shadow.replace(/0\.\d+|\d+\.\d+|\d+\)/, `${shape.shadowAlpha.toFixed(3)})`));
+      shadow.addColorStop(1, "rgba(0,0,0,0)");
 
       ctx.beginPath();
-      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
-      ctx.fillStyle = highlight;
+      ctx.arc(0, 0, shape.bodyRadius * 1.06, 0, Math.PI * 2);
+      ctx.fillStyle = shadow;
       ctx.fill();
 
-      if (tone.ridgeAlpha > 0 || tone.plateauAlpha > 0 || tone.summitAlpha > 0) {
-        const crest = ctx.createRadialGradient(
-          sample.x - sampleRadius * 0.26,
-          sample.y - sampleRadius * 0.28,
-          sampleRadius * 0.05,
-          sample.x - sampleRadius * 0.08,
-          sample.y - sampleRadius * 0.10,
-          sampleRadius * 0.62
-        );
-        crest.addColorStop(
-          0,
-          `rgba(255,255,255,${tone.ridgeAlpha * 0.45 + tone.plateauAlpha * 0.35 + tone.summitAlpha})`
-        );
-        crest.addColorStop(
-          0.45,
-          `rgba(245,255,235,${tone.ridgeAlpha * 0.24 + tone.plateauAlpha * 0.18})`
-        );
-        crest.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.arc(0, 0, shape.bodyRadius, 0, Math.PI * 2);
+      ctx.fillStyle = palette.fill;
+      ctx.fill();
+
+      if (shape.lowlandAlpha > 0.01) {
         ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 0.95, 0, Math.PI * 2);
-        ctx.fillStyle = crest;
+        ctx.arc(0, shape.bodyRadius * 0.08, shape.bodyRadius * 0.92, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(58,84,40,${shape.lowlandAlpha.toFixed(3)})`;
         ctx.fill();
       }
 
-      if (tone.valleyAlpha > 0 || tone.canyonAlpha > 0 || tone.cliffAlpha > 0) {
+      const crest = ctx.createRadialGradient(
+        -shape.bodyRadius * 0.28,
+        -shape.bodyRadius * 0.30,
+        shape.bodyRadius * 0.04,
+        -shape.bodyRadius * 0.08,
+        -shape.bodyRadius * 0.10,
+        shape.bodyRadius * 0.70
+      );
+      crest.addColorStop(0, `rgba(255,255,255,${shape.highlightAlpha.toFixed(3)})`);
+      crest.addColorStop(0.42, palette.ridge);
+      crest.addColorStop(1, "rgba(255,255,255,0)");
+
+      ctx.beginPath();
+      ctx.arc(0, 0, shape.bodyRadius * 0.96, 0, Math.PI * 2);
+      ctx.fillStyle = crest;
+      ctx.fill();
+
+      if (shape.cliffMask > 0.06 || shape.canyonMask > 0.06) {
         const relief = ctx.createLinearGradient(
-          sample.x - sampleRadius * 0.8,
-          sample.y - sampleRadius * 0.4,
-          sample.x + sampleRadius * 0.8,
-          sample.y + sampleRadius * 0.6
+          -shape.bodyRadius * 0.92,
+          -shape.bodyRadius * 0.34,
+          shape.bodyRadius * 0.90,
+          shape.bodyRadius * 0.72
         );
-        relief.addColorStop(
-          0,
-          `rgba(255,255,255,${tone.cliffAlpha * 0.18 + tone.plateauAlpha * 0.08})`
-        );
-        relief.addColorStop(
-          0.45,
-          `rgba(0,0,0,${tone.valleyAlpha * 0.12 + tone.canyonAlpha * 0.10})`
-        );
-        relief.addColorStop(
-          1,
-          `rgba(0,0,0,${tone.cliffAlpha * 0.18 + tone.canyonAlpha * 0.22})`
-        );
+        relief.addColorStop(0, `rgba(255,255,255,${(shape.cliffMask * 0.10 + shape.plateauMask * 0.06).toFixed(3)})`);
+        relief.addColorStop(0.48, `rgba(0,0,0,${(shape.valleyMask * 0.08).toFixed(3)})`);
+        relief.addColorStop(1, palette.canyon);
+
         ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 0.98, 0, Math.PI * 2);
+        ctx.arc(0, 0, shape.bodyRadius * 0.98, 0, Math.PI * 2);
         ctx.fillStyle = relief;
         ctx.fill();
       }
 
-      if (emergentHeight > 0.55) {
+      if ((sample.shoreline ?? 0) > 0.04) {
         ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 0.42, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255,0.035)";
+        ctx.arc(0, 0, shape.bodyRadius * 1.04, 0, Math.PI * 2);
+        ctx.strokeStyle = palette.line;
+        ctx.lineWidth = 0.60;
+        ctx.stroke();
+      }
+
+      if (topologySample?.terrainClass === "cliff" || topologySample?.terrainClass === "peak") {
+        ctx.beginPath();
+        ctx.arc(0, 0, shape.bodyRadius * 0.96, Math.PI * 0.14, Math.PI * 0.82);
+        ctx.strokeStyle = `rgba(100,78,46,${(0.12 + shape.cliffMask * 0.24).toFixed(3)})`;
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+      }
+
+      if (topologySample?.terrainClass === "canyon") {
+        ctx.beginPath();
+        ctx.arc(0, 0, shape.bodyRadius * 0.52, Math.PI * 1.06, Math.PI * 1.88);
+        ctx.strokeStyle = `rgba(76,48,28,${(0.16 + shape.canyonMask * 0.24).toFixed(3)})`;
+        ctx.lineWidth = 0.78;
+        ctx.stroke();
+      }
+
+      if (topologySample?.terrainClass === "peak") {
+        ctx.beginPath();
+        ctx.arc(-shape.bodyRadius * 0.08, -shape.bodyRadius * 0.14, shape.bodyRadius * 0.22, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.20)";
         ctx.fill();
       }
 
-      if (topologySample?.terrainType === "cliff") {
-        ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 1.02, Math.PI * 0.15, Math.PI * 0.80);
-        ctx.strokeStyle = `rgba(110,80,46,${0.10 + tone.cliffAlpha * 0.35})`;
-        ctx.lineWidth = 0.9;
-        ctx.stroke();
-      }
-
-      if (topologySample?.terrainType === "canyon") {
-        ctx.beginPath();
-        ctx.arc(sample.x, sample.y, sampleRadius * 0.52, Math.PI * 1.10, Math.PI * 1.85);
-        ctx.strokeStyle = `rgba(88,56,32,${0.14 + tone.canyonAlpha * 0.30})`;
-        ctx.lineWidth = 0.75;
-        ctx.stroke();
-      }
+      ctx.restore();
     }
 
     ctx.restore();
   }
 
   function renderBase(ctx, projector, runtime, state, terrainField, topologyField) {
-    drawLandSamples(ctx, projector, terrainField, topologyField);
+    drawLandBodies(ctx, projector, terrainField, topologyField);
     drawLatitudeBands(ctx, projector);
     drawLongitudeBands(ctx, projector);
   }
@@ -637,17 +744,12 @@ export function createSurfaceEngine() {
     ctx.stroke();
 
     if (topologyField && Array.isArray(topologyField.samples)) {
-      const visibleCount = topologyField.samples.reduce(
-        (total, sample) => total + (sample.visible ? 1 : 0),
-        0
-      );
-
-      if (visibleCount > 0) {
-        ctx.fillStyle = "rgba(255,255,255,0.55)";
-        ctx.font = "11px system-ui, sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText(`Topo ${visibleCount}`, x + cellWidth - 6, y + cellHeight - 6);
-      }
+      const summary = topologyField.summary ?? {};
+      ctx.fillStyle = "rgba(255,255,255,0.60)";
+      ctx.font = "11px system-ui, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(`Topo ${topologyField.samples.length}`, x + cellWidth - 6, y + cellHeight - 18);
+      ctx.fillText(`M ${summary.mountainCount ?? 0}`, x + cellWidth - 6, y + cellHeight - 6);
     }
 
     ctx.restore();

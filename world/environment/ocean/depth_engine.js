@@ -27,8 +27,12 @@ export function createDepthEngine() {
     ctx.fill();
   }
 
+  function getWaterDepth(sample) {
+    return clamp(sample.seaLevel - sample.elevation, 0, 1);
+  }
+
   function getWaterDepthBand(sample) {
-    const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+    const waterDepth = getWaterDepth(sample);
 
     if (waterDepth < 0.025) return "shore";
     if (waterDepth < 0.09) return "upper_shelf";
@@ -49,8 +53,19 @@ export function createDepthEngine() {
     return "rgba(3,23,72,0.18)";
   }
 
+  function getWaterRadiusOffsetPx(baseRadius, sample) {
+    const waterDepth = getWaterDepth(sample);
+
+    if (waterDepth < 0.025) return -baseRadius * 0.004;
+    if (waterDepth < 0.09) return -baseRadius * 0.009;
+    if (waterDepth < 0.18) return -baseRadius * 0.015;
+    if (waterDepth < 0.32) return -baseRadius * 0.022;
+    if (waterDepth < 0.52) return -baseRadius * 0.031;
+    return -baseRadius * 0.042;
+  }
+
   function getWaterRadius(radius, sample) {
-    const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+    const waterDepth = getWaterDepth(sample);
 
     if (waterDepth < 0.025) return radius * 0.026;
     if (waterDepth < 0.09) return radius * 0.023;
@@ -60,7 +75,7 @@ export function createDepthEngine() {
     return radius * 0.015;
   }
 
-  function drawDepthSamples(ctx, terrainField, radius) {
+  function drawDepthSamples(ctx, projector, terrainField, radius) {
     if (!terrainField || !Array.isArray(terrainField.samples)) return;
 
     ctx.save();
@@ -69,8 +84,16 @@ export function createDepthEngine() {
       if (!sample.visible) continue;
       if (sample.terrain !== "OCEAN") continue;
 
+      const projected = projector.projectSphereWithOffset(
+        (sample.lonDeg * Math.PI) / 180,
+        (sample.latDeg * Math.PI) / 180,
+        getWaterRadiusOffsetPx(radius, sample)
+      );
+
+      if (!projected.visible) continue;
+
       ctx.beginPath();
-      ctx.arc(sample.x, sample.y, getWaterRadius(radius, sample), 0, Math.PI * 2);
+      ctx.arc(projected.x, projected.y, getWaterRadius(radius, sample), 0, Math.PI * 2);
       ctx.fillStyle = getWaterColor(sample);
       ctx.fill();
     }
@@ -78,7 +101,7 @@ export function createDepthEngine() {
     ctx.restore();
   }
 
-  function drawShelfGlow(ctx, terrainField, radius) {
+  function drawShelfGlow(ctx, projector, terrainField, radius) {
     if (!terrainField || !Array.isArray(terrainField.samples)) return;
 
     ctx.save();
@@ -87,18 +110,26 @@ export function createDepthEngine() {
       if (!sample.visible) continue;
       if (sample.terrain !== "OCEAN") continue;
 
-      const waterDepth = clamp(sample.seaLevel - sample.elevation, 0, 1);
+      const waterDepth = getWaterDepth(sample);
       if (waterDepth > 0.11) continue;
+
+      const projected = projector.projectSphereWithOffset(
+        (sample.lonDeg * Math.PI) / 180,
+        (sample.latDeg * Math.PI) / 180,
+        getWaterRadiusOffsetPx(radius, sample)
+      );
+
+      if (!projected.visible) continue;
 
       const alpha = 0.05 + (1 - clamp(waterDepth / 0.11, 0, 1)) * 0.14;
       const glowRadius = radius * (0.020 + (0.11 - waterDepth) * 0.10);
 
       const gradient = ctx.createRadialGradient(
-        sample.x,
-        sample.y,
+        projected.x,
+        projected.y,
         glowRadius * 0.16,
-        sample.x,
-        sample.y,
+        projected.x,
+        projected.y,
         glowRadius * 1.9
       );
 
@@ -107,7 +138,7 @@ export function createDepthEngine() {
       gradient.addColorStop(1.00, "rgba(90,242,231,0)");
 
       ctx.beginPath();
-      ctx.arc(sample.x, sample.y, glowRadius * 1.9, 0, Math.PI * 2);
+      ctx.arc(projected.x, projected.y, glowRadius * 1.9, 0, Math.PI * 2);
       ctx.fillStyle = gradient;
       ctx.fill();
     }
@@ -206,8 +237,8 @@ export function createDepthEngine() {
     const { centerX, centerY, radius } = projector.state;
 
     drawBaseOceanBody(ctx, centerX, centerY, radius);
-    drawDepthSamples(ctx, terrainField, radius);
-    drawShelfGlow(ctx, terrainField, radius);
+    drawDepthSamples(ctx, projector, terrainField, radius);
+    drawShelfGlow(ctx, projector, terrainField, radius);
     drawDepthFalloff(ctx, centerX, centerY, radius);
     drawAbyssBias(ctx, centerX, centerY, radius);
     drawSpecularSheen(ctx, centerX, centerY, radius);

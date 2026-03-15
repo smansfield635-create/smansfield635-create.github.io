@@ -1,5 +1,5 @@
 export function createCurrentEngine() {
-  function render(ctx, projector, runtime, state) {
+  function render(ctx, projector, runtime, state, terrainField) {
     const { centerX, centerY, radius } = projector.state;
     const wave = 0.5 + 0.5 * Math.sin(state.time * 0.0014);
 
@@ -9,6 +9,7 @@ export function createCurrentEngine() {
 
     for (let i = 0; i < 4; i += 1) {
       const y = centerY + (i - 1.3) * radius * 0.11;
+
       ctx.beginPath();
       ctx.arc(
         centerX,
@@ -32,6 +33,7 @@ export function createCurrentEngine() {
     ctx.strokeStyle = "rgba(255,255,255,0.48)";
     ctx.lineWidth = 0.95;
     ctx.stroke();
+
     ctx.restore();
   }
 

@@ -1,5 +1,13 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function wrapAngle(value) {
+  return Math.atan2(Math.sin(value), Math.cos(value));
+}
+
 export function createPlanetSurfaceProjector() {
   let yaw = WORLD_KERNEL.constants.initialYaw;
   let pitch = WORLD_KERNEL.constants.initialPitch;
@@ -23,11 +31,11 @@ export function createPlanetSurfaceProjector() {
   }
 
   function clampPitch() {
-    pitch = Math.max(WORLD_KERNEL.constants.minPitch, Math.min(WORLD_KERNEL.constants.maxPitch, pitch));
+    pitch = clamp(pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
   }
 
   function applyDrag(deltaX, deltaY) {
-    yaw += deltaX * WORLD_KERNEL.constants.dragSensitivity;
+    yaw = wrapAngle(yaw + deltaX * WORLD_KERNEL.constants.dragSensitivity);
     pitch += deltaY * WORLD_KERNEL.constants.dragSensitivity;
     yawVelocity = deltaX * WORLD_KERNEL.constants.dragSensitivity * 0.45;
     pitchVelocity = deltaY * WORLD_KERNEL.constants.dragSensitivity * 0.45;
@@ -35,11 +43,21 @@ export function createPlanetSurfaceProjector() {
   }
 
   function stepInertia() {
-    yaw += yawVelocity;
+    yaw = wrapAngle(yaw + yawVelocity);
     pitch += pitchVelocity;
     yawVelocity *= WORLD_KERNEL.constants.inertiaDecay;
     pitchVelocity *= WORLD_KERNEL.constants.inertiaDecay;
     clampPitch();
+  }
+
+  function getBasis() {
+    const cosPitch = Math.cos(pitch);
+    const sinPitch = Math.sin(pitch);
+
+    return Object.freeze({
+      cosPitch,
+      sinPitch
+    });
   }
 
   function projectSphere(lon, lat) {
@@ -47,8 +65,7 @@ export function createPlanetSurfaceProjector() {
     const sinLat = Math.sin(lat);
     const cosLon = Math.cos(lon + yaw);
     const sinLon = Math.sin(lon + yaw);
-    const cosPitch = Math.cos(pitch);
-    const sinPitch = Math.sin(pitch);
+    const { cosPitch, sinPitch } = getBasis();
 
     const x = cosLat * sinLon;
     const y0 = sinLat;
@@ -57,16 +74,91 @@ export function createPlanetSurfaceProjector() {
     const y = y0 * cosPitch - z0 * sinPitch;
     const z = y0 * sinPitch + z0 * cosPitch;
 
-    return {
+    return Object.freeze({
       x: state.centerX + x * state.radius,
       y: state.centerY - y * state.radius,
       z,
-      visible: z >= 0
-    };
+      visible: z >= 0,
+      horizonExcluded: z < 0
+    });
+  }
+
+  function screenPointToNormalizedBody(x, y) {
+    const dx = (x - state.centerX) / state.radius;
+    const dy = -(y - state.centerY) / state.radius;
+    const distanceSquared = dx * dx + dy * dy;
+
+    if (distanceSquared > 1) {
+      return null;
+    }
+
+    const dz = Math.sqrt(Math.max(0, 1 - distanceSquared));
+
+    return Object.freeze({
+      x: dx,
+      y: dy,
+      z: dz,
+      visible: dz >= 0
+    });
+  }
+
+  function bodyPointToLonLat(bodyPoint) {
+    if (!bodyPoint) return null;
+
+    const { cosPitch, sinPitch } = getBasis();
+    const x = bodyPoint.x;
+    const y = bodyPoint.y * cosPitch + bodyPoint.z * sinPitch;
+    const z = -bodyPoint.y * sinPitch + bodyPoint.z * cosPitch;
+
+    const lon = wrapAngle(Math.atan2(x, z) - yaw);
+    const lat = Math.asin(clamp(y, -1, 1));
+
+    return Object.freeze({ lon, lat });
+  }
+
+  function inverseProject(screenX, screenY) {
+    const bodyPoint = screenPointToNormalizedBody(screenX, screenY);
+    if (!bodyPoint) return null;
+
+    const lonLat = bodyPointToLonLat(bodyPoint);
+    if (!lonLat) return null;
+
+    return Object.freeze({
+      screenX,
+      screenY,
+      bodyPoint,
+      lon: lonLat.lon,
+      lat: lonLat.lat,
+      visible: bodyPoint.visible,
+      horizonExcluded: !bodyPoint.visible
+    });
+  }
+
+  function lonLatToSurfaceCoordinates(lon, lat) {
+    const normalizedLon = (wrapAngle(lon) + Math.PI) / (Math.PI * 2);
+    const normalizedLat = (lat + Math.PI / 2) / Math.PI;
+
+    return Object.freeze({
+      u: clamp(normalizedLon, 0, 1),
+      v: clamp(1 - normalizedLat, 0, 1)
+    });
+  }
+
+  function surfaceCoordinatesToLocalCell(surfaceCoordinates) {
+    const row = clamp(Math.floor(surfaceCoordinates.v * 4), 0, 3);
+    const col = clamp(Math.floor(surfaceCoordinates.u * 4), 0, 3);
+    const cellIndex = row * 4 + col;
+
+    return Object.freeze({
+      row,
+      col,
+      cellIndex,
+      cellId: WORLD_KERNEL.localGrid.cellIds[cellIndex]
+    });
   }
 
   function getCardinalWeights() {
-    const normalizedYaw = Math.atan2(Math.sin(yaw), Math.cos(yaw));
+    const normalizedYaw = wrapAngle(yaw);
     const north = Math.max(0, Math.cos(pitch));
     const south = Math.max(0, -Math.sin(pitch));
     const east = Math.max(0, Math.sin(normalizedYaw));
@@ -96,16 +188,53 @@ export function createPlanetSurfaceProjector() {
   }
 
   function getProjectionSummary() {
-    const bandIndex = Math.max(0, Math.min(7, Math.floor(((pitch + Math.PI / 2) / Math.PI) * 8)));
-    const sectorIndex = Math.max(0, Math.min(7, Math.floor(((yaw + Math.PI) / (Math.PI * 2)) * 8)));
-    const cellId = `B${bandIndex}-S${sectorIndex}`;
-    const stateByte = bandIndex * 16 + sectorIndex;
+    const bandIndex = clamp(Math.floor(((pitch + Math.PI / 2) / Math.PI) * 4), 0, 3);
+    const sectorIndex = clamp(Math.floor(((wrapAngle(yaw) + Math.PI) / (Math.PI * 2)) * 4), 0, 3);
+    const cellIndex = bandIndex * 4 + sectorIndex;
 
     return Object.freeze({
-      cellId,
+      cellId: WORLD_KERNEL.localGrid.cellIds[cellIndex],
       sector: sectorIndex,
       bandIndex,
-      stateByte
+      stateByte: cellIndex,
+      row: bandIndex,
+      col: sectorIndex,
+      cellIndex
+    });
+  }
+
+  function getOrbitalViewState() {
+    return Object.freeze({
+      centerX: state.centerX,
+      centerY: state.centerY,
+      radius: state.radius,
+      fullCircle: true
+    });
+  }
+
+  function attachBodyRelative(lon, lat) {
+    const projected = projectSphere(lon, lat);
+    const surface = lonLatToSurfaceCoordinates(lon, lat);
+    const localCell = surfaceCoordinatesToLocalCell(surface);
+
+    return Object.freeze({
+      projected,
+      surface,
+      localCell
+    });
+  }
+
+  function getWorldStateHandoff(screenX = state.centerX, screenY = state.centerY) {
+    const inverse = inverseProject(screenX, screenY);
+    const summary = getProjectionSummary();
+
+    return Object.freeze({
+      body: getOrbitalViewState(),
+      orientation: getOrientation(),
+      cardinals: getCardinalWeights(),
+      projection: summary,
+      inverse,
+      fullCircle: true
     });
   }
 
@@ -115,8 +244,14 @@ export function createPlanetSurfaceProjector() {
     applyDrag,
     stepInertia,
     projectSphere,
+    inverseProject,
+    lonLatToSurfaceCoordinates,
+    surfaceCoordinatesToLocalCell,
     getCardinalWeights,
     getOrientation,
-    getProjectionSummary
+    getProjectionSummary,
+    getOrbitalViewState,
+    attachBodyRelative,
+    getWorldStateHandoff
   });
 }

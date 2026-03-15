@@ -22,40 +22,40 @@ export function createDepthEngine() {
     const lonRad = toRad(lonDeg);
 
     const base =
-      0.6 +
-      0.22 * Math.sin(latRad * 2.0) +
-      0.08 * Math.cos(lonRad * 1.7) +
-      (noise(latDeg, lonDeg) - 0.5) * 0.16;
+      0.58 +
+      0.22 * Math.sin(latRad * 2.1) +
+      0.10 * Math.cos(lonRad * 1.45) +
+      (noise(latDeg, lonDeg) - 0.5) * 0.18;
 
     return clamp(base, 0, 1);
   }
 
   function getDepthColor(depth) {
-    if (depth < 0.22) return "rgba(116,243,230,0.20)";
-    if (depth < 0.38) return "rgba(62,224,214,0.16)";
-    if (depth < 0.56) return "rgba(35,198,216,0.13)";
-    if (depth < 0.74) return "rgba(22,143,200,0.11)";
-    if (depth < 0.90) return "rgba(11,93,167,0.10)";
-    return "rgba(2,21,63,0.14)";
+    if (depth < 0.18) return "rgba(115,255,240,0.34)";
+    if (depth < 0.34) return "rgba(74,244,233,0.26)";
+    if (depth < 0.52) return "rgba(44,212,229,0.19)";
+    if (depth < 0.70) return "rgba(20,160,221,0.15)";
+    if (depth < 0.86) return "rgba(12,98,186,0.13)";
+    return "rgba(3,24,74,0.16)";
   }
 
   function drawBaseOceanBody(ctx, centerX, centerY, radius) {
     const baseGradient = ctx.createRadialGradient(
-      centerX - radius * 0.28,
-      centerY - radius * 0.24,
+      centerX - radius * 0.30,
+      centerY - radius * 0.26,
       radius * 0.04,
-      centerX + radius * 0.10,
+      centerX + radius * 0.08,
       centerY + radius * 0.10,
-      radius * 1.02
+      radius * 1.04
     );
 
-    baseGradient.addColorStop(0.00, "#74f3e6");
-    baseGradient.addColorStop(0.10, "#3ce0d6");
-    baseGradient.addColorStop(0.22, "#23c6d8");
-    baseGradient.addColorStop(0.40, "#168fc8");
-    baseGradient.addColorStop(0.60, "#0b5da7");
-    baseGradient.addColorStop(0.82, "#06346f");
-    baseGradient.addColorStop(1.00, "#02153f");
+    baseGradient.addColorStop(0.00, "#7affef");
+    baseGradient.addColorStop(0.10, "#49f1e7");
+    baseGradient.addColorStop(0.22, "#22d7e7");
+    baseGradient.addColorStop(0.40, "#1798d4");
+    baseGradient.addColorStop(0.62, "#0d61b1");
+    baseGradient.addColorStop(0.84, "#063978");
+    baseGradient.addColorStop(1.00, "#021743");
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -74,7 +74,7 @@ export function createDepthEngine() {
 
       const depth = getDepthLevel(sample.latDeg, sample.lonDeg);
       const sampleRadius =
-        radius * (depth < 0.28 ? 0.022 : depth < 0.64 ? 0.018 : 0.015);
+        radius * (depth < 0.24 ? 0.024 : depth < 0.62 ? 0.019 : 0.016);
 
       ctx.beginPath();
       ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
@@ -85,42 +85,55 @@ export function createDepthEngine() {
     ctx.restore();
   }
 
-  function drawShelfGradient(ctx, centerX, centerY, radius) {
-    const shelfGradient = ctx.createRadialGradient(
-      centerX - radius * 0.18,
-      centerY - radius * 0.14,
-      radius * 0.03,
-      centerX - radius * 0.02,
-      centerY - radius * 0.02,
-      radius * 0.92
-    );
+  function drawShelfGlow(ctx, terrainField, radius) {
+    if (!terrainField || !Array.isArray(terrainField.samples)) return;
 
-    shelfGradient.addColorStop(0.00, "rgba(150,255,242,0.18)");
-    shelfGradient.addColorStop(0.16, "rgba(92,245,232,0.12)");
-    shelfGradient.addColorStop(0.36, "rgba(42,212,223,0.07)");
-    shelfGradient.addColorStop(0.62, "rgba(15,130,205,0.03)");
-    shelfGradient.addColorStop(1.00, "rgba(0,0,0,0)");
+    ctx.save();
 
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.992, 0, Math.PI * 2);
-    ctx.fillStyle = shelfGradient;
-    ctx.fill();
+    for (const sample of terrainField.samples) {
+      if (!sample.visible) continue;
+      if (sample.terrain !== "LAND") continue;
+      if (!(sample.shoreline > 0.04)) continue;
+
+      const glowRadius = radius * 0.018;
+      const alpha = 0.04 + sample.shoreline * 0.10;
+
+      const gradient = ctx.createRadialGradient(
+        sample.x,
+        sample.y,
+        glowRadius * 0.15,
+        sample.x,
+        sample.y,
+        glowRadius * 1.9
+      );
+
+      gradient.addColorStop(0.00, `rgba(145,255,242,${alpha})`);
+      gradient.addColorStop(0.45, `rgba(88,240,230,${alpha * 0.75})`);
+      gradient.addColorStop(1.00, "rgba(88,240,230,0)");
+
+      ctx.beginPath();
+      ctx.arc(sample.x, sample.y, glowRadius * 1.9, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 
   function drawDepthFalloff(ctx, centerX, centerY, radius) {
     const falloff = ctx.createRadialGradient(
       centerX,
       centerY,
-      radius * 0.26,
+      radius * 0.22,
       centerX,
       centerY,
       radius
     );
 
     falloff.addColorStop(0.00, "rgba(0,0,0,0)");
-    falloff.addColorStop(0.56, "rgba(0,0,0,0.04)");
-    falloff.addColorStop(0.82, "rgba(0,0,0,0.13)");
-    falloff.addColorStop(1.00, "rgba(0,0,0,0.24)");
+    falloff.addColorStop(0.52, "rgba(0,0,0,0.03)");
+    falloff.addColorStop(0.78, "rgba(0,0,0,0.11)");
+    falloff.addColorStop(1.00, "rgba(0,0,0,0.23)");
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -128,19 +141,38 @@ export function createDepthEngine() {
     ctx.fill();
   }
 
-  function drawSpecularSheen(ctx, centerX, centerY, radius) {
-    const sheen = ctx.createRadialGradient(
-      centerX - radius * 0.30,
-      centerY - radius * 0.24,
-      radius * 0.02,
-      centerX - radius * 0.16,
-      centerY - radius * 0.12,
-      radius * 0.58
+  function drawAbyssBias(ctx, centerX, centerY, radius) {
+    const abyss = ctx.createLinearGradient(
+      centerX - radius * 0.92,
+      centerY - radius * 0.20,
+      centerX + radius * 0.96,
+      centerY + radius * 0.34
     );
 
-    sheen.addColorStop(0.00, "rgba(255,255,255,0.16)");
-    sheen.addColorStop(0.18, "rgba(215,255,250,0.09)");
-    sheen.addColorStop(0.42, "rgba(120,245,235,0.05)");
+    abyss.addColorStop(0.00, "rgba(0,0,0,0.24)");
+    abyss.addColorStop(0.20, "rgba(0,0,0,0.12)");
+    abyss.addColorStop(0.50, "rgba(0,0,0,0.03)");
+    abyss.addColorStop(1.00, "rgba(0,0,0,0)");
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius * 0.998, 0, Math.PI * 2);
+    ctx.fillStyle = abyss;
+    ctx.fill();
+  }
+
+  function drawSpecularSheen(ctx, centerX, centerY, radius) {
+    const sheen = ctx.createRadialGradient(
+      centerX - radius * 0.32,
+      centerY - radius * 0.24,
+      radius * 0.02,
+      centerX - radius * 0.15,
+      centerY - radius * 0.10,
+      radius * 0.64
+    );
+
+    sheen.addColorStop(0.00, "rgba(255,255,255,0.24)");
+    sheen.addColorStop(0.16, "rgba(210,255,250,0.13)");
+    sheen.addColorStop(0.34, "rgba(125,248,237,0.08)");
     sheen.addColorStop(1.00, "rgba(255,255,255,0)");
 
     ctx.beginPath();
@@ -149,25 +181,25 @@ export function createDepthEngine() {
     ctx.fill();
   }
 
-  function drawWaterBands(ctx, centerX, centerY, radius) {
+  function drawWaveBloom(ctx, centerX, centerY, radius) {
     ctx.save();
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius * 0.992, 0, Math.PI * 2);
     ctx.clip();
 
-    ctx.strokeStyle = "rgba(110,245,232,0.05)";
-    ctx.lineWidth = 1.25;
+    ctx.strokeStyle = "rgba(115,255,240,0.07)";
+    ctx.lineWidth = 1.35;
 
-    for (let i = 0; i < 5; i += 1) {
-      const bandRadius = radius * (0.34 + i * 0.10);
+    for (let i = 0; i < 6; i += 1) {
+      const bandRadius = radius * (0.30 + i * 0.095);
 
       ctx.beginPath();
       ctx.arc(
-        centerX + radius * 0.04,
-        centerY + radius * (i - 2) * 0.018,
+        centerX + radius * 0.05,
+        centerY + radius * (i - 2.5) * 0.015,
         bandRadius,
-        0.18 * Math.PI,
-        0.82 * Math.PI
+        0.16 * Math.PI,
+        0.84 * Math.PI
       );
       ctx.stroke();
     }
@@ -180,13 +212,14 @@ export function createDepthEngine() {
 
     drawBaseOceanBody(ctx, centerX, centerY, radius);
     drawDepthSamples(ctx, terrainField, radius);
-    drawShelfGradient(ctx, centerX, centerY, radius);
+    drawShelfGlow(ctx, terrainField, radius);
     drawDepthFalloff(ctx, centerX, centerY, radius);
+    drawAbyssBias(ctx, centerX, centerY, radius);
     drawSpecularSheen(ctx, centerX, centerY, radius);
-    drawWaterBands(ctx, centerX, centerY, radius);
+    drawWaveBloom(ctx, centerX, centerY, radius);
 
     return Object.freeze({
-      mode: "masked_ocean_fill"
+      mode: "cinematic_stylized_ocean_body"
     });
   }
 

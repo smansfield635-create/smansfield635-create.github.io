@@ -3,6 +3,8 @@ import { createSpaceEngine } from "./environment/space_engine.js";
 import { createAtmosphereEngine } from "./environment/atmosphere_engine.js";
 import { createSurfaceEngine } from "./environment/surface_engine.js";
 import { createOceanEngine } from "./environment/ocean/index.js";
+import { createMagneticFieldEngine } from "./environment/magnetic_field_engine.js";
+import { createThermodynamicEngine } from "./environment/thermodynamic_engine.js";
 import { createHydrologyEngine } from "./environment/hydrology_engine.js";
 
 function getCanvasMetrics(ctx) {
@@ -39,20 +41,102 @@ function getRenderState(runtime) {
   });
 }
 
-export function createEnvironmentRenderer() {
+function createEnvironmentAudit(runtime, renderState, magneticField, thermodynamicField, hydrologyField) {
+  return Object.freeze({
+    activeDepth: renderState.activeDepth,
+    gridBound: renderState.gridBound,
+    zone: renderState.localSelection.zone,
+    cellId: renderState.localSelection.cellId,
+    branch: runtime?.resolvedState?.auditLabels?.branch ?? "external.harbor",
+    exclusions: Object.freeze({
+      npc: WORLD_KERNEL.scope.includeNPCs === false,
+      events: WORLD_KERNEL.scope.includeEvents === false
+    }),
+    magneticField,
+    thermodynamicField,
+    hydrologyField
+  });
+}
 
+export function createEnvironmentRenderer() {
   const spaceEngine = createSpaceEngine();
+  const magneticFieldEngine = createMagneticFieldEngine();
+  const thermodynamicEngine = createThermodynamicEngine();
   const atmosphereEngine = createAtmosphereEngine();
+  const hydrologyEngine = createHydrologyEngine();
   const surfaceEngine = createSurfaceEngine();
   const oceanEngine = createOceanEngine();
-  const hydrologyEngine = createHydrologyEngine();
+
+  const families = Object.freeze({
+    space: Object.freeze({
+      stars: true,
+      nebula: true,
+      orbits: true,
+      bodies: true
+    }),
+    magnetic_field: Object.freeze({
+      magnetic_intensity: true,
+      shielding_gradient: true,
+      auroral_potential: true,
+      navigation_basis: true
+    }),
+    thermodynamic: Object.freeze({
+      temperature: true,
+      thermal_gradient: true,
+      freeze_potential: true,
+      melt_potential: true,
+      evaporation_pressure: true
+    }),
+    hydrology: Object.freeze({
+      rainfall: true,
+      runoff: true,
+      basin_accumulation: true,
+      drainage: true,
+      river_path: true,
+      lake_formation: true
+    }),
+    atmosphere: Object.freeze({
+      wind: true,
+      atmospheric_discharge: true,
+      moisture: true,
+      temperature: true
+    }),
+    ocean: Object.freeze({
+      depth: true,
+      current: true,
+      sea_life: true,
+      boating_life: true
+    }),
+    surface: Object.freeze({
+      shoreline: true,
+      infrastructure: true,
+      terrain: true,
+      foliage: true
+    })
+  });
 
   function render(ctx, projector, runtime) {
-
     const renderState = getRenderState(runtime);
-    const { width, height } = getCanvasMetrics(ctx);
+    const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
+    const thermodynamicField = thermodynamicEngine.compute(projector, runtime, renderState);
 
+    runtime.magneticField = magneticField;
+    runtime.thermodynamicField = thermodynamicField;
+
+    const { width, height } = getCanvasMetrics(ctx);
     const terrainField = surfaceEngine.buildTerrainField(projector);
+    const hydrologyAudit = hydrologyEngine.render(ctx, projector, runtime, renderState, terrainField);
+    const hydrologyField = hydrologyAudit.field;
+
+    runtime.hydrologyField = hydrologyField;
+
+    const audit = createEnvironmentAudit(
+      runtime,
+      renderState,
+      magneticField,
+      thermodynamicField,
+      hydrologyField
+    );
 
     ctx.clearRect(0, 0, width, height);
 
@@ -70,16 +154,10 @@ export function createEnvironmentRenderer() {
     );
     ctx.clip();
 
-    hydrologyEngine.render(ctx, projector, runtime, renderState, terrainField);
-
     oceanEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
-
     surfaceEngine.renderBase(ctx, projector, runtime, renderState, terrainField);
-
     atmosphereEngine.renderInner(ctx, projector, runtime, renderState);
-
     oceanEngine.renderDynamic(ctx, projector, runtime, renderState, terrainField);
-
     surfaceEngine.renderOverlay(ctx, projector, runtime, renderState);
 
     ctx.restore();
@@ -88,13 +166,14 @@ export function createEnvironmentRenderer() {
 
     return Object.freeze({
       width,
-      height
+      height,
+      families,
+      audit
     });
-
   }
 
   return Object.freeze({
+    families,
     render
   });
-
 }

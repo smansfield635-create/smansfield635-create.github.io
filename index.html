@@ -1,240 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diamond Gate Bridge — Harbor Core Foundation</title>
-  <meta name="description" content="Diamond Gate Bridge Harbor Core interactive foundation runtime.">
-  <meta name="theme-color" content="#0b1220">
-  <style>
-    :root{
-      --bg-0:#05070b;
-      --panel:rgba(10,16,26,.50);
-      --line:rgba(255,255,255,.12);
-      --text:#edf4ff;
-      --muted:rgba(237,244,255,.74);
-      --gold:rgba(255,226,176,.96);
-      --safe-top:max(10px,env(safe-area-inset-top));
-      --safe-right:max(10px,env(safe-area-inset-right));
-      --safe-bottom:max(10px,env(safe-area-inset-bottom));
-      --safe-left:max(10px,env(safe-area-inset-left));
-      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-    }
-
-    *{box-sizing:border-box}
-
-    html,body{
-      margin:0;
-      padding:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:var(--bg-0);
-      color:var(--text);
-      font-family:var(--font);
-    }
-
-    body{
-      overscroll-behavior:none;
-      touch-action:none;
-    }
-
-    .app{
-      position:relative;
-      width:100vw;
-      height:100dvh;
-      overflow:hidden;
-      background:#05070b;
-    }
-
-    /* NEUTRAL CANVAS: NO SCALE, NO TRANSLATE, NO FAKE CAMERA */
-    #scene{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      display:block;
-      z-index:1;
-      touch-action:none;
-    }
-
-    .topbar{
-      position:absolute;
-      top:var(--safe-top);
-      left:var(--safe-left);
-      right:var(--safe-right);
-      z-index:3;
-      display:flex;
-      align-items:flex-start;
-      justify-content:flex-start;
-      gap:10px;
-      pointer-events:none;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:var(--panel);
-      backdrop-filter:blur(8px);
-      -webkit-backdrop-filter:blur(8px);
-      box-shadow:0 8px 20px rgba(0,0,0,.20);
-      pointer-events:auto;
-    }
-
-    .brand-mark{
-      width:24px;
-      height:24px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.20);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.95), rgba(255,255,255,.18) 36%, transparent 37%),
-        linear-gradient(180deg, #f1f7ff 0%, #a7c5f0 42%, #21385f 72%, #0d1730 100%);
-      flex:0 0 auto;
-    }
-
-    .brand-copy{
-      display:flex;
-      flex-direction:column;
-      line-height:1.03;
-    }
-
-    .brand-copy strong{
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .brand-copy span{
-      font-size:10px;
-      color:var(--muted);
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
-
-    .panel-stack{
-      position:absolute;
-      right:var(--safe-right);
-      bottom:var(--safe-bottom);
-      z-index:3;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      width:98px;
-      pointer-events:none;
-    }
-
-    .panel{
-      padding:4px 5px;
-      border-radius:9px;
-      border:1px solid var(--line);
-      background:rgba(10,16,26,.40);
-      backdrop-filter:blur(6px);
-      -webkit-backdrop-filter:blur(6px);
-      box-shadow:0 6px 14px rgba(0,0,0,.16);
-      pointer-events:none;
-    }
-
-    .panel h2{
-      margin:0 0 2px;
-      font-size:8px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
-
-    .kv{
-      display:grid;
-      grid-template-columns:30px 1fr;
-      gap:1px 3px;
-      font-size:8px;
-      line-height:1.0;
-      margin:0;
-    }
-
-    .kv dt{color:var(--muted)}
-    .kv dd{margin:0;color:var(--text);word-break:break-word}
-
-    .panel-copy{
-      margin:2px 0 0;
-      color:var(--muted);
-      font-size:7px;
-      line-height:1.0;
-      opacity:.76;
-    }
-
-    .footer-hint{
-      display:none;
-    }
-
-    @media (max-width: 920px){
-      .panel-stack{
-        width:92px;
-      }
-
-      .kv{
-        grid-template-columns:28px 1fr;
-      }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>World Is Round · External Harbor Branch</title>
+  <link rel="stylesheet" href="./assets/ui.css" />
 </head>
 <body>
-  <div class="app">
-    <canvas id="scene" aria-label="Harbor Core Interactive Foundation Scene"></canvas>
+  <div id="app">
+    <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
-    <div class="topbar">
-      <div class="pill">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <div class="brand-copy">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Harbor Core Interactive Foundation</span>
+    <div id="hud">
+      <div id="title-bar">
+        <div class="brand-card">
+          <h1 class="brand-title">World Is Round</h1>
+          <div class="brand-subtitle">
+            External branch baseline · Harbor → Gratitude → Generosity
+          </div>
+        </div>
+
+        <div class="state-card">
+          <div class="state-label">Runtime state</div>
+          <div id="runtime-phase" class="state-value">BOOT</div>
         </div>
       </div>
-    </div>
 
-    <div class="panel-stack">
-      <section class="panel" aria-live="polite">
-        <h2>Selection</h2>
-        <dl class="kv">
-          <dt>Sel</dt><dd id="selectedNameOut">—</dd>
-          <dt>Type</dt><dd id="selectedTypeOut">—</dd>
-          <dt>Dest</dt><dd id="destinationOut">—</dd>
-        </dl>
-        <p class="panel-copy" id="selectionHintOut">Tap region.</p>
-      </section>
-    </div>
+      <div id="debug-panel" class="panel-card">
+        <div id="debug-content" class="panel-grid"></div>
+      </div>
 
-    <div class="footer-hint">Tap Harbor Region or Harbor Village · fixed camera pilot</div>
+      <div id="compass-overlay" class="panel-card">
+        <canvas id="compass-canvas" aria-label="Compass overlay"></canvas>
+      </div>
+    </div>
   </div>
 
+  <noscript>
+    <div
+      style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;font-family:system-ui,sans-serif;"
+    >
+      JavaScript is required to run the external world baseline.
+    </div>
+  </noscript>
+
   <script type="module">
-    import { createScene } from "./variant/scene.js";
+    import { createRuntime } from "./world/scene_runtime.js";
 
-    const outputs = {
-      region: document.createElement("span"),
-      cell: document.createElement("span"),
-      sector: document.createElement("span"),
-      band: document.createElement("span"),
-      encoding: document.createElement("span"),
-      byte: document.createElement("span"),
-      selectedName: document.getElementById("selectedNameOut"),
-      selectedType: document.getElementById("selectedTypeOut"),
-      destination: document.getElementById("destinationOut"),
-      selectionHint: document.getElementById("selectionHintOut")
-    };
+    const runtime = createRuntime({
+      worldCanvas: document.getElementById("world-canvas"),
+      compassCanvas: document.getElementById("compass-canvas"),
+      debugContent: document.getElementById("debug-content"),
+      runtimePhase: document.getElementById("runtime-phase")
+    });
 
-    const canvas = document.getElementById("scene");
-
-    createScene(canvas, outputs)
-      .then((scene) => scene.start())
-      .catch((error) => {
-        console.error(error);
-        alert(`Interactive foundation failed to boot: ${error.message}`);
-      });
+    runtime.start();
+    window.__WORLD_RUNTIME__ = runtime;
   </script>
 </body>
 </html>

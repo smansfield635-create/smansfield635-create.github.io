@@ -1,4 +1,44 @@
 export function createDepthEngine() {
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function toRad(deg) {
+    return (deg * Math.PI) / 180;
+  }
+
+  function fract(value) {
+    return value - Math.floor(value);
+  }
+
+  function noise(latDeg, lonDeg) {
+    return fract(
+      Math.sin(latDeg * 12.9898 + lonDeg * 78.233) * 43758.5453123
+    );
+  }
+
+  function getDepthLevel(latDeg, lonDeg) {
+    const latRad = toRad(latDeg);
+    const lonRad = toRad(lonDeg);
+
+    const base =
+      0.6 +
+      0.22 * Math.sin(latRad * 2.0) +
+      0.08 * Math.cos(lonRad * 1.7) +
+      (noise(latDeg, lonDeg) - 0.5) * 0.16;
+
+    return clamp(base, 0, 1);
+  }
+
+  function getDepthColor(depth) {
+    if (depth < 0.22) return "rgba(116,243,230,0.20)";
+    if (depth < 0.38) return "rgba(62,224,214,0.16)";
+    if (depth < 0.56) return "rgba(35,198,216,0.13)";
+    if (depth < 0.74) return "rgba(22,143,200,0.11)";
+    if (depth < 0.90) return "rgba(11,93,167,0.10)";
+    return "rgba(2,21,63,0.14)";
+  }
+
   function drawBaseOceanBody(ctx, centerX, centerY, radius) {
     const baseGradient = ctx.createRadialGradient(
       centerX - radius * 0.28,
@@ -21,6 +61,28 @@ export function createDepthEngine() {
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
     ctx.fillStyle = baseGradient;
     ctx.fill();
+  }
+
+  function drawDepthSamples(ctx, terrainField, radius) {
+    if (!terrainField || !Array.isArray(terrainField.samples)) return;
+
+    ctx.save();
+
+    for (const sample of terrainField.samples) {
+      if (!sample.visible) continue;
+      if (sample.terrain !== "OCEAN") continue;
+
+      const depth = getDepthLevel(sample.latDeg, sample.lonDeg);
+      const sampleRadius =
+        radius * (depth < 0.28 ? 0.022 : depth < 0.64 ? 0.018 : 0.015);
+
+      ctx.beginPath();
+      ctx.arc(sample.x, sample.y, sampleRadius, 0, Math.PI * 2);
+      ctx.fillStyle = getDepthColor(depth);
+      ctx.fill();
+    }
+
+    ctx.restore();
   }
 
   function drawShelfGradient(ctx, centerX, centerY, radius) {
@@ -66,25 +128,6 @@ export function createDepthEngine() {
     ctx.fill();
   }
 
-  function drawAbyssBias(ctx, centerX, centerY, radius) {
-    const abyss = ctx.createLinearGradient(
-      centerX - radius * 0.92,
-      centerY - radius * 0.20,
-      centerX + radius * 0.96,
-      centerY + radius * 0.32
-    );
-
-    abyss.addColorStop(0.00, "rgba(0,0,0,0.22)");
-    abyss.addColorStop(0.24, "rgba(0,0,0,0.10)");
-    abyss.addColorStop(0.54, "rgba(0,0,0,0.02)");
-    abyss.addColorStop(1.00, "rgba(0,0,0,0)");
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius * 0.998, 0, Math.PI * 2);
-    ctx.fillStyle = abyss;
-    ctx.fill();
-  }
-
   function drawSpecularSheen(ctx, centerX, centerY, radius) {
     const sheen = ctx.createRadialGradient(
       centerX - radius * 0.30,
@@ -117,6 +160,7 @@ export function createDepthEngine() {
 
     for (let i = 0; i < 5; i += 1) {
       const bandRadius = radius * (0.34 + i * 0.10);
+
       ctx.beginPath();
       ctx.arc(
         centerX + radius * 0.04,
@@ -131,18 +175,18 @@ export function createDepthEngine() {
     ctx.restore();
   }
 
-  function render(ctx, projector, runtime, state) {
+  function render(ctx, projector, runtime, state, terrainField) {
     const { centerX, centerY, radius } = projector.state;
 
     drawBaseOceanBody(ctx, centerX, centerY, radius);
+    drawDepthSamples(ctx, terrainField, radius);
     drawShelfGradient(ctx, centerX, centerY, radius);
     drawDepthFalloff(ctx, centerX, centerY, radius);
-    drawAbyssBias(ctx, centerX, centerY, radius);
     drawSpecularSheen(ctx, centerX, centerY, radius);
     drawWaterBands(ctx, centerX, centerY, radius);
 
     return Object.freeze({
-      mode: "safe_ocean_fill"
+      mode: "masked_ocean_fill"
     });
   }
 

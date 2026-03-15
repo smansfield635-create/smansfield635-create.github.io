@@ -15,6 +15,7 @@ export function createInstruments() {
     "Magnetic Field",
     "Thermodynamic Field",
     "Hydrology Field",
+    "Topology Field",
     "Failure"
   ]);
 
@@ -147,6 +148,10 @@ export function createInstruments() {
 
   function getHydrologyField(runtime) {
     return normalizeObject(runtime?.hydrologyField);
+  }
+
+  function getTopologyField(runtime) {
+    return normalizeObject(runtime?.topologyField);
   }
 
   function buildRuntimePanel(runtime) {
@@ -362,11 +367,28 @@ export function createInstruments() {
     const summary = normalizeObject(field?.summary);
 
     return Object.freeze({
-      sampleCount: normalizePrimitive(field?.samples?.length ?? summary?.sampleCount),
+      sampleCount: normalizePrimitive(field?.samples?.length),
       runoffAverage: toFixedSafe(summary?.runoffAverage, 3),
       basinAverage: toFixedSafe(summary?.basinAverage, 3),
       riverCandidateCount: normalizePrimitive(summary?.riverCandidateCount),
       lakeCandidateCount: normalizePrimitive(summary?.lakeCandidateCount)
+    });
+  }
+
+  function buildTopologyFieldPanel(runtime) {
+    const field = getTopologyField(runtime);
+    const summary = normalizeObject(field?.summary);
+
+    return Object.freeze({
+      sampleCount: normalizePrimitive(field?.samples?.length),
+      elevationAverage: toFixedSafe(summary?.elevationAverage, 3),
+      slopeAverage: toFixedSafe(summary?.slopeAverage, 3),
+      ridgeAverage: toFixedSafe(summary?.ridgeAverage, 3),
+      valleyAverage: toFixedSafe(summary?.valleyAverage, 3),
+      mountainCount: normalizePrimitive(summary?.mountainCount),
+      basinCount: normalizePrimitive(summary?.basinCount),
+      canyonCount: normalizePrimitive(summary?.canyonCount),
+      caveCandidateCount: normalizePrimitive(summary?.caveCandidateCount)
     });
   }
 
@@ -426,6 +448,7 @@ export function createInstruments() {
       "Magnetic Field": buildMagneticFieldPanel(runtime),
       "Thermodynamic Field": buildThermodynamicFieldPanel(runtime),
       "Hydrology Field": buildHydrologyFieldPanel(runtime),
+      "Topology Field": buildTopologyFieldPanel(runtime),
       Failure: buildFailurePanel(runtime)
     });
 
@@ -446,6 +469,7 @@ export function createInstruments() {
     buildMagneticFieldPanel,
     buildThermodynamicFieldPanel,
     buildHydrologyFieldPanel,
+    buildTopologyFieldPanel,
     buildFailurePanel,
     renderKeyValueSection,
     renderPanelHTML

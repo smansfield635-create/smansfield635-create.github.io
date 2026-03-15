@@ -60,7 +60,7 @@ export function createPlanetSurfaceProjector() {
     });
   }
 
-  function projectSphere(lon, lat) {
+  function computeProjectedPoint(lon, lat, radiusOffsetPx = 0) {
     const cosLat = Math.cos(lat);
     const sinLat = Math.sin(lat);
     const cosLon = Math.cos(lon + yaw);
@@ -74,13 +74,25 @@ export function createPlanetSurfaceProjector() {
     const y = y0 * cosPitch - z0 * sinPitch;
     const z = y0 * sinPitch + z0 * cosPitch;
 
+    const resolvedRadius = Math.max(1, state.radius + radiusOffsetPx);
+
     return Object.freeze({
-      x: state.centerX + x * state.radius,
-      y: state.centerY - y * state.radius,
+      x: state.centerX + x * resolvedRadius,
+      y: state.centerY - y * resolvedRadius,
       z,
       visible: z >= 0,
-      horizonExcluded: z < 0
+      horizonExcluded: z < 0,
+      radiusOffsetPx,
+      resolvedRadius
     });
+  }
+
+  function projectSphere(lon, lat) {
+    return computeProjectedPoint(lon, lat, 0);
+  }
+
+  function projectSphereWithOffset(lon, lat, radiusOffsetPx = 0) {
+    return computeProjectedPoint(lon, lat, radiusOffsetPx);
   }
 
   function screenPointToNormalizedBody(x, y) {
@@ -244,6 +256,7 @@ export function createPlanetSurfaceProjector() {
     applyDrag,
     stepInertia,
     projectSphere,
+    projectSphereWithOffset,
     inverseProject,
     lonLatToSurfaceCoordinates,
     surfaceCoordinatesToLocalCell,

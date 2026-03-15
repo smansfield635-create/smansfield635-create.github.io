@@ -16,14 +16,14 @@ export function createOceanEngine() {
     boating_life: Object.freeze({ enabled: true, coverage: "256x256" })
   });
 
-  function renderBase(ctx, projector, runtime, state) {
-    depthEngine.render(ctx, projector, runtime, state);
+  function renderBase(ctx, projector, runtime, state, terrainField) {
+    depthEngine.render(ctx, projector, runtime, state, terrainField);
   }
 
-  function renderDynamic(ctx, projector, runtime, state) {
-    currentEngine.render(ctx, projector, runtime, state);
-    seaLifeEngine.render(ctx, projector, runtime, state);
-    boatingLifeEngine.render(ctx, projector, runtime, state);
+  function renderDynamic(ctx, projector, runtime, state, terrainField) {
+    currentEngine.render(ctx, projector, runtime, state, terrainField);
+    seaLifeEngine.render(ctx, projector, runtime, state, terrainField);
+    boatingLifeEngine.render(ctx, projector, runtime, state, terrainField);
   }
 
   return Object.freeze({

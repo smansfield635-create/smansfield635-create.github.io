@@ -200,19 +200,20 @@ const DEPTH_REGISTRY = Object.freeze([
   Object.freeze({ id: "cosmic", index: 0, label: "Cosmic", zoneBearing: false }),
   Object.freeze({ id: "region", index: 1, label: "Region", zoneBearing: false }),
   Object.freeze({ id: "galaxy", index: 2, label: "Galaxy", zoneBearing: false }),
-  Object.freeze({ id: "system", index: 3, label: "System", zoneBearing: false }),
-  Object.freeze({ id: "planet", index: 4, label: "Planet", zoneBearing: false }),
-  Object.freeze({ id: "macro_surface", index: 5, label: "Macro Surface", zoneBearing: false }),
-  Object.freeze({ id: "regional_surface", index: 6, label: "Regional Surface", zoneBearing: true }),
-  Object.freeze({ id: "local_zone", index: 7, label: "Local Zone", zoneBearing: true }),
-  Object.freeze({ id: "site_cell", index: 8, label: "Site Cell", zoneBearing: true }),
-  Object.freeze({ id: "micro_cell", index: 9, label: "Micro Cell", zoneBearing: true })
+  Object.freeze({ id: "harbor", index: 3, label: "Harbor", zoneBearing: false }),
+  Object.freeze({ id: "system", index: 4, label: "System", zoneBearing: false }),
+  Object.freeze({ id: "planet", index: 5, label: "Planet", zoneBearing: false }),
+  Object.freeze({ id: "macro_surface", index: 6, label: "Macro Surface", zoneBearing: false }),
+  Object.freeze({ id: "regional_surface", index: 7, label: "Regional Surface", zoneBearing: true }),
+  Object.freeze({ id: "local_zone", index: 8, label: "Local Zone", zoneBearing: true }),
+  Object.freeze({ id: "site_cell", index: 9, label: "Site Cell", zoneBearing: true }),
+  Object.freeze({ id: "micro_cell", index: 10, label: "Micro Cell", zoneBearing: true })
 ]);
 
 const DEPTH_ORDER = Object.freeze(DEPTH_REGISTRY.map((depth) => depth.id));
 
 const DEPTH_SCOPE_LOCK = Object.freeze({
-  live: Object.freeze(["cosmic", "region", "galaxy", "planet", "local_zone"]),
+  live: Object.freeze(["cosmic", "region", "galaxy", "harbor", "planet", "local_zone"]),
   scaffolded: Object.freeze(["system", "macro_surface", "regional_surface", "site_cell", "micro_cell"]),
   externalBranchOnly: true
 });
@@ -232,6 +233,7 @@ const DEPTH_TO_GRID_BINDING = Object.freeze({
   cosmic: false,
   region: false,
   galaxy: false,
+  harbor: false,
   system: false,
   planet: false,
   macro_surface: false,
@@ -281,6 +283,7 @@ const DESCENT_ORDER = Object.freeze([
   "cosmic",
   "region",
   "galaxy",
+  "harbor",
   "system",
   "planet",
   "macro_surface",
@@ -328,14 +331,14 @@ const CONSTANTS = Object.freeze({
   localGridRows: 4,
   localGridCols: 4,
   localGridCells: 16,
-  depthCount: 10
+  depthCount: 11
 });
 
 const NAMING_REGISTRY = Object.freeze({
   activeScale: "harbor",
   baselineLabel: "world_is_round_external",
   reconnectionTarget: "world_is_flat",
-  liveDepthBaseline: "planet",
+  liveDepthBaseline: "harbor",
   localGridLabel: "4x4_local_zone_field"
 });
 
@@ -465,7 +468,7 @@ function packageVerificationVerdict(expected, received) {
 }
 
 export const WORLD_KERNEL = Object.freeze({
-  version: "optimum-baseline-v2",
+  version: "optimum-baseline-v3",
   modes: Object.freeze({
     roundWorld: true,
     flatWorldReconnection: true,

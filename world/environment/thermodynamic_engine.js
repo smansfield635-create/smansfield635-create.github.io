@@ -54,4 +54,51 @@ export function createThermodynamicEngine() {
 
   function computeThermalState(latDeg, lonDeg) {
     const normalizedLon = normalizeLonDeg(lonDeg);
-    const
+    const polarCooling = Math.pow(Math.abs(latDeg) / 90, 1.35) * 0.82;
+    const ambient = 0.48 - polarCooling;
+
+    let heatNodeInfluence = 0;
+    let nearestHeatDistanceDeg = 180;
+
+    for (const node of HEAT_NODES) {
+      const distanceDeg = angularDistanceDeg(latDeg, normalizedLon, node.latDeg, node.lonDeg);
+      nearestHeatDistanceDeg = Math.min(nearestHeatDistanceDeg, distanceDeg);
+
+      const influence = Math.exp(-distanceDeg / 34) * node.strength;
+      heatNodeInfluence += influence;
+    }
+
+    const wildernessDecay = clamp(nearestHeatDistanceDeg / 140, 0, 1) * 0.26;
+    const temperatureField = clamp(ambient + heatNodeInfluence * 0.34 - wildernessDecay, 0, 1);
+
+    const freezePotentialField = clamp((0.42 - temperatureField) / 0.42, 0, 1);
+    const meltPotentialField = clamp((temperatureField - 0.38) / 0.42, 0, 1);
+    const evaporationPressureField = clamp((temperatureField - 0.28) / 0.52, 0, 1);
+
+    const thermalGradientField = Object.freeze({
+      polarCooling,
+      heatNodeInfluence: clamp(heatNodeInfluence, 0, 1.5),
+      wildernessDecay,
+      nearestHeatDistanceDeg
+    });
+
+    return Object.freeze({
+      latDeg,
+      lonDeg: normalizedLon,
+      temperatureField,
+      thermalGradientField,
+      freezePotentialField,
+      meltPotentialField,
+      evaporationPressureField
+    });
+  }
+
+  function compute(projector, runtime, renderState) {
+    const sample = getLatLonFromProjector(projector);
+    return computeThermalState(sample.latDeg, sample.lonDeg);
+  }
+
+  return Object.freeze({
+    compute
+  });
+}

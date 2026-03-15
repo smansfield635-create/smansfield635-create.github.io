@@ -27,12 +27,15 @@
 
   --title-width-min: 240px;
   --state-width-min: 210px;
-  --debug-width-max: 460px;
-  --debug-width-fluid: min(var(--debug-width-max), calc(100vw - (var(--shell-pad) * 2)));
-  --debug-height-max: calc(100vh - 128px);
+  --debug-width-max: 480px;
+  --debug-height-max: calc(100vh - 140px);
 
   --compass-size: 180px;
-  --compass-size-mobile: 140px;
+  --compass-size-mobile: 136px;
+
+  --toggle-size: 44px;
+  --peek-width: min(360px, calc(100vw - 32px));
+  --peek-height: auto;
 
   --font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   --font-size-title: 16px;
@@ -44,6 +47,7 @@
   --z-canvas: 1;
   --z-hud: 10;
   --z-title: 20;
+  --z-diagnostics-toggle: 25;
   --z-debug: 30;
   --z-compass: 40;
   --z-failsafe: 100;
@@ -116,7 +120,8 @@ body {
 
 .brand-card,
 .state-card,
-.panel-card {
+.panel-card,
+.diagnostics-toggle {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   border-radius: var(--radius);
@@ -176,17 +181,42 @@ body {
   line-height: 1.2;
 }
 
+.diagnostics-toggle {
+  position: absolute;
+  right: var(--shell-pad);
+  top: 96px;
+  z-index: var(--z-diagnostics-toggle);
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  color: var(--text);
+  font: 700 18px/1 var(--font);
+  user-select: none;
+}
+
+.diagnostics-toggle:active {
+  transform: scale(0.98);
+}
+
 #debug-panel {
   position: absolute;
   left: var(--shell-pad);
   bottom: var(--shell-pad);
   z-index: var(--z-debug);
-  width: var(--debug-width-fluid);
+  width: min(var(--debug-width-max), calc(100vw - (var(--shell-pad) * 2)));
   max-height: var(--debug-height-max);
   overflow: auto;
   pointer-events: auto;
   padding: 12px;
   overscroll-behavior: contain;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    width 180ms ease,
+    max-height 180ms ease;
 }
 
 #debug-panel::-webkit-scrollbar {
@@ -274,12 +304,39 @@ body {
   width: var(--compass-size);
   height: var(--compass-size);
   pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 #compass-overlay canvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+body[data-diagnostics="hidden"] #debug-panel {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+
+body[data-diagnostics="hidden"] #compass-overlay {
+  opacity: 1;
+}
+
+body[data-diagnostics="peek"] #debug-panel {
+  width: var(--peek-width);
+  max-height: 220px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body[data-diagnostics="peek"] #debug-content .panel-section:not(:nth-child(-n + 3)) {
+  display: none;
+}
+
+body[data-diagnostics="full"] #debug-panel {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hidden {
@@ -304,11 +361,21 @@ body {
     text-align: left;
   }
 
+  .diagnostics-toggle {
+    right: var(--shell-pad-mobile);
+    top: 132px;
+  }
+
   #debug-panel {
     left: var(--shell-pad-mobile);
     bottom: var(--shell-pad-mobile);
     width: calc(100vw - (var(--shell-pad-mobile) * 2));
-    max-height: calc(100vh - 196px);
+    max-height: calc(100vh - 220px);
+  }
+
+  body[data-diagnostics="peek"] #debug-panel {
+    width: calc(100vw - (var(--shell-pad-mobile) * 2));
+    max-height: 210px;
   }
 
   #compass-overlay {

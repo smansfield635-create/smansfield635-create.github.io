@@ -3,8 +3,8 @@ export function createCurrentEngine() {
     const pulse = 0.5 + 0.5 * Math.sin(time * 0.0012);
 
     ctx.save();
-    ctx.strokeStyle = `rgba(135,230,255,${0.08 + pulse * 0.05})`;
-    ctx.lineWidth = 1.8;
+    ctx.strokeStyle = `rgba(135,230,255,${0.06 + pulse * 0.04})`;
+    ctx.lineWidth = 1.55;
 
     for (let i = 0; i < 5; i += 1) {
       const arcRadius = radius * (0.34 + i * 0.09);
@@ -22,8 +22,8 @@ export function createCurrentEngine() {
 
   function drawSecondaryFlowLanes(ctx, centerX, centerY, radius, time) {
     ctx.save();
-    ctx.strokeStyle = "rgba(95,245,238,0.06)";
-    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = "rgba(95,245,238,0.045)";
+    ctx.lineWidth = 0.95;
 
     for (let i = 0; i < 4; i += 1) {
       const offsetX = Math.sin(time * 0.00022 + i) * radius * 0.025;
@@ -59,9 +59,9 @@ export function createCurrentEngine() {
     );
 
     shimmer.addColorStop(0.00, "rgba(255,255,255,0)");
-    shimmer.addColorStop(0.35, "rgba(180,255,245,0.03)");
-    shimmer.addColorStop(0.50, "rgba(255,255,255,0.08)");
-    shimmer.addColorStop(0.65, "rgba(180,255,245,0.03)");
+    shimmer.addColorStop(0.35, "rgba(180,255,245,0.02)");
+    shimmer.addColorStop(0.50, "rgba(255,255,255,0.06)");
+    shimmer.addColorStop(0.65, "rgba(180,255,245,0.02)");
     shimmer.addColorStop(1.00, "rgba(255,255,255,0)");
 
     ctx.fillStyle = shimmer;
@@ -75,9 +75,9 @@ export function createCurrentEngine() {
     ctx.restore();
   }
 
-  function drawLocalizedEnergy(ctx, centerX, centerY, radius, time) {
+  function drawLocalizedEnergy(ctx, centerX, centerY, radius, time, terrainField) {
     ctx.save();
-    ctx.globalAlpha = 0.05;
+    ctx.globalAlpha = 0.04;
 
     for (let i = 0; i < 5; i += 1) {
       const x =
@@ -96,14 +96,40 @@ export function createCurrentEngine() {
         radius * 0.08
       );
 
-      glow.addColorStop(0.00, "rgba(120,255,242,0.8)");
-      glow.addColorStop(0.45, "rgba(120,255,242,0.18)");
+      glow.addColorStop(0.00, "rgba(120,255,242,0.7)");
+      glow.addColorStop(0.45, "rgba(120,255,242,0.14)");
       glow.addColorStop(1.00, "rgba(120,255,242,0)");
 
       ctx.beginPath();
       ctx.arc(x, y, radius * 0.08, 0, Math.PI * 2);
       ctx.fillStyle = glow;
       ctx.fill();
+    }
+
+    if (terrainField && Array.isArray(terrainField.samples)) {
+      for (const sample of terrainField.samples) {
+        if (!sample.visible) continue;
+        if (sample.terrain !== "OCEAN") continue;
+        if (!(sample.shoreline > 0.55)) continue;
+
+        const nearShoreGlow = ctx.createRadialGradient(
+          sample.x,
+          sample.y,
+          radius * 0.004,
+          sample.x,
+          sample.y,
+          radius * 0.028
+        );
+
+        nearShoreGlow.addColorStop(0.00, "rgba(150,255,245,0.05)");
+        nearShoreGlow.addColorStop(0.45, "rgba(150,255,245,0.02)");
+        nearShoreGlow.addColorStop(1.00, "rgba(150,255,245,0)");
+
+        ctx.beginPath();
+        ctx.arc(sample.x, sample.y, radius * 0.028, 0, Math.PI * 2);
+        ctx.fillStyle = nearShoreGlow;
+        ctx.fill();
+      }
     }
 
     ctx.restore();
@@ -116,7 +142,7 @@ export function createCurrentEngine() {
     drawPrimaryCurrentArcs(ctx, centerX, centerY, radius, time);
     drawSecondaryFlowLanes(ctx, centerX, centerY, radius, time);
     drawMovingShimmer(ctx, centerX, centerY, radius, time);
-    drawLocalizedEnergy(ctx, centerX, centerY, radius, time);
+    drawLocalizedEnergy(ctx, centerX, centerY, radius, time, terrainField);
 
     return Object.freeze({
       mode: "cinematic_stylized_current_field"

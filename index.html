@@ -111,15 +111,20 @@
       if (runtimePhase) runtimePhase.textContent = phase;
     }
 
+    function isFiniteNumber(value) {
+      return typeof value === "number" && Number.isFinite(value);
+    }
+
     function buildPanelCacheKey() {
       const projection = runtime.control?.projectionSummary ?? {};
       const summary = runtime.planetField?.summary ?? {};
       const verification = runtime.verification ?? {};
+      const failure = runtime.failure ?? {};
 
       return JSON.stringify({
         phase: runtime.phase,
-        fps: Number.isFinite(runtime.fps) ? runtime.fps.toFixed(1) : "—",
-        elapsedMs: Number.isFinite(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        elapsedMs: isFiniteNumber(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
         sampleX: projection.sampleX ?? "—",
         sampleY: projection.sampleY ?? "—",
         cellId: projection.cellId ?? "—",
@@ -127,11 +132,11 @@
         summaryLandCount: summary.landCount ?? "—",
         summaryWaterCount: summary.waterCount ?? "—",
         verificationPass:
-          verification.pass === true ? "PASS" :
-          verification.pass === false ? "FAIL" :
-          verification.pass ?? "MISSING",
-        failurePhase: runtime.failure?.phase ?? "—",
-        failureMessage: runtime.failure?.message ?? "—"
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING",
+        failurePhase: failure.phase ?? "—",
+        failureMessage: failure.message ?? "—"
       });
     }
 
@@ -142,13 +147,13 @@
 
       return JSON.stringify({
         phase: runtime.phase,
-        fps: Number.isFinite(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
         cellId: projection.cellId ?? "—",
         sampleCount: summary.sampleCount ?? "—",
         verificationPass:
-          verification.pass === true ? "PASS" :
-          verification.pass === false ? "FAIL" :
-          verification.pass ?? "MISSING"
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING"
       });
     }
 
@@ -209,20 +214,38 @@
       runtime.planetField = planetEngine.buildPlanetField({});
     }
 
-    function verifyRuntime() {
-      runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
-        fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
-        dependency: WORLD_KERNEL.canon.dependencyRegistry ?? WORLD_KERNEL.canon.chronologyRegistry,
-        ownership: WORLD_KERNEL.canon.ownershipRegistry,
-        duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
-        pulseOrder: WORLD_KERNEL.planetField.order,
-        sampleContract: WORLD_KERNEL.planetField.sampleContract,
-        scope: WORLD_KERNEL.scope
-      });
+    function verifyRuntimeSafely() {
+      try {
+        const verifier = WORLD_KERNEL?.verification?.verifyCanonicalStructure;
+        if (typeof verifier !== "function") {
+          runtime.verification = null;
+          return;
+        }
+
+        runtime.verification = verifier({
+          fileHomes: WORLD_KERNEL?.canon?.fileHomeRegistry,
+          dependency: WORLD_KERNEL?.canon?.dependencyRegistry ?? WORLD_KERNEL?.canon?.chronologyRegistry,
+          ownership: WORLD_KERNEL?.canon?.ownershipRegistry,
+          duplicateTruth: WORLD_KERNEL?.canon?.duplicateTruthRegistry,
+          pulseOrder: WORLD_KERNEL?.planetField?.order,
+          sampleContract: WORLD_KERNEL?.planetField?.sampleContract,
+          scope: WORLD_KERNEL?.scope
+        });
+      } catch {
+        runtime.verification = null;
+      }
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
     }
 
     function renderFrame() {
-      if (!runtime.planetField) return;
+      clearCanvas();
+
+      if (!runtime.planetField) {
+        return;
+      }
 
       renderer.renderPlanet({
         ctx,
@@ -230,10 +253,6 @@
         projectPoint: buildProjectionFunction(),
         viewState: runtime.control.cameraState
       });
-    }
-
-    function drawBootBackground() {
-      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
     }
 
     function frame(now) {
@@ -258,6 +277,7 @@
 
     function onPointerMove(event) {
       if (!isDragging) return;
+      if (!runtime.planetField) return;
 
       const dx = event.clientX - lastX;
       const dy = event.clientY - lastY;
@@ -318,6 +338,7 @@
         message: error instanceof Error ? error.message : String(error)
       };
       setPhase("ERROR");
+      renderFrame();
       writePanels(true);
 
       if (frameHandle) {
@@ -330,8 +351,8 @@
       requestAnimationFrame(() => {
         try {
           buildPlanetFieldOnce();
-          verifyRuntime();
           updateControlState();
+          verifyRuntimeSafely();
           renderFrame();
           writePanels(true);
           bindEvents();
@@ -347,7 +368,7 @@
         resizeWorld();
         control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
         updateControlState();
-        drawBootBackground();
+        renderFrame();
         setPhase("INITIALIZING");
         writePanels(true);
         continueStartupAfterPaint();

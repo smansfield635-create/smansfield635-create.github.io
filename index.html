@@ -34,15 +34,27 @@
 
       <div id="compass-overlay" class="compass-overlay" aria-hidden="true"></div>
 
-      <button
-        id="diagnostics-toggle"
-        class="diagnostics-toggle"
-        type="button"
-        aria-label="Toggle diagnostics"
-        aria-expanded="true"
-      >
-        ◫
-      </button>
+      <div id="diagnostics-dock" class="diagnostics-dock">
+        <div id="diagnostics-bar" class="diagnostics-bar" aria-live="polite">
+          <div id="diagnostics-summary" class="diagnostic-bar__summary">
+            <div class="diagnostic-bar__group">
+              <span class="diagnostic-pill">
+                <span class="diagnostic-pill__label">State</span>
+                <span class="diagnostic-pill__value">Booting…</span>
+              </span>
+            </div>
+          </div>
+
+          <button
+            id="diagnostics-toggle"
+            class="diagnostics-toggle"
+            type="button"
+            aria-label="Toggle diagnostics"
+            aria-expanded="false"
+          >
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -57,6 +69,7 @@
     const debugPanel = document.getElementById("debug-panel");
     const runtimePhase = document.getElementById("runtime-phase");
     const diagnosticsToggle = document.getElementById("diagnostics-toggle");
+    const diagnosticsSummary = document.getElementById("diagnostics-summary");
 
     const planetEngine = createPlanetEngine();
     const renderer = createRenderer();
@@ -95,8 +108,12 @@
     }
 
     function writePanels() {
-      if (!debugPanel) return;
-      debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+      if (debugPanel) {
+        debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+      }
+      if (diagnosticsSummary) {
+        diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+      }
     }
 
     function resizeWorld() {
@@ -224,18 +241,12 @@
 
     function cycleDiagnostics() {
       const current = document.body.dataset.diagnostics || "peek";
-      const next =
-        current === "hidden"
-          ? "peek"
-          : current === "peek"
-            ? "full"
-            : "hidden";
+      const next = current === "full" ? "peek" : "full";
 
       document.body.dataset.diagnostics = next;
 
       if (diagnosticsToggle) {
         diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
-        diagnosticsToggle.textContent = next === "hidden" ? "⌁" : next === "peek" ? "◫" : "✕";
       }
     }
 

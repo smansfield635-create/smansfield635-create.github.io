@@ -51,8 +51,7 @@
             type="button"
             aria-label="Toggle diagnostics"
             aria-expanded="false"
-          >
-          </button>
+          ></button>
         </div>
       </div>
     </div>
@@ -126,45 +125,6 @@
       control.resize(width, height);
     }
 
-    function buildTerrainSeed() {
-      const width = WORLD_KERNEL.planetField.width;
-      const height = WORLD_KERNEL.planetField.height;
-      const samples = [];
-
-      for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
-          const latDeg = 90 - (y / (height - 1)) * 180;
-          const lonDeg = -180 + (x / width) * 360;
-
-          const latNorm = Math.abs(latDeg) / 90;
-          const lonRad = (lonDeg * Math.PI) / 180;
-          const latRad = (latDeg * Math.PI) / 180;
-
-          const continentalWave =
-            Math.sin(lonRad * 1.7) * 0.32 +
-            Math.cos(latRad * 1.2) * 0.18 +
-            Math.sin((lonRad + latRad) * 1.1) * 0.12;
-
-          const elevation = continentalWave - latNorm * 0.18;
-          const seaLevel = 0.02;
-          const terrainClass = elevation <= seaLevel ? "water" : "land";
-
-          samples.push({
-            x,
-            y,
-            visible: true,
-            elevation,
-            seaLevel,
-            terrainClass,
-            shoreline: false,
-            continentMass: terrainClass === "water" ? 0 : Math.max(0, elevation + 0.45)
-          });
-        }
-      }
-
-      return Object.freeze({ samples: Object.freeze(samples) });
-    }
-
     function buildProjectionFunction() {
       return function projectPoint(latDeg, lonDeg, radiusOffsetPx = 0) {
         return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
@@ -186,8 +146,7 @@
     }
 
     function updatePlanetField() {
-      const terrainField = buildTerrainSeed();
-      runtime.planetField = planetEngine.buildPlanetField({ terrainField });
+      runtime.planetField = planetEngine.buildPlanetField({});
     }
 
     function renderFrame() {
@@ -260,10 +219,10 @@
 
         runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
           fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
-          chronology: WORLD_KERNEL.canon.chronologyRegistry,
+          dependency: WORLD_KERNEL.canon.dependencyRegistry,
           ownership: WORLD_KERNEL.canon.ownershipRegistry,
           duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
-          fieldOrder: WORLD_KERNEL.planetField.order,
+          pulseOrder: WORLD_KERNEL.planetField.order,
           sampleContract: WORLD_KERNEL.planetField.sampleContract,
           scope: WORLD_KERNEL.scope
         });

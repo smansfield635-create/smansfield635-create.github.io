@@ -4,12 +4,12 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
-}
-
 function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
 function toNumber(value, fallback = 0) {
@@ -23,19 +23,15 @@ function wrapLongitude(lonDeg) {
   return value;
 }
 
-function degToRad(deg) {
-  return (deg * Math.PI) / 180;
-}
-
-function radToDeg(rad) {
-  return (rad * 180) / Math.PI;
-}
-
 function normalizeLongitudeDelta(deltaDeg) {
   let value = deltaDeg;
   while (value > 180) value -= 360;
   while (value < -180) value += 360;
   return value;
+}
+
+function degToRad(deg) {
+  return (deg * Math.PI) / 180;
 }
 
 function buildCoordinateMaps(width, height) {
@@ -57,11 +53,6 @@ function hashNoise(seed, a, b, c = 0) {
   return v - Math.floor(v);
 }
 
-function smoothstep(edge0, edge1, x) {
-  const t = clamp((x - edge0) / Math.max(1e-9, edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
-}
-
 function sampleSignedNoise(seed, latDeg, lonDeg, scaleLat, scaleLon) {
   const a = latDeg / scaleLat;
   const b = lonDeg / scaleLon;
@@ -69,32 +60,69 @@ function sampleSignedNoise(seed, latDeg, lonDeg, scaleLat, scaleLon) {
   return (n * 2) - 1;
 }
 
-function buildAuthoredConstants(contractWidth, contractHeight) {
+function getKernelContract() {
+  const kernel = normalizeObject(WORLD_KERNEL);
+  const planetField = normalizeObject(kernel.planetField);
+  const constants = normalizeObject(kernel.constants);
+
   return Object.freeze({
-    width: contractWidth,
-    height: contractHeight,
-    totalSamples: contractWidth * contractHeight,
+    width: Number.isInteger(planetField.width) ? planetField.width : 256,
+    height: Number.isInteger(planetField.height) ? planetField.height : 256,
+    total: Number.isInteger(planetField.total) ? planetField.total : 65536,
+    constants
+  });
+}
 
-    landTarget: 0.29,
-    waterTarget: 0.71,
-    ratioTolerance: 0.005,
-    seaLevel: 0,
+function buildAuthoredConstants(contract) {
+  const kc = normalizeObject(contract.constants);
 
-    contourSeedA: 1109,
-    contourSeedB: 2713,
-    contourSeedC: 4079,
-    contourAmplitude: 0.07,
-    contourSigma: 0.06,
+  return Object.freeze({
+    width: contract.width,
+    height: contract.height,
+    totalSamples: contract.total,
 
-    macroThreshold: 0.16,
-    finalLandThresholdDefault: 0.18,
-    shorelineBandHalfWidth: 0.018,
+    seaLevel: toNumber(kc.seaLevelNormalized, 0),
+    landTarget: toNumber(kc.landTarget, 0.29),
+    waterTarget: toNumber(kc.waterTarget, 0.71),
+    ratioTolerance: toNumber(kc.ratioTolerance, 0.005),
 
-    equatorialMaxAbsLat: 15,
-    tropicalMaxAbsLat: 30,
-    temperateMaxAbsLat: 55,
-    subpolarMaxAbsLat: 70,
-    polarMaxAbsLat: 90,
+    contourSeedA: toNumber(kc.contourSeedA, 1109),
+    contourSeedB: toNumber(kc.contourSeedB, 2713),
+    contourSeedC: toNumber(kc.contourSeedC, 4079),
+    contourAmplitude: toNumber(kc.contourAmplitude, 0.07),
+    contourSigma: toNumber(kc.contourSigma, 0.06),
+    macroThreshold: toNumber(kc.macroThreshold, 0.16),
+    finalLandThresholdDefault: toNumber(kc.finalLandThresholdDefault, 0.18),
+    shorelineBandHalfWidth: toNumber(kc.shorelineBandHalfWidth, 0.018),
+
+    equatorialMaxAbsLat: toNumber(kc.equatorialMaxAbsLat, 15),
+    tropicalMaxAbsLat: toNumber(kc.tropicalMaxAbsLat, 30),
+    temperateMaxAbsLat: toNumber(kc.temperateMaxAbsLat, 55),
+    subpolarMaxAbsLat: toNumber(kc.subpolarMaxAbsLat, 70),
+    polarMaxAbsLat: toNumber(kc.polarMaxAbsLat, 90),
+
+    thermalBaseline: toNumber(kc.thermalBaseline, 0.64),
+    thermalPolarCoolingStrength: toNumber(kc.thermalPolarCoolingStrength, 0.55),
+    thermalWildernessDecayStrength: toNumber(kc.thermalWildernessDecayStrength, 0.65),
+
+    magneticBaseline: toNumber(kc.magneticBaseline, 0.22),
+
+    hydrologyRunoffStrength: toNumber(kc.hydrologyRunoffStrength, 0.52),
+    hydrologyRiverThreshold: toNumber(kc.hydrologyRiverThreshold, 0.48),
+    hydrologyLakeThreshold: toNumber(kc.hydrologyLakeThreshold, 0.50),
+
+    topologyMountainThreshold: toNumber(kc.topologyMountainThreshold, 0.38),
+    topologyBasinThreshold: toNumber(kc.topologyBasinThreshold, 0.26),
+    topologyCanyonThreshold: toNumber(kc.topologyCanyonThreshold, 0.32),
+    topologyCaveThreshold: toNumber(kc.topologyCaveThreshold, 0.50),
+
+    oceanDepths: Object.freeze({
+      shelf: -0.04,
+      slope: -0.10,
+      abyss: -0.22,
+      trench: -0.36,
+      shelfWidthDeg: 4.5
+    }),
 
     climateLabels: Object.freeze({
       EQUATORIAL: "EQUATORIAL",
@@ -121,28 +149,29 @@ function buildAuthoredConstants(contractWidth, contractHeight) {
       GLACIAL_HIGHLAND: "GLACIAL_HIGHLAND"
     }),
 
-    magneticBaseline: 0.22,
-    auroralPolarGain: 0.82,
-    diamondDensityBase: 0.18,
-    opalDensityBase: 0.28,
-    graniteDensityBase: 0.22,
-    marbleDensityBase: 0.08,
-    metalDensityBase: 0.03,
+    surfaceMaterials: Object.freeze({
+      NONE: "NONE",
+      BEDROCK: "BEDROCK",
+      GRAVEL: "GRAVEL",
+      SAND: "SAND",
+      SILT: "SILT",
+      CLAY: "CLAY",
+      SOIL: "SOIL",
+      ICE: "ICE",
+      SNOW: "SNOW"
+    }),
 
-    thermalBaseline: 0.64,
-    thermalPolarCoolingStrength: 0.55,
-    thermalWildernessDecayStrength: 0.65,
-
-    hydrologyRunoffStrength: 0.52,
-    hydrologyRiverThreshold: 0.48,
-    hydrologyLakeThreshold: 0.50,
-
-    oceanDepths: Object.freeze({
-      shelf: -0.04,
-      slope: -0.10,
-      abyss: -0.22,
-      trench: -0.36,
-      shelfWidthDeg: 4.5
+    biomeTypes: Object.freeze({
+      NONE: "NONE",
+      TROPICAL_RAINFOREST: "TROPICAL_RAINFOREST",
+      TROPICAL_GRASSLAND: "TROPICAL_GRASSLAND",
+      TEMPERATE_FOREST: "TEMPERATE_FOREST",
+      TEMPERATE_GRASSLAND: "TEMPERATE_GRASSLAND",
+      DESERT: "DESERT",
+      TUNDRA: "TUNDRA",
+      WETLAND: "WETLAND",
+      BOREAL_FOREST: "BOREAL_FOREST",
+      GLACIER: "GLACIER"
     }),
 
     anchors: Object.freeze([
@@ -411,17 +440,6 @@ function buildAuthoredConstants(contractWidth, contractHeight) {
   });
 }
 
-function getWorldKernelContract() {
-  const kernel = normalizeObject(WORLD_KERNEL);
-  const planetField = normalizeObject(kernel.planetField);
-  const width = Number.isInteger(planetField.width) ? planetField.width : 256;
-  const height = Number.isInteger(planetField.height) ? planetField.height : 256;
-  return Object.freeze({
-    width,
-    height
-  });
-}
-
 function findAnchor(constants, id) {
   return constants.anchors.find((anchor) => anchor.id === id) ?? null;
 }
@@ -485,13 +503,27 @@ function corridorField(latDeg, lonDeg, a, b, corridorWidthDeg, exponent) {
   return Math.max(0, 1 - Math.pow(normalized, exponent));
 }
 
-function buildBaseSample(x, y, latDeg, lonDeg) {
+function radialFalloff(latDeg, lonDeg, anchorLatDeg, anchorLonDeg, radiusDeg, exponent = 1.75) {
+  const midLatRad = degToRad((latDeg + anchorLatDeg) * 0.5);
+  const dLon = normalizeLongitudeDelta(lonDeg - anchorLonDeg) * Math.cos(midLatRad);
+  const dLat = latDeg - anchorLatDeg;
+  const d = Math.sqrt((dLon * dLon) + (dLat * dLat)) / Math.max(1e-9, radiusDeg);
+  if (d >= 1) return 0;
+  return Math.max(0, 1 - Math.pow(d, exponent));
+}
+
+function createBaseSample(x, y, latDeg, lonDeg) {
   return {
     x,
     y,
     latDeg,
     lonDeg,
     visible: true,
+
+    parentAddress: "ROOT",
+    localAddress: `${x}:${y}`,
+    seedSignature: "AUTHORED_NINE_SUMMITS_WORLD_v1",
+    nestedLatticeDepth: 1,
 
     landMask: 0,
     waterMask: 1,
@@ -502,6 +534,7 @@ function buildBaseSample(x, y, latDeg, lonDeg) {
     elevation: 0,
     seaLevel: 0,
     waterDepth: 0,
+    oceanDepthField: 0,
     terrainClass: "WATER",
     shoreline: false,
     shorelineBand: false,
@@ -509,6 +542,11 @@ function buildBaseSample(x, y, latDeg, lonDeg) {
     continentMass: "NONE",
     macroRegion: "NONE",
     subRegion: "NONE",
+
+    strongestSummitId: "NONE",
+    strongestSummitScore: 0,
+    strongestBasinId: "NONE",
+    strongestBasinScore: 0,
 
     slope: 0,
     curvature: 0,
@@ -524,6 +562,7 @@ function buildBaseSample(x, y, latDeg, lonDeg) {
     freezePotential: 0,
     meltPotential: 0,
     evaporationPressure: 0,
+    climateBandField: "TEMPERATE",
 
     rainfall: 0,
     runoff: 0,
@@ -531,6 +570,8 @@ function buildBaseSample(x, y, latDeg, lonDeg) {
     drainage: "none",
     riverCandidate: false,
     lakeCandidate: false,
+    distanceToWater: -1,
+    distanceToLand: -1,
 
     magneticIntensity: 0,
     shieldingGradient: 0,
@@ -546,92 +587,101 @@ function buildBaseSample(x, y, latDeg, lonDeg) {
     marbleDensity: 0,
     metalDensity: 0,
 
-    sedimentType: "none",
+    sedimentType: "mixed",
     sedimentLoad: 0,
     transportPotential: 0,
     depositionPotential: 0,
 
-    oceanDepthField: 0,
-    climateBandField: "TEMPERATE",
+    surfaceMaterial: "NONE",
+    biomeType: "NONE",
 
-    parentAddress: "ROOT",
-    localAddress: `${x}:${y}`,
-    seedSignature: "AUTHORED_BLUEPRINT_REALIZATION_CONSTANT_PACK_v1",
-    nestedLatticeDepth: 1,
     eventFlags: []
   };
 }
 
-function evaluateMacroWorld(sample, constants) {
-  const anchorScores = Object.create(null);
-  let sumInfluence = 0;
+function stageBaseSampleGrid(constants) {
+  const coordinates = buildCoordinateMaps(constants.width, constants.height);
+  return Array.from({ length: constants.height }, (_, y) =>
+    Array.from({ length: constants.width }, (_, x) => {
+      const latDeg = coordinates.latAt(y);
+      const lonDeg = coordinates.lonAt(x);
+      return createBaseSample(x, y, latDeg, lonDeg);
+    })
+  );
+}
 
-  for (const anchor of constants.anchors) {
-    const score = continentInfluence(
-      sample.latDeg,
-      sample.lonDeg,
-      anchor,
-      constants.continentInfluenceExponent
-    );
-    anchorScores[anchor.id] = score;
-    sumInfluence += score;
-  }
-
+function stageMacroContinentField(grid, constants) {
   const harbor = findAnchor(constants, "HARBOR_SUPERCONTINENT");
   const gratitude = findAnchor(constants, "GRATITUDE_REGION");
   const generosity = findAnchor(constants, "GENEROSITY_REGION");
 
-  const bridgeG = constants.harborBridge.harborToGratitudeWeight * corridorField(
-    sample.latDeg,
-    sample.lonDeg,
-    harbor,
-    gratitude,
-    constants.harborBridge.harborToGratitudeCorridorWidthDeg,
-    constants.harborBridge.falloffExponent
-  );
+  return grid.map((row) => row.map((sample) => {
+    const anchorScores = Object.create(null);
+    let sumInfluence = 0;
 
-  const bridgeN = constants.harborBridge.harborToGenerosityWeight * corridorField(
-    sample.latDeg,
-    sample.lonDeg,
-    harbor,
-    generosity,
-    constants.harborBridge.harborToGenerosityCorridorWidthDeg,
-    constants.harborBridge.falloffExponent
-  );
+    for (const anchor of constants.anchors) {
+      const score = continentInfluence(
+        sample.latDeg,
+        sample.lonDeg,
+        anchor,
+        constants.continentInfluenceExponent
+      );
+      anchorScores[anchor.id] = score;
+      sumInfluence += score;
+    }
 
-  let oceanCarveTotal = 0;
-  for (const carve of constants.oceanCarves) {
-    oceanCarveTotal += radialInfluence(
+    const bridgeG = constants.harborBridge.harborToGratitudeWeight * corridorField(
       sample.latDeg,
       sample.lonDeg,
-      carve,
-      constants.oceanCarveExponent
+      harbor,
+      gratitude,
+      constants.harborBridge.harborToGratitudeCorridorWidthDeg,
+      constants.harborBridge.falloffExponent
     );
-  }
 
-  const macroRaw = sumInfluence + bridgeG + bridgeN - oceanCarveTotal;
-  const macroLandScore = Math.max(0, macroRaw);
+    const bridgeN = constants.harborBridge.harborToGenerosityWeight * corridorField(
+      sample.latDeg,
+      sample.lonDeg,
+      harbor,
+      generosity,
+      constants.harborBridge.harborToGenerosityCorridorWidthDeg,
+      constants.harborBridge.falloffExponent
+    );
 
-  const n1 = sampleSignedNoise(constants.contourSeedA, sample.latDeg, sample.lonDeg, 9.5, 13.5);
-  const n2 = sampleSignedNoise(constants.contourSeedB, sample.latDeg, sample.lonDeg, 18, 23);
-  const n3 = sampleSignedNoise(constants.contourSeedC, sample.latDeg, sample.lonDeg, 36, 44);
-  const contourNoise = (0.55 * n1) + (0.30 * n2) + (0.15 * n3);
+    let oceanCarveTotal = 0;
+    for (const carve of constants.oceanCarves) {
+      oceanCarveTotal += radialInfluence(
+        sample.latDeg,
+        sample.lonDeg,
+        carve,
+        constants.oceanCarveExponent
+      );
+    }
 
-  const coastSensitivity = Math.exp(-Math.abs(macroLandScore - constants.macroThreshold) / constants.contourSigma);
-  const contourContribution = constants.contourAmplitude * coastSensitivity * contourNoise;
-  const finalLandScore = macroLandScore + contourContribution;
+    const macroRaw = sumInfluence + bridgeG + bridgeN - oceanCarveTotal;
+    const macroLandScore = Math.max(0, macroRaw);
 
-  return {
-    ...sample,
-    anchorScores,
-    harborBridgeSupport: bridgeG + bridgeN,
-    oceanCarveTotal,
-    macroLandScore,
-    finalLandScore
-  };
+    const n1 = sampleSignedNoise(constants.contourSeedA, sample.latDeg, sample.lonDeg, 9.5, 13.5);
+    const n2 = sampleSignedNoise(constants.contourSeedB, sample.latDeg, sample.lonDeg, 18, 23);
+    const n3 = sampleSignedNoise(constants.contourSeedC, sample.latDeg, sample.lonDeg, 36, 44);
+    const contourNoise = (0.55 * n1) + (0.30 * n2) + (0.15 * n3);
+
+    const coastSensitivity = Math.exp(-Math.abs(macroLandScore - constants.macroThreshold) / constants.contourSigma);
+    const contourContribution = constants.contourAmplitude * coastSensitivity * contourNoise;
+    const finalLandScore = macroLandScore + contourContribution;
+
+    return {
+      ...sample,
+      anchorScores,
+      harborBridgeSupport: bridgeG + bridgeN,
+      oceanCarveTotal,
+      macroLandScore,
+      finalLandScore
+    };
+  }));
 }
 
-function classifyLandWater(baseSamples, constants) {
+function stageLandWaterClassification(grid, constants) {
   let low = constants.finalLandThresholdDefault - 0.12;
   let high = constants.finalLandThresholdDefault + 0.12;
   let threshold = constants.finalLandThresholdDefault;
@@ -640,7 +690,7 @@ function classifyLandWater(baseSamples, constants) {
     threshold = (low + high) * 0.5;
     let landCount = 0;
 
-    for (const row of baseSamples) {
+    for (const row of grid) {
       for (const sample of row) {
         if (sample.finalLandScore >= threshold) landCount += 1;
       }
@@ -654,7 +704,7 @@ function classifyLandWater(baseSamples, constants) {
     }
   }
 
-  return baseSamples.map((row) => row.map((sample) => {
+  return grid.map((row) => row.map((sample) => {
     const landMask = sample.finalLandScore >= threshold ? 1 : 0;
     const waterMask = 1 - landMask;
     return {
@@ -665,176 +715,179 @@ function classifyLandWater(baseSamples, constants) {
   }));
 }
 
-function assignContinentLabels(sample, constants) {
-  if (sample.landMask !== 1) {
+function stageContinentLabels(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    if (sample.landMask !== 1) {
+      return {
+        ...sample,
+        continentMass: "NONE",
+        macroRegion: "NONE",
+        subRegion: "NONE"
+      };
+    }
+
+    const entries = Object.entries(sample.anchorScores || {});
+    entries.sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      const anchorA = findAnchor(constants, a[0]);
+      const anchorB = findAnchor(constants, b[0]);
+      if (anchorA && anchorB && anchorB.dominanceWeight !== anchorA.dominanceWeight) {
+        return anchorB.dominanceWeight - anchorA.dominanceWeight;
+      }
+      return a[0].localeCompare(b[0]);
+    });
+
+    const bestRegion = entries[0]?.[0] ?? "HARBOR_SUPERCONTINENT";
+    const continentMass =
+      bestRegion === "GRATITUDE_REGION" || bestRegion === "GENEROSITY_REGION"
+        ? "HARBOR_SUPERCONTINENT"
+        : bestRegion;
+
     return {
       ...sample,
-      continentMass: "NONE",
-      macroRegion: "NONE",
-      subRegion: "NONE"
+      continentMass,
+      macroRegion: continentMass,
+      subRegion: bestRegion
     };
-  }
+  }));
+}
 
-  const entries = Object.entries(sample.anchorScores);
-  entries.sort((a, b) => {
-    if (b[1] !== a[1]) return b[1] - a[1];
-    const anchorA = findAnchor(constants, a[0]);
-    const anchorB = findAnchor(constants, b[0]);
-    if (anchorA && anchorB && anchorB.dominanceWeight !== anchorA.dominanceWeight) {
-      return anchorB.dominanceWeight - anchorA.dominanceWeight;
+function stageSummitRealization(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    if (sample.landMask !== 1) {
+      return {
+        ...sample,
+        baseElevation: constants.seaLevel,
+        elevation: constants.seaLevel
+      };
     }
-    return a[0].localeCompare(b[0]);
-  });
 
-  const bestRegion = entries[0]?.[0] ?? "HARBOR_SUPERCONTINENT";
-  const continentMass =
-    bestRegion === "GRATITUDE_REGION" || bestRegion === "GENEROSITY_REGION"
-      ? "HARBOR_SUPERCONTINENT"
-      : bestRegion;
+    let summitElevation = 0;
+    let strongestSummitId = "NONE";
+    let strongestSummitScore = 0;
 
-  return {
-    ...sample,
-    continentMass,
-    macroRegion: continentMass,
-    subRegion: bestRegion
-  };
-}
+    for (const summit of constants.summits) {
+      const influence = radialFalloff(
+        sample.latDeg,
+        sample.lonDeg,
+        summit.anchorLatDeg,
+        summit.anchorLonDeg,
+        summit.influenceRadiusDeg,
+        1.7
+      );
+      if (influence <= 0) continue;
 
-function radialFalloff(latDeg, lonDeg, anchorLatDeg, anchorLonDeg, radiusDeg, exponent = 1.75) {
-  const midLatRad = degToRad((latDeg + anchorLatDeg) * 0.5);
-  const dLon = normalizeLongitudeDelta(lonDeg - anchorLonDeg) * Math.cos(midLatRad);
-  const dLat = latDeg - anchorLatDeg;
-  const d = Math.sqrt((dLon * dLon) + (dLat * dLat)) / Math.max(1e-9, radiusDeg);
-  if (d >= 1) return 0;
-  return Math.max(0, 1 - Math.pow(d, exponent));
-}
+      const contribution = summit.peakHeightNorm * influence;
+      summitElevation += contribution;
 
-function applySummits(sample, constants) {
-  if (sample.landMask !== 1) {
+      if (contribution > strongestSummitScore) {
+        strongestSummitScore = contribution;
+        strongestSummitId = summit.id;
+      }
+    }
+
+    const harborBodyBoost =
+      sample.continentMass === "HARBOR_SUPERCONTINENT"
+        ? 0.05 + (toNumber(sample.harborBridgeSupport, 0) * 0.12)
+        : 0;
+
+    const continentalPlate = 0.04 + (sample.macroLandScore * 0.12) + harborBodyBoost;
+    const baseElevation = clamp(continentalPlate + summitElevation, 0.01, 0.98);
+
     return {
       ...sample,
-      baseElevation: constants.seaLevel,
-      elevation: constants.seaLevel
+      strongestSummitId,
+      strongestSummitScore,
+      baseElevation,
+      elevation: baseElevation
     };
-  }
-
-  let summitElevation = 0;
-  let strongestSummitId = null;
-  let strongestSummitScore = 0;
-
-  for (const summit of constants.summits) {
-    const influence = radialFalloff(
-      sample.latDeg,
-      sample.lonDeg,
-      summit.anchorLatDeg,
-      summit.anchorLonDeg,
-      summit.influenceRadiusDeg,
-      1.7
-    );
-    if (influence <= 0) continue;
-
-    const contribution = summit.peakHeightNorm * influence;
-    summitElevation += contribution;
-
-    if (contribution > strongestSummitScore) {
-      strongestSummitScore = contribution;
-      strongestSummitId = summit.id;
-    }
-  }
-
-  const harborBodyBoost =
-    sample.continentMass === "HARBOR_SUPERCONTINENT"
-      ? 0.05 + (sample.harborBridgeSupport * 0.12)
-      : 0;
-
-  const continentalPlate = 0.04 + (sample.macroLandScore * 0.12) + harborBodyBoost;
-  const baseElevation = clamp(continentalPlate + summitElevation, 0.01, 0.98);
-
-  return {
-    ...sample,
-    strongestSummitId: strongestSummitId ?? "NONE",
-    strongestSummitScore,
-    baseElevation,
-    elevation: baseElevation
-  };
+  }));
 }
 
-function applyBasins(sample, constants) {
-  if (sample.landMask !== 1) return sample;
+function stageBasinRealization(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    if (sample.landMask !== 1) return sample;
 
-  let basinPull = 0;
-  let strongestBasinId = null;
-  let strongestBasinScore = 0;
+    let basinPull = 0;
+    let strongestBasinId = "NONE";
+    let strongestBasinScore = 0;
 
-  for (const basin of constants.basins) {
-    const influence = radialFalloff(
-      sample.latDeg,
-      sample.lonDeg,
-      basin.centerLatDeg,
-      basin.centerLonDeg,
-      basin.influenceRadiusDeg,
-      1.8
-    );
-    if (influence <= 0) continue;
+    for (const basin of constants.basins) {
+      const influence = radialFalloff(
+        sample.latDeg,
+        sample.lonDeg,
+        basin.centerLatDeg,
+        basin.centerLonDeg,
+        basin.influenceRadiusDeg,
+        1.8
+      );
+      if (influence <= 0) continue;
 
-    const contribution = Math.abs(basin.basinDepthNorm) * influence;
-    basinPull += contribution;
+      const contribution = Math.abs(basin.basinDepthNorm) * influence;
+      basinPull += contribution;
 
-    if (contribution > strongestBasinScore) {
-      strongestBasinScore = contribution;
-      strongestBasinId = basin.id;
+      if (contribution > strongestBasinScore) {
+        strongestBasinScore = contribution;
+        strongestBasinId = basin.id;
+      }
     }
-  }
 
-  const elevation = clamp(sample.elevation - basinPull, 0.001, 0.98);
+    const elevation = clamp(sample.elevation - basinPull, 0.001, 0.98);
 
-  return {
-    ...sample,
-    strongestBasinId: strongestBasinId ?? "NONE",
-    strongestBasinScore,
-    elevation
-  };
-}
-
-function applyOceanDepth(sample, constants) {
-  if (sample.landMask === 1) {
     return {
       ...sample,
-      waterDepth: 0,
-      oceanDepthField: 0
+      strongestBasinId,
+      strongestBasinScore,
+      elevation
     };
-  }
-
-  const oceanBase = clamp(sample.oceanCarveTotal, 0, 1.25);
-  let oceanDepth = constants.oceanDepths.shelf;
-
-  if (oceanBase > 0.95) oceanDepth = constants.oceanDepths.trench;
-  else if (oceanBase > 0.68) oceanDepth = constants.oceanDepths.abyss;
-  else if (oceanBase > 0.42) oceanDepth = constants.oceanDepths.slope;
-  else oceanDepth = constants.oceanDepths.shelf;
-
-  return {
-    ...sample,
-    baseElevation: oceanDepth,
-    elevation: oceanDepth,
-    waterDepth: Math.abs(oceanDepth),
-    oceanDepthField: oceanDepth
-  };
+  }));
 }
 
-function assignClimateBand(sample, constants) {
-  const absLat = Math.abs(sample.latDeg);
-  let climateBandField = constants.climateLabels.POLAR;
+function stageOceanDepthRealization(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    if (sample.landMask === 1) {
+      return {
+        ...sample,
+        waterDepth: 0,
+        oceanDepthField: 0,
+        seaLevel: constants.seaLevel
+      };
+    }
 
-  if (absLat < constants.equatorialMaxAbsLat) climateBandField = constants.climateLabels.EQUATORIAL;
-  else if (absLat < constants.tropicalMaxAbsLat) climateBandField = constants.climateLabels.TROPICAL;
-  else if (absLat < constants.temperateMaxAbsLat) climateBandField = constants.climateLabels.TEMPERATE;
-  else if (absLat < constants.subpolarMaxAbsLat) climateBandField = constants.climateLabels.SUBPOLAR;
+    const oceanBase = clamp(toNumber(sample.oceanCarveTotal, 0), 0, 1.25);
+    let oceanDepth = constants.oceanDepths.shelf;
 
-  return {
-    ...sample,
-    climateBandField
-  };
+    if (oceanBase > 0.95) oceanDepth = constants.oceanDepths.trench;
+    else if (oceanBase > 0.68) oceanDepth = constants.oceanDepths.abyss;
+    else if (oceanBase > 0.42) oceanDepth = constants.oceanDepths.slope;
+    else oceanDepth = constants.oceanDepths.shelf;
+
+    return {
+      ...sample,
+      baseElevation: oceanDepth,
+      elevation: oceanDepth,
+      seaLevel: constants.seaLevel,
+      waterDepth: Math.abs(oceanDepth),
+      oceanDepthField: oceanDepth
+    };
+  }));
+}
+
+function stageClimateBands(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    const absLat = Math.abs(sample.latDeg);
+    let climateBandField = constants.climateLabels.POLAR;
+
+    if (absLat < constants.equatorialMaxAbsLat) climateBandField = constants.climateLabels.EQUATORIAL;
+    else if (absLat < constants.tropicalMaxAbsLat) climateBandField = constants.climateLabels.TROPICAL;
+    else if (absLat < constants.temperateMaxAbsLat) climateBandField = constants.climateLabels.TEMPERATE;
+    else if (absLat < constants.subpolarMaxAbsLat) climateBandField = constants.climateLabels.SUBPOLAR;
+
+    return {
+      ...sample,
+      climateBandField
+    };
+  }));
 }
 
 function getElevation(grid, x, y) {
@@ -844,12 +897,11 @@ function getElevation(grid, x, y) {
 function computeDistanceFields(grid) {
   const height = grid.length;
   const width = grid[0]?.length ?? 0;
-
   const distanceToWater = Array.from({ length: height }, () => Array.from({ length: width }, () => Infinity));
   const distanceToLand = Array.from({ length: height }, () => Array.from({ length: width }, () => Infinity));
-
   const waterQueue = [];
   const landQueue = [];
+  const offsets = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
@@ -863,8 +915,6 @@ function computeDistanceFields(grid) {
       }
     }
   }
-
-  const offsets = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
   function bfs(queue, dist) {
     let head = 0;
@@ -889,142 +939,113 @@ function computeDistanceFields(grid) {
   return { distanceToWater, distanceToLand };
 }
 
-function enrichTopology(grid, x, y, constants, distanceFields) {
-  const sample = grid[y][x];
-  const left = getElevation(grid, Math.max(0, x - 1), y);
-  const right = getElevation(grid, Math.min(grid[0].length - 1, x + 1), y);
-  const up = getElevation(grid, x, Math.max(0, y - 1));
-  const down = getElevation(grid, x, Math.min(grid.length - 1, y + 1));
+function stageTopologyFields(grid, constants) {
+  const distanceFields = computeDistanceFields(grid);
 
-  const dx = right - left;
-  const dy = down - up;
-  const slope = clamp(Math.sqrt((dx * dx) + (dy * dy)) * 2.4, 0, 1);
+  return grid.map((row, y) => row.map((sample, x) => {
+    const left = getElevation(grid, Math.max(0, x - 1), y);
+    const right = getElevation(grid, Math.min(grid[0].length - 1, x + 1), y);
+    const up = getElevation(grid, x, Math.max(0, y - 1));
+    const down = getElevation(grid, x, Math.min(grid.length - 1, y + 1));
 
-  const meanNeighbor = (left + right + up + down) / 4;
-  const curvatureRaw = sample.elevation - meanNeighbor;
-  const curvature = clamp(curvatureRaw * 4, -1, 1);
+    const dx = right - left;
+    const dy = down - up;
+    const slope = clamp(Math.sqrt((dx * dx) + (dy * dy)) * 2.4, 0, 1);
 
-  const ridgeStrength = clamp(curvature > 0 ? curvature : 0, 0, 1);
-  const basinStrength = clamp(curvature < 0 ? -curvature : 0, 0, 1);
-  const divideStrength = clamp(Math.abs(dx - dy) * 2.4, 0, 1);
-  const plateauStrength = clamp(sample.elevation > 0.18 ? 1 - slope : 0, 0, 1);
-  const canyonStrength = clamp(
-    slope > 0.18 ? basinStrength * slope * 1.35 : 0,
-    0,
-    1
-  );
-  const cavePotential = clamp(
-    basinStrength * 0.45 + plateauStrength * 0.12 + canyonStrength * 0.28,
-    0,
-    1
-  );
+    const meanNeighbor = (left + right + up + down) / 4;
+    const curvatureRaw = sample.elevation - meanNeighbor;
+    const curvature = clamp(curvatureRaw * 4, -1, 1);
 
-  const distWater = distanceFields.distanceToWater[y][x];
-  const distLand = distanceFields.distanceToLand[y][x];
-  const shoreline = sample.landMask === 1 && distWater <= 1;
-  const shorelineBand = distWater <= 2 || distLand <= 2;
-  const beachCandidate =
-    sample.landMask === 1 &&
-    shorelineBand &&
-    slope < 0.18 &&
-    sample.elevation <= (constants.seaLevel + constants.shorelineBandHalfWidth * 3.5);
+    const ridgeStrength = clamp(curvature > 0 ? curvature : 0, 0, 1);
+    const basinStrength = clamp(curvature < 0 ? -curvature : 0, 0, 1);
+    const divideStrength = clamp(Math.abs(dx - dy) * 2.4, 0, 1);
+    const plateauStrength = clamp(sample.elevation > 0.18 ? 1 - slope : 0, 0, 1);
+    const canyonStrength = clamp(slope > 0.18 ? basinStrength * slope * 1.35 : 0, 0, 1);
+    const cavePotential = clamp(
+      basinStrength * 0.45 + plateauStrength * 0.12 + canyonStrength * 0.28,
+      0,
+      1
+    );
 
-  let terrainClass = constants.terrainClasses.LOWLAND;
+    const distWater = distanceFields.distanceToWater[y][x];
+    const distLand = distanceFields.distanceToLand[y][x];
+    const shoreline = sample.landMask === 1 && distWater <= 1;
+    const shorelineBand = distWater <= 2 || distLand <= 2;
+    const beachCandidate =
+      sample.landMask === 1 &&
+      shorelineBand &&
+      slope < 0.18 &&
+      sample.elevation <= (constants.seaLevel + constants.shorelineBandHalfWidth * 3.5);
 
-  if (sample.waterMask === 1) {
-    if (sample.elevation <= constants.oceanDepths.trench + 0.02) terrainClass = constants.terrainClasses.WATER;
-    else if (sample.elevation <= constants.oceanDepths.abyss + 0.02) terrainClass = constants.terrainClasses.WATER;
-    else if (sample.elevation <= constants.oceanDepths.slope + 0.015) terrainClass = constants.terrainClasses.SHELF;
-    else terrainClass = constants.terrainClasses.SHELF;
-  } else if (sample.climateBandField === constants.climateLabels.POLAR && sample.elevation > 0.26) {
-    terrainClass = constants.terrainClasses.GLACIAL_HIGHLAND;
-  } else if (sample.strongestSummitScore > 0.18 || sample.elevation > 0.56) {
-    terrainClass = constants.terrainClasses.SUMMIT;
-  } else if (sample.elevation > 0.38 || ridgeStrength > 0.35) {
-    terrainClass = constants.terrainClasses.MOUNTAIN;
-  } else if (canyonStrength > 0.32) {
-    terrainClass = constants.terrainClasses.CANYON;
-  } else if (strongestBasinScore(sample) > 0.055 || basinStrength > 0.26) {
-    terrainClass = constants.terrainClasses.BASIN;
-  } else if (plateauStrength > 0.42) {
-    terrainClass = constants.terrainClasses.PLATEAU;
-  } else if (ridgeStrength > 0.18) {
-    terrainClass = constants.terrainClasses.RIDGE;
-  } else if (shoreline) {
-    terrainClass = constants.terrainClasses.SHORELINE;
-  } else if (beachCandidate) {
-    terrainClass = constants.terrainClasses.BEACH;
-  } else if (sample.elevation > 0.12) {
-    terrainClass = constants.terrainClasses.FOOTHILL;
-  }
-
-  return {
-    ...sample,
-    shoreline,
-    shorelineBand,
-    beachCandidate,
-    slope,
-    curvature,
-    ridgeStrength,
-    basinStrength,
-    divideStrength,
-    plateauStrength,
-    canyonStrength,
-    cavePotential,
-    terrainClass,
-    distanceToWater: Number.isFinite(distWater) ? distWater : -1,
-    distanceToLand: Number.isFinite(distLand) ? distLand : -1
-  };
+    return {
+      ...sample,
+      shoreline,
+      shorelineBand,
+      beachCandidate,
+      slope,
+      curvature,
+      ridgeStrength,
+      basinStrength,
+      divideStrength,
+      plateauStrength,
+      canyonStrength,
+      cavePotential,
+      distanceToWater: Number.isFinite(distWater) ? distWater : -1,
+      distanceToLand: Number.isFinite(distLand) ? distLand : -1
+    };
+  }));
 }
 
-function strongestBasinScore(sample) {
-  return toNumber(sample.strongestBasinScore, 0);
-}
+function stageThermodynamics(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    const absLat = Math.abs(sample.latDeg) / 90;
+    const polarCooling = Math.pow(absLat, 1.35) * constants.thermalPolarCoolingStrength;
+    const elevationCooling = clamp(Math.max(0, sample.elevation - constants.seaLevel) * 0.35, 0, 0.34);
+    const basinModeration = clamp(toNumber(sample.strongestBasinScore, 0) * 0.16, 0, 0.14);
+    const shorelineModeration = sample.shoreline ? 0.08 : 0;
+    const summitExposure = clamp(toNumber(sample.strongestSummitScore, 0) * 0.2, 0, 0.18);
+    const regionWarmBias =
+      sample.subRegion === "GRATITUDE_REGION" || sample.subRegion === "GENEROSITY_REGION"
+        ? 0.04
+        : sample.continentMass === "HARBOR_SUPERCONTINENT"
+          ? 0.02
+          : 0;
 
-function enrichThermodynamics(sample, constants) {
-  const absLat = Math.abs(sample.latDeg) / 90;
-  const polarCooling = Math.pow(absLat, 1.35) * constants.thermalPolarCoolingStrength;
-  const elevationCooling = clamp(Math.max(0, sample.elevation - constants.seaLevel) * 0.35, 0, 0.34);
-  const basinModeration = clamp(strongestBasinScore(sample) * 0.16, 0, 0.14);
-  const shorelineModeration = sample.shoreline ? 0.08 : 0;
-  const summitExposure = clamp(sample.strongestSummitScore ? sample.strongestSummitScore * 0.2 : 0, 0, 0.18);
-  const regionWarmBias =
-    sample.subRegion === "GRATITUDE_REGION" || sample.subRegion === "GENEROSITY_REGION"
-      ? 0.04
-      : sample.continentMass === "HARBOR_SUPERCONTINENT"
-        ? 0.02
-        : 0;
+    const temperature = clamp(
+      constants.thermalBaseline +
+        regionWarmBias +
+        basinModeration +
+        shorelineModeration -
+        polarCooling -
+        elevationCooling -
+        summitExposure,
+      0,
+      1
+    );
 
-  const temperature = clamp(
-    constants.thermalBaseline +
-      regionWarmBias +
-      basinModeration +
-      shorelineModeration -
-      polarCooling -
-      elevationCooling -
-      summitExposure,
-    0,
-    1
-  );
+    const thermalGradient = clamp(
+      polarCooling + elevationCooling + sample.slope * 0.18 + summitExposure,
+      0,
+      1
+    );
 
-  const thermalGradient = clamp(
-    polarCooling + elevationCooling + sample.slope * 0.18 + summitExposure,
-    0,
-    1
-  );
+    const freezePotential = clamp((0.42 - temperature) / 0.42, 0, 1);
+    const meltPotential = clamp((temperature - 0.38) / 0.42, 0, 1);
+    const evaporationPressure = clamp(
+      (temperature - 0.28) / 0.52 + (sample.waterMask === 1 ? 0.12 : 0),
+      0,
+      1
+    );
 
-  const freezePotential = clamp((0.42 - temperature) / 0.42, 0, 1);
-  const meltPotential = clamp((temperature - 0.38) / 0.42, 0, 1);
-  const evaporationPressure = clamp((temperature - 0.28) / 0.52 + (sample.waterMask === 1 ? 0.12 : 0), 0, 1);
-
-  return {
-    ...sample,
-    temperature,
-    thermalGradient,
-    freezePotential,
-    meltPotential,
-    evaporationPressure
-  };
+    return {
+      ...sample,
+      temperature,
+      thermalGradient,
+      freezePotential,
+      meltPotential,
+      evaporationPressure
+    };
+  }));
 }
 
 function determineDrainage(sample, left, right, up, down) {
@@ -1040,176 +1061,553 @@ function determineDrainage(sample, left, right, up, down) {
   return targets[0].key;
 }
 
-function enrichHydrology(grid, x, y, constants) {
-  const sample = grid[y][x];
-  const left = grid[y]?.[Math.max(0, x - 1)] ?? null;
-  const right = grid[y]?.[Math.min(grid[0].length - 1, x + 1)] ?? null;
-  const up = grid[Math.max(0, y - 1)]?.[x] ?? null;
-  const down = grid[Math.min(grid.length - 1, y + 1)]?.[x] ?? null;
+function stageHydrology(grid, constants) {
+  return grid.map((row, y) => row.map((sample, x) => {
+    const left = grid[y]?.[Math.max(0, x - 1)] ?? null;
+    const right = grid[y]?.[Math.min(grid[0].length - 1, x + 1)] ?? null;
+    const up = grid[Math.max(0, y - 1)]?.[x] ?? null;
+    const down = grid[Math.min(grid.length - 1, y + 1)]?.[x] ?? null;
 
-  const rainfall = clamp(
-    0.14 +
-      sample.evaporationPressure * 0.34 +
-      strongestBasinScore(sample) * 0.18 +
-      (sample.shorelineBand ? 0.16 : 0) +
-      (sample.climateBandField === constants.climateLabels.EQUATORIAL ? 0.12 : 0),
-    0,
-    1
-  );
+    const rainfall = clamp(
+      0.14 +
+        sample.evaporationPressure * 0.34 +
+        toNumber(sample.strongestBasinScore, 0) * 0.18 +
+        (sample.shorelineBand ? 0.16 : 0) +
+        (sample.climateBandField === constants.climateLabels.EQUATORIAL ? 0.12 : 0),
+      0,
+      1
+    );
 
-  const runoff = clamp(
-    rainfall * constants.hydrologyRunoffStrength +
-      sample.slope * 0.26 +
-      sample.meltPotential * 0.12,
-    0,
-    1
-  );
+    const runoff = clamp(
+      rainfall * constants.hydrologyRunoffStrength +
+        sample.slope * 0.26 +
+        sample.meltPotential * 0.12,
+      0,
+      1
+    );
 
-  const basinAccumulation = clamp(
-    strongestBasinScore(sample) * 0.6 +
-      rainfall * 0.22 +
-      (sample.waterMask === 1 ? 0.2 : 0),
-    0,
-    1
-  );
+    const basinAccumulation = clamp(
+      toNumber(sample.strongestBasinScore, 0) * 0.6 +
+        rainfall * 0.22 +
+        (sample.waterMask === 1 ? 0.2 : 0),
+      0,
+      1
+    );
 
-  const drainage = determineDrainage(sample, left, right, up, down);
-  const riverCandidate =
-    sample.landMask === 1 &&
-    runoff >= constants.hydrologyRiverThreshold &&
-    sample.distanceToWater > 1;
-  const lakeCandidate =
-    sample.landMask === 1 &&
-    basinAccumulation >= constants.hydrologyLakeThreshold &&
-    strongestBasinScore(sample) > 0.04;
+    const drainage = determineDrainage(sample, left, right, up, down);
+    const riverCandidate =
+      sample.landMask === 1 &&
+      runoff >= constants.hydrologyRiverThreshold &&
+      sample.distanceToWater > 1;
+    const lakeCandidate =
+      sample.landMask === 1 &&
+      basinAccumulation >= constants.hydrologyLakeThreshold &&
+      toNumber(sample.strongestBasinScore, 0) > 0.04;
 
-  return {
-    ...sample,
-    rainfall,
-    runoff,
-    basinAccumulation,
-    drainage,
-    riverCandidate,
-    lakeCandidate
-  };
+    return {
+      ...sample,
+      rainfall,
+      runoff,
+      basinAccumulation,
+      drainage,
+      riverCandidate,
+      lakeCandidate
+    };
+  }));
 }
 
-function enrichMagnetics(sample, constants) {
-  const absLat = Math.abs(sample.latDeg) / 90;
-  const polarBias = Math.pow(absLat, 0.72);
-  const mountainAmplifier = clamp(Math.max(0, sample.elevation) * 0.22 + sample.strongestSummitScore * 0.18, 0, 0.24);
+function stageMagnetics(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    const absLat = Math.abs(sample.latDeg) / 90;
+    const polarBias = Math.pow(absLat, 0.72);
+    const mountainAmplifier = clamp(
+      Math.max(0, sample.elevation) * 0.22 + toNumber(sample.strongestSummitScore, 0) * 0.18,
+      0,
+      0.24
+    );
 
-  const magneticIntensity = clamp(
-    constants.magneticBaseline + polarBias * 0.5 + mountainAmplifier,
-    0,
-    1
-  );
+    const magneticIntensity = clamp(
+      constants.magneticBaseline + polarBias * 0.5 + mountainAmplifier,
+      0,
+      1
+    );
 
-  const shieldingGradient = clamp(0.25 + magneticIntensity * 0.68, 0, 1);
-  const auroralPotential = clamp((Math.pow(polarBias, 1.6) * constants.auroralPolarGain) + (sample.climateBandField === constants.climateLabels.POLAR ? 0.08 : 0), 0, 1);
+    const shieldingGradient = clamp(0.25 + magneticIntensity * 0.68, 0, 1);
+    const auroralPotential = clamp(
+      Math.pow(polarBias, 1.6) * 0.82 + (sample.climateBandField === constants.climateLabels.POLAR ? 0.08 : 0),
+      0,
+      1
+    );
 
-  const navigationBias =
-    sample.latDeg > 12
-      ? "N"
-      : sample.latDeg < -12
-        ? "S"
-        : sample.lonDeg >= 0
-          ? "E"
-          : "W";
+    const navigationBias =
+      sample.latDeg > 12 ? "N"
+        : sample.latDeg < -12 ? "S"
+          : sample.lonDeg >= 0 ? "E" : "W";
 
-  const navigationStability = clamp(
-    0.35 + magneticIntensity * 0.5 - sample.canyonStrength * 0.15 - sample.freezePotential * 0.08,
-    0,
-    1
-  );
+    const navigationStability = clamp(
+      0.35 + magneticIntensity * 0.5 - sample.canyonStrength * 0.15 - sample.freezePotential * 0.08,
+      0,
+      1
+    );
 
-  const gravityConstraint = clamp(
-    1 - (sample.slope * 0.18 + sample.canyonStrength * 0.24 + sample.strongestSummitScore * 0.10),
-    0.55,
-    1
-  );
+    const gravityConstraint = clamp(
+      1 - (sample.slope * 0.18 + sample.canyonStrength * 0.24 + toNumber(sample.strongestSummitScore, 0) * 0.10),
+      0.55,
+      1
+    );
 
-  return {
-    ...sample,
-    magneticIntensity,
-    shieldingGradient,
-    auroralPotential,
-    navigationBias,
-    navigationStability,
-    gravityConstraint
-  };
+    return {
+      ...sample,
+      magneticIntensity,
+      shieldingGradient,
+      auroralPotential,
+      navigationBias,
+      navigationStability,
+      gravityConstraint
+    };
+  }));
 }
 
-function enrichMaterials(sample, constants) {
-  const absLat = Math.abs(sample.latDeg) / 90;
-  const highlandBias = clamp(Math.max(0, sample.elevation) * 0.7 + sample.ridgeStrength * 0.22, 0, 1);
-  const basinBias = clamp(strongestBasinScore(sample) * 0.9 + sample.basinStrength * 0.35, 0, 1);
-  const coastalBias = sample.shorelineBand ? 0.12 : 0;
+function stageMaterials(grid) {
+  const baseDiamond = 0.18;
+  const baseOpal = 0.28;
+  const baseGranite = 0.22;
+  const baseMarble = 0.08;
+  const baseMetal = 0.03;
 
-  const diamondDensity = clamp(constants.diamondDensityBase + highlandBias * 0.52, 0, 1);
-  const opalDensity = clamp(constants.opalDensityBase + (1 - absLat) * 0.26 + coastalBias, 0, 1);
-  const graniteDensity = clamp(constants.graniteDensityBase + (1 - highlandBias) * 0.22, 0, 1);
-  const marbleDensity = clamp(constants.marbleDensityBase + basinBias * 0.24, 0, 1);
-  const metalDensity = clamp(constants.metalDensityBase + highlandBias * 0.12 + basinBias * 0.04, 0, 1);
+  return grid.map((row) => row.map((sample) => {
+    const absLat = Math.abs(sample.latDeg) / 90;
+    const highlandBias = clamp(Math.max(0, sample.elevation) * 0.7 + sample.ridgeStrength * 0.22, 0, 1);
+    const basinBias = clamp(toNumber(sample.strongestBasinScore, 0) * 0.9 + sample.basinStrength * 0.35, 0, 1);
+    const coastalBias = sample.shorelineBand ? 0.12 : 0;
 
-  let materialType = "mixed";
-  if (diamondDensity >= opalDensity && diamondDensity >= graniteDensity) materialType = "diamond";
-  else if (opalDensity >= graniteDensity) materialType = "opal";
-  else materialType = "granite";
+    const diamondDensity = clamp(baseDiamond + highlandBias * 0.52, 0, 1);
+    const opalDensity = clamp(baseOpal + (1 - absLat) * 0.26 + coastalBias, 0, 1);
+    const graniteDensity = clamp(baseGranite + (1 - highlandBias) * 0.22, 0, 1);
+    const marbleDensity = clamp(baseMarble + basinBias * 0.24, 0, 1);
+    const metalDensity = clamp(baseMetal + highlandBias * 0.12 + basinBias * 0.04, 0, 1);
 
-  return {
-    ...sample,
-    materialType,
-    diamondDensity,
-    opalDensity,
-    graniteDensity,
-    marbleDensity,
-    metalDensity
-  };
+    let materialType = "mixed";
+    if (diamondDensity >= opalDensity && diamondDensity >= graniteDensity) materialType = "diamond";
+    else if (opalDensity >= graniteDensity) materialType = "opal";
+    else materialType = "granite";
+
+    return {
+      ...sample,
+      materialType,
+      diamondDensity,
+      opalDensity,
+      graniteDensity,
+      marbleDensity,
+      metalDensity
+    };
+  }));
 }
 
-function enrichSediment(sample) {
-  const transportPotential = clamp(
-    sample.runoff * 0.45 + sample.slope * 0.3 + sample.meltPotential * 0.15,
-    0,
-    1
-  );
+function stageSediment(grid) {
+  return grid.map((row) => row.map((sample) => {
+    const transportPotential = clamp(
+      sample.runoff * 0.45 + sample.slope * 0.3 + sample.meltPotential * 0.15,
+      0,
+      1
+    );
 
-  const depositionPotential = clamp(
-    sample.basinAccumulation * 0.5 +
-      (1 - sample.slope) * 0.22 +
-      sample.freezePotential * 0.08 +
-      (sample.shorelineBand ? 0.2 : 0),
-    0,
-    1
-  );
+    const depositionPotential = clamp(
+      sample.basinAccumulation * 0.5 +
+        (1 - sample.slope) * 0.22 +
+        sample.freezePotential * 0.08 +
+        (sample.shorelineBand ? 0.2 : 0),
+      0,
+      1
+    );
 
-  let sedimentType = "mixed";
-  if (sample.waterMask === 1) sedimentType = "marine_sediment";
-  else if (sample.diamondDensity > 0.58 && depositionPotential > 0.45) sedimentType = "diamond_sand";
-  else if (sample.opalDensity > 0.5 && transportPotential > 0.35) sedimentType = "opal_dust";
-  else if (sample.graniteDensity > 0.42) sedimentType = "stone_sediment";
+    let sedimentType = "mixed";
+    if (sample.waterMask === 1) sedimentType = "marine_sediment";
+    else if (sample.diamondDensity > 0.58 && depositionPotential > 0.45) sedimentType = "diamond_sand";
+    else if (sample.opalDensity > 0.5 && transportPotential > 0.35) sedimentType = "opal_dust";
+    else if (sample.graniteDensity > 0.42) sedimentType = "stone_sediment";
 
-  const sedimentLoad = clamp(
-    transportPotential * 0.62 + depositionPotential * 0.28 + sample.metalDensity * 0.08,
-    0,
-    1
-  );
+    const sedimentLoad = clamp(
+      transportPotential * 0.62 + depositionPotential * 0.28 + sample.metalDensity * 0.08,
+      0,
+      1
+    );
 
-  return {
-    ...sample,
-    sedimentType,
-    sedimentLoad,
-    transportPotential,
-    depositionPotential
-  };
+    return {
+      ...sample,
+      sedimentType,
+      sedimentLoad,
+      transportPotential,
+      depositionPotential
+    };
+  }));
 }
 
-function finalizeSample(sample) {
-  return Object.freeze({
+function surfaceMaterialCandidates(sample, constants) {
+  const candidates = [];
+  const SM = constants.surfaceMaterials;
+
+  if (sample.waterMask === 1) {
+    candidates.push({ value: SM.NONE, score: 1, precedence: 999 });
+    return candidates;
+  }
+
+  if (
+    sample.freezePotential >= 0.82 &&
+    sample.meltPotential <= 0.20 &&
+    sample.temperature <= 0.26
+  ) {
+    candidates.push({
+      value: SM.ICE,
+      score:
+        (sample.freezePotential - 0.82) +
+        (0.20 - sample.meltPotential) +
+        (0.26 - sample.temperature),
+      precedence: 1
+    });
+  }
+
+  if (
+    sample.freezePotential >= 0.64 &&
+    sample.elevation >= 0.24 &&
+    !(
+      sample.freezePotential >= 0.82 &&
+      sample.meltPotential <= 0.20 &&
+      sample.temperature <= 0.26
+    )
+  ) {
+    candidates.push({
+      value: SM.SNOW,
+      score: (sample.freezePotential - 0.64) + (sample.elevation - 0.24),
+      precedence: 2
+    });
+  }
+
+  if (
+    sample.slope >= 0.42 ||
+    sample.ridgeStrength >= 0.38 ||
+    (sample.elevation >= 0.34 && sample.depositionPotential <= 0.24)
+  ) {
+    candidates.push({
+      value: SM.BEDROCK,
+      score: Math.max(sample.slope - 0.42, 0) + Math.max(sample.ridgeStrength - 0.38, 0),
+      precedence: 3
+    });
+  }
+
+  if (
+    sample.transportPotential >= 0.48 &&
+    sample.runoff >= 0.42 &&
+    sample.slope >= 0.18
+  ) {
+    candidates.push({
+      value: SM.GRAVEL,
+      score:
+        (sample.transportPotential - 0.48) +
+        (sample.runoff - 0.42) +
+        (sample.slope - 0.18),
+      precedence: 4
+    });
+  }
+
+  if (
+    sample.basinAccumulation >= 0.52 &&
+    sample.depositionPotential >= 0.52 &&
+    sample.slope <= 0.14
+  ) {
+    candidates.push({
+      value: SM.CLAY,
+      score:
+        (sample.basinAccumulation - 0.52) +
+        (sample.depositionPotential - 0.52) +
+        (0.14 - sample.slope),
+      precedence: 5
+    });
+  }
+
+  if (
+    sample.runoff >= 0.26 &&
+    sample.depositionPotential >= 0.34 &&
+    sample.slope <= 0.22
+  ) {
+    candidates.push({
+      value: SM.SILT,
+      score:
+        (sample.runoff - 0.26) +
+        (sample.depositionPotential - 0.34) +
+        (0.22 - sample.slope),
+      precedence: 6
+    });
+  }
+
+  if (
+    sample.shorelineBand ||
+    (sample.evaporationPressure >= 0.62 && sample.rainfall <= 0.24)
+  ) {
+    candidates.push({
+      value: SM.SAND,
+      score:
+        (sample.shorelineBand ? 0.5 : 0) +
+        Math.max(sample.evaporationPressure - 0.62, 0) +
+        Math.max(0.24 - sample.rainfall, 0),
+      precedence: 7
+    });
+  }
+
+  if (
+    sample.rainfall >= 0.24 &&
+    sample.rainfall <= 0.72 &&
+    sample.slope <= 0.30 &&
+    sample.freezePotential <= 0.58 &&
+    sample.evaporationPressure <= 0.72
+  ) {
+    candidates.push({
+      value: SM.SOIL,
+      score:
+        (sample.rainfall - 0.24) +
+        (0.30 - sample.slope) +
+        (0.58 - sample.freezePotential) +
+        (0.72 - sample.evaporationPressure),
+      precedence: 8
+    });
+  }
+
+  if (candidates.length === 0) {
+    candidates.push({ value: SM.SOIL, score: 0, precedence: 8 });
+  }
+
+  return candidates;
+}
+
+function compareCandidates(a, b) {
+  if (a.precedence !== b.precedence) return a.precedence - b.precedence;
+  if (b.score !== a.score) return b.score - a.score;
+  return a.value.localeCompare(b.value);
+}
+
+function stageSurfaceBiomeThresholdBands(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    const surfaceCandidates = surfaceMaterialCandidates(sample, constants);
+    return {
+      ...sample,
+      _surfaceCandidates: surfaceCandidates
+    };
+  }));
+}
+
+function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
+  const BT = constants.biomeTypes;
+  const CL = constants.climateLabels;
+  const SM = constants.surfaceMaterials;
+
+  return grid.map((row) => row.map((sample) => {
+    const surfaceCandidates = Array.isArray(sample._surfaceCandidates) ? [...sample._surfaceCandidates] : [];
+    surfaceCandidates.sort(compareCandidates);
+    const chosenSurface = surfaceCandidates[0]?.value ?? (sample.waterMask === 1 ? SM.NONE : SM.SOIL);
+
+    const biomeCandidates = [];
+    if (sample.waterMask === 1) {
+      biomeCandidates.push({ value: BT.NONE, score: 1, precedence: 999 });
+    } else {
+      if (
+        chosenSurface === SM.ICE &&
+        (
+          (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
+          sample.elevation >= 0.28
+        )
+      ) {
+        biomeCandidates.push({ value: BT.GLACIER, score: sample.freezePotential + sample.elevation, precedence: 1 });
+      }
+
+      if (
+        sample.basinAccumulation >= 0.56 &&
+        sample.runoff >= 0.34 &&
+        sample.slope <= 0.12 &&
+        (
+          sample.terrainClass === constants.terrainClasses.BASIN ||
+          sample.terrainClass === constants.terrainClasses.LOWLAND ||
+          sample.terrainClass === constants.terrainClasses.SHORELINE
+        )
+      ) {
+        biomeCandidates.push({
+          value: BT.WETLAND,
+          score: sample.basinAccumulation + sample.runoff + (0.12 - sample.slope),
+          precedence: 2
+        });
+      }
+
+      if (
+        sample.rainfall <= 0.18 &&
+        sample.evaporationPressure >= 0.62 &&
+        (chosenSurface === SM.SAND || chosenSurface === SM.GRAVEL)
+      ) {
+        biomeCandidates.push({
+          value: BT.DESERT,
+          score: (0.18 - sample.rainfall) + sample.evaporationPressure,
+          precedence: 3
+        });
+      }
+
+      if (
+        sample.climateBandField === CL.EQUATORIAL &&
+        sample.rainfall >= 0.66 &&
+        sample.temperature >= 0.56 &&
+        (chosenSurface === SM.SOIL || chosenSurface === SM.CLAY)
+      ) {
+        biomeCandidates.push({
+          value: BT.TROPICAL_RAINFOREST,
+          score: sample.rainfall + sample.temperature,
+          precedence: 4
+        });
+      }
+
+      if (
+        sample.climateBandField === CL.SUBPOLAR &&
+        sample.rainfall >= 0.28 &&
+        sample.rainfall <= 0.58 &&
+        sample.temperature >= 0.22 &&
+        sample.temperature <= 0.46 &&
+        sample.freezePotential >= 0.30 &&
+        sample.freezePotential <= 0.68
+      ) {
+        biomeCandidates.push({
+          value: BT.BOREAL_FOREST,
+          score: sample.rainfall + sample.temperature + sample.freezePotential,
+          precedence: 5
+        });
+      }
+
+      if (
+        sample.climateBandField === CL.TEMPERATE &&
+        sample.rainfall >= 0.42 &&
+        sample.temperature >= 0.34 &&
+        sample.temperature <= 0.66 &&
+        chosenSurface === SM.SOIL
+      ) {
+        biomeCandidates.push({
+          value: BT.TEMPERATE_FOREST,
+          score: sample.rainfall + sample.temperature,
+          precedence: 6
+        });
+      }
+
+      if (
+        (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
+        sample.freezePotential >= 0.58 &&
+        sample.temperature <= 0.34 &&
+        !(
+          chosenSurface === SM.ICE &&
+          (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
+          sample.elevation >= 0.28
+        )
+      ) {
+        biomeCandidates.push({
+          value: BT.TUNDRA,
+          score: sample.freezePotential + (0.34 - sample.temperature),
+          precedence: 7
+        });
+      }
+
+      if (
+        (sample.climateBandField === CL.EQUATORIAL || sample.climateBandField === CL.TROPICAL) &&
+        sample.rainfall >= 0.30 &&
+        sample.rainfall <= 0.66 &&
+        sample.temperature >= 0.52
+      ) {
+        biomeCandidates.push({
+          value: BT.TROPICAL_GRASSLAND,
+          score: sample.rainfall + sample.temperature,
+          precedence: 8
+        });
+      }
+
+      if (
+        sample.climateBandField === CL.TEMPERATE &&
+        sample.rainfall >= 0.22 &&
+        sample.rainfall <= 0.46 &&
+        sample.temperature >= 0.34 &&
+        sample.temperature <= 0.66
+      ) {
+        biomeCandidates.push({
+          value: BT.TEMPERATE_GRASSLAND,
+          score: sample.rainfall + sample.temperature,
+          precedence: 9
+        });
+      }
+
+      if (biomeCandidates.length === 0) {
+        if (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) {
+          biomeCandidates.push({ value: BT.TUNDRA, score: 0, precedence: 7 });
+        } else {
+          biomeCandidates.push({ value: BT.TEMPERATE_GRASSLAND, score: 0, precedence: 9 });
+        }
+      }
+    }
+
+    biomeCandidates.sort(compareCandidates);
+
+    return {
+      ...sample,
+      _surfaceChosen: chosenSurface,
+      _biomeChosen: biomeCandidates[0]?.value ?? BT.NONE
+    };
+  }));
+}
+
+function stageSurfaceBiomeSamplingUnitAssignment(grid, constants) {
+  const SM = constants.surfaceMaterials;
+  const BT = constants.biomeTypes;
+
+  return grid.map((row) => row.map((sample) => ({
     ...sample,
-    eventFlags: Object.freeze(Array.isArray(sample.eventFlags) ? [...sample.eventFlags] : [])
-  });
+    surfaceMaterial: sample.waterMask === 1 ? SM.NONE : (sample._surfaceChosen ?? SM.SOIL),
+    biomeType: sample.waterMask === 1 ? BT.NONE : (sample._biomeChosen ?? BT.TEMPERATE_GRASSLAND)
+  })));
+}
+
+function stageFinalTerrainClass(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    let terrainClass = constants.terrainClasses.LOWLAND;
+
+    if (sample.waterMask === 1) {
+      if (sample.oceanDepthField <= constants.oceanDepths.slope + 0.015) terrainClass = constants.terrainClasses.SHELF;
+      else terrainClass = constants.terrainClasses.WATER;
+    } else if (sample.surfaceMaterial === constants.surfaceMaterials.ICE) {
+      terrainClass = constants.terrainClasses.POLAR_ICE;
+    } else if (sample.biomeType === constants.biomeTypes.GLACIER || (sample.climateBandField === constants.climateLabels.POLAR && sample.elevation > 0.26)) {
+      terrainClass = constants.terrainClasses.GLACIAL_HIGHLAND;
+    } else if (sample.strongestSummitScore > 0.18 || sample.elevation > 0.56) {
+      terrainClass = constants.terrainClasses.SUMMIT;
+    } else if (sample.elevation > constants.topologyMountainThreshold || sample.ridgeStrength > 0.35) {
+      terrainClass = constants.terrainClasses.MOUNTAIN;
+    } else if (sample.canyonStrength > constants.topologyCanyonThreshold) {
+      terrainClass = constants.terrainClasses.CANYON;
+    } else if (sample.strongestBasinScore > 0.055 || sample.basinStrength > constants.topologyBasinThreshold) {
+      terrainClass = constants.terrainClasses.BASIN;
+    } else if (sample.plateauStrength > 0.42) {
+      terrainClass = constants.terrainClasses.PLATEAU;
+    } else if (sample.ridgeStrength > 0.18) {
+      terrainClass = constants.terrainClasses.RIDGE;
+    } else if (sample.shoreline) {
+      terrainClass = sample.beachCandidate ? constants.terrainClasses.BEACH : constants.terrainClasses.SHORELINE;
+    } else if (sample.elevation > 0.12) {
+      terrainClass = constants.terrainClasses.FOOTHILL;
+    }
+
+    const eventFlags = [];
+    if (sample.riverCandidate) eventFlags.push("RIVER_CANDIDATE");
+    if (sample.lakeCandidate) eventFlags.push("LAKE_CANDIDATE");
+    if (sample.cavePotential >= constants.topologyCaveThreshold) eventFlags.push("CAVE_CANDIDATE");
+    if (sample.shoreline) eventFlags.push("SHORELINE");
+    if (sample.biomeType === constants.biomeTypes.GLACIER) eventFlags.push("GLACIER");
+    if (sample.biomeType === constants.biomeTypes.WETLAND) eventFlags.push("WETLAND");
+
+    return {
+      ...sample,
+      terrainClass,
+      eventFlags
+    };
+  }));
 }
 
 function buildSummary(grid) {
@@ -1248,7 +1646,11 @@ function buildSummary(grid) {
       else summary.waterCount += 1;
       if (sample.shoreline) summary.shorelineCount += 1;
 
-      if (sample.terrainClass === "MOUNTAIN" || sample.terrainClass === "SUMMIT" || sample.terrainClass === "GLACIAL_HIGHLAND") {
+      if (
+        sample.terrainClass === "MOUNTAIN" ||
+        sample.terrainClass === "SUMMIT" ||
+        sample.terrainClass === "GLACIAL_HIGHLAND"
+      ) {
         summary.mountainCount += 1;
       }
       if (sample.terrainClass === "BASIN") summary.basinCount += 1;
@@ -1281,54 +1683,73 @@ function buildSummary(grid) {
 
 function buildCompleteness() {
   return Object.freeze({
-    samples: true,
-    macroMask: true,
-    ratioLock: true,
-    summits: true,
-    basins: true,
-    oceanDepth: true,
-    climate: true,
-    topology: true,
+    base_sample_grid: true,
+    macro_continent_field: true,
+    land_water_classification: true,
+    continent_labels: true,
+    summit_realization: true,
+    basin_realization: true,
+    ocean_depth_realization: true,
+    climate_bands: true,
+    topology_fields: true,
     thermodynamics: true,
     hydrology: true,
     magnetics: true,
-    sediment: true
+    materials: true,
+    sediment: true,
+    surface_biome_threshold_bands: true,
+    surface_biome_precedence_tiebreak: true,
+    surface_biome_sampling_unit_assignment: true,
+    final_terrain_class: true,
+    summary_completeness: true
   });
 }
 
-function buildPlanetFieldFromAuthoredBlueprint(constants) {
-  const coordinates = buildCoordinateMaps(constants.width, constants.height);
+function finalizeSamples(grid) {
+  return Object.freeze(
+    grid.map((row) =>
+      Object.freeze(
+        row.map((sample) => {
+          const finalized = {
+            ...sample,
+            eventFlags: Object.freeze(Array.isArray(sample.eventFlags) ? [...sample.eventFlags] : [])
+          };
 
-  const stage0 = Array.from({ length: constants.height }, (_, y) =>
-    Array.from({ length: constants.width }, (_, x) => {
-      const latDeg = coordinates.latAt(y);
-      const lonDeg = coordinates.lonAt(x);
-      return buildBaseSample(x, y, latDeg, lonDeg);
-    })
+          delete finalized.anchorScores;
+          delete finalized.harborBridgeSupport;
+          delete finalized.oceanCarveTotal;
+          delete finalized._surfaceCandidates;
+          delete finalized._surfaceChosen;
+          delete finalized._biomeChosen;
+
+          return Object.freeze(finalized);
+        })
+      )
+    )
   );
+}
 
-  const stage1 = stage0.map((row) => row.map((sample) => evaluateMacroWorld(sample, constants)));
-  const stage2 = classifyLandWater(stage1, constants).map((row) => row.map((sample) => assignContinentLabels(sample, constants)));
-  const stage3 = stage2.map((row) => row.map((sample) => applySummits(sample, constants)));
-  const stage4 = stage3.map((row) => row.map((sample) => applyBasins(sample, constants)));
-  const stage5 = stage4.map((row) => row.map((sample) => applyOceanDepth(sample, constants)));
-  const stage6 = stage5.map((row) => row.map((sample) => assignClimateBand(sample, constants)));
+function buildPlanetFieldFromAuthoredWorld(constants) {
+  const stage0 = stageBaseSampleGrid(constants);
+  const stage1 = stageMacroContinentField(stage0, constants);
+  const stage2 = stageLandWaterClassification(stage1, constants);
+  const stage3 = stageContinentLabels(stage2, constants);
+  const stage4 = stageSummitRealization(stage3, constants);
+  const stage5 = stageBasinRealization(stage4, constants);
+  const stage6 = stageOceanDepthRealization(stage5, constants);
+  const stage7 = stageClimateBands(stage6, constants);
+  const stage8 = stageTopologyFields(stage7, constants);
+  const stage9 = stageThermodynamics(stage8, constants);
+  const stage10 = stageHydrology(stage9, constants);
+  const stage11 = stageMagnetics(stage10, constants);
+  const stage12 = stageMaterials(stage11);
+  const stage13 = stageSediment(stage12);
+  const stage14 = stageSurfaceBiomeThresholdBands(stage13, constants);
+  const stage15 = stageSurfaceBiomePrecedenceTiebreak(stage14, constants);
+  const stage16 = stageSurfaceBiomeSamplingUnitAssignment(stage15, constants);
+  const stage17 = stageFinalTerrainClass(stage16, constants);
 
-  const distanceFields = computeDistanceFields(stage6);
-  const stage7 = stage6.map((row, y, grid) =>
-    row.map((_, x) => enrichTopology(grid, x, y, constants, distanceFields))
-  );
-
-  const stage8 = stage7.map((row) => row.map((sample) => enrichThermodynamics(sample, constants)));
-  const stage9 = stage8.map((row, y, grid) =>
-    row.map((_, x) => enrichHydrology(grid, x, y, constants))
-  );
-  const stage10 = stage9.map((row) => row.map((sample) => enrichMagnetics(sample, constants)));
-  const stage11 = stage10.map((row) => row.map((sample) => enrichMaterials(sample, constants)));
-  const stage12 = stage11.map((row) => row.map((sample) => enrichSediment(sample)));
-
-  const finalizedRows = stage12.map((row) => Object.freeze(row.map((sample) => finalizeSample(sample))));
-  const samples = Object.freeze(finalizedRows);
+  const samples = finalizeSamples(stage17);
   const summary = buildSummary(samples);
   const completeness = buildCompleteness();
 
@@ -1342,11 +1763,11 @@ function buildPlanetFieldFromAuthoredBlueprint(constants) {
 }
 
 export function createPlanetEngine() {
-  const contract = getWorldKernelContract();
-  const constants = buildAuthoredConstants(contract.width, contract.height);
+  const contract = getKernelContract();
+  const constants = buildAuthoredConstants(contract);
 
   function buildPlanetField(_inputState = {}) {
-    return buildPlanetFieldFromAuthoredBlueprint(constants);
+    return buildPlanetFieldFromAuthoredWorld(constants);
   }
 
   return Object.freeze({

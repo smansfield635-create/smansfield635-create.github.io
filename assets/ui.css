@@ -33,6 +33,10 @@
   --toggle-z: 30;
 
   --font-stack: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --diagnostic-bar-height: 60px;
+  --diagnostic-panel-width: min(420px, calc(100vw - 24px));
+  --diagnostic-panel-max-height: min(58vh, 560px);
 }
 
 * {
@@ -87,19 +91,183 @@ textarea {
   z-index: var(--hud-z);
 }
 
+#runtime-banner,
+.runtime-banner {
+  position: absolute;
+  top: var(--shell-gap);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 180px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(8, 14, 24, 0.68);
+  border: 1px solid rgba(145, 175, 255, 0.18);
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(10px);
+  color: var(--text-1);
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  z-index: var(--overlay-z);
+  pointer-events: none;
+}
+
+#compass-overlay,
+.compass-overlay {
+  position: absolute;
+  right: var(--shell-gap);
+  bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(20, 33, 56, 0.88) 0%, rgba(9, 14, 24, 0.76) 72%, rgba(6, 10, 18, 0.66) 100%);
+  border: 1px solid rgba(145, 175, 255, 0.18);
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(10px);
+  z-index: var(--overlay-z);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#compass-overlay canvas,
+.compass-overlay canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#diagnostics-dock,
+.diagnostics-dock {
+  position: absolute;
+  left: var(--shell-gap);
+  right: var(--shell-gap);
+  bottom: var(--shell-gap);
+  min-height: var(--diagnostic-bar-height);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: var(--overlay-z);
+  pointer-events: none;
+}
+
+#diagnostics-bar,
+.diagnostics-bar {
+  width: min(980px, 100%);
+  min-height: var(--diagnostic-bar-height);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid rgba(145, 175, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(8, 14, 24, 0.76);
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+
+.diagnostic-bar__summary {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.diagnostic-bar__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.diagnostic-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(145, 175, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-1);
+  white-space: nowrap;
+}
+
+.diagnostic-pill__label {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.diagnostic-pill__value {
+  color: var(--text-0);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.diagnostic-pill--ok .diagnostic-pill__value {
+  color: var(--ok);
+}
+
+.diagnostic-pill--danger .diagnostic-pill__value {
+  color: var(--danger);
+}
+
+#diagnostics-toggle,
+.diagnostics-toggle {
+  width: auto;
+  min-width: 110px;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(145, 175, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(10, 16, 28, 0.84);
+  color: var(--text-0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(10px);
+  z-index: var(--toggle-z);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+#diagnostics-toggle:hover,
+.diagnostics-toggle:hover {
+  transform: scale(1.02);
+  background: rgba(18, 28, 46, 0.92);
+  border-color: rgba(145, 175, 255, 0.34);
+}
+
+#diagnostics-toggle:active,
+.diagnostics-toggle:active {
+  transform: scale(0.98);
+}
+
 #debug-panel,
 .debug-panel {
   position: absolute;
-  top: var(--shell-gap);
   left: var(--shell-gap);
-  width: min(360px, calc(100vw - 32px));
-  max-height: calc(100vh - 32px);
+  bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 14px);
+  width: var(--diagnostic-panel-width);
+  max-height: var(--diagnostic-panel-max-height);
   overflow: auto;
   padding-right: 2px;
   display: grid;
   gap: var(--panel-gap);
   pointer-events: auto;
   scrollbar-width: thin;
+  opacity: 0;
+  transform: translateY(10px);
 }
 
 #debug-panel::-webkit-scrollbar,
@@ -170,98 +338,28 @@ textarea {
   color: var(--text-muted);
 }
 
-#runtime-banner,
-.runtime-banner {
-  position: absolute;
-  top: var(--shell-gap);
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 180px;
-  max-width: calc(100vw - 32px);
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(8, 14, 24, 0.68);
-  border: 1px solid rgba(145, 175, 255, 0.18);
-  box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(10px);
-  color: var(--text-1);
-  text-align: center;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  z-index: var(--overlay-z);
-  pointer-events: none;
-}
-
-#compass-overlay,
-.compass-overlay {
-  position: absolute;
-  right: var(--shell-gap);
-  bottom: var(--shell-gap);
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(20, 33, 56, 0.88) 0%, rgba(9, 14, 24, 0.76) 72%, rgba(6, 10, 18, 0.66) 100%);
-  border: 1px solid rgba(145, 175, 255, 0.18);
-  box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(10px);
-  z-index: var(--overlay-z);
-  pointer-events: none;
-  overflow: hidden;
-}
-
-#compass-overlay canvas,
-.compass-overlay canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-#diagnostics-toggle,
-.diagnostics-toggle {
-  position: absolute;
-  top: var(--shell-gap);
-  right: var(--shell-gap);
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(145, 175, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(10, 16, 28, 0.84);
-  color: var(--text-0);
-  display: grid;
-  place-items: center;
-  box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(10px);
-  z-index: var(--toggle-z);
-  pointer-events: auto;
-  cursor: pointer;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
-}
-
-#diagnostics-toggle:hover,
-.diagnostics-toggle:hover {
-  transform: scale(1.04);
-  background: rgba(18, 28, 46, 0.92);
-  border-color: rgba(145, 175, 255, 0.34);
-}
-
-#diagnostics-toggle:active,
-.diagnostics-toggle:active {
-  transform: scale(0.97);
-}
-
 body[data-diagnostics="hidden"] #debug-panel,
 body[data-diagnostics="hidden"] .debug-panel {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-8px);
+  transform: translateY(10px);
+}
+
+body[data-diagnostics="hidden"] #diagnostics-toggle::before,
+body[data-diagnostics="hidden"] .diagnostics-toggle::before {
+  content: "Open";
 }
 
 body[data-diagnostics="peek"] #debug-panel,
 body[data-diagnostics="peek"] .debug-panel {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+body[data-diagnostics="peek"] #diagnostics-toggle::before,
+body[data-diagnostics="peek"] .diagnostics-toggle::before {
+  content: "Open";
 }
 
 body[data-diagnostics="full"] #debug-panel,
@@ -271,13 +369,20 @@ body[data-diagnostics="full"] .debug-panel {
   transform: translateY(0);
 }
 
+body[data-diagnostics="full"] #diagnostics-toggle::before,
+body[data-diagnostics="full"] .diagnostics-toggle::before {
+  content: "Close";
+}
+
 #debug-panel,
 .debug-panel,
 #compass-overlay,
 .compass-overlay,
 #runtime-banner,
-.runtime-banner {
-  transition: opacity 160ms ease, transform 160ms ease;
+.runtime-banner,
+#diagnostics-bar,
+.diagnostics-bar {
+  transition: opacity 160ms ease, transform 160ms ease, bottom 160ms ease;
 }
 
 .hidden {
@@ -300,11 +405,8 @@ body[data-diagnostics="full"] .debug-panel {
   :root {
     --shell-gap: 12px;
     --panel-padding: 12px;
-  }
-
-  #debug-panel,
-  .debug-panel {
-    width: min(320px, calc(100vw - 24px));
+    --diagnostic-bar-height: 64px;
+    --diagnostic-panel-width: min(360px, calc(100vw - 24px));
   }
 
   #compass-overlay,
@@ -312,26 +414,48 @@ body[data-diagnostics="full"] .debug-panel {
     width: 152px;
     height: 152px;
   }
+
+  #diagnostics-bar,
+  .diagnostics-bar {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  #diagnostics-toggle,
+  .diagnostics-toggle {
+    justify-self: end;
+  }
 }
 
 @media (max-width: 680px) {
+  :root {
+    --diagnostic-bar-height: 72px;
+  }
+
   #runtime-banner,
   .runtime-banner {
     top: auto;
-    bottom: calc(var(--shell-gap) + 160px);
+    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 148px);
     font-size: 11px;
   }
 
   #debug-panel,
   .debug-panel {
     width: calc(100vw - 24px);
-    max-height: min(46vh, 420px);
+    max-height: min(50vh, 440px);
+    left: 12px;
   }
 
   #compass-overlay,
   .compass-overlay {
     width: 132px;
     height: 132px;
+    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);
+  }
+
+  .diagnostic-pill {
+    min-height: 28px;
+    padding: 5px 9px;
   }
 }
 
@@ -339,9 +463,9 @@ body[data-diagnostics="full"] .debug-panel {
   :root {
     --panel-title-size: 11px;
     --panel-text-size: 11px;
+    --diagnostic-bar-height: 78px;
   }
 
-  #panel-row,
   .panel-row {
     gap: 6px;
   }
@@ -353,7 +477,16 @@ body[data-diagnostics="full"] .debug-panel {
 
   #diagnostics-toggle,
   .diagnostics-toggle {
-    width: 36px;
+    min-width: 96px;
     height: 36px;
+    padding: 0 12px;
+  }
+
+  .diagnostic-pill__label {
+    font-size: 10px;
+  }
+
+  .diagnostic-pill__value {
+    font-size: 11px;
   }
 }

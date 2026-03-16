@@ -209,13 +209,31 @@
       runtime.planetField = planetEngine.buildPlanetField({});
     }
 
+    function verifyRuntime() {
+      runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
+        fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
+        dependency: WORLD_KERNEL.canon.dependencyRegistry ?? WORLD_KERNEL.canon.chronologyRegistry,
+        ownership: WORLD_KERNEL.canon.ownershipRegistry,
+        duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
+        pulseOrder: WORLD_KERNEL.planetField.order,
+        sampleContract: WORLD_KERNEL.planetField.sampleContract,
+        scope: WORLD_KERNEL.scope
+      });
+    }
+
     function renderFrame() {
+      if (!runtime.planetField) return;
+
       renderer.renderPlanet({
         ctx,
         planetField: runtime.planetField,
         projectPoint: buildProjectionFunction(),
         viewState: runtime.control.cameraState
       });
+    }
+
+    function drawBootBackground() {
+      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
     }
 
     function frame(now) {
@@ -271,54 +289,70 @@
       writePanels(true);
     }
 
-    function start() {
-      try {
-        setPhase("INITIALIZING");
+    function bindEvents() {
+      diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
+
+      window.addEventListener("resize", () => {
         resizeWorld();
-        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
         updateControlState();
-        buildPlanetFieldOnce();
-
-        runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
-          fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
-          dependency: WORLD_KERNEL.canon.dependencyRegistry,
-          ownership: WORLD_KERNEL.canon.ownershipRegistry,
-          duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
-          pulseOrder: WORLD_KERNEL.planetField.order,
-          sampleContract: WORLD_KERNEL.planetField.sampleContract,
-          scope: WORLD_KERNEL.scope
-        });
-
         renderFrame();
         writePanels(true);
+      });
 
-        diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
-        window.addEventListener("resize", () => {
-          resizeWorld();
+      worldCanvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    }
+
+    function beginRunningLoop() {
+      setPhase("RUNNING");
+      startedAt = performance.now();
+      lastFrameAt = startedAt;
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function failStartup(error) {
+      runtime.failure = {
+        phase: "startup",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      setPhase("ERROR");
+      writePanels(true);
+
+      if (frameHandle) {
+        cancelAnimationFrame(frameHandle);
+        frameHandle = 0;
+      }
+    }
+
+    function continueStartupAfterPaint() {
+      requestAnimationFrame(() => {
+        try {
+          buildPlanetFieldOnce();
+          verifyRuntime();
           updateControlState();
           renderFrame();
           writePanels(true);
-        });
-        worldCanvas.addEventListener("pointerdown", onPointerDown);
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", onPointerUp);
-
-        setPhase("RUNNING");
-        startedAt = performance.now();
-        lastFrameAt = startedAt;
-        frameHandle = requestAnimationFrame(frame);
-      } catch (error) {
-        runtime.failure = {
-          phase: "startup",
-          message: error instanceof Error ? error.message : String(error)
-        };
-        setPhase("ERROR");
-        writePanels(true);
-        if (frameHandle) {
-          cancelAnimationFrame(frameHandle);
-          frameHandle = 0;
+          bindEvents();
+          beginRunningLoop();
+        } catch (error) {
+          failStartup(error);
         }
+      });
+    }
+
+    function start() {
+      try {
+        resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        updateControlState();
+        drawBootBackground();
+        setPhase("INITIALIZING");
+        writePanels(true);
+        continueStartupAfterPaint();
+      } catch (error) {
+        failStartup(error);
       }
     }
 

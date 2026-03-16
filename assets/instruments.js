@@ -298,6 +298,36 @@ export function createInstruments() {
     });
   }
 
+  function buildCompactBar(runtime) {
+    const state = getRuntime(runtime);
+    const control = getControl(runtime);
+    const projection = normalizeObject(control?.projectionSummary);
+    const summary = getSummary(runtime);
+    const verification = getVerification(runtime);
+
+    return Object.freeze({
+      phase: normalizePrimitive(state.phase, "BOOT"),
+      fps: toFixedSafe(state.fps, 1),
+      sampleCount: normalizePrimitive(summary.sampleCount),
+      cell: normalizePrimitive(projection.cellId),
+      verify: verification.pass ? "PASS" : "FAIL"
+    });
+  }
+
+  function renderCompactBarHTML(runtime = {}) {
+    const compact = buildCompactBar(runtime);
+
+    return `
+      <div class="diagnostic-bar__group">
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Phase</span><span class="diagnostic-pill__value">${escapeHTML(compact.phase)}</span></span>
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">FPS</span><span class="diagnostic-pill__value">${escapeHTML(compact.fps)}</span></span>
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Samples</span><span class="diagnostic-pill__value">${escapeHTML(compact.sampleCount)}</span></span>
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Cell</span><span class="diagnostic-pill__value">${escapeHTML(compact.cell)}</span></span>
+        <span class="diagnostic-pill diagnostic-pill--${compact.verify === "PASS" ? "ok" : "danger"}"><span class="diagnostic-pill__label">Verify</span><span class="diagnostic-pill__value">${escapeHTML(compact.verify)}</span></span>
+      </div>
+    `.trim();
+  }
+
   function buildPanelMap(runtime) {
     return Object.freeze({
       Runtime: buildRuntimePanel(runtime),
@@ -318,6 +348,7 @@ export function createInstruments() {
 
   return Object.freeze({
     renderKeyValueSection,
+    renderCompactBarHTML,
     renderPanelHTML
   });
 }

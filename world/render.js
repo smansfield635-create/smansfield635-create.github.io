@@ -76,61 +76,66 @@ function withPlanetClip(ctx, projectionState, drawFn) {
   ctx.restore();
 }
 
-function colorForSample(sample) {
-  if (sample.terrainClass === "water") {
-    const runoff = clamp(sample.runoff ?? 0, 0, 1);
-    const depth = clamp((sample.seaLevel ?? 0) - (sample.elevation ?? 0), 0, 1);
-    const blue = Math.round(120 + depth * 90 + runoff * 20);
-    const green = Math.round(80 + runoff * 70);
-    return `rgb(40, ${green}, ${blue})`;
-  }
-
-  const diamond = clamp(sample.diamondDensity ?? 0, 0, 1);
-  const opal = clamp(sample.opalDensity ?? 0, 0, 1);
-  const granite = clamp(sample.graniteDensity ?? 0, 0, 1);
-  const marble = clamp(sample.marbleDensity ?? 0, 0, 1);
-  const elevation = clamp((sample.elevation ?? 0), 0, 1);
-  const freeze = clamp(sample.freezePotential ?? 0, 0, 1);
-  const shoreline = sample.shoreline === true ? 1 : 0;
-
-  const r = Math.round(
-    70 +
-      diamond * 120 +
-      opal * 80 +
-      granite * 35 +
-      marble * 50 +
-      freeze * 50 +
-      shoreline * 40
-  );
-  const g = Math.round(
-    65 +
-      opal * 110 +
-      granite * 55 +
-      marble * 35 +
-      elevation * 35 +
-      shoreline * 45
-  );
-  const b = Math.round(
-    55 +
-      diamond * 145 +
-      opal * 120 +
-      marble * 60 +
-      freeze * 85 +
-      shoreline * 35
-  );
-
-  return `rgb(${clamp(r, 0, 255)}, ${clamp(g, 0, 255)}, ${clamp(b, 0, 255)})`;
+function terrainClass(sample) {
+  return typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
 }
 
-function alphaForSample(sample) {
-  const rainfall = clamp(sample.rainfall ?? 0, 0, 1);
-  const magnetic = clamp(sample.auroralPotential ?? 0, 0, 1);
-  const freeze = clamp(sample.freezePotential ?? 0, 0, 1);
-  return clamp(0.48 + rainfall * 0.08 + magnetic * 0.04 + freeze * 0.05, 0.35, 0.9);
+function biomeType(sample) {
+  return typeof sample?.biomeType === "string" ? sample.biomeType : "NONE";
+}
+
+function surfaceMaterial(sample) {
+  return typeof sample?.surfaceMaterial === "string" ? sample.surfaceMaterial : "NONE";
+}
+
+function climateBand(sample) {
+  return typeof sample?.climateBandField === "string" ? sample.climateBandField : "TEMPERATE";
+}
+
+function isWaterFamily(sample) {
+  return sample?.waterMask === 1 ||
+    terrainClass(sample) === "WATER" ||
+    terrainClass(sample) === "SHELF";
+}
+
+function isLandFamily(sample) {
+  return sample?.landMask === 1;
+}
+
+function isCryosphere(sample) {
+  const tc = terrainClass(sample);
+  return (
+    tc === "POLAR_ICE" ||
+    tc === "GLACIAL_HIGHLAND" ||
+    biomeType(sample) === "GLACIER" ||
+    surfaceMaterial(sample) === "ICE" ||
+    surfaceMaterial(sample) === "SNOW"
+  );
+}
+
+function isShoreTransition(sample) {
+  const tc = terrainClass(sample);
+  return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
+}
+
+function isHighland(sample) {
+  const tc = terrainClass(sample);
+  return (
+    tc === "MOUNTAIN" ||
+    tc === "SUMMIT" ||
+    tc === "GLACIAL_HIGHLAND" ||
+    tc === "RIDGE" ||
+    tc === "PLATEAU"
+  );
+}
+
+function projectionStateOffset(sample) {
+  const elevation = clamp(sample?.elevation ?? 0, -1, 1);
+  return 10 + elevation * 10;
 }
 
 function pointFromSample(sample, projectPoint, radiusScale = 1) {
-  const elevation = clamp(sample.elevation ?? 0, -1, 1);
+  const elevation = clamp(sample?.elevation ?? 0, -1, 1);
   const radiusOffset = radiusScale * elevation * 16;
   return projectPoint(sample.latDeg, sample.lonDeg, radiusOffset);
 }
@@ -249,40 +254,149 @@ function drawOceanBase(ctx, projectionState) {
   });
 }
 
-function drawTerrainMesh(ctx, grid, projectPoint) {
-  if (!grid.length || !grid[0].length) return;
+function waterColorForSample(sample) {
+  const depth = Math.abs(clamp(sample?.oceanDepthField ?? 0, -1, 0));
+  const runoff = clamp(sample?.runoff ?? 0, 0, 1);
+  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
+  const climate = climateBand(sample);
+  const shore = isShoreTransition(sample);
 
-  for (let y = 0; y < grid.length - 1; y += 1) {
-    const row = grid[y];
-    const nextRow = grid[y + 1];
+  let r = 28;
+  let g = 86;
+  let b = 155;
 
-    for (let x = 0; x < row.length - 1; x += 1) {
-      const s00 = row[x];
-      const s10 = row[x + 1];
-      const s01 = nextRow[x];
-      const s11 = nextRow[x + 1];
+  b += Math.round(depth * 55);
+  g += Math.round(runoff * 24);
 
-      const p00 = pointFromSample(s00, projectPoint, 1);
-      const p10 = pointFromSample(s10, projectPoint, 1);
-      const p01 = pointFromSample(s01, projectPoint, 1);
-      const p11 = pointFromSample(s11, projectPoint, 1);
-
-      if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
-
-      const terrainBias =
-        (s00.terrainClass === "water" ? 0 : 1) +
-        (s10.terrainClass === "water" ? 0 : 1) +
-        (s01.terrainClass === "water" ? 0 : 1) +
-        (s11.terrainClass === "water" ? 0 : 1);
-
-      if (terrainBias === 0) continue;
-
-      const color = colorForSample(s00);
-      const alpha = alphaForSample(s00);
-
-      drawQuad(ctx, p00, p10, p11, p01, color, alpha);
-    }
+  if (terrainClass(sample) === "SHELF") {
+    r += 10;
+    g += 18;
+    b -= 8;
   }
+
+  if (shore) {
+    r += 12;
+    g += 16;
+    b -= 10;
+  }
+
+  if (climate === "POLAR" || climate === "SUBPOLAR") {
+    r += Math.round(freeze * 28);
+    g += Math.round(freeze * 18);
+    b += Math.round(freeze * 20);
+  }
+
+  return `rgb(${clamp(r, 0, 255)}, ${clamp(g, 0, 255)}, ${clamp(b, 0, 255)})`;
+}
+
+function landColorForSample(sample) {
+  const tc = terrainClass(sample);
+  const biome = biomeType(sample);
+  const surface = surfaceMaterial(sample);
+  const climate = climateBand(sample);
+
+  const elevation = clamp(sample?.elevation ?? 0, 0, 1);
+  const rainfall = clamp(sample?.rainfall ?? 0, 0, 1);
+  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
+  const basin = clamp(sample?.basinStrength ?? 0, 0, 1);
+  const ridge = clamp(sample?.ridgeStrength ?? 0, 0, 1);
+  const sediment = clamp(sample?.sedimentLoad ?? 0, 0, 1);
+
+  let r = 92;
+  let g = 112;
+  let b = 88;
+
+  if (biome === "TROPICAL_RAINFOREST") {
+    r = 36; g = 92; b = 48;
+  } else if (biome === "TROPICAL_GRASSLAND") {
+    r = 128; g = 140; b = 78;
+  } else if (biome === "TEMPERATE_FOREST") {
+    r = 58; g = 98; b = 62;
+  } else if (biome === "TEMPERATE_GRASSLAND") {
+    r = 138; g = 146; b = 96;
+  } else if (biome === "DESERT") {
+    r = 176; g = 148; b = 96;
+  } else if (biome === "TUNDRA") {
+    r = 124; g = 128; b = 118;
+  } else if (biome === "WETLAND") {
+    r = 72; g = 102; b = 78;
+  } else if (biome === "BOREAL_FOREST") {
+    r = 66; g = 86; b = 70;
+  } else if (biome === "GLACIER") {
+    r = 208; g = 220; b = 232;
+  }
+
+  if (surface === "BEDROCK") {
+    r += 18; g += 12; b += 10;
+  } else if (surface === "GRAVEL") {
+    r += 10; g += 8; b += 6;
+  } else if (surface === "SAND") {
+    r += 22; g += 18; b += 6;
+  } else if (surface === "SILT") {
+    r += 12; g += 10; b += 8;
+  } else if (surface === "CLAY") {
+    r += 18; g -= 6; b -= 2;
+  } else if (surface === "SOIL") {
+    r += 6; g += 8; b -= 4;
+  } else if (surface === "ICE") {
+    r = 218; g = 228; b = 238;
+  } else if (surface === "SNOW") {
+    r = 238; g = 240; b = 244;
+  }
+
+  if (tc === "BEACH") {
+    r = 198; g = 176; b = 120;
+  } else if (tc === "SHORELINE") {
+    r += 16; g += 14; b += 2;
+  } else if (tc === "BASIN") {
+    r -= 10; g += 8; b -= 6;
+  } else if (tc === "CANYON") {
+    r += 28; g -= 10; b -= 10;
+  } else if (tc === "RIDGE") {
+    r += 8; g += 4; b += 2;
+  } else if (tc === "PLATEAU") {
+    r += 12; g += 10; b += 8;
+  } else if (tc === "MOUNTAIN") {
+    r += 24; g += 22; b += 24;
+  } else if (tc === "SUMMIT") {
+    r += 44; g += 42; b += 46;
+  } else if (tc === "GLACIAL_HIGHLAND" || tc === "POLAR_ICE") {
+    r = 210; g = 220; b = 232;
+  }
+
+  if (climate === "POLAR" || climate === "SUBPOLAR") {
+    r += Math.round(freeze * 18);
+    g += Math.round(freeze * 18);
+    b += Math.round(freeze * 24);
+  } else if (climate === "EQUATORIAL" || climate === "TROPICAL") {
+    g += Math.round(rainfall * 12);
+  }
+
+  r += Math.round(elevation * 12 + ridge * 14 + sediment * 6 - basin * 8);
+  g += Math.round(rainfall * 10 - freeze * 4);
+  b += Math.round(freeze * 10);
+
+  return `rgb(${clamp(r, 0, 255)}, ${clamp(g, 0, 255)}, ${clamp(b, 0, 255)})`;
+}
+
+function colorForSample(sample) {
+  return isWaterFamily(sample) ? waterColorForSample(sample) : landColorForSample(sample);
+}
+
+function alphaForSample(sample) {
+  const rainfall = clamp(sample?.rainfall ?? 0, 0, 1);
+  const magnetic = clamp(sample?.auroralPotential ?? 0, 0, 1);
+  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
+  const water = isWaterFamily(sample);
+  const shore = isShoreTransition(sample);
+
+  let alpha = water ? 0.78 : 0.62;
+  alpha += rainfall * 0.06;
+  alpha += magnetic * 0.03;
+  alpha += freeze * 0.04;
+  if (shore) alpha += 0.04;
+
+  return clamp(alpha, 0.35, 0.92);
 }
 
 function drawOceanMesh(ctx, grid, projectPoint) {
@@ -299,10 +413,10 @@ function drawOceanMesh(ctx, grid, projectPoint) {
       const s11 = nextRow[x + 1];
 
       const waterBias =
-        (s00.terrainClass === "water" ? 1 : 0) +
-        (s10.terrainClass === "water" ? 1 : 0) +
-        (s01.terrainClass === "water" ? 1 : 0) +
-        (s11.terrainClass === "water" ? 1 : 0);
+        (isWaterFamily(s00) ? 1 : 0) +
+        (isWaterFamily(s10) ? 1 : 0) +
+        (isWaterFamily(s01) ? 1 : 0) +
+        (isWaterFamily(s11) ? 1 : 0);
 
       if (waterBias === 0) continue;
 
@@ -313,7 +427,40 @@ function drawOceanMesh(ctx, grid, projectPoint) {
 
       if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
-      drawQuad(ctx, p00, p10, p11, p01, colorForSample(s00), 0.72);
+      drawQuad(ctx, p00, p10, p11, p01, colorForSample(s00), alphaForSample(s00));
+    }
+  }
+}
+
+function drawTerrainMesh(ctx, grid, projectPoint) {
+  if (!grid.length || !grid[0].length) return;
+
+  for (let y = 0; y < grid.length - 1; y += 1) {
+    const row = grid[y];
+    const nextRow = grid[y + 1];
+
+    for (let x = 0; x < row.length - 1; x += 1) {
+      const s00 = row[x];
+      const s10 = row[x + 1];
+      const s01 = nextRow[x];
+      const s11 = nextRow[x + 1];
+
+      const landBias =
+        (isLandFamily(s00) ? 1 : 0) +
+        (isLandFamily(s10) ? 1 : 0) +
+        (isLandFamily(s01) ? 1 : 0) +
+        (isLandFamily(s11) ? 1 : 0);
+
+      if (landBias === 0) continue;
+
+      const p00 = pointFromSample(s00, projectPoint, 1);
+      const p10 = pointFromSample(s10, projectPoint, 1);
+      const p01 = pointFromSample(s01, projectPoint, 1);
+      const p11 = pointFromSample(s11, projectPoint, 1);
+
+      if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
+
+      drawQuad(ctx, p00, p10, p11, p01, colorForSample(s00), alphaForSample(s00));
     }
   }
 }
@@ -326,7 +473,7 @@ function drawClouds(ctx, grid, projectPoint) {
     for (let x = 0; x < grid[y].length; x += 3) {
       const sample = grid[y][x];
       const cloudiness = clamp(
-        (sample.rainfall ?? 0) * 0.65 + (sample.evaporationPressure ?? 0) * 0.2,
+        (sample?.rainfall ?? 0) * 0.65 + (sample?.evaporationPressure ?? 0) * 0.2,
         0,
         1
       );
@@ -346,11 +493,6 @@ function drawClouds(ctx, grid, projectPoint) {
   }
 
   ctx.restore();
-}
-
-function projectionStateOffset(sample) {
-  const elevation = clamp(sample.elevation ?? 0, -1, 1);
-  return 10 + elevation * 10;
 }
 
 function drawLighting(ctx, projectionState) {
@@ -394,10 +536,29 @@ function drawPlanetOutline(ctx, projectionState) {
 }
 
 function buildRenderAudit(planetField) {
+  const grid = sampleGrid(planetField);
+  let waterFamilyCount = 0;
+  let landFamilyCount = 0;
+  let cryosphereCount = 0;
+  let shorelineCount = 0;
+
+  for (const row of grid) {
+    for (const sample of row) {
+      if (isWaterFamily(sample)) waterFamilyCount += 1;
+      if (isLandFamily(sample)) landFamilyCount += 1;
+      if (isCryosphere(sample)) cryosphereCount += 1;
+      if (isShoreTransition(sample)) shorelineCount += 1;
+    }
+  }
+
   return Object.freeze({
     sampleCount: Array.isArray(planetField?.samples)
       ? planetField.samples.reduce((total, row) => total + (Array.isArray(row) ? row.length : 0), 0)
       : 0,
+    waterFamilyCount,
+    landFamilyCount,
+    cryosphereCount,
+    shorelineCount,
     summary: normalizeObject(planetField?.summary)
   });
 }
@@ -421,7 +582,6 @@ export function createRenderer() {
 
     drawSpace(ctx, projectionState, viewState);
     drawAtmosphere(ctx, projectionState);
-
     drawOceanBase(ctx, projectionState);
 
     withPlanetClip(ctx, projectionState, () => {

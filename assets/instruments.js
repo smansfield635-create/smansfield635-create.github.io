@@ -1,4 +1,4 @@
-import { WORLD_KERNEL, verifyCanonicalStructure } from "../world/world_kernel.js";
+import { WORLD_KERNEL } from "../world/world_kernel.js";
 
 export function createInstruments() {
   const EMPTY = "—";
@@ -77,7 +77,12 @@ export function createInstruments() {
     const normalized = normalizePrimitive(value);
 
     if (normalized === "ALLOW" || normalized === "PASS" || normalized === "true") return "ok";
-    if (normalized === "BLOCK" || normalized === "FAIL" || normalized === "false" || normalized === "ERROR") {
+    if (
+      normalized === "BLOCK" ||
+      normalized === "FAIL" ||
+      normalized === "false" ||
+      normalized === "ERROR"
+    ) {
       return "danger";
     }
     if (normalized === EMPTY) return "muted";
@@ -104,18 +109,6 @@ export function createInstruments() {
 
     const className = sectionClass ? `panel-section ${sectionClass}` : "panel-section";
     return `<section class="${className}"><h3 class="panel-title">${escapeHTML(title)}</h3>${rows.join("")}</section>`;
-  }
-
-  function buildExpectedCanonInput() {
-    return Object.freeze({
-      fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
-      chronology: WORLD_KERNEL.canon.chronologyRegistry,
-      ownership: WORLD_KERNEL.canon.ownershipRegistry,
-      duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
-      fieldOrder: WORLD_KERNEL.planetField.order,
-      sampleContract: WORLD_KERNEL.planetField.sampleContract,
-      scope: WORLD_KERNEL.scope
-    });
   }
 
   function getRuntime(runtime) {
@@ -147,10 +140,33 @@ export function createInstruments() {
     return normalizeObject(runtime?.failure);
   }
 
-  function getVerification(runtime) {
+  function getVerificationState(runtime) {
     const provided = normalizeObject(runtime?.verification);
-    if (Object.keys(provided).length) return provided;
-    return verifyCanonicalStructure(buildExpectedCanonInput());
+    const hasProvided = Object.keys(provided).length > 0;
+
+    if (hasProvided) {
+      return Object.freeze({
+        ...provided,
+        __source: "provided",
+        __present: true
+      });
+    }
+
+    return Object.freeze({
+      pass: "MISSING",
+      file_home_pass: EMPTY,
+      dependency_pass: EMPTY,
+      chronology_pass: EMPTY,
+      ownership_pass: EMPTY,
+      duplicate_truth_pass: EMPTY,
+      pulse_order_pass: EMPTY,
+      field_order_pass: EMPTY,
+      sample_contract_pass: EMPTY,
+      scope_pass: EMPTY,
+      reasons: Object.freeze(["verification_missing"]),
+      __source: "missing",
+      __present: false
+    });
   }
 
   function getOrientation(runtime) {
@@ -192,13 +208,16 @@ export function createInstruments() {
 
   function buildKernelPanel(runtime) {
     const kernel = getKernel(runtime);
+    const planetField = normalizeObject(kernel.planetField);
+    const lattices = normalizeObject(kernel.lattices);
+    const planetSample = normalizeObject(lattices.planetSample);
 
     return Object.freeze({
       label: normalizePrimitive(kernel.label),
       version: normalizePrimitive(kernel.version),
-      latticeWidth: normalizePrimitive(kernel.lattice?.width),
-      latticeHeight: normalizePrimitive(kernel.lattice?.height),
-      fieldOrder: joinList(kernel.planetField?.order),
+      latticeWidth: normalizePrimitive(planetSample.width ?? planetField.width),
+      latticeHeight: normalizePrimitive(planetSample.height ?? planetField.height),
+      fieldOrder: joinList(planetField.order ?? planetField.pulseOrder),
       scopeBranch: normalizePrimitive(kernel.scope?.activeBranch),
       diagnosticsEnabled: normalizePrimitive(kernel.flags?.enableDiagnostics)
     });
@@ -221,16 +240,31 @@ export function createInstruments() {
   }
 
   function buildVerificationPanel(runtime) {
-    const verification = getVerification(runtime);
+    const verification = getVerificationState(runtime);
     const completeness = getCompleteness(runtime);
+    const reasons = normalizeArray(verification.reasons);
+
+    const passValue =
+      verification.__present === false
+        ? "MISSING"
+        : verification.pass === true
+          ? "PASS"
+          : verification.pass === false
+            ? "FAIL"
+            : normalizePrimitive(verification.pass);
 
     return Object.freeze({
-      pass: verification.pass ? "PASS" : "FAIL",
+      source: verification.__source === "provided" ? "provided" : "missing",
+      pass: passValue,
       fileHomePass: normalizePrimitive(verification.file_home_pass),
-      chronologyPass: normalizePrimitive(verification.chronology_pass),
+      dependencyPass: normalizePrimitive(
+        verification.dependency_pass ?? verification.chronology_pass
+      ),
       ownershipPass: normalizePrimitive(verification.ownership_pass),
       duplicateTruthPass: normalizePrimitive(verification.duplicate_truth_pass),
-      fieldOrderPass: normalizePrimitive(verification.field_order_pass),
+      pulseOrderPass: normalizePrimitive(
+        verification.pulse_order_pass ?? verification.field_order_pass
+      ),
       sampleContractPass: normalizePrimitive(verification.sample_contract_pass),
       scopePass: normalizePrimitive(verification.scope_pass),
       completeness: joinList(
@@ -238,7 +272,7 @@ export function createInstruments() {
           .filter(([, value]) => value === true)
           .map(([key]) => key)
       ),
-      reasons: joinList(verification.reasons)
+      reasons: joinList(reasons)
     });
   }
 
@@ -303,19 +337,36 @@ export function createInstruments() {
     const control = getControl(runtime);
     const projection = normalizeObject(control?.projectionSummary);
     const summary = getSummary(runtime);
-    const verification = getVerification(runtime);
+    const verification = getVerificationState(runtime);
+
+    const verifyValue =
+      verification.__present === false
+        ? "MISSING"
+        : verification.pass === true
+          ? "PASS"
+          : verification.pass === false
+            ? "FAIL"
+            : normalizePrimitive(verification.pass);
 
     return Object.freeze({
       phase: normalizePrimitive(state.phase, "BOOT"),
       fps: toFixedSafe(state.fps, 1),
       sampleCount: normalizePrimitive(summary.sampleCount),
       cell: normalizePrimitive(projection.cellId),
-      verify: verification.pass ? "PASS" : "FAIL"
+      verify: verifyValue
     });
   }
 
   function renderCompactBarHTML(runtime = {}) {
     const compact = buildCompactBar(runtime);
+    const verifyTone =
+      compact.verify === "PASS"
+        ? "ok"
+        : compact.verify === "FAIL"
+          ? "danger"
+          : "";
+
+    const verifyClass = verifyTone ? ` diagnostic-pill--${verifyTone}` : "";
 
     return `
       <div class="diagnostic-bar__group">
@@ -323,7 +374,7 @@ export function createInstruments() {
         <span class="diagnostic-pill"><span class="diagnostic-pill__label">FPS</span><span class="diagnostic-pill__value">${escapeHTML(compact.fps)}</span></span>
         <span class="diagnostic-pill"><span class="diagnostic-pill__label">Samples</span><span class="diagnostic-pill__value">${escapeHTML(compact.sampleCount)}</span></span>
         <span class="diagnostic-pill"><span class="diagnostic-pill__label">Cell</span><span class="diagnostic-pill__value">${escapeHTML(compact.cell)}</span></span>
-        <span class="diagnostic-pill diagnostic-pill--${compact.verify === "PASS" ? "ok" : "danger"}"><span class="diagnostic-pill__label">Verify</span><span class="diagnostic-pill__value">${escapeHTML(compact.verify)}</span></span>
+        <span class="diagnostic-pill${verifyClass}"><span class="diagnostic-pill__label">Verify</span><span class="diagnostic-pill__value">${escapeHTML(compact.verify)}</span></span>
       </div>
     `.trim();
   }

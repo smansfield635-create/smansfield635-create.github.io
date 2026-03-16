@@ -1,86 +1,290 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8">
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <title>Nine Summits World</title>
   <meta
     name="description"
-    content="Constraint-governed world runtime baseline for the external harbor branch."
-  />
-  <title>World Is Round · External Harbor Branch</title>
-  <link rel="stylesheet" href="./assets/ui.css?v=1006" />
+    content="Compressed 256×256 world engine bootstrap shell."
+  >
+  <link rel="stylesheet" href="./assets/ui.css">
 </head>
-<body data-shell="canonical" data-runtime="booting" data-diagnostics="peek">
-  <div id="app" aria-label="World runtime host">
-    <canvas id="world-canvas" aria-label="World canvas"></canvas>
+<body data-diagnostics="peek">
+  <div id="app-shell">
+    <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
 
-    <div id="hud" aria-label="Heads-up display">
-      <div id="title-bar" aria-label="Title and runtime state">
-        <div class="brand-card">
-          <h1 class="brand-title">World Is Round</h1>
-          <div class="brand-subtitle">
-            External branch baseline · Harbor → Gratitude → Generosity
-          </div>
-        </div>
-
-        <div class="state-card">
-          <div class="state-label">Runtime state</div>
-          <div id="runtime-phase" class="state-value">BOOT</div>
-        </div>
+    <div id="hud" class="hud">
+      <div id="runtime-banner" class="runtime-banner" aria-live="polite">
+        <span id="runtime-phase">BOOT</span>
       </div>
+
+      <div id="debug-panel" class="debug-panel" aria-live="polite">
+        <section class="panel-section">
+          <h3 class="panel-title">Loading</h3>
+          <div class="panel-row">
+            <span class="panel-key">State</span>
+            <span class="panel-value">Booting application shell…</span>
+          </div>
+        </section>
+      </div>
+
+      <div id="compass-overlay" class="compass-overlay" aria-hidden="true"></div>
 
       <button
         id="diagnostics-toggle"
         class="diagnostics-toggle"
         type="button"
         aria-label="Toggle diagnostics"
-        aria-controls="debug-panel"
-        aria-expanded="false"
+        aria-expanded="true"
       >
-        ⌁
+        ◫
       </button>
-
-      <div id="debug-panel" class="panel-card" aria-label="Debug instrumentation panel">
-        <div id="debug-content" class="panel-grid"></div>
-      </div>
-
-      <div id="compass-overlay" class="panel-card" aria-label="Compass overlay">
-        <canvas id="compass-canvas" aria-label="Compass canvas"></canvas>
-      </div>
     </div>
   </div>
 
-  <noscript>
-    <div
-      style="position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#000;color:#fff;font-family:system-ui,sans-serif;"
-    >
-      JavaScript is required to run the external world baseline.
-    </div>
-  </noscript>
-
   <script type="module">
-    import { createRuntime } from "./world/scene_runtime.js?v=1006";
+    import { WORLD_KERNEL } from "./world/world_kernel.js";
+    import { createPlanetEngine } from "./world/planet_engine.js";
+    import { createRenderer } from "./world/render.js";
+    import { createControlSystem } from "./world/control.js";
+    import { createInstruments } from "./assets/instruments.js";
 
     const worldCanvas = document.getElementById("world-canvas");
-    const compassCanvas = document.getElementById("compass-canvas");
-    const debugContent = document.getElementById("debug-content");
+    const debugPanel = document.getElementById("debug-panel");
     const runtimePhase = document.getElementById("runtime-phase");
     const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
-    const runtime = createRuntime({
-      worldCanvas,
-      compassCanvas,
-      debugContent,
-      runtimePhase,
-      diagnosticsToggle
-    });
+    const planetEngine = createPlanetEngine();
+    const renderer = createRenderer();
+    const control = createControlSystem();
+    const instruments = createInstruments();
 
-    runtime.start();
-    window.__WORLD_RUNTIME__ = runtime;
-    document.body.dataset.runtime = "running";
+    const ctx = worldCanvas.getContext("2d", { alpha: true });
+
+    const runtime = {
+      phase: "BOOT",
+      activeFile: "index.html",
+      kernel: WORLD_KERNEL,
+      planetField: null,
+      control: {
+        cameraState: null,
+        projectionSummary: null,
+        cardinals: null
+      },
+      verification: null,
+      failure: null,
+      dtMs: 0,
+      fps: 0,
+      elapsedMs: 0
+    };
+
+    let frameHandle = 0;
+    let lastFrameAt = performance.now();
+    let startedAt = lastFrameAt;
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    function setPhase(phase) {
+      runtime.phase = phase;
+      if (runtimePhase) runtimePhase.textContent = phase;
+    }
+
+    function writePanels() {
+      if (!debugPanel) return;
+      debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+    }
+
+    function resizeWorld() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      worldCanvas.width = width;
+      worldCanvas.height = height;
+
+      control.resize(width, height);
+    }
+
+    function buildTerrainSeed() {
+      const width = WORLD_KERNEL.planetField.width;
+      const height = WORLD_KERNEL.planetField.height;
+      const samples = [];
+
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const latDeg = 90 - (y / (height - 1)) * 180;
+          const lonDeg = -180 + (x / width) * 360;
+
+          const latNorm = Math.abs(latDeg) / 90;
+          const lonRad = (lonDeg * Math.PI) / 180;
+          const latRad = (latDeg * Math.PI) / 180;
+
+          const continentalWave =
+            Math.sin(lonRad * 1.7) * 0.32 +
+            Math.cos(latRad * 1.2) * 0.18 +
+            Math.sin((lonRad + latRad) * 1.1) * 0.12;
+
+          const elevation = continentalWave - latNorm * 0.18;
+          const seaLevel = 0.02;
+          const terrainClass = elevation <= seaLevel ? "water" : "land";
+
+          samples.push({
+            x,
+            y,
+            visible: true,
+            elevation,
+            seaLevel,
+            terrainClass,
+            shoreline: false,
+            continentMass: terrainClass === "water" ? 0 : Math.max(0, elevation + 0.45)
+          });
+        }
+      }
+
+      return Object.freeze({ samples: Object.freeze(samples) });
+    }
+
+    function buildProjectionFunction() {
+      return function projectPoint(latDeg, lonDeg, radiusOffsetPx = 0) {
+        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
+      };
+    }
+
+    function updateControlState() {
+      runtime.control.cameraState = control.getCameraState();
+      runtime.control.projectionSummary = control.getProjectionSummary();
+      runtime.control.cardinals = control.getCardinals();
+    }
+
+    function updateTiming(now) {
+      const dtMs = now - lastFrameAt;
+      lastFrameAt = now;
+      runtime.dtMs = dtMs;
+      runtime.fps = dtMs > 0 ? 1000 / dtMs : 0;
+      runtime.elapsedMs = now - startedAt;
+    }
+
+    function updatePlanetField() {
+      const terrainField = buildTerrainSeed();
+      runtime.planetField = planetEngine.buildPlanetField({ terrainField });
+    }
+
+    function renderFrame() {
+      renderer.renderPlanet({
+        ctx,
+        planetField: runtime.planetField,
+        projectPoint: buildProjectionFunction(),
+        viewState: runtime.control.cameraState
+      });
+    }
+
+    function frame(now) {
+      updateTiming(now);
+
+      if (!isDragging) {
+        control.stepInertia();
+      }
+
+      updateControlState();
+      updatePlanetField();
+      renderFrame();
+      writePanels();
+
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function onPointerDown(event) {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }
+
+    function onPointerMove(event) {
+      if (!isDragging) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      control.applyDrag(dx, dy);
+      control.updateSelection(event.clientX, event.clientY);
+      updateControlState();
+      writePanels();
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    function cycleDiagnostics() {
+      const current = document.body.dataset.diagnostics || "peek";
+      const next =
+        current === "hidden"
+          ? "peek"
+          : current === "peek"
+            ? "full"
+            : "hidden";
+
+      document.body.dataset.diagnostics = next;
+
+      if (diagnosticsToggle) {
+        diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
+        diagnosticsToggle.textContent = next === "hidden" ? "⌁" : next === "peek" ? "◫" : "✕";
+      }
+    }
+
+    function start() {
+      try {
+        setPhase("INITIALIZING");
+        resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        updateControlState();
+        updatePlanetField();
+
+        runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
+          fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
+          chronology: WORLD_KERNEL.canon.chronologyRegistry,
+          ownership: WORLD_KERNEL.canon.ownershipRegistry,
+          duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
+          fieldOrder: WORLD_KERNEL.planetField.order,
+          sampleContract: WORLD_KERNEL.planetField.sampleContract,
+          scope: WORLD_KERNEL.scope
+        });
+
+        writePanels();
+
+        diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
+        window.addEventListener("resize", resizeWorld);
+        worldCanvas.addEventListener("pointerdown", onPointerDown);
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", onPointerUp);
+        window.addEventListener("pointercancel", onPointerUp);
+
+        setPhase("RUNNING");
+        startedAt = performance.now();
+        lastFrameAt = startedAt;
+        frameHandle = requestAnimationFrame(frame);
+      } catch (error) {
+        runtime.failure = {
+          phase: "startup",
+          message: error instanceof Error ? error.message : String(error)
+        };
+        setPhase("ERROR");
+        writePanels();
+        if (frameHandle) {
+          cancelAnimationFrame(frameHandle);
+          frameHandle = 0;
+        }
+      }
+    }
+
+    start();
   </script>
 </body>
 </html>

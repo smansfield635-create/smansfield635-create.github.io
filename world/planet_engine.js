@@ -1,4 +1,4 @@
-import { WORLD_KERNEL, getStateRegistry } from "./world_kernel.js";
+import { WORLD_KERNEL } from "./world_kernel.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -1634,36 +1634,6 @@ function stageFinalTerrainClass(grid, constants) {
   }));
 }
 
-function buildStateCodeLookup() {
-  const registry = getStateRegistry();
-  const byName = normalizeObject(registry?.codesByName);
-
-  return Object.freeze({
-    code(name, fallback = 0) {
-      const value = byName[name];
-      return Number.isInteger(value) ? value : fallback;
-    }
-  });
-}
-
-function stageInitialStateSeedingHandoff(grid) {
-  const lookup = buildStateCodeLookup();
-
-  return grid.map((row) => row.map((sample) => {
-    const seeded = seedStateFromSample(sample);
-    const stateCode = Number.isInteger(seeded?.stateCode)
-      ? seeded.stateCode
-      : lookup.code("VOID", 0);
-    const stateAge = Number.isInteger(seeded?.stateAge) ? seeded.stateAge : 0;
-
-    return {
-      ...sample,
-      stateCode,
-      stateAge
-    };
-  }));
-}
-
 function buildSummary(grid) {
   const summary = {
     sampleCount: 0,
@@ -1755,7 +1725,6 @@ function buildCompleteness() {
     surface_biome_precedence_tiebreak: true,
     surface_biome_sampling_unit_assignment: true,
     final_terrain_class: true,
-    initial_state_seeding_handoff: true,
     summary_completeness: true
   });
 }
@@ -1803,9 +1772,8 @@ function buildPlanetFieldFromAuthoredWorld(constants) {
   const stage15 = stageSurfaceBiomePrecedenceTiebreak(stage14, constants);
   const stage16 = stageSurfaceBiomeSamplingUnitAssignment(stage15, constants);
   const stage17 = stageFinalTerrainClass(stage16, constants);
-  const stage18 = stageInitialStateSeedingHandoff(stage17);
 
-  const samples = finalizeSamples(stage18);
+  const samples = finalizeSamples(stage17);
   const summary = buildSummary(samples);
   const completeness = buildCompleteness();
 

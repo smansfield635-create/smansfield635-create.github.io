@@ -143,7 +143,7 @@ export function createEnvironmentRenderer() {
       topologyField,
       thermodynamicField
     );
-    const magneticField = magneticFieldEngine.compute(projector, runtime, renderState);
+    const magneticField = magneticFieldEngine.buildMagneticField(terrainField);
 
     const planetField = runtime.spine.assemblePlanetField({
       terrainField,

@@ -522,7 +522,7 @@ function createBaseSample(x, y, latDeg, lonDeg) {
 
     parentAddress: "ROOT",
     localAddress: `${x}:${y}`,
-    seedSignature: "AUTHORED_NINE_SUMMITS_WORLD_v1",
+    seedSignature: "AUTHORED_NINE_SUMMITS_WORLD_v2",
     nestedLatticeDepth: 1,
 
     landMask: 0,
@@ -974,8 +974,9 @@ function stageTopologyFields(grid, constants) {
     const beachCandidate =
       sample.landMask === 1 &&
       shorelineBand &&
-      slope < 0.18 &&
-      sample.elevation <= (constants.seaLevel + constants.shorelineBandHalfWidth * 3.5);
+      slope < 0.12 &&
+      sample.elevation <= (constants.seaLevel + constants.shorelineBandHalfWidth * 5.5) &&
+      sample.basinStrength < 0.22;
 
     return {
       ...sample,
@@ -1098,11 +1099,13 @@ function stageHydrology(grid, constants) {
     const riverCandidate =
       sample.landMask === 1 &&
       runoff >= constants.hydrologyRiverThreshold &&
-      sample.distanceToWater > 1;
+      sample.distanceToWater > 1 &&
+      sample.slope >= 0.06;
     const lakeCandidate =
       sample.landMask === 1 &&
       basinAccumulation >= constants.hydrologyLakeThreshold &&
-      toNumber(sample.strongestBasinScore, 0) > 0.04;
+      toNumber(sample.strongestBasinScore, 0) > 0.04 &&
+      sample.slope <= 0.18;
 
     return {
       ...sample,
@@ -1252,122 +1255,128 @@ function surfaceMaterialCandidates(sample, constants) {
     return candidates;
   }
 
-  if (
-    sample.freezePotential >= 0.82 &&
-    sample.meltPotential <= 0.20 &&
-    sample.temperature <= 0.26
-  ) {
+  const iceLock =
+    sample.freezePotential >= 0.88 &&
+    sample.meltPotential <= 0.16 &&
+    sample.temperature <= 0.22 &&
+    (sample.elevation >= 0.26 || sample.climateBandField === constants.climateLabels.POLAR);
+
+  if (iceLock) {
     candidates.push({
       value: SM.ICE,
       score:
-        (sample.freezePotential - 0.82) +
-        (0.20 - sample.meltPotential) +
-        (0.26 - sample.temperature),
+        (sample.freezePotential - 0.88) +
+        (0.16 - sample.meltPotential) +
+        (0.22 - sample.temperature) +
+        Math.max(sample.elevation - 0.26, 0),
       precedence: 1
     });
   }
 
   if (
-    sample.freezePotential >= 0.64 &&
-    sample.elevation >= 0.24 &&
-    !(
-      sample.freezePotential >= 0.82 &&
-      sample.meltPotential <= 0.20 &&
-      sample.temperature <= 0.26
-    )
+    sample.freezePotential >= 0.68 &&
+    sample.elevation >= 0.20 &&
+    !iceLock
   ) {
     candidates.push({
       value: SM.SNOW,
-      score: (sample.freezePotential - 0.64) + (sample.elevation - 0.24),
+      score:
+        (sample.freezePotential - 0.68) +
+        (sample.elevation - 0.20),
       precedence: 2
     });
   }
 
   if (
-    sample.slope >= 0.42 ||
-    sample.ridgeStrength >= 0.38 ||
-    (sample.elevation >= 0.34 && sample.depositionPotential <= 0.24)
+    sample.slope >= 0.48 ||
+    sample.ridgeStrength >= 0.42 ||
+    (sample.elevation >= 0.42 && sample.depositionPotential <= 0.22)
   ) {
     candidates.push({
       value: SM.BEDROCK,
-      score: Math.max(sample.slope - 0.42, 0) + Math.max(sample.ridgeStrength - 0.38, 0),
+      score:
+        Math.max(sample.slope - 0.48, 0) +
+        Math.max(sample.ridgeStrength - 0.42, 0) +
+        Math.max(sample.elevation - 0.42, 0),
       precedence: 3
     });
   }
 
   if (
-    sample.transportPotential >= 0.48 &&
-    sample.runoff >= 0.42 &&
-    sample.slope >= 0.18
+    sample.transportPotential >= 0.56 &&
+    sample.runoff >= 0.46 &&
+    sample.slope >= 0.16
   ) {
     candidates.push({
       value: SM.GRAVEL,
       score:
-        (sample.transportPotential - 0.48) +
-        (sample.runoff - 0.42) +
-        (sample.slope - 0.18),
+        (sample.transportPotential - 0.56) +
+        (sample.runoff - 0.46) +
+        Math.max(sample.slope - 0.16, 0),
       precedence: 4
     });
   }
 
   if (
-    sample.basinAccumulation >= 0.52 &&
-    sample.depositionPotential >= 0.52 &&
-    sample.slope <= 0.14
+    sample.basinAccumulation >= 0.64 &&
+    sample.depositionPotential >= 0.60 &&
+    sample.slope <= 0.10
   ) {
     candidates.push({
       value: SM.CLAY,
       score:
-        (sample.basinAccumulation - 0.52) +
-        (sample.depositionPotential - 0.52) +
-        (0.14 - sample.slope),
+        (sample.basinAccumulation - 0.64) +
+        (sample.depositionPotential - 0.60) +
+        (0.10 - sample.slope),
       precedence: 5
     });
   }
 
   if (
-    sample.runoff >= 0.26 &&
-    sample.depositionPotential >= 0.34 &&
-    sample.slope <= 0.22
+    sample.runoff >= 0.34 &&
+    sample.depositionPotential >= 0.40 &&
+    sample.slope <= 0.18 &&
+    sample.distanceToWater > 2
   ) {
     candidates.push({
       value: SM.SILT,
       score:
-        (sample.runoff - 0.26) +
-        (sample.depositionPotential - 0.34) +
-        (0.22 - sample.slope),
+        (sample.runoff - 0.34) +
+        (sample.depositionPotential - 0.40) +
+        (0.18 - sample.slope),
       precedence: 6
     });
   }
 
   if (
-    sample.shorelineBand ||
-    (sample.evaporationPressure >= 0.62 && sample.rainfall <= 0.24)
+    (sample.shorelineBand && sample.slope <= 0.18) ||
+    (sample.evaporationPressure >= 0.70 && sample.rainfall <= 0.20)
   ) {
     candidates.push({
       value: SM.SAND,
       score:
-        (sample.shorelineBand ? 0.5 : 0) +
-        Math.max(sample.evaporationPressure - 0.62, 0) +
-        Math.max(0.24 - sample.rainfall, 0),
+        (sample.shorelineBand ? 0.6 : 0) +
+        Math.max(sample.evaporationPressure - 0.70, 0) +
+        Math.max(0.20 - sample.rainfall, 0) +
+        Math.max(0.18 - sample.slope, 0),
       precedence: 7
     });
   }
 
   if (
-    sample.rainfall >= 0.24 &&
-    sample.rainfall <= 0.72 &&
-    sample.slope <= 0.30 &&
-    sample.freezePotential <= 0.58 &&
-    sample.evaporationPressure <= 0.72
+    sample.rainfall >= 0.26 &&
+    sample.rainfall <= 0.78 &&
+    sample.slope <= 0.28 &&
+    sample.freezePotential <= 0.62 &&
+    sample.evaporationPressure <= 0.74
   ) {
     candidates.push({
       value: SM.SOIL,
       score:
-        (sample.rainfall - 0.24) +
-        (0.30 - sample.slope) +
-        (0.58 - sample.freezePotential) +
-        (0.72 - sample.evaporationPressure),
+        Math.max(sample.rainfall - 0.26, 0) +
+        Math.max(0.28 - sample.slope, 0) +
+        Math.max(0.62 - sample.freezePotential, 0) +
+        Math.max(0.74 - sample.evaporationPressure, 0),
       precedence: 8
     });
   }
@@ -1406,69 +1415,71 @@ function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
     const chosenSurface = surfaceCandidates[0]?.value ?? (sample.waterMask === 1 ? SM.NONE : SM.SOIL);
 
     const biomeCandidates = [];
+
     if (sample.waterMask === 1) {
       biomeCandidates.push({ value: BT.NONE, score: 1, precedence: 999 });
     } else {
-      if (
+      const glacierLock =
         chosenSurface === SM.ICE &&
-        (
-          (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
-          sample.elevation >= 0.28
-        )
-      ) {
-        biomeCandidates.push({ value: BT.GLACIER, score: sample.freezePotential + sample.elevation, precedence: 1 });
+        (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
+        sample.elevation >= 0.24 &&
+        sample.freezePotential >= 0.80;
+
+      if (glacierLock || terrainWouldBeGlacialHighland(sample)) {
+        biomeCandidates.push({
+          value: BT.GLACIER,
+          score: sample.freezePotential + sample.elevation + Math.max(0.3 - sample.meltPotential, 0),
+          precedence: 1
+        });
       }
 
       if (
-        sample.basinAccumulation >= 0.56 &&
-        sample.runoff >= 0.34 &&
-        sample.slope <= 0.12 &&
-        (
-          sample.terrainClass === constants.terrainClasses.BASIN ||
-          sample.terrainClass === constants.terrainClasses.LOWLAND ||
-          sample.terrainClass === constants.terrainClasses.SHORELINE
-        )
+        sample.basinAccumulation >= 0.60 &&
+        sample.runoff >= 0.36 &&
+        sample.slope <= 0.10 &&
+        (sample.strongestBasinScore >= 0.03 || sample.basinStrength >= 0.18)
       ) {
         biomeCandidates.push({
           value: BT.WETLAND,
-          score: sample.basinAccumulation + sample.runoff + (0.12 - sample.slope),
+          score: sample.basinAccumulation + sample.runoff + (0.10 - sample.slope),
           precedence: 2
         });
       }
 
       if (
-        sample.rainfall <= 0.18 &&
-        sample.evaporationPressure >= 0.62 &&
+        sample.rainfall <= 0.16 &&
+        sample.evaporationPressure >= 0.72 &&
         (chosenSurface === SM.SAND || chosenSurface === SM.GRAVEL)
       ) {
         biomeCandidates.push({
           value: BT.DESERT,
-          score: (0.18 - sample.rainfall) + sample.evaporationPressure,
+          score: (0.16 - sample.rainfall) + sample.evaporationPressure + Math.max(sample.temperature - 0.44, 0),
           precedence: 3
         });
       }
 
       if (
         sample.climateBandField === CL.EQUATORIAL &&
-        sample.rainfall >= 0.66 &&
-        sample.temperature >= 0.56 &&
+        sample.rainfall >= 0.68 &&
+        sample.temperature >= 0.58 &&
         (chosenSurface === SM.SOIL || chosenSurface === SM.CLAY)
       ) {
         biomeCandidates.push({
           value: BT.TROPICAL_RAINFOREST,
-          score: sample.rainfall + sample.temperature,
+          score: sample.rainfall + sample.temperature + Math.max(0.4 - sample.slope, 0),
           precedence: 4
         });
       }
 
       if (
         sample.climateBandField === CL.SUBPOLAR &&
-        sample.rainfall >= 0.28 &&
+        sample.rainfall >= 0.30 &&
         sample.rainfall <= 0.58 &&
-        sample.temperature >= 0.22 &&
-        sample.temperature <= 0.46 &&
-        sample.freezePotential >= 0.30 &&
-        sample.freezePotential <= 0.68
+        sample.temperature >= 0.18 &&
+        sample.temperature <= 0.42 &&
+        sample.freezePotential >= 0.34 &&
+        sample.freezePotential <= 0.72 &&
+        chosenSurface === SM.SOIL
       ) {
         biomeCandidates.push({
           value: BT.BOREAL_FOREST,
@@ -1479,9 +1490,9 @@ function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
 
       if (
         sample.climateBandField === CL.TEMPERATE &&
-        sample.rainfall >= 0.42 &&
+        sample.rainfall >= 0.46 &&
         sample.temperature >= 0.34 &&
-        sample.temperature <= 0.66 &&
+        sample.temperature <= 0.68 &&
         chosenSurface === SM.SOIL
       ) {
         biomeCandidates.push({
@@ -1493,17 +1504,13 @@ function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
 
       if (
         (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
-        sample.freezePotential >= 0.58 &&
-        sample.temperature <= 0.34 &&
-        !(
-          chosenSurface === SM.ICE &&
-          (sample.climateBandField === CL.SUBPOLAR || sample.climateBandField === CL.POLAR) &&
-          sample.elevation >= 0.28
-        )
+        sample.freezePotential >= 0.60 &&
+        sample.temperature <= 0.32 &&
+        !glacierLock
       ) {
         biomeCandidates.push({
           value: BT.TUNDRA,
-          score: sample.freezePotential + (0.34 - sample.temperature),
+          score: sample.freezePotential + (0.32 - sample.temperature),
           precedence: 7
         });
       }
@@ -1511,7 +1518,7 @@ function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
       if (
         (sample.climateBandField === CL.EQUATORIAL || sample.climateBandField === CL.TROPICAL) &&
         sample.rainfall >= 0.30 &&
-        sample.rainfall <= 0.66 &&
+        sample.rainfall <= 0.62 &&
         sample.temperature >= 0.52
       ) {
         biomeCandidates.push({
@@ -1523,10 +1530,10 @@ function stageSurfaceBiomePrecedenceTiebreak(grid, constants) {
 
       if (
         sample.climateBandField === CL.TEMPERATE &&
-        sample.rainfall >= 0.22 &&
-        sample.rainfall <= 0.46 &&
+        sample.rainfall >= 0.20 &&
+        sample.rainfall <= 0.44 &&
         sample.temperature >= 0.34 &&
-        sample.temperature <= 0.66
+        sample.temperature <= 0.68
       ) {
         biomeCandidates.push({
           value: BT.TEMPERATE_GRASSLAND,
@@ -1565,33 +1572,44 @@ function stageSurfaceBiomeSamplingUnitAssignment(grid, constants) {
   })));
 }
 
+function terrainWouldBeGlacialHighland(sample) {
+  return sample.climateBandField === "POLAR" && sample.elevation > 0.28;
+}
+
 function stageFinalTerrainClass(grid, constants) {
   return grid.map((row) => row.map((sample) => {
     let terrainClass = constants.terrainClasses.LOWLAND;
 
     if (sample.waterMask === 1) {
-      if (sample.oceanDepthField <= constants.oceanDepths.slope + 0.015) terrainClass = constants.terrainClasses.SHELF;
-      else terrainClass = constants.terrainClasses.WATER;
-    } else if (sample.surfaceMaterial === constants.surfaceMaterials.ICE) {
+      if (sample.oceanDepthField >= constants.oceanDepths.shelf - 1e-9 && sample.oceanDepthField <= constants.oceanDepths.slope + 0.015) {
+        terrainClass = constants.terrainClasses.SHELF;
+      } else {
+        terrainClass = constants.terrainClasses.WATER;
+      }
+    } else if (sample.surfaceMaterial === constants.surfaceMaterials.ICE && sample.biomeType === constants.biomeTypes.GLACIER) {
       terrainClass = constants.terrainClasses.POLAR_ICE;
-    } else if (sample.biomeType === constants.biomeTypes.GLACIER || (sample.climateBandField === constants.climateLabels.POLAR && sample.elevation > 0.26)) {
+    } else if (sample.biomeType === constants.biomeTypes.GLACIER || terrainWouldBeGlacialHighland(sample)) {
       terrainClass = constants.terrainClasses.GLACIAL_HIGHLAND;
-    } else if (sample.strongestSummitScore > 0.18 || sample.elevation > 0.56) {
+    } else if (sample.strongestSummitScore > 0.22 || sample.elevation > 0.62) {
       terrainClass = constants.terrainClasses.SUMMIT;
-    } else if (sample.elevation > constants.topologyMountainThreshold || sample.ridgeStrength > 0.35) {
+    } else if (sample.elevation > 0.44 || sample.ridgeStrength > 0.34) {
       terrainClass = constants.terrainClasses.MOUNTAIN;
-    } else if (sample.canyonStrength > constants.topologyCanyonThreshold) {
+    } else if (sample.canyonStrength > 0.30 && sample.slope > 0.18) {
       terrainClass = constants.terrainClasses.CANYON;
-    } else if (sample.strongestBasinScore > 0.055 || sample.basinStrength > constants.topologyBasinThreshold) {
+    } else if ((sample.strongestBasinScore > 0.065 || sample.basinStrength > 0.22) && sample.slope <= 0.26) {
       terrainClass = constants.terrainClasses.BASIN;
-    } else if (sample.plateauStrength > 0.42) {
+    } else if (sample.plateauStrength > 0.52 && sample.elevation > 0.18) {
       terrainClass = constants.terrainClasses.PLATEAU;
-    } else if (sample.ridgeStrength > 0.18) {
+    } else if (sample.ridgeStrength > 0.16 && sample.elevation > 0.14) {
       terrainClass = constants.terrainClasses.RIDGE;
+    } else if (sample.beachCandidate) {
+      terrainClass = constants.terrainClasses.BEACH;
     } else if (sample.shoreline) {
-      terrainClass = sample.beachCandidate ? constants.terrainClasses.BEACH : constants.terrainClasses.SHORELINE;
+      terrainClass = constants.terrainClasses.SHORELINE;
     } else if (sample.elevation > 0.12) {
       terrainClass = constants.terrainClasses.FOOTHILL;
+    } else {
+      terrainClass = constants.terrainClasses.LOWLAND;
     }
 
     const eventFlags = [];

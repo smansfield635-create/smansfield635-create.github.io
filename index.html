@@ -101,18 +101,78 @@
     let lastX = 0;
     let lastY = 0;
 
+    let panelCacheKey = "";
+    let compactCacheKey = "";
+    let lastDiagnosticsWriteAt = 0;
+    const DIAGNOSTICS_INTERVAL_MS = 250;
+
     function setPhase(phase) {
       runtime.phase = phase;
       if (runtimePhase) runtimePhase.textContent = phase;
     }
 
-    function writePanels() {
-      if (debugPanel) {
+    function buildPanelCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
+
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: Number.isFinite(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        elapsedMs: Number.isFinite(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
+        sampleX: projection.sampleX ?? "—",
+        sampleY: projection.sampleY ?? "—",
+        cellId: projection.cellId ?? "—",
+        summarySampleCount: summary.sampleCount ?? "—",
+        summaryLandCount: summary.landCount ?? "—",
+        summaryWaterCount: summary.waterCount ?? "—",
+        verificationPass:
+          verification.pass === true ? "PASS" :
+          verification.pass === false ? "FAIL" :
+          verification.pass ?? "MISSING",
+        failurePhase: runtime.failure?.phase ?? "—",
+        failureMessage: runtime.failure?.message ?? "—"
+      });
+    }
+
+    function buildCompactCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
+
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: Number.isFinite(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        cellId: projection.cellId ?? "—",
+        sampleCount: summary.sampleCount ?? "—",
+        verificationPass:
+          verification.pass === true ? "PASS" :
+          verification.pass === false ? "FAIL" :
+          verification.pass ?? "MISSING"
+      });
+    }
+
+    function writePanels(force = false) {
+      const now = performance.now();
+
+      if (!force && now - lastDiagnosticsWriteAt < DIAGNOSTICS_INTERVAL_MS) {
+        return;
+      }
+
+      const nextPanelKey = buildPanelCacheKey();
+      const nextCompactKey = buildCompactCacheKey();
+
+      if (debugPanel && (force || nextPanelKey !== panelCacheKey)) {
         debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+        panelCacheKey = nextPanelKey;
       }
-      if (diagnosticsSummary) {
+
+      if (diagnosticsSummary && (force || nextCompactKey !== compactCacheKey)) {
         diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+        compactCacheKey = nextCompactKey;
       }
+
+      lastDiagnosticsWriteAt = now;
     }
 
     function resizeWorld() {
@@ -145,7 +205,7 @@
       runtime.elapsedMs = now - startedAt;
     }
 
-    function updatePlanetField() {
+    function buildPlanetFieldOnce() {
       runtime.planetField = planetEngine.buildPlanetField({});
     }
 
@@ -166,9 +226,8 @@
       }
 
       updateControlState();
-      updatePlanetField();
       renderFrame();
-      writePanels();
+      writePanels(false);
 
       frameHandle = requestAnimationFrame(frame);
     }
@@ -191,7 +250,8 @@
       control.applyDrag(dx, dy);
       control.updateSelection(event.clientX, event.clientY);
       updateControlState();
-      writePanels();
+      renderFrame();
+      writePanels(false);
     }
 
     function onPointerUp() {
@@ -207,6 +267,8 @@
       if (diagnosticsToggle) {
         diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
       }
+
+      writePanels(true);
     }
 
     function start() {
@@ -215,7 +277,7 @@
         resizeWorld();
         control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
         updateControlState();
-        updatePlanetField();
+        buildPlanetFieldOnce();
 
         runtime.verification = WORLD_KERNEL.verification.verifyCanonicalStructure({
           fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
@@ -227,10 +289,16 @@
           scope: WORLD_KERNEL.scope
         });
 
-        writePanels();
+        renderFrame();
+        writePanels(true);
 
         diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
-        window.addEventListener("resize", resizeWorld);
+        window.addEventListener("resize", () => {
+          resizeWorld();
+          updateControlState();
+          renderFrame();
+          writePanels(true);
+        });
         worldCanvas.addEventListener("pointerdown", onPointerDown);
         window.addEventListener("pointermove", onPointerMove);
         window.addEventListener("pointerup", onPointerUp);
@@ -246,7 +314,7 @@
           message: error instanceof Error ? error.message : String(error)
         };
         setPhase("ERROR");
-        writePanels();
+        writePanels(true);
         if (frameHandle) {
           cancelAnimationFrame(frameHandle);
           frameHandle = 0;

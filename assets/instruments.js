@@ -1,21 +1,16 @@
+import { WORLD_KERNEL, verifyCanonicalStructure } from "../world/world_kernel.js";
+
 export function createInstruments() {
   const EMPTY = "—";
 
   const PANEL_ORDER = Object.freeze([
     "Runtime",
     "Kernel",
-    "Selection",
-    "Harbor",
-    "Gratitude",
-    "Generosity",
     "Orientation",
-    "Depth Lattice",
-    "Canon Verification",
-    "Execution Gate",
-    "Magnetic Field",
-    "Thermodynamic Field",
-    "Hydrology Field",
-    "Topology Field",
+    "Verification",
+    "Thermodynamics",
+    "Hydrology",
+    "Topology",
     "Failure"
   ]);
 
@@ -78,336 +73,13 @@ export function createInstruments() {
     return items.length ? items.join(", ") : EMPTY;
   }
 
-  function getResolvedState(runtime) {
-    return normalizeObject(runtime?.resolvedState);
-  }
-
-  function getProjection(runtime) {
-    return normalizeObject(runtime?.projection);
-  }
-
-  function getOrientation(runtime) {
-    return normalizeObject(runtime?.orientation);
-  }
-
-  function getCardinals(runtime) {
-    return normalizeObject(runtime?.cardinals);
-  }
-
-  function getTiming(runtime) {
-    return normalizeObject(runtime?.timing);
-  }
-
-  function getKernel(runtime) {
-    return normalizeObject(runtime?.kernel);
-  }
-
-  function getSelection(runtime) {
-    return runtime?.selection ?? null;
-  }
-
-  function getDestination(runtime) {
-    return runtime?.destination ?? null;
-  }
-
-  function getHarbor(runtime) {
-    return normalizeObject(getResolvedState(runtime)?.branches?.harbor);
-  }
-
-  function getLocalSelection(runtime) {
-    return normalizeObject(getResolvedState(runtime)?.localSelection);
-  }
-
-  function getTransition(runtime) {
-    return normalizeObject(getResolvedState(runtime)?.transition);
-  }
-
-  function getCanonVerification(runtime) {
-    return normalizeObject(runtime?.canonVerification);
-  }
-
-  function getExecutionGate(runtime) {
-    return normalizeObject(runtime?.executionGate);
-  }
-
-  function getFailure(runtime) {
-    return normalizeObject(runtime?.failure);
-  }
-
-  function getAuditLabels(runtime) {
-    return normalizeObject(getResolvedState(runtime)?.auditLabels);
-  }
-
-  function getMagneticField(runtime) {
-    return normalizeObject(runtime?.magneticField);
-  }
-
-  function getThermodynamicField(runtime) {
-    return normalizeObject(runtime?.thermodynamicField);
-  }
-
-  function getHydrologyField(runtime) {
-    return normalizeObject(runtime?.hydrologyField);
-  }
-
-  function getTopologyField(runtime) {
-    return normalizeObject(runtime?.topologyField);
-  }
-
-  function buildRuntimePanel(runtime) {
-    const resolvedState = getResolvedState(runtime);
-    const projection = getProjection(runtime);
-    const orientation = getOrientation(runtime);
-    const timing = getTiming(runtime);
-
-    return Object.freeze({
-      phase: normalizePrimitive(runtime?.phase, "BOOT"),
-      region: normalizePrimitive(
-        runtime?.region?.displayName ??
-          runtime?.region?.id ??
-          resolvedState?.region?.displayName ??
-          resolvedState?.region?.id
-      ),
-      scale: normalizePrimitive(resolvedState?.activeScale ?? getKernel(runtime)?.naming?.activeScale),
-      encoding: normalizePrimitive(runtime?.encoding?.label),
-      depth: normalizePrimitive(resolvedState?.activeDepth),
-      cell: normalizePrimitive(projection?.cellId),
-      sector: normalizePrimitive(projection?.sector),
-      band: normalizePrimitive(projection?.bandIndex),
-      yaw: toFixedSafe(orientation?.yaw, 3),
-      pitch: toFixedSafe(orientation?.pitch, 3),
-      radius: toFixedSafe(runtime?.projector?.state?.radius, 1),
-      fps: toFixedSafe(timing?.fps, 1),
-      dt: toFixedSafe(timing?.dtMs, 1),
-      elapsed: toFixedSafe(timing?.elapsedMs, 1)
-    });
-  }
-
-  function buildKernelPanel(runtime) {
-    const kernel = getKernel(runtime);
-    const naming = normalizeObject(kernel?.naming);
-    const scope = normalizeObject(kernel?.scope);
-    const modes = normalizeObject(kernel?.modes);
-
-    return Object.freeze({
-      version: normalizePrimitive(kernel?.version),
-      baselineLabel: normalizePrimitive(naming?.baselineLabel),
-      activeScale: normalizePrimitive(naming?.activeScale),
-      activeBranch: normalizePrimitive(scope?.activeBranch),
-      externalViewOnly: normalizePrimitive(modes?.externalViewOnly),
-      roundWorld: normalizePrimitive(modes?.roundWorld),
-      flatWorldReconnection: normalizePrimitive(modes?.flatWorldReconnection)
-    });
-  }
-
-  function buildSelectionPanel(runtime) {
-    const selected = getSelection(runtime);
-    const destination = getDestination(runtime);
-
-    if (!selected) {
-      return Object.freeze({
-        selectedName: EMPTY,
-        selectedType: EMPTY,
-        destination: normalizePrimitive(destination?.displayName ?? destination?.id),
-        hint: "No active selection."
-      });
-    }
-
-    return Object.freeze({
-      selectedName: normalizePrimitive(selected?.displayName ?? selected?.id),
-      selectedType: normalizePrimitive(selected?.kind),
-      destination: normalizePrimitive(destination?.displayName ?? destination?.id),
-      hint: normalizePrimitive(selected?.hint, "Selection active.")
-    });
-  }
-
-  function buildHarborPanel(runtime) {
-    const harbor = getHarbor(runtime);
-    const conclusion = normalizeObject(harbor?.nodeConclusion);
-    const premise = normalizeObject(harbor?.corePremise);
-
-    return Object.freeze({
-      branch: normalizePrimitive(getAuditLabels(runtime)?.branch, "external.harbor"),
-      premise: normalizePrimitive(premise?.premise ?? premise?.label),
-      status: normalizePrimitive(conclusion?.status),
-      node: normalizePrimitive(conclusion?.node),
-      gratitudeConclusion: normalizePrimitive(conclusion?.gratitudeConclusion),
-      generosityConclusion: normalizePrimitive(conclusion?.generosityConclusion),
-      exchangePremise: normalizePrimitive(conclusion?.exchangePremise)
-    });
-  }
-
-  function buildGratitudePanel(runtime) {
-    const harbor = getHarbor(runtime);
-    const gratitude = normalizeObject(harbor?.gratitude);
-    const recombination = normalizeObject(harbor?.gratitudeRecombination);
-
-    return Object.freeze({
-      north: normalizePrimitive(gratitude?.north),
-      south: normalizePrimitive(gratitude?.south),
-      east: normalizePrimitive(gratitude?.east),
-      west: normalizePrimitive(gratitude?.west),
-      recombination: normalizePrimitive(recombination?.conclusion ?? gratitude?.recombination)
-    });
-  }
-
-  function buildGenerosityPanel(runtime) {
-    const harbor = getHarbor(runtime);
-    const generosity = normalizeObject(harbor?.generosity);
-    const recombination = normalizeObject(harbor?.generosityRecombination);
-
-    return Object.freeze({
-      north: normalizePrimitive(generosity?.north),
-      south: normalizePrimitive(generosity?.south),
-      east: normalizePrimitive(generosity?.east),
-      west: normalizePrimitive(generosity?.west),
-      recombination: normalizePrimitive(recombination?.conclusion ?? generosity?.recombination)
-    });
-  }
-
-  function buildOrientationPanel(runtime) {
-    const orientation = getOrientation(runtime);
-    const cardinals = getCardinals(runtime);
-
-    return Object.freeze({
-      heading: normalizePrimitive(cardinals?.heading),
-      yaw: toFixedSafe(orientation?.yaw, 3),
-      pitch: toFixedSafe(orientation?.pitch, 3),
-      yawVelocity: toFixedSafe(orientation?.yawVelocity, 4),
-      pitchVelocity: toFixedSafe(orientation?.pitchVelocity, 4),
-      northWeight: toFixedSafe(cardinals?.north, 2),
-      southWeight: toFixedSafe(cardinals?.south, 2),
-      eastWeight: toFixedSafe(cardinals?.east, 2),
-      westWeight: toFixedSafe(cardinals?.west, 2)
-    });
-  }
-
-  function buildDepthLatticePanel(runtime) {
-    const resolvedState = getResolvedState(runtime);
-    const localSelection = getLocalSelection(runtime);
-    const transition = getTransition(runtime);
-    const projection = getProjection(runtime);
-
-    return Object.freeze({
-      depth: normalizePrimitive(resolvedState?.activeDepth),
-      depthLabel: normalizePrimitive(resolvedState?.activeDepthLabel),
-      from: normalizePrimitive(transition?.from),
-      to: normalizePrimitive(transition?.to),
-      legal: normalizePrimitive(transition?.legal),
-      gridBound: normalizePrimitive(resolvedState?.gridBound),
-      zone: normalizePrimitive(localSelection?.zone),
-      row: normalizePrimitive(localSelection?.row ?? projection?.row),
-      col: normalizePrimitive(localSelection?.col ?? projection?.col),
-      cellIndex: normalizePrimitive(localSelection?.cellIndex ?? projection?.cellIndex),
-      cellId: normalizePrimitive(localSelection?.cellId ?? projection?.cellId)
-    });
-  }
-
-  function buildCanonVerificationPanel(runtime) {
-    const canon = getCanonVerification(runtime);
-
-    return Object.freeze({
-      pass: normalizePrimitive(canon?.pass),
-      fileHomePass: normalizePrimitive(canon?.file_home_pass),
-      chronologyPass: normalizePrimitive(canon?.chronology_pass),
-      ownershipPass: normalizePrimitive(canon?.ownership_pass),
-      scopePass: normalizePrimitive(canon?.scope_pass),
-      duplicateTruthPass: normalizePrimitive(canon?.duplicate_truth_pass),
-      reasons: joinList(canon?.reasons)
-    });
-  }
-
-  function buildExecutionGatePanel(runtime) {
-    const gate = getExecutionGate(runtime);
-
-    return Object.freeze({
-      allow: gate?.allow === true ? "ALLOW" : gate?.allow === false ? "BLOCK" : EMPTY,
-      mode: normalizePrimitive(gate?.mode),
-      blockedBy: joinList(gate?.blocked_by),
-      reasons: joinList(gate?.reasons),
-      nextAuthorizedAction: normalizePrimitive(gate?.next_authorized_action)
-    });
-  }
-
-  function buildMagneticFieldPanel(runtime) {
-    const field = getMagneticField(runtime);
-    const navigationBasis = normalizeObject(field?.navigationFieldBasis);
-
-    return Object.freeze({
-      latitude: toFixedSafe(field?.latDeg, 2),
-      longitude: toFixedSafe(field?.lonDeg, 2),
-      magneticIntensity: toFixedSafe(field?.magneticIntensityField, 3),
-      shieldingGradient: toFixedSafe(field?.shieldingGradientField, 3),
-      auroralPotential: toFixedSafe(field?.auroralPotentialField, 3),
-      headingBias: normalizePrimitive(navigationBasis?.headingBias),
-      navigationStability: toFixedSafe(navigationBasis?.stability, 3)
-    });
-  }
-
-  function buildThermodynamicFieldPanel(runtime) {
-    const field = getThermodynamicField(runtime);
-    const gradient = normalizeObject(field?.thermalGradientField);
-
-    return Object.freeze({
-      latitude: toFixedSafe(field?.latDeg, 2),
-      longitude: toFixedSafe(field?.lonDeg, 2),
-      temperature: toFixedSafe(field?.temperatureField, 3),
-      freezePotential: toFixedSafe(field?.freezePotentialField, 3),
-      meltPotential: toFixedSafe(field?.meltPotentialField, 3),
-      evaporationPressure: toFixedSafe(field?.evaporationPressureField, 3),
-      polarCooling: toFixedSafe(gradient?.polarCooling, 3),
-      heatNodeInfluence: toFixedSafe(gradient?.heatNodeInfluence, 3),
-      wildernessDecay: toFixedSafe(gradient?.wildernessDecay, 3),
-      nearestHeatDistance: toFixedSafe(gradient?.nearestHeatDistanceDeg, 2)
-    });
-  }
-
-  function buildHydrologyFieldPanel(runtime) {
-    const field = getHydrologyField(runtime);
-    const summary = normalizeObject(field?.summary);
-
-    return Object.freeze({
-      sampleCount: normalizePrimitive(field?.samples?.length),
-      runoffAverage: toFixedSafe(summary?.runoffAverage, 3),
-      basinAverage: toFixedSafe(summary?.basinAverage, 3),
-      riverCandidateCount: normalizePrimitive(summary?.riverCandidateCount),
-      lakeCandidateCount: normalizePrimitive(summary?.lakeCandidateCount)
-    });
-  }
-
-  function buildTopologyFieldPanel(runtime) {
-    const field = getTopologyField(runtime);
-    const summary = normalizeObject(field?.summary);
-
-    return Object.freeze({
-      sampleCount: normalizePrimitive(field?.samples?.length),
-      elevationAverage: toFixedSafe(summary?.elevationAverage, 3),
-      slopeAverage: toFixedSafe(summary?.slopeAverage, 3),
-      ridgeAverage: toFixedSafe(summary?.ridgeAverage, 3),
-      valleyAverage: toFixedSafe(summary?.valleyAverage, 3),
-      mountainCount: normalizePrimitive(summary?.mountainCount),
-      basinCount: normalizePrimitive(summary?.basinCount),
-      canyonCount: normalizePrimitive(summary?.canyonCount),
-      caveCandidateCount: normalizePrimitive(summary?.caveCandidateCount)
-    });
-  }
-
-  function buildFailurePanel(runtime) {
-    const failure = getFailure(runtime);
-
-    return Object.freeze({
-      phase: normalizePrimitive(failure?.phase),
-      message: normalizePrimitive(failure?.message),
-      renderError: normalizePrimitive(runtime?.renderError),
-      updateError: normalizePrimitive(runtime?.updateError)
-    });
-  }
-
   function classifyValue(value) {
     const normalized = normalizePrimitive(value);
 
-    if (normalized === "ALLOW" || normalized === "true") return "ok";
-    if (normalized === "BLOCK" || normalized === "ERROR" || normalized === "FAILED") return "danger";
+    if (normalized === "ALLOW" || normalized === "PASS" || normalized === "true") return "ok";
+    if (normalized === "BLOCK" || normalized === "FAIL" || normalized === "false" || normalized === "ERROR") {
+      return "danger";
+    }
     if (normalized === EMPTY) return "muted";
     return "default";
   }
@@ -417,6 +89,7 @@ export function createInstruments() {
       const safeLabel = escapeHTML(labelize(key));
       const safeValue = escapeHTML(normalizePrimitive(value));
       const tone = classifyValue(value);
+
       const valueClass =
         tone === "ok"
           ? "panel-value panel-value--ok"
@@ -433,44 +106,217 @@ export function createInstruments() {
     return `<section class="${className}"><h3 class="panel-title">${escapeHTML(title)}</h3>${rows.join("")}</section>`;
   }
 
-  function renderPanelHTML(runtime) {
-    const sectionMap = Object.freeze({
+  function buildExpectedCanonInput() {
+    return Object.freeze({
+      fileHomes: WORLD_KERNEL.canon.fileHomeRegistry,
+      chronology: WORLD_KERNEL.canon.chronologyRegistry,
+      ownership: WORLD_KERNEL.canon.ownershipRegistry,
+      duplicateTruth: WORLD_KERNEL.canon.duplicateTruthRegistry,
+      fieldOrder: WORLD_KERNEL.planetField.order,
+      sampleContract: WORLD_KERNEL.planetField.sampleContract,
+      scope: WORLD_KERNEL.scope
+    });
+  }
+
+  function getRuntime(runtime) {
+    return normalizeObject(runtime);
+  }
+
+  function getKernel(runtime) {
+    const candidate = normalizeObject(runtime?.kernel);
+    return Object.keys(candidate).length ? candidate : WORLD_KERNEL;
+  }
+
+  function getControl(runtime) {
+    return normalizeObject(runtime?.control);
+  }
+
+  function getPlanetField(runtime) {
+    return normalizeObject(runtime?.planetField);
+  }
+
+  function getSummary(runtime) {
+    return normalizeObject(getPlanetField(runtime)?.summary);
+  }
+
+  function getCompleteness(runtime) {
+    return normalizeObject(getPlanetField(runtime)?.completeness);
+  }
+
+  function getFailure(runtime) {
+    return normalizeObject(runtime?.failure);
+  }
+
+  function getVerification(runtime) {
+    const provided = normalizeObject(runtime?.verification);
+    if (Object.keys(provided).length) return provided;
+    return verifyCanonicalStructure(buildExpectedCanonInput());
+  }
+
+  function getOrientation(runtime) {
+    const control = getControl(runtime);
+    const cameraState = normalizeObject(control?.cameraState);
+    const cardinals = normalizeObject(control?.cardinals);
+
+    return Object.freeze({
+      yaw: cameraState.yaw,
+      pitch: cameraState.pitch,
+      yawVelocity: cameraState.yawVelocity,
+      pitchVelocity: cameraState.pitchVelocity,
+      heading: cardinals.heading,
+      north: cardinals.north,
+      south: cardinals.south,
+      east: cardinals.east,
+      west: cardinals.west
+    });
+  }
+
+  function buildRuntimePanel(runtime) {
+    const state = getRuntime(runtime);
+    const control = getControl(runtime);
+    const projection = normalizeObject(control?.projectionSummary);
+    const summary = getSummary(runtime);
+
+    return Object.freeze({
+      phase: normalizePrimitive(state.phase, "BOOT"),
+      activeFile: normalizePrimitive(state.activeFile),
+      sampleCount: normalizePrimitive(summary.sampleCount),
+      sampleX: normalizePrimitive(projection.sampleX),
+      sampleY: normalizePrimitive(projection.sampleY),
+      cellId: normalizePrimitive(projection.cellId),
+      dtMs: toFixedSafe(state.dtMs, 2),
+      fps: toFixedSafe(state.fps, 1),
+      elapsedMs: toFixedSafe(state.elapsedMs, 1)
+    });
+  }
+
+  function buildKernelPanel(runtime) {
+    const kernel = getKernel(runtime);
+
+    return Object.freeze({
+      label: normalizePrimitive(kernel.label),
+      version: normalizePrimitive(kernel.version),
+      latticeWidth: normalizePrimitive(kernel.lattice?.width),
+      latticeHeight: normalizePrimitive(kernel.lattice?.height),
+      fieldOrder: joinList(kernel.planetField?.order),
+      scopeBranch: normalizePrimitive(kernel.scope?.activeBranch),
+      diagnosticsEnabled: normalizePrimitive(kernel.flags?.enableDiagnostics)
+    });
+  }
+
+  function buildOrientationPanel(runtime) {
+    const orientation = getOrientation(runtime);
+
+    return Object.freeze({
+      heading: normalizePrimitive(orientation.heading),
+      yaw: toFixedSafe(orientation.yaw, 3),
+      pitch: toFixedSafe(orientation.pitch, 3),
+      yawVelocity: toFixedSafe(orientation.yawVelocity, 4),
+      pitchVelocity: toFixedSafe(orientation.pitchVelocity, 4),
+      northWeight: toFixedSafe(orientation.north, 2),
+      southWeight: toFixedSafe(orientation.south, 2),
+      eastWeight: toFixedSafe(orientation.east, 2),
+      westWeight: toFixedSafe(orientation.west, 2)
+    });
+  }
+
+  function buildVerificationPanel(runtime) {
+    const verification = getVerification(runtime);
+    const completeness = getCompleteness(runtime);
+
+    return Object.freeze({
+      pass: verification.pass ? "PASS" : "FAIL",
+      fileHomePass: normalizePrimitive(verification.file_home_pass),
+      chronologyPass: normalizePrimitive(verification.chronology_pass),
+      ownershipPass: normalizePrimitive(verification.ownership_pass),
+      duplicateTruthPass: normalizePrimitive(verification.duplicate_truth_pass),
+      fieldOrderPass: normalizePrimitive(verification.field_order_pass),
+      sampleContractPass: normalizePrimitive(verification.sample_contract_pass),
+      scopePass: normalizePrimitive(verification.scope_pass),
+      completeness: joinList(
+        Object.entries(completeness)
+          .filter(([, value]) => value === true)
+          .map(([key]) => key)
+      ),
+      reasons: joinList(verification.reasons)
+    });
+  }
+
+  function buildThermodynamicsPanel(runtime) {
+    const summary = getSummary(runtime);
+    const planetField = getPlanetField(runtime);
+
+    return Object.freeze({
+      sampleCount: normalizePrimitive(summary.sampleCount),
+      temperatureAverage: toFixedSafe(summary.temperatureAverage, 3),
+      rainfallAverage: toFixedSafe(summary.rainfallAverage, 3),
+      runoffAverage: toFixedSafe(summary.runoffAverage, 3),
+      completeness: normalizePrimitive(getCompleteness(runtime).thermodynamics),
+      width: normalizePrimitive(planetField.width),
+      height: normalizePrimitive(planetField.height)
+    });
+  }
+
+  function buildHydrologyPanel(runtime) {
+    const summary = getSummary(runtime);
+
+    return Object.freeze({
+      sampleCount: normalizePrimitive(summary.sampleCount),
+      runoffAverage: toFixedSafe(summary.runoffAverage, 3),
+      shorelineCount: normalizePrimitive(summary.shorelineCount),
+      landCount: normalizePrimitive(summary.landCount),
+      waterCount: normalizePrimitive(summary.waterCount),
+      completeness: normalizePrimitive(getCompleteness(runtime).hydrology)
+    });
+  }
+
+  function buildTopologyPanel(runtime) {
+    const summary = getSummary(runtime);
+
+    return Object.freeze({
+      sampleCount: normalizePrimitive(summary.sampleCount),
+      mountainCount: normalizePrimitive(summary.mountainCount),
+      basinCount: normalizePrimitive(summary.basinCount),
+      canyonCount: normalizePrimitive(summary.canyonCount),
+      caveCandidateCount: normalizePrimitive(summary.caveCandidateCount),
+      diamondAverage: toFixedSafe(summary.diamondAverage, 3),
+      opalAverage: toFixedSafe(summary.opalAverage, 3),
+      sedimentAverage: toFixedSafe(summary.sedimentAverage, 3),
+      completeness: normalizePrimitive(getCompleteness(runtime).topology)
+    });
+  }
+
+  function buildFailurePanel(runtime) {
+    const failure = getFailure(runtime);
+
+    return Object.freeze({
+      phase: normalizePrimitive(failure.phase),
+      message: normalizePrimitive(failure.message),
+      code: normalizePrimitive(failure.code),
+      blockedBy: joinList(failure.blockedBy),
+      details: normalizePrimitive(failure.details)
+    });
+  }
+
+  function buildPanelMap(runtime) {
+    return Object.freeze({
       Runtime: buildRuntimePanel(runtime),
       Kernel: buildKernelPanel(runtime),
-      Selection: buildSelectionPanel(runtime),
-      Harbor: buildHarborPanel(runtime),
-      Gratitude: buildGratitudePanel(runtime),
-      Generosity: buildGenerosityPanel(runtime),
       Orientation: buildOrientationPanel(runtime),
-      "Depth Lattice": buildDepthLatticePanel(runtime),
-      "Canon Verification": buildCanonVerificationPanel(runtime),
-      "Execution Gate": buildExecutionGatePanel(runtime),
-      "Magnetic Field": buildMagneticFieldPanel(runtime),
-      "Thermodynamic Field": buildThermodynamicFieldPanel(runtime),
-      "Hydrology Field": buildHydrologyFieldPanel(runtime),
-      "Topology Field": buildTopologyFieldPanel(runtime),
+      Verification: buildVerificationPanel(runtime),
+      Thermodynamics: buildThermodynamicsPanel(runtime),
+      Hydrology: buildHydrologyPanel(runtime),
+      Topology: buildTopologyPanel(runtime),
       Failure: buildFailurePanel(runtime)
     });
+  }
 
-    return PANEL_ORDER.map((title) => renderKeyValueSection(title, sectionMap[title])).join("");
+  function renderPanelHTML(runtime = {}) {
+    const panelMap = buildPanelMap(runtime);
+    return PANEL_ORDER.map((title) => renderKeyValueSection(title, panelMap[title])).join("");
   }
 
   return Object.freeze({
-    buildRuntimePanel,
-    buildKernelPanel,
-    buildSelectionPanel,
-    buildHarborPanel,
-    buildGratitudePanel,
-    buildGenerosityPanel,
-    buildOrientationPanel,
-    buildDepthLatticePanel,
-    buildCanonVerificationPanel,
-    buildExecutionGatePanel,
-    buildMagneticFieldPanel,
-    buildThermodynamicFieldPanel,
-    buildHydrologyFieldPanel,
-    buildTopologyFieldPanel,
-    buildFailurePanel,
     renderKeyValueSection,
     renderPanelHTML
   });

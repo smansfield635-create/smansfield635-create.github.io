@@ -1,5 +1,5 @@
 export const WORLD_KERNEL = Object.freeze((() => {
-  const VERSION = "kernel-cog-v2";
+  const VERSION = "kernel-cog-v3";
 
   // SECTION 1 — CANONICAL CONSTANTS
   const CONSTANTS = Object.freeze({
@@ -26,28 +26,42 @@ export const WORLD_KERNEL = Object.freeze((() => {
     worldRadiusFactor: 0.34,
     atmosphereThicknessFactor: 0.08,
 
-    lithosphereBaseElevation: 809070.0,
+    seaLevelNormalized: 0.0,
+    landTarget: 0.29,
+    waterTarget: 0.71,
+    ratioTolerance: 0.005,
 
-    seaLevelConstant: 0.5,
-    shorelineBandHalfWidth: 0.04,
+    contourSeedA: 1109,
+    contourSeedB: 2713,
+    contourSeedC: 4079,
+    contourAmplitude: 0.07,
+    contourSigma: 0.06,
+    macroThreshold: 0.16,
+    finalLandThresholdDefault: 0.18,
+    shorelineBandHalfWidth: 0.018,
 
-    thermalBaselineKelvin: 290.0,
+    equatorialMaxAbsLat: 15,
+    tropicalMaxAbsLat: 30,
+    temperateMaxAbsLat: 55,
+    subpolarMaxAbsLat: 70,
+    polarMaxAbsLat: 90,
+
+    thermalBaseline: 0.64,
     axialTiltDegrees: 23.5,
-    thermalPolarCoolingStrength: 0.82,
-    thermalWildernessDecayStrength: 0.26,
+    thermalPolarCoolingStrength: 0.55,
+    thermalWildernessDecayStrength: 0.65,
 
-    magneticBaseline: 0.2,
+    magneticBaseline: 0.22,
     gravityConstant: 9.81,
 
-    hydrologyRunoffStrength: 0.58,
-    hydrologyBasinThreshold: 0.62,
-    hydrologyRiverThreshold: 0.56,
-    hydrologyLakeThreshold: 0.62,
+    hydrologyRunoffStrength: 0.52,
+    hydrologyRiverThreshold: 0.48,
+    hydrologyLakeThreshold: 0.50,
 
-    topologyMountainThreshold: 0.66,
-    topologyBasinThreshold: 0.68,
-    topologyCanyonThreshold: 0.68,
-    topologyCaveThreshold: 0.62,
+    topologyMountainThreshold: 0.38,
+    topologyBasinThreshold: 0.26,
+    topologyCanyonThreshold: 0.32,
+    topologyCaveThreshold: 0.50,
 
     sedimentDepositionThreshold: 0.48,
     sedimentErosionScalar: 0.12,
@@ -80,7 +94,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     north: Object.freeze({ id: "north", role: "structure" }),
     south: Object.freeze({ id: "south", role: "environment" }),
     east: Object.freeze({ id: "east", role: "execution" }),
-    west: Object.freeze({ id: "west", role: "governance" })
+    west: Object.freeze({ id: "west", role: "representation" })
   });
 
   const RECURSION_LAW = Object.freeze({
@@ -101,8 +115,76 @@ export const WORLD_KERNEL = Object.freeze((() => {
 
   const DEPTH_ORDER = Object.freeze(DEPTH_REGISTRY.map((item) => item.id));
 
-  // SECTION 3 — ENVIRONMENT FAMILIES
+  // SECTION 3 — VOCABULARY
+  const TERRAIN_CLASSES = Object.freeze([
+    "WATER",
+    "SHELF",
+    "SHORELINE",
+    "BEACH",
+    "LOWLAND",
+    "FOOTHILL",
+    "RIDGE",
+    "PLATEAU",
+    "MOUNTAIN",
+    "SUMMIT",
+    "BASIN",
+    "CANYON",
+    "POLAR_ICE",
+    "GLACIAL_HIGHLAND"
+  ]);
+
+  const SURFACE_MATERIALS = Object.freeze([
+    "NONE",
+    "BEDROCK",
+    "GRAVEL",
+    "SAND",
+    "SILT",
+    "CLAY",
+    "SOIL",
+    "ICE",
+    "SNOW"
+  ]);
+
+  const BIOME_TYPES = Object.freeze([
+    "NONE",
+    "TROPICAL_RAINFOREST",
+    "TROPICAL_GRASSLAND",
+    "TEMPERATE_FOREST",
+    "TEMPERATE_GRASSLAND",
+    "DESERT",
+    "TUNDRA",
+    "WETLAND",
+    "BOREAL_FOREST",
+    "GLACIER"
+  ]);
+
+  const CLIMATE_BANDS = Object.freeze([
+    "EQUATORIAL",
+    "TROPICAL",
+    "TEMPERATE",
+    "SUBPOLAR",
+    "POLAR"
+  ]);
+
+  // SECTION 4 — ENVIRONMENT FAMILIES
   const ENVIRONMENT_FAMILIES = Object.freeze({
+    macroWorld: Object.freeze([
+      "landMask",
+      "waterMask",
+      "macroLandScore",
+      "finalLandScore",
+      "continentMass",
+      "macroRegion",
+      "subRegion",
+      "harborBridgeSupport",
+      "oceanCarveTotal"
+    ]),
+    summitBasin: Object.freeze([
+      "strongestSummitId",
+      "strongestSummitScore",
+      "strongestBasinId",
+      "strongestBasinScore"
+    ]),
     lithosphere: Object.freeze([
       "materialType",
       "diamondDensity",
@@ -120,14 +202,17 @@ export const WORLD_KERNEL = Object.freeze((() => {
       "basinAccumulation",
       "drainage",
       "riverCandidate",
-      "lakeCandidate"
+      "lakeCandidate",
+      "distanceToWater",
+      "distanceToLand"
     ]),
     thermodynamic: Object.freeze([
       "temperature",
       "thermalGradient",
       "freezePotential",
       "meltPotential",
-      "evaporationPressure"
+      "evaporationPressure",
+      "climateBandField"
     ]),
     sediment: Object.freeze([
       "sedimentType",
@@ -147,9 +232,9 @@ export const WORLD_KERNEL = Object.freeze((() => {
     ]),
     topologyDerived: Object.freeze([
       "elevation",
+      "oceanDepthField",
       "shoreline",
       "terrainClass",
-      "continentMass",
       "slope",
       "curvature",
       "ridgeStrength",
@@ -158,24 +243,36 @@ export const WORLD_KERNEL = Object.freeze((() => {
       "plateauStrength",
       "canyonStrength",
       "cavePotential"
+    ]),
+    surfaceBiome: Object.freeze([
+      "surfaceMaterial",
+      "biomeType"
     ])
   });
 
-  // SECTION 4 — CANONICAL REGISTRIES
+  // SECTION 5 — CANONICAL REGISTRIES
   const FILE_HOME_REGISTRY = Object.freeze({
     "world/world_kernel.js": Object.freeze([
       "cardinal_stack",
       "lattice_geometry",
       "canonical_constants",
       "environment_family_registry",
+      "terrain_vocabulary",
+      "surface_material_vocabulary",
+      "biome_vocabulary",
+      "climate_band_vocabulary",
       "depth_registry",
       "planet_field_contract",
       "planet_sample_contract",
-      "canon_verification"
+      "canon_verification",
+      "file_ownership_registry",
+      "dependency_registry"
     ]),
     "world/planet_engine.js": Object.freeze([
       "planet_field_generation",
-      "sample_enrichment",
+      "macro_world_realization",
+      "summit_basin_realization",
+      "surface_biome_realization",
       "field_summary",
       "field_completeness"
     ]),
@@ -184,15 +281,15 @@ export const WORLD_KERNEL = Object.freeze((() => {
       "atmosphere_expression",
       "surface_expression",
       "ocean_expression",
-      "draw_order"
+      "draw_order",
+      "render_audit"
     ]),
     "world/control.js": Object.freeze([
-      "boot",
-      "update_loop",
-      "render_loop",
       "input_handling",
       "projection_state",
-      "selection_state"
+      "selection_state",
+      "orientation_state",
+      "inverse_projection"
     ]),
     "assets/instruments.js": Object.freeze([
       "runtime_panels",
@@ -208,11 +305,14 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "index.html": Object.freeze([
       "document_shell",
       "mount_points",
-      "boot_entry"
+      "boot_entry",
+      "runtime_orchestration",
+      "frame_scheduling",
+      "error_capture"
     ])
   });
 
-  const CHRONOLOGY_REGISTRY = Object.freeze([
+  const DEPENDENCY_REGISTRY = Object.freeze([
     "world/world_kernel.js",
     "world/planet_engine.js",
     "world/render.js",
@@ -235,18 +335,38 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "lattice_geometry",
     "canonical_constants",
     "environment_family_registry",
+    "terrain_vocabulary",
+    "surface_material_vocabulary",
+    "biome_vocabulary",
+    "climate_band_vocabulary",
     "planet_field_contract",
     "planet_sample_contract",
-    "canon_verification"
+    "canon_verification",
+    "file_ownership_registry",
+    "dependency_registry"
   ]);
 
-  // SECTION 5 — PLANET FIELD CONTRACT
+  // SECTION 6 — PLANET FIELD CONTRACT
   const PLANET_FIELD_PULSE_ORDER = Object.freeze([
-    "lithosphere",
+    "base_sample_grid",
+    "macro_continent_field",
+    "land_water_classification",
+    "continent_labels",
+    "summit_realization",
+    "basin_realization",
+    "ocean_depth_realization",
+    "climate_bands",
+    "topology_fields",
+    "thermodynamics",
     "hydrology",
-    "thermodynamic",
+    "magnetics",
+    "materials",
     "sediment",
-    "magnetic"
+    "surface_biome_threshold_bands",
+    "surface_biome_precedence_tiebreak",
+    "surface_biome_sampling_unit_assignment",
+    "final_terrain_class",
+    "summary_completeness"
   ]);
 
   const CANONICAL_SAMPLE_CONTRACT = Object.freeze([
@@ -261,15 +381,28 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "seedSignature",
     "nestedLatticeDepth",
 
+    "landMask",
+    "waterMask",
+    "macroLandScore",
+    "finalLandScore",
+
     "baseElevation",
     "elevation",
     "seaLevel",
     "waterDepth",
+    "oceanDepthField",
     "terrainClass",
     "shoreline",
     "shorelineBand",
     "beachCandidate",
     "continentMass",
+    "macroRegion",
+    "subRegion",
+
+    "strongestSummitId",
+    "strongestSummitScore",
+    "strongestBasinId",
+    "strongestBasinScore",
 
     "slope",
     "curvature",
@@ -285,6 +418,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "freezePotential",
     "meltPotential",
     "evaporationPressure",
+    "climateBandField",
 
     "rainfall",
     "runoff",
@@ -292,6 +426,8 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "drainage",
     "riverCandidate",
     "lakeCandidate",
+    "distanceToWater",
+    "distanceToLand",
 
     "magneticIntensity",
     "shieldingGradient",
@@ -312,6 +448,9 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "transportPotential",
     "depositionPotential",
 
+    "surfaceMaterial",
+    "biomeType",
+
     "eventFlags"
   ]);
 
@@ -319,16 +458,17 @@ export const WORLD_KERNEL = Object.freeze((() => {
     width: CONSTANTS.planetSampleLatticeWidth,
     height: CONSTANTS.planetSampleLatticeHeight,
     total: CONSTANTS.planetSampleTotal,
+    order: PLANET_FIELD_PULSE_ORDER,
     pulseOrder: PLANET_FIELD_PULSE_ORDER,
     sampleContract: CANONICAL_SAMPLE_CONTRACT,
     summaryRequired: true,
     completenessRequired: true
   });
 
-  // SECTION 6 — VERIFICATION SYSTEM
+  // SECTION 7 — NAMING / SCOPE / FLAGS
   const NAMING = Object.freeze({
     kernelLabel: "KERNEL_COG",
-    baselineLabel: "compressed_256_world_v2",
+    baselineLabel: "compressed_256_world_v3",
     planetFieldLabel: "planetField",
     sampleLabel: "planetSample",
     structuralLatticeLabel: "structuralLattice16",
@@ -339,7 +479,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     includeEvents: true,
     includeVariants: true,
     includeUI: true,
-    activeBranch: "compressed_world_v2"
+    activeBranch: "compressed_world_v3"
   });
 
   const FEATURE_FLAGS = Object.freeze({
@@ -358,6 +498,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     passiveFieldState: "passive"
   });
 
+  // SECTION 8 — NORMALIZERS
   function normalizeArray(value) {
     return Array.isArray(value) ? value.map((item) => String(item)) : [];
   }
@@ -374,10 +515,11 @@ export const WORLD_KERNEL = Object.freeze((() => {
     return value && typeof value === "object" && !Array.isArray(value) ? value : {};
   }
 
+  // SECTION 9 — EXPECTED STRUCTURE
   function buildExpectedCanonStructure() {
     return Object.freeze({
       fileHomes: FILE_HOME_REGISTRY,
-      chronology: CHRONOLOGY_REGISTRY,
+      dependency: DEPENDENCY_REGISTRY,
       ownership: OWNERSHIP_REGISTRY,
       duplicateTruth: DUPLICATE_TRUTH_REGISTRY,
       pulseOrder: PLANET_FIELD_PULSE_ORDER,
@@ -386,6 +528,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     });
   }
 
+  // SECTION 10 — COMPARATORS
   function compareFileHomes(expected, received) {
     const expectedEntries = Object.entries(expected);
     if (expectedEntries.length === 0) return false;
@@ -400,7 +543,7 @@ export const WORLD_KERNEL = Object.freeze((() => {
     });
   }
 
-  function compareChronology(expected, received) {
+  function compareDependency(expected, received) {
     return (
       Array.isArray(received) &&
       received.length === expected.length &&
@@ -445,21 +588,22 @@ export const WORLD_KERNEL = Object.freeze((() => {
     );
   }
 
+  // SECTION 11 — VERIFICATION
   function verifyCanonicalStructure(input = {}) {
     const received = normalizeObject(input);
     const expected = buildExpectedCanonStructure();
 
     const file_home_pass = compareFileHomes(expected.fileHomes, normalizeObject(received.fileHomes));
-    const chronology_pass = compareChronology(expected.chronology, normalizeArray(received.chronology));
+    const dependency_pass = compareDependency(expected.dependency, normalizeArray(received.dependency ?? received.chronology));
     const ownership_pass = compareOwnership(expected.ownership, normalizeObject(received.ownership));
     const duplicate_truth_pass = compareDuplicateTruth(expected.duplicateTruth, normalizeArray(received.duplicateTruth));
-    const pulse_order_pass = comparePulseOrder(expected.pulseOrder, normalizeArray(received.pulseOrder));
+    const pulse_order_pass = comparePulseOrder(expected.pulseOrder, normalizeArray(received.pulseOrder ?? received.fieldOrder));
     const sample_contract_pass = compareSampleContract(expected.sampleContract, normalizeArray(received.sampleContract));
     const scope_pass = compareScope(expected.scope, normalizeObject(received.scope));
 
     const reasons = [];
     if (!file_home_pass) reasons.push("file_home_mismatch");
-    if (!chronology_pass) reasons.push("chronology_mismatch");
+    if (!dependency_pass) reasons.push("dependency_registry_mismatch");
     if (!ownership_pass) reasons.push("ownership_mismatch");
     if (!duplicate_truth_pass) reasons.push("duplicate_truth_mismatch");
     if (!pulse_order_pass) reasons.push("pulse_order_mismatch");
@@ -469,17 +613,19 @@ export const WORLD_KERNEL = Object.freeze((() => {
     return Object.freeze({
       pass:
         file_home_pass &&
-        chronology_pass &&
+        dependency_pass &&
         ownership_pass &&
         duplicate_truth_pass &&
         pulse_order_pass &&
         sample_contract_pass &&
         scope_pass,
       file_home_pass,
-      chronology_pass,
+      dependency_pass,
+      chronology_pass: dependency_pass,
       ownership_pass,
       duplicate_truth_pass,
       pulse_order_pass,
+      field_order_pass: pulse_order_pass,
       sample_contract_pass,
       scope_pass,
       reasons: Object.freeze(reasons)
@@ -512,6 +658,13 @@ export const WORLD_KERNEL = Object.freeze((() => {
     depthRegistry: DEPTH_REGISTRY,
     depthOrder: DEPTH_ORDER,
 
+    vocabulary: Object.freeze({
+      terrainClasses: TERRAIN_CLASSES,
+      surfaceMaterials: SURFACE_MATERIALS,
+      biomeTypes: BIOME_TYPES,
+      climateBands: CLIMATE_BANDS
+    }),
+
     environment: Object.freeze({
       families: ENVIRONMENT_FAMILIES
     }),
@@ -525,7 +678,8 @@ export const WORLD_KERNEL = Object.freeze((() => {
 
     canon: Object.freeze({
       fileHomeRegistry: FILE_HOME_REGISTRY,
-      chronologyRegistry: CHRONOLOGY_REGISTRY,
+      dependencyRegistry: DEPENDENCY_REGISTRY,
+      chronologyRegistry: DEPENDENCY_REGISTRY,
       ownershipRegistry: OWNERSHIP_REGISTRY,
       duplicateTruthRegistry: DUPLICATE_TRUTH_REGISTRY
     }),

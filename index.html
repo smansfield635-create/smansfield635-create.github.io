@@ -4,9 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits</title>
-
 <link rel="stylesheet" href="./assets/ui.css"/>
-
 <style>
 html,body{
   margin:0;
@@ -17,27 +15,125 @@ html,body{
   color:#fff;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
-
-/* ===== LAYERS ===== */
-#app-shell,#world-layer,#door-layer{
-  position:fixed;inset:0;
+#app-shell{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  isolation:isolate;
 }
-
 #world-canvas{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   width:100%;
   height:100%;
   display:block;
   z-index:1;
 }
 
-/* ===== DOOR ===== */
+/* ===== ATMOSPHERE / UNIVERSE LAYERS ===== */
+#universe-layer,
+#atmosphere-layer,
+#orbital-layer,
+#door-layer,
+#runtime-pill,
+#zone-panel,
+#control-panel{
+  position:fixed;
+  inset:0;
+}
+
+#universe-layer{
+  z-index:2;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.star-band{
+  position:absolute;
+  inset:-8%;
+  opacity:.45;
+  mix-blend-mode:screen;
+  animation:starDrift 42s linear infinite;
+}
+
+.star-band.near{
+  opacity:.68;
+  animation-duration:26s;
+}
+
+.star-band.far{
+  opacity:.24;
+  animation-duration:68s;
+}
+
+.star-band::before,
+.star-band::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-repeat:repeat;
+  background-size:320px 320px;
+}
+
+.star-band::before{
+  background-image:
+    radial-gradient(circle at 20px 28px, rgba(255,255,255,.95) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 130px 80px, rgba(255,255,255,.6) 0 1.1px, transparent 1.6px),
+    radial-gradient(circle at 240px 200px, rgba(255,255,255,.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 280px 40px, rgba(255,255,255,.52) 0 .9px, transparent 1.4px),
+    radial-gradient(circle at 60px 190px, rgba(255,255,255,.7) 0 .9px, transparent 1.3px);
+}
+
+.star-band::after{
+  background-image:
+    radial-gradient(circle at 80px 50px, rgba(120,180,255,.28) 0 1.3px, transparent 2px),
+    radial-gradient(circle at 200px 150px, rgba(255,210,120,.22) 0 1.4px, transparent 2.2px),
+    radial-gradient(circle at 300px 260px, rgba(180,120,255,.2) 0 1.2px, transparent 2px);
+  filter:blur(.5px);
+}
+
+#atmosphere-layer{
+  z-index:3;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.atmo-glow{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(84vw,980px);
+  height:min(84vw,980px);
+  transform:translate(-50%,-42%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(110,170,255,.10), transparent 38%),
+    radial-gradient(circle at 50% 55%, rgba(255,255,255,.05), transparent 56%),
+    radial-gradient(circle at 50% 50%, rgba(0,80,180,.12), transparent 68%);
+  filter:blur(10px);
+  animation:glowPulse 7s ease-in-out infinite;
+}
+
+.veil{
+  position:absolute;
+  inset:auto 0 0 0;
+  height:42%;
+  opacity:.22;
+  background:
+    linear-gradient(to bottom, transparent 0%, rgba(130,190,255,.08) 18%, rgba(170,220,255,.12) 58%, rgba(255,255,255,.03) 100%);
+  mask-image:linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.2) 18%, rgba(0,0,0,.95) 80%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.2) 18%, rgba(0,0,0,.95) 80%, transparent 100%);
+  transform:translateY(8%);
+  animation:veilDrift 8s ease-in-out infinite;
+}
+
+/* ===== HERO / TITLE ===== */
 #door-layer{
   z-index:10;
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;
   text-align:center;
   pointer-events:none;
 }
@@ -47,239 +143,834 @@ html,body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:18px;
+  gap:14px;
+  margin-top:7.5vh;
+  padding:24px;
 }
 
-/* TITLE */
 .door-title{
   margin:0;
-  font-size:clamp(44px,7vw,96px);
+  font-size:clamp(42px,7vw,92px);
   font-weight:950;
   letter-spacing:.05em;
   line-height:.9;
-  text-shadow:0 10px 40px rgba(0,0,0,.6);
+  text-shadow:0 10px 38px rgba(0,0,0,.6);
 }
 
-/* SUBTEXT */
 .door-sub{
   margin:0;
   font-size:clamp(16px,2vw,22px);
-  color:rgba(255,255,255,.82);
+  color:rgba(255,255,255,.86);
 }
 
 .door-tag{
-  margin:0;
+  margin:0 0 4px;
   font-size:clamp(13px,1.5vw,16px);
-  color:rgba(255,255,255,.6);
+  color:rgba(255,255,255,.64);
+  letter-spacing:.02em;
 }
 
-/* BUTTONS */
 .door-buttons{
   display:flex;
-  gap:14px;
   flex-wrap:wrap;
+  gap:12px;
   justify-content:center;
 }
 
 .door-btn{
+  appearance:none;
   border:1px solid rgba(255,255,255,.18);
   background:rgba(255,255,255,.08);
   color:#fff;
   border-radius:999px;
-  padding:14px 20px;
+  padding:12px 18px;
+  min-height:46px;
   font-weight:800;
+  letter-spacing:.03em;
   cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
   backdrop-filter:blur(10px);
-  transition:.2s;
+  transition:transform .18s ease, background .18s ease, border-color .18s ease;
 }
-.door-btn:hover{transform:translateY(-2px)}
+.door-btn:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.12);
+  border-color:rgba(255,255,255,.24);
+}
 
-/* ===== CONTROL PANEL ===== */
-#control-panel{
-  position:fixed;
+/* ===== ORBITAL DIAMOND SYSTEM ===== */
+#orbital-layer{
+  z-index:8;
+  pointer-events:none;
+}
+
+.orbit-shell{
+  position:absolute;
   left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
+  top:54%;
+  width:min(78vw,760px);
+  height:min(78vw,760px);
+  transform:translate(-50%,-50%);
+}
+
+.orbit-ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  animation:orbitRotate 36s linear infinite;
+}
+
+.orbit-ring::before{
+  content:"";
+  position:absolute;
+  inset:9%;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 0 80px rgba(130,180,255,.08), inset 0 0 50px rgba(255,255,255,.02);
+}
+
+.orbit-node{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:116px;
+  height:116px;
+  margin:-58px 0 0 -58px;
+  pointer-events:auto;
+  cursor:pointer;
+  transform-origin:50% 50%;
+  transition:transform .18s ease, filter .18s ease, opacity .18s ease;
+}
+
+.orbit-node:hover{
+  filter:brightness(1.08);
+}
+
+.orbit-node .gem{
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.22);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.28), transparent 26%),
+    radial-gradient(circle at 68% 74%, rgba(255,255,255,.08), transparent 34%),
+    linear-gradient(145deg, rgba(10,18,34,.92), rgba(6,8,14,.98)),
+    linear-gradient(45deg, rgba(102,194,255,.12), rgba(255,212,120,.10));
+  box-shadow:
+    0 0 20px rgba(255,255,255,.10),
+    0 0 50px rgba(0,0,0,.68),
+    inset 0 0 16px rgba(255,255,255,.08),
+    inset 0 0 42px rgba(120,180,255,.06);
+  overflow:hidden;
+  animation:gemSpinCW 14s linear infinite;
+}
+
+.orbit-node.ccw .gem{
+  animation-name:gemSpinCCW;
+}
+
+.orbit-node .gem::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    linear-gradient(120deg, transparent 18%, rgba(255,255,255,.12) 34%, transparent 48%, rgba(255,255,255,.07) 58%, transparent 72%);
+  transform:translateX(-26%);
+  animation:shimmerSweep 4.8s ease-in-out infinite;
+}
+
+.orbit-node .label{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:13px;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  text-align:center;
+  text-shadow:0 2px 18px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+
+.orbit-node.preview-only{
+  pointer-events:none;
+  opacity:.78;
+}
+
+.orbit-node.explore{
+  transform:translate(-50%,-50%) translateY(calc(-1 * min(31vw,300px)));
+}
+.orbit-node.products{
+  transform:translate(-50%,-50%) translateX(min(31vw,300px));
+}
+.orbit-node.laws{
+  transform:translate(-50%,-50%) translateY(min(31vw,300px));
+}
+.orbit-node.gauges{
+  transform:translate(-50%,-50%) translateX(calc(-1 * min(31vw,300px)));
+}
+
+.orbit-node.ring-breath{
+  animation:ringBreath 5s ease-in-out infinite;
+}
+
+.flat-menu{
+  position:absolute;
+  left:50%;
+  top:58%;
+  transform:translate(-50%,-50%);
+  width:min(92vw,720px);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  z-index:9;
+  pointer-events:auto;
+}
+
+.flat-card{
+  position:relative;
+  min-height:132px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.18), transparent 22%),
+    linear-gradient(145deg, rgba(10,14,22,.92), rgba(5,8,12,.98));
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.38),
+    inset 0 0 20px rgba(255,255,255,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:900;
+  font-size:clamp(18px,2.2vw,24px);
+  letter-spacing:.06em;
+  cursor:pointer;
+  overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.flat-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.26);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.22), transparent 24%),
+    linear-gradient(145deg, rgba(14,18,28,.96), rgba(5,8,12,1));
+}
+
+.flat-card::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:86px;
+  height:86px;
+  margin:-43px 0 0 -43px;
+  transform:rotate(45deg);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 0 14px rgba(255,255,255,.08);
+}
+
+/* ===== HUD ===== */
+#runtime-pill{
   z-index:12;
+  width:max-content;
+  left:16px;
+  top:16px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(0,0,0,.38);
+  border:1px solid rgba(255,255,255,.14);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+  color:rgba(255,255,255,.86);
+  backdrop-filter:blur(8px);
+}
+
+#zone-panel{
+  z-index:12;
+  top:16px;
+  right:16px;
+  left:auto;
+  bottom:auto;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  max-width:min(92vw,540px);
+}
+
+.zone-btn{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  border-radius:999px;
+  min-height:38px;
+  padding:8px 12px;
+  font-weight:700;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+}
+
+#control-panel{
+  z-index:12;
+  left:50%;
+  bottom:max(16px,env(safe-area-inset-bottom));
+  right:auto;
+  top:auto;
+  transform:translateX(-50%);
   display:flex;
   gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:max-content;
+  max-width:min(92vw,760px);
 }
 
 .ctrl-btn{
+  appearance:none;
   border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.5);
+  background:rgba(0,0,0,.42);
   color:#fff;
   border-radius:999px;
+  min-height:42px;
   padding:10px 14px;
   font-weight:800;
   cursor:pointer;
+  backdrop-filter:blur(8px);
 }
 
-/* ===== STATE ===== */
-.hidden{display:none!important}
+.hidden{display:none !important}
 
+@keyframes starDrift{
+  from{transform:translate3d(-1.5%, -1%, 0)}
+  to{transform:translate3d(1.5%, 1%, 0)}
+}
+@keyframes glowPulse{
+  0%,100%{opacity:.82; transform:translate(-50%,-42%) scale(1)}
+  50%{opacity:1; transform:translate(-50%,-42%) scale(1.04)}
+}
+@keyframes veilDrift{
+  0%,100%{transform:translateY(8%); opacity:.18}
+  50%{transform:translateY(2%); opacity:.28}
+}
+@keyframes orbitRotate{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes gemSpinCW{
+  from{transform:rotate(45deg)}
+  to{transform:rotate(405deg)}
+}
+@keyframes gemSpinCCW{
+  from{transform:rotate(45deg)}
+  to{transform:rotate(-315deg)}
+}
+@keyframes shimmerSweep{
+  0%,100%{transform:translateX(-34%)}
+  50%{transform:translateX(34%)}
+}
+@keyframes ringBreath{
+  0%,100%{filter:brightness(1); opacity:.94}
+  50%{filter:brightness(1.08); opacity:1}
+}
+
+@media (max-width:900px){
+  .orbit-shell{
+    width:min(92vw,640px);
+    height:min(92vw,640px);
+    top:56%;
+  }
+  .orbit-node{
+    width:104px;
+    height:104px;
+    margin:-52px 0 0 -52px;
+  }
+  .flat-menu{
+    width:min(92vw,620px);
+    gap:14px;
+  }
+}
+
+@media (max-width:700px){
+  .door-panel{
+    margin-top:8.5vh;
+    gap:12px;
+    padding:18px;
+  }
+  .orbit-shell{
+    width:min(96vw,560px);
+    height:min(96vw,560px);
+    top:59%;
+  }
+  .orbit-node{
+    width:92px;
+    height:92px;
+    margin:-46px 0 0 -46px;
+  }
+  .orbit-node .label{
+    font-size:11px;
+    letter-spacing:.6px;
+  }
+  .flat-menu{
+    top:60%;
+    grid-template-columns:1fr;
+    width:min(92vw,420px);
+    gap:12px;
+  }
+  .flat-card{
+    min-height:98px;
+  }
+  #zone-panel{
+    left:16px;
+    right:16px;
+    top:auto;
+    bottom:78px;
+    justify-content:center;
+  }
+  #control-panel{
+    width:min(94vw,560px);
+  }
+}
 </style>
 </head>
-
 <body>
-
 <div id="app-shell">
+  <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
-  <!-- WORLD -->
-  <canvas id="world-canvas"></canvas>
+  <div id="universe-layer" aria-hidden="true">
+    <div class="star-band far"></div>
+    <div class="star-band"></div>
+    <div class="star-band near"></div>
+  </div>
 
-  <!-- DOOR -->
+  <div id="atmosphere-layer" aria-hidden="true">
+    <div class="atmo-glow"></div>
+    <div class="veil"></div>
+  </div>
+
+  <div id="orbital-layer" aria-hidden="true">
+    <div id="orbit-shell" class="orbit-shell">
+      <div id="orbit-ring" class="orbit-ring">
+        <button class="orbit-node explore ring-breath" data-route="/explore/" type="button" aria-label="Explore">
+          <span class="gem"></span>
+          <span class="label">EXPLORE</span>
+        </button>
+        <button class="orbit-node products ccw ring-breath" data-route="/products/" type="button" aria-label="Products">
+          <span class="gem"></span>
+          <span class="label">PRODUCTS</span>
+        </button>
+        <button class="orbit-node laws ring-breath" data-route="/laws/" type="button" aria-label="Laws">
+          <span class="gem"></span>
+          <span class="label">LAWS</span>
+        </button>
+        <button class="orbit-node gauges ccw ring-breath" data-route="/gauges/" type="button" aria-label="Gauges">
+          <span class="gem"></span>
+          <span class="label">GAUGES</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="flat-menu" class="flat-menu hidden">
+      <button class="flat-card" data-route="/home/" type="button">OPEN</button>
+      <button class="flat-card" data-route="/explore/" type="button">EXPLORE</button>
+      <button class="flat-card" data-route="/products/" type="button">PRODUCTS</button>
+      <button class="flat-card" data-route="/laws/" type="button">LAWS</button>
+    </div>
+  </div>
+
   <div id="door-layer">
     <div class="door-panel">
       <h1 class="door-title">NINE SUMMITS</h1>
       <p class="door-sub">Choose your reality.</p>
       <p class="door-tag">Enter simple. Discover power. Choose depth.</p>
-
       <div class="door-buttons">
-        <button id="btn-round" class="door-btn">WORLD IS ROUND</button>
-        <button id="btn-flat" class="door-btn">WORLD IS FLAT</button>
+        <button id="btn-round" class="door-btn" type="button">WORLD IS ROUND</button>
+        <button id="btn-flat" class="door-btn" type="button">WORLD IS FLAT</button>
       </div>
     </div>
   </div>
 
-  <!-- CONTROL -->
-  <div id="control-panel" class="hidden">
-    <button id="btn-open" class="ctrl-btn">OPEN</button>
-    <button id="btn-explore" class="ctrl-btn">EXPLORE</button>
-    <button id="btn-products" class="ctrl-btn">PRODUCTS</button>
-    <button id="btn-laws" class="ctrl-btn">LAWS</button>
+  <div id="runtime-pill" class="hidden">SURFACE</div>
+
+  <div id="zone-panel" class="hidden">
+    <button id="btn-underground" class="zone-btn" type="button">UNDERGROUND</button>
+    <button id="btn-north" class="zone-btn" type="button">NORTH POLE</button>
+    <button id="btn-south" class="zone-btn" type="button">SOUTH POLE</button>
+    <button id="btn-surface" class="zone-btn" type="button">SURFACE</button>
   </div>
 
+  <div id="control-panel" class="hidden">
+    <button id="btn-open" class="ctrl-btn" type="button">OPEN</button>
+    <button id="btn-explore" class="ctrl-btn" type="button">EXPLORE</button>
+    <button id="btn-products" class="ctrl-btn" type="button">PRODUCTS</button>
+    <button id="btn-laws" class="ctrl-btn" type="button">LAWS</button>
+  </div>
 </div>
 
 <script type="module">
-
 import { createPlanetEngine } from "./world/planet_engine.js";
 import { createRenderer } from "./world/render.js";
 import { createControlSystem } from "./world/control.js";
+import { createCompletionEngine } from "./world/completion_engine.js";
+import { createTransitionEngine } from "./world/transition_engine.js";
+import { createPolarEngine } from "./world/polar_engine.js";
 
-/* ===== INIT ===== */
 const params = new URLSearchParams(location.search);
 const mode = params.get("mode") || "door";
 
 const canvas = document.getElementById("world-canvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { alpha: true });
 
 const doorLayer = document.getElementById("door-layer");
+const runtimePill = document.getElementById("runtime-pill");
+const zonePanel = document.getElementById("zone-panel");
 const controlPanel = document.getElementById("control-panel");
+const orbitShell = document.getElementById("orbit-shell");
+const orbitRing = document.getElementById("orbit-ring");
+const flatMenu = document.getElementById("flat-menu");
+
+const btnRound = document.getElementById("btn-round");
+const btnFlat = document.getElementById("btn-flat");
+
+const btnOpen = document.getElementById("btn-open");
+const btnExplore = document.getElementById("btn-explore");
+const btnProducts = document.getElementById("btn-products");
+const btnLaws = document.getElementById("btn-laws");
+
+const btnUnderground = document.getElementById("btn-underground");
+const btnNorth = document.getElementById("btn-north");
+const btnSouth = document.getElementById("btn-south");
+const btnSurface = document.getElementById("btn-surface");
 
 const planetEngine = createPlanetEngine();
 const renderer = createRenderer();
 const control = createControlSystem();
+const completionEngine = createCompletionEngine();
+const transitionEngine = createTransitionEngine();
+const polarEngine = createPolarEngine();
 
-/* ===== STATE ===== */
-let planetField = null;
-let raf = 0;
-let last = performance.now();
-let dragging = false;
-let lx = 0, ly = 0;
+const runtime = {
+  mode,
+  planetField: null,
+  progress: {
+    summitCompletion: 0,
+    confusionLoad: 0,
+    masteryPass: false
+  },
+  unlocks: {
+    underground: false,
+    north: false,
+    south: false
+  },
+  zone: {
+    currentZone: "surface",
+    targetZone: null,
+    transitioning: false
+  },
+  failure: null
+};
 
-/* ===== RESIZE ===== */
-function resize(){
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  control.resize(innerWidth, innerHeight);
+let rafId = 0;
+let lastFrameAt = performance.now();
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+let idlePhase = 0;
+
+function withModeQuery(route) {
+  const stateMode = runtime.mode === "flat" ? "flat" : "round";
+  if (!route || route === "/") return `/?mode=${stateMode}`;
+  const glue = route.includes("?") ? "&" : "?";
+  return `${route}${glue}mode=${stateMode}`;
 }
 
-/* ===== BUILD ===== */
-function build(){
-  if(!planetField){
-    planetField = planetEngine.buildPlanetField({});
+function resizeWorld() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+  control.resize(width, height);
+}
+
+function buildPlanetFieldOnce() {
+  if (!runtime.planetField) {
+    runtime.planetField = planetEngine.buildPlanetField({});
   }
 }
 
-/* ===== RENDER ===== */
-function render(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+function updateCompletion() {
+  completionEngine.update(runtime);
+}
 
-  if(!planetField) return;
+function updateRuntimeUI() {
+  const inDoor = runtime.mode === "door";
+  const inFlat = runtime.mode === "flat";
+  const inRound = runtime.mode === "world";
 
+  doorLayer.classList.toggle("hidden", !inDoor);
+  runtimePill.classList.toggle("hidden", inDoor);
+  zonePanel.classList.toggle("hidden", inDoor);
+  controlPanel.classList.toggle("hidden", inDoor);
+
+  runtimePill.textContent = String(runtime.zone.currentZone || "surface").toUpperCase();
+
+  btnUnderground.disabled = !runtime.unlocks.underground;
+  btnNorth.disabled = !runtime.unlocks.north;
+  btnSouth.disabled = !runtime.unlocks.south;
+
+  orbitShell.classList.toggle("hidden", inFlat);
+  flatMenu.classList.toggle("hidden", !inFlat);
+
+  document.querySelectorAll(".orbit-node").forEach((node) => {
+    const previewOnly = inDoor;
+    node.classList.toggle("preview-only", previewOnly);
+    node.disabled = previewOnly;
+    node.setAttribute("aria-disabled", previewOnly ? "true" : "false");
+  });
+
+  if (inRound) {
+    orbitRing.style.opacity = "1";
+    orbitRing.style.filter = "drop-shadow(0 0 24px rgba(120,180,255,.12))";
+  } else if (inFlat) {
+    orbitRing.style.opacity = ".22";
+    orbitRing.style.filter = "none";
+  } else {
+    orbitRing.style.opacity = ".94";
+    orbitRing.style.filter = "drop-shadow(0 0 24px rgba(120,180,255,.12))";
+  }
+}
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawUndergroundScene() {
+  const w = canvas.width;
+  const h = canvas.height;
+  const cx = w * 0.5;
+  const cy = h * 0.56;
+
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#04070c");
+  bg.addColorStop(1, "#120d0a");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  for (let i = 0; i < 18; i += 1) {
+    const r = 30 + i * 24;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, Math.PI * 0.08, Math.PI * 0.92);
+    ctx.strokeStyle = `rgba(220,190,150,${0.05 + i * 0.012})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, Math.min(w, h) * 0.12, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,214,150,0.08)";
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255,255,255,0.82)";
+  ctx.font = "700 14px system-ui";
+  ctx.textAlign = "center";
+  ctx.fillText("UNDERGROUND CITY", cx, cy + Math.min(w, h) * 0.18);
+}
+
+function renderSurface() {
   renderer.renderPlanet({
     ctx,
-    planetField,
-    projectPoint:(lat,lon,r=0)=>control.projectSphere(lat,lon,r),
-    viewState:control.getCameraState()
+    planetField: runtime.planetField,
+    projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => control.projectSphere(latDeg, lonDeg, radiusOffsetPx),
+    viewState: control.getCameraState()
   });
 }
 
-/* ===== LOOP ===== */
-function loop(t){
-  const dt = t-last;
-  last=t;
+function renderActiveZone() {
+  clearCanvas();
 
-  if(!dragging){
-    control.stepInertia(dt);
+  if (runtime.zone.currentZone === "surface") {
+    renderSurface();
+    return;
   }
 
-  render();
-  raf=requestAnimationFrame(loop);
+  if (runtime.zone.currentZone === "underground") {
+    drawUndergroundScene();
+    return;
+  }
+
+  polarEngine.render(runtime, ctx);
 }
 
-/* ===== MODE ===== */
-function enterDoor(){
-  doorLayer.classList.remove("hidden");
-  controlPanel.classList.add("hidden");
+function applyIdleDrift(dtMs) {
+  if (runtime.zone.currentZone !== "surface") return;
+  idlePhase += dtMs * 0.00018;
+  const drift = 0.045 + Math.sin(idlePhase) * 0.015;
+  control.applyDrag(drift * dtMs * 0.18, 0);
 }
 
-function enterWorld(flat=false){
-  doorLayer.classList.add("hidden");
-  controlPanel.classList.remove("hidden");
+function updateFrame(now) {
+  const dtMs = now - lastFrameAt;
+  lastFrameAt = now;
 
-  build();
+  if (!isDragging && runtime.zone.currentZone === "surface") {
+    applyIdleDrift(dtMs);
+    control.stepInertia(dtMs);
+  }
 
-  canvas.style.filter = flat ? "blur(6px) brightness(.7)" : "none";
+  transitionEngine.step(runtime);
+  updateCompletion();
+  updateRuntimeUI();
+  renderActiveZone();
 
-  if(!raf){
-    last=performance.now();
-    raf=requestAnimationFrame(loop);
+  rafId = requestAnimationFrame(updateFrame);
+}
+
+function requestZone(targetZone) {
+  transitionEngine.requestTransition(runtime, targetZone);
+  updateRuntimeUI();
+}
+
+function enterDoorMode() {
+  runtime.mode = "door";
+  runtime.zone.currentZone = "surface";
+  canvas.style.filter = "brightness(.88)";
+  updateRuntimeUI();
+  renderActiveZone();
+
+  if (!rafId) {
+    lastFrameAt = performance.now();
+    rafId = requestAnimationFrame(updateFrame);
   }
 }
 
-/* ===== INPUT ===== */
-canvas.addEventListener("pointerdown",(e)=>{
-  if(mode==="door") return;
-  dragging=true;
-  lx=e.clientX; ly=e.clientY;
-});
+function enterWorldMode(flat = false) {
+  runtime.mode = flat ? "flat" : "world";
+  buildPlanetFieldOnce();
+  updateCompletion();
+  updateRuntimeUI();
+  canvas.style.filter = flat ? "blur(6px) brightness(.72) saturate(.86)" : "none";
+  renderActiveZone();
 
-window.addEventListener("pointermove",(e)=>{
-  if(!dragging) return;
-  const dx=e.clientX-lx;
-  const dy=e.clientY-ly;
-  lx=e.clientX; ly=e.clientY;
-  control.applyDrag(dx,dy);
-});
+  if (!rafId) {
+    lastFrameAt = performance.now();
+    rafId = requestAnimationFrame(updateFrame);
+  }
+}
 
-window.addEventListener("pointerup",()=>dragging=false);
+function onPointerDown(event) {
+  if (runtime.mode !== "world") return;
+  if (runtime.zone.currentZone !== "surface") return;
+  isDragging = true;
+  lastX = event.clientX;
+  lastY = event.clientY;
+}
 
-/* ===== BUTTONS ===== */
-document.getElementById("btn-round").onclick=()=>{
-  location.href="/index.html?mode=world";
-};
+function onPointerMove(event) {
+  if (!isDragging) return;
+  if (runtime.mode !== "world") return;
+  if (runtime.zone.currentZone !== "surface") return;
 
-document.getElementById("btn-flat").onclick=()=>{
-  location.href="/index.html?mode=flat";
-};
+  const dx = event.clientX - lastX;
+  const dy = event.clientY - lastY;
+  lastX = event.clientX;
+  lastY = event.clientY;
 
-document.getElementById("btn-open").onclick=()=>location.href="/home/";
-document.getElementById("btn-explore").onclick=()=>location.href="/explore/";
-document.getElementById("btn-products").onclick=()=>location.href="/products/";
-document.getElementById("btn-laws").onclick=()=>location.href="/laws/";
+  control.applyDrag(dx, dy);
+  renderActiveZone();
+}
 
-/* ===== START ===== */
-resize();
-addEventListener("resize",resize);
+function onPointerUp() {
+  isDragging = false;
+}
 
-if(mode==="world") enterWorld(false);
-else if(mode==="flat") enterWorld(true);
-else enterDoor();
+function bindEvents() {
+  window.addEventListener("resize", () => {
+    resizeWorld();
+    renderActiveZone();
+  });
 
+  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerup", onPointerUp, { passive: true });
+  window.addEventListener("pointercancel", onPointerUp, { passive: true });
+
+  btnRound.addEventListener("click", () => {
+    location.href = "/home/?mode=round";
+  });
+
+  btnFlat.addEventListener("click", () => {
+    location.href = "/home/?mode=flat";
+  });
+
+  btnOpen.addEventListener("click", () => {
+    location.href = withModeQuery("/home/");
+  });
+  btnExplore.addEventListener("click", () => {
+    location.href = withModeQuery("/explore/");
+  });
+  btnProducts.addEventListener("click", () => {
+    location.href = withModeQuery("/products/");
+  });
+  btnLaws.addEventListener("click", () => {
+    location.href = withModeQuery("/laws/");
+  });
+
+  btnUnderground.addEventListener("click", () => {
+    requestZone("underground");
+  });
+  btnNorth.addEventListener("click", () => {
+    requestZone("north");
+  });
+  btnSouth.addEventListener("click", () => {
+    requestZone("south");
+  });
+  btnSurface.addEventListener("click", () => {
+    requestZone("surface");
+  });
+
+  document.querySelectorAll(".orbit-node, .flat-card").forEach((node) => {
+    node.addEventListener("click", () => {
+      const route = node.dataset.route || "/home/";
+      if (node.classList.contains("preview-only")) return;
+      location.href = withModeQuery(route);
+    });
+  });
+
+  window.addEventListener("pagehide", () => {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }, { passive: true });
+}
+
+function start() {
+  resizeWorld();
+  buildPlanetFieldOnce();
+  bindEvents();
+
+  if (mode === "world" || mode === "round") {
+    enterWorldMode(false);
+    return;
+  }
+
+  if (mode === "flat") {
+    enterWorldMode(true);
+    return;
+  }
+
+  updateCompletion();
+  enterDoorMode();
+}
+
+start();
 </script>
-
 </body>
 </html>

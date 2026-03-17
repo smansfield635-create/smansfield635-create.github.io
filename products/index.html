@@ -18,24 +18,29 @@ body::before,body::after{pointer-events:none!important}
   --dockH:132px;
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-  --ink:rgba(255,255,255,.95);
+  --ink:rgba(255,255,255,.96);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
+
   --crimson:rgba(120,0,22,.34);
   --festival:rgba(255,43,43,.18);
   --opalV:rgba(90,40,120,.12);
   --goldSoft:rgba(201,162,74,.18);
+
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
-  --fieldGap:14px;
-  --microGap:10px;
-  --radiusA:26px;
-  --radiusB:22px;
-  --radiusC:18px;
+
+  --rA:26px;
+  --rB:22px;
+  --rC:18px;
+
+  --gapA:14px;
+  --gapB:10px;
+  --gapC:8px;
 }
 
-/* ===== TOP CONTROLS ===== */
+/* ===== TOP ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -67,16 +72,19 @@ body::before,body::after{pointer-events:none!important}
 .btn::after{
   content:"";
   position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
   opacity:.60;pointer-events:none;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowC),0 0 18px rgba(255,43,43,.12);
+}
 
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow: var(--shadowC);
+  background:rgba(0,0,0,.16);
+  box-shadow:var(--shadowC);
 }
 .seg button{
   appearance:none;border:0;background:transparent;color:var(--mut);
@@ -90,12 +98,12 @@ body::before,body::after{pointer-events:none!important}
   background:
     radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
+  box-shadow:inset 0 -10px 22px rgba(201,162,74,.16);
 }
 
 /* ===== PAGE ===== */
 .page{
-  width:min(1580px,96vw);
+  width:min(1720px,97vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;
@@ -110,7 +118,7 @@ body::before,body::after{pointer-events:none!important}
   left:50%;
   top:68px;
   transform:translateX(-50%);
-  width:min(1660px,98vw);
+  width:min(1780px,99vw);
   height:calc(100% - 108px);
   border-radius:34px;
   pointer-events:none;
@@ -160,8 +168,8 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
   z-index:2;
   border:1px solid var(--stroke);
-  border-radius:var(--radiusA);
-  padding:20px 18px 16px;
+  border-radius:var(--rA);
+  padding:16px 16px 14px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
@@ -174,8 +182,8 @@ body::before,body::after{pointer-events:none!important}
 }
 .hero::before{
   content:"";
-  position:absolute;inset:0;border-radius:var(--radiusA);pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  position:absolute;inset:0;border-radius:var(--rA);pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
     repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
@@ -190,45 +198,57 @@ body::before,body::after{pointer-events:none!important}
 .heroGrid{
   position:relative;
   display:grid;
-  grid-template-columns:minmax(0,1.4fr) minmax(360px,.9fr);
-  gap:18px;
+  grid-template-columns:minmax(0,1.45fr) minmax(380px,.95fr);
+  gap:14px;
   align-items:stretch;
 }
 .heroMain{min-width:0}
 .heroField{
   min-width:0;
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
   align-content:start;
 }
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-.h1{margin:0;font-weight:980;font-size:36px;letter-spacing:.7px;color:var(--ink);line-height:1.02;position:relative}
+.k{
+  margin:0 0 6px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:.78;
+  color:var(--mut);
+}
+.h1{
+  margin:0;
+  font-weight:980;
+  font-size:34px;
+  line-height:1.02;
+  letter-spacing:.7px;
+  color:var(--ink);
+}
 .sub{
-  margin-top:12px;
-  font-size:15.75px;
-  line-height:1.6;
+  margin-top:10px;
+  font-size:15.25px;
+  line-height:1.55;
   color:rgba(255,255,255,.88);
   max-width:980px;
-  position:relative;
   white-space:pre-line;
 }
 .rule{
-  margin-top:12px;
-  padding:12px 12px;
+  margin-top:10px;
+  padding:11px 12px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
     radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
     linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
-  font-size:13.25px;
+  font-size:13px;
   color:rgba(255,255,255,.86);
-  line-height:1.45;
-  position:relative;
+  line-height:1.42;
 }
 .stateRow{
-  margin-top:12px;
+  margin-top:10px;
   display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
 }
 .statePill{
@@ -242,7 +262,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .fieldChip{
   position:relative;
-  min-height:78px;
+  min-height:74px;
   border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
@@ -269,7 +289,7 @@ body::before,body::after{pointer-events:none!important}
   margin-top:8px;font-size:13px;line-height:1.35;color:rgba(255,255,255,.88);font-weight:850
 }
 
-/* ===== SECTION HEADERS ===== */
+/* ===== SECTION LABEL ===== */
 .band{
   position:relative;z-index:2;
   padding:10px 12px;border-radius:18px;
@@ -279,80 +299,99 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.90);
 }
 
-/* ===== SIGNATURE FIELD ===== */
+/* ===== SIGNATURE GEOMETRY FIELD ===== */
+.sigWrap{
+  position:relative;
+  z-index:2;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255,43,43,.08), transparent 54%),
+    radial-gradient(circle at 82% 20%, rgba(90,40,120,.10), transparent 58%),
+    linear-gradient(145deg, rgba(14,18,24,.84), rgba(8,10,14,.94));
+  box-shadow:var(--shadowA);
+  padding:14px;
+  overflow:hidden;
+}
+.sigWrap::before{
+  content:"";
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
 .sigField{
-  position:relative;z-index:2;
   display:grid;
-  grid-template-columns:repeat(12,minmax(0,1fr));
-  gap:var(--fieldGap);
-  align-items:start;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
 }
 .sigNode{
   position:relative;
-  min-height:180px;
+  min-height:168px;
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border-radius:20px;
   background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.08), transparent 56%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.08), transparent 64%),
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
+  box-shadow:var(--shadowB);
   overflow:hidden;
 }
 .sigNode::before{
   content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow:inset 0 0 0 1px rgba(201,162,74,.10);
+  position:absolute;inset:0;border-radius:20px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.08);
   opacity:.55;
 }
-.sigNode[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10)}
-.sigNode--wide{grid-column:span 6}
-.sigNode--mid{grid-column:span 4}
-.sigNode--small{grid-column:span 3}
-.sigNode__head{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-  padding:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+.sigNode[data-open="true"]{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);
 }
-.sigNode__left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.sigNode__head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+  padding:14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.sigNode__left{display:flex;gap:10px;align-items:flex-start;min-width:0}
 .sigNode__diamond{
-  width:12px;height:12px;border-radius:3px;transform:rotate(45deg);flex:0 0 auto;margin-top:4px;
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);flex:0 0 auto;margin-top:4px;
   background:var(--nodeColor,#c9a24a);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 10px rgba(0,0,0,.35);
 }
 .sigNode__title{
-  font-weight:980;font-size:19px;line-height:1.1;color:var(--ink)
+  font-weight:980;font-size:17px;line-height:1.1;color:var(--ink)
 }
 .sigNode__preview{
-  margin-top:8px;font-size:13.75px;line-height:1.42;color:rgba(255,255,255,.84);max-width:64ch
+  margin-top:7px;font-size:13px;line-height:1.38;color:rgba(255,255,255,.84)
 }
 .sigNode__chev{
-  width:36px;height:36px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;
   color:rgba(255,255,255,.78);font-weight:950;flex:0 0 auto;position:relative;overflow:hidden
-}
-.sigNode__chev::after{
-  content:"";position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-  opacity:.62;pointer-events:none;
 }
 .sigNode__body{
   display:none;
-  padding:0 16px 16px;
+  padding:0 14px 14px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.05), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.84), rgba(6,8,10,.94));
 }
 .sigNode[data-open="true"] .sigNode__body{display:block}
-.sigNode__micro{
-  display:grid;grid-template-columns:1.1fr auto;gap:12px;align-items:end;padding-top:14px
-}
 .sigNode__para{
-  margin:0;color:rgba(255,255,255,.88);font-size:14.5px;line-height:1.7
+  margin:14px 0 0;color:rgba(255,255,255,.88);font-size:13.8px;line-height:1.6
 }
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+.actions .btn{border-radius:999px;min-height:40px;font-size:13px}
 
 /* ===== STREAMS ===== */
-.streamList{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.streamList{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;gap:12px;
+}
 .stream{
   position:relative;
   border:1px solid rgba(255,255,255,.10);
@@ -370,7 +409,10 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:inset 0 0 0 1px rgba(201,162,74,.10);
   opacity:.55;
 }
-.stream[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10)}
+.stream[data-open="true"]{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowA),0 0 18px rgba(255,43,43,.10);
+}
 .stream__head{
   display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
   padding:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
@@ -382,20 +424,15 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
 }
 .stream__title{
-  font-weight:980;font-size:20px;line-height:1.1;color:var(--ink)
+  font-weight:980;font-size:20px;line-height:1.08;color:var(--ink)
 }
 .stream__sub{
-  margin-top:8px;font-size:13.75px;line-height:1.42;color:rgba(255,255,255,.84);max-width:96ch
+  margin-top:8px;font-size:13.5px;line-height:1.42;color:rgba(255,255,255,.84);max-width:110ch
 }
 .stream__chev{
   width:36px;height:36px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
   background:rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
   color:rgba(255,255,255,.78);font-weight:950;flex:0 0 auto;position:relative;overflow:hidden
-}
-.stream__chev::after{
-  content:"";position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-  opacity:.62;pointer-events:none;
 }
 .stream__body{
   display:none;
@@ -406,14 +443,8 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
 .stream[data-open="true"] .stream__body{display:block}
-.stream__bodyGrid{
-  display:grid;
-  grid-template-columns:minmax(0,.9fr) minmax(0,2.1fr);
-  gap:14px;
-  align-items:start;
-}
 .stream__thesis{
-  position:sticky;top:92px;
+  margin-bottom:12px;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
   padding:14px;
@@ -423,15 +454,16 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowB);
 }
 .stream__para{
-  margin:0;color:rgba(255,255,255,.88);font-size:14.5px;line-height:1.7
+  margin:0;color:rgba(255,255,255,.88);font-size:14.5px;line-height:1.65
 }
 .stream__grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:var(--microGap);
+  gap:12px;
 }
 .productNode{
   position:relative;
+  min-height:192px;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
   background:
@@ -447,10 +479,16 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:inset 0 0 0 1px rgba(201,162,74,.08);
   opacity:.55;
 }
-.productNode[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 16px rgba(255,43,43,.10)}
+.productNode[data-open="true"]{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowB),0 0 16px rgba(255,43,43,.10);
+}
 .productNode__head{
   display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
-  padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  padding:14px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 .productNode__left{display:flex;gap:10px;align-items:flex-start;min-width:0}
 .productNode__diamond{
@@ -479,10 +517,8 @@ body::before,body::after{pointer-events:none!important}
 }
 .productNode[data-open="true"] .productNode__body{display:block}
 .productNode__para{
-  margin:14px 0 0;color:rgba(255,255,255,.88);font-size:14px;line-height:1.65
+  margin:14px 0 0;color:rgba(255,255,255,.88);font-size:14px;line-height:1.62
 }
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-.actions .btn{border-radius:999px;min-height:40px;font-size:13px}
 
 /* ===== DOCK ===== */
 .dock{
@@ -504,23 +540,24 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 
-@media (max-width:1240px){
+/* ===== BREAKPOINTS ===== */
+@media (max-width:1400px){
   .heroGrid{grid-template-columns:1fr}
-  .heroField{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .stream__bodyGrid{grid-template-columns:1fr}
-  .stream__thesis{position:relative;top:auto}
-  .sigNode--wide,.sigNode--mid,.sigNode--small{grid-column:span 6}
 }
-@media (max-width:900px){
-  .sigField{grid-template-columns:repeat(6,minmax(0,1fr))}
-  .sigNode--wide,.sigNode--mid,.sigNode--small{grid-column:span 6}
+@media (max-width:1180px){
+  .sigField{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:960px){
   .stream__grid{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  .sigField{grid-template-columns:1fr}
+  .heroField{grid-template-columns:1fr}
 }
 @media (max-width:520px){
   :root{--dockH:148px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
   .h1{font-size:28px}
-  .heroField{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -571,7 +608,9 @@ body::before,body::after{pointer-events:none!important}
   </section>
 
   <div class="band" id="bandSig">SIGNATURE SYSTEMS (OPEN ONE)</div>
-  <div class="sigField" id="sigField" aria-label="Signature systems field"></div>
+  <section class="sigWrap" aria-label="Signature systems field">
+    <div class="sigField" id="sigField"></div>
+  </section>
 
   <div class="band" id="bandStreams">DEPLOYMENT STREAMS (OPEN ONE)</div>
   <div class="streamList" id="streamList" aria-label="Deployment streams"></div>
@@ -640,8 +679,6 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-
-  function go(path){ window.location.href = path + q(); }
 
   var ROUTES = {
     sig_shimmer: "/explore/frontier/shimmer/",
@@ -731,7 +768,7 @@ body::before,body::after{pointer-events:none!important}
   };
 
   var SIGNATURE = [
-    {id:"sig_shimmer", c:"#ff2b2b", size:"wide",
+    {id:"sig_shimmer", c:"#ff5c33",
       name:{platform:{en:"SHIMMER Engine",zh:"SHIMMER 引擎",es:"Motor SHIMMER"}, engineering:{en:"Variance Control",zh:"方差控制",es:"Control de Varianza"}},
       preview:{platform:{en:"Stabilizes perception under pressure.",zh:"压力下稳定感知。",es:"Estabiliza percepción bajo presión."},
               engineering:{en:"Baseline→bands→triggers→receipts.",zh:"基线→区间→触发→收据。",es:"Baseline→bandas→triggers→recibos."}},
@@ -744,7 +781,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"SHIMMER (ingeniería) trata la deriva perceptiva como fallo de interfaz: baseline, bandas, triggers con códigos, recibos y replay. Si no es reproducible bajo alcance fijo: HOLD."}
       }
     },
-    {id:"sig_lattice256", c:"#c9a24a", size:"wide",
+    {id:"sig_lattice256", c:"#ffd84d",
       name:{platform:{en:"256-State Lattice",zh:"256态晶格",es:"Lattice 256"}, engineering:{en:"Finite Coordinates",zh:"有限坐标",es:"Coordenadas Finitas"}},
       preview:{platform:{en:"Makes “complex” indexable.",zh:"让“复杂”可索引。",es:"Hace lo complejo indexable."},
               engineering:{en:"Manifest lock + replay discipline.",zh:"清单锁+回放纪律。",es:"Manifiesto fijo + replay."}},
@@ -757,89 +794,89 @@ body::before,body::after{pointer-events:none!important}
                     es:"Coordenadas finitas requieren ejes y enumeración explícitos, con manifiesto bloqueado. Salidas admisibles solo si deterministas bajo alcance fijo y replayables desde recibos. Cambios = nueva época."}
       }
     },
-    {id:"sig_dotdot", c:"#93c5fd", size:"mid",
+    {id:"sig_dotdot", c:"#bfe8ff",
       name:{platform:{en:"Dot·Dot Grid",zh:"点点网格",es:"Dot·Dot Grid"}, engineering:{en:"Signal Surface",zh:"信号面",es:"Superficie de Señal"}},
       preview:{platform:{en:"Shows what changed.",zh:"展示变化。",es:"Muestra cambios."},
               engineering:{en:"Windowed deltas + thresholds.",zh:"窗口差分+阈值。",es:"Deltas por ventana + umbrales."}},
       para:{
-        platform:{en:"Dot·Dot turns vague concern into measurable movement. It makes drift visible early, so you can correct before failure. It is the “truth surface” that keeps the catalog grounded.",
-                  zh:"点点网格把模糊担忧变成可测运动：提前把漂移显出来，让你在失败前纠正。它是让整个目录落地的“真相面”。",
-                  es:"Dot·Dot convierte preocupación vaga en movimiento medible. Hace visible la deriva temprano para corregir antes del fallo. Es la superficie de verdad que mantiene el catálogo aterrizado."},
+        platform:{en:"Dot·Dot turns vague concern into measurable movement. It makes drift visible early, so you can correct before failure. It is the truth surface that keeps the catalog grounded.",
+                  zh:"点点网格把模糊担忧变成可测运动：提前把漂移显出来，让你在失败前纠正。它是真相表面。",
+                  es:"Dot·Dot convierte preocupación vaga en movimiento medible. Hace visible la deriva temprano para corregir antes del fallo. Es la superficie de verdad."},
         engineering:{en:"Signal surfaces compute windowed deltas, slope changes, and threshold crossings. Each flag must be attached to scope + evidence and stored as a receipt for replay.",
                     zh:"信号面计算窗口差分、斜率变化与阈值穿越。每个标记必须绑定范围+证据，并作为收据存储以便回放。",
                     es:"Superficies de señal calculan deltas por ventana, cambios de pendiente y cruces de umbral. Cada flag se liga a alcance+evidencia y se guarda como recibo para replay."}
       }
     },
-    {id:"sig_onyourside", c:"#34d399", size:"mid",
+    {id:"sig_onyourside", c:"#60f0b0",
       name:{platform:{en:"On Your Side AI (SIDE)",zh:"On Your Side AI（SIDE）",es:"On Your Side AI"}, engineering:{en:"Receipt-First Assistant",zh:"收据优先助手",es:"Asistente con Recibos"}},
       preview:{platform:{en:"Next step, not noise.",zh:"给下一步，不给噪声。",es:"Siguiente paso, no ruido."},
               engineering:{en:"Bounded outputs under scope.",zh:"范围下有界输出。",es:"Salidas acotadas bajo alcance."}},
       para:{
         platform:{en:"SIDE is calm decision support. It reduces clutter, asks the right questions, and routes you toward action without getting lost. When evidence is missing, it says HOLD instead of inventing confidence.",
-                  zh:"SIDE 是冷静的决策支持：减少杂乱、提出关键问题、把你路由到行动而不迷路。证据缺失时输出 HOLD，而不是编造自信。",
-                  es:"SIDE es soporte calmado de decisión: reduce fricción, hace preguntas correctas y te enruta a la acción sin perderte. Si falta evidencia, dice HOLD en vez de inventar confianza."},
+                  zh:"SIDE 是冷静的决策支持：减少杂乱、提出关键问题、把你路由到行动而不迷路。证据缺失时输出 HOLD。",
+                  es:"SIDE es soporte calmado de decisión: reduce fricción, hace preguntas correctas y te enruta a la acción sin perderte. Si falta evidencia, dice HOLD."},
         engineering:{en:"SIDE enforces scope discipline and non-narrative classification. It produces bounded recommendations with reason codes and routes to measurement layers when gates are undecidable.",
                     zh:"工程 SIDE 执行范围纪律与非叙事分类：输出有界建议与原因码；闸门不可判定时路由到测量层。",
-                    es:"SIDE (ingeniería) impone disciplina de alcance y clasificación no narrativa. Emite recomendaciones acotadas con códigos y enruta a medición cuando los gates son indecidibles."}
+                    es:"SIDE (ingeniería) impone disciplina de alcance y clasificación no narrativa. Emite recomendaciones acotadas con códigos y enruta a medición."}
       }
     },
-    {id:"sig_clean_english", c:"#93c5fd", size:"small",
+    {id:"sig_clean_english", c:"#c9efff",
       name:{platform:{en:"Clean English Core",zh:"Clean English Core",es:"Clean English Core"}, engineering:{en:"Syntax Geometry (SSG)",zh:"简化语法几何（SSG）",es:"Geometría de Sintaxis"}},
       preview:{platform:{en:"ESL fluency by traversal.",zh:"遍历式 ESL 流利。",es:"Fluidez ESL por recorrido."},
               engineering:{en:"Finite rulesets + navigation.",zh:"有限规则集+导航。",es:"Reglas finitas + navegación."}},
       para:{
-        platform:{en:"Clean English Core is traversal learning: small steps, stable rules, and repetition without confusion. It’s built for speed and clarity—exactly the posture this site enforces.",
-                  zh:"Clean English Core 是遍历式学习：小步、稳定规则、重复且不混乱。它追求速度与清晰——与本网站姿态一致。",
-                  es:"Clean English Core es aprendizaje por recorrido: pasos pequeños, reglas estables y repetición sin confusión. Está hecho para velocidad y claridad—la misma postura del sitio."},
+        platform:{en:"Clean English Core is traversal learning: small steps, stable rules, and repetition without confusion. It’s built for speed and clarity.",
+                  zh:"Clean English Core 是遍历式学习：小步、稳定规则、重复且不混乱。",
+                  es:"Clean English Core es aprendizaje por recorrido: pasos pequeños, reglas estables y repetición sin confusión."},
         engineering:{en:"SSG expresses grammar and execution as finite coordinate rules. It supports deterministic navigation and consistent outputs across learners and contexts.",
-                    zh:"SSG 把语法与执行表达为有限坐标规则，支持确定性导航与跨学习者一致输出。",
+                    zh:"SSG 把语法与执行表达为有限坐标规则，支持确定性导航与一致输出。",
                     es:"SSG expresa gramática/ejecución como reglas de coordenadas finitas, con navegación determinista y salidas consistentes."}
       }
     },
-    {id:"sig_ccd", c:"#c9a24a", size:"small",
+    {id:"sig_ccd", c:"#e6c76b",
       name:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"Admissibility Superlayer",zh:"可采信超层",es:"Supercapa de Admisibilidad"}},
       preview:{platform:{en:"Admissibility before scale.",zh:"先可采信再扩张。",es:"Admisibilidad antes de escalar."},
               engineering:{en:"Invariant gates above finance.",zh:"金融之上的不变量闸门。",es:"Compuertas invariantes sobre finanzas."}},
       para:{
-        platform:{en:"CCD prevents money from scaling a weak structure into a bigger collapse. It is not advice. It is the boundary that decides whether scale is allowed right now.",
-                  zh:"CCD 阻止资本把弱结构扩张成更大坍塌。它不是建议，而是决定“现在是否允许扩张”的边界。",
-                  es:"CCD evita que el dinero escale una estructura débil hasta un colapso mayor. No es consejo: es el límite que decide si la escala se permite ahora."},
-        engineering:{en:"CCD is an admissibility layer above finance and governance. If measurement and receipts are missing, outputs are HOLD. If constraints are violated, posture is CONTAIN/ROLLBACK.",
-                    zh:"CCD 位于金融与治理之上。缺测量与收据则 HOLD；约束违规则 CONTAIN/ROLLBACK。",
-                    es:"CCD es capa de admisibilidad sobre finanzas y gobernanza. Sin medición/recibos: HOLD. Con violación: CONTENER/ROLLBACK."}
+        platform:{en:"CCD prevents money from scaling a weak structure into a bigger collapse. It is the boundary that decides whether scale is allowed right now.",
+                  zh:"CCD 阻止资本把弱结构扩张成更大坍塌，它决定现在是否允许扩张。",
+                  es:"CCD evita que el dinero escale una estructura débil hasta un colapso mayor. Decide si se permite escalar ahora."},
+        engineering:{en:"CCD is an admissibility layer above finance and governance. If measurement and receipts are missing, outputs are HOLD.",
+                    zh:"CCD 位于金融与治理之上。缺测量与收据则 HOLD。",
+                    es:"CCD es capa de admisibilidad sobre finanzas y gobernanza. Sin medición/recibos: HOLD."}
       }
     },
-    {id:"sig_fusion_traversal", c:"#a3a3a3", size:"small",
+    {id:"sig_fusion_traversal", c:"#d6d6d6",
       name:{platform:{en:"Traversal Engine",zh:"遍历引擎",es:"Motor de Traversal"}, engineering:{en:"Fusion Traversal Core",zh:"融合遍历核",es:"Núcleo de Fusión"}},
       preview:{platform:{en:"Checkpoints keep navigation calm.",zh:"检查点让导航更安静。",es:"Checkpoints mantienen calma."},
               engineering:{en:"Receipt-gated progression.",zh:"收据门控推进。",es:"Progresión por recibos."}},
       para:{
-        platform:{en:"Traversal Engine reduces clutter by routing through checkpoints. You can move forward and back, but you don’t teleport mid-transition. That keeps users calm and decisions clean.",
-                  zh:"遍历引擎通过检查点路由来减少杂乱：你可以前后移动，但不能在过渡中瞬移。这样用户更冷静，决策更干净。",
-                  es:"Traversal Engine reduce fricción ruteando por checkpoints. Puedes ir adelante/atrás, pero no teletransportarte a mitad de transición. Mantiene calma y decisiones limpias."},
-        engineering:{en:"Receipt-gated traversal produces deterministic exits and returns. Back-navigation invalidates downstream receipts. No timers as gates; progression is evidence-driven.",
-                    zh:"收据门控遍历提供确定性退出与返回；后退会使下游收据失效；无计时器闸门；推进由证据驱动。",
-                    es:"Traversal con compuertas por recibo: salidas/retornos deterministas. Back-nav invalida recibos downstream. Sin timers como gates; avance guiado por evidencia."}
+        platform:{en:"Traversal Engine reduces clutter by routing through checkpoints. You can move forward and back, but you don’t teleport mid-transition.",
+                  zh:"遍历引擎通过检查点路由来减少杂乱：你可以前后移动，但不能在过渡中瞬移。",
+                  es:"Traversal Engine reduce fricción ruteando por checkpoints. Puedes ir adelante/atrás, pero no teletransportarte a mitad de transición."},
+        engineering:{en:"Receipt-gated traversal produces deterministic exits and returns. Back-navigation invalidates downstream receipts.",
+                    zh:"收据门控遍历提供确定性退出与返回；后退会使下游收据失效。",
+                    es:"Traversal con compuertas por recibo produce salidas deterministas. Back-nav invalida recibos downstream."}
       }
     },
-    {id:"sig_energy_stack", c:"#ff2b2b", size:"small",
+    {id:"sig_energy_stack", c:"#ff7a45",
       name:{platform:{en:"Energy Stack",zh:"能源栈",es:"Stack Energía"}, engineering:{en:"Solar→Fusion Roadmap",zh:"太阳→聚变路线",es:"Solar→Fusión"}},
       preview:{platform:{en:"Stability first, then frontier.",zh:"先稳定，再前沿。",es:"Estabilidad primero, luego frontera."},
               engineering:{en:"Routing + buffering + verification.",zh:"路由+缓冲+验证。",es:"Ruteo + buffers + verificación."}},
       para:{
-        platform:{en:"Energy Stack is industrial substitution from today’s reality to frontier capability. It does not promise miracles. It promises stability-first upgrades that can be verified and copied safely.",
-                  zh:"能源栈是从现实到前沿能力的工业替代：不承诺奇迹，只承诺可验证、可复制、稳定优先的升级路径。",
-                  es:"Energy Stack es sustitución industrial desde la realidad actual a capacidad de frontera. No promete milagros. Promete mejoras verificables, copiables y seguras."},
-        engineering:{en:"Engineering posture: define interfaces, set thresholds, size buffers, instrument flows, and verify stability bands before replication. Escalation is phase-gated.",
-                    zh:"工程姿态：定义接口、设置阈值、配置缓冲、仪器化流量、先验证稳定区间再复制；升级必须阶段闸门。",
-                    es:"Postura ingeniería: interfaces, umbrales, buffers, instrumentación y verificación de bandas antes de replicación. Escalación por fases."}
+        platform:{en:"Energy Stack is industrial substitution from today’s reality to frontier capability. It promises stability-first upgrades that can be verified and copied safely.",
+                  zh:"能源栈是从现实到前沿能力的工业替代，只承诺可验证、可复制、稳定优先的升级路径。",
+                  es:"Energy Stack es sustitución industrial desde la realidad actual a capacidad de frontera. Promete mejoras verificables y seguras."},
+        engineering:{en:"Engineering posture: define interfaces, set thresholds, size buffers, instrument flows, and verify stability bands before replication.",
+                    zh:"工程姿态：定义接口、设置阈值、配置缓冲、仪器化流量、先验证稳定区间再复制。",
+                    es:"Postura ingeniería: interfaces, umbrales, buffers, instrumentación y verificación de bandas antes de replicación."}
       }
     }
   ];
 
   var STREAMS = [
     {
-      c:"#34d399",
+      c:"#60f0b0",
       name:{en:"GOVERNING",zh:"治理",es:"GOBIERNO"},
       sub:{en:"Meaning, rules, enforcement, and public stability boundaries.", zh:"含义、规则、执行与公共稳定边界。", es:"Significado, reglas, ejecución y límites públicos."},
       para:{
@@ -851,292 +888,289 @@ body::before,body::after{pointer-events:none!important}
                     es:"Enforcement determinista: restricciones, códigos, recibos y auditoría replayable. Sin overrides silenciosos."}
       },
       products:[
-        {id:"gov_policy_engine", c:"#34d399", t:{platform:{en:"Policy Engine",zh:"政策引擎",es:"Motor de Política"}, engineering:{en:"Policy Compiler",zh:"政策编译器",es:"Compilador"}},
+        {id:"gov_policy_engine", c:"#60f0b0", t:{platform:{en:"Policy Engine",zh:"政策引擎",es:"Motor de Política"}, engineering:{en:"Policy Compiler",zh:"政策编译器",es:"Compilador"}},
          prev:{platform:{en:"Turns rules into usable decisions.",zh:"把规则变成可用决策。",es:"Convierte reglas en decisiones."},
                engineering:{en:"Deterministic rules + reason codes.",zh:"确定性规则+原因码。",es:"Reglas deterministas + códigos."}},
          para:{platform:{en:"Policy Engine turns rules into a calm decision posture: what’s allowed, what’s blocked, and what comes next—without argument loops.",
-                         zh:"政策引擎把规则变成冷静的决策姿态：允许什么、禁止什么、下一步是什么——不陷入争论循环。",
-                         es:"Policy Engine convierte reglas en postura calmada: permitido/bloqueado y siguiente paso sin bucles de discusión."},
+                         zh:"政策引擎把规则变成冷静的决策姿态：允许什么、禁止什么、下一步是什么。",
+                         es:"Policy Engine convierte reglas en postura calmada: permitido/bloqueado y siguiente paso."},
                engineering:{en:"Policy Compiler expresses constraints as executable gates with reason codes and receipts. Every enforcement action is audit-ready.",
                            zh:"政策编译器把约束变成可执行闸门：原因码+收据；每次执行都可审计。",
-                           es:"Policy Compiler expresa restricciones como compuertas ejecutables con códigos y recibos; cada acción es auditable."}}},
-        {id:"gov_decision_index", c:"#93c5fd", t:{platform:{en:"Decision Index",zh:"决策索引",es:"Índice de Decisión"}, engineering:{en:"Decision Classifier",zh:"决策分类器",es:"Clasificador"}},
+                           es:"Policy Compiler expresa restricciones como compuertas ejecutables con códigos y recibos."}}},
+        {id:"gov_decision_index", c:"#bfe8ff", t:{platform:{en:"Decision Index",zh:"决策索引",es:"Índice de Decisión"}, engineering:{en:"Decision Classifier",zh:"决策分类器",es:"Clasificador"}},
          prev:{platform:{en:"Produces next step without wandering.",zh:"输出下一步，避免乱逛。",es:"Siguiente paso sin deambular."},
                engineering:{en:"Bounded outputs under fixed scope.",zh:"固定范围下有界输出。",es:"Salidas acotadas bajo alcance fijo."}},
          para:{platform:{en:"Decision Index reduces clutter: it routes you to one next step, then one deeper step—so you stay calm and directional.",
-                         zh:"决策索引减少杂乱：一次只给一个下一步，再给一个更深一步——保持冷静与方向。",
-                         es:"Decision Index reduce fricción: te enruta a un siguiente paso y luego uno más profundo para mantener claridad."},
+                         zh:"决策索引减少杂乱：一次只给一个下一步，再给一个更深一步。",
+                         es:"Decision Index reduce fricción: te enruta a un siguiente paso y luego uno más profundo."},
                engineering:{en:"Decision Classifier outputs bounded recommendations under declared scope, with reason codes when gates are undecidable.",
                            zh:"决策分类器在声明范围下输出有界建议；闸门不可判定时输出原因码。",
-                           es:"Decision Classifier emite recomendaciones acotadas bajo alcance declarado, con códigos cuando gates son indecidibles."}}},
-        {id:"gov_compliance_grid", c:"#c9a24a", t:{platform:{en:"Compliance Grid",zh:"合规网格",es:"Grid de Cumplimiento"}, engineering:{en:"Constraint Matrix",zh:"约束矩阵",es:"Matriz"}},
+                           es:"Decision Classifier emite recomendaciones acotadas bajo alcance declarado."}}},
+        {id:"gov_compliance_grid", c:"#ffd84d", t:{platform:{en:"Compliance Grid",zh:"合规网格",es:"Grid de Cumplimiento"}, engineering:{en:"Constraint Matrix",zh:"约束矩阵",es:"Matriz"}},
          prev:{platform:{en:"Shows what is allowed to be done.",zh:"展示允许做什么。",es:"Muestra lo permitido."},
                engineering:{en:"Constraint surfaces + audit trail.",zh:"约束面+审计轨迹。",es:"Superficies + rastro."}},
          para:{platform:{en:"Compliance Grid makes permission visible. People stop guessing, because the boundary is explicit and shared.",
                          zh:"合规网格让许可可见：边界显式且共享，人不再猜。",
-                         es:"Compliance Grid vuelve visible el permiso: límites explícitos y compartidos, sin adivinar."},
+                         es:"Compliance Grid vuelve visible el permiso: límites explícitos y compartidos."},
                engineering:{en:"Constraint Matrix formalizes allowed transitions and logs violations as receipts for audit replay.",
                            zh:"约束矩阵形式化允许转移，并把违规记录为可回放收据。",
-                           es:"Constraint Matrix formaliza transiciones permitidas y registra violaciones como recibos para replay."}}},
-        {id:"gov_public_risk_meter", c:"#ff2b2b", t:{platform:{en:"Public Risk Meter",zh:"公共风险表",es:"Medidor Público"}, engineering:{en:"Exposure Monitor",zh:"暴露监测",es:"Monitor"}},
+                           es:"Constraint Matrix formaliza transiciones permitidas y registra violaciones como recibos."}}},
+        {id:"gov_public_risk_meter", c:"#ff7a45", t:{platform:{en:"Public Risk Meter",zh:"公共风险表",es:"Medidor Público"}, engineering:{en:"Exposure Monitor",zh:"暴露监测",es:"Monitor"}},
          prev:{platform:{en:"Readable posture: green/yellow/red.",zh:"可读姿态：绿/黄/红。",es:"Postura legible: verde/amarillo/rojo."},
                engineering:{en:"Windowed exposure + Δρ watch.",zh:"窗口暴露+Δρ监测。",es:"Exposición por ventana + Δρ."}},
          para:{platform:{en:"Public Risk Meter is the public-facing truth: what’s safe, what’s strained, and what must pause—without drama.",
-                         zh:"公共风险表是面向公众的真相：哪里安全、哪里紧张、哪里必须暂停——不制造戏剧。",
+                         zh:"公共风险表是面向公众的真相：哪里安全、哪里紧张、哪里必须暂停。",
                          es:"Public Risk Meter es verdad pública: seguro/estresado/pausa sin drama."},
                engineering:{en:"Exposure Monitor watches windowed exposure and correlation acceleration (Δρ). Threshold crossings emit reason codes and containment posture.",
                            zh:"暴露监测跟踪窗口暴露与相关加速度（Δρ）；阈值穿越输出原因码并进入隔离姿态。",
-                           es:"Exposure Monitor observa exposición por ventana y aceleración de correlación (Δρ); cruces emiten códigos y postura de contención."}}}
+                           es:"Exposure Monitor observa exposición por ventana y aceleración de correlación."}}}
       ]
     },
     {
-      c:"#ff2b2b",
+      c:"#ff7a45",
       name:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},
       sub:{en:"Stability first, then scale.", zh:"先稳定，再扩张。", es:"Estabilidad primero, luego escala."},
       para:{
         platform:{en:"Energy surfaces keep volatility local and recovery fast. The goal is boring stability—not hype.",
-                  zh:"能源面把波动局部化、恢复变快。目标是无聊的稳定，而不是噱头。",
-                  es:"Superficies de energía mantienen volatilidad local y recuperación rápida. Meta: estabilidad aburrida, no hype."},
+                  zh:"能源面把波动局部化、恢复变快。目标是无聊的稳定。",
+                  es:"Superficies de energía mantienen volatilidad local y recuperación rápida. Meta: estabilidad."},
         engineering:{en:"Control under constraint: feedback loops, buffers, windowed deltas, and containment playbooks. Escalation is phase-gated.",
                     zh:"约束下的控制：反馈回路、缓冲、窗口差分、隔离剧本；升级必须阶段闸门。",
-                    es:"Control bajo restricción: bucles, buffers, deltas por ventana y playbooks de contención; escalación por fases."}
+                    es:"Control bajo restricción: bucles, buffers, deltas por ventana y playbooks de contención."}
       },
       products:[
-        {id:"en_grid_optimization", c:"#ff2b2b", t:{platform:{en:"Grid Optimization",zh:"电网优化",es:"Optimización de Red"}, engineering:{en:"Grid Control Loop",zh:"电网控制回路",es:"Bucle de Control"}},
+        {id:"en_grid_optimization", c:"#ff7a45", t:{platform:{en:"Grid Optimization",zh:"电网优化",es:"Optimización de Red"}, engineering:{en:"Grid Control Loop",zh:"电网控制回路",es:"Bucle de Control"}},
          prev:{platform:{en:"Reduce volatility without fantasy.",zh:"不靠幻想降低波动。",es:"Reduce volatilidad sin fantasía."},
                engineering:{en:"Feedback control + stability bands.",zh:"反馈控制+稳定区间。",es:"Feedback + bandas."}},
          para:{platform:{en:"Grid Optimization reduces volatility so everything downstream can behave: industry, cities, and storage. It is stability as a product.",
-                         zh:"电网优化降低波动，让下游都能正常运行：工业、城市、储能。稳定性本身就是产品。",
-                         es:"Grid Optimization reduce volatilidad para que todo downstream funcione: industria, ciudades y almacenamiento. Estabilidad como producto."},
+                         zh:"电网优化降低波动，让下游都能正常运行。",
+                         es:"Grid Optimization reduce volatilidad para que todo downstream funcione."},
                engineering:{en:"Grid Control Loop defines stability bands, computes windowed deltas, and triggers containment actions when thresholds are crossed.",
                            zh:"电网控制回路定义稳定区间、计算窗口差分、阈值穿越时触发隔离动作。",
-                           es:"Grid Control Loop define bandas, calcula deltas por ventana y dispara contención al cruzar umbrales."}}},
-        {id:"en_storage_stack", c:"#c9a24a", t:{platform:{en:"Storage Stack",zh:"储能系统",es:"Sistema de Almacenamiento"}, engineering:{en:"Buffer Envelope",zh:"缓冲包络",es:"Envolvente de Buffer"}},
+                           es:"Grid Control Loop define bandas y dispara contención al cruzar umbrales."}}},
+        {id:"en_storage_stack", c:"#ffd84d", t:{platform:{en:"Storage Stack",zh:"储能系统",es:"Sistema de Almacenamiento"}, engineering:{en:"Buffer Envelope",zh:"缓冲包络",es:"Envolvente de Buffer"}},
          prev:{platform:{en:"Store energy so the system stays calm.",zh:"储能让系统保持安静。",es:"Almacena para mantener calma."},
                engineering:{en:"Capacity + discharge constraints.",zh:"容量+放电约束。",es:"Capacidad + restricciones."}},
          para:{platform:{en:"Storage Stack keeps the grid calm by absorbing shocks and smoothing output. It makes scale survivable.",
-                         zh:"储能系统吸收冲击、平滑输出，让电网安静，让扩张可生存。",
-                         es:"Storage Stack mantiene calma absorbiendo shocks y suavizando salida. Hace la escala sobrevivible."},
+                         zh:"储能系统吸收冲击、平滑输出，让电网安静。",
+                         es:"Storage Stack mantiene calma absorbiendo shocks y suavizando salida."},
                engineering:{en:"Buffer Envelope defines capacity/discharge constraints and size rules for perturbations; failures remain local via containment posture.",
-                           zh:"缓冲包络定义容量/放电约束与扰动尺寸规则；通过隔离姿态让失败局部化。",
-                           es:"Buffer Envelope define restricciones de capacidad/descarga y reglas de tamaño ante perturbaciones; contención mantiene fallos locales."}}},
-        {id:"en_load_balancer", c:"#93c5fd", t:{platform:{en:"Load Balancer",zh:"负载平衡",es:"Balanceador de Carga"}, engineering:{en:"Demand Shaper",zh:"需求整形",es:"Modelador de Demanda"}},
+                           zh:"缓冲包络定义容量/放电约束与扰动尺寸规则。",
+                           es:"Buffer Envelope define restricciones de capacidad/descarga y reglas de tamaño."}}},
+        {id:"en_load_balancer", c:"#bfe8ff", t:{platform:{en:"Load Balancer",zh:"负载平衡",es:"Balanceador de Carga"}, engineering:{en:"Demand Shaper",zh:"需求整形",es:"Modelador de Demanda"}},
          prev:{platform:{en:"Keep peaks from breaking the system.",zh:"防止峰值破坏系统。",es:"Evita que picos rompan el sistema."},
                engineering:{en:"Windowed deltas + control thresholds.",zh:"窗口差分+控制阈值。",es:"Deltas + umbrales."}},
          para:{platform:{en:"Load Balancer turns peaks into a schedule the system can survive. It protects infrastructure by smoothing behavior.",
-                         zh:"负载平衡把峰值变成系统可扛住的节奏，通过平滑行为保护基础设施。",
-                         es:"Load Balancer convierte picos en un ritmo que el sistema puede sobrevivir. Protege infraestructura suavizando comportamiento."},
+                         zh:"负载平衡把峰值变成系统可扛住的节奏。",
+                         es:"Load Balancer convierte picos en un ritmo que el sistema puede sobrevivir."},
                engineering:{en:"Demand Shaper predicts windowed deltas and applies thresholds to cap acceleration. It reports reason codes for every intervention.",
-                           zh:"需求整形预测窗口差分并用阈值限制加速；每次干预都输出原因码。",
-                           es:"Demand Shaper predice deltas por ventana y aplica umbrales para limitar aceleración; reporta códigos por intervención."}}},
-        {id:"en_resilience_module", c:"#a3a3a3", t:{platform:{en:"Resilience Module",zh:"韧性模块",es:"Módulo de Resiliencia"}, engineering:{en:"Containment Playbook",zh:"隔离剧本",es:"Playbook de Contención"}},
+                           zh:"需求整形预测窗口差分并用阈值限制加速。",
+                           es:"Demand Shaper predice deltas por ventana y aplica umbrales."}}},
+        {id:"en_resilience_module", c:"#d6d6d6", t:{platform:{en:"Resilience Module",zh:"韧性模块",es:"Módulo de Resiliencia"}, engineering:{en:"Containment Playbook",zh:"隔离剧本",es:"Playbook de Contención"}},
          prev:{platform:{en:"Make failure local. Recover fast.",zh:"让失败变小，快速恢复。",es:"Fallo local. Recuperación rápida."},
                engineering:{en:"Rollback paths + kill/exit logic.",zh:"回滚路径+终止/退出逻辑。",es:"Rollback + kill/exit."}},
          para:{platform:{en:"Resilience Module is recovery discipline: isolate, stabilize, then rejoin. It prevents one fault from becoming a city-wide event.",
-                         zh:"韧性模块是恢复纪律：隔离→稳定→回并。它防止单点故障变成全城事件。",
-                         es:"Resilience Module es disciplina de recuperación: aislar, estabilizar y reintegrar. Evita que un fallo se vuelva evento de ciudad."},
-               engineering:{en:"Containment Playbook defines rollback paths, kill/exit behaviors, and re-entry verification. No escalation without re-entry to bands.",
-                           zh:"隔离剧本定义回滚路径、终止/退出行为与回带验证；不回带不升级。",
-                           es:"Containment Playbook define rollback, kill/exit y verificación de re-entrada; sin re-entrada a bandas no hay escalación."}}}
+                         zh:"韧性模块是恢复纪律：隔离→稳定→回并。",
+                         es:"Resilience Module es disciplina de recuperación: aislar, estabilizar y reintegrar."},
+               engineering:{en:"Containment Playbook defines rollback paths, kill/exit behaviors, and re-entry verification.",
+                           zh:"隔离剧本定义回滚路径、终止/退出行为与回带验证。",
+                           es:"Containment Playbook define rollback, kill/exit y verificación de re-entrada."}}}
       ]
     },
     {
-      c:"#c9a24a",
+      c:"#ffd84d",
       name:{en:"FINANCE",zh:"金融",es:"FINANZAS"},
       sub:{en:"Admissibility before scale.", zh:"先可采信再扩张。", es:"Admisibilidad antes de escalar."},
       para:{
         platform:{en:"Finance here is survival structure: liquidity, risk bounds, audit receipts, and doctrine that prevents scale from lying.",
-                  zh:"这里的金融是生存结构：流动性、风险边界、审计收据、以及阻止“扩张撒谎”的教义。",
-                  es:"Finanzas aquí es estructura de supervivencia: liquidez, límites de riesgo, recibos de auditoría y doctrina que evita que la escala mienta."},
+                  zh:"这里的金融是生存结构：流动性、风险边界、审计收据、以及阻止扩张撒谎的教义。",
+                  es:"Finanzas aquí es estructura de supervivencia: liquidez, límites de riesgo y recibos."},
         engineering:{en:"Constraint execution: envelopes, stress windows, reason-coded gates, and replayable audit receipts. Missing evidence forces HOLD.",
                     zh:"约束执行：包络、压力窗口、原因码闸门、可回放审计收据。缺证据则 HOLD。",
-                    es:"Ejecución de restricciones: envolventes, ventanas de estrés, compuertas con razones y recibos replayables. Sin evidencia: HOLD."}
+                    es:"Ejecución de restricciones: envolventes, ventanas de estrés, compuertas con razones y recibos."}
       },
       products:[
-        {id:"fi_capital_doctrine", c:"#c9a24a", t:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"CCD Superlayer",zh:"CCD 超层",es:"Supercapa CCD"}},
+        {id:"fi_capital_doctrine", c:"#ffd84d", t:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"CCD Superlayer",zh:"CCD 超层",es:"Supercapa CCD"}},
          prev:{platform:{en:"The rulebook above finance & governance.",zh:"金融与治理之上的规则书。",es:"Reglamento sobre finanzas y gobernanza."},
                engineering:{en:"Invariant admissibility gates.",zh:"不变量可采信闸门。",es:"Compuertas invariantes."}},
          para:{platform:{en:"CCD exists so money cannot scale a weak structure into a bigger collapse. It is the boundary that decides if scale is allowed right now.",
-                         zh:"CCD 的存在是为了阻止资本把弱结构扩张成更大坍塌：它决定“现在是否允许扩张”。",
-                         es:"CCD existe para que el dinero no escale una estructura débil hasta un colapso mayor. Decide si se permite escalar ahora."},
-               engineering:{en:"CCD enforces admissibility above finance: gates, reason codes, receipts, and replay discipline. If comparability breaks, escalation is blocked.",
-                           zh:"CCD 在金融之上执行可采信：闸门、原因码、收据、回放纪律。可比性破裂则阻止升级。",
-                           es:"CCD impone admisibilidad sobre finanzas: compuertas, códigos, recibos y replay. Si se rompe comparabilidad, se bloquea escalación."}}},
-        {id:"fi_liquidity_model", c:"#93c5fd", t:{platform:{en:"Liquidity Model",zh:"流动性模型",es:"Modelo de Liquidez"}, engineering:{en:"Coverage Envelope",zh:"覆盖包络",es:"Envolvente de Cobertura"}},
+                         zh:"CCD 的存在是为了阻止资本把弱结构扩张成更大坍塌。",
+                         es:"CCD existe para que el dinero no escale una estructura débil."},
+               engineering:{en:"CCD enforces admissibility above finance: gates, reason codes, receipts, and replay discipline.",
+                           zh:"CCD 在金融之上执行可采信：闸门、原因码、收据、回放纪律。",
+                           es:"CCD impone admisibilidad sobre finanzas: compuertas, códigos, recibos y replay."}}},
+        {id:"fi_liquidity_model", c:"#bfe8ff", t:{platform:{en:"Liquidity Model",zh:"流动性模型",es:"Modelo de Liquidez"}, engineering:{en:"Coverage Envelope",zh:"覆盖包络",es:"Envolvente de Cobertura"}},
          prev:{platform:{en:"Can you survive the shock?",zh:"能否扛住冲击？",es:"¿Puedes sobrevivir el shock?"},
                engineering:{en:"Floors/ceilings + window stress.",zh:"地板/天花+窗口压力。",es:"Pisos/techos + estrés."}},
          para:{platform:{en:"Liquidity Model answers one question: can you survive without selling your future? It turns panic into a measurable coverage posture.",
-                         zh:"流动性模型只回答一件事：你能否不卖掉未来就扛住冲击？它把恐慌变成可测的覆盖姿态。",
-                         es:"Liquidity Model responde: ¿puedes sobrevivir sin vender tu futuro? Convierte pánico en postura de cobertura medible."},
-               engineering:{en:"Coverage Envelope defines minimum floors, ceilings, and windowed stress checks. If coverage drops below floor, posture becomes SLOW/CONTAIN immediately.",
-                           zh:"覆盖包络定义最低地板、天花与窗口压力检查。覆盖跌破地板则立即进入 SLOW/CONTAIN。",
-                           es:"Coverage Envelope define pisos/techos y checks de estrés por ventana. Si cae bajo el piso: postura SLOW/CONTAIN inmediata."}}},
-        {id:"fi_risk_envelope", c:"#ff2b2b", t:{platform:{en:"Risk Envelope",zh:"风险包络",es:"Envolvente de Riesgo"}, engineering:{en:"K/M/R/P Bounds",zh:"K/M/R/P 边界",es:"Límites K/M/R/P"}},
+                         zh:"流动性模型只回答一件事：你能否不卖掉未来就扛住冲击？",
+                         es:"Liquidity Model responde: ¿puedes sobrevivir sin vender tu futuro?"},
+               engineering:{en:"Coverage Envelope defines minimum floors, ceilings, and windowed stress checks.",
+                           zh:"覆盖包络定义最低地板、天花与窗口压力检查。",
+                           es:"Coverage Envelope define pisos/techos y checks de estrés por ventana."}}},
+        {id:"fi_risk_envelope", c:"#ff7a45", t:{platform:{en:"Risk Envelope",zh:"风险包络",es:"Envolvente de Riesgo"}, engineering:{en:"K/M/R/P Bounds",zh:"K/M/R/P 边界",es:"Límites K/M/R/P"}},
          prev:{platform:{en:"How close to breaking are we?",zh:"我们离崩坏多近？",es:"¿Qué tan cerca de romper?"},
                engineering:{en:"Bounds + triggers + rollback posture.",zh:"边界+触发+回滚姿态。",es:"Límites + triggers + rollback."}},
-         para:{platform:{en:"Risk Envelope is the “how close to breaking” map. It makes risk readable so you stop gambling with vague confidence.",
-                         zh:"风险包络是“离崩坏多近”的地图：让风险可读，从而停止用模糊自信赌博。",
-                         es:"Risk Envelope es el mapa de “qué tan cerca de romper”. Hace el riesgo legible para dejar de apostar con confianza vaga."},
+         para:{platform:{en:"Risk Envelope is the map of proximity to breakage. It makes risk readable so you stop gambling with vague confidence.",
+                         zh:"风险包络是离崩坏多近的地图，让风险可读。",
+                         es:"Risk Envelope es el mapa de proximidad a ruptura."},
                engineering:{en:"K/M/R/P bounds define constraint surfaces and trigger actions. Violations emit reason codes and force containment or rollback.",
-                           zh:"K/M/R/P 边界定义约束面并触发动作；违规输出原因码并强制隔离或回滚。",
-                           es:"Límites K/M/R/P definen superficies y disparan acciones. Violaciones emiten códigos y fuerzan contención o rollback."}}},
-        {id:"fi_audit_ledger", c:"#a3a3a3", t:{platform:{en:"Audit Ledger",zh:"审计账本",es:"Libro de Auditoría"}, engineering:{en:"Receipt Log",zh:"收据日志",es:"Log de Recibos"}},
+                           zh:"K/M/R/P 边界定义约束面并触发动作。",
+                           es:"Límites K/M/R/P definen superficies y disparan acciones."}}},
+        {id:"fi_audit_ledger", c:"#d6d6d6", t:{platform:{en:"Audit Ledger",zh:"审计账本",es:"Libro de Auditoría"}, engineering:{en:"Receipt Log",zh:"收据日志",es:"Log de Recibos"}},
          prev:{platform:{en:"Receipts beat arguments.",zh:"收据胜过争论。",es:"Recibos > discusiones."},
                engineering:{en:"Manifest hash + replay path.",zh:"清单哈希+回放路径。",es:"Hash + replay."}},
-         para:{platform:{en:"Audit Ledger is memory with integrity: what was decided, on what evidence, and what changed afterward. That ends retroactive story edits.",
-                         zh:"审计账本是带完整性的记忆：做了什么决策、基于什么证据、之后发生了什么变化——从此终止追溯改写。",
-                         es:"Audit Ledger es memoria con integridad: qué se decidió, con qué evidencia y qué cambió después. Termina ediciones retroactivas."},
-               engineering:{en:"Receipt Log stores scope + evidence + manifest hash + outputs for deterministic replay. Without receipts, conclusions remain UNDETERMINED.",
-                           zh:"收据日志存范围+证据+清单哈希+输出用于确定性回放；无收据则结论 UNDETERMINED。",
-                           es:"Receipt Log guarda alcance+evidencia+hash de manifiesto+salidas para replay determinista; sin recibos: UNDETERMINED."}}}
+         para:{platform:{en:"Audit Ledger is memory with integrity: what was decided, on what evidence, and what changed afterward.",
+                         zh:"审计账本是带完整性的记忆：做了什么决策、基于什么证据、之后发生了什么变化。",
+                         es:"Audit Ledger es memoria con integridad: qué se decidió, con qué evidencia y qué cambió después."},
+               engineering:{en:"Receipt Log stores scope + evidence + manifest hash + outputs for deterministic replay.",
+                           zh:"收据日志存范围+证据+清单哈希+输出用于确定性回放。",
+                           es:"Receipt Log guarda alcance+evidencia+hash+salidas para replay."}}}
       ]
     },
     {
-      c:"#34d399",
+      c:"#60f0b0",
       name:{en:"AGRICULTURE",zh:"农业",es:"AGRICULTURA"},
       sub:{en:"Food as closed loop: water, energy, soil, yield, verification.", zh:"食物闭环：水、能量、土壤、产量、验证。", es:"Alimento como ciclo cerrado: agua, energía, suelo, rendimiento, verificación."},
       para:{
         platform:{en:"Agriculture is closed-loop survival at human scale. If you can close loops here, you can close loops anywhere.",
                   zh:"农业是人类尺度的闭环生存。若能在这里闭环，就能在任何地方闭环。",
-                  es:"Agricultura es supervivencia en ciclo cerrado a escala humana. Si cierras loops aquí, puedes cerrarlos en cualquier parte."},
-        engineering:{en:"Mass-balance under constraints: contamination bounds, windowed yields, and receipts for replay. Scale is allowed only after stability holds under perturbation.",
-                    zh:"约束下的质量平衡：污染边界、窗口产率、回放收据。只有扰动下稳定成立才允许扩张。",
-                    es:"Balance de masa bajo restricciones: límites de contaminación, rendimientos por ventana y recibos para replay. Escala solo tras estabilidad bajo perturbación."}
+                  es:"Agricultura es supervivencia en ciclo cerrado a escala humana."},
+        engineering:{en:"Mass-balance under constraints: contamination bounds, windowed yields, and receipts for replay.",
+                    zh:"约束下的质量平衡：污染边界、窗口产率、回放收据。",
+                    es:"Balance de masa bajo restricciones: contaminación, rendimientos y recibos."}
       },
       products:[
-        {id:"ag_closed_loop_farming", c:"#34d399", t:{platform:{en:"Closed Loop Farming",zh:"闭环农业",es:"Agricultura Cerrada"}, engineering:{en:"Nutrient Loop",zh:"营养回路",es:"Bucle de Nutrientes"}},
+        {id:"ag_closed_loop_farming", c:"#60f0b0", t:{platform:{en:"Closed Loop Farming",zh:"闭环农业",es:"Agricultura Cerrada"}, engineering:{en:"Nutrient Loop",zh:"营养回路",es:"Bucle de Nutrientes"}},
          prev:{platform:{en:"Stop losses. Reuse inputs.",zh:"止损并复用投入。",es:"Detener pérdidas. Reusar insumos."},
                engineering:{en:"Mass balance + contamination bounds.",zh:"质量平衡+污染边界。",es:"Balance + límites."}},
          para:{platform:{en:"Closed Loop Farming stops input leakage. You reuse what matters, keep losses visible, and turn waste into inventory.",
                          zh:"闭环农业停止投入泄漏：复用关键资源，让损耗可见，把废弃物变成库存。",
-                         es:"Closed Loop Farming detiene fugas de insumos: reusa lo importante, hace pérdidas visibles y convierte residuo en inventario."},
-               engineering:{en:"Nutrient Loop enforces mass balance, purity constraints, and recovery fractions with windowed verification. Contamination triggers isolation.",
-                           zh:"营养回路执行质量平衡、纯度约束与回收分数，并做窗口验证；污染触发隔离。",
-                           es:"Nutrient Loop impone balance de masa, restricciones de pureza y fracciones de recuperación con verificación por ventana; contaminación dispara aislamiento."}}},
-        {id:"ag_yield_optimizer", c:"#c9a24a", t:{platform:{en:"Yield Optimizer",zh:"产量优化",es:"Optimizador de Rendimiento"}, engineering:{en:"Yield Controller",zh:"产量控制器",es:"Controlador"}},
+                         es:"Closed Loop Farming detiene fugas de insumos: reusa lo importante y convierte residuo en inventario."},
+               engineering:{en:"Nutrient Loop enforces mass balance, purity constraints, and recovery fractions with windowed verification.",
+                           zh:"营养回路执行质量平衡、纯度约束与回收分数，并做窗口验证。",
+                           es:"Nutrient Loop impone balance de masa, pureza y recuperación con verificación."}}},
+        {id:"ag_yield_optimizer", c:"#ffd84d", t:{platform:{en:"Yield Optimizer",zh:"产量优化",es:"Optimizador de Rendimiento"}, engineering:{en:"Yield Controller",zh:"产量控制器",es:"Controlador"}},
          prev:{platform:{en:"Better harvest with less waste.",zh:"更好收成、更少浪费。",es:"Mejor cosecha con menos residuo."},
                engineering:{en:"Deltas + constraint gates.",zh:"差分+约束闸门。",es:"Deltas + gates."}},
          para:{platform:{en:"Yield Optimizer increases harvest while reducing waste. It makes improvement repeatable instead of seasonal luck.",
-                         zh:"产量优化提升收成并减少浪费，让改进可复跑，而不是靠季节运气。",
-                         es:"Yield Optimizer aumenta cosecha y reduce residuo. Hace mejora repetible en vez de suerte estacional."},
+                         zh:"产量优化提升收成并减少浪费，让改进可复跑。",
+                         es:"Yield Optimizer aumenta cosecha y reduce residuo. Hace mejora repetible."},
                engineering:{en:"Yield Controller uses windowed deltas and constraint gates to prevent short-term gains from causing long-term collapse.",
                            zh:"产量控制器用窗口差分与约束闸门，防止短期增益导致长期崩坏。",
-                           es:"Yield Controller usa deltas por ventana y compuertas de restricción para evitar que ganancias cortas causen colapso a largo plazo."}}},
-        {id:"ag_water_index", c:"#93c5fd", t:{platform:{en:"Water Index",zh:"水指数",es:"Índice Hídrico"}, engineering:{en:"Hydro Bands",zh:"水稳定带",es:"Bandas Hídricas"}},
+                           es:"Yield Controller usa deltas por ventana y compuertas de restricción."}}},
+        {id:"ag_water_index", c:"#bfe8ff", t:{platform:{en:"Water Index",zh:"水指数",es:"Índice Hídrico"}, engineering:{en:"Hydro Bands",zh:"水稳定带",es:"Bandas Hídricas"}},
          prev:{platform:{en:"Track water reality, not stories.",zh:"追踪水的现实，不追故事。",es:"Medir agua real, no historias."},
                engineering:{en:"Inflow/outflow + stress bands.",zh:"进出+压力区间。",es:"Entrada/salida + bandas."}},
          para:{platform:{en:"Water Index turns water into a dashboard you can trust. You see stress before crisis and adjust before failure.",
                          zh:"水指数把水变成可信仪表：危机前看到压力，失败前调整。",
-                         es:"Water Index convierte agua en dashboard confiable: ves estrés antes de crisis y ajustas antes del fallo."},
+                         es:"Water Index convierte agua en dashboard confiable."},
                engineering:{en:"Hydro Bands compute inflow/outflow balance and stress bands. Band violations emit triggers and recovery actions.",
                            zh:"水稳定带计算进出平衡与压力区间；区间违规触发动作与恢复。",
-                           es:"Hydro Bands calculan balance entrada/salida y bandas de estrés. Violaciones emiten triggers y acciones de recuperación."}}},
-        {id:"ag_soil_health_grid", c:"#a3a3a3", t:{platform:{en:"Soil Health Grid",zh:"土壤网格",es:"Grid de Suelo"}, engineering:{en:"Soil State Lattice",zh:"土壤态晶格",es:"Lattice de Suelo"}},
+                           es:"Hydro Bands calculan balance entrada/salida y bandas de estrés."}}},
+        {id:"ag_soil_health_grid", c:"#d6d6d6", t:{platform:{en:"Soil Health Grid",zh:"土壤网格",es:"Grid de Suelo"}, engineering:{en:"Soil State Lattice",zh:"土壤态晶格",es:"Lattice de Suelo"}},
          prev:{platform:{en:"Make soil measurable.",zh:"让土壤可测。",es:"Hacer suelo medible."},
                engineering:{en:"Finite states + drift detection.",zh:"有限态+漂移检测。",es:"Estados finitos + deriva."}},
-         para:{platform:{en:"Soil Health Grid makes soil legible. You stop arguing about anecdotes and start tracking state changes you can repeat.",
+         para:{platform:{en:"Soil Health Grid makes soil legible. You stop arguing about anecdotes and start tracking repeatable state changes.",
                          zh:"土壤网格让土壤可读：不再争论案例，而是追踪可复跑的状态变化。",
-                         es:"Soil Health Grid vuelve el suelo legible: dejas anécdotas y rastreas cambios de estado repetibles."},
-               engineering:{en:"Soil State Lattice enumerates finite soil states and detects drift by windowed measurements. Corrections are versioned.",
-                           zh:"土壤态晶格枚举有限土壤状态并通过窗口测量检测漂移；修正必须版本化。",
-                           es:"Soil State Lattice enumera estados finitos y detecta deriva con medición por ventana; correcciones se versionan."}}}
+                         es:"Soil Health Grid vuelve el suelo legible y rastreable."},
+               engineering:{en:"Soil State Lattice enumerates finite soil states and detects drift by windowed measurements.",
+                           zh:"土壤态晶格枚举有限土壤状态并通过窗口测量检测漂移。",
+                           es:"Soil State Lattice enumera estados finitos y detecta deriva."}}}
       ]
     },
     {
-      c:"#a3a3a3",
+      c:"#d6d6d6",
       name:{en:"INFRASTRUCTURE",zh:"基础设施",es:"INFRAESTRUCTURA"},
       sub:{en:"Substitution without breaking: interfaces, thresholds, rollback.", zh:"不破坏的替代：接口、阈值、回滚。", es:"Sustitución sin romper: interfaces, umbrales, rollback."},
       para:{
         platform:{en:"Infrastructure upgrades fail when they break routes. This stream upgrades by substitution: one interface at a time, failures stay local, gains are measured.",
                   zh:"基础设施升级失败往往是因为破坏了路由。本流用替代升级：一次一个接口，失败局部化，收益靠测量证明。",
-                  es:"Las mejoras de infraestructura fallan cuando rompen rutas. Este stream mejora por sustitución: una interfaz a la vez, fallos locales y ganancias medidas."},
-        engineering:{en:"Containment-first deployment: explicit interfaces, thresholds, rollback routes, and receipts for audit. No escalation beyond measurement capability.",
-                    zh:"隔离优先部署：显式接口、阈值、回滚路由与审计收据。不得超出测量能力升级。",
-                    es:"Despliegue con contención primero: interfaces explícitas, umbrales, rutas de rollback y recibos. Sin escalación más allá de capacidad de medición."}
+                  es:"Las mejoras de infraestructura fallan cuando rompen rutas. Este stream mejora por sustitución."},
+        engineering:{en:"Containment-first deployment: explicit interfaces, thresholds, rollback routes, and receipts for audit.",
+                    zh:"隔离优先部署：显式接口、阈值、回滚路由与审计收据。",
+                    es:"Despliegue con contención primero: interfaces explícitas, umbrales, rollback y recibos."}
       },
       products:[
-        {id:"in_urban_stack", c:"#a3a3a3", t:{platform:{en:"Urban Stack",zh:"城市栈",es:"Stack Urbano"}, engineering:{en:"Urban OS Surface",zh:"城市OS面",es:"Superficie OS"}},
+        {id:"in_urban_stack", c:"#d6d6d6", t:{platform:{en:"Urban Stack",zh:"城市栈",es:"Stack Urbano"}, engineering:{en:"Urban OS Surface",zh:"城市OS面",es:"Superficie OS"}},
          prev:{platform:{en:"City as routed inventory.",zh:"城市=路由库存。",es:"Ciudad = inventario ruteado."},
                engineering:{en:"Dependencies + receipts + gates.",zh:"依赖+收据+闸门。",es:"Dependencias + recibos + gates."}},
          para:{platform:{en:"Urban Stack turns a city into a readable inventory: what flows, what leaks, and what to fix next—without politics turning into noise.",
-                         zh:"城市栈把城市变成可读库存：哪些在流、哪里在漏、下一步修哪里——不让政治变成噪声。",
-                         es:"Urban Stack vuelve la ciudad un inventario legible: qué fluye, qué fuga y qué arreglar después—sin ruido político."},
+                         zh:"城市栈把城市变成可读库存：哪些在流、哪里在漏、下一步修哪里。",
+                         es:"Urban Stack vuelve la ciudad un inventario legible."},
                engineering:{en:"Urban OS Surface binds dependencies, gates and receipts so upgrades can be audited and replayed across municipalities.",
-                           zh:"城市OS面绑定依赖、闸门与收据，使升级可审计、可回放、可跨城市复制。",
-                           es:"Urban OS Surface liga dependencias, compuertas y recibos para auditar y replicar mejoras entre municipios."}}},
-        {id:"in_transit_model", c:"#93c5fd", t:{platform:{en:"Transit Model",zh:"交通模型",es:"Modelo de Tránsito"}, engineering:{en:"Flow Constraints",zh:"流量约束",es:"Restricciones de Flujo"}},
+                           zh:"城市OS面绑定依赖、闸门与收据，使升级可审计、可回放。",
+                           es:"Urban OS Surface liga dependencias, compuertas y recibos."}}},
+        {id:"in_transit_model", c:"#bfe8ff", t:{platform:{en:"Transit Model",zh:"交通模型",es:"Modelo de Tránsito"}, engineering:{en:"Flow Constraints",zh:"流量约束",es:"Restricciones de Flujo"}},
          prev:{platform:{en:"Throughput without collapse.",zh:"吞吐不坍塌。",es:"Throughput sin colapso."},
                engineering:{en:"Queues + window stability.",zh:"队列+窗口稳定。",es:"Colas + estabilidad."}},
          para:{platform:{en:"Transit Model reduces bottlenecks by making queues visible and routing changes one step at a time.",
-                         zh:"交通模型通过让队列可见来减少瓶颈，并以一步一步的方式路由改动。",
-                         es:"Transit Model reduce cuellos mostrando colas y ruteando cambios paso a paso."},
+                         zh:"交通模型通过让队列可见来减少瓶颈，并一步一步路由改动。",
+                         es:"Transit Model reduce cuellos mostrando colas y ruteando cambios."},
                engineering:{en:"Flow Constraints formalize queue behavior and window stability bands; violations trigger containment actions.",
                            zh:"流量约束形式化队列行为与窗口稳定区间；违规触发隔离动作。",
-                           es:"Flow Constraints formalizan colas y bandas de estabilidad; violaciones disparan contención."}}},
-        {id:"in_waste_loop", c:"#ff2b2b", t:{platform:{en:"Waste Loop",zh:"废弃循环",es:"Bucle de Residuos"}, engineering:{en:"Entropy Routing",zh:"熵路由",es:"Ruteo Entrópico"}},
+                           es:"Flow Constraints formalizan colas y bandas de estabilidad."}}},
+        {id:"in_waste_loop", c:"#ff7a45", t:{platform:{en:"Waste Loop",zh:"废弃循环",es:"Bucle de Residuos"}, engineering:{en:"Entropy Routing",zh:"熵路由",es:"Ruteo Entrópico"}},
          prev:{platform:{en:"No ‘away’. Route value back.",zh:"没有扔掉，把价值路由回来。",es:"Sin ‘afuera’. Retornar valor."},
                engineering:{en:"Classification + conversion + yields.",zh:"分类+转化+产率。",es:"Clasificación + conversión + rendimientos."}},
          para:{platform:{en:"Waste Loop treats waste as misplaced structure. Once you can classify it, you can route it, recover value, and reduce instability.",
                          zh:"废弃循环把废弃物当错位结构：能分类就能路由，就能回收价值并减少不稳定。",
-                         es:"Waste Loop trata residuo como estructura mal ubicada: clasificar → rutear → recuperar valor → reducir inestabilidad."},
+                         es:"Waste Loop trata residuo como estructura mal ubicada."},
                engineering:{en:"Entropy Routing measures streams beyond disposal, binds conversion modules to envelopes, and publishes yields as receipts.",
                            zh:"熵路由测量处置后的流，绑定转化模块到包络，并把产率发布为收据。",
-                           es:"Entropy Routing mide flujos más allá de disposición, liga módulos de conversión a envolventes y publica rendimientos como recibos."}}},
-        {id:"in_habitat_module", c:"#c9a24a", t:{platform:{en:"Habitat Module",zh:"栖息模块",es:"Módulo de Hábitat"}, engineering:{en:"No-Away Closure",zh:"无扔掉闭合",es:"Cierre Sin-Afuera"}},
+                           es:"Entropy Routing mide flujos y publica rendimientos como recibos."}}},
+        {id:"in_habitat_module", c:"#ffd84d", t:{platform:{en:"Habitat Module",zh:"栖息模块",es:"Módulo de Hábitat"}, engineering:{en:"No-Away Closure",zh:"无扔掉闭合",es:"Cierre Sin-Afuera"}},
          prev:{platform:{en:"Closed loop scaled down to Earth.",zh:"闭环可下放到地面。",es:"Ciclo cerrado escalado a Tierra."},
                engineering:{en:"Conserved inventories + leakage bands.",zh:"守恒库存+泄漏区间。",es:"Inventarios conservados + bandas de fuga."}},
          para:{platform:{en:"Habitat Module removes the city’s excuses. No away. Everything is inventory. If it works in a habitat, it works anywhere.",
-                         zh:"栖息模块拿走城市的借口：没有扔掉，一切是库存。能在栖息地稳定，就能在任何地方稳定。",
-                         es:"Habitat Module elimina excusas: no hay ‘afuera’, todo es inventario. Si funciona en hábitat, funciona en cualquier parte."},
-               engineering:{en:"No-Away Closure defines conserved inventories (water/air/solids/heat), leakage bands, and deterministic recovery procedures.",
-                           zh:"无扔掉闭合定义守恒库存（水/气/固体/热）、泄漏区间与确定性恢复流程。",
-                           es:"No-Away Closure define inventarios conservados (agua/aire/sólidos/calor), bandas de fuga y procedimientos deterministas de recuperación."}}}
+                         zh:"栖息模块拿走城市的借口：没有扔掉，一切是库存。",
+                         es:"Habitat Module elimina excusas: no hay afuera, todo es inventario."},
+               engineering:{en:"No-Away Closure defines conserved inventories, leakage bands, and deterministic recovery procedures.",
+                           zh:"无扔掉闭合定义守恒库存、泄漏区间与确定性恢复流程。",
+                           es:"No-Away Closure define inventarios conservados y recuperación determinista."}}}
       ]
     }
   ];
 
   function applyHero(){
-    var H = (HERO[lang] || HERO.en);
-    var pack = (lane==="engineering") ? H.engineering : H.platform;
+    var H=(HERO[lang]||HERO.en);
+    var pack=(lane==="engineering")?H.engineering:H.platform;
 
-    document.getElementById("hk").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("ht").textContent = pack.h;
-    document.getElementById("hs").textContent = pack.sub;
-    document.getElementById("rule").textContent = pack.rule;
+    document.getElementById("hk").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("ht").textContent=pack.h;
+    document.getElementById("hs").textContent=pack.sub;
+    document.getElementById("rule").textContent=pack.rule;
 
-    document.getElementById("bandSig").textContent = pick3("SIGNATURE SYSTEMS (OPEN ONE)","签名系统（打开一个）","SISTEMAS FIRMA (ABRE UNO)");
-    document.getElementById("bandStreams").textContent = pick3("DEPLOYMENT STREAMS (OPEN ONE)","部署产品流（打开一个）","STREAMS DE DESPLIEGUE (ABRE UNO)");
+    document.getElementById("bandSig").textContent=pick3("SIGNATURE SYSTEMS (OPEN ONE)","签名系统（打开一个）","SISTEMAS FIRMA (ABRE UNO)");
+    document.getElementById("bandStreams").textContent=pick3("DEPLOYMENT STREAMS (OPEN ONE)","部署产品流（打开一个）","STREAMS DE DESPLIEGUE (ABRE UNO)");
 
-    document.getElementById("laneState").textContent =
+    document.getElementById("laneState").textContent=
       (lang==="zh") ? ("当前透镜："+laneLabel()) :
       (lang==="es") ? ("Lente actual: "+laneLabel()) :
       ("Current lens: "+laneLabel());
 
-    document.getElementById("langState").textContent =
+    document.getElementById("langState").textContent=
       (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
 
-    document.getElementById("btnDoor").textContent = pick3("DOOR","门","PUERTA");
-    document.getElementById("btnHome").textContent = pick3("HOME","主页","INICIO");
-    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("btnDoor").textContent=pick3("DOOR","门","PUERTA");
+    document.getElementById("btnHome").textContent=pick3("HOME","主页","INICIO");
+    document.getElementById("btnCompass").textContent=pick3("COMPASS","指南针","BRÚJULA");
 
-    document.getElementById("dockExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
+    document.getElementById("dockExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("dockProducts").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent=pick3("GAUGES","量规","MEDIDORES");
 
-    document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
-    document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
+    document.getElementById("lanePlatform").textContent=pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent=pick3("ENGINEERING","工程","INGENIERÍA");
 
-    document.getElementById("chipSurface").textContent =
-      pick3("256-density product field","256密度产品字段","Campo de productos 256");
-    document.getElementById("chipSignal").textContent =
-      pick3("Systems visible simultaneously","系统同时可见","Sistemas visibles a la vez");
-    document.getElementById("chipMode").textContent =
+    document.getElementById("chipSurface").textContent=pick3("256-density product field","256密度产品字段","Campo de productos 256");
+    document.getElementById("chipSignal").textContent=pick3("Systems visible simultaneously","系统同时可见","Sistemas visibles a la vez");
+    document.getElementById("chipMode").textContent=
       (lane==="engineering")
         ? pick3("Receipt-first surface","收据优先表面","Superficie recibo-primero")
         : pick3("Geometry-led routing","几何主导路由","Ruteo guiado por geometría");
-    document.getElementById("chipBehavior").textContent =
-      pick3("No-reload state preserved","无刷新状态保留","Estado sin recarga preservado");
+    document.getElementById("chipBehavior").textContent=pick3("No-reload state preserved","无刷新状态保留","Estado sin recarga preservado");
   }
 
   function wireAll(){
@@ -1150,17 +1184,17 @@ body::before,body::after{pointer-events:none!important}
         try{
           var u=new URL(route, location.origin);
           var sp=u.searchParams;
-          sp.set("lang", lang);
+          sp.set("lang",lang);
           sp.set("style","informal");
-          sp.set("time", time);
+          sp.set("time",time);
           sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
+          sp.set("lane",lane);
+          el.setAttribute("href",u.pathname+"?"+sp.toString()+(u.hash||""));
         }catch(e){
-          el.setAttribute("href", route);
+          el.setAttribute("href",route);
         }
       }else{
-        el.setAttribute("href", route + q());
+        el.setAttribute("href",route+q());
       }
     }
   }
@@ -1175,37 +1209,39 @@ body::before,body::after{pointer-events:none!important}
   /* ===== SIGNATURE FIELD ===== */
   var sigField=document.getElementById("sigField");
   var sigRefs=[];
-  var openSignature = 0;
+  var openSignature=0;
 
   function closeAllSignature(){
     for(var i=0;i<sigRefs.length;i++){
-      sigRefs[i].node.dataset.open = "false";
-      sigRefs[i].chev.textContent = "▸";
+      sigRefs[i].node.dataset.open="false";
+      sigRefs[i].chev.textContent="▸";
     }
   }
 
   function toggleSignature(i){
-    var active = sigRefs[i].node.dataset.open === "true";
+    var active=sigRefs[i].node.dataset.open==="true";
     if(active){
-      sigRefs[i].node.dataset.open = "false";
-      sigRefs[i].chev.textContent = "▸";
+      sigRefs[i].node.dataset.open="false";
+      sigRefs[i].chev.textContent="▸";
       return;
     }
     closeAllSignature();
-    openSignature = i;
-    sigRefs[i].node.dataset.open = "true";
-    sigRefs[i].chev.textContent = "▾";
+    openSignature=i;
+    sigRefs[i].node.dataset.open="true";
+    sigRefs[i].chev.textContent="▾";
     wireAll();
   }
 
   function buildSignatureField(){
     sigField.innerHTML="";
     sigRefs=[];
+
     for(var i=0;i<SIGNATURE.length;i++){
       var S=SIGNATURE[i];
+
       var node=document.createElement("article");
-      node.className="sigNode sigNode--"+(S.size||"mid");
-      node.style.setProperty("--nodeColor", S.c);
+      node.className="sigNode";
+      node.style.setProperty("--nodeColor",S.c);
 
       var head=document.createElement("div");
       head.className="sigNode__head";
@@ -1218,20 +1254,16 @@ body::before,body::after{pointer-events:none!important}
       var dia=document.createElement("div");
       dia.className="sigNode__diamond";
 
-      var copy=document.createElement("div");
-      copy.className="sigNode__copy";
-
+      var block=document.createElement("div");
       var title=document.createElement("div");
       title.className="sigNode__title";
-
       var preview=document.createElement("div");
       preview.className="sigNode__preview";
 
-      copy.appendChild(title);
-      copy.appendChild(preview);
-
+      block.appendChild(title);
+      block.appendChild(preview);
       left.appendChild(dia);
-      left.appendChild(copy);
+      left.appendChild(block);
 
       var chevWrap=document.createElement("div");
       chevWrap.className="sigNode__chev";
@@ -1244,21 +1276,14 @@ body::before,body::after{pointer-events:none!important}
 
       var body=document.createElement("div");
       body.className="sigNode__body";
-
-      var micro=document.createElement("div");
-      micro.className="sigNode__micro";
-
       var para=document.createElement("p");
       para.className="sigNode__para";
-
       var actions=document.createElement("div");
       actions.className="actions";
-      var enter=createEnterButton(S.id);
-      actions.appendChild(enter);
-
-      micro.appendChild(para);
-      micro.appendChild(actions);
-      body.appendChild(micro);
+      var btn=createEnterButton(S.id);
+      actions.appendChild(btn);
+      body.appendChild(para);
+      body.appendChild(actions);
 
       (function(index){
         function act(){ toggleSignature(index); }
@@ -1278,10 +1303,11 @@ body::before,body::after{pointer-events:none!important}
         title:title,
         preview:preview,
         para:para,
-        btn:enter,
+        btn:btn,
         chev:chev
       });
     }
+
     toggleSignature(openSignature);
   }
 
@@ -1293,14 +1319,14 @@ body::before,body::after{pointer-events:none!important}
 
   function closeAllStreams(){
     for(var i=0;i<streamRefs.length;i++){
-      streamRefs[i].row.dataset.open = "false";
-      streamRefs[i].chev.textContent = "▸";
+      streamRefs[i].row.dataset.open="false";
+      streamRefs[i].chev.textContent="▸";
     }
   }
 
   function toggleStream(i){
-    var isOpen=streamRefs[i].row.dataset.open === "true";
-    if(isOpen){
+    var active=streamRefs[i].row.dataset.open==="true";
+    if(active){
       streamRefs[i].row.dataset.open="false";
       streamRefs[i].chev.textContent="▸";
       return;
@@ -1318,22 +1344,22 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  function toggleProduct(streamIndex, prodIndex){
+  function toggleProduct(streamIndex, productIndex){
     var refs=streamRefs[streamIndex].products;
-    var active = refs[prodIndex].node.dataset.open === "true";
+    var active=refs[productIndex].node.dataset.open==="true";
     if(active){
-      refs[prodIndex].node.dataset.open="false";
-      refs[prodIndex].chev.textContent="▸";
+      refs[productIndex].node.dataset.open="false";
+      refs[productIndex].chev.textContent="▸";
       return;
     }
     closeAllProducts(refs);
-    openProductByStream[streamIndex]=prodIndex;
-    refs[prodIndex].node.dataset.open="true";
-    refs[prodIndex].chev.textContent="▾";
+    openProductByStream[streamIndex]=productIndex;
+    refs[productIndex].node.dataset.open="true";
+    refs[productIndex].chev.textContent="▾";
     wireAll();
   }
 
-  function buildStreamList(){
+  function buildStreams(){
     streamList.innerHTML="";
     streamRefs=[];
 
@@ -1342,7 +1368,7 @@ body::before,body::after{pointer-events:none!important}
 
       var row=document.createElement("section");
       row.className="stream";
-      row.style.setProperty("--streamColor", S.c);
+      row.style.setProperty("--streamColor",S.c);
 
       var head=document.createElement("div");
       head.className="stream__head";
@@ -1356,14 +1382,10 @@ body::before,body::after{pointer-events:none!important}
       dia.className="stream__diamond";
 
       var block=document.createElement("div");
-      block.className="stream__block";
-
       var title=document.createElement("div");
       title.className="stream__title";
-
       var sub=document.createElement("div");
       sub.className="stream__sub";
-
       block.appendChild(title);
       block.appendChild(sub);
 
@@ -1382,9 +1404,6 @@ body::before,body::after{pointer-events:none!important}
       var body=document.createElement("div");
       body.className="stream__body";
 
-      var bodyGrid=document.createElement("div");
-      bodyGrid.className="stream__bodyGrid";
-
       var thesis=document.createElement("div");
       thesis.className="stream__thesis";
       var para=document.createElement("p");
@@ -1394,13 +1413,13 @@ body::before,body::after{pointer-events:none!important}
       var grid=document.createElement("div");
       grid.className="stream__grid";
 
-      var prodRefs=[];
+      var productRefs=[];
       for(var j=0;j<S.products.length;j++){
         var P=S.products[j];
 
         var pNode=document.createElement("article");
         pNode.className="productNode";
-        pNode.style.setProperty("--prodColor", P.c);
+        pNode.style.setProperty("--prodColor",P.c);
 
         var pHead=document.createElement("div");
         pHead.className="productNode__head";
@@ -1413,20 +1432,16 @@ body::before,body::after{pointer-events:none!important}
         var pDia=document.createElement("div");
         pDia.className="productNode__diamond";
 
-        var pCopy=document.createElement("div");
-        pCopy.className="productNode__copy";
-
+        var pBlock=document.createElement("div");
         var pTitle=document.createElement("div");
         pTitle.className="productNode__title";
-
         var pPreview=document.createElement("div");
         pPreview.className="productNode__preview";
-
-        pCopy.appendChild(pTitle);
-        pCopy.appendChild(pPreview);
+        pBlock.appendChild(pTitle);
+        pBlock.appendChild(pPreview);
 
         pLeft.appendChild(pDia);
-        pLeft.appendChild(pCopy);
+        pLeft.appendChild(pBlock);
 
         var pChevWrap=document.createElement("div");
         pChevWrap.className="productNode__chev";
@@ -1439,15 +1454,12 @@ body::before,body::after{pointer-events:none!important}
 
         var pBody=document.createElement("div");
         pBody.className="productNode__body";
-
         var pPara=document.createElement("p");
         pPara.className="productNode__para";
-
         var pActions=document.createElement("div");
         pActions.className="actions";
         var pBtn=createEnterButton(P.id);
         pActions.appendChild(pBtn);
-
         pBody.appendChild(pPara);
         pBody.appendChild(pActions);
 
@@ -1457,13 +1469,13 @@ body::before,body::after{pointer-events:none!important}
           pHead.addEventListener("keydown", function(e){
             if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
           });
-        })(i, j);
+        })(i,j);
 
         pNode.appendChild(pHead);
         pNode.appendChild(pBody);
         grid.appendChild(pNode);
 
-        prodRefs.push({
+        productRefs.push({
           prod:P,
           node:pNode,
           title:pTitle,
@@ -1474,9 +1486,8 @@ body::before,body::after{pointer-events:none!important}
         });
       }
 
-      bodyGrid.appendChild(thesis);
-      bodyGrid.appendChild(grid);
-      body.appendChild(bodyGrid);
+      body.appendChild(thesis);
+      body.appendChild(grid);
 
       (function(index){
         function act(){ toggleStream(index); }
@@ -1497,7 +1508,7 @@ body::before,body::after{pointer-events:none!important}
         sub:sub,
         para:para,
         chev:chev,
-        products:prodRefs
+        products:productRefs
       });
     }
 
@@ -1514,10 +1525,10 @@ body::before,body::after{pointer-events:none!important}
       var pv=(lane==="engineering")?S.preview.engineering:S.preview.platform;
       var pr=(lane==="engineering")?S.para.engineering:S.para.platform;
 
-      R.title.textContent = pick3(nm.en, nm.zh, nm.es);
-      R.preview.textContent = pick3(pv.en, pv.zh, pv.es);
-      R.para.textContent = pick3(pr.en, pr.zh, pr.es);
-      R.btn.textContent = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
+      R.title.textContent=pick3(nm.en,nm.zh,nm.es);
+      R.preview.textContent=pick3(pv.en,pv.zh,pv.es);
+      R.para.textContent=pick3(pr.en,pr.zh,pr.es);
+      R.btn.textContent=openLabel()+": "+pick3("ENTER","进入","ENTRAR");
     }
 
     closeAllSignature();
@@ -1525,31 +1536,30 @@ body::before,body::after{pointer-events:none!important}
 
     for(var s=0;s<streamRefs.length;s++){
       var SR=streamRefs[s];
-      var S2=SR.stream;
+      var ST=SR.stream;
 
-      SR.title.textContent = pick3(S2.name.en, S2.name.zh, S2.name.es);
-      SR.sub.textContent   = pick3(S2.sub.en, S2.sub.zh, S2.sub.es);
+      SR.title.textContent=pick3(ST.name.en,ST.name.zh,ST.name.es);
+      SR.sub.textContent=pick3(ST.sub.en,ST.sub.zh,ST.sub.es);
 
-      var sp = (lane==="engineering") ? S2.para.engineering : S2.para.platform;
-      SR.para.textContent = pick3(sp.en, sp.zh, sp.es);
+      var streamPara=(lane==="engineering")?ST.para.engineering:ST.para.platform;
+      SR.para.textContent=pick3(streamPara.en,streamPara.zh,streamPara.es);
 
       for(var j=0;j<SR.products.length;j++){
         var P=SR.products[j].prod;
         var R2=SR.products[j];
-
         var nm2=(lane==="engineering")?P.t.engineering:P.t.platform;
         var pv2=(lane==="engineering")?P.prev.engineering:P.prev.platform;
         var pr2=(lane==="engineering")?P.para.engineering:P.para.platform;
 
-        R2.title.textContent = pick3(nm2.en, nm2.zh, nm2.es);
-        R2.preview.textContent = pick3(pv2.en, pv2.zh, pv2.es);
-        R2.para.textContent = pick3(pr2.en, pr2.zh, pr2.es);
-        R2.btn.textContent = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
+        R2.title.textContent=pick3(nm2.en,nm2.zh,nm2.es);
+        R2.preview.textContent=pick3(pv2.en,pv2.zh,pv2.es);
+        R2.para.textContent=pick3(pr2.en,pr2.zh,pr2.es);
+        R2.btn.textContent=openLabel()+": "+pick3("ENTER","进入","ENTRAR");
       }
 
       closeAllProducts(SR.products);
-      var openProd = Number.isInteger(openProductByStream[s]) ? openProductByStream[s] : 0;
-      if(SR.products[openProd]){
+      var openProd=Number.isInteger(openProductByStream[s]) ? openProductByStream[s] : -1;
+      if(openProd>=0 && SR.products[openProd]){
         SR.products[openProd].node.dataset.open="true";
         SR.products[openProd].chev.textContent="▾";
       }
@@ -1587,9 +1597,8 @@ body::before,body::after{pointer-events:none!important}
   setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
   buildSignatureField();
-  buildStreamList();
+  buildStreams();
   applyCopy();
-
 })();
 </script>
 

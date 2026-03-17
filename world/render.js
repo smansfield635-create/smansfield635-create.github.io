@@ -12,6 +12,10 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
+function normalizeArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
 function sampleGrid(planetField) {
   const rows = Array.isArray(planetField?.samples) ? planetField.samples : [];
   return Array.isArray(rows[0]) ? rows : [];
@@ -116,17 +120,6 @@ function isCryosphere(sample) {
 function isShoreTransition(sample) {
   const tc = terrainClass(sample);
   return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
-}
-
-function isHighland(sample) {
-  const tc = terrainClass(sample);
-  return (
-    tc === "MOUNTAIN" ||
-    tc === "SUMMIT" ||
-    tc === "GLACIAL_HIGHLAND" ||
-    tc === "RIDGE" ||
-    tc === "PLATEAU"
-  );
 }
 
 function projectionStateOffset(sample) {
@@ -535,6 +528,158 @@ function drawPlanetOutline(ctx, projectionState) {
   ctx.restore();
 }
 
+function normalizeOrbitalSystem(input, projectionState) {
+  const source = normalizeObject(input);
+  const phase = isFiniteNumber(source.phase) ? source.phase : 0;
+  const objects = normalizeArray(source.objects);
+  const altitudeFactor = isFiniteNumber(source.altitudeFactor)
+    ? source.altitudeFactor
+    : 0.42;
+
+  return Object.freeze({
+    phase,
+    altitudePx: projectionState.radius * altitudeFactor,
+    objects
+  });
+}
+
+function buildOrbitalProjections(orbitalSystem, projectPoint) {
+  return orbitalSystem.objects.map((object, index) => {
+    const source = normalizeObject(object);
+    const baseLatDeg = isFiniteNumber(source.baseLatDeg) ? source.baseLatDeg : 0;
+    const baseLonDeg = isFiniteNumber(source.baseLonDeg) ? source.baseLonDeg : 0;
+    const bearingOffsetDeg = isFiniteNumber(source.bearingOffsetDeg) ? source.bearingOffsetDeg : 0;
+    const spinOffsetRad = isFiniteNumber(source.spinOffsetRad) ? source.spinOffsetRad : 0;
+    const spinMultiplier = isFiniteNumber(source.spinMultiplier) ? source.spinMultiplier : 1.35;
+    const sizePx = isFiniteNumber(source.sizePx) ? source.sizePx : 52;
+
+    const lonDeg = baseLonDeg + bearingOffsetDeg + ((orbitalSystem.phase * 180) / Math.PI);
+    const point = projectPoint(baseLatDeg, lonDeg, orbitalSystem.altitudePx);
+    const edgeVisibility = clamp((point.z + 0.08) / 0.30, 0, 1);
+    const frontFacing = point.z >= 0;
+    const scale = 0.82 + edgeVisibility * 0.34;
+    const opacity = frontFacing
+      ? 0.42 + edgeVisibility * 0.58
+      : edgeVisibility * 0.34;
+
+    return Object.freeze({
+      id: typeof source.id === "string" ? source.id : `orbital-${index}`,
+      label: typeof source.label === "string" ? source.label : "NODE",
+      route: typeof source.route === "string" ? source.route : "/",
+      point,
+      frontFacing,
+      opacity,
+      scale,
+      sizePx: sizePx * scale,
+      spinRad: orbitalSystem.phase * spinMultiplier + spinOffsetRad
+    });
+  });
+}
+
+function drawStarCube(ctx, object, interactive = false) {
+  const { point, sizePx, spinRad, opacity, label } = object;
+  const coreHalfW = sizePx * 0.82;
+  const coreHalfH = sizePx * 1.04;
+  const inset = sizePx * 0.34;
+
+  ctx.save();
+  ctx.translate(point.x, point.y);
+  ctx.rotate(spinRad);
+  ctx.globalAlpha = opacity;
+
+  const glow = ctx.createRadialGradient(0, 0, sizePx * 0.1, 0, 0, sizePx * 1.55);
+  glow.addColorStop(0, "rgba(255,255,255,0.40)");
+  glow.addColorStop(0.55, "rgba(255,255,255,0.08)");
+  glow.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(0, 0, sizePx * 1.45, 0, Math.PI * 2);
+  ctx.fill();
+
+  const outer = ctx.createLinearGradient(-coreHalfW, -coreHalfH, coreHalfW, coreHalfH);
+  outer.addColorStop(0, "rgba(255,255,255,0.92)");
+  outer.addColorStop(0.28, "rgba(230,236,245,0.88)");
+  outer.addColorStop(1, "rgba(120,132,164,0.78)");
+
+  ctx.fillStyle = outer;
+  ctx.beginPath();
+  ctx.moveTo(0, -coreHalfH);
+  ctx.lineTo(inset * 0.62, -inset);
+  ctx.lineTo(coreHalfW, 0);
+  ctx.lineTo(inset * 0.62, inset);
+  ctx.lineTo(0, coreHalfH);
+  ctx.lineTo(-inset * 0.62, inset);
+  ctx.lineTo(-coreHalfW, 0);
+  ctx.lineTo(-inset * 0.62, -inset);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = interactive ? "rgba(255,255,255,0.78)" : "rgba(255,255,255,0.56)";
+  ctx.lineWidth = Math.max(1.2, sizePx * 0.04);
+  ctx.stroke();
+
+  const inner = ctx.createRadialGradient(0, 0, sizePx * 0.06, 0, 0, sizePx * 0.92);
+  inner.addColorStop(0, "rgba(18,24,36,0.96)");
+  inner.addColorStop(0.55, "rgba(28,34,48,0.94)");
+  inner.addColorStop(1, "rgba(58,68,92,0.58)");
+
+  ctx.fillStyle = inner;
+  ctx.beginPath();
+  ctx.moveTo(0, -coreHalfH * 0.68);
+  ctx.lineTo(inset * 0.34, -inset * 0.48);
+  ctx.lineTo(coreHalfW * 0.68, 0);
+  ctx.lineTo(inset * 0.34, inset * 0.48);
+  ctx.lineTo(0, coreHalfH * 0.68);
+  ctx.lineTo(-inset * 0.34, inset * 0.48);
+  ctx.lineTo(-coreHalfW * 0.68, 0);
+  ctx.lineTo(-inset * 0.34, -inset * 0.48);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(255,255,255,0.22)";
+  ctx.lineWidth = Math.max(0.8, sizePx * 0.018);
+  ctx.beginPath();
+  ctx.moveTo(0, -coreHalfH * 0.82);
+  ctx.lineTo(0, coreHalfH * 0.82);
+  ctx.moveTo(-coreHalfW * 0.82, 0);
+  ctx.lineTo(coreHalfW * 0.82, 0);
+  ctx.stroke();
+
+  ctx.rotate(-spinRad);
+  ctx.fillStyle = "rgba(9,13,22,0.92)";
+  ctx.font = `900 ${Math.max(10, sizePx * 0.24)}px system-ui`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, 0, 0);
+
+  ctx.restore();
+}
+
+function drawOrbitalObjects(ctx, orbitalProjections, drawFront) {
+  const hits = [];
+
+  for (const object of orbitalProjections) {
+    if (drawFront && !object.frontFacing) continue;
+    if (!drawFront && object.frontFacing) continue;
+    if (object.opacity <= 0.01) continue;
+
+    drawStarCube(ctx, object, drawFront);
+
+    if (drawFront && object.opacity > 0.22) {
+      hits.push(Object.freeze({
+        id: object.id,
+        label: object.label,
+        route: object.route,
+        x: object.point.x,
+        y: object.point.y,
+        radius: object.sizePx * 0.72
+      }));
+    }
+  }
+
+  return hits;
+}
+
 function buildRenderAudit(planetField) {
   const grid = sampleGrid(planetField);
   let waterFamilyCount = 0;
@@ -568,7 +713,8 @@ export function createRenderer() {
     ctx,
     planetField,
     projectPoint,
-    viewState = {}
+    viewState = {},
+    orbitalSystem = null
   }) {
     if (!ctx || !planetField) {
       throw new Error("renderPlanet requires ctx and planetField.");
@@ -577,10 +723,19 @@ export function createRenderer() {
     const grid = sampleGrid(planetField);
     const projectionState = getProjectionState(viewState, ctx);
     const projector = resolveProjectPoint(projectPoint, projectionState);
+    const orbitalConfig = orbitalSystem
+      ? normalizeOrbitalSystem(orbitalSystem, projectionState)
+      : null;
+    const orbitalProjections = orbitalConfig
+      ? buildOrbitalProjections(orbitalConfig, projector)
+      : [];
 
     ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
     drawSpace(ctx, projectionState, viewState);
+
+    drawOrbitalObjects(ctx, orbitalProjections, false);
+
     drawAtmosphere(ctx, projectionState);
     drawOceanBase(ctx, projectionState);
 
@@ -593,8 +748,15 @@ export function createRenderer() {
 
     drawPlanetOutline(ctx, projectionState);
 
+    const orbitalHits = drawOrbitalObjects(ctx, orbitalProjections, true);
+
     return Object.freeze({
       projectionState,
+      orbitalHits: Object.freeze(orbitalHits),
+      orbitalAudit: Object.freeze({
+        count: orbitalProjections.length,
+        frontVisibleCount: orbitalHits.length
+      }),
       audit: buildRenderAudit(planetField)
     });
   }

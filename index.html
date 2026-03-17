@@ -69,7 +69,6 @@
   <script type="module">
     import { WORLD_KERNEL } from "./world/world_kernel.js";
     import { createPlanetEngine } from "./world/planet_engine.js";
-    import { createRuleEngine } from "./world/rule_engine.js";
     import { createRenderer } from "./world/render.js";
     import { createControlSystem } from "./world/control.js";
     import { createInstruments } from "./assets/instruments.js";
@@ -82,7 +81,6 @@
     const openButton = document.getElementById("open-button");
 
     const planetEngine = createPlanetEngine();
-    const ruleEngine = createRuleEngine();
     const renderer = createRenderer();
     const control = createControlSystem();
     const instruments = createInstruments();
@@ -94,13 +92,6 @@
       activeFile: "index.html",
       kernel: WORLD_KERNEL,
       planetField: null,
-      state: {
-        currentStateBuffer: null,
-        nextStateBuffer: null,
-        transitionSummary: null,
-        stateSummary: null,
-        tickIndex: 0
-      },
       control: {
         cameraState: null,
         projectionSummary: null,
@@ -140,8 +131,6 @@
       const summary = runtime.planetField?.summary ?? {};
       const verification = runtime.verification ?? {};
       const failure = runtime.failure ?? {};
-      const stateSummary = runtime.state?.stateSummary ?? {};
-      const transitionSummary = runtime.state?.transitionSummary ?? {};
 
       return JSON.stringify({
         phase: runtime.phase,
@@ -153,9 +142,6 @@
         summarySampleCount: summary.sampleCount ?? "—",
         summaryLandCount: summary.landCount ?? "—",
         summaryWaterCount: summary.waterCount ?? "—",
-        stateSampleCount: stateSummary.sampleCount ?? "—",
-        mutatedCount: stateSummary.mutatedCount ?? "—",
-        admissibleCount: transitionSummary.admissibleCount ?? "—",
         verificationPass:
           verification?.pass === true ? "PASS" :
           verification?.pass === false ? "FAIL" :
@@ -237,30 +223,6 @@
 
     function buildPlanetFieldOnce() {
       runtime.planetField = planetEngine.buildPlanetField({});
-    }
-
-    function seedStateOnce() {
-      if (!runtime.planetField?.samples) return;
-
-      const seeded = ruleEngine.seedStateBuffer(runtime.planetField.samples);
-
-      runtime.state.currentStateBuffer = seeded;
-      runtime.state.nextStateBuffer = seeded;
-      runtime.state.transitionSummary = Object.freeze({
-        tickIndex: 0,
-        activeRuleFamilies: Object.freeze([
-          ...(WORLD_KERNEL.ruleEngine?.tickContract?.firstRuleFamilies ?? [])
-        ]),
-        admissibleCount: 0,
-        blockedTransitionCount: 0,
-        transitionCounts: Object.freeze({
-          FREEZE_MELT: 0,
-          WATER_RETENTION_SPREAD: 0,
-          WETTING_DRYING: 0
-        })
-      });
-      runtime.state.stateSummary = ruleEngine.summarizeStateLattice(seeded, null);
-      runtime.state.tickIndex = 0;
     }
 
     function verifyRuntimeSafely() {
@@ -438,7 +400,6 @@
       requestAnimationFrame(() => {
         try {
           buildPlanetFieldOnce();
-          seedStateOnce();
           updateControlState();
           verifyRuntimeSafely();
           renderFrame();

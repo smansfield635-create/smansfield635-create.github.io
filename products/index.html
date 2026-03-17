@@ -15,7 +15,10 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:132px;
+  --topH:76px;
+  --topStackH:76px;
+  --dockH:96px;
+
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
   --ink:rgba(255,255,255,.96);
@@ -35,22 +38,33 @@ body::before,body::after{pointer-events:none!important}
   --rB:22px;
   --rC:18px;
 
-  --gapA:14px;
-  --gapB:10px;
-  --gapC:8px;
+  --gapA:16px;
+  --gapB:14px;
+  --gapC:10px;
 }
 
 /* ===== TOP ===== */
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--topH);
+  padding:16px 16px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
   gap:12px;
   z-index:240;
   pointer-events:none;
+  box-sizing:border-box;
 }
 .top .left,.top .right{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  white-space:nowrap;
   pointer-events:auto;
 }
 
@@ -105,21 +119,25 @@ body::before,body::after{pointer-events:none!important}
 .page{
   width:min(1720px,97vw);
   margin:0 auto;
-  padding:104px 0 calc(var(--dockH) + 18px);
+  padding:
+    calc(var(--topStackH) + 16px)
+    0
+    calc(var(--dockH) + 32px);
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:var(--gapA);
   position:relative;
   z-index:10;
+  box-sizing:border-box;
 }
 
 .backdrop{
   position:absolute;
   left:50%;
-  top:68px;
+  top:calc(var(--topStackH) + 4px);
   transform:translateX(-50%);
   width:min(1780px,99vw);
-  height:calc(100% - 108px);
+  height:calc(100% - (var(--topStackH) + 40px));
   border-radius:34px;
   pointer-events:none;
   z-index:0;
@@ -167,6 +185,7 @@ body::before,body::after{pointer-events:none!important}
 .hero{
   position:relative;
   z-index:2;
+  margin-top:8px;
   border:1px solid var(--stroke);
   border-radius:var(--rA);
   padding:16px 16px 14px;
@@ -291,11 +310,15 @@ body::before,body::after{pointer-events:none!important}
 
 /* ===== SECTION LABEL ===== */
 .band{
-  position:relative;z-index:2;
-  padding:10px 12px;border-radius:18px;
+  position:relative;
+  z-index:2;
+  margin-top:4px;
+  padding:10px 12px;
+  border-radius:18px;
   border:1px solid var(--stroke2);
   background:rgba(0,0,0,.14);
-  font-weight:980;letter-spacing:.25px;
+  font-weight:980;
+  letter-spacing:.25px;
   color:rgba(255,255,255,.90);
 }
 
@@ -390,7 +413,7 @@ body::before,body::after{pointer-events:none!important}
 /* ===== STREAMS ===== */
 .streamList{
   position:relative;z-index:2;
-  display:flex;flex-direction:column;gap:12px;
+  display:flex;flex-direction:column;gap:14px;
 }
 .stream{
   position:relative;
@@ -522,12 +545,15 @@ body::before,body::after{pointer-events:none!important}
 
 /* ===== DOCK ===== */
 .dock{
-  position:fixed;left:50%;
+  position:fixed;
+  left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   z-index:220;
   width:min(980px,94vw);
-  padding:10px 12px;border-radius:22px;
+  min-height:var(--dockH);
+  padding:10px 12px;
+  border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
@@ -535,28 +561,116 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
   gap:10px;
+  box-sizing:border-box;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+.dock .btn{
+  width:100%;
+  padding:10px 10px;
+  border-radius:999px;
+  white-space:nowrap;
+}
 
 /* ===== BREAKPOINTS ===== */
 @media (max-width:1400px){
   .heroGrid{grid-template-columns:1fr}
 }
+
 @media (max-width:1180px){
   .sigField{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
 @media (max-width:960px){
   .stream__grid{grid-template-columns:1fr}
 }
-@media (max-width:700px){
-  .sigField{grid-template-columns:1fr}
+
+@media (max-width:767px){
+  :root{
+    --topH:168px;
+    --topStackH:176px;
+    --dockH:110px;
+  }
+
+  .top{
+    height:var(--topH);
+    padding:12px 12px 8px;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap:8px;
+  }
+
+  .top .left,
+  .top .right{
+    width:100%;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:nowrap;
+    gap:8px;
+  }
+
+  .top .left .btn,
+  .top .right .seg,
+  .top .right .seg button{
+    min-height:48px;
+  }
+
+  .top .left .btn{
+    flex:1 1 0;
+    min-width:0;
+    padding:10px 8px;
+  }
+
+  .top .right{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .top .right .seg{
+    width:100%;
+  }
+
+  .top .right .seg button{
+    flex:1 1 0;
+  }
+
+  .page{
+    padding-top:calc(var(--topStackH) + 16px);
+    padding-bottom:calc(var(--dockH) + 36px);
+  }
+
+  .backdrop{
+    top:calc(var(--topStackH) + 4px);
+    height:calc(100% - (var(--topStackH) + 44px));
+  }
+
   .heroField{grid-template-columns:1fr}
 }
+
+@media (max-width:700px){
+  .sigField{grid-template-columns:1fr}
+}
+
 @media (max-width:520px){
-  :root{--dockH:148px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  :root{
+    --topH:176px;
+    --topStackH:184px;
+    --dockH:116px;
+  }
+
+  .dock{
+    width:min(96vw,720px);
+    grid-template-columns:repeat(3, minmax(0,1fr));
+    gap:10px;
+    padding:10px;
+  }
+
+  .dock .btn{
+    min-height:44px;
+  }
+
   .h1{font-size:28px}
 }
 </style>
@@ -1206,7 +1320,6 @@ body::before,body::after{pointer-events:none!important}
     return a;
   }
 
-  /* ===== SIGNATURE FIELD ===== */
   var sigField=document.getElementById("sigField");
   var sigRefs=[];
   var openSignature=0;
@@ -1311,7 +1424,6 @@ body::before,body::after{pointer-events:none!important}
     toggleSignature(openSignature);
   }
 
-  /* ===== STREAMS ===== */
   var streamList=document.getElementById("streamList");
   var streamRefs=[];
   var openStream=0;

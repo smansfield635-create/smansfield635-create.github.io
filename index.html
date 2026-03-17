@@ -1,697 +1,472 @@
 <!doctype html>
-<!-- TNT — /home/index.html
-     HOME · NARRATIVE BRIDGE
-     PURPOSE:
-       - Rebuild Home as the TED-style bridge between Compass and the deeper sequence
-       - Sequence locked by geometry:
-           Home → Prelude → Door
-       - State the problem
-       - State the solution
-       - State the path with alignment
-       - State the path without alignment
-       - Then route onward to Prelude / Door
-     RULES:
-       - Trilingual site copy: EN / 中文 / ES
-       - No formal/informal lenses on this page
-       - No engineering/platform split on this page
-       - No modals / no overlays
-       - No inline onclick; use addEventListener
-       - State carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - lane=platform|engineering is URL-only (preserve if present; never store)
-       - ui.css owns the field
-       - Use the same 3D gem / gloss button language already approved
-     ROUTES:
-       - Continue primary → /prelude/
-       - Continue secondary → /door/
-       - Dock: Compass / Prelude / Door / Products / Laws / Gauges
--->
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Home</title>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
-#root{position:relative;z-index:10}
-
-:root{
-  --dockH:104px;
-
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
-
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.82);
-
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-
-  --goldA:rgba(201,162,74,.22);
-  --goldB:rgba(201,162,74,.10);
-
-  --shadowA:0 34px 120px rgba(0,0,0,.58);
-  --shadowB:0 20px 70px rgba(0,0,0,.62);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
-
-  --glow:rgba(212,175,55,.26);
-  --glowStrong:rgba(212,175,55,.34);
-}
-
-/* TOP */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;gap:12px;
-  z-index:240;pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;white-space:nowrap;
-  pointer-events:auto;flex-wrap:wrap;align-items:center;
-}
-
-/* ===== 3D GLOSS BUTTON ===== */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:44px;padding:10px 12px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 42%),
-    radial-gradient(circle at 78% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
-    radial-gradient(circle at 28% 80%, rgba(120,0,22,.16), transparent 72%),
-    linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:
-    var(--shadowC),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -26px 46px rgba(0,0,0,.55);
-  transform:none !important;
-  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
-}
-.btn::before{
-  content:"";
-  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:
-    radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
-    repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  opacity:.32;
-}
-.btn::after{
-  content:"";
-  position:absolute;left:12%;right:12%;top:10%;
-  height:30%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.90;
-}
-.btn:hover{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 22px 72px rgba(0,0,0,.72),
-    0 0 22px var(--glow),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -30px 54px rgba(0,0,0,.60);
-  filter:saturate(1.05);
-}
-.btn:active{
-  border-color:rgba(212,175,55,.62);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.65),
-    0 0 28px var(--glowStrong),
-    inset 0 0 0 2px rgba(255,255,255,.10),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -30px 54px rgba(0,0,0,.62);
-}
-.btn.primary{
-  border-color:rgba(255,43,43,.22);
-  box-shadow:
-    var(--shadowC),
-    0 0 16px rgba(255,43,43,.12),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -26px 46px rgba(0,0,0,.55);
-}
-
-/* PAGE */
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:86px 0 calc(var(--dockH) + 18px);
-  display:flex;flex-direction:column;gap:16px;
-  position:relative;
-}
-
-/* Background context */
-.backdrop{
-  position:absolute;
-  left:50%;
-  top:70px;
-  transform:translateX(-50%);
-  width:min(1160px,96vw);
-  height:calc(100% - 120px);
-  border-radius:34px;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
-}
-.backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:34px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 78% 26%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 62% 90%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
-  box-shadow:
-    0 70px 220px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.06),
-    inset 0 -70px 140px rgba(0,0,0,.55);
-  opacity:.92;
-}
-.backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
-  background:
-    radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
-    radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
-    radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-    conic-gradient(from 12deg at 30% 28%,
-      rgba(201,162,74,.14), transparent 12%,
-      rgba(255,43,43,.12), transparent 24%,
-      rgba(90,40,120,.10), transparent 38%,
-      transparent 100%),
-    conic-gradient(from 180deg at 70% 36%,
-      rgba(255,43,43,.12), transparent 14%,
-      rgba(201,162,74,.12), transparent 28%,
-      rgba(90,40,120,.10), transparent 44%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(1px);
-  opacity:.72;
-}
-
-/* HERO */
-.hero{
-  position:relative;
-  z-index:2;
-  border-radius:28px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 18% 26%, var(--crimson), transparent 70%),
-    radial-gradient(circle at 82% 34%, var(--opalV), transparent 72%),
-    radial-gradient(circle at 55% 110%, var(--festival), transparent 62%),
-    radial-gradient(circle at 26% 22%, var(--goldA), transparent 62%),
-    radial-gradient(circle at 78% 80%, var(--goldB), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(12px);
-  box-shadow:var(--shadowA);
-  padding:22px 22px 20px;
-  overflow:hidden;
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:0;border-radius:28px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.20);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.32;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
-    linear-gradient(#000,#000);
-}
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:var(--mut)}
-.h1{
-  margin:0;
-  font-weight:980;
-  font-size:42px;
-  letter-spacing:1px;
-  line-height:1.08;
-  color:var(--ink);
-}
-.tag{
-  margin:14px 0 0;
-  font-size:18px;
-  line-height:1.6;
-  color:var(--ink);
-  max-width:980px;
-}
-
-/* CARDS */
-.stack{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px}
-.card{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:24px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:var(--shadowB);
-  overflow:hidden;
-  position:relative;
-}
-.card::after{
-  content:"";
-  position:absolute;inset:0;border-radius:24px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
-  opacity:.60;
-}
-.head{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  padding:18px 20px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-}
-.q{
-  font-weight:980;
-  font-size:20px;
-  line-height:1.4;
-  color:var(--ink);
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--mut);
-  font-weight:980;
-  position:relative;
-  overflow:hidden;
-  flex:0 0 auto;
-}
-.chev::after{
-  content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
-  opacity:.62;pointer-events:none;
-}
-.body{
-  display:none;
-  padding:18px 20px 22px;
-  border-top:1px solid rgba(255,255,255,.08);
-  position:relative;
-}
-.card.open .body{display:block}
-.p{
-  margin:0;
-  font-size:16px;
-  line-height:1.7;
-  color:var(--mut);
-}
-.p + .p{margin-top:14px}
-
-.actions{
-  margin-top:18px;
-  display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;
-}
-.actions .btn{padding:12px 16px;border-radius:999px}
-
-/* DOCK */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(1120px,94vw);
-  padding:12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:10px;
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-}
-.dock .btn{width:100%;padding:12px;border-radius:999px}
-
-@media (max-width:760px){
-  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media (max-width:520px){
-  .h1{font-size:36px}
-  .p{font-size:15px}
-  :root{--dockH:156px}
-}
-</style>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <title>Nine Summits World</title>
+  <meta
+    name="description"
+    content="Compressed 256×256 world engine bootstrap shell."
+  >
+  <link rel="stylesheet" href="./assets/ui.css">
 </head>
+<body data-mode="world" data-diagnostics="peek">
+  <div id="app-shell">
+    <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
 
-<body>
-<div id="root">
-
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn primary" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
-      <a class="btn" id="btnPreludeTop" href="/prelude/" data-route="/prelude/">PRELUDE</a>
+    <div id="nav-doors" class="nav-doors" aria-label="Primary doors">
+      <a href="/home/" class="nav-btn">Home</a>
+      <a href="/explore/" class="nav-btn">Explore</a>
     </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
+
+    <div id="hud" class="hud">
+      <div id="runtime-banner" class="runtime-banner" aria-live="polite">
+        <span id="runtime-phase">BOOT</span>
+      </div>
+
+      <div id="world-actions" class="world-actions" aria-label="World actions">
+        <button id="open-button" class="world-btn" type="button">Open</button>
+      </div>
+
+      <div id="debug-panel" class="debug-panel" aria-live="polite">
+        <section class="panel-section">
+          <h3 class="panel-title">Loading</h3>
+          <div class="panel-row">
+            <span class="panel-key">State</span>
+            <span class="panel-value">Booting application shell…</span>
+          </div>
+        </section>
+      </div>
+
+      <div id="compass-overlay" class="compass-overlay" aria-hidden="true"></div>
+
+      <div id="diagnostics-dock" class="diagnostics-dock">
+        <div id="diagnostics-bar" class="diagnostics-bar" aria-live="polite">
+          <div id="diagnostics-summary" class="diagnostic-bar__summary">
+            <div class="diagnostic-bar__group">
+              <span class="diagnostic-pill">
+                <span class="diagnostic-pill__label">State</span>
+                <span class="diagnostic-pill__value">Booting…</span>
+              </span>
+            </div>
+          </div>
+
+          <button
+            id="diagnostics-toggle"
+            class="diagnostics-toggle"
+            type="button"
+            aria-label="Toggle diagnostics"
+            aria-expanded="false"
+          ></button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="page">
-    <div class="backdrop" aria-hidden="true"></div>
+  <script type="module">
+    import { WORLD_KERNEL } from "./world/world_kernel.js";
+    import { createPlanetEngine } from "./world/planet_engine.js";
+    import { createRuleEngine } from "./world/rule_engine.js";
+    import { createRenderer } from "./world/render.js";
+    import { createControlSystem } from "./world/control.js";
+    import { createInstruments } from "./assets/instruments.js";
 
-    <section class="hero" aria-label="Home hero">
-      <p class="k" id="k0">HOME</p>
-      <h1 class="h1" id="h0"></h1>
-      <p class="tag" id="tag0"></p>
-    </section>
+    const worldCanvas = document.getElementById("world-canvas");
+    const debugPanel = document.getElementById("debug-panel");
+    const runtimePhase = document.getElementById("runtime-phase");
+    const diagnosticsToggle = document.getElementById("diagnostics-toggle");
+    const diagnosticsSummary = document.getElementById("diagnostics-summary");
+    const openButton = document.getElementById("open-button");
 
-    <div class="stack" id="stack" aria-label="Home narrative stack"></div>
-  </div>
+    const planetEngine = createPlanetEngine();
+    const ruleEngine = createRuleEngine();
+    const renderer = createRenderer();
+    const control = createControlSystem();
+    const instruments = createInstruments();
 
-  <nav class="dock" aria-label="Bottom navigation">
-    <a class="btn" id="dockCompass" href="/index.html" data-route="/index.html">COMPASS</a>
-    <a class="btn" id="dockPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
-    <a class="btn" id="dockDoor" href="/door/" data-route="/door/">DOOR</a>
-    <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-    <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
-    <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
-  </nav>
+    const ctx = worldCanvas.getContext("2d", { alpha: true });
 
-</div>
+    const runtime = {
+      phase: "BOOT",
+      activeFile: "index.html",
+      kernel: WORLD_KERNEL,
+      planetField: null,
+      state: {
+        currentStateBuffer: null,
+        nextStateBuffer: null,
+        transitionSummary: null,
+        stateSummary: null,
+        tickIndex: 0
+      },
+      control: {
+        cameraState: null,
+        projectionSummary: null,
+        cardinals: null
+      },
+      verification: null,
+      failure: null,
+      dtMs: 0,
+      fps: 0,
+      elapsedMs: 0,
+      startupComplete: false
+    };
 
-<script>
-(function(){
-  "use strict";
+    let frameHandle = 0;
+    let lastFrameAt = performance.now();
+    let startedAt = lastFrameAt;
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
 
-  var qs = new URLSearchParams(location.search);
-  var LS = window.localStorage;
+    let panelCacheKey = "";
+    let compactCacheKey = "";
+    let lastDiagnosticsWriteAt = 0;
+    const DIAGNOSTICS_INTERVAL_MS = 200;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || "";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d = parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth = String(d);
-
-  if(lane!=="platform" && lane!=="engineering") lane="";
-
-  try{
-    LS.setItem("gd_lang", lang);
-    LS.setItem("gd_style", style);
-    LS.setItem("gd_time", time);
-    LS.setItem("gd_depth", depth);
-  }catch(e){}
-
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function q(extra){
-    var p = new URLSearchParams();
-    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
-    p.set("style",(extra&&extra.style)?extra.style:style);
-    p.set("time", (extra&&extra.time)?extra.time:time);
-    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-    var L = (extra&&extra.lane)?extra.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane", L);
-    return "?" + p.toString();
-  }
-
-  function wireAll(){
-    var nodes = document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el = nodes[i];
-      var route = el.getAttribute("data-route") || "";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ LS.setItem("gd_lang", lang); }catch(e){}
-    location.href = location.pathname + q({lang:lang});
-  }
-
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  function P(en,zh,es){ return {en:en,zh:zh,es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en; }
-
-  var HERO={
-    h:P(
-      "Most systems do not collapse all at once. They drift first.",
-      "大多数系统不是一下子崩溃，而是先发生漂移。",
-      "La mayoría de los sistemas no colapsan de golpe. Primero se desvían."
-    ),
-    t:P(
-      "This page sets the table before the journey begins: the problem, the structural answer, the path with it, and the path without it.",
-      "这一页在旅程开始前先铺好桌面：问题、结构性答案、有它的路径，以及没有它的路径。",
-      "Esta página prepara la mesa antes del recorrido: el problema, la respuesta estructural, el camino con ella y el camino sin ella."
-    )
-  };
-
-  document.getElementById("h0").textContent=pick(HERO.h);
-  document.getElementById("tag0").textContent=pick(HERO.t);
-
-  var FINAL_PRIMARY="/prelude/";
-  var FINAL_SECONDARY="/door/";
-
-  var SECTIONS=[
-    {
-      q:P(
-        "What is the problem?",
-        "问题是什么？",
-        "¿Cuál es el problema?"
-      ),
-      p:P(
-        "The problem is not simply error. It is drift.\n\nWords detach from behavior. Metrics detach from reality. Systems continue moving while the people inside them slowly lose alignment with the thing they claim to be building.",
-        "问题不只是错误，而是漂移。\n\n语言与行为分离，指标与现实分离。系统继续运转，而其中的人却逐渐与他们声称正在构建的东西失去对齐。",
-        "El problema no es solo el error. Es la deriva.\n\nLas palabras se separan del comportamiento. Las métricas se separan de la realidad. Los sistemas siguen avanzando mientras quienes están dentro pierden alineación con lo que dicen construir."
-      )
-    },
-    {
-      q:P(
-        "What is the solution?",
-        "解决方案是什么？",
-        "¿Cuál es la solución?"
-      ),
-      p:P(
-        "The solution is not noise, speed, or more narrative.\n\nIt is structure.\n\nFinite gates. Measurable boundaries. Clear distinctions between what is claimed, what is built, and what is validated.",
-        "解决方案不是噪音、速度或更多叙事。\n\n而是结构。\n\n有限闸门、可测边界，以及对“被宣称的、被构建的、被验证的”做清晰区分。",
-        "La solución no es más ruido, ni más velocidad, ni más narrativa.\n\nEs estructura.\n\nCompuertas finitas. Límites medibles. Distinciones claras entre lo que se afirma, lo que se construye y lo que se valida."
-      )
-    },
-    {
-      q:P(
-        "What is the path with alignment?",
-        "有了对齐之后的路径是什么？",
-        "¿Cuál es el camino con alineación?"
-      ),
-      p:P(
-        "With alignment, the system becomes comprehensible.\n\nSignals strengthen. Decisions compress. Waste falls. Measurement stops competing with storytelling and starts governing it.",
-        "有了对齐，系统就变得可理解。\n\n信号增强，决策压缩，浪费下降。测量不再和叙事竞争，而开始约束叙事。",
-        "Con alineación, el sistema se vuelve comprensible.\n\nLas señales se fortalecen. Las decisiones se comprimen. El desperdicio cae. La medición deja de competir con la narrativa y empieza a gobernarla."
-      )
-    },
-    {
-      q:P(
-        "What is the path without it?",
-        "没有它的路径是什么？",
-        "¿Cuál es el camino sin ella?"
-      ),
-      p:P(
-        "Without alignment, scale becomes danger.\n\nThe louder the promise, the larger the mismatch. Systems begin optimizing optics instead of reality, and the cost is pushed outward until it becomes visible to everyone at once.",
-        "没有对齐，规模就会变成危险。\n\n承诺越大，错位越大。系统开始优化表象而不是现实，代价被不断外推，直到某一刻对所有人同时显现。",
-        "Sin alineación, la escala se vuelve peligrosa.\n\nCuanto más grande la promesa, mayor el desajuste. Los sistemas empiezan a optimizar apariencias en lugar de realidad, y el costo se empuja hacia afuera hasta hacerse visible para todos al mismo tiempo."
-      )
-    }
-  ];
-
-  var stack=document.getElementById("stack");
-
-  function closeAll(){
-    var cards=stack.querySelectorAll(".card");
-    for(var i=0;i<cards.length;i++){
-      cards[i].classList.remove("open");
-      var t=cards[i].querySelector(".chevTxt");
-      if(t) t.textContent="▸";
-    }
-  }
-
-  function continueLabel(){
-    if(lang==="zh") return "继续";
-    if(lang==="es") return "CONTINUAR";
-    return "CONTINUE";
-  }
-
-  function continueAltLabel(){
-    if(lang==="zh") return "直接进入门";
-    if(lang==="es") return "IR DIRECTO A LA PUERTA";
-    return "GO DIRECT TO DOOR";
-  }
-
-  function openCard(i){
-    var cards=stack.querySelectorAll(".card");
-    if(i<0 || i>=cards.length) return;
-    closeAll();
-    var c=cards[i];
-    c.classList.add("open");
-    var t=c.querySelector(".chevTxt");
-    if(t) t.textContent="▾";
-  }
-
-  SECTIONS.forEach(function(sec,i){
-    var card=document.createElement("div");
-    card.className="card";
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var qEl=document.createElement("div");
-    qEl.className="q";
-    qEl.textContent=pick(sec.q);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(qEl);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    pick(sec.p).split("\n\n").forEach(function(t){
-      var p=document.createElement("p");
-      p.className="p";
-      p.textContent=t;
-      body.appendChild(p);
-    });
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var btn=document.createElement("button");
-    btn.className="btn";
-    btn.type="button";
-    btn.textContent=continueLabel();
-    actions.appendChild(btn);
-
-    if(i===SECTIONS.length-1){
-      var alt=document.createElement("button");
-      alt.className="btn";
-      alt.type="button";
-      alt.textContent=continueAltLabel();
-      actions.appendChild(alt);
-
-      alt.addEventListener("click", function(){
-        location.href = FINAL_SECONDARY + q();
-      }, {passive:true});
+    function setPhase(phase) {
+      runtime.phase = phase;
+      if (runtimePhase) runtimePhase.textContent = phase;
     }
 
-    body.appendChild(actions);
+    function isFiniteNumber(value) {
+      return typeof value === "number" && Number.isFinite(value);
+    }
 
-    function toggle(){
-      var open=!card.classList.contains("open");
-      closeAll();
-      if(open){
-        card.classList.add("open");
-        chev.querySelector(".chevTxt").textContent="▾";
+    function buildPanelCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
+      const failure = runtime.failure ?? {};
+      const stateSummary = runtime.state?.stateSummary ?? {};
+      const transitionSummary = runtime.state?.transitionSummary ?? {};
+
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        elapsedMs: isFiniteNumber(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
+        sampleX: projection.sampleX ?? "—",
+        sampleY: projection.sampleY ?? "—",
+        cellId: projection.cellId ?? "—",
+        summarySampleCount: summary.sampleCount ?? "—",
+        summaryLandCount: summary.landCount ?? "—",
+        summaryWaterCount: summary.waterCount ?? "—",
+        stateSampleCount: stateSummary.sampleCount ?? "—",
+        mutatedCount: stateSummary.mutatedCount ?? "—",
+        admissibleCount: transitionSummary.admissibleCount ?? "—",
+        verificationPass:
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING",
+        failurePhase: failure.phase ?? "—",
+        failureMessage: failure.message ?? "—"
+      });
+    }
+
+    function buildCompactCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
+
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        cellId: projection.cellId ?? "—",
+        sampleCount: summary.sampleCount ?? "—",
+        verificationPass:
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING"
+      });
+    }
+
+    function writePanels(force = false) {
+      const now = performance.now();
+
+      if (!force && now - lastDiagnosticsWriteAt < DIAGNOSTICS_INTERVAL_MS) {
+        return;
+      }
+
+      const nextPanelKey = buildPanelCacheKey();
+      const nextCompactKey = buildCompactCacheKey();
+
+      if (debugPanel && (force || nextPanelKey !== panelCacheKey)) {
+        debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+        panelCacheKey = nextPanelKey;
+      }
+
+      if (diagnosticsSummary && (force || nextCompactKey !== compactCacheKey)) {
+        diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+        compactCacheKey = nextCompactKey;
+      }
+
+      lastDiagnosticsWriteAt = now;
+    }
+
+    function resizeWorld() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      worldCanvas.width = width;
+      worldCanvas.height = height;
+
+      control.resize(width, height);
+    }
+
+    function buildProjectionFunction() {
+      return function projectPoint(latDeg, lonDeg, radiusOffsetPx = 0) {
+        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
+      };
+    }
+
+    function updateControlState() {
+      runtime.control.cameraState = control.getCameraState();
+      runtime.control.projectionSummary = control.getProjectionSummary();
+      runtime.control.cardinals = control.getCardinals();
+    }
+
+    function updateTiming(now) {
+      const dtMs = now - lastFrameAt;
+      lastFrameAt = now;
+      runtime.dtMs = dtMs;
+      runtime.fps = dtMs > 0 ? 1000 / dtMs : 0;
+      runtime.elapsedMs = now - startedAt;
+    }
+
+    function buildPlanetFieldOnce() {
+      runtime.planetField = planetEngine.buildPlanetField({});
+    }
+
+    function seedStateOnce() {
+      if (!runtime.planetField?.samples) return;
+
+      const seeded = ruleEngine.seedStateBuffer(runtime.planetField.samples);
+
+      runtime.state.currentStateBuffer = seeded;
+      runtime.state.nextStateBuffer = seeded;
+      runtime.state.transitionSummary = Object.freeze({
+        tickIndex: 0,
+        activeRuleFamilies: Object.freeze([
+          ...(WORLD_KERNEL.ruleEngine?.tickContract?.firstRuleFamilies ?? [])
+        ]),
+        admissibleCount: 0,
+        blockedTransitionCount: 0,
+        transitionCounts: Object.freeze({
+          FREEZE_MELT: 0,
+          WATER_RETENTION_SPREAD: 0,
+          WETTING_DRYING: 0
+        })
+      });
+      runtime.state.stateSummary = ruleEngine.summarizeStateLattice(seeded, null);
+      runtime.state.tickIndex = 0;
+    }
+
+    function verifyRuntimeSafely() {
+      try {
+        const verifier = WORLD_KERNEL?.verification?.verifyCanonicalStructure;
+        if (typeof verifier !== "function") {
+          runtime.verification = null;
+          return;
+        }
+
+        runtime.verification = verifier({
+          fileHomes: WORLD_KERNEL?.canon?.fileHomeRegistry,
+          dependency: WORLD_KERNEL?.canon?.dependencyRegistry ?? WORLD_KERNEL?.canon?.chronologyRegistry,
+          ownership: WORLD_KERNEL?.canon?.ownershipRegistry,
+          duplicateTruth: WORLD_KERNEL?.canon?.duplicateTruthRegistry,
+          pulseOrder: WORLD_KERNEL?.planetField?.order,
+          sampleContract: WORLD_KERNEL?.planetField?.sampleContract,
+          scope: WORLD_KERNEL?.scope
+        });
+      } catch {
+        runtime.verification = null;
       }
     }
 
-    head.addEventListener("click", function(){ toggle(); }, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-    });
+    function getOpenRoute() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const sampleY = projection.sampleY;
+      const sampleX = projection.sampleX;
 
-    btn.addEventListener("click", function(){
-      var next=i+1;
-      if(next<SECTIONS.length){
-        openCard(next);
-        try{ stack.children[next].scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){}
-      }else{
-        location.href = FINAL_PRIMARY + q();
+      if (!runtime.planetField?.samples || !Number.isInteger(sampleY) || !Number.isInteger(sampleX)) {
+        return "/home/";
       }
-    }, {passive:true});
 
-    card.appendChild(head);
-    card.appendChild(body);
-    stack.appendChild(card);
+      const sample = runtime.planetField.samples[sampleY]?.[sampleX] ?? null;
+      if (!sample) return "/home/";
 
-    if(i===0){
-      card.classList.add("open");
-      chev.querySelector(".chevTxt").textContent="▾";
+      if (sample.lobeId === "GENEROSITY") return "/explore/";
+      return "/home/";
     }
-  });
 
-  if(lang==="zh"){
-    document.getElementById("btnIndex").textContent="指南针";
-    document.getElementById("btnPreludeTop").textContent="前奏";
-    document.getElementById("dockCompass").textContent="指南针";
-    document.getElementById("dockPrelude").textContent="前奏";
-    document.getElementById("dockDoor").textContent="门";
-    document.getElementById("dockProducts").textContent="产品";
-    document.getElementById("dockLaws").textContent="法则";
-    document.getElementById("dockGauges").textContent="量规";
-    document.getElementById("k0").textContent="主页";
-  }else if(lang==="es"){
-    document.getElementById("btnIndex").textContent="BRÚJULA";
-    document.getElementById("btnPreludeTop").textContent="PRELUDIO";
-    document.getElementById("dockCompass").textContent="BRÚJULA";
-    document.getElementById("dockPrelude").textContent="PRELUDIO";
-    document.getElementById("dockDoor").textContent="PUERTA";
-    document.getElementById("dockProducts").textContent="PRODUCTOS";
-    document.getElementById("dockLaws").textContent="LEYES";
-    document.getElementById("dockGauges").textContent="MEDIDORES";
-    document.getElementById("k0").textContent="INICIO";
-  }else{
-    document.getElementById("k0").textContent="HOME";
-  }
+    function updateOpenButton() {
+      if (!openButton) return;
+      openButton.dataset.route = getOpenRoute();
+      openButton.disabled = !runtime.startupComplete;
+      openButton.setAttribute("aria-disabled", runtime.startupComplete ? "false" : "true");
+      openButton.style.opacity = runtime.startupComplete ? "1" : "0.65";
+    }
 
-  wireAll();
-})();
-</script>
+    function clearCanvas() {
+      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
+    }
 
+    function renderFrame() {
+      clearCanvas();
+
+      if (!runtime.planetField) {
+        return;
+      }
+
+      renderer.renderPlanet({
+        ctx,
+        planetField: runtime.planetField,
+        projectPoint: buildProjectionFunction(),
+        viewState: runtime.control.cameraState
+      });
+    }
+
+    function frame(now) {
+      updateTiming(now);
+
+      if (!isDragging) {
+        control.stepInertia();
+      }
+
+      updateControlState();
+      updateOpenButton();
+      renderFrame();
+      writePanels(false);
+
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function onPointerDown(event) {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }
+
+    function onPointerMove(event) {
+      if (!isDragging) return;
+      if (!runtime.planetField) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      control.applyDrag(dx, dy);
+      control.updateSelection(event.clientX, event.clientY);
+      updateControlState();
+      updateOpenButton();
+      renderFrame();
+      writePanels(false);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    function cycleDiagnostics() {
+      const current = document.body.dataset.diagnostics || "peek";
+      const next = current === "full" ? "peek" : "full";
+
+      document.body.dataset.diagnostics = next;
+
+      if (diagnosticsToggle) {
+        diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
+      }
+
+      writePanels(true);
+    }
+
+    function handleOpen() {
+      if (!runtime.startupComplete) return;
+      window.location.href = openButton?.dataset?.route || "/home/";
+    }
+
+    function bindEvents() {
+      diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
+      openButton?.addEventListener("click", handleOpen);
+
+      window.addEventListener("resize", () => {
+        resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        updateControlState();
+        updateOpenButton();
+        renderFrame();
+        writePanels(true);
+      });
+
+      worldCanvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    }
+
+    function beginRunningLoop() {
+      runtime.startupComplete = true;
+      setPhase("RUNNING");
+      updateOpenButton();
+      startedAt = performance.now();
+      lastFrameAt = startedAt;
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function failStartup(error) {
+      runtime.failure = {
+        phase: "startup",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      runtime.startupComplete = false;
+      setPhase("ERROR");
+      updateOpenButton();
+      renderFrame();
+      writePanels(true);
+
+      if (frameHandle) {
+        cancelAnimationFrame(frameHandle);
+        frameHandle = 0;
+      }
+    }
+
+    function continueStartupAfterPaint() {
+      requestAnimationFrame(() => {
+        try {
+          buildPlanetFieldOnce();
+          seedStateOnce();
+          updateControlState();
+          verifyRuntimeSafely();
+          renderFrame();
+          writePanels(true);
+          bindEvents();
+          beginRunningLoop();
+        } catch (error) {
+          failStartup(error);
+        }
+      });
+    }
+
+    function start() {
+      try {
+        resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        updateControlState();
+        updateOpenButton();
+        renderFrame();
+        setPhase("INITIALIZING");
+        writePanels(true);
+        continueStartupAfterPaint();
+      } catch (error) {
+        failStartup(error);
+      }
+    }
+
+    start();
+  </script>
 </body>
 </html>

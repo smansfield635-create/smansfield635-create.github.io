@@ -9,134 +9,148 @@
 <link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
-body{margin:0;color:#fff;font-family:system-ui}
+a{color:inherit;text-decoration:none}
+body{margin:0;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body::before,body::after{pointer-events:none!important}
 
-/* ===== ROOT ===== */
 :root{
-  --ink:rgba(255,255,255,.95);
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.80);
+  --soft:rgba(255,255,255,.56);
+
+  --red:255,43,43;
+  --gold:201,162,74;
+  --opal:90,40,120;
+
+  --stroke:rgba(255,255,255,.14);
+  --strokeSoft:rgba(255,255,255,.08);
+
+  --bg0:#04060a;
+  --bg1:#080b12;
+  --bg2:#0d1118;
+
+  --shadowDeep:0 40px 140px rgba(0,0,0,.72);
+  --shadowMid:0 18px 60px rgba(0,0,0,.52);
+
+  --diamondSize:min(26vw,220px);
+  --diamondGap:min(10vw,120px);
+
+  --z-bg:1;
+  --z-water:2;
+  --z-field:3;
+  --z-geo:4;
+  --z-ui:10;
 }
 
 /* ===== PAGE ===== */
 .page{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  min-height:100vh;
   position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(var(--red),.16), transparent 46%),
+    radial-gradient(circle at 80% 18%, rgba(var(--opal),.12), transparent 42%),
+    radial-gradient(circle at 72% 82%, rgba(var(--gold),.08), transparent 32%),
+    linear-gradient(180deg, var(--bg2), var(--bg0));
+}
+
+/* ===== DEPTH STACK ===== */
+.bgDepth{
+  position:absolute;
+  inset:-8%;
+  z-index:var(--z-bg);
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.035), transparent 24%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.018), transparent 48%),
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 24%, transparent 76%, rgba(0,0,0,.22));
+  filter:blur(10px);
+  opacity:.95;
+}
+
+.waterfall{
+  position:absolute;
+  inset:-6%;
+  z-index:var(--z-water);
+  pointer-events:none;
   overflow:hidden;
 }
 
-/* ===== BACKGROUND ===== */
-.bg{
+.waterfall::before{
+  content:"";
   position:absolute;
-  inset:0;
-  z-index:0;
-
+  inset:-10% -6%;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,43,43,.18), transparent 60%),
-    radial-gradient(circle at 70% 70%, rgba(0,0,0,.6), transparent 70%),
-    linear-gradient(180deg, #050608, #0b0d12);
+    linear-gradient(180deg,
+      rgba(255,255,255,.00) 0%,
+      rgba(255,255,255,.05) 10%,
+      rgba(255,255,255,.02) 22%,
+      rgba(255,255,255,.07) 34%,
+      rgba(255,255,255,.01) 48%,
+      rgba(255,255,255,.06) 62%,
+      rgba(255,255,255,.015) 76%,
+      rgba(255,255,255,.05) 90%,
+      rgba(255,255,255,.00) 100%
+    );
+  filter:blur(24px);
+  opacity:.34;
+  animation:waterfallDrift 8s linear infinite;
+  transform:translateY(-6%);
 }
 
-/* ===== WATERFALL ===== */
-.waterfall{
+.waterfall::after{
+  content:"";
   position:absolute;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-
+  inset:-16% -12%;
   background:
     repeating-linear-gradient(
       to bottom,
-      rgba(255,255,255,.05) 0px,
-      rgba(255,255,255,.02) 6px,
-      transparent 12px
+      rgba(255,255,255,.04) 0px,
+      rgba(255,255,255,.02) 8px,
+      rgba(255,255,255,0) 20px,
+      rgba(255,255,255,.018) 34px,
+      rgba(255,255,255,0) 52px
     );
-
-  animation:waterfallFlow 1.2s linear infinite;
-  opacity:.35;
+  opacity:.18;
+  filter:blur(2px);
+  animation:waterfallFlow 1.6s linear infinite;
 }
 
 @keyframes waterfallFlow{
   from{transform:translateY(0)}
-  to{transform:translateY(40px)}
+  to{transform:translateY(72px)}
+}
+@keyframes waterfallDrift{
+  from{transform:translateY(-6%)}
+  to{transform:translateY(6%)}
 }
 
-/* ===== CONTENT ===== */
-.content{
-  position:relative;
-  z-index:2;
-  text-align:center;
-}
-
-/* TITLE */
-.title{
-  font-size:42px;
-  font-weight:900;
-  letter-spacing:.08em;
-}
-
-.subtitle{
-  margin-top:10px;
-  opacity:.8;
-  font-size:16px;
-}
-
-/* ===== DIAMOND FIELD ===== */
-.field{
-  margin-top:60px;
-  display:flex;
-  gap:80px;
-  justify-content:center;
-}
-
-/* NODE */
-.node{
-  width:160px;
-  height:160px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* DIAMOND */
-.diamond{
-  width:100%;
-  height:100%;
-  border:1px solid rgba(255,255,255,.3);
-  transform:rotate(45deg);
-  position:relative;
-}
-
-/* ROTATION */
-.spin-cw{animation:spinCW 12s linear infinite;}
-.spin-ccw{animation:spinCCW 12s linear infinite;}
-
-@keyframes spinCW{
-  from{transform:rotate(45deg)}
-  to{transform:rotate(405deg)}
-}
-
-@keyframes spinCCW{
-  from{transform:rotate(45deg)}
-  to{transform:rotate(-315deg)}
-}
-
-/* INNER (STABILIZATION) */
-.inner{
+.fieldGrid{
   position:absolute;
   inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transform:rotate(-45deg);
+  z-index:var(--z-field);
+  pointer-events:none;
+  background:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.032) 1px, transparent 1px);
+  background-size:32px 32px, 32px 32px;
+  mask:radial-gradient(circle at 50% 52%, #000 0%, rgba(0,0,0,.72) 44%, transparent 88%);
+  -webkit-mask:radial-gradient(circle at 50% 52%, #000 0%, rgba(0,0,0,.72) 44%, transparent 88%);
+  opacity:.28;
 }
 
-/* TEXT */
-.label{
-  font-size:18px;
-  font-weight:900;
-  letter-spacing:.25em;
+.fieldGlow{
+  position:absolute;
+  inset:0;
+  z-index:var(--z-field);
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 55%, rgba(var(--gold),.10), transparent 18%),
+    radial-gradient(circle at 50% 55%, rgba(255,255,255,.05), transparent 32%),
+    radial-gradient(circle at 50% 55%, rgba(var(--red),.08), transparent 48%);
+  filter:blur(12px);
+  opacity:.9;
 }
 
 /* ===== NAV ===== */
@@ -144,32 +158,314 @@ body{margin:0;color:#fff;font-family:system-ui}
   position:absolute;
   left:16px;
   top:16px;
-  z-index:3;
+  z-index:var(--z-ui);
   display:flex;
   flex-direction:column;
   gap:10px;
 }
 
 .btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
   padding:10px 14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.2);
-  background:rgba(0,0,0,.4);
-  color:#fff;
-  text-decoration:none;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(var(--gold),.14), transparent 68%),
+    linear-gradient(145deg, rgba(12,16,22,.84), rgba(6,8,12,.94));
+  color:var(--ink);
+  font-weight:950;
+  letter-spacing:.18em;
+  font-size:13px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadowMid);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn::after{
+  content:"";
+  position:absolute;
+  left:10px;right:10px;bottom:-12px;height:28px;
+  background:radial-gradient(circle at 50% 0%, rgba(var(--gold),.32), transparent 72%);
+  opacity:.55;
+  pointer-events:none;
+}
+
+/* ===== CONTENT ===== */
+.content{
+  position:relative;
+  z-index:var(--z-ui);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:36px;
+  padding:96px 22px 40px;
+  box-sizing:border-box;
+  text-align:center;
+}
+
+.hero{
+  max-width:780px;
+}
+
+.title{
+  margin:0;
+  font-size:clamp(40px,6.2vw,72px);
+  font-weight:980;
+  letter-spacing:.08em;
+  color:var(--ink);
+  text-shadow:
+    0 0 18px rgba(255,255,255,.08),
+    0 0 42px rgba(var(--gold),.10);
+}
+
+.subtitle{
+  margin-top:12px;
+  color:var(--mut);
+  line-height:1.55;
+  font-size:clamp(16px,2vw,22px);
+  text-shadow:0 0 12px rgba(0,0,0,.38);
+}
+
+/* ===== GEOMETRY ===== */
+.geometry{
+  position:relative;
+  z-index:var(--z-geo);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--diamondGap);
+  padding:18px 0;
+  width:min(900px,92vw);
+}
+
+.centerAnchor{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(16vw,120px);
+  height:min(16vw,120px);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--gold),.08),
+    0 0 30px rgba(var(--gold),.08);
+  opacity:.48;
+  pointer-events:none;
+}
+
+.connector{
+  position:absolute;
+  top:50%;
+  width:min(22vw,180px);
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(var(--gold),.18), transparent);
+  transform:translateY(-50%);
+  opacity:.7;
+  pointer-events:none;
+}
+.connector.left{left:calc(50% - min(22vw,180px) - 42px)}
+.connector.right{left:calc(50% + 42px)}
+
+.node{
+  position:relative;
+  width:var(--diamondSize);
+  height:var(--diamondSize);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:2;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.nodeAura{
+  position:absolute;
+  inset:-18%;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--gold),.16), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(var(--red),.10), transparent 58%);
+  filter:blur(22px);
+  opacity:.55;
+  pointer-events:none;
+}
+
+.diamondShell{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(45deg);
+}
+
+.spin-cw{animation:spinCW 14s linear infinite;}
+.spin-ccw{animation:spinCCW 18s linear infinite;}
+
+.diamondOuter,
+.diamondMid,
+.diamondInner{
+  position:absolute;
+  inset:0;
+  border:1px solid rgba(255,255,255,.20);
+  box-sizing:border-box;
+}
+
+.diamondOuter{
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+  box-shadow:
+    0 0 0 1px rgba(var(--gold),.04),
+    0 0 34px rgba(var(--gold),.10),
+    0 0 60px rgba(var(--red),.08);
+}
+
+.diamondMid{
+  inset:14%;
+  border-color:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(var(--gold),.05);
+  opacity:.72;
+}
+
+.diamondInner{
+  inset:31%;
+  border-color:rgba(var(--gold),.24);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--gold),.10), transparent 72%),
+    linear-gradient(160deg, rgba(255,255,255,.03), rgba(255,255,255,.00));
+  box-shadow:
+    0 0 20px rgba(var(--gold),.12),
+    inset 0 0 18px rgba(255,255,255,.03);
+  opacity:.95;
+}
+
+.textLock{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-45deg);
+  z-index:3;
+}
+
+.label{
+  font-size:clamp(20px,2.1vw,28px);
+  font-weight:980;
+  letter-spacing:.22em;
+  color:var(--ink);
+  text-shadow:
+    0 0 18px rgba(255,255,255,.10),
+    0 0 32px rgba(var(--gold),.12);
+}
+
+.node:hover .nodeAura{
+  opacity:.82;
+}
+.node:hover .diamondOuter{
+  border-color:rgba(var(--gold),.52);
+  box-shadow:
+    0 0 0 1px rgba(var(--gold),.06),
+    0 0 34px rgba(var(--gold),.18),
+    0 0 90px rgba(var(--red),.10);
+}
+.node:hover .diamondInner{
+  border-color:rgba(var(--gold),.38);
+}
+
+@keyframes spinCW{
+  0%{transform:rotate(45deg)}
+  50%{transform:rotate(224deg)}
+  100%{transform:rotate(405deg)}
+}
+@keyframes spinCCW{
+  0%{transform:rotate(45deg)}
+  50%{transform:rotate(-132deg)}
+  100%{transform:rotate(-315deg)}
+}
+
+/* ===== MOBILE ===== */
+@media (max-width:900px){
+  :root{
+    --diamondSize:min(30vw,190px);
+    --diamondGap:min(8vw,58px);
+  }
+}
+
+@media (max-width:680px){
+  .content{
+    gap:28px;
+    padding-top:104px;
+  }
+
+  .hero{
+    max-width:520px;
+  }
+
+  .geometry{
+    gap:20px;
+    width:min(520px,94vw);
+  }
+
+  :root{
+    --diamondSize:min(34vw,156px);
+  }
+
+  .connector{
+    display:none;
+  }
+
+  .centerAnchor{
+    width:76px;
+    height:76px;
+    opacity:.36;
+  }
+
+  .label{
+    letter-spacing:.16em;
+    font-size:18px;
+  }
+
+  .nav{
+    left:12px;
+    top:12px;
+    gap:8px;
+  }
+
+  .btn{
+    min-height:40px;
+    padding:8px 12px;
+    font-size:12px;
+    letter-spacing:.12em;
+  }
+}
+
+@media (max-width:520px){
+  .geometry{
+    flex-direction:column;
+    gap:24px;
+  }
+
+  .centerAnchor{
+    display:none;
+  }
 }
 </style>
 </head>
 
 <body>
-
 <div class="page">
 
-  <!-- BACKGROUND -->
-  <div class="bg"></div>
+  <div class="bgDepth"></div>
   <div class="waterfall"></div>
+  <div class="fieldGrid"></div>
+  <div class="fieldGlow"></div>
 
-  <!-- NAV -->
   <div class="nav">
     <a class="btn" href="/index.html">COMPASS</a>
     <a class="btn" href="/products/">PRODUCTS</a>
@@ -177,41 +473,70 @@ body{margin:0;color:#fff;font-family:system-ui}
     <a class="btn" href="/gauges/">GAUGES</a>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
-    <div class="title">PRODUCTS</div>
-    <div class="subtitle">
-      Choose your path. What exists now, or what is being built next.
+    <div class="hero">
+      <h1 class="title">PRODUCTS</h1>
+      <div class="subtitle">Choose your path. What exists now, or what is being built next.</div>
     </div>
 
-    <div class="field">
+    <div class="geometry">
+      <div class="centerAnchor" aria-hidden="true"></div>
+      <div class="connector left" aria-hidden="true"></div>
+      <div class="connector right" aria-hidden="true"></div>
 
-      <!-- NOW -->
-      <div class="node">
-        <div class="diamond spin-cw">
-          <div class="inner">
-            <div class="label">NOW</div>
-          </div>
+      <div class="node" id="enterNow" role="button" tabindex="0" aria-label="Enter current products">
+        <div class="nodeAura" aria-hidden="true"></div>
+        <div class="diamondShell spin-cw" aria-hidden="true">
+          <div class="diamondOuter"></div>
+          <div class="diamondMid"></div>
+          <div class="diamondInner"></div>
+        </div>
+        <div class="textLock">
+          <div class="label">NOW</div>
         </div>
       </div>
 
-      <!-- FUTURE -->
-      <div class="node">
-        <div class="diamond spin-ccw">
-          <div class="inner">
-            <div class="label">FUTURE</div>
-          </div>
+      <div class="node" id="enterFuture" role="button" tabindex="0" aria-label="Enter future products">
+        <div class="nodeAura" aria-hidden="true"></div>
+        <div class="diamondShell spin-ccw" aria-hidden="true">
+          <div class="diamondOuter"></div>
+          <div class="diamondMid"></div>
+          <div class="diamondInner"></div>
+        </div>
+        <div class="textLock">
+          <div class="label">FUTURE</div>
         </div>
       </div>
-
     </div>
   </div>
 
 </div>
 
 <script>
-document.querySelectorAll(".node")[0].onclick=()=>location.href="/products/now/";
-document.querySelectorAll(".node")[1].onclick=()=>location.href="/explore/";
+(function(){
+  var enterNow=document.getElementById("enterNow");
+  var enterFuture=document.getElementById("enterFuture");
+
+  function goNow(){ window.location.href="/products/now/"; }
+  function goFuture(){ window.location.href="/explore/"; }
+
+  enterNow.addEventListener("click", goNow, {passive:true});
+  enterFuture.addEventListener("click", goFuture, {passive:true});
+
+  enterNow.addEventListener("keydown", function(e){
+    if(e.key==="Enter" || e.key===" "){
+      e.preventDefault();
+      goNow();
+    }
+  });
+
+  enterFuture.addEventListener("keydown", function(e){
+    if(e.key==="Enter" || e.key===" "){
+      e.preventDefault();
+      goFuture();
+    }
+  });
+})();
 </script>
 
 </body>

@@ -17,7 +17,7 @@
   <div id="app-shell">
     <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
 
-    <div id="nav-doors" aria-label="Primary doors">
+    <div id="nav-doors" class="nav-doors" aria-label="Primary doors">
       <a href="/home/" class="nav-btn">Home</a>
       <a href="/explore/" class="nav-btn">Explore</a>
     </div>
@@ -25,6 +25,10 @@
     <div id="hud" class="hud">
       <div id="runtime-banner" class="runtime-banner" aria-live="polite">
         <span id="runtime-phase">BOOT</span>
+      </div>
+
+      <div id="world-actions" class="world-actions" aria-label="World actions">
+        <button id="open-button" class="world-btn" type="button">Open</button>
       </div>
 
       <div id="debug-panel" class="debug-panel" aria-live="polite">
@@ -75,6 +79,7 @@
     const runtimePhase = document.getElementById("runtime-phase");
     const diagnosticsToggle = document.getElementById("diagnostics-toggle");
     const diagnosticsSummary = document.getElementById("diagnostics-summary");
+    const openButton = document.getElementById("open-button");
 
     const planetEngine = createPlanetEngine();
     const ruleEngine = createRuleEngine();
@@ -279,6 +284,27 @@
       }
     }
 
+    function getOpenRoute() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const sampleY = projection.sampleY;
+      const sampleX = projection.sampleX;
+
+      if (!runtime.planetField?.samples || !Number.isInteger(sampleY) || !Number.isInteger(sampleX)) {
+        return "/home/";
+      }
+
+      const sample = runtime.planetField.samples[sampleY]?.[sampleX] ?? null;
+      if (!sample) return "/home/";
+
+      if (sample.lobeId === "GENEROSITY") return "/explore/";
+      return "/home/";
+    }
+
+    function updateOpenButton() {
+      if (!openButton) return;
+      openButton.dataset.route = getOpenRoute();
+    }
+
     function clearCanvas() {
       ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
     }
@@ -306,6 +332,7 @@
       }
 
       updateControlState();
+      updateOpenButton();
       renderFrame();
       writePanels(false);
 
@@ -331,6 +358,7 @@
       control.applyDrag(dx, dy);
       control.updateSelection(event.clientX, event.clientY);
       updateControlState();
+      updateOpenButton();
       renderFrame();
       writePanels(false);
     }
@@ -352,12 +380,19 @@
       writePanels(true);
     }
 
+    function handleOpen() {
+      window.location.href = openButton?.dataset?.route || "/home/";
+    }
+
     function bindEvents() {
       diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
+      openButton?.addEventListener("click", handleOpen);
 
       window.addEventListener("resize", () => {
         resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
         updateControlState();
+        updateOpenButton();
         renderFrame();
         writePanels(true);
       });
@@ -396,6 +431,7 @@
           buildPlanetFieldOnce();
           seedStateOnce();
           updateControlState();
+          updateOpenButton();
           verifyRuntimeSafely();
           renderFrame();
           writePanels(true);
@@ -412,6 +448,7 @@
         resizeWorld();
         control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
         updateControlState();
+        updateOpenButton();
         renderFrame();
         setPhase("INITIALIZING");
         writePanels(true);

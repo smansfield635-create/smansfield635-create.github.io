@@ -3,300 +3,215 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Products · Spine</title>
+<title>Products</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
 
 <style>
+body{margin:0;color:#fff;font-family:system-ui}
+
+/* ===== ROOT ===== */
 :root{
-  --bg0:#05070d;
-  --bg1:#0a0f1a;
-
-  --red:#ff2b2b;
-  --gold:#c9a24a;
-
-  --ink:#ffffff;
-  --mut:rgba(255,255,255,.75);
-
-  --z-bg:1;
-  --z-field:2;
-  --z-ui:10;
+  --ink:rgba(255,255,255,.95);
 }
 
-/* BASE */
-html,body{
-  margin:0;
-  height:100%;
-  overflow:hidden;
-  color:var(--ink);
-  font-family:system-ui;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,43,43,.15), transparent 60%),
-    radial-gradient(circle at 80% 80%, rgba(201,162,74,.12), transparent 60%),
-    linear-gradient(160deg,var(--bg1),var(--bg0));
-}
-
-/* FIELD */
-#field{
-  position:absolute;
-  inset:0;
-  z-index:var(--z-field);
-}
-
-/* WEATHER */
-.weather{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  z-index:var(--z-bg);
-}
-
-.rain{
-  background-image:
-    linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
-  background-size:2px 18px;
-  animation:rain 0.4s linear infinite;
-  opacity:.25;
-}
-
-@keyframes rain{
-  from{transform:translateY(0)}
-  to{transform:translateY(18px)}
-}
-
-/* UI */
-#ui{
-  position:absolute;
-  inset:0;
+/* ===== PAGE ===== */
+.page{
+  height:100vh;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:40px;
-  z-index:var(--z-ui);
+  position:relative;
+  overflow:hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,43,43,.18), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(0,0,0,.6), transparent 70%),
+    linear-gradient(180deg, #050608, #0b0d12);
+}
+
+/* ===== WATERFALL ===== */
+.waterfall{
+  position:absolute;
+  inset:0;
+  z-index:1;
   pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.05) 0px,
+      rgba(255,255,255,.02) 6px,
+      transparent 12px
+    );
+
+  animation:waterfallFlow 1.2s linear infinite;
+  opacity:.35;
 }
 
-/* HERO */
-.hero{
+@keyframes waterfallFlow{
+  from{transform:translateY(0)}
+  to{transform:translateY(40px)}
+}
+
+/* ===== CONTENT ===== */
+.content{
+  position:relative;
+  z-index:2;
   text-align:center;
-  max-width:720px;
 }
 
-.hero h1{
+/* TITLE */
+.title{
   font-size:42px;
-  margin:0;
-  letter-spacing:1px;
+  font-weight:900;
+  letter-spacing:.08em;
 }
 
-.hero p{
-  margin-top:12px;
-  color:var(--mut);
-  line-height:1.6;
+.subtitle{
+  margin-top:10px;
+  opacity:.8;
+  font-size:16px;
 }
 
-/* SPLIT */
-.split{
+/* ===== DIAMOND FIELD ===== */
+.field{
+  margin-top:60px;
   display:flex;
   gap:80px;
-  pointer-events:auto;
+  justify-content:center;
 }
 
+/* NODE */
 .node{
-  width:180px;
-  height:180px;
+  width:160px;
+  height:160px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:18px;
-  position:relative;
-  cursor:pointer;
-  transition:.2s;
 }
 
 /* DIAMOND */
 .diamond{
   width:100%;
   height:100%;
+  border:1px solid rgba(255,255,255,.3);
   transform:rotate(45deg);
-  border:1px solid rgba(255,255,255,.15);
-  display:flex;
-  align-items:center;
-  justify-content:center;
   position:relative;
 }
 
-.node span{
-  transform:rotate(-45deg);
-  font-weight:900;
-  letter-spacing:.2em;
-}
-
-/* ANIMATION */
-.spin-cw{
-  animation:spinCW 12s linear infinite;
-}
-.spin-ccw{
-  animation:spinCCW 16s linear infinite;
-}
+/* ROTATION */
+.spin-cw{animation:spinCW 12s linear infinite;}
+.spin-ccw{animation:spinCCW 12s linear infinite;}
 
 @keyframes spinCW{
   from{transform:rotate(45deg)}
   to{transform:rotate(405deg)}
 }
+
 @keyframes spinCCW{
   from{transform:rotate(45deg)}
   to{transform:rotate(-315deg)}
 }
 
-/* HOVER */
-.node:hover{
-  transform:scale(1.05);
-}
-
-.node:hover .diamond{
-  border-color:var(--gold);
-  box-shadow:0 0 25px rgba(201,162,74,.25);
-}
-
-/* PRODUCT GRID (HIDDEN UNTIL ENTRY) */
-#products{
+/* INNER (STABILIZATION) */
+.inner{
   position:absolute;
   inset:0;
-  display:none;
-  flex-direction:column;
-  padding:120px 40px 40px;
-  gap:20px;
-  overflow:auto;
-  z-index:var(--z-ui);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:rotate(-45deg);
 }
 
-.product{
-  padding:18px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;
-  background:rgba(0,0,0,.4);
-  cursor:pointer;
+/* TEXT */
+.label{
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:.25em;
 }
 
-.product:hover{
-  border-color:var(--gold);
-}
-
-/* BACK */
-.back{
+/* ===== NAV ===== */
+.nav{
   position:absolute;
-  top:20px;
-  left:20px;
-  cursor:pointer;
-  pointer-events:auto;
+  left:16px;
+  top:16px;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.btn{
+  padding:10px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(0,0,0,.4);
+  color:#fff;
+  text-decoration:none;
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="field"></canvas>
-<div class="weather rain"></div>
+<div class="page">
 
-<div id="ui">
+  <!-- BACKGROUND -->
+  <div class="bg"></div>
+  <div class="waterfall"></div>
 
-  <div class="hero">
-    <h1>PRODUCTS</h1>
-    <p>
+  <!-- NAV -->
+  <div class="nav">
+    <a class="btn" href="/index.html">COMPASS</a>
+    <a class="btn" href="/products/">PRODUCTS</a>
+    <a class="btn" href="/explore/">EXPLORE</a>
+    <a class="btn" href="/gauges/">GAUGES</a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+    <div class="title">PRODUCTS</div>
+    <div class="subtitle">
       Choose your path. What exists now, or what is being built next.
-    </p>
-  </div>
-
-  <div class="split">
-
-    <!-- NOW -->
-    <div class="node" id="enterNow">
-      <div class="diamond spin-cw">
-        <span>NOW</span>
-      </div>
     </div>
 
-    <!-- FUTURE -->
-    <div class="node" id="enterFuture">
-      <div class="diamond spin-ccw">
-        <span>FUTURE</span>
+    <div class="field">
+
+      <!-- NOW -->
+      <div class="node">
+        <div class="diamond spin-cw">
+          <div class="inner">
+            <div class="label">NOW</div>
+          </div>
+        </div>
       </div>
+
+      <!-- FUTURE -->
+      <div class="node">
+        <div class="diamond spin-ccw">
+          <div class="inner">
+            <div class="label">FUTURE</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
   </div>
-
-</div>
-
-<!-- PRODUCTS -->
-<div id="products">
-
-  <div class="back" id="backBtn">← BACK</div>
-
-  <div class="product">OnYourSide AI</div>
-  <div class="product">Education System</div>
-  <div class="product">Energy Platform</div>
-  <div class="product">Governance System</div>
 
 </div>
 
 <script>
-/* =========================
-   FIELD ENGINE (256 DENSITY FEEL)
-========================= */
-const canvas=document.getElementById("field");
-const ctx=canvas.getContext("2d");
-
-function resize(){
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-}
-resize();
-window.addEventListener("resize",resize);
-
-let t=0;
-
-function render(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  const spacing=40;
-
-  for(let x=0;x<canvas.width;x+=spacing){
-    for(let y=0;y<canvas.height;y+=spacing){
-
-      const v=Math.sin(x*0.01 + t) + Math.cos(y*0.01 + t);
-      const a=(v+2)/4;
-
-      ctx.fillStyle=`rgba(255,255,255,${a*0.08})`;
-      ctx.fillRect(x,y,2,2);
-    }
-  }
-
-  t+=0.01;
-  requestAnimationFrame(render);
-}
-render();
-
-/* =========================
-   INTERACTION
-========================= */
-
-const ui=document.getElementById("ui");
-const products=document.getElementById("products");
-
-document.getElementById("enterNow").onclick=()=>{
-  ui.style.display="none";
-  products.style.display="flex";
-};
-
-document.getElementById("enterFuture").onclick=()=>{
-  window.location.href="/explore/";
-};
-
-document.getElementById("backBtn").onclick=()=>{
-  products.style.display="none";
-  ui.style.display="flex";
-};
+document.querySelectorAll(".node")[0].onclick=()=>location.href="/products/now/";
+document.querySelectorAll(".node")[1].onclick=()=>location.href="/explore/";
 </script>
 
 </body>

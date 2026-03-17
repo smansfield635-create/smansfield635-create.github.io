@@ -1,763 +1,302 @@
 <!doctype html>
-<!-- TNT — /products/index.html
-     PRODUCTS · STRUCTURAL PASS ONLY
-     STATUS:
-       - PRODUCT-FORWARD
-       - DIAMOND-SPINE LAYOUT
-       - NOW vs FRONTIER SPLIT
-       - NO UNDER-THE-HOOD FRONT LEAKAGE
-       - NO 4K VISUAL PASS YET
-       - NO ANIMATION PASS YET
-     STATE:
-       - preserve gd_lang/gd_style/gd_time/gd_depth only
-       - preserve URL query: lang/style/time/depth
-     ROUTING:
-       - LIVE = reveal products on page
-       - FRONTIER = route to /explore/
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Products</title>
+<title>Products · Spine</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
-
 :root{
-  --topH:76px;
-  --topStackH:76px;
-  --dockH:104px;
-  --pageW:min(1400px,92vw);
+  --bg0:#05070d;
+  --bg1:#0a0f1a;
 
-  --stroke:rgba(255,255,255,.14);
-  --ink:rgba(255,255,255,.96);
-  --mut:rgba(255,255,255,.76);
+  --red:#ff2b2b;
+  --gold:#c9a24a;
 
-  --shadowA:0 28px 110px rgba(0,0,0,.70);
-  --shadowB:0 18px 60px rgba(0,0,0,.55);
+  --ink:#ffffff;
+  --mut:rgba(255,255,255,.75);
 
-  --diamondSize:380px;
+  --z-bg:1;
+  --z-field:2;
+  --z-ui:10;
 }
 
-/* ===== TOP ===== */
-
-.top{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:var(--topH);
-  padding:16px 16px 12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-  box-sizing:border-box;
-}
-.top .left,.top .right{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  pointer-events:auto;
-  flex-wrap:wrap;
-}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  padding:10px 14px;
-  border-radius:16px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
-  color:var(--ink);
-  font-weight:950;
-  letter-spacing:.3px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:var(--shadowB);
-  touch-action:manipulation;
-}
-.btn.active{
-  border-color:rgba(255,255,255,.28);
-}
-
-/* ===== PAGE ===== */
-
-.page{
-  width:var(--pageW);
-  margin:0 auto;
-  padding:calc(var(--topStackH) + 18px) 0 calc(var(--dockH) + 42px);
-  display:flex;
-  flex-direction:column;
-  gap:26px;
-  position:relative;
-  z-index:10;
-  box-sizing:border-box;
-  min-height:100vh;
-}
-
-/* ===== HERO ===== */
-
-.hero{
-  min-height:18vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:8px;
-}
-.heroInner{
-  width:min(760px,94vw);
-  margin:0 auto;
-  text-align:center;
-}
-.heroTitle{
+/* BASE */
+html,body{
   margin:0;
-  font-size:48px;
-  line-height:1.02;
-  font-weight:980;
-  letter-spacing:1px;
-}
-.heroSub{
-  margin:14px auto 0;
-  max-width:620px;
-  font-size:18px;
-  line-height:1.6;
-  color:var(--mut);
-}
-
-/* ===== SPINE FIELD ===== */
-
-.spineField{
-  min-height:56vh;
-  display:grid;
-  place-items:center;
-  position:relative;
-  overflow:visible;
-}
-.spineWrap{
-  width:100%;
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-
-.spineDiamond{
-  position:relative;
-  width:var(--diamondSize);
-  height:var(--diamondSize);
-  transform:rotate(45deg);
-  border:1px solid var(--stroke);
-  box-shadow:var(--shadowA);
+  height:100%;
   overflow:hidden;
-  background:rgba(10,12,16,.42);
+  color:var(--ink);
+  font-family:system-ui;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,43,43,.15), transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(201,162,74,.12), transparent 60%),
+    linear-gradient(160deg,var(--bg1),var(--bg0));
 }
 
-.spineHalf{
+/* FIELD */
+#field{
   position:absolute;
   inset:0;
-  transform:rotate(-45deg);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:28px;
-  box-sizing:border-box;
-  cursor:pointer;
-  touch-action:manipulation;
+  z-index:var(--z-field);
 }
 
-.spineHalfTop{
-  clip-path:polygon(50% 0%, 100% 50%, 50% 50%, 0% 50%);
-}
-.spineHalfBottom{
-  clip-path:polygon(0% 50%, 50% 50%, 100% 50%, 50% 100%);
+/* WEATHER */
+.weather{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:var(--z-bg);
 }
 
-.spineLabel{
+.rain{
+  background-image:
+    linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+  background-size:2px 18px;
+  animation:rain 0.4s linear infinite;
+  opacity:.25;
+}
+
+@keyframes rain{
+  from{transform:translateY(0)}
+  to{transform:translateY(18px)}
+}
+
+/* UI */
+#ui{
+  position:absolute;
+  inset:0;
   display:flex;
   flex-direction:column;
-  gap:8px;
   align-items:center;
   justify-content:center;
-  max-width:220px;
-}
-.spineKicker{
-  font-size:11px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--mut);
-}
-.spineTitle{
-  font-size:24px;
-  line-height:1.08;
-  font-weight:980;
-}
-.spineText{
-  font-size:14px;
-  line-height:1.45;
-  color:var(--mut);
-}
-
-.spineCore{
-  position:absolute;
-  width:96px;
-  height:96px;
-  transform:rotate(45deg);
-  border:1px solid var(--stroke);
-  display:grid;
-  place-items:center;
-  background:rgba(0,0,0,.36);
-  z-index:3;
-  box-shadow:var(--shadowB);
+  gap:40px;
+  z-index:var(--z-ui);
   pointer-events:none;
 }
-.spineCoreInner{
-  transform:rotate(-45deg);
-  font-size:15px;
-  font-weight:980;
-  letter-spacing:.8px;
+
+/* HERO */
+.hero{
+  text-align:center;
+  max-width:720px;
 }
 
-/* ===== LIVE PRODUCTS ===== */
+.hero h1{
+  font-size:42px;
+  margin:0;
+  letter-spacing:1px;
+}
 
-.liveSection{
+.hero p{
+  margin-top:12px;
+  color:var(--mut);
+  line-height:1.6;
+}
+
+/* SPLIT */
+.split{
+  display:flex;
+  gap:80px;
+  pointer-events:auto;
+}
+
+.node{
+  width:180px;
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:18px;
+  position:relative;
+  cursor:pointer;
+  transition:.2s;
+}
+
+/* DIAMOND */
+.diamond{
+  width:100%;
+  height:100%;
+  transform:rotate(45deg);
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+}
+
+.node span{
+  transform:rotate(-45deg);
+  font-weight:900;
+  letter-spacing:.2em;
+}
+
+/* ANIMATION */
+.spin-cw{
+  animation:spinCW 12s linear infinite;
+}
+.spin-ccw{
+  animation:spinCCW 16s linear infinite;
+}
+
+@keyframes spinCW{
+  from{transform:rotate(45deg)}
+  to{transform:rotate(405deg)}
+}
+@keyframes spinCCW{
+  from{transform:rotate(45deg)}
+  to{transform:rotate(-315deg)}
+}
+
+/* HOVER */
+.node:hover{
+  transform:scale(1.05);
+}
+
+.node:hover .diamond{
+  border-color:var(--gold);
+  box-shadow:0 0 25px rgba(201,162,74,.25);
+}
+
+/* PRODUCT GRID (HIDDEN UNTIL ENTRY) */
+#products{
+  position:absolute;
+  inset:0;
   display:none;
   flex-direction:column;
-  gap:18px;
-  margin-top:4px;
-}
-.liveSection.active{
-  display:flex;
-}
-
-.liveHead{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.liveTitle{
-  margin:0;
-  font-size:28px;
-  line-height:1.08;
-  font-weight:980;
-}
-.liveSub{
-  margin:0;
-  color:var(--mut);
-  font-size:15px;
-  line-height:1.55;
-}
-
-.liveGrid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  padding:120px 40px 40px;
   gap:20px;
+  overflow:auto;
+  z-index:var(--z-ui);
 }
 
-.productTile{
-  border:1px solid var(--stroke);
-  border-radius:22px;
+.product{
   padding:18px;
-  background:rgba(10,12,16,.34);
-  box-shadow:var(--shadowB);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  min-height:156px;
-}
-.productTitle{
-  margin:0;
-  font-size:22px;
-  line-height:1.1;
-  font-weight:960;
-}
-.productLine{
-  margin:0;
-  color:var(--mut);
-  font-size:15px;
-  line-height:1.5;
-}
-.tileActions{
-  margin-top:auto;
-  display:flex;
-  justify-content:flex-end;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  background:rgba(0,0,0,.4);
+  cursor:pointer;
 }
 
-/* ===== UNDERSTRIP ===== */
-
-.supportStrip{
-  margin-top:2px;
-  border:1px solid var(--stroke);
-  border-radius:20px;
-  padding:16px 18px;
-  background:rgba(0,0,0,.22);
-  box-shadow:var(--shadowB);
-}
-.supportKicker{
-  font-size:11px;
-  letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--mut);
-}
-.supportText{
-  margin-top:10px;
-  font-size:14px;
-  line-height:1.55;
-  color:var(--mut);
+.product:hover{
+  border-color:var(--gold);
 }
 
-/* ===== DOCK ===== */
-
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(1000px,94vw);
-  min-height:var(--dockH);
-  padding:12px;
-  border-radius:24px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.40);
-  backdrop-filter:blur(12px);
-  box-shadow:0 20px 70px rgba(0,0,0,.70);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  z-index:220;
-  box-sizing:border-box;
-}
-.dock .btn{
-  width:100%;
-  min-width:0;
-  text-align:center;
-}
-
-/* ===== RESPONSIVE ===== */
-
-@media (max-width:960px){
-  :root{ --diamondSize:320px; }
-  .liveGrid{ grid-template-columns:1fr; }
-}
-
-@media (max-width:767px){
-  :root{
-    --topH:124px;
-    --topStackH:132px;
-    --dockH:112px;
-    --diamondSize:272px;
-  }
-
-  .top{
-    height:var(--topH);
-    padding:12px 12px 8px;
-    flex-direction:column;
-    align-items:stretch;
-    justify-content:flex-start;
-    gap:8px;
-  }
-
-  .top .left,.top .right{
-    width:100%;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    flex-wrap:nowrap;
-  }
-
-  .top .left .btn,
-  .top .right .btn{
-    flex:1 1 0;
-    min-width:0;
-    min-height:48px;
-    padding:10px 8px;
-  }
-
-  .page{
-    padding-top:calc(var(--topStackH) + 16px);
-    padding-bottom:calc(var(--dockH) + 40px);
-  }
-
-  .heroTitle{ font-size:36px; }
-  .heroSub{ font-size:16px; }
-
-  .spineTitle{ font-size:20px; }
-  .spineText{ font-size:13px; }
-  .spineCore{
-    width:76px;
-    height:76px;
-  }
-  .spineCoreInner{
-    font-size:12px;
-  }
-}
-
-@media (max-width:520px){
-  :root{
-    --topH:132px;
-    --topStackH:140px;
-    --dockH:118px;
-    --diamondSize:248px;
-  }
-
-  .dock{
-    width:min(96vw,720px);
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    padding:10px;
-  }
-
-  .productTitle{ font-size:20px; }
+/* BACK */
+.back{
+  position:absolute;
+  top:20px;
+  left:20px;
+  cursor:pointer;
+  pointer-events:auto;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
-    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+<canvas id="field"></canvas>
+<div class="weather rain"></div>
+
+<div id="ui">
+
+  <div class="hero">
+    <h1>PRODUCTS</h1>
+    <p>
+      Choose your path. What exists now, or what is being built next.
+    </p>
   </div>
-  <div class="right">
-    <button class="btn active" id="langEN" type="button">EN</button>
-    <button class="btn" id="langZH" type="button">中文</button>
-    <button class="btn" id="langES" type="button">ES</button>
+
+  <div class="split">
+
+    <!-- NOW -->
+    <div class="node" id="enterNow">
+      <div class="diamond spin-cw">
+        <span>NOW</span>
+      </div>
+    </div>
+
+    <!-- FUTURE -->
+    <div class="node" id="enterFuture">
+      <div class="diamond spin-ccw">
+        <span>FUTURE</span>
+      </div>
+    </div>
+
   </div>
-</div>
-
-<div class="page">
-
-  <section class="hero" aria-label="Products hero">
-    <div class="heroInner">
-      <h1 class="heroTitle" id="heroTitle">Products</h1>
-      <p class="heroSub" id="heroSub">What exists now, and what is coming next.</p>
-    </div>
-  </section>
-
-  <section class="spineField" aria-label="Products decision spine">
-    <div class="spineWrap">
-
-      <div class="spineDiamond" aria-hidden="false">
-
-        <button class="spineHalf spineHalfTop" id="frontierPortal" type="button" aria-label="In development">
-          <div class="spineLabel">
-            <div class="spineKicker" id="frontierKicker">FUTURE</div>
-            <div class="spineTitle" id="frontierTitle">IN DEVELOPMENT</div>
-            <div class="spineText" id="frontierText">Experimental systems, innovation, and frontier builds.</div>
-          </div>
-        </button>
-
-        <button class="spineHalf spineHalfBottom" id="livePortal" type="button" aria-label="On the field">
-          <div class="spineLabel">
-            <div class="spineKicker" id="liveKicker">NOW</div>
-            <div class="spineTitle" id="liveTitle">ON THE FIELD</div>
-            <div class="spineText" id="liveText">Current offerings, usable systems, and public entry points.</div>
-          </div>
-        </button>
-
-      </div>
-
-      <div class="spineCore" aria-hidden="true">
-        <div class="spineCoreInner" id="spineCoreText">ENTER</div>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="liveSection" id="liveSection" aria-label="Live products">
-    <div class="liveHead">
-      <h2 class="liveTitle" id="liveSectionTitle">Live Products</h2>
-      <p class="liveSub" id="liveSectionSub">Current products and entry points. Internals stay under the surface.</p>
-    </div>
-
-    <div class="liveGrid">
-      <article class="productTile">
-        <h3 class="productTitle" id="tile1Title">On Your Side AI</h3>
-        <p class="productLine" id="tile1Line">Decision clarity in real time.</p>
-        <div class="tileActions">
-          <a class="btn" id="tile1Btn" data-route="/products/on-your-side-ai/" href="/products/on-your-side-ai/">ENTER</a>
-        </div>
-      </article>
-
-      <article class="productTile">
-        <h3 class="productTitle" id="tile2Title">Clean English Core</h3>
-        <p class="productLine" id="tile2Line">Structured language progression through traversal learning.</p>
-        <div class="tileActions">
-          <a class="btn" id="tile2Btn" data-route="/products/education/" href="/products/education/">ENTER</a>
-        </div>
-      </article>
-
-      <article class="productTile">
-        <h3 class="productTitle" id="tile3Title">The Platform</h3>
-        <p class="productLine" id="tile3Line">A routing spine into systems, tools, and future deployments.</p>
-        <div class="tileActions">
-          <a class="btn" id="tile3Btn" data-route="/home/" href="/home/">ENTER</a>
-        </div>
-      </article>
-    </div>
-
-    <div class="supportStrip">
-      <div class="supportKicker" id="supportKicker">UNDER THE HOOD</div>
-      <div class="supportText" id="supportText">The deeper support systems remain below the front layer and appear only after product entry.</div>
-    </div>
-  </section>
 
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-  <a class="btn active" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
-</nav>
+<!-- PRODUCTS -->
+<div id="products">
+
+  <div class="back" id="backBtn">← BACK</div>
+
+  <div class="product">OnYourSide AI</div>
+  <div class="product">Education System</div>
+  <div class="product">Energy Platform</div>
+  <div class="product">Governance System</div>
+
+</div>
 
 <script>
-(function(){
-  "use strict";
+/* =========================
+   FIELD ENGINE (256 DENSITY FEEL)
+========================= */
+const canvas=document.getElementById("field");
+const ctx=canvas.getContext("2d");
 
-  var qs = new URLSearchParams(location.search);
-  var LS = window.localStorage;
+function resize(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
 
-  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time = qs.get("time") || LS.getItem("gd_time") || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+let t=0;
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="informal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="overview" && depth!=="explore" && depth!=="deep") depth="explore";
+function render(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  function q(over){
-    var p = new URLSearchParams();
-    p.set("lang", (over && over.lang) ? over.lang : lang);
-    p.set("style", (over && over.style) ? over.style : style);
-    p.set("time", (over && over.time) ? over.time : time);
-    p.set("depth", (over && over.depth) ? over.depth : depth);
-    return "?" + p.toString();
-  }
+  const spacing=40;
 
-  function syncState(){
-    try{
-      LS.setItem("gd_lang", lang);
-      LS.setItem("gd_style", style);
-      LS.setItem("gd_time", time);
-      LS.setItem("gd_depth", depth);
-    }catch(e){}
-    history.replaceState({}, "", location.pathname + q());
-  }
+  for(let x=0;x<canvas.width;x+=spacing){
+    for(let y=0;y<canvas.height;y+=spacing){
 
-  function setLangButtons(){
-    ["langEN","langZH","langES"].forEach(function(id){
-      var el = document.getElementById(id);
-      if(!el) return;
-      el.classList.remove("active");
-    });
-    if(lang==="en") document.getElementById("langEN").classList.add("active");
-    if(lang==="zh") document.getElementById("langZH").classList.add("active");
-    if(lang==="es") document.getElementById("langES").classList.add("active");
-  }
+      const v=Math.sin(x*0.01 + t) + Math.cos(y*0.01 + t);
+      const a=(v+2)/4;
 
-  function wireRoutes(){
-    var nodes = document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el = nodes[i];
-      var route = el.getAttribute("data-route") || "";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
+      ctx.fillStyle=`rgba(255,255,255,${a*0.08})`;
+      ctx.fillRect(x,y,2,2);
     }
   }
 
-  var COPY = {
-    en:{
-      heroTitle:"Products",
-      heroSub:"What exists now, and what is coming next.",
-      frontierKicker:"FUTURE",
-      frontierTitle:"IN DEVELOPMENT",
-      frontierText:"Experimental systems, innovation, and frontier builds.",
-      liveKicker:"NOW",
-      liveTitle:"ON THE FIELD",
-      liveText:"Current offerings, usable systems, and public entry points.",
-      spineCoreText:"ENTER",
-      liveSectionTitle:"Live Products",
-      liveSectionSub:"Current products and entry points. Internals stay under the surface.",
-      tile1Title:"On Your Side AI",
-      tile1Line:"Decision clarity in real time.",
-      tile2Title:"Clean English Core",
-      tile2Line:"Structured language progression through traversal learning.",
-      tile3Title:"The Platform",
-      tile3Line:"A routing spine into systems, tools, and future deployments.",
-      supportKicker:"UNDER THE HOOD",
-      supportText:"The deeper support systems remain below the front layer and appear only after product entry.",
-      door:"DOOR",
-      home:"HOME",
-      compass:"COMPASS",
-      products:"PRODUCTS",
-      explore:"EXPLORE",
-      gauges:"GAUGES",
-      enter:"ENTER"
-    },
-    zh:{
-      heroTitle:"产品",
-      heroSub:"现在已有的，与正在到来的。",
-      frontierKicker:"未来",
-      frontierTitle:"开发中",
-      frontierText:"实验系统、创新方向与前沿构建。",
-      liveKicker:"现在",
-      liveTitle:"已在场上",
-      liveText:"当前可进入、可使用、可理解的公开产品。",
-      spineCoreText:"进入",
-      liveSectionTitle:"当前产品",
-      liveSectionSub:"当前产品与入口。内部结构保持在表面之下。",
-      tile1Title:"On Your Side AI",
-      tile1Line:"实时决策清晰化。",
-      tile2Title:"Clean English Core",
-      tile2Line:"通过遍历式学习实现结构化语言进阶。",
-      tile3Title:"平台本身",
-      tile3Line:"进入系统、工具与未来部署的路由脊柱。",
-      supportKicker:"底层支撑",
-      supportText:"更深层的支撑系统不会出现在正面层，只有进入产品后才出现。",
-      door:"DOOR",
-      home:"HOME",
-      compass:"COMPASS",
-      products:"PRODUCTS",
-      explore:"EXPLORE",
-      gauges:"GAUGES",
-      enter:"进入"
-    },
-    es:{
-      heroTitle:"Productos",
-      heroSub:"Lo que existe ahora, y lo que viene después.",
-      frontierKicker:"FUTURO",
-      frontierTitle:"EN DESARROLLO",
-      frontierText:"Sistemas experimentales, innovación y construcciones de frontera.",
-      liveKicker:"AHORA",
-      liveTitle:"EN EL CAMPO",
-      liveText:"Ofertas actuales, sistemas utilizables y puntos públicos de entrada.",
-      spineCoreText:"ENTRAR",
-      liveSectionTitle:"Productos Activos",
-      liveSectionSub:"Productos y puntos de entrada actuales. Los internos permanecen bajo la superficie.",
-      tile1Title:"On Your Side AI",
-      tile1Line:"Claridad de decisión en tiempo real.",
-      tile2Title:"Clean English Core",
-      tile2Line:"Progresión estructurada del idioma mediante aprendizaje por recorrido.",
-      tile3Title:"La Plataforma",
-      tile3Line:"Una espina de ruteo hacia sistemas, herramientas y despliegues futuros.",
-      supportKicker:"BAJO EL CAPÓ",
-      supportText:"Los sistemas de soporte profundo permanecen fuera de la capa frontal y aparecen solo después de entrar al producto.",
-      door:"DOOR",
-      home:"HOME",
-      compass:"COMPASS",
-      products:"PRODUCTS",
-      explore:"EXPLORE",
-      gauges:"GAUGES",
-      enter:"ENTRAR"
-    }
-  };
+  t+=0.01;
+  requestAnimationFrame(render);
+}
+render();
 
-  function applyCopy(){
-    var C = COPY[lang] || COPY.en;
+/* =========================
+   INTERACTION
+========================= */
 
-    document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es") ? "es" : "en";
+const ui=document.getElementById("ui");
+const products=document.getElementById("products");
 
-    document.getElementById("heroTitle").textContent = C.heroTitle;
-    document.getElementById("heroSub").textContent = C.heroSub;
+document.getElementById("enterNow").onclick=()=>{
+  ui.style.display="none";
+  products.style.display="flex";
+};
 
-    document.getElementById("frontierKicker").textContent = C.frontierKicker;
-    document.getElementById("frontierTitle").textContent = C.frontierTitle;
-    document.getElementById("frontierText").textContent = C.frontierText;
+document.getElementById("enterFuture").onclick=()=>{
+  window.location.href="/explore/";
+};
 
-    document.getElementById("liveKicker").textContent = C.liveKicker;
-    document.getElementById("liveTitle").textContent = C.liveTitle;
-    document.getElementById("liveText").textContent = C.liveText;
-
-    document.getElementById("spineCoreText").textContent = C.spineCoreText;
-
-    document.getElementById("liveSectionTitle").textContent = C.liveSectionTitle;
-    document.getElementById("liveSectionSub").textContent = C.liveSectionSub;
-
-    document.getElementById("tile1Title").textContent = C.tile1Title;
-    document.getElementById("tile1Line").textContent = C.tile1Line;
-    document.getElementById("tile2Title").textContent = C.tile2Title;
-    document.getElementById("tile2Line").textContent = C.tile2Line;
-    document.getElementById("tile3Title").textContent = C.tile3Title;
-    document.getElementById("tile3Line").textContent = C.tile3Line;
-
-    document.getElementById("supportKicker").textContent = C.supportKicker;
-    document.getElementById("supportText").textContent = C.supportText;
-
-    document.getElementById("btnDoor").textContent = C.door;
-    document.getElementById("btnHome").textContent = C.home;
-
-    document.getElementById("dockCompass").textContent = C.compass;
-    document.getElementById("dockProducts").textContent = C.products;
-    document.getElementById("dockExplore").textContent = C.explore;
-    document.getElementById("dockGauges").textContent = C.gauges;
-
-    document.getElementById("tile1Btn").textContent = C.enter;
-    document.getElementById("tile2Btn").textContent = C.enter;
-    document.getElementById("tile3Btn").textContent = C.enter;
-  }
-
-  var livePortal = document.getElementById("livePortal");
-  var frontierPortal = document.getElementById("frontierPortal");
-  var liveSection = document.getElementById("liveSection");
-
-  livePortal.addEventListener("click", function(){
-    liveSection.classList.add("active");
-    depth = "explore";
-    syncState();
-    wireRoutes();
-    liveSection.scrollIntoView({behavior:"smooth", block:"start"});
-  }, {passive:true});
-
-  frontierPortal.addEventListener("click", function(){
-    window.location.href = "/explore/" + q();
-  }, {passive:true});
-
-  document.getElementById("langEN").addEventListener("click", function(){
-    lang = "en";
-    setLangButtons();
-    applyCopy();
-    syncState();
-    wireRoutes();
-  }, {passive:true});
-
-  document.getElementById("langZH").addEventListener("click", function(){
-    lang = "zh";
-    setLangButtons();
-    applyCopy();
-    syncState();
-    wireRoutes();
-  }, {passive:true});
-
-  document.getElementById("langES").addEventListener("click", function(){
-    lang = "es";
-    setLangButtons();
-    applyCopy();
-    syncState();
-    wireRoutes();
-  }, {passive:true});
-
-  setLangButtons();
-  applyCopy();
-  syncState();
-  wireRoutes();
-})();
+document.getElementById("backBtn").onclick=()=>{
+  products.style.display="none";
+  ui.style.display="flex";
+};
 </script>
 
 </body>

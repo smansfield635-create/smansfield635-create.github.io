@@ -37,6 +37,12 @@
   --diagnostic-bar-height: 60px;
   --diagnostic-panel-width: min(420px, calc(100vw - 24px));
   --diagnostic-panel-max-height: min(58vh, 560px);
+
+  /* normalized shared surface */
+  --shell-surface: rgba(10, 16, 28, 0.84);
+  --shell-surface-hover: rgba(18, 28, 46, 0.92);
+  --shell-border: rgba(145, 175, 255, 0.22);
+  --shell-border-hover: rgba(145, 175, 255, 0.34);
 }
 
 * {
@@ -48,15 +54,22 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
   color: var(--text-0);
   font-family: var(--font-stack);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
   position: relative;
+}
+
+/* world-mode only lock */
+body[data-mode="world"] {
+  height: 100%;
+  overflow: hidden;
 }
 
 button,
@@ -75,8 +88,13 @@ a {
 #app-shell {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   isolation: isolate;
+}
+
+body[data-mode="world"] #app-shell {
+  height: 100vh;
+  min-height: 100vh;
 }
 
 #world-canvas,
@@ -87,6 +105,7 @@ a {
   height: 100%;
   display: block;
   z-index: var(--canvas-z);
+  opacity: 0.92;
 }
 
 #hud,
@@ -120,13 +139,14 @@ a {
   pointer-events: none;
 }
 
+#nav-doors,
 .nav-doors {
   position: absolute;
   top: var(--shell-gap);
   left: var(--shell-gap);
   display: flex;
   gap: 10px;
-  z-index: var(--overlay-z);
+  z-index: calc(var(--overlay-z) + 1);
   pointer-events: auto;
 }
 
@@ -135,8 +155,8 @@ a {
   min-height: 40px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid rgba(145, 175, 255, 0.22);
-  background: rgba(10, 16, 28, 0.84);
+  border: 1px solid var(--shell-border);
+  background: var(--shell-surface);
   color: var(--text-0);
   display: inline-flex;
   align-items: center;
@@ -145,18 +165,21 @@ a {
   box-shadow: var(--panel-shadow);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, opacity 140ms ease;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-btn:hover,
 .world-btn:hover {
   transform: scale(1.02);
-  background: rgba(18, 28, 46, 0.92);
-  border-color: rgba(145, 175, 255, 0.34);
+  background: var(--shell-surface-hover);
+  border-color: var(--shell-border-hover);
 }
 
 .nav-btn:active,
@@ -171,7 +194,7 @@ a {
   right: var(--shell-gap);
   display: flex;
   gap: 10px;
-  z-index: var(--overlay-z);
+  z-index: calc(var(--overlay-z) + 1);
   pointer-events: auto;
 }
 
@@ -273,9 +296,9 @@ a {
   min-width: 110px;
   height: 38px;
   padding: 0 14px;
-  border: 1px solid rgba(145, 175, 255, 0.22);
+  border: 1px solid var(--shell-border);
   border-radius: 999px;
-  background: rgba(10, 16, 28, 0.84);
+  background: var(--shell-surface);
   color: var(--text-0);
   display: inline-flex;
   align-items: center;
@@ -291,13 +314,15 @@ a {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #diagnostics-toggle:hover,
 .diagnostics-toggle:hover {
   transform: scale(1.02);
-  background: rgba(18, 28, 46, 0.92);
-  border-color: rgba(145, 175, 255, 0.34);
+  background: var(--shell-surface-hover);
+  border-color: var(--shell-border-hover);
 }
 
 #diagnostics-toggle:active,
@@ -462,6 +487,7 @@ body[data-diagnostics="full"] .debug-panel {
     --diagnostic-bar-height: 72px;
   }
 
+  #nav-doors,
   .nav-doors {
     top: auto;
     bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 154px);

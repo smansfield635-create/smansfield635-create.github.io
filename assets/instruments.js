@@ -18,6 +18,10 @@ export function createInstruments() {
     return value && typeof value === "object" && !Array.isArray(value) ? value : {};
   }
 
+  function normalizeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
   function normalizeString(value, fallback = EMPTY) {
     return typeof value === "string" && value.trim() ? value.trim() : fallback;
   }
@@ -48,6 +52,53 @@ export function createInstruments() {
       .replace(/([A-Z])/g, " $1")
       .replace(/_/g, " ")
       .replace(/^./, (s) => s.toUpperCase());
+  }
+
+  function classifyValueTone(value) {
+    const normalized = normalizePrimitive(value);
+    if (
+      normalized === "PASS" ||
+      normalized === "STABLE" ||
+      normalized === "ASCENT" ||
+      normalized === "control.js" ||
+      normalized === "render.js" ||
+      normalized === "ROUND" ||
+      normalized === "true"
+    ) {
+      return "ok";
+    }
+
+    if (
+      normalized === "FAIL" ||
+      normalized === "COLLAPSE" ||
+      normalized === "DESCENT" ||
+      normalized === "blocked" ||
+      normalized === "denied" ||
+      normalized === "false"
+    ) {
+      return "danger";
+    }
+
+    if (normalized === EMPTY) return "muted";
+    return "default";
+  }
+
+  function renderKeyValueSection(title, data) {
+    const rows = Object.entries(data).map(([key, value]) => {
+      const tone = classifyValueTone(value);
+      const valueClass =
+        tone === "ok"
+          ? "panel-value panel-value--ok"
+          : tone === "danger"
+            ? "panel-value panel-value--danger"
+            : tone === "muted"
+              ? "panel-value panel-value--muted"
+              : "panel-value";
+
+      return `<div class="panel-row"><span class="panel-key">${escapeHTML(labelize(key))}</span><span class="${valueClass}">${escapeHTML(normalizePrimitive(value))}</span></div>`;
+    });
+
+    return `<section class="panel-section"><h3 class="panel-title">${escapeHTML(title)}</h3>${rows.join("")}</section>`;
   }
 
   function buildDirection16FromSamples(currentSample, previousSample) {
@@ -164,7 +215,92 @@ export function createInstruments() {
     return "COLLAPSE";
   }
 
-  function buildInstrumentReceipt({ currentSample, previousSample = null, tickIndex = 0 } = {}) {
+  function buildValueVector(source = {}) {
+    const valueSource = normalizeObject(source);
+    const V = clamp(valueSource.V ?? valueSource.valuation ?? 0, 0, 1);
+    const A = clamp(valueSource.A ?? valueSource.aim ?? 0, 0, 1);
+    const L = clamp(valueSource.L ?? valueSource.logic ?? 0, 0, 1);
+    const U = clamp(valueSource.U ?? valueSource.utilization ?? 0, 0, 1);
+    const EVAL = clamp(
+      valueSource.EVAL ??
+      valueSource.Evaluation ??
+      valueSource.evaluation ??
+      valueSource.E ??
+      0,
+      0,
+      1
+    );
+
+    const aggregate = clamp(Math.min(V, A, L, U, EVAL), 0, 1);
+
+    return Object.freeze({
+      V,
+      A,
+      L,
+      U,
+      EVAL,
+      aggregate
+    });
+  }
+
+  function buildPsychologyReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      type: normalizeString(source.type, "UNSET"),
+      stability: normalizeString(source.stability, "UNSET"),
+      pressure: toFixedSafe(source.pressure, 2),
+      outputClass: normalizeString(source.outputClass, "UNSET")
+    });
+  }
+
+  function buildAuthorityReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      motionOwner: normalizeString(source.motionOwner, "UNSET"),
+      projectionOwner: normalizeString(source.projectionOwner, "UNSET"),
+      inputOwner: normalizeString(source.inputOwner, "UNSET"),
+      renderSource: normalizeString(source.renderSource, "UNSET"),
+      orbitSource: normalizeString(source.orbitSource, "UNSET")
+    });
+  }
+
+  function buildMotionReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      motionRunning: source.motionRunning === true,
+      rafActive: source.rafActive === true,
+      pageVisible: source.pageVisible === true,
+      pageRestored: source.pageRestored === true,
+      yawVelocity: isFiniteNumber(source.yawVelocity) ? source.yawVelocity : null,
+      pitchVelocity: isFiniteNumber(source.pitchVelocity) ? source.pitchVelocity : null,
+      orbitVelocity: isFiniteNumber(source.orbitVelocity) ? source.orbitVelocity : null,
+      orbitPhase: isFiniteNumber(source.orbitPhase) ? source.orbitPhase : null,
+      blockedDragOnStarCount: Number.isInteger(source.blockedDragOnStarCount) ? source.blockedDragOnStarCount : 0,
+      starTapCount: Number.isInteger(source.starTapCount) ? source.starTapCount : 0
+    });
+  }
+
+  function buildTransitionReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      proposed: normalizeString(source.proposed, EMPTY),
+      admissible: source.admissible === true ? "true" : source.admissible === false ? "false" : EMPTY,
+      accepted: source.accepted === true ? "true" : source.accepted === false ? "false" : EMPTY,
+      blockedReason: normalizeString(source.blockedReason, EMPTY),
+      family: normalizeString(source.family, EMPTY)
+    });
+  }
+
+  function buildInstrumentReceipt({
+    currentSample,
+    previousSample = null,
+    tickIndex = 0,
+    valueState = null,
+    psychologyState = null,
+    motionState = null,
+    authorityState = null,
+    transitionState = null
+  } = {}) {
     if (!currentSample) {
       return Object.freeze({
         stateIndex: 0,
@@ -179,7 +315,12 @@ export function createInstruments() {
           phase: "VOID",
           terrainClass: "VOID",
           stabilityClass: "COLLAPSE"
-        })
+        }),
+        value: buildValueVector(valueState),
+        psychology: buildPsychologyReceipt(psychologyState),
+        motion: buildMotionReceipt(motionState),
+        authority: buildAuthorityReceipt(authorityState),
+        transition: buildTransitionReceipt(transitionState)
       });
     }
 
@@ -201,39 +342,20 @@ export function createInstruments() {
         phase: buildWorldPhase(currentSample),
         terrainClass: normalizeString(currentSample.terrainClass, "VOID"),
         stabilityClass: buildStabilityClass(coherence)
-      })
+      }),
+      value: buildValueVector(valueState),
+      psychology: buildPsychologyReceipt(psychologyState),
+      motion: buildMotionReceipt(motionState),
+      authority: buildAuthorityReceipt(authorityState),
+      transition: buildTransitionReceipt(transitionState)
     });
-  }
-
-  function classifyValueTone(value) {
-    const normalized = normalizePrimitive(value);
-    if (normalized === "PASS" || normalized === "STABLE" || normalized === "ASCENT") return "ok";
-    if (normalized === "FAIL" || normalized === "COLLAPSE" || normalized === "DESCENT") return "danger";
-    if (normalized === EMPTY) return "muted";
-    return "default";
-  }
-
-  function renderKeyValueSection(title, data) {
-    const rows = Object.entries(data).map(([key, value]) => {
-      const tone = classifyValueTone(value);
-      const valueClass =
-        tone === "ok"
-          ? "panel-value panel-value--ok"
-          : tone === "danger"
-            ? "panel-value panel-value--danger"
-            : tone === "muted"
-              ? "panel-value panel-value--muted"
-              : "panel-value";
-
-      return `<div class="panel-row"><span class="panel-key">${escapeHTML(labelize(key))}</span><span class="${valueClass}">${escapeHTML(normalizePrimitive(value))}</span></div>`;
-    });
-
-    return `<section class="panel-section"><h3 class="panel-title">${escapeHTML(title)}</h3>${rows.join("")}</section>`;
   }
 
   function renderCompactBarHTML(runtime = {}) {
     const instrument = normalizeObject(runtime.instrument);
     const summary = normalizeObject(runtime.planetField?.summary);
+    const motion = normalizeObject(instrument.motion);
+    const authority = normalizeObject(instrument.authority);
 
     return `
       <div class="diagnostic-bar__group">
@@ -250,8 +372,16 @@ export function createInstruments() {
           <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(instrument.stateIndex))}</span>
         </span>
         <span class="diagnostic-pill">
-          <span class="diagnostic-pill__label">Coherence</span>
+          <span class="diagnostic-pill__label">C</span>
           <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(instrument.coherence, 2))}</span>
+        </span>
+        <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Orbit</span>
+          <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(motion.orbitVelocity, 4))}</span>
+        </span>
+        <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Owner</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(authority.motionOwner))}</span>
         </span>
         <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Land</span>
@@ -267,6 +397,11 @@ export function createInstruments() {
     const summary = normalizeObject(runtime.planetField?.summary);
     const verification = normalizeObject(runtime.verification);
     const failure = normalizeObject(runtime.failure);
+    const value = normalizeObject(instrument.value);
+    const psychology = normalizeObject(instrument.psychology);
+    const motion = normalizeObject(instrument.motion);
+    const authority = normalizeObject(instrument.authority);
+    const transition = normalizeObject(instrument.transition);
 
     const sections = [
       renderKeyValueSection("Runtime", Object.freeze({
@@ -283,10 +418,50 @@ export function createInstruments() {
         gate: normalizePrimitive(instrument.gate),
         trajectoryClass: normalizePrimitive(instrument.trajectoryClass)
       })),
+      renderKeyValueSection("Value", Object.freeze({
+        valuation: toFixedSafe(value.V, 2),
+        aim: toFixedSafe(value.A, 2),
+        logic: toFixedSafe(value.L, 2),
+        utilization: toFixedSafe(value.U, 2),
+        evaluation: toFixedSafe(value.EVAL, 2),
+        aggregate: toFixedSafe(value.aggregate, 2)
+      })),
+      renderKeyValueSection("Psychology", Object.freeze({
+        type: normalizePrimitive(psychology.type),
+        stability: normalizePrimitive(psychology.stability),
+        pressure: normalizePrimitive(psychology.pressure),
+        outputClass: normalizePrimitive(psychology.outputClass)
+      })),
       renderKeyValueSection("Vector", Object.freeze({
         dx: toFixedSafe(instrument.vector?.dx, 2),
         dy: toFixedSafe(instrument.vector?.dy, 2),
         magnitude: toFixedSafe(instrument.vector?.magnitude, 2)
+      })),
+      renderKeyValueSection("Motion", Object.freeze({
+        motionRunning: normalizePrimitive(motion.motionRunning),
+        rafActive: normalizePrimitive(motion.rafActive),
+        pageVisible: normalizePrimitive(motion.pageVisible),
+        pageRestored: normalizePrimitive(motion.pageRestored),
+        yawVelocity: toFixedSafe(motion.yawVelocity, 4),
+        pitchVelocity: toFixedSafe(motion.pitchVelocity, 4),
+        orbitVelocity: toFixedSafe(motion.orbitVelocity, 4),
+        orbitPhase: toFixedSafe(motion.orbitPhase, 3),
+        blockedDragOnStarCount: normalizePrimitive(motion.blockedDragOnStarCount),
+        starTapCount: normalizePrimitive(motion.starTapCount)
+      })),
+      renderKeyValueSection("Authority", Object.freeze({
+        motionOwner: normalizePrimitive(authority.motionOwner),
+        projectionOwner: normalizePrimitive(authority.projectionOwner),
+        inputOwner: normalizePrimitive(authority.inputOwner),
+        renderSource: normalizePrimitive(authority.renderSource),
+        orbitSource: normalizePrimitive(authority.orbitSource)
+      })),
+      renderKeyValueSection("Transition", Object.freeze({
+        proposed: normalizePrimitive(transition.proposed),
+        admissible: normalizePrimitive(transition.admissible),
+        accepted: normalizePrimitive(transition.accepted),
+        blockedReason: normalizePrimitive(transition.blockedReason),
+        family: normalizePrimitive(transition.family)
       })),
       renderKeyValueSection("World", Object.freeze({
         lobeId: normalizePrimitive(instrument.world?.lobeId),

@@ -51,7 +51,9 @@ export function createControlSystem() {
     row: 0,
     col: 0,
     cellIndex: 0,
-    cellId: WORLD_KERNEL.localGrid.cellIds[0]
+    cellId: WORLD_KERNEL.localGrid.cellIds[0],
+    sampleX: 0,
+    sampleY: 0
   });
 
   function resize(width, height) {

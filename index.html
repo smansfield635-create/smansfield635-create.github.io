@@ -1,138 +1,427 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nine Summits World</title>
-<link rel="stylesheet" href="./assets/ui.css">
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+  <title>Nine Summits World</title>
+  <meta
+    name="description"
+    content="Compressed 256×256 world engine bootstrap shell."
+  >
+  <link rel="stylesheet" href="./assets/ui.css">
 </head>
-
 <body data-mode="world" data-diagnostics="peek">
+  <div id="app-shell">
+    <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
 
-<div id="app-shell">
+    <div id="hud" class="hud">
+      <div id="nav-doors" aria-label="Primary doors">
+        <a href="/home/" class="nav-btn">Home</a>
+        <a href="/explore/" class="nav-btn">Explore</a>
+      </div>
 
-  <!-- WORLD -->
-  <canvas id="world-canvas"></canvas>
+      <div id="runtime-banner" class="runtime-banner" aria-live="polite">
+        <span id="runtime-phase">BOOT</span>
+      </div>
 
-  <!-- NAV DOORS -->
-  <div id="nav-doors">
-    <a href="/home/index.html" class="nav-btn">HOME</a>
-    <a href="/explore/index.html" class="nav-btn">EXPLORE</a>
-  </div>
+      <div id="debug-panel" class="debug-panel" aria-live="polite">
+        <section class="panel-section">
+          <h3 class="panel-title">Loading</h3>
+          <div class="panel-row">
+            <span class="panel-key">State</span>
+            <span class="panel-value">Booting application shell…</span>
+          </div>
+        </section>
+      </div>
 
-  <!-- HUD -->
-  <div id="hud">
+      <div id="compass-overlay" class="compass-overlay" aria-hidden="true"></div>
 
-    <div id="runtime-banner">
-      <span id="runtime-phase">BOOT</span>
-    </div>
+      <div id="diagnostics-dock" class="diagnostics-dock">
+        <div id="diagnostics-bar" class="diagnostics-bar" aria-live="polite">
+          <div id="diagnostics-summary" class="diagnostic-bar__summary">
+            <div class="diagnostic-bar__group">
+              <span class="diagnostic-pill">
+                <span class="diagnostic-pill__label">State</span>
+                <span class="diagnostic-pill__value">Booting…</span>
+              </span>
+            </div>
+          </div>
 
-    <div id="debug-panel"></div>
-
-    <div id="diagnostics-dock">
-      <div id="diagnostics-bar">
-        <div id="diagnostics-summary"></div>
-        <button id="diagnostics-toggle"></button>
+          <button
+            id="diagnostics-toggle"
+            class="diagnostics-toggle"
+            type="button"
+            aria-label="Toggle diagnostics"
+            aria-expanded="false"
+          ></button>
+        </div>
       </div>
     </div>
-
   </div>
 
-</div>
+  <script type="module">
+    import { WORLD_KERNEL } from "./world/world_kernel.js";
+    import { createPlanetEngine } from "./world/planet_engine.js";
+    import { createRuleEngine } from "./world/rule_engine.js";
+    import { createRenderer } from "./world/render.js";
+    import { createControlSystem } from "./world/control.js";
+    import { createInstruments } from "./assets/instruments.js";
 
-<script type="module">
-import { WORLD_KERNEL } from "./world/world_kernel.js";
-import { createPlanetEngine } from "./world/planet_engine.js";
-import { createRenderer } from "./world/render.js";
-import { createControlSystem } from "./world/control.js";
-import { createInstruments } from "./assets/instruments.js";
+    const worldCanvas = document.getElementById("world-canvas");
+    const debugPanel = document.getElementById("debug-panel");
+    const runtimePhase = document.getElementById("runtime-phase");
+    const diagnosticsToggle = document.getElementById("diagnostics-toggle");
+    const diagnosticsSummary = document.getElementById("diagnostics-summary");
 
-const canvas = document.getElementById("world-canvas");
-const ctx = canvas.getContext("2d");
+    const planetEngine = createPlanetEngine();
+    const ruleEngine = createRuleEngine();
+    const renderer = createRenderer();
+    const control = createControlSystem();
+    const instruments = createInstruments();
 
-const renderer = createRenderer();
-const control = createControlSystem();
-const engine = createPlanetEngine();
-const instruments = createInstruments();
+    const ctx = worldCanvas.getContext("2d", { alpha: true });
 
-const runtime = {
-  phase: "BOOT",
-  planetField: null,
-  control: {},
-  fps: 0
-};
+    const runtime = {
+      phase: "BOOT",
+      activeFile: "index.html",
+      kernel: WORLD_KERNEL,
+      planetField: null,
+      state: {
+        currentStateBuffer: null,
+        nextStateBuffer: null,
+        transitionSummary: null,
+        stateSummary: null,
+        tickIndex: 0
+      },
+      control: {
+        cameraState: null,
+        projectionSummary: null,
+        cardinals: null
+      },
+      verification: null,
+      failure: null,
+      dtMs: 0,
+      fps: 0,
+      elapsedMs: 0
+    };
 
-let last = performance.now();
+    let frameHandle = 0;
+    let lastFrameAt = performance.now();
+    let startedAt = lastFrameAt;
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
 
-/* ---------- CORE ---------- */
+    let panelCacheKey = "";
+    let compactCacheKey = "";
+    let lastDiagnosticsWriteAt = 0;
+    const DIAGNOSTICS_INTERVAL_MS = 200;
 
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  control.resize(canvas.width, canvas.height);
-}
+    function setPhase(phase) {
+      runtime.phase = phase;
+      if (runtimePhase) runtimePhase.textContent = phase;
+    }
 
-function buildWorld(){
-  runtime.planetField = engine.buildPlanetField({});
-}
+    function isFiniteNumber(value) {
+      return typeof value === "number" && Number.isFinite(value);
+    }
 
-function render(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+    function buildPanelCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
+      const failure = runtime.failure ?? {};
+      const stateSummary = runtime.state?.stateSummary ?? {};
+      const transitionSummary = runtime.state?.transitionSummary ?? {};
 
-  if(!runtime.planetField) return;
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        elapsedMs: isFiniteNumber(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
+        sampleX: projection.sampleX ?? "—",
+        sampleY: projection.sampleY ?? "—",
+        cellId: projection.cellId ?? "—",
+        summarySampleCount: summary.sampleCount ?? "—",
+        summaryLandCount: summary.landCount ?? "—",
+        summaryWaterCount: summary.waterCount ?? "—",
+        stateSampleCount: stateSummary.sampleCount ?? "—",
+        mutatedCount: stateSummary.mutatedCount ?? "—",
+        admissibleCount: transitionSummary.admissibleCount ?? "—",
+        verificationPass:
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING",
+        failurePhase: failure.phase ?? "—",
+        failureMessage: failure.message ?? "—"
+      });
+    }
 
-  renderer.renderPlanet({
-    ctx,
-    planetField: runtime.planetField,
-    projectPoint: (lat,lon)=>control.projectSphere(lat,lon),
-    viewState: control.getCameraState()
-  });
-}
+    function buildCompactCacheKey() {
+      const projection = runtime.control?.projectionSummary ?? {};
+      const summary = runtime.planetField?.summary ?? {};
+      const verification = runtime.verification ?? {};
 
-function frame(now){
-  const dt = now - last;
-  last = now;
-  runtime.fps = 1000 / dt;
+      return JSON.stringify({
+        phase: runtime.phase,
+        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
+        cellId: projection.cellId ?? "—",
+        sampleCount: summary.sampleCount ?? "—",
+        verificationPass:
+          verification?.pass === true ? "PASS" :
+          verification?.pass === false ? "FAIL" :
+          verification?.pass ?? "MISSING"
+      });
+    }
 
-  control.stepInertia();
-  runtime.control = control.getCameraState();
+    function writePanels(force = false) {
+      const now = performance.now();
 
-  render();
+      if (!force && now - lastDiagnosticsWriteAt < DIAGNOSTICS_INTERVAL_MS) {
+        return;
+      }
 
-  requestAnimationFrame(frame);
-}
+      const nextPanelKey = buildPanelCacheKey();
+      const nextCompactKey = buildCompactCacheKey();
 
-/* ---------- EVENTS ---------- */
+      if (debugPanel && (force || nextPanelKey !== panelCacheKey)) {
+        debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+        panelCacheKey = nextPanelKey;
+      }
 
-let dragging = false;
-let lx=0, ly=0;
+      if (diagnosticsSummary && (force || nextCompactKey !== compactCacheKey)) {
+        diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+        compactCacheKey = nextCompactKey;
+      }
 
-canvas.addEventListener("pointerdown", e=>{
-  dragging = true;
-  lx=e.clientX; ly=e.clientY;
-});
+      lastDiagnosticsWriteAt = now;
+    }
 
-window.addEventListener("pointermove", e=>{
-  if(!dragging) return;
-  control.applyDrag(e.clientX-lx, e.clientY-ly);
-  lx=e.clientX; ly=e.clientY;
-});
+    function resizeWorld() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
 
-window.addEventListener("pointerup", ()=> dragging=false);
+      worldCanvas.width = width;
+      worldCanvas.height = height;
 
-/* ---------- START ---------- */
+      control.resize(width, height);
+    }
 
-function start(){
-  resize();
-  buildWorld();
-  runtime.phase="RUNNING";
-  requestAnimationFrame(frame);
-}
+    function buildProjectionFunction() {
+      return function projectPoint(latDeg, lonDeg, radiusOffsetPx = 0) {
+        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
+      };
+    }
 
-window.addEventListener("resize", resize);
+    function updateControlState() {
+      runtime.control.cameraState = control.getCameraState();
+      runtime.control.projectionSummary = control.getProjectionSummary();
+      runtime.control.cardinals = control.getCardinals();
+    }
 
-start();
-</script>
+    function updateTiming(now) {
+      const dtMs = now - lastFrameAt;
+      lastFrameAt = now;
+      runtime.dtMs = dtMs;
+      runtime.fps = dtMs > 0 ? 1000 / dtMs : 0;
+      runtime.elapsedMs = now - startedAt;
+    }
 
+    function buildPlanetFieldOnce() {
+      runtime.planetField = planetEngine.buildPlanetField({});
+    }
+
+    function seedStateOnce() {
+      if (!runtime.planetField?.samples) return;
+
+      const seeded = ruleEngine.seedStateBuffer(runtime.planetField.samples);
+
+      runtime.state.currentStateBuffer = seeded;
+      runtime.state.nextStateBuffer = seeded;
+      runtime.state.transitionSummary = Object.freeze({
+        tickIndex: 0,
+        activeRuleFamilies: Object.freeze([
+          ...(WORLD_KERNEL.ruleEngine?.tickContract?.firstRuleFamilies ?? [])
+        ]),
+        admissibleCount: 0,
+        blockedTransitionCount: 0,
+        transitionCounts: Object.freeze({
+          FREEZE_MELT: 0,
+          WATER_RETENTION_SPREAD: 0,
+          WETTING_DRYING: 0
+        })
+      });
+      runtime.state.stateSummary = ruleEngine.summarizeStateLattice(seeded, null);
+      runtime.state.tickIndex = 0;
+    }
+
+    function verifyRuntimeSafely() {
+      try {
+        const verifier = WORLD_KERNEL?.verification?.verifyCanonicalStructure;
+        if (typeof verifier !== "function") {
+          runtime.verification = null;
+          return;
+        }
+
+        runtime.verification = verifier({
+          fileHomes: WORLD_KERNEL?.canon?.fileHomeRegistry,
+          dependency: WORLD_KERNEL?.canon?.dependencyRegistry ?? WORLD_KERNEL?.canon?.chronologyRegistry,
+          ownership: WORLD_KERNEL?.canon?.ownershipRegistry,
+          duplicateTruth: WORLD_KERNEL?.canon?.duplicateTruthRegistry,
+          pulseOrder: WORLD_KERNEL?.planetField?.order,
+          sampleContract: WORLD_KERNEL?.planetField?.sampleContract,
+          scope: WORLD_KERNEL?.scope
+        });
+      } catch {
+        runtime.verification = null;
+      }
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
+    }
+
+    function renderFrame() {
+      clearCanvas();
+
+      if (!runtime.planetField) {
+        return;
+      }
+
+      renderer.renderPlanet({
+        ctx,
+        planetField: runtime.planetField,
+        projectPoint: buildProjectionFunction(),
+        viewState: runtime.control.cameraState
+      });
+    }
+
+    function frame(now) {
+      updateTiming(now);
+
+      if (!isDragging) {
+        control.stepInertia();
+      }
+
+      updateControlState();
+      renderFrame();
+      writePanels(false);
+
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function onPointerDown(event) {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }
+
+    function onPointerMove(event) {
+      if (!isDragging) return;
+      if (!runtime.planetField) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      control.applyDrag(dx, dy);
+      control.updateSelection(event.clientX, event.clientY);
+      updateControlState();
+      renderFrame();
+      writePanels(false);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    function cycleDiagnostics() {
+      const current = document.body.dataset.diagnostics || "peek";
+      const next = current === "full" ? "peek" : "full";
+
+      document.body.dataset.diagnostics = next;
+
+      if (diagnosticsToggle) {
+        diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
+      }
+
+      writePanels(true);
+    }
+
+    function bindEvents() {
+      diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
+
+      window.addEventListener("resize", () => {
+        resizeWorld();
+        updateControlState();
+        renderFrame();
+        writePanels(true);
+      });
+
+      worldCanvas.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    }
+
+    function beginRunningLoop() {
+      setPhase("RUNNING");
+      startedAt = performance.now();
+      lastFrameAt = startedAt;
+      frameHandle = requestAnimationFrame(frame);
+    }
+
+    function failStartup(error) {
+      runtime.failure = {
+        phase: "startup",
+        message: error instanceof Error ? error.message : String(error)
+      };
+      setPhase("ERROR");
+      renderFrame();
+      writePanels(true);
+
+      if (frameHandle) {
+        cancelAnimationFrame(frameHandle);
+        frameHandle = 0;
+      }
+    }
+
+    function continueStartupAfterPaint() {
+      requestAnimationFrame(() => {
+        try {
+          buildPlanetFieldOnce();
+          seedStateOnce();
+          updateControlState();
+          verifyRuntimeSafely();
+          renderFrame();
+          writePanels(true);
+          bindEvents();
+          beginRunningLoop();
+        } catch (error) {
+          failStartup(error);
+        }
+      });
+    }
+
+    function start() {
+      try {
+        resizeWorld();
+        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        updateControlState();
+        renderFrame();
+        setPhase("INITIALIZING");
+        writePanels(true);
+        continueStartupAfterPaint();
+      } catch (error) {
+        failStartup(error);
+      }
+    }
+
+    start();
+  </script>
 </body>
 </html>

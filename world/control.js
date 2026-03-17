@@ -35,6 +35,9 @@ export function createControlSystem() {
   let yawVelocity = 0;
   let pitchVelocity = 0;
 
+  let orbitPhase = 0;
+  let orbitAngularVelocity = 0.00018;
+
   const cameraState = {
     width: 0,
     height: 0,
@@ -72,6 +75,14 @@ export function createControlSystem() {
     );
   }
 
+  function recomputeOrbitalVelocity() {
+    const baseOrbitSpeed = 0.00018;
+    const correlated =
+      ((Math.abs(yawVelocity) + (Math.abs(pitchVelocity) * 0.5)) / 16.6667) * 0.95;
+
+    orbitAngularVelocity = baseOrbitSpeed + correlated;
+  }
+
   function applyDrag(deltaX, deltaY) {
     yaw = wrapAngle(yaw + deltaX * WORLD_KERNEL.constants.dragSensitivity);
     pitch += deltaY * WORLD_KERNEL.constants.dragSensitivity;
@@ -80,16 +91,23 @@ export function createControlSystem() {
     pitchVelocity = deltaY * WORLD_KERNEL.constants.dragSensitivity * 0.45;
 
     clampPitch();
+    recomputeOrbitalVelocity();
   }
 
-  function stepInertia() {
-    yaw = wrapAngle(yaw + yawVelocity);
-    pitch += pitchVelocity;
+  function stepInertia(dtMs = 16.6667) {
+    const frameScale = clamp(dtMs / 16.6667, 0.25, 4);
 
-    yawVelocity *= WORLD_KERNEL.constants.inertiaDecay;
-    pitchVelocity *= WORLD_KERNEL.constants.inertiaDecay;
+    yaw = wrapAngle(yaw + yawVelocity * frameScale);
+    pitch += pitchVelocity * frameScale;
+
+    const decay = Math.pow(WORLD_KERNEL.constants.inertiaDecay, frameScale);
+    yawVelocity *= decay;
+    pitchVelocity *= decay;
 
     clampPitch();
+    recomputeOrbitalVelocity();
+
+    orbitPhase = wrapAngle(orbitPhase + orbitAngularVelocity * dtMs);
   }
 
   function getBasis() {
@@ -304,6 +322,26 @@ export function createControlSystem() {
     });
   }
 
+  function getOrbitalState() {
+    return Object.freeze({
+      orbitPhase,
+      orbitAngularVelocity,
+      correlatedFromGlobe:
+        ((Math.abs(yawVelocity) + (Math.abs(pitchVelocity) * 0.5)) / 16.6667) * 0.95
+    });
+  }
+
+  function getMotionState() {
+    return Object.freeze({
+      yaw,
+      pitch,
+      yawVelocity,
+      pitchVelocity,
+      orbitPhase,
+      orbitAngularVelocity
+    });
+  }
+
   function setOrientation(input = {}) {
     const next = normalizeObject(input);
 
@@ -320,6 +358,21 @@ export function createControlSystem() {
     if (isFiniteNumber(next.pitchVelocity)) {
       pitchVelocity = next.pitchVelocity;
     }
+    recomputeOrbitalVelocity();
+  }
+
+  function restoreMotionState(input = {}) {
+    const next = normalizeObject(input);
+
+    if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
+    if (isFiniteNumber(next.pitch)) pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
+    if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
+    if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
+    if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
+    if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = next.orbitAngularVelocity;
+
+    clampPitch();
+    recomputeOrbitalVelocity();
   }
 
   return Object.freeze({
@@ -327,12 +380,15 @@ export function createControlSystem() {
     applyDrag,
     stepInertia,
     setOrientation,
+    restoreMotionState,
     projectSphere,
     inverseProjection,
     updateSelection,
     getCameraState,
     getProjectionSummary,
-    getCardinals
+    getCardinals,
+    getOrbitalState,
+    getMotionState
   });
 }
 

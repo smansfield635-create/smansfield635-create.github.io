@@ -5,34 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Nine Summits World</title>
   <meta name="description" content="World entry gateway.">
-
   <link rel="stylesheet" href="./assets/ui.css">
+
+  <style>
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#030712;
+    }
+
+    body[data-mode="door"]{
+      position:relative;
+    }
+
+    #app-shell{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+    }
+
+    #world-canvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    #door-ui{
+      position:fixed;
+      inset:0;
+      z-index:10;
+      display:flex;
+      align-items:flex-start;
+      justify-content:flex-start;
+      pointer-events:none;
+    }
+
+    .door-panel{
+      margin:96px 0 0 24px;
+      width:min(520px,calc(100vw - 48px));
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      pointer-events:auto;
+    }
+
+    .door-title{
+      margin:0;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-size:clamp(36px,6vw,64px);
+      line-height:0.98;
+      font-weight:900;
+      letter-spacing:-0.03em;
+      text-shadow:0 8px 30px rgba(0,0,0,.45);
+    }
+
+    .door-subtitle{
+      margin:0;
+      color:rgba(255,255,255,.92);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-size:clamp(18px,2.3vw,30px);
+      line-height:1.2;
+      font-weight:700;
+      text-shadow:0 6px 24px rgba(0,0,0,.35);
+    }
+
+    .door-copy{
+      margin:2px 0 0;
+      color:rgba(255,255,255,.76);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-size:14px;
+      line-height:1.45;
+      max-width:42ch;
+      text-shadow:0 4px 18px rgba(0,0,0,.35);
+    }
+
+    .door-options{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:4px;
+    }
+
+    .door-btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.20);
+      background:rgba(255,255,255,.94);
+      color:#1f2937;
+      border-radius:999px;
+      min-height:48px;
+      padding:0 22px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:.02em;
+      box-shadow:
+        0 10px 28px rgba(0,0,0,.22),
+        inset 0 1px 0 rgba(255,255,255,.65);
+      cursor:pointer;
+      transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease;
+    }
+
+    .door-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,.28),
+        inset 0 1px 0 rgba(255,255,255,.65);
+    }
+
+    .door-btn:active{
+      transform:translateY(0);
+    }
+
+    .door-btn.alt{
+      background:rgba(255,255,255,.88);
+    }
+
+    .door-note{
+      color:rgba(255,255,255,.58);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      font-size:12px;
+      font-weight:600;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-top:4px;
+    }
+
+    @media (max-width: 700px){
+      .door-panel{
+        margin:88px 0 0 18px;
+        width:min(460px,calc(100vw - 36px));
+        gap:12px;
+      }
+
+      .door-options{
+        gap:10px;
+      }
+
+      .door-btn{
+        min-height:44px;
+        padding:0 18px;
+        font-size:14px;
+      }
+    }
+  </style>
 </head>
 
 <body data-mode="door">
+  <div id="app-shell">
+    <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
-  <canvas id="world-canvas"></canvas>
+    <div id="door-ui" aria-live="polite">
+      <div class="door-panel">
+        <h1 class="door-title">NINE SUMMITS</h1>
+        <p class="door-subtitle">Choose your reality.</p>
+        <p class="door-copy">
+          Round enters the living world. Flat reduces depth and centers content.
+        </p>
 
-  <!-- DOOR UI -->
-  <div id="door-ui">
+        <div class="door-options">
+          <button id="btn-round" class="door-btn" type="button">WORLD IS ROUND</button>
+          <button id="btn-flat" class="door-btn alt" type="button">WORLD IS FLAT</button>
+        </div>
 
-    <div class="door-title">
-      <h1>NINE SUMMITS</h1>
-      <p>Choose your reality.</p>
+        <div class="door-note">Door mode only · no products mounted here</div>
+      </div>
     </div>
-
-    <div class="door-options">
-
-      <button id="btn-round" class="door-btn">
-        WORLD IS ROUND
-      </button>
-
-      <button id="btn-flat" class="door-btn alt">
-        WORLD IS FLAT
-      </button>
-
-    </div>
-
   </div>
 
   <script type="module">
@@ -41,61 +187,138 @@
     import { createControlSystem } from "./world/control.js";
 
     const canvas = document.getElementById("world-canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
 
-    const engine = createPlanetEngine();
+    const buttonRound = document.getElementById("btn-round");
+    const buttonFlat = document.getElementById("btn-flat");
+    const doorUI = document.getElementById("door-ui");
+
+    const planetEngine = createPlanetEngine();
     const renderer = createRenderer();
     const control = createControlSystem();
 
     const runtime = {
-      planetField: null
+      planetField: null,
+      started: false
     };
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      control.resize(canvas.width, canvas.height);
+    let rafId = 0;
+    let lastFrameAt = performance.now();
+    let isDragging = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    function resizeWorld() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      control.resize(width, height);
     }
 
-    function render() {
+    function renderFrame() {
       if (!runtime.planetField) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       renderer.renderPlanet({
         ctx,
         planetField: runtime.planetField,
-        projectPoint: (lat, lon, r) => control.projectSphere(lat, lon, r),
+        projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => {
+          return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
+        },
         viewState: control.getCameraState()
       });
     }
 
-    function frame() {
-      control.stepInertia();
-      render();
-      requestAnimationFrame(frame);
+    function frame(now) {
+      const dtMs = now - lastFrameAt;
+      lastFrameAt = now;
+
+      if (!isDragging) {
+        control.stepInertia(dtMs);
+      }
+
+      renderFrame();
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function onPointerDown(event) {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }
+
+    function onPointerMove(event) {
+      if (!isDragging) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      control.applyDrag(dx, dy);
+      renderFrame();
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    function bindEvents() {
+      window.addEventListener("resize", () => {
+        resizeWorld();
+        renderFrame();
+      });
+
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerup", onPointerUp, { passive: true });
+      window.addEventListener("pointercancel", onPointerUp, { passive: true });
+
+      buttonRound.addEventListener("click", () => {
+        window.location.href = "/world/gratitude/";
+      });
+
+      buttonFlat.addEventListener("click", () => {
+        window.location.href = "/home/?mode=flat";
+      });
+
+      doorUI.addEventListener("pointerdown", () => {
+        isDragging = false;
+      });
+
+      canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
     }
 
     function start() {
-      resize();
-      runtime.planetField = engine.buildPlanetField({});
-      frame();
+      resizeWorld();
+      runtime.planetField = planetEngine.buildPlanetField({});
+      bindEvents();
+      renderFrame();
+
+      requestAnimationFrame(() => {
+        doorUI.style.opacity = "1";
+      });
+
+      if (!runtime.started) {
+        runtime.started = true;
+        rafId = requestAnimationFrame(frame);
+      }
     }
 
-    // ===== DOOR LOGIC =====
+    function stop() {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
 
-    document.getElementById("btn-round").addEventListener("click", () => {
-      // ENTER WORLD → ZOOM INTO GRATITUDE
-      window.location.href = "/world/gratitude/";
-    });
-
-    document.getElementById("btn-flat").addEventListener("click", () => {
-      // FLAT MODE → CONTENT ONLY
-      window.location.href = "/home/?mode=flat";
-    });
-
-    window.addEventListener("resize", resize);
+    window.addEventListener("pagehide", stop, { passive: true });
 
     start();
   </script>
-
 </body>
 </html>

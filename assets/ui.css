@@ -4,9 +4,6 @@
   --bg-2: #0f1728;
   --bg-3: #152033;
 
-  --site-bg: #f3efe7;
-  --site-ink: #171717;
-
   --panel-bg: rgba(10, 16, 28, 0.78);
   --panel-border: rgba(145, 175, 255, 0.22);
   --panel-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
@@ -40,10 +37,6 @@
   --diagnostic-bar-height: 60px;
   --diagnostic-panel-width: min(420px, calc(100vw - 24px));
   --diagnostic-panel-max-height: min(58vh, 560px);
-
-  --route-max: 1200px;
-  --route-shell: rgba(7, 11, 19, 0.74);
-  --route-stroke: rgba(255, 255, 255, 0.10);
 }
 
 * {
@@ -55,39 +48,22 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
+  color: var(--text-0);
   font-family: var(--font-stack);
-}
-
-html {
-  background: var(--site-bg);
+  overflow: hidden;
 }
 
 body {
-  color: var(--site-ink);
-}
-
-body[data-mode="world"] {
-  height: 100%;
-  overflow: hidden;
   position: relative;
-  background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
-  color: var(--text-0);
-}
-
-body[data-mode="route"] {
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: relative;
-  background: var(--site-bg);
-  color: var(--site-ink);
 }
 
 button,
 input,
 select,
-textarea {
+textarea,
+a {
   font: inherit;
 }
 
@@ -144,55 +120,59 @@ a {
   pointer-events: none;
 }
 
-#nav-doors {
+.nav-doors {
   position: absolute;
   top: var(--shell-gap);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 40;
+  left: var(--shell-gap);
   display: flex;
   gap: 10px;
+  z-index: var(--overlay-z);
   pointer-events: auto;
 }
 
 .nav-btn,
-.route-btn,
-.route-link-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 0 14px;
+.world-btn {
+  min-height: 40px;
+  padding: 0 16px;
   border-radius: 999px;
   border: 1px solid rgba(145, 175, 255, 0.22);
   background: rgba(10, 16, 28, 0.84);
   color: var(--text-0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   box-shadow: var(--panel-shadow);
   backdrop-filter: blur(10px);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  cursor: pointer;
   transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
-}
-
-body[data-mode="route"] .route-btn,
-body[data-mode="route"] .route-link-btn {
-  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .nav-btn:hover,
-.route-btn:hover,
-.route-link-btn:hover {
+.world-btn:hover {
   transform: scale(1.02);
   background: rgba(18, 28, 46, 0.92);
   border-color: rgba(145, 175, 255, 0.34);
 }
 
 .nav-btn:active,
-.route-btn:active,
-.route-link-btn:active {
+.world-btn:active {
   transform: scale(0.98);
+}
+
+#world-actions,
+.world-actions {
+  position: absolute;
+  top: var(--shell-gap);
+  right: var(--shell-gap);
+  display: flex;
+  gap: 10px;
+  z-index: var(--overlay-z);
+  pointer-events: auto;
 }
 
 #compass-overlay,
@@ -288,17 +268,8 @@ body[data-mode="route"] .route-link-btn {
   font-weight: 700;
 }
 
-.diagnostic-pill--ok .diagnostic-pill__value {
-  color: var(--ok);
-}
-
-.diagnostic-pill--danger .diagnostic-pill__value {
-  color: var(--danger);
-}
-
 #diagnostics-toggle,
 .diagnostics-toggle {
-  width: auto;
   min-width: 110px;
   height: 38px;
   padding: 0 14px;
@@ -419,18 +390,6 @@ body[data-mode="route"] .route-link-btn {
   color: var(--text-muted);
 }
 
-body[data-diagnostics="hidden"] #debug-panel,
-body[data-diagnostics="hidden"] .debug-panel {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-}
-
-body[data-diagnostics="hidden"] #diagnostics-toggle::before,
-body[data-diagnostics="hidden"] .diagnostics-toggle::before {
-  content: "Open";
-}
-
 body[data-diagnostics="peek"] #debug-panel,
 body[data-diagnostics="peek"] .debug-panel {
   opacity: 0;
@@ -438,36 +397,11 @@ body[data-diagnostics="peek"] .debug-panel {
   transform: translateY(10px);
 }
 
-body[data-diagnostics="peek"] #diagnostics-toggle::before,
-body[data-diagnostics="peek"] .diagnostics-toggle::before {
-  content: "Open";
-}
-
 body[data-diagnostics="full"] #debug-panel,
 body[data-diagnostics="full"] .debug-panel {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-}
-
-body[data-diagnostics="full"] #diagnostics-toggle::before,
-body[data-diagnostics="full"] .diagnostics-toggle::before {
-  content: "Close";
-}
-
-body[data-mode="route"] #hud,
-body[data-mode="route"] .hud,
-body[data-mode="route"] #diagnostics-dock,
-body[data-mode="route"] .diagnostics-dock,
-body[data-mode="route"] #runtime-banner,
-body[data-mode="route"] .runtime-banner,
-body[data-mode="route"] #debug-panel,
-body[data-mode="route"] .debug-panel,
-body[data-mode="route"] #compass-overlay,
-body[data-mode="route"] .compass-overlay,
-body[data-mode="route"] #world-canvas,
-body[data-mode="route"] .world-canvas {
-  display: none !important;
 }
 
 #debug-panel,
@@ -479,29 +413,6 @@ body[data-mode="route"] .world-canvas {
 #diagnostics-bar,
 .diagnostics-bar {
   transition: opacity 160ms ease, transform 160ms ease, bottom 160ms ease;
-}
-
-.route-ambient {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.route-shell {
-  position: relative;
-  z-index: 2;
-  width: min(var(--route-max), 94vw);
-  margin: 0 auto;
-  padding: 84px 0 120px;
-}
-
-.route-panel {
-  border: 1px solid var(--route-stroke);
-  border-radius: 24px;
-  background: var(--route-shell);
-  box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(10px);
 }
 
 .hidden {
@@ -544,11 +455,6 @@ body[data-mode="route"] .world-canvas {
   .diagnostics-toggle {
     justify-self: end;
   }
-
-  #nav-doors {
-    top: 12px;
-    gap: 8px;
-  }
 }
 
 @media (max-width: 680px) {
@@ -556,10 +462,22 @@ body[data-mode="route"] .world-canvas {
     --diagnostic-bar-height: 72px;
   }
 
+  .nav-doors {
+    top: auto;
+    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 154px);
+  }
+
+  #world-actions,
+  .world-actions {
+    top: auto;
+    right: var(--shell-gap);
+    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 154px);
+  }
+
   #runtime-banner,
   .runtime-banner {
     top: auto;
-    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 148px);
+    bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 208px);
     font-size: 11px;
   }
 
@@ -600,7 +518,9 @@ body[data-mode="route"] .world-canvas {
   }
 
   #diagnostics-toggle,
-  .diagnostics-toggle {
+  .diagnostics-toggle,
+  .nav-btn,
+  .world-btn {
     min-width: 96px;
     height: 36px;
     padding: 0 12px;
@@ -611,14 +531,6 @@ body[data-mode="route"] .world-canvas {
   }
 
   .diagnostic-pill__value {
-    font-size: 11px;
-  }
-
-  .nav-btn,
-  .route-btn,
-  .route-link-btn {
-    min-height: 38px;
-    padding: 0 12px;
     font-size: 11px;
   }
 }

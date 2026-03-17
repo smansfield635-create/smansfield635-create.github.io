@@ -4,6 +4,9 @@
   --bg-2: #0f1728;
   --bg-3: #152033;
 
+  --site-bg: #f3efe7;
+  --site-ink: #171717;
+
   --panel-bg: rgba(10, 16, 28, 0.78);
   --panel-border: rgba(145, 175, 255, 0.22);
   --panel-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
@@ -53,15 +56,23 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
-  color: var(--text-0);
   font-family: var(--font-stack);
+}
+
+html {
+  background: var(--site-bg);
+}
+
+body {
+  color: var(--site-ink);
 }
 
 body[data-mode="world"] {
   height: 100%;
   overflow: hidden;
   position: relative;
+  background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
+  color: var(--text-0);
 }
 
 body[data-mode="route"] {
@@ -69,6 +80,8 @@ body[data-mode="route"] {
   overflow-x: hidden;
   overflow-y: auto;
   position: relative;
+  background: var(--site-bg);
+  color: var(--site-ink);
 }
 
 button,
@@ -134,7 +147,8 @@ a {
 #nav-doors {
   position: absolute;
   top: var(--shell-gap);
-  left: var(--shell-gap);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 40;
   display: flex;
   gap: 10px;
@@ -160,6 +174,11 @@ a {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+
+body[data-mode="route"] .route-btn,
+body[data-mode="route"] .route-link-btn {
+  color: #ffffff;
 }
 
 .nav-btn:hover,
@@ -436,6 +455,21 @@ body[data-diagnostics="full"] .diagnostics-toggle::before {
   content: "Close";
 }
 
+body[data-mode="route"] #hud,
+body[data-mode="route"] .hud,
+body[data-mode="route"] #diagnostics-dock,
+body[data-mode="route"] .diagnostics-dock,
+body[data-mode="route"] #runtime-banner,
+body[data-mode="route"] .runtime-banner,
+body[data-mode="route"] #debug-panel,
+body[data-mode="route"] .debug-panel,
+body[data-mode="route"] #compass-overlay,
+body[data-mode="route"] .compass-overlay,
+body[data-mode="route"] #world-canvas,
+body[data-mode="route"] .world-canvas {
+  display: none !important;
+}
+
 #debug-panel,
 .debug-panel,
 #compass-overlay,
@@ -513,7 +547,6 @@ body[data-diagnostics="full"] .diagnostics-toggle::before {
 
   #nav-doors {
     top: 12px;
-    left: 12px;
     gap: 8px;
   }
 }

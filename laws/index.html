@@ -1,17 +1,17 @@
 <!doctype html>
 <!-- TNT — /laws/index.html
      CANONICAL SEVEN LAWS — FLAGSHIP SCIENTIFIC EDITION
-     STATUS: PUBLICATION-READY · ARCHIVAL-GRADE · TRILINGUAL
+     STATUS: STRUCTURAL-CORRECTION PASS · TRILINGUAL · CANON STATE CARRY
      STRUCTURE:
-       - 7 Primary Laws (Gold-Trim Macro Bubbles)
-       - Formal Scientific Expression (Canonical)
-       - Informal Narrative Lens (Public Layer)
+       - 7 Primary Laws
+       - Formal Scientific Expression
+       - Informal Narrative Lens
        - EN / 中文 / ES Toggle (no reload)
        - Formal ⇄ Informal Toggle (no reload)
-       - Strong Red / Black / Gold Contrast
-       - Canon State Carry (gd_lang/gd_style/gd_time/gd_depth ONLY)
-       - Timestamped Archival Stamp
        - Single-Open Law Accordion
+       - Canon State Carry (gd_lang/gd_style/gd_time/gd_depth ONLY)
+       - URL State Carry (lang/style/time/depth)
+       - Mobile Shell / Dock Collision Corrected
      FIELD: ui.css owns background (NO html/body overrides)
 -->
 
@@ -31,7 +31,9 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:110px;
+  --topH:76px;
+  --topStackH:76px;
+  --dockH:104px;
 
   --ink:#ffffff;
   --mut:rgba(255,255,255,.82);
@@ -53,33 +55,52 @@ body::before,body::after{pointer-events:none!important}
    ========================= */
 
 .top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:var(--topH);
+  padding:16px 16px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
   z-index:240;
   pointer-events:none;
+  box-sizing:border-box;
 }
 .top .left,.top .right{
-  display:flex;gap:10px;align-items:center;
+  display:flex;
+  gap:10px;
+  align-items:center;
   pointer-events:auto;
+  flex-wrap:wrap;
 }
 
 .btn{
   padding:10px 14px;
+  min-height:44px;
   border-radius:16px;
   border:1px solid var(--stroke);
   background:
     radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
     linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
+  color:var(--ink);
   font-weight:950;
   letter-spacing:.3px;
   cursor:pointer;
   position:relative;
   overflow:hidden;
+  touch-action:manipulation;
+  box-shadow:var(--shadowMid);
 }
 .btn::after{
   content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:-12px;
+  height:28px;
   background: radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
   opacity:.6;
 }
@@ -95,10 +116,16 @@ body::before,body::after{pointer-events:none!important}
 .page{
   width:min(1200px,94vw);
   margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 40px);
+  padding:
+    calc(var(--topStackH) + 18px)
+    0
+    calc(var(--dockH) + 38px);
   display:flex;
   flex-direction:column;
   gap:18px;
+  position:relative;
+  z-index:10;
+  box-sizing:border-box;
 }
 
 /* =========================
@@ -116,8 +143,8 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowDeep);
   position:relative;
   overflow:hidden;
+  margin-top:8px;
 }
-
 .header::before{
   content:"";
   position:absolute;inset:0;
@@ -129,21 +156,18 @@ body::before,body::after{pointer-events:none!important}
   opacity:.35;
   pointer-events:none;
 }
-
 .hTitle{
   font-size:42px;
   font-weight:980;
   letter-spacing:1px;
   margin:0 0 12px;
 }
-
 .hSub{
   font-size:18px;
   line-height:1.7;
   color:var(--mut);
   max-width:1000px;
 }
-
 .timestamp{
   margin-top:14px;
   font-size:13px;
@@ -171,7 +195,6 @@ body::before,body::after{pointer-events:none!important}
   overflow:hidden;
   position:relative;
 }
-
 .law::before{
   content:"";
   position:absolute;inset:0;
@@ -180,6 +203,10 @@ body::before,body::after{pointer-events:none!important}
   opacity:.6;
   pointer-events:none;
 }
+.law.open{
+  border-color:rgba(212,175,55,.30);
+  box-shadow:var(--shadowMid), 0 0 18px rgba(212,175,55,.12);
+}
 
 .lawHead{
   padding:20px 24px;
@@ -187,11 +214,28 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:14px;
 }
-
+.lawHeadLeft{
+  min-width:0;
+}
 .lawTitle{
   font-size:22px;
   font-weight:960;
+  line-height:1.2;
+}
+.lawChevron{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.20);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  color:var(--mut);
+  font-weight:950;
 }
 
 .lawBody{
@@ -199,7 +243,6 @@ body::before,body::after{pointer-events:none!important}
   padding:24px 26px 28px;
   border-top:1px solid rgba(255,255,255,.08);
 }
-
 .law.open .lawBody{display:block}
 
 .sectionTitle{
@@ -207,7 +250,6 @@ body::before,body::after{pointer-events:none!important}
   margin:0 0 10px;
   letter-spacing:.3px;
 }
-
 .formalBlock{
   font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size:14px;
@@ -219,7 +261,6 @@ body::before,body::after{pointer-events:none!important}
   margin-bottom:18px;
   white-space:pre-wrap;
 }
-
 .informalBlock{
   font-size:16px;
   line-height:1.8;
@@ -236,6 +277,7 @@ body::before,body::after{pointer-events:none!important}
   bottom:max(12px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
   width:min(1000px,94vw);
+  min-height:var(--dockH);
   padding:12px;
   border-radius:24px;
   border:1px solid var(--stroke);
@@ -245,8 +287,107 @@ body::before,body::after{pointer-events:none!important}
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:12px;
+  z-index:220;
+  box-sizing:border-box;
+}
+.dock .btn{
+  width:100%;
+  min-width:0;
+  text-align:center;
 }
 
+/* =========================
+   BREAKPOINTS
+   ========================= */
+
+@media (max-width:767px){
+  :root{
+    --topH:124px;
+    --topStackH:132px;
+    --dockH:112px;
+  }
+
+  .top{
+    height:var(--topH);
+    padding:12px 12px 8px;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    gap:8px;
+  }
+
+  .top .left,
+  .top .right{
+    width:100%;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
+    flex-wrap:nowrap;
+  }
+
+  .top .left .btn,
+  .top .right .btn{
+    flex:1 1 0;
+    min-width:0;
+    min-height:48px;
+    padding:10px 8px;
+  }
+
+  .page{
+    padding-top:calc(var(--topStackH) + 16px);
+    padding-bottom:calc(var(--dockH) + 40px);
+  }
+
+  .header{
+    padding:22px 20px;
+  }
+
+  .hTitle{
+    font-size:32px;
+    line-height:1.08;
+  }
+
+  .hSub{
+    font-size:16px;
+    line-height:1.65;
+  }
+}
+
+@media (max-width:520px){
+  :root{
+    --topH:132px;
+    --topStackH:140px;
+    --dockH:118px;
+  }
+
+  .dock{
+    width:min(96vw,720px);
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    padding:10px;
+  }
+
+  .lawHead{
+    padding:18px 18px;
+  }
+
+  .lawBody{
+    padding:20px 18px 24px;
+  }
+
+  .lawTitle{
+    font-size:19px;
+  }
+
+  .formalBlock{
+    font-size:13px;
+  }
+
+  .informalBlock{
+    font-size:15px;
+    line-height:1.72;
+  }
+}
 </style>
 </head>
 
@@ -254,26 +395,26 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top">
   <div class="left">
-    <button class="btn active" id="lensFormal">FORMAL</button>
-    <button class="btn" id="lensInformal">INFORMAL</button>
+    <button class="btn active" id="lensFormal" type="button">FORMAL</button>
+    <button class="btn" id="lensInformal" type="button">INFORMAL</button>
   </div>
   <div class="right">
-    <button class="btn active" id="langEN">EN</button>
-    <button class="btn" id="langZH">中文</button>
-    <button class="btn" id="langES">ES</button>
+    <button class="btn active" id="langEN" type="button">EN</button>
+    <button class="btn" id="langZH" type="button">中文</button>
+    <button class="btn" id="langES" type="button">ES</button>
   </div>
 </div>
 
 <div class="page">
 
   <div class="header">
-    <h1 class="hTitle">Seven Canonical Laws of Structural Coherence</h1>
-    <div class="hSub">
+    <h1 class="hTitle" id="headerTitle">Seven Canonical Laws of Structural Coherence</h1>
+    <div class="hSub" id="headerSub">
       A unified formal constraint framework governing coherence, admissibility,
       stability, calibration authority, non-contradiction, scope binding,
       and cascade containment across multi-scale systems.
     </div>
-    <div class="timestamp">
+    <div class="timestamp" id="headerTimestamp">
       Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0
     </div>
   </div>
@@ -283,18 +424,123 @@ body::before,body::after{pointer-events:none!important}
 </div>
 
 <nav class="dock">
-  <a class="btn" href="/index.html">COMPASS</a>
-  <a class="btn" href="/explore/">EXPLORE</a>
-  <a class="btn" href="/products/">PRODUCTS</a>
-  <a class="btn" href="/gauges/">GAUGES</a>
+  <a class="btn" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
 </nav>
 
 <script>
 (function(){
 "use strict";
 
-let lang="en";
-let lens="formal";
+var qs = new URLSearchParams(location.search);
+var LS = window.localStorage;
+
+var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
+var style = qs.get("style") || LS.getItem("gd_style") || "formal";
+var time = qs.get("time") || LS.getItem("gd_time") || "now";
+var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+
+if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+if(style!=="formal" && style!=="informal") style="formal";
+if(time==="trajectory") time="post";
+if(time!=="origin" && time!=="now" && time!=="post") time="now";
+if(depth!=="overview" && depth!=="explore" && depth!=="deep") depth="explore";
+
+var lens = style;
+var openLaw = 0;
+
+try{
+  LS.setItem("gd_lang", lang);
+  LS.setItem("gd_style", style);
+  LS.setItem("gd_time", time);
+  LS.setItem("gd_depth", depth);
+}catch(e){}
+
+document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es") ? "es" : "en";
+
+function q(over){
+  var p = new URLSearchParams();
+  p.set("lang", (over && over.lang) ? over.lang : lang);
+  p.set("style", (over && over.style) ? over.style : style);
+  p.set("time", (over && over.time) ? over.time : time);
+  p.set("depth", (over && over.depth) ? over.depth : depth);
+  return "?" + p.toString();
+}
+
+function syncState(){
+  try{
+    LS.setItem("gd_lang", lang);
+    LS.setItem("gd_style", style);
+    LS.setItem("gd_time", time);
+    LS.setItem("gd_depth", depth);
+  }catch(e){}
+  history.replaceState({}, "", location.pathname + q());
+}
+
+function setButtonState(activeId, ids){
+  for(var i=0;i<ids.length;i++){
+    var el = document.getElementById(ids[i]);
+    if(!el) continue;
+    if(ids[i]===activeId) el.classList.add("active");
+    else el.classList.remove("active");
+  }
+}
+
+function wireRoutes(){
+  var nodes = document.querySelectorAll("[data-route]");
+  for(var i=0;i<nodes.length;i++){
+    var el = nodes[i];
+    var route = el.getAttribute("data-route") || "";
+    if(!route) continue;
+    el.setAttribute("href", route + q());
+  }
+}
+
+var copy = {
+  header:{
+    en:{
+      title:"Seven Canonical Laws of Structural Coherence",
+      sub:"A unified formal constraint framework governing coherence, admissibility, stability, calibration authority, non-contradiction, scope binding, and cascade containment across multi-scale systems.",
+      ts:"Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0",
+      formal:"FORMAL",
+      informal:"INFORMAL",
+      compass:"COMPASS",
+      explore:"EXPLORE",
+      products:"PRODUCTS",
+      gauges:"GAUGES",
+      formalLabel:"Formal Scientific Expression",
+      informalLabel:"Narrative Interpretation"
+    },
+    zh:{
+      title:"结构一致性的七条规范法则",
+      sub:"一个统一的形式约束框架，用于治理多尺度系统中的一致性、可采信性、稳定性、校准权威、不矛盾性、范围绑定与级联隔离。",
+      ts:"发布时间戳：2026-03-02 · 规范档案发布 v1.0",
+      formal:"FORMAL",
+      informal:"INFORMAL",
+      compass:"COMPASS",
+      explore:"EXPLORE",
+      products:"PRODUCTS",
+      gauges:"GAUGES",
+      formalLabel:"正式科学表达",
+      informalLabel:"叙事解释"
+    },
+    es:{
+      title:"Siete Leyes Canónicas de la Coherencia Estructural",
+      sub:"Un marco unificado de restricciones formales que gobierna coherencia, admisibilidad, estabilidad, autoridad de calibración, no contradicción, vinculación de alcance y contención de cascadas en sistemas multi-escala.",
+      ts:"Marca de publicación: 2026-03-02 · Lanzamiento de archivo canónico v1.0",
+      formal:"FORMAL",
+      informal:"INFORMAL",
+      compass:"COMPASS",
+      explore:"EXPLORE",
+      products:"PRODUCTS",
+      gauges:"GAUGES",
+      formalLabel:"Expresión Científica Formal",
+      informalLabel:"Interpretación Narrativa"
+    }
+  }
+};
 
 const laws = [
 {
@@ -417,59 +663,164 @@ es:"Mantén el fallo local. El rollback salva el sistema."
 }
 ];
 
-const container=document.getElementById("lawsContainer");
+const container = document.getElementById("lawsContainer");
+
+function closeAll(){
+  var nodes = container.querySelectorAll(".law");
+  for(var i=0;i<nodes.length;i++){
+    nodes[i].classList.remove("open");
+    var chev = nodes[i].querySelector(".lawChevron");
+    if(chev) chev.textContent = "▸";
+  }
+}
+
+function toggleLaw(index){
+  var nodes = container.querySelectorAll(".law");
+  if(!nodes[index]) return;
+  var isOpen = nodes[index].classList.contains("open");
+  if(isOpen){
+    nodes[index].classList.remove("open");
+    var chev0 = nodes[index].querySelector(".lawChevron");
+    if(chev0) chev0.textContent = "▸";
+    return;
+  }
+  closeAll();
+  nodes[index].classList.add("open");
+  var chev = nodes[index].querySelector(".lawChevron");
+  if(chev) chev.textContent = "▾";
+  openLaw = index;
+}
+
+function applyHeader(){
+  var H = copy.header[lang] || copy.header.en;
+  document.getElementById("headerTitle").textContent = H.title;
+  document.getElementById("headerSub").textContent = H.sub;
+  document.getElementById("headerTimestamp").textContent = H.ts;
+
+  document.getElementById("lensFormal").textContent = H.formal;
+  document.getElementById("lensInformal").textContent = H.informal;
+
+  document.getElementById("dockCompass").textContent = H.compass;
+  document.getElementById("dockExplore").textContent = H.explore;
+  document.getElementById("dockProducts").textContent = H.products;
+  document.getElementById("dockGauges").textContent = H.gauges;
+}
 
 function render(){
-container.innerHTML="";
-laws.forEach((law,i)=>{
-const div=document.createElement("div");
-div.className="law";
+  container.innerHTML = "";
+  applyHeader();
 
-const head=document.createElement("div");
-head.className="lawHead";
-head.innerHTML="<div class='lawTitle'>"+law.title[lang]+"</div><div>▸</div>";
-head.onclick=()=>div.classList.toggle("open");
+  var H = copy.header[lang] || copy.header.en;
 
-const body=document.createElement("div");
-body.className="lawBody";
+  laws.forEach(function(law, i){
+    const div = document.createElement("div");
+    div.className = "law";
 
-if(lens==="formal"){
-body.innerHTML="<div class='sectionTitle'>Formal Scientific Expression</div><div class='formalBlock'>"+law.formal+"</div>";
-}else{
-body.innerHTML="<div class='sectionTitle'>Narrative Interpretation</div><div class='informalBlock'>"+law.informal[lang]+"</div>";
+    const head = document.createElement("div");
+    head.className = "lawHead";
+    head.setAttribute("role","button");
+    head.tabIndex = 0;
+
+    const left = document.createElement("div");
+    left.className = "lawHeadLeft";
+
+    const title = document.createElement("div");
+    title.className = "lawTitle";
+    title.textContent = law.title[lang];
+
+    left.appendChild(title);
+
+    const chev = document.createElement("div");
+    chev.className = "lawChevron";
+    chev.textContent = "▸";
+
+    head.appendChild(left);
+    head.appendChild(chev);
+
+    const body = document.createElement("div");
+    body.className = "lawBody";
+
+    if(lens === "formal"){
+      body.innerHTML =
+        "<div class='sectionTitle'>" + H.formalLabel + "</div>" +
+        "<div class='formalBlock'>" + law.formal + "</div>";
+    }else{
+      body.innerHTML =
+        "<div class='sectionTitle'>" + H.informalLabel + "</div>" +
+        "<div class='informalBlock'>" + law.informal[lang] + "</div>";
+    }
+
+    (function(index){
+      function act(){ toggleLaw(index); }
+      head.addEventListener("click", act, {passive:true});
+      head.addEventListener("keydown", function(e){
+        if(e.key==="Enter" || e.key===" "){
+          e.preventDefault();
+          act();
+        }
+      });
+    })(i);
+
+    div.appendChild(head);
+    div.appendChild(body);
+    container.appendChild(div);
+  });
+
+  if(openLaw < 0 || openLaw >= laws.length) openLaw = 0;
+  toggleLaw(openLaw);
 }
 
-div.appendChild(head);
-div.appendChild(body);
-container.appendChild(div);
-});
-}
-
-document.getElementById("lensFormal").onclick=()=>{
-lens="formal";
-document.getElementById("lensFormal").classList.add("active");
-document.getElementById("lensInformal").classList.remove("active");
-render();
+document.getElementById("lensFormal").onclick = function(){
+  lens = "formal";
+  style = "formal";
+  setButtonState("lensFormal", ["lensFormal","lensInformal"]);
+  syncState();
+  render();
+  wireRoutes();
 };
-document.getElementById("lensInformal").onclick=()=>{
-lens="informal";
-document.getElementById("lensInformal").classList.add("active");
-document.getElementById("lensFormal").classList.remove("active");
-render();
+
+document.getElementById("lensInformal").onclick = function(){
+  lens = "informal";
+  style = "informal";
+  setButtonState("lensInformal", ["lensFormal","lensInformal"]);
+  syncState();
+  render();
+  wireRoutes();
 };
 
-document.getElementById("langEN").onclick=()=>{lang="en";updateLangButtons();render();};
-document.getElementById("langZH").onclick=()=>{lang="zh";updateLangButtons();render();};
-document.getElementById("langES").onclick=()=>{lang="es";updateLangButtons();render();};
+document.getElementById("langEN").onclick = function(){
+  lang = "en";
+  document.documentElement.lang = "en";
+  setButtonState("langEN", ["langEN","langZH","langES"]);
+  syncState();
+  render();
+  wireRoutes();
+};
 
-function updateLangButtons(){
-["langEN","langZH","langES"].forEach(id=>document.getElementById(id).classList.remove("active"));
-if(lang==="en")document.getElementById("langEN").classList.add("active");
-if(lang==="zh")document.getElementById("langZH").classList.add("active");
-if(lang==="es")document.getElementById("langES").classList.add("active");
-}
+document.getElementById("langZH").onclick = function(){
+  lang = "zh";
+  document.documentElement.lang = "zh";
+  setButtonState("langZH", ["langEN","langZH","langES"]);
+  syncState();
+  render();
+  wireRoutes();
+};
 
+document.getElementById("langES").onclick = function(){
+  lang = "es";
+  document.documentElement.lang = "es";
+  setButtonState("langES", ["langEN","langZH","langES"]);
+  syncState();
+  render();
+  wireRoutes();
+};
+
+setButtonState(lens === "formal" ? "lensFormal" : "lensInformal", ["lensFormal","lensInformal"]);
+setButtonState(lang === "zh" ? "langZH" : (lang === "es" ? "langES" : "langEN"), ["langEN","langZH","langES"]);
+
+syncState();
 render();
+wireRoutes();
 
 })();
 </script>

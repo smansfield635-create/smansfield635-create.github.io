@@ -179,131 +179,6 @@
       letter-spacing: 0.02em;
     }
 
-    .orbit-shell {
-      position: absolute;
-      left: 50%;
-      top: 58%;
-      width: min(84vw, 780px);
-      height: min(84vw, 780px);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .orbit-guide {
-      position: absolute;
-      inset: 12%;
-      border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      box-shadow:
-        0 0 70px rgba(100, 170, 255, 0.06),
-        inset 0 0 34px rgba(255, 255, 255, 0.02);
-    }
-
-    .orbit-guide.inner {
-      inset: 22%;
-      opacity: 0.66;
-    }
-
-    .star-node {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      margin: -60px 0 0 -60px;
-      pointer-events: auto;
-      cursor: pointer;
-      transition: filter 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
-      will-change: transform, opacity, filter;
-    }
-
-    .star-node:hover {
-      filter: brightness(1.08);
-    }
-
-    .star-core {
-      position: absolute;
-      inset: 0;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      box-shadow:
-        0 0 20px rgba(255, 255, 255, 0.08),
-        0 0 50px rgba(0, 0, 0, 0.68),
-        inset 0 0 16px rgba(255, 255, 255, 0.08),
-        inset 0 0 42px rgba(120, 180, 255, 0.06);
-      background:
-        linear-gradient(145deg, rgba(10, 18, 34, 0.94), rgba(6, 8, 14, 0.98)),
-        linear-gradient(45deg, rgba(102,194,255,0.12), rgba(255,212,120,0.1));
-      transform: rotate(45deg);
-      animation: starSpinCW 14s linear infinite;
-    }
-
-    .star-node.ccw .star-core {
-      animation-name: starSpinCCW;
-    }
-
-    .star-core::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      background:
-        linear-gradient(
-          120deg,
-          transparent 18%,
-          rgba(255,255,255,0.12) 34%,
-          transparent 48%,
-          rgba(255,255,255,0.07) 58%,
-          transparent 72%
-        );
-      transform: translateX(-26%);
-      animation: shimmerSweep 4.8s ease-in-out infinite;
-    }
-
-    .star-cross {
-      position: absolute;
-      inset: 0;
-      transform: rotate(45deg);
-      pointer-events: none;
-    }
-
-    .star-cross::before,
-    .star-cross::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.26), rgba(255,255,255,0.02));
-      box-shadow: 0 0 20px rgba(255,255,255,0.08);
-      border-radius: 999px;
-      transform: translate(-50%, -50%);
-    }
-
-    .star-cross::before {
-      width: 18px;
-      height: 106%;
-    }
-
-    .star-cross::after {
-      width: 106%;
-      height: 18px;
-    }
-
-    .star-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      text-align: center;
-      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.52);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
     #flat-layer {
       z-index: 9;
       display: none;
@@ -370,9 +245,9 @@
       pointer-events: none;
     }
 
-    .runtime-pill {
+    .runtime-pill,
+    .mode-note {
       position: absolute;
-      left: 16px;
       top: 16px;
       padding: 8px 12px;
       border-radius: 999px;
@@ -384,26 +259,14 @@
       color: rgba(255, 255, 255, 0.86);
       backdrop-filter: blur(8px);
       pointer-events: auto;
+    }
+
+    .runtime-pill {
+      left: 16px;
     }
 
     .mode-note {
-      position: absolute;
       right: 16px;
-      top: 16px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.38);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.86);
-      backdrop-filter: blur(8px);
-      pointer-events: auto;
-    }
-
-    .hidden {
-      display: none !important;
     }
 
     @keyframes starDrift {
@@ -421,56 +284,10 @@
       50%     { transform: translateY(2%); opacity: 0.28; }
     }
 
-    @keyframes starSpinCW {
-      from { transform: rotate(45deg); }
-      to   { transform: rotate(405deg); }
-    }
-
-    @keyframes starSpinCCW {
-      from { transform: rotate(45deg); }
-      to   { transform: rotate(-315deg); }
-    }
-
-    @keyframes shimmerSweep {
-      0%,100% { transform: translateX(-34%); }
-      50%     { transform: translateX(34%); }
-    }
-
-    @media (max-width: 900px) {
-      .orbit-shell {
-        width: min(92vw, 660px);
-        height: min(92vw, 660px);
-        top: 60%;
-      }
-
-      .star-node {
-        width: 106px;
-        height: 106px;
-        margin: -53px 0 0 -53px;
-      }
-    }
-
     @media (max-width: 700px) {
       .hero-panel {
         top: 8.4vh;
         gap: 12px;
-      }
-
-      .orbit-shell {
-        width: min(96vw, 560px);
-        height: min(96vw, 560px);
-        top: 61%;
-      }
-
-      .star-node {
-        width: 92px;
-        height: 92px;
-        margin: -46px 0 0 -46px;
-      }
-
-      .star-label {
-        font-size: 11px;
-        letter-spacing: 0.6px;
       }
 
       .flat-menu {
@@ -506,35 +323,6 @@
         <p class="hero-sub">Homepage</p>
         <p class="hero-tag">Enter simple. Discover power. Choose depth.</p>
       </div>
-
-      <div class="orbit-shell" id="orbit-shell">
-        <div class="orbit-guide"></div>
-        <div class="orbit-guide inner"></div>
-
-        <button class="star-node" id="star-products" type="button" aria-label="Products">
-          <span class="star-core"></span>
-          <span class="star-cross"></span>
-          <span class="star-label">PRODUCTS</span>
-        </button>
-
-        <button class="star-node ccw" id="star-laws" type="button" aria-label="Laws">
-          <span class="star-core"></span>
-          <span class="star-cross"></span>
-          <span class="star-label">LAWS</span>
-        </button>
-
-        <button class="star-node" id="star-gauges" type="button" aria-label="Gauges">
-          <span class="star-core"></span>
-          <span class="star-cross"></span>
-          <span class="star-label">GAUGES</span>
-        </button>
-
-        <button class="star-node ccw" id="star-explore" type="button" aria-label="Explore">
-          <span class="star-core"></span>
-          <span class="star-cross"></span>
-          <span class="star-label">EXPLORE</span>
-        </button>
-      </div>
     </div>
 
     <div id="flat-layer">
@@ -547,7 +335,7 @@
     </div>
 
     <div id="hud-layer">
-      <div class="runtime-pill" id="runtime-pill">HOME</div>
+      <div class="runtime-pill">HOME</div>
       <div class="mode-note" id="mode-note">ROUND</div>
     </div>
   </div>
@@ -562,55 +350,76 @@
 
     const canvas = document.getElementById("world-canvas");
     const ctx = canvas.getContext("2d", { alpha: true });
-
     const flatLayer = document.getElementById("flat-layer");
-    const orbitShell = document.getElementById("orbit-shell");
     const modeNote = document.getElementById("mode-note");
-
-    const starProducts = document.getElementById("star-products");
-    const starLaws = document.getElementById("star-laws");
-    const starGauges = document.getElementById("star-gauges");
-    const starExplore = document.getElementById("star-explore");
 
     const planetEngine = createPlanetEngine();
     const renderer = createRenderer();
     const control = createControlSystem();
 
+    const MOTION_STORAGE_KEY = "ns_home_round_motion_v1";
+
+    const orbitalSystem = Object.freeze({
+      objects: Object.freeze([
+        Object.freeze({
+          id: "north-products",
+          label: "PRODUCTS",
+          route: "/products/",
+          baseLatDeg: 0,
+          baseLonDeg: 0,
+          bearingOffsetDeg: -90,
+          spinOffsetRad: 0.2,
+          spinMultiplier: 1.35,
+          sizePx: 52
+        }),
+        Object.freeze({
+          id: "south-laws",
+          label: "LAWS",
+          route: "/laws/",
+          baseLatDeg: 0,
+          baseLonDeg: 0,
+          bearingOffsetDeg: 90,
+          spinOffsetRad: 0.8,
+          spinMultiplier: 1.25,
+          sizePx: 52
+        }),
+        Object.freeze({
+          id: "east-gauges",
+          label: "GAUGES",
+          route: "/gauges/",
+          baseLatDeg: 0,
+          baseLonDeg: 0,
+          bearingOffsetDeg: 0,
+          spinOffsetRad: 1.1,
+          spinMultiplier: 1.45,
+          sizePx: 52
+        }),
+        Object.freeze({
+          id: "west-explore",
+          label: "EXPLORE",
+          route: "/explore/",
+          baseLatDeg: 0,
+          baseLonDeg: 0,
+          bearingOffsetDeg: 180,
+          spinOffsetRad: 1.7,
+          spinMultiplier: 1.3,
+          sizePx: 52
+        })
+      ])
+    });
+
     let planetField = null;
     let rafId = 0;
     let lastFrameAt = performance.now();
-    let idlePhase = 0;
-    let orbitPhase = 0;
+    let lastRenderReceipt = Object.freeze({
+      orbitalHits: Object.freeze([])
+    });
+
     let isDragging = false;
+    let pendingStar = null;
+    let pendingPointerDown = null;
     let lastX = 0;
     let lastY = 0;
-
-    const starState = [
-      {
-        element: starProducts,
-        label: "PRODUCTS",
-        route: "/products/",
-        phase0: -Math.PI / 2
-      },
-      {
-        element: starLaws,
-        label: "LAWS",
-        route: "/laws/",
-        phase0: Math.PI / 2
-      },
-      {
-        element: starGauges,
-        label: "GAUGES",
-        route: "/gauges/",
-        phase0: 0
-      },
-      {
-        element: starExplore,
-        label: "EXPLORE",
-        route: "/explore/",
-        phase0: Math.PI
-      }
-    ];
 
     function withModeQuery(route) {
       const glue = route.includes("?") ? "&" : "?";
@@ -631,56 +440,68 @@
       }
     }
 
+    function restoreMotionState() {
+      if (mode !== "round") return;
+
+      try {
+        const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
+        if (!raw) return;
+        control.restoreMotionState(JSON.parse(raw));
+      } catch {
+        return;
+      }
+    }
+
+    function persistMotionState() {
+      if (mode !== "round") return;
+
+      try {
+        sessionStorage.setItem(
+          MOTION_STORAGE_KEY,
+          JSON.stringify(control.getMotionState())
+        );
+      } catch {
+        return;
+      }
+    }
+
     function renderSurface() {
       if (!planetField) return;
 
-      renderer.renderPlanet({
+      lastRenderReceipt = renderer.renderPlanet({
         ctx,
         planetField,
         projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => {
           return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
         },
-        viewState: control.getCameraState()
+        viewState: control.getCameraState(),
+        orbitalSystem: mode === "round"
+          ? Object.freeze({
+              phase: control.getOrbitalState().orbitPhase,
+              objects: orbitalSystem.objects,
+              altitudeFactor: 0.42
+            })
+          : null
       });
     }
 
-    function stepIdleDrift(dtMs) {
-      if (mode !== "round") return;
+    function hitTestOrbitalTargets(screenX, screenY) {
+      const targets = Array.isArray(lastRenderReceipt?.orbitalHits)
+        ? lastRenderReceipt.orbitalHits
+        : [];
 
-      idlePhase += dtMs * 0.00018;
-      const yawDrift = 0.05 + Math.sin(idlePhase) * 0.016;
-      control.applyDrag(yawDrift * dtMs * 0.18, 0);
-      control.stepInertia(dtMs);
-    }
+      for (let i = targets.length - 1; i >= 0; i -= 1) {
+        const hit = targets[i];
+        const dx = screenX - hit.x;
+        const dy = screenY - hit.y;
+        const distance = Math.sqrt((dx * dx) + (dy * dy));
 
-    function updateStarOrbit(dtMs) {
-      if (mode !== "round") return;
+        if (distance <= hit.radius) {
+          return hit;
+        }
+      }
 
-      orbitPhase += dtMs * 0.00028;
-
-      const shellRect = orbitShell.getBoundingClientRect();
-      const cx = shellRect.width * 0.5;
-      const cy = shellRect.height * 0.5;
-      const orbitX = shellRect.width * 0.38;
-      const orbitY = shellRect.height * 0.23;
-
-      starState.forEach((star) => {
-        const theta = orbitPhase + star.phase0;
-        const x = cx + Math.cos(theta) * orbitX;
-        const y = cy + Math.sin(theta) * orbitY;
-        const depth = Math.cos(theta);
-        const scale = 0.78 + ((depth + 1) * 0.18);
-        const opacity = 0.28 + ((depth + 1) * 0.36);
-        const blur = Math.max(0, (1 - scale) * 6);
-        const z = depth >= 0 ? 4 : 1;
-
-        const transform = `translate(${x}px, ${y}px) translate(-50%, -50%) scale(${scale})`;
-
-        star.element.style.transform = transform;
-        star.element.style.opacity = String(opacity);
-        star.element.style.filter = `blur(${blur}px) brightness(${0.92 + ((depth + 1) * 0.08)})`;
-        star.element.style.zIndex = String(z);
-      });
+      return null;
     }
 
     function frame(now) {
@@ -690,12 +511,10 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (mode === "round") {
-        stepIdleDrift(dtMs);
+        control.stepInertia(dtMs);
       }
 
       renderSurface();
-      updateStarOrbit(dtMs);
-
       rafId = requestAnimationFrame(frame);
     }
 
@@ -704,11 +523,9 @@
 
       if (mode === "flat") {
         flatLayer.style.display = "flex";
-        orbitShell.style.display = "none";
         canvas.style.filter = "blur(8px) brightness(.65)";
       } else {
         flatLayer.style.display = "none";
-        orbitShell.style.display = "block";
         canvas.style.filter = "none";
       }
     }
@@ -716,33 +533,68 @@
     function bindEvents() {
       if (mode === "round") {
         canvas.addEventListener("pointerdown", (event) => {
+          const starHit = hitTestOrbitalTargets(event.clientX, event.clientY);
+
+          pendingPointerDown = Object.freeze({
+            x: event.clientX,
+            y: event.clientY
+          });
+
+          if (starHit) {
+            pendingStar = starHit;
+            isDragging = false;
+            return;
+          }
+
+          pendingStar = null;
           isDragging = true;
           lastX = event.clientX;
           lastY = event.clientY;
         }, { passive: true });
 
         window.addEventListener("pointermove", (event) => {
+          if (pendingStar) {
+            return;
+          }
+
           if (!isDragging) return;
+
           const dx = event.clientX - lastX;
           const dy = event.clientY - lastY;
+
           lastX = event.clientX;
           lastY = event.clientY;
+
           control.applyDrag(dx, dy);
         }, { passive: true });
 
-        window.addEventListener("pointerup", () => {
+        window.addEventListener("pointerup", (event) => {
+          if (pendingStar) {
+            const moved =
+              pendingPointerDown
+                ? Math.sqrt(
+                    Math.pow(event.clientX - pendingPointerDown.x, 2) +
+                    Math.pow(event.clientY - pendingPointerDown.y, 2)
+                  )
+                : 0;
+
+            const hit = hitTestOrbitalTargets(event.clientX, event.clientY);
+
+            if (moved <= 12 && hit && hit.id === pendingStar.id) {
+              location.href = withModeQuery(pendingStar.route);
+            }
+          }
+
+          pendingStar = null;
+          pendingPointerDown = null;
           isDragging = false;
         }, { passive: true });
 
         window.addEventListener("pointercancel", () => {
+          pendingStar = null;
+          pendingPointerDown = null;
           isDragging = false;
         }, { passive: true });
-
-        starState.forEach((star) => {
-          star.element.addEventListener("click", () => {
-            location.href = withModeQuery(star.route);
-          });
-        });
       }
 
       document.querySelectorAll(".flat-card").forEach((card) => {
@@ -756,13 +608,25 @@
         resizeWorld();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         renderSurface();
-        updateStarOrbit(0);
       }, { passive: true });
 
       window.addEventListener("pagehide", () => {
+        persistMotionState();
+
         if (rafId) {
           cancelAnimationFrame(rafId);
           rafId = 0;
+        }
+      }, { passive: true });
+
+      window.addEventListener("pageshow", () => {
+        if (mode === "round") {
+          restoreMotionState();
+        }
+
+        if (!rafId) {
+          lastFrameAt = performance.now();
+          rafId = requestAnimationFrame(frame);
         }
       }, { passive: true });
     }
@@ -770,12 +634,14 @@
     function start() {
       resizeWorld();
       buildPlanetFieldOnce();
+      if (mode === "round") {
+        restoreMotionState();
+      }
       setModePresentation();
       bindEvents();
       renderSurface();
-      updateStarOrbit(0);
 
-      if (!rafId) {
+      if (mode === "round" && !rafId) {
         lastFrameAt = performance.now();
         rafId = requestAnimationFrame(frame);
       }

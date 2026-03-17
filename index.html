@@ -1,324 +1,212 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Nine Summits World</title>
-  <meta name="description" content="World entry gateway.">
-  <link rel="stylesheet" href="./assets/ui.css">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Nine Summits</title>
 
-  <style>
-    html,body{
-      margin:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:#030712;
-    }
+<link rel="stylesheet" href="./assets/ui.css"/>
+<style>
+body{margin:0;background:#020612;color:#fff;font-family:system-ui}
 
-    body[data-mode="door"]{
-      position:relative;
-    }
+/* ===== ROOT LAYERS ===== */
+#door-layer,
+#world-layer{
+  position:fixed;inset:0;
+}
 
-    #app-shell{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-    }
+/* ===== DOOR MODE ===== */
+#door-layer{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:18px;
+  z-index:20;
+}
 
-    #world-canvas{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
-      display:block;
-      z-index:1;
-      pointer-events:none;
-    }
+#door-title{
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:1px;
+}
 
-    #door-ui{
-      position:fixed;
-      inset:0;
-      z-index:10;
-      display:flex;
-      align-items:flex-start;
-      justify-content:flex-start;
-      pointer-events:none;
-    }
+#door-sub{
+  opacity:.8;
+}
 
-    .door-panel{
-      margin:96px 0 0 24px;
-      width:min(520px,calc(100vw - 48px));
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      pointer-events:auto;
-    }
+.door-buttons{
+  display:flex;
+  gap:14px;
+}
 
-    .door-title{
-      margin:0;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      font-size:clamp(36px,6vw,64px);
-      line-height:0.98;
-      font-weight:900;
-      letter-spacing:-0.03em;
-      text-shadow:0 8px 30px rgba(0,0,0,.45);
-    }
+.door-btn{
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.06);
+  cursor:pointer;
+}
 
-    .door-subtitle{
-      margin:0;
-      color:rgba(255,255,255,.92);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      font-size:clamp(18px,2.3vw,30px);
-      line-height:1.2;
-      font-weight:700;
-      text-shadow:0 6px 24px rgba(0,0,0,.35);
-    }
+/* ===== WORLD MODE ===== */
+#world-layer{
+  z-index:10;
+}
 
-    .door-copy{
-      margin:2px 0 0;
-      color:rgba(255,255,255,.76);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      font-size:14px;
-      line-height:1.45;
-      max-width:42ch;
-      text-shadow:0 4px 18px rgba(0,0,0,.35);
-    }
+canvas{
+  width:100%;
+  height:100%;
+  display:block;
+}
 
-    .door-options{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:4px;
-    }
+/* ===== CONTROL PANEL ===== */
+#control-panel{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  z-index:30;
+}
 
-    .door-btn{
-      appearance:none;
-      border:1px solid rgba(255,255,255,.20);
-      background:rgba(255,255,255,.94);
-      color:#1f2937;
-      border-radius:999px;
-      min-height:48px;
-      padding:0 22px;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      font-size:15px;
-      font-weight:800;
-      letter-spacing:.02em;
-      box-shadow:
-        0 10px 28px rgba(0,0,0,.22),
-        inset 0 1px 0 rgba(255,255,255,.65);
-      cursor:pointer;
-      transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease;
-    }
+.ctrl-btn{
+  padding:10px 14px;
+  border-radius:999px;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(255,255,255,.15);
+}
 
-    .door-btn:hover{
-      transform:translateY(-1px);
-      box-shadow:
-        0 14px 34px rgba(0,0,0,.28),
-        inset 0 1px 0 rgba(255,255,255,.65);
-    }
-
-    .door-btn:active{
-      transform:translateY(0);
-    }
-
-    .door-btn.alt{
-      background:rgba(255,255,255,.88);
-    }
-
-    .door-note{
-      color:rgba(255,255,255,.58);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      font-size:12px;
-      font-weight:600;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      margin-top:4px;
-    }
-
-    @media (max-width: 700px){
-      .door-panel{
-        margin:88px 0 0 18px;
-        width:min(460px,calc(100vw - 36px));
-        gap:12px;
-      }
-
-      .door-options{
-        gap:10px;
-      }
-
-      .door-btn{
-        min-height:44px;
-        padding:0 18px;
-        font-size:14px;
-      }
-    }
-  </style>
+/* ===== STATE ===== */
+.hidden{display:none;}
+</style>
 </head>
 
-<body data-mode="door">
-  <div id="app-shell">
-    <canvas id="world-canvas" aria-label="World canvas"></canvas>
+<body>
 
-    <div id="door-ui" aria-live="polite">
-      <div class="door-panel">
-        <h1 class="door-title">NINE SUMMITS</h1>
-        <p class="door-subtitle">Choose your reality.</p>
-        <p class="door-copy">
-          Round enters the living world. Flat reduces depth and centers content.
-        </p>
+<!-- ===== DOOR ===== -->
+<div id="door-layer">
+  <div id="door-title">NINE SUMMITS</div>
+  <div id="door-sub">Choose your reality.</div>
 
-        <div class="door-options">
-          <button id="btn-round" class="door-btn" type="button">WORLD IS ROUND</button>
-          <button id="btn-flat" class="door-btn alt" type="button">WORLD IS FLAT</button>
-        </div>
-
-        <div class="door-note">Door mode only · no products mounted here</div>
-      </div>
-    </div>
+  <div class="door-buttons">
+    <button class="door-btn" id="btn-round">WORLD IS ROUND</button>
+    <button class="door-btn" id="btn-flat">WORLD IS FLAT</button>
   </div>
+</div>
 
-  <script type="module">
-    import { createPlanetEngine } from "./world/planet_engine.js";
-    import { createRenderer } from "./world/render.js";
-    import { createControlSystem } from "./world/control.js";
+<!-- ===== WORLD ===== -->
+<div id="world-layer">
+  <canvas id="world-canvas"></canvas>
 
-    const canvas = document.getElementById("world-canvas");
-    const ctx = canvas.getContext("2d", { alpha: true });
+  <div id="control-panel" class="hidden">
+    <button class="ctrl-btn">OPEN</button>
+    <button class="ctrl-btn">EXPLORE</button>
+    <button class="ctrl-btn">PRODUCTS</button>
+    <button class="ctrl-btn">LAWS</button>
+  </div>
+</div>
 
-    const buttonRound = document.getElementById("btn-round");
-    const buttonFlat = document.getElementById("btn-flat");
-    const doorUI = document.getElementById("door-ui");
+<script type="module">
+import { createPlanetEngine } from "./world/planet_engine.js";
+import { createRenderer } from "./world/render.js";
+import { createControlSystem } from "./world/control.js";
 
-    const planetEngine = createPlanetEngine();
-    const renderer = createRenderer();
-    const control = createControlSystem();
+/* ===== MODE ===== */
+const params = new URLSearchParams(location.search);
+const mode = params.get("mode") || "door";
 
-    const runtime = {
-      planetField: null,
-      started: false
-    };
+/* ===== DOM ===== */
+const door = document.getElementById("door-layer");
+const world = document.getElementById("world-layer");
+const panel = document.getElementById("control-panel");
 
-    let rafId = 0;
-    let lastFrameAt = performance.now();
-    let isDragging = false;
-    let lastX = 0;
-    let lastY = 0;
+const btnRound = document.getElementById("btn-round");
+const btnFlat = document.getElementById("btn-flat");
 
-    function resizeWorld() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+const canvas = document.getElementById("world-canvas");
+const ctx = canvas.getContext("2d");
 
-      canvas.width = width;
-      canvas.height = height;
+/* ===== ENGINE ===== */
+const engine = createPlanetEngine();
+const renderer = createRenderer();
+const control = createControlSystem();
 
-      control.resize(width, height);
-    }
+let planetField = null;
 
-    function renderFrame() {
-      if (!runtime.planetField) return;
+/* ===== RESIZE ===== */
+function resize(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  control.resize(innerWidth, innerHeight);
+}
+window.addEventListener("resize", resize);
+resize();
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+/* ===== MODE HANDLERS ===== */
+function enterDoor(){
+  door.classList.remove("hidden");
+  panel.classList.add("hidden");
+}
 
-      renderer.renderPlanet({
-        ctx,
-        planetField: runtime.planetField,
-        projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => {
-          return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
-        },
-        viewState: control.getCameraState()
-      });
-    }
+function enterWorld(flat=false){
+  door.classList.add("hidden");
+  panel.classList.remove("hidden");
 
-    function frame(now) {
-      const dtMs = now - lastFrameAt;
-      lastFrameAt = now;
+  planetField = engine.buildPlanetField({});
 
-      if (!isDragging) {
-        control.stepInertia(dtMs);
-      }
+  if(flat){
+    canvas.style.filter = "blur(6px) brightness(.7)";
+  } else {
+    canvas.style.filter = "none";
+  }
 
-      renderFrame();
-      rafId = requestAnimationFrame(frame);
-    }
+  startLoop();
+}
 
-    function onPointerDown(event) {
-      isDragging = true;
-      lastX = event.clientX;
-      lastY = event.clientY;
-    }
+/* ===== ROUTING ===== */
+btnRound.onclick = () => {
+  location.href = "/index.html?mode=world";
+};
 
-    function onPointerMove(event) {
-      if (!isDragging) return;
+btnFlat.onclick = () => {
+  location.href = "/index.html?mode=flat";
+};
 
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
+/* ===== LOOP ===== */
+let last = performance.now();
 
-      lastX = event.clientX;
-      lastY = event.clientY;
+function loop(now){
+  const dt = now - last;
+  last = now;
 
-      control.applyDrag(dx, dy);
-      renderFrame();
-    }
+  control.stepInertia();
 
-    function onPointerUp() {
-      isDragging = false;
-    }
+  renderer.renderPlanet({
+    ctx,
+    planetField,
+    projectPoint:(lat,lon,r=0)=>control.projectSphere(lat,lon,r),
+    viewState:control.getCameraState()
+  });
 
-    function bindEvents() {
-      window.addEventListener("resize", () => {
-        resizeWorld();
-        renderFrame();
-      });
+  requestAnimationFrame(loop);
+}
 
-      window.addEventListener("pointermove", onPointerMove, { passive: true });
-      window.addEventListener("pointerup", onPointerUp, { passive: true });
-      window.addEventListener("pointercancel", onPointerUp, { passive: true });
+function startLoop(){
+  last = performance.now();
+  requestAnimationFrame(loop);
+}
 
-      buttonRound.addEventListener("click", () => {
-        window.location.href = "/world/gratitude/";
-      });
+/* ===== INIT ===== */
+if(mode === "world"){
+  enterWorld(false);
+}else if(mode === "flat"){
+  enterWorld(true);
+}else{
+  enterDoor();
+}
+</script>
 
-      buttonFlat.addEventListener("click", () => {
-        window.location.href = "/home/?mode=flat";
-      });
-
-      doorUI.addEventListener("pointerdown", () => {
-        isDragging = false;
-      });
-
-      canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
-    }
-
-    function start() {
-      resizeWorld();
-      runtime.planetField = planetEngine.buildPlanetField({});
-      bindEvents();
-      renderFrame();
-
-      requestAnimationFrame(() => {
-        doorUI.style.opacity = "1";
-      });
-
-      if (!runtime.started) {
-        runtime.started = true;
-        rafId = requestAnimationFrame(frame);
-      }
-    }
-
-    function stop() {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      }
-    }
-
-    window.addEventListener("pagehide", stop, { passive: true });
-
-    start();
-  </script>
 </body>
 </html>

@@ -1,29 +1,4 @@
 <!doctype html>
-<!-- TNT — /products/index.html
-     PRODUCTS · SIGNATURE SYSTEMS + 5 STREAMS (FULL / GLOSS / COLOR / NO SHELLS)
-     INFORMAL SITE LAYER (PINNED):
-       - gd_style = informal
-       - gd_depth = explore
-     TRILINGUAL UI: EN / 中文 / ES  (NO RELOAD)
-     VISIBLE LENS ONLY:
-       - lane=platform|engineering (URL-only; NEVER stored) (NO RELOAD)
-     UX:
-       - Prelude/Door-style “premise header” (authentic delivery)
-       - Signature Systems: bubble rows (preview) → tap opens 1 paragraph + OPEN: ENTER
-       - Streams: single-open accordion
-       - Inside each stream: 4 bubble product rows (preview) → tap opens 1 paragraph + OPEN: ENTER
-       - Switching LANG or LANE does NOT reload and does NOT close open stream or open bubble
-     STATE:
-       - Preserve gd_lang/gd_style/gd_time/gd_depth only (NO new gd_* keys)
-       - Preserve URL query: lang/style/time/depth/lane
-     ASSETS:
-       - /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
-     ROUTING:
-       - Edit ROUTES table only.
-       - If a destination 404s: create that page, don’t degrade this hub.
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -41,26 +16,23 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:132px;
-
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
-
-  --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.86);
-
   --crimson:rgba(120,0,22,.34);
   --festival:rgba(255,43,43,.18);
   --opalV:rgba(90,40,120,.12);
-
   --goldSoft:rgba(201,162,74,.18);
-
   --shadowA:0 28px 110px rgba(0,0,0,.70);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
+  --fieldGap:14px;
+  --microGap:10px;
+  --radiusA:26px;
+  --radiusB:22px;
+  --radiusC:18px;
 }
 
 /* ===== TOP CONTROLS ===== */
@@ -77,7 +49,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* Buttons */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -124,23 +95,22 @@ body::before,body::after{pointer-events:none!important}
 
 /* ===== PAGE ===== */
 .page{
-  width:min(1180px,94vw);
+  width:min(1580px,96vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:14px;
   position:relative;
   z-index:10;
 }
 
-/* Background context behind content */
 .backdrop{
   position:absolute;
   left:50%;
   top:68px;
   transform:translateX(-50%);
-  width:min(1240px,96vw);
+  width:min(1660px,98vw);
   height:calc(100% - 108px);
   border-radius:34px;
   pointer-events:none;
@@ -185,12 +155,12 @@ body::before,body::after{pointer-events:none!important}
   opacity:.72;
 }
 
-/* ===== PREMISE HEADER (Prelude/Door tone) ===== */
+/* ===== HERO ===== */
 .hero{
   position:relative;
   z-index:2;
   border:1px solid var(--stroke);
-  border-radius:26px;
+  border-radius:var(--radiusA);
   padding:20px 18px 16px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
@@ -204,7 +174,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .hero::before{
   content:"";
-  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  position:absolute;inset:0;border-radius:var(--radiusA);pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -217,8 +187,23 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
     linear-gradient(#000,#000);
 }
+.heroGrid{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(360px,.9fr);
+  gap:18px;
+  align-items:stretch;
+}
+.heroMain{min-width:0}
+.heroField{
+  min-width:0;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  align-content:start;
+}
 .k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-.h1{margin:0;font-weight:980;font-size:32px;letter-spacing:.7px;color:var(--ink);line-height:1.08;position:relative}
+.h1{margin:0;font-weight:980;font-size:36px;letter-spacing:.7px;color:var(--ink);line-height:1.02;position:relative}
 .sub{
   margin-top:12px;
   font-size:15.75px;
@@ -242,8 +227,6 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.45;
   position:relative;
 }
-
-/* State pills */
 .stateRow{
   margin-top:12px;
   display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
@@ -257,8 +240,36 @@ body::before,body::after{pointer-events:none!important}
   font-weight:950;
   box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
+.fieldChip{
+  position:relative;
+  min-height:78px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 24% 24%, rgba(255,255,255,.05), transparent 58%),
+    linear-gradient(145deg, rgba(17,22,28,.88), rgba(10,12,16,.96));
+  box-shadow:var(--shadowB);
+  padding:12px;
+  overflow:hidden;
+}
+.fieldChip::before{
+  content:"";
+  position:absolute;
+  width:10px;height:10px;
+  right:12px;top:12px;
+  background:rgba(201,162,74,.90);
+  border-radius:2px;
+  transform:rotate(45deg);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08);
+}
+.fieldChip__k{
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.58)
+}
+.fieldChip__v{
+  margin-top:8px;font-size:13px;line-height:1.35;color:rgba(255,255,255,.88);font-weight:850
+}
 
-/* ===== BANDS ===== */
+/* ===== SECTION HEADERS ===== */
 .band{
   position:relative;z-index:2;
   padding:10px 12px;border-radius:18px;
@@ -268,10 +279,82 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.90);
 }
 
-/* ===== BUBBLE ROWS (signature + products) ===== */
-.blist{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+/* ===== SIGNATURE FIELD ===== */
+.sigField{
+  position:relative;z-index:2;
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:var(--fieldGap);
+  align-items:start;
+}
+.sigNode{
+  position:relative;
+  min-height:180px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+  box-shadow:var(--shadowA);
+  overflow:hidden;
+}
+.sigNode::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.55;
+}
+.sigNode[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10)}
+.sigNode--wide{grid-column:span 6}
+.sigNode--mid{grid-column:span 4}
+.sigNode--small{grid-column:span 3}
+.sigNode__head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  padding:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.sigNode__left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.sigNode__diamond{
+  width:12px;height:12px;border-radius:3px;transform:rotate(45deg);flex:0 0 auto;margin-top:4px;
+  background:var(--nodeColor,#c9a24a);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
+}
+.sigNode__title{
+  font-weight:980;font-size:19px;line-height:1.1;color:var(--ink)
+}
+.sigNode__preview{
+  margin-top:8px;font-size:13.75px;line-height:1.42;color:rgba(255,255,255,.84);max-width:64ch
+}
+.sigNode__chev{
+  width:36px;height:36px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);font-weight:950;flex:0 0 auto;position:relative;overflow:hidden
+}
+.sigNode__chev::after{
+  content:"";position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+  opacity:.62;pointer-events:none;
+}
+.sigNode__body{
+  display:none;
+  padding:0 16px 16px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+}
+.sigNode[data-open="true"] .sigNode__body{display:block}
+.sigNode__micro{
+  display:grid;grid-template-columns:1.1fr auto;gap:12px;align-items:end;padding-top:14px
+}
+.sigNode__para{
+  margin:0;color:rgba(255,255,255,.88);font-size:14.5px;line-height:1.7
+}
 
-.brow{
+/* ===== STREAMS ===== */
+.streamList{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+.stream{
+  position:relative;
   border:1px solid rgba(255,255,255,.10);
   border-radius:22px;
   background:
@@ -280,133 +363,126 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
   box-shadow:var(--shadowA);
   overflow:hidden;
-  position:relative;
 }
-.brow::before{
+.stream::before{
   content:"";
   position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.10);
   opacity:.55;
 }
-.bhead{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+.stream[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10)}
+.stream__head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  padding:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.dia{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c,#c9a24a);
+.stream__left{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.stream__diamond{
+  width:12px;height:12px;border-radius:3px;transform:rotate(45deg);flex:0 0 auto;margin-top:4px;
+  background:var(--streamColor,#c9a24a);
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
 }
-.tblock{min-width:0}
-.title{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.stream__title{
+  font-weight:980;font-size:20px;line-height:1.1;color:var(--ink)
 }
-.preview{
-  margin-top:8px;font-size:13.75px;opacity:.90;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
+.stream__sub{
+  margin-top:8px;font-size:13.75px;line-height:1.42;color:rgba(255,255,255,.84);max-width:96ch
 }
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
+.stream__chev{
+  width:36px;height:36px;border-radius:14px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);font-weight:950;flex:0 0 auto;position:relative;overflow:hidden
 }
-.chev::after{
-  content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
+.stream__chev::after{
+  content:"";position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
   opacity:.62;pointer-events:none;
 }
-
-.bbody{
+.stream__body{
   display:none;
-  padding:16px 16px 18px;
+  padding:16px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
-.brow.open .bbody{display:block}
-
-.par{
-  margin:0;
-  color:rgba(255,255,255,.88);
-  font-size:14.75px;
-  line-height:1.7;
-  max-width:980px;
+.stream[data-open="true"] .stream__body{display:block}
+.stream__bodyGrid{
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,2.1fr);
+  gap:14px;
+  align-items:start;
+}
+.stream__thesis{
+  position:sticky;top:92px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  padding:14px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.04), transparent 58%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  box-shadow:var(--shadowB);
+}
+.stream__para{
+  margin:0;color:rgba(255,255,255,.88);font-size:14.5px;line-height:1.7
+}
+.stream__grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--microGap);
+}
+.productNode{
+  position:relative;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.08), transparent 56%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.08), transparent 64%),
+    linear-gradient(145deg, rgba(17,22,28,.84), rgba(11,15,20,.94));
+  box-shadow:var(--shadowB);
+  overflow:hidden;
+}
+.productNode::before{
+  content:"";
+  position:absolute;inset:0;border-radius:18px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.08);
+  opacity:.55;
+}
+.productNode[data-open="true"]{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 16px rgba(255,43,43,.10)}
+.productNode__head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+  padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.productNode__left{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.productNode__diamond{
+  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);flex:0 0 auto;margin-top:4px;
+  background:var(--prodColor,#c9a24a);
+  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 10px rgba(0,0,0,.35);
+}
+.productNode__title{
+  font-weight:980;font-size:17px;line-height:1.12;color:var(--ink)
+}
+.productNode__preview{
+  margin-top:7px;font-size:13.25px;line-height:1.4;color:rgba(255,255,255,.84)
+}
+.productNode__chev{
+  width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.78);font-weight:950;flex:0 0 auto;position:relative;overflow:hidden
+}
+.productNode__body{
+  display:none;
+  padding:0 14px 14px;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,.05), transparent 55%),
+    linear-gradient(145deg, rgba(10,12,16,.84), rgba(6,8,10,.94));
+}
+.productNode[data-open="true"] .productNode__body{display:block}
+.productNode__para{
+  margin:14px 0 0;color:rgba(255,255,255,.88);font-size:14px;line-height:1.65
 }
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
 .actions .btn{border-radius:999px;min-height:40px;font-size:13px}
-
-/* ===== STREAM ACCORDION ===== */
-.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
-  overflow:hidden;
-  position:relative;
-}
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.hDia{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
-}
-.hTitleBlock{min-width:0}
-.hTitle{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.hSub{
-  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
-}
-.body{
-  display:none;
-  padding:16px 16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-}
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
-
-.streamPara{
-  margin:0 0 12px;
-  color:rgba(255,255,255,.88);
-  font-size:14.75px;
-  line-height:1.7;
-  max-width:980px;
-}
 
 /* ===== DOCK ===== */
 .dock{
@@ -427,10 +503,24 @@ body::before,body::after{pointer-events:none!important}
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+
+@media (max-width:1240px){
+  .heroGrid{grid-template-columns:1fr}
+  .heroField{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stream__bodyGrid{grid-template-columns:1fr}
+  .stream__thesis{position:relative;top:auto}
+  .sigNode--wide,.sigNode--mid,.sigNode--small{grid-column:span 6}
+}
+@media (max-width:900px){
+  .sigField{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .sigNode--wide,.sigNode--mid,.sigNode--small{grid-column:span 6}
+  .stream__grid{grid-template-columns:1fr}
+}
 @media (max-width:520px){
   :root{--dockH:148px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
   .h1{font-size:28px}
+  .heroField{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -460,23 +550,31 @@ body::before,body::after{pointer-events:none!important}
   <div class="backdrop" aria-hidden="true"></div>
 
   <section class="hero" aria-label="Products hero">
-    <p class="k" id="hk">PRODUCTS</p>
-    <h1 class="h1" id="ht">WHAT THE WORLD NEEDS NOW</h1>
-    <p class="sub" id="hs"></p>
-    <div class="rule" id="rule"></div>
-
-    <div class="stateRow" aria-label="State">
-      <div class="statePill" id="laneState">—</div>
-      <div class="statePill" id="langState">—</div>
+    <div class="heroGrid">
+      <div class="heroMain">
+        <p class="k" id="hk">PRODUCTS</p>
+        <h1 class="h1" id="ht">WHAT THE WORLD NEEDS NOW</h1>
+        <p class="sub" id="hs"></p>
+        <div class="rule" id="rule"></div>
+        <div class="stateRow" aria-label="State">
+          <div class="statePill" id="laneState">—</div>
+          <div class="statePill" id="langState">—</div>
+        </div>
+      </div>
+      <div class="heroField" aria-label="Field diagnostics">
+        <div class="fieldChip"><div class="fieldChip__k">Surface</div><div class="fieldChip__v" id="chipSurface">256-density product field</div></div>
+        <div class="fieldChip"><div class="fieldChip__k">Signal</div><div class="fieldChip__v" id="chipSignal">Systems visible simultaneously</div></div>
+        <div class="fieldChip"><div class="fieldChip__k">Mode</div><div class="fieldChip__v" id="chipMode">Geometry-led routing</div></div>
+        <div class="fieldChip"><div class="fieldChip__k">Behavior</div><div class="fieldChip__v" id="chipBehavior">No-reload state preserved</div></div>
+      </div>
     </div>
   </section>
 
   <div class="band" id="bandSig">SIGNATURE SYSTEMS (OPEN ONE)</div>
-  <div class="blist" id="sigList"></div>
+  <div class="sigField" id="sigField" aria-label="Signature systems field"></div>
 
   <div class="band" id="bandStreams">DEPLOYMENT STREAMS (OPEN ONE)</div>
-  <div class="list" id="list"></div>
-
+  <div class="streamList" id="streamList" aria-label="Deployment streams"></div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
@@ -490,15 +588,13 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== STATE (gd_* only; pinned informal layer) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
   var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
   var time = qs.get("time") || LS.getItem("gd_time") || "now";
-  var lane = qs.get("lane") || "platform"; // URL-only
+  var lane = qs.get("lane") || "platform";
 
-  // pinned layer
   var style="informal";
   var depth="explore";
 
@@ -547,9 +643,7 @@ body::before,body::after{pointer-events:none!important}
 
   function go(path){ window.location.href = path + q(); }
 
-  // ===== ROUTES (single source of truth) =====
   var ROUTES = {
-    // SIGNATURE SYSTEMS
     sig_shimmer: "/explore/frontier/shimmer/",
     sig_lattice256: "/explore/frontier/lattice/",
     sig_dotdot: "/gauges/dot-grid/",
@@ -559,38 +653,32 @@ body::before,body::after{pointer-events:none!important}
     sig_clean_english: "/products/education/",
     sig_energy_stack: "/explore/frontier/energy/",
 
-    // STREAMS: GOVERNING
     gov_policy_engine: "/products/governing/policy-engine/",
     gov_decision_index: "/products/governing/decision-index/",
     gov_compliance_grid: "/products/governing/compliance-grid/",
     gov_public_risk_meter: "/products/governing/public-risk-meter/",
 
-    // STREAMS: ENERGY
     en_grid_optimization: "/products/energy/grid-optimization/",
     en_storage_stack: "/products/energy/storage-stack/",
     en_load_balancer: "/products/energy/load-balancer/",
     en_resilience_module: "/products/energy/resilience-module/",
 
-    // STREAMS: FINANCE
     fi_capital_doctrine: "/products/capital-doctrine/",
     fi_liquidity_model: "/products/finance/liquidity-model/",
     fi_risk_envelope: "/products/finance/risk-envelope/",
     fi_audit_ledger: "/products/finance/audit-ledger/",
 
-    // STREAMS: AGRICULTURE
     ag_closed_loop_farming: "/products/agriculture/closed-loop-farming/",
     ag_yield_optimizer: "/products/agriculture/yield-optimizer/",
     ag_water_index: "/products/agriculture/water-index/",
     ag_soil_health_grid: "/products/agriculture/soil-health-grid/",
 
-    // STREAMS: INFRASTRUCTURE
     in_urban_stack: "/products/infrastructure/urban-stack/",
     in_transit_model: "/products/infrastructure/transit-model/",
     in_waste_loop: "/products/infrastructure/waste-loop/",
     in_habitat_module: "/products/infrastructure/habitat-module/"
   };
 
-  // ===== COPY PACKS =====
   var HERO = {
     en:{
       platform:{
@@ -598,14 +686,14 @@ body::before,body::after{pointer-events:none!important}
         sub:
           "Most tools optimize comfort while systems quietly drift. Waste moves “away.” Water stress moves “later.” Capital scales weakness. Decisions become noise.\n\n" +
           "These products reverse that pattern: make reality measurable, keep motion bounded, and move from problem → execution without drama.",
-        rule:"Rule: pick one system, read one block, then enter. This page routes; the product pages go deep."
+        rule:"Rule: scan the field, open one system, then enter. This page is the lattice surface. Product pages go deep."
       },
       engineering:{
         h:"WHAT THE WORLD NEEDS NOW",
         sub:
           "Modern failures are drift under load: coupling, missing receipts, unbounded escalation, and silent overrides.\n\n" +
           "These products enforce a stability posture: scope → measurement → admissibility → containment → replay. Claims stay bounded until receipts exist.",
-        rule:"Rule: route → receipt → replay. If evidence is missing, posture is HOLD."
+        rule:"Rule: surface → node → receipt path. If evidence is missing, posture is HOLD."
       }
     },
     zh:{
@@ -614,14 +702,14 @@ body::before,body::after{pointer-events:none!important}
         sub:
           "很多工具只优化舒适，而系统在悄悄漂移：废弃物被“扔掉”、水压力被“拖延”、资本放大弱点、决策变成噪声。\n\n" +
           "这些产品用来逆转这一切：让现实可测，让运动有界，让你从问题→执行不再混乱。",
-        rule:"规则：选一个系统，读一个块，然后进入。本页负责路由；产品页负责深入。"
+        rule:"规则：先扫视字段，再打开一个系统，然后进入。本页是晶格表面，产品页负责深入。"
       },
       engineering:{
         h:"世界此刻需要什么",
         sub:
           "现代崩坏不是谜，而是负载下的漂移：耦合、缺收据、无界升级、静默覆盖。\n\n" +
           "这些产品执行稳定姿态：范围→测量→可采信→隔离→回放。没收据就保持有界。",
-        rule:"规则：路由→收据→回放。缺证据=HOLD。"
+        rule:"规则：表面→节点→收据路径。缺证据=HOLD。"
       }
     },
     es:{
@@ -630,20 +718,20 @@ body::before,body::after{pointer-events:none!important}
         sub:
           "Muchas herramientas optimizan comodidad mientras los sistemas derivan en silencio: residuos “afuera”, estrés hídrico “más tarde”, capital escalando debilidad, decisiones como ruido.\n\n" +
           "Estos productos invierten ese patrón: medir la realidad, acotar el movimiento, y llevarte de problema → ejecución sin drama.",
-        rule:"Regla: elige un sistema, lee un bloque y entra. Esta página enruta; las páginas de producto profundizan."
+        rule:"Regla: recorre el campo, abre un sistema y entra. Esta página es la superficie lattice. Las páginas de producto profundizan."
       },
       engineering:{
         h:"LO QUE EL MUNDO NECESITA HOY",
         sub:
           "Los fallos modernos son deriva bajo carga: acoplamientos, falta de recibos, escalación sin límites y overrides silenciosos.\n\n" +
           "Estos productos imponen postura de estabilidad: alcance → medición → admisibilidad → contención → replay.",
-        rule:"Regla: ruta → recibo → replay. Sin evidencia: HOLD."
+        rule:"Regla: superficie → nodo → ruta de recibos. Sin evidencia: HOLD."
       }
     }
   };
 
   var SIGNATURE = [
-    {id:"sig_shimmer", c:"#ff2b2b",
+    {id:"sig_shimmer", c:"#ff2b2b", size:"wide",
       name:{platform:{en:"SHIMMER Engine",zh:"SHIMMER 引擎",es:"Motor SHIMMER"}, engineering:{en:"Variance Control",zh:"方差控制",es:"Control de Varianza"}},
       preview:{platform:{en:"Stabilizes perception under pressure.",zh:"压力下稳定感知。",es:"Estabiliza percepción bajo presión."},
               engineering:{en:"Baseline→bands→triggers→receipts.",zh:"基线→区间→触发→收据。",es:"Baseline→bandas→triggers→recibos."}},
@@ -656,7 +744,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"SHIMMER (ingeniería) trata la deriva perceptiva como fallo de interfaz: baseline, bandas, triggers con códigos, recibos y replay. Si no es reproducible bajo alcance fijo: HOLD."}
       }
     },
-    {id:"sig_lattice256", c:"#c9a24a",
+    {id:"sig_lattice256", c:"#c9a24a", size:"wide",
       name:{platform:{en:"256-State Lattice",zh:"256态晶格",es:"Lattice 256"}, engineering:{en:"Finite Coordinates",zh:"有限坐标",es:"Coordenadas Finitas"}},
       preview:{platform:{en:"Makes “complex” indexable.",zh:"让“复杂”可索引。",es:"Hace lo complejo indexable."},
               engineering:{en:"Manifest lock + replay discipline.",zh:"清单锁+回放纪律。",es:"Manifiesto fijo + replay."}},
@@ -669,7 +757,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"Coordenadas finitas requieren ejes y enumeración explícitos, con manifiesto bloqueado. Salidas admisibles solo si deterministas bajo alcance fijo y replayables desde recibos. Cambios = nueva época."}
       }
     },
-    {id:"sig_dotdot", c:"#93c5fd",
+    {id:"sig_dotdot", c:"#93c5fd", size:"mid",
       name:{platform:{en:"Dot·Dot Grid",zh:"点点网格",es:"Dot·Dot Grid"}, engineering:{en:"Signal Surface",zh:"信号面",es:"Superficie de Señal"}},
       preview:{platform:{en:"Shows what changed.",zh:"展示变化。",es:"Muestra cambios."},
               engineering:{en:"Windowed deltas + thresholds.",zh:"窗口差分+阈值。",es:"Deltas por ventana + umbrales."}},
@@ -682,7 +770,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"Superficies de señal calculan deltas por ventana, cambios de pendiente y cruces de umbral. Cada flag se liga a alcance+evidencia y se guarda como recibo para replay."}
       }
     },
-    {id:"sig_onyourside", c:"#34d399",
+    {id:"sig_onyourside", c:"#34d399", size:"mid",
       name:{platform:{en:"On Your Side AI (SIDE)",zh:"On Your Side AI（SIDE）",es:"On Your Side AI"}, engineering:{en:"Receipt-First Assistant",zh:"收据优先助手",es:"Asistente con Recibos"}},
       preview:{platform:{en:"Next step, not noise.",zh:"给下一步，不给噪声。",es:"Siguiente paso, no ruido."},
               engineering:{en:"Bounded outputs under scope.",zh:"范围下有界输出。",es:"Salidas acotadas bajo alcance."}},
@@ -695,7 +783,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"SIDE (ingeniería) impone disciplina de alcance y clasificación no narrativa. Emite recomendaciones acotadas con códigos y enruta a medición cuando los gates son indecidibles."}
       }
     },
-    {id:"sig_clean_english", c:"#93c5fd",
+    {id:"sig_clean_english", c:"#93c5fd", size:"small",
       name:{platform:{en:"Clean English Core",zh:"Clean English Core",es:"Clean English Core"}, engineering:{en:"Syntax Geometry (SSG)",zh:"简化语法几何（SSG）",es:"Geometría de Sintaxis"}},
       preview:{platform:{en:"ESL fluency by traversal.",zh:"遍历式 ESL 流利。",es:"Fluidez ESL por recorrido."},
               engineering:{en:"Finite rulesets + navigation.",zh:"有限规则集+导航。",es:"Reglas finitas + navegación."}},
@@ -708,7 +796,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"SSG expresa gramática/ejecución como reglas de coordenadas finitas, con navegación determinista y salidas consistentes."}
       }
     },
-    {id:"sig_ccd", c:"#c9a24a",
+    {id:"sig_ccd", c:"#c9a24a", size:"small",
       name:{platform:{en:"Capital Doctrine (CCD)",zh:"资本教义（CCD）",es:"Doctrina de Capital"}, engineering:{en:"Admissibility Superlayer",zh:"可采信超层",es:"Supercapa de Admisibilidad"}},
       preview:{platform:{en:"Admissibility before scale.",zh:"先可采信再扩张。",es:"Admisibilidad antes de escalar."},
               engineering:{en:"Invariant gates above finance.",zh:"金融之上的不变量闸门。",es:"Compuertas invariantes sobre finanzas."}},
@@ -721,7 +809,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"CCD es capa de admisibilidad sobre finanzas y gobernanza. Sin medición/recibos: HOLD. Con violación: CONTENER/ROLLBACK."}
       }
     },
-    {id:"sig_fusion_traversal", c:"#a3a3a3",
+    {id:"sig_fusion_traversal", c:"#a3a3a3", size:"small",
       name:{platform:{en:"Traversal Engine",zh:"遍历引擎",es:"Motor de Traversal"}, engineering:{en:"Fusion Traversal Core",zh:"融合遍历核",es:"Núcleo de Fusión"}},
       preview:{platform:{en:"Checkpoints keep navigation calm.",zh:"检查点让导航更安静。",es:"Checkpoints mantienen calma."},
               engineering:{en:"Receipt-gated progression.",zh:"收据门控推进。",es:"Progresión por recibos."}},
@@ -734,7 +822,7 @@ body::before,body::after{pointer-events:none!important}
                     es:"Traversal con compuertas por recibo: salidas/retornos deterministas. Back-nav invalida recibos downstream. Sin timers como gates; avance guiado por evidencia."}
       }
     },
-    {id:"sig_energy_stack", c:"#ff2b2b",
+    {id:"sig_energy_stack", c:"#ff2b2b", size:"small",
       name:{platform:{en:"Energy Stack",zh:"能源栈",es:"Stack Energía"}, engineering:{en:"Solar→Fusion Roadmap",zh:"太阳→聚变路线",es:"Solar→Fusión"}},
       preview:{platform:{en:"Stability first, then frontier.",zh:"先稳定，再前沿。",es:"Estabilidad primero, luego frontera."},
               engineering:{en:"Routing + buffering + verification.",zh:"路由+缓冲+验证。",es:"Ruteo + buffers + verificación."}},
@@ -801,7 +889,6 @@ body::before,body::after{pointer-events:none!important}
                            es:"Exposure Monitor observa exposición por ventana y aceleración de correlación (Δρ); cruces emiten códigos y postura de contención."}}}
       ]
     },
-
     {
       c:"#ff2b2b",
       name:{en:"ENERGY",zh:"能源",es:"ENERGÍA"},
@@ -853,7 +940,6 @@ body::before,body::after{pointer-events:none!important}
                            es:"Containment Playbook define rollback, kill/exit y verificación de re-entrada; sin re-entrada a bandas no hay escalación."}}}
       ]
     },
-
     {
       c:"#c9a24a",
       name:{en:"FINANCE",zh:"金融",es:"FINANZAS"},
@@ -905,7 +991,6 @@ body::before,body::after{pointer-events:none!important}
                            es:"Receipt Log guarda alcance+evidencia+hash de manifiesto+salidas para replay determinista; sin recibos: UNDETERMINED."}}}
       ]
     },
-
     {
       c:"#34d399",
       name:{en:"AGRICULTURE",zh:"农业",es:"AGRICULTURA"},
@@ -957,7 +1042,6 @@ body::before,body::after{pointer-events:none!important}
                            es:"Soil State Lattice enumera estados finitos y detecta deriva con medición por ventana; correcciones se versionan."}}}
       ]
     },
-
     {
       c:"#a3a3a3",
       name:{en:"INFRASTRUCTURE",zh:"基础设施",es:"INFRAESTRUCTURA"},
@@ -1011,7 +1095,6 @@ body::before,body::after{pointer-events:none!important}
     }
   ];
 
-  // ===== HERO APPLY =====
   function applyHero(){
     var H = (HERO[lang] || HERO.en);
     var pack = (lane==="engineering") ? H.engineering : H.platform;
@@ -1043,9 +1126,19 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("lanePlatform").textContent = pick3("PLATFORM","平台","PLATAFORMA");
     document.getElementById("laneEngineering").textContent = pick3("ENGINEERING","工程","INGENIERÍA");
+
+    document.getElementById("chipSurface").textContent =
+      pick3("256-density product field","256密度产品字段","Campo de productos 256");
+    document.getElementById("chipSignal").textContent =
+      pick3("Systems visible simultaneously","系统同时可见","Sistemas visibles a la vez");
+    document.getElementById("chipMode").textContent =
+      (lane==="engineering")
+        ? pick3("Receipt-first surface","收据优先表面","Superficie recibo-primero")
+        : pick3("Geometry-led routing","几何主导路由","Ruteo guiado por geometría");
+    document.getElementById("chipBehavior").textContent =
+      pick3("No-reload state preserved","无刷新状态保留","Estado sin recarga preservado");
   }
 
-  // ===== ROUTE WIRING (state carry) =====
   function wireAll(){
     var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
@@ -1072,215 +1165,351 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // ===== BUBBLE BUILDERS =====
-  function mkBubbleRow(def){
-    var row=document.createElement("div");
-    row.className="brow";
-    row.style.setProperty("--c", def.c);
-
-    var head=document.createElement("div");
-    head.className="bhead";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var hL=document.createElement("div");
-    hL.className="hL";
-
-    var dia=document.createElement("div");
-    dia.className="dia";
-    dia.style.background=def.c;
-
-    var tb=document.createElement("div");
-    tb.className="tblock";
-
-    var title=document.createElement("div");
-    title.className="title";
-
-    var preview=document.createElement("div");
-    preview.className="preview";
-
-    tb.appendChild(title);
-    tb.appendChild(preview);
-
-    hL.appendChild(dia);
-    hL.appendChild(tb);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="bbody";
-
-    var p=document.createElement("p");
-    p.className="par";
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
+  function createEnterButton(id){
     var a=document.createElement("a");
     a.className="btn red";
-    a.setAttribute("data-route", ROUTES[def.id] || "/products/");
-    actions.appendChild(a);
-
-    body.appendChild(p);
-    body.appendChild(actions);
-
-    function toggle(){
-      var willOpen=!row.classList.contains("open");
-      row.classList.toggle("open", willOpen);
-      row.querySelector(".chevTxt").textContent = willOpen ? "▾" : "▸";
-      wireAll();
-    }
-    head.addEventListener("click", toggle, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-
-    return {row:row, title:title, preview:preview, para:p, btn:a};
+    a.setAttribute("data-route", ROUTES[id] || "/products/");
+    return a;
   }
 
-  // ===== SIGNATURE LIST =====
-  var sigList=document.getElementById("sigList");
+  /* ===== SIGNATURE FIELD ===== */
+  var sigField=document.getElementById("sigField");
   var sigRefs=[];
-  function renderSignature(){
-    sigList.innerHTML="";
+  var openSignature = 0;
+
+  function closeAllSignature(){
+    for(var i=0;i<sigRefs.length;i++){
+      sigRefs[i].node.dataset.open = "false";
+      sigRefs[i].chev.textContent = "▸";
+    }
+  }
+
+  function toggleSignature(i){
+    var active = sigRefs[i].node.dataset.open === "true";
+    if(active){
+      sigRefs[i].node.dataset.open = "false";
+      sigRefs[i].chev.textContent = "▸";
+      return;
+    }
+    closeAllSignature();
+    openSignature = i;
+    sigRefs[i].node.dataset.open = "true";
+    sigRefs[i].chev.textContent = "▾";
+    wireAll();
+  }
+
+  function buildSignatureField(){
+    sigField.innerHTML="";
     sigRefs=[];
     for(var i=0;i<SIGNATURE.length;i++){
-      var item=SIGNATURE[i];
-      var ref=mkBubbleRow({id:item.id,c:item.c});
-      sigList.appendChild(ref.row);
-      sigRefs.push({ref:ref,item:item});
+      var S=SIGNATURE[i];
+      var node=document.createElement("article");
+      node.className="sigNode sigNode--"+(S.size||"mid");
+      node.style.setProperty("--nodeColor", S.c);
+
+      var head=document.createElement("div");
+      head.className="sigNode__head";
+      head.setAttribute("role","button");
+      head.tabIndex=0;
+
+      var left=document.createElement("div");
+      left.className="sigNode__left";
+
+      var dia=document.createElement("div");
+      dia.className="sigNode__diamond";
+
+      var copy=document.createElement("div");
+      copy.className="sigNode__copy";
+
+      var title=document.createElement("div");
+      title.className="sigNode__title";
+
+      var preview=document.createElement("div");
+      preview.className="sigNode__preview";
+
+      copy.appendChild(title);
+      copy.appendChild(preview);
+
+      left.appendChild(dia);
+      left.appendChild(copy);
+
+      var chevWrap=document.createElement("div");
+      chevWrap.className="sigNode__chev";
+      var chev=document.createElement("span");
+      chev.textContent="▸";
+      chevWrap.appendChild(chev);
+
+      head.appendChild(left);
+      head.appendChild(chevWrap);
+
+      var body=document.createElement("div");
+      body.className="sigNode__body";
+
+      var micro=document.createElement("div");
+      micro.className="sigNode__micro";
+
+      var para=document.createElement("p");
+      para.className="sigNode__para";
+
+      var actions=document.createElement("div");
+      actions.className="actions";
+      var enter=createEnterButton(S.id);
+      actions.appendChild(enter);
+
+      micro.appendChild(para);
+      micro.appendChild(actions);
+      body.appendChild(micro);
+
+      (function(index){
+        function act(){ toggleSignature(index); }
+        head.addEventListener("click", act, {passive:true});
+        head.addEventListener("keydown", function(e){
+          if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+        });
+      })(i);
+
+      node.appendChild(head);
+      node.appendChild(body);
+      sigField.appendChild(node);
+
+      sigRefs.push({
+        item:S,
+        node:node,
+        title:title,
+        preview:preview,
+        para:para,
+        btn:enter,
+        chev:chev
+      });
     }
+    toggleSignature(openSignature);
   }
 
-  // ===== STREAMS ACCORDION =====
-  var list=document.getElementById("list");
+  /* ===== STREAMS ===== */
+  var streamList=document.getElementById("streamList");
   var streamRefs=[];
   var openStream=0;
+  var openProductByStream={};
 
   function closeAllStreams(){
     for(var i=0;i<streamRefs.length;i++){
-      streamRefs[i].row.classList.remove("open");
-      streamRefs[i].row.querySelector(".chevTxt").textContent="▸";
+      streamRefs[i].row.dataset.open = "false";
+      streamRefs[i].chev.textContent = "▸";
     }
   }
 
   function toggleStream(i){
-    var isOpen=streamRefs[i].row.classList.contains("open");
+    var isOpen=streamRefs[i].row.dataset.open === "true";
     if(isOpen){
-      streamRefs[i].row.classList.remove("open");
-      streamRefs[i].row.querySelector(".chevTxt").textContent="▸";
+      streamRefs[i].row.dataset.open="false";
+      streamRefs[i].chev.textContent="▸";
       return;
     }
     closeAllStreams();
     openStream=i;
-    streamRefs[i].row.classList.add("open");
-    streamRefs[i].row.querySelector(".chevTxt").textContent="▾";
+    streamRefs[i].row.dataset.open="true";
+    streamRefs[i].chev.textContent="▾";
   }
 
-  function buildStreamRow(S, idx){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", S.c);
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var hL=document.createElement("div");
-    hL.className="hL";
-
-    var dia=document.createElement("div");
-    dia.className="hDia";
-    dia.style.background=S.c;
-
-    var tb=document.createElement("div");
-    tb.className="hTitleBlock";
-
-    var hTitle=document.createElement("div");
-    hTitle.className="hTitle";
-
-    var hSub=document.createElement("div");
-    hSub.className="hSub";
-
-    tb.appendChild(hTitle);
-    tb.appendChild(hSub);
-
-    hL.appendChild(dia);
-    hL.appendChild(tb);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var para=document.createElement("p");
-    para.className="streamPara";
-    body.appendChild(para);
-
-    // 4 bubble rows
-    var bl=document.createElement("div");
-    bl.className="blist";
-    var prodRefs=[];
-    for(var i=0;i<S.products.length;i++){
-      var P=S.products[i];
-      var r=mkBubbleRow({id:P.id,c:P.c});
-      bl.appendChild(r.row);
-      prodRefs.push({ref:r,prod:P});
+  function closeAllProducts(refs){
+    for(var i=0;i<refs.length;i++){
+      refs[i].node.dataset.open="false";
+      refs[i].chev.textContent="▸";
     }
-    body.appendChild(bl);
-
-    function act(){ toggleStream(idx); }
-    head.addEventListener("click", act, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    streamRefs.push({
-      row:row,
-      title:hTitle,
-      sub:hSub,
-      para:para,
-      products:prodRefs,
-      stream:S
-    });
   }
 
-  function renderStreams(){
-    list.innerHTML="";
+  function toggleProduct(streamIndex, prodIndex){
+    var refs=streamRefs[streamIndex].products;
+    var active = refs[prodIndex].node.dataset.open === "true";
+    if(active){
+      refs[prodIndex].node.dataset.open="false";
+      refs[prodIndex].chev.textContent="▸";
+      return;
+    }
+    closeAllProducts(refs);
+    openProductByStream[streamIndex]=prodIndex;
+    refs[prodIndex].node.dataset.open="true";
+    refs[prodIndex].chev.textContent="▾";
+    wireAll();
+  }
+
+  function buildStreamList(){
+    streamList.innerHTML="";
     streamRefs=[];
+
     for(var i=0;i<STREAMS.length;i++){
-      buildStreamRow(STREAMS[i], i);
+      var S=STREAMS[i];
+
+      var row=document.createElement("section");
+      row.className="stream";
+      row.style.setProperty("--streamColor", S.c);
+
+      var head=document.createElement("div");
+      head.className="stream__head";
+      head.setAttribute("role","button");
+      head.tabIndex=0;
+
+      var left=document.createElement("div");
+      left.className="stream__left";
+
+      var dia=document.createElement("div");
+      dia.className="stream__diamond";
+
+      var block=document.createElement("div");
+      block.className="stream__block";
+
+      var title=document.createElement("div");
+      title.className="stream__title";
+
+      var sub=document.createElement("div");
+      sub.className="stream__sub";
+
+      block.appendChild(title);
+      block.appendChild(sub);
+
+      left.appendChild(dia);
+      left.appendChild(block);
+
+      var chevWrap=document.createElement("div");
+      chevWrap.className="stream__chev";
+      var chev=document.createElement("span");
+      chev.textContent="▸";
+      chevWrap.appendChild(chev);
+
+      head.appendChild(left);
+      head.appendChild(chevWrap);
+
+      var body=document.createElement("div");
+      body.className="stream__body";
+
+      var bodyGrid=document.createElement("div");
+      bodyGrid.className="stream__bodyGrid";
+
+      var thesis=document.createElement("div");
+      thesis.className="stream__thesis";
+      var para=document.createElement("p");
+      para.className="stream__para";
+      thesis.appendChild(para);
+
+      var grid=document.createElement("div");
+      grid.className="stream__grid";
+
+      var prodRefs=[];
+      for(var j=0;j<S.products.length;j++){
+        var P=S.products[j];
+
+        var pNode=document.createElement("article");
+        pNode.className="productNode";
+        pNode.style.setProperty("--prodColor", P.c);
+
+        var pHead=document.createElement("div");
+        pHead.className="productNode__head";
+        pHead.setAttribute("role","button");
+        pHead.tabIndex=0;
+
+        var pLeft=document.createElement("div");
+        pLeft.className="productNode__left";
+
+        var pDia=document.createElement("div");
+        pDia.className="productNode__diamond";
+
+        var pCopy=document.createElement("div");
+        pCopy.className="productNode__copy";
+
+        var pTitle=document.createElement("div");
+        pTitle.className="productNode__title";
+
+        var pPreview=document.createElement("div");
+        pPreview.className="productNode__preview";
+
+        pCopy.appendChild(pTitle);
+        pCopy.appendChild(pPreview);
+
+        pLeft.appendChild(pDia);
+        pLeft.appendChild(pCopy);
+
+        var pChevWrap=document.createElement("div");
+        pChevWrap.className="productNode__chev";
+        var pChev=document.createElement("span");
+        pChev.textContent="▸";
+        pChevWrap.appendChild(pChev);
+
+        pHead.appendChild(pLeft);
+        pHead.appendChild(pChevWrap);
+
+        var pBody=document.createElement("div");
+        pBody.className="productNode__body";
+
+        var pPara=document.createElement("p");
+        pPara.className="productNode__para";
+
+        var pActions=document.createElement("div");
+        pActions.className="actions";
+        var pBtn=createEnterButton(P.id);
+        pActions.appendChild(pBtn);
+
+        pBody.appendChild(pPara);
+        pBody.appendChild(pActions);
+
+        (function(streamIndex, prodIndex){
+          function act(){ toggleProduct(streamIndex, prodIndex); }
+          pHead.addEventListener("click", act, {passive:true});
+          pHead.addEventListener("keydown", function(e){
+            if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+          });
+        })(i, j);
+
+        pNode.appendChild(pHead);
+        pNode.appendChild(pBody);
+        grid.appendChild(pNode);
+
+        prodRefs.push({
+          prod:P,
+          node:pNode,
+          title:pTitle,
+          preview:pPreview,
+          para:pPara,
+          btn:pBtn,
+          chev:pChev
+        });
+      }
+
+      bodyGrid.appendChild(thesis);
+      bodyGrid.appendChild(grid);
+      body.appendChild(bodyGrid);
+
+      (function(index){
+        function act(){ toggleStream(index); }
+        head.addEventListener("click", act, {passive:true});
+        head.addEventListener("keydown", function(e){
+          if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
+        });
+      })(i);
+
+      row.appendChild(head);
+      row.appendChild(body);
+      streamList.appendChild(row);
+
+      streamRefs.push({
+        stream:S,
+        row:row,
+        title:title,
+        sub:sub,
+        para:para,
+        chev:chev,
+        products:prodRefs
+      });
     }
-    openStream=0;
-    toggleStream(0);
+
+    toggleStream(openStream);
   }
 
-  // ===== APPLY COPY =====
   function applyCopy(){
     applyHero();
 
-    // signature
     for(var i=0;i<sigRefs.length;i++){
       var S=sigRefs[i].item;
-      var R=sigRefs[i].ref;
+      var R=sigRefs[i];
       var nm=(lane==="engineering")?S.name.engineering:S.name.platform;
       var pv=(lane==="engineering")?S.preview.engineering:S.preview.platform;
       var pr=(lane==="engineering")?S.para.engineering:S.para.platform;
@@ -1291,7 +1520,9 @@ body::before,body::after{pointer-events:none!important}
       R.btn.textContent = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
     }
 
-    // streams + product rows
+    closeAllSignature();
+    toggleSignature(openSignature);
+
     for(var s=0;s<streamRefs.length;s++){
       var SR=streamRefs[s];
       var S2=SR.stream;
@@ -1304,7 +1535,7 @@ body::before,body::after{pointer-events:none!important}
 
       for(var j=0;j<SR.products.length;j++){
         var P=SR.products[j].prod;
-        var R2=SR.products[j].ref;
+        var R2=SR.products[j];
 
         var nm2=(lane==="engineering")?P.t.engineering:P.t.platform;
         var pv2=(lane==="engineering")?P.prev.engineering:P.prev.platform;
@@ -1315,14 +1546,20 @@ body::before,body::after{pointer-events:none!important}
         R2.para.textContent = pick3(pr2.en, pr2.zh, pr2.es);
         R2.btn.textContent = openLabel()+": "+pick3("ENTER","进入","ENTRAR");
       }
+
+      closeAllProducts(SR.products);
+      var openProd = Number.isInteger(openProductByStream[s]) ? openProductByStream[s] : 0;
+      if(SR.products[openProd]){
+        SR.products[openProd].node.dataset.open="true";
+        SR.products[openProd].chev.textContent="▾";
+      }
     }
 
-    // keep open stream as-is
     closeAllStreams();
     toggleStream(openStream);
+    wireAll();
   }
 
-  // ===== NO-RELOAD TOGGLES =====
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
@@ -1330,32 +1567,28 @@ body::before,body::after{pointer-events:none!important}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
     setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
     applyCopy();
-    wireAll();
   }
+
   function setLane(next){
     if(next!=="platform"&&next!=="engineering") next="platform";
     lane=next;
     history.replaceState({}, "", location.pathname + q({lane:lane}));
     setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
     applyCopy();
-    wireAll();
   }
 
-  // ===== BINDINGS =====
   document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
   document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
   document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  // ===== INIT =====
   setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
   setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
 
-  renderSignature();
-  renderStreams();
+  buildSignatureField();
+  buildStreamList();
   applyCopy();
-  wireAll();
 
 })();
 </script>

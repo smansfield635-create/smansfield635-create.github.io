@@ -4,203 +4,98 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Nine Summits World</title>
-  <meta name="description" content="Compressed 256×256 world engine bootstrap shell.">
+  <meta name="description" content="World entry gateway.">
+
   <link rel="stylesheet" href="./assets/ui.css">
 </head>
 
-<body data-mode="world" data-diagnostics="peek">
-  <div id="app-shell">
-    <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
+<body data-mode="door">
 
-    <div id="nav-doors" class="nav-doors" aria-label="Primary doors">
-      <a href="/home/" class="nav-btn">Home</a>
-      <a href="/explore/" class="nav-btn">Explore</a>
+  <canvas id="world-canvas"></canvas>
+
+  <!-- DOOR UI -->
+  <div id="door-ui">
+
+    <div class="door-title">
+      <h1>NINE SUMMITS</h1>
+      <p>Choose your reality.</p>
     </div>
 
-    <div id="hud" class="hud">
-      <div id="runtime-banner" class="runtime-banner">
-        <span id="runtime-phase">BOOT</span>
-      </div>
+    <div class="door-options">
 
-      <div id="world-actions" class="world-actions">
-        <button id="open-button" class="world-btn" type="button">Open</button>
-      </div>
+      <button id="btn-round" class="door-btn">
+        WORLD IS ROUND
+      </button>
 
-      <div id="debug-panel" class="debug-panel"></div>
+      <button id="btn-flat" class="door-btn alt">
+        WORLD IS FLAT
+      </button>
 
-      <div id="compass-overlay" class="compass-overlay"></div>
-
-      <div id="diagnostics-dock" class="diagnostics-dock">
-        <div id="diagnostics-bar" class="diagnostics-bar">
-          <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
-          <button id="diagnostics-toggle" class="diagnostics-toggle"></button>
-        </div>
-      </div>
     </div>
+
   </div>
 
   <script type="module">
-    import { WORLD_KERNEL } from "./world/world_kernel.js";
     import { createPlanetEngine } from "./world/planet_engine.js";
     import { createRenderer } from "./world/render.js";
     import { createControlSystem } from "./world/control.js";
-    import { createInstruments } from "./assets/instruments.js";
-
-    // ✅ NEW: GEOMETRY ENGINE
-    import { createProductGeometryEngine } from "./world/product_geometry.js";
 
     const canvas = document.getElementById("world-canvas");
-    const ctx = canvas.getContext("2d", { alpha: true });
+    const ctx = canvas.getContext("2d");
 
-    const runtimePhase = document.getElementById("runtime-phase");
-    const openButton = document.getElementById("open-button");
-
-    const planetEngine = createPlanetEngine();
+    const engine = createPlanetEngine();
     const renderer = createRenderer();
     const control = createControlSystem();
-    const instruments = createInstruments();
-
-    // ✅ NEW: GEOMETRY ENGINE INSTANCE
-    const geometry = createProductGeometryEngine();
 
     const runtime = {
-      phase: "BOOT",
-      kernel: WORLD_KERNEL,
-      planetField: null,
-      dtMs: 0,
-      fps: 0,
-      elapsedMs: 0,
-      startupComplete: false
+      planetField: null
     };
 
-    let lastFrame = performance.now();
-    let startTime = lastFrame;
-
-    // =========================
-    // RESIZE
-    // =========================
     function resize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-
-      canvas.width = w;
-      canvas.height = h;
-
-      control.resize(w, h);
-
-      // ✅ GEOMETRY RESIZE
-      geometry.resize(w, h);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      control.resize(canvas.width, canvas.height);
     }
 
-    // =========================
-    // TIMING
-    // =========================
-    function updateTime(now) {
-      const dt = now - lastFrame;
-      lastFrame = now;
+    function render() {
+      if (!runtime.planetField) return;
 
-      runtime.dtMs = dt;
-      runtime.fps = dt > 0 ? 1000 / dt : 0;
-      runtime.elapsedMs = now - startTime;
-    }
-
-    // =========================
-    // INITIAL BUILD
-    // =========================
-    function build() {
-      runtime.planetField = planetEngine.buildPlanetField({});
-
-      // ✅ INITIAL PRODUCT NODES
-      geometry.buildNodes([
-        { id: "now", label: "NOW", route: "/products/" },
-        { id: "future", label: "FUTURE", route: "/explore/" }
-      ]);
-    }
-
-    // =========================
-    // RENDER
-    // =========================
-    function renderFrame() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // 🌍 WORLD
       renderer.renderPlanet({
         ctx,
         planetField: runtime.planetField,
-        projectPoint: control.projectSphere,
+        projectPoint: (lat, lon, r) => control.projectSphere(lat, lon, r),
         viewState: control.getCameraState()
       });
-
-      // 💠 GEOMETRY (DIAMONDS)
-      geometry.render(ctx);
     }
 
-    // =========================
-    // FRAME LOOP
-    // =========================
-    function frame(now) {
-      updateTime(now);
-
+    function frame() {
       control.stepInertia();
-
-      // ✅ GEOMETRY UPDATE
-      geometry.update(runtime.dtMs);
-
-      renderFrame();
-
+      render();
       requestAnimationFrame(frame);
     }
 
-    // =========================
-    // EVENTS
-    // =========================
-    function bind() {
-      window.addEventListener("resize", () => {
-        resize();
-        renderFrame();
-      });
-
-      canvas.addEventListener("pointerdown", e => {
-        control.startDrag(e.clientX, e.clientY);
-      });
-
-      window.addEventListener("pointermove", e => {
-        control.drag(e.clientX, e.clientY);
-      });
-
-      window.addEventListener("pointerup", () => {
-        control.endDrag();
-      });
-
-      // ✅ TAP ROUTING (GEOMETRY HIT TEST)
-      canvas.addEventListener("click", e => {
-        const hit = geometry.hitTest(e.clientX, e.clientY);
-        if (hit?.route) {
-          window.location.href = hit.route;
-        }
-      });
-
-      openButton.addEventListener("click", () => {
-        window.location.href = "/home/";
-      });
-    }
-
-    // =========================
-    // START
-    // =========================
     function start() {
       resize();
-      build();
-      bind();
-
-      runtime.startupComplete = true;
-      runtime.phase = "RUNNING";
-      runtimePhase.textContent = "RUNNING";
-
-      requestAnimationFrame(frame);
+      runtime.planetField = engine.buildPlanetField({});
+      frame();
     }
+
+    // ===== DOOR LOGIC =====
+
+    document.getElementById("btn-round").addEventListener("click", () => {
+      // ENTER WORLD → ZOOM INTO GRATITUDE
+      window.location.href = "/world/gratitude/";
+    });
+
+    document.getElementById("btn-flat").addEventListener("click", () => {
+      // FLAT MODE → CONTENT ONLY
+      window.location.href = "/home/?mode=flat";
+    });
+
+    window.addEventListener("resize", resize);
 
     start();
   </script>
+
 </body>
 </html>

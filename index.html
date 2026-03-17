@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Nine Summits World</title>
-  <meta
-    name="description"
-    content="Compressed 256×256 world engine bootstrap shell."
-  >
+  <meta name="description" content="Compressed 256×256 world engine bootstrap shell.">
   <link rel="stylesheet" href="./assets/ui.css">
 </head>
+
 <body data-mode="world" data-diagnostics="peek">
   <div id="app-shell">
     <canvas id="world-canvas" class="world-canvas" aria-label="World canvas"></canvas>
@@ -23,44 +18,22 @@
     </div>
 
     <div id="hud" class="hud">
-      <div id="runtime-banner" class="runtime-banner" aria-live="polite">
+      <div id="runtime-banner" class="runtime-banner">
         <span id="runtime-phase">BOOT</span>
       </div>
 
-      <div id="world-actions" class="world-actions" aria-label="World actions">
+      <div id="world-actions" class="world-actions">
         <button id="open-button" class="world-btn" type="button">Open</button>
       </div>
 
-      <div id="debug-panel" class="debug-panel" aria-live="polite">
-        <section class="panel-section">
-          <h3 class="panel-title">Loading</h3>
-          <div class="panel-row">
-            <span class="panel-key">State</span>
-            <span class="panel-value">Booting application shell…</span>
-          </div>
-        </section>
-      </div>
+      <div id="debug-panel" class="debug-panel"></div>
 
-      <div id="compass-overlay" class="compass-overlay" aria-hidden="true"></div>
+      <div id="compass-overlay" class="compass-overlay"></div>
 
       <div id="diagnostics-dock" class="diagnostics-dock">
-        <div id="diagnostics-bar" class="diagnostics-bar" aria-live="polite">
-          <div id="diagnostics-summary" class="diagnostic-bar__summary">
-            <div class="diagnostic-bar__group">
-              <span class="diagnostic-pill">
-                <span class="diagnostic-pill__label">State</span>
-                <span class="diagnostic-pill__value">Booting…</span>
-              </span>
-            </div>
-          </div>
-
-          <button
-            id="diagnostics-toggle"
-            class="diagnostics-toggle"
-            type="button"
-            aria-label="Toggle diagnostics"
-            aria-expanded="false"
-          ></button>
+        <div id="diagnostics-bar" class="diagnostics-bar">
+          <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
+          <button id="diagnostics-toggle" class="diagnostics-toggle"></button>
         </div>
       </div>
     </div>
@@ -73,11 +46,13 @@
     import { createControlSystem } from "./world/control.js";
     import { createInstruments } from "./assets/instruments.js";
 
-    const worldCanvas = document.getElementById("world-canvas");
-    const debugPanel = document.getElementById("debug-panel");
+    // ✅ NEW: GEOMETRY ENGINE
+    import { createProductGeometryEngine } from "./world/product_geometry.js";
+
+    const canvas = document.getElementById("world-canvas");
+    const ctx = canvas.getContext("2d", { alpha: true });
+
     const runtimePhase = document.getElementById("runtime-phase");
-    const diagnosticsToggle = document.getElementById("diagnostics-toggle");
-    const diagnosticsSummary = document.getElementById("diagnostics-summary");
     const openButton = document.getElementById("open-button");
 
     const planetEngine = createPlanetEngine();
@@ -85,346 +60,144 @@
     const control = createControlSystem();
     const instruments = createInstruments();
 
-    const ctx = worldCanvas.getContext("2d", { alpha: true });
+    // ✅ NEW: GEOMETRY ENGINE INSTANCE
+    const geometry = createProductGeometryEngine();
 
     const runtime = {
       phase: "BOOT",
-      activeFile: "index.html",
       kernel: WORLD_KERNEL,
       planetField: null,
-      control: {
-        cameraState: null,
-        projectionSummary: null,
-        cardinals: null
-      },
-      verification: null,
-      failure: null,
       dtMs: 0,
       fps: 0,
       elapsedMs: 0,
       startupComplete: false
     };
 
-    let frameHandle = 0;
-    let lastFrameAt = performance.now();
-    let startedAt = lastFrameAt;
-    let isDragging = false;
-    let lastX = 0;
-    let lastY = 0;
+    let lastFrame = performance.now();
+    let startTime = lastFrame;
 
-    let panelCacheKey = "";
-    let compactCacheKey = "";
-    let lastDiagnosticsWriteAt = 0;
-    const DIAGNOSTICS_INTERVAL_MS = 200;
+    // =========================
+    // RESIZE
+    // =========================
+    function resize() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
 
-    function setPhase(phase) {
-      runtime.phase = phase;
-      if (runtimePhase) runtimePhase.textContent = phase;
+      canvas.width = w;
+      canvas.height = h;
+
+      control.resize(w, h);
+
+      // ✅ GEOMETRY RESIZE
+      geometry.resize(w, h);
     }
 
-    function isFiniteNumber(value) {
-      return typeof value === "number" && Number.isFinite(value);
+    // =========================
+    // TIMING
+    // =========================
+    function updateTime(now) {
+      const dt = now - lastFrame;
+      lastFrame = now;
+
+      runtime.dtMs = dt;
+      runtime.fps = dt > 0 ? 1000 / dt : 0;
+      runtime.elapsedMs = now - startTime;
     }
 
-    function buildPanelCacheKey() {
-      const projection = runtime.control?.projectionSummary ?? {};
-      const summary = runtime.planetField?.summary ?? {};
-      const verification = runtime.verification ?? {};
-      const failure = runtime.failure ?? {};
-
-      return JSON.stringify({
-        phase: runtime.phase,
-        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
-        elapsedMs: isFiniteNumber(runtime.elapsedMs) ? Math.floor(runtime.elapsedMs) : "—",
-        sampleX: projection.sampleX ?? "—",
-        sampleY: projection.sampleY ?? "—",
-        cellId: projection.cellId ?? "—",
-        summarySampleCount: summary.sampleCount ?? "—",
-        summaryLandCount: summary.landCount ?? "—",
-        summaryWaterCount: summary.waterCount ?? "—",
-        verificationPass:
-          verification?.pass === true ? "PASS" :
-          verification?.pass === false ? "FAIL" :
-          verification?.pass ?? "MISSING",
-        failurePhase: failure.phase ?? "—",
-        failureMessage: failure.message ?? "—"
-      });
-    }
-
-    function buildCompactCacheKey() {
-      const projection = runtime.control?.projectionSummary ?? {};
-      const summary = runtime.planetField?.summary ?? {};
-      const verification = runtime.verification ?? {};
-
-      return JSON.stringify({
-        phase: runtime.phase,
-        fps: isFiniteNumber(runtime.fps) ? runtime.fps.toFixed(1) : "—",
-        cellId: projection.cellId ?? "—",
-        sampleCount: summary.sampleCount ?? "—",
-        verificationPass:
-          verification?.pass === true ? "PASS" :
-          verification?.pass === false ? "FAIL" :
-          verification?.pass ?? "MISSING"
-      });
-    }
-
-    function writePanels(force = false) {
-      const now = performance.now();
-
-      if (!force && now - lastDiagnosticsWriteAt < DIAGNOSTICS_INTERVAL_MS) {
-        return;
-      }
-
-      const nextPanelKey = buildPanelCacheKey();
-      const nextCompactKey = buildCompactCacheKey();
-
-      if (debugPanel && (force || nextPanelKey !== panelCacheKey)) {
-        debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
-        panelCacheKey = nextPanelKey;
-      }
-
-      if (diagnosticsSummary && (force || nextCompactKey !== compactCacheKey)) {
-        diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-        compactCacheKey = nextCompactKey;
-      }
-
-      lastDiagnosticsWriteAt = now;
-    }
-
-    function resizeWorld() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-
-      worldCanvas.width = width;
-      worldCanvas.height = height;
-
-      control.resize(width, height);
-    }
-
-    function buildProjectionFunction() {
-      return function projectPoint(latDeg, lonDeg, radiusOffsetPx = 0) {
-        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
-      };
-    }
-
-    function updateControlState() {
-      runtime.control.cameraState = control.getCameraState();
-      runtime.control.projectionSummary = control.getProjectionSummary();
-      runtime.control.cardinals = control.getCardinals();
-    }
-
-    function updateTiming(now) {
-      const dtMs = now - lastFrameAt;
-      lastFrameAt = now;
-      runtime.dtMs = dtMs;
-      runtime.fps = dtMs > 0 ? 1000 / dtMs : 0;
-      runtime.elapsedMs = now - startedAt;
-    }
-
-    function buildPlanetFieldOnce() {
+    // =========================
+    // INITIAL BUILD
+    // =========================
+    function build() {
       runtime.planetField = planetEngine.buildPlanetField({});
+
+      // ✅ INITIAL PRODUCT NODES
+      geometry.buildNodes([
+        { id: "now", label: "NOW", route: "/products/" },
+        { id: "future", label: "FUTURE", route: "/explore/" }
+      ]);
     }
 
-    function verifyRuntimeSafely() {
-      try {
-        const verifier = WORLD_KERNEL?.verification?.verifyCanonicalStructure;
-        if (typeof verifier !== "function") {
-          runtime.verification = null;
-          return;
-        }
-
-        runtime.verification = verifier({
-          fileHomes: WORLD_KERNEL?.canon?.fileHomeRegistry,
-          dependency: WORLD_KERNEL?.canon?.dependencyRegistry ?? WORLD_KERNEL?.canon?.chronologyRegistry,
-          ownership: WORLD_KERNEL?.canon?.ownershipRegistry,
-          duplicateTruth: WORLD_KERNEL?.canon?.duplicateTruthRegistry,
-          pulseOrder: WORLD_KERNEL?.planetField?.order,
-          sampleContract: WORLD_KERNEL?.planetField?.sampleContract,
-          scope: WORLD_KERNEL?.scope
-        });
-      } catch {
-        runtime.verification = null;
-      }
-    }
-
-    function getOpenRoute() {
-      const projection = runtime.control?.projectionSummary ?? {};
-      const sampleY = projection.sampleY;
-      const sampleX = projection.sampleX;
-
-      if (!runtime.planetField?.samples || !Number.isInteger(sampleY) || !Number.isInteger(sampleX)) {
-        return "/home/";
-      }
-
-      const sample = runtime.planetField.samples[sampleY]?.[sampleX] ?? null;
-      if (!sample) return "/home/";
-
-      if (sample.lobeId === "GENEROSITY") return "/explore/";
-      return "/home/";
-    }
-
-    function updateOpenButton() {
-      if (!openButton) return;
-      openButton.dataset.route = getOpenRoute();
-      openButton.disabled = !runtime.startupComplete;
-      openButton.setAttribute("aria-disabled", runtime.startupComplete ? "false" : "true");
-      openButton.style.opacity = runtime.startupComplete ? "1" : "0.65";
-    }
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, worldCanvas.width, worldCanvas.height);
-    }
-
+    // =========================
+    // RENDER
+    // =========================
     function renderFrame() {
-      clearCanvas();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (!runtime.planetField) {
-        return;
-      }
-
+      // 🌍 WORLD
       renderer.renderPlanet({
         ctx,
         planetField: runtime.planetField,
-        projectPoint: buildProjectionFunction(),
-        viewState: runtime.control.cameraState
+        projectPoint: control.projectSphere,
+        viewState: control.getCameraState()
       });
+
+      // 💠 GEOMETRY (DIAMONDS)
+      geometry.render(ctx);
     }
 
+    // =========================
+    // FRAME LOOP
+    // =========================
     function frame(now) {
-      updateTiming(now);
+      updateTime(now);
 
-      if (!isDragging) {
-        control.stepInertia();
-      }
+      control.stepInertia();
 
-      updateControlState();
-      updateOpenButton();
+      // ✅ GEOMETRY UPDATE
+      geometry.update(runtime.dtMs);
+
       renderFrame();
-      writePanels(false);
 
-      frameHandle = requestAnimationFrame(frame);
+      requestAnimationFrame(frame);
     }
 
-    function onPointerDown(event) {
-      isDragging = true;
-      lastX = event.clientX;
-      lastY = event.clientY;
-    }
-
-    function onPointerMove(event) {
-      if (!isDragging) return;
-      if (!runtime.planetField) return;
-
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
-
-      lastX = event.clientX;
-      lastY = event.clientY;
-
-      control.applyDrag(dx, dy);
-      control.updateSelection(event.clientX, event.clientY);
-      updateControlState();
-      updateOpenButton();
-      renderFrame();
-      writePanels(false);
-    }
-
-    function onPointerUp() {
-      isDragging = false;
-    }
-
-    function cycleDiagnostics() {
-      const current = document.body.dataset.diagnostics || "peek";
-      const next = current === "full" ? "peek" : "full";
-
-      document.body.dataset.diagnostics = next;
-
-      if (diagnosticsToggle) {
-        diagnosticsToggle.setAttribute("aria-expanded", next === "full" ? "true" : "false");
-      }
-
-      writePanels(true);
-    }
-
-    function handleOpen() {
-      if (!runtime.startupComplete) return;
-      window.location.href = openButton?.dataset?.route || "/home/";
-    }
-
-    function bindEvents() {
-      diagnosticsToggle?.addEventListener("click", cycleDiagnostics);
-      openButton?.addEventListener("click", handleOpen);
-
+    // =========================
+    // EVENTS
+    // =========================
+    function bind() {
       window.addEventListener("resize", () => {
-        resizeWorld();
-        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
-        updateControlState();
-        updateOpenButton();
+        resize();
         renderFrame();
-        writePanels(true);
       });
 
-      worldCanvas.addEventListener("pointerdown", onPointerDown);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerup", onPointerUp);
-      window.addEventListener("pointercancel", onPointerUp);
-    }
+      canvas.addEventListener("pointerdown", e => {
+        control.startDrag(e.clientX, e.clientY);
+      });
 
-    function beginRunningLoop() {
-      runtime.startupComplete = true;
-      setPhase("RUNNING");
-      updateOpenButton();
-      startedAt = performance.now();
-      lastFrameAt = startedAt;
-      frameHandle = requestAnimationFrame(frame);
-    }
+      window.addEventListener("pointermove", e => {
+        control.drag(e.clientX, e.clientY);
+      });
 
-    function failStartup(error) {
-      runtime.failure = {
-        phase: "startup",
-        message: error instanceof Error ? error.message : String(error)
-      };
-      runtime.startupComplete = false;
-      setPhase("ERROR");
-      updateOpenButton();
-      renderFrame();
-      writePanels(true);
+      window.addEventListener("pointerup", () => {
+        control.endDrag();
+      });
 
-      if (frameHandle) {
-        cancelAnimationFrame(frameHandle);
-        frameHandle = 0;
-      }
-    }
-
-    function continueStartupAfterPaint() {
-      requestAnimationFrame(() => {
-        try {
-          buildPlanetFieldOnce();
-          updateControlState();
-          verifyRuntimeSafely();
-          renderFrame();
-          writePanels(true);
-          bindEvents();
-          beginRunningLoop();
-        } catch (error) {
-          failStartup(error);
+      // ✅ TAP ROUTING (GEOMETRY HIT TEST)
+      canvas.addEventListener("click", e => {
+        const hit = geometry.hitTest(e.clientX, e.clientY);
+        if (hit?.route) {
+          window.location.href = hit.route;
         }
       });
+
+      openButton.addEventListener("click", () => {
+        window.location.href = "/home/";
+      });
     }
 
+    // =========================
+    // START
+    // =========================
     function start() {
-      try {
-        resizeWorld();
-        control.updateSelection(window.innerWidth * 0.5, window.innerHeight * 0.5);
-        updateControlState();
-        updateOpenButton();
-        renderFrame();
-        setPhase("INITIALIZING");
-        writePanels(true);
-        continueStartupAfterPaint();
-      } catch (error) {
-        failStartup(error);
-      }
+      resize();
+      build();
+      bind();
+
+      runtime.startupComplete = true;
+      runtime.phase = "RUNNING";
+      runtimePhase.textContent = "RUNNING";
+
+      requestAnimationFrame(frame);
     }
 
     start();

@@ -6,27 +6,22 @@
        - Strong marketing tone + clear ESL language
        - Stage 1 FREE PDF + soft gate form (required to download)
        - Immediate download after submit (best-effort email automation)
-       - Single-open accordion (auto-close)
-       - TRAVERSAL LOCK (UPDATE):
-           * No jump buttons inside the traversal.
-           * Once you’re in, you proceed linearly (Continue buttons only).
-           * PDF gate remains allowed.
+       - TRAVERSAL LOCK:
+           * No jump buttons inside the traversal
+           * Linear forward-only flow
+           * Previous sections stay open
+           * No collapse once opened
+           * PDF gate remains allowed at top and final completion state
        - Full state carry: lang/style/time/depth + gd_* localStorage ONLY
      PDF PATH (LOCKED): /assets/education/stage-1-vocab-strategy-pack.pdf
      EMAIL TARGET (LOCKED): Geodiametrics@gmail.com
      FORM DELIVERY:
        - Static sites cannot email directly. Use one endpoint:
          FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE"
-         (Formspree / Google Apps Script / Make / Zapier webhook)
      LOCKS:
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
        - ui.css owns html/body background (no overrides)
-     FIXES APPLIED (NO DRIFT):
-       - Removed washed blue; enforced red/black primary with gold adorn + subtle opal sheen (purple only)
-       - No inline onclick (addEventListener only)
-       - Language toggle reloads SAME pathname (GH Pages safe)
 -->
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -40,11 +35,8 @@
 <style>
 a{color:inherit;text-decoration:none}
 :root{--dockH:104px}
-
-/* never let ui field overlays steal taps */
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOKENS (RED primary, BLACK secondary, GOLD adorn; subtle opal sheen only) ===== */
 :root{
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
@@ -67,7 +59,6 @@ body::before,body::after{pointer-events:none!important}
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* Button (gold under-light only; no haze) */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -92,7 +83,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
 
-/* Top controls */
 .top-left{
   position:fixed;left:16px;top:16px;z-index:240;
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -103,7 +93,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .top-right .btn{white-space:nowrap}
 
-/* Page layout */
 .page{
   width:min(1040px,94vw);
   margin:0 auto;
@@ -114,9 +103,8 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
   z-index:10;
 }
-
-/* Hero (red/black + opal sheen; no blue wash) */
 .hero{
+  margin-top:16px;
   border-radius:28px;
   border:1px solid var(--stroke);
   background:
@@ -130,7 +118,6 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
   overflow:hidden;
 }
-/* gold diamond lay trim zone */
 .hero::before{
   content:"";
   position:absolute;inset:0;border-radius:28px;pointer-events:none;
@@ -172,7 +159,6 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.88);
 }
 
-/* Panel */
 .panel{
   border-radius:22px;
   border:1px solid var(--stroke);
@@ -193,7 +179,6 @@ body::before,body::after{pointer-events:none!important}
   opacity:.55;
 }
 
-/* PDF CTA */
 .pdfTitle{
   margin:0;
   font-weight:980;
@@ -228,7 +213,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .miniPanel.show{display:block}
 
-/* Soft gate form */
 .formWrap{
   display:none;
   margin-top:12px;
@@ -252,6 +236,7 @@ body::before,body::after{pointer-events:none!important}
   background:rgba(0,0,0,.22);
   color:#fff;
   outline:none;
+  box-sizing:border-box;
 }
 .inp::placeholder{color:rgba(255,255,255,.55)}
 
@@ -271,7 +256,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .formActions .btn{padding:10px 14px;border-radius:999px}
 
-/* Ladder */
 .ladder h3{margin:0;font-weight:980;letter-spacing:.2px;font-size:15px;color:var(--ink)}
 .ladder p{margin:10px 0 0;color:rgba(255,255,255,.86);line-height:1.6;font-size:13.5px}
 .badge{
@@ -285,7 +269,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 
-/* Accordion (single-open) */
 .section{
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
@@ -306,15 +289,11 @@ body::before,body::after{pointer-events:none!important}
 .head{
   position:relative;
   padding:16px 16px;
-  cursor:pointer;
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   gap:12px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
 }
-.head:hover{background:rgba(255,255,255,.04)}
 .hL{min-width:0}
 .hT{margin:0;font-weight:980;letter-spacing:.2px;color:var(--ink)}
 .hS{margin:8px 0 0;font-size:12.75px;opacity:.86;line-height:1.45;max-width:92ch;color:rgba(255,255,255,.86)}
@@ -339,7 +318,12 @@ body::before,body::after{pointer-events:none!important}
 .body .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
 .body .actions .btn{padding:10px 14px;border-radius:999px}
 
-/* Dock */
+.completionPanel{
+  border-top:1px solid rgba(255,255,255,.10);
+  padding-top:12px;
+  margin-top:4px;
+}
+
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -385,7 +369,6 @@ body::before,body::after{pointer-events:none!important}
     <p id="heroText"></p>
   </div>
 
-  <!-- FREE PDF + SOFT GATE -->
   <div class="panel" id="pdfPanel">
     <div class="pdfRow">
       <div>
@@ -424,20 +407,18 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <!-- STAGE LADDER -->
   <div class="panel ladder">
     <h3 id="ladderTitle">Stage Ladder</h3>
     <p id="ladderText"></p>
   </div>
 
-  <!-- ACCORDION SECTIONS -->
-  <div class="section" id="sec1">
-    <div class="head" role="button" tabindex="0">
+  <div class="section open" id="sec1" data-step="1">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t1">What makes this different</div>
         <div class="hS" id="s1"></div>
       </div>
-      <div class="chev">▸</div>
+      <div class="chev">▾</div>
     </div>
     <div class="body">
       <p id="p1a"></p>
@@ -448,8 +429,8 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="section" id="sec2">
-    <div class="head" role="button" tabindex="0">
+  <div class="section" id="sec2" data-step="2">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t2">Traversal learning (the core idea)</div>
         <div class="hS" id="s2"></div>
@@ -465,8 +446,8 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="section" id="sec3">
-    <div class="head" role="button" tabindex="0">
+  <div class="section" id="sec3" data-step="3">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t3">The Stage 1 routine (simple, repeatable)</div>
         <div class="hS" id="s3"></div>
@@ -477,14 +458,13 @@ body::before,body::after{pointer-events:none!important}
       <p id="p3a"></p>
       <p id="p3b"></p>
       <div class="actions">
-        <button class="btn red" id="jumpGetPdf3" type="button">GET THE FREE PDF</button>
         <button class="btn" id="btnNext3" type="button">CONTINUE</button>
       </div>
     </div>
   </div>
 
-  <div class="section" id="sec4">
-    <div class="head" role="button" tabindex="0">
+  <div class="section" id="sec4" data-step="4">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t4">Checkpoints (proof, not feelings)</div>
         <div class="hS" id="s4"></div>
@@ -500,8 +480,8 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="section" id="sec5">
-    <div class="head" role="button" tabindex="0">
+  <div class="section" id="sec5" data-step="5">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t5">From individual to organization</div>
         <div class="hS" id="s5"></div>
@@ -517,8 +497,8 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="section" id="sec6">
-    <div class="head" role="button" tabindex="0">
+  <div class="section" id="sec6" data-step="6">
+    <div class="head" aria-hidden="false">
       <div class="hL">
         <div class="hT" id="t6">What you can do today (quick start)</div>
         <div class="hS" id="s6"></div>
@@ -529,7 +509,27 @@ body::before,body::after{pointer-events:none!important}
       <p id="p6a"></p>
       <p id="p6b"></p>
       <div class="actions">
-        <button class="btn red" id="jumpGetPdf6" type="button">GET THE FREE PDF</button>
+        <button class="btn" id="btnNext6" type="button">CONTINUE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sec7" data-step="7">
+    <div class="head" aria-hidden="false">
+      <div class="hL">
+        <div class="hT" id="t7">You’re ready</div>
+        <div class="hS" id="s7"></div>
+      </div>
+      <div class="chev">▸</div>
+    </div>
+    <div class="body">
+      <p id="p7a"></p>
+      <p id="p7b"></p>
+      <div class="completionPanel">
+        <div class="actions">
+          <button class="btn red" id="btnGetFinal" type="button">GET THE FREE PDF</button>
+          <a class="btn" id="btnReturnProducts" href="/products/">RETURN TO PRODUCTS</a>
+        </div>
       </div>
     </div>
   </div>
@@ -545,12 +545,10 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ========= CONFIG =========
-  var FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE"; // webhook endpoint that forwards to Geodiametrics@gmail.com
+  var FORM_ENDPOINT = "PASTE_YOUR_ENDPOINT_HERE";
   var PDF_URL = "/assets/education/stage-1-vocab-strategy-pack.pdf";
   var EMAIL_TARGET = "Geodiametrics@gmail.com";
 
-  // ========= STATE (canonical) =========
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
@@ -580,15 +578,14 @@ body::before,body::after{pointer-events:none!important}
     return "?lang="+encodeURIComponent(L)+"&style="+encodeURIComponent(S)+"&time="+encodeURIComponent(T)+"&depth="+encodeURIComponent(D);
   }
 
-  // ========= NAV WIRING (state carry) =========
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/index.html"+q();
   document.getElementById("dockHome").href="/home/"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
+  document.getElementById("btnReturnProducts").href="/products/"+q();
 
-  // ========= LANGUAGE TOGGLE (reload same pathname) =========
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -603,7 +600,6 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ========= COPY (dense · tri-lingual) =========
   var COPY = {
     en: {
       heroK:"PRODUCTS · EDUCATION",
@@ -643,7 +639,13 @@ body::before,body::after{pointer-events:none!important}
       t6:"What you can do today (quick start)",
       s6:"No waiting. One loop. One checkpoint. One real output.",
       p6a:"Step 1: download Stage 1. Step 2: choose 10 items from one category. Step 3: write 10 sentences. Step 4: say them out loud twice. Step 5: run one checkpoint. If you pass, move. If you fail, loop. That is the whole system.",
-      p6b:"If you do this daily, you will feel a shift quickly: fewer pauses, clearer sentences, more calm. Not because you got lucky. Because the system is engineered to build automatic output, not just knowledge."
+      p6b:"If you do this daily, you will feel a shift quickly: fewer pauses, clearer sentences, more calm. Not because you got lucky. Because the system is engineered to build automatic output, not just knowledge.",
+      t7:"You’re ready",
+      s7:"You now have the structure. The next move is execution.",
+      p7a:"At this point, you do not need more theory. You need repetition. Download Stage 1, run the loop, pass a checkpoint, and prove output. That is how this system is supposed to work: simple structure, repeated honestly.",
+      p7b:"If you want support beyond the PDF, the next layer is guided progression. But the right first move is still the same: take the free pack, start today, and let the proof come from your output.",
+      getFinal:"GET THE FREE PDF",
+      returnProducts:"RETURN TO PRODUCTS"
     },
     zh: {
       heroK:"产品 · 教育",
@@ -683,7 +685,13 @@ body::before,body::after{pointer-events:none!important}
       t6:"今天就能做的快速开始",
       s6:"不等待：一个循环、一个检查点、一个真实输出。",
       p6a:"第1步：下载阶段1。第2步：从一个类别选10条。第3步：写10句。第4步：大声读两遍。第5步：跑一个检查点。过了就前进，没过就回循环。就这么简单。",
-      p6b:"如果你每天这样跑，你会很快感受到变化：停顿更少、句子更清晰、心态更稳。不是运气，是结构在起作用：它追求的是自动化输出，而不是“知道很多”。"
+      p6b:"如果你每天这样跑，你会很快感受到变化：停顿更少、句子更清晰、心态更稳。不是运气，是结构在起作用：它追求的是自动化输出，而不是“知道很多”。",
+      t7:"你已经准备好了",
+      s7:"你现在已经有了结构，下一步是执行。",
+      p7a:"到这里，你不需要更多理论。你需要的是重复。下载阶段1，跑循环，过一个检查点，用输出证明自己。这就是这个系统应该工作的方式：简单结构，诚实重复。",
+      p7b:"如果你希望超越 PDF 获得进一步支持，下一层是引导式进阶。但正确的第一步仍然相同：拿到免费包，今天开始，让证据来自你的输出。",
+      getFinal:"获取免费PDF",
+      returnProducts:"返回产品页"
     },
     es: {
       heroK:"PRODUCTOS · EDUCACIÓN",
@@ -723,7 +731,13 @@ body::before,body::after{pointer-events:none!important}
       t6:"Qué puedes hacer hoy (inicio rápido)",
       s6:"Sin esperar: un bucle, un checkpoint y una salida real.",
       p6a:"Paso 1: descarga Etapa 1. Paso 2: elige 10 ítems. Paso 3: escribe 10 frases. Paso 4: léelas en voz alta dos veces. Paso 5: un checkpoint. Pasas y avanzas; fallas y vuelves al bucle. Eso es todo.",
-      p6b:"Si lo haces diario, notarás el cambio: menos pausas, frases más claras, más calma. No por suerte—porque el sistema está diseñado para producir salida automática, no solo conocimiento."
+      p6b:"Si lo haces diario, notarás el cambio: menos pausas, frases más claras, más calma. No por suerte—porque el sistema está diseñado para producir salida automática, no solo conocimiento.",
+      t7:"Ya estás listo",
+      s7:"Ahora ya tienes la estructura. El siguiente movimiento es ejecución.",
+      p7a:"En este punto no necesitas más teoría. Necesitas repetición. Descarga Etapa 1, corre el bucle, pasa un checkpoint y prueba salida. Así está diseñado este sistema: estructura simple, repetición honesta.",
+      p7b:"Si quieres apoyo más allá del PDF, la siguiente capa es progresión guiada. Pero el primer movimiento correcto sigue siendo el mismo: toma el pack gratis, empieza hoy y deja que la prueba venga de tu salida.",
+      getFinal:"OBTENER PDF GRATIS",
+      returnProducts:"VOLVER A PRODUCTOS"
     }
   };
 
@@ -792,10 +806,17 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("s6").textContent=t.s6;
     document.getElementById("p6a").textContent=t.p6a;
     document.getElementById("p6b").textContent=t.p6b;
+
+    document.getElementById("t7").textContent=t.t7;
+    document.getElementById("s7").textContent=t.s7;
+    document.getElementById("p7a").textContent=t.p7a;
+    document.getElementById("p7b").textContent=t.p7b;
+
+    document.getElementById("btnGetFinal").textContent=t.getFinal;
+    document.getElementById("btnReturnProducts").textContent=t.returnProducts;
   }
   applyText();
 
-  // ========= PDF UI =========
   var insidePanel=document.getElementById("insidePanel");
   var formWrap=document.getElementById("formWrap");
 
@@ -803,24 +824,20 @@ body::before,body::after{pointer-events:none!important}
     insidePanel.classList.toggle("show");
   }, {passive:true});
 
+  function showPdfGate(){
+    formWrap.classList.add("show");
+    insidePanel.classList.add("show");
+    document.getElementById("pdfPanel").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
   document.getElementById("btnGet").addEventListener("click", function(){
-    formWrap.classList.toggle("show");
-    insidePanel.classList.add("show");
+    showPdfGate();
   }, {passive:true});
 
-  document.getElementById("jumpGetPdf3").addEventListener("click", function(){
-    formWrap.classList.add("show");
-    insidePanel.classList.add("show");
-    window.scrollTo({top:0,behavior:"smooth"});
+  document.getElementById("btnGetFinal").addEventListener("click", function(){
+    showPdfGate();
   }, {passive:true});
 
-  document.getElementById("jumpGetPdf6").addEventListener("click", function(){
-    formWrap.classList.add("show");
-    insidePanel.classList.add("show");
-    window.scrollTo({top:0,behavior:"smooth"});
-  }, {passive:true});
-
-  // ========= SOFT GATE SUBMIT (best-effort) =========
   function v(id){ var el=document.getElementById(id); return el ? (el.value||"").trim() : ""; }
 
   function submitAndDownload(){
@@ -863,44 +880,36 @@ body::before,body::after{pointer-events:none!important}
   }
   document.getElementById("btnSubmit").addEventListener("click", submitAndDownload);
 
-  // ========= ACCORDION (single-open auto-close; tap same closes) =========
-  var secs=[].slice.call(document.querySelectorAll(".section"));
-  function setChevron(sec,isOpen){
-    var c=sec.querySelector(".chev");
-    if(c) c.textContent=isOpen ? "▾" : "▸";
-  }
-  secs.forEach(function(sec){
-    setChevron(sec,false);
-    var head=sec.querySelector(".head");
-    function act(){
-      var willOpen=!sec.classList.contains("open");
-      secs.forEach(function(s){
-        s.classList.remove("open");
-        setChevron(s,false);
-      });
-      if(willOpen){
-        sec.classList.add("open");
-        setChevron(sec,true);
-      }
-    }
-    head.addEventListener("click", act, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  });
-  if(secs[0]){ secs[0].classList.add("open"); setChevron(secs[0],true); }
+  var sections=[].slice.call(document.querySelectorAll(".section"));
 
-  // ========= CONTINUE BUTTONS (Traversal only; no jump) =========
-  function scrollToId(id){
-    var el=document.getElementById(id);
-    if(!el) return;
-    el.scrollIntoView({behavior:"smooth", block:"start"});
+  function setOpen(idx){
+    sections.forEach(function(sec, i){
+      var isOpen = i <= idx;
+      sec.classList.toggle("open", isOpen);
+      var c = sec.querySelector(".chev");
+      if(c) c.textContent = isOpen ? "▾" : "▸";
+    });
   }
-  document.getElementById("btnNext1").addEventListener("click", function(){ scrollToId("sec2"); }, {passive:true});
-  document.getElementById("btnNext2").addEventListener("click", function(){ scrollToId("sec3"); }, {passive:true});
-  document.getElementById("btnNext3").addEventListener("click", function(){ scrollToId("sec4"); }, {passive:true});
-  document.getElementById("btnNext4").addEventListener("click", function(){ scrollToId("sec5"); }, {passive:true});
-  document.getElementById("btnNext5").addEventListener("click", function(){ scrollToId("sec6"); }, {passive:true});
+
+  function openNext(currentId, nextId){
+    var currentIndex = sections.findIndex(function(s){ return s.id===currentId; });
+    var nextIndex = sections.findIndex(function(s){ return s.id===nextId; });
+    if(currentIndex===-1 || nextIndex===-1) return;
+    if(nextIndex > currentIndex){
+      setOpen(nextIndex);
+      var nextEl=document.getElementById(nextId);
+      if(nextEl) nextEl.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+
+  setOpen(0);
+
+  document.getElementById("btnNext1").addEventListener("click", function(){ openNext("sec1","sec2"); }, {passive:true});
+  document.getElementById("btnNext2").addEventListener("click", function(){ openNext("sec2","sec3"); }, {passive:true});
+  document.getElementById("btnNext3").addEventListener("click", function(){ openNext("sec3","sec4"); }, {passive:true});
+  document.getElementById("btnNext4").addEventListener("click", function(){ openNext("sec4","sec5"); }, {passive:true});
+  document.getElementById("btnNext5").addEventListener("click", function(){ openNext("sec5","sec6"); }, {passive:true});
+  document.getElementById("btnNext6").addEventListener("click", function(){ openNext("sec6","sec7"); }, {passive:true});
 })();
 </script>
 

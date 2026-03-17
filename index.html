@@ -4,107 +4,180 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits</title>
-
 <link rel="stylesheet" href="./assets/ui.css"/>
 <style>
-body{margin:0;background:#020612;color:#fff;font-family:system-ui}
-
-/* ===== ROOT LAYERS ===== */
-#door-layer,
-#world-layer{
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030712;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+#app-shell,#world-layer,#door-layer{
   position:fixed;inset:0;
 }
-
-/* ===== DOOR MODE ===== */
-#door-layer{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  gap:18px;
-  z-index:20;
-}
-
-#door-title{
-  font-size:42px;
-  font-weight:900;
-  letter-spacing:1px;
-}
-
-#door-sub{
-  opacity:.8;
-}
-
-.door-buttons{
-  display:flex;
-  gap:14px;
-}
-
-.door-btn{
-  padding:12px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.2);
-  background:rgba(255,255,255,.06);
-  cursor:pointer;
-}
-
-/* ===== WORLD MODE ===== */
-#world-layer{
-  z-index:10;
-}
-
-canvas{
+#world-canvas{
+  position:fixed;inset:0;
   width:100%;
   height:100%;
   display:block;
+  z-index:1;
 }
-
-/* ===== CONTROL PANEL ===== */
+#door-layer{
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  pointer-events:none;
+}
+.door-panel{
+  pointer-events:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  padding:24px;
+}
+.door-title{
+  margin:0;
+  font-size:clamp(40px,7vw,88px);
+  font-weight:950;
+  letter-spacing:.04em;
+  line-height:.94;
+  text-shadow:0 8px 30px rgba(0,0,0,.45);
+}
+.door-sub{
+  margin:0;
+  font-size:clamp(16px,2vw,22px);
+  color:rgba(255,255,255,.82);
+}
+.door-tag{
+  margin:0 0 6px;
+  font-size:clamp(13px,1.5vw,16px);
+  color:rgba(255,255,255,.64);
+  letter-spacing:.02em;
+}
+.door-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:center;
+}
+.door-btn{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  border-radius:999px;
+  padding:12px 18px;
+  min-height:46px;
+  font-weight:800;
+  letter-spacing:.03em;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
+}
+.door-btn:hover{transform:translateY(-1px)}
 #control-panel{
-  position:absolute;
-  bottom:20px;
+  position:fixed;
   left:50%;
+  bottom:max(16px,env(safe-area-inset-bottom));
   transform:translateX(-50%);
+  z-index:12;
   display:flex;
   gap:10px;
-  z-index:30;
+  flex-wrap:wrap;
+  justify-content:center;
 }
-
 .ctrl-btn{
-  padding:10px 14px;
+  appearance:none;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.42);
+  color:#fff;
   border-radius:999px;
-  background:rgba(0,0,0,.5);
-  border:1px solid rgba(255,255,255,.15);
+  min-height:42px;
+  padding:10px 14px;
+  font-weight:800;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
 }
-
-/* ===== STATE ===== */
-.hidden{display:none;}
+#zone-panel{
+  position:fixed;
+  top:16px;
+  right:16px;
+  z-index:12;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  max-width:min(92vw,540px);
+}
+.zone-btn{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.35);
+  color:#fff;
+  border-radius:999px;
+  min-height:38px;
+  padding:8px 12px;
+  font-weight:700;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+}
+#runtime-pill{
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:12;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(0,0,0,.38);
+  border:1px solid rgba(255,255,255,.14);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.04em;
+  color:rgba(255,255,255,.86);
+  backdrop-filter:blur(8px);
+}
+.hidden{display:none !important}
+@media (max-width:700px){
+  #control-panel{width:min(94vw,560px)}
+  #zone-panel{left:16px; right:16px; top:auto; bottom:78px; justify-content:center}
+}
 </style>
 </head>
-
 <body>
+<div id="app-shell">
+  <canvas id="world-canvas" aria-label="World canvas"></canvas>
 
-<!-- ===== DOOR ===== -->
-<div id="door-layer">
-  <div id="door-title">NINE SUMMITS</div>
-  <div id="door-sub">Choose your reality.</div>
-
-  <div class="door-buttons">
-    <button class="door-btn" id="btn-round">WORLD IS ROUND</button>
-    <button class="door-btn" id="btn-flat">WORLD IS FLAT</button>
+  <div id="door-layer">
+    <div class="door-panel">
+      <h1 class="door-title">NINE SUMMITS</h1>
+      <p class="door-sub">Choose your reality.</p>
+      <p class="door-tag">Enter simple. Discover power. Choose depth.</p>
+      <div class="door-buttons">
+        <button id="btn-round" class="door-btn" type="button">WORLD IS ROUND</button>
+        <button id="btn-flat" class="door-btn" type="button">WORLD IS FLAT</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- ===== WORLD ===== -->
-<div id="world-layer">
-  <canvas id="world-canvas"></canvas>
+  <div id="runtime-pill" class="hidden">SURFACE</div>
+
+  <div id="zone-panel" class="hidden">
+    <button id="btn-underground" class="zone-btn" type="button">UNDERGROUND</button>
+    <button id="btn-north" class="zone-btn" type="button">NORTH POLE</button>
+    <button id="btn-south" class="zone-btn" type="button">SOUTH POLE</button>
+    <button id="btn-surface" class="zone-btn" type="button">SURFACE</button>
+  </div>
 
   <div id="control-panel" class="hidden">
-    <button class="ctrl-btn">OPEN</button>
-    <button class="ctrl-btn">EXPLORE</button>
-    <button class="ctrl-btn">PRODUCTS</button>
-    <button class="ctrl-btn">LAWS</button>
+    <button id="btn-open" class="ctrl-btn" type="button">OPEN</button>
+    <button id="btn-explore" class="ctrl-btn" type="button">EXPLORE</button>
+    <button id="btn-products" class="ctrl-btn" type="button">PRODUCTS</button>
+    <button id="btn-laws" class="ctrl-btn" type="button">LAWS</button>
   </div>
 </div>
 
@@ -112,101 +185,302 @@ canvas{
 import { createPlanetEngine } from "./world/planet_engine.js";
 import { createRenderer } from "./world/render.js";
 import { createControlSystem } from "./world/control.js";
+import { createCompletionEngine } from "./world/completion_engine.js";
+import { createTransitionEngine } from "./world/transition_engine.js";
+import { createPolarEngine } from "./world/polar_engine.js";
 
-/* ===== MODE ===== */
 const params = new URLSearchParams(location.search);
 const mode = params.get("mode") || "door";
 
-/* ===== DOM ===== */
-const door = document.getElementById("door-layer");
-const world = document.getElementById("world-layer");
-const panel = document.getElementById("control-panel");
+const canvas = document.getElementById("world-canvas");
+const ctx = canvas.getContext("2d", { alpha: true });
+
+const doorLayer = document.getElementById("door-layer");
+const runtimePill = document.getElementById("runtime-pill");
+const zonePanel = document.getElementById("zone-panel");
+const controlPanel = document.getElementById("control-panel");
 
 const btnRound = document.getElementById("btn-round");
 const btnFlat = document.getElementById("btn-flat");
 
-const canvas = document.getElementById("world-canvas");
-const ctx = canvas.getContext("2d");
+const btnOpen = document.getElementById("btn-open");
+const btnExplore = document.getElementById("btn-explore");
+const btnProducts = document.getElementById("btn-products");
+const btnLaws = document.getElementById("btn-laws");
 
-/* ===== ENGINE ===== */
-const engine = createPlanetEngine();
+const btnUnderground = document.getElementById("btn-underground");
+const btnNorth = document.getElementById("btn-north");
+const btnSouth = document.getElementById("btn-south");
+const btnSurface = document.getElementById("btn-surface");
+
+const planetEngine = createPlanetEngine();
 const renderer = createRenderer();
 const control = createControlSystem();
+const completionEngine = createCompletionEngine();
+const transitionEngine = createTransitionEngine();
+const polarEngine = createPolarEngine();
 
-let planetField = null;
+const runtime = {
+  mode,
+  planetField: null,
+  progress: {
+    summitCompletion: 0,
+    confusionLoad: 0,
+    masteryPass: false
+  },
+  unlocks: {
+    underground: false,
+    north: false,
+    south: false
+  },
+  zone: {
+    currentZone: "surface",
+    targetZone: null,
+    transitioning: false
+  },
+  failure: null
+};
 
-/* ===== RESIZE ===== */
-function resize(){
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-  control.resize(innerWidth, innerHeight);
+let rafId = 0;
+let lastFrameAt = performance.now();
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+
+function resizeWorld() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+  control.resize(width, height);
 }
-window.addEventListener("resize", resize);
-resize();
 
-/* ===== MODE HANDLERS ===== */
-function enterDoor(){
-  door.classList.remove("hidden");
-  panel.classList.add("hidden");
+function buildPlanetFieldOnce() {
+  if (!runtime.planetField) {
+    runtime.planetField = planetEngine.buildPlanetField({});
+  }
 }
 
-function enterWorld(flat=false){
-  door.classList.add("hidden");
-  panel.classList.remove("hidden");
+function updateCompletion() {
+  completionEngine.update(runtime);
+}
 
-  planetField = engine.buildPlanetField({});
+function updateRuntimeUI() {
+  const inDoor = runtime.mode === "door";
+  doorLayer.classList.toggle("hidden", !inDoor);
+  runtimePill.classList.toggle("hidden", inDoor);
+  zonePanel.classList.toggle("hidden", inDoor);
+  controlPanel.classList.toggle("hidden", inDoor);
 
-  if(flat){
-    canvas.style.filter = "blur(6px) brightness(.7)";
-  } else {
-    canvas.style.filter = "none";
+  runtimePill.textContent = String(runtime.zone.currentZone || "surface").toUpperCase();
+
+  btnUnderground.disabled = !runtime.unlocks.underground;
+  btnNorth.disabled = !runtime.unlocks.north;
+  btnSouth.disabled = !runtime.unlocks.south;
+}
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function drawUndergroundScene() {
+  const w = canvas.width;
+  const h = canvas.height;
+  const cx = w * 0.5;
+  const cy = h * 0.54;
+
+  const bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, "#05070d");
+  bg.addColorStop(1, "#120c08");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  for (let i = 0; i < 18; i += 1) {
+    const r = 30 + i * 24;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, Math.PI * 0.08, Math.PI * 0.92);
+    ctx.strokeStyle = `rgba(220,190,150,${0.05 + i * 0.012})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
   }
 
-  startLoop();
+  ctx.beginPath();
+  ctx.arc(cx, cy, Math.min(w, h) * 0.12, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,214,150,0.08)";
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255,255,255,0.82)";
+  ctx.font = "700 14px system-ui";
+  ctx.textAlign = "center";
+  ctx.fillText("UNDERGROUND CITY", cx, cy + Math.min(w, h) * 0.18);
 }
 
-/* ===== ROUTING ===== */
-btnRound.onclick = () => {
-  location.href = "/index.html?mode=world";
-};
-
-btnFlat.onclick = () => {
-  location.href = "/index.html?mode=flat";
-};
-
-/* ===== LOOP ===== */
-let last = performance.now();
-
-function loop(now){
-  const dt = now - last;
-  last = now;
-
-  control.stepInertia();
-
+function renderSurface() {
   renderer.renderPlanet({
     ctx,
-    planetField,
-    projectPoint:(lat,lon,r=0)=>control.projectSphere(lat,lon,r),
-    viewState:control.getCameraState()
+    planetField: runtime.planetField,
+    projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => control.projectSphere(latDeg, lonDeg, radiusOffsetPx),
+    viewState: control.getCameraState()
+  });
+}
+
+function renderActiveZone() {
+  clearCanvas();
+
+  if (runtime.zone.currentZone === "surface") {
+    renderSurface();
+    return;
+  }
+
+  if (runtime.zone.currentZone === "underground") {
+    drawUndergroundScene();
+    return;
+  }
+
+  polarEngine.render(runtime, ctx);
+}
+
+function updateFrame(now) {
+  const dtMs = now - lastFrameAt;
+  lastFrameAt = now;
+
+  if (!isDragging && runtime.zone.currentZone === "surface") {
+    control.stepInertia(dtMs);
+  }
+
+  transitionEngine.step(runtime);
+  updateCompletion();
+  updateRuntimeUI();
+  renderActiveZone();
+
+  rafId = requestAnimationFrame(updateFrame);
+}
+
+function requestZone(targetZone) {
+  transitionEngine.requestTransition(runtime, targetZone);
+  updateRuntimeUI();
+}
+
+function enterDoorMode() {
+  runtime.mode = "door";
+  runtime.zone.currentZone = "surface";
+  updateRuntimeUI();
+  renderActiveZone();
+}
+
+function enterWorldMode(flat = false) {
+  runtime.mode = flat ? "flat" : "world";
+  buildPlanetFieldOnce();
+  updateCompletion();
+  updateRuntimeUI();
+  canvas.style.filter = flat ? "blur(6px) brightness(.72)" : "none";
+  renderActiveZone();
+
+  if (!rafId) {
+    lastFrameAt = performance.now();
+    rafId = requestAnimationFrame(updateFrame);
+  }
+}
+
+function onPointerDown(event) {
+  if (runtime.mode !== "world") return;
+  if (runtime.zone.currentZone !== "surface") return;
+  isDragging = true;
+  lastX = event.clientX;
+  lastY = event.clientY;
+}
+
+function onPointerMove(event) {
+  if (!isDragging) return;
+  if (runtime.mode !== "world") return;
+  if (runtime.zone.currentZone !== "surface") return;
+
+  const dx = event.clientX - lastX;
+  const dy = event.clientY - lastY;
+  lastX = event.clientX;
+  lastY = event.clientY;
+
+  control.applyDrag(dx, dy);
+  renderActiveZone();
+}
+
+function onPointerUp() {
+  isDragging = false;
+}
+
+function bindEvents() {
+  window.addEventListener("resize", () => {
+    resizeWorld();
+    renderActiveZone();
   });
 
-  requestAnimationFrame(loop);
+  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerup", onPointerUp, { passive: true });
+  window.addEventListener("pointercancel", onPointerUp, { passive: true });
+
+  btnRound.addEventListener("click", () => {
+    location.href = "/index.html?mode=world";
+  });
+
+  btnFlat.addEventListener("click", () => {
+    location.href = "/index.html?mode=flat";
+  });
+
+  btnOpen.addEventListener("click", () => {
+    location.href = "/home/";
+  });
+  btnExplore.addEventListener("click", () => {
+    location.href = "/explore/";
+  });
+  btnProducts.addEventListener("click", () => {
+    location.href = "/products/";
+  });
+  btnLaws.addEventListener("click", () => {
+    location.href = "/laws/";
+  });
+
+  btnUnderground.addEventListener("click", () => {
+    requestZone("underground");
+  });
+  btnNorth.addEventListener("click", () => {
+    requestZone("north");
+  });
+  btnSouth.addEventListener("click", () => {
+    requestZone("south");
+  });
+  btnSurface.addEventListener("click", () => {
+    requestZone("surface");
+  });
+
+  window.addEventListener("pagehide", () => {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }, { passive: true });
 }
 
-function startLoop(){
-  last = performance.now();
-  requestAnimationFrame(loop);
+function start() {
+  resizeWorld();
+  bindEvents();
+
+  if (mode === "world") {
+    enterWorldMode(false);
+    return;
+  }
+
+  if (mode === "flat") {
+    enterWorldMode(true);
+    return;
+  }
+
+  buildPlanetFieldOnce();
+  updateCompletion();
+  enterDoorMode();
 }
 
-/* ===== INIT ===== */
-if(mode === "world"){
-  enterWorld(false);
-}else if(mode === "flat"){
-  enterWorld(true);
-}else{
-  enterDoor();
-}
+start();
 </script>
-
 </body>
 </html>

@@ -165,7 +165,7 @@ body::before,body::after{pointer-events:none!important}
 .hero-panel{
   position:absolute;
   left:50%;
-  top:7.4vh;
+  top:10.5vh;
   transform:translateX(-50%);
   width:min(92vw,980px);
   display:flex;
@@ -253,18 +253,18 @@ body::before,body::after{pointer-events:none!important}
 
 .home-pill{
   position:absolute;
-  top:16px;
+  top:12px;
   left:50%;
   transform:translateX(-50%);
-  min-width:156px;
-  padding:8px 18px;
+  min-width:132px;
+  padding:7px 16px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.09);
   background:rgba(0,0,0,.18);
   box-shadow:0 12px 28px rgba(0,0,0,.18);
   backdrop-filter:blur(8px);
   color:rgba(255,255,255,.92);
-  font-size:12px;
+  font-size:11px;
   font-weight:900;
   letter-spacing:.12em;
   text-transform:uppercase;
@@ -276,13 +276,15 @@ body::before,body::after{pointer-events:none!important}
 
 .mode-cluster{
   position:absolute;
-  top:16px;
-  right:16px;
+  top:12px;
+  right:12px;
   z-index:16;
   display:flex;
   gap:8px;
   opacity:var(--uiAlpha);
   transition:opacity 180ms ease;
+  transform:scale(.92);
+  transform-origin:top right;
 }
 .mode-btn{
   min-height:42px;
@@ -525,8 +527,8 @@ body[data-mode="flat"]{
   --starAlpha:.72;
 }
 body[data-mode="observe"]{
-  --heroDim:.56;
-  --uiAlpha:.74;
+  --heroDim:.78;
+  --uiAlpha:.88;
   --shellAtmosAlpha:.58;
   --starAlpha:.12;
 }
@@ -534,7 +536,7 @@ body[data-mode="observe"] #orbital-overlay{
   opacity:0;
 }
 body[data-mode="observe"] .diagnostics-summary{
-  opacity:.58;
+  opacity:.68;
 }
 
 @keyframes starDrift{
@@ -552,7 +554,7 @@ body[data-mode="observe"] .diagnostics-summary{
 
 @media (max-width:700px){
   .hero-panel{
-    top:8.4vh;
+    top:13.5vh;
     gap:12px;
   }
   .flat-menu{
@@ -564,10 +566,20 @@ body[data-mode="observe"] .diagnostics-summary{
   .diagnostics-bar{grid-template-columns:1fr}
   .diagnostics-toggle{justify-self:end}
   .mode-cluster{
+    top:10px;
+    right:10px;
     gap:6px;
+    transform:scale(.82);
   }
   .mode-btn{
     padding:0 12px;
+  }
+  .home-pill{
+    top:10px;
+    min-width:108px;
+    padding:6px 12px;
+    font-size:10px;
+    letter-spacing:.10em;
   }
 }
 </style>

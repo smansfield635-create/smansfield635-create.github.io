@@ -65,10 +65,20 @@ function getKernelContract() {
   const planetField = normalizeObject(kernel.planetField);
   const constants = normalizeObject(kernel.constants);
 
+  const width =
+    Number.isInteger(planetField.width) ? planetField.width :
+    Number.isInteger(constants.lonSteps) ? constants.lonSteps :
+    216;
+
+  const height =
+    Number.isInteger(planetField.height) ? planetField.height :
+    Number.isInteger(constants.latSteps) ? constants.latSteps :
+    108;
+
   return Object.freeze({
-    width: Number.isInteger(planetField.width) ? planetField.width : 256,
-    height: Number.isInteger(planetField.height) ? planetField.height : 256,
-    total: Number.isInteger(planetField.total) ? planetField.total : 65536,
+    width,
+    height,
+    total: width * height,
     constants
   });
 }
@@ -81,7 +91,7 @@ function buildAuthoredConstants(contract) {
     height: contract.height,
     totalSamples: contract.total,
 
-    seaLevel: toNumber(kc.seaLevelNormalized, 0),
+    seaLevel: toNumber(kc.seaLevel, 0),
     landTarget: toNumber(kc.landTarget, 0.35),
     waterTarget: toNumber(kc.waterTarget, 0.65),
     ratioTolerance: toNumber(kc.ratioTolerance, 0.01),

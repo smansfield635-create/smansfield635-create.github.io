@@ -16,22 +16,58 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
-function getLocalGridCell(row, col) {
-  const safeRow = clamp(row, 0, WORLD_KERNEL.constants.localGridRows - 1);
-  const safeCol = clamp(col, 0, WORLD_KERNEL.constants.localGridCols - 1);
-  const cellIndex = safeRow * WORLD_KERNEL.constants.localGridCols + safeCol;
+function getKernelConstants() {
+  const constants = normalizeObject(WORLD_KERNEL?.constants);
+  return Object.freeze({
+    worldRadiusFactor: isFiniteNumber(constants.worldRadiusFactor) ? constants.worldRadiusFactor : 0.36,
+    minPitch: isFiniteNumber(constants.minPitch) ? constants.minPitch : -(Math.PI / 2.2),
+    maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
+    initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
+    initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0025,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.92,
+    latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
+    lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
+  });
+}
+
+function getPlanetFieldShape() {
+  const kernel = normalizeObject(WORLD_KERNEL);
+  const constants = getKernelConstants();
+
+  const rootWidth = Number.isInteger(kernel.width) ? kernel.width : null;
+  const rootHeight = Number.isInteger(kernel.height) ? kernel.height : null;
+
+  const planetField = normalizeObject(kernel.planetField);
+  const fieldWidth = Number.isInteger(planetField.width) ? planetField.width : null;
+  const fieldHeight = Number.isInteger(planetField.height) ? planetField.height : null;
 
   return Object.freeze({
-    row: safeRow,
-    col: safeCol,
-    cellIndex,
-    cellId: WORLD_KERNEL.localGrid.cellIds[cellIndex]
+    width: rootWidth ?? fieldWidth ?? constants.lonSteps,
+    height: rootHeight ?? fieldHeight ?? constants.latSteps
+  });
+}
+
+function latLonToSample(latDeg, lonDeg) {
+  const shape = getPlanetFieldShape();
+
+  const normalizedLon = (wrapAngle((lonDeg * Math.PI) / 180) + Math.PI) / (Math.PI * 2);
+  const normalizedLat = (90 - latDeg) / 180;
+
+  const sampleX = clamp(Math.floor(normalizedLon * shape.width), 0, shape.width - 1);
+  const sampleY = clamp(Math.floor(normalizedLat * shape.height), 0, shape.height - 1);
+
+  return Object.freeze({
+    sampleX,
+    sampleY
   });
 }
 
 export function createControlSystem() {
-  let yaw = WORLD_KERNEL.constants.initialYaw;
-  let pitch = WORLD_KERNEL.constants.initialPitch;
+  const K = getKernelConstants();
+
+  let yaw = K.initialYaw;
+  let pitch = K.initialPitch;
   let yawVelocity = 0;
   let pitchVelocity = 0;
 
@@ -59,20 +95,16 @@ export function createControlSystem() {
     screenY: 0,
     latDeg: 0,
     lonDeg: 0,
+    sampleX: 0,
+    sampleY: 0,
     row: 0,
     col: 0,
     cellIndex: 0,
-    cellId: WORLD_KERNEL.localGrid.cellIds[0],
-    sampleX: 0,
-    sampleY: 0
+    cellId: "0:0"
   });
 
   function clampPitch() {
-    pitch = clamp(
-      pitch,
-      WORLD_KERNEL.constants.minPitch,
-      WORLD_KERNEL.constants.maxPitch
-    );
+    pitch = clamp(pitch, K.minPitch, K.maxPitch);
   }
 
   function clampZoomValue(value) {
@@ -88,7 +120,7 @@ export function createControlSystem() {
     cameraState.height = height;
     cameraState.centerX = width * 0.5;
     cameraState.centerY = height * 0.5;
-    cameraState.radius = Math.min(width, height) * WORLD_KERNEL.constants.worldRadiusFactor;
+    cameraState.radius = Math.min(width, height) * K.worldRadiusFactor;
   }
 
   function setPresentationMode(mode = "round") {
@@ -117,18 +149,17 @@ export function createControlSystem() {
   }
 
   function applyDrag(deltaX, deltaY) {
-    yaw = wrapAngle(yaw + deltaX * WORLD_KERNEL.constants.dragSensitivity);
-    pitch += deltaY * WORLD_KERNEL.constants.dragSensitivity;
+    yaw = wrapAngle(yaw + deltaX * K.dragSensitivity);
+    pitch += deltaY * K.dragSensitivity;
 
-    yawVelocity = deltaX * WORLD_KERNEL.constants.dragSensitivity * 0.45;
-    pitchVelocity = deltaY * WORLD_KERNEL.constants.dragSensitivity * 0.45;
+    yawVelocity = deltaX * K.dragSensitivity * 0.45;
+    pitchVelocity = deltaY * K.dragSensitivity * 0.45;
 
     clampPitch();
   }
 
   function stepZoom() {
     zoomCurrent += (zoomTarget - zoomCurrent) * ZOOM_EASING;
-
     if (Math.abs(zoomTarget - zoomCurrent) < 0.0005) {
       zoomCurrent = zoomTarget;
     }
@@ -140,7 +171,7 @@ export function createControlSystem() {
     yaw = wrapAngle(yaw + yawVelocity * frameScale);
     pitch += pitchVelocity * frameScale;
 
-    const decay = Math.pow(WORLD_KERNEL.constants.inertiaDecay, frameScale);
+    const decay = Math.pow(K.inertiaDecay, frameScale);
     yawVelocity *= decay;
     pitchVelocity *= decay;
 
@@ -156,11 +187,7 @@ export function createControlSystem() {
   function getBasis() {
     const cosPitch = Math.cos(pitch);
     const sinPitch = Math.sin(pitch);
-
-    return Object.freeze({
-      cosPitch,
-      sinPitch
-    });
+    return Object.freeze({ cosPitch, sinPitch });
   }
 
   function projectSphere(latDeg, lonDeg, radiusOffsetPx = 0) {
@@ -202,9 +229,7 @@ export function createControlSystem() {
     const dy = -(screenY - cameraState.centerY) / resolvedRadius;
     const distanceSquared = dx * dx + dy * dy;
 
-    if (distanceSquared > 1) {
-      return null;
-    }
+    if (distanceSquared > 1) return null;
 
     const dz = Math.sqrt(Math.max(0, 1 - distanceSquared));
 
@@ -234,38 +259,6 @@ export function createControlSystem() {
     });
   }
 
-  function latLonToGrid(latDeg, lonDeg) {
-    const width = WORLD_KERNEL.planetField.width;
-    const height = WORLD_KERNEL.planetField.height;
-
-    const normalizedLon = (wrapAngle((lonDeg * Math.PI) / 180) + Math.PI) / (Math.PI * 2);
-    const normalizedLat = (latDeg + 90) / 180;
-
-    const x = clamp(Math.floor(normalizedLon * width), 0, width - 1);
-    const y = clamp(Math.floor((1 - normalizedLat) * height), 0, height - 1);
-
-    return Object.freeze({ x, y });
-  }
-
-  function latLonToLocalGrid(latDeg, lonDeg) {
-    const normalizedLon = (wrapAngle((lonDeg * Math.PI) / 180) + Math.PI) / (Math.PI * 2);
-    const normalizedLat = (latDeg + 90) / 180;
-
-    const row = clamp(
-      Math.floor((1 - normalizedLat) * WORLD_KERNEL.constants.localGridRows),
-      0,
-      WORLD_KERNEL.constants.localGridRows - 1
-    );
-
-    const col = clamp(
-      Math.floor(normalizedLon * WORLD_KERNEL.constants.localGridCols),
-      0,
-      WORLD_KERNEL.constants.localGridCols - 1
-    );
-
-    return getLocalGridCell(row, col);
-  }
-
   function inverseProjection(screenX, screenY) {
     const bodyPoint = screenPointToNormalizedBody(screenX, screenY);
     if (!bodyPoint) return null;
@@ -273,8 +266,7 @@ export function createControlSystem() {
     const latLon = bodyPointToLatLon(bodyPoint);
     if (!latLon) return null;
 
-    const sampleIndex = latLonToGrid(latLon.latDeg, latLon.lonDeg);
-    const localGrid = latLonToLocalGrid(latLon.latDeg, latLon.lonDeg);
+    const sample = latLonToSample(latLon.latDeg, latLon.lonDeg);
 
     return Object.freeze({
       screenX,
@@ -284,21 +276,18 @@ export function createControlSystem() {
       lonDeg: latLon.lonDeg,
       visible: bodyPoint.visible,
       horizonExcluded: !bodyPoint.visible,
-      sampleX: sampleIndex.x,
-      sampleY: sampleIndex.y,
-      row: localGrid.row,
-      col: localGrid.col,
-      cellIndex: localGrid.cellIndex,
-      cellId: localGrid.cellId
+      sampleX: sample.sampleX,
+      sampleY: sample.sampleY,
+      row: sample.sampleY,
+      col: sample.sampleX,
+      cellIndex: sample.sampleY * getPlanetFieldShape().width + sample.sampleX,
+      cellId: `${sample.sampleY}:${sample.sampleX}`
     });
   }
 
   function updateSelection(screenX = cameraState.centerX, screenY = cameraState.centerY) {
     const result = inverseProjection(screenX, screenY);
-
-    if (!result) {
-      return selectionState;
-    }
+    if (!result) return selectionState;
 
     selectionState = Object.freeze({
       screenX: result.screenX,
@@ -396,28 +385,16 @@ export function createControlSystem() {
   function setOrientation(input = {}) {
     const next = normalizeObject(input);
 
-    if (isFiniteNumber(next.yaw)) {
-      yaw = wrapAngle(next.yaw);
-    }
+    if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
     if (isFiniteNumber(next.pitch)) {
       pitch = next.pitch;
       clampPitch();
     }
-    if (isFiniteNumber(next.yawVelocity)) {
-      yawVelocity = next.yawVelocity;
-    }
-    if (isFiniteNumber(next.pitchVelocity)) {
-      pitchVelocity = next.pitchVelocity;
-    }
-    if (isFiniteNumber(next.zoomCurrent)) {
-      zoomCurrent = clampZoomValue(next.zoomCurrent);
-    }
-    if (isFiniteNumber(next.zoomTarget)) {
-      zoomTarget = clampZoomValue(next.zoomTarget);
-    }
-    if (isFiniteNumber(next.orbitPhase)) {
-      orbitPhase = wrapAngle(next.orbitPhase);
-    }
+    if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
+    if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
+    if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = clampZoomValue(next.zoomCurrent);
+    if (isFiniteNumber(next.zoomTarget)) zoomTarget = clampZoomValue(next.zoomTarget);
+    if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
   }
 
   function restoreMotionState(input = {}) {
@@ -429,7 +406,7 @@ export function createControlSystem() {
 
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
     if (isFiniteNumber(next.pitch)) {
-      pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
+      pitch = clamp(next.pitch, K.minPitch, K.maxPitch);
     }
     if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
     if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;

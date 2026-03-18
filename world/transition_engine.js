@@ -54,28 +54,29 @@ function getSummary(runtime) {
 function routeFamily(route) {
   const value = normalizeString(route, "/");
 
-  if (value === "/" || value === "/index.html" || value === "/home/" || value === "/home/index.html") {
+  if (
+    value === "/" ||
+    value === "/index.html" ||
+    value === "/home/" ||
+    value === "/home/index.html"
+  ) {
     return "HOME";
   }
-  if (value.startsWith("/products/")) {
-    return "PRODUCTS";
-  }
-  if (value.startsWith("/explore/")) {
-    return "EXPLORE";
-  }
-  if (value.startsWith("/laws/")) {
-    return "LAWS";
-  }
-  if (value.startsWith("/gauges/")) {
-    return "GAUGES";
-  }
-  if (value.startsWith("/door/")) {
-    return "DOOR";
-  }
-  if (value.startsWith("/prelude/")) {
-    return "PRELUDE";
-  }
+  if (value.startsWith("/products/")) return "PRODUCTS";
+  if (value.startsWith("/explore/")) return "EXPLORE";
+  if (value.startsWith("/laws/")) return "LAWS";
+  if (value.startsWith("/gauges/")) return "GAUGES";
+  if (value.startsWith("/door/")) return "DOOR";
+  if (value.startsWith("/prelude/")) return "PRELUDE";
 
+  return "UNKNOWN";
+}
+
+function modeFamily(mode) {
+  const value = normalizeString(mode, "round");
+  if (value === "round") return "ROUND";
+  if (value === "flat") return "FLAT";
+  if (value === "observe") return "OBSERVE";
   return "UNKNOWN";
 }
 
@@ -95,7 +96,7 @@ function buildBaseTransitionRequest(input = {}) {
 }
 
 function isModeTransition(request) {
-  return request.proposed === "ROUND_HOME" || request.proposed === "FLAT_HOME";
+  return request.fromMode !== request.toMode;
 }
 
 function isRouteTransition(request) {
@@ -121,6 +122,7 @@ function evaluateSystemReadiness(runtime) {
 
 function evaluateModeTransition(runtime, request) {
   const readiness = evaluateSystemReadiness(runtime);
+  const toModeFamily = modeFamily(request.toMode);
 
   if (!request.explicitUserAction) {
     return Object.freeze({
@@ -131,7 +133,7 @@ function evaluateModeTransition(runtime, request) {
     });
   }
 
-  if (request.toMode !== "round" && request.toMode !== "flat") {
+  if (toModeFamily === "UNKNOWN") {
     return Object.freeze({
       admissible: false,
       accepted: false,
@@ -154,6 +156,15 @@ function evaluateModeTransition(runtime, request) {
       admissible: false,
       accepted: false,
       blockedReason: "authority_receipt_failed",
+      family: "HOME_MODE"
+    });
+  }
+
+  if (request.toMode === "observe" && !readiness.completionPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "observe_requires_completion",
       family: "HOME_MODE"
     });
   }
@@ -362,7 +373,7 @@ function evaluatePreludeTransition(runtime, request) {
   });
 }
 
-function evaluateUnknownTransition(_runtime, _request) {
+function evaluateUnknownTransition() {
   return Object.freeze({
     admissible: false,
     accepted: false,
@@ -395,6 +406,10 @@ function evaluateRouteTransition(runtime, request) {
 function buildTransitionReceipt(runtime, input = {}) {
   const request = buildBaseTransitionRequest(input);
   const summary = getSummary(runtime);
+  const completion = getCompletion(runtime);
+  const authorityReceipt = getAuthorityReceipt(runtime);
+  const unlocks = getUnlocks(runtime);
+  const progress = getProgress(runtime);
 
   let decision = Object.freeze({
     admissible: false,
@@ -421,7 +436,13 @@ function buildTransitionReceipt(runtime, input = {}) {
       toRoute: request.toRoute,
       fromMode: request.fromMode,
       toMode: request.toMode,
-      continentCount: isFiniteNumber(summary.continentCount) ? summary.continentCount : 0
+      toRouteFamily: routeFamily(request.toRoute),
+      toModeFamily: modeFamily(request.toMode),
+      continentCount: isFiniteNumber(summary.continentCount) ? summary.continentCount : 0,
+      completionPass: normalizeBoolean(completion.pass, false),
+      authorityPass: normalizeBoolean(authorityReceipt.pass, false),
+      summitCompletion: isFiniteNumber(progress.summitCompletion) ? progress.summitCompletion : 0,
+      unlockKeys: normalizeArray(Object.keys(unlocks))
     })
   });
 }

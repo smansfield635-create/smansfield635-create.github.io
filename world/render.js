@@ -141,7 +141,15 @@ function pointFromSample(sample, projectPoint, radiusScale = 1) {
 }
 
 function shouldDrawQuad(points) {
-  return points.some((point) => point?.visible === true);
+  let visibleCount = 0;
+
+  for (let i = 0; i < points.length; i += 1) {
+    if (points[i]?.visible === true) {
+      visibleCount += 1;
+    }
+  }
+
+  return visibleCount >= 3;
 }
 
 function hashNoise(seed, a, b, c = 0) {
@@ -510,71 +518,27 @@ function drawSpace(ctx, projectionState, viewState = {}) {
 function drawAtmosphere(ctx, projectionState) {
   ctx.save();
 
-  const outerRadius = projectionState.observeMode
-    ? projectionState.radius * 1.010
-    : projectionState.radius * 1.018;
-
-  const glow = ctx.createRadialGradient(
+  const outerRadius = projectionState.radius * 1.01;
+  const grad = ctx.createRadialGradient(
     projectionState.centerX,
     projectionState.centerY,
-    projectionState.radius * 0.975,
+    projectionState.radius * 0.98,
     projectionState.centerX,
     projectionState.centerY,
     outerRadius
   );
 
   if (projectionState.observeMode) {
-    glow.addColorStop(0, "rgba(40,120,255,0.00)");
-    glow.addColorStop(0.92, "rgba(72,156,255,0.018)");
-    glow.addColorStop(1, "rgba(108,188,255,0.036)");
+    grad.addColorStop(0.98, "rgba(120,180,255,0.025)");
+    grad.addColorStop(1, "rgba(160,210,255,0.05)");
   } else {
-    glow.addColorStop(0, "rgba(40,120,255,0.00)");
-    glow.addColorStop(0.90, "rgba(72,156,255,0.032)");
-    glow.addColorStop(1, "rgba(108,188,255,0.060)");
+    grad.addColorStop(0.98, "rgba(120,180,255,0.04)");
+    grad.addColorStop(1, "rgba(160,210,255,0.08)");
   }
 
   ctx.beginPath();
-  ctx.arc(
-    projectionState.centerX,
-    projectionState.centerY,
-    outerRadius,
-    0,
-    Math.PI * 2
-  );
-  ctx.fillStyle = glow;
-  ctx.fill();
-
-  const limbRadius = projectionState.radius * 1.002;
-  const limb = ctx.createRadialGradient(
-    projectionState.centerX - projectionState.radius * 0.18,
-    projectionState.centerY - projectionState.radius * 0.22,
-    projectionState.radius * 0.90,
-    projectionState.centerX,
-    projectionState.centerY,
-    limbRadius
-  );
-
-  if (projectionState.observeMode) {
-    limb.addColorStop(0, "rgba(0,0,0,0)");
-    limb.addColorStop(0.965, "rgba(132,204,255,0.00)");
-    limb.addColorStop(0.988, "rgba(150,216,255,0.050)");
-    limb.addColorStop(1, "rgba(176,228,255,0.075)");
-  } else {
-    limb.addColorStop(0, "rgba(0,0,0,0)");
-    limb.addColorStop(0.960, "rgba(132,204,255,0.00)");
-    limb.addColorStop(0.986, "rgba(150,216,255,0.068)");
-    limb.addColorStop(1, "rgba(176,228,255,0.100)");
-  }
-
-  ctx.beginPath();
-  ctx.arc(
-    projectionState.centerX,
-    projectionState.centerY,
-    limbRadius,
-    0,
-    Math.PI * 2
-  );
-  ctx.fillStyle = limb;
+  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
   ctx.fill();
 
   ctx.restore();
@@ -616,11 +580,13 @@ function drawOceanMesh(ctx, grid, projectPoint) {
     const row = grid[y];
     const nextRow = grid[y + 1];
 
-    for (let x = 0; x < row.length - 1; x += 1) {
+    for (let x = 0; x < row.length; x += 1) {
+      const nextX = (x + 1) % row.length;
+
       const s00 = row[x];
-      const s10 = row[x + 1];
+      const s10 = row[nextX];
       const s01 = nextRow[x];
-      const s11 = nextRow[x + 1];
+      const s11 = nextRow[nextX];
 
       const waterBias =
         (isWaterFamily(s00) ? 1 : 0) +
@@ -657,11 +623,13 @@ function drawTerrainMesh(ctx, grid, projectPoint) {
     const row = grid[y];
     const nextRow = grid[y + 1];
 
-    for (let x = 0; x < row.length - 1; x += 1) {
+    for (let x = 0; x < row.length; x += 1) {
+      const nextX = (x + 1) % row.length;
+
       const s00 = row[x];
-      const s10 = row[x + 1];
+      const s10 = row[nextX];
       const s01 = nextRow[x];
-      const s11 = nextRow[x + 1];
+      const s11 = nextRow[nextX];
 
       const landBias =
         (isLandFamily(s00) ? 1 : 0) +

@@ -746,10 +746,11 @@ import { createControlSystem } from "/world/control.js";
 import { createInstruments } from "/assets/instruments.js";
 
 const params = new URLSearchParams(location.search);
-const modeParam = params.get("mode");
-const mode =
-  modeParam === "flat" || modeParam === "observe"
-    ? modeParam
+const initialModeParam = params.get("mode");
+
+let currentMode =
+  initialModeParam === "flat" || initialModeParam === "observe"
+    ? initialModeParam
     : "round";
 
 const body = document.body;
@@ -760,7 +761,6 @@ const flatLayer = document.getElementById("flat-layer");
 const universeLayer = document.getElementById("universe-layer");
 const atmosphereLayer = document.getElementById("atmosphere-layer");
 const heroLayer = document.getElementById("hero-layer");
-const orbitalOverlay = document.getElementById("orbital-overlay");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
@@ -783,7 +783,7 @@ const renderer = createRenderer();
 const control = createControlSystem();
 const instruments = createInstruments();
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v7";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v8";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
@@ -792,9 +792,14 @@ const activePointers = new Map();
 let planetField = null;
 let rafId = 0;
 let lastFrameAt = performance.now();
+let diagnosticsMode = "peek";
+let dragPointerId = null;
+let lastX = 0;
+let lastY = 0;
+let pinchStartDistance = 0;
+let pinchStartZoom = 1;
+
 let lastRenderReceipt = Object.freeze({
-  orbitalHits: Object.freeze([]),
-  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
   audit: Object.freeze({})
 });
 
@@ -804,13 +809,6 @@ let lastPlacementReceipt = Object.freeze({
   markerCollisionCount: 0,
   markerRepositionedCount: 0
 });
-
-let diagnosticsMode = "peek";
-let dragPointerId = null;
-let lastX = 0;
-let lastY = 0;
-let pinchStartDistance = 0;
-let pinchStartZoom = 1;
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -862,19 +860,49 @@ const orbitalSystem = Object.freeze({
 });
 
 function isFlatMode() {
-  return mode === "flat";
+  return currentMode === "flat";
 }
 
 function isObserveMode() {
-  return mode === "observe";
+  return currentMode === "observe";
 }
 
 function isRoundVisualMode() {
-  return mode === "round" || mode === "observe";
+  return currentMode === "round" || currentMode === "observe";
 }
 
 function markerModeRequired() {
-  return mode === "round";
+  return currentMode === "round";
+}
+
+function orbitVelocityForMode() {
+  if (currentMode === "observe") return 0.00010;
+  if (currentMode === "round") return 0.00018;
+  return 0;
+}
+
+function zoomPolicyForMode() {
+  if (currentMode === "observe") {
+    return Object.freeze({
+      min: 1.04,
+      max: 1.34,
+      initial: 1.24
+    });
+  }
+
+  if (currentMode === "round") {
+    return Object.freeze({
+      min: 0.86,
+      max: 1.52,
+      initial: 1
+    });
+  }
+
+  return Object.freeze({
+    min: 1,
+    max: 1,
+    initial: 1
+  });
 }
 
 function buildModeHref(nextMode) {
@@ -885,7 +913,7 @@ function buildModeHref(nextMode) {
 
 function withModeQuery(route) {
   const glue = route.includes("?") ? "&" : "?";
-  return `${route}${glue}mode=${mode}`;
+  return `${route}${glue}mode=${currentMode}`;
 }
 
 function resizeWorld() {
@@ -947,7 +975,7 @@ function safeMotionReceipt(dtMs) {
     pageRestored: true,
     yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
     pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity) ? orbitalState.orbitAngularVelocity : null,
+    orbitVelocity: orbitVelocityForMode(),
     orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
     blockedDragOnStarCount: 0,
     starTapCount: 0,
@@ -997,7 +1025,10 @@ function buildRuntimePacket(dtMs) {
     planetField,
     renderAudit: lastRenderReceipt?.audit || {},
     orbitalAudit: {
-      ...(lastRenderReceipt?.orbitalAudit || {}),
+      count: orbitalSystem.objects.length,
+      frontVisibleCount: Array.isArray(lastPlacementReceipt?.resolvedHits)
+        ? lastPlacementReceipt.resolvedHits.length
+        : 0,
       ...(lastPlacementReceipt || {})
     },
     progress: {},
@@ -1137,6 +1168,36 @@ function validateMarkersInViewport(hits) {
   return true;
 }
 
+function getRawOrbitalHits() {
+  if (!markerModeRequired()) return [];
+
+  const orbitalState = control.getOrbitalState();
+  const phase = Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : 0;
+  const altitudePx = control.getCameraState().radius * 0.42;
+
+  return orbitalSystem.objects.map((object) => {
+    const lonDeg = object.baseLonDeg + object.bearingOffsetDeg + ((phase * 180) / Math.PI);
+    const point = control.projectSphere(object.baseLatDeg, lonDeg, altitudePx);
+    const edgeVisibility = Math.max(0, Math.min(1, (point.z + 0.08) / 0.30));
+    const frontFacing = point.z >= 0;
+    const scale = 0.82 + edgeVisibility * 0.34;
+    const opacity = frontFacing
+      ? 0.42 + edgeVisibility * 0.58
+      : edgeVisibility * 0.34;
+
+    return Object.freeze({
+      id: object.id,
+      label: object.label,
+      route: object.route,
+      x: point.x,
+      y: point.y,
+      radius: object.sizePx * scale * 0.72,
+      frontFacing,
+      opacity
+    });
+  }).filter((hit) => hit.frontFacing && hit.opacity > 0.22);
+}
+
 function solveMarkerPlacement(rawHits) {
   const required = markerModeRequired();
 
@@ -1227,6 +1288,7 @@ function solveMarkerPlacement(rawHits) {
 function syncOverlayMarkers() {
   if (!isRoundVisualMode() || isObserveMode()) {
     lastPlacementReceipt = Object.freeze({
+      resolvedHits: Object.freeze([]),
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
@@ -1236,14 +1298,10 @@ function syncOverlayMarkers() {
     return;
   }
 
-  const rawHits = Array.isArray(lastRenderReceipt?.orbitalHits)
-    ? lastRenderReceipt.orbitalHits
-    : [];
+  const placement = solveMarkerPlacement(getRawOrbitalHits());
+  lastPlacementReceipt = placement;
 
   hideAllMarkers();
-
-  const placement = solveMarkerPlacement(rawHits);
-  lastPlacementReceipt = placement;
 
   for (const hit of placement.resolvedHits) {
     const marker = overlayMap[hit.id];
@@ -1263,23 +1321,7 @@ function buildViewState() {
 
   return Object.freeze({
     ...cameraState,
-    observeMode: isObserveMode(),
-    starfieldSuppressed: isObserveMode()
-  });
-}
-
-function buildOrbitalConfig() {
-  if (!isRoundVisualMode() || isObserveMode()) return null;
-
-  const orbitalState =
-    typeof control.getOrbitalState === "function"
-      ? control.getOrbitalState()
-      : {};
-
-  return Object.freeze({
-    phase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : 0,
-    objects: orbitalSystem.objects,
-    altitudeFactor: 0.42
+    observeMode: isObserveMode()
   });
 }
 
@@ -1291,8 +1333,7 @@ function renderSurface(dtMs) {
     planetField,
     projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) =>
       control.projectSphere(latDeg, lonDeg, radiusOffsetPx),
-    viewState: buildViewState(),
-    orbitalSystem: buildOrbitalConfig()
+    viewState: buildViewState()
   });
 
   syncOverlayMarkers();
@@ -1305,6 +1346,7 @@ function frame(now) {
 
   if (isRoundVisualMode()) {
     control.stepInertia(dtMs);
+    control.advanceOrbit(dtMs, orbitVelocityForMode());
   }
 
   renderSurface(dtMs);
@@ -1312,19 +1354,39 @@ function frame(now) {
 }
 
 function syncModeButtons() {
-  btnFlat.classList.toggle("is-active", mode === "flat");
-  btnRound.classList.toggle("is-active", mode === "round");
-  btnObserve.classList.toggle("is-active", mode === "observe");
+  btnFlat.classList.toggle("is-active", currentMode === "flat");
+  btnRound.classList.toggle("is-active", currentMode === "round");
+  btnObserve.classList.toggle("is-active", currentMode === "observe");
+}
+
+function applyModePolicy() {
+  control.setPresentationMode(currentMode);
+
+  const zoom = zoomPolicyForMode();
+  control.setZoomBounds(zoom.min, zoom.max);
+
+  if (currentMode === "flat") {
+    control.setZoomAbsolute(1);
+  } else {
+    const motion = control.getMotionState();
+    if (!Number.isFinite(motion.zoomCurrent) || motion.zoomCurrent < zoom.min || motion.zoomCurrent > zoom.max) {
+      control.setZoomAbsolute(zoom.initial);
+      control.setOrientation({
+        zoomCurrent: zoom.initial,
+        zoomTarget: zoom.initial
+      });
+    }
+  }
 }
 
 function setModePresentation() {
-  body.setAttribute("data-mode", mode);
+  body.setAttribute("data-mode", currentMode);
   syncModeButtons();
+  applyModePolicy();
 
   if (isFlatMode()) {
     flatLayer.style.display = "flex";
     canvas.style.filter = "blur(8px) brightness(.64)";
-    orbitalOverlay.style.opacity = "0";
     universeLayer.style.filter = "none";
     atmosphereLayer.style.filter = "none";
     heroLayer.style.transform = "none";
@@ -1332,7 +1394,6 @@ function setModePresentation() {
   } else if (isObserveMode()) {
     flatLayer.style.display = "none";
     canvas.style.filter = "none";
-    orbitalOverlay.style.opacity = "0";
     universeLayer.style.filter = "blur(.25px)";
     atmosphereLayer.style.filter = "none";
     heroLayer.style.transform = "translateY(-4px)";
@@ -1340,7 +1401,6 @@ function setModePresentation() {
   } else {
     flatLayer.style.display = "none";
     canvas.style.filter = "none";
-    orbitalOverlay.style.opacity = "1";
     universeLayer.style.filter = "none";
     atmosphereLayer.style.filter = "none";
     heroLayer.style.transform = "none";
@@ -1476,17 +1536,17 @@ function bindEvents() {
   });
 
   btnFlat.addEventListener("click", () => {
-    if (mode === "flat") return;
+    if (currentMode === "flat") return;
     navigateToMode("flat");
   });
 
   btnRound.addEventListener("click", () => {
-    if (mode === "round") return;
+    if (currentMode === "round") return;
     navigateToMode("round");
   });
 
   btnObserve.addEventListener("click", () => {
-    if (mode === "observe") return;
+    if (currentMode === "observe") return;
     navigateToMode("observe");
   });
 
@@ -1525,10 +1585,11 @@ function bindEvents() {
   }, { passive: true });
 
   window.addEventListener("pageshow", () => {
-    control.setPresentationMode(mode);
+    applyModePolicy();
 
     if (isRoundVisualMode()) {
       restoreMotionState();
+      applyModePolicy();
     }
 
     if (!rafId && isRoundVisualMode()) {
@@ -1541,10 +1602,11 @@ function bindEvents() {
 function start() {
   resizeWorld();
   buildPlanetFieldOnce();
-  control.setPresentationMode(mode);
+  applyModePolicy();
 
   if (isRoundVisualMode()) {
     restoreMotionState();
+    applyModePolicy();
   }
 
   bindOverlayRoutes();

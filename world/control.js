@@ -16,10 +16,6 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
-function normalizeMode(value) {
-  return value === "flat" ? "flat" : "round";
-}
-
 function getLocalGridCell(row, col) {
   const safeRow = clamp(row, 0, WORLD_KERNEL.constants.localGridRows - 1);
   const safeCol = clamp(col, 0, WORLD_KERNEL.constants.localGridCols - 1);
@@ -34,17 +30,22 @@ function getLocalGridCell(row, col) {
 }
 
 export function createControlSystem() {
-  let mode = "round";
-
   let yaw = WORLD_KERNEL.constants.initialYaw;
   let pitch = WORLD_KERNEL.constants.initialPitch;
-
   let yawVelocity = 0;
   let pitchVelocity = 0;
 
   let orbitPhase = 0;
   let orbitAngularVelocity = 0.00018;
   let orbitPresentationVelocity = 0.00018;
+
+  let presentationMode = "round";
+  let observationMode = false;
+
+  let zoomCurrent = 1;
+  let zoomTarget = 1;
+  const OBSERVE_ZOOM = 1.24;
+  const ZOOM_EASING = 0.12;
 
   const cameraState = {
     width: 0,
@@ -64,10 +65,18 @@ export function createControlSystem() {
     cellIndex: 0,
     cellId: WORLD_KERNEL.localGrid.cellIds[0],
     sampleX: 0,
-    sampleY: 0,
-    visible: true,
-    horizonExcluded: false
+    sampleY: 0
   });
+
+  function getResolvedRadius() {
+    return Math.max(1, cameraState.radius * zoomCurrent);
+  }
+
+  function updatePresentationDerivedState() {
+    observationMode = presentationMode === "observe";
+    zoomTarget = observationMode ? OBSERVE_ZOOM : 1;
+    orbitPresentationVelocity = observationMode ? orbitAngularVelocity * 0.52 : orbitAngularVelocity;
+  }
 
   function resize(width, height) {
     cameraState.width = width;
@@ -91,29 +100,10 @@ export function createControlSystem() {
       ((Math.abs(yawVelocity) + (Math.abs(pitchVelocity) * 0.5)) / 16.6667) * 0.95;
 
     orbitAngularVelocity = baseOrbitSpeed + correlated;
-    orbitPresentationVelocity = baseOrbitSpeed + correlated * 0.65;
-  }
-
-  function setMode(nextMode = "round") {
-    mode = normalizeMode(nextMode);
-
-    if (mode === "flat") {
-      yawVelocity = 0;
-      pitchVelocity = 0;
-      orbitAngularVelocity = 0;
-      orbitPresentationVelocity = 0;
-    } else {
-      recomputeOrbitalVelocity();
-    }
-
-    return mode;
+    updatePresentationDerivedState();
   }
 
   function applyDrag(deltaX, deltaY) {
-    if (mode !== "round") {
-      return getMotionState();
-    }
-
     yaw = wrapAngle(yaw + deltaX * WORLD_KERNEL.constants.dragSensitivity);
     pitch += deltaY * WORLD_KERNEL.constants.dragSensitivity;
 
@@ -122,15 +112,16 @@ export function createControlSystem() {
 
     clampPitch();
     recomputeOrbitalVelocity();
+  }
 
-    return getMotionState();
+  function stepZoom() {
+    zoomCurrent += (zoomTarget - zoomCurrent) * ZOOM_EASING;
+    if (Math.abs(zoomTarget - zoomCurrent) < 0.0005) {
+      zoomCurrent = zoomTarget;
+    }
   }
 
   function stepInertia(dtMs = 16.6667) {
-    if (mode !== "round") {
-      return getMotionState();
-    }
-
     const frameScale = clamp(dtMs / 16.6667, 0.25, 4);
 
     yaw = wrapAngle(yaw + yawVelocity * frameScale);
@@ -142,10 +133,9 @@ export function createControlSystem() {
 
     clampPitch();
     recomputeOrbitalVelocity();
+    stepZoom();
 
-    orbitPhase = wrapAngle(orbitPhase + orbitAngularVelocity * dtMs);
-
-    return getMotionState();
+    orbitPhase = wrapAngle(orbitPhase + orbitPresentationVelocity * dtMs);
   }
 
   function getBasis() {
@@ -159,22 +149,6 @@ export function createControlSystem() {
   }
 
   function projectSphere(latDeg, lonDeg, radiusOffsetPx = 0) {
-    if (mode !== "round") {
-      const resolvedRadius = Math.max(1, cameraState.radius + radiusOffsetPx);
-      const x = cameraState.centerX + ((lonDeg / 180) * resolvedRadius * 0.92);
-      const y = cameraState.centerY - ((latDeg / 90) * resolvedRadius * 0.92);
-
-      return Object.freeze({
-        x,
-        y,
-        z: 1,
-        visible: true,
-        horizonExcluded: false,
-        resolvedRadius,
-        radiusOffsetPx
-      });
-    }
-
     const lat = (latDeg * Math.PI) / 180;
     const lon = (lonDeg * Math.PI) / 180;
 
@@ -192,7 +166,7 @@ export function createControlSystem() {
     const y = y0 * cosPitch - z0 * sinPitch;
     const z = y0 * sinPitch + z0 * cosPitch;
 
-    const resolvedRadius = Math.max(1, cameraState.radius + radiusOffsetPx);
+    const resolvedRadius = Math.max(1, getResolvedRadius() + radiusOffsetPx);
 
     return Object.freeze({
       x: cameraState.centerX + x * resolvedRadius,
@@ -206,10 +180,11 @@ export function createControlSystem() {
   }
 
   function screenPointToNormalizedBody(screenX, screenY) {
-    if (!cameraState.radius) return null;
+    const resolvedRadius = getResolvedRadius();
+    if (!resolvedRadius) return null;
 
-    const dx = (screenX - cameraState.centerX) / cameraState.radius;
-    const dy = -(screenY - cameraState.centerY) / cameraState.radius;
+    const dx = (screenX - cameraState.centerX) / resolvedRadius;
+    const dy = -(screenY - cameraState.centerY) / resolvedRadius;
     const distanceSquared = dx * dx + dy * dy;
 
     if (distanceSquared > 1) {
@@ -277,35 +252,6 @@ export function createControlSystem() {
   }
 
   function inverseProjection(screenX, screenY) {
-    if (mode !== "round") {
-      if (!cameraState.radius) return null;
-
-      const dx = (screenX - cameraState.centerX) / (cameraState.radius * 0.92);
-      const dy = -(screenY - cameraState.centerY) / (cameraState.radius * 0.92);
-
-      const lonDeg = clamp(dx * 180, -180, 180);
-      const latDeg = clamp(dy * 90, -90, 90);
-
-      const sampleIndex = latLonToGrid(latDeg, lonDeg);
-      const localGrid = latLonToLocalGrid(latDeg, lonDeg);
-
-      return Object.freeze({
-        screenX,
-        screenY,
-        bodyPoint: Object.freeze({ x: dx, y: dy, z: 1, visible: true }),
-        latDeg,
-        lonDeg,
-        visible: true,
-        horizonExcluded: false,
-        sampleX: sampleIndex.x,
-        sampleY: sampleIndex.y,
-        row: localGrid.row,
-        col: localGrid.col,
-        cellIndex: localGrid.cellIndex,
-        cellId: localGrid.cellId
-      });
-    }
-
     const bodyPoint = screenPointToNormalizedBody(screenX, screenY);
     if (!bodyPoint) return null;
 
@@ -349,52 +295,10 @@ export function createControlSystem() {
       row: result.row,
       col: result.col,
       cellIndex: result.cellIndex,
-      cellId: result.cellId,
-      visible: result.visible,
-      horizonExcluded: result.horizonExcluded
+      cellId: result.cellId
     });
 
     return selectionState;
-  }
-
-  function classifyPointerTarget(screenX, screenY, orbitalHits = []) {
-    const dx = screenX - cameraState.centerX;
-    const dy = screenY - cameraState.centerY;
-    const radialDistance = Math.sqrt(dx * dx + dy * dy);
-
-    for (let i = orbitalHits.length - 1; i >= 0; i -= 1) {
-      const hit = orbitalHits[i];
-      const hx = screenX - hit.x;
-      const hy = screenY - hit.y;
-      const d = Math.sqrt(hx * hx + hy * hy);
-      if (d <= hit.radius) {
-        return Object.freeze({
-          family: "orbital",
-          id: hit.id,
-          label: hit.label,
-          route: hit.route
-        });
-      }
-    }
-
-    if (mode === "round" && radialDistance <= cameraState.radius) {
-      return Object.freeze({
-        family: "globe",
-        id: "planet_body"
-      });
-    }
-
-    if (mode === "flat") {
-      return Object.freeze({
-        family: "flat_surface",
-        id: "flat_projection"
-      });
-    }
-
-    return Object.freeze({
-      family: "ui_or_void",
-      id: "ui_or_void"
-    });
   }
 
   function getCameraState() {
@@ -403,12 +307,13 @@ export function createControlSystem() {
       height: cameraState.height,
       centerX: cameraState.centerX,
       centerY: cameraState.centerY,
-      radius: cameraState.radius,
+      radius: getResolvedRadius(),
       yaw,
       pitch,
       yawVelocity,
       pitchVelocity,
-      mode
+      mode: presentationMode,
+      observationMode
     });
   }
 
@@ -424,21 +329,11 @@ export function createControlSystem() {
       col: centerSelection.col,
       cellIndex: centerSelection.cellIndex,
       cellId: centerSelection.cellId,
-      mode
+      mode: presentationMode
     });
   }
 
   function getCardinals() {
-    if (mode !== "round") {
-      return Object.freeze({
-        heading: "N",
-        north: 1,
-        south: 0,
-        east: 0,
-        west: 0
-      });
-    }
-
     const normalizedYaw = wrapAngle(yaw);
     const north = Math.max(0, Math.cos(pitch));
     const south = Math.max(0, -Math.sin(pitch));
@@ -465,22 +360,35 @@ export function createControlSystem() {
       orbitAngularVelocity,
       orbitPresentationVelocity,
       correlatedFromGlobe:
-        ((Math.abs(yawVelocity) + (Math.abs(pitchVelocity) * 0.5)) / 16.6667) * 0.95,
-      mode
+        ((Math.abs(yawVelocity) + (Math.abs(pitchVelocity) * 0.5)) / 16.6667) * 0.95
     });
   }
 
   function getMotionState() {
     return Object.freeze({
-      mode,
       yaw,
       pitch,
       yawVelocity,
       pitchVelocity,
       orbitPhase,
       orbitAngularVelocity,
-      orbitPresentationVelocity
+      orbitVelocity: orbitAngularVelocity,
+      orbitPresentationVelocity,
+      mode: presentationMode,
+      observationMode,
+      zoomCurrent,
+      zoomTarget
     });
+  }
+
+  function setPresentationMode(mode = "round") {
+    const next =
+      mode === "flat" || mode === "round" || mode === "observe"
+        ? mode
+        : "round";
+
+    presentationMode = next;
+    updatePresentationDerivedState();
   }
 
   function setOrientation(input = {}) {
@@ -499,63 +407,39 @@ export function createControlSystem() {
     if (isFiniteNumber(next.pitchVelocity)) {
       pitchVelocity = next.pitchVelocity;
     }
-    if (typeof next.mode === "string") {
-      setMode(next.mode);
-    }
-
     recomputeOrbitalVelocity();
   }
 
   function restoreMotionState(input = {}) {
     const next = normalizeObject(input);
 
-    if (typeof next.mode === "string") mode = normalizeMode(next.mode);
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
     if (isFiniteNumber(next.pitch)) pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
     if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
     if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
-    if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = Math.max(0, next.orbitAngularVelocity);
-    if (isFiniteNumber(next.orbitPresentationVelocity)) orbitPresentationVelocity = Math.max(0, next.orbitPresentationVelocity);
+    if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = next.orbitAngularVelocity;
+    if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = next.zoomCurrent;
+    if (isFiniteNumber(next.zoomTarget)) zoomTarget = next.zoomTarget;
+    if (typeof next.mode === "string") {
+      setPresentationMode(next.mode);
+    } else {
+      updatePresentationDerivedState();
+    }
 
     clampPitch();
-
-    if (mode === "round") {
-      recomputeOrbitalVelocity();
-    } else {
-      yawVelocity = 0;
-      pitchVelocity = 0;
-      orbitAngularVelocity = 0;
-      orbitPresentationVelocity = 0;
-    }
+    recomputeOrbitalVelocity();
   }
 
-  function buildTransitionHandoff(input = {}) {
-    const next = normalizeObject(input);
-
-    return Object.freeze({
-      fromMode: mode,
-      toMode: typeof next.toMode === "string" ? normalizeMode(next.toMode) : mode,
-      yaw,
-      pitch,
-      yawVelocity,
-      pitchVelocity,
-      orbitPhase,
-      orbitAngularVelocity,
-      orbitPresentationVelocity,
-      projection: getProjectionSummary()
-    });
-  }
+  updatePresentationDerivedState();
 
   return Object.freeze({
     resize,
-    setMode,
     applyDrag,
     stepInertia,
     setOrientation,
+    setPresentationMode,
     restoreMotionState,
-    buildTransitionHandoff,
-    classifyPointerTarget,
     projectSphere,
     inverseProjection,
     updateSelection,

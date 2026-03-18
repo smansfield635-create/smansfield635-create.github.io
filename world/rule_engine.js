@@ -4,37 +4,114 @@ import {
   getRuleFamilyRegistry,
   getSimulationTickContract
 } from "./world_kernel.js";
-import { createQuantizedSampleView } from "./quantized_sample_view.js";
+import {
+  createQuantizedSampleView,
+  isCanonicalQuantizedSampleGrid
+} from "./quantized_sample_view.js";
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+const STAGE_1_BOUNDARY_MODE = "LOCAL_PATCH_HARD_EDGE";
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function normalizeArray(value) {
-  return Array.isArray(value) ? value : [];
+function requireInt32(value, fieldName) {
+  if (!Number.isInteger(value)) {
+    throw new Error(`RULE_ENGINE_INVALID_INT32:${fieldName}`);
+  }
+  if (value < -2147483648 || value > 2147483647) {
+    throw new Error(`RULE_ENGINE_INT32_OUT_OF_RANGE:${fieldName}`);
+  }
+  return value;
 }
 
-function isFiniteInteger(value) {
-  return typeof value === "number" && Number.isInteger(value);
+function clampInt32(value, min, max, fieldName) {
+  const int32 = requireInt32(value, fieldName);
+  if (int32 < min) return min;
+  if (int32 > max) return max;
+  return int32;
 }
 
-function clampInt(value, min, max) {
-  if (value < min) return min;
-  if (value > max) return max;
-  return value | 0;
+function requireArray(value, fieldName) {
+  if (!Array.isArray(value)) {
+    throw new Error(`RULE_ENGINE_INVALID_ARRAY:${fieldName}`);
+  }
+  return value;
+}
+
+function buildStateLookup() {
+  const registry = getStateRegistry();
+  const codesByName = isPlainObject(registry?.codesByName) ? registry.codesByName : null;
+  const byCode = isPlainObject(registry?.byCode) ? registry.byCode : null;
+
+  if (!codesByName || !byCode) {
+    throw new Error("RULE_ENGINE_STATE_REGISTRY_INVALID");
+  }
+
+  function requireStateCode(name) {
+    if (typeof name !== "string" || name.length === 0) {
+      throw new Error("RULE_ENGINE_STATE_LOOKUP_INVALID_NAME");
+    }
+
+    const code = codesByName[name];
+    if (!Number.isInteger(code)) {
+      throw new Error(`RULE_ENGINE_STATE_LOOKUP_MISSING:${name}`);
+    }
+
+    return requireInt32(code, `stateCode:${name}`);
+  }
+
+  function getStateEntry(stateCode) {
+    const code = requireInt32(stateCode, "getStateEntry.stateCode");
+    const entry = byCode[code];
+    if (!isPlainObject(entry)) {
+      throw new Error(`RULE_ENGINE_INVALID_STATE_CODE:${code}`);
+    }
+    return entry;
+  }
+
+  function familyFromCode(stateCode) {
+    return getStateEntry(stateCode).family;
+  }
+
+  return Object.freeze({
+    requireStateCode,
+    getStateEntry,
+    familyFromCode
+  });
+}
+
+function buildRuleLookup() {
+  const families = getRuleFamilyRegistry();
+  const precedence = requireArray(WORLD_KERNEL?.ruleEngine?.precedence, "WORLD_KERNEL.ruleEngine.precedence");
+
+  if (!isPlainObject(families)) {
+    throw new Error("RULE_ENGINE_FAMILY_REGISTRY_INVALID");
+  }
+
+  for (let i = 0; i < precedence.length; i += 1) {
+    const familyName = precedence[i];
+    if (!isPlainObject(families[familyName])) {
+      throw new Error(`RULE_ENGINE_PRECEDENCE_FAMILY_MISSING:${familyName}`);
+    }
+  }
+
+  return Object.freeze({
+    families,
+    precedence: Object.freeze([...precedence])
+  });
 }
 
 function getPlanetDimensions() {
-  const contract = normalizeObject(WORLD_KERNEL.planetField);
+  const contract = isPlainObject(WORLD_KERNEL?.planetField) ? WORLD_KERNEL.planetField : null;
+  if (!contract) {
+    throw new Error("RULE_ENGINE_PLANET_FIELD_CONTRACT_INVALID");
+  }
+
   return Object.freeze({
     width: Number.isInteger(contract.width) ? contract.width : 256,
     height: Number.isInteger(contract.height) ? contract.height : 256
   });
-}
-
-function getSampleGrid(input) {
-  const rows = normalizeArray(input?.sampleGrid);
-  return Array.isArray(rows[0]) ? rows : [];
 }
 
 function emptyCellState() {
@@ -44,54 +121,59 @@ function emptyCellState() {
   });
 }
 
-function buildStateLookup() {
-  const registry = getStateRegistry();
-  const byName = normalizeObject(registry?.codesByName);
-  const byCode = normalizeObject(registry?.byCode);
-
-  function code(name, fallback = 0) {
-    const value = byName[name];
-    return Number.isInteger(value) ? value : fallback;
-  }
-
-  function familyFromCode(stateCode) {
-    const entry = byCode[stateCode];
-    return typeof entry?.family === "string" ? entry.family : "unknown";
-  }
-
+function createFrozenStateCell(stateCode, stateAge) {
   return Object.freeze({
-    code,
-    familyFromCode
+    stateCode: requireInt32(stateCode, "stateCode"),
+    stateAge: clampInt32(stateAge, 0, 2147483647, "stateAge")
   });
 }
 
-function buildRuleLookup() {
-  const families = getRuleFamilyRegistry();
-  const precedence = normalizeArray(WORLD_KERNEL.ruleEngine?.precedence);
-  return Object.freeze({
-    families,
-    precedence
-  });
+function validateStateCell(cell, fieldName) {
+  if (!isPlainObject(cell)) {
+    throw new Error(`RULE_ENGINE_INVALID_STATE_CELL:${fieldName}`);
+  }
+
+  requireInt32(cell.stateCode, `${fieldName}.stateCode`);
+  requireInt32(cell.stateAge, `${fieldName}.stateAge`);
+
+  return cell;
 }
 
-function createBuffer(width, height, fillFn) {
-  return Object.freeze(
-    Array.from({ length: height }, (_, y) =>
-      Object.freeze(
-        Array.from({ length: width }, (_, x) => fillFn(x, y))
-      )
-    )
-  );
+function validateStateBuffer(stateBuffer, width, height) {
+  const rows = requireArray(stateBuffer, "stateBuffer");
+
+  if (rows.length !== height) {
+    throw new Error("RULE_ENGINE_STATE_BUFFER_HEIGHT_MISMATCH");
+  }
+
+  for (let y = 0; y < rows.length; y += 1) {
+    const row = requireArray(rows[y], `stateBuffer[${y}]`);
+    if (row.length !== width) {
+      throw new Error(`RULE_ENGINE_STATE_BUFFER_WIDTH_MISMATCH:${y}`);
+    }
+
+    for (let x = 0; x < row.length; x += 1) {
+      validateStateCell(row[x], `stateBuffer[${y}][${x}]`);
+    }
+  }
+
+  return stateBuffer;
 }
 
 function cloneMutableBuffer(buffer) {
-  return buffer.map((row) => row.map((cell) => ({
-    stateCode: cell.stateCode,
-    stateAge: cell.stateAge
-  })));
+  return buffer.map((row) =>
+    row.map((cell) => ({
+      stateCode: cell.stateCode,
+      stateAge: cell.stateAge
+    }))
+  );
 }
 
 function getCell(buffer, x, y) {
+  if (STAGE_1_BOUNDARY_MODE !== "LOCAL_PATCH_HARD_EDGE") {
+    throw new Error("RULE_ENGINE_BOUNDARY_MODE_INVALID");
+  }
+
   if (y < 0 || y >= buffer.length) return null;
   const row = buffer[y];
   if (x < 0 || x >= row.length) return null;
@@ -113,10 +195,13 @@ function getNeighbors(buffer, x, y) {
 
 function countNeighborFamily(neighbors, familyFromCode, familyName) {
   let total = 0;
-  for (const neighbor of neighbors) {
+
+  for (let i = 0; i < neighbors.length; i += 1) {
+    const neighbor = neighbors[i];
     if (!neighbor) continue;
     if (familyFromCode(neighbor.stateCode) === familyName) total += 1;
   }
+
   return total;
 }
 
@@ -164,7 +249,7 @@ function summarizeStateLattice(currentStateBuffer, previousStateBuffer, familyFr
 export function createRuleEngine() {
   const { width, height } = getPlanetDimensions();
   const tickContract = getSimulationTickContract();
-  const lookup = buildStateLookup();
+  const stateLookup = buildStateLookup();
   const { precedence } = buildRuleLookup();
   const quantizedSampleView = createQuantizedSampleView();
 
@@ -176,268 +261,246 @@ export function createRuleEngine() {
   const drainage = registries.drainage;
 
   const TERRAIN = Object.freeze({
-    UNKNOWN: terrain.requireCode("UNKNOWN", "ER2_ENUM_INVALID_CODE"),
-    WATER: terrain.requireCode("WATER", "ER2_ENUM_INVALID_CODE"),
-    SHELF: terrain.requireCode("SHELF", "ER2_ENUM_INVALID_CODE"),
-    SHORELINE: terrain.requireCode("SHORELINE", "ER2_ENUM_INVALID_CODE"),
-    BEACH: terrain.requireCode("BEACH", "ER2_ENUM_INVALID_CODE"),
-    BASIN: terrain.requireCode("BASIN", "ER2_ENUM_INVALID_CODE"),
-    POLAR_ICE: terrain.requireCode("POLAR_ICE", "ER2_ENUM_INVALID_CODE"),
-    GLACIAL_HIGHLAND: terrain.requireCode("GLACIAL_HIGHLAND", "ER2_ENUM_INVALID_CODE")
+    UNKNOWN: terrain.requireCode("UNKNOWN"),
+    WATER: terrain.requireCode("WATER"),
+    SHELF: terrain.requireCode("SHELF"),
+    SHORELINE: terrain.requireCode("SHORELINE"),
+    BEACH: terrain.requireCode("BEACH"),
+    BASIN: terrain.requireCode("BASIN"),
+    POLAR_ICE: terrain.requireCode("POLAR_ICE"),
+    GLACIAL_HIGHLAND: terrain.requireCode("GLACIAL_HIGHLAND")
   });
 
   const SURFACE = Object.freeze({
-    UNKNOWN: surface.requireCode("UNKNOWN", "ER2_ENUM_INVALID_CODE"),
-    BEDROCK: surface.requireCode("BEDROCK", "ER2_ENUM_INVALID_CODE"),
-    GRAVEL: surface.requireCode("GRAVEL", "ER2_ENUM_INVALID_CODE"),
-    SAND: surface.requireCode("SAND", "ER2_ENUM_INVALID_CODE"),
-    SILT: surface.requireCode("SILT", "ER2_ENUM_INVALID_CODE"),
-    CLAY: surface.requireCode("CLAY", "ER2_ENUM_INVALID_CODE"),
-    ICE: surface.requireCode("ICE", "ER2_ENUM_INVALID_CODE"),
-    SNOW: surface.requireCode("SNOW", "ER2_ENUM_INVALID_CODE")
+    UNKNOWN: surface.requireCode("UNKNOWN"),
+    NONE: surface.requireCode("NONE"),
+    BEDROCK: surface.requireCode("BEDROCK"),
+    GRAVEL: surface.requireCode("GRAVEL"),
+    SAND: surface.requireCode("SAND"),
+    SILT: surface.requireCode("SILT"),
+    CLAY: surface.requireCode("CLAY"),
+    SOIL: surface.requireCode("SOIL"),
+    ICE: surface.requireCode("ICE"),
+    SNOW: surface.requireCode("SNOW")
   });
 
   const BIOME = Object.freeze({
-    UNKNOWN: biome.requireCode("UNKNOWN", "ER2_ENUM_INVALID_CODE"),
-    TROPICAL_RAINFOREST: biome.requireCode("TROPICAL_RAINFOREST", "ER2_ENUM_INVALID_CODE"),
-    TEMPERATE_FOREST: biome.requireCode("TEMPERATE_FOREST", "ER2_ENUM_INVALID_CODE"),
-    BOREAL_FOREST: biome.requireCode("BOREAL_FOREST", "ER2_ENUM_INVALID_CODE"),
-    WETLAND: biome.requireCode("WETLAND", "ER2_ENUM_INVALID_CODE"),
-    DESERT: biome.requireCode("DESERT", "ER2_ENUM_INVALID_CODE"),
-    TUNDRA: biome.requireCode("TUNDRA", "ER2_ENUM_INVALID_CODE"),
-    TROPICAL_GRASSLAND: biome.requireCode("TROPICAL_GRASSLAND", "ER2_ENUM_INVALID_CODE"),
-    TEMPERATE_GRASSLAND: biome.requireCode("TEMPERATE_GRASSLAND", "ER2_ENUM_INVALID_CODE"),
-    GLACIER: biome.requireCode("GLACIER", "ER2_ENUM_INVALID_CODE")
+    UNKNOWN: biome.requireCode("UNKNOWN"),
+    NONE: biome.requireCode("NONE"),
+    TROPICAL_RAINFOREST: biome.requireCode("TROPICAL_RAINFOREST"),
+    TEMPERATE_FOREST: biome.requireCode("TEMPERATE_FOREST"),
+    BOREAL_FOREST: biome.requireCode("BOREAL_FOREST"),
+    WETLAND: biome.requireCode("WETLAND"),
+    DESERT: biome.requireCode("DESERT"),
+    TUNDRA: biome.requireCode("TUNDRA"),
+    TROPICAL_GRASSLAND: biome.requireCode("TROPICAL_GRASSLAND"),
+    TEMPERATE_GRASSLAND: biome.requireCode("TEMPERATE_GRASSLAND"),
+    GLACIER: biome.requireCode("GLACIER")
   });
 
   const CLIMATE = Object.freeze({
-    UNKNOWN: climate.requireCode("UNKNOWN", "ER2_ENUM_INVALID_CODE"),
-    SUBPOLAR: climate.requireCode("SUBPOLAR", "ER2_ENUM_INVALID_CODE"),
-    POLAR: climate.requireCode("POLAR", "ER2_ENUM_INVALID_CODE")
+    UNKNOWN: climate.requireCode("UNKNOWN"),
+    EQUATORIAL: climate.requireCode("EQUATORIAL"),
+    TROPICAL: climate.requireCode("TROPICAL"),
+    TEMPERATE: climate.requireCode("TEMPERATE"),
+    SUBPOLAR: climate.requireCode("SUBPOLAR"),
+    POLAR: climate.requireCode("POLAR")
   });
 
   const DRAINAGE = Object.freeze({
-    UNKNOWN: drainage.requireCode("UNKNOWN", "ER2_ENUM_INVALID_CODE"),
-    NONE: drainage.requireCode("NONE", "ER2_ENUM_INVALID_CODE")
+    UNKNOWN: drainage.requireCode("UNKNOWN"),
+    NONE: drainage.requireCode("NONE"),
+    CLOSED_BASIN: drainage.requireCode("CLOSED_BASIN"),
+    OPEN_FLOW: drainage.requireCode("OPEN_FLOW"),
+    RIVER_ACTIVE: drainage.requireCode("RIVER_ACTIVE"),
+    FLOODPLAIN: drainage.requireCode("FLOODPLAIN"),
+    WETLAND_DRAIN: drainage.requireCode("WETLAND_DRAIN")
   });
 
   function validateQuantizedSample(sample) {
-    if (!sample || typeof sample !== "object" || Array.isArray(sample)) {
-      const error = new Error("QS5_MISSING_FIELD:sample");
-      error.code = "QS5_MISSING_FIELD";
-      throw error;
-    }
-
-    const requiredNumeric = [
-      "rainfallQ",
-      "runoffQ",
-      "freezeQ",
-      "meltQ",
-      "basinQ",
-      "slopeQ",
-      "elevationQ",
-      "temperatureQ",
-      "evaporationQ",
-      "waterDepthQ",
-      "shorelineBand",
-      "terrainCode",
-      "biomeCode",
-      "surfaceCode",
-      "climateCode",
-      "drainageCode",
-      "enumRegistryVersion"
-    ];
-
-    for (const key of requiredNumeric) {
-      if (!isFiniteInteger(sample[key])) {
-        const error = new Error(`QS5_MISSING_FIELD:${key}`);
-        error.code = "QS5_MISSING_FIELD";
-        throw error;
-      }
-    }
-
-    if (sample.enumRegistryVersion !== quantizedSampleView.enumRegistryVersion) {
-      const error = new Error("ER1_ENUM_VERSION_MISMATCH");
-      error.code = "ER1_ENUM_VERSION_MISMATCH";
-      throw error;
-    }
-
-    if (sample.numericMode !== quantizedSampleView.numericMode) {
-      const error = new Error("NUMERIC_MODE_MISMATCH");
-      error.code = "NUMERIC_MODE_MISMATCH";
-      throw error;
-    }
-
-    if (!terrain.isValidCode(sample.terrainCode)) {
-      const error = new Error("ER2_ENUM_INVALID_CODE:TERRAIN");
-      error.code = "ER2_ENUM_INVALID_CODE";
-      throw error;
-    }
-    if (!surface.isValidCode(sample.surfaceCode)) {
-      const error = new Error("ER2_ENUM_INVALID_CODE:SURFACE");
-      error.code = "ER2_ENUM_INVALID_CODE";
-      throw error;
-    }
-    if (!biome.isValidCode(sample.biomeCode)) {
-      const error = new Error("ER2_ENUM_INVALID_CODE:BIOME");
-      error.code = "ER2_ENUM_INVALID_CODE";
-      throw error;
-    }
-    if (!climate.isValidCode(sample.climateCode)) {
-      const error = new Error("ER2_ENUM_INVALID_CODE:CLIMATE");
-      error.code = "ER2_ENUM_INVALID_CODE";
-      throw error;
-    }
-    if (!drainage.isValidCode(sample.drainageCode)) {
-      const error = new Error("ER2_ENUM_INVALID_CODE:DRAINAGE");
-      error.code = "ER2_ENUM_INVALID_CODE";
-      throw error;
-    }
-
-    return sample;
+    return quantizedSampleView.validateQuantizedSample(sample);
   }
 
   function getQuantizedSampleGrid(input) {
-    if (Array.isArray(input?.quantizedSampleGrid) && Array.isArray(input.quantizedSampleGrid[0])) {
-      return Object.freeze(
-        input.quantizedSampleGrid.map((row) =>
-          Object.freeze(row.map((sample) => validateQuantizedSample(sample)))
-        )
-      );
+    if (isCanonicalQuantizedSampleGrid(input?.quantizedSampleGrid)) {
+      return input.quantizedSampleGrid;
     }
 
-    const sourceGrid = getSampleGrid(input);
-    if (!sourceGrid.length) return Object.freeze([]);
+    const sourceGrid = input?.sampleGrid;
+    if (!Array.isArray(sourceGrid) || sourceGrid.length === 0) {
+      throw new Error("RULE_ENGINE_SAMPLE_GRID_MISSING");
+    }
 
     return quantizedSampleView.buildQuantizedSampleGrid(sourceGrid);
   }
 
   function nextAge(currentAge, changed) {
     if (changed) return 0;
-    return clampInt((currentAge | 0) + 1, 0, 2147483647);
+    return clampInt32(currentAge + 1, 0, 2147483647, "nextAge");
   }
 
   function seedStateFromQuantizedSample(sample) {
     validateQuantizedSample(sample);
 
     if (sample.terrainCode === TERRAIN.POLAR_ICE) {
-      return Object.freeze({ stateCode: lookup.code("ICE_SHEET"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("ICE_SHEET"), 0);
     }
 
     if (sample.terrainCode === TERRAIN.GLACIAL_HIGHLAND || sample.biomeCode === BIOME.GLACIER) {
-      return Object.freeze({ stateCode: lookup.code("GLACIER_STABLE"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("GLACIER_STABLE"), 0);
     }
 
     if (sample.terrainCode === TERRAIN.WATER) {
-      if (sample.waterDepthQ >= 3000) return Object.freeze({ stateCode: lookup.code("WATER_TRENCH"), stateAge: 0 });
-      if (sample.waterDepthQ >= 1800) return Object.freeze({ stateCode: lookup.code("WATER_ABYSS"), stateAge: 0 });
-      if (sample.waterDepthQ >= 800) return Object.freeze({ stateCode: lookup.code("WATER_SLOPE"), stateAge: 0 });
-      return Object.freeze({ stateCode: lookup.code("WATER_STILL_DEEP"), stateAge: 0 });
+      if (sample.waterDepthQ >= 3000) {
+        return createFrozenStateCell(stateLookup.requireStateCode("WATER_TRENCH"), 0);
+      }
+      if (sample.waterDepthQ >= 1800) {
+        return createFrozenStateCell(stateLookup.requireStateCode("WATER_ABYSS"), 0);
+      }
+      if (sample.waterDepthQ >= 800) {
+        return createFrozenStateCell(stateLookup.requireStateCode("WATER_SLOPE"), 0);
+      }
+      return createFrozenStateCell(stateLookup.requireStateCode("WATER_STILL_DEEP"), 0);
     }
 
     if (sample.terrainCode === TERRAIN.SHELF) {
-      return Object.freeze({ stateCode: lookup.code("WATER_SHELF"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("WATER_SHELF"), 0);
     }
 
     if (sample.terrainCode === TERRAIN.BASIN && sample.basinQ >= 1800 && sample.rainfallQ >= 3000) {
-      return Object.freeze({ stateCode: lookup.code("WATER_BASIN_RETAINED"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("WATER_BASIN_RETAINED"), 0);
     }
 
     if (sample.surfaceCode === SURFACE.ICE) {
-      return Object.freeze({ stateCode: lookup.code("ICE_PACK"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("ICE_PACK"), 0);
     }
 
     if (sample.surfaceCode === SURFACE.SNOW) {
-      return Object.freeze({ stateCode: lookup.code("SNOW_DENSE"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("SNOW_DENSE"), 0);
     }
 
     if (sample.surfaceCode === SURFACE.BEDROCK) {
-      return Object.freeze({ stateCode: lookup.code("BEDROCK_EXPOSED"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("BEDROCK_EXPOSED"), 0);
     }
 
     if (sample.surfaceCode === SURFACE.GRAVEL) {
-      return Object.freeze({ stateCode: lookup.code("GRAVEL_LOOSE"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("GRAVEL_LOOSE"), 0);
     }
 
     if (sample.surfaceCode === SURFACE.SAND) {
-      return Object.freeze({
-        stateCode: lookup.code(sample.shorelineBand === 1 ? "SAND_WET" : "SAND_DRY"),
-        stateAge: 0
-      });
+      return createFrozenStateCell(
+        stateLookup.requireStateCode(sample.shorelineBand === 1 ? "SAND_WET" : "SAND_DRY"),
+        0
+      );
     }
 
     if (sample.surfaceCode === SURFACE.SILT) {
-      return Object.freeze({
-        stateCode: lookup.code(sample.rainfallQ >= 3500 ? "SILT_WET" : "SILT_DRY"),
-        stateAge: 0
-      });
+      return createFrozenStateCell(
+        stateLookup.requireStateCode(sample.rainfallQ >= 3500 ? "SILT_WET" : "SILT_DRY"),
+        0
+      );
     }
 
     if (sample.surfaceCode === SURFACE.CLAY) {
-      return Object.freeze({
-        stateCode: lookup.code(sample.runoffQ >= 2800 ? "CLAY_WET" : "CLAY_DRY"),
-        stateAge: 0
-      });
+      return createFrozenStateCell(
+        stateLookup.requireStateCode(sample.runoffQ >= 2800 ? "CLAY_WET" : "CLAY_DRY"),
+        0
+      );
     }
 
-    if (sample.biomeCode === BIOME.TROPICAL_RAINFOREST) {
-      return Object.freeze({ stateCode: lookup.code("RAINFOREST_TROPICAL"), stateAge: 0 });
-    }
+    if (sample.surfaceCode === SURFACE.SOIL) {
+      if (sample.biomeCode === BIOME.TROPICAL_RAINFOREST) {
+        return createFrozenStateCell(stateLookup.requireStateCode("RAINFOREST_TROPICAL"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.TEMPERATE_FOREST) {
-      return Object.freeze({ stateCode: lookup.code("FOREST_TEMPERATE"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.TEMPERATE_FOREST) {
+        return createFrozenStateCell(stateLookup.requireStateCode("FOREST_TEMPERATE"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.BOREAL_FOREST) {
-      return Object.freeze({ stateCode: lookup.code("FOREST_BOREAL"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.BOREAL_FOREST) {
+        return createFrozenStateCell(stateLookup.requireStateCode("FOREST_BOREAL"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.WETLAND) {
-      return Object.freeze({ stateCode: lookup.code("WETLAND_REED"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.WETLAND) {
+        return createFrozenStateCell(stateLookup.requireStateCode("WETLAND_REED"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.DESERT) {
-      return Object.freeze({ stateCode: lookup.code("DESERT_SCRUB"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.DESERT) {
+        return createFrozenStateCell(stateLookup.requireStateCode("DESERT_SCRUB"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.TUNDRA) {
-      return Object.freeze({ stateCode: lookup.code("TUNDRA_MOSS"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.TUNDRA) {
+        return createFrozenStateCell(stateLookup.requireStateCode("TUNDRA_MOSS"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.TROPICAL_GRASSLAND) {
-      return Object.freeze({ stateCode: lookup.code("GRASSLAND_TROPICAL"), stateAge: 0 });
-    }
+      if (sample.biomeCode === BIOME.TROPICAL_GRASSLAND) {
+        return createFrozenStateCell(stateLookup.requireStateCode("GRASSLAND_TROPICAL"), 0);
+      }
 
-    if (sample.biomeCode === BIOME.TEMPERATE_GRASSLAND) {
-      return Object.freeze({ stateCode: lookup.code("GRASSLAND_TEMPERATE"), stateAge: 0 });
+      if (sample.biomeCode === BIOME.TEMPERATE_GRASSLAND) {
+        return createFrozenStateCell(stateLookup.requireStateCode("GRASSLAND_TEMPERATE"), 0);
+      }
     }
 
     if (sample.freezeQ >= 7200 && sample.meltQ <= 1800) {
-      return Object.freeze({ stateCode: lookup.code("FROST_HEAVY"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("FROST_HEAVY"), 0);
     }
 
     if (sample.runoffQ >= 3200) {
-      return Object.freeze({ stateCode: lookup.code("SOIL_MOIST"), stateAge: 0 });
+      return createFrozenStateCell(stateLookup.requireStateCode("SOIL_MOIST"), 0);
     }
 
-    return Object.freeze({ stateCode: lookup.code("SOIL_DRY"), stateAge: 0 });
+    return createFrozenStateCell(stateLookup.requireStateCode("SOIL_DRY"), 0);
+  }
+
+  function seedStateBuffer(sampleGridOrQuantizedGrid) {
+    const quantizedGrid = isCanonicalQuantizedSampleGrid(sampleGridOrQuantizedGrid)
+      ? sampleGridOrQuantizedGrid
+      : quantizedSampleView.buildQuantizedSampleGrid(sampleGridOrQuantizedGrid);
+
+    if (quantizedGrid.length !== height) {
+      throw new Error("RULE_ENGINE_GRID_HEIGHT_MISMATCH");
+    }
+
+    if (!Array.isArray(quantizedGrid[0]) || quantizedGrid[0].length !== width) {
+      throw new Error("RULE_ENGINE_GRID_WIDTH_MISMATCH");
+    }
+
+    return Object.freeze(
+      quantizedGrid.map((row, y) => {
+        if (!Array.isArray(row) || row.length !== width) {
+          throw new Error(`RULE_ENGINE_GRID_WIDTH_MISMATCH:${y}`);
+        }
+
+        return Object.freeze(
+          row.map((sample, x) => {
+            validateQuantizedSample(sample);
+            return seedStateFromQuantizedSample(sample);
+          })
+        );
+      })
+    );
   }
 
   function freezeMeltTransition(sample, currentCell, neighbors) {
-    const currentFamily = lookup.familyFromCode(currentCell.stateCode);
-    const waterNeighborCount = countNeighborFamily(neighbors, lookup.familyFromCode, "water_family");
-    const cryoNeighborCount = countNeighborFamily(neighbors, lookup.familyFromCode, "cryosphere_family");
+    const currentFamily = stateLookup.familyFromCode(currentCell.stateCode);
+    const waterNeighborCount = countNeighborFamily(neighbors, stateLookup.familyFromCode, "water_family");
+    const cryoNeighborCount = countNeighborFamily(neighbors, stateLookup.familyFromCode, "cryosphere_family");
 
     if (
       (currentFamily === "water_family" || currentFamily === "substrate_family") &&
       sample.freezeQ >= 7800 &&
       sample.meltQ <= 1800 &&
-      (sample.climateCode === CLIMATE.POLAR || sample.climateCode === CLIMATE.SUBPOLAR || sample.elevationQ >= 2200)
+      (
+        sample.climateCode === CLIMATE.POLAR ||
+        sample.climateCode === CLIMATE.SUBPOLAR ||
+        sample.elevationQ >= 2200
+      )
     ) {
       const nextStateCode =
         waterNeighborCount > 2
-          ? lookup.code("ICE_PACK")
-          : lookup.code("FROST_HEAVY");
+          ? stateLookup.requireStateCode("ICE_PACK")
+          : stateLookup.requireStateCode("FROST_HEAVY");
 
       return Object.freeze({
         changed: nextStateCode !== currentCell.stateCode,
@@ -454,8 +517,8 @@ export function createRuleEngine() {
     ) {
       const nextStateCode =
         cryoNeighborCount > 3
-          ? lookup.code("SLUSH")
-          : lookup.code("WATER_GLACIAL_RUNOFF");
+          ? stateLookup.requireStateCode("SLUSH")
+          : stateLookup.requireStateCode("WATER_GLACIAL_RUNOFF");
 
       return Object.freeze({
         changed: nextStateCode !== currentCell.stateCode,
@@ -474,34 +537,40 @@ export function createRuleEngine() {
   }
 
   function waterRetentionSpreadTransition(sample, currentCell, neighbors) {
-    const currentFamily = lookup.familyFromCode(currentCell.stateCode);
-    const waterNeighborCount = countNeighborFamily(neighbors, lookup.familyFromCode, "water_family");
+    const currentFamily = stateLookup.familyFromCode(currentCell.stateCode);
+    const waterNeighborCount = countNeighborFamily(neighbors, stateLookup.familyFromCode, "water_family");
 
     if (currentFamily === "water_family") {
       if (sample.basinQ >= 1800 && sample.slopeQ <= 1600) {
+        const nextStateCode = stateLookup.requireStateCode("WATER_BASIN_RETAINED");
         return Object.freeze({
-          changed: currentCell.stateCode !== lookup.code("WATER_BASIN_RETAINED"),
+          changed: currentCell.stateCode !== nextStateCode,
           ruleFamily: "WATER_RETENTION_SPREAD",
           admissible: true,
-          nextStateCode: lookup.code("WATER_BASIN_RETAINED")
+          nextStateCode
         });
       }
 
-      if ((sample.slopeQ >= 1800 || sample.drainageCode !== DRAINAGE.NONE) && sample.runoffQ >= 2600) {
+      if (
+        (sample.slopeQ >= 1800 || sample.drainageCode !== DRAINAGE.NONE) &&
+        sample.runoffQ >= 2600
+      ) {
+        const nextStateCode = stateLookup.requireStateCode("WATER_FLOWING_STRONG");
         return Object.freeze({
-          changed: currentCell.stateCode !== lookup.code("WATER_FLOWING_STRONG"),
+          changed: currentCell.stateCode !== nextStateCode,
           ruleFamily: "WATER_RETENTION_SPREAD",
           admissible: true,
-          nextStateCode: lookup.code("WATER_FLOWING_STRONG")
+          nextStateCode
         });
       }
 
       if (sample.slopeQ >= 1000 || sample.runoffQ >= 1800) {
+        const nextStateCode = stateLookup.requireStateCode("WATER_FLOWING_WEAK");
         return Object.freeze({
-          changed: currentCell.stateCode !== lookup.code("WATER_FLOWING_WEAK"),
+          changed: currentCell.stateCode !== nextStateCode,
           ruleFamily: "WATER_RETENTION_SPREAD",
           admissible: true,
-          nextStateCode: lookup.code("WATER_FLOWING_WEAK")
+          nextStateCode
         });
       }
     }
@@ -512,11 +581,12 @@ export function createRuleEngine() {
       sample.rainfallQ >= 2400 &&
       sample.slopeQ <= 2600
     ) {
+      const nextStateCode = stateLookup.requireStateCode("WATER_SEEPING");
       return Object.freeze({
-        changed: currentCell.stateCode !== lookup.code("WATER_SEEPING"),
+        changed: currentCell.stateCode !== nextStateCode,
         ruleFamily: "WATER_RETENTION_SPREAD",
         admissible: true,
-        nextStateCode: lookup.code("WATER_SEEPING")
+        nextStateCode
       });
     }
 
@@ -529,8 +599,8 @@ export function createRuleEngine() {
   }
 
   function wettingDryingTransition(sample, currentCell, neighbors) {
-    const currentFamily = lookup.familyFromCode(currentCell.stateCode);
-    const waterNeighborCount = countNeighborFamily(neighbors, lookup.familyFromCode, "water_family");
+    const currentFamily = stateLookup.familyFromCode(currentCell.stateCode);
+    const waterNeighborCount = countNeighborFamily(neighbors, stateLookup.familyFromCode, "water_family");
 
     if (currentFamily !== "substrate_family") {
       return Object.freeze({
@@ -542,51 +612,59 @@ export function createRuleEngine() {
     }
 
     if (
-      (waterNeighborCount >= 1 || sample.shorelineBand === 1 || sample.rainfallQ >= 3400 || sample.basinQ >= 3000) &&
+      (
+        waterNeighborCount >= 1 ||
+        sample.shorelineBand === 1 ||
+        sample.rainfallQ >= 3400 ||
+        sample.basinQ >= 3000
+      ) &&
       sample.evaporationQ <= 6200
     ) {
-      if (currentCell.stateCode === lookup.code("SOIL_DRY")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SOIL_DRY")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SOIL_MOIST")
+          nextStateCode: stateLookup.requireStateCode("SOIL_MOIST")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SOIL_MOIST") && (waterNeighborCount >= 2 || sample.basinQ >= 4200)) {
+      if (
+        currentCell.stateCode === stateLookup.requireStateCode("SOIL_MOIST") &&
+        (waterNeighborCount >= 2 || sample.basinQ >= 4200)
+      ) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SOIL_SATURATED")
+          nextStateCode: stateLookup.requireStateCode("SOIL_SATURATED")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SAND_DRY")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SAND_DRY")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SAND_WET")
+          nextStateCode: stateLookup.requireStateCode("SAND_WET")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SILT_DRY")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SILT_DRY")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SILT_WET")
+          nextStateCode: stateLookup.requireStateCode("SILT_WET")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("CLAY_DRY")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("CLAY_DRY")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("CLAY_WET")
+          nextStateCode: stateLookup.requireStateCode("CLAY_WET")
         });
       }
     }
@@ -597,48 +675,48 @@ export function createRuleEngine() {
       sample.runoffQ <= 1800 &&
       waterNeighborCount === 0
     ) {
-      if (currentCell.stateCode === lookup.code("SOIL_SATURATED")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SOIL_SATURATED")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SOIL_MOIST")
+          nextStateCode: stateLookup.requireStateCode("SOIL_MOIST")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SOIL_MOIST")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SOIL_MOIST")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SOIL_DRY")
+          nextStateCode: stateLookup.requireStateCode("SOIL_DRY")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SAND_WET")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SAND_WET")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SAND_DRY")
+          nextStateCode: stateLookup.requireStateCode("SAND_DRY")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("SILT_WET")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("SILT_WET")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("SILT_DRY")
+          nextStateCode: stateLookup.requireStateCode("SILT_DRY")
         });
       }
 
-      if (currentCell.stateCode === lookup.code("CLAY_WET")) {
+      if (currentCell.stateCode === stateLookup.requireStateCode("CLAY_WET")) {
         return Object.freeze({
           changed: true,
           ruleFamily: "WETTING_DRYING",
           admissible: true,
-          nextStateCode: lookup.code("CLAY_DRY")
+          nextStateCode: stateLookup.requireStateCode("CLAY_DRY")
         });
       }
     }
@@ -651,33 +729,27 @@ export function createRuleEngine() {
     });
   }
 
-  function seedStateBuffer(inputGrid) {
-    const quantizedGrid =
-      Array.isArray(inputGrid) && Array.isArray(inputGrid[0]) && isFiniteInteger(inputGrid[0][0]?.terrainCode)
-        ? inputGrid
-        : quantizedSampleView.buildQuantizedSampleGrid(inputGrid);
-
-    if (!quantizedGrid.length) {
-      return createBuffer(width, height, () => emptyCellState());
+  function stepStateLattice(input = {}) {
+    if (!isPlainObject(input)) {
+      throw new Error("RULE_ENGINE_STEP_INPUT_INVALID");
     }
 
-    return createBuffer(width, height, (x, y) => {
-      const sample = quantizedGrid[y]?.[x] ?? null;
-      return sample ? seedStateFromQuantizedSample(sample) : emptyCellState();
-    });
-  }
-
-  function stepStateLattice(input = {}) {
     const quantizedSampleGrid = getQuantizedSampleGrid(input);
-    const currentStateBufferInput = normalizeArray(input.currentStateBuffer);
+    if (quantizedSampleGrid.length !== height || quantizedSampleGrid[0].length !== width) {
+      throw new Error("RULE_ENGINE_GRID_COMPLETENESS_FAILURE");
+    }
+
     const tickIndex = Number.isInteger(input.tickIndex) ? input.tickIndex : 0;
-    const activeRuleFamilies = normalizeArray(input.activeRuleFamilies).length
-      ? normalizeArray(input.activeRuleFamilies)
+
+    const activeRuleFamilies = Array.isArray(input.activeRuleFamilies) && input.activeRuleFamilies.length > 0
+      ? Object.freeze([...input.activeRuleFamilies])
       : tickContract.firstRuleFamilies;
 
+    const activeRuleFamilySet = new Set(activeRuleFamilies);
+
     const currentStateBuffer =
-      currentStateBufferInput.length && Array.isArray(currentStateBufferInput[0])
-        ? currentStateBufferInput
+      Array.isArray(input.currentStateBuffer)
+        ? validateStateBuffer(input.currentStateBuffer, width, height)
         : seedStateBuffer(quantizedSampleGrid);
 
     const nextStateBufferMutable = cloneMutableBuffer(currentStateBuffer);
@@ -693,15 +765,16 @@ export function createRuleEngine() {
 
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
-        const sample = validateQuantizedSample(quantizedSampleGrid[y]?.[x] ?? {});
-        const currentCell = currentStateBuffer[y]?.[x] ?? emptyCellState();
+        const sample = validateQuantizedSample(quantizedSampleGrid[y][x]);
+        const currentCell = validateStateCell(currentStateBuffer[y][x], `currentStateBuffer[${y}][${x}]`);
         const neighbors = getNeighbors(currentStateBuffer, x, y);
 
         let nextStateCode = currentCell.stateCode;
         let transitionAdmissible = false;
 
-        for (const ruleFamily of precedence) {
-          if (!activeRuleFamilies.includes(ruleFamily)) continue;
+        for (let i = 0; i < precedence.length; i += 1) {
+          const ruleFamily = precedence[i];
+          if (!activeRuleFamilySet.has(ruleFamily)) continue;
 
           let result = null;
 
@@ -711,12 +784,16 @@ export function createRuleEngine() {
             result = waterRetentionSpreadTransition(sample, currentCell, neighbors);
           } else if (ruleFamily === "WETTING_DRYING") {
             result = wettingDryingTransition(sample, currentCell, neighbors);
+          } else {
+            throw new Error(`RULE_ENGINE_UNKNOWN_RULE_FAMILY:${ruleFamily}`);
           }
 
-          if (result?.admissible === true) {
-            nextStateCode = result.nextStateCode;
+          if (result.admissible === true) {
+            nextStateCode = requireInt32(result.nextStateCode, `nextStateCode:${ruleFamily}`);
             transitionAdmissible = true;
-            transitionCounts[result.ruleFamily] += result.changed ? 1 : 0;
+            if (result.changed) {
+              transitionCounts[result.ruleFamily] += 1;
+            }
             admissibleCount += 1;
             break;
           }
@@ -736,28 +813,32 @@ export function createRuleEngine() {
 
     const nextStateBuffer = Object.freeze(
       nextStateBufferMutable.map((row) =>
-        Object.freeze(row.map((cell) => Object.freeze(cell)))
+        Object.freeze(row.map((cell) => createFrozenStateCell(cell.stateCode, cell.stateAge)))
       )
     );
 
     const stateSummary = summarizeStateLattice(
       nextStateBuffer,
       currentStateBuffer,
-      lookup.familyFromCode
+      stateLookup.familyFromCode
     );
 
     const transitionSummary = Object.freeze({
       tickIndex,
       activeRuleFamilies: Object.freeze([...activeRuleFamilies]),
-      admissibleCount,
-      blockedTransitionCount,
+      admissibleCount: requireInt32(admissibleCount, "admissibleCount"),
+      blockedTransitionCount: requireInt32(blockedTransitionCount, "blockedTransitionCount"),
       transitionCounts: Object.freeze({
-        FREEZE_MELT: transitionCounts.FREEZE_MELT,
-        WATER_RETENTION_SPREAD: transitionCounts.WATER_RETENTION_SPREAD,
-        WETTING_DRYING: transitionCounts.WETTING_DRYING
+        FREEZE_MELT: requireInt32(transitionCounts.FREEZE_MELT, "transitionCounts.FREEZE_MELT"),
+        WATER_RETENTION_SPREAD: requireInt32(
+          transitionCounts.WATER_RETENTION_SPREAD,
+          "transitionCounts.WATER_RETENTION_SPREAD"
+        ),
+        WETTING_DRYING: requireInt32(transitionCounts.WETTING_DRYING, "transitionCounts.WETTING_DRYING")
       }),
       enumRegistryVersion: quantizedSampleView.enumRegistryVersion,
-      numericMode: quantizedSampleView.numericMode
+      numericMode: quantizedSampleView.numericMode,
+      boundaryMode: STAGE_1_BOUNDARY_MODE
     });
 
     return Object.freeze({
@@ -770,6 +851,7 @@ export function createRuleEngine() {
   }
 
   return Object.freeze({
+    boundaryMode: STAGE_1_BOUNDARY_MODE,
     seedStateFromSample(sample) {
       return seedStateFromQuantizedSample(quantizedSampleView.buildQuantizedSample(sample));
     },
@@ -777,7 +859,16 @@ export function createRuleEngine() {
     seedStateBuffer,
     stepStateLattice,
     summarizeStateLattice(stateBuffer, previousStateBuffer = null) {
-      return summarizeStateLattice(stateBuffer, previousStateBuffer, lookup.familyFromCode);
+      validateStateBuffer(stateBuffer, width, height);
+      if (previousStateBuffer) {
+        validateStateBuffer(previousStateBuffer, width, height);
+      }
+
+      return summarizeStateLattice(
+        stateBuffer,
+        previousStateBuffer,
+        stateLookup.familyFromCode
+      );
     }
   });
 }

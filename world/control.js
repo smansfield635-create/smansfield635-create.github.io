@@ -68,14 +68,28 @@ export function createControlSystem() {
     sampleY: 0
   });
 
+  function getBaseRadius() {
+    return Math.max(1, cameraState.radius);
+  }
+
   function getResolvedRadius() {
-    return Math.max(1, cameraState.radius * zoomCurrent);
+    return Math.max(1, getBaseRadius() * zoomCurrent);
   }
 
   function updatePresentationDerivedState() {
     observationMode = presentationMode === "observe";
     zoomTarget = observationMode ? OBSERVE_ZOOM : 1;
     orbitPresentationVelocity = observationMode ? orbitAngularVelocity * 0.52 : orbitAngularVelocity;
+  }
+
+  function lockZoomToMode(forceImmediate = false) {
+    if (observationMode) {
+      if (forceImmediate) zoomCurrent = OBSERVE_ZOOM;
+      return;
+    }
+
+    zoomTarget = 1;
+    zoomCurrent = 1;
   }
 
   function resize(width, height) {
@@ -308,6 +322,9 @@ export function createControlSystem() {
       centerX: cameraState.centerX,
       centerY: cameraState.centerY,
       radius: getResolvedRadius(),
+      baseRadius: getBaseRadius(),
+      zoomCurrent,
+      zoomTarget,
       yaw,
       pitch,
       yawVelocity,
@@ -388,6 +405,10 @@ export function createControlSystem() {
 
     presentationMode = next;
     updatePresentationDerivedState();
+
+    if (!observationMode) {
+      lockZoomToMode(true);
+    }
   }
 
   function setOrientation(input = {}) {
@@ -416,6 +437,9 @@ export function createControlSystem() {
       setPresentationMode(next.mode);
     } else {
       updatePresentationDerivedState();
+      if (!observationMode) {
+        lockZoomToMode(true);
+      }
     }
 
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
@@ -424,13 +448,21 @@ export function createControlSystem() {
     if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
     if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = next.orbitAngularVelocity;
-    if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = next.zoomCurrent;
+
+    if (observationMode) {
+      zoomCurrent = OBSERVE_ZOOM;
+      zoomTarget = OBSERVE_ZOOM;
+    } else {
+      zoomCurrent = 1;
+      zoomTarget = 1;
+    }
 
     clampPitch();
     recomputeOrbitalVelocity();
   }
 
   updatePresentationDerivedState();
+  lockZoomToMode(true);
 
   return Object.freeze({
     resize,

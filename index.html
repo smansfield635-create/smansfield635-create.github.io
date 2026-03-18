@@ -65,6 +65,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:2;
   pointer-events:none;
   overflow:hidden;
+  transition:opacity 220ms ease;
 }
 .star-band{
   position:absolute;
@@ -109,6 +110,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:3;
   pointer-events:none;
   overflow:hidden;
+  transition:opacity 220ms ease;
 }
 .atmo-glow{
   position:absolute;
@@ -261,10 +263,15 @@ body::before,body::after{pointer-events:none!important}
   z-index:15;
 }
 
-.mode-btn{
+.mode-cluster{
   position:absolute;
   top:16px;
   right:16px;
+  z-index:16;
+  display:flex;
+  gap:8px;
+}
+.mode-btn{
   min-height:42px;
   padding:0 16px;
   border-radius:999px;
@@ -278,10 +285,18 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.06em;
   text-transform:uppercase;
   cursor:pointer;
-  z-index:16;
 }
 .mode-btn:active{transform:translateY(1px)}
+.mode-btn.is-active{
+  border-color:rgba(226,191,92,.54);
+  box-shadow:
+    0 16px 44px rgba(0,0,0,.32),
+    0 0 0 1px rgba(226,191,92,.12),
+    0 0 18px rgba(226,191,92,.12);
+  color:#fff5cf;
+}
 
+/* overlay markers */
 #orbital-overlay{
   z-index:12;
   pointer-events:none;
@@ -401,6 +416,7 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(6px);
 }
 
+/* diagnostics */
 .diagnostics-shell{
   position:absolute;
   left:16px;
@@ -454,8 +470,8 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:16px;
   bottom:94px;
-  width:min(420px, calc(100vw - 32px));
-  max-height:min(54vh, 520px);
+  width:min(380px, calc(100vw - 32px));
+  max-height:min(48vh, 420px);
   overflow:auto;
   display:grid;
   gap:10px;
@@ -477,6 +493,20 @@ body[data-diagnostics="full"] .debug-panel{
   opacity:1;
   pointer-events:auto;
   transform:translateY(0);
+}
+
+/* mode-specific presentation */
+body[data-mode="observe"] #universe-layer{
+  opacity:.10;
+}
+body[data-mode="observe"] #atmosphere-layer{
+  opacity:.58;
+}
+body[data-mode="observe"] #orbital-overlay{
+  opacity:0;
+}
+body[data-mode="observe"] .diagnostics-summary{
+  opacity:.58;
 }
 
 @keyframes starDrift{
@@ -505,6 +535,12 @@ body[data-diagnostics="full"] .debug-panel{
   .flat-card{min-height:98px}
   .diagnostics-bar{grid-template-columns:1fr}
   .diagnostics-toggle{justify-self:end}
+  .mode-cluster{
+    gap:6px;
+  }
+  .mode-btn{
+    padding:0 12px;
+  }
 }
 </style>
 </head>
@@ -527,7 +563,7 @@ body[data-diagnostics="full"] .debug-panel{
     <div class="hero-panel">
       <h1 class="hero-title">NINE SUMMITS</h1>
       <p class="hero-sub">Learn to live, to love.</p>
-      <p class="hero-tag">Enter simple. Discover power. Choose depth.</p>
+      <p class="hero-tag">Enter simply. Discover power. Choose depth.</p>
     </div>
   </div>
 
@@ -579,7 +615,12 @@ body[data-diagnostics="full"] .debug-panel{
   </div>
 
   <div class="home-pill">HOME</div>
-  <button id="mode-note" class="mode-btn" type="button">ROUND</button>
+
+  <div class="mode-cluster">
+    <button id="btn-flat" class="mode-btn" type="button">FLAT</button>
+    <button id="btn-round" class="mode-btn" type="button">ROUND</button>
+    <button id="btn-observe" class="mode-btn" type="button">OBSERVE</button>
+  </div>
 
   <div class="diagnostics-shell">
     <div class="diagnostics-bar">
@@ -595,22 +636,27 @@ body[data-diagnostics="full"] .debug-panel{
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
-import { createCompletionEngine } from "/world/completion_engine.js";
-import { createTransitionEngine } from "/world/transition_engine.js";
 import { createInstruments } from "/assets/instruments.js";
 
 const params = new URLSearchParams(location.search);
-const initialMode = params.get("mode") === "flat" ? "flat" : "round";
+const modeParam = params.get("mode");
+const mode =
+  modeParam === "flat" || modeParam === "observe"
+    ? modeParam
+    : "round";
 
 const body = document.body;
 const canvas = document.getElementById("world-canvas");
 const ctx = canvas.getContext("2d", { alpha: true });
 
 const flatLayer = document.getElementById("flat-layer");
-const modeNote = document.getElementById("mode-note");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
+
+const btnFlat = document.getElementById("btn-flat");
+const btnRound = document.getElementById("btn-round");
+const btnObserve = document.getElementById("btn-observe");
 
 const overlayMap = Object.freeze({
   "north-products": document.getElementById("marker-north"),
@@ -622,12 +668,9 @@ const overlayMap = Object.freeze({
 const planetEngine = createPlanetEngine();
 const renderer = createRenderer();
 const control = createControlSystem();
-const completionEngine = createCompletionEngine();
-const transitionEngine = createTransitionEngine();
 const instruments = createInstruments();
 
 const MOTION_STORAGE_KEY = "ns_home_round_motion_v5";
-const HANDOFF_STORAGE_KEY = "ns_home_transition_handoff_v1";
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -686,24 +729,41 @@ const orbitalSystem = Object.freeze({
   ])
 });
 
-let mode = initialMode;
 let planetField = null;
 let rafId = 0;
 let lastFrameAt = performance.now();
-let lastRenderReceipt = Object.freeze({ orbitalHits: Object.freeze([]) });
+let lastRenderReceipt = Object.freeze({
+  orbitalHits: Object.freeze([]),
+  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
+  audit: Object.freeze({})
+});
 
 let isDragging = false;
-let activePointerId = null;
-let movedSincePointerDown = false;
 let lastX = 0;
 let lastY = 0;
 let diagnosticsMode = "peek";
-let runtimePacket = Object.freeze({});
 
-function withModeQuery(route, nextMode = mode) {
-  const url = new URL(route, location.origin);
-  url.searchParams.set("mode", nextMode);
-  return url.pathname + url.search;
+function isFlatMode() {
+  return mode === "flat";
+}
+
+function isObserveMode() {
+  return mode === "observe";
+}
+
+function isRoundVisualMode() {
+  return mode === "round" || mode === "observe";
+}
+
+function buildModeHref(nextMode) {
+  const q = new URLSearchParams(location.search);
+  q.set("mode", nextMode);
+  return `${location.pathname}?${q.toString()}`;
+}
+
+function withModeQuery(route) {
+  const glue = route.includes("?") ? "&" : "?";
+  return `${route}${glue}mode=${mode}`;
 }
 
 function resizeWorld() {
@@ -721,60 +781,98 @@ function buildPlanetFieldOnce() {
 }
 
 function restoreMotionState() {
-  if (mode !== "round") return;
+  if (!isRoundVisualMode()) return;
   try {
     const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
     if (!raw) return;
     control.restoreMotionState(JSON.parse(raw));
-  } catch {}
+  } catch {
+    return;
+  }
 }
 
 function persistMotionState() {
-  if (mode !== "round") return;
+  if (!isRoundVisualMode()) return;
   try {
     sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
-  } catch {}
+  } catch {
+    return;
+  }
 }
 
-function persistTransitionHandoff(toMode) {
-  try {
-    const handoff = control.buildTransitionHandoff({ toMode });
-    sessionStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify(handoff));
-  } catch {}
+function safeProjectionSummary() {
+  if (typeof control.getProjectionSummary === "function") {
+    const summary = control.getProjectionSummary();
+    return summary && typeof summary === "object" ? summary : {};
+  }
+  return {};
 }
 
-function applyStoredHandoff() {
-  try {
-    const raw = sessionStorage.getItem(HANDOFF_STORAGE_KEY);
-    if (!raw) return;
-    const handoff = JSON.parse(raw);
-    if (handoff && typeof handoff === "object" && handoff.toMode === mode) {
-      control.restoreMotionState(handoff);
-    }
-    sessionStorage.removeItem(HANDOFF_STORAGE_KEY);
-  } catch {}
+function safeMotionReceipt(dtMs) {
+  const motionState =
+    typeof control.getMotionState === "function"
+      ? control.getMotionState()
+      : {};
+
+  return {
+    motionRunning: isRoundVisualMode(),
+    rafActive: rafId !== 0,
+    pageVisible: document.visibilityState === "visible",
+    pageRestored: true,
+    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
+    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
+    orbitVelocity: Number.isFinite(motionState?.orbitVelocity) ? motionState.orbitVelocity : null,
+    orbitPhase: Number.isFinite(motionState?.orbitPhase) ? motionState.orbitPhase : null,
+    blockedDragOnStarCount: 0,
+    starTapCount: 0,
+    dtMs
+  };
 }
 
 function buildRuntimePacket(dtMs) {
-  const motionState = control.getMotionState();
-  const orbitalState = control.getOrbitalState();
-  const projectionSummary = control.getProjectionSummary();
-  const renderAudit = lastRenderReceipt?.audit || {};
-  const orbitalAudit = lastRenderReceipt?.orbitalAudit || {};
+  const projectionSummary = safeProjectionSummary();
+  const sample =
+    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
+    planetField?.samples?.[128]?.[128] ||
+    null;
 
-  const runtime = {
+  const instrument = instruments.buildInstrumentReceipt({
+    currentSample: sample,
+    previousSample: sample,
+    tickIndex: 0,
+    motionState: safeMotionReceipt(dtMs),
+    authorityState: {
+      motionOwner: "control.js",
+      projectionOwner: "control.js",
+      inputOwner: "index.html",
+      renderSource: "render.js",
+      orbitSource: "index.html"
+    },
+    transitionState: {
+      proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
+      admissible: true,
+      accepted: true,
+      blockedReason: "",
+      family: "HOME_MODE"
+    }
+  });
+
+  return Object.freeze({
     phase: "HOME",
     fps: dtMs > 0 ? 1000 / dtMs : 0,
     dtMs,
     elapsedMs: performance.now(),
-    planetField,
-    renderAudit,
-    orbitalAudit,
+    instrument,
     control: {
       projectionSummary,
-      motionState,
-      orbitalState
+      motionState: typeof control.getMotionState === "function" ? control.getMotionState() : {},
+      orbitalState: typeof control.getOrbitalState === "function" ? control.getOrbitalState() : {}
     },
+    planetField,
+    renderAudit: lastRenderReceipt?.audit || {},
+    orbitalAudit: lastRenderReceipt?.orbitalAudit || {},
+    progress: {},
+    unlocks: {},
     verification: {
       pass: true,
       reasons: []
@@ -783,68 +881,33 @@ function buildRuntimePacket(dtMs) {
       phase: "",
       message: ""
     }
-  };
-
-  completionEngine.update(runtime);
-
-  const transitionReceipt = transitionEngine.evaluate(runtime, {
-    proposed: mode === "round" ? "ROUND_HOME" : "FLAT_HOME",
-    family: "HOME_MODE",
-    fromRoute: location.pathname,
-    toRoute: location.pathname,
-    fromMode: mode,
-    toMode: mode,
-    explicitUserAction: true,
-    reason: "runtime_state"
   });
-
-  runtime.transition = transitionReceipt;
-
-  runtime.instrument = instruments.buildInstrumentReceipt({
-    currentSample: planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] || null,
-    previousSample: planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] || null,
-    tickIndex: 0,
-    motionState: {
-      motionRunning: mode === "round",
-      rafActive: rafId !== 0,
-      pageVisible: document.visibilityState === "visible",
-      pageRestored: true,
-      yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
-      pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-      orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity) ? orbitalState.orbitAngularVelocity : null,
-      orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
-      blockedDragOnStarCount: 0,
-      starTapCount: 0,
-      dtMs
-    },
-    authorityState: {
-      motionOwner: "control.js",
-      projectionOwner: "control.js",
-      inputOwner: "index.html",
-      renderSource: "render.js",
-      orbitSource: "control.js"
-    },
-    transitionState: transitionReceipt
-  });
-
-  return Object.freeze(runtime);
 }
 
 function updateDiagnostics(dtMs) {
-  runtimePacket = buildRuntimePacket(dtMs);
-  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtimePacket);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtimePacket);
+  const runtime = buildRuntimePacket(dtMs);
+  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
 }
 
-function syncOverlayMarkers() {
-  const hits = Array.isArray(lastRenderReceipt?.orbitalHits)
-    ? lastRenderReceipt.orbitalHits
-    : [];
-
+function hideAllMarkers() {
   for (const key of Object.keys(overlayMap)) {
     const node = overlayMap[key];
     if (node) node.hidden = true;
   }
+}
+
+function syncOverlayMarkers() {
+  if (!isRoundVisualMode() || isObserveMode()) {
+    hideAllMarkers();
+    return;
+  }
+
+  const hits = Array.isArray(lastRenderReceipt?.orbitalHits)
+    ? lastRenderReceipt.orbitalHits
+    : [];
+
+  hideAllMarkers();
 
   for (let i = 0; i < hits.length; i += 1) {
     const hit = hits[i];
@@ -860,19 +923,38 @@ function syncOverlayMarkers() {
 function renderSurface(dtMs) {
   if (!planetField) return;
 
+  const cameraState =
+    typeof control.getCameraState === "function"
+      ? control.getCameraState()
+      : {};
+
+  const orbitalConfig =
+    isRoundVisualMode() && !isObserveMode()
+      ? Object.freeze({
+          phase: typeof control.getOrbitalState === "function"
+            ? control.getOrbitalState().orbitPhase
+            : 0,
+          objects: orbitalSystem.objects,
+          altitudeFactor: 0.42
+        })
+      : null;
+
+  const observeZoomScale = isObserveMode() ? 1.24 : 1;
+
   lastRenderReceipt = renderer.renderPlanet({
     ctx,
     planetField,
     projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) =>
       control.projectSphere(latDeg, lonDeg, radiusOffsetPx),
-    viewState: control.getCameraState(),
-    orbitalSystem: mode === "round"
-      ? Object.freeze({
-          phase: control.getOrbitalState().orbitPhase,
-          objects: orbitalSystem.objects,
-          altitudeFactor: 0.42
-        })
-      : null
+    viewState: Object.freeze({
+      ...cameraState,
+      observeMode: isObserveMode(),
+      radius: Number.isFinite(cameraState?.radius)
+        ? cameraState.radius * observeZoomScale
+        : undefined,
+      starfieldSuppressed: isObserveMode()
+    }),
+    orbitalSystem: orbitalConfig
   });
 
   syncOverlayMarkers();
@@ -885,7 +967,7 @@ function frame(now) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (mode === "round") {
+  if (isRoundVisualMode()) {
     control.stepInertia(dtMs);
   }
 
@@ -893,18 +975,28 @@ function frame(now) {
   rafId = requestAnimationFrame(frame);
 }
 
+function syncModeButtons() {
+  btnFlat.classList.toggle("is-active", mode === "flat");
+  btnRound.classList.toggle("is-active", mode === "round");
+  btnObserve.classList.toggle("is-active", mode === "observe");
+}
+
 function setModePresentation() {
   body.setAttribute("data-mode", mode);
-  modeNote.textContent = mode.toUpperCase();
-  control.setMode(mode);
+  syncModeButtons();
 
-  if (mode === "flat") {
+  if (typeof control.setMode === "function") {
+    control.setMode(mode);
+  }
+
+  if (isFlatMode()) {
     flatLayer.style.display = "flex";
     canvas.style.filter = "blur(8px) brightness(.65)";
-    for (const key of Object.keys(overlayMap)) {
-      const node = overlayMap[key];
-      if (node) node.hidden = true;
-    }
+    hideAllMarkers();
+  } else if (isObserveMode()) {
+    flatLayer.style.display = "none";
+    canvas.style.filter = "none";
+    hideAllMarkers();
   } else {
     flatLayer.style.display = "none";
     canvas.style.filter = "none";
@@ -917,10 +1009,9 @@ function setDiagnosticsMode(nextMode) {
   diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
 }
 
-function navigateWithTransition(route, nextMode = mode) {
+function navigateToMode(nextMode) {
   persistMotionState();
-  persistTransitionHandoff(nextMode);
-  location.href = withModeQuery(route, nextMode);
+  location.href = buildModeHref(nextMode);
 }
 
 function bindOverlayRoutes() {
@@ -929,63 +1020,10 @@ function bindOverlayRoutes() {
     if (!marker) return;
 
     marker.addEventListener("click", () => {
-      navigateWithTransition(obj.route, mode);
+      persistMotionState();
+      location.href = withModeQuery(obj.route);
     });
   });
-}
-
-function bindRoundPointerEvents() {
-  canvas.addEventListener("pointerdown", (event) => {
-    if (mode !== "round") return;
-
-    const target = control.classifyPointerTarget(
-      event.clientX,
-      event.clientY,
-      Array.isArray(lastRenderReceipt?.orbitalHits) ? lastRenderReceipt.orbitalHits : []
-    );
-
-    if (target.family !== "globe") {
-      return;
-    }
-
-    activePointerId = event.pointerId;
-    isDragging = true;
-    movedSincePointerDown = false;
-    lastX = event.clientX;
-    lastY = event.clientY;
-  }, { passive: true });
-
-  window.addEventListener("pointermove", (event) => {
-    if (mode !== "round") return;
-    if (!isDragging) return;
-    if (activePointerId !== null && event.pointerId !== activePointerId) return;
-
-    const dx = event.clientX - lastX;
-    const dy = event.clientY - lastY;
-
-    if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
-      movedSincePointerDown = true;
-    }
-
-    lastX = event.clientX;
-    lastY = event.clientY;
-
-    control.applyDrag(dx, dy);
-  }, { passive: true });
-
-  window.addEventListener("pointerup", (event) => {
-    if (activePointerId !== null && event.pointerId !== activePointerId) return;
-    activePointerId = null;
-    isDragging = false;
-    movedSincePointerDown = false;
-  }, { passive: true });
-
-  window.addEventListener("pointercancel", (event) => {
-    if (activePointerId !== null && event.pointerId !== activePointerId) return;
-    activePointerId = null;
-    isDragging = false;
-    movedSincePointerDown = false;
-  }, { passive: true });
 }
 
 function bindEvents() {
@@ -993,17 +1031,54 @@ function bindEvents() {
     setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
   });
 
-  modeNote.addEventListener("click", () => {
-    const nextMode = mode === "round" ? "flat" : "round";
-    navigateWithTransition(location.pathname, nextMode);
+  btnFlat.addEventListener("click", () => {
+    if (mode === "flat") return;
+    navigateToMode("flat");
   });
 
-  bindRoundPointerEvents();
+  btnRound.addEventListener("click", () => {
+    if (mode === "round") return;
+    navigateToMode("round");
+  });
+
+  btnObserve.addEventListener("click", () => {
+    if (mode === "observe") return;
+    navigateToMode("observe");
+  });
+
+  if (isRoundVisualMode()) {
+    canvas.addEventListener("pointerdown", (event) => {
+      isDragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }, { passive: true });
+
+    window.addEventListener("pointermove", (event) => {
+      if (!isDragging) return;
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+
+      lastX = event.clientX;
+      lastY = event.clientY;
+
+      control.applyDrag(dx, dy);
+    }, { passive: true });
+
+    window.addEventListener("pointerup", () => {
+      isDragging = false;
+    }, { passive: true });
+
+    window.addEventListener("pointercancel", () => {
+      isDragging = false;
+    }, { passive: true });
+  }
 
   document.querySelectorAll(".flat-card").forEach((card) => {
     card.addEventListener("click", () => {
       const route = card.dataset.route || "/home/";
-      navigateWithTransition(route, mode);
+      persistMotionState();
+      location.href = withModeQuery(route);
     });
   });
 
@@ -1015,6 +1090,7 @@ function bindEvents() {
 
   window.addEventListener("pagehide", () => {
     persistMotionState();
+
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = 0;
@@ -1022,22 +1098,13 @@ function bindEvents() {
   }, { passive: true });
 
   window.addEventListener("pageshow", () => {
-    if (mode === "round") {
+    if (isRoundVisualMode()) {
       restoreMotionState();
-      applyStoredHandoff();
     }
 
-    if (!rafId) {
+    if (!rafId && isRoundVisualMode()) {
       lastFrameAt = performance.now();
       rafId = requestAnimationFrame(frame);
-    }
-  }, { passive: true });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") {
-      persistMotionState();
-    } else if (document.visibilityState === "visible" && mode === "round") {
-      lastFrameAt = performance.now();
     }
   }, { passive: true });
 }
@@ -1045,19 +1112,18 @@ function bindEvents() {
 function start() {
   resizeWorld();
   buildPlanetFieldOnce();
-  setModePresentation();
 
-  if (mode === "round") {
+  if (isRoundVisualMode()) {
     restoreMotionState();
-    applyStoredHandoff();
   }
 
   bindOverlayRoutes();
+  setModePresentation();
   setDiagnosticsMode("peek");
   bindEvents();
   renderSurface(16.7);
 
-  if (mode === "round" && !rafId) {
+  if (isRoundVisualMode() && !rafId) {
     lastFrameAt = performance.now();
     rafId = requestAnimationFrame(frame);
   }

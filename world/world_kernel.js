@@ -1,1159 +1,727 @@
-export const WORLD_KERNEL = Object.freeze((() => {
-  const VERSION = "kernel-cog-v4";
+export const WORLD_KERNEL = Object.freeze({
+  constants: Object.freeze({
+    worldRadiusFactor: 0.36,
+    latSteps: 108,
+    lonSteps: 216,
+    seaLevel: 0.0,
+    shorelineBand: 0.028,
+    shelfBand: 0.075,
+    elevationScale: 1.0
+  }),
 
-  function freezeObjectDeep(value) {
-    if (!value || typeof value !== "object") return value;
-    if (Object.isFrozen(value)) return value;
-    Object.freeze(value);
-    for (const key of Object.keys(value)) {
-      freezeObjectDeep(value[key]);
+  hierarchy: Object.freeze({
+    continents: 9,
+    countriesPerContinent: 4,
+    regionsPerCountry: 4,
+    statesPerCountry: 16,
+    metrosPerState: 16,
+    citiesPerState: 256,
+    capitalsPerCountry: 4
+  }),
+
+  continents: Object.freeze([
+    Object.freeze({
+      id: "C1",
+      tier: 1,
+      canonicalName: "Input Calibration",
+      shardClass: "CORE_FRAGMENT",
+      sizeFactor: 1.0,
+      reliefAmp: 0.35,
+      reliefFreq: 0.50,
+      roughness: 0.20,
+      erosionStrength: 0.70,
+      coastSmoothness: 0.65,
+      ridgeAlignment: 0.40,
+      valleyDepth: 0.30,
+      traversalDifficulty: 0.20,
+      habitabilityFraction: 0.72,
+      activeNodeDensity: 1.0,
+      activeMetroDensity: 1.0,
+      activeCitiesTotal: null,
+      seedLat: 18,
+      seedLon: -42,
+      axisX: 1.65,
+      axisY: 1.02,
+      rotationDeg: -26
+    }),
+    Object.freeze({
+      id: "C2",
+      tier: 2,
+      canonicalName: "Output Allocation",
+      shardClass: "CORE_FRAGMENT",
+      sizeFactor: 0.90,
+      reliefAmp: 0.40,
+      reliefFreq: 0.55,
+      roughness: 0.22,
+      erosionStrength: 0.68,
+      coastSmoothness: 0.63,
+      ridgeAlignment: 0.45,
+      valleyDepth: 0.35,
+      traversalDifficulty: 0.28,
+      habitabilityFraction: 0.64,
+      activeNodeDensity: 0.85,
+      activeMetroDensity: 0.80,
+      activeCitiesTotal: null,
+      seedLat: -14,
+      seedLon: -18,
+      axisX: 1.48,
+      axisY: 0.98,
+      rotationDeg: 14
+    }),
+    Object.freeze({
+      id: "C3",
+      tier: 3,
+      canonicalName: "Uptime Integrity",
+      shardClass: "CORE_FRAGMENT",
+      sizeFactor: 0.80,
+      reliefAmp: 0.45,
+      reliefFreq: 0.60,
+      roughness: 0.25,
+      erosionStrength: 0.66,
+      coastSmoothness: 0.60,
+      ridgeAlignment: 0.50,
+      valleyDepth: 0.40,
+      traversalDifficulty: 0.35,
+      habitabilityFraction: 0.57,
+      activeNodeDensity: 0.70,
+      activeMetroDensity: 0.64,
+      activeCitiesTotal: null,
+      seedLat: 36,
+      seedLon: 6,
+      axisX: 1.34,
+      axisY: 0.92,
+      rotationDeg: -8
+    }),
+    Object.freeze({
+      id: "C4",
+      tier: 4,
+      canonicalName: "Audit Chain",
+      shardClass: "SECONDARY_SPLIT",
+      sizeFactor: 0.70,
+      reliefAmp: 0.55,
+      reliefFreq: 0.65,
+      roughness: 0.28,
+      erosionStrength: 0.63,
+      coastSmoothness: 0.58,
+      ridgeAlignment: 0.55,
+      valleyDepth: 0.50,
+      traversalDifficulty: 0.45,
+      habitabilityFraction: 0.49,
+      activeNodeDensity: 0.55,
+      activeMetroDensity: 0.48,
+      activeCitiesTotal: null,
+      seedLat: -36,
+      seedLon: 22,
+      axisX: 1.18,
+      axisY: 0.86,
+      rotationDeg: 32
+    }),
+    Object.freeze({
+      id: "C5",
+      tier: 5,
+      canonicalName: "Dynamic Resizing",
+      shardClass: "SECONDARY_SPLIT",
+      sizeFactor: 0.60,
+      reliefAmp: 0.65,
+      reliefFreq: 0.70,
+      roughness: 0.32,
+      erosionStrength: 0.60,
+      coastSmoothness: 0.55,
+      ridgeAlignment: 0.60,
+      valleyDepth: 0.60,
+      traversalDifficulty: 0.55,
+      habitabilityFraction: 0.40,
+      activeNodeDensity: 0.40,
+      activeMetroDensity: 0.34,
+      activeCitiesTotal: null,
+      seedLat: 10,
+      seedLon: 46,
+      axisX: 1.04,
+      axisY: 0.80,
+      rotationDeg: -38
+    }),
+    Object.freeze({
+      id: "C6",
+      tier: 6,
+      canonicalName: "Rollback System",
+      shardClass: "SECONDARY_SPLIT",
+      sizeFactor: 0.50,
+      reliefAmp: 0.75,
+      reliefFreq: 0.75,
+      roughness: 0.36,
+      erosionStrength: 0.56,
+      coastSmoothness: 0.52,
+      ridgeAlignment: 0.65,
+      valleyDepth: 0.70,
+      traversalDifficulty: 0.65,
+      habitabilityFraction: 0.31,
+      activeNodeDensity: 0.28,
+      activeMetroDensity: 0.22,
+      activeCitiesTotal: null,
+      seedLat: -4,
+      seedLon: 76,
+      axisX: 0.90,
+      axisY: 0.70,
+      rotationDeg: 18
+    }),
+    Object.freeze({
+      id: "C7",
+      tier: 7,
+      canonicalName: "Boundary Engine",
+      shardClass: "PERIPHERAL_SHARD",
+      sizeFactor: 0.40,
+      reliefAmp: 0.85,
+      reliefFreq: 0.80,
+      roughness: 0.40,
+      erosionStrength: 0.52,
+      coastSmoothness: 0.48,
+      ridgeAlignment: 0.70,
+      valleyDepth: 0.80,
+      traversalDifficulty: 0.75,
+      habitabilityFraction: 0.22,
+      activeNodeDensity: 0.18,
+      activeMetroDensity: 0.12,
+      activeCitiesTotal: null,
+      seedLat: 52,
+      seedLon: 54,
+      axisX: 0.76,
+      axisY: 0.62,
+      rotationDeg: -22
+    }),
+    Object.freeze({
+      id: "C8",
+      tier: 8,
+      canonicalName: "Time Horizon Control",
+      shardClass: "PERIPHERAL_SHARD",
+      sizeFactor: 0.30,
+      reliefAmp: 0.95,
+      reliefFreq: 0.85,
+      roughness: 0.45,
+      erosionStrength: 0.48,
+      coastSmoothness: 0.45,
+      ridgeAlignment: 0.75,
+      valleyDepth: 0.90,
+      traversalDifficulty: 0.88,
+      habitabilityFraction: 0.14,
+      activeNodeDensity: 0.10,
+      activeMetroDensity: 0.06,
+      activeCitiesTotal: null,
+      seedLat: -50,
+      seedLon: -76,
+      axisX: 0.62,
+      axisY: 0.54,
+      rotationDeg: 42
+    }),
+    Object.freeze({
+      id: "C9",
+      tier: 9,
+      canonicalName: "Noise Suppression",
+      shardClass: "PERIPHERAL_SHARD",
+      sizeFactor: 0.10,
+      reliefAmp: 1.05,
+      reliefFreq: 0.90,
+      roughness: 0.50,
+      erosionStrength: 0.45,
+      coastSmoothness: 0.42,
+      ridgeAlignment: 0.80,
+      valleyDepth: 1.00,
+      traversalDifficulty: 1.00,
+      habitabilityFraction: 0.06,
+      activeNodeDensity: 0.0,
+      activeMetroDensity: 0.0,
+      activeCitiesTotal: 16,
+      seedLat: 64,
+      seedLon: -104,
+      axisX: 0.50,
+      axisY: 0.42,
+      rotationDeg: -12
+    })
+  ])
+});
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function lerp(a, b, t) {
+  return a + ((b - a) * t);
+}
+
+function smoothstep(edge0, edge1, x) {
+  const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function fract(value) {
+  return value - Math.floor(value);
+}
+
+function degToRad(value) {
+  return (value * Math.PI) / 180;
+}
+
+function signedAngularDeltaDeg(a, b) {
+  let delta = a - b;
+  while (delta > 180) delta -= 360;
+  while (delta < -180) delta += 360;
+  return delta;
+}
+
+function hash2(a, b, c = 0) {
+  const x = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453123;
+  return fract(x);
+}
+
+function noise2(a, b, c = 0) {
+  return hash2(a, b, c) * 2 - 1;
+}
+
+function octaveNoise(a, b, octaves, persistence, seed = 0) {
+  let amplitude = 1;
+  let frequency = 1;
+  let total = 0;
+  let maxAmplitude = 0;
+
+  for (let i = 0; i < octaves; i += 1) {
+    total += noise2(a * frequency, b * frequency, seed + i * 17.3) * amplitude;
+    maxAmplitude += amplitude;
+    amplitude *= persistence;
+    frequency *= 2;
+  }
+
+  return maxAmplitude > 0 ? total / maxAmplitude : 0;
+}
+
+function rotate2(x, y, rotationDeg) {
+  const radians = degToRad(rotationDeg);
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+
+  return {
+    x: x * cos - y * sin,
+    y: x * sin + y * cos
+  };
+}
+
+function continentProfileById(continentId) {
+  return WORLD_KERNEL.continents.find((entry) => entry.id === continentId) ?? WORLD_KERNEL.continents[0];
+}
+
+function continentDistance(latDeg, lonDeg, profile) {
+  const dLat = (latDeg - profile.seedLat) / 52;
+  const dLon = signedAngularDeltaDeg(lonDeg, profile.seedLon) / 78;
+  const rotated = rotate2(dLon, dLat, profile.rotationDeg);
+
+  const seamWarp =
+    octaveNoise(latDeg * 0.055 + profile.tier, lonDeg * 0.055 - profile.tier, 3, 0.55, 11.2) * 0.12 +
+    octaveNoise(latDeg * 0.11 - profile.tier, lonDeg * 0.09 + profile.tier, 2, 0.50, 19.4) * 0.06;
+
+  const x = rotated.x / profile.axisX;
+  const y = rotated.y / profile.axisY;
+  const radial = Math.sqrt(x * x + y * y);
+
+  return radial + seamWarp;
+}
+
+function continentMaskStrength(latDeg, lonDeg, profile) {
+  const distance = continentDistance(latDeg, lonDeg, profile);
+  const tectonicBite =
+    octaveNoise(latDeg * 0.07 + profile.tier * 0.3, lonDeg * 0.07 - profile.tier * 0.2, 4, 0.52, 29.8) * 0.11 +
+    octaveNoise(latDeg * 0.16, lonDeg * 0.12, 2, 0.58, 9.7) * 0.04;
+
+  const threshold = 1.02 - profile.sizeFactor * 0.08;
+  return 1 - smoothstep(threshold - 0.18, threshold + 0.18, distance + tectonicBite);
+}
+
+function findBestContinent(latDeg, lonDeg) {
+  let best = null;
+  let second = null;
+
+  for (const profile of WORLD_KERNEL.continents) {
+    const strength = continentMaskStrength(latDeg, lonDeg, profile);
+
+    if (!best || strength > best.strength) {
+      second = best;
+      best = { profile, strength };
+    } else if (!second || strength > second.strength) {
+      second = { profile, strength };
     }
-    return value;
   }
 
-  function buildReservedNames(prefix, start, end) {
-    return Array.from({ length: end - start + 1 }, (_, i) => `${prefix}_${start + i}`);
+  return { best, second };
+}
+
+function fractureStrength(latDeg, lonDeg, best, second) {
+  const seamNoise = octaveNoise(latDeg * 0.14, lonDeg * 0.14, 3, 0.48, 41.1) * 0.08;
+  const delta = Math.abs((best?.strength ?? 0) - (second?.strength ?? 0));
+  return clamp(1 - delta * 2.6 + seamNoise, 0, 1);
+}
+
+function continentNormalizedCoordinates(latDeg, lonDeg, profile) {
+  const dLat = (latDeg - profile.seedLat) / 36;
+  const dLon = signedAngularDeltaDeg(lonDeg, profile.seedLon) / 54;
+  const rotated = rotate2(dLon, dLat, profile.rotationDeg);
+
+  return {
+    u: clamp((rotated.x / (profile.axisX * 1.25) + 1) * 0.5, 0, 0.999999),
+    v: clamp((rotated.y / (profile.axisY * 1.25) + 1) * 0.5, 0, 0.999999)
+  };
+}
+
+function resolveCountryRegionState(localU, localV) {
+  const countryX = clamp(Math.floor(localU * 2), 0, 1);
+  const countryY = clamp(Math.floor(localV * 2), 0, 1);
+  const countryIndex = countryY * 2 + countryX;
+
+  const regionWithinCountryX = clamp(Math.floor((localU * 4) % 2), 0, 1);
+  const regionWithinCountryY = clamp(Math.floor((localV * 4) % 2), 0, 1);
+  const regionWithinCountry = regionWithinCountryY * 2 + regionWithinCountryX;
+
+  const stateX = clamp(Math.floor(localU * 4), 0, 3);
+  const stateY = clamp(Math.floor(localV * 4), 0, 3);
+  const stateIndex = stateY * 4 + stateX;
+
+  return {
+    countryIndex,
+    regionWithinCountry,
+    stateIndex
+  };
+}
+
+function resolveClimateBand(latDeg, elevation) {
+  const absLat = Math.abs(latDeg);
+
+  if (absLat >= 72 || elevation > 0.80) return "POLAR";
+  if (absLat >= 58 || elevation > 0.68) return "SUBPOLAR";
+  if (absLat >= 42) return "TEMPERATE";
+  if (absLat >= 24) return "SUBTROPICAL";
+  return "TROPICAL";
+}
+
+function resolveSeason(latDeg, yearPhase = 0.32) {
+  const northSummer = Math.sin(yearPhase * Math.PI * 2) >= 0;
+  const isNorth = latDeg >= 0;
+
+  if ((isNorth && northSummer) || (!isNorth && !northSummer)) return "SUMMER";
+  return Math.abs(latDeg) < 14 ? "SPRING" : "WINTER";
+}
+
+function deriveMoisture(latDeg, lonDeg, maritimeInfluence, elevation, profile) {
+  const belt = Math.cos(degToRad(latDeg));
+  const synoptic = octaveNoise(latDeg * 0.055 + profile.tier, lonDeg * 0.08 - profile.tier, 4, 0.53, 13.1);
+  const rainShadow = octaveNoise(latDeg * 0.12 - profile.tier, lonDeg * 0.14 + profile.tier, 2, 0.58, 73.5);
+  const value =
+    0.34 +
+    belt * 0.22 +
+    maritimeInfluence * 0.20 +
+    synoptic * 0.14 -
+    clamp(elevation, 0, 1) * 0.22 -
+    Math.max(rainShadow, 0) * 0.12;
+
+  return clamp(value, 0, 1);
+}
+
+function deriveTemperature(latDeg, elevation, climateBandField) {
+  const absLat = Math.abs(latDeg);
+  let base = 1 - absLat / 90;
+  base -= clamp(elevation, 0, 1) * 0.42;
+
+  if (climateBandField === "POLAR") base -= 0.35;
+  else if (climateBandField === "SUBPOLAR") base -= 0.20;
+  else if (climateBandField === "TROPICAL") base += 0.08;
+
+  return clamp(base, 0, 1);
+}
+
+function deriveBiome(temperature, rainfall, terrainClass) {
+  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND") return "GLACIER";
+  if (temperature < 0.18) return rainfall > 0.42 ? "TUNDRA" : "GLACIER";
+  if (temperature < 0.34) return rainfall > 0.48 ? "BOREAL_FOREST" : "TUNDRA";
+  if (temperature < 0.56) {
+    if (rainfall > 0.64) return "TEMPERATE_FOREST";
+    if (rainfall > 0.34) return "TEMPERATE_GRASSLAND";
+    return "DESERT";
+  }
+  if (rainfall > 0.70) return "TROPICAL_RAINFOREST";
+  if (rainfall > 0.42) return "TROPICAL_GRASSLAND";
+  return "DESERT";
+}
+
+function deriveSurfaceMaterial(terrainClass, rainfall, freezePotential) {
+  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND") return "ICE";
+  if (terrainClass === "BEACH") return "SAND";
+  if (terrainClass === "SHORELINE") return "SILT";
+  if (terrainClass === "SUMMIT" || terrainClass === "RIDGE") return "BEDROCK";
+  if (terrainClass === "CANYON") return "CLAY";
+  if (terrainClass === "PLATEAU") return "GRAVEL";
+  if (freezePotential > 0.82) return "SNOW";
+  if (rainfall < 0.22) return "SAND";
+  if (rainfall < 0.42) return "SOIL";
+  return "SOIL";
+}
+
+function terrainClassFromElevation(elevation, shoreline, freezePotential) {
+  if (freezePotential > 0.86 && elevation > 0.22) return "POLAR_ICE";
+  if (freezePotential > 0.74 && elevation > 0.62) return "GLACIAL_HIGHLAND";
+  if (shoreline) return "SHORELINE";
+  if (elevation > 0.92) return "SUMMIT";
+  if (elevation > 0.76) return "MOUNTAIN";
+  if (elevation > 0.58) return "RIDGE";
+  if (elevation > 0.36) return "PLATEAU";
+  if (elevation < 0.10) return "BASIN";
+  if (elevation < 0.18) return "CANYON";
+  return "LAND";
+}
+
+function buildContinentRelief(latDeg, lonDeg, profile, fracture) {
+  const macro = octaveNoise(
+    latDeg * (0.035 + profile.reliefFreq * 0.018),
+    lonDeg * (0.035 + profile.reliefFreq * 0.014),
+    4,
+    0.52,
+    profile.tier * 10.3
+  );
+
+  const ridge = octaveNoise(
+    latDeg * (0.09 + profile.reliefFreq * 0.022),
+    lonDeg * (0.11 + profile.ridgeAlignment * 0.030),
+    3,
+    0.48,
+    80 + profile.tier * 7.1
+  );
+
+  const rough = octaveNoise(
+    latDeg * (0.18 + profile.roughness * 0.08),
+    lonDeg * (0.16 + profile.roughness * 0.07),
+    2,
+    0.45,
+    140 + profile.tier * 5.7
+  );
+
+  const erosion = octaveNoise(
+    latDeg * 0.07,
+    lonDeg * 0.07,
+    3,
+    0.50,
+    220 + profile.tier * 3.2
+  ) * (1 - profile.erosionStrength * 0.5);
+
+  const relief =
+    macro * 0.52 +
+    ridge * (0.18 + profile.ridgeAlignment * 0.22) +
+    rough * (0.08 + profile.roughness * 0.10) +
+    fracture * profile.valleyDepth * 0.10 -
+    erosion * profile.erosionStrength * 0.18;
+
+  return clamp(relief * profile.reliefAmp, -1, 1);
+}
+
+function deriveElevation(latDeg, lonDeg, best, second) {
+  const profile = best.profile;
+  const landStrength = best.strength;
+  const seam = fractureStrength(latDeg, lonDeg, best, second);
+
+  const coastalFade = smoothstep(0.18, 0.84, landStrength);
+  const relief = buildContinentRelief(latDeg, lonDeg, profile, seam);
+
+  const baseElevation =
+    (landStrength - 0.50) * 1.75 +
+    relief * (0.55 + profile.traversalDifficulty * 0.35);
+
+  const eroded = lerp(baseElevation, baseElevation * 0.82, profile.erosionStrength * 0.45);
+  const finalElevation = clamp(eroded * coastalFade + (landStrength - 0.48) * 0.38, -1, 1);
+
+  return { elevation: finalElevation, seam };
+}
+
+function deriveOceanDepth(latDeg, lonDeg) {
+  const deep = octaveNoise(latDeg * 0.026, lonDeg * 0.026, 4, 0.56, 310.4);
+  const trench = octaveNoise(latDeg * 0.08, lonDeg * 0.05, 2, 0.52, 470.9);
+  return clamp(-0.25 - Math.abs(deep) * 0.55 - Math.max(trench, 0) * 0.30, -1, 0);
+}
+
+function activeCitiesForContinent(profile) {
+  const baselineStatesPerContinent =
+    WORLD_KERNEL.hierarchy.countriesPerContinent * WORLD_KERNEL.hierarchy.statesPerCountry;
+  const baselineCitiesPerContinent = baselineStatesPerContinent * WORLD_KERNEL.hierarchy.citiesPerState;
+
+  if (typeof profile.activeCitiesTotal === "number") return profile.activeCitiesTotal;
+  return Math.max(16, Math.round(baselineCitiesPerContinent * profile.activeNodeDensity));
+}
+
+function activeMetrosForContinent(profile) {
+  const baselineStatesPerContinent =
+    WORLD_KERNEL.hierarchy.countriesPerContinent * WORLD_KERNEL.hierarchy.statesPerCountry;
+  const baselineMetrosPerContinent = baselineStatesPerContinent * WORLD_KERNEL.hierarchy.metrosPerState;
+
+  if (profile.tier === 9) return 1;
+  return Math.max(4, Math.round(baselineMetrosPerContinent * profile.activeMetroDensity));
+}
+
+function buildSample(latDeg, lonDeg) {
+  const { best, second } = findBestContinent(latDeg, lonDeg);
+
+  const oceanDepthField = deriveOceanDepth(latDeg, lonDeg);
+  const landStrength = best?.strength ?? 0;
+  const isLand = landStrength >= 0.46;
+
+  if (!best || !isLand) {
+    const climateBandField = resolveClimateBand(latDeg, -0.2);
+    const freezePotential = clamp((Math.abs(latDeg) - 46) / 34, 0, 1);
+    const rainfall = clamp(0.36 + Math.cos(degToRad(latDeg)) * 0.18 + noise2(latDeg * 0.05, lonDeg * 0.05, 5.4) * 0.08, 0, 1);
+
+    return Object.freeze({
+      latDeg,
+      lonDeg,
+      continentId: null,
+      continentTier: null,
+      continentName: null,
+      shardClass: null,
+      countryIndex: null,
+      regionWithinCountry: null,
+      stateIndex: null,
+      capitalRegionIndex: null,
+      elevation: clamp(oceanDepthField * 0.55, -1, 0),
+      terrainClass: Math.abs(oceanDepthField) < WORLD_KERNEL.constants.shelfBand ? "SHELF" : "WATER",
+      biomeType: "NONE",
+      surfaceMaterial: "NONE",
+      climateBandField,
+      hemisphereSeason: resolveSeason(latDeg),
+      waterMask: 1,
+      landMask: 0,
+      shoreline: false,
+      shorelineBand: false,
+      oceanDepthField,
+      freezePotential,
+      rainfall,
+      continentality: 0,
+      evaporationPressure: clamp(0.32 + (1 - Math.abs(latDeg) / 90) * 0.24, 0, 1),
+      maritimeInfluence: 1,
+      auroralPotential: clamp((Math.abs(latDeg) - 52) / 24, 0, 1),
+      habitability: 0,
+      activationWeight: 0,
+      activeCitiesTotal: 0,
+      activeMetrosTotal: 0,
+      tectonicMemory: 0,
+      traversalDifficulty: 0,
+      slopeSeverity: 0
+    });
   }
 
-  function buildStateRegistryDefinitions() {
-    const block0 = [
-      "VOID",
-      "AIR_STILL",
-      "AIR_MOIST",
-      "AIR_COLD",
-      "AIR_WARM",
-      "FOG",
-      "MIST",
-      "CLOUD_THIN",
-      "CLOUD_DENSE",
-      "STORM_CELL",
-      "AURORA_ACTIVE",
-      "AURORA_PASSIVE",
-      "ASH_LIGHT",
-      "ASH_HEAVY",
-      "SMOKE_LIGHT",
-      "SMOKE_HEAVY",
-      "DUST_LIGHT",
-      "DUST_HEAVY",
-      "VAPOR_RISING",
-      "VAPOR_CONDENSING",
-      "WIND_CALM",
-      "WIND_ACTIVE",
-      "WIND_SHEAR",
-      "PRESSURE_LOW",
-      "PRESSURE_HIGH",
-      "ELECTRICAL_CHARGE_LOW",
-      "ELECTRICAL_CHARGE_HIGH",
-      "PARTICULATE_LIGHT",
-      "PARTICULATE_DENSE"
-    ].concat(buildReservedNames("RESERVED_AIR", 29, 31));
+  const profile = best.profile;
+  const { elevation, seam } = deriveElevation(latDeg, lonDeg, best, second);
+  const shorelineBand = elevation >= -WORLD_KERNEL.constants.shorelineBand && elevation <= WORLD_KERNEL.constants.shorelineBand;
+  const climateBandField = resolveClimateBand(latDeg, elevation);
+  const maritimeInfluence = clamp(1 - smoothstep(0.50, 1.0, Math.abs(elevation) + best.strength), 0, 1);
+  const rainfall = deriveMoisture(latDeg, lonDeg, maritimeInfluence, elevation, profile);
+  const temperature = deriveTemperature(latDeg, elevation, climateBandField);
+  const freezePotential = clamp(1 - temperature + Math.max(0, elevation - 0.45) * 0.45, 0, 1);
+  const terrainClass = terrainClassFromElevation(elevation, shorelineBand, freezePotential);
+  const biomeType = deriveBiome(temperature, rainfall, terrainClass);
+  const surfaceMaterial = deriveSurfaceMaterial(terrainClass, rainfall, freezePotential);
+  const local = continentNormalizedCoordinates(latDeg, lonDeg, profile);
+  const structure = resolveCountryRegionState(local.u, local.v);
+  const continentality = clamp(1 - maritimeInfluence, 0, 1);
+  const habitability = clamp(
+    profile.habitabilityFraction *
+      (1 - profile.traversalDifficulty * 0.30) *
+      (1 - Math.max(0, elevation - 0.40) * 0.65) *
+      (0.70 + rainfall * 0.40),
+    0,
+    1
+  );
 
-    const block1 = [
-      "WATER_STILL_SHALLOW",
-      "WATER_STILL_DEEP",
-      "WATER_FLOWING_WEAK",
-      "WATER_FLOWING_STRONG",
-      "WATER_BASIN_RETAINED",
-      "WATER_CHANNELLED",
-      "WATER_FALLING",
-      "WATER_SHELF",
-      "WATER_SLOPE",
-      "WATER_ABYSS",
-      "WATER_TRENCH",
-      "WATER_WAVE_LOW",
-      "WATER_WAVE_HIGH",
-      "WATER_TIDAL_ADVANCE",
-      "WATER_TIDAL_RETREAT",
-      "WATER_DELTA",
-      "WATER_MARSH_OPEN",
-      "WATER_MARSH_DENSE",
-      "WATER_SEEPING",
-      "WATER_SATURATED",
-      "WATER_BRACKISH",
-      "WATER_MINERAL_RICH",
-      "WATER_GLACIAL_RUNOFF",
-      "WATER_THERMAL",
-      "WATER_EVAPORATING",
-      "WATER_CONDENSING",
-      "WATER_POLLUTED_LIGHT",
-      "WATER_POLLUTED_HEAVY"
-    ].concat(buildReservedNames("RESERVED_WATER", 60, 63));
+  const activationWeight = profile.tier === 9
+    ? clamp(habitability * 0.25 + (1 - Math.abs(local.u - 0.5) - Math.abs(local.v - 0.5)) * 0.18, 0, 1)
+    : clamp(habitability * profile.activeNodeDensity, 0, 1);
 
-    const block2 = [
-      "ICE_SHEET",
-      "ICE_PACK",
-      "ICE_THIN",
-      "ICE_CRACKING",
-      "ICE_MELTING",
-      "ICE_REFORMING",
-      "SNOW_LIGHT",
-      "SNOW_DENSE",
-      "SNOWPACK",
-      "SNOW_MELTING",
-      "FROST_LIGHT",
-      "FROST_HEAVY",
-      "GLACIER_STABLE",
-      "GLACIER_ADVANCING",
-      "GLACIER_RETREATING",
-      "SLUSH",
-      "PERMAFROST",
-      "POLAR_SURFACE",
-      "SUBPOLAR_SURFACE",
-      "HAIL_FIELD",
-      "RIME_ICE",
-      "BLACK_ICE",
-      "ICE_SATURATED",
-      "ICE_MINERAL_RICH",
-      "ICE_COMPRESSED",
-      "ICE_SHEAR_ZONE"
-    ].concat(buildReservedNames("RESERVED_CRYO", 90, 95));
+  return Object.freeze({
+    latDeg,
+    lonDeg,
+    continentId: profile.id,
+    continentTier: profile.tier,
+    continentName: profile.canonicalName,
+    shardClass: profile.shardClass,
+    countryIndex: structure.countryIndex,
+    regionWithinCountry: structure.regionWithinCountry,
+    stateIndex: structure.stateIndex,
+    capitalRegionIndex: structure.regionWithinCountry,
+    elevation,
+    terrainClass: shorelineBand && elevation > 0 ? "BEACH" : terrainClass,
+    biomeType,
+    surfaceMaterial,
+    climateBandField,
+    hemisphereSeason: resolveSeason(latDeg),
+    waterMask: 0,
+    landMask: 1,
+    shoreline: shorelineBand,
+    shorelineBand,
+    oceanDepthField,
+    freezePotential,
+    rainfall,
+    continentality,
+    evaporationPressure: clamp(0.24 + temperature * 0.44 + continentality * 0.12, 0, 1),
+    maritimeInfluence,
+    auroralPotential: clamp((Math.abs(latDeg) - 52) / 24, 0, 1),
+    habitability,
+    activationWeight,
+    activeCitiesTotal: activeCitiesForContinent(profile),
+    activeMetrosTotal: activeMetrosForContinent(profile),
+    tectonicMemory: clamp(seam * (0.35 + profile.ridgeAlignment * 0.55), 0, 1),
+    traversalDifficulty: profile.traversalDifficulty,
+    slopeSeverity: clamp(Math.abs(elevation) * 0.55 + profile.reliefAmp * 0.35 + seam * 0.22, 0, 1)
+  });
+}
 
-    const block3 = [
-      "SOIL_DRY",
-      "SOIL_MOIST",
-      "SOIL_SATURATED",
-      "SAND_DRY",
-      "SAND_WET",
-      "SILT_DRY",
-      "SILT_WET",
-      "CLAY_DRY",
-      "CLAY_WET",
-      "GRAVEL_LOOSE",
-      "GRAVEL_LOCKED",
-      "BEDROCK_EXPOSED",
-      "BEDROCK_CRACKED",
-      "BEDROCK_WEATHERING",
-      "SEDIMENT_LIGHT",
-      "SEDIMENT_HEAVY",
-      "MUD_SOFT",
-      "MUD_DENSE",
-      "PEAT",
-      "ORGANIC_LITTER",
-      "DELTA_DEPOSIT",
-      "DUNE_ACTIVE",
-      "DUNE_LOCKED",
-      "TALUS",
-      "SCREE",
-      "ALLUVIUM",
-      "LATERITE",
-      "SALT_FLAT",
-      "BASALT_EXPOSED",
-      "GRANITE_EXPOSED",
-      "MARBLE_EXPOSED",
-      "RESERVED_SUBSTRATE_127"
-    ];
+function buildSummary(samples) {
+  const summary = {
+    continents: {}
+  };
 
-    const block4 = [
-      "VEGETATION_SPARSE",
-      "VEGETATION_GROWING",
-      "VEGETATION_DENSE",
-      "GRASSLAND_TEMPERATE",
-      "GRASSLAND_TROPICAL",
-      "FOREST_TEMPERATE",
-      "FOREST_BOREAL",
-      "RAINFOREST_TROPICAL",
-      "SHRUBLAND_DRY",
-      "WETLAND_REED",
-      "WETLAND_MANGROVE",
-      "TUNDRA_MOSS",
-      "TUNDRA_LICHEN",
-      "DESERT_SCRUB",
-      "RIPARIAN_LIGHT",
-      "RIPARIAN_DENSE",
-      "ALPINE_LOW",
-      "ALPINE_DENSE",
-      "CANOPY_OPEN",
-      "CANOPY_DENSE",
-      "ROOTED_BANK",
-      "ERODED_VEGETATION",
-      "BURNT_VEGETATION",
-      "REGROWTH_EARLY",
-      "REGROWTH_MID",
-      "REGROWTH_LATE"
-    ].concat(buildReservedNames("RESERVED_VEG", 154, 159));
-
-    const block5 = [
-      "THERMAL_CALM",
-      "THERMAL_ACTIVE",
-      "THERMAL_HIGH",
-      "MAGMA_LOCKED",
-      "MAGMA_MOBILE",
-      "FIRE_START",
-      "FIRE_ACTIVE_LOW",
-      "FIRE_ACTIVE_HIGH",
-      "FIRE_SMOLDER",
-      "FIRE_EXHAUSTED",
-      "ASH_DEPOSIT",
-      "CHAR_LAYER",
-      "HEAT_STRESS_LOW",
-      "HEAT_STRESS_HIGH",
-      "DRYING_ACTIVE",
-      "MELT_ACTIVE",
-      "FREEZE_ACTIVE",
-      "OXIDATION_LIGHT",
-      "OXIDATION_HEAVY",
-      "CHEMICAL_ACTIVE_LOW",
-      "CHEMICAL_ACTIVE_HIGH",
-      "ELECTRICAL_SURGE",
-      "STATIC_BUILDUP",
-      "STEAM_RELEASE",
-      "BOIL_ACTIVE",
-      "COOLING_ACTIVE"
-    ].concat(buildReservedNames("RESERVED_THERMAL", 186, 191));
-
-    const block6 = [
-      "FOUNDATION_STABLE",
-      "FOUNDATION_WEAK",
-      "PATH_EARTH",
-      "PATH_STONE",
-      "BRIDGE_STABLE",
-      "BRIDGE_STRESSED",
-      "WALL_STABLE",
-      "WALL_DAMAGED",
-      "TOWER_STABLE",
-      "TOWER_DAMAGED",
-      "HARBOR_WORKS",
-      "CANAL_WORKS",
-      "FARMLAND_ACTIVE",
-      "FARMLAND_FALLOW",
-      "SETTLEMENT_LIGHT",
-      "SETTLEMENT_DENSE",
-      "INDUSTRIAL_LIGHT",
-      "INDUSTRIAL_HEAVY",
-      "DRAINAGE_WORKS",
-      "RETAINING_WORKS",
-      "FORTIFICATION_LIGHT",
-      "FORTIFICATION_HEAVY",
-      "ROAD_LIGHT",
-      "ROAD_HEAVY",
-      "POWER_NODE_ACTIVE",
-      "POWER_NODE_FAILING",
-      "SIGNAL_NODE_ACTIVE",
-      "SIGNAL_NODE_FAILING"
-    ].concat(buildReservedNames("RESERVED_CIV", 220, 223));
-
-    const block7 = [
-      "LOCKED_STATIC",
-      "LOCKED_SCRIPTED",
-      "EVENT_PENDING",
-      "EVENT_ACTIVE",
-      "EVENT_RESOLVING",
-      "BOUNDARY_HARD",
-      "BOUNDARY_SOFT",
-      "SAFE_ZONE",
-      "HAZARD_ZONE",
-      "CHECKPOINT",
-      "BASIN_RESTORE_NODE",
-      "SUMMIT_CLEAR_NODE",
-      "TRANSITION_GATE",
-      "ADMISSIBILITY_BLOCK",
-      "ADMISSIBILITY_ALLOW",
-      "MEMORY_ECHO",
-      "TEMP_OVERRIDE",
-      "DEBUG_MARK",
-      "DIAGNOSTIC_MARK",
-      "PLAYER_TRACE",
-      "NPC_TRACE",
-      "STORY_TRIGGER",
-      "STORY_ACTIVE",
-      "STORY_RESOLVED"
-    ].concat(buildReservedNames("RESERVED_META", 248, 255));
-
-    return Object.freeze([
-      Object.freeze({ start: 0, end: 31, family: "air_passive", labels: Object.freeze(block0) }),
-      Object.freeze({ start: 32, end: 63, family: "water_family", labels: Object.freeze(block1) }),
-      Object.freeze({ start: 64, end: 95, family: "cryosphere_family", labels: Object.freeze(block2) }),
-      Object.freeze({ start: 96, end: 127, family: "substrate_family", labels: Object.freeze(block3) }),
-      Object.freeze({ start: 128, end: 159, family: "vegetation_family", labels: Object.freeze(block4) }),
-      Object.freeze({ start: 160, end: 191, family: "thermal_reactive_family", labels: Object.freeze(block5) }),
-      Object.freeze({ start: 192, end: 223, family: "civilization_family", labels: Object.freeze(block6) }),
-      Object.freeze({ start: 224, end: 255, family: "meta_event_family", labels: Object.freeze(block7) })
-    ]);
+  for (const profile of WORLD_KERNEL.continents) {
+    summary.continents[profile.id] = {
+      tier: profile.tier,
+      canonicalName: profile.canonicalName,
+      shardClass: profile.shardClass,
+      landSamples: 0,
+      activeCitiesTotal: activeCitiesForContinent(profile),
+      activeMetrosTotal: activeMetrosForContinent(profile),
+      habitabilityFraction: profile.habitabilityFraction,
+      traversalDifficulty: profile.traversalDifficulty
+    };
   }
 
-  function buildStateRegistry(definitions) {
-    const byCode = {};
-    const codesByName = {};
-    const familyByCode = {};
-
-    for (const block of definitions) {
-      for (let offset = 0; offset < block.labels.length; offset += 1) {
-        const code = block.start + offset;
-        const label = block.labels[offset];
-        byCode[code] = Object.freeze({
-          code,
-          label,
-          family: block.family,
-          blockStart: block.start,
-          blockEnd: block.end
-        });
-        codesByName[label] = code;
-        familyByCode[code] = block.family;
+  for (const row of samples) {
+    for (const sample of row) {
+      if (sample.continentId && summary.continents[sample.continentId]) {
+        summary.continents[sample.continentId].landSamples += 1;
       }
     }
-
-    return Object.freeze({
-      definitions,
-      byCode: freezeObjectDeep(byCode),
-      codesByName: freezeObjectDeep(codesByName),
-      familyByCode: freezeObjectDeep(familyByCode)
-    });
   }
 
-  function buildEnumRegistry(vocabulary) {
-    return Object.freeze({
-      version: 1,
-      terrain: Object.freeze(["UNKNOWN", ...vocabulary.terrainClasses]),
-      surface: Object.freeze(["UNKNOWN", ...vocabulary.surfaceMaterials]),
-      biome: Object.freeze(["UNKNOWN", ...vocabulary.biomeTypes]),
-      climate: Object.freeze(["UNKNOWN", ...vocabulary.climateBands]),
-      drainage: Object.freeze([
-        "UNKNOWN",
-        "NONE",
-        "CLOSED_BASIN",
-        "OPEN_FLOW",
-        "RIVER_ACTIVE",
-        "FLOODPLAIN",
-        "WETLAND_DRAIN"
-      ])
-    });
-  }
-
-  const STATE_DEFINITIONS = buildStateRegistryDefinitions();
-  const STATE_REGISTRY = buildStateRegistry(STATE_DEFINITIONS);
-
-  const RULE_FAMILY_REGISTRY = freezeObjectDeep({
-    WATER_RETENTION_SPREAD: Object.freeze({
-      id: "WATER_RETENTION_SPREAD",
-      precedence: 2,
-      description: "Water-family states persist in basins and move across slopes."
-    }),
-    FREEZE_MELT: Object.freeze({
-      id: "FREEZE_MELT",
-      precedence: 1,
-      description: "Water-family and cryosphere-family states convert under thermal thresholds."
-    }),
-    WETTING_DRYING: Object.freeze({
-      id: "WETTING_DRYING",
-      precedence: 3,
-      description: "Substrate-family states shift between dry, moist, and saturated regimes."
-    })
-  });
-
-  const RULE_PRECEDENCE_REGISTRY = Object.freeze([
-    "FREEZE_MELT",
-    "WATER_RETENTION_SPREAD",
-    "WETTING_DRYING"
-  ]);
-
-  const SIMULATION_TICK_CONTRACT = freezeObjectDeep({
-    neighborhoodMode: "SURFACE_RING_8",
-    doubleBufferRequired: true,
-    simulationTickHz: 6,
-    renderDecoupledFromSimulation: true,
-    stateChannels: Object.freeze([
-      "stateCode",
-      "stateAge"
-    ]),
-    firstRuleFamilies: Object.freeze([
-      "WATER_RETENTION_SPREAD",
-      "FREEZE_MELT",
-      "WETTING_DRYING"
-    ])
-  });
-
-  const STATE_CHANNEL_CONTRACT = freezeObjectDeep({
-    required: Object.freeze([
-      "stateCode",
-      "stateAge"
-    ]),
-    optional: Object.freeze([
-      "stateEnergy",
-      "stateFlags",
-      "stateAux",
-      "transitionFamily",
-      "transitionAdmissible"
-    ])
-  });
-
-  const CONSTANTS = Object.freeze({
-    structuralLatticeWidth: 16,
-    structuralLatticeHeight: 16,
-    structuralCoordinateCount: 16,
-    executionCoordinateCount: 16,
-
-    planetSampleLatticeWidth: 256,
-    planetSampleLatticeHeight: 256,
-    planetSampleTotal: 65536,
-
-    localGridRows: 4,
-    localGridCols: 4,
-    localGridCells: 16,
-
-    initialYaw: -0.18,
-    initialPitch: -0.34,
-    minPitch: -1.15,
-    maxPitch: 1.15,
-    inertiaDecay: 0.94,
-    dragSensitivity: 0.0065,
-
-    worldRadiusFactor: 0.34,
-    atmosphereThicknessFactor: 0.08,
-
-    seaLevelNormalized: 0.0,
-    landTarget: 0.29,
-    waterTarget: 0.71,
-    ratioTolerance: 0.005,
-
-    contourSeedA: 1109,
-    contourSeedB: 2713,
-    contourSeedC: 4079,
-    contourAmplitude: 0.07,
-    contourSigma: 0.06,
-    macroThreshold: 0.16,
-    finalLandThresholdDefault: 0.18,
-    shorelineBandHalfWidth: 0.018,
-
-    equatorialMaxAbsLat: 15,
-    tropicalMaxAbsLat: 30,
-    temperateMaxAbsLat: 55,
-    subpolarMaxAbsLat: 70,
-    polarMaxAbsLat: 90,
-
-    thermalBaseline: 0.64,
-    axialTiltDegrees: 23.5,
-    thermalPolarCoolingStrength: 0.55,
-    thermalWildernessDecayStrength: 0.65,
-
-    magneticBaseline: 0.22,
-    gravityConstant: 9.81,
-
-    hydrologyRunoffStrength: 0.52,
-    hydrologyRiverThreshold: 0.48,
-    hydrologyLakeThreshold: 0.50,
-
-    topologyMountainThreshold: 0.38,
-    topologyBasinThreshold: 0.26,
-    topologyCanyonThreshold: 0.32,
-    topologyCaveThreshold: 0.50,
-
-    sedimentDepositionThreshold: 0.48,
-    sedimentErosionScalar: 0.12,
-
-    dtMsThreshold: 16.6,
-    targetFps: 60
-  });
-
-  const STRUCTURAL_COORDINATES = Object.freeze(
-    Array.from({ length: CONSTANTS.structuralCoordinateCount }, (_, i) => `S${i}`)
-  );
-
-  const EXECUTION_COORDINATES = Object.freeze(
-    Array.from({ length: CONSTANTS.executionCoordinateCount }, (_, i) => `E${i}`)
-  );
-
-  const LOCAL_GRID = Object.freeze({
-    rows: Object.freeze([0, 1, 2, 3]),
-    cols: Object.freeze([0, 1, 2, 3]),
-    cellIds: Object.freeze([
-      "R0C0", "R0C1", "R0C2", "R0C3",
-      "R1C0", "R1C1", "R1C2", "R1C3",
-      "R2C0", "R2C1", "R2C2", "R2C3",
-      "R3C0", "R3C1", "R3C2", "R3C3"
-    ])
-  });
-
-  const CARDINALS = Object.freeze({
-    north: Object.freeze({ id: "north", role: "structure" }),
-    south: Object.freeze({ id: "south", role: "environment" }),
-    east: Object.freeze({ id: "east", role: "execution" }),
-    west: Object.freeze({ id: "west", role: "representation" })
-  });
-
-  const RECURSION_LAW = Object.freeze({
-    pattern: "1→4→1",
-    description: "Core differentiates into four axes and recombines into one lawful system."
-  });
-
-  const DEPTH_REGISTRY = Object.freeze([
-    Object.freeze({ id: "cosmic", index: 0, label: "Cosmic", zoneBearing: false }),
-    Object.freeze({ id: "galaxy", index: 1, label: "Galaxy", zoneBearing: false }),
-    Object.freeze({ id: "solar", index: 2, label: "Solar", zoneBearing: false }),
-    Object.freeze({ id: "planet", index: 3, label: "Planet", zoneBearing: false }),
-    Object.freeze({ id: "surface", index: 4, label: "Surface", zoneBearing: true }),
-    Object.freeze({ id: "harbor", index: 5, label: "Harbor", zoneBearing: false }),
-    Object.freeze({ id: "gratitude", index: 6, label: "Gratitude", zoneBearing: false }),
-    Object.freeze({ id: "generosity", index: 7, label: "Generosity", zoneBearing: false })
-  ]);
-
-  const DEPTH_ORDER = Object.freeze(DEPTH_REGISTRY.map((item) => item.id));
-
-  const TERRAIN_CLASSES = Object.freeze([
-    "WATER",
-    "SHELF",
-    "SHORELINE",
-    "BEACH",
-    "LOWLAND",
-    "FOOTHILL",
-    "RIDGE",
-    "PLATEAU",
-    "MOUNTAIN",
-    "SUMMIT",
-    "BASIN",
-    "CANYON",
-    "POLAR_ICE",
-    "GLACIAL_HIGHLAND"
-  ]);
-
-  const SURFACE_MATERIALS = Object.freeze([
-    "NONE",
-    "BEDROCK",
-    "GRAVEL",
-    "SAND",
-    "SILT",
-    "CLAY",
-    "SOIL",
-    "ICE",
-    "SNOW"
-  ]);
-
-  const BIOME_TYPES = Object.freeze([
-    "NONE",
-    "TROPICAL_RAINFOREST",
-    "TROPICAL_GRASSLAND",
-    "TEMPERATE_FOREST",
-    "TEMPERATE_GRASSLAND",
-    "DESERT",
-    "TUNDRA",
-    "WETLAND",
-    "BOREAL_FOREST",
-    "GLACIER"
-  ]);
-
-  const CLIMATE_BANDS = Object.freeze([
-    "EQUATORIAL",
-    "TROPICAL",
-    "TEMPERATE",
-    "SUBPOLAR",
-    "POLAR"
-  ]);
-
-  const ENUM_REGISTRY = buildEnumRegistry(Object.freeze({
-    terrainClasses: TERRAIN_CLASSES,
-    surfaceMaterials: SURFACE_MATERIALS,
-    biomeTypes: BIOME_TYPES,
-    climateBands: CLIMATE_BANDS
-  }));
-
-  const ENVIRONMENT_FAMILIES = Object.freeze({
-    macroWorld: Object.freeze([
-      "landMask",
-      "waterMask",
-      "macroLandScore",
-      "finalLandScore",
-      "continentMass",
-      "macroRegion",
-      "subRegion",
-      "harborBridgeSupport",
-      "oceanCarveTotal"
-    ]),
-    summitBasin: Object.freeze([
-      "strongestSummitId",
-      "strongestSummitScore",
-      "strongestBasinId",
-      "strongestBasinScore"
-    ]),
-    lithosphere: Object.freeze([
-      "materialType",
-      "diamondDensity",
-      "opalDensity",
-      "graniteDensity",
-      "marbleDensity",
-      "metalDensity",
-      "baseElevation"
-    ]),
-    hydrology: Object.freeze([
-      "waterDepth",
-      "seaLevel",
-      "rainfall",
-      "runoff",
-      "basinAccumulation",
-      "drainage",
-      "riverCandidate",
-      "lakeCandidate",
-      "distanceToWater",
-      "distanceToLand"
-    ]),
-    thermodynamic: Object.freeze([
-      "temperature",
-      "thermalGradient",
-      "freezePotential",
-      "meltPotential",
-      "evaporationPressure",
-      "climateBandField"
-    ]),
-    sediment: Object.freeze([
-      "sedimentType",
-      "sedimentLoad",
-      "transportPotential",
-      "depositionPotential",
-      "shorelineBand",
-      "beachCandidate"
-    ]),
-    magnetic: Object.freeze([
-      "magneticIntensity",
-      "shieldingGradient",
-      "auroralPotential",
-      "navigationBias",
-      "navigationStability",
-      "gravityConstraint"
-    ]),
-    topologyDerived: Object.freeze([
-      "elevation",
-      "oceanDepthField",
-      "shoreline",
-      "terrainClass",
-      "slope",
-      "curvature",
-      "ridgeStrength",
-      "basinStrength",
-      "divideStrength",
-      "plateauStrength",
-      "canyonStrength",
-      "cavePotential"
-    ]),
-    surfaceBiome: Object.freeze([
-      "surfaceMaterial",
-      "biomeType"
-    ]),
-    stateChannels: Object.freeze([
-      "stateCode",
-      "stateAge"
-    ])
-  });
-
-  const FILE_HOME_REGISTRY = Object.freeze({
-    "world/world_kernel.js": Object.freeze([
-      "cardinal_stack",
-      "lattice_geometry",
-      "canonical_constants",
-      "environment_family_registry",
-      "terrain_vocabulary",
-      "surface_material_vocabulary",
-      "biome_vocabulary",
-      "climate_band_vocabulary",
-      "state_channel_contract",
-      "state_registry",
-      "rule_family_registry",
-      "rule_precedence_registry",
-      "simulation_tick_contract",
-      "depth_registry",
-      "planet_field_contract",
-      "planet_sample_contract",
-      "canon_verification",
-      "file_ownership_registry",
-      "dependency_registry"
-    ]),
-    "world/planet_engine.js": Object.freeze([
-      "planet_field_generation",
-      "macro_world_realization",
-      "summit_basin_realization",
-      "surface_biome_realization",
-      "initial_state_seeding_handoff",
-      "field_summary",
-      "field_completeness"
-    ]),
-    "world/rule_engine.js": Object.freeze([
-      "state_seeding_law",
-      "state_buffer_contract",
-      "neighborhood_read_law",
-      "transition_family_execution",
-      "state_step_execution",
-      "transition_summary"
-    ]),
-    "world/render.js": Object.freeze([
-      "space_expression",
-      "atmosphere_expression",
-      "surface_expression",
-      "ocean_expression",
-      "draw_order",
-      "render_audit"
-    ]),
-    "world/control.js": Object.freeze([
-      "input_handling",
-      "projection_state",
-      "selection_state",
-      "orientation_state",
-      "inverse_projection"
-    ]),
-    "assets/instruments.js": Object.freeze([
-      "runtime_panels",
-      "field_panels",
-      "verification_panels",
-      "failure_panels",
-      "state_panels_later"
-    ]),
-    "assets/ui.css": Object.freeze([
-      "shell_layout",
-      "panel_layout",
-      "responsive_layout"
-    ]),
-    "index.html": Object.freeze([
-      "document_shell",
-      "mount_points",
-      "boot_entry",
-      "runtime_orchestration",
-      "frame_scheduling",
-      "simulation_cadence",
-      "error_capture"
-    ])
-  });
-
-  const DEPENDENCY_REGISTRY = Object.freeze([
-    "world/world_kernel.js",
-    "world/planet_engine.js",
-    "world/rule_engine.js",
-    "world/render.js",
-    "world/control.js",
-    "assets/instruments.js",
-    "assets/ui.css",
-    "index.html"
-  ]);
-
-  const OWNERSHIP_REGISTRY = Object.freeze(
-    Object.fromEntries(
-      Object.entries(FILE_HOME_REGISTRY).flatMap(([filePath, constructs]) =>
-        constructs.map((construct) => [construct, filePath])
-      )
-    )
-  );
-
-  const DUPLICATE_TRUTH_REGISTRY = Object.freeze([
-    "cardinal_stack",
-    "lattice_geometry",
-    "canonical_constants",
-    "environment_family_registry",
-    "terrain_vocabulary",
-    "surface_material_vocabulary",
-    "biome_vocabulary",
-    "climate_band_vocabulary",
-    "state_channel_contract",
-    "state_registry",
-    "rule_family_registry",
-    "rule_precedence_registry",
-    "simulation_tick_contract",
-    "planet_field_contract",
-    "planet_sample_contract",
-    "canon_verification",
-    "file_ownership_registry",
-    "dependency_registry"
-  ]);
-
-  const PLANET_FIELD_PULSE_ORDER = Object.freeze([
-    "base_sample_grid",
-    "macro_continent_field",
-    "land_water_classification",
-    "continent_labels",
-    "summit_realization",
-    "basin_realization",
-    "ocean_depth_realization",
-    "climate_bands",
-    "topology_fields",
-    "thermodynamics",
-    "hydrology",
-    "magnetics",
-    "materials",
-    "sediment",
-    "surface_biome_threshold_bands",
-    "surface_biome_precedence_tiebreak",
-    "surface_biome_sampling_unit_assignment",
-    "final_terrain_class",
-    "initial_state_seeding_handoff",
-    "summary_completeness"
-  ]);
-
-  const CANONICAL_SAMPLE_CONTRACT = Object.freeze([
-    "x",
-    "y",
-    "latDeg",
-    "lonDeg",
-    "visible",
-
-    "parentAddress",
-    "localAddress",
-    "seedSignature",
-    "nestedLatticeDepth",
-
-    "landMask",
-    "waterMask",
-    "macroLandScore",
-    "finalLandScore",
-
-    "baseElevation",
-    "elevation",
-    "seaLevel",
-    "waterDepth",
-    "oceanDepthField",
-    "terrainClass",
-    "shoreline",
-    "shorelineBand",
-    "beachCandidate",
-    "continentMass",
-    "macroRegion",
-    "subRegion",
-
-    "strongestSummitId",
-    "strongestSummitScore",
-    "strongestBasinId",
-    "strongestBasinScore",
-
-    "slope",
-    "curvature",
-    "ridgeStrength",
-    "basinStrength",
-    "divideStrength",
-    "plateauStrength",
-    "canyonStrength",
-    "cavePotential",
-
-    "temperature",
-    "thermalGradient",
-    "freezePotential",
-    "meltPotential",
-    "evaporationPressure",
-    "climateBandField",
-
-    "rainfall",
-    "runoff",
-    "basinAccumulation",
-    "drainage",
-    "riverCandidate",
-    "lakeCandidate",
-    "distanceToWater",
-    "distanceToLand",
-
-    "magneticIntensity",
-    "shieldingGradient",
-    "auroralPotential",
-    "navigationBias",
-    "navigationStability",
-    "gravityConstraint",
-
-    "materialType",
-    "diamondDensity",
-    "opalDensity",
-    "graniteDensity",
-    "marbleDensity",
-    "metalDensity",
-
-    "sedimentType",
-    "sedimentLoad",
-    "transportPotential",
-    "depositionPotential",
-
-    "surfaceMaterial",
-    "biomeType",
-
-    "stateCode",
-    "stateAge",
-
-    "eventFlags"
-  ]);
-
-  const PLANET_FIELD_CONTRACT = Object.freeze({
-    width: CONSTANTS.planetSampleLatticeWidth,
-    height: CONSTANTS.planetSampleLatticeHeight,
-    total: CONSTANTS.planetSampleTotal,
-    order: PLANET_FIELD_PULSE_ORDER,
-    pulseOrder: PLANET_FIELD_PULSE_ORDER,
-    sampleContract: CANONICAL_SAMPLE_CONTRACT,
-    summaryRequired: true,
-    completenessRequired: true
-  });
-
-  const NAMING = Object.freeze({
-    kernelLabel: "KERNEL_COG",
-    baselineLabel: "compressed_256_world_v4",
-    planetFieldLabel: "planetField",
-    sampleLabel: "planetSample",
-    stateSampleLabel: "stateSample",
-    structuralLatticeLabel: "structuralLattice16",
-    planetSampleLatticeLabel: "planetSampleLattice256"
-  });
-
-  const SCOPE = Object.freeze({
-    includeEvents: true,
-    includeVariants: true,
-    includeUI: true,
-    activeBranch: "compressed_world_v4"
-  });
-
-  const FEATURE_FLAGS = Object.freeze({
-    enablePlanetField: true,
-    enableVariants: true,
-    enableDiagnostics: true,
-    enableVerification: true,
-    enableRuleEngine: true,
-    nestedLatticeEnabled: false
-  });
-
-  const FUTURE_SCALING = Object.freeze({
-    universeSeed: null,
-    universalAddress: null,
-    nestedLatticeEnabled: false,
-    activeFieldState: "active",
-    passiveFieldState: "passive"
-  });
-
-  function normalizeArray(value) {
-    return Array.isArray(value) ? value.map((item) => String(item)) : [];
-  }
-
-  function normalizeBoolean(value, fallback = false) {
-    return typeof value === "boolean" ? value : fallback;
-  }
-
-  function normalizeString(value, fallback = "") {
-    return typeof value === "string" && value.trim() ? value.trim() : fallback;
-  }
-
-  function normalizeObject(value) {
-    return value && typeof value === "object" && !Array.isArray(value) ? value : {};
-  }
-
-  function buildExpectedCanonStructure() {
-    return Object.freeze({
-      fileHomes: FILE_HOME_REGISTRY,
-      dependency: DEPENDENCY_REGISTRY,
-      ownership: OWNERSHIP_REGISTRY,
-      duplicateTruth: DUPLICATE_TRUTH_REGISTRY,
-      pulseOrder: PLANET_FIELD_PULSE_ORDER,
-      sampleContract: CANONICAL_SAMPLE_CONTRACT,
-      scope: SCOPE
-    });
-  }
-
-  function compareFileHomes(expected, received) {
-    const expectedEntries = Object.entries(expected);
-    if (expectedEntries.length === 0) return false;
-
-    return expectedEntries.every(([filePath, constructs]) => {
-      const got = received[filePath];
-      return (
-        Array.isArray(got) &&
-        got.length === constructs.length &&
-        constructs.every((construct, index) => got[index] === construct)
-      );
-    });
-  }
-
-  function compareDependency(expected, received) {
-    return (
-      Array.isArray(received) &&
-      received.length === expected.length &&
-      expected.every((item, index) => received[index] === item)
-    );
-  }
-
-  function compareOwnership(expected, received) {
-    const expectedEntries = Object.entries(expected);
-    if (expectedEntries.length === 0) return false;
-    return expectedEntries.every(([construct, filePath]) => received[construct] === filePath);
-  }
-
-  function compareDuplicateTruth(expected, received) {
-    if (!Array.isArray(received) || received.length !== expected.length) return false;
-    const seen = new Set(received);
-    return seen.size === expected.length && expected.every((item) => seen.has(item));
-  }
-
-  function comparePulseOrder(expected, received) {
-    return (
-      Array.isArray(received) &&
-      received.length === expected.length &&
-      expected.every((item, index) => received[index] === item)
-    );
-  }
-
-  function compareSampleContract(expected, received) {
-    return (
-      Array.isArray(received) &&
-      received.length === expected.length &&
-      expected.every((item, index) => received[index] === item)
-    );
-  }
-
-  function compareScope(expected, received) {
-    return (
-      normalizeBoolean(received.includeEvents, !expected.includeEvents) === expected.includeEvents &&
-      normalizeBoolean(received.includeVariants, !expected.includeVariants) === expected.includeVariants &&
-      normalizeBoolean(received.includeUI, !expected.includeUI) === expected.includeUI &&
-      normalizeString(received.activeBranch) === expected.activeBranch
-    );
-  }
-
-  function verifyCanonicalStructure(input = {}) {
-    const received = normalizeObject(input);
-    const expected = buildExpectedCanonStructure();
-
-    const file_home_pass = compareFileHomes(expected.fileHomes, normalizeObject(received.fileHomes));
-    const dependency_pass = compareDependency(expected.dependency, normalizeArray(received.dependency ?? received.chronology));
-    const ownership_pass = compareOwnership(expected.ownership, normalizeObject(received.ownership));
-    const duplicate_truth_pass = compareDuplicateTruth(expected.duplicateTruth, normalizeArray(received.duplicateTruth));
-    const pulse_order_pass = comparePulseOrder(expected.pulseOrder, normalizeArray(received.pulseOrder ?? received.fieldOrder));
-    const sample_contract_pass = compareSampleContract(expected.sampleContract, normalizeArray(received.sampleContract));
-    const scope_pass = compareScope(expected.scope, normalizeObject(received.scope));
-
-    const reasons = [];
-    if (!file_home_pass) reasons.push("file_home_mismatch");
-    if (!dependency_pass) reasons.push("dependency_registry_mismatch");
-    if (!ownership_pass) reasons.push("ownership_mismatch");
-    if (!duplicate_truth_pass) reasons.push("duplicate_truth_mismatch");
-    if (!pulse_order_pass) reasons.push("pulse_order_mismatch");
-    if (!sample_contract_pass) reasons.push("sample_contract_mismatch");
-    if (!scope_pass) reasons.push("scope_mismatch");
-
-    return Object.freeze({
-      pass:
-        file_home_pass &&
-        dependency_pass &&
-        ownership_pass &&
-        duplicate_truth_pass &&
-        pulse_order_pass &&
-        sample_contract_pass &&
-        scope_pass,
-      file_home_pass,
-      dependency_pass,
-      chronology_pass: dependency_pass,
-      ownership_pass,
-      duplicate_truth_pass,
-      pulse_order_pass,
-      field_order_pass: pulse_order_pass,
-      sample_contract_pass,
-      scope_pass,
-      reasons: Object.freeze(reasons)
-    });
+  return Object.freeze(summary);
+}
+
+export function generatePlanetField() {
+  const samples = [];
+  const { latSteps, lonSteps } = WORLD_KERNEL.constants;
+
+  for (let y = 0; y < latSteps; y += 1) {
+    const v = y / (latSteps - 1);
+    const latDeg = lerp(82, -82, v);
+    const row = [];
+
+    for (let x = 0; x < lonSteps; x += 1) {
+      const u = x / lonSteps;
+      const lonDeg = lerp(-180, 180, u);
+      row.push(buildSample(latDeg, lonDeg));
+    }
+
+    samples.push(Object.freeze(row));
   }
 
   return Object.freeze({
-    version: VERSION,
-    label: NAMING.kernelLabel,
-    cardinals: CARDINALS,
-    recursionLaw: RECURSION_LAW,
-
-    constants: CONSTANTS,
-
-    lattices: Object.freeze({
-      structural: Object.freeze({
-        width: CONSTANTS.structuralLatticeWidth,
-        height: CONSTANTS.structuralLatticeHeight,
-        structuralCoordinates: STRUCTURAL_COORDINATES,
-        executionCoordinates: EXECUTION_COORDINATES
-      }),
-      planetSample: Object.freeze({
-        width: CONSTANTS.planetSampleLatticeWidth,
-        height: CONSTANTS.planetSampleLatticeHeight,
-        total: CONSTANTS.planetSampleTotal
-      })
-    }),
-
-    localGrid: LOCAL_GRID,
-    depthRegistry: DEPTH_REGISTRY,
-    depthOrder: DEPTH_ORDER,
-
-    vocabulary: Object.freeze({
-      terrainClasses: TERRAIN_CLASSES,
-      surfaceMaterials: SURFACE_MATERIALS,
-      biomeTypes: BIOME_TYPES,
-      climateBands: CLIMATE_BANDS
-    }),
-
-    enums: ENUM_REGISTRY,
-
-    environment: Object.freeze({
-      families: ENVIRONMENT_FAMILIES
-    }),
-
-    state: Object.freeze({
-      channelContract: STATE_CHANNEL_CONTRACT,
-      registry: STATE_REGISTRY
-    }),
-
-    ruleEngine: Object.freeze({
-      families: RULE_FAMILY_REGISTRY,
-      precedence: RULE_PRECEDENCE_REGISTRY,
-      tickContract: SIMULATION_TICK_CONTRACT
-    }),
-
-    naming: NAMING,
-    scope: SCOPE,
-    flags: FEATURE_FLAGS,
-    futureScaling: FUTURE_SCALING,
-
-    planetField: PLANET_FIELD_CONTRACT,
-
-    canon: Object.freeze({
-      fileHomeRegistry: FILE_HOME_REGISTRY,
-      dependencyRegistry: DEPENDENCY_REGISTRY,
-      chronologyRegistry: DEPENDENCY_REGISTRY,
-      ownershipRegistry: OWNERSHIP_REGISTRY,
-      duplicateTruthRegistry: DUPLICATE_TRUTH_REGISTRY
-    }),
-
-    verification: Object.freeze({
-      verifyCanonicalStructure
-    })
+    samples: Object.freeze(samples),
+    summary: buildSummary(samples)
   });
-})());
-
-export function getPlanetFieldContract() {
-  return WORLD_KERNEL.planetField;
-}
-
-export function getCanonicalSampleContract() {
-  return WORLD_KERNEL.planetField.sampleContract;
-}
-
-export function getStateRegistry() {
-  return WORLD_KERNEL.state.registry;
-}
-
-export function getRuleFamilyRegistry() {
-  return WORLD_KERNEL.ruleEngine.families;
-}
-
-export function getSimulationTickContract() {
-  return WORLD_KERNEL.ruleEngine.tickContract;
-}
-
-export function getEnumRegistry() {
-  return WORLD_KERNEL.enums;
-}
-
-export function getEnumRegistryVersion() {
-  return WORLD_KERNEL.enums.version;
-}
-
-export function requireStateCode(name) {
-  const code = WORLD_KERNEL.state.registry.codesByName[name];
-  if (!Number.isInteger(code)) {
-    throw new Error(`WORLD_KERNEL_STATE_LOOKUP_MISSING:${String(name)}`);
-  }
-  return code;
-}
-
-export function getStateEntry(code) {
-  const entry = WORLD_KERNEL.state.registry.byCode[code];
-  if (!entry) {
-    throw new Error(`WORLD_KERNEL_INVALID_STATE_CODE:${String(code)}`);
-  }
-  return entry;
-}
-
-export function isValidStateCode(code) {
-  return !!WORLD_KERNEL.state.registry.byCode[code];
-}
-
-export function verifyCanonicalStructure(input = {}) {
-  return WORLD_KERNEL.verification.verifyCanonicalStructure(input);
 }

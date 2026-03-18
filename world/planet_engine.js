@@ -34,6 +34,10 @@ function degToRad(deg) {
   return (deg * Math.PI) / 180;
 }
 
+function radToDeg(rad) {
+  return (rad * 180) / Math.PI;
+}
+
 function buildCoordinateMaps(width, height) {
   const latStep = 180 / Math.max(1, height - 1);
   const lonStep = 360 / Math.max(1, width);
@@ -60,6 +64,10 @@ function sampleSignedNoise(seed, latDeg, lonDeg, scaleLat, scaleLon) {
   return (n * 2) - 1;
 }
 
+function sampleUnsignedNoise(seed, latDeg, lonDeg, scaleLat, scaleLon) {
+  return hashNoise(seed, latDeg / scaleLat, lonDeg / scaleLon, 0);
+}
+
 function getKernelContract() {
   const kernel = normalizeObject(WORLD_KERNEL);
   const planetField = normalizeObject(kernel.planetField);
@@ -82,17 +90,17 @@ function buildAuthoredConstants(contract) {
     totalSamples: contract.total,
 
     seaLevel: toNumber(kc.seaLevelNormalized, 0),
-    landTarget: toNumber(kc.landTarget, 0.29),
-    waterTarget: toNumber(kc.waterTarget, 0.71),
-    ratioTolerance: toNumber(kc.ratioTolerance, 0.005),
+    landTarget: toNumber(kc.landTarget, 0.35),
+    waterTarget: toNumber(kc.waterTarget, 0.65),
+    ratioTolerance: toNumber(kc.ratioTolerance, 0.01),
 
     contourSeedA: toNumber(kc.contourSeedA, 1109),
     contourSeedB: toNumber(kc.contourSeedB, 2713),
     contourSeedC: toNumber(kc.contourSeedC, 4079),
-    contourAmplitude: toNumber(kc.contourAmplitude, 0.07),
+    contourAmplitude: toNumber(kc.contourAmplitude, 0.08),
     contourSigma: toNumber(kc.contourSigma, 0.06),
-    macroThreshold: toNumber(kc.macroThreshold, 0.16),
-    finalLandThresholdDefault: toNumber(kc.finalLandThresholdDefault, 0.18),
+    macroThreshold: toNumber(kc.macroThreshold, 0.11),
+    finalLandThresholdDefault: toNumber(kc.finalLandThresholdDefault, 0.14),
     shorelineBandHalfWidth: toNumber(kc.shorelineBandHalfWidth, 0.018),
 
     equatorialMaxAbsLat: toNumber(kc.equatorialMaxAbsLat, 15),
@@ -115,6 +123,8 @@ function buildAuthoredConstants(contract) {
     topologyBasinThreshold: toNumber(kc.topologyBasinThreshold, 0.26),
     topologyCanyonThreshold: toNumber(kc.topologyCanyonThreshold, 0.32),
     topologyCaveThreshold: toNumber(kc.topologyCaveThreshold, 0.50),
+
+    seasonGlobalPhase: toNumber(kc.seasonGlobalPhase, 0.18),
 
     oceanDepths: Object.freeze({
       shelf: -0.04,
@@ -174,268 +184,218 @@ function buildAuthoredConstants(contract) {
       GLACIER: "GLACIER"
     }),
 
-    anchors: Object.freeze([
-      Object.freeze({
-        id: "HARBOR_SUPERCONTINENT",
-        centerLatDeg: 8,
-        centerLonDeg: 0,
-        baseRadiusDeg: 58,
-        anisotropyX: 1.35,
-        anisotropyY: 0.92,
-        rotationDeg: -12,
-        dominanceWeight: 1.8
-      }),
-      Object.freeze({
-        id: "GRATITUDE_REGION",
-        centerLatDeg: 26,
-        centerLonDeg: 36,
-        baseRadiusDeg: 24,
-        anisotropyX: 1.05,
-        anisotropyY: 0.82,
-        rotationDeg: 18,
-        dominanceWeight: 1.05
-      }),
-      Object.freeze({
-        id: "GENEROSITY_REGION",
-        centerLatDeg: 24,
-        centerLonDeg: -34,
-        baseRadiusDeg: 24,
-        anisotropyX: 1.02,
-        anisotropyY: 0.86,
-        rotationDeg: -20,
-        dominanceWeight: 1.05
-      }),
-      Object.freeze({
-        id: "HUMILITY_BODY",
-        centerLatDeg: -18,
-        centerLonDeg: 104,
-        baseRadiusDeg: 27,
-        anisotropyX: 1.18,
-        anisotropyY: 0.88,
-        rotationDeg: -8,
-        dominanceWeight: 0.88
-      }),
-      Object.freeze({
-        id: "FORGIVENESS_BODY",
-        centerLatDeg: -22,
-        centerLonDeg: -110,
-        baseRadiusDeg: 29,
-        anisotropyX: 1.12,
-        anisotropyY: 0.90,
-        rotationDeg: 16,
-        dominanceWeight: 0.90
-      }),
-      Object.freeze({
-        id: "ACCOUNTABILITY_BODY",
-        centerLatDeg: 42,
-        centerLonDeg: 112,
-        baseRadiusDeg: 21,
-        anisotropyX: 0.98,
-        anisotropyY: 1.10,
-        rotationDeg: 28,
-        dominanceWeight: 0.76
-      }),
-      Object.freeze({
-        id: "PURITY_BODY",
-        centerLatDeg: 61,
-        centerLonDeg: -28,
-        baseRadiusDeg: 18,
-        anisotropyX: 0.84,
-        anisotropyY: 1.34,
-        rotationDeg: 6,
-        dominanceWeight: 0.72
-      })
-    ]),
-
-    harborBridge: Object.freeze({
-      harborToGratitudeWeight: 0.22,
-      harborToGenerosityWeight: 0.22,
-      harborToGratitudeCorridorWidthDeg: 11,
-      harborToGenerosityCorridorWidthDeg: 11,
-      falloffExponent: 1.65
+    seasonLabels: Object.freeze({
+      WINTER: "WINTER",
+      SPRING: "SPRING",
+      SUMMER: "SUMMER",
+      AUTUMN: "AUTUMN"
     }),
 
-    oceanCarves: Object.freeze([
+    anchors: Object.freeze([
       Object.freeze({
-        id: "WESTERN_DEEP_OCEAN",
-        centerLatDeg: -4,
-        centerLonDeg: -70,
-        radiusDeg: 34,
-        weight: 0.95
+        id: "HARBOR_CONTINENT",
+        centerLatDeg: 10,
+        centerLonDeg: -8,
+        baseRadiusDeg: 26,
+        anisotropyX: 1.22,
+        anisotropyY: 1.00,
+        rotationDeg: -12,
+        dominanceWeight: 1.05,
+        hemisphereBias: "N",
+        thermalBias: 0.04,
+        moistureBias: 0.08,
+        upliftBias: 0.14
       }),
       Object.freeze({
-        id: "EASTERN_WARM_OCEAN",
-        centerLatDeg: 2,
-        centerLonDeg: 76,
-        radiusDeg: 31,
-        weight: 0.88
+        id: "GRATITUDE_CONTINENT",
+        centerLatDeg: 26,
+        centerLonDeg: 78,
+        baseRadiusDeg: 21,
+        anisotropyX: 1.08,
+        anisotropyY: 0.92,
+        rotationDeg: 18,
+        dominanceWeight: 0.92,
+        hemisphereBias: "N",
+        thermalBias: 0.03,
+        moistureBias: 0.10,
+        upliftBias: 0.12
       }),
       Object.freeze({
-        id: "SOUTHERN_OPEN_OCEAN",
-        centerLatDeg: -42,
-        centerLonDeg: 10,
-        radiusDeg: 44,
-        weight: 1.0
+        id: "GENEROSITY_CONTINENT",
+        centerLatDeg: 22,
+        centerLonDeg: -84,
+        baseRadiusDeg: 20,
+        anisotropyX: 1.00,
+        anisotropyY: 0.90,
+        rotationDeg: -18,
+        dominanceWeight: 0.92,
+        hemisphereBias: "N",
+        thermalBias: 0.02,
+        moistureBias: 0.08,
+        upliftBias: 0.10
       }),
       Object.freeze({
-        id: "NORTH_POLAR_SEPARATION_SEA",
-        centerLatDeg: 72,
-        centerLonDeg: 98,
-        radiusDeg: 20,
-        weight: 0.72
+        id: "DEPENDABILITY_CONTINENT",
+        centerLatDeg: 50,
+        centerLonDeg: 32,
+        baseRadiusDeg: 18,
+        anisotropyX: 0.92,
+        anisotropyY: 1.22,
+        rotationDeg: 12,
+        dominanceWeight: 0.82,
+        hemisphereBias: "N",
+        thermalBias: -0.06,
+        moistureBias: 0.02,
+        upliftBias: 0.20
+      }),
+      Object.freeze({
+        id: "ACCOUNTABILITY_CONTINENT",
+        centerLatDeg: 42,
+        centerLonDeg: 140,
+        baseRadiusDeg: 17,
+        anisotropyX: 1.04,
+        anisotropyY: 1.10,
+        rotationDeg: 30,
+        dominanceWeight: 0.78,
+        hemisphereBias: "N",
+        thermalBias: -0.02,
+        moistureBias: -0.03,
+        upliftBias: 0.22
+      }),
+      Object.freeze({
+        id: "HUMILITY_CONTINENT",
+        centerLatDeg: -14,
+        centerLonDeg: 108,
+        baseRadiusDeg: 23,
+        anisotropyX: 1.12,
+        anisotropyY: 0.90,
+        rotationDeg: -10,
+        dominanceWeight: 0.90,
+        hemisphereBias: "S",
+        thermalBias: 0.05,
+        moistureBias: 0.00,
+        upliftBias: 0.16
+      }),
+      Object.freeze({
+        id: "FORGIVENESS_CONTINENT",
+        centerLatDeg: -20,
+        centerLonDeg: -132,
+        baseRadiusDeg: 22,
+        anisotropyX: 1.06,
+        anisotropyY: 0.92,
+        rotationDeg: 14,
+        dominanceWeight: 0.90,
+        hemisphereBias: "S",
+        thermalBias: 0.03,
+        moistureBias: 0.06,
+        upliftBias: 0.15
+      }),
+      Object.freeze({
+        id: "SELF_CONTROL_CONTINENT",
+        centerLatDeg: -46,
+        centerLonDeg: 18,
+        baseRadiusDeg: 20,
+        anisotropyX: 1.18,
+        anisotropyY: 0.84,
+        rotationDeg: 8,
+        dominanceWeight: 0.86,
+        hemisphereBias: "S",
+        thermalBias: -0.08,
+        moistureBias: -0.06,
+        upliftBias: 0.18
+      }),
+      Object.freeze({
+        id: "PURITY_CONTINENT",
+        centerLatDeg: 70,
+        centerLonDeg: -34,
+        baseRadiusDeg: 16,
+        anisotropyX: 0.88,
+        anisotropyY: 1.32,
+        rotationDeg: 2,
+        dominanceWeight: 0.74,
+        hemisphereBias: "N",
+        thermalBias: -0.14,
+        moistureBias: -0.02,
+        upliftBias: 0.26
       })
     ]),
-    oceanCarveExponent: 2.0,
-    continentInfluenceExponent: 1.85,
+
+    continentInfluenceExponent: 1.82,
+
+    oceanCarves: Object.freeze([
+      Object.freeze({ id: "PACIFIC_WEST_SPLIT", centerLatDeg: 12, centerLonDeg: -44, radiusDeg: 18, weight: 0.95 }),
+      Object.freeze({ id: "PACIFIC_EAST_SPLIT", centerLatDeg: 18, centerLonDeg: 36, radiusDeg: 18, weight: 0.90 }),
+      Object.freeze({ id: "NORTH_INTERIOR_SEA", centerLatDeg: 38, centerLonDeg: 106, radiusDeg: 15, weight: 0.86 }),
+      Object.freeze({ id: "MID_ATLANTIC_GAP", centerLatDeg: 2, centerLonDeg: -108, radiusDeg: 17, weight: 0.88 }),
+      Object.freeze({ id: "SOUTHERN_OCEAN_CORE", centerLatDeg: -38, centerLonDeg: -42, radiusDeg: 26, weight: 1.00 }),
+      Object.freeze({ id: "SOUTHERN_INDIAN_GAP", centerLatDeg: -32, centerLonDeg: 84, radiusDeg: 19, weight: 0.92 }),
+      Object.freeze({ id: "POLAR_SEA_WEST", centerLatDeg: 74, centerLonDeg: 36, radiusDeg: 12, weight: 0.78 }),
+      Object.freeze({ id: "POLAR_SEA_EAST", centerLatDeg: 66, centerLonDeg: -98, radiusDeg: 12, weight: 0.78 }),
+      Object.freeze({ id: "EQUATORIAL_OPEN_WATER", centerLatDeg: -2, centerLonDeg: 156, radiusDeg: 16, weight: 0.86 })
+    ]),
+    oceanCarveExponent: 1.95,
+
+    separationCorridors: Object.freeze([
+      Object.freeze({
+        id: "HARBOR_TO_GRATITUDE_SPLIT",
+        a: "HARBOR_CONTINENT",
+        b: "GRATITUDE_CONTINENT",
+        widthDeg: 8,
+        weight: 0.30
+      }),
+      Object.freeze({
+        id: "HARBOR_TO_GENEROSITY_SPLIT",
+        a: "HARBOR_CONTINENT",
+        b: "GENEROSITY_CONTINENT",
+        widthDeg: 8,
+        weight: 0.32
+      }),
+      Object.freeze({
+        id: "GRATITUDE_TO_ACCOUNTABILITY_SPLIT",
+        a: "GRATITUDE_CONTINENT",
+        b: "ACCOUNTABILITY_CONTINENT",
+        widthDeg: 7,
+        weight: 0.26
+      }),
+      Object.freeze({
+        id: "HUMILITY_TO_SELF_CONTROL_SPLIT",
+        a: "HUMILITY_CONTINENT",
+        b: "SELF_CONTROL_CONTINENT",
+        widthDeg: 8,
+        weight: 0.30
+      }),
+      Object.freeze({
+        id: "FORGIVENESS_TO_SELF_CONTROL_SPLIT",
+        a: "FORGIVENESS_CONTINENT",
+        b: "SELF_CONTROL_CONTINENT",
+        widthDeg: 8,
+        weight: 0.28
+      })
+    ]),
+    separationFalloffExponent: 1.65,
 
     summits: Object.freeze([
-      Object.freeze({
-        id: "S1_HARBOR_BASIN_RIM",
-        parentRegion: "HARBOR_SUPERCONTINENT",
-        anchorLatDeg: 6,
-        anchorLonDeg: -8,
-        peakHeightNorm: 0.08,
-        influenceRadiusDeg: 10,
-        difficultyWeight: 0.20
-      }),
-      Object.freeze({
-        id: "S2_GRATITUDE_RIDGE",
-        parentRegion: "GRATITUDE_REGION",
-        anchorLatDeg: 22,
-        anchorLonDeg: 28,
-        peakHeightNorm: 0.12,
-        influenceRadiusDeg: 10,
-        difficultyWeight: 0.26
-      }),
-      Object.freeze({
-        id: "S3_GENEROSITY_PLATEAU",
-        parentRegion: "GENEROSITY_REGION",
-        anchorLatDeg: 22,
-        anchorLonDeg: -26,
-        peakHeightNorm: 0.16,
-        influenceRadiusDeg: 11,
-        difficultyWeight: 0.32
-      }),
-      Object.freeze({
-        id: "S4_HUMILITY_PASS",
-        parentRegion: "HUMILITY_BODY",
-        anchorLatDeg: -12,
-        anchorLonDeg: 96,
-        peakHeightNorm: 0.21,
-        influenceRadiusDeg: 12,
-        difficultyWeight: 0.40
-      }),
-      Object.freeze({
-        id: "S5_ACCOUNTABILITY_SPINE",
-        parentRegion: "ACCOUNTABILITY_BODY",
-        anchorLatDeg: 39,
-        anchorLonDeg: 106,
-        peakHeightNorm: 0.28,
-        influenceRadiusDeg: 13,
-        difficultyWeight: 0.50
-      }),
-      Object.freeze({
-        id: "S6_FORGIVENESS_WALL",
-        parentRegion: "FORGIVENESS_BODY",
-        anchorLatDeg: -18,
-        anchorLonDeg: -100,
-        peakHeightNorm: 0.36,
-        influenceRadiusDeg: 13,
-        difficultyWeight: 0.62
-      }),
-      Object.freeze({
-        id: "S7_PATIENCE_RANGE",
-        parentRegion: "HARBOR_SUPERCONTINENT",
-        anchorLatDeg: 15,
-        anchorLonDeg: 10,
-        peakHeightNorm: 0.46,
-        influenceRadiusDeg: 14,
-        difficultyWeight: 0.74
-      }),
-      Object.freeze({
-        id: "S8_SELF_CONTROL_PEAK",
-        parentRegion: "HARBOR_SUPERCONTINENT",
-        anchorLatDeg: 18,
-        anchorLonDeg: 0,
-        peakHeightNorm: 0.60,
-        influenceRadiusDeg: 14,
-        difficultyWeight: 0.86
-      }),
-      Object.freeze({
-        id: "S9_PURITY_APEX",
-        parentRegion: "PURITY_BODY",
-        anchorLatDeg: 64,
-        anchorLonDeg: -24,
-        peakHeightNorm: 0.78,
-        influenceRadiusDeg: 15,
-        difficultyWeight: 1.0
-      })
+      Object.freeze({ id: "S1_HARBOR_SUMMIT", parentRegion: "HARBOR_CONTINENT", anchorLatDeg: 14, anchorLonDeg: -2, peakHeightNorm: 0.16, influenceRadiusDeg: 10, difficultyWeight: 0.18 }),
+      Object.freeze({ id: "S2_GRATITUDE_SUMMIT", parentRegion: "GRATITUDE_CONTINENT", anchorLatDeg: 30, anchorLonDeg: 82, peakHeightNorm: 0.20, influenceRadiusDeg: 10, difficultyWeight: 0.26 }),
+      Object.freeze({ id: "S3_GENEROSITY_SUMMIT", parentRegion: "GENEROSITY_CONTINENT", anchorLatDeg: 26, anchorLonDeg: -80, peakHeightNorm: 0.20, influenceRadiusDeg: 10, difficultyWeight: 0.30 }),
+      Object.freeze({ id: "S4_DEPENDABILITY_SUMMIT", parentRegion: "DEPENDABILITY_CONTINENT", anchorLatDeg: 54, anchorLonDeg: 28, peakHeightNorm: 0.24, influenceRadiusDeg: 11, difficultyWeight: 0.40 }),
+      Object.freeze({ id: "S5_ACCOUNTABILITY_SUMMIT", parentRegion: "ACCOUNTABILITY_CONTINENT", anchorLatDeg: 48, anchorLonDeg: 146, peakHeightNorm: 0.28, influenceRadiusDeg: 12, difficultyWeight: 0.50 }),
+      Object.freeze({ id: "S6_HUMILITY_SUMMIT", parentRegion: "HUMILITY_CONTINENT", anchorLatDeg: -10, anchorLonDeg: 102, peakHeightNorm: 0.30, influenceRadiusDeg: 12, difficultyWeight: 0.60 }),
+      Object.freeze({ id: "S7_FORGIVENESS_SUMMIT", parentRegion: "FORGIVENESS_CONTINENT", anchorLatDeg: -16, anchorLonDeg: -124, peakHeightNorm: 0.34, influenceRadiusDeg: 13, difficultyWeight: 0.72 }),
+      Object.freeze({ id: "S8_SELF_CONTROL_SUMMIT", parentRegion: "SELF_CONTROL_CONTINENT", anchorLatDeg: -50, anchorLonDeg: 12, peakHeightNorm: 0.42, influenceRadiusDeg: 14, difficultyWeight: 0.86 }),
+      Object.freeze({ id: "S9_PURITY_APEX", parentRegion: "PURITY_CONTINENT", anchorLatDeg: 74, anchorLonDeg: -30, peakHeightNorm: 0.56, influenceRadiusDeg: 15, difficultyWeight: 1.0 })
     ]),
 
     basins: Object.freeze([
-      Object.freeze({
-        id: "B1_HARBOR_BASIN",
-        parentRegion: "HARBOR_SUPERCONTINENT",
-        centerLatDeg: 2,
-        centerLonDeg: 0,
-        basinDepthNorm: -0.08,
-        influenceRadiusDeg: 16,
-        recoveryPriority: 1
-      }),
-      Object.freeze({
-        id: "B2_GRATITUDE_BASIN",
-        parentRegion: "GRATITUDE_REGION",
-        centerLatDeg: 19,
-        centerLonDeg: 34,
-        basinDepthNorm: -0.07,
-        influenceRadiusDeg: 11,
-        recoveryPriority: 2
-      }),
-      Object.freeze({
-        id: "B3_GENEROSITY_BASIN",
-        parentRegion: "GENEROSITY_REGION",
-        centerLatDeg: 19,
-        centerLonDeg: -32,
-        basinDepthNorm: -0.07,
-        influenceRadiusDeg: 11,
-        recoveryPriority: 2
-      }),
-      Object.freeze({
-        id: "B4_HUMILITY_BASIN",
-        parentRegion: "HUMILITY_BODY",
-        centerLatDeg: -20,
-        centerLonDeg: 102,
-        basinDepthNorm: -0.09,
-        influenceRadiusDeg: 12,
-        recoveryPriority: 3
-      }),
-      Object.freeze({
-        id: "B5_FORGIVENESS_BASIN",
-        parentRegion: "FORGIVENESS_BODY",
-        centerLatDeg: -24,
-        centerLonDeg: -112,
-        basinDepthNorm: -0.10,
-        influenceRadiusDeg: 12,
-        recoveryPriority: 3
-      }),
-      Object.freeze({
-        id: "B6_ACCOUNTABILITY_BASIN",
-        parentRegion: "ACCOUNTABILITY_BODY",
-        centerLatDeg: 36,
-        centerLonDeg: 108,
-        basinDepthNorm: -0.08,
-        influenceRadiusDeg: 10,
-        recoveryPriority: 4
-      }),
-      Object.freeze({
-        id: "B7_PURITY_BASIN",
-        parentRegion: "PURITY_BODY",
-        centerLatDeg: 58,
-        centerLonDeg: -30,
-        basinDepthNorm: -0.06,
-        influenceRadiusDeg: 9,
-        recoveryPriority: 5
-      })
+      Object.freeze({ id: "B1_HARBOR_BASIN", parentRegion: "HARBOR_CONTINENT", centerLatDeg: 8, centerLonDeg: -10, basinDepthNorm: -0.07, influenceRadiusDeg: 12, recoveryPriority: 1 }),
+      Object.freeze({ id: "B2_GRATITUDE_BASIN", parentRegion: "GRATITUDE_CONTINENT", centerLatDeg: 22, centerLonDeg: 74, basinDepthNorm: -0.07, influenceRadiusDeg: 11, recoveryPriority: 2 }),
+      Object.freeze({ id: "B3_GENEROSITY_BASIN", parentRegion: "GENEROSITY_CONTINENT", centerLatDeg: 18, centerLonDeg: -88, basinDepthNorm: -0.07, influenceRadiusDeg: 11, recoveryPriority: 2 }),
+      Object.freeze({ id: "B4_DEPENDABILITY_BASIN", parentRegion: "DEPENDABILITY_CONTINENT", centerLatDeg: 46, centerLonDeg: 36, basinDepthNorm: -0.09, influenceRadiusDeg: 12, recoveryPriority: 3 }),
+      Object.freeze({ id: "B5_ACCOUNTABILITY_BASIN", parentRegion: "ACCOUNTABILITY_CONTINENT", centerLatDeg: 40, centerLonDeg: 136, basinDepthNorm: -0.08, influenceRadiusDeg: 10, recoveryPriority: 3 }),
+      Object.freeze({ id: "B6_HUMILITY_BASIN", parentRegion: "HUMILITY_CONTINENT", centerLatDeg: -18, centerLonDeg: 112, basinDepthNorm: -0.08, influenceRadiusDeg: 12, recoveryPriority: 4 }),
+      Object.freeze({ id: "B7_FORGIVENESS_BASIN", parentRegion: "FORGIVENESS_CONTINENT", centerLatDeg: -26, centerLonDeg: -138, basinDepthNorm: -0.09, influenceRadiusDeg: 12, recoveryPriority: 4 }),
+      Object.freeze({ id: "B8_SELF_CONTROL_BASIN", parentRegion: "SELF_CONTROL_CONTINENT", centerLatDeg: -52, centerLonDeg: 24, basinDepthNorm: -0.10, influenceRadiusDeg: 13, recoveryPriority: 5 }),
+      Object.freeze({ id: "B9_PURITY_BASIN", parentRegion: "PURITY_CONTINENT", centerLatDeg: 68, centerLonDeg: -40, basinDepthNorm: -0.06, influenceRadiusDeg: 9, recoveryPriority: 6 })
     ])
   });
 }
@@ -476,6 +436,15 @@ function radialInfluence(latDeg, lonDeg, node, exponent) {
   return node.weight * Math.max(0, 1 - Math.pow(d, exponent));
 }
 
+function radialFalloff(latDeg, lonDeg, anchorLatDeg, anchorLonDeg, radiusDeg, exponent = 1.75) {
+  const midLatRad = degToRad((latDeg + anchorLatDeg) * 0.5);
+  const dLon = normalizeLongitudeDelta(lonDeg - anchorLonDeg) * Math.cos(midLatRad);
+  const dLat = latDeg - anchorLatDeg;
+  const d = Math.sqrt((dLon * dLon) + (dLat * dLat)) / Math.max(1e-9, radiusDeg);
+  if (d >= 1) return 0;
+  return Math.max(0, 1 - Math.pow(d, exponent));
+}
+
 function corridorField(latDeg, lonDeg, a, b, corridorWidthDeg, exponent) {
   const midLatRad = degToRad((latDeg + a.centerLatDeg + b.centerLatDeg) / 3);
   const ax = normalizeLongitudeDelta(a.centerLonDeg) * Math.cos(midLatRad);
@@ -503,15 +472,6 @@ function corridorField(latDeg, lonDeg, a, b, corridorWidthDeg, exponent) {
   return Math.max(0, 1 - Math.pow(normalized, exponent));
 }
 
-function radialFalloff(latDeg, lonDeg, anchorLatDeg, anchorLonDeg, radiusDeg, exponent = 1.75) {
-  const midLatRad = degToRad((latDeg + anchorLatDeg) * 0.5);
-  const dLon = normalizeLongitudeDelta(lonDeg - anchorLonDeg) * Math.cos(midLatRad);
-  const dLat = latDeg - anchorLatDeg;
-  const d = Math.sqrt((dLon * dLon) + (dLat * dLat)) / Math.max(1e-9, radiusDeg);
-  if (d >= 1) return 0;
-  return Math.max(0, 1 - Math.pow(d, exponent));
-}
-
 function createBaseSample(x, y, latDeg, lonDeg) {
   return {
     x,
@@ -522,7 +482,7 @@ function createBaseSample(x, y, latDeg, lonDeg) {
 
     parentAddress: "ROOT",
     localAddress: `${x}:${y}`,
-    seedSignature: "AUTHORED_NINE_SUMMITS_WORLD_v4",
+    seedSignature: "AUTHORED_NINE_SUMMITS_WORLD_v5",
     nestedLatticeDepth: 1,
 
     landMask: 0,
@@ -598,6 +558,16 @@ function createBaseSample(x, y, latDeg, lonDeg) {
     stateCode: 0,
     stateAge: 0,
 
+    hemisphereSeason: "NONE",
+    seasonPhase: 0,
+    continentality: 0,
+    maritimeInfluence: 0,
+    altitudeCooling: 0,
+    rainShadowStrength: 0,
+    seasonalTemperature: 0,
+    seasonalMoisture: 0,
+    seasonalBiomePhase: "NONE",
+
     eventFlags: []
   };
 }
@@ -614,10 +584,6 @@ function stageBaseSampleGrid(constants) {
 }
 
 function stageMacroContinentField(grid, constants) {
-  const harbor = findAnchor(constants, "HARBOR_SUPERCONTINENT");
-  const gratitude = findAnchor(constants, "GRATITUDE_REGION");
-  const generosity = findAnchor(constants, "GENEROSITY_REGION");
-
   return grid.map((row) => row.map((sample) => {
     const anchorScores = Object.create(null);
     let sumInfluence = 0;
@@ -633,24 +599,6 @@ function stageMacroContinentField(grid, constants) {
       sumInfluence += score;
     }
 
-    const bridgeG = constants.harborBridge.harborToGratitudeWeight * corridorField(
-      sample.latDeg,
-      sample.lonDeg,
-      harbor,
-      gratitude,
-      constants.harborBridge.harborToGratitudeCorridorWidthDeg,
-      constants.harborBridge.falloffExponent
-    );
-
-    const bridgeN = constants.harborBridge.harborToGenerosityWeight * corridorField(
-      sample.latDeg,
-      sample.lonDeg,
-      harbor,
-      generosity,
-      constants.harborBridge.harborToGenerosityCorridorWidthDeg,
-      constants.harborBridge.falloffExponent
-    );
-
     let oceanCarveTotal = 0;
     for (const carve of constants.oceanCarves) {
       oceanCarveTotal += radialInfluence(
@@ -661,14 +609,28 @@ function stageMacroContinentField(grid, constants) {
       );
     }
 
-    const macroRaw = sumInfluence + bridgeG + bridgeN - oceanCarveTotal;
-    const macroLandScore = Math.max(0, macroRaw);
+    let corridorSeparation = 0;
+    for (const corridor of constants.separationCorridors) {
+      const a = findAnchor(constants, corridor.a);
+      const b = findAnchor(constants, corridor.b);
+      if (!a || !b) continue;
+      corridorSeparation += corridor.weight * corridorField(
+        sample.latDeg,
+        sample.lonDeg,
+        a,
+        b,
+        corridor.widthDeg,
+        constants.separationFalloffExponent
+      );
+    }
 
     const n1 = sampleSignedNoise(constants.contourSeedA, sample.latDeg, sample.lonDeg, 9.5, 13.5);
     const n2 = sampleSignedNoise(constants.contourSeedB, sample.latDeg, sample.lonDeg, 18, 23);
     const n3 = sampleSignedNoise(constants.contourSeedC, sample.latDeg, sample.lonDeg, 36, 44);
     const contourNoise = (0.55 * n1) + (0.30 * n2) + (0.15 * n3);
 
+    const macroRaw = sumInfluence - oceanCarveTotal - corridorSeparation;
+    const macroLandScore = Math.max(0, macroRaw);
     const coastSensitivity = Math.exp(-Math.abs(macroLandScore - constants.macroThreshold) / constants.contourSigma);
     const contourContribution = constants.contourAmplitude * coastSensitivity * contourNoise;
     const finalLandScore = macroLandScore + contourContribution;
@@ -676,8 +638,8 @@ function stageMacroContinentField(grid, constants) {
     return {
       ...sample,
       anchorScores,
-      harborBridgeSupport: bridgeG + bridgeN,
       oceanCarveTotal,
+      corridorSeparation,
       macroLandScore,
       finalLandScore
     };
@@ -740,16 +702,12 @@ function stageContinentLabels(grid, constants) {
       return a[0].localeCompare(b[0]);
     });
 
-    const bestRegion = entries[0]?.[0] ?? "HARBOR_SUPERCONTINENT";
-    const continentMass =
-      bestRegion === "GRATITUDE_REGION" || bestRegion === "GENEROSITY_REGION"
-        ? "HARBOR_SUPERCONTINENT"
-        : bestRegion;
+    const bestRegion = entries[0]?.[0] ?? "HARBOR_CONTINENT";
 
     return {
       ...sample,
-      continentMass,
-      macroRegion: continentMass,
+      continentMass: bestRegion,
+      macroRegion: bestRegion,
       subRegion: bestRegion
     };
   }));
@@ -780,7 +738,8 @@ function stageSummitRealization(grid, constants) {
       );
       if (influence <= 0) continue;
 
-      const contribution = summit.peakHeightNorm * influence;
+      const parentBoost = summit.parentRegion === sample.continentMass ? 1.16 : 0.22;
+      const contribution = summit.peakHeightNorm * influence * parentBoost;
       summitElevation += contribution;
 
       if (contribution > strongestSummitScore) {
@@ -789,13 +748,19 @@ function stageSummitRealization(grid, constants) {
       }
     }
 
-    const harborBodyBoost =
-      sample.continentMass === "HARBOR_SUPERCONTINENT"
-        ? 0.05 + (toNumber(sample.harborBridgeSupport, 0) * 0.12)
-        : 0;
+    const ownAnchor = findAnchor(constants, sample.continentMass);
+    const regionalPlate = ownAnchor ? ownAnchor.upliftBias : 0.10;
+    const continentalPlate =
+      0.03 +
+      regionalPlate * 0.45 +
+      sample.macroLandScore * 0.12 +
+      Math.max(0, sample.finalLandScore - constants.finalLandThresholdDefault) * 0.25;
 
-    const continentalPlate = 0.04 + (sample.macroLandScore * 0.12) + harborBodyBoost;
-    const baseElevation = clamp(continentalPlate + summitElevation, 0.01, 0.98);
+    const r1 = sampleSignedNoise(constants.contourSeedA + 901, sample.latDeg, sample.lonDeg, 6.5, 8.5);
+    const r2 = sampleSignedNoise(constants.contourSeedB + 1301, sample.latDeg, sample.lonDeg, 14, 17);
+    const regionalRelief = clamp((0.018 * r1) + (0.028 * r2), -0.03, 0.04);
+
+    const baseElevation = clamp(continentalPlate + summitElevation + regionalRelief, 0.01, 0.98);
 
     return {
       ...sample,
@@ -826,7 +791,8 @@ function stageBasinRealization(grid, constants) {
       );
       if (influence <= 0) continue;
 
-      const contribution = Math.abs(basin.basinDepthNorm) * influence;
+      const parentBoost = basin.parentRegion === sample.continentMass ? 1.12 : 0.20;
+      const contribution = Math.abs(basin.basinDepthNorm) * influence * parentBoost;
       basinPull += contribution;
 
       if (contribution > strongestBasinScore) {
@@ -857,11 +823,16 @@ function stageOceanDepthRealization(grid, constants) {
       };
     }
 
-    const oceanBase = clamp(toNumber(sample.oceanCarveTotal, 0), 0, 1.25);
+    const oceanBase = clamp(
+      toNumber(sample.oceanCarveTotal, 0) + toNumber(sample.corridorSeparation, 0) * 0.65,
+      0,
+      1.35
+    );
+
     let oceanDepth = constants.oceanDepths.shelf;
 
-    if (oceanBase > 0.95) oceanDepth = constants.oceanDepths.trench;
-    else if (oceanBase > 0.68) oceanDepth = constants.oceanDepths.abyss;
+    if (oceanBase > 0.98) oceanDepth = constants.oceanDepths.trench;
+    else if (oceanBase > 0.70) oceanDepth = constants.oceanDepths.abyss;
     else if (oceanBase > 0.42) oceanDepth = constants.oceanDepths.slope;
     else oceanDepth = constants.oceanDepths.shelf;
 
@@ -953,17 +924,17 @@ function stageTopologyFields(grid, constants) {
 
     const dx = right - left;
     const dy = down - up;
-    const slope = clamp(Math.sqrt((dx * dx) + (dy * dy)) * 2.4, 0, 1);
+    const slope = clamp(Math.sqrt((dx * dx) + (dy * dy)) * 2.6, 0, 1);
 
     const meanNeighbor = (left + right + up + down) / 4;
     const curvatureRaw = sample.elevation - meanNeighbor;
-    const curvature = clamp(curvatureRaw * 4, -1, 1);
+    const curvature = clamp(curvatureRaw * 4.4, -1, 1);
 
     const ridgeStrength = clamp(curvature > 0 ? curvature : 0, 0, 1);
     const basinStrength = clamp(curvature < 0 ? -curvature : 0, 0, 1);
-    const divideStrength = clamp(Math.abs(dx - dy) * 2.4, 0, 1);
+    const divideStrength = clamp(Math.abs(dx - dy) * 2.5, 0, 1);
     const plateauStrength = clamp(sample.elevation > 0.18 ? 1 - slope : 0, 0, 1);
-    const canyonStrength = clamp(slope > 0.18 ? basinStrength * slope * 1.35 : 0, 0, 1);
+    const canyonStrength = clamp(slope > 0.18 ? basinStrength * slope * 1.42 : 0, 0, 1);
     const cavePotential = clamp(
       basinStrength * 0.45 + plateauStrength * 0.12 + canyonStrength * 0.28,
       0,
@@ -979,7 +950,7 @@ function stageTopologyFields(grid, constants) {
       shorelineBand &&
       slope < 0.12 &&
       sample.elevation <= (constants.seaLevel + constants.shorelineBandHalfWidth * 5.5) &&
-      sample.basinStrength < 0.22;
+      basinStrength < 0.22;
 
     return {
       ...sample,
@@ -1003,23 +974,21 @@ function stageTopologyFields(grid, constants) {
 function stageThermodynamics(grid, constants) {
   return grid.map((row) => row.map((sample) => {
     const absLat = Math.abs(sample.latDeg) / 90;
+    const ownAnchor = findAnchor(constants, sample.continentMass);
     const polarCooling = Math.pow(absLat, 1.35) * constants.thermalPolarCoolingStrength;
-    const elevationCooling = clamp(Math.max(0, sample.elevation - constants.seaLevel) * 0.35, 0, 0.34);
+    const elevationCooling = clamp(Math.max(0, sample.elevation - constants.seaLevel) * 0.46, 0, 0.40);
     const basinModeration = clamp(toNumber(sample.strongestBasinScore, 0) * 0.16, 0, 0.14);
     const shorelineModeration = sample.shoreline ? 0.08 : 0;
-    const summitExposure = clamp(toNumber(sample.strongestSummitScore, 0) * 0.2, 0, 0.18);
-    const regionWarmBias =
-      sample.subRegion === "GRATITUDE_REGION" || sample.subRegion === "GENEROSITY_REGION"
-        ? 0.04
-        : sample.continentMass === "HARBOR_SUPERCONTINENT"
-          ? 0.02
-          : 0;
+    const summitExposure = clamp(toNumber(sample.strongestSummitScore, 0) * 0.22, 0, 0.20);
+    const regionThermalBias = ownAnchor ? ownAnchor.thermalBias : 0;
+    const continentalityHeat = clamp(Math.max(sample.distanceToWater - 6, 0) / 24, 0, 0.16);
 
     const temperature = clamp(
       constants.thermalBaseline +
-        regionWarmBias +
+        regionThermalBias +
         basinModeration +
-        shorelineModeration -
+        shorelineModeration +
+        continentalityHeat -
         polarCooling -
         elevationCooling -
         summitExposure,
@@ -1028,7 +997,7 @@ function stageThermodynamics(grid, constants) {
     );
 
     const thermalGradient = clamp(
-      polarCooling + elevationCooling + sample.slope * 0.18 + summitExposure,
+      polarCooling + elevationCooling + sample.slope * 0.20 + summitExposure,
       0,
       1
     );
@@ -1047,7 +1016,8 @@ function stageThermodynamics(grid, constants) {
       thermalGradient,
       freezePotential,
       meltPotential,
-      evaporationPressure
+      evaporationPressure,
+      altitudeCooling: elevationCooling
     };
   }));
 }
@@ -1071,13 +1041,26 @@ function stageHydrology(grid, constants) {
     const right = grid[y]?.[Math.min(grid[0].length - 1, x + 1)] ?? null;
     const up = grid[Math.max(0, y - 1)]?.[x] ?? null;
     const down = grid[Math.min(grid.length - 1, y + 1)]?.[x] ?? null;
+    const ownAnchor = findAnchor(constants, sample.continentMass);
+
+    const maritimeInfluence = clamp(sample.distanceToWater < 0 ? 0 : 1 - (sample.distanceToWater / 26), 0, 1);
+    const continentality = clamp(1 - maritimeInfluence, 0, 1);
+    const rainShadowStrength = clamp(
+      sample.ridgeStrength * 0.34 +
+      sample.divideStrength * 0.18 +
+      Math.max(sample.distanceToWater - 5, 0) / 30,
+      0,
+      1
+    );
 
     const rainfall = clamp(
-      0.14 +
-        sample.evaporationPressure * 0.34 +
+      0.12 +
+        sample.evaporationPressure * 0.30 +
         toNumber(sample.strongestBasinScore, 0) * 0.18 +
-        (sample.shorelineBand ? 0.16 : 0) +
-        (sample.climateBandField === constants.climateLabels.EQUATORIAL ? 0.12 : 0),
+        maritimeInfluence * 0.26 +
+        (ownAnchor ? ownAnchor.moistureBias : 0) -
+        rainShadowStrength * 0.22 +
+        (sample.climateBandField === constants.climateLabels.EQUATORIAL ? 0.10 : 0),
       0,
       1
     );
@@ -1091,7 +1074,7 @@ function stageHydrology(grid, constants) {
     );
 
     const basinAccumulation = clamp(
-      toNumber(sample.strongestBasinScore, 0) * 0.6 +
+      toNumber(sample.strongestBasinScore, 0) * 0.60 +
         rainfall * 0.22 +
         (sample.waterMask === 1 ? 0.2 : 0),
       0,
@@ -1117,7 +1100,71 @@ function stageHydrology(grid, constants) {
       basinAccumulation,
       drainage,
       riverCandidate,
-      lakeCandidate
+      lakeCandidate,
+      continentality,
+      maritimeInfluence,
+      rainShadowStrength
+    };
+  }));
+}
+
+function stageSeasonalField(grid, constants) {
+  return grid.map((row) => row.map((sample) => {
+    const latAbsNorm = clamp(Math.abs(sample.latDeg) / 90, 0, 1);
+    const hemispherePhase = sample.latDeg >= 0 ? constants.seasonGlobalPhase : constants.seasonGlobalPhase + 0.5;
+    const wrappedPhase = hemispherePhase - Math.floor(hemispherePhase);
+    const phaseAngle = wrappedPhase * Math.PI * 2;
+    const seasonalWave = Math.sin(phaseAngle);
+    const shoulderWave = Math.cos(phaseAngle);
+
+    const seasonAmplitude =
+      clamp(0.12 + latAbsNorm * 0.28 + sample.continentality * 0.12 - sample.maritimeInfluence * 0.08, 0, 0.42);
+
+    const seasonalTemperature = clamp(
+      sample.temperature +
+        seasonalWave * seasonAmplitude -
+        sample.altitudeCooling * 0.40 +
+        sample.maritimeInfluence * 0.03,
+      0,
+      1
+    );
+
+    const seasonalMoisture = clamp(
+      sample.rainfall +
+        shoulderWave * 0.08 +
+        sample.maritimeInfluence * 0.06 -
+        sample.rainShadowStrength * 0.08,
+      0,
+      1
+    );
+
+    let hemisphereSeason = constants.seasonLabels.SPRING;
+    if (wrappedPhase >= 0 && wrappedPhase < 0.25) hemisphereSeason = constants.seasonLabels.SPRING;
+    else if (wrappedPhase >= 0.25 && wrappedPhase < 0.50) hemisphereSeason = constants.seasonLabels.SUMMER;
+    else if (wrappedPhase >= 0.50 && wrappedPhase < 0.75) hemisphereSeason = constants.seasonLabels.AUTUMN;
+    else hemisphereSeason = constants.seasonLabels.WINTER;
+
+    let seasonalBiomePhase = hemisphereSeason;
+
+    if (sample.waterMask === 1) {
+      seasonalBiomePhase = "MARINE";
+    } else if (seasonalTemperature <= 0.22 || sample.freezePotential >= 0.80) {
+      seasonalBiomePhase = constants.seasonLabels.WINTER;
+    } else if (seasonalTemperature >= 0.70 && seasonalMoisture >= 0.20) {
+      seasonalBiomePhase = constants.seasonLabels.SUMMER;
+    } else if (shoulderWave >= 0) {
+      seasonalBiomePhase = constants.seasonLabels.SPRING;
+    } else {
+      seasonalBiomePhase = constants.seasonLabels.AUTUMN;
+    }
+
+    return {
+      ...sample,
+      hemisphereSeason,
+      seasonPhase: wrappedPhase,
+      seasonalTemperature,
+      seasonalMoisture,
+      seasonalBiomePhase
     };
   }));
 }
@@ -1621,7 +1668,7 @@ function stageFinalTerrainClass(grid, constants) {
     const eventFlags = [];
     if (sample.riverCandidate) eventFlags.push("RIVER_CANDIDATE");
     if (sample.lakeCandidate) eventFlags.push("LAKE_CANDIDATE");
-    if (sample.cavePotential >= constants.topologyCaveThreshold) eventFlags.push("CAVE_CANDIDATE");
+    if (sample.cavePotential > constants.topologyCaveThreshold) eventFlags.push("CAVE_CANDIDATE");
     if (sample.shoreline) eventFlags.push("SHORELINE");
     if (sample.biomeType === constants.biomeTypes.GLACIER) eventFlags.push("GLACIER");
     if (sample.biomeType === constants.biomeTypes.WETLAND) eventFlags.push("WETLAND");
@@ -1634,7 +1681,7 @@ function stageFinalTerrainClass(grid, constants) {
   }));
 }
 
-function buildSummary(grid) {
+function buildSummary(grid, constants) {
   const summary = {
     sampleCount: 0,
     landCount: 0,
@@ -1644,6 +1691,7 @@ function buildSummary(grid) {
     basinCount: 0,
     canyonCount: 0,
     caveCandidateCount: 0,
+    glacialRegionCount: 0,
     temperatureAverage: 0,
     rainfallAverage: 0,
     runoffAverage: 0,
@@ -1651,7 +1699,29 @@ function buildSummary(grid) {
     auroralAverage: 0,
     diamondAverage: 0,
     opalAverage: 0,
-    sedimentAverage: 0
+    sedimentAverage: 0,
+    seasonalTemperatureAverage: 0,
+    seasonalMoistureAverage: 0,
+    elevationMin: Infinity,
+    elevationMax: -Infinity,
+    topologyVariance: 0,
+    continentIds: [],
+    continentCount: 0,
+    seasonCoverage: {
+      WINTER: false,
+      SPRING: false,
+      SUMMER: false,
+      AUTUMN: false
+    },
+    climateBandCoverage: {
+      EQUATORIAL: false,
+      TROPICAL: false,
+      TEMPERATE: false,
+      SUBPOLAR: false,
+      POLAR: false
+    },
+    mountainRegionCount: 0,
+    basinRegionCount: 0
   };
 
   let temperatureTotal = 0;
@@ -1662,12 +1732,26 @@ function buildSummary(grid) {
   let diamondTotal = 0;
   let opalTotal = 0;
   let sedimentTotal = 0;
+  let seasonalTemperatureTotal = 0;
+  let seasonalMoistureTotal = 0;
+  let slopeTotal = 0;
+  let ridgeTotal = 0;
+  let basinTotal = 0;
+
+  const continentSet = new Set();
+  const mountainRegionSet = new Set();
+  const basinRegionSet = new Set();
 
   for (const row of grid) {
     for (const sample of row) {
       summary.sampleCount += 1;
-      if (sample.landMask === 1) summary.landCount += 1;
-      else summary.waterCount += 1;
+      if (sample.landMask === 1) {
+        summary.landCount += 1;
+        if (sample.continentMass && sample.continentMass !== "NONE") continentSet.add(sample.continentMass);
+      } else {
+        summary.waterCount += 1;
+      }
+
       if (sample.shoreline) summary.shorelineCount += 1;
 
       if (
@@ -1676,10 +1760,30 @@ function buildSummary(grid) {
         sample.terrainClass === "GLACIAL_HIGHLAND"
       ) {
         summary.mountainCount += 1;
+        if (sample.continentMass !== "NONE") mountainRegionSet.add(sample.continentMass);
       }
-      if (sample.terrainClass === "BASIN") summary.basinCount += 1;
+
+      if (sample.terrainClass === "BASIN") {
+        summary.basinCount += 1;
+        if (sample.continentMass !== "NONE") basinRegionSet.add(sample.continentMass);
+      }
+
       if (sample.terrainClass === "CANYON") summary.canyonCount += 1;
       if (sample.cavePotential > 0.5) summary.caveCandidateCount += 1;
+      if (sample.biomeType === "GLACIER" || sample.terrainClass === "GLACIAL_HIGHLAND" || sample.terrainClass === "POLAR_ICE") {
+        summary.glacialRegionCount += 1;
+      }
+
+      if (sample.landMask === 1) {
+        if (sample.seasonalBiomePhase === constants.seasonLabels.WINTER) summary.seasonCoverage.WINTER = true;
+        if (sample.seasonalBiomePhase === constants.seasonLabels.SPRING) summary.seasonCoverage.SPRING = true;
+        if (sample.seasonalBiomePhase === constants.seasonLabels.SUMMER) summary.seasonCoverage.SUMMER = true;
+        if (sample.seasonalBiomePhase === constants.seasonLabels.AUTUMN) summary.seasonCoverage.AUTUMN = true;
+      }
+
+      if (summary.climateBandCoverage[sample.climateBandField] === false) {
+        summary.climateBandCoverage[sample.climateBandField] = true;
+      }
 
       temperatureTotal += sample.temperature;
       rainfallTotal += sample.rainfall;
@@ -1689,6 +1793,14 @@ function buildSummary(grid) {
       diamondTotal += sample.diamondDensity;
       opalTotal += sample.opalDensity;
       sedimentTotal += sample.sedimentLoad;
+      seasonalTemperatureTotal += sample.seasonalTemperature;
+      seasonalMoistureTotal += sample.seasonalMoisture;
+      slopeTotal += sample.slope;
+      ridgeTotal += sample.ridgeStrength;
+      basinTotal += sample.basinStrength;
+
+      summary.elevationMin = Math.min(summary.elevationMin, sample.elevation);
+      summary.elevationMax = Math.max(summary.elevationMax, sample.elevation);
     }
   }
 
@@ -1701,6 +1813,17 @@ function buildSummary(grid) {
   summary.diamondAverage = diamondTotal / count;
   summary.opalAverage = opalTotal / count;
   summary.sedimentAverage = sedimentTotal / count;
+  summary.seasonalTemperatureAverage = seasonalTemperatureTotal / count;
+  summary.seasonalMoistureAverage = seasonalMoistureTotal / count;
+
+  summary.topologyVariance = (slopeTotal / count) + (ridgeTotal / count) + (basinTotal / count);
+  summary.continentIds = Object.freeze(Array.from(continentSet).sort());
+  summary.continentCount = summary.continentIds.length;
+  summary.mountainRegionCount = mountainRegionSet.size;
+  summary.basinRegionCount = basinRegionSet.size;
+
+  if (!Number.isFinite(summary.elevationMin)) summary.elevationMin = 0;
+  if (!Number.isFinite(summary.elevationMax)) summary.elevationMax = 0;
 
   return Object.freeze(summary);
 }
@@ -1718,6 +1841,7 @@ function buildCompleteness() {
     topology_fields: true,
     thermodynamics: true,
     hydrology: true,
+    seasonal_field: true,
     magnetics: true,
     materials: true,
     sediment: true,
@@ -1740,8 +1864,8 @@ function finalizeSamples(grid) {
           };
 
           delete finalized.anchorScores;
-          delete finalized.harborBridgeSupport;
           delete finalized.oceanCarveTotal;
+          delete finalized.corridorSeparation;
           delete finalized._surfaceCandidates;
           delete finalized._surfaceChosen;
           delete finalized._biomeChosen;
@@ -1765,16 +1889,17 @@ function buildPlanetFieldFromAuthoredWorld(constants) {
   const stage8 = stageTopologyFields(stage7, constants);
   const stage9 = stageThermodynamics(stage8, constants);
   const stage10 = stageHydrology(stage9, constants);
-  const stage11 = stageMagnetics(stage10, constants);
-  const stage12 = stageMaterials(stage11);
-  const stage13 = stageSediment(stage12);
-  const stage14 = stageSurfaceBiomeThresholdBands(stage13, constants);
-  const stage15 = stageSurfaceBiomePrecedenceTiebreak(stage14, constants);
-  const stage16 = stageSurfaceBiomeSamplingUnitAssignment(stage15, constants);
-  const stage17 = stageFinalTerrainClass(stage16, constants);
+  const stage11 = stageSeasonalField(stage10, constants);
+  const stage12 = stageMagnetics(stage11, constants);
+  const stage13 = stageMaterials(stage12);
+  const stage14 = stageSediment(stage13);
+  const stage15 = stageSurfaceBiomeThresholdBands(stage14, constants);
+  const stage16 = stageSurfaceBiomePrecedenceTiebreak(stage15, constants);
+  const stage17 = stageSurfaceBiomeSamplingUnitAssignment(stage16, constants);
+  const stage18 = stageFinalTerrainClass(stage17, constants);
 
-  const samples = finalizeSamples(stage17);
-  const summary = buildSummary(samples);
+  const samples = finalizeSamples(stage18);
+  const summary = buildSummary(samples, constants);
   const completeness = buildCompleteness();
 
   return Object.freeze({

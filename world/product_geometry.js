@@ -1,127 +1,140 @@
-// PRODUCT_GEOMETRY_ENGINE_v1
+// TNT — /world/product_geometry.js
 // OWNER: SEAN
-// MODE: 256-DENSITY · MOBILE-FIRST · NO DRIFT
+// MODE: MOBILE-FIRST · DETERMINISTIC · NO DRIFT
 // PURPOSE:
-// - render floating diamond field (products)
-// - stable text layer, rotating geometry layer
-// - supports tap / slide / swipe integration (external)
-// - deterministic, bounded, efficient
+// - render floating product diamond field
+// - stable label layer, moving geometry layer
+// - deterministic bounded motion
+// - safe downstream utility, no kernel/world contract dependency
 
 export function createProductGeometryEngine() {
-
-  // =============================
-  // CONFIG
-  // =============================
-  const MAX_VISIBLE = 4;         // initial nodes
-  const MAX_UNLOCKED = 16;       // full layer
-  const ROTATION_SPEED = 0.0008; // base rotation
-  const FLOAT_SPEED = 0.0012;
+  const MAX_VISIBLE = 4;
+  const MAX_UNLOCKED = 16;
+  const BASE_ROTATION_SPEED = 0.0008;
+  const BASE_FLOAT_SPEED = 0.0012;
   const DEPTH_SCALE = 0.35;
+  const HIT_RADIUS_PX = 30;
 
-  // =============================
-  // STATE
-  // =============================
   let nodes = [];
-  let unlockedLevel = 1; // progression system
+  let unlockedLevel = 1;
   let width = 0;
   let height = 0;
+  let lastTime = null;
 
-  // =============================
-  // INIT NODES (256 GRID LOGIC)
-  // =============================
-  function buildNodes(productList) {
-    nodes = [];
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
-    const count = productList.length;
+  function isFiniteNumber(value) {
+    return typeof value === "number" && Number.isFinite(value);
+  }
 
-    for (let i = 0; i < count; i++) {
+  function normalizeLabel(value, fallback) {
+    return typeof value === "string" && value.trim().length > 0 ? value.trim() : fallback;
+  }
 
-      const angle = (i / count) * Math.PI * 2;
+  function normalizeId(value, fallback) {
+    if (typeof value === "string" && value.trim().length > 0) return value.trim();
+    if (typeof value === "number" && Number.isFinite(value)) return String(value);
+    return fallback;
+  }
 
-      nodes.push({
-        id: productList[i].id,
-        label: productList[i].label,
+  function normalizedVisibleTarget() {
+    return Math.min(MAX_VISIBLE * unlockedLevel, Math.min(nodes.length, MAX_UNLOCKED));
+  }
 
-        // polar → cartesian
+  function deterministicPhase(index) {
+    return (index * 1.61803398875) % (Math.PI * 2);
+  }
+
+  function deterministicDepth(index) {
+    return (index % 4) * DEPTH_SCALE;
+  }
+
+  function deterministicRadius(index) {
+    return 0.28 + (index % 4) * 0.08;
+  }
+
+  function deterministicDirection(index) {
+    return index % 2 === 0 ? 1 : -1;
+  }
+
+  function buildNodes(productList = []) {
+    const source = Array.isArray(productList) ? productList : [];
+    const count = source.length;
+
+    nodes = source.map((item, index) => {
+      const angle = count > 0 ? (index / count) * Math.PI * 2 : 0;
+
+      return {
+        id: normalizeId(item?.id, `product-${index}`),
+        label: normalizeLabel(item?.label, `PRODUCT ${index + 1}`),
         baseAngle: angle,
-        radius: 0.28 + (i % 4) * 0.08,
-
-        // dynamic state
+        radius: deterministicRadius(index),
         rotation: 0,
-        floatOffset: Math.random() * Math.PI * 2,
-
-        // position
+        floatPhase: deterministicPhase(index),
+        depth: deterministicDepth(index),
         x: 0,
         y: 0,
-        z: (i % 4) * DEPTH_SCALE,
+        visible: index < MAX_VISIBLE,
+        direction: deterministicDirection(index)
+      };
+    });
 
-        visible: i < MAX_VISIBLE
-      });
-    }
+    unlockedLevel = 1;
+    lastTime = null;
   }
 
-  // =============================
-  // RESIZE
-  // =============================
   function resize(w, h) {
-    width = w;
-    height = h;
+    width = isFiniteNumber(w) ? Math.max(0, w) : 0;
+    height = isFiniteNumber(h) ? Math.max(0, h) : 0;
   }
 
-  // =============================
-  // UPDATE LOOP
-  // =============================
-  function update(time) {
+  function update(timeMs = 0) {
+    const safeTime = isFiniteNumber(timeMs) ? timeMs : 0;
 
-    for (let i = 0; i < nodes.length; i++) {
+    if (lastTime === null) {
+      lastTime = safeTime;
+    }
 
-      const n = nodes[i];
+    const deltaMs = clamp(safeTime - lastTime, 0, 33.3333);
+    lastTime = safeTime;
 
-      if (!n.visible) continue;
+    const cx = width * 0.5;
+    const cy = height * 0.5;
+    const baseSpan = Math.min(width, height);
 
-      // rotation (clockwise / counterclockwise split)
-      const dir = (i % 2 === 0) ? 1 : -1;
-      n.rotation += ROTATION_SPEED * dir * time;
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      if (!node.visible) continue;
 
-      // floating motion
-      n.floatOffset += FLOAT_SPEED * time;
+      node.rotation += BASE_ROTATION_SPEED * node.direction * deltaMs;
+      node.floatPhase += BASE_FLOAT_SPEED * deltaMs;
 
-      const floatY = Math.sin(n.floatOffset) * 12;
-      const floatX = Math.cos(n.floatOffset * 0.6) * 8;
+      const floatY = Math.sin(node.floatPhase) * 12;
+      const floatX = Math.cos(node.floatPhase * 0.6) * 8;
 
-      // radial placement
-      const cx = width * 0.5;
-      const cy = height * 0.5;
+      const r = baseSpan * node.radius;
 
-      const r = Math.min(width, height) * n.radius;
-
-      n.x = cx + Math.cos(n.baseAngle) * r + floatX;
-      n.y = cy + Math.sin(n.baseAngle) * r + floatY;
+      node.x = cx + Math.cos(node.baseAngle) * r + floatX;
+      node.y = cy + Math.sin(node.baseAngle) * r + floatY;
     }
   }
 
-  // =============================
-  // DRAW DIAMOND
-  // =============================
   function drawDiamond(ctx, x, y, size, rotation, depth) {
-
     ctx.save();
 
-    // depth scaling
     const scale = 1 + depth * 0.25;
     ctx.translate(x, y);
     ctx.scale(scale, scale);
-
     ctx.rotate(rotation);
 
-    // gradient fill (4K feel)
     const grad = ctx.createLinearGradient(-size, -size, size, size);
     grad.addColorStop(0, "rgba(255,43,43,0.9)");
     grad.addColorStop(0.5, "rgba(201,162,74,0.9)");
     grad.addColorStop(1, "rgba(120,0,22,0.9)");
 
     ctx.fillStyle = grad;
-
     ctx.beginPath();
     ctx.moveTo(0, -size);
     ctx.lineTo(size, 0);
@@ -130,7 +143,6 @@ export function createProductGeometryEngine() {
     ctx.closePath();
     ctx.fill();
 
-    // inner glow
     ctx.strokeStyle = "rgba(255,255,255,0.15)";
     ctx.lineWidth = 1;
     ctx.stroke();
@@ -138,88 +150,75 @@ export function createProductGeometryEngine() {
     ctx.restore();
   }
 
-  // =============================
-  // DRAW LABEL (STABLE TEXT)
-  // =============================
   function drawLabel(ctx, x, y, text) {
-
     ctx.save();
-
     ctx.fillStyle = "#ffffff";
     ctx.font = "600 13px system-ui";
     ctx.textAlign = "center";
-
+    ctx.textBaseline = "middle";
     ctx.fillText(text, x, y + 28);
-
     ctx.restore();
   }
 
-  // =============================
-  // RENDER
-  // =============================
   function render(ctx) {
+    if (!ctx) return;
 
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i += 1) {
+      const node = nodes[i];
+      if (!node.visible) continue;
 
-      const n = nodes[i];
-      if (!n.visible) continue;
-
-      const size = 18 + (n.z * 12);
-
-      // rotating geometry
-      drawDiamond(ctx, n.x, n.y, size, n.rotation, n.z);
-
-      // stable label (no rotation)
-      drawLabel(ctx, n.x, n.y, n.label);
+      const size = 18 + node.depth * 12;
+      drawDiamond(ctx, node.x, node.y, size, node.rotation, node.depth);
+      drawLabel(ctx, node.x, node.y, node.label);
     }
   }
 
-  // =============================
-  // HIT TEST (FOR TAP)
-  // =============================
   function hitTest(x, y) {
+    const px = isFiniteNumber(x) ? x : 0;
+    const py = isFiniteNumber(y) ? y : 0;
 
-    for (let i = nodes.length - 1; i >= 0; i--) {
+    for (let i = nodes.length - 1; i >= 0; i -= 1) {
+      const node = nodes[i];
+      if (!node.visible) continue;
 
-      const n = nodes[i];
-      if (!n.visible) continue;
-
-      const dx = x - n.x;
-      const dy = y - n.y;
-
+      const dx = px - node.x;
+      const dy = py - node.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      if (dist < 30) {
-        return n;
+      if (dist < HIT_RADIUS_PX) {
+        return node;
       }
     }
 
     return null;
   }
 
-  // =============================
-  // PROGRESSION (UNLOCK MORE NODES)
-  // =============================
   function unlockNextLayer() {
+    unlockedLevel += 1;
+    const target = normalizedVisibleTarget();
 
-    unlockedLevel++;
-
-    const target = Math.min(MAX_VISIBLE * unlockedLevel, MAX_UNLOCKED);
-
-    for (let i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i += 1) {
       nodes[i].visible = i < target;
     }
   }
 
-  // =============================
-  // PUBLIC API
-  // =============================
-  return {
+  function getSnapshot() {
+    return Object.freeze({
+      width,
+      height,
+      unlockedLevel,
+      visibleCount: nodes.reduce((total, node) => total + (node.visible ? 1 : 0), 0),
+      totalCount: nodes.length
+    });
+  }
+
+  return Object.freeze({
     buildNodes,
     resize,
     update,
     render,
     hitTest,
-    unlockNextLayer
-  };
+    unlockNextLayer,
+    getSnapshot
+  });
 }

@@ -325,7 +325,6 @@ body::before,body::after{pointer-events:none!important}
   color:#fff5cf;
 }
 
-/* overlay markers */
 #orbital-overlay{
   z-index:12;
   pointer-events:none;
@@ -446,7 +445,6 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(6px);
 }
 
-/* diagnostics */
 .diagnostics-shell{
   position:absolute;
   left:16px;
@@ -527,7 +525,6 @@ body[data-diagnostics="full"] .debug-panel{
   transform:translateY(0);
 }
 
-/* mode-specific presentation */
 body[data-mode="round"]{
   --heroDim:1;
   --uiAlpha:1;
@@ -714,10 +711,10 @@ body[data-mode="observe"] .diagnostics-summary{
 
   <div class="top-ui">
     <div class="top-ui-row top-ui-row--home">
-      <div class="home-pill">HOME</div>
+      <div class="home-pill" id="home-pill">HOME</div>
     </div>
     <div class="top-ui-row top-ui-row--modes">
-      <div class="mode-cluster">
+      <div class="mode-cluster" id="mode-cluster">
         <button id="btn-flat" class="mode-btn" type="button">FLAT</button>
         <button id="btn-round" class="mode-btn" type="button">ROUND</button>
         <button id="btn-observe" class="mode-btn" type="button">OBSERVE</button>
@@ -753,6 +750,8 @@ const canvas = document.getElementById("world-canvas");
 const ctx = canvas.getContext("2d", { alpha: true });
 
 const heroPanel = document.getElementById("hero-panel");
+const homePill = document.getElementById("home-pill");
+const modeCluster = document.getElementById("mode-cluster");
 const flatLayer = document.getElementById("flat-layer");
 const universeLayer = document.getElementById("universe-layer");
 const atmosphereLayer = document.getElementById("atmosphere-layer");
@@ -785,6 +784,7 @@ const MARKER_SIDE_MARGIN_PX = 28;
 const MARKER_TOP_MARGIN_PX = 20;
 const MARKER_BOTTOM_MARGIN_PX = 24;
 const MARKER_MAX_PASSES = 3;
+const DEFAULT_MARKER_RADIUS = 48;
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -1039,39 +1039,6 @@ function getRectSafe(element) {
   return element.getBoundingClientRect();
 }
 
-function computeSafeBands() {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-  const heroRect = getRectSafe(heroPanel);
-  const diagnosticsRect =
-    diagnosticsMode === "full"
-      ? getRectSafe(debugPanel)
-      : getRectSafe(diagnosticsShell);
-
-  const left = MARKER_SIDE_MARGIN_PX;
-  const right = Math.max(left, viewportWidth - MARKER_SIDE_MARGIN_PX);
-  const top = Math.max(MARKER_TOP_MARGIN_PX, Math.ceil(heroRect.bottom + 24));
-
-  let bottom = Math.floor(viewportHeight - MARKER_BOTTOM_MARGIN_PX);
-  if (diagnosticsRect.top > 0) {
-    bottom = Math.min(bottom, Math.floor(diagnosticsRect.top - 24));
-  }
-
-  if (bottom <= top + 40) {
-    bottom = Math.max(top + 40, Math.floor(viewportHeight - 40));
-  }
-
-  return Object.freeze({
-    left,
-    right,
-    top,
-    bottom,
-    width: viewportWidth,
-    height: viewportHeight,
-    constrainedViewport: viewportWidth <= 900 || viewportHeight <= 900
-  });
-}
-
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -1085,6 +1052,59 @@ function cloneHit(hit) {
     y: hit.y,
     radius: hit.radius
   };
+}
+
+function getMarkerRadius(rawHits) {
+  let maxRadius = DEFAULT_MARKER_RADIUS;
+  for (const hit of rawHits) {
+    if (Number.isFinite(hit?.radius)) {
+      maxRadius = Math.max(maxRadius, hit.radius);
+    }
+  }
+  return maxRadius;
+}
+
+function computeSafeBands(markerRadius) {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  const heroRect = getRectSafe(heroPanel);
+  const homeRect = getRectSafe(homePill);
+  const modesRect = getRectSafe(modeCluster);
+  const diagnosticsRect =
+    diagnosticsMode === "full"
+      ? getRectSafe(debugPanel)
+      : getRectSafe(diagnosticsShell);
+
+  const topUiBottom = Math.max(homeRect.bottom, modesRect.bottom);
+
+  const left = MARKER_SIDE_MARGIN_PX + markerRadius;
+  const right = viewportWidth - MARKER_SIDE_MARGIN_PX - markerRadius;
+
+  const top = Math.max(
+    MARKER_TOP_MARGIN_PX + markerRadius,
+    Math.ceil(topUiBottom + 18 + markerRadius),
+    Math.ceil(heroRect.bottom + 20 + markerRadius)
+  );
+
+  let bottom = viewportHeight - MARKER_BOTTOM_MARGIN_PX - markerRadius;
+  if (diagnosticsRect.top > 0) {
+    bottom = Math.min(bottom, Math.floor(diagnosticsRect.top - 24 - markerRadius));
+  }
+
+  if (bottom <= top + 40) {
+    bottom = Math.max(top + 40, viewportHeight - 40 - markerRadius);
+  }
+
+  return Object.freeze({
+    left,
+    right: Math.max(left, right),
+    top,
+    bottom: Math.max(top + 40, bottom),
+    width: viewportWidth,
+    height: viewportHeight,
+    constrainedViewport: viewportWidth <= 900 || viewportHeight <= 900
+  });
 }
 
 function clampHitToBands(hit, bands) {
@@ -1102,13 +1122,12 @@ function resolvePairCollision(a, b) {
     return false;
   }
 
-  let ux = 0;
-  let uy = 0;
   if (distSq > 0.0001) {
     const dist = Math.sqrt(distSq);
-    ux = dx / dist;
-    uy = dy / dist;
+    const ux = dx / dist;
+    const uy = dy / dist;
     const overlap = minDistance - dist;
+
     a.x -= ux * (overlap * 0.5);
     a.y -= uy * (overlap * 0.5);
     b.x += ux * (overlap * 0.5);
@@ -1116,14 +1135,11 @@ function resolvePairCollision(a, b) {
     return true;
   }
 
-  const deterministic =
-    a.id.localeCompare(b.id) <= 0
-      ? { ux: 1, uy: 0 }
-      : { ux: 0, uy: 1 };
-
-  ux = deterministic.ux;
-  uy = deterministic.uy;
+  const horizontal = a.id.localeCompare(b.id) <= 0;
+  const ux = horizontal ? 1 : 0;
+  const uy = horizontal ? 0 : 1;
   const overlap = minDistance;
+
   a.x -= ux * (overlap * 0.5);
   a.y -= uy * (overlap * 0.5);
   b.x += ux * (overlap * 0.5);
@@ -1134,11 +1150,12 @@ function resolvePairCollision(a, b) {
 function buildFallbackAnchors(bands) {
   const centerX = (bands.left + bands.right) * 0.5;
   const centerY = (bands.top + bands.bottom) * 0.5;
+
   return Object.freeze({
-    "north-products": { x: centerX, y: bands.top + 10 },
-    "east-gauges": { x: bands.right - 10, y: centerY },
-    "south-laws": { x: centerX, y: bands.bottom - 10 },
-    "west-explore": { x: bands.left + 10, y: centerY }
+    "north-products": { x: centerX, y: bands.top },
+    "east-gauges": { x: bands.right, y: centerY },
+    "south-laws": { x: centerX, y: bands.bottom },
+    "west-explore": { x: bands.left, y: centerY }
   });
 }
 
@@ -1175,13 +1192,16 @@ function solveMarkerPlacement(rawHits) {
   }
 
   const hits = rawHits.map(cloneHit);
-  const bands = computeSafeBands();
+  const markerRadius = getMarkerRadius(rawHits);
+  const bands = computeSafeBands(markerRadius);
+
   let repositionedCount = 0;
   let collisionCount = 0;
 
   for (const hit of hits) {
     const beforeX = hit.x;
     const beforeY = hit.y;
+    hit.radius = Math.max(markerRadius, Number.isFinite(hit.radius) ? hit.radius : markerRadius);
     clampHitToBands(hit, bands);
     if (beforeX !== hit.x || beforeY !== hit.y) repositionedCount += 1;
   }

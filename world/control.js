@@ -44,8 +44,12 @@ export function createControlSystem() {
 
   let zoomCurrent = 1;
   let zoomTarget = 1;
-  const OBSERVE_ZOOM = 1.24;
+
   const ZOOM_EASING = 0.12;
+  const ROUND_ZOOM_MIN = 0.86;
+  const ROUND_ZOOM_MAX = 1.52;
+  const OBSERVE_ZOOM_MIN = 1.04;
+  const OBSERVE_ZOOM_MAX = 1.34;
 
   const cameraState = {
     width: 0,
@@ -68,25 +72,60 @@ export function createControlSystem() {
     sampleY: 0
   });
 
+  function getZoomBounds(mode = presentationMode) {
+    if (mode === "observe") {
+      return Object.freeze({
+        min: OBSERVE_ZOOM_MIN,
+        max: OBSERVE_ZOOM_MAX
+      });
+    }
+
+    if (mode === "flat") {
+      return Object.freeze({
+        min: 1,
+        max: 1
+      });
+    }
+
+    return Object.freeze({
+      min: ROUND_ZOOM_MIN,
+      max: ROUND_ZOOM_MAX
+    });
+  }
+
+  function clampZoomForMode(value, mode = presentationMode) {
+    const bounds = getZoomBounds(mode);
+    return clamp(value, bounds.min, bounds.max);
+  }
+
   function getResolvedRadius() {
     return Math.max(1, cameraState.radius * zoomCurrent);
   }
 
   function updatePresentationDerivedState() {
     observationMode = presentationMode === "observe";
-    zoomTarget = observationMode ? OBSERVE_ZOOM : 1;
-    orbitPresentationVelocity = observationMode ? orbitAngularVelocity * 0.52 : orbitAngularVelocity;
+    orbitPresentationVelocity = observationMode
+      ? orbitAngularVelocity * 0.52
+      : orbitAngularVelocity;
   }
 
   function forceModeZoomState() {
-    if (observationMode) {
-      zoomCurrent = clamp(zoomCurrent, 1, OBSERVE_ZOOM);
-      zoomTarget = OBSERVE_ZOOM;
+    if (presentationMode === "flat") {
+      zoomCurrent = 1;
+      zoomTarget = 1;
       return;
     }
 
-    zoomCurrent = 1;
-    zoomTarget = 1;
+    zoomCurrent = clampZoomForMode(zoomCurrent);
+    zoomTarget = clampZoomForMode(zoomTarget);
+
+    if (presentationMode === "observe" && zoomCurrent < OBSERVE_ZOOM_MIN) {
+      zoomCurrent = OBSERVE_ZOOM_MIN;
+    }
+
+    if (presentationMode === "observe" && zoomTarget < OBSERVE_ZOOM_MIN) {
+      zoomTarget = OBSERVE_ZOOM_MIN;
+    }
   }
 
   function resize(width, height) {
@@ -123,6 +162,17 @@ export function createControlSystem() {
 
     clampPitch();
     recomputeOrbitalVelocity();
+  }
+
+  function setZoomAbsolute(nextZoom) {
+    if (presentationMode === "flat") return;
+
+    zoomTarget = clampZoomForMode(nextZoom);
+  }
+
+  function adjustZoomBy(delta) {
+    if (presentationMode === "flat") return;
+    setZoomAbsolute(zoomTarget + delta);
   }
 
   function stepZoom() {
@@ -324,7 +374,9 @@ export function createControlSystem() {
       yawVelocity,
       pitchVelocity,
       mode: presentationMode,
-      observationMode
+      observationMode,
+      zoomCurrent,
+      zoomTarget
     });
   }
 
@@ -387,7 +439,8 @@ export function createControlSystem() {
       orbitPresentationVelocity,
       mode: presentationMode,
       observationMode,
-      zoomCurrent
+      zoomCurrent,
+      zoomTarget
     });
   }
 
@@ -418,7 +471,14 @@ export function createControlSystem() {
     if (isFiniteNumber(next.pitchVelocity)) {
       pitchVelocity = next.pitchVelocity;
     }
+    if (isFiniteNumber(next.zoomCurrent)) {
+      zoomCurrent = clampZoomForMode(next.zoomCurrent);
+    }
+    if (isFiniteNumber(next.zoomTarget)) {
+      zoomTarget = clampZoomForMode(next.zoomTarget);
+    }
     recomputeOrbitalVelocity();
+    forceModeZoomState();
   }
 
   function restoreMotionState(input = {}) {
@@ -431,17 +491,15 @@ export function createControlSystem() {
     }
 
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
-    if (isFiniteNumber(next.pitch)) pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
+    if (isFiniteNumber(next.pitch)) {
+      pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
+    }
     if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
     if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
     if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = next.orbitAngularVelocity;
-
-    if (presentationMode === "observe" && isFiniteNumber(next.zoomCurrent)) {
-      zoomCurrent = clamp(next.zoomCurrent, 1, OBSERVE_ZOOM);
-    } else {
-      zoomCurrent = 1;
-    }
+    if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = clampZoomForMode(next.zoomCurrent);
+    if (isFiniteNumber(next.zoomTarget)) zoomTarget = clampZoomForMode(next.zoomTarget);
 
     clampPitch();
     recomputeOrbitalVelocity();
@@ -465,7 +523,10 @@ export function createControlSystem() {
     getProjectionSummary,
     getCardinals,
     getOrbitalState,
-    getMotionState
+    getMotionState,
+    setZoomAbsolute,
+    adjustZoomBy,
+    getZoomBounds
   });
 }
 

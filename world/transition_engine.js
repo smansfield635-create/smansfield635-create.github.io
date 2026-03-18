@@ -2,10 +2,13 @@
 // PURPOSE: transition admissibility, route gating, handoff receipts
 // AUTHORITY:
 // - decides whether a requested transition is admissible
+// - consumes validated receipts when provided
 // - does not generate world truth
 // - does not render
 // - does not own motion
 // - does not mutate kernel contracts
+
+import { validateReceiptPacket } from "./validator_engine.js";
 
 function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
@@ -51,6 +54,10 @@ function getSummary(runtime) {
   return normalizeObject(getPlanetField(runtime).summary);
 }
 
+function getValidatedReceipts(runtime) {
+  return normalizeObject(runtime?.validatedReceipts);
+}
+
 function routeFamily(route) {
   const value = normalizeString(route, "/");
 
@@ -91,7 +98,9 @@ function buildBaseTransitionRequest(input = {}) {
     fromMode: normalizeString(source.fromMode, "round"),
     toMode: normalizeString(source.toMode, "round"),
     explicitUserAction: normalizeBoolean(source.explicitUserAction, true),
-    reason: normalizeString(source.reason, "")
+    reason: normalizeString(source.reason, ""),
+    packet: normalizeObject(source.packet),
+    dependencyReceipts: normalizeObject(source.dependencyReceipts)
   });
 }
 
@@ -103,25 +112,67 @@ function isRouteTransition(request) {
   return request.toRoute !== request.fromRoute;
 }
 
-function evaluateSystemReadiness(runtime) {
+function buildValidatorReceipt(runtime, request) {
+  const packet = request.packet;
+  const packetKeys = Object.keys(packet);
+
+  if (packetKeys.length === 0) {
+    return Object.freeze({
+      verdict: "UNUSED",
+      admissible: true,
+      signedAuthority: true,
+      engineId: "",
+      lobeId: null,
+      faultClass: "",
+      reason: ""
+    });
+  }
+
+  const runtimeDependencies = getValidatedReceipts(runtime);
+  const explicitDependencies = request.dependencyReceipts;
+
+  const mergedDependencies = Object.freeze({
+    ...runtimeDependencies,
+    ...explicitDependencies
+  });
+
+  return validateReceiptPacket(packet, mergedDependencies);
+}
+
+function evaluateSystemReadiness(runtime, validatorReceipt) {
   const completion = getCompletion(runtime);
   const progress = getProgress(runtime);
   const authorityReceipt = getAuthorityReceipt(runtime);
 
   const completionPass = normalizeBoolean(completion.pass, false);
   const authorityPass = normalizeBoolean(authorityReceipt.pass, false);
+  const validatorPass =
+    normalizeString(validatorReceipt?.verdict) === "UNUSED"
+      ? true
+      : normalizeBoolean(validatorReceipt?.signedAuthority, false);
   const summitCompletion = isFiniteNumber(progress.summitCompletion) ? progress.summitCompletion : 0;
 
   return Object.freeze({
     completionPass,
     authorityPass,
+    validatorPass,
     summitCompletion,
-    pass: completionPass && authorityPass
+    pass: completionPass && authorityPass && validatorPass
   });
 }
 
-function evaluateModeTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function validatorBlockedDecision(baseFamily, validatorReceipt) {
+  return Object.freeze({
+    admissible: false,
+    accepted: false,
+    blockedReason: `validator_${normalizeString(validatorReceipt.reason, "failed")}`,
+    family: baseFamily,
+    faultClass: normalizeString(validatorReceipt.faultClass, "")
+  });
+}
+
+function evaluateModeTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
   const toModeFamily = modeFamily(request.toMode);
 
   if (!request.explicitUserAction) {
@@ -160,6 +211,10 @@ function evaluateModeTransition(runtime, request) {
     });
   }
 
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("HOME_MODE", validatorReceipt);
+  }
+
   if (request.toMode === "observe" && !readiness.completionPass) {
     return Object.freeze({
       admissible: false,
@@ -177,8 +232,8 @@ function evaluateModeTransition(runtime, request) {
   });
 }
 
-function evaluateProductsTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluateProductsTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
   const unlocks = getUnlocks(runtime);
 
   if (!request.explicitUserAction) {
@@ -197,6 +252,10 @@ function evaluateProductsTransition(runtime, request) {
       blockedReason: "authority_receipt_failed",
       family: "ROUTE_PRODUCTS"
     });
+  }
+
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_PRODUCTS", validatorReceipt);
   }
 
   return Object.freeze({
@@ -208,8 +267,8 @@ function evaluateProductsTransition(runtime, request) {
   });
 }
 
-function evaluateExploreTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluateExploreTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
   const unlocks = getUnlocks(runtime);
 
   if (!request.explicitUserAction) {
@@ -228,6 +287,10 @@ function evaluateExploreTransition(runtime, request) {
       blockedReason: "authority_receipt_failed",
       family: "ROUTE_EXPLORE"
     });
+  }
+
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_EXPLORE", validatorReceipt);
   }
 
   if (!normalizeBoolean(unlocks.continents, false)) {
@@ -247,8 +310,8 @@ function evaluateExploreTransition(runtime, request) {
   });
 }
 
-function evaluateLawsTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluateLawsTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
 
   if (!request.explicitUserAction) {
     return Object.freeze({
@@ -268,6 +331,10 @@ function evaluateLawsTransition(runtime, request) {
     });
   }
 
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_LAWS", validatorReceipt);
+  }
+
   return Object.freeze({
     admissible: true,
     accepted: true,
@@ -276,8 +343,8 @@ function evaluateLawsTransition(runtime, request) {
   });
 }
 
-function evaluateGaugesTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluateGaugesTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
 
   if (!request.explicitUserAction) {
     return Object.freeze({
@@ -297,6 +364,10 @@ function evaluateGaugesTransition(runtime, request) {
     });
   }
 
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_GAUGES", validatorReceipt);
+  }
+
   return Object.freeze({
     admissible: true,
     accepted: true,
@@ -305,8 +376,8 @@ function evaluateGaugesTransition(runtime, request) {
   });
 }
 
-function evaluateDoorTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluateDoorTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
   const unlocks = getUnlocks(runtime);
 
   if (!request.explicitUserAction) {
@@ -325,6 +396,10 @@ function evaluateDoorTransition(runtime, request) {
       blockedReason: "authority_receipt_failed",
       family: "ROUTE_DOOR"
     });
+  }
+
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_DOOR", validatorReceipt);
   }
 
   if (!normalizeBoolean(unlocks.underground, false)) {
@@ -344,8 +419,8 @@ function evaluateDoorTransition(runtime, request) {
   });
 }
 
-function evaluatePreludeTransition(runtime, request) {
-  const readiness = evaluateSystemReadiness(runtime);
+function evaluatePreludeTransition(runtime, request, validatorReceipt) {
+  const readiness = evaluateSystemReadiness(runtime, validatorReceipt);
 
   if (!request.explicitUserAction) {
     return Object.freeze({
@@ -365,6 +440,10 @@ function evaluatePreludeTransition(runtime, request) {
     });
   }
 
+  if (!readiness.validatorPass) {
+    return validatorBlockedDecision("ROUTE_PRELUDE", validatorReceipt);
+  }
+
   return Object.freeze({
     admissible: true,
     accepted: true,
@@ -382,15 +461,15 @@ function evaluateUnknownTransition() {
   });
 }
 
-function evaluateRouteTransition(runtime, request) {
+function evaluateRouteTransition(runtime, request, validatorReceipt) {
   const family = routeFamily(request.toRoute);
 
-  if (family === "PRODUCTS") return evaluateProductsTransition(runtime, request);
-  if (family === "EXPLORE") return evaluateExploreTransition(runtime, request);
-  if (family === "LAWS") return evaluateLawsTransition(runtime, request);
-  if (family === "GAUGES") return evaluateGaugesTransition(runtime, request);
-  if (family === "DOOR") return evaluateDoorTransition(runtime, request);
-  if (family === "PRELUDE") return evaluatePreludeTransition(runtime, request);
+  if (family === "PRODUCTS") return evaluateProductsTransition(runtime, request, validatorReceipt);
+  if (family === "EXPLORE") return evaluateExploreTransition(runtime, request, validatorReceipt);
+  if (family === "LAWS") return evaluateLawsTransition(runtime, request, validatorReceipt);
+  if (family === "GAUGES") return evaluateGaugesTransition(runtime, request, validatorReceipt);
+  if (family === "DOOR") return evaluateDoorTransition(runtime, request, validatorReceipt);
+  if (family === "PRELUDE") return evaluatePreludeTransition(runtime, request, validatorReceipt);
   if (family === "HOME") {
     return Object.freeze({
       admissible: true,
@@ -410,18 +489,20 @@ function buildTransitionReceipt(runtime, input = {}) {
   const authorityReceipt = getAuthorityReceipt(runtime);
   const unlocks = getUnlocks(runtime);
   const progress = getProgress(runtime);
+  const validatorReceipt = buildValidatorReceipt(runtime, request);
 
   let decision = Object.freeze({
     admissible: false,
     accepted: false,
     blockedReason: "no_transition_class",
-    family: "UNKNOWN"
+    family: "UNKNOWN",
+    faultClass: ""
   });
 
   if (isModeTransition(request)) {
-    decision = evaluateModeTransition(runtime, request);
+    decision = evaluateModeTransition(runtime, request, validatorReceipt);
   } else if (isRouteTransition(request)) {
-    decision = evaluateRouteTransition(runtime, request);
+    decision = evaluateRouteTransition(runtime, request, validatorReceipt);
   }
 
   return Object.freeze({
@@ -430,7 +511,9 @@ function buildTransitionReceipt(runtime, input = {}) {
     admissible: decision.admissible,
     accepted: decision.accepted,
     blockedReason: decision.blockedReason,
+    faultClass: normalizeString(decision.faultClass, ""),
     request,
+    validator: validatorReceipt,
     context: Object.freeze({
       fromRoute: request.fromRoute,
       toRoute: request.toRoute,
@@ -442,7 +525,11 @@ function buildTransitionReceipt(runtime, input = {}) {
       completionPass: normalizeBoolean(completion.pass, false),
       authorityPass: normalizeBoolean(authorityReceipt.pass, false),
       summitCompletion: isFiniteNumber(progress.summitCompletion) ? progress.summitCompletion : 0,
-      unlockKeys: normalizeArray(Object.keys(unlocks))
+      unlockKeys: normalizeArray(Object.keys(unlocks)),
+      validatorVerdict: normalizeString(validatorReceipt.verdict, ""),
+      validatorSignedAuthority: normalizeBoolean(validatorReceipt.signedAuthority, false),
+      validatorReason: normalizeString(validatorReceipt.reason, ""),
+      validatorEngineId: normalizeString(validatorReceipt.engineId, "")
     })
   });
 }
@@ -456,6 +543,16 @@ export function createTransitionEngine() {
     const target = normalizeObject(runtime);
     const receipt = buildTransitionReceipt(target, input);
     target.transition = receipt;
+    target.validator = receipt.validator;
+
+    if (receipt.validator && receipt.validator.engineId) {
+      const currentValidated = normalizeObject(target.validatedReceipts);
+      target.validatedReceipts = Object.freeze({
+        ...currentValidated,
+        [receipt.validator.engineId]: receipt.validator
+      });
+    }
+
     return target;
   }
 

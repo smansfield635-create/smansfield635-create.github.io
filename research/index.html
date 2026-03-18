@@ -27,7 +27,6 @@ a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
-/* ===== TOKENS ===== */
 :root{
   --dockH:112px;
 
@@ -46,7 +45,6 @@ body::before,body::after{pointer-events:none!important}
   --shadowB:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== TOP BAR (FIXED, NON-OVERLAP) ===== */
 .top{
   position:fixed;top:12px;left:0;right:0;
   z-index:240;
@@ -77,7 +75,6 @@ body::before,body::after{pointer-events:none!important}
   align-items:center;
 }
 
-/* Buttons (gold underlight; high contrast) */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   padding:10px 14px;
@@ -107,7 +104,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-/* Lens toggle pills */
 .pill{
   padding:10px 14px;
   min-height:44px;
@@ -128,7 +124,6 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:0 0 18px rgba(255,43,43,.18);
 }
 
-/* ===== PAGE ===== */
 .page{
   width:min(980px,94vw);
   margin:0 auto;
@@ -140,7 +135,6 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* ===== PEDESTAL SECTIONS (HIGH CONTRAST) ===== */
 .section{
   border:1px solid rgba(255,255,255,.12);
   border-radius:26px;
@@ -201,7 +195,91 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.6;
 }
 
-/* ===== FRAMEWORK ACCORDION (NEUTRAL) ===== */
+.liveRail{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.liveCell{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(201,162,74,.10), transparent 64%),
+    rgba(0,0,0,.34);
+  padding:12px;
+  box-shadow:var(--shadowB);
+}
+.liveLabel{
+  font-size:11px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.68);
+  margin-bottom:6px;
+}
+.liveValue{
+  font-size:22px;
+  line-height:1.1;
+  font-weight:980;
+  color:var(--ink);
+}
+.liveSub{
+  margin-top:6px;
+  font-size:12.5px;
+  line-height:1.4;
+  color:rgba(255,255,255,.72);
+}
+.liveBar{
+  margin-top:10px;
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+}
+.liveFill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:
+    linear-gradient(90deg, rgba(255,43,43,.36), rgba(201,162,74,.60));
+  transition:width 140ms linear;
+}
+.liveMeta{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+}
+.liveMetaText{
+  font-size:12.5px;
+  color:rgba(255,255,255,.74);
+  line-height:1.45;
+}
+.livePulse{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12.5px;
+  color:rgba(255,255,255,.82);
+}
+.liveDot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,43,43,.72);
+  box-shadow:0 0 14px rgba(255,43,43,.26);
+}
+.liveDot.on{
+  background:rgba(201,162,74,.86);
+  box-shadow:0 0 14px rgba(201,162,74,.36);
+}
+
 .stack{display:flex;flex-direction:column;gap:12px}
 .card{
   border:1px solid rgba(255,255,255,.12);
@@ -229,7 +307,13 @@ body::before,body::after{pointer-events:none!important}
 .card.open .body{display:block}
 .body p{margin:0 0 12px;line-height:1.7;color:rgba(255,255,255,.84);font-size:14.75px}
 
-/* ===== DOCK ===== */
+.actions{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
 .dock{
   position:fixed;left:50%;
   bottom:max(12px, env(safe-area-inset-bottom));
@@ -254,6 +338,10 @@ body::before,body::after{pointer-events:none!important}
   border-radius:999px;
   padding:10px;
 }
+
+@media (max-width:900px){
+  .liveRail{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 @media (max-width:720px){
   .topbar{gap:8px}
   .btn,.pill{padding:10px 12px}
@@ -263,13 +351,13 @@ body::before,body::after{pointer-events:none!important}
   .dock{grid-template-columns:repeat(3,1fr)}
   .page{padding-top:180px}
   .h1{font-size:26px}
+  .liveRail{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<!-- FIXED TOP BAR -->
 <div class="top" aria-label="Top controls">
   <div class="topbar">
     <div class="topLeft">
@@ -287,7 +375,6 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="page">
 
-  <!-- PRIMARY DATASET PEDESTAL -->
   <section class="section" aria-label="Primary dataset">
     <p class="k">PRIMARY DATASET</p>
     <h1 class="h1" id="hDataset">100-Customer Field Study (Rainwater Management)</h1>
@@ -302,7 +389,53 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </section>
 
-  <!-- PARALLEL CORRELATIVE CONTEXT -->
+  <section class="section" aria-label="Live gauges">
+    <p class="k">LIVE GAUGES</p>
+    <h1 class="h1" id="hLiveGauges">Traversal Motion (Local Telemetry)</h1>
+
+    <p class="p" id="pLiveIntro">
+      This surface is hardwired to local traversal telemetry. It reads the live gauges store directly and keeps the research layer in motion without introducing new canon keys.
+    </p>
+
+    <div class="liveRail" id="liveRail">
+      <div class="liveCell">
+        <div class="liveLabel" id="lblCoherence">Coherence</div>
+        <div class="liveValue" id="gCoherence">0%</div>
+        <div class="liveSub" id="gCoherenceSub">No live receipt yet</div>
+        <div class="liveBar"><div class="liveFill" id="gCoherenceFill"></div></div>
+      </div>
+
+      <div class="liveCell">
+        <div class="liveLabel" id="lblStability">Stability</div>
+        <div class="liveValue" id="gStability">0%</div>
+        <div class="liveSub" id="gStabilitySub">Awaiting local feed</div>
+        <div class="liveBar"><div class="liveFill" id="gStabilityFill"></div></div>
+      </div>
+
+      <div class="liveCell">
+        <div class="liveLabel" id="lblAdmissibility">Admissibility</div>
+        <div class="liveValue" id="gAdmissibility">0%</div>
+        <div class="liveSub" id="gAdmissibilitySub">No comparative receipt</div>
+        <div class="liveBar"><div class="liveFill" id="gAdmissibilityFill"></div></div>
+      </div>
+
+      <div class="liveCell">
+        <div class="liveLabel" id="lblPressure">Pressure</div>
+        <div class="liveValue" id="gPressure">0%</div>
+        <div class="liveSub" id="gPressureSub">No local load trace</div>
+        <div class="liveBar"><div class="liveFill" id="gPressureFill"></div></div>
+      </div>
+    </div>
+
+    <div class="liveMeta">
+      <div class="liveMetaText" id="liveMetaText">Store: cte_gauges_v1 · Source: local browser telemetry · Refresh: animation frame + storage event</div>
+      <div class="livePulse">
+        <span class="liveDot" id="liveDot"></span>
+        <span id="livePulseText">SYNC STANDBY</span>
+      </div>
+    </div>
+  </section>
+
   <section class="section" aria-label="Engineering context">
     <p class="k">PARALLEL CORRELATIVE CONTEXT</p>
     <h1 class="h1" id="hContext">Engineering Context (Parallel, Not Comparative)</h1>
@@ -315,7 +448,6 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </section>
 
-  <!-- STRUCTURAL FRAMEWORK (NEUTRAL) -->
   <div class="stack" id="stack"></div>
 
 </div>
@@ -331,8 +463,9 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state carry (gd_* only) =====
-  var qs=new URLSearchParams(location.search);
+  var GAUGE_STORE_KEY = "cte_gauges_v1";
+
+  var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -344,10 +477,10 @@ body::before,body::after{pointer-events:none!important}
   if(depth!=="explore" && depth!=="learn") depth="explore";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+    localStorage.setItem("gd_depth", depth);
   }catch(e){}
 
   function q(){
@@ -358,21 +491,17 @@ body::before,body::after{pointer-events:none!important}
     if(el) el.href = path + q();
   }
 
-  // top links
   wire("btnIndex","/index.html");
   wire("btnIndustry","/research/industry-context/");
   wire("btnEvidence","/research/testimonials/");
   wire("btnLive","/gauges/live/");
   wire("goEvidence","/research/testimonials/");
   wire("goIndustry","/research/industry-context/");
-
-  // dock links
   wire("dockIndex","/index.html");
   wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  // ===== Lens copy packs =====
   var COPY = {
     narrative:{
       dataset1:
@@ -387,7 +516,17 @@ body::before,body::after{pointer-events:none!important}
       context1:
         "The broader industry context is not here to compete with the dataset. It is here to support correlation: across the building envelope, engineering-led systems tend to stabilize when they reduce failure modes and standardize deployment.",
       context2:
-        "That is why industry benchmarks are tracked separately: HVAC, roofing, insulation, fenestration, plumbing, and rainwater management show similar convergence patterns when constraints dominate. This page keeps them parallel, not comparative."
+        "That is why industry benchmarks are tracked separately: HVAC, roofing, insulation, fenestration, plumbing, and rainwater management show similar convergence patterns when constraints dominate. This page keeps them parallel, not comparative.",
+      liveTitle:"Traversal Motion (Local Telemetry)",
+      liveIntro:"This surface is hardwired to local traversal telemetry. It reads the live gauges store directly and keeps the research layer in motion without introducing new canon keys.",
+      coherence:"Coherence",
+      stability:"Stability",
+      admissibility:"Admissibility",
+      pressure:"Pressure",
+      syncStandby:"SYNC STANDBY",
+      syncLive:"SYNC LIVE",
+      syncStale:"SYNC STALE",
+      liveMeta:"Store: cte_gauges_v1 · Source: local browser telemetry · Refresh: animation frame + storage event"
     },
     engineering:{
       dataset1:
@@ -402,7 +541,17 @@ body::before,body::after{pointer-events:none!important}
       context1:
         "Parallel correlative context: building-envelope verticals exhibit convergence under constraint. Benchmarks normalize language and categorize engineered system evolution under repeatable constraints.",
       context2:
-        "Industry Benchmarks remain separate by design to prevent category mixing: benchmarks are references; the 100-installation cohort is deployed evidence. Correlation is allowed; comparison is excluded."
+        "Industry Benchmarks remain separate by design to prevent category mixing: benchmarks are references; the 100-installation cohort is deployed evidence. Correlation is allowed; comparison is excluded.",
+      liveTitle:"Traversal Motion (Local Telemetry)",
+      liveIntro:"This surface is hardwired to local traversal telemetry. It reads the live gauges store directly and keeps the research layer in motion without introducing new canon keys.",
+      coherence:"Coherence",
+      stability:"Stability",
+      admissibility:"Admissibility",
+      pressure:"Pressure",
+      syncStandby:"SYNC STANDBY",
+      syncLive:"SYNC LIVE",
+      syncStale:"SYNC STALE",
+      liveMeta:"Store: cte_gauges_v1 · Source: local browser telemetry · Refresh: animation frame + storage event"
     }
   };
 
@@ -418,19 +567,27 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("metricBox").innerHTML = COPY[lens].metric;
     document.getElementById("pContext1").textContent = COPY[lens].context1;
     document.getElementById("pContext2").textContent = COPY[lens].context2;
+    document.getElementById("hLiveGauges").textContent = COPY[lens].liveTitle;
+    document.getElementById("pLiveIntro").textContent = COPY[lens].liveIntro;
+    document.getElementById("lblCoherence").textContent = COPY[lens].coherence;
+    document.getElementById("lblStability").textContent = COPY[lens].stability;
+    document.getElementById("lblAdmissibility").textContent = COPY[lens].admissibility;
+    document.getElementById("lblPressure").textContent = COPY[lens].pressure;
+    document.getElementById("liveMetaText").textContent = COPY[lens].liveMeta;
   }
 
   pillNarr.addEventListener("click", function(){
     lens="narrative";
     applyLens();
-  });
+  }, {passive:true});
+
   pillEng.addEventListener("click", function(){
     lens="engineering";
     applyLens();
-  });
+  }, {passive:true});
+
   applyLens();
 
-  // ===== Neutral framework accordion (single voice) =====
   var SECTIONS = [
     {
       title:"Field Evidence Structure",
@@ -487,7 +644,7 @@ body::before,body::after{pointer-events:none!important}
         card.classList.add("open");
         chev.textContent="▾";
       }
-    });
+    }, {passive:true});
 
     card.appendChild(head);
     card.appendChild(body);
@@ -499,6 +656,199 @@ body::before,body::after{pointer-events:none!important}
     }
   });
 
+  function clamp(n,min,max){
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function toPercent(value){
+    if(typeof value !== "number" || !isFinite(value)) return 0;
+    if(value <= 1 && value >= 0) return Math.round(value * 100);
+    return Math.round(clamp(value, 0, 100));
+  }
+
+  function toNumber(value){
+    return typeof value === "number" && isFinite(value) ? value : null;
+  }
+
+  function parseGaugeStore(){
+    try{
+      var raw = localStorage.getItem(GAUGE_STORE_KEY);
+      if(!raw) return null;
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : null;
+    }catch(e){
+      return null;
+    }
+  }
+
+  function pickFirstNumber(obj, keys){
+    if(!obj || typeof obj !== "object") return null;
+    for(var i=0;i<keys.length;i++){
+      var v = obj[keys[i]];
+      if(typeof v === "number" && isFinite(v)) return v;
+    }
+    return null;
+  }
+
+  function readTelemetry(){
+    var store = parseGaugeStore();
+    if(!store) return {
+      coherence:0,
+      stability:0,
+      admissibility:0,
+      pressure:0,
+      updatedAt:null,
+      source:"standby"
+    };
+
+    var coherence = pickFirstNumber(store, ["coherence","coherencePct","coherence_percent","score","health"]);
+    var stability = pickFirstNumber(store, ["stability","stabilityPct","stability_percent","continuity"]);
+    var admissibility = pickFirstNumber(store, ["admissibility","admissibilityPct","admissibility_percent","receipt","verification"]);
+    var pressure = pickFirstNumber(store, ["pressure","pressurePct","pressure_percent","load","stress"]);
+
+    var updatedAt = null;
+    if(typeof store.updatedAt === "number") updatedAt = store.updatedAt;
+    else if(typeof store.updated_at === "number") updatedAt = store.updated_at;
+    else if(typeof store.timestamp === "number") updatedAt = store.timestamp;
+    else if(typeof store.ts === "number") updatedAt = store.ts;
+    else if(typeof store.updatedAt === "string"){
+      var t = Date.parse(store.updatedAt);
+      if(isFinite(t)) updatedAt = t;
+    }
+
+    coherence = toPercent(coherence === null ? 0 : coherence);
+    stability = toPercent(stability === null ? coherence : stability);
+    admissibility = toPercent(admissibility === null ? coherence : admissibility);
+    pressure = toPercent(pressure === null ? 0 : pressure);
+
+    return {
+      coherence:coherence,
+      stability:stability,
+      admissibility:admissibility,
+      pressure:pressure,
+      updatedAt:updatedAt,
+      source:"live"
+    };
+  }
+
+  var gaugeEls = {
+    coherence: document.getElementById("gCoherence"),
+    coherenceSub: document.getElementById("gCoherenceSub"),
+    coherenceFill: document.getElementById("gCoherenceFill"),
+
+    stability: document.getElementById("gStability"),
+    stabilitySub: document.getElementById("gStabilitySub"),
+    stabilityFill: document.getElementById("gStabilityFill"),
+
+    admissibility: document.getElementById("gAdmissibility"),
+    admissibilitySub: document.getElementById("gAdmissibilitySub"),
+    admissibilityFill: document.getElementById("gAdmissibilityFill"),
+
+    pressure: document.getElementById("gPressure"),
+    pressureSub: document.getElementById("gPressureSub"),
+    pressureFill: document.getElementById("gPressureFill"),
+
+    liveDot: document.getElementById("liveDot"),
+    livePulseText: document.getElementById("livePulseText")
+  };
+
+  var lastSerialized = "";
+  var rafId = 0;
+
+  function ageLabel(updatedAt){
+    if(typeof updatedAt !== "number" || !isFinite(updatedAt)) return "No timestamp";
+    var delta = Date.now() - updatedAt;
+    if(delta < 0) delta = 0;
+    if(delta < 2000) return "Updated just now";
+    if(delta < 60000) return "Updated " + Math.round(delta / 1000) + "s ago";
+    return "Updated " + Math.round(delta / 60000) + "m ago";
+  }
+
+  function pressureState(value){
+    if(value >= 80) return "High local load";
+    if(value >= 45) return "Moderate local load";
+    return "Low local load";
+  }
+
+  function coherenceState(value){
+    if(value >= 80) return "High structural agreement";
+    if(value >= 55) return "Partial agreement";
+    return "Weak agreement";
+  }
+
+  function stabilityState(value){
+    if(value >= 80) return "Stable motion";
+    if(value >= 55) return "Intermediate motion";
+    return "Unstable motion";
+  }
+
+  function admissibilityState(value){
+    if(value >= 80) return "Receipt-backed";
+    if(value >= 55) return "Partially backed";
+    return "Low admissibility";
+  }
+
+  function renderTelemetry(force){
+    var snapshot = readTelemetry();
+    var serialized = JSON.stringify(snapshot);
+    if(!force && serialized === lastSerialized){
+      return;
+    }
+    lastSerialized = serialized;
+
+    gaugeEls.coherence.textContent = snapshot.coherence + "%";
+    gaugeEls.stability.textContent = snapshot.stability + "%";
+    gaugeEls.admissibility.textContent = snapshot.admissibility + "%";
+    gaugeEls.pressure.textContent = snapshot.pressure + "%";
+
+    gaugeEls.coherenceFill.style.width = snapshot.coherence + "%";
+    gaugeEls.stabilityFill.style.width = snapshot.stability + "%";
+    gaugeEls.admissibilityFill.style.width = snapshot.admissibility + "%";
+    gaugeEls.pressureFill.style.width = snapshot.pressure + "%";
+
+    gaugeEls.coherenceSub.textContent = coherenceState(snapshot.coherence) + " · " + ageLabel(snapshot.updatedAt);
+    gaugeEls.stabilitySub.textContent = stabilityState(snapshot.stability) + " · " + ageLabel(snapshot.updatedAt);
+    gaugeEls.admissibilitySub.textContent = admissibilityState(snapshot.admissibility) + " · " + ageLabel(snapshot.updatedAt);
+    gaugeEls.pressureSub.textContent = pressureState(snapshot.pressure) + " · " + ageLabel(snapshot.updatedAt);
+
+    var stale = !(typeof snapshot.updatedAt === "number" && (Date.now() - snapshot.updatedAt) < 20000);
+    if(snapshot.source === "live" && !stale){
+      gaugeEls.liveDot.classList.add("on");
+      gaugeEls.livePulseText.textContent = COPY[lens].syncLive;
+    }else if(snapshot.source === "live" && stale){
+      gaugeEls.liveDot.classList.remove("on");
+      gaugeEls.livePulseText.textContent = COPY[lens].syncStale;
+    }else{
+      gaugeEls.liveDot.classList.remove("on");
+      gaugeEls.livePulseText.textContent = COPY[lens].syncStandby;
+    }
+  }
+
+  function telemetryLoop(){
+    renderTelemetry(false);
+    rafId = window.requestAnimationFrame(telemetryLoop);
+  }
+
+  window.addEventListener("storage", function(event){
+    if(event.key === GAUGE_STORE_KEY){
+      renderTelemetry(true);
+    }
+  });
+
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "visible"){
+      renderTelemetry(true);
+      if(!rafId){
+        rafId = window.requestAnimationFrame(telemetryLoop);
+      }
+    }else if(rafId){
+      window.cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  });
+
+  renderTelemetry(true);
+  rafId = window.requestAnimationFrame(telemetryLoop);
 })();
 </script>
 

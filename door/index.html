@@ -6,7 +6,6 @@
 <title>Nine Summits — Door</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 <style>
 a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
@@ -25,26 +24,58 @@ body::before,body::after{pointer-events:none!important}
   --glowStrong:rgba(212,175,55,.34);
 }
 
-#root{position:relative;z-index:10}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030712;
+}
+
+#root{
+  position:relative;
+  z-index:10;
+}
+
 #world-canvas{
-  position:fixed;inset:0;width:100%;height:100%;
-  display:block;z-index:1;touch-action:none;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  z-index:1;
+  touch-action:none;
 }
 
 .top{
-  position:fixed;top:16px;left:0;right:0;
+  position:fixed;
+  top:16px;
+  left:0;
+  right:0;
   padding:0 16px;
-  display:flex;justify-content:space-between;gap:12px;
-  z-index:240;pointer-events:none;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  z-index:240;
+  pointer-events:none;
 }
-.top .left,.top .right{
-  display:flex;gap:10px;white-space:nowrap;
-  pointer-events:auto;flex-wrap:wrap;align-items:center;
+
+.top .left,
+.top .right{
+  display:flex;
+  gap:10px;
+  white-space:nowrap;
+  pointer-events:auto;
+  flex-wrap:wrap;
+  align-items:center;
 }
 
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:44px;padding:10px 12px;border-radius:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:10px 12px;
+  border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 42%),
@@ -53,20 +84,28 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 28% 80%, rgba(120,0,22,.16), transparent 72%),
     linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
   color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
+  font-weight:950;
+  font-size:14px;
+  letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:hidden;
   touch-action:manipulation;
   box-shadow:
     var(--shadowC),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -26px 46px rgba(0,0,0,.55);
-  transform:none !important;
+  transform:none!important;
   transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease, opacity .16s ease;
+  cursor:pointer;
 }
+
 .btn::before{
   content:"";
-  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
   background:
     radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
     repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
@@ -79,9 +118,13 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(#000,#000);
   opacity:.32;
 }
+
 .btn::after{
   content:"";
-  position:absolute;left:12%;right:12%;top:10%;
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:10%;
   height:30%;
   border-radius:999px;
   background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
@@ -89,6 +132,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.90;
 }
+
 .btn:hover{
   border-color:rgba(212,175,55,.55);
   box-shadow:
@@ -98,6 +142,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -30px 54px rgba(0,0,0,.60);
   filter:saturate(1.05);
 }
+
 .btn:active{
   border-color:rgba(212,175,55,.62);
   box-shadow:
@@ -107,6 +152,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.12),
     inset 0 -30px 54px rgba(0,0,0,.62);
 }
+
 .btn.primary{
   border-color:rgba(255,43,43,.22);
   box-shadow:
@@ -115,6 +161,7 @@ body::before,body::after{pointer-events:none!important}
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -26px 46px rgba(0,0,0,.55);
 }
+
 .btn.is-active{
   border-color:rgba(212,175,55,.62);
   box-shadow:
@@ -129,8 +176,11 @@ body::before,body::after{pointer-events:none!important}
   width:min(1160px,94vw);
   margin:0 auto;
   padding:86px 0 calc(var(--dockH) + 18px);
-  display:flex;flex-direction:column;gap:16px;
-  position:relative;z-index:3;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  position:relative;
+  z-index:3;
 }
 
 .hero{
@@ -140,6 +190,7 @@ body::before,body::after{pointer-events:none!important}
   text-align:center;
   pointer-events:none;
 }
+
 .k{
   margin:0 0 8px;
   font-size:12px;
@@ -148,6 +199,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.80;
   color:var(--mut);
 }
+
 .h1{
   margin:0;
   font-weight:980;
@@ -157,6 +209,7 @@ body::before,body::after{pointer-events:none!important}
   color:var(--ink);
   text-shadow:0 10px 38px rgba(0,0,0,.62);
 }
+
 .h2{
   margin:12px 0 0;
   font-weight:900;
@@ -165,6 +218,7 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.92);
   text-shadow:0 8px 26px rgba(0,0,0,.48);
 }
+
 .tag{
   margin:12px auto 0;
   max-width:940px;
@@ -172,6 +226,7 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.6;
   color:rgba(255,255,255,.86);
 }
+
 .micro{
   margin:10px auto 0;
   max-width:900px;
@@ -201,6 +256,7 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
 }
+
 .choice{
   border:1px solid rgba(255,255,255,.12);
   border-radius:20px;
@@ -210,18 +266,21 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:var(--shadowB);
 }
+
 .choice h3{
   margin:0 0 8px;
   font-size:16px;
   line-height:1.2;
   letter-spacing:.04em;
 }
+
 .choice p{
   margin:0;
   font-size:13.5px;
   line-height:1.6;
   color:rgba(255,255,255,.78);
 }
+
 .choice .actions{
   margin-top:12px;
   display:flex;
@@ -245,11 +304,18 @@ body::before,body::after{pointer-events:none!important}
 }
 
 @media (max-width:760px){
-  .bottom-panel{grid-template-columns:1fr}
-  :root{--dockH:196px}
+  .bottom-panel{
+    grid-template-columns:1fr;
+  }
+  :root{
+    --dockH:196px;
+  }
 }
+
 @media (max-width:520px){
-  .micro{font-size:12px}
+  .micro{
+    font-size:12px;
+  }
 }
 </style>
 </head>
@@ -259,7 +325,7 @@ body::before,body::after{pointer-events:none!important}
 <div id="root">
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn primary" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
+      <a class="btn primary" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
     </div>
     <div class="right" aria-label="Language and mode">
       <button class="btn" id="btnFlatTop" type="button">FLAT</button>
@@ -323,12 +389,12 @@ import { createControlSystem } from "/world/control.js";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
   let d = parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
+  if(!isFinite(d)) d = 1;
+  if(d < 1) d = 1;
+  if(d > 9) d = 9;
   depth = String(d);
 
-  if(lane!=="platform" && lane!=="engineering") lane="";
+  if(lane!=="platform" && lane!=="engineering") lane = "";
 
   try{
     LS.setItem("gd_lang", lang);
@@ -339,47 +405,60 @@ import { createControlSystem } from "/world/control.js";
 
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(extra){
+  function buildQuery(extra){
     const p = new URLSearchParams();
-    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
-    p.set("style",(extra&&extra.style)?extra.style:style);
-    p.set("time", (extra&&extra.time)?extra.time:time);
-    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-    p.set("mode", (extra&&extra.mode)?extra.mode:mode);
-    const L = (extra&&extra.lane)?extra.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane", L);
+    p.set("lang", (extra && extra.lang) ? extra.lang : lang);
+    p.set("style", (extra && extra.style) ? extra.style : style);
+    p.set("time", (extra && extra.time) ? extra.time : time);
+    p.set("depth", (extra && extra.depth) ? String(extra.depth) : depth);
+    p.set("mode", (extra && extra.mode) ? extra.mode : mode);
+
+    const resolvedLane = (extra && extra.lane) ? extra.lane : lane;
+    if(resolvedLane === "platform" || resolvedLane === "engineering"){
+      p.set("lane", resolvedLane);
+    }
+
     return "?" + p.toString();
   }
 
   function withModeQuery(route, nextMode){
     const glue = route.includes("?") ? "&" : "?";
-    return route + glue + q({ mode: nextMode || mode }).slice(1);
+    return route + glue + buildQuery({ mode: nextMode || mode }).slice(1);
   }
 
-  function wireAll(){
+  function wireRoutes(){
     const nodes = document.querySelectorAll("[data-route]");
-    for(let i=0;i<nodes.length;i++){
+    for(let i = 0; i < nodes.length; i += 1){
       const el = nodes[i];
       const route = el.getAttribute("data-route") || "";
       if(!route) continue;
-      el.setAttribute("href", route + q());
+      if(el.tagName === "A"){
+        el.setAttribute("href", route + buildQuery());
+      }
     }
   }
 
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
+    if(next!=="en" && next!=="zh" && next!=="es") next = "en";
     lang = next;
-    try{ LS.setItem("gd_lang", lang); }catch(e){}
-    location.href = location.pathname + q({lang:lang});
+    try{
+      LS.setItem("gd_lang", lang);
+    }catch(e){}
+    location.href = location.pathname + buildQuery({ lang: lang });
   }
 
   function setMode(next){
     mode = next === "flat" ? "flat" : "round";
-    location.href = location.pathname + q({mode:mode});
+    location.href = location.pathname + buildQuery({ mode: mode });
   }
 
-  function P(en,zh,es){ return {en,zh,es}; }
-  function pick(o){ return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en); }
+  function P(en, zh, es){
+    return { en, zh, es };
+  }
+
+  function pick(o){
+    return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en);
+  }
 
   const COPY = {
     k: P("DOOR","门","PUERTA"),
@@ -425,8 +504,9 @@ import { createControlSystem } from "/world/control.js";
   document.getElementById("roundTitle").textContent = pick(COPY.roundTitle);
   document.getElementById("roundBody").textContent = pick(COPY.roundBody);
   document.getElementById("btnRoundBottom").textContent = pick(COPY.roundBtn);
-  document.getElementById("btnIndex").textContent = pick(COPY.compass);
-  wireAll();
+  document.getElementById("btnCompass").textContent = pick(COPY.compass);
+
+  wireRoutes();
 
   const canvas = document.getElementById("world-canvas");
   const ctx = canvas.getContext("2d", { alpha: true });
@@ -440,13 +520,13 @@ import { createControlSystem } from "/world/control.js";
   const btnRoundBottom = document.getElementById("btnRoundBottom");
   const runtimePill = document.getElementById("runtimePill");
 
-  btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-  btnFlatTop.addEventListener("click", function(){ setMode("flat"); }, {passive:true});
-  btnRoundTop.addEventListener("click", function(){ setMode("round"); }, {passive:true});
-  btnFlatBottom.addEventListener("click", function(){ setMode("flat"); }, {passive:true});
-  btnRoundBottom.addEventListener("click", function(){ setMode("round"); }, {passive:true});
+  btnEN.addEventListener("click", function(){ setLang("en"); }, { passive:true });
+  btnZH.addEventListener("click", function(){ setLang("zh"); }, { passive:true });
+  btnES.addEventListener("click", function(){ setLang("es"); }, { passive:true });
+  btnFlatTop.addEventListener("click", function(){ setMode("flat"); }, { passive:true });
+  btnRoundTop.addEventListener("click", function(){ setMode("round"); }, { passive:true });
+  btnFlatBottom.addEventListener("click", function(){ setMode("flat"); }, { passive:true });
+  btnRoundBottom.addEventListener("click", function(){ setMode("round"); }, { passive:true });
 
   function syncModeButtons(){
     btnFlatTop.classList.toggle("is-active", mode === "flat");
@@ -454,13 +534,14 @@ import { createControlSystem } from "/world/control.js";
     runtimePill.textContent = mode === "flat" ? pick(COPY.runtimeFlat) : pick(COPY.runtimeRound);
     canvas.style.filter = mode === "flat" ? "blur(8px) brightness(.62)" : "none";
   }
+
   syncModeButtons();
 
   const planetEngine = createPlanetEngine();
   const renderer = createRenderer();
   const control = createControlSystem();
 
-  const MOTION_STORAGE_KEY = "ns_door_motion_v2";
+  const MOTION_STORAGE_KEY = "ns_door_motion_v3";
 
   let planetField = null;
   let rafId = 0;
@@ -573,8 +654,8 @@ import { createControlSystem } from "/world/control.js";
     lastRenderReceipt = renderer.renderPlanet({
       ctx,
       planetField,
-      projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) => {
-        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx);
+      projectPoint: function(latDeg, lonDeg, radiusOffsetPx){
+        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx || 0);
       },
       viewState: control.getCameraState(),
       orbitalSystem: mode === "round" ? buildRenderOrbitalSystem() : null
@@ -657,18 +738,19 @@ import { createControlSystem } from "/world/control.js";
         isDragging = true;
         lastX = event.clientX;
         lastY = event.clientY;
-      }, {passive:true});
+      }, { passive:true });
 
       window.addEventListener("pointermove", function(event){
         if(transition.active) return;
         if(pendingStar) return;
         if(!isDragging) return;
+
         const dx = event.clientX - lastX;
         const dy = event.clientY - lastY;
         lastX = event.clientX;
         lastY = event.clientY;
         control.applyDrag(dx, dy);
-      }, {passive:true});
+      }, { passive:true });
 
       window.addEventListener("pointerup", function(event){
         if(transition.active){
@@ -695,20 +777,20 @@ import { createControlSystem } from "/world/control.js";
         pendingStar = null;
         pendingPointerDown = null;
         isDragging = false;
-      }, {passive:true});
+      }, { passive:true });
 
       window.addEventListener("pointercancel", function(){
         pendingStar = null;
         pendingPointerDown = null;
         isDragging = false;
-      }, {passive:true});
+      }, { passive:true });
     }
 
     window.addEventListener("resize", function(){
       resizeWorld();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       renderSurface();
-    }, {passive:true});
+    }, { passive:true });
 
     window.addEventListener("pagehide", function(){
       persistMotionState();
@@ -716,7 +798,7 @@ import { createControlSystem } from "/world/control.js";
         cancelAnimationFrame(rafId);
         rafId = 0;
       }
-    }, {passive:true});
+    }, { passive:true });
 
     window.addEventListener("pageshow", function(){
       if(mode === "round"){
@@ -726,7 +808,7 @@ import { createControlSystem } from "/world/control.js";
         lastFrameAt = performance.now();
         rafId = requestAnimationFrame(frame);
       }
-    }, {passive:true});
+    }, { passive:true });
   }
 
   function start(){

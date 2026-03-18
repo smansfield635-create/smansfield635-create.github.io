@@ -270,7 +270,7 @@ body::before,body::after{pointer-events:none!important}
   left:0;
   right:0;
 }
-.top-ui-row--modes{
+.top-ui-row--tools{
   position:absolute;
   top:12px;
   right:12px;
@@ -295,12 +295,20 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-.mode-cluster{
+.tool-cluster,
+.zoom-cluster{
   display:flex;
   gap:8px;
   pointer-events:auto;
 }
-.mode-btn{
+.top-tools{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.mode-btn,
+.zoom-btn{
   min-height:42px;
   padding:0 16px;
   border-radius:999px;
@@ -315,7 +323,14 @@ body::before,body::after{pointer-events:none!important}
   text-transform:uppercase;
   cursor:pointer;
 }
-.mode-btn:active{transform:translateY(1px)}
+.zoom-btn{
+  min-width:42px;
+  padding:0 12px;
+}
+.mode-btn:active,
+.zoom-btn:active{
+  transform:translateY(1px);
+}
 .mode-btn.is-active{
   border-color:rgba(226,191,92,.50);
   box-shadow:
@@ -346,7 +361,6 @@ body::before,body::after{pointer-events:none!important}
   -webkit-tap-highlight-color:transparent;
 }
 .orbital-marker[hidden]{display:none}
-
 .orbital-core{
   position:absolute;
   left:50%;
@@ -374,14 +388,8 @@ body::before,body::after{pointer-events:none!important}
     0 0 16px rgba(255,225,140,.28),
     0 0 28px rgba(255,219,126,.14);
 }
-.orbital-core::before{
-  width:10px;
-  height:78px;
-}
-.orbital-core::after{
-  width:78px;
-  height:10px;
-}
+.orbital-core::before{ width:10px; height:78px; }
+.orbital-core::after{ width:78px; height:10px; }
 .orbital-diag-a,
 .orbital-diag-b{
   position:absolute;
@@ -396,7 +404,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .orbital-diag-a{transform:translate(-50%,-50%) rotate(45deg)}
 .orbital-diag-b{transform:translate(-50%,-50%) rotate(-45deg)}
-
 .orbital-glow{
   position:absolute;
   left:50%;
@@ -405,12 +412,10 @@ body::before,body::after{pointer-events:none!important}
   height:118px;
   transform:translate(-50%,-50%);
   border-radius:50%;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255,227,132,.10), rgba(255,227,132,.05) 26%, rgba(255,227,132,0) 68%);
+  background:radial-gradient(circle at 50% 50%, rgba(255,227,132,.10), rgba(255,227,132,.05) 26%, rgba(255,227,132,0) 68%);
   filter:blur(8px);
   opacity:.84;
 }
-
 .orbital-code{
   position:absolute;
   left:50%;
@@ -424,7 +429,6 @@ body::before,body::after{pointer-events:none!important}
   text-shadow:0 0 10px rgba(0,0,0,.50);
   white-space:nowrap;
 }
-
 .orbital-name{
   position:absolute;
   left:50%;
@@ -564,23 +568,31 @@ body[data-mode="observe"] .diagnostics-summary{
 }
 
 @media (max-width:700px){
-  .top-ui-row--home{
-    top:10px;
-  }
-  .top-ui-row--modes{
+  .top-ui-row--home{ top:10px; }
+  .top-ui-row--tools{
     top:58px;
     left:0;
     right:0;
     width:100%;
     justify-content:center;
   }
-  .mode-cluster{
+  .top-tools{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .tool-cluster,
+  .zoom-cluster{
     gap:6px;
   }
-  .mode-btn{
+  .mode-btn,
+  .zoom-btn{
     min-height:38px;
     padding:0 12px;
     font-size:11px;
+  }
+  .zoom-btn{
+    min-width:38px;
+    padding:0 10px;
   }
   .home-pill{
     min-width:108px;
@@ -619,23 +631,11 @@ body[data-mode="observe"] .diagnostics-summary{
 }
 
 @media (max-width:420px){
-  .hero-panel{
-    top:21vh;
-  }
-  .hero-title{
-    font-size:clamp(34px,11vw,54px);
-  }
-  .hero-sub{
-    font-size:clamp(16px,5.8vw,22px);
-  }
-  .hero-tag{
-    font-size:clamp(12px,4vw,14px);
-  }
-  .mode-btn{
-    padding:0 10px;
-    min-height:36px;
-    letter-spacing:.04em;
-  }
+  .hero-panel{ top:21vh; }
+  .hero-title{ font-size:clamp(34px,11vw,54px); }
+  .hero-sub{ font-size:clamp(16px,5.8vw,22px); }
+  .hero-tag{ font-size:clamp(12px,4vw,14px); }
+  .mode-btn{ padding:0 10px; min-height:36px; letter-spacing:.04em; }
 }
 </style>
 </head>
@@ -713,11 +713,18 @@ body[data-mode="observe"] .diagnostics-summary{
     <div class="top-ui-row top-ui-row--home">
       <div class="home-pill" id="home-pill">HOME</div>
     </div>
-    <div class="top-ui-row top-ui-row--modes">
-      <div class="mode-cluster" id="mode-cluster">
-        <button id="btn-flat" class="mode-btn" type="button">FLAT</button>
-        <button id="btn-round" class="mode-btn" type="button">ROUND</button>
-        <button id="btn-observe" class="mode-btn" type="button">OBSERVE</button>
+
+    <div class="top-ui-row top-ui-row--tools">
+      <div class="top-tools">
+        <div class="tool-cluster" id="mode-cluster">
+          <button id="btn-flat" class="mode-btn" type="button">FLAT</button>
+          <button id="btn-round" class="mode-btn" type="button">ROUND</button>
+          <button id="btn-observe" class="mode-btn" type="button">OBSERVE</button>
+        </div>
+        <div class="zoom-cluster" aria-label="Zoom">
+          <button id="btn-zoom-out" class="zoom-btn" type="button">−</button>
+          <button id="btn-zoom-in" class="zoom-btn" type="button">+</button>
+        </div>
       </div>
     </div>
   </div>
@@ -761,6 +768,8 @@ const debugPanel = document.getElementById("debug-panel");
 const btnFlat = document.getElementById("btn-flat");
 const btnRound = document.getElementById("btn-round");
 const btnObserve = document.getElementById("btn-observe");
+const btnZoomIn = document.getElementById("btn-zoom-in");
+const btnZoomOut = document.getElementById("btn-zoom-out");
 
 const overlayMap = Object.freeze({
   "north-products": document.getElementById("marker-north"),
@@ -774,67 +783,11 @@ const renderer = createRenderer();
 const control = createControlSystem();
 const instruments = createInstruments();
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v6";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v7";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
-
-const orbitalSystem = Object.freeze({
-  objects: Object.freeze([
-    Object.freeze({
-      id: "north-products",
-      label: "PRODUCTS",
-      route: "/products/",
-      code: "N",
-      uiLabel: "PRODUCTS",
-      baseLatDeg: 0,
-      baseLonDeg: 0,
-      bearingOffsetDeg: -90,
-      spinOffsetRad: 0.20,
-      spinMultiplier: 1.35,
-      sizePx: 20
-    }),
-    Object.freeze({
-      id: "south-laws",
-      label: "LAWS",
-      route: "/laws/",
-      code: "S",
-      uiLabel: "LAWS",
-      baseLatDeg: 0,
-      baseLonDeg: 0,
-      bearingOffsetDeg: 90,
-      spinOffsetRad: 0.80,
-      spinMultiplier: 1.25,
-      sizePx: 20
-    }),
-    Object.freeze({
-      id: "east-gauges",
-      label: "GAUGES",
-      route: "/gauges/",
-      code: "E",
-      uiLabel: "GAUGES",
-      baseLatDeg: 0,
-      baseLonDeg: 0,
-      bearingOffsetDeg: 0,
-      spinOffsetRad: 1.10,
-      spinMultiplier: 1.45,
-      sizePx: 20
-    }),
-    Object.freeze({
-      id: "west-explore",
-      label: "EXPLORE",
-      route: "/explore/",
-      code: "W",
-      uiLabel: "EXPLORE",
-      baseLatDeg: 0,
-      baseLonDeg: 0,
-      bearingOffsetDeg: 180,
-      spinOffsetRad: 1.70,
-      spinMultiplier: 1.30,
-      sizePx: 20
-    })
-  ])
-});
+const activePointers = new Map();
 
 let planetField = null;
 let rafId = 0;
@@ -852,10 +805,61 @@ let lastPlacementReceipt = Object.freeze({
   markerRepositionedCount: 0
 });
 
-let isDragging = false;
+let diagnosticsMode = "peek";
+let dragPointerId = null;
 let lastX = 0;
 let lastY = 0;
-let diagnosticsMode = "peek";
+let pinchStartDistance = 0;
+let pinchStartZoom = 1;
+
+const orbitalSystem = Object.freeze({
+  objects: Object.freeze([
+    Object.freeze({
+      id: "north-products",
+      label: "PRODUCTS",
+      route: "/products/",
+      code: "N",
+      uiLabel: "PRODUCTS",
+      baseLatDeg: 0,
+      baseLonDeg: 0,
+      bearingOffsetDeg: -90,
+      sizePx: 20
+    }),
+    Object.freeze({
+      id: "south-laws",
+      label: "LAWS",
+      route: "/laws/",
+      code: "S",
+      uiLabel: "LAWS",
+      baseLatDeg: 0,
+      baseLonDeg: 0,
+      bearingOffsetDeg: 90,
+      sizePx: 20
+    }),
+    Object.freeze({
+      id: "east-gauges",
+      label: "GAUGES",
+      route: "/gauges/",
+      code: "E",
+      uiLabel: "GAUGES",
+      baseLatDeg: 0,
+      baseLonDeg: 0,
+      bearingOffsetDeg: 0,
+      sizePx: 20
+    }),
+    Object.freeze({
+      id: "west-explore",
+      label: "EXPLORE",
+      route: "/explore/",
+      code: "W",
+      uiLabel: "EXPLORE",
+      baseLatDeg: 0,
+      baseLonDeg: 0,
+      bearingOffsetDeg: 180,
+      sizePx: 20
+    })
+  ])
+});
 
 function isFlatMode() {
   return mode === "flat";
@@ -1299,8 +1303,6 @@ function frame(now) {
   const dtMs = now - lastFrameAt;
   lastFrameAt = now;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   if (isRoundVisualMode()) {
     control.stepInertia(dtMs);
   }
@@ -1368,6 +1370,105 @@ function bindOverlayRoutes() {
   });
 }
 
+function pointerDistance(a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  return Math.sqrt((dx * dx) + (dy * dy));
+}
+
+function resetPinchState() {
+  pinchStartDistance = 0;
+  pinchStartZoom = control.getMotionState().zoomCurrent;
+}
+
+function bindCanvasInteractions() {
+  if (!isRoundVisualMode()) return;
+
+  canvas.addEventListener("wheel", (event) => {
+    if (!isRoundVisualMode() || isFlatMode()) return;
+    event.preventDefault();
+    const delta = -event.deltaY * 0.0015;
+    control.adjustZoomBy(delta);
+  }, { passive: false });
+
+  canvas.addEventListener("pointerdown", (event) => {
+    activePointers.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY
+    });
+
+    if (activePointers.size === 1) {
+      dragPointerId = event.pointerId;
+      lastX = event.clientX;
+      lastY = event.clientY;
+    }
+
+    if (activePointers.size === 2) {
+      dragPointerId = null;
+      const points = Array.from(activePointers.values());
+      pinchStartDistance = pointerDistance(points[0], points[1]);
+      pinchStartZoom = control.getMotionState().zoomCurrent;
+    }
+  }, { passive: true });
+
+  window.addEventListener("pointermove", (event) => {
+    if (!activePointers.has(event.pointerId)) return;
+
+    activePointers.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY
+    });
+
+    if (activePointers.size === 2) {
+      const points = Array.from(activePointers.values());
+      const currentDistance = pointerDistance(points[0], points[1]);
+
+      if (pinchStartDistance > 0.0001) {
+        const factor = currentDistance / pinchStartDistance;
+        control.setZoomAbsolute(pinchStartZoom * factor);
+      }
+      return;
+    }
+
+    if (dragPointerId !== event.pointerId) return;
+
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+
+    control.applyDrag(dx, dy);
+  }, { passive: true });
+
+  function endPointer(pointerId) {
+    activePointers.delete(pointerId);
+
+    if (activePointers.size < 2) {
+      resetPinchState();
+    }
+
+    if (dragPointerId === pointerId) {
+      dragPointerId = null;
+    }
+
+    if (activePointers.size === 1) {
+      const [id, point] = Array.from(activePointers.entries())[0];
+      dragPointerId = id;
+      lastX = point.x;
+      lastY = point.y;
+    }
+  }
+
+  window.addEventListener("pointerup", (event) => {
+    endPointer(event.pointerId);
+  }, { passive: true });
+
+  window.addEventListener("pointercancel", (event) => {
+    endPointer(event.pointerId);
+  }, { passive: true });
+}
+
 function bindEvents() {
   diagnosticsToggle.addEventListener("click", () => {
     setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
@@ -1389,33 +1490,17 @@ function bindEvents() {
     navigateToMode("observe");
   });
 
-  if (isRoundVisualMode()) {
-    canvas.addEventListener("pointerdown", (event) => {
-      isDragging = true;
-      lastX = event.clientX;
-      lastY = event.clientY;
-    }, { passive: true });
+  btnZoomIn.addEventListener("click", () => {
+    if (!isRoundVisualMode()) return;
+    control.adjustZoomBy(0.10);
+  }, { passive: true });
 
-    window.addEventListener("pointermove", (event) => {
-      if (!isDragging) return;
+  btnZoomOut.addEventListener("click", () => {
+    if (!isRoundVisualMode()) return;
+    control.adjustZoomBy(-0.10);
+  }, { passive: true });
 
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
-
-      lastX = event.clientX;
-      lastY = event.clientY;
-
-      control.applyDrag(dx, dy);
-    }, { passive: true });
-
-    window.addEventListener("pointerup", () => {
-      isDragging = false;
-    }, { passive: true });
-
-    window.addEventListener("pointercancel", () => {
-      isDragging = false;
-    }, { passive: true });
-  }
+  bindCanvasInteractions();
 
   document.querySelectorAll(".flat-card").forEach((card) => {
     card.addEventListener("click", () => {
@@ -1427,7 +1512,6 @@ function bindEvents() {
 
   window.addEventListener("resize", () => {
     resizeWorld();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderSurface(16.7);
   }, { passive: true });
 

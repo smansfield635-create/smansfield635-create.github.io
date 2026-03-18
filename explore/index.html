@@ -1,29 +1,25 @@
 <!doctype html>
 <!-- TNT — /explore/index.html
      EXPLORE · EXPANSION MAP (INTRO-TIER ORIENTATION — NO LENSES)
-     UPDATE (PER SEAN):
-       - UPGRADE BUTTON MATERIAL SYSTEM to match “3D gloss” standard:
-           • Perimeter gold glow (NOT bottom-only underlight)
-           • Diamond-aligned silk inlay (no flat orthogonal grid feel)
-           • Hover = glow only (no movement)
-       - Keep: no lenses (orientation layer)
-       - Keep: trilingual (EN/中文/ES) with SAME-path reload
-       - Keep: single-open accordion
-       - Keep: state carry lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - Keep: lane=platform|engineering is URL-only (preserve if present; never store)
-       - Keep: ui.css owns html/body background (NO background styling here)
-       - No overlays/modals; no inline onclick; addEventListener only
-     ROUTING:
-       - Links append full state query
-       - If destination doesn’t exist yet, keep link (shell later)
+     STATUS:
+       - full authority rewrite
+       - 3D gloss material system upgraded
+       - perimeter gold glow added
+       - diamond-aligned silk inlay added
+       - hover = glow only
+       - no overlays / no modals
+       - single-open accordion preserved
+       - trilingual reload preserved
+       - canon state carry preserved
+       - lane remains URL-only
+       - ui.css owns background
 -->
 
-<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Explore · Expansion Map</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Nine Summits — Explore</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
@@ -37,52 +33,63 @@ body::before,body::after{pointer-events:none!important}
 :root{
   --dockH:100px;
 
-  /* High-contrast red/black/gold */
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.08);
 
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.85);
-  --mut2:rgba(255,255,255,.72);
+  --ink:rgba(255,255,255,.95);
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.74);
 
   --crimson:rgba(120,0,22,.28);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
+
   --goldA:rgba(201,162,74,.22);
   --goldB:rgba(201,162,74,.10);
-
   --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.30);
-  --goldGlow2:rgba(201,162,74,.16);
+  --goldGlow:rgba(201,162,74,.24);
+  --goldGlow2:rgba(201,162,74,.14);
 
   --shadowA:0 40px 140px rgba(0,0,0,.65);
   --shadowB:0 20px 70px rgba(0,0,0,.60);
+  --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* Page */
-.page{
-  width:min(1200px,94vw);
-  margin:0 auto;
-  padding:90px 0 calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-/* Top controls */
+/* =========================
+   TOP CONTROLS
+========================= */
 .top-left{
-  position:fixed;left:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  position:fixed;
+  left:16px;
+  top:16px;
+  z-index:240;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
 }
 .top-right{
-  position:fixed;right:16px;top:16px;z-index:240;
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+  position:fixed;
+  right:16px;
+  top:16px;
+  z-index:240;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
 }
 
-/* ===== Button (3D gloss + perimeter gold glow; NO movement) ===== */
+/* =========================
+   3D GLOSS BUTTON SYSTEM
+========================= */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:44px;padding:10px 12px;border-radius:16px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:10px 14px;
+  border-radius:16px;
   border:1px solid rgba(255,255,255,.14);
   background:
     radial-gradient(circle at 18% 22%, rgba(255,255,255,.10), transparent 46%),
@@ -90,32 +97,41 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 70% 86%, rgba(90,40,120,.10), transparent 66%),
     linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
   color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
+  font-weight:950;
+  font-size:14px;
+  letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:hidden;
   touch-action:manipulation;
-  box-shadow:0 16px 44px rgba(0,0,0,.62);
+  box-shadow:var(--shadowC);
   white-space:nowrap;
+  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
 }
 .btn::before{
   content:"";
-  position:absolute;inset:0;border-radius:16px;
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
   pointer-events:none;
-  /* diamond-aligned silk inlay (subtle) */
   background:
+    radial-gradient(130% 130% at 50% 50%, rgba(201,162,74,0) 58%, rgba(201,162,74,.18) 82%, rgba(201,162,74,0) 100%),
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
-  opacity:.18;
   mask:
-    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
     linear-gradient(#000,#000);
   -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 74%, #000 80% 100%),
+    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
     linear-gradient(#000,#000);
+  opacity:.32;
 }
 .btn::after{
   content:"";
-  position:absolute;left:12%;right:12%;top:10%;
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:10%;
   height:32%;
   border-radius:999px;
   pointer-events:none;
@@ -126,29 +142,44 @@ body::before,body::after{pointer-events:none!important}
 .btn:hover{
   border-color:rgba(201,162,74,.46);
   box-shadow:
-    0 16px 44px rgba(0,0,0,.62),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 28px rgba(201,162,74,.22),
-    0 0 46px rgba(201,162,74,.12);
+    var(--shadowC),
+    0 0 0 2px rgba(201,162,74,.14),
+    0 0 28px rgba(201,162,74,.20),
+    0 0 44px rgba(201,162,74,.10);
+  filter:saturate(1.04);
 }
 .btn:active{filter:brightness(.98)}
 .btn.red{
   border-color:rgba(255,43,43,.22);
   box-shadow:
-    0 16px 44px rgba(0,0,0,.62),
-    0 0 18px rgba(255,43,43,.12);
+    var(--shadowC),
+    0 0 18px rgba(255,43,43,.10);
 }
 .btn.red:hover{
   border-color:rgba(201,162,74,.46);
   box-shadow:
-    0 16px 44px rgba(0,0,0,.62),
-    0 0 0 2px rgba(201,162,74,.16),
-    0 0 28px rgba(201,162,74,.22),
-    0 0 46px rgba(201,162,74,.12),
-    0 0 20px rgba(255,43,43,.10);
+    var(--shadowC),
+    0 0 0 2px rgba(201,162,74,.14),
+    0 0 28px rgba(201,162,74,.20),
+    0 0 44px rgba(201,162,74,.10),
+    0 0 18px rgba(255,43,43,.08);
 }
 
-/* Header */
+/* =========================
+   PAGE
+========================= */
+.page{
+  width:min(1200px,94vw);
+  margin:0 auto;
+  padding:92px 0 calc(var(--dockH) + 24px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+/* =========================
+   HEADER
+========================= */
 .header{
   border:1px solid var(--stroke);
   border-radius:28px;
@@ -162,12 +193,15 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   box-shadow:var(--shadowA);
   backdrop-filter:blur(10px);
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:hidden;
 }
-/* Gold diamond lay in trim zone only (already diamond-aligned) */
 .header::before{
   content:"";
-  position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
@@ -185,7 +219,7 @@ body::before,body::after{pointer-events:none!important}
   font-size:12px;
   letter-spacing:6px;
   text-transform:uppercase;
-  opacity:.70;
+  opacity:.74;
   margin:0 0 14px;
   color:var(--mut);
 }
@@ -195,6 +229,7 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.6px;
   margin:0 0 16px;
   color:var(--ink);
+  line-height:1.02;
 }
 .s{
   font-size:18px;
@@ -204,7 +239,57 @@ body::before,body::after{pointer-events:none!important}
   max-width:1000px;
 }
 
-/* Accordion */
+/* =========================
+   FEATURE ROW
+========================= */
+.feature-row{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.feature{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+  box-shadow:var(--shadowB);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.feature::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.60;
+}
+.feature-k{
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--mut2);
+}
+.feature-t{
+  margin-top:8px;
+  font-size:16px;
+  font-weight:950;
+  color:var(--ink);
+}
+.feature-p{
+  margin-top:8px;
+  font-size:13px;
+  line-height:1.55;
+  color:var(--mut2);
+}
+
+/* =========================
+   ACCORDION
+========================= */
 .accordion{
   display:flex;
   flex-direction:column;
@@ -224,7 +309,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .block::after{
   content:"";
-  position:absolute;inset:0;border-radius:26px;pointer-events:none;
+  position:absolute;
+  inset:0;
+  border-radius:26px;
+  pointer-events:none;
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
   opacity:.60;
 }
@@ -235,6 +323,7 @@ body::before,body::after{pointer-events:none!important}
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
+  gap:14px;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
 }
@@ -245,20 +334,30 @@ body::before,body::after{pointer-events:none!important}
   color:var(--ink);
 }
 .chev{
-  width:36px;height:36px;border-radius:14px;
+  width:36px;
+  height:36px;
+  border-radius:14px;
   border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.16);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   color:var(--mut);
   font-weight:950;
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:hidden;
   flex:0 0 auto;
 }
 .chev::after{
   content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
+  position:absolute;
+  left:6px;
+  right:6px;
+  bottom:-10px;
+  height:22px;
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
-  opacity:.62;pointer-events:none;
+  opacity:.62;
+  pointer-events:none;
 }
 
 .body{
@@ -274,18 +373,19 @@ body::before,body::after{pointer-events:none!important}
   color:var(--mut2);
   margin:0 0 18px;
 }
-
-/* Jump button uses same .btn system, but pill-shaped */
 .jump{
   display:inline-flex;
-  align-items:center;justify-content:center;
+  align-items:center;
+  justify-content:center;
   min-height:44px;
   margin-top:10px;
   padding:10px 18px;
   border-radius:999px;
 }
 
-/* Dock */
+/* =========================
+   DOCK
+========================= */
 .dock{
   position:fixed;
   left:50%;
@@ -306,12 +406,28 @@ body::before,body::after{pointer-events:none!important}
   grid-template-columns:repeat(4,1fr);
   gap:10px;
 }
-.dock .btn{width:100%;border-radius:999px;padding:10px 0}
+.dock .btn{
+  width:100%;
+  border-radius:999px;
+  padding:10px 0;
+}
+
+/* =========================
+   BREAKPOINTS
+========================= */
+@media (max-width:980px){
+  .feature-row{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
 @media (max-width:560px){
   :root{--dockH:114px}
   .dock{grid-template-columns:repeat(3,1fr)}
   .t{font-size:34px}
   .s{font-size:16px}
+  .feature-row{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -337,6 +453,29 @@ body::before,body::after{pointer-events:none!important}
     <p class="s" id="s"></p>
   </div>
 
+  <section class="feature-row" aria-label="Explore framing">
+    <article class="feature">
+      <div class="feature-k" id="f1k">POSTURE</div>
+      <div class="feature-t" id="f1t">Expansion under structure</div>
+      <div class="feature-p" id="f1p">This layer extends outward without breaking upstream order.</div>
+    </article>
+    <article class="feature">
+      <div class="feature-k" id="f2k">ENTRY</div>
+      <div class="feature-t" id="f2t">Clean surfaces only</div>
+      <div class="feature-p" id="f2p">Each block opens as a bounded entry point, not a mixed narrative pile.</div>
+    </article>
+    <article class="feature">
+      <div class="feature-k" id="f3k">RULE</div>
+      <div class="feature-t" id="f3t">Prerequisite first</div>
+      <div class="feature-p" id="f3p">Anything that cannot support fixed scope or measurable constraint stays downstream.</div>
+    </article>
+    <article class="feature">
+      <div class="feature-k" id="f4k">RESULT</div>
+      <div class="feature-t" id="f4t">Frontier without drift</div>
+      <div class="feature-p" id="f4p">Vision expands, but the frame stays coherent.</div>
+    </article>
+  </section>
+
   <div class="accordion" id="accordion" aria-label="Explore accordion"></div>
 
 </div>
@@ -352,7 +491,6 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (NO new gd_* keys) =====
   var qs = new URLSearchParams(location.search);
   var LS = window.localStorage;
 
@@ -360,7 +498,7 @@ body::before,body::after{pointer-events:none!important}
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || ""; // URL-only preserve only
+  var lane  = qs.get("lane")  || "";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
@@ -394,7 +532,6 @@ body::before,body::after{pointer-events:none!important}
     return "?" + p.toString();
   }
 
-  // Wire all internal links with full state
   function wireAll(){
     var nodes=document.querySelectorAll("[data-route]");
     for(var i=0;i<nodes.length;i++){
@@ -421,13 +558,13 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // Language toggle (reload SAME pathname)
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
     try{ LS.setItem("gd_lang",lang); }catch(e){}
     location.href = location.pathname + q({lang:lang});
   }
+
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -435,12 +572,23 @@ body::before,body::after{pointer-events:none!important}
   if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
   if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  // Copy
   var COPY={
     en:{
       k:"EXPLORE",
       head:"The Expansion Layer",
       desc:"Explore is where we extend capability without breaking structure. It holds frontier direction as organized surfaces: prerequisites, boundaries, and clean entry points.",
+      topHome:"HOME",
+      topProducts:"PRODUCTS",
+      dockCompass:"COMPASS",
+      dockLaws:"LAWS",
+      dockGauges:"GAUGES",
+      dockDoor:"DOOR",
+      features:[
+        {k:"POSTURE",t:"Expansion under structure",p:"This layer extends outward without breaking upstream order."},
+        {k:"ENTRY",t:"Clean surfaces only",p:"Each block opens as a bounded entry point, not a mixed narrative pile."},
+        {k:"RULE",t:"Prerequisite first",p:"Anything that cannot support fixed scope or measurable constraint stays downstream."},
+        {k:"RESULT",t:"Frontier without drift",p:"Vision expands, but the frame stays coherent."}
+      ],
       blocks:[
         {t:"Frontier Systems",p:"Water, Waste, Energy, Habitat, Urban OS. Structured deployment visions built on measurable substrate logic.",link:"/explore/frontier/"},
         {t:"Economic & Risk Architecture",p:"Finance, insurance, compliance, contracts, regulatory mapping. Expansion only works when incentives and constraints are aligned.",link:"/explore/economic/"},
@@ -453,6 +601,18 @@ body::before,body::after{pointer-events:none!important}
       k:"探索",
       head:"扩展层",
       desc:"Explore 是“在不破坏结构前提下扩展能力”的地方。它把前沿方向做成有序面：前置条件、边界、与清晰入口。",
+      topHome:"主页",
+      topProducts:"产品",
+      dockCompass:"指南针",
+      dockLaws:"法则",
+      dockGauges:"量规",
+      dockDoor:"门",
+      features:[
+        {k:"姿态",t:"在结构下扩展",p:"这一层向外延展，但不破坏上游秩序。"},
+        {k:"入口",t:"只保留干净表面",p:"每个区块都是有界入口，而不是混杂叙事堆。"},
+        {k:"规则",t:"前置优先",p:"凡是不能支撑固定范围与可测约束的内容，都保持在下游。"},
+        {k:"结果",t:"无漂移前沿",p:"愿景扩展，但框架保持一致。"}
+      ],
       blocks:[
         {t:"前沿系统",p:"水、废弃物、能源、栖息地、城市操作系统。基于可测底层逻辑的结构化部署愿景。",link:"/explore/frontier/"},
         {t:"经济与风险架构",p:"金融、保险、合规、合同、监管映射。只有激励与约束对齐，扩展才成立。",link:"/explore/economic/"},
@@ -465,6 +625,18 @@ body::before,body::after{pointer-events:none!important}
       k:"EXPLORAR",
       head:"Capa de Expansión",
       desc:"Explore es donde extendemos capacidad sin romper estructura. Mantiene dirección frontera como superficies organizadas: prerrequisitos, límites y entradas limpias.",
+      topHome:"INICIO",
+      topProducts:"PRODUCTOS",
+      dockCompass:"BRÚJULA",
+      dockLaws:"LEYES",
+      dockGauges:"MEDIDORES",
+      dockDoor:"PUERTA",
+      features:[
+        {k:"POSTURA",t:"Expansión bajo estructura",p:"Esta capa extiende capacidad sin romper el orden upstream."},
+        {k:"ENTRADA",t:"Solo superficies limpias",p:"Cada bloque abre como punto de entrada acotado, no como mezcla narrativa."},
+        {k:"REGLA",t:"Primero prerrequisito",p:"Todo lo que no soporte alcance fijo o restricción medible queda downstream."},
+        {k:"RESULTADO",t:"Frontera sin deriva",p:"La visión se expande, pero el marco sigue coherente."}
+      ],
       blocks:[
         {t:"Sistemas Frontier",p:"Agua, residuos, energía, hábitat, sistema urbano. Visiones desplegables estructuradas sobre lógica medible.",link:"/explore/frontier/"},
         {t:"Arquitectura Económica y de Riesgo",p:"Finanzas, seguros, cumplimiento, contratos, regulación. Escalar funciona solo con incentivos y restricciones alineados.",link:"/explore/economic/"},
@@ -476,11 +648,32 @@ body::before,body::after{pointer-events:none!important}
   };
 
   var C=COPY[lang]||COPY.en;
+
   document.getElementById("k").textContent=C.k;
   document.getElementById("t").textContent=C.head;
   document.getElementById("s").textContent=C.desc;
 
-  // Render accordion (single-open; tap same closes; keyboard safe)
+  document.getElementById("btnHome").textContent=C.topHome;
+  document.getElementById("btnProducts").textContent=C.topProducts;
+  document.getElementById("dockIndex").textContent=C.dockCompass;
+  document.getElementById("dockLaws").textContent=C.dockLaws;
+  document.getElementById("dockGauges").textContent=C.dockGauges;
+  document.getElementById("dockDoor").textContent=C.dockDoor;
+
+  var features=C.features;
+  document.getElementById("f1k").textContent=features[0].k;
+  document.getElementById("f1t").textContent=features[0].t;
+  document.getElementById("f1p").textContent=features[0].p;
+  document.getElementById("f2k").textContent=features[1].k;
+  document.getElementById("f2t").textContent=features[1].t;
+  document.getElementById("f2p").textContent=features[1].p;
+  document.getElementById("f3k").textContent=features[2].k;
+  document.getElementById("f3t").textContent=features[2].t;
+  document.getElementById("f3p").textContent=features[2].p;
+  document.getElementById("f4k").textContent=features[3].k;
+  document.getElementById("f4t").textContent=features[3].t;
+  document.getElementById("f4p").textContent=features[3].p;
+
   var acc=document.getElementById("accordion");
 
   function closeAll(){
@@ -542,7 +735,10 @@ body::before,body::after{pointer-events:none!important}
 
     head.addEventListener("click", toggle, {passive:true});
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        toggle();
+      }
     });
 
     block.appendChild(head);
@@ -555,7 +751,6 @@ body::before,body::after{pointer-events:none!important}
     }
   });
 
-  // Wire nav + jumps
   wireAll();
 })();
 </script>

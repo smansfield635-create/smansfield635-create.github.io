@@ -1,28 +1,26 @@
 <!doctype html>
 <!-- TNT — /gauges/index.html
-     GAUGES (PUBLIC DASHBOARD) — PUBLIC READOUT AUTHORITY
+     GAUGES (DIAGNOSTIC AUTHORITY) — SYSTEM DIAGNOSTICS SURFACE
      ROLE:
-       - Public/simple telemetry surface
+       - Independent diagnostic checkpoint
        - Separate authority from INDEX and DOOR
-       - Reads same telemetry store as engineer console: localStorage["cte_gauges_v1"]
-       - Engineer console remains separate: /gauges/live/
+       - Reads live kernel / engine / control contracts directly
+       - No canvas / no render loop / no simulation ownership
      RULES:
        - No modals / no overlays
        - Canon state carry only: gd_lang / gd_style / gd_time / gd_depth
        - No new gd_* keys
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns field
+       - Uses /assets/ui.css + /assets/branch.css only
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Nine Summits — Gauges</title>
+<title>Nine Summits — Diagnostics</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -36,6 +34,9 @@ body::before,body::after{pointer-events:none!important}
   --ink:rgba(255,255,255,.96);
   --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.72);
+  --ok:rgba(131,230,168,1);
+  --warn:rgba(255,211,123,1);
+  --bad:rgba(255,142,142,1);
   --shadowA:0 28px 100px rgba(0,0,0,.65);
   --shadowB:0 18px 60px rgba(0,0,0,.55);
   --glow:rgba(212,175,55,.18);
@@ -115,7 +116,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .btn:hover{
   border-color:rgba(212,175,55,.42);
-  box-shadow:var(--shadowB), 0 0 18px var(--glow);
+  box-shadow:var(--shadowB),0 0 18px var(--glow);
 }
 .btn:active{transform:translateY(1px)}
 
@@ -141,7 +142,7 @@ body::before,body::after{pointer-events:none!important}
   padding:150px 0 calc(var(--dockH) + 24px);
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:12px;
 }
 
 /* =========================
@@ -185,13 +186,32 @@ body::before,body::after{pointer-events:none!important}
   line-height:1.5;
   font-size:13px;
 }
+.summaryBar{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.summaryPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  font-size:12px;
+  color:var(--mut);
+}
+.summaryPill strong{color:var(--ink)}
 
 /* =========================
    GRID
 ========================= */
 .grid{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0, 1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:12px;
 }
 @media (max-width:860px){
@@ -251,6 +271,8 @@ body::before,body::after{pointer-events:none!important}
   border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.20);
+  min-width:88px;
+  text-align:center;
 }
 .bar{
   flex:1;
@@ -271,6 +293,9 @@ body::before,body::after{pointer-events:none!important}
   font-size:13px;
   line-height:1.55;
   white-space:pre-wrap;
+}
+.mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 
 /* =========================
@@ -310,13 +335,13 @@ body::before,body::after{pointer-events:none!important}
 <div class="top">
   <div class="topbar">
     <div class="group">
+      <a class="btn" id="btnDoor" href="/door/">DOOR</a>
       <a class="btn" id="btnIndex" href="/index.html">INDEX</a>
-      <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
       <a class="btn" id="btnProducts" href="/products/">PRODUCTS</a>
       <a class="btn" id="btnExplore" href="/explore/">EXPLORE</a>
     </div>
     <div class="group">
-      <a class="btn" id="btnEngineer" href="/gauges/live/"><span class="badge" id="engineerBadge">ENGINEER</span>&nbsp;<span id="engineerLabel">CONSOLE</span></a>
+      <a class="btn" id="btnLive" href="/gauges/live/"><span class="badge" id="liveBadge">LIVE</span>&nbsp;<span id="liveLabel">CONSOLE</span></a>
     </div>
   </div>
 </div>
@@ -324,436 +349,502 @@ body::before,body::after{pointer-events:none!important}
 <div class="page">
 
   <section class="header">
-    <div class="h1" id="headerTitle">Public Gauge Dashboard</div>
-    <div class="p0" id="headerBody">This is the readable layer. It summarizes system behavior using the same telemetry as the engineer console.</div>
-    <div class="small" id="headerSmall">Data source: local telemetry on this device (cte_gauges_v1). For cross-device aggregation, use the engineer console export.</div>
+    <div class="h1" id="headerTitle">System Diagnostics</div>
+    <div class="p0" id="headerBody">Independent checkpoint for kernel, engine, control, runtime, and route state. This page observes. It does not simulate.</div>
+    <div class="small" id="headerSmall">Use this page to determine whether the break is in contract truth, engine build, control state, or runtime orchestration.</div>
+
+    <div class="summaryBar">
+      <div class="summaryPill"><span id="sumKernelLabel">Kernel</span><strong id="sumKernelValue">—</strong></div>
+      <div class="summaryPill"><span id="sumEngineLabel">Engine</span><strong id="sumEngineValue">—</strong></div>
+      <div class="summaryPill"><span id="sumControlLabel">Control</span><strong id="sumControlValue">—</strong></div>
+      <div class="summaryPill"><span id="sumRuntimeLabel">Runtime</span><strong id="sumRuntimeValue">—</strong></div>
+      <div class="summaryPill"><span id="sumOverallLabel">Overall</span><strong id="sumOverallValue">—</strong></div>
+    </div>
   </section>
 
-  <section class="grid" aria-label="Public gauges">
-    <div class="card" id="gHealth"></div>
-    <div class="card" id="gTraffic"></div>
-    <div class="card" id="gClarity"></div>
-    <div class="card" id="gEngagement"></div>
-    <div class="card" id="gStability"></div>
-    <div class="card" id="gNext"></div>
+  <section class="grid" aria-label="Diagnostics">
+    <div class="card" id="gKernel"></div>
+    <div class="card" id="gEngine"></div>
+    <div class="card" id="gControl"></div>
+    <div class="card" id="gRuntime"></div>
+    <div class="card" id="gRouting"></div>
+    <div class="card" id="gVerdict"></div>
   </section>
 
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
+  <a class="btn" id="dockDoor" href="/door/">DOOR</a>
   <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
 </nav>
 
-<script>
+<script type="module">
 (function(){
   "use strict";
 
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
+  const qs = new URLSearchParams(location.search);
+  const LS = window.localStorage;
+
+  let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  let style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  let lane  = qs.get("lane")  || "";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
+
+  let d = parseInt(depth,10);
+  if(!Number.isFinite(d)) d = 1;
+  if(d < 1) d = 1;
+  if(d > 9) d = 9;
+  depth = String(d);
+
+  if(lane!=="platform" && lane!=="engineering") lane = "";
 
   try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
+    LS.setItem("gd_lang",lang);
+    LS.setItem("gd_style",style);
+    LS.setItem("gd_time",time);
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
+  function buildQuery(extra){
+    const p = new URLSearchParams();
+    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+    p.set("style", (extra&&extra.style)?extra.style:style);
+    p.set("time", (extra&&extra.time)?extra.time:time);
+    p.set("depth", (extra&&extra.depth)?String(extra.depth):depth);
+    if(extra && extra.mode) p.set("mode", extra.mode);
+    const L = (extra&&extra.lane)?extra.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
+    return "?" + p.toString();
   }
 
   function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
+    const el=document.getElementById(id);
+    if(el) el.href = path + buildQuery();
   }
 
+  wire("btnDoor","/door/");
   wire("btnIndex","/index.html");
-  wire("btnResearch","/research/");
   wire("btnProducts","/products/");
   wire("btnExplore","/explore/");
-  wire("btnEngineer","/gauges/live/");
-
+  wire("btnLive","/gauges/live/");
+  wire("dockDoor","/door/");
   wire("dockIndex","/index.html");
-  wire("dockExplore","/explore/");
   wire("dockProducts","/products/");
   wire("dockLaws","/laws/");
 
-  var COPY = {
-    en:{
-      headerTitle:"Public Gauge Dashboard",
-      headerBody:"This is the readable layer. It summarizes system behavior using the same telemetry as the engineer console.",
-      headerSmall:"Data source: local telemetry on this device (cte_gauges_v1). For cross-device aggregation, use the engineer console export.",
-      engineerBadge:"ENGINEER",
-      engineerLabel:"CONSOLE",
-      index:"INDEX",
-      research:"RESEARCH",
-      products:"PRODUCTS",
-      explore:"EXPLORE",
-      laws:"LAWS",
-      labels:{
-        score:"0–100",
-        health:"Overall Health",
-        healthSub:"One-screen read of system behavior.",
-        traffic:"Traffic",
-        trafficSub:"How many sessions this device has recorded.",
-        clarity:"Clarity",
-        claritySub:"Are people reaching the intended hubs?",
-        engagement:"Engagement",
-        engagementSub:"Are people actually reading?",
-        stability:"Stability",
-        stabilitySub:"Low bounce, low thrash.",
-        next:"What’s Happening",
-        nextSub:"Plain-English interpretation of movement."
-      },
-      text:{
-        visitors:"Visitors (sessions): ",
-        pageViews:"Page views (all time on device): ",
-        reachedResearch:"Reached Research: ",
-        reachedEvidence:"Reached Evidence: ",
-        reachedIndustry:"Reached Industry: ",
-        avgScroll:"Avg scroll max: ",
-        avgTime:"Avg time max: ",
-        avgAccordion:"Avg accordion opens: ",
-        bounces:"Bounces: ",
-        avgNav:"Avg nav clicks: ",
-        tip:"Tip: Engineers can open /gauges/live/ for full detail.",
-        noPath:"No dominant path yet.",
-        fullPath:"Common path present: Research → Evidence → Industry.",
-        partialPath:"Common path forming: Research → Evidence.",
-        researchOnly:"Most sessions enter Research; Evidence not yet reached consistently."
-      }
+  function P(en,zh,es){ return {en,zh,es}; }
+  function pick(o){ return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en); }
+
+  const COPY = {
+    headerTitle: P("System Diagnostics","系统诊断","Diagnóstico del Sistema"),
+    headerBody: P(
+      "Independent checkpoint for kernel, engine, control, runtime, and route state. This page observes. It does not simulate.",
+      "用于内核、引擎、控制、运行时与路由状态的独立检查点。此页只观察，不模拟。",
+      "Punto de control independiente para kernel, motor, control, runtime y estado de ruta. Esta página observa. No simula."
+    ),
+    headerSmall: P(
+      "Use this page to determine whether the break is in contract truth, engine build, control state, or runtime orchestration.",
+      "用此页判断问题出在契约真值、引擎构建、控制状态，还是运行时编排。",
+      "Usa esta página para determinar si la falla está en la verdad del contrato, la construcción del motor, el estado de control o la orquestación del runtime."
+    ),
+    liveBadge: P("LIVE","实时","LIVE"),
+    liveLabel: P("CONSOLE","控制台","CONSOLA"),
+    door: P("DOOR","门","PUERTA"),
+    index: P("INDEX","索引","ÍNDICE"),
+    products: P("PRODUCTS","产品","PRODUCTOS"),
+    explore: P("EXPLORE","探索","EXPLORAR"),
+    laws: P("LAWS","法则","LEYES"),
+    sumKernel: P("Kernel","内核","Kernel"),
+    sumEngine: P("Engine","引擎","Motor"),
+    sumControl: P("Control","控制","Control"),
+    sumRuntime: P("Runtime","运行时","Runtime"),
+    sumOverall: P("Overall","总计","General"),
+    labels: {
+      score: P("0–100","0–100","0–100"),
+      kernel: P("Kernel Contract","内核契约","Contrato Kernel"),
+      kernelSub: P("Source-of-truth dimensions and sea level.","真值维度与海平面。","Dimensiones de verdad y nivel del mar."),
+      engine: P("Planet Engine","星球引擎","Motor Planetario"),
+      engineSub: P("Build result and field structure.","构建结果与场结构。","Resultado de build y estructura de campo."),
+      control: P("Control State","控制状态","Estado de Control"),
+      controlSub: P("Motion, projection, and orbital state.","运动、投影与轨道状态。","Movimiento, proyección y estado orbital."),
+      runtime: P("Runtime State","运行时状态","Estado Runtime"),
+      runtimeSub: P("Visibility, storage, diagnostics, and entry state.","可见性、存储、诊断与入口状态。","Visibilidad, almacenamiento, diagnósticos y estado de entrada."),
+      routing: P("Routing State","路由状态","Estado de Ruta"),
+      routingSub: P("Mode, lane, and query carry.","模式、通道与查询继承。","Modo, carril y continuidad de query."),
+      verdict: P("Layer Verdict","分层结论","Veredicto por Capas"),
+      verdictSub: P("Where the break lives.","问题所在层。","Dónde vive la falla.")
     },
-    zh:{
-      headerTitle:"公共量规仪表板",
-      headerBody:"这是可读层。它用与工程控制台相同的遥测来汇总系统行为。",
-      headerSmall:"数据来源：本设备本地遥测（cte_gauges_v1）。跨设备汇总请使用工程控制台导出。",
-      engineerBadge:"工程",
-      engineerLabel:"控制台",
-      index:"索引",
-      research:"研究",
-      products:"产品",
-      explore:"探索",
-      laws:"法则",
-      labels:{
-        score:"0–100",
-        health:"整体健康",
-        healthSub:"系统行为的一屏读数。",
-        traffic:"流量",
-        trafficSub:"本设备记录了多少会话。",
-        clarity:"清晰度",
-        claritySub:"用户是否到达预定枢纽？",
-        engagement:"参与度",
-        engagementSub:"用户是否真的在阅读？",
-        stability:"稳定性",
-        stabilitySub:"低跳出，低乱跳。",
-        next:"当前走势",
-        nextSub:"对运动路径的自然语言解释。"
-      },
-      text:{
-        visitors:"访客（会话）：",
-        pageViews:"页面浏览（本设备累计）：",
-        reachedResearch:"到达研究：",
-        reachedEvidence:"到达证据：",
-        reachedIndustry:"到达行业：",
-        avgScroll:"平均最大滚动：",
-        avgTime:"平均最大停留：",
-        avgAccordion:"平均展开次数：",
-        bounces:"跳出：",
-        avgNav:"平均导航点击：",
-        tip:"提示：工程端可打开 /gauges/live/ 查看完整细节。",
-        noPath:"当前尚无主导路径。",
-        fullPath:"常见路径已形成：研究 → 证据 → 行业。",
-        partialPath:"常见路径正在形成：研究 → 证据。",
-        researchOnly:"多数会话进入研究，但尚未稳定到达证据层。"
-      }
-    },
-    es:{
-      headerTitle:"Panel Público de Medidores",
-      headerBody:"Esta es la capa legible. Resume el comportamiento del sistema usando la misma telemetría que la consola de ingeniería.",
-      headerSmall:"Fuente de datos: telemetría local en este dispositivo (cte_gauges_v1). Para agregación entre dispositivos, usa la exportación de la consola de ingeniería.",
-      engineerBadge:"INGEN.",
-      engineerLabel:"CONSOLA",
-      index:"INDEX",
-      research:"RESEARCH",
-      products:"PRODUCTOS",
-      explore:"EXPLORE",
-      laws:"LAWS",
-      labels:{
-        score:"0–100",
-        health:"Salud General",
-        healthSub:"Lectura de una pantalla del sistema.",
-        traffic:"Tráfico",
-        trafficSub:"Cuántas sesiones registró este dispositivo.",
-        clarity:"Claridad",
-        claritySub:"¿La gente está llegando a los hubs previstos?",
-        engagement:"Interacción",
-        engagementSub:"¿La gente realmente está leyendo?",
-        stability:"Estabilidad",
-        stabilitySub:"Bajo rebote, bajo desorden.",
-        next:"Qué Está Pasando",
-        nextSub:"Interpretación simple del movimiento."
-      },
-      text:{
-        visitors:"Visitantes (sesiones): ",
-        pageViews:"Vistas de página (todo el tiempo en este dispositivo): ",
-        reachedResearch:"Llegó a Research: ",
-        reachedEvidence:"Llegó a Evidence: ",
-        reachedIndustry:"Llegó a Industry: ",
-        avgScroll:"Promedio scroll máx.: ",
-        avgTime:"Promedio tiempo máx.: ",
-        avgAccordion:"Promedio aperturas accordion: ",
-        bounces:"Rebotes: ",
-        avgNav:"Promedio clics nav: ",
-        tip:"Tip: Ingeniería puede abrir /gauges/live/ para el detalle completo.",
-        noPath:"Todavía no hay una ruta dominante.",
-        fullPath:"Ruta común presente: Research → Evidence → Industry.",
-        partialPath:"Ruta común formándose: Research → Evidence.",
-        researchOnly:"La mayoría entra a Research; Evidence todavía no se alcanza de forma consistente."
-      }
+    text: {
+      pass: P("PASS","通过","PASS"),
+      fail: P("FAIL","失败","FAIL"),
+      warn: P("WARN","警告","WARN"),
+      yes: P("YES","是","SÍ"),
+      no: P("NO","否","NO"),
+      missing: P("MISSING","缺失","FALTA"),
+      buildOk: P("Build success: ","构建成功：","Build correcto: "),
+      width: P("Width: ","宽度：","Ancho: "),
+      height: P("Height: ","高度：","Alto: "),
+      total: P("Total: ","总数：","Total: "),
+      sea: P("Sea level: ","海平面：","Nivel del mar: "),
+      sampleCount: P("Sample count: ","样本数：","Cantidad de muestras: "),
+      summary: P("Summary present: ","存在摘要：","Resumen presente: "),
+      completeness: P("Completeness present: ","存在完整性：","Completitud presente: "),
+      mode: P("Mode: ","模式：","Modo: "),
+      yaw: P("Yaw: ","Yaw: ","Yaw: "),
+      pitch: P("Pitch: ","Pitch: ","Pitch: "),
+      zoom: P("Zoom: ","缩放：","Zoom: "),
+      orbit: P("Orbit phase: ","轨道相位：","Fase orbital: "),
+      pageVisible: P("Page visible: ","页面可见：","Página visible: "),
+      storage: P("Storage available: ","存储可用：","Storage disponible: "),
+      diagnostics: P("Diagnostics query: ","诊断查询：","Query diagnóstica: "),
+      restore: P("Motion restore key present: ","存在运动恢复键：","Clave de restauración presente: "),
+      pathname: P("Pathname: ","路径：","Ruta: "),
+      lane: P("Lane: ","通道：","Carril: "),
+      lang: P("Language: ","语言：","Idioma: "),
+      style: P("Style: ","风格：","Estilo: "),
+      time: P("Time: ","时间：","Tiempo: "),
+      depth: P("Depth: ","深度：","Profundidad: "),
+      routeMode: P("Requested mode: ","请求模式：","Modo solicitado: "),
+      breakKernel: P("Break is upstream in kernel / contract truth.","问题在上游的内核/契约真值层。","La falla está arriba, en la verdad del kernel/contrato."),
+      breakEngine: P("Kernel passes. Engine build is failing or incomplete.","内核通过，但引擎构建失败或不完整。","Kernel pasa. El build del motor falla o está incompleto."),
+      breakControl: P("Kernel and engine pass. Control state is drifting.","内核和引擎通过，但控制状态漂移。","Kernel y motor pasan. El estado de control deriva."),
+      breakRuntime: P("Kernel, engine, and control pass. Break is in runtime orchestration.","内核、引擎、控制都通过。问题在运行时编排。","Kernel, motor y control pasan. La falla está en la orquestación runtime."),
+      stable: P("All observed layers pass on this page.","此页观测到的所有层都通过。","Todas las capas observadas pasan en esta página.")
     }
   };
 
-  var T = (lang==="zh") ? COPY.zh : (lang==="es" ? COPY.es : COPY.en);
+  document.getElementById("headerTitle").textContent = pick(COPY.headerTitle);
+  document.getElementById("headerBody").textContent = pick(COPY.headerBody);
+  document.getElementById("headerSmall").textContent = pick(COPY.headerSmall);
+  document.getElementById("liveBadge").textContent = pick(COPY.liveBadge);
+  document.getElementById("liveLabel").textContent = pick(COPY.liveLabel);
+  document.getElementById("btnDoor").textContent = pick(COPY.door);
+  document.getElementById("btnIndex").textContent = pick(COPY.index);
+  document.getElementById("btnProducts").textContent = pick(COPY.products);
+  document.getElementById("btnExplore").textContent = pick(COPY.explore);
+  document.getElementById("dockDoor").textContent = pick(COPY.door);
+  document.getElementById("dockIndex").textContent = pick(COPY.index);
+  document.getElementById("dockProducts").textContent = pick(COPY.products);
+  document.getElementById("dockLaws").textContent = pick(COPY.laws);
+  document.getElementById("sumKernelLabel").textContent = pick(COPY.sumKernel);
+  document.getElementById("sumEngineLabel").textContent = pick(COPY.sumEngine);
+  document.getElementById("sumControlLabel").textContent = pick(COPY.sumControl);
+  document.getElementById("sumRuntimeLabel").textContent = pick(COPY.sumRuntime);
+  document.getElementById("sumOverallLabel").textContent = pick(COPY.sumOverall);
 
-  document.getElementById("headerTitle").textContent = T.headerTitle;
-  document.getElementById("headerBody").textContent = T.headerBody;
-  document.getElementById("headerSmall").textContent = T.headerSmall;
-  document.getElementById("engineerBadge").textContent = T.engineerBadge;
-  document.getElementById("engineerLabel").textContent = T.engineerLabel;
-
-  document.getElementById("btnIndex").textContent = T.index;
-  document.getElementById("btnResearch").textContent = T.research;
-  document.getElementById("btnProducts").textContent = T.products;
-  document.getElementById("btnExplore").textContent = T.explore;
-  document.getElementById("dockIndex").textContent = T.index;
-  document.getElementById("dockExplore").textContent = T.explore;
-  document.getElementById("dockProducts").textContent = T.products;
-  document.getElementById("dockLaws").textContent = T.laws;
-
-  function loadStore(){
-    try{
-      var raw=localStorage.getItem("cte_gauges_v1");
-      if(!raw) return {v:1,events:[]};
-      var obj=JSON.parse(raw);
-      if(!obj || !Array.isArray(obj.events)) return {v:1,events:[]};
-      return obj;
-    }catch(e){
-      return {v:1,events:[]};
-    }
+  function yesNo(v){ return v ? pick(COPY.text.yes) : pick(COPY.text.no); }
+  function present(v){ return v ? pick(COPY.text.yes) : pick(COPY.text.missing); }
+  function n(v, digits){
+    return (typeof v === "number" && Number.isFinite(v)) ? v.toFixed(digits || 0) : "—";
   }
-
-  function parseTs(ts){
-    var t=Date.parse(ts);
-    return isFinite(t) ? t : 0;
-  }
-
-  function getSessions(events){
-    var by={};
-    events.forEach(function(e){
-      var sid=e.sid || "NO_SID";
-      if(!by[sid]) by[sid]=[];
-      by[sid].push(e);
-    });
-
-    var out=[];
-    Object.keys(by).forEach(function(sid){
-      var ev=by[sid].slice().sort(function(a,b){ return parseTs(a.ts)-parseTs(b.ts); });
-      out.push({sid:sid, events:ev});
-    });
-
-    out.sort(function(a,b){
-      var at=a.events.length ? parseTs(a.events[a.events.length-1].ts) : 0;
-      var bt=b.events.length ? parseTs(b.events[b.events.length-1].ts) : 0;
-      return bt-at;
-    });
-
-    return out;
-  }
-
-  function sessionStats(sess){
-    var ev=sess.events;
-    var pages={};
-    var nav=0;
-    var lens=0;
-    var acc=0;
-    var scrollMax=0;
-    var timeMax=0;
-
-    ev.forEach(function(e){
-      if(e.page) pages[e.page]=true;
-      if(e.type==="nav_click") nav++;
-      if(e.type==="lens_toggle") lens++;
-      if(e.type==="accordion_toggle") acc++;
-      if(e.type==="scroll_depth"){
-        var p=(e.payload && e.payload.pct)?parseInt(e.payload.pct,10):0;
-        if(isFinite(p)) scrollMax=Math.max(scrollMax,p);
-      }
-      if(e.type==="time_on_page"){
-        var ms=(e.payload && e.payload.ms)?parseInt(e.payload.ms,10):0;
-        if(isFinite(ms)) timeMax=Math.max(timeMax,ms);
-      }
-    });
-
-    return {
-      pages:pages,
-      nav:nav,
-      lens:lens,
-      acc:acc,
-      scrollMax:scrollMax,
-      timeMax:timeMax
-    };
-  }
-
-  var P_RESEARCH="/research/";
-  var P_EVIDENCE="/research/testimonials/";
-  var P_INDUSTRY="/research/industry-context/";
-
-  function clamp(n){
-    return Math.max(0, Math.min(100, Math.round(n)));
-  }
-
   function fillColor(pct){
     if(pct >= 80) return "linear-gradient(90deg, rgba(131,230,168,.72), rgba(255,255,255,.72))";
     if(pct >= 50) return "linear-gradient(90deg, rgba(255,211,123,.72), rgba(255,255,255,.72))";
     return "linear-gradient(90deg, rgba(255,142,142,.72), rgba(255,255,255,.72))";
   }
-
+  function statusWord(kind){
+    if(kind === "pass") return pick(COPY.text.pass);
+    if(kind === "warn") return pick(COPY.text.warn);
+    return pick(COPY.text.fail);
+  }
   function card(el, title, sub, score, kpi){
     el.innerHTML =
-      '<div class="cardTop"><div><div class="title">'+title+'</div><div class="sub">'+sub+'</div></div><div class="badge">'+T.labels.score+'</div></div>'+
-      '<div class="scoreRow"><div class="score">'+score+'</div><div class="bar"><div class="fill"></div></div></div>'+
-      '<div class="kpi">'+kpi+'</div>';
+      '<div class="cardTop"><div><div class="title">'+title+'</div><div class="sub">'+sub+'</div></div><div class="badge">'+pick(COPY.labels.score)+'</div></div>'+
+      '<div class="scoreRow"><div class="score">'+Math.round(score)+'</div><div class="bar"><div class="fill"></div></div></div>'+
+      '<div class="kpi mono">'+kpi+'</div>';
 
-    var f=el.querySelector(".fill");
+    const f=el.querySelector(".fill");
     if(f){
-      f.style.width=clamp(score)+"%";
+      f.style.width=Math.max(0,Math.min(100,Math.round(score)))+"%";
       f.style.background=fillColor(score);
     }
   }
-
-  function render(){
-    var store=loadStore();
-    var sessions=getSessions(store.events);
-    var roll=sessions.slice(0,20);
-
-    var visitors=roll.length;
-    var pageViews=store.events.filter(function(e){ return e.type==="page_view"; }).length;
-
-    var reachedResearch=0;
-    var reachedEvidence=0;
-    var reachedIndustry=0;
-    var avgScroll=0;
-    var avgTime=0;
-    var avgNav=0;
-    var avgAcc=0;
-    var bounces=0;
-
-    roll.forEach(function(s){
-      var st=sessionStats(s);
-      if(st.pages[P_RESEARCH]) reachedResearch++;
-      if(st.pages[P_EVIDENCE]) reachedEvidence++;
-      if(st.pages[P_INDUSTRY]) reachedIndustry++;
-      avgScroll += st.scrollMax;
-      avgTime += st.timeMax;
-      avgNav += st.nav;
-      avgAcc += st.acc;
-      if(st.timeMax < 15000 && st.scrollMax < 25) bounces++;
-    });
-
-    if(visitors>0){
-      avgScroll = avgScroll/visitors;
-      avgTime = avgTime/visitors;
-      avgNav = avgNav/visitors;
-      avgAcc = avgAcc/visitors;
-    }else{
-      avgScroll = 0;
-      avgTime = 0;
-      avgNav = 0;
-      avgAcc = 0;
-    }
-
-    var clarity = clamp((reachedResearch/Math.max(1,visitors))*60 + (reachedEvidence/Math.max(1,visitors))*40);
-    var engagement = clamp((avgScroll*0.7) + (Math.min(120000,avgTime)/120000)*30);
-    var stability = clamp(100 - (bounces/Math.max(1,visitors))*100);
-    var health = clamp((clarity*0.35) + (engagement*0.35) + (stability*0.30));
-
-    var next = T.text.noPath;
-    if(reachedResearch>0 && reachedEvidence>0 && reachedIndustry>0){
-      next = T.text.fullPath;
-    }else if(reachedResearch>0 && reachedEvidence>0){
-      next = T.text.partialPath;
-    }else if(reachedResearch>0){
-      next = T.text.researchOnly;
-    }
-
-    card(
-      document.getElementById("gHealth"),
-      T.labels.health,
-      T.labels.healthSub,
-      health,
-      "Clarity: "+clarity+"\nEngagement: "+engagement+"\nStability: "+stability
-    );
-
-    card(
-      document.getElementById("gTraffic"),
-      T.labels.traffic,
-      T.labels.trafficSub,
-      clamp(Math.min(100, visitors*10)),
-      T.text.visitors+visitors+"\n"+T.text.pageViews+pageViews
-    );
-
-    card(
-      document.getElementById("gClarity"),
-      T.labels.clarity,
-      T.labels.claritySub,
-      clarity,
-      T.text.reachedResearch+reachedResearch+"/"+visitors+"\n"+
-      T.text.reachedEvidence+reachedEvidence+"/"+visitors+"\n"+
-      T.text.reachedIndustry+reachedIndustry+"/"+visitors
-    );
-
-    card(
-      document.getElementById("gEngagement"),
-      T.labels.engagement,
-      T.labels.engagementSub,
-      engagement,
-      T.text.avgScroll+Math.round(avgScroll)+"%\n"+
-      T.text.avgTime+Math.round(avgTime/1000)+"s\n"+
-      T.text.avgAccordion+Math.round(avgAcc)
-    );
-
-    card(
-      document.getElementById("gStability"),
-      T.labels.stability,
-      T.labels.stabilitySub,
-      stability,
-      T.text.bounces+bounces+"/"+visitors+"\n"+
-      T.text.avgNav+Math.round(avgNav)
-    );
-
-    card(
-      document.getElementById("gNext"),
-      T.labels.next,
-      T.labels.nextSub,
-      clamp((reachedEvidence/Math.max(1,visitors))*100),
-      next+"\n\n"+T.text.tip
-    );
+  function pill(id, kind){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = statusWord(kind);
+    el.style.color = kind==="pass" ? "var(--ok)" : kind==="warn" ? "var(--warn)" : "var(--bad)";
   }
 
-  render();
+  async function collectDiagnostics(){
+    const result = {
+      kernel: { score: 0, kind: "fail", text: "" },
+      engine: { score: 0, kind: "fail", text: "" },
+      control: { score: 0, kind: "fail", text: "" },
+      runtime: { score: 0, kind: "fail", text: "" },
+      routing: { score: 0, kind: "pass", text: "" },
+      verdict: { score: 0, kind: "fail", text: "" }
+    };
+
+    let kernelModule = null;
+    let engineModule = null;
+    let controlModule = null;
+    let kernel = null;
+    let engine = null;
+    let control = null;
+    let field = null;
+    let camera = null;
+    let motion = null;
+    let orbital = null;
+
+    try{
+      kernelModule = await import("/world/world_kernel.js");
+      kernel = kernelModule && kernelModule.WORLD_KERNEL ? kernelModule.WORLD_KERNEL : null;
+    }catch(e){ kernel = null; }
+
+    try{
+      engineModule = await import("/world/planet_engine.js");
+      engine = engineModule && typeof engineModule.createPlanetEngine === "function" ? engineModule.createPlanetEngine() : null;
+    }catch(e){ engine = null; }
+
+    try{
+      controlModule = await import("/world/control.js");
+      control = controlModule && typeof controlModule.createControlSystem === "function" ? controlModule.createControlSystem() : null;
+    }catch(e){ control = null; }
+
+    /* KERNEL */
+    const lonSteps = kernel?.constants?.lonSteps;
+    const latSteps = kernel?.constants?.latSteps;
+    const kernelWidth = Number.isInteger(kernel?.planetField?.width) ? kernel.planetField.width : (Number.isInteger(lonSteps) ? lonSteps : null);
+    const kernelHeight = Number.isInteger(kernel?.planetField?.height) ? kernel.planetField.height : (Number.isInteger(latSteps) ? latSteps : null);
+    const kernelTotal = (Number.isInteger(kernelWidth) && Number.isInteger(kernelHeight)) ? (kernelWidth * kernelHeight) : null;
+    const seaLevel = (typeof kernel?.constants?.seaLevel === "number") ? kernel.constants.seaLevel : null;
+
+    const kernelPass =
+      kernel &&
+      kernelWidth === 216 &&
+      kernelHeight === 108 &&
+      kernelTotal === 23328 &&
+      seaLevel !== null;
+
+    result.kernel.score = kernelPass ? 100 : (kernel ? 45 : 0);
+    result.kernel.kind = kernelPass ? "pass" : (kernel ? "warn" : "fail");
+    result.kernel.text =
+      pick(COPY.text.width)+ (kernelWidth ?? "—") + "\n" +
+      pick(COPY.text.height)+ (kernelHeight ?? "—") + "\n" +
+      pick(COPY.text.total)+ (kernelTotal ?? "—") + "\n" +
+      pick(COPY.text.sea)+ (seaLevel ?? "—");
+
+    /* ENGINE */
+    try{
+      if(engine && typeof engine.buildPlanetField === "function"){
+        field = engine.buildPlanetField({});
+      }
+    }catch(e){
+      field = null;
+    }
+
+    const engineWidth = field?.width;
+    const engineHeight = field?.height;
+    const sampleCount = Array.isArray(field?.samples)
+      ? field.samples.reduce((acc,row)=>acc + (Array.isArray(row) ? row.length : 0), 0)
+      : 0;
+    const summaryPresent = !!field?.summary;
+    const completenessPresent = !!field?.completeness;
+
+    const enginePass =
+      !!field &&
+      engineWidth === 216 &&
+      engineHeight === 108 &&
+      sampleCount === 23328 &&
+      summaryPresent &&
+      completenessPresent;
+
+    result.engine.score = enginePass ? 100 : (field ? 55 : 0);
+    result.engine.kind = enginePass ? "pass" : (field ? "warn" : "fail");
+    result.engine.text =
+      pick(COPY.text.buildOk)+ yesNo(!!field) + "\n" +
+      pick(COPY.text.width)+ (engineWidth ?? "—") + "\n" +
+      pick(COPY.text.height)+ (engineHeight ?? "—") + "\n" +
+      pick(COPY.text.sampleCount)+ sampleCount + "\n" +
+      pick(COPY.text.summary)+ present(summaryPresent) + "\n" +
+      pick(COPY.text.completeness)+ present(completenessPresent);
+
+    /* CONTROL */
+    try{
+      if(control && typeof control.resize === "function"){
+        control.resize(window.innerWidth, window.innerHeight);
+      }
+      if(control && typeof control.getCameraState === "function"){
+        camera = control.getCameraState();
+      }
+      if(control && typeof control.getMotionState === "function"){
+        motion = control.getMotionState();
+      }
+      if(control && typeof control.getOrbitalState === "function"){
+        orbital = control.getOrbitalState();
+      }
+    }catch(e){
+      camera = null;
+      motion = null;
+      orbital = null;
+    }
+
+    const controlPass =
+      !!control &&
+      !!camera &&
+      !!motion &&
+      !!orbital &&
+      typeof motion.mode === "string" &&
+      Number.isFinite(motion.yaw) &&
+      Number.isFinite(motion.pitch);
+
+    result.control.score = controlPass ? 100 : (control ? 55 : 0);
+    result.control.kind = controlPass ? "pass" : (control ? "warn" : "fail");
+    result.control.text =
+      pick(COPY.text.mode)+ (motion?.mode ?? "—") + "\n" +
+      pick(COPY.text.yaw)+ n(motion?.yaw,4) + "\n" +
+      pick(COPY.text.pitch)+ n(motion?.pitch,4) + "\n" +
+      pick(COPY.text.zoom)+ n(motion?.zoomCurrent,4) + "\n" +
+      pick(COPY.text.orbit)+ n(orbital?.orbitPhase,4);
+
+    /* RUNTIME */
+    const mode = qs.get("mode") || "—";
+    const diagnostics = qs.get("diagnostics") || "—";
+    const storageAvailable = (function(){
+      try{
+        const key = "__cte_diag_test__";
+        localStorage.setItem(key, "1");
+        localStorage.removeItem(key);
+        return true;
+      }catch(e){
+        return false;
+      }
+    })();
+    const motionRestorePresent = (function(){
+      try{
+        return !!sessionStorage.getItem("ns_home_round_motion_v6");
+      }catch(e){
+        return false;
+      }
+    })();
+
+    const runtimePass =
+      document.visibilityState === "visible" &&
+      storageAvailable;
+
+    result.runtime.score = runtimePass ? 100 : 40;
+    result.runtime.kind = runtimePass ? "pass" : "warn";
+    result.runtime.text =
+      pick(COPY.text.pageVisible)+ yesNo(document.visibilityState === "visible") + "\n" +
+      pick(COPY.text.storage)+ yesNo(storageAvailable) + "\n" +
+      pick(COPY.text.diagnostics)+ diagnostics + "\n" +
+      pick(COPY.text.restore)+ yesNo(motionRestorePresent);
+
+    /* ROUTING */
+    result.routing.score = 100;
+    result.routing.kind = "pass";
+    result.routing.text =
+      pick(COPY.text.pathname)+ location.pathname + "\n" +
+      pick(COPY.text.lane)+ (lane || "—") + "\n" +
+      pick(COPY.text.lang)+ lang + "\n" +
+      pick(COPY.text.style)+ style + "\n" +
+      pick(COPY.text.time)+ time + "\n" +
+      pick(COPY.text.depth)+ depth + "\n" +
+      pick(COPY.text.routeMode)+ mode;
+
+    /* VERDICT */
+    let verdictText = pick(COPY.text.stable);
+    let verdictScore = 100;
+    let verdictKind = "pass";
+
+    if(!kernelPass){
+      verdictText = pick(COPY.text.breakKernel);
+      verdictScore = 20;
+      verdictKind = "fail";
+    }else if(!enginePass){
+      verdictText = pick(COPY.text.breakEngine);
+      verdictScore = 40;
+      verdictKind = "fail";
+    }else if(!controlPass){
+      verdictText = pick(COPY.text.breakControl);
+      verdictScore = 65;
+      verdictKind = "warn";
+    }else if(!runtimePass){
+      verdictText = pick(COPY.text.breakRuntime);
+      verdictScore = 75;
+      verdictKind = "warn";
+    }
+
+    result.verdict.score = verdictScore;
+    result.verdict.kind = verdictKind;
+    result.verdict.text = verdictText;
+
+    return result;
+  }
+
+  collectDiagnostics().then((data)=>{
+    card(
+      document.getElementById("gKernel"),
+      pick(COPY.labels.kernel),
+      pick(COPY.labels.kernelSub),
+      data.kernel.score,
+      data.kernel.text
+    );
+    card(
+      document.getElementById("gEngine"),
+      pick(COPY.labels.engine),
+      pick(COPY.labels.engineSub),
+      data.engine.score,
+      data.engine.text
+    );
+    card(
+      document.getElementById("gControl"),
+      pick(COPY.labels.control),
+      pick(COPY.labels.controlSub),
+      data.control.score,
+      data.control.text
+    );
+    card(
+      document.getElementById("gRuntime"),
+      pick(COPY.labels.runtime),
+      pick(COPY.labels.runtimeSub),
+      data.runtime.score,
+      data.runtime.text
+    );
+    card(
+      document.getElementById("gRouting"),
+      pick(COPY.labels.routing),
+      pick(COPY.labels.routingSub),
+      data.routing.score,
+      data.routing.text
+    );
+    card(
+      document.getElementById("gVerdict"),
+      pick(COPY.labels.verdict),
+      pick(COPY.labels.verdictSub),
+      data.verdict.score,
+      data.verdict.text
+    );
+
+    pill("sumKernelValue", data.kernel.kind);
+    pill("sumEngineValue", data.engine.kind);
+    pill("sumControlValue", data.control.kind);
+    pill("sumRuntimeValue", data.runtime.kind);
+    pill("sumOverallValue", data.verdict.kind);
+  }).catch(()=>{
+    const failText = pick(COPY.text.breakKernel);
+    card(document.getElementById("gKernel"), pick(COPY.labels.kernel), pick(COPY.labels.kernelSub), 0, failText);
+    card(document.getElementById("gEngine"), pick(COPY.labels.engine), pick(COPY.labels.engineSub), 0, failText);
+    card(document.getElementById("gControl"), pick(COPY.labels.control), pick(COPY.labels.controlSub), 0, failText);
+    card(document.getElementById("gRuntime"), pick(COPY.labels.runtime), pick(COPY.labels.runtimeSub), 0, failText);
+    card(document.getElementById("gRouting"), pick(COPY.labels.routing), pick(COPY.labels.routingSub), 0, failText);
+    card(document.getElementById("gVerdict"), pick(COPY.labels.verdict), pick(COPY.labels.verdictSub), 0, failText);
+    pill("sumKernelValue","fail");
+    pill("sumEngineValue","fail");
+    pill("sumControlValue","fail");
+    pill("sumRuntimeValue","fail");
+    pill("sumOverallValue","fail");
+  });
 })();
 </script>
 

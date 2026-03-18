@@ -658,7 +658,7 @@ body[data-mode="observe"] .diagnostics-summary{
   </div>
 
   <div id="hero-layer">
-    <div class="hero-panel">
+    <div class="hero-panel" id="hero-panel">
       <h1 class="hero-title">NINE SUMMITS</h1>
       <p class="hero-sub">Learn to live, to love.</p>
       <p class="hero-tag">Enter simply. Discover power. Choose depth.</p>
@@ -725,7 +725,7 @@ body[data-mode="observe"] .diagnostics-summary{
     </div>
   </div>
 
-  <div class="diagnostics-shell">
+  <div class="diagnostics-shell" id="diagnostics-shell">
     <div class="diagnostics-bar">
       <div id="diagnostics-summary" class="diagnostics-summary"></div>
       <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">DIAGNOSTICS</button>
@@ -752,11 +752,13 @@ const body = document.body;
 const canvas = document.getElementById("world-canvas");
 const ctx = canvas.getContext("2d", { alpha: true });
 
+const heroPanel = document.getElementById("hero-panel");
 const flatLayer = document.getElementById("flat-layer");
 const universeLayer = document.getElementById("universe-layer");
 const atmosphereLayer = document.getElementById("atmosphere-layer");
 const heroLayer = document.getElementById("hero-layer");
 const orbitalOverlay = document.getElementById("orbital-overlay");
+const diagnosticsShell = document.getElementById("diagnostics-shell");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
@@ -778,6 +780,11 @@ const control = createControlSystem();
 const instruments = createInstruments();
 
 const MOTION_STORAGE_KEY = "ns_home_round_motion_v6";
+const MARKER_GAP_PX = 14;
+const MARKER_SIDE_MARGIN_PX = 28;
+const MARKER_TOP_MARGIN_PX = 20;
+const MARKER_BOTTOM_MARGIN_PX = 24;
+const MARKER_MAX_PASSES = 3;
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -845,6 +852,16 @@ let lastRenderReceipt = Object.freeze({
   audit: Object.freeze({})
 });
 
+let lastPlacementReceipt = Object.freeze({
+  markerRequired: false,
+  markerPlacementAdmissible: true,
+  markerCollisionCount: 0,
+  markerRepositionedCount: 0,
+  excludedTopPx: 0,
+  excludedBottomPx: 0,
+  constrainedViewport: false
+});
+
 let isDragging = false;
 let lastX = 0;
 let lastY = 0;
@@ -860,6 +877,10 @@ function isObserveMode() {
 
 function isRoundVisualMode() {
   return mode === "round" || mode === "observe";
+}
+
+function markerModeRequired() {
+  return mode === "round";
 }
 
 function buildModeHref(nextMode) {
@@ -981,7 +1002,10 @@ function buildRuntimePacket(dtMs) {
     },
     planetField,
     renderAudit: lastRenderReceipt?.audit || {},
-    orbitalAudit: lastRenderReceipt?.orbitalAudit || {},
+    orbitalAudit: {
+      ...(lastRenderReceipt?.orbitalAudit || {}),
+      ...(lastPlacementReceipt || {})
+    },
     progress: {},
     unlocks: {},
     verification: {
@@ -1008,35 +1032,236 @@ function hideAllMarkers() {
   }
 }
 
+function getRectSafe(element) {
+  if (!element || typeof element.getBoundingClientRect !== "function") {
+    return { top: 0, bottom: 0, left: 0, right: 0, height: 0, width: 0 };
+  }
+  return element.getBoundingClientRect();
+}
+
+function computeSafeBands() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const heroRect = getRectSafe(heroPanel);
+  const diagnosticsRect =
+    diagnosticsMode === "full"
+      ? getRectSafe(debugPanel)
+      : getRectSafe(diagnosticsShell);
+
+  const left = MARKER_SIDE_MARGIN_PX;
+  const right = Math.max(left, viewportWidth - MARKER_SIDE_MARGIN_PX);
+  const top = Math.max(MARKER_TOP_MARGIN_PX, Math.ceil(heroRect.bottom + 24));
+
+  let bottom = Math.floor(viewportHeight - MARKER_BOTTOM_MARGIN_PX);
+  if (diagnosticsRect.top > 0) {
+    bottom = Math.min(bottom, Math.floor(diagnosticsRect.top - 24));
+  }
+
+  if (bottom <= top + 40) {
+    bottom = Math.max(top + 40, Math.floor(viewportHeight - 40));
+  }
+
+  return Object.freeze({
+    left,
+    right,
+    top,
+    bottom,
+    width: viewportWidth,
+    height: viewportHeight,
+    constrainedViewport: viewportWidth <= 900 || viewportHeight <= 900
+  });
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function cloneHit(hit) {
+  return {
+    id: hit.id,
+    label: hit.label,
+    route: hit.route,
+    x: hit.x,
+    y: hit.y,
+    radius: hit.radius
+  };
+}
+
+function clampHitToBands(hit, bands) {
+  hit.x = clamp(hit.x, bands.left, bands.right);
+  hit.y = clamp(hit.y, bands.top, bands.bottom);
+}
+
+function resolvePairCollision(a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const minDistance = (a.radius + b.radius) + MARKER_GAP_PX;
+  const distSq = (dx * dx) + (dy * dy);
+
+  if (distSq >= minDistance * minDistance) {
+    return false;
+  }
+
+  let ux = 0;
+  let uy = 0;
+  if (distSq > 0.0001) {
+    const dist = Math.sqrt(distSq);
+    ux = dx / dist;
+    uy = dy / dist;
+    const overlap = minDistance - dist;
+    a.x -= ux * (overlap * 0.5);
+    a.y -= uy * (overlap * 0.5);
+    b.x += ux * (overlap * 0.5);
+    b.y += uy * (overlap * 0.5);
+    return true;
+  }
+
+  const deterministic =
+    a.id.localeCompare(b.id) <= 0
+      ? { ux: 1, uy: 0 }
+      : { ux: 0, uy: 1 };
+
+  ux = deterministic.ux;
+  uy = deterministic.uy;
+  const overlap = minDistance;
+  a.x -= ux * (overlap * 0.5);
+  a.y -= uy * (overlap * 0.5);
+  b.x += ux * (overlap * 0.5);
+  b.y += uy * (overlap * 0.5);
+  return true;
+}
+
+function buildFallbackAnchors(bands) {
+  const centerX = (bands.left + bands.right) * 0.5;
+  const centerY = (bands.top + bands.bottom) * 0.5;
+  return Object.freeze({
+    "north-products": { x: centerX, y: bands.top + 10 },
+    "east-gauges": { x: bands.right - 10, y: centerY },
+    "south-laws": { x: centerX, y: bands.bottom - 10 },
+    "west-explore": { x: bands.left + 10, y: centerY }
+  });
+}
+
+function countRemainingCollisions(hits) {
+  let count = 0;
+  for (let i = 0; i < hits.length; i += 1) {
+    for (let j = i + 1; j < hits.length; j += 1) {
+      const a = hits[i];
+      const b = hits[j];
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const minDistance = (a.radius + b.radius) + MARKER_GAP_PX;
+      if ((dx * dx) + (dy * dy) < minDistance * minDistance) {
+        count += 1;
+      }
+    }
+  }
+  return count;
+}
+
+function solveMarkerPlacement(rawHits) {
+  const required = markerModeRequired();
+  if (!required) {
+    return Object.freeze({
+      resolvedHits: Object.freeze([]),
+      markerRequired: false,
+      markerPlacementAdmissible: true,
+      markerCollisionCount: 0,
+      markerRepositionedCount: 0,
+      excludedTopPx: 0,
+      excludedBottomPx: 0,
+      constrainedViewport: false
+    });
+  }
+
+  const hits = rawHits.map(cloneHit);
+  const bands = computeSafeBands();
+  let repositionedCount = 0;
+  let collisionCount = 0;
+
+  for (const hit of hits) {
+    const beforeX = hit.x;
+    const beforeY = hit.y;
+    clampHitToBands(hit, bands);
+    if (beforeX !== hit.x || beforeY !== hit.y) repositionedCount += 1;
+  }
+
+  for (let pass = 0; pass < MARKER_MAX_PASSES; pass += 1) {
+    let anyCollision = false;
+
+    for (let i = 0; i < hits.length; i += 1) {
+      for (let j = i + 1; j < hits.length; j += 1) {
+        const changed = resolvePairCollision(hits[i], hits[j]);
+        if (changed) {
+          anyCollision = true;
+          collisionCount += 1;
+          repositionedCount += 2;
+          clampHitToBands(hits[i], bands);
+          clampHitToBands(hits[j], bands);
+        }
+      }
+    }
+
+    if (!anyCollision) break;
+  }
+
+  const remaining = countRemainingCollisions(hits);
+  if (remaining > 0) {
+    const anchors = buildFallbackAnchors(bands);
+    for (const hit of hits) {
+      const anchor = anchors[hit.id];
+      if (!anchor) continue;
+      hit.x = anchor.x;
+      hit.y = anchor.y;
+      clampHitToBands(hit, bands);
+    }
+  }
+
+  const finalRemaining = countRemainingCollisions(hits);
+
+  return Object.freeze({
+    resolvedHits: Object.freeze(hits.map((hit) => Object.freeze(hit))),
+    markerRequired: true,
+    markerPlacementAdmissible: hits.length > 0 && finalRemaining === 0,
+    markerCollisionCount: collisionCount + finalRemaining,
+    markerRepositionedCount: repositionedCount,
+    excludedTopPx: bands.top,
+    excludedBottomPx: Math.max(0, bands.height - bands.bottom),
+    constrainedViewport: bands.constrainedViewport
+  });
+}
+
 function syncOverlayMarkers() {
   if (!isRoundVisualMode() || isObserveMode()) {
+    lastPlacementReceipt = Object.freeze({
+      markerRequired: false,
+      markerPlacementAdmissible: true,
+      markerCollisionCount: 0,
+      markerRepositionedCount: 0,
+      excludedTopPx: 0,
+      excludedBottomPx: 0,
+      constrainedViewport: false
+    });
     hideAllMarkers();
     return;
   }
 
-  const hits = Array.isArray(lastRenderReceipt?.orbitalHits)
+  const rawHits = Array.isArray(lastRenderReceipt?.orbitalHits)
     ? lastRenderReceipt.orbitalHits
     : [];
 
   hideAllMarkers();
 
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const marginX = Math.max(26, width * 0.06);
-  const marginTop = Math.max(120, height * 0.16);
-  const marginBottom = Math.max(96, height * 0.14);
+  const placement = solveMarkerPlacement(rawHits);
+  lastPlacementReceipt = placement;
 
-  for (let i = 0; i < hits.length; i += 1) {
-    const hit = hits[i];
+  for (const hit of placement.resolvedHits) {
     const marker = overlayMap[hit.id];
     if (!marker) continue;
 
-    const clampedX = Math.max(marginX, Math.min(width - marginX, hit.x));
-    const clampedY = Math.max(marginTop, Math.min(height - marginBottom, hit.y));
-
     marker.hidden = false;
-    marker.style.left = `${clampedX}px`;
-    marker.style.top = `${clampedY}px`;
+    marker.style.left = `${hit.x}px`;
+    marker.style.top = `${hit.y}px`;
   }
 }
 
@@ -1138,6 +1363,7 @@ function setDiagnosticsMode(nextMode) {
   diagnosticsMode = nextMode === "full" ? "full" : "peek";
   body.setAttribute("data-diagnostics", diagnosticsMode);
   diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
+  syncOverlayMarkers();
 }
 
 function navigateToMode(nextMode) {

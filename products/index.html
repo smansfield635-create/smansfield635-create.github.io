@@ -1,348 +1,495 @@
 <!doctype html>
+<!-- TNT — /products/index.html
+     PRODUCTS AUTHORITY — GATE + NOW FIELD
+     STATUS:
+       - full authority rewrite
+       - canon state carry added
+       - GATE state + NOW state preserved
+       - FUTURE routes to /explore/
+       - no inline onclick
+       - no modals / no overlays
+       - uses ui.css + branch.css only
+-->
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Products · Gateway</title>
-  <link rel="stylesheet" href="/assets/ui.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Nine Summits — Products</title>
+
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+
   <style>
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #030712;
-      color: #fff;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    a{color:inherit;text-decoration:none}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:#fff;
+    }
+    body::before,body::after{pointer-events:none!important}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --mut:rgba(255,255,255,.84);
+      --mut2:rgba(255,255,255,.72);
+
+      --stroke:rgba(255,255,255,.14);
+      --stroke2:rgba(255,255,255,.09);
+
+      --gold:rgba(212,175,55,.52);
+      --goldSoft:rgba(212,175,55,.18);
+
+      --crimson:rgba(120,0,22,.28);
+      --festival:rgba(255,43,43,.14);
+      --opalV:rgba(90,40,120,.12);
+
+      --shadowA:0 34px 120px rgba(0,0,0,.58);
+      --shadowB:0 20px 70px rgba(0,0,0,.62);
+      --shadowC:0 18px 60px rgba(0,0,0,.55);
     }
 
-    body {
-      position: relative;
-    }
-
-    #app-shell {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      isolation: isolate;
+    #app-shell{
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      isolation:isolate;
       background:
-        radial-gradient(circle at 50% 18%, rgba(120, 180, 255, 0.08), transparent 28%),
+        radial-gradient(circle at 50% 20%, rgba(120,180,255,.10), transparent 28%),
+        radial-gradient(circle at 50% 72%, rgba(120,180,255,.06), transparent 36%),
         linear-gradient(180deg, #030712 0%, #071225 52%, #08101f 100%);
     }
 
-    .env {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 1;
-      pointer-events: none;
+    /* =========================
+       BACKDROP
+    ========================= */
+    .env{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      z-index:1;
+      pointer-events:none;
     }
 
-    .waterfall {
-      position: absolute;
-      width: 120%;
-      height: 140%;
-      left: -10%;
-      top: -20%;
+    .waterfall{
+      position:absolute;
+      width:120%;
+      height:140%;
+      left:-10%;
+      top:-20%;
       background:
         linear-gradient(
           to bottom,
-          rgba(255,255,255,0.05),
-          rgba(255,255,255,0.02),
-          transparent 40%
+          rgba(255,255,255,.05),
+          rgba(255,255,255,.02),
+          transparent 42%
         ),
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.08), transparent 60%);
-      animation: flow 12s linear infinite;
-      filter: blur(2px);
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,.08), transparent 60%);
+      animation:flow 12s linear infinite;
+      filter:blur(2px);
+      opacity:.55;
     }
 
-    .mist {
-      position: absolute;
-      inset: 0;
+    .mist{
+      position:absolute;
+      inset:0;
       background:
-        radial-gradient(circle at 50% 60%, rgba(255,255,255,0.08), transparent 70%);
-      animation: mist 6s ease-in-out infinite alternate;
+        radial-gradient(circle at 50% 56%, rgba(255,255,255,.08), transparent 70%);
+      animation:mist 6s ease-in-out infinite alternate;
+      opacity:.7;
     }
 
-    .top-nav {
-      position: fixed;
-      left: 16px;
-      top: 16px;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    /* =========================
+       TOP NAV
+    ========================= */
+    .top-nav{
+      position:fixed;
+      left:16px;
+      top:16px;
+      z-index:30;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
-    .top-nav a,
-    .top-nav button {
-      min-height: 42px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(0,0,0,0.40);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-    }
-
-    .hero {
-      position: absolute;
-      top: 12%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(94vw, 980px);
-      text-align: center;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: clamp(38px, 6vw, 82px);
-      font-weight: 950;
-      letter-spacing: 0.05em;
-      line-height: 0.94;
-      text-shadow: 0 10px 38px rgba(0, 0, 0, 0.62);
-    }
-
-    .hero p {
-      margin: 12px 0 0;
-      font-size: clamp(15px, 1.9vw, 21px);
-      line-height: 1.55;
-      color: rgba(255,255,255,0.84);
-      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.44);
-    }
-
-    .gate {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: min(8vw, 96px);
-      padding: 0 20px;
-    }
-
-    .diamond-card {
-      position: relative;
-      width: clamp(140px, 18vw, 220px);
-      height: clamp(140px, 18vw, 220px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      border: 0;
-      padding: 0;
-      cursor: pointer;
-      color: inherit;
-    }
-
-    .diamond-shell {
-      position: absolute;
-      inset: 0;
-      transform: rotate(45deg);
-      border: 2px solid rgba(255,255,255,0.28);
+    .nav-btn,
+    .status-pill{
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.15);
       background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,0.10), transparent 26%),
-        linear-gradient(145deg, rgba(10,14,22,0.40), rgba(5,8,12,0.20));
-      box-shadow:
-        0 18px 48px rgba(0,0,0,0.38),
-        inset 0 0 20px rgba(255,255,255,0.04);
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+        radial-gradient(circle at 50% 120%, rgba(212,175,55,.10), transparent 64%),
+        rgba(0,0,0,.36);
+      color:#fff;
+      text-decoration:none;
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:.05em;
+      backdrop-filter:blur(8px);
+      box-shadow:var(--shadowC);
     }
 
-    .diamond-shell::after {
-      content: "";
-      position: absolute;
-      inset: 20%;
-      border: 1px solid rgba(201,162,74,0.50);
+    .nav-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .diamond-shell--now {
-      animation: spinCW 12s linear infinite;
+    .nav-btn:hover{
+      border-color:rgba(212,175,55,.34);
+      box-shadow:var(--shadowC), 0 0 18px rgba(212,175,55,.12);
+      filter:saturate(1.04);
     }
 
-    .diamond-shell--future {
-      animation: spinCCW 14s linear infinite;
+    .status-pill{
+      position:fixed;
+      right:16px;
+      top:16px;
+      z-index:30;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:72px;
     }
 
-    .diamond-label {
-      position: relative;
-      z-index: 2;
-      font-weight: 950;
-      font-size: clamp(20px, 2.6vw, 30px);
-      letter-spacing: 0.12em;
-      text-align: center;
-      pointer-events: none;
-      text-shadow: 0 8px 26px rgba(0,0,0,0.55);
+    /* =========================
+       HERO
+    ========================= */
+    .hero{
+      position:absolute;
+      top:10%;
+      left:50%;
+      transform:translateX(-50%);
+      width:min(94vw, 980px);
+      text-align:center;
+      z-index:10;
+      pointer-events:none;
     }
 
-    .diamond-sub {
-      position: absolute;
-      left: 50%;
-      bottom: -44px;
-      transform: translateX(-50%);
-      min-width: 140px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.74);
-      text-transform: uppercase;
-      pointer-events: none;
+    .hero h1{
+      margin:0;
+      font-size:clamp(40px, 6.2vw, 86px);
+      font-weight:950;
+      letter-spacing:.05em;
+      line-height:.94;
+      text-shadow:0 10px 38px rgba(0,0,0,.62);
     }
 
-    .diamond-card:hover .diamond-shell {
-      border-color: rgba(255,255,255,0.42);
-      box-shadow:
-        0 22px 56px rgba(0,0,0,0.46),
-        0 0 18px rgba(212,175,55,0.16),
-        inset 0 0 24px rgba(255,255,255,0.05);
+    .hero p{
+      margin:12px 0 0;
+      font-size:clamp(15px, 1.9vw, 21px);
+      line-height:1.55;
+      color:rgba(255,255,255,.86);
+      text-shadow:0 8px 24px rgba(0,0,0,.44);
     }
 
-    .product-field {
-      position: absolute;
-      inset: 0;
-      z-index: 6;
-      display: none;
+    /* =========================
+       STAGE
+    ========================= */
+    .stage{
+      position:absolute;
+      inset:0;
+      z-index:12;
     }
 
-    .product-field.is-active {
-      display: block;
+    /* =========================
+       GATE MODE
+    ========================= */
+    .gate{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:min(8vw, 96px);
+      padding:0 20px;
     }
 
-    .product-node {
-      position: absolute;
-      width: 132px;
-      height: 132px;
-      border: 0;
-      background: transparent;
-      color: inherit;
-      padding: 0;
-      cursor: pointer;
-      animation: float 8s ease-in-out infinite alternate;
+    .diamond-card{
+      position:relative;
+      width:clamp(150px, 19vw, 230px);
+      height:clamp(150px, 19vw, 230px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:transparent;
+      border:0;
+      padding:0;
+      cursor:pointer;
+      color:inherit;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
     }
 
-    .product-node:nth-child(2) {
-      animation-duration: 9s;
-    }
-
-    .product-node:nth-child(3) {
-      animation-duration: 10s;
-    }
-
-    .product-node:nth-child(4) {
-      animation-duration: 11s;
-    }
-
-    .product-node-shell {
-      position: absolute;
-      inset: 0;
-      transform: rotate(45deg);
-      border: 2px solid rgba(255,255,255,0.24);
+    .diamond-shell{
+      position:absolute;
+      inset:0;
+      border:2px solid rgba(255,255,255,.28);
       background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,0.10), transparent 24%),
-        linear-gradient(145deg, rgba(10,14,22,0.68), rgba(5,8,12,0.84));
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 26%),
+        linear-gradient(145deg, rgba(10,14,22,.42), rgba(5,8,12,.24));
       box-shadow:
-        0 18px 44px rgba(0,0,0,0.38),
-        inset 0 0 18px rgba(255,255,255,0.04);
-      animation: spinCW 18s linear infinite;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        0 18px 48px rgba(0,0,0,.38),
+        inset 0 0 20px rgba(255,255,255,.04);
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .product-node-shell::after {
-      content: "";
-      position: absolute;
-      inset: 22%;
-      border: 1px solid rgba(201,162,74,0.36);
+    .diamond-shell::after{
+      content:"";
+      position:absolute;
+      inset:20%;
+      border:1px solid rgba(201,162,74,.50);
     }
 
-    .product-node-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 18px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      line-height: 1.2;
-      pointer-events: none;
+    .diamond-shell--now{
+      transform:rotate(0deg);
     }
 
-    .product-node:hover .product-node-shell {
-      border-color: rgba(255,255,255,0.40);
+    .diamond-shell--future{
+      transform:rotate(45deg);
+    }
+
+    .diamond-label{
+      position:relative;
+      z-index:2;
+      font-weight:950;
+      font-size:clamp(22px, 2.6vw, 32px);
+      letter-spacing:.12em;
+      text-align:center;
+      pointer-events:none;
+      text-shadow:0 8px 26px rgba(0,0,0,.55);
+    }
+
+    .diamond-sub{
+      position:absolute;
+      left:50%;
+      bottom:-44px;
+      transform:translateX(-50%);
+      min-width:164px;
+      text-align:center;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.06em;
+      color:rgba(255,255,255,.74);
+      text-transform:uppercase;
+      pointer-events:none;
+      white-space:nowrap;
+    }
+
+    .diamond-card:hover .diamond-shell{
+      border-color:rgba(255,255,255,.42);
       box-shadow:
-        0 22px 52px rgba(0,0,0,0.46),
-        0 0 16px rgba(212,175,55,0.14),
-        inset 0 0 18px rgba(255,255,255,0.06);
+        0 22px 56px rgba(0,0,0,.46),
+        0 0 18px rgba(212,175,55,.16),
+        inset 0 0 24px rgba(255,255,255,.05);
+      filter:saturate(1.04);
     }
 
-    .status-pill {
-      position: fixed;
-      right: 16px;
-      top: 16px;
-      z-index: 10;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.38);
-      border: 1px solid rgba(255,255,255,0.14);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: rgba(255,255,255,0.86);
-      backdrop-filter: blur(8px);
+    /* =========================
+       NOW FIELD
+    ========================= */
+    .product-field{
+      position:absolute;
+      inset:0;
+      display:none;
     }
 
-    @keyframes flow {
-      from { transform: translateY(-5%); }
-      to { transform: translateY(5%); }
+    .product-field.is-active{
+      display:block;
     }
 
-    @keyframes mist {
-      from { opacity: 0.4; }
-      to { opacity: 0.7; }
+    .field-core{
+      position:absolute;
+      left:50%;
+      top:56%;
+      transform:translate(-50%,-50%);
+      width:min(760px, 86vw);
+      height:min(520px, 54vh);
+      pointer-events:none;
     }
 
-    @keyframes spinCW {
-      from { transform: rotate(45deg); }
-      to { transform: rotate(405deg); }
+    .product-node{
+      position:absolute;
+      width:144px;
+      height:144px;
+      border:0;
+      background:transparent;
+      color:inherit;
+      padding:0;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      animation:float 8s ease-in-out infinite alternate;
     }
 
-    @keyframes spinCCW {
-      from { transform: rotate(45deg); }
-      to { transform: rotate(-315deg); }
+    .product-node:nth-child(2){animation-duration:9s}
+    .product-node:nth-child(3){animation-duration:10s}
+    .product-node:nth-child(4){animation-duration:11s}
+
+    .product-node-shell{
+      position:absolute;
+      inset:0;
+      transform:rotate(45deg);
+      border:2px solid rgba(255,255,255,.24);
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 24%),
+        linear-gradient(145deg, rgba(10,14,22,.70), rgba(5,8,12,.84));
+      box-shadow:
+        0 18px 44px rgba(0,0,0,.38),
+        inset 0 0 18px rgba(255,255,255,.04);
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    @keyframes float {
-      from { transform: translateY(-10px); }
-      to { transform: translateY(10px); }
+    .product-node-shell::after{
+      content:"";
+      position:absolute;
+      inset:22%;
+      border:1px solid rgba(201,162,74,.38);
     }
 
-    @media (max-width: 700px) {
-      .gate {
-        gap: 40px;
+    .product-node-label{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      font-size:13px;
+      font-weight:950;
+      letter-spacing:.08em;
+      line-height:1.18;
+      pointer-events:none;
+      text-shadow:0 8px 22px rgba(0,0,0,.55);
+    }
+
+    .product-node:hover .product-node-shell{
+      border-color:rgba(255,255,255,.40);
+      box-shadow:
+        0 22px 52px rgba(0,0,0,.46),
+        0 0 16px rgba(212,175,55,.14),
+        inset 0 0 18px rgba(255,255,255,.06);
+      filter:saturate(1.04);
+    }
+
+    /* field positions */
+    .node-sideai{left:8%; top:8%}
+    .node-energy{right:8%; top:12%}
+    .node-education{right:22%; bottom:10%}
+    .node-governance{left:26%; bottom:2%}
+
+    /* =========================
+       ANIMATION
+    ========================= */
+    @keyframes flow{
+      from{transform:translateY(-5%)}
+      to{transform:translateY(5%)}
+    }
+
+    @keyframes mist{
+      from{opacity:.4}
+      to{opacity:.7}
+    }
+
+    @keyframes float{
+      from{transform:translateY(-10px)}
+      to{transform:translateY(10px)}
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+    @media (max-width:780px){
+      .hero{
+        top:12%;
+        width:min(92vw, 700px);
       }
 
-      .product-node {
-        width: 112px;
-        height: 112px;
+      .gate{
+        gap:40px;
       }
 
-      .product-node-label {
-        font-size: 11px;
+      .diamond-sub{
+        bottom:-38px;
+        min-width:132px;
+        font-size:11px;
       }
+
+      .field-core{
+        width:min(92vw, 560px);
+        height:min(540px, 52vh);
+        top:58%;
+      }
+
+      .product-node{
+        width:120px;
+        height:120px;
+      }
+
+      .product-node-label{
+        font-size:11px;
+        padding:14px;
+      }
+
+      .node-sideai{left:4%; top:8%}
+      .node-energy{right:4%; top:12%}
+      .node-education{right:16%; bottom:8%}
+      .node-governance{left:18%; bottom:0%}
+    }
+
+    @media (max-width:560px){
+      .top-nav{
+        gap:8px;
+      }
+
+      .nav-btn{
+        min-height:40px;
+        padding:9px 12px;
+        font-size:12px;
+      }
+
+      .status-pill{
+        min-height:40px;
+        padding:9px 12px;
+        font-size:12px;
+      }
+
+      .hero{
+        top:14%;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .gate{
+        flex-direction:column;
+        gap:64px;
+        justify-content:center;
+      }
+
+      .field-core{
+        width:min(94vw, 360px);
+        height:420px;
+        top:60%;
+      }
+
+      .product-node{
+        width:112px;
+        height:112px;
+      }
+
+      .node-sideai{left:2%; top:0%}
+      .node-energy{right:2%; top:10%}
+      .node-education{right:8%; bottom:14%}
+      .node-governance{left:10%; bottom:4%}
     }
   </style>
 </head>
+
 <body>
   <div id="app-shell">
     <div class="env" aria-hidden="true">
@@ -351,98 +498,224 @@
     </div>
 
     <nav class="top-nav" aria-label="Primary">
-      <a href="/index.html">COMPASS</a>
-      <a href="/products/">PRODUCTS</a>
-      <a href="/explore/">EXPLORE</a>
-      <a href="/gauges/">GAUGES</a>
+      <a class="nav-btn" id="navCompass" href="/index.html" data-route="/index.html">COMPASS</a>
+      <a class="nav-btn" id="navProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+      <a class="nav-btn" id="navExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+      <a class="nav-btn" id="navGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
     </nav>
 
-    <div class="status-pill" id="status-pill">GATE</div>
+    <div class="status-pill" id="statusPill">GATE</div>
 
     <section class="hero" aria-label="Products hero">
-      <h1>PRODUCTS</h1>
-      <p>Choose your path. What exists now, or what is being built next.</p>
+      <h1 id="heroTitle">PRODUCTS</h1>
+      <p id="heroTag">Choose your path. What exists now, or what is being built next.</p>
     </section>
 
-    <section class="gate" id="gate" aria-label="Gateway choices">
-      <button class="diamond-card" id="enter-now" type="button" aria-label="Enter now products">
-        <div class="diamond-shell diamond-shell--now"></div>
-        <div class="diamond-label">NOW</div>
-        <div class="diamond-sub">Available surface</div>
-      </button>
+    <section class="stage" aria-label="Products authority">
+      <div class="gate" id="gate" aria-label="Gateway choices">
+        <button class="diamond-card" id="enterNow" type="button" aria-label="Enter available products">
+          <div class="diamond-shell diamond-shell--now"></div>
+          <div class="diamond-label" id="nowLabel">NOW</div>
+          <div class="diamond-sub" id="nowSub">AVAILABLE SURFACE</div>
+        </button>
 
-      <button class="diamond-card" id="enter-future" type="button" aria-label="Enter future products">
-        <div class="diamond-shell diamond-shell--future"></div>
-        <div class="diamond-label">FUTURE</div>
-        <div class="diamond-sub">Expansion path</div>
-      </button>
-    </section>
+        <button class="diamond-card" id="enterFuture" type="button" aria-label="Enter future products">
+          <div class="diamond-shell diamond-shell--future"></div>
+          <div class="diamond-label" id="futureLabel">FUTURE</div>
+          <div class="diamond-sub" id="futureSub">EXPANSION PATH</div>
+        </button>
+      </div>
 
-    <section class="product-field" id="field" aria-label="Product field">
-      <button class="product-node" style="top:30%;left:28%" data-route="/products/on-your-side-ai/" type="button">
-        <div class="product-node-shell"></div>
-        <div class="product-node-label">ON YOUR SIDE AI</div>
-      </button>
+      <section class="product-field" id="field" aria-label="Product field">
+        <div class="field-core">
+          <button class="product-node node-sideai" data-route="/products/on-your-side-ai/" type="button" aria-label="On Your Side AI">
+            <div class="product-node-shell"></div>
+            <div class="product-node-label" id="labelSide">ON YOUR SIDE AI</div>
+          </button>
 
-      <button class="product-node" style="top:58%;left:60%" data-route="/products/education/" type="button">
-        <div class="product-node-shell"></div>
-        <div class="product-node-label">EDUCATION</div>
-      </button>
+          <button class="product-node node-energy" data-route="/products/energy/" type="button" aria-label="Energy">
+            <div class="product-node-shell"></div>
+            <div class="product-node-label" id="labelEnergy">ENERGY</div>
+          </button>
 
-      <button class="product-node" style="top:38%;left:68%" data-route="/products/energy/" type="button">
-        <div class="product-node-shell"></div>
-        <div class="product-node-label">ENERGY</div>
-      </button>
+          <button class="product-node node-education" data-route="/products/education/" type="button" aria-label="Education">
+            <div class="product-node-shell"></div>
+            <div class="product-node-label" id="labelEducation">EDUCATION</div>
+          </button>
 
-      <button class="product-node" style="top:68%;left:38%" data-route="/products/governance/" type="button">
-        <div class="product-node-shell"></div>
-        <div class="product-node-label">GOVERNANCE</div>
-      </button>
+          <button class="product-node node-governance" data-route="/products/governance/" type="button" aria-label="Governance">
+            <div class="product-node-shell"></div>
+            <div class="product-node-label" id="labelGovernance">GOVERNANCE</div>
+          </button>
+        </div>
+      </section>
     </section>
   </div>
 
   <script type="module">
-    const gate = document.getElementById("gate");
-    const field = document.getElementById("field");
-    const statusPill = document.getElementById("status-pill");
-    const enterNowButton = document.getElementById("enter-now");
-    const enterFutureButton = document.getElementById("enter-future");
-    const productNodes = Array.from(document.querySelectorAll(".product-node"));
+    (function(){
+      "use strict";
 
-    function setGatewayMode(nextMode) {
-      if (nextMode === "field") {
-        gate.style.display = "none";
-        field.classList.add("is-active");
-        statusPill.textContent = "NOW";
-        return;
+      const qs = new URLSearchParams(location.search);
+      const LS = window.localStorage;
+
+      let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+      let style = qs.get("style") || LS.getItem("gd_style") || "informal";
+      let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+      let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+      let lane  = qs.get("lane")  || "";
+      let view  = qs.get("view")  || "gate";
+
+      if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+      if(style!=="informal" && style!=="formal") style="informal";
+      if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+      let d = parseInt(depth,10);
+      if(!isFinite(d)) d = 1;
+      if(d < 1) d = 1;
+      if(d > 9) d = 9;
+      depth = String(d);
+
+      if(lane!=="platform" && lane!=="engineering") lane = "";
+      if(view!=="gate" && view!=="now") view = "gate";
+
+      try{
+        LS.setItem("gd_lang", lang);
+        LS.setItem("gd_style", style);
+        LS.setItem("gd_time", time);
+        LS.setItem("gd_depth", depth);
+      }catch(e){}
+
+      document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
+
+      function buildQuery(extra){
+        const p = new URLSearchParams();
+        p.set("lang", (extra && extra.lang) ? extra.lang : lang);
+        p.set("style", (extra && extra.style) ? extra.style : style);
+        p.set("time", (extra && extra.time) ? extra.time : time);
+        p.set("depth", (extra && extra.depth) ? String(extra.depth) : depth);
+        p.set("view", (extra && extra.view) ? extra.view : view);
+
+        const resolvedLane = (extra && extra.lane) ? extra.lane : lane;
+        if(resolvedLane === "platform" || resolvedLane === "engineering"){
+          p.set("lane", resolvedLane);
+        }
+
+        return "?" + p.toString();
       }
 
-      gate.style.display = "flex";
-      field.classList.remove("is-active");
-      statusPill.textContent = "GATE";
-    }
+      function withState(route, extra){
+        const glue = route.includes("?") ? "&" : "?";
+        return route + glue + buildQuery(extra).slice(1);
+      }
 
-    function navigateTo(path) {
-      window.location.href = path;
-    }
+      function wireRoutes(){
+        const nodes = document.querySelectorAll("[data-route]");
+        for(let i=0;i<nodes.length;i+=1){
+          const el = nodes[i];
+          const route = el.getAttribute("data-route") || "";
+          if(!route) continue;
+          if(el.tagName === "A"){
+            el.setAttribute("href", withState(route));
+          }
+        }
+      }
 
-    enterNowButton.addEventListener("click", () => {
-      setGatewayMode("field");
-    });
+      function P(en, zh, es){
+        return { en, zh, es };
+      }
 
-    enterFutureButton.addEventListener("click", () => {
-      navigateTo("/explore/");
-    });
+      function pick(o){
+        return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en);
+      }
 
-    for (let i = 0; i < productNodes.length; i += 1) {
-      const node = productNodes[i];
-      const route = node.getAttribute("data-route") || "/products/";
-      node.addEventListener("click", () => {
-        navigateTo(route);
-      });
-    }
+      const COPY = {
+        heroTitle: P("PRODUCTS","产品","PRODUCTOS"),
+        heroTag: P(
+          "Choose your path. What exists now, or what is being built next.",
+          "选择你的路径。选择现在存在的，或正在构建的下一层。",
+          "Elige tu camino. Lo que existe ahora, o lo que se está construyendo después."
+        ),
+        navCompass: P("COMPASS","指南针","BRÚJULA"),
+        navProducts: P("PRODUCTS","产品","PRODUCTOS"),
+        navExplore: P("EXPLORE","探索","EXPLORAR"),
+        navGauges: P("GAUGES","量规","MEDIDORES"),
+        gate: P("GATE","闸门","PUERTA"),
+        now: P("NOW","现在","AHORA"),
+        future: P("FUTURE","未来","FUTURO"),
+        nowSub: P("AVAILABLE SURFACE","可用界面","SUPERFICIE DISPONIBLE"),
+        futureSub: P("EXPANSION PATH","扩展路径","RUTA DE EXPANSIÓN"),
+        side: P("ON YOUR SIDE AI","站你这边 AI","ON YOUR SIDE AI"),
+        energy: P("ENERGY","能源","ENERGÍA"),
+        education: P("EDUCATION","教育","EDUCACIÓN"),
+        governance: P("GOVERNANCE","治理","GOBERNANZA")
+      };
 
-    setGatewayMode("gate");
+      document.getElementById("heroTitle").textContent = pick(COPY.heroTitle);
+      document.getElementById("heroTag").textContent = pick(COPY.heroTag);
+
+      document.getElementById("navCompass").textContent = pick(COPY.navCompass);
+      document.getElementById("navProducts").textContent = pick(COPY.navProducts);
+      document.getElementById("navExplore").textContent = pick(COPY.navExplore);
+      document.getElementById("navGauges").textContent = pick(COPY.navGauges);
+
+      document.getElementById("nowLabel").textContent = pick(COPY.now);
+      document.getElementById("futureLabel").textContent = pick(COPY.future);
+      document.getElementById("nowSub").textContent = pick(COPY.nowSub);
+      document.getElementById("futureSub").textContent = pick(COPY.futureSub);
+
+      document.getElementById("labelSide").textContent = pick(COPY.side);
+      document.getElementById("labelEnergy").textContent = pick(COPY.energy);
+      document.getElementById("labelEducation").textContent = pick(COPY.education);
+      document.getElementById("labelGovernance").textContent = pick(COPY.governance);
+
+      wireRoutes();
+
+      const gate = document.getElementById("gate");
+      const field = document.getElementById("field");
+      const statusPill = document.getElementById("statusPill");
+      const enterNowButton = document.getElementById("enterNow");
+      const enterFutureButton = document.getElementById("enterFuture");
+      const productNodes = Array.from(document.querySelectorAll(".product-node"));
+
+      function syncView(nextView){
+        view = nextView === "now" ? "now" : "gate";
+
+        if(view === "now"){
+          gate.style.display = "none";
+          field.classList.add("is-active");
+          statusPill.textContent = pick(COPY.now);
+        }else{
+          gate.style.display = "flex";
+          field.classList.remove("is-active");
+          statusPill.textContent = pick(COPY.gate);
+        }
+
+        history.replaceState({}, "", location.pathname + buildQuery({ view:view }));
+      }
+
+      function navigateTo(path){
+        window.location.href = withState(path, { view:view });
+      }
+
+      enterNowButton.addEventListener("click", function(){
+        syncView("now");
+      }, { passive:true });
+
+      enterFutureButton.addEventListener("click", function(){
+        navigateTo("/explore/");
+      }, { passive:true });
+
+      for(let i=0;i<productNodes.length;i+=1){
+        const node = productNodes[i];
+        const route = node.getAttribute("data-route") || "/products/";
+        node.addEventListener("click", function(){
+          navigateTo(route);
+        }, { passive:true });
+      }
+
+      syncView(view);
+    })();
   </script>
 </body>
 </html>

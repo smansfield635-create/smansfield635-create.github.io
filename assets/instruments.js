@@ -61,13 +61,17 @@ export function createInstruments() {
       normalized === "PASS" ||
       normalized === "STABLE" ||
       normalized === "ASCENT" ||
+      normalized === "ADMISSIBLE" ||
       normalized === "true" ||
       normalized === "control.js" ||
       normalized === "render.js" ||
       normalized === "completion_engine.js" ||
       normalized === "transition_engine.js" ||
+      normalized === "validator_engine.js" ||
       normalized === "round" ||
-      normalized === "ROUND"
+      normalized === "ROUND" ||
+      normalized === "HOME_MODE" ||
+      normalized === "ROUTE_HOME"
     ) {
       return "ok";
     }
@@ -76,9 +80,14 @@ export function createInstruments() {
       normalized === "FAIL" ||
       normalized === "COLLAPSE" ||
       normalized === "DESCENT" ||
+      normalized === "INADMISSIBLE" ||
       normalized === "false" ||
       normalized === "blocked" ||
-      normalized === "denied"
+      normalized === "denied" ||
+      normalized === "REJECT_PACKET" ||
+      normalized === "QUARANTINE_OUTPUT" ||
+      normalized === "FREEZE_HANDOFF" ||
+      normalized === "SYSTEM_HALT"
     ) {
       return "danger";
     }
@@ -266,7 +275,10 @@ export function createInstruments() {
       projectionOwner: normalizeString(source.projectionOwner, "UNSET"),
       inputOwner: normalizeString(source.inputOwner, "UNSET"),
       renderSource: normalizeString(source.renderSource, "UNSET"),
-      orbitSource: normalizeString(source.orbitSource, "UNSET")
+      orbitSource: normalizeString(source.orbitSource, "UNSET"),
+      transitionSource: normalizeString(source.transitionSource, EMPTY),
+      completionSource: normalizeString(source.completionSource, EMPTY),
+      validatorSource: normalizeString(source.validatorSource, EMPTY)
     });
   }
 
@@ -293,7 +305,26 @@ export function createInstruments() {
       admissible: source.admissible === true ? "true" : source.admissible === false ? "false" : EMPTY,
       accepted: source.accepted === true ? "true" : source.accepted === false ? "false" : EMPTY,
       blockedReason: normalizeString(source.blockedReason, EMPTY),
-      family: normalizeString(source.family, EMPTY)
+      family: normalizeString(source.family, EMPTY),
+      faultClass: normalizeString(source.faultClass, EMPTY)
+    });
+  }
+
+  function buildValidatorReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      verdict: normalizeString(source.verdict, EMPTY),
+      admissible: source.admissible === true ? "true" : source.admissible === false ? "false" : EMPTY,
+      signedAuthority: source.signedAuthority === true ? "true" : source.signedAuthority === false ? "false" : EMPTY,
+      engineId: normalizeString(source.engineId, EMPTY),
+      lobeId: normalizePrimitive(source.lobeId, EMPTY),
+      parentLobeId: normalizePrimitive(source.parentLobeId, EMPTY),
+      microLobeId: normalizePrimitive(source.microLobeId, EMPTY),
+      shardDepth: normalizePrimitive(source.shardDepth, EMPTY),
+      budgetClass: normalizeString(source.budgetClass, EMPTY),
+      precisionMode: normalizeString(source.precisionMode, EMPTY),
+      faultClass: normalizeString(source.faultClass, EMPTY),
+      reason: normalizeString(source.reason, EMPTY)
     });
   }
 
@@ -307,11 +338,17 @@ export function createInstruments() {
       confusionLoad: isFiniteNumber(progress.confusionLoad) ? progress.confusionLoad : null,
       completenessRatio: isFiniteNumber(progress.completenessRatio) ? progress.completenessRatio : null,
       renderReadinessRatio: isFiniteNumber(progress.renderReadinessRatio) ? progress.renderReadinessRatio : null,
+      summaryIntegrityRatio: isFiniteNumber(progress.summaryIntegrityRatio) ? progress.summaryIntegrityRatio : null,
+      seasonalCoverageRatio: isFiniteNumber(progress.seasonalCoverageRatio) ? progress.seasonalCoverageRatio : null,
+      climateCoverageRatio: isFiniteNumber(progress.climateCoverageRatio) ? progress.climateCoverageRatio : null,
       masteryPass: progress.masteryPass === true ? "true" : progress.masteryPass === false ? "false" : EMPTY,
       underground: unlocks.underground === true ? "true" : unlocks.underground === false ? "false" : EMPTY,
+      north: unlocks.north === true ? "true" : unlocks.north === false ? "false" : EMPTY,
+      south: unlocks.south === true ? "true" : unlocks.south === false ? "false" : EMPTY,
       continents: unlocks.continents === true ? "true" : unlocks.continents === false ? "false" : EMPTY,
       seasons: unlocks.seasons === true ? "true" : unlocks.seasons === false ? "false" : EMPTY,
-      climates: unlocks.climates === true ? "true" : unlocks.climates === false ? "false" : EMPTY
+      climates: unlocks.climates === true ? "true" : unlocks.climates === false ? "false" : EMPTY,
+      renderReady: unlocks.renderReady === true ? "true" : unlocks.renderReady === false ? "false" : EMPTY
     });
   }
 
@@ -330,7 +367,11 @@ export function createInstruments() {
     const source = normalizeObject(input);
     return Object.freeze({
       count: isFiniteNumber(source.count) ? source.count : null,
-      frontVisibleCount: isFiniteNumber(source.frontVisibleCount) ? source.frontVisibleCount : null
+      frontVisibleCount: isFiniteNumber(source.frontVisibleCount) ? source.frontVisibleCount : null,
+      markerRequired: source.markerRequired === true ? "true" : source.markerRequired === false ? "false" : EMPTY,
+      markerPlacementAdmissible: source.markerPlacementAdmissible === true ? "true" : source.markerPlacementAdmissible === false ? "false" : EMPTY,
+      markerCollisionCount: isFiniteNumber(source.markerCollisionCount) ? source.markerCollisionCount : null,
+      markerRepositionedCount: isFiniteNumber(source.markerRepositionedCount) ? source.markerRepositionedCount : null
     });
   }
 
@@ -401,6 +442,7 @@ export function createInstruments() {
     const authority = normalizeObject(instrument.authority);
     const progress = normalizeObject(runtime.progress);
     const renderAudit = normalizeObject(runtime.renderAudit);
+    const validator = normalizeObject(runtime.validator);
 
     return `
       <div class="diagnostic-bar__group">
@@ -427,6 +469,10 @@ export function createInstruments() {
         <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Orbit</span>
           <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(motion.orbitVelocity, 4))}</span>
+        </span>
+        <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Validator</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(validator.verdict))}</span>
         </span>
         <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Owner</span>
@@ -456,7 +502,8 @@ export function createInstruments() {
     const psychology = normalizeObject(instrument.psychology);
     const motion = normalizeObject(instrument.motion);
     const authority = normalizeObject(instrument.authority);
-    const transition = normalizeObject(instrument.transition);
+    const transition = buildTransitionReceipt(runtime.transition || instrument.transition);
+    const validator = buildValidatorReceipt(runtime.validator);
     const completion = buildCompletionReceipt({
       progress: runtime.progress,
       unlocks: runtime.unlocks
@@ -519,7 +566,6 @@ export function createInstruments() {
         pitchVelocity: toFixedSafe(motion.pitchVelocity, 4),
         orbitVelocity: toFixedSafe(motion.orbitVelocity, 4),
         orbitPhase: toFixedSafe(motion.orbitPhase, 3),
-        orbitPresentationVelocity: toFixedSafe(orbitalState.orbitPresentationVelocity, 4),
         blockedDragOnStarCount: normalizePrimitive(motion.blockedDragOnStarCount),
         starTapCount: normalizePrimitive(motion.starTapCount)
       })),
@@ -528,25 +574,49 @@ export function createInstruments() {
         projectionOwner: normalizePrimitive(authority.projectionOwner),
         inputOwner: normalizePrimitive(authority.inputOwner),
         renderSource: normalizePrimitive(authority.renderSource),
-        orbitSource: normalizePrimitive(authority.orbitSource)
+        orbitSource: normalizePrimitive(authority.orbitSource),
+        transitionSource: normalizePrimitive(authority.transitionSource),
+        completionSource: normalizePrimitive(authority.completionSource),
+        validatorSource: normalizePrimitive(authority.validatorSource)
       })),
       renderKeyValueSection("Transition", Object.freeze({
         proposed: normalizePrimitive(transition.proposed),
         admissible: normalizePrimitive(transition.admissible),
         accepted: normalizePrimitive(transition.accepted),
         blockedReason: normalizePrimitive(transition.blockedReason),
-        family: normalizePrimitive(transition.family)
+        family: normalizePrimitive(transition.family),
+        faultClass: normalizePrimitive(transition.faultClass)
+      })),
+      renderKeyValueSection("Validator", Object.freeze({
+        verdict: normalizePrimitive(validator.verdict),
+        admissible: normalizePrimitive(validator.admissible),
+        signedAuthority: normalizePrimitive(validator.signedAuthority),
+        engineId: normalizePrimitive(validator.engineId),
+        lobeId: normalizePrimitive(validator.lobeId),
+        parentLobeId: normalizePrimitive(validator.parentLobeId),
+        microLobeId: normalizePrimitive(validator.microLobeId),
+        shardDepth: normalizePrimitive(validator.shardDepth),
+        budgetClass: normalizePrimitive(validator.budgetClass),
+        precisionMode: normalizePrimitive(validator.precisionMode),
+        faultClass: normalizePrimitive(validator.faultClass),
+        reason: normalizePrimitive(validator.reason)
       })),
       renderKeyValueSection("Completion", Object.freeze({
         summitCompletion: toFixedSafe(completion.summitCompletion, 2),
         confusionLoad: normalizePrimitive(completion.confusionLoad),
         completenessRatio: toFixedSafe(completion.completenessRatio, 2),
+        summaryIntegrityRatio: toFixedSafe(completion.summaryIntegrityRatio, 2),
+        seasonalCoverageRatio: toFixedSafe(completion.seasonalCoverageRatio, 2),
+        climateCoverageRatio: toFixedSafe(completion.climateCoverageRatio, 2),
         renderReadinessRatio: toFixedSafe(completion.renderReadinessRatio, 2),
         masteryPass: normalizePrimitive(completion.masteryPass),
         underground: normalizePrimitive(completion.underground),
+        north: normalizePrimitive(completion.north),
+        south: normalizePrimitive(completion.south),
         continents: normalizePrimitive(completion.continents),
         seasons: normalizePrimitive(completion.seasons),
-        climates: normalizePrimitive(completion.climates)
+        climates: normalizePrimitive(completion.climates),
+        renderReady: normalizePrimitive(completion.renderReady)
       })),
       renderKeyValueSection("Render", Object.freeze({
         sampleCount: normalizePrimitive(renderReceipt.sampleCount),
@@ -555,7 +625,11 @@ export function createInstruments() {
         cryosphereCount: normalizePrimitive(renderReceipt.cryosphereCount),
         shorelineCount: normalizePrimitive(renderReceipt.shorelineCount),
         orbitalCount: normalizePrimitive(orbitalReceipt.count),
-        frontVisibleCount: normalizePrimitive(orbitalReceipt.frontVisibleCount)
+        frontVisibleCount: normalizePrimitive(orbitalReceipt.frontVisibleCount),
+        markerRequired: normalizePrimitive(orbitalReceipt.markerRequired),
+        markerPlacementAdmissible: normalizePrimitive(orbitalReceipt.markerPlacementAdmissible),
+        markerCollisionCount: normalizePrimitive(orbitalReceipt.markerCollisionCount),
+        markerRepositionedCount: normalizePrimitive(orbitalReceipt.markerRepositionedCount)
       })),
       renderKeyValueSection("Field", Object.freeze({
         sampleCount: normalizePrimitive(summary.sampleCount),

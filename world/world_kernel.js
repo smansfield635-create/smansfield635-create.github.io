@@ -300,6 +300,25 @@ export const WORLD_KERNEL = Object.freeze((() => {
     });
   }
 
+  function buildEnumRegistry(vocabulary) {
+    return Object.freeze({
+      version: 1,
+      terrain: Object.freeze(["UNKNOWN", ...vocabulary.terrainClasses]),
+      surface: Object.freeze(["UNKNOWN", ...vocabulary.surfaceMaterials]),
+      biome: Object.freeze(["UNKNOWN", ...vocabulary.biomeTypes]),
+      climate: Object.freeze(["UNKNOWN", ...vocabulary.climateBands]),
+      drainage: Object.freeze([
+        "UNKNOWN",
+        "NONE",
+        "CLOSED_BASIN",
+        "OPEN_FLOW",
+        "RIVER_ACTIVE",
+        "FLOODPLAIN",
+        "WETLAND_DRAIN"
+      ])
+    });
+  }
+
   const STATE_DEFINITIONS = buildStateRegistryDefinitions();
   const STATE_REGISTRY = buildStateRegistry(STATE_DEFINITIONS);
 
@@ -518,6 +537,13 @@ export const WORLD_KERNEL = Object.freeze((() => {
     "SUBPOLAR",
     "POLAR"
   ]);
+
+  const ENUM_REGISTRY = buildEnumRegistry(Object.freeze({
+    terrainClasses: TERRAIN_CLASSES,
+    surfaceMaterials: SURFACE_MATERIALS,
+    biomeTypes: BIOME_TYPES,
+    climateBands: CLIMATE_BANDS
+  }));
 
   const ENVIRONMENT_FAMILIES = Object.freeze({
     macroWorld: Object.freeze([
@@ -1042,6 +1068,8 @@ export const WORLD_KERNEL = Object.freeze((() => {
       climateBands: CLIMATE_BANDS
     }),
 
+    enums: ENUM_REGISTRY,
+
     environment: Object.freeze({
       families: ENVIRONMENT_FAMILIES
     }),
@@ -1096,6 +1124,34 @@ export function getRuleFamilyRegistry() {
 
 export function getSimulationTickContract() {
   return WORLD_KERNEL.ruleEngine.tickContract;
+}
+
+export function getEnumRegistry() {
+  return WORLD_KERNEL.enums;
+}
+
+export function getEnumRegistryVersion() {
+  return WORLD_KERNEL.enums.version;
+}
+
+export function requireStateCode(name) {
+  const code = WORLD_KERNEL.state.registry.codesByName[name];
+  if (!Number.isInteger(code)) {
+    throw new Error(`WORLD_KERNEL_STATE_LOOKUP_MISSING:${String(name)}`);
+  }
+  return code;
+}
+
+export function getStateEntry(code) {
+  const entry = WORLD_KERNEL.state.registry.byCode[code];
+  if (!entry) {
+    throw new Error(`WORLD_KERNEL_INVALID_STATE_CODE:${String(code)}`);
+  }
+  return entry;
+}
+
+export function isValidStateCode(code) {
+  return !!WORLD_KERNEL.state.registry.byCode[code];
 }
 
 export function verifyCanonicalStructure(input = {}) {

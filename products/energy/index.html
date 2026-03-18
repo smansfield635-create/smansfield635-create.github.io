@@ -1,3 +1,4 @@
+<!doctype html>
 <!-- TNT — /products/energy/index.html
      PRODUCTS · ENERGY (INDUSTRIAL) · UNIVERSAL PRODUCT MODEL · 72 NARRATIVES · EN/中文/ES
      STANDARD (LOCKED):
@@ -19,7 +20,7 @@
        - Language is page-level only (EN/中文/ES)
        - Tone toggle is page-local (does not change gd_style)
      LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
+       - Uses /assets/ui.css + /assets/branch.css
        - Does NOT style html/body background (ui.css owns field)
 -->
 
@@ -32,7 +33,6 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -87,7 +87,7 @@ body::before,body::after{pointer-events:none!important}
   width:min(720px,94vw);
   height:min(720px,94vw);
   z-index:60;
-  pointer-events:auto; /* IMPORTANT */
+  pointer-events:auto;
 }
 .outer{
   position:absolute;left:50%;top:50%;
@@ -204,7 +204,7 @@ body::before,body::after{pointer-events:none!important}
 }
 .dock .btn{pointer-events:auto}
 
-/* ===== MODALS (ALWAYS OPEN) ===== */
+/* ===== MODALS ===== */
 .bd{
   position:fixed;inset:0;
   z-index:1000;
@@ -348,7 +348,7 @@ body::before,body::after{pointer-events:none!important}
 <nav class="dock" aria-label="Bottom navigation">
   <a class="btn" id="dockTerminal" href="/index.html">TERMINAL</a>
   <a class="btn" id="dockDoor" href="/door/">DOOR</a>
-  <a class="btn" id="dockHub" href="/home/">HUB</a>
+  <a class="btn" id="dockHub" href="/index.html">INDEX</a>
   <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
   <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
   <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
@@ -397,7 +397,6 @@ body::before,body::after{pointer-events:none!important}
 
 <script>
 (function(){
-  // ===== state =====
   var qs=new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
@@ -420,22 +419,23 @@ body::before,body::after{pointer-events:none!important}
 
   function q(){
     var p=new URLSearchParams();
-    p.set("lang",lang); p.set("style",style); p.set("time",time); p.set("depth",depth);
+    p.set("lang",lang);
+    p.set("style",style);
+    p.set("time",time);
+    p.set("depth",depth);
     return "?"+p.toString();
   }
 
-  // nav wiring
   document.getElementById("btnBack").href="/products/"+q();
   document.getElementById("btnExit").href="/index.html"+q();
   document.getElementById("dockTerminal").href="/index.html"+q();
   document.getElementById("dockDoor").href="/door/"+q();
-  document.getElementById("dockHub").href="/home/"+q();
+  document.getElementById("dockHub").href="/index.html"+q();
   document.getElementById("dockProducts").href="/products/"+q();
   document.getElementById("dockLaws").href="/laws/"+q();
   document.getElementById("dockGauges").href="/gauges/"+q();
   document.getElementById("dockLinks").href="/links/"+q();
 
-  // language toggle (page-level)
   var btnEN=document.getElementById("btnEN");
   var btnZH=document.getElementById("btnZH");
   var btnES=document.getElementById("btnES");
@@ -455,7 +455,6 @@ body::before,body::after{pointer-events:none!important}
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
 
-  // ===== UI labels =====
   var UI={
     en:{
       hdrT:"Energy",
@@ -528,7 +527,6 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("hRoadmap").textContent=T.roadmap;
   document.getElementById("domainHint").textContent=T.domainHint;
 
-  // ===== domains per quadrant (12 total) =====
   var DOM={
     FOUNDATION:["scope_baseline","feedstock_variance","safety_limits"],
     ARCHITECTURE:["segmentation_intake","conversion_modules","heat_interfaces"],
@@ -536,7 +534,6 @@ body::before,body::after{pointer-events:none!important}
     GOVERNANCE:["permitting_posture","deployment_phasing","rollback_containment"]
   };
 
-  // display names
   var NAMES={
     scope_baseline:{en:"Scope & Baseline",zh:"范围与基线",es:"Alcance y línea base"},
     feedstock_variance:{en:"Feedstock Variance",zh:"来料方差",es:"Varianza de insumo"},
@@ -559,8 +556,6 @@ body::before,body::after{pointer-events:none!important}
     return (lang==="zh")?o.zh:(lang==="es")?o.es:o.en;
   }
 
-  // ===== narrative copy (bounded) =====
-  // Note: EN is primary; zh/es are concise but real (not empty).
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
   function pickLang(obj){ return (lang==="zh")?obj.zh:(lang==="es")?obj.es:obj.en; }
 
@@ -1034,7 +1029,6 @@ body::before,body::after{pointer-events:none!important}
     }
   };
 
-  // ===== modal engine =====
   var bd=document.getElementById("bd");
   var quadModal=document.getElementById("quadModal");
   var domainModal=document.getElementById("domainModal");
@@ -1053,9 +1047,9 @@ body::before,body::after{pointer-events:none!important}
   var pLive=document.getElementById("pLive");
   var pRoadmap=document.getElementById("pRoadmap");
 
-  var currentQuad=null;      // FOUNDATION/ARCHITECTURE/PERFORMANCE/GOVERNANCE
-  var currentDomain=null;    // domain id
-  var tone="informal";       // informal/formal
+  var currentQuad=null;
+  var currentDomain=null;
+  var tone="informal";
 
   function showBD(){ bd.classList.add("show"); }
   function hideBD(){ bd.classList.remove("show"); }
@@ -1140,20 +1134,18 @@ body::before,body::after{pointer-events:none!important}
     domainTitle.textContent =
       (lang==="zh" ? "能源 · " : (lang==="es" ? "ENERGÍA · " : "ENERGY · ")) + dTitle(id);
 
-    // auto-close bubbles by default (none open)
     [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
 
     quadModal.classList.remove("show");
     showBD();
     domainModal.classList.add("show");
 
-    // keep last tone
     applyTone(tone);
   }
 
-  // bubble auto-close
   function bindBubble(box){
-    box.tabIndex=0; box.setAttribute("role","button");
+    box.tabIndex=0;
+    box.setAttribute("role","button");
     box.addEventListener("click", function(){
       var willOpen=!box.classList.contains("open");
       [bConcept,bLive,bRoadmap].forEach(function(b){ b.classList.remove("open"); });
@@ -1168,20 +1160,19 @@ body::before,body::after{pointer-events:none!important}
       }
     });
   }
-  bindBubble(bConcept); bindBubble(bLive); bindBubble(bRoadmap);
+  bindBubble(bConcept);
+  bindBubble(bLive);
+  bindBubble(bRoadmap);
 
-  // tone buttons
   toneInformal.addEventListener("click", function(){ applyTone("informal"); });
   toneFormal.addEventListener("click", function(){ applyTone("formal"); });
 
-  // close wiring
   bd.addEventListener("click", closeAll);
   quadClose.addEventListener("click", closeAll);
   domainClose.addEventListener("click", closeAll);
   quadModal.addEventListener("click", function(e){ e.stopPropagation(); });
   domainModal.addEventListener("click", function(e){ e.stopPropagation(); });
 
-  // bind quadrants
   function bindQuad(id, name){
     var el=document.getElementById(id);
     function act(){ openQuad(name); }
@@ -1193,7 +1184,6 @@ body::before,body::after{pointer-events:none!important}
   bindQuad("qPerformance","PERFORMANCE");
   bindQuad("qGovernance","GOVERNANCE");
 
-  // default: do nothing (no forced modal open on load)
   applyTone("informal");
 })();
 </script>

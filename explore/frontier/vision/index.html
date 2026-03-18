@@ -32,7 +32,6 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -40,19 +39,17 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;col
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  /* ===== HIERARCHY (match compass concept) ===== */
-  --D0:154px; /* CORE */
-  --D1:112px; /* N/E/S/W */
-  --D2:92px;  /* NE/SE/SW/NW */
-  --D3:80px;  /* other 8 */
+  --D0:154px;
+  --D1:112px;
+  --D2:92px;
+  --D3:80px;
 
-  --R1:178px; /* cardinals closest */
-  --R2:246px; /* diagonals */
-  --R3:300px; /* outer 8 */
+  --R1:178px;
+  --R2:246px;
+  --R3:300px;
 
   --padTop:118px;
 
-  /* ===== MATERIAL (UO stack) ===== */
   --ink:rgba(255,255,255,.94);
 
   --onyx0:rgba(6,8,10,.96);
@@ -69,7 +66,6 @@ body::before,body::after{pointer-events:none!important}
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== STAGE ===== */
 .stage{
   position:relative;
   width:min(980px,95vw);
@@ -78,7 +74,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
 }
 
-/* ===== Festival slab (soft) ===== */
 .slab{
   position:absolute;left:50%;top:50%;
   width:min(820px,92vw);
@@ -99,7 +94,6 @@ body::before,body::after{pointer-events:none!important}
     inset 0 -50px 90px rgba(0,0,0,.55);
 }
 
-/* ===== Dial face (instrument-grade) ===== */
 .dialFace{
   position:absolute;
   left:50%;top:50%;
@@ -134,28 +128,21 @@ body::before,body::after{pointer-events:none!important}
   content:"";
   position:absolute;inset:-16%;
   background:
-    /* resolution rings */
     radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
     radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
-
-    /* engraved axes */
     linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
     linear-gradient(0deg,  transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-
-    /* 45° aligned silk inlay */
     repeating-conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.06) 0 1.2deg,
       transparent 1.2deg 7.5deg),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter: blur(.25px);
+  filter:blur(.25px);
   opacity:.78;
   mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
   -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
 }
 
-/* ===== Diamonds ===== */
 .d{
   position:absolute;
   left:50%;
@@ -170,26 +157,20 @@ body::before,body::after{pointer-events:none!important}
   touch-action:manipulation;
   overflow:hidden;
   z-index:5;
-
   background:
     radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
     radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
     radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
     radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
-
   border:1px solid rgba(255,255,255,.16);
-
   box-shadow:
     var(--shadowDeep),
     0 0 28px rgba(255,43,43,.10),
     inset 0 2px 0 rgba(255,255,255,.18),
     inset 0 -44px 84px rgba(0,0,0,.84);
-
   transition:box-shadow .16s ease, border-color .16s ease, filter .16s ease;
 }
-
-/* diamond-aligned gold inlay */
 .d::before{
   content:"";
   position:absolute;inset:0;border-radius:inherit;pointer-events:none;
@@ -205,8 +186,6 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
     linear-gradient(#000,#000);
 }
-
-/* highlight streak */
 .d::after{
   content:"";
   position:absolute;left:12%;right:12%;top:10%;
@@ -217,8 +196,6 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:none;
   opacity:.92;
 }
-
-/* glow-only hover (NO movement) */
 .d:hover{
   border-color:rgba(201,162,74,.34);
   box-shadow:
@@ -231,13 +208,11 @@ body::before,body::after{pointer-events:none!important}
 }
 .d:active{filter:brightness(.985)}
 
-/* size classes */
 .d.core{width:var(--D0);height:var(--D0);border-radius:26px;z-index:10}
 .d.l1{width:var(--D1);height:var(--D1);border-radius:22px}
 .d.l2{width:var(--D2);height:var(--D2);border-radius:20px}
 .d.l3{width:var(--D3);height:var(--D3);border-radius:18px}
 
-/* inner text */
 .inner{
   transform:rotate(-45deg);
   width:100%;height:100%;
@@ -263,14 +238,11 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:1.1px;
   color:rgba(255,255,255,.84);
 }
-
-/* bump text size for larger nodes */
 .d.core .word{font-size:15px}
 .d.core .cardinal{font-size:10px}
 .d.l1 .word{font-size:13px}
 .d.l2 .word{font-size:12px}
 
-/* ===== TOP CONTROLS (diamond-shaped) ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -324,7 +296,6 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12);
 }
 
-/* ===== BOTTOM CORNERS (EXIT / HUB) ===== */
 .corner{
   position:fixed;
   bottom:max(18px, env(safe-area-inset-bottom));
@@ -342,7 +313,6 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.4px;
 }
 
-/* ===== MOBILE ===== */
 @media (max-width:640px){
   :root{
     --D0:148px; --D1:108px; --D2:88px; --D3:78px;
@@ -363,7 +333,6 @@ body::before,body::after{pointer-events:none!important}
 
 <body>
 
-<!-- TOP CONTROLS -->
 <div class="top" aria-label="Top controls">
   <div class="left" aria-label="Language">
     <div class="dbtn on" id="langEN" role="button" tabindex="0" aria-label="English"><span>EN</span></div>
@@ -377,14 +346,11 @@ body::before,body::after{pointer-events:none!important}
   </div>
 </div>
 
-<!-- STAGE -->
 <div class="stage" id="stage" aria-label="Vision Remote">
   <div class="slab" aria-hidden="true"></div>
   <div class="dialFace" aria-hidden="true"></div>
-  <!-- nodes injected -->
 </div>
 
-<!-- BOTTOM CORNERS -->
 <div class="corner left" aria-label="Exit">
   <div class="dbtn" id="btnExit" role="button" tabindex="0" aria-label="Exit to Door"><span>⟲</span></div>
   <div class="cornerLabel" id="lblExit">EXIT</div>
@@ -399,15 +365,13 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only; no new keys) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
   var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var lane  = qs.get("lane")  || "platform"; // URL-only
+  var lane  = qs.get("lane")  || "platform";
 
-  // pinned informal layer
   var style = "informal";
   var depth = "explore";
 
@@ -436,15 +400,14 @@ body::before,body::after{pointer-events:none!important}
     return "?"+p.toString();
   }
 
-  function go(path){ window.location.href = path + q(); }
+  function go(path){
+    window.location.href = path + q();
+  }
 
-  // ===== ROUTE MAP (EDIT HERE ONLY) =====
-  var ROUTE_CORE = "/explore/frontier/manual/"; // core manual index / linear map
+  var ROUTE_CORE = "/explore/frontier/manual/";
   var ROUTE_EXIT = "/door/";
   var ROUTE_HUB  = "/index.html";
 
-  // 16 manifolds (outer)
-  // NOTE: order is fixed by geometry (clockwise starting at N)
   var MANIFOLDS = [
     {code:"N",   href:"/explore/frontier/urban/",        p:{en:"CITIES",zh:"城市",es:"CIUDADES"},    e:{en:"URBAN",zh:"城市OS",es:"URB-OS"}},
     {code:"NNE", href:"/explore/frontier/shimmer/",      p:{en:"SHIMMER",zh:"闪烁",es:"SHIMMER"},   e:{en:"CLEAR",zh:"清晰",es:"CLAR"}},
@@ -464,7 +427,6 @@ body::before,body::after{pointer-events:none!important}
     {code:"NNW", href:"/explore/frontier/vision/",       p:{en:"VISION",zh:"愿景",es:"VISIÓN"},     e:{en:"MAP",zh:"映射",es:"MAP"}}
   ];
 
-  // ===== UI refs =====
   var stage=document.getElementById("stage");
 
   function setPressedLang(){
@@ -472,6 +434,7 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("langZH").classList.toggle("on", lang==="zh");
     document.getElementById("langES").classList.toggle("on", lang==="es");
   }
+
   function setPressedLane(){
     document.getElementById("lanePlatform").classList.toggle("on", lane==="platform");
     document.getElementById("laneEngineering").classList.toggle("on", lane==="engineering");
@@ -480,6 +443,7 @@ body::before,body::after{pointer-events:none!important}
   function pick(o){
     return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en;
   }
+
   function labelFor(m){
     return (lane==="engineering") ? pick(m.e) : pick(m.p);
   }
@@ -507,17 +471,15 @@ body::before,body::after{pointer-events:none!important}
     return d;
   }
 
-  // classify by code into tier class + radius
   function tierFor(code){
-    if(code==="N"||code==="E"||code==="S"||code==="W") return {cls:"l1", rvar:"--R1"};
-    if(code==="NE"||code==="SE"||code==="SW"||code==="NW") return {cls:"l2", rvar:"--R2"};
-    return {cls:"l3", rvar:"--R3"};
+    if(code==="N"||code==="E"||code==="S"||code==="W") return {cls:"l1", r:1};
+    if(code==="NE"||code==="SE"||code==="SW"||code==="NW") return {cls:"l2", r:2};
+    return {cls:"l3", r:3};
   }
 
-  var ringEls=[]; // keep for label refresh
+  var ringEls=[];
 
   function layout(){
-    // keep slab + dial face
     var slab=stage.querySelector(".slab");
     var dial=stage.querySelector(".dialFace");
     stage.innerHTML="";
@@ -530,7 +492,6 @@ body::before,body::after{pointer-events:none!important}
     var cx=rect.width/2;
     var cy=rect.height/2;
 
-    // core
     var core=mkDiamond(
       (lang==="zh")?"索引":(lang==="es")?"ÍNDICE":"INDEX",
       "CORE",
@@ -539,23 +500,25 @@ body::before,body::after{pointer-events:none!important}
     core.style.left=cx+"px";
     core.style.top=cy+"px";
     core.addEventListener("click", function(){ go(ROUTE_CORE); }, {passive:true});
-    core.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(ROUTE_CORE); }});
+    core.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        go(ROUTE_CORE);
+      }
+    });
     stage.appendChild(core);
 
-    // radii
     var cs=getComputedStyle(document.documentElement);
     var R1=parseFloat(cs.getPropertyValue("--R1"))||178;
     var R2=parseFloat(cs.getPropertyValue("--R2"))||246;
     var R3=parseFloat(cs.getPropertyValue("--R3"))||300;
 
-    // ring (perfect symmetry, N at top) — positions by angle, but tier decides radius/size
     var n=MANIFOLDS.length;
     for(var i=0;i<n;i++){
       var m=MANIFOLDS[i];
       var ang=(i/n)*Math.PI*2 - Math.PI/2;
-
       var t=tierFor(m.code);
-      var r=(t.rvar==="--R1")?R1:(t.rvar==="--R2")?R2:R3;
+      var r=t.r===1 ? R1 : (t.r===2 ? R2 : R3);
 
       var x=cx + r*Math.cos(ang);
       var y=cy + r*Math.sin(ang);
@@ -564,16 +527,20 @@ body::before,body::after{pointer-events:none!important}
       d.style.left=x+"px";
       d.style.top=y+"px";
 
-      (function(path){
-        d.addEventListener("click", function(){ go(path); }, {passive:true});
-        d.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(path); }});
-      })(m.href);
+      (function(path, el){
+        el.addEventListener("click", function(){ go(path); }, {passive:true});
+        el.addEventListener("keydown", function(e){
+          if(e.key==="Enter"||e.key===" "){
+            e.preventDefault();
+            go(path);
+          }
+        });
+      })(m.href, d);
 
       stage.appendChild(d);
       ringEls.push({el:d, m:m});
     }
 
-    // corner labels
     document.getElementById("lblExit").textContent = (lang==="zh")?"退出":(lang==="es")?"SALIR":"EXIT";
     document.getElementById("lblHub").textContent  = (lang==="zh")?"枢纽":(lang==="es")?"HUB":"HUB";
   }
@@ -586,7 +553,6 @@ body::before,body::after{pointer-events:none!important}
     }
   }
 
-  // toggles (no reload)
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
@@ -610,7 +576,12 @@ body::before,body::after{pointer-events:none!important}
     var el=document.getElementById(id);
     if(!el) return;
     el.addEventListener("click", fn, {passive:true});
-    el.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); fn(); }});
+    el.addEventListener("keydown", function(e){
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        fn();
+      }
+    });
   }
 
   bindBtn("langEN", function(){ setLang("en"); });
@@ -623,19 +594,21 @@ body::before,body::after{pointer-events:none!important}
   bindBtn("btnExit", function(){ go(ROUTE_EXIT); });
   bindBtn("btnHub",  function(){ go(ROUTE_HUB); });
 
-  // init
   setPressedLang();
   setPressedLane();
 
   function safeLayout(){
     var r=stage.getBoundingClientRect();
-    if(r.width<10 || r.height<10){ requestAnimationFrame(safeLayout); return; }
+    if(r.width<10 || r.height<10){
+      requestAnimationFrame(safeLayout);
+      return;
+    }
     layout();
     updateLabelsOnly();
   }
+
   requestAnimationFrame(safeLayout);
   window.addEventListener("resize", function(){ safeLayout(); });
-
 })();
 </script>
 

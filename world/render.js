@@ -142,13 +142,9 @@ function pointFromSample(sample, projectPoint, radiusScale = 1) {
 
 function shouldDrawQuad(points) {
   let visibleCount = 0;
-
   for (let i = 0; i < points.length; i += 1) {
-    if (points[i]?.visible === true) {
-      visibleCount += 1;
-    }
+    if (points[i]?.visible === true) visibleCount += 1;
   }
-
   return visibleCount >= 3;
 }
 
@@ -317,63 +313,34 @@ function landColorForSample(sample, point) {
 
   let color = rgb(104, 116, 82);
 
-  if (biome === "TROPICAL_RAINFOREST") {
-    color = rgb(24, 74, 40);
-  } else if (biome === "TROPICAL_GRASSLAND") {
-    color = rgb(126, 132, 72);
-  } else if (biome === "TEMPERATE_FOREST") {
-    color = rgb(48, 80, 54);
-  } else if (biome === "TEMPERATE_GRASSLAND") {
-    color = rgb(130, 134, 88);
-  } else if (biome === "DESERT") {
-    color = rgb(154, 124, 80);
-  } else if (biome === "TUNDRA") {
-    color = rgb(116, 118, 112);
-  } else if (biome === "WETLAND") {
-    color = rgb(60, 82, 68);
-  } else if (biome === "BOREAL_FOREST") {
-    color = rgb(52, 70, 58);
-  } else if (biome === "GLACIER") {
-    color = rgb(214, 222, 230);
-  }
+  if (biome === "TROPICAL_RAINFOREST") color = rgb(24, 74, 40);
+  else if (biome === "TROPICAL_GRASSLAND") color = rgb(126, 132, 72);
+  else if (biome === "TEMPERATE_FOREST") color = rgb(48, 80, 54);
+  else if (biome === "TEMPERATE_GRASSLAND") color = rgb(130, 134, 88);
+  else if (biome === "DESERT") color = rgb(154, 124, 80);
+  else if (biome === "TUNDRA") color = rgb(116, 118, 112);
+  else if (biome === "WETLAND") color = rgb(60, 82, 68);
+  else if (biome === "BOREAL_FOREST") color = rgb(52, 70, 58);
+  else if (biome === "GLACIER") color = rgb(214, 222, 230);
 
-  if (surface === "BEDROCK") {
-    color = mixRgb(color, rgb(118, 114, 112), 0.44);
-  } else if (surface === "GRAVEL") {
-    color = mixRgb(color, rgb(134, 126, 112), 0.30);
-  } else if (surface === "SAND") {
-    color = mixRgb(color, rgb(182, 160, 114), 0.34);
-  } else if (surface === "SILT") {
-    color = mixRgb(color, rgb(144, 130, 110), 0.28);
-  } else if (surface === "CLAY") {
-    color = mixRgb(color, rgb(140, 100, 82), 0.34);
-  } else if (surface === "SOIL") {
-    color = mixRgb(color, rgb(92, 74, 56), 0.18);
-  } else if (surface === "ICE") {
-    color = rgb(222, 228, 234);
-  } else if (surface === "SNOW") {
-    color = rgb(244, 246, 250);
-  }
+  if (surface === "BEDROCK") color = mixRgb(color, rgb(118, 114, 112), 0.44);
+  else if (surface === "GRAVEL") color = mixRgb(color, rgb(134, 126, 112), 0.30);
+  else if (surface === "SAND") color = mixRgb(color, rgb(182, 160, 114), 0.34);
+  else if (surface === "SILT") color = mixRgb(color, rgb(144, 130, 110), 0.28);
+  else if (surface === "CLAY") color = mixRgb(color, rgb(140, 100, 82), 0.34);
+  else if (surface === "SOIL") color = mixRgb(color, rgb(92, 74, 56), 0.18);
+  else if (surface === "ICE") color = rgb(222, 228, 234);
+  else if (surface === "SNOW") color = rgb(244, 246, 250);
 
-  if (tc === "BEACH") {
-    color = rgb(188, 166, 118);
-  } else if (tc === "SHORELINE") {
-    color = mixRgb(color, rgb(166, 150, 108), 0.26);
-  } else if (tc === "BASIN") {
-    color = mixRgb(color, rgb(72, 88, 68), 0.38);
-  } else if (tc === "CANYON") {
-    color = mixRgb(color, rgb(144, 88, 68), 0.50);
-  } else if (tc === "RIDGE") {
-    color = mixRgb(color, rgb(112, 106, 98), 0.32);
-  } else if (tc === "PLATEAU") {
-    color = mixRgb(color, rgb(132, 118, 94), 0.30);
-  } else if (tc === "MOUNTAIN") {
-    color = mixRgb(color, rgb(136, 132, 128), 0.54);
-  } else if (tc === "SUMMIT") {
-    color = mixRgb(color, rgb(188, 186, 188), 0.66);
-  } else if (tc === "GLACIAL_HIGHLAND" || tc === "POLAR_ICE") {
-    color = rgb(208, 218, 230);
-  }
+  if (tc === "BEACH") color = rgb(188, 166, 118);
+  else if (tc === "SHORELINE") color = mixRgb(color, rgb(166, 150, 108), 0.26);
+  else if (tc === "BASIN") color = mixRgb(color, rgb(72, 88, 68), 0.38);
+  else if (tc === "CANYON") color = mixRgb(color, rgb(144, 88, 68), 0.50);
+  else if (tc === "RIDGE") color = mixRgb(color, rgb(112, 106, 98), 0.32);
+  else if (tc === "PLATEAU") color = mixRgb(color, rgb(132, 118, 94), 0.30);
+  else if (tc === "MOUNTAIN") color = mixRgb(color, rgb(136, 132, 128), 0.54);
+  else if (tc === "SUMMIT") color = mixRgb(color, rgb(188, 186, 188), 0.66);
+  else if (tc === "GLACIAL_HIGHLAND" || tc === "POLAR_ICE") color = rgb(208, 218, 230);
 
   if (climate === "POLAR" || climate === "SUBPOLAR") {
     color = mixRgb(color, rgb(192, 202, 216), freeze * 0.42);
@@ -418,10 +385,7 @@ function alphaForSample(sample) {
   const water = isWaterFamily(sample);
   const tc = terrainClass(sample);
 
-  if (water) {
-    return tc === "SHELF" ? 0.70 : 0.62;
-  }
-
+  if (water) return tc === "SHELF" ? 0.70 : 0.62;
   if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return 0.88;
   if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return 0.84;
   if (tc === "BEACH" || tc === "SHORELINE") return 0.78;
@@ -448,99 +412,6 @@ function drawQuad(ctx, p00, p10, p11, p01, fillStyle, alpha = 1) {
   ctx.closePath();
   ctx.fillStyle = fillStyle;
   ctx.fill();
-  ctx.restore();
-}
-
-function drawSpace(ctx, projectionState, viewState = {}) {
-  ctx.save();
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, projectionState.height);
-  gradient.addColorStop(0, "#030714");
-  gradient.addColorStop(0.50, "#08152a");
-  gradient.addColorStop(1, "#0a1831");
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
-
-  const nebulaA = ctx.createRadialGradient(
-    projectionState.centerX - projectionState.radius * 0.85,
-    projectionState.centerY - projectionState.radius * 0.95,
-    0,
-    projectionState.centerX - projectionState.radius * 0.85,
-    projectionState.centerY - projectionState.radius * 0.95,
-    projectionState.radius * 1.7
-  );
-  nebulaA.addColorStop(0, "rgba(92,110,255,0.08)");
-  nebulaA.addColorStop(0.55, "rgba(90,60,180,0.04)");
-  nebulaA.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = nebulaA;
-  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
-
-  const nebulaB = ctx.createRadialGradient(
-    projectionState.centerX + projectionState.radius * 0.72,
-    projectionState.centerY - projectionState.radius * 0.34,
-    0,
-    projectionState.centerX + projectionState.radius * 0.72,
-    projectionState.centerY - projectionState.radius * 0.34,
-    projectionState.radius * 1.25
-  );
-  nebulaB.addColorStop(0, "rgba(255,88,88,0.04)");
-  nebulaB.addColorStop(0.45, "rgba(160,72,130,0.03)");
-  nebulaB.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = nebulaB;
-  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
-
-  if (!(viewState.starfieldSuppressed === true || projectionState.starfieldSuppressed === true)) {
-    const seed = Math.round(
-      (isFiniteNumber(viewState.seed) ? viewState.seed : 1) * 9973 +
-      projectionState.width +
-      projectionState.height
-    );
-
-    for (let i = 0; i < 110; i += 1) {
-      const rx = Math.abs(Math.sin(seed + i * 13.17));
-      const ry = Math.abs(Math.cos(seed + i * 7.91));
-      const rs = 0.22 + (Math.abs(Math.sin(seed + i * 2.31)) * 1.0);
-      const x = rx * projectionState.width;
-      const y = ry * projectionState.height;
-      const alpha = 0.05 + Math.abs(Math.cos(seed + i * 0.77)) * 0.16;
-
-      ctx.beginPath();
-      ctx.arc(x, y, rs, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
-      ctx.fill();
-    }
-  }
-
-  ctx.restore();
-}
-
-function drawAtmosphere(ctx, projectionState) {
-  ctx.save();
-
-  const outerRadius = projectionState.radius * 1.01;
-  const grad = ctx.createRadialGradient(
-    projectionState.centerX,
-    projectionState.centerY,
-    projectionState.radius * 0.98,
-    projectionState.centerX,
-    projectionState.centerY,
-    outerRadius
-  );
-
-  if (projectionState.observeMode) {
-    grad.addColorStop(0.98, "rgba(120,180,255,0.025)");
-    grad.addColorStop(1, "rgba(160,210,255,0.05)");
-  } else {
-    grad.addColorStop(0.98, "rgba(120,180,255,0.04)");
-    grad.addColorStop(1, "rgba(160,210,255,0.08)");
-  }
-
-  ctx.beginPath();
-  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
   ctx.restore();
 }
 
@@ -818,8 +689,32 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
   ctx.restore();
 }
 
-function drawPlanetOutline(ctx, projectionState) {
+function drawPlanetRim(ctx, projectionState) {
   ctx.save();
+
+  const outerRadius = projectionState.radius * 1.018;
+  const rim = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius * 0.965,
+    projectionState.centerX,
+    projectionState.centerY,
+    outerRadius
+  );
+
+  if (projectionState.observeMode) {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.04)");
+    rim.addColorStop(1, "rgba(170,220,255,0.08)");
+  } else {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
+    rim.addColorStop(1, "rgba(170,220,255,0.12)");
+  }
+
+  ctx.beginPath();
+  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
+  ctx.fillStyle = rim;
+  ctx.fill();
+
   ctx.beginPath();
   ctx.arc(
     projectionState.centerX,
@@ -833,6 +728,7 @@ function drawPlanetOutline(ctx, projectionState) {
     : "rgba(188,220,255,0.14)";
   ctx.lineWidth = projectionState.observeMode ? 0.75 : 0.85;
   ctx.stroke();
+
   ctx.restore();
 }
 
@@ -851,14 +747,12 @@ function normalizeOrbitalSystem(input, projectionState) {
   });
 }
 
-function buildOrbitalProjections(orbitalSystem, projectPoint) {
+function buildOrbitalHits(orbitalSystem, projectPoint) {
   return orbitalSystem.objects.map((object, index) => {
     const source = normalizeObject(object);
     const baseLatDeg = isFiniteNumber(source.baseLatDeg) ? source.baseLatDeg : 0;
     const baseLonDeg = isFiniteNumber(source.baseLonDeg) ? source.baseLonDeg : 0;
     const bearingOffsetDeg = isFiniteNumber(source.bearingOffsetDeg) ? source.bearingOffsetDeg : 0;
-    const spinOffsetRad = isFiniteNumber(source.spinOffsetRad) ? source.spinOffsetRad : 0;
-    const spinMultiplier = isFiniteNumber(source.spinMultiplier) ? source.spinMultiplier : 1.35;
     const sizePx = isFiniteNumber(source.sizePx) ? source.sizePx : 52;
 
     const lonDeg = baseLonDeg + bearingOffsetDeg + ((orbitalSystem.phase * 180) / Math.PI);
@@ -874,110 +768,13 @@ function buildOrbitalProjections(orbitalSystem, projectPoint) {
       id: typeof source.id === "string" ? source.id : `orbital-${index}`,
       label: typeof source.label === "string" ? source.label : "NODE",
       route: typeof source.route === "string" ? source.route : "/",
-      point,
+      x: point.x,
+      y: point.y,
       frontFacing,
       opacity,
-      scale,
-      sizePx: sizePx * scale,
-      spinRad: orbitalSystem.phase * spinMultiplier + spinOffsetRad
+      radius: sizePx * scale * 0.72
     });
-  });
-}
-
-function drawStarCompass(ctx, object, interactive = false) {
-  const { point, sizePx, spinRad, opacity, label } = object;
-  const outerW = sizePx * 0.94;
-  const outerH = sizePx * 1.16;
-  const innerW = sizePx * 0.56;
-  const innerH = sizePx * 0.68;
-
-  ctx.save();
-  ctx.translate(point.x, point.y);
-  ctx.rotate(spinRad);
-  ctx.globalAlpha = opacity;
-
-  const halo = ctx.createRadialGradient(0, 0, sizePx * 0.12, 0, 0, sizePx * 1.55);
-  halo.addColorStop(0, "rgba(255,244,210,0.34)");
-  halo.addColorStop(0.55, "rgba(212,175,74,0.12)");
-  halo.addColorStop(1, "rgba(212,175,74,0)");
-  ctx.fillStyle = halo;
-  ctx.beginPath();
-  ctx.arc(0, 0, sizePx * 1.34, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = interactive ? "rgba(248,228,172,0.96)" : "rgba(238,214,160,0.72)";
-  ctx.lineWidth = Math.max(1.3, sizePx * 0.05);
-
-  ctx.beginPath();
-  ctx.moveTo(0, -outerH);
-  ctx.lineTo(outerW * 0.18, -innerH);
-  ctx.lineTo(outerW, 0);
-  ctx.lineTo(outerW * 0.18, innerH);
-  ctx.lineTo(0, outerH);
-  ctx.lineTo(-outerW * 0.18, innerH);
-  ctx.lineTo(-outerW, 0);
-  ctx.lineTo(-outerW * 0.18, -innerH);
-  ctx.closePath();
-
-  const fill = ctx.createLinearGradient(-outerW, -outerH, outerW, outerH);
-  fill.addColorStop(0, "rgba(112,34,38,0.92)");
-  fill.addColorStop(0.48, "rgba(152,84,58,0.88)");
-  fill.addColorStop(1, "rgba(182,138,88,0.88)");
-  ctx.fillStyle = fill;
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(0, -outerH);
-  ctx.lineTo(0, outerH);
-  ctx.moveTo(-outerW, 0);
-  ctx.lineTo(outerW, 0);
-  ctx.moveTo(-outerW * 0.18, -innerH);
-  ctx.lineTo(outerW * 0.18, innerH);
-  ctx.moveTo(outerW * 0.18, -innerH);
-  ctx.lineTo(-outerW * 0.18, innerH);
-  ctx.strokeStyle = "rgba(248,228,172,0.92)";
-  ctx.lineWidth = Math.max(1.0, sizePx * 0.035);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(0, 0, Math.max(2.4, sizePx * 0.10), 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(250,240,220,0.94)";
-  ctx.fill();
-
-  ctx.rotate(-spinRad);
-  ctx.fillStyle = "rgba(255,248,236,0.96)";
-  ctx.font = `900 ${Math.max(10, sizePx * 0.19)}px system-ui`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(label, 0, 0);
-
-  ctx.restore();
-}
-
-function drawOrbitalObjects(ctx, orbitalProjections, drawFront) {
-  const hits = [];
-
-  for (const object of orbitalProjections) {
-    if (drawFront && !object.frontFacing) continue;
-    if (!drawFront && object.frontFacing) continue;
-    if (object.opacity <= 0.01) continue;
-
-    drawStarCompass(ctx, object, drawFront);
-
-    if (drawFront && object.opacity > 0.22) {
-      hits.push(Object.freeze({
-        id: object.id,
-        label: object.label,
-        route: object.route,
-        x: object.point.x,
-        y: object.point.y,
-        radius: object.sizePx * 0.72
-      }));
-    }
-  }
-
-  return hits;
+  }).filter((hit) => hit.frontFacing && hit.opacity > 0.22);
 }
 
 function buildRenderAudit(planetField) {
@@ -1026,15 +823,13 @@ export function createRenderer() {
     const orbitalConfig = orbitalSystem
       ? normalizeOrbitalSystem(orbitalSystem, projectionState)
       : null;
-    const orbitalProjections = orbitalConfig
-      ? buildOrbitalProjections(orbitalConfig, projector)
+    const orbitalHits = orbitalConfig
+      ? buildOrbitalHits(orbitalConfig, projector)
       : [];
 
     ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
-    drawSpace(ctx, projectionState, viewState);
-    drawOrbitalObjects(ctx, orbitalProjections, false);
-    drawAtmosphere(ctx, projectionState);
+    drawPlanetRim(ctx, projectionState);
     drawOceanBase(ctx, projectionState);
 
     withPlanetClip(ctx, projectionState, () => {
@@ -1046,15 +841,11 @@ export function createRenderer() {
       drawPolarGlow(ctx, grid, projector, projectionState);
     });
 
-    drawPlanetOutline(ctx, projectionState);
-
-    const orbitalHits = drawOrbitalObjects(ctx, orbitalProjections, true);
-
     return Object.freeze({
       projectionState,
       orbitalHits: Object.freeze(orbitalHits),
       orbitalAudit: Object.freeze({
-        count: orbitalProjections.length,
+        count: orbitalConfig ? orbitalConfig.objects.length : 0,
         frontVisibleCount: orbitalHits.length
       }),
       audit: buildRenderAudit(planetField)

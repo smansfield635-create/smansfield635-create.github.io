@@ -1,15 +1,18 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — GATE + NOW FIELD
-     STATUS:
-       - structural rewrite
-       - broken button path corrected
-       - waterfall backdrop integrated
-       - 3D floating gem lattice system integrated
-       - nutrition / baseline system centered
-       - canon state carry preserved
-       - no overlays / no modals / no inline onclick
-       - uses ui.css + branch.css only
+     PRODUCTS AUTHORITY — DUAL STRUCTURE
+     MODES:
+       - FLAT  = packed blue gem lattice authority
+       - ROUND = floating compass-gem hybrid authority
+     LOCKS:
+       - canon state carry: gd_lang/gd_style/gd_time/gd_depth only
+       - lane is URL-only
+       - mode is URL-only
+       - no inline onclick
+       - no modals / no overlays
+       - all product buttons route
+       - nutrition installed as center authority
+       - waterfall atmosphere behind content
 -->
 
 <html lang="en">
@@ -36,18 +39,19 @@
       --mut2:rgba(255,255,255,.72);
 
       --stroke:rgba(255,255,255,.14);
-      --gold:rgba(212,175,55,.52);
+      --stroke2:rgba(255,255,255,.08);
+
+      --gold:rgba(212,175,55,.56);
       --goldSoft:rgba(212,175,55,.18);
+      --goldGlow:rgba(212,175,55,.22);
 
       --crimson:rgba(120,0,22,.28);
       --festival:rgba(255,43,43,.14);
       --opalV:rgba(90,40,120,.12);
 
-      --shadowA:0 40px 140px rgba(0,0,0,.62);
-      --shadowB:0 24px 84px rgba(0,0,0,.58);
-      --shadowC:0 18px 60px rgba(0,0,0,.52);
-
-      --dockPad:16px;
+      --shadowA:0 36px 120px rgba(0,0,0,.58);
+      --shadowB:0 20px 70px rgba(0,0,0,.62);
+      --shadowC:0 18px 60px rgba(0,0,0,.55);
     }
 
     #app-shell{
@@ -56,105 +60,66 @@
       overflow:hidden;
       isolation:isolate;
       background:
-        radial-gradient(circle at 50% 16%, rgba(120,180,255,.12), transparent 24%),
-        radial-gradient(circle at 50% 56%, rgba(120,180,255,.08), transparent 38%),
-        linear-gradient(180deg, #030712 0%, #071225 48%, #08101f 100%);
+        radial-gradient(circle at 50% 18%, rgba(120,180,255,.12), transparent 28%),
+        radial-gradient(circle at 50% 72%, rgba(120,180,255,.08), transparent 36%),
+        linear-gradient(180deg, #030712 0%, #071225 52%, #08101f 100%);
     }
 
     /* =========================
-       WATERFALL BACKDROP
+       ATMOSPHERE
     ========================= */
     .env{
       position:absolute;
       inset:0;
+      overflow:hidden;
       z-index:1;
       pointer-events:none;
-      overflow:hidden;
     }
 
-    .fall-core,
-    .fall-side,
-    .mist,
-    .spark-field{
+    .waterfall{
       position:absolute;
-      inset:0;
-      pointer-events:none;
-    }
-
-    .fall-core{
+      inset:-18% -10%;
       background:
-        linear-gradient(to bottom,
-          rgba(255,255,255,.03) 0%,
-          rgba(190,225,255,.08) 12%,
-          rgba(110,180,255,.14) 32%,
-          rgba(90,160,255,.10) 54%,
-          rgba(255,255,255,.02) 78%,
-          transparent 100%);
-      mask-image:
-        radial-gradient(circle at 50% 16%, rgba(0,0,0,.95) 0 20%, transparent 52%),
-        linear-gradient(to right, transparent 0%, rgba(0,0,0,.9) 18%, rgba(0,0,0,.95) 50%, rgba(0,0,0,.9) 82%, transparent 100%);
-      -webkit-mask-image:
-        radial-gradient(circle at 50% 16%, rgba(0,0,0,.95) 0 20%, transparent 52%),
-        linear-gradient(to right, transparent 0%, rgba(0,0,0,.9) 18%, rgba(0,0,0,.95) 50%, rgba(0,0,0,.9) 82%, transparent 100%);
-      filter:blur(1px);
-      opacity:.95;
-      animation:fallShift 11s linear infinite;
-    }
-
-    .fall-side{
-      background:
-        radial-gradient(circle at 50% 12%, rgba(255,255,255,.10), transparent 14%),
-        linear-gradient(to bottom,
-          rgba(255,255,255,.02) 0%,
-          rgba(120,190,255,.06) 24%,
-          rgba(255,255,255,.01) 60%,
-          transparent 100%);
-      mask-image:
-        linear-gradient(to right, transparent 0%, rgba(0,0,0,.62) 26%, transparent 40%, transparent 60%, rgba(0,0,0,.62) 74%, transparent 100%);
-      -webkit-mask-image:
-        linear-gradient(to right, transparent 0%, rgba(0,0,0,.62) 26%, transparent 40%, transparent 60%, rgba(0,0,0,.62) 74%, transparent 100%);
-      opacity:.70;
+        linear-gradient(
+          to bottom,
+          rgba(255,255,255,.05) 0%,
+          rgba(255,255,255,.02) 16%,
+          rgba(120,180,255,.06) 34%,
+          rgba(255,255,255,.01) 52%,
+          transparent 72%
+        ),
+        radial-gradient(circle at 50% 24%, rgba(255,255,255,.08), transparent 44%),
+        radial-gradient(circle at 50% 52%, rgba(120,180,255,.10), transparent 42%);
       filter:blur(2px);
-      animation:fallShiftSlow 15s linear infinite;
+      opacity:.78;
+      animation:flow 12s linear infinite;
     }
 
     .mist{
-      background:
-        radial-gradient(circle at 50% 76%, rgba(255,255,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 94%, rgba(160,220,255,.12), transparent 38%);
-      opacity:.62;
-      filter:blur(18px);
-      animation:mistPulse 8s ease-in-out infinite;
-    }
-
-    .spark-field::before,
-    .spark-field::after{
-      content:"";
       position:absolute;
-      inset:-10%;
-      background-repeat:repeat;
-      mix-blend-mode:screen;
-      opacity:.34;
-      animation:drift 24s linear infinite;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 58%, rgba(255,255,255,.08), transparent 58%),
+        radial-gradient(circle at 50% 72%, rgba(120,180,255,.10), transparent 42%);
+      opacity:.72;
+      animation:mist 6s ease-in-out infinite alternate;
     }
 
-    .spark-field::before{
-      background-size:260px 260px;
+    .stars{
+      position:absolute;
+      inset:-8%;
+      opacity:.72;
       background-image:
-        radial-gradient(circle at 28px 36px, rgba(255,255,255,.95) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 118px 102px, rgba(255,255,255,.54) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 214px 174px, rgba(255,255,255,.72) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 180px 54px, rgba(201,162,74,.34) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 78px 212px, rgba(255,255,255,.50) 0 1px, transparent 1.6px);
-    }
-
-    .spark-field::after{
-      background-size:320px 320px;
-      background-image:
-        radial-gradient(circle at 52px 62px, rgba(120,180,255,.22) 0 1.3px, transparent 2.2px),
-        radial-gradient(circle at 222px 204px, rgba(255,255,255,.22) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 144px 142px, rgba(255,215,120,.16) 0 1.4px, transparent 2.1px);
-      animation-duration:36s;
+        radial-gradient(circle at 14% 22%, rgba(255,255,255,.96) 0 1.2px, transparent 1.8px),
+        radial-gradient(circle at 34% 16%, rgba(255,255,255,.80) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 58% 26%, rgba(255,255,255,.95) 0 1.2px, transparent 1.8px),
+        radial-gradient(circle at 76% 18%, rgba(255,255,255,.75) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 22% 66%, rgba(255,255,255,.82) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 44% 72%, rgba(255,255,255,.96) 0 1.2px, transparent 1.8px),
+        radial-gradient(circle at 66% 70%, rgba(255,255,255,.78) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 84% 62%, rgba(255,255,255,.92) 0 1.2px, transparent 1.8px);
+      filter:blur(.2px);
+      animation:drift 34s linear infinite;
     }
 
     /* =========================
@@ -170,72 +135,72 @@
       gap:10px;
     }
 
+    .top-right{
+      position:fixed;
+      right:16px;
+      top:16px;
+      z-index:30;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+
     .nav-btn,
-    .status-pill{
+    .top-pill{
       min-height:42px;
       padding:10px 14px;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.15);
       background:
-        radial-gradient(circle at 20% 18%, rgba(255,255,255,.12), transparent 42%),
-        radial-gradient(circle at 78% 22%, rgba(255,43,43,.10), transparent 62%),
-        radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
-        linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
+        radial-gradient(circle at 50% 120%, rgba(212,175,55,.12), transparent 64%),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.14), transparent 42%),
+        linear-gradient(145deg, rgba(10,12,20,.48), rgba(4,6,10,.62));
       color:#fff;
       font-weight:900;
       font-size:13px;
       letter-spacing:.05em;
+      backdrop-filter:blur(10px);
       box-shadow:var(--shadowC);
-      backdrop-filter:blur(8px);
       position:relative;
       overflow:hidden;
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .nav-btn::before,
-    .status-pill::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:inherit;
-      pointer-events:none;
-      background:
-        radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
-        repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
-      mask:
-        radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask:
-        radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-        linear-gradient(#000,#000);
-      opacity:.32;
-    }
-
-    .nav-btn{
+    .nav-btn,
+    .top-pill{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .nav-btn:hover{
-      border-color:rgba(212,175,55,.42);
-      box-shadow:
-        var(--shadowC),
-        0 0 18px rgba(212,175,55,.14);
+    .nav-btn::after,
+    .top-pill::after{
+      content:"";
+      position:absolute;
+      left:10px;
+      right:10px;
+      bottom:-12px;
+      height:26px;
+      background:radial-gradient(circle at 50% 0%, rgba(212,175,55,.26), transparent 72%);
+      opacity:.58;
+      pointer-events:none;
+    }
+
+    .nav-btn:hover,
+    .top-pill:hover{
+      border-color:rgba(212,175,55,.38);
+      box-shadow:var(--shadowC),0 0 18px rgba(212,175,55,.14);
       filter:saturate(1.04);
     }
 
-    .status-pill{
-      position:fixed;
-      right:16px;
-      top:16px;
-      z-index:30;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:76px;
+    .top-pill.active{
+      border-color:rgba(212,175,55,.54);
+      box-shadow:var(--shadowC),0 0 22px rgba(212,175,55,.18);
     }
 
     /* =========================
@@ -243,10 +208,10 @@
     ========================= */
     .hero{
       position:absolute;
-      top:9%;
+      top:10%;
       left:50%;
       transform:translateX(-50%);
-      width:min(94vw, 980px);
+      width:min(94vw,980px);
       text-align:center;
       z-index:10;
       pointer-events:none;
@@ -254,7 +219,7 @@
 
     .hero h1{
       margin:0;
-      font-size:clamp(40px, 6.2vw, 86px);
+      font-size:clamp(40px,6.2vw,86px);
       font-weight:950;
       letter-spacing:.05em;
       line-height:.94;
@@ -263,10 +228,34 @@
 
     .hero p{
       margin:12px 0 0;
-      font-size:clamp(15px, 1.9vw, 21px);
+      font-size:clamp(15px,1.9vw,21px);
       line-height:1.55;
-      color:rgba(255,255,255,.86);
+      color:rgba(255,255,255,.88);
       text-shadow:0 8px 24px rgba(0,0,0,.44);
+    }
+
+    .status-pill{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:30;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:80px;
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.15);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(212,175,55,.12), transparent 64%),
+        rgba(0,0,0,.36);
+      color:#fff;
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:.05em;
+      backdrop-filter:blur(8px);
+      box-shadow:var(--shadowC);
     }
 
     /* =========================
@@ -278,290 +267,461 @@
       z-index:12;
     }
 
-    /* =========================
-       GATE MODE
-    ========================= */
-    .gate{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:min(8vw, 96px);
-      padding:0 20px;
-    }
-
-    .diamond-card{
-      position:relative;
-      width:clamp(150px, 19vw, 230px);
-      height:clamp(150px, 19vw, 230px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:transparent;
-      border:0;
-      padding:0;
-      cursor:pointer;
-      color:inherit;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
-    }
-
-    .diamond-shell{
-      position:absolute;
-      inset:0;
-      border:2px solid rgba(255,255,255,.28);
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 26%),
-        linear-gradient(145deg, rgba(10,14,22,.42), rgba(5,8,12,.24));
-      box-shadow:
-        0 18px 48px rgba(0,0,0,.38),
-        inset 0 0 20px rgba(255,255,255,.04);
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
-    }
-
-    .diamond-shell::after{
-      content:"";
-      position:absolute;
-      inset:20%;
-      border:1px solid rgba(201,162,74,.50);
-    }
-
-    .diamond-shell--now{transform:rotate(0deg)}
-    .diamond-shell--future{transform:rotate(45deg)}
-
-    .diamond-label{
-      position:relative;
-      z-index:2;
-      font-weight:950;
-      font-size:clamp(22px, 2.6vw, 32px);
-      letter-spacing:.12em;
-      text-align:center;
-      pointer-events:none;
-      text-shadow:0 8px 26px rgba(0,0,0,.55);
-    }
-
-    .diamond-sub{
-      position:absolute;
-      left:50%;
-      bottom:-44px;
-      transform:translateX(-50%);
-      min-width:164px;
-      text-align:center;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.06em;
-      color:rgba(255,255,255,.74);
-      text-transform:uppercase;
-      pointer-events:none;
-      white-space:nowrap;
-    }
-
-    .diamond-card:hover .diamond-shell{
-      border-color:rgba(255,255,255,.42);
-      box-shadow:
-        0 22px 56px rgba(0,0,0,.46),
-        0 0 18px rgba(212,175,55,.16),
-        inset 0 0 24px rgba(255,255,255,.05);
-      filter:saturate(1.04);
-    }
-
-    /* =========================
-       NOW FIELD
-    ========================= */
-    .product-field{
+    .mode-panel{
       position:absolute;
       inset:0;
       display:none;
     }
 
-    .product-field.is-active{
+    .mode-panel.is-active{
       display:block;
     }
 
-    .field-core{
+    /* =========================
+       FLAT MODE — PACKED BLUE
+    ========================= */
+    .flat-core{
       position:absolute;
       left:50%;
       top:57%;
       transform:translate(-50%,-50%);
-      width:min(980px, 90vw);
-      height:min(640px, 62vh);
-      pointer-events:auto;
+      width:min(920px,88vw);
+      height:min(620px,58vh);
+      pointer-events:none;
     }
 
-    .gem-node{
+    .flat-node{
       position:absolute;
-      display:block;
       border:0;
       background:transparent;
       color:inherit;
       padding:0;
       cursor:pointer;
+      pointer-events:auto;
       -webkit-tap-highlight-color:transparent;
       touch-action:manipulation;
-      text-decoration:none;
-      pointer-events:auto;
-      animation:float 8s ease-in-out infinite alternate;
     }
 
-    .gem-node.nutrition{width:220px;height:220px;z-index:4;animation-duration:9s}
-    .gem-node.sideai{width:170px;height:170px;z-index:3;animation-duration:8s}
-    .gem-node.energy{width:170px;height:170px;z-index:3;animation-duration:10s}
-    .gem-node.education{width:170px;height:170px;z-index:3;animation-duration:11s}
-    .gem-node.governance{width:170px;height:170px;z-index:3;animation-duration:9.5s}
+    .flat-node.center{
+      width:240px;
+      height:240px;
+      left:50%;
+      top:50%;
+      margin-left:-120px;
+      margin-top:-120px;
+      z-index:4;
+    }
 
-    .gem-shell{
+    .flat-node.small{
+      width:176px;
+      height:176px;
+      z-index:3;
+    }
+
+    .flat-node.n1{left:50%;top:4%;margin-left:-88px}
+    .flat-node.n2{right:8%;top:50%;margin-top:-88px}
+    .flat-node.n3{left:50%;bottom:4%;margin-left:-88px}
+    .flat-node.n4{left:8%;top:50%;margin-top:-88px}
+
+    .flat-shell{
+      position:absolute;
+      inset:0;
+      transform:rotate(45deg);
+      border-radius:26px;
+      border:2px solid rgba(255,255,255,.32);
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.20), transparent 24%),
+        radial-gradient(circle at 80% 22%, rgba(255,43,43,.14), transparent 58%),
+        radial-gradient(circle at 28% 82%, rgba(120,0,22,.16), transparent 68%),
+        radial-gradient(circle at 50% 58%, rgba(80,180,255,.28), transparent 44%),
+        linear-gradient(145deg, rgba(26,42,84,.98), rgba(16,24,46,.98));
+      box-shadow:
+        0 24px 60px rgba(0,0,0,.34),
+        0 0 0 1px rgba(255,255,255,.06) inset,
+        0 0 20px rgba(120,180,255,.12);
+      overflow:hidden;
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .flat-shell::before{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border-radius:20px;
+      border:1px solid rgba(212,175,55,.52);
+      opacity:.92;
+      pointer-events:none;
+    }
+
+    .flat-shell::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, transparent 0 14%, rgba(255,255,255,.10) 14% 15%, transparent 15% 33%, rgba(255,255,255,.08) 33% 34%, transparent 34% 100%),
+        linear-gradient(180deg, transparent 0 18%, rgba(255,255,255,.08) 18% 19%, transparent 19% 48%, rgba(255,255,255,.06) 48% 49%, transparent 49% 100%);
+      opacity:.40;
+      mix-blend-mode:screen;
+    }
+
+    .flat-node:hover .flat-shell{
+      border-color:rgba(212,175,55,.52);
+      box-shadow:
+        0 28px 66px rgba(0,0,0,.40),
+        0 0 24px rgba(212,175,55,.16),
+        0 0 18px rgba(120,180,255,.18);
+      filter:saturate(1.06);
+    }
+
+    .flat-label{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:18px;
+      z-index:2;
+      pointer-events:none;
+      text-shadow:0 8px 22px rgba(0,0,0,.55);
+    }
+
+    .flat-title{
+      font-size:clamp(18px,2vw,28px);
+      line-height:1.02;
+      font-weight:950;
+      letter-spacing:.05em;
+    }
+
+    .flat-node.small .flat-title{
+      font-size:clamp(15px,1.5vw,22px);
+    }
+
+    .flat-sub{
+      margin-top:10px;
+      font-size:clamp(11px,1vw,15px);
+      line-height:1.2;
+      font-weight:900;
+      letter-spacing:.08em;
+      color:rgba(255,255,255,.88);
+      text-transform:uppercase;
+    }
+
+    .flat-outline{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(760px,74vw);
+      height:min(760px,74vw);
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:2px solid rgba(255,255,255,.14);
+      border-radius:40px;
+      opacity:.46;
+      pointer-events:none;
+      z-index:1;
+    }
+
+    /* =========================
+       ROUND MODE — FLOATING COMPASS-GEM
+    ========================= */
+    .round-core{
+      position:absolute;
+      left:50%;
+      top:58%;
+      transform:translate(-50%,-50%);
+      width:min(980px,90vw);
+      height:min(650px,60vh);
+      pointer-events:none;
+    }
+
+    .round-node{
+      position:absolute;
+      border:0;
+      background:transparent;
+      color:inherit;
+      padding:0;
+      cursor:pointer;
+      pointer-events:auto;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+      animation:float 7.5s ease-in-out infinite alternate;
+    }
+
+    .round-node.center{
+      width:250px;
+      height:250px;
+      left:50%;
+      top:50%;
+      margin-left:-125px;
+      margin-top:-125px;
+      z-index:4;
+      animation-duration:8.8s;
+    }
+
+    .round-node.small{
+      width:178px;
+      height:178px;
+      z-index:3;
+    }
+
+    .round-node.r1{left:50%;top:2%;margin-left:-89px;animation-duration:7.2s}
+    .round-node.r2{right:8%;top:50%;margin-top:-89px;animation-duration:8.2s}
+    .round-node.r3{left:50%;bottom:2%;margin-left:-89px;animation-duration:9s}
+    .round-node.r4{left:8%;top:50%;margin-top:-89px;animation-duration:7.8s}
+
+    .round-shadow{
+      position:absolute;
+      left:14%;
+      right:14%;
+      bottom:10%;
+      height:18%;
+      border-radius:999px;
+      background:radial-gradient(circle at 50% 50%, rgba(0,0,0,.34), transparent 72%);
+      filter:blur(10px);
+      opacity:.88;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .round-shell{
       position:absolute;
       inset:0;
       transform:rotate(45deg);
       border-radius:28px;
-      border:1px solid rgba(255,255,255,.18);
+      border:2px solid rgba(255,255,255,.32);
       background:
-        radial-gradient(circle at 24% 20%, rgba(255,255,255,.28), transparent 30%),
-        radial-gradient(circle at 76% 22%, rgba(255,43,43,.16), transparent 46%),
-        radial-gradient(circle at 76% 80%, rgba(90,40,120,.16), transparent 52%),
-        linear-gradient(155deg, rgba(16,24,40,.96), rgba(9,12,20,.98));
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.26), transparent 22%),
+        radial-gradient(circle at 80% 22%, rgba(255,43,43,.18), transparent 58%),
+        radial-gradient(circle at 50% 82%, rgba(90,40,120,.18), transparent 64%),
+        radial-gradient(circle at 50% 58%, rgba(80,180,255,.22), transparent 42%),
+        linear-gradient(145deg, rgba(28,38,84,.98), rgba(18,22,48,.98));
       box-shadow:
-        0 34px 70px rgba(0,0,0,.48),
-        0 16px 0 rgba(0,0,0,.12),
-        inset 0 1px 0 rgba(255,255,255,.20),
-        inset 0 -18px 36px rgba(0,0,0,.55);
+        0 30px 72px rgba(0,0,0,.42),
+        0 0 18px rgba(120,180,255,.12),
+        inset 0 0 0 1px rgba(255,255,255,.06);
       overflow:hidden;
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease, transform .18s ease;
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .gem-shell::before{
+    .round-shell::before{
       content:"";
       position:absolute;
-      inset:7%;
-      border-radius:20px;
-      border:1px solid rgba(201,162,74,.38);
+      inset:10px;
+      border-radius:22px;
+      border:1px solid rgba(212,175,55,.50);
+      pointer-events:none;
       opacity:.96;
     }
 
-    .gem-shell::after{
+    .round-shell::after{
       content:"";
       position:absolute;
-      inset:-8%;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.08), transparent 24%),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 34px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 34px);
-      opacity:.28;
-      transform:rotate(0deg);
+      inset:0;
+      border-radius:28px;
       pointer-events:none;
+      background:
+        linear-gradient(90deg, transparent 0 18%, rgba(255,255,255,.06) 18% 19%, transparent 19% 50%, rgba(255,255,255,.06) 50% 51%, transparent 51% 82%, rgba(255,255,255,.06) 82% 83%, transparent 83% 100%),
+        linear-gradient(180deg, transparent 0 18%, rgba(255,255,255,.06) 18% 19%, transparent 19% 50%, rgba(255,255,255,.06) 50% 51%, transparent 51% 82%, rgba(255,255,255,.06) 82% 83%, transparent 83% 100%);
+      opacity:.38;
+      mix-blend-mode:screen;
     }
 
-    .gem-face{
+    .compass-core{
+      position:absolute;
+      inset:22%;
+      transform:rotate(45deg);
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 52%),
+        linear-gradient(145deg, rgba(20,28,62,.12), rgba(8,10,22,.02));
+      pointer-events:none;
+      opacity:.58;
+    }
+
+    .compass-core::before,
+    .compass-core::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background:rgba(255,255,255,.16);
+      border-radius:999px;
+    }
+
+    .compass-core::before{
+      width:1px;
+      height:92%;
+    }
+
+    .compass-core::after{
+      width:92%;
+      height:1px;
+    }
+
+    .round-node:hover .round-shell{
+      border-color:rgba(212,175,55,.56);
+      box-shadow:
+        0 34px 78px rgba(0,0,0,.46),
+        0 0 22px rgba(212,175,55,.18),
+        0 0 18px rgba(120,180,255,.20);
+      filter:saturate(1.08);
+    }
+
+    .round-label{
       position:absolute;
       inset:0;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
+      flex-direction:column;
       text-align:center;
-      padding:24px 20px;
+      padding:18px;
       z-index:2;
       pointer-events:none;
+      text-shadow:0 8px 22px rgba(0,0,0,.55);
     }
 
-    .gem-title{
-      font-size:clamp(18px, 2vw, 28px);
+    .round-title{
+      font-size:clamp(18px,2vw,28px);
+      line-height:1.02;
       font-weight:950;
-      letter-spacing:.08em;
-      line-height:1.05;
-      text-shadow:0 10px 26px rgba(0,0,0,.58);
-      text-transform:uppercase;
+      letter-spacing:.05em;
     }
 
-    .gem-node.nutrition .gem-title{font-size:clamp(22px, 2.4vw, 34px)}
+    .round-node.small .round-title{
+      font-size:clamp(15px,1.5vw,22px);
+    }
 
-    .gem-sub{
+    .round-sub{
       margin-top:10px;
-      font-size:clamp(11px, 1.05vw, 14px);
-      font-weight:850;
-      letter-spacing:.10em;
-      line-height:1.25;
+      font-size:clamp(11px,1vw,15px);
+      line-height:1.2;
+      font-weight:900;
+      letter-spacing:.08em;
+      color:rgba(255,255,255,.88);
       text-transform:uppercase;
-      color:rgba(255,255,255,.78);
     }
-
-    .gem-node:hover .gem-shell{
-      border-color:rgba(255,255,255,.34);
-      box-shadow:
-        0 42px 86px rgba(0,0,0,.54),
-        0 0 24px rgba(212,175,55,.14),
-        inset 0 1px 0 rgba(255,255,255,.24),
-        inset 0 -18px 40px rgba(0,0,0,.58);
-      filter:saturate(1.05) brightness(1.03);
-    }
-
-    /* positions */
-    .nutrition{left:50%;top:50%;transform:translate(-50%,-50%)}
-    .sideai{left:56%;top:12%;transform:translate(-50%,-50%)}
-    .energy{left:84%;top:56%;transform:translate(-50%,-50%)}
-    .education{left:34%;top:82%;transform:translate(-50%,-50%)}
-    .governance{left:12%;top:42%;transform:translate(-50%,-50%)}
 
     /* =========================
-       ANIMATION
+       MOTION
     ========================= */
-    @keyframes flow{from{transform:translateY(-5%)}to{transform:translateY(5%)}}
-    @keyframes mist{from{opacity:.40}to{opacity:.72}}
-    @keyframes fallShift{from{transform:translateY(-4%)}to{transform:translateY(4%)}}
-    @keyframes fallShiftSlow{from{transform:translateY(-2%)}to{transform:translateY(3%)}}
-    @keyframes drift{from{transform:translate3d(-1.5%,-1%,0)}to{transform:translate3d(1.5%,1%,0)}}
-    @keyframes float{from{translate:0 -10px}to{translate:0 10px}}
+    @keyframes flow{
+      from{transform:translateY(-5%)}
+      to{transform:translateY(5%)}
+    }
+
+    @keyframes mist{
+      from{opacity:.42}
+      to{opacity:.72}
+    }
+
+    @keyframes drift{
+      from{transform:translate3d(-1.2%, -0.8%, 0)}
+      to{transform:translate3d(1.2%, 0.8%, 0)}
+    }
+
+    @keyframes float{
+      from{transform:translateY(-10px)}
+      to{transform:translateY(10px)}
+    }
 
     /* =========================
        MOBILE
     ========================= */
-    @media (max-width:900px){
-      .field-core{
-        width:min(94vw, 760px);
-        height:min(620px, 58vh);
-      }
-      .gem-node.nutrition{width:190px;height:190px}
-      .gem-node.sideai,
-      .gem-node.energy,
-      .gem-node.education,
-      .gem-node.governance{width:146px;height:146px}
-    }
-
-    @media (max-width:640px){
+    @media (max-width:820px){
       .hero{
         top:12%;
-        width:min(92vw, 700px);
+        width:min(92vw,700px);
       }
 
-      .gate{
-        flex-direction:column;
-        gap:64px;
-        justify-content:center;
+      .flat-core,
+      .round-core{
+        width:min(94vw,620px);
+        height:min(620px,54vh);
       }
 
-      .field-core{
-        width:min(96vw, 360px);
-        height:500px;
-        top:60%;
+      .flat-node.center,
+      .round-node.center{
+        width:220px;
+        height:220px;
+        margin-left:-110px;
+        margin-top:-110px;
       }
 
-      .gem-node.nutrition{width:168px;height:168px}
-      .gem-node.sideai,
-      .gem-node.energy,
-      .gem-node.education,
-      .gem-node.governance{width:124px;height:124px}
+      .flat-node.small,
+      .round-node.small{
+        width:154px;
+        height:154px;
+      }
 
-      .nutrition{left:50%;top:50%}
-      .sideai{left:50%;top:16%}
-      .energy{left:82%;top:52%}
-      .education{left:50%;top:84%}
-      .governance{left:18%;top:52%}
+      .flat-node.n1,.round-node.r1{margin-left:-77px}
+      .flat-node.n3,.round-node.r3{margin-left:-77px}
+      .flat-node.n2,.round-node.r2{margin-top:-77px}
+      .flat-node.n4,.round-node.r4{margin-top:-77px}
+    }
 
-      .gem-face{padding:18px 14px}
-      .gem-title{font-size:16px}
-      .gem-node.nutrition .gem-title{font-size:22px}
-      .gem-sub{font-size:10px}
+    @media (max-width:560px){
+      .top-nav{
+        gap:8px;
+      }
+
+      .nav-btn,
+      .top-pill{
+        min-height:40px;
+        padding:9px 12px;
+        font-size:12px;
+      }
+
+      .hero{
+        top:14%;
+      }
+
+      .hero p{
+        font-size:15px;
+      }
+
+      .flat-core,
+      .round-core{
+        width:min(96vw,390px);
+        height:460px;
+      }
+
+      .flat-node.center,
+      .round-node.center{
+        width:182px;
+        height:182px;
+        margin-left:-91px;
+        margin-top:-91px;
+      }
+
+      .flat-node.small,
+      .round-node.small{
+        width:126px;
+        height:126px;
+      }
+
+      .flat-node.n1,.round-node.r1{top:4%;margin-left:-63px}
+      .flat-node.n2,.round-node.r2{right:0%;margin-top:-63px}
+      .flat-node.n3,.round-node.r3{bottom:4%;margin-left:-63px}
+      .flat-node.n4,.round-node.r4{left:0%;margin-top:-63px}
+
+      .flat-title,.round-title{
+        font-size:18px;
+      }
+
+      .flat-node.small .flat-title,
+      .round-node.small .round-title{
+        font-size:14px;
+      }
+
+      .flat-sub,.round-sub{
+        font-size:10px;
+      }
     }
   </style>
 </head>
@@ -569,10 +729,9 @@
 <body>
   <div id="app-shell">
     <div class="env" aria-hidden="true">
-      <div class="fall-core"></div>
-      <div class="fall-side"></div>
+      <div class="waterfall"></div>
       <div class="mist"></div>
-      <div class="spark-field"></div>
+      <div class="stars"></div>
     </div>
 
     <nav class="top-nav" aria-label="Primary">
@@ -582,71 +741,121 @@
       <a class="nav-btn" id="navGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
     </nav>
 
-    <div class="status-pill" id="statusPill">GATE</div>
+    <div class="top-right" aria-label="Mode toggle">
+      <button class="top-pill" id="modeFlat" type="button">FLAT</button>
+      <button class="top-pill" id="modeRound" type="button">ROUND</button>
+    </div>
 
     <section class="hero" aria-label="Products hero">
       <h1 id="heroTitle">PRODUCTS</h1>
       <p id="heroTag">Choose your path. What exists now, or what is being built next.</p>
     </section>
 
-    <section class="stage" aria-label="Products authority">
-      <div class="gate" id="gate" aria-label="Gateway choices">
-        <button class="diamond-card" id="enterNow" type="button" aria-label="Enter available products">
-          <div class="diamond-shell diamond-shell--now"></div>
-          <div class="diamond-label" id="nowLabel">NOW</div>
-          <div class="diamond-sub" id="nowSub">AVAILABLE SURFACE</div>
-        </button>
+    <div class="status-pill" id="statusPill">FLAT</div>
 
-        <button class="diamond-card" id="enterFuture" type="button" aria-label="Enter future products">
-          <div class="diamond-shell diamond-shell--future"></div>
-          <div class="diamond-label" id="futureLabel">FUTURE</div>
-          <div class="diamond-sub" id="futureSub">EXPANSION PATH</div>
-        </button>
+    <section class="stage" aria-label="Products authority">
+
+      <div class="mode-panel" id="flatPanel" aria-label="Flat authority">
+        <div class="flat-core">
+          <div class="flat-outline" aria-hidden="true"></div>
+
+          <button class="flat-node center" data-route="/products/nutrition/" type="button" aria-label="Nutrition">
+            <div class="flat-shell"></div>
+            <div class="flat-label">
+              <div class="flat-title" id="flatNutritionTitle">NUTRITION</div>
+              <div class="flat-sub" id="flatNutritionSub">BASELINE SYSTEM</div>
+            </div>
+          </button>
+
+          <button class="flat-node small n1" data-route="/products/on-your-side-ai/" type="button" aria-label="On Your Side AI">
+            <div class="flat-shell"></div>
+            <div class="flat-label">
+              <div class="flat-title" id="flatSideTitle">ON YOUR SIDE AI</div>
+              <div class="flat-sub" id="flatSideSub">INTELLIGENCE</div>
+            </div>
+          </button>
+
+          <button class="flat-node small n2" data-route="/products/energy/" type="button" aria-label="Energy">
+            <div class="flat-shell"></div>
+            <div class="flat-label">
+              <div class="flat-title" id="flatEnergyTitle">ENERGY</div>
+              <div class="flat-sub" id="flatEnergySub">SYSTEM OUTPUT</div>
+            </div>
+          </button>
+
+          <button class="flat-node small n3" data-route="/products/education/" type="button" aria-label="Education">
+            <div class="flat-shell"></div>
+            <div class="flat-label">
+              <div class="flat-title" id="flatEducationTitle">EDUCATION</div>
+              <div class="flat-sub" id="flatEducationSub">LANGUAGE SYSTEMS</div>
+            </div>
+          </button>
+
+          <button class="flat-node small n4" data-route="/products/governance/" type="button" aria-label="Governance">
+            <div class="flat-shell"></div>
+            <div class="flat-label">
+              <div class="flat-title" id="flatGovernanceTitle">GOVERNANCE</div>
+              <div class="flat-sub" id="flatGovernanceSub">SCALING RULES</div>
+            </div>
+          </button>
+        </div>
       </div>
 
-      <section class="product-field" id="field" aria-label="Product field">
-        <div class="field-core">
-          <a class="gem-node nutrition" id="nodeNutrition" data-route="/products/nutrition/" href="/products/nutrition/" aria-label="Nutrition baseline system">
-            <div class="gem-shell"></div>
-            <div class="gem-face">
-              <div class="gem-title" id="labelNutrition">NUTRITION</div>
-              <div class="gem-sub" id="subNutrition">BASELINE SYSTEM</div>
-            </div>
-          </a>
+      <div class="mode-panel" id="roundPanel" aria-label="Round authority">
+        <div class="round-core">
 
-          <a class="gem-node sideai" id="nodeSideai" data-route="/products/on-your-side-ai/" href="/products/on-your-side-ai/" aria-label="On Your Side AI">
-            <div class="gem-shell"></div>
-            <div class="gem-face">
-              <div class="gem-title" id="labelSide">ON YOUR SIDE AI</div>
-              <div class="gem-sub" id="subSide">INTELLIGENCE</div>
+          <button class="round-node center" data-route="/products/nutrition/" type="button" aria-label="Nutrition">
+            <div class="round-shadow"></div>
+            <div class="round-shell"></div>
+            <div class="compass-core"></div>
+            <div class="round-label">
+              <div class="round-title" id="roundNutritionTitle">NUTRITION</div>
+              <div class="round-sub" id="roundNutritionSub">BASELINE SYSTEM</div>
             </div>
-          </a>
+          </button>
 
-          <a class="gem-node energy" id="nodeEnergy" data-route="/products/energy/" href="/products/energy/" aria-label="Energy">
-            <div class="gem-shell"></div>
-            <div class="gem-face">
-              <div class="gem-title" id="labelEnergy">ENERGY</div>
-              <div class="gem-sub" id="subEnergy">SYSTEM OUTPUT</div>
+          <button class="round-node small r1" data-route="/products/on-your-side-ai/" type="button" aria-label="On Your Side AI">
+            <div class="round-shadow"></div>
+            <div class="round-shell"></div>
+            <div class="compass-core"></div>
+            <div class="round-label">
+              <div class="round-title" id="roundSideTitle">ON YOUR SIDE AI</div>
+              <div class="round-sub" id="roundSideSub">INTELLIGENCE</div>
             </div>
-          </a>
+          </button>
 
-          <a class="gem-node education" id="nodeEducation" data-route="/products/education/" href="/products/education/" aria-label="Education">
-            <div class="gem-shell"></div>
-            <div class="gem-face">
-              <div class="gem-title" id="labelEducation">EDUCATION</div>
-              <div class="gem-sub" id="subEducation">LANGUAGE SYSTEMS</div>
+          <button class="round-node small r2" data-route="/products/energy/" type="button" aria-label="Energy">
+            <div class="round-shadow"></div>
+            <div class="round-shell"></div>
+            <div class="compass-core"></div>
+            <div class="round-label">
+              <div class="round-title" id="roundEnergyTitle">ENERGY</div>
+              <div class="round-sub" id="roundEnergySub">SYSTEM OUTPUT</div>
             </div>
-          </a>
+          </button>
 
-          <a class="gem-node governance" id="nodeGovernance" data-route="/products/governance/" href="/products/governance/" aria-label="Governance">
-            <div class="gem-shell"></div>
-            <div class="gem-face">
-              <div class="gem-title" id="labelGovernance">GOVERNANCE</div>
-              <div class="gem-sub" id="subGovernance">SCALING RULES</div>
+          <button class="round-node small r3" data-route="/products/education/" type="button" aria-label="Education">
+            <div class="round-shadow"></div>
+            <div class="round-shell"></div>
+            <div class="compass-core"></div>
+            <div class="round-label">
+              <div class="round-title" id="roundEducationTitle">EDUCATION</div>
+              <div class="round-sub" id="roundEducationSub">LANGUAGE SYSTEMS</div>
             </div>
-          </a>
+          </button>
+
+          <button class="round-node small r4" data-route="/products/governance/" type="button" aria-label="Governance">
+            <div class="round-shadow"></div>
+            <div class="round-shell"></div>
+            <div class="compass-core"></div>
+            <div class="round-label">
+              <div class="round-title" id="roundGovernanceTitle">GOVERNANCE</div>
+              <div class="round-sub" id="roundGovernanceSub">SCALING RULES</div>
+            </div>
+          </button>
         </div>
-      </section>
+      </div>
+
     </section>
   </div>
 
@@ -662,7 +871,7 @@
       let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
       let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
       let lane  = qs.get("lane")  || "";
-      let view  = qs.get("view")  || "gate";
+      let mode  = qs.get("mode")  || "flat";
 
       if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
       if(style!=="informal" && style!=="formal") style="informal";
@@ -675,7 +884,7 @@
       depth = String(d);
 
       if(lane!=="platform" && lane!=="engineering") lane = "";
-      if(view!=="gate" && view!=="now") view = "gate";
+      if(mode!=="flat" && mode!=="round") mode = "flat";
 
       try{
         LS.setItem("gd_lang", lang);
@@ -692,13 +901,12 @@
         p.set("style", (extra && extra.style) ? extra.style : style);
         p.set("time", (extra && extra.time) ? extra.time : time);
         p.set("depth", (extra && extra.depth) ? String(extra.depth) : depth);
-        p.set("view", (extra && extra.view) ? extra.view : view);
+        p.set("mode", (extra && extra.mode) ? extra.mode : mode);
 
         const resolvedLane = (extra && extra.lane) ? extra.lane : lane;
         if(resolvedLane === "platform" || resolvedLane === "engineering"){
           p.set("lane", resolvedLane);
         }
-
         return "?" + p.toString();
       }
 
@@ -717,6 +925,10 @@
             el.setAttribute("href", withState(route));
           }
         }
+      }
+
+      function navigateTo(path){
+        window.location.href = withState(path);
       }
 
       function P(en, zh, es){
@@ -738,14 +950,10 @@
         navProducts: P("PRODUCTS","产品","PRODUCTOS"),
         navExplore: P("EXPLORE","探索","EXPLORAR"),
         navGauges: P("GAUGES","量规","MEDIDORES"),
-        gate: P("GATE","闸门","PUERTA"),
-        now: P("NOW","现在","AHORA"),
-        future: P("FUTURE","未来","FUTURO"),
-        nowSub: P("AVAILABLE SURFACE","可用界面","SUPERFICIE DISPONIBLE"),
-        futureSub: P("EXPANSION PATH","扩展路径","RUTA DE EXPANSIÓN"),
-
+        flat: P("FLAT","平面","PLANO"),
+        round: P("ROUND","球面","REDONDO"),
         nutrition: P("NUTRITION","营养","NUTRICIÓN"),
-        nutritionSub: P("BASELINE SYSTEM","基线系统","SISTEMA BASE"),
+        nutritionSub: P("BASELINE SYSTEM","基线系统","SISTEMA BASELINE"),
         side: P("ON YOUR SIDE AI","站你这边 AI","ON YOUR SIDE AI"),
         sideSub: P("INTELLIGENCE","智能","INTELIGENCIA"),
         energy: P("ENERGY","能源","ENERGÍA"),
@@ -753,7 +961,7 @@
         education: P("EDUCATION","教育","EDUCACIÓN"),
         educationSub: P("LANGUAGE SYSTEMS","语言系统","SISTEMAS DE LENGUAJE"),
         governance: P("GOVERNANCE","治理","GOBERNANZA"),
-        governanceSub: P("SCALING RULES","规模规则","REGLAS DE ESCALA")
+        governanceSub: P("SCALING RULES","扩展规则","REGLAS DE ESCALA")
       };
 
       document.getElementById("heroTitle").textContent = pick(COPY.heroTitle);
@@ -764,63 +972,69 @@
       document.getElementById("navExplore").textContent = pick(COPY.navExplore);
       document.getElementById("navGauges").textContent = pick(COPY.navGauges);
 
-      document.getElementById("nowLabel").textContent = pick(COPY.now);
-      document.getElementById("futureLabel").textContent = pick(COPY.future);
-      document.getElementById("nowSub").textContent = pick(COPY.nowSub);
-      document.getElementById("futureSub").textContent = pick(COPY.futureSub);
+      document.getElementById("modeFlat").textContent = pick(COPY.flat);
+      document.getElementById("modeRound").textContent = pick(COPY.round);
 
-      document.getElementById("labelNutrition").textContent = pick(COPY.nutrition);
-      document.getElementById("subNutrition").textContent = pick(COPY.nutritionSub);
+      document.getElementById("flatNutritionTitle").textContent = pick(COPY.nutrition);
+      document.getElementById("flatNutritionSub").textContent = pick(COPY.nutritionSub);
+      document.getElementById("flatSideTitle").textContent = pick(COPY.side);
+      document.getElementById("flatSideSub").textContent = pick(COPY.sideSub);
+      document.getElementById("flatEnergyTitle").textContent = pick(COPY.energy);
+      document.getElementById("flatEnergySub").textContent = pick(COPY.energySub);
+      document.getElementById("flatEducationTitle").textContent = pick(COPY.education);
+      document.getElementById("flatEducationSub").textContent = pick(COPY.educationSub);
+      document.getElementById("flatGovernanceTitle").textContent = pick(COPY.governance);
+      document.getElementById("flatGovernanceSub").textContent = pick(COPY.governanceSub);
 
-      document.getElementById("labelSide").textContent = pick(COPY.side);
-      document.getElementById("subSide").textContent = pick(COPY.sideSub);
-
-      document.getElementById("labelEnergy").textContent = pick(COPY.energy);
-      document.getElementById("subEnergy").textContent = pick(COPY.energySub);
-
-      document.getElementById("labelEducation").textContent = pick(COPY.education);
-      document.getElementById("subEducation").textContent = pick(COPY.educationSub);
-
-      document.getElementById("labelGovernance").textContent = pick(COPY.governance);
-      document.getElementById("subGovernance").textContent = pick(COPY.governanceSub);
+      document.getElementById("roundNutritionTitle").textContent = pick(COPY.nutrition);
+      document.getElementById("roundNutritionSub").textContent = pick(COPY.nutritionSub);
+      document.getElementById("roundSideTitle").textContent = pick(COPY.side);
+      document.getElementById("roundSideSub").textContent = pick(COPY.sideSub);
+      document.getElementById("roundEnergyTitle").textContent = pick(COPY.energy);
+      document.getElementById("roundEnergySub").textContent = pick(COPY.energySub);
+      document.getElementById("roundEducationTitle").textContent = pick(COPY.education);
+      document.getElementById("roundEducationSub").textContent = pick(COPY.educationSub);
+      document.getElementById("roundGovernanceTitle").textContent = pick(COPY.governance);
+      document.getElementById("roundGovernanceSub").textContent = pick(COPY.governanceSub);
 
       wireRoutes();
 
-      const gate = document.getElementById("gate");
-      const field = document.getElementById("field");
+      const flatPanel = document.getElementById("flatPanel");
+      const roundPanel = document.getElementById("roundPanel");
       const statusPill = document.getElementById("statusPill");
-      const enterNowButton = document.getElementById("enterNow");
-      const enterFutureButton = document.getElementById("enterFuture");
+      const modeFlat = document.getElementById("modeFlat");
+      const modeRound = document.getElementById("modeRound");
+      const allNodes = Array.from(document.querySelectorAll(".flat-node,.round-node"));
 
-      function syncView(nextView){
-        view = nextView === "now" ? "now" : "gate";
+      function syncMode(nextMode){
+        mode = nextMode === "round" ? "round" : "flat";
 
-        if(view === "now"){
-          gate.style.display = "none";
-          field.classList.add("is-active");
-          statusPill.textContent = pick(COPY.now);
-        }else{
-          gate.style.display = "flex";
-          field.classList.remove("is-active");
-          statusPill.textContent = pick(COPY.gate);
-        }
+        flatPanel.classList.toggle("is-active", mode === "flat");
+        roundPanel.classList.toggle("is-active", mode === "round");
+        modeFlat.classList.toggle("active", mode === "flat");
+        modeRound.classList.toggle("active", mode === "round");
+        statusPill.textContent = mode === "round" ? pick(COPY.round) : pick(COPY.flat);
 
-        history.replaceState({}, "", location.pathname + buildQuery({ view:view }));
+        history.replaceState({}, "", location.pathname + buildQuery({ mode:mode }));
       }
 
-      function navigateTo(path){
-        window.location.href = withState(path, { view:view });
+      modeFlat.addEventListener("click", function(){
+        syncMode("flat");
+      }, { passive:true });
+
+      modeRound.addEventListener("click", function(){
+        syncMode("round");
+      }, { passive:true });
+
+      for(let i=0;i<allNodes.length;i+=1){
+        const node = allNodes[i];
+        const route = node.getAttribute("data-route") || "/products/";
+        node.addEventListener("click", function(){
+          navigateTo(route);
+        }, { passive:true });
       }
 
-      enterNowButton.addEventListener("click", function(){
-        syncView("now");
-      }, { passive:true });
-
-      enterFutureButton.addEventListener("click", function(){
-        navigateTo("/explore/");
-      }, { passive:true });
-
-      syncView(view);
+      syncMode(mode);
     })();
   </script>
 </body>

@@ -1,34 +1,29 @@
 <!doctype html>
-<!-- TNT — /explore/frontier/shimmer/index.html
-     FRONTIER · SHIMMER (COMBINED ROOM: SHIMMER + LATTICE)
-     NEW STANDARD (INFORMAL SITE LAYER):
-       - Trilingual: EN / 中文 / ES
-       - VISIBLE LENS ONLY: lane=platform|engineering (URL-only; NEVER stored)
-       - Mode toggle (in-page; no reload): SHIMMER ↔ LATTICE
-       - Pin informal layer: gd_style=informal, gd_depth=explore
-       - Switching LANG or LANE does NOT reload page
-       - Switching LANG or LANE does NOT close the open row
-       - Switching MODE does NOT reload page (preserve open row per mode)
-       - Canon state carry: gd_lang/gd_style/gd_time/gd_depth ONLY (no new keys)
-       - No modals/overlays; no inline onclick; addEventListener only
-     ROUTING:
-       - FRONTIER INDEX → /explore/frontier/
-       - EXPLORE → /explore/
-       - HOME → /home/
-       - PRODUCTS → /products/
-       - LAWS → /laws/
-       - GAUGES → /gauges/
+<!-- TNT — /gauges/index.html
+     GAUGES · METAVERSE STABILIZATION AUTHORITY
+     ROLE:
+       - Two-sided authority page
+       - CHECKLIST side = progression / admissibility truth
+       - DIAGNOSTIC side = live runtime / stabilization truth
+       - Compass-first scope
+     RULES:
+       - No modals / no overlays
+       - Canon state carry only: gd_lang / gd_style / gd_time / gd_depth
+       - No new gd_* keys
+       - lane remains URL-only
+       - Toggle does not reload page
+       - Language / lane toggle does not reload page
+       - Uses /assets/ui.css + /assets/branch.css only
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FRONTIER · SHIMMER</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Nine Summits — Gauges</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -37,25 +32,20 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:132px;
-
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-
-  --ink:rgba(255,255,255,.94);
+  --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.78);
-
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-  --goldSoft:rgba(201,162,74,.18);
-
+  --mut:rgba(255,255,255,.80);
+  --ok:rgba(131,230,168,1);
+  --warn:rgba(255,211,123,1);
+  --bad:rgba(255,142,142,1);
   --shadowA:0 24px 90px rgba(0,0,0,.58);
   --shadowB:0 16px 56px rgba(0,0,0,.62);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== Top (fixed) ===== */
+/* ===== Top ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
@@ -69,7 +59,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;
 }
 
-/* Button */
+/* ===== Button ===== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -91,14 +81,14 @@ body::before,body::after{pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
   opacity:.60;pointer-events:none;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC),0 0 18px rgba(255,43,43,.12);}
 
-/* Segmented controls */
+/* ===== Segmented controls ===== */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow: var(--shadowC);
+  background:rgba(0,0,0,.16);
+  box-shadow:var(--shadowC);
 }
 .seg button{
   appearance:none;border:0;background:transparent;color:var(--mut);
@@ -127,7 +117,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:10;
 }
 
-/* Background context (behind content; not body) */
+/* ===== Background context ===== */
 .backdrop{
   position:absolute;
   left:50%;
@@ -173,16 +163,16 @@ body::before,body::after{pointer-events:none!important}
   opacity:.72;
 }
 
-/* Header */
+/* ===== Header ===== */
 .header{
   position:relative;
   z-index:2;
   border:1px solid var(--stroke);
   border-radius:22px;
   background:
-    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 18% 22%, rgba(120,0,22,.30), transparent 72%),
+    radial-gradient(circle at 82% 34%, rgba(90,40,120,.10), transparent 74%),
+    radial-gradient(circle at 70% 92%, rgba(255,43,43,.14), transparent 62%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
   backdrop-filter:blur(10px);
@@ -221,8 +211,6 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.86);
   line-height:1.45;
 }
-
-/* Mode row + state pills */
 .modeRow{
   margin-top:12px;
   display:flex;
@@ -241,7 +229,7 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
-/* Band */
+/* ===== Band ===== */
 .band{
   position:relative;
   z-index:2;
@@ -254,7 +242,7 @@ body::before,body::after{pointer-events:none!important}
   color:rgba(255,255,255,.88);
 }
 
-/* Accordion rows */
+/* ===== List ===== */
 .list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
 .row{
   border:1px solid rgba(255,255,255,.10);
@@ -301,7 +289,7 @@ body::before,body::after{pointer-events:none!important}
 .chev{
   width:36px;height:36px;border-radius:14px;
   border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
+  background:rgba(0,0,0,.16);
   display:flex;align-items:center;justify-content:center;
   color:rgba(255,255,255,.78);
   font-weight:950;
@@ -323,12 +311,11 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
 }
 .row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
+.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB),0 0 18px rgba(255,43,43,.10);}
 
 .pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
 .pdesc + .pdesc{margin-top:10px}
 
-/* Sub-bubbles */
 .subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
@@ -351,12 +338,21 @@ body::before,body::after{pointer-events:none!important}
   opacity:.50;pointer-events:none;
 }
 .bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px;white-space:pre-wrap}
 .bubble.open p{display:block}
-
 .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+.pill{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:28px;padding:4px 10px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.16);
+  font-size:11px;font-weight:950;letter-spacing:.25px;
+}
+.pill.pass{color:var(--ok)}
+.pill.warn{color:var(--warn)}
+.pill.fail{color:var(--bad)}
 
-/* Dock */
+/* ===== Dock ===== */
 .dock{
   position:fixed;
   left:50%;
@@ -374,13 +370,13 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
   display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 @media (max-width:520px){
   :root{--dockH:132px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -389,9 +385,9 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="top" aria-label="Top controls">
   <div class="left">
-    <a class="btn" id="btnFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
-    <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-    <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
+    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
+    <a class="btn" id="btnIndex" data-route="/index.html" href="/index.html">INDEX</a>
+    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
   </div>
   <div class="right" aria-label="Controls">
     <div class="seg" role="group" aria-label="Language">
@@ -410,15 +406,15 @@ body::before,body::after{pointer-events:none!important}
   <div class="backdrop" aria-hidden="true"></div>
 
   <div class="header" aria-label="Header">
-    <p class="k" id="hk">FRONTIER</p>
-    <h1 class="t" id="ht">SHIMMER (S.H.I.M.M.E.R.)</h1>
+    <p class="k" id="hk">GAUGES</p>
+    <h1 class="t" id="ht">METAVERSE STABILIZATION AUTHORITY</h1>
     <p class="s" id="hs"></p>
     <div class="rule" id="rule"></div>
 
     <div class="modeRow" aria-label="Mode + state">
       <div class="seg" role="group" aria-label="Mode">
-        <button type="button" id="modeShimmer" aria-pressed="true">SHIMMER</button>
-        <button type="button" id="modeLattice" aria-pressed="false">LATTICE</button>
+        <button type="button" id="modeChecklist" aria-pressed="true">CHECKLIST</button>
+        <button type="button" id="modeDiagnostic" aria-pressed="false">DIAGNOSTIC</button>
       </div>
       <div class="statePill" id="modeState">—</div>
       <div class="statePill" id="laneState">—</div>
@@ -426,61 +422,65 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </div>
 
-  <div class="band" id="band">DOMAINS</div>
+  <div class="band" id="band">STABILIZATION LAYERS</div>
   <div class="list" id="list"></div>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockFrontier" data-route="/explore/frontier/" href="/explore/frontier/">FRONTIER</a>
-  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+  <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
+  <a class="btn" id="dockIndex" data-route="/index.html" href="/index.html">INDEX</a>
+  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
   <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
 </nav>
 
-<script>
+<script type="module">
 (function(){
   "use strict";
 
-  // ===== Canon state (gd_* only; no new keys) =====
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
+  const qs=new URLSearchParams(location.search);
+  const LS=window.localStorage;
 
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var lane  = qs.get("lane")  || "platform"; // URL-only
-
-  // Pin informal layer
-  var style = "informal";
-  var depth = "explore";
+  let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  let style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  let lane  = qs.get("lane")  || "platform";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(time==="trajectory") time="post";
+  if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
+
+  let d=parseInt(depth,10);
+  if(!Number.isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
+  depth=String(d);
+
   if(lane!=="platform" && lane!=="engineering") lane="platform";
 
   try{
     LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style","informal");
+    LS.setItem("gd_style",style);
     LS.setItem("gd_time",time);
-    LS.setItem("gd_depth","explore");
+    LS.setItem("gd_depth",depth);
   }catch(e){}
 
   document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
 
   function q(over){
-    var p=new URLSearchParams();
+    const p=new URLSearchParams();
     p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style","informal");
+    p.set("style",(over&&over.style)?over.style:style);
     p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth","explore");
-    var L=(over&&over.lane)?over.lane:lane;
+    p.set("depth",(over&&over.depth)?String(over.depth):depth);
+    const L=(over&&over.lane)?over.lane:lane;
     if(L==="platform"||L==="engineering") p.set("lane",L);
     return "?"+p.toString();
   }
 
-  function setPressed(ids, activeId){
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
+  function setPressed(ids,activeId){
+    for(let i=0;i<ids.length;i++){
+      const el=document.getElementById(ids[i]);
       if(!el) continue;
       el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
     }
@@ -488,9 +488,9 @@ body::before,body::after{pointer-events:none!important}
 
   function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
   function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
-  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
-  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
+  function labStatus(){ return (lang==="zh")?"状态":(lang==="es")?"Estado":"Status"; }
+  function labMeaning(){ return (lang==="zh")?"含义":(lang==="es")?"Sentido":"Meaning"; }
+  function labNext(){ return (lang==="zh")?"下一步":(lang==="es")?"Siguiente":"Next"; }
 
   function laneLabel(){
     return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
@@ -498,238 +498,513 @@ body::before,body::after{pointer-events:none!important}
       : (lane==="engineering"?"ENGINEERING":"PLATFORM");
   }
 
-  // Wire all internal links with pinned state (and lane)
   function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
+    const nodes=document.querySelectorAll("[data-route]");
+    for(let i=0;i<nodes.length;i++){
+      const el=nodes[i];
+      const route=el.getAttribute("data-route")||"";
       if(!route) continue;
-
-      if(route.indexOf("?")!==-1){
-        try{
-          var u=new URL(route, location.origin);
-          var sp=u.searchParams;
-          sp.set("lang", lang);
-          sp.set("style","informal");
-          sp.set("time", time);
-          sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
-      }else{
-        el.setAttribute("href", route + q());
-      }
+      el.setAttribute("href", route + q());
     }
   }
 
-  // ===== MODE (in-page; not stored; no reload) =====
-  var mode="shimmer"; // shimmer|lattice
-  var openIndexByMode={ shimmer:0, lattice:0 };
+  let mode="checklist";
+  const openIndexByMode={ checklist:0, diagnostic:0 };
 
-  // ===== Header copy =====
-  function headerPacks(){
-    var H={
-      shimmer:{
-        en:{
-          platform:{hs:"SHIMMER is a clarity loop for humans: Screen → Highlight → Inspect → Measure → Mitigate → Explain → Repeat. It stops attention from turning into drift.", rule:"Rule: show what changed before you argue. Receipts beat vibes."},
-          engineering:{hs:"Engineering SHIMMER = interface variance control: baseline → bands → triggers → reason codes → receipts → replay. Treat perception drift as a measurable system fault.", rule:"Rule: baseline first. Any trigger must be reproducible under fixed scope."}
-        },
-        zh:{
-          platform:{hs:"SHIMMER 是面向人类的清晰循环：筛选→高亮→检查→测量→减缓→解释→重复。它阻止注意力变成漂移。", rule:"规则：先展示变化，再争论。收据胜过感觉。"},
-          engineering:{hs:"工程 SHIMMER = 接口方差控制：基线→区间→触发→原因码→收据→回放。把感知漂移当成可测系统故障。", rule:"规则：先基线。任何触发在固定范围下都必须可复现。"}
-        },
-        es:{
-          platform:{hs:"SHIMMER es un loop de claridad: Filtrar → Resaltar → Inspeccionar → Medir → Mitigar → Explicar → Repetir. Evita que la atención se vuelva deriva.", rule:"Regla: muestra qué cambió antes de discutir. Recibos > sensaciones."},
-          engineering:{hs:"SHIMMER (ingeniería) = control de varianza de interfaz: baseline → bandas → triggers → códigos → recibos → replay. Trata la deriva perceptiva como fallo medible.", rule:"Regla: baseline primero. Cualquier trigger debe ser reproducible bajo alcance fijo."}
-        }
-      },
-      lattice:{
-        en:{
-          platform:{hs:"Lattice is coordinate discipline. It turns ‘complex’ into ‘indexable’. Indexable → comparable; comparable → scalable safely.", rule:"Rule: no indexing → no comparability. No comparability → no safe scaling."},
-          engineering:{hs:"Engineering view: finite state coordinates + manifest locks + deterministic replay. If identical inputs diverge, epoch bump + replay is required.", rule:"Rule: identical inputs must yield identical outputs. Mutation requires version bump + full replay."}
-        },
-        zh:{
-          platform:{hs:"晶格=坐标纪律。把“复杂”变成“可索引”。可索引→可比较；可比较→可安全扩张。", rule:"规则：不能索引就不能比较；不能比较就不能安全扩张。"},
-          engineering:{hs:"工程视图：有限状态坐标+清单锁定+确定性回放。同输入若分歧，必须新纪元+回放。", rule:"规则：同输入必得同输出。变异必须版本升级+全量回放。"}
-        },
-        es:{
-          platform:{hs:"Lattice es disciplina de coordenadas. Indexable → comparable; comparable → escalable con seguridad.", rule:"Regla: sin indexación no hay comparabilidad. Sin comparabilidad no hay escala segura."},
-          engineering:{hs:"Vista de ingeniería: coordenadas finitas + manifiestos bloqueados + replay determinista. Si diverge, nueva época + replay.", rule:"Regla: mismas entradas → mismas salidas. Mutación requiere versión + replay completo."}
-        }
-      }
+  async function collectRuntime(){
+    const out={
+      kernel:{pass:false,warn:false,width:null,height:null,total:null,seaLevel:null,reason:""},
+      engine:{pass:false,warn:false,width:null,height:null,sampleCount:null,summary:false,completeness:false,reason:""},
+      control:{pass:false,warn:false,mode:null,yaw:null,pitch:null,zoom:null,orbitPhase:null,reason:""},
+      runtime:{pass:false,warn:false,canvas:false,storage:false,visibility:false,dataMode:null,diagnosticsQuery:null,reason:""},
+      routing:{pass:false,warn:false,pathname:location.pathname,modeQuery:qs.get("mode")||null,lane:lane,reason:""},
+      overall:{pass:false,warn:false,reason:""}
     };
 
-    var root = (H[mode][lang]||H[mode].en);
-    return (lane==="engineering") ? root.engineering : root.platform;
+    let kernel=null;
+    let engine=null;
+    let control=null;
+    let field=null;
+    let camera=null;
+    let motion=null;
+    let orbital=null;
+
+    try{
+      const km=await import("/world/world_kernel.js");
+      kernel=km&&km.WORLD_KERNEL?km.WORLD_KERNEL:null;
+    }catch(e){
+      kernel=null;
+    }
+
+    try{
+      const em=await import("/world/planet_engine.js");
+      engine=em&&typeof em.createPlanetEngine==="function"?em.createPlanetEngine():null;
+    }catch(e){
+      engine=null;
+    }
+
+    try{
+      const cm=await import("/world/control.js");
+      control=cm&&typeof cm.createControlSystem==="function"?cm.createControlSystem():null;
+    }catch(e){
+      control=null;
+    }
+
+    const lonSteps=kernel?.constants?.lonSteps;
+    const latSteps=kernel?.constants?.latSteps;
+    const width=Number.isInteger(kernel?.planetField?.width)?kernel.planetField.width:(Number.isInteger(lonSteps)?lonSteps:null);
+    const height=Number.isInteger(kernel?.planetField?.height)?kernel.planetField.height:(Number.isInteger(latSteps)?latSteps:null);
+    const total=(Number.isInteger(width)&&Number.isInteger(height))?(width*height):null;
+    const seaLevel=(typeof kernel?.constants?.seaLevel==="number")?kernel.constants.seaLevel:null;
+
+    out.kernel.width=width;
+    out.kernel.height=height;
+    out.kernel.total=total;
+    out.kernel.seaLevel=seaLevel;
+    out.kernel.pass=!!kernel && width===216 && height===108 && total===23328 && seaLevel!==null;
+    out.kernel.warn=!out.kernel.pass && !!kernel;
+    out.kernel.reason = out.kernel.pass
+      ? "Kernel contract is aligned."
+      : (!kernel ? "Kernel import failed." : "Kernel is present but contract does not fully align.");
+
+    try{
+      if(engine&&typeof engine.buildPlanetField==="function"){
+        field=engine.buildPlanetField({});
+      }
+    }catch(e){
+      field=null;
+    }
+
+    const sampleCount=Array.isArray(field?.samples)
+      ? field.samples.reduce((a,row)=>a+(Array.isArray(row)?row.length:0),0)
+      : 0;
+
+    out.engine.width=field?.width??null;
+    out.engine.height=field?.height??null;
+    out.engine.sampleCount=sampleCount;
+    out.engine.summary=!!field?.summary;
+    out.engine.completeness=!!field?.completeness;
+    out.engine.pass=!!field && field.width===216 && field.height===108 && sampleCount===23328 && !!field.summary && !!field.completeness;
+    out.engine.warn=!out.engine.pass && !!field;
+    out.engine.reason = out.engine.pass
+      ? "Planet engine builds a lawful field."
+      : (!field ? "Planet engine build failed." : "Planet engine returned a partial or misaligned field.");
+
+    try{
+      if(control&&typeof control.resize==="function"){
+        control.resize(window.innerWidth,window.innerHeight);
+      }
+      if(control&&typeof control.getCameraState==="function"){
+        camera=control.getCameraState();
+      }
+      if(control&&typeof control.getMotionState==="function"){
+        motion=control.getMotionState();
+      }
+      if(control&&typeof control.getOrbitalState==="function"){
+        orbital=control.getOrbitalState();
+      }
+    }catch(e){
+      camera=null; motion=null; orbital=null;
+    }
+
+    out.control.mode=motion?.mode??null;
+    out.control.yaw=motion?.yaw??null;
+    out.control.pitch=motion?.pitch??null;
+    out.control.zoom=motion?.zoomCurrent??null;
+    out.control.orbitPhase=orbital?.orbitPhase??null;
+    out.control.pass=!!control && !!camera && !!motion && !!orbital && typeof motion.mode==="string" && Number.isFinite(motion.yaw) && Number.isFinite(motion.pitch);
+    out.control.warn=!out.control.pass && !!control;
+    out.control.reason = out.control.pass
+      ? "Control state is readable and live."
+      : (!control ? "Control import failed." : "Control exists but runtime motion state is incomplete.");
+
+    let storageAvailable=false;
+    try{
+      localStorage.setItem("__cte_diag_test__","1");
+      localStorage.removeItem("__cte_diag_test__");
+      storageAvailable=true;
+    }catch(e){
+      storageAvailable=false;
+    }
+
+    const canvasExists = !!document.getElementById("world-canvas");
+    out.runtime.canvas=canvasExists;
+    out.runtime.storage=storageAvailable;
+    out.runtime.visibility=(document.visibilityState==="visible");
+    out.runtime.dataMode=document.body ? (document.body.getAttribute("data-mode")||null) : null;
+    out.runtime.diagnosticsQuery=qs.get("diagnostics")||null;
+    out.runtime.pass=storageAvailable && document.visibilityState==="visible";
+    out.runtime.warn=!out.runtime.pass && (storageAvailable || document.visibilityState==="visible");
+    out.runtime.reason = out.runtime.pass
+      ? "Observer page is healthy, but this does not prove index render execution."
+      : "Observer runtime is degraded.";
+
+    out.routing.pass=true;
+    out.routing.reason="Routing state is readable on this page.";
+
+    if(!out.kernel.pass){
+      out.overall.pass=false;
+      out.overall.warn=false;
+      out.overall.reason="Break class: kernel / contract truth.";
+    }else if(!out.engine.pass){
+      out.overall.pass=false;
+      out.overall.warn=false;
+      out.overall.reason="Break class: planet engine build.";
+    }else if(!out.control.pass){
+      out.overall.pass=false;
+      out.overall.warn=true;
+      out.overall.reason="Break class: control / projection state.";
+    }else{
+      out.overall.pass=true;
+      out.overall.warn=false;
+      out.overall.reason="Upstream modules pass here. White compass would then indicate index-side execution or render orchestration, not upstream contract truth.";
+    }
+
+    return out;
   }
 
-  // ===== LATTICE DOMAINS (compact) =====
-  var LATTICE_DOMAINS=[
-    {c:"#c9a24a",
-     t:{en:"256-State Finite Geometry",zh:"256态有限几何",es:"Geometría finita (256)"},
-     s:{en:"Countable map for classification.",zh:"用于分类的可计数地图。",es:"Mapa contable para clasificación."},
-     platform:{intro:{en:"Finite states stop story drift. They force a countable map.",zh:"有限状态阻止叙事漂移：强制可计数地图。",es:"Estados finitos evitan deriva narrativa: mapa contable."},
-               concept:{en:"Concept: finite states make disagreement measurable.",zh:"概念：有限状态让分歧可测。",es:"Concepto: estados finitos hacen desacuerdo medible."},
-               build:{en:"Build now: name the few axes that matter.",zh:"现在建：命名真正重要的少数轴。",es:"Construir ahora: nombrar los pocos ejes que importan."},
-               roadmap:{en:"Roadmap: publish enumeration and lock naming.",zh:"路线图：发布枚举并锁定命名。",es:"Hoja de ruta: publicar enumeración y fijar nombres."}},
-     engineering:{intro:{en:"Explicit axes + ordering + enumeration. ‘Complex’ becomes indexable.",zh:"显式轴+顺序+枚举。“复杂”变可索引。",es:"Ejes+orden+enumeración. ‘Complejo’ se vuelve indexable."},
-                 concept:{en:"Concept: enumeration enables deterministic classification.",zh:"概念：枚举支持确定性分类。",es:"Concepto: enumeración habilita clasificación determinista."},
-                 build:{en:"Build now: define axis independence + inequality basis.",zh:"现在建：轴独立性+不等式基。",es:"Construir ahora: independencia + base de desigualdades."},
-                 roadmap:{en:"Roadmap: sweep + store receipts (hash/version) for replay.",zh:"路线图：扫掠+存收据（哈希/版本）回放。",es:"Hoja de ruta: barrer + guardar recibos (hash/versión) para replay."}}
-    },
-    {c:"#ff2b2b",
-     t:{en:"Cardinal Axis Mapping",zh:"基数轴映射",es:"Ejes cardinales"},
-     s:{en:"Anchors for definition/execution/measurement/identity.",zh:"定义/执行/测量/身份锚点。",es:"Anclas para definición/ejecución/medición/identidad."},
-     platform:{intro:{en:"Anchors keep the map readable without debating intent.",zh:"锚点让地图可读，不必争论意图。",es:"Anclas mantienen el mapa legible sin debatir intención."},
-               concept:{en:"Concept: anchors keep navigation honest.",zh:"概念：锚点让导航诚实。",es:"Concepto: anclas mantienen navegación honesta."},
-               build:{en:"Build now: one sentence per axis — what must stay true.",zh:"现在建：每轴一句——必须保持什么为真。",es:"Construir ahora: una frase por eje — qué debe mantenerse verdadero."},
-               roadmap:{en:"Roadmap: bind each axis to measurement + return path.",zh:"路线图：每轴绑定测量面+返回路径。",es:"Hoja de ruta: ligar cada eje a medición + retorno."}},
-     engineering:{intro:{en:"Axes become invariant inputs; disputes become coordinates.",zh:"轴成为不变量输入；争论变坐标。",es:"Ejes como entradas invariantes; disputas como coordenadas."},
-                 concept:{en:"Concept: axis anchors define constraint surfaces.",zh:"概念：轴锚定义约束面。",es:"Concepto: anclas definen superficies de restricción."},
-                 build:{en:"Build now: manifest locks (scope + axis defs) and hash them.",zh:"现在建：清单锁（范围+轴定义）并哈希。",es:"Construir ahora: bloquear manifiestos (alcance + ejes) y hashearlos."},
-                 roadmap:{en:"Roadmap: forbid silent axis mutation (epoch rollover).",zh:"路线图：禁止静默轴变异（新纪元）。",es:"Hoja de ruta: prohibir mutación silenciosa (nueva época)."}}
-    },
-    {c:"#a3a3a3",
-     t:{en:"Admissibility Boundaries",zh:"可采信边界",es:"Límites de admisibilidad"},
-     s:{en:"Claims cannot exceed evidence.",zh:"主张不得超证据。",es:"Afirmaciones no exceden evidencia."},
-     platform:{intro:{en:"Dream big, label readiness. No measurement means: concept only.",zh:"想得很大也可以，但要标注就绪度；无测量=仅概念。",es:"Sueña grande, etiqueta preparación; sin medición = solo concepto."},
-               concept:{en:"Concept: readiness is a label.",zh:"概念：就绪度是标签。",es:"Concepto: preparación es etiqueta."},
-               build:{en:"Build now: separate vision from proof in routing.",zh:"现在建：路由上分开愿景与证明。",es:"Construir ahora: separar visión de prueba en ruteo."},
-               roadmap:{en:"Roadmap: promote shells only after receipts exist.",zh:"路线图：有收据后再升级壳。",es:"Hoja de ruta: promover shells solo con recibos."}},
-     engineering:{intro:{en:"Gates must be machine-checkable under fixed scope.",zh:"固定范围下闸门必须可机检。",es:"Compuertas deben ser comprobables bajo alcance fijo."},
-                 concept:{en:"Concept: admissibility is binary with reason codes.",zh:"概念：可采信=二元闸门+原因码。",es:"Concepto: admisibilidad es binaria con códigos."},
-                 build:{en:"Build now: output HOLD/UNDETERMINED when receipts are missing.",zh:"现在建：缺收据输出HOLD/UNDETERMINED。",es:"Construir ahora: emitir HOLD/UNDETERMINED cuando falten recibos."},
-                 roadmap:{en:"Roadmap: epoch discipline (no retroactive edits).",zh:"路线图：新纪元纪律（无追溯改写）。",es:"Hoja de ruta: disciplina de época (sin ediciones retroactivas)."}}
-    }
-  ];
+  let runtimeSnapshot=null;
 
-  // ===== SHIMMER DOMAINS (deep; acronym) =====
-  var SHIMMER_DOMAINS=[
-    {c:"#ff2b2b",
-     t:{en:"SHIMMER Overview (Protocol)",zh:"SHIMMER 总览（协议）",es:"SHIMMER (protocolo)"},
-     s:{en:"Screen→Highlight→Inspect→Measure→Mitigate→Explain→Repeat.",zh:"筛选→高亮→检查→测量→减缓→解释→重复。",es:"Filtrar→Resaltar→Inspeccionar→Medir→Mitigar→Explicar→Repetir."},
-     platform:{intro:{en:"SHIMMER reduces distortion so humans can decide without being dragged by noise.",zh:"SHIMMER 减少失真，让人不被噪声拖着走。",es:"SHIMMER reduce distorsión para decidir sin ruido."},
-               concept:{en:"Concept: attention is a resource; distortion is a leak.",zh:"概念：注意力是资源；失真是泄漏。",es:"Concepto: atención es recurso; distorsión es fuga."},
-               build:{en:"Build now: define the loop and where receipts live.",zh:"现在建：写清循环与收据位置。",es:"Construir ahora: definir el loop y dónde viven los recibos."},
-               roadmap:{en:"Roadmap: attach outputs to Gauges (signals) + Laws (bounds).",zh:"路线图：输出锚定量规（信号）+法则（边界）。",es:"Hoja de ruta: anclar salidas a Medidores (señales) + Leyes (límites)."}},
-     engineering:{intro:{en:"Treat perception drift as measurable interface fault: baselines, bands, triggers, reason codes, receipts, replay.",zh:"把感知漂移当可测接口故障：基线、区间、触发、原因码、收据、回放。",es:"Deriva perceptiva como fallo medible: baseline, bandas, triggers, razones, recibos, replay."},
-                 concept:{en:"Concept: measured variance is the only admissible driver of resets.",zh:"概念：只有测得方差才允许触发重置。",es:"Concepto: solo varianza medida puede disparar resets."},
-                 build:{en:"Build now: baseline capture + variance metric + threshold per surface.",zh:"现在建：每个界面定义基线+方差指标+阈值。",es:"Construir ahora: baseline+métrica+umbral por superficie."},
-                 roadmap:{en:"Roadmap: publish replayable log (baseline hash, deltas, triggers, recovery-to-band).",zh:"路线图：发布可回放日志（基线哈希、差分、触发、回带恢复）。",es:"Hoja de ruta: publicar log replayable (hash baseline, deltas, triggers, recuperación a banda)."}}
-    },
+  function statusKind(pass,warn){
+    return pass ? "pass" : warn ? "warn" : "fail";
+  }
 
-    {c:"#c9a24a",
-     t:{en:"S — SCREEN (Input Gate)",zh:"S — 筛选（输入闸门）",es:"S — FILTRAR (compuerta)"},
-     s:{en:"Decide what enters at all.",zh:"决定什么能进入。",es:"Decidir qué entra."},
-     platform:{intro:{en:"If you can’t say why it matters, don’t feed it in.",zh:"说不清为什么重要，就别喂进去。",es:"Si no puedes decir por qué importa, no lo metas."},
-               concept:{en:"Concept: fewer inputs = more stability.",zh:"概念：输入越少越稳定。",es:"Concepto: menos entradas = más estabilidad."},
-               build:{en:"Build now: MUST SEE / MUST IGNORE lists.",zh:"现在建：必看/必忽略清单。",es:"Construir ahora: listas IMPRESCINDIBLE / IGNORAR."},
-               roadmap:{en:"Roadmap: add tags (source trust, scope relevance).",zh:"路线图：加标签（来源可信度、范围相关性）。",es:"Hoja de ruta: añadir etiquetas (confianza de fuente, relevancia de alcance)."}},
-     engineering:{intro:{en:"Deterministic gating: allow/deny-lists and reason-coded rejections.",zh:"确定性闸门：白/黑名单+原因码拒绝。",es:"Compuerta determinista: allow/deny-lists y rechazos con códigos."},
-                 concept:{en:"Concept: gate inputs before classification.",zh:"概念：先闸门输入再分类。",es:"Concepto: gatear entradas antes de clasificar."},
-                 build:{en:"Build now: implement rejection reason codes (R1..Rn).",zh:"现在建：实现拒绝原因码（R1..Rn）。",es:"Construir ahora: implementar razones (R1..Rn)."},
-                 roadmap:{en:"Roadmap: measure screening drift by window.",zh:"路线图：按窗口测筛选漂移。",es:"Hoja de ruta: medir deriva de filtrado por ventana."}}
-    },
+  function statusLabel(kind){
+    return kind==="pass"
+      ? pick3("PASS","通过","PASS")
+      : kind==="warn"
+        ? pick3("WARN","警告","WARN")
+        : pick3("FAIL","失败","FAIL");
+  }
 
-    {c:"#ff2b2b",
-     t:{en:"H — HIGHLIGHT (Change Detector)",zh:"H — 高亮（变化检测）",es:"H — RESALTAR (detector)"},
-     s:{en:"Show deltas, not opinions.",zh:"展示差分，不展示观点。",es:"Mostrar deltas, no opiniones."},
-     platform:{intro:{en:"Pin: what changed, when, and how big.",zh:"钉住：变了什么、何时、多大。",es:"Fijar: qué cambió, cuándo y cuánto."},
-               concept:{en:"Concept: visible change reduces argument loops.",zh:"概念：变化可见，争论就少。",es:"Concepto: cambio visible reduce bucles."},
-               build:{en:"Build now: 1-line before/after for the primary signal.",zh:"现在建：主信号一行前后对比。",es:"Construir ahora: diff 1 línea antes/después."},
-               roadmap:{en:"Roadmap: link highlights to receipts (no narratives).",zh:"路线图：高亮绑定收据（无叙事）。",es:"Hoja de ruta: vincular resaltados a recibos (sin narrativa)."}},
-     engineering:{intro:{en:"Variance detection: delta, slope, threshold crossings with reason codes.",zh:"方差检测：差分、斜率、阈值穿越+原因码。",es:"Detección de varianza: delta, pendiente, cruces con códigos."},
-                 concept:{en:"Concept: drift is a metric.",zh:"概念：漂移是指标。",es:"Concepto: deriva es métrica."},
-                 build:{en:"Build now: windowed deltas; flag slope changes.",zh:"现在建：窗口差分；标记斜率变化。",es:"Construir ahora: deltas por ventana; marcar cambios de pendiente."},
-                 roadmap:{en:"Roadmap: connect flags to containment triggers.",zh:"路线图：标记接入隔离触发。",es:"Hoja de ruta: conectar flags a triggers de contención."}}
-    },
+  function n(v,d){
+    return (typeof v==="number" && Number.isFinite(v)) ? v.toFixed(d||0) : "—";
+  }
 
-    {c:"#93c5fd",
-     t:{en:"I — INSPECT (Scope Boundary)",zh:"I — 检查（范围边界）",es:"I — INSPECCIONAR (alcance)"},
-     s:{en:"Pick the evidence boundary before claiming.",zh:"主张前先选证据边界。",es:"Elegir límite de evidencia antes de afirmar."},
-     platform:{intro:{en:"Go one level deeper without getting lost.",zh:"深入一级但不迷路。",es:"Bajar un nivel sin perderse."},
-               concept:{en:"Concept: scope first, then conclusions.",zh:"概念：先范围，再结论。",es:"Concepto: alcance primero, conclusiones después."},
-               build:{en:"Build now: one inspect path per signal.",zh:"现在建：每个信号一条检查路径。",es:"Construir ahora: una ruta de inspección por señal."},
-               roadmap:{en:"Roadmap: standardize inspection depth.",zh:"路线图：标准化检查深度。",es:"Hoja de ruta: estandarizar profundidad de inspección."}},
-     engineering:{intro:{en:"Scope slice is part of input: identifiers, window, evidence list.",zh:"范围切片是输入：标识符、窗口、证据清单。",es:"Corte de alcance es entrada: IDs, ventana, lista de evidencia."},
-                 concept:{en:"Concept: scope is an input variable.",zh:"概念：范围是输入变量。",es:"Concepto: alcance es variable de entrada."},
-                 build:{en:"Build now: scope schema (anchors, window, evidence).",zh:"现在建：范围架构（锚点/窗口/证据）。",es:"Construir ahora: esquema de alcance (anclas, ventana, evidencia)."},
-                 roadmap:{en:"Roadmap: hash scope+evidence for replay integrity.",zh:"路线图：哈希锁范围+证据用于回放完整性。",es:"Hoja de ruta: hashear alcance+evidencia para integridad de replay."}}
-    },
+  function yn(v){
+    return v ? pick3("YES","是","SÍ") : pick3("NO","否","NO");
+  }
 
-    {c:"#34d399",
-     t:{en:"M — MEASURE (Receipts)",zh:"M — 测量（收据）",es:"M — MEDIR (recibos)"},
-     s:{en:"Turn observation into a repeatable number.",zh:"把观察变成可复跑数字。",es:"Convertir observación en número repetible."},
-     platform:{intro:{en:"If you can’t measure it, label it concept.",zh:"测不了就标注概念。",es:"Si no puedes medir, etiqueta como concepto."},
-               concept:{en:"Concept: receipts beat confidence.",zh:"概念：收据胜过自信。",es:"Concepto: recibos vencen confianza."},
-               build:{en:"Build now: one truth metric per page.",zh:"现在建：每页一个说真话指标。",es:"Construir ahora: una métrica verdadera por página."},
-               roadmap:{en:"Roadmap: align metrics to gates (pass/hold/fail + reasons).",zh:"路线图：指标对齐闸门（通过/暂停/失败+原因）。",es:"Hoja de ruta: alinear métricas a compuertas (pasar/hold/fallar + razones)."}},
-     engineering:{intro:{en:"Measurement is function: inputs→output→threshold→failure meaning. Undefined→UNDETERMINED.",zh:"测量是函数：输入→输出→阈值→失败含义；未定义→UNDETERMINED。",es:"Medición es función: entradas→salida→umbral→significado. Sin definir→UNDETERMINED."},
-                 concept:{en:"Concept: determinism under fixed scope.",zh:"概念：固定范围下确定性。",es:"Concepto: determinismo bajo alcance fijo."},
-                 build:{en:"Build now: reason codes per threshold crossing.",zh:"现在建：每次阈值穿越输出原因码。",es:"Construir ahora: códigos por cruce de umbral."},
-                 roadmap:{en:"Roadmap: store receipts (timestamp+version+hash) for replay.",zh:"路线图：存收据（时间戳+版本+哈希）回放。",es:"Hoja de ruta: guardar recibos (timestamp+versión+hash) para replay."}}
-    },
+  function checklistDomains(){
+    return [
+      {
+        c:"#c9a24a",
+        t:{en:"1. Contract Stability",zh:"1. 契约稳定",es:"1. Estabilidad del Contrato"},
+        s:{en:"Kernel dimensions and sea-level truth must align before anything else.",zh:"内核维度与海平面真值必须先对齐。",es:"Las dimensiones del kernel y el nivel del mar deben alinearse antes de todo."},
+        getPack:function(){
+          const k=runtimeSnapshot?.kernel;
+          const kind=statusKind(!!k?.pass, !!k?.warn);
+          return {
+            kind:kind,
+            intro:{
+              en:"This layer determines whether the world contract is lawful enough for every downstream system.",
+              zh:"这一层决定世界契约是否足够合法，从而支撑所有下游系统。",
+              es:"Esta capa determina si el contrato del mundo es lo bastante legal para sostener todo lo demás."
+            },
+            meaning:{
+              en:"Current read: width="+(k?.width??"—")+", height="+(k?.height??"—")+", total="+(k?.total??"—")+", seaLevel="+(k?.seaLevel??"—")+".",
+              zh:"当前读数：宽="+(k?.width??"—")+"，高="+(k?.height??"—")+"，总数="+(k?.total??"—")+"，海平面="+(k?.seaLevel??"—")+"。",
+              es:"Lectura actual: ancho="+(k?.width??"—")+", alto="+(k?.height??"—")+", total="+(k?.total??"—")+", seaLevel="+(k?.seaLevel??"—")+"."
+            },
+            next:{
+              en:k?.pass ? "Admissible next: keep contract frozen while testing execution." : "Blocked next: fix kernel contract before trusting any green downstream.",
+              zh:k?.pass ? "下一步可采信：冻结契约，然后测试执行。" : "下一步阻塞：先修复内核契约，再相信任何下游绿色。",
+              es:k?.pass ? "Siguiente admisible: congelar el contrato mientras se prueba la ejecución." : "Siguiente bloqueado: arreglar el contrato kernel antes de creer cualquier verde abajo."
+            }
+          };
+        }
+      },
+      {
+        c:"#34d399",
+        t:{en:"2. Planet Generation Stability",zh:"2. 星球生成稳定",es:"2. Estabilidad de Generación Planetaria"},
+        s:{en:"The engine must produce a lawful field before render can mean anything.",zh:"引擎必须先生成合法场，渲染才有意义。",es:"El motor debe producir un campo legal antes de que el render signifique algo."},
+        getPack:function(){
+          const e=runtimeSnapshot?.engine;
+          const kind=statusKind(!!e?.pass, !!e?.warn);
+          return {
+            kind:kind,
+            intro:{
+              en:"This layer decides whether the world exists as an actual sample field instead of an idea.",
+              zh:"这一层决定世界是否作为真实样本场存在，而不只是一个想法。",
+              es:"Esta capa decide si el mundo existe como campo de muestras real y no solo como idea."
+            },
+            meaning:{
+              en:"Current read: build="+yn(!!e?.width)+", width="+(e?.width??"—")+", height="+(e?.height??"—")+", samples="+(e?.sampleCount??"—")+".",
+              zh:"当前读数：构建="+yn(!!e?.width)+"，宽="+(e?.width??"—")+"，高="+(e?.height??"—")+"，样本="+(e?.sampleCount??"—")+"。",
+              es:"Lectura actual: build="+yn(!!e?.width)+", ancho="+(e?.width??"—")+", alto="+(e?.height??"—")+", muestras="+(e?.sampleCount??"—")+"."
+            },
+            next:{
+              en:e?.pass ? "Admissible next: render-side execution isolation." : "Blocked next: engine build must return lawful field shape first.",
+              zh:e?.pass ? "下一步可采信：进入渲染侧执行隔离。" : "下一步阻塞：引擎必须先返回合法字段形状。",
+              es:e?.pass ? "Siguiente admisible: aislar ejecución del lado render." : "Siguiente bloqueado: el motor debe devolver primero una forma de campo legal."
+            }
+          };
+        }
+      },
+      {
+        c:"#93c5fd",
+        t:{en:"3. Control / Projection Stability",zh:"3. 控制 / 投影稳定",es:"3. Estabilidad de Control / Proyección"},
+        s:{en:"Camera, motion, and orbital state must be readable before interaction depth is trustworthy.",zh:"在交互深度可信之前，必须先读到相机、运动和轨道状态。",es:"Cámara, movimiento y estado orbital deben ser legibles antes de confiar en la interacción."},
+        getPack:function(){
+          const c=runtimeSnapshot?.control;
+          const kind=statusKind(!!c?.pass, !!c?.warn);
+          return {
+            kind:kind,
+            intro:{
+              en:"This layer is the motion spine. If this drifts, render truth becomes ambiguous.",
+              zh:"这一层是运动脊柱。如果它漂移，渲染真值就会变得模糊。",
+              es:"Esta capa es la columna del movimiento. Si deriva, la verdad del render se vuelve ambigua."
+            },
+            meaning:{
+              en:"Current read: mode="+(c?.mode??"—")+", yaw="+n(c?.yaw,4)+", pitch="+n(c?.pitch,4)+", zoom="+n(c?.zoom,4)+".",
+              zh:"当前读数：模式="+(c?.mode??"—")+"，yaw="+n(c?.yaw,4)+"，pitch="+n(c?.pitch,4)+"，缩放="+n(c?.zoom,4)+"。",
+              es:"Lectura actual: modo="+(c?.mode??"—")+", yaw="+n(c?.yaw,4)+", pitch="+n(c?.pitch,4)+", zoom="+n(c?.zoom,4)+"."
+            },
+            next:{
+              en:c?.pass ? "Admissible next: bind observer to true index execution receipts." : "Blocked next: stabilize control before blaming render.",
+              zh:c?.pass ? "下一步可采信：把观察器绑定到真实 index 执行收据。" : "下一步阻塞：先稳定 control，再判断 render。",
+              es:c?.pass ? "Siguiente admisible: enlazar el observador a recibos reales de ejecución del index." : "Siguiente bloqueado: estabilizar control antes de culpar al render."
+            }
+          };
+        }
+      },
+      {
+        c:"#f59e0b",
+        t:{en:"4. Render / Frame Stability",zh:"4. 渲染 / 帧稳定",es:"4. Estabilidad de Render / Frame"},
+        s:{en:"This is currently blocked because the observer page is not yet reading live index execution receipts.",zh:"这一层当前阻塞，因为观察页还没有读取 live index 执行收据。",es:"Esta capa está bloqueada porque la página observadora todavía no lee recibos vivos de ejecución del index."},
+        getPack:function(){
+          return {
+            kind:"warn",
+            intro:{
+              en:"This is the missing bridge. White compass cannot be isolated truthfully until index writes execution receipts.",
+              zh:"这是缺失的桥。除非 index 写入执行收据，否则白色 compass 无法被真实隔离。",
+              es:"Este es el puente faltante. El compass blanco no puede aislarse con verdad hasta que index escriba recibos de ejecución."
+            },
+            meaning:{
+              en:"Current read: gauges can prove upstream readiness, but cannot yet prove index draw, frame loop, or render receipt.",
+              zh:"当前读数：gauges 只能证明上游就绪，还不能证明 index 绘制、帧循环或渲染收据。",
+              es:"Lectura actual: gauges puede probar preparación upstream, pero aún no puede probar draw del index, frame loop o recibo de render."
+            },
+            next:{
+              en:"Next required: wire compass runtime receipts into a shared observer source, then grade render truth here.",
+              zh:"下一步要求：把 compass 运行时收据接入共享观察源，然后在这里评估 render 真值。",
+              es:"Siguiente requerido: cablear recibos runtime del compass a una fuente observadora compartida, y luego calificar aquí la verdad del render."
+            }
+          };
+        }
+      },
+      {
+        c:"#ff2b2b",
+        t:{en:"5. Scene / Layer Stability",zh:"5. 场景 / 图层稳定",es:"5. Estabilidad de Escena / Capas"},
+        s:{en:"Plants, buildings, and NPCs are not admissible until world and render stabilization are truthful.",zh:"在世界与渲染稳定性真实之前，植物、建筑和 NPC 都不可采信。",es:"Plantas, edificios y NPCs no son admisibles hasta que la estabilización de mundo y render sea verdadera."},
+        getPack:function(){
+          return {
+            kind:"fail",
+            intro:{
+              en:"This layer is intentionally blocked. Adding visible content on top of a white compass only multiplies blindness.",
+              zh:"这一层被有意阻塞。在白色 compass 上继续加可见内容，只会放大盲区。",
+              es:"Esta capa está bloqueada a propósito. Añadir contenido visible sobre un compass blanco solo multiplica la ceguera."
+            },
+            meaning:{
+              en:"Current state: stabilization preconditions are incomplete, so scene-layer growth would be incoherent.",
+              zh:"当前状态：稳定性前提尚未完成，因此场景层继续增长会失去一致性。",
+              es:"Estado actual: las precondiciones de estabilización están incompletas, así que crecer la escena sería incoherente."
+            },
+            next:{
+              en:"Next lawful order: contract → engine → control → render → scene → vegetation → structures → NPCs.",
+              zh:"下一步合法顺序：契约 → 引擎 → 控制 → 渲染 → 场景 → 植被 → 结构 → NPC。",
+              es:"Orden legal siguiente: contrato → motor → control → render → escena → vegetación → estructuras → NPCs."
+            }
+          };
+        }
+      }
+    ];
+  }
 
-    {c:"#f59e0b",
-     t:{en:"M — MITIGATE (Contain)",zh:"M — 减缓（隔离）",es:"M — MITIGAR (contener)"},
-     s:{en:"Reduce harm before you ‘solve’.",zh:"先止损，再谈解决。",es:"Reducir daño antes de ‘resolver’."},
-     platform:{intro:{en:"Make blast radius smaller; preserve options.",zh:"缩小爆炸半径，保留选择权。",es:"Reducir radio de impacto; preservar opciones."},
-               concept:{en:"Concept: containment preserves options.",zh:"概念：隔离保留选择权。",es:"Concepto: contención preserva opciones."},
-               build:{en:"Build now: define pause + rollback actions people can execute.",zh:"现在建：定义可执行暂停+回滚。",es:"Construir ahora: definir pausa + rollback ejecutables."},
-               roadmap:{en:"Roadmap: tiered responses: warn→slow→isolate→reset.",zh:"路线图：分级响应：警告→减速→隔离→重置。",es:"Hoja de ruta: respuestas por niveles: avisar→ralentizar→aislar→reset."}},
-     engineering:{intro:{en:"Control logic: containment triggers, rollback paths, kill/exit behaviors.",zh:"控制逻辑：隔离触发、回滚路径、终止/退出。",es:"Lógica de control: triggers, rollback y kill/exit."},
-                 concept:{en:"Concept: containment beats cascade.",zh:"概念：隔离胜过级联。",es:"Concepto: contención vence cascada."},
-                 build:{en:"Build now: define thresholds and corresponding actions.",zh:"现在建：定义阈值与对应动作。",es:"Construir ahora: definir umbrales y acciones."},
-                 roadmap:{en:"Roadmap: verify effectiveness by re-entry to bands over windows.",zh:"路线图：用窗口回带验证有效性。",es:"Hoja de ruta: verificar eficacia por re-entrada a bandas en ventanas."}}
-    },
+  function diagnosticDomains(){
+    const k=runtimeSnapshot?.kernel;
+    const e=runtimeSnapshot?.engine;
+    const c=runtimeSnapshot?.control;
+    const r=runtimeSnapshot?.runtime;
+    const rt=runtimeSnapshot?.routing;
+    const o=runtimeSnapshot?.overall;
 
-    {c:"#a3a3a3",
-     t:{en:"E — EXPLAIN (Reason Codes)",zh:"E — 解释（原因码）",es:"E — EXPLICAR (razones)"},
-     s:{en:"Translate flags into plain causes.",zh:"把标记翻译成人话原因。",es:"Traducir flags a causas simples."},
-     platform:{intro:{en:"Short explanation: what changed, what it means, next action.",zh:"短解释：变了什么、意味着什么、下一步动作。",es:"Explicación corta: qué cambió, qué significa, siguiente acción."},
-               concept:{en:"Concept: people need next action, not theory.",zh:"概念：人需要下一步动作，不需要理论。",es:"Concepto: la gente necesita siguiente acción, no teoría."},
-               build:{en:"Build now: standardize 5–10 reason codes across pages.",zh:"现在建：全站标准化5–10个原因码。",es:"Construir ahora: estandarizar 5–10 códigos en el sitio."},
-               roadmap:{en:"Roadmap: map reason codes into Laws (bounds) and Products (actions).",zh:"路线图：原因码映射到法则（边界）与产品（动作）。",es:"Hoja de ruta: mapear códigos a Leyes (límites) y Productos (acciones)."}},
-     engineering:{intro:{en:"Reason codes bridge measurement and governance; preserve auditability.",zh:"原因码连接测量与治理，保持可审计。",es:"Códigos conectan medición y gobernanza; preservan auditabilidad."},
-                 concept:{en:"Concept: codes prevent narrative drift.",zh:"概念：代码防止叙事漂移。",es:"Concepto: códigos previenen deriva narrativa."},
-                 build:{en:"Build now: bind each code to threshold + action + receipt schema.",zh:"现在建：每个码绑定阈值+动作+收据架构。",es:"Construir ahora: ligar cada código a umbral+acción+esquema de recibo."},
-                 roadmap:{en:"Roadmap: require codes for every intervention (no silent fixes).",zh:"路线图：每次干预必须有原因码（无静默修复）。",es:"Hoja de ruta: exigir códigos para cada intervención (sin arreglos silenciosos)."}}
-    },
-
-    {c:"#c9a24a",
-     t:{en:"R — REPEAT (Window Discipline)",zh:"R — 重复（窗口纪律）",es:"R — REPETIR (ventanas)"},
-     s:{en:"Confirm stabilization over time.",zh:"用时间确认稳定。",es:"Confirmar estabilidad con el tiempo."},
-     platform:{intro:{en:"Check again tomorrow. Patterns show up.",zh:"明天再看一次，模式就出来。",es:"Revisar mañana. Aparecen patrones."},
-               concept:{en:"Concept: stability is consistency over windows.",zh:"概念：稳定=跨窗口一致。",es:"Concepto: estabilidad = consistencia por ventanas."},
-               build:{en:"Build now: pick one window size (daily/weekly) and stick to it.",zh:"现在建：选一个窗口（天/周）并坚持。",es:"Construir ahora: elegir tamaño de ventana (día/semana) y mantenerlo."},
-               roadmap:{en:"Roadmap: publish a readable timeline of flags and recoveries.",zh:"路线图：发布可读时间线：标记与恢复。",es:"Hoja de ruta: publicar línea temporal legible: flags y recuperaciones."}},
-     engineering:{intro:{en:"Verification: band re-entry, reduced variance, stable reason-code frequency over windows.",zh:"验证：回带、方差降低、原因码频率稳定（跨窗口）。",es:"Verificación: re-entrada a bandas, menor varianza y frecuencia estable de códigos por ventanas."},
-                 concept:{en:"Concept: windowed evidence beats snapshots.",zh:"概念：窗口证据胜过快照。",es:"Concepto: evidencia por ventanas vence snapshots."},
-                 build:{en:"Build now: store window aggregates + hashes for audit replay.",zh:"现在建：存窗口汇总+哈希用于审计回放。",es:"Construir ahora: guardar agregados por ventana + hashes para replay."},
-                 roadmap:{en:"Roadmap: integrate repeat checks into gating and escalation control.",zh:"路线图：把重复检查接入闸门与升级控制。",es:"Hoja de ruta: integrar chequeos repetidos en compuertas y control de escalación."}}
-    }
-  ];
+    return [
+      {
+        c:"#c9a24a",
+        t:{en:"Kernel Contract",zh:"内核契约",es:"Contrato Kernel"},
+        s:{en:"Source-of-truth dimensions and sea-level alignment.",zh:"真值维度与海平面对齐。",es:"Dimensiones de verdad y alineación del nivel del mar."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!k?.pass, !!k?.warn),
+            intro:{
+              en:"Observer result: upstream kernel truth is measured here before all downstream claims.",
+              zh:"观察结果：所有下游主张之前，这里先测上游内核真值。",
+              es:"Resultado observador: aquí se mide la verdad upstream del kernel antes de cualquier reclamo downstream."
+            },
+            meaning:{
+              en:"width="+(k?.width??"—")+"\nheight="+(k?.height??"—")+"\ntotal="+(k?.total??"—")+"\nseaLevel="+(k?.seaLevel??"—"),
+              zh:"宽="+(k?.width??"—")+"\n高="+(k?.height??"—")+"\n总数="+(k?.total??"—")+"\n海平面="+(k?.seaLevel??"—"),
+              es:"ancho="+(k?.width??"—")+"\nalto="+(k?.height??"—")+"\ntotal="+(k?.total??"—")+"\nseaLevel="+(k?.seaLevel??"—")
+            },
+            next:{
+              en:k?.reason||"",
+              zh:k?.reason||"",
+              es:k?.reason||""
+            }
+          };
+        }
+      },
+      {
+        c:"#34d399",
+        t:{en:"Planet Engine",zh:"星球引擎",es:"Motor Planetario"},
+        s:{en:"Field build and structure receipts.",zh:"字段构建与结构收据。",es:"Build de campo y recibos de estructura."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!e?.pass, !!e?.warn),
+            intro:{
+              en:"Observer result: this verifies whether the world can be instantiated as a lawful sample field.",
+              zh:"观察结果：这验证世界能否被实例化为合法样本场。",
+              es:"Resultado observador: esto verifica si el mundo puede instanciarse como campo de muestras legal."
+            },
+            meaning:{
+              en:"width="+(e?.width??"—")+"\nheight="+(e?.height??"—")+"\nsampleCount="+(e?.sampleCount??"—")+"\nsummary="+yn(!!e?.summary)+"\ncompleteness="+yn(!!e?.completeness),
+              zh:"宽="+(e?.width??"—")+"\n高="+(e?.height??"—")+"\n样本数="+(e?.sampleCount??"—")+"\n摘要="+yn(!!e?.summary)+"\n完整性="+yn(!!e?.completeness),
+              es:"ancho="+(e?.width??"—")+"\nalto="+(e?.height??"—")+"\nsampleCount="+(e?.sampleCount??"—")+"\nsummary="+yn(!!e?.summary)+"\ncompleteness="+yn(!!e?.completeness)
+            },
+            next:{
+              en:e?.reason||"",
+              zh:e?.reason||"",
+              es:e?.reason||""
+            }
+          };
+        }
+      },
+      {
+        c:"#93c5fd",
+        t:{en:"Control State",zh:"控制状态",es:"Estado de Control"},
+        s:{en:"Motion, camera, and orbital readability.",zh:"运动、相机与轨道可读性。",es:"Legibilidad de movimiento, cámara y órbita."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!c?.pass, !!c?.warn),
+            intro:{
+              en:"Observer result: this measures whether motion authority is alive enough to be trusted.",
+              zh:"观察结果：这测量运动权威是否足够活跃并值得信任。",
+              es:"Resultado observador: esto mide si la autoridad de movimiento está lo bastante viva para confiar en ella."
+            },
+            meaning:{
+              en:"mode="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\nzoom="+n(c?.zoom,4)+"\norbitPhase="+n(c?.orbitPhase,4),
+              zh:"模式="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\n缩放="+n(c?.zoom,4)+"\n轨道相位="+n(c?.orbitPhase,4),
+              es:"modo="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\nzoom="+n(c?.zoom,4)+"\norbitPhase="+n(c?.orbitPhase,4)
+            },
+            next:{
+              en:c?.reason||"",
+              zh:c?.reason||"",
+              es:c?.reason||""
+            }
+          };
+        }
+      },
+      {
+        c:"#f59e0b",
+        t:{en:"Observer Runtime",zh:"观察器运行时",es:"Runtime Observador"},
+        s:{en:"This page’s own runtime health.",zh:"本页自身运行时健康。",es:"La salud runtime de esta página."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!r?.pass, !!r?.warn),
+            intro:{
+              en:"Observer result: this only proves the gauges page is alive. It does not yet prove index draw health.",
+              zh:"观察结果：这只证明 gauges 页面活着，还不能证明 index 绘制健康。",
+              es:"Resultado observador: esto solo prueba que la página gauges está viva. Todavía no prueba la salud del draw del index."
+            },
+            meaning:{
+              en:"canvasOnThisPage="+yn(!!r?.canvas)+"\nstorage="+yn(!!r?.storage)+"\nvisible="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\ndiagnosticsQuery="+(r?.diagnosticsQuery??"—"),
+              zh:"本页canvas="+yn(!!r?.canvas)+"\n存储="+yn(!!r?.storage)+"\n可见="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\n诊断查询="+(r?.diagnosticsQuery??"—"),
+              es:"canvasEnEstaPágina="+yn(!!r?.canvas)+"\nstorage="+yn(!!r?.storage)+"\nvisible="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\ndiagnosticsQuery="+(r?.diagnosticsQuery??"—")
+            },
+            next:{
+              en:r?.reason||"",
+              zh:r?.reason||"",
+              es:r?.reason||""
+            }
+          };
+        }
+      },
+      {
+        c:"#a3a3a3",
+        t:{en:"Routing State",zh:"路由状态",es:"Estado de Ruta"},
+        s:{en:"Path, query, and observer position.",zh:"路径、查询与观察器位置。",es:"Ruta, query y posición del observador."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!rt?.pass, !!rt?.warn),
+            intro:{
+              en:"Observer result: routing on this page is stable and readable.",
+              zh:"观察结果：本页路由稳定且可读。",
+              es:"Resultado observador: el ruteo de esta página es estable y legible."
+            },
+            meaning:{
+              en:"pathname="+(rt?.pathname??"—")+"\nmodeQuery="+(rt?.modeQuery??"—")+"\nlane="+(rt?.lane??"—")+"\nlang="+lang+"\nstyle="+style+"\ntime="+time+"\ndepth="+depth,
+              zh:"路径="+(rt?.pathname??"—")+"\n模式查询="+(rt?.modeQuery??"—")+"\n通道="+(rt?.lane??"—")+"\n语言="+lang+"\n风格="+style+"\n时间="+time+"\n深度="+depth,
+              es:"ruta="+(rt?.pathname??"—")+"\nmodeQuery="+(rt?.modeQuery??"—")+"\nlane="+(rt?.lane??"—")+"\nlang="+lang+"\nstyle="+style+"\ntime="+time+"\ndepth="+depth
+            },
+            next:{
+              en:rt?.reason||"",
+              zh:rt?.reason||"",
+              es:rt?.reason||""
+            }
+          };
+        }
+      },
+      {
+        c:"#ff2b2b",
+        t:{en:"Layer Verdict",zh:"分层结论",es:"Veredicto por Capas"},
+        s:{en:"Where the real break class lives right now.",zh:"当前真实问题类所在层。",es:"Dónde vive ahora la clase real de la falla."},
+        getPack:function(){
+          return {
+            kind:statusKind(!!o?.pass, !!o?.warn),
+            intro:{
+              en:"This is the current compression. It tells you which layer to trust next.",
+              zh:"这是当前压缩结论。它告诉你下一步该信哪一层。",
+              es:"Esta es la compresión actual. Te dice en qué capa confiar después."
+            },
+            meaning:{
+              en:o?.reason||"—",
+              zh:o?.reason||"—",
+              es:o?.reason||"—"
+            },
+            next:{
+              en:o?.pass
+                ? "Next required: wire index execution receipts into this observer so render truth can be graded instead of inferred."
+                : "Next required: repair the failing upstream layer before expanding scene complexity.",
+              zh:o?.pass
+                ? "下一步要求：把 index 执行收据接入本观察器，这样 render 真值就能被评估，而不是靠推断。"
+                : "下一步要求：先修复失败的上游层，再扩展场景复杂度。",
+              es:o?.pass
+                ? "Siguiente requerido: cablear recibos de ejecución del index a este observador para calificar la verdad del render en vez de inferirla."
+                : "Siguiente requerido: reparar primero la capa upstream que falla antes de expandir complejidad de escena."
+            }
+          };
+        }
+      }
+    ];
+  }
 
   function getActiveDomains(){
-    return (mode==="lattice") ? LATTICE_DOMAINS : SHIMMER_DOMAINS;
+    return mode==="diagnostic" ? diagnosticDomains() : checklistDomains();
   }
 
-  // ===== Accordion state preserved across lane/lang/mode changes =====
-  var list=document.getElementById("list");
-  var rowRefs=[];
+  const list=document.getElementById("list");
+  let rowRefs=[];
 
   function closeAllRows(){
-    for(var i=0;i<rowRefs.length;i++){
+    for(let i=0;i<rowRefs.length;i++){
       rowRefs[i].row.classList.remove("open");
       rowRefs[i].chev.textContent="▸";
     }
   }
 
   function toggleRow(i){
-    var isOpen=rowRefs[i].row.classList.contains("open");
+    const isOpen=rowRefs[i].row.classList.contains("open");
     if(isOpen){
       rowRefs[i].row.classList.remove("open");
       rowRefs[i].chev.textContent="▸";
@@ -742,15 +1017,15 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function makeSubBubble(label){
-    var b=document.createElement("div");
+    const b=document.createElement("div");
     b.className="bubble";
     b.setAttribute("role","button");
     b.tabIndex=0;
 
-    var h=document.createElement("h4");
+    const h=document.createElement("h4");
     h.textContent=label;
 
-    var p=document.createElement("p");
+    const p=document.createElement("p");
     p.textContent="";
 
     b.appendChild(h);
@@ -760,73 +1035,76 @@ body::before,body::after{pointer-events:none!important}
     b.addEventListener("click", act, {passive:true});
     b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
 
-    return {wrap:b, p:p};
+    return {wrap:b,p:p};
   }
 
-  function buildRow(item, idx){
-    var row=document.createElement("div");
+  function buildRow(item,idx){
+    const row=document.createElement("div");
     row.className="row";
     row.style.setProperty("--c", item.c);
 
-    var head=document.createElement("div");
+    const head=document.createElement("div");
     head.className="head";
     head.setAttribute("role","button");
     head.tabIndex=0;
 
-    var hL=document.createElement("div");
+    const hL=document.createElement("div");
     hL.className="hL";
 
-    var mark=document.createElement("div");
+    const mark=document.createElement("div");
     mark.className="dmark";
     mark.style.background=item.c;
 
-    var tb=document.createElement("div");
+    const tb=document.createElement("div");
     tb.className="titleBlock";
 
-    var title=document.createElement("div");
+    const title=document.createElement("div");
     title.className="q";
 
-    var sub=document.createElement("div");
+    const sub=document.createElement("div");
     sub.className="sub";
 
     tb.appendChild(title);
     tb.appendChild(sub);
-
     hL.appendChild(mark);
     hL.appendChild(tb);
 
-    var chev=document.createElement("div");
+    const chev=document.createElement("div");
     chev.className="chev";
     chev.innerHTML='<span class="chevTxt">▸</span>';
 
     head.appendChild(hL);
     head.appendChild(chev);
 
-    var body=document.createElement("div");
+    const body=document.createElement("div");
     body.className="body";
 
-    var intro=document.createElement("p");
+    const statusPill=document.createElement("div");
+    statusPill.className="pill";
+    body.appendChild(statusPill);
+
+    const intro=document.createElement("p");
     intro.className="pdesc";
     body.appendChild(intro);
 
-    var bubbles=document.createElement("div");
+    const bubbles=document.createElement("div");
     bubbles.className="subBubbles";
 
-    var b1=makeSubBubble(labConcept());
-    var b2=makeSubBubble(labBuild());
-    var b3=makeSubBubble(labRoadmap());
+    const b1=makeSubBubble(labStatus());
+    const b2=makeSubBubble(labMeaning());
+    const b3=makeSubBubble(labNext());
 
     bubbles.appendChild(b1.wrap);
     bubbles.appendChild(b2.wrap);
     bubbles.appendChild(b3.wrap);
     body.appendChild(bubbles);
 
-    var actions=document.createElement("div");
+    const actions=document.createElement("div");
     actions.className="actions";
 
-    var a1=document.createElement("a"); a1.className="btn"; a1.setAttribute("data-route","/explore/frontier/"); actions.appendChild(a1);
-    var a2=document.createElement("a"); a2.className="btn"; a2.setAttribute("data-route","/laws/"); actions.appendChild(a2);
-    var a3=document.createElement("a"); a3.className="btn red"; a3.setAttribute("data-route","/gauges/"); actions.appendChild(a3);
+    const a1=document.createElement("a"); a1.className="btn"; a1.setAttribute("data-route","/index.html"); actions.appendChild(a1);
+    const a2=document.createElement("a"); a2.className="btn"; a2.setAttribute("data-route","/door/"); actions.appendChild(a2);
+    const a3=document.createElement("a"); a3.className="btn red"; a3.setAttribute("data-route","/laws/"); actions.appendChild(a3);
 
     body.appendChild(actions);
 
@@ -843,103 +1121,130 @@ body::before,body::after{pointer-events:none!important}
       chev:row.querySelector(".chevTxt"),
       title:title,
       sub:sub,
+      statusPill:statusPill,
       intro:intro,
-      b1p:b1.p, b2p:b2.p, b3p:b3.p,
+      b1p:b1.p,b2p:b2.p,b3p:b3.p,
       a1:a1,a2:a2,a3:a3
     });
   }
 
   function renderList(){
-    var DOMS=getActiveDomains();
-    var keep=openIndexByMode[mode]||0;
+    const DOMS=getActiveDomains();
+    let keep=openIndexByMode[mode]||0;
     if(keep<0) keep=0;
     if(keep>=DOMS.length) keep=0;
 
     list.innerHTML="";
     rowRefs=[];
-    for(var i=0;i<DOMS.length;i++){
-      buildRow(DOMS[i], i);
+    for(let i=0;i<DOMS.length;i++){
+      buildRow(DOMS[i],i);
     }
     toggleRow(keep);
   }
 
   function applyHeader(){
-    var pack=headerPacks();
-
     document.getElementById("hk").textContent =
-      (mode==="shimmer") ? pick3("FRONTIER · SHIMMER","前沿 · SHIMMER","FRONTERA · SHIMMER")
-                         : pick3("FRONTIER · LATTICE","前沿 · 晶格","FRONTERA · LATTICE");
+      mode==="checklist"
+        ? pick3("GAUGES · CHECKLIST","GAUGES · 清单","GAUGES · CHECKLIST")
+        : pick3("GAUGES · DIAGNOSTIC","GAUGES · 诊断","GAUGES · DIAGNÓSTICO");
 
     document.getElementById("ht").textContent =
-      (mode==="shimmer") ? pick3("SHIMMER (S.H.I.M.M.E.R.)","SHIMMER（S.H.I.M.M.E.R.）","SHIMMER (S.H.I.M.M.E.R.)")
-                         : pick3("LATTICE GEOMETRY","晶格几何","GEOMETRÍA LATTICE");
+      mode==="checklist"
+        ? pick3("METAVERSE STABILIZATION CHECKLIST","元宇宙稳定清单","CHECKLIST DE ESTABILIZACIÓN DEL METAVERSO")
+        : pick3("LIVE STABILIZATION DIAGNOSTIC","实时稳定诊断","DIAGNÓSTICO VIVO DE ESTABILIZACIÓN");
 
-    document.getElementById("hs").textContent = pack.hs;
-    document.getElementById("rule").textContent = pack.rule;
+    document.getElementById("hs").textContent =
+      mode==="checklist"
+        ? pick3(
+            "This side answers what must be true before the next layer is lawful. It is progression truth, not guesswork.",
+            "这一面回答：在下一层合法之前，哪些条件必须为真。它是进度真值，不是猜测。",
+            "Este lado responde qué debe ser verdadero antes de que la siguiente capa sea legal. Es verdad de progresión, no adivinanza."
+          )
+        : pick3(
+            "This side answers what is passing now, what is failing now, and where the break class actually lives.",
+            "这一面回答：现在什么通过，什么失败，以及问题类真正位于哪一层。",
+            "Este lado responde qué pasa ahora, qué falla ahora y dónde vive realmente la clase de la falla."
+          );
+
+    document.getElementById("rule").textContent =
+      mode==="checklist"
+        ? pick3(
+            "Rule: do not add plants, buildings, or NPCs until stabilization layers become admissible in order.",
+            "规则：在稳定层按顺序变得可采信之前，不要添加植物、建筑或 NPC。",
+            "Regla: no añadir plantas, edificios o NPCs hasta que las capas de estabilización sean admisibles en orden."
+          )
+        : pick3(
+            "Rule: this observer may reveal truth, but it must not pretend to validate index render execution until live compass receipts are wired in.",
+            "规则：此观察器可以揭示真值，但在 live compass 收据接入前，它不能假装验证 index 渲染执行。",
+            "Regla: este observador puede revelar verdad, pero no debe fingir validar la ejecución render del index hasta que se conecten recibos vivos del compass."
+          );
 
     document.getElementById("band").textContent =
-      (mode==="shimmer") ? pick3("SHIMMER DOMAINS","SHIMMER 域","DOMINIOS SHIMMER")
-                         : pick3("LATTICE DOMAINS","晶格域","DOMINIOS LATTICE");
+      mode==="checklist"
+        ? pick3("STABILIZATION LAYERS","稳定层","CAPAS DE ESTABILIZACIÓN")
+        : pick3("LIVE OBSERVER READOUT","实时观察读数","LECTURA DEL OBSERVADOR VIVO");
 
-    document.getElementById("btnFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
-    document.getElementById("btnExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("btnHome").textContent     = pick3("HOME","主页","INICIO");
+    document.getElementById("btnDoor").textContent=pick3("DOOR","门","PUERTA");
+    document.getElementById("btnIndex").textContent=pick3("INDEX","索引","ÍNDICE");
+    document.getElementById("btnProducts").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockDoor").textContent=pick3("DOOR","门","PUERTA");
+    document.getElementById("dockIndex").textContent=pick3("INDEX","索引","ÍNDICE");
+    document.getElementById("dockExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
 
-    document.getElementById("dockFrontier").textContent = pick3("FRONTIER","前沿","FRONTERA");
-    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent   = pick3("GAUGES","量规","MEDIDORES");
-
-    document.getElementById("modeShimmer").textContent = pick3("SHIMMER","SHIMMER","SHIMMER");
-    document.getElementById("modeLattice").textContent = pick3("LATTICE","晶格","LATTICE");
-
-    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
-    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
+    document.getElementById("modeChecklist").textContent=pick3("CHECKLIST","清单","CHECKLIST");
+    document.getElementById("modeDiagnostic").textContent=pick3("DIAGNOSTIC","诊断","DIAGNÓSTICO");
+    document.getElementById("lanePlatform").textContent=pick3("PLATFORM","平台","PLATAFORMA");
+    document.getElementById("laneEngineering").textContent=pick3("ENGINEERING","工程","INGENIERÍA");
 
     document.getElementById("modeState").textContent =
-      (lang==="zh") ? ("模式："+(mode==="shimmer"?"SHIMMER":"晶格")) :
-      (lang==="es") ? ("Modo: "+(mode==="shimmer"?"SHIMMER":"LATTICE")) :
-      ("Mode: "+(mode==="shimmer"?"SHIMMER":"LATTICE"));
+      (lang==="zh")
+        ? ("模式："+(mode==="checklist"?"清单":"诊断"))
+        : (lang==="es")
+          ? ("Modo: "+(mode==="checklist"?"CHECKLIST":"DIAGNÓSTICO"))
+          : ("Mode: "+(mode==="checklist"?"CHECKLIST":"DIAGNOSTIC"));
 
     document.getElementById("laneState").textContent =
-      (lang==="zh") ? ("当前透镜："+laneLabel()) :
-      (lang==="es") ? ("Lente actual: "+laneLabel()) :
-      ("Current lens: "+laneLabel());
+      (lang==="zh")
+        ? ("当前透镜："+laneLabel())
+        : (lang==="es")
+          ? ("Lente actual: "+laneLabel())
+          : ("Current lens: "+laneLabel());
 
     document.getElementById("langState").textContent =
-      (lang==="zh") ? ("语言：中文") :
-      (lang==="es") ? ("Idioma: ES") :
-      ("Lang: EN");
+      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
 
     setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
     setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    setPressed(["modeShimmer","modeLattice"], mode==="shimmer"?"modeShimmer":"modeLattice");
+    setPressed(["modeChecklist","modeDiagnostic"], mode==="checklist"?"modeChecklist":"modeDiagnostic");
   }
 
   function updateRows(){
-    var DOMS=getActiveDomains();
-    var keep=openIndexByMode[mode]||0;
+    const DOMS=getActiveDomains();
+    let keep=openIndexByMode[mode]||0;
     if(keep<0) keep=0;
     if(keep>=DOMS.length) keep=0;
 
-    for(var i=0;i<DOMS.length;i++){
-      var item=DOMS[i];
-      var r=rowRefs[i];
+    for(let i=0;i<DOMS.length;i++){
+      const item=DOMS[i];
+      const pack=item.getPack();
+      const r=rowRefs[i];
       if(!r) continue;
 
-      r.title.textContent = (lang==="zh")?item.t.zh:(lang==="es")?(item.t.es||item.t.en):item.t.en;
-      r.sub.textContent   = (lang==="zh")?item.s.zh:(lang==="es")?(item.s.es||item.s.en):item.s.en;
+      r.title.textContent=(lang==="zh")?item.t.zh:(lang==="es"?item.t.es:item.t.en);
+      r.sub.textContent=(lang==="zh")?item.s.zh:(lang==="es"?item.s.es:item.s.en);
 
-      var pack = (lane==="engineering") ? item.engineering : item.platform;
+      r.statusPill.className="pill "+pack.kind;
+      r.statusPill.textContent=statusLabel(pack.kind);
 
-      r.intro.textContent = (lang==="zh")?pack.intro.zh:(lang==="es")?(pack.intro.es||pack.intro.en):pack.intro.en;
-      r.b1p.textContent   = (lang==="zh")?pack.concept.zh:(lang==="es")?(pack.concept.es||pack.concept.en):pack.concept.en;
-      r.b2p.textContent   = (lang==="zh")?pack.build.zh:(lang==="es")?(pack.build.es||pack.build.en):pack.build.en;
-      r.b3p.textContent   = (lang==="zh")?pack.roadmap.zh:(lang==="es")?(pack.roadmap.es||pack.roadmap.en):pack.roadmap.en;
+      r.intro.textContent=(lang==="zh")?pack.intro.zh:(lang==="es"?pack.intro.es:pack.intro.en);
+      r.b1p.textContent=statusLabel(pack.kind);
+      r.b2p.textContent=(lang==="zh")?pack.meaning.zh:(lang==="es"?pack.meaning.es:pack.meaning.en);
+      r.b3p.textContent=(lang==="zh")?pack.next.zh:(lang==="es"?pack.next.es:pack.next.en);
 
-      r.a1.textContent = openLabel()+": "+pick3("FRONTIER INDEX","前沿索引","ÍNDICE FRONTERA");
-      r.a2.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");
-      r.a3.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+      r.a1.textContent=openLabel()+": "+pick3("INDEX","索引","ÍNDICE");
+      r.a2.textContent=openLabel()+": "+pick3("DOOR","门","PUERTA");
+      r.a3.textContent=openLabel()+": "+pick3("LAWS","法则","LEYES");
     }
 
     closeAllRows();
@@ -947,7 +1252,6 @@ body::before,body::after{pointer-events:none!important}
     wireAll();
   }
 
-  // ===== No reload on language/lane/mode changes =====
   function setLang(next){
     if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang=next;
@@ -966,7 +1270,7 @@ body::before,body::after{pointer-events:none!important}
   }
 
   function setMode(next){
-    if(next!=="shimmer" && next!=="lattice") next="shimmer";
+    if(next!=="checklist" && next!=="diagnostic") next="checklist";
     mode=next;
     applyHeader();
     renderList();
@@ -980,14 +1284,24 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
   document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
 
-  document.getElementById("modeShimmer").addEventListener("click", function(){ setMode("shimmer"); }, {passive:true});
-  document.getElementById("modeLattice").addEventListener("click", function(){ setMode("lattice"); }, {passive:true});
+  document.getElementById("modeChecklist").addEventListener("click", function(){ setMode("checklist"); }, {passive:true});
+  document.getElementById("modeDiagnostic").addEventListener("click", async function(){
+    mode="diagnostic";
+    runtimeSnapshot=await collectRuntime();
+    applyHeader();
+    renderList();
+    updateRows();
+  }, {passive:true});
 
-  // ===== INIT =====
-  renderList();
-  applyHeader();
-  updateRows();
-  wireAll();
+  async function init(){
+    runtimeSnapshot=await collectRuntime();
+    renderList();
+    applyHeader();
+    updateRows();
+    wireAll();
+  }
+
+  init();
 })();
 </script>
 

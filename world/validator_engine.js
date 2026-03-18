@@ -6,7 +6,13 @@ import {
   ENGINE_DEPENDENCY_MATRIX_V1,
   COMPLETENESS_THRESHOLDS_V1,
   isValidLobeId,
-  RECEIPT_LAW_SPEC_V1
+  RECEIPT_LAW_SPEC_V1,
+  LOCAL_SHARD_CONSTANT_V1,
+  MAX_SHARD_DEPTH_V1,
+  OBSERVE_MODE_SHARD_POLICY_V1,
+  BUDGET_SIGNAL_LADDER_V1,
+  isValidMicroLobeAddress,
+  MICRO_LOBE_RECEIPT_V1
 } from "./world_kernel.js";
 
 function isPlainObject(value) {
@@ -33,18 +39,43 @@ function hasOwn(source, key) {
   return Object.prototype.hasOwnProperty.call(source, key);
 }
 
+function isValidBudgetClass(value) {
+  return (
+    value === "NOMINAL" ||
+    value === "STRESS" ||
+    value === "CRITICAL" ||
+    value === "EMERGENCY"
+  );
+}
+
+function isMicroLobePacket(packet) {
+  return (
+    hasOwn(packet, "parentLobeId") ||
+    hasOwn(packet, "microLobeId") ||
+    hasOwn(packet, "shardDepth") ||
+    hasOwn(packet, "budgetClass")
+  );
+}
+
 function computeFaultClass(reason) {
   switch (reason) {
     case "invalid_packet_shape":
     case "missing_required_field":
+    case "missing_micro_lobe_field":
     case "invalid_engine_id":
     case "invalid_lobe_id":
+    case "invalid_micro_lobe_address":
+    case "invalid_parent_lobe_id":
+    case "invalid_micro_lobe_id":
+    case "invalid_shard_depth":
     case "invalid_state_index_depth":
     case "invalid_buffer_class":
     case "invalid_hash":
     case "invalid_stale_flag":
     case "invalid_dependencies_shape":
     case "invalid_completeness":
+    case "invalid_budget_class":
+    case "invalid_budget_ladder":
       return FAULT_CLASS_LADDER_V1.CLASS_A;
 
     case "stale_packet":
@@ -53,8 +84,11 @@ function computeFaultClass(reason) {
       return FAULT_CLASS_LADDER_V1.CLASS_B;
 
     case "completeness_below_threshold":
+    case "budget_stress":
+    case "budget_critical":
       return FAULT_CLASS_LADDER_V1.CLASS_C;
 
+    case "budget_emergency":
     case "law_surface_invalid":
     default:
       return FAULT_CLASS_LADDER_V1.CLASS_D;
@@ -66,6 +100,12 @@ function makeReceipt({
   signedAuthority,
   engineId = "",
   lobeId = null,
+  parentLobeId = null,
+  microLobeId = null,
+  shardDepth = null,
+  budgetClass = "",
+  precisionMode = "",
+  localShardConstant = LOCAL_SHARD_CONSTANT_V1,
   faultClass,
   reason,
   packetHash = "",
@@ -77,6 +117,12 @@ function makeReceipt({
     signedAuthority,
     engineId,
     lobeId,
+    parentLobeId,
+    microLobeId,
+    shardDepth,
+    budgetClass,
+    precisionMode,
+    localShardConstant,
     faultClass,
     reason,
     packetHash,
@@ -94,10 +140,19 @@ function validateLawSurface() {
   if (typeof isValidLobeId !== "function") return false;
   if (!isPlainObject(RECEIPT_LAW_SPEC_V1)) return false;
   if (!Array.isArray(RECEIPT_LAW_SPEC_V1.REQUIRED_FIELDS)) return false;
+
+  if (!Number.isInteger(LOCAL_SHARD_CONSTANT_V1) || LOCAL_SHARD_CONSTANT_V1 <= 0) return false;
+  if (!Number.isInteger(MAX_SHARD_DEPTH_V1) || MAX_SHARD_DEPTH_V1 < 0) return false;
+  if (!isPlainObject(OBSERVE_MODE_SHARD_POLICY_V1)) return false;
+  if (!isPlainObject(BUDGET_SIGNAL_LADDER_V1)) return false;
+  if (typeof isValidMicroLobeAddress !== "function") return false;
+  if (!isPlainObject(MICRO_LOBE_RECEIPT_V1)) return false;
+  if (!Array.isArray(MICRO_LOBE_RECEIPT_V1.REQUIRED)) return false;
+
   return true;
 }
 
-function validateRequiredFields(packet) {
+function validateRootRequiredFields(packet) {
   const required = RECEIPT_LAW_SPEC_V1.REQUIRED_FIELDS;
   for (let i = 0; i < required.length; i += 1) {
     if (!hasOwn(packet, required[i])) {
@@ -113,6 +168,27 @@ function validateRequiredFields(packet) {
   return null;
 }
 
+function validateMicroLobeRequiredFields(packet) {
+  if (!isMicroLobePacket(packet)) return null;
+
+  const required = MICRO_LOBE_RECEIPT_V1.REQUIRED;
+  for (let i = 0; i < required.length; i += 1) {
+    if (!hasOwn(packet, required[i])) {
+      return makeReceipt({
+        admissible: false,
+        signedAuthority: false,
+        engineId: normalizeString(packet.engineId),
+        lobeId: packet.lobeId ?? null,
+        faultClass: computeFaultClass("missing_micro_lobe_field"),
+        reason: "missing_micro_lobe_field",
+        packetHash: normalizeString(packet.hash),
+        details: { field: required[i] }
+      });
+    }
+  }
+  return null;
+}
+
 function validateEngineIdentity(packet) {
   const engineId = normalizeString(packet.engineId);
   if (!ALLOWED_ENGINE_IDS_V1.includes(engineId)) {
@@ -121,6 +197,10 @@ function validateEngineIdentity(packet) {
       signedAuthority: false,
       engineId,
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_engine_id"),
       reason: "invalid_engine_id",
       packetHash: normalizeString(packet.hash)
@@ -136,11 +216,95 @@ function validateLobe(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_lobe_id"),
       reason: "invalid_lobe_id",
       packetHash: normalizeString(packet.hash)
     });
   }
+  return null;
+}
+
+function validateMicroLobeAddressLaw(packet) {
+  if (!isMicroLobePacket(packet)) return null;
+
+  if (!isFiniteNumber(packet.parentLobeId)) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_parent_lobe_id"),
+      reason: "invalid_parent_lobe_id",
+      packetHash: normalizeString(packet.hash)
+    });
+  }
+
+  if (!isFiniteNumber(packet.microLobeId)) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_micro_lobe_id"),
+      reason: "invalid_micro_lobe_id",
+      packetHash: normalizeString(packet.hash)
+    });
+  }
+
+  if (!Number.isInteger(packet.shardDepth) || packet.shardDepth < 0 || packet.shardDepth > MAX_SHARD_DEPTH_V1) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_shard_depth"),
+      reason: "invalid_shard_depth",
+      packetHash: normalizeString(packet.hash),
+      details: {
+        maxDepth: MAX_SHARD_DEPTH_V1,
+        actual: packet.shardDepth
+      }
+    });
+  }
+
+  const admissible = isValidMicroLobeAddress({
+    parentId: packet.parentLobeId,
+    childId: packet.microLobeId,
+    depth: packet.shardDepth
+  });
+
+  if (!admissible) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_micro_lobe_address"),
+      reason: "invalid_micro_lobe_address",
+      packetHash: normalizeString(packet.hash)
+    });
+  }
+
   return null;
 }
 
@@ -151,6 +315,10 @@ function validateStateIndex(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_state_index_depth"),
       reason: "invalid_state_index_depth",
       packetHash: normalizeString(packet.hash),
@@ -170,6 +338,10 @@ function validateBufferClass(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_buffer_class"),
       reason: "invalid_buffer_class",
       packetHash: normalizeString(packet.hash),
@@ -190,6 +362,10 @@ function validateIntegrityAndHash(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_hash"),
       reason: "invalid_hash",
       packetHash: hash
@@ -205,6 +381,10 @@ function validateStaleFlag(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_stale_flag"),
       reason: "invalid_stale_flag",
       packetHash: normalizeString(packet.hash)
@@ -217,6 +397,10 @@ function validateStaleFlag(packet) {
       signedAuthority: false,
       engineId: normalizeString(packet.engineId),
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("stale_packet"),
       reason: "stale_packet",
       packetHash: normalizeString(packet.hash)
@@ -241,10 +425,17 @@ function validateDependencies(packet, dependencyReceipts) {
         signedAuthority: false,
         engineId,
         lobeId: packet.lobeId ?? null,
+        parentLobeId: packet.parentLobeId ?? null,
+        microLobeId: packet.microLobeId ?? null,
+        shardDepth: packet.shardDepth ?? null,
+        budgetClass: normalizeString(packet.budgetClass),
         faultClass: computeFaultClass("dependency_missing"),
         reason: "dependency_missing",
         packetHash: normalizeString(packet.hash),
-        details: { dependency: dep, source: "packet.dependencies" }
+        details: {
+          dependency: dep,
+          source: "packet.dependencies"
+        }
       });
     }
 
@@ -255,6 +446,10 @@ function validateDependencies(packet, dependencyReceipts) {
         signedAuthority: false,
         engineId,
         lobeId: packet.lobeId ?? null,
+        parentLobeId: packet.parentLobeId ?? null,
+        microLobeId: packet.microLobeId ?? null,
+        shardDepth: packet.shardDepth ?? null,
+        budgetClass: normalizeString(packet.budgetClass),
         faultClass: computeFaultClass("dependency_not_ready"),
         reason: "dependency_not_ready",
         packetHash: normalizeString(packet.hash),
@@ -277,6 +472,10 @@ function validateCompleteness(packet) {
       signedAuthority: false,
       engineId,
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("invalid_completeness"),
       reason: "invalid_completeness",
       packetHash: normalizeString(packet.hash)
@@ -289,6 +488,10 @@ function validateCompleteness(packet) {
       signedAuthority: false,
       engineId,
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("law_surface_invalid"),
       reason: "law_surface_invalid",
       packetHash: normalizeString(packet.hash),
@@ -302,12 +505,137 @@ function validateCompleteness(packet) {
       signedAuthority: false,
       engineId,
       lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
       faultClass: computeFaultClass("completeness_below_threshold"),
       reason: "completeness_below_threshold",
       packetHash: normalizeString(packet.hash),
       details: {
         completeness,
         threshold
+      }
+    });
+  }
+
+  return null;
+}
+
+function validateBudgetLawSurface() {
+  const ladder = normalizeObject(BUDGET_SIGNAL_LADDER_V1);
+  const required = ["NOMINAL", "STRESS", "CRITICAL", "EMERGENCY"];
+
+  for (let i = 0; i < required.length; i += 1) {
+    const key = required[i];
+    const entry = normalizeObject(ladder[key]);
+
+    if (!isFiniteNumber(entry.validator_ms) || !isFiniteNumber(entry.frame_drop)) {
+      return false;
+    }
+
+    if (!normalizeString(entry.action)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function validateBudgetClass(packet) {
+  if (!isMicroLobePacket(packet)) return null;
+
+  if (!isValidBudgetClass(packet.budgetClass)) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_budget_class"),
+      reason: "invalid_budget_class",
+      packetHash: normalizeString(packet.hash)
+    });
+  }
+
+  if (!validateBudgetLawSurface()) {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: normalizeString(packet.budgetClass),
+      faultClass: computeFaultClass("invalid_budget_ladder"),
+      reason: "invalid_budget_ladder",
+      packetHash: normalizeString(packet.hash)
+    });
+  }
+
+  if (packet.budgetClass === "STRESS") {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: packet.budgetClass,
+      precisionMode: normalizeString(OBSERVE_MODE_SHARD_POLICY_V1.MANDATORY_PRECISION),
+      localShardConstant: LOCAL_SHARD_CONSTANT_V1,
+      faultClass: computeFaultClass("budget_stress"),
+      reason: "budget_stress",
+      packetHash: normalizeString(packet.hash),
+      details: {
+        action: normalizeString(BUDGET_SIGNAL_LADDER_V1.STRESS?.action)
+      }
+    });
+  }
+
+  if (packet.budgetClass === "CRITICAL") {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: packet.budgetClass,
+      precisionMode: normalizeString(OBSERVE_MODE_SHARD_POLICY_V1.MANDATORY_PRECISION),
+      localShardConstant: LOCAL_SHARD_CONSTANT_V1,
+      faultClass: computeFaultClass("budget_critical"),
+      reason: "budget_critical",
+      packetHash: normalizeString(packet.hash),
+      details: {
+        action: normalizeString(BUDGET_SIGNAL_LADDER_V1.CRITICAL?.action)
+      }
+    });
+  }
+
+  if (packet.budgetClass === "EMERGENCY") {
+    return makeReceipt({
+      admissible: false,
+      signedAuthority: false,
+      engineId: normalizeString(packet.engineId),
+      lobeId: packet.lobeId ?? null,
+      parentLobeId: packet.parentLobeId ?? null,
+      microLobeId: packet.microLobeId ?? null,
+      shardDepth: packet.shardDepth ?? null,
+      budgetClass: packet.budgetClass,
+      precisionMode: normalizeString(OBSERVE_MODE_SHARD_POLICY_V1.MANDATORY_PRECISION),
+      localShardConstant: LOCAL_SHARD_CONSTANT_V1,
+      faultClass: computeFaultClass("budget_emergency"),
+      reason: "budget_emergency",
+      packetHash: normalizeString(packet.hash),
+      details: {
+        action: normalizeString(BUDGET_SIGNAL_LADDER_V1.EMERGENCY?.action)
       }
     });
   }
@@ -326,7 +654,6 @@ export function createValidatorEngine() {
       });
     }
 
-    const packet = normalizeObject(packetInput);
     if (!isPlainObject(packetInput)) {
       return makeReceipt({
         admissible: false,
@@ -336,28 +663,44 @@ export function createValidatorEngine() {
       });
     }
 
+    const packet = normalizeObject(packetInput);
+
     return (
-      validateRequiredFields(packet) ||
+      validateRootRequiredFields(packet) ||
+      validateMicroLobeRequiredFields(packet) ||
       validateEngineIdentity(packet) ||
       validateLobe(packet) ||
+      validateMicroLobeAddressLaw(packet) ||
       validateStateIndex(packet) ||
       validateBufferClass(packet) ||
       validateIntegrityAndHash(packet) ||
       validateStaleFlag(packet) ||
       validateDependencies(packet, dependencyReceipts) ||
       validateCompleteness(packet) ||
+      validateBudgetClass(packet) ||
       makeReceipt({
         admissible: true,
         signedAuthority: true,
         engineId: normalizeString(packet.engineId),
         lobeId: packet.lobeId,
+        parentLobeId: hasOwn(packet, "parentLobeId") ? packet.parentLobeId : null,
+        microLobeId: hasOwn(packet, "microLobeId") ? packet.microLobeId : null,
+        shardDepth: hasOwn(packet, "shardDepth") ? packet.shardDepth : null,
+        budgetClass: hasOwn(packet, "budgetClass") ? normalizeString(packet.budgetClass) : "NOMINAL",
+        precisionMode: isMicroLobePacket(packet)
+          ? normalizeString(OBSERVE_MODE_SHARD_POLICY_V1.MANDATORY_PRECISION)
+          : "",
+        localShardConstant: LOCAL_SHARD_CONSTANT_V1,
         faultClass: "",
         reason: "",
         packetHash: normalizeString(packet.hash),
         details: {
           stateIndexDepth: packet.stateIndexDepth,
           bufferClass: packet.bufferClass,
-          completeness: packet.completeness
+          completeness: packet.completeness,
+          resolutionMultiplier: isMicroLobePacket(packet)
+            ? OBSERVE_MODE_SHARD_POLICY_V1.RESOLUTION_MULTIPLIER
+            : 1
         }
       })
     );

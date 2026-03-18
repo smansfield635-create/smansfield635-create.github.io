@@ -25,27 +25,17 @@ function getProjectionState(viewState = {}, ctx) {
   const state = normalizeObject(viewState);
   const width = ctx.canvas.width;
   const height = ctx.canvas.height;
-  const observeMode = state.observeMode === true;
-  const baseRadius = isFiniteNumber(state.radius)
-    ? state.radius
-    : Math.min(width, height) * WORLD_KERNEL.constants.worldRadiusFactor;
-  const radiusScale = isFiniteNumber(state.radiusScale)
-    ? state.radiusScale
-    : observeMode ? 1.22 : 1;
 
   return Object.freeze({
     width,
     height,
     centerX: isFiniteNumber(state.centerX) ? state.centerX : width * 0.5,
-    centerY: isFiniteNumber(state.centerY)
-      ? state.centerY
-      : observeMode
-        ? height * 0.615
-        : height * 0.585,
-    radius: baseRadius * radiusScale,
-    observeMode,
-    radiusScale,
-    starfieldSuppressed: state.starfieldSuppressed === true || observeMode === true
+    centerY: isFiniteNumber(state.centerY) ? state.centerY : height * 0.5,
+    radius: isFiniteNumber(state.radius)
+      ? state.radius
+      : Math.min(width, height) * WORLD_KERNEL.constants.worldRadiusFactor,
+    observeMode: state.observeMode === true,
+    starfieldSuppressed: state.starfieldSuppressed === true
   });
 }
 
@@ -492,7 +482,7 @@ function drawSpace(ctx, projectionState, viewState = {}) {
   ctx.fillStyle = nebulaB;
   ctx.fillRect(0, 0, projectionState.width, projectionState.height);
 
-  if (viewState.starfieldSuppressed !== true) {
+  if (!(viewState.starfieldSuppressed === true || projectionState.starfieldSuppressed === true)) {
     const seed = Math.round(
       (isFiniteNumber(viewState.seed) ? viewState.seed : 1) * 9973 +
       projectionState.width +
@@ -518,22 +508,24 @@ function drawSpace(ctx, projectionState, viewState = {}) {
 }
 
 function drawAtmosphere(ctx, projectionState) {
+  if (projectionState.observeMode) return;
+
   ctx.save();
 
-  const outerRadius = projectionState.radius * 1.028;
+  const outerRadius = projectionState.radius * 1.014;
 
   const glow = ctx.createRadialGradient(
     projectionState.centerX,
     projectionState.centerY,
-    projectionState.radius * 0.95,
+    projectionState.radius * 0.97,
     projectionState.centerX,
     projectionState.centerY,
     outerRadius
   );
 
   glow.addColorStop(0, "rgba(40,120,255,0.00)");
-  glow.addColorStop(0.84, "rgba(62,146,255,0.035)");
-  glow.addColorStop(1, "rgba(96,180,255,0.08)");
+  glow.addColorStop(0.90, "rgba(62,146,255,0.024)");
+  glow.addColorStop(1, "rgba(96,180,255,0.052)");
 
   ctx.beginPath();
   ctx.arc(
@@ -825,8 +817,10 @@ function drawPlanetOutline(ctx, projectionState) {
     0,
     Math.PI * 2
   );
-  ctx.strokeStyle = "rgba(190,220,255,0.18)";
-  ctx.lineWidth = 0.9;
+  ctx.strokeStyle = projectionState.observeMode
+    ? "rgba(190,220,255,0.10)"
+    : "rgba(190,220,255,0.18)";
+  ctx.lineWidth = projectionState.observeMode ? 0.8 : 0.9;
   ctx.stroke();
   ctx.restore();
 }

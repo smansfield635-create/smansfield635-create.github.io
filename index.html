@@ -523,6 +523,41 @@ body[data-diagnostics="full"] .debug-panel{
   transform:translateY(0);
 }
 
+.boot-status{
+  position:absolute;
+  left:16px;
+  top:96px;
+  z-index:18;
+  max-width:min(560px, calc(100vw - 32px));
+  padding:12px 14px;
+  border-radius:16px;
+  border:1px solid rgba(255,180,120,.24);
+  background:rgba(18,10,8,.72);
+  color:rgba(255,240,224,.94);
+  box-shadow:0 14px 34px rgba(0,0,0,.24);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.boot-status.is-visible{
+  display:block;
+}
+.boot-status-title{
+  margin:0 0 6px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:rgba(255,214,160,.96);
+}
+.boot-status-copy{
+  margin:0;
+  font-size:13px;
+  line-height:1.45;
+  color:rgba(255,236,220,.88);
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
 body[data-mode="round"]{
   --heroDim:1;
   --uiAlpha:1;
@@ -621,6 +656,10 @@ body[data-mode="observe"] .diagnostics-summary{
   }
   .debug-panel{
     bottom:84px;
+  }
+  .boot-status{
+    top:106px;
+    font-size:12px;
   }
 }
 
@@ -731,20 +770,18 @@ body[data-mode="observe"] .diagnostics-summary{
   </div>
 
   <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
+
+  <div id="boot-status" class="boot-status" aria-live="polite">
+    <p class="boot-status-title">Compass Boot Status</p>
+    <p class="boot-status-copy" id="boot-status-copy"></p>
+  </div>
 </div>
 
 <script type="module">
-import { createPlanetEngine } from "/world/planet_engine.js";
-import { createRenderer } from "/world/render.js";
-import { createControlSystem } from "/world/control.js";
-import { createInstruments } from "/assets/instruments.js";
-
 const params = new URLSearchParams(location.search);
-const initialModeParam = params.get("mode");
-
 let currentMode =
-  initialModeParam === "flat" || initialModeParam === "observe"
-    ? initialModeParam
+  params.get("mode") === "flat" || params.get("mode") === "observe"
+    ? params.get("mode")
     : "round";
 
 const body = document.body;
@@ -758,6 +795,8 @@ const heroLayer = document.getElementById("hero-layer");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
+const bootStatus = document.getElementById("boot-status");
+const bootStatusCopy = document.getElementById("boot-status-copy");
 
 const btnFlat = document.getElementById("btn-flat");
 const btnRound = document.getElementById("btn-round");
@@ -772,16 +811,16 @@ const overlayMap = Object.freeze({
   "west-explore": document.getElementById("marker-west")
 });
 
-const planetEngine = createPlanetEngine();
-const renderer = createRenderer();
-const control = createControlSystem();
-const instruments = createInstruments();
-
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v9";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v10";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
 const activePointers = new Map();
+
+let planetEngine = null;
+let renderer = null;
+let control = null;
+let instruments = null;
 
 let planetField = null;
 let rafId = 0;
@@ -792,6 +831,7 @@ let lastX = 0;
 let lastY = 0;
 let pinchStartDistance = 0;
 let pinchStartZoom = 1;
+let runtimeReady = false;
 
 let lastRenderReceipt = Object.freeze({
   audit: Object.freeze({})
@@ -854,6 +894,20 @@ const orbitalSystem = Object.freeze({
   ])
 });
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function showBootStatus(message) {
+  bootStatusCopy.textContent = message;
+  bootStatus.classList.add("is-visible");
+}
+
+function clearBootStatus() {
+  bootStatusCopy.textContent = "";
+  bootStatus.classList.remove("is-visible");
+}
+
 function isFlatMode() {
   return currentMode === "flat";
 }
@@ -911,22 +965,21 @@ function withModeQuery(route) {
   return `${route}${glue}mode=${currentMode}`;
 }
 
-function resizeWorld() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  canvas.width = width;
-  canvas.height = height;
-  control.resize(width, height);
+function navigateToMode(nextMode) {
+  location.href = buildModeHref(nextMode);
 }
 
-function buildPlanetFieldOnce() {
-  if (!planetField) {
-    planetField = planetEngine.buildPlanetField({});
+function persistMotionState() {
+  if (!runtimeReady || !control || !isRoundVisualMode()) return;
+  try {
+    sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
+  } catch {
+    return;
   }
 }
 
 function restoreMotionState() {
-  if (!isRoundVisualMode()) return;
+  if (!runtimeReady || !control || !isRoundVisualMode()) return;
   try {
     const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
     if (!raw) return;
@@ -936,119 +989,176 @@ function restoreMotionState() {
   }
 }
 
-function persistMotionState() {
-  if (!isRoundVisualMode()) return;
-  try {
-    sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
-  } catch {
-    return;
+function resizeWorld() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+  if (runtimeReady && control && typeof control.resize === "function") {
+    control.resize(width, height);
   }
 }
 
-function safeProjectionSummary() {
-  if (typeof control.getProjectionSummary === "function") {
-    const summary = control.getProjectionSummary();
-    return summary && typeof summary === "object" ? summary : {};
-  }
-  return {};
-}
-
-function safeMotionReceipt(dtMs) {
-  const motionState =
-    typeof control.getMotionState === "function"
-      ? control.getMotionState()
-      : {};
-  const orbitalState =
-    typeof control.getOrbitalState === "function"
-      ? control.getOrbitalState()
-      : {};
-
-  return {
-    motionRunning: isRoundVisualMode(),
-    rafActive: rafId !== 0,
-    pageVisible: document.visibilityState === "visible",
-    pageRestored: true,
-    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
-    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: orbitVelocityForMode(),
-    orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
-    blockedDragOnStarCount: 0,
-    starTapCount: 0,
-    dtMs
-  };
-}
-
-function buildRuntimePacket(dtMs) {
-  const projectionSummary = safeProjectionSummary();
-  const sample =
-    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
-    planetField?.samples?.[128]?.[128] ||
-    null;
-
-  const instrument = instruments.buildInstrumentReceipt({
-    currentSample: sample,
-    previousSample: sample,
-    tickIndex: 0,
-    motionState: safeMotionReceipt(dtMs),
-    authorityState: {
-      motionOwner: "control.js",
-      projectionOwner: "control.js",
-      inputOwner: "index.html",
-      renderSource: "render.js",
-      orbitSource: "index.html"
-    },
-    transitionState: {
-      proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
-      admissible: true,
-      accepted: true,
-      blockedReason: "",
-      family: "HOME_MODE"
-    }
-  });
-
-  return Object.freeze({
-    phase: "HOME",
-    fps: dtMs > 0 ? 1000 / dtMs : 0,
-    dtMs,
-    elapsedMs: performance.now(),
-    instrument,
-    control: {
-      projectionSummary,
-      motionState: typeof control.getMotionState === "function" ? control.getMotionState() : {},
-      orbitalState: typeof control.getOrbitalState === "function" ? control.getOrbitalState() : {}
-    },
-    planetField,
-    renderAudit: lastRenderReceipt?.audit || {},
-    orbitalAudit: {
-      count: orbitalSystem.objects.length,
-      frontVisibleCount: Array.isArray(lastPlacementReceipt?.resolvedHits)
-        ? lastPlacementReceipt.resolvedHits.length
-        : 0,
-      ...(lastPlacementReceipt || {})
-    },
-    progress: {},
-    unlocks: {},
-    verification: {
-      pass: true,
-      reasons: []
-    },
-    failure: {
-      phase: "",
-      message: ""
-    }
-  });
-}
-
-function updateDiagnostics(dtMs) {
-  const runtime = buildRuntimePacket(dtMs);
-  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+function syncModeButtons() {
+  btnFlat.classList.toggle("is-active", currentMode === "flat");
+  btnRound.classList.toggle("is-active", currentMode === "round");
+  btnObserve.classList.toggle("is-active", currentMode === "observe");
 }
 
 function hideAllMarkers() {
   for (const key of Object.keys(overlayMap)) {
     const node = overlayMap[key];
     if (node) node.hidden = true;
+  }
+}
+
+function setDiagnosticsMode(nextMode) {
+  diagnosticsMode = nextMode === "full" ? "full" : "peek";
+  body.setAttribute("data-diagnostics", diagnosticsMode);
+  diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
+}
+
+function setModePresentation() {
+  body.setAttribute("data-mode", currentMode);
+  syncModeButtons();
+
+  if (isFlatMode()) {
+    flatLayer.style.display = "flex";
+    canvas.style.filter = "blur(8px) brightness(.64)";
+    universeLayer.style.filter = "none";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "none";
+    hideAllMarkers();
+  } else if (isObserveMode()) {
+    flatLayer.style.display = "none";
+    canvas.style.filter = "none";
+    universeLayer.style.filter = "blur(.25px)";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "translateY(-4px)";
+    hideAllMarkers();
+  } else {
+    flatLayer.style.display = "none";
+    canvas.style.filter = "none";
+    universeLayer.style.filter = "none";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "none";
+  }
+}
+
+function renderFallbackDiagnostics() {
+  diagnosticsSummary.innerHTML = `
+    <span class="diagnostic-pill">PHASE HOME</span>
+    <span class="diagnostic-pill">MODE ${currentMode.toUpperCase()}</span>
+    <span class="diagnostic-pill">BOOT FALLBACK</span>
+  `;
+  debugPanel.innerHTML = `
+    <div class="panel-section">
+      <strong>Runtime status</strong><br/>
+      Compass shell is live, but world boot did not complete. Navigation remains available.
+    </div>
+  `;
+}
+
+function bindStaticRoutes() {
+  btnFlat.addEventListener("click", () => {
+    if (currentMode === "flat") return;
+    navigateToMode("flat");
+  });
+
+  btnRound.addEventListener("click", () => {
+    if (currentMode === "round") return;
+    navigateToMode("round");
+  });
+
+  btnObserve.addEventListener("click", () => {
+    if (currentMode === "observe") return;
+    navigateToMode("observe");
+  });
+
+  btnZoomIn.addEventListener("click", () => {
+    if (!runtimeReady || !control || !isRoundVisualMode()) return;
+    control.adjustZoomBy(0.10);
+  }, { passive: true });
+
+  btnZoomOut.addEventListener("click", () => {
+    if (!runtimeReady || !control || !isRoundVisualMode()) return;
+    control.adjustZoomBy(-0.10);
+  }, { passive: true });
+
+  diagnosticsToggle.addEventListener("click", () => {
+    setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
+    if (runtimeReady) {
+      syncOverlayMarkers();
+    }
+  });
+
+  document.querySelectorAll(".flat-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const route = card.dataset.route || "/home/";
+      persistMotionState();
+      location.href = withModeQuery(route);
+    });
+  });
+
+  orbitalSystem.objects.forEach((obj) => {
+    const marker = overlayMap[obj.id];
+    if (!marker) return;
+    marker.addEventListener("click", () => {
+      persistMotionState();
+      location.href = withModeQuery(obj.route);
+    });
+  });
+
+  window.addEventListener("resize", () => {
+    resizeWorld();
+    if (runtimeReady) renderSurface(16.7);
+  }, { passive: true });
+
+  window.addEventListener("pagehide", () => {
+    persistMotionState();
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }, { passive: true });
+
+  window.addEventListener("pageshow", () => {
+    if (!runtimeReady) return;
+    applyModePolicy();
+    if (isRoundVisualMode()) {
+      restoreMotionState();
+      applyModePolicy();
+    }
+    if (!rafId && isRoundVisualMode()) {
+      lastFrameAt = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+  }, { passive: true });
+}
+
+function applyModePolicy() {
+  if (!runtimeReady || !control) return;
+
+  control.setPresentationMode(currentMode);
+
+  const zoom = zoomPolicyForMode();
+  control.setZoomBounds(zoom.min, zoom.max);
+
+  if (currentMode === "flat") {
+    control.setZoomAbsolute(1);
+    control.setOrientation({
+      zoomCurrent: 1,
+      zoomTarget: 1
+    });
+  } else {
+    const motion = control.getMotionState();
+    if (!Number.isFinite(motion.zoomCurrent) || motion.zoomCurrent < zoom.min || motion.zoomCurrent > zoom.max) {
+      control.setZoomAbsolute(zoom.initial);
+      control.setOrientation({
+        zoomCurrent: zoom.initial,
+        zoomTarget: zoom.initial
+      });
+    }
   }
 }
 
@@ -1163,7 +1273,7 @@ function validateMarkersInViewport(hits) {
 }
 
 function getRawOrbitalHits() {
-  if (!markerModeRequired()) return [];
+  if (!runtimeReady || !control || !markerModeRequired()) return [];
 
   const orbitalState = control.getOrbitalState();
   const phase = Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : 0;
@@ -1280,7 +1390,7 @@ function solveMarkerPlacement(rawHits) {
 }
 
 function syncOverlayMarkers() {
-  if (!isRoundVisualMode() || isObserveMode()) {
+  if (!runtimeReady || !control || !isRoundVisualMode() || isObserveMode()) {
     lastPlacementReceipt = Object.freeze({
       resolvedHits: Object.freeze([]),
       markerRequired: false,
@@ -1308,6 +1418,12 @@ function syncOverlayMarkers() {
 }
 
 function buildViewState() {
+  if (!runtimeReady || !control) {
+    return Object.freeze({
+      observeMode: isObserveMode()
+    });
+  }
+
   const cameraState =
     typeof control.getCameraState === "function"
       ? control.getCameraState()
@@ -1319,8 +1435,145 @@ function buildViewState() {
   });
 }
 
+function safeProjectionSummary() {
+  if (runtimeReady && control && typeof control.getProjectionSummary === "function") {
+    const summary = control.getProjectionSummary();
+    return summary && typeof summary === "object" ? summary : {};
+  }
+  return {};
+}
+
+function safeMotionReceipt(dtMs) {
+  const motionState =
+    runtimeReady && control && typeof control.getMotionState === "function"
+      ? control.getMotionState()
+      : {};
+  const orbitalState =
+    runtimeReady && control && typeof control.getOrbitalState === "function"
+      ? control.getOrbitalState()
+      : {};
+
+  return {
+    motionRunning: runtimeReady && isRoundVisualMode(),
+    rafActive: rafId !== 0,
+    pageVisible: document.visibilityState === "visible",
+    pageRestored: true,
+    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
+    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
+    orbitVelocity: orbitVelocityForMode(),
+    orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
+    blockedDragOnStarCount: 0,
+    starTapCount: 0,
+    dtMs
+  };
+}
+
+function buildRuntimePacket(dtMs) {
+  const projectionSummary = safeProjectionSummary();
+  const sample =
+    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
+    planetField?.samples?.[0]?.[0] ||
+    null;
+
+  if (!runtimeReady || !instruments) {
+    return Object.freeze({
+      phase: "HOME",
+      fps: 0,
+      dtMs,
+      elapsedMs: performance.now(),
+      instrument: {},
+      control: {
+        projectionSummary,
+        motionState: {},
+        orbitalState: {}
+      },
+      planetField,
+      renderAudit: lastRenderReceipt?.audit || {},
+      orbitalAudit: {
+        count: orbitalSystem.objects.length,
+        frontVisibleCount: 0,
+        ...(lastPlacementReceipt || {})
+      },
+      progress: {},
+      unlocks: {},
+      verification: {
+        pass: false,
+        reasons: ["WORLD_BOOT_INCOMPLETE"]
+      },
+      failure: {
+        phase: "BOOT",
+        message: "Compass shell active; world runtime unavailable."
+      }
+    });
+  }
+
+  const instrument = instruments.buildInstrumentReceipt({
+    currentSample: sample,
+    previousSample: sample,
+    tickIndex: 0,
+    motionState: safeMotionReceipt(dtMs),
+    authorityState: {
+      motionOwner: "control.js",
+      projectionOwner: "control.js",
+      inputOwner: "index.html",
+      renderSource: "render.js",
+      orbitSource: "index.html"
+    },
+    transitionState: {
+      proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
+      admissible: true,
+      accepted: true,
+      blockedReason: "",
+      family: "HOME_MODE"
+    }
+  });
+
+  return Object.freeze({
+    phase: "HOME",
+    fps: dtMs > 0 ? 1000 / dtMs : 0,
+    dtMs,
+    elapsedMs: performance.now(),
+    instrument,
+    control: {
+      projectionSummary,
+      motionState: typeof control.getMotionState === "function" ? control.getMotionState() : {},
+      orbitalState: typeof control.getOrbitalState === "function" ? control.getOrbitalState() : {}
+    },
+    planetField,
+    renderAudit: lastRenderReceipt?.audit || {},
+    orbitalAudit: {
+      count: orbitalSystem.objects.length,
+      frontVisibleCount: Array.isArray(lastPlacementReceipt?.resolvedHits)
+        ? lastPlacementReceipt.resolvedHits.length
+        : 0,
+      ...(lastPlacementReceipt || {})
+    },
+    progress: {},
+    unlocks: {},
+    verification: {
+      pass: true,
+      reasons: []
+    },
+    failure: {
+      phase: "",
+      message: ""
+    }
+  });
+}
+
+function updateDiagnostics(dtMs) {
+  if (!runtimeReady || !instruments) {
+    renderFallbackDiagnostics();
+    return;
+  }
+
+  const runtime = buildRuntimePacket(dtMs);
+  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+}
+
 function renderSurface(dtMs) {
-  if (!planetField) return;
+  if (!runtimeReady || !planetField || !renderer || !control) return;
 
   lastRenderReceipt = renderer.renderPlanet({
     ctx,
@@ -1338,94 +1591,15 @@ function frame(now) {
   const dtMs = now - lastFrameAt;
   lastFrameAt = now;
 
-  if (isRoundVisualMode()) {
+  if (runtimeReady && isRoundVisualMode()) {
     control.stepInertia(dtMs);
     control.advanceOrbit(dtMs, orbitVelocityForMode());
   }
 
-  renderSurface(dtMs);
-  rafId = requestAnimationFrame(frame);
-}
-
-function syncModeButtons() {
-  btnFlat.classList.toggle("is-active", currentMode === "flat");
-  btnRound.classList.toggle("is-active", currentMode === "round");
-  btnObserve.classList.toggle("is-active", currentMode === "observe");
-}
-
-function applyModePolicy() {
-  control.setPresentationMode(currentMode);
-
-  const zoom = zoomPolicyForMode();
-  control.setZoomBounds(zoom.min, zoom.max);
-
-  if (currentMode === "flat") {
-    control.setZoomAbsolute(1);
-    control.setOrientation({
-      zoomCurrent: 1,
-      zoomTarget: 1
-    });
-  } else {
-    const motion = control.getMotionState();
-    if (!Number.isFinite(motion.zoomCurrent) || motion.zoomCurrent < zoom.min || motion.zoomCurrent > zoom.max) {
-      control.setZoomAbsolute(zoom.initial);
-      control.setOrientation({
-        zoomCurrent: zoom.initial,
-        zoomTarget: zoom.initial
-      });
-    }
+  if (runtimeReady) {
+    renderSurface(dtMs);
+    rafId = requestAnimationFrame(frame);
   }
-}
-
-function setModePresentation() {
-  body.setAttribute("data-mode", currentMode);
-  syncModeButtons();
-  applyModePolicy();
-
-  if (isFlatMode()) {
-    flatLayer.style.display = "flex";
-    canvas.style.filter = "blur(8px) brightness(.64)";
-    universeLayer.style.filter = "none";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "none";
-    hideAllMarkers();
-  } else if (isObserveMode()) {
-    flatLayer.style.display = "none";
-    canvas.style.filter = "none";
-    universeLayer.style.filter = "blur(.25px)";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "translateY(-4px)";
-    hideAllMarkers();
-  } else {
-    flatLayer.style.display = "none";
-    canvas.style.filter = "none";
-    universeLayer.style.filter = "none";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "none";
-  }
-}
-
-function setDiagnosticsMode(nextMode) {
-  diagnosticsMode = nextMode === "full" ? "full" : "peek";
-  body.setAttribute("data-diagnostics", diagnosticsMode);
-  diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
-}
-
-function navigateToMode(nextMode) {
-  persistMotionState();
-  location.href = buildModeHref(nextMode);
-}
-
-function bindOverlayRoutes() {
-  orbitalSystem.objects.forEach((obj) => {
-    const marker = overlayMap[obj.id];
-    if (!marker) return;
-
-    marker.addEventListener("click", () => {
-      persistMotionState();
-      location.href = withModeQuery(obj.route);
-    });
-  });
 }
 
 function pointerDistance(a, b) {
@@ -1435,21 +1609,26 @@ function pointerDistance(a, b) {
 }
 
 function resetPinchState() {
+  if (!runtimeReady || !control) {
+    pinchStartDistance = 0;
+    pinchStartZoom = 1;
+    return;
+  }
   pinchStartDistance = 0;
   pinchStartZoom = control.getMotionState().zoomCurrent;
 }
 
 function bindCanvasInteractions() {
-  if (!isRoundVisualMode()) return;
-
   canvas.addEventListener("wheel", (event) => {
-    if (!isRoundVisualMode() || isFlatMode()) return;
+    if (!runtimeReady || !control || !isRoundVisualMode() || isFlatMode()) return;
     event.preventDefault();
     const delta = -event.deltaY * 0.0015;
     control.adjustZoomBy(delta);
   }, { passive: false });
 
   canvas.addEventListener("pointerdown", (event) => {
+    if (!runtimeReady || !control || !isRoundVisualMode()) return;
+
     activePointers.set(event.pointerId, {
       x: event.clientX,
       y: event.clientY
@@ -1470,7 +1649,7 @@ function bindCanvasInteractions() {
   }, { passive: true });
 
   window.addEventListener("pointermove", (event) => {
-    if (!activePointers.has(event.pointerId)) return;
+    if (!runtimeReady || !control || !activePointers.has(event.pointerId)) return;
 
     activePointers.set(event.pointerId, {
       x: event.clientX,
@@ -1527,62 +1706,29 @@ function bindCanvasInteractions() {
   }, { passive: true });
 }
 
-function bindEvents() {
-  diagnosticsToggle.addEventListener("click", () => {
-    setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
-    syncOverlayMarkers();
-  });
+async function bootRuntime() {
+  try {
+    const [
+      planetEngineModule,
+      renderModule,
+      controlModule,
+      instrumentsModule
+    ] = await Promise.all([
+      import("/world/planet_engine.js"),
+      import("/world/render.js"),
+      import("/world/control.js"),
+      import("/assets/instruments.js")
+    ]);
 
-  btnFlat.addEventListener("click", () => {
-    if (currentMode === "flat") return;
-    navigateToMode("flat");
-  });
+    planetEngine = planetEngineModule.createPlanetEngine();
+    renderer = renderModule.createRenderer();
+    control = controlModule.createControlSystem();
+    instruments = instrumentsModule.createInstruments();
 
-  btnRound.addEventListener("click", () => {
-    if (currentMode === "round") return;
-    navigateToMode("round");
-  });
-
-  btnObserve.addEventListener("click", () => {
-    if (currentMode === "observe") return;
-    navigateToMode("observe");
-  });
-
-  btnZoomIn.addEventListener("click", () => {
-    if (!isRoundVisualMode()) return;
-    control.adjustZoomBy(0.10);
-  }, { passive: true });
-
-  btnZoomOut.addEventListener("click", () => {
-    if (!isRoundVisualMode()) return;
-    control.adjustZoomBy(-0.10);
-  }, { passive: true });
-
-  bindCanvasInteractions();
-
-  document.querySelectorAll(".flat-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      const route = card.dataset.route || "/home/";
-      persistMotionState();
-      location.href = withModeQuery(route);
-    });
-  });
-
-  window.addEventListener("resize", () => {
     resizeWorld();
-    renderSurface(16.7);
-  }, { passive: true });
+    planetField = planetEngine.buildPlanetField({});
+    runtimeReady = true;
 
-  window.addEventListener("pagehide", () => {
-    persistMotionState();
-
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = 0;
-    }
-  }, { passive: true });
-
-  window.addEventListener("pageshow", () => {
     applyModePolicy();
 
     if (isRoundVisualMode()) {
@@ -1590,33 +1736,38 @@ function bindEvents() {
       applyModePolicy();
     }
 
-    if (!rafId && isRoundVisualMode()) {
+    clearBootStatus();
+    setModePresentation();
+    updateDiagnostics(16.7);
+    renderSurface(16.7);
+
+    if (isRoundVisualMode() && !rafId) {
       lastFrameAt = performance.now();
       rafId = requestAnimationFrame(frame);
     }
-  }, { passive: true });
+  } catch (error) {
+    runtimeReady = false;
+    hideAllMarkers();
+    renderFallbackDiagnostics();
+
+    const message = error instanceof Error
+      ? `${error.name}: ${error.message}`
+      : String(error);
+
+    showBootStatus(
+      `World runtime failed to boot.\n\n${message}\n\nStatic navigation remains active.`
+    );
+  }
 }
 
 function start() {
   resizeWorld();
-  buildPlanetFieldOnce();
-  applyModePolicy();
-
-  if (isRoundVisualMode()) {
-    restoreMotionState();
-    applyModePolicy();
-  }
-
-  bindOverlayRoutes();
+  bindStaticRoutes();
+  bindCanvasInteractions();
   setModePresentation();
   setDiagnosticsMode("peek");
-  bindEvents();
-  renderSurface(16.7);
-
-  if (isRoundVisualMode() && !rafId) {
-    lastFrameAt = performance.now();
-    rafId = requestAnimationFrame(frame);
-  }
+  renderFallbackDiagnostics();
+  bootRuntime();
 }
 
 start();

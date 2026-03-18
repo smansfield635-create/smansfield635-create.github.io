@@ -22,14 +22,8 @@ body::before,body::after{pointer-events:none!important}
   --mut:rgba(255,255,255,.84);
   --mut2:rgba(255,255,255,.68);
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
   --shadowA:0 18px 52px rgba(0,0,0,.30);
-  --shadowB:0 24px 90px rgba(0,0,0,.42);
   --gold:rgba(226,191,92,.92);
-  --goldSoft:rgba(226,191,92,.22);
-  --goldGlow:rgba(226,191,92,.16);
-  --panel:rgba(8,12,20,.38);
-  --panel2:rgba(8,12,20,.56);
   --heroDim:1;
   --uiAlpha:1;
   --shellAtmosAlpha:.82;
@@ -783,7 +777,7 @@ const renderer = createRenderer();
 const control = createControlSystem();
 const instruments = createInstruments();
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v8";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v9";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
@@ -804,6 +798,7 @@ let lastRenderReceipt = Object.freeze({
 });
 
 let lastPlacementReceipt = Object.freeze({
+  resolvedHits: Object.freeze([]),
   markerRequired: false,
   markerPlacementAdmissible: true,
   markerCollisionCount: 0,
@@ -1075,8 +1070,7 @@ function cloneHit(hit, center) {
     x: hit.x,
     y: hit.y,
     radius,
-    angle: Math.atan2(dy, dx),
-    radialDistance: Math.sqrt((dx * dx) + (dy * dy))
+    angle: Math.atan2(dy, dx)
   };
 }
 
@@ -1367,6 +1361,10 @@ function applyModePolicy() {
 
   if (currentMode === "flat") {
     control.setZoomAbsolute(1);
+    control.setOrientation({
+      zoomCurrent: 1,
+      zoomTarget: 1
+    });
   } else {
     const motion = control.getMotionState();
     if (!Number.isFinite(motion.zoomCurrent) || motion.zoomCurrent < zoom.min || motion.zoomCurrent > zoom.max) {

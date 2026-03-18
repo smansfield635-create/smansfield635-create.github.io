@@ -26,16 +26,16 @@ export function createInstruments() {
     return typeof value === "string" && value.trim() ? value.trim() : fallback;
   }
 
-  function toFixedSafe(value, digits = 2, fallback = EMPTY) {
-    return isFiniteNumber(value) ? value.toFixed(digits) : fallback;
-  }
-
   function normalizePrimitive(value, fallback = EMPTY) {
     if (value === null || value === undefined) return fallback;
     if (typeof value === "string") return normalizeString(value, fallback);
     if (typeof value === "number") return Number.isFinite(value) ? String(value) : fallback;
     if (typeof value === "boolean") return value ? "true" : "false";
     return fallback;
+  }
+
+  function toFixedSafe(value, digits = 2, fallback = EMPTY) {
+    return isFiniteNumber(value) ? value.toFixed(digits) : fallback;
   }
 
   function escapeHTML(value) {
@@ -56,14 +56,15 @@ export function createInstruments() {
 
   function classifyValueTone(value) {
     const normalized = normalizePrimitive(value);
+
     if (
       normalized === "PASS" ||
       normalized === "STABLE" ||
       normalized === "ASCENT" ||
+      normalized === "true" ||
       normalized === "control.js" ||
       normalized === "render.js" ||
-      normalized === "ROUND" ||
-      normalized === "true"
+      normalized === "ROUND"
     ) {
       return "ok";
     }
@@ -72,9 +73,9 @@ export function createInstruments() {
       normalized === "FAIL" ||
       normalized === "COLLAPSE" ||
       normalized === "DESCENT" ||
+      normalized === "false" ||
       normalized === "blocked" ||
-      normalized === "denied" ||
-      normalized === "false"
+      normalized === "denied"
     ) {
       return "danger";
     }
@@ -102,7 +103,15 @@ export function createInstruments() {
   }
 
   function buildDirection16FromSamples(currentSample, previousSample) {
-    const fallback = currentSample?.lobeId === "GENEROSITY" ? "N" : "S";
+    const directions = WORLD_KERNEL?.cardinal16 ?? [
+      "N", "NNE", "NE", "ENE",
+      "E", "ESE", "SE", "SSE",
+      "S", "SSW", "SW", "WSW",
+      "W", "WNW", "NW", "NNW"
+    ];
+
+    const fallback = currentSample?.subRegion === "GENEROSITY_REGION" ? "N" : "S";
+
     if (!currentSample || !isFiniteNumber(currentSample.latDeg) || !isFiniteNumber(currentSample.lonDeg)) {
       return fallback;
     }
@@ -117,16 +126,10 @@ export function createInstruments() {
       return fallback;
     }
 
-    const directions = WORLD_KERNEL?.cardinal16 ?? [
-      "N", "NNE", "NE", "ENE",
-      "E", "ESE", "SE", "SSE",
-      "S", "SSW", "SW", "WSW",
-      "W", "WNW", "NW", "NNW"
-    ];
-
     const angle = Math.atan2(dLon, dLat);
     const normalized = (angle + Math.PI * 2) % (Math.PI * 2);
     const sector = Math.round(normalized / (Math.PI / 8)) % 16;
+
     return directions[sector] ?? fallback;
   }
 
@@ -142,6 +145,7 @@ export function createInstruments() {
         : 0;
 
     const magnitude = Math.sqrt((dx * dx) + (dy * dy));
+
     return Object.freeze({
       dx,
       dy,
@@ -153,16 +157,15 @@ export function createInstruments() {
     const sample = normalizeObject(currentSample);
 
     const plateau = clamp(sample.plateauStrength ?? 0, 0, 1);
-    const mountain = clamp(sample.mountainStrength ?? 0, 0, 1);
-    const escarpment = clamp(sample.escarpmentStrength ?? 0, 0, 1);
-    const mirror = clamp(sample.mirrorCorrelation ?? 0, 0, 1);
-    const portal = clamp(sample.portalAffinity ?? 0, 0, 1);
-    const harbor = sample.isHarbor === true ? 1 : 0;
-    const star = sample.isStarRegion === true ? 1 : 0;
+    const mountain = clamp(sample.strongestSummitScore ?? 0, 0, 1);
+    const basin = clamp(sample.strongestBasinScore ?? 0, 0, 1);
+    const shoreline = sample.shoreline === true ? 1 : 0;
+    const wetland = sample.biomeType === "WETLAND" ? 1 : 0;
+    const glacier = sample.biomeType === "GLACIER" ? 1 : 0;
 
-    const energy = clamp(0.28 + plateau * 0.30 + mountain * 0.18 + star * 0.12, 0, 1);
-    const information = clamp(0.30 + mirror * 0.28 + harbor * 0.22 + portal * 0.10, 0, 1);
-    const value = clamp(0.26 + harbor * 0.24 + plateau * 0.12 + (1 - escarpment) * 0.16 + portal * 0.12, 0, 1);
+    const energy = clamp(0.26 + plateau * 0.20 + mountain * 0.28 + shoreline * 0.08, 0, 1);
+    const information = clamp(0.28 + basin * 0.24 + shoreline * 0.12 + wetland * 0.10, 0, 1);
+    const value = clamp(0.24 + (1 - glacier) * 0.16 + plateau * 0.14 + basin * 0.16 + wetland * 0.10, 0, 1);
 
     return clamp(Math.min(energy, information, value), 0, 1);
   }
@@ -172,19 +175,21 @@ export function createInstruments() {
 
     const bits = [
       clamp(sample.plateauStrength ?? 0, 0, 1) >= 0.5 ? 1 : 0,
-      clamp(sample.mountainStrength ?? 0, 0, 1) >= 0.45 ? 1 : 0,
-      sample.isHarbor === true ? 1 : 0,
-      sample.isStarRegion === true ? 1 : 0,
-      clamp(sample.escarpmentStrength ?? 0, 0, 1) >= 0.35 ? 1 : 0,
-      clamp(sample.mirrorCorrelation ?? 0, 0, 1) >= 0.45 ? 1 : 0,
-      clamp(sample.portalAffinity ?? 0, 0, 1) >= 0.5 ? 1 : 0,
-      sample.lobeId === "GENEROSITY" ? 1 : 0
+      clamp(sample.strongestSummitScore ?? 0, 0, 1) >= 0.2 ? 1 : 0,
+      sample.shoreline === true ? 1 : 0,
+      sample.waterMask === 1 ? 1 : 0,
+      clamp(sample.basinStrength ?? 0, 0, 1) >= 0.18 ? 1 : 0,
+      sample.riverCandidate === true ? 1 : 0,
+      sample.lakeCandidate === true ? 1 : 0,
+      sample.subRegion === "GENEROSITY_REGION" ? 1 : 0
     ];
 
     let stateIndex = 0;
+
     for (let i = 0; i < bits.length; i += 1) {
       stateIndex |= bits[i] << (7 - i);
     }
+
     return stateIndex;
   }
 
@@ -199,14 +204,13 @@ export function createInstruments() {
 
   function buildWorldPhase(currentSample) {
     if (!currentSample) return "VOID";
-    if (currentSample.isHarbor === true) return "HARBOR";
-    if (currentSample.isStarRegion === true) return "STAR";
-    if ((currentSample.mountainStrength ?? 0) > 0.78) return "SUMMIT";
-    if ((currentSample.mountainStrength ?? 0) > 0.40) return "MOUNTAIN";
-    if ((currentSample.plateauStrength ?? 0) > 0.12) return "PLATEAU";
-    if ((currentSample.escarpmentStrength ?? 0) > 0.18) return "ESCARPMENT";
     if (currentSample.waterMask === 1) return "WATER";
-    return "LOWLAND";
+    if (currentSample.shoreline === true) return "SHORE";
+    if (currentSample.terrainClass === "SUMMIT") return "SUMMIT";
+    if (currentSample.terrainClass === "MOUNTAIN") return "MOUNTAIN";
+    if (currentSample.terrainClass === "PLATEAU") return "PLATEAU";
+    if (currentSample.terrainClass === "BASIN") return "BASIN";
+    return "LAND";
   }
 
   function buildStabilityClass(coherence) {
@@ -217,6 +221,7 @@ export function createInstruments() {
 
   function buildValueVector(source = {}) {
     const valueSource = normalizeObject(source);
+
     const V = clamp(valueSource.V ?? valueSource.valuation ?? 0, 0, 1);
     const A = clamp(valueSource.A ?? valueSource.aim ?? 0, 0, 1);
     const L = clamp(valueSource.L ?? valueSource.logic ?? 0, 0, 1);
@@ -231,15 +236,13 @@ export function createInstruments() {
       1
     );
 
-    const aggregate = clamp(Math.min(V, A, L, U, EVAL), 0, 1);
-
     return Object.freeze({
       V,
       A,
       L,
       U,
       EVAL,
-      aggregate
+      aggregate: clamp(Math.min(V, A, L, U, EVAL), 0, 1)
     });
   }
 
@@ -338,7 +341,7 @@ export function createInstruments() {
       trajectoryClass: buildTrajectoryClass(coherence, previousCoherence, vector.magnitude),
       tickIndex,
       world: Object.freeze({
-        lobeId: normalizeString(currentSample.lobeId, "NONE"),
+        lobeId: normalizeString(currentSample.subRegion, "NONE"),
         phase: buildWorldPhase(currentSample),
         terrainClass: normalizeString(currentSample.terrainClass, "VOID"),
         stabilityClass: buildStabilityClass(coherence)
@@ -476,10 +479,10 @@ export function createInstruments() {
         sampleCount: normalizePrimitive(summary.sampleCount),
         landCount: normalizePrimitive(summary.landCount),
         waterCount: normalizePrimitive(summary.waterCount),
-        escarpmentCount: normalizePrimitive(summary.escarpmentCount),
-        plateauCount: normalizePrimitive(summary.plateauCount),
+        shorelineCount: normalizePrimitive(summary.shorelineCount),
         mountainCount: normalizePrimitive(summary.mountainCount),
-        beachCount: normalizePrimitive(summary.beachCount)
+        basinCount: normalizePrimitive(summary.basinCount),
+        canyonCount: normalizePrimitive(summary.canyonCount)
       })),
       renderKeyValueSection("Verification", Object.freeze({
         pass: normalizePrimitive(verification.pass),

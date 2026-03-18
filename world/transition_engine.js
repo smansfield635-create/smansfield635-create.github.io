@@ -1,45 +1,445 @@
 // TNT — /world/transition_engine.js
-// PURPOSE: deterministic zone transitions (NO UI drift)
+// PURPOSE: transition admissibility, route gating, handoff receipts
+// AUTHORITY:
+// - decides whether a requested transition is admissible
+// - does not generate world truth
+// - does not render
+// - does not own motion
+// - does not mutate kernel contracts
 
-export function createTransitionEngine() {
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
 
-  function canTransition(runtime, targetZone) {
-    if (runtime.zone?.transitioning) return false;
+function normalizeString(value, fallback = "") {
+  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+}
 
-    if (targetZone === "underground") return runtime.unlocks?.underground;
-    if (targetZone === "north") return runtime.unlocks?.north;
-    if (targetZone === "south") return runtime.unlocks?.south;
+function normalizeBoolean(value, fallback = false) {
+  return typeof value === "boolean" ? value : fallback;
+}
 
-    return true;
+function normalizeArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function getProgress(runtime) {
+  return normalizeObject(runtime?.progress);
+}
+
+function getUnlocks(runtime) {
+  return normalizeObject(runtime?.unlocks);
+}
+
+function getCompletion(runtime) {
+  return normalizeObject(runtime?.completion);
+}
+
+function getAuthorityReceipt(runtime) {
+  return normalizeObject(runtime?.authorityReceipt);
+}
+
+function getPlanetField(runtime) {
+  return normalizeObject(runtime?.planetField);
+}
+
+function getSummary(runtime) {
+  return normalizeObject(getPlanetField(runtime).summary);
+}
+
+function routeFamily(route) {
+  const value = normalizeString(route, "/");
+
+  if (value === "/" || value === "/index.html" || value === "/home/" || value === "/home/index.html") {
+    return "HOME";
+  }
+  if (value.startsWith("/products/")) {
+    return "PRODUCTS";
+  }
+  if (value.startsWith("/explore/")) {
+    return "EXPLORE";
+  }
+  if (value.startsWith("/laws/")) {
+    return "LAWS";
+  }
+  if (value.startsWith("/gauges/")) {
+    return "GAUGES";
+  }
+  if (value.startsWith("/door/")) {
+    return "DOOR";
+  }
+  if (value.startsWith("/prelude/")) {
+    return "PRELUDE";
   }
 
-  function requestTransition(runtime, targetZone) {
-    if (!canTransition(runtime, targetZone)) {
-      runtime.failure = {
-        phase: "transition_blocked",
-        message: "Transition not admissible"
-      };
-      return false;
-    }
+  return "UNKNOWN";
+}
 
-    runtime.zone = runtime.zone || {};
-    runtime.zone.transitioning = true;
-    runtime.zone.targetZone = targetZone;
+function buildBaseTransitionRequest(input = {}) {
+  const source = normalizeObject(input);
 
-    return true;
+  return Object.freeze({
+    proposed: normalizeString(source.proposed, "UNKNOWN"),
+    family: normalizeString(source.family, "UNKNOWN"),
+    fromRoute: normalizeString(source.fromRoute, "/"),
+    toRoute: normalizeString(source.toRoute, "/"),
+    fromMode: normalizeString(source.fromMode, "round"),
+    toMode: normalizeString(source.toMode, "round"),
+    explicitUserAction: normalizeBoolean(source.explicitUserAction, true),
+    reason: normalizeString(source.reason, "")
+  });
+}
+
+function isModeTransition(request) {
+  return request.proposed === "ROUND_HOME" || request.proposed === "FLAT_HOME";
+}
+
+function isRouteTransition(request) {
+  return request.toRoute !== request.fromRoute;
+}
+
+function evaluateSystemReadiness(runtime) {
+  const completion = getCompletion(runtime);
+  const progress = getProgress(runtime);
+  const authorityReceipt = getAuthorityReceipt(runtime);
+
+  const completionPass = normalizeBoolean(completion.pass, false);
+  const authorityPass = normalizeBoolean(authorityReceipt.pass, false);
+  const summitCompletion = isFiniteNumber(progress.summitCompletion) ? progress.summitCompletion : 0;
+
+  return Object.freeze({
+    completionPass,
+    authorityPass,
+    summitCompletion,
+    pass: completionPass && authorityPass
+  });
+}
+
+function evaluateModeTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "HOME_MODE"
+    });
   }
 
-  function step(runtime) {
-    if (!runtime.zone?.transitioning) return;
+  if (request.toMode !== "round" && request.toMode !== "flat") {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "invalid_target_mode",
+      family: "HOME_MODE"
+    });
+  }
 
-    // simple deterministic step (no animation yet)
-    runtime.zone.currentZone = runtime.zone.targetZone;
-    runtime.zone.targetZone = null;
-    runtime.zone.transitioning = false;
+  if (request.fromMode === request.toMode) {
+    return Object.freeze({
+      admissible: true,
+      accepted: true,
+      blockedReason: "",
+      family: "HOME_MODE"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "HOME_MODE"
+    });
   }
 
   return Object.freeze({
-    requestTransition,
-    step
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "HOME_MODE"
+  });
+}
+
+function evaluateProductsTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+  const unlocks = getUnlocks(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_PRODUCTS"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "ROUTE_PRODUCTS"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_PRODUCTS",
+    unlocksObserved: normalizeBoolean(unlocks.renderReady, false)
+  });
+}
+
+function evaluateExploreTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+  const unlocks = getUnlocks(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_EXPLORE"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "ROUTE_EXPLORE"
+    });
+  }
+
+  if (!normalizeBoolean(unlocks.continents, false)) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "continent_unlock_incomplete",
+      family: "ROUTE_EXPLORE"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_EXPLORE"
+  });
+}
+
+function evaluateLawsTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_LAWS"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "ROUTE_LAWS"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_LAWS"
+  });
+}
+
+function evaluateGaugesTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_GAUGES"
+    });
+  }
+
+  if (!readiness.completionPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "completion_receipt_failed",
+      family: "ROUTE_GAUGES"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_GAUGES"
+  });
+}
+
+function evaluateDoorTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+  const unlocks = getUnlocks(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_DOOR"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "ROUTE_DOOR"
+    });
+  }
+
+  if (!normalizeBoolean(unlocks.underground, false)) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "door_unlock_incomplete",
+      family: "ROUTE_DOOR"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_DOOR"
+  });
+}
+
+function evaluatePreludeTransition(runtime, request) {
+  const readiness = evaluateSystemReadiness(runtime);
+
+  if (!request.explicitUserAction) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "user_action_required",
+      family: "ROUTE_PRELUDE"
+    });
+  }
+
+  if (!readiness.authorityPass) {
+    return Object.freeze({
+      admissible: false,
+      accepted: false,
+      blockedReason: "authority_receipt_failed",
+      family: "ROUTE_PRELUDE"
+    });
+  }
+
+  return Object.freeze({
+    admissible: true,
+    accepted: true,
+    blockedReason: "",
+    family: "ROUTE_PRELUDE"
+  });
+}
+
+function evaluateUnknownTransition(_runtime, _request) {
+  return Object.freeze({
+    admissible: false,
+    accepted: false,
+    blockedReason: "unknown_route_family",
+    family: "UNKNOWN"
+  });
+}
+
+function evaluateRouteTransition(runtime, request) {
+  const family = routeFamily(request.toRoute);
+
+  if (family === "PRODUCTS") return evaluateProductsTransition(runtime, request);
+  if (family === "EXPLORE") return evaluateExploreTransition(runtime, request);
+  if (family === "LAWS") return evaluateLawsTransition(runtime, request);
+  if (family === "GAUGES") return evaluateGaugesTransition(runtime, request);
+  if (family === "DOOR") return evaluateDoorTransition(runtime, request);
+  if (family === "PRELUDE") return evaluatePreludeTransition(runtime, request);
+  if (family === "HOME") {
+    return Object.freeze({
+      admissible: true,
+      accepted: true,
+      blockedReason: "",
+      family: "ROUTE_HOME"
+    });
+  }
+
+  return evaluateUnknownTransition(runtime, request);
+}
+
+function buildTransitionReceipt(runtime, input = {}) {
+  const request = buildBaseTransitionRequest(input);
+  const summary = getSummary(runtime);
+
+  let decision = Object.freeze({
+    admissible: false,
+    accepted: false,
+    blockedReason: "no_transition_class",
+    family: "UNKNOWN"
+  });
+
+  if (isModeTransition(request)) {
+    decision = evaluateModeTransition(runtime, request);
+  } else if (isRouteTransition(request)) {
+    decision = evaluateRouteTransition(runtime, request);
+  }
+
+  return Object.freeze({
+    proposed: request.proposed,
+    family: decision.family,
+    admissible: decision.admissible,
+    accepted: decision.accepted,
+    blockedReason: decision.blockedReason,
+    request,
+    context: Object.freeze({
+      fromRoute: request.fromRoute,
+      toRoute: request.toRoute,
+      fromMode: request.fromMode,
+      toMode: request.toMode,
+      continentCount: isFiniteNumber(summary.continentCount) ? summary.continentCount : 0
+    })
+  });
+}
+
+export function createTransitionEngine() {
+  function evaluate(runtime, input = {}) {
+    return buildTransitionReceipt(runtime, input);
+  }
+
+  function update(runtime, input = {}) {
+    const target = normalizeObject(runtime);
+    const receipt = buildTransitionReceipt(target, input);
+    target.transition = receipt;
+    return target;
+  }
+
+  return Object.freeze({
+    evaluate,
+    update
   });
 }

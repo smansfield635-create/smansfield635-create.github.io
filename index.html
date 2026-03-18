@@ -282,7 +282,6 @@ body::before,body::after{pointer-events:none!important}
 }
 .mode-btn:active{transform:translateY(1px)}
 
-/* overlay markers */
 #orbital-overlay{
   z-index:12;
   pointer-events:none;
@@ -402,7 +401,6 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(6px);
 }
 
-/* diagnostics */
 .diagnostics-shell{
   position:absolute;
   left:16px;
@@ -456,8 +454,8 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:16px;
   bottom:94px;
-  width:min(380px, calc(100vw - 32px));
-  max-height:min(48vh, 420px);
+  width:min(420px, calc(100vw - 32px));
+  max-height:min(54vh, 520px);
   overflow:auto;
   display:grid;
   gap:10px;
@@ -510,7 +508,7 @@ body[data-diagnostics="full"] .debug-panel{
 }
 </style>
 </head>
-<body data-mode="world" data-diagnostics="peek">
+<body data-mode="round" data-diagnostics="peek">
 <div id="app-shell">
   <canvas id="world-canvas" aria-label="Home world canvas"></canvas>
 
@@ -597,10 +595,12 @@ body[data-diagnostics="full"] .debug-panel{
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
+import { createCompletionEngine } from "/world/completion_engine.js";
+import { createTransitionEngine } from "/world/transition_engine.js";
 import { createInstruments } from "/assets/instruments.js";
 
 const params = new URLSearchParams(location.search);
-const mode = params.get("mode") === "flat" ? "flat" : "round";
+const initialMode = params.get("mode") === "flat" ? "flat" : "round";
 
 const body = document.body;
 const canvas = document.getElementById("world-canvas");
@@ -622,9 +622,12 @@ const overlayMap = Object.freeze({
 const planetEngine = createPlanetEngine();
 const renderer = createRenderer();
 const control = createControlSystem();
+const completionEngine = createCompletionEngine();
+const transitionEngine = createTransitionEngine();
 const instruments = createInstruments();
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v4";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v5";
+const HANDOFF_STORAGE_KEY = "ns_home_transition_handoff_v1";
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -683,20 +686,24 @@ const orbitalSystem = Object.freeze({
   ])
 });
 
+let mode = initialMode;
 let planetField = null;
 let rafId = 0;
 let lastFrameAt = performance.now();
 let lastRenderReceipt = Object.freeze({ orbitalHits: Object.freeze([]) });
 
 let isDragging = false;
-let pendingPointerDown = null;
+let activePointerId = null;
+let movedSincePointerDown = false;
 let lastX = 0;
 let lastY = 0;
 let diagnosticsMode = "peek";
+let runtimePacket = Object.freeze({});
 
-function withModeQuery(route) {
-  const glue = route.includes("?") ? "&" : "?";
-  return `${route}${glue}mode=${mode}`;
+function withModeQuery(route, nextMode = mode) {
+  const url = new URL(route, location.origin);
+  url.searchParams.set("mode", nextMode);
+  return url.pathname + url.search;
 }
 
 function resizeWorld() {
@@ -719,83 +726,55 @@ function restoreMotionState() {
     const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
     if (!raw) return;
     control.restoreMotionState(JSON.parse(raw));
-  } catch {
-    return;
-  }
+  } catch {}
 }
 
 function persistMotionState() {
   if (mode !== "round") return;
   try {
     sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
-  } catch {
-    return;
-  }
+  } catch {}
 }
 
-function safeProjectionSummary() {
-  if (typeof control.getProjectionSummary === "function") {
-    const summary = control.getProjectionSummary();
-    return summary && typeof summary === "object" ? summary : {};
-  }
-  return {};
+function persistTransitionHandoff(toMode) {
+  try {
+    const handoff = control.buildTransitionHandoff({ toMode });
+    sessionStorage.setItem(HANDOFF_STORAGE_KEY, JSON.stringify(handoff));
+  } catch {}
 }
 
-function safeMotionReceipt(dtMs) {
-  const motionState =
-    typeof control.getMotionState === "function"
-      ? control.getMotionState()
-      : {};
-
-  return {
-    motionRunning: mode === "round",
-    rafActive: rafId !== 0,
-    pageVisible: document.visibilityState === "visible",
-    pageRestored: true,
-    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
-    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: Number.isFinite(motionState?.orbitVelocity) ? motionState.orbitVelocity : null,
-    orbitPhase: Number.isFinite(motionState?.orbitPhase) ? motionState.orbitPhase : null,
-    blockedDragOnStarCount: 0,
-    starTapCount: 0,
-    dtMs
-  };
+function applyStoredHandoff() {
+  try {
+    const raw = sessionStorage.getItem(HANDOFF_STORAGE_KEY);
+    if (!raw) return;
+    const handoff = JSON.parse(raw);
+    if (handoff && typeof handoff === "object" && handoff.toMode === mode) {
+      control.restoreMotionState(handoff);
+    }
+    sessionStorage.removeItem(HANDOFF_STORAGE_KEY);
+  } catch {}
 }
 
 function buildRuntimePacket(dtMs) {
-  const sample = planetField?.samples?.[128]?.[128] || null;
+  const motionState = control.getMotionState();
+  const orbitalState = control.getOrbitalState();
+  const projectionSummary = control.getProjectionSummary();
+  const renderAudit = lastRenderReceipt?.audit || {};
+  const orbitalAudit = lastRenderReceipt?.orbitalAudit || {};
 
-  const instrument = instruments.buildInstrumentReceipt({
-    currentSample: sample,
-    previousSample: sample,
-    tickIndex: 0,
-    motionState: safeMotionReceipt(dtMs),
-    authorityState: {
-      motionOwner: "control.js",
-      projectionOwner: "control.js",
-      inputOwner: "index.html",
-      renderSource: "render.js",
-      orbitSource: "index.html"
-    },
-    transitionState: {
-      proposed: mode === "round" ? "ROUND_HOME" : "FLAT_HOME",
-      admissible: true,
-      accepted: true,
-      blockedReason: "",
-      family: "HOME_MODE"
-    }
-  });
-
-  return Object.freeze({
+  const runtime = {
     phase: "HOME",
     fps: dtMs > 0 ? 1000 / dtMs : 0,
     dtMs,
     elapsedMs: performance.now(),
-    instrument,
-    control: {
-      projectionSummary: safeProjectionSummary()
-    },
     planetField,
+    renderAudit,
+    orbitalAudit,
+    control: {
+      projectionSummary,
+      motionState,
+      orbitalState
+    },
     verification: {
       pass: true,
       reasons: []
@@ -804,13 +783,57 @@ function buildRuntimePacket(dtMs) {
       phase: "",
       message: ""
     }
+  };
+
+  completionEngine.update(runtime);
+
+  const transitionReceipt = transitionEngine.evaluate(runtime, {
+    proposed: mode === "round" ? "ROUND_HOME" : "FLAT_HOME",
+    family: "HOME_MODE",
+    fromRoute: location.pathname,
+    toRoute: location.pathname,
+    fromMode: mode,
+    toMode: mode,
+    explicitUserAction: true,
+    reason: "runtime_state"
   });
+
+  runtime.transition = transitionReceipt;
+
+  runtime.instrument = instruments.buildInstrumentReceipt({
+    currentSample: planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] || null,
+    previousSample: planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] || null,
+    tickIndex: 0,
+    motionState: {
+      motionRunning: mode === "round",
+      rafActive: rafId !== 0,
+      pageVisible: document.visibilityState === "visible",
+      pageRestored: true,
+      yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
+      pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
+      orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity) ? orbitalState.orbitAngularVelocity : null,
+      orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
+      blockedDragOnStarCount: 0,
+      starTapCount: 0,
+      dtMs
+    },
+    authorityState: {
+      motionOwner: "control.js",
+      projectionOwner: "control.js",
+      inputOwner: "index.html",
+      renderSource: "render.js",
+      orbitSource: "control.js"
+    },
+    transitionState: transitionReceipt
+  });
+
+  return Object.freeze(runtime);
 }
 
 function updateDiagnostics(dtMs) {
-  const runtime = buildRuntimePacket(dtMs);
-  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+  runtimePacket = buildRuntimePacket(dtMs);
+  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtimePacket);
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtimePacket);
 }
 
 function syncOverlayMarkers() {
@@ -871,7 +894,9 @@ function frame(now) {
 }
 
 function setModePresentation() {
+  body.setAttribute("data-mode", mode);
   modeNote.textContent = mode.toUpperCase();
+  control.setMode(mode);
 
   if (mode === "flat") {
     flatLayer.style.display = "flex";
@@ -892,15 +917,75 @@ function setDiagnosticsMode(nextMode) {
   diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
 }
 
+function navigateWithTransition(route, nextMode = mode) {
+  persistMotionState();
+  persistTransitionHandoff(nextMode);
+  location.href = withModeQuery(route, nextMode);
+}
+
 function bindOverlayRoutes() {
   orbitalSystem.objects.forEach((obj) => {
     const marker = overlayMap[obj.id];
     if (!marker) return;
 
     marker.addEventListener("click", () => {
-      location.href = withModeQuery(obj.route);
+      navigateWithTransition(obj.route, mode);
     });
   });
+}
+
+function bindRoundPointerEvents() {
+  canvas.addEventListener("pointerdown", (event) => {
+    if (mode !== "round") return;
+
+    const target = control.classifyPointerTarget(
+      event.clientX,
+      event.clientY,
+      Array.isArray(lastRenderReceipt?.orbitalHits) ? lastRenderReceipt.orbitalHits : []
+    );
+
+    if (target.family !== "globe") {
+      return;
+    }
+
+    activePointerId = event.pointerId;
+    isDragging = true;
+    movedSincePointerDown = false;
+    lastX = event.clientX;
+    lastY = event.clientY;
+  }, { passive: true });
+
+  window.addEventListener("pointermove", (event) => {
+    if (mode !== "round") return;
+    if (!isDragging) return;
+    if (activePointerId !== null && event.pointerId !== activePointerId) return;
+
+    const dx = event.clientX - lastX;
+    const dy = event.clientY - lastY;
+
+    if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+      movedSincePointerDown = true;
+    }
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+
+    control.applyDrag(dx, dy);
+  }, { passive: true });
+
+  window.addEventListener("pointerup", (event) => {
+    if (activePointerId !== null && event.pointerId !== activePointerId) return;
+    activePointerId = null;
+    isDragging = false;
+    movedSincePointerDown = false;
+  }, { passive: true });
+
+  window.addEventListener("pointercancel", (event) => {
+    if (activePointerId !== null && event.pointerId !== activePointerId) return;
+    activePointerId = null;
+    isDragging = false;
+    movedSincePointerDown = false;
+  }, { passive: true });
 }
 
 function bindEvents() {
@@ -910,48 +995,15 @@ function bindEvents() {
 
   modeNote.addEventListener("click", () => {
     const nextMode = mode === "round" ? "flat" : "round";
-    location.href = withModeQuery(location.pathname.replace(/\/index\.html$/, "/"));
+    navigateWithTransition(location.pathname, nextMode);
   });
 
-  if (mode === "round") {
-    canvas.addEventListener("pointerdown", (event) => {
-      pendingPointerDown = Object.freeze({
-        x: event.clientX,
-        y: event.clientY
-      });
-
-      isDragging = true;
-      lastX = event.clientX;
-      lastY = event.clientY;
-    }, { passive: true });
-
-    window.addEventListener("pointermove", (event) => {
-      if (!isDragging) return;
-
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
-
-      lastX = event.clientX;
-      lastY = event.clientY;
-
-      control.applyDrag(dx, dy);
-    }, { passive: true });
-
-    window.addEventListener("pointerup", () => {
-      pendingPointerDown = null;
-      isDragging = false;
-    }, { passive: true });
-
-    window.addEventListener("pointercancel", () => {
-      pendingPointerDown = null;
-      isDragging = false;
-    }, { passive: true });
-  }
+  bindRoundPointerEvents();
 
   document.querySelectorAll(".flat-card").forEach((card) => {
     card.addEventListener("click", () => {
       const route = card.dataset.route || "/home/";
-      location.href = withModeQuery(route);
+      navigateWithTransition(route, mode);
     });
   });
 
@@ -963,7 +1015,6 @@ function bindEvents() {
 
   window.addEventListener("pagehide", () => {
     persistMotionState();
-
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = 0;
@@ -973,6 +1024,7 @@ function bindEvents() {
   window.addEventListener("pageshow", () => {
     if (mode === "round") {
       restoreMotionState();
+      applyStoredHandoff();
     }
 
     if (!rafId) {
@@ -980,18 +1032,27 @@ function bindEvents() {
       rafId = requestAnimationFrame(frame);
     }
   }, { passive: true });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      persistMotionState();
+    } else if (document.visibilityState === "visible" && mode === "round") {
+      lastFrameAt = performance.now();
+    }
+  }, { passive: true });
 }
 
 function start() {
   resizeWorld();
   buildPlanetFieldOnce();
+  setModePresentation();
 
   if (mode === "round") {
     restoreMotionState();
+    applyStoredHandoff();
   }
 
   bindOverlayRoutes();
-  setModePresentation();
   setDiagnosticsMode("peek");
   bindEvents();
   renderSurface(16.7);

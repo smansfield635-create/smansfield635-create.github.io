@@ -1,4 +1,11 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
+import { resolveTerrain } from "./terrain_resolver.js";
+import {
+  resolveElevationOffsetPx,
+  resolveFillAlpha,
+  resolveFillColor,
+  rgbString
+} from "./terrain_expression.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -75,74 +82,6 @@ function withPlanetClip(ctx, projectionState, drawFn) {
   ctx.restore();
 }
 
-function terrainClass(sample) {
-  return typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
-}
-
-function biomeType(sample) {
-  return typeof sample?.biomeType === "string" ? sample.biomeType : "NONE";
-}
-
-function surfaceMaterial(sample) {
-  return typeof sample?.surfaceMaterial === "string" ? sample.surfaceMaterial : "NONE";
-}
-
-function climateBand(sample) {
-  return typeof sample?.climateBandField === "string" ? sample.climateBandField : "TEMPERATE";
-}
-
-function seasonName(sample) {
-  return typeof sample?.hemisphereSeason === "string" ? sample.hemisphereSeason : "NONE";
-}
-
-function isWaterFamily(sample) {
-  return sample?.waterMask === 1 ||
-    terrainClass(sample) === "WATER" ||
-    terrainClass(sample) === "SHELF";
-}
-
-function isLandFamily(sample) {
-  return sample?.landMask === 1;
-}
-
-function isCryosphere(sample) {
-  const tc = terrainClass(sample);
-  return (
-    tc === "POLAR_ICE" ||
-    tc === "GLACIAL_HIGHLAND" ||
-    biomeType(sample) === "GLACIER" ||
-    surfaceMaterial(sample) === "ICE" ||
-    surfaceMaterial(sample) === "SNOW"
-  );
-}
-
-function isShoreTransition(sample) {
-  const tc = terrainClass(sample);
-  return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
-}
-
-function rgb(r, g, b) {
-  return { r, g, b };
-}
-
-function rgbString(color) {
-  return `rgb(${Math.round(clamp(color.r, 0, 255))}, ${Math.round(clamp(color.g, 0, 255))}, ${Math.round(clamp(color.b, 0, 255))})`;
-}
-
-function mixRgb(a, b, t) {
-  return {
-    r: a.r + ((b.r - a.r) * t),
-    g: a.g + ((b.g - a.g) * t),
-    b: a.b + ((b.b - a.b) * t)
-  };
-}
-
-function pointFromSample(sample, projectPoint, radiusScale = 1) {
-  const elevation = clamp(sample?.elevation ?? 0, -1, 1);
-  const radiusOffset = radiusScale * elevation * 10;
-  return projectPoint(sample.latDeg, sample.lonDeg, radiusOffset);
-}
-
 function shouldDrawQuad(points) {
   let visibleCount = 0;
   for (let i = 0; i < points.length; i += 1) {
@@ -165,109 +104,9 @@ function drawQuad(ctx, p00, p10, p11, p01, fillStyle, alpha = 1) {
   ctx.restore();
 }
 
-function baseWaterColor(sample) {
-  const depth = Math.abs(clamp(sample?.oceanDepthField ?? 0, -1, 0));
-  let color = rgb(12, 42, 98);
-
-  if (terrainClass(sample) === "SHELF") {
-    color = rgb(34, 88, 136);
-  } else if (depth > 0.30) {
-    color = rgb(4, 18, 46);
-  } else if (depth > 0.12) {
-    color = rgb(8, 30, 76);
-  }
-
-  if (climateBand(sample) === "POLAR" || climateBand(sample) === "SUBPOLAR") {
-    color = mixRgb(color, rgb(132, 168, 194), clamp(sample?.freezePotential ?? 0, 0, 1) * 0.30);
-  }
-
-  if (isShoreTransition(sample)) {
-    color = mixRgb(color, rgb(60, 118, 152), 0.18);
-  }
-
-  return color;
-}
-
-function baseLandColor(sample) {
-  const biome = biomeType(sample);
-  const surface = surfaceMaterial(sample);
-  const tc = terrainClass(sample);
-  let color = rgb(110, 118, 86);
-
-  if (biome === "TROPICAL_RAINFOREST") color = rgb(24, 74, 40);
-  else if (biome === "TROPICAL_GRASSLAND") color = rgb(126, 132, 72);
-  else if (biome === "TEMPERATE_FOREST") color = rgb(48, 80, 54);
-  else if (biome === "TEMPERATE_GRASSLAND") color = rgb(130, 134, 88);
-  else if (biome === "DESERT") color = rgb(154, 124, 80);
-  else if (biome === "TUNDRA") color = rgb(116, 118, 112);
-  else if (biome === "WETLAND") color = rgb(60, 82, 68);
-  else if (biome === "BOREAL_FOREST") color = rgb(52, 70, 58);
-  else if (biome === "GLACIER") color = rgb(214, 222, 230);
-
-  if (surface === "BEDROCK") color = mixRgb(color, rgb(118, 114, 112), 0.42);
-  else if (surface === "GRAVEL") color = mixRgb(color, rgb(134, 126, 112), 0.28);
-  else if (surface === "SAND") color = mixRgb(color, rgb(182, 160, 114), 0.34);
-  else if (surface === "SILT") color = mixRgb(color, rgb(144, 130, 110), 0.26);
-  else if (surface === "CLAY") color = mixRgb(color, rgb(140, 100, 82), 0.32);
-  else if (surface === "SOIL") color = mixRgb(color, rgb(92, 74, 56), 0.18);
-  else if (surface === "ICE") color = rgb(222, 228, 234);
-  else if (surface === "SNOW") color = rgb(244, 246, 250);
-
-  if (tc === "BEACH") color = rgb(188, 166, 118);
-  else if (tc === "SHORELINE") color = mixRgb(color, rgb(166, 150, 108), 0.26);
-  else if (tc === "BASIN") color = mixRgb(color, rgb(72, 88, 68), 0.38);
-  else if (tc === "CANYON") color = mixRgb(color, rgb(144, 88, 68), 0.46);
-  else if (tc === "RIDGE") color = mixRgb(color, rgb(112, 106, 98), 0.30);
-  else if (tc === "PLATEAU") color = mixRgb(color, rgb(132, 118, 94), 0.28);
-  else if (tc === "MOUNTAIN") color = mixRgb(color, rgb(136, 132, 128), 0.52);
-  else if (tc === "SUMMIT") color = mixRgb(color, rgb(188, 186, 188), 0.62);
-  else if (tc === "GLACIAL_HIGHLAND" || tc === "POLAR_ICE") color = rgb(208, 218, 230);
-
-  return color;
-}
-
-function applySeasonalTint(color, sample) {
-  const season = seasonName(sample);
-  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
-  const rainfall = clamp(sample?.rainfall ?? 0, 0, 1);
-  const continentality = clamp(sample?.continentality ?? 0, 0, 1);
-
-  if (season === "SUMMER") {
-    color = mixRgb(color, rgb(170, 154, 86), continentality * 0.10);
-    color = mixRgb(color, rgb(72, 108, 60), rainfall * 0.10);
-  } else if (season === "SPRING") {
-    color = mixRgb(color, rgb(112, 140, 82), rainfall * 0.10);
-  } else if (season === "AUTUMN") {
-    color = mixRgb(color, rgb(162, 110, 68), 0.10 + continentality * 0.08);
-  } else if (season === "WINTER") {
-    color = mixRgb(color, rgb(204, 210, 220), freeze * 0.24);
-  }
-
-  return color;
-}
-
-function applyFacing(color, point) {
-  const factor = clamp(0.72 + point.z * 0.24, 0.56, 1.06);
-  return rgb(color.r * factor, color.g * factor, color.b * factor);
-}
-
-function colorForSample(sample, point) {
-  const base = isWaterFamily(sample)
-    ? baseWaterColor(sample)
-    : applySeasonalTint(baseLandColor(sample), sample);
-
-  return applyFacing(base, point);
-}
-
-function alphaForSample(sample) {
-  const water = isWaterFamily(sample);
-  const tc = terrainClass(sample);
-
-  if (water) return tc === "SHELF" ? 0.70 : 0.64;
-  if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return 0.88;
-  if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return 0.84;
-  if (tc === "BEACH" || tc === "SHORELINE") return 0.78;
-  return 0.74;
+function pointFromResolvedSample(sample, resolved, projectPoint) {
+  const radiusOffset = resolveElevationOffsetPx(sample, resolved);
+  return projectPoint(sample.latDeg, sample.lonDeg, radiusOffset);
 }
 
 function drawPlanetBase(ctx, projectionState) {
@@ -314,22 +153,22 @@ function drawSurfaceMesh(ctx, grid, projectPoint) {
       const s01 = nextRow[x];
       const s11 = nextRow[nextX];
 
-      const p00 = pointFromSample(s00, projectPoint, 0.90);
-      const p10 = pointFromSample(s10, projectPoint, 0.90);
-      const p01 = pointFromSample(s01, projectPoint, 0.90);
-      const p11 = pointFromSample(s11, projectPoint, 0.90);
+      const r00 = resolveTerrain(s00);
+      const r10 = resolveTerrain(s10);
+      const r01 = resolveTerrain(s01);
+      const r11 = resolveTerrain(s11);
+
+      const p00 = pointFromResolvedSample(s00, r00, projectPoint);
+      const p10 = pointFromResolvedSample(s10, r10, projectPoint);
+      const p01 = pointFromResolvedSample(s01, r01, projectPoint);
+      const p11 = pointFromResolvedSample(s11, r11, projectPoint);
 
       if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
-      drawQuad(
-        ctx,
-        p00,
-        p10,
-        p11,
-        p01,
-        rgbString(colorForSample(s00, p00)),
-        alphaForSample(s00)
-      );
+      const color = rgbString(resolveFillColor(s00, r00, p00));
+      const alpha = resolveFillAlpha(s00, r00);
+
+      drawQuad(ctx, p00, p10, p11, p01, color, alpha);
     }
   }
 }
@@ -464,17 +303,25 @@ function drawPlanetRim(ctx, projectionState) {
 
 function buildRenderAudit(planetField) {
   const grid = sampleGrid(planetField);
+
   let waterFamilyCount = 0;
   let landFamilyCount = 0;
   let cryosphereCount = 0;
   let shorelineCount = 0;
+  const continentCoverage = {};
 
   for (const row of grid) {
     for (const sample of row) {
-      if (isWaterFamily(sample)) waterFamilyCount += 1;
-      if (isLandFamily(sample)) landFamilyCount += 1;
-      if (isCryosphere(sample)) cryosphereCount += 1;
-      if (isShoreTransition(sample)) shorelineCount += 1;
+      const resolved = resolveTerrain(sample);
+
+      if (resolved.waterFamily) waterFamilyCount += 1;
+      if (resolved.landFamily) landFamilyCount += 1;
+      if (resolved.cryosphere) cryosphereCount += 1;
+      if (resolved.shoreline) shorelineCount += 1;
+
+      if (resolved.continentId) {
+        continentCoverage[resolved.continentId] = (continentCoverage[resolved.continentId] ?? 0) + 1;
+      }
     }
   }
 
@@ -486,6 +333,7 @@ function buildRenderAudit(planetField) {
     landFamilyCount,
     cryosphereCount,
     shorelineCount,
+    continentCoverage: Object.freeze(continentCoverage),
     summary: normalizeObject(planetField?.summary)
   });
 }

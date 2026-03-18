@@ -193,8 +193,8 @@ function getSlopeLight(sample) {
   const ridge = clamp(sample?.ridgeStrength ?? 0, 0, 1);
   const basin = clamp(sample?.basinStrength ?? 0, 0, 1);
   const curvature = clamp(sample?.curvature ?? 0, -1, 1);
-  const signed = ridge * 0.6 - basin * 0.45 + curvature * 0.22;
-  return clamp(0.92 + signed - slope * 0.18, 0.68, 1.22);
+  const signed = ridge * 0.62 - basin * 0.48 + curvature * 0.24;
+  return clamp(0.92 + signed - slope * 0.18, 0.68, 1.24);
 }
 
 function getSeasonalTemperature(sample) {
@@ -220,6 +220,12 @@ function getContinentalVisualNoise(sample) {
   return clamp((n1 * 0.55) + (n2 * 0.30) + (n3 * 0.15), -1, 1);
 }
 
+function getMicroReliefNoise(sample) {
+  const n1 = sampleVisualNoise(sample, 15011, 2.8, 3.4);
+  const n2 = sampleVisualNoise(sample, 16061, 4.6, 5.0);
+  return clamp((n1 * 0.68) + (n2 * 0.32), -1, 1);
+}
+
 function getCoastBreakFactor(sample) {
   if (!isShoreTransition(sample)) return 0;
   const n = getContinentalVisualNoise(sample);
@@ -235,8 +241,8 @@ function getWaterLight(point) {
 
 function getLandLight(point, sample) {
   const slopeLight = getSlopeLight(sample);
-  const facing = clamp(0.78 + point.z * 0.32, 0.60, 1.14);
-  return clamp(slopeLight * facing, 0.58, 1.25);
+  const facing = clamp(0.78 + point.z * 0.34, 0.60, 1.16);
+  return clamp(slopeLight * facing, 0.58, 1.28);
 }
 
 function waterColorForSample(sample, point) {
@@ -249,27 +255,29 @@ function waterColorForSample(sample, point) {
   const shore = isShoreTransition(sample);
   const shelf = terrainClass(sample) === "SHELF";
   const visualNoise = getContinentalVisualNoise(sample);
+  const micro = getMicroReliefNoise(sample);
 
-  let color = rgb(24, 78, 146);
+  let color = rgb(20, 72, 138);
 
-  color = mixRgb(color, rgb(42, 112, 186), clamp(1 - depth * 1.65, 0, 1));
-  color = mixRgb(color, rgb(11, 34, 78), clamp(depth * 0.82, 0, 1));
+  color = mixRgb(color, rgb(56, 128, 202), clamp(1 - depth * 1.72, 0, 1));
+  color = mixRgb(color, rgb(7, 26, 68), clamp(depth * 0.86, 0, 1));
 
   if (shelf) {
-    color = mixRgb(color, rgb(62, 128, 176), 0.34);
+    color = mixRgb(color, rgb(70, 136, 182), 0.38);
   }
 
   if (shore) {
-    color = mixRgb(color, rgb(78, 142, 182), 0.20 + getCoastBreakFactor(sample) * 0.18);
+    color = mixRgb(color, rgb(82, 148, 190), 0.18 + getCoastBreakFactor(sample) * 0.22);
   }
 
   if (climate === "POLAR" || climate === "SUBPOLAR") {
-    color = mixRgb(color, rgb(146, 182, 210), freeze * 0.42);
+    color = mixRgb(color, rgb(150, 186, 214), freeze * 0.44);
   }
 
-  color = mixRgb(color, rgb(52, 124, 198), seasonalTemp * 0.08);
-  color = mixRgb(color, rgb(34, 92, 144), seasonalMoisture * 0.06);
-  color = addColor(color, visualNoise * 5, visualNoise * 6, visualNoise * 7);
+  color = mixRgb(color, rgb(58, 132, 208), seasonalTemp * 0.08);
+  color = mixRgb(color, rgb(30, 88, 142), seasonalMoisture * 0.07);
+  color = addColor(color, visualNoise * 5 + micro * 3, visualNoise * 6 + micro * 3, visualNoise * 7 + micro * 4);
+  color = addColor(color, runoff * 5, runoff * 8, runoff * 4);
 
   return mulColor(color, getWaterLight(point));
 }
@@ -293,41 +301,42 @@ function landColorForSample(sample, point) {
   const rainShadowStrength = clamp(sample?.rainShadowStrength ?? 0, 0, 1);
   const season = seasonName(sample);
   const visualNoise = getContinentalVisualNoise(sample);
+  const micro = getMicroReliefNoise(sample);
 
   let color = rgb(122, 134, 92);
 
   if (biome === "TROPICAL_RAINFOREST") {
-    color = rgb(40, 100, 54);
+    color = rgb(34, 92, 48);
   } else if (biome === "TROPICAL_GRASSLAND") {
-    color = rgb(142, 146, 82);
+    color = rgb(146, 148, 84);
   } else if (biome === "TEMPERATE_FOREST") {
-    color = rgb(66, 102, 68);
+    color = rgb(64, 96, 64);
   } else if (biome === "TEMPERATE_GRASSLAND") {
-    color = rgb(150, 150, 100);
+    color = rgb(154, 152, 102);
   } else if (biome === "DESERT") {
-    color = rgb(176, 148, 98);
+    color = rgb(178, 146, 94);
   } else if (biome === "TUNDRA") {
-    color = rgb(128, 130, 120);
+    color = rgb(132, 132, 122);
   } else if (biome === "WETLAND") {
-    color = rgb(78, 104, 84);
+    color = rgb(74, 98, 78);
   } else if (biome === "BOREAL_FOREST") {
-    color = rgb(72, 90, 74);
+    color = rgb(68, 86, 70);
   } else if (biome === "GLACIER") {
     color = rgb(220, 228, 234);
   }
 
   if (surface === "BEDROCK") {
-    color = mixRgb(color, rgb(136, 130, 126), 0.30);
+    color = mixRgb(color, rgb(136, 130, 126), 0.32);
   } else if (surface === "GRAVEL") {
     color = mixRgb(color, rgb(150, 140, 124), 0.18);
   } else if (surface === "SAND") {
-    color = mixRgb(color, rgb(200, 178, 124), 0.30);
+    color = mixRgb(color, rgb(202, 178, 122), 0.32);
   } else if (surface === "SILT") {
     color = mixRgb(color, rgb(162, 146, 122), 0.24);
   } else if (surface === "CLAY") {
-    color = mixRgb(color, rgb(158, 118, 94), 0.26);
+    color = mixRgb(color, rgb(160, 116, 92), 0.28);
   } else if (surface === "SOIL") {
-    color = mixRgb(color, rgb(108, 88, 62), 0.12);
+    color = mixRgb(color, rgb(104, 84, 60), 0.14);
   } else if (surface === "ICE") {
     color = rgb(228, 234, 238);
   } else if (surface === "SNOW") {
@@ -335,29 +344,29 @@ function landColorForSample(sample, point) {
   }
 
   if (tc === "BEACH") {
-    color = rgb(202, 180, 128);
+    color = rgb(206, 184, 130);
   } else if (tc === "SHORELINE") {
-    color = mixRgb(color, rgb(182, 166, 118), 0.24);
+    color = mixRgb(color, rgb(184, 168, 116), 0.26);
   } else if (tc === "BASIN") {
-    color = mixRgb(color, rgb(94, 112, 82), 0.22);
+    color = mixRgb(color, rgb(88, 106, 78), 0.26);
   } else if (tc === "CANYON") {
-    color = mixRgb(color, rgb(160, 106, 82), 0.38);
+    color = mixRgb(color, rgb(158, 102, 80), 0.40);
   } else if (tc === "RIDGE") {
-    color = mixRgb(color, rgb(128, 122, 110), 0.18);
+    color = mixRgb(color, rgb(128, 122, 110), 0.20);
   } else if (tc === "PLATEAU") {
-    color = mixRgb(color, rgb(148, 134, 104), 0.18);
+    color = mixRgb(color, rgb(150, 136, 104), 0.20);
   } else if (tc === "MOUNTAIN") {
-    color = mixRgb(color, rgb(154, 150, 142), 0.34);
+    color = mixRgb(color, rgb(154, 150, 142), 0.38);
   } else if (tc === "SUMMIT") {
-    color = mixRgb(color, rgb(192, 190, 188), 0.42);
+    color = mixRgb(color, rgb(194, 190, 188), 0.46);
   } else if (tc === "GLACIAL_HIGHLAND" || tc === "POLAR_ICE") {
     color = rgb(214, 224, 234);
   }
 
   if (climate === "POLAR" || climate === "SUBPOLAR") {
-    color = mixRgb(color, rgb(198, 208, 220), freeze * 0.32);
+    color = mixRgb(color, rgb(198, 208, 220), freeze * 0.34);
   } else if (climate === "EQUATORIAL" || climate === "TROPICAL") {
-    color = mixRgb(color, rgb(84, 126, 70), rainfall * 0.10);
+    color = mixRgb(color, rgb(82, 122, 68), rainfall * 0.10);
   }
 
   if (season === "SUMMER") {
@@ -377,9 +386,9 @@ function landColorForSample(sample, point) {
 
   color = addColor(
     color,
-    visualNoise * 8 + ridge * 9 - basin * 6,
-    visualNoise * 6 + rainfall * 5 - freeze * 2,
-    visualNoise * 3 + freeze * 8
+    visualNoise * 8 + micro * 5 + ridge * 10 - basin * 7,
+    visualNoise * 6 + micro * 4 + rainfall * 5 - freeze * 2,
+    visualNoise * 3 + micro * 2 + freeze * 8
   );
 
   return mulColor(color, getLandLight(point, sample));
@@ -398,13 +407,13 @@ function alphaForSample(sample) {
   const water = isWaterFamily(sample);
   const shore = isShoreTransition(sample);
 
-  let alpha = water ? 0.82 : 0.70;
+  let alpha = water ? 0.82 : 0.72;
   alpha += rainfall * 0.04;
   alpha += magnetic * 0.02;
   alpha += freeze * 0.03;
   if (shore) alpha += 0.03;
 
-  return clamp(alpha, 0.42, 0.94);
+  return clamp(alpha, 0.42, 0.95);
 }
 
 function edgeBreakAlpha(sample) {
@@ -434,9 +443,9 @@ function drawSpace(ctx, projectionState, viewState = {}) {
   ctx.save();
 
   const gradient = ctx.createLinearGradient(0, 0, 0, projectionState.height);
-  gradient.addColorStop(0, "#030714");
-  gradient.addColorStop(0.50, "#08152a");
-  gradient.addColorStop(1, "#0a1831");
+  gradient.addColorStop(0, "#020611");
+  gradient.addColorStop(0.48, "#071326");
+  gradient.addColorStop(1, "#091731");
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, projectionState.width, projectionState.height);
@@ -449,8 +458,8 @@ function drawSpace(ctx, projectionState, viewState = {}) {
     projectionState.centerY - projectionState.radius * 0.95,
     projectionState.radius * 1.7
   );
-  nebulaA.addColorStop(0, "rgba(92,110,255,0.12)");
-  nebulaA.addColorStop(0.55, "rgba(90,60,180,0.06)");
+  nebulaA.addColorStop(0, "rgba(92,110,255,0.10)");
+  nebulaA.addColorStop(0.55, "rgba(90,60,180,0.05)");
   nebulaA.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = nebulaA;
@@ -464,8 +473,8 @@ function drawSpace(ctx, projectionState, viewState = {}) {
     projectionState.centerY - projectionState.radius * 0.34,
     projectionState.radius * 1.25
   );
-  nebulaB.addColorStop(0, "rgba(255,88,88,0.06)");
-  nebulaB.addColorStop(0.45, "rgba(160,72,130,0.05)");
+  nebulaB.addColorStop(0, "rgba(255,88,88,0.05)");
+  nebulaB.addColorStop(0.45, "rgba(160,72,130,0.04)");
   nebulaB.addColorStop(1, "rgba(0,0,0,0)");
 
   ctx.fillStyle = nebulaB;
@@ -477,17 +486,22 @@ function drawSpace(ctx, projectionState, viewState = {}) {
       projectionState.height
   );
 
-  for (let i = 0; i < 160; i += 1) {
+  for (let i = 0; i < 240; i += 1) {
     const rx = Math.abs(Math.sin(seed + i * 13.17));
     const ry = Math.abs(Math.cos(seed + i * 7.91));
-    const rs = 0.35 + (Math.abs(Math.sin(seed + i * 2.31)) * 1.9);
+    const scaleNoise = Math.abs(Math.sin(seed + i * 2.31));
     const x = rx * projectionState.width;
     const y = ry * projectionState.height;
-    const alpha = 0.14 + Math.abs(Math.cos(seed + i * 0.77)) * 0.50;
+    const size = 0.20 + scaleNoise * 1.65;
+    const alpha = 0.10 + Math.abs(Math.cos(seed + i * 0.77)) * 0.42;
 
+    const star = ctx.createRadialGradient(x, y, 0, x, y, size * 2.4);
+    star.addColorStop(0, `rgba(255,255,255,${(alpha * 1.3).toFixed(3)})`);
+    star.addColorStop(0.45, `rgba(255,244,214,${alpha.toFixed(3)})`);
+    star.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = star;
     ctx.beginPath();
-    ctx.arc(x, y, rs, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${alpha.toFixed(3)})`;
+    ctx.arc(x, y, size * 2.4, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -504,15 +518,15 @@ function drawAtmosphere(ctx, projectionState) {
   const glow = ctx.createRadialGradient(
     projectionState.centerX,
     projectionState.centerY,
-    projectionState.radius * 0.82,
+    projectionState.radius * 0.86,
     projectionState.centerX,
     projectionState.centerY,
     outerRadius
   );
 
   glow.addColorStop(0, "rgba(40,120,255,0.00)");
-  glow.addColorStop(0.66, "rgba(62,146,255,0.10)");
-  glow.addColorStop(1, "rgba(96,180,255,0.22)");
+  glow.addColorStop(0.68, "rgba(62,146,255,0.08)");
+  glow.addColorStop(1, "rgba(96,180,255,0.18)");
 
   ctx.beginPath();
   ctx.arc(
@@ -539,10 +553,10 @@ function drawOceanBase(ctx, projectionState) {
       projectionState.radius
     );
 
-    oceanGradient.addColorStop(0, "rgb(64,128,196)");
-    oceanGradient.addColorStop(0.45, "rgb(34,92,162)");
-    oceanGradient.addColorStop(0.82, "rgb(14,48,104)");
-    oceanGradient.addColorStop(1, "rgb(8,24,62)");
+    oceanGradient.addColorStop(0, "rgb(62,126,194)");
+    oceanGradient.addColorStop(0.42, "rgb(30,88,156)");
+    oceanGradient.addColorStop(0.82, "rgb(12,44,98)");
+    oceanGradient.addColorStop(1, "rgb(6,22,56)");
 
     ctx.beginPath();
     ctx.arc(
@@ -687,7 +701,7 @@ function drawReliefRidges(ctx, grid, projectPoint) {
 
       if (!point.visible) continue;
 
-      const local = ridge * 0.70 + canyon * 0.50 + plateau * 0.16;
+      const local = ridge * 0.72 + canyon * 0.56 + plateau * 0.16;
       if (local < 0.14) continue;
 
       const radiusX = 1.1 + local * 3.0;
@@ -706,6 +720,44 @@ function drawReliefRidges(ctx, grid, projectPoint) {
       ctx.fill();
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+  }
+
+  ctx.restore();
+}
+
+function drawTerrainMicroTexture(ctx, grid, projectPoint) {
+  ctx.save();
+
+  for (let y = 0; y < grid.length; y += 2) {
+    for (let x = 0; x < grid[y].length; x += 2) {
+      const sample = grid[y][x];
+      if (!isLandFamily(sample)) continue;
+
+      const point = pointFromSample(sample, projectPoint, 1.02);
+      if (!point.visible) continue;
+
+      const ridge = clamp(sample?.ridgeStrength ?? 0, 0, 1);
+      const basin = clamp(sample?.basinStrength ?? 0, 0, 1);
+      const moisture = getSeasonalMoisture(sample);
+      const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
+      const noise = getMicroReliefNoise(sample);
+
+      const radius = 0.45 + Math.abs(noise) * 0.95;
+      const alpha = clamp(0.018 + ridge * 0.03 + basin * 0.02 + moisture * 0.01, 0.015, 0.07);
+
+      ctx.globalAlpha = alpha;
+      if (freeze > 0.45) {
+        ctx.fillStyle = "rgba(245,248,252,1)";
+      } else if (basin > ridge) {
+        ctx.fillStyle = "rgba(58,72,42,1)";
+      } else {
+        ctx.fillStyle = "rgba(236,230,214,1)";
+      }
+
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+      ctx.fill();
     }
   }
 
@@ -805,8 +857,8 @@ function drawLighting(ctx, projectionState) {
     projectionState.radius * 1.12
   );
 
-  light.addColorStop(0, "rgba(255,255,255,0.24)");
-  light.addColorStop(0.42, "rgba(255,255,255,0.08)");
+  light.addColorStop(0, "rgba(255,255,255,0.22)");
+  light.addColorStop(0.42, "rgba(255,255,255,0.07)");
   light.addColorStop(1, "rgba(0,0,0,0.18)");
 
   withPlanetClip(ctx, projectionState, () => {
@@ -1039,6 +1091,7 @@ export function createRenderer() {
       drawTerrainMesh(ctx, grid, projector);
       drawCoastHighlights(ctx, grid, projector);
       drawReliefRidges(ctx, grid, projector);
+      drawTerrainMicroTexture(ctx, grid, projector);
       drawClouds(ctx, grid, projector);
       drawPolarGlow(ctx, grid, projector);
       drawLighting(ctx, projectionState);

@@ -36,6 +36,7 @@ export function createControlSystem() {
   let pitchVelocity = 0;
 
   let orbitPhase = 0;
+
   let zoomCurrent = 1;
   let zoomTarget = 1;
   let zoomMin = 1;
@@ -44,6 +45,7 @@ export function createControlSystem() {
   let presentationMode = "round";
 
   const ZOOM_EASING = 0.12;
+
   const cameraState = {
     width: 0,
     height: 0,
@@ -105,10 +107,12 @@ export function createControlSystem() {
   }
 
   function setZoomAbsolute(nextZoom) {
+    if (!isFiniteNumber(nextZoom)) return;
     zoomTarget = clampZoomValue(nextZoom);
   }
 
   function adjustZoomBy(delta) {
+    if (!isFiniteNumber(delta)) return;
     setZoomAbsolute(zoomTarget + delta);
   }
 
@@ -124,6 +128,7 @@ export function createControlSystem() {
 
   function stepZoom() {
     zoomCurrent += (zoomTarget - zoomCurrent) * ZOOM_EASING;
+
     if (Math.abs(zoomTarget - zoomCurrent) < 0.0005) {
       zoomCurrent = zoomTarget;
     }

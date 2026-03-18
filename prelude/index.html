@@ -1,39 +1,38 @@
 <!doctype html>
 <!-- TNT — /prelude/index.html
      PRELUDE · TABLE SETTING (TRILINGUAL · NO LENSES · MONUMENT DENSITY · SINGLE-OPEN)
-     UPDATE (PER SEAN):
-       - Keep festival-night context BEHIND content (no overlays/modals)
-       - Uniform 3D gloss adoption (gem material) for ALL buttons on this page
-       - Gold glow = PERIMETER ring (NOT bottom-only underlight)
-       - Buttons do NOT move on press (glow only)
-       - “CONTINUE” does NOT jump pages (no arbitrary routing):
-           clicking CONTINUE closes current section and opens the next section
-           final section’s CONTINUE routes to /door/
+     LOCKS:
+       - Festival-night context behind content only
+       - Uniform 3D gloss adoption for all buttons on this page
+       - Gold glow = perimeter ring
+       - Buttons do not move on press
+       - CONTINUE advances accordion section-by-section
+       - Final section CONTINUE routes to /door/
      RULES:
        - EN / 中文 / ES
        - No lenses on this page
        - Single-open accordion (tap same closes)
        - No modals / no overlays
-       - Canon state carry (lang/style/time/depth) via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - Language toggle reloads SAME pathname (GH Pages safe)
-       - lane=platform|engineering is URL-only (preserve if present; never store)
-       - Uses ui.css + branch.css + instruments.js only
-       - ui.css owns field (NO html/body background styling)
+       - Canon state carry via URL + LS gd_lang/gd_style/gd_time/gd_depth only
+       - No new gd_* keys
+       - Language toggle reloads same pathname
+       - lane=platform|engineering remains URL-only
+       - Uses ui.css + branch.css only
+       - ui.css owns field (no html/body background styling)
      ROUTES:
        - Final continue → /door/
        - Dock: Door / Products / Explore
+       - Top: Compass / Index
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PRELUDE</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Nine Summits — Prelude</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -77,7 +76,7 @@ body::before,body::after{pointer-events:none!important}
   pointer-events:auto;flex-wrap:wrap;align-items:center;
 }
 
-/* ===== 3D GLOSS BUTTON (uniform; no movement; perimeter glow) ===== */
+/* ===== 3D GLOSS BUTTON ===== */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   min-height:44px;padding:10px 12px;border-radius:16px;
@@ -97,7 +96,7 @@ body::before,body::after{pointer-events:none!important}
     var(--shadowC),
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -26px 46px rgba(0,0,0,.55);
-  transform:none !important;
+  transform:none!important;
   transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
 }
 .btn::before{
@@ -161,7 +160,7 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
 }
 
-/* ===== Background context (behind hero + accordion; not body) ===== */
+/* Backdrop behind hero + accordion */
 .backdrop{
   position:absolute;
   left:50%;
@@ -197,7 +196,6 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
     radial-gradient(circle at 52% 78%, rgba(201,162,74,.12), transparent 48%),
-
     conic-gradient(from 12deg at 30% 28%,
       rgba(201,162,74,.14), transparent 12%,
       rgba(255,43,43,.12), transparent 24%,
@@ -208,7 +206,6 @@ body::before,body::after{pointer-events:none!important}
       rgba(201,162,74,.12), transparent 28%,
       rgba(90,40,120,.10), transparent 44%,
       transparent 100%),
-
     radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
   filter:blur(1px);
   opacity:.72;
@@ -310,9 +307,8 @@ body::before,body::after{pointer-events:none!important}
 }
 .chev::after{
   content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
-  opacity:.62;pointer-events:none;
+  position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:0 0 16px rgba(212,175,55,.14) inset;
 }
 .body{
   display:none;
@@ -369,7 +365,7 @@ body::before,body::after{pointer-events:none!important}
 
   <div class="top" aria-label="Top controls">
     <div class="left">
-      <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
+      <a class="btn" id="btnHome" href="/index.html" data-route="/index.html">INDEX</a>
       <a class="btn primary" id="btnIndex" href="/index.html" data-route="/index.html">COMPASS</a>
     </div>
     <div class="right" aria-label="Language">
@@ -403,7 +399,6 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== Canon state (NO new gd_* keys) =====
   var qs = new URLSearchParams(location.search);
   var LS = window.localStorage;
 
@@ -411,7 +406,7 @@ body::before,body::after{pointer-events:none!important}
   var style = qs.get("style") || LS.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
   var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || ""; // URL-only preserve only
+  var lane  = qs.get("lane")  || "";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
@@ -608,14 +603,19 @@ body::before,body::after{pointer-events:none!important}
 
     head.addEventListener("click", function(){ toggle(); }, {passive:true});
     head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
+      if(e.key==="Enter"||e.key===" "){
+        e.preventDefault();
+        toggle();
+      }
     });
 
     btn.addEventListener("click", function(){
       var next=i+1;
       if(next<SECTIONS.length){
         openCard(next);
-        try{ stack.children[next].scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){}
+        try{
+          stack.children[next].scrollIntoView({behavior:"smooth", block:"start"});
+        }catch(e){}
       }else{
         location.href = FINAL_ROUTE + q();
       }
@@ -631,22 +631,26 @@ body::before,body::after{pointer-events:none!important}
     }
   });
 
-  // Localize fixed labels
   if(lang==="zh"){
-    document.getElementById("btnHome").textContent="主页";
+    document.getElementById("btnHome").textContent="索引";
     document.getElementById("btnIndex").textContent="指南针";
     document.getElementById("dockDoor").textContent="门";
     document.getElementById("dockProducts").textContent="产品";
     document.getElementById("dockExplore").textContent="探索";
     document.getElementById("k0").textContent="前奏";
   }else if(lang==="es"){
-    document.getElementById("btnHome").textContent="INICIO";
+    document.getElementById("btnHome").textContent="ÍNDICE";
     document.getElementById("btnIndex").textContent="BRÚJULA";
     document.getElementById("dockDoor").textContent="PUERTA";
     document.getElementById("dockProducts").textContent="PRODUCTOS";
     document.getElementById("dockExplore").textContent="EXPLORAR";
     document.getElementById("k0").textContent="PRELUDIO";
   }else{
+    document.getElementById("btnHome").textContent="INDEX";
+    document.getElementById("btnIndex").textContent="COMPASS";
+    document.getElementById("dockDoor").textContent="DOOR";
+    document.getElementById("dockProducts").textContent="PRODUCTS";
+    document.getElementById("dockExplore").textContent="EXPLORE";
     document.getElementById("k0").textContent="PRELUDE";
   }
 

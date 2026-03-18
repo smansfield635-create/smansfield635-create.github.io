@@ -23,7 +23,6 @@
 
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
 
 <style>
 a{color:inherit;text-decoration:none}
@@ -49,10 +48,6 @@ body::before,body::after{pointer-events:none!important}
   --shadowDeep:0 40px 140px rgba(0,0,0,.85);
   --shadowMid:0 18px 60px rgba(0,0,0,.65);
 }
-
-/* =========================
-   TOP CONTROLS
-   ========================= */
 
 .top{
   position:fixed;
@@ -101,17 +96,13 @@ body::before,body::after{pointer-events:none!important}
   right:10px;
   bottom:-12px;
   height:28px;
-  background: radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
+  background:radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
   opacity:.6;
 }
 .btn.active{
   border-color:var(--gold);
   box-shadow:0 0 0 2px var(--goldSoft), 0 0 28px var(--goldSoft);
 }
-
-/* =========================
-   PAGE
-   ========================= */
 
 .page{
   width:min(1200px,94vw);
@@ -128,10 +119,6 @@ body::before,body::after{pointer-events:none!important}
   box-sizing:border-box;
 }
 
-/* =========================
-   HEADER
-   ========================= */
-
 .header{
   border-radius:28px;
   border:1px solid var(--stroke);
@@ -147,9 +134,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .header::before{
   content:"";
-  position:absolute;inset:0;
+  position:absolute;
+  inset:0;
   border-radius:28px;
-  box-shadow: inset 0 0 0 1px var(--goldSoft);
+  box-shadow:inset 0 0 0 1px var(--goldSoft);
   background:
     repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
@@ -175,10 +163,6 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.3px;
 }
 
-/* =========================
-   LAW BUBBLES
-   ========================= */
-
 .laws{
   display:flex;
   flex-direction:column;
@@ -197,9 +181,10 @@ body::before,body::after{pointer-events:none!important}
 }
 .law::before{
   content:"";
-  position:absolute;inset:0;
+  position:absolute;
+  inset:0;
   border-radius:26px;
-  box-shadow: inset 0 0 0 1px var(--goldSoft);
+  box-shadow:inset 0 0 0 1px var(--goldSoft);
   opacity:.6;
   pointer-events:none;
 }
@@ -267,10 +252,6 @@ body::before,body::after{pointer-events:none!important}
   color:var(--mut);
 }
 
-/* =========================
-   FOOTER DOCK
-   ========================= */
-
 .dock{
   position:fixed;
   left:50%;
@@ -295,10 +276,6 @@ body::before,body::after{pointer-events:none!important}
   min-width:0;
   text-align:center;
 }
-
-/* =========================
-   BREAKPOINTS
-   ========================= */
 
 @media (max-width:767px){
   :root{
@@ -542,7 +519,7 @@ var copy = {
   }
 };
 
-const laws = [
+var laws = [
 {
 title:{
 en:"1. Coherence Constraint Law",
@@ -663,7 +640,7 @@ es:"Mantén el fallo local. El rollback salva el sistema."
 }
 ];
 
-const container = document.getElementById("lawsContainer");
+var container = document.getElementById("lawsContainer");
 
 function closeAll(){
   var nodes = container.querySelectorAll(".law");
@@ -672,6 +649,16 @@ function closeAll(){
     var chev = nodes[i].querySelector(".lawChevron");
     if(chev) chev.textContent = "▸";
   }
+}
+
+function openLawAt(index){
+  var nodes = container.querySelectorAll(".law");
+  if(!nodes[index]) return;
+  closeAll();
+  nodes[index].classList.add("open");
+  var chev = nodes[index].querySelector(".lawChevron");
+  if(chev) chev.textContent = "▾";
+  openLaw = index;
 }
 
 function toggleLaw(index){
@@ -684,11 +671,7 @@ function toggleLaw(index){
     if(chev0) chev0.textContent = "▸";
     return;
   }
-  closeAll();
-  nodes[index].classList.add("open");
-  var chev = nodes[index].querySelector(".lawChevron");
-  if(chev) chev.textContent = "▾";
-  openLaw = index;
+  openLawAt(index);
 }
 
 function applyHeader(){
@@ -713,31 +696,31 @@ function render(){
   var H = copy.header[lang] || copy.header.en;
 
   laws.forEach(function(law, i){
-    const div = document.createElement("div");
+    var div = document.createElement("div");
     div.className = "law";
 
-    const head = document.createElement("div");
+    var head = document.createElement("div");
     head.className = "lawHead";
     head.setAttribute("role","button");
     head.tabIndex = 0;
 
-    const left = document.createElement("div");
+    var left = document.createElement("div");
     left.className = "lawHeadLeft";
 
-    const title = document.createElement("div");
+    var title = document.createElement("div");
     title.className = "lawTitle";
     title.textContent = law.title[lang];
 
     left.appendChild(title);
 
-    const chev = document.createElement("div");
+    var chev = document.createElement("div");
     chev.className = "lawChevron";
     chev.textContent = "▸";
 
     head.appendChild(left);
     head.appendChild(chev);
 
-    const body = document.createElement("div");
+    var body = document.createElement("div");
     body.className = "lawBody";
 
     if(lens === "formal"){
@@ -767,53 +750,42 @@ function render(){
   });
 
   if(openLaw < 0 || openLaw >= laws.length) openLaw = 0;
-  toggleLaw(openLaw);
+  openLawAt(openLaw);
 }
 
-document.getElementById("lensFormal").onclick = function(){
+function applyLensFormal(){
   lens = "formal";
   style = "formal";
   setButtonState("lensFormal", ["lensFormal","lensInformal"]);
   syncState();
   render();
   wireRoutes();
-};
+}
 
-document.getElementById("lensInformal").onclick = function(){
+function applyLensInformal(){
   lens = "informal";
   style = "informal";
   setButtonState("lensInformal", ["lensFormal","lensInformal"]);
   syncState();
   render();
   wireRoutes();
-};
+}
 
-document.getElementById("langEN").onclick = function(){
-  lang = "en";
-  document.documentElement.lang = "en";
-  setButtonState("langEN", ["langEN","langZH","langES"]);
+function applyLang(next){
+  lang = next;
+  document.documentElement.lang = next === "zh" ? "zh" : (next === "es" ? "es" : "en");
+  setButtonState(next === "zh" ? "langZH" : (next === "es" ? "langES" : "langEN"), ["langEN","langZH","langES"]);
   syncState();
   render();
   wireRoutes();
-};
+}
 
-document.getElementById("langZH").onclick = function(){
-  lang = "zh";
-  document.documentElement.lang = "zh";
-  setButtonState("langZH", ["langEN","langZH","langES"]);
-  syncState();
-  render();
-  wireRoutes();
-};
+document.getElementById("lensFormal").addEventListener("click", applyLensFormal, {passive:true});
+document.getElementById("lensInformal").addEventListener("click", applyLensInformal, {passive:true});
 
-document.getElementById("langES").onclick = function(){
-  lang = "es";
-  document.documentElement.lang = "es";
-  setButtonState("langES", ["langEN","langZH","langES"]);
-  syncState();
-  render();
-  wireRoutes();
-};
+document.getElementById("langEN").addEventListener("click", function(){ applyLang("en"); }, {passive:true});
+document.getElementById("langZH").addEventListener("click", function(){ applyLang("zh"); }, {passive:true});
+document.getElementById("langES").addEventListener("click", function(){ applyLang("es"); }, {passive:true});
 
 setButtonState(lens === "formal" ? "lensFormal" : "lensInformal", ["lensFormal","lensInformal"]);
 setButtonState(lang === "zh" ? "langZH" : (lang === "es" ? "langES" : "langEN"), ["langEN","langZH","langES"]);
